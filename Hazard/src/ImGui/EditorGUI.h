@@ -14,7 +14,7 @@ namespace Hazard {
 		void OnImGuiRender();
 
 		void PushLayer(GuiLayer* layer) { layers.emplace_back(layer); }
-		static void OpenPicker(GuiLayer* layer);
+		static void OpenPicker(GuiLayer* layer, Color color);
 	private:
 		static ColorPicker* colorPicker;
 		std::vector<GuiLayer*> layers;

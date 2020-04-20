@@ -29,6 +29,7 @@ namespace Hazard {
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 		virtual void SetClearColor(Color color) const = 0;
+		virtual Color GetClearColor() const = 0;
 
 		//Attribs
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

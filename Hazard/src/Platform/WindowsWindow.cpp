@@ -158,6 +158,14 @@ namespace Hazard {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
+	Color WindowsWindow::GetClearColor() const
+	{
+		GLfloat bkColor[4];
+		glGetFloatv(GL_COLOR_CLEAR_VALUE, bkColor);
+
+		return Color(bkColor[0], bkColor[1], bkColor[2], bkColor[3]);
+	}
+
 	void WindowsWindow::Shutdown()
 	{
 		glfwTerminate();
