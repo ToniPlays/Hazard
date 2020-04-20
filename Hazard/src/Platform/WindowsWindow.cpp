@@ -139,8 +139,6 @@ namespace Hazard {
 
 
 		glfwSwapBuffers(window);
-
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
@@ -155,9 +153,14 @@ namespace Hazard {
 		return data.VSync;
 	}
 
+	void WindowsWindow::SetClearColor(Color color) const
+	{
+		glClearColor(color.r, color.g, color.b, color.a);
+	}
+
 	void WindowsWindow::Shutdown()
 	{
-		HZR_CORE_ERROR("Window shutting down");
+		glfwTerminate();
 		glfwDestroyWindow(window);
 	}
 }

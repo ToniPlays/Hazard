@@ -12,7 +12,6 @@ namespace Hazard {
 
 		void OnAttach();
 		void OnDetach();
-		void OnImGuiRender();
 		void OnEvent(Event& e) override;
 
 		void Begin();

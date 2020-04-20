@@ -35,8 +35,6 @@ namespace Hazard {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(OnWindowClose));
-
-		//HZR_CORE_INFO("{0}", e.ToString());
 	}
 	void Application::PushLayer(Layer* layer)
 	{
@@ -55,7 +53,7 @@ namespace Hazard {
 			Update();
 			Render();
 		}
-		Close();
+		CleanUp();
 	}
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
@@ -68,7 +66,6 @@ namespace Hazard {
 	}
 	void Application::Update() {
 		window->OnUpdate();
-
 	}
 	void Application::Render() {
 
@@ -81,7 +78,7 @@ namespace Hazard {
 		}
 		imGuiLayer->End();
 	}
-	void Application::Close() {
-		
+	void Application::CleanUp() {
+		window->~Window();
 	}
 }

@@ -25,6 +25,7 @@ namespace Hazard {
 		bool IsVSync() const override;
 
 		virtual void* GetNativeWindow() const { return window; }
+		void SetClearColor(Color color) const override;
 
 	private:
 		virtual void Init(const WindowProps& props);

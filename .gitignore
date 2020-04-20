@@ -2,8 +2,9 @@
 /bin
 /bin-int
 /vendor
-/GLAD
+
 
 /*.vcxproj.*
 **/*.vcxproj
 /vendor/spdlog/*
+

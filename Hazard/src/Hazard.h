@@ -7,6 +7,7 @@
 #include "ImGui/ImGuiLayer.h"
 #include <stdarg.h>
 #include "Core/EventSystem/Event.h"
+#include "ImGui/Widgets/EditorGUI.h"
 
 #include "GLFW/glfw3.h"
 #include "Platform/OpenGl/imgui_impl_glfw.h"

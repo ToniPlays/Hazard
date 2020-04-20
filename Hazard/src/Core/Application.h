@@ -29,6 +29,8 @@ namespace Hazard {
 
 		UpdateType getUpdateType() { return type; }
 
+		static void Close() { Application::Get().isRunning = false; }
+
 	private:
 
 		UpdateType type = UpdateType::WaitEvents;
@@ -45,7 +47,7 @@ namespace Hazard {
 		void Start();
 		void Update();
 		void Render();
-		void Close();
+		void CleanUp();
 	};
 
 	Hazard::Application* CreateApplication();

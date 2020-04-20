@@ -74,6 +74,10 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
+    <ClInclude Include="src\ImGui\EditorStyle.h" />
+    <ClInclude Include="src\Utils\Color.h" />
+    <ClInclude Include="src\ImGui\Widgets\EditorGUI.h" />
+    <ClInclude Include="src\ImGui\Widgets\Items\MainMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -101,5 +105,9 @@
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
+    <ClCompile Include="src\ImGui\EditorStyle.cpp" />
+    <ClCompile Include="src\Utils\Color.cpp" />
+    <ClCompile Include="src\ImGui\Widgets\EditorGUI.cpp" />
+    <ClCompile Include="src\ImGui\Widgets\Items\MainMenu.cpp" />
   </ItemGroup>
 </Project>

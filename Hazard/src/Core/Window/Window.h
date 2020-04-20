@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "Core/Core.h"
 #include "Core/EventSystem/Event.h"
+#include "Utils/Color.h"
 
 namespace Hazard {
 
@@ -27,6 +28,7 @@ namespace Hazard {
 		virtual void OnUpdate() = 0;
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
+		virtual void SetClearColor(Color color) const = 0;
 
 		//Attribs
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

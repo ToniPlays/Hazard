@@ -1,4 +1,5 @@
 #pragma once
+
 #include <hzrpch.h>
 #include "ImGuiLayer.h"
 #include "imgui.h"
@@ -7,6 +8,7 @@
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 #include "Core/Application.h"
+#include "ImGui/EditorStyle.h"
 
 namespace Hazard {
 	ImGuiLayer::ImGuiLayer() : Layer("ImGui")
@@ -28,16 +30,16 @@ namespace Hazard {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigDockingWithShift = true;
 
 		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
-		//ImGui::StyleColorsClassic();
-
+		EditorStyle::InitStyle();
+		
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
@@ -56,12 +58,6 @@ namespace Hazard {
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
-
-	void ImGuiLayer::OnImGuiRender()
-	{
-		ImGui::ShowDemoWindow();
-	}
-
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
