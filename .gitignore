@@ -1,0 +1,14 @@
+/.vs
+/bin
+/bin-int
+/vendor/glfw/*
+/vendor/IMGUI/*/*
+/vendor/glad/*
+
+/*.vcxproj.*
+**/*.vcxproj
+/vendor/spdlog/*
+
+!/vendor/spdlog/include
+!/vendor/glfw/include
+!/vendor/IMGUI/*/

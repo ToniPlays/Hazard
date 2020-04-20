@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\EventSystem">
+      <UniqueIdentifier>{E4AE7F5F-D0A7-9EB1-F9D9-8336E5317EBD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Layers">
+      <UniqueIdentifier>{2D0BFE82-99C0-7678-22B5-704F8E696D7C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Logging">
+      <UniqueIdentifier>{C4E22202-B045-B2A6-59CB-EA5C450D7E29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window">
+      <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGl">
+      <UniqueIdentifier>{3E7D2C1D-AA08-9AE1-B319-1DD61F24F6E1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core\Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EntryPoint.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EventSystem\ApplicationEvent.h">
+      <Filter>Core\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EventSystem\Event.h">
+      <Filter>Core\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EventSystem\KeyEvent.h">
+      <Filter>Core\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EventSystem\MouseEvent.h">
+      <Filter>Core\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Layers\Layer.h">
+      <Filter>Core\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Layers\LayerStack.h">
+      <Filter>Core\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Logging\Log.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Window\Window.h">
+      <Filter>Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard.h" />
+    <ClInclude Include="src\ImGui\ImGuiLayer.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\imgui_impl_glfw.h">
+      <Filter>Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\imgui_impl_opengl3.h">
+      <Filter>Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WindowsWindow.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hzrpch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Layers\Layer.cpp">
+      <Filter>Core\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Layers\LayerStack.cpp">
+      <Filter>Core\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Logging\Log.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\ImGuiLayer.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\imgui_impl_glfw.cpp">
+      <Filter>Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\imgui_impl_opengl3.cpp">
+      <Filter>Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\WindowsWindow.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hzrpch.cpp" />
+  </ItemGroup>
+</Project>
