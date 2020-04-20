@@ -7,7 +7,7 @@
 extern Hazard::Application* Hazard::CreateApplication();
 
 int main() {
-	
+
 	Hazard::Application* app = Hazard::CreateApplication();
 	app->Run();
 	delete app;

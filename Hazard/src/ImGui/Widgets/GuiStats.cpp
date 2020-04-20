@@ -10,7 +10,7 @@ namespace Hazard {
 
 	void GuiStats::OnRender() const
 	{
-		ImGui::Begin("Perfomance", &show, ImGuiWindowFlags_NoResize);
+		ImGui::Begin("Perfomance", &show);
 
 		if (ImGui::Button("Change clear color")) {
 			GuiLayer* layer = (GuiLayer*)this;
@@ -38,8 +38,6 @@ namespace Hazard {
 		ss.str("");
 		ss << "Renderer: " << glGetString(GL_RENDERER);
 		ImGui::Text(ss.str().c_str());
-
-
 
 		ImGui::End();
 	}

@@ -152,7 +152,7 @@ static int          g_AttribLocationVtxPos = 0, g_AttribLocationVtxUV = 0, g_Att
 static unsigned int g_VboHandle = 0, g_ElementsHandle = 0;
 
 // Functions
-bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
+bool    ImGui_ImplOpenGL3_Init(const char* glsl_version = "#version 410")
 {
     // Query for GL version (e.g. 320 for GL 3.2)
 #if !defined(IMGUI_IMPL_OPENGL_ES2)
