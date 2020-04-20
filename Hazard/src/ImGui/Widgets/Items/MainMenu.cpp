@@ -7,7 +7,7 @@
 
 namespace Hazard {
 
-	void MainMenu::Render()
+	void MainMenu::OnRender() const
 	{
 		ImGui::BeginMainMenuBar();
 

@@ -18,7 +18,7 @@ namespace Hazard {
 
 	ImGuiLayer::~ImGuiLayer()
 	{
-
+		OnDetach();
 	}
 
 	void ImGuiLayer::OnAttach()

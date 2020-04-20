@@ -76,8 +76,12 @@
     <ClInclude Include="src\hzrpch.h" />
     <ClInclude Include="src\ImGui\EditorStyle.h" />
     <ClInclude Include="src\Utils\Color.h" />
-    <ClInclude Include="src\ImGui\Widgets\EditorGUI.h" />
     <ClInclude Include="src\ImGui\Widgets\Items\MainMenu.h" />
+    <ClInclude Include="src\Utils\Time.h" />
+    <ClInclude Include="src\ImGui\Widgets\GuiStats.h" />
+    <ClInclude Include="src\ImGui\EditorGUI.h" />
+    <ClInclude Include="src\ImGui\GuiLayer.h" />
+    <ClInclude Include="src\ImGui\Widgets\Items\ColorPicker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -107,7 +111,11 @@
     <ClCompile Include="src\hzrpch.cpp" />
     <ClCompile Include="src\ImGui\EditorStyle.cpp" />
     <ClCompile Include="src\Utils\Color.cpp" />
-    <ClCompile Include="src\ImGui\Widgets\EditorGUI.cpp" />
     <ClCompile Include="src\ImGui\Widgets\Items\MainMenu.cpp" />
+    <ClCompile Include="src\Utils\Time.cpp" />
+    <ClCompile Include="src\ImGui\EditorGUI.cpp" />
+    <ClCompile Include="src\ImGui\Widgets\GuiStats.cpp" />
+    <ClCompile Include="src\ImGui\GuiLayer.cpp" />
+    <ClCompile Include="src\ImGui\Widgets\Items\ColoPicker.cpp" />
   </ItemGroup>
 </Project>

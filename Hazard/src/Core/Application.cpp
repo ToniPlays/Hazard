@@ -50,8 +50,15 @@ namespace Hazard {
 
 		while (isRunning) {
 
+			double time = glfwGetTime();
+			Time::unscaledDeltaTime = time - lastTime;
+			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
+			Time::time = time;
+
 			Update();
 			Render();
+
+			lastTime = time;
 		}
 		CleanUp();
 	}
@@ -63,6 +70,8 @@ namespace Hazard {
 	void Application::Start() {
 		imGuiLayer = new ImGuiLayer();
 		PushOverlay(imGuiLayer);
+		Time::time = 0;
+		lastTime = glfwGetTime();
 	}
 	void Application::Update() {
 		window->OnUpdate();
@@ -79,6 +88,6 @@ namespace Hazard {
 		imGuiLayer->End();
 	}
 	void Application::CleanUp() {
-		window->~Window();
+	
 	}
 }

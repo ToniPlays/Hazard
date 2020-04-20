@@ -33,12 +33,13 @@ namespace Hazard {
 
 	private:
 
-		UpdateType type = UpdateType::WaitEvents;
+		UpdateType type = UpdateType::PollEvents;
 		static std::string name;
 		bool isRunning = true;
 		std::unique_ptr<Window> window;
 		LayerStack layerStack;
 		ImGuiLayer* imGuiLayer;
+		float lastTime = 0;
 
 		static Application* instance;
 

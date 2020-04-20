@@ -14,5 +14,6 @@
 
 //Hazard stuff
 #include "Core/Core.h"
+#include "Utils/Time.h"
 #include "Core/Logging/Log.h"
 #include "Core/Layers/Layer.h"
