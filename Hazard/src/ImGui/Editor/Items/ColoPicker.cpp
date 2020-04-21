@@ -6,7 +6,6 @@
 namespace Hazard {
 
 	bool ColorPicker::isOpen = false;
-
 	void ColorPicker::OnRender() {
 
 		ImGui::Begin("Color picker", &isOpen);

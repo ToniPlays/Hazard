@@ -1,10 +1,12 @@
 #pragma once
 #include "Core/Core.h"
-#include "Core/Window/Window.h"
+#include "Rendering/Window.h"
+#include "Rendering/RenderAPI/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Hazard {
+
 	class HAZARD_API WindowsWindow : public Window {
 
 	public:
@@ -33,6 +35,9 @@ namespace Hazard {
 		virtual void Shutdown();
 
 	private:
+
+		GraphicsContext* context;
+
 		GLFWwindow* window;
 
 		struct WindowData {

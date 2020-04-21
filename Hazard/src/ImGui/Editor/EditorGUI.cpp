@@ -2,37 +2,42 @@
 #include <hzrpch.h>
 #include "EditorGUI.h"
 #include "imgui.h"
-#include "Widgets/Items/MainMenu.h"
-#include "Widgets/GuiStats.h"
+#include "Items/MainMenu.h"
+#include "ImGui/Editor/Widgets/Performance.h"
+#include "ImGui/Editor/Widgets/Viewport.h"
+#include "GLFW/glfw3.h"
+
 
 namespace Hazard {
-	ColorPicker* EditorGUI::colorPicker;
 
-	EditorGUI::EditorGUI() : Hazard::Layer("EditorLayer")
+	ColorPicker* EditorGUI::colorPicker = nullptr;
+    std::unordered_map<std::string, GuiLayer*> EditorGUI::layers;
+
+	EditorGUI::EditorGUI() : Layer("EditorLayer")
 	{
 
 	}
 
 	EditorGUI::~EditorGUI()
 	{
-		
+
 	}
 	void EditorGUI::OnAttach()
 	{
 		colorPicker = new ColorPicker();
-		//PushLayer(new MainMenu());
-		PushLayer(new GuiStats());
+		PushLayer("Performance", new Performance());
+        PushLayer("Viewport", new Viewport());
 	}
 
 	void EditorGUI::OnDetach()
 	{
-		for (GuiLayer* layer : layers) {
-			delete layer;
+		for (std::pair<std::string, GuiLayer*> layer : layers) {
+			delete layer.second;
 		}
 	}
 
 	void EditorGUI::OnImGuiRender()
-	{
+    {
         //Docking stuff
         {
             static bool open = true;
@@ -67,6 +72,8 @@ namespace Hazard {
             // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
             ImGui::Begin("DockSpace Demo", &open, window_flags);
+
+            MainMenu::OnRender();
             ImGui::PopStyleVar();
 
             if (opt_fullscreen)
@@ -83,16 +90,20 @@ namespace Hazard {
             ImGui::End();
         }
 
-		for (GuiLayer* layer : layers) {
-			layer->OnRender();
-		}
-		if (colorPicker->isOpen) colorPicker->OnRender();
-	}
+        for (std::pair<std::string, GuiLayer*> layer : layers) {
+            layer.second->OnRender();
+        }
+        if (colorPicker->isOpen) colorPicker->OnRender();
+    }
 	void EditorGUI::OpenPicker(GuiLayer* layer, Color color = Color())
 	{
 		colorPicker->getterLayer = layer;
 		colorPicker->color = color;
 		colorPicker->isOpen = true;
 	}
+    void EditorGUI::OpenLayer(std::string name)
+    {
+        layers.at(name)->OpenLayer();
+    }
 }
 

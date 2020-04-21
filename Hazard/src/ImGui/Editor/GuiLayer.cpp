@@ -3,5 +3,5 @@
 #include "GuiLayer.h"
 
 namespace Hazard {
-	bool GuiLayer::show = true;
+
 }

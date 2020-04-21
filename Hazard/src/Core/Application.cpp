@@ -26,7 +26,6 @@ namespace Hazard {
 
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(Application::OnEvent));
-
 	}
 	Application::~Application() {
 		
@@ -68,15 +67,21 @@ namespace Hazard {
 		return true;
 	}
 	void Application::Start() {
+
 		imGuiLayer = new ImGuiLayer();
 		PushOverlay(imGuiLayer);
 		Time::time = 0;
 		lastTime = glfwGetTime();
+		renderer = new Renderer2D();
 	}
+
 	void Application::Update() {
 		window->OnUpdate();
 	}
+
 	void Application::Render() {
+
+		renderer->Render();
 
 		for (Layer* layer : layerStack) {
 			layer->OnUpdate();

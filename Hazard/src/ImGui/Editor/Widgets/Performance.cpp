@@ -1,16 +1,24 @@
 ﻿#pragma once
 #include <hzrpch.h>
-#include "GuiStats.h"
+#include "Performance.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "Core/Application.h"
-#include "ImGui/EditorGUI.h"
+#include "ImGui/Editor/GuiLayer.h"
+#include "ImGui/Editor/EditorGUI.h"
 #include "glad/glad.h"
 
 namespace Hazard {
 
-	void GuiStats::OnRender() const
+	void Performance::OnRender() const
 	{
-		ImGui::Begin("Perfomance", &show);
+		if (!isLayerOpen) return;
+		ImGui::Begin("Perfomance");
+
+		if (ImGui::CloseButton(ImGui::GetID("Perf_1"), ImVec2(2, 2))) {
+			GuiLayer* layer = (GuiLayer*)this;
+			layer->CloseLayer();
+		}
 
 		if (ImGui::Button("Change clear color")) {
 			GuiLayer* layer = (GuiLayer*)this;
@@ -20,10 +28,10 @@ namespace Hazard {
 		static bool vsync = false;
 		ImGui::Checkbox("VSync", &vsync);
 
-		Application::Get().GetWindow().SetVSync(vsync);
+		Hazard::Application::Get().GetWindow().SetVSync(vsync);
 
 		std::stringstream ss;
-		ss << "Frametime " << Time::unscaledDeltaTime * 1000 << " ms";
+		ss << "Frametime " << Hazard::Time::unscaledDeltaTime * 1000 << " ms";
 		ImGui::Text(ss.str().c_str());
 		ss.str("");
 
@@ -32,7 +40,7 @@ namespace Hazard {
 		ImGui::Text(ss.str().c_str());
 		ss.str("");
 
-		ss << "FPS " << 1 / Time::unscaledDeltaTime;
+		ss << "FPS " << 1 / Hazard::Time::unscaledDeltaTime;
 		ImGui::Text(ss.str().c_str());
 
 		ss.str("");
@@ -41,9 +49,8 @@ namespace Hazard {
 
 		ImGui::End();
 	}
-	void GuiStats::OnGetColor(Color color)
+	void Performance::OnGetColor(Hazard::Color color)
 	{
-		Application::Get().GetWindow().SetClearColor(color);
+		Hazard::Application::Get().GetWindow().SetClearColor(color);
 	}
-	
 }

@@ -6,12 +6,11 @@
 #include "Core/EventSystem/KeyEvent.h"
 #include "Core/EventSystem/MouseEvent.h"
 #include "glad/glad.h"
-#include "Core/Application.h"
-
 
 #include "imgui.h"
 #include "Platform/OpenGl/imgui_impl_glfw.h"
 #include "Platform/OpenGl/imgui_impl_opengl3.h"
+#include "Rendering/RenderAPI/OpenGLContext.h"
 
 namespace Hazard {
 
@@ -34,10 +33,13 @@ namespace Hazard {
 		data.Width = props.Width;
 		data.Height = props.Height;
 
+		
 		if(!glfwInit()) {
 			HZR_CORE_FATAL("Unable to init GLFW");
 			return;
 		}
+
+
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		
 		window = glfwCreateWindow(data.Width, data.Height, data.Title.c_str(), NULL, NULL);
@@ -46,17 +48,13 @@ namespace Hazard {
 			HZR_CORE_FATAL("Unable to create window");
 			return;
 		}
-		
-		glfwMakeContextCurrent(window);
-		glfwSetWindowUserPointer(window, &data);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
 
 		SetVSync(false);
 
-		
-		//TODO DEFINE CLEARCOLOR
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glViewport(0, 0, data.Width, data.Height);
+		context = new OpenGLContext(window);
+		context->Init();
+		glfwSetWindowUserPointer(window, &data);
 
 		//SET GLFW CALLBACKS
 
@@ -132,14 +130,9 @@ namespace Hazard {
 	}
 	void WindowsWindow::OnUpdate()
 	{
-		
 		UpdateType type = Application::Get().getUpdateType();
-
 		type == UpdateType::PollEvents ? glfwPollEvents() : glfwWaitEvents();
-
-
-		glfwSwapBuffers(window);
-		glClear(GL_COLOR_BUFFER_BIT);
+		context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -155,7 +148,7 @@ namespace Hazard {
 
 	void WindowsWindow::SetClearColor(Color color) const
 	{
-		glClearColor(color.r, color.g, color.b, color.a);
+		context->ClearColor(color);
 	}
 
 	Color WindowsWindow::GetClearColor() const

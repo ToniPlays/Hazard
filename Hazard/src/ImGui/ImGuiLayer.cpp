@@ -8,7 +8,7 @@
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 #include "Core/Application.h"
-#include "ImGui/EditorStyle.h"
+#include "ImGui/Editor/Items/EditorStyle.h"
 
 namespace Hazard {
 	ImGuiLayer::ImGuiLayer() : Layer("ImGui")
@@ -52,7 +52,6 @@ namespace Hazard {
 
 	void ImGuiLayer::OnDetach()
 	{
-		HZR_CORE_WARN("Imgui detach");
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -79,7 +78,6 @@ namespace Hazard {
 		// Rendering
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			GLFWwindow* backup_current_context = glfwGetCurrentContext();

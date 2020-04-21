@@ -1,9 +1,10 @@
 #pragma once
 #include <hzrpch.h>
-#include "Core/Window/Window.h"
+#include "Rendering/Window.h"
 #include "Core/EventSystem/ApplicationEvent.h"
 #include "Core/Layers/LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Rendering/Renderer2D.h"
 
 enum class UpdateType {
 	PollEvents = 0,
@@ -49,6 +50,9 @@ namespace Hazard {
 		void Update();
 		void Render();
 		void CleanUp();
+
+	private:
+		Renderer2D* renderer;
 	};
 
 	Hazard::Application* CreateApplication();

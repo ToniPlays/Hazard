@@ -2,7 +2,7 @@
 
 #include "Core/Core.h"
 #include "Core/EventSystem/Event.h"
-#include "Core/Window/Window.h"
+#include "Rendering/Window.h"
 
 namespace Hazard {
 	class HAZARD_API Layer {

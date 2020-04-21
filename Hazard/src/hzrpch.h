@@ -13,6 +13,7 @@
 #include <unordered_set>
 
 //Hazard stuff
+#include "Core/Application.h"
 #include "Core/Core.h"
 #include "Utils/Time.h"
 #include "Core/Logging/Log.h"
