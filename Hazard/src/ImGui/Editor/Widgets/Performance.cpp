@@ -21,9 +21,11 @@ namespace Hazard {
 		}
 
 		if (ImGui::Button("Change clear color")) {
-			GuiLayer* layer = (GuiLayer*)this;
-			EditorGUI::OpenPicker(layer, Application::Get().GetWindow().GetClearColor());
+			EditorGUI::OpenPicker([](Color color) {
+				Application::Get().GetWindow().SetClearColor(color);
+			}, Application::Get().GetWindow().GetClearColor());
 		}
+
 		ImGui::SameLine(175);
 		static bool vsync = false;
 		ImGui::Checkbox("VSync", &vsync);
@@ -49,8 +51,5 @@ namespace Hazard {
 
 		ImGui::End();
 	}
-	void Performance::OnGetColor(Hazard::Color color)
-	{
-		Hazard::Application::Get().GetWindow().SetClearColor(color);
-	}
+
 }

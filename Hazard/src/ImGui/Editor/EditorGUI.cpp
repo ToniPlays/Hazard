@@ -95,9 +95,9 @@ namespace Hazard {
         }
         if (colorPicker->isOpen) colorPicker->OnRender();
     }
-	void EditorGUI::OpenPicker(GuiLayer* layer, Color color = Color())
+	void EditorGUI::OpenPicker(void(*func)(Color color), Color color = Color())
 	{
-		colorPicker->getterLayer = layer;
+        colorPicker->func = func;
 		colorPicker->color = color;
 		colorPicker->isOpen = true;
 	}

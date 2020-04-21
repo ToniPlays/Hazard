@@ -6,6 +6,5 @@ namespace Hazard {
 	class HAZARD_API Performance : public GuiLayer {
 	public:
 		void OnRender() const override;
-		void OnGetColor(Hazard::Color color) override;
 	};
 }

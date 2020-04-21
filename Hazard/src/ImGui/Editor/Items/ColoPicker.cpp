@@ -17,7 +17,7 @@ namespace Hazard {
 		color.b = _col[2];
 		color.a = _col[3];
 
-		getterLayer->OnGetColor(color);
+		func(color);
 
 		ImGui::End();
 	}

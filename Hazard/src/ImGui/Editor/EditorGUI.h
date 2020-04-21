@@ -14,7 +14,7 @@ namespace Hazard {
 		void OnDetach();
 		void OnImGuiRender();
 		void PushLayer(std::string name, GuiLayer* layer) { layers[name] = layer; }
-		static void OpenPicker(GuiLayer* layer, Hazard::Color color);
+		static void OpenPicker(void(*func)(Color color), Hazard::Color color);
 		static void OpenLayer(std::string name);
 
 	private:

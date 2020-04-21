@@ -10,7 +10,7 @@ namespace Hazard {
 		Hazard::Color color;
 	private:
 		friend class EditorGUI;
-		GuiLayer* getterLayer = nullptr;
+		void(*func)(Color color);
 		static bool isOpen;
 	};
 }
