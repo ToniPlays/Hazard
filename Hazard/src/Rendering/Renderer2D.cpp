@@ -14,10 +14,10 @@ namespace Hazard {
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
 		float vertices[4 * 3] = {
-			-0.8f, -0.8f, 0.0f,
-			-0.8f, 0.8f, 0.0f,
-			0.8f, 0.8f, 0.0f,
-			0.8f, -0.8f, 0.0f
+			-0.4f, -0.2f, 0.0f,
+			-0.4f, 0.6f, 0.0f,
+			0.4f, 0.6f, 0.0f,
+			0.4f, -0.2f, 0.0f
 		};
 		int indices[6] = {
 			0, 1, 2,

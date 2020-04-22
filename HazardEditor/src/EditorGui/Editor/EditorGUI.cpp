@@ -1,6 +1,6 @@
 #pragma once
-#include "EditorGUI.h"
 #include "HzrEditor.h"
+#include "EditorGUI.h"
 #include "EditorGui/Editor/Items/MainMenu.h"
 #include "EditorGui/Editor/Widgets/Performance.h"
 #include "EditorGui/Editor/Widgets/Viewport.h"
@@ -27,7 +27,6 @@ EditorGUI::~EditorGUI()
 }
 void EditorGUI::OnAttach()
 {
-
 	{
 		HZR_WARN("GL version: {0}.{1}", GLVersion.major, GLVersion.minor);
 		IMGUI_CHECKVERSION();
@@ -136,7 +135,9 @@ void EditorGUI::OnUpdate()
 	for (std::pair<std::string, GuiLayer*> layer : layers) {
 		layer.second->OnRender();
 	}
-	if (colorPicker->isOpen) colorPicker->OnRender();
+	if (colorPicker->isOpen) 
+		colorPicker->OnRender();
+
 	End();
 }
 void EditorGUI::OpenPicker(void(*func)(Hazard::Color color), Hazard::Color color = Hazard::Color())
@@ -159,6 +160,7 @@ void EditorGUI::Begin()
 
 void EditorGUI::End()
 {
+
 	ImGuiIO& io = ImGui::GetIO();
 	Hazard::Application& app = Hazard::Application::Get();
 	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

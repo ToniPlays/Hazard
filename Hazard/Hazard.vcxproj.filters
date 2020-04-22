@@ -83,6 +83,8 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
+    <ClInclude Include="src\Utils\math\Vector3.h" />
+    <ClInclude Include="src\Utils\math\Math.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -113,5 +115,7 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
+    <ClCompile Include="src\Utils\math\Vector3.cpp" />
+    <ClCompile Include="src\Rendering\Items\Rendering.h" />
   </ItemGroup>
 </Project>

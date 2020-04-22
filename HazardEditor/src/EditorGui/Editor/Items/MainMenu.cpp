@@ -12,7 +12,7 @@ void MainMenu::OnRender()
 	if (ImGui::BeginMenu("File")) {
 
 		if (ImGui::MenuItem("New")) {
-			Hazard::Application::Close();
+			Debug::Log("MenuItem in File->New TODO");
 		}
 
 		if (ImGui::MenuItem("Quit")) {
@@ -21,6 +21,8 @@ void MainMenu::OnRender()
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Edit")) {
+
+		Debug::Log("Menu Edit TODO");
 
 		ImGui::EndMenu();
 	}
@@ -49,7 +51,7 @@ void MainMenu::OnRender()
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help")) {
-
+		Debug::Log("Menu Help TODO");
 		ImGui::EndMenu();
 	}
 	ImGui::EndMenuBar();
