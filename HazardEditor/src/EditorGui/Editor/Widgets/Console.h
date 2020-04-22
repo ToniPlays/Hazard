@@ -1,13 +1,15 @@
 #pragma once
+
 #include "HzrEditor.h"
 #include "EditorGui/Editor/GuiLayer.h"
 
-class Performance : public GuiLayer {
+class Console : public GuiLayer {
 public:
+	Console(Debug* d) : debug(d) {}
 	void OnRender() const override;
 	void OpenLayer() const override;
 	void CloseLayer() const override;
 private:
-	static bool layerOpen;
+	Debug* debug;
+	static bool isOpen;
 };
-

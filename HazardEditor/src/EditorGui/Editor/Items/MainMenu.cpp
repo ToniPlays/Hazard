@@ -10,6 +10,11 @@ void MainMenu::OnRender()
 	ImGui::BeginMenuBar();
 
 	if (ImGui::BeginMenu("File")) {
+
+		if (ImGui::MenuItem("New")) {
+			Hazard::Application::Close();
+		}
+
 		if (ImGui::MenuItem("Quit")) {
 			Hazard::Application::Close();
 		}
@@ -19,12 +24,27 @@ void MainMenu::OnRender()
 
 		ImGui::EndMenu();
 	}
+	//Assetmenu
+
+	if (ImGui::BeginMenu("Assets")) {
+
+		
+
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Window")) {
+		if (ImGui::MenuItem("Inspector")) {
+			EditorGUI::OpenLayer("Inspector");
+		}
 		if (ImGui::MenuItem("Performance")) {
 			EditorGUI::OpenLayer("Performance");
 		}
 		if (ImGui::MenuItem("Viewport")) {
 			EditorGUI::OpenLayer("Viewport");
+		}
+		if (ImGui::MenuItem("Console")) {
+			EditorGUI::OpenLayer("Console");
 		}
 		ImGui::EndMenu();
 	}

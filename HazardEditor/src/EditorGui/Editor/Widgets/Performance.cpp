@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "HzrEditor.h"
 #include "Performance.h"
-#include "imgui.h"
 #include "imgui_internal.h"
 #include "EditorGui/Editor/EditorGUI.h"
 
@@ -42,4 +41,15 @@ void Performance::OnRender() const
 	ImGui::Text(ss.str().c_str());
 
 	ImGui::End();
+}
+void Performance::OpenLayer() const
+{
+	Debug::Log("Opened Performance");
+	layerOpen = true;
+}
+
+void Performance::CloseLayer() const
+{
+	Debug::Log("Closed Performance");
+	layerOpen = false;
 }

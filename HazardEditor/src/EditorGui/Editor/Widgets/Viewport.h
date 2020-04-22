@@ -6,8 +6,8 @@
 class Viewport : public GuiLayer {
 public:
 	void OnRender() const override;
-	void OpenLayer() const override { isOpen = true; }
-	void CloseLayer() const override { isOpen = false; }
+	void OpenLayer() const override;
+	void CloseLayer() const override;
 private:
 	static bool isOpen;
 };

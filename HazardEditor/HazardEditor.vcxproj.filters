@@ -58,6 +58,10 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\HzrEditor.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Inspector.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Console.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\AssetManager.h" />
+    <ClInclude Include="src\Core\Debug.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorGui\Editor\EditorGUI.cpp">
@@ -90,5 +94,9 @@
     <ClCompile Include="src\Platform\imgui_impl_opengl3.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Inspector.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Console.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\AssetManager.cpp" />
+    <ClCompile Include="src\Core\Debug.cpp" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,11 @@
 #include "EditorGui/Editor/Items/MainMenu.h"
 #include "EditorGui/Editor/Widgets/Performance.h"
 #include "EditorGui/Editor/Widgets/Viewport.h"
+#include "EditorGui/Editor/Widgets/Inspector.h"
+#include "EditorGui/Editor/Widgets/Console.h"
+#include "EditorGui/Editor/Widgets/AssetManager.h"
 #include "EditorGui/Editor/Items/EditorStyle.h"
+#include "Core/Debug.h"
 
 #include "Platform/imgui_impl_glfw.h"
 #include "Platform/imgui_impl_opengl3.h"
@@ -54,9 +58,13 @@ void EditorGUI::OnAttach()
 		HZR_INFO("Imgui enabled");
 	}
 	HZR_INFO("EditorGUI attach");
+
 	colorPicker = new ColorPicker();
 	PushLayer("Performance", new Performance());
 	PushLayer("Viewport", new Viewport());
+	PushLayer("Inspector", new Inspector());
+	PushLayer("Console", new Console(new Debug()));
+	PushLayer("Assets", new AssetManager());
 }
 
 void EditorGUI::OnDetach()
