@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="EditorGui">
+      <UniqueIdentifier>{91DCAF4A-FD46-64C1-4685-1567B22E4216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorGui\Editor">
+      <UniqueIdentifier>{A72C3CBE-9325-5B10-BC57-4095A8AF3A1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorGui\Editor\Items">
+      <UniqueIdentifier>{5898F727-4492-207A-2DFF-B68A199886E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorGui\Editor\Widgets">
+      <UniqueIdentifier>{0D133020-F937-7FA0-2283-64300E077EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{2AEC870B-96F5-877C-1F71-9E7C8B79937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\EditorGui\Editor\EditorGUI.h">
+      <Filter>EditorGui\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\GuiLayer.h">
+      <Filter>EditorGui\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Items\ColorPicker.h">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Items\EditorStyle.h">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Items\MainMenu.h">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Performance.h">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Viewport.h">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\HazardEditor.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\imgui_impl_glfw.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\imgui_impl_opengl3.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Utility.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HzrEditor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EditorGui\Editor\EditorGUI.cpp">
+      <Filter>EditorGui\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\GuiLayer.cpp">
+      <Filter>EditorGui\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Items\ColoPicker.cpp">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Items\EditorStyle.cpp">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Items\MainMenu.cpp">
+      <Filter>EditorGui\Editor\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Performance.cpp">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Viewport.cpp">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\HazardEditor.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\imgui_impl_glfw.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\imgui_impl_opengl3.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
