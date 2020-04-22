@@ -1,10 +1,12 @@
 #pragma once
-#include <Hazard.h>
+#include "HzrEditor.h"
 
 class HazardEditor : public Hazard::Application {
 public:
 	HazardEditor();
 	~HazardEditor();
+
+	void Start() override;
 };
 
 Hazard::Application* Hazard::CreateApplication() {

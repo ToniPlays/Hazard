@@ -10,6 +10,8 @@ namespace Hazard {
 		void ClearColor(Color color) override;
 		virtual void SwapBuffers() override;
 
+		void SetViewport(int x, int y, int w, int h) override;
+
 	private:
 		GLFWwindow* windowHandle;
 	};

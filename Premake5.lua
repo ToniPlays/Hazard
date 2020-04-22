@@ -78,7 +78,7 @@ project "GLAD"
 project "Hazard"
 
 	location "Hazard"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -97,7 +97,6 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/spdlog/include",
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
-		"c:/dev/Hazard/vendor/IMGUI",
 		"Hazard/src"
 	}
 
@@ -106,8 +105,7 @@ project "Hazard"
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
-		"GLAD",
-		"IMGUI"
+		"GLAD"
 	}
 
 	filter "system:windows"
@@ -156,6 +154,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/IMGUI",
+		"HazardEditor/src",
 		"Hazard/src"
 	}
 
@@ -168,9 +167,14 @@ project "HazardEditor"
 			"HZR_PLATFORM_WINDOWS"
 		}
 	links {
+		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
+		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
+		"msvcrt.lib",
+		"opengl32.lib",
 		"Hazard",
 		"GLAD",
-		"IMGUI"
+		"IMGUI",
+
 	}
 
 	filter "configurations:Debug"

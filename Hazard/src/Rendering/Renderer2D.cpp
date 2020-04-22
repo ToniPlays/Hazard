@@ -33,11 +33,18 @@ namespace Hazard {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	}
-	Renderer2D::~Renderer2D() {
+	Renderer2D::~Renderer2D() 
+	{
 	
 	}
-	void Renderer2D::Render() {
+	void Renderer2D::Render() 
+	{
 
+		glBindVertexArray(vertexArray);
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+	}
+	void Renderer2D::RenderToTexture()
+	{
 		glBindVertexArray(vertexArray);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 	}

@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 #include "Layer.h"
 
 namespace Hazard {

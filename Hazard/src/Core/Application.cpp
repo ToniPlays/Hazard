@@ -2,11 +2,7 @@
 
 #include <hzrpch.h>
 #include "Application.h"
-#include "ImGui/ImGuiLayer.h"
 #include "glad/glad.h"
-#include "imgui.h"
-#include "Platform/OpenGl/imgui_impl_glfw.h"
-#include "Platform/OpenGl/imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 
 namespace Hazard {
@@ -45,7 +41,7 @@ namespace Hazard {
 	}
 	void Application::Run()
 	{
-		Start();
+		APPStart();
 
 		while (isRunning) {
 
@@ -54,45 +50,39 @@ namespace Hazard {
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
 			Time::time = time;
 
-			Update();
-			Render();
+			APPUpdate();
+			APPRender();
 
 			lastTime = time;
 		}
-		CleanUp();
+		APPCleanUp();
 	}
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		isRunning = false;
 		return true;
 	}
-	void Application::Start() {
+	void Application::APPStart() {
 
-		imGuiLayer = new ImGuiLayer();
-		PushOverlay(imGuiLayer);
 		Time::time = 0;
 		lastTime = glfwGetTime();
 		renderer = new Renderer2D();
+		Start();
 	}
 
-	void Application::Update() {
+	void Application::APPUpdate() {
 		window->OnUpdate();
 	}
 
-	void Application::Render() {
+	void Application::APPRender() {
 
 		renderer->Render();
 
 		for (Layer* layer : layerStack) {
 			layer->OnUpdate();
 		}
-		imGuiLayer->Begin();
-		for (Layer* layer : layerStack) {
-			layer->OnImGuiRender();
-		}
-		imGuiLayer->End();
 	}
-	void Application::CleanUp() {
+	void Application::APPCleanUp() {
 	
 	}
 }

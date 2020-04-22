@@ -9,6 +9,7 @@ namespace Hazard {
 		~Renderer2D();
 
 		void Render();
+		void RenderToTexture();
 	private:
 		unsigned int vertexArray, vertexBuffer, indexBuffer;
 	};

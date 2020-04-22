@@ -21,10 +21,6 @@ namespace Hazard {
 	Color::~Color() {
 	
 	}
-	ImVec4 Color::asImVec(Color color)
-	{
-		return ImVec4(color.r, color.g, color.b, color.a);
-	}
 	Color Color::fromHEX(std::string hex)
 	{
 		int r, g, b, a = 255;
@@ -37,7 +33,6 @@ namespace Hazard {
 		b = std::strtoul(hex.substr(5, 2).c_str(), 0, 16);
 		if(hex.length() == 9)
 			a = std::strtoul(hex.substr(7, 2).c_str(), 0, 16);
-		HZR_CORE_INFO("R: {0} G: {1} B: {2} A: {3}", r, g, b, a);
 
 		return Color(r, g, b, a);
 	}

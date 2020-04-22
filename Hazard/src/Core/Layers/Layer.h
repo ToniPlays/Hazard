@@ -1,8 +1,7 @@
 #pragma once
-
 #include "Core/Core.h"
 #include "Core/EventSystem/Event.h"
-#include "Rendering/Window.h"
+#include "Platform/Window.h"
 
 namespace Hazard {
 	class HAZARD_API Layer {
@@ -13,7 +12,6 @@ namespace Hazard {
 		virtual void OnAttach() {};
 		virtual void OnDetach() {};
 		virtual void OnUpdate() {};
-		virtual void OnImGuiRender() {};
 		virtual void OnEvent(Event& e) {};
 
 		inline const std::string& GetName() const { return DebugName; }

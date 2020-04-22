@@ -13,17 +13,20 @@
     <Filter Include="Core\Logging">
       <UniqueIdentifier>{C4E22202-B045-B2A6-59CB-EA5C450D7E29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Window">
-      <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\OpenGl">
-      <UniqueIdentifier>{3E7D2C1D-AA08-9AE1-B319-1DD61F24F6E1}</UniqueIdentifier>
+    <Filter Include="Platform\System">
+      <UniqueIdentifier>{FEC62B27-6A52-99EB-7363-1CE0DF6DF5EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\RenderAPI">
+      <UniqueIdentifier>{CC0139FB-3863-1609-C1D0-5CBB2D314DC8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,32 +61,28 @@
       <Filter>Core\Logging</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard.h" />
-    <ClInclude Include="src\Platform\OpenGl\imgui_impl_glfw.h">
-      <Filter>Platform\OpenGl</Filter>
+    <ClInclude Include="src\Platform\System\WindowsWindow.h">
+      <Filter>Platform\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGl\imgui_impl_opengl3.h">
-      <Filter>Platform\OpenGl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WindowsWindow.h">
+    <ClInclude Include="src\Platform\Window.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\hzrpch.h" />
-    <ClInclude Include="src\Utils\Color.h" />
-    <ClInclude Include="src\Utils\Time.h" />
-    <ClInclude Include="src\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\ImGui\Editor\Items\ColorPicker.h" />
-    <ClInclude Include="src\ImGui\Editor\Items\MainMenu.h" />
-    <ClInclude Include="src\ImGui\Editor\EditorGUI.h" />
-    <ClInclude Include="src\ImGui\Editor\GuiLayer.h" />
-    <ClInclude Include="src\ImGui\Editor\Items\EditorStyle.h" />
-    <ClInclude Include="src\ImGui\Editor\Widgets\Performance.h" />
-    <ClInclude Include="src\ImGui\Editor\Widgets\Viewport.h" />
-    <ClInclude Include="src\Rendering\Window.h">
-      <Filter>Core\Window</Filter>
+    <ClInclude Include="src\Rendering\RenderAPI\GraphicsContext.h">
+      <Filter>Rendering\RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\RenderAPI\GraphicsContext.h" />
-    <ClInclude Include="src\Rendering\RenderAPI\OpenGLContext.h" />
-    <ClInclude Include="src\Rendering\Renderer2D.h" />
+    <ClInclude Include="src\Rendering\RenderAPI\OpenGLContext.h">
+      <Filter>Rendering\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Renderer2D.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Color.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Time.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hzrpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -98,27 +97,21 @@
     <ClCompile Include="src\Core\Logging\Log.cpp">
       <Filter>Core\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGl\imgui_impl_glfw.cpp">
-      <Filter>Platform\OpenGl</Filter>
+    <ClCompile Include="src\Platform\System\WindowsWindow.cpp">
+      <Filter>Platform\System</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGl\imgui_impl_opengl3.cpp">
-      <Filter>Platform\OpenGl</Filter>
+    <ClCompile Include="src\Rendering\RenderAPI\OpenGLContext.cpp">
+      <Filter>Rendering\RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WindowsWindow.cpp">
-      <Filter>Platform</Filter>
+    <ClCompile Include="src\Rendering\Renderer2D.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Color.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Time.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\Utils\Color.cpp" />
-    <ClCompile Include="src\Utils\Time.cpp" />
-    <ClCompile Include="src\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\ImGui\Editor\Items\ColoPicker.cpp" />
-    <ClCompile Include="src\ImGui\Editor\Items\MainMenu.cpp" />
-    <ClCompile Include="src\ImGui\Editor\EditorGUI.cpp" />
-    <ClCompile Include="src\ImGui\Editor\GuiLayer.cpp" />
-    <ClCompile Include="src\ImGui\Editor\Items\EditorStyle.cpp" />
-    <ClCompile Include="src\ImGui\Editor\Widgets\Performance.cpp" />
-    <ClCompile Include="src\ImGui\Editor\Widgets\Viewport.cpp" />
-    <ClCompile Include="src\Rendering\RenderAPI\OpenGLContext.cpp" />
-    <ClCompile Include="src\Rendering\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
