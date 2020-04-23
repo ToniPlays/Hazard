@@ -39,9 +39,6 @@
     <ClInclude Include="src\EditorGui\Editor\Items\MainMenu.h">
       <Filter>EditorGui\Editor\Items</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\HazardEditor.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\imgui_impl_glfw.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -63,6 +60,9 @@
     </ClInclude>
     <ClInclude Include="src\EditorGui\Editor\Widgets\Inspect\AssetManager.h" />
     <ClInclude Include="src\EditorGui\Editor\Widgets\Inspect\Hierarchy.h" />
+    <ClInclude Include="src\Core\HazardEditor.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorGui\Editor\EditorGUI.cpp">
@@ -79,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="src\EditorGui\Editor\Items\MainMenu.cpp">
       <Filter>EditorGui\Editor\Items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\HazardEditor.cpp">
-      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\imgui_impl_glfw.cpp">
       <Filter>Platform</Filter>
@@ -100,5 +97,8 @@
     </ClCompile>
     <ClCompile Include="src\EditorGui\Editor\Widgets\Inspect\AssetManager.cpp" />
     <ClCompile Include="src\EditorGui\Editor\Widgets\Inspect\Hierarchy.cpp" />
+    <ClCompile Include="src\Core\HazardEditor.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
