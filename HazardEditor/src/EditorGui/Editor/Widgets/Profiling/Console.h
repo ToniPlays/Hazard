@@ -12,4 +12,7 @@ public:
 private:
 	Debug* debug;
 	static bool isOpen;
+	static bool showErrors;
+	static bool showWarnings;
+	static bool showInfo;
 };

@@ -8,6 +8,7 @@
 struct Message {
 	int level = 0;
 	std::string text;
+	std::string time;
 };
 
 class Debug {

@@ -12,7 +12,7 @@ void MainMenu::OnRender()
 	if (ImGui::BeginMenu("File")) {
 
 		if (ImGui::MenuItem("New")) {
-			Debug::Log("MenuItem in File->New TODO");
+			Debug::Warn("File->New TODO");
 		}
 
 		if (ImGui::MenuItem("Quit")) {
@@ -22,15 +22,20 @@ void MainMenu::OnRender()
 	}
 	if (ImGui::BeginMenu("Edit")) {
 
-		Debug::Log("Menu Edit TODO");
+		Debug::Error("Menu Edit TODO");
 
 		ImGui::EndMenu();
 	}
 	//Assetmenu
 
 	if (ImGui::BeginMenu("Assets")) {
-
 		
+		if (ImGui::MenuItem("New GameObject")) {
+			Debug::Warn("Assets-> New GameObject TODO");
+		}
+		if (ImGui::MenuItem("Import asset")) {
+			Debug::Warn("Assets-> Import asset TODO");
+		}
 
 		ImGui::EndMenu();
 	}
@@ -54,7 +59,9 @@ void MainMenu::OnRender()
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help")) {
-		Debug::Log("Menu Help TODO");
+
+		Debug::Error("Menu Help TODO");
+
 		ImGui::EndMenu();
 	}
 	ImGui::EndMenuBar();
