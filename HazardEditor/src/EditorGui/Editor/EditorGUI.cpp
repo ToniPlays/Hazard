@@ -2,12 +2,12 @@
 #include "HzrEditor.h"
 #include "EditorGUI.h"
 #include "EditorGui/Editor/Items/MainMenu.h"
-#include "EditorGui/Editor/Widgets/Performance.h"
-#include "EditorGui/Editor/Widgets/Viewport.h"
-#include "EditorGui/Editor/Widgets/Inspector.h"
-#include "EditorGui/Editor/Widgets/Console.h"
-#include "EditorGui/Editor/Widgets/AssetManager.h"
-#include "EditorGui/Editor/Items/EditorStyle.h"
+#include "EditorGui/Editor/Widgets/Inspect/AssetManager.h"
+#include "EditorGui/Editor/Widgets/Inspect/Inspector.h"
+#include "EditorGui/Editor/Widgets/Inspect/Hierarchy.h"
+#include "EditorGui/Editor/Widgets/Profiling/Console.h"
+#include "EditorGui/Editor/Widgets/Profiling/Performance.h"
+#include "EditorGui/Editor/Widgets/Rendering/Viewport.h"
 #include "Core/Debug.h"
 
 #include "Platform/imgui_impl_glfw.h"
@@ -59,11 +59,15 @@ void EditorGUI::OnAttach()
 	HZR_INFO("EditorGUI attach");
 
 	colorPicker = new ColorPicker();
-	PushLayer("Performance", new Performance());
-	PushLayer("Viewport", new Viewport());
+	//Inspect
 	PushLayer("Inspector", new Inspector());
-	PushLayer("Console", new Console(new Debug()));
 	PushLayer("Assets", new AssetManager());
+	PushLayer("Hierarchy", new Hierarchy());
+	//Rendering
+	PushLayer("Viewport", new Viewport());
+	//Profiling
+	PushLayer("Performance", new Performance());
+	PushLayer("Console", new Console(new Debug()));
 }
 
 void EditorGUI::OnDetach()

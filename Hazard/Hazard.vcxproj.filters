@@ -85,6 +85,7 @@
     <ClInclude Include="src\hzrpch.h" />
     <ClInclude Include="src\Utils\math\Vector3.h" />
     <ClInclude Include="src\Utils\math\Math.h" />
+    <ClInclude Include="src\Core\ApplicationInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">

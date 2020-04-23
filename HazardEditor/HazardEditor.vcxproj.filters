@@ -39,12 +39,6 @@
     <ClInclude Include="src\EditorGui\Editor\Items\MainMenu.h">
       <Filter>EditorGui\Editor\Items</Filter>
     </ClInclude>
-    <ClInclude Include="src\EditorGui\Editor\Widgets\Performance.h">
-      <Filter>EditorGui\Editor\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EditorGui\Editor\Widgets\Viewport.h">
-      <Filter>EditorGui\Editor\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="src\GUI\HazardEditor.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -58,10 +52,17 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\HzrEditor.h" />
-    <ClInclude Include="src\EditorGui\Editor\Widgets\Inspector.h" />
-    <ClInclude Include="src\EditorGui\Editor\Widgets\Console.h" />
-    <ClInclude Include="src\EditorGui\Editor\Widgets\AssetManager.h" />
     <ClInclude Include="src\Core\Debug.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Profiling\Console.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Inspect\Inspector.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Profiling\Performance.h">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Rendering\Viewport.h">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Inspect\AssetManager.h" />
+    <ClInclude Include="src\EditorGui\Editor\Widgets\Inspect\Hierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorGui\Editor\EditorGUI.cpp">
@@ -79,12 +80,6 @@
     <ClCompile Include="src\EditorGui\Editor\Items\MainMenu.cpp">
       <Filter>EditorGui\Editor\Items</Filter>
     </ClCompile>
-    <ClCompile Include="src\EditorGui\Editor\Widgets\Performance.cpp">
-      <Filter>EditorGui\Editor\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EditorGui\Editor\Widgets\Viewport.cpp">
-      <Filter>EditorGui\Editor\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\HazardEditor.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -94,9 +89,16 @@
     <ClCompile Include="src\Platform\imgui_impl_opengl3.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\EditorGui\Editor\Widgets\Inspector.cpp" />
-    <ClCompile Include="src\EditorGui\Editor\Widgets\Console.cpp" />
-    <ClCompile Include="src\EditorGui\Editor\Widgets\AssetManager.cpp" />
     <ClCompile Include="src\Core\Debug.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Profiling\Console.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Inspect\Inspector.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Profiling\Performance.cpp">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Rendering\Viewport.cpp">
+      <Filter>EditorGui\Editor\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Inspect\AssetManager.cpp" />
+    <ClCompile Include="src\EditorGui\Editor\Widgets\Inspect\Hierarchy.cpp" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
 #pragma once
 #include <hzrpch.h>
 #include "OpenGLContext.h"
-#include <glad/glad.h>
 
 
 namespace Hazard {
+
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(windowHandle);
@@ -25,6 +25,23 @@ namespace Hazard {
 	{
 		glfwSwapBuffers(windowHandle);
 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	std::string OpenGLContext::Get(int value) const
+	{
+		std::stringstream ss;
+		switch (value)
+		{
+			case SYSTEM_GPU:
+				ss << glGetString(GL_RENDERER);
+				break;
+			case SYSTEM_RENDERER:
+				ss << "OpenGL " << GLVersion.major << "." << GLVersion.minor;
+				break;
+			default:
+				ss << "Unknown";
+				break;
+		}
+		return ss.str();
 	}
 	void OpenGLContext::SetViewport(int x, int y, int w, int h)
 	{

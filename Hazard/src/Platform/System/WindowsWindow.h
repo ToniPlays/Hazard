@@ -29,7 +29,7 @@ namespace Hazard {
 		virtual void* GetNativeWindow() const { return window; }
 		void SetClearColor(Color color) const override;
 		Color GetClearColor() const;
-
+		void SetWindowTitle(std::string title) const override { glfwSetWindowTitle(window, title.c_str()); }
 		GraphicsContext& GetContext() const override { return *context; }
 
 	private:
@@ -43,11 +43,13 @@ namespace Hazard {
 		GLFWwindow* window;
 
 		struct WindowData {
+
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
 			EventCallbackFn EventCallback;
 		};
+
 		WindowData data;
 	};
 }

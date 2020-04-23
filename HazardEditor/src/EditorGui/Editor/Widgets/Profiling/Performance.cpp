@@ -37,7 +37,11 @@ void Performance::OnRender() const
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
-	ss << "Renderer: " << glGetString(GL_RENDERER);
+	ss << "Renderer: " << Hazard::Application::GetInfo().renderer.graphicProcessor;
+	ImGui::Text(ss.str().c_str());
+
+	ss.str("");
+	ss << "GPU: " << Hazard::Application::GetInfo().renderer.renderer;
 	ImGui::Text(ss.str().c_str());
 
 	ImGui::End();

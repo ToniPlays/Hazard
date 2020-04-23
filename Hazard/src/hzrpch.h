@@ -1,4 +1,9 @@
 #pragma once
+
+#define SYSTEM_GPU 0
+#define SYSTEM_CPU 1
+#define SYSTEM_RENDERER 2
+
 #include <iostream>
 #include <memory>
 #include <utility>

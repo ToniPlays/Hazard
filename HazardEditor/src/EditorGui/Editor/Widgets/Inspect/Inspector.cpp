@@ -1,7 +1,7 @@
 #include "Inspector.h"
 
 
-bool Inspector::isOpen = false;
+bool Inspector::isOpen = true;
 void Inspector::OnRender() const {
 
 	if (!isOpen) return;

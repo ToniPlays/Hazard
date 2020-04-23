@@ -16,4 +16,5 @@ HazardEditor::~HazardEditor()
 void HazardEditor::Start()
 {
 	PushOverlay(new EditorGUI());
+	Application::GetInfo().title = "Not at title";
 }

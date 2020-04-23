@@ -2,7 +2,7 @@
 #include "imgui.h"
 #include "Viewport.h"
 
-bool Viewport::isOpen = false;
+bool Viewport::isOpen = true;
 void Viewport::OnRender() const
 {
 	if (!isOpen) return;

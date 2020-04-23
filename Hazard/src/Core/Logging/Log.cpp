@@ -15,7 +15,7 @@ namespace Hazard {
 		s_CoreLogger = spdlog::stdout_color_mt("Hazard");
 		s_CoreLogger->set_level(spdlog::level::trace);
 
-		s_ClientLogger = spdlog::stdout_color_mt(Application::getAppName());
+		s_ClientLogger = spdlog::stdout_color_mt(Application::GetInfo().title);
 		s_ClientLogger->set_level(spdlog::level::trace);
 		HZR_CORE_WARN("Logger initialized");
 	}

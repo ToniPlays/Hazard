@@ -9,19 +9,22 @@ namespace Hazard {
 
 #define BIND_EVENT(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-	std::string Application::name = "Untitled";
-
 	Application* Application::instance = nullptr;
+	ApplicationInfo* Application::info;
+
+
 
 	Application::Application(std::string name) {
 
-		this->name = name;
+		info = new ApplicationInfo(name);
+
 		instance = this;
 		this->layerStack = LayerStack();
 		Log::Init();
 
-		window = std::unique_ptr<Window>(Window::Create());
+		window = std::unique_ptr<Window>(Window::Create(WindowProps(info->title)));
 		window->SetEventCallback(BIND_EVENT(Application::OnEvent));
+
 	}
 	Application::~Application() {
 		
@@ -67,6 +70,10 @@ namespace Hazard {
 		Time::time = 0;
 		lastTime = glfwGetTime();
 		renderer = new Renderer2D();
+
+		info->renderer.renderer = GetWindow().GetContext().Get(SYSTEM_GPU);
+		info->renderer.graphicProcessor = GetWindow().GetContext().Get(SYSTEM_RENDERER);
+
 		Start();
 	}
 
@@ -83,6 +90,6 @@ namespace Hazard {
 		}
 	}
 	void Application::APPCleanUp() {
-	
+		
 	}
 }

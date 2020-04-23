@@ -4,6 +4,7 @@
 #include "core/Layers/Layer.h"
 #include "GuiLayer.h"
 #include "Items/ColorPicker.h"
+#include "EditorGui/Editor/Items/EditorStyle.h"
 
 class EditorGUI : public Hazard::Layer {
 public:

@@ -31,7 +31,9 @@ namespace Hazard {
 		virtual void SetClearColor(Color color) const = 0;
 		virtual Color GetClearColor() const = 0;
 		virtual GraphicsContext& GetContext() const = 0;
+
 		//Attribs
+		virtual void SetWindowTitle(std::string title) const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;

@@ -4,6 +4,9 @@
 #include "Core/EventSystem/ApplicationEvent.h"
 #include "Core/Layers/LayerStack.h"
 #include "Rendering/Renderer2D.h"
+#include "Rendering/RenderAPI/GraphicsContext.h"
+#include "ApplicationInfo.h"
+
 
 enum class UpdateType {
 	PollEvents = 0,
@@ -15,9 +18,9 @@ namespace Hazard {
 	class HAZARD_API Application {
 
 	public:
+
 		Application(std::string name);
 		virtual ~Application();
-		static std::string getAppName() { return name; }
 		void Run();
 		
 		void OnEvent(Event& e);
@@ -30,21 +33,21 @@ namespace Hazard {
 		UpdateType getUpdateType() { return type; }
 		static void Close() { Application::Get().isRunning = false; }
 		
-		
+		static ApplicationInfo& GetInfo() { return *info; }
 
 	//Client side
 	public:
 		virtual void Start() {}
-
 	private:
 
 		UpdateType type = UpdateType::PollEvents;
-		static std::string name;
 		bool isRunning = true;
 		std::unique_ptr<Window> window;
 		LayerStack layerStack;
 		float lastTime = 0;
+
 		static Application* instance;
+		static ApplicationInfo* info;
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);

@@ -48,6 +48,9 @@ void MainMenu::OnRender()
 		if (ImGui::MenuItem("Console")) {
 			EditorGUI::OpenLayer("Console");
 		}
+		if (ImGui::MenuItem("Hierarchy")) {
+			EditorGUI::OpenLayer("Hierarchy");
+		}
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help")) {
