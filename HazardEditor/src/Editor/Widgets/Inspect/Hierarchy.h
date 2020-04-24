@@ -1,8 +1,8 @@
 #pragma once
 #include "HzrEditor.h"
-#include "EditorGui/Editor/GuiLayer.h"
+#include "Editor/GuiLayer.h"
 
-class AssetManager : public GuiLayer {
+class Hierarchy : public GuiLayer {
 public:
 	void OnRender() const override;
 	void OpenLayer() const override;

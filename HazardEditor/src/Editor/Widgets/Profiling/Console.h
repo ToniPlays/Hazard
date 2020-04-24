@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HzrEditor.h"
-#include "EditorGui/Editor/GuiLayer.h"
+#include "Editor/GuiLayer.h"
 
 class Console : public GuiLayer {
 public:

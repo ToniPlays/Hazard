@@ -5,6 +5,9 @@
 #include <hzrpch.h>
 
 namespace Hazard {
+
+	//Contains all window events;
+
 	class HAZARD_API WindowResizeEvent : public Event {
 
 	public: 

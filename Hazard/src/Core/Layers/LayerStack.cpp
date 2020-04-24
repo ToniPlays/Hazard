@@ -2,6 +2,8 @@
 #include "LayerStack.h"
 
 namespace Hazard {
+
+
 	LayerStack::LayerStack()
 	{
 
@@ -12,17 +14,21 @@ namespace Hazard {
 			delete layer;
 		}
 	}
+	//Add layer to LayerStack
+
 	void LayerStack::PushLayer(Layer* layer)
 	{
 		layers.emplace(layers.begin() + LayerInsert, layer);
 		LayerInsert++;
 		layer->OnAttach();
 	}
+	//Add overlay to LayerStack
 	void LayerStack::PushOverlay(Layer* layer)
 	{
 		layers.emplace_back(layer);
 		layer->OnAttach();
 	}
+	//Remove layer in LayerStack
 	void LayerStack::PopLayer(Layer* layer)
 	{
 		auto it = std::find(layers.begin(), layers.end(), layer);
@@ -32,6 +38,7 @@ namespace Hazard {
 			LayerInsert--;
 		}
 	}
+	//Remove overlay in LayerStack
 	void LayerStack::PopOverlay(Layer* layer)
 	{
 		auto it = std::find(layers.begin(), layers.end(), layer);

@@ -3,6 +3,9 @@
 #include "Layer.h"
 
 namespace Hazard {
+
+	//Layer stack hold layers and handles events
+
 	class HAZARD_API LayerStack {
 
 	public:
@@ -13,10 +16,8 @@ namespace Hazard {
 		void PushOverlay(Layer* layer);
 		void PopLayer(Layer* layer);
 		void PopOverlay(Layer* layer);
-
 		std::vector<Layer*>::iterator begin() { return layers.begin(); }
 		std::vector<Layer*>::iterator end() { return layers.end(); }
-
 	private:
 		std::vector<Layer*> layers;
 		unsigned int LayerInsert = 0;

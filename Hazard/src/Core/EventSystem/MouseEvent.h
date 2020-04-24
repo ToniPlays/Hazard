@@ -3,6 +3,9 @@
 #include "Event.h"
 
 namespace Hazard {
+
+	//Mouse events
+
 	class MouseMovedEvent : public Event
 	{
 	public:

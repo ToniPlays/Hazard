@@ -1,13 +1,14 @@
 #pragma once
 #include "HzrEditor.h"
 #include "EditorGUI.h"
-#include "EditorGui/Editor/Items/MainMenu.h"
-#include "EditorGui/Editor/Widgets/Inspect/AssetManager.h"
-#include "EditorGui/Editor/Widgets/Inspect/Inspector.h"
-#include "EditorGui/Editor/Widgets/Inspect/Hierarchy.h"
-#include "EditorGui/Editor/Widgets/Profiling/Console.h"
-#include "EditorGui/Editor/Widgets/Profiling/Performance.h"
-#include "EditorGui/Editor/Widgets/Rendering/Viewport.h"
+#include "Editor/Items/MainMenu.h"
+#include "Editor/Items/UtilityBar.h"
+#include "Editor/Widgets/Inspect/AssetManager.h"
+#include "Editor/Widgets/Inspect/Inspector.h"
+#include "Editor/Widgets/Inspect/Hierarchy.h"
+#include "Editor/Widgets/Profiling/Console.h"
+#include "Editor/Widgets/Profiling/Performance.h"
+#include "Editor/Widgets/Rendering/Viewport.h"
 #include "Core/Debug.h"
 
 #include "Platform/imgui_impl_glfw.h"
@@ -135,6 +136,8 @@ void EditorGUI::OnUpdate()
 
 		ImGui::End();
 	}
+
+	UtilityBar::OnRender();
 
 	for (std::pair<std::string, GuiLayer*> layer : layers) {
 		layer.second->OnRender();

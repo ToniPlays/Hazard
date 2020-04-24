@@ -1,6 +1,6 @@
 #pragma once
 #include "HzrEditor.h"
-#include "EditorGui/Editor/GuiLayer.h"
+#include "Editor/GuiLayer.h"
 
 
 class Inspector : public GuiLayer {

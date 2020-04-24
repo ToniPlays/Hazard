@@ -21,19 +21,18 @@ namespace Hazard {
 
 		Application(std::string name);
 		virtual ~Application();
-		void Run();
-		
-		void OnEvent(Event& e);
-		inline static Application& Get() {	return *instance; }
-		inline Window& GetWindow() { return *window; }
 
+		void Run();
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
+		void OnEvent(Event& e);
 
+		inline static Application& Get() {	return *instance; }
+		inline Window& GetWindow() { return *window; }
 		UpdateType getUpdateType() { return type; }
 		static void Close() { Application::Get().isRunning = false; }
-		
 		static ApplicationInfo& GetInfo() { return *info; }
+		
 
 	//Client side
 	public:

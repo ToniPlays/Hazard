@@ -22,15 +22,27 @@
     <Filter Include="Rendering">
       <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Items">
+      <UniqueIdentifier>{94D79AA1-0063-0866-0974-8B5A757E6466}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Rendering\RenderAPI">
       <UniqueIdentifier>{CC0139FB-3863-1609-C1D0-5CBB2D314DC8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Utils">
+      <UniqueIdentifier>{830E74A2-EF99-E166-F8AA-645B64B53D67}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\math">
+      <UniqueIdentifier>{AF66F6C5-9B1E-3813-0426-116FF0FCD203}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\ApplicationInfo.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Core.h">
@@ -67,6 +79,9 @@
     <ClInclude Include="src\Platform\Window.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\Items\Rendering.h">
+      <Filter>Rendering\Items</Filter>
+    </ClInclude>
     <ClInclude Include="src\Rendering\RenderAPI\GraphicsContext.h">
       <Filter>Rendering\RenderAPI</Filter>
     </ClInclude>
@@ -76,16 +91,22 @@
     <ClInclude Include="src\Rendering\Renderer2D.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\Utils\ShaderUtils.h">
+      <Filter>Rendering\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\Utils\Color.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\Time.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\math\Math.h">
+      <Filter>Utils\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\math\Vector3.h">
+      <Filter>Utils\math</Filter>
+    </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
-    <ClInclude Include="src\Utils\math\Vector3.h" />
-    <ClInclude Include="src\Utils\math\Math.h" />
-    <ClInclude Include="src\Core\ApplicationInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -109,14 +130,18 @@
     <ClCompile Include="src\Rendering\Renderer2D.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\Utils\ShaderUtils.cpp">
+      <Filter>Rendering\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="src\Utils\Color.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\Time.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\math\Vector3.cpp">
+      <Filter>Utils\math</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\Utils\math\Vector3.cpp" />
-    <ClCompile Include="src\Rendering\Items\Rendering.h" />
   </ItemGroup>
 </Project>

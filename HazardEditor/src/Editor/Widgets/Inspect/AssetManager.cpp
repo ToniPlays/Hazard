@@ -2,7 +2,7 @@
 #include "HzrEditor.h"
 #include "AssetManager.h"
 #include "imgui_internal.h"
-#include "EditorGui/Editor/EditorGUI.h"
+#include "Editor/EditorGUI.h"
 
 bool AssetManager::layerOpen = true;
 

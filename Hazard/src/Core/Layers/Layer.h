@@ -4,6 +4,7 @@
 #include "Platform/Window.h"
 
 namespace Hazard {
+
 	class HAZARD_API Layer {
 	public:
 		Layer(const std::string& name = "Layer");

@@ -9,11 +9,12 @@ namespace Hazard {
 
 #define BIND_EVENT(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+
+	//Static variables
 	Application* Application::instance = nullptr;
 	ApplicationInfo* Application::info;
 
-
-
+	//Application constructor
 	Application::Application(std::string name) {
 
 		info = new ApplicationInfo(name);
@@ -48,11 +49,14 @@ namespace Hazard {
 
 		while (isRunning) {
 
+			//Calulate deltatime
 			double time = glfwGetTime();
 			Time::unscaledDeltaTime = time - lastTime;
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
 			Time::time = time;
 
+
+			//Update and render;
 			APPUpdate();
 			APPRender();
 
@@ -71,6 +75,7 @@ namespace Hazard {
 		lastTime = glfwGetTime();
 		renderer = new Renderer2D();
 
+		//Set Application info
 		info->renderer.renderer = GetWindow().GetContext().Get(SYSTEM_GPU);
 		info->renderer.graphicProcessor = GetWindow().GetContext().Get(SYSTEM_RENDERER);
 
@@ -83,8 +88,9 @@ namespace Hazard {
 
 	void Application::APPRender() {
 
+		//Render scene
 		renderer->Render();
-
+		//Update layers
 		for (Layer* layer : layerStack) {
 			layer->OnUpdate();
 		}

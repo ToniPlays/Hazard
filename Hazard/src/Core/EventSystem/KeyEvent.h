@@ -4,6 +4,9 @@
 #include <sstream>
 
 namespace Hazard {
+
+	//KeyEvents
+
 	class KeyEvent : public Event
 	{
 	public:

@@ -6,6 +6,9 @@
 #include <functional>
 
 namespace Hazard {
+
+
+	//What type of event happened
 	enum class EventType {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -13,6 +16,8 @@ namespace Hazard {
 		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
+
+	//Events belong to a category
 	enum EventCategory {
 		None = 0,
 		EventCategoryApplication = BIT(0),
@@ -28,7 +33,11 @@ namespace Hazard {
 								virtual const char* GetName() const override {return #type; }
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
+
+	//Actual event class
+
 	class HAZARD_API Event {
+
 		friend class EventDispathcer;
 	public:
 		bool handled = false;
@@ -42,11 +51,14 @@ namespace Hazard {
 			return GetCategoryFlags() & category;
 		}
 	};
+
+	//Event dispatcher handles events
 	class EventDispatcher {
 
 	public: 
 		EventDispatcher(Event& event) : event(event) {}
 
+		//Dispath the event for layer
 		template<typename T, typename F>
 		bool Dispatch(const F& func) {
 			if (event.GetEventType() == T::GetStaticType()) {

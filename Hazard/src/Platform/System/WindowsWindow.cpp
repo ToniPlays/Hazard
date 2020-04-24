@@ -48,7 +48,7 @@ namespace Hazard {
 
 
 		SetVSync(false);
-
+		//Create and initialize context
 		context = new OpenGLContext(window);
 		context->Init();
 		glfwSetWindowUserPointer(window, &data);
@@ -129,19 +129,21 @@ namespace Hazard {
 		#endif // HZR_DEBUG
 
 	}
+	//Update window
 	void WindowsWindow::OnUpdate()
 	{
 		UpdateType type = Application::Get().getUpdateType();
 		type == UpdateType::PollEvents ? glfwPollEvents() : glfwWaitEvents();
+		//Swap buffers on renderer
 		context->SwapBuffers();
 	}
-
+	//Set window VSync
 	void WindowsWindow::SetVSync(bool enabled)
 	{
 		enabled ? glfwSwapInterval(1) : glfwSwapInterval(0);
 		data.VSync = enabled;
 	}
-
+	//Is window currently VSync enabled?
 	bool WindowsWindow::IsVSync() const
 	{
 		return data.VSync;
@@ -151,15 +153,14 @@ namespace Hazard {
 	{
 		context->ClearColor(color);
 	}
-
+	//Get current clear color
 	Color WindowsWindow::GetClearColor() const
 	{
 		GLfloat bkColor[4];
 		glGetFloatv(GL_COLOR_CLEAR_VALUE, bkColor);
-
 		return Color(bkColor[0], bkColor[1], bkColor[2], bkColor[3]);
 	}
-
+	//Shut down GLFW and destroy window
 	void WindowsWindow::Shutdown()
 	{
 		glfwTerminate();

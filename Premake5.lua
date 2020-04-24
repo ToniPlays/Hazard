@@ -4,7 +4,8 @@ workspace "Hazard"
 	configurations {
 		"Debug",
 		"Release",
-		"Dist"
+		"Dist",
+		"Game"
 	}
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -135,6 +136,11 @@ project "Hazard"
 		defines "HZR_DIST"
 		optimize "On"
 
+	filter "configurations:Game"
+		defines "HZR_GAME_ONLY"
+		runtime "Release"
+		optimize "on"
+
 project "HazardEditor"
 	location "HazardEditor"
 	kind "ConsoleApp"
@@ -186,4 +192,7 @@ project "HazardEditor"
 
 	filter "configurations:Dist"
 		defines "HZR_DIST"
+		optimize "On"
+	filter "configurations:Game" 
+		defines "HZR_GAME_ONLY"
 		optimize "On"

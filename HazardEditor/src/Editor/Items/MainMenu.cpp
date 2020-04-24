@@ -2,7 +2,7 @@
 
 #include "MainMenu.h"
 #include "imgui.h"
-#include "EditorGui/Editor/EditorGUI.h"
+#include "Editor/EditorGUI.h"
 
 
 void MainMenu::OnRender()

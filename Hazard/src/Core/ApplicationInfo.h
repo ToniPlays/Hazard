@@ -4,6 +4,9 @@
 #include <iostream>
 
 namespace Hazard {
+
+	//Contains data about the application and system
+
 	class HAZARD_API ApplicationInfo {
 	public:
 

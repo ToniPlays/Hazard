@@ -2,7 +2,7 @@
 #include "HzrEditor.h"
 #include "Performance.h"
 #include "imgui_internal.h"
-#include "EditorGui/Editor/EditorGUI.h"
+#include "Editor/EditorGUI.h"
 
 bool Performance::layerOpen = true;
 
@@ -29,12 +29,15 @@ void Performance::OnRender() const
 	ss.str("");
 
 	ImGui::SameLine(200);
+	ss << "FPS " << 1 / Hazard::Time::unscaledDeltaTime;
+	ImGui::Text(ss.str().c_str());
 
+
+	ss.str("");
+	ss << "Window size: " << Hazard::Application::Get().GetWindow().GetWidth() << "x" << Hazard::Application::Get().GetWindow().GetHeight();
 	ImGui::Text(ss.str().c_str());
 	ss.str("");
 
-	ss << "FPS " << 1 / Hazard::Time::unscaledDeltaTime;
-	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
 	ss << "Renderer: " << Hazard::Application::GetInfo().renderer.graphicProcessor;
@@ -43,6 +46,7 @@ void Performance::OnRender() const
 	ss.str("");
 	ss << "GPU: " << Hazard::Application::GetInfo().renderer.renderer;
 	ImGui::Text(ss.str().c_str());
+
 
 	ImGui::End();
 }

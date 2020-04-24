@@ -6,9 +6,11 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace Hazard {
+
 	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
 	std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
 
+	//Initialize logger
 	void Log::Init()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
@@ -17,6 +19,5 @@ namespace Hazard {
 
 		s_ClientLogger = spdlog::stdout_color_mt(Application::GetInfo().title);
 		s_ClientLogger->set_level(spdlog::level::trace);
-		HZR_CORE_WARN("Logger initialized");
 	}
 }
