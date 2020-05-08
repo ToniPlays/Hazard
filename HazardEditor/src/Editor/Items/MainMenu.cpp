@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "imgui.h"
 #include "Editor/EditorGUI.h"
+#include "Core/Assets/CreateGameObject.h"
 
 
 void MainMenu::OnRender()
@@ -31,7 +32,7 @@ void MainMenu::OnRender()
 	if (ImGui::BeginMenu("Assets")) {
 		
 		if (ImGui::MenuItem("New GameObject")) {
-			Debug::Warn("Assets-> New GameObject TODO");
+			CreateGameObject::CreateEmpty();
 		}
 		if (ImGui::MenuItem("Import asset")) {
 			Debug::Warn("Assets-> Import asset TODO");

@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <unordered_map>
@@ -23,3 +24,4 @@
 #include "Utils/Time.h"
 #include "Core/Logging/Log.h"
 #include "Core/Layers/Layer.h"
+#include "SceneGraph/Scene.h"

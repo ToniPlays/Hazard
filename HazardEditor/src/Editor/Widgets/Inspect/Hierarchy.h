@@ -9,4 +9,5 @@ public:
 	void CloseLayer() const override;
 private:
 	static bool layerOpen;
+	void ListChilds(Hazard::GameObject* obj) const;
 };

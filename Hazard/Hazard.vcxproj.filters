@@ -31,6 +31,9 @@
     <Filter Include="Rendering\Utils">
       <UniqueIdentifier>{830E74A2-EF99-E166-F8AA-645B64B53D67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{05BA97CB-F171-D918-5A79-B27446507409}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
     </Filter>
@@ -94,7 +97,19 @@
     <ClInclude Include="src\Rendering\Utils\ShaderUtils.h">
       <Filter>Rendering\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\SceneGraph\GameObject.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneGraph\MonoBehaviour.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneGraph\Scene.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
     <ClInclude Include="src\Utils\Color.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\JSON.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\Time.h">
@@ -133,7 +148,13 @@
     <ClCompile Include="src\Rendering\Utils\ShaderUtils.cpp">
       <Filter>Rendering\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\SceneGraph\GameObject.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
     <ClCompile Include="src\Utils\Color.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\JSON.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\Time.cpp">
@@ -143,5 +164,6 @@
       <Filter>Utils\math</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
+    <ClCompile Include="src\SceneGraph\Scene.cpp" />
   </ItemGroup>
 </Project>

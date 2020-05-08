@@ -16,9 +16,8 @@ HazardEditor::~HazardEditor()
 void HazardEditor::Start()
 {
 	Application::GetInfo().title = "Not at title";
-
 #ifndef HZR_GAME_ONLY
 	PushOverlay(new EditorGUI());
-#endif // HZR_GAME_ONLY
-
+#endif
+	//Debug::Log(Hazard::JSON::ReadFile(""));
 }

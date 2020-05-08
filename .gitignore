@@ -2,7 +2,9 @@
 /bin
 /bin-int
 /vendor
-
+/GLAD
+/ImGui
+/JSONParser
 
 /*.vcxproj.*
 **/*.vcxproj

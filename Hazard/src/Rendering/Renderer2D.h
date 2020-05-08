@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Core.h"
 
-
 namespace Hazard {
 	class HAZARD_API Renderer2D {
 	public:

@@ -74,6 +74,7 @@ namespace Hazard {
 		Time::time = 0;
 		lastTime = glfwGetTime();
 		renderer = new Renderer2D();
+		new Scene("Test scene");
 
 		//Set Application info
 		info->renderer.renderer = GetWindow().GetContext().Get(SYSTEM_GPU);

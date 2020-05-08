@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 16
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "GLAD.vcxproj", "{5D4A857C-4981-860D-F26D-6C10DE83020F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "GLAD\GLAD.vcxproj", "{5D4A857C-4981-860D-F26D-6C10DE83020F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcxproj", "{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IMGUI", "IMGUI.vcxproj", "{606F530D-CC83-7BBE-9505-1F1E01D977EF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IMGUI", "ImGui\IMGUI.vcxproj", "{606F530D-CC83-7BBE-9505-1F1E01D977EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSONParser", "JSONParser\JSONParser.vcxproj", "{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,14 @@ Global
 		{606F530D-CC83-7BBE-9505-1F1E01D977EF}.Game|x64.Build.0 = Game|x64
 		{606F530D-CC83-7BBE-9505-1F1E01D977EF}.Release|x64.ActiveCfg = Release|x64
 		{606F530D-CC83-7BBE-9505-1F1E01D977EF}.Release|x64.Build.0 = Release|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Debug|x64.ActiveCfg = Debug|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Debug|x64.Build.0 = Debug|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Dist|x64.ActiveCfg = Dist|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Dist|x64.Build.0 = Dist|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Game|x64.ActiveCfg = Game|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Game|x64.Build.0 = Game|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Release|x64.ActiveCfg = Release|x64
+		{6C1F5C43-58D7-9D90-C1DE-76ECADB53881}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

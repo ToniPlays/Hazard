@@ -11,6 +11,7 @@ workspace "Hazard"
 
 
 project "IMGUI"
+	location "c:/dev/Hazard/ImGui"
 	kind "StaticLib"
 	language "C++"
 
@@ -50,8 +51,30 @@ project "IMGUI"
 		runtime "Release"
 		optimize "on"
 
+project "JSONParser"
+
+	location "c:/dev/Hazard/JSONParser"
+	kind "StaticLib"
+	language "C++"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}");
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	includedirs {
+		"JSONParser/include"
+	}
+
+	filter "system:windows"
+		buildoptions { "-std=c11", "-lgdi32" }
+		systemversion "latest"
+		staticruntime "On"
+
+	filter { "system:windows", "configurations:Release" } 
+		buildoptions "/MT"
+
 
 project "GLAD"
+	location "c:/dev/Hazard/GLAD"
 	kind "StaticLib"
 	language "C"
 
@@ -98,6 +121,7 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/spdlog/include",
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
+		"c:/dev/Hazard/vendor/JSON/include",
 		"Hazard/src"
 	}
 
@@ -159,6 +183,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/spdlog/include",
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
+		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"HazardEditor/src",
 		"Hazard/src"
@@ -179,7 +204,7 @@ project "HazardEditor"
 		"opengl32.lib",
 		"Hazard",
 		"GLAD",
-		"IMGUI",
+		"IMGUI"
 
 	}
 
