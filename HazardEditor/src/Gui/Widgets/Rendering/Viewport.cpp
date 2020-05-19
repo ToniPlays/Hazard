@@ -15,11 +15,6 @@ void Viewport::OnRender() const
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(25);
 	static bool s1 = true;
-	ImGui::Checkbox("2D", &s1);
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(25);
-	static bool s2 = false;
-	ImGui::Checkbox("Audio", &s2);
 	ImGui::End();
 }
 void Viewport::OpenLayer() const

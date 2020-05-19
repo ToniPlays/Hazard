@@ -9,5 +9,10 @@
 #include "Modules/Analytics/Logger.h"
 #include "Maths/Math.h"
 
+#include "Events/Event.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
+
 //Other stuff
 #include <unordered_map>

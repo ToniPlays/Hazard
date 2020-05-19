@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Events/Event.h"
 
 namespace Hazard {
 
@@ -14,10 +15,14 @@ namespace Hazard {
 		virtual void LateUpdate() {}
 		virtual void OnRender() {};
 		virtual void Shutdown() {};
-
+		virtual bool OnEvent(Event& e) { return false; };
 		virtual std::string GetName() { return name; };
+
+		void SetActive(bool active) { isActive = active; }
+		bool IsActive() { return isActive; }
 
 	protected:
 		std::string name;
+		bool isActive = true;
 	};
 }

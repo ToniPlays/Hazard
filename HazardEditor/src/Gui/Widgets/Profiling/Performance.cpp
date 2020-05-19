@@ -48,6 +48,14 @@ void Performance::OnRender() const
 	ss << "Renderer: " << Hazard::Application::GetCurrent().GetWindow().GetWindowInfo().Renderer;
 	ImGui::Text(ss.str().c_str());
 
+	ImGui::NewLine();
+
+	ImGui::Text("Active modules: ");
+	for (Hazard::Module* module : Hazard::Application::GetCurrent().GetModuleHandler().GetAll()) {
+		ss.str("");
+		ss << "- " + module->GetName();
+		ImGui::Text(ss.str().c_str());
+	}
 
 	ImGui::End();
 }

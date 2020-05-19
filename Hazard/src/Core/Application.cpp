@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "Application.h"
 #include "Modules/GUI/LayerStack.h"
+#include "Modules/Input/Input.h"
 
 namespace Hazard {
 
@@ -44,10 +45,13 @@ namespace Hazard {
 		}
 		cleanUp();
 	}
-	void Application::OnEvent(Event& e) {
+	void Application::onEvent(Event& e) {
 
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(ExitApplication));
+		if(!dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(Application::ExitApplication)))
+			moduleHandler.OnEvent(e);
+		OnEvent(e);
+
 	}
 	void Application::start()
 	{
@@ -58,12 +62,13 @@ namespace Hazard {
 
 		moduleHandler = ModuleHandler();
 		moduleHandler.PushModule(new LayerStack());
+		moduleHandler.PushModule(new Input());
 
 #ifdef HZR_DEBUG
 		moduleHandler.PushModule(new Logger());
 #endif
 
-		window->SetEventCallback(BIND_EVENT(Application::OnEvent));
+		window->SetEventCallback(BIND_EVENT(Application::onEvent));
 	}
 
 	void Application::update()
@@ -87,6 +92,7 @@ namespace Hazard {
 		PROFILE_FN();
 	}
 	bool Application::ExitApplication(WindowCloseEvent& e) {
+
 		isRunning = false;
 		return true;
 	}

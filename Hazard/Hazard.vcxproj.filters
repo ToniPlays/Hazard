@@ -98,6 +98,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
+    <ClInclude Include="src\Modules\Input\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -131,5 +132,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
+    <ClCompile Include="src\Modules\Input\Input.cpp" />
   </ItemGroup>
 </Project>

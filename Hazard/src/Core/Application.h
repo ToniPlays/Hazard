@@ -6,6 +6,7 @@
 #include "Events/ApplicationEvent.h"
 
 namespace Hazard {
+#define BIND_EVENT(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	class HAZARD_API Application : public HazardInterface {
 
@@ -25,7 +26,7 @@ namespace Hazard {
 		ModuleHandler& GetModuleHandler() { return *&moduleHandler; };
 		void CloseApplication();
 	private:
-		void OnEvent(Event& e);
+		void onEvent(Event& e);
 		void start();
 		void update();
 		void render();

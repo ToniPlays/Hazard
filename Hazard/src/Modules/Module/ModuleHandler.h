@@ -15,6 +15,8 @@ namespace Hazard {
 		void Update();
 		void LateUpdate();
 		void OnRender();
+		void OnEvent(Event& e);
+
 		template <typename T>
 		T* GetModule() {
 			T type;
@@ -23,6 +25,10 @@ namespace Hazard {
 					return static_cast<T*>(module);
 				}
 			}
+			std::stringstream ss;
+			ss << "Module of type " << typeid(type).name();
+
+			HZR_CORE_WARN(ss.str());
 			return nullptr;
 		}
 		std::vector<Module*> GetAll() {	return modules; }

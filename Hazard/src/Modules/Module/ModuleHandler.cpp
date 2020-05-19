@@ -14,6 +14,13 @@ namespace Hazard {
 	}
 	void ModuleHandler::PushModule(Module* module)
 	{
+		for (Module* m : modules) {
+
+			if (m->GetName() == module->GetName()) {
+				HZR_CORE_WARN("Module already pushed "+ module->GetName());
+				return;
+			}
+		}
 		modules.emplace_back(module);
 		module->OnEnable();
 	}
@@ -27,19 +34,28 @@ namespace Hazard {
 	void ModuleHandler::Update()
 	{
 		for (Module* module : modules) {
-			module->Update();
+			if (module->IsActive())
+				module->Update();
 		}
 	}
 	void ModuleHandler::LateUpdate()
 	{
 		for (Module* module : modules) {
-			module->LateUpdate();
+			if (module->IsActive())
+				module->LateUpdate();
 		}
 	}
 	void ModuleHandler::OnRender()
 	{
 		for (Module* module : modules) {
-			module->OnRender();
+			if (module->IsActive())
+				module->OnRender();
+		}
+	}
+	void ModuleHandler::OnEvent(Event& e) {
+		for (Module* module : modules) {
+			if (!module->IsActive()) continue;
+			if (module->OnEvent(e)) return;
 		}
 	}
 }
