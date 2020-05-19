@@ -69,7 +69,7 @@ project "JSONParser"
 		systemversion "latest"
 		staticruntime "On"
 
-	filter { "system:windows", "configurations:Release" } 
+	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
 
 
@@ -95,7 +95,7 @@ project "GLAD"
 		buildoptions { "-std=c11", "-lgdi32" }
 		systemversion "latest"
 		staticruntime "On"
-	filter { "system:windows", "configurations:Release" } 
+	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
 
 
@@ -104,6 +104,7 @@ project "Hazard"
 	location "Hazard"
 	kind "StaticLib"
 	language "C++"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -168,7 +169,6 @@ project "Hazard"
 project "HazardEditor"
 	location "HazardEditor"
 	kind "ConsoleApp"
-
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -194,9 +194,10 @@ project "HazardEditor"
 		staticruntime "On"
 		systemversion "latest"
 
-		defines {
-			"HZR_PLATFORM_WINDOWS"
-		}
+	defines {
+		"HZR_PLATFORM_WINDOWS"
+	}
+
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
@@ -205,7 +206,6 @@ project "HazardEditor"
 		"Hazard",
 		"GLAD",
 		"IMGUI"
-
 	}
 
 	filter "configurations:Debug"
@@ -218,6 +218,7 @@ project "HazardEditor"
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		optimize "On"
-	filter "configurations:Game" 
+
+	filter "configurations:Game"
 		defines "HZR_GAME_ONLY"
 		optimize "On"

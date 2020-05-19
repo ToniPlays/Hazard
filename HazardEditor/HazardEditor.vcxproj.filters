@@ -4,79 +4,67 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Assets">
-      <UniqueIdentifier>{50BB976A-BC70-1060-4565-0A37B1190764}</UniqueIdentifier>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{6AF0870B-D6F9-877C-5F75-9E7CCB7D937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor">
-      <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
+    <Filter Include="Gui\Component">
+      <UniqueIdentifier>{4CD58801-B895-0438-81D0-4DB5ED4F4914}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Items">
-      <UniqueIdentifier>{FD9D313E-E900-C1E2-9286-F9987EC88C65}</UniqueIdentifier>
+    <Filter Include="Gui\Widgets">
+      <UniqueIdentifier>{D0E9580D-3C9F-D102-C593-CBD93148C806}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Widgets">
-      <UniqueIdentifier>{F21502AD-DEE3-F5B2-C777-66D9B3E4D117}</UniqueIdentifier>
+    <Filter Include="Gui\Widgets\Inspect">
+      <UniqueIdentifier>{95BEB629-0120-9437-8A8D-DAE9F6EDCAF6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Widgets\Inspect">
-      <UniqueIdentifier>{B7EC523E-A3E6-7B90-8C53-12A178ECE1FC}</UniqueIdentifier>
+    <Filter Include="Gui\Widgets\Profiling">
+      <UniqueIdentifier>{49CADF07-B536-9B02-7E2A-3360EA55BD6A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Widgets\Profiling">
-      <UniqueIdentifier>{EB0840B4-D72D-8F34-0079-74C4ECFC8D52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Editor\Widgets\Rendering">
-      <UniqueIdentifier>{BF75F74B-AB9A-46CC-D4E5-2B5CC06945EA}</UniqueIdentifier>
+    <Filter Include="Gui\Widgets\Rendering">
+      <UniqueIdentifier>{1D37979F-89A3-529A-5297-EAF7BEC27402}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Assets\CreateGameObject.h">
-      <Filter>Core\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Debug.h">
+    <ClInclude Include="src\Core\GuiLayer.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorGUI.h">
-      <Filter>Editor</Filter>
+    <ClInclude Include="src\Core\ImGuiLayer.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GuiLayer.h">
-      <Filter>Editor</Filter>
+    <ClInclude Include="src\Gui\Component\ColorPicker.h">
+      <Filter>Gui\Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Items\ColorPicker.h">
-      <Filter>Editor\Items</Filter>
+    <ClInclude Include="src\Gui\Component\EditorStyle.h">
+      <Filter>Gui\Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Items\EditorStyle.h">
-      <Filter>Editor\Items</Filter>
+    <ClInclude Include="src\Gui\Component\MainMenu.h">
+      <Filter>Gui\Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Items\MainMenu.h">
-      <Filter>Editor\Items</Filter>
+    <ClInclude Include="src\Gui\Component\UtilityBar.h">
+      <Filter>Gui\Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Items\UtilityBar.h">
-      <Filter>Editor\Items</Filter>
+    <ClInclude Include="src\Gui\Widgets\Inspect\AssetManager.h">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Inspect\AssetManager.h">
-      <Filter>Editor\Widgets\Inspect</Filter>
+    <ClInclude Include="src\Gui\Widgets\Inspect\Hierarchy.h">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Inspect\Hierarchy.h">
-      <Filter>Editor\Widgets\Inspect</Filter>
+    <ClInclude Include="src\Gui\Widgets\Inspect\Inspector.h">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Inspect\Inspector.h">
-      <Filter>Editor\Widgets\Inspect</Filter>
+    <ClInclude Include="src\Gui\Widgets\Profiling\Console.h">
+      <Filter>Gui\Widgets\Profiling</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Profiling\Console.h">
-      <Filter>Editor\Widgets\Profiling</Filter>
+    <ClInclude Include="src\Gui\Widgets\Profiling\Performance.h">
+      <Filter>Gui\Widgets\Profiling</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Profiling\Performance.h">
-      <Filter>Editor\Widgets\Profiling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\Widgets\Rendering\Viewport.h">
-      <Filter>Editor\Widgets\Rendering</Filter>
+    <ClInclude Include="src\Gui\Widgets\Rendering\Viewport.h">
+      <Filter>Gui\Widgets\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\HzrEditor.h" />
     <ClInclude Include="src\Platform\imgui_impl_glfw.h">
@@ -85,55 +73,41 @@
     <ClInclude Include="src\Platform\imgui_impl_opengl3.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Utility.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Gui\Widgets\Profiling\Profiler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Assets\CreateGameObject.cpp">
-      <Filter>Core\Assets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Debug.cpp">
+    <ClCompile Include="src\Core\ImGuiLayer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\HazardEditor.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="src\Gui\Component\ColoPicker.cpp">
+      <Filter>Gui\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\EditorGUI.cpp">
-      <Filter>Editor</Filter>
+    <ClCompile Include="src\Gui\Component\EditorStyle.cpp">
+      <Filter>Gui\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GuiLayer.cpp">
-      <Filter>Editor</Filter>
+    <ClCompile Include="src\Gui\Component\MainMenu.cpp">
+      <Filter>Gui\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Items\ColoPicker.cpp">
-      <Filter>Editor\Items</Filter>
+    <ClCompile Include="src\Gui\Component\UtilityBar.cpp">
+      <Filter>Gui\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Items\EditorStyle.cpp">
-      <Filter>Editor\Items</Filter>
+    <ClCompile Include="src\Gui\Widgets\Inspect\AssetManager.cpp">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Items\MainMenu.cpp">
-      <Filter>Editor\Items</Filter>
+    <ClCompile Include="src\Gui\Widgets\Inspect\Hierarchy.cpp">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Items\UtilityBar.cpp">
-      <Filter>Editor\Items</Filter>
+    <ClCompile Include="src\Gui\Widgets\Inspect\Inspector.cpp">
+      <Filter>Gui\Widgets\Inspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Inspect\AssetManager.cpp">
-      <Filter>Editor\Widgets\Inspect</Filter>
+    <ClCompile Include="src\Gui\Widgets\Profiling\Console.cpp">
+      <Filter>Gui\Widgets\Profiling</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Inspect\Hierarchy.cpp">
-      <Filter>Editor\Widgets\Inspect</Filter>
+    <ClCompile Include="src\Gui\Widgets\Profiling\Performance.cpp">
+      <Filter>Gui\Widgets\Profiling</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Inspect\Inspector.cpp">
-      <Filter>Editor\Widgets\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Profiling\Console.cpp">
-      <Filter>Editor\Widgets\Profiling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Profiling\Performance.cpp">
-      <Filter>Editor\Widgets\Profiling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\Widgets\Rendering\Viewport.cpp">
-      <Filter>Editor\Widgets\Rendering</Filter>
+    <ClCompile Include="src\Gui\Widgets\Rendering\Viewport.cpp">
+      <Filter>Gui\Widgets\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\imgui_impl_glfw.cpp">
       <Filter>Platform</Filter>
@@ -141,5 +115,9 @@
     <ClCompile Include="src\Platform\imgui_impl_opengl3.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\HazardEditor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gui\Widgets\Profiling\Profiler.cpp" />
   </ItemGroup>
 </Project>

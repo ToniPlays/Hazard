@@ -4,48 +4,36 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\EventSystem">
-      <UniqueIdentifier>{E4AE7F5F-D0A7-9EB1-F9D9-8336E5317EBD}</UniqueIdentifier>
+    <Filter Include="Events">
+      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Layers">
-      <UniqueIdentifier>{2D0BFE82-99C0-7678-22B5-704F8E696D7C}</UniqueIdentifier>
+    <Filter Include="Maths">
+      <UniqueIdentifier>{028BA70D-6E9F-CFBE-3721-731EA3F4CBEF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Logging">
-      <UniqueIdentifier>{C4E22202-B045-B2A6-59CB-EA5C450D7E29}</UniqueIdentifier>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{DE144435-4AF4-C2D0-530C-4EA7BF6A2932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Analytics">
+      <UniqueIdentifier>{35373284-A14D-301A-EAC4-BB3B561A01A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\GUI">
+      <UniqueIdentifier>{F252FAB0-5E08-73A6-E7FC-6C7D53B169AA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Module">
+      <UniqueIdentifier>{D3041C04-BFD2-0F0A-A866-803094D3EB6E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\System">
-      <UniqueIdentifier>{FEC62B27-6A52-99EB-7363-1CE0DF6DF5EB}</UniqueIdentifier>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
     <Filter Include="Rendering">
       <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Items">
-      <UniqueIdentifier>{94D79AA1-0063-0866-0974-8B5A757E6466}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\RenderAPI">
-      <UniqueIdentifier>{CC0139FB-3863-1609-C1D0-5CBB2D314DC8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Utils">
-      <UniqueIdentifier>{830E74A2-EF99-E166-F8AA-645B64B53D67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SceneGraph">
-      <UniqueIdentifier>{05BA97CB-F171-D918-5A79-B27446507409}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils\math">
-      <UniqueIdentifier>{AF66F6C5-9B1E-3813-0426-116FF0FCD203}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Application.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\ApplicationInfo.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Core.h">
@@ -54,72 +42,60 @@
     <ClInclude Include="src\Core\EntryPoint.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EventSystem\ApplicationEvent.h">
-      <Filter>Core\EventSystem</Filter>
+    <ClInclude Include="src\Core\HazardInterface.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EventSystem\Event.h">
-      <Filter>Core\EventSystem</Filter>
+    <ClInclude Include="src\Events\ApplicationEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EventSystem\KeyEvent.h">
-      <Filter>Core\EventSystem</Filter>
+    <ClInclude Include="src\Events\Event.h">
+      <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EventSystem\MouseEvent.h">
-      <Filter>Core\EventSystem</Filter>
+    <ClInclude Include="src\Events\KeyEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Layers\Layer.h">
-      <Filter>Core\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Layers\LayerStack.h">
-      <Filter>Core\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Logging\Log.h">
-      <Filter>Core\Logging</Filter>
+    <ClInclude Include="src\Events\MouseEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard.h" />
-    <ClInclude Include="src\Platform\System\WindowsWindow.h">
-      <Filter>Platform\System</Filter>
+    <ClInclude Include="src\Maths\Color.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Math.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Time.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\Analytics\Logger.h">
+      <Filter>Modules\Analytics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\GUI\Layer.h">
+      <Filter>Modules\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\GUI\LayerStack.h">
+      <Filter>Modules\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\Module\Module.h">
+      <Filter>Modules\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\Module\ModuleHandler.h">
+      <Filter>Modules\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GraphicsContext.h">
+      <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Window.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\Items\Rendering.h">
-      <Filter>Rendering\Items</Filter>
+    <ClInclude Include="src\Platform\Windows\OpenGLContext.h">
+      <Filter>Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\RenderAPI\GraphicsContext.h">
-      <Filter>Rendering\RenderAPI</Filter>
+    <ClInclude Include="src\Platform\Windows\WindosWindow.h">
+      <Filter>Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\RenderAPI\OpenGLContext.h">
-      <Filter>Rendering\RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Renderer2D.h">
+    <ClInclude Include="src\Rendering\Shader.h">
       <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Utils\ShaderUtils.h">
-      <Filter>Rendering\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SceneGraph\GameObject.h">
-      <Filter>SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SceneGraph\MonoBehaviour.h">
-      <Filter>SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SceneGraph\Scene.h">
-      <Filter>SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Color.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\JSON.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Time.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\math\Math.h">
-      <Filter>Utils\math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\math\Vector3.h">
-      <Filter>Utils\math</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
   </ItemGroup>
@@ -127,43 +103,33 @@
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Layers\Layer.cpp">
-      <Filter>Core\Layers</Filter>
+    <ClCompile Include="src\Maths\Color.cpp">
+      <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Layers\LayerStack.cpp">
-      <Filter>Core\Layers</Filter>
+    <ClCompile Include="src\Maths\Time.cpp">
+      <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Logging\Log.cpp">
-      <Filter>Core\Logging</Filter>
+    <ClCompile Include="src\Modules\Analytics\Logger.cpp">
+      <Filter>Modules\Analytics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\System\WindowsWindow.cpp">
-      <Filter>Platform\System</Filter>
+    <ClCompile Include="src\Modules\GUI\Layer.cpp">
+      <Filter>Modules\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\RenderAPI\OpenGLContext.cpp">
-      <Filter>Rendering\RenderAPI</Filter>
+    <ClCompile Include="src\Modules\GUI\LayerStack.cpp">
+      <Filter>Modules\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\Renderer2D.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="src\Modules\Module\Module.cpp">
+      <Filter>Modules\Module</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\Utils\ShaderUtils.cpp">
-      <Filter>Rendering\Utils</Filter>
+    <ClCompile Include="src\Modules\Module\ModuleHandler.cpp">
+      <Filter>Modules\Module</Filter>
     </ClCompile>
-    <ClCompile Include="src\SceneGraph\GameObject.cpp">
-      <Filter>SceneGraph</Filter>
+    <ClCompile Include="src\Platform\Windows\OpenGLContext.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Color.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\JSON.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Time.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\math\Vector3.cpp">
-      <Filter>Utils\math</Filter>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\SceneGraph\Scene.cpp" />
   </ItemGroup>
 </Project>

@@ -1,23 +1,19 @@
 #pragma once
-#include "Core/EntryPoint.h"
 #include "HazardEditor.h"
-#include "Editor/EditorGUI.h"
+#include "ImGuiLayer.h"
+#include "Hazard.h"
 
-HazardEditor::HazardEditor() : Hazard::Application("Editor")
-{
-
+HazardEditor::HazardEditor() : Hazard::Application("Engine Editor") {
+	
 }
 
-HazardEditor::~HazardEditor()
-{
-
+HazardEditor::~HazardEditor() {
+	
 }
+void HazardEditor::Start() {
 
-void HazardEditor::Start()
-{
-	Application::GetInfo().title = "Not at title";
 #ifndef HZR_GAME_ONLY
-	PushOverlay(new EditorGUI());
+	GetModuleHandler().PushModule(new ImGuiLayer());
 #endif
-	//Debug::Log(Hazard::JSON::ReadFile(""));
+
 }

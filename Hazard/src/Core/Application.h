@@ -1,63 +1,44 @@
 #pragma once
-#include <hzrpch.h>
+#include "Core.h"
+#include "HazardInterface.h"
 #include "Platform/Window.h"
-#include "Core/EventSystem/ApplicationEvent.h"
-#include "Core/Layers/LayerStack.h"
-#include "Rendering/Renderer2D.h"
-#include "Rendering/RenderAPI/GraphicsContext.h"
-#include "ApplicationInfo.h"
-
-
-enum class UpdateType {
-	PollEvents = 0,
-	WaitEvents = 1
-};
+#include "Modules/Module/ModuleHandler.h"
+#include "Events/ApplicationEvent.h"
 
 namespace Hazard {
 
-	class HAZARD_API Application {
+	class HAZARD_API Application : public HazardInterface {
 
 	public:
+		Application(std::string _name);
+		Application();
+		~Application();
 
-		Application(std::string name);
-		virtual ~Application();
-
+	public:
 		void Run();
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
-		void OnEvent(Event& e);
+		Window& GetWindow() { return *window; }
 
-		inline static Application& Get() {	return *instance; }
-		inline Window& GetWindow() { return *window; }
-		UpdateType getUpdateType() { return type; }
-		static void Close() { Application::Get().isRunning = false; }
-		static ApplicationInfo& GetInfo() { return *info; }
+		static std::string GetName() { return name; }
+		static void SetName(std::string _name) { Application::name = _name + " | Hazard"; }
+		static Application& GetCurrent() { return *instance; }
 		
-
-	//Client side
-	public:
-		virtual void Start() {}
+		ModuleHandler& GetModuleHandler() { return *&moduleHandler; };
+		void CloseApplication();
 	private:
+		void OnEvent(Event& e);
+		void start();
+		void update();
+		void render();
+		void cleanUp();
+		bool ExitApplication(WindowCloseEvent& e);
 
-		UpdateType type = UpdateType::PollEvents;
-		bool isRunning = true;
+	private:
+		double lastTime = 0;
+		ModuleHandler moduleHandler;
 		std::unique_ptr<Window> window;
-		LayerStack layerStack;
-		float lastTime = 0;
-
+		static std::string name;
 		static Application* instance;
-		static ApplicationInfo* info;
-
-	private:
-		bool OnWindowClose(WindowCloseEvent& e);
-		void APPStart();
-		void APPUpdate();
-		void APPRender();
-		void APPCleanUp();
-
-	//Temporary
-	private:
-		Renderer2D* renderer;
+		bool isRunning = false;
 	};
 
 	Hazard::Application* CreateApplication();

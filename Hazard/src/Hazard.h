@@ -1,19 +1,13 @@
 #pragma once
 
-//HAZARD STUFF
-
 #include "Core/Core.h"
-#include "Core/ApplicationInfo.h"
 #include "Core/Application.h"
-#include "Core/Layers/Layer.h"
-#include "Core/Layers/LayerStack.h"
-#include "Core/EventSystem/Event.h"
-#include "Utils/math/Math.h"
+#include "Modules/GUI/Layer.h"
+#include "Modules/Module/Module.h"
+#include "Maths/Color.h"
+#include "Maths/Time.h"
+#include "Modules/Analytics/Logger.h"
+#include "Maths/Math.h"
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
-
-//Scene
-#include "SceneGraph/GameObject.h"
-#include "SceneGraph/Scene.h"
+//Other stuff
+#include <unordered_map>

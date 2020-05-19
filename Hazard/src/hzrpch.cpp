@@ -1,1 +1,2 @@
-#include "hzrpch.h"
+#pragma once
+#include <hzrpch.h>
