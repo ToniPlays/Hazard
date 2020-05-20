@@ -159,7 +159,7 @@ void ImGuiLayer::OpenPicker(void(*func)(Hazard::Color color), Hazard::Color colo
 }
 void ImGuiLayer::OpenLayer(std::string name)
 {
-	//layers.at(name)->OpenLayer();
+	layers.at(name)->OpenLayer();
 }
 
 void ImGuiLayer::Begin()

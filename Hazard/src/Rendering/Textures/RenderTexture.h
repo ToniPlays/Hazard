@@ -16,12 +16,12 @@ namespace Hazard {
 
 		void Bind() override;
 		void Unbind() override;
-		GLuint GetTextureID() { return texture; }
+		uint32_t GetTextureID() { return texture; }
 		Color GetClearColor() { return ClearColor; }
 
 	protected:
 		void Create();
-		GLuint texture;
+		uint32_t texture;
 		Color ClearColor = Color();
 	};
 }

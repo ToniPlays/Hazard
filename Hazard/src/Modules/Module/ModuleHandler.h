@@ -16,22 +16,17 @@ namespace Hazard {
 		void LateUpdate();
 		void OnRender();
 		void OnEvent(Event& e);
+		std::vector<Module*> GetAll() {	return modules; }
 
 		template <typename T>
 		T* GetModule() {
-			T type;
 			for (Module* module : modules) {
-				if (typeid(*module) == typeid(type)) {
-					return static_cast<T*>(module);
+				if (dynamic_cast<T*>(module)) {
+					return (T*)module;
 				}
 			}
-			std::stringstream ss;
-			ss << "Module of type " << typeid(type).name();
-
-			HZR_CORE_WARN(ss.str());
 			return nullptr;
 		}
-		std::vector<Module*> GetAll() {	return modules; }
 
 	private:
 		std::vector<Module*> modules;

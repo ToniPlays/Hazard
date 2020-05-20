@@ -2,6 +2,7 @@
 
 #include "MainMenu.h"
 #include "imgui.h"
+#include "Gui/Widgets/All.h"
 
 
 void MainMenu::OnRender()
@@ -41,19 +42,19 @@ void MainMenu::OnRender()
 
 	if (ImGui::BeginMenu("Window")) {
 		if (ImGui::MenuItem("Inspector")) {
-			//EditorGUI::OpenLayer("Inspector");
+			ImGuiLayer::OpenLayer("Inspector");
 		}
 		if (ImGui::MenuItem("Performance")) {
-			//EditorGUI::OpenLayer("Performance");
+			ImGuiLayer::OpenLayer("Performance");
 		}
 		if (ImGui::MenuItem("Viewport")) {
-			//EditorGUI::OpenLayer("Viewport");
+			ImGuiLayer::OpenLayer("Viewport");
 		}
 		if (ImGui::MenuItem("Console")) {
-			//EditorGUI::OpenLayer("Console");
+			ImGuiLayer::OpenLayer("Console");
 		}
 		if (ImGui::MenuItem("Hierarchy")) {
-			//EditorGUI::OpenLayer("Hierarchy");
+			ImGuiLayer::OpenLayer("Hierarchy");
 		}
 		ImGui::EndMenu();
 	}

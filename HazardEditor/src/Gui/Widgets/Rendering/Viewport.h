@@ -11,5 +11,6 @@ public:
 	void CloseLayer() const override;
 private:
 	static bool isOpen;
+	static bool useRender;
 	Hazard::RenderTexture* texture;
 };

@@ -6,7 +6,7 @@ namespace Hazard {
 
 	class HAZARD_API Module {
 	public:
-		Module(std::string _name) : name(_name) {};
+		Module(std::string _name);
 		~Module();
 
 		virtual void OnEnable() {}

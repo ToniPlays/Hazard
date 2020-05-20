@@ -11,6 +11,7 @@ void Profiler::OnRender() const
 	ImGui::Begin("Profiler", &layerOpen);
 	
 	Hazard::Logger* logger = Hazard::Application::GetCurrent().GetModuleHandler().GetModule<Hazard::Logger>();
+
 	std::unordered_map<std::string, Hazard::ProfiledFunction> logs = logger->GetLogs();
 
 	for (std::pair<std::string, Hazard::ProfiledFunction> log : logs) {

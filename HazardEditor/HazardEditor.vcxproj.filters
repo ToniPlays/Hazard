@@ -76,6 +76,7 @@
     <ClInclude Include="src\Platform\imgui_impl_opengl3.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="src\Gui\Widgets\All.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\HazardEditor.cpp">

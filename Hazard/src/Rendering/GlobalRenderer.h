@@ -4,6 +4,7 @@
 #include "glad/glad.h"
 #include "Rendering/Textures/RenderTexture.h"
 #include "Rendering/Textures/DefaultRenderTexture.h"
+#include "Rendering/Shaders/Shader.h"
 
 namespace Hazard {
 	class HAZARD_API GlobalRenderer : public Module {
@@ -11,17 +12,17 @@ namespace Hazard {
 		GlobalRenderer();
 		~GlobalRenderer() {};
 		void SceneRender();
-		void DefaultTarget() { renderTarget = defaultTarget; }
+		void DefaultTarget() { renderTarget = nullptr; }
 
 		RenderTexture* GetRenderTexture() { return renderTarget != nullptr ? renderTarget : (RenderTexture*)defaultTarget; }
 		RenderTexture* renderTarget = nullptr;
-		DefaultRenderTexture* defaultTarget = new DefaultRenderTexture();
 	private:
-
-		GLuint vertexArray;
-		GLuint vertexBuffer;
-		GLuint indiceBuffer;
-		GLuint texture;
+		DefaultRenderTexture* defaultTarget;
+		Shader* shader;
+		uint32_t vertexArray;
+		uint32_t vertexBuffer;
+		uint32_t indiceBuffer;
+		uint32_t texture;
 
 	};
 }

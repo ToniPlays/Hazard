@@ -4,9 +4,12 @@
 #include "glad/glad.h"
 
 bool Viewport::isOpen = true;
+bool Viewport::useRender = true;
+
 Viewport::Viewport()
 {
-	texture = new Hazard::RenderTexture("Viewport Texture", 1280, 720, Hazard::Color::FromHex("#147300"));
+	texture = new Hazard::RenderTexture("Viewport Texture", 1280, 720, Hazard::Color::FromHex("#000000"));
+	
 }
 void Viewport::OnRender() const
 {
@@ -21,21 +24,24 @@ void Viewport::OnRender() const
 	ImGui::SetNextItemWidth(25);
 	
 	//Render scene
+
+	ImGui::Checkbox("Render to default texture", &useRender);
 	Hazard::GlobalRenderer* renderer = Hazard::Application::GetCurrent().GetModuleHandler().GetModule<Hazard::GlobalRenderer>();
-	renderer->renderTarget = texture;
+	!useRender ? renderer->renderTarget = texture : renderer->DefaultTarget();
+
 	renderer->SceneRender();
 
 	ImGui::SameLine();
 	std::stringstream ss;
 	ImVec2 windowSize = ImGui::GetWindowSize();
-
+	ImGui::NewLine();
 	ss << "Rendering to: " << texture->name << ", size " << texture->GetWidth() << "x" << texture->GetHeight();
 	ImGui::Text(ss.str().c_str());
 
-	ImVec2 cursorPos = ImVec2((windowSize.x - texture->GetWidth()) * 0.5f, (windowSize.y - texture->GetHeight()) * 0.5f + 15);
+	/*ImVec2 cursorPos = ImVec2((windowSize.x - texture->GetWidth()) * 0.5f, (windowSize.y - texture->GetHeight()) * 0.5f + 15);
 	ImGui::SetCursorPos(cursorPos);
 
-	ImGui::Image((void*)(intptr_t)texture->GetTextureID(), ImVec2(1280, 720), ImVec2(1, 0), ImVec2(0, 1));
+	ImGui::Image((void*)(intptr_t)texture->GetTextureID(), ImVec2(1280, 720), ImVec2(1, 0), ImVec2(0, 1));*/
 	ImGui::End();
 }
 void Viewport::OpenLayer() const

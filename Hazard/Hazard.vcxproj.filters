@@ -106,15 +106,15 @@
     <ClInclude Include="src\Rendering\GlobalRenderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\Shader.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Rendering\Textures\Texture.h">
       <Filter>Rendering\Textures</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
     <ClInclude Include="src\Rendering\Textures\RenderTexture.h" />
     <ClInclude Include="src\Rendering\Textures\DefaultRenderTexture.h" />
+    <ClInclude Include="src\Rendering\Shaders\Shader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -157,5 +157,6 @@
     <ClCompile Include="src\Rendering\Textures\Texture.cpp" />
     <ClCompile Include="src\Rendering\Textures\RenderTexture.cpp" />
     <ClCompile Include="src\Rendering\Textures\DefaultRenderTexture.cpp" />
+    <ClCompile Include="src\Rendering\Shaders\Shader.cpp" />
   </ItemGroup>
 </Project>

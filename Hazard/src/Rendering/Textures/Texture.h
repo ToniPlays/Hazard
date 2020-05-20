@@ -11,14 +11,14 @@ namespace Hazard {
 		Texture(std::string _name) : name(_name) {}
 		unsigned int GetWidth() { return width; }
 		unsigned int GetHeight() { return height; }
-		GLuint GetID() { return ID; }
+		uint32_t GetID() { return ID; }
 
 		virtual void Bind() = 0;;
 		virtual void Unbind() = 0;
 
 	protected:
-		unsigned int width;
-		unsigned int height;
-		GLuint ID;
+		unsigned int width = 0;
+		unsigned int height = 0;
+		uint32_t ID = -1;
 	};
 }
