@@ -11,6 +11,8 @@ public:
 	void Start();
 	void OnEvent(Hazard::Event& e);
 	bool TestEvent(Hazard::KeyPressedEvent& e);
+private:
+	std::unordered_map<std::string, Hazard::RenderTexture*> renderTextures;
 };
 
 Hazard::Application* Hazard::CreateApplication() {

@@ -2,7 +2,7 @@
 #include "Core/Application.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
-
+	
 	//Do be defined in client
 	extern Hazard::Application* Hazard::CreateApplication();
 

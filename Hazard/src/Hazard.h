@@ -7,6 +7,7 @@
 #include "Maths/Color.h"
 #include "Maths/Time.h"
 #include "Modules/Analytics/Logger.h"
+#include "Rendering/GlobalRenderer.h"
 #include "Maths/Math.h"
 
 #include "Events/Event.h"

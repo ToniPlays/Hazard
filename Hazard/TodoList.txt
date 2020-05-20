@@ -1,9 +1,9 @@
 Core
-	- Main loop
-	- Application
-	- Build/Editor runnable
+	- Entry point DONE
+	- Application DONE
+	- Build/Editor runnable SORTF OF
 	- Core events
-	- Core logging
+	- Core logging DONE
 	- Engine Configuration
 
 Modules (Api's)
@@ -12,7 +12,7 @@ Modules (Api's)
 	- Physics
 	- Rendering
 	- Interactable
-	- Events
+	- Events    STARTED
 	- Core logging
 
 Input
@@ -20,7 +20,7 @@ Input
 	- Input mappings
 	- Input actions
 Maths
-	- Color
+	- Color   STARTED
 	- Transform
 	- Vector 2/3 (Template)
 	- Matrix4 (Template)

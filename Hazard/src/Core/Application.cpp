@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Modules/GUI/LayerStack.h"
 #include "Modules/Input/Input.h"
+#include "Rendering/GlobalRenderer.h"
 
 namespace Hazard {
 
@@ -61,11 +62,12 @@ namespace Hazard {
 		window->SetWindowTitle(Application::GetName());
 
 		moduleHandler = ModuleHandler();
+		moduleHandler.PushModule(new Logger());
 		moduleHandler.PushModule(new LayerStack());
 		moduleHandler.PushModule(new Input());
+		moduleHandler.PushModule(new GlobalRenderer());
 
 #ifdef HZR_DEBUG
-		moduleHandler.PushModule(new Logger());
 #endif
 
 		window->SetEventCallback(BIND_EVENT(Application::onEvent));

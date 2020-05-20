@@ -108,7 +108,7 @@ namespace Hazard {
 		glfwSetWindowUserPointer(window, &windowData);
 		context = GraphicsContext::CreateContext(this, &props);
 
-		SetClearColor(Color::FromHex("#1473c6"));
+		SetClearColor(Color::FromHex("#222222"));
 		windowData.Renderer = context->GetVersion();
 
 		SetCallbacks();

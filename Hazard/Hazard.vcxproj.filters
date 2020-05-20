@@ -19,6 +19,9 @@
     <Filter Include="Modules\GUI">
       <UniqueIdentifier>{F252FAB0-5E08-73A6-E7FC-6C7D53B169AA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules\Input">
+      <UniqueIdentifier>{5D730DD9-C933-890F-926E-D28CFEEDCDEB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Modules\Module">
       <UniqueIdentifier>{D3041C04-BFD2-0F0A-A866-803094D3EB6E}</UniqueIdentifier>
     </Filter>
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="Rendering">
       <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Textures">
+      <UniqueIdentifier>{16F08EBA-02D4-4F10-6B34-4A6357373A92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +82,9 @@
     <ClInclude Include="src\Modules\GUI\LayerStack.h">
       <Filter>Modules\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Modules\Input\Input.h">
+      <Filter>Modules\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Modules\Module\Module.h">
       <Filter>Modules\Module</Filter>
     </ClInclude>
@@ -94,11 +103,18 @@
     <ClInclude Include="src\Platform\Windows\WindosWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\GlobalRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Rendering\Shader.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\Textures\Texture.h">
+      <Filter>Rendering\Textures</Filter>
+    </ClInclude>
     <ClInclude Include="src\hzrpch.h" />
-    <ClInclude Include="src\Modules\Input\Input.h" />
+    <ClInclude Include="src\Rendering\Textures\RenderTexture.h" />
+    <ClInclude Include="src\Rendering\Textures\DefaultRenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -119,6 +135,9 @@
     <ClCompile Include="src\Modules\GUI\LayerStack.cpp">
       <Filter>Modules\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Modules\Input\Input.cpp">
+      <Filter>Modules\Input</Filter>
+    </ClCompile>
     <ClCompile Include="src\Modules\Module\Module.cpp">
       <Filter>Modules\Module</Filter>
     </ClCompile>
@@ -131,7 +150,12 @@
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\GlobalRenderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\Modules\Input\Input.cpp" />
+    <ClCompile Include="src\Rendering\Textures\Texture.cpp" />
+    <ClCompile Include="src\Rendering\Textures\RenderTexture.cpp" />
+    <ClCompile Include="src\Rendering\Textures\DefaultRenderTexture.cpp" />
   </ItemGroup>
 </Project>
