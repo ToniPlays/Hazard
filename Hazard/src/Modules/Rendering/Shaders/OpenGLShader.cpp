@@ -1,10 +1,14 @@
 #pragma once
 #include <hzrpch.h>
-#include "Shader.h"
+#include "OpenGlShader.h"
 
 namespace Hazard {
 
-	Shader::Shader(const std::string& vertex, const std::string& fragment)
+	Shader* Shader::Create(const std::string& vertex, const std::string& fragment) {
+		return new OpenGLShader(vertex, fragment);
+	}
+
+	OpenGLShader::OpenGLShader(const std::string& vertex, const std::string& fragment)
 	{
 		// Create an empty vertex shader handle
 		GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -88,15 +92,15 @@ namespace Hazard {
 		glDetachShader(program, fragmentShader);
 		HZR_CORE_WARN("Shade compiled");
 	}
-	Shader::~Shader()
+	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(program);
 	}
-	void Shader::Bind() const
+	void OpenGLShader::Bind() const
 	{
 		glUseProgram(program);
 	}
-	void Shader::Unbind() const
+	void OpenGLShader::Unbind() const
 	{
 		glUseProgram(0);
 	}

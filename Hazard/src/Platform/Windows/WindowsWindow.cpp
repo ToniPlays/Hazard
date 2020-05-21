@@ -13,6 +13,51 @@ namespace Hazard {
 		Init(props);
 	}
 
+	void WindowsWindow::Init(WindowProps& props) {
+
+		windowData.Title = props.Title;
+		windowData.Width = props.Width;
+		windowData.Height = props.Height;
+		windowData.Platform = "Windows";
+
+		if (!glfwInit()) {
+			return;
+		}
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title.c_str(), NULL, NULL);
+
+
+		if (!window) {
+			return;
+		}
+
+		glfwSetWindowUserPointer(window, &windowData);
+		context = GraphicsContext::CreateContext(this, &props);
+
+		windowData.Renderer = context->GetVersion();
+
+		SetCallbacks();
+		SetClearColor(Color::FromHex("#222222"));
+	}
+	void WindowsWindow::OnUpdate() {
+		glfwPollEvents();
+		context->ClearFrame();
+	}
+
+	void WindowsWindow::SetClearColor(Color color) const
+	{
+		context->SetClearColor(color);
+	}
+	Color WindowsWindow::GetClearColor() const
+	{
+		return context->GetClearColor();
+	}
+	void WindowsWindow::SetWindowTitle(std::string title)
+	{
+		windowData.Title = title;
+		glfwSetWindowTitle(window, title.c_str());
+	}
 	void WindowsWindow::SetCallbacks()
 	{
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int w, int h) {
@@ -84,51 +129,5 @@ namespace Hazard {
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 			});
-	}
-
-	void WindowsWindow::Init(WindowProps& props) {
-
-		windowData.Title = props.Title;
-		windowData.Width = props.Width;
-		windowData.Height = props.Height;
-		windowData.Platform = "Windows";
-
-		if (!glfwInit()) {
-			return;
-		}
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title.c_str(), NULL, NULL);
-
-
-		if (!window) {
-			return;
-		}
-
-		glfwSetWindowUserPointer(window, &windowData);
-		context = GraphicsContext::CreateContext(this, &props);
-
-		windowData.Renderer = context->GetVersion();
-
-		SetCallbacks();
-		SetClearColor(Color::FromHex("#1473c5"));
-	}
-	void WindowsWindow::OnUpdate() {
-		glfwPollEvents();
-		context->ClearFrame();
-	}
-
-	void WindowsWindow::SetClearColor(Color color) const
-	{
-		context->SetClearColor(color);
-	}
-	Color WindowsWindow::GetClearColor() const
-	{
-		return context->GetClearColor();
-	}
-	void WindowsWindow::SetWindowTitle(std::string title)
-	{
-		windowData.Title = title;
-		glfwSetWindowTitle(window, title.c_str());
 	}
 }

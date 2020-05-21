@@ -2,6 +2,7 @@
 #include "DefaultRenderTexture.h"
 
 namespace Hazard {
+
 	DefaultRenderTexture::DefaultRenderTexture() : RenderTexture("Default render texture")
 	{
 		ID = 0;

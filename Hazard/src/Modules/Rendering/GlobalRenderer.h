@@ -2,9 +2,9 @@
 #include "Core/Core.h"
 #include "Modules/Module/Module.h"
 #include "glad/glad.h"
-#include "Rendering/Textures/RenderTexture.h"
-#include "Rendering/Textures/DefaultRenderTexture.h"
-#include "Rendering/Shaders/Shader.h"
+#include "Shaders/OpenGLShader.h"
+#include "Textures/RenderTexture.h"
+#include "Textures/DefaultRenderTexture.h"
 
 namespace Hazard {
 	class HAZARD_API GlobalRenderer : public Module {

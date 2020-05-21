@@ -4,7 +4,7 @@
 #include "Application.h"
 #include "Modules/GUI/LayerStack.h"
 #include "Modules/Input/Input.h"
-#include "Rendering/GlobalRenderer.h"
+#include "Modules/Rendering/GlobalRenderer.h"
 
 namespace Hazard {
 

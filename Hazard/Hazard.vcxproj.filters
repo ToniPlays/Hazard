@@ -103,18 +103,20 @@
     <ClInclude Include="src\Platform\Windows\WindosWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\GlobalRenderer.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Textures\Texture.h">
+    <ClInclude Include="src\hzrpch.h" />
+    <ClInclude Include="src\Modules\Rendering\Textures\DefaultRenderTexture.h" />
+    <ClInclude Include="src\Modules\Rendering\Textures\RenderTexture.h" />
+    <ClInclude Include="src\Modules\Rendering\Textures\Texture.h">
       <Filter>Rendering\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="src\hzrpch.h" />
-    <ClInclude Include="src\Rendering\Textures\RenderTexture.h" />
-    <ClInclude Include="src\Rendering\Textures\DefaultRenderTexture.h" />
-    <ClInclude Include="src\Rendering\Shaders\Shader.h">
+    <ClInclude Include="src\Modules\Rendering\GlobalRenderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Modules\Rendering\Shaders\OpenGLShader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Modules\Rendering\Shaders\Shader.h" />
+    <ClInclude Include="src\Maths\Queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -150,13 +152,13 @@
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\GlobalRenderer.cpp">
+    <ClCompile Include="src\hzrpch.cpp" />
+    <ClCompile Include="src\Modules\Rendering\Textures\DefaultRenderTexture.cpp" />
+    <ClCompile Include="src\Modules\Rendering\Textures\RenderTexture.cpp" />
+    <ClCompile Include="src\Modules\Rendering\Textures\Texture.cpp" />
+    <ClCompile Include="src\Modules\Rendering\GlobalRenderer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\Rendering\Textures\Texture.cpp" />
-    <ClCompile Include="src\Rendering\Textures\RenderTexture.cpp" />
-    <ClCompile Include="src\Rendering\Textures\DefaultRenderTexture.cpp" />
-    <ClCompile Include="src\Rendering\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Modules\Rendering\Shaders\OpenGLShader.cpp" />
   </ItemGroup>
 </Project>

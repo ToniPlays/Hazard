@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <stdio.h>
+#include <deque>
 
 #include <string>
 #include <fstream>
@@ -28,7 +29,6 @@
 
 #include "Modules/Analytics/Logger.h"
 #include "Platform/Window.h"
-
 
 
 #ifdef HZR_DEBUG

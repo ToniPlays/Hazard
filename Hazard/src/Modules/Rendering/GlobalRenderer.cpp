@@ -14,10 +14,10 @@ namespace Hazard {
 		};
 
 		float colors[12] = {
-			 6 / 255.0f,  38 / 255.0f, 111 / 255.0f,
+			 200 / 255.0f,  138 / 255.0f, 0 / 255.0f,
 			20 / 255.0f, 115 / 255.0f, 198 / 255.0f,
 			20 / 255.0f, 115 / 255.0f, 198 / 255.0f,
-			 6 / 255.0f,  38 / 255.0f, 111 / 255.0f
+			 200 / 255.0f,  138 / 255.0f, 0 / 255.0f
 		};
 		int indices[2 * 3] = {
 			0, 1, 2,
@@ -50,7 +50,7 @@ namespace Hazard {
 
 		defaultTarget = new DefaultRenderTexture();
 
-		shader = new Shader(
+		shader = Shader::Create(
 			R"(
 			#version 330 core
 
@@ -76,6 +76,7 @@ namespace Hazard {
 
 	void GlobalRenderer::SceneRender()
 	{
+		PROFILE_FN();
 		//Clear and set FBO
 		Window& window = Application::GetCurrent().GetWindow();
 		//FBO
@@ -95,5 +96,6 @@ namespace Hazard {
 
 		shader->Unbind();
 		defaultTarget->Bind();
+		PROFILE_FN();
 	}
 }

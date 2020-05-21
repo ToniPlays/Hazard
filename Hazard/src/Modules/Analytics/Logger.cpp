@@ -11,6 +11,7 @@ namespace Hazard {
 	std::shared_ptr<spdlog::logger> Logger::s_CoreLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
 	std::unordered_map<std::string, ProfiledFunction> Logger::logs;
+	bool Logger::isRealtime = false;
 
 	Logger::Logger() : Module("Logger")
 	{
@@ -102,7 +103,12 @@ namespace Hazard {
 				logs[name].start = time;
 			}
 			else {
-				logs[name].time = time - logs[name].start;
+				double time = Application::GetCurrent().GetWindow().GetContext()->GetMSTime() - logs[name].start;
+
+				if (isRealtime) {
+					logs[name].data->PushValue(time);
+				}
+				logs[name].curVal = time;
 				logs[name].start = -1;
 			}
 		}

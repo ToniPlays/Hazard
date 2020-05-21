@@ -13,12 +13,18 @@ void Profiler::OnRender() const
 	Hazard::Logger* logger = Hazard::Application::GetCurrent().GetModuleHandler().GetModule<Hazard::Logger>();
 
 	std::unordered_map<std::string, Hazard::ProfiledFunction> logs = logger->GetLogs();
+	static bool realtime = logger->IsRealtime();
 
-	for (std::pair<std::string, Hazard::ProfiledFunction> log : logs) {
-		std::stringstream ss;
-		ss << log.first << ": " << log.second.time << " ms";
-		ImGui::Text(ss.str().c_str());
+	if (ImGui::Checkbox("Realtime", &realtime)) {
+		!logger->IsRealtime() ? logger->EnableRealtime() : logger->DisableRealtime();
 	}
+	if (logger->IsRealtime()) {
+		for (std::pair<std::string, Hazard::ProfiledFunction> log : logs) {
+			Hazard::Queue<double>* data = log.second.data;
+			ImGui::PlotLines(log.first.c_str(), data->GetData(), data->GetSize(), 0, "", 0, 10);
+		}
+	}
+	
 	ImGui::End();
 }
 
