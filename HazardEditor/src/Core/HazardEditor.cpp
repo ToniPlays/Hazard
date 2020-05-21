@@ -17,6 +17,16 @@ void HazardEditor::Start() {
 #endif
 }
 
+void HazardEditor::Update()
+{
+	ImGuiLayer* layer = GetModuleHandler().GetModule<ImGuiLayer>();
+	if (layer != nullptr) {
+		if (!layer->IsActive()) {
+			GetModuleHandler().GetModule<Hazard::GlobalRenderer>()->SceneRender();
+		}
+	}
+}
+
 void HazardEditor::OnEvent(Hazard::Event& e)
 {
 	Hazard::EventDispatcher dispatcher(e);

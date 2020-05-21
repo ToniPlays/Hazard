@@ -10,10 +10,10 @@ namespace Hazard {
 		OpenGLContext(Window* window, WindowProps* props);
 		void Init() const;
 		void ClearFrame() const;
-		void SetClearColor(Color color) const override;
+		void SetClearColor(Color color) override;
 		void SetViewport(int x, int y, int w, int h) const override;
 
-		Color GetClearColor() const override;
+		Color GetClearColor() override;
 		double GetMSTime() const { return glfwGetTime() * 1000.0f; }
 
 		std::string GetVersion() const override;

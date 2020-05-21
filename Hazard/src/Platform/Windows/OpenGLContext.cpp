@@ -28,17 +28,19 @@ namespace Hazard {
 		glfwSwapBuffers(window);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
-	void OpenGLContext::SetClearColor(Color color) const
+	void OpenGLContext::SetClearColor(Color color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
+		clearColor = color;
 	}
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const
 	{
 		glViewport(x, y, w, h);
 	};
-	Color OpenGLContext::GetClearColor() const
+	Color OpenGLContext::GetClearColor()
 	{
-		return Color();
+		return clearColor;
+		
 	}
 	std::string OpenGLContext::GetVersion() const
 	{

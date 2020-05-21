@@ -86,7 +86,7 @@ namespace Hazard {
 
 		glDetachShader(program, vertexShader);
 		glDetachShader(program, fragmentShader);
-		HZR_CORE_INFO("Success");
+		HZR_CORE_WARN("Shade compiled");
 	}
 	Shader::~Shader()
 	{
@@ -94,8 +94,6 @@ namespace Hazard {
 	}
 	void Shader::Bind() const
 	{
-		if (program == -1) 
-			return;
 		glUseProgram(program);
 	}
 	void Shader::Unbind() const

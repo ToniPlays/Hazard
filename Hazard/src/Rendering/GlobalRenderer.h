@@ -21,6 +21,7 @@ namespace Hazard {
 		Shader* shader;
 		uint32_t vertexArray;
 		uint32_t vertexBuffer;
+		uint32_t colorBuffer;
 		uint32_t indiceBuffer;
 		uint32_t texture;
 

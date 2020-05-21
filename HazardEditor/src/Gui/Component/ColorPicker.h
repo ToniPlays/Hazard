@@ -6,6 +6,7 @@ class ColorPicker {
 public:
 	ColorPicker() {}
 	void OnRender();
+	
 	Hazard::Color color;
 private:
 	friend class ImGuiLayer;

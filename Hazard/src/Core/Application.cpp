@@ -62,13 +62,12 @@ namespace Hazard {
 		window->SetWindowTitle(Application::GetName());
 
 		moduleHandler = ModuleHandler();
+#ifdef HZR_DEBUG
 		moduleHandler.PushModule(new Logger());
+#endif
 		moduleHandler.PushModule(new LayerStack());
 		moduleHandler.PushModule(new Input());
 		moduleHandler.PushModule(new GlobalRenderer());
-
-#ifdef HZR_DEBUG
-#endif
 
 		window->SetEventCallback(BIND_EVENT(Application::onEvent));
 	}
@@ -90,6 +89,10 @@ namespace Hazard {
 
 		window->OnUpdate();
 		moduleHandler.OnRender();
+#ifdef HZR_GAME_ONLY
+		moduleHandler.GetModule<GlobalRenderer>()->SceneRender();
+#endif // HZR_GAME_ONLY
+
 
 		PROFILE_FN();
 	}

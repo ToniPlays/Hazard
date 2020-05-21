@@ -18,6 +18,15 @@ namespace Hazard
 		this->b = (float)b / 255.0f;
 		this->a = (float)a / 255.0f;
 	}
+	std::string Color::ToString()
+	{
+		std::stringstream ss;
+		ss << "R: " << this->r;
+		ss << " G: " << this->g;
+		ss << " B: " << this->b;
+		ss << " A: " << this->a;
+		return ss.str();
+	}
 	Color Color::FromHex(std::string hex) {
 
 		int r, g, b, a = 255;

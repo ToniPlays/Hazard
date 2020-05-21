@@ -10,6 +10,8 @@ namespace Hazard {
 	public:
 		Color();
 		Color(int r, int g, int b, int a);
+
+		std::string ToString();
 		static Color FromHex(std::string hex);
 	};
 }

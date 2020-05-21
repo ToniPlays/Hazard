@@ -16,6 +16,7 @@ namespace Hazard {
 
 		void Bind() override;
 		void Unbind() override;
+		virtual void Clear();
 		uint32_t GetTextureID() { return texture; }
 		Color GetClearColor() { return ClearColor; }
 

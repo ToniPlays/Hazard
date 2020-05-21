@@ -111,6 +111,7 @@ namespace Hazard {
 		windowData.Renderer = context->GetVersion();
 
 		SetCallbacks();
+		SetClearColor(Color::FromHex("#1473c5"));
 	}
 	void WindowsWindow::OnUpdate() {
 		glfwPollEvents();

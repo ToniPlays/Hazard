@@ -9,6 +9,7 @@ public:
 	~HazardEditor();
 
 	void Start();
+	void Update();
 	void OnEvent(Hazard::Event& e);
 	bool TestEvent(Hazard::KeyPressedEvent& e);
 private:

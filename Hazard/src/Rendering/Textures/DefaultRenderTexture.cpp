@@ -5,6 +5,6 @@ namespace Hazard {
 	DefaultRenderTexture::DefaultRenderTexture() : RenderTexture("Default render texture")
 	{
 		ID = 0;
-		ClearColor = Color::FromHex("#222222");
+		ClearColor = Application::GetCurrent().GetWindow().GetClearColor();
 	}
 }

@@ -6,5 +6,6 @@ namespace Hazard {
 	class HAZARD_API DefaultRenderTexture : public RenderTexture {
 	public:
 		DefaultRenderTexture();
+		void Clear() override {};
 	};
 }

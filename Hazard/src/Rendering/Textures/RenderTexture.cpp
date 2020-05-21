@@ -47,6 +47,12 @@ namespace Hazard {
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+	void RenderTexture::Clear()
+	{
+		Color c = GetClearColor();
+		glClearColor(c.r, c.g, c.b, c.a);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 	void RenderTexture::Create()
 	{
 		glGenFramebuffers(1, &ID);

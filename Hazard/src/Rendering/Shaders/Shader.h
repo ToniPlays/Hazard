@@ -11,6 +11,6 @@ namespace Hazard {
 		void Unbind() const;
 		GLint GetProgram() { return program; }
 	private:
-		GLint program = -1;
+		GLint program = 0;
 	};
 }
