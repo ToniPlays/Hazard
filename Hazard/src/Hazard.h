@@ -1,21 +1,16 @@
 #pragma once
 
-#include "Core/Core.h"
-#include "Core/Application.h"
-#include "Maths/Color.h"
-#include "Maths/Time.h"
-#include "Maths/Queue.h"
-#include "Events/MouseEvent.h"
+#include "Hazard/Core/Application.h"
+#include "Hazard/Utils/Maths/Time.h"
+#include "Hazard/Modules/Module.h"
 
-#include "Modules/GUI/Layer.h"
-#include "Modules/Module/Module.h"
-#include "Modules/Analytics/Logger.h"
-#include "Modules/Rendering/GlobalRenderer.h"
-#include "Maths/Math.h"
+#include "Hazard/Utils/Maths/Math.h"
+#include "Hazard/Utils/Maths/Vector/Vector2.h"
+#include "Hazard/Utils/Maths/Vector/Vector3.h"
+#include "Hazard/Utils/Maths/Vector/Matrix4.h"
 
-#include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/KeyEvent.h"
+#include "Hazard/ECS/Camera.h"
 
-//Other stuff
-#include <unordered_map>
+//Rendering
+#include "Hazard/Modules/Rendering/Renderer.h"
+#include "Hazard/Modules/Logging/Logger.h"

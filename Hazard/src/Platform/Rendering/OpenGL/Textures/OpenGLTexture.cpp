@@ -1,0 +1,47 @@
+#pragma once
+
+#include <hzrpch.h>
+#include "OpenGLTexture.h"
+#include <glad/glad.h>
+#include "stb_image.h"
+
+namespace Hazard {
+	
+	OpenGLTexture2D::OpenGLTexture2D(std::string file)
+	{
+		this->path = file;
+		int w, h, channels;
+		stbi_uc* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
+		if (!data) {
+			HZR_CORE_WARN("Texture file not found");
+			return;
+		}
+		width = w;
+		height = h;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
+		glTextureStorage2D(textureID, 1, GL_RGBA8, width, height);
+
+		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureSubImage2D(textureID, 0, 0, 0, width, height, channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+		stbi_image_free(data);
+	}
+
+	OpenGLTexture2D::~OpenGLTexture2D()
+	{
+		glDeleteTextures(1, &textureID);
+	}
+
+	void OpenGLTexture2D::Bind(uint32_t slot) const
+	{
+		glBindTextureUnit(slot, textureID);
+	}
+
+	void OpenGLTexture2D::Unbind(uint32_t slot) const
+	{
+		glBindTextureUnit(slot, 0);
+	}
+
+}

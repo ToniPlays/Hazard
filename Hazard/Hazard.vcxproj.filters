@@ -1,164 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
+    <Filter Include="src\Hazard">
+      <UniqueIdentifier>{16265114-02DE-9261-6BE5-6BBD57BC2D52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Maths">
-      <UniqueIdentifier>{028BA70D-6E9F-CFBE-3721-731EA3F4CBEF}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Core">
+      <UniqueIdentifier>{2E88C349-9A13-310E-A324-B4020F2F8D0E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules">
-      <UniqueIdentifier>{DE144435-4AF4-C2D0-530C-4EA7BF6A2932}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Core\Events">
+      <UniqueIdentifier>{5274C488-3E6E-EDDA-27DB-83EB13745347}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Analytics">
-      <UniqueIdentifier>{35373284-A14D-301A-EAC4-BB3B561A01A2}</UniqueIdentifier>
+    <Filter Include="src\Hazard\ECS">
+      <UniqueIdentifier>{60351D86-4C03-118C-3597-81B22104EDF0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\GUI">
-      <UniqueIdentifier>{F252FAB0-5E08-73A6-E7FC-6C7D53B169AA}</UniqueIdentifier>
+    <Filter Include="src\Hazard\ECS\Components">
+      <UniqueIdentifier>{75FEC174-E1C0-F5FE-2A71-848B9672CEDC}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Input">
-      <UniqueIdentifier>{5D730DD9-C933-890F-926E-D28CFEEDCDEB}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules">
+      <UniqueIdentifier>{DE6863E2-CA4C-2438-33AD-1E8B1FB00EBA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Module">
-      <UniqueIdentifier>{D3041C04-BFD2-0F0A-A866-803094D3EB6E}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules\Logging">
+      <UniqueIdentifier>{7447046C-6057-B03C-C910-155BB53F9FD5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules\Rendering">
+      <UniqueIdentifier>{AB5F1E12-971A-0EBE-40D2-86082C6C584E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows">
-      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules\Rendering\Buffers">
+      <UniqueIdentifier>{279A219E-1381-E395-BCD1-49B3A8975CFC}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules\Rendering\Shaders">
+      <UniqueIdentifier>{84FF109C-70E6-D293-1937-39B105FD4BFA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Textures">
-      <UniqueIdentifier>{16F08EBA-02D4-4F10-6B34-4A6357373A92}</UniqueIdentifier>
+    <Filter Include="src\Hazard\Modules\Rendering\Textures">
+      <UniqueIdentifier>{DE01555A-4AC6-534A-132C-84147FAFEF7F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Utils">
+      <UniqueIdentifier>{F6DF7C83-E2D8-9BD5-0B0B-815AF7627BE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Utils\Maths">
+      <UniqueIdentifier>{E2802997-CE7A-52E9-B7E7-E8F9A380B855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Utils\Maths\Vector">
+      <UniqueIdentifier>{C42C803D-3045-6767-F9F1-F60065C9FB00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering">
+      <UniqueIdentifier>{AE706E2F-9A6A-9781-83D7-2D926F70FDED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\OpenGL">
+      <UniqueIdentifier>{22CAEB0B-8EE2-D235-578F-62CFC36667CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\OpenGL\Data">
+      <UniqueIdentifier>{CBE4A2BB-B720-A625-2033-BE1C0C8E4E40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\OpenGL\Textures">
+      <UniqueIdentifier>{3522C3EB-2174-9ADB-0A93-D7EBF683B3C4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\System">
+      <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\System\Windows">
+      <UniqueIdentifier>{4FDDE4E9-BBEA-12D0-44D1-0EBBB0DDDE86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Application.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Hazard.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Core.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Hazard\Core\Application.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EntryPoint.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Hazard\Core\ApplicationInfo.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\HazardInterface.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Hazard\Core\Core.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\ApplicationEvent.h">
-      <Filter>Events</Filter>
+    <ClInclude Include="src\Hazard\Core\EntryPoint.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\Event.h">
-      <Filter>Events</Filter>
+    <ClInclude Include="src\Hazard\Core\Events\ApplicationEvent.h">
+      <Filter>src\Hazard\Core\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\KeyEvent.h">
-      <Filter>Events</Filter>
+    <ClInclude Include="src\Hazard\Core\Events\Event.h">
+      <Filter>src\Hazard\Core\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\MouseEvent.h">
-      <Filter>Events</Filter>
+    <ClInclude Include="src\Hazard\Core\Events\KeyEvent.h">
+      <Filter>src\Hazard\Core\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard.h" />
-    <ClInclude Include="src\Maths\Color.h">
-      <Filter>Maths</Filter>
+    <ClInclude Include="src\Hazard\Core\Events\MouseEvent.h">
+      <Filter>src\Hazard\Core\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths\Math.h">
-      <Filter>Maths</Filter>
+    <ClInclude Include="src\Hazard\Core\HazardLoop.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths\Time.h">
-      <Filter>Maths</Filter>
+    <ClInclude Include="src\Hazard\Core\IApplication.h">
+      <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Analytics\Logger.h">
-      <Filter>Modules\Analytics</Filter>
+    <ClInclude Include="src\Hazard\ECS\Camera.h">
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\GUI\Layer.h">
-      <Filter>Modules\GUI</Filter>
+    <ClInclude Include="src\Hazard\ECS\Components\Mesh.h">
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\GUI\LayerStack.h">
-      <Filter>Modules\GUI</Filter>
+    <ClInclude Include="src\Hazard\ECS\Components\MeshRenderer.h">
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Input\Input.h">
-      <Filter>Modules\Input</Filter>
+    <ClInclude Include="src\Hazard\ECS\ECS.h">
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Module\Module.h">
-      <Filter>Modules\Module</Filter>
+    <ClInclude Include="src\Hazard\ECS\GameObject.h">
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Module\ModuleHandler.h">
-      <Filter>Modules\Module</Filter>
+    <ClInclude Include="src\Hazard\Modules\Logging\Logger.h">
+      <Filter>src\Hazard\Modules\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GraphicsContext.h">
-      <Filter>Platform</Filter>
+    <ClInclude Include="src\Hazard\Modules\Module.h">
+      <Filter>src\Hazard\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Window.h">
-      <Filter>Platform</Filter>
+    <ClInclude Include="src\Hazard\Modules\ModuleHandler.h">
+      <Filter>src\Hazard\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\OpenGLContext.h">
-      <Filter>Platform\Windows</Filter>
+    <ClInclude Include="src\Hazard\Modules\Rendering\Buffers\Buffer.h">
+      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindosWindow.h">
-      <Filter>Platform\Windows</Filter>
+    <ClInclude Include="src\Hazard\Modules\Rendering\Buffers\VertexArray.h">
+      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\hzrpch.h" />
-    <ClInclude Include="src\Modules\Rendering\Textures\DefaultRenderTexture.h" />
-    <ClInclude Include="src\Modules\Rendering\Textures\RenderTexture.h" />
-    <ClInclude Include="src\Modules\Rendering\Textures\Texture.h">
-      <Filter>Rendering\Textures</Filter>
+    <ClInclude Include="src\Hazard\Modules\Rendering\Renderer.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Rendering\GlobalRenderer.h">
-      <Filter>Rendering</Filter>
+    <ClInclude Include="src\Hazard\Modules\Rendering\RendererAPI.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Rendering\Shaders\OpenGLShader.h">
-      <Filter>Rendering</Filter>
+    <ClInclude Include="src\Hazard\Modules\Rendering\Shaders\Shader.h">
+      <Filter>src\Hazard\Modules\Rendering\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="src\Modules\Rendering\Shaders\Shader.h" />
-    <ClInclude Include="src\Maths\Queue.h" />
+    <ClInclude Include="src\Hazard\Modules\Rendering\Textures\Texture.h">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Rendering\Textures\Texture2D.h">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\File.h">
+      <Filter>src\Hazard\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Color.h">
+      <Filter>src\Hazard\Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Math.h">
+      <Filter>src\Hazard\Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Time.h">
+      <Filter>src\Hazard\Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Vector\Matrix4.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Vector\Transform.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Vector\Vector2.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Vector\Vector3.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\ShaderData.h">
+      <Filter>src\Hazard\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
+      <Filter>src\Platform\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Data\OpenGLBuffers.h">
+      <Filter>src\Platform\Rendering\OpenGL\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Data\OpenGLVertexArray.h">
+      <Filter>src\Platform\Rendering\OpenGL\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture.h">
+      <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\System\Window.h">
+      <Filter>src\Platform\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\System\Windows\WindowWindow.h">
+      <Filter>src\Platform\System\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hzrpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Scene\Scene.h" />
+    <ClInclude Include="src\Hazard\ECS\SceneManger.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Application.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
+      <Filter>src\Hazard\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Maths\Color.cpp">
-      <Filter>Maths</Filter>
+    <ClCompile Include="src\Hazard\ECS\Camera.cpp">
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Maths\Time.cpp">
-      <Filter>Maths</Filter>
+    <ClCompile Include="src\Hazard\ECS\Components\Mesh.cpp">
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\Analytics\Logger.cpp">
-      <Filter>Modules\Analytics</Filter>
+    <ClCompile Include="src\Hazard\ECS\Components\MeshRenderer.cpp">
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\GUI\Layer.cpp">
-      <Filter>Modules\GUI</Filter>
+    <ClCompile Include="src\Hazard\ECS\GameObject.cpp">
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\GUI\LayerStack.cpp">
-      <Filter>Modules\GUI</Filter>
+    <ClCompile Include="src\Hazard\Modules\Logging\Logger.cpp">
+      <Filter>src\Hazard\Modules\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\Input\Input.cpp">
-      <Filter>Modules\Input</Filter>
+    <ClCompile Include="src\Hazard\Modules\ModuleHandler.cpp">
+      <Filter>src\Hazard\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\Module\Module.cpp">
-      <Filter>Modules\Module</Filter>
+    <ClCompile Include="src\Hazard\Modules\Rendering\Renderer.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\Module\ModuleHandler.cpp">
-      <Filter>Modules\Module</Filter>
+    <ClCompile Include="src\Hazard\Modules\Rendering\RendererAPI.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\OpenGLContext.cpp">
-      <Filter>Platform\Windows</Filter>
+    <ClCompile Include="src\Hazard\Modules\Rendering\Textures\Texture2D.cpp">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
-      <Filter>Platform\Windows</Filter>
+    <ClCompile Include="src\Hazard\Utils\File.cpp">
+      <Filter>src\Hazard\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\hzrpch.cpp" />
-    <ClCompile Include="src\Modules\Rendering\Textures\DefaultRenderTexture.cpp" />
-    <ClCompile Include="src\Modules\Rendering\Textures\RenderTexture.cpp" />
-    <ClCompile Include="src\Modules\Rendering\Textures\Texture.cpp" />
-    <ClCompile Include="src\Modules\Rendering\GlobalRenderer.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="src\Hazard\Utils\Maths\Color.cpp">
+      <Filter>src\Hazard\Utils\Maths</Filter>
     </ClCompile>
-    <ClCompile Include="src\Modules\Rendering\Shaders\OpenGLShader.cpp" />
+    <ClCompile Include="src\Hazard\Utils\Maths\Time.cpp">
+      <Filter>src\Hazard\Utils\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\Maths\Vector\Matrix4.cpp">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\Maths\Vector\Transform.cpp">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Data\OpenGLBuffers.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Data\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\System\Windows\WindowsWindow.cpp">
+      <Filter>src\Platform\System\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hzrpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image.cpp">
+      <Filter>vendor</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

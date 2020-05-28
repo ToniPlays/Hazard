@@ -115,7 +115,9 @@ project "Hazard"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/**.cpp",
+
 	}
 
 	includedirs {
@@ -123,7 +125,9 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
-		"Hazard/src"
+		"c:/dev/Hazard/vendor/GLM",
+		"Hazard/src",
+		"Hazard/vendor"
 	}
 
 	links {
@@ -176,7 +180,9 @@ project "HazardEditor"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/platform/**.cpp",
+		"%{prj.name}/platform/**.cpp"
 	}
 
 	includedirs {
@@ -185,8 +191,11 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/IMGUI",
+		"c:/dev/Hazard/vendor/GLM",
+		"HazardEditor/Platform",
 		"HazardEditor/src",
-		"Hazard/src"
+		"Hazard/src",
+		"Hazard/GLM/glm"
 	}
 
 	filter "system:windows"
@@ -200,7 +209,6 @@ project "HazardEditor"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"Hazard",

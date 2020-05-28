@@ -1,128 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="platform">
+      <UniqueIdentifier>{4A63C33C-3630-1E48-5F49-0CF04B7553D6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui">
-      <UniqueIdentifier>{6AF0870B-D6F9-877C-5F75-9E7CCB7D937C}</UniqueIdentifier>
+    <Filter Include="platform\GLFW">
+      <UniqueIdentifier>{C9BC714D-357D-ED83-FEB7-36016A373260}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\Component">
-      <UniqueIdentifier>{4CD58801-B895-0438-81D0-4DB5ED4F4914}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\Widgets">
-      <UniqueIdentifier>{D0E9580D-3C9F-D102-C593-CBD93148C806}</UniqueIdentifier>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\Widgets\Inspect">
-      <UniqueIdentifier>{95BEB629-0120-9437-8A8D-DAE9F6EDCAF6}</UniqueIdentifier>
+    <Filter Include="src\Editor\Core">
+      <UniqueIdentifier>{FBE925CC-6775-9390-7086-1685DC90EF90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\Widgets\Profiling">
-      <UniqueIdentifier>{49CADF07-B536-9B02-7E2A-3360EA55BD6A}</UniqueIdentifier>
+    <Filter Include="src\Editor\GUI">
+      <UniqueIdentifier>{571CA4D7-43EA-97DD-2C7E-080418EB7342}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\Widgets\Rendering">
-      <UniqueIdentifier>{1D37979F-89A3-529A-5297-EAF7BEC27402}</UniqueIdentifier>
+    <Filter Include="src\Editor\GUI\Items">
+      <UniqueIdentifier>{088C60FD-F41A-EAC6-9D39-FEC189A7FA6C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    <Filter Include="src\Editor\GUI\Layers">
+      <UniqueIdentifier>{368B24AF-A2F7-DFA9-6BEB-7707D7160212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Widgets">
+      <UniqueIdentifier>{BDB2A4F3-A9AC-CD45-9219-64567EB233B2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\GuiLayer.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Editor\Core\HazardEditor.h">
+      <Filter>src\Editor\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\HazardEditor.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Editor\GUI\All.h">
+      <Filter>src\Editor\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\ImGuiLayer.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Editor\GUI\Editor.h">
+      <Filter>src\Editor\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Component\ColorPicker.h">
-      <Filter>Gui\Component</Filter>
+    <ClInclude Include="src\Editor\GUI\Items\EditorStyle.h">
+      <Filter>src\Editor\GUI\Items</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Component\EditorStyle.h">
-      <Filter>Gui\Component</Filter>
+    <ClInclude Include="src\Editor\GUI\Items\MainMenu.h">
+      <Filter>src\Editor\GUI\Items</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Component\MainMenu.h">
-      <Filter>Gui\Component</Filter>
+    <ClInclude Include="src\Editor\GUI\Layers\Layer.h">
+      <Filter>src\Editor\GUI\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Component\UtilityBar.h">
-      <Filter>Gui\Component</Filter>
+    <ClInclude Include="src\Editor\GUI\Widgets\Inspector.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Inspect\AssetManager.h">
-      <Filter>Gui\Widgets\Inspect</Filter>
+    <ClInclude Include="src\Editor\GUI\Widgets\Performance.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Inspect\Hierarchy.h">
-      <Filter>Gui\Widgets\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Inspect\Inspector.h">
-      <Filter>Gui\Widgets\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Profiling\Console.h">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Profiling\Performance.h">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Profiling\Profiler.h">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\Rendering\Viewport.h">
-      <Filter>Gui\Widgets\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\HzrEditor.h" />
-    <ClInclude Include="src\Platform\imgui_impl_glfw.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\imgui_impl_opengl3.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gui\Widgets\All.h" />
+    <ClInclude Include="src\Editor\GUI\Widgets\Profiler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\HazardEditor.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
+      <Filter>platform\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\ImGuiLayer.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="platform\GLFW\imgui_impl_opengl3.cpp">
+      <Filter>platform\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Component\ColoPicker.cpp">
-      <Filter>Gui\Component</Filter>
+    <ClCompile Include="src\Editor\Core\HazardEditor.cpp">
+      <Filter>src\Editor\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Component\EditorStyle.cpp">
-      <Filter>Gui\Component</Filter>
+    <ClCompile Include="src\Editor\GUI\Editor.cpp">
+      <Filter>src\Editor\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Component\MainMenu.cpp">
-      <Filter>Gui\Component</Filter>
+    <ClCompile Include="src\Editor\GUI\Items\EditorStyle.cpp">
+      <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Component\UtilityBar.cpp">
-      <Filter>Gui\Component</Filter>
+    <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
+      <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Inspect\AssetManager.cpp">
-      <Filter>Gui\Widgets\Inspect</Filter>
+    <ClCompile Include="src\Editor\GUI\Widgets\Inspector.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Inspect\Hierarchy.cpp">
-      <Filter>Gui\Widgets\Inspect</Filter>
+    <ClCompile Include="src\Editor\GUI\Widgets\Performance.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Inspect\Inspector.cpp">
-      <Filter>Gui\Widgets\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Profiling\Console.cpp">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Profiling\Performance.cpp">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Profiling\Profiler.cpp">
-      <Filter>Gui\Widgets\Profiling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gui\Widgets\Rendering\Viewport.cpp">
-      <Filter>Gui\Widgets\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\imgui_impl_glfw.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\imgui_impl_opengl3.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Profiler.cpp" />
   </ItemGroup>
 </Project>
