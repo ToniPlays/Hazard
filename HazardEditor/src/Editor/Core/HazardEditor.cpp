@@ -14,6 +14,8 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::Awake()
 {
+#ifndef HZR_GAME_ONLY
 	PushModule(new Editor());
+#endif
 
 }

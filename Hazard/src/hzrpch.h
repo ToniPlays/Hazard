@@ -21,11 +21,11 @@
 
 #ifdef HZR_DEBUG
 //Core logging macros
-#define HZR_CORE_TRACE(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 0);
-#define HZR_CORE_INFO(...)    ::Hazard::Logger::CoreLog(__VA_ARGS__, 1);
-#define HZR_CORE_WARN(...)    ::Hazard::Logger::CoreLog(__VA_ARGS__, 2);
-#define HZR_CORE_ERROR(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 3);
-#define HZR_CORE_FATAL(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 4);
+#define HZR_CORE_INFO(...)    ::Hazard::Logger::CoreLog(__VA_ARGS__, 0);
+#define HZR_CORE_WARN(...)    ::Hazard::Logger::CoreLog(__VA_ARGS__, 1);
+#define HZR_CORE_ERROR(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 2);
+#define HZR_CORE_FATAL(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 3);
+#define HZR_CORE_TRACE(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 4);
 
 //Client logging macros
 #define HZR_TRACE(...)   ::Hazard::Logger::ClientLog(__VA_ARGS__, 0);

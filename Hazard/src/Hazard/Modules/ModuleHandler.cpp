@@ -11,7 +11,10 @@ namespace Hazard {
 	ModuleHandler::ModuleHandler()
 	{
 		//TEMP
+#if !defined(HZR_RELEASE) && !defined(HZR_GAME_ONLY)
 		PushModule(new Logger);
+#endif // !HZR_GAME_ONLY || HZR_RELEASE
+
 		PushModule(new Renderer());
 	}
 

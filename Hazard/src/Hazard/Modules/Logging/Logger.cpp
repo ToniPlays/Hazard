@@ -14,12 +14,9 @@ namespace Hazard {
 	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
 	std::unordered_map<std::string, ProfiledFunction> Logger::logs;
 
+	std::vector<Log> Logger::engineLogs;
+
 	bool Logger::isRealtime = false;
-
-	Logger::Logger() : Module("Logger")
-	{
-
-	}
 
 	void Logger::OnEnabled()
 	{
@@ -50,21 +47,22 @@ namespace Hazard {
 		switch (level)
 		{
 		case 0:
-			s_CoreLogger->trace(text);
-			break;
-		case 1:
 			s_CoreLogger->info(text);
 			break;
-		case 2:
+		case 1:
 			s_CoreLogger->warn(text);
 			break;
-		case 3:
+		case 2:
 			s_CoreLogger->error(text);
 			break;
-		case 4:
+		case 3:
 			s_CoreLogger->critical(text);
 			break;
+		case 4:
+			s_CoreLogger->trace(text);
+			break;
 		}
+		engineLogs.push_back(Log(text, level));
 	}
 	void Logger::ClientLog(std::string text, int level)
 	{
@@ -73,19 +71,19 @@ namespace Hazard {
 		switch (level)
 		{
 		case 0:
-			s_ClientLogger->trace(text);
-			break;
-		case 1:
 			s_ClientLogger->info(text);
 			break;
-		case 2:
+		case 1:
 			s_ClientLogger->warn(text);
 			break;
-		case 3:
+		case 2:
 			s_ClientLogger->error(text);
 			break;
-		case 4:
+		case 3:
 			s_ClientLogger->critical(text);
+			break;
+		case 4:
+			s_ClientLogger->trace(text);
 			break;
 		}
 	}

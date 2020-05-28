@@ -15,6 +15,8 @@ namespace Hazard {
 
 	Renderer::Renderer() : Module("Renderer")
 	{
+		HZR_CORE_INFO("Renderer enabled");
+
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(Renderer::OnEvent));
 

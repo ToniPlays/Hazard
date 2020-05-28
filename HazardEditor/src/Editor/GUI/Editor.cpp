@@ -14,6 +14,7 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Performance());
 	PushLayer(new Inspector());
 	PushLayer(new Profiler());
+	PushLayer(new Console());
 }
 Editor::~Editor()
 {
@@ -59,7 +60,8 @@ void Editor::OnEnabled() {
 
 void Editor::PushLayer(Layer* layer)
 {
-	if(layer->OnEnabled()) layers.push_back(layer);
+	if (layer->OnEnabled()) layers.push_back(layer);
+	else Debug::Warn("Unable to set layer");
 }
 
 void Editor::Begin()

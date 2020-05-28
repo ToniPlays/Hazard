@@ -5,21 +5,20 @@
 #include <vector>
 
 namespace Hazard {
-	
 
 	class HAZARD_API Scene {
 	public:
 
-		Scene();
-		~Scene();
+		Scene() {};
+		~Scene() {};
 
-		void Awake();
-		void Start();
-		void Update();
-		void Render();
+		void Awake() {};
+		void Start() {};
+		void Update() {};
+		void Render() {};
 
 	private:
-		std::vector<
+		std::vector<GameObject*> objects;
 
 	};
 }

@@ -12,15 +12,21 @@ namespace Hazard {
 
 		ProfiledFunction(long double _start) : start(_start) {}
 		ProfiledFunction() {};
+	};
 
+	struct Log {
+		std::string text;
+		int level;
+		Log(std::string _text, int _level = 0) : text(_text), level(_level) {};
 	};
 
 	class HAZARD_API Logger : public Module {
 	public:
-		Logger();
+		Logger() : Module("Logger") {};
 		~Logger() {};
 		void OnEnabled() override;
 		void OnDisabled() override;
+
 		static void EnableRealtime() { isRealtime = true; }
 		static void DisableRealtime() { isRealtime = false; }
 		static bool IsRealtime() { return isRealtime; }
@@ -30,13 +36,17 @@ namespace Hazard {
 		static void CoreLog(std::string text, int level = 1);
 		static void ClientLog(std::string text, int level = 1);
 		static void Begin(std::string name);
+
 		static std::unordered_map<std::string, ProfiledFunction> GetLogs() { return logs; }
+		static std::vector<Log> GetEngineLogs() { return engineLogs; };
 		static ProfiledFunction GetLog(std::string key);
+
 	private:
 		static bool isRealtime;
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 		static std::unordered_map<std::string, ProfiledFunction> logs;
+		static std::vector<Log> engineLogs;
 	};
 }
 

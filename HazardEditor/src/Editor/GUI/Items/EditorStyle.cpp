@@ -2,10 +2,7 @@
 #include "EditorStyle.h"
 #include "imgui.h"
 #include "imgui_internal.h"
-
-ImVec4 ColorAsImVec(Hazard::Color color) {
-	return ImVec4(color.r, color.g, color.b, color.a);
-}
+#include "Editor/Utils/Utility.h"
 
 
 void EditorStyle::InitStyle() 
