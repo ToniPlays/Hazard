@@ -48,6 +48,12 @@ namespace Hazard {
 			this->z /= len;
 		}
 
+		void SetAll(float value) {
+			this->x = value;
+			this->y = value;
+			this->z = value;
+		}
+
 		std::string ToString() {
 			std::stringstream ss;
 			ss << "(" << x << ", " << y << ", " << z << ")";

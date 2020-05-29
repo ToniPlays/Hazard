@@ -60,6 +60,18 @@ namespace Hazard {
 		EVENT_CLASS_TYPE(AppRender)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
+	class WindowFocusEvent : public Event {
+	public:
+		WindowFocusEvent(bool _focus) : focus(_focus) {};
+		inline bool GetFocus() { return focus; };
+
+		EVENT_CLASS_TYPE(WindowFocus)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+
+	private:
+		bool focus;
+	};
+
 	class ModuleErrorEvent : public Event
 	{
 	public:

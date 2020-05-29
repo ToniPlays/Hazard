@@ -10,6 +10,7 @@ public:
 	~EditorApplication();
 
 	void Awake();
+	void OnEvent(Hazard::Event& e);
 };
 
 Hazard::Application* Hazard::CreateApplication() {

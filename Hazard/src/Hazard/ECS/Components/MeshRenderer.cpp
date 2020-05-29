@@ -44,13 +44,14 @@ namespace Hazard {
 		shader->Bind();
 		texture->Bind();
 
-		Matrix4 view = Renderer::GetViewMatrix();
-		view.Mul(Matrix4::TransformMatrix(Camera::instance->transform));
 
-		shader->SetUniform("projection", view);
-		shader->SetUniform("transform", Matrix4::TransformMatrix(gameObject->transform));
-		shader->SetUniform("test", 1.0f);
-		shader->SetUniform("gradient", 1);
+
+		Matrix4 transform = Matrix4::TransformMatrix(gameObject->transform);
+
+		shader->SetUniform("projection", Renderer::GetViewMatrix());
+		shader->SetUniform("transform", transform);
+		shader->SetUniform("test", (float)((Math::Sin(Time::time * Renderer::test) + 1)) / 2);
+		shader->SetUniform("gradient", Renderer::useGradient);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}

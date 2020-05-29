@@ -88,4 +88,7 @@
     <ClCompile Include="src\Editor\GUI\Widgets\Console.cpp" />
     <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\shader.glsl" />
+  </ItemGroup>
 </Project>

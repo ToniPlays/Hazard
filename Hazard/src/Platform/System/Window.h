@@ -14,6 +14,7 @@ namespace Hazard {
 		std::string Renderer;
 
 		bool VSync = false;
+		bool focus = true;
 		unsigned int Width;
 		unsigned int Height;
 
@@ -44,6 +45,7 @@ namespace Hazard {
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 		virtual bool IsVSync() const = 0;
+		virtual bool IsFocused() const = 0;
 		virtual WindowProps GetWindowInfo() { return windowData; }
 
 		virtual Color GetClearColor() const = 0;

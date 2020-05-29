@@ -19,8 +19,10 @@ void Performance::Render()
 	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
 	
 	ImGui::Checkbox("Use gradient", &renderer->useGradient);
+
 	if(renderer->useGradient)
-		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 1.0f);
+		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 10.0f);
+
 	ImGui::NewLine();
 	/*
 	if (ImGui::Button("Change clear color")) {
@@ -44,6 +46,7 @@ void Performance::Render()
 
 	ss.str("");
 	ss << "Window size: " << renderer->GetWindow().GetWidth() << "x" << renderer->GetWindow().GetHeight();
+	ss << ", focus " << (renderer->GetWindow().IsFocused() ? "True" : "False");
 	ImGui::Text(ss.str().c_str());
 	ss.str("");
 

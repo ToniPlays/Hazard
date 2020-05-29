@@ -27,5 +27,9 @@ out vec4 color;
 
 void main() {
 	
-	color = texture(T_texture, coords) * vec4(coords, test, 1.0);
+	vec4 c = texture(T_texture, coords);
+
+	if(gradient == 1)
+		c = c  * vec4(coords, test, 1.0);
+	color = c;
 }

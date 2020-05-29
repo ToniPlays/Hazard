@@ -24,8 +24,9 @@ namespace Hazard {
 		}
 		unsigned int GetWidth() const { return windowData.Width; }
 		unsigned int GetHeight() const { return windowData.Height; }
-
+		
 		bool IsVSync() const { return windowData.VSync; }
+		bool IsFocused() const { return windowData.focus; }
 		WindowProps GetWindowInfo() { return windowData; }
 		Color GetClearColor() const { return Color(); }
 

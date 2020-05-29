@@ -23,10 +23,13 @@ void Inspector::Render()
 	ImGui::Text("Camera");
 
 
-	Hazard::GameObject* cam = Hazard::Camera::instance;
+	Hazard::Camera* cam = Hazard::Camera::instance;
 	ImGui::DragFloat("CX", &cam->transform.position.x, 0.01f);
 	ImGui::DragFloat("CY", &cam->transform.position.y, 0.01f);
 	ImGui::DragFloat("CZ", &cam->transform.position.z, 0.01f);
+	static float size = cam->GetSize();
+	ImGui::DragFloat("Size", &size, 0.01f);
+	cam->SetSize(size);
 
 	ImGui::NewLine();
 	ImGui::Text("GameObject");

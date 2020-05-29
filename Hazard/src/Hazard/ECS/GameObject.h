@@ -17,8 +17,8 @@ namespace Hazard {
 
 	class HAZARD_API GameObject {
 	public:
-		GameObject(std::string _name, std::initializer_list<Component*> _components);
-		GameObject(std::string _name);
+		GameObject(std::string _name, std::initializer_list<Component*> _components, Transform transform = Transform());
+		GameObject(std::string _name, Transform transform = Transform());
 		~GameObject();
 		Transform transform;
 		std::string GetName() { return name; }

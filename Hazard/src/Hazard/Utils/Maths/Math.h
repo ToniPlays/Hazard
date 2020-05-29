@@ -31,4 +31,16 @@ public:
 	static T Round(T value, int digits) {
 		return round(value * Pow(10, digits)) / Pow(10, digits);
 	}
+	static double ToRadians(double value) {
+		return 2 * (atan(1) * 4 )* (value / 360);
+	}
+
+	static double Tan(double value)
+	{
+		return tan(value);
+	}
+	static double Sin(double value)
+	{
+		return sin(value);
+	}
 };

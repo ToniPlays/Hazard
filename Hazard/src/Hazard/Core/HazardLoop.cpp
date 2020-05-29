@@ -20,8 +20,12 @@ namespace Hazard {
 
 	bool HazardLoop::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		return dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Close));	
+
+		if (e.GetCategoryFlags() & EventCategory::EventCategoryApplication) {
+			EventDispatcher dispatcher(e);
+			return dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Close));
+		}
+		else current->OnEvent(e);
 	}
 	bool HazardLoop::Close(Event& e)
 	{
@@ -49,7 +53,7 @@ namespace Hazard {
 			double time = glfwGetTime() * 1000;
 			Time::unscaledDeltaTime = time - lastTime;
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
-			Time::time = time;
+			Time::time = time / 1000;
 			
 			//Update
 			moduleHandler.Update();

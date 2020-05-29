@@ -8,7 +8,10 @@ namespace Hazard {
 	public:
 		Camera();
 		static Transform GetCameraTransform();
+		void SetSize(float size);
+		float GetSize() { return size; };
 	public:
+		float size = 1.0f;
 		static Camera* instance;
 	};
 }

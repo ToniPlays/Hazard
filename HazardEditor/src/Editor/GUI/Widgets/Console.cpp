@@ -52,7 +52,7 @@ void Console::Render()
 		if (msg->level == 1 && !ShowWarn) continue;
 		if (msg->level == 0 && !ShowLog) continue;
 
-		ss << msg->time << ": " << types[msg->level] << ": " << msg->text.c_str();
+		ss << msg->time << "App (" << types[msg->level] << "): " << msg->text.c_str();
 		ImGui::TextColored(ColorAsImVec(Hazard::Color::FromHex(colors[msg->level])), ss.str().c_str());
 		ss.str("");
 	}
@@ -80,7 +80,7 @@ void Console::Render()
 			if (level == 0 && !ShowLog) continue;
 
 
-			ss << types[level] << ": " << msg.text.c_str();
+			ss << "Engine(" << types[level] << "): " << msg.text.c_str();
 			ImGui::TextColored(ColorAsImVec(Hazard::Color::FromHex(colors[level])), ss.str().c_str());
 			ss.str("");
 		}

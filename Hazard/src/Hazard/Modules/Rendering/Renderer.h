@@ -21,7 +21,7 @@ namespace Hazard {
 		bool OnEvent(Event& e);
 
 		Window& GetWindow() { return *window; }
-		static Matrix4& GetViewMatrix() { return viewMatrix; }
+		static Matrix4& GetViewMatrix();
 		static float test; 
 		static bool useGradient;
 
@@ -29,11 +29,11 @@ namespace Hazard {
 
 	private:
 
-		static std::vector<GameObject*> gameObjects;
 		bool Resized(Event& e);
 		std::unique_ptr<Window> window;
 		std::unique_ptr<VertexArray> vertexArray;
 
+		static std::vector<GameObject*> gameObjects;
 		static Matrix4 viewMatrix;
 	};
 }

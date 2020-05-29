@@ -93,6 +93,17 @@ namespace Hazard {
 		}
 	}
 
+	void Matrix4::Mul(Transform other)
+	{
+		Mul(TransformMatrix(other));
+	}
+
+	Hazard::Matrix4 Matrix4::Mul(Matrix4 first, Matrix4 second)
+	{
+		first.Mul(second);
+		return first;
+	}
+
 	Matrix4 Matrix4::Ortho(float left, float right, float top, float bottom, float zNear, float zFar)
 	{
 		Matrix4 matrix;
@@ -104,6 +115,24 @@ namespace Hazard {
 		matrix.SetElement(3, 0, -(right + left) / (right - left));
 		matrix.SetElement(3, 1, -(top + bottom) / (top - bottom));
 		matrix.SetElement(3, 3, 1);
+
+		return matrix;
+	}
+
+	Matrix4 Matrix4::Perspec(float fov, float aspectRatio, float zNear, float zFar)
+	{
+		float tanHalfFov = Math::Tan(Math::ToRadians(fov) / 2);
+
+		float zRange = zNear - zFar;
+		Matrix4 matrix;
+
+		matrix.SetElement(0, 0, 1.0f / (tanHalfFov * aspectRatio));
+		matrix.SetElement(1, 1, 1.0f / tanHalfFov);
+		matrix.SetElement(2, 2, (-zNear - zFar) / zRange);
+		matrix.SetElement(2, 3, 2.0f * zFar * zNear / zRange);
+		matrix.SetElement(3, 2, 1.0f);
+
+		std::cout << matrix.ToString() << std::endl;
 
 		return matrix;
 	}

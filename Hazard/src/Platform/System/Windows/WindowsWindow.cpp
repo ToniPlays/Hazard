@@ -43,7 +43,7 @@ namespace Hazard {
 
 		glfwSwapBuffers(window);
 		context->ClearFrame();
-		glfwPollEvents();
+		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(0.1f);
 	}
 	void WindowsWindow::SetWindowTitle(std::string title)
 	{
@@ -52,7 +52,6 @@ namespace Hazard {
 	}
 	void WindowsWindow::SetCallbacks()
 	{
-		GraphicsContext* ctx = GetContext();
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int w, int h) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
@@ -122,6 +121,12 @@ namespace Hazard {
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 			});
+		glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focus) {
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			data.focus = focus;
+			WindowFocusEvent event(focus);
+			data.EventCallback(event);
+		});
 	}
 	void WindowsWindow::SetClearColor(Color color) const
 	{

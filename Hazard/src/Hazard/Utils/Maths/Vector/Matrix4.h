@@ -17,11 +17,14 @@ namespace Hazard {
 		void InitRotation(Vector3<float> rotation);
 		void InitScale(Vector3<float> scale);
 		void Mul(Matrix4 other);
+		void Mul(Transform other);
 		float Get(int x, int y) { return elements[y * 4 + x]; }
 
 	public:
 		static Matrix4 TransformMatrix(Transform transform);
+		static Matrix4 Mul(Matrix4 first, Matrix4 second);
 		static Matrix4 Ortho(float left, float right, float top, float bottom, float zNear = -1000, float zFar = 1000);
+		static Matrix4 Perspec(float fov, float aspectRatio, float zNear, float zFar);
 	private:
 		float elements[16];
 	};

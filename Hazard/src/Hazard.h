@@ -10,7 +10,9 @@
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
 
 #include "Hazard/ECS/Camera.h"
-
+#include "Hazard/Core/Events/Event.h"
+#include "Hazard/Core/Events/MouseEvent.h"
+#include "Hazard/Core/Events/KeyEvent.h"
 //Rendering
 #include "Hazard/Modules/Rendering/Renderer.h"
 #include "Hazard/Modules/Logging/Logger.h"
