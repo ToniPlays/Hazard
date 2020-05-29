@@ -206,6 +206,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Scene\Scene.h" />
     <ClInclude Include="src\Hazard\ECS\SceneManger.h" />
+    <ClInclude Include="src\Hazard\Modules\Rendering\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -277,5 +278,6 @@
     <ClCompile Include="vendor\stb_image.cpp">
       <Filter>vendor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Rendering\TextureManager.cpp" />
   </ItemGroup>
 </Project>

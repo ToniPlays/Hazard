@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazard/Core/Core.h"
 #include "Hazard/Utils/Maths/Math.h"
+#include <ostream>
 
 namespace Hazard {
 	template <typename T>
@@ -20,26 +21,28 @@ namespace Hazard {
 		double Length() {
 			return Math::Sqrt(x * x + y * y + z * z);
 		}
-		void Add(Vector3 other) {
-			this->x += other.x;
-			this->y += other.y;
-			this->z += other.z;
+		Vector3 operator + (const Vector3<T>& vector) {
+			return Vector3(x + vector.x, y + vector.y, z + vector.z);
 		}
-		void Subtract(Vector3 other) {
-			this->x -= other.x;
-			this->y -= other.y;
-			this->z -= other.z;
+		Vector3 operator - (const Vector3<T>& vector) {
+			return Vector3(x - vector.x, y - vector.y, z - vector.z);
 		}
-		void Multiply(Vector3 other) {
-			this->x *= other.x;
-			this->y *= other.y;
-			this->z *= other.z;
+		Vector3 operator * (const Vector3<T>& vector) {
+			return Vector3(x * vector.x, y * vector.y, z * vector.z);
 		}
-		void Divide(Vector3 other) {
-			this->x /= other.x;
-			this->y /= other.y;
-			this->z /= other.z;
+		Vector3 operator / (const Vector3<T>& vector) {
+			return Vector3(x / vector.x, y / vector.y, z / vector.z);
 		}
+
+		Vector3& operator *= (const float value) {
+
+			x *= value;
+			y *= value;
+			z *= value;
+
+			return *this;
+		}
+
 		void Normalize() {
 			double len = Length();
 
@@ -54,10 +57,9 @@ namespace Hazard {
 			this->z = value;
 		}
 
-		std::string ToString() {
-			std::stringstream ss;
-			ss << "(" << x << ", " << y << ", " << z << ")";
-			return ss.str();
+		friend std::ostream& operator << (std::ostream& os, const Vector3<T>& vector) {
+			os << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
+			return os;
 		}
 
 	public:
@@ -69,9 +71,14 @@ namespace Hazard {
 			return first.x * second.x + first.y * second.y + first.z * second.z;
 		}
 
+		static Vector3 Invert(Vector3 vector) {
+			return Vector3(-vector.x, -vector.y, -vector.z);
+		}
+
 		static Vector3<float> zero;
 		static Vector3<float> one;
 	};
+
 	Vector3<float> Vector3<float>::zero = Vector3();
 	Vector3<float> Vector3<float>::one = Vector3(1, 1, 1);
 }

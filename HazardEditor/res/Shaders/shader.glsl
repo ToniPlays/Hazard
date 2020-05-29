@@ -29,6 +29,8 @@ void main() {
 	
 	vec4 c = texture(T_texture, coords);
 
+	c = vec4(c.g, c.g, c.g, 1.0);
+
 	if(gradient == 1)
 		c = c  * vec4(coords, test, 1.0);
 	color = c;

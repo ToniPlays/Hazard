@@ -65,7 +65,7 @@ void Console::Render()
 
 		ImGui::NewLine();
 		ImGui::Text("Engine log");
-		ImGui::SameLine(200);
+		ImGui::SameLine(NULL, 280);
 
 		ss << "Logs: " << logs.size();
 		ImGui::Text(ss.str().c_str());

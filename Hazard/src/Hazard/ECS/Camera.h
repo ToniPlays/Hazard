@@ -7,7 +7,7 @@ namespace Hazard {
 	class HAZARD_API Camera : public GameObject {
 	public:
 		Camera();
-		static Transform GetCameraTransform();
+		static Transform GetTransform();
 		void SetSize(float size);
 		float GetSize() { return size; };
 	public:

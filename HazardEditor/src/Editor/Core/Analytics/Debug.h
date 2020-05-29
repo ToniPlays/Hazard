@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Hazard.h"
-
 struct Message {
 	int level = 0;
 	std::string text;

@@ -18,7 +18,6 @@ void EditorApplication::Awake()
 #ifndef HZR_GAME_ONLY
 	PushModule(new Editor());
 #endif
-
 }
 
 void EditorApplication::OnEvent(Hazard::Event& e)

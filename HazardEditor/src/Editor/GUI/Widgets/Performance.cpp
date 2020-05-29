@@ -41,7 +41,7 @@ void Performance::Render()
 	ImGui::Text(ss.str().c_str());
 	ss.str("");
 
-	ss << "FPS " << Math::Round(1 / Hazard::Time::unscaledDeltaTime * 1000, 2);
+	ss << "FPS " << Hazard::Math::Round(1 / Hazard::Time::unscaledDeltaTime * 1000, 2);
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");

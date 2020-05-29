@@ -15,6 +15,7 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Inspector());
 	PushLayer(new Profiler());
 	PushLayer(new Console());
+	PushLayer(new EngineAssets());
 }
 Editor::~Editor()
 {

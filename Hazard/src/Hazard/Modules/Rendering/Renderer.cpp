@@ -9,7 +9,7 @@ namespace Hazard {
 
 	Matrix4& Renderer::GetViewMatrix()
 	{
-		return Matrix4::Mul(viewMatrix, Matrix4::TransformMatrix(Camera::instance->transform));
+		return Matrix4::Mul(viewMatrix, Matrix4::TransformMatrix(Camera::GetTransform()));
 	}
 
 	float Renderer::test = 1.0;
@@ -26,8 +26,8 @@ namespace Hazard {
 		window->SetEventCallback(BIND_EVENT(Renderer::OnEvent));
 
 		Camera* camera = new Camera();
-		camera->SetSize(2);
-		camera->transform.position = { -0.2f, 0.16f, 0.0f };
+		camera->SetSize(5);
+		camera->transform.position = { 0.2f, -0.2f, 0.0f };
 		GameObject* gameObject = new GameObject("Test object 1", {});
 		GameObject* Origin = new GameObject("Origin", {});
 

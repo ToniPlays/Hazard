@@ -58,6 +58,7 @@
     <ClInclude Include="src\Editor\GUI\Widgets\Console.h" />
     <ClInclude Include="src\Editor\Core\Analytics\Debug.h" />
     <ClInclude Include="src\Editor\Utils\Utility.h" />
+    <ClInclude Include="src\Editor\GUI\Widgets\EngineAssets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -87,6 +88,7 @@
     <ClCompile Include="src\Editor\GUI\Widgets\Profiler.cpp" />
     <ClCompile Include="src\Editor\GUI\Widgets\Console.cpp" />
     <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp" />
+    <ClCompile Include="src\Editor\GUI\Widgets\EngineAssets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\shader.glsl" />

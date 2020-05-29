@@ -11,15 +11,16 @@ namespace Hazard {
 	{
 		Camera::instance = this;
 	}
-
-	Transform Camera::GetCameraTransform()
+	
+	Transform Camera::GetTransform()
 	{
-		return instance->transform;
+		Transform t = instance->transform;
+		float s = instance->size;
+		return Transform(Vector3<float>::Invert(t.position), Vector3<float>::Invert(t.rotation), Vector3<float>::Invert(t.scale) / Vector3<float>(-s, -s, -s));
 	}
 
 	void Camera::SetSize(float size)
 	{
 		this->size = size;
-		this->transform.scale.SetAll(size);
 	}
 }
