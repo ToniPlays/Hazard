@@ -1,31 +1,24 @@
 #pragma once
 #include "Hazard/Core/Core.h"
 #include "Transform.h"
+#include <ostream>
+#include <iostream>
+#include "glm/glm.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 namespace Hazard {
-	class HAZARD_API Matrix4 {	
+	class HAZARD_API Matrix4 {
 	public:
-		Matrix4();
 
-		void Identity();
-		void Clear();
-		std::string ToString();
-		float* GetAll() { return elements; }
-		void SetElement(int y, int x, float value) { elements[y * 4 + x] = value; }
+		static glm::mat4 GetModelMatrix(Transform transform);
 
-		void InitTranslation(Vector3<float> position);
-		void InitRotation(Vector3<float> rotation);
-		void InitScale(Vector3<float> scale);
-		void Mul(Matrix4 other);
-		void Mul(Transform other);
-		float Get(int x, int y) { return elements[y * 4 + x]; }
+		/*friend std::ostream& operator << (std::ostream& os, const glm::mat4& matrix) {
+			os << glm::to_string(matrix);
+			return os;
+		}*/
 
-	public:
-		static Matrix4 TransformMatrix(Transform transform);
-		static Matrix4 Mul(Matrix4 first, Matrix4 second);
-		static Matrix4 Ortho(float left, float right, float top, float bottom, float zNear = -1000, float zFar = 1000);
-		static Matrix4 Perspec(float fov, float aspectRatio, float zNear, float zFar);
-	private:
-		float elements[16];
+		static void ToString(glm::mat4 matrix) {
+			std::cout << glm::to_string(matrix) << std::endl;
+		}
 	};
 }

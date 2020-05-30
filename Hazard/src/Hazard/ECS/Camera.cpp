@@ -16,7 +16,7 @@ namespace Hazard {
 	{
 		Transform t = instance->transform;
 		float s = instance->size;
-		return Transform(Vector3<float>::Invert(t.position), Vector3<float>::Invert(t.rotation), Vector3<float>::Invert(t.scale) / Vector3<float>(-s, -s, -s));
+		return Transform(Vector3<float>::Invert(t.position), Vector3<float>::Invert(t.rotation), Vector3<float>::Invert(t.scale) / -s);
 	}
 
 	void Camera::SetSize(float size)

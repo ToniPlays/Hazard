@@ -7,6 +7,7 @@
 #include "Platform/Rendering/OpenGL/Data/OpenGLBuffers.h"
 #include "Platform/Rendering/OpenGL/Textures/OpenGLTexture.h"
 #include "Platform/Rendering/OpenGL/OpenGLShader.h"
+#include "Hazard/Modules/Rendering/TextureManager.h"
 
 namespace Hazard {
 
@@ -51,7 +52,16 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGLTexture2D(file);
+		case RenderAPI::OpenGL: 
+
+			Hazard::Texture2D* texture = (Hazard::Texture2D*)TextureManager::GetTexture(T2D, file);
+
+			if (texture != nullptr) 
+				return texture;
+
+			texture = new OpenGLTexture2D(file);
+			TextureManager::AddTexture(T2D, texture);
+			return texture;
 		}
 		return nullptr;
 	}

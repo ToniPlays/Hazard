@@ -33,6 +33,9 @@ namespace Hazard {
 		Vector3 operator / (const Vector3<T>& vector) {
 			return Vector3(x / vector.x, y / vector.y, z / vector.z);
 		}
+		Vector3 operator / (const float v) {
+			return Vector3(x / v, y / v, z / v);
+		}
 
 		Vector3& operator *= (const float value) {
 

@@ -4,17 +4,19 @@
 #include "glad/glad.h"
 #include "RendererAPI.h"
 #include "Hazard/ECS/Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
+
 
 namespace Hazard {
 
-	Matrix4& Renderer::GetViewMatrix()
+	glm::mat4& Renderer::GetProjection()
 	{
-		return Matrix4::Mul(viewMatrix, Matrix4::TransformMatrix(Camera::GetTransform()));
+		return projection;
 	}
 
 	float Renderer::test = 1.0;
-	bool Renderer::useGradient = false;
-	Matrix4 Renderer::viewMatrix;
+	bool Renderer::useGradient = true;
+	glm::mat4 Renderer::projection;
 
 	std::vector<GameObject*> Renderer::gameObjects;
 
@@ -26,8 +28,8 @@ namespace Hazard {
 		window->SetEventCallback(BIND_EVENT(Renderer::OnEvent));
 
 		Camera* camera = new Camera();
-		camera->SetSize(5);
-		camera->transform.position = { 0.2f, -0.2f, 0.0f };
+		camera->SetSize(1);
+		camera->transform.position.z = 10;
 		GameObject* gameObject = new GameObject("Test object 1", {});
 		GameObject* Origin = new GameObject("Origin", {});
 
@@ -53,10 +55,10 @@ namespace Hazard {
 		float scale = 5;
 		float aspectX = (float)window->GetWidth() / (float)window->GetWidth() * scale;
 		float aspectY = (float)window->GetHeight() / (float)GetWindow().GetWidth() * scale;
-		//Ortho
-		viewMatrix = Matrix4::Ortho(-aspectX, aspectX, -aspectY, aspectY, -1000, 1000);
+		//Orthographic
+		//projection = glm::ortho(-aspectX, aspectX, -aspectY, aspectY, 0.1f, 1000.0f);
 		//Perspective
-		//viewMatrix = Matrix4::Perspec(70.0f, (float)window->GetWidth() / (float)window->GetHeight(), 0.1f, 1000.0f);
+		projection = glm::perspective((float)Math::ToRadians(90.0f), (float)window->GetWidth() / (float)window->GetHeight(), 0.1f, 1000.0f);
 		return true;
 	}
 

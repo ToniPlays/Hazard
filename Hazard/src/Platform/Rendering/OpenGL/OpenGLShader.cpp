@@ -1,6 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "OpenGLShader.h"
+#include "glm/gtc/type_ptr.hpp"
 
 
 namespace Hazard {
@@ -33,6 +34,16 @@ namespace Hazard {
 	{
 		glUseProgram(0);
 	}
+	GLint OpenGLShader::GetLocation(const std::string& name)
+	{
+		if (locations.count(name) > 0) {
+			return locations[name];
+		}
+
+		GLint location = glGetUniformLocation(program, name.c_str());
+		locations[name] = location;
+		return location;
+	}
 	//Uniforms 
 	void OpenGLShader::SetUniform(const std::string& name, int value)
 	{
@@ -61,7 +72,7 @@ namespace Hazard {
 
 	void OpenGLShader::SetUniform(const std::string& name, Matrix4 value)
 	{
-		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, value.GetAll());
+		//glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, value.GetAll());
 	}
 
 	void OpenGLShader::SetUniform(const std::string& name, bool value)
@@ -69,16 +80,12 @@ namespace Hazard {
 		SetUniform(name, value ? 1 : 0);
 	}
 
-	GLint OpenGLShader::GetLocation(const std::string& name)
-	{
-		if (locations.count(name) > 0) {
-			return locations[name];
-		}
 
-		GLint location = glGetUniformLocation(program, name.c_str());
-		locations[name] = location;
-		return location;
+	void OpenGLShader::SetUniform(const std::string& name, const glm::mat4& value)
+	{
+		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
+
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
 	{

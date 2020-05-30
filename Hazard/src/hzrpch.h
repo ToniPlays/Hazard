@@ -28,14 +28,14 @@
 #define HZR_CORE_TRACE(...)   ::Hazard::Logger::CoreLog(__VA_ARGS__, 4);
 
 //Client logging macros
-#define HZR_TRACE(...)   ::Hazard::Logger::ClientLog(__VA_ARGS__, 0);
-#define HZR_INFO(...)    ::Hazard::Logger::ClientLog(__VA_ARGS__, 1);
-#define HZR_WARN(...)    ::Hazard::Logger::ClientLog(__VA_ARGS__, 2);
-#define HZR_ERROR(...)   ::Hazard::Logger::ClientLog(__VA_ARGS__, 3);
-#define HZR_FATAL(...)   ::Hazard::Logger::ClientLog(__VA_ARGS__, 4);
+#define HZR_TRACE(...)        ::Hazard::Logger::ClientLog(__VA_ARGS__, 0);
+#define HZR_INFO(...)         ::Hazard::Logger::ClientLog(__VA_ARGS__, 1);
+#define HZR_WARN(...)         ::Hazard::Logger::ClientLog(__VA_ARGS__, 2);
+#define HZR_ERROR(...)        ::Hazard::Logger::ClientLog(__VA_ARGS__, 3);
+#define HZR_FATAL(...)        ::Hazard::Logger::ClientLog(__VA_ARGS__, 4);
 
-#define PROFILE_FN()          ::Hazard::Logger::Begin(__FUNCTION__);
-#define PROFILE_NAMED_FN(...) ::Hazard::Logger::Begin(__VA_ARGS__);
+#define PROFILE_FN()             ::Hazard::Logger::Begin(__FUNCTION__);
+#define PROFILE_NAMED_FN(...)    ::Hazard::Logger::Begin(__VA_ARGS__);
 #define HZR_ASSERT(success, ...) ::Hazard::Logger::Assert(success, __VA_ARGS__);
 
 

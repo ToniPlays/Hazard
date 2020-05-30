@@ -16,6 +16,9 @@
     <Filter Include="src\Editor\Core">
       <UniqueIdentifier>{FBE925CC-6775-9390-7086-1685DC90EF90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\Core\Analytics">
+      <UniqueIdentifier>{92D4A226-FE96-D6B0-4747-653DB348AF8E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Editor\GUI">
       <UniqueIdentifier>{571CA4D7-43EA-97DD-2C7E-080418EB7342}</UniqueIdentifier>
     </Filter>
@@ -28,8 +31,14 @@
     <Filter Include="src\Editor\GUI\Widgets">
       <UniqueIdentifier>{BDB2A4F3-A9AC-CD45-9219-64567EB233B2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\Utils">
+      <UniqueIdentifier>{637B2B52-4F74-4AA4-78A6-2F2964FE29B0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Editor\Core\Analytics\Debug.h">
+      <Filter>src\Editor\Core\Analytics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\Core\HazardEditor.h">
       <Filter>src\Editor\Core</Filter>
     </ClInclude>
@@ -48,17 +57,24 @@
     <ClInclude Include="src\Editor\GUI\Layers\Layer.h">
       <Filter>src\Editor\GUI\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Console.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\EngineAssets.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Inspector.h">
       <Filter>src\Editor\GUI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Performance.h">
       <Filter>src\Editor\GUI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Profiler.h" />
-    <ClInclude Include="src\Editor\GUI\Widgets\Console.h" />
-    <ClInclude Include="src\Editor\Core\Analytics\Debug.h" />
-    <ClInclude Include="src\Editor\Utils\Utility.h" />
-    <ClInclude Include="src\Editor\GUI\Widgets\EngineAssets.h" />
+    <ClInclude Include="src\Editor\GUI\Widgets\Profiler.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Utils\Utility.h">
+      <Filter>src\Editor\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -66,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="platform\GLFW\imgui_impl_opengl3.cpp">
       <Filter>platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp">
+      <Filter>src\Editor\Core\Analytics</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\Core\HazardEditor.cpp">
       <Filter>src\Editor\Core</Filter>
@@ -79,18 +98,20 @@
     <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Console.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\EngineAssets.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspector.cpp">
       <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Performance.cpp">
       <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Widgets\Profiler.cpp" />
-    <ClCompile Include="src\Editor\GUI\Widgets\Console.cpp" />
-    <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp" />
-    <ClCompile Include="src\Editor\GUI\Widgets\EngineAssets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\shader.glsl" />
+    <ClCompile Include="src\Editor\GUI\Widgets\Profiler.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

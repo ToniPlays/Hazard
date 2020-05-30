@@ -21,6 +21,10 @@ namespace Hazard {
 
 			return;
 		};
+
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
+
 		HazardLoop::GetAppInfo().SetValue("Renderer", GetVersion());
 	}
 

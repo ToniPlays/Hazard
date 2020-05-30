@@ -23,10 +23,10 @@ namespace Hazard {
 			 1.0f, -1.0f, 0.0f
 		};
 		float textCoord[8] = {
+			0.0f, 1.0f,
 			0.0f, 0.0f,
 			1.0f, 0.0f,
 			1.0f, 1.0f,
-			0.0f, 1.0f,
 		};
 
 		int indices[6] = {

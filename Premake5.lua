@@ -117,7 +117,8 @@ project "Hazard"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/**.cpp",
-
+		"%{prj.name}/vendor/**.hpp",
+		"%{prj.name}/vendor/**.inl"
 	}
 
 	includedirs {
@@ -126,8 +127,8 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/GLM",
-		"Hazard/src",
-		"Hazard/vendor"
+		"c:/dev/Hazard/Hazard/vendor",
+		"Hazard/src"
 	}
 
 	links {

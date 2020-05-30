@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazard.h";
+#include "Hazard.h"
 #include "Layers/Layer.h"
 
 class Editor : public Hazard::Module {

@@ -6,6 +6,7 @@
 namespace Hazard {
 	class HAZARD_API Texture {
 	public:
+		Texture(std::string file) : path(file) {};
 
 		virtual ~Texture() {};
 		virtual unsigned int GetWidth() const { return width; };
@@ -17,7 +18,7 @@ namespace Hazard {
 		virtual uint32_t GetID() const = 0;
 		virtual std::string GetPath() { return path; }
 	protected:
-		unsigned int width, height;
+		unsigned int width = 0, height = 0;
 		std::string path;
 	};
 }

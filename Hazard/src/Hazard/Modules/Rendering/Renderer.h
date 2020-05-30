@@ -10,6 +10,8 @@
 #include "Hazard/Modules/Rendering/Shaders/Shader.h"
 #include "Hazard/Modules/Rendering/Textures/Texture2D.h"
 
+#include "glm/glm.hpp"
+
 namespace Hazard {
 	class HAZARD_API Renderer : public Module {
 	public:
@@ -21,7 +23,7 @@ namespace Hazard {
 		bool OnEvent(Event& e);
 
 		Window& GetWindow() { return *window; }
-		static Matrix4& GetViewMatrix();
+		static glm::mat4& GetProjection();
 		static float test; 
 		static bool useGradient;
 
@@ -34,6 +36,6 @@ namespace Hazard {
 		std::unique_ptr<VertexArray> vertexArray;
 
 		static std::vector<GameObject*> gameObjects;
-		static Matrix4 viewMatrix;
+		static glm::mat4 projection;
 	};
 }

@@ -6,6 +6,7 @@
 
 
 namespace Hazard {
+
 	class HAZARD_API Math {
 	public:
 		template<typename T>
@@ -47,13 +48,17 @@ namespace Hazard {
 			return 2 * (atan(1) * 4) * (value / 360);
 		}
 
-		static double Tan(double value)
-		{
-			return tan(value);
-		}
 		static double Sin(double value)
 		{
 			return sin(value);
+		}
+		static double Cos(double value)
+		{
+			return sin(value);
+		}
+		static double Tan(double value)
+		{
+			return tan(value);
 		}
 	};
 }

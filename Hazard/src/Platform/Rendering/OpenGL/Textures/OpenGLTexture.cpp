@@ -7,9 +7,8 @@
 
 namespace Hazard {
 	
-	OpenGLTexture2D::OpenGLTexture2D(std::string file)
+	OpenGLTexture2D::OpenGLTexture2D(std::string file) : Texture2D(file)
 	{
-		this->path = file;
 		int w, h, channels;
 		stbi_uc* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
 		if (!data) {

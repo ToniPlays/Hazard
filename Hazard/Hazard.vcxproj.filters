@@ -19,6 +19,9 @@
     <Filter Include="src\Hazard\ECS\Components">
       <UniqueIdentifier>{75FEC174-E1C0-F5FE-2A71-848B9672CEDC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\ECS\Scene">
+      <UniqueIdentifier>{7D2A0008-69B9-89D1-12D8-9DCCFE459A77}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Modules">
       <UniqueIdentifier>{DE6863E2-CA4C-2438-33AD-1E8B1FB00EBA}</UniqueIdentifier>
     </Filter>
@@ -120,6 +123,12 @@
     <ClInclude Include="src\Hazard\ECS\GameObject.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Scene\Scene.h">
+      <Filter>src\Hazard\ECS\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\SceneManger.h">
+      <Filter>src\Hazard\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Logging\Logger.h">
       <Filter>src\Hazard\Modules\Logging</Filter>
     </ClInclude>
@@ -143,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Rendering\Shaders\Shader.h">
       <Filter>src\Hazard\Modules\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Rendering\TextureManager.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Rendering\Textures\Texture.h">
       <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
@@ -204,9 +216,6 @@
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Scene\Scene.h" />
-    <ClInclude Include="src\Hazard\ECS\SceneManger.h" />
-    <ClInclude Include="src\Hazard\Modules\Rendering\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -234,6 +243,9 @@
       <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Rendering\RendererAPI.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Rendering\TextureManager.cpp">
       <Filter>src\Hazard\Modules\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Rendering\Textures\Texture2D.cpp">
@@ -278,6 +290,5 @@
     <ClCompile Include="vendor\stb_image.cpp">
       <Filter>vendor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Rendering\TextureManager.cpp" />
   </ItemGroup>
 </Project>

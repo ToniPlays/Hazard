@@ -49,11 +49,12 @@ namespace Hazard {
 
 		double lastTime = 0;
 		while (!info.ShouldClose()) {
+
 			PROFILE_FN();
-			double time = glfwGetTime() * 1000;
+			double time = glfwGetTime();
 			Time::unscaledDeltaTime = time - lastTime;
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
-			Time::time = time / 1000;
+			Time::time = time;
 			
 			//Update
 			moduleHandler.Update();

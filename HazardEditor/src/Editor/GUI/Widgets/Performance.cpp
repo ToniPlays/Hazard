@@ -37,11 +37,11 @@ void Performance::Render()
 	renderer->GetWindow().SetVSync(vsync);
 
 	std::stringstream ss;
-	ss << "Frametime " << Hazard::Time::unscaledDeltaTime << "ms";
+	ss << "Frametime " << Hazard::Time::unscaledDeltaTime * 1000 << "ms";
 	ImGui::Text(ss.str().c_str());
 	ss.str("");
 
-	ss << "FPS " << Hazard::Math::Round(1 / Hazard::Time::unscaledDeltaTime * 1000, 2);
+	ss << "FPS " << Hazard::Math::Round(1 / Hazard::Time::unscaledDeltaTime, 2);
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");

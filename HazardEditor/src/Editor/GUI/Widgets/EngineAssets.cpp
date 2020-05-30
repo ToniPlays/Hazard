@@ -36,6 +36,7 @@ void EngineAssets::Render()
 
 				for (Hazard::Texture* texture : type.second) {
 					ImGui::Text(texture->GetPath().c_str());
+					ImGui::Image((ImTextureID)texture->GetID(), ImVec2(50, 50));
 				}
 				ImGui::TreePop();
 			}
