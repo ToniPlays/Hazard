@@ -55,7 +55,7 @@ namespace Hazard {
 		shader->SetUniform("view", Matrix4::GetModelMatrix(Camera::GetTransform()));
 		shader->SetUniform("transform", Matrix4::GetModelMatrix(gameObject->transform));
 		shader->SetUniform("lightPos", { 0, 0, -20 });
-		shader->SetUniform("lightColor", Vector3<float>(1, 1, Math::Sin(Time::time)));
+		shader->SetUniform("lightColor", Vector3<float>(1, 1, 1));
 		shader->SetUniform("test", (float)((Math::Sin(Time::time * Renderer::test) + 1)) / 2);
 
 		glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
