@@ -5,6 +5,7 @@ class Performance : public Layer {
 public:
 	Performance();
 	void Render() override;
+	bool OnEnabled() override;
 private:
 	static bool layerOpen;
 };

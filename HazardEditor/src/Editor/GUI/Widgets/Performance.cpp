@@ -4,23 +4,28 @@
 #include <sstream>
 
 bool Performance::layerOpen = true;
+static bool vsync;
+Performance::Performance() {}
 
-Performance::Performance()
+bool Performance::OnEnabled()
 {
+	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+	if(renderer != nullptr)
+		vsync = renderer->GetWindow().IsVSync();
+	return true;
 }
-
 
 void Performance::Render()
 {
 	if (!layerOpen) return;
 
 	ImGui::Begin("Performance", &layerOpen);
-	
+
 	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
-	
+
 	ImGui::Checkbox("Use gradient", &renderer->useGradient);
 
-	if(renderer->useGradient)
+	if (renderer->useGradient)
 		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 360.0f);
 
 	ImGui::NewLine();
@@ -31,7 +36,6 @@ void Performance::Render()
 			}, Hazard::Application::GetCurrent().GetWindow().GetClearColor());
 	}*/
 	ImGui::NewLine();
-	static bool vsync = false;
 	ImGui::Checkbox("VSync", &vsync);
 
 	renderer->GetWindow().SetVSync(vsync);

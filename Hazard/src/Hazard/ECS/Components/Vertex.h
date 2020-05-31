@@ -8,6 +8,7 @@ namespace Hazard {
 		Vector3<float> position;
 		Vector3<float> normal;
 
+		Vertex() = default;
 		Vertex(Vector3<float> _position, Vector3<float> _normal) : position(_position), normal(_normal) {}
 	};
 }

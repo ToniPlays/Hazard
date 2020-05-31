@@ -18,7 +18,7 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Console());
 	PushLayer(new EngineAssets());
 
-	Hazard::ModuleHandler::PushModule(new Grid());
+	//Hazard::ModuleHandler::PushModule(new Grid());
 }
 Editor::~Editor()
 {

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <map>
 #include <stdio.h>
 
 #include "Hazard/Utils/File.h"

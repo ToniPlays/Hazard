@@ -20,7 +20,6 @@ namespace Hazard {
 	void OpenGLVertexBuffer::SetData(void* data, uint32_t size)
 	{
 		Bind();
-		std::cout << "Buffer " << name << " size " << size * ShaderDataTypeSize(dataType) << std::endl;
 		glBufferData(GL_ARRAY_BUFFER, size * ShaderDataTypeSize(dataType), data, GL_STATIC_DRAW);
 		Unbind();
 	}
@@ -49,7 +48,6 @@ namespace Hazard {
 	void OpenGLIndexBuffer::SetData(int* indices, uint32_t size)
 	{
 		Bind();
-		std::cout << "Index size " << size * sizeof(int) << std::endl;
 		this->count = size;
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(int), indices, GL_STATIC_DRAW);
 		Unbind();

@@ -27,14 +27,17 @@ namespace Hazard {
 			textures[type] = std::vector<Texture*>();
 		}
 		textures[type].push_back(texture);
+		HZR_CORE_INFO("Added 2D texture " + texture->GetPath());
 	}
 
 	Texture* TextureManager::GetTexture(TextureType type, std::string file)
 	{
-		if (textures.count(type) == 0) return nullptr;
+		if (textures.count(type) == 0) 
+			return nullptr;
 		
 		for (Texture* texture : textures[type]) {
-			if (texture->GetPath() == file) return texture;
+			if (texture->GetPath() == file) 
+				return texture;
 		}
 		return nullptr;
 	}

@@ -14,7 +14,7 @@ namespace Hazard {
 		return projection;
 	}
 
-	float Renderer::test = 1.0;
+	float Renderer::test = 45.0;
 	bool Renderer::useGradient = true;
 	glm::mat4 Renderer::projection;
 
@@ -35,7 +35,7 @@ namespace Hazard {
 		//GameObject* Origin = new GameObject("Origin", {});
 
 		//Origin->transform.scale = Vector3<float>(0.025, 0.025, 0.025);
-
+		gameObject->transform.rotation.y = 25.0f;
 		gameObjects.push_back(gameObject);
 		//gameObjects.push_back(Origin);
 		gameObjects.push_back(camera);

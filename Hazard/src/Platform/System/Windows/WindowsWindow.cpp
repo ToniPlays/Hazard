@@ -34,10 +34,10 @@ namespace Hazard {
 		glfwShowWindow(window);
 
 		std::string hex = "#161616";
-
 		SetClearColor(Color::FromHex(hex));
 		HazardLoop::GetAppInfo().SetValue("Clear Color", hex);
 		SetCallbacks();
+		SetVSync(true);
 	}
 	void WindowsWindow::OnUpdate() {
 
