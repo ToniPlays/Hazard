@@ -9,7 +9,7 @@ namespace Hazard {
 	class HAZARD_API VertexBuffer {
 
 	public:
-		virtual void SetData(void* data) = 0;
+		virtual void SetData(void* data, uint32_t size) = 0;
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetID() const = 0;

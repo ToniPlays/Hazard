@@ -21,9 +21,7 @@ void Inspector::Render()
 	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
 	ImGui::Text("GameObjects");
 
-	ImGui::Text("Camera");
-
-	Hazard::Camera* cam = Hazard::Camera::instance;
+	Hazard::GameObject* cam = renderer->GetAll()[0];
 	//Position
 
 	ImGui::Text("Position");
@@ -56,19 +54,6 @@ void Inspector::Render()
 	ImGui::SetNextItemWidth(70);
 	ImGui::DragFloat("SZ", &cam->transform.scale.z, 0.01f);
 
-
-	static float size = cam->GetSize();
-	ImGui::DragFloat("Size", &size, 0.01f);
-	size = Hazard::Math::Clamp(size, 0.0f, Hazard::Math::MaxValue<float>());
-	cam->SetSize(size);
-
-
-
-
-	ImGui::NewLine();
-	ImGui::Text("GameObject");
-
-	Hazard::GameObject* go = renderer->GetAll()[0];
 
 	ImGui::End();
 }

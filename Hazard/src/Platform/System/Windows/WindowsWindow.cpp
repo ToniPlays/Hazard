@@ -43,7 +43,7 @@ namespace Hazard {
 
 		glfwSwapBuffers(window);
 		context->ClearFrame();
-		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(0.1f);
+		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
 	void WindowsWindow::SetWindowTitle(std::string title)
 	{

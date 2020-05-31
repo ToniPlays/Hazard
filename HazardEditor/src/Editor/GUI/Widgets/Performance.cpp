@@ -21,7 +21,7 @@ void Performance::Render()
 	ImGui::Checkbox("Use gradient", &renderer->useGradient);
 
 	if(renderer->useGradient)
-		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 10.0f);
+		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 360.0f);
 
 	ImGui::NewLine();
 	/*

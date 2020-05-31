@@ -13,6 +13,7 @@ namespace Hazard {
 		virtual IndexBuffer* GetIndexBuffer() const = 0;
 
 		virtual void SetLayout(std::initializer_list<VertexBuffer*> buffers) = 0;
+		virtual void AddBuffer(VertexBuffer* buffers) = 0;
 		virtual void SetIndexBuffer(IndexBuffer* indexBuffer) = 0;
 	};
 }

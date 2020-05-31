@@ -1,37 +1,33 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "Hazard/Utils/Maths/Vector/Vector3.h"
+#include "Hazard/ECS/Components/Vertex.h"
 
 namespace Hazard {
 	class HAZARD_API Mesh {
 	public: 
 
-		Mesh();
+		Mesh(std::vector<Vertex> vertices, std::vector<int> indices);
 		~Mesh();
+		
+		float* GetVertices() { return vertices.data(); };
+		float* GetNormals() { return normals.data(); };
+		int* GetIndices() { return indices.data(); }
 
-		float* GetVertices() { return vertices; };
-		float* GetTextureCoords() { return textCoord; }
-		int* GetIndices() { return indices; }
+		int GetVerticesLength() { return vertices.size() / 3; };
+		int GetIndicesLength() { return indices.size(); }
 
+		bool HasNormals() { return hasNormals; }
+
+		//float* GetTextureCoords() { return textCoord; }
 
 	private:
 		
-		float vertices[12] = {
-			-1.0f, -1.0f, 0.0f,
-			-1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f, 0.0f,
-			 1.0f, -1.0f, 0.0f
-		};
-		float textCoord[8] = {
-			0.0f, 1.0f,
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 1.0f,
-		};
+		bool hasNormals = false;
 
-		int indices[6] = {
-			0, 1, 2,
-			0, 3, 2
-		};
+		std::vector<float> vertices;
+		std::vector<float> normals;
+		std::vector<int> indices;
 	};
 }

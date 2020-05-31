@@ -6,6 +6,7 @@
 #include "GLFW/imgui_impl_opengl3.h"
 #include "Items/EditorStyle.h"
 #include "GLFW/glfw3.h"
+#include "Editor/Core/Grid.h"
 
 #include "All.h"
 
@@ -16,6 +17,8 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Profiler());
 	PushLayer(new Console());
 	PushLayer(new EngineAssets());
+
+	Hazard::ModuleHandler::PushModule(new Grid());
 }
 Editor::~Editor()
 {

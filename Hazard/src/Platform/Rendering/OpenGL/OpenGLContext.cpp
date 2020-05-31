@@ -18,19 +18,21 @@ namespace Hazard {
 	{
 		glfwMakeContextCurrent(window);
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-
+			HZR_ASSERT(false, "Unable to init GLFW")
 			return;
 		};
 
 		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
+		//glCullFace(GL_FRONT);
+
+		glEnable(GL_DEPTH_TEST);
 
 		HazardLoop::GetAppInfo().SetValue("Renderer", GetVersion());
 	}
 
 	void OpenGLContext::ClearFrame() const
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGLContext::SetClearColor(Color color)

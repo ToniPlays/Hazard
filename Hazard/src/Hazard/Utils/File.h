@@ -7,5 +7,6 @@ namespace Hazard {
 	class HAZARD_API File {
 	public:
 		static std::string ReadFile(std::string file);
+		static std::string GetFileExtension(std::string file);
 	};
 }

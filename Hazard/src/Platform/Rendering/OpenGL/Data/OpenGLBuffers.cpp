@@ -17,11 +17,11 @@ namespace Hazard {
 		glDeleteBuffers(1, &BufferID);
 	}
 
-	void OpenGLVertexBuffer::SetData(void* data)
+	void OpenGLVertexBuffer::SetData(void* data, uint32_t size)
 	{
 		Bind();
-		uint32_t s = sizeof(data);
-		glBufferData(GL_ARRAY_BUFFER, s * ShaderDataTypeSize(dataType) / 2, data, GL_STATIC_DRAW);
+		std::cout << "Buffer " << name << " size " << size * ShaderDataTypeSize(dataType) << std::endl;
+		glBufferData(GL_ARRAY_BUFFER, size * ShaderDataTypeSize(dataType), data, GL_STATIC_DRAW);
 		Unbind();
 	}
 
@@ -49,8 +49,9 @@ namespace Hazard {
 	void OpenGLIndexBuffer::SetData(int* indices, uint32_t size)
 	{
 		Bind();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
-		this->count = size / sizeof(int);
+		std::cout << "Index size " << size * sizeof(int) << std::endl;
+		this->count = size;
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(int), indices, GL_STATIC_DRAW);
 		Unbind();
 	}
 

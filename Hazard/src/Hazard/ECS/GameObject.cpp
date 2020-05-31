@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Hazard/ECS/Components/MeshRenderer.h"
 #include "Hazard/Modules/Rendering/RendererAPI.h"
+#include "Hazard/Utils/Loaders/MeshLoader.h"
 
 namespace Hazard {
 
@@ -18,11 +19,10 @@ namespace Hazard {
 		this->components = components;
 		this->name = _name;
 		this->transform = transform;
-		Mesh* mesh = new Mesh();
-		components.emplace_back(new MeshRenderer(mesh, RendererAPI::Shader("res/shaders/shader.glsl"), this));
+		Mesh* mesh = MeshLoader::LoadMesh("res/models/cube.obj");
+		components.emplace_back(new MeshRenderer(mesh, RendererAPI::Shader("res/shaders/default.glsl"), this));
 	}
-
-
+	
 	GameObject::~GameObject()
 	{
 		for (Component* component : components) {

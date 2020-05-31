@@ -35,8 +35,13 @@ void EngineAssets::Render()
 			if(ImGui::TreeNode(ToString(type.first).c_str())) {
 
 				for (Hazard::Texture* texture : type.second) {
-					ImGui::Text(texture->GetPath().c_str());
+					std::stringstream ss;
+					ss << texture->GetPath();
+					ss << "\n" << texture->GetWidth() << "x" << texture->GetHeight();
+
 					ImGui::Image((ImTextureID)texture->GetID(), ImVec2(50, 50));
+					ImGui::SameLine();
+					ImGui::Text(ss.str().c_str());
 				}
 				ImGui::TreePop();
 			}

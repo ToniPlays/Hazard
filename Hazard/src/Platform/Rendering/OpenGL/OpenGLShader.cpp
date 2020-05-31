@@ -10,10 +10,13 @@ namespace Hazard {
 		if (type == "Vertex") {
 			return GL_VERTEX_SHADER;
 		}
+		else if (type == "Geometry") {
+			return GL_GEOMETRY_SHADER;
+		}
 		else if (type == "Fragment" || type == "Pixel") {
 			return GL_FRAGMENT_SHADER;
 		}
-		return 0;
+		return -1;
 	}
 
 	OpenGLShader::OpenGLShader(std::string path) {
@@ -119,6 +122,8 @@ namespace Hazard {
 		for (auto& kv : sources) {
 			GLenum type = kv.first;
 			const GLchar* source = kv.second.c_str();
+			if (type == -1) 
+				continue;
 
 			GLuint shader = glCreateShader(type);
 			glShaderSource(shader, 1, &source, 0);

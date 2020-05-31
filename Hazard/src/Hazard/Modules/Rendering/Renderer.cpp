@@ -29,14 +29,15 @@ namespace Hazard {
 
 		Camera* camera = new Camera();
 		camera->SetSize(1);
-		camera->transform.position.z = 10;
+		camera->transform.rotation.x = 0;
+		camera->transform.position = { 0, 0, 5 };
 		GameObject* gameObject = new GameObject("Test object 1", {});
-		GameObject* Origin = new GameObject("Origin", {});
+		//GameObject* Origin = new GameObject("Origin", {});
 
-		Origin->transform.scale = Vector3<float>(0.025, 0.025, 0.025);
+		//Origin->transform.scale = Vector3<float>(0.025, 0.025, 0.025);
 
 		gameObjects.push_back(gameObject);
-		gameObjects.push_back(Origin);
+		//gameObjects.push_back(Origin);
 		gameObjects.push_back(camera);
 
 		WindowResizeEvent event(window->GetWidth(), window->GetHeight());

@@ -3,6 +3,7 @@
 #include "File.h"
 
 namespace Hazard {
+
 	std::string File::ReadFile(std::string file) {
 
 		std::ifstream ifs(file, std::ios::in, std::ios::binary);
@@ -17,5 +18,8 @@ namespace Hazard {
 		ifs.read(&result[0], result.size());
 		ifs.close();
 		return result;
+	}
+	std::string File::GetFileExtension(std::string file) {
+		return file.substr(file.find_last_of(".") + 1);
 	}
 }

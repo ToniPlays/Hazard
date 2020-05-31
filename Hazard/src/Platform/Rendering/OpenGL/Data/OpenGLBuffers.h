@@ -9,7 +9,7 @@ namespace Hazard {
 		OpenGLVertexBuffer(ShaderDataType type, std::string name);
 		~OpenGLVertexBuffer();
 
-		void SetData(void* data);
+		void SetData(void* data, uint32_t size);
 		void Bind() const;
 		void Unbind() const;
 

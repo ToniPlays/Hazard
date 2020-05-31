@@ -75,6 +75,7 @@
     <ClInclude Include="src\Editor\Utils\Utility.h">
       <Filter>src\Editor\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\Core\Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -113,5 +114,9 @@
     <ClCompile Include="src\Editor\GUI\Widgets\Profiler.cpp">
       <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Core\Grid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\grid.glsl" />
   </ItemGroup>
 </Project>

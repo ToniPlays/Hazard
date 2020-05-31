@@ -216,6 +216,8 @@
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Loaders\MeshLoader.h" />
+    <ClInclude Include="src\Hazard\ECS\Components\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -290,5 +292,6 @@
     <ClCompile Include="vendor\stb_image.cpp">
       <Filter>vendor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\Loaders\MeshLoader.cpp" />
   </ItemGroup>
 </Project>

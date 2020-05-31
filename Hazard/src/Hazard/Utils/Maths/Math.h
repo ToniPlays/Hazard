@@ -44,6 +44,14 @@ namespace Hazard {
 		static T Round(T value, int digits) {
 			return round(value * Pow(10, digits)) / Pow(10, digits);
 		}
+
+		template<typename T>
+		static T ToRange(T value, T min, T max) {
+			if (value > max) return value - max;
+			else if (value < min) return value + max;
+			else return value;
+		}
+
 		static double ToRadians(double value) {
 			return 2 * (atan(1) * 4) * (value / 360);
 		}

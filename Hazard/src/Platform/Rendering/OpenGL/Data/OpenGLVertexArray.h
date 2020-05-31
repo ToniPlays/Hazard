@@ -18,6 +18,7 @@ namespace Hazard {
 		virtual IndexBuffer* GetIndexBuffer() const { return indexBuffer; }
 		void SetIndexBuffer(IndexBuffer* indexBuffer) { Bind(); this->indexBuffer = indexBuffer; this->indexBuffer->Bind(); };
 		void SetLayout(std::initializer_list<VertexBuffer*> buffers);
+		void AddBuffer(VertexBuffer* buffer) { layout.push_back(buffer); };
 
 	private:
 		std::vector<VertexBuffer*> layout;

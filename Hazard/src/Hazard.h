@@ -5,6 +5,7 @@
 #include "Hazard/Modules/Module.h"
 
 #include "Hazard/Modules/Rendering/TextureManager.h"
+#include "Hazard/Modules/Rendering/RendererAPI.h"
 
 #include "Hazard/Utils/Maths/Math.h"
 #include "Hazard/Utils/Maths/Vector/Vector2.h"
