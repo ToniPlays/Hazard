@@ -18,21 +18,21 @@ namespace Hazard {
 		VertexBuffer* vertexBuffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "position");
 		vertexBuffer->SetData(mesh->GetVertices(), mesh->GetVerticesLength());
 
+		VertexBuffer* textureCoords = RendererAPI::VertexBuffer(ShaderDataType::Float3, "position");
+		textureCoords->SetData(mesh->GetTextureCoords(), mesh->GetVerticesLength());
 
-		HZR_CORE_INFO("Has normals");
 
 		VertexBuffer* normalBuffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "normals");
-		normalBuffer->SetData(mesh->GetNormals(), mesh->GetVerticesLength());
-		HZR_CORE_INFO("Mesh has normals");
+		normalBuffer->SetData(mesh->GetNormals(), mesh->GetVerticesLength());;
 
-		vertexArray->SetLayout({ vertexBuffer, normalBuffer });
+		vertexArray->SetLayout({ vertexBuffer, textureCoords, normalBuffer });
 		IndexBuffer* indexBuffer = RendererAPI::IndexBuffer();
 
 		indexBuffer->SetData(mesh->GetIndices(), mesh->GetIndicesLength());
 		vertexArray->SetIndexBuffer(indexBuffer);
 
-		//texture = RendererAPI::Texture2D("res/textures/checker.png");
-		//texture->Bind();
+		texture = RendererAPI::Texture2D("res/textures/checker.png");
+		texture->Bind();
 
 		vertexArray->Bind();
 
@@ -46,10 +46,10 @@ namespace Hazard {
 
 	void MeshRenderer::OnRender()
 	{
-		//texture->Bind();
 
 		vertexArray->Bind();
 		shader->Bind();
+		texture->Bind();
 
 		shader->SetUniform("projection", Renderer::GetProjection());
 		shader->SetUniform("view", Matrix4::GetModelMatrix(Camera::GetTransform()));
@@ -58,7 +58,7 @@ namespace Hazard {
 		shader->SetUniform("lightColor", Vector3<float>(1, 1, 1));
 		shader->SetUniform("test", (float)((Math::Sin(Time::time * Renderer::test) + 1)) / 2);
 
-		glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
+		Renderer::RenderMesh(mesh);
 
 		gameObject->transform.rotation.x += Time::deltaTime * Renderer::test, 0.0f, 360.0f;
 		gameObject->transform.rotation.x = Math::ToRange(gameObject->transform.rotation.x, 0.0f, 360.0f);

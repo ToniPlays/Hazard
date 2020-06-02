@@ -19,7 +19,7 @@ namespace Hazard {
 		this->components = components;
 		this->name = _name;
 		this->transform = transform;
-		Mesh* mesh = MeshLoader::LoadMesh("res/models/cube.obj");
+		Mesh* mesh = MeshLoader::LoadMesh("res/models/monkey.obj");
 		components.emplace_back(new MeshRenderer(mesh, RendererAPI::Shader("res/shaders/default.glsl"), this));
 	}
 	

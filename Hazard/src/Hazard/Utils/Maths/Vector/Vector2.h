@@ -41,10 +41,9 @@ namespace Hazard {
 			this->y /= len;
 		}
 
-		std::string ToString() {
-			std::stringstream ss;
-			ss << "(" << x << ", " << y << ")";
-			return ss.str();
+		friend std::ostream& operator << (std::ostream& os, const Vector2<T>& v) {
+			os << "(" << v.x << ", " << v.y << ")";
+			return os;
 		}
 
 	public:

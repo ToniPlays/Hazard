@@ -17,6 +17,7 @@ namespace Hazard {
 		void ClearFrame() const override;
 		void SetClearColor(Color color) override;
 		void SetViewport(int x, int y, int w, int h) const override;
+		void Draw(RenderType type, Mesh* mesh) override;
 		Color GetClearColor() { return Color(); }
 		std::string GetVersion() const;
 	private:

@@ -2,27 +2,30 @@
 #include <hzrpch.h>
 #include "Renderer.h"
 #include "glad/glad.h"
-#include "RendererAPI.h"
 #include "Hazard/ECS/Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Hazard {
 
+	float Renderer::test = 45.0;
+	bool Renderer::useGradient = true;
+	Renderer* Renderer::instance;
+	glm::mat4 Renderer::projection;
+
+	std::vector<GameObject*> Renderer::gameObjects;
+
 	glm::mat4& Renderer::GetProjection()
 	{
 		return projection;
 	}
 
-	float Renderer::test = 45.0;
-	bool Renderer::useGradient = true;
-	glm::mat4 Renderer::projection;
-
-	std::vector<GameObject*> Renderer::gameObjects;
-
 	Renderer::Renderer() : Module("Renderer")
 	{
 		HZR_CORE_INFO("Renderer enabled");
+		api = new RendererAPI();
+		Renderer::instance = this;
+		
 
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(Renderer::OnEvent));
@@ -35,7 +38,7 @@ namespace Hazard {
 		//GameObject* Origin = new GameObject("Origin", {});
 
 		//Origin->transform.scale = Vector3<float>(0.025, 0.025, 0.025);
-		gameObject->transform.rotation.y = 25.0f;
+		gameObject->transform.rotation.y = 90.0f;
 		gameObjects.push_back(gameObject);
 		//gameObjects.push_back(Origin);
 		gameObjects.push_back(camera);
@@ -49,6 +52,12 @@ namespace Hazard {
 		for (GameObject* gameObject : gameObjects) {
 			gameObject->~GameObject();
 		}
+	}
+
+
+	void Renderer::RenderMeshAsType(Mesh* mesh)
+	{
+		window->GetContext()->Draw(api->GetType(), mesh);
 	}
 
 	bool Renderer::Resized(Event& e)
@@ -79,6 +88,12 @@ namespace Hazard {
 		ss << calls;
 		HazardLoop::GetCurrent().GetAppInfo().SetValue("DrawCalls", ss.str());
 		PROFILE_FN();
+	}
+
+
+	void Renderer::RenderMesh(Mesh* mesh)
+	{
+		Renderer::instance->RenderMeshAsType(mesh);
 	}
 
 	bool Renderer::OnEvent(Event& e)

@@ -12,6 +12,9 @@ namespace Hazard {
 			this->vertices.push_back(v.position.x);
 			this->vertices.push_back(v.position.y);
 			this->vertices.push_back(v.position.z);
+
+			this->textCoord.push_back(v.textureCoords.x);
+			this->textCoord.push_back(v.textureCoords.y);
 			
 			this->normals.push_back(v.normal.x);
 			this->normals.push_back(v.normal.y);

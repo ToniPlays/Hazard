@@ -2,7 +2,8 @@
 #version 330 core
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
+layout(location = 1) in vec2 textureCoords;
+layout(location = 2) in vec3 normal;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -11,6 +12,7 @@ uniform vec3 lightPos;
 
 out vec3 surfaceNormal;
 out vec3 lightVec;
+out vec2 passCoords;
 
 void main() {
 
@@ -20,16 +22,19 @@ void main() {
 	lightVec = lightPos - worldPos.xyz;
 
 	gl_Position = projection * view * worldPos;
+	passCoords = textureCoords;
 }
 
 #type Fragment
 #version 330 core
 
 in vec3 surfaceNormal;
+in vec2 passCoords;
 in vec3 lightVec;
 
 uniform float test;
 uniform vec3 lightColor;
+uniform sampler2D T_texture;
 
 out vec4 color;
 
@@ -41,6 +46,6 @@ void main() {
 	float nDotl = dot(unitNormal, unitLight);
 	float brightness = max(nDotl, 0.1);
 	vec3 diffuse = brightness * lightColor;
-
-	color = vec4(diffuse * vec3(1.0, 1.0, 1.0), 1.0);
+	color = vec4(1.0, 1.0, 1.0, 1.0);
+	//color = vec4(diffuse, 1.0) * texture(T_texture, passCoords);
 }

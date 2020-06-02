@@ -20,13 +20,14 @@ namespace Hazard {
 
 		bool HasNormals() { return hasNormals; }
 
-		//float* GetTextureCoords() { return textCoord; }
+		float* GetTextureCoords() { return textCoord.data(); }
 
 	private:
 		
 		bool hasNormals = false;
 
 		std::vector<float> vertices;
+		std::vector<float> textCoord;
 		std::vector<float> normals;
 		std::vector<int> indices;
 	};

@@ -11,6 +11,7 @@
 
 namespace Hazard {
 
+	RenderAPI RendererAPI::renderer = RenderAPI::OpenGL;
 
 	Shader* RendererAPI::Shader(const std::string& file)
 	{
@@ -66,5 +67,28 @@ namespace Hazard {
 		return nullptr;
 	}
 
-	RenderAPI RendererAPI::renderer = RenderAPI::OpenGL;
+	void RendererAPI::GetType(int &selected)
+	{
+		switch (type)
+		{
+		case Hazard::RenderType::Points:
+			selected = 1;
+			break;
+		default:
+			selected = 0;
+			break;
+		}
+	}
+
+	void RendererAPI::SetType(int t)
+	{
+		switch (t)
+		{
+		case 1:
+			type = RenderType::Points;
+			break;
+		default:
+			type = RenderType::Default;
+		}
+	}
 }

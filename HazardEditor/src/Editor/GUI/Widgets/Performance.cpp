@@ -23,10 +23,16 @@ void Performance::Render()
 
 	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
 
-	ImGui::Checkbox("Use gradient", &renderer->useGradient);
+	static char* data[] = { "Shaded", "Points" };
+	int selected = 0;
+	renderer->GetAPI().GetType(selected);
 
-	if (renderer->useGradient)
-		ImGui::SliderFloat("Blue channel", &renderer->test, 0.0f, 360.0f);
+	ImGui::SetNextItemWidth(125);
+	ImGui::Combo("Shading", &selected, data, IM_ARRAYSIZE(data));
+	renderer->GetAPI().SetType(selected);
+
+
+	ImGui::SliderFloat("Rotation speed ", &renderer->test, 0.0f, 360.0f);
 
 	ImGui::NewLine();
 	/*

@@ -46,6 +46,21 @@ namespace Hazard {
 		glViewport(x, y, w, h);
 	}
 
+
+	void OpenGLContext::Draw(RenderType type, Mesh* mesh)
+	{
+		switch (type)
+		{
+		case Hazard::RenderType::Default:
+			glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
+			break;
+		case Hazard::RenderType::Points:
+			glPointSize(5.0);
+			glDrawArrays(GL_POINTS, 0, mesh->GetVerticesLength());
+			break;
+		}
+	}
+
 	std::string OpenGLContext::GetVersion() const
 	{
 		std::stringstream ss;
