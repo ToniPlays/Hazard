@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Modules/Rendering/Textures/Texture.h"
+#include "Hazard/Modules/Renderer/Textures/Texture2D.h"
 #include <unordered_map>
 #include <vector>
 
 namespace Hazard {
 
 	enum TextureType {
-		T2D = 0, Render
+		T2D = 0, RenderTX
 	};
 
 	class HAZARD_API TextureManager {

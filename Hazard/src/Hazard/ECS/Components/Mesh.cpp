@@ -21,12 +21,14 @@ namespace Hazard {
 			this->normals.push_back(v.normal.z);
 		}
 		this->indices = _indices;
+
+		std::cout << "Mesh: " << _vertices.size() << " v, indices " << indices.size() << std::endl;
 	}
+
 
 	Mesh::~Mesh()
 	{
 		indices.clear();
 		vertices.clear();
 	}
-
 }

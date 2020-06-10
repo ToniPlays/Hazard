@@ -2,7 +2,7 @@
 
 #include "Hazard/Core/Core.h"
 #include <glad/glad.h>
-#include "Hazard/Modules/Rendering/Shaders/Shader.h"
+#include "Hazard/Modules/Renderer/Shaders/Shader.h"
 
 #include "glm/glm.hpp"
 

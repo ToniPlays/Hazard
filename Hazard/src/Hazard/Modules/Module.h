@@ -18,8 +18,8 @@ namespace Hazard {
 		virtual void Update() {};
 		virtual void LateUpdate() {};
 		virtual void Render() {};
-		virtual void OnEnabled() {};
-		virtual void OnDisabled() {};
+		virtual bool OnEnabled() { return true; };
+		virtual bool OnDisabled() { return true; };
 		virtual void OnDestroy() {};
 	protected:
 		std::string name;

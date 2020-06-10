@@ -10,7 +10,7 @@ std::string ToString(Hazard::TextureType type) {
 	{
 	case Hazard::TextureType::T2D:
 		return "Texture 2D";
-	case Hazard::TextureType::Render:
+	case Hazard::TextureType::RenderTX:
 		return "RenderTexture";
 	default:
 		return "Unknown texture type";

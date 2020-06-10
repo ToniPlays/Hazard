@@ -9,7 +9,7 @@ Performance::Performance() {}
 
 bool Performance::OnEnabled()
 {
-	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 	if(renderer != nullptr)
 		vsync = renderer->GetWindow().IsVSync();
 	return true;
@@ -21,26 +21,10 @@ void Performance::Render()
 
 	ImGui::Begin("Performance", &layerOpen);
 
-	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 
-	static char* data[] = { "Shaded", "Points" };
-	int selected = 0;
-	renderer->GetAPI().GetType(selected);
+	ImGui::SliderFloat("Rotation speed ", &Hazard::GlobalRenderer::speed, 0.0f, 360.0f);
 
-	ImGui::SetNextItemWidth(125);
-	ImGui::Combo("Shading", &selected, data, IM_ARRAYSIZE(data));
-	renderer->GetAPI().SetType(selected);
-
-
-	ImGui::SliderFloat("Rotation speed ", &renderer->test, 0.0f, 360.0f);
-
-	ImGui::NewLine();
-	/*
-	if (ImGui::Button("Change clear color")) {
-		/*ImGuiLayer::OpenPicker([](Hazard::Color color) {
-			Hazard::Application::GetCurrent().GetWindow().SetClearColor(color);
-			}, Hazard::Application::GetCurrent().GetWindow().GetClearColor());
-	}*/
 	ImGui::NewLine();
 	ImGui::Checkbox("VSync", &vsync);
 

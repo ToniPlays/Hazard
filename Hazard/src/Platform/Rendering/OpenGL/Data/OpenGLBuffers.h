@@ -1,6 +1,6 @@
 #pragma once
 #include "Hazard/Core/Core.h"
-#include "Hazard/Modules/Rendering/Buffers/Buffer.h"
+#include "Hazard/Modules/Renderer/Buffers/Buffer.h"
 
 namespace Hazard {
 

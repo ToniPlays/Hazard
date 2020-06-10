@@ -2,7 +2,8 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/ECS/ECS.h"
-#include "Hazard/Modules/Rendering/RendererAPI.h"
+#include "Hazard/Modules/Renderer/RendererAPI.h"
+#include "Hazard/Modules/Renderer/Textures/Texture2D.h"
 
 
 namespace Hazard {

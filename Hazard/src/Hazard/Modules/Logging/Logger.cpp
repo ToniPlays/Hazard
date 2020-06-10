@@ -18,7 +18,7 @@ namespace Hazard {
 
 	bool Logger::isRealtime = false;
 
-	void Logger::OnEnabled()
+	bool Logger::OnEnabled()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		s_CoreLogger = spdlog::stdout_color_mt("Hazard");
@@ -26,12 +26,15 @@ namespace Hazard {
 
 		s_ClientLogger = spdlog::stdout_color_mt("Application");
 		s_ClientLogger->set_level(spdlog::level::trace);
+
+		return true;
 	}
 
-	void Logger::OnDisabled()
+	bool Logger::OnDisabled()
 	{
 		s_CoreLogger.reset();
 		s_ClientLogger.reset();
+		return true;
 	}
 
 	void Logger::Assert(bool success, std::string text)

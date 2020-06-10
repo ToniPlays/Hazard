@@ -6,8 +6,6 @@
 
 namespace Hazard {
 
-	
-
 	HazardLoop* HazardLoop::instance;
 
 	ApplicationInfo HazardLoop::info = ApplicationInfo();
@@ -20,7 +18,6 @@ namespace Hazard {
 
 	bool HazardLoop::OnEvent(Event& e)
 	{
-
 		if (e.GetCategoryFlags() & EventCategory::EventCategoryApplication) {
 			EventDispatcher dispatcher(e);
 			return dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Close));

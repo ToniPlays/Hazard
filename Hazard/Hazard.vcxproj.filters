@@ -138,30 +138,6 @@
     <ClInclude Include="src\Hazard\Modules\ModuleHandler.h">
       <Filter>src\Hazard\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Buffers\Buffer.h">
-      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Buffers\VertexArray.h">
-      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Renderer.h">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\RendererAPI.h">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Shaders\Shader.h">
-      <Filter>src\Hazard\Modules\Rendering\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\TextureManager.h">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Textures\Texture.h">
-      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Rendering\Textures\Texture2D.h">
-      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Utils\File.h">
       <Filter>src\Hazard\Utils</Filter>
     </ClInclude>
@@ -218,6 +194,36 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Utils\Loaders\MeshLoader.h" />
     <ClInclude Include="src\Hazard\ECS\Components\Vertex.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Buffers\Buffer.h">
+      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Buffers\VertexArray.h">
+      <Filter>src\Hazard\Modules\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Materials\Material.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Shaders\Shader.h">
+      <Filter>src\Hazard\Modules\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Textures\Texture.h">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Textures\Texture2D.h">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\GlobalRenderer.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\RendererAPI.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\TextureManager.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Renderer3D\Renderer3d.h">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\Renderer2D\Renderer2D.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Textures\RenderTexture.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLRenderTexture.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -240,18 +246,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\ModuleHandler.cpp">
       <Filter>src\Hazard\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Rendering\Renderer.cpp">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Rendering\RendererAPI.cpp">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Rendering\TextureManager.cpp">
-      <Filter>src\Hazard\Modules\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Rendering\Textures\Texture2D.cpp">
-      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Utils\File.cpp">
       <Filter>src\Hazard\Utils</Filter>
@@ -293,5 +287,21 @@
       <Filter>vendor</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Utils\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="src\Hazard\Modules\Renderer\Textures\Texture2D.cpp">
+      <Filter>src\Hazard\Modules\Rendering\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Renderer\GlobalRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Modules\Renderer\RendererAPI.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Renderer\TextureManager.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Renderer\Renderer3D\Renderer3d.cpp">
+      <Filter>src\Hazard\Modules\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Renderer\Renderer2D\Renderer2D.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLRenderTexture.cpp" />
+    <ClCompile Include="src\Hazard\Modules\Renderer\Grid.cpp" />
   </ItemGroup>
 </Project>

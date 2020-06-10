@@ -3,9 +3,11 @@
 #include "Hazard/Core/Core.h"
 
 namespace Hazard {
-	class HAZARD_API SceneManager {
+	class HAZARD_API Material {
 	public:
-		void LoadScene();
 		
+		void Bind();
+		void Unbind();
+
 	};
 }

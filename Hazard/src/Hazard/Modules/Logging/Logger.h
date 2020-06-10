@@ -24,8 +24,8 @@ namespace Hazard {
 	public:
 		Logger() : Module("Logger") {};
 		~Logger() {};
-		void OnEnabled() override;
-		void OnDisabled() override;
+		bool OnEnabled() override;
+		bool OnDisabled() override;
 
 		static void EnableRealtime() { isRealtime = true; }
 		static void DisableRealtime() { isRealtime = false; }

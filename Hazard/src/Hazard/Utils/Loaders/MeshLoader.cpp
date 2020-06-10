@@ -60,7 +60,6 @@ namespace Hazard {
 				std::stringstream vOffset;
 
 				vOffset << temp;
-				//std::cout << "Line: pos " << v << std::endl;
 
 				if (vertices.count(vOffset.str()) > 1) {
 					vOffset << "_" << offset;
@@ -97,13 +96,13 @@ namespace Hazard {
 		}
 
 		return new Mesh(v, indices);
-		return LoadCube();
 	}
 
 	void MeshLoader::GetData(std::string line, int& v, int& vt, int& vn)
 	{
 		std::stringstream ss(line);
 		std::string temp;
+
 		while (std::getline(ss, temp, '/')) {
 			v = std::stoi(temp) - 1;
 			break;
@@ -124,24 +123,24 @@ namespace Hazard {
 		std::vector<int> indices;
 
 		//Cube front
-		vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
-		vertices.push_back(Vertex({ -1,-1, 1 }, { 0, 1 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({-1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({-1,-1, 1 }, { 1, 0 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 0, -1 }));
-		vertices.push_back(Vertex({ 1, 1, 1 }, { 1, 0 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({ 1, 1, 1 }, { 0, 0 }, { 0, 0, -1 }));
 		indices.insert(indices.end(), { 0, 1, 2 });
 		indices.insert(indices.end(), { 0, 2, 3 });
 		//Back
-		vertices.push_back(Vertex({ -1, 1,-1 }, { 0, 1 }, { 0, 0, 1 }));
-		vertices.push_back(Vertex({ -1,-1,-1 }, { 0, 1 }, { 0, 0, 1 }));
+		vertices.push_back(Vertex({-1, 1,-1 }, { 0, 1 }, { 0, 0, 1 }));
+		vertices.push_back(Vertex({-1,-1,-1 }, { 0, 1 }, { 0, 0, 1 }));
 		vertices.push_back(Vertex({ 1,-1,-1 }, { 1, 1 }, { 0, 0, 1 }));
 		vertices.push_back(Vertex({ 1, 1,-1 }, { 1, 0 }, { 0, 0, 1 }));
 		indices.insert(indices.end(), { 4, 5, 6 });
 		indices.insert(indices.end(), { 4, 6, 7 });
 		//Left
-		vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 1, 0, 0 }));
-		vertices.push_back(Vertex({ -1,-1, 1 }, { 0, 1 }, { 1, 0, 0 }));
-		vertices.push_back(Vertex({ -1, 1,-1 }, { 1, 1 }, { 1, 0, 0 }));
-		vertices.push_back(Vertex({ -1,-1,-1 }, { 1, 0 }, { 1, 0, 0 }));
+		vertices.push_back(Vertex({-1, 1, 1 }, { 0, 1 }, { 1, 0, 0 }));
+		vertices.push_back(Vertex({-1,-1, 1 }, { 0, 1 }, { 1, 0, 0 }));
+		vertices.push_back(Vertex({-1, 1,-1 }, { 1, 1 }, { 1, 0, 0 }));
+		vertices.push_back(Vertex({-1,-1,-1 }, { 1, 0 }, { 1, 0, 0 }));
 		indices.insert(indices.end(), { 8, 9, 10 });
 		indices.insert(indices.end(), { 9, 10, 11 });
 		//Right
@@ -152,20 +151,20 @@ namespace Hazard {
 		indices.insert(indices.end(), { 12, 13, 14 });
 		indices.insert(indices.end(), { 13, 14, 15 });
 		//Top
-		vertices.push_back(Vertex({ -1, 1,-1 }, { 0, 1 }, { 0, -1, 0 }));
-		vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 0, -1, 0 }));
+		vertices.push_back(Vertex({-1, 1,-1 }, { 0, 1 }, { 0, -1, 0 }));
+		vertices.push_back(Vertex({-1, 1, 1 }, { 0, 1 }, { 0, -1, 0 }));
 		vertices.push_back(Vertex({ 1, 1, 1 }, { 1, 1 }, { 0, -1, 0 }));
 		vertices.push_back(Vertex({ 1, 1,-1 }, { 1, 0 }, { 0, -1, 0 }));
 		indices.insert(indices.end(), { 16, 17, 18 });
 		indices.insert(indices.end(), { 16, 18, 19 });
 		//Bottom
-		vertices.push_back(Vertex({ -1,-1,-1 }, { 1, 1 }, { 0, 1, 0 }));
-		vertices.push_back(Vertex({ -1,-1, 1 }, { 0, 1 }, { 0, 1, 0 }));
+		vertices.push_back(Vertex({-1,-1,-1 }, { 1, 1 }, { 0, 1, 0 }));
+		vertices.push_back(Vertex({-1,-1, 1 }, { 0, 1 }, { 0, 1, 0 }));
 		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 1, 0 }));
 		vertices.push_back(Vertex({ 1,-1,-1 }, { 1, 0 }, { 0, 1, 0 }));
 		indices.insert(indices.end(), { 20, 21, 22 });
 		indices.insert(indices.end(), { 20, 23, 22 });
-
+		
 		//std::cout << "Vertices " << vertices.size() << ", indices " << indices.size() << std::endl;
 
 		return new Mesh(vertices, indices);
@@ -182,7 +181,6 @@ namespace Hazard {
 				f = true;
 				continue;
 			}
-
 			result.push_back(std::stof(current));
 		}
 		return Vector3<float>(result.at(0), result.at(1), result.at(2));
@@ -199,8 +197,6 @@ namespace Hazard {
 		pos += std::strlen(l.c_str());
 		l = line.substr(pos, line.find_first_of(" ", pos));
 		float y = std::stof(l);
-
-		//std::cout << x << ", " << y  << std::endl;
 
 		return Vector2<float>(x, 1 - y);
 	}

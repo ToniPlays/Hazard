@@ -12,3 +12,20 @@ inline std::string CurrentTime() {
 	strftime(timestamp, 10, "%H:%M:%S", localtime(&now));
 	return timestamp;
 }
+inline ImVec2 GetMaxSize(ImVec2 size, int w, int h) {
+
+	/*float sizeRatio = size.x / size.y;
+	float wRatio = (float)w / (float)h;
+	float hRatio = (float)h / (float)w;
+	std::cout << sizeRatio << std::endl;
+
+	if (sizeRatio >= wRatio) {
+		
+		return ImVec2(hRatio * (float)w, size.y);
+	}
+	else {
+		return ImVec2(960, 540);
+		
+	}*/
+	return ImVec2(w, h);
+}

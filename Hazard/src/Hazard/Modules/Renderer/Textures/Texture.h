@@ -17,6 +17,7 @@ namespace Hazard {
 
 		virtual uint32_t GetID() const = 0;
 		virtual std::string GetPath() { return path; }
+
 	protected:
 		unsigned int width = 0, height = 0;
 		std::string path;

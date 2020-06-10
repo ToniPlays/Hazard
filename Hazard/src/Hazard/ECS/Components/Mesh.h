@@ -15,8 +15,8 @@ namespace Hazard {
 		float* GetNormals() { return normals.data(); };
 		int* GetIndices() { return indices.data(); }
 
-		int GetVerticesLength() { return vertices.size() / 3; };
-		int GetIndicesLength() { return indices.size(); }
+		size_t GetVerticesLength() { return vertices.size() / 3; };
+		size_t GetIndicesLength() { return indices.size(); }
 
 		bool HasNormals() { return hasNormals; }
 

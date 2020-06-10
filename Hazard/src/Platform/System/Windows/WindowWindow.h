@@ -28,7 +28,7 @@ namespace Hazard {
 		bool IsVSync() const { return windowData.VSync; }
 		bool IsFocused() const { return windowData.focus; }
 		WindowProps GetWindowInfo() { return windowData; }
-		Color GetClearColor() const { return Color(); }
+		Color GetClearColor() const { return context->GetClearColor(); }
 
 	private:
 		GLFWwindow* window = nullptr;

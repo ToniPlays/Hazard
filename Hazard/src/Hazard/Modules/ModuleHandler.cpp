@@ -1,7 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "ModuleHandler.h"
-#include "Rendering/Renderer.h"
+#include "Hazard/Modules/Renderer/GlobalRenderer.h"
 #include "Logging/Logger.h"
 
 namespace Hazard {
@@ -14,8 +14,7 @@ namespace Hazard {
 #if !defined(HZR_RELEASE) && !defined(HZR_GAME_ONLY)
 		PushModule(new Logger);
 #endif // !HZR_GAME_ONLY || HZR_RELEASE
-
-		PushModule(new Renderer());
+		PushModule(new GlobalRenderer());
 	}
 
 	ModuleHandler::~ModuleHandler()
@@ -25,8 +24,11 @@ namespace Hazard {
 
 	void ModuleHandler::PushModule(Module* module)
 	{
-		modules.emplace_back(module);
-		module->OnEnabled();
+		if (module->OnEnabled()) {
+			modules.emplace_back(module);
+			return;
+		}
+		HZR_CORE_WARN(module->GetName() + " was not started correctly");
 
 	}
 	bool ModuleHandler::PopModule(Module* module)
@@ -34,7 +36,10 @@ namespace Hazard {
 		auto it = std::find(modules.begin(), modules.end(), module);
 		if (it != modules.end()) {
 			modules.erase(it);
-			module->OnDisabled();
+			if (!module->OnDisabled()) {
+				HZR_CORE_WARN(module->GetName() + " was not closed correctly");
+				return false;
+			}
 			return true;
 		}
 		return false;

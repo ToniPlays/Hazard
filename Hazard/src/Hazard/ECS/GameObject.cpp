@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "GameObject.h"
 #include "Hazard/ECS/Components/MeshRenderer.h"
-#include "Hazard/Modules/Rendering/RendererAPI.h"
+#include "Hazard/Modules/Renderer/RendererAPI.h"
 #include "Hazard/Utils/Loaders/MeshLoader.h"
 
 namespace Hazard {
@@ -19,7 +19,7 @@ namespace Hazard {
 		this->components = components;
 		this->name = _name;
 		this->transform = transform;
-		Mesh* mesh = MeshLoader::LoadMesh("res/models/monkey.obj");
+		Mesh* mesh = MeshLoader::LoadCube();
 		components.emplace_back(new MeshRenderer(mesh, RendererAPI::Shader("res/shaders/default.glsl"), this));
 	}
 	

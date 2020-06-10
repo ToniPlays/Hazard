@@ -2,9 +2,9 @@
 
 #include <hzrpch.h>
 #include "Hazard/ECS/ECS.h"
-#include "Hazard/Modules/Rendering/Renderer.h"
+#include "Hazard/Modules/Renderer/GlobalRenderer.h"
 #include "Hazard/ECS/Camera.h"
-#include "../../Utils/Maths/Vector/Matrix4.h"
+#include "Hazard/Utils/Maths/Vector/Matrix4.h"
 
 namespace Hazard {
 
@@ -23,7 +23,7 @@ namespace Hazard {
 
 
 		VertexBuffer* normalBuffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "normals");
-		normalBuffer->SetData(mesh->GetNormals(), mesh->GetVerticesLength());;
+		normalBuffer->SetData(mesh->GetNormals(), mesh->GetVerticesLength());
 
 		vertexArray->SetLayout({ vertexBuffer, textureCoords, normalBuffer });
 		IndexBuffer* indexBuffer = RendererAPI::IndexBuffer();
@@ -32,8 +32,8 @@ namespace Hazard {
 		vertexArray->SetIndexBuffer(indexBuffer);
 
 		texture = RendererAPI::Texture2D("res/textures/checker.png");
-		texture->Bind();
 
+		texture->Bind();
 		vertexArray->Bind();
 
 	}
@@ -46,21 +46,20 @@ namespace Hazard {
 
 	void MeshRenderer::OnRender()
 	{
-
 		vertexArray->Bind();
 		shader->Bind();
 		texture->Bind();
 
-		shader->SetUniform("projection", Renderer::GetProjection());
+		shader->SetUniform("projection", GlobalRenderer::Instance->Get3DProjection());
 		shader->SetUniform("view", Matrix4::GetModelMatrix(Camera::GetTransform()));
 		shader->SetUniform("transform", Matrix4::GetModelMatrix(gameObject->transform));
 		shader->SetUniform("lightPos", { 0, 0, -20 });
 		shader->SetUniform("lightColor", Vector3<float>(1, 1, 1));
-		shader->SetUniform("test", (float)((Math::Sin(Time::time * Renderer::test) + 1)) / 2);
+		shader->SetUniform("test", (float)((Math::Sin(Time::time) + 1)) / 2);
 
-		Renderer::RenderMesh(mesh);
+		GlobalRenderer::Draw(mesh);
 
-		gameObject->transform.rotation.x += Time::deltaTime * Renderer::test, 0.0f, 360.0f;
+		gameObject->transform.rotation.x += Time::deltaTime * GlobalRenderer::speed, 0.0f, 360.0f;
 		gameObject->transform.rotation.x = Math::ToRange(gameObject->transform.rotation.x, 0.0f, 360.0f);
 	}
 }

@@ -6,8 +6,9 @@
 #include "Platform/Rendering/OpenGL/Data/OpenGLVertexArray.h"
 #include "Platform/Rendering/OpenGL/Data/OpenGLBuffers.h"
 #include "Platform/Rendering/OpenGL/Textures/OpenGLTexture.h"
+#include "Platform/Rendering/OpenGL/Textures/OpenGLRenderTexture.h"
 #include "Platform/Rendering/OpenGL/OpenGLShader.h"
-#include "Hazard/Modules/Rendering/TextureManager.h"
+#include "Hazard/Modules/Renderer/TextureManager.h"
 
 namespace Hazard {
 
@@ -67,12 +68,26 @@ namespace Hazard {
 		return nullptr;
 	}
 
-	void RendererAPI::GetType(int &selected)
+
+	RenderTexture* RendererAPI::RenderTexture()
+	{
+		switch (GetAPI())
+		{
+		case RenderAPI::OpenGL:
+			return new OpenGLRenderTexture();
+		}
+		return nullptr;
+	}
+
+	void RendererAPI::GetType(int& selected)
 	{
 		switch (type)
 		{
 		case Hazard::RenderType::Points:
 			selected = 1;
+			break;
+		case Hazard::RenderType::Wireframe:
+			selected = 2;
 			break;
 		default:
 			selected = 0;
@@ -86,6 +101,9 @@ namespace Hazard {
 		{
 		case 1:
 			type = RenderType::Points;
+			break;
+		case 2:
+			type = RenderType::Wireframe;
 			break;
 		default:
 			type = RenderType::Default;

@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Buffers/VertexArray.h"
-#include "Buffers/Buffer.h"
 #include "Shaders/Shader.h"
-#include "Textures/Texture2D.h"
+#include "Buffers/VertexArray.h"
+#include "Hazard/Modules/Renderer/Buffers/Buffer.h"
+#include "Hazard/Modules/Renderer/Shaders/Shader.h"
+#include "Hazard/Modules/Renderer/Textures/Texture2D.h"
+#include "Hazard/Modules/Renderer/Textures/RenderTexture.h"
 
 
 namespace Hazard {
@@ -13,7 +15,7 @@ namespace Hazard {
 		None = 0, OpenGL, Vulkan, DirectX, Metal
 	};
 	enum class RenderType {
-		Default = 0, Points
+		Default = 0, Points, Wireframe
 	};
 
 	class HAZARD_API RendererAPI {
@@ -26,11 +28,11 @@ namespace Hazard {
 		static VertexBuffer* VertexBuffer(ShaderDataType type, const std::string& name);
 		static IndexBuffer* IndexBuffer();
 		static Texture2D* Texture2D(const std::string& file);
+		static RenderTexture* RenderTexture();
 
 		void GetType(int &selected);
+		RenderType GetType() { return type; }
 		void SetType(int t);
-
-		RenderType GetType() { return type; };
 
 	private:
 		RenderType renderType = RenderType::Default;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Modules/Rendering/Textures/Texture2D.h"
+#include "Hazard/Modules/Renderer/Textures/Texture2D.h"
 #include <iostream>
 
 namespace Hazard {

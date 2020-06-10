@@ -3,7 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Utils/Maths/Color.h"
 #include "Hazard/ECS/Components/Mesh.h"
-#include "Hazard/Modules/Rendering/RendererAPI.h"
+#include "Hazard/Modules/Renderer/RendererAPI.h"
 
 namespace Hazard {
 	class HAZARD_API GraphicsContext {

@@ -18,10 +18,10 @@ void Inspector::Render()
 	if (!layerOpen) return;
 
 	ImGui::Begin("Inspector", &layerOpen);
-	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 	ImGui::Text("GameObjects");
 
-	Hazard::GameObject* cam = renderer->GetAll()[0];
+	Hazard::GameObject* cam = Hazard::Camera::instance;
 	//Position
 
 	ImGui::Text("Position");

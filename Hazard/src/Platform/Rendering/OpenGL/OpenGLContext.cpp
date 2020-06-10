@@ -51,12 +51,19 @@ namespace Hazard {
 	{
 		switch (type)
 		{
-		case Hazard::RenderType::Default:
+		case RenderType::Default:
 			glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
 			break;
-		case Hazard::RenderType::Points:
+		case RenderType::Points:
 			glPointSize(5.0);
 			glDrawArrays(GL_POINTS, 0, mesh->GetVerticesLength());
+			break;
+		case RenderType::Wireframe: 
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+			glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
 		}
 	}

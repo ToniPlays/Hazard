@@ -6,9 +6,10 @@
 #include "GLFW/imgui_impl_opengl3.h"
 #include "Items/EditorStyle.h"
 #include "GLFW/glfw3.h"
-#include "Editor/Core/Grid.h"
 
 #include "All.h"
+
+ColorPicker* Editor::colorPicker;
 
 Editor::Editor() : Module("EditorGUI")
 {
@@ -17,14 +18,13 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Profiler());
 	PushLayer(new Console());
 	PushLayer(new EngineAssets());
-
-	//Hazard::ModuleHandler::PushModule(new Grid());
+	PushLayer(new Viewport());
 }
 Editor::~Editor()
 {
-	
+
 }
-void Editor::OnEnabled() {
+bool Editor::OnEnabled() {
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -49,16 +49,18 @@ void Editor::OnEnabled() {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+		Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 		if (renderer == nullptr) {
 			SetActive(false);
-			return;
+			return false;
 		}
+		colorPicker = new ColorPicker();
 		GLFWwindow* window = static_cast<GLFWwindow*>(renderer->GetWindow().GetNativeWindow());
 
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+		return true;
 	}
 }
 
@@ -66,6 +68,13 @@ void Editor::PushLayer(Layer* layer)
 {
 	if (layer->OnEnabled()) layers.push_back(layer);
 	else Debug::Warn("Unable to set layer");
+}
+
+void Editor::OpenColorPicker(Hazard::Color color, void(*func)(Hazard::Color color))
+{
+	colorPicker->func = func;
+	colorPicker->color = color;
+	colorPicker->isOpen = true;
 }
 
 void Editor::Begin()
@@ -78,7 +87,7 @@ void Editor::Begin()
 void Editor::End()
 {
 	ImGuiIO& io = ImGui::GetIO();
-	Hazard::Renderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::Renderer>();
+	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 	io.DisplaySize = ImVec2((float)renderer->GetWindow().GetWidth(), (float)renderer->GetWindow().GetHeight());
 
 	// Rendering
@@ -152,15 +161,17 @@ void Editor::Render() {
 	for (Layer* layer : layers) {
 		layer->Render();
 	}
-	/*if (colorPicker->isOpen)
-		colorPicker->OnRender();*/
+	if (colorPicker->isOpen)
+		colorPicker->OnRender();
 
 	End();
 }
 
-void Editor::OnDisabled()
+bool Editor::OnDisabled()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
+	return true;
 }

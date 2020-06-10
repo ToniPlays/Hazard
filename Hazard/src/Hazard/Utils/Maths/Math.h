@@ -20,7 +20,7 @@ namespace Hazard {
 
 		template<typename T, typename U>
 		static T Pow(T value, U pow) {
-			return std::pow(value, pow);
+			return (T)std::pow(value, pow);
 		}
 		template<typename T>
 		static T Sqrt(T value) {

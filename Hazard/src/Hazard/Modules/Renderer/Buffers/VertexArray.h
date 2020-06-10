@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
 #include <hzrpch.h>
-#include "Hazard/Modules/Rendering/Buffers/Buffer.h"
+#include "Hazard/Modules/Renderer/Buffers/Buffer.h"
 
 namespace Hazard {
 	class HAZARD_API VertexArray {
