@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Utils/Maths/Vector/Vector3.h"
 #include "Hazard/ECS/Components/Vertex.h"
 
 namespace Hazard {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "Hazard/ECS/Components/Mesh.h"
 
 namespace Hazard {
 	class HAZARD_API Renderer2D {
@@ -12,6 +13,6 @@ namespace Hazard {
 		void OnResized(Event& e);
 
 	private:
-
+		Mesh* planeMesh;
 	};
 }

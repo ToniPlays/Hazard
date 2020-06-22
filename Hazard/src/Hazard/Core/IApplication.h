@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Hazard/Core/Events/Event.h"
+
 namespace Hazard {
 	class HAZARD_API IApplication {
 	public:

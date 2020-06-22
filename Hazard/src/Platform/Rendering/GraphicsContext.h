@@ -11,7 +11,7 @@ namespace Hazard {
 		virtual ~GraphicsContext() = default;
 
 		virtual void Init() const = 0;
-		virtual void ClearFrame() const = 0;
+		virtual void ClearFrame(bool useClearColor = false) const = 0;
 		virtual void SetClearColor(Color color) = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
 		virtual Color GetClearColor() = 0;

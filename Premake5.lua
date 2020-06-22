@@ -179,6 +179,9 @@ project "HazardEditor"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "hzreditor.h"
+	pchsource "HazardEditor/src/hzreditor.cpp"
+
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
@@ -200,7 +203,7 @@ project "HazardEditor"
 	}
 
 	filter "system:windows"
-		cppdialect "default"
+		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
 

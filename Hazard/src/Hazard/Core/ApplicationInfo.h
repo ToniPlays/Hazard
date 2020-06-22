@@ -4,6 +4,7 @@
 #include <hzrpch.h>
 
 namespace Hazard {
+
 	class HAZARD_API ApplicationInfo {
 		friend class HazardLoop;
 	public:

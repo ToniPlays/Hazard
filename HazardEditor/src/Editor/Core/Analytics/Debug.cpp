@@ -1,6 +1,6 @@
 #pragma once
+#include "hzreditor.h"
 #include "Debug.h"
-#include "Editor/Utils/Utility.h"
 
 std::vector<Message*> Debug::logs;
 

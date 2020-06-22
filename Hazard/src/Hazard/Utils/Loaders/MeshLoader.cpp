@@ -169,6 +169,23 @@ namespace Hazard {
 
 		return new Mesh(vertices, indices);
 	}
+
+	Mesh* MeshLoader::LoadPlane()
+	{
+		std::vector<Vertex> vertices;
+		std::vector<int> indices;
+
+		//Cube front
+		vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({ -1,-1, 1 }, { 1, 0 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 0, -1 }));
+		vertices.push_back(Vertex({ 1, 1, 1 }, { 0, 0 }, { 0, 0, -1 }));
+		indices.insert(indices.end(), { 0, 1, 2 });
+		indices.insert(indices.end(), { 0, 2, 3 });
+
+		return new Mesh(vertices, indices);
+	}
+
 	Vector3<float> MeshLoader::GetPosV3(std::string line) {
 		std::stringstream ss;
 		ss << line;

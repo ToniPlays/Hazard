@@ -1,7 +1,6 @@
 #pragma once
+#include <hzreditor.h>
 #include "Profiler.h"
-#include "imgui.h"
-#include <sstream>
 
 bool Profiler::layerOpen = true;
 

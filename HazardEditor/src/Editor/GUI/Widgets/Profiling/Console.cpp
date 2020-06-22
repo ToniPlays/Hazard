@@ -1,9 +1,8 @@
 #pragma once
 
 #pragma once
+#include <hzreditor.h>
 #include "Console.h"
-#include "imgui.h"
-#include <sstream>
 #include "Editor/Utils/Utility.h"
 
 bool Console::layerOpen = true;

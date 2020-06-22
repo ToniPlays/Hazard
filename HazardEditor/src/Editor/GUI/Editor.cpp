@@ -1,12 +1,6 @@
 #pragma once
+#include <hzreditor.h>
 #include "Editor.h"
-
-#include "imgui.h"
-#include "GLFW/imgui_impl_glfw.h"
-#include "GLFW/imgui_impl_opengl3.h"
-#include "Items/EditorStyle.h"
-#include "GLFW/glfw3.h"
-
 #include "All.h"
 
 ColorPicker* Editor::colorPicker;

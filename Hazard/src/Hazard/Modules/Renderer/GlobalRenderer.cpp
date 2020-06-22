@@ -2,6 +2,8 @@
 #include <hzrpch.h>
 #include "GlobalRenderer.h"
 
+
+
 namespace Hazard {
 
 	GlobalRenderer* GlobalRenderer::Instance;
@@ -26,7 +28,6 @@ namespace Hazard {
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(GlobalRenderer::OnEvent));
 		HZR_ASSERT(window != nullptr, "Window was not created");
-
 		renderer3D = new Renderer3D();
 		renderer2D = new Renderer2D();
 		grid = new Grid();
@@ -59,10 +60,21 @@ namespace Hazard {
 	{
 		renderTexture->Bind();
 		window->GetContext()->ClearFrame();
+		//Use 2D and 3D renderers
 		renderer2D->Render();
 		renderer3D->Render();
 		grid->Render();
+
 		renderTexture->Unbind();
+		std::stringstream ss;
+
+#if !defined(HZR_GAME_ONLY) && !defined(HZR_RELEASE)
+		ss << drawCalls;
+		HazardLoop::GetAppInfo().SetValue("DrawCalls", ss.str());
+		drawCalls = 0;
+
+#endif // HZR_GAME_ONLY | HZR_RELEASE
+
 	}
 
 	bool GlobalRenderer::OnResized(Event& e)
@@ -72,14 +84,17 @@ namespace Hazard {
 		renderer3D->OnResized(e);
 		renderer2D->OnResized(e);
 
-		renderTexture->SetWidth(1280);
-		renderTexture->SetHeight(720);
+		renderTexture->SetWidth(resizeEvent.GetWidth());
+		renderTexture->SetHeight(resizeEvent.GetHeight());
+
 		return true;
 	}
 
 	void GlobalRenderer::Draw(Mesh* mesh)
 	{
 		RenderType type = GlobalRenderer::Instance->GetAPI().GetType();
-		GlobalRenderer::Instance->window->GetContext()->Draw(type, mesh);
+		GlobalRenderer* rd = GlobalRenderer::Instance;
+		rd->window->GetContext()->Draw(type, mesh);
+		rd->drawCalls++;
 	}
 }

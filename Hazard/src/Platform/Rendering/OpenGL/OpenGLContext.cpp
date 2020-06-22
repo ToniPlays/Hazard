@@ -30,15 +30,17 @@ namespace Hazard {
 		HazardLoop::GetAppInfo().SetValue("Renderer", GetVersion());
 	}
 
-	void OpenGLContext::ClearFrame() const
+	void OpenGLContext::ClearFrame(bool useClearColor) const
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if(useClearColor)
+			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+		else glClearColor(0, 0, 0, 0);
 	}
 
 	void OpenGLContext::SetClearColor(Color color)
 	{
 		clearColor = color;
-		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const

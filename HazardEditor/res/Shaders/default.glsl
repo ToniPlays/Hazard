@@ -44,7 +44,7 @@ void main() {
 	vec3 unitLight = normalize(lightVec);
 
 	float nDotl = dot(unitNormal, unitLight);
-	float brightness = max(nDotl, 0.5);
+	float brightness = max(nDotl, 0.6);
 	vec3 diffuse = brightness * lightColor;
 	color = vec4(diffuse, 1.0) * vec4(1.0, 1.0, 1.0, 1.0);
 }

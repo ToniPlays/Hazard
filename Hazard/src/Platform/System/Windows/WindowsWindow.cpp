@@ -21,10 +21,13 @@ namespace Hazard {
 		windowData.Title = props.Title;
 		windowData.Platform = "Windows";
 
+
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title.c_str(), 0, 0);
 
 		if (!window) {
+			HZR_ASSERT(false, "Window was not initialized");
 			return;
 		}
 
@@ -33,16 +36,16 @@ namespace Hazard {
 		windowData.Renderer = context->GetVersion();
 		glfwShowWindow(window);
 
-		std::string hex = "#161616";
+		std::string hex = "#222222FF";
 		SetClearColor(Color::FromHex(hex));
-		HazardLoop::GetAppInfo().SetValue("Clear Color", hex);
 		SetCallbacks();
 		SetVSync(true);
+		glfwMaximizeWindow(window);
 	}
 	void WindowsWindow::OnUpdate() {
 
 		glfwSwapBuffers(window);
-		context->ClearFrame();
+		context->ClearFrame(true);
 		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
 	void WindowsWindow::SetWindowTitle(std::string title)

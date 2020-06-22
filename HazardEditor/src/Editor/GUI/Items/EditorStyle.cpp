@@ -1,9 +1,6 @@
 #pragma once
+#include <hzreditor.h>
 #include "EditorStyle.h"
-#include "imgui.h"
-#include "imgui_internal.h"
-#include "Editor/Utils/Utility.h"
-
 
 void EditorStyle::InitStyle() 
 {

@@ -9,6 +9,7 @@ public:
 	bool OnEnabled() override;
 
 private:
+	float width = 0.0f, height = 0.0f;
 	static bool layerOpen;
 	static bool ShowLog;
 	static bool ShowWarn;

@@ -14,6 +14,8 @@ namespace Hazard {
 	OpenGLRenderTexture::~OpenGLRenderTexture()
 	{
 		glDeleteFramebuffers(1, &RendererID);
+		glDeleteTextures(1, &colorAttachment);
+		glDeleteTextures(1, &depthAttachment);
 	}
 
 	void OpenGLRenderTexture::Bind(uint32_t slot) const
@@ -24,6 +26,20 @@ namespace Hazard {
 	void OpenGLRenderTexture::Unbind(uint32_t slot) const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLRenderTexture::Resize(uint32_t width, uint32_t height)
+	{
+		if (RendererID) {
+			glDeleteFramebuffers(1, &RendererID);
+			glDeleteTextures(1, &colorAttachment);
+			glDeleteTextures(1, &depthAttachment);
+		}
+		this->width = width;
+		this->height = height;
+		glViewport(0, 0, width, height);
+
+		Create();
 	}
 
 	void OpenGLRenderTexture::Create()

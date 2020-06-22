@@ -31,6 +31,15 @@
     <Filter Include="src\Editor\GUI\Widgets">
       <UniqueIdentifier>{BDB2A4F3-A9AC-CD45-9219-64567EB233B2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\GUI\Widgets\Inspect">
+      <UniqueIdentifier>{82247F3A-6E4A-49A1-5790-CE6C43556E6D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Widgets\Profiling">
+      <UniqueIdentifier>{765F596C-62B0-44AE-8B14-337077C4D717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Widgets\Rendering">
+      <UniqueIdentifier>{4ACC1004-361D-FC45-5F81-EA074B318FAF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Editor\Utils">
       <UniqueIdentifier>{637B2B52-4F74-4AA4-78A6-2F2964FE29B0}</UniqueIdentifier>
     </Filter>
@@ -48,6 +57,9 @@
     <ClInclude Include="src\Editor\GUI\Editor.h">
       <Filter>src\Editor\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Items\ColorPicker.h">
+      <Filter>src\Editor\GUI\Items</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Items\EditorStyle.h">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClInclude>
@@ -57,26 +69,30 @@
     <ClInclude Include="src\Editor\GUI\Layers\Layer.h">
       <Filter>src\Editor\GUI\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.h">
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Inspect\Inspector.h">
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Console.h">
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Performance.h">
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Profiler.h">
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Rendering\Viewport.h">
+      <Filter>src\Editor\GUI\Widgets\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\Utils\Utility.h">
       <Filter>src\Editor\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Console.h">
-      <Filter>src\Editor\GUI\Widgets</Filter>
+    <ClInclude Include="src\hzreditor.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.h">
-      <Filter>src\Editor\GUI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Inspect\Inspector.h">
-      <Filter>src\Editor\GUI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Profiler.h">
-      <Filter>src\Editor\GUI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Widgets\Rendering\Viewport.h" />
-    <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Performance.h">
-      <Filter>src\Editor\GUI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Items\ColorPicker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -94,31 +110,35 @@
     <ClCompile Include="src\Editor\GUI\Editor.cpp">
       <Filter>src\Editor\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Items\ColorPicker.cpp">
+      <Filter>src\Editor\GUI\Items</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Items\EditorStyle.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Console.cpp">
-      <Filter>src\Editor\GUI\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.cpp">
-      <Filter>src\Editor\GUI\Widgets</Filter>
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\Inspector.cpp">
-      <Filter>src\Editor\GUI\Widgets</Filter>
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Console.cpp">
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Performance.cpp">
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Profiler.cpp">
-      <Filter>src\Editor\GUI\Widgets</Filter>
+      <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Widgets\Rendering\Viewport.cpp" />
-    <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Performance.cpp">
-      <Filter>src\Editor\GUI\Widgets</Filter>
+    <ClCompile Include="src\Editor\GUI\Widgets\Rendering\Viewport.cpp">
+      <Filter>src\Editor\GUI\Widgets\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Items\ColorPicker.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\grid.glsl" />
+    <ClCompile Include="src\hzreditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

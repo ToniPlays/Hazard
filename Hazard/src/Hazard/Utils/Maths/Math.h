@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
 #include <math.h>
 #include <numeric>
 
+#include "Vector/Vector2.h"
 
 namespace Hazard {
 
 	class HAZARD_API Math {
+
 	public:
 		template<typename T>
 		static T MaxValue() {
@@ -67,6 +68,12 @@ namespace Hazard {
 		static double Tan(double value)
 		{
 			return tan(value);
+		}
+
+		template<typename T>
+		static Vector2<double> AspectRatio(T width, T height) {
+			height = (height / width) * width;
+			return Vector2<double>(width / 100.0f, height / 100.0f);
 		}
 	};
 }

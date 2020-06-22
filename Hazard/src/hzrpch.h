@@ -10,8 +10,15 @@
 
 #include "Hazard/Utils/File.h"
 #include "Hazard/Utils/Maths/Time.h"
+#include "Hazard/Utils/Loaders/MeshLoader.h"
+#include "Hazard/Utils/Maths/Color.h"
+
+#include "Hazard/Utils/Maths/Vector/Vector2.h"
+#include "Hazard/Utils/Maths/Vector/Vector3.h"
+
 #include "Hazard/Core/ApplicationInfo.h"
 #include "Hazard/Core/HazardLoop.h"
+
 #include "Hazard/Core/Events/Event.h"
 #include "Hazard/Core/Events/ApplicationEvent.h"
 #include "Hazard/Core/Events/MouseEvent.h"

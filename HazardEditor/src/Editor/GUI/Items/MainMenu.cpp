@@ -1,7 +1,6 @@
 #pragma once
-
+#include <hzreditor.h>
 #include "MainMenu.h"
-#include "imgui.h"
 
 void SplitString(std::string string, const char* regex, char* out) {
 	char splitted[3];

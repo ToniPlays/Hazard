@@ -42,5 +42,7 @@ namespace Hazard {
 		Renderer3D* renderer3D = nullptr;
 		Renderer2D* renderer2D = nullptr;
 		Grid* grid;
+
+		int drawCalls = 0;
 	};
 }

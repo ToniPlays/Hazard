@@ -44,7 +44,7 @@ namespace Hazard {
 		shader->SetUniform("projection", GlobalRenderer::Instance->Get3DProjection());
 		shader->SetUniform("view", Hazard::Matrix4::GetModelMatrix(Camera::GetTransform()));
 		shader->SetUniform("transform", Hazard::Matrix4::GetModelMatrix(Hazard::Transform()));
-
+		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawArrays(GL_QUADS, 0, size);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

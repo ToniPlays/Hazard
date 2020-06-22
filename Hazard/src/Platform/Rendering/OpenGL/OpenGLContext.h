@@ -14,7 +14,7 @@ namespace Hazard {
 		OpenGLContext(Window* window, WindowProps* props);
 
 		void Init() const override;
-		void ClearFrame() const override;
+		void ClearFrame(bool useClearColor) const override;
 		void SetClearColor(Color color) override;
 		void SetViewport(int x, int y, int w, int h) const override;
 		void Draw(RenderType type, Mesh* mesh) override;

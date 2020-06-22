@@ -1,6 +1,6 @@
 #pragma once
+#include <hzreditor.h>
 #include "EngineAssets.h"
-#include "imgui.h"
 
 bool EngineAssets::layerOpen = true;
 

@@ -1,6 +1,6 @@
 #pragma once
+#include <hzreditor.h>
 #include "HazardEditor.h"
-#include "Editor/GUI/Editor.h"
 
 EditorApplication::EditorApplication()
 {

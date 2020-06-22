@@ -1,7 +1,6 @@
 ﻿#pragma once
+#include <hzreditor.h>
 #include "Performance.h"
-#include "imgui.h"
-#include <sstream>
 
 bool Performance::layerOpen = true;
 static bool vsync;
