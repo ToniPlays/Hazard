@@ -4,6 +4,7 @@
 #include "All.h"
 
 ColorPicker* Editor::colorPicker;
+Editor* Editor::instance = nullptr;
 
 Editor::Editor() : Module("EditorGUI")
 {
@@ -20,6 +21,10 @@ Editor::~Editor()
 }
 bool Editor::OnEnabled() {
 	{
+		if (Editor::instance != nullptr) 
+			delete Editor::instance;
+
+		Editor::instance = this;
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 

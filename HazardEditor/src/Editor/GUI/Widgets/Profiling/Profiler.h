@@ -7,7 +7,5 @@ public:
 	Profiler();
 	bool OnEnabled();
 	void Render() override;
-private:
-	static bool layerOpen;
 };
 

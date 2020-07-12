@@ -5,7 +5,6 @@
 #include "Console.h"
 #include "Editor/Utils/Utility.h"
 
-bool Console::layerOpen = true;
 bool Console::ShowLog = true;
 bool Console::ShowWarn = true;
 bool Console::ShowError = true;
@@ -18,14 +17,14 @@ Console::Console()
 
 void Console::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
 	std::vector<Message*> logs = Debug::GetAll();
 
 	const char* types[3] = { "Log", "Warning", "Error" };
 	const char* colors[3] = { "#b9b9b9", "#DCB540", "#B20E0E" };
 
-	ImGui::Begin("Console", &layerOpen);
+	ImGui::Begin("Console", &isLayerOpen);
 
 	if (ImGui::Button("Clear")) {
 		Debug::Clear();

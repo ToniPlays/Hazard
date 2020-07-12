@@ -253,6 +253,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\SpriteRenderer.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Batch\Batch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -343,5 +344,6 @@
       <Filter>vendor</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Modules\Renderer\Batch\Batch.cpp" />
   </ItemGroup>
 </Project>

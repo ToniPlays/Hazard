@@ -4,8 +4,6 @@
 #include <hzreditor.h>
 #include "Viewport.h"
 
-bool Viewport::layerOpen = true;
-
 Viewport::Viewport()
 {
 
@@ -13,6 +11,7 @@ Viewport::Viewport()
 
 bool Viewport::OnEnabled()
 {
+	SetLayerOpen(true);
 	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 	if (renderer != nullptr) return true;
 	return false;
@@ -20,9 +19,9 @@ bool Viewport::OnEnabled()
 
 void Viewport::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
-	ImGui::Begin("Viewport", &layerOpen);
+	ImGui::Begin("Viewport", &isLayerOpen);
 
 	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 
@@ -44,7 +43,7 @@ void Viewport::Render()
 		Editor::OpenColorPicker(sceneColor, [](Hazard::Color color) {
 			Hazard::GlobalRenderer* rd = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 			rd->GetWindow().SetClearColor(color);
-			});
+		});
 	}
 
 	ImVec2 size = ImGui::GetContentRegionAvail();

@@ -12,6 +12,10 @@ public:
 	virtual void Update() {};
 	virtual void Render() {};
 
-	virtual bool OnEnabled() { return true; };
-	virtual bool OnDisabled() { return true; };
+	virtual bool OnEnabled() { return true; }
+	virtual bool OnDisabled() { return true; }
+
+	void SetLayerOpen(bool open) { isLayerOpen = open; }
+protected:
+	bool isLayerOpen = false;
 };

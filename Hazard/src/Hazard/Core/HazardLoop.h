@@ -13,10 +13,11 @@ namespace Hazard {
 
 		HazardLoop(Application* app);
 		~HazardLoop();
-		static ApplicationInfo& GetAppInfo() { return info; }
 		void Run();
-		static HazardLoop& GetCurrent() { return *instance; }
 		bool OnEvent(Event& e);
+
+		static ApplicationInfo& GetAppInfo() { return info; }
+		static HazardLoop& GetCurrent() { return *instance; }
 
 	private:
 

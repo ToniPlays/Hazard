@@ -10,7 +10,6 @@ public:
 	bool OnEnabled() override;
 	
 private:
-	static bool layerOpen;
 	static bool ShowLog;
 	static bool ShowWarn;
 	static bool ShowError;

@@ -20,6 +20,7 @@ namespace Hazard {
 	void Renderer2D::Render()
 	{
 		GlobalRenderer::Draw(planeMesh);
+		std::cout << "Rendering" << std::endl;
 	}
 
 	void Renderer2D::OnResized(Event& e)

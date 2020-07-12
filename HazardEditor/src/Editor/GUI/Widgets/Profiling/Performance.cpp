@@ -2,7 +2,6 @@
 #include <hzreditor.h>
 #include "Performance.h"
 
-bool Performance::layerOpen = true;
 static bool vsync;
 Performance::Performance() {}
 
@@ -16,9 +15,9 @@ bool Performance::OnEnabled()
 
 void Performance::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
-	ImGui::Begin("Performance", &layerOpen);
+	ImGui::Begin("Performance", &isLayerOpen);
 
 	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 

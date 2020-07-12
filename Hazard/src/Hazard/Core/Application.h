@@ -16,7 +16,5 @@ namespace Hazard {
 		};
 	};
 
-
-
 	Hazard::Application* CreateApplication();
 }

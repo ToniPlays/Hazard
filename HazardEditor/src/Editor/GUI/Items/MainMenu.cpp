@@ -1,5 +1,6 @@
 #pragma once
 #include <hzreditor.h>
+#include "Editor/GUI/All.h"
 #include "MainMenu.h"
 
 void SplitString(std::string string, const char* regex, char* out) {
@@ -19,7 +20,8 @@ void MainMenu::OnRender()
 		}
 
 		if (ImGui::MenuItem("Quit")) {
-			
+			Hazard::WindowCloseEvent e;
+			Hazard::HazardLoop::GetCurrent().OnEvent(e);
 		}
 		ImGui::EndMenu();
 	}
@@ -45,19 +47,19 @@ void MainMenu::OnRender()
 
 	if (ImGui::BeginMenu("Window")) {
 		if (ImGui::MenuItem("Inspector")) {
-			
+			Editor::SetLayerOpen<Inspector>(true);
 		}
 		if (ImGui::MenuItem("Performance")) {
-			
+			Editor::SetLayerOpen<Performance>(true);
 		}
 		if (ImGui::MenuItem("Viewport")) {
-		
+			Editor::SetLayerOpen<Viewport>(true);
 		}
 		if (ImGui::MenuItem("Console")) {
-			
+			Editor::SetLayerOpen<Console>(true);
 		}
 		if (ImGui::MenuItem("Hierarchy")) {
-			
+			//Editor::SetLayerOpen<Hierarchy>(true);
 		}
 		ImGui::EndMenu();
 	}

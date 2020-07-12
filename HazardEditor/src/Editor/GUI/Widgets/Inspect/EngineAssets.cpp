@@ -2,7 +2,6 @@
 #include <hzreditor.h>
 #include "EngineAssets.h"
 
-bool EngineAssets::layerOpen = true;
 
 std::string ToString(Hazard::TextureType type) {
 
@@ -24,9 +23,9 @@ EngineAssets::EngineAssets()
 
 void EngineAssets::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
-	ImGui::Begin("Engine assets", &layerOpen);
+	ImGui::Begin("Engine assets", &isLayerOpen);
 
 	if(ImGui::CollapsingHeader("Loaded textures")) {
 		std::unordered_map<Hazard::TextureType, std::vector<Hazard::Texture*>> textures = Hazard::TextureManager::GetTextures();

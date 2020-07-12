@@ -14,8 +14,6 @@ namespace Hazard {
 		if (GlobalRenderer::Instance == nullptr) {
 			GlobalRenderer::Instance = this;
 		}
-		else 
-			return;
 	}
 
 	GlobalRenderer::~GlobalRenderer()
@@ -27,6 +25,7 @@ namespace Hazard {
 		api = new RendererAPI();
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(GlobalRenderer::OnEvent));
+
 		HZR_ASSERT(window != nullptr, "Window was not created");
 		renderer3D = new Renderer3D();
 		renderer2D = new Renderer2D();
@@ -62,7 +61,7 @@ namespace Hazard {
 		window->GetContext()->ClearFrame();
 		//Use 2D and 3D renderers
 		renderer2D->Render();
-		renderer3D->Render();
+		//renderer3D->Render();
 		grid->Render();
 
 		renderTexture->Unbind();

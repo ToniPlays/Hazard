@@ -5,7 +5,6 @@
 #include "Inspector.h"
 #include "Editor/Core/Analytics/Debug.h"
 
-bool Inspector::layerOpen = true;
 
 Inspector::Inspector()
 {
@@ -14,9 +13,9 @@ Inspector::Inspector()
 
 void Inspector::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
-	ImGui::Begin("Inspector", &layerOpen);
+	ImGui::Begin("Inspector", &isLayerOpen);
 	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
 	ImGui::Text("GameObjects");
 

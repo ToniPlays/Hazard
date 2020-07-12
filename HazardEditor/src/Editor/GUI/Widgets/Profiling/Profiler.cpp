@@ -2,13 +2,11 @@
 #include <hzreditor.h>
 #include "Profiler.h"
 
-bool Profiler::layerOpen = true;
 
 Profiler::Profiler()
 {
 
 }
-
 
 bool Profiler::OnEnabled()
 {
@@ -18,9 +16,9 @@ bool Profiler::OnEnabled()
 
 void Profiler::Render()
 {
-	if (!layerOpen) return;
+	if (!isLayerOpen) return;
 
-	ImGui::Begin("Profiler", &layerOpen);
+	ImGui::Begin("Profiler", &isLayerOpen);
 	
 	Hazard::Logger* logger = Hazard::ModuleHandler::GetModule<Hazard::Logger>();
 	std::stringstream ss;

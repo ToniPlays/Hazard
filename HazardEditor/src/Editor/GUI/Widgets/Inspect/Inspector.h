@@ -6,7 +6,5 @@ class Inspector : public Layer {
 public:
 	Inspector();
 	void Render() override;
-private:
-	static bool layerOpen;
 };
 
