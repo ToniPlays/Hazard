@@ -286,9 +286,6 @@
     <ClCompile Include="src\Hazard\Modules\Renderer\Renderer2D\Renderer2D.cpp">
       <Filter>src\Hazard\Modules\Renderer\Renderer2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Renderer\Renderer3D\Renderer3d.cpp">
-      <Filter>src\Hazard\Modules\Renderer\Renderer3D</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\RendererAPI.cpp">
       <Filter>src\Hazard\Modules\Renderer</Filter>
     </ClCompile>
@@ -345,5 +342,8 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\SpriteRenderer.cpp" />
     <ClCompile Include="src\Hazard\Modules\Renderer\Batch\Batch.cpp" />
+    <ClCompile Include="src\Hazard\Modules\Renderer\Renderer3D\Renderer3D.cpp">
+      <Filter>src\Hazard\Modules\Renderer\Renderer3D</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

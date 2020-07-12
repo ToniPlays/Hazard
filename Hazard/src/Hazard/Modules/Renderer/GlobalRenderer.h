@@ -30,7 +30,7 @@ namespace Hazard {
 		RenderTexture* GetRenderTexture() { return renderTexture; }
 
 		static GlobalRenderer* Instance;
-		static void Draw(Mesh* mesh);
+		static void Draw(VertexArray* mesh, RenderType type = RenderType::None);
 		static float speed;
 
 	private:
@@ -44,5 +44,7 @@ namespace Hazard {
 		Grid* grid;
 
 		int drawCalls = 0;
+	public:
+		Renderer2D* Get2D();
 	};
 }

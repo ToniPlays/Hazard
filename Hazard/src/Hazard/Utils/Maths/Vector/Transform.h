@@ -7,7 +7,8 @@ namespace Hazard {
 	class HAZARD_API Transform {
 
 	public:
-		Transform(Vector3<float> position = Vector3<float>::zero, Vector3<float> rotation = Vector3<float>::zero, Vector3<float> scale = Vector3<float>::one);
+		Transform();
+		Transform(Vector3<float> position, Vector3<float> rotation, Vector3<float> scalee);
 	public:
 		Vector3<float> position, rotation, scale;
 	};

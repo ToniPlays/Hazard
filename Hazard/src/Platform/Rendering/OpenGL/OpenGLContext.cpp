@@ -49,25 +49,25 @@ namespace Hazard {
 	}
 
 
-	void OpenGLContext::Draw(RenderType type, Mesh* mesh)
+	void OpenGLContext::Draw(RenderType type, VertexArray* vertexArray)
 	{
 		switch (type)
 		{
 		case RenderType::Default:
-			glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 			break;
 		case RenderType::Points:
 			glPointSize(5.0);
-			glDrawArrays(GL_POINTS, 0, mesh->GetVerticesLength());
+			glDrawArrays(GL_POINTS, 0, vertexArray->GetIndexBuffer()->GetCount());
 			break;
 		case RenderType::Wireframe: 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-			glDrawElements(GL_TRIANGLES, mesh->GetIndicesLength(), GL_UNSIGNED_INT, nullptr);
-
+			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
 		}
+		if(glGetError() != 0)
+			std::cout << "[OpenGL error] " << glGetError() << std::endl;
 	}
 
 	std::string OpenGLContext::GetVersion() const

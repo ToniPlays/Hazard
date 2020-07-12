@@ -15,9 +15,6 @@ namespace Hazard {
 
 	public:
 
-		static float test;
-		static bool useGradient;
-
 		Renderer3D();
 		~Renderer3D();
 

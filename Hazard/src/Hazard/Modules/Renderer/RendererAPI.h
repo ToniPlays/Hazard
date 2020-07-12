@@ -15,7 +15,7 @@ namespace Hazard {
 		None = 0, OpenGL, Vulkan, DirectX, Metal
 	};
 	enum class RenderType {
-		Default = 0, Points, Wireframe
+		None = 0, Default, Points, Wireframe
 	};
 
 	class HAZARD_API RendererAPI {

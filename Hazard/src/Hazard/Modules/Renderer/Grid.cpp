@@ -39,8 +39,9 @@ namespace Hazard {
 	}
 	void Grid::Render()
 	{
-		vertexArray->Bind();
+		vertexArray->BindAll();
 		shader->Bind();
+
 		shader->SetUniform("projection", GlobalRenderer::Instance->Get3DProjection());
 		shader->SetUniform("view", Hazard::Matrix4::GetModelMatrix(Camera::GetTransform()));
 		shader->SetUniform("transform", Hazard::Matrix4::GetModelMatrix(Hazard::Transform()));

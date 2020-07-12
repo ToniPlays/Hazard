@@ -16,7 +16,7 @@ namespace Hazard {
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
 		virtual Color GetClearColor() = 0;
 		virtual std::string GetVersion() const = 0;
-		virtual void Draw(RenderType type, Mesh* mesh) = 0;
+		virtual void Draw(RenderType type, VertexArray* vertexArray) = 0;
 		static GraphicsContext* Create(void* window, void* props);
 
 	};

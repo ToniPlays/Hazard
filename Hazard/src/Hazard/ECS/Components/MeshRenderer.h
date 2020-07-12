@@ -11,7 +11,7 @@ namespace Hazard {
 	public:
 		MeshRenderer(Mesh* mesh, Shader* shader, GameObject* gameObject);
 		~MeshRenderer();
-		std::unique_ptr<VertexArray> vertexArray;
+		VertexArray* vertexArray;
 		void OnRender() override;
 
 	private:

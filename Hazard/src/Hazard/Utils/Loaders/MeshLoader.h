@@ -9,7 +9,9 @@ namespace Hazard {
 		static Mesh* LoadMesh(std::string file);
 		static Mesh* LoadCube();
 		static Mesh* LoadPlane();
+
 	private:
+
 		static Mesh* LoadObj(std::string file);
 		//OBJ
 		static Vector3<float> MeshLoader::GetPosV3(std::string line);

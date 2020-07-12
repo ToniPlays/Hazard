@@ -11,6 +11,7 @@ public:
 
 	void Awake();
 	void OnEvent(Hazard::Event& e);
+	bool CameraZoom(Hazard::Event& e);
 };
 
 Hazard::Application* Hazard::CreateApplication() {

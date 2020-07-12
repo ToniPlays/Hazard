@@ -11,4 +11,11 @@ namespace Hazard {
 		this->rotation = rotation;
 		this->scale = scale;
 	}
+
+	Transform::Transform()
+	{
+		this->position = Vector3<float>::zero;
+		this->rotation = Vector3<float>::zero;
+		this->scale = Vector3<float>::one;
+	}
 }

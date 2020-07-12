@@ -17,11 +17,10 @@ namespace Hazard {
 		glDeleteBuffers(1, &BufferID);
 	}
 
-	void OpenGLVertexBuffer::SetData(void* data, uint32_t size)
+	void OpenGLVertexBuffer::SetData(void* data, uint32_t verticeCount)
 	{
 		Bind();
-		glBufferData(GL_ARRAY_BUFFER, size * ShaderDataTypeSize(dataType), data, GL_STATIC_DRAW);
-		Unbind();
+		glBufferData(GL_ARRAY_BUFFER, (double)verticeCount * ShaderDataTypeSize(dataType), data, GL_DYNAMIC_DRAW);
 	}
 
 	void OpenGLVertexBuffer::Bind() const
@@ -45,12 +44,11 @@ namespace Hazard {
 		glDeleteBuffers(1, &BufferID);
 	}
 
-	void OpenGLIndexBuffer::SetData(int* indices, uint32_t size)
+	void OpenGLIndexBuffer::SetData(int* indices, uint32_t indiceCount)
 	{
 		Bind();
-		this->count = size;
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(int), indices, GL_STATIC_DRAW);
-		Unbind();
+		this->count = indiceCount;
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceCount * sizeof(int), indices, GL_DYNAMIC_DRAW);
 	}
 
 	void OpenGLIndexBuffer::Bind() const

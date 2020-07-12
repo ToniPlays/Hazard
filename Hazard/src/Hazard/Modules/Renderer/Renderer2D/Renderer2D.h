@@ -12,7 +12,11 @@ namespace Hazard {
 		void Render();
 		void OnResized(Event& e);
 
+		static int size;
+
 	private:
-		Mesh* planeMesh;
+		void BeginScene();
+		void EndScene();
+
 	};
 }

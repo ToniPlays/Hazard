@@ -61,6 +61,9 @@ void MainMenu::OnRender()
 		if (ImGui::MenuItem("Hierarchy")) {
 			//Editor::SetLayerOpen<Hierarchy>(true);
 		}
+		if (ImGui::MenuItem("Engine assets")) {
+			Editor::SetLayerOpen<EngineAssets>(true);
+		}
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help")) {

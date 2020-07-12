@@ -4,14 +4,14 @@
 #include "Camera.h"
 
 namespace Hazard {
-	
+
 	Camera* Camera::instance;
 
 	Camera::Camera() : GameObject("Camera", Transform())
 	{
 		Camera::instance = this;
 	}
-	
+
 	Transform Camera::GetTransform()
 	{
 		Transform t = instance->transform;

@@ -27,7 +27,7 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGLVertexArray();
+			case RenderAPI::OpenGL: return new OpenGLVertexArray();
 		}
 		return nullptr;
 	}
@@ -36,7 +36,7 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGLVertexBuffer(type, name);
+			case RenderAPI::OpenGL: return new OpenGLVertexBuffer(type, name);
 		}
 		return nullptr;
 	}
@@ -45,7 +45,7 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGLIndexBuffer();
+			case RenderAPI::OpenGL: return new OpenGLIndexBuffer();
 		}
 		return nullptr;
 	}
@@ -54,11 +54,11 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: 
+		case RenderAPI::OpenGL:
 
 			Hazard::Texture2D* texture = (Hazard::Texture2D*)TextureManager::GetTexture(T2D, file);
 
-			if (texture != nullptr) 
+			if (texture != nullptr)
 				return texture;
 
 			texture = new OpenGLTexture2D(file);

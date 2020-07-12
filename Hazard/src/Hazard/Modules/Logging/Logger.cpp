@@ -39,7 +39,8 @@ namespace Hazard {
 
 	void Logger::Assert(bool success, std::string text)
 	{
-		if (!success) CoreLog(text, 3);
+		if (!success) 
+			CoreLog(text, 3);
 	}
 
 	void Logger::CoreLog(std::string text, int level)

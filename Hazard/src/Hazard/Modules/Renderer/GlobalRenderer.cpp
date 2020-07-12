@@ -61,7 +61,7 @@ namespace Hazard {
 		window->GetContext()->ClearFrame();
 		//Use 2D and 3D renderers
 		renderer2D->Render();
-		//renderer3D->Render();
+		renderer3D->Render();
 		grid->Render();
 
 		renderTexture->Unbind();
@@ -89,11 +89,19 @@ namespace Hazard {
 		return true;
 	}
 
-	void GlobalRenderer::Draw(Mesh* mesh)
+	void GlobalRenderer::Draw(VertexArray* mesh, RenderType type)
 	{
-		RenderType type = GlobalRenderer::Instance->GetAPI().GetType();
+		if(type == RenderType::None)
+			type = GlobalRenderer::Instance->GetAPI().GetType();
+
 		GlobalRenderer* rd = GlobalRenderer::Instance;
 		rd->window->GetContext()->Draw(type, mesh);
 		rd->drawCalls++;
 	}
+
+	Renderer2D* GlobalRenderer::Get2D()
+	{
+		return renderer2D;
+	}
+
 }

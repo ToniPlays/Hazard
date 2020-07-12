@@ -17,7 +17,7 @@ namespace Hazard {
 		glDeleteVertexArrays(1, &ArrayID);
 	}
 
-	void OpenGLVertexArray::Bind() const
+	void OpenGLVertexArray::BindAll() const
 	{
 
 		glBindVertexArray(ArrayID);
@@ -36,6 +36,11 @@ namespace Hazard {
 			indexBuffer->Bind();
 	}
 
+	void OpenGLVertexArray::Bind() const
+	{
+		glBindVertexArray(ArrayID);
+	}
+
 	void OpenGLVertexArray::Unbind() const
 	{
 		glBindVertexArray(0);
@@ -47,8 +52,23 @@ namespace Hazard {
 		if (indexBuffer != nullptr) indexBuffer->Unbind();
 	}
 
+	void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer)
+	{
+		Bind(); 
+		this->indexBuffer = indexBuffer; 
+	};
+
 	void OpenGLVertexArray::SetLayout(std::initializer_list<VertexBuffer*> buffers)
 	{
 		layout = buffers;
 	}
+
+	VertexBuffer* OpenGLVertexArray::GetBuffer(std::string name)
+	{
+		for (VertexBuffer* buffer : layout) {
+			if (buffer->GetName() == name) return buffer;
+		}
+		return nullptr;
+	}
+
 }

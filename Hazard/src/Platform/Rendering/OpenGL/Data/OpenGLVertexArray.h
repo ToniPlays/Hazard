@@ -13,12 +13,14 @@ namespace Hazard {
 		~OpenGLVertexArray();
 
 		void Bind() const;
+		void BindAll() const;
 		void Unbind() const;
 
 		virtual IndexBuffer* GetIndexBuffer() const { return indexBuffer; }
-		void SetIndexBuffer(IndexBuffer* indexBuffer) { Bind(); this->indexBuffer = indexBuffer; this->indexBuffer->Bind(); };
+		void SetIndexBuffer(IndexBuffer* indexBuffer);
 		void SetLayout(std::initializer_list<VertexBuffer*> buffers);
 		void AddBuffer(VertexBuffer* buffer) { layout.push_back(buffer); };
+		VertexBuffer* GetBuffer(std::string name);
 
 	private:
 		std::vector<VertexBuffer*> layout;

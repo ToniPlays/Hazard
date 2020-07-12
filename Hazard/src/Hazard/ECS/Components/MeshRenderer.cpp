@@ -13,22 +13,40 @@ namespace Hazard {
 		this->mesh = mesh;
 		this->shader = shader;
 
-		vertexArray = std::unique_ptr<VertexArray>(RendererAPI::VertexArray());
+		std::vector<float> pos;
+		std::vector<float> textCoords;
+		std::vector<float> normals;
+
+		for (Vertex v : mesh->GetVertices()) {
+
+			pos.push_back(v.position.x);
+			pos.push_back(v.position.y);
+			pos.push_back(v.position.z);
+
+			textCoords.push_back(v.textureCoords.x);
+			textCoords.push_back(v.textureCoords.y);
+
+			normals.push_back(v.normal.x);
+			normals.push_back(v.normal.y);
+			normals.push_back(v.normal.z);
+		}
+
+		vertexArray = RendererAPI::VertexArray();
 
 		VertexBuffer* vertexBuffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "position");
-		vertexBuffer->SetData(mesh->GetVertices(), mesh->GetVerticesLength());
+		vertexBuffer->SetData(pos.data(), mesh->GetVerticesLength());
 
 		VertexBuffer* textureCoords = RendererAPI::VertexBuffer(ShaderDataType::Float3, "position");
-		textureCoords->SetData(mesh->GetTextureCoords(), mesh->GetVerticesLength());
+		textureCoords->SetData(textCoords.data(), mesh->GetVerticesLength());
 
 
 		VertexBuffer* normalBuffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "normals");
-		normalBuffer->SetData(mesh->GetNormals(), mesh->GetVerticesLength());
+		normalBuffer->SetData(normals.data(), mesh->GetVerticesLength());
 
 		vertexArray->SetLayout({ vertexBuffer, textureCoords, normalBuffer });
 		IndexBuffer* indexBuffer = RendererAPI::IndexBuffer();
 
-		indexBuffer->SetData(mesh->GetIndices(), mesh->GetIndicesLength());
+		indexBuffer->SetData(mesh->GetIndices().data(), mesh->GetIndicesLength());
 		vertexArray->SetIndexBuffer(indexBuffer);
 
 		texture = RendererAPI::Texture2D("res/textures/checker.png");
@@ -46,7 +64,7 @@ namespace Hazard {
 
 	void MeshRenderer::OnRender()
 	{
-		vertexArray->Bind();
+		vertexArray->BindAll();
 		shader->Bind();
 		texture->Bind();
 
@@ -57,9 +75,8 @@ namespace Hazard {
 		shader->SetUniform("lightColor", Vector3<float>(1, 1, 1));
 		shader->SetUniform("test", (float)((Math::Sin(Time::time) + 1)) / 2);
 
-		GlobalRenderer::Draw(mesh);
+		GlobalRenderer::Draw(vertexArray);
 
-		gameObject->transform.rotation.x += Time::deltaTime * GlobalRenderer::speed, 0.0f, 360.0f;
-		gameObject->transform.rotation.x = Math::ToRange(gameObject->transform.rotation.x, 0.0f, 360.0f);
+		gameObject->transform.rotation.y += Time::deltaTime * 25.0f;
 	}
 }

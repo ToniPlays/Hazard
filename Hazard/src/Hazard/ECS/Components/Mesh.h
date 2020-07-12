@@ -10,24 +10,20 @@ namespace Hazard {
 		Mesh(std::vector<Vertex> vertices, std::vector<int> indices);
 		~Mesh();
 		
-		float* GetVertices() { return vertices.data(); };
-		float* GetNormals() { return normals.data(); };
-		int* GetIndices() { return indices.data(); }
+		std::vector<Vertex> GetVertices() { return vertices; };
 
-		size_t GetVerticesLength() { return vertices.size() / 3; };
+		size_t GetVerticesLength() { return vertices.size(); };
 		size_t GetIndicesLength() { return indices.size(); }
 
-		bool HasNormals() { return hasNormals; }
+		std::vector<int> GetIndices() { return indices; }
 
-		float* GetTextureCoords() { return textCoord.data(); }
+		bool HasNormals() { return hasNormals; }
 
 	private:
 		
 		bool hasNormals = false;
 
-		std::vector<float> vertices;
-		std::vector<float> textCoord;
-		std::vector<float> normals;
+		std::vector<Vertex> vertices;
 		std::vector<int> indices;
 	};
 }
