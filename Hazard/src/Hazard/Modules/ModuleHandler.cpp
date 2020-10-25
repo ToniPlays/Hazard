@@ -1,7 +1,8 @@
 #pragma once
 #include <hzrpch.h>
 #include "ModuleHandler.h"
-#include "Hazard/Modules/Renderer/GlobalRenderer.h"
+#include "Hazard/Modules/Renderer/RenderEngine.h"
+#include "Hazard/Modules/Scene/SceneManager.h"
 #include "Logging/Logger.h"
 
 namespace Hazard {
@@ -14,9 +15,9 @@ namespace Hazard {
 #if !defined(HZR_RELEASE) && !defined(HZR_GAME_ONLY)
 		PushModule(new Logger);
 #endif // !HZR_GAME_ONLY || HZR_RELEASE
-		PushModule(new GlobalRenderer());
+		PushModule(new RenderEngine());
+		PushModule(new SceneManager(nullptr));
 	}
-
 	ModuleHandler::~ModuleHandler()
 	{
 		OnClose();
@@ -24,7 +25,7 @@ namespace Hazard {
 
 	void ModuleHandler::PushModule(Module* module)
 	{
-		if (module->OnEnabled()) {
+		if (module->OnEnabled()) { 
 			modules.emplace_back(module);
 			return;
 		}

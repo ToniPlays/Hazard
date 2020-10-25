@@ -19,6 +19,7 @@ namespace Hazard {
 		ifs.close();
 		return result;
 	}
+
 	std::string File::GetFileExtension(std::string file) {
 		return file.substr(file.find_last_of(".") + 1);
 	}

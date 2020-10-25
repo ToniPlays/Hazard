@@ -2,6 +2,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Utils/Maths/Math.h"
 #include <ostream>
+#include <glm/glm.hpp>
 
 namespace Hazard {
 	template <typename T>
@@ -76,6 +77,10 @@ namespace Hazard {
 
 		static Vector3 Invert(Vector3 vector) {
 			return Vector3(-vector.x, -vector.y, -vector.z);
+		}
+
+		static glm::vec3 AsGLM(Vector3<T> vector) {
+			return glm::vec3(vector.x, vector.y, vector.z);
 		}
 
 		static Vector3<float> zero;

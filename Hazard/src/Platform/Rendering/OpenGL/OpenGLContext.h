@@ -20,6 +20,7 @@ namespace Hazard {
 		void Draw(RenderType type, VertexArray* vertexArray) override;
 		Color GetClearColor() { return clearColor; }
 		std::string GetVersion() const;
+		std::string GetError() const override;
 	private:
 		Color clearColor;
 		GLFWwindow* window;

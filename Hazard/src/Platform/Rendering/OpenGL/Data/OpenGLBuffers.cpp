@@ -21,6 +21,7 @@ namespace Hazard {
 	{
 		Bind();
 		glBufferData(GL_ARRAY_BUFFER, (double)verticeCount * ShaderDataTypeSize(dataType), data, GL_DYNAMIC_DRAW);
+		dataLength = verticeCount;
 	}
 
 	void OpenGLVertexBuffer::Bind() const

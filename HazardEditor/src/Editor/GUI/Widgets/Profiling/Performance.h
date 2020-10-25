@@ -6,5 +6,6 @@ public:
 	Performance();
 	void Render() override;
 	bool OnEnabled() override;
+	std::string MenuPlacement() { return "View/Analytics"; }
 };
 

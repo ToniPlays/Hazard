@@ -13,4 +13,6 @@
 
 #include "Editor/Utils/Utility.h"
 #include "Editor/GUI/Editor.h"
-#include "Editor/GUI/Items/EditorStyle.h"
+
+#include "Editor/GUI/GUILibrary/Style.h"
+#include "Editor/GUI/GUILibrary/Panel.h"

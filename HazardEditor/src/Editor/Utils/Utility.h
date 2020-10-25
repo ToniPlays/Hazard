@@ -10,6 +10,5 @@ inline std::string CurrentTime() {
 	time_t now = time(0);
 	char timestamp[10] = "";
 	strftime(timestamp, 10, "%H:%M:%S", localtime(&now));
-
 	return timestamp;
 }

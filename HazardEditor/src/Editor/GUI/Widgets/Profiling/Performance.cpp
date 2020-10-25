@@ -3,11 +3,11 @@
 #include "Performance.h"
 
 static bool vsync;
-Performance::Performance() {}
+Performance::Performance() : Layer("Performance") {}
 
 bool Performance::OnEnabled()
 {
-	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
+	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 	if(renderer != nullptr)
 		vsync = renderer->GetWindow().IsVSync();
 	return true;
@@ -15,13 +15,9 @@ bool Performance::OnEnabled()
 
 void Performance::Render()
 {
-	if (!isLayerOpen) return;
+	if (!Panel::Begin(name, isLayerOpen)) return;
 
-	ImGui::Begin("Performance", &isLayerOpen);
-
-	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
-
-	ImGui::SliderFloat("Rotation speed ", &Hazard::GlobalRenderer::speed, 0.0f, 360.0f);
+	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 
 	ImGui::NewLine();
 	ImGui::Checkbox("VSync", &vsync);
@@ -55,6 +51,10 @@ void Performance::Render()
 	ss << "Draw calls: " << Hazard::HazardLoop::GetAppInfo().Get("DrawCalls");
 	ImGui::Text(ss.str().c_str());
 
+	ss.str("");
+	ss << "Error: " << Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>()->GetError();
+	ImGui::Text(ss.str().c_str());
+
 	ImGui::NewLine();
 
 	ImGui::Text("\nActive modules: ");
@@ -63,5 +63,5 @@ void Performance::Render()
 		ss << "- " << module->GetName();
 		ImGui::Text(ss.str().c_str());
 	}
-	ImGui::End();
+	Panel::End();
 }

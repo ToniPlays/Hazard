@@ -7,7 +7,7 @@ public:
 	ColorPicker() {}
 	void OnRender();
 	
-	Hazard::Color color;
+	Hazard::Color& color = Hazard::Color();
 private:
 	friend class Editor;
 	void(*func)(Hazard::Color color);

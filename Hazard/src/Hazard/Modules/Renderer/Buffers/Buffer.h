@@ -15,6 +15,7 @@ namespace Hazard {
 		virtual uint32_t GetID() const = 0;
 		virtual std::string GetName() const = 0;
 		virtual uint32_t GetSize() const = 0;
+		virtual uint64_t GetLength() const = 0;
 		virtual ShaderDataType GetType() const = 0;
 	};
 

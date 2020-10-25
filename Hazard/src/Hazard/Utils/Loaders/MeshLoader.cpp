@@ -95,7 +95,7 @@ namespace Hazard {
 			v.push_back(vertices[index]);
 		}
 
-		return new Mesh(v, indices);
+		return new Mesh();
 	}
 
 	void MeshLoader::GetData(std::string line, int& v, int& vt, int& vn)
@@ -167,7 +167,7 @@ namespace Hazard {
 		
 		//std::cout << "Vertices " << vertices.size() << ", indices " << indices.size() << std::endl;
 
-		return new Mesh(vertices, indices);
+		return new Mesh();
 	}
 
 	Mesh* MeshLoader::LoadPlane()
@@ -183,7 +183,7 @@ namespace Hazard {
 		indices.insert(indices.end(), { 0, 1, 2 });
 		indices.insert(indices.end(), { 0, 2, 3 });
 
-		return new Mesh(vertices, indices);
+		return new Mesh();
 	}
 
 	Vector3<float> MeshLoader::GetPosV3(std::string line) {

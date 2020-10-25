@@ -2,18 +2,23 @@
 #include <hzreditor.h>
 #include "Editor.h"
 #include "All.h"
+#include "Editor/Core/ComponentRegister.h"
 
-ColorPicker* Editor::colorPicker;
 Editor* Editor::instance = nullptr;
 
 Editor::Editor() : Module("EditorGUI")
 {
+	mainMenu.OnCreate();
+
+	ModuleHandler::PushModule(new ComponentRegister());
+
 	PushLayer(new Performance());
 	PushLayer(new Inspector());
 	PushLayer(new Profiler());
 	PushLayer(new Console());
 	PushLayer(new EngineAssets());
 	PushLayer(new Viewport());
+	PushLayer(new Hierarchy());
 }
 Editor::~Editor()
 {
@@ -21,10 +26,12 @@ Editor::~Editor()
 }
 bool Editor::OnEnabled() {
 	{
+		
 		if (Editor::instance != nullptr) 
 			delete Editor::instance;
 
 		Editor::instance = this;
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
@@ -37,7 +44,7 @@ bool Editor::OnEnabled() {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
 		// Setup Dear ImGui style
-		EditorStyle::InitStyle();
+		Style::InitDarkTheme();
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -48,32 +55,42 @@ bool Editor::OnEnabled() {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
+		RenderEngine* renderer = ModuleHandler::GetModule<Hazard::RenderEngine>();
+
 		if (renderer == nullptr) {
 			SetActive(false);
 			return false;
 		}
-		colorPicker = new ColorPicker();
+		
 		GLFWwindow* window = static_cast<GLFWwindow*>(renderer->GetWindow().GetNativeWindow());
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
 
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+
+		
 		return true;
 	}
 }
 
 void Editor::PushLayer(Layer* layer)
 {
-	if (layer->OnEnabled()) layers.push_back(layer);
-	else Debug::Warn("Unable to set layer");
+	if (layer->OnEnabled()) {
+		Register(layer);
+	}
+	else Debug::Warn("Unable to set layer: " + layer->GetName());
 }
+void Editor::Register(Layer* layer) {
 
-void Editor::OpenColorPicker(Hazard::Color color, void(*func)(Hazard::Color color))
-{
-	colorPicker->func = func;
-	colorPicker->color = color;
-	colorPicker->isOpen = true;
+	mainMenu.RegisterMenuItem(layer->MenuPlacement(), new Callback(layer->GetName(), [](void* item) {
+		Layer* layer = static_cast<Layer*>(item);
+		layer->SetLayerOpen(true);
+	}, layer));
+
+	layers.push_back(layer);
 }
 
 void Editor::Begin()
@@ -86,7 +103,7 @@ void Editor::Begin()
 void Editor::End()
 {
 	ImGuiIO& io = ImGui::GetIO();
-	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
+	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 	io.DisplaySize = ImVec2((float)renderer->GetWindow().GetWidth(), (float)renderer->GetWindow().GetHeight());
 
 	// Rendering
@@ -106,18 +123,20 @@ void Editor::Render() {
 	Begin();
 	//Docking stuff
 	{
-		static bool open = true;
-		bool opt_fullscreen = true;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
+		static bool dockspaceOpen = true;
+		static bool opt_fullscreen_persistant = true;
+		bool opt_fullscreen = opt_fullscreen_persistant;
+
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiDockNodeFlags_PassthruCentralNode;
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		if (opt_fullscreen)
 		{
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->GetWorkPos());
-			ImGui::SetNextWindowSize(viewport->GetWorkSize());
+			ImGui::SetNextWindowPos(viewport->Pos);
+			ImGui::SetNextWindowSize(viewport->Size);
 			ImGui::SetNextWindowViewport(viewport->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -127,41 +146,41 @@ void Editor::Render() {
 
 		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
 		// and handle the pass-thru hole, so we ask Begin() to not render a background.
-		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) {
+		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
-		}
+		
 
 		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
 		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
 		// all active windows docked into it will lose their parent and become undocked.
 		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &open, window_flags);
 
-		MainMenu::OnRender();
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("DockSpace", &dockspaceOpen, window_flags);
 		ImGui::PopStyleVar();
+
 
 		if (opt_fullscreen)
 			ImGui::PopStyleVar(2);
 
+		Style::GetStyle()->WindowMinSize.x = 315.0f;
+		mainMenu.OnRender();
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+			ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+		
+		Style::GetStyle()->WindowMinSize.x = 32.0f;
 		ImGui::End();
 	}
 
 	//UtilityBar::OnRender();
 
-	for (Layer* layer : layers) {
-		layer->Render();
-	}
-	if (colorPicker->isOpen)
-		colorPicker->OnRender();
+	for (Layer* layer : layers) layer->Render();
 
 	End();
 }

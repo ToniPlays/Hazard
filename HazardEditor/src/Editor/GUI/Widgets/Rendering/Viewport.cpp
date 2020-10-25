@@ -4,26 +4,23 @@
 #include <hzreditor.h>
 #include "Viewport.h"
 
-Viewport::Viewport()
+Viewport::Viewport() : Layer("Viewport")
 {
 
 }
 
 bool Viewport::OnEnabled()
 {
-	SetLayerOpen(true);
-	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
+	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 	if (renderer != nullptr) return true;
 	return false;
 }
 
 void Viewport::Render()
 {
-	if (!isLayerOpen) return;
+	if (!Panel::Begin(name, isLayerOpen)) return;
 
-	ImGui::Begin("Viewport", &isLayerOpen);
-
-	Hazard::GlobalRenderer* renderer = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
+	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 
 	static char* data[] = { "Shaded", "Points", "Wireframe" };
 	int selected = 0;
@@ -40,10 +37,8 @@ void Viewport::Render()
 	Hazard::Color sceneColor = renderer->GetWindow().GetClearColor();
 
 	if (ImGui::ColorButton("Scene color", ColorAsImVec(sceneColor))) {
-		Editor::OpenColorPicker(sceneColor, [](Hazard::Color color) {
-			Hazard::GlobalRenderer* rd = Hazard::ModuleHandler::GetModule<Hazard::GlobalRenderer>();
-			rd->GetWindow().SetClearColor(color);
-		});
+		Hazard::RenderEngine* rd = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
+		rd->GetWindow().SetClearColor(sceneColor);
 	}
 
 	ImVec2 size = ImGui::GetContentRegionAvail();
@@ -64,7 +59,8 @@ void Viewport::Render()
 
 	ImGui::Image((void*)renderer->GetRenderTexture()->GetColorID(), 
 		size, ImVec2(0, 1), ImVec2(1, 0));
-	ImGui::End();
+	
+	Panel::End();
 }
 
 

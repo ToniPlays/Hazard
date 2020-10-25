@@ -20,6 +20,7 @@ namespace Hazard {
 
 	class HAZARD_API RendererAPI {
 	public:
+		RendererAPI(RenderAPI api) { renderer = api; }
 
 		static RenderAPI GetAPI() { return renderer; }
 		static Shader* Shader(const std::string& file);

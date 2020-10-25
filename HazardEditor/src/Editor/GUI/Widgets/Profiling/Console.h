@@ -8,6 +8,7 @@ public:
 	Console();
 	void Render() override;
 	bool OnEnabled() override;
+	std::string MenuPlacement() { return "View/Analytics"; }
 	
 private:
 	static bool ShowLog;

@@ -2,6 +2,9 @@
 #include "Hazard.h"
 #include "Layers/Layer.h"
 #include "Editor/GUI/Items/ColorPicker.h"
+#include "Editor/GUI/Items/MainMenu.h"
+
+using namespace Hazard;
 
 class Editor : public Hazard::Module {
 public:
@@ -13,6 +16,8 @@ public:
 	bool OnDisabled();
 	void PushLayer(Layer* layer);
 
+	void Register(Layer* layer);
+
 	template<typename T>
 	static bool SetLayerOpen(bool open) {
 		for (Layer* layer : instance->layers) {
@@ -23,11 +28,20 @@ public:
 		}
 		return false;
 	}
-	static void OpenColorPicker(Hazard::Color color, void(*func)(Hazard::Color color));
+	template <typename T>
+		static T* GetLayer() {
+		for (Layer* layer : instance->layers) {
+			if (dynamic_cast<T*>(layer)) {
+				return (T*)layer;
+			}
+		}
+		return nullptr;
+	}
 private:
-	static ColorPicker* colorPicker;
 	static Editor* instance;
+
+	MainMenu mainMenu;
+	std::vector<Layer*> layers;
 	void Begin();
 	void End();
-	std::vector<Layer*> layers;
 };

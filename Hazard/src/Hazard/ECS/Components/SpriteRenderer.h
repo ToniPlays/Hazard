@@ -2,17 +2,22 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/ECS/ECS.h"
+#include "Hazard/Modules/Renderer/Shaders/Shader.h"
+#include "Hazard/Modules/Renderer/Buffers/VertexArray.h"
 
 namespace Hazard {
 
 	class HAZARD_API SpriteRenderer : public Component {
 	public:
-		SpriteRenderer(GameObject* gameObject, Mesh* mesh);
+		SpriteRenderer();
 		~SpriteRenderer();
 
-		Mesh& GetMesh() { return *mesh; }
-
+		void OnRender() override;
+		void SetTint(Color _tint);
+		Color GetTint() { return tint; };
 	private:
-		Mesh* mesh;
+		Color tint;
+		VertexArray* vertexArray;
+
 	};
 }

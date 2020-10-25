@@ -22,7 +22,7 @@ void ColorPicker::OnRender() {
 	color.b = _col[2];
 	color.a = _col[3];
 
-	func(color);
+	//func(color);
 	ImGui::End();
 }
 

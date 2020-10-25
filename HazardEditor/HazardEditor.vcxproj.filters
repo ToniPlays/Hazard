@@ -57,12 +57,6 @@
     <ClInclude Include="src\Editor\GUI\Editor.h">
       <Filter>src\Editor\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Items\ColorPicker.h">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Items\EditorStyle.h">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Items\MainMenu.h">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClInclude>
@@ -70,6 +64,9 @@
       <Filter>src\Editor\GUI\Layers</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.h">
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Inspect\Hierarchy.h">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Inspect\Inspector.h">
@@ -93,6 +90,12 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Panel.h" />
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Style.h" />
+    <ClInclude Include="src\Editor\GUI\GUILibrary\ComponentView.h" />
+    <ClInclude Include="src\Editor\GUI\GUILibrary\VectorControl.h" />
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Inputs.h" />
+    <ClInclude Include="src\Editor\Core\ComponentRegister.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -110,16 +113,13 @@
     <ClCompile Include="src\Editor\GUI\Editor.cpp">
       <Filter>src\Editor\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Items\ColorPicker.cpp">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Items\EditorStyle.cpp">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.cpp">
+      <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Inspect\Hierarchy.cpp">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\Inspector.cpp">
@@ -140,5 +140,11 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Panel.cpp" />
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Style.cpp" />
+    <ClCompile Include="src\Editor\GUI\GUILibrary\ComponentView.cpp" />
+    <ClCompile Include="src\Editor\GUI\GUILibrary\VectorControl.cpp" />
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Inputs.cpp" />
+    <ClCompile Include="src\Editor\Core\ComponentRegister.cpp" />
   </ItemGroup>
 </Project>

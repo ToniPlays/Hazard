@@ -1,7 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "RendererAPI.h"
-#include "GlobalRenderer.h"
+#include "RenderEngine.h"
 #include "Hazard/ECS/Camera.h"
 #include "Grid.h"
 
@@ -39,15 +39,15 @@ namespace Hazard {
 	}
 	void Grid::Render()
 	{
-		vertexArray->BindAll();
+		/*vertexArray->BindAll();
 		shader->Bind();
 
-		shader->SetUniform("projection", GlobalRenderer::Instance->Get3DProjection());
+		shader->SetUniform("projection", RenderEngine::Instance->Get3DProjection());
 		shader->SetUniform("view", Hazard::Matrix4::GetModelMatrix(Camera::GetTransform()));
 		shader->SetUniform("transform", Hazard::Matrix4::GetModelMatrix(Hazard::Transform()));
 		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawArrays(GL_QUADS, 0, size);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);*/
 	}
 }

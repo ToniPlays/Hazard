@@ -22,6 +22,7 @@ namespace Hazard {
 		void SetUniform(const std::string& name, Vector2<float> value);
 		void SetUniform(const std::string& name, Vector3<float>  value);
 		void SetUniform(const std::string& name, Matrix4 value);
+		void SetUniform(const std::string& name, Color color);
 		void SetUniform(const std::string& name, const glm::mat4& value);
 		void SetUniform(const std::string& name, bool value);
 

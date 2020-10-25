@@ -4,10 +4,8 @@
 
 class Layer {
 public:
+	Layer(std::string n) : name(n) {}
 	virtual ~Layer() {};
-
-	virtual void Awake() {};
-	virtual void Start() {};
 
 	virtual void Update() {};
 	virtual void Render() {};
@@ -16,6 +14,9 @@ public:
 	virtual bool OnDisabled() { return true; }
 
 	void SetLayerOpen(bool open) { isLayerOpen = open; }
+	virtual std::string MenuPlacement() { return ""; };
+	std::string GetName() { return name; }
 protected:
-	bool isLayerOpen = false;
+	bool isLayerOpen = true;
+	std::string name;
 };

@@ -16,12 +16,15 @@ namespace Hazard {
 		std::string GetName() const { return name; };
 		uint32_t GetID() const { return BufferID; }
 		uint32_t GetSize() const { return ShaderDataTypeSize(dataType); }
+		uint64_t GetLength() const { return dataLength; }
 		ShaderDataType GetType() const { return dataType; };
 
 	private:
 		std::string name;
 		ShaderDataType dataType = ShaderDataType::None;
 		uint32_t BufferID;
+
+		uint64_t dataLength = 0;
 	};
 
 	class HAZARD_API OpenGLIndexBuffer : public IndexBuffer {

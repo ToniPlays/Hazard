@@ -7,6 +7,7 @@ public:
 	Viewport();
 	void Render() override;
 	bool OnEnabled() override;
+	std::string MenuPlacement() { return "View/General"; }
 
 private:
 	float width = 0.0f, height = 0.0f;

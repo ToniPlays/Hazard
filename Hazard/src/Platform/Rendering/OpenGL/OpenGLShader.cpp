@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "OpenGLShader.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "Hazard/Modules/Renderer/RenderEngine.h"
 
 
 namespace Hazard {
@@ -22,6 +23,7 @@ namespace Hazard {
 	OpenGLShader::OpenGLShader(std::string path) {
 		std::string file = File::ReadFile(path);
 		Compile(Process(file));
+		
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -77,6 +79,9 @@ namespace Hazard {
 	{
 		//glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, value.GetAll());
 	}
+	void OpenGLShader::SetUniform(const std::string& name, Color color) {
+		SetUniform(name, { color.r, color.g, color.b });
+	}
 
 	void OpenGLShader::SetUniform(const std::string& name, bool value)
 	{
@@ -109,7 +114,7 @@ namespace Hazard {
 			shaderSources[ShaderTypeFromString(type)] = 
 				source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
 		}
-
+		
 		return shaderSources;
 	}
 
@@ -169,8 +174,8 @@ namespace Hazard {
 		}
 		for (auto id : shaderId)
 		{
-			glDetachShader(program, id);
-			glDeleteShader(id);
+			//glDetachShader(program, id);
+			//glDeleteShader(id);
 		}
 	}
 }

@@ -16,7 +16,7 @@ namespace Hazard {
 
 		void SetVSync(bool enabled) override {
 			windowData.VSync = enabled;
-			glfwSwapInterval(enabled ? 1 : 0);
+			glfwSwapInterval(enabled);
 		};
 		void* GetNativeWindow() const { return window; }
 		void SetEventCallback(const EventCallbackFn& callback) {

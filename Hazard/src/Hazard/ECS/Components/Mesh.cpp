@@ -5,17 +5,10 @@
 
 namespace Hazard {
 	
-
-	Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<int> _indices)
+	Mesh::Mesh()
 	{
-		this->vertices = _vertices;
-		this->indices = _indices;
 	}
-
-
 	Mesh::~Mesh()
 	{
-		indices.clear();
-		vertices.clear();
 	}
 }

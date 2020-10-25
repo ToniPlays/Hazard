@@ -4,6 +4,8 @@
 #include "Hazard/Modules/Renderer/Buffers/Buffer.h"
 
 namespace Hazard {
+
+
 	class HAZARD_API VertexArray {
 	public:
 

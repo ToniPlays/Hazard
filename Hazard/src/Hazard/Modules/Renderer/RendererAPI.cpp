@@ -18,7 +18,7 @@ namespace Hazard {
 	{
 		switch (GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGLShader(file);
+			case RenderAPI::OpenGL: return new OpenGLShader(file);
 		}
 		return nullptr;
 	}

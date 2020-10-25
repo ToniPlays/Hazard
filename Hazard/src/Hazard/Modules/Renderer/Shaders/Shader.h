@@ -4,6 +4,7 @@
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
 #include "Hazard/Utils/Maths/Vector/Vector2.h"
 #include "Hazard/Utils/Maths/Vector/Vector3.h"
+#include "Hazard/Utils/Maths/Color.h"
 
 #include "glm/glm.hpp"
 
@@ -23,6 +24,7 @@ namespace Hazard {
 		virtual void SetUniform(const std::string& name, Vector2<float> value) = 0;
 		virtual void SetUniform(const std::string& name, Vector3<float>  value) = 0;
 		virtual void SetUniform(const std::string& name, Matrix4 value) = 0;
+		virtual void SetUniform(const std::string& name, Color color) = 0;
 		virtual void SetUniform(const std::string& name, const glm::mat4& value) = 0;
 		virtual void SetUniform(const std::string& name, bool value) = 0;
 

@@ -16,16 +16,14 @@ std::string ToString(Hazard::TextureType type) {
 	}
 }
 
-EngineAssets::EngineAssets()
+EngineAssets::EngineAssets() : Layer("Engine assets")
 {
-}
 
+}
 
 void EngineAssets::Render()
 {
-	if (!isLayerOpen) return;
-
-	ImGui::Begin("Engine assets", &isLayerOpen);
+	if (!Panel::Begin(name, isLayerOpen)) return;
 
 	if(ImGui::CollapsingHeader("Loaded textures")) {
 		std::unordered_map<Hazard::TextureType, std::vector<Hazard::Texture*>> textures = Hazard::TextureManager::GetTextures();
@@ -47,5 +45,5 @@ void EngineAssets::Render()
 		}
 	}
 
-	ImGui::End();
+	Panel::End();
 }

@@ -7,5 +7,6 @@ public:
 	Profiler();
 	bool OnEnabled();
 	void Render() override;
+	std::string MenuPlacement() { return "View/Analytics"; }
 };
 

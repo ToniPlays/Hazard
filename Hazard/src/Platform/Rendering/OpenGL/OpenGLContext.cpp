@@ -4,6 +4,7 @@
 #include "OpenGLContext.h"
 
 namespace Hazard {
+
 	GraphicsContext* GraphicsContext::Create(void* window, void* props) {
 		return new OpenGLContext((Window*)window, (WindowProps*)props);
 	}
@@ -66,8 +67,6 @@ namespace Hazard {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
 		}
-		if(glGetError() != 0)
-			std::cout << "[OpenGL error] " << glGetError() << std::endl;
 	}
 
 	std::string OpenGLContext::GetVersion() const
@@ -81,5 +80,11 @@ namespace Hazard {
 		ss << "OpenGL ";
 		ss << major << "." << minor;
 		return ss.str();
+	}
+	std::string OpenGLContext::GetError() const {
+		GLint error = glGetError();
+		if (error == GL_NO_ERROR) return "";
+		HZR_CORE_ERROR("[OpenGL Error] " + std::to_string(error));
+		return std::to_string(error);
 	}
 }

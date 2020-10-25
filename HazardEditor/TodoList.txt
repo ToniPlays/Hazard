@@ -2,7 +2,7 @@ Core
 	- Entry point DONE
 	- Application DONE
 	- Build/Editor runnable SORTF OF
-	- Core events
+	- Core events DONE
 	- Core logging DONE
 	- Engine Configuration
 

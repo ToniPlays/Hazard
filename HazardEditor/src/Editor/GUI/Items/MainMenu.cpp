@@ -3,80 +3,69 @@
 #include "Editor/GUI/All.h"
 #include "MainMenu.h"
 
-void SplitString(std::string string, const char* regex, char* out) {
-	char splitted[3];
 
-	out = splitted;
+void MainMenu::OnCreate() {
+	menuItems.push_back(new MenuItems("File"));
+	menuItems.push_back(new MenuItems("Edit"));
+	menuItems.push_back(new MenuItems("Assets"));
+	menuItems.push_back(new MenuItems("Objects"));
+	menuItems.push_back(new MenuItems("Component"));
+	menuItems.push_back(new MenuItems("View"));
+	menuItems.push_back(new MenuItems("Help"));
 }
 
 void MainMenu::OnRender()
 {
 	ImGui::BeginMenuBar();
 
-	if (ImGui::BeginMenu("File")) {
-
-		if (ImGui::MenuItem("New")) {
-			//Debug::Warn("File->New TODO");
-		}
-
-		if (ImGui::MenuItem("Quit")) {
-			Hazard::WindowCloseEvent e;
-			Hazard::HazardLoop::GetCurrent().OnEvent(e);
-		}
-		ImGui::EndMenu();
-	}
-	if (ImGui::BeginMenu("Edit")) {
-
-		//Debug::Error("Menu Edit TODO");
-
-		ImGui::EndMenu();
-	}
-	//Assetmenu
-
-	if (ImGui::BeginMenu("Assets")) {
-
-		if (ImGui::MenuItem("New GameObject")) {
-			//CreateGameObject::CreateEmpty();
-		}
-		if (ImGui::MenuItem("Import asset")) {
-			//Debug::Warn("Assets-> Import asset TODO");
-		}
-
-		ImGui::EndMenu();
-	}
-
-	if (ImGui::BeginMenu("Window")) {
-		if (ImGui::MenuItem("Inspector")) {
-			Editor::SetLayerOpen<Inspector>(true);
-		}
-		if (ImGui::MenuItem("Performance")) {
-			Editor::SetLayerOpen<Performance>(true);
-		}
-		if (ImGui::MenuItem("Viewport")) {
-			Editor::SetLayerOpen<Viewport>(true);
-		}
-		if (ImGui::MenuItem("Console")) {
-			Editor::SetLayerOpen<Console>(true);
-		}
-		if (ImGui::MenuItem("Hierarchy")) {
-			//Editor::SetLayerOpen<Hierarchy>(true);
-		}
-		if (ImGui::MenuItem("Engine assets")) {
-			Editor::SetLayerOpen<EngineAssets>(true);
-		}
-		ImGui::EndMenu();
-	}
-	if (ImGui::BeginMenu("Help")) {
-
-		//Debug::Error("Menu Help TODO");
-
-		ImGui::EndMenu();
+	for (MenuItems* menu : menuItems) {
+		RenderMenu(menu);
 	}
 	ImGui::EndMenuBar();
 }
+void MainMenu::RenderMenu(MenuItems* menu) {
+	
+	if (ImGui::BeginMenu(menu->label.c_str())) {
 
-void MainMenu::CreateMenu(std::string menu)
-{
-	ImGui::MenuItem(menu.c_str());
+		for (Callback* callback : menu->callbacks) {
+			if (ImGui::MenuItem(callback->label.c_str())) {
+				callback->fn(callback->item);
+			}
+		}
+
+		for (MenuItems* item : menu->menuItems) {
+			RenderMenu(item);
+		}
+		ImGui::EndMenu();
+	}
 }
+void MainMenu::RegisterMenuItem(std::string str, Callback* callback) {
+
+	std::vector<std::string> menuString = StringUtils::SplitString(str, '/');
+	MenuItems* currentMenu = nullptr;
+	
+	for (uint8_t i = 0; i < menuString.size(); i++) {
+		currentMenu = FindMenu(currentMenu, menuString.at(i));
+	}
+	currentMenu->PushLayer(callback);
+}
+MenuItems* MainMenu::FindMenu(MenuItems* menu, std::string& label) {
+	if (menu == nullptr) {
+		for (MenuItems* m : menuItems) {
+			if (m->label == label) return m;
+		}
+		MenuItems* newMenu = new MenuItems(label);
+		menuItems.push_back(newMenu);
+		return newMenu;
+	}
+
+	for (MenuItems* childMenu : menu->menuItems) {
+		if (childMenu->label == label) return childMenu;
+	}
+
+	MenuItems* newMenu = new MenuItems(label);
+	menu->PushMenuItem(newMenu);
+	return newMenu;
+}
+
 
