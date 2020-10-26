@@ -198,6 +198,9 @@
     <ClInclude Include="src\Hazard\Modules\Scene\SceneManager.h">
       <Filter>src\Hazard\Modules\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Loaders\Deserializer.h">
+      <Filter>src\Hazard\Utils\Loaders</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Utils\Loaders\File.h">
       <Filter>src\Hazard\Utils\Loaders</Filter>
     </ClInclude>
@@ -317,6 +320,9 @@
     <ClCompile Include="src\Hazard\Modules\Scene\SceneManager.cpp">
       <Filter>src\Hazard\Modules\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\Loaders\Deserializer.cpp">
+      <Filter>src\Hazard\Utils\Loaders</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Utils\Loaders\File.cpp">
       <Filter>src\Hazard\Utils\Loaders</Filter>
     </ClCompile>
@@ -365,5 +371,6 @@
     <ClCompile Include="vendor\stb_image.cpp">
       <Filter>vendor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Core\Application.cpp" />
   </ItemGroup>
 </Project>

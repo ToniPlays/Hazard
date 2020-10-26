@@ -3,15 +3,16 @@
 #include "Hazard.h"
 #include "Hazard/Core/EntryPoint.h"
 
+
 class EditorApplication : public Hazard::Application {
 
 public:
+	
 	EditorApplication();
 	~EditorApplication();
 
-	void Awake();
-	void OnEvent(Hazard::Event& e);
-	bool CameraZoom(Hazard::Event& e);
+	void Awake() override;
+	void OnEvent(Hazard::Event& e) override;
 };
 
 Hazard::Application* Hazard::CreateApplication() {

@@ -24,7 +24,7 @@ void Hierarchy::Render() {
 	std::hash<std::string> hash;
 
 	bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)hash(sceneManager->GetActiveScene()->GetName()), flags, 
-		("Scene " + sceneManager->GetActiveScene()->GetName()).c_str());
+		("Scene: " + sceneManager->GetActiveScene()->GetName()).c_str());
 
 	if (ImGui::IsItemClicked()) {
 		sceneContext = sceneManager->GetActiveScene();
@@ -33,7 +33,7 @@ void Hierarchy::Render() {
 	}
 
 	if(opened) {
-		DrawEntities(sceneManager->GetActiveScene()->GetEntities());
+		DrawEntities(sceneManager->GetActiveScene()->GetChildEntities());
 	}	
 
 	if (opened) ImGui::TreePop();
@@ -41,7 +41,7 @@ void Hierarchy::Render() {
 	if (ImGui::BeginPopupContextWindow(0, 1, false)) {
 		if (ImGui::MenuItem("New entity")) {
 			SceneManager* manager = ModuleHandler::GetModule<SceneManager>();
-			manager->GetActiveScene()->AddEntity("Empty entity");
+			manager->GetActiveScene()->AddEntity(new Entity("Empty entity"));
 		}
 		ImGui::EndPopup();
 	}

@@ -114,6 +114,7 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\Core\HazardProject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -179,5 +180,6 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Core\HazardProject.cpp" />
   </ItemGroup>
 </Project>

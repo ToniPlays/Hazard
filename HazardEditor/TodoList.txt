@@ -36,3 +36,6 @@ Rendering
 	- Subtextures
 System
 	- File dialogs
+
+---------------BUGS-----------------
+Viewport clipping

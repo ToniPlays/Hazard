@@ -23,7 +23,7 @@ namespace Hazard {
 	}
 	void Renderer2D::Render(Scene* scene)
 	{
-		for (Entity* entity : scene->GetEntities()) {
+		for (Entity* entity : scene->GetChildEntities()) {
 			RenderEntity(entity);
 		}
 	}
@@ -36,7 +36,7 @@ namespace Hazard {
 		//projection = glm::perspective((float)Math::ToRadians(60.0f), w / (float)h, 0.1f, 1000.0f);
 	}
 	void Renderer2D::RenderEntity(Entity* entity) {
-
+		if (!entity->HasComponent<Transform>()) return;
 		shader->SetUniform("transform", Transform::AsMat4(*entity->GetComponent<Transform>()));
 
 		for (Component* component : entity->GetComponents()) {

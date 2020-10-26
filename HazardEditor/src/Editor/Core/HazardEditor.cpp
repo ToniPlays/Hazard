@@ -1,6 +1,8 @@
 #pragma once
 #include <hzreditor.h>
 #include "HazardEditor.h"
+#include "Analytics/Debug.h"
+#include "HazardProject.h"
 
 
 using namespace Hazard;
@@ -18,18 +20,12 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::Awake()
 {
-#ifndef HZR_GAME_ONLY
 	PushModule(new Editor());
-#endif
 }
 
 void EditorApplication::OnEvent(Event& e)
 {
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<Hazard::MouseScrolledEvent>(BIND_EVENT(EditorApplication::CameraZoom));
+
 }
 
-bool EditorApplication::CameraZoom(Event& e) 
-{
-	return true;
-}
+

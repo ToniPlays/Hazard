@@ -30,11 +30,13 @@ namespace Hazard {
 		}
 		std::vector<Entity*> GetChildEntities() { return childs; }
 		std::vector<Component*> GetComponents() { return components; }
+		void AddEntity(Entity* entity);
+		void RemoveEntity(Entity* entity);
 
 		std::string name = "";
 
-	private:
-		std::vector<Entity*> childs;
+	protected:
+		std::vector<Entity*> childs;;
 		std::vector<Component*> components;
 	};
 }

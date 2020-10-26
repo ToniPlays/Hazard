@@ -9,7 +9,7 @@ namespace Hazard {
 	class HAZARD_API Scene : public Entity {
 	public:
 
-		Scene(std::string name);
+		Scene(std::string name = "Empty scene");
 		~Scene() {};
 
 		void Awake() {};
@@ -17,14 +17,9 @@ namespace Hazard {
 		void Update() {};
 		void Render() {};
 
-		void AddEntity(std::string name, Entity* entity = nullptr);
-		void RemoveEntity(Entity* entity);
-		std::vector<Entity*> GetEntities() { return entities; }
+		void Flush();
 
 		std::string GetName() { return name; }
 		void SetSceneName(std::string name) { this->name = name; }
-
-	private:
-		std::vector<Entity*> entities;
 	};
 }

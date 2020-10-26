@@ -9,6 +9,42 @@ workspace "Hazard"
 	}
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+project "yaml-cpp"
+	location "c:/dev/Hazard/yaml-cpp"
+	kind "StaticLib"
+	language "C++"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {	
+		"C:/dev/Hazard/vendor/yaml-cpp/src/**.h",
+		"C:/dev/Hazard/vendor/yaml-cpp/src/**.cpp",
+		"C:/dev/Hazard/vendor/yaml-cpp/include/**.h"
+	}
+
+	includedirs	{
+		"C:/dev/Hazard/vendor/yaml-cpp/include"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		cppdialect "C++17"
+		staticruntime "On"
+
+	filter "system:linux"
+		pic "On"
+		systemversion "latest"
+		cppdialect "C++17"
+		staticruntime "On"
+
+	filter "configurations:Debug"
+		runtime "Release"
+		symbols "On"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"
 
 project "IMGUI"
 	location "c:/dev/Hazard/ImGui"
@@ -51,28 +87,6 @@ project "IMGUI"
 		runtime "Release"
 		optimize "on"
 
-project "JSONParser"
-
-	location "c:/dev/Hazard/JSONParser"
-	kind "StaticLib"
-	language "C++"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}");
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	includedirs {
-		"JSONParser/include"
-	}
-
-	filter "system:windows"
-		buildoptions { "-std=c11", "-lgdi32" }
-		systemversion "latest"
-		staticruntime "On"
-
-	filter { "system:windows", "configurations:Release" }
-		buildoptions "/MT"
-
-
 project "GLAD"
 	location "c:/dev/Hazard/GLAD"
 	kind "StaticLib"
@@ -97,7 +111,6 @@ project "GLAD"
 		staticruntime "On"
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
-
 
 project "Hazard"
 
@@ -126,6 +139,7 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
+		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/GLM",
 		"c:/dev/Hazard/Hazard/vendor",
 		"Hazard/src"
@@ -136,7 +150,8 @@ project "Hazard"
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
-		"GLAD"
+		"GLAD",
+		"yaml-cpp"
 	}
 
 	filter "system:windows"
@@ -194,6 +209,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
+		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/GLM",
 		"HazardEditor/Platform",
@@ -208,11 +224,13 @@ project "HazardEditor"
 		systemversion "latest"
 
 	defines {
-		"HZR_PLATFORM_WINDOWS"
+		"HZR_PLATFORM_WINDOWS",
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
+		"yaml-cpp",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"Hazard",

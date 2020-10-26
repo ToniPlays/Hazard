@@ -1,19 +1,33 @@
 #pragma once
 #include <hzrpch.h>
 #include "SceneManager.h"
+#include "Hazard/Utils/Loaders/Deserializer.h"
 
 namespace Hazard {
 	SceneManager::SceneManager(Scene* scene) : Module("SceneManager") {
-		if (scene == nullptr) 
+		if (scene == nullptr)
 			LoadEmptyScene();
-		else LoadScene(scene);
+		else ActivateScene(scene);
 	}
-	void SceneManager::LoadScene(Scene* scene) {
-		LoadEmptyScene();
+	void SceneManager::LoadScene(std::string& path) {
+		Scene* scene = new Scene();
+		if (Deserializer::DeserializeScene(path, *scene)) {
+			ActivateScene(scene);
+		}
+	}
+	void SceneManager::ActivateScene(Scene* scene) {
+		if(activeScene != nullptr)
+			activeScene->Flush();
+		activeScene = scene;
+
+		for (Entity* entity : activeScene->GetChildEntities()) HZR_CORE_INFO(entity->name);
 	}
 	void SceneManager::LoadEmptyScene() {
-		activeScene = new Scene("Empty scene");
-		activeScene->AddEntity("Sky light");
-		activeScene->AddEntity("CameraEntity");
+
+		Scene* empty = new Scene("Empty scene");
+		empty->AddEntity(new Entity("Sky light"));
+		empty->AddEntity(new Entity("Camera entity"));
+
+		ActivateScene(empty);
 	}
 }

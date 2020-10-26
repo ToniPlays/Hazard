@@ -3,7 +3,7 @@
 #include "Core.h"
 #include "IApplication.h"
 #include "Hazard/Modules/Module.h"
-#include "Hazard/Modules/ModuleHandler.h"
+
 
 namespace Hazard {
 	class HAZARD_API Application : public IApplication {
@@ -11,9 +11,9 @@ namespace Hazard {
 		Application() {};
 		~Application() {};
 
-		void PushModule(Module* module) {
-			ModuleHandler::PushModule(module);
-		};
+		void PushModule(Module* module);
+		void SetTitle(std::string& title);
+		static Application& GetApplication();
 	};
 
 	Hazard::Application* CreateApplication();

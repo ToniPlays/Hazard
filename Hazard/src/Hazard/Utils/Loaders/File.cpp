@@ -23,6 +23,7 @@ namespace Hazard {
 		ofn.lpstrFilter = filters;
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
 		if (GetOpenFileNameA(&ofn) == TRUE) {
 			return ofn.lpstrFile;
 		}

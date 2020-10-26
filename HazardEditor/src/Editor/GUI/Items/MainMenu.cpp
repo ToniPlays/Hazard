@@ -2,6 +2,7 @@
 #include <hzreditor.h>
 #include "Editor/GUI/All.h"
 #include "MainMenu.h"
+#include "Editor/Core/HazardProject.h"
 
 
 void MainMenu::OnCreate() {
@@ -9,6 +10,9 @@ void MainMenu::OnCreate() {
 	file->PushLayer(new Callback("Open file", [](void* item) {
 		Hazard::File::OpenFileDialog("Hazard Scene (*.hazard)\0*.hazard\0");
 	}, NULL, "Ctrl+O"));
+	file->PushLayer(new Callback("Open project", [](void* item) {
+		HazardProject::OpenProject(Hazard::File::OpenFileDialog("Hazard Project (*.hzrproj)\0*.hzrproj\0"));
+	}, NULL));
 	menuItems.push_back(file);
 	
 	menuItems.push_back(new MenuItems("Edit"));
