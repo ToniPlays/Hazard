@@ -13,6 +13,7 @@ namespace Hazard {
 		void OnUpdate() override;
 		void SetClearColor(Color color) const override;
 		void SetWindowTitle(std::string title) override;
+		void SetWindowIcon(const char* smallIcon, const char* bigIcon) override;
 
 		void SetVSync(bool enabled) override {
 			windowData.VSync = enabled;

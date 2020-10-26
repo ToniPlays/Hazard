@@ -29,8 +29,10 @@ namespace Hazard {
 	}
 	void Renderer2D::Resize(float w, float h)
 	{
-		float scale = 256;
-		projection = glm::ortho(-w / scale, w / scale, -h / scale, h / scale, -1000.0f, 1000.0f);
+		float scale = 5;
+		float aspectX = w / h * scale;
+		std::cout << aspectX << "x" << scale << std::endl;
+		projection = glm::ortho(-aspectX, aspectX, -scale, scale, -1.0f, 1.0f);
 		//projection = glm::perspective((float)Math::ToRadians(60.0f), w / (float)h, 0.1f, 1000.0f);
 	}
 	void Renderer2D::RenderEntity(Entity* entity) {

@@ -15,8 +15,9 @@ namespace Hazard {
 
 		bool VSync = false;
 		bool focus = true;
-		unsigned int Width;
-		unsigned int Height;
+		bool maximized = false;
+		int Width;
+		int Height;
 
 		std::function<void(Event&)> EventCallback;
 
@@ -24,8 +25,8 @@ namespace Hazard {
 			std::string platform = "Undefined platform",
 			std::string renderer = "Undefined renderer",
 			unsigned int width = 1280,
-			unsigned int height = 720)
-			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height) {}
+			unsigned int height = 720, bool maxim = true)
+			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
 	};
 
 	class HAZARD_API Window {
@@ -38,6 +39,7 @@ namespace Hazard {
 		virtual void OnUpdate() = 0;
 		virtual void SetClearColor(Color color) const = 0;
 		virtual void SetWindowTitle(std::string title) = 0;
+		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

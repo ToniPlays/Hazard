@@ -22,6 +22,9 @@
     <Filter Include="src\Editor\GUI">
       <UniqueIdentifier>{571CA4D7-43EA-97DD-2C7E-080418EB7342}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\GUI\GUILibrary">
+      <UniqueIdentifier>{405C7F07-AC1E-B391-F5CE-411E61D08B6F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Editor\GUI\Items">
       <UniqueIdentifier>{088C60FD-F41A-EAC6-9D39-FEC189A7FA6C}</UniqueIdentifier>
     </Filter>
@@ -48,6 +51,9 @@
     <ClInclude Include="src\Editor\Core\Analytics\Debug.h">
       <Filter>src\Editor\Core\Analytics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\Core\ComponentRegister.h">
+      <Filter>src\Editor\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\Core\HazardEditor.h">
       <Filter>src\Editor\Core</Filter>
     </ClInclude>
@@ -56,6 +62,24 @@
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Editor.h">
       <Filter>src\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\ComponentView.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Components.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Inputs.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Panel.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\Style.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\GUILibrary\VectorControl.h">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Items\MainMenu.h">
       <Filter>src\Editor\GUI\Items</Filter>
@@ -90,12 +114,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\GUILibrary\Panel.h" />
-    <ClInclude Include="src\Editor\GUI\GUILibrary\Style.h" />
-    <ClInclude Include="src\Editor\GUI\GUILibrary\ComponentView.h" />
-    <ClInclude Include="src\Editor\GUI\GUILibrary\VectorControl.h" />
-    <ClInclude Include="src\Editor\GUI\GUILibrary\Inputs.h" />
-    <ClInclude Include="src\Editor\Core\ComponentRegister.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -107,11 +125,32 @@
     <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp">
       <Filter>src\Editor\Core\Analytics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Core\ComponentRegister.cpp">
+      <Filter>src\Editor\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\Core\HazardEditor.cpp">
       <Filter>src\Editor\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Editor.cpp">
       <Filter>src\Editor\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\ComponentView.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Components.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Inputs.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Panel.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\Style.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\GUILibrary\VectorControl.cpp">
+      <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
@@ -140,11 +179,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\GUILibrary\Panel.cpp" />
-    <ClCompile Include="src\Editor\GUI\GUILibrary\Style.cpp" />
-    <ClCompile Include="src\Editor\GUI\GUILibrary\ComponentView.cpp" />
-    <ClCompile Include="src\Editor\GUI\GUILibrary\VectorControl.cpp" />
-    <ClCompile Include="src\Editor\GUI\GUILibrary\Inputs.cpp" />
-    <ClCompile Include="src\Editor\Core\ComponentRegister.cpp" />
   </ItemGroup>
 </Project>

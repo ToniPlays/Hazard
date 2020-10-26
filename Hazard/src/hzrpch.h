@@ -8,13 +8,13 @@
 #include <map>
 #include <stdio.h>
 
-#include "Hazard/Utils/File.h"
 #include "Hazard/Utils/Maths/Time.h"
 #include "Hazard/Utils/Loaders/MeshLoader.h"
 #include "Hazard/Utils/Maths/Color.h"
 
 #include "Hazard/Utils/Maths/Vector/Vector2.h"
 #include "Hazard/Utils/Maths/Vector/Vector3.h"
+#include "Hazard/Utils/Loaders/File.h"
 
 #include "Hazard/Core/ApplicationInfo.h"
 #include "Hazard/Core/HazardLoop.h"

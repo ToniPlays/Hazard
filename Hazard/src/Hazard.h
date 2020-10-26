@@ -7,6 +7,7 @@
 #include "Hazard/Modules/Renderer/RendererAPI.h"
 #include "Hazard/Modules/Renderer/RenderEngine.h"
 #include "Hazard/Modules/Scene/SceneManager.h"
+#include "Hazard/Modules/Logging/Logger.h"
 
 #include "Hazard/ECS/Components/SpriteRenderer.h"
 #include "Hazard/ECS/Components/Mesh.h"
@@ -19,14 +20,11 @@
 #include "Hazard/Utils/Maths/Vector/Vector3.h"
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
 #include "Hazard/Utils/StringUtils.h"
+#include "Hazard/Utils/Loaders/File.h"
 
 #include "Hazard/ECS/Camera.h"
 #include "Hazard/ECS/Entity.h"
 
-
 #include "Hazard/Core/Events/Event.h"
 #include "Hazard/Core/Events/MouseEvent.h"
 #include "Hazard/Core/Events/KeyEvent.h"
-
-
-#include "Hazard/Modules/Logging/Logger.h"

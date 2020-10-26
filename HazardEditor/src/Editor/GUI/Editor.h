@@ -1,7 +1,6 @@
 #pragma once
 #include "Hazard.h"
 #include "Layers/Layer.h"
-#include "Editor/GUI/Items/ColorPicker.h"
 #include "Editor/GUI/Items/MainMenu.h"
 
 using namespace Hazard;

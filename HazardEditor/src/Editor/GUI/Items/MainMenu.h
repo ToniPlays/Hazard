@@ -5,14 +5,16 @@ using namespace Hazard;
 
 struct Callback {
 	std::string label;
+	const char* shortcut = "";
 	void(*fn)(void* item);
 	void* item;
 	Callback() = default;
 
-	Callback(std::string label, void(*fn)(void* item), void* item) {
+	Callback(std::string label, void(*fn)(void* item), void* item, const char* shortcut = "") {
 		this->label = label;
 		this->fn = fn;
 		this->item = item;
+		this->shortcut = shortcut;
 	}
 };
 

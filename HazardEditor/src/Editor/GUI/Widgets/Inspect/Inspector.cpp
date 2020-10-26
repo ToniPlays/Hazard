@@ -36,8 +36,12 @@ void Inspector::Render()
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		ImGui::Checkbox("Lock", &locked);
-
 		ComponentView::DrawComponents(context);
+
+		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+			ComponentView::ViewAll(context);
+			ImGui::EndPopup();
+		}
 	}
 	
 	Panel::End();

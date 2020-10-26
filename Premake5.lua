@@ -173,7 +173,7 @@ project "Hazard"
 
 project "HazardEditor"
 	location "HazardEditor"
-	kind "ConsoleApp"
+	kind "WindowedApp"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")

@@ -5,7 +5,12 @@
 
 
 void MainMenu::OnCreate() {
-	menuItems.push_back(new MenuItems("File"));
+	MenuItems* file = new MenuItems("File");
+	file->PushLayer(new Callback("Open file", [](void* item) {
+		Hazard::File::OpenFileDialog("Hazard Scene (*.hazard)\0*.hazard\0");
+	}, NULL, "Ctrl+O"));
+	menuItems.push_back(file);
+	
 	menuItems.push_back(new MenuItems("Edit"));
 	menuItems.push_back(new MenuItems("Assets"));
 	menuItems.push_back(new MenuItems("Objects"));
@@ -28,7 +33,7 @@ void MainMenu::RenderMenu(MenuItems* menu) {
 	if (ImGui::BeginMenu(menu->label.c_str())) {
 
 		for (Callback* callback : menu->callbacks) {
-			if (ImGui::MenuItem(callback->label.c_str())) {
+			if (ImGui::MenuItem(callback->label.c_str(), callback->shortcut)) {
 				callback->fn(callback->item);
 			}
 		}

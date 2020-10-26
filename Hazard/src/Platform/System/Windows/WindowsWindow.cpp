@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "WindowWindow.h"
 #include <glad/glad.h>
+#include <stb_image.h>
 
 namespace Hazard {
 
@@ -16,14 +17,13 @@ namespace Hazard {
 			return;
 		}
 
-		windowData.Width = props.Width;
-		windowData.Height = props.Height;
 		windowData.Title = props.Title;
 		windowData.Platform = "Windows";
 
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+		glfwWindowHint(GLFW_MAXIMIZED, props.maximized ? GLFW_TRUE : GLFW_FALSE);
+
 		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title.c_str(), 0, 0);
 
 		if (!window) {
@@ -34,13 +34,15 @@ namespace Hazard {
 		glfwSetWindowUserPointer(window, &windowData);
 		context = GraphicsContext::Create(this, &windowData);
 		windowData.Renderer = context->GetVersion();
-		glfwShowWindow(window);
 
 		std::string hex = "#222222FF";
 		SetClearColor(Color::FromHex(hex));
 		SetCallbacks();
 		SetVSync(true);
-		glfwMaximizeWindow(window);
+
+
+		glfwShowWindow(window);
+		glfwGetWindowSize(window, &windowData.Width, &windowData.Height);
 	}
 	void WindowsWindow::OnUpdate() {
 
@@ -52,6 +54,19 @@ namespace Hazard {
 	{
 		windowData.Title = title;
 		glfwSetWindowTitle(window, title.c_str());
+	}
+	void WindowsWindow::SetWindowIcon(const char* smallIcon, const char* bigIcon)
+	{
+		GLFWimage images[2];
+		int sx, sy, bx, by, sChannels, bChannels;
+		images[0].pixels = stbi_load(smallIcon, &sx, &sy, &sChannels, 0);
+		images[0].width = sx;
+		images[0].height = sy;
+		images[1].pixels = stbi_load(bigIcon, &bx, &by, &bChannels, 0);
+		images[1].width = bx;
+		images[1].height = by;
+
+		glfwSetWindowIcon(window, 2, images);
 	}
 	void WindowsWindow::SetCallbacks()
 	{

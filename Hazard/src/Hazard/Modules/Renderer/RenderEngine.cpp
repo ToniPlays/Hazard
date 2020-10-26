@@ -27,6 +27,8 @@ namespace Hazard {
 		window = std::unique_ptr<Window>(Window::Create());
 		window->SetEventCallback(BIND_EVENT(RenderEngine::OnEvent));
 
+		window->SetWindowIcon("res/icons/hazard_16.ico", "res/icons/hazard_16.ico");
+
 		HZR_ASSERT(window != nullptr, "Window was not created");
 		renderTexture = RendererAPI::RenderTexture();
 
@@ -47,6 +49,12 @@ namespace Hazard {
 	void RenderEngine::Render()
 	{
 		window->OnUpdate();
+#ifdef HZR_GAME_ONLY
+		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
+		renderer2D.BeginScene();
+		renderer2D.Render(scene);
+		renderer2D.EndScene();
+#endif
 	}
 
 	void RenderEngine::SceneRender()

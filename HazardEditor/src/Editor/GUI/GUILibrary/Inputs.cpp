@@ -47,7 +47,7 @@ Color Inputs::ColorPicker(const char* label, bool &open, Color color)
 	ImGui::End();
 	return color;
 }
-Color Inputs::ColorPicker(std::string label, bool &open, Color color)
+Color Inputs::ColorPicker(std::string& label, bool &open, Color color)
 {
 	return ColorPicker(label.c_str(), open, color);
 }
@@ -64,7 +64,17 @@ Color Inputs::LabelledColorPicker(const char* label, bool &open, Color color)
 	ImGui::Columns(1);
 	return color;
 }
-Color Inputs::LabelledColorPicker(std::string label, bool& open, Color color) {
+Color Inputs::LabelledColorPicker(std::string& label, bool& open, Color color) {
 	return LabelledColorPicker(label.c_str(), open, color);
+}
+
+bool Inputs::ConfirmDialog(const char* label, const char* description)
+{
+	return false;
+}
+
+bool Inputs::ConfirmDialog(std::string& label, std::string& description)
+{
+	return ConfirmDialog(label.c_str(), description.c_str());
 }
 

@@ -1,12 +1,16 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
 #include <iostream>
-
 namespace Hazard {
-	class HAZARD_API File {
+
+	class File {
 	public:
+		static std::string OpenFileDialog(const char* filters);
+		static std::string SaveFile(const char* filters);
+
 		static std::string ReadFile(std::string file);
 		static std::string GetFileExtension(std::string file);
+	private:
+		
 	};
 }
