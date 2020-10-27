@@ -48,7 +48,7 @@ void Performance::Render()
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
-	ss << "Draw calls: " << Hazard::HazardLoop::GetAppInfo().Get("DrawCalls");
+	ss << "Draw calls: " << renderer->GetStats().draws;
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");

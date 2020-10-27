@@ -14,7 +14,6 @@ Inspector::Inspector() : Layer("Properties")
 
 }
 
-
 void Inspector::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;

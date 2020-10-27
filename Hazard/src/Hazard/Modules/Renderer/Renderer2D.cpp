@@ -9,14 +9,15 @@ namespace Hazard {
 
 	void Renderer2D::Init()
 	{
-		shader = RendererAPI::Shader("res/shaders/canvasShader.glsl");
+		shader = RendererAPI::Create<Shader>("res/shaders/canvasShader.glsl");
 	}
 
-	void Renderer2D::BeginScene() {
-		
+	void Renderer2D::BeginScene(CameraComponent* sceneCamera) {
+		this->sceneCamera = sceneCamera;
+
 		shader->Bind();
-		shader->SetUniform("projection", projection);
-		shader->SetUniform("view", Matrix4::GetModelMatrix(Transform()));
+		RenderEngine::boundShader = shader->GetProgram();
+		shader->SetUniform("viewProjection", sceneCamera->GetViewProjection());
 	}
 	void Renderer2D::EndScene() {
 		

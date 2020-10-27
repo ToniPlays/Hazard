@@ -16,7 +16,5 @@ public:
 private:
 	void DrawEntities(std::vector<Entity*> entities);
 
-
-	Scene* sceneContext = nullptr;
 	Entity* entityContext = nullptr;
 };

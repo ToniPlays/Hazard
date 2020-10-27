@@ -15,7 +15,7 @@ void MainMenu::OnCreate() {
 	}, NULL));
 	file->PushLayer(new Callback("Save Scene", [](void* item) {
 		HazardProject::SaveCurrentScene();
-		}, NULL));
+	}, NULL));
 	menuItems.push_back(file);
 	
 	menuItems.push_back(new MenuItems("Edit"));

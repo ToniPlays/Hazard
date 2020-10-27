@@ -12,7 +12,7 @@ namespace Hazard {
 
 	SpriteRenderer::SpriteRenderer() : Component("SpriteRenderer")
 	{
-		vertexArray = RendererAPI::VertexArray();
+		vertexArray = RendererAPI::Create<VertexArray>();
 
 
 		VertexBuffer* buffer = RendererAPI::VertexBuffer(ShaderDataType::Float3, "position");
@@ -29,7 +29,7 @@ namespace Hazard {
 		vertexArray->SetLayout({ buffer, colorBuffer });
 
 		int indices[6] = { 0, 1, 2, 2, 3, 0 };
-		IndexBuffer* indexBuffer = RendererAPI::IndexBuffer();
+		IndexBuffer* indexBuffer = RendererAPI::Create<IndexBuffer>();
 		indexBuffer->SetData(indices, sizeof(indices));
 		vertexArray->SetIndexBuffer(indexBuffer);
 

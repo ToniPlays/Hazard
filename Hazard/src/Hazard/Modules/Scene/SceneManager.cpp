@@ -4,24 +4,33 @@
 #include "Hazard/Utils/Loaders/Deserializer.h"
 
 namespace Hazard {
-
+	SceneManager::SceneManager() : Module("SceneManager")
+	{
+		activeScene = new Scene("Empty scene");
+	}
 	SceneManager::SceneManager(Scene* scene) : Module("SceneManager") {
 		if (scene == nullptr)
 			LoadEmptyScene();
 		else ActivateScene(scene);
 	}
 	void SceneManager::LoadScene(std::string& path) {
-		Scene* scene = new Scene();
-		if (Deserializer::DeserializeScene(path, *scene)) {
-			ActivateScene(scene);
+		Scene* tempScene = GetActiveScene();
+		activeScene = new Scene();
+		HZR_CORE_INFO("Loading scene");
+		if (Deserializer::DeserializeScene(path, *activeScene)) {
+			Scene* loadedScene = activeScene;
+			activeScene = tempScene;
+			ActivateScene(loadedScene);
+			return;
 		}
+		activeScene = tempScene;
 	}
 	void SceneManager::ActivateScene(Scene* scene) {
 		if(activeScene != nullptr)
 			activeScene->Flush();
 		activeScene = scene;
-
-		for (Entity* entity : activeScene->GetChildEntities()) HZR_CORE_INFO(entity->name);
+		HZR_CORE_INFO("Activating scene " + scene->GetName());
+		
 	}
 	void SceneManager::LoadEmptyScene() {
 

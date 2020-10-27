@@ -19,6 +19,7 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new EngineAssets());
 	PushLayer(new Viewport());
 	PushLayer(new Hierarchy());
+	PushLayer(new NewProject());
 }
 Editor::~Editor()
 {
@@ -84,11 +85,11 @@ void Editor::PushLayer(Layer* layer)
 	else Debug::Warn("Unable to set layer: " + layer->GetName());
 }
 void Editor::Register(Layer* layer) {
-
-	mainMenu.RegisterMenuItem(layer->MenuPlacement(), new Callback(layer->GetName(), [](void* item) {
-		Layer* layer = static_cast<Layer*>(item);
-		layer->SetLayerOpen(true);
-	}, layer));
+	if(layer->MenuPlacement() != "")
+		mainMenu.RegisterMenuItem(layer->MenuPlacement(), new Callback(layer->GetName(), [](void* item) {
+			Layer* layer = static_cast<Layer*>(item);
+			layer->SetLayerOpen(true);
+		}, layer));
 
 	layers.push_back(layer);
 }

@@ -25,12 +25,14 @@ namespace Hazard {
 	glm::mat4 Transform::AsMat4(Transform _transform)
 	{
 		glm::vec3 rotation = Vector3<float>::AsGLM(_transform.rotation);
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), Vector3<float>::AsGLM(_transform.position))
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x), glm::vec3(0, 0, 1))
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), Vector3<float>::AsGLM(_transform.position));
+
+		glm::mat4 rot =  glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x), glm::vec3(0, 0, 1))
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0, 1, 0))
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation.z), glm::vec3(1, 0, 0))
-			* glm::scale(glm::mat4(1.0f), Vector3<float>::AsGLM(_transform.scale));
-		return transform;
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation.z), glm::vec3(1, 0, 0));
+
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), Vector3<float>::AsGLM(_transform.scale));
+		return transform * rot * scale;
 	}
 	void Transform::SerializeComponent(YAML::Emitter& out)
 	{

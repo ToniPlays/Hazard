@@ -16,7 +16,6 @@
 #include "Hazard/Utils/Maths/Vector/Vector3.h"
 #include "Hazard/Utils/Loaders/File.h"
 
-#include "Hazard/Core/ApplicationInfo.h"
 #include "Hazard/Core/HazardLoop.h"
 
 #include "Hazard/Core/Events/Event.h"

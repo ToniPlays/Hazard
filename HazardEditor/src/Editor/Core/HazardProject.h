@@ -15,6 +15,7 @@ public:
 	static void OpenProject(std::string& path);
 	static bool SaveProject(std::string& path, HazardProject* project);
 	static void SaveCurrentScene();
+	static void NewProject(HazardProject* project);
 	static HazardProject* current;
 
 private:

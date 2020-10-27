@@ -37,6 +37,12 @@ namespace Hazard {
 		out << YAML::EndMap; // Entity map
 	}
 
+	void Serializer::Serialize(YAML::Emitter& out, Vector2<float> value)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+	}
+
 	void Serializer::Serialize(YAML::Emitter& out, Vector3<float> value)
 	{
 		out << YAML::Flow;

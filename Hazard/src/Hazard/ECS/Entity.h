@@ -12,9 +12,14 @@ namespace Hazard {
 
 		void Render();
 		void OnDestroy();
+
 		template<typename T>
-		void AddComponent() { components.push_back(new T()); }
-		void AddComponent(Component* component) { components.push_back(component); }
+		void AddComponent() {
+			T* component = new T();
+			AddComponent(component);
+		}
+
+		void AddComponent(Component* component);
 		void RemoveComponent(Component* component);
 
 		template<typename T>
@@ -31,6 +36,7 @@ namespace Hazard {
 		}
 		std::vector<Entity*> GetChildEntities() { return childs; }
 		std::vector<Component*> GetComponents() { return components; }
+
 		void AddEntity(Entity* entity);
 		void RemoveEntity(Entity* entity);
 

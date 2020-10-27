@@ -3,6 +3,7 @@
 #include "Deserializer.h"
 #include "Hazard/ECS/Components/Transform.h"
 #include "Hazard/ECS/Components/SpriteRenderer.h"
+#include "Hazard/ECS/Components/CameraComponent.h"
 
 namespace Hazard {
 
@@ -24,7 +25,8 @@ namespace Hazard {
 			Entity* entity = Deserializer::DeserializeEntity(ent);
 			scene.AddEntity(entity);
 		}
-
+		HZR_CORE_INFO("Deserialized scene");
+		HZR_CORE_INFO(scene.sceneCamera != nullptr ? "Scene has camera" : "Scene camera is fucked up");
 		return true;
 	}
 	Entity* Deserializer::DeserializeEntity(YAML::Node ent) {
@@ -38,14 +40,18 @@ namespace Hazard {
 
 			if (key == "Transform") component = new Transform();
 			if (key == "SpriteRenderer") component = new SpriteRenderer();
+			if (key == "CameraComponent") component = new CameraComponent();
 
 			if (component == nullptr) continue;
 
 			component->DeserializeComponent(value);
 			entity->AddComponent(component);
 		}
-
 		return entity;
+	}
+	template<>
+	Vector2<float>Deserializer::Deserialize(YAML::Node in) {
+		return { in[0].as<float>(), in[1].as<float>() };
 	}
 	template<>
 	Vector3<float>Deserializer::Deserialize(YAML::Node in) {

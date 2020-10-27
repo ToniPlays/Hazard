@@ -9,6 +9,7 @@ namespace Hazard {
 		static bool SerializeScene(const std::string& file, Scene& scene);
 		static void SerializeEntity(YAML::Emitter& out, Entity* entity);
 
+		static void Serialize(YAML::Emitter& out, Vector2<float> value);
 		static void Serialize(YAML::Emitter& out, Vector3<float> value);
 		static void Serialize(YAML::Emitter& out, Color value);
 		

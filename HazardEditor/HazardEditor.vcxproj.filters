@@ -115,6 +115,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\Core\HazardProject.h" />
+    <ClInclude Include="src\Editor\GUI\Widgets\Assets\NewProject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -181,5 +182,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\Core\HazardProject.cpp" />
+    <ClCompile Include="src\Editor\GUI\Widgets\Assets\NewProject.cpp" />
   </ItemGroup>
 </Project>

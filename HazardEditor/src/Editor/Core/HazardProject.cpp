@@ -55,3 +55,13 @@ void HazardProject::SaveCurrentScene()
 	Hazard::SceneManager* manager = Hazard::ModuleHandler::GetModule<SceneManager>();
 	Hazard::Serializer::SerializeScene(current->path + "/" + current->startUpScene, *manager->GetActiveScene());
 }
+
+void HazardProject::NewProject(HazardProject* project)
+{
+	std::string& path = Hazard::File::SaveFolderDialog();
+	if (path == "") {
+		HZR_CORE_WARN("Cancelled");
+		return;
+	}
+	SaveProject(path, project);
+}

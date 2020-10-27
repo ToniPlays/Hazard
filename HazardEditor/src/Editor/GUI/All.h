@@ -2,6 +2,8 @@
 
 #include "Items/MainMenu.h"
 
+#include "Editor/GUI/Widgets/Assets/NewProject.h"
+
 #include "Widgets/Inspect/EngineAssets.h"
 #include "Widgets/Inspect/Inspector.h"
 #include "Widgets/Inspect/Hierarchy.h"

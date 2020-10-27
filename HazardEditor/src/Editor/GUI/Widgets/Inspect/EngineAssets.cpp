@@ -2,19 +2,7 @@
 #include <hzreditor.h>
 #include "EngineAssets.h"
 
-
-std::string ToString(Hazard::TextureType type) {
-
-	switch (type)
-	{
-	case Hazard::TextureType::T2D:
-		return "Texture 2D";
-	case Hazard::TextureType::RenderTX:
-		return "RenderTexture";
-	default:
-		return "Unknown texture type";
-	}
-}
+using namespace Hazard;
 
 EngineAssets::EngineAssets() : Layer("Engine assets")
 {
@@ -24,26 +12,37 @@ EngineAssets::EngineAssets() : Layer("Engine assets")
 void EngineAssets::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;
+	std::vector<TextureData*> textures = AssetManager::GetAssets<Hazard::TextureData>();
+	
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_AllowItemOverlap | 
+		ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-	if(ImGui::CollapsingHeader("Loaded textures")) {
-		std::unordered_map<Hazard::TextureType, std::vector<Hazard::Texture*>> textures = Hazard::TextureManager::GetTextures();
+	
+	if (textures.size() > 0) {
+		if (ImGui::TreeNodeEx("Textures", flags, "Textures")) {
 
-		for (std::pair<Hazard::TextureType, std::vector<Hazard::Texture*>> type : textures) {
-			if(ImGui::TreeNode(ToString(type.first).c_str())) {
+			for (TextureData* texture : textures) {
 
-				for (Hazard::Texture* texture : type.second) {
-					std::stringstream ss;
-					ss << texture->GetPath();
-					ss << "\n" << texture->GetWidth() << "x" << texture->GetHeight();
-
-					ImGui::Image((ImTextureID)texture->GetID(), ImVec2(50, 50));
-					ImGui::SameLine();
-					ImGui::Text(ss.str().c_str());
-				}
-				ImGui::TreePop();
 			}
+
+			ImGui::TreePop();
 		}
 	}
+	std::vector<ShaderData*> shaderData = AssetManager::GetAssets<Hazard::ShaderData>();
+	if (shaderData.size() > 0) {
+		if (ImGui::TreeNodeEx("##Shader", flags, "Shaders")) {
 
+			for (ShaderData* shaders : shaderData) {
+				for (Shader* shader : shaders->shaders) {
+					if (ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)shader->file.c_str(), flags, shader->file.c_str())) {
+						ImGui::Text(shader->file.c_str());
+						ImGui::TreePop();
+					}
+				}
+			}
+
+			ImGui::TreePop();
+		}
+	}
 	Panel::End();
 }

@@ -7,6 +7,7 @@ namespace Hazard {
 	class SceneManager : public Module {
 
 	public:
+		SceneManager();
 		SceneManager(Scene* scene);
 
 		void LoadScene(std::string& path);
@@ -15,6 +16,6 @@ namespace Hazard {
 
 		Scene* GetActiveScene() { return activeScene; }
 	private:
-		Scene* activeScene;
+		Scene* activeScene = nullptr;
 	};
 }

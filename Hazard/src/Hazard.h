@@ -3,15 +3,17 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Modules/Module.h"
 
-#include "Hazard/Modules/Renderer/TextureManager.h"
+#include "Hazard/Modules/Renderer/AssetManager.h"
 #include "Hazard/Modules/Renderer/RendererAPI.h"
 #include "Hazard/Modules/Renderer/RenderEngine.h"
 #include "Hazard/Modules/Scene/SceneManager.h"
 #include "Hazard/Modules/Logging/Logger.h"
 
+#include "Hazard/ECS/Entity.h"
 #include "Hazard/ECS/Components/SpriteRenderer.h"
 #include "Hazard/ECS/Components/Mesh.h"
 #include "Hazard/ECS/Components/MeshRenderer.h"
+#include "Hazard/ECS/Components/CameraComponent.h"
 
 #include "Hazard/Utils/Maths/Math.h"
 #include "Hazard/Utils/Maths/Time.h"
@@ -23,8 +25,6 @@
 #include "Hazard/Utils/Loaders/File.h"
 #include "Hazard/Utils/Loaders/Serializer.h"
 #include "Hazard/Utils/Loaders/Deserializer.h"
-
-#include "Hazard/ECS/Entity.h"
 
 #include "Hazard/Core/Events/Event.h"
 #include "Hazard/Core/Events/MouseEvent.h"

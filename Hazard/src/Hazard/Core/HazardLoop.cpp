@@ -8,8 +8,6 @@ namespace Hazard {
 
 	HazardLoop* HazardLoop::instance;
 
-	ApplicationInfo HazardLoop::info = ApplicationInfo();
-
 	HazardLoop::HazardLoop(Application* app) {
 		this->current = app;
 		instance = this;
@@ -26,7 +24,7 @@ namespace Hazard {
 	}
 	bool HazardLoop::Close(Event& e)
 	{
-		info.shouldClose = true;
+		shouldClose = true;
 		return true;
 	}
 
@@ -45,7 +43,7 @@ namespace Hazard {
 		current->Start();
 
 		double lastTime = 0;
-		while (!info.ShouldClose()) {
+		while (!shouldClose) {
 
 			PROFILE_FN();
 			double time = glfwGetTime();

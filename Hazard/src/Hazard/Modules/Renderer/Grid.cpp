@@ -8,9 +8,8 @@ namespace Hazard {
 
 	Grid::Grid()
 	{
-
-		shader = RendererAPI::Shader("res/shaders/grid.glsl");
-		vertexArray = RendererAPI::VertexArray();
+		shader = RendererAPI::Create<Shader>("res/shaders/grid.glsl");
+		vertexArray = RendererAPI::Create<VertexArray>();
 
 		VertexBuffer* points = RendererAPI::VertexBuffer(ShaderDataType::Float3, "points");
 		std::vector<Vector3<float>> p;

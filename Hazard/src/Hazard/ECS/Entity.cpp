@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Hazard/Modules/Renderer/RendererAPI.h"
 #include "Hazard/ECS/Components/SpriteRenderer.h"
+#include "Hazard/Modules/Scene/SceneManager.h"
 
 namespace Hazard {
 
@@ -31,17 +32,22 @@ namespace Hazard {
 		}
 
 	}
+
+	void Entity::AddComponent(Component* component) {
+		component->SetParent(this);
+		components.push_back(component);
+		ModuleHandler::GetModule<SceneManager>()->GetActiveScene()->OnComponentAdded(component);
+	}
+
 	void Entity::RemoveComponent(Component* component) {
 		auto& it = std::find(components.begin(), components.end(), component);
 		if (it != components.end()) {
 			components.erase(it);
+			ModuleHandler::GetModule<SceneManager>()->GetActiveScene()->OnComponentRemoved(component);
 		}
 	}
+
 	void Entity::AddEntity(Entity* entity) {
-
-		if (entity == nullptr)
-			entity = new Entity("Empty entity");
-
 		childs.push_back(entity);
 	}
 	void Entity::RemoveEntity(Entity* entity) {

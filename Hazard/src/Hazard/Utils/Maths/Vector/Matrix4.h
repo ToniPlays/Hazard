@@ -10,8 +10,6 @@ namespace Hazard {
 	class HAZARD_API Matrix4 {
 	public:
 
-		static glm::mat4 GetModelMatrix(Transform transform);
-
 		/*friend std::ostream& operator << (std::ostream& os, const glm::mat4& matrix) {
 			os << glm::to_string(matrix);
 			return os;

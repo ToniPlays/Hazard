@@ -12,9 +12,10 @@ public:
 
 	virtual bool OnEnabled() { return true; }
 	virtual bool OnDisabled() { return true; }
-
-	void SetLayerOpen(bool open) { isLayerOpen = open; }
 	virtual std::string MenuPlacement() { return ""; };
+
+	void SetLayerOpen(bool open) { isLayerOpen = open; };
+
 	std::string GetName() { return name; }
 protected:
 	bool isLayerOpen = true;

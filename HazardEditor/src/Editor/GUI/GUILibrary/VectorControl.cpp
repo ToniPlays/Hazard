@@ -42,3 +42,25 @@ void VectorControl::DrawVec3(const char* label, Vector3<float>& vector, float re
 	ImGui::Columns(1);
 	ImGui::PopID();
 }
+
+void VectorControl::DrawVec2(const char* label, Vector2<float>& vector, float resetValue, float columnWidth)
+{
+	Inputs::BeginColumnRow(label, 2);
+
+	float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
+	ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+	Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+	Inputs::ResettableDragButton("X", vector.x, resetValue, buttonSize, 1, 0);
+	ImGui::PopStyleColor(3);
+
+	ImGui::PopItemWidth();
+	ImGui::SameLine();
+
+	Style::SetButtonColors("#5DC505", "#4A9F04", "#418B04");
+	Inputs::ResettableDragButton("Y", vector.y, resetValue, buttonSize, 1, 0);
+	ImGui::PopStyleColor(3);
+
+	ImGui::PopItemWidth();
+	Inputs::EndColumnRow();
+}

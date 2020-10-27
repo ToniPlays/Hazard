@@ -1,7 +1,6 @@
 #pragma once
 #include <hzreditor.h>
 #include "ComponentRegister.h"
-#include "Hazard.h"
 
 ComponentRegister::ComponentRegister() : Module("ComponentRegister") {
 
@@ -12,6 +11,9 @@ bool ComponentRegister::OnEnabled() {
 	}));
 	components.push_back(ComponentInfo("Sprite renderer", [](Entity* entity) { 
 		entity->AddComponent<SpriteRenderer>(); 
+	}));
+	components.push_back(ComponentInfo("Camera", [](Entity* entity) {
+		entity->AddComponent<CameraComponent>();
 	}));
 	return true;
 }

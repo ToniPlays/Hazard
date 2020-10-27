@@ -7,6 +7,13 @@
 
 using namespace Hazard;
 
+std::string CameraTypeToString(CameraType type) {
+	return type == CameraType::Perspective ? "Perspective" : "Orthographic";
+}
+CameraType StringToType(std::string type) {
+	return type == "Perspective" ? CameraType::Perspective : CameraType::Orthographic;
+}
+
 
 template<typename T, typename Draw, typename Context>
 inline void Components::DrawComponent(Entity* entity, Draw fn, Context ctx)
@@ -46,8 +53,6 @@ inline void Components::DrawComponent(Entity* entity, Draw fn, Context ctx)
 template<typename T>
 void Draw(Entity* entity, T* component) {};
 
-
-
 template<>
 inline void Draw<Transform>(Entity* entity, Transform* transform) {
 	Components::DrawComponent<Transform>(entity, [](Transform* component) {
@@ -64,12 +69,57 @@ inline void Draw<Transform>(Entity* entity, Transform* transform) {
 	});
 }
 template<>
+inline void Draw<CameraComponent>(Entity* entity, CameraComponent* transform) {
+	Components::DrawComponent<CameraComponent>(entity, [](CameraComponent* component) {
+
+		std::string type = CameraTypeToString(component->GetType());
+		
+		if (Inputs::Combo("Projection", { "Perspective", "Orthographic" }, type)) {
+			component->SetType(StringToType(type));
+		}
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
+		ImVec2 buttonSize = { lineHeight + 15.0f, lineHeight };
+
+		Inputs::BeginColumnRow("Fov", 2);
+		Inputs::MaxWidth();
+		ImGui::SliderFloat("##Fov", &component->FovSize, 0, component->GetType() == CameraType::Perspective ? 180 : 100);
+		ImGui::PopItemWidth();
+		Inputs::EndColumnRow(1);
+
+		Inputs::BeginColumnRow("Clipping", 2);
+		Style::SetButtonColors("#5DC505", "#4A9F04", "#418B04");
+		Inputs::ResettableDragButton("Near", component->clipping.x,
+			component->GetType() == CameraType::Perspective ? 0.03f : -1.0f, buttonSize);
+		ImGui::PopStyleColor(3);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		Style::SetButtonColors("#1651F3", "#0B41D5", "#0935AE");
+		Inputs::ResettableDragButton("Far", component->clipping.y, 
+			component->GetType() == CameraType::Perspective ? 1000 : 1.0, buttonSize);
+		ImGui::PopStyleColor(3);
+		ImGui::PopItemWidth();
+		
+		Inputs::EndColumnRow(1);
+
+		}, [](CameraComponent* component, Entity* entity) -> bool {
+			if (ImGui::MenuItem("Remove component")) {
+				entity->RemoveComponent(component);
+				return true;
+			}
+			return false;
+		});
+}
+template<>
 inline void Draw<SpriteRenderer>(Entity* entity, SpriteRenderer* renderer) {
 	Components::DrawComponent<SpriteRenderer>(entity, [](SpriteRenderer* component) {
 		static bool tintOpen = false;
 		Color newTint = Inputs::LabelledColorPicker("Tint", tintOpen, component->GetTint());
+
 		if (tintOpen)
 			component->SetTint(newTint);
+
 		}, [](SpriteRenderer* component, Entity* entity) -> bool {
 			if (ImGui::MenuItem("Remove component")) {
 				entity->RemoveComponent(component);
@@ -82,6 +132,9 @@ inline void Draw<SpriteRenderer>(Entity* entity, SpriteRenderer* renderer) {
 void Components::DrawComponent(Entity* entity, Component* component) {
 	if (dynamic_cast<Transform*>(component)) {
 		Draw<Transform>(entity, (Transform*)component);
+	}
+	else if (dynamic_cast<CameraComponent*>(component)) {
+		Draw<CameraComponent>(entity, (CameraComponent*)component);
 	}
 	else if (dynamic_cast<SpriteRenderer*>(component)) {
 		Draw<SpriteRenderer>(entity, (SpriteRenderer*)component);

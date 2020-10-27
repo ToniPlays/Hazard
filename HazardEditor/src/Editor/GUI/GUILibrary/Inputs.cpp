@@ -78,3 +78,63 @@ bool Inputs::ConfirmDialog(std::string& label, std::string& description)
 	return ConfirmDialog(label.c_str(), description.c_str());
 }
 
+bool Inputs::Combo(const char* label, std::vector<std::string> values, std::string& selected)
+{
+	BeginColumnRow(label, 2);
+	Inputs::MaxWidth();
+	if (ImGui::BeginCombo("##Label", selected.c_str())) {
+		
+		for (std::string value : values) {
+			bool isSelected = value == selected;
+			if (ImGui::Selectable(value.c_str(), isSelected)) {
+				ImGui::EndCombo();
+				Inputs::EndColumnRow();
+				selected = value;
+				return true;
+			}
+			if (isSelected) {
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		
+		ImGui::EndCombo();
+	}
+	Inputs::EndColumnRow();
+	return false;
+}
+
+bool Inputs::Combo(std::string label, std::vector<std::string> values, std::string& selected)
+{
+	return Combo(label, values, selected);
+}
+
+void Inputs::BeginColumnRow(const char* label, uint8_t columns)
+{
+	ImGui::PushID(label);
+	ImGui::Columns(columns);
+	ImGui::SetColumnWidth(0, 100);
+	ImGui::Text(label);
+
+	ImGui::NextColumn();
+
+	ImGui::PushMultiItemsWidths(columns, ImGui::CalcItemWidth());
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+}
+
+void Inputs::BeginColumnRow(std::string label, uint8_t columns)
+{
+	BeginColumnRow(label.c_str(), columns);
+}
+
+void Inputs::EndColumnRow(uint8_t columns)
+{
+	ImGui::PopStyleVar();
+	ImGui::Columns(columns);
+	ImGui::PopID();
+}
+
+void Inputs::MaxWidth()
+{
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+}
+

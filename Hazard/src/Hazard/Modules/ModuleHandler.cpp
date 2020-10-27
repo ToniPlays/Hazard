@@ -16,7 +16,7 @@ namespace Hazard {
 		PushModule(new Logger);
 #endif // !HZR_GAME_ONLY || HZR_RELEASE
 		PushModule(new RenderEngine());
-		PushModule(new SceneManager(nullptr));
+		PushModule(new SceneManager());
 	}
 	ModuleHandler::~ModuleHandler()
 	{

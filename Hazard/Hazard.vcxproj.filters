@@ -90,9 +90,6 @@
     <ClInclude Include="src\Hazard\Core\Application.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\ApplicationInfo.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Core.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -116,9 +113,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\IApplication.h">
       <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Components\Camera.h">
-      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\Component.h">
       <Filter>src\Hazard\ECS\Components</Filter>
@@ -176,9 +170,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Renderer\Shaders\Shader.h">
       <Filter>src\Hazard\Modules\Renderer\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Renderer\TextureManager.h">
-      <Filter>src\Hazard\Modules\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Renderer\Textures\RenderTexture.h">
       <Filter>src\Hazard\Modules\Renderer\Textures</Filter>
@@ -262,13 +253,14 @@
     <ClInclude Include="src\Hazard\ECS\Components\Transform.h">
       <Filter>src\Hazard\Utils\Maths\Vector</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Components\CameraComponent.h">
+      <Filter>src\Hazard\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Modules\Renderer\AssetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
       <Filter>src\Hazard\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\ECS\Components\Camera.cpp">
-      <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\Mesh.cpp">
       <Filter>src\Hazard\ECS\Components</Filter>
@@ -301,9 +293,6 @@
       <Filter>src\Hazard\Modules\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\RendererAPI.cpp">
-      <Filter>src\Hazard\Modules\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Renderer\TextureManager.cpp">
       <Filter>src\Hazard\Modules\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\Textures\Texture2D.cpp">
@@ -368,6 +357,9 @@
     <ClCompile Include="src\Hazard\ECS\Components\Transform.cpp">
       <Filter>src\Hazard\Utils\Maths\Vector</Filter>
     </ClCompile>
-    <ClCompile Include="SRC\HAZARD\ECS\CAMERA.CPP" />
+    <ClCompile Include="src\Hazard\ECS\Components\CameraComponent.cpp">
+      <Filter>src\Hazard\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Modules\Renderer\AssetManager.cpp" />
   </ItemGroup>
 </Project>

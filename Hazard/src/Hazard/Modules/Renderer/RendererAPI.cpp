@@ -8,26 +8,83 @@
 #include "Platform/Rendering/OpenGL/Textures/OpenGLTexture.h"
 #include "Platform/Rendering/OpenGL/Textures/OpenGLRenderTexture.h"
 #include "Platform/Rendering/OpenGL/OpenGLShader.h"
-#include "Hazard/Modules/Renderer/TextureManager.h"
+#include "Hazard/Modules/Renderer/AssetManager.h"
 
 namespace Hazard {
 
 	RenderAPI RendererAPI::renderer = RenderAPI::OpenGL;
 
-	Shader* RendererAPI::Shader(const std::string& file)
+	template<typename T>
+	T* RendererAPI::Create()
 	{
+		HZR_ASSERT(false, "Unknown Create type");
+		return nullptr;
+	}
+	template<>
+	VertexArray* RendererAPI::Create() {
 		switch (GetAPI())
 		{
-			case RenderAPI::OpenGL: return new OpenGLShader(file);
+			case RenderAPI::OpenGL: return new OpenGLVertexArray();
 		}
 		return nullptr;
 	}
 
-	VertexArray* RendererAPI::VertexArray()
-	{
+	template<>
+	IndexBuffer* RendererAPI::Create() {
 		switch (GetAPI())
 		{
-			case RenderAPI::OpenGL: return new OpenGLVertexArray();
+			case RenderAPI::OpenGL: return new OpenGLIndexBuffer();
+		}
+		return nullptr;
+	}
+	template<>
+	RenderTexture* RendererAPI::Create() {
+		switch (GetAPI())
+		{
+			case RenderAPI::OpenGL: {
+				RenderTexture* texture =  new OpenGLRenderTexture();
+				AssetManager::AddAsset<RenderTexture>(texture);
+				return texture;
+			}
+		}
+		return nullptr;
+	}
+
+	template<typename T>
+	T* RendererAPI::Create(const char* file)
+	{
+		HZR_ASSERT(false, "Unknown Create type");
+		return nullptr;
+	}
+
+	template<>
+	Shader* RendererAPI::Create(const char* file) {
+		switch (GetAPI())
+		{
+		case RenderAPI::OpenGL: {
+			Hazard::Shader* shader = AssetManager::GetAsset<Hazard::Shader>(file);
+			if (shader != nullptr)
+				return shader;
+			shader = new OpenGLShader(file);
+			AssetManager::AddAsset<Hazard::Shader>(shader);
+			return shader;
+			}
+		}
+		return nullptr;
+	}
+	template<>
+	Texture2D* RendererAPI::Create(const char* file) {
+
+		switch (GetAPI())
+		{
+		case RenderAPI::OpenGL:
+
+			Hazard::Texture2D* texture = AssetManager::GetAsset<Hazard::Texture2D>(file);
+			if (texture != nullptr)
+				return texture;
+			texture = new OpenGLTexture2D(file);
+			AssetManager::AddAsset<Hazard::Texture2D>(texture);
+			return texture;
 		}
 		return nullptr;
 	}
@@ -41,56 +98,18 @@ namespace Hazard {
 		return nullptr;
 	}
 
-	Hazard::IndexBuffer* RendererAPI::IndexBuffer()
+	int RendererAPI::GetTypeAsInt()
 	{
-		switch (GetAPI())
-		{
-			case RenderAPI::OpenGL: return new OpenGLIndexBuffer();
-		}
-		return nullptr;
-	}
-
-	Texture2D* RendererAPI::Texture2D(const std::string& file)
-	{
-		switch (GetAPI())
-		{
-		case RenderAPI::OpenGL:
-
-			Hazard::Texture2D* texture = (Hazard::Texture2D*)TextureManager::GetTexture(T2D, file);
-
-			if (texture != nullptr)
-				return texture;
-
-			texture = new OpenGLTexture2D(file);
-			TextureManager::AddTexture(T2D, texture);
-			return texture;
-		}
-		return nullptr;
-	}
-
-
-	RenderTexture* RendererAPI::RenderTexture()
-	{
-		switch (GetAPI())
-		{
-		case RenderAPI::OpenGL:
-			return new OpenGLRenderTexture();
-		}
-		return nullptr;
-	}
-
-	void RendererAPI::GetType(int& selected)
-	{
-		switch (type)
+		switch (GetType())
 		{
 		case Hazard::RenderType::Points:
-			selected = 1;
+			return 1;
 			break;
 		case Hazard::RenderType::Wireframe:
-			selected = 2;
+			return 2;
 			break;
 		default:
-			selected = 0;
+			return 0;
 			break;
 		}
 	}

@@ -9,8 +9,15 @@
 #include "glm/glm.hpp"
 
 namespace Hazard {
-	class HAZARD_API RenderEngine : public Module {
 
+	struct RendererStats {
+		uint32_t draws;
+		uint32_t width;
+		uint32_t height;
+	};
+
+	class HAZARD_API RenderEngine : public Module {
+		friend class Renderer2D;
 	public:
 		RenderEngine();
 		~RenderEngine();
@@ -24,18 +31,24 @@ namespace Hazard {
 
 		Window& GetWindow() { return *window; }
 		RendererAPI& GetAPI() { return *api; };
+		RendererStats& GetStats() { return *stats; }
 		
 		RenderTexture* GetRenderTexture() { return renderTexture; }
 
 		static std::string GetError();
 		static void Draw(VertexArray* array);
 		static RenderEngine* Instance;
-	private:
 
+	private:
+		RendererStats* stats;
 		RenderTexture* renderTexture = nullptr;
 		std::unique_ptr<Window> window;
-		RendererAPI* api = nullptr;
 
+		RendererAPI* api = nullptr;
 		Renderer2D renderer2D;
+
+		CameraComponent* sceneCamera;
+	private:
+		static uint32_t boundShader;
 	};
 }

@@ -8,6 +8,7 @@
 namespace Hazard {
 
 	RenderEngine* RenderEngine::Instance;
+	uint32_t RenderEngine::boundShader = 0;
 
 	RenderEngine::RenderEngine() : Module("RenderEngine")
 	{
@@ -23,19 +24,18 @@ namespace Hazard {
 	bool RenderEngine::OnEnabled()
 	{
 		api = new RendererAPI(RenderAPI::OpenGL);
-
+		stats = new RendererStats();
 		window = std::unique_ptr<Window>(Window::Create());
-		window->SetEventCallback(BIND_EVENT(RenderEngine::OnEvent));
-
-		window->SetWindowIcon("res/icons/hazard_16.ico", "res/icons/hazard_16.ico");
-
 		HZR_ASSERT(window != nullptr, "Window was not created");
-		renderTexture = RendererAPI::RenderTexture();
+		renderTexture = RendererAPI::Create<RenderTexture>();
+
+		window->SetEventCallback(BIND_EVENT(RenderEngine::OnEvent));
+		window->SetWindowIcon("res/icons/hazard_16.ico", "res/icons/hazard_16.ico");
 
 		WindowResizeEvent event(window->GetWidth(), window->GetHeight());
 		OnResized(event);
+
 		renderer2D.Init();
-		
 		return true;
 	}
 
@@ -59,24 +59,36 @@ namespace Hazard {
 
 	void RenderEngine::SceneRender()
 	{
-		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
+		stats->draws = 0;
+
 		renderTexture->Bind();
 		window->GetContext()->ClearFrame();
 
-		renderer2D.BeginScene();
-		renderer2D.Render(scene);
-		renderer2D.EndScene();
+		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
+		sceneCamera = scene->sceneCamera;
 
-		//Use 2D and 3D renderers
+		if (sceneCamera != nullptr) {
+			
+			sceneCamera->RecalculateViewMatrix(stats->height, stats->width);
+			renderer2D.BeginScene(sceneCamera);
+			renderer2D.Render(scene);
+			renderer2D.EndScene();
+
+		}
 		renderTexture->Unbind();
 	}
 
 	bool RenderEngine::OnResized(Event& e)
 	{
 		WindowResizeEvent& resizeEvent = (WindowResizeEvent&)e;
-		renderTexture->SetWidth(resizeEvent.GetWidth());
-		renderTexture->SetHeight(resizeEvent.GetHeight());
-		renderer2D.Resize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
+		stats->height = resizeEvent.GetWidth();
+		stats->width = resizeEvent.GetHeight();
+		renderTexture->SetWidth(stats->width);
+		renderTexture->SetHeight(stats->height);
+		renderer2D.Resize(stats->height, stats->width);
+
+		if(sceneCamera != nullptr)
+			sceneCamera->RecalculateViewMatrix(stats->height, stats->width);
 
 		return true;
 	}
@@ -85,6 +97,7 @@ namespace Hazard {
 	{
 		array->BindAll();
 		Instance->window->GetContext()->Draw(RenderType::Default, array);
+		Instance->stats->draws++;
 	}
 
 	std::string RenderEngine::GetError() {

@@ -27,8 +27,6 @@ namespace Hazard {
 		//glCullFace(GL_BACK);
 
 		glEnable(GL_DEPTH_TEST);
-
-		HazardLoop::GetAppInfo().SetValue("Renderer", GetVersion());
 	}
 
 	void OpenGLContext::ClearFrame(bool useClearColor) const

@@ -23,8 +23,7 @@ void Viewport::Render()
 	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 
 	static char* data[] = { "Shaded", "Points", "Wireframe" };
-	int selected = 0;
-	renderer->GetAPI().GetType(selected);
+	int selected = renderer->GetAPI().GetTypeAsInt();
 
 	ImGui::SetNextItemWidth(125);
 	ImGui::Combo("Shading", &selected, data, IM_ARRAYSIZE(data));
