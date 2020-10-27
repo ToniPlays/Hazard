@@ -10,7 +10,6 @@ namespace Hazard {
 	Entity::Entity(std::string _name)
 	{
 		this->name = _name;
-		AddComponent<Transform>();
 	}
 	Entity::Entity(std::string _name, std::initializer_list<Component*> _components)
 	{

@@ -21,9 +21,9 @@
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
 #include "Hazard/Utils/StringUtils.h"
 #include "Hazard/Utils/Loaders/File.h"
+#include "Hazard/Utils/Loaders/Serializer.h"
 #include "Hazard/Utils/Loaders/Deserializer.h"
 
-#include "Hazard/ECS/Camera.h"
 #include "Hazard/ECS/Entity.h"
 
 #include "Hazard/Core/Events/Event.h"

@@ -13,8 +13,10 @@ public:
 	std::string startUpScene;
 
 	static void OpenProject(std::string& path);
-	static bool SaveProject(std::string& path, HazardProject project);
+	static bool SaveProject(std::string& path, HazardProject* project);
+	static void SaveCurrentScene();
+	static HazardProject* current;
 
 private:
-	static HazardProject LoadProject(std::string& path);
+	static HazardProject* LoadProject(std::string& path);
 };

@@ -4,6 +4,7 @@
 #include "Hazard/ECS/ECS.h"
 #include "Hazard/Modules/Renderer/Shaders/Shader.h"
 #include "Hazard/Modules/Renderer/Buffers/VertexArray.h"
+#include <yaml-cpp/yaml.h>
 
 namespace Hazard {
 
@@ -15,6 +16,9 @@ namespace Hazard {
 		void OnRender() override;
 		void SetTint(Color _tint);
 		Color GetTint() { return tint; };
+
+		void SerializeComponent(YAML::Emitter& out) override;
+		void DeserializeComponent(YAML::Node in) override;
 	private:
 		Color tint;
 		VertexArray* vertexArray;

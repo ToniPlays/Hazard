@@ -8,6 +8,10 @@ namespace Hazard {
 	public:
 		MeshRenderer();
 		~MeshRenderer();
+
+		void SerializeComponent(YAML::Emitter& out) override;
+		void DeserializeComponent(YAML::Node in) override;
+
 	private:
 	};
 }

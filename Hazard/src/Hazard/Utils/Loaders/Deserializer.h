@@ -8,5 +8,8 @@ namespace Hazard {
 	public:
 		static bool DeserializeScene(const std::string& file, Scene& scene);
 		static Entity* DeserializeEntity(YAML::Node ent);
+
+		template<typename T>
+		static T Deserialize(YAML::Node in);
 	};
 }

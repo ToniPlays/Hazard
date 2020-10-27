@@ -14,6 +14,7 @@ namespace Hazard {
 		void OnDestroy();
 		template<typename T>
 		void AddComponent() { components.push_back(new T()); }
+		void AddComponent(Component* component) { components.push_back(component); }
 		void RemoveComponent(Component* component);
 
 		template<typename T>

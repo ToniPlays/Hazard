@@ -1,19 +1,6 @@
-#pragma once
+#include "hzrpch.h"
+#include "Components\Camera.h"
 
-#include <hzrpch.h>
-#include "Camera.h"
-
-namespace Hazard {
-
-
-	Camera::Camera() : Entity("Camera")
-	{
-		
-	}
-
-	Transform Camera::GetTransform()
-	{
-		return Transform();
-	}
-
+void Hazard::Camera::DeserializeComponent(YAML::Node in)
+{
 }

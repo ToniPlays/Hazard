@@ -13,6 +13,9 @@ void MainMenu::OnCreate() {
 	file->PushLayer(new Callback("Open project", [](void* item) {
 		HazardProject::OpenProject(Hazard::File::OpenFileDialog("Hazard Project (*.hzrproj)\0*.hzrproj\0"));
 	}, NULL));
+	file->PushLayer(new Callback("Save Scene", [](void* item) {
+		HazardProject::SaveCurrentScene();
+		}, NULL));
 	menuItems.push_back(file);
 	
 	menuItems.push_back(new MenuItems("Edit"));

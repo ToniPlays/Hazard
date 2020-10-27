@@ -4,6 +4,7 @@
 #include "Hazard/Utils/Loaders/Deserializer.h"
 
 namespace Hazard {
+
 	SceneManager::SceneManager(Scene* scene) : Module("SceneManager") {
 		if (scene == nullptr)
 			LoadEmptyScene();

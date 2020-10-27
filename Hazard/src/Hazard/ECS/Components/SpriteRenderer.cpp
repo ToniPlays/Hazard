@@ -4,6 +4,8 @@
 #include "SpriteRenderer.h"
 #include "Hazard/Modules/Renderer/RendererAPI.h"
 #include "Hazard/Modules/Renderer/RenderEngine.h"
+#include "Hazard/Utils/Loaders/Serializer.h"
+#include "Hazard/Utils/Loaders/Deserializer.h"
 
 
 namespace Hazard {
@@ -57,5 +59,16 @@ namespace Hazard {
 
 		VertexBuffer* colorBuffer = vertexArray->GetBuffer("color");
 		colorBuffer->SetData(newColor.data(), newColor.size());
+	}
+	void SpriteRenderer::SerializeComponent(YAML::Emitter& out)
+	{
+		out << YAML::Key << "SpriteRenderer" << YAML::Value;
+		out << YAML::BeginMap;
+		out << YAML::Key << "Tint" << YAML::Value; Serializer::Serialize(out, tint);
+		out << YAML::EndMap;
+	}
+	void SpriteRenderer::DeserializeComponent(YAML::Node in)
+	{
+		SetTint(Deserializer::Deserialize<Color>(in["Tint"]));
 	}
 }

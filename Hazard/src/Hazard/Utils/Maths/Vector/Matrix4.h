@@ -1,6 +1,6 @@
 #pragma once
 #include "Hazard/Core/Core.h"
-#include "Transform.h"
+#include "Hazard/ECS/Components/Transform.h"
 #include <ostream>
 #include <iostream>
 #include "glm/glm.hpp"

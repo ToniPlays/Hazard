@@ -2,7 +2,6 @@
 #include <hzrpch.h>
 #include "RendererAPI.h"
 #include "RenderEngine.h"
-#include "Hazard/ECS/Camera.h"
 #include "Grid.h"
 
 namespace Hazard {

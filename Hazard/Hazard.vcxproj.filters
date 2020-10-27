@@ -117,9 +117,6 @@
     <ClInclude Include="src\Hazard\Core\IApplication.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Camera.h">
-      <Filter>src\Hazard\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\Camera.h">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
@@ -219,9 +216,6 @@
     <ClInclude Include="src\Hazard\Utils\Maths\Vector\Matrix4.h">
       <Filter>src\Hazard\Utils\Maths\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Utils\Maths\Vector\Transform.h">
-      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Utils\Maths\Vector\Vector2.h">
       <Filter>src\Hazard\Utils\Maths\Vector</Filter>
     </ClInclude>
@@ -264,13 +258,14 @@
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Loaders\Serializer.h" />
+    <ClInclude Include="src\Hazard\ECS\Components\Transform.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
       <Filter>src\Hazard\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\ECS\Camera.cpp">
-      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\Camera.cpp">
       <Filter>src\Hazard\ECS\Components</Filter>
@@ -338,9 +333,6 @@
     <ClCompile Include="src\Hazard\Utils\Maths\Vector\Matrix4.cpp">
       <Filter>src\Hazard\Utils\Maths\Vector</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Utils\Maths\Vector\Transform.cpp">
-      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Utils\StringUtils.cpp">
       <Filter>src\Hazard\Utils</Filter>
     </ClCompile>
@@ -372,5 +364,10 @@
       <Filter>vendor</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\Application.cpp" />
+    <ClCompile Include="src\Hazard\Utils\Loaders\Serializer.cpp" />
+    <ClCompile Include="src\Hazard\ECS\Components\Transform.cpp">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\HAZARD\ECS\CAMERA.CPP" />
   </ItemGroup>
 </Project>
