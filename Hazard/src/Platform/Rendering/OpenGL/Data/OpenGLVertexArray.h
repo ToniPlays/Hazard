@@ -9,22 +9,23 @@
 namespace Hazard {
 	class HAZARD_API OpenGLVertexArray : public VertexArray {
 	public:
+
 		OpenGLVertexArray();
 		~OpenGLVertexArray();
-
 		void Bind() const;
-		void BindAll() const;
 		void Unbind() const;
+		void EnableAll(uint32_t index) const override;
+		uint32_t GetID() const { return ArrayID; }
 
-		virtual IndexBuffer* GetIndexBuffer() const { return indexBuffer; }
-		void SetIndexBuffer(IndexBuffer* indexBuffer);
-		void SetLayout(std::initializer_list<VertexBuffer*> buffers);
-		void AddBuffer(VertexBuffer* buffer) { layout.push_back(buffer); };
-		VertexBuffer* GetBuffer(std::string name);
+		void AddBuffer(VertexBuffer* vertexBuffer) override;
+		IndexBuffer* GetIndexBuffer() const;
+		std::vector<VertexBuffer*> GetBuffers() override { return vertexBuffers; }
+		void SetIndexBuffer(IndexBuffer* indexBuffer) override;
 
 	private:
-		std::vector<VertexBuffer*> layout;
-		IndexBuffer* indexBuffer = nullptr;
 		uint32_t ArrayID;
+		uint32_t vertexBufferIndex = 0;
+		std::vector<VertexBuffer*> vertexBuffers;
+		IndexBuffer* indexBuffer;
 	};
 }

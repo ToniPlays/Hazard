@@ -60,6 +60,7 @@ inline void Draw<Transform>(Entity* entity, Transform* transform) {
 		VectorControl::DrawVec3("Position", component->position);
 		VectorControl::DrawVec3("Rotation", component->rotation);
 		VectorControl::DrawVec3("Scale", component->scale, 1.0f);
+
 	}, [](Transform* component, Entity* entity) -> bool {
 		if (ImGui::MenuItem("Remove component")) {
 			entity->RemoveComponent(component);
@@ -78,12 +79,18 @@ inline void Draw<CameraComponent>(Entity* entity, CameraComponent* transform) {
 			component->SetType(StringToType(type));
 		}
 
+		static bool colorOpen = false;
+		Color newColor = Inputs::LabelledColorPicker("Tint", colorOpen, component->clearColor);
+
+		if (colorOpen)
+			component->clearColor = newColor;
+
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 15.0f, lineHeight };
 
 		Inputs::BeginColumnRow("Fov", 2);
 		Inputs::MaxWidth();
-		ImGui::SliderFloat("##Fov", &component->FovSize, 0, component->GetType() == CameraType::Perspective ? 180 : 100);
+		ImGui::SliderFloat("##Fov", &component->FovSize, 0, component->GetType() == CameraType::Perspective ? 180 : 500);
 		ImGui::PopItemWidth();
 		Inputs::EndColumnRow(1);
 
@@ -128,6 +135,20 @@ inline void Draw<SpriteRenderer>(Entity* entity, SpriteRenderer* renderer) {
 			return false;
 		});
 }
+template<>
+inline void Draw<BatchRendererComponent>(Entity* entity, BatchRendererComponent* renderer) {
+	Components::DrawComponent<BatchRendererComponent>(entity, [](BatchRendererComponent* component) {
+
+		VectorControl::DravVec1("Size", component->size, 1);
+
+		}, [](BatchRendererComponent* component, Entity* entity) -> bool {
+			if (ImGui::MenuItem("Remove component")) {
+				entity->RemoveComponent(component);
+				return true;
+			}
+			return false;
+		});
+}
 
 void Components::DrawComponent(Entity* entity, Component* component) {
 	if (dynamic_cast<Transform*>(component)) {
@@ -138,5 +159,8 @@ void Components::DrawComponent(Entity* entity, Component* component) {
 	}
 	else if (dynamic_cast<SpriteRenderer*>(component)) {
 		Draw<SpriteRenderer>(entity, (SpriteRenderer*)component);
+	}
+	else if (dynamic_cast<BatchRendererComponent*>(component)) {
+		Draw<BatchRendererComponent>(entity, (BatchRendererComponent*)component);
 	}
 }

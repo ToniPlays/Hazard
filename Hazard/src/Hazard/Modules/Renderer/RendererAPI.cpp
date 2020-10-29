@@ -88,12 +88,11 @@ namespace Hazard {
 		}
 		return nullptr;
 	}
-
-	VertexBuffer* RendererAPI::VertexBuffer(ShaderDataType type, const std::string& name)
+	VertexBuffer* RendererAPI::VertexBuffer(uint32_t size)
 	{
 		switch (GetAPI())
 		{
-			case RenderAPI::OpenGL: return new OpenGLVertexBuffer(type, name);
+			case RenderAPI::OpenGL: return new OpenGLVertexBuffer(size);
 		}
 		return nullptr;
 	}

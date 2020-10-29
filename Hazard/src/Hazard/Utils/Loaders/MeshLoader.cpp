@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "MeshLoader.h"
 #include "Hazard/Utils/Maths/Vector/Vector3.h"
-#include "Hazard/ECS/Components/Vertex.h"
+#include "Hazard/Modules/Renderer/Batch/Vertex.h"
 
 namespace Hazard {
 
@@ -17,7 +17,7 @@ namespace Hazard {
 	Mesh* MeshLoader::LoadObj(std::string file)
 	{
 
-		HZR_CORE_INFO("Loading mesh: " + file);
+		/*HZR_CORE_INFO("Loading mesh: " + file);
 		std::ifstream ifs(file);
 
 		std::vector<Vector3<float>> positions;
@@ -66,7 +66,7 @@ namespace Hazard {
 					offset++;
 				}
 
-				vertices[vOffset.str()] = Vertex(positions.at(v), txC.at(vt), Vector3<float>::Invert(normals.at(vn)));
+				//vertices[vOffset.str()] = Vertex(positions.at(v), txC.at(vt), Vector3<float>::Invert(normals.at(vn)));
 				indices.push_back(v + offset);
 				insertion.push_back(vOffset.str());
 			}
@@ -94,7 +94,7 @@ namespace Hazard {
 			//	vertices[index].textureCoords << std::endl;
 			v.push_back(vertices[index]);
 		}
-
+		*/
 		return new Mesh();
 	}
 
@@ -123,7 +123,7 @@ namespace Hazard {
 		std::vector<int> indices;
 
 		//Cube front
-		vertices.push_back(Vertex({-1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
+		/*vertices.push_back(Vertex({-1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({-1,-1, 1 }, { 1, 0 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ 1, 1, 1 }, { 0, 0 }, { 0, 0, -1 }));
@@ -163,7 +163,7 @@ namespace Hazard {
 		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 1, 0 }));
 		vertices.push_back(Vertex({ 1,-1,-1 }, { 1, 0 }, { 0, 1, 0 }));
 		indices.insert(indices.end(), { 20, 21, 22 });
-		indices.insert(indices.end(), { 20, 23, 22 });
+		indices.insert(indices.end(), { 20, 23, 22 });*/
 		
 		//std::cout << "Vertices " << vertices.size() << ", indices " << indices.size() << std::endl;
 
@@ -175,14 +175,14 @@ namespace Hazard {
 		std::vector<Vertex> vertices;
 		std::vector<int> indices;
 
-		//Cube front
-		vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
+		//Plane
+		/*vertices.push_back(Vertex({ -1, 1, 1 }, { 0, 1 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ -1,-1, 1 }, { 1, 0 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ 1,-1, 1 }, { 1, 1 }, { 0, 0, -1 }));
 		vertices.push_back(Vertex({ 1, 1, 1 }, { 0, 0 }, { 0, 0, -1 }));
 		indices.insert(indices.end(), { 0, 1, 2 });
 		indices.insert(indices.end(), { 0, 2, 3 });
-
+		*/
 		return new Mesh();
 	}
 

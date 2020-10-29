@@ -121,6 +121,7 @@ void Editor::End()
 }
 
 void Editor::Render() {
+	PROFILE_FN()
 	Begin();
 	//Docking stuff
 	{
@@ -165,7 +166,7 @@ void Editor::Render() {
 		if (opt_fullscreen)
 			ImGui::PopStyleVar(2);
 
-		Style::GetStyle()->WindowMinSize.x = 315.0f;
+		Style::GetStyle()->WindowMinSize = ImVec2(315.0f, 100.0f);
 		mainMenu.OnRender();
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
@@ -184,6 +185,7 @@ void Editor::Render() {
 	for (Layer* layer : layers) layer->Render();
 
 	End();
+	PROFILE_FN_END();
 }
 
 bool Editor::OnDisabled()

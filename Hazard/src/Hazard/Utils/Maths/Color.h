@@ -6,12 +6,17 @@ namespace Hazard {
 
 	class HAZARD_API Color {
 	public:
-		float r, g, b, a;
+		float r = 0, g = 0, b = 0, a = 0;
 	public:
 		Color();
-
+		Color(const char* color);
 		Color(int r, int g, int b, int a);
+		Color(float r, float g, float b, float a);
 		std::string ToString();
+		
+		operator std::string() {
+			return this->ToString();
+		}
 
 		friend std::ostream& operator << (std::ostream& os, const Color color) {
 			os << color.r << ", " << color.g << ", " << color.b << ", " << color.a;

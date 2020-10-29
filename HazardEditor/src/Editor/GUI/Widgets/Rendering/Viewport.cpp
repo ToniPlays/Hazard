@@ -29,16 +29,6 @@ void Viewport::Render()
 	ImGui::Combo("Shading", &selected, data, IM_ARRAYSIZE(data));
 	renderer->GetAPI().SetType(selected);
 
-	ImGui::SameLine(0.0f, 20.0f);
-	ImGui::Text("Scene color");
-	ImGui::SameLine();
-
-	Hazard::Color sceneColor = renderer->GetWindow().GetClearColor();
-
-	if (ImGui::ColorButton("Scene color", ColorAsImVec(sceneColor))) {
-		Hazard::RenderEngine* rd = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
-		rd->GetWindow().SetClearColor(sceneColor);
-	}
 
 	ImVec2 size = ImGui::GetContentRegionAvail();
 	ImGui::SameLine(0.0f, 30.0f);
@@ -46,18 +36,16 @@ void Viewport::Render()
 	ss << size.x << "x" << size.y;
 	ImGui::Text(ss.str().c_str());
 
+	ImGui::Image((void*)renderer->GetRenderTexture()->GetColorID(), 
+		size, ImVec2(0, 1), ImVec2(1, 0));
+
 	if (size.x != width || size.y != height) {
 		
 		width = size.x;
 		height = size.y;
 
-		Hazard::WindowResizeEvent e(width, height);
-		renderer->OnResized(e);
+		renderer->OnViewResized(width, height);
 	}
-	renderer->SceneRender();
-
-	ImGui::Image((void*)renderer->GetRenderTexture()->GetColorID(), 
-		size, ImVec2(0, 1), ImVec2(1, 0));
 	
 	Panel::End();
 }

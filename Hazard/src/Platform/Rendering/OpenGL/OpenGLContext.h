@@ -14,15 +14,12 @@ namespace Hazard {
 		OpenGLContext(Window* window, WindowProps* props);
 
 		void Init() const override;
-		void ClearFrame(bool useClearColor) const override;
-		void SetClearColor(Color color) override;
+		void ClearFrame(Color clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-		void Draw(RenderType type, VertexArray* vertexArray) override;
-		Color GetClearColor() { return clearColor; }
+		void Draw(VertexArray* vertexArray, uint32_t indices, RenderType type = RenderType::Default) override;
 		std::string GetVersion() const;
 		std::string GetError() const override;
 	private:
-		Color clearColor;
 		GLFWwindow* window;
 	};
 }

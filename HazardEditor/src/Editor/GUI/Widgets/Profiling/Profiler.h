@@ -7,6 +7,7 @@ public:
 	Profiler();
 	bool OnEnabled();
 	void Render() override;
+	void DisplayLog(Hazard::ProfiledFn* parent);
 	std::string MenuPlacement() { return "View/Analytics"; }
 };
 

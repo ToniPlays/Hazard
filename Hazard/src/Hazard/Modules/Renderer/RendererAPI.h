@@ -26,7 +26,7 @@ namespace Hazard {
 
 		template<typename T>
 		static T* Create(const char* file);
-		static VertexBuffer* VertexBuffer(ShaderDataType type, const std::string& name);
+		static VertexBuffer* VertexBuffer(uint32_t size);
 
 		static RenderAPI GetAPI() { return renderer; }
 		RenderType GetType() { return type; }

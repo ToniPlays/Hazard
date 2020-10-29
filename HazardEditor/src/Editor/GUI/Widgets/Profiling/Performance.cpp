@@ -48,11 +48,19 @@ void Performance::Render()
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
+	ss << "Quads: " << renderer->GetStats().quads;
+	ImGui::Text(ss.str().c_str());
+
+	ss.str("");
+	ss << "Indices: " << renderer->GetStats().indices;
+	ImGui::Text(ss.str().c_str());
+
+	ss.str("");
 	ss << "Draw calls: " << renderer->GetStats().draws;
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
-	ss << "Error: " << Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>()->GetError();
+	ss << "Error: " << renderer->GetError();
 	ImGui::Text(ss.str().c_str());
 
 	ImGui::NewLine();

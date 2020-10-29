@@ -10,8 +10,7 @@ namespace Hazard {
 		WindowsWindow(WindowProps& props);
 		virtual ~WindowsWindow();
 		
-		void OnUpdate() override;
-		void SetClearColor(Color color) const override;
+		void OnUpdate(Color color) override;
 		void SetWindowTitle(std::string title) override;
 		void SetWindowIcon(const char* smallIcon, const char* bigIcon) override;
 
@@ -29,7 +28,6 @@ namespace Hazard {
 		bool IsVSync() const { return windowData.VSync; }
 		bool IsFocused() const { return windowData.focus; }
 		WindowProps GetWindowInfo() { return windowData; }
-		Color GetClearColor() const { return context->GetClearColor(); }
 
 	private:
 		GLFWwindow* window = nullptr;

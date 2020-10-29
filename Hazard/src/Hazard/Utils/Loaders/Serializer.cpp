@@ -6,7 +6,6 @@
 namespace Hazard {
 
 	bool Serializer::SerializeScene(const std::string& file, Scene& scene) {
-		HZR_CORE_INFO("Serializing scene to " + file);
 
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -20,7 +19,8 @@ namespace Hazard {
 		out << YAML::EndMap;
 		std::ofstream fout(file);
 		fout << out.c_str();
-		return false;
+
+		return true;
 	}
 
 	void Serializer::SerializeEntity(YAML::Emitter& out, Entity* entity)

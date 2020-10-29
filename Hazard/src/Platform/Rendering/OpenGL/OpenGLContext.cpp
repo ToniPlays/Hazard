@@ -29,17 +29,10 @@ namespace Hazard {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void OpenGLContext::ClearFrame(bool useClearColor) const
+	void OpenGLContext::ClearFrame(Color clearColor) const
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		if(useClearColor)
-			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-		else glClearColor(0, 0, 0, 0);
-	}
-
-	void OpenGLContext::SetClearColor(Color color)
-	{
-		clearColor = color;
+		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	}
 
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const
@@ -47,21 +40,20 @@ namespace Hazard {
 		glViewport(x, y, w, h);
 	}
 
-
-	void OpenGLContext::Draw(RenderType type, VertexArray* vertexArray)
+	void OpenGLContext::Draw(VertexArray* vertexArray, uint32_t indices, RenderType type)
 	{
 		switch (type)
 		{
 		case RenderType::Default:
-			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
 			break;
 		case RenderType::Points:
 			glPointSize(5.0);
-			glDrawArrays(GL_POINTS, 0, vertexArray->GetIndexBuffer()->GetCount());
+			glDrawArrays(GL_POINTS, 0, indices);
 			break;
 		case RenderType::Wireframe: 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
 		}

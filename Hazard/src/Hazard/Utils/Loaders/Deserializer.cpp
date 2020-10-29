@@ -4,8 +4,14 @@
 #include "Hazard/ECS/Components/Transform.h"
 #include "Hazard/ECS/Components/SpriteRenderer.h"
 #include "Hazard/ECS/Components/CameraComponent.h"
+#include "Hazard/ECS/Components/BatchRendererComponent.h"
 
 namespace Hazard {
+
+	void RunPostDeserialize(Entity* entity) {
+		for (Component* c : entity->GetComponents()) c->PostDeserialize();
+		for (Entity* child : entity->GetChildEntities()) RunPostDeserialize(child);
+	}
 
 	bool Deserializer::DeserializeScene(const std::string& file, Scene& scene) {
 		std::ifstream stream(file);
@@ -25,8 +31,10 @@ namespace Hazard {
 			Entity* entity = Deserializer::DeserializeEntity(ent);
 			scene.AddEntity(entity);
 		}
-		HZR_CORE_INFO("Deserialized scene");
-		HZR_CORE_INFO(scene.sceneCamera != nullptr ? "Scene has camera" : "Scene camera is fucked up");
+		
+		for (Entity* entity : scene.GetChildEntities())
+			RunPostDeserialize(entity);
+
 		return true;
 	}
 	Entity* Deserializer::DeserializeEntity(YAML::Node ent) {
@@ -41,6 +49,7 @@ namespace Hazard {
 			if (key == "Transform") component = new Transform();
 			if (key == "SpriteRenderer") component = new SpriteRenderer();
 			if (key == "CameraComponent") component = new CameraComponent();
+			if (key == "BatchRendererComponent") component = new BatchRendererComponent();
 
 			if (component == nullptr) continue;
 

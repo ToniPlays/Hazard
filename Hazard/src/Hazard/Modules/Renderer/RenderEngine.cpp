@@ -8,7 +8,7 @@
 namespace Hazard {
 
 	RenderEngine* RenderEngine::Instance;
-	uint32_t RenderEngine::boundShader = 0;
+	uint32_t RenderEngine::boundShader = 9999;
 
 	RenderEngine::RenderEngine() : Module("RenderEngine")
 	{
@@ -18,13 +18,14 @@ namespace Hazard {
 
 	RenderEngine::~RenderEngine()
 	{
-
+		
 	}
 
 	bool RenderEngine::OnEnabled()
 	{
 		api = new RendererAPI(RenderAPI::OpenGL);
 		stats = new RendererStats();
+
 		window = std::unique_ptr<Window>(Window::Create());
 		HZR_ASSERT(window != nullptr, "Window was not created");
 		renderTexture = RendererAPI::Create<RenderTexture>();
@@ -48,56 +49,60 @@ namespace Hazard {
 
 	void RenderEngine::Render()
 	{
-		window->OnUpdate();
-#ifdef HZR_GAME_ONLY
-		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
-		renderer2D.BeginScene();
-		renderer2D.Render(scene);
-		renderer2D.EndScene();
-#endif
+		PROFILE_FN();
+		if (sceneCamera != nullptr) window->OnUpdate(sceneCamera->clearColor);
+		else window->OnUpdate();
+
+		SceneRender();
+		PROFILE_FN_END();
 	}
 
 	void RenderEngine::SceneRender()
 	{
+		PROFILE_FN();
 		stats->draws = 0;
+		stats->quads = 0;
+		stats->indices = 0;
 
 		renderTexture->Bind();
-		window->GetContext()->ClearFrame();
 
 		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
-		sceneCamera = scene->sceneCamera;
+		this->sceneCamera = scene->sceneCamera;
 
-		if (sceneCamera != nullptr) {
-			
-			sceneCamera->RecalculateViewMatrix(stats->height, stats->width);
-			renderer2D.BeginScene(sceneCamera);
+		if (sceneCamera != nullptr) 
+		{
+			window->GetContext()->ClearFrame(sceneCamera->clearColor);
+			sceneCamera->RecalculateViewMatrix();
 			renderer2D.Render(scene);
-			renderer2D.EndScene();
-
 		}
+		else window->GetContext()->ClearFrame();
 		renderTexture->Unbind();
+
+		PROFILE_FN_END();
 	}
 
 	bool RenderEngine::OnResized(Event& e)
 	{
 		WindowResizeEvent& resizeEvent = (WindowResizeEvent&)e;
-		stats->height = resizeEvent.GetWidth();
-		stats->width = resizeEvent.GetHeight();
-		renderTexture->SetWidth(stats->width);
-		renderTexture->SetHeight(stats->height);
-		renderer2D.Resize(stats->height, stats->width);
+		
+		renderer2D.Resize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
 
 		if(sceneCamera != nullptr)
-			sceneCamera->RecalculateViewMatrix(stats->height, stats->width);
-
+			sceneCamera->RecalculateViewMatrix();
 		return true;
 	}
+	void RenderEngine::OnViewResized(uint32_t width, uint32_t height) {
+		stats->width = width;
+		stats->height = height;
+		renderTexture->Resize(width, height);
+	}
 
-	void RenderEngine::Draw(VertexArray* array)
+	void RenderEngine::Draw(VertexArray* array, uint32_t indices)
 	{
-		array->BindAll();
-		Instance->window->GetContext()->Draw(RenderType::Default, array);
+		array->Bind();
+		Instance->window->GetContext()->Draw(array, indices);
 		Instance->stats->draws++;
+		Instance->stats->indices += indices;
 	}
 
 	std::string RenderEngine::GetError() {

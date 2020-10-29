@@ -33,6 +33,11 @@ void Inputs::InputField(std::string& text)
 	}
 }
 
+void Inputs::Texture(Hazard::Texture* texture, Hazard::Vector2<int> size)
+{
+	ImGui::Image((void*)texture->GetID(), {(float)size.x, (float)size.y }, ImVec2(0, 1), ImVec2(1, 0));
+}
+
 Color Inputs::ColorPicker(const char* label, bool &open, Color color)
 {
 	float c[4] = { color.r, color.g, color.b, color.a };
@@ -111,14 +116,13 @@ bool Inputs::Combo(std::string label, std::vector<std::string> values, std::stri
 void Inputs::BeginColumnRow(const char* label, uint8_t columns)
 {
 	ImGui::PushID(label);
-	ImGui::Columns(columns);
-	ImGui::SetColumnWidth(0, 100);
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 80);
 	ImGui::Text(label);
 
 	ImGui::NextColumn();
-
-	ImGui::PushMultiItemsWidths(columns, ImGui::CalcItemWidth());
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+	ImGui::PushMultiItemsWidths(columns, ImGui::CalcItemWidth());
 }
 
 void Inputs::BeginColumnRow(std::string label, uint8_t columns)

@@ -12,11 +12,25 @@ namespace Hazard
 		this->b = 0;
 		this->a = 1;
 	}
+	Color::Color(const char* color)
+	{
+		Color c = Color::FromHex(color);
+		this->r = c.r;
+		this->g = c.g;
+		this->b = c.b;
+		this->a = c.a;
+	}
 	Color::Color(int r, int g, int b, int a) {
 		this->r = (float)r / 255.0f;
 		this->g = (float)g / 255.0f;
 		this->b = (float)b / 255.0f;
 		this->a = (float)a / 255.0f;
+	}
+	Color::Color(float r, float g, float b, float a) {
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
 	}
 	std::string Color::ToString()
 	{

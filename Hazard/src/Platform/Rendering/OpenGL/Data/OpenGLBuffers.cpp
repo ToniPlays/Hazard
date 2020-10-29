@@ -4,26 +4,22 @@
 #include "OpenGLBuffers.h"
 
 namespace Hazard {
-
-	OpenGLVertexBuffer::OpenGLVertexBuffer(ShaderDataType type, std::string name)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{
 		glGenBuffers(1, &BufferID);
-		this->dataType = type;
-		this->name = name;
+		Bind();
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
-
+	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
+	{
+		glGenBuffers(1, &BufferID);
+		Bind();
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_DYNAMIC_DRAW);
+	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		glDeleteBuffers(1, &BufferID);
 	}
-
-	void OpenGLVertexBuffer::SetData(void* data, uint32_t verticeCount)
-	{
-		Bind();
-		glBufferData(GL_ARRAY_BUFFER, (double)verticeCount * ShaderDataTypeSize(dataType), data, GL_DYNAMIC_DRAW);
-		dataLength = verticeCount;
-	}
-
 	void OpenGLVertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, BufferID);
@@ -32,34 +28,32 @@ namespace Hazard {
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-
-	//---------------------- Index buffer ----------------------
-
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		Bind();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer()
 	{
+		count = 0;
 		glGenBuffers(1, &BufferID);
 	}
-
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
 		glDeleteBuffers(1, &BufferID);
 	}
-
-	void OpenGLIndexBuffer::SetData(int* indices, uint32_t indiceCount)
-	{
-		Bind();
-		this->count = indiceCount;
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceCount * sizeof(int), indices, GL_DYNAMIC_DRAW);
-	}
-
 	void OpenGLIndexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, BufferID);
 	}
-
 	void OpenGLIndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-
+	void OpenGLIndexBuffer::SetData(uint32_t* indices, uint32_t c)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, BufferID);
+		glBufferData(GL_ARRAY_BUFFER, c * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+		this->count = c;
+	}
 }

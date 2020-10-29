@@ -35,8 +35,6 @@ namespace Hazard {
 		context = GraphicsContext::Create(this, &windowData);
 		windowData.Renderer = context->GetVersion();
 
-		std::string hex = "#222222FF";
-		SetClearColor(Color::FromHex(hex));
 		SetCallbacks();
 		SetVSync(true);
 
@@ -44,10 +42,10 @@ namespace Hazard {
 		glfwShowWindow(window);
 		glfwGetWindowSize(window, &windowData.Width, &windowData.Height);
 	}
-	void WindowsWindow::OnUpdate() {
+	void WindowsWindow::OnUpdate(Color color) {
 
 		glfwSwapBuffers(window);
-		context->ClearFrame(true);
+		context->ClearFrame(color);
 		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
 	void WindowsWindow::SetWindowTitle(std::string title)
@@ -145,10 +143,6 @@ namespace Hazard {
 			WindowFocusEvent event(focus);
 			data.EventCallback(event);
 		});
-	}
-	void WindowsWindow::SetClearColor(Color color) const
-	{
-		context->SetClearColor(color);
 	}
 
 	WindowsWindow::~WindowsWindow() {

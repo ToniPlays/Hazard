@@ -9,22 +9,25 @@ namespace Hazard {
 	public:
 
 		OpenGLRenderTexture();
-		~OpenGLRenderTexture();
+		virtual ~OpenGLRenderTexture();
+
+		void Invalidate();
 
 		void Bind(uint32_t slot = 0) const override;
 		void Unbind(uint32_t slot = 0) const override;
-		void Resize(uint32_t width, uint32_t height);
 
+		void Resize(uint32_t width, uint32_t height) override;
+
+		uint32_t GetColorID() const { return colorAttachment; }
 		uint32_t GetID() const override { return RendererID; }
-		uint32_t GetColorID() const override{ return colorAttachment; }
-		uint32_t GetDepthID() const override{ return depthAttachment; }
-
+		RenderTextureSpec& GetSpec() { return spec; }
 
 	private:
-		void Create();
-		
+		RenderTextureSpec spec;
+
 		GLuint RendererID = 0;
 		GLuint colorAttachment = 0;
 		GLuint depthAttachment = 0;
+
 	};
 }

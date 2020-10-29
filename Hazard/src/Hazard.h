@@ -14,6 +14,7 @@
 #include "Hazard/ECS/Components/Mesh.h"
 #include "Hazard/ECS/Components/MeshRenderer.h"
 #include "Hazard/ECS/Components/CameraComponent.h"
+#include "Hazard/ECS/Components/BatchRendererComponent.h"
 
 #include "Hazard/Utils/Maths/Math.h"
 #include "Hazard/Utils/Maths/Time.h"

@@ -13,8 +13,9 @@ namespace Hazard {
 	{
 		//TEMP
 #if !defined(HZR_RELEASE) && !defined(HZR_GAME_ONLY)
-		PushModule(new Logger);
+		PushModule(new Logger());
 #endif // !HZR_GAME_ONLY || HZR_RELEASE
+
 		PushModule(new RenderEngine());
 		PushModule(new SceneManager());
 	}
@@ -68,7 +69,7 @@ namespace Hazard {
 			if (module->IsActive())
 				module->Update();
 		}
-		PROFILE_FN();
+		PROFILE_FN_END();
 	}
 
 	void ModuleHandler::LateUpdate()
@@ -78,7 +79,7 @@ namespace Hazard {
 			if (module->IsActive())
 				module->LateUpdate();
 		}
-		PROFILE_FN();
+		PROFILE_FN_END();
 	}
 
 	void ModuleHandler::OnRender()
@@ -88,7 +89,7 @@ namespace Hazard {
 			if (module->IsActive())
 				module->Render();
 		}
-		PROFILE_FN();
+		PROFILE_FN_END();
 	}
 
 	void ModuleHandler::OnEvent(Event& e)

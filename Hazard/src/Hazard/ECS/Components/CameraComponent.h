@@ -13,17 +13,19 @@ namespace Hazard {
 		CameraComponent();
 		~CameraComponent();
 
-
-		//Projection
 		CameraType type = CameraType::Orthographic;
 		float FovSize = 10;
 		Vector2<float> clipping = { 0, 1000 };
+		Color clearColor = Color();
+
+		//Projection
+
 		void SetType(CameraType type) { this->type = type; }
-
-		void RecalculateViewMatrix(float w, float h);
-
+		void RecalculateViewMatrix();
+		
 		void SerializeComponent(YAML::Emitter& out) override;
 		void DeserializeComponent(YAML::Node in) override;
+		void PostDeserialize() override;
 
 		CameraType GetType() { return type; }
 		glm::mat4 GetViewProjection() { return viewProjection; }

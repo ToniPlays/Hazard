@@ -126,9 +126,6 @@
     <ClInclude Include="src\Hazard\ECS\Components\SpriteRenderer.h">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Components\Vertex.h">
-      <Filter>src\Hazard\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\ECS.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
@@ -143,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\ModuleHandler.h">
       <Filter>src\Hazard\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Modules\Renderer\Batch\Batch.h">
-      <Filter>src\Hazard\Modules\Renderer\Batch</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Renderer\Buffers\Buffer.h">
       <Filter>src\Hazard\Modules\Renderer\Buffers</Filter>
@@ -257,6 +251,8 @@
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Renderer\AssetManager.h" />
+    <ClInclude Include="src\Hazard\ECS\Components\BatchRendererComponent.h" />
+    <ClInclude Include="src\Hazard\Modules\Renderer\Batch\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -279,9 +275,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\ModuleHandler.cpp">
       <Filter>src\Hazard\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Modules\Renderer\Batch\Batch.cpp">
-      <Filter>src\Hazard\Modules\Renderer\Batch</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\Grid.cpp">
       <Filter>src\Hazard\Modules\Renderer</Filter>
@@ -361,5 +354,6 @@
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\AssetManager.cpp" />
+    <ClCompile Include="src\Hazard\ECS\Components\BatchRendererComponent.cpp" />
   </ItemGroup>
 </Project>

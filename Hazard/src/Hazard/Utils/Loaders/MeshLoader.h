@@ -2,6 +2,7 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/ECS/Components/Mesh.h"
+#include "Hazard/Utils/Maths/Vector/Vector3.h"
 
 namespace Hazard {
 	class HAZARD_API MeshLoader {

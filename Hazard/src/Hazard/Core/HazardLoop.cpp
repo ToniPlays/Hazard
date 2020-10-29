@@ -44,8 +44,8 @@ namespace Hazard {
 
 		double lastTime = 0;
 		while (!shouldClose) {
-
 			PROFILE_FN();
+
 			double time = glfwGetTime();
 			Time::unscaledDeltaTime = time - lastTime;
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
@@ -61,8 +61,8 @@ namespace Hazard {
 			//Render
 			moduleHandler.OnRender();
 
-			PROFILE_FN();
 			lastTime = time;
+			PROFILE_FN_END();
 		}
 	}
 }

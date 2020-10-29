@@ -6,39 +6,34 @@ namespace Hazard {
 
 	class HAZARD_API OpenGLVertexBuffer : public VertexBuffer {
 	public:
-		OpenGLVertexBuffer(ShaderDataType type, std::string name);
-		~OpenGLVertexBuffer();
+		OpenGLVertexBuffer(uint32_t size);
+		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		virtual ~OpenGLVertexBuffer();
 
-		void SetData(void* data, uint32_t size);
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
 
-		std::string GetName() const { return name; };
-		uint32_t GetID() const { return BufferID; }
-		uint32_t GetSize() const { return ShaderDataTypeSize(dataType); }
-		uint64_t GetLength() const { return dataLength; }
-		ShaderDataType GetType() const { return dataType; };
+		virtual void SetData(const void* data, uint32_t size) override;
+		virtual const BufferLayout& GetLayout() const override { return bufferLayout; }
+		virtual void SetLayout(const BufferLayout& layout) override { bufferLayout = layout; }
 
 	private:
-		std::string name;
-		ShaderDataType dataType = ShaderDataType::None;
-		uint32_t BufferID;
-
-		uint64_t dataLength = 0;
+		uint32_t BufferID = 0;
+		BufferLayout bufferLayout;
 	};
 
 	class HAZARD_API OpenGLIndexBuffer : public IndexBuffer {
 	public:
 		OpenGLIndexBuffer();
-		~OpenGLIndexBuffer();
+		virtual ~OpenGLIndexBuffer();
 
-		void SetData(int* indices, uint32_t size);
-		void Bind() const;
-		void Unbind() const;
-		uint32_t GetCount() const { return count; };
-		uint32_t GetID() const { return BufferID; }
+		virtual void Bind() const;
+		virtual void Unbind() const;
+		virtual void SetData(uint32_t* indices, uint32_t count);
+		virtual uint32_t GetID() const override { return BufferID; }
+		virtual uint32_t GetCount() const { return count; }
 	private:
-		uint32_t BufferID;
+		uint32_t BufferID = 0;
 		uint32_t count = 0;
 	};
 }

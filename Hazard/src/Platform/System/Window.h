@@ -36,8 +36,7 @@ namespace Hazard {
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
-		virtual void OnUpdate() = 0;
-		virtual void SetClearColor(Color color) const = 0;
+		virtual void OnUpdate(Color color = Color("#222222")) = 0;
 		virtual void SetWindowTitle(std::string title) = 0;
 		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
 		virtual void SetVSync(bool enabled) = 0;
@@ -50,7 +49,6 @@ namespace Hazard {
 		virtual bool IsFocused() const = 0;
 		virtual WindowProps GetWindowInfo() { return windowData; }
 
-		virtual Color GetClearColor() const = 0;
 		static Window* Create(WindowProps& props = WindowProps());
 		GraphicsContext* GetContext() const { return context; }
 

@@ -85,9 +85,9 @@ void Style::SetColor(ImGuiCol_ color, const char* value) {
 	SetColor(color, Color::FromHex(value));
 }
 
-void Style::SetButtonColors(std::string button, std::string hovered, std::string active)
+void Style::SetButtonColors(const char* button, const char* hovered, const char* active)
 {
-	SetButtonColors(Color::FromHex(button), Color::FromHex(hovered), Color::FromHex(active));
+	SetButtonColors(Color(button), Color(hovered), Color(active));
 }
 
 void Style::SetButtonColors(Color button, Color hovered, Color active)

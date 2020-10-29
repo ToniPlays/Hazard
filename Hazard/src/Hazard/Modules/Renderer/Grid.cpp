@@ -8,7 +8,7 @@ namespace Hazard {
 
 	Grid::Grid()
 	{
-		shader = RendererAPI::Create<Shader>("res/shaders/grid.glsl");
+		/*shader = RendererAPI::Create<Shader>("res/shaders/grid.glsl");
 		vertexArray = RendererAPI::Create<VertexArray>();
 
 		VertexBuffer* points = RendererAPI::VertexBuffer(ShaderDataType::Float3, "points");
@@ -25,9 +25,7 @@ namespace Hazard {
 			}
 		}
 
-		size = p.size();
-		points->SetData(p.data(), size);
-		vertexArray->SetLayout({ points });
+		size = p.size();*/
 	}
 
 
