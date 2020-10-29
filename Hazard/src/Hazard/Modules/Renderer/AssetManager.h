@@ -3,13 +3,13 @@
 #include "Hazard/Modules/Renderer/Textures/Texture.h"
 #include "Hazard/Modules/Renderer/Shaders/Shader.h"
 
-enum TextureType {
+enum class TextureType {
 	Texture = 0,
 	Texture2D,
 	Cubemap,
 	RenderTexture
 };
-enum ShaderType {
+enum class ShaderType {
 	Vertex = 0,
 	Geometry,
 	Fragment,
@@ -41,12 +41,12 @@ namespace Hazard {
 			static T* GetAsset(const std::string& file);
 			template<typename T>
 			static void AddAsset(T* asset);
+
 			template<typename T>
 			static std::vector<T*> GetAssets();
 	private:
 		static TextureData* GetTextureNode(TextureType type);
-		static ShaderData* GetShaderNode(ShaderType type);
 		static std::vector<TextureData*> textures;
-		static std::vector<ShaderData*> shaders;
+		static std::vector<Shader*> shaders;
 	};
 }

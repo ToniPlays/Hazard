@@ -3,12 +3,13 @@
 #include "AssetManager.h"
 #include "Hazard/Modules/Renderer/Textures/Texture2D.h"
 #include "Hazard/Modules/Renderer/Textures/RenderTexture.h"
+#include "RendererAPI.h"
 
 
 namespace Hazard {
 
 	std::vector<TextureData*> AssetManager::textures;
-	std::vector<ShaderData*> AssetManager::shaders;
+	std::vector<Shader*> AssetManager::shaders;
 
 
 	//Get asset
@@ -20,16 +21,24 @@ namespace Hazard {
 	}
 	template<>
 	Texture2D* AssetManager::GetAsset(const std::string& file) {
-		return nullptr;
+
+		std::cout << file << std::endl;
+		TextureData* texts = GetTextureNode(TextureType::Texture2D);
+		for (auto* tex : texts->textures) {
+			if (tex->GetPath() == file) return (Texture2D*)tex;
+		}
+		Texture2D* newTexture = RendererAPI::Create<Texture2D>(file.c_str());
+		texts->textures.push_back(newTexture);
+		return newTexture;
 	}
 	template<>
 	Shader* AssetManager::GetAsset(const std::string& file) {
-		for (ShaderData* data : shaders) {
-			for (Shader* shader : data->shaders) {
-				if (shader->file == file) return shader;
-			}
+		for (Shader* shader : shaders) {
+			if (shader->file == file) return shader;
 		}
-		return nullptr;
+		Shader* shader = RendererAPI::Create<Shader>(file.c_str());
+		shaders.push_back(shader);
+		return shader;
 	}
 
 
@@ -45,7 +54,7 @@ namespace Hazard {
 		return textures;
 	}
 	template<>
-	std::vector<ShaderData*> AssetManager::GetAssets()
+	std::vector<Shader*> AssetManager::GetAssets()
 	{
 		return shaders;
 	}
@@ -70,8 +79,7 @@ namespace Hazard {
 	}
 	template<>
 	void AssetManager::AddAsset(Shader* shader) {
-		ShaderData* data = GetShaderNode(ShaderType::Vertex);
-		data->shaders.push_back(shader);
+		shaders.push_back(shader);
 	}
 	
 	TextureData* AssetManager::GetTextureNode(TextureType type)
@@ -82,15 +90,6 @@ namespace Hazard {
 
 		TextureData* newData = new TextureData(type);
 		textures.push_back(newData);
-		return newData;
-	}
-	ShaderData* AssetManager::GetShaderNode(ShaderType type) {
-		for (ShaderData* data : shaders) {
-			if (data->type == type) return data;
-		}
-
-		ShaderData* newData = new ShaderData(type);
-		shaders.push_back(newData);
 		return newData;
 	}
 }

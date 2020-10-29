@@ -15,9 +15,13 @@ namespace Hazard {
 		void Bind(uint32_t slot) const override;
 		void Unbind(uint32_t slot) const override;
 
+		virtual uint32_t GetWidth() const { return width; }
+		virtual uint32_t GetHeight() const { return height; }
+
 		uint32_t GetID() const { return textureID; };
 
 	private:
+		uint32_t width, height;
 		uint32_t textureID;
 	};
 }

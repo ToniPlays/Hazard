@@ -15,5 +15,6 @@ namespace Hazard {
 		void DeserializeComponent(YAML::Node in);
 
 		float size;
+		uint32_t textureIndex;
 	};
 }

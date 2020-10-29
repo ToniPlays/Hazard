@@ -7,6 +7,8 @@ namespace Hazard {
 
 	struct Vertex {
 		Vector3<float> position;
+		Vector2<float> texCoord;
 		Color color;
+		float textureIndex;
 	};
 }

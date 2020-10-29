@@ -34,6 +34,7 @@ namespace Hazard {
 	void OpenGLShader::Bind() const
 	{
 		glUseProgram(program);
+		RenderEngine::SetActiveShader((Shader*)this);
 	}
 	void OpenGLShader::Unbind() const
 	{

@@ -62,11 +62,7 @@ namespace Hazard {
 		switch (GetAPI())
 		{
 		case RenderAPI::OpenGL: {
-			Hazard::Shader* shader = AssetManager::GetAsset<Hazard::Shader>(file);
-			if (shader != nullptr)
-				return shader;
-			shader = new OpenGLShader(file);
-			AssetManager::AddAsset<Hazard::Shader>(shader);
+			Shader* shader = new OpenGLShader(file);
 			return shader;
 			}
 		}
@@ -78,13 +74,7 @@ namespace Hazard {
 		switch (GetAPI())
 		{
 		case RenderAPI::OpenGL:
-
-			Hazard::Texture2D* texture = AssetManager::GetAsset<Hazard::Texture2D>(file);
-			if (texture != nullptr)
-				return texture;
-			texture = new OpenGLTexture2D(file);
-			AssetManager::AddAsset<Hazard::Texture2D>(texture);
-			return texture;
+			return new OpenGLTexture2D(file);
 		}
 		return nullptr;
 	}

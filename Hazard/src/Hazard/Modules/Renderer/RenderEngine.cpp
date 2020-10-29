@@ -8,7 +8,7 @@
 namespace Hazard {
 
 	RenderEngine* RenderEngine::Instance;
-	uint32_t RenderEngine::boundShader = 9999;
+	Shader* RenderEngine::currentShader = nullptr;
 
 	RenderEngine::RenderEngine() : Module("RenderEngine")
 	{
@@ -74,6 +74,7 @@ namespace Hazard {
 			window->GetContext()->ClearFrame(sceneCamera->clearColor);
 			sceneCamera->RecalculateViewMatrix();
 			renderer2D.Render(scene);
+
 		}
 		else window->GetContext()->ClearFrame();
 		renderTexture->Unbind();

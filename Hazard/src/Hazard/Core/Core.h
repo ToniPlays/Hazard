@@ -15,5 +15,14 @@
 #endif // HRD_PLATFORM_WINDOWS
 
 #define BIT(x) (1 << x)
-
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
+
+#if HZR_DEBUG
+	#define HZR_BUILD_VERSION "Debug"
+#elif defined HZR_DIST
+	#define HZR_BUILD_VERSION "Distribution"
+#elif defined(HZR_GAME_ONLY)
+	#define HZR_BUILD_VERSION "Game"
+#else
+	#define HZR_BUILD_VERSION "Release"
+#endif // HZR_DEBUG

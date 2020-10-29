@@ -18,6 +18,9 @@ namespace Hazard {
 
 		void Resize(uint32_t width, uint32_t height) override;
 
+		virtual uint32_t GetWidth() const override { return spec.width; }
+		virtual uint32_t GetHeight() const override { return spec.height; }
+
 		uint32_t GetColorID() const { return colorAttachment; }
 		uint32_t GetID() const override { return RendererID; }
 		RenderTextureSpec& GetSpec() { return spec; }

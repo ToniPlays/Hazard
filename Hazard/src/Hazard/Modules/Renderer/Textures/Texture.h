@@ -9,8 +9,8 @@ namespace Hazard {
 		Texture(std::string file) : path(file) {};
 
 		virtual ~Texture() {};
-		virtual unsigned int GetWidth() const { return width; };
-		virtual unsigned int GetHeight() const { return height; };
+		virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
 		virtual void Unbind(uint32_t slot = 0) const = 0;
@@ -19,7 +19,6 @@ namespace Hazard {
 		virtual std::string GetPath() { return path; }
 
 	protected:
-		unsigned int width = 0, height = 0;
 		std::string path;
 	};
 }

@@ -40,16 +40,13 @@ void EngineAssets::Render()
 			ImGui::TreePop();
 		}
 	}
-	std::vector<ShaderData*> shaderData = AssetManager::GetAssets<Hazard::ShaderData>();
-	if (shaderData.size() > 0) {
+	std::vector<Shader*> shaders = AssetManager::GetAssets<Hazard::Shader>();
+	if (shaders.size() > 0) {
 		if (ImGui::TreeNodeEx("##Shader", flags, "Shaders")) {
-
-			for (ShaderData* shaders : shaderData) {
-				for (Shader* shader : shaders->shaders) {
-					if (ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)shader->file.c_str(), flags, shader->file.c_str())) {
-						ImGui::Text(shader->file.c_str());
-						ImGui::TreePop();
-					}
+			for (Shader* shader : shaders) {
+				if (ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)shader->file.c_str(), flags, shader->file.c_str())) {
+					ImGui::Text(shader->file.c_str());
+					ImGui::TreePop();
 				}
 			}
 
@@ -60,6 +57,15 @@ void EngineAssets::Render()
 }
 void EngineAssets::DrawTextures(TextureData* data) {
 
-	for(Hazard::Texture* texture : data->textures)
+	for (Hazard::Texture* texture : data->textures) {
 		Inputs::Texture(texture, Vector2<int>(75, 75));
+		ImGui::SameLine(150);
+		std::stringstream ss;
+		ss << texture->GetWidth() << "x" << texture->GetHeight();
+		ImGui::Text(ss.str().c_str());
+		ss.str("");
+		ss << "ID: " << texture->GetID();
+		ImGui::Text(ss.str().c_str());
+	}
+
 }

@@ -45,6 +45,7 @@ namespace Hazard {
 		static std::string GetError();
 		static void Draw(VertexArray* array, uint32_t indices);
 		static RenderEngine* Instance;
+		static void SetActiveShader(Shader* shader) { currentShader = shader; }
 
 	private:
 		RendererStats* stats;
@@ -57,6 +58,6 @@ namespace Hazard {
 		CameraComponent* sceneCamera = nullptr;
 
 	private:
-		static uint32_t boundShader;
+		static Shader* currentShader;
 	};
 }

@@ -88,9 +88,12 @@ inline void Draw<CameraComponent>(Entity* entity, CameraComponent* transform) {
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 15.0f, lineHeight };
 
-		Inputs::BeginColumnRow("Fov", 2);
+		Inputs::BeginColumnRow(component->GetType() == CameraType::Perspective ? "Fov" : "Size", 2);
 		Inputs::MaxWidth();
-		ImGui::SliderFloat("##Fov", &component->FovSize, 0, component->GetType() == CameraType::Perspective ? 180 : 500);
+
+		if (component->GetType() == CameraType::Perspective)
+			ImGui::SliderFloat("##Fov", &component->FovSize, 0, 180);
+		else ImGui::DragFloat("##Size", &component->FovSize, 0.1f, 0.001f, 250);
 		ImGui::PopItemWidth();
 		Inputs::EndColumnRow(1);
 
@@ -126,6 +129,8 @@ inline void Draw<SpriteRenderer>(Entity* entity, SpriteRenderer* renderer) {
 
 		if (tintOpen)
 			component->SetTint(newTint);
+		ImGui::InputInt("TextureIndex", &component->textureIndex);
+		component->textureIndex = Hazard::Math::Clamp(component->textureIndex, 0, 10);
 
 		}, [](SpriteRenderer* component, Entity* entity) -> bool {
 			if (ImGui::MenuItem("Remove component")) {
