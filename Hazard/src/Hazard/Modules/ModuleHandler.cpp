@@ -6,8 +6,8 @@
 #include "Logging/Logger.h"
 
 namespace Hazard {
-
-	std::vector<Module*> ModuleHandler::modules = std::vector<Module*>();
+	
+	std::vector<Module*> ModuleHandler::modules;
 
 	ModuleHandler::ModuleHandler()
 	{
@@ -30,7 +30,7 @@ namespace Hazard {
 			modules.emplace_back(module);
 			return;
 		}
-		HZR_CORE_WARN(module->GetName() + " was not started correctly");
+		HZR_CORE_WARN((std::string(module->GetName()) + " was not started correctly").c_str());
 
 	}
 	bool ModuleHandler::PopModule(Module* module)
@@ -39,7 +39,7 @@ namespace Hazard {
 		if (it != modules.end()) {
 			modules.erase(it);
 			if (!module->OnDisabled()) {
-				HZR_CORE_WARN(module->GetName() + " was not closed correctly");
+				HZR_CORE_WARN((std::string(module->GetName()) + " was not closed correctly").c_str());
 				return false;
 			}
 			return true;

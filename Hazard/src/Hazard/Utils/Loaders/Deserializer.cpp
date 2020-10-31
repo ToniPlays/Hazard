@@ -1,7 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "Deserializer.h"
-#include "Hazard/ECS/Components/Transform.h"
+#include "Hazard/ECS/Components/TransformComponent.h"
 #include "Hazard/ECS/Components/SpriteRenderer.h"
 #include "Hazard/ECS/Components/CameraComponent.h"
 #include "Hazard/ECS/Components/BatchRendererComponent.h"

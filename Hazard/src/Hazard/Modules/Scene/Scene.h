@@ -11,8 +11,10 @@ namespace Hazard {
 		friend class RenderEngine;
 	public:
 
-		Scene(std::string name = "Empty scene");
+		Scene(char* = "Empty scene");
 		~Scene() {};
+
+		void Awake() override;
 
 		void Flush();
 		void OnComponentAdded(Component* component);
@@ -22,5 +24,6 @@ namespace Hazard {
 		CameraComponent* sceneCamera = nullptr;
 
 	private:
+
 	};
 }

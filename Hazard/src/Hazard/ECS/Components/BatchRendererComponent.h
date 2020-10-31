@@ -14,7 +14,7 @@ namespace Hazard {
 		void SerializeComponent(YAML::Emitter& out);
 		void DeserializeComponent(YAML::Node in);
 
-		float size;
-		uint32_t textureIndex;
+		float size = 1;
+		uint32_t textureIndex = 0;
 	};
 }

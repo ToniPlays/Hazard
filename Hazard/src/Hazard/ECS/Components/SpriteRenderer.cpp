@@ -26,7 +26,7 @@ namespace Hazard {
 	}
 
 	void SpriteRenderer::OnRender() {
-		Renderer2D::DrawQuad(Vector3<float>::zero, Vector3<float>::one, tint, "res/textures/hazard.png");
+		Renderer2D::DrawQuad(*parent->GetComponent<Transform>(), tint, "res/textures/hazard.png");
 		//Renderer2D::DrawQuad(Vector3<float>::zero, Vector3<float>::one, tint);
 	}
 	void SpriteRenderer::SetTint(Color _tint)

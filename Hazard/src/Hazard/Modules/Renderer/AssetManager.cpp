@@ -8,35 +8,35 @@
 
 namespace Hazard {
 
-	std::vector<TextureData*> AssetManager::textures;
-	std::vector<Shader*> AssetManager::shaders;
+	std::vector<TextureData*> AssetManager::textures  = std::vector<TextureData*>();
+	std::vector<Shader*> AssetManager::shaders = std::vector<Shader*>();
 
 
 	//Get asset
 	template<typename T>
-	T* AssetManager::GetAsset(const std::string& file)
+	T* AssetManager::GetAsset(const char* file)
 	{
 		HZR_ASSERT(false, "Undefined asset type: " + file);
 		return nullptr;
 	}
 	template<>
-	Texture2D* AssetManager::GetAsset(const std::string& file) {
+	Texture2D* AssetManager::GetAsset(const char* file) {
 
-		std::cout << file << std::endl;
 		TextureData* texts = GetTextureNode(TextureType::Texture2D);
 		for (auto* tex : texts->textures) {
 			if (tex->GetPath() == file) return (Texture2D*)tex;
 		}
-		Texture2D* newTexture = RendererAPI::Create<Texture2D>(file.c_str());
+
+		Texture2D* newTexture = RendererAPI::Create<Texture2D>(file);
 		texts->textures.push_back(newTexture);
 		return newTexture;
 	}
 	template<>
-	Shader* AssetManager::GetAsset(const std::string& file) {
+	Shader* AssetManager::GetAsset(const char* file) {
 		for (Shader* shader : shaders) {
 			if (shader->file == file) return shader;
 		}
-		Shader* shader = RendererAPI::Create<Shader>(file.c_str());
+		Shader* shader = RendererAPI::Create<Shader>(file);
 		shaders.push_back(shader);
 		return shader;
 	}

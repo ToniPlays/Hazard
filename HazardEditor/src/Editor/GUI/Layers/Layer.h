@@ -4,7 +4,7 @@
 
 class Layer {
 public:
-	Layer(std::string n) : name(n) {}
+	Layer(const char* n) : name(n) {}
 	virtual ~Layer() {};
 
 	virtual void Update() {};
@@ -16,8 +16,8 @@ public:
 
 	void SetLayerOpen(bool open) { isLayerOpen = open; };
 
-	std::string GetName() { return name; }
+	const char* GetName() { return name; }
 protected:
 	bool isLayerOpen = true;
-	std::string name;
+	const char* name;
 };

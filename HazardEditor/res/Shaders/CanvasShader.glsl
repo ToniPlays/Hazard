@@ -7,8 +7,6 @@ layout(location = 2) in vec4 color;
 layout(location = 3) in float textureIndex;
 
 uniform mat4 viewProjection;
-uniform mat4 transform;
-
 
 out vec4 v_color;
 out vec2 o_coords;
@@ -16,7 +14,7 @@ out float texIndex;
 
 void main() {
 	
-	gl_Position = viewProjection * transform * vec4(position, 1.0);
+	gl_Position = viewProjection * vec4(position, 1.0);
 	v_color = color;
 	o_coords = v_coords;
 	texIndex = textureIndex;

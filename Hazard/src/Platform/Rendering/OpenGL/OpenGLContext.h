@@ -16,9 +16,9 @@ namespace Hazard {
 		void Init() const override;
 		void ClearFrame(Color clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-		void Draw(VertexArray* vertexArray, uint32_t indices, RenderType type = RenderType::Default) override;
-		std::string GetVersion() const;
-		std::string GetError() const override;
+		void Draw(VertexArray* vertexArray, uint32_t indices, RenderType type) override;
+		void DrawIndexed(VertexArray* vertexArray, uint32_t indices) override;
+		std::string GetVersion() const override;
 	private:
 		GLFWwindow* window;
 	};

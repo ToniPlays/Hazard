@@ -1,24 +1,30 @@
 #pragma once
 #include <hzrpch.h>
 #include "CameraComponent.h"
+#include "TransformComponent.h"
 #include "Hazard/Utils/Loaders/Serializer.h"
 #include "Hazard/Utils/Loaders/Deserializer.h"
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
 #include "Hazard/Modules/Renderer/RenderEngine.h"
 
+#include <glm/glm.hpp>
+
 namespace Hazard {
 
 	CameraComponent::CameraComponent() : Component("Camera Component") 
 	{
-
 	}
 	CameraComponent::~CameraComponent()
 	{
 
 	}
+	void CameraComponent::OnAttach()
+	{
+		RecalculateViewMatrix();
+	}
 	void CameraComponent::RecalculateViewMatrix()
 	{
-		PROFILE_FN()
+		PROFILE_FN();
 		float aspectX = RenderEngine::GetStats().GetAspectRatio();
 		glm::mat4 projection;
 		if (type == CameraType::Orthographic) 
@@ -27,7 +33,7 @@ namespace Hazard {
 			projection = glm::perspective(glm::radians(FovSize), aspectX, clipping.x, clipping.y);
 
 		viewProjection = projection * glm::inverse(Transform::AsMat4(*parent->GetComponent<Transform>()));
-		PROFILE_FN_END()
+		PROFILE_FN_END();
 	}
 	void CameraComponent::SerializeComponent(YAML::Emitter& out)
 	{
@@ -46,6 +52,6 @@ namespace Hazard {
 		clearColor = Deserializer::Deserialize<Color>(in["Clear Color"]);
 	}
 	void CameraComponent::PostDeserialize() {
-		//RecalculateViewMatrix();
+		RecalculateViewMatrix();
 	}
 }

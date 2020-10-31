@@ -24,8 +24,8 @@ void NewProject::Render()
 	ImGui::SetNextWindowPos(size);
 	ImGui::SetNextWindowSize(size);
 
-	ImGui::OpenPopup(name.c_str());
-	ImGui::BeginPopupModal(name.c_str(), &isLayerOpen, ImGuiWindowFlags_NoResize);
+	ImGui::OpenPopup(name);
+	ImGui::BeginPopupModal(name, &isLayerOpen, ImGuiWindowFlags_NoResize);
 
 	ImGui::Columns(2);
 	Style::SelectFont(1);

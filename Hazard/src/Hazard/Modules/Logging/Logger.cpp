@@ -38,7 +38,7 @@ namespace Hazard {
 
 	void Logger::Assert(bool success, std::string text)
 	{
-		if (!success) 
+		if (!success)
 			CoreLog(text, 3);
 	}
 
@@ -50,22 +50,22 @@ namespace Hazard {
 		switch (level)
 		{
 		case 0:
-			s_CoreLogger->info(text);
+			s_CoreLogger->info(text.c_str());
 			break;
 		case 1:
-			s_CoreLogger->warn(text);
+			s_CoreLogger->warn(text.c_str());
 			break;
 		case 2:
-			s_CoreLogger->error(text);
+			s_CoreLogger->error(text.c_str());
 			break;
 		case 3:
-			s_CoreLogger->critical(text);
+			s_CoreLogger->critical(text.c_str());
 			break;
 		case 4:
-			s_CoreLogger->trace(text);
+			s_CoreLogger->trace(text.c_str());
 			break;
 		}
-		engineLogs.push_back(Log(text, level));
+		engineLogs.push_back(Log(text.c_str(), level));
 	}
 	void Logger::ClientLog(std::string text, int level)
 	{
@@ -74,19 +74,19 @@ namespace Hazard {
 		switch (level)
 		{
 		case 0:
-			s_ClientLogger->info(text);
+			s_ClientLogger->info(text.c_str());
 			break;
 		case 1:
-			s_ClientLogger->warn(text);
+			s_ClientLogger->warn(text.c_str());
 			break;
 		case 2:
-			s_ClientLogger->error(text);
+			s_ClientLogger->error(text.c_str());
 			break;
 		case 3:
-			s_ClientLogger->critical(text);
+			s_ClientLogger->critical(text.c_str());
 			break;
 		case 4:
-			s_ClientLogger->trace(text);
+			s_ClientLogger->trace(text.c_str());
 			break;
 		}
 	}
@@ -110,6 +110,7 @@ namespace Hazard {
 		for (ProfiledFn* pFn : profiled->subFunctions) {
 			if (pFn->name == fn) return pFn;
 		}
+
 		ProfiledFn* newFn = new ProfiledFn(fn, profiled, std::chrono::time_point<std::chrono::high_resolution_clock>());
 		profiled->subFunctions.push_back(newFn);
 		return newFn;

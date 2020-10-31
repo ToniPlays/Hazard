@@ -2,7 +2,8 @@
 #include <hzrpch.h>
 #include "Entity.h"
 #include "Hazard/Modules/Renderer/RendererAPI.h"
-#include "Hazard/ECS/Components/SpriteRenderer.h"
+#include "Components/TransformComponent.h"
+#include "Components/SpriteRenderer.h"
 #include "Hazard/Modules/Scene/SceneManager.h"
 
 namespace Hazard {
@@ -16,7 +17,8 @@ namespace Hazard {
 	{
 		this->name = _name;
 		for (Component* component : _components) {
-			this->components.push_back(component);
+			component->SetParent(this);
+			components.push_back(component);
 		}
 	}
 	
@@ -33,6 +35,13 @@ namespace Hazard {
 
 	}
 
+	void Entity::Awake()
+	{
+		for (Component* component : components) {
+			component->OnAttach();
+		}
+	}
+
 	void Entity::AddComponent(Component* component) {
 		component->SetParent(this);
 		components.push_back(component);
@@ -43,6 +52,7 @@ namespace Hazard {
 		auto& it = std::find(components.begin(), components.end(), component);
 		if (it != components.end()) {
 			components.erase(it);
+			component->OnDetach();
 			ModuleHandler::GetModule<SceneManager>()->GetActiveScene()->OnComponentRemoved(component);
 		}
 	}
@@ -59,9 +69,6 @@ namespace Hazard {
 	}
 	void Entity::Render()
 	{
-		for (Component* comp : components) {
-			
-		}
 	}
 	void Entity::OnDestroy() {
 		

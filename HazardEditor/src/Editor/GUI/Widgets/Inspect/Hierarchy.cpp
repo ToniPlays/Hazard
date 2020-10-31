@@ -57,7 +57,7 @@ void Hierarchy::DrawEntities(std::vector<Entity*> entities) {
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		std::hash<std::string> hash;
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)hash(entity->name), flags, (entity->name.c_str()));
+		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)hash(entity->name), flags, entity->name.c_str());
 
 		if (ImGui::IsItemClicked() || ImGui::IsItemClicked(1)) {
 			entityContext = entity;

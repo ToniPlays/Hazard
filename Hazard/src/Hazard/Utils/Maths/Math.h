@@ -5,6 +5,8 @@
 
 #include "Vector/Vector2.h"
 
+#include <glm/glm.hpp>
+
 namespace Hazard {
 
 	class HAZARD_API Math {
@@ -21,11 +23,11 @@ namespace Hazard {
 
 		template<typename T, typename U>
 		static T Pow(T value, U pow) {
-			return (T)std::pow(value, pow);
+			return (T)glm::pow(value, pow);
 		}
 		template<typename T>
 		static T Sqrt(T value) {
-			return sqrt(value);
+			return glm::sqrt(value);
 		}
 		template<typename T>
 		static T Max(T a, T b) {
@@ -43,7 +45,8 @@ namespace Hazard {
 		}
 		template<typename T>
 		static T Round(T value, int digits) {
-			return round(value * Pow(10, digits)) / Pow(10, digits);
+			float pow = Pow(10, digits);
+			return glm::round(value * pow) / pow;
 		}
 
 		template<typename T>
@@ -54,20 +57,20 @@ namespace Hazard {
 		}
 
 		static double ToRadians(double value) {
-			return 2 * (atan(1) * 4) * (value / 360);
+			return glm::radians(value);
 		}
 
 		static double Sin(double value)
 		{
-			return sin(value);
+			return glm::sin(value);
 		}
 		static double Cos(double value)
 		{
-			return sin(value);
+			return glm::cos(value);
 		}
 		static double Tan(double value)
 		{
-			return tan(value);
+			return glm::tan(value);
 		}
 
 		template<typename T>

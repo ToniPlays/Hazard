@@ -82,7 +82,7 @@ void Editor::PushLayer(Layer* layer)
 	if (layer->OnEnabled()) {
 		Register(layer);
 	}
-	else Debug::Warn("Unable to set layer: " + layer->GetName());
+	else Debug::Warn("Unable to set layer: " + std::string(layer->GetName()));
 }
 void Editor::Register(Layer* layer) {
 	if(layer->MenuPlacement() != "")
@@ -121,7 +121,7 @@ void Editor::End()
 }
 
 void Editor::Render() {
-	PROFILE_FN()
+	PROFILE_FN();
 	Begin();
 	//Docking stuff
 	{

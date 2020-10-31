@@ -10,8 +10,10 @@ namespace Hazard {
 		Entity(std::string _name);
 		~Entity();
 
-		void Render();
-		void OnDestroy();
+		virtual void Awake();
+
+		virtual void Render();
+		virtual void OnDestroy();
 
 		template<typename T>
 		void AddComponent() {
@@ -19,8 +21,8 @@ namespace Hazard {
 			AddComponent(component);
 		}
 
-		void AddComponent(Component* component);
-		void RemoveComponent(Component* component);
+		virtual void AddComponent(Component* component);
+		virtual void RemoveComponent(Component* component);
 
 		template<typename T>
 		bool HasComponent() {
@@ -37,13 +39,13 @@ namespace Hazard {
 		std::vector<Entity*> GetChildEntities() { return childs; }
 		std::vector<Component*> GetComponents() { return components; }
 
-		void AddEntity(Entity* entity);
-		void RemoveEntity(Entity* entity);
+		virtual void AddEntity(Entity* entity);
+		virtual void RemoveEntity(Entity* entity);
 
-		std::string name = "";
+		std::string name;
 
 	protected:
-		std::vector<Entity*> childs;;
+		std::vector<Entity*> childs;
 		std::vector<Component*> components;
 	};
 }

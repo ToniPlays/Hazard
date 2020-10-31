@@ -24,7 +24,7 @@ namespace Hazard {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_MAXIMIZED, props.maximized ? GLFW_TRUE : GLFW_FALSE);
 
-		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title.c_str(), 0, 0);
+		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title, 0, 0);
 
 		if (!window) {
 			HZR_ASSERT(false, "Window was not initialized");
@@ -36,8 +36,6 @@ namespace Hazard {
 		windowData.Renderer = context->GetVersion();
 
 		SetCallbacks();
-		SetVSync(true);
-
 
 		glfwShowWindow(window);
 		glfwGetWindowSize(window, &windowData.Width, &windowData.Height);
@@ -46,12 +44,13 @@ namespace Hazard {
 
 		glfwSwapBuffers(window);
 		context->ClearFrame(color);
-		IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
+		glfwPollEvents();
+		//IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
-	void WindowsWindow::SetWindowTitle(std::string title)
+	void WindowsWindow::SetWindowTitle(const char* title)
 	{
 		windowData.Title = title;
-		glfwSetWindowTitle(window, title.c_str());
+		glfwSetWindowTitle(window, title);
 	}
 	void WindowsWindow::SetWindowIcon(const char* smallIcon, const char* bigIcon)
 	{
@@ -76,12 +75,14 @@ namespace Hazard {
 			glViewport(0, 0, w, h);
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
+
 			});
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent event;
 			data.EventCallback(event);
+
 			});
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
@@ -142,6 +143,10 @@ namespace Hazard {
 			data.focus = focus;
 			WindowFocusEvent event(focus);
 			data.EventCallback(event);
+		});
+		glfwSetWindowIconifyCallback(window, [](GLFWwindow* window, int minimized) {
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			data.minimized = minimized;
 		});
 	}
 

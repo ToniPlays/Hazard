@@ -18,7 +18,7 @@ Console::Console() : Layer("Console")
 void Console::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;
-
+/*
 	std::vector<Message*> logs = Debug::GetAll();
 
 	const char* types[3] = { "Log", "Warning", "Error" };
@@ -49,9 +49,7 @@ void Console::Render()
 		if (msg->level == 1 && !ShowWarn) continue;
 		if (msg->level == 0 && !ShowLog) continue;
 
-		ss << msg->time << " App (" << types[msg->level] << "): " << msg->text.c_str();
-		ImGui::TextColored(ColorAsImVec(Hazard::Color::FromHex(colors[msg->level])), ss.str().c_str());
-		ss.str("");
+		ImGui::Text(msg->text);
 	}
 
 	Hazard::Logger* logger = Hazard::ModuleHandler::GetModule<Hazard::Logger>();
@@ -77,12 +75,12 @@ void Console::Render()
 			if (level == 0 && !ShowLog) continue;
 
 
-			ss << "Engine(" << types[level] << "): " << msg.text.c_str();
-			ImGui::TextColored(ColorAsImVec(Hazard::Color::FromHex(colors[level])), ss.str().c_str());
-			ss.str("");
+			//ss << "Engine(" << types[level] << "): " << msg.text;
+			ImGui::Text(msg.text);
+			//ss.str("");
 		}
 	}
-
+	*/
 	Panel::End();
 }
 

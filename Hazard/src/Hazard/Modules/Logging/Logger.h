@@ -7,9 +7,11 @@ namespace Hazard {
 
 	;
 	struct Log {
-		std::string text;
-		int level;
-		Log(std::string _text, int _level = 0) : text(_text), level(_level) {};
+		const char* text = "";
+		int level = 0;
+
+		Log() = default;
+		Log(const char* _text, int _level = 0) : text(_text), level(_level) {};
 	};
 
 	struct ProfiledFn {
@@ -22,7 +24,7 @@ namespace Hazard {
 		std::vector<ProfiledFn*> subFunctions = std::vector<ProfiledFn*>();
 
 		ProfiledFn(const char* _name, ProfiledFn* parent, std::chrono::time_point<std::chrono::high_resolution_clock> start) : startTime(start),
-			name(_name), parentFn(parent) 
+			name(_name), parentFn(parent)
 		{
 		}
 	};
@@ -48,10 +50,9 @@ namespace Hazard {
 		static ProfiledFn* profiledRoot;
 		static ProfiledFn* profiled;
 		static ProfiledFn* FindProfiled(const char* fn);
+
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 		static std::vector<Log> engineLogs;
 	};
 }
-
-

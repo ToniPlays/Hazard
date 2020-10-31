@@ -78,7 +78,7 @@ namespace Hazard {
 
 	void OpenGLShader::SetUniform(const std::string& name, Matrix4 value)
 	{
-		//glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, value.GetAll());
+		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, (GLfloat*)value.data());
 	}
 	void OpenGLShader::SetUniform(const std::string& name, Color color) {
 		SetUniform(name, { color.r, color.g, color.b });

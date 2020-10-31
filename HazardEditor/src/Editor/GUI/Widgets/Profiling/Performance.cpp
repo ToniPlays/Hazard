@@ -7,7 +7,7 @@ Performance::Performance() : Layer("Performance") {}
 
 bool Performance::OnEnabled()
 {
-	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
+	renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 	if(renderer != nullptr)
 		vsync = renderer->GetWindow().IsVSync();
 	return true;
@@ -16,8 +16,6 @@ bool Performance::OnEnabled()
 void Performance::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;
-
-	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 
 	ImGui::NewLine();
 	ImGui::Checkbox("VSync", &vsync);
@@ -60,12 +58,12 @@ void Performance::Render()
 	ImGui::Text(ss.str().c_str());
 
 	ss.str("");
-	ss << "Error: " << renderer->GetError();
+	ss << "Batches: " << renderer->GetStats().batches;
 	ImGui::Text(ss.str().c_str());
 
 	ImGui::NewLine();
 
-	ImGui::Text("\nActive modules: ");
+	ImGui::Text("Active modules: ");
 	for (Hazard::Module* module : Hazard::ModuleHandler::GetAll()) {
 		ss.str("");
 		ss << "- " << module->GetName();

@@ -6,7 +6,7 @@
 namespace Hazard {
 
 	struct Vertex {
-		Vector3<float> position;
+		glm::vec3 position;
 		Vector2<float> texCoord;
 		Color color;
 		float textureIndex;

@@ -2,14 +2,13 @@
 #include <hzrpch.h>
 #include "BatchRendererComponent.h"
 #include "Hazard/Modules/Renderer/Renderer2D.h"
+#include "TransformComponent.h"
 
 
 namespace Hazard {
 
 	BatchRendererComponent::BatchRendererComponent() : Component("BatchRendererComponent")
 	{
-		size = 1;
-		
 	}
 	BatchRendererComponent::~BatchRendererComponent()
 	{
@@ -17,19 +16,19 @@ namespace Hazard {
 	}
 	void BatchRendererComponent::OnAttach() 
 	{
-		textureIndex = 4;
+
 	}
 	void BatchRendererComponent::OnDetach() 
 	{
 		
 	}
 	void BatchRendererComponent::OnRender() {
+		Transform* transform = parent->GetComponent<Transform>();
 		for (int x = 0; x < size; x++) {
-			for (int y = 0; y < size; y++)
-				Renderer2D::DrawQuad({ float(y), float(x), 0.0f }, { 0.9f, 0.9f, 0.9f }, 
-					{ float(x) / size, 0.8f, float(y) / size, 1.0f }, "res/textures/checker.png");
-				//Renderer2D::DrawQuad({ float(y), float(x), 0.0f }, { 0.9f, 0.9f, 0.9f }, 
-				//	{ float(x) / size, 0.8f, float(y) / size, 1.0f });
+			for (int y = 0; y < size; y++) {
+				Renderer2D::DrawQuad(Transform({ float(x), float(y), 0.0f }, Vector3<float>::zero, { 0.8f, 0.8f, 1.0f }), { float(x) / size, 0.8f, float(y) / size, 1.0f }, "res/textures/checker.png");
+				//Renderer2D::DrawQuad((Matrix4)*transform, { float(x) / size, 0.8f, float(y) / size, 1.0f });
+			}
 		}
 	}
 	void BatchRendererComponent::SerializeComponent(YAML::Emitter& out)

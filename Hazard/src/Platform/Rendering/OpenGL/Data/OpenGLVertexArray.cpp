@@ -52,7 +52,7 @@ namespace Hazard {
 		const BufferLayout& layout = vertexBuffers.at(index)->GetLayout();
 		uint32_t offset = 0;
 
-		for (uint32_t i = 0; i < layout.GetElements().size(); i++) {
+		for (uint16_t i = 0; i < layout.GetElements().size(); i++) {
 
 			ShaderDataType type = layout.GetElements()[i].Type;
 			glEnableVertexArrayAttrib(ArrayID, i);
@@ -60,7 +60,6 @@ namespace Hazard {
 				GL_FALSE, layout.GetStride(), (const void*)offset);
 
 			offset += ShaderDataTypeSize(type);
-
 		}
 	}
 	void OpenGLVertexArray::AddBuffer(VertexBuffer* vertexBuffer)

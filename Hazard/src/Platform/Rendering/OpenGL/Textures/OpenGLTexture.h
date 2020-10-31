@@ -9,7 +9,7 @@ namespace Hazard {
 	class HAZARD_API OpenGLTexture2D : public Texture2D {
 	public:
 
-		OpenGLTexture2D(std::string file);
+		OpenGLTexture2D(const char* file);
 		~OpenGLTexture2D();
 		
 		void Bind(uint32_t slot) const override;

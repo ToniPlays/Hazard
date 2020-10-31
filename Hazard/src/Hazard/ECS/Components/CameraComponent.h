@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-
+#include "Hazard/Utils/Maths/Vector/Matrix4.h"
 
 
 namespace Hazard {
@@ -13,6 +13,8 @@ namespace Hazard {
 		CameraComponent();
 		~CameraComponent();
 
+		void OnAttach() override;
+
 		CameraType type = CameraType::Orthographic;
 		float FovSize = 10;
 		Vector2<float> clipping = { 0, 1000 };
@@ -20,7 +22,10 @@ namespace Hazard {
 
 		//Projection
 
-		void SetType(CameraType type) { this->type = type; }
+		void SetType(CameraType type) {
+			this->type = type;
+			RecalculateViewMatrix();
+		}
 		void RecalculateViewMatrix();
 		
 		void SerializeComponent(YAML::Emitter& out) override;

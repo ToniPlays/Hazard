@@ -19,10 +19,20 @@ namespace Hazard {
 			this->y = 0;
 			this->z = 0;
 		}
+
+		Vector3<T>(glm::vec3 vector) {
+			this->x = vector.x;
+			this->y = vector.y;
+			this->z = vector.z;
+		}
+
 		double Length() {
 			return Math::Sqrt(x * x + y * y + z * z);
 		}
 		Vector3 operator + (const Vector3<T>& vector) {
+			return Vector3(x + vector.x, y + vector.y, z + vector.z);
+		}
+		Vector3& operator += (const Vector3<T>& vector) {
 			return Vector3(x + vector.x, y + vector.y, z + vector.z);
 		}
 		Vector3 operator - (const Vector3<T>& vector) {
@@ -45,6 +55,11 @@ namespace Hazard {
 			z *= value;
 
 			return *this;
+		}
+		operator Vector2<T> const() { return { x, y }; }
+
+		friend bool operator != (const Vector3<T>& f, const Vector3<T>& s) {
+			return f.x != s.x || f.y != f.y || f.z != f.z;
 		}
 
 		void Normalize() {

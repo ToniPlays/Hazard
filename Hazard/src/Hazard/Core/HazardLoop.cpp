@@ -44,6 +44,7 @@ namespace Hazard {
 
 		double lastTime = 0;
 		while (!shouldClose) {
+
 			PROFILE_FN();
 
 			double time = glfwGetTime();

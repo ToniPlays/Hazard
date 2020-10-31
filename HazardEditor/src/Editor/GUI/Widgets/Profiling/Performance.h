@@ -7,5 +7,7 @@ public:
 	void Render() override;
 	bool OnEnabled() override;
 	std::string MenuPlacement() { return "View/Analytics"; }
+private:
+	Hazard::RenderEngine* renderer;
 };
 

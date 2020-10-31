@@ -10,7 +10,8 @@ public:
 	std::string MenuPlacement() { return "View/General"; }
 
 private:
-	float width = 0.0f, height = 0.0f;
+	Hazard::RenderEngine* renderer;
+	float width = -1.0f, height = -1.0f;
 	static bool ShowLog;
 	static bool ShowWarn;
 	static bool ShowError;

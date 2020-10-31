@@ -6,11 +6,11 @@ namespace Hazard {
 
 	class HAZARD_API Module {
 	public:
-		Module(std::string _name) : name(_name) {}
+		Module(const char* _name) : name(_name) {}
 		virtual ~Module() {};
 		bool IsActive() { return enabled; }
 		void SetActive(bool active) { enabled = active; }
-		std::string GetName() const { return name; }
+		const char* GetName() const { return name; }
 
 	public:
 		virtual void Awake() {};
@@ -22,7 +22,7 @@ namespace Hazard {
 		virtual bool OnDisabled() { return true; };
 		virtual void OnDestroy() {};
 	protected:
-		std::string name;
+		const char* name;
 		bool enabled = true;
 	};
 }

@@ -244,15 +244,17 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Utils\Loaders\Serializer.h" />
-    <ClInclude Include="src\Hazard\ECS\Components\Transform.h">
-      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\CameraComponent.h">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Modules\Renderer\AssetManager.h" />
     <ClInclude Include="src\Hazard\ECS\Components\BatchRendererComponent.h" />
     <ClInclude Include="src\Hazard\Modules\Renderer\Batch\Vertex.h" />
+    <ClInclude Include="src\Hazard\ECS\Components\TransformComponent.h">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\Maths\Transform.h" />
+    <ClInclude Include="src\Hazard\Utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -347,13 +349,14 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\Application.cpp" />
     <ClCompile Include="src\Hazard\Utils\Loaders\Serializer.cpp" />
-    <ClCompile Include="src\Hazard\ECS\Components\Transform.cpp">
-      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\CameraComponent.cpp">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modules\Renderer\AssetManager.cpp" />
     <ClCompile Include="src\Hazard\ECS\Components\BatchRendererComponent.cpp" />
+    <ClCompile Include="src\Hazard\ECS\Components\TransformComponent.cpp">
+      <Filter>src\Hazard\Utils\Maths\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\Maths\Transform.cpp" />
   </ItemGroup>
 </Project>

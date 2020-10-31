@@ -91,9 +91,14 @@ inline void Draw<CameraComponent>(Entity* entity, CameraComponent* transform) {
 		Inputs::BeginColumnRow(component->GetType() == CameraType::Perspective ? "Fov" : "Size", 2);
 		Inputs::MaxWidth();
 
-		if (component->GetType() == CameraType::Perspective)
-			ImGui::SliderFloat("##Fov", &component->FovSize, 0, 180);
-		else ImGui::DragFloat("##Size", &component->FovSize, 0.1f, 0.001f, 250);
+		if (component->GetType() == CameraType::Perspective) {
+			if (ImGui::SliderFloat("##Fov", &component->FovSize, 0, 180))
+				component->RecalculateViewMatrix();
+		}
+		else {
+			if (ImGui::DragFloat("##Size", &component->FovSize, 0.1f, 0.001f, 250))
+				component->RecalculateViewMatrix();
+		}
 		ImGui::PopItemWidth();
 		Inputs::EndColumnRow(1);
 

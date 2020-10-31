@@ -12,6 +12,7 @@ public:
 	~EditorApplication();
 
 	void Awake() override;
+	void Update() override;
 	void OnEvent(Hazard::Event& e) override;
 };
 

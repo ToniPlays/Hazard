@@ -38,7 +38,7 @@ namespace Hazard {
 	class HAZARD_API AssetManager {
 		public:
 			template<typename T>
-			static T* GetAsset(const std::string& file);
+			static T* GetAsset(const char* file);
 			template<typename T>
 			static void AddAsset(T* asset);
 

@@ -34,7 +34,7 @@ void Profiler::DisplayLog(ProfiledFn* parent)
 
 	std::stringstream ss;
 	ss << parent->name << ": ";
-	ss << std::to_string(parent->timeInMillis);
+	ss << parent->timeInMillis;
 
 	if (ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)parent->name, flags, ss.str().c_str())) {
 		for (ProfiledFn* fn : parent->subFunctions)

@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "OpenGLContext.h"
+#include "Hazard/Modules/Renderer/RenderEngine.h"
 
 namespace Hazard {
 
@@ -19,14 +20,21 @@ namespace Hazard {
 	{
 		glfwMakeContextCurrent(window);
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			HZR_ASSERT(false, "Unable to init GLFW")
+			HZR_ASSERT(false, "Unable to init GLFW");
 			return;
 		};
 
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+		glDebugMessageCallback(RenderEngine::CheckError, nullptr);
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
 
 	void OpenGLContext::ClearFrame(Color clearColor) const
@@ -42,6 +50,7 @@ namespace Hazard {
 
 	void OpenGLContext::Draw(VertexArray* vertexArray, uint32_t indices, RenderType type)
 	{
+		vertexArray->Bind();
 		switch (type)
 		{
 		case RenderType::Default:
@@ -59,10 +68,15 @@ namespace Hazard {
 		}
 	}
 
+	void OpenGLContext::DrawIndexed(VertexArray* vertexArray, uint32_t indices)
+	{
+		vertexArray->Bind();
+		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
+	}
+
 	std::string OpenGLContext::GetVersion() const
 	{
 		std::stringstream ss;
-
 		GLint major, minor;
 		glGetIntegerv(GL_MAJOR_VERSION, &major);
 		glGetIntegerv(GL_MINOR_VERSION, &minor);
@@ -70,11 +84,5 @@ namespace Hazard {
 		ss << "OpenGL ";
 		ss << major << "." << minor;
 		return ss.str();
-	}
-	std::string OpenGLContext::GetError() const {
-		GLint error = glGetError();
-		if (error == GL_NO_ERROR) return "";
-		HZR_CORE_ERROR("[OpenGL Error] " + std::to_string(error));
-		return std::to_string(error);
 	}
 }

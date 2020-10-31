@@ -11,7 +11,7 @@ namespace Hazard {
 	}
 	void Application::SetTitle(std::string& title)
 	{
-		ModuleHandler::GetModule<RenderEngine>()->GetWindow().SetWindowTitle(title + " | Hazard " + HZR_BUILD_VERSION);
+		ModuleHandler::GetModule<RenderEngine>()->GetWindow().SetWindowTitle((std::string(title.c_str()) + " | Hazard " + HZR_BUILD_VERSION).c_str());
 	}
 	Application& Application::GetApplication()
 	{

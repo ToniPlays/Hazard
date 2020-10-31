@@ -11,7 +11,7 @@ Viewport::Viewport() : Layer("Viewport")
 
 bool Viewport::OnEnabled()
 {
-	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
+	renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 	if (renderer != nullptr) return true;
 	return false;
 }
@@ -19,8 +19,6 @@ bool Viewport::OnEnabled()
 void Viewport::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;
-
-	Hazard::RenderEngine* renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();
 
 	static char* data[] = { "Shaded", "Points", "Wireframe" };
 	int selected = renderer->GetAPI().GetTypeAsInt();

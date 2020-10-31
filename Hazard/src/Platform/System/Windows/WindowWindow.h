@@ -11,7 +11,7 @@ namespace Hazard {
 		virtual ~WindowsWindow();
 		
 		void OnUpdate(Color color) override;
-		void SetWindowTitle(std::string title) override;
+		void SetWindowTitle(const char* title) override;
 		void SetWindowIcon(const char* smallIcon, const char* bigIcon) override;
 
 		void SetVSync(bool enabled) override {
@@ -27,6 +27,7 @@ namespace Hazard {
 		
 		bool IsVSync() const { return windowData.VSync; }
 		bool IsFocused() const { return windowData.focus; }
+		bool IsMinimized() const { return windowData.minimized; }
 		WindowProps GetWindowInfo() { return windowData; }
 
 	private:

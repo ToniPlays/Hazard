@@ -9,24 +9,25 @@ namespace Hazard {
 
 	struct WindowProps {
 
-		std::string Title;
-		std::string Platform;
+		const char* Title;
+		const char* Platform;
 		std::string Renderer;
 
 		bool VSync = false;
 		bool focus = true;
 		bool maximized = false;
+		bool minimized = false;
 		int Width;
 		int Height;
 
 		std::function<void(Event&)> EventCallback;
 
 		WindowProps(const std::string& title = "Hazard",
-			std::string platform = "Undefined platform",
+			const char* platform = "Undefined platform",
 			std::string renderer = "Undefined renderer",
 			unsigned int width = 1280,
 			unsigned int height = 720, bool maxim = true)
-			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
+			: Title(title.c_str()), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
 	};
 
 	class HAZARD_API Window {
@@ -37,7 +38,7 @@ namespace Hazard {
 
 		virtual ~Window() {};
 		virtual void OnUpdate(Color color = Color("#222222")) = 0;
-		virtual void SetWindowTitle(std::string title) = 0;
+		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
@@ -47,6 +48,7 @@ namespace Hazard {
 		virtual unsigned int GetHeight() const = 0;
 		virtual bool IsVSync() const = 0;
 		virtual bool IsFocused() const = 0;
+		virtual bool IsMinimized() const = 0;
 		virtual WindowProps GetWindowInfo() { return windowData; }
 
 		static Window* Create(WindowProps& props = WindowProps());

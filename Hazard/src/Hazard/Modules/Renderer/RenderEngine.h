@@ -11,14 +11,18 @@
 namespace Hazard {
 
 	struct RendererStats {
-		uint32_t draws;
-		uint32_t width;
-		uint32_t height;
+		uint32_t draws = 0;
+		uint32_t width = 0;
+		uint32_t height = 0;
 
 		uint32_t quads = 0;
 		uint32_t indices = 0;
+		uint32_t batches = 0;
 
-		float GetAspectRatio() { return float(width) / float(height); }
+		float GetAspectRatio() {
+			if (height == 0) return 0;
+			return float(width) / float(height); 
+		}
 
 	};
 
@@ -34,21 +38,23 @@ namespace Hazard {
 		void SceneRender();
 		bool OnResized(Event& e);
 		void OnViewResized(uint32_t width, uint32_t height);
+		void SetSceneCamera(CameraComponent* camera);
 
 
 		Window& GetWindow() { return *window; }
 		RendererAPI& GetAPI() { return *api; };
-		static RendererStats& GetStats() { return *Instance->stats; }
+		static RendererStats& GetStats() { return Instance->stats; }
 		
 		RenderTexture* GetRenderTexture() { return renderTexture; }
-
-		static std::string GetError();
+		
+		static void CheckError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 		static void Draw(VertexArray* array, uint32_t indices);
 		static RenderEngine* Instance;
 		static void SetActiveShader(Shader* shader) { currentShader = shader; }
 
+
 	private:
-		RendererStats* stats;
+		RendererStats stats;
 		RenderTexture* renderTexture = nullptr;
 		std::unique_ptr<Window> window;
 

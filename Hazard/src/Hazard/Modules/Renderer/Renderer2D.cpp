@@ -6,12 +6,18 @@
 #include "Buffers/VertexArray.h"
 #include "AssetManager.h"
 
+#include "Hazard/Utils/Timer.h"
+
 namespace Hazard {
 
+	Vector3<float> quadVertexPos[] = { { -0.5f, -0.5f, 0.0f},
+								  {  0.5f, -0.5f, 0.0f },
+								  {  0.5f,  0.5f, 0.0f },
+								  { -0.5f,  0.5f, 0.0f} };
+	const Vector2<float> textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	
 
 	Renderer2D* Renderer2D::instance = nullptr;
-	Transform transform = Transform();
 
 	void Renderer2D::Init()
 	{
@@ -68,41 +74,52 @@ namespace Hazard {
 		for (uint32_t i = 0; i < MaxTextureSlots; i++) {
 			samplers[i] = i;
 		}
-
 		shader->Bind();
 		shader->SetUniform("textures", samplers, MaxTextureSlots);
 	}
 
 	bool Renderer2D::BeginScene(CameraComponent* sceneCamera) {
-		return sceneCamera != nullptr;
+		if (sceneCamera == nullptr) 
+			return false;
+		RenderEngine::Instance->SetSceneCamera(sceneCamera);
+		return true;
+
 	}
 	void Renderer2D::BeginBatch()
 	{
-		PROFILE_FN_NAMED("Hazard::Renderer2D batching")
+		PROFILE_FN();
 		instance->batchData->indexCount = 0;
 		batchData->vertexBufferPtr = batchData->vertexBuffer;
-
 		shader->SetUniform("viewProjection", RenderEngine::Instance->sceneCamera->GetViewProjection());
-		shader->SetUniform("transform", Transform::AsMat4(transform));
+		PROFILE_FN_END();
 	}
 	void Renderer2D::EndBatch()
 	{
+		PROFILE_FN();
 		GLsizeiptr size = (uint32_t)((uint8_t*)batchData->vertexBufferPtr - (uint8_t*)batchData->vertexBuffer);
 		batchData->VBO->SetData(batchData->vertexBuffer, size);
+		RenderEngine::Instance->stats.batches++;
 
-		PROFILE_FN_END()
+		PROFILE_FN_END();
 	}
 	void Renderer2D::DrawBatch()
 	{
 		if (batchData->indexCount == 0) return;
-		PROFILE_FN()
+		PROFILE_FN();
 		batchData->VAO->EnableAll();
 
 		for (int i = 0; i < batchData->textureIndex; i++) {
 			batchData->textures[i]->Bind(i);
 		}
+
 		RenderEngine::Draw(batchData->VAO, batchData->indexCount);
-		PROFILE_FN_END()
+		PROFILE_FN_END();
+	}
+	void Renderer2D::NextBatch()
+	{
+		EndBatch();
+		DrawBatch();
+		BeginBatch();
 	}
 	void Renderer2D::EndScene() 
 	{
@@ -110,64 +127,45 @@ namespace Hazard {
 	}
 	void Renderer2D::Render(Scene* scene)
 	{
+		//Timer timer;
 		PROFILE_FN();
 		if (!BeginScene(scene->sceneCamera)) 
 			return;
-
+		BeginBatch();
 		for (Entity* entity : scene->GetChildEntities()) {
-			if (!entity->HasComponent<Transform>()) 
-				continue;
-			transform = *entity->GetComponent<Transform>();
-
-			BeginBatch();
 			RenderEntity(entity);	
-			EndBatch();
-			DrawBatch();
 		}
+		EndBatch();
+		DrawBatch();
 		EndScene();
 		PROFILE_FN_END();
 	}
-	void Renderer2D::DrawQuad(Vector3<float> position, Vector3<float> size, Color color, const char* texture)
+	void Renderer2D::DrawQuad(Transform transform, Color color, const char* texture)
 	{
-		if (instance->batchData->indexCount >= MaxIndices) {
-
-			instance->EndBatch();
-			instance->DrawBatch();
-			instance->BeginBatch();
-		}
-
-		float id = instance->GetTextureSlot(texture);
-		instance->batchData->vertexBufferPtr->position = { position.x, position.y, position.z };
-		instance->batchData->vertexBufferPtr->texCoord = { 0, 0 };
-		instance->batchData->vertexBufferPtr->color = color;
-		instance->batchData->vertexBufferPtr->textureIndex = id;
-		instance->batchData->vertexBufferPtr++;
-
-		instance->batchData->vertexBufferPtr->position = { position.x + size.x, position.y, position.z };
-		instance->batchData->vertexBufferPtr->texCoord = { 1, 0 };
-		instance->batchData->vertexBufferPtr->color = color;
-		instance->batchData->vertexBufferPtr->textureIndex = id;
-		instance->batchData->vertexBufferPtr++;
-
-		instance->batchData->vertexBufferPtr->position = { position.x + size.x, position.y + size.y, position.z };
-		instance->batchData->vertexBufferPtr->texCoord = { 1, 1 };
-		instance->batchData->vertexBufferPtr->color = color;
-		instance->batchData->vertexBufferPtr->textureIndex = id;
-		instance->batchData->vertexBufferPtr++;
-
-		instance->batchData->vertexBufferPtr->position = { position.x, position.y + size.y, position.z };
-		instance->batchData->vertexBufferPtr->texCoord = { 0, 1 };
-		instance->batchData->vertexBufferPtr->color = color;
-		instance->batchData->vertexBufferPtr->textureIndex = id;
-		instance->batchData->vertexBufferPtr++;
-
-		instance->batchData->indexCount += 6;
-
-		RenderEngine::Instance->stats->quads++;
+		instance->PushQuad(Transform::AsMat4(transform) , color, texture);
 	}
 	void Renderer2D::Resize(float w, float h)
 	{
 
+	}
+	void Renderer2D::PushQuad(glm::mat4 transformMatrix, Color color, const char* texture)
+	{
+		if (batchData->indexCount >= MaxIndices)
+			NextBatch();
+
+		constexpr size_t quadVertexCount = 4;
+		float id = GetTextureSlot(texture);
+
+		for (uint32_t i = 0; i < quadVertexCount; i++) {
+
+			batchData->vertexBufferPtr->position = transformMatrix * glm::vec4(quadVertexPos[i].x, quadVertexPos[i].y, quadVertexPos[i].z, 1.0f);
+			batchData->vertexBufferPtr->texCoord = textureCoords[i];
+			batchData->vertexBufferPtr->color = color;
+			batchData->vertexBufferPtr->textureIndex = id;
+			batchData->vertexBufferPtr++;
+		}
+		batchData->indexCount += 6;
+		RenderEngine::Instance->stats.quads++;
 	}
 	void Renderer2D::RenderEntity(Entity* entity) {
 		for (Component* component : entity->GetComponents()) {

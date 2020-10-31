@@ -29,6 +29,7 @@ namespace Hazard {
 		if(activeScene != nullptr)
 			activeScene->Flush();
 		activeScene = scene;
+		activeScene->Awake();
 		HZR_CORE_INFO("Activating scene " + scene->GetName());
 		
 	}
