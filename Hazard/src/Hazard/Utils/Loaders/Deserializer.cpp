@@ -46,7 +46,7 @@ namespace Hazard {
 			std::string key = kv.first.as<std::string>();
 			YAML::Node value = kv.second.as<YAML::Node>();
 
-			if (key == "Transform") component = new Transform();
+			if (key == "Transform") component = new TransformComponent();
 			if (key == "SpriteRenderer") component = new SpriteRenderer();
 			if (key == "CameraComponent") component = new CameraComponent();
 			if (key == "BatchRendererComponent") component = new BatchRendererComponent();

@@ -6,6 +6,8 @@
 class NewProject : public Layer {
 public:
 	NewProject();
+	~NewProject() override;
+
 	bool OnEnabled() override;
 	void Render() override;
 	std::string MenuPlacement() { return "File"; }

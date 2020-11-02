@@ -5,6 +5,12 @@
 static bool vsync;
 Performance::Performance() : Layer("Performance") {}
 
+Performance::~Performance()
+{
+	renderer = nullptr;
+	delete renderer;
+}
+
 bool Performance::OnEnabled()
 {
 	renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();

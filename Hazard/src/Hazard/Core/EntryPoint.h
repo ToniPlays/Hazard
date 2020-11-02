@@ -6,7 +6,7 @@
 #include <windows.h>
 
 
-/*struct MemoryUsage {
+struct MemoryUsage {
 	size_t usedMemory = 0;
 };
 
@@ -21,11 +21,11 @@ void operator delete(void* loc, size_t size) {
 	free(loc);
 }
 
-*/
+
 #ifdef HZR_PLATFORM_WINDOWS
 
 	extern Hazard::Application* Hazard::CreateApplication();
-#ifdef HZR_DEBUG
+#if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
 #pragma comment( linker, "/subsystem:console" )
 	int main()
 #else
@@ -38,6 +38,8 @@ void operator delete(void* loc, size_t size) {
 		Hazard::HazardLoop* hazardLoop = new Hazard::HazardLoop(app);
 		hazardLoop->Run();
 		delete hazardLoop;
+
+		//__debugbreak(); // Aim for 400
 	}
 #else
 #error Unsupported platform

@@ -7,6 +7,10 @@ NewProject::NewProject() : Layer("New project")
 {
 }
 
+NewProject::~NewProject()
+{
+}
+
 bool NewProject::OnEnabled()
 {
 	SetLayerOpen(false);

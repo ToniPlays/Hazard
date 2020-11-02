@@ -23,10 +23,10 @@ namespace Hazard {
 		
 	}
 	void BatchRendererComponent::OnRender() {
-		Transform* transform = parent->GetComponent<Transform>();
+		Transform transform = parent->GetComponent<TransformComponent>()->transform;
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				Renderer2D::DrawQuad(Transform({ float(x), float(y), 0.0f }, Vector3<float>::zero, { 0.8f, 0.8f, 1.0f }), { float(x) / size, 0.8f, float(y) / size, 1.0f }, "res/textures/checker.png");
+				Renderer2D::DrawQuad(Transform({ float(x), float(y), 0.0f }, transform.rotation, transform.scale), { float(x) / size, 0.8f, float(y) / size, 1.0f }, "res/textures/checker.png");
 				//Renderer2D::DrawQuad((Matrix4)*transform, { float(x) / size, 0.8f, float(y) / size, 1.0f });
 			}
 		}

@@ -7,7 +7,7 @@ ComponentRegister::ComponentRegister() : Module("ComponentRegister") {
 }
 bool ComponentRegister::OnEnabled() {
 	components.push_back(ComponentInfo("Transform", [](Entity* entity) { 
-		entity->AddComponent<Transform>(); 
+		entity->AddComponent<TransformComponent>(); 
 	}));
 	components.push_back(ComponentInfo("Camera", [](Entity* entity) {
 		entity->AddComponent<CameraComponent>();
@@ -19,4 +19,8 @@ bool ComponentRegister::OnEnabled() {
 		entity->AddComponent<BatchRendererComponent>();
 		}));
 	return true;
+}
+
+void ComponentRegister::OnDestroy()
+{
 }

@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "RenderEngine.h"
 #include "Hazard/Modules/Scene/SceneManager.h"
-
+#include "Platform/Rendering/OpenGL/Textures/OpenGLSkybox.h"
 
 
 namespace Hazard {
@@ -24,7 +24,6 @@ namespace Hazard {
 
 	RenderEngine::~RenderEngine()
 	{
-		
 	}
 
 	bool RenderEngine::OnEnabled()
@@ -42,6 +41,7 @@ namespace Hazard {
 
 		WindowResizeEvent event(window->GetWidth(), window->GetHeight());
 		OnResized(event);
+		renderTexture->Unbind();
 
 		return true;
 	}
@@ -56,9 +56,12 @@ namespace Hazard {
 	void RenderEngine::Render()
 	{
 		PROFILE_FN();
-		//if (window->IsMinimized()) return;
+		if (window->IsMinimized()) return;
+
+
 		if (sceneCamera != nullptr) window->OnUpdate(sceneCamera->clearColor);
 		else window->OnUpdate();
+
 
 		SceneRender();
 		PROFILE_FN_END();
@@ -71,7 +74,6 @@ namespace Hazard {
 		stats.quads = 0;
 		stats.indices = 0;
 		stats.batches = 0;
-
 		renderTexture->Bind();
 
 		Scene* scene = ModuleHandler::GetModule<SceneManager>()->GetActiveScene();
@@ -79,12 +81,15 @@ namespace Hazard {
 
 		if (sceneCamera != nullptr) 
 		{
-			sceneCamera->RecalculateViewMatrix();
+
 			window->GetContext()->ClearFrame(sceneCamera->clearColor);
+			sceneCamera->RecalculateViewMatrix();
 			renderer2D.Render(scene);
+			sceneCamera->DrawBackground();
 
 		}
 		else window->GetContext()->ClearFrame();
+
 		renderTexture->Unbind();
 
 		PROFILE_FN_END();
@@ -113,6 +118,14 @@ namespace Hazard {
 		if (sceneCamera == camera) return;
 		camera->RecalculateViewMatrix();
 		sceneCamera = camera;
+	}
+
+	void RenderEngine::OnDestroy()
+	{
+		delete currentShader;
+		delete renderTexture;
+		delete sceneCamera;
+		window.reset();
 	}
 
 	void RenderEngine::CheckError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)

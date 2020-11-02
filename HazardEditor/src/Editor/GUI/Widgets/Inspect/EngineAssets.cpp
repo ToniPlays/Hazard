@@ -19,6 +19,10 @@ EngineAssets::EngineAssets() : Layer("Engine assets")
 
 }
 
+EngineAssets::~EngineAssets()
+{
+}
+
 void EngineAssets::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;

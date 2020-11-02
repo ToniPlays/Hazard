@@ -7,7 +7,7 @@
 
 namespace Hazard {
 
-	static const uint32_t MaxQuads = 15000;
+	static const uint32_t MaxQuads = 25000;
 	static const uint32_t MaxVertices = MaxQuads * 4;
 	static const uint32_t MaxIndices = MaxQuads * 6;
 	static const short MaxTextureSlots = 16;
@@ -31,6 +31,7 @@ namespace Hazard {
 	public:
 
 		Renderer2D() {}
+		~Renderer2D();
 		void Init();
 
 		bool BeginScene(CameraComponent* sceneCamera);
@@ -38,7 +39,10 @@ namespace Hazard {
 
 		void Render(Scene* scene);
 		void Resize(float w, float h);
+		void OnDestroy();
+
 		static void DrawQuad(Transform transform, Color color = Color::FromHex("#FFFFFF"), const char* texture = "");
+
 	private:
 		void RenderEntity(Entity* entity);
 
@@ -47,7 +51,7 @@ namespace Hazard {
 		void DrawBatch();
 		void NextBatch();
 
-		void PushQuad(glm::mat4 transformMatrix, Color color, const char* texture);
+		void PushQuad(glm::mat4 transformMatrix, Color& color, const char* texture);
 		uint8_t GetTextureSlot(const char* texture);
 		static Renderer2D* instance;
 		BatchData* batchData;

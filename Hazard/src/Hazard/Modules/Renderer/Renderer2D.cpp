@@ -19,11 +19,15 @@ namespace Hazard {
 
 	Renderer2D* Renderer2D::instance = nullptr;
 
+	Renderer2D::~Renderer2D()
+	{
+		OnDestroy();
+	}
+
 	void Renderer2D::Init()
 	{
 		if (Renderer2D::instance != nullptr) 
 			delete Renderer2D::instance;
-
 
 		Renderer2D::instance = this;
 
@@ -78,6 +82,10 @@ namespace Hazard {
 		shader->SetUniform("textures", samplers, MaxTextureSlots);
 	}
 
+	void Renderer2D::OnDestroy() {
+		
+	}
+
 	bool Renderer2D::BeginScene(CameraComponent* sceneCamera) {
 		if (sceneCamera == nullptr) 
 			return false;
@@ -88,8 +96,10 @@ namespace Hazard {
 	void Renderer2D::BeginBatch()
 	{
 		PROFILE_FN();
+		batchData->VAO->Bind();
 		instance->batchData->indexCount = 0;
 		batchData->vertexBufferPtr = batchData->vertexBuffer;
+		shader->Bind();
 		shader->SetUniform("viewProjection", RenderEngine::Instance->sceneCamera->GetViewProjection());
 		PROFILE_FN_END();
 	}
@@ -106,7 +116,6 @@ namespace Hazard {
 	{
 		if (batchData->indexCount == 0) return;
 		PROFILE_FN();
-		batchData->VAO->EnableAll();
 
 		for (int i = 0; i < batchData->textureIndex; i++) {
 			batchData->textures[i]->Bind(i);
@@ -127,7 +136,6 @@ namespace Hazard {
 	}
 	void Renderer2D::Render(Scene* scene)
 	{
-		//Timer timer;
 		PROFILE_FN();
 		if (!BeginScene(scene->sceneCamera)) 
 			return;
@@ -148,7 +156,7 @@ namespace Hazard {
 	{
 
 	}
-	void Renderer2D::PushQuad(glm::mat4 transformMatrix, Color color, const char* texture)
+	void Renderer2D::PushQuad(glm::mat4 transformMatrix, Color& color, const char* texture)
 	{
 		if (batchData->indexCount >= MaxIndices)
 			NextBatch();

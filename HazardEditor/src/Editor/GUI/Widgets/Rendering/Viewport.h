@@ -5,6 +5,8 @@
 class Viewport : public Layer {
 public:
 	Viewport();
+	~Viewport();
+
 	void Render() override;
 	bool OnEnabled() override;
 	std::string MenuPlacement() { return "View/General"; }

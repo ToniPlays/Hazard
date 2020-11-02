@@ -10,11 +10,12 @@ namespace Hazard {
 	class HAZARD_API TransformComponent : public Component {
 
 	public:
-		TransformComponent(Transform* transform = new Transform());
+		TransformComponent();
+		~TransformComponent();
 
 		void SerializeComponent(YAML::Emitter& out) override;
 		void DeserializeComponent(YAML::Node in) override;
 
-		Transform* transform;
+		Transform transform;
 	};
 }

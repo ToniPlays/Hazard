@@ -152,6 +152,7 @@ namespace Hazard {
 
 	WindowsWindow::~WindowsWindow() {
 
+		delete context;
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}

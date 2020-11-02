@@ -82,6 +82,22 @@ namespace Hazard {
 		shaders.push_back(shader);
 	}
 	
+	AssetManager::AssetManager()
+	{
+
+	}
+
+	AssetManager::~AssetManager()
+	{
+		for (TextureData* data : textures) {
+			for (Texture* texture : data->textures) {
+				delete texture;
+			}
+		}
+		for (Shader* shader : shaders) 
+			delete shader;
+	}
+
 	TextureData* AssetManager::GetTextureNode(TextureType type)
 	{
 		for (TextureData* data : textures) {

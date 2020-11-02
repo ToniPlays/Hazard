@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 #include "Hazard/Utils/Maths/Vector/Matrix4.h"
-
+#include "Hazard/Modules/Renderer/Textures/Skybox.h"
+#include "Hazard/Modules/Renderer/Shaders/Shader.h"
 
 namespace Hazard {
 	enum class CameraType {
@@ -28,6 +29,8 @@ namespace Hazard {
 		}
 		void RecalculateViewMatrix();
 		
+		void DrawBackground();
+
 		void SerializeComponent(YAML::Emitter& out) override;
 		void DeserializeComponent(YAML::Node in) override;
 		void PostDeserialize() override;
@@ -36,5 +39,8 @@ namespace Hazard {
 		glm::mat4 GetViewProjection() { return viewProjection; }
 	private:
 		glm::mat4 viewProjection;
+
+		Skybox* skybox;
+		Shader* skyboxShader;
 	};
 }

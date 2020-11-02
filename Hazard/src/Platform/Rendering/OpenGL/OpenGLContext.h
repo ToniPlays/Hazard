@@ -12,6 +12,7 @@ namespace Hazard {
 	class HAZARD_API OpenGLContext : public GraphicsContext {
 	public:
 		OpenGLContext(Window* window, WindowProps* props);
+		~OpenGLContext();
 
 		void Init() const override;
 		void ClearFrame(Color clearColor) const override;

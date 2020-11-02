@@ -14,6 +14,10 @@ Console::Console() : Layer("Console")
 
 }
 
+Console::~Console()
+{
+}
+
 
 void Console::Render()
 {

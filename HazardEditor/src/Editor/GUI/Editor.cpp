@@ -23,7 +23,10 @@ Editor::Editor() : Module("EditorGUI")
 }
 Editor::~Editor()
 {
-
+	for (Layer* layer : layers) {
+		layer->OnDisabled();
+		delete layer;
+	}
 }
 bool Editor::OnEnabled() {
 	{

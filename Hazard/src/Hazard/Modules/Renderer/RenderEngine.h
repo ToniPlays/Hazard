@@ -40,6 +40,7 @@ namespace Hazard {
 		void OnViewResized(uint32_t width, uint32_t height);
 		void SetSceneCamera(CameraComponent* camera);
 
+		void OnDestroy() override;
 
 		Window& GetWindow() { return *window; }
 		RendererAPI& GetAPI() { return *api; };

@@ -22,12 +22,12 @@ namespace Hazard {
 
 		std::function<void(Event&)> EventCallback;
 
-		WindowProps(const std::string& title = "Hazard",
+		WindowProps(const char* title = "Hazard",
 			const char* platform = "Undefined platform",
 			std::string renderer = "Undefined renderer",
 			unsigned int width = 1280,
 			unsigned int height = 720, bool maxim = true)
-			: Title(title.c_str()), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
+			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
 	};
 
 	class HAZARD_API Window {

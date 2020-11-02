@@ -6,9 +6,16 @@ using namespace Hazard;
 
 Profiler::Profiler() : Layer("Profiler") {}
 
+Profiler::~Profiler()
+{
+	delete name;
+	logger = nullptr;
+	delete logger;
+}
+
 bool Profiler::OnEnabled()
 {
-	Logger* logger = ModuleHandler::GetModule<Logger>();
+	logger = ModuleHandler::GetModule<Logger>();
 	return logger != nullptr;
 }
 

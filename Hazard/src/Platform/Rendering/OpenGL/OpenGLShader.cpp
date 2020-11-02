@@ -45,7 +45,6 @@ namespace Hazard {
 		if (locations.count(name) > 0) {
 			return locations[name];
 		}
-
 		GLint location = glGetUniformLocation(program, name.c_str());
 		locations[name] = location;
 		return location;
@@ -88,13 +87,10 @@ namespace Hazard {
 	{
 		SetUniform(name, value ? 1 : 0);
 	}
-
-
 	void OpenGLShader::SetUniform(const std::string& name, const glm::mat4& value)
 	{
 		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
-
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
 	{
@@ -175,8 +171,8 @@ namespace Hazard {
 		}
 		for (auto id : shaderId)
 		{
-			//glDetachShader(program, id);
-			//glDeleteShader(id);
+			glDetachShader(program, id);
+			glDeleteShader(id);
 		}
 	}
 }

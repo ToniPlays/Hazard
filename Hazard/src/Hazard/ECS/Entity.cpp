@@ -24,15 +24,15 @@ namespace Hazard {
 	
 	Entity::~Entity()
 	{
-		for (Entity* child : childs) {
-			RemoveEntity(child);
-			delete child;
-		}
 		for (Component* component : components) {
 			RemoveComponent(component);
 			delete component;
 		}
 
+		for (Entity* child : childs) {
+			RemoveEntity(child);
+			delete child;
+		}
 	}
 
 	void Entity::Awake()
@@ -54,6 +54,7 @@ namespace Hazard {
 			components.erase(it);
 			component->OnDetach();
 			ModuleHandler::GetModule<SceneManager>()->GetActiveScene()->OnComponentRemoved(component);
+			delete component;
 		}
 	}
 

@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "HazardLoop.h"
 #include "GLFW/glfw3.h"
+#include "Hazard/Utils/Timer.h"
 
 namespace Hazard {
 
@@ -31,6 +32,7 @@ namespace Hazard {
 	HazardLoop::~HazardLoop()
 	{
 		current->OnClose();
+		moduleHandler.OnClose();
 		delete current;
 	}
 
@@ -44,7 +46,6 @@ namespace Hazard {
 
 		double lastTime = 0;
 		while (!shouldClose) {
-
 			PROFILE_FN();
 
 			double time = glfwGetTime();

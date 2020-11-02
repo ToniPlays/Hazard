@@ -14,6 +14,11 @@ Inspector::Inspector() : Layer("Properties")
 
 }
 
+Inspector::~Inspector()
+{
+	delete context;
+}
+
 void Inspector::Render()
 {
 	if (!Panel::Begin(name, isLayerOpen)) return;

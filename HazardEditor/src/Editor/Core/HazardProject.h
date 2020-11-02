@@ -7,6 +7,7 @@ class HazardProject {
 	
 public:
 	HazardProject();
+	~HazardProject();
 
 	std::string path;
 	std::string name;

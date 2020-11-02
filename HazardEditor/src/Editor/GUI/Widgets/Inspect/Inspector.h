@@ -8,6 +8,8 @@ class Inspector : public Layer {
 
 public:
 	Inspector();
+	~Inspector() override;
+
 	void Render() override;
 	void OpenContext(Entity* entity);
 	std::string MenuPlacement() { return "View/General"; }

@@ -34,6 +34,9 @@
     <Filter Include="src\Editor\GUI\Widgets">
       <UniqueIdentifier>{BDB2A4F3-A9AC-CD45-9219-64567EB233B2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\GUI\Widgets\Assets">
+      <UniqueIdentifier>{FFE2B4E7-6BFB-9B11-34A8-2BABA07F30AB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Editor\GUI\Widgets\Inspect">
       <UniqueIdentifier>{82247F3A-6E4A-49A1-5790-CE6C43556E6D}</UniqueIdentifier>
     </Filter>
@@ -55,6 +58,9 @@
       <Filter>src\Editor\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\Core\HazardEditor.h">
+      <Filter>src\Editor\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Core\HazardProject.h">
       <Filter>src\Editor\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\All.h">
@@ -87,6 +93,9 @@
     <ClInclude Include="src\Editor\GUI\Layers\Layer.h">
       <Filter>src\Editor\GUI\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\Assets\NewProject.h">
+      <Filter>src\Editor\GUI\Widgets\Assets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.h">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
     </ClInclude>
@@ -114,8 +123,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Core\HazardProject.h" />
-    <ClInclude Include="src\Editor\GUI\Widgets\Assets\NewProject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -131,6 +138,9 @@
       <Filter>src\Editor\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\Core\HazardEditor.cpp">
+      <Filter>src\Editor\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\Core\HazardProject.cpp">
       <Filter>src\Editor\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Editor.cpp">
@@ -157,6 +167,9 @@
     <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
       <Filter>src\Editor\GUI\Items</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\Assets\NewProject.cpp">
+      <Filter>src\Editor\GUI\Widgets\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\EngineAssets.cpp">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
     </ClCompile>
@@ -181,7 +194,8 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Core\HazardProject.cpp" />
-    <ClCompile Include="src\Editor\GUI\Widgets\Assets\NewProject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\skyboxShader.glsl" />
   </ItemGroup>
 </Project>

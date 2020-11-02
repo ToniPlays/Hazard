@@ -16,6 +16,13 @@ namespace Hazard {
 		Init();
 	}
 
+	OpenGLContext::~OpenGLContext()
+	{
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_DEBUG_OUTPUT);
+		glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
+
 	void OpenGLContext::Init() const
 	{
 		glfwMakeContextCurrent(window);
@@ -70,7 +77,7 @@ namespace Hazard {
 
 	void OpenGLContext::DrawIndexed(VertexArray* vertexArray, uint32_t indices)
 	{
-		vertexArray->Bind();
+		vertexArray->EnableAll();
 		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
 	}
 

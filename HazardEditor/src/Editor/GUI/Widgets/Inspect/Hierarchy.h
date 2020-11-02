@@ -8,7 +8,7 @@ class Hierarchy : public Layer {
 
 public:
 	Hierarchy();
-	~Hierarchy();
+	~Hierarchy() override;
 	bool OnEnabled() override;
 	void Render() override;
 

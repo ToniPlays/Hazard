@@ -8,7 +8,15 @@
 
 namespace Hazard {
 	
-	Scene::Scene(char* name) : Entity(name) {};
+	Scene::Scene(char* name) : Entity(name) {}
+	Scene::~Scene()
+	{
+		std::cout << "Cleaning scene \n";
+		Flush();
+
+		for (Entity* entity : GetChildEntities())
+			delete entity;
+	};
 
 	void Scene::Awake()
 	{
@@ -22,7 +30,6 @@ namespace Hazard {
 		HZR_CORE_INFO("Flushing scene " + std::string(name));
 		for (Entity* entity : GetChildEntities()) {
 			RemoveEntity(entity);
-			delete entity;
 		}
 	}
 	void Scene::OnComponentAdded(Component* component) {

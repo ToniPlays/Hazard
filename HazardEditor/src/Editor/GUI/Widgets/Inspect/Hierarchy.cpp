@@ -9,8 +9,8 @@ Hierarchy::Hierarchy() : Layer("Hierarchy")
 {
 	
 }
-Hierarchy::~Hierarchy() {
-	
+Hierarchy::~Hierarchy() 
+{
 }
 bool Hierarchy::OnEnabled() {
 	return true;

@@ -37,6 +37,10 @@ namespace Hazard {
 
 	class HAZARD_API AssetManager {
 		public:
+
+			AssetManager();
+			~AssetManager();
+
 			template<typename T>
 			static T* GetAsset(const char* file);
 			template<typename T>

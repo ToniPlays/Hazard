@@ -13,14 +13,21 @@ namespace Hazard {
 			LoadEmptyScene();
 		else ActivateScene(scene);
 	}
+	SceneManager::~SceneManager()
+	{
+		OnDestroy();
+	}
 	void SceneManager::LoadScene(std::string& path) {
+
 		Scene* tempScene = GetActiveScene();
 		activeScene = new Scene();
 		HZR_CORE_INFO("Loading scene");
+
 		if (Deserializer::DeserializeScene(path, *activeScene)) {
 			Scene* loadedScene = activeScene;
 			activeScene = tempScene;
 			ActivateScene(loadedScene);
+			delete tempScene;
 			return;
 		}
 		activeScene = tempScene;
@@ -28,10 +35,16 @@ namespace Hazard {
 	void SceneManager::ActivateScene(Scene* scene) {
 		if(activeScene != nullptr)
 			activeScene->Flush();
+
 		activeScene = scene;
 		activeScene->Awake();
+
 		HZR_CORE_INFO("Activating scene " + scene->GetName());
 		
+	}
+	void SceneManager::OnDestroy()
+	{
+		delete activeScene;
 	}
 	void SceneManager::LoadEmptyScene() {
 
@@ -40,5 +53,6 @@ namespace Hazard {
 		empty->AddEntity(new Entity("Camera entity"));
 
 		ActivateScene(empty);
+		delete empty;
 	}
 }

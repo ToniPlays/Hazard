@@ -10,6 +10,8 @@ namespace Hazard {
 		Component(std::string _name, Entity* parent = nullptr) : name(_name) {
 			this->parent = parent;
 		};
+		virtual ~Component() {};
+
 		virtual void OnAttach() {};
 		virtual void OnDetach() {};
 		virtual void OnRender() {};

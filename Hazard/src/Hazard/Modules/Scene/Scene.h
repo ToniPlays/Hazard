@@ -12,15 +12,15 @@ namespace Hazard {
 	public:
 
 		Scene(char* = "Empty scene");
-		~Scene() {};
+		~Scene();
 
 		void Awake() override;
 
 		void Flush();
 		void OnComponentAdded(Component* component);
 		void OnComponentRemoved(Component* component);
-		std::string GetName() { return name; }
-		void SetSceneName(std::string name) { this->name = name; }
+		std::string& GetName() { return name; }
+		void SetSceneName(std::string& name) { this->name = name; }
 		CameraComponent* sceneCamera = nullptr;
 
 	private:

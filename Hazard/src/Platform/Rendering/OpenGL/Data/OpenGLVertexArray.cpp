@@ -49,6 +49,7 @@ namespace Hazard {
 	void OpenGLVertexArray::EnableAll(uint32_t index) const
 	{
 		Bind();
+		vertexBuffers.at(index)->Bind();
 		const BufferLayout& layout = vertexBuffers.at(index)->GetLayout();
 		uint32_t offset = 0;
 

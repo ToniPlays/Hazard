@@ -9,10 +9,12 @@ namespace Hazard {
 	public:
 		SceneManager();
 		SceneManager(Scene* scene);
+		~SceneManager();
 
 		void LoadScene(std::string& path);
 		void LoadEmptyScene();
 		void ActivateScene(Scene* scene);
+		void OnDestroy() override;
 
 		Scene* GetActiveScene() { return activeScene; }
 	private:

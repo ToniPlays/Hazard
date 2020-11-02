@@ -17,6 +17,13 @@ namespace Hazard {
 	ProfiledFn* Logger::profiledRoot = new ProfiledFn("Root", nullptr, std::chrono::time_point<std::chrono::high_resolution_clock>());
 	ProfiledFn* Logger::profiled = profiledRoot;
 
+	Logger::~Logger()
+	{
+		engineLogs.clear();
+		delete profiled;
+		delete profiledRoot;
+	}
+
 	bool Logger::OnEnabled()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");

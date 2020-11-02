@@ -9,6 +9,12 @@ Viewport::Viewport() : Layer("Viewport")
 
 }
 
+Viewport::~Viewport()
+{
+	renderer = nullptr;
+	delete renderer;
+}
+
 bool Viewport::OnEnabled()
 {
 	renderer = Hazard::ModuleHandler::GetModule<Hazard::RenderEngine>();

@@ -12,7 +12,7 @@ namespace Hazard {
 	ModuleHandler::ModuleHandler()
 	{
 		//TEMP
-#if !defined(HZR_RELEASE) && !defined(HZR_GAME_ONLY)
+#if !defined(HZR_RELEASE)
 		PushModule(new Logger());
 #endif // !HZR_GAME_ONLY || HZR_RELEASE
 
@@ -21,7 +21,6 @@ namespace Hazard {
 	}
 	ModuleHandler::~ModuleHandler()
 	{
-		OnClose();
 	}
 
 	void ModuleHandler::PushModule(Module* module)
@@ -99,8 +98,12 @@ namespace Hazard {
 
 	void ModuleHandler::OnClose()
 	{
+
+		std::cout << modules.size() << std::endl;
 		for (Module* module : modules) {
-			delete module;
+			module->OnDestroy();
 		}
+		modules.clear();
+		std::cout << modules.size() << std::endl;
 	}
 }

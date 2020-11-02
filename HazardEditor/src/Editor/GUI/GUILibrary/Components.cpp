@@ -54,14 +54,14 @@ template<typename T>
 void Draw(Entity* entity, T* component) {};
 
 template<>
-inline void Draw<Transform>(Entity* entity, Transform* transform) {
-	Components::DrawComponent<Transform>(entity, [](Transform* component) {
+inline void Draw<TransformComponent>(Entity* entity, TransformComponent* transform) {
+	Components::DrawComponent<TransformComponent>(entity, [](TransformComponent* component) {
 
-		VectorControl::DrawVec3("Position", component->position);
-		VectorControl::DrawVec3("Rotation", component->rotation);
-		VectorControl::DrawVec3("Scale", component->scale, 1.0f);
+		VectorControl::DrawVec3("Position", component->transform.position);
+		VectorControl::DrawVec3("Rotation", component->transform.rotation);
+		VectorControl::DrawVec3("Scale", component->transform.scale, 1.0f);
 
-	}, [](Transform* component, Entity* entity) -> bool {
+	}, [](TransformComponent* component, Entity* entity) -> bool {
 		if (ImGui::MenuItem("Remove component")) {
 			entity->RemoveComponent(component);
 			return true;
@@ -161,8 +161,8 @@ inline void Draw<BatchRendererComponent>(Entity* entity, BatchRendererComponent*
 }
 
 void Components::DrawComponent(Entity* entity, Component* component) {
-	if (dynamic_cast<Transform*>(component)) {
-		Draw<Transform>(entity, (Transform*)component);
+	if (dynamic_cast<TransformComponent*>(component)) {
+		Draw<TransformComponent>(entity, (TransformComponent*)component);
 	}
 	else if (dynamic_cast<CameraComponent*>(component)) {
 		Draw<CameraComponent>(entity, (CameraComponent*)component);

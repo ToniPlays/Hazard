@@ -12,6 +12,10 @@ HazardProject::HazardProject()
 
 }
 
+HazardProject::~HazardProject()
+{
+}
+
 HazardProject* HazardProject::LoadProject(std::string& path) {
 	std::ifstream stream(path);
 	std::stringstream ss;

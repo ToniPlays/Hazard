@@ -9,7 +9,7 @@
 
 namespace Hazard {
 	
-	class Transform : public Component {
+	class Transform {
 	public:
 		Vector3<float> position, rotation, scale;
 
@@ -17,10 +17,8 @@ namespace Hazard {
 		Transform(Vector3<float> position = Vector3<float>::zero, Vector3<float> rotation = Vector3<float>::zero, Vector3<float> scale = Vector3<float>::one);
 
 		static glm::mat4 Transform::AsMat4(Transform t);
+		static glm::mat4 Transform::AsMat4NoScale(Transform t);
 		
-		void SerializeComponent(YAML::Emitter& out) override;
-		void DeserializeComponent(YAML::Node in);
-
 	};
 }
 

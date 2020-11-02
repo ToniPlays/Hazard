@@ -32,7 +32,7 @@ namespace Hazard {
 	class HAZARD_API Logger : public Module {
 	public:
 		Logger() : Module("Logger") {};
-		~Logger() {};
+		~Logger();
 		bool OnEnabled() override;
 		bool OnDisabled() override;
 
