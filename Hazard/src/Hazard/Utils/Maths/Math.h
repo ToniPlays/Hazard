@@ -3,8 +3,6 @@
 #include <math.h>
 #include <numeric>
 
-#include "Vector/Vector2.h"
-
 #include <glm/glm.hpp>
 
 namespace Hazard {
@@ -74,9 +72,9 @@ namespace Hazard {
 		}
 
 		template<typename T>
-		static Vector2<double> AspectRatio(T width, T height) {
+		static glm::vec2 AspectRatio(T width, T height) {
 			height = (height / width) * width;
-			return Vector2<double>(width / 100.0f, height / 100.0f);
+			return glm::vec2<double>(width / 100.0f, height / 100.0f);
 		}
 	};
 }

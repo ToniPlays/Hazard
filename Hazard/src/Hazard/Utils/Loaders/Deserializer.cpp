@@ -1,19 +1,11 @@
 #pragma once
 #include <hzrpch.h>
 #include "Deserializer.h"
-#include "Hazard/ECS/Components/TransformComponent.h"
-#include "Hazard/ECS/Components/SpriteRenderer.h"
-#include "Hazard/ECS/Components/CameraComponent.h"
-#include "Hazard/ECS/Components/BatchRendererComponent.h"
 
 namespace Hazard {
 
-	void RunPostDeserialize(Entity* entity) {
-		for (Component* c : entity->GetComponents()) c->PostDeserialize();
-		for (Entity* child : entity->GetChildEntities()) RunPostDeserialize(child);
-	}
 
-	bool Deserializer::DeserializeScene(const std::string& file, Scene& scene) {
+	/*bool Deserializer::DeserializeScene(const std::string& file) {
 		std::ifstream stream(file);
 		std::stringstream ss;
 
@@ -23,13 +15,13 @@ namespace Hazard {
 		if (!root["HazardScene"]) 
 			return false;
 
-		scene.SetSceneName(root["HazardScene"].as<std::string>());
+		//scene.SetSceneName(root["HazardScene"].as<std::string>());
 		if (!root["Entities"])
 			return false;
 		
 		for (YAML::Node ent : root["Entities"]) {
-			Entity* entity = Deserializer::DeserializeEntity(ent);
-			scene.AddEntity(entity);
+			//Entity* entity = Deserializer::DeserializeEntity(ent);
+			//scene.AddEntity(entity);
 		}
 		
 		for (Entity* entity : scene.GetChildEntities())
@@ -74,5 +66,5 @@ namespace Hazard {
 		color.b = in[2].as<float>();
 		color.a = in[3].as<float>();
 		return color;
-	}
+	}*/
 }

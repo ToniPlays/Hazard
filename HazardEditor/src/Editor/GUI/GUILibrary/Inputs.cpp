@@ -33,10 +33,10 @@ void Inputs::InputField(std::string& text)
 	}
 }
 
-void Inputs::Texture(Hazard::Texture* texture, Hazard::Vector2<int> size)
+/*void Inputs::Texture(Hazard::Texture* texture, Hazard::Vector2<int> size)
 {
 	ImGui::Image((void*)texture->GetID(), {(float)size.x, (float)size.y }, ImVec2(0, 1), ImVec2(1, 0));
-}
+}*/
 
 Color Inputs::ColorPicker(const char* label, bool &open, Color color)
 {
@@ -110,7 +110,7 @@ bool Inputs::Combo(const char* label, std::vector<std::string> values, std::stri
 
 bool Inputs::Combo(std::string label, std::vector<std::string> values, std::string& selected)
 {
-	return Combo(label, values, selected);
+	return Combo(label.c_str(), values, selected);
 }
 
 void Inputs::BeginColumnRow(const char* label, uint8_t columns)

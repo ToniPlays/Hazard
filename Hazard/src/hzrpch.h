@@ -9,11 +9,8 @@
 #include <stdio.h>
 
 #include "Hazard/Utils/Maths/Time.h"
-#include "Hazard/Utils/Loaders/MeshLoader.h"
 #include "Hazard/Utils/Maths/Color.h"
 
-#include "Hazard/Utils/Maths/Vector/Vector2.h"
-#include "Hazard/Utils/Maths/Vector/Vector3.h"
 #include "Hazard/Utils/Loaders/File.h"
 
 #include "Hazard/Core/HazardLoop.h"
@@ -23,7 +20,7 @@
 #include "Hazard/Core/Events/MouseEvent.h"
 #include "Hazard/Core/Events/KeyEvent.h"
 
-#include "Hazard/Modules/Logging/Logger.h"
+#include "Hazard/Logging/Logger.h"
 
 
 #if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)

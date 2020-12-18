@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Items/MainMenu.h"
+#include "Widgets/MainMenu.h"
 
 #include "Editor/GUI/Widgets/Assets/NewProject.h"
 

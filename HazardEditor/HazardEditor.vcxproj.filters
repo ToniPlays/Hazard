@@ -16,20 +16,11 @@
     <Filter Include="src\Editor\Core">
       <UniqueIdentifier>{FBE925CC-6775-9390-7086-1685DC90EF90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Editor\Core\Analytics">
-      <UniqueIdentifier>{92D4A226-FE96-D6B0-4747-653DB348AF8E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Editor\GUI">
       <UniqueIdentifier>{571CA4D7-43EA-97DD-2C7E-080418EB7342}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Editor\GUI\GUILibrary">
       <UniqueIdentifier>{405C7F07-AC1E-B391-F5CE-411E61D08B6F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Editor\GUI\Items">
-      <UniqueIdentifier>{088C60FD-F41A-EAC6-9D39-FEC189A7FA6C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Editor\GUI\Layers">
-      <UniqueIdentifier>{368B24AF-A2F7-DFA9-6BEB-7707D7160212}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Editor\GUI\Widgets">
       <UniqueIdentifier>{BDB2A4F3-A9AC-CD45-9219-64567EB233B2}</UniqueIdentifier>
@@ -51,12 +42,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Editor\Core\Analytics\Debug.h">
-      <Filter>src\Editor\Core\Analytics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\Core\ComponentRegister.h">
-      <Filter>src\Editor\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\Core\HazardEditor.h">
       <Filter>src\Editor\Core</Filter>
     </ClInclude>
@@ -68,12 +53,6 @@
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Editor.h">
       <Filter>src\Editor\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\GUILibrary\ComponentView.h">
-      <Filter>src\Editor\GUI\GUILibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\GUILibrary\Components.h">
-      <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\GUILibrary\Inputs.h">
       <Filter>src\Editor\GUI\GUILibrary</Filter>
@@ -87,11 +66,8 @@
     <ClInclude Include="src\Editor\GUI\GUILibrary\VectorControl.h">
       <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Items\MainMenu.h">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Layers\Layer.h">
-      <Filter>src\Editor\GUI\Layers</Filter>
+    <ClInclude Include="src\Editor\GUI\Layer.h">
+      <Filter>src\Editor\GUI</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Assets\NewProject.h">
       <Filter>src\Editor\GUI\Widgets\Assets</Filter>
@@ -104,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Inspect\Inspector.h">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Widgets\MainMenu.h">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\Widgets\Profiling\Console.h">
       <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
@@ -131,12 +110,6 @@
     <ClCompile Include="platform\GLFW\imgui_impl_opengl3.cpp">
       <Filter>platform\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Core\Analytics\Debug.cpp">
-      <Filter>src\Editor\Core\Analytics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\Core\ComponentRegister.cpp">
-      <Filter>src\Editor\Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\Editor\Core\HazardEditor.cpp">
       <Filter>src\Editor\Core</Filter>
     </ClCompile>
@@ -145,12 +118,6 @@
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Editor.cpp">
       <Filter>src\Editor\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\GUI\GUILibrary\ComponentView.cpp">
-      <Filter>src\Editor\GUI\GUILibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\GUI\GUILibrary\Components.cpp">
-      <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\GUILibrary\Inputs.cpp">
       <Filter>src\Editor\GUI\GUILibrary</Filter>
@@ -164,9 +131,6 @@
     <ClCompile Include="src\Editor\GUI\GUILibrary\VectorControl.cpp">
       <Filter>src\Editor\GUI\GUILibrary</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Items\MainMenu.cpp">
-      <Filter>src\Editor\GUI\Items</Filter>
-    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Assets\NewProject.cpp">
       <Filter>src\Editor\GUI\Widgets\Assets</Filter>
     </ClCompile>
@@ -178,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Inspect\Inspector.cpp">
       <Filter>src\Editor\GUI\Widgets\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Widgets\MainMenu.cpp">
+      <Filter>src\Editor\GUI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Widgets\Profiling\Console.cpp">
       <Filter>src\Editor\GUI\Widgets\Profiling</Filter>
@@ -194,8 +161,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\skyboxShader.glsl" />
   </ItemGroup>
 </Project>

@@ -17,10 +17,9 @@ project "yaml-cpp"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	files {	
+	files {
 		"C:/dev/Hazard/vendor/yaml-cpp/src/**.h",
-		"C:/dev/Hazard/vendor/yaml-cpp/src/**.cpp",
-		"C:/dev/Hazard/vendor/yaml-cpp/include/**.h"
+		"C:/dev/Hazard/vendor/yaml-cpp/src/**.cpp"
 	}
 
 	includedirs	{
@@ -141,7 +140,8 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/GLM",
-		"c:/dev/Hazard/Hazard/vendor",
+		"c:/dev/Hazard/Hazard/vendor/stb-image",
+		"c:/dev/Hazard/vendor/entt",
 		"Hazard/src"
 	}
 
@@ -172,19 +172,23 @@ project "Hazard"
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
+		cppdialect "C++17"
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"
 		optimize "On"
+		cppdialect "C++17"
 
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		optimize "On"
+		cppdialect "C++17"
 
 	filter "configurations:Game"
 		defines "HZR_GAME_ONLY"
 		runtime "Release"
 		optimize "on"
+		cppdialect "C++17"
 
 project "HazardEditor"
 	location "HazardEditor"
@@ -212,6 +216,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/GLM",
+		"c:/dev/Hazard/vendor/entt",
 		"HazardEditor/Platform",
 		"HazardEditor/src",
 		"Hazard/src",

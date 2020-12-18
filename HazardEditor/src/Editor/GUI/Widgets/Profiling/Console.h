@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Editor/GUI/Layers/Layer.h"
-#include "Editor/Core/Analytics/Debug.h"
+#include "Editor/GUI/Layer.h"
 
 class Console : public Layer {
 public:

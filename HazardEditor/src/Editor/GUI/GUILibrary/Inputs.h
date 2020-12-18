@@ -6,7 +6,7 @@ class Inputs {
 public:
 	static void ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint32_t buttonFont = 0, uint32_t dragFont = 0);
 	static void InputField(std::string& text);
-	static void Texture(Hazard::Texture* texture, Hazard::Vector2<int> size = { 100, 100});
+	//static void Texture(Hazard::Texture* texture, Hazard::Vector2<int> size = { 100, 100});
 
 
 	static Color ColorPicker(const char* label, bool &open, Color color);

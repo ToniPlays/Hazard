@@ -13,7 +13,7 @@ public:
 
 	void Awake() override;
 	void Update() override;
-	void OnEvent(Hazard::Event& e) override;
+	bool OnEvent(Hazard::Event& e) override;
 	void OnClose() override;
 };
 

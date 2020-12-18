@@ -18,7 +18,7 @@ void VectorControl::DravVec1(const char* label, float& value, float resetValue, 
 	Inputs::EndColumnRow();
 }
 
-void VectorControl::DrawVec2(const char* label, Vector2<float>& vector, float resetValue, float columnWidth)
+void VectorControl::DrawVec2(const char* label, glm::vec2& vector, float resetValue, float columnWidth)
 {
 	Inputs::BeginColumnRow(label, 2);
 
@@ -40,7 +40,7 @@ void VectorControl::DrawVec2(const char* label, Vector2<float>& vector, float re
 	Inputs::EndColumnRow();
 }
 
-void VectorControl::DrawVec3(const char* label, Vector3<float>& vector, float resetValue, float columnWidth)
+void VectorControl::DrawVec3(const char* label, glm::vec3& vector, float resetValue, float columnWidth)
 {
 	Inputs::BeginColumnRow(label, 3);
 

@@ -2,7 +2,7 @@
 #include "Core.h"
 #include "Application.h"
 #include "Events/Event.h"
-#include "Hazard/Modules/ModuleHandler.h"
+#include "Hazard/ModuleHandler.h"
 
 namespace Hazard {
 
@@ -12,16 +12,18 @@ namespace Hazard {
 
 		HazardLoop(Application* app);
 		~HazardLoop();
+
 		void Run();
 		bool OnEvent(Event& e);
 
 		static HazardLoop& GetCurrent() { return *instance; }
 		
 	private:
-		bool shouldClose = false;
+
 		static HazardLoop* instance;
-		bool Close(Event& e);
 		Application* current;
 		ModuleHandler moduleHandler;
+
+		bool Close(Event& e);
 	};
 }

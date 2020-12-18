@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Editor/GUI/Layers/Layer.h"
+#include "Editor/GUI/Layer.h"
+#include "Hazard.h"
 
 class Viewport : public Layer {
 public:
@@ -12,7 +13,9 @@ public:
 	std::string MenuPlacement() { return "View/General"; }
 
 private:
-	Hazard::RenderEngine* renderer;
+
+	RenderEngine* renderer;
+
 	float width = -1.0f, height = -1.0f;
 	static bool ShowLog;
 	static bool ShowWarn;

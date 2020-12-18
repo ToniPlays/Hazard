@@ -5,7 +5,7 @@
 
 namespace Hazard {
 
-	bool Serializer::SerializeScene(const std::string& file, Scene& scene) {
+	/*bool Serializer::SerializeScene(const std::string& file, Scene& scene) {
 
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -37,13 +37,13 @@ namespace Hazard {
 		out << YAML::EndMap; // Entity map
 	}
 
-	void Serializer::Serialize(YAML::Emitter& out, Vector2<float> value)
+	void Serializer::Serialize(YAML::Emitter& out, glm::vec2 value)
 	{
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
 	}
 
-	void Serializer::Serialize(YAML::Emitter& out, Vector3<float> value)
+	void Serializer::Serialize(YAML::Emitter& out, glm::vec2 value)
 	{
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
@@ -52,5 +52,5 @@ namespace Hazard {
 	{
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.r << value.g << value.b << value.a << YAML::EndSeq;
-	}
+	}*/
 }

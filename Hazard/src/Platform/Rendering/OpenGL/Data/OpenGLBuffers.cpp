@@ -4,6 +4,7 @@
 #include "OpenGLBuffers.h"
 
 namespace Hazard {
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{
 		glGenBuffers(1, &BufferID);

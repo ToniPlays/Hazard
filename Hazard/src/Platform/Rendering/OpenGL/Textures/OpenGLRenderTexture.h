@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Modules/Renderer/Textures/RenderTexture.h"
+#include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "glad/glad.h"
 
 namespace Hazard {

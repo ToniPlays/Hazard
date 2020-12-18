@@ -2,9 +2,11 @@
 
 #include <hzrpch.h>
 #include "OpenGLContext.h"
-#include "Hazard/Modules/Renderer/RenderEngine.h"
+#include <glad/glad.h>
 
 namespace Hazard {
+
+	ErrorCallback OpenGLContext::callback;
 
 	GraphicsContext* GraphicsContext::Create(void* window, void* props) {
 		return new OpenGLContext((Window*)window, (WindowProps*)props);
@@ -31,15 +33,15 @@ namespace Hazard {
 			return;
 		};
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-
-		glDebugMessageCallback(RenderEngine::CheckError, nullptr);
+		//glEnable(GL_DEPTH_TEST);
+		//glDepthFunc(GL_LESS);
+		
+		glDebugMessageCallback(OpenGLContext::OnError, nullptr);
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
@@ -48,6 +50,9 @@ namespace Hazard {
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+
+		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0,
+			GL_DEBUG_SEVERITY_NOTIFICATION, -1, "Clearing");
 	}
 
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const
@@ -55,30 +60,26 @@ namespace Hazard {
 		glViewport(x, y, w, h);
 	}
 
-	void OpenGLContext::Draw(VertexArray* vertexArray, uint32_t indices, RenderType type)
+	void OpenGLContext::DrawArray(VertexArray* array) const
 	{
-		vertexArray->Bind();
-		switch (type)
-		{
-		case RenderType::Default:
-			glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
-			break;
-		case RenderType::Points:
-			glPointSize(5.0);
-			glDrawArrays(GL_POINTS, 0, indices);
-			break;
-		case RenderType::Wireframe: 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			break;
-		}
+		array->EnableAll();
+		glDrawElements(GL_TRIANGLES, array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenGLContext::DrawIndexed(VertexArray* vertexArray, uint32_t indices)
+	void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 	{
-		vertexArray->EnableAll();
-		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
+		OpenGLContext::callback = callback;
+		HZR_CORE_WARN(GetVersion() + " added debug callback");
+	}
+
+	void GLAPIENTRY OpenGLContext::OnError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
+	{
+		HZR_CORE_WARN(message);
+
+		if (callback) {
+			ErrorData data(message, type);
+			OpenGLContext::callback(data);
+		}
 	}
 
 	std::string OpenGLContext::GetVersion() const

@@ -1,11 +1,6 @@
 #pragma once
 #include <hzreditor.h>
 #include "HazardEditor.h"
-#include "Analytics/Debug.h"
-#include "HazardProject.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
 
 using namespace Hazard;
 
@@ -22,11 +17,8 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::Awake()
 {
-#ifndef HZR_GAME_ONLY
+	Hazard::ModuleHandler::GetModule<RenderEngine>()->GetWindow().SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule(new Editor());
-#endif
-	std::string project = "C:\\dev\\HazardTestProject\\TestProject.hzrproj";
-	HazardProject::OpenProject(project);
 
 }
 void EditorApplication::Update()
@@ -34,12 +26,12 @@ void EditorApplication::Update()
 
 }
 
-void EditorApplication::OnEvent(Event& e)
+bool EditorApplication::OnEvent(Event& e)
 {
-
+	return true;
 }
 void EditorApplication::OnClose() {
-	delete HazardProject::current;
+	
 }
 
 

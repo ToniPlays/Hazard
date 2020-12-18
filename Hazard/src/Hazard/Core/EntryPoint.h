@@ -6,7 +6,7 @@
 #include <windows.h>
 
 
-struct MemoryUsage {
+/*struct MemoryUsage {
 	size_t usedMemory = 0;
 };
 
@@ -21,7 +21,7 @@ void operator delete(void* loc, size_t size) {
 	free(loc);
 }
 
-
+*/
 #ifdef HZR_PLATFORM_WINDOWS
 
 	extern Hazard::Application* Hazard::CreateApplication();

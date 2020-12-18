@@ -1,5 +1,5 @@
 #pragma once
-#include "Editor/GUI/Layers/Layer.h"
+#include "Editor/GUI/Layer.h"
 
 
 using namespace Hazard;
@@ -11,11 +11,13 @@ public:
 	~Inspector() override;
 
 	void Render() override;
-	void OpenContext(Entity* entity);
+	void SetContext(ECS::Entity entity) { context = entity; };
+
 	std::string MenuPlacement() { return "View/General"; }
 
 private:
-	Entity* context = nullptr;
+
+	ECS::Entity context;
 	bool locked = false;
 };
 

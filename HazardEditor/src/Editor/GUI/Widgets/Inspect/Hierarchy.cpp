@@ -3,6 +3,11 @@
 #include "Hierarchy.h"
 #include "Inspector.h"
 
+#ifdef _MSVC_LANG
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+
 using namespace Hazard;
 
 Hierarchy::Hierarchy() : Layer("Hierarchy") 
@@ -11,75 +16,74 @@ Hierarchy::Hierarchy() : Layer("Hierarchy")
 }
 Hierarchy::~Hierarchy() 
 {
+
 }
 bool Hierarchy::OnEnabled() {
-	return true;
+
+	manager = Hazard::ModuleHandler::GetModule<ECS::SceneManager>();
+	context = &manager->GetActiveScene();
+	return manager != nullptr;
 }
 void Hierarchy::Render() {
 
 	if (!Panel::Begin(name, isLayerOpen)) return;
+	
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth
+		| ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Framed;
 
-	SceneManager* sceneManager = ModuleHandler::GetModule<SceneManager>();
-	ImGuiTreeNodeFlags flags = ((entityContext == sceneManager->GetActiveScene()) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-	flags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
-	std::hash<std::string> hash;
-
-	bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)hash(sceneManager->GetActiveScene()->GetName()), flags, 
-		("Scene: " + sceneManager->GetActiveScene()->GetName()).c_str());
-
-	if (ImGui::IsItemClicked()) {
-		entityContext = sceneManager->GetActiveScene();
-		Editor::GetLayer<Inspector>()->OpenContext((Entity*)entityContext);
+	if (ImGui::TreeNodeEx(context->GetFile(), flags)) {
+		context->GetRegistry().each([&](auto entityID)
+			{
+				Hazard::ECS::Entity entity{ entityID, context };
+				DrawEntity(entity);
+			});
+		ImGui::TreePop();
 	}
-
-	if(opened) {
-		DrawEntities(sceneManager->GetActiveScene()->GetChildEntities());
-	}	
-
-	if (opened) ImGui::TreePop();
-
+	if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
+		selectionContext = {};
+	}
 	if (ImGui::BeginPopupContextWindow(0, 1, false)) {
-		entityContext = nullptr;
-		if (ImGui::MenuItem("New entity")) {
-			if(entityContext == nullptr) 
-				ModuleHandler::GetModule<SceneManager>()->GetActiveScene()->AddEntity(new Entity("Empty entity"));
+		if (ImGui::MenuItem("Create empty entity")) {
+			context->CreateEntity();
 		}
 		ImGui::EndPopup();
 	}
+
 	Panel::End();
 }
-void Hierarchy::DrawEntities(std::vector<Entity*> entities) {
 
+void Hierarchy::DrawEntity(Hazard::ECS::Entity entity) {
+	
 
-	for (Entity* entity : entities) {
+	auto& tag = entity.GetComponent<TagComponent>().Tag;
 
-		ImGuiTreeNodeFlags flags = ((entityContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+	ImGuiTreeNodeFlags flags = ((selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow |
+		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		std::hash<std::string> hash;
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)hash(entity->name), flags, entity->name.c_str());
-
-		if (ImGui::IsItemClicked() || ImGui::IsItemClicked(1)) {
-			entityContext = entity;
-			Editor::GetLayer<Inspector>()->OpenContext(entityContext);
+	bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+	if (ImGui::IsItemClicked()) {
+		selectionContext = entity;
+		editor->GetLayer<Inspector>()->SetContext(entity);
+	}
+	bool entityDeleted = false;
+	if (ImGui::BeginPopupContextItem()) {
+		if (ImGui::MenuItem("Delete entity")) {
+			entityDeleted = true;
 		}
+		ImGui::EndPopup();
+	}
+	if (opened) {
+		//Draw child entities here
 		
-		if (ImGui::BeginPopupContextItem()) {
 
-			if (ImGui::MenuItem("New entity")) 
-				entityContext->AddEntity(new Entity("Empty entity"));
-			if (ImGui::MenuItem("Duplicate entity")) {}
-			if (ImGui::MenuItem("Delete entity")) {
-				SceneManager* manager = ModuleHandler::GetModule<SceneManager>();
-				manager->GetActiveScene()->RemoveEntity(entityContext);
-			}
-			ImGui::EndPopup();
-		}
 
-		if(opened) {
-			DrawEntities(entity->GetChildEntities());
-			ImGui::TreePop();
+		ImGui::TreePop();
+	}
+	if (entityDeleted) {
+		context->DestroyEntity(entity);
+		if (selectionContext == entity) {
+			selectionContext = {};
+			editor->GetLayer<Inspector>()->SetContext({});
 		}
-		
 	}
 }

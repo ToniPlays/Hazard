@@ -9,10 +9,8 @@ namespace Hazard {
 
 	HazardLoop* HazardLoop::instance;
 
-	HazardLoop::HazardLoop(Application* app) {
-		this->current = app;
+	HazardLoop::HazardLoop(Application* app) : current(app) {
 		instance = this;
-
 	}
 
 	bool HazardLoop::OnEvent(Event& e)
@@ -21,12 +19,8 @@ namespace Hazard {
 			EventDispatcher dispatcher(e);
 			return dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Close));
 		}
-		else current->OnEvent(e);
-	}
-	bool HazardLoop::Close(Event& e)
-	{
-		shouldClose = true;
-		return true;
+		else return current->OnEvent(e);
+
 	}
 
 	HazardLoop::~HazardLoop()
@@ -44,9 +38,12 @@ namespace Hazard {
 		moduleHandler.Start();
 		current->Start();
 
+		HZR_CORE_INFO("Engine startup");
+
 		double lastTime = 0;
-		while (!shouldClose) {
-			PROFILE_FN();
+
+		while (!current->ShouldWindowClose()) {
+			//PROFILE_FN();
 
 			double time = glfwGetTime();
 			Time::unscaledDeltaTime = time - lastTime;
@@ -64,7 +61,11 @@ namespace Hazard {
 			moduleHandler.OnRender();
 
 			lastTime = time;
-			PROFILE_FN_END();
+			//PROFILE_FN_END();
 		}
+	}
+	bool HazardLoop::Close(Event& e) {
+		current->shouldClose = true;
+		return true;
 	}
 }

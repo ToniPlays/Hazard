@@ -13,21 +13,21 @@ Modules (Api's)
 	- Rendering
 	- Interactable
 	- Events    STARTED
-	- Core logging
+	- Core logging DONE
 
 Input
 	- Input handler
 	- Input mappings
 	- Input actions
 Maths
-	- Color   STARTED
+	- Color   DONE
 	- Transform
 	- Vector 2/3 (Template)
 	- Matrix4 (Template)
 	- Math class (Template / static)
 
 Rendering
-	- Abstarct window
+	- Abstarct window DONE
 	- Abstract Renderers (Vulkan / OpenGL etc)
 	- Abstract uniforms / shader
 	- Mesh
@@ -35,7 +35,7 @@ Rendering
 	- Texture
 	- Subtextures
 System
-	- File dialogs
+	- File dialogs Sort of
 
 ---------------BUGS-----------------
 Viewport clipping

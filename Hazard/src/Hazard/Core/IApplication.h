@@ -9,8 +9,8 @@ namespace Hazard {
 		virtual void Awake() {};
 		virtual void Start() {};
 		virtual void Update() {};
-		virtual void OnEvent(Event& e) {};
 		virtual void LateUpdate() {};
+		virtual bool OnEvent(Event& e) { return true; };
 		virtual void OnClose() {};
 	};
 }

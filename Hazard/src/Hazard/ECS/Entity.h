@@ -1,51 +1,57 @@
 #pragma once
-#include "Hazard/Core/Core.h"
-#include "Hazard/ECS/Components/Component.h"
+
+#include <hzrpch.h>
+
+#include "entt.hpp"
+#include "Scene.h"
 
 namespace Hazard {
+	namespace ECS {
+		class Entity {
 
-	class HAZARD_API Entity {
-	public:
-		Entity(std::string _name, std::initializer_list<Component*> _components);
-		Entity(std::string _name);
-		~Entity();
+		public:
+			Entity() = default;
+			Entity(entt::entity entityHandle, Scene* _scene);
+			Entity(const Entity& other) = default;
 
-		virtual void Awake();
-
-		virtual void Render();
-		virtual void OnDestroy();
-
-		template<typename T>
-		void AddComponent() {
-			T* component = new T();
-			AddComponent(component);
-		}
-
-		virtual void AddComponent(Component* component);
-		virtual void RemoveComponent(Component* component);
-
-		template<typename T>
-		bool HasComponent() {
-			return GetComponent<T>() != nullptr;
-		}
-
-		template<typename T>
-		T* GetComponent() {
-			for (Component* c : components) {
-				if (dynamic_cast<T*>(c)) return (T*)c;
+			template<typename T, typename... Args>
+			T& AddComponent(Args&&... args) {
+				//HZR_ASSERT(HasComponent<T>(), "Entity has component already!");
+				T& component = scene->registry.emplace<T>(handle, std::forward<Args>(args)...);
+				scene->OnComponentAdded<T>(*this, component);
+				return component;
 			}
-			return nullptr;
-		}
-		std::vector<Entity*> GetChildEntities() { return childs; }
-		std::vector<Component*> GetComponents() { return components; }
+			template<typename T>
+			T& GetComponent() {
+				//HZR_ASSERT(!HasComponent<T>(), "Entity does not have component!");
+				return scene->registry.get<T>(handle);
+			}
+			template<typename T>
+			bool HasComponent() {
+				return scene->registry.has<T>(handle);
+			}
 
-		virtual void AddEntity(Entity* entity);
-		virtual void RemoveEntity(Entity* entity);
+			template<typename T>
+			void RemoveComponent() {
+				scene->registry.remove<T>(handle);
+			}
 
-		std::string name;
+			operator bool() const { return handle != entt::null; }
+			operator entt::entity() const { return handle; }
+			operator uint32_t() const { return (uint32_t)handle; }
 
-	protected:
-		std::vector<Entity*> childs;
-		std::vector<Component*> components;
-	};
+			bool operator ==(const Entity& other) {
+				return handle == other.handle && scene == other.scene;
+			}
+			bool operator != (const Entity& other) {
+				return !(*this == other);
+			}
+
+		private:
+			entt::entity handle{ entt::null };
+			Scene* scene = nullptr;
+
+			friend class Scene;
+		};
+	}
 }

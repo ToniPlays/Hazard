@@ -4,10 +4,10 @@
 #include <commdlg.h>
 #include <shlobj.h>
 #include <GLFW/glfw3.h>
+
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"
-#include "Hazard/Modules/ModuleHandler.h"
-#include "Hazard/Modules/Renderer/RenderEngine.h"
+#include "Hazard/ModuleHandler.h"
 #include "Hazard/Utils/StringUtils.h"
 
 
@@ -19,7 +19,7 @@ namespace Hazard {
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
+		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filters;
@@ -38,7 +38,7 @@ namespace Hazard {
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
+		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filters;
@@ -56,7 +56,7 @@ namespace Hazard {
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
+		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.nFilterIndex = 1;

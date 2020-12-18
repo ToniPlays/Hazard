@@ -1,5 +1,5 @@
 #pragma once
-#include "Editor/GUI/Layers/Layer.h"
+#include "Editor/GUI/Layer.h"
 
 class Performance : public Layer {
 public:
@@ -9,7 +9,5 @@ public:
 	void Render() override;
 	bool OnEnabled() override;
 	std::string MenuPlacement() { return "View/Analytics"; }
-private:
-	Hazard::RenderEngine* renderer;
 };
 

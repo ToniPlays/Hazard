@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Editor/GUI/Layers/Layer.h"
+#include "Editor/GUI/Layer.h"
 
 class Profiler : public Layer {
 public:

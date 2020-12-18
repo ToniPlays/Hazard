@@ -1,17 +1,18 @@
 #pragma once
 #include <hzrpch.h>
 #include "Application.h"
-#include "Hazard/Modules/ModuleHandler.h"
-#include "Hazard/Modules/Renderer/RenderEngine.h"
+#include "Hazard/ModuleHandler.h"
+#include "Hazard/Rendering/Core/RenderEngine.h"
 
 namespace Hazard {
 	void Application::PushModule(Module* module)
 	{
 		ModuleHandler::PushModule(module);
 	}
-	void Application::SetTitle(std::string& title)
+	void Application::SetTitle(const char* title)
 	{
-		ModuleHandler::GetModule<RenderEngine>()->GetWindow().SetWindowTitle((std::string(title.c_str()) + " | Hazard " + HZR_BUILD_VERSION).c_str());
+		HZR_CORE_INFO("Title not able to be set");
+		ModuleHandler::GetModule<RenderEngine>()->SetTitle(title);
 	}
 	Application& Application::GetApplication()
 	{

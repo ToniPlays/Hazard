@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Editor/GUI/Layers/Layer.h"
+#include "Editor/GUI/Layer.h"
 
 using namespace Hazard;
 
@@ -11,10 +11,11 @@ public:
 	~Hierarchy() override;
 	bool OnEnabled() override;
 	void Render() override;
+	void DrawEntity(Hazard::ECS::Entity entity);
 
 	std::string MenuPlacement() override { return "View/General"; }
 private:
-	void DrawEntities(std::vector<Entity*> entities);
-
-	Entity* entityContext = nullptr;
+	ECS::Scene* context = nullptr;
+	ECS::SceneManager* manager = nullptr;
+	ECS::Entity selectionContext = {};
 };

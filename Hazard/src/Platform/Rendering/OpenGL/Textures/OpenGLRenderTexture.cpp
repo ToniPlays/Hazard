@@ -5,7 +5,6 @@
 
 namespace Hazard {
 
-
 	OpenGLRenderTexture::OpenGLRenderTexture() : RenderTexture()
 	{
 		spec.width = 1920;

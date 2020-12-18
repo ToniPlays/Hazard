@@ -2,8 +2,6 @@
 #include <hzrpch.h>
 #include "OpenGLShader.h"
 #include "glm/gtc/type_ptr.hpp"
-#include "Hazard/Modules/Renderer/RenderEngine.h"
-
 
 namespace Hazard {
 
@@ -23,7 +21,6 @@ namespace Hazard {
 	OpenGLShader::OpenGLShader(std::string path) : Shader(path) {
 		std::string file = File::ReadFile(path);
 		Compile(Process(file));
-		
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -34,7 +31,6 @@ namespace Hazard {
 	void OpenGLShader::Bind() const
 	{
 		glUseProgram(program);
-		RenderEngine::SetActiveShader((Shader*)this);
 	}
 	void OpenGLShader::Unbind() const
 	{
@@ -65,19 +61,19 @@ namespace Hazard {
 		glUniform1f(GetLocation(name), value);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, Vector2<float> value)
+	void OpenGLShader::SetUniform(const std::string& name, glm::vec2 value)
 	{
 		glUniform2f(GetLocation(name), value.x, value.y);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, Vector3<float> value)
+	void OpenGLShader::SetUniform(const std::string& name, glm::vec3 value)
 	{
 		glUniform3f(GetLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, Matrix4 value)
+	void OpenGLShader::SetUniform(const std::string& name, glm::mat4 value)
 	{
-		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, (GLfloat*)value.data());
+		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
 	void OpenGLShader::SetUniform(const std::string& name, Color color) {
 		SetUniform(name, { color.r, color.g, color.b });
@@ -120,6 +116,7 @@ namespace Hazard {
 		program = glCreateProgram();
 		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;
+
 
 		for (auto& kv : sources) {
 			GLenum type = kv.first;
@@ -169,9 +166,9 @@ namespace Hazard {
 
 			return;
 		}
-		for (auto id : shaderId)
+		for (GLuint id : shaderId)
 		{
-			glDetachShader(program, id);
+			//glDetachShader(program, id);
 			glDeleteShader(id);
 		}
 	}

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Modules/Renderer/Buffers/VertexArray.h"
-#include "Hazard/Modules/Renderer/Buffers/Buffer.h"
+#include "Hazard/Rendering/Buffer/Buffers.h"
+#include "Hazard/Rendering/Buffer/VertexArray.h"
 #include "glad/glad.h"
 
 

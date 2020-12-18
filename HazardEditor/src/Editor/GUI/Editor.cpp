@@ -2,15 +2,15 @@
 #include <hzreditor.h>
 #include "Editor.h"
 #include "All.h"
-#include "Editor/Core/ComponentRegister.h"
+#include <GLFW/glfw3.h>
 
 Editor* Editor::instance = nullptr;
 
 Editor::Editor() : Module("EditorGUI")
 {
-	mainMenu.OnCreate();
+	
 
-	ModuleHandler::PushModule(new ComponentRegister());
+	//ModuleHandler::PushModule(new ComponentRegister());
 
 	PushLayer(new Performance());
 	PushLayer(new Inspector());
@@ -21,6 +21,7 @@ Editor::Editor() : Module("EditorGUI")
 	PushLayer(new Hierarchy());
 	PushLayer(new NewProject());
 }
+
 Editor::~Editor()
 {
 	for (Layer* layer : layers) {
@@ -28,6 +29,7 @@ Editor::~Editor()
 		delete layer;
 	}
 }
+
 bool Editor::OnEnabled() {
 	{
 		
@@ -85,7 +87,6 @@ void Editor::PushLayer(Layer* layer)
 	if (layer->OnEnabled()) {
 		Register(layer);
 	}
-	else Debug::Warn("Unable to set layer: " + std::string(layer->GetName()));
 }
 void Editor::Register(Layer* layer) {
 	if(layer->MenuPlacement() != "")
@@ -93,7 +94,7 @@ void Editor::Register(Layer* layer) {
 			Layer* layer = static_cast<Layer*>(item);
 			layer->SetLayerOpen(true);
 		}, layer));
-
+	layer->SetEditor(this);
 	layers.push_back(layer);
 }
 
@@ -182,8 +183,6 @@ void Editor::Render() {
 		Style::GetStyle()->WindowMinSize.x = 32.0f;
 		ImGui::End();
 	}
-
-	//UtilityBar::OnRender();
 
 	for (Layer* layer : layers) layer->Render();
 
