@@ -8,7 +8,9 @@ namespace WindowElement {
 		EditorWindow(const char* title);
 		~EditorWindow();
 
+
 		void RenderWindow();
+		virtual void Init() {};
 		virtual void OnWindowRender() = 0;
 
 		bool GetActive() { return active; }

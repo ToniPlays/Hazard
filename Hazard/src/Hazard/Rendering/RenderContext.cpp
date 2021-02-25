@@ -7,7 +7,7 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("Window")
+	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
 	{
 		
 	}
@@ -32,15 +32,6 @@ namespace Hazard::Rendering {
 		
 	}
 
-	const char* RenderContext::ApiAsString(RenderAPI api)
-	{
-		switch (api)
-		{
-		case RenderAPI::OpenGL:	return "OpenGL";
-		case RenderAPI::Vulkan: return "Vulkan";
-		default:				return "Auto";
-		}
-	}
 	void RenderContext::Process(Event& e)
 	{
 		Core::HazardLoop::GetCurrent().Process(e);

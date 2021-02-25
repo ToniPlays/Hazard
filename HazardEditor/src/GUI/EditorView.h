@@ -18,8 +18,10 @@ namespace WindowElement {
 
 		template<typename T>
 		void PushWindow() {
-			windows.push_back(new T());
-		}
+			T* w = new T();
+			windows.push_back(w);
+			w->Init();
+		} 
 
 	private:
 		std::vector<EditorWindow*> windows;

@@ -8,9 +8,11 @@ namespace WindowElement {
 		Performance();
 		~Performance();
 
+
+		void Init() override;
 		void OnWindowRender() override;
 
 	private:
-
+		Hazard::Rendering::RenderContext* context;
 	};
 }

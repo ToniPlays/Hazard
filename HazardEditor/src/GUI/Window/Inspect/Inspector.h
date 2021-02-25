@@ -3,6 +3,7 @@
 #include "GUI/EditorWindow.h"
 
 namespace WindowElement {
+
 	class Inspector : public EditorWindow {
 	public:
 		Inspector();

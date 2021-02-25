@@ -36,9 +36,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\WindowLib.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="src\GUI\Library\Style.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -50,6 +47,8 @@
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Rendering\Performance.h" />
+    <ClInclude Include="src\GUI\Library\Input.h" />
+    <ClInclude Include="src\GUI\Library\Layout.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -81,5 +80,7 @@
       <Filter>src\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp" />
+    <ClCompile Include="src\GUI\Library\Input.cpp" />
+    <ClCompile Include="src\GUI\Library\Layout.cpp" />
   </ItemGroup>
 </Project>

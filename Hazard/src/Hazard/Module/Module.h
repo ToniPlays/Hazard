@@ -1,5 +1,5 @@
 #pragma once
-#include "Core.h"
+#include "Hazard/Core/Core.h"
 
 namespace Hazard::Module {
 	class Module {

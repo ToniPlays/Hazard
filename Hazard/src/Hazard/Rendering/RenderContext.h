@@ -24,8 +24,7 @@ namespace Hazard::Rendering {
 		bool IsAvailable() { return true; }
 
 		RenderAPI GetCurrentAPI() { return currentAPI; }
-		const char* ApiAsString(RenderAPI api);
-
+		std::string GetRenderer() { return window->GetContext()->GetVersion(); }
 		Window& GetWindow() { return *window; }
 
 	private:
