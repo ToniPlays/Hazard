@@ -1,58 +1,24 @@
 #pragma once
 #include "Hazard/Core/Core.h"
+#include "Hazard/Module/Module.h"
+
 #include "spdlog/spdlog.h"
-#include "Hazard/Module.h"
 
-namespace Hazard {
-
-	;
-	struct Log {
-		const char* text = "";
-		int level = 0;
-
-		Log() = default;
-		Log(const char* _text, int _level = 0) : text(_text), level(_level) {};
-	};
-
-	struct ProfiledFn {
-		const char* name;
-
-		std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
-		float timeInMillis;
-
-		ProfiledFn* parentFn = nullptr;
-		std::vector<ProfiledFn*> subFunctions = std::vector<ProfiledFn*>();
-
-		ProfiledFn(const char* _name, ProfiledFn* parent, std::chrono::time_point<std::chrono::high_resolution_clock> start) : startTime(start),
-			name(_name), parentFn(parent)
-		{
-		}
-	};
-
-	class HAZARD_API Logger : public Module {
+namespace Hazard::Logging {
+	class Logger : public Module::Module {
 	public:
-		Logger() : Module("Logger") {};
+		Logger();
 		~Logger();
-		bool OnEnabled() override;
-		bool OnDisabled() override;
 
-	public:
-		static void Assert(bool success, std::string text);
-		static void CoreLog(std::string text, int level = 1);
-		static void ClientLog(std::string text, int level = 1);
+		void PreInit() override;
+		void Flush();
 
-		static void Push(const char* fn);
-		static void Pop();
-		static ProfiledFn* GetProfiledFn() { return profiledRoot; }
-		static std::vector<Log> GetEngineLogs() { return engineLogs; };
+		static std::shared_ptr<spdlog::logger> GetCoreLogger() { return coreLogger; }
+		static std::shared_ptr<spdlog::logger> GetClientLogger() { return clienLogger; }
+
 
 	private:
-		static ProfiledFn* profiledRoot;
-		static ProfiledFn* profiled;
-		static ProfiledFn* FindProfiled(const char* fn);
-
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static std::shared_ptr<spdlog::logger> s_ClientLogger;
-		static std::vector<Log> engineLogs;
+		static std::shared_ptr<spdlog::logger> coreLogger;
+		static std::shared_ptr<spdlog::logger> clienLogger;
 	};
 }

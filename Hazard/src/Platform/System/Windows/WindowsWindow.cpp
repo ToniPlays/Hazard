@@ -20,8 +20,11 @@ namespace Hazard {
 		windowData.Title = props.Title;
 		windowData.Platform = "Windows";
 
-
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+		//Move to somewhere else, please don't break this
+		//Headache
 		glfwWindowHint(GLFW_MAXIMIZED, props.maximized ? GLFW_TRUE : GLFW_FALSE);
 
 		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title, 0, 0);

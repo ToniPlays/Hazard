@@ -1,46 +1,39 @@
 #pragma once
-#include "HazardLoop.h"
-#include "Hazard/Core/Application.h"
+
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
+#include "Hazard/Core/HazardLoop.h"
 
 
-/*struct MemoryUsage {
-	size_t usedMemory = 0;
-};
-
-MemoryUsage memory;
-
+uint64_t memorySize = 0;
+/*
 void* operator new(size_t size) {
-	memory.usedMemory += size;
-	return malloc(size);
+	memorySize += size;
+	void* p = malloc(size);
+	return p;
 }
-void operator delete(void* loc, size_t size) {
-	memory.usedMemory -= size;
-	free(loc);
+void operator delete(void* p) {
+	memorySize -= sizeof(p);
+	free(p);
 }
-
 */
+
 #ifdef HZR_PLATFORM_WINDOWS
 
-	extern Hazard::Application* Hazard::CreateApplication();
+extern Hazard::Application* Hazard::CreateApplication();
 #if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
-#pragma comment( linker, "/subsystem:console" )
+	#pragma comment( linker, "/subsystem:console" )
 	int main()
 #else
-#pragma comment( linker, "/subsystem:windows" )
-	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-		LPSTR lpCmdLine, int nCmdShow)
+	#pragma comment( linker, "/subsystem:windows" )
+	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif // HZR_DEBUG
-	{
-		Hazard::Application* app = Hazard::CreateApplication();
-		Hazard::HazardLoop* hazardLoop = new Hazard::HazardLoop(app);
-		hazardLoop->Run();
-		delete hazardLoop;
-
-		//__debugbreak(); // Aim for 400
-	}
+{
+	Hazard::Application* app = Hazard::CreateApplication();
+	Hazard::Core::HazardLoop loop(app);
+	loop.Start();
+}
 #else
-#error Unsupported platform
+	#error Unsupported platform for Hazard
 #endif // HZR_PLATFORM_WINDOWS

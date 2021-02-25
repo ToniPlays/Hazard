@@ -64,6 +64,7 @@ project "IMGUI"
 		"c:/dev/hazard/vendor/IMGUI/imgui.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_demo.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_draw.cpp",
+		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp"
 	}
 

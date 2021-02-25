@@ -8,6 +8,21 @@ namespace Hazard {
 
 	ErrorCallback OpenGLContext::callback;
 
+
+	/*void APIENTRY OpenGLContext::OnError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+	{
+		std::stringstream ss;
+
+		ss << "[OpenGL]: " << message;
+		ErrorCallback callback = ((OpenGLContext*)userParam)->callback;
+
+		if (callback) {
+			ErrorData data(ss.str(), type);
+			OpenGLContext::callback(data);
+		}
+	}*/
+
+
 	GraphicsContext* GraphicsContext::Create(void* window, void* props) {
 		return new OpenGLContext((Window*)window, (WindowProps*)props);
 	}
@@ -28,31 +43,21 @@ namespace Hazard {
 	void OpenGLContext::Init() const
 	{
 		glfwMakeContextCurrent(window);
+
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			HZR_ASSERT(false, "Unable to init GLFW");
 			return;
 		};
-
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
-
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		//glEnable(GL_DEPTH_TEST);
-		//glDepthFunc(GL_LESS);
 		
-		glDebugMessageCallback(OpenGLContext::OnError, nullptr);
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		//glEnable(GL_DEBUG_OUTPUT);
+		//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		//glDebugMessageCallback(OpenGLContext::OnError, this);
 	}
 
 	void OpenGLContext::ClearFrame(Color clearColor) const
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-
-		glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0,
-			GL_DEBUG_SEVERITY_NOTIFICATION, -1, "Clearing");
 	}
 
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const
@@ -60,26 +65,10 @@ namespace Hazard {
 		glViewport(x, y, w, h);
 	}
 
-	void OpenGLContext::DrawArray(VertexArray* array) const
-	{
-		array->EnableAll();
-		glDrawElements(GL_TRIANGLES, array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-	}
-
 	void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 	{
 		OpenGLContext::callback = callback;
-		HZR_CORE_WARN(GetVersion() + " added debug callback");
-	}
-
-	void GLAPIENTRY OpenGLContext::OnError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
-	{
-		HZR_CORE_WARN(message);
-
-		if (callback) {
-			ErrorData data(message, type);
-			OpenGLContext::callback(data);
-		}
+		HZR_CORE_INFO("Added OpenGL error callback");
 	}
 
 	std::string OpenGLContext::GetVersion() const

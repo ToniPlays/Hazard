@@ -8,36 +8,30 @@
 #include <map>
 #include <stdio.h>
 
-#include "Hazard/Utils/Maths/Time.h"
-#include "Hazard/Utils/Maths/Color.h"
-
-#include "Hazard/Utils/Loaders/File.h"
-
 #include "Hazard/Core/HazardLoop.h"
-
-#include "Hazard/Core/Events/Event.h"
-#include "Hazard/Core/Events/ApplicationEvent.h"
-#include "Hazard/Core/Events/MouseEvent.h"
-#include "Hazard/Core/Events/KeyEvent.h"
-
 #include "Hazard/Logging/Logger.h"
 
+#include "Hazard/Events/Event.h"
+#include "Hazard/Events/ApplicationEvent.h"
+#include "Hazard/Events/KeyEvent.h"
+#include "Hazard/Events/MouseEvent.h"
 
 #if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
 	//Core logging macros
-	#define HZR_CORE_INFO(...)		 ::Hazard::Logger::CoreLog(__VA_ARGS__, 0)
-	#define HZR_CORE_WARN(...)		 ::Hazard::Logger::CoreLog(__VA_ARGS__, 1)
-	#define HZR_CORE_ERROR(...)	 	 ::Hazard::Logger::CoreLog(__VA_ARGS__, 2)
-	#define HZR_CORE_FATAL(...)		 ::Hazard::Logger::CoreLog(__VA_ARGS__, 3)
-	#define HZR_CORE_TRACE(...)		 ::Hazard::Logger::CoreLog(__VA_ARGS__, 4)
+	#define HZR_CORE_INFO(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)
+	#define HZR_CORE_WARN(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->warn(__VA_ARGS__)
+	#define HZR_CORE_ERROR(...)	 	 ::Hazard::Logging::Logger::GetCoreLogger()->error(__VA_ARGS__)
+	#define HZR_CORE_FATAL(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->critical(__VA_ARGS__)
+	#define HZR_CORE_TRACE(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->trace(__VA_ARGS__)
+	#define HZR_CORE_ASSERT(...)
 
 	//Client logging macros
-	#define HZR_INFO(...)			 ::Hazard::Logger::ClientLog(__VA_ARGS__, 0)
-	#define HZR_WARN(...)			 ::Hazard::Logger::ClientLog(__VA_ARGS__, 1)
-	#define HZR_ERROR(...)			 ::Hazard::Logger::ClientLog(__VA_ARGS__, 2)
-	#define HZR_FATAL(...)			 ::Hazard::Logger::ClientLog(__VA_ARGS__, 3)
-	#define HZR_TRACE(...)			 ::Hazard::Logger::ClientLog(__VA_ARGS__, 4)
-	#define HZR_ASSERT(success, ...) ::Hazard::Logger::Assert(success, __VA_ARGS__)
+	#define HZR_INFO(...)			 ::Hazard::Logging::Logger::GetClientLogger()->info(__VA_ARGS__)
+	#define HZR_WARN(...)			 ::Hazard::Logging::Logger::GetClientLogger()->warn(__VA_ARGS__)
+	#define HZR_ERROR(...)			 ::Hazard::Logging::Logger::GetClientLogger()->error(__VA_ARGS__)
+	#define HZR_FATAL(...)			 ::Hazard::Logging::Logger::GetClientLogger()->critical(__VA_ARGS__)
+	#define HZR_TRACE(...)			 ::Hazard::Logging::Logger::GetClientLogger()->trace(__VA_ARGS__)
+	#define HZR_ASSERT(success, ...) 
 
 	#ifdef HZR_DEBUG
 
@@ -49,7 +43,6 @@
 		#define PROFILE_FN_NAMED(x)
 		#define PROFILE_FN_END()
 	#endif
-
 #else
 
 //Core logging macros

@@ -3,8 +3,10 @@
 #include "Hazard/Core/Core.h"
 #include "Platform/System/Window.h"
 #include "GLFW/glfw3.h"
+#include "Hazard/Math/Color.h"
 
 namespace Hazard {
+
 	class HAZARD_API WindowsWindow : public Window {
 	public:
 		WindowsWindow(WindowProps& props);

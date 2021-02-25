@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Utils/Maths/Color.h"
+#include "Hazard/Math/Color.h"
 #include "Platform/Rendering/GraphicsContext.h"
 #include <iostream>
 
@@ -37,7 +37,7 @@ namespace Hazard {
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
-		virtual void OnUpdate(Color color = Color("#222222")) = 0;
+		virtual void OnUpdate(Color color = Color("#000000")) = 0;
 		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
 		virtual void SetVSync(bool enabled) = 0;

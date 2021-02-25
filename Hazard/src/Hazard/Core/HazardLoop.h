@@ -1,29 +1,40 @@
 #pragma once
+
 #include "Core.h"
-#include "Application.h"
-#include "Events/Event.h"
-#include "Hazard/ModuleHandler.h"
 
-namespace Hazard {
+#include "Hazard/Core/Application.h"
+#include "Hazard/Events/ApplicationEvent.h"
+#include "Hazard/Module/ModuleHandler.h"
 
-	class HAZARD_API HazardLoop {
-		friend class Application;
+namespace Hazard::Core {
+	class HazardLoop {
 	public:
-
 		HazardLoop(Application* app);
 		~HazardLoop();
 
-		void Run();
-		bool OnEvent(Event& e);
+		void Start();
+		bool Quit(WindowCloseEvent& e);
 
+		void OnEvent(Event& e);
+
+	public:
+		static void Process(Event& e);
 		static HazardLoop& GetCurrent() { return *instance; }
-		
+
+		template<typename T>
+		static void PushModule() {
+			instance->moduleHandler.AddModule<T>();
+		};
+
+		template<typename T>
+		static T& GetModule() { return instance->moduleHandler.GetModule<T>(); };
+
 	private:
+		Application* application = nullptr;
+		Module::ModuleHandler moduleHandler;
+		bool shouldClose = false;
 
+	private:
 		static HazardLoop* instance;
-		Application* current;
-		ModuleHandler moduleHandler;
-
-		bool Close(Event& e);
 	};
 }

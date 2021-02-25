@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Utils/Maths/Color.h"
-
-#include "Hazard/Rendering/Buffer/VertexArray.h"
+#include "Hazard/Math/Color.h"
 
 namespace Hazard {
 
@@ -23,7 +21,6 @@ namespace Hazard {
 		virtual void Init() const = 0;
 		virtual void ClearFrame(Color clearColor = {34, 34, 34, 255}) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
-		virtual void DrawArray(VertexArray* array) const = 0;
 		virtual std::string GetVersion() const = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;

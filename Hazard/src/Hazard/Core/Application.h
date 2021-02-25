@@ -1,27 +1,28 @@
 #pragma once
 
 #include "Core.h"
-#include "IApplication.h"
-#include "Hazard/Module.h"
-
+#include "Hazard/Module/Module.h"
 
 namespace Hazard {
-	class HAZARD_API Application : public IApplication {
+
+	class HAZARD_API Application {
 		friend class HazardLoop;
 	public:
 		Application() {};
 		~Application() {};
 
-		void PushModule(Module* module);
-		void SetTitle(const char* title);
-		static Application& GetApplication();
-
-		bool ShouldWindowClose() { return shouldClose; }
-
-	private:
+		virtual void Init() {};
 		
-		bool shouldClose = false;
-	};
+		void SetTitle(std::string title);
+		void SetTitle(const char* title);
 
+		template<typename T>
+		void PushModule() {
+			Core::HazardLoop::GetCurrent().PushModule<T>();
+		};
+		template<typename T>
+		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }
+		
+	};
 	Hazard::Application* CreateApplication();
 }
