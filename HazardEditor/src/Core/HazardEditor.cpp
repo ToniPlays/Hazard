@@ -19,6 +19,8 @@ void EditorApplication::Init()
 	PushModule<Logging::Logger>();
 	PushModule<Rendering::RenderContext>();
 	PushModule<Rendering::RenderEngine>();
+	PushModule<ECS::SceneHandler>();
+
 	PushModule<WindowElement::EditorView>();
 }
 

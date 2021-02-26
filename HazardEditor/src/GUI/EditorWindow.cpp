@@ -17,7 +17,7 @@ namespace WindowElement {
 	{
 
 	}
-	void EditorWindow::RenderWindow()
+	void EditorWindow::OnRender()
 	{
 		if (GetActive()) {
 			ImGui::Begin(title.c_str(), &active);

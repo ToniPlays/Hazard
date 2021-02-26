@@ -17,14 +17,14 @@ namespace WindowElement {
 		void Flush();
 
 		template<typename T>
-		void PushWindow() {
+		void PushRenderable() {
 			T* w = new T();
-			windows.push_back(w);
+			elements.push_back(w);
 			w->Init();
 		} 
 
 	private:
-		std::vector<EditorWindow*> windows;
+		std::vector<RenderableElement*> elements;
 		Rendering::RenderContext* context;
 	private:
 		void BeginFrame();

@@ -52,10 +52,14 @@ namespace WindowElement {
 		ImGui_ImplOpenGL3_Init("#version 410");
 		Style::Style::Init();
 
-		PushWindow<Viewport>();
-		PushWindow<Inspector>();
-		PushWindow<Hierarchy>();
-		PushWindow<Performance>();
+		PushRenderable<MenuBar>();
+
+		PushRenderable<Inspector>();
+		PushRenderable<Hierarchy>();
+		PushRenderable<FileView>();
+
+		PushRenderable<Performance>();
+		PushRenderable<Viewport>();
 
 	}
 	void EditorView::Render()
@@ -93,6 +97,10 @@ namespace WindowElement {
 			if (opt_fullscreen)
 				ImGui::PopStyleVar(2);
 
+			for (RenderableElement* element : elements) {
+				element->OnMenuRender();
+			}
+
 			ImGuiIO& io = ImGui::GetIO();
 			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 			{
@@ -103,8 +111,10 @@ namespace WindowElement {
 			ImGui::End();
 		}
 
-		for (EditorWindow* window : windows) {
-			window->RenderWindow();
+
+
+		for (RenderableElement* element : elements) {
+			element->OnRender();
 		}
 		EndFrame();
 	}

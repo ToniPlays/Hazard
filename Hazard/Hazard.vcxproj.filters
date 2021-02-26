@@ -114,6 +114,7 @@
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\SceneHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -152,5 +153,6 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\SceneHandler.cpp" />
   </ItemGroup>
 </Project>

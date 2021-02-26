@@ -1,15 +1,17 @@
 #pragma once
 
+#include "RenderableElement.h"
+
 namespace WindowElement {
 
-	class EditorWindow {
+	class EditorWindow : public RenderableElement {
 	public:
 		EditorWindow();
 		EditorWindow(const char* title);
 		~EditorWindow();
 
 
-		void RenderWindow();
+		void OnRender() override;
 		virtual void Init() {};
 		virtual void OnWindowRender() = 0;
 

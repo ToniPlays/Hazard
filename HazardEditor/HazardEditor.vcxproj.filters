@@ -49,6 +49,9 @@
     <ClInclude Include="src\GUI\Window\Rendering\Performance.h" />
     <ClInclude Include="src\GUI\Library\Input.h" />
     <ClInclude Include="src\GUI\Library\Layout.h" />
+    <ClInclude Include="src\GUI\Window\Inspect\FileView.h" />
+    <ClInclude Include="src\GUI\RenderableElement.h" />
+    <ClInclude Include="src\GUI\Window\MenuBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -82,5 +85,7 @@
     <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp" />
     <ClCompile Include="src\GUI\Library\Input.cpp" />
     <ClCompile Include="src\GUI\Library\Layout.cpp" />
+    <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp" />
+    <ClCompile Include="src\GUI\Window\MenuBar.cpp" />
   </ItemGroup>
 </Project>

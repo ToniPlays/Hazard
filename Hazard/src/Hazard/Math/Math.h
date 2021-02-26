@@ -74,7 +74,7 @@ namespace Hazard {
 		template<typename T>
 		static glm::vec2 AspectRatio(T width, T height) {
 			height = (height / width) * width;
-			return glm::vec2<double>(width / 100.0f, height / 100.0f);
+			return glm::vec2<double>(width * 0.01f, height * 0.01f);
 		}
 	};
 }

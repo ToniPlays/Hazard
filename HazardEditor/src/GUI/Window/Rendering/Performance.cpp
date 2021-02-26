@@ -29,7 +29,14 @@ namespace WindowElement {
 		Layout::TableNext();
 
 		std::stringstream ss;
-		ss << Time::unscaledDeltaTime * 1000 << "ms";
+		ss << Math::Round(Time::unscaledDeltaTime * 1000, 3) << "ms";
+		Layout::Text(ss.str().c_str());
+		ss.str("");
+		Layout::TableNext();
+		Layout::Text("FPS");
+		Layout::TableNext();
+
+		ss << Math::Round(1.0f / Time::unscaledDeltaTime, 3) << " fps";
 		Layout::Text(ss.str().c_str());
 
 		Layout::TableNext();
@@ -41,8 +48,12 @@ namespace WindowElement {
 		Layout::Text("Renderer");
 		Layout::TableNext();
 		Layout::Text(context->GetRenderer().c_str());
+		
+		Layout::TableNext();
+		Layout::Text("VSync");
+		Layout::TableNext();
 		static bool vsync = context->GetWindow().GetWindowInfo().VSync;
-		Input::Checkbox("VSync", vsync);
+		Input::Checkbox("##VSYNC", vsync);
 		context->GetWindow().SetVSync(vsync);
 
 		Layout::EndTable();

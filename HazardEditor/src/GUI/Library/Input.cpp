@@ -28,7 +28,7 @@ namespace WindowElement {
 	void Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		Style::Style::SelectFont(buttonFont);
-
+		
 		if (Button(label, size)) {
 			value = resetValue;
 		}
