@@ -115,6 +115,13 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\SceneHandler.h" />
+    <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.h" />
+    <ClInclude Include="src\Hazard\File\File.h" />
+    <ClInclude Include="src\Hazard\File\StringUtil.h" />
+    <ClInclude Include="src\Hazard\Entity\Scene.h" />
+    <ClInclude Include="src\Hazard\Entity\Entity.h" />
+    <ClInclude Include="src\Hazard\Entity\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -154,5 +161,10 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\SceneHandler.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.cpp" />
+    <ClCompile Include="src\Hazard\File\File.cpp" />
+    <ClCompile Include="src\Hazard\File\StringUtil.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Scene.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Entity.cpp" />
   </ItemGroup>
 </Project>

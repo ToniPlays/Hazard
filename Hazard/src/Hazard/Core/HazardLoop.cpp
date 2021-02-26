@@ -23,6 +23,7 @@ namespace Hazard::Core {
 
 		moduleHandler.PreInit();
 		moduleHandler.Init();
+
 		double lastTime = 0;
 		while (!shouldClose) {
 

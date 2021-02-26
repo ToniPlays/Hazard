@@ -110,4 +110,9 @@ namespace Style {
 	{
 		return { color.r, color.g, color.b, color.a };
 	}
+	ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
+	{
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
+		return flags;
+	}
 }

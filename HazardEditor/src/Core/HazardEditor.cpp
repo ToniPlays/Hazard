@@ -16,8 +16,9 @@ EditorApplication::~EditorApplication()
 void EditorApplication::Init()
 {
 	SetTitle("HazardEditor");
+
 	PushModule<Logging::Logger>();
-	PushModule<Rendering::RenderContext>();
+	PushModule<Rendering::RenderContext>().SetClearColor(Color::FromHex("#222222"));
 	PushModule<Rendering::RenderEngine>();
 	PushModule<ECS::SceneHandler>();
 

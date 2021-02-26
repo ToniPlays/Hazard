@@ -16,9 +16,11 @@ namespace Hazard::Module {
 		void Close();
 
 		template<typename T>
-		void AddModule() {
+		T& AddModule() {
 			T* m = new T();
 			modules.push_back(m);
+			HZR_CORE_INFO("Added module " + std::string(typeid(T).name()));
+			return *m;
 		};
 
 		template<typename T>
@@ -28,6 +30,17 @@ namespace Hazard::Module {
 				if (dynamic_cast<T*>(m))
 					return (T&)*m;
 			}
+		}
+		template<typename T>
+		T& GetModule(bool& found)
+		{
+			for (Module* m : modules) {
+				if (dynamic_cast<T*>(m)) {
+					found = true;
+					return (T&)*m;
+				}
+			}
+			found = false;
 		}
 
 	private:

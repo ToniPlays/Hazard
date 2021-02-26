@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include <hzreditor.h>
 #include "EditorView.h"
 
@@ -21,6 +21,16 @@ namespace WindowElement {
 	}
 	void EditorView::Init()
 	{
+		bool found = false;
+		context = &Hazard::Application::GetModule<Rendering::RenderContext>(found);
+		if (!found) {
+			SetActive(false);
+			HZR_WARN("EditorView unable to start without RenderContext");
+			return;
+		}
+		SetActive(true);
+
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
@@ -40,7 +50,7 @@ namespace WindowElement {
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
-		context = &Hazard::Application::GetModule<Rendering::RenderContext>();
+		
 
 		GLFWwindow* window = static_cast<GLFWwindow*>(context->GetWindow().GetNativeWindow());
 
@@ -61,11 +71,12 @@ namespace WindowElement {
 		PushRenderable<Performance>();
 		PushRenderable<Viewport>();
 
-	}
+		HZR_INFO("EditoView init");
+
+	}  
 	void EditorView::Render()
 	{
 		BeginFrame();
-
 		{
 			static bool dockspaceOpen = true;
 			static bool opt_fullscreen_persistant = true;
@@ -110,8 +121,6 @@ namespace WindowElement {
 
 			ImGui::End();
 		}
-
-
 
 		for (RenderableElement* element : elements) {
 			element->OnRender();

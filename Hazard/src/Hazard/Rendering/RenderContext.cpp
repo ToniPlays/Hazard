@@ -9,7 +9,7 @@ namespace Hazard::Rendering {
 
 	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
 	{
-		
+		SetActive(true);
 	}
 	RenderContext::~RenderContext()
 	{
@@ -24,7 +24,7 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Update()
 	{
-		window->OnUpdate();
+		window->OnUpdate(clearColor);
 	}
 
 	void RenderContext::Close()

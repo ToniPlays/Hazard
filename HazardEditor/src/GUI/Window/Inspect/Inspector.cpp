@@ -4,6 +4,7 @@
 #include "Inspector.h"
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Layout.h"
+#include "GUI/Library/Style.h"
 
 using namespace WindowLayout;
 
@@ -42,8 +43,8 @@ namespace WindowElement {
 		static glm::vec3 value3 = { 0, 0, 0 };
 		
 		
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
-		Layout::Treenode("Transform", flags, []() {
+		
+		Layout::Treenode("Transform", Style::Style::GetTreeNodeDefaultFlags(), []() {
 			Layout::Text("Treenode");
 
 			Layout::IDGroud("FloatVec", []() {
@@ -57,9 +58,9 @@ namespace WindowElement {
 				});
 		});
 		Layout::ContextMenu([]() {
-			if (Layout::MenuItem("Selected")) {
-				
-			}
+			Layout::MenuItem("Do something", []() {
+			
+			});
 		});
 		
 	}

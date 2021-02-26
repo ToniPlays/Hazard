@@ -19,9 +19,29 @@ namespace WindowElement {
 	{
 		ImGui::BeginMenuBar();
 
-		if (Layout::MenuItem("Element")) {
+		Layout::Menu("File", []() {
+			Layout::MenuItem("New", []() {});
+			Layout::MenuItem("Open", []() {});
+			Layout::Separator();
+			Layout::MenuItem("Save", []() {});
+			Layout::MenuItem("Save as", []() {});
+			Layout::MenuItem("New scene", []() {});
+		});
+		Layout::Menu("Edit", []() {
 			
-		}
+		});
+		Layout::Menu("View", []() {
+			
+		});
+		Layout::Menu("Assets", []() {
+			
+		});
+		Layout::Menu("Window", []() {
+			
+		});
+		Layout::Menu("Help", []() {
+			
+		});
 
 		ImGui::EndMenuBar();
 	}

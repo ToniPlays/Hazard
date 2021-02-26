@@ -13,22 +13,19 @@ namespace Hazard::Logging {
 
 	Logger::Logger() : Module("Logger")
 	{
-
-	}
-	Logger::~Logger()
-	{
-		Flush();
-	}
-	void Logger::PreInit()
-	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		coreLogger = spdlog::stdout_color_mt("Hazard");
 		coreLogger->set_level(spdlog::level::trace);
 
 		clienLogger = spdlog::stdout_color_mt("Client");
 		clienLogger->set_level(spdlog::level::trace);
+
 	}
-	void Logger::Flush()
+	Logger::~Logger()
+	{
+		Close();
+	}
+	void Logger::Close()
 	{
 		coreLogger.reset();
 		clienLogger.reset();

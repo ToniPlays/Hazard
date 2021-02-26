@@ -16,6 +16,7 @@ namespace Style {
 		static ImFont* AddFont(const char* file, float size);
 		static ImVec4 ColorAsImVec4(Color color);
 
+		static ImGuiTreeNodeFlags GetTreeNodeDefaultFlags();
 		static ImGuiStyle& GetStyle() { return ImGui::GetStyle(); }
 	};
 }

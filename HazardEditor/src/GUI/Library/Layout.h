@@ -10,11 +10,39 @@ namespace WindowLayout {
 		static void EndTable();
 
 		static void IDGroud(const char* id, void(*callback)());
-		static void Treenode(const char* title, ImGuiTreeNodeFlags flags, void(*callback)());
-		static void ContextMenu(void(*callback)());
-		static bool MenuItem(const char* name);
+		template<typename T>
+		static bool Treenode(const char* title, ImGuiTreeNodeFlags flags, T callback)
+		{
+			if (ImGui::TreeNodeEx(title, flags)) {
+				callback();
+				ImGui::TreePop();
+				return true;
+			}
+			return false;
+		}
+		template<typename T>
+		static bool ContextMenu(T callback) {
+			if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+				callback();
+				ImGui::EndPopup();
+				return true;
+			}
+			return false;
+		}
+		template<typename T>
+		static void Menu(const char* name, T callback) {
+			if (ImGui::BeginMenu(name)) {
+				callback();
+				ImGui::EndMenu();
+			}
+		}
+		template<typename T>
+		static void MenuItem(const char* name, T callback) {
+			if (ImGui::MenuItem(name)) 
+				callback();
+		}
 
-
+		static void Separator() { ImGui::Separator(); }
 		static void Text(const char* text);
 		static void NextLine(float height = 15.0f);
 		static void ItemWidth(float width);

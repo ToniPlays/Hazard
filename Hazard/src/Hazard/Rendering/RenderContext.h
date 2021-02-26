@@ -23,6 +23,8 @@ namespace Hazard::Rendering {
 		void Close();
 		bool IsAvailable() { return true; }
 
+		void SetClearColor(Color color) { clearColor = color; };
+
 		RenderAPI GetCurrentAPI() { return currentAPI; }
 		std::string GetRenderer() { return window->GetContext()->GetVersion(); }
 		Window& GetWindow() { return *window; }
@@ -30,7 +32,7 @@ namespace Hazard::Rendering {
 	private:
 		RenderAPI currentAPI;
 		Window* window = nullptr;
-
+		Color clearColor;
 	private:
 		void Process(Event& e);
 	};

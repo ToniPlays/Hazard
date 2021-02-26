@@ -30,26 +30,6 @@ namespace WindowLayout {
         callback();
         ImGui::PopID();
     }
-    void Layout::Treenode(const char* title, ImGuiTreeNodeFlags flags, void(*callback)())
-    {
-
-        if (ImGui::TreeNodeEx(title, flags)) {
-            callback();
-            ImGui::TreePop();
-        }
-    }
-    void Layout::ContextMenu(void(*callback)())
-    {
-        if (ImGui::BeginPopupContextWindow(0, 1, false)) {
-            callback();
-            ImGui::EndPopup();
-        }
-
-    }
-    bool Layout::MenuItem(const char* name)
-    {
-        return ImGui::MenuItem(name);
-    }
     void Layout::Text(const char* text)
     {
         ImGui::Text(text);

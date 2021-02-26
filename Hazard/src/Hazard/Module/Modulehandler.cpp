@@ -14,27 +14,35 @@ namespace Hazard::Module {
     ModuleHandler::~ModuleHandler()
     {
         Close();
-        for (Module* m : modules) delete m;
+        for (Module* m : modules) 
+            delete m;
     }
 
     void ModuleHandler::PreInit()
     {
-        for (Module* m : modules) m->PreInit();
+        for (Module* m : modules) 
+            m->PreInit();
     }
     void ModuleHandler::Init()
     {
-        for (Module* m : modules) m->Init();
+        for (Module* m : modules) 
+            m->Init();
     }
     void ModuleHandler::Update()
     {
-        for (Module* m : modules) m->Update();
+        for (Module* m : modules)
+            if (m->GetActive())
+                m->Update();
     }
     void ModuleHandler::Render()
     {
-        for (Module* m : modules) m->Render();
+        for (Module* m : modules) 
+            if (m->GetActive())
+                m->Render();
     }
     void ModuleHandler::Close()
     {
-        for (Module* m : modules) m->Close();
+        for (Module* m : modules) 
+            m->Close();
     }
 }

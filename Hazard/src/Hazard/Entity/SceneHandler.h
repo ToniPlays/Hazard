@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Module/Module.h"
+#include "Scene.h"
 
 namespace Hazard::ECS {
 	class SceneHandler : public Module::Module {
@@ -14,7 +15,9 @@ namespace Hazard::ECS {
 
 		void LoadScene(const char* file);
 
+		Scene& GetCurrentScene() { return *scene; }
+
 	private:
-		
+		Scene* scene = nullptr;
 	};
 }

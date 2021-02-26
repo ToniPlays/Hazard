@@ -22,12 +22,14 @@ namespace Hazard::Core {
 		static HazardLoop& GetCurrent() { return *instance; }
 
 		template<typename T>
-		static void PushModule() {
-			instance->moduleHandler.AddModule<T>();
+		static T& PushModule() {
+			return instance->moduleHandler.AddModule<T>();
 		};
 
 		template<typename T>
 		static T& GetModule() { return instance->moduleHandler.GetModule<T>(); };
+		template<typename T>
+		static T& GetModule(bool& found) { return instance->moduleHandler.GetModule<T>(found); };
 
 	private:
 		Application* application = nullptr;

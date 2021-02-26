@@ -20,7 +20,10 @@ namespace WindowElement {
 	}
 	void Performance::Init()
 	{
-		context = &Core::HazardLoop::GetModule<Rendering::RenderContext>();
+		bool found = false;
+		context = &Core::HazardLoop::GetModule<Rendering::RenderContext>(found);
+		SetActive(found);
+		HZR_ASSERT(!found, "Performance can't start without RenderContext");
 	}
 	void Performance::OnWindowRender()
 	{

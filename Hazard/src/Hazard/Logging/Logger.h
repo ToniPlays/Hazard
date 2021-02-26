@@ -10,11 +10,11 @@ namespace Hazard::Logging {
 		Logger();
 		~Logger();
 
-		void PreInit() override;
-		void Flush();
+		void Close();
 
 		static std::shared_ptr<spdlog::logger> GetCoreLogger() { return coreLogger; }
 		static std::shared_ptr<spdlog::logger> GetClientLogger() { return clienLogger; }
+		
 
 
 	private:

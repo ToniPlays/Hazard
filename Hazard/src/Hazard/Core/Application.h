@@ -17,11 +17,13 @@ namespace Hazard {
 		void SetTitle(const char* title);
 
 		template<typename T>
-		void PushModule() {
-			Core::HazardLoop::GetCurrent().PushModule<T>();
+		T& PushModule() {
+			return Core::HazardLoop::GetCurrent().PushModule<T>();
 		};
 		template<typename T>
 		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }
+		template<typename T>
+		static T& GetModule(bool& found) { return Core::HazardLoop::GetModule<T>(found); }
 		
 	};
 	Hazard::Application* CreateApplication();

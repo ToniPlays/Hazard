@@ -4,6 +4,7 @@
 #include "SceneHandler.h"
 
 namespace Hazard::ECS {
+
 	SceneHandler::SceneHandler() : Module::Module("Scene handler")
 	{
 	}
@@ -12,6 +13,7 @@ namespace Hazard::ECS {
 	}
 	void SceneHandler::Init()
 	{
+		this->scene = new Scene();
 	}
 	void SceneHandler::Update()
 	{
@@ -21,5 +23,6 @@ namespace Hazard::ECS {
 	}
 	void SceneHandler::LoadScene(const char* file)
 	{
+		
 	}
 }

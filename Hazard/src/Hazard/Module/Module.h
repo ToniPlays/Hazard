@@ -13,7 +13,7 @@ namespace Hazard::Module {
 		virtual void Update() {}
 		virtual void Render() {}
 		virtual void Close() {}
-
+		
 
 		bool GetActive() { return isActive; }
 		void SetActive(bool active) { isActive = active; }

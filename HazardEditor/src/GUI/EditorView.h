@@ -21,6 +21,7 @@ namespace WindowElement {
 			T* w = new T();
 			elements.push_back(w);
 			w->Init();
+			HZR_INFO("Added renderable " + std::string(typeid(T).name()));
 		} 
 
 	private:

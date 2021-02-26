@@ -17,7 +17,10 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::Init()
 	{
-
+		bool found = false;
+		Core::HazardLoop::GetModule<RenderContext>(found);
+		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
+		SetActive(found);
 	}
 	void RenderEngine::Update()
 	{
