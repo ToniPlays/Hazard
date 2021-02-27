@@ -5,6 +5,7 @@
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
+#include "GUI/Library/ComponentDraw.h"
 
 using namespace WindowLayout;
 
@@ -20,48 +21,22 @@ namespace WindowElement {
 	}
 	void Inspector::OnWindowRender()
 	{
-		std::string text = "Some text";
-		Input::InputField(text);
+		if (!selectionContext) return;
 
-		if (Input::Button("Click me!")) {}
-
-		Layout::Table(2);
-		Layout::Text("Someting");
-		Layout::TableNext();
-		Layout::Text("Else");
-		Layout::TableNext();
-		Layout::Text("Here");
-		Layout::TableNext();
-		Layout::EndTable();
-
-		Layout::NextLine(25.0f);
-
-		Layout::Text("I am meme");
-
-		static float value = 0;
-		static glm::vec2 value2 = { 0, 0 };
-		static glm::vec3 value3 = { 0, 0, 0 };
+		DrawComponent<TagComponent>("Tag", selectionContext);
+		DrawComponent<TransformComponent>("Transform", selectionContext);
+		DrawComponent<CameraComponent>("CameraComponent", selectionContext);
 		
-		
-		
-		Layout::Treenode("Transform", Style::Style::GetTreeNodeDefaultFlags(), []() {
-			Layout::Text("Treenode");
-
-			Layout::IDGroud("FloatVec", []() {
-				Input::Vec1("Float", value, 0.0f, 80);
-				});
-			Layout::IDGroud("OffsetVec2", []() {
-				Input::Vec2("Offset", value2, 0.0f, 80);
-				});
-			Layout::IDGroud("PositionVec3", []() {
-				Input::Vec3("Position", value3, 0.0f, 80);
-				});
-		});
-		Layout::ContextMenu([]() {
-			Layout::MenuItem("Do something", []() {
-			
-			});
-		});
-		
+	}
+	bool Inspector::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Inspector::SelectionContextChange));
+		return false;
+	}
+	bool Inspector::SelectionContextChange(Events::SelectionContextChange& e)
+	{
+		if(!IsLocked()) selectionContext = e.GetEntity();
+		return false;
 	}
 }

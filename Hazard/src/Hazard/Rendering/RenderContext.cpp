@@ -10,6 +10,7 @@ namespace Hazard::Rendering {
 	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
 	{
 		SetActive(true);
+		window = Window::Create();
 	}
 	RenderContext::~RenderContext()
 	{
@@ -18,7 +19,7 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Init()
 	{
-		window = Window::Create();
+		
 		window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 	}
 

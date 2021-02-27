@@ -1,6 +1,7 @@
 #pragma once
 
 namespace WindowElement {
+
 	class RenderableElement {
 	public:
 		RenderableElement() {};
@@ -9,5 +10,8 @@ namespace WindowElement {
 		virtual void Init() {};
 		virtual void OnMenuRender() {};
 		virtual void OnRender() {};
+
+		virtual bool OnEvent(Event& e) { return false; };
+
 	};
 }

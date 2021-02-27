@@ -1,5 +1,6 @@
 #pragma once
 #include "Hazard.h"
+#include "Core/EditorEvent.h"
 #include "GUI/EditorWindow.h"
 
 using namespace Hazard;
@@ -12,14 +13,15 @@ namespace WindowElement {
 		~Hierarchy();
 
 		void Init() override;
+		bool OnEvent(Event& e) override;
 
 		void OnWindowRender() override;
-
-		void SetSelectionContext(Entity entity) { selectionContext = entity; }
+		bool SelectionContextChange(Events::SelectionContextChange& e);
 
 	private:
 		SceneHandler* handler;
 		Entity selectionContext;
+
 	private:
 		void DrawEntity(Entity entity);
 	};

@@ -52,6 +52,7 @@
 #define HZR_CORE_WARN(...)
 #define HZR_CORE_ERROR(...)
 #define HZR_CORE_FATAL(...)
+#define HZR_CORE_ASSERT(c, ...)
 
 //Client logging macros
 #define HZR_TRACE(...)
@@ -59,11 +60,11 @@
 #define HZR_WARN(...)
 #define HZR_ERROR(...)
 #define HZR_FATAL(...)
+#define HZR_ASSERT(status, ...)
 
 #define PROFILE_FN();
 #define PROFILE_FN_NAMED(x)
 #define PROFILE_FN_END()
-#define HZR_ASSERT()
 
 #endif // !
 

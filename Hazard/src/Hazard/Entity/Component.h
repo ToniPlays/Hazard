@@ -15,8 +15,8 @@ namespace Hazard::ECS {
 	struct TransformComponent
 	{
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Scale = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Rotation =	{ 0.0f, 0.0f, 0.0f };
+		glm::vec3 Scale =		{ 1.0f, 1.0f, 1.0f };
 
 		glm::mat4 GetTransformMat4()
 		{
@@ -26,5 +26,8 @@ namespace Hazard::ECS {
 				* rotation
 				* glm::scale(glm::mat4(1.0f), Scale);
 		}
+	};
+	struct CameraComponent {
+		float fov = 60.0f;
 	};
 }

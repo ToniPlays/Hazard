@@ -31,13 +31,13 @@ namespace Hazard::Core {
 			Time::unscaledDeltaTime = time - lastTime;
 			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
 			Time::time = time;
-
+			application->Update();
 			moduleHandler.Update();
 			moduleHandler.Render();
 
 			lastTime = time;
 		}
-
+		application->Close();
 		moduleHandler.Close();
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)

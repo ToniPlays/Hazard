@@ -15,10 +15,15 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::Init()
 {
-	SetTitle("HazardEditor");
-
 	PushModule<Logging::Logger>();
-	PushModule<Rendering::RenderContext>().SetClearColor(Color::FromHex("#222222"));
+	Rendering::RenderContext context = PushModule<Rendering::RenderContext>();
+
+	std::stringstream ss;
+	ss << "Hazard Editor | Hazard " << HZR_BUILD_VERSION << " (" << HAZARD_SYSTEM_BIT << ")" << " for " << HZR_PLATFORM;
+	context.SetClearColor(Color::FromHex("#222222"));
+	context.GetWindow().SetWindowTitle(ss.str().c_str());
+	context.GetWindow().SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
+
 	PushModule<Rendering::RenderEngine>();
 	PushModule<ECS::SceneHandler>();
 

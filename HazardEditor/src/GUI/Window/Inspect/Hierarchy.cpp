@@ -2,6 +2,8 @@
 
 #include <hzreditor.h>
 #include "Hierarchy.h"
+#include "GUI/EditorView.h"
+
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
 
@@ -23,6 +25,12 @@ namespace WindowElement {
 		handler = &Application::GetModule<SceneHandler>(found);
 		SetActive(found);
 	}
+	bool Hierarchy::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Hierarchy::SelectionContextChange));
+		return false;
+	}
 	void Hierarchy::OnWindowRender()
 	{
 		Scene& scene = handler->GetCurrentScene();
@@ -33,22 +41,36 @@ namespace WindowElement {
 			});
 		});
 
-		Layout::ContextMenu([]() {
-			Layout::MenuItem("Create entity", []() {
-				HZR_INFO("Create new entity TODO");
+		Layout::ContextMenu([&scene]() {
+			Layout::MenuItem("Create entity", [&scene]() {
+				scene.CreateEntity("New entity");
 			});
 		});
+		
+		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0)) {
+			Events::SelectionContextChange e({});
+			EditorView::GetInstance().OnEvent(e);
+		}
+	}
+	bool Hierarchy::SelectionContextChange(Events::SelectionContextChange& e)
+	{
+		selectionContext = e.GetEntity();
+		return false;
 	}
 	void Hierarchy::DrawEntity(Entity entity) {
 		ImGuiTreeNodeFlags flags = ((selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow |
 			ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		bool opened = Layout::Treenode(entity.GetComponent<TagComponent>().tag.c_str(), flags, [&entity]() {
-			Layout::Text("Hello is me entity");
-		});
-		if (ImGui::IsItemClicked()) {
-			SetSelectionContext(entity);
-		}
 
+		auto& tag = entity.GetComponent<TagComponent>();
+		
+		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {
+			Layout::Text(std::string("Hello is me entity named " + tag.tag).c_str());
+		});
+
+		if (ImGui::IsItemClicked()) {
+			Events::SelectionContextChange e(entity);
+			EditorView::GetInstance().OnEvent(e);
+		}
 	}
 }

@@ -12,9 +12,9 @@ namespace WindowLayout {
     {
         ImGui::NextColumn();
     }
-    void Layout::SameLine() 
+    void Layout::SameLine(float offset, float spacing) 
     {
-        ImGui::SameLine();
+        ImGui::SameLine(offset, spacing);
     }
     void Layout::SetColumnWidth(float width)
     {
@@ -22,13 +22,7 @@ namespace WindowLayout {
     }
     void Layout::EndTable()
     {
-        ImGui::Columns(1);
-    }
-    void Layout::IDGroud(const char* id, void(*callback)())
-    {
-        ImGui::PushID(id);
-        callback();
-        ImGui::PopID();
+        ImGui::Columns(1); 
     }
     void Layout::Text(const char* text)
     {

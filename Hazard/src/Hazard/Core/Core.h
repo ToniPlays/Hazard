@@ -1,6 +1,13 @@
 #pragma once
 
 #ifdef HZR_PLATFORM_WINDOWS
+#define HZR_PLATFORM "Windows"
+#if _WIN64
+#define HAZARD_SYSTEM_BIT "x64"
+#elif _WIN32
+#define HAZARD_SYSTEM_BIT "x86"
+#endif
+
 #if HZR_DYNAMIC_LINK
 #ifdef HZR_BUILD_DLL
 #define HAZARD_API __declspec(dllexport)

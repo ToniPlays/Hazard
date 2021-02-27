@@ -11,9 +11,10 @@ using namespace Hazard;
 
 namespace WindowElement {
 
+	EditorView* EditorView::instance = nullptr;
 	EditorView::EditorView() : Module::Module("EditorViews")
 	{
-
+		instance = this;
 	}
 	EditorView::~EditorView()
 	{
@@ -126,6 +127,12 @@ namespace WindowElement {
 			element->OnRender();
 		}
 		EndFrame();
+	}
+	void EditorView::OnEvent(Event& e)
+	{
+		for (RenderableElement* element : elements) {
+			if (element->OnEvent(e)) return;
+		}
 	}
 	void EditorView::Flush()
 	{

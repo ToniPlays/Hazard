@@ -12,9 +12,8 @@ namespace Hazard {
 		~Application() {};
 
 		virtual void Init() {};
-		
-		void SetTitle(std::string title);
-		void SetTitle(const char* title);
+		virtual void Update() {};
+		virtual void Close() {};
 
 		template<typename T>
 		T& PushModule() {

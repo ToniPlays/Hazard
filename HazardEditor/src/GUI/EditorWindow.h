@@ -14,6 +14,7 @@ namespace WindowElement {
 		void OnRender() override;
 		virtual void Init() {};
 		virtual void OnWindowRender() = 0;
+		virtual bool OnEvent(Event& e) override { return false; };
 
 		bool GetActive() { return active; }
 
