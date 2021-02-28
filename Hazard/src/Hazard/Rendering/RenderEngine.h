@@ -7,13 +7,10 @@
 #include "Textures/RenderTexture.h"
 #include "Hazard/Entity/Scene.h"
 
-#include "Buffers/VertexArray.h"
-#include "Buffers/Buffer.h"
-#include "Shader/Shader.h"
+#include "2D/Renderer2D.h"
 
+namespace Hazard::Rendering {	
 
-
-namespace Hazard::Rendering {
 	class RenderEngine : public Module::Module {
 	public:
 		RenderEngine();
@@ -25,15 +22,20 @@ namespace Hazard::Rendering {
 
 		void SceneRender(ECS::Scene& scene);
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
+
 		RenderTexture* GetRenderTarget() { return renderTarget; }
+		RenderStats& GetStats() { return stats; }
+
+		template<typename T>
+		void Submit(T element) {};
+		template<>
+		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
 
 	private:
 		RenderContext* context;
 		RenderTexture* renderTarget = nullptr;
 
-		//Temporary
-		VertexArray* vertexArray;
-		Shader* shader;
-
+		Renderer2D* renderer2D;
+		RenderStats stats;
 	};
 }

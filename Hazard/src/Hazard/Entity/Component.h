@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Hazard/Math/Math.h"
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -28,6 +29,14 @@ namespace Hazard::ECS {
 		}
 	};
 	struct CameraComponent {
-		float fov = 60.0f;
+		float fov = 10.0f;
+
+		glm::mat4 projection;
+
+		void RecalculateProjection(float w, float h) {
+			HZR_CORE_INFO("Camera resized");
+			float aspect = w / h * fov;
+			projection = glm::ortho(-aspect, aspect, -fov, fov);
+		}
 	};
 }

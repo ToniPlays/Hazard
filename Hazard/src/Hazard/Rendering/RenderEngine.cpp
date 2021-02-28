@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "RenderEngine.h"
 #include "RenderUtils.h"
+#include "2D/QuadData.h"
 
 namespace Hazard::Rendering {
 
@@ -23,50 +24,38 @@ namespace Hazard::Rendering {
 		context = &Core::HazardLoop::GetModule<RenderContext>(found);
 		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
 		SetActive(found);
-
-		vertexArray = RenderUtils::Create<VertexArray>();
-		shader = RenderUtils::Create<Shader>("res/shaders/standard.glsl");
-
-		VertexBuffer* buffer = RenderUtils::Create<VertexBuffer>((uint32_t)1000);
-		vertexArray->AddBuffer(buffer);
-
-		float positions[12] = {
-			-0.5f, -0.5f, 0.5f,
-			-0.5f,  0.5f, 0.5f,
-			 0.5f,  0.5f, 0.5f,
-			 0.5f, -0.5f, 0.5f
-		};
-
-		buffer->SetLayout({ {ShaderDataType::Float3, "position" } });
-		buffer->SetData(positions, 12);
-
-		uint32_t indices[6] = {
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		buffer->SetData(positions, sizeof(positions));
-		IndexBuffer* indexBuffer = RenderUtils::Create<IndexBuffer>();
-		indexBuffer->SetData(indices, 6);
-		vertexArray->SetIndexBuffer(indexBuffer);
+		renderer2D = new Renderer2D(context);
+		renderer2D->Init(35000);
 
 	}
 	void RenderEngine::Flush()
 	{
 		delete context; 
+		renderer2D->Close();
 	}
 	void RenderEngine::SceneRender(ECS::Scene& scene)
 	{
+		stats.drawCalls = 0;
+		stats.quads = 0;
+		stats.indices = 0;
+		stats.vertices = 0;
+
 		if (renderTarget == nullptr) 
 			return;
 
 		renderTarget->Bind();
-		shader->Bind();
-
 		context->GetWindow().GetContext()->ClearFrame("#222222");
-		context->GetWindow().GetContext()->DrawIndexed(vertexArray);
+		renderer2D->BeginScene(scene.GetSceneCamera().projection);
+		renderer2D->BeginBatch();
 
-		shader->Unbind();
+		for (int x = 0; x < 100; x++) {
+			for (int y = 0; y < 100; y++) {
+				Submit(Quad({ float(x) * 1.05f - 5.0f, float(y) * 1.05 - 5.0f, 0 }, { float(x) * 0.001f, float(y) * 0.001f, 0.2f, 1.0f }));
+			}
+		}
+	
+		renderer2D->Flush();
 		renderTarget->Unbind();
+		renderer2D->CollectStats(stats);
 	}
 }

@@ -198,6 +198,8 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -269,5 +271,6 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp" />
   </ItemGroup>
 </Project>

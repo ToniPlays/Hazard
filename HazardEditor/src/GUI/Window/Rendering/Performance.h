@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GUI/EditorWindow.h"
+#include "Hazard.h"
 
 namespace WindowElement {
 	class Performance : public EditorWindow {
@@ -14,5 +15,6 @@ namespace WindowElement {
 
 	private:
 		Hazard::Rendering::RenderContext* context;
+		Hazard::Rendering::RenderStats stats;
 	};
 }

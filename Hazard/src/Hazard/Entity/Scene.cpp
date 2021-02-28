@@ -9,7 +9,6 @@ namespace Hazard::ECS {
     Scene::Scene() : file("EmptyFile")
     {
         Entity entity = CreateEntity("Test entity");
-        
         HZR_CORE_INFO("Created entity " + std::string(entity.GetComponent<TagComponent>().tag));
     }
     Scene::Scene(const char* file) : file(file)

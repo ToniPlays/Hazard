@@ -17,3 +17,5 @@
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Time.h"
 #include "Hazard/Math/Math.h"
+
+#include "Hazard/File/StringUtil.h"

@@ -16,5 +16,7 @@ namespace WindowElement {
 	
 	private:
 		RenderEngine* renderer;
+
+		uint32_t width = 0, height = 0;
 	};
 }
