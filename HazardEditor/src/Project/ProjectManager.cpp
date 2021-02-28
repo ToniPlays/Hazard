@@ -9,6 +9,7 @@ namespace Project {
 
 	ProjectManager::ProjectManager() : Module::Module("ProjectManager")
 	{
+
 	}
 
 	ProjectManager::~ProjectManager()
@@ -23,6 +24,10 @@ namespace Project {
 
 	void ProjectManager::Save()
 	{
-		HZR_INFO(projectData->absolutePath);
+		HZR_INFO("Saving project to" + std::string(projectData->absolutePath));
+	}
+	void ProjectManager::SaveCurrentScene()
+	{
+
 	}
 }

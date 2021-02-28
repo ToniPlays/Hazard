@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Hazard.h"
+
 namespace WindowElement {
 	class Input {
 	public:
@@ -12,5 +14,6 @@ namespace WindowElement {
 		static void Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth);
 
 		static void Checkbox(const char* label, bool& value);
+		static void ColorPicker(const char* label, Hazard::Color& color);
 	};
 }

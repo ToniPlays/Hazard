@@ -66,6 +66,8 @@ namespace WindowElement {
 		Layout::Text(label);
 		Layout::TableNext();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
@@ -74,10 +76,10 @@ namespace WindowElement {
 		ImGui::PopStyleColor(3);
 		Layout::TableNext();
 
-		Style::Style::SetButtonColors("#5DC505", "#4A9F04", "#418B04");
+		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
 		Input::ResettableDragButton("Y", value.y, resetValue, buttonSize, 1, 0);
 		ImGui::PopStyleColor(3);
-		
+		ImGui::PopStyleVar();
 
 		Layout::EndTable();
 	}
@@ -88,6 +90,8 @@ namespace WindowElement {
 		Layout::Text(label);
 		Layout::TableNext();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 		
@@ -96,7 +100,7 @@ namespace WindowElement {
 		ImGui::PopStyleColor(3);
 		Layout::TableNext();
 
-		Style::Style::SetButtonColors("#5DC505", "#4A9F04", "#418B04");
+		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
 		Input::ResettableDragButton("Y", value.y, resetValue, buttonSize, 1, 0);
 		ImGui::PopStyleColor(3);
 		Layout::TableNext();
@@ -105,11 +109,31 @@ namespace WindowElement {
 		Input::ResettableDragButton("Z", value.z, resetValue, buttonSize, 1, 0);
 		ImGui::PopStyleColor(3);
 		
+		ImGui::PopStyleVar();
 
 		Layout::EndTable();
 	}
 	void Input::Checkbox(const char* label, bool& value)
 	{
 		ImGui::Checkbox(label, &value);
+	}
+	void Input::ColorPicker(const char* label, Hazard::Color& color)
+	{
+		static bool open = false;
+		if (ImGui::ColorButton(label, Style::Style::ColorAsImVec4(color))) {
+			open = true;
+		}
+		if (open) {
+			float c[4] = { color.r, color.g, color.b, color.a };
+			ImGui::Begin(label, &open);
+
+			if (ImGui::ColorPicker4(label, c)) {
+				color.r = c[0];
+				color.g = c[1];
+				color.b = c[2];
+				color.a = c[3];
+			}
+			ImGui::End();
+		}
 	}
 }

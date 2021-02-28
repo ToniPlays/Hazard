@@ -75,17 +75,14 @@ namespace Hazard::Rendering {
 			BeginBatch();
 		}
 
-		glm::mat4 rotation = glm::toMat4(glm::quat({0, 0, 0}));
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), quad.position) * rotation * glm::scale(glm::mat4(1.0f), {1.0f, 1.0f, 1.0f });
-
 		for (uint8_t i = 0; i < quadVertexCount; i++) {
-			data.QuadVertexBufferPtr->position = transform * data.QuadVertexPos[i];
+			data.QuadVertexBufferPtr->position = quad.transform * data.QuadVertexPos[i];
 			data.QuadVertexBufferPtr->color = quad.color;
 			data.QuadVertexBufferPtr++;
 		}
-		data.QuadIndexCount += 6;
 
+		data.QuadIndexCount += 6;
+		stats.vertices += quadVertexCount;
 		stats.quads++;
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
@@ -115,7 +112,6 @@ namespace Hazard::Rendering {
 
 		stats.drawCalls++;
 		stats.indices += data.QuadIndexCount;
-		stats.vertices += dataSize;
 	}
 	void Renderer2D::Close()
 	{

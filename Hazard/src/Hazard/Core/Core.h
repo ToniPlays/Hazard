@@ -34,6 +34,8 @@
 #define HZR_BUILD_VERSION "Release"
 #endif // HZR_DEBUG
 
+
+//Accessible globally
 #include <iostream>
 #include <vector>
 #include <unordered_map>

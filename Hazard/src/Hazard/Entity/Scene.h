@@ -13,6 +13,7 @@ namespace Hazard::ECS {
 		Scene(const char* file);
 		~Scene();
 
+		void Render();
 		void Flush();
 
 		Entity CreateEntity(const char* name);

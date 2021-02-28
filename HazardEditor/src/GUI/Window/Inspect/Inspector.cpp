@@ -25,8 +25,20 @@ namespace WindowElement {
 
 		DrawComponent<TagComponent>("Tag", selectionContext);
 		DrawComponent<TransformComponent>("Transform", selectionContext);
-		DrawComponent<CameraComponent>("CameraComponent", selectionContext);
-		
+		DrawComponent<CameraComponent>("Camera", selectionContext);
+		DrawComponent<SpriteRendererComponent>("Sprite", selectionContext);
+
+
+		Layout::ContextMenu([&]() {
+			Layout::MenuItem("Camera", [&]() {
+				selectionContext.AddComponent<CameraComponent>();
+				});
+			
+			Layout::MenuItem("Sprite renderer", [&]() {
+				selectionContext.AddComponent<SpriteRendererComponent>();
+				});
+		});
+
 	}
 	bool Inspector::OnEvent(Event& e)
 	{

@@ -6,10 +6,10 @@
 namespace Hazard::Rendering {
 
 	struct Quad {
-		glm::vec3 position;
+		glm::mat4 transform;
 		glm::vec4 color;
 
-		Quad(glm::vec3 pos, glm::vec4 color) : position(pos), color(color) {};
+		Quad(glm::mat4 transform, glm::vec4 color) : transform(transform), color(color) {};
 	};
 
 	struct QuadVertex

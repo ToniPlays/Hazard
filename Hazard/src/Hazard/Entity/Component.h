@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Hazard/Math/Math.h"
+#include "Hazard/Math/Color.h"
+
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -34,9 +36,11 @@ namespace Hazard::ECS {
 		glm::mat4 projection;
 
 		void RecalculateProjection(float w, float h) {
-			HZR_CORE_INFO("Camera resized");
 			float aspect = w / h * fov;
-			projection = glm::ortho(-aspect, aspect, -fov, fov);
+			projection = glm::ortho(-aspect, aspect, -fov, fov, -1000.0f, 1000.0f);
 		}
+	};
+	struct SpriteRendererComponent {
+		Color tint;
 	};
 }

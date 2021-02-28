@@ -43,7 +43,8 @@ namespace WindowElement {
 
 		Layout::ContextMenu([&scene]() {
 			Layout::MenuItem("Create entity", [&scene]() {
-				scene.CreateEntity("New entity");
+				scene.CreateEntity("Empty entity");
+				
 			});
 		});
 		
@@ -65,7 +66,7 @@ namespace WindowElement {
 		auto& tag = entity.GetComponent<TagComponent>();
 		
 		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {
-			Layout::Text(std::string("Hello is me entity named " + tag.tag).c_str());
+			
 		});
 
 		if (ImGui::IsItemClicked()) {

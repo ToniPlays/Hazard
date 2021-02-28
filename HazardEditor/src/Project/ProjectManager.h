@@ -12,6 +12,7 @@ namespace Project {
 
 		HazardProject* Load(const char* file);
 		void Save();
+		void SaveCurrentScene();
 
 		HazardProject& GetProject() { return *projectData; }
 

@@ -4,6 +4,7 @@
 #include "MenuBar.h"
 
 #include "GUI/Library/Layout.h"
+#include "Project/ProjectManager.h"
 
 using namespace WindowLayout;
 
@@ -23,7 +24,9 @@ namespace WindowElement {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open", []() {});
 			Layout::Separator();
-			Layout::MenuItem("Save", []() {});
+			Layout::MenuItem("Save", []() {
+				Hazard::Core::HazardLoop::GetModule<Project::ProjectManager>().Save();
+			});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
 		});
