@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-namespace Hazard {
+namespace Hazard::Rendering {
 
 	Window* Window::Create(WindowProps& props) {
 		return new WindowsWindow(props);

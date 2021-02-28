@@ -6,7 +6,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Hazard {
+namespace Hazard::Rendering {
 	class HAZARD_API OpenGLContext : public GraphicsContext {
 	public:
 		OpenGLContext(Window* window, WindowProps* props);
@@ -15,8 +15,7 @@ namespace Hazard {
 		void Init() const override;
 		void ClearFrame(Color clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-
-		//void DrawArray(VertexArray* array) const override;
+		void DrawIndexed(VertexArray* array) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		std::string GetVersion() const override;

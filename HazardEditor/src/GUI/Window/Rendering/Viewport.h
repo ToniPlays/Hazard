@@ -16,6 +16,5 @@ namespace WindowElement {
 	
 	private:
 		RenderEngine* renderer;
-		
 	};
 }

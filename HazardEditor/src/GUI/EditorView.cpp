@@ -2,16 +2,22 @@
 #include <hzreditor.h>
 #include "EditorView.h"
 
+#include "GLFW/imgui_impl_glfw.h"
+#include "GLFW/imgui_impl_opengl3.h"
+
 #include "Library/Style.h"
 #include "Window/AllWindows.h"
 
 #include "GLFW/glfw3.h"
+#include "glad/glad.h"
+
 
 using namespace Hazard;
 
 namespace WindowElement {
 
 	EditorView* EditorView::instance = nullptr;
+
 	EditorView::EditorView() : Module::Module("EditorViews")
 	{
 		instance = this;
@@ -35,11 +41,13 @@ namespace WindowElement {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags  |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+		//io.ConfigFlags|= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags  |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
+		io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+		io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
+		io.ConfigFlags  |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
@@ -48,6 +56,7 @@ namespace WindowElement {
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
+			HZR_WARN("Viewports enable");
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
@@ -58,9 +67,10 @@ namespace WindowElement {
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
 
-		// Setup Platform/Renderer bindingss
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		// Setup Platform/Renderer bindings
 		ImGui_ImplOpenGL3_Init("#version 410");
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+
 		Style::Style::Init();
 
 		PushRenderable<MenuBar>();
@@ -134,11 +144,10 @@ namespace WindowElement {
 			if (element->OnEvent(e)) return;
 		}
 	}
-	void EditorView::Flush()
+	void EditorView::Close()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()
 	{
@@ -157,7 +166,6 @@ namespace WindowElement {
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			HZR_INFO("Draw outside");
 			GLFWwindow* backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();

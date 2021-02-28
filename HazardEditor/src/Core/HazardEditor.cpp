@@ -2,6 +2,7 @@
 #include <hzreditor.h>
 #include "HazardEditor.h"
 #include "GUI/EditorView.h"
+#include "Project/ProjectManager.h"
 
 EditorApplication::EditorApplication()
 {
@@ -28,6 +29,8 @@ void EditorApplication::Init()
 	PushModule<ECS::SceneHandler>();
 
 	PushModule<WindowElement::EditorView>();
+	Project::HazardProject* project = PushModule<Project::ProjectManager>().Load("C:\\dev\\HazardTestProject");
+
 }
 
 

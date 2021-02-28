@@ -4,6 +4,7 @@
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 
 #include "Hazard/Core/HazardLoop.h"
+#include "RenderUtils.h"
 
 namespace Hazard::Rendering {
 
@@ -11,6 +12,7 @@ namespace Hazard::Rendering {
 	{
 		SetActive(true);
 		window = Window::Create();
+		RenderUtils::SetRenderAPI(api);
 	}
 	RenderContext::~RenderContext()
 	{

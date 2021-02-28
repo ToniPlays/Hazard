@@ -130,6 +130,7 @@ project "Hazard"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/**.cpp",
+		"%{prj.name}/vendor/**.h",
 		"%{prj.name}/vendor/**.hpp",
 		"%{prj.name}/vendor/**.inl"
 	}
@@ -143,6 +144,7 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/GLM",
 		"c:/dev/Hazard/Hazard/vendor/stb-image",
 		"c:/dev/Hazard/vendor/entt",
+		"c:/dev/Hazard/vendor/IMGUI/examples",
 		"Hazard/src"
 	}
 

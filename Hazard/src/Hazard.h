@@ -7,6 +7,7 @@
 
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/RenderContext.h"
+#include "Hazard/Rendering/RenderUtils.h"
 
 #include "Hazard/Entity/SceneHandler.h"
 #include "Hazard/Entity/Scene.h"

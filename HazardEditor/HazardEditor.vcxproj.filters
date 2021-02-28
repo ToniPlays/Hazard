@@ -16,11 +16,26 @@
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Library">
+      <UniqueIdentifier>{C50274C5-318E-E189-3A9F-647EA6A93D8A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Window">
       <UniqueIdentifier>{8802468C-74D0-3992-5D64-AAB849D115F7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Window\Inspect">
+      <UniqueIdentifier>{4D0FADA9-3909-D6FB-2276-6C0C0E0F3C68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI\Window\Rendering">
+      <UniqueIdentifier>{D59564F6-C1BA-B376-EA05-9906D689B294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Project">
+      <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\EditorEvent.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -30,29 +45,51 @@
     <ClInclude Include="src\GUI\EditorWindow.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Library\ComponentDraw.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Input.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Style.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\RenderableElement.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\AllWindows.h">
       <Filter>src\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\Inspector.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\MenuBar.h">
+      <Filter>src\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\Performance.h">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\HazardProject.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\ProjectManager.h">
+      <Filter>src\Project</Filter>
     </ClInclude>
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\Style.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h" />
-    <ClInclude Include="src\GUI\Window\Inspect\Inspector.h">
-      <Filter>src\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
-      <Filter>src\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\Performance.h" />
-    <ClInclude Include="src\GUI\Library\Input.h" />
-    <ClInclude Include="src\GUI\Library\Layout.h" />
-    <ClInclude Include="src\GUI\Window\Inspect\FileView.h" />
-    <ClInclude Include="src\GUI\RenderableElement.h" />
-    <ClInclude Include="src\GUI\Window\MenuBar.h" />
-    <ClInclude Include="src\Core\EditorEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
@@ -70,24 +107,38 @@
     <ClCompile Include="src\GUI\EditorWindow.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Library\Input.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Style.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\Inspector.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\MenuBar.cpp">
+      <Filter>src\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectManager.cpp">
+      <Filter>src\Project</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Library\Style.cpp">
-      <Filter>src\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp" />
-    <ClCompile Include="src\GUI\Window\Inspect\Inspector.cpp">
-      <Filter>src\GUI\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
-      <Filter>src\GUI\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp" />
-    <ClCompile Include="src\GUI\Library\Input.cpp" />
-    <ClCompile Include="src\GUI\Library\Layout.cpp" />
-    <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp" />
-    <ClCompile Include="src\GUI\Window\MenuBar.cpp" />
-    <ClCompile Include="src\GUI\Library\ComponentDraw.h" />
   </ItemGroup>
 </Project>

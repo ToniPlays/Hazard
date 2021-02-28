@@ -5,7 +5,7 @@
 #include "Platform/Rendering/GraphicsContext.h"
 #include <iostream>
 
-namespace Hazard {
+namespace Hazard::Rendering {
 
 	struct WindowProps {
 

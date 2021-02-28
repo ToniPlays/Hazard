@@ -5,7 +5,7 @@
 #include "GLFW/glfw3.h"
 #include "Hazard/Math/Color.h"
 
-namespace Hazard {
+namespace Hazard::Rendering {
 
 	class HAZARD_API WindowsWindow : public Window {
 	public:

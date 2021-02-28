@@ -5,6 +5,13 @@
 #include <windows.h>
 #include "Hazard/Core/HazardLoop.h"
 
+#include "imgui.h"
+#include "GLFW/imgui_impl_glfw.h"
+#include "GLFW/imgui_impl_opengl3.h"
+#include <stdio.h>
+
+#include "GLFW/glfw3.h"
+#include "glad/glad.h"
 
 uint64_t memorySize = 0;
 /*

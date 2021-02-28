@@ -16,7 +16,7 @@ namespace WindowElement {
 
 		void OnEvent(Event& e);
 
-		void Flush();
+		void Close() override;
 
 		template<typename T>
 		T& PushRenderable() {

@@ -4,7 +4,7 @@
 #include "OpenGLContext.h"
 #include <glad/glad.h>
 
-namespace Hazard {
+namespace Hazard::Rendering {
 
 	ErrorCallback OpenGLContext::callback;
 
@@ -56,13 +56,19 @@ namespace Hazard {
 
 	void OpenGLContext::ClearFrame(Color clearColor) const
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGLContext::SetViewport(int x, int y, int w, int h) const
 	{
 		glViewport(x, y, w, h);
+	}
+
+	void OpenGLContext::DrawIndexed(VertexArray* array) const
+	{
+		array->EnableAll();
+		glDrawElements(GL_TRIANGLES, array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
