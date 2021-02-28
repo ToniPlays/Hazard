@@ -76,7 +76,8 @@ namespace WindowElement {
 			Layout::Table(2, false);
 			Layout::Text("Tint");
 			Layout::TableNext();
-			Input::ColorPicker("Tint", component.tint);
+
+			Input::ColorPicker("Sprite tint", component.tint);
 			Layout::EndTable();
 
 			}, []() {

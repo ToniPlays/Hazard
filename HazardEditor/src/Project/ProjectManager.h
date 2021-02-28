@@ -10,7 +10,7 @@ namespace Project {
 		ProjectManager();
 		~ProjectManager();
 
-		HazardProject* Load(const char* file);
+		bool Load(const char* file);
 		void Save();
 		void SaveCurrentScene();
 

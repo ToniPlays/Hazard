@@ -2,6 +2,9 @@
 namespace Project {
 	struct  HazardProject
 	{
-		const char* absolutePath;
+		std::string name;
+		std::string absolutePath;
+
+		std::string startupScene;
 	};
 }

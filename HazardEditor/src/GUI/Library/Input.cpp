@@ -125,7 +125,9 @@ namespace WindowElement {
 		}
 		if (open) {
 			float c[4] = { color.r, color.g, color.b, color.a };
-			ImGui::Begin(label, &open);
+			ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize;
+
+			ImGui::Begin(label, &open, flags);
 
 			if (ImGui::ColorPicker4(label, c)) {
 				color.r = c[0];

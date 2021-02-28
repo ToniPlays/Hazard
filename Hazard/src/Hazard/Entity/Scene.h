@@ -9,8 +9,7 @@ namespace Hazard::ECS {
 	class Scene {
 		friend class Entity;
 	public:
-		Scene();
-		Scene(const char* file);
+		Scene(std::string file);
 		~Scene();
 
 		void Render();
@@ -22,11 +21,11 @@ namespace Hazard::ECS {
 		CameraComponent& GetSceneCamera() { return sceneCamera; }
 
 		entt::registry& GetSceneRegistry() { return registry; }
-		const char* GetSceneFile() { return file; }
+		std::string& GetSceneFile() { return file; }
 
 	private:
 		entt::registry registry;
-		const char* file;
+		std::string file;
 
 		CameraComponent sceneCamera;
 

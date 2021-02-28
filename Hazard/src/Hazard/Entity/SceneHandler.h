@@ -4,6 +4,9 @@
 #include "Scene.h"
 
 namespace Hazard::ECS {
+
+	enum Serialization { Runtime, Editor };
+
 	class SceneHandler : public Module::Module {
 	public:
 		SceneHandler();
@@ -13,7 +16,7 @@ namespace Hazard::ECS {
 		void Update() override;
 		void Render() override;
 
-		void LoadScene(const char* file);
+		bool LoadScene(const char* file, Serialization type = Serialization::Runtime);
 
 		Scene& GetCurrentScene() { return *scene; }
 

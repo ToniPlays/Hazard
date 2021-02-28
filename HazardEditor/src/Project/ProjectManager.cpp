@@ -9,17 +9,32 @@ namespace Project {
 
 	ProjectManager::ProjectManager() : Module::Module("ProjectManager")
 	{
-
+		
 	}
 
 	ProjectManager::~ProjectManager()
 	{
+
 	}
 
-	HazardProject* ProjectManager::Load(const char* file)
+	bool ProjectManager::Load(const char* file)
 	{
 		HZR_INFO(file);
-		return nullptr;
+
+		HazardProject* project = new HazardProject();
+		std::ifstream stream(file);
+		if (!stream.good()) 
+			return false;
+
+		YAML::Node root = YAML::LoadFile(file);
+		
+		project->name = root["project_name"].as<std::string>();
+		project->absolutePath = root["project_path"].as<std::string>();
+		project->startupScene = root["startup_scene"].as<std::string>();
+
+		projectData = project;
+
+		return true;
 	}
 
 	void ProjectManager::Save()

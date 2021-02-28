@@ -13,7 +13,10 @@ namespace Hazard {
 		Color(const char* color);
 		Color(int r, int g, int b, int a);
 		Color(float r, float g, float b, float a);
+
+
 		glm::vec4 ToGlm() { return glm::vec4(r, g, b, a); }
+		static Color FromGLM(const glm::vec4 color) { return Color(color.r, color.g, color.b, color.w); }
 		
 
 		std::string ToString();

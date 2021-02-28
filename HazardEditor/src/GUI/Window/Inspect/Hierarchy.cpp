@@ -34,7 +34,7 @@ namespace WindowElement {
 	void Hierarchy::OnWindowRender()
 	{
 		Scene& scene = handler->GetCurrentScene();
-		Layout::Treenode(scene.GetSceneFile(), Style::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
+		Layout::Treenode(scene.GetSceneFile().c_str(), Style::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
 			scene.GetSceneRegistry().each([&](auto entityID) {
 				Entity entity { entityID, &scene };
 				DrawEntity(entity);

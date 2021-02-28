@@ -31,13 +31,14 @@ namespace Hazard::ECS {
 		}
 	};
 	struct CameraComponent {
-		float fov = 10.0f;
+		float fov = 60.0f;
 
 		glm::mat4 projection;
 
 		void RecalculateProjection(float w, float h) {
 			float aspect = w / h * fov;
 			projection = glm::ortho(-aspect, aspect, -fov, fov, -1000.0f, 1000.0f);
+
 		}
 	};
 	struct SpriteRendererComponent {

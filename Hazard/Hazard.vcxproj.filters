@@ -200,6 +200,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h" />
     <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h" />
+    <ClInclude Include="src\Hazard\Entity\SceneDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -272,5 +273,6 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp" />
+    <ClCompile Include="src\Hazard\Entity\SceneDeserializer.cpp" />
   </ItemGroup>
 </Project>
