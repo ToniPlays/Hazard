@@ -56,15 +56,20 @@ namespace WindowElement {
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
-
 		if (!IsFocused()) return false;
+
 		EventDispatcher dispacher(e);
 		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+
 		editorCamera.OnEvent(e);
-		return gizmos.OnEvent(e);
+		gizmos.OnEvent(e);
+
+		return false;
 	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
+		HZR_INFO("WORKD");
+
 		switch (e.GetKeyCode()) {
 		case Key::Q:
 			gizmos.SetType(Gizmo::Translate);

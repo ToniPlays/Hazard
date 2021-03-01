@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "SceneHandler.h"
-#include "SceneDeserializer.h"
+#include "SceneSerializer.h"
 
 namespace Hazard::ECS {
 
@@ -28,7 +28,7 @@ namespace Hazard::ECS {
 
 		HZR_WARN("Loading file " + std::string(file));
 		if (type == Serialization::Editor) {
-			scene = Loader::SceneDeserializer::DeserializeEditor(file);
+			scene = Loader::SceneSerializer::DeserializeEditor(file);
 			return true;
 		}
 		return false;

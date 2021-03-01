@@ -18,13 +18,17 @@ namespace Hazard::ECS {
 		Entity CreateEntity(const char* name);
 		void DestroyEntity(Entity entity);
 
+		void SetName(std::string name) { this->name = name.c_str(); }
+
 		CameraComponent& GetSceneCamera() { return sceneCamera; }
-
 		entt::registry& GetSceneRegistry() { return registry; }
-		std::string& GetSceneFile() { return file; }
 
+		std::string& GetSceneFile() { return file; }
+		std::string& GetName() { return name; }
+		
 	private:
 		entt::registry registry;
+		std::string name;
 		std::string file;
 
 		CameraComponent sceneCamera;

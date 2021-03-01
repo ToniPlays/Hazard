@@ -19,6 +19,11 @@ void EditorApplication::PreInit()
 {
 	PushModule<Logging::Logger>();
 	Rendering::RenderContext context = PushModule<Rendering::RenderContext>();
+	std::stringstream ss;
+	ss << "Hazard Editor | Hazard " << HZR_BUILD_VERSION << " (" << HAZARD_SYSTEM_BIT << ")" << " for " << HZR_PLATFORM;
+
+	context.GetWindow().SetWindowTitle(ss.str().c_str());
+
 	context.SetClearColor(Color::FromHex("#222222"));
 	context.GetWindow().SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule<Rendering::RenderEngine>();
@@ -29,14 +34,15 @@ void EditorApplication::PreInit()
 		HZR_ERROR("Valid project file required to run application");
 	}
 
-	PushModule<ECS::SceneHandler>().LoadScene((manager.GetProject().absolutePath + "\\" +
-		manager.GetProject().startupScene + ".hazard").c_str(), ECS::Serialization::Editor);
+	PushModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
+
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
 		SetRootPath(manager.GetProject().absolutePath.c_str());
 
+
 }
 void EditorApplication::Init() {
-	Input::Init();
+	
 }
 
 bool EditorApplication::OnEvent(Event& e)

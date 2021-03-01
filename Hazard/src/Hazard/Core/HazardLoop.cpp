@@ -4,6 +4,7 @@
 #include "HazardLoop.h"
 #include "Hazard/Math/Time.h"
 #include "GLFW/glfw3.h"
+#include "Hazard/Events/Input.h"
 
 namespace Hazard::Core {
 
@@ -27,6 +28,7 @@ namespace Hazard::Core {
 		application->Init();
 		moduleHandler.Init();
 
+		Input::Input::Init();
 		double lastTime = 0;
 		//Update and render while close is not requested
 		while (!shouldClose) {

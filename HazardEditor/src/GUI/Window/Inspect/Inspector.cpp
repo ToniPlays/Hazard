@@ -36,6 +36,9 @@ namespace WindowElement {
 			
 			Layout::MenuItem("Sprite renderer", [&]() {
 				selectionContext.AddComponent<SpriteRendererComponent>();
+			});
+			Layout::MenuItem("Camera", [&]() {
+				selectionContext.AddComponent<CameraComponent>();
 				});
 		});
 

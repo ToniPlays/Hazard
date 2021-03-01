@@ -21,11 +21,11 @@ namespace WindowElement {
 	{
 		if (GetActive()) {
 			ImGui::Begin(title.c_str(), &active);
+			focused = ImGui::IsWindowFocused();
+			hovered = ImGui::IsWindowHovered();
 
 			OnWindowRender();
 
-			focused = ImGui::IsWindowFocused();
-			hovered = ImGui::IsWindowHovered();
 			ImGui::End();
 		}
 	}

@@ -1,0 +1,8 @@
+Scene: Empty scene
+Entities:
+  - Entity: 43243234
+    TagComponent:
+      Tag: Empty entity
+  - Entity: 43243234
+    TagComponent:
+      Tag: Empty entity

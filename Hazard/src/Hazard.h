@@ -17,6 +17,7 @@
 #include "Hazard/Entity/Scene.h"
 #include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"
+#include "Hazard/Entity/SceneSerializer.h"
 
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Time.h"

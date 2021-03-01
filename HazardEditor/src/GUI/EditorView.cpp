@@ -74,12 +74,12 @@ namespace WindowElement {
 		Style::Style::Init();
 
 		PushRenderable<MenuBar>();
+		PushRenderable<Viewport>();
 
 		PushRenderable<Inspector>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<FileView>();
 		PushRenderable<Performance>();
-		PushRenderable<Viewport>();
 
 
 		HZR_INFO("EditoView init");
@@ -141,7 +141,8 @@ namespace WindowElement {
 	bool EditorView::OnEvent(Event& e)
 	{
 		for (RenderableElement* element : elements) {
-			if (element->OnEvent(e)) return true;
+			if (element->OnEvent(e)) 
+				return true;
 		}
 		return false;
 	}

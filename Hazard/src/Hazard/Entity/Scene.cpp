@@ -10,7 +10,7 @@ namespace Hazard::ECS {
 
     Scene::Scene(std::string file) : file(file)
     {
-
+        
     }
     Scene::~Scene()
     {
@@ -24,7 +24,9 @@ namespace Hazard::ECS {
 
         for (auto entity : group) {
             auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            engine.Submit(Rendering::Quad{ transform.GetTransformMat4(), { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a } });
+            for (int i = 0; i < 1000; i++) {
+                engine.Submit(Rendering::Quad{ transform.GetTransformMat4(), { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a } });
+            }
         }
     }
     void Scene::Flush()

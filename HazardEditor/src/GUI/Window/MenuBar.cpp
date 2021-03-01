@@ -48,4 +48,22 @@ namespace WindowElement {
 
 		ImGui::EndMenuBar();
 	}
+	bool MenuBar::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
+		return false;
+	}
+	bool MenuBar::KeyPressed(KeyPressedEvent& e)
+	{
+		bool isCtrl = Input::IsKeyDown(Key::LeftControl);
+		if (!isCtrl) return false;
+
+		switch (e.GetKeyCode()) {
+		case Key::S:
+			Core::HazardLoop::GetModule<Project::ProjectManager>().SaveCurrentScene();
+			return true;
+		}
+		return false;
+	}
 }

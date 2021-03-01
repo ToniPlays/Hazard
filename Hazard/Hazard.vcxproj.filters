@@ -99,9 +99,6 @@
     <ClInclude Include="src\Hazard\Entity\Scene.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\SceneDeserializer.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\SceneHandler.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
@@ -213,6 +210,9 @@
     <ClInclude Include="src\Hazard\Events\KeyCode.h" />
     <ClInclude Include="src\Hazard\Events\MouseCode.h" />
     <ClInclude Include="src\Hazard\Events\Input.h" />
+    <ClInclude Include="src\Hazard\Entity\SceneSerializer.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -225,9 +225,6 @@
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Scene.cpp">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\SceneDeserializer.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\SceneHandler.cpp">
@@ -291,5 +288,8 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Hazard\Entity\SceneSerializer.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

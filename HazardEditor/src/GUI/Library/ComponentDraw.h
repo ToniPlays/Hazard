@@ -62,7 +62,7 @@ namespace WindowElement {
 		if (!entity.HasComponent<CameraComponent>()) return;
 		Layout::ComponentTreenode<CameraComponent>(name, [&entity]() {
 			auto& component = entity.GetComponent<CameraComponent>();
-			Layout::Text("Camera component todo");
+				
 			}, []() {
 
 			});

@@ -9,5 +9,8 @@ namespace WindowElement {
 		~MenuBar();
 
 		void OnMenuRender() override;
+		bool OnEvent(Event& e) override;
+	private:
+		bool KeyPressed(KeyPressedEvent& e);
 	};
 }

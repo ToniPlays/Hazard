@@ -66,10 +66,8 @@ namespace WindowElement {
 	bool TransformationGizmo::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		if(dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(TransformationGizmo::SetSelectionContext))) 
-			return true;
-
-		return false;
+		return dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(TransformationGizmo::SetSelectionContext));
+	
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{
