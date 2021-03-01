@@ -15,7 +15,7 @@ namespace Hazard::Rendering {
 		void Init() const override;
 		void ClearFrame(Color clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-		void DrawIndexed(VertexArray* array) const override;
+		void DrawIndexed(VertexArray* array, uint32_t size) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		std::string GetVersion() const override;

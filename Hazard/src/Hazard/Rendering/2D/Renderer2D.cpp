@@ -34,6 +34,7 @@ namespace Hazard::Rendering {
 
 		data.QuadVertexArray->AddBuffer(data.QuadVertexBuffer);
 		data.QuadVertexBufferBase = new QuadVertex[data.MaxVertices];
+		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
 		
 		uint32_t* indices = new uint32_t[data.MaxIndices];
 
@@ -108,7 +109,7 @@ namespace Hazard::Rendering {
 		uint32_t dataSize = (uint32_t)((uint8_t*)data.QuadVertexBufferPtr - (uint8_t*)data.QuadVertexBufferBase);
 		data.QuadVertexBuffer->SetData(data.QuadVertexBufferBase, dataSize);
 
-		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray);
+		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 
 		stats.drawCalls++;
 		stats.indices += data.QuadIndexCount;

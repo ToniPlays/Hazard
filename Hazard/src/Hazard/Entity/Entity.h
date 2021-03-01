@@ -36,6 +36,11 @@ namespace Hazard::ECS {
 			return scene->registry.has<T>(handle);
 		}
 
+		bool IsValid() { 
+			if (scene == nullptr) return false;
+			return scene->GetSceneRegistry().valid(handle); 
+		}
+
 	public:
 		operator bool() const { return handle != entt::null; }
 		operator entt::entity() const { return handle; }

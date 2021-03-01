@@ -21,14 +21,14 @@ namespace WindowElement {
 	}
 	void Inspector::OnWindowRender()
 	{
-		if (!selectionContext) return;
+		if (!selectionContext.IsValid()) return;
 
 		DrawComponent<TagComponent>("Tag", selectionContext);
 		DrawComponent<TransformComponent>("Transform", selectionContext);
 		DrawComponent<CameraComponent>("Camera", selectionContext);
 		DrawComponent<SpriteRendererComponent>("Sprite", selectionContext);
 
-		if (!IsFocused()) return;
+
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("Camera", [&]() {
 				selectionContext.AddComponent<CameraComponent>();

@@ -33,7 +33,7 @@ namespace WindowElement {
 	}
 	void TransformationGizmo::OnRender(Editor::EditorCamera camera)
 	{
-		if (!currentSelection || type == Gizmo::None) return;
+		if (!currentSelection.IsValid() || type == Gizmo::None) return;
 
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();

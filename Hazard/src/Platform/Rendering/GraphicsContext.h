@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
 		virtual void Init() const = 0;
 		virtual void ClearFrame(Color clearColor = { 0, 0, 0, 255 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
-		virtual void DrawIndexed(VertexArray* array) const = 0;
+		virtual void DrawIndexed(VertexArray* array, uint32_t size) const = 0;
 		virtual std::string GetVersion() const = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;

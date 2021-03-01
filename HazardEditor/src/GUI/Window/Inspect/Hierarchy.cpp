@@ -33,14 +33,13 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
-		Layout::Text(IsFocused() ? "Focused" : "Not focused");
 		Scene& scene = handler->GetCurrentScene();
 		Layout::Treenode(scene.GetSceneFile().c_str(), Style::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
 			scene.GetSceneRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, &scene };
 				DrawEntity(entity);
-				});
 			});
+		});
 
 		Layout::ContextMenu([&scene]() {
 			Layout::MenuItem("Create entity", [&scene]() {
@@ -70,9 +69,25 @@ namespace WindowElement {
 			
 		});
 
+		bool entityDeleted = false;
+
+		if (ImGui::BeginPopupContextItem()) {
+			Layout::MenuItem("Delete entity", [&entity]() {
+				entity.GetScene().GetSceneRegistry().destroy(entity);
+				});
+			ImGui::EndPopup();
+		}
+
 		if (ImGui::IsItemClicked()) {
-			Events::SelectionContextChange e(entity);
-			EditorView::GetInstance().OnEvent(e);
+			if (entityDeleted) {
+				Events::SelectionContextChange e({});
+				EditorView::GetInstance().OnEvent(e);
+				return;
+			}
+			else {
+				Events::SelectionContextChange e(entity);
+				EditorView::GetInstance().OnEvent(e);
+			}
 		}
 	}
 }
