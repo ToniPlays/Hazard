@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Hazard.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 using namespace Hazard;
 

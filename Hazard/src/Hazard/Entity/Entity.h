@@ -12,6 +12,8 @@ namespace Hazard::ECS {
 		Entity(entt::entity handle, Scene* scene);
 		Entity(const Entity& other) = default;
 
+		Scene& GetScene() { return *scene; }
+
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
 			T& component = scene->registry.emplace<T>(*this, std::forward<Args>(args)...);

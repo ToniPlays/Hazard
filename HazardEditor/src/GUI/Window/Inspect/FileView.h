@@ -6,12 +6,13 @@ namespace WindowElement {
 	class FileView : public EditorWindow {
 	public:
 		FileView();
-		FileView(const char* root) : rootPath(root) {};
 		~FileView();
 
 		void OnWindowRender() override;
-
+		void SetRootPath(const char* rootPath) { this->rootPath = std::string(rootPath); currentPath = rootPath; }
+		const char* GetRootPath() { return rootPath.c_str(); }
 	private:
-		const char* rootPath = "";
+		std::string rootPath;
+		std::string currentPath;
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
+#include "imgui.h"
 
 namespace WindowElement {
 	class Input {

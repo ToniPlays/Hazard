@@ -3,6 +3,8 @@
 #include <hzreditor.h>
 #include "Layout.h"
 
+#include "imgui_internal.h"
+
 namespace WindowLayout {
     void Layout::Table(uint8_t columns, bool border, const char* id)
     {

@@ -31,6 +31,9 @@
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\2D">
+      <UniqueIdentifier>{A80A7A05-1442-C29C-1D4C-26C08902E995}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering\Buffers">
       <UniqueIdentifier>{5FF592A6-4BB0-8252-F467-FB9CE001CDE2}</UniqueIdentifier>
     </Filter>
@@ -96,6 +99,9 @@
     <ClInclude Include="src\Hazard\Entity\Scene.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\SceneDeserializer.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\SceneHandler.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
@@ -134,6 +140,12 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Module\ModuleHandler.h">
       <Filter>src\Hazard\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h">
+      <Filter>src\Hazard\Rendering\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
+      <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Buffers\Buffer.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
@@ -198,9 +210,9 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h" />
-    <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h" />
-    <ClInclude Include="src\Hazard\Entity\SceneDeserializer.h" />
+    <ClInclude Include="src\Hazard\Events\KeyCode.h" />
+    <ClInclude Include="src\Hazard\Events\MouseCode.h" />
+    <ClInclude Include="src\Hazard\Events\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -213,6 +225,9 @@
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Scene.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\SceneDeserializer.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\SceneHandler.cpp">
@@ -235,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Module\Modulehandler.cpp">
       <Filter>src\Hazard\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
+      <Filter>src\Hazard\Rendering\2D</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderContext.cpp">
       <Filter>src\Hazard\Rendering</Filter>
@@ -272,7 +290,6 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp" />
-    <ClCompile Include="src\Hazard\Entity\SceneDeserializer.cpp" />
+    <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>

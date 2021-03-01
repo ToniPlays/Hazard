@@ -34,7 +34,7 @@ namespace Hazard::Rendering {
 		delete context; 
 		renderer2D->Close();
 	}
-	void RenderEngine::SceneRender(ECS::Scene& scene)
+	void RenderEngine::SceneRender(ECS::Scene& scene, glm::mat4 projection)
 	{
 		stats.drawCalls = 0;
 		stats.quads = 0;
@@ -46,13 +46,14 @@ namespace Hazard::Rendering {
 
 		renderTarget->Bind();
 		context->GetWindow().GetContext()->ClearFrame("#222222");
-		renderer2D->BeginScene(scene.GetSceneCamera().projection);
+		renderer2D->BeginScene(projection);
 		renderer2D->BeginBatch();
 		scene.Render();
 		//Process scene
 
 		renderer2D->Flush();
 		renderTarget->Unbind();
+
 		renderer2D->CollectStats(stats);
 	}
 }

@@ -24,14 +24,14 @@ namespace Hazard::ECS {
 		glm::mat4 GetTransformMat4()
 		{
 			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
-
+			
 			return glm::translate(glm::mat4(1.0f), Translation)
 				* rotation
 				* glm::scale(glm::mat4(1.0f), Scale);
 		}
 	};
 	struct CameraComponent {
-		float fov = 60.0f;
+		float fov = 1.0f;
 
 		glm::mat4 projection;
 

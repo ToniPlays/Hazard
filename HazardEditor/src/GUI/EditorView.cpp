@@ -78,9 +78,9 @@ namespace WindowElement {
 		PushRenderable<Inspector>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<FileView>();
-
 		PushRenderable<Performance>();
 		PushRenderable<Viewport>();
+
 
 		HZR_INFO("EditoView init");
 
@@ -138,11 +138,12 @@ namespace WindowElement {
 		}
 		EndFrame();
 	}
-	void EditorView::OnEvent(Event& e)
+	bool EditorView::OnEvent(Event& e)
 	{
 		for (RenderableElement* element : elements) {
-			if (element->OnEvent(e)) return;
+			if (element->OnEvent(e)) return true;
 		}
+		return false;
 	}
 	void EditorView::Close()
 	{
@@ -154,9 +155,19 @@ namespace WindowElement {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		for (RenderableElement* element : elements) {
+			element->OnFrameBegin();
+		}
+
 	}
 	void EditorView::EndFrame()
 	{
+
+		for (RenderableElement* element : elements) {
+			element->OnFrameBegin();
+		}
+
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2((float)context->GetWindow().GetWidth(), (float)context->GetWindow().GetHeight());
 

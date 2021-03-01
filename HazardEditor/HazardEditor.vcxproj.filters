@@ -31,8 +31,17 @@
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -81,6 +90,9 @@
     <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
       <Filter>src\GUI\Window\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\TransformationGizmo.h">
+      <Filter>src\GUI\Window</Filter>
+    </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
     </ClInclude>
@@ -92,6 +104,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
       <Filter>platform\GLFW</Filter>
     </ClCompile>
@@ -133,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
       <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\TransformationGizmo.cpp">
+      <Filter>src\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>

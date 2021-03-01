@@ -14,7 +14,7 @@ namespace WindowElement {
 		void Init();
 		void Render();
 
-		void OnEvent(Event& e);
+		bool OnEvent(Event& e);
 
 		void Close() override;
 
@@ -26,6 +26,14 @@ namespace WindowElement {
 			HZR_INFO("Added renderable " + std::string(typeid(T).name()));
 			return *w;
 		} 
+		template<typename T>
+		T& GetRenderable() {
+			for (RenderableElement* e : elements) {
+				if (dynamic_cast<T*>(e))
+					return (T&)*e;
+			}
+		}
+
 	public:
 		static EditorView& GetInstance() { return *instance; }
 	private:

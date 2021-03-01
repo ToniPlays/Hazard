@@ -1,0 +1,92 @@
+#pragma once
+
+#include <hzreditor.h>
+#include "TransformationGizmo.h"
+#include "imgui.h"
+#include "ImGuizmo.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
+using namespace Hazard::ECS;
+
+namespace WindowElement {
+
+	TransformationGizmo::TransformationGizmo()
+	{
+
+	}
+	TransformationGizmo::~TransformationGizmo()
+	{
+
+	}
+	void TransformationGizmo::Init()
+	{
+
+	}
+	void TransformationGizmo::OnFrameBegin()
+	{
+		ImGuizmo::BeginFrame();
+	}
+	void TransformationGizmo::OnRender()
+	{
+		if (!currentSelection || type == Gizmo::None) return;
+
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+
+		float windowWidth = (float)ImGui::GetWindowWidth();
+		float windowHeight = (float)ImGui::GetWindowHeight();
+
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+		CameraComponent camera = currentSelection.GetScene().GetSceneCamera();
+
+		glm::mat4 cameraView = glm::mat4(1.0f);
+		auto& tc = currentSelection.GetComponent<TransformComponent>();
+		auto transform = tc.GetTransformMat4();
+
+		ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(camera.projection),
+			(ImGuizmo::OPERATION)type, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
+
+		if (!ImGuizmo::IsUsing()) return;
+
+		//Decompose and apply modifications
+		glm::vec3 position, rotation, scale;
+		Hazard::Math::DecomposeTransform(transform, position, rotation, scale);
+
+		glm::vec3 deltaRotation = rotation - tc.Rotation;
+
+		tc.Translation = position;
+		tc.Rotation = rotation + deltaRotation;
+		tc.Scale = scale;
+
+	}
+	bool TransformationGizmo::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		if(dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(TransformationGizmo::SetSelectionContext))) 
+			return true;
+
+		return false;
+	}
+	float* TransformationGizmo::GetSnapValues()
+	{
+		
+		if (Input::IsKeyDown(Key::LeftControl)) {
+
+			if (type == Gizmo::Translate) return new float[] { 0.5f, 0.5f, 0.5f };
+			if (type == Gizmo::Rotate) return new float[] { 10.0f, 10.0f, 10.0f };
+			if (type == Gizmo::Scale) return new float[] { 1.0f, 1.0f, 1.0f };
+		}
+		return nullptr;
+	}
+	bool TransformationGizmo::SetSelectionContext(Events::SelectionContextChange& change)
+	{
+		currentSelection = change.GetEntity(); 
+		return false;
+	}
+}

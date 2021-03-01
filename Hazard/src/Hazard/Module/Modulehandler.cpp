@@ -20,13 +20,13 @@ namespace Hazard::Module {
 
     void ModuleHandler::PreInit()
     {
-        for (Module* m : modules) 
-            m->PreInit();
+        /*for (Module* m : modules) 
+            m->PreInit();*/
     }
     void ModuleHandler::Init()
     {
-        for (Module* m : modules) 
-            m->Init();
+        /*for (Module* m : modules) 
+            m->Init();*/
     }
     void ModuleHandler::Update()
     {

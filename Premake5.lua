@@ -208,7 +208,9 @@ project "HazardEditor"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/platform/**.cpp",
-		"%{prj.name}/platform/**.cpp"
+		"%{prj.name}/platform/**.cpp",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs {
@@ -218,6 +220,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
+		"c:/dev/Hazard/vendor/ImGuizmo",
 		"c:/dev/Hazard/vendor/GLM",
 		"c:/dev/Hazard/vendor/entt",
 		"HazardEditor/Platform",

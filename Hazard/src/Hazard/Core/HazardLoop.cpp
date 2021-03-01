@@ -21,6 +21,7 @@ namespace Hazard::Core {
 	{
 
 		//PreInit moduleHandler
+		application->PreInit();
 		moduleHandler.PreInit();
 		//Init application and moduleHandler
 		application->Init();
@@ -58,6 +59,8 @@ namespace Hazard::Core {
 	{
 		//Dispatch WindowCloseEvent
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit));
+		if(dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit))) return;
+
+		application->OnEvent(e);
 	}
 }

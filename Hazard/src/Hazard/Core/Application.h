@@ -17,9 +17,12 @@ namespace Hazard {
 		~Application() {};
 
 		//Application events;
+		virtual void PreInit() {};
 		virtual void Init() {};
 		virtual void Update() {};
 		virtual void Close() {};
+
+		virtual bool OnEvent(Event& e) { return false; };
 
 		//Push new module to module stack
 		template<typename T>

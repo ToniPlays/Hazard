@@ -11,7 +11,9 @@ public:
 	EditorApplication();
 	~EditorApplication();
 
+	void PreInit() override;
 	void Init() override;
+	bool OnEvent(Event& e) override;
 };
 
 Hazard::Application* Hazard::CreateApplication() {

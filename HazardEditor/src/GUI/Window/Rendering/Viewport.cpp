@@ -4,6 +4,7 @@
 #include "Viewport.h"
 #include "GUI/Library/Layout.h"
 
+using namespace Hazard;
 
 namespace WindowElement {
 
@@ -18,7 +19,7 @@ namespace WindowElement {
 	void Viewport::Init()
 	{
 		bool found = false;
-		renderer = &Hazard::Application::GetModule<RenderEngine>(found);
+		renderer = &Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 
 		if (found) renderer->SetRenderTarget(RenderUtils::Create<RenderTexture>());
@@ -27,8 +28,6 @@ namespace WindowElement {
 	{
 		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
 		renderer->SceneRender(scene);
-
-
 
 		RenderTexture* texture = renderer->GetRenderTarget();
 		if (texture == nullptr) 
@@ -41,11 +40,38 @@ namespace WindowElement {
 
 			renderer->GetRenderTarget()->Resize(width, height);
 			scene.GetSceneCamera().RecalculateProjection(width, height);
-
 		}
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		ImGui::Image((void*)renderer->GetRenderTarget()->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::PopStyleVar();
+		gizmos.OnRender();
 
+	}
+	bool Viewport::OnEvent(Event& e)
+	{
+		EventDispatcher dispacher(e);
+		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+		return gizmos.OnEvent(e);
+	}
+	bool Viewport::KeyPressed(KeyPressedEvent& e)
+	{
+		switch (e.GetKeyCode()) {
+		case Key::Q:
+			gizmos.SetType(Gizmo::Translate);
+			return true;
+		case Key::W:
+			gizmos.SetType(Gizmo::Rotate);
+			return true;
+		case Key::E:
+			gizmos.SetType(Gizmo::Scale);
+			return true;
+		case Key::R:
+			gizmos.SetType(Gizmo::Bounds);
+			return true;
+		}
+		return false;
 	}
 }

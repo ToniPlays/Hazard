@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "WindowWindow.h"
+#include "Hazard/Events/Input.h"
 #include <glad/glad.h>
 #include <stb_image.h>
 
@@ -42,6 +43,8 @@ namespace Hazard::Rendering {
 
 		glfwShowWindow(window);
 		glfwGetWindowSize(window, &windowData.Width, &windowData.Height);
+
+		
 	}
 	void WindowsWindow::OnUpdate(Color color) {
 

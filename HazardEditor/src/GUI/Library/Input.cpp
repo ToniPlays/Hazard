@@ -4,6 +4,9 @@
 #include "Style.h"
 #include "Layout.h"
 
+#include "imgui.h"
+#include "imgui_internal.h"
+
 using namespace WindowLayout;
 
 namespace WindowElement {

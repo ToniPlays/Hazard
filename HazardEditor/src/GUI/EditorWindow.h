@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderableElement.h"
+#include "imgui.h"
 
 namespace WindowElement {
 

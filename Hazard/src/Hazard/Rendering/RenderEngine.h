@@ -20,7 +20,10 @@ namespace Hazard::Rendering {
 		void Init() override;
 		void Flush();
 
-		void SceneRender(ECS::Scene& scene);
+		void SceneRender(ECS::Scene& scene) { 
+			SceneRender(scene, scene.GetSceneCamera().projection); 
+		};
+		void SceneRender(ECS::Scene& scene, glm::mat4 projection);
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
 
 		RenderTexture* GetRenderTarget() { return renderTarget; }

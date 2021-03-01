@@ -8,3 +8,5 @@
 
 #include "Rendering/Viewport.h"
 #include "Rendering/Performance.h"
+
+#include "TransformationGizmo.h"

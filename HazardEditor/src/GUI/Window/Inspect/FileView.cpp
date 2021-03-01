@@ -6,16 +6,16 @@
 
 namespace WindowElement {
 
-	FileView::FileView() : EditorWindow("File explorer")
-	{
-		rootPath = "UNDEFINED ROOT PATH";
+	FileView::FileView() : EditorWindow("Asset manager") {
+	
 	}
+
 	FileView::~FileView()
 	{
 
 	}
 	void FileView::OnWindowRender()
 	{
-		WindowLayout::Layout::Text(rootPath);
+		WindowLayout::Layout::Text(rootPath.c_str());
 	}
 }
