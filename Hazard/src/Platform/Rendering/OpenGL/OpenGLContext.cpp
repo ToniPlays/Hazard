@@ -48,7 +48,8 @@ namespace Hazard::Rendering {
 			HZR_ASSERT(false, "Unable to init GLFW");
 			return;
 		};
-		
+		glEnable(GL_DEPTH_TEST);
+		glCullFace(GL_CULL_FACE);
 		//glEnable(GL_DEBUG_OUTPUT);
 		//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		//glDebugMessageCallback(OpenGLContext::OnError, this);

@@ -20,4 +20,19 @@ namespace Hazard {
 		auto state = glfwGetKey(window, static_cast<int32_t>(key));
 		return state == GLFW_PRESS;
 	}
+	bool Input::IsMouseButtonDown(const Mouse::MouseCode code) {
+		auto state = glfwGetMouseButton(window, static_cast<int32_t>(code));
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
+	bool Input::IsMouseButtonPressed(const Mouse::MouseCode code) {
+		auto state = glfwGetMouseButton(window, static_cast<int32_t>(code));
+		return state == GLFW_PRESS;
+	}
+
+	glm::vec2 Input::GetMousePos() {
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		return { (float)xpos, (float)ypos };
+	}
 }

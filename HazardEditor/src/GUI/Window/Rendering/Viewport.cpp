@@ -27,7 +27,7 @@ namespace WindowElement {
 	void Viewport::OnWindowRender()
 	{
 		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
-		renderer->SceneRender(scene);
+		renderer->SceneRender(scene, editorCamera.GetViewPprojection());
 
 		RenderTexture* texture = renderer->GetRenderTarget();
 		if (texture == nullptr) 
@@ -41,19 +41,26 @@ namespace WindowElement {
 			renderer->GetRenderTarget()->Resize(width, height);
 			scene.GetSceneCamera().RecalculateProjection(width, height);
 		}
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		ImGui::Image((void*)renderer->GetRenderTarget()->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
+
 		ImGui::PopStyleVar();
-		gizmos.OnRender();
+		gizmos.OnRender(editorCamera);
+
+		if (gizmos.IsUsing()) return;
+		if (!IsFocused()) return;
+		editorCamera.OnUpdate();
 
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
+
+		if (!IsFocused()) return false;
 		EventDispatcher dispacher(e);
 		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+		editorCamera.OnEvent(e);
 		return gizmos.OnEvent(e);
 	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)

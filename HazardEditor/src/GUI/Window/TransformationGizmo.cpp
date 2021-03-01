@@ -31,7 +31,7 @@ namespace WindowElement {
 	{
 		ImGuizmo::BeginFrame();
 	}
-	void TransformationGizmo::OnRender()
+	void TransformationGizmo::OnRender(Editor::EditorCamera camera)
 	{
 		if (!currentSelection || type == Gizmo::None) return;
 
@@ -43,16 +43,14 @@ namespace WindowElement {
 
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-		CameraComponent camera = currentSelection.GetScene().GetSceneCamera();
-
-		glm::mat4 cameraView = glm::mat4(1.0f);
 		auto& tc = currentSelection.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();
 
-		ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(camera.projection),
+		ImGuizmo::Manipulate(glm::value_ptr(camera.GetView()), glm::value_ptr(camera.GetProjection()),
 			(ImGuizmo::OPERATION)type, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
 
-		if (!ImGuizmo::IsUsing()) return;
+		isUsing = ImGuizmo::IsUsing();
+		if (!isUsing) return;
 
 		//Decompose and apply modifications
 		glm::vec3 position, rotation, scale;

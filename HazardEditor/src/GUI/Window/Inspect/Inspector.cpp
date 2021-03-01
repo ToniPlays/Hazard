@@ -28,7 +28,7 @@ namespace WindowElement {
 		DrawComponent<CameraComponent>("Camera", selectionContext);
 		DrawComponent<SpriteRendererComponent>("Sprite", selectionContext);
 
-
+		if (!IsFocused()) return;
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("Camera", [&]() {
 				selectionContext.AddComponent<CameraComponent>();

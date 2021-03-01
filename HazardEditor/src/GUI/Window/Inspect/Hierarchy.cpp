@@ -33,13 +33,14 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
+		Layout::Text(IsFocused() ? "Focused" : "Not focused");
 		Scene& scene = handler->GetCurrentScene();
 		Layout::Treenode(scene.GetSceneFile().c_str(), Style::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
 			scene.GetSceneRegistry().each([&](auto entityID) {
-				Entity entity { entityID, &scene };
+				Entity entity{ entityID, &scene };
 				DrawEntity(entity);
+				});
 			});
-		});
 
 		Layout::ContextMenu([&scene]() {
 			Layout::MenuItem("Create entity", [&scene]() {

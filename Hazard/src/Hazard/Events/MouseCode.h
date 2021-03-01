@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace Hazard {
+namespace Hazard::Mouse {
 	using MouseCode = uint16_t;
 
 	enum : MouseCode {

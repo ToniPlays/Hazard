@@ -18,11 +18,15 @@ namespace WindowElement {
 		virtual bool OnEvent(Event& e) override { return false; };
 
 		bool GetActive() { return active; }
+		bool IsFocused() { return focused; }
+		bool IsHovered() { return hovered; }
 
 		void SetActive(bool active) { this->active = active; }
 	protected:
 		std::string title = "Untitled";
 	private:
+		bool focused = false;
+		bool hovered = false;
 		bool active = true;
 	};
 }
