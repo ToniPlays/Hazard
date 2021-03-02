@@ -8,27 +8,17 @@
 using namespace Hazard;
 using namespace Hazard::Rendering;
 
-
-
 namespace WindowElement {
-	class Viewport : public EditorWindow {
+	class GameViewport : public EditorWindow {
 	public:
-		Viewport();
-		~Viewport();
-		
+		GameViewport();
+		~GameViewport();
+
 		void Init() override;
-		void OnFrameBegin() override { gizmos.OnFrameBegin(); };
 		void OnWindowRender() override;
-		bool OnEvent(Event& e) override;
 	private:
-		Editor::EditorCamera editorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
-
 		RenderTexture* renderTexture;
-
 		RenderEngine* renderer;
-		TransformationGizmo gizmos;
 		uint32_t width = 0, height = 0;
-	private:
-		bool KeyPressed(KeyPressedEvent& e);
 	};
 }

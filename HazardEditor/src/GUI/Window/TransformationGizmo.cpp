@@ -82,6 +82,7 @@ namespace WindowElement {
 	}
 	bool TransformationGizmo::SetSelectionContext(Events::SelectionContextChange& change)
 	{
+		HZR_WARN("Entity target change");
 		currentSelection = change.GetEntity(); 
 		return false;
 	}

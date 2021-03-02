@@ -26,7 +26,7 @@ namespace Hazard::Rendering {
 		void SetClearColor(Color color) { clearColor = color; };
 
 		RenderAPI GetCurrentAPI() { return currentAPI; }
-		std::string GetRenderer() { return window->GetContext()->GetVersion(); }
+		GraphicsContext& GetContext() { return *window->GetContext(); }
 		Window& GetWindow() { return *window; }
 
 	private:

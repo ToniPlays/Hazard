@@ -19,6 +19,7 @@ namespace Hazard::Rendering {
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		std::string GetVersion() const override;
+		std::string GetDevice() const override;
 	private:
 
 		static ErrorCallback callback;

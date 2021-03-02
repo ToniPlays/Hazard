@@ -74,16 +74,13 @@ namespace WindowElement {
 		Style::Style::Init();
 
 		PushRenderable<MenuBar>();
+		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
 		PushRenderable<Inspector>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<FileView>();
 		PushRenderable<Performance>();
-
-
-		HZR_INFO("EditoView init");
-
 	}  
 	void EditorView::Render()
 	{

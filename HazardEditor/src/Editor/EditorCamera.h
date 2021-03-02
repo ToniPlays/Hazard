@@ -25,9 +25,9 @@ namespace Editor {
 		glm::mat4 GetViewPprojection() const { return projectionMatrix * viewMatrix; }
 
 		glm::quat GetOrientation() const;
+		const void SetMousePosition(glm::vec2 pos) { initialMousePos = pos; }
 
-		float Get
-		() const { return pitch; }
+		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 
 		glm::vec3 GetUpDirection() const;

@@ -31,6 +31,7 @@ namespace WindowElement {
 		stats = Hazard::Core::HazardLoop::GetModule<Rendering::RenderEngine>().GetStats();
 
 		Layout::Table(2, true);
+		Layout::SetColumnWidth(115);
 		Layout::Text("Frametime");
 		Layout::TableNext();
 
@@ -53,7 +54,12 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Renderer");
 		Layout::TableNext();
-		Layout::Text(context->GetRenderer().c_str());
+		Layout::Text(context->GetContext().GetDevice().c_str());
+
+		Layout::TableNext();
+		Layout::Text("Rendering API");
+		Layout::TableNext();
+		Layout::Text(context->GetContext().GetVersion().c_str());
 
 		Layout::TableNext();
 		Layout::Text("Drawcalls");

@@ -103,6 +103,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h" />
+    <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -160,5 +161,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp" />
+    <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp" />
   </ItemGroup>
 </Project>

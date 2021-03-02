@@ -21,12 +21,14 @@ namespace WindowElement {
 		bool found = false;
 		renderer = &Application::GetModule<RenderEngine>(found);
 		SetActive(found);
+		renderTexture = RenderUtils::Create<RenderTexture>();
 
 		if (found) renderer->SetRenderTarget(RenderUtils::Create<RenderTexture>());
 	}
 	void Viewport::OnWindowRender()
 	{
 		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
+		renderer->SetRenderTarget(renderTexture);
 		renderer->SceneRender(scene, editorCamera.GetViewPprojection());
 
 		RenderTexture* texture = renderer->GetRenderTarget();
@@ -39,7 +41,7 @@ namespace WindowElement {
 			height = size.y;
 
 			renderer->GetRenderTarget()->Resize(width, height);
-			scene.GetSceneCamera().RecalculateProjection(width, height);
+			editorCamera.SetViewpotSize(width, height);
 		}
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
@@ -50,19 +52,20 @@ namespace WindowElement {
 		gizmos.OnRender(editorCamera);
 
 		if (gizmos.IsUsing()) return;
-		if (!IsFocused()) return;
+		if (!IsFocused()) editorCamera.SetMousePosition(Input::GetMousePos());
 		editorCamera.OnUpdate();
 
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
+		editorCamera.OnEvent(e);
+		gizmos.OnEvent(e);
+
 		if (!IsFocused()) return false;
 
 		EventDispatcher dispacher(e);
 		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 
-		editorCamera.OnEvent(e);
-		gizmos.OnEvent(e);
 
 		return false;
 	}

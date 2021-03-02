@@ -43,7 +43,8 @@ namespace WindowElement {
 
 		Layout::ContextMenu([&scene]() {
 			Layout::MenuItem("Create entity", [&scene]() {
-				scene.CreateEntity("Empty entity");
+				Events::SelectionContextChange e(scene.CreateEntity("Empty entity"));
+				EditorView::GetInstance().OnEvent(e);
 				
 			});
 		});

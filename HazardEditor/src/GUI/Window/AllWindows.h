@@ -7,6 +7,7 @@
 #include "Inspect/FileView.h"
 
 #include "Rendering/Viewport.h"
+#include "Rendering/GameViewport.h"
 #include "Rendering/Performance.h"
 
 #include "TransformationGizmo.h"

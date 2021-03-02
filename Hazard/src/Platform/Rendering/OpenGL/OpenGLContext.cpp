@@ -82,11 +82,18 @@ namespace Hazard::Rendering {
 	{
 		std::stringstream ss;
 		GLint major, minor;
+		
 		glGetIntegerv(GL_MAJOR_VERSION, &major);
 		glGetIntegerv(GL_MINOR_VERSION, &minor);
 
 		ss << "OpenGL ";
 		ss << major << "." << minor;
+		return ss.str();
+	}
+	std::string OpenGLContext::GetDevice() const
+	{
+		std::stringstream ss;
+		ss << glGetString(GL_RENDERER);
 		return ss.str();
 	}
 }
