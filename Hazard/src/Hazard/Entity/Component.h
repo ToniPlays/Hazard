@@ -11,7 +11,7 @@
 
 namespace Hazard::ECS {
 
-	enum Projection { Perspective, Orthographic };
+	enum Projection { Perspective = 0, Orthographic };
 
 	struct TagComponent
 	{
@@ -39,6 +39,9 @@ namespace Hazard::ECS {
 
 		glm::mat4 projection;
 		float width, height;
+
+		int GetProjectionType() { return type; }
+		void SetProjection(Projection t) { type = t; RecalculateProjection(width, height); }
 
 		void RecalculateProjection(float w, float h) {
 

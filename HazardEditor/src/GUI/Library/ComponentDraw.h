@@ -62,6 +62,26 @@ namespace WindowElement {
 		if (!entity.HasComponent<CameraComponent>()) return;
 		Layout::ComponentTreenode<CameraComponent>(name, [&entity]() {
 			auto& component = entity.GetComponent<CameraComponent>();
+
+			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+			const char* currentProjectionTypeString = projectionTypeStrings[(int)component.GetProjectionType()];
+
+			if (ImGui::BeginCombo("Projection", currentProjectionTypeString)) {
+				for (int i = 0; i < 2; i++) {
+					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+
+					if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+					{
+						currentProjectionTypeString = projectionTypeStrings[i];
+						component.SetProjection((ECS::Projection)i);
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
 			if (Input::Slider("FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
