@@ -100,10 +100,52 @@ namespace WindowElement {
 			Layout::TableNext();
 
 			Input::ColorPicker("Sprite tint", component.tint);
+			Input::TextureSlot("Texture", component.textureID);
 			Layout::EndTable();
 
 			}, []() {
 
 			});
 	}
+
+#pragma region Lights 
+	template<>
+	inline void DrawComponent<SkyLightComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<SkyLightComponent>()) return;
+
+		Layout::ComponentTreenode<SkyLightComponent>(name, [&entity]() {
+			auto& component = entity.GetComponent<SkyLightComponent>();
+			Input::Slider("Intensity", component.intensity);
+			Input::ColorPicker("Tint", component.tint);
+		}, []() {
+
+		});
+	}
+	template<>
+	inline void DrawComponent<DirectionalLightComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<DirectionalLightComponent>()) return;
+		Layout::ComponentTreenode<DirectionalLightComponent>(name, [&entity]() {
+			auto& component = entity.GetComponent<DirectionalLightComponent>();
+			Input::Slider("Intensity", component.intensity);
+			Input::ColorPicker("Tint", component.tint);
+			}, []() {
+
+			});
+	}
+	template<>
+	inline void DrawComponent<PointLightComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<PointLightComponent>()) return;
+		Layout::ComponentTreenode<PointLightComponent>(name, [&entity]() {
+			auto& component = entity.GetComponent<PointLightComponent>();
+
+			Input::Slider("Intensity", component.intensity, 0, 10000);
+			Input::ColorPicker("Tint", component.tint);
+
+			Input::Vec1("Radius", component.radius, 10, 110);
+			}, []() {
+
+			});
+	}
+
+#pragma endregion
 }

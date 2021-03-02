@@ -30,6 +30,8 @@ namespace Hazard::Rendering {
 		data.QuadVertexBuffer->SetLayout({ 
 			{ ShaderDataType::Float3, "v_position" },
 			{ ShaderDataType::Float4, "v_color" },
+			{ ShaderDataType::Float3, "v_tex_coords" },
+			{ ShaderDataType::Float3, "v_normal" },
 			});
 
 		data.QuadVertexArray->AddBuffer(data.QuadVertexBuffer);

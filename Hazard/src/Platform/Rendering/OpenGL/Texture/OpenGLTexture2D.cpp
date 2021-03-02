@@ -26,6 +26,10 @@ namespace Hazard::Rendering {
 		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+		glGenerateMipmap(textureID);
+		glTexParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
 		glTextureSubImage2D(textureID, 0, 0, 0, width, height, channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 	}
@@ -44,5 +48,4 @@ namespace Hazard::Rendering {
 	{
 		glBindTextureUnit(slot, 0);
 	}
-
 }

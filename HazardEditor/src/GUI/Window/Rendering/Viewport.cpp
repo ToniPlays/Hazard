@@ -71,8 +71,6 @@ namespace WindowElement {
 	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
-		HZR_INFO("WORKD");
-
 		switch (e.GetKeyCode()) {
 		case Key::Q:
 			gizmos.SetType(Gizmo::Translate);

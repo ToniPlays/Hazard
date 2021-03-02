@@ -28,6 +28,11 @@ namespace WindowElement {
 		DrawComponent<CameraComponent>("Camera", selectionContext);
 		DrawComponent<SpriteRendererComponent>("Sprite", selectionContext);
 
+		DrawComponent<SkyLightComponent>("Sky light", selectionContext);
+		DrawComponent<DirectionalLightComponent>("Directional light", selectionContext);
+		DrawComponent<PointLightComponent>("Point light", selectionContext);
+
+
 
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("Camera", [&]() {
@@ -39,6 +44,15 @@ namespace WindowElement {
 			});
 			Layout::MenuItem("Camera", [&]() {
 				selectionContext.AddComponent<CameraComponent>();
+				});
+			Layout::MenuItem("Sky Light", [&]() {
+				selectionContext.AddComponent<SkyLightComponent>();
+			});
+			Layout::MenuItem("Directional light", [&]() {
+				selectionContext.AddComponent<SkyLightComponent>();
+				});
+			Layout::MenuItem("Point light", [&]() {
+				selectionContext.AddComponent<PointLightComponent>();
 				});
 		});
 

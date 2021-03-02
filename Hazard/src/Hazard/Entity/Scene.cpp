@@ -23,7 +23,8 @@ namespace Hazard::ECS {
 
         for (auto entity : group) {
             auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            engine.Submit(Rendering::Quad{ transform.GetTransformMat4(), { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a } });
+            engine.Submit(Rendering::Quad{ transform.GetTransformMat4(),
+                { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a }, sprite.textureID });
         }
     }
     void Scene::Flush()
@@ -47,7 +48,7 @@ namespace Hazard::ECS {
 
         for (auto entity : group) {
             auto&[transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
-            return std::tuple(true, Camera(cam, cam.projection * glm::inverse(transform.GetTransformMat4())));
+            return std::tuple(true, Camera(cam, cam.projection * glm::inverse(transform.GetTransformMat4()), transform.Translation));
         }
         return std::tuple(false, Camera());
     }
@@ -62,6 +63,18 @@ namespace Hazard::ECS {
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
+
+    }
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, SkyLightComponent& component) {
+
+    }
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, DirectionalLightComponent& component) {
+
+    }
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {
 
     }
 }

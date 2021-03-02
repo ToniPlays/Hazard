@@ -141,6 +141,10 @@ namespace WindowElement {
 			ImGui::End();
 		}
 	}
+	void Input::TextureSlot(const char* label, uint8_t& index)
+	{
+
+	}
 	bool Input::Slider(const char* label, float& value, float min, float max)
 	{
 		return ImGui::SliderFloat(label, &value, min, max, "%.3f");

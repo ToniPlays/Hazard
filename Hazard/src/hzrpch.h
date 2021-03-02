@@ -17,6 +17,8 @@
 #include "Hazard/Events/KeyEvent.h"
 #include "Hazard/Events/MouseEvent.h"
 
+#include "Hazard/Math/Time.h"
+
 #if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
 	//Core logging macros
 	#define HZR_CORE_INFO(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)

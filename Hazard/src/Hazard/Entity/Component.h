@@ -11,7 +11,9 @@
 
 namespace Hazard::ECS {
 
-	enum Projection { Perspective = 0, Orthographic };
+enum Projection { Perspective = 0, Orthographic };
+#pragma region General
+
 
 	struct TagComponent
 	{
@@ -20,18 +22,39 @@ namespace Hazard::ECS {
 	struct TransformComponent
 	{
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Rotation =	{ 0.0f, 0.0f, 0.0f };
-		glm::vec3 Scale =		{ 1.0f, 1.0f, 1.0f };
+		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 
 		glm::mat4 GetTransformMat4()
 		{
 			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
-			
+
 			return glm::translate(glm::mat4(1.0f), Translation)
 				* rotation
 				* glm::scale(glm::mat4(1.0f), Scale);
 		}
 	};
+
+#pragma endregion
+#pragma region Lights 
+
+	struct SkyLightComponent {
+		float intensity = 1.0f;
+		Color tint;
+	};
+	struct DirectionalLightComponent {
+		float intensity = 1.0f;
+		Color tint;
+	};
+	struct PointLightComponent {
+		float intensity = 1.0f;
+		Color tint;
+
+		float radius = 10.0f;
+	};
+
+#pragma endregion
+	
 	struct CameraComponent {
 		
 		Projection type = Projection::Perspective;
@@ -67,16 +90,19 @@ namespace Hazard::ECS {
 	};
 	struct SpriteRendererComponent {
 		Color tint;
+
+		uint8_t textureID = 0;
 	};
 
 	struct Camera {
 
 		glm::mat4 viewProjection;
+		glm::vec3 position;
 
 		CameraComponent* component;
 		Camera() = default;
 
-		Camera(CameraComponent& cam, glm::mat4 viewProjection) : component(&cam) {
+		Camera(CameraComponent& cam, glm::mat4 viewProjection, glm::vec3 pos) : component(&cam), position(pos) {
 			this->viewProjection = viewProjection;
 		}
 	};

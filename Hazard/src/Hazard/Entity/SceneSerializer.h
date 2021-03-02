@@ -127,7 +127,9 @@ namespace Hazard::ECS::Loader {
 
 			if (!node["CameraComponent"]) return;
 			auto comp = node["CameraComponent"];
-			entity.AddComponent<CameraComponent>().fov = comp["Fov"].as<float>();
+			auto& c = entity.AddComponent<CameraComponent>();
+			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
+			c.fov = comp["Fov"].as<float>();
 
 		};
 
@@ -183,6 +185,7 @@ namespace Hazard::ECS::Loader {
 			if (!entity.HasComponent<CameraComponent>()) return;
 			auto c = entity.GetComponent<CameraComponent>();
 			out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
+			out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
 			out << YAML::Key << "Fov" << YAML::Value << c.fov;
 
 			out << YAML::EndMap;

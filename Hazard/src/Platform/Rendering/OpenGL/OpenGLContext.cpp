@@ -45,11 +45,13 @@ namespace Hazard::Rendering {
 		glfwMakeContextCurrent(window);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			HZR_ASSERT(false, "Unable to init GLFW");
+			HZR_ASSERT(false, "Unable to init GLFW context");
 			return;
 		};
 		glEnable(GL_DEPTH_TEST);
-		glCullFace(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+
 		//glEnable(GL_DEBUG_OUTPUT);
 		//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		//glDebugMessageCallback(OpenGLContext::OnError, this);
