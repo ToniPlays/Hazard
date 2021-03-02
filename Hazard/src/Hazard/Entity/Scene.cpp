@@ -18,8 +18,7 @@ namespace Hazard::ECS {
     }
     void Scene::Render()
     {
-        auto group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-
+        auto group = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         Rendering::RenderEngine& engine = Core::HazardLoop::GetModule<Rendering::RenderEngine>();
 
         for (auto entity : group) {
@@ -42,13 +41,24 @@ namespace Hazard::ECS {
     {
         registry.destroy(entity);
     }
+    std::tuple<bool, Camera> Scene::GetSceneCamera() {
+
+        auto group = registry.group<CameraComponent>(entt::get<TransformComponent>);
+
+        for (auto entity : group) {
+            auto&[transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
+            return std::tuple(true, Camera(cam, cam.projection * glm::inverse(transform.GetTransformMat4())));
+        }
+        return std::tuple(false, Camera());
+    }
+
     template<typename T>
     void Scene::OnComponentAdded(Entity& entity, T& component) {
         
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, CameraComponent& component) {
-
+        component.RecalculateProjection(1920, 1080);
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {

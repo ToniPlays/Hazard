@@ -11,6 +11,8 @@
 
 namespace Hazard::ECS {
 
+	enum Projection { Perspective, Orthographic };
+
 	struct TagComponent
 	{
 		std::string tag;
@@ -31,17 +33,48 @@ namespace Hazard::ECS {
 		}
 	};
 	struct CameraComponent {
-		float fov = 1.0f;
+		
+		Projection type = Projection::Perspective;
+		float fov = 10.0f;
 
 		glm::mat4 projection;
+		float width, height;
 
 		void RecalculateProjection(float w, float h) {
-			float aspect = w / h * fov;
-			projection = glm::ortho(-aspect, aspect, -fov, fov, -1000.0f, 1000.0f);
 
+			width = w;
+			height = h;
+
+			float aspectRatio = width / height;
+
+			if (type == Perspective) {
+				projection = glm::perspective(glm::radians(fov), aspectRatio, 0.01f, 1000.0f);
+			} 
+			else
+			{
+				float orthoLeft = -fov * aspectRatio * 0.5f;
+				float orthoRight = fov * aspectRatio * 0.5f;
+				float orthoBottom = -fov * 0.5f;
+				float orthoTop = fov * 0.5f;
+
+				projection = glm::ortho(orthoLeft, orthoRight,
+					orthoBottom, orthoTop, -1000.0f, 1000.0f);
+			}
 		}
 	};
 	struct SpriteRendererComponent {
 		Color tint;
+	};
+
+	struct Camera {
+
+		glm::mat4 viewProjection;
+
+		CameraComponent* component;
+		Camera() = default;
+
+		Camera(CameraComponent& cam, glm::mat4 viewProjection) : component(&cam) {
+			this->viewProjection = viewProjection;
+		}
 	};
 }

@@ -35,26 +35,26 @@ namespace WindowElement {
 		if (texture == nullptr) 
 			return;
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (size.x != width || size.y != height) {
 			width = size.x;
 			height = size.y;
 
-			renderer->GetRenderTarget()->Resize(width, height);
+			renderTexture->Resize(width, height);
 			editorCamera.SetViewpotSize(width, height);
 		}
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
-		ImGui::Image((void*)renderer->GetRenderTarget()->GetColorID(),
+		ImGui::Image((void*)renderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
-
 		ImGui::PopStyleVar();
+
 		gizmos.OnRender(editorCamera);
 
 		if (gizmos.IsUsing()) return;
-		if (!IsFocused()) editorCamera.SetMousePosition(Input::GetMousePos());
-		editorCamera.OnUpdate();
 
+		IsFocused() ? editorCamera.OnUpdate() : editorCamera.SetMousePosition(Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{

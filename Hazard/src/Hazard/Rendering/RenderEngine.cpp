@@ -36,6 +36,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::SceneRender(ECS::Scene& scene, glm::mat4 viewProjection)
 	{
+
 		stats.drawCalls = 0;
 		stats.quads = 0;
 		stats.indices = 0;

@@ -21,7 +21,9 @@ namespace Hazard::Rendering {
 		void Flush();
 
 		void SceneRender(ECS::Scene& scene) { 
-			SceneRender(scene, scene.GetSceneCamera().projection); 
+			auto [found, cam] = scene.GetSceneCamera();
+			if (!found) return;
+			SceneRender(scene, cam.viewProjection); 
 		};
 		void SceneRender(ECS::Scene& scene, glm::mat4 projection);
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };

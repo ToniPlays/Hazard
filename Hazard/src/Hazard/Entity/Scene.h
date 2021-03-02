@@ -20,7 +20,7 @@ namespace Hazard::ECS {
 
 		void SetName(std::string name) { this->name = name.c_str(); }
 
-		CameraComponent& GetSceneCamera() { return sceneCamera; }
+		std::tuple<bool, Camera> GetSceneCamera();
 		entt::registry& GetSceneRegistry() { return registry; }
 
 		std::string& GetSceneFile() { return file; }
@@ -30,8 +30,6 @@ namespace Hazard::ECS {
 		entt::registry registry;
 		std::string name;
 		std::string file;
-
-		CameraComponent sceneCamera;
 
 	private:
 		template<typename T>

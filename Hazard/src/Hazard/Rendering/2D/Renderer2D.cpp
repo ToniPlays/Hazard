@@ -88,7 +88,6 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
 	{
-		this->viewProjection = viewProjection;
 		data.QuadShader->Bind();
 		data.QuadShader->SetUniform("viewProjection", viewProjection);
 

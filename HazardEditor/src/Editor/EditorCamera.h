@@ -18,7 +18,7 @@ namespace Editor {
 		inline float GetDistance() const { return distance; }
 		inline float SetDistance(float distance) { this->distance = distance; }
 
-		inline void SetViewpotSize(float w, float h) { viewport_w = w; viewport_h = h; }
+		inline void SetViewpotSize(float w, float h) { viewport_w = w; viewport_h = h; UpdateProjection(); }
 
 		const glm::mat4& GetView() const { return viewMatrix; }
 		const glm::mat4& GetProjection() const { return projectionMatrix; }
@@ -50,8 +50,8 @@ namespace Editor {
 
 		float viewport_w = 1280, viewport_h = 720;
 
-	private:
 		void UpdateProjection();
+	private:
 		void UpdateView();
 
 		bool OnMouseScroll(MouseScrolledEvent& e);

@@ -29,19 +29,24 @@ namespace WindowElement {
 	{
 		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
 		renderer->SetRenderTarget(renderTexture);
-		renderer->SceneRender(scene, scene.GetSceneCamera().projection);
+
+		auto&[found, cam] = scene.GetSceneCamera();
+		if (!found) return;
+
+		renderer->SceneRender(scene, cam.viewProjection);
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
+
 		if (size.x != width || size.y != height) {
 			width = size.x;
 			height = size.y;
 
-			renderer->GetRenderTarget()->Resize(width, height);
-			scene.GetSceneCamera().RecalculateProjection(width, height);
+			renderTexture->Resize(width, height);
+			cam.component->RecalculateProjection(width, height);
 		}
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
-		ImGui::Image((void*)renderer->GetRenderTarget()->GetColorID(),
+		ImGui::Image((void*)renderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::PopStyleVar();

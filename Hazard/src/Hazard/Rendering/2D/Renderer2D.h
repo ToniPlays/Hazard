@@ -47,7 +47,7 @@ namespace Hazard::Rendering {
 		Renderer2DData data;
 		RenderContext* context;
 
-		glm::mat4 viewProjection;
+		//glm::mat4 viewProjection;
 		RenderStats stats;
 	};
 }

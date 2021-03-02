@@ -62,7 +62,9 @@ namespace WindowElement {
 		if (!entity.HasComponent<CameraComponent>()) return;
 		Layout::ComponentTreenode<CameraComponent>(name, [&entity]() {
 			auto& component = entity.GetComponent<CameraComponent>();
-				
+			if (Input::Slider("FOV", component.fov, 0.001, 100)) {
+				component.RecalculateProjection(component.width, component.height);
+			}
 			}, []() {
 
 			});
