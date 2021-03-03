@@ -61,7 +61,15 @@ namespace Hazard::Rendering {
 
 		data.QuadVertexArray->SetIndexBuffer(indexBuffer);
 		
+		int32_t samplers[8];
+		for (uint32_t i = 0; i < 8; i++)
+			samplers[i] = i;
+
+		data.TextureSlots[0] = RenderUtils::GetWhiteTexture();
+
+
 		data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
+		data.QuadShader->SetUniform("u_textures", samplers, 8);
 
 
 		data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -72,6 +80,7 @@ namespace Hazard::Rendering {
 	void Renderer2D::SubmitQuad(Quad quad)
 	{
 		constexpr uint8_t quadVertexCount = 4;
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f } };
 
 		if (data.QuadIndexCount >= data.MaxIndices) {
 			Flush();
@@ -81,6 +90,7 @@ namespace Hazard::Rendering {
 		for (uint8_t i = 0; i < quadVertexCount; i++) {
 			data.QuadVertexBufferPtr->position = quad.transform * data.QuadVertexPos[i];
 			data.QuadVertexBufferPtr->color = quad.color;
+			data.QuadVertexBufferPtr->texture = { textureCoords[i].x, textureCoords[i].y, quad.texture };
 			data.QuadVertexBufferPtr++;
 		}
 
@@ -102,6 +112,7 @@ namespace Hazard::Rendering {
 	{
 		data.QuadIndexCount = 0;
 		data.QuadVertexBufferPtr = data.QuadVertexBufferBase;
+		data.UsedTextures = 1;
 	}
 	void Renderer2D::Flush()
 	{
@@ -109,6 +120,9 @@ namespace Hazard::Rendering {
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)data.QuadVertexBufferPtr - (uint8_t*)data.QuadVertexBufferBase);
 		data.QuadVertexBuffer->SetData(data.QuadVertexBufferBase, dataSize);
+
+		for (uint32_t i = 0; i < data.UsedTextures; i++)
+			data.TextureSlots[i]->Bind(i);
 
 		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 

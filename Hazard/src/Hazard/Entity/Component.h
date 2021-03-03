@@ -91,7 +91,7 @@ enum Projection { Perspective = 0, Orthographic };
 	struct SpriteRendererComponent {
 		Color tint;
 
-		uint8_t textureID = 0;
+		int16_t textureID = -1;
 	};
 
 	struct Camera {

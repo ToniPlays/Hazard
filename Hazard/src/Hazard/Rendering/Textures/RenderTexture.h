@@ -25,6 +25,7 @@ namespace Hazard::Rendering {
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual RenderTextureSpec& GetSpec() = 0;
+		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual uint32_t GetColorID() const = 0;
 	};

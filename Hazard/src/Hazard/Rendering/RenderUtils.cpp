@@ -12,7 +12,9 @@
 namespace Hazard::Rendering {
 
 	RenderAPI RenderUtils::api;
+	Texture2D* RenderUtils::whiteTexture;
 
+	
 	template<class T>
 	T* RenderUtils::Create()
 	{
@@ -62,5 +64,30 @@ namespace Hazard::Rendering {
 		case RenderAPI::OpenGL:		return new OpenGLShader(file);
 		}
 		return nullptr;
+	}
+	template<>
+	Texture2D* RenderUtils::Create<Texture2D>(glm::vec2 size) {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGLTexture2D(size);
+		}
+		return nullptr;
+	}
+	template<>
+	Texture2D* RenderUtils::Create<Texture2D>(const char* path) {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGLTexture2D(path);
+		}
+		return nullptr;
+	}
+
+	//Initialize white texture for batch rendering
+	void RenderUtils::Init()
+	{
+		whiteTexture = Create<Texture2D>(glm::vec2{ 1, 1 });
+		uint32_t data = 0xFFFFFFFF;
+		whiteTexture->SetData(&data, sizeof(uint32_t));
+		HZR_CORE_INFO("White texture id {0}", whiteTexture->GetID());
 	}
 }

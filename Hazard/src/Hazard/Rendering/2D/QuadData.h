@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "glm/glm.hpp"
+#include "../RenderUtils.h"
 
 namespace Hazard::Rendering {
 
@@ -10,8 +11,10 @@ namespace Hazard::Rendering {
 		glm::vec4 color;
 		uint8_t texture;
 
-		Quad(glm::mat4 transform, glm::vec4 color, uint8_t texture) : transform(transform), 
-			color(color), texture(texture) {};
+		Quad(glm::mat4 transform, glm::vec4 color, int16_t text) : transform(transform), 
+			color(color) {
+			texture = text == -1 ? RenderUtils::GetWhiteTexture()->GetID() : text;
+		};
 	};
 
 	struct QuadVertex

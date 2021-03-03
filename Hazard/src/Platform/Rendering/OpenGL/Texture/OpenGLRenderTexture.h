@@ -24,6 +24,7 @@ namespace Hazard::Rendering {
 		uint32_t GetColorID() const { return colorAttachment; }
 		uint32_t GetID() const override { return RendererID; }
 		RenderTextureSpec& GetSpec() { return spec; }
+		virtual void SetData(void* data, uint32_t size) {}
 
 	private:
 		RenderTextureSpec spec;

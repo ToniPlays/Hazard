@@ -141,7 +141,7 @@ namespace WindowElement {
 			ImGui::End();
 		}
 	}
-	void Input::TextureSlot(const char* label, uint8_t& index)
+	void Input::TextureSlot(const char* label, int16_t& index)
 	{
 
 	}

@@ -25,6 +25,8 @@ namespace Hazard::Rendering {
 		context = &Core::HazardLoop::GetModule<RenderContext>(found);
 		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
 		SetActive(found);
+		RenderUtils::Init();
+
 		renderer2D = new Renderer2D(context);
 		renderer2D->Init(35000);
 

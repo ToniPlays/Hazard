@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 
 	class RenderUtils {
 		public:
-
+			static void Init();
 			static void SetRenderAPI(RenderAPI api) { RenderUtils::api = api; }
 
 			template<class T>
@@ -22,7 +22,11 @@ namespace Hazard::Rendering {
 
 			template<class T, typename Arg>
 			static T* Create(Arg arg);
+
+			static Texture2D* GetWhiteTexture() { return whiteTexture; }
+
 	private:
 		static RenderAPI api;
+		static Texture2D* whiteTexture;
 	};
 }

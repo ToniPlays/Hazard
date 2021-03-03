@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Textures/Texture2D.h"
 #include <iostream>
+#include "glm/glm.hpp"
 
 namespace Hazard::Rendering {
 
@@ -10,6 +11,7 @@ namespace Hazard::Rendering {
 	public:
 
 		OpenGLTexture2D(const char* file);
+		OpenGLTexture2D(const glm::vec2 size);
 		~OpenGLTexture2D();
 
 		void Bind(uint32_t slot) const override;
@@ -17,11 +19,14 @@ namespace Hazard::Rendering {
 
 		virtual uint32_t GetWidth() const { return width; }
 		virtual uint32_t GetHeight() const { return height; }
+		virtual void SetData(void* data, uint32_t size) override;
 
 		uint32_t GetID() const { return textureID; };
 
 	private:
 		uint32_t width, height;
 		uint32_t textureID;
+
+		uint32_t dataFormat, internalFormat;
 	};
 }
