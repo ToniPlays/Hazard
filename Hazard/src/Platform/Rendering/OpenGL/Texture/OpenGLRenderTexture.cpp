@@ -5,7 +5,7 @@
 
 namespace Hazard::Rendering {
 
-	OpenGLRenderTexture::OpenGLRenderTexture() : RenderTexture()
+	OpenGLRenderTexture::OpenGLRenderTexture() : RenderTexture("RenderTexture")
 	{
 		spec.width = 1920;
 		spec.height = 1080;

@@ -9,6 +9,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
+#include "Hazard/Rendering/RenderUtils.h"
+
 namespace Hazard::ECS {
 
 enum Projection { Perspective = 0, Orthographic };
@@ -90,8 +92,7 @@ enum Projection { Perspective = 0, Orthographic };
 	};
 	struct SpriteRendererComponent {
 		Color tint;
-
-		int16_t textureID = -1;
+		Rendering::Texture* texture = nullptr;
 	};
 
 	struct Camera {

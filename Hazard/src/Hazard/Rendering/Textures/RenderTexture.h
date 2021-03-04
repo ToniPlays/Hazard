@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 	class HAZARD_API RenderTexture : public Texture2D {
 	public:
 
-		RenderTexture() {}
+		RenderTexture(const char* file) : Texture2D(file) {}
 		~RenderTexture() {};
 
 		virtual uint32_t GetWidth() const = 0;

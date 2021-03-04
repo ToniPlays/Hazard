@@ -6,7 +6,7 @@
 namespace Hazard::Rendering {
 	class HAZARD_API Texture {
 	public:
-		Texture() {};
+		Texture(const char* file) : file(file) {};
 
 		virtual ~Texture() {};
 		virtual unsigned int GetWidth() const = 0;
@@ -17,6 +17,9 @@ namespace Hazard::Rendering {
 		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual uint32_t GetID() const = 0;
+		const char* GetFile() { return file; };
+	protected:
+		const char* file = "";
 
 	};
 }

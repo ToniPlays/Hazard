@@ -81,6 +81,8 @@ namespace WindowElement {
 		PushRenderable<Hierarchy>();
 		PushRenderable<FileView>();
 		PushRenderable<Performance>();
+
+		PushRenderable<EngineAssets>();
 	}  
 	void EditorView::Render()
 	{

@@ -10,6 +10,7 @@ namespace Hazard::Rendering {
 		uint32_t quads = 0;
 		uint32_t vertices = 0;
 		uint32_t indices = 0;
+		uint32_t textures = 0;
 	};
 
 	class RenderUtils {
@@ -17,16 +18,27 @@ namespace Hazard::Rendering {
 			static void Init();
 			static void SetRenderAPI(RenderAPI api) { RenderUtils::api = api; }
 
-			template<class T>
+			template<typename T>
 			static T* Create();
 
-			template<class T, typename Arg>
+			template<typename T, typename Arg>
 			static T* Create(Arg arg);
 
-			static Texture2D* GetWhiteTexture() { return whiteTexture; }
+			template<typename T, typename Arg, typename C>
+			static T* Create(Arg arg, C name);
 
+			template<typename T, typename Arg>
+			static T* Find(Arg args);
+
+			static Texture* GetTexture(uint32_t textureID);
+			static Texture* GetFromTextures(uint32_t index);
+			static uint32_t GetTextureStackIndex(Texture* texture);
+			static void UnloadTexture() {};
+
+			static std::vector<Texture*> GetTextures() { return textures; }
 	private:
 		static RenderAPI api;
-		static Texture2D* whiteTexture;
+		static std::vector<Texture*> textures;
+
 	};
 }

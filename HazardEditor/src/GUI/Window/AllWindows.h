@@ -10,4 +10,6 @@
 #include "Rendering/GameViewport.h"
 #include "Rendering/Performance.h"
 
+#include "Debug/EngineAssets.h"
+
 #include "TransformationGizmo.h"

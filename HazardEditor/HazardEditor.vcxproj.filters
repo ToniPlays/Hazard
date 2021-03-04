@@ -104,6 +104,7 @@
     </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h" />
     <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h" />
+    <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -162,5 +163,6 @@
     </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp" />
     <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp" />
+    <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp" />
   </ItemGroup>
 </Project>

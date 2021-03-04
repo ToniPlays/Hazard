@@ -18,13 +18,13 @@ namespace Hazard::Rendering {
 		virtual uint32_t GetProgram() const = 0;
 
 	public:
-		virtual void SetUniform(const std::string& name, int value) = 0;
-		virtual void SetUniform(const std::string& name, int* value, uint32_t size) = 0;
-		virtual void SetUniform(const std::string& name, float value) = 0;
-		virtual void SetUniform(const std::string& name, glm::vec2 value) = 0;
-		virtual void SetUniform(const std::string& name, glm::vec3  value) = 0;
-		virtual void SetUniform(const std::string& name, glm::mat4 value) = 0;
-		virtual void SetUniform(const std::string& name, Color color) = 0;
-		virtual void SetUniform(const std::string& name, bool value) = 0;
+		virtual void SetUniformInt(const std::string& name, int value) = 0;
+		virtual void SetUniformIntArray(const std::string& name, int* value, uint32_t size) = 0;
+		virtual void SetUniformFloat(const std::string& name, float value) = 0;
+		virtual void SetUniformVec2(const std::string& name, glm::vec2 value) = 0;
+		virtual void SetUniformVec3(const std::string& name, glm::vec3  value) = 0;
+		virtual void SetUniformMat4(const std::string& name, glm::mat4 value) = 0;
+		virtual void SetUniformColor(const std::string& name, Color color) = 0;
+		virtual void SetUniformBool(const std::string& name, bool value) = 0;
 	};
 }

@@ -9,11 +9,11 @@ namespace Hazard::Rendering {
 	struct Quad {
 		glm::mat4 transform;
 		glm::vec4 color;
-		uint8_t texture;
+		Texture* texture;
 
-		Quad(glm::mat4 transform, glm::vec4 color, int16_t text) : transform(transform), 
+		Quad(glm::mat4 transform, glm::vec4 color, Texture* text) : transform(transform), 
 			color(color) {
-			texture = text == -1 ? RenderUtils::GetWhiteTexture()->GetID() : text;
+			texture = text;
 		};
 	};
 
@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 	{
 		glm::vec3 position;
 		glm::vec4 color;
-		glm::vec3 texture;
-		glm::vec3 surfaceNormal;
+		glm::vec2 texture;
+		float textureIndex;
 	};
 }

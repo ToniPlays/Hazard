@@ -7,10 +7,12 @@
 
 namespace Hazard::Rendering {
 
-	OpenGLTexture2D::OpenGLTexture2D(const char* file)
+	OpenGLTexture2D::OpenGLTexture2D(const char* file) : Texture2D(file)
 	{
 		int w, h, channels;
+		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(file, &w, &h, &channels, 0);
+		
 
 		if (!data) {
 			HZR_CORE_WARN("Texture file not found");
@@ -29,15 +31,11 @@ namespace Hazard::Rendering {
 		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glGenerateMipmap(textureID);
-		glTexParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
 		glTextureSubImage2D(textureID, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const glm::vec2 size)
+	OpenGLTexture2D::OpenGLTexture2D(const glm::vec2 size, const char* name) : Texture2D(name)
 	{
 		width = size.x;
 		height = size.y;

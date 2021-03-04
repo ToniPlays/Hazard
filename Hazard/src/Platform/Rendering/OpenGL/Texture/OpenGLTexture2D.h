@@ -11,7 +11,7 @@ namespace Hazard::Rendering {
 	public:
 
 		OpenGLTexture2D(const char* file);
-		OpenGLTexture2D(const glm::vec2 size);
+		OpenGLTexture2D(const glm::vec2 size, const char* name);
 		~OpenGLTexture2D();
 
 		void Bind(uint32_t slot) const override;

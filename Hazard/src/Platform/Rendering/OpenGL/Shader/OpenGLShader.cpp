@@ -47,42 +47,42 @@ namespace Hazard::Rendering {
 		return location;
 	}
 	//Uniforms 
-	void OpenGLShader::SetUniform(const std::string& name, int value)
+	void OpenGLShader::SetUniformInt(const std::string& name, int value)
 	{
 		glUniform1i(GetLocation(name), value);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, int* value, uint32_t size)
+	void OpenGLShader::SetUniformIntArray(const std::string& name, int* value, uint32_t size)
 	{
 		glUniform1iv(GetLocation(name), size, value);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, float value)
+	void OpenGLShader::SetUniformFloat(const std::string& name, float value)
 	{
 		glUniform1f(GetLocation(name), value);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, glm::vec2 value)
+	void OpenGLShader::SetUniformVec2(const std::string& name, glm::vec2 value)
 	{
 		glUniform2f(GetLocation(name), value.x, value.y);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, glm::vec3 value)
+	void OpenGLShader::SetUniformVec3(const std::string& name, glm::vec3 value)
 	{
 		glUniform3f(GetLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, glm::mat4 value)
+	void OpenGLShader::SetUniformMat4(const std::string& name, glm::mat4 value)
 	{
 		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
-	void OpenGLShader::SetUniform(const std::string& name, Color color) {
-		SetUniform(name, { color.r, color.g, color.b });
+	void OpenGLShader::SetUniformColor(const std::string& name, Color color) {
+		SetUniformVec3(name, { color.r, color.g, color.b });
 	}
 
-	void OpenGLShader::SetUniform(const std::string& name, bool value)
+	void OpenGLShader::SetUniformBool(const std::string& name, bool value)
 	{
-		SetUniform(name, value ? 1 : 0);
+		SetUniformBool(name, value ? 1 : 0);
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
@@ -113,7 +113,6 @@ namespace Hazard::Rendering {
 		program = glCreateProgram();
 		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;
-
 
 		for (auto& kv : sources) {
 			GLenum type = kv.first;

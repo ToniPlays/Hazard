@@ -141,9 +141,9 @@ namespace WindowElement {
 			ImGui::End();
 		}
 	}
-	void Input::TextureSlot(const char* label, int16_t& index)
+	bool Input::TextureSlot(const char* label, uint32_t& index)
 	{
-
+		return ImGui::DragInt(label, (int*)&index, 0.1f, 0, 10);
 	}
 	bool Input::Slider(const char* label, float& value, float min, float max)
 	{

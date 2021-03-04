@@ -22,9 +22,10 @@ namespace Hazard::ECS {
         Rendering::RenderEngine& engine = Core::HazardLoop::GetModule<Rendering::RenderEngine>();
 
         for (auto entity : group) {
-            auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+            auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+            
             engine.Submit(Rendering::Quad{ transform.GetTransformMat4(),
-                { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a }, sprite.textureID });
+                { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a }, sprite.texture });
         }
     }
     void Scene::Flush()
@@ -63,7 +64,7 @@ namespace Hazard::ECS {
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-
+        component.texture = Rendering::RenderUtils::GetFromTextures(0);
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, SkyLightComponent& component) {

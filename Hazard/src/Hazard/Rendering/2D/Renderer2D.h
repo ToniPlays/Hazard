@@ -21,11 +21,11 @@ namespace Hazard::Rendering {
 		Shader* QuadShader;
 
 		uint32_t QuadIndexCount = 0;
-		uint32_t UsedTextures = 1;
+		uint32_t TextureIndex = 1;
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
-		std::array<Texture2D*, 8> TextureSlots;
+		std::array<Texture*, 8> TextureSlots;
 
 		glm::vec4 QuadVertexPos[4];
 	};
