@@ -139,6 +139,8 @@ namespace Hazard::Rendering {
 		Texture2D* texture = Create<Texture2D>(glm::vec2{ 1, 1 }, "White");
 		uint32_t data = 0xFFFFFFFF;
 		texture->SetData(&data, sizeof(uint32_t));
+
+		Create<Texture2D>("res/textures/chernoLogo.png");
 	}
 	Texture* RenderUtils::GetTexture(uint32_t textureID)
 	{

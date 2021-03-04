@@ -48,6 +48,5 @@ void main() {
 		case 7: c *= texture(u_Textures[7], texCoords); break;
 	}
 
-
 	color = c;
 }

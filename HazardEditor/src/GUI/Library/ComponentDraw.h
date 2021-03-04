@@ -97,15 +97,19 @@ namespace WindowElement {
 			auto& component = entity.GetComponent<SpriteRendererComponent>();
 
 			Layout::Table(2, false);
+			Layout::SetColumnWidth(125);
 			Layout::Text("Tint");
 			Layout::TableNext();
 			Input::ColorPicker("Sprite tint", component.tint);
+			Layout::TableNext();
+			Layout::Text("Texture");
+			Layout::TableNext();
 
 			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.texture);
-
 			ImGui::Image((void*)component.texture->GetID(), { 25, 25 });
-			Input::TextureSlot("Texture", value);
-
+			Layout::SameLine();
+			Input::TextureSlot("", value);
+			Layout::Text(component.texture->GetFile());
 			component.texture = Rendering::RenderUtils::GetFromTextures(value);
 
 			Layout::EndTable();

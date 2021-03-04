@@ -65,7 +65,8 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < 8; i++)
 			samplers[i] = i;
 
-		data.TextureSlots[0] = static_cast<Texture2D*>(RenderUtils::GetFromTextures(0));
+		data.TextureSlots[0] = static_cast<Texture2D*>(RenderUtils::Find<Texture>("White"));
+
 		data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
 		data.QuadShader->Bind();
 		data.QuadShader->SetUniformIntArray("u_Textures", samplers, 8);
@@ -91,19 +92,19 @@ namespace Hazard::Rendering {
 		{
 			bool found = false;
 			for (int i = 1; i < data.TextureIndex; i++) {
-				if (&quad.texture == &data.TextureSlots[i]) {
+				if (std::string(quad.texture->GetFile()) == std::string(data.TextureSlots[i]->GetFile())) {
 					found = true;
+					textureIndex = float(i);
 					break;
 				}
 			}
 			if (!found) {
 				textureIndex = float(data.TextureIndex);
+				HZR_CORE_WARN("Adding texture to textureSlots {0}", quad.texture->GetFile());
 				data.TextureSlots[data.TextureIndex] = quad.texture;
 				data.TextureIndex++;
 			}
 		}
-		
-
 
 		for (uint8_t i = 0; i < quadVertexCount; i++) {
 			data.QuadVertexBufferPtr->position = quad.transform * data.QuadVertexPos[i];
@@ -143,7 +144,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < data.TextureIndex; i++)
 			data.TextureSlots[i]->Bind(i);
 
-
+		HZR_CORE_INFO("Using textures {0}", data.TextureIndex - 1);
 		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 
 		stats.drawCalls++;
