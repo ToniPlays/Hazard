@@ -21,14 +21,14 @@ namespace WindowElement {
 	void Performance::Init()
 	{
 		bool found = false;
-		context = &Core::HazardLoop::GetModule<Rendering::RenderContext>(found);
+		context = &Application::GetModule<Rendering::RenderContext>(found);
 		SetActive(found);
 		HZR_ASSERT(!found, "Performance can't start without RenderContext");
 	}
 	void Performance::OnWindowRender()
 	{
 
-		stats = Hazard::Core::HazardLoop::GetModule<Rendering::RenderEngine>().GetStats();
+		stats = Application::GetModule<Rendering::RenderEngine>().GetStats();
 
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);

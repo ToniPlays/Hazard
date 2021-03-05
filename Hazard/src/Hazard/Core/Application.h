@@ -21,15 +21,20 @@ namespace Hazard {
 		virtual void Init() {};
 		virtual void Update() {};
 		virtual void Close() {};
-
 		virtual bool OnEvent(Event& e) { return false; };
+		
+		//Set window title and icons in RenderingContext
+		void SetTitle(std::string title);
+		void SetTitle(const char* title);
+		void SetWindowIcon(const char* windowIcon, const char* barIcon);
+		
+		void Quit();
 
 		//Push new module to module stack
 		template<typename T>
 		T& PushModule() {
 			return Core::HazardLoop::GetCurrent().PushModule<T>();
 		};
-
 		//Get specified module type from module stack
 		template<typename T>
 		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }

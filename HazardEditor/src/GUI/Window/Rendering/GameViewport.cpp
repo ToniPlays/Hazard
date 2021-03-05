@@ -42,7 +42,7 @@ namespace WindowElement {
 			height = size.y;
 
 			renderTexture->Resize(width, height);
-			cam.component->RecalculateProjection(width, height);
+			cam.component.RecalculateProjection(width, height);
 		}
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 

@@ -18,14 +18,16 @@ EditorApplication::~EditorApplication()
 void EditorApplication::PreInit()
 {
 	PushModule<Logging::Logger>();
-	Rendering::RenderContext context = PushModule<Rendering::RenderContext>();
+	PushModule<Rendering::RenderContext>();
+
 	std::stringstream ss;
-	ss << "Hazard Editor | Hazard " << HZR_BUILD_VERSION << " (" << HAZARD_SYSTEM_BIT << ")" << " for " << HZR_PLATFORM;
+	ss << "Hazard Editor | Hazard "; 
+	ss << HZR_BUILD_VERSION;
+	ss << " for " << HZR_PLATFORM;
+	ss << " (" << HAZARD_SYSTEM_BIT << ")";;
 
-	context.GetWindow().SetWindowTitle(ss.str().c_str());
-
-	context.SetClearColor(Color::FromHex("#222222"));
-	context.GetWindow().SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
+	SetTitle(ss.str());
+	SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule<Rendering::RenderEngine>();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
@@ -35,19 +37,17 @@ void EditorApplication::PreInit()
 	}
 
 	PushModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
-
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
 		SetRootPath(manager.GetProject().absolutePath.c_str());
-
-
 }
-void EditorApplication::Init() {
-	
+void EditorApplication::Init() 
+{
+
 }
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	 return Core::HazardLoop::GetModule<WindowElement::EditorView>().OnEvent(e);
+	 return GetModule<WindowElement::EditorView>().OnEvent(e);
 }
 
 

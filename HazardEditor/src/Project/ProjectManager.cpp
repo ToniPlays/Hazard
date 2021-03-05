@@ -43,7 +43,7 @@ namespace Project {
 	}
 	void ProjectManager::SaveCurrentScene()
 	{
-		ECS::Scene& scene = Core::HazardLoop::GetModule<ECS::SceneHandler>().GetCurrentScene();
+		ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
 		HZR_INFO("Saving scene " + scene.GetSceneFile());
 		ECS::Loader::SceneSerializer::SerializeEditor(scene.GetSceneFile().c_str(), scene);
 	}

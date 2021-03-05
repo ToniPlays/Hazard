@@ -90,9 +90,6 @@
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Component.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
@@ -216,6 +213,13 @@
     <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h" />
+    <ClInclude Include="src\Hazard\Entity\Component.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h" />
+    <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h" />
+    <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h" />
+    <ClInclude Include="src\Hazard\Entity\Components\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">

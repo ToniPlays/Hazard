@@ -1,7 +1,7 @@
 #pragma once
 
+#include <entt.hpp>
 #include "Component.h"
-#include "entt.hpp"
 
 namespace Hazard::ECS {
 	class Entity;

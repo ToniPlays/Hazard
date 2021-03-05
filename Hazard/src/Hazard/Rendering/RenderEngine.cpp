@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
 	void RenderEngine::Init()
 	{
 		bool found = false;
-		context = &Core::HazardLoop::GetModule<RenderContext>(found);
+		context = &Application::GetModule<RenderContext>(found);
 		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
 		SetActive(found);
 		if (!found) return;
@@ -34,7 +34,6 @@ namespace Hazard::Rendering {
 		renderer2D->Init(35000);
 
 		occlusionQuery->BeginQuery();
-
 	}
 	void RenderEngine::Flush()
 	{

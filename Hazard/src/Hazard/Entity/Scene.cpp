@@ -18,7 +18,7 @@ namespace Hazard::ECS {
     }
     void Scene::Render()
     {
-        Rendering::RenderEngine& engine = Core::HazardLoop::GetModule<Rendering::RenderEngine>();
+        Rendering::RenderEngine& engine = Application::GetModule<Rendering::RenderEngine>();
         auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
         for (auto entity : sprites) {
@@ -88,6 +88,10 @@ namespace Hazard::ECS {
         component.texture = Rendering::RenderUtils::GetFromTextures(0);
     }
     template<>
+    void Scene::OnComponentAdded(Entity& entity, BatchComponent& component) {
+
+    }
+    template<>
     void Scene::OnComponentAdded(Entity& entity, SkyLightComponent& component) {
 
     }
@@ -97,10 +101,6 @@ namespace Hazard::ECS {
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {
-
-    }
-    template<>
-    void Scene::OnComponentAdded(Entity& entity, BatchComponent& component) {
 
     }
 }

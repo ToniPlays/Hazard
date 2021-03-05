@@ -18,6 +18,7 @@ namespace Hazard::Rendering {
 		public:
 			static void Init();
 			static void Flush();
+			static void UnloadPending();
 
 			static void SetRenderAPI(RenderAPI api) { RenderUtils::api = api; }
 

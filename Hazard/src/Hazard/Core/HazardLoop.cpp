@@ -32,6 +32,7 @@ namespace Hazard::Core {
 		double lastTime = 0;
 		//Update and render while close is not requested
 		while (!shouldClose) {
+
 			//Update deltaTime and timeScale
 			double time = glfwGetTime();
 			Time::unscaledDeltaTime = time - lastTime;
@@ -41,6 +42,7 @@ namespace Hazard::Core {
 			//Update and render
 			application->Update();
 			moduleHandler.Update();
+
 			moduleHandler.Render();
 
 			lastTime = time;
@@ -49,13 +51,18 @@ namespace Hazard::Core {
 		application->Close();
 		moduleHandler.Close();
 	}
+	//Stop application from running
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{
-		instance->shouldClose = true;
+		Shutdown();
 		return true;
 	}
 	void HazardLoop::Process(Event& e) {
 		instance->OnEvent(e);
+	}
+	void HazardLoop::Shutdown()
+	{
+		instance->shouldClose = true;
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{

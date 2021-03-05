@@ -107,10 +107,11 @@ namespace WindowElement {
 			Layout::TableNext();
 
 			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.texture);
+
 			ImGui::Image((void*)component.texture->GetID(), { 25, 25 });
 			Layout::SameLine();
 			if (Input::TextureSlot("", value)) {
-				component.texture = Rendering::RenderUtils::GetFromTextures(value);
+				*&component.texture = Rendering::RenderUtils::GetFromTextures(value);
 			}
 			Layout::Text(component.texture->GetFile().c_str());
 

@@ -12,16 +12,15 @@ namespace Hazard::Core {
 	All modules can be accessed from within HazardLoop and GetCurrent();
 	*/
 	class HazardLoop {
+		friend class Application;
 	public:
 		HazardLoop(Application* app);
 		~HazardLoop();
 
 		//Starts application
 		void Start();
-
 		//Closes the application
 		bool Quit(WindowCloseEvent& e);
-
 		//Processses events
 		void OnEvent(Event& e);
 
@@ -30,9 +29,10 @@ namespace Hazard::Core {
 		Directed to instance OnEvent
 		*/
 		static void Process(Event& e);
-
 		//Get current HazardLoop instance
 		static HazardLoop& GetCurrent() { return *instance; }
+
+	private:
 		//Push module to module stack
 		template<typename T>
 		static T& PushModule() {
@@ -45,13 +45,12 @@ namespace Hazard::Core {
 		template<typename T>
 		static T& GetModule(bool& found) { return instance->moduleHandler.GetModule<T>(found); };
 
-	private:
+		void Shutdown();
 
+	private:
 		Application* application = nullptr;
 		Module::ModuleHandler moduleHandler;
 		bool shouldClose = false;
-
-	private:
 		static HazardLoop* instance;
 	};
 }

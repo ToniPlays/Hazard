@@ -151,6 +151,10 @@ namespace Hazard::Rendering {
 			UnloadTexture(t);
 		}
 	}
+	void RenderUtils::UnloadPending()
+	{
+
+	}
 	Texture* RenderUtils::GetTexture(uint32_t textureID)
 	{
 		return Find<Texture>(textureID);
@@ -171,8 +175,8 @@ namespace Hazard::Rendering {
 	{
 		auto i = std::find(textures.begin(), textures.end(), texture);
 		if (i != textures.end()) {
-			textures.erase(i);
-			delete texture;
+			//textures.erase(i);
+			//delete texture;
 		}
 	}
 }

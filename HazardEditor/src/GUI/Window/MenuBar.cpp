@@ -6,6 +6,7 @@
 #include "GUI/Library/Layout.h"
 #include "Project/ProjectManager.h"
 
+using namespace Hazard;
 using namespace WindowLayout;
 
 namespace WindowElement {
@@ -25,7 +26,7 @@ namespace WindowElement {
 			Layout::MenuItem("Open", []() {});
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
-				Hazard::Core::HazardLoop::GetModule<Project::ProjectManager>().Save();
+				Application::GetModule<Project::ProjectManager>().Save();
 			});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
@@ -61,7 +62,7 @@ namespace WindowElement {
 
 		switch (e.GetKeyCode()) {
 		case Key::S:
-			Core::HazardLoop::GetModule<Project::ProjectManager>().SaveCurrentScene();
+			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
 			return true;
 		}
 		return false;

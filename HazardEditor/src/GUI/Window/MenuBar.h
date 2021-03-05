@@ -3,6 +3,7 @@
 #include "GUI/RenderableElement.h"
 
 namespace WindowElement {
+
 	class MenuBar : public RenderableElement {
 	public:
 		MenuBar();
