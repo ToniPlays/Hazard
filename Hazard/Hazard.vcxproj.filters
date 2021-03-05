@@ -96,9 +96,6 @@
     <ClInclude Include="src\Hazard\Entity\Scene.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\SceneHandler.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Events\ApplicationEvent.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
@@ -207,9 +204,6 @@
     <ClInclude Include="src\Hazard\Events\KeyCode.h" />
     <ClInclude Include="src\Hazard\Events\MouseCode.h" />
     <ClInclude Include="src\Hazard\Events\Input.h" />
-    <ClInclude Include="src\Hazard\Entity\SceneSerializer.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h" />
@@ -220,6 +214,13 @@
     <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h" />
     <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h" />
     <ClInclude Include="src\Hazard\Entity\Components\Component.h" />
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneSerializer.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneHandler.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -232,9 +233,6 @@
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Scene.cpp">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\SceneHandler.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\File\File.cpp">
@@ -295,9 +293,13 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp" />
-    <ClCompile Include="src\Hazard\Entity\SceneSerializer.cpp">
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneSerializer.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneHandler.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneCommand.cpp" />
   </ItemGroup>
 </Project>

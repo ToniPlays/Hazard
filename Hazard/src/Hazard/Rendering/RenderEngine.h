@@ -19,7 +19,7 @@ namespace Hazard::Rendering {
 
 		void PreInit() override;
 		void Init() override;
-		void Flush();
+		void Close() override;
 
 		void SceneRender(ECS::Scene& scene) { 
 			auto [found, cam] = scene.GetSceneCamera();

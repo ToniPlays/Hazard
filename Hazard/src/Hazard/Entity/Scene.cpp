@@ -3,8 +3,7 @@
 #include <hzrpch.h>
 #include "Scene.h"
 #include "Entity.h"
-#include "Hazard/Rendering/RenderEngine.h"
-#include "Hazard/Rendering/2D/QuadData.h"
+#include "Loader/SceneCommand.h"
 
 namespace Hazard::ECS {
 
@@ -18,35 +17,16 @@ namespace Hazard::ECS {
     }
     void Scene::Render()
     {
-        Rendering::RenderEngine& engine = Application::GetModule<Rendering::RenderEngine>();
         auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
         for (auto entity : sprites) {
-
-            Entity e{ entity, this };
-            if (!e.IsVisible()) continue;
-
-            auto& [transform, sprite] = sprites.get<TransformComponent, SpriteRendererComponent>(entity);
-
-            engine.Submit(Rendering::Quad{ transform.GetTransformMat4(),
-                { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a }, sprite.texture });
+            auto& [sprite, transform] = registry.get<SpriteRendererComponent, TransformComponent>(entity);
+            SceneCommand::Render(sprite, transform);
         }
         auto group = registry.group<BatchComponent>(entt::get<TransformComponent>);
-
         for (auto entity : group) {
-            Entity e{ entity, this };
-            if (!e.IsVisible()) continue;
-            auto& [transform, batch] = group.get<TransformComponent, BatchComponent>(entity);
-
-            for (int x = 0; x < batch.size; x++) {
-                for (int y = 0; y < batch.size; y++) {
-
-                    glm::vec3 translation = transform.Translation + glm::vec3{ x * 1.1, y * 1.1, 1.0 };
-
-                    engine.Submit(Rendering::Quad { Math::ToTransformMatrix(translation, transform.Rotation, transform.Scale),
-                        { batch.tint.r, batch.tint.g, batch.tint.b, batch.tint.a }, nullptr });
-                }
-            }
+            auto& [batch, transform] = registry.get<BatchComponent, TransformComponent>(entity);
+            SceneCommand::Render(batch, transform);
         }
     }
     void Scene::Flush()

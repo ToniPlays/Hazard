@@ -13,7 +13,7 @@ namespace Hazard::Rendering {
 	}
 	RenderEngine::~RenderEngine()
 	{
-		Flush();
+
 	}
 	void RenderEngine::PreInit()
 	{
@@ -35,7 +35,7 @@ namespace Hazard::Rendering {
 
 		occlusionQuery->BeginQuery();
 	}
-	void RenderEngine::Flush()
+	void RenderEngine::Close()
 	{
 		delete context;
 		occlusionQuery->EndQuery();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Module/Module.h"
-#include "Scene.h"
+#include "../Scene.h"
 
 namespace Hazard::ECS {
 

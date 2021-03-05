@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SceneHandler.h"
-#include "Scene.h"
-#include "Entity.h"
+#include "../Scene.h"
+#include "../Entity.h"
 #include "Hazard/Rendering/RenderContext.h"
 
 #include <yaml-cpp/yaml.h>
