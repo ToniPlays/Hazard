@@ -2,6 +2,7 @@
 
 #include "Textures/RenderTexture.h"
 #include "Hazard/Rendering/RenderContext.h"
+#include "OcclusionQuery.h"
 
 namespace Hazard::Rendering {
 

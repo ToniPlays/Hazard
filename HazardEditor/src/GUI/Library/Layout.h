@@ -12,7 +12,7 @@ namespace WindowLayout {
 		static void EndTable();
 
 		template<typename T>
-		static void IDGroud(const char* id, T callback) {
+		static void IDGroup(const char* id, T callback) {
 			ImGui::PushID(id);
 			callback();
 			ImGui::PopID();

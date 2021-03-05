@@ -18,14 +18,35 @@ namespace Hazard::ECS {
     }
     void Scene::Render()
     {
-        auto group = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         Rendering::RenderEngine& engine = Core::HazardLoop::GetModule<Rendering::RenderEngine>();
+        auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
-        for (auto entity : group) {
-            auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+        for (auto entity : sprites) {
+
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+
+            auto& [transform, sprite] = sprites.get<TransformComponent, SpriteRendererComponent>(entity);
 
             engine.Submit(Rendering::Quad{ transform.GetTransformMat4(),
                 { sprite.tint.r, sprite.tint.g, sprite.tint.b, sprite.tint.a }, sprite.texture });
+        }
+        auto group = registry.group<BatchComponent>(entt::get<TransformComponent>);
+
+        for (auto entity : group) {
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+            auto& [transform, batch] = group.get<TransformComponent, BatchComponent>(entity);
+
+            for (int x = 0; x < batch.size; x++) {
+                for (int y = 0; y < batch.size; y++) {
+
+                    glm::vec3 translation = transform.Translation + glm::vec3{ x * 1.1, y * 1.1, 1.0 };
+
+                    engine.Submit(Rendering::Quad { Math::ToTransformMatrix(translation, transform.Rotation, transform.Scale),
+                        { batch.tint.r, batch.tint.g, batch.tint.b, batch.tint.a }, nullptr });
+                }
+            }
         }
     }
     void Scene::Flush()
@@ -76,6 +97,10 @@ namespace Hazard::ECS {
     }
     template<>
     void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {
+
+    }
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, BatchComponent& component) {
 
     }
 }

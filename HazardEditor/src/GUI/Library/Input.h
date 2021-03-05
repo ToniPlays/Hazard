@@ -16,7 +16,7 @@ namespace WindowElement {
 
 		static void Checkbox(const char* label, bool& value);
 		static void ColorPicker(const char* label, Hazard::Color& color);
-		static bool TextureSlot(const char* label, uint32_t& index);
+		static bool TextureSlot(const char* label, uint32_t& index, uint32_t min = 0, uint32_t max = 10);
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
 	};
 }

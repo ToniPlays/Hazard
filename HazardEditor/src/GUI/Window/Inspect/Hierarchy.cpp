@@ -65,13 +65,9 @@ namespace WindowElement {
 
 
 		auto& tag = entity.GetComponent<TagComponent>();
-		
-		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {
-			
-		});
+		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {});
 
 		bool entityDeleted = false;
-
 		if (ImGui::BeginPopupContextItem()) {
 			Layout::MenuItem("Delete entity", [&entity]() {
 				entity.GetScene().GetSceneRegistry().destroy(entity);
@@ -89,6 +85,9 @@ namespace WindowElement {
 				Events::SelectionContextChange e(entity);
 				EditorView::GetInstance().OnEvent(e);
 			}
+		}
+		if (opened) {
+			Layout::Text(entity.IsValid() ? "Visible" : "Not visible");
 		}
 	}
 }

@@ -28,6 +28,7 @@ namespace WindowElement {
 
 		});	
 	}
+
 	template<>
 	inline void DrawComponent<TransformComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<TransformComponent>()) return;
@@ -39,13 +40,13 @@ namespace WindowElement {
 				glm::degrees(component.Rotation.y), 
 				glm::degrees(component.Rotation.z) };
 
-			Layout::IDGroud("Translation", [&]() {
+			Layout::IDGroup("Translation", [&]() {
 				Input::Vec3("Translation", component.Translation, 0, 100);
 			});
-			Layout::IDGroud("Rotation", [&]() {
+			Layout::IDGroup("Rotation", [&]() {
 				Input::Vec3("Rotation", rotation, 0, 100);
 			});
-			Layout::IDGroud("Scale", [&]() {
+			Layout::IDGroup("Scale", [&]() {
 				Input::Vec3("Scale", component.Scale, 1.0f, 100);
 			});
 
@@ -115,6 +116,21 @@ namespace WindowElement {
 
 			Layout::EndTable();
 
+			}, []() {
+
+			});
+	}
+	template<>
+	inline void DrawComponent<BatchComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<BatchComponent>()) return;
+		Layout::ComponentTreenode<BatchComponent>(name, [&entity]() {
+			auto& component = entity.GetComponent<BatchComponent>();
+
+			Layout::Text("Tag");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::TextureSlot("Size", component.size, 0, 1000);
+			Layout::NextLine(10);
 			}, []() {
 
 			});

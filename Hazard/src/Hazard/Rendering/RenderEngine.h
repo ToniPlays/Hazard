@@ -7,6 +7,7 @@
 #include "Textures/RenderTexture.h"
 #include "Hazard/Entity/Scene.h"
 
+#include "RenderUtils.h"
 #include "2D/Renderer2D.h"
 
 namespace Hazard::Rendering {	
@@ -39,6 +40,8 @@ namespace Hazard::Rendering {
 	private:
 		RenderContext* context;
 		RenderTexture* renderTarget = nullptr;
+
+		OcclusionQuery* occlusionQuery = nullptr;
 
 		Renderer2D* renderer2D;
 		RenderStats stats;

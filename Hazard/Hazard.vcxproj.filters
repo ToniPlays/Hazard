@@ -213,6 +213,9 @@
     <ClInclude Include="src\Hazard\Entity\SceneSerializer.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -291,5 +294,6 @@
     <ClCompile Include="src\Hazard\Entity\SceneSerializer.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp" />
   </ItemGroup>
 </Project>

@@ -31,6 +31,7 @@ namespace WindowElement {
 		DrawComponent<SkyLightComponent>("Sky light", selectionContext);
 		DrawComponent<DirectionalLightComponent>("Directional light", selectionContext);
 		DrawComponent<PointLightComponent>("Point light", selectionContext);
+		DrawComponent<BatchComponent>("Batch", selectionContext);
 
 
 
@@ -53,6 +54,9 @@ namespace WindowElement {
 				});
 			Layout::MenuItem("Point light", [&]() {
 				selectionContext.AddComponent<PointLightComponent>();
+				});
+			Layout::MenuItem("Batch renderer", [&]() {
+				selectionContext.AddComponent<BatchComponent>();
 				});
 		});
 

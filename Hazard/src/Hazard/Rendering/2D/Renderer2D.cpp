@@ -92,7 +92,7 @@ namespace Hazard::Rendering {
 		{
 			bool found = false;
 			for (int i = 1; i < data.TextureIndex; i++) {
-				if (std::string(quad.texture->GetFile()) == std::string(data.TextureSlots[i]->GetFile())) {
+				if (&data.TextureSlots[i] == &quad.texture) {
 					found = true;
 					textureIndex = float(i);
 					break;

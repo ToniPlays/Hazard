@@ -4,10 +4,6 @@
 #include "Hazard/Math/Color.h"
 
 #include "glm/glm.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 
 #include "Hazard/Rendering/RenderUtils.h"
 
@@ -29,11 +25,9 @@ enum Projection { Perspective = 0, Orthographic };
 
 		glm::mat4 GetTransformMat4()
 		{
-			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+			
 
-			return glm::translate(glm::mat4(1.0f), Translation)
-				* rotation
-				* glm::scale(glm::mat4(1.0f), Scale);
+			return Math::ToTransformMatrix(Translation, Rotation, Scale);
 		}
 	};
 
@@ -93,6 +87,10 @@ enum Projection { Perspective = 0, Orthographic };
 	struct SpriteRendererComponent {
 		Color tint;
 		Rendering::Texture* texture = nullptr;
+	};
+	struct BatchComponent {
+		Color tint;
+		uint32_t size;
 	};
 
 	struct Camera {

@@ -41,6 +41,8 @@ namespace Hazard::ECS {
 			return scene->GetSceneRegistry().valid(handle); 
 		}
 
+		bool IsVisible() { return visible; }
+
 	public:
 		operator bool() const { return handle != entt::null; }
 		operator entt::entity() const { return handle; }
@@ -56,5 +58,7 @@ namespace Hazard::ECS {
 	private:
 		entt::entity handle{ entt::null };
 		Scene* scene = nullptr;
+
+		bool visible = true;
 	};
 }

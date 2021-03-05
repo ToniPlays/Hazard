@@ -25,15 +25,22 @@ namespace Hazard::Rendering {
 		context = &Core::HazardLoop::GetModule<RenderContext>(found);
 		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
 		SetActive(found);
+		if (!found) return;
+
 		RenderUtils::Init();
+		occlusionQuery = RenderUtils::Create<OcclusionQuery>();
 
 		renderer2D = new Renderer2D(context);
 		renderer2D->Init(35000);
 
+		occlusionQuery->BeginQuery();
+
 	}
 	void RenderEngine::Flush()
 	{
-		delete context; 
+		delete context;
+		occlusionQuery->EndQuery();
+		occlusionQuery->Flush();
 		renderer2D->Close();
 	}
 	void RenderEngine::SceneRender(ECS::Scene& scene, glm::mat4 viewProjection)

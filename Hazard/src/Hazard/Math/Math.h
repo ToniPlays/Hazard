@@ -7,6 +7,11 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
+
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 namespace Hazard {
 
 	class HAZARD_API Math {
@@ -77,6 +82,14 @@ namespace Hazard {
 		static glm::vec2 AspectRatio(T width, T height) {
 			height = (height / width) * width;
 			return glm::vec2<double>(width * 0.01f, height * 0.01f);
+		}
+
+		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) {
+			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+
+			return glm::translate(glm::mat4(1.0f), translation)	* rot
+				* glm::scale(glm::mat4(1.0f), scale);
+
 		}
 		static bool DecomposeTransform(const glm::mat4& transform, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale) {
 			using namespace glm;
