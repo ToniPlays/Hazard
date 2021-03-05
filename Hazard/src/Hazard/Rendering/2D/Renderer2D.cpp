@@ -100,7 +100,6 @@ namespace Hazard::Rendering {
 			}
 			if (!found) {
 				textureIndex = float(data.TextureIndex);
-				HZR_CORE_WARN("Adding texture to textureSlots {0}", quad.texture->GetFile());
 				data.TextureSlots[data.TextureIndex] = quad.texture;
 				data.TextureIndex++;
 			}
@@ -144,7 +143,6 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < data.TextureIndex; i++)
 			data.TextureSlots[i]->Bind(i);
 
-		HZR_CORE_INFO("Using textures {0}", data.TextureIndex - 1);
 		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 
 		stats.drawCalls++;

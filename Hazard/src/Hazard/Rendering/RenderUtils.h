@@ -16,6 +16,8 @@ namespace Hazard::Rendering {
 	class RenderUtils {
 		public:
 			static void Init();
+			static void Flush();
+
 			static void SetRenderAPI(RenderAPI api) { RenderUtils::api = api; }
 
 			template<typename T>
@@ -33,7 +35,7 @@ namespace Hazard::Rendering {
 			static Texture* GetTexture(uint32_t textureID);
 			static Texture* GetFromTextures(uint32_t index);
 			static uint32_t GetTextureStackIndex(Texture* texture);
-			static void UnloadTexture() {};
+			static void UnloadTexture(Texture* texture);
 
 			static std::vector<Texture*> GetTextures() { return textures; }
 	private:

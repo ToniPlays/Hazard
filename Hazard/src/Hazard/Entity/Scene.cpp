@@ -30,7 +30,7 @@ namespace Hazard::ECS {
     }
     void Scene::Flush()
     {
-
+        
     }
     Entity Scene::CreateEntity(const char* name)
     {

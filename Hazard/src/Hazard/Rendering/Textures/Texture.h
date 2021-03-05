@@ -17,9 +17,9 @@ namespace Hazard::Rendering {
 		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual uint32_t GetID() const = 0;
-		const char* GetFile() { return file; };
+		std::string& GetFile() { return file; };
 	protected:
-		const char* file = "";
+		std::string file = "";
 
 	};
 }

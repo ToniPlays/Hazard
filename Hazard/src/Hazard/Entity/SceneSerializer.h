@@ -118,7 +118,11 @@ namespace Hazard::ECS::Loader {
 			if (!node["SpriteRendererComponent"]) return;
 			auto comp = node["SpriteRendererComponent"];
 
-			entity.AddComponent<SpriteRendererComponent>().tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
+			auto& component = entity.AddComponent<SpriteRendererComponent>();
+			component.tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
+			if (comp["Texture"]) {
+				component.texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(comp["Texture"].as<std::string>().c_str());
+			}
 
 		};
 		template<>
@@ -176,6 +180,10 @@ namespace Hazard::ECS::Loader {
 
 			out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Tint" << YAML::Value; Convert(out, c.tint.ToGlm());
+			if (c.texture != nullptr) {
+				if(std::string(c.texture->GetFile()) != "White")
+					out << YAML::Key << "Texture" << YAML::Value << std::string(c.texture->GetFile());
+			}
 
 			out << YAML::EndMap;
 		}
@@ -187,7 +195,6 @@ namespace Hazard::ECS::Loader {
 			out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
 			out << YAML::Key << "Fov" << YAML::Value << c.fov;
-
 			out << YAML::EndMap;
 		}
 

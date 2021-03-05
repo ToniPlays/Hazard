@@ -119,6 +119,8 @@ namespace Hazard::Rendering {
 	template<>
 	Texture2D* RenderUtils::Create<Texture2D>(const char* path) {
 
+		HZR_CORE_INFO("Loading texture: {0}", path);
+
 		Texture2D* texture = (Texture2D*)Find<Texture>(path);
 
 		if (texture != nullptr) 
@@ -139,8 +141,12 @@ namespace Hazard::Rendering {
 		Texture2D* texture = Create<Texture2D>(glm::vec2{ 1, 1 }, "White");
 		uint32_t data = 0xFFFFFFFF;
 		texture->SetData(&data, sizeof(uint32_t));
-
-		Create<Texture2D>("res/textures/chernoLogo.png");
+	}
+	void RenderUtils::Flush()
+	{
+		for (Texture* t : textures) {
+			UnloadTexture(t);
+		}
 	}
 	Texture* RenderUtils::GetTexture(uint32_t textureID)
 	{
@@ -156,7 +162,14 @@ namespace Hazard::Rendering {
 			if (textures[i] == texture) 
 				return i;
 		}
-
 		return 0;
+	}
+	void RenderUtils::UnloadTexture(Texture* texture)
+	{
+		auto i = std::find(textures.begin(), textures.end(), texture);
+		if (i != textures.end()) {
+			textures.erase(i);
+			delete texture;
+		}
 	}
 }

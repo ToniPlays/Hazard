@@ -102,15 +102,16 @@ namespace WindowElement {
 			Layout::TableNext();
 			Input::ColorPicker("Sprite tint", component.tint);
 			Layout::TableNext();
-			Layout::Text("Texture");
+			Layout::Text("Sprite");
 			Layout::TableNext();
 
 			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.texture);
 			ImGui::Image((void*)component.texture->GetID(), { 25, 25 });
 			Layout::SameLine();
-			Input::TextureSlot("", value);
-			Layout::Text(component.texture->GetFile());
-			component.texture = Rendering::RenderUtils::GetFromTextures(value);
+			if (Input::TextureSlot("", value)) {
+				component.texture = Rendering::RenderUtils::GetFromTextures(value);
+			}
+			Layout::Text(component.texture->GetFile().c_str());
 
 			Layout::EndTable();
 
