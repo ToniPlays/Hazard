@@ -59,8 +59,6 @@ namespace Hazard::ECS::Loader {
 		std::ofstream fout(file);
 		fout << out.c_str();
 
-		HZR_CORE_WARN("Scene saved");
-
 		return true;
 	}
 	void SceneSerializer::SerializeEntityEditor(Entity entity, YAML::Emitter& out)

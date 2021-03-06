@@ -47,6 +47,7 @@ namespace WindowElement {
 		DrawComponent<DirectionalLightComponent>(ICON_FK_SUN_O " Directional light", selectionContext);
 		DrawComponent<PointLightComponent>(ICON_FK_LIGHTBULB_O " Point light", selectionContext);
 		DrawComponent<BatchComponent>("Batch", selectionContext);
+		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
 
 
 		Layout::ContextMenu([&]() {
@@ -74,6 +75,10 @@ namespace WindowElement {
 			Layout::MenuItem("Batch renderer", [&]() {
 				selectionContext.AddComponent<BatchComponent>();
 				});
+			if (!selectionContext.HasComponent<ScriptComponent>())
+				Layout::MenuItem("Script component", [&]() {
+				selectionContext.AddComponent<ScriptComponent>();
+					});
 		});
 
 	}

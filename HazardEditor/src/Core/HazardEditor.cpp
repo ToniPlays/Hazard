@@ -24,11 +24,12 @@ void EditorApplication::PreInit()
 	ss << "Hazard Editor | Hazard "; 
 	ss << HZR_BUILD_VERSION;
 	ss << " for " << HZR_PLATFORM;
-	ss << " (" << HAZARD_SYSTEM_BIT << ")";;
+	ss << " (" << HAZARD_SYSTEM_BIT << ")";
 
 	SetTitle(ss.str());
 	SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule<Rendering::RenderEngine>();
+	PushModule<Scripting::ScriptEngine>().InitAssembly("res/ExampleApp.dll");
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 

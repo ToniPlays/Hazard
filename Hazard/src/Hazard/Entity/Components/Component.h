@@ -20,4 +20,7 @@ namespace Hazard::ECS {
 			return Math::ToTransformMatrix(Translation, Rotation, Scale);
 		}
 	};
+	struct ScriptComponent {
+		std::string filePath;
+	};
 }

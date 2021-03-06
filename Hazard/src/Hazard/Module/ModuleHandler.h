@@ -21,7 +21,6 @@ namespace Hazard::Module {
 			modules.push_back(m);
 			m->PreInit();
 			m->Init();
-			HZR_CORE_INFO("Added module " + std::string(typeid(T).name()));
 			return *m;
 		};
 

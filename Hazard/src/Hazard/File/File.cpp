@@ -2,14 +2,13 @@
 #include <hzrpch.h>
 #include "File.h"
 #include <commdlg.h>
+
 #include <shlobj.h>
 #include <GLFW/glfw3.h>
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"
-#include "Hazard/Module/ModuleHandler.h"
 #include "StringUtil.h"
-
 
 namespace Hazard::File {
 
@@ -76,7 +75,7 @@ namespace Hazard::File {
 
 		std::ifstream ifs(file, std::ios::in, std::ios::binary);
 
-		HZR_ASSERT(ifs.is_open(), "File " + file + " could not be opened");
+		HZR_ASSERT(!ifs.is_open(), "File " + file + " could not be opened");
 
 		std::string result;
 		ifs.seekg(0, std::ios::end);
@@ -90,5 +89,28 @@ namespace Hazard::File {
 
 	std::string File::GetFileExtension(std::string file) {
 		return file.substr(file.find_last_of(".") + 1);
+	}
+
+	std::vector<char> File::ReadBinaryFile(const char* path)
+	{
+		std::ifstream stream(path, std::ios::binary | std::ios::ate);
+
+		if (!stream)
+			HZR_CORE_ERROR("Cannot open filepath: {0}", path);
+
+		auto end = stream.tellg();
+		stream.seekg(0, std::ios::beg);
+		auto size = std::size_t(end - stream.tellg());
+		if (size == 0) return {};
+
+		std::vector<char> buffer(size);
+		if (!stream.read((char*)buffer.data(), buffer.size()))
+			HZR_CORE_ERROR("Cannot read file: {0}", path);
+		return buffer;
+	}
+	bool File::Exists(const char* file)
+	{
+		std::ifstream f(file);
+		return f.good();
 	}
 }

@@ -19,8 +19,6 @@ namespace Project {
 
 	bool ProjectManager::Load(const char* file)
 	{
-		HZR_INFO(file);
-
 		HazardProject* project = new HazardProject();
 		std::ifstream stream(file);
 		if (!stream.good()) 
@@ -39,12 +37,11 @@ namespace Project {
 
 	void ProjectManager::Save()
 	{
-		HZR_INFO("Saving project to" + std::string(projectData->absolutePath));
+		HZR_INFO("Saving TODO");
 	}
 	void ProjectManager::SaveCurrentScene()
 	{
 		ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
-		HZR_INFO("Saving scene " + scene.GetSceneFile());
 		ECS::Loader::SceneSerializer::SerializeEditor(scene.GetSceneFile().c_str(), scene);
 	}
 }

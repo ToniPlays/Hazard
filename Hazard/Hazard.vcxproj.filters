@@ -49,6 +49,9 @@
     <Filter Include="src\Hazard\Rendering\Textures">
       <UniqueIdentifier>{16C4F170-82DC-D89A-4B89-6834B7606D34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Scripting">
+      <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -210,6 +213,9 @@
     <ClInclude Include="src\Hazard\Rendering\Textures\Texture2D.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
       <Filter>src\Platform\Rendering</Filter>
     </ClInclude>
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>

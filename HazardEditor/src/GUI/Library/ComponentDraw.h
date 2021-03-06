@@ -168,6 +168,24 @@ namespace WindowElement {
 			}, [&entity]() {
 			});
 	}
+	template<>
+	inline void DrawComponent<ScriptComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<ScriptComponent>()) return;
+		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&entity]() {
+			auto& component = entity.GetComponent<ScriptComponent>();
+
+			Layout::Text("Script");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::InputField(component.filePath);
+			Layout::NextLine(10);
+
+			}, [&entity]() {
+				Layout::MenuItem("Reload C# assembly", []() {
+					Application::GetModule<Scripting::ScriptEngine>().ReloadAssembly();
+					});
+			});
+	}
 
 #pragma endregion
 }

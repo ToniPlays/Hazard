@@ -145,6 +145,7 @@ project "Hazard"
 		"c:/dev/Hazard/Hazard/vendor/stb-image",
 		"c:/dev/Hazard/vendor/entt",
 		"c:/dev/Hazard/vendor/IMGUI/examples",
+		"c:/dev/Hazard/vendor/mono/include",
 		"Hazard/src"
 	}
 
@@ -153,8 +154,11 @@ project "Hazard"
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
+		"mono-2.0-sgen.dll",
 		"GLAD",
-		"yaml-cpp"
+		"yaml-cpp",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 	}
 
 	filter "system:windows"

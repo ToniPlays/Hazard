@@ -66,6 +66,9 @@
     <ClInclude Include="src\GUI\Library\ComponentDraw.h">
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Library\FontAwesome.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Library\Input.h">
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
@@ -105,6 +108,9 @@
     <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
       <Filter>src\GUI\Window\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Toolbar.h">
+      <Filter>src\GUI\Window</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\TransformationGizmo.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
@@ -117,8 +123,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\FontAwesome.h" />
-    <ClInclude Include="src\GUI\Window\Toolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -175,6 +179,9 @@
     <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
       <Filter>src\GUI\Window\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\Toolbar.cpp">
+      <Filter>src\GUI\Window</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Window\TransformationGizmo.cpp">
       <Filter>src\GUI\Window</Filter>
     </ClCompile>
@@ -184,6 +191,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\Toolbar.cpp" />
   </ItemGroup>
 </Project>

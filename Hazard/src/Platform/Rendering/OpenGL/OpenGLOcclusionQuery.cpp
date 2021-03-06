@@ -10,7 +10,6 @@ namespace Hazard::Rendering {
 
 	OpenGLOcclusionQuery::OpenGLOcclusionQuery()
 	{
-		HZR_CORE_INFO("Creating occlusion query");
 		glGenQueries(1, &queryID);
 	}
 	OpenGLOcclusionQuery::~OpenGLOcclusionQuery()

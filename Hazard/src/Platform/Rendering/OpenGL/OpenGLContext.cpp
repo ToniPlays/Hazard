@@ -80,7 +80,6 @@ namespace Hazard::Rendering {
 	void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 	{
 		OpenGLContext::callback = callback;
-		HZR_CORE_INFO("Added OpenGL error callback");
 	}
 
 	std::string OpenGLContext::GetVersion() const

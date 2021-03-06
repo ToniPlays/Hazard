@@ -122,8 +122,6 @@ namespace Hazard::Rendering {
 	template<>
 	Texture2D* RenderUtils::Create<Texture2D>(const char* path) {
 
-		HZR_CORE_INFO("Loading texture: {0}", path);
-
 		Texture2D* texture = (Texture2D*)Find<Texture>(path);
 
 		if (texture != nullptr) 

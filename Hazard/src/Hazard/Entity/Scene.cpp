@@ -83,4 +83,8 @@ namespace Hazard::ECS {
     void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {
 
     }
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, ScriptComponent& component) {
+
+    }
 }

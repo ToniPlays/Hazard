@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 namespace Hazard::File {
 
@@ -13,7 +14,8 @@ namespace Hazard::File {
 
 		static std::string ReadFile(std::string file);
 		static std::string GetFileExtension(std::string file);
-	private:
 
+		static std::vector<char> ReadBinaryFile(const char* path);
+		static bool Exists(const char* file);
 	};
 }
