@@ -77,7 +77,7 @@ namespace WindowElement {
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
-		PushRenderable<Inspector>();
+		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<FileView>();
 		PushRenderable<Performance>();

@@ -6,6 +6,9 @@
 #include "GUI/Library/Layout.h"
 #include "Project/ProjectManager.h"
 
+#include "GUI/EditorView.h"
+#include "GUI/Window/AllWindows.h"
+
 using namespace Hazard;
 using namespace WindowLayout;
 
@@ -13,9 +16,11 @@ namespace WindowElement {
 
 	MenuBar::MenuBar()
 	{
+
 	}
 	MenuBar::~MenuBar()
 	{
+
 	}
 	void MenuBar::OnMenuRender()
 	{
@@ -41,7 +46,36 @@ namespace WindowElement {
 			
 		});
 		Layout::Menu("Window", []() {
+			Layout::Menu("General", [&]() {
+				Layout::MenuItem("Viewport", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Viewport>(true);
+					});
+				Layout::MenuItem("Game viewport", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<GameViewport>(true);
+					});
+				Layout::MenuItem("Hierarchy", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Hierarchy>(true);
+					});
+				Layout::MenuItem("Properties", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Properties>(true);
+					});
+				Layout::MenuItem("Asset manager", [&]() {
+
+					Application::GetModule<EditorView>().SetLayerActive<FileView>(true);
+					});
+				});
+			Layout::Menu("Rendering", [&]() {
 			
+			
+			});
+			Layout::Menu("Debug", [&]() {
+				Layout::MenuItem("Assets", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
+					});
+				Layout::MenuItem("Performance", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Performance>(true);
+					});
+			});
 		});
 		Layout::Menu("Help", []() {
 			

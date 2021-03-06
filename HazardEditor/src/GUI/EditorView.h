@@ -13,7 +13,6 @@ namespace WindowElement {
 
 		void Init();
 		void Render();
-
 		bool OnEvent(Event& e);
 
 		void Close() override;
@@ -32,6 +31,11 @@ namespace WindowElement {
 				if (dynamic_cast<T*>(e))
 					return (T&)*e;
 			}
+		}
+		template<typename T>
+		void SetLayerActive(bool active) 
+		{
+			GetRenderable<T>().SetActive(active);
 		}
 
 	public:

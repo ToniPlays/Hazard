@@ -2,7 +2,7 @@
 
 #include "MenuBar.h"
 
-#include "Inspect/Inspector.h"
+#include "Inspect/Properties.h"
 #include "Inspect/Hierarchy.h"
 #include "Inspect/FileView.h"
 

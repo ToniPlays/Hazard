@@ -4,10 +4,10 @@
 
 namespace WindowElement {
 
-	class Inspector : public EditorWindow {
+	class Properties : public EditorWindow {
 	public:
-		Inspector();
-		~Inspector();
+		Properties();
+		~Properties();
 
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;

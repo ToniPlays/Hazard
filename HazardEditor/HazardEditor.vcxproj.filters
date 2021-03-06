@@ -78,9 +78,6 @@
     <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\Inspector.h">
-      <Filter>src\GUI\Window\Inspect</Filter>
-    </ClInclude>
     <ClInclude Include="src\GUI\Window\MenuBar.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
@@ -105,6 +102,9 @@
     <ClInclude Include="src\Editor\EditorCamera.h" />
     <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h" />
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h" />
+    <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -140,9 +140,6 @@
     <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\Inspector.cpp">
-      <Filter>src\GUI\Window\Inspect</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\Window\MenuBar.cpp">
       <Filter>src\GUI\Window</Filter>
     </ClCompile>
@@ -164,5 +161,8 @@
     <ClCompile Include="src\Editor\EditorCamera.cpp" />
     <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp" />
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp" />
+    <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

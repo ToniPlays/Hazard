@@ -37,7 +37,6 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::Close()
 	{
-		delete context;
 		occlusionQuery->EndQuery();
 		occlusionQuery->Flush();
 		renderer2D->Close();

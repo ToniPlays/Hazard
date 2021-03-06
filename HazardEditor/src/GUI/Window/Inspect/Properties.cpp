@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hzreditor.h>
-#include "Inspector.h"
+#include "Properties.h"
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
@@ -11,15 +11,15 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	Inspector::Inspector() : EditorWindow("Inspector")
+	Properties::Properties() : EditorWindow("Properties")
 	{
 
 	}
-	Inspector::~Inspector()
+	Properties::~Properties()
 	{
 
 	}
-	void Inspector::OnWindowRender()
+	void Properties::OnWindowRender()
 	{
 		if (!selectionContext.IsValid()) return;
 
@@ -61,13 +61,13 @@ namespace WindowElement {
 		});
 
 	}
-	bool Inspector::OnEvent(Event& e)
+	bool Properties::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Inspector::SelectionContextChange));
+		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Properties::SelectionContextChange));
 		return false;
 	}
-	bool Inspector::SelectionContextChange(Events::SelectionContextChange& e)
+	bool Properties::SelectionContextChange(Events::SelectionContextChange& e)
 	{
 		if(!IsLocked()) selectionContext = e.GetEntity();
 		return false;
