@@ -29,9 +29,8 @@ namespace Hazard::ECS {
 	void SceneCommand::Render(BatchComponent& component, TransformComponent& transform) {
 		for (int x = 0; x < component.size; x++) {
 			for (int y = 0; y < component.size; y++) {
-				glm::vec3 translation = transform.Translation + glm::vec3{ x * 1.1, y * 1.1, 1.0 };
-				engine.Submit(Rendering::Quad{ Math::ToTransformMatrix(translation, transform.Rotation, transform.Scale),
-					component.tint.ToGlm(), nullptr });
+				engine.Submit(Rendering::Quad { transform.GetTransformMat4() * glm::translate(glm::mat4(1.0f), glm::vec3(float(x), float(y), 0.0f))
+					, component.tint.ToGlm(), nullptr });
 			}
 		}
 	}

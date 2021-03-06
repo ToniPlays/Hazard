@@ -13,6 +13,12 @@
     <Filter Include="src\Hazard\Entity">
       <UniqueIdentifier>{A2BD5FCD-0ED4-5D63-574B-E984C3A02EEB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Entity\Components">
+      <UniqueIdentifier>{77991D57-6354-0D03-0C0C-864DF8A55793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Entity\Loader">
+      <UniqueIdentifier>{28929A23-14B7-E9A3-3D02-CF332986E8C1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Events">
       <UniqueIdentifier>{3A5DE8CD-A673-E663-EFEA-71855B40B7EB}</UniqueIdentifier>
     </Filter>
@@ -90,8 +96,32 @@
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Component.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\Component.h">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneCommand.h">
+      <Filter>src\Hazard\Entity\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneHandler.h">
+      <Filter>src\Hazard\Entity\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneSerializer.h">
+      <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Scene.h">
       <Filter>src\Hazard\Entity</Filter>
@@ -102,7 +132,16 @@
     <ClInclude Include="src\Hazard\Events\Event.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Events\Input.h">
+      <Filter>src\Hazard\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Events\KeyCode.h">
+      <Filter>src\Hazard\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Events\KeyEvent.h">
+      <Filter>src\Hazard\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Events\MouseCode.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Events\MouseEvent.h">
@@ -147,6 +186,9 @@
     <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderContext.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
@@ -177,7 +219,13 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLVertexArray.h">
       <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.h">
@@ -201,26 +249,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Events\KeyCode.h" />
-    <ClInclude Include="src\Hazard\Events\MouseCode.h" />
-    <ClInclude Include="src\Hazard\Events\Input.h" />
-    <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h" />
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h" />
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h" />
-    <ClInclude Include="src\Hazard\Entity\Component.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h" />
-    <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h" />
-    <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h" />
-    <ClInclude Include="src\Hazard\Entity\Components\Component.h" />
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneSerializer.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneHandler.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -231,6 +259,15 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Entity.cpp">
       <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneCommand.cpp">
+      <Filter>src\Hazard\Entity\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneHandler.cpp">
+      <Filter>src\Hazard\Entity\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneSerializer.cpp">
+      <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Scene.cpp">
       <Filter>src\Hazard\Entity</Filter>
@@ -274,6 +311,9 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Shader</Filter>
     </ClCompile>
@@ -282,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
+      <Filter>src\Platform\System\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\System\Windows</Filter>
@@ -292,14 +335,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp" />
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp" />
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneSerializer.cpp">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneHandler.cpp">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneCommand.cpp" />
   </ItemGroup>
 </Project>

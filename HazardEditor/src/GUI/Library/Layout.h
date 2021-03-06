@@ -1,6 +1,7 @@
 #pragma once
 
 #include "imgui.h"
+#include "FontAwesome.h"
 
 namespace WindowLayout {
 	class Layout {
@@ -39,7 +40,7 @@ namespace WindowLayout {
 			return false;
 		}
 		template<typename T, typename UI, typename Prop>
-		static void ComponentTreenode(const char* name, UI uiCall, Prop propCall) {
+		static void ComponentTreenode(ECS::Entity entity, const char* name, UI uiCall, Prop propCall) {
 			const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
 			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
@@ -48,17 +49,27 @@ namespace WindowLayout {
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 			ImGui::Separator();
 			bool open = ImGui::TreeNodeEx((void*)name, flags, name);
+			bool removed = false;
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
 			{
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			if (ImGui::BeginPopup("ComponentSettings")) {
+				Layout::MenuItem("Remove component", [&removed]() {
+					removed = true;
+				});
+
 				propCall();
+				ImGui::EndPopup();
 			}
 			if (open) {
 				uiCall();
 				ImGui::TreePop();
 			}
+			if (removed) entity.RemoveComponent<T>();
 		}
 
 		template<typename T>

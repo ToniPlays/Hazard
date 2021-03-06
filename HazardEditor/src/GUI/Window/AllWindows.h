@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MenuBar.h"
+#include "Toolbar.h"
 
 #include "Inspect/Properties.h"
 #include "Inspect/Hierarchy.h"

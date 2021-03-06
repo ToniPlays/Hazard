@@ -23,23 +23,21 @@ namespace WindowElement {
 	{
 		if (!selectionContext.IsValid()) return;
 
-		DrawComponent<TagComponent>("Tag", selectionContext);
-		DrawComponent<TransformComponent>("Transform", selectionContext);
-		DrawComponent<CameraComponent>("Camera", selectionContext);
-		DrawComponent<SpriteRendererComponent>("Sprite", selectionContext);
+		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
+		DrawComponent<TransformComponent>(ICON_FK_WRENCH " Transform", selectionContext);
+		DrawComponent<CameraComponent>(ICON_FK_CAMERA " Camera", selectionContext);
+		DrawComponent<SpriteRendererComponent>(" Sprite", selectionContext);
 
-		DrawComponent<SkyLightComponent>("Sky light", selectionContext);
-		DrawComponent<DirectionalLightComponent>("Directional light", selectionContext);
-		DrawComponent<PointLightComponent>("Point light", selectionContext);
+		DrawComponent<SkyLightComponent>(ICON_FK_CLOUD " Sky light", selectionContext);
+		DrawComponent<DirectionalLightComponent>(ICON_FK_SUN_O " Directional light", selectionContext);
+		DrawComponent<PointLightComponent>(ICON_FK_LIGHTBULB_O " Point light", selectionContext);
 		DrawComponent<BatchComponent>("Batch", selectionContext);
-
 
 
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("Camera", [&]() {
 				selectionContext.AddComponent<CameraComponent>();
 				});
-			
 			Layout::MenuItem("Sprite renderer", [&]() {
 				selectionContext.AddComponent<SpriteRendererComponent>();
 			});
@@ -50,7 +48,7 @@ namespace WindowElement {
 				selectionContext.AddComponent<SkyLightComponent>();
 			});
 			Layout::MenuItem("Directional light", [&]() {
-				selectionContext.AddComponent<SkyLightComponent>();
+				selectionContext.AddComponent<DirectionalLightComponent>();
 				});
 			Layout::MenuItem("Point light", [&]() {
 				selectionContext.AddComponent<PointLightComponent>();

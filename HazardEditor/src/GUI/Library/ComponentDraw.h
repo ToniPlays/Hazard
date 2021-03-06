@@ -16,7 +16,7 @@ namespace WindowElement {
 	template<>
 	inline void DrawComponent<TagComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<TagComponent>()) return;
-		Layout::ComponentTreenode<TagComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<TagComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<TagComponent>();
 			
 			Layout::Text("Tag");
@@ -24,7 +24,7 @@ namespace WindowElement {
 			Layout::MaxWidth();
 			Input::InputField(component.tag);
 			Layout::NextLine(10);
-		}, []() {
+		}, [&entity]() {
 
 		});	
 	}
@@ -32,10 +32,10 @@ namespace WindowElement {
 	template<>
 	inline void DrawComponent<TransformComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<TransformComponent>()) return;
-		Layout::ComponentTreenode<TransformComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<TransformComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<TransformComponent>();
 
-			glm::vec3 rotation { 
+			glm::vec3 rot { 
 				glm::degrees(component.Rotation.x), 
 				glm::degrees(component.Rotation.y), 
 				glm::degrees(component.Rotation.z) };
@@ -44,24 +44,22 @@ namespace WindowElement {
 				Input::Vec3("Translation", component.Translation, 0, 100);
 			});
 			Layout::IDGroup("Rotation", [&]() {
-				Input::Vec3("Rotation", rotation, 0, 100);
+				Input::Vec3("Rotation", rot, 0, 100);
 			});
 			Layout::IDGroup("Scale", [&]() {
 				Input::Vec3("Scale", component.Scale, 1.0f, 100);
 			});
 
-			component.Rotation.x = glm::radians(rotation.x);
-			component.Rotation.y = glm::radians(rotation.y);
-			component.Rotation.z = glm::radians(rotation.z);
+			component.Rotation = { glm::radians(rot.x), glm::radians(rot.z), glm::radians(rot.y) };
 
-		}, []() {
+		}, [&entity]() {
 
 		});
 	}
 	template<>
 	inline void DrawComponent<CameraComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<CameraComponent>()) return;
-		Layout::ComponentTreenode<CameraComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<CameraComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<CameraComponent>();
 
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
@@ -86,15 +84,14 @@ namespace WindowElement {
 			if (Input::Slider("FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
-			}, []() {
-
+			}, [&entity]() {
 			});
 	}
 	template<>
 	inline void DrawComponent<SpriteRendererComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<SpriteRendererComponent>()) return;
 
-		Layout::ComponentTreenode<SpriteRendererComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<SpriteRendererComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<SpriteRendererComponent>();
 
 			Layout::Table(2, false);
@@ -117,14 +114,13 @@ namespace WindowElement {
 
 			Layout::EndTable();
 
-			}, []() {
-
+			}, [&entity]() {
 			});
 	}
 	template<>
 	inline void DrawComponent<BatchComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<BatchComponent>()) return;
-		Layout::ComponentTreenode<BatchComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<BatchComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<BatchComponent>();
 
 			Layout::Text("Tag");
@@ -132,8 +128,8 @@ namespace WindowElement {
 			Layout::MaxWidth();
 			Input::TextureSlot("Size", component.size, 0, 1000);
 			Layout::NextLine(10);
-			}, []() {
-
+			}, [&entity]() {
+				
 			});
 	}
 
@@ -142,37 +138,34 @@ namespace WindowElement {
 	inline void DrawComponent<SkyLightComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<SkyLightComponent>()) return;
 
-		Layout::ComponentTreenode<SkyLightComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<SkyLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<SkyLightComponent>();
 			Input::Slider("Intensity", component.intensity);
 			Input::ColorPicker("Tint", component.tint);
-		}, []() {
-
+		}, [&entity]() {
 		});
 	}
 	template<>
 	inline void DrawComponent<DirectionalLightComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<DirectionalLightComponent>()) return;
-		Layout::ComponentTreenode<DirectionalLightComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<DirectionalLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<DirectionalLightComponent>();
 			Input::Slider("Intensity", component.intensity);
 			Input::ColorPicker("Tint", component.tint);
-			}, []() {
-
+			}, [&entity]() {
 			});
 	}
 	template<>
 	inline void DrawComponent<PointLightComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<PointLightComponent>()) return;
-		Layout::ComponentTreenode<PointLightComponent>(name, [&entity]() {
+		Layout::ComponentTreenode<PointLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<PointLightComponent>();
 
 			Input::Slider("Intensity", component.intensity, 0, 10000);
 			Input::ColorPicker("Tint", component.tint);
 
 			Input::Vec1("Radius", component.radius, 10, 110);
-			}, []() {
-
+			}, [&entity]() {
 			});
 	}
 

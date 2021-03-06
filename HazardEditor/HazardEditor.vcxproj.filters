@@ -13,6 +13,9 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
@@ -21,6 +24,9 @@
     </Filter>
     <Filter Include="src\GUI\Window">
       <UniqueIdentifier>{8802468C-74D0-3992-5D64-AAB849D115F7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI\Window\Debug">
+      <UniqueIdentifier>{FED2D974-EA61-633E-9380-77397FEE73E4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\GUI\Window\Inspect">
       <UniqueIdentifier>{4D0FADA9-3909-D6FB-2276-6C0C0E0F3C68}</UniqueIdentifier>
@@ -48,6 +54,9 @@
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorCamera.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\EditorView.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -72,14 +81,23 @@
     <ClInclude Include="src\GUI\Window\AllWindows.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\MenuBar.h">
       <Filter>src\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h">
+      <Filter>src\GUI\Window\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Rendering\Performance.h">
       <Filter>src\GUI\Window\Rendering</Filter>
@@ -99,12 +117,8 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorCamera.h" />
-    <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h" />
-    <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h" />
-    <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
-      <Filter>src\GUI\Window\Inspect</Filter>
-    </ClInclude>
+    <ClInclude Include="src\GUI\Library\FontAwesome.h" />
+    <ClInclude Include="src\GUI\Window\Toolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -118,6 +132,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
       <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorCamera.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\EditorView.cpp">
       <Filter>src\GUI</Filter>
@@ -134,14 +151,23 @@
     <ClCompile Include="src\GUI\Library\Style.cpp">
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Window\MenuBar.cpp">
       <Filter>src\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp">
+      <Filter>src\GUI\Window\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp">
       <Filter>src\GUI\Window\Rendering</Filter>
@@ -158,11 +184,6 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\EditorCamera.cpp" />
-    <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp" />
-    <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp" />
-    <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
-      <Filter>src\GUI\Window\Inspect</Filter>
-    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Toolbar.cpp" />
   </ItemGroup>
 </Project>

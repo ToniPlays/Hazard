@@ -10,7 +10,7 @@
 
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
-
+#include "GUI/Library/FontAwesome.h"
 
 using namespace Hazard;
 
@@ -52,6 +52,18 @@ namespace WindowElement {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
 
+
+		GLFWwindow* window = static_cast<GLFWwindow*>(context->GetWindow().GetNativeWindow());
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
+
+		ImFontConfig config;
+		config.MergeMode = true;
+		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+		io.Fonts->AddFontFromFileTTF("res/fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
+
+		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
+
 		ImGuiStyle& style = ImGui::GetStyle();
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -60,13 +72,6 @@ namespace WindowElement {
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
-		
-
-		GLFWwindow* window = static_cast<GLFWwindow*>(context->GetWindow().GetNativeWindow());
-
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
-		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
-
 		// Setup Platform/Renderer bindings
 		ImGui_ImplOpenGL3_Init("#version 410");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -74,6 +79,7 @@ namespace WindowElement {
 		Style::Style::Init();
 
 		PushRenderable<MenuBar>();
+		PushRenderable<Toobar>();
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
@@ -135,6 +141,7 @@ namespace WindowElement {
 		for (RenderableElement* element : elements) {
 			element->OnRender();
 		}
+
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)
