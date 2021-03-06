@@ -39,9 +39,9 @@ namespace WindowElement {
 		ImGui::PopFont();
 		Style::Style::SelectFont(dragFont);
 
-		ImGui::SameLine();
 		std::stringstream ss;
 		ss << "##" << label;
+		Layout::SameLine();
 		Layout::MaxWidth();
 		ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopFont();

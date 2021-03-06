@@ -6,7 +6,7 @@
 
 namespace WindowElement {
 
-	FileView::FileView() : EditorWindow("Asset manager") {
+	FileView::FileView() : EditorWindow(ICON_FK_FOLDER_OPEN" Asset manager") {
 	
 	}
 

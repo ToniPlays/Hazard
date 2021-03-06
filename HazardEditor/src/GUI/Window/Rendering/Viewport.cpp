@@ -8,7 +8,7 @@ using namespace Hazard;
 
 namespace WindowElement {
 
-	Viewport::Viewport() : EditorWindow("Viewport")
+	Viewport::Viewport() : EditorWindow(ICON_FK_GLOBE " Viewport")
 	{
 
 	}
@@ -50,38 +50,38 @@ namespace WindowElement {
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 
-		gizmos.OnRender(editorCamera);
+			gizmos.OnRender(editorCamera);
 
 		if (gizmos.IsUsing()) return;
-
+		
 		IsFocused() ? editorCamera.OnUpdate() : editorCamera.SetMousePosition(Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
-		editorCamera.OnEvent(e);
+		if(IsHovered())
+			editorCamera.OnEvent(e);
 		gizmos.OnEvent(e);
 
-		if (!IsFocused()) return false;
+		if (!IsHovered()) return false;
 
 		EventDispatcher dispacher(e);
 		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
-
 
 		return false;
 	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
 		switch (e.GetKeyCode()) {
-		case Key::Q:
+		case Key::D1:
 			gizmos.SetType(Gizmo::Translate);
 			return true;
-		case Key::W:
+		case Key::D2:
 			gizmos.SetType(Gizmo::Rotate);
 			return true;
-		case Key::E:
+		case Key::D3:
 			gizmos.SetType(Gizmo::Scale);
 			return true;
-		case Key::R:
+		case Key::D4:
 			gizmos.SetType(Gizmo::Bounds);
 			return true;
 		}

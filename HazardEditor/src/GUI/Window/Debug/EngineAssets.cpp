@@ -9,7 +9,7 @@
 using namespace WindowLayout;
 
 namespace WindowElement {
-	EngineAssets::EngineAssets() : EditorWindow("Engine assets")
+	EngineAssets::EngineAssets() : EditorWindow(ICON_FK_EXCLAMATION_TRIANGLE" Engine assets")
 	{
 
 	}
@@ -32,7 +32,7 @@ namespace WindowElement {
 			for (Texture* t : textures) {
 				ss.str("");
 
-				Layout::SetColumnWidth(110);
+				Layout::SetColumnWidth(90);
 				ImGui::Image((void*)t->GetID(), { 50, 50 }, { 0, 1 }, { 1, 0 });
 				Layout::TableNext();
 				Layout::Text(t->GetFile().c_str());

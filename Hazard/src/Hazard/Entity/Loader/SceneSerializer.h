@@ -135,7 +135,7 @@ namespace Hazard::ECS::Loader {
 			auto& c = entity.AddComponent<CameraComponent>();
 			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.fov = comp["Fov"].as<float>();
-
+			c.RecalculateProjection(1920, 1080);
 		};
 
 		//Deserialize runtime

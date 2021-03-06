@@ -6,7 +6,7 @@
 namespace Hazard::ECS {
 
 	struct SpriteRendererComponent {
-		Color tint;
+		Color tint = Color::FromHex("#FFFFFFFF");
 		Rendering::Texture* texture = nullptr;
 	};
 	struct BatchComponent {

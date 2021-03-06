@@ -7,7 +7,7 @@ using namespace Hazard;
 
 namespace WindowElement {
 
-	GameViewport::GameViewport() : EditorWindow("Game")
+	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game")
 	{
 
 	}

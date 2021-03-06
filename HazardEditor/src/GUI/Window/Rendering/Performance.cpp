@@ -10,7 +10,7 @@ using namespace Hazard;
 
 namespace WindowElement {
 
-	Performance::Performance() : EditorWindow("Performance")
+	Performance::Performance() : EditorWindow(ICON_FK_BAR_CHART " Performance")
 	{
 
 	}

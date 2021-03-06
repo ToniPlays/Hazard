@@ -16,6 +16,9 @@ namespace Hazard::ECS {
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
+			if (HasComponent<T>()) {
+				HZR_CORE_WARN("Entity already has component");
+			}
 			T& component = scene->registry.emplace<T>(*this, std::forward<Args>(args)...);
 			scene->OnComponentAdded<T>(*this, component);
 			return component;
@@ -25,6 +28,10 @@ namespace Hazard::ECS {
 		void RemoveComponent() {
 			scene->registry.remove<T>(handle);
 		}
+		template<>
+		void RemoveComponent<TagComponent>() {};
+		template<>
+		void RemoveComponent<TransformComponent>() {};
 
 		template<typename T>
 		T& GetComponent() {

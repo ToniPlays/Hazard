@@ -52,8 +52,8 @@ namespace WindowLayout {
 			bool removed = false;
 			ImGui::PopStyleVar();
 
-			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f - 5);
+			if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
