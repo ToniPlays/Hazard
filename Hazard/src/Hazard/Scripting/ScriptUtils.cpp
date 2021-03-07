@@ -21,14 +21,14 @@ namespace Hazard::Scripting {
 	{
 		switch (type)
 		{
-		case Hazard::Scripting::VarFieldType::Float:		return "Float";
-		case Hazard::Scripting::VarFieldType::Int:			return "Int";
-		case Hazard::Scripting::VarFieldType::UnsignedInt:	return "Unsigned int";
-		case Hazard::Scripting::VarFieldType::String:		return "String";
-		case Hazard::Scripting::VarFieldType::Vec2:			return "Vector 2";
-		case Hazard::Scripting::VarFieldType::Vec3:			return "Vector 3";
-		case Hazard::Scripting::VarFieldType::Vec4:			return "Vector 4";
-		default:											return "Undefined";
+		case VarFieldType::Float:		return "Float";
+		case VarFieldType::Int:			return "Int";
+		case VarFieldType::UnsignedInt:	return "Unsigned int";
+		case VarFieldType::String:		return "String";
+		case VarFieldType::Vec2:		return "Vector 2";
+		case VarFieldType::Vec3:		return "Vector 3";
+		case VarFieldType::Vec4:		return "Vector 4";
+		default:						return "Undefined";
 		}
 	}
 	void ScriptUtils::GetNames(const std::string& module, std::string& nameSpace, std::string& className)
@@ -38,5 +38,19 @@ namespace Hazard::Scripting {
 			className = module.substr(module.find_last_of(".") + 1);
 		}
 		else className = module;
+	}
+	uint32_t ScriptUtils::GetFieldSize(VarFieldType type)
+	{
+		switch (type)
+		{
+		case VarFieldType::Float:		return 4;
+		case VarFieldType::Int:			return 4;
+		case VarFieldType::UnsignedInt:	return 4;
+		case VarFieldType::String:		return 16;
+		case VarFieldType::Vec2:		return 4 * 2;
+		case VarFieldType::Vec3:		return 4 * 3;
+		case VarFieldType::Vec4:		return 4 * 4;
+		default:						return 0;
+		}
 	}
 }

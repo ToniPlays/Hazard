@@ -12,5 +12,6 @@ namespace Hazard::Scripting {
 		static void InitMono();
 		static const char* VarFieldToString(VarFieldType type);
 		static void GetNames(const std::string& module, std::string& nameSpace, std::string& className);
+		static uint32_t GetFieldSize(VarFieldType type);
 	};
 }

@@ -11,7 +11,7 @@ namespace Hazard::Scripting {
 	{
 		scriptEngine = &Application::GetModule<ScriptEngine>();
 	}
-	void ScriptCommand::InitScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
+	void ScriptCommand::InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
 		ECS::Scene& scene = entity.GetScene();
 		uint32_t UUID = entity;
@@ -19,9 +19,13 @@ namespace Hazard::Scripting {
 		if (moduleName == "Hazard_NULL") return;
 		if (!scriptEngine->ModuleExists(moduleName)) return;
 
-		scriptEngine->RegisterScriptableEntity(moduleName, UUID);
+		scriptEngine->RegisterScripEntity(moduleName, UUID);
 
 		HZR_CORE_INFO("Adding script component");
+	}
+	void ScriptCommand::ShutdownScriptEntity(ECS::Entity& entity, std::string& oldComponent)
+	{
+
 	}
 	void ScriptCommand::RemoveScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
@@ -30,5 +34,8 @@ namespace Hazard::Scripting {
 	bool ScriptCommand::ModuleExists(std::string& module)
 	{
 		return scriptEngine->ModuleExists(module);
+	}
+	EntityInstanceData& ScriptCommand::GetInstanceData(uint32_t entity) {
+		return scriptEngine->GetInstanceData(entity);
 	}
 }

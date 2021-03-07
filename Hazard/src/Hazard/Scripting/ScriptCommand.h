@@ -9,9 +9,12 @@ namespace Hazard::Scripting {
 	class ScriptCommand {
 	public:
 		static void Init();
-		static void InitScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component);
+		static void InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component);
+		static void ShutdownScriptEntity(ECS::Entity& entity, std::string& oldComponent);
 		static void RemoveScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component);
 		static bool ModuleExists(std::string& module);
+
+		static EntityInstanceData& GetInstanceData(uint32_t entity);
 	private:
 		static ScriptEngine* scriptEngine;
 	};

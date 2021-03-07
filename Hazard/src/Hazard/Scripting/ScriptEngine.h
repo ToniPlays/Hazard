@@ -4,6 +4,7 @@
 #include "ScriptUtils.h"
 #include "Hazard/Entity/Scene.h"
 
+
 extern "C"
 {
 	typedef struct _MonoObject MonoObject;
@@ -31,25 +32,44 @@ namespace Hazard::Scripting {
 		VarFieldType type;
 
 		PublicField() = default;
-		PublicField(const std::string& name, VarFieldType type) : name(name), type(type) {};
+		PublicField(const std::string& name, VarFieldType type) : name(name), type(type) {
+			storedValueBuffer = AllocateBuffer(type);
+		};
 
-		~PublicField() {};
+		~PublicField() {
+			//delete[] storedValueBuffer;
+		};
 
+		void CopyStoredToRuntimeValue();
+		bool RuntimeAvailable();
 
 		template<typename T>
 		T GetStoredValue() const {
-			return 0;
+			T value;
+			GetStoredValueInternal(&value);
+			return value;
 		}
 		template<typename T>
 		void SetStoredValue(T value) {
-
+			SetStoredValueInternal(&value);
 		}
+		template<typename T>
+		T GetRuntimeValue() const {
+			T value;
+			GetRuntimeValue(&value);
+			return value;
+		}
+		template<typename T>
+		void SetRuntimeValue(T value) {
+			SetRuntimeValueInternal(&value);
+		}
+		void SetStoredValueRaw(void* src);
 	private:
 		EntityInstance* entityInstance;
 		MonoClassField* monoClassField;
-		uint8_t* storedValueBuffer = nullptr;
+		std::byte* storedValueBuffer = nullptr;
 
-		uint8_t* AllocateBuffer(VarFieldType type);
+		std::byte* AllocateBuffer(VarFieldType type);
 		void SetStoredValueInternal(void* value) const;
 		void GetStoredValueInternal(void* value) const;
 		void SetRuntimeValueInternal(void* value) const;
@@ -92,11 +112,14 @@ namespace Hazard::Scripting {
 
 		bool ModuleExists(const std::string& module);
 
-		void RegisterScriptableEntity(const std::string& moduleName, uint32_t id);
+		void RegisterScripEntity(const std::string& moduleName, uint32_t id);
+		void RemoveScriptEntity(const std::string& moduleName, uint32_t id);
+
+		EntityInstanceData& GetInstanceData(uint32_t entity);
 
 	private:
 		void MonoInit();
 		void MonoShutdown();
-
+		
 	};
 }

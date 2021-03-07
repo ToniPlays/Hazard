@@ -8,15 +8,23 @@ namespace WindowElement {
 	public:
 		static bool InputField(std::string& text);
 		static bool Button(const char* name, ImVec2 size = {0, 0});
-		static void ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = {0, 0}, 
+		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = {0, 0}, 
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);
-		static void Vec1(const char* label, float& value, float resetValue, float columnWidth);
-		static void Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth);
-		static void Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth);
+		static bool Vec1(const char* label, float& value, float resetValue, float columnWidth);
+		static bool Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth);
+		static bool Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth);
+
+		static bool ScriptField(const char* label, std::string& moduleName, bool exists);
 
 		static void Checkbox(const char* label, bool& value);
 		static void ColorPicker(const char* label, Hazard::Color& color);
 		static bool TextureSlot(const char* label, uint32_t& index, uint32_t min = 0, uint32_t max = 10);
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
+
+		static bool DragInt(const char* label, int& value);
+		static bool DragUInt(const char* label, uint32_t& value);
+		static bool DragFloat(const char* label, float& value);
+
+		static void PublicField(const char* label, Scripting::PublicField& field);
 	};
 }

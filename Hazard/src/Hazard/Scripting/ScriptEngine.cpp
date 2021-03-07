@@ -56,6 +56,12 @@ namespace Hazard::Scripting {
 		MonoClass* monoClass = mono_class_from_name(image, script.nameSpace.c_str(), script.className.c_str());
 		return monoClass;
 	}
+	MonoMethod* GetMethod(MonoImage* image, const std::string& name) {
+		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
+		MonoMethod* method = mono_method_desc_search_in_image(desc, image);
+		return method;
+	}
+
 #pragma endregion
 
 	static VarFieldType MonoTypeToFieldType(MonoType* type)
@@ -151,11 +157,10 @@ namespace Hazard::Scripting {
 		ScriptUtils::GetNames(module, nameSpace, ClassName);
 
 		MonoClass* monoClass = mono_class_from_name(data.app_assembly_image, nameSpace.c_str(), ClassName.c_str());
-		HZR_CORE_INFO("{0}::{1} exists {2}", nameSpace, ClassName, monoClass != nullptr);
 		return monoClass != nullptr;
 	}
 
-	void ScriptEngine::RegisterScriptableEntity(const std::string& moduleName, uint32_t id)
+	void ScriptEngine::RegisterScripEntity(const std::string& moduleName, uint32_t id)
 	{
 		EntityScript& scriptClass = data.EntityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
@@ -203,6 +208,21 @@ namespace Hazard::Scripting {
 		}
 	}
 
+	void ScriptEngine::RemoveScriptEntity(const std::string& moduleName, uint32_t id)
+	{
+		EntityInstanceData& instanceData = GetInstanceData(id);
+		ModuleFieldMap& moduleFieldMap = instanceData.moduleFieldMap;
+
+		if (moduleFieldMap.find(moduleName) != moduleFieldMap.end()) {
+			moduleFieldMap.erase(moduleName);
+		}
+	}
+
+	EntityInstanceData& ScriptEngine::GetInstanceData(uint32_t entity)
+	{
+		return data.EntityInstanceMap[entity];
+	}
+
 	void ScriptEngine::MonoInit()
 	{
 		ScriptUtils::InitMono();
@@ -222,4 +242,49 @@ namespace Hazard::Scripting {
 		return mono_gchandle_get_target(handle);
 	}
 
+	void PublicField::CopyStoredToRuntimeValue()
+	{
+		mono_field_set_value(entityInstance->GetInstance(), monoClassField, storedValueBuffer);
+	}
+
+	bool PublicField::RuntimeAvailable()
+	{
+		return entityInstance->handle != 0;
+	}
+
+	void PublicField::SetStoredValueRaw(void* src)
+	{
+		uint32_t size = ScriptUtils::GetFieldSize(type);
+		memcpy(storedValueBuffer, src, size);
+	}
+
+	std::byte* PublicField::AllocateBuffer(VarFieldType type)
+	{
+		uint32_t size = ScriptUtils::GetFieldSize(type);
+		std::byte* buffer = new std::byte[size];
+		memset(buffer, 0, size);
+		return buffer;
+	}
+
+	void PublicField::SetStoredValueInternal(void* value) const
+	{
+		uint32_t size = ScriptUtils::GetFieldSize(type);
+		memcpy(storedValueBuffer, value, size);
+	}
+
+	void PublicField::GetStoredValueInternal(void* value) const
+	{
+		uint32_t size = ScriptUtils::GetFieldSize(type);
+		memcpy(value, storedValueBuffer, size);
+	}
+
+	void PublicField::SetRuntimeValueInternal(void* value) const
+	{
+		mono_field_set_value(entityInstance->GetInstance(), monoClassField, value);
+	}
+
+	void PublicField::GetRuntimeValueInternal(void* value) const
+	{
+		mono_field_get_value(entityInstance->GetInstance(), monoClassField, value);
+	}
 }

@@ -180,14 +180,28 @@ namespace WindowElement {
 		auto& component = entity.GetComponent<ScriptComponent>();
 		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
-			Layout::Text("Script");
-			Layout::SameLine(75);
-			Layout::MaxWidth();
-			Input::InputField(component.moduleName);
-			Layout::NextLine(10);
+			std::string moduleName = component.moduleName;
 
-			if (Scripting::ScriptCommand::ModuleExists(component.moduleName)) {
-				Layout::Text("This module exists, ffs");
+			if (Input::ScriptField("Script", component.moduleName, Scripting::ScriptCommand::ModuleExists(moduleName))) {
+				if (Scripting::ScriptCommand::ModuleExists(moduleName)) {
+					Scripting::ScriptCommand::ShutdownScriptEntity(entity, moduleName);
+				}
+				if (Scripting::ScriptCommand::ModuleExists(component.moduleName)) {
+					Scripting::ScriptCommand::InitScripEntity(entity, component);
+				}
+			}
+			if (Scripting::ScriptCommand::ModuleExists(moduleName)) {
+				//Show public fields
+				Scripting::EntityInstanceData& instanceData = Scripting::ScriptCommand::GetInstanceData(entity);
+				auto& moduleFieldMap = instanceData.moduleFieldMap;
+				
+				if (moduleFieldMap.find(moduleName) != moduleFieldMap.end()) {
+					auto& fields = moduleFieldMap.at(moduleName);
+
+					for (auto& [name, field] : fields) {
+						Input::PublicField(name.c_str(), field);
+					}
+				}
 			}
 
 			}, [&]() {
