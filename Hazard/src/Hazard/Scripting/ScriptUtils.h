@@ -5,8 +5,7 @@ namespace Hazard::Scripting {
 	enum class VarFieldType {
 		None = 0, Float, Int, UnsignedInt, String, Vec2, Vec3, Vec4
 	};
-
-
+	
 	class ScriptUtils {
 	public:
 		static void InitMono();

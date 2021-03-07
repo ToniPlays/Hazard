@@ -52,7 +52,7 @@ namespace WindowElement {
 				Input::Vec3("Scale", component.Scale, 1.0f, 100);
 			});
 
-			component.Rotation = { glm::radians(rot.x), glm::radians(rot.z), glm::radians(rot.y) };
+			component.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 
 		}, [&]() {
 			Layout::MenuItem("Reset", [&]() {
@@ -174,6 +174,9 @@ namespace WindowElement {
 			}, [&entity]() {
 			});
 	}
+
+#pragma endregion
+
 	template<>
 	inline void DrawComponent<ScriptComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<ScriptComponent>()) return;
@@ -207,13 +210,10 @@ namespace WindowElement {
 			}, [&]() {
 				Layout::MenuItem("Reset", [&]() {
 					component.moduleName = "Hazard_NULL";
-					Application::GetModule<Scripting::ScriptEngine>().ReloadAssembly();
 					});
 				Layout::MenuItem("Reload C# assembly", []() {
-					Application::GetModule<Scripting::ScriptEngine>().ReloadAssembly();
+					Application::GetModule<Scripting::ScriptEngine>().ReloadRuntimeAssembly();
 					});
 			});
 	}
-
-#pragma endregion
 }

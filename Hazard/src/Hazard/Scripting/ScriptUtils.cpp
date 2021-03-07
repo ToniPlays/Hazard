@@ -46,7 +46,7 @@ namespace Hazard::Scripting {
 		case VarFieldType::Float:		return 4;
 		case VarFieldType::Int:			return 4;
 		case VarFieldType::UnsignedInt:	return 4;
-		case VarFieldType::String:		return 16;
+		//case VarFieldType::String:		return 16;
 		case VarFieldType::Vec2:		return 4 * 2;
 		case VarFieldType::Vec3:		return 4 * 3;
 		case VarFieldType::Vec4:		return 4 * 4;

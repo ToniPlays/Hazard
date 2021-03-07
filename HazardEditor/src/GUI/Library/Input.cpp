@@ -30,7 +30,6 @@ namespace WindowElement {
 	}
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
-
 		bool modified = false;
 		Style::Style::SelectFont(buttonFont);
 		
@@ -45,8 +44,9 @@ namespace WindowElement {
 		std::stringstream ss;
 		ss << "##" << label;
 		Layout::SameLine();
-		Layout::MaxWidth();
-		if (ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f")) modified = true;
+
+		if (ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f")) 
+			modified = true;
 		ImGui::PopFont();
 
 		return modified;
@@ -73,61 +73,109 @@ namespace WindowElement {
 	}
 	bool Input::Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth)
 	{
+		bool modified = true;
+		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 
-		bool modified = false;
-		Layout::Table(3, false);
+		Layout::Table(2, false);
 		Layout::SetColumnWidth(columnWidth);
 		Layout::Text(label);
 		Layout::TableNext();
 
+		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
 		Style::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-		if (Input::ResettableDragButton("X", value.x, resetValue, buttonSize, 1, 0)) modified = true;
-		ImGui::PopStyleColor(3);
-		Layout::TableNext();
+		ImGui::PushFont(boldFont);
 
+		if (ImGui::Button("X", buttonSize)) {
+			modified = true;
+			value.x = resetValue;
+		}
+		ImGui::PopFont();
+		Layout::SameLine();
+		if (Input::DragFloat("##x", value.x)) modified = true;
+		ImGui::PopStyleColor(3);
+
+
+		Layout::SameLine();
 		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
-		if (Input::ResettableDragButton("Y", value.y, resetValue, buttonSize, 1, 0)) modified = true;
-		ImGui::PopStyleColor(3);
-		ImGui::PopStyleVar();
+		ImGui::PushFont(boldFont);
 
+		if (ImGui::Button("Y", buttonSize)) {
+			modified = true;
+			value.y = resetValue;
+		}
+		ImGui::PopFont();
+		Layout::SameLine();
+		if (Input::DragFloat("##Y", value.y)) modified = true;
+		ImGui::PopStyleColor(3);
+
+		ImGui::PopStyleVar();
 		Layout::EndTable();
+
 		return modified;
 	}
 	bool Input::Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth)
 	{
-
 		bool modified = true;
-		Layout::Table(4, false);
+		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
+
+		Layout::Table(2, false);
 		Layout::SetColumnWidth(columnWidth);
 		Layout::Text(label);
 		Layout::TableNext();
 
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 		
 		Style::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-		if (Input::ResettableDragButton("X", value.x, resetValue, buttonSize, 1, 0)) modified = true;
-		ImGui::PopStyleColor(3);
-		Layout::TableNext();
-
-		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
-		if (Input::ResettableDragButton("Y", value.y, resetValue, buttonSize, 1, 0)) modified = true;
-		ImGui::PopStyleColor(3);
-		Layout::TableNext();
-
-		Style::Style::SetButtonColors("#1651F3", "#0B41D5", "#0935AE");
-		if(Input::ResettableDragButton("Z", value.z, resetValue, buttonSize, 1, 0)) modified = true;
-		ImGui::PopStyleColor(3);
+		ImGui::PushFont(boldFont);
 		
-		ImGui::PopStyleVar();
+		if (ImGui::Button("X", buttonSize)) {
+			modified = true;
+			value.x = resetValue;
+		}
+		ImGui::PopFont();
+		Layout::SameLine();
+		if (Input::DragFloat("##x_", value.x)) modified = true;
+		ImGui::PopStyleColor(3);
 
+
+		Layout::SameLine();
+		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
+		ImGui::PushFont(boldFont);
+
+		if (ImGui::Button("Y", buttonSize)) {
+			modified = true;
+			value.y = resetValue;
+		}
+		ImGui::PopFont();
+		Layout::SameLine();
+		if (Input::DragFloat("##Y_", value.y)) modified = true;
+		ImGui::PopStyleColor(3);
+
+
+		Layout::SameLine();
+		Style::Style::SetButtonColors("#1651F3", "#0B41D5", "#0935AE");
+		ImGui::PushFont(boldFont);
+
+		if (ImGui::Button("Z", buttonSize)) {
+			modified = true;
+			value.z = resetValue;
+		}
+		ImGui::PopFont();
+		Layout::SameLine();
+		if (Input::DragFloat("##z_", value.z)) modified = true;
+		ImGui::PopStyleColor(3);
+
+
+		ImGui::PopStyleVar();
 		Layout::EndTable();
 
 		return modified;
@@ -207,63 +255,69 @@ namespace WindowElement {
 		using namespace Scripting;
 		switch (field.type)
 		{
-		case VarFieldType::Int:
-		{
-			int value = field.GetStoredValue<int>();
-			if (Input::DragInt(label, value)) {
-				field.SetStoredValue(value);
+			case VarFieldType::Int:
+			{
+				int value = field.GetStoredValue<int>();
+				if (Input::DragInt(label, value)) {
+					field.SetStoredValue(value);
+				}
+				break;
 			}
-			break;
-		}
-		case VarFieldType::Float: 
-		{
-			float value = field.GetStoredValue<float>();
+			case VarFieldType::Float: 
+			{
+				float value = field.GetStoredValue<float>();
 
-			if (Input::DragFloat(label, value)) {
-				field.SetStoredValue(value);
+				if (Input::DragFloat(label, value)) {
+					field.SetStoredValue(value);
+				}
+				break;
 			}
-			break;
-		}
-		case VarFieldType::UnsignedInt: 
-		{
-			uint32_t value = field.GetStoredValue<uint32_t>();
-			if (Input::DragUInt(label, value)) {
-				field.SetStoredValue(value);
+			case VarFieldType::UnsignedInt: 
+			{
+				uint32_t value = field.GetStoredValue<uint32_t>();
+				if (Input::DragUInt(label, value)) {
+					field.SetStoredValue(value);
+				}
+				break;
 			}
-			break;
-		}
-		case VarFieldType::Vec2:
-		{
-			glm::vec2 value = field.GetStoredValue<glm::vec2>();
-			if (Input::Vec2(label, value, 0, 100)) {
-				field.SetStoredValue(value);
+			case VarFieldType::Vec2:
+			{
+				glm::vec2 value = field.GetStoredValue<glm::vec2>();
+				Layout::IDGroup(label, [&]() {
+					if (Input::Vec2(label, value, 0, 75)) {
+						field.SetStoredValue(value);
+					}
+					});
+				break;
 			}
-			break;
-		}
-		case VarFieldType::Vec3:
-		{
-			glm::vec3 value = field.GetStoredValue<glm::vec3>();
-			if (Input::Vec3(label, value, 0, 100)) {
-				field.SetStoredValue(value);
+			case VarFieldType::Vec3:
+			{
+				glm::vec3 value = field.GetStoredValue<glm::vec3>();
+				Layout::IDGroup(label, [&]() {
+					if (Input::Vec3(label, value, 0, 75)) {
+						field.SetStoredValue(value);
+					}
+				});
+				break;
 			}
-			break;
-		}
-		case VarFieldType::Vec4:
-		{
-			glm::vec4 value = field.GetStoredValue<glm::vec4>();
-			Layout::Text("Vec4 not yet supported");
-			break;
-		}
-		case VarFieldType::String:
-		{
-			std::string value = field.GetStoredValue<std::string>();
+			case VarFieldType::Vec4:
+			{
+				glm::vec4 value = field.GetStoredValue<glm::vec4>();
+				Layout::Text("Vec4 not yet supported");
+				break;
+			}
+			case VarFieldType::String:
+			{
+				std::string value = field.GetStoredValue<std::string>();
+				Layout::Text(label);
+				Layout::SameLine(150);
+				Layout::MaxWidth();
 
-			if (Input::InputField(value)) {
-				field.SetStoredValue(value);
+				if (Input::InputField(value)) {
+					field.SetStoredValue(value);
+				}
+				break;
 			}
-
-			break;
-		}
 		}
 	}
 }

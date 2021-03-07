@@ -50,7 +50,7 @@ namespace WindowElement {
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 
-			gizmos.OnRender(editorCamera);
+		gizmos.OnRender(editorCamera);
 
 		if (gizmos.IsUsing()) return;
 		

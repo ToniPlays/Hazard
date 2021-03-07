@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Hazard/Module/Module.h"
-#include "ScriptUtils.h"
 #include "Hazard/Entity/Scene.h"
+#include "ScriptUtils.h"
 
 
 extern "C"
@@ -10,6 +10,7 @@ extern "C"
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoClassField MonoClassField;
 	typedef struct _MonoClass MonoClass;
+	typedef struct _MonoMethod MonoMethod;
 }
 
 
@@ -23,7 +24,7 @@ namespace Hazard::Scripting {
 	struct EntityInstance
 	{
 		EntityScript* ScriptClass;
-		uint32_t handle;
+		uint32_t handle = 0;
 		ECS::Scene* instance = nullptr;
 		MonoObject* GetInstance();
 	};
@@ -56,7 +57,7 @@ namespace Hazard::Scripting {
 		template<typename T>
 		T GetRuntimeValue() const {
 			T value;
-			GetRuntimeValue(&value);
+			GetRuntimeValueInternal(&value);
 			return value;
 		}
 		template<typename T>
@@ -64,6 +65,8 @@ namespace Hazard::Scripting {
 			SetRuntimeValueInternal(&value);
 		}
 		void SetStoredValueRaw(void* src);
+
+
 	private:
 		EntityInstance* entityInstance;
 		MonoClassField* monoClassField;
@@ -92,6 +95,10 @@ namespace Hazard::Scripting {
 		std::string nameSpace;
 
 		MonoClass* monoClass;
+		MonoMethod* Constructor = nullptr;
+		MonoMethod* OnUpdate = nullptr;
+
+		void InitClassMethods();
 	};
 
 #pragma endregion
@@ -107,19 +114,31 @@ namespace Hazard::Scripting {
 		void InitAssembly(const char* assemblyPath);
 		void LoadRuntimeAssembly(const char* path);
 
-		void ReloadAssembly();
-		void ReloadAssembly(const char* assemblyPath);
+		void ReloadRuntimeAssembly();
+		void ReloadRuntimeAssembly(const char* assemblyPath);
 
 		bool ModuleExists(const std::string& module);
 
 		void RegisterScripEntity(const std::string& moduleName, uint32_t id);
 		void RemoveScriptEntity(const std::string& moduleName, uint32_t id);
 
+		void InstantiateScriptEntity(uint32_t handle, const std::string& moduleName);
+
 		EntityInstanceData& GetInstanceData(uint32_t entity);
+
+		bool GetRunning() { return running; }
+		void SetRunning(bool running) { this->running = running; }
+
+		void Step();
+
+		void EntityStart(EntityInstance& instance);
 
 	private:
 		void MonoInit();
 		void MonoShutdown();
+
+		uint32_t Instantiate(EntityScript& instance);
 		
+		bool running = false;
 	};
 }

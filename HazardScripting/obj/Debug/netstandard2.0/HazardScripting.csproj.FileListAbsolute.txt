@@ -1,0 +1,9 @@
+C:\dev\Hazard\HazardScripting\bin\Debug\netstandard2.0\HazardScripting.deps.json
+C:\dev\Hazard\HazardScripting\bin\Debug\netstandard2.0\HazardScripting.dll
+C:\dev\Hazard\HazardScripting\bin\Debug\netstandard2.0\HazardScripting.pdb
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.csprojAssemblyReference.cache
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.AssemblyInfoInputs.cache
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.AssemblyInfo.cs
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.csproj.CoreCompileInputs.cache
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.dll
+C:\dev\Hazard\HazardScripting\obj\Debug\netstandard2.0\HazardScripting.pdb

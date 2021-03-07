@@ -79,6 +79,7 @@ namespace WindowElement {
 
 		PushRenderable<MenuBar>();
 		PushRenderable<Toobar>();
+
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
@@ -88,6 +89,7 @@ namespace WindowElement {
 		PushRenderable<Performance>();
 
 		PushRenderable<EngineAssets>();
+		PushRenderable<Console>();
 	}  
 	void EditorView::Render()
 	{

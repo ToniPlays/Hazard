@@ -15,6 +15,9 @@ namespace Hazard::Scripting {
 		static bool ModuleExists(std::string& module);
 
 		static EntityInstanceData& GetInstanceData(uint32_t entity);
+		static void DoStep();
+
+		static void InitAllEntities();
 	private:
 		static ScriptEngine* scriptEngine;
 	};

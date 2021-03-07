@@ -2,6 +2,7 @@
 
 #include "hzrpch.h"
 #include "ScriptCommand.h"
+#include "Hazard/Entity/Loader/SceneHandler.h"
 
 namespace Hazard::Scripting {
 
@@ -18,14 +19,11 @@ namespace Hazard::Scripting {
 		auto& moduleName = component.moduleName;
 		if (moduleName == "Hazard_NULL") return;
 		if (!scriptEngine->ModuleExists(moduleName)) return;
-
 		scriptEngine->RegisterScripEntity(moduleName, UUID);
-
-		HZR_CORE_INFO("Adding script component");
 	}
 	void ScriptCommand::ShutdownScriptEntity(ECS::Entity& entity, std::string& oldComponent)
 	{
-
+		scriptEngine->RemoveScriptEntity(oldComponent, entity);
 	}
 	void ScriptCommand::RemoveScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
@@ -37,5 +35,33 @@ namespace Hazard::Scripting {
 	}
 	EntityInstanceData& ScriptCommand::GetInstanceData(uint32_t entity) {
 		return scriptEngine->GetInstanceData(entity);
+	}
+	void ScriptCommand::DoStep()
+	{
+		using namespace ECS;
+		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
+		auto view = current.GetSceneRegistry().view<ScriptComponent>();
+
+		for (auto entity : view) {
+			Entity e{ entity, &current };
+			auto& c = e.GetComponent<ScriptComponent>();
+			if (ModuleExists(c.moduleName)) {
+				scriptEngine->InstantiateScriptEntity(e, c.moduleName);
+			}
+		}
+	}
+	void ScriptCommand::InitAllEntities()
+	{
+		using namespace ECS;
+		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
+		current.GetSceneRegistry().each([&](auto entityID) {
+			Entity entity{ entityID, &current };
+
+
+			if (entity.HasComponent<ScriptComponent>()) {
+				HZR_CORE_INFO("Initializing {0}", entity.GetComponent<TagComponent>().tag);
+				InitScripEntity(entity, entity.GetComponent<ScriptComponent>());
+			}
+		});
 	}
 }

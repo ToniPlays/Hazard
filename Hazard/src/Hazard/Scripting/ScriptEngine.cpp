@@ -5,6 +5,8 @@
 #include "Hazard/File/File.h"
 
 #include "ScriptUtils.h"
+#include "ScriptCommand.h"
+#include "Script/ScriptRegistry.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -52,14 +54,23 @@ namespace Hazard::Scripting {
 		return image;
 	}
 
-	MonoClass* GetClass(MonoImage* image, const EntityScript& script) {
+	MonoClass* GetMonoClass(MonoImage* image, const EntityScript& script) {
 		MonoClass* monoClass = mono_class_from_name(image, script.nameSpace.c_str(), script.className.c_str());
 		return monoClass;
 	}
-	MonoMethod* GetMethod(MonoImage* image, const std::string& name) {
+
+	MonoMethod* GetMonoMethod(MonoImage* image, const std::string& name) {
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 		MonoMethod* method = mono_method_desc_search_in_image(desc, image);
+
+		if (method == nullptr) HZR_CORE_ERROR("Unable to find {0}", name);
+
 		return method;
+	}
+	MonoObject* CallMonoMethod(MonoObject* obj, MonoMethod* method, void** params = nullptr) {
+		MonoObject* exception = nullptr;
+		MonoObject* result = mono_runtime_invoke(method, obj, params, &exception);
+		return result;
 	}
 
 #pragma endregion
@@ -74,10 +85,9 @@ namespace Hazard::Scripting {
 		case MONO_TYPE_I4:			return VarFieldType::Int;
 		case MONO_TYPE_U4:			return VarFieldType::UnsignedInt;
 		case MONO_TYPE_STRING:		return VarFieldType::String;
-		case MONO_TYPE_VALUETYPE:
+		case MONO_TYPE_CLASS:
 		{
 			char* name = mono_type_get_name(type);
-
 			if (strcmp(name, "Hazard.Vector2") == 0) return VarFieldType::Vec2;
 			if (strcmp(name, "Hazard.Vector3") == 0) return VarFieldType::Vec3;
 			if (strcmp(name, "Hazard.Vector4") == 0) return VarFieldType::Vec4;
@@ -108,7 +118,6 @@ namespace Hazard::Scripting {
 
 	void ScriptEngine::InitAssembly(const char* assemblyPath)
 	{
-		HZR_CORE_INFO("AssemblyPath {0}", assemblyPath);
 		data.assemblyPath = assemblyPath;
 		MonoInit();
 		LoadRuntimeAssembly(assemblyPath);
@@ -118,38 +127,45 @@ namespace Hazard::Scripting {
 		MonoDomain* domain = nullptr;
 		bool cleanUp = false;
 
-		if (data.mono_domain != nullptr)
+		if (data.mono_domain)
 		{
+
 			domain = mono_domain_create_appdomain("Hazard-runtime", nullptr);
 			mono_domain_set(domain, false);
 			cleanUp = true;
 		}
-		HZR_CORE_WARN("Loading runtime assembly");
-		data.core_assembly = LoadAssembly("res/ScriptEngine.dll");
 
+		data.core_assembly = LoadAssembly("c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll");
 		data.core_assembly_image = GetAssemblyImage(data.core_assembly);
 
 		auto appAssembly = LoadAssembly(path);
 		auto appAssemblyImage = GetAssemblyImage(appAssembly);
 
+		ScriptRegistry::RegisterAll();
+
 		if (cleanUp) {
-			mono_domain_unload(data.mono_domain);
+			//mono_domain_unload(data.mono_domain);
 			data.mono_domain = domain;
 		}
 
 		data.app_assembly = appAssembly;
 		data.app_assembly_image = appAssemblyImage;
 
-		HZR_CORE_INFO("Loaded successfully");
 	}
-	void ScriptEngine::ReloadAssembly()
+	void ScriptEngine::ReloadRuntimeAssembly()
 	{
-		ReloadAssembly(data.assemblyPath.c_str());
+		ReloadRuntimeAssembly(data.assemblyPath.c_str());
 	}
-	void ScriptEngine::ReloadAssembly(const char* assemblyPath)
+	void ScriptEngine::ReloadRuntimeAssembly(const char* assemblyPath)
 	{
 		LoadRuntimeAssembly(assemblyPath);
-		HZR_CORE_INFO("Reloading C# assembly");
+		
+		if (data.EntityInstanceMap.size() == 0) return;
+
+		auto& entityMap = data.EntityInstanceMap;
+		for (auto& [EntityID, instanceData] : entityMap) {
+			ScriptCommand::InitAllEntities();
+		}
 	}
 	bool ScriptEngine::ModuleExists(const std::string& module)
 	{
@@ -159,14 +175,16 @@ namespace Hazard::Scripting {
 		MonoClass* monoClass = mono_class_from_name(data.app_assembly_image, nameSpace.c_str(), ClassName.c_str());
 		return monoClass != nullptr;
 	}
-
 	void ScriptEngine::RegisterScripEntity(const std::string& moduleName, uint32_t id)
 	{
 		EntityScript& scriptClass = data.EntityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 
 		ScriptUtils::GetNames(moduleName, scriptClass.nameSpace, scriptClass.className);
-		scriptClass.monoClass = GetClass(data.app_assembly_image, scriptClass);
+		scriptClass.monoClass = GetMonoClass(data.app_assembly_image, scriptClass);
+
+		scriptClass.InitClassMethods();
+
 
 		EntityInstanceData& entityData = data.EntityInstanceMap[id];
 		EntityInstance& instance = entityData.instance;
@@ -197,12 +215,14 @@ namespace Hazard::Scripting {
 			VarFieldType fieldType = MonoTypeToFieldType(mono_field_get_type(iter));
 
 			MonoCustomAttrInfo* atff = mono_custom_attrs_from_field(scriptClass.monoClass, iter);
-			if (oldFields.find(name) != oldFields.end())
+			if (oldFields.find(name) != oldFields.end()) {
 				fieldMap.emplace(name, std::move(oldFields.at(name)));
+			}
 			else {
 				PublicField field = { name, fieldType };
 				field.entityInstance = &instance;
 				field.monoClassField = iter;
+
 				fieldMap.emplace(name, std::move(field));
 			}
 		}
@@ -218,9 +238,48 @@ namespace Hazard::Scripting {
 		}
 	}
 
+	void ScriptEngine::InstantiateScriptEntity(uint32_t handle, const std::string& moduleName)
+	{
+		EntityInstanceData& data = GetInstanceData(handle);
+		EntityInstance& instance = data.instance;
+		instance.handle = Instantiate(*instance.ScriptClass);
+
+		void* param[] = { &handle };
+		CallMonoMethod(instance.GetInstance(), instance.ScriptClass->Constructor, param);
+
+		ModuleFieldMap& fieldMap = data.moduleFieldMap;
+
+		if (fieldMap.find(moduleName) != fieldMap.end()) {
+			auto& publicFields = fieldMap.at(moduleName);
+
+			for (auto& [name, field] : publicFields) {
+				field.CopyStoredToRuntimeValue();
+			}
+		}
+		EntityStart(instance);
+	}
+
 	EntityInstanceData& ScriptEngine::GetInstanceData(uint32_t entity)
 	{
 		return data.EntityInstanceMap[entity];
+	}
+
+	void ScriptEngine::Step()
+	{
+		for (auto& [EntityID, instanceData] : data.EntityInstanceMap) {
+			EntityInstance& instance = GetInstanceData(EntityID).instance;
+
+			if (instance.ScriptClass->OnUpdate != nullptr && instance.handle != 0) continue;
+
+			HZR_CORE_INFO("Script step");
+			CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, nullptr);
+		}
+	}
+
+	void ScriptEngine::EntityStart(EntityInstance& instance)
+	{
+		if (instance.ScriptClass->OnUpdate)
+			CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate);
 	}
 
 	void ScriptEngine::MonoInit()
@@ -237,8 +296,17 @@ namespace Hazard::Scripting {
 		//mono_jit_cleanup(data.mono_domain);
 	}
 
+	uint32_t ScriptEngine::Instantiate(EntityScript& instance)
+	{
+		MonoObject* obj = mono_object_new(data.mono_domain, instance.monoClass);
+
+		mono_runtime_object_init(obj);
+		return mono_gchandle_new(obj, false);
+	}
+
 	MonoObject* EntityInstance::GetInstance()
 	{
+		HZR_ASSERT(handle != 0, "Invalid entity instance");
 		return mono_gchandle_get_target(handle);
 	}
 
@@ -286,5 +354,11 @@ namespace Hazard::Scripting {
 	void PublicField::GetRuntimeValueInternal(void* value) const
 	{
 		mono_field_get_value(entityInstance->GetInstance(), monoClassField, value);
+	}
+	void EntityScript::InitClassMethods()
+	{
+		Constructor = GetMonoMethod(data.core_assembly_image, "Hazard.Entity:.ctor(ulong)");
+		OnUpdate = GetMonoMethod(data.app_assembly_image, moduleName + ":OnUpdate()");
+		
 	}
 }

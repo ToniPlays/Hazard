@@ -11,7 +11,7 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	Hierarchy::Hierarchy() : EditorWindow("Hierarchy")
+	Hierarchy::Hierarchy() : EditorWindow(ICON_FK_ALIGN_LEFT " Hierarchy")
 	{
 
 	}

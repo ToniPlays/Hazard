@@ -37,7 +37,7 @@ namespace WindowElement {
 		}
 		Layout::SameLine(0, 5);
 		if (Input::Button(ICON_FK_FORWARD, { 32, 32 })) {
-
+			Application::GetModule < Scripting::ScriptCommand>().DoStep();
 		}
 
 		ImGui::End();

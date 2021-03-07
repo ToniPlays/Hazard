@@ -12,5 +12,6 @@
 #include "Rendering/Performance.h"
 
 #include "Debug/EngineAssets.h"
+#include "Debug/Console.h"
 
 #include "TransformationGizmo.h"
