@@ -2,6 +2,7 @@
 
 #include "entt.hpp"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Scripting/ScriptCommand.h"
 
 namespace Hazard::ECS {
 	class SceneCommand {
@@ -11,8 +12,10 @@ namespace Hazard::ECS {
 
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);
+		static void OnScriptAttached(Entity& entity, ScriptComponent& script);
+		static void OnScriptDetached(Entity& entity, ScriptComponent& script);
 
 	private:
-		static Rendering::RenderEngine engine;
+		static Rendering::RenderEngine RenderEngine;
 	};
 }

@@ -34,6 +34,8 @@ namespace Hazard::ECS {
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity& entity, T& component);
+		template<typename T>
+		void OnComponentRemoved(Entity& entity, T& component);
 
 	};
 }

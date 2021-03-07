@@ -7,11 +7,21 @@
 
 namespace Hazard::ECS {
 
-	Rendering::RenderEngine SceneCommand::engine;
+	Rendering::RenderEngine SceneCommand::RenderEngine;
 
 	void SceneCommand::Init()
 	{
-		engine = Application::GetModule<Rendering::RenderEngine>();
+		RenderEngine = Application::GetModule<Rendering::RenderEngine>();
+	}
+
+	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)
+	{
+		Scripting::ScriptCommand::InitScriptableEntity(entity, script);
+	}
+
+	void SceneCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
+	{
+		Scripting::ScriptCommand::RemoveScriptableEntity(entity, script);
 	}
 
 	template<typename C, typename T>
@@ -22,14 +32,14 @@ namespace Hazard::ECS {
 
 	template<>
 	void SceneCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
-		engine.Submit(Rendering::Quad(transform.GetTransformMat4(), component.tint.ToGlm(), component.texture));
+		RenderEngine.Submit(Rendering::Quad(transform.GetTransformMat4(), component.tint.ToGlm(), component.texture));
 	}
 
 	template<>
 	void SceneCommand::Render(BatchComponent& component, TransformComponent& transform) {
 		for (int x = 0; x < component.size; x++) {
 			for (int y = 0; y < component.size; y++) {
-				engine.Submit(Rendering::Quad { transform.GetTransformMat4() * glm::translate(glm::mat4(1.0f), glm::vec3(float(x), float(y), 0.0f))
+				RenderEngine.Submit(Rendering::Quad { transform.GetTransformMat4() * glm::translate(glm::mat4(1.0f), glm::vec3(float(x), float(y), 0.0f))
 					, component.tint.ToGlm(), nullptr });
 			}
 		}

@@ -16,24 +16,26 @@ namespace WindowElement {
 	template<>
 	inline void DrawComponent<TagComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<TagComponent>()) return;
-		Layout::ComponentTreenode<TagComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<TagComponent>();
+		auto& component = entity.GetComponent<TagComponent>();
+		Layout::ComponentTreenode<TagComponent>(entity, name, [&]() {
 			
 			Layout::Text("Tag");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 			Input::InputField(component.tag);
 			Layout::NextLine(10);
-		}, [&entity]() {
-
+		}, [&component]() {
+			Layout::MenuItem("Reset", [&component]() {
+				component.tag = "New entity";
+				});
 		});	
 	}
 
 	template<>
 	inline void DrawComponent<TransformComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<TransformComponent>()) return;
-		Layout::ComponentTreenode<TransformComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<TransformComponent>();
+		auto& component = entity.GetComponent<TransformComponent>();
+		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
 			glm::vec3 rot { 
 				glm::degrees(component.Rotation.x), 
@@ -52,8 +54,12 @@ namespace WindowElement {
 
 			component.Rotation = { glm::radians(rot.x), glm::radians(rot.z), glm::radians(rot.y) };
 
-		}, [&entity]() {
-
+		}, [&]() {
+			Layout::MenuItem("Reset", [&]() {
+				component.Translation = { 0, 0, 0 };
+				component.Rotation = { 0, 0, 0 };
+				component.Scale = { 1, 1, 1 };
+			});
 		});
 	}
 	template<>
@@ -84,7 +90,7 @@ namespace WindowElement {
 			if (Input::Slider("FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
-			}, [&entity]() {
+			}, [&]() {
 			});
 	}
 	template<>
@@ -171,16 +177,24 @@ namespace WindowElement {
 	template<>
 	inline void DrawComponent<ScriptComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<ScriptComponent>()) return;
-		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<ScriptComponent>();
+		auto& component = entity.GetComponent<ScriptComponent>();
+		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
 			Layout::Text("Script");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::InputField(component.filePath);
+			Input::InputField(component.moduleName);
 			Layout::NextLine(10);
 
-			}, [&entity]() {
+			if (Scripting::ScriptCommand::ModuleExists(component.moduleName)) {
+				Layout::Text("This module exists, ffs");
+			}
+
+			}, [&]() {
+				Layout::MenuItem("Reset", [&]() {
+					component.moduleName = "Hazard_NULL";
+					Application::GetModule<Scripting::ScriptEngine>().ReloadAssembly();
+					});
 				Layout::MenuItem("Reload C# assembly", []() {
 					Application::GetModule<Scripting::ScriptEngine>().ReloadAssembly();
 					});

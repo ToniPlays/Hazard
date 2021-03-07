@@ -26,6 +26,7 @@ namespace Hazard::ECS {
 
 		template<typename T>
 		void RemoveComponent() {
+			scene->OnComponentRemoved<T>(*this, GetComponent<T>());
 			scene->registry.remove<T>(handle);
 		}
 		template<>

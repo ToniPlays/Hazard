@@ -21,6 +21,6 @@ namespace Hazard::ECS {
 		}
 	};
 	struct ScriptComponent {
-		std::string filePath;
+		std::string moduleName = "Test";
 	};
 }

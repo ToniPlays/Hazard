@@ -54,37 +54,60 @@ namespace Hazard::ECS {
         }
         return std::tuple(false, Camera());
     }
-
+    //Scene component added and removed
     template<typename T>
     void Scene::OnComponentAdded(Entity& entity, T& component) {
         
     }
+    template<typename T>
+    void Scene::OnComponentRemoved(Entity& entity, T& component)
+    {
+
+    }
+    //CAMERA COMPONENT
     template<>
     void Scene::OnComponentAdded(Entity& entity, CameraComponent& component) {
         component.RecalculateProjection(1920, 1080);
     }
     template<>
+    void Scene::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
+
+    //SPRITE RENDERER COMPONENT
+
+    template<>
     void Scene::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
         component.texture = Rendering::RenderUtils::GetFromTextures(0);
     }
     template<>
-    void Scene::OnComponentAdded(Entity& entity, BatchComponent& component) {
-
-    }
+    void Scene::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
+    //BATCH COMPONENT
     template<>
-    void Scene::OnComponentAdded(Entity& entity, SkyLightComponent& component) {
-
-    }
+    void Scene::OnComponentAdded(Entity& entity, BatchComponent& component) {}
     template<>
-    void Scene::OnComponentAdded(Entity& entity, DirectionalLightComponent& component) {
-
-    }
+    void Scene::OnComponentRemoved(Entity& entity, BatchComponent& component) {}
+    //SKY LIGHT COMPONENT
     template<>
-    void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {
-
-    }
+    void Scene::OnComponentAdded(Entity& entity, SkyLightComponent& component) {}
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, SkyLightComponent& component) {}
+    //DIRECTIONAL LIGHT COMPONENT
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, DirectionalLightComponent& component) {}
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, DirectionalLightComponent& component) {}
+    //POINT LIGHT COMPONENT
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, PointLightComponent& component) {}
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, PointLightComponent& component) {}
+    //SCRIPT COMPONENT
     template<>
     void Scene::OnComponentAdded(Entity& entity, ScriptComponent& component) {
-
+        SceneCommand::OnScriptAttached(entity, component);
+    }
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, ScriptComponent& component)
+    {
+        SceneCommand::OnScriptDetached(entity, component);
     }
 }

@@ -25,6 +25,7 @@
 
 //Hazadrd script engine
 #include "Hazard/Scripting/ScriptEngine.h"
+#include "Hazard/Scripting/ScriptCommand.h"
 
 //Hazard Math classes
 #include "Hazard/Math/Color.h"
