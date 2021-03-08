@@ -12,7 +12,7 @@
 
 namespace Hazard::File {
 
-	std::string File::OpenFileDialog(const char* filters) {
+	std::string File::OpenFileDialog(const std::string& filters) {
 		OPENFILENAMEA ofn;
 
 		CHAR szFile[260] = { 0 };
@@ -21,7 +21,7 @@ namespace Hazard::File {
 		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = filters;
+		ofn.lpstrFilter = filters.c_str();
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
@@ -30,7 +30,7 @@ namespace Hazard::File {
 		}
 		return "";
 	}
-	std::string File::SaveFile(const char* filters) {
+	std::string File::SaveFile(const std::string& filters) {
 
 		OPENFILENAMEA ofn;
 
@@ -40,7 +40,7 @@ namespace Hazard::File {
 		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = filters;
+		ofn.lpstrFilter = filters.c_str();
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 		if (GetSaveFileNameA(&ofn) == TRUE) {
@@ -71,7 +71,7 @@ namespace Hazard::File {
 		return "";
 
 	}
-	std::string File::ReadFile(std::string file) {
+	std::string File::ReadFile(const std::string& file) {
 
 		std::ifstream ifs(file, std::ios::in, std::ios::binary);
 
@@ -87,7 +87,7 @@ namespace Hazard::File {
 		return result;
 	}
 
-	std::string File::GetFileExtension(std::string file) {
+	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of(".") + 1);
 	}
 

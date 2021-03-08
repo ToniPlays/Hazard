@@ -190,7 +190,7 @@ namespace WindowElement {
 			if (exists && moduleName != "Hazard_NULL") Layout::Text(ICON_FK_MINUS_SQUARE " Connected");
 
 			Layout::Table(2, false);
-			Layout::SetColumnWidth(100);
+			Layout::SetColumnWidth(75);
 			Layout::Text(label);
 			Layout::TableNext();
 
@@ -253,31 +253,52 @@ namespace WindowElement {
 	void Input::PublicField(const char* label, Scripting::PublicField& field)
 	{
 		using namespace Scripting;
+
+		std::string id("##");
+		id.append(label);
+
 		switch (field.type)
 		{
 			case VarFieldType::Int:
 			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(label);
+				Layout::TableNext();
+				Layout::MaxWidth();
 				int value = field.GetStoredValue<int>();
-				if (Input::DragInt(label, value)) {
+				if (Input::DragInt(id.c_str(), value)) {
 					field.SetStoredValue(value);
 				}
+				Layout::EndTable();
 				break;
 			}
 			case VarFieldType::Float: 
 			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(label);
+				Layout::TableNext();
+				Layout::MaxWidth();
 				float value = field.GetStoredValue<float>();
-
-				if (Input::DragFloat(label, value)) {
+				if (Input::DragFloat(id.c_str(), value)) {
 					field.SetStoredValue(value);
 				}
+				Layout::EndTable();
 				break;
 			}
 			case VarFieldType::UnsignedInt: 
 			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(label);
+				Layout::TableNext();
+				Layout::MaxWidth();
 				uint32_t value = field.GetStoredValue<uint32_t>();
-				if (Input::DragUInt(label, value)) {
+				if (Input::DragUInt(id.c_str(), value)) {
 					field.SetStoredValue(value);
 				}
+				Layout::EndTable();
 				break;
 			}
 			case VarFieldType::Vec2:
@@ -288,6 +309,7 @@ namespace WindowElement {
 						field.SetStoredValue(value);
 					}
 					});
+				Layout::NextLine(1);
 				break;
 			}
 			case VarFieldType::Vec3:
@@ -298,6 +320,7 @@ namespace WindowElement {
 						field.SetStoredValue(value);
 					}
 				});
+				Layout::NextLine(1);
 				break;
 			}
 			case VarFieldType::Vec4:
@@ -310,7 +333,7 @@ namespace WindowElement {
 			{
 				std::string value = field.GetStoredValue<std::string>();
 				Layout::Text(label);
-				Layout::SameLine(150);
+				Layout::SameLine(75);
 				Layout::MaxWidth();
 
 				if (Input::InputField(value)) {
