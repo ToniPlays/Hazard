@@ -7,6 +7,7 @@
 namespace Hazard::Scripting {
 
 	ScriptEngine* ScriptCommand::scriptEngine;
+	void(*ScriptCommand::debugCallback)(Severity, std::string);
 
 	void ScriptCommand::Init()
 	{
@@ -50,6 +51,7 @@ namespace Hazard::Scripting {
 			}
 		}
 	}
+
 	void ScriptCommand::InitAllEntities()
 	{
 		using namespace ECS;
@@ -63,5 +65,9 @@ namespace Hazard::Scripting {
 				InitScripEntity(entity, entity.GetComponent<ScriptComponent>());
 			}
 		});
+	}
+	void ScriptCommand::SendDebugMessage(Severity severity, std::string message)
+	{
+		debugCallback(severity, message);
 	}
 }

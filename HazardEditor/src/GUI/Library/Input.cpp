@@ -320,4 +320,37 @@ namespace WindowElement {
 			}
 		}
 	}
+	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify)
+	{
+		if (modify) {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(onColor));
+			if (Button(onLabel)) {
+				modify = false;
+			}
+		}
+		else {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(offColor));
+			if (Button(offLabel)) {
+				modify = true;
+			}
+		}
+		ImGui::PopStyleColor();
+	}
+	void Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, Style::Style::ColorAsImVec4(textColor));
+		if (modify) {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(onColor));
+			if (Button(label)) {
+				modify = false;
+			}
+		}
+		else {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(offColor));
+			if (Button(label)) {
+				modify = true;
+			}
+		}
+		ImGui::PopStyleColor(2);
+	}
 }

@@ -206,14 +206,13 @@ namespace WindowElement {
 					}
 				}
 			}
-
-			}, [&]() {
-				Layout::MenuItem("Reset", [&]() {
-					component.moduleName = "Hazard_NULL";
-					});
-				Layout::MenuItem("Reload C# assembly", []() {
-					Application::GetModule<Scripting::ScriptEngine>().ReloadRuntimeAssembly();
-					});
-			});
+		}, [&]() {
+			Layout::MenuItem("Reset", [&]() {
+				component.moduleName = "Hazard_NULL";
+				});
+			Layout::MenuItem("Reload C# assembly", []() {
+				Application::GetModule<Scripting::ScriptEngine>().ReloadRuntimeAssembly();
+				});
+		});
 	}
 }

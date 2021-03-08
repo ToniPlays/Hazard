@@ -58,11 +58,12 @@ namespace WindowLayout {
 				ImGui::OpenPopup("ComponentSettings");
 			}
 			if (ImGui::BeginPopup("ComponentSettings")) {
+				propCall();
+				Layout::Separator();
 				Layout::MenuItem("Remove component", [&removed]() {
 					removed = true;
 				});
 
-				propCall();
 				ImGui::EndPopup();
 			}
 			if (open) {
@@ -96,6 +97,7 @@ namespace WindowLayout {
 
 		static void Separator() { ImGui::Separator(); }
 		static void Text(const char* text);
+		static void TextColored(const char* text, Color color);
 		static void NextLine(float height = 15.0f);
 		static void ItemWidth(float width);
 		static void PushWidths(uint16_t cols);

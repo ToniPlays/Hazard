@@ -6,6 +6,16 @@
 #include "ScriptEngine.h"
 
 namespace Hazard::Scripting {
+
+	enum class Severity {
+		Debug,
+		Trace,
+		Info,
+		Warning,
+		Error,
+		Critical
+	};
+
 	class ScriptCommand {
 	public:
 		static void Init();
@@ -16,9 +26,14 @@ namespace Hazard::Scripting {
 
 		static EntityInstanceData& GetInstanceData(uint32_t entity);
 		static void DoStep();
-
+		static void SetDebugCallback(void(*fn)(Severity, std::string)) { debugCallback = fn; }
 		static void InitAllEntities();
+		static void SendDebugMessage(Severity severity, std::string message);
 	private:
+
+
 		static ScriptEngine* scriptEngine;
+
+		static void(*debugCallback)(Severity, std::string);
 	};
 }

@@ -53,4 +53,20 @@ namespace Hazard::Scripting {
 		default:						return 0;
 		}
 	}
+	std::string ScriptUtils::MonoStringToString(MonoString* string)
+	{
+		char* ptr = mono_string_to_utf8(string);
+		std::string result(ptr);
+		mono_free(ptr);
+		return result;
+	}
+	char* ScriptUtils::MonoObjectToChar(MonoObject* object)
+	{
+		if (object == nullptr)
+			return (char*)'Null';
+		else {
+			MonoString* string = mono_object_to_string(object, nullptr);
+			return _strdup(MonoStringToString(string).c_str());
+		}
+	}
 }

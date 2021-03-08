@@ -2,6 +2,7 @@
 
 #include <hzreditor.h>
 #include "Layout.h"
+#include "Style.h"
 
 #include "imgui_internal.h"
 
@@ -29,6 +30,10 @@ namespace WindowLayout {
     void Layout::Text(const char* text)
     {
         ImGui::Text(text);
+    }
+    void Layout::TextColored(const char* text, Color color)
+    {
+        ImGui::TextColored(Style::Style::ColorAsImVec4(color), text);
     }
     void Layout::NextLine(float height)
     {

@@ -5,6 +5,7 @@
 #include "spdlog/spdlog.h"
 
 namespace Hazard::Logging {
+
 	class Logger : public Module::Module {
 	public:
 		Logger();

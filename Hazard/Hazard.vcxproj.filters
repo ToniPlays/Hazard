@@ -258,6 +258,8 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptUtils.h" />
     <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h" />
     <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h" />
+    <ClInclude Include="src\Hazard\Scripting\Script\Debug\DebugBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Script\Bindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -350,5 +352,6 @@
     <ClCompile Include="src\Hazard\Scripting\ScriptUtils.cpp" />
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp" />
     <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\Script\Debug\DebugBindings.cpp" />
   </ItemGroup>
 </Project>

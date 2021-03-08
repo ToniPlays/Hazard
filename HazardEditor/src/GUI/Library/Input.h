@@ -26,5 +26,7 @@ namespace WindowElement {
 		static bool DragFloat(const char* label, float& value);
 
 		static void PublicField(const char* label, Scripting::PublicField& field);
+		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
+		static void ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify);
 	};
 }

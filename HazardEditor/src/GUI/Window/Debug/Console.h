@@ -2,7 +2,7 @@
 #include "Hazard.h"
 #include "GUI/EditorWindow.h"
 
-using namespace Hazard::Rendering;
+using namespace Hazard::Scripting;
 
 namespace WindowElement {
 	class Console : public EditorWindow {
@@ -12,5 +12,23 @@ namespace WindowElement {
 
 		void Init() override;
 		void OnWindowRender() override;
+
+		void Print(Severity severity, std::string message);
+	private:
+		void ClearLog() { messages.clear(); };
+		bool LogEnabled(Severity severity);
+
+	private:
+
+		bool scrollLockEnable = true;
+
+		bool infoEnable = true;
+		bool debugEnable = true;
+		bool warningEnable = true;
+		bool errorEnable = true;
+		bool traceEnable = true;
+
+		std::vector<std::pair<Severity, std::string>> messages;
+
 	};
 }
