@@ -23,7 +23,8 @@ namespace WindowElement {
 	}
 	void EngineAssets::OnWindowRender()
 	{
-		Layout::Treenode("Loaded textures", Style::Style::GetTreeNodeDefaultFlags(), []() {
+		using namespace Appereance;
+		Layout::Treenode("Loaded textures", Style::GetTreeNodeDefaultFlags(), []() {
 			auto textures = Hazard::Rendering::RenderUtils::GetTextures();
 			Layout::Table(2, false);
 

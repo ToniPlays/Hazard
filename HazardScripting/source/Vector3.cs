@@ -19,5 +19,6 @@ namespace Hazard
         }
 
         public static Vector3 zero = new Vector3(0, 0, 0);
+        public static Vector3 one = new Vector3(1, 1, 1);
     }
 }

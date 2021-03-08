@@ -21,9 +21,7 @@ namespace WindowElement {
 	}
 	void Hierarchy::Init()
 	{
-		bool found = false;
-		handler = &Application::GetModule<SceneHandler>(found);
-		SetActive(found);
+
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{
@@ -33,8 +31,8 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
-		Scene& scene = handler->GetCurrentScene();
-		Layout::Treenode(scene.GetName().c_str(), Style::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
+		Scene& scene = ECS::SceneCommand::GetCurrentScene();
+		Layout::Treenode(scene.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
 			scene.GetSceneRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, &scene };
 				DrawEntity(entity);
@@ -62,7 +60,6 @@ namespace WindowElement {
 	void Hierarchy::DrawEntity(Entity entity) {
 		ImGuiTreeNodeFlags flags = ((selectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow |
 			ImGuiTreeNodeFlags_SpanAvailWidth;
-
 
 		auto& tag = entity.GetComponent<TagComponent>();
 		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {});

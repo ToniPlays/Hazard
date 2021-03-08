@@ -15,6 +15,8 @@ namespace Hazard::ECS {
 		static void OnScriptAttached(Entity& entity, ScriptComponent& script);
 		static void OnScriptDetached(Entity& entity, ScriptComponent& script);
 
+		static Scene& GetCurrentScene();
+
 	private:
 		static Rendering::RenderEngine RenderEngine;
 	};

@@ -51,6 +51,8 @@ namespace Hazard::ECS {
 
 		bool IsVisible() { return visible; }
 
+		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
+
 	public:
 		operator bool() const { return handle != entt::null; }
 		operator entt::entity() const { return handle; }

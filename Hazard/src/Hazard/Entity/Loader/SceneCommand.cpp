@@ -1,9 +1,10 @@
 #pragma once
 
 #include <hzrpch.h>
+#include "SceneCommand.h"
 #include "Hazard/Core/Application.h"
 #include "../Component.h"
-#include "SceneCommand.h"
+#include "SceneHandler.h"
 
 namespace Hazard::ECS {
 
@@ -22,6 +23,11 @@ namespace Hazard::ECS {
 	void SceneCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
 		Scripting::ScriptCommand::RemoveScriptableEntity(entity, script);
+	}
+
+	Scene& SceneCommand::GetCurrentScene()
+	{
+		return Application::GetModule<SceneHandler>().GetCurrentScene();
 	}
 
 	template<typename C, typename T>

@@ -17,7 +17,7 @@ namespace WindowElement {
 		static bool ScriptField(const char* label, std::string& moduleName, bool exists);
 
 		static void Checkbox(const char* label, bool& value);
-		static void ColorPicker(const char* label, Hazard::Color& color);
+		static void ColorPicker(const char* label, Hazard::Color& color, bool& open);
 		static bool TextureSlot(const char* label, uint32_t& index, uint32_t min = 0, uint32_t max = 10);
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
 
@@ -27,6 +27,7 @@ namespace WindowElement {
 
 		static void PublicField(const char* label, Scripting::PublicField& field);
 		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
-		static void ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify);
+		static bool ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 
+			bool& modify, ImVec2 size = {0, 0});
 	};
 }

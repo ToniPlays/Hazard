@@ -75,7 +75,7 @@ namespace WindowElement {
 		ImGui_ImplOpenGL3_Init("#version 410");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 
-		Style::Style::Init();
+		Appereance::Style::Init();
 
 		PushRenderable<MenuBar>();
 		PushRenderable<Toobar>();

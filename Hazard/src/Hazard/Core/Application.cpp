@@ -5,8 +5,6 @@
 #include "Hazard/Rendering/RenderContext.h"
 #include "HazardLoop.h"
 
-//TODO: More application accessible methods
-
 namespace Hazard {
 
 	void Application::SetTitle(std::string title)

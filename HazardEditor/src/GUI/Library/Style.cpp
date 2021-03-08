@@ -2,7 +2,7 @@
 #include <hzreditor.h>
 #include "Style.h"
 
-namespace Style {
+namespace Appereance {
 
 	void Style::Init()
 	{
@@ -22,20 +22,20 @@ namespace Style {
 
 
 		//Window 
-		SetColor(ImGuiCol_WindowBg, "#181818");
+		SetColor(ImGuiCol_WindowBg, GetStyleColor(ColorType::Background));
 		SetColor(ImGuiCol_DockingPreview, "#202020");
 		SetColor(ImGuiCol_MenuBarBg, "#141414");
-		SetColor(ImGuiCol_NavHighlight, "#53B305");
+		SetColor(ImGuiCol_NavHighlight, GetStyleColor(ColorType::Primary));
 
 		//Separators
 		SetColor(ImGuiCol_Separator, "#262626");
 		SetColor(ImGuiCol_SeparatorHovered, "#212121");
-		SetColor(ImGuiCol_SeparatorActive, "#53B305");
+		SetColor(ImGuiCol_SeparatorActive, GetStyleColor(ColorType::Primary));
 
 		//Headers
 		SetColor(ImGuiCol_TitleBg, "#161616");
-		SetColor(ImGuiCol_TitleBgActive, "#242424");
-		SetColor(ImGuiCol_Header, "#242424");
+		SetColor(ImGuiCol_TitleBgActive, GetStyleColor(ColorType::Secondary));
+		SetColor(ImGuiCol_Header, GetStyleColor(ColorType::Secondary));
 		SetColor(ImGuiCol_HeaderHovered, "#202020");
 		SetColor(ImGuiCol_HeaderActive, "#2E6303");
 
@@ -43,20 +43,20 @@ namespace Style {
 		SetColor(ImGuiCol_Tab, "#262626");
 		SetColor(ImGuiCol_TabUnfocusedActive, "#262626");
 		SetColor(ImGuiCol_TabActive, "#202020");
-		SetColor(ImGuiCol_TabUnfocused, "#242424");
+		SetColor(ImGuiCol_TabUnfocused, GetStyleColor(ColorType::Secondary));
 		SetColor(ImGuiCol_TabHovered, "#3E6303");
 
 
 		//Frames
-		SetColor(ImGuiCol_FrameBg, "#242424");
+		SetColor(ImGuiCol_FrameBg, GetStyleColor(ColorType::Secondary));
 		SetColor(ImGuiCol_FrameBgHovered, "#222222");
 		SetColor(ImGuiCol_FrameBgActive, "#202020");
-		SetColor(ImGuiCol_ResizeGrip, "#262626");
+		SetColor(ImGuiCol_ResizeGrip, GetStyleColor(ColorType::Secondary));
 		SetColor(ImGuiCol_ResizeGripHovered, "#2E6303");
-		SetColor(ImGuiCol_ResizeGripActive, "#53B305");
+		SetColor(ImGuiCol_ResizeGripActive, GetStyleColor(ColorType::Primary));
 
 		//Text
-		SetColor(ImGuiCol_Text, "#E9E9E9");
+		SetColor(ImGuiCol_Text, GetStyleColor(ColorType::Text));
 		SetColor(ImGuiCol_TextDisabled, "#A9A9A9");
 
 		//Lines
@@ -64,9 +64,9 @@ namespace Style {
 		SetColor(ImGuiCol_Border, "#131313");
 
 		//Inputs
-		SetColor(ImGuiCol_CheckMark, "#53B305");
+		SetColor(ImGuiCol_CheckMark, GetStyleColor(ColorType::Primary));
 		SetColor(ImGuiCol_SliderGrab, "#353535");
-		SetColor(ImGuiCol_SliderGrabActive, "#53B305");
+		SetColor(ImGuiCol_SliderGrabActive, GetStyleColor(ColorType::Primary));
 
 		SetColor(ImGuiCol_Button, "#262626");
 		SetColor(ImGuiCol_ButtonHovered, "#222222");
@@ -78,15 +78,15 @@ namespace Style {
 	}
 	void Style::SetColor(ImGuiCol_ color, Color value)
 	{
-		SetColor(color, Color::FromHex(value));
+		SetColor(color, ColorAsImVec4(value));
 		
 	}
-	void Style::SetColor(ImGuiCol_ color, const char* value)
+	void Style::SetColor(ImGuiCol_ color, ImVec4 value)
 	{
 		ImGuiStyle* style = &GetStyle();
 		ImVec4* colors = style->Colors;
 
-		colors[color] = ColorAsImVec4(value);
+		colors[color] = value;
 	}
 	void Style::SetButtonColors(const char* button, const char* hovered, const char* active)
 	{
@@ -114,5 +114,22 @@ namespace Style {
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
 		return flags;
+	}
+	Color Style::GetStyleColor(ColorType type)
+	{
+		switch (type)
+		{
+		case ColorType::Primary:		return Color("#53B305");
+		case ColorType::Secondary:		return Color("#242424");
+		case ColorType::Info:			return Color("#1AE61A");
+		case ColorType::Debug:			return Color("#0080ff");
+		case ColorType::Warning:		return Color("#FFE600");
+		case ColorType::Error:			return Color("#FF331A");
+		case ColorType::Critical:		return Color("#FF0000");
+		case ColorType::Trace:			return Color("#FFFFFF");
+		case ColorType::Background:		return Color("#181818");
+		case ColorType::Text:			return Color("#E9E9E9");
+		}
+		return Color();
 	}
 }

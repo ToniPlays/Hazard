@@ -77,6 +77,9 @@ namespace WindowElement {
 				Layout::MenuItem("Performance", [&]() {
 					Application::GetModule<EditorView>().SetLayerActive<Performance>(true);
 					});
+				Layout::MenuItem("Console", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Console>(true);
+					});
 			});
 		});
 		Layout::Menu("Help", []() {

@@ -6,12 +6,26 @@
 
 using namespace Hazard;
 
-namespace Style {
+namespace Appereance {
+
+	enum ColorType {
+		Primary,
+		Secondary,
+		Info,
+		Debug,
+		Warning,
+		Error,
+		Critical,
+		Trace,
+		Background,
+		Text
+	};
+
 	class Style {
 	public:
 		static void Init();
 		static void SetColor(ImGuiCol_ color, Color value);
-		static void SetColor(ImGuiCol_ color, const char* value);
+		static void SetColor(ImGuiCol_ color, ImVec4 value);
 		static void SetButtonColors(const char* button, const char* hovered, const char* active);
 		static void SetButtonColors(Color button, Color hovered, Color active);
 		static void SelectFont(uint8_t index);
@@ -20,5 +34,7 @@ namespace Style {
 
 		static ImGuiTreeNodeFlags GetTreeNodeDefaultFlags();
 		static ImGuiStyle& GetStyle() { return ImGui::GetStyle(); }
+
+		static Color GetStyleColor(ColorType type);
 	};
 }

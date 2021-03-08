@@ -8,6 +8,7 @@
 #include "imgui_internal.h"
 
 using namespace WindowLayout;
+using namespace Appereance;
 
 namespace WindowElement {
 
@@ -31,7 +32,7 @@ namespace WindowElement {
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		bool modified = false;
-		Style::Style::SelectFont(buttonFont);
+		Style::SelectFont(buttonFont);
 		
 		if (Button(label, size)) {
 			value = resetValue;
@@ -39,7 +40,7 @@ namespace WindowElement {
 		}
 
 		ImGui::PopFont();
-		Style::Style::SelectFont(dragFont);
+		Style::SelectFont(dragFont);
 
 		std::stringstream ss;
 		ss << "##" << label;
@@ -63,7 +64,7 @@ namespace WindowElement {
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		Style::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
 		if (Input::ResettableDragButton("X", value, resetValue, buttonSize, 1, 0)) modified = true;
 		ImGui::PopStyleColor(3);
 		
@@ -87,7 +88,7 @@ namespace WindowElement {
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		Style::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
 		ImGui::PushFont(boldFont);
 
 		if (ImGui::Button("X", buttonSize)) {
@@ -101,7 +102,7 @@ namespace WindowElement {
 
 
 		Layout::SameLine();
-		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
+		Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
 		ImGui::PushFont(boldFont);
 
 		if (ImGui::Button("Y", buttonSize)) {
@@ -134,7 +135,7 @@ namespace WindowElement {
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 		
-		Style::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
 		ImGui::PushFont(boldFont);
 		
 		if (ImGui::Button("X", buttonSize)) {
@@ -148,7 +149,7 @@ namespace WindowElement {
 
 
 		Layout::SameLine();
-		Style::Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
+		Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
 		ImGui::PushFont(boldFont);
 
 		if (ImGui::Button("Y", buttonSize)) {
@@ -162,7 +163,7 @@ namespace WindowElement {
 
 
 		Layout::SameLine();
-		Style::Style::SetButtonColors("#1651F3", "#0B41D5", "#0935AE");
+		Style::SetButtonColors("#1651F3", "#0B41D5", "#0935AE");
 		ImGui::PushFont(boldFont);
 
 		if (ImGui::Button("Z", buttonSize)) {
@@ -209,10 +210,9 @@ namespace WindowElement {
 	{
 		ImGui::Checkbox(label, &value);
 	}
-	void Input::ColorPicker(const char* label, Hazard::Color& color)
+	void Input::ColorPicker(const char* label, Hazard::Color& color, bool& open)
 	{
-		static bool open = false;
-		if (ImGui::ColorButton(label, Style::Style::ColorAsImVec4(color))) {
+		if (ImGui::ColorButton(label, Style::ColorAsImVec4(color))) {
 			open = true;
 		}
 		if (open) {
@@ -346,34 +346,38 @@ namespace WindowElement {
 	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify)
 	{
 		if (modify) {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(onColor));
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
 			if (Button(onLabel)) {
 				modify = false;
 			}
 		}
 		else {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(offColor));
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
 			if (Button(offLabel)) {
 				modify = true;
 			}
 		}
 		ImGui::PopStyleColor();
 	}
-	void Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify)
+	bool Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
 	{
-		ImGui::PushStyleColor(ImGuiCol_Text, Style::Style::ColorAsImVec4(textColor));
+		bool changed = false;
+		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
 		if (modify) {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(onColor));
-			if (Button(label)) {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
+			if (Button(label, size)) {
 				modify = false;
+				changed = true;
 			}
 		}
 		else {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::Style::ColorAsImVec4(offColor));
-			if (Button(label)) {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
+			if (Button(label, size)) {
 				modify = true;
+				changed = true;
 			}
 		}
 		ImGui::PopStyleColor(2);
+		return changed;
 	}
 }

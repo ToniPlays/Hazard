@@ -71,7 +71,13 @@ namespace WindowElement {
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 			const char* currentProjectionTypeString = projectionTypeStrings[(int)component.GetProjectionType()];
 
-			if (ImGui::BeginCombo("Projection", currentProjectionTypeString)) {
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text("Projection");
+			Layout::TableNext();
+			Layout::MaxWidth();
+
+			if (ImGui::BeginCombo("##Projection", currentProjectionTypeString)) {
 				for (int i = 0; i < 2; i++) {
 					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
 
@@ -86,10 +92,14 @@ namespace WindowElement {
 				}
 				ImGui::EndCombo();
 			}
-
-			if (Input::Slider("FOV", component.fov, 0.001, 100)) {
+			Layout::TableNext();
+			Layout::Text("Fov");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			if (Input::Slider("##FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
+			Layout::EndTable();
 			}, [&]() {
 			});
 	}
@@ -100,11 +110,14 @@ namespace WindowElement {
 		Layout::ComponentTreenode<SpriteRendererComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<SpriteRendererComponent>();
 
+
 			Layout::Table(2, false);
-			Layout::SetColumnWidth(125);
+			Layout::SetColumnWidth(75);
 			Layout::Text("Tint");
 			Layout::TableNext();
-			Input::ColorPicker("Sprite tint", component.tint);
+
+			bool open = false;
+			Input::ColorPicker("Sprite tint", component.tint, open);
 			Layout::TableNext();
 			Layout::Text("Sprite");
 			Layout::TableNext();
@@ -129,11 +142,14 @@ namespace WindowElement {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<BatchComponent>();
 
-			Layout::Text("Tag");
-			Layout::SameLine(75);
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text("Size");
+			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::TextureSlot("Size", component.size, 0, 1000);
-			Layout::NextLine(10);
+			Input::TextureSlot("##Size", component.size, 0, 1000);
+			Layout::EndTable();
+
 			}, [&entity]() {
 				
 			});
@@ -146,8 +162,22 @@ namespace WindowElement {
 
 		Layout::ComponentTreenode<SkyLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<SkyLightComponent>();
-			Input::Slider("Intensity", component.intensity);
-			Input::ColorPicker("Tint", component.tint);
+
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+
+			Layout::Text("Intensity");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			Input::Slider("##Intensity", component.intensity);
+
+			Layout::TableNext();
+			Layout::Text("Tint");
+			Layout::TableNext();
+			static bool open = false;
+			Input::ColorPicker("Sky Light tint", component.tint, open);
+			Layout::EndTable();
+
 		}, [&entity]() {
 		});
 	}
@@ -156,8 +186,22 @@ namespace WindowElement {
 		if (!entity.HasComponent<DirectionalLightComponent>()) return;
 		Layout::ComponentTreenode<DirectionalLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<DirectionalLightComponent>();
-			Input::Slider("Intensity", component.intensity);
-			Input::ColorPicker("Tint", component.tint);
+			
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+
+			Layout::Text("Intensity");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			Input::Slider("##Intensity", component.intensity);
+
+			Layout::TableNext();
+			Layout::Text("Tint");
+			Layout::TableNext();
+			static bool open = false;
+			Input::ColorPicker("Directional Light tint", component.tint, open);
+			Layout::EndTable();
+
 			}, [&entity]() {
 			});
 	}
@@ -167,10 +211,28 @@ namespace WindowElement {
 		Layout::ComponentTreenode<PointLightComponent>(entity, name, [&entity]() {
 			auto& component = entity.GetComponent<PointLightComponent>();
 
-			Input::Slider("Intensity", component.intensity, 0, 10000);
-			Input::ColorPicker("Tint", component.tint);
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
 
-			Input::Vec1("Radius", component.radius, 10, 110);
+			Layout::Text("Intensity");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			Input::Slider("##Intensity", component.intensity);
+
+			Layout::TableNext();
+			Layout::Text("Tint");
+			Layout::TableNext();
+			static bool open = false;
+			Input::ColorPicker("Point Light tint", component.tint, open);
+			Layout::TableNext();
+
+			Layout::Text("Radius");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			Input::Slider("##Radius", component.radius);
+
+			Layout::EndTable();
+			
 			}, [&entity]() {
 			});
 	}

@@ -40,26 +40,27 @@ namespace WindowElement {
 	}
 	void Console::OnWindowRender()
 	{
-		ImGuiStyle& style = Style::Style::GetStyle();
+		using namespace Appereance;
+		ImGuiStyle& style = Style::GetStyle();
 		if (Input::Button("Clear")) {
 			ClearLog();
 		}
 		Layout::SameLine(0, 5);
-		Input::DynamicToggleButton(ICON_FK_TIMES, ICON_FK_CHECK, Color::FromHex("#B31A1A"), Color::FromHex("#338033"), scrollLockEnable);
+		Input::DynamicToggleButton(ICON_FK_TIMES, ICON_FK_CHECK, Style::GetStyleColor(ColorType::Background), Style::GetStyleColor(ColorType::Primary), scrollLockEnable);
 
-		Color enableColor = Color::FromHex("#181818");
+		Color enableColor = Style::GetStyleColor(ColorType::Background);
 		Color disableColor = Color::FromHex("#803333");
 
 		Layout::SameLine(0, ImGui::GetContentRegionAvailWidth() - 200);
-		Input::ToggleButtonColorChange(ICON_FK_PAPERCLIP,				disableColor, enableColor, Color::FromHex("#FFFFFF"), traceEnable);
+		Input::ToggleButtonColorChange(ICON_FK_PAPERCLIP,				disableColor, enableColor, Style::GetStyleColor(ColorType::Trace), traceEnable);
 		Layout::SameLine(0, 5);
-		Input::ToggleButtonColorChange(ICON_FK_INFO_CIRCLE,				disableColor, enableColor, Color::FromHex("#1AE61A"), infoEnable);
+		Input::ToggleButtonColorChange(ICON_FK_INFO_CIRCLE,				disableColor, enableColor, Style::GetStyleColor(ColorType::Info), infoEnable);
 		Layout::SameLine(0, 5);
-		Input::ToggleButtonColorChange(ICON_FK_BUG,						disableColor, enableColor, Color::FromHex("#0080ff"), debugEnable);
+		Input::ToggleButtonColorChange(ICON_FK_BUG,						disableColor, enableColor, Style::GetStyleColor(ColorType::Debug), debugEnable);
 		Layout::SameLine(0, 5);
-		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_TRIANGLE,	disableColor, enableColor, Color::FromHex("#FFE600"), warningEnable);
+		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_TRIANGLE,	disableColor, enableColor, Style::GetStyleColor(ColorType::Warning), warningEnable);
 		Layout::SameLine(0, 5);
-		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_CIRCLE,		disableColor, enableColor, Color::FromHex("#FF331A"), errorEnable);
+		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_CIRCLE,		disableColor, enableColor, Style::GetStyleColor(ColorType::Error), errorEnable);
 
 		ImGui::BeginChild(ICON_FK_LIST" Console", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
@@ -70,42 +71,42 @@ namespace WindowElement {
 			{
 				case Severity::Trace:
 				{
-					Layout::TextColored(ICON_FK_PAPERCLIP " [Trace]: ", Color::FromHex("#FFFFFF"));
+					Layout::TextColored(ICON_FK_PAPERCLIP " [Trace]: ", Style::GetStyleColor(ColorType::Trace));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;
 				}
 				case Severity::Info:
 				{
-					Layout::TextColored(ICON_FK_INFO_CIRCLE " [Info]: ", Color::FromHex("#1AE61A"));
+					Layout::TextColored(ICON_FK_INFO_CIRCLE " [Info]: ", Style::GetStyleColor(ColorType::Info));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;
 				}
 				case Severity::Debug:
 				{
-					Layout::TextColored(ICON_FK_BUG " [Log]: ", Color::FromHex("#0080ff"));
+					Layout::TextColored(ICON_FK_BUG " [Log]: ", Style::GetStyleColor(ColorType::Debug));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;
 				}
 				case Severity::Warning: 
 				{
-					Layout::TextColored(ICON_FK_EXCLAMATION_TRIANGLE " [Warning]: ", Color::FromHex("#FFE600"));
+					Layout::TextColored(ICON_FK_EXCLAMATION_TRIANGLE " [Warning]: ", Style::GetStyleColor(ColorType::Warning));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;
 				}
 				case Severity::Error:
 				{
-					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Error]: ", Color::FromHex("#FF331A"));
+					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Error]: ", Style::GetStyleColor(ColorType::Error));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;
 				}
 				case Severity::Critical:
 				{
-					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Critical]: ", Color::FromHex("#FF0000"));
+					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Critical]: ", Style::GetStyleColor(ColorType::Trace));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;

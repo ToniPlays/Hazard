@@ -33,7 +33,7 @@ namespace WindowLayout {
     }
     void Layout::TextColored(const char* text, Color color)
     {
-        ImGui::TextColored(Style::Style::ColorAsImVec4(color), text);
+        ImGui::TextColored(Appereance::Style::ColorAsImVec4(color), text);
     }
     void Layout::NextLine(float height)
     {
