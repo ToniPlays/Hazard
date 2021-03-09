@@ -19,6 +19,10 @@ namespace Hazard::ECS {
     {
         auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         for (auto entity : sprites) {
+
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+
             auto& [sprite, transform] = registry.get<SpriteRendererComponent, TransformComponent>(entity);
             SceneCommand::Render(sprite, transform);
         }

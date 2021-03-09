@@ -5,8 +5,10 @@
 
 namespace Hazard::Rendering {
 
+	RenderEngine RenderCommand::engine;
+
 	void RenderCommand::Init()
 	{
-
+		engine = Application::GetModule<RenderEngine>();
 	}
 }

@@ -6,6 +6,7 @@
 
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
+#include "GUI/Library/Input.h"
 
 using namespace WindowLayout;
 
@@ -31,6 +32,14 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
+		std::string findValue;
+		Layout::SameLine(0, 5);
+		Layout::Text("Find");
+		Layout::SameLine(45);
+		Layout::MaxWidth();
+		Input::InputField(findValue);
+
+
 		Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		Layout::Treenode(scene.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
 			scene.GetSceneRegistry().each([&](auto entityID) {
@@ -84,7 +93,7 @@ namespace WindowElement {
 			}
 		}
 		if (opened) {
-			Layout::Text(entity.IsValid() ? "Visible" : "Not visible");
+			Layout::Text(entity.IsVisible() ? "Visible" : "Not visible");
 		}
 	}
 }

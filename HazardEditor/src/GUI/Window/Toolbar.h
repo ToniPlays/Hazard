@@ -3,12 +3,15 @@
 #include "GUI/RenderableElement.h"
 
 namespace WindowElement {
-	class Toobar : public RenderableElement {
+	class Toolbar : public RenderableElement {
 	public:
-		Toobar();
-		~Toobar();
+		Toolbar();
+		~Toolbar();
 
 		void Init() override;
 		void OnRender() override;
+		bool OnEvent(Event& e) override;
+		bool OnKey(KeyPressedEvent& e);
+	private:
 	};
 }

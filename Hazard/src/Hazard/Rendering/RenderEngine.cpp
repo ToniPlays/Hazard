@@ -3,7 +3,7 @@
 #include "RenderEngine.h"
 #include "Hazard/RenderContext/RenderUtils.h"
 #include "2D/QuadData.h"
-
+#include "RenderCommand.h"
 
 namespace Hazard::Rendering {
 
@@ -31,6 +31,8 @@ namespace Hazard::Rendering {
 
 		renderer2D = new Renderer2D(context);
 		renderer2D->Init(35000);
+
+		RenderCommand::Init();
 	}
 	void RenderEngine::Close()
 	{
@@ -40,16 +42,16 @@ namespace Hazard::Rendering {
 	{
 		auto [found, cam] = scene.GetSceneCamera();
 		if (!found) return;
-		SceneRender(scene, cam.viewProjection);
+		SceneRender(scene, cam);
 	}
-	void RenderEngine::SceneRender(ECS::Scene& scene, glm::mat4 viewProjection)
+	void RenderEngine::SceneRender(ECS::Scene& scene, ECS::Camera camera)
 	{
 		if (renderTarget == nullptr) 
 			return;
 
 		renderTarget->Bind();
-		context->GetWindow().GetContext()->ClearFrame("#222222");
-		renderer2D->BeginScene(viewProjection);
+		context->GetWindow().GetContext()->ClearFrame(camera.component.bgColor);
+		renderer2D->BeginScene(camera.viewProjection);
 		renderer2D->BeginBatch();
 		scene.Render();
 

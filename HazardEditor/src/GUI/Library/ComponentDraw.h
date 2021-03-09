@@ -99,6 +99,11 @@ namespace WindowElement {
 			if (Input::Slider("##FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
+			Layout::TableNext();
+			Layout::Text("Color");
+			Layout::TableNext();
+			static bool open = false;
+			Input::ColorPicker("Background color", component.bgColor, open);
 			Layout::EndTable();
 			}, [&]() {
 			});
@@ -115,9 +120,9 @@ namespace WindowElement {
 			Layout::SetColumnWidth(75);
 			Layout::Text("Tint");
 			Layout::TableNext();
-
 			bool open = false;
 			Input::ColorPicker("Sprite tint", component.tint, open);
+
 			Layout::TableNext();
 			Layout::Text("Sprite");
 			Layout::TableNext();

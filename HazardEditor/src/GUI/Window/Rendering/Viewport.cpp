@@ -27,9 +27,15 @@ namespace WindowElement {
 	}
 	void Viewport::OnWindowRender()
 	{
-		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
+		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		renderer->SetRenderTarget(renderTexture);
-		renderer->SceneRender(scene, editorCamera.GetViewPprojection());
+
+		auto&[found, camera] = scene.GetSceneCamera();
+
+		ECS::Camera cam(camera.component, editorCamera.GetViewPprojection(), editorCamera.GetPosition());
+
+
+		renderer->SceneRender(scene, cam);
 
 		RenderTexture* texture = renderer->GetRenderTarget();
 		if (texture == nullptr) 

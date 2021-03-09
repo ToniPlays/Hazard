@@ -16,9 +16,9 @@ namespace Hazard::ECS
 
 		Projection type = Projection::Perspective;
 		float fov = 10.0f;
+		Color bgColor;
 
 		glm::mat4 projection;
-
 		float width, height;
 
 		//Get and set camera projection type

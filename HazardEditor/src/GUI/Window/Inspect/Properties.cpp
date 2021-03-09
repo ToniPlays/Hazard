@@ -27,8 +27,8 @@ namespace WindowElement {
 			
 		}
 		Layout::SameLine(0, 2);
-		if (ImGui::Button(true ? ICON_FK_EYE : ICON_FK_EYE_SLASH, { 35, 35 })) {
-			HZR_WARN("Active TODO");
+		if (ImGui::Button(selectionContext.IsVisible() ? ICON_FK_EYE : ICON_FK_EYE_SLASH, { 35, 35 })) {
+			selectionContext.SetVisible(!selectionContext.IsVisible());
 		}
 
 		auto tag = selectionContext.GetComponent<TagComponent>().tag;

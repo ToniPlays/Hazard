@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
 
 		void SceneRender(ECS::Scene& scene);
 		//TODO: remove Scene render
-		void SceneRender(ECS::Scene& scene, glm::mat4 projection);
+		void SceneRender(ECS::Scene& scene, ECS::Camera camera);
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
 
 		RenderTexture* GetRenderTarget() { return renderTarget; }
@@ -34,8 +34,8 @@ namespace Hazard::Rendering {
 
 	private:
 		RenderContext* context;
-		RenderTexture* renderTarget = nullptr;
 
+		RenderTexture* renderTarget = nullptr;
 		Renderer2D* renderer2D;
 	};
 }

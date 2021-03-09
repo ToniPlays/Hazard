@@ -91,7 +91,7 @@ namespace WindowElement {
 		PushRenderable<EngineAssets>();
 		PushRenderable<Console>();
 
-		PushRenderable<Toobar>();
+		PushRenderable<Toolbar>();
 	}  
 	void EditorView::Render()
 	{

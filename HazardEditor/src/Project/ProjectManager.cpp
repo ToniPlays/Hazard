@@ -41,7 +41,7 @@ namespace Project {
 	}
 	void ProjectManager::SaveCurrentScene()
 	{
-		ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
+		ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		ECS::Loader::SceneSerializer::SerializeEditor(scene.GetSceneFile().c_str(), scene);
 	}
 }

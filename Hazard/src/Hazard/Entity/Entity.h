@@ -50,7 +50,8 @@ namespace Hazard::ECS {
 			return scene->GetSceneRegistry().valid(handle); 
 		}
 
-		bool IsVisible() { return visible; }
+		bool IsVisible() { return GetComponent<TagComponent>().visible; }
+		void SetVisible(bool visible) { GetComponent<TagComponent>().visible = visible; }
 
 		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
 
@@ -69,7 +70,5 @@ namespace Hazard::ECS {
 	private:
 		entt::entity handle{ entt::null };
 		Scene* scene = nullptr;
-
-		bool visible = true;
 	};
 }

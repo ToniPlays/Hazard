@@ -48,7 +48,7 @@ namespace WindowElement {
 		});
 		Layout::Menu("Assets", []() {
 			Layout::MenuItem("Reload C# assembly", []() {
-				Application::GetModule<Scripting::ScriptEngine>().ReloadRuntimeAssembly();
+				Scripting::ScriptCommand::ReloadRuntimeAssembly();
 				});
 		});
 		Layout::Menu("Window", []() {

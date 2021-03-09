@@ -13,6 +13,7 @@ namespace Hazard::ECS {
 	struct TagComponent
 	{
 		std::string tag;
+		bool visible = true;
 	};
 	//Entity transformation component, non removable
 	struct TransformComponent

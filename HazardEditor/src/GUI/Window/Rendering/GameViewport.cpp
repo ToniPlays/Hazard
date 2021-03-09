@@ -27,13 +27,13 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-		Hazard::ECS::Scene& scene = Application::GetModule<ECS::SceneHandler>().GetCurrentScene();
+		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		renderer->SetRenderTarget(renderTexture);
 
 		auto&[found, cam] = scene.GetSceneCamera();
 		if (!found) return;
 
-		renderer->SceneRender(scene, cam.viewProjection);
+		renderer->SceneRender(scene, cam);
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 

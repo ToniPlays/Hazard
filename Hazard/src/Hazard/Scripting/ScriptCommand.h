@@ -29,6 +29,8 @@ namespace Hazard::Scripting {
 		static void SetDebugCallback(void(*fn)(Severity, std::string)) { debugCallback = fn; }
 		static void InitAllEntities();
 		static void SendDebugMessage(Severity severity, std::string message);
+
+		static void ReloadRuntimeAssembly() { scriptEngine->ReloadRuntimeAssembly(); }
 	private:
 
 

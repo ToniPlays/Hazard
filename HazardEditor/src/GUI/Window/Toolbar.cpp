@@ -14,18 +14,18 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	Toobar::Toobar()
+	Toolbar::Toolbar()
 	{
 
 	}
-	Toobar::~Toobar()
+	Toolbar::~Toolbar()
 	{
 	}
 
-	void Toobar::Init()
+	void Toolbar::Init()
 	{
 	}
-	void Toobar::OnRender()
+	void Toolbar::OnRender()
 	{
 
 		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>().GetGizmo();
@@ -73,16 +73,35 @@ namespace WindowElement {
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
-			Application::GetModule < Scripting::ScriptCommand>().DoStep();
+			Scripting::ScriptCommand::DoStep();
 		}
 
 		Layout::SameLine(0, 5);
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33);
-		if(Input::ButtonColorChange(ICON_FK_SLIDERS, offColor, onColor, Style::GetStyleColor(ColorType::Text), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33 * 2);
+		if(Input::ButtonColorChange(ICON_FK_SLIDERS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
 			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
 		}
 		Layout::SameLine(0, 5);
+		if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
+			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
+		}
 
 		ImGui::End();
+	}
+	bool Toolbar::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Toolbar::OnKey));
+	}
+	bool Toolbar::OnKey(KeyPressedEvent& e)
+	{
+		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
+		bool isShift = Hazard::Input::IsKeyDown(Key::LeftShift);
+
+		if (e.GetKeyCode() == Key::R) {
+			Hazard::Scripting::ScriptCommand::ReloadRuntimeAssembly();
+			return true;
+		}
+		return false;
 	}
 }
