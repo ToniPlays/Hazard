@@ -248,7 +248,7 @@ namespace WindowElement {
 	}
 	bool Input::DragFloat(const char* label, float& value)
 	{
-		return ImGui::DragFloat(label, &value);
+		return ImGui::DragFloat(label, &value, 0.025f);
 	}
 	void Input::PublicField(const char* label, Scripting::PublicField& field)
 	{

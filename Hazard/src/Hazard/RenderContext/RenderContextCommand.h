@@ -8,7 +8,7 @@ namespace Hazard::Rendering {
 		static void Init();
 		static bool IsVsync();
 		static void SetVsync(bool vsync);
-		static void ClearFrame(Color color);
+		static void ClearFrame(glm::vec4 color);
 
 		static RenderContext& GetContext() { return context; };
 

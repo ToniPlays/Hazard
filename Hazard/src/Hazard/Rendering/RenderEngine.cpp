@@ -30,23 +30,15 @@ namespace Hazard::Rendering {
 	{
 		renderer2D->Close();
 	}
-	void RenderEngine::SceneRender(ECS::Scene& scene)
+	void RenderEngine::BeginRendering(Camera camera)
 	{
-		auto [found, cam] = scene.GetSceneCamera();
-		if (!found) return;
-		SceneRender(scene, cam);
-	}
-	void RenderEngine::SceneRender(ECS::Scene& scene, ECS::Camera camera)
-	{
-		if (renderTarget == nullptr) 
-			return;
-
 		renderTarget->Bind();
-		RenderContextCommand::ClearFrame(camera.component.bgColor);
+		RenderContextCommand::ClearFrame(camera.clearColor);
 		renderer2D->BeginScene(camera.viewProjection);
 		renderer2D->BeginBatch();
-		scene.Render();
-
+	}
+	void RenderEngine::EndRendering()
+	{
 		renderer2D->Flush();
 		renderTarget->Unbind();
 	}

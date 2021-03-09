@@ -23,26 +23,17 @@ namespace WindowElement {
 		SetActive(found);
 		renderTexture = RenderUtils::Create<RenderTexture>();
 
-		if (found) renderer->SetRenderTarget(RenderUtils::Create<RenderTexture>());
 	}
 	void Viewport::OnWindowRender()
 	{
 		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
-		renderer->SetRenderTarget(renderTexture);
+		auto&[found, camera, t] = scene.GetSceneCamera();
 
-		auto&[found, camera] = scene.GetSceneCamera();
+		Rendering::RenderCommand::SetRenderTarget(renderTexture);
+		ECS::SceneCommand::RenderScene(editorCamera.GetViewPprojection(), camera.bgColor.ToGlm());
 
-		ECS::Camera cam(camera.component, editorCamera.GetViewPprojection(), editorCamera.GetPosition());
-
-
-		renderer->SceneRender(scene, cam);
-
-		RenderTexture* texture = renderer->GetRenderTarget();
-		if (texture == nullptr) 
-			return;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (size.x != width || size.y != height) {
 			width = size.x;

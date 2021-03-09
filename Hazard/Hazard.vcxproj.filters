@@ -363,5 +363,7 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
     <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Camera.h" />
+    <ClCompile Include="src\Hazard\Rendering\Camera.cpp" />
   </ItemGroup>
 </Project>

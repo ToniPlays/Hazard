@@ -15,8 +15,13 @@ namespace Hazard::ECS {
     {
 
     }
-    void Scene::Render()
+        
+    void Scene::Flush()
     {
+        
+    }
+    void Scene::RenderAll() {
+
         auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         for (auto entity : sprites) {
 
@@ -28,13 +33,13 @@ namespace Hazard::ECS {
         }
         auto group = registry.group<BatchComponent>(entt::get<TransformComponent>);
         for (auto entity : group) {
+
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+
             auto& [batch, transform] = registry.get<BatchComponent, TransformComponent>(entity);
             SceneCommand::Render(batch, transform);
         }
-    }
-    void Scene::Flush()
-    {
-        
     }
     Entity Scene::CreateEntity(const char* name)
     {
@@ -47,7 +52,7 @@ namespace Hazard::ECS {
     {
         registry.destroy(entity);
     }
-    std::tuple<bool, Camera> Scene::GetSceneCamera() {
+    std::tuple<bool, CameraComponent, TransformComponent> Scene::GetSceneCamera() {
 
         auto group = registry.group<CameraComponent>(entt::get<TransformComponent>);
 
@@ -56,10 +61,10 @@ namespace Hazard::ECS {
             Entity e{ entity, this };
             if (!e.IsVisible()) continue;
 
-            auto&[transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
-            return std::tuple(true, Camera(cam, cam.projection * glm::inverse(transform.GetTransformMat4()), transform.Translation));
+            auto&[cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
+            return std::tuple(true, cam, e.GetTransform());
         }
-        return std::tuple(false, Camera());
+        return std::tuple(false, CameraComponent(), TransformComponent());
     }
 #pragma region Component added and removed methods
     //Scene component added and removed

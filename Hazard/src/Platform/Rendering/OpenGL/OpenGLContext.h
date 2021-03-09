@@ -13,7 +13,7 @@ namespace Hazard::Rendering {
 		~OpenGLContext();
 
 		void Init() const override;
-		void ClearFrame(Color clearColor) const override;
+		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
 		void DrawIndexed(VertexArray* array, uint32_t size) const override;
 

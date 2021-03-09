@@ -82,8 +82,6 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::SubmitQuad(Quad quad)
 	{
-		
-
 		if (data.QuadIndexCount >= data.MaxIndices || data.TextureIndex > 8) {
 			Flush();
 			BeginBatch();

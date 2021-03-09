@@ -12,15 +12,16 @@ namespace Hazard::ECS {
 		Scene(std::string file);
 		~Scene();
 
-		void Render();
 		void Flush();
+
+		void RenderAll();
 
 		Entity CreateEntity(const char* name);
 		void DestroyEntity(Entity entity);
 
 		void SetName(std::string name) { this->name = name.c_str(); }
 
-		std::tuple<bool, Camera> GetSceneCamera();
+		std::tuple<bool, CameraComponent, TransformComponent> GetSceneCamera();
 		entt::registry& GetSceneRegistry() { return registry; }
 
 		std::string& GetSceneFile() { return file; }

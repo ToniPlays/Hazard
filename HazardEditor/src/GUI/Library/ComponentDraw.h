@@ -120,7 +120,7 @@ namespace WindowElement {
 			Layout::SetColumnWidth(75);
 			Layout::Text("Tint");
 			Layout::TableNext();
-			bool open = false;
+			static bool open = false;
 			Input::ColorPicker("Sprite tint", component.tint, open);
 
 			Layout::TableNext();

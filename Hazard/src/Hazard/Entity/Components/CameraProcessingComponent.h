@@ -49,18 +49,4 @@ namespace Hazard::ECS
 			}
 		}
 	};
-	//Camera, used for rendering
-	//Represent a point from where to render from
-	struct Camera 
-	{
-		glm::mat4 viewProjection;
-		glm::vec3 position;
-
-		CameraComponent component;
-		Camera() = default;
-
-		Camera(CameraComponent& cam, glm::mat4 viewProjection, glm::vec3 pos) : component(cam), position(pos) {
-			this->viewProjection = viewProjection;
-		}
-	};
 }

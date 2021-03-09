@@ -20,7 +20,7 @@ namespace Hazard::Rendering {
 		virtual ~GraphicsContext() = default;
 
 		virtual void Init() const = 0;
-		virtual void ClearFrame(Color clearColor = { 0, 0, 0, 255 }) const = 0;
+		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
 		virtual void DrawIndexed(VertexArray* array, uint32_t size) const = 0;
 		virtual std::string GetVersion() const = 0;

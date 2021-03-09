@@ -31,6 +31,14 @@ namespace Hazard::ECS {
 		return Application::GetModule<SceneHandler>().GetCurrentScene();
 	}
 
+	void SceneCommand::RenderScene(glm::mat4 viewProjection, glm::vec4 clearColor) {
+
+		Rendering::Camera camera(viewProjection, clearColor);
+		Rendering::RenderCommand::Begin(camera);
+		GetCurrentScene().RenderAll();
+		Rendering::RenderCommand::End();
+	}
+
 	//Submit element to RenderEngine
 	template<typename C, typename T>
 	void SceneCommand::Render(C& component, T& transform)

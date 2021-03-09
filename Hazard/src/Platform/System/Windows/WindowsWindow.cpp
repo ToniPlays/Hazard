@@ -46,7 +46,7 @@ namespace Hazard::Rendering {
 	void WindowsWindow::OnUpdate(Color color) {
 
 		glfwSwapBuffers(window);
-		context->ClearFrame(color);
+		context->ClearFrame(color.ToGlm());
 		glfwPollEvents();
 		//IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}

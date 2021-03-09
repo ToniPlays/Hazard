@@ -8,6 +8,7 @@
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include "2D/Renderer2D.h"
+#include "Camera.h"
 
 namespace Hazard::Rendering {	
 
@@ -20,9 +21,8 @@ namespace Hazard::Rendering {
 		void Init() override;
 		void Close() override;
 
-		void SceneRender(ECS::Scene& scene);
-		//TODO: remove Scene render
-		void SceneRender(ECS::Scene& scene, ECS::Camera camera);
+		void BeginRendering(Camera camera);
+		void EndRendering();
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
 
 		RenderTexture* GetRenderTarget() { return renderTarget; }

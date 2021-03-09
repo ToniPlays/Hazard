@@ -14,6 +14,11 @@ namespace Hazard::Rendering {
 	public:
 		static void Init();
 		static void ResetStats();
+
+		static void Begin(Camera camera) { engine.BeginRendering(camera); }
+		static void End() { engine.EndRendering(); }
+		static void SetRenderTarget(RenderTexture* texture) { engine.SetRenderTarget(texture); }
+
 		template<typename T>
 		static void Submit(T element) { engine.Submit(element); }
 

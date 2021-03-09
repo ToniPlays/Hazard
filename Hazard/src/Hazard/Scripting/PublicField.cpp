@@ -52,11 +52,15 @@ namespace Hazard::Scripting {
 	{
 		MonoCommand::GetFieldValue(entityInstance->GetInstance(), monoClassField, value);
 	}
+	 
+	//ENTITY SCRIPT
 	void EntityScript::InitClassMethods()
 	{
 		Constructor = MonoCommand::GetMonoCoreMethod("Hazard.Entity:.ctor(ulong)");
 		OnUpdate = MonoCommand::GetMonoAppMethod(moduleName + ":OnUpdate()");
 	}
+
+	//ENTITY INSTANCE
 	MonoObject* EntityInstance::GetInstance()
 	{
 		return MonoCommand::GetClassFromHandle(handle);

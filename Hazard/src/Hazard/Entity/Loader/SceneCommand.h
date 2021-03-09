@@ -13,6 +13,7 @@ namespace Hazard::ECS {
 		//Render component
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);
+		static void RenderScene(glm::mat4 viewProjection, glm::vec4 clearColor);
 		//Call when script is added or removed from entity
 		static void OnScriptAttached(Entity& entity, ScriptComponent& script);
 		static void OnScriptDetached(Entity& entity, ScriptComponent& script);

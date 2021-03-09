@@ -17,23 +17,20 @@ namespace WindowElement {
 	}
 	void GameViewport::Init()
 	{
-		bool found = false;
-		renderer = &Application::GetModule<RenderEngine>(found);
-		SetActive(found);
-
+		SetActive(true);
 		renderTexture = RenderUtils::Create<RenderTexture>();
-
-		if (found) renderer->SetRenderTarget(RenderUtils::Create<RenderTexture>());
 	}
 	void GameViewport::OnWindowRender()
 	{
 		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
-		renderer->SetRenderTarget(renderTexture);
 
-		auto&[found, cam] = scene.GetSceneCamera();
-		if (!found) return;
-
-		renderer->SceneRender(scene, cam);
+		auto&[found, cam, transform] = scene.GetSceneCamera();
+		if (!found) {
+			WindowLayout::Layout::Text("No active camera");
+			return;
+		}
+		Rendering::RenderCommand::SetRenderTarget(renderTexture);
+		ECS::SceneCommand::RenderScene(cam.projection * glm::inverse(transform.GetTransformMat4()), cam.bgColor.ToGlm());
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -42,7 +39,7 @@ namespace WindowElement {
 			height = size.y;
 
 			renderTexture->Resize(width, height);
-			cam.component.RecalculateProjection(width, height);
+			cam.RecalculateProjection(width, height);
 		}
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 

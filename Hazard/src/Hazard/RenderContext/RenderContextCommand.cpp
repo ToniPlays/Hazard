@@ -19,7 +19,7 @@ namespace Hazard::Rendering {
 	{
 		context.GetWindow().SetVSync(vsync);
 	}
-	void RenderContextCommand::ClearFrame(Color color)
+	void RenderContextCommand::ClearFrame(glm::vec4 color)
 	{
 		context.GetWindow().GetContext()->ClearFrame(color);
 	}
