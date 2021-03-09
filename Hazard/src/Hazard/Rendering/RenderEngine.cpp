@@ -21,15 +21,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::Init()
 	{
-		bool found = false;
-		context = &Application::GetModule<RenderContext>(found);
-		HZR_CORE_ASSERT(found, "RenderEngine cannot start without RenderContext");
-		SetActive(found);
-		if (!found) return;
-
-		RenderUtils::Init();
-
-		renderer2D = new Renderer2D(context);
+		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		renderer2D->Init(35000);
 
 		RenderCommand::Init();
@@ -50,7 +42,7 @@ namespace Hazard::Rendering {
 			return;
 
 		renderTarget->Bind();
-		context->GetWindow().GetContext()->ClearFrame(camera.component.bgColor);
+		RenderContextCommand::ClearFrame(camera.component.bgColor);
 		renderer2D->BeginScene(camera.viewProjection);
 		renderer2D->BeginBatch();
 		scene.Render();

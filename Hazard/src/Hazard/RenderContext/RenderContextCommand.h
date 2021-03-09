@@ -8,6 +8,8 @@ namespace Hazard::Rendering {
 		static void Init();
 		static bool IsVsync();
 		static void SetVsync(bool vsync);
+		static void ClearFrame(Color color);
+
 		static RenderContext& GetContext() { return context; };
 
 	private:

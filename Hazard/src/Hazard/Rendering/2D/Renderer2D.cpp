@@ -10,6 +10,9 @@
 
 namespace Hazard::Rendering {
 
+	constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+	constexpr uint8_t quadVertexCount = 4;
+
 	Renderer2D::Renderer2D(RenderContext* context) : context(context)
 	{
 		
@@ -79,8 +82,7 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::SubmitQuad(Quad quad)
 	{
-		constexpr uint8_t quadVertexCount = 4;
-		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		
 
 		if (data.QuadIndexCount >= data.MaxIndices || data.TextureIndex > 8) {
 			Flush();

@@ -52,6 +52,10 @@ namespace Hazard::ECS {
         auto group = registry.group<CameraComponent>(entt::get<TransformComponent>);
 
         for (auto entity : group) {
+
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+
             auto&[transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
             return std::tuple(true, Camera(cam, cam.projection * glm::inverse(transform.GetTransformMat4()), transform.Translation));
         }

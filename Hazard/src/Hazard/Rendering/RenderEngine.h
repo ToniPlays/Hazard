@@ -33,8 +33,6 @@ namespace Hazard::Rendering {
 		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
 
 	private:
-		RenderContext* context;
-
 		RenderTexture* renderTarget = nullptr;
 		Renderer2D* renderer2D;
 	};

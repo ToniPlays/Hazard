@@ -43,7 +43,7 @@ namespace Hazard::ECS::Loader {
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		out << YAML::Key << "Scene" << YAML::Value << scene.GetName();
+		out << YAML::Key << "Scene" << YAML::Value << (scene.GetName() != "" ? scene.GetName() : "Untitled scene");
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 		scene.GetSceneRegistry().each([&](auto entityID) {

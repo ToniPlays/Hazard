@@ -20,10 +20,11 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Init()
 	{
-		SetActive(true);
 		window = Window::Create();
 		window->SetEventCallback(BIND_EVENT(RenderContext::Process));
+		RenderUtils::Init();
 		RenderContextCommand::Init();
+		SetActive(true);
 	}
 
 	void RenderContext::Update()
@@ -33,6 +34,7 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Close()
 	{
+		RenderUtils::Flush();
 		delete window;
 	}
 

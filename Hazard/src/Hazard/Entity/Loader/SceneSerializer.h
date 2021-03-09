@@ -196,6 +196,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
 			out << YAML::Key << "Fov" << YAML::Value << c.fov;
+			out << YAML::Key << "Color" << YAML::Key; Convert(out, c.bgColor.ToGlm());
 			out << YAML::EndMap;
 		}
 
