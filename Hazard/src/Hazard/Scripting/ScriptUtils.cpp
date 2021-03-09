@@ -13,10 +13,6 @@
 
 namespace Hazard::Scripting {
 
-	void ScriptUtils::InitMono() {
-		mono_set_dirs("C:/Program Files/Mono/lib", "C:/Program Files/Mono/etc");
-		mono_set_assemblies_path("C:/dev/Hazard//vendor/mono/lib");
-	}
 	const char* ScriptUtils::VarFieldToString(VarFieldType type)
 	{
 		switch (type)
@@ -31,6 +27,28 @@ namespace Hazard::Scripting {
 		default:						return "Undefined";
 		}
 	}
+	VarFieldType ScriptUtils::MonoTypeToFieldType(MonoType* type)
+	{
+		int t = mono_type_get_type(type);
+
+		HZR_CORE_INFO(t);
+		switch (t)
+		{
+		case MONO_TYPE_R4:			return VarFieldType::Float;
+		case MONO_TYPE_I4:			return VarFieldType::Int;
+		case MONO_TYPE_U4:			return VarFieldType::UnsignedInt;
+		case MONO_TYPE_STRING:		return VarFieldType::String;
+		case MONO_TYPE_CLASS:
+		{
+			char* name = mono_type_get_name(type);
+			if (strcmp(name, "Hazard.Vector2") == 0) return VarFieldType::Vec2;
+			if (strcmp(name, "Hazard.Vector3") == 0) return VarFieldType::Vec3;
+			if (strcmp(name, "Hazard.Vector4") == 0) return VarFieldType::Vec4;
+		}
+		}
+		return VarFieldType::None;
+	}
+
 	void ScriptUtils::GetNames(const std::string& module, std::string& nameSpace, std::string& className)
 	{
 		if (module.find('.') != std::string::npos) {

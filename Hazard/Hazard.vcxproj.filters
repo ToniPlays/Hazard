@@ -263,6 +263,8 @@
     <ClInclude Include="src\Hazard\RenderContext\RenderUtils.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\PublicField.h" />
+    <ClInclude Include="src\Hazard\Scripting\Mono\MonoCommands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -359,5 +361,7 @@
     <ClCompile Include="src\Hazard\RenderContext\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp" />
   </ItemGroup>
 </Project>

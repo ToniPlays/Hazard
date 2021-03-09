@@ -11,6 +11,8 @@ extern "C"
 
 namespace Hazard::Scripting::Bindings {
 
+	//Bind debug calls internal
+
 	class DebugBindings {
 	public:
 		static BindMap GetBindings();
