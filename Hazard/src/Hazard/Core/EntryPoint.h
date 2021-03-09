@@ -7,9 +7,9 @@
 
 #include <stdio.h>
 
+extern Hazard::Application* Hazard::CreateApplication();
 #ifdef HZR_PLATFORM_WINDOWS
 
-	extern Hazard::Application* Hazard::CreateApplication();
 	#if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
 		//Appliction starts as console-app
 		#pragma comment( linker, "/subsystem:console" )

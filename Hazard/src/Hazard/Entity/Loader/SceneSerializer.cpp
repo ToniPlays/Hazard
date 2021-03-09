@@ -6,40 +6,41 @@
 
 namespace Hazard::ECS::Loader {
 
+	//Deserialize scene editor
 	Scene* SceneSerializer::DeserializeEditor(const char* file)
 	{
 		YAML::Node root = YAML::LoadFile(file);
 		Scene* scene = new Scene(file);
 
+		//Set scene name
 		if (!root["Scene"]) return scene;
-
 		scene->SetName(root["Scene"].as<std::string>());
 
+		//Loop entities
 		auto entities = root["Entities"];
 		if (entities) {
 			for (auto node : root["Entities"]) {
 				uint64_t uuid = node["Entity"].as<uint64_t>();
 
 				Entity entity = scene->CreateEntity("");
-
+				//Deserialize components
 				Deserialize<TagComponent>(entity, node);
 				Deserialize<TransformComponent>(entity, node);
 				Deserialize<SpriteRendererComponent>(entity, node);
 				Deserialize<CameraComponent>(entity, node);
 			}
 		}
-
 		return scene;
 	}
-
+	//Deserialize runtime file
 	Scene* SceneSerializer::DeserializeRuntime(const char* file)
 	{
 		HZR_ERROR("Runtime serialization TODO");
 		return nullptr;
 	}
+
 	bool SceneSerializer::SerializeEditor(const char* file, Scene& scene)
 	{
-
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << scene.GetName();

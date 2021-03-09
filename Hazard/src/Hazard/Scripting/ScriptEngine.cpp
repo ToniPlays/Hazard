@@ -79,6 +79,7 @@ namespace Hazard::Scripting {
 	{
 		int t = mono_type_get_type(type);
 
+		HZR_CORE_INFO(t);
 		switch (t)
 		{
 		case MONO_TYPE_R4:			return VarFieldType::Float;
@@ -92,8 +93,8 @@ namespace Hazard::Scripting {
 			if (strcmp(name, "Hazard.Vector3") == 0) return VarFieldType::Vec3;
 			if (strcmp(name, "Hazard.Vector4") == 0) return VarFieldType::Vec4;
 		}
-		return VarFieldType::None;
 		}
+		return VarFieldType::None;
 	}
 
 	MonoData data;
@@ -269,7 +270,7 @@ namespace Hazard::Scripting {
 		for (auto& [EntityID, instanceData] : data.EntityInstanceMap) {
 			EntityInstance& instance = GetInstanceData(EntityID).instance;
 
-			if (instance.ScriptClass->OnUpdate != nullptr && instance.handle != 0) continue;
+			if (instance.ScriptClass->OnUpdate == nullptr || instance.handle == 0) continue;
 
 			HZR_CORE_INFO("Script step");
 			CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, nullptr);

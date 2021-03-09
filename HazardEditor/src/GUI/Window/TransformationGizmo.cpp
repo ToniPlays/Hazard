@@ -47,7 +47,7 @@ namespace WindowElement {
 		auto transform = tc.GetTransformMat4();
 
 		ImGuizmo::Manipulate(glm::value_ptr(camera.GetView()), glm::value_ptr(camera.GetProjection()),
-			(ImGuizmo::OPERATION)type, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
+			(ImGuizmo::OPERATION)type, global ? ImGuizmo::WORLD : ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
 
 		isUsing = ImGuizmo::IsUsing();
 		if (!isUsing) return;

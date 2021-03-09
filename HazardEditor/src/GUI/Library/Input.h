@@ -27,7 +27,8 @@ namespace WindowElement {
 
 		static void PublicField(const char* label, Scripting::PublicField& field);
 		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
-		static bool ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 
+		static void ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 
 			bool& modify, ImVec2 size = {0, 0});
+		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size = { 0, 0 });
 	};
 }

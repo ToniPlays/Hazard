@@ -20,6 +20,9 @@ namespace WindowElement {
 		void OnFrameBegin() override { gizmos.OnFrameBegin(); };
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;
+
+		TransformationGizmo& GetGizmo() { return gizmos; }
+
 	private:
 		Editor::EditorCamera editorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 

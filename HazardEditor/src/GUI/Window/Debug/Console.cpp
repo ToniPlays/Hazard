@@ -106,7 +106,7 @@ namespace WindowElement {
 				}
 				case Severity::Critical:
 				{
-					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Critical]: ", Style::GetStyleColor(ColorType::Trace));
+					Layout::TextColored(ICON_FK_EXCLAMATION_CIRCLE " [Critical]: ", Style::GetStyleColor(ColorType::Critical));
 					Layout::SameLine(90);
 					Layout::Text(message.c_str());
 					break;

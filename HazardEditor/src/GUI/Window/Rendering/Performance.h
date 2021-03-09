@@ -15,6 +15,5 @@ namespace WindowElement {
 
 	private:
 		Hazard::Rendering::RenderContext* context;
-		Hazard::Rendering::RenderStats stats;
 	};
 }

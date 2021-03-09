@@ -9,7 +9,7 @@
 namespace Hazard::ECS {
 
 	Rendering::RenderEngine SceneCommand::RenderEngine;
-
+	//Initialize connection to renderEngine
 	void SceneCommand::Init()
 	{
 		RenderEngine = Application::GetModule<Rendering::RenderEngine>();
@@ -30,12 +30,12 @@ namespace Hazard::ECS {
 		return Application::GetModule<SceneHandler>().GetCurrentScene();
 	}
 
+	//Submit element to RenderEngine
 	template<typename C, typename T>
 	void SceneCommand::Render(C& component, T& transform)
 	{
 		static_assert(false);
 	}
-
 	template<>
 	void SceneCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
 		RenderEngine.Submit(Rendering::Quad(transform.GetTransformMat4(), component.tint.ToGlm(), component.texture));

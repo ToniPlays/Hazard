@@ -5,9 +5,10 @@
 #include "../Buffers/VertexArray.h"
 #include "../Buffers/Buffer.h"
 #include "../Shader/Shader.h"
-#include "../RenderContext.h"
 
-#include "../RenderUtils.h"
+#include "Hazard/RenderContext/RenderContext.h"
+#include "Hazard/RenderContext/RenderUtils.h"
+
 
 namespace Hazard::Rendering {
 
@@ -26,7 +27,6 @@ namespace Hazard::Rendering {
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
 		std::array<Texture*, 8> TextureSlots;
-
 		glm::vec4 QuadVertexPos[4];
 	};
 
@@ -44,13 +44,8 @@ namespace Hazard::Rendering {
 		void Flush();
 		void Close();
 
-		void CollectStats(RenderStats& stats);
-
 	private:
 		Renderer2DData data;
 		RenderContext* context;
-
-		//glm::mat4 viewProjection;
-		RenderStats stats;
 	};
 }

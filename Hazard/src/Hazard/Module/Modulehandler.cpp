@@ -13,7 +13,6 @@ namespace Hazard::Module {
     }
     ModuleHandler::~ModuleHandler()
     {
-        Close();
         for (Module* m : modules) 
             delete m;
     }

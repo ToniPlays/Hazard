@@ -1,13 +1,12 @@
 #pragma once
 #include "Hazard/Core/Core.h"
 #include "Hazard/Module/Module.h"
-#include "RenderContext.h"
 #include "Platform/System/Window.h"
 
 #include "Textures/RenderTexture.h"
 #include "Hazard/Entity/Scene.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
-#include "RenderUtils.h"
 #include "2D/Renderer2D.h"
 
 namespace Hazard::Rendering {	
@@ -21,16 +20,12 @@ namespace Hazard::Rendering {
 		void Init() override;
 		void Close() override;
 
-		void SceneRender(ECS::Scene& scene) { 
-			auto [found, cam] = scene.GetSceneCamera();
-			if (!found) return;
-			SceneRender(scene, cam.viewProjection); 
-		};
+		void SceneRender(ECS::Scene& scene);
+		//TODO: remove Scene render
 		void SceneRender(ECS::Scene& scene, glm::mat4 projection);
 		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
 
 		RenderTexture* GetRenderTarget() { return renderTarget; }
-		RenderStats& GetStats() { return stats; }
 
 		template<typename T>
 		void Submit(T element) {};
@@ -41,9 +36,6 @@ namespace Hazard::Rendering {
 		RenderContext* context;
 		RenderTexture* renderTarget = nullptr;
 
-		OcclusionQuery* occlusionQuery = nullptr;
-
 		Renderer2D* renderer2D;
-		RenderStats stats;
 	};
 }

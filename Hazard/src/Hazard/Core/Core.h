@@ -1,28 +1,30 @@
 #pragma once
 
-#ifdef HZR_PLATFORM_WINDOWS
-#define HZR_PLATFORM "Windows"
-#if _WIN64
-#define HAZARD_SYSTEM_BIT "x64"
-#elif _WIN32
-#define HAZARD_SYSTEM_BIT "x86"
-#endif
 
-#if HZR_DYNAMIC_LINK
-#ifdef HZR_BUILD_DLL
-#define HAZARD_API __declspec(dllexport)
-#else
-#define HAZARD_API __declspec(dllimport)
-#endif
-#else
-#define HAZARD_API
-#endif
-#else 
-#error Hazard supports only windows!
+//Platform selection
+#ifdef HZR_PLATFORM_WINDOWS
+	#define HZR_PLATFORM "Windows"
+	#if _WIN64
+		#define HAZARD_SYSTEM_BIT "x64"
+	#elif _WIN32
+		#define HAZARD_SYSTEM_BIT "x86"
+	#endif
+
+	#if HZR_DYNAMIC_LINK
+		#ifdef HZR_BUILD_DLL
+			#define HAZARD_API __declspec(dllexport)
+		#else
+		#define HAZARD_API __declspec(dllimport)
+		#endif
+	#else
+		#define HAZARD_API
+		#endif
+	#else 
+	#error Hazard only supports windows!
 #endif // HRD_PLATFORM_WINDOWS
 
-#define BIT(x) (1 << x)
-#define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
+
+//Hazard BUILD_VERSION
 
 #if HZR_DEBUG
 #define HZR_BUILD_VERSION "Debug"
@@ -34,6 +36,9 @@
 #define HZR_BUILD_VERSION "Release"
 #endif // HZR_DEBUG
 
+
+#define BIT(x) (1 << x)
+#define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
 //Accessible globally
 #include <iostream>

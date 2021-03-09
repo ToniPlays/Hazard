@@ -35,6 +35,10 @@ namespace WindowElement {
 			});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
+			Layout::Separator();
+			Layout::MenuItem("Quit", []() {
+				Application::Quit();
+			});
 		});
 		Layout::Menu("Edit", []() {
 			

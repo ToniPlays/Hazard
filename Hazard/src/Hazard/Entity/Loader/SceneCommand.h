@@ -10,11 +10,14 @@ namespace Hazard::ECS {
 
 		static void Init();
 
+		//Render component
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);
+		//Call when script is added or removed from entity
 		static void OnScriptAttached(Entity& entity, ScriptComponent& script);
 		static void OnScriptDetached(Entity& entity, ScriptComponent& script);
 
+		//Get current scene from SceneHandler
 		static Scene& GetCurrentScene();
 
 	private:

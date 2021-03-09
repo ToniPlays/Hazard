@@ -114,17 +114,10 @@ namespace Hazard::Rendering {
 		}
 
 		data.QuadIndexCount += 6;
-		stats.vertices += quadVertexCount;
-		stats.quads++;
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
 	{
 		data.QuadShader->SetUniformMat4("viewProjection", viewProjection);
-
-		stats.drawCalls = 0;
-		stats.quads = 0;
-		stats.indices = 0;
-		stats.vertices = 0;
 	}
 	void Renderer2D::BeginBatch()
 	{
@@ -144,19 +137,9 @@ namespace Hazard::Rendering {
 			data.TextureSlots[i]->Bind(i);
 
 		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
-
-		stats.drawCalls++;
-		stats.indices += data.QuadIndexCount;
 	}
 	void Renderer2D::Close()
 	{
-
-	}
-	void Renderer2D::CollectStats(RenderStats& stats)
-	{
-		stats.drawCalls += this->stats.drawCalls;
-		stats.quads += this->stats.quads;
-		stats.indices += this->stats.indices;
-		stats.vertices += this->stats.vertices;
+		
 	}
 }

@@ -14,6 +14,7 @@ namespace Hazard::ECS {
 
 		Scene& GetScene() { return *scene; }
 
+		//Add component to entity
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
 			if (HasComponent<T>()) {
@@ -23,7 +24,7 @@ namespace Hazard::ECS {
 			scene->OnComponentAdded<T>(*this, component);
 			return component;
 		}
-
+		//Remove component from entity
 		template<typename T>
 		void RemoveComponent() {
 			scene->OnComponentRemoved<T>(*this, GetComponent<T>());

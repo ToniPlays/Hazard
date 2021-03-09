@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "Hazard/Events/Input.h"
 
-#include "Hazard/Rendering/RenderContext.h"
+#include "Hazard/RenderContext/RenderContext.h"
 #include "GLFW/glfw3.h"
 
 namespace Hazard {

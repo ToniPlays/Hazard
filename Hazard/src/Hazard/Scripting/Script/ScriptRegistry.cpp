@@ -15,6 +15,7 @@ namespace Hazard::Scripting {
 	{
 		using namespace Hazard::Scripting::Bindings;
 		Register(DebugBindings::GetBindings());
+		Register(ApplicationBindings::GetBindings());
 	}
 	void ScriptRegistry::Register(std::vector<std::pair<const char*, void*>> methods)
 	{

@@ -3,7 +3,7 @@
 #include "SceneHandler.h"
 #include "../Scene.h"
 #include "../Entity.h"
-#include "Hazard/Rendering/RenderContext.h"
+#include "Hazard/RenderContext/RenderContext.h"
 
 #include <yaml-cpp/yaml.h>
 

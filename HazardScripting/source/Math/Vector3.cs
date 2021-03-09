@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Hazard
 {
@@ -16,6 +11,10 @@ namespace Hazard
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+        public override string ToString()
+        {
+            return "(" + x + ", " + y + ", " + z + ")";
         }
 
         public static Vector3 zero = new Vector3(0, 0, 0);

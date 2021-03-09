@@ -192,13 +192,7 @@
     <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderContext.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
@@ -260,6 +254,15 @@
     <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h" />
     <ClInclude Include="src\Hazard\Scripting\Script\Debug\DebugBindings.h" />
     <ClInclude Include="src\Hazard\Scripting\Script\Bindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.h" />
+    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h" />
+    <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h" />
+    <ClInclude Include="src\Hazard\RenderContext\RenderUtils.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -304,13 +307,7 @@
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderContext.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
@@ -353,5 +350,14 @@
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp" />
     <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp" />
     <ClCompile Include="src\Hazard\Scripting\Script\Debug\DebugBindings.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp" />
+    <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp" />
+    <ClCompile Include="src\Hazard\RenderContext\RenderUtils.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

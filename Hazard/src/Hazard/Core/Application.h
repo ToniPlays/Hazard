@@ -28,7 +28,7 @@ namespace Hazard {
 		void SetTitle(const char* title);
 		void SetWindowIcon(const char* windowIcon, const char* barIcon);
 		
-		void Quit();
+		static void Quit();
 
 		//Push new module to module stack
 		template<typename T>

@@ -5,24 +5,25 @@
 
 #include "Hazard/Core/HazardLoop.h"
 #include "RenderUtils.h"
+#include "RenderContextCommand.h"
 
 namespace Hazard::Rendering {
 
 	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
 	{
-		SetActive(true);
-		window = Window::Create();
 		RenderUtils::SetRenderAPI(api);
 	}
 	RenderContext::~RenderContext()
 	{
-		Close();
+
 	}
 
 	void RenderContext::Init()
 	{
-		
+		SetActive(true);
+		window = Window::Create();
 		window->SetEventCallback(BIND_EVENT(RenderContext::Process));
+		RenderContextCommand::Init();
 	}
 
 	void RenderContext::Update()
@@ -32,7 +33,7 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Close()
 	{
-		
+		delete window;
 	}
 
 	void RenderContext::Process(Event& e)

@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Math/Color.h"
 #include "Platform/Rendering/GraphicsContext.h"
+
 #include <iostream>
 
 namespace Hazard::Rendering {

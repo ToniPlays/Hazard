@@ -72,17 +72,20 @@ namespace WindowElement {
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
 		switch (e.GetKeyCode()) {
-		case Key::D1:
+		case Key::Q:
 			gizmos.SetType(Gizmo::Translate);
 			return true;
-		case Key::D2:
+		case Key::W:
 			gizmos.SetType(Gizmo::Rotate);
 			return true;
-		case Key::D3:
+		case Key::E:
 			gizmos.SetType(Gizmo::Scale);
 			return true;
-		case Key::D4:
+		case Key::R:
 			gizmos.SetType(Gizmo::Bounds);
+			return true;
+		case Key::G:
+			gizmos.SetGlobal(!gizmos.IsGlobal());
 			return true;
 		}
 		return false;

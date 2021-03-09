@@ -18,7 +18,6 @@ namespace Hazard::ECS {
     void Scene::Render()
     {
         auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
-
         for (auto entity : sprites) {
             auto& [sprite, transform] = registry.get<SpriteRendererComponent, TransformComponent>(entity);
             SceneCommand::Render(sprite, transform);
@@ -54,6 +53,7 @@ namespace Hazard::ECS {
         }
         return std::tuple(false, Camera());
     }
+#pragma region Component added and removed methods
     //Scene component added and removed
     template<typename T>
     void Scene::OnComponentAdded(Entity& entity, T& component) {
@@ -110,4 +110,5 @@ namespace Hazard::ECS {
     {
         SceneCommand::OnScriptDetached(entity, component);
     }
+#pragma endregion
 }

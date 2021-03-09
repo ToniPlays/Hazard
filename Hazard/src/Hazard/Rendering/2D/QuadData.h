@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "glm/glm.hpp"
-#include "../RenderUtils.h"
+#include "Hazard/RenderContext/RenderUtils.h"
 
 namespace Hazard::Rendering {
 

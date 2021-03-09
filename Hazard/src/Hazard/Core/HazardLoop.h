@@ -44,13 +44,15 @@ namespace Hazard::Core {
 
 		template<typename T>
 		static T& GetModule(bool& found) { return instance->moduleHandler.GetModule<T>(found); };
-
+		//Shutdown the application
 		void Shutdown();
 
 	private:
+
 		Application* application = nullptr;
 		Module::ModuleHandler moduleHandler;
 		bool shouldClose = false;
+
 		static HazardLoop* instance;
 	};
 }

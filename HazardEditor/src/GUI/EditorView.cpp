@@ -21,6 +21,7 @@ namespace WindowElement {
 	EditorView::EditorView() : Module::Module("EditorViews")
 	{
 		instance = this;
+		elements = std::vector<RenderableElement*>();
 	}
 	EditorView::~EditorView()
 	{
@@ -78,7 +79,6 @@ namespace WindowElement {
 		Appereance::Style::Init();
 
 		PushRenderable<MenuBar>();
-		PushRenderable<Toobar>();
 
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
@@ -90,6 +90,8 @@ namespace WindowElement {
 
 		PushRenderable<EngineAssets>();
 		PushRenderable<Console>();
+
+		PushRenderable<Toobar>();
 	}  
 	void EditorView::Render()
 	{

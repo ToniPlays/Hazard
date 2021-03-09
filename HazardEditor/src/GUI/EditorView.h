@@ -40,7 +40,7 @@ namespace WindowElement {
 	public:
 		static EditorView& GetInstance() { return *instance; }
 	private:
-		std::vector<RenderableElement*> elements;
+		std::vector<RenderableElement*> elements = std::vector<RenderableElement*>();
 		Rendering::RenderContext* context;
 
 	private:

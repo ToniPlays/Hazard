@@ -1,18 +1,9 @@
 #pragma once
 
-#include "Textures/RenderTexture.h"
-#include "Hazard/Rendering/RenderContext.h"
-#include "OcclusionQuery.h"
+#include "Hazard/Rendering/Textures/RenderTexture.h"
+#include "Hazard/RenderContext/RenderContext.h"
 
 namespace Hazard::Rendering {
-
-	struct RenderStats {
-		uint32_t drawCalls = 0;
-		uint32_t quads = 0;
-		uint32_t vertices = 0;
-		uint32_t indices = 0;
-		uint32_t textures = 0;
-	};
 
 	class RenderUtils {
 		public:

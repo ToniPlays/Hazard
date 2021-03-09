@@ -28,7 +28,7 @@ namespace WindowElement {
 	void Performance::OnWindowRender()
 	{
 
-		stats = Application::GetModule<Rendering::RenderEngine>().GetStats();
+		/*stats = Application::GetModule<Rendering::RenderEngine>().GetStats();
 
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
@@ -80,14 +80,7 @@ namespace WindowElement {
 		Layout::Text("Indices");
 		Layout::TableNext();
 		Layout::Text(Utility::StringUtil::FormatNumber(stats.indices).c_str());
-		
-		Layout::TableNext();
-		Layout::Text("VSync");
-		Layout::TableNext();
-		static bool vsync = context->GetWindow().GetWindowInfo().VSync;
-		Input::Checkbox("##VSYNC", vsync);
-		context->GetWindow().SetVSync(vsync);
 
-		Layout::EndTable();
+		Layout::EndTable();*/
 	}
 }

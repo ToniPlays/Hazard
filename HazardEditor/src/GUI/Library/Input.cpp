@@ -359,25 +359,40 @@ namespace WindowElement {
 		}
 		ImGui::PopStyleColor();
 	}
-	bool Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
+	void Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
 	{
-		bool changed = false;
 		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
 		if (modify) {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
 			if (Button(label, size)) {
 				modify = false;
-				changed = true;
 			}
 		}
 		else {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
 			if (Button(label, size)) {
 				modify = true;
-				changed = true;
 			}
 		}
 		ImGui::PopStyleColor(2);
-		return changed;
+	}
+	bool Input::ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size)
+	{
+		bool modified = false;
+		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
+		if (state) {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
+			if (Button(label, size)) {
+				modified = true;
+			}
+		}
+		else {
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
+			if (Button(label, size)) {
+				modified = true;
+			}
+		}
+		ImGui::PopStyleColor(2);
+		return modified;
 	}
 }

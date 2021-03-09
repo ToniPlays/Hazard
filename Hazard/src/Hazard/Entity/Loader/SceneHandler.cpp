@@ -17,16 +17,14 @@ namespace Hazard::ECS {
 	}
 	void SceneHandler::Init()
 	{
+		//Initialize SceneCommand
 		SceneCommand::Init();
 	}
 	void SceneHandler::Update()
 	{
 
 	}
-	void SceneHandler::Render()
-	{
-
-	}
+	//Load scene from file
 	bool SceneHandler::LoadScene(const char* file, Serialization type)
 	{
 		HZR_WARN("Loading file " + std::string(file));

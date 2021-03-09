@@ -42,9 +42,6 @@ namespace Hazard::Rendering {
 		SetCallbacks();
 
 		glfwShowWindow(window);
-		glfwGetWindowSize(window, &windowData.Width, &windowData.Height);
-
-		
 	}
 	void WindowsWindow::OnUpdate(Color color) {
 

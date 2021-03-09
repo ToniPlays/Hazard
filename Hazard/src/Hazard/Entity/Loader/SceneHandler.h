@@ -5,6 +5,7 @@
 
 namespace Hazard::ECS {
 
+	//Scene serialization type
 	enum Serialization { Runtime, Editor };
 
 	class SceneHandler : public Module::Module {
@@ -14,10 +15,9 @@ namespace Hazard::ECS {
 
 		void Init() override;
 		void Update() override;
-		void Render() override;
-
+		//Load scene from file and deserialize with specified type
 		bool LoadScene(const char* file, Serialization type = Serialization::Runtime);
-
+		//Get current scene
 		Scene& GetCurrentScene() { return *scene; }
 
 	private:
