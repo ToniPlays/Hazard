@@ -32,6 +32,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::BeginRendering(Camera camera)
 	{
+		RenderCommand::ResetStats();
 		renderTarget->Bind();
 		RenderContextCommand::ClearFrame(camera.clearColor);
 		renderer2D->BeginScene(camera.viewProjection);

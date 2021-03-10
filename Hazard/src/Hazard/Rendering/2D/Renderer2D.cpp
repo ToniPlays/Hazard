@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "Renderer2D.h"
+#include "../RenderCommand.h"
 
 #include "glm/ext/matrix_transform.hpp"
 #include <glm/glm.hpp>
@@ -112,7 +113,8 @@ namespace Hazard::Rendering {
 			data.QuadVertexBufferPtr->textureIndex = textureIndex;
 			data.QuadVertexBufferPtr++;
 		}
-
+		RenderCommand::GetStats().quads++;
+		RenderCommand::GetStats().vertices += 4;
 		data.QuadIndexCount += 6;
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
@@ -137,6 +139,8 @@ namespace Hazard::Rendering {
 			data.TextureSlots[i]->Bind(i);
 
 		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
+		RenderCommand::GetStats().draws++;
+		RenderCommand::GetStats().indices += data.QuadIndexCount;
 	}
 	void Renderer2D::Close()
 	{

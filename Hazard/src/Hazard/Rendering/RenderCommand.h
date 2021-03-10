@@ -14,6 +14,7 @@ namespace Hazard::Rendering {
 	public:
 		static void Init();
 		static void ResetStats();
+		static RenderStats& GetStats() { return stats; }
 
 		static void Begin(Camera camera) { engine.BeginRendering(camera); }
 		static void End() { engine.EndRendering(); }

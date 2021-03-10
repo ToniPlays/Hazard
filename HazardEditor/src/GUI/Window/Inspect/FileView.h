@@ -11,7 +11,6 @@ namespace WindowElement {
 		std::vector<std::filesystem::directory_entry> files;
 	};
 
-
 	class FileView : public EditorWindow {
 	public:
 		FileView();
