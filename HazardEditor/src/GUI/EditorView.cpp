@@ -88,8 +88,8 @@ namespace WindowElement {
 		PushRenderable<FileView>();
 		PushRenderable<Performance>();
 
-		PushRenderable<EngineAssets>();
 		PushRenderable<Console>();
+		PushRenderable<EngineAssets>();
 
 		PushRenderable<Toolbar>();
 	}  

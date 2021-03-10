@@ -29,11 +29,11 @@ void EditorApplication::PreInit()
 	SetTitle(ss.str());
 	SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule<Rendering::RenderEngine>();
-	PushModule<Scripting::ScriptEngine>().InitAssembly("c:/dev/HazardTestProject/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
+	PushModule<Scripting::ScriptEngine>().InitAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 
-	if (!manager.Load("C:\\dev\\HazardTestProject\\Hazard.hzrproj")) {
+	if (!manager.Load("C:\\dev\\HazardProject\\Hazard.hzrproj")) {
 		HZR_ERROR("Valid project file required to run application");
 	}
 

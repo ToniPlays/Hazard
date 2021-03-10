@@ -50,6 +50,9 @@ namespace WindowElement {
 			Layout::MenuItem("Reload C# assembly", []() {
 				Scripting::ScriptCommand::ReloadRuntimeAssembly();
 				});
+			Layout::MenuItem("Reload asset folder", []() {
+				Application::GetModule<EditorView>().GetRenderable<FileView>().UpdateFileTree();
+				});
 		});
 		Layout::Menu("Window", []() {
 			Layout::Menu("General", [&]() {

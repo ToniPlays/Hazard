@@ -77,7 +77,7 @@ namespace Hazard::Scripting {
 	}
 	MonoAssembly* MonoCommand::LoadAssemblyFromFile(const char* file)
 	{
-		std::vector<char> data = File::File::ReadBinaryFile(file);
+		std::vector<char> data = Utility::File::ReadBinaryFile(file);
 		MonoImageOpenStatus status;
 
 		MonoImage* image = mono_image_open_from_data_full(data.data(), data.size(), 1, &status, 0);

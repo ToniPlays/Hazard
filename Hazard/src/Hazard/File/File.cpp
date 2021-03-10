@@ -10,7 +10,7 @@
 #include "GLFW/glfw3native.h"
 #include "StringUtil.h"
 
-namespace Hazard::File {
+namespace Hazard::Utility {
 
 	std::string File::OpenFileDialog(const std::string& filters) {
 		OPENFILENAMEA ofn;
@@ -89,6 +89,20 @@ namespace Hazard::File {
 	
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of(".") + 1);
+	}
+
+	FolderData File::GetFolderFiles(const std::string& folder)
+	{
+		FolderData result;
+		result.path = folder;
+
+		for (const auto& file : directory_iterator(folder)) {
+			if (file.is_directory()) 
+				result.folders.emplace_back(file.path());
+			else 
+				result.files.emplace_back(file.path());
+		}
+		return result;
 	}
 
 	std::vector<char> File::ReadBinaryFile(const char* path)

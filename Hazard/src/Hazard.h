@@ -37,3 +37,4 @@
 #include "Hazard/Math/Math.h"
 //Hazard utility
 #include "Hazard/File/StringUtil.h"
+#include "Hazard/File/File.h"

@@ -2,8 +2,17 @@
 
 #include <iostream>
 #include <vector>
+#include <filesystem>
 
-namespace Hazard::File {
+using std::filesystem::directory_iterator;
+
+namespace Hazard::Utility {
+
+	struct FolderData {
+		std::string path;
+		std::vector<std::filesystem::directory_entry> folders;
+		std::vector<std::filesystem::directory_entry> files;
+	};
 
 	class File {
 	public:
@@ -14,6 +23,8 @@ namespace Hazard::File {
 
 		static std::string ReadFile(const std::string& file);
 		static std::string GetFileExtension(const std::string& file);
+
+		static FolderData GetFolderFiles(const std::string& folder);
 
 		static std::vector<char> ReadBinaryFile(const char* path);
 		static bool Exists(const char* file);
