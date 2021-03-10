@@ -23,6 +23,10 @@ namespace WindowLayout {
     {
         ImGui::SetColumnWidth(ImGui::GetColumnIndex(), width);
     }
+    float Layout::GetColumnWidth()
+    {
+        return ImGui::GetColumnWidth(ImGui::GetColumnIndex());
+    }
     void Layout::EndTable()
     {
         ImGui::Columns(1); 

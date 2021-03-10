@@ -10,6 +10,7 @@ namespace WindowLayout {
 		static void TableNext();
 		static void SameLine(float offset = 0.0f, float spacing = 0.0f);
 		static void SetColumnWidth(float width);
+		static float GetColumnWidth();
 		static void EndTable();
 
 		template<typename T>
@@ -39,6 +40,14 @@ namespace WindowLayout {
 			}
 			return false;
 		}
+		static bool Treenode(const char* title, ImGuiTreeNodeFlags flags)
+		{
+			if (ImGui::TreeNodeEx(title, flags)) {
+				return true;
+			}
+			return false;
+		}
+
 		template<typename T, typename UI, typename Prop>
 		static void ComponentTreenode(ECS::Entity entity, const char* name, UI uiCall, Prop propCall) {
 			const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;

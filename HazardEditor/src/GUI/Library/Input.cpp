@@ -29,6 +29,13 @@ namespace WindowElement {
 	{
 		return ImGui::Button(name, size);
 	}
+	bool Input::IconButton(const char* icon, const char* name, ImVec2 size)
+	{
+		bool clicked = ImGui::Button(name, size);
+		//Layout::SameLine();
+		//ImGui::Text(name);
+		return clicked;
+	}
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		bool modified = false;
@@ -391,6 +398,17 @@ namespace WindowElement {
 			if (Button(label, size)) {
 				modified = true;
 			}
+		}
+		ImGui::PopStyleColor(2);
+		return modified;
+	}
+	bool Input::ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size)
+	{
+		bool modified = false;
+		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
+		ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(color));
+		if (Button(label, size)) {
+			modified = true;
 		}
 		ImGui::PopStyleColor(2);
 		return modified;

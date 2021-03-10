@@ -8,6 +8,7 @@ namespace WindowElement {
 	public:
 		static bool InputField(std::string& text);
 		static bool Button(const char* name, ImVec2 size = {0, 0});
+		static bool IconButton(const char* icon, const char* name, ImVec2 size = {0, 0});
 		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = {0, 0}, 
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);
 		static bool Vec1(const char* label, float& value, float resetValue, float columnWidth);
@@ -30,5 +31,6 @@ namespace WindowElement {
 		static void ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 
 			bool& modify, ImVec2 size = {0, 0});
 		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size = { 0, 0 });
+		static bool ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size = { 0, 0 });
 	};
 }

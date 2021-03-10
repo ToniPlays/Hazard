@@ -85,10 +85,10 @@ namespace WindowElement {
 
 		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
-		PushRenderable<FileView>();
 		PushRenderable<Performance>();
 
 		PushRenderable<Console>();
+		PushRenderable<FileView>();
 		PushRenderable<EngineAssets>();
 
 		PushRenderable<Toolbar>();

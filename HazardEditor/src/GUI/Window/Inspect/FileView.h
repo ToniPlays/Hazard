@@ -27,9 +27,11 @@ namespace WindowElement {
 		std::vector<FolderViewData> UpdateFolderFiles(FolderViewData& parent);
 
 		void DrawFileTree(FolderViewData& data);
+		void DrawFolder(FolderViewData& data);
+		void DrawFile(const char* file);
 
 		std::string rootPath;
-		std::string currentPath;
+		FolderViewData currentFolder;
 
 		FolderViewData folderData;
 	};
