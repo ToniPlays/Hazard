@@ -2,7 +2,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Buffers/Buffer.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	class HAZARD_API OpenGLVertexBuffer : public VertexBuffer {
 	public:

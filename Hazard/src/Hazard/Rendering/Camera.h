@@ -1,5 +1,5 @@
-#pragma once
 
+#include <hzrpch.h>
 #include <glm/glm.hpp>
 
 namespace Hazard::Rendering {

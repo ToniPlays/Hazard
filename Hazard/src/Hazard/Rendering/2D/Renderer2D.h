@@ -7,7 +7,7 @@
 #include "../Shader/Shader.h"
 
 #include "Hazard/RenderContext/RenderContext.h"
-#include "Hazard/RenderContext/RenderUtils.h"
+#include "Hazard/Rendering/RenderUtils.h"
 
 
 namespace Hazard::Rendering {
@@ -46,6 +46,5 @@ namespace Hazard::Rendering {
 
 	private:
 		Renderer2DData data;
-		RenderContext* context;
 	};
 }

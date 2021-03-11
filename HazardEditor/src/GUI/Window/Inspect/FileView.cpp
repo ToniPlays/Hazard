@@ -50,7 +50,7 @@ namespace WindowElement {
 		if (Input::InputField(value)) {
 			
 		}
-
+		Layout::Separator();
 		Layout::Table(2, true);
 		ImGui::BeginChild("Folders");
 		DrawFileTree(folderData);

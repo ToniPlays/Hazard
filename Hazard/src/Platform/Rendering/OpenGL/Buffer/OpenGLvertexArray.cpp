@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "OpenGLVertexArray.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
 	{

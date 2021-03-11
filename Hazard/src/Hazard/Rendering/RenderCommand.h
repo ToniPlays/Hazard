@@ -20,10 +20,13 @@ namespace Hazard::Rendering {
 		static void End() { engine.EndRendering(); }
 		static void SetRenderTarget(RenderTexture* texture) { engine.SetRenderTarget(texture); }
 
+		static void DrawIndexed(VertexArray* vao, uint32_t count);
+
 		template<typename T>
 		static void Submit(T element) { engine.Submit(element); }
 
 	private:
+		static RenderContext context;
 		static RenderEngine engine;
 		static RenderStats stats;
 	};

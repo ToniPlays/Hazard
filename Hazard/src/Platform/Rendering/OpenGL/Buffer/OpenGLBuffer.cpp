@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "OpenGLBuffer.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{

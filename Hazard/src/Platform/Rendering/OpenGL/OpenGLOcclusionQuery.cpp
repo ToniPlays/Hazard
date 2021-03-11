@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 #include "OpenGLOcclusionQuery.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	
 

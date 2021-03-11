@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "Hazard/RenderContext/RenderUtils.h"
+#include "Hazard/Rendering/RenderUtils.h"
 
 #include "Components/Component.h"
 #include "Components/LightComponent.h"

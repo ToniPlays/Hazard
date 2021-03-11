@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	OpenGLTexture2D::OpenGLTexture2D(const char* file) : Texture2D(file)
 	{

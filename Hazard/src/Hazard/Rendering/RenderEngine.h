@@ -33,6 +33,11 @@ namespace Hazard::Rendering {
 		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
 
 	private:
+		VertexArray* skyboxVao;
+		CubemapTexture* skybox;
+		Shader* skyboxShader;
+
+
 		RenderTexture* renderTarget = nullptr;
 		Renderer2D* renderer2D;
 	};

@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include "glm/glm.hpp"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 	class HAZARD_API OpenGLShader : public Shader {
 	public:
 		OpenGLShader(std::string path);

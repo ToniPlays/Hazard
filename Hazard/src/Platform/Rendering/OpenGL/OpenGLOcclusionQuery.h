@@ -2,7 +2,8 @@
 
 #include "Hazard/Rendering/OcclusionQuery.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
+
 	class OpenGLOcclusionQuery : public OcclusionQuery {
 	public:
 		OpenGLOcclusionQuery();

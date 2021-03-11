@@ -260,11 +260,13 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h" />
-    <ClInclude Include="src\Hazard\RenderContext\RenderUtils.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h" />
     <ClInclude Include="src\Hazard\Scripting\Mono\MonoCommands.h" />
+    <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.h" />
+    <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -358,12 +360,12 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp" />
-    <ClCompile Include="src\Hazard\RenderContext\RenderUtils.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
     <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp" />
     <ClCompile Include="src\Hazard\Rendering\Camera.h" />
-    <ClCompile Include="src\Hazard\Rendering\Camera.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "OpenGLRenderTexture.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	OpenGLRenderTexture::OpenGLRenderTexture() : RenderTexture("RenderTexture")
 	{

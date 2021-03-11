@@ -14,9 +14,9 @@
 //Hazard render engien includes
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/RenderUtils.h"
 
 #include "Hazard/RenderContext/RenderContext.h"
-#include "Hazard/RenderContext/RenderUtils.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 //Hazard ECS includes

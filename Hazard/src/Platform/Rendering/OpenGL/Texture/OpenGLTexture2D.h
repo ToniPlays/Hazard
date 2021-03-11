@@ -5,7 +5,7 @@
 #include <iostream>
 #include "glm/glm.hpp"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	class HAZARD_API OpenGLTexture2D : public Texture2D {
 	public:

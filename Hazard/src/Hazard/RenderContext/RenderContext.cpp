@@ -4,7 +4,7 @@
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 
 #include "Hazard/Core/HazardLoop.h"
-#include "RenderUtils.h"
+#include "Hazard/Rendering/RenderUtils.h"
 #include "RenderContextCommand.h"
 
 namespace Hazard::Rendering {

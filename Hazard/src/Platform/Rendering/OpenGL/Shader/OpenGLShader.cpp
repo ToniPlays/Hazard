@@ -4,7 +4,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Hazard/File/File.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	static GLenum ShaderTypeFromString(const std::string& type) {
 		if (type == "Vertex") {

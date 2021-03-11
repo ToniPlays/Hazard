@@ -56,7 +56,7 @@ namespace Hazard::Rendering {
 	VertexArray* RenderUtils::Create<VertexArray>() {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLVertexArray();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray();
 		}
 		return nullptr;
 	}
@@ -64,7 +64,7 @@ namespace Hazard::Rendering {
 	VertexBuffer* RenderUtils::Create<VertexBuffer>(uint32_t size) {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLVertexBuffer(size);
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexBuffer(size);
 		}
 		return nullptr;
 	}
@@ -72,7 +72,7 @@ namespace Hazard::Rendering {
 	IndexBuffer* RenderUtils::Create<IndexBuffer>() {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLIndexBuffer();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLIndexBuffer();
 		}
 		return nullptr;
 	}
@@ -80,7 +80,7 @@ namespace Hazard::Rendering {
 	Shader* RenderUtils::Create<Shader>(const char* file) {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLShader(file);
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLShader(file);
 		}
 		return nullptr;
 	}
@@ -88,7 +88,7 @@ namespace Hazard::Rendering {
 	OcclusionQuery* RenderUtils::Create<OcclusionQuery>() {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLOcclusionQuery();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLOcclusionQuery();
 		}
 		return nullptr;
 	}
@@ -99,7 +99,7 @@ namespace Hazard::Rendering {
 	RenderTexture* RenderUtils::Create<RenderTexture>() {
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGLRenderTexture();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLRenderTexture();
 		}
 		return nullptr;
 	}
@@ -114,7 +114,7 @@ namespace Hazard::Rendering {
 
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGLTexture2D(size, name); break;
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(size, name); break;
 		}
 		textures.push_back(texture);
 		return texture;
@@ -129,10 +129,18 @@ namespace Hazard::Rendering {
 
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGLTexture2D(path); break;
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path); break;
 		}
 		textures.push_back(texture);
 		return texture;
+	}
+	template<>
+	CubemapTexture* RenderUtils::Create<CubemapTexture>() {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture();
+		}
+		return nullptr;
 	}
 #pragma endregion
 

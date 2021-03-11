@@ -3,7 +3,7 @@
 #include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "glad/glad.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::OpenGL {
 
 	class HAZARD_API OpenGLRenderTexture : public RenderTexture {
 	public:

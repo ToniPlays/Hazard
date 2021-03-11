@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 	constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr uint8_t quadVertexCount = 4;
 
-	Renderer2D::Renderer2D(RenderContext* context) : context(context)
+	Renderer2D::Renderer2D(RenderContext* context)
 	{
 		
 	}
@@ -119,6 +119,7 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
 	{
+		data.QuadShader->Bind();
 		data.QuadShader->SetUniformMat4("viewProjection", viewProjection);
 	}
 	void Renderer2D::BeginBatch()
@@ -138,7 +139,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < data.TextureIndex; i++)
 			data.TextureSlots[i]->Bind(i);
 
-		context->GetWindow().GetContext()->DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
+		RenderCommand::DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
 		RenderCommand::GetStats().draws++;
 		RenderCommand::GetStats().indices += data.QuadIndexCount;
 	}

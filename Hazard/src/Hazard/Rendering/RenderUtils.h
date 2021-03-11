@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Rendering/Textures/RenderTexture.h"
+#include "Hazard/Rendering/Textures/CubemapTexture.h"
 #include "Hazard/RenderContext/RenderContext.h"
 
 namespace Hazard::Rendering {
