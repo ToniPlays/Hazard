@@ -26,11 +26,11 @@ namespace WindowElement {
 	}
 	void Viewport::OnWindowRender()
 	{
-		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
+		ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		auto&[found, camera, t] = scene.GetSceneCamera();
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(editorCamera.GetViewPprojection(), camera.bgColor.ToGlm());
+		ECS::SceneCommand::RenderScene(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), camera.bgColor.ToGlm());
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

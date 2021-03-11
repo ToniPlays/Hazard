@@ -75,28 +75,29 @@ namespace Hazard::Rendering {
 	void RenderEngine::BeginRendering(Camera camera)
 	{
 		skyboxShader->Bind();
-		skyboxShader->SetUniformMat4("viewProjection", glm::mat4(glm::mat3(camera.viewProjection)));
+		skyboxShader->SetUniformMat4("viewProjection", camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 		skyboxShader->Unbind();
 
 		RenderCommand::ResetStats();
 		renderTarget->Bind();
 		RenderContextCommand::ClearFrame(camera.clearColor);
 
-		renderer2D->BeginScene(camera.viewProjection);
+		renderer2D->BeginScene(camera.projection * glm::inverse(camera.view));
 		renderer2D->BeginBatch();
 	}
 	void RenderEngine::EndRendering()
 	{
 		renderer2D->Flush();
-		//glDepthFunc(GL_LEQUAL);
-		//glDepthMask(GL_FALSE);
-		//skyboxVao->Bind();
-		//skyboxShader->Bind();
-		//skybox->Bind();
 
-		//RenderCommand::DrawIndexed(skyboxVao, 36);
-		//glDepthFunc(GL_LESS);
-		//glDepthMask(GL_TRUE);
+		//Skybox
+		glDepthFunc(GL_LEQUAL);
+
+		skyboxVao->Bind();
+		skyboxShader->Bind();
+		skybox->Bind();
+
+		RenderCommand::DrawIndexed(skyboxVao, 36);
+		glDepthFunc(GL_LESS);
 		renderTarget->Unbind();
 	}
 }

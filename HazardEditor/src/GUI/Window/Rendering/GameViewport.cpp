@@ -23,29 +23,30 @@ namespace WindowElement {
 	void GameViewport::OnWindowRender()
 	{
 		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
-
 		auto&[found, cam, transform] = scene.GetSceneCamera();
+
 		if (!found) {
 			WindowLayout::Layout::Text("No active camera");
 			return;
 		}
-		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(cam.projection * glm::inverse(transform.GetTransformMat4()), cam.bgColor.ToGlm());
 
+		Rendering::RenderCommand::SetRenderTarget(renderTexture);
+		ECS::SceneCommand::RenderScene(cam.projection, glm::inverse(transform.GetTransformMat4()), cam.bgColor.ToGlm());
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		if (size.x != width || size.y != height) {
 			width = size.x;
 			height = size.y;
 
-			renderTexture->Resize(width, height);
-			cam.RecalculateProjection(width, height);
+			renderTexture->Resize(size.x, size.y);
+			cam.RecalculateProjection(size.x, size.y);
 		}
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+
 
 		ImGui::Image((void*)renderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
-
 		ImGui::PopStyleVar();
 	}
 }

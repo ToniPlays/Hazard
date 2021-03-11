@@ -16,7 +16,7 @@ namespace Hazard {
 
 
 		glm::vec4 ToGlm() { return glm::vec4(r, g, b, a); }
-		static Color FromGLM(const glm::vec4 color) { return Color(color.r, color.g, color.b, color.w); }
+		static Color FromGLM(const glm::vec4 color) { return Color(color.r, color.g, color.b, color.a); }
 		
 
 		std::string ToString();

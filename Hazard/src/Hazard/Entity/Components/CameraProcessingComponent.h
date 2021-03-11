@@ -31,7 +31,8 @@ namespace Hazard::ECS
 			width = w;
 			height = h;
 
-			float aspectRatio = width / height;
+			float aspectRatio = w / h;
+
 			if (type == Perspective) {
 				//Calculate perspective projection
 				projection = glm::perspective(glm::radians(fov), aspectRatio, 0.01f, 1000.0f);

@@ -24,6 +24,9 @@ namespace WindowElement {
 		TransformationGizmo& GetGizmo() { return gizmos; }
 
 	private:
+		bool KeyPressed(KeyPressedEvent& e);
+
+	private:
 		Editor::EditorCamera editorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
 		RenderTexture* renderTexture;
@@ -31,7 +34,6 @@ namespace WindowElement {
 		RenderEngine* renderer;
 		TransformationGizmo gizmos;
 		uint32_t width = 0, height = 0;
-	private:
-		bool KeyPressed(KeyPressedEvent& e);
+
 	};
 }
