@@ -143,6 +143,7 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/GLM",
 		"c:/dev/Hazard/Hazard/vendor/stb-image",
+		"c:/dev/Hazard/Hazard/vendor/assimp/include",
 		"c:/dev/Hazard/vendor/entt",
 		"c:/dev/Hazard/vendor/IMGUI/examples",
 		"c:/dev/Hazard/vendor/mono/include",
@@ -152,6 +153,8 @@ project "Hazard"
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
+		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll",
+		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"mono-2.0-sgen.dll",

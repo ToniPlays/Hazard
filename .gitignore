@@ -2,6 +2,7 @@
 /bin
 /bin-int
 /vendor
+/Assimp
 /GLAD
 /ImGui
 /JSONParser

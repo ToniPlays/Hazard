@@ -84,6 +84,9 @@
     <ClInclude Include="src\GUI\Window\AllWindows.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\Console.h">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
@@ -123,7 +126,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -155,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Library\Style.cpp">
       <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\Console.cpp">
+      <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
@@ -192,6 +197,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\Console.cpp" />
   </ItemGroup>
 </Project>

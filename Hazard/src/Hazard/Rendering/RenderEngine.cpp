@@ -6,6 +6,8 @@
 #include "2D/QuadData.h"
 #include "RenderCommand.h"
 
+#include "Mesh/MeshLoader.h"
+
 namespace Hazard::Rendering {
 
 	RenderEngine::RenderEngine() : Module("RenderEngine")
@@ -24,15 +26,15 @@ namespace Hazard::Rendering {
 	{
 		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		renderer2D->Init(35000);
-
-		std::vector<std::string> faces;
-
-		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/starfield_", ".png");
+		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/sea-", ".jpg");
 
 		skybox = new Skybox();
+
 		skybox->SetCubemapTexture(texture);
 
 		RenderCommand::Init();
+
+		Mesh* mesh = MeshLoader::LoadMesh("res/Models/monkey.obj");
 	}
 	void RenderEngine::Close()
 	{

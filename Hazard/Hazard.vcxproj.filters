@@ -34,6 +34,9 @@
     <Filter Include="src\Hazard\Module">
       <UniqueIdentifier>{0B8712E0-779D-1076-C014-9C972C6AE1FD}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\RenderContext">
+      <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
@@ -43,6 +46,9 @@
     <Filter Include="src\Hazard\Rendering\Buffers">
       <UniqueIdentifier>{5FF592A6-4BB0-8252-F467-FB9CE001CDE2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\Mesh">
+      <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering\Shader">
       <UniqueIdentifier>{29B50B43-95C2-3929-1EA9-35148AB505E0}</UniqueIdentifier>
     </Filter>
@@ -51,6 +57,18 @@
     </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Scripting\Mono">
+      <UniqueIdentifier>{402DC35C-ACEF-F6E6-F59F-857361A1CFC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Scripting\Script">
+      <UniqueIdentifier>{DC716BA7-487F-998D-D165-95783D726544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Scripting\Script\Application">
+      <UniqueIdentifier>{9F578609-0BE7-47F4-14E3-280C80F18200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Scripting\Script\Debug">
+      <UniqueIdentifier>{5271325A-BEDF-87D9-07C9-42D973767D75}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -78,6 +96,24 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp">
+      <UniqueIdentifier>{6F57A1F8-DB17-1D2F-A452-66AC10D2610B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp\include">
+      <UniqueIdentifier>{E27D8AD0-4EEA-45CB-17DE-DD2883096833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp\include\assimp">
+      <UniqueIdentifier>{BE36F154-AAF1-E000-53A9-594B3F432B91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp\include\assimp\Compiler">
+      <UniqueIdentifier>{E8EB814D-54B0-803D-1D16-B10789991C73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp\include\assimp\port">
+      <UniqueIdentifier>{F2EEE8C8-5E5D-3E48-A746-F94713F433E4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\assimp\include\assimp\port\AndroidJNI">
+      <UniqueIdentifier>{031EAA1A-EF30-AA73-981A-8760840C47C1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\stb-image">
       <UniqueIdentifier>{9BB018E5-87A9-3737-B0DB-1CBC9C331743}</UniqueIdentifier>
@@ -174,6 +210,12 @@
     <ClInclude Include="src\Hazard\Module\ModuleHandler.h">
       <Filter>src\Hazard\Module</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
@@ -189,14 +231,35 @@
     <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Camera.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshLoader.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
       <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Skybox.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h">
+      <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Textures\RenderTexture.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
@@ -207,7 +270,31 @@
     <ClInclude Include="src\Hazard\Rendering\Textures\Texture2D.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Mono\MonoCommands.h">
+      <Filter>src\Hazard\Scripting\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\PublicField.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.h">
+      <Filter>src\Hazard\Scripting\Script\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Script\Bindings.h">
+      <Filter>src\Hazard\Scripting\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Script\Debug\DebugBindings.h">
+      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h">
+      <Filter>src\Hazard\Scripting\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptUtils.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
@@ -231,6 +318,9 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.h">
       <Filter>src\Platform\Rendering\OpenGL\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.h">
+      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLRenderTexture.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
@@ -246,28 +336,270 @@
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\BaseImporter.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Bitmap.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\BlobIOSystem.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ByteSwapper.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ColladaMetaData.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Compiler\poppack1.h">
+      <Filter>vendor\assimp\include\assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Compiler\pstdint.h">
+      <Filter>vendor\assimp\include\assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Compiler\pushpack1.h">
+      <Filter>vendor\assimp\include\assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\CreateAnimMesh.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\DefaultIOStream.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\DefaultIOSystem.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\DefaultLogger.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Defines.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Exceptional.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Exporter.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\GenericProperty.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Hash.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\IOStream.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\IOStreamBuffer.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\IOSystem.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Importer.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\LineSplitter.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\LogAux.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\LogStream.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Logger.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\MathFunctions.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\MemoryIOWrapper.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\NullLogger.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ParsingUtils.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Profiler.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ProgressHandler.hpp">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\RemoveComments.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SGSpatialSort.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SceneCombiner.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SkeletonMeshBuilder.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SmallVector.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SmoothingGroups.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SmoothingGroups.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\SpatialSort.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\StandardShapes.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\StreamReader.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\StreamWriter.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\StringComparison.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\StringUtils.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Subdivision.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\TinyFormatter.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\Vertex.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\XMLTools.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ZipArchiveIOSystem.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\aabb.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\ai_assert.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\anim.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\camera.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\cexport.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\cfileio.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\cimport.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\color4.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\color4.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\commonMetaData.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\config.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\defs.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\fast_atof.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\importerdesc.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\irrXMLWrapper.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\light.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\material.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\material.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\matrix3x3.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\matrix3x3.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\matrix4x4.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\matrix4x4.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\mesh.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\metadata.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\pbrmaterial.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\port\AndroidJNI\AndroidJNIIOSystem.h">
+      <Filter>vendor\assimp\include\assimp\port\AndroidJNI</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\postprocess.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\qnan.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\quaternion.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\quaternion.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\scene.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\texture.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\types.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\vector2.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\vector2.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\vector3.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\vector3.inl">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\assimp\include\assimp\version.h">
+      <Filter>vendor\assimp\include\assimp</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptUtils.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\Debug\DebugBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\Bindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.h" />
-    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h" />
-    <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h" />
-    <ClInclude Include="src\Hazard\Scripting\PublicField.h" />
-    <ClInclude Include="src\Hazard\Scripting\Mono\MonoCommands.h" />
-    <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h" />
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.h" />
-    <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -309,13 +641,55 @@
     <ClCompile Include="src\Hazard\Module\Modulehandler.cpp">
       <Filter>src\Hazard\Module</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
       <Filter>src\Hazard\Rendering\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshLoader.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Skybox.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp">
+      <Filter>src\Hazard\Scripting\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.cpp">
+      <Filter>src\Hazard\Scripting\Script\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\Script\Debug\DebugBindings.cpp">
+      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp">
+      <Filter>src\Hazard\Scripting\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptUtils.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.cpp">
@@ -332,6 +706,9 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Shader\OpenGLShader.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLRenderTexture.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
@@ -351,23 +728,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptUtils.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Script\Debug\DebugBindings.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp" />
-    <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Camera.h" />
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Skybox.cpp" />
   </ItemGroup>
 </Project>

@@ -2,14 +2,16 @@
 #include <hzreditor.h>
 #include "EditorView.h"
 
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD
+
 #include "GLFW/imgui_impl_glfw.h"
 #include "GLFW/imgui_impl_opengl3.h"
+
+#include <GLFW/glfw3.h>
 
 #include "Library/Style.h"
 #include "Window/AllWindows.h"
 
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
 #include "GUI/Library/FontAwesome.h"
 
 using namespace Hazard;
@@ -44,11 +46,12 @@ namespace WindowElement {
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags  |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-		//io.ConfigFlags|= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		io.ConfigFlags  |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
-		io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
-		io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
+		//io.ConfigFlags|= ImGuiConfigFlags_NavEnableGamepad;        // Enable Gamepad Controls
+		io.ConfigFlags  |= ImGuiConfigFlags_DockingEnable;			 // Enable Docking
 		io.ConfigFlags  |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
+		io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
@@ -73,8 +76,8 @@ namespace WindowElement {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 		// Setup Platform/Renderer bindings
-		ImGui_ImplOpenGL3_Init("#version 410");
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init("#version 330 core");
 
 		Appereance::Style::Init();
 
@@ -159,6 +162,7 @@ namespace WindowElement {
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()
 	{
@@ -173,15 +177,14 @@ namespace WindowElement {
 	}
 	void EditorView::EndFrame()
 	{
-
 		for (RenderableElement* element : elements) {
-			element->OnFrameBegin();
+			element->OnFrameEnd();
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2((float)context->GetWindow().GetWidth(), (float)context->GetWindow().GetHeight());
 
-		// Rendering
+		// Rendering 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
