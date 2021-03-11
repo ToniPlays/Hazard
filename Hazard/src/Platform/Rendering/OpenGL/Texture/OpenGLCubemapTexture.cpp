@@ -10,31 +10,40 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLCubemapTexture::OpenGLCubemapTexture()
 	{
-		std::vector<std::string> faces;
-		faces.push_back("res/textures/sea-right.jpg");
-		faces.push_back("res/textures/sea-left.jpg");
-		faces.push_back("res/textures/sea-top.jpg");
-		faces.push_back("res/textures/sea-bottom.jpg");
-		faces.push_back("res/textures/sea-front.jpg");
-		faces.push_back("res/textures/sea-back.jpg");
-
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		SetFilters();
+	}
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const char* file)
+	{
+		HZR_CORE_ERROR("Not implemented");
+	}
+	OpenGLCubemapTexture::OpenGLCubemapTexture(std::vector<std::string>& faces)
+	{
+		
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-		int w, h, channels;
 		for (uint8_t i = 0; i < faces.size(); i++) {
-			unsigned char* data = stbi_load(faces[i].c_str(), &w, &h, &channels, 0);
-
-			if (data) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0 , GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			}
-			stbi_image_free(data);
+			SetTexture(i, faces[i]);
 		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		SetFilters();
+	}
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& name, const std::string& extension)
+	{
+		std::vector<std::string> sides;
+		sides.push_back(name + "right" + extension);
+		sides.push_back(name + "left" + extension);
+		sides.push_back(name + "top" + extension);
+		sides.push_back(name + "bottom" + extension);
+		sides.push_back(name + "front" + extension);
+		sides.push_back(name + "back" + extension);
+
+		for (uint8_t i = 0; i < sides.size(); i++) {
+			SetTexture(i, sides[i]);
+		}
+		SetFilters();
 	}
 	OpenGLCubemapTexture::~OpenGLCubemapTexture()
 	{
@@ -48,6 +57,17 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		return 0;
 	}
+	void OpenGLCubemapTexture::SetTexture(int side, const std::string& file)
+	{
+		int w, h, channels;
+		unsigned char* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
+		uint32_t internalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
+		uint32_t dataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
+		if (data) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, internalFormat, w, h, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+		}
+		stbi_image_free(data);
+	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
 		glBindTextureUnit(slot, textureID);
@@ -55,5 +75,13 @@ namespace Hazard::Rendering::OpenGL {
 	void OpenGLCubemapTexture::Unbind(uint32_t slot) const
 	{
 		glBindTextureUnit(slot, 0);
+	}
+	void OpenGLCubemapTexture::SetFilters()
+	{
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 }

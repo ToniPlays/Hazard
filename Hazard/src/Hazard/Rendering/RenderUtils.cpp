@@ -142,6 +142,30 @@ namespace Hazard::Rendering {
 		}
 		return nullptr;
 	}
+	template<>
+	CubemapTexture* RenderUtils::Create<CubemapTexture>(std::vector<std::string> faces) {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(faces);
+		}
+		return nullptr;
+	}
+	template<>
+	CubemapTexture* RenderUtils::Create<CubemapTexture>(const char* name, const char* extension) {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(name, extension);
+		}
+		return nullptr;
+	}
+	template<>
+	CubemapTexture* RenderUtils::Create<CubemapTexture>(const char* file) {
+		switch (api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(file);
+		}
+		return nullptr;
+	}
 #pragma endregion
 
 	//Initialize white texture for batch rendering
