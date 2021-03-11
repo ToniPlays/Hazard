@@ -15,6 +15,8 @@ namespace Hazard::Rendering::OpenGL {
 		void Init() const override;
 		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
+		void SetDepthTest(DepthTest type) const override;
+
 		void DrawIndexed(VertexArray* array, uint32_t size) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;

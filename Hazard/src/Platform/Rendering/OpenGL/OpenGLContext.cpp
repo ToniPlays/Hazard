@@ -76,6 +76,11 @@ namespace Hazard::Rendering {
 			glViewport(x, y, w, h);
 		}
 
+		void OpenGLContext::SetDepthTest(DepthTest type) const
+		{
+			glDepthFunc(GL_NEVER + type);
+		}
+
 		void OpenGLContext::DrawIndexed(VertexArray* array, uint32_t size) const
 		{
 			array->EnableAll();

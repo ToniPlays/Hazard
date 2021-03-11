@@ -11,6 +11,10 @@ namespace Hazard::Rendering {
 	{
 		context = Application::GetModule<RenderContext>();
 	}
+	void RenderContextCommand::SetDepthTest(DepthTest type)
+	{
+		context.GetContext().SetDepthTest(type);
+	}
 	bool RenderContextCommand::IsVsync()
 	{
 		return context.GetWindow().IsVSync();

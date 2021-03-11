@@ -267,6 +267,7 @@
     <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -367,5 +368,6 @@
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Skybox.cpp" />
   </ItemGroup>
 </Project>

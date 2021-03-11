@@ -4,6 +4,8 @@
 #include "Hazard/Math/Color.h"
 #include "Hazard/Rendering/Buffers/VertexArray.h"
 
+
+
 namespace Hazard::Rendering {
 
 	struct ErrorData {
@@ -13,6 +15,18 @@ namespace Hazard::Rendering {
 		ErrorData(std::string i, uint32_t error) : info(i), errorCode(error) {};
 	};
 
+	enum DepthTest {
+		Never = 0,
+		Less = 1,
+		Equal = 2,
+		LEqual = 3,
+		Greater = 4,
+		NotEqual = 5,
+		GEqual = 6,
+		Always = 7
+	};
+
+
 	using ErrorCallback = std::function<void(ErrorData&)>;
 
 	class HAZARD_API GraphicsContext {
@@ -20,8 +34,11 @@ namespace Hazard::Rendering {
 		virtual ~GraphicsContext() = default;
 
 		virtual void Init() const = 0;
+
 		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
+		virtual void SetDepthTest(DepthTest type) const = 0;
+
 		virtual void DrawIndexed(VertexArray* array, uint32_t size) const = 0;
 		virtual std::string GetVersion() const = 0;
 		virtual std::string GetDevice() const = 0;

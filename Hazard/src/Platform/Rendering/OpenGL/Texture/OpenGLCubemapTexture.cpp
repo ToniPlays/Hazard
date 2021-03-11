@@ -29,7 +29,6 @@ namespace Hazard::Rendering::OpenGL {
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0 , GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			}
 			stbi_image_free(data);
-			HZR_CORE_INFO("Loading {0} to cubemap", faces[i].c_str());
 		}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

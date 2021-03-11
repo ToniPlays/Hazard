@@ -3,9 +3,9 @@
 #include "Hazard/Module/Module.h"
 #include "Platform/System/Window.h"
 
-#include "Textures/RenderTexture.h"
 #include "Hazard/Entity/Scene.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+#include "Skybox.h"
 
 #include "2D/Renderer2D.h"
 #include "Camera.h"
@@ -33,12 +33,9 @@ namespace Hazard::Rendering {
 		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
 
 	private:
-		VertexArray* skyboxVao;
-		CubemapTexture* skybox;
-		Shader* skyboxShader;
-
+		Skybox* skybox;
 
 		RenderTexture* renderTarget = nullptr;
-		Renderer2D* renderer2D;
+		Renderer2D* renderer2D = nullptr;
 	};
 }
