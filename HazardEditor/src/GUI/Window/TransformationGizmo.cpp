@@ -72,7 +72,7 @@ namespace WindowElement {
 	float* TransformationGizmo::GetSnapValues()
 	{
 		
-		if (Input::IsKeyDown(Key::LeftControl)) {
+		if (Input::IsKeyDown(Key::LeftControl) || forcedSnapping) {
 
 			if (type == Gizmo::Translate) return new float[] { 0.5f, 0.5f, 0.5f };
 			if (type == Gizmo::Rotate) return new float[] { 10.0f, 10.0f, 10.0f };

@@ -25,6 +25,8 @@ namespace WindowElement {
 
 		bool IsGlobal() const { return this->global; }
 		void SetGlobal(bool global) { this->global = global; }
+		bool ForcedSnapping() { return forcedSnapping; }
+		void SetForcedSnapping(bool snapping) { forcedSnapping = snapping; }
 
 	private:
 		Hazard::ECS::Entity currentSelection;
@@ -32,6 +34,7 @@ namespace WindowElement {
 
 		bool isUsing = false;
 		bool global = false;
+		bool forcedSnapping = false;
 
 		float* GetSnapValues();
 		bool SetSelectionContext(Events::SelectionContextChange& change);

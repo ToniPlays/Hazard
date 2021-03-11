@@ -64,6 +64,12 @@ namespace WindowElement {
 		if (Input::ButtonColorChange(ICON_FK_BUILDING, offColor, onColor, Style::GetStyleColor(ColorType::Debug), !gizmo.IsGlobal(), { 28, 28 })) {
 			gizmo.SetGlobal(false);
 		}
+
+		Layout::SameLine(0, 5);
+		if (Input::ButtonColorChange(ICON_FK_CROSSHAIRS, offColor, onColor, Style::GetStyleColor(ColorType::Warning), gizmo.ForcedSnapping(), { 28, 28 })) {
+			gizmo.SetForcedSnapping(!gizmo.ForcedSnapping());
+		}
+
 		Layout::SameLine(0, 5);
 
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
