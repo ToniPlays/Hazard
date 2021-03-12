@@ -13,6 +13,7 @@ namespace Hazard::Rendering {
 	RenderEngine::RenderEngine() : Module("RenderEnginwe")
 	{
 		SetActive(true);
+		std::cout << "RenderEngine()" << std::endl;
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -26,14 +27,22 @@ namespace Hazard::Rendering {
 	{
 		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		renderer2D->Init(35000);
-		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/starfield_", ".png");
+		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/sea-", ".jpg");
 
 		skybox = new Skybox();
 		skybox->SetCubemapTexture(texture);
 
 		RenderCommand::Init();
-		//"c:/dev/Hazard/HazardEditor/res/Models/backpack.obj"
 		meshModel = MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
+		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/cube.obj");
+		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/backpack.obj");
+		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/cube.obj");
+		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
+		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
+
+		meshModel->GetMaterial().GetShader().Bind();
+		meshModel->GetMaterial().GetShader().SetUniformInt("envMap", 0);
+		meshModel->GetMaterial().GetShader().Unbind();
 		//meshModel = MeshFactory::LoadCube();
 
 		HZR_CORE_ASSERT((meshModel != nullptr), "Mesh failed to load");
@@ -49,12 +58,13 @@ namespace Hazard::Rendering {
 		RenderContextCommand::ClearFrame(camera.clearColor);
 		glm::mat4 viewProjection = camera.projection * glm::inverse(camera.view);
 		
+		skybox->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 
-		meshModel->GetShader().Bind();
-		meshModel->GetShader().SetUniformMat4("viewProjection", viewProjection);
+		meshModel->GetMaterial().GetShader().Bind();
+		meshModel->GetMaterial().GetShader().SetUniformMat4("viewProjection", viewProjection);
+		meshModel->GetMaterial().GetShader().SetUniformVec3("cameraPos", camera.position);
 		meshModel->Render();
 
-		skybox->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 
 		renderer2D->BeginScene(viewProjection);
 		renderer2D->BeginBatch();

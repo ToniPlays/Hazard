@@ -30,7 +30,8 @@ namespace WindowElement {
 		auto&[found, camera, t] = scene.GetSceneCamera();
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), camera.bgColor.ToGlm());
+		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 
+			editorCamera.GetPosition(), camera.bgColor.ToGlm()));
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

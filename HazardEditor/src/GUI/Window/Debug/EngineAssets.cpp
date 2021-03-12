@@ -56,5 +56,11 @@ namespace WindowElement {
 			Layout::SameLine(125);
 			Input::InputField(texture);
 		});
+		Layout::Treenode("Loaded meshes", Style::GetTreeNodeDefaultFlags(), []() {
+			for (auto& [file, mesh] : MeshFactory::GetLoadedMeshes()) {
+				Layout::Text(file.c_str());
+			}
+		});
+		Layout::NextLine(25);
 	}
 }

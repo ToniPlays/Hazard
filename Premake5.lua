@@ -226,6 +226,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/GLAD/include",
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
+		"c:/dev/Hazard/Hazard/vendor/assimp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/ImGuizmo",
 		"c:/dev/Hazard/vendor/GLM",

@@ -4,6 +4,8 @@
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptCommand.h"
 
+#include "Hazard/Rendering/Camera.h"
+
 namespace Hazard::ECS {
 	class SceneCommand {
 	public:
@@ -13,7 +15,7 @@ namespace Hazard::ECS {
 		//Render component
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);
-		static void RenderScene(glm::mat4 projection, glm::mat4 view, glm::vec4 clearColor);
+		static void RenderScene(Rendering::Camera camera);
 		//Call when script is added or removed from entity
 		static void OnScriptAttached(Entity& entity, ScriptComponent& script);
 		static void OnScriptDetached(Entity& entity, ScriptComponent& script);

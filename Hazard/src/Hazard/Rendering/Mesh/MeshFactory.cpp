@@ -3,15 +3,22 @@
 #include "MeshFactory.h"
 
 #include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace Hazard::Rendering {
 
-	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
+	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords 
+		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
+
+	std::unordered_map<std::string, Mesh*> MeshFactory::loadedMeshes;
 
 	Mesh* MeshFactory::LoadMesh(const char* file)
 	{
-
-		HZR_CORE_INFO("Loading mesh {0}", file);
+		auto it = loadedMeshes.find(file);
+		if (it != loadedMeshes.end())
+			return loadedMeshes.at(file);
+		
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(file, meshFlags);
 
@@ -19,60 +26,69 @@ namespace Hazard::Rendering {
 			HZR_CORE_WARN("No meshes in {0}", file);
 			return nullptr;
 		}
-		
-		for (uint16_t i; i < scene->mNumMeshes; i++) {
-			aiMesh* aiMesh = scene->mMeshes[i];
-			return ProcessMesh(aiMesh, scene);
+
+		MeshData data;
+
+		data.subMeshes.reserve(scene->mNumMeshes);
+		ProcessNode(scene->mRootNode, scene, data);
+
+		Material* material = Material::Create("res/shaders/PBRShader.glsl");
+		Mesh* mesh = new Mesh(data.vertices, data.indices);
+		mesh->SetMaterial(material);
+
+		if (scene->HasMaterials())
+			GetMaterials(scene, *material);
+
+		loadedMeshes.insert(std::pair(file, mesh));
+		return mesh;
+	}
+	
+	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)
+	{
+		for (uint32_t i = 0; i < node->mNumMeshes; i++) {
+			aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
+			ProcessMesh(aiMesh, scene, data);
 		}
-		return nullptr;
+		for (uint32_t i = 0; i < node->mNumChildren; i++) {
+			ProcessNode(node->mChildren[i], scene, data);
+		}
 	}
-	Mesh* MeshFactory::LoadCube()
+
+	void MeshFactory::ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data)
 	{
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indices;
+		SubMesh subMesh = data.subMeshes.emplace_back();
 
-		vertices.resize(8);
-		vertices[0].position = { -1.0f, -1.0f,  1.0f };
-		vertices[1].position = {  1.0f, -1.0f,  1.0f };
-		vertices[2].position = {  1.0f,  1.0f,  1.0f };
-		vertices[3].position = { -1.0f,  1.0f,  1.0f };
-		vertices[4].position = { -1.0f, -1.0f, -1.0f };
-		vertices[5].position = {  1.0f, -1.0f, -1.0f };
-		vertices[6].position = {  1.0f,  1.0f, -1.0f };
-		vertices[7].position = { -1.0f,  1.0f, -1.0f };
+		subMesh.baseVertex = data.vertexIndex;
+		subMesh.baseIndex = data.baseIndex;
 
-		indices.resize(36);
+		subMesh.materialIndex = mesh->mMaterialIndex;
 
-		indices[0]  = 0; indices[1]  = 1; indices[2]  = 2;
-		indices[3]  = 2; indices[4]  = 3; indices[5]  = 0;
-		indices[6]  = 1; indices[7]  = 5; indices[8]  = 6;
-		indices[9]  = 6; indices[10] = 2; indices[11] = 1;
-		indices[12] = 7; indices[13] = 6; indices[14] = 5;
-		indices[15] = 5; indices[16] = 4; indices[17] = 7;
-		indices[18] = 4; indices[19] = 0; indices[20] = 3;
-		indices[21] = 3; indices[22] = 7; indices[23] = 4;
-		indices[24] = 4; indices[25] = 5; indices[26] = 1;
-		indices[27] = 1; indices[28] = 0; indices[29] = 4;
-		indices[30] = 3; indices[31] = 2; indices[32] = 6;
-		indices[33] = 6; indices[34] = 7; indices[35] = 3;
+		subMesh.vertexCount = mesh->mNumVertices;
+		subMesh.indexCount = mesh->mNumFaces * 3;
+
+		data.vertexIndex += subMesh.vertexCount;
+		data.baseIndex += subMesh.indexCount;
+
+		subMesh.meshName = mesh->mName.C_Str();
+
+		uint32_t colors = 0;
+
+		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++) {
+			if (mesh->HasVertexColors(i)) {
+				colors = i;
+				break;
+			}
+		}
 
 
-		return new Mesh(vertices, indices);
-	}
-	Mesh* MeshFactory::ProcessMesh(aiMesh* mesh, const aiScene* scene)
-	{
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indices;
-
-		for (uint16_t i = 0; i < mesh->mNumVertices; i++) {
+		for (size_t i = 0; i < mesh->mNumVertices; i++) {
 			Vertex vertex;
 
-			if (mesh->HasPositions()) {
-				vertex.position.x = mesh->mVertices[i].x;
-				vertex.position.y = mesh->mVertices[i].y;
-				vertex.position.z = mesh->mVertices[i].z;
-			}
-			if (mesh->HasVertexColors(0)) {
+			vertex.position.x = mesh->mVertices[i].x;
+			vertex.position.y = mesh->mVertices[i].y;
+			vertex.position.z = mesh->mVertices[i].z;
+
+			if (mesh->HasVertexColors(colors)) {
 				vertex.color.r = mesh->mColors[i]->r;
 				vertex.color.g = mesh->mColors[i]->g;
 				vertex.color.b = mesh->mColors[i]->b;
@@ -87,17 +103,50 @@ namespace Hazard::Rendering {
 				vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
 				vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
 			}
-
-			vertices.push_back(vertex);
+			data.vertices.push_back(vertex);
 		}
 
-		for (uint32_t i = 0; i < mesh->mNumFaces; i++) {
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 			aiFace face = mesh->mFaces[i];
-			for (uint32_t j = 0; j < face.mNumIndices; j++) {
-				indices.push_back(face.mIndices[j]);
-			}
+			for (unsigned int j = 0; j < face.mNumIndices; j++)
+				data.indices.push_back(face.mIndices[j] + subMesh.baseVertex);
 		}
 
-		return new Mesh(vertices, indices);
+	}
+	void MeshFactory::GetMaterials(const aiScene* scene, Material& material)
+	{
+
+		HZR_CORE_INFO("Loading materials");
+		std::vector<Texture2D*> textures;
+		textures.reserve(scene->mNumMaterials);
+
+		for (uint16_t i = 0; i < scene->mNumMaterials; i++) {
+
+			aiMaterial* aiMat = scene->mMaterials[i];
+
+			LoadMaterialTexture(aiMat, material, aiTextureType_BASE_COLOR, "texture_albedo");
+			LoadMaterialTexture(aiMat, material, aiTextureType_DIFFUSE   , "texture_diffuse");
+			LoadMaterialTexture(aiMat, material, aiTextureType_SPECULAR  , "texture_specular");
+			LoadMaterialTexture(aiMat, material, aiTextureType_AMBIENT   , "texture_ambient");
+		}
+
+		material.SetTextures(textures);
+	}
+	void MeshFactory::LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName)
+	{
+		std::vector<Texture2D*> textures;
+
+		HZR_CORE_INFO("Are there materials? {0}", material->GetTextureCount(type));
+
+		for (uint32_t i = 0; i < material->GetTextureCount(type); i++) {
+			aiString str;
+			material->GetTexture(type, i, &str);
+
+			HZR_CORE_INFO("Loading texture {0}", str.C_Str());
+		}
+	}
+	Mesh* MeshFactory::LoadCube()
+	{
+		return LoadMesh("res/models/cube.obj");
 	}
 }

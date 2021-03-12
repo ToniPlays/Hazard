@@ -12,6 +12,9 @@ namespace Hazard::Rendering {
         this->vertices = vertices;
         this->indices = indices;
 
+        HZR_CORE_WARN("Creating mesh");
+        HZR_CORE_WARN("Vertices {0}, Indices {1}", vertices.size(), indices.size());
+
         GenerateArrays();
     }
     Mesh::~Mesh()
@@ -26,6 +29,7 @@ namespace Hazard::Rendering {
     }
     void Mesh::GenerateArrays()
     {
+                
         meshVAO = RenderUtils::Create<VertexArray>();
         VertexBuffer* buffer = RenderUtils::Create<VertexBuffer>((uint32_t)(vertices.size() * sizeof(Vertex)));
 
@@ -41,8 +45,5 @@ namespace Hazard::Rendering {
         IndexBuffer* iBuffer = RenderUtils::Create<IndexBuffer>();
         iBuffer->SetData(indices.data(), indices.size());
         meshVAO->SetIndexBuffer(iBuffer);
-        
-        HZR_CORE_INFO("Vertices {0}, indices {1}", vertices.size(), indices.size());
-        shader = RenderUtils::Create<Shader>("res/shaders/PBRShader.glsl");
     }
 }
