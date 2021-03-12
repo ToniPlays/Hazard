@@ -28,6 +28,7 @@ namespace Hazard::Rendering {
 	struct Vertex {
 		glm::vec3 position  = { 0, 0, 0 };
 		glm::vec4 color     = { 1, 1, 1, 1 };
+		glm::vec3 normals   = { 0, 0, 0 };
 		glm::vec2 texCoords = { 0, 0 };
 	};
 }

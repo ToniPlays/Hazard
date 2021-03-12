@@ -72,15 +72,20 @@ namespace Hazard::Rendering {
 				vertex.position.y = mesh->mVertices[i].y;
 				vertex.position.z = mesh->mVertices[i].z;
 			}
-			if (mesh->HasTextureCoords(0)) {
-				vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
-				vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
-			}
 			if (mesh->HasVertexColors(0)) {
 				vertex.color.r = mesh->mColors[i]->r;
 				vertex.color.g = mesh->mColors[i]->g;
 				vertex.color.b = mesh->mColors[i]->b;
 				vertex.color.a = mesh->mColors[i]->a;
+			}
+			if (mesh->HasNormals()) {
+				vertex.normals.x = mesh->mNormals[i].x;
+				vertex.normals.y = mesh->mNormals[i].y;
+				vertex.normals.z = mesh->mNormals[i].z;
+			}
+			if (mesh->HasTextureCoords(0)) {
+				vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
+				vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
 			}
 
 			vertices.push_back(vertex);

@@ -31,6 +31,7 @@ namespace Hazard::Rendering {
         buffer->SetLayout({ 
             { ShaderDataType::Float3, "v_position" },
             { ShaderDataType::Float4, "v_color" },
+            { ShaderDataType::Float3, "v_normals" },
             { ShaderDataType::Float2, "v-textCoords" }
             });
         buffer->SetData(vertices.data(), vertices.size() * sizeof(Vertex));
