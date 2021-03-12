@@ -23,6 +23,8 @@ namespace Hazard::Rendering {
 	}
 	void RenderCommand::DrawIndexed(VertexArray* vao, uint32_t count)
 	{
+		stats.draws++;
+		stats.indices += count;
 		context->GetContext().DrawIndexed(vao, count);
 	}
 }

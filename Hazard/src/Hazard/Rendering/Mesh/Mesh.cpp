@@ -20,6 +20,7 @@ namespace Hazard::Rendering {
     }
     void Mesh::Render()
     {
+        RenderCommand::GetStats().vertices += vertices.size();
         uint32_t size = meshVAO->GetIndexBuffer()->GetCount();
         RenderCommand::DrawIndexed(meshVAO, size);
     }

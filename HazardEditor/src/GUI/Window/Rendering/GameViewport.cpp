@@ -31,7 +31,7 @@ namespace WindowElement {
 		}
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(cam.projection, glm::inverse(transform.GetTransformMat4()), cam.bgColor.ToGlm());
+		ECS::SceneCommand::RenderScene(cam.projection, transform.GetTransformNoScale(), cam.bgColor.ToGlm());
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();

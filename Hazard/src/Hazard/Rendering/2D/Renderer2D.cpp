@@ -140,8 +140,6 @@ namespace Hazard::Rendering {
 			data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(data.QuadVertexArray, data.QuadIndexCount);
-		RenderCommand::GetStats().draws++;
-		RenderCommand::GetStats().indices += data.QuadIndexCount;
 	}
 	void Renderer2D::Close()
 	{

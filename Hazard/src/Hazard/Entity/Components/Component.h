@@ -26,6 +26,10 @@ namespace Hazard::ECS {
 		{
 			return Math::ToTransformMatrix(Translation, Rotation, Scale);
 		}
+		glm::mat4 GetTransformNoScale()
+		{
+			return Math::ToTransformMatrix(Translation, Rotation);
+		}
 	};
 	//Script component for entities
 	struct ScriptComponent {

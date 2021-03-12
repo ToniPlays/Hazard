@@ -10,7 +10,7 @@
 
 namespace Hazard::Rendering {
 
-	RenderEngine::RenderEngine() : Module("RenderEngine")
+	RenderEngine::RenderEngine() : Module("RenderEnginwe")
 	{
 		SetActive(true);
 	}
@@ -26,14 +26,14 @@ namespace Hazard::Rendering {
 	{
 		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		renderer2D->Init(35000);
-		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/sea-", ".jpg");
+		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/starfield_", ".png");
 
 		skybox = new Skybox();
 		skybox->SetCubemapTexture(texture);
 
 		RenderCommand::Init();
 		//"c:/dev/Hazard/HazardEditor/res/Models/backpack.obj"
-		meshModel = MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/space_shuttle.fbx");
+		meshModel = MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
 		//meshModel = MeshFactory::LoadCube();
 
 		HZR_CORE_ASSERT((meshModel != nullptr), "Mesh failed to load");
@@ -48,6 +48,7 @@ namespace Hazard::Rendering {
 		renderTarget->Bind();
 		RenderContextCommand::ClearFrame(camera.clearColor);
 		glm::mat4 viewProjection = camera.projection * glm::inverse(camera.view);
+		
 
 		meshModel->GetShader().Bind();
 		meshModel->GetShader().SetUniformMat4("viewProjection", viewProjection);
@@ -57,7 +58,6 @@ namespace Hazard::Rendering {
 
 		renderer2D->BeginScene(viewProjection);
 		renderer2D->BeginBatch();
-
 	}
 		
 	void RenderEngine::EndRendering()
