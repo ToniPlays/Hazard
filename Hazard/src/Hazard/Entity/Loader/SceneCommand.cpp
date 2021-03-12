@@ -9,11 +9,9 @@
 
 namespace Hazard::ECS {
 
-	Rendering::RenderEngine SceneCommand::RenderEngine;
 	//Initialize connection to renderEngine
 	void SceneCommand::Init()
 	{
-		RenderEngine = Application::GetModule<Rendering::RenderEngine>();
 	}
 
 	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)

@@ -198,4 +198,7 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\PBRShader.glsl" />
+  </ItemGroup>
 </Project>

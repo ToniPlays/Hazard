@@ -1,6 +1,6 @@
 #pragma once
 
-#include "QuadData.h"
+#include "../Mesh/VertexData.h"
 
 #include "../Buffers/VertexArray.h"
 #include "../Buffers/Buffer.h"

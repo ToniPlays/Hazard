@@ -9,7 +9,7 @@ namespace Hazard::ECS {
 
 	SceneHandler::SceneHandler() : Module::Module("Scene handler")
 	{
-
+		std::cout << "SceneHandler()" << std::endl;
 	}
 	SceneHandler::~SceneHandler()
 	{

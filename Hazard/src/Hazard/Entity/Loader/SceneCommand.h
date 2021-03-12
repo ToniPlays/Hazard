@@ -20,8 +20,5 @@ namespace Hazard::ECS {
 
 		//Get current scene from SceneHandler
 		static Scene& GetCurrentScene();
-
-	private:
-		static Rendering::RenderEngine RenderEngine;
 	};
 }

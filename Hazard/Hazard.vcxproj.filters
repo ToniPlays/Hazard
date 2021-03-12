@@ -216,9 +216,6 @@
     <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\2D\QuadData.h">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
@@ -233,12 +230,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Camera.h">
       <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshLoader.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h">
       <Filter>src\Hazard\Rendering</Filter>
@@ -600,6 +591,11 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h">
+      <Filter>src\Hazard\Rendering\2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -649,12 +645,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
       <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshLoader.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
       <Filter>src\Hazard\Rendering</Filter>
@@ -728,5 +718,7 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp" />
   </ItemGroup>
 </Project>

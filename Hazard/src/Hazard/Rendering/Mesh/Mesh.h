@@ -1,20 +1,29 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "VertexData.h"
 
 namespace Hazard::Rendering {
 
-	struct Vertex 
-	{
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec3 texCoors;
-	};
 
 	class Mesh {
 	public:
-		Mesh();
+		Mesh() = default;
+		Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 		~Mesh();
 
+		void Render();
+
+		Shader& GetShader() { return *shader; }
+		void GenerateArrays();
+
+	private:
+		
+	private:
+		std::vector<Vertex> vertices;
+		std::vector<uint32_t> indices;
+
+		Shader* shader;
+
+		VertexArray* meshVAO;
 	};
 }

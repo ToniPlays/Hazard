@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "RenderUtils.h"
-#include "Platform/Rendering/OpenGL/OpenGL.h";
+#include "Platform/Rendering/OpenGL/OpenGL.h"
 
 namespace Hazard::Rendering {
 

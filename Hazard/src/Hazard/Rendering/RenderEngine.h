@@ -10,6 +10,9 @@
 #include "2D/Renderer2D.h"
 #include "Camera.h"
 
+#include "Mesh/Mesh.h"
+
+
 namespace Hazard::Rendering {	
 
 	class RenderEngine : public Module::Module {
@@ -33,7 +36,9 @@ namespace Hazard::Rendering {
 		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
 
 	private:
-		Skybox* skybox;
+
+		Skybox* skybox = nullptr;
+		Mesh* meshModel = nullptr;
 
 		RenderTexture* renderTarget = nullptr;
 		Renderer2D* renderer2D = nullptr;

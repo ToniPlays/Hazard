@@ -1,6 +1,8 @@
 #pragma once
 
 #include "RenderEngine.h"
+#include "Hazard/RenderContext/RenderContext.h"
+
 namespace Hazard::Rendering {
 
 	struct RenderStats {
@@ -16,18 +18,18 @@ namespace Hazard::Rendering {
 		static void ResetStats();
 		static RenderStats& GetStats() { return stats; }
 
-		static void Begin(Camera camera) { engine.BeginRendering(camera); }
-		static void End() { engine.EndRendering(); }
-		static void SetRenderTarget(RenderTexture* texture) { engine.SetRenderTarget(texture); }
+		static void Begin(Camera camera) { engine->BeginRendering(camera); }
+		static void End() { engine->EndRendering(); }
+		static void SetRenderTarget(RenderTexture* texture) { engine->SetRenderTarget(texture); }
 
 		static void DrawIndexed(VertexArray* vao, uint32_t count);
 
 		template<typename T>
-		static void Submit(T element) { engine.Submit(element); }
+		static void Submit(T element) { engine->Submit(element); }
 
 	private:
-		static RenderContext context;
-		static RenderEngine engine;
+		static RenderContext* context;
+		static RenderEngine* engine;
 		static RenderStats stats;
 	};
 }

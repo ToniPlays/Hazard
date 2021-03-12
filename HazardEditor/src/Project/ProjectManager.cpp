@@ -9,7 +9,7 @@ namespace Project {
 
 	ProjectManager::ProjectManager() : Module::Module("ProjectManager")
 	{
-		
+		std::cout << "ProjectManager()" << std::endl;
 	}
 
 	ProjectManager::~ProjectManager()

@@ -12,6 +12,7 @@ namespace Hazard::Rendering {
 	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
 	{
 		RenderUtils::SetRenderAPI(api);
+		std::cout << "RenderContext()" << std::endl;
 	}
 	RenderContext::~RenderContext()
 	{

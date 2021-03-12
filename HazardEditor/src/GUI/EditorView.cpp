@@ -24,6 +24,7 @@ namespace WindowElement {
 	{
 		instance = this;
 		elements = std::vector<RenderableElement*>();
+		std::cout << "EditorView()" << std::endl;
 	}
 	EditorView::~EditorView()
 	{
