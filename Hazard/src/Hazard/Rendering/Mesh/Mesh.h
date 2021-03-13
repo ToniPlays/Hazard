@@ -13,27 +13,39 @@ namespace Hazard::Rendering {
 		uint32_t indexCount;
 		uint32_t vertexCount;
 
-
-
 		glm::mat4 transform;
 		glm::mat4 localTransform;
 
 		std::string nodeName, meshName;
 	};
 
+	class Mesh;
+
+	struct RenderableMesh {
+		Mesh* mesh;
+		glm::mat4 transform;
+
+		RenderableMesh(Mesh* mesh, glm::mat4 transform) : mesh(mesh), transform(transform) {}
+	};
+
 	class Mesh {
 	public:
 		Mesh() = default;
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+		Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 		~Mesh();
 
 		void Render();
 
+
+		std::string& GetFile() { return filename; }
 		Material& GetMaterial() { return *material; }
 		void SetMaterial(Material* material) { this->material = material; }
 		void GenerateArrays();
 
 	private:
+
+		std::string filename;
+
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 

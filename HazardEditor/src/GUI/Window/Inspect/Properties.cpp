@@ -48,6 +48,7 @@ namespace WindowElement {
 		DrawComponent<PointLightComponent>(ICON_FK_LIGHTBULB_O " Point light", selectionContext);
 		DrawComponent<BatchComponent>("Batch", selectionContext);
 		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
+		DrawComponent<MeshComponent>(ICON_FK_SLACK " Mesh", selectionContext);
 
 
 		Layout::ContextMenu([&]() {
@@ -78,6 +79,10 @@ namespace WindowElement {
 			if (!selectionContext.HasComponent<ScriptComponent>())
 				Layout::MenuItem("Script component", [&]() {
 				selectionContext.AddComponent<ScriptComponent>();
+					});
+			if (!selectionContext.HasComponent<MeshComponent>())
+				Layout::MenuItem("Mesh component", [&]() {
+				selectionContext.AddComponent<MeshComponent>();
 					});
 		});
 

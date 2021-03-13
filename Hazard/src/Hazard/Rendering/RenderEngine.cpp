@@ -31,40 +31,23 @@ namespace Hazard::Rendering {
 
 		skybox = new Skybox();
 		skybox->SetCubemapTexture(texture);
-
 		RenderCommand::Init();
-		meshModel = MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
-		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/cube.obj");
-		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/backpack.obj");
-		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/cube.obj");
-		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
-		MeshFactory::LoadMesh("c:/dev/Hazard/HazardEditor/res/Models/shuttle.fbx");
-
-		meshModel->GetMaterial().GetShader().Bind();
-		meshModel->GetMaterial().GetShader().SetUniformInt("envMap", 0);
-		meshModel->GetMaterial().GetShader().Unbind();
-		//meshModel = MeshFactory::LoadCube();
-
-		HZR_CORE_ASSERT((meshModel != nullptr), "Mesh failed to load");
 	}
 	void RenderEngine::Close()
 	{
 		renderer2D->Close();
 	}
+
 	void RenderEngine::BeginRendering(Camera camera)
 	{
 		RenderCommand::ResetStats();
 		renderTarget->Bind();
+
 		RenderContextCommand::ClearFrame(camera.clearColor);
-		glm::mat4 viewProjection = camera.projection * glm::inverse(camera.view);
+		viewProjection = camera.projection * glm::inverse(camera.view);
+		cameraPosition = camera.position;
 		
 		skybox->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
-
-		meshModel->GetMaterial().GetShader().Bind();
-		meshModel->GetMaterial().GetShader().SetUniformMat4("viewProjection", viewProjection);
-		meshModel->GetMaterial().GetShader().SetUniformVec3("cameraPos", camera.position);
-		meshModel->Render();
-
 
 		renderer2D->BeginScene(viewProjection);
 		renderer2D->BeginBatch();

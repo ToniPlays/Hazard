@@ -2,6 +2,7 @@
 
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Math.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 
 /*
@@ -34,5 +35,8 @@ namespace Hazard::ECS {
 	//Script component for entities
 	struct ScriptComponent {
 		std::string moduleName = "";
+	};
+	struct MeshComponent {
+		Rendering::Mesh* mesh;
 	};
 }

@@ -21,9 +21,9 @@ namespace Hazard::Rendering {
 	class MeshFactory {
 
 	public:
-		static Mesh* LoadMesh(const char* file);
+		static Mesh* LoadMesh(const std::string& file);
 		static Mesh* LoadCube();
-		static std::unordered_map<std::string, Mesh*>& GetLoadedMeshes() { return loadedMeshes; }
+		static std::vector<Mesh*>& GetLoadedMeshes() { return loadedMeshes; }
 
 	private:
 		static void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);
@@ -33,6 +33,6 @@ namespace Hazard::Rendering {
 		static void LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName);
 
 	private:
-		static std::unordered_map<std::string, Mesh*> loadedMeshes;
+		static std::vector<Mesh*> loadedMeshes;
 	};
 }

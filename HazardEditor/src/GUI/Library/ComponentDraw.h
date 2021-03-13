@@ -282,4 +282,19 @@ namespace WindowElement {
 				});
 		});
 	}
+	template<>
+	inline void DrawComponent<MeshComponent>(const char* name, Entity entity) {
+		if (!entity.HasComponent<MeshComponent>()) return;
+		auto& component = entity.GetComponent<MeshComponent>();
+		Layout::ComponentTreenode<MeshComponent>(entity, name, [&]() {
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text("Mesh file");
+			Layout::TableNext();
+			Layout::Text(component.mesh->GetFile().c_str());
+			Layout::EndTable();
+		}, []() {
+			
+		});
+	}
 }

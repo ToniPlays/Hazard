@@ -57,8 +57,8 @@ namespace WindowElement {
 			Input::InputField(texture);
 		});
 		Layout::Treenode("Loaded meshes", Style::GetTreeNodeDefaultFlags(), []() {
-			for (auto& [file, mesh] : MeshFactory::GetLoadedMeshes()) {
-				Layout::Text(file.c_str());
+			for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {
+				Layout::Text(mesh->GetFile().c_str());
 			}
 		});
 		Layout::NextLine(25);

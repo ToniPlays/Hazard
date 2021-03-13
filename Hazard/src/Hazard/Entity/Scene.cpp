@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Entity.h"
 #include "Loader/SceneCommand.h"
+#include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 namespace Hazard::ECS {
 
@@ -31,14 +32,23 @@ namespace Hazard::ECS {
             auto& [sprite, transform] = registry.get<SpriteRendererComponent, TransformComponent>(entity);
             SceneCommand::Render(sprite, transform);
         }
-        auto group = registry.group<BatchComponent>(entt::get<TransformComponent>);
-        for (auto entity : group) {
+        auto batches = registry.group<BatchComponent>(entt::get<TransformComponent>);
+        for (auto entity : batches) {
 
             Entity e{ entity, this };
             if (!e.IsVisible()) continue;
 
             auto& [batch, transform] = registry.get<BatchComponent, TransformComponent>(entity);
             SceneCommand::Render(batch, transform);
+        }
+        auto meshes = registry.group<MeshComponent>(entt::get<TransformComponent>);
+        for (auto entity : meshes) {
+
+            Entity e{ entity, this };
+            if (!e.IsVisible()) continue;
+
+            auto& [mesh, transform] = registry.get<MeshComponent, TransformComponent>(entity);
+            SceneCommand::Render(mesh, transform);
         }
     }
     Entity Scene::CreateEntity(const char* name)
@@ -86,7 +96,6 @@ namespace Hazard::ECS {
     void Scene::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
 
     //SPRITE RENDERER COMPONENT
-
     template<>
     void Scene::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
         component.texture = Rendering::RenderUtils::GetFromTextures(0);
@@ -123,5 +132,12 @@ namespace Hazard::ECS {
     {
         SceneCommand::OnScriptDetached(entity, component);
     }
+    //MESH COMPONENT
+    template<>
+    void Scene::OnComponentAdded(Entity& entity, MeshComponent& component) {
+        component.mesh = Rendering::MeshFactory::LoadMesh("res/models/shuttle.fbx");
+    }
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, MeshComponent& component) {}
 #pragma endregion
 }

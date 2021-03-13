@@ -46,6 +46,10 @@ namespace Hazard::ECS {
 	void SceneCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
 		Rendering::RenderCommand::Submit(Rendering::Quad(transform.GetTransformMat4(), component.tint.ToGlm(), component.texture));
 	}
+	template<>
+	void SceneCommand::Render(MeshComponent& component, TransformComponent& transform) {
+		Rendering::RenderCommand::Submit(Rendering::RenderableMesh(component.mesh, transform.GetTransformMat4()));
+	}
 
 	template<>
 	void SceneCommand::Render(BatchComponent& component, TransformComponent& transform) {

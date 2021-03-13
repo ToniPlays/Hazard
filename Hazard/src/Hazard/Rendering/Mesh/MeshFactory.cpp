@@ -11,13 +11,14 @@ namespace Hazard::Rendering {
 	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords 
 		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
 
-	std::unordered_map<std::string, Mesh*> MeshFactory::loadedMeshes;
+	std::vector<Mesh*> MeshFactory::loadedMeshes;
 
-	Mesh* MeshFactory::LoadMesh(const char* file)
+	Mesh* MeshFactory::LoadMesh(const std::string& file)
 	{
-		auto it = loadedMeshes.find(file);
-		if (it != loadedMeshes.end())
-			return loadedMeshes.at(file);
+		for (uint32_t i = 0; i < loadedMeshes.size(); i++) {
+			if (loadedMeshes[i]->GetFile() == file)
+				return loadedMeshes[i];
+		}
 		
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(file, meshFlags);
@@ -33,13 +34,13 @@ namespace Hazard::Rendering {
 		ProcessNode(scene->mRootNode, scene, data);
 
 		Material* material = Material::Create("res/shaders/PBRShader.glsl");
-		Mesh* mesh = new Mesh(data.vertices, data.indices);
+		Mesh* mesh = new Mesh(file, data.vertices, data.indices);
 		mesh->SetMaterial(material);
 
 		if (scene->HasMaterials())
 			GetMaterials(scene, *material);
 
-		loadedMeshes.insert(std::pair(file, mesh));
+		loadedMeshes.push_back(mesh);
 		return mesh;
 	}
 	
