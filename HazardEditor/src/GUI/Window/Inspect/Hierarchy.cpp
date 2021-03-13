@@ -28,7 +28,8 @@ namespace WindowElement {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Hierarchy::SelectionContextChange));
-		return false;
+		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::KeyPressEvent));
+		
 	}
 	void Hierarchy::OnWindowRender()
 	{
@@ -95,5 +96,13 @@ namespace WindowElement {
 		if (opened) {
 			Layout::Text(entity.IsVisible() ? "Visible" : "Not visible");
 		}
+	}
+	bool Hierarchy::KeyPressEvent(KeyPressedEvent& e)
+	{
+		if (e.GetKeyCode() == Key::Delete) {
+			selectionContext.GetScene().DestroyEntity(selectionContext);
+			return true;
+		}
+		return false;
 	}
 }

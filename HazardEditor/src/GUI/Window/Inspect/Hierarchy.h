@@ -18,11 +18,13 @@ namespace WindowElement {
 		void OnWindowRender() override;
 		bool SelectionContextChange(Events::SelectionContextChange& e);
 
-	private:
-		SceneHandler* handler;
-		Entity selectionContext;
 
 	private:
 		void DrawEntity(Entity entity);
+		bool KeyPressEvent(KeyPressedEvent& e);
+
+	private:
+		SceneHandler* handler;
+		Entity selectionContext;
 	};
 }
