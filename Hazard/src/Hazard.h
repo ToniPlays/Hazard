@@ -21,8 +21,8 @@
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 //Hazard ECS includes
+#include "Hazard/Entity/SceneCommand.h"
 #include "Hazard/Entity/Loader/SceneHandler.h"
-#include "Hazard/Entity/Loader/SceneCommand.h"
 #include "Hazard/Entity/Loader/SceneSerializer.h"
 #include "Hazard/Entity/Scene.h"
 #include "Hazard/Entity/Entity.h"

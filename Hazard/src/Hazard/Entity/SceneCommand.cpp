@@ -4,8 +4,8 @@
 #include "SceneCommand.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Core/Application.h"
-#include "../Component.h"
-#include "SceneHandler.h"
+#include "Component.h"
+#include "Loader/SceneHandler.h"
 
 namespace Hazard::ECS {
 

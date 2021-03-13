@@ -140,8 +140,6 @@ namespace Hazard::Rendering {
 	{
 		std::vector<Texture2D*> textures;
 
-		HZR_CORE_INFO("Are there materials? {0}", material->GetTextureCount(type));
-
 		for (uint32_t i = 0; i < material->GetTextureCount(type); i++) {
 			aiString str;
 			material->GetTexture(type, i, &str);

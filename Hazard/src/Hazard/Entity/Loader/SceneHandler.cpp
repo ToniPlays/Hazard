@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "SceneHandler.h"
 #include "SceneSerializer.h"
-#include "SceneCommand.h"
+#include "../SceneCommand.h"
 
 namespace Hazard::ECS {
 

@@ -50,7 +50,10 @@ namespace WindowElement {
 			});
 		});
 
-		ContextMenus::HierarchyEntityMenu(scene);
+		ContextMenus::HierarchyEntityMenu(scene, [](Entity entity) {
+			Events::SelectionContextChange e(entity);
+			EditorView::GetInstance().OnEvent(e);
+		});
 		
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0)) {
 			Events::SelectionContextChange e({});

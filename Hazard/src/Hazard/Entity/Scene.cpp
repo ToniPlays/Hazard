@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "Scene.h"
 #include "Entity.h"
-#include "Loader/SceneCommand.h"
+#include "SceneCommand.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 namespace Hazard::ECS {

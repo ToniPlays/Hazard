@@ -28,6 +28,8 @@ namespace Hazard::ECS::Loader {
 				Deserialize<TransformComponent>(entity, node);
 				Deserialize<SpriteRendererComponent>(entity, node);
 				Deserialize<CameraComponent>(entity, node);
+				Deserialize<ScriptComponent>(entity, node);
+				Deserialize<MeshComponent>(entity, node);
 			}
 		}
 		return scene;
@@ -71,6 +73,8 @@ namespace Hazard::ECS::Loader {
 		SerializeComponentEditor<TransformComponent>(entity, out);
 		SerializeComponentEditor<SpriteRendererComponent>(entity, out);
 		SerializeComponentEditor<CameraComponent>(entity, out);
+		SerializeComponentEditor<ScriptComponent>(entity, out);
+		SerializeComponentEditor<MeshComponent>(entity, out);
 
 		out << YAML::EndMap;
 	}

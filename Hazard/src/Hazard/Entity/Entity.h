@@ -24,6 +24,14 @@ namespace Hazard::ECS {
 			scene->OnComponentAdded<T>(*this, component);
 			return component;
 		}
+		template<typename T, typename... Args>
+		void AddComponent(T component, Args&&... args) {
+			if (HasComponent<T>()) {
+				HZR_CORE_WARN("Entity already has component");
+			}
+			scene->registry.emplace<T>(*this, std::forward<Args>(args)...);
+			scene->OnComponentAdded<T>(*this, component);
+		}
 		//Remove component from entity
 		template<typename T>
 		void RemoveComponent() {

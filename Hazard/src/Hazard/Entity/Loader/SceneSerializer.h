@@ -4,6 +4,7 @@
 #include "../Scene.h"
 #include "../Entity.h"
 #include "Hazard/RenderContext/RenderContext.h"
+#include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -139,6 +140,25 @@ namespace Hazard::ECS::Loader {
 			c.RecalculateProjection(1920, 1080);
 		};
 
+		template<>
+		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node node) {
+			if (!node["ScriptComponent"]) return;
+			auto comp = node["ScriptComponent"];
+			std::string moduleName = comp["ModuleName"].as<std::string>();
+			ScriptComponent c = ScriptComponent();
+			c.moduleName = moduleName;
+			entity.AddComponent(c);
+			
+			HZR_CORE_INFO("Loading script {0}", moduleName);
+		};
+		template<>
+		static void Deserialize<MeshComponent>(Entity entity, YAML::Node node) {
+			if (!node["MeshComponent"]) return;
+			auto comp = node["MeshComponent"];
+			auto& c = entity.AddComponent<MeshComponent>();
+			c.mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
+		};
+
 		//Deserialize runtime
 		static Scene* DeserializeRuntime(const char* file);
 
@@ -200,7 +220,24 @@ namespace Hazard::ECS::Loader {
 			out << YAML::Key << "Color" << YAML::Key; Convert(out, c.bgColor.ToGlm());
 			out << YAML::EndMap;
 		}
-
+		template<>
+		static void SerializeComponentEditor<ScriptComponent>(Entity entity, YAML::Emitter& out)
+		{
+			if (!entity.HasComponent<ScriptComponent>()) return;
+			auto c = entity.GetComponent<ScriptComponent>();
+			out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
+			out << YAML::Key << "ModuleName" << YAML::Value << c.moduleName;
+			out << YAML::EndMap;
+		}
+		template<>
+		static void SerializeComponentEditor<MeshComponent>(Entity entity, YAML::Emitter& out)
+		{
+			if (!entity.HasComponent<MeshComponent>()) return;
+			auto c = entity.GetComponent<MeshComponent>();
+			out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
+			out << YAML::Key << "File" << YAML::Value << c.mesh->GetFile();
+			out << YAML::EndMap;
+		}
 
 		static bool SerializeRuntime(const char* file, Scene& scene);
 	};
