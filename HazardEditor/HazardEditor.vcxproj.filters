@@ -126,6 +126,7 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Library\ContextMenus.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
@@ -197,5 +198,6 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Library\ContextMenus.cpp" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
 #include "GUI/Library/ComponentDraw.h"
+#include "GUI/Library/ContextMenus.h"
 
 using namespace WindowLayout;
 
@@ -50,42 +51,7 @@ namespace WindowElement {
 		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
 		DrawComponent<MeshComponent>(ICON_FK_SLACK " Mesh", selectionContext);
 
-
-		Layout::ContextMenu([&]() {
-			if (!selectionContext.HasComponent<CameraComponent>())
-			Layout::MenuItem("Camera", [&]() {
-				selectionContext.AddComponent<CameraComponent>();
-				});
-			if (!selectionContext.HasComponent<SpriteRendererComponent>())
-			Layout::MenuItem("Sprite renderer", [&]() {
-				selectionContext.AddComponent<SpriteRendererComponent>();
-			});
-			if (!selectionContext.HasComponent<SkyLightComponent>())
-			Layout::MenuItem("Sky Light", [&]() {
-				selectionContext.AddComponent<SkyLightComponent>();
-			});
-			if (!selectionContext.HasComponent<DirectionalLightComponent>())
-			Layout::MenuItem("Directional light", [&]() {
-				selectionContext.AddComponent<DirectionalLightComponent>();
-				});
-			if (!selectionContext.HasComponent<PointLightComponent>())
-			Layout::MenuItem("Point light", [&]() {
-				selectionContext.AddComponent<PointLightComponent>();
-				});
-			if (!selectionContext.HasComponent<BatchComponent>())
-			Layout::MenuItem("Batch renderer", [&]() {
-				selectionContext.AddComponent<BatchComponent>();
-				});
-			if (!selectionContext.HasComponent<ScriptComponent>())
-				Layout::MenuItem("Script component", [&]() {
-				selectionContext.AddComponent<ScriptComponent>();
-					});
-			if (!selectionContext.HasComponent<MeshComponent>())
-				Layout::MenuItem("Mesh component", [&]() {
-				selectionContext.AddComponent<MeshComponent>();
-					});
-		});
-
+		ContextMenus::PropertiesContextMenu(selectionContext);
 	}
 	bool Properties::OnEvent(Event& e)
 	{

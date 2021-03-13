@@ -22,6 +22,7 @@ namespace Hazard::Utility {
 		static std::string SaveFolderDialog();
 
 		static std::string ReadFile(const std::string& file);
+		static std::string GetFileAbsolutePath(const std::string& file);
 		static std::string GetFileExtension(const std::string& file);
 
 		static FolderData GetFolderFiles(const std::string& folder);

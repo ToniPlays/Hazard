@@ -86,6 +86,12 @@ namespace Hazard::Utility {
 		ifs.close();
 		return result;
 	}
+
+	std::string File::GetFileAbsolutePath(const std::string& file)
+	{
+		std::filesystem::path path(file);
+		return std::filesystem::absolute(path).string();
+	}
 	
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of(".") + 1);

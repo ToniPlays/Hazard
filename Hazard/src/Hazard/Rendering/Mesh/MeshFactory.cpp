@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Hazard/File/File.h"
 
 namespace Hazard::Rendering {
 
@@ -15,16 +16,18 @@ namespace Hazard::Rendering {
 
 	Mesh* MeshFactory::LoadMesh(const std::string& file)
 	{
+		std::string absoluteFile = Utility::File::GetFileAbsolutePath(file);
+
 		for (uint32_t i = 0; i < loadedMeshes.size(); i++) {
 			if (loadedMeshes[i]->GetFile() == file)
 				return loadedMeshes[i];
 		}
 		
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(file, meshFlags);
+		const aiScene* scene = importer.ReadFile(absoluteFile, meshFlags);
 
 		if (!scene || !scene->HasMeshes()) {
-			HZR_CORE_WARN("No meshes in {0}", file);
+			HZR_CORE_WARN("No meshes in {0}", absoluteFile);
 			return nullptr;
 		}
 
@@ -34,7 +37,7 @@ namespace Hazard::Rendering {
 		ProcessNode(scene->mRootNode, scene, data);
 
 		Material* material = Material::Create("res/shaders/PBRShader.glsl");
-		Mesh* mesh = new Mesh(file, data.vertices, data.indices);
+		Mesh* mesh = new Mesh(absoluteFile, data.vertices, data.indices);
 		mesh->SetMaterial(material);
 
 		if (scene->HasMaterials())
@@ -149,5 +152,13 @@ namespace Hazard::Rendering {
 	Mesh* MeshFactory::LoadCube()
 	{
 		return LoadMesh("res/models/cube.obj");
+	}
+	Mesh* MeshFactory::LoadSphere()
+	{
+		return LoadMesh("res/models/ico.obj");
+	}
+	Mesh* MeshFactory::LoadPlane()
+	{
+		return LoadMesh("res/models/plane.obj");
 	}
 }

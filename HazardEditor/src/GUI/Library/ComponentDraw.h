@@ -289,9 +289,14 @@ namespace WindowElement {
 		Layout::ComponentTreenode<MeshComponent>(entity, name, [&]() {
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
-			Layout::Text("Mesh file");
+			if (Input::Button("Mesh")) {
+				std::string file = Hazard::Utility::File::OpenFileDialog("");
+				if (file != "") 
+					component.mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
+			}
 			Layout::TableNext();
-			Layout::Text(component.mesh->GetFile().c_str());
+			std::string filename = component.mesh != nullptr ? component.mesh->GetFile() : "None";
+			Layout::Text(filename.c_str());
 			Layout::EndTable();
 		}, []() {
 			

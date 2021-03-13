@@ -7,6 +7,7 @@
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
+#include "GUI/Library/ContextMenus.h"
 
 using namespace WindowLayout;
 
@@ -49,13 +50,7 @@ namespace WindowElement {
 			});
 		});
 
-		Layout::ContextMenu([&scene]() {
-			Layout::MenuItem("Create entity", [&scene]() {
-				Events::SelectionContextChange e(scene.CreateEntity("Empty entity"));
-				EditorView::GetInstance().OnEvent(e);
-				
-			});
-		});
+		ContextMenus::HierarchyEntityMenu(scene);
 		
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0)) {
 			Events::SelectionContextChange e({});

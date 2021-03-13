@@ -23,6 +23,8 @@ namespace Hazard::Rendering {
 	public:
 		static Mesh* LoadMesh(const std::string& file);
 		static Mesh* LoadCube();
+		static Mesh* LoadSphere();
+		static Mesh* LoadPlane();
 		static std::vector<Mesh*>& GetLoadedMeshes() { return loadedMeshes; }
 
 	private:

@@ -5,6 +5,7 @@
 #include "GUI/Library/Layout.h"
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
+#include "GUI/Library/ContextMenus.h"
 
 using namespace WindowLayout;
 
@@ -68,9 +69,7 @@ namespace WindowElement {
 			DrawFile(data.path().filename().string().c_str());
 		}
 		
-		Layout::ContextMenu([&]() {
-			Layout::MenuItem("New C# script", [&]() {});
-		});
+		ContextMenus::FileContextMenu();
 
 		ImGui::EndChild();
 		Layout::EndTable();

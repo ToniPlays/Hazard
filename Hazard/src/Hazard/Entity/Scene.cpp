@@ -45,9 +45,9 @@ namespace Hazard::ECS {
         for (auto entity : meshes) {
 
             Entity e{ entity, this };
-            if (!e.IsVisible()) continue;
-
             auto& [mesh, transform] = registry.get<MeshComponent, TransformComponent>(entity);
+            if (!e.IsVisible() || mesh.mesh == nullptr) continue;
+
             SceneCommand::Render(mesh, transform);
         }
     }
@@ -134,9 +134,7 @@ namespace Hazard::ECS {
     }
     //MESH COMPONENT
     template<>
-    void Scene::OnComponentAdded(Entity& entity, MeshComponent& component) {
-        component.mesh = Rendering::MeshFactory::LoadMesh("res/models/shuttle.fbx");
-    }
+    void Scene::OnComponentAdded(Entity& entity, MeshComponent& component) {}
     template<>
     void Scene::OnComponentRemoved(Entity& entity, MeshComponent& component) {}
 #pragma endregion
