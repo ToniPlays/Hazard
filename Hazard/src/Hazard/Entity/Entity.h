@@ -25,7 +25,7 @@ namespace Hazard::ECS {
 			return component;
 		}
 		template<typename T, typename... Args>
-		void AddComponent(T component, Args&&... args) {
+		void AddComponent(T& component, Args&&... args) {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}

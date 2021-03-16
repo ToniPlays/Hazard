@@ -2,11 +2,11 @@
 #include <hzreditor.h>
 #include "Toolbar.h"
 
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Style.h"
-
 #include "GUI/EditorView.h"
+#include "Core/SceneRuntimeHandler.h"
 
 #include "Gui/Window/Rendering/Viewport.h"
 
@@ -72,14 +72,21 @@ namespace WindowElement {
 
 		Layout::SameLine(0, 5);
 
+		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
+		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
-		Input::ToggleButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), b, { 28, 28 });
+		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), sceneRunning, { 28, 28 })) {
+			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
+		}
 		Layout::SameLine(0, 5);
-		Input::ToggleButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), b, { 28, 28 });
+		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), scenePaused, { 28, 28 })) {
+			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
+		}
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
-			Scripting::ScriptCommand::DoStep();
+			if(Runtime::SceneRuntimeHandler::IsSceneRunning())
+				Scripting::ScriptCommand::DoStep();
 		}
 
 		Layout::SameLine(0, 5);

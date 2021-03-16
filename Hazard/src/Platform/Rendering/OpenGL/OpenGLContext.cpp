@@ -54,11 +54,11 @@ namespace Hazard::Rendering {
 				return;
 			};
 
-			glEnable(GL_CULL_FACE);
+			Enable(CullFace);
 			glCullFace(GL_BACK);
-			glEnable(GL_DEPTH_TEST);
+			Enable(Depth);
+			Enable(Blend);
 
-			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			/*glEnable(GL_DEBUG_OUTPUT);
@@ -80,6 +80,44 @@ namespace Hazard::Rendering {
 		void OpenGLContext::SetDepthTest(DepthTest type) const
 		{
 			glDepthFunc(GL_NEVER + type);
+		}
+
+		void OpenGLContext::Enable(Function fn) const
+		{
+			switch (fn)
+			{
+			case Multisample:
+				glEnable(GL_MULTISAMPLE);
+				break;
+			case CullFace:
+				glEnable(GL_CULL_FACE);
+				break;
+			case Depth:
+				glEnable(GL_DEPTH_TEST);
+				break;
+			case Blend:
+				glEnable(GL_BLEND);
+				break;
+			}
+		}
+
+		void OpenGLContext::Disable(Function fn) const
+		{
+			switch (fn)
+			{
+			case Hazard::Rendering::Multisample:
+				glDisable(GL_MULTISAMPLE);
+				break;
+			case CullFace:
+				glDisable(GL_CULL_FACE);
+				break;
+			case Depth:
+				glDisable(GL_DEPTH_TEST);
+				break;
+			case Blend:
+				glDisable(GL_BLEND);
+				break;
+			}
 		}
 
 		void OpenGLContext::DrawIndexed(VertexArray* array, uint32_t size) const

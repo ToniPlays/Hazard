@@ -165,6 +165,9 @@
     <ClInclude Include="src\Hazard\Entity\Scene.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\SceneCommand.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Events\ApplicationEvent.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
@@ -257,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
       <Filter>src\Hazard\Rendering\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Skybox.h">
-      <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
@@ -603,9 +603,10 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\SceneCommand.h">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+    <ClInclude Include="src\Hazard\Rendering\Sky\Skybox.h">
+      <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -624,6 +625,9 @@
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Scene.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\SceneCommand.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\File\File.cpp">
@@ -669,9 +673,6 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Skybox.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp">
@@ -734,8 +735,9 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\SceneCommand.cpp">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+    <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp" />
   </ItemGroup>
 </Project>

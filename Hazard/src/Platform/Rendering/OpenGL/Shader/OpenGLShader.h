@@ -16,6 +16,8 @@ namespace Hazard::Rendering::OpenGL {
 		void Bind() const;
 		void Unbind() const;
 
+		const char* GetFile() const override { return file.c_str(); }
+
 		void SetUniformInt(const std::string& name, int value) override;
 		void SetUniformIntArray(const std::string& name, int* value, uint32_t size) override;
 		void SetUniformFloat(const std::string& name, float value) override;
@@ -28,6 +30,9 @@ namespace Hazard::Rendering::OpenGL {
 		uint32_t GetProgram() const { return program; }
 
 	private:
+
+		std::string file;
+
 		GLint GetLocation(const std::string& name);
 		std::unordered_map<GLenum, std::string> Process(std::string source);
 		GLuint program = 0;

@@ -86,13 +86,13 @@ namespace WindowElement {
 
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
+		PushRenderable<FileView>();
 
 		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<Performance>();
 
 		PushRenderable<Console>();
-		PushRenderable<FileView>();
 		PushRenderable<EngineAssets>();
 
 		PushRenderable<Toolbar>();

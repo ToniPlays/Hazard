@@ -130,6 +130,7 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::Flush()
 	{
+		data.QuadShader->Bind();
 		if (data.QuadIndexCount == 0) 
 			return;
 

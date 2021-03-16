@@ -118,6 +118,7 @@ namespace Hazard::Scripting {
 				fieldMap.emplace(name, std::move(field));
 			}
 		}
+		HZR_CORE_INFO("Registered {0}", moduleName);
 	}
 
 	void ScriptEngine::RemoveScriptEntity(const std::string& moduleName, uint32_t id)

@@ -1,7 +1,7 @@
 
 #include <hzreditor.h>
 #include "GameViewport.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 
 using namespace Hazard;
 
@@ -26,13 +26,17 @@ namespace WindowElement {
 		auto&[found, cam, transform] = scene.GetSceneCamera();
 
 		if (!found) {
-			WindowLayout::Layout::Text("No active camera");
+			const char* text = "No active camera";
+			ImVec2 size = ImGui::CalcTextSize(text);
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - size.x) / 2);
+			ImGui::SetCursorPosY((ImGui::GetWindowHeight() - size.y) / 2);
+			WindowLayout::Layout::Text(text);
 			return;
 		}
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(cam.projection, transform.GetTransformNoScale(), 
-			transform.Translation, cam.bgColor.ToGlm()));
+			transform.Translation, cam.bgRenderer));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
@@ -44,7 +48,6 @@ namespace WindowElement {
 			renderTexture->Resize(size.x, size.y);
 			cam.RecalculateProjection(size.x, size.y);
 		}
-
 
 		ImGui::Image((void*)renderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));

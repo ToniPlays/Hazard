@@ -16,6 +16,7 @@ namespace Hazard::Rendering {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetProgram() const = 0;
+		virtual const char* GetFile() const = 0;
 
 	public:
 		virtual void SetUniformInt(const std::string& name, int value) = 0;

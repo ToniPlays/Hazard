@@ -27,10 +27,7 @@ namespace Hazard::Rendering {
 	{
 		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		renderer2D->Init(35000);
-		CubemapTexture* texture = RenderUtils::Create<CubemapTexture>("res/textures/sea-", ".jpg");
 
-		skybox = new Skybox();
-		skybox->SetCubemapTexture(texture);
 		RenderCommand::Init();
 	}
 	void RenderEngine::Close()
@@ -42,12 +39,12 @@ namespace Hazard::Rendering {
 	{
 		RenderCommand::ResetStats();
 		renderTarget->Bind();
+		RenderContextCommand::ClearFrame(camera.renderer->ClearColor());
 
-		RenderContextCommand::ClearFrame(camera.clearColor);
 		viewProjection = camera.projection * glm::inverse(camera.view);
 		cameraPosition = camera.position;
 		
-		skybox->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
+		camera.renderer->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 
 		renderer2D->BeginScene(viewProjection);
 		renderer2D->BeginBatch();

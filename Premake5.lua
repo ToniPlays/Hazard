@@ -65,7 +65,7 @@ project "IMGUI"
 		"c:/dev/hazard/vendor/IMGUI/imgui_demo.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_draw.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
-		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp"
+		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp",
 	}
 
 	filter "system:windows"
@@ -214,13 +214,16 @@ project "HazardEditor"
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/platform/**.cpp",
+		"%{prj.name}/platform/**.h",
 		"%{prj.name}/platform/**.cpp",
 		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp"
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
+		"c:/dev/Hazard/vendor/ImGui-node/*.h",
+		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
 	}
 
 	includedirs {
+		"c:/dev/Hazard/vendor/imgui-node",
 		"c:/dev/Hazard/vendor/spdlog/include",
 		"c:/dev/Hazard/vendor/GLFW/include",
 		"c:/dev/Hazard/vendor/GLAD/include",

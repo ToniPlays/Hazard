@@ -7,6 +7,7 @@
 namespace Hazard::Rendering {
 
 	RenderAPI RenderUtils::api;
+	std::vector<Shader*> RenderUtils::shaders = std::vector<Shader*>();
 	std::vector<Texture*> RenderUtils::textures = std::vector<Texture*>();
 
 	template<typename T>
@@ -30,6 +31,15 @@ namespace Hazard::Rendering {
 	}
 
 #pragma region Find textures 
+
+	template<>
+	Shader* RenderUtils::Find(const char* file) {
+		for (Shader* shader : shaders) {
+			if (std::strcmp(shader->GetFile(), file) == 0)
+				return shader;
+		}
+		return nullptr;
+	}
 
 	template<>
 	Texture* RenderUtils::Find(uint32_t textureID) {
@@ -78,11 +88,17 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	Shader* RenderUtils::Create<Shader>(const char* file) {
+
+		Shader* shader = Find<Shader>(file);
+		if (shader != nullptr)
+			return shader;
+
 		switch (api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLShader(file);
+		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(file);
 		}
-		return nullptr;
+		shaders.push_back(shader);
+		return shader;
 	}
 	template<>
 	OcclusionQuery* RenderUtils::Create<OcclusionQuery>() {
@@ -136,6 +152,8 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	CubemapTexture* RenderUtils::Create<CubemapTexture>() {
+
+
 		switch (api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture();
@@ -152,6 +170,9 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	CubemapTexture* RenderUtils::Create<CubemapTexture>(const char* name, const char* extension) {
+
+		HZR_CORE_INFO("Loading cubemap {0}, {1}", name, extension);
+
 		switch (api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(name, extension);

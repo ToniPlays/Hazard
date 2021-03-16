@@ -4,10 +4,10 @@
 #include "Hierarchy.h"
 #include "GUI/EditorView.h"
 
-#include "GUI/Library/Layout.h"
-#include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
-#include "GUI/Library/ContextMenus.h"
+#include "GUI/Library/Style.h"
+#include "GUI/Library/Layout/Layout.h"
+#include "GUI/Library/Layout/ContextMenus.h"
 
 using namespace WindowLayout;
 
@@ -34,13 +34,21 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
-		std::string findValue;
 		Layout::SameLine(0, 5);
 		Layout::Text("Find");
 		Layout::SameLine(45);
-		Layout::MaxWidth();
-		Input::InputField(findValue);
+		ImGui::SetNextItemWidth(Layout::GetMaxWidth() - 20);
+		Input::InputField(searchValue);
+		Layout::SameLine();
 
+		Appereance::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Appereance::Style::SelectFont(1);
+
+		if (Input::Button("X", { 20, 20 })) {
+			searchValue = "";
+		}
+		ImGui::PopFont();
+		ImGui::PopStyleColor(3);
 
 		Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		Layout::Treenode(scene.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
@@ -70,6 +78,11 @@ namespace WindowElement {
 			ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		auto& tag = entity.GetComponent<TagComponent>();
+		
+		if (searchValue != "" && strstr(tag.tag.c_str(), searchValue.c_str()) == 0) {
+			return;
+		}
+
 		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {});
 
 		bool entityDeleted = false;
@@ -97,7 +110,7 @@ namespace WindowElement {
 	}
 	bool Hierarchy::KeyPressEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Key::Delete) {
+		if (e.GetKeyCode() == Key::Delete && selectionContext) {
 			selectionContext.GetScene().DestroyEntity(selectionContext);
 			return true;
 		}

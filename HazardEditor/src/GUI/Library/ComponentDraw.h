@@ -1,6 +1,6 @@
 #pragma once
 #include <hzreditor.h>
-#include "Layout.h"
+#include "Layout/Layout.h"
 #include "Style.h"
 #include "Input.h"
 
@@ -77,6 +77,7 @@ namespace WindowElement {
 			Layout::TableNext();
 			Layout::MaxWidth();
 
+
 			if (ImGui::BeginCombo("##Projection", currentProjectionTypeString)) {
 				for (int i = 0; i < 2; i++) {
 					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
@@ -93,17 +94,36 @@ namespace WindowElement {
 				ImGui::EndCombo();
 			}
 			Layout::TableNext();
+			Layout::Text("Color");
+			Layout::TableNext();
+			Layout::MaxWidth();
+
+			const char* backgroundTypeString[] = { "Solid", "Skybox" };
+			const char* currentBackgroundTypeString = backgroundTypeString[(int)component.GetBackgroundType()];
+
+			if (ImGui::BeginCombo("##backgroundType", currentBackgroundTypeString)) {
+				for (int i = 0; i < 2; i++) {
+					bool isSelected = currentBackgroundTypeString == backgroundTypeString[i];
+
+					if (ImGui::Selectable(backgroundTypeString[i], isSelected))
+					{
+						currentBackgroundTypeString = backgroundTypeString[i];
+						component.SetBackground((ECS::Background)i);
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+			Layout::TableNext();
 			Layout::Text("Fov");
 			Layout::TableNext();
 			Layout::MaxWidth();
 			if (Input::Slider("##FOV", component.fov, 0.001, 100)) {
 				component.RecalculateProjection(component.width, component.height);
 			}
-			Layout::TableNext();
-			Layout::Text("Color");
-			Layout::TableNext();
-			static bool open = false;
-			Input::ColorPicker("Background color", component.bgColor, open);
 			Layout::EndTable();
 			}, [&]() {
 			});

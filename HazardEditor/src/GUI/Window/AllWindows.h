@@ -14,4 +14,6 @@
 #include "Debug/EngineAssets.h"
 #include "Debug/Console.h"
 
+#include "GUI/Window/NodeEditor/NodeEditor.h"
+
 #include "TransformationGizmo.h"

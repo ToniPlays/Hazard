@@ -15,7 +15,7 @@ namespace Hazard::Rendering {
 
 	class CubemapTexture : public Texture {
 	public:
-		CubemapTexture() : Texture("") {};
+		CubemapTexture(const char* file) : Texture(file) {};
 		virtual ~CubemapTexture() {};
 
 		virtual void SetTexture(int side, const std::string& file) = 0;

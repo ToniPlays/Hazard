@@ -4,7 +4,7 @@
 #include "Console.h"
 
 #include "GUI/Library/Style.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 #include "GUI/EditorView.h"
 

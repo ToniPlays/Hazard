@@ -2,7 +2,7 @@
 
 #include <hzreditor.h>
 #include "Performance.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 
 using namespace WindowLayout;

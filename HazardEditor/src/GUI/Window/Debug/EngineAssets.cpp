@@ -2,7 +2,7 @@
 
 #include <hzreditor.h>
 #include "EngineAssets.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
 
@@ -24,7 +24,15 @@ namespace WindowElement {
 	void EngineAssets::OnWindowRender()
 	{
 		using namespace Appereance;
-		Layout::Treenode("Loaded textures", Style::GetTreeNodeDefaultFlags(), []() {
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+
+		Layout::Treenode("Shaders", flags, []() {
+			for (Shader* shader : RenderUtils::GetShaders()) {
+				Layout::Text(shader->GetFile());
+			}
+		});
+
+		Layout::Treenode("Textures", flags, []() {
 			auto textures = Hazard::Rendering::RenderUtils::GetTextures();
 			Layout::Table(2, false);
 
@@ -56,7 +64,7 @@ namespace WindowElement {
 			Layout::SameLine(125);
 			Input::InputField(texture);
 		});
-		Layout::Treenode("Loaded meshes", Style::GetTreeNodeDefaultFlags(), []() {
+		Layout::Treenode("Meshes", flags, []() {
 			for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {
 				Layout::Text(mesh->GetFile().c_str());
 			}

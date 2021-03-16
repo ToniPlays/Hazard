@@ -2,10 +2,10 @@
 
 #include <hzreditor.h>
 #include "FileView.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
-#include "GUI/Library/ContextMenus.h"
+#include "GUI/Library/Layout/ContextMenus.h"
 
 using namespace WindowLayout;
 

@@ -19,7 +19,8 @@ namespace Hazard::Rendering::OpenGL {
 		return -1;
 	}
 
-	OpenGLShader::OpenGLShader(std::string path) {
+	OpenGLShader::OpenGLShader(std::string path) : file(path) 
+	{
 		std::string file = Utility::File::ReadFile(path);
 		Compile(Process(file));
 	}
@@ -111,6 +112,9 @@ namespace Hazard::Rendering::OpenGL {
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& sources)
 	{
 		program = glCreateProgram();
+
+		HZR_CORE_INFO("Compiling shader program {0}", program);
+
 		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;
 

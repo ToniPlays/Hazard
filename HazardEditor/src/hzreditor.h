@@ -2,6 +2,7 @@
 #include "Hazard.h"
 
 #include <ctime>
+#include <locale> 
 #include <sstream>
 
 #include "Core/EditorEvent.h";

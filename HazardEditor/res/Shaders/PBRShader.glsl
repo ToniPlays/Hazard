@@ -13,7 +13,8 @@ uniform vec3 cameraPos;
 out vec4 f_color;
 out vec3 f_normal;
 out vec2 texCoords;
-out vec3 reflectVector;
+out vec3 reflectedVector;
+out vec3 refractedVector;
 
 void main() {
 
@@ -27,7 +28,8 @@ void main() {
 	vec3 unitNormal = normalize(v_normal);
 	vec3 viewVector = normalize(worldPos.xyz - cameraPos);
 
-	reflectVector = reflect(viewVector, unitNormal);
+	reflectedVector = reflect(viewVector, unitNormal);
+	refractedVector = refract(viewVector, unitNormal, 1.0 / 1.33);
 }
 
 #type Fragment
@@ -36,7 +38,8 @@ void main() {
 in vec4 f_color;
 in vec3 f_normal;
 in vec2 texCoords;
-in vec3 reflectVector;
+in vec3 reflectedVector;
+in vec3 refractedVector;
 
 uniform samplerCube envMap;
 
@@ -44,6 +47,10 @@ out vec4 color;
 
 void main() 
 {
-	vec4 reflectedColor = texture(envMap, reflectVector);
+	vec4 reflectedColor = texture(envMap, reflectedVector);
+	vec4 refractedColor = texture(envMap, refractedVector);
+
+	vec4 envColor = mix(reflectedColor, refractedColor, 0.25);
+
 	color = mix(reflectedColor, f_color, 0.5);
 }

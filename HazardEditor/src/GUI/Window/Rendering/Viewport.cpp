@@ -2,7 +2,7 @@
 
 #include <hzreditor.h>
 #include "Viewport.h"
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 
 using namespace Hazard;
 
@@ -22,7 +22,7 @@ namespace WindowElement {
 		renderer = &Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 		renderTexture = RenderUtils::Create<RenderTexture>();
-
+		
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -31,7 +31,7 @@ namespace WindowElement {
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 
-			editorCamera.GetPosition(), camera.bgColor.ToGlm()));
+			editorCamera.GetPosition(), camera.bgRenderer));
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

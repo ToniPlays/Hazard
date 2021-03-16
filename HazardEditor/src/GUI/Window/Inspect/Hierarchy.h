@@ -26,5 +26,7 @@ namespace WindowElement {
 	private:
 		SceneHandler* handler;
 		Entity selectionContext;
+
+		std::string searchValue;
 	};
 }

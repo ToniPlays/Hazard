@@ -3,7 +3,7 @@
 #include <hzreditor.h>
 #include "MenuBar.h"
 
-#include "GUI/Library/Layout.h"
+#include "GUI/Library/Layout/Layout.h"
 #include "Project/ProjectManager.h"
 
 #include "GUI/EditorView.h"
@@ -90,7 +90,9 @@ namespace WindowElement {
 			});
 		});
 		Layout::Menu("Help", []() {
-			
+			Layout::MenuItem("About", [&]() {
+				
+			});
 		});
 
 		ImGui::EndMenuBar();
@@ -109,6 +111,7 @@ namespace WindowElement {
 		switch (e.GetKeyCode()) {
 		case Key::S:
 			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
+			HZR_CORE_WARN("Saving scene");
 			return true;
 		}
 		return false;

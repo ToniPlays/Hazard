@@ -136,7 +136,6 @@ namespace Hazard::ECS::Loader {
 			auto& c = entity.AddComponent<CameraComponent>();
 			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.fov = comp["Fov"].as<float>();
-			c.bgColor = Color::FromGLM(comp["Color"].as<glm::vec4>());
 			c.RecalculateProjection(1920, 1080);
 		};
 
@@ -184,7 +183,7 @@ namespace Hazard::ECS::Loader {
 		static void SerializeComponentEditor<TransformComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<TransformComponent>()) return;
-			auto c = entity.GetComponent<TransformComponent>();
+			auto& c = entity.GetComponent<TransformComponent>();
 
 			out << YAML::Key << "TransformComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.Translation);
@@ -198,7 +197,7 @@ namespace Hazard::ECS::Loader {
 		static void SerializeComponentEditor<SpriteRendererComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<SpriteRendererComponent>()) return;
-			auto c = entity.GetComponent<SpriteRendererComponent>();
+			auto& c = entity.GetComponent<SpriteRendererComponent>();
 
 			out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Tint" << YAML::Value; Convert(out, c.tint.ToGlm());
@@ -213,18 +212,17 @@ namespace Hazard::ECS::Loader {
 		static void SerializeComponentEditor<CameraComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<CameraComponent>()) return;
-			auto c = entity.GetComponent<CameraComponent>();
+			auto& c = entity.GetComponent<CameraComponent>();
 			out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
 			out << YAML::Key << "Fov" << YAML::Value << c.fov;
-			out << YAML::Key << "Color" << YAML::Key; Convert(out, c.bgColor.ToGlm());
 			out << YAML::EndMap;
 		}
 		template<>
 		static void SerializeComponentEditor<ScriptComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<ScriptComponent>()) return;
-			auto c = entity.GetComponent<ScriptComponent>();
+			auto& c = entity.GetComponent<ScriptComponent>();
 			out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "ModuleName" << YAML::Value << c.moduleName;
 			out << YAML::EndMap;
@@ -233,7 +231,7 @@ namespace Hazard::ECS::Loader {
 		static void SerializeComponentEditor<MeshComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<MeshComponent>()) return;
-			auto c = entity.GetComponent<MeshComponent>();
+			auto& c = entity.GetComponent<MeshComponent>();
 			out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "File" << YAML::Value << c.mesh->GetFile();
 			out << YAML::EndMap;

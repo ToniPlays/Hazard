@@ -28,6 +28,9 @@
     <Filter Include="src\GUI\Window\Debug">
       <UniqueIdentifier>{FED2D974-EA61-633E-9380-77397FEE73E4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Window\Editor">
+      <UniqueIdentifier>{BE165B12-2A83-160D-F376-AE6A5FA23875}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Window\Inspect">
       <UniqueIdentifier>{4D0FADA9-3909-D6FB-2276-6C0C0E0F3C68}</UniqueIdentifier>
     </Filter>
@@ -40,18 +43,48 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\ImGui-node">
+      <UniqueIdentifier>{10A3FC65-7CB9-FAFB-C530-861D3186CB83}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\ImGuizmo">
       <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\vendor\ImGui-node\crude_json.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_bezier_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_canvas.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_extra_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor_internal.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
     <ClInclude Include="..\vendor\ImGuizmo\ImGuizmo.h">
       <Filter>vendor\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\GLFW\imgui_impl_glfw.h">
+      <Filter>platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\GLFW\imgui_impl_opengl3.h">
+      <Filter>platform\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\SceneRuntimeHandler.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h">
@@ -70,9 +103,6 @@
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Library\Input.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout.h">
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Library\Style.h">
@@ -126,9 +156,28 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\ContextMenus.h" />
+    <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\Layout.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Node\NodeLibrary.h" />
+    <ClInclude Include="src\GUI\Window\NodeEditor\NodeEditor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_canvas.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor_api.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
       <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>
@@ -141,6 +190,9 @@
     <ClCompile Include="src\Core\HazardEditor.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\SceneRuntimeHandler.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
@@ -151,9 +203,6 @@
       <Filter>src\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Library\Input.cpp">
-      <Filter>src\GUI\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout.cpp">
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Library\Style.cpp">
@@ -198,6 +247,13 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Library\ContextMenus.cpp" />
+    <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Node\NodeLibrary.cpp" />
+    <ClCompile Include="src\GUI\Window\NodeEditor\NodeEditor.cpp" />
   </ItemGroup>
 </Project>

@@ -8,17 +8,17 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLCubemapTexture::OpenGLCubemapTexture()
+	OpenGLCubemapTexture::OpenGLCubemapTexture() : CubemapTexture("")
 	{
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 		SetFilters();
 	}
-	OpenGLCubemapTexture::OpenGLCubemapTexture(const char* file)
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const char* file) : CubemapTexture(file)
 	{
 		HZR_CORE_ERROR("Not implemented");
 	}
-	OpenGLCubemapTexture::OpenGLCubemapTexture(std::vector<std::string>& faces)
+	OpenGLCubemapTexture::OpenGLCubemapTexture(std::vector<std::string>& faces) : CubemapTexture(faces[0].c_str())
 	{
 		
 		glGenTextures(1, &textureID);
@@ -30,7 +30,7 @@ namespace Hazard::Rendering::OpenGL {
 
 		SetFilters();
 	}
-	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& name, const std::string& extension)
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& name, const std::string& extension) : CubemapTexture(name.c_str())
 	{
 		std::vector<std::string> sides;
 		sides.push_back(name + "right" + extension);
@@ -60,6 +60,7 @@ namespace Hazard::Rendering::OpenGL {
 	void OpenGLCubemapTexture::SetTexture(int side, const std::string& file)
 	{
 		int w, h, channels;
+		stbi_set_flip_vertically_on_load(false);
 		unsigned char* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
 		uint32_t internalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
 		uint32_t dataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;

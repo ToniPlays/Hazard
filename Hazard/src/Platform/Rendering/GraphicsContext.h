@@ -25,6 +25,12 @@ namespace Hazard::Rendering {
 		GEqual = 6,
 		Always = 7
 	};
+	enum Function {
+		Multisample = 0,
+		CullFace,
+		Depth,
+		Blend
+	};
 
 
 	using ErrorCallback = std::function<void(ErrorData&)>;
@@ -38,6 +44,8 @@ namespace Hazard::Rendering {
 		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
 		virtual void SetDepthTest(DepthTest type) const = 0;
+		virtual void Enable(Function fn) const = 0;
+		virtual void Disable(Function fn) const = 0;
 
 		virtual void DrawIndexed(VertexArray* array, uint32_t size) const = 0;
 		virtual std::string GetVersion() const = 0;

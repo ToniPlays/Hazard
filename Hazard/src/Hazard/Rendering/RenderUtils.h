@@ -33,9 +33,11 @@ namespace Hazard::Rendering {
 		static uint32_t GetTextureStackIndex(Texture* texture);
 		static void UnloadTexture(Texture* texture);
 
+		static std::vector<Shader*> GetShaders() { return shaders; }
 		static std::vector<Texture*> GetTextures() { return textures; }
 	private:
 		static RenderAPI api;
+		static std::vector<Shader*> shaders;
 		static std::vector<Texture*> textures;
 
 	};

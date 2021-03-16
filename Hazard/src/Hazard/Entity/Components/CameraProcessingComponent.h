@@ -1,6 +1,6 @@
 
 #include "Hazard/Math/Color.h"
-
+#include "Hazard/Rendering/Sky/BackgroundRenderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -11,19 +11,26 @@ namespace Hazard::ECS
 {
 	//Camera projection types
 	enum Projection { Perspective = 0, Orthographic };
+	enum Background { SingleColor = 0, Skybox };
 
 	struct CameraComponent {
 
 		Projection type = Projection::Perspective;
+		Background backgroundType = Background::SingleColor;
 		float fov = 10.0f;
-		Color bgColor;
 
+		Rendering::BackgroundRenderer* bgRenderer = new Rendering::SkyboxBackground(
+			Rendering::RenderUtils::Create<Rendering::CubemapTexture>("res/textures/sea-", ".jpg"));
+			
 		glm::mat4 projection;
 		float width, height;
 
 		//Get and set camera projection type
 		int GetProjectionType() { return type; }
+		int GetBackgroundType() { return backgroundType; }
+
 		void SetProjection(Projection t) { type = t; RecalculateProjection(width, height); }
+		void SetBackground(Background t) { backgroundType = t;  }
 
 		//Recalculate camera projection
 		void RecalculateProjection(float w, float h) {
