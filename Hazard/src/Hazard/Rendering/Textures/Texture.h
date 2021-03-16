@@ -4,6 +4,11 @@
 #include <iostream>
 
 namespace Hazard::Rendering {
+
+	struct TextureParam {
+		uint8_t samples = 2;
+	};
+
 	class HAZARD_API Texture {
 	public:
 		Texture(const char* file) : file(file) {};

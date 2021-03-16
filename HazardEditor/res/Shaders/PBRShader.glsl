@@ -29,7 +29,7 @@ void main() {
 	vec3 viewVector = normalize(worldPos.xyz - cameraPos);
 
 	reflectedVector = reflect(viewVector, unitNormal);
-	refractedVector = refract(viewVector, unitNormal, 1.0 / 1.33);
+	refractedVector = refract(viewVector, unitNormal, 1.0);
 }
 
 #type Fragment
@@ -52,5 +52,5 @@ void main()
 
 	vec4 envColor = mix(reflectedColor, refractedColor, 0.25);
 
-	color = mix(reflectedColor, f_color, 0.5);
+	color = mix(reflectedColor, f_color, 0.75);
 }

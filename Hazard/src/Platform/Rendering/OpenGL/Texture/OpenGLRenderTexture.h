@@ -8,7 +8,7 @@ namespace Hazard::Rendering::OpenGL {
 	class HAZARD_API OpenGLRenderTexture : public RenderTexture {
 	public:
 
-		OpenGLRenderTexture();
+		OpenGLRenderTexture(TextureParam params = TextureParam());
 		virtual ~OpenGLRenderTexture();
 
 		void Invalidate();

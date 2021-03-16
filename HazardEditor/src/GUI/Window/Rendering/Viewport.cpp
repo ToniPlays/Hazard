@@ -31,7 +31,7 @@ namespace WindowElement {
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 
-			editorCamera.GetPosition(), camera.bgRenderer));
+			editorCamera.GetPosition(), camera->bgRenderer));
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

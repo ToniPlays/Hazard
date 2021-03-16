@@ -5,10 +5,11 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLRenderTexture::OpenGLRenderTexture() : RenderTexture("RenderTexture")
+	OpenGLRenderTexture::OpenGLRenderTexture(TextureParam params) : RenderTexture("RenderTexture")
 	{
 		spec.width = 1920;
 		spec.height = 1080;
+		spec.samples = params.samples;
 		Invalidate();
 	}
 
@@ -29,12 +30,12 @@ namespace Hazard::Rendering::OpenGL {
 			glDeleteTextures(1, &colorAttachment);
 			glDeleteTextures(1, &colorAttachment);
 		}
-
 		glGenFramebuffers(1, &RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, RendererID);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 		glBindTexture(GL_TEXTURE_2D, colorAttachment);
+
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

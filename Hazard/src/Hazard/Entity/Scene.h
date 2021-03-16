@@ -21,7 +21,7 @@ namespace Hazard::ECS {
 
 		void SetName(std::string name) { this->name = name.c_str(); }
 
-		std::tuple<bool, CameraComponent, TransformComponent> GetSceneCamera();
+		std::tuple<bool, CameraComponent*, TransformComponent*> GetSceneCamera();
 		entt::registry& GetSceneRegistry() { return registry; }
 
 		std::string& GetSceneFile() { return file; }

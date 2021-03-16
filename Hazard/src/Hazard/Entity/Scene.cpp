@@ -62,7 +62,7 @@ namespace Hazard::ECS {
     {
         registry.destroy(entity);
     }
-    std::tuple<bool, CameraComponent, TransformComponent> Scene::GetSceneCamera() {
+    std::tuple<bool, CameraComponent*, TransformComponent*> Scene::GetSceneCamera() {
 
         auto group = registry.group<CameraComponent>(entt::get<TransformComponent>);
 
@@ -72,9 +72,9 @@ namespace Hazard::ECS {
             if (!e.IsVisible()) continue;
 
             auto&[cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
-            return std::tuple(true, cam, e.GetTransform());
+            return std::tuple(true, &cam, &e.GetTransform());
         }
-        return std::tuple(false, CameraComponent(), TransformComponent());
+        return std::tuple(false, nullptr, nullptr);
     }
 #pragma region Component added and removed methods
     //Scene component added and removed
