@@ -14,6 +14,8 @@ namespace Hazard::Scripting {
 		~ScriptEngine();
 
 		void Init() override;
+		void Update() override;
+
 		void Close() override;
 		void InitAssembly(const char* assemblyPath);
 		void LoadRuntimeAssembly(const char* path);

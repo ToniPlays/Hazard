@@ -24,6 +24,7 @@ namespace WindowElement {
 
 	void Toolbar::Init()
 	{
+		Runtime::SceneRuntimeHandler::Init();
 	}
 	void Toolbar::OnRender()
 	{

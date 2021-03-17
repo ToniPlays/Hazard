@@ -90,7 +90,11 @@ namespace Hazard::Scripting {
 
 		MonoClass* monoClass;
 		MonoMethod* Constructor = nullptr;
+		MonoMethod* OnCreated = nullptr;
+		MonoMethod* OnStart = nullptr;
 		MonoMethod* OnUpdate = nullptr;
+		MonoMethod* OnLateUpdate = nullptr;
+		MonoMethod* OnFixedUpdate = nullptr;
 
 		void InitClassMethods();
 	};

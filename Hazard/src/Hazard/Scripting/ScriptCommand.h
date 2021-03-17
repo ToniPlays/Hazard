@@ -17,8 +17,11 @@ namespace Hazard::Scripting {
 	};
 
 	class ScriptCommand {
+		friend class ScriptEngine;
 	public:
-		static void Init();
+		static void Init(ScriptEngine* engine);
+		static void OnBeginRuntime();
+		static void OnEndRuntime();
 		static void InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component);
 		static void ShutdownScriptEntity(ECS::Entity& entity, std::string& oldComponent);
 		static void RemoveScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component);
@@ -32,10 +35,7 @@ namespace Hazard::Scripting {
 
 		static void ReloadRuntimeAssembly() { scriptEngine->ReloadRuntimeAssembly(); }
 	private:
-
-
 		static ScriptEngine* scriptEngine;
-
 		static void(*debugCallback)(Severity, std::string);
 	};
 }

@@ -9,9 +9,29 @@ namespace Hazard::Scripting {
 	ScriptEngine* ScriptCommand::scriptEngine;
 	void(*ScriptCommand::debugCallback)(Severity, std::string);
 
-	void ScriptCommand::Init()
+	void ScriptCommand::Init(ScriptEngine* engine)
 	{
-		scriptEngine = &Application::GetModule<ScriptEngine>();
+		scriptEngine = engine;
+	}
+	void ScriptCommand::OnBeginRuntime()
+	{
+		HZR_CORE_WARN("Runtime begin");
+		using namespace ECS;
+		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
+		auto view = current.GetSceneRegistry().view<ScriptComponent>();
+
+		for (auto entity : view) {
+			Entity e{ entity, &current };
+			if (!e.IsVisible()) continue;
+
+			auto& c = e.GetComponent<ScriptComponent>();
+			if (ModuleExists(c.moduleName)) {
+				scriptEngine->InstantiateScriptEntity(e, c.moduleName);
+			}
+		}
+	}
+	void ScriptCommand::OnEndRuntime()
+	{
 	}
 	void ScriptCommand::InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
@@ -39,17 +59,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::DoStep()
 	{
-		using namespace ECS;
-		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
-		auto view = current.GetSceneRegistry().view<ScriptComponent>();
-
-		for (auto entity : view) {
-			Entity e{ entity, &current };
-			auto& c = e.GetComponent<ScriptComponent>();
-			if (ModuleExists(c.moduleName)) {
-				scriptEngine->InstantiateScriptEntity(e, c.moduleName);
-			}
-		}
+		scriptEngine->Update();
 	}
 
 	void ScriptCommand::InitAllEntities()

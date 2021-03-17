@@ -57,7 +57,11 @@ namespace Hazard::Scripting {
 	void EntityScript::InitClassMethods()
 	{
 		Constructor = MonoCommand::GetMonoCoreMethod("Hazard.Entity:.ctor(ulong)");
+		OnCreated = MonoCommand::GetMonoAppMethod(moduleName + ":OnCreate()");
+		OnStart = MonoCommand::GetMonoAppMethod(moduleName + ":Start()");
 		OnUpdate = MonoCommand::GetMonoAppMethod(moduleName + ":OnUpdate()");
+		OnLateUpdate = MonoCommand::GetMonoAppMethod(moduleName + ":LateUpdate()");
+		OnFixedUpdate = MonoCommand::GetMonoAppMethod(moduleName + ":FixedUpdate()");
 	}
 
 	//ENTITY INSTANCE

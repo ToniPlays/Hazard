@@ -134,15 +134,11 @@ namespace Hazard::Scripting {
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 		MonoMethod* method = mono_method_desc_search_in_image(desc, data.app_assembly_image);
 
-		if (method == nullptr) HZR_CORE_ERROR("Unable to find {0}", name);
-
 		return method;
 	}
 	MonoMethod* MonoCommand::GetMonoCoreMethod(const std::string& name) {
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 		MonoMethod* method = mono_method_desc_search_in_image(desc, data.core_assembly_image);
-
-		if (method == nullptr) HZR_CORE_ERROR("Unable to find {0}", name);
 
 		return method;
 	}

@@ -18,6 +18,7 @@ namespace Hazard::Module {
 		template<typename T>
 		T& AddModule() {
 			T* m = new T();
+			std::cout << "Added module " << m->GetName() << std::endl;
 			modules.push_back(m);
 			m->PreInit();
 			m->Init();
@@ -43,7 +44,6 @@ namespace Hazard::Module {
 			}
 			found = false;
 		}
-
 	private:
 		std::vector<Module*> modules;
 	};

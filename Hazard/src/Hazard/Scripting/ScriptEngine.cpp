@@ -12,8 +12,8 @@
 namespace Hazard::Scripting {
 
 	struct AssemblyData {
-		EntityInstanceMap EntityInstanceMap;
-		std::unordered_map<std::string, EntityScript> EntityClassMap;
+		EntityInstanceMap entityInstanceMap;
+		std::unordered_map<std::string, EntityScript> entityClassMap;
 
 		std::string assemblyPath;
 	};
@@ -22,7 +22,7 @@ namespace Hazard::Scripting {
 
 	ScriptEngine::ScriptEngine() : Module("ScriptEngine")
 	{
-
+		std::cout << "ScriptEngine()" << std::endl;
 	}
 
 	ScriptEngine::~ScriptEngine()
@@ -31,7 +31,16 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngine::Init()
 	{
-
+		ScriptCommand::Init(this);
+	}
+	void ScriptEngine::Update()
+	{
+		for (auto& [id, entity] : data.entityInstanceMap) {
+			EntityInstance& instance = entity.instance;
+			if (instance.ScriptClass == nullptr) continue;
+			if (instance.ScriptClass->OnUpdate != nullptr)
+				MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate);
+		}
 	}
 	void ScriptEngine::Close()
 	{
@@ -57,9 +66,9 @@ namespace Hazard::Scripting {
 	{
 		LoadRuntimeAssembly(assemblyPath);
 		
-		if (data.EntityInstanceMap.size() == 0) return;
+		if (data.entityInstanceMap.size() == 0) return;
 
-		auto& entityMap = data.EntityInstanceMap;
+		auto& entityMap = data.entityInstanceMap;
 		for (auto& [EntityID, instanceData] : entityMap) {
 			ScriptCommand::InitAllEntities();
 		}
@@ -75,7 +84,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngine::RegisterScripEntity(const std::string& moduleName, uint32_t id)
 	{
-		EntityScript& scriptClass = data.EntityClassMap[moduleName];
+		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 
 		ScriptUtils::GetNames(moduleName, scriptClass.nameSpace, scriptClass.className);
@@ -83,7 +92,7 @@ namespace Hazard::Scripting {
 
 		scriptClass.InitClassMethods();
 
-		EntityInstanceData& entityData = data.EntityInstanceMap[id];
+		EntityInstanceData& entityData = data.entityInstanceMap[id];
 		EntityInstance& instance = entityData.instance;
 		instance.ScriptClass = &scriptClass;
 
@@ -154,12 +163,12 @@ namespace Hazard::Scripting {
 
 	EntityInstanceData& ScriptEngine::GetInstanceData(uint32_t entity)
 	{
-		return data.EntityInstanceMap[entity];
+		return data.entityInstanceMap[entity];
 	}
 
 	void ScriptEngine::Step()
 	{
-		for (auto& [EntityID, instanceData] : data.EntityInstanceMap) {
+		for (auto& [EntityID, instanceData] : data.entityInstanceMap) {
 			EntityInstance& instance = GetInstanceData(EntityID).instance;
 			if (instance.ScriptClass->OnUpdate == nullptr || instance.handle == 0) continue;
 			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, nullptr);
@@ -168,8 +177,11 @@ namespace Hazard::Scripting {
 
 	void ScriptEngine::EntityStart(EntityInstance& instance)
 	{
-		if (instance.ScriptClass->OnUpdate)
-			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate);
+		if (instance.ScriptClass->OnCreated)
+			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnCreated);
+
+		if (instance.ScriptClass->OnStart)
+			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnStart);
 	}
 
 	void ScriptEngine::MonoInit()

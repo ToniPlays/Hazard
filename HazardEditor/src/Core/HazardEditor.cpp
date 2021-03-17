@@ -38,12 +38,14 @@ void EditorApplication::PreInit()
 	}
 
 	PushModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
+
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
 		SetRootPath(manager.GetProject().absolutePath.c_str());
+	
 }
 void EditorApplication::Init() 
 {
-
+	
 }
 
 bool EditorApplication::OnEvent(Event& e)
