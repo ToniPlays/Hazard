@@ -145,6 +145,7 @@ namespace Hazard::Scripting {
 	MonoObject* MonoCommand::CallMonoMethod(MonoObject* obj, MonoMethod* method, void** params) {
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(method, obj, params, &exception);
+		HZR_CORE_ASSERT((exception == nullptr), "Mono method failed {0}", mono_method_get_name(method));
 		return result;
 	}
 }

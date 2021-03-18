@@ -25,7 +25,6 @@ namespace WindowElement {
 			hovered = ImGui::IsWindowHovered();
 
 			OnWindowRender();
-
 			ImGui::End();
 		}
 	}

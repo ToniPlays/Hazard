@@ -607,6 +607,7 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h" />
+    <ClInclude Include="src\Hazard\Scripting\Script\Components\ComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -739,5 +740,6 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\Script\Components\ComponentBindings.cpp" />
   </ItemGroup>
 </Project>

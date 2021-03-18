@@ -35,11 +35,15 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngine::Update()
 	{
+		float timeStep = Time::deltaTime;
+		void* args[] = { &timeStep };
 		for (auto& [id, entity] : data.entityInstanceMap) {
 			EntityInstance& instance = entity.instance;
-			if (instance.ScriptClass == nullptr) continue;
-			if (instance.ScriptClass->OnUpdate != nullptr)
-				MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate);
+			if (instance.ScriptClass == nullptr || instance.handle == 0) 
+				continue;
+
+			if (instance.ScriptClass->OnUpdate != nullptr) 
+				MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, args);
 		}
 	}
 	void ScriptEngine::Close()
@@ -127,7 +131,6 @@ namespace Hazard::Scripting {
 				fieldMap.emplace(name, std::move(field));
 			}
 		}
-		HZR_CORE_INFO("Registered {0}", moduleName);
 	}
 
 	void ScriptEngine::RemoveScriptEntity(const std::string& moduleName, uint32_t id)
@@ -177,10 +180,10 @@ namespace Hazard::Scripting {
 
 	void ScriptEngine::EntityStart(EntityInstance& instance)
 	{
-		if (instance.ScriptClass->OnCreated)
-			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnCreated);
+		if (instance.ScriptClass->OnCreate != nullptr)
+			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnCreate);
 
-		if (instance.ScriptClass->OnStart)
+		if (instance.ScriptClass->OnStart != nullptr)
 			MonoCommand::CallMonoMethod(instance.GetInstance(), instance.ScriptClass->OnStart);
 	}
 

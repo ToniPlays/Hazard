@@ -40,7 +40,6 @@ namespace Hazard::Rendering {
 		windowData.Renderer = context->GetVersion();
 
 		SetCallbacks();
-
 		glfwShowWindow(window);
 	}
 	void WindowsWindow::OnUpdate(Color color) {

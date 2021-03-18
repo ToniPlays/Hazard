@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../ScriptUtils.h"
+#include "../ScriptEngine.h"
 
 namespace Hazard::Scripting {
 
@@ -7,6 +9,6 @@ namespace Hazard::Scripting {
 	public:
 		static void RegisterAll();
 	private:
-		static void Register(std::vector<std::pair<const char*, void*>> methods);
+		static void Register(BindMap methods);
 	};
 }

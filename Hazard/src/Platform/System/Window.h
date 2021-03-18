@@ -18,6 +18,7 @@ namespace Hazard::Rendering {
 		bool focus = true;
 		bool maximized = false;
 		bool minimized = false;
+		bool fullscreen = false;
 		int Width;
 		int Height;
 
@@ -42,14 +43,18 @@ namespace Hazard::Rendering {
 		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
 		virtual void SetVSync(bool enabled) = 0;
+		virtual void SetFullscreen(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
+
 		virtual bool IsVSync() const = 0;
 		virtual bool IsFocused() const = 0;
 		virtual bool IsMinimized() const = 0;
+		virtual bool IsFullscreen() const = 0;
+
 		virtual WindowProps GetWindowInfo() { return windowData; }
 
 		static Window* Create(WindowProps& props = WindowProps());

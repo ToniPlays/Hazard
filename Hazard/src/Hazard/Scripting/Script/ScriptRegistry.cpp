@@ -1,9 +1,6 @@
+#pragma once
 #include "hzrpch.h"
 #include "ScriptRegistry.h"
-
-#include "../ScriptUtils.h"
-#include "../ScriptEngine.h"
-#pragma once
 
 #include <mono/jit/jit.h>
 
@@ -16,10 +13,12 @@ namespace Hazard::Scripting {
 		using namespace Hazard::Scripting::Bindings;
 		Register(DebugBindings::GetBindings());
 		Register(ApplicationBindings::GetBindings());
+		Register(ComponentBindings::GetBindings());
 	}
-	void ScriptRegistry::Register(std::vector<std::pair<const char*, void*>> methods)
+	void ScriptRegistry::Register(BindMap methods)
 	{
-		for (auto [name, method] : methods) {
+		for (auto& [name, method] : methods) {
+			HZR_CORE_INFO("Registering method {0}", name);
 			mono_add_internal_call(name, method);
 		}
 	}

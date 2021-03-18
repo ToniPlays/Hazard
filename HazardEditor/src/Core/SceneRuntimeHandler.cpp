@@ -1,6 +1,8 @@
 #pragma once
 #include <hzreditor.h>
 #include "SceneRuntimeHandler.h"
+#include "GUI/EditorView.h"
+#include "GUI/Window/AllWindows.h"
 
 namespace Runtime {
 
@@ -18,15 +20,28 @@ namespace Runtime {
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
 	{
 		sceneRunning = running;
+
+		if (sceneRunning) {
+			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
+			ScriptCommand::OnBeginRuntime();
+		}
+		if (!sceneRunning) { 
+			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
+			ScriptCommand::OnEndRuntime(); 
+		}
 		if (scenePaused && sceneRunning) return;
-		if (sceneRunning) ScriptCommand::OnBeginRuntime();
-		if (!sceneRunning) ScriptCommand::OnEndRuntime();
 		engine->SetActive(sceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
 	{
 		scenePaused = paused;
 		if (!sceneRunning) return;
+
+		if (paused) {
+			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
+		}
+		else
+			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
 		engine->SetActive(!paused);
 	}
 }

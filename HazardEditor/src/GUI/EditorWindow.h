@@ -21,6 +21,8 @@ namespace WindowElement {
 		bool IsFocused() { return focused; }
 		bool IsHovered() { return hovered; }
 
+		std::string& GetTitle() { return title; }
+
 		void SetActive(bool active) { this->active = active; }
 	protected:
 		std::string title = "Untitled";
