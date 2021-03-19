@@ -9,11 +9,6 @@
 
 namespace Hazard::ECS {
 
-	//Initialize connection to renderEngine
-	void SceneCommand::Init()
-	{
-	}
-
 	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)
 	{
 		Scripting::ScriptCommand::InitScripEntity(entity, script);
@@ -22,6 +17,11 @@ namespace Hazard::ECS {
 	void SceneCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
 		Scripting::ScriptCommand::RemoveScriptableEntity(entity, script);
+	}
+
+	Entity SceneCommand::GetEntity(uint32_t id)
+	{
+		return GetCurrentScene().GetEntity((entt::entity)id);
 	}
 
 	Scene& SceneCommand::GetCurrentScene()

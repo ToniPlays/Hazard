@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../ScriptUtils.h"
-#include "../../ScriptCommand.h"
+#include "Hazard/Scripting/ScriptUtils.h"
+#include "Hazard/Scripting/ScriptCommand.h"
 
 extern "C"
 {

@@ -4,7 +4,7 @@
 
 #include <mono/jit/jit.h>
 
-#include "bindings.h"
+#include "Hazard/NativeScript/Bindings.h"
 
 namespace Hazard::Scripting {
 

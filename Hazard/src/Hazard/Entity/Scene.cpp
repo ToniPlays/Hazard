@@ -58,6 +58,11 @@ namespace Hazard::ECS {
         entity.AddComponent<TransformComponent>();
         return entity;
     }
+    Entity Scene::GetEntity(entt::entity id)
+    {
+        Entity e{ id, this };
+        return e;
+    }
     void Scene::DestroyEntity(Entity entity)
     {
         registry.destroy(entity);

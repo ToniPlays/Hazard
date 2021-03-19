@@ -60,6 +60,9 @@ namespace Hazard::Scripting {
 		static MonoMethod* GetMonoAppMethod(const std::string& name);
 		static MonoMethod* GetMonoCoreMethod(const std::string& name);
 		static MonoObject* CallMonoMethod(MonoObject* obj, MonoMethod* method, void** params = nullptr);
+
+		static MonoData& GetData() { return data; }
+
 	private:
 		static MonoData data;
 	};

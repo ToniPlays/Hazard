@@ -279,15 +279,6 @@
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.h">
-      <Filter>src\Hazard\Scripting\Script\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Script\Bindings.h">
-      <Filter>src\Hazard\Scripting\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Script\Debug\DebugBindings.h">
-      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h">
       <Filter>src\Hazard\Scripting\Script</Filter>
     </ClInclude>
@@ -607,8 +598,17 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\Components\ComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script\Application\DisplayBindings.h" />
+    <ClInclude Include="src\Hazard\NativeScript\Bindings.h">
+      <Filter>src\Hazard\Scripting\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\NativeScript\Debug\DebugBindings.h">
+      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\NativeScript\Components\ComponentBindings.h" />
+    <ClInclude Include="src\Hazard\NativeScript\Application\ApplicationBindings.h">
+      <Filter>src\Hazard\Scripting\Script\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\NativeScript\Application\DisplayBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -683,12 +683,6 @@
     <ClCompile Include="src\Hazard\Scripting\PublicField.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\Script\Application\ApplicationBindings.cpp">
-      <Filter>src\Hazard\Scripting\Script\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\Script\Debug\DebugBindings.cpp">
-      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp">
       <Filter>src\Hazard\Scripting\Script</Filter>
     </ClCompile>
@@ -741,7 +735,13 @@
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Script\Components\ComponentBindings.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\Script\Application\DisplayBindings.cpp" />
+    <ClCompile Include="src\Hazard\NativeScript\Debug\DebugBindings.cpp">
+      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\NativeScript\Components\ComponentBindings.cpp" />
+    <ClCompile Include="src\Hazard\NativeScript\Application\ApplicationBindings.cpp">
+      <Filter>src\Hazard\Scripting\Script\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\NativeScript\Application\DisplayBindings.cpp" />
   </ItemGroup>
 </Project>

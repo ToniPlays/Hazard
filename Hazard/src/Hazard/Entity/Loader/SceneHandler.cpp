@@ -17,8 +17,7 @@ namespace Hazard::ECS {
 	}
 	void SceneHandler::Init()
 	{
-		//Initialize SceneCommand
-		SceneCommand::Init();
+
 	}
 	void SceneHandler::Update()
 	{

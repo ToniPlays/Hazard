@@ -31,6 +31,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::OnEndRuntime()
 	{
+
 	}
 	void ScriptCommand::InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
 	{

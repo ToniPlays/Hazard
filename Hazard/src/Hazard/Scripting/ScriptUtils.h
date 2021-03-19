@@ -23,6 +23,7 @@ namespace Hazard::Scripting {
 
 		static void GetNames(const std::string& module, std::string& nameSpace, std::string& className);
 		static std::string MonoStringToString(MonoString* string);
+		static MonoString* StringToMonoString(const char* string);
 		static char* MonoObjectToChar(MonoObject* object);
 	};
 }

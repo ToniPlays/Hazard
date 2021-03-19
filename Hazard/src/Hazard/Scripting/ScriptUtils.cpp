@@ -4,6 +4,7 @@
 #include "ScriptUtils.h"
 
 #include "Hazard/File/File.h"
+#include "Mono/MonoCommands.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -76,6 +77,10 @@ namespace Hazard::Scripting {
 		std::string result(ptr);
 		mono_free(ptr);
 		return result;
+	}
+	MonoString* ScriptUtils::StringToMonoString(const char* string)
+	{
+		return mono_string_new(MonoCommand::GetData().mono_domain, string);
 	}
 	char* ScriptUtils::MonoObjectToChar(MonoObject* object)
 	{
