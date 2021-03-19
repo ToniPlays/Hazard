@@ -12,7 +12,7 @@ namespace Hazard::Scripting::Bindings {
             bindings.emplace_back("Hazard.Entity::Entity_Get_Name_Native", ComponentBindings::GetEntityName);
             bindings.emplace_back("Hazard.Entity::Entity_Set_Name_Native", ComponentBindings::SetEntityName);
 
-            bindings.emplace_back("Hazard.Entity::Entity_Set_Active_Native", ComponentBindings::GetEntityActive);
+            bindings.emplace_back("Hazard.Entity::Entity_Get_Active_Native", ComponentBindings::GetEntityActive);
             bindings.emplace_back("Hazard.Entity::Entity_Set_Active_Native", ComponentBindings::SetEntityActive);
 
         }
