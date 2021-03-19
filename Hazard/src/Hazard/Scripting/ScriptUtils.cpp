@@ -31,7 +31,6 @@ namespace Hazard::Scripting {
 	{
 		int t = mono_type_get_type(type);
 
-		HZR_CORE_INFO(t);
 		switch (t)
 		{
 		case MONO_TYPE_R4:			return VarFieldType::Float;

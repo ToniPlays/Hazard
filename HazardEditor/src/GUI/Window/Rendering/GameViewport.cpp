@@ -35,7 +35,7 @@ namespace WindowElement {
 		}
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(Rendering::Camera(cam->projection, transform->GetTransformNoScale(), 
+		ECS::SceneCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(), 
 			transform->Translation, cam->bgRenderer));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

@@ -135,8 +135,7 @@ namespace Hazard::ECS::Loader {
 			auto comp = node["CameraComponent"];
 			auto& c = entity.AddComponent<CameraComponent>();
 			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
-			c.fov = comp["Fov"].as<float>();
-			c.RecalculateProjection(1920, 1080);
+			c.SetFov(comp["Fov"].as<float>());
 		};
 
 		template<>
@@ -147,8 +146,6 @@ namespace Hazard::ECS::Loader {
 			ScriptComponent c = ScriptComponent();
 			c.moduleName = moduleName;
 			entity.AddComponent(c);
-			
-			HZR_CORE_INFO("Loading script {0}", moduleName);
 		};
 		template<>
 		static void Deserialize<MeshComponent>(Entity entity, YAML::Node node) {
@@ -215,7 +212,7 @@ namespace Hazard::ECS::Loader {
 			auto& c = entity.GetComponent<CameraComponent>();
 			out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
-			out << YAML::Key << "Fov" << YAML::Value << c.fov;
+			out << YAML::Key << "Fov" << YAML::Value << c.GetFov();
 			out << YAML::EndMap;
 		}
 		template<>

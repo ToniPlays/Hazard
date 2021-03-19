@@ -65,8 +65,8 @@ namespace WindowElement {
 	template<>
 	inline void DrawComponent<CameraComponent>(const char* name, Entity entity) {
 		if (!entity.HasComponent<CameraComponent>()) return;
-		Layout::ComponentTreenode<CameraComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<CameraComponent>();
+		auto& component = entity.GetComponent<CameraComponent>();
+		Layout::ComponentTreenode<CameraComponent>(entity, name, [&]() {
 
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 			const char* currentProjectionTypeString = projectionTypeStrings[(int)component.GetProjectionType()];
@@ -121,11 +121,23 @@ namespace WindowElement {
 			Layout::Text("Fov");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			if (Input::Slider("##FOV", component.fov, 0.001, 100)) {
-				component.RecalculateProjection(component.width, component.height);
+			float fov = component.GetFov();
+			if (Input::Slider("##FOV", fov, 0.001, 100)) {
+				component.SetFov(fov);
 			}
 			Layout::EndTable();
+			glm::vec2 clipping = component.GetClipping();
+			if (Input::Vec2("Clipping", clipping, 0, 75)) {
+				component.SetZNear(clipping.x);
+				component.SetZFar(clipping.y);
+			}
+
 			}, [&]() {
+				Layout::MenuItem("Reset", [&]() {
+					component.SetFov(60);
+					component.SetZNear(0.03f);
+					component.SetZFar(1000);
+				});
 			});
 	}
 	template<>

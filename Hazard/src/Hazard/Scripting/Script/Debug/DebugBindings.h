@@ -3,7 +3,6 @@
 #include "../../ScriptUtils.h"
 #include "../../ScriptCommand.h"
 
-
 extern "C"
 {
 	typedef struct _MonoObject MonoObject;

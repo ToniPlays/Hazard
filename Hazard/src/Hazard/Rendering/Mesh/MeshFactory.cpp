@@ -120,7 +120,6 @@ namespace Hazard::Rendering {
 	void MeshFactory::GetMaterials(const aiScene* scene, Material& material)
 	{
 
-		HZR_CORE_INFO("Loading materials");
 		std::vector<Texture2D*> textures;
 		textures.reserve(scene->mNumMaterials);
 
@@ -143,8 +142,6 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < material->GetTextureCount(type); i++) {
 			aiString str;
 			material->GetTexture(type, i, &str);
-
-			HZR_CORE_INFO("Loading texture {0}", str.C_Str());
 		}
 	}
 	Mesh* MeshFactory::LoadCube()

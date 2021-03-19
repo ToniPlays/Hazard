@@ -52,5 +52,5 @@ void main()
 
 	vec4 envColor = mix(reflectedColor, refractedColor, 0.25);
 
-	color = mix(reflectedColor, f_color, 0.75);
+	color = mix(reflectedColor, f_color, 0.1);
 }

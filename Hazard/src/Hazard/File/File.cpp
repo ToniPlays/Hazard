@@ -115,8 +115,7 @@ namespace Hazard::Utility {
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
-		if (!stream)
-			HZR_CORE_ERROR("Cannot open filepath: {0}", path);
+		HZR_CORE_ASSERT(stream, "Cannot open filepath: {0}", path);
 
 		auto end = stream.tellg();
 		stream.seekg(0, std::ios::beg);

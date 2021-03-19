@@ -11,14 +11,18 @@ namespace Hazard::Scripting {
 	void ScriptRegistry::RegisterAll()
 	{
 		using namespace Hazard::Scripting::Bindings;
-		Register(DebugBindings::GetBindings());
+		//Application bindings
+		
 		Register(ApplicationBindings::GetBindings());
+		Register(DisplayBindings::GetBindings());
+		
+		//Other bindings
+		Register(DebugBindings::GetBindings());
 		Register(ComponentBindings::GetBindings());
 	}
 	void ScriptRegistry::Register(BindMap methods)
 	{
 		for (auto& [name, method] : methods) {
-			HZR_CORE_INFO("Registering method {0}", name);
 			mono_add_internal_call(name, method);
 		}
 	}

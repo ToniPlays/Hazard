@@ -15,7 +15,6 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
-		HZR_CORE_WARN("Runtime begin");
 		using namespace ECS;
 		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
 		auto view = current.GetSceneRegistry().view<ScriptComponent>();
