@@ -18,11 +18,13 @@ namespace Hazard::Scripting::Bindings {
         }
         return bindings;
     }
-    MonoString* ComponentBindings::GetEntityName(uint32_t id) {
+    MonoString* ComponentBindings::GetEntityName(uint32_t id) 
+    {
         ECS::Entity& entity = ECS::SceneCommand::GetEntity(id);
         return ScriptUtils::StringToMonoString(entity.GetTag().tag.c_str());
     }
-    void ComponentBindings::SetEntityName(uint32_t id, MonoString* value) {
+    void ComponentBindings::SetEntityName(uint32_t id, MonoString* value) 
+    {
         ECS::Entity& entity = ECS::SceneCommand::GetEntity(id);
         entity.GetTag().tag = ScriptUtils::MonoStringToString(value);
     }

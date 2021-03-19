@@ -609,6 +609,7 @@
       <Filter>src\Hazard\Scripting\Script\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\NativeScript\Application\DisplayBindings.h" />
+    <ClInclude Include="src\Hazard\NativeScript\InputBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -743,5 +744,6 @@
       <Filter>src\Hazard\Scripting\Script\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\NativeScript\Application\DisplayBindings.cpp" />
+    <ClCompile Include="src\Hazard\NativeScript\InputBindings.cpp" />
   </ItemGroup>
 </Project>

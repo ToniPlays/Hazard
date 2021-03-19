@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-
 namespace Hazard::Key {
 
 	using KeyCode = uint16_t;

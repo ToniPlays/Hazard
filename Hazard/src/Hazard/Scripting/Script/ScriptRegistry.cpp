@@ -15,6 +15,7 @@ namespace Hazard::Scripting {
 		
 		Register(ApplicationBindings::GetBindings());
 		Register(DisplayBindings::GetBindings());
+		Register(InputBindings::GetBindings());
 		
 		//Other bindings
 		Register(DebugBindings::GetBindings());
