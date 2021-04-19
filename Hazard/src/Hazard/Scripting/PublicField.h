@@ -1,46 +1,21 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "ScriptUtils.h"
-#include "Hazard/Entity/Scene.h"
-
-extern "C"
-{
-	typedef struct _MonoClassField MonoClassField;
-	typedef struct _MonoClass MonoClass;
-	typedef struct _MonoMethod MonoMethod;
-}
 
 namespace Hazard::Scripting {
 
-	struct EntityScript;
+	enum FieldType { Float, Float2, Float3, Float4, Int, UInt, String, None };
 
-	struct EntityInstance
-	{
-		EntityScript* ScriptClass;
-		uint32_t handle = 0;
-		ECS::Scene* instance = nullptr;
-		MonoObject* GetInstance();
-	};
+	class PublicField {
+	public:
+		PublicField(const std::string& name, FieldType type) : name(name), type(type) {};
+		virtual ~PublicField() = default;
 
-	struct PublicField {
-		std::string name;
-		VarFieldType type;
-
-		PublicField() = default;
-		PublicField(const std::string& name, VarFieldType type) : name(name), type(type) {
-			storedValueBuffer = AllocateBuffer(type);
-		};
-
-		~PublicField() {
-			//delete[] storedValueBuffer;
-		};
-
-		void CopyStoredToRuntimeValue();
-		bool RuntimeAvailable();
+		const char* GetName() const { return name.c_str();}
+		FieldType GetType() const { return type;}
 
 		template<typename T>
-		T GetStoredValue() const {
+		T GetStoredValue() {
 			T value;
 			GetStoredValueInternal(&value);
 			return value;
@@ -50,7 +25,7 @@ namespace Hazard::Scripting {
 			SetStoredValueInternal(&value);
 		}
 		template<typename T>
-		T GetRuntimeValue() const {
+		T GetRuntimeValue() {
 			T value;
 			GetRuntimeValueInternal(&value);
 			return value;
@@ -59,44 +34,15 @@ namespace Hazard::Scripting {
 		void SetRuntimeValue(T value) {
 			SetRuntimeValueInternal(&value);
 		}
-		void SetStoredValueRaw(void* src);
+	protected:
+		virtual void GetStoredValueInternal(void* value) const = 0;
+		virtual void SetStoredValueInternal(void* value) const = 0;
+		virtual void GetRuntimeValueInternal(void* value) const = 0;
+		virtual void SetRuntimeValueInternal(void* value) const = 0;
+	
 
-
-	private:
-		EntityInstance* entityInstance;
-		MonoClassField* monoClassField;
-		std::byte* storedValueBuffer = nullptr;
-
-		std::byte* AllocateBuffer(VarFieldType type);
-		void SetStoredValueInternal(void* value) const;
-		void GetStoredValueInternal(void* value) const;
-		void SetRuntimeValueInternal(void* value) const;
-		void GetRuntimeValueInternal(void* value) const;
-
-		friend class ScriptEngine;
+	protected:
+		std::string name;
+		FieldType type;
 	};
-	using ModuleFieldMap = std::unordered_map<std::string, std::unordered_map<std::string, PublicField>>;
-
-	struct EntityInstanceData {
-		EntityInstance instance;
-		ModuleFieldMap moduleFieldMap;
-	};
-
-	using EntityInstanceMap = std::unordered_map<uint32_t, EntityInstanceData>;
-	struct EntityScript {
-		std::string moduleName;
-		std::string className;
-		std::string nameSpace;
-
-		MonoClass* monoClass;
-		MonoMethod* Constructor = nullptr;
-		MonoMethod* OnCreate = nullptr;
-		MonoMethod* OnStart = nullptr;
-		MonoMethod* OnUpdate = nullptr;
-		MonoMethod* OnLateUpdate = nullptr;
-		MonoMethod* OnFixedUpdate = nullptr;
-
-		void InitClassMethods();
-	};
-
 }

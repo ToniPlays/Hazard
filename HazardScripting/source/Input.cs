@@ -129,9 +129,13 @@ namespace Hazard
 
     public class Input
     {
+        public static bool AnyKey() { return Input_Any_Key_Native(); }
         public static bool KeyDown(Key code) { return Input_Key_Down_Native((int)code); }
         public static bool KeyPressed(Key code) { return Input_Key_Pressed_Native((int)code); }
         public static bool KeyReleased(Key code) { return Input_Key_Released_Native((int)code); }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool Input_Any_Key_Native();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Input_Key_Down_Native(int code);

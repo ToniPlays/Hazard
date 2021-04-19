@@ -17,9 +17,9 @@ namespace Runtime {
 		static void SetScenePaused(bool paused);
 
 	private:
-		static ScriptEngine* engine;
-
 		static bool sceneRunning;
 		static bool scenePaused;
+
+		static ScriptEngineManager* scriptManager;
 	};
 }

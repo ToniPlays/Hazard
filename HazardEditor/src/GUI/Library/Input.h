@@ -26,11 +26,12 @@ namespace WindowElement {
 		static bool DragUInt(const char* label, uint32_t& value);
 		static bool DragFloat(const char* label, float& value);
 
-		static void PublicField(const char* label, Scripting::PublicField& field);
 		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
 		static void ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 
 			bool& modify, ImVec2 size = {0, 0});
 		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size = { 0, 0 });
 		static bool ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size = { 0, 0 });
+
+		static bool PublicField(Scripting::PublicField* field);
 	};
 }

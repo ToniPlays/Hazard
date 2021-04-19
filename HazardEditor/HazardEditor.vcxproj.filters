@@ -22,14 +22,17 @@
     <Filter Include="src\GUI\Library">
       <UniqueIdentifier>{C50274C5-318E-E189-3A9F-647EA6A93D8A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Library\Layout">
+      <UniqueIdentifier>{D2549FC7-BE4E-C819-A7BB-5E2A93542E86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI\Library\Node">
+      <UniqueIdentifier>{9AB04CC7-863F-D690-2F5E-EA8B1BCCE636}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Window">
       <UniqueIdentifier>{8802468C-74D0-3992-5D64-AAB849D115F7}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\GUI\Window\Debug">
       <UniqueIdentifier>{FED2D974-EA61-633E-9380-77397FEE73E4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Window\Editor">
-      <UniqueIdentifier>{BE165B12-2A83-160D-F376-AE6A5FA23875}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\GUI\Window\Inspect">
       <UniqueIdentifier>{4D0FADA9-3909-D6FB-2276-6C0C0E0F3C68}</UniqueIdentifier>
@@ -105,6 +108,15 @@
     <ClInclude Include="src\GUI\Library\Input.h">
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\Layout.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Node\NodeLibrary.h">
+      <Filter>src\GUI\Library\Node</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Library\Style.h">
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
@@ -118,6 +130,9 @@
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\ScriptDebug.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
@@ -156,14 +171,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout\Layout.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Node\NodeLibrary.h" />
-    <ClInclude Include="src\GUI\Window\NodeEditor\NodeEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -205,6 +212,15 @@
     <ClCompile Include="src\GUI\Library\Input.cpp">
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Node\NodeLibrary.cpp">
+      <Filter>src\GUI\Library\Node</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Library\Style.cpp">
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
@@ -212,6 +228,9 @@
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\ScriptDebug.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
@@ -247,13 +266,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
-      <Filter>src\GUI\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
-      <Filter>src\GUI\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Node\NodeLibrary.cpp" />
-    <ClCompile Include="src\GUI\Window\NodeEditor\NodeEditor.cpp" />
   </ItemGroup>
 </Project>

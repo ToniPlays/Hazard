@@ -29,6 +29,7 @@ namespace WindowElement {
 		ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
 		auto&[found, camera, t] = scene.GetSceneCamera();
 
+
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 
 			editorCamera.GetPosition(), camera->bgRenderer));

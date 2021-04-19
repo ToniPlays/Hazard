@@ -13,7 +13,6 @@
 
 #include "Debug/EngineAssets.h"
 #include "Debug/Console.h"
-
-#include "GUI/Window/NodeEditor/NodeEditor.h"
+#include "Debug/ScriptDebug.h"
 
 #include "TransformationGizmo.h"

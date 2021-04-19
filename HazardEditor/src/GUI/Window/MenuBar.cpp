@@ -47,8 +47,8 @@ namespace WindowElement {
 			
 		});
 		Layout::Menu("Assets", []() {
-			Layout::MenuItem("Reload C# assembly", []() {
-				Scripting::ScriptCommand::ReloadRuntimeAssembly();
+			Layout::MenuItem("Reload script assemblies", []() {
+				Application::GetModule<ScriptEngineManager>().ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
 				Application::GetModule<EditorView>().GetRenderable<FileView>().UpdateFileTree();
@@ -78,14 +78,17 @@ namespace WindowElement {
 			
 			});
 			Layout::Menu("Debug", [&]() {
-				Layout::MenuItem("Assets", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
+				Layout::MenuItem("Console", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<Console>(true);
 					});
 				Layout::MenuItem("Performance", [&]() {
 					Application::GetModule<EditorView>().SetLayerActive<Performance>(true);
 					});
-				Layout::MenuItem("Console", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Console>(true);
+				Layout::MenuItem("Assets", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
+					});
+				Layout::MenuItem("Script debugger", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<ScriptDebug>(true);
 					});
 			});
 		});

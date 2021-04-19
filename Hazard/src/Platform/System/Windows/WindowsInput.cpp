@@ -12,6 +12,10 @@ namespace Hazard {
 	void Input::Init() {
 		window = (GLFWwindow*)Application::GetModule<Rendering::RenderContext>().GetWindow().GetNativeWindow();
 	}
+	bool Input::AnyKey()
+	{
+		return false;
+	}
 	bool Input::IsKeyDown(const Key::KeyCode key) { 
 		auto state = glfwGetKey(window, static_cast<int32_t>(key));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;

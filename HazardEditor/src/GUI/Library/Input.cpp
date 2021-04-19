@@ -32,8 +32,6 @@ namespace WindowElement {
 	bool Input::IconButton(const char* icon, const char* name, ImVec2 size)
 	{
 		bool clicked = ImGui::Button(name, size);
-		//Layout::SameLine();
-		//ImGui::Text(name);
 		return clicked;
 	}
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
@@ -81,7 +79,7 @@ namespace WindowElement {
 	}
 	bool Input::Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth)
 	{
-		bool modified = true;
+		bool modified = false;
 		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 
 		Layout::Table(2, false);
@@ -102,11 +100,11 @@ namespace WindowElement {
 			modified = true;
 			value.x = resetValue;
 		}
+
 		ImGui::PopFont();
 		Layout::SameLine();
 		if (Input::DragFloat("##x", value.x)) modified = true;
 		ImGui::PopStyleColor(3);
-
 
 		Layout::SameLine();
 		Style::SetButtonColors("#53B305", "#4A9F04", "#418B04");
@@ -257,99 +255,7 @@ namespace WindowElement {
 	{
 		return ImGui::DragFloat(label, &value, 0.025f);
 	}
-	void Input::PublicField(const char* label, Scripting::PublicField& field)
-	{
-		using namespace Scripting;
 
-		std::string id("##");
-		id.append(label);
-
-		switch (field.type)
-		{
-			case VarFieldType::Int:
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(label);
-				Layout::TableNext();
-				Layout::MaxWidth();
-				int value = field.GetStoredValue<int>();
-				if (Input::DragInt(id.c_str(), value)) {
-					field.SetStoredValue(value);
-				}
-				Layout::EndTable();
-				break;
-			}
-			case VarFieldType::Float: 
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(label);
-				Layout::TableNext();
-				Layout::MaxWidth();
-				float value = field.GetStoredValue<float>();
-				if (Input::DragFloat(id.c_str(), value)) {
-					field.SetStoredValue(value);
-				}
-				Layout::EndTable();
-				break;
-			}
-			case VarFieldType::UnsignedInt: 
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(label);
-				Layout::TableNext();
-				Layout::MaxWidth();
-				uint32_t value = field.GetStoredValue<uint32_t>();
-				if (Input::DragUInt(id.c_str(), value)) {
-					field.SetStoredValue(value);
-				}
-				Layout::EndTable();
-				break;
-			}
-			case VarFieldType::Vec2:
-			{
-				glm::vec2 value = field.GetStoredValue<glm::vec2>();
-				Layout::IDGroup(label, [&]() {
-					if (Input::Vec2(label, value, 0, 75)) {
-						field.SetStoredValue(value);
-					}
-					});
-				Layout::NextLine(1);
-				break;
-			}
-			case VarFieldType::Vec3:
-			{
-				glm::vec3 value = field.GetStoredValue<glm::vec3>();
-				Layout::IDGroup(label, [&]() {
-					if (Input::Vec3(label, value, 0, 75)) {
-						field.SetStoredValue(value);
-					}
-				});
-				Layout::NextLine(1);
-				break;
-			}
-			case VarFieldType::Vec4:
-			{
-				glm::vec4 value = field.GetStoredValue<glm::vec4>();
-				Layout::Text("Vec4 not yet supported");
-				break;
-			}
-			case VarFieldType::String:
-			{
-				std::string value = field.GetStoredValue<std::string>();
-				Layout::Text(label);
-				Layout::SameLine(75);
-				Layout::MaxWidth();
-
-				if (Input::InputField(value)) {
-					field.SetStoredValue(value);
-				}
-				break;
-			}
-		}
-	}
 	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify)
 	{
 		if (modify) {
@@ -411,6 +317,79 @@ namespace WindowElement {
 			modified = true;
 		}
 		ImGui::PopStyleColor(2);
+		return modified;
+	}
+	bool Input::PublicField(Scripting::PublicField* field)
+	{
+		bool modified = false;
+		using namespace Hazard::Scripting;
+
+		std::string id("##");
+		id.append(field->GetName());
+
+		switch (field->GetType())
+		{
+			case FieldType::Float: 
+			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(field->GetName());
+				Layout::TableNext();
+				Layout::MaxWidth();
+				float f = field->GetStoredValue<float>();
+				modified = DragFloat(id.c_str(), f);
+				if (modified) field->SetStoredValue(f);
+				Layout::EndTable();
+				break;
+			}
+			case FieldType::Float2: 
+			{
+				glm::vec2 f2 = field->GetStoredValue<glm::vec2>();
+				modified = Vec2(field->GetName(), f2, 0, 75);
+				if (modified) field->SetStoredValue(f2);
+				Layout::NextLine(1);
+				break;
+			}
+			case FieldType::Float3:
+			{
+				glm::vec3 f3 = field->GetStoredValue<glm::vec3>();
+				modified = Vec3(field->GetName(), f3, 0, 75);
+				if (modified) field->SetStoredValue(f3);
+				Layout::NextLine(1);
+				break;
+			}
+			case FieldType::Int:
+			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(field->GetName());
+				Layout::TableNext();
+				Layout::MaxWidth();
+				int i = field->GetStoredValue<int>();
+				modified = DragInt(id.c_str(), i);
+				if (modified) field->SetStoredValue(i);
+				Layout::EndTable();
+				break;
+			}
+			case FieldType::UInt:
+			{
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(field->GetName());
+				Layout::TableNext();
+				Layout::MaxWidth();
+				uint32_t uint = field->GetStoredValue<uint32_t>();
+				modified = DragUInt(field->GetName(), uint);
+				if (modified) field->SetStoredValue(uint);
+				Layout::EndTable();
+				break;
+			}
+			default:
+			{
+				ImGui::Text("Type not recognized");
+			}
+		}
+		Layout::EndTable();
 		return modified;
 	}
 }

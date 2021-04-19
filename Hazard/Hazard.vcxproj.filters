@@ -55,23 +55,14 @@
     <Filter Include="src\Hazard\Rendering\Shader">
       <UniqueIdentifier>{29B50B43-95C2-3929-1EA9-35148AB505E0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\Sky">
+      <UniqueIdentifier>{89F1BBB4-7516-0B35-9E61-F0C48AE50953}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering\Textures">
       <UniqueIdentifier>{16C4F170-82DC-D89A-4B89-6834B7606D34}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Scripting\Mono">
-      <UniqueIdentifier>{402DC35C-ACEF-F6E6-F59F-857361A1CFC4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Scripting\Script">
-      <UniqueIdentifier>{DC716BA7-487F-998D-D165-95783D726544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Scripting\Script\Application">
-      <UniqueIdentifier>{9F578609-0BE7-47F4-14E3-280C80F18200}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Scripting\Script\Debug">
-      <UniqueIdentifier>{5271325A-BEDF-87D9-07C9-42D973767D75}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -96,6 +87,21 @@
     </Filter>
     <Filter Include="src\Platform\System\Windows">
       <UniqueIdentifier>{4FDDE4E9-BBEA-12D0-44D1-0EBBB0DDDE86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting">
+      <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\CSharp">
+      <UniqueIdentifier>{1FF8C090-0B87-4A5A-B4A5-5E55A0135B00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\CSharp\Mono">
+      <UniqueIdentifier>{2783EAD3-9345-1E5E-DCF5-ACEA48F7F63B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\HazardScript">
+      <UniqueIdentifier>{ED619A93-D971-4664-422B-AB822E5A35FD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\HazardScript\API">
+      <UniqueIdentifier>{5675BEBC-429B-8823-2BE1-0DEF17A6ADEF}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -261,6 +267,12 @@
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
       <Filter>src\Hazard\Rendering\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h">
+      <Filter>src\Hazard\Rendering\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Sky\Skybox.h">
+      <Filter>src\Hazard\Rendering\Sky</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
@@ -273,14 +285,8 @@
     <ClInclude Include="src\Hazard\Rendering\Textures\Texture2D.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Mono\MonoCommands.h">
-      <Filter>src\Hazard\Scripting\Mono</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Script\ScriptRegistry.h">
-      <Filter>src\Hazard\Scripting\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -288,7 +294,7 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptUtils.h">
+    <ClInclude Include="src\Hazard\Scripting\ScriptEngineManager.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
@@ -326,6 +332,24 @@
     </ClInclude>
     <ClInclude Include="src\Platform\System\Windows\WindowWindow.h">
       <Filter>src\Platform\System\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\CSharpEngine.h">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\CSharpField.h">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Mono\Mono.h">
+      <Filter>src\Scripting\CSharp\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\ScriptUtils.h">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\HazardScript\API\HVSEngine.h">
+      <Filter>src\Scripting\HazardScript\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\ScriptEngines.h">
+      <Filter>src\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
@@ -594,22 +618,15 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Sky\Skybox.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h" />
-    <ClInclude Include="src\Hazard\NativeScript\Bindings.h">
-      <Filter>src\Hazard\Scripting\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\NativeScript\Debug\DebugBindings.h">
-      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\NativeScript\Components\ComponentBindings.h" />
-    <ClInclude Include="src\Hazard\NativeScript\Application\ApplicationBindings.h">
-      <Filter>src\Hazard\Scripting\Script\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\NativeScript\Application\DisplayBindings.h" />
-    <ClInclude Include="src\Hazard\NativeScript\InputBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\ScriptRegistery.h" />
+    <ClInclude Include="src\Scripting\CSharp\Bindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Application\ApplicationBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Application\InputBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Application\DisplayBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\ECS\TransformBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\ECS\EntityBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\ECS\TagComponentBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -678,22 +695,19 @@
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\Mono\MonoCommands.cpp">
-      <Filter>src\Hazard\Scripting\Mono</Filter>
+    <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp">
+    <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
+      <Filter>src\Hazard\Rendering\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScripEngine.cpp">
       <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\Script\ScriptRegistry.cpp">
-      <Filter>src\Hazard\Scripting\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptUtils.cpp">
+    <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.cpp">
@@ -726,24 +740,34 @@
     <ClCompile Include="src\Platform\System\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\System\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\CSharpEngine.cpp">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\CSharpField.cpp">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Mono\Mono.cpp">
+      <Filter>src\Scripting\CSharp\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\ScriptUtils.cpp">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\HazardScript\API\HVSEngine.cpp">
+      <Filter>src\Scripting\HazardScript\API</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp" />
-    <ClCompile Include="src\Hazard\NativeScript\Debug\DebugBindings.cpp">
-      <Filter>src\Hazard\Scripting\Script\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\NativeScript\Components\ComponentBindings.cpp" />
-    <ClCompile Include="src\Hazard\NativeScript\Application\ApplicationBindings.cpp">
-      <Filter>src\Hazard\Scripting\Script\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\NativeScript\Application\DisplayBindings.cpp" />
-    <ClCompile Include="src\Hazard\NativeScript\InputBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\ScriptRegistery.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Application\ApplicationBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Application\InputBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Application\DisplayBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\ECS\TransformBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\ECS\EntityBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\ECS\TagComponentBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.cpp" />
   </ItemGroup>
 </Project>

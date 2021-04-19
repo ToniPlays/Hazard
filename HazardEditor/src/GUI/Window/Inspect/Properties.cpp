@@ -49,6 +49,7 @@ namespace WindowElement {
 		DrawComponent<PointLightComponent>(ICON_FK_LIGHTBULB_O " Point light", selectionContext);
 		DrawComponent<BatchComponent>("Batch", selectionContext);
 		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
+		DrawComponent<VisualScriptComponent>(ICON_FK_SITEMAP " Visual script", selectionContext);
 		DrawComponent<MeshComponent>(ICON_FK_CUBE " Mesh", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);

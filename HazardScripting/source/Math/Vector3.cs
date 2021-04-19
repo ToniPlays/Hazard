@@ -3,9 +3,16 @@
 namespace Hazard
 {
     [StructLayout(LayoutKind.Sequential)]
-    public class Vector3
+    public struct Vector3
     {
         public float x, y, z;
+
+        public Vector3(float scalar) {
+            x = scalar;
+            y = scalar;
+            z = scalar;
+        }
+
         public Vector3(float x, float y, float z)
         {
             this.x = x;

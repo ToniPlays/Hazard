@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hazard
 {
-    class Random
+    public class Random
     {
 
     }

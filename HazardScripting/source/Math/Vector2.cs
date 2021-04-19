@@ -3,7 +3,7 @@
 namespace Hazard
 {
     [StructLayout(LayoutKind.Sequential)]
-    public class Vector2
+    public struct Vector2
     {
         public float x, y;
         public Vector2(float x, float y) {

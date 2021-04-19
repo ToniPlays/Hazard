@@ -34,7 +34,10 @@ namespace Hazard::ECS {
 	};
 	//Script component for entities
 	struct ScriptComponent {
-		std::string moduleName = "";
+		std::string moduleName;
+	};
+	struct VisualScriptComponent {
+		std::string filename;
 	};
 	struct MeshComponent {
 		Rendering::Mesh* mesh;

@@ -86,8 +86,8 @@ namespace WindowElement {
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
-			if(Runtime::SceneRuntimeHandler::IsSceneRunning())
-				Scripting::ScriptCommand::DoStep();
+			if (Runtime::SceneRuntimeHandler::IsSceneRunning())
+				Application::GetModule<ScriptEngineManager>().Update();
 		}
 
 		Layout::SameLine(0, 5);
@@ -113,7 +113,7 @@ namespace WindowElement {
 		bool isShift = Hazard::Input::IsKeyDown(Key::LeftShift);
 
 		if (e.GetKeyCode() == Key::R) {
-			Hazard::Scripting::ScriptCommand::ReloadRuntimeAssembly();
+			HZR_INFO("Now you should reload assemblies");
 			return true;
 		}
 		return false;

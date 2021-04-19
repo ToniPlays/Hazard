@@ -99,6 +99,10 @@ namespace WindowElement {
 				Layout::MenuItem("Script component", [&]() {
 				entity.AddComponent<ScriptComponent>();
 					});
+			if (!entity.HasComponent<VisualScriptComponent>())
+				Layout::MenuItem("Visual script component", [&]() {
+				entity.AddComponent<VisualScriptComponent>();
+					});
 			if (!entity.HasComponent<MeshComponent>())
 				Layout::MenuItem("Mesh component", [&]() {
 				entity.AddComponent<MeshComponent>();

@@ -6,17 +6,40 @@
 #include "Hazard/Core/Application.h"
 #include "Component.h"
 #include "Loader/SceneHandler.h"
+#include "Hazard/Scripting/ScriptEngine.h"
 
 namespace Hazard::ECS {
 
-	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)
+	template<typename T>
+	void SceneCommand::OnScriptAttached(Entity& entity, T& script)
 	{
-		Scripting::ScriptCommand::InitScripEntity(entity, script);
+		static_assert(false);
 	}
+	
+	template<>
+	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script) 
+	{
+		
+	}
+	template<>
+	void SceneCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script) 
+	{
 
+	}
+	template<typename T>
+	void SceneCommand::OnScriptDetached(Entity& entity, T& script)
+	{
+		static_assert(false);
+	}
+	template<>
 	void SceneCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
-		Scripting::ScriptCommand::RemoveScriptableEntity(entity, script);
+		Scripting::ScriptCommand::ClearEntity(entity, script);
+	}
+	template<>
+	void SceneCommand::OnScriptDetached(Entity& entity, VisualScriptComponent& script)
+	{
+		Scripting::ScriptCommand::ClearEntity(entity, script);
 	}
 
 	Entity SceneCommand::GetEntity(uint32_t id)

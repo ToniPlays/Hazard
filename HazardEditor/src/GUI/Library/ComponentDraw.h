@@ -11,12 +11,18 @@ namespace WindowElement {
 
 	template<typename T>
 	void DrawComponent(const char* name, Entity entity) {
+		if (!entity.HasComponent<T>()) return;
+		Draw(name, entity, entity.GetComponent<T>());
+	}
+
+	template<typename T>
+	void Draw(const char* name, Entity entity, T& component) {
 		static_assert(false);
 	}
+
 	template<>
-	inline void DrawComponent<TagComponent>(const char* name, Entity entity) {
+	inline void Draw(const char* name, Entity entity, TagComponent& component) {
 		if (!entity.HasComponent<TagComponent>()) return;
-		auto& component = entity.GetComponent<TagComponent>();
 		Layout::ComponentTreenode<TagComponent>(entity, name, [&]() {
 			
 			Layout::Text("Tag");
@@ -32,9 +38,7 @@ namespace WindowElement {
 	}
 
 	template<>
-	inline void DrawComponent<TransformComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<TransformComponent>()) return;
-		auto& component = entity.GetComponent<TransformComponent>();
+	inline void Draw(const char* name, Entity entity, TransformComponent& component) {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
 			glm::vec3 rot { 
@@ -43,13 +47,13 @@ namespace WindowElement {
 				glm::degrees(component.Rotation.z) };
 
 			Layout::IDGroup("Translation", [&]() {
-				Input::Vec3("Translation", component.Translation, 0, 100);
+				Input::Vec3("Translation", component.Translation, 0, 75);
 			});
 			Layout::IDGroup("Rotation", [&]() {
-				Input::Vec3("Rotation", rot, 0, 100);
+				Input::Vec3("Rotation", rot, 0, 75);
 			});
 			Layout::IDGroup("Scale", [&]() {
-				Input::Vec3("Scale", component.Scale, 1.0f, 100);
+				Input::Vec3("Scale", component.Scale, 1.0f, 75);
 			});
 
 			component.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
@@ -63,9 +67,7 @@ namespace WindowElement {
 		});
 	}
 	template<>
-	inline void DrawComponent<CameraComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<CameraComponent>()) return;
-		auto& component = entity.GetComponent<CameraComponent>();
+	inline void Draw(const char* name, Entity entity, CameraComponent& component) {
 		Layout::ComponentTreenode<CameraComponent>(entity, name, [&]() {
 
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
@@ -141,12 +143,8 @@ namespace WindowElement {
 			});
 	}
 	template<>
-	inline void DrawComponent<SpriteRendererComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<SpriteRendererComponent>()) return;
-
-		Layout::ComponentTreenode<SpriteRendererComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<SpriteRendererComponent>();
-
+	inline void Draw(const char* name, Entity entity, SpriteRendererComponent& component) {
+		Layout::ComponentTreenode<SpriteRendererComponent>(entity, name, [&]() {
 
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
@@ -174,10 +172,8 @@ namespace WindowElement {
 			});
 	}
 	template<>
-	inline void DrawComponent<BatchComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<BatchComponent>()) return;
-		Layout::ComponentTreenode<BatchComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<BatchComponent>();
+	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
+		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
 
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
@@ -194,11 +190,8 @@ namespace WindowElement {
 
 #pragma region Lights 
 	template<>
-	inline void DrawComponent<SkyLightComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<SkyLightComponent>()) return;
-
-		Layout::ComponentTreenode<SkyLightComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<SkyLightComponent>();
+	inline void Draw(const char* name, Entity entity, SkyLightComponent& component) {
+		Layout::ComponentTreenode<SkyLightComponent>(entity, name, [&]() {
 
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
@@ -219,10 +212,8 @@ namespace WindowElement {
 		});
 	}
 	template<>
-	inline void DrawComponent<DirectionalLightComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<DirectionalLightComponent>()) return;
-		Layout::ComponentTreenode<DirectionalLightComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<DirectionalLightComponent>();
+	inline void Draw(const char* name, Entity entity, DirectionalLightComponent& component) {
+		Layout::ComponentTreenode<DirectionalLightComponent>(entity, name, [&]() {
 			
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
@@ -243,10 +234,8 @@ namespace WindowElement {
 			});
 	}
 	template<>
-	inline void DrawComponent<PointLightComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<PointLightComponent>()) return;
-		Layout::ComponentTreenode<PointLightComponent>(entity, name, [&entity]() {
-			auto& component = entity.GetComponent<PointLightComponent>();
+	inline void Draw(const char* name, Entity entity, PointLightComponent& component) {
+		Layout::ComponentTreenode<PointLightComponent>(entity, name, [&]() {
 
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
@@ -277,48 +266,51 @@ namespace WindowElement {
 #pragma endregion
 
 	template<>
-	inline void DrawComponent<ScriptComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<ScriptComponent>()) return;
-		auto& component = entity.GetComponent<ScriptComponent>();
+	inline void Draw(const char* name, Entity entity, ScriptComponent& component) {
+		using namespace Hazard::Scripting;
 		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
 			std::string moduleName = component.moduleName;
+			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
 
-			if (Input::ScriptField("Script", component.moduleName, Scripting::ScriptCommand::ModuleExists(moduleName))) {
-				if (Scripting::ScriptCommand::ModuleExists(moduleName)) {
-					Scripting::ScriptCommand::ShutdownScriptEntity(entity, moduleName);
+			if (Input::ScriptField("Script", component.moduleName, exists))
+			{
+				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
+					ScriptCommand::ClearEntity(entity, component);
 				}
-				if (Scripting::ScriptCommand::ModuleExists(component.moduleName)) {
-					Scripting::ScriptCommand::InitScripEntity(entity, component);
+				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.moduleName.c_str())) {
+					ScriptCommand::InitEntity(entity, component);
 				}
 			}
-			if (Scripting::ScriptCommand::ModuleExists(moduleName)) {
-				//Show public fields
-				Scripting::EntityInstanceData& instanceData = Scripting::ScriptCommand::GetInstanceData(entity);
-				auto& moduleFieldMap = instanceData.moduleFieldMap;
-				
-				if (moduleFieldMap.find(moduleName) != moduleFieldMap.end()) {
-					auto& fields = moduleFieldMap.at(moduleName);
 
-					for (auto& [name, field] : fields) {
-						Input::PublicField(name.c_str(), field);
-					}
+			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
+				ScriptData data = ScriptCommand::GetData(ScriptType::CSharpScript, entity, moduleName);
+				for (PublicField* field : data.fields) {
+					Input::PublicField(field);
 				}
 			}
-		}, [&]() {
-			Layout::MenuItem("Reset", [&]() {
-				component.moduleName = "Hazard_NULL";
+
+			}, []() {
+				Layout::MenuItem("Reload", []() {
+					Application::GetModule<ScriptEngineManager>().ReloadAll();
 				});
-			Layout::MenuItem("Reload C# assembly", []() {
-				Application::GetModule<Scripting::ScriptEngine>().ReloadRuntimeAssembly();
-				});
-		});
+			});
 	}
 	template<>
-	inline void DrawComponent<MeshComponent>(const char* name, Entity entity) {
-		if (!entity.HasComponent<MeshComponent>()) return;
-		auto& component = entity.GetComponent<MeshComponent>();
+	inline void Draw(const char* name, Entity entity, VisualScriptComponent& component) {
+		using namespace Hazard::Scripting;
+		Layout::ComponentTreenode<VisualScriptComponent>(entity, name, [&]() {
+
+			}, []() {
+				Layout::MenuItem("Reload", []() {
+					Application::GetModule<ScriptEngineManager>().ReloadAll();
+				});
+			});
+	}
+	template<>
+	inline void Draw(const char* name, Entity entity, MeshComponent& component) {
 		Layout::ComponentTreenode<MeshComponent>(entity, name, [&]() {
+
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
 			if (Input::Button("Mesh")) {

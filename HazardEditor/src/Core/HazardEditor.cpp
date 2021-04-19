@@ -29,7 +29,7 @@ void EditorApplication::PreInit()
 	SetTitle(ss.str());
 	SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
 	PushModule<Rendering::RenderEngine>();
-	PushModule<Scripting::ScriptEngine>().InitAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
+	PushModule<Scripting::ScriptEngineManager>();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 

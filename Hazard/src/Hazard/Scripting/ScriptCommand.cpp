@@ -6,75 +6,39 @@
 
 namespace Hazard::Scripting {
 
-	ScriptEngine* ScriptCommand::scriptEngine;
 	void(*ScriptCommand::debugCallback)(Severity, std::string);
+	ScriptEngineManager* ScriptCommand::manager;
 
-	void ScriptCommand::Init(ScriptEngine* engine)
+	void ScriptCommand::Init()
 	{
-		scriptEngine = engine;
+		manager = &Application::GetModule<ScriptEngineManager>();
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
-		using namespace ECS;
-		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
-		auto view = current.GetSceneRegistry().view<ScriptComponent>();
-
-		for (auto entity : view) {
-			Entity e{ entity, &current };
-			if (!e.IsVisible()) continue;
-
-			auto& c = e.GetComponent<ScriptComponent>();
-			if (ModuleExists(c.moduleName)) {
-				scriptEngine->InstantiateScriptEntity(e, c.moduleName);
-			}
-		}
+		manager->BeginRuntime();
 	}
 	void ScriptCommand::OnEndRuntime()
 	{
-
+		manager->EndRuntime();
 	}
-	void ScriptCommand::InitScripEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
+	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::ScriptComponent& component)
 	{
-		ECS::Scene& scene = entity.GetScene();
-		uint32_t UUID = entity;
-		auto& moduleName = component.moduleName;
-		if (moduleName == "Hazard_NULL") return;
-		if (!scriptEngine->ModuleExists(moduleName)) return;
-		scriptEngine->RegisterScripEntity(moduleName, UUID);
+		manager->InitEntity((uint32_t)entity, component.moduleName, ScriptType::CSharpScript);
 	}
-	void ScriptCommand::ShutdownScriptEntity(ECS::Entity& entity, std::string& oldComponent)
+	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::ScriptComponent& component)
 	{
-		scriptEngine->RemoveScriptEntity(oldComponent, entity);
+		manager->ClearEntity((uint32_t)entity, component.moduleName, ScriptType::CSharpScript);
 	}
-	void ScriptCommand::RemoveScriptableEntity(ECS::Entity& entity, ECS::ScriptComponent& component)
+	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		HZR_CORE_INFO("Removing scriptable entity");
+		manager->InitEntity((uint32_t)entity, component.filename, ScriptType::CSharpScript);
 	}
-	bool ScriptCommand::ModuleExists(std::string& module)
+	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		return scriptEngine->ModuleExists(module);
+		manager->ClearEntity((uint32_t)entity, component.filename, ScriptType::CSharpScript);
 	}
-	EntityInstanceData& ScriptCommand::GetInstanceData(uint32_t entity) {
-		return scriptEngine->GetInstanceData(entity);
-	}
-	void ScriptCommand::DoStep()
-	{
-		scriptEngine->Update();
-	}
-
-	void ScriptCommand::InitAllEntities()
-	{
-		using namespace ECS;
-		Scene& current = Application::GetModule<SceneHandler>().GetCurrentScene();
-		current.GetSceneRegistry().each([&](auto entityID) {
-			Entity entity{ entityID, &current };
-
-
-			if (entity.HasComponent<ScriptComponent>()) {
-				HZR_CORE_INFO("Initializing {0}", entity.GetComponent<TagComponent>().tag);
-				InitScripEntity(entity, entity.GetComponent<ScriptComponent>());
-			}
-		});
+	ScriptData ScriptCommand::GetData(ScriptType type, ECS::Entity entity, std::string moduleName) {
+		return manager->GetData(type, entity, moduleName);
 	}
 	void ScriptCommand::SendDebugMessage(Severity severity, std::string message)
 	{

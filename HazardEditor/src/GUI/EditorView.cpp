@@ -94,6 +94,7 @@ namespace WindowElement {
 
 		PushRenderable<Console>();
 		PushRenderable<EngineAssets>();
+		PushRenderable<ScriptDebug>();
 
 		PushRenderable<Toolbar>();
 	}  

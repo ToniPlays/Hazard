@@ -29,13 +29,11 @@ namespace WindowElement {
 	{
 
 	}
-	static void Print() {
-		
-	}
 	void Console::Init()
 	{
 		void(*callback)(Severity, std::string) = PrintToConsole;
 		ScriptCommand::SetDebugCallback(callback);
+		HZR_CORE_WARN("Console init");
 
 	}
 	void Console::OnWindowRender()

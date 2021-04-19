@@ -24,12 +24,13 @@ namespace Hazard::ECS::Loader {
 
 				Entity entity = scene->CreateEntity("");
 				//Deserialize components
-				Deserialize<TagComponent>(entity, node);
-				Deserialize<TransformComponent>(entity, node);
-				Deserialize<SpriteRendererComponent>(entity, node);
-				Deserialize<CameraComponent>(entity, node);
-				Deserialize<ScriptComponent>(entity, node);
-				Deserialize<MeshComponent>(entity, node);
+				TryDeserialize<TagComponent>("TagComponent", entity, node);
+				TryDeserialize<TransformComponent>("TransformComponent", entity, node);
+				TryDeserialize<SpriteRendererComponent>("SpriteRendererComponent", entity, node);
+				TryDeserialize<CameraComponent>("CameraComponent", entity, node);
+				TryDeserialize<ScriptComponent>("ScriptComponent", entity, node);
+				TryDeserialize<VisualScriptComponent>("VisualScriptComponent", entity, node);
+				TryDeserialize<MeshComponent>("MeshComponent", entity, node);
 			}
 		}
 		return scene;

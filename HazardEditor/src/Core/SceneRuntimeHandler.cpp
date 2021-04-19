@@ -6,15 +6,14 @@
 
 namespace Runtime {
 
-	ScriptEngine* SceneRuntimeHandler::engine = nullptr;
-
 	bool SceneRuntimeHandler::sceneRunning = false;
 	bool SceneRuntimeHandler::scenePaused = false;
 
+	ScriptEngineManager* SceneRuntimeHandler::scriptManager;
 
 	void SceneRuntimeHandler::Init()
 	{
-		engine = &Application::GetModule<ScriptEngine>();
+		scriptManager = &Application::GetModule<ScriptEngineManager>();
 	}
 
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
@@ -30,7 +29,7 @@ namespace Runtime {
 			ScriptCommand::OnEndRuntime(); 
 		}
 		if (scenePaused && sceneRunning) return;
-		engine->SetActive(sceneRunning);
+		scriptManager->SetActive(sceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
 	{
@@ -42,6 +41,6 @@ namespace Runtime {
 		}
 		else
 			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
-		engine->SetActive(!paused);
+		scriptManager->SetActive(!paused);
 	}
 }

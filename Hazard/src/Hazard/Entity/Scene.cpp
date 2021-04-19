@@ -133,7 +133,16 @@ namespace Hazard::ECS {
         SceneCommand::OnScriptAttached(entity, component);
     }
     template<>
+    void Scene::OnComponentAdded(Entity& entity, VisualScriptComponent& component) {
+        SceneCommand::OnScriptAttached(entity, component);
+    }
+    template<>
     void Scene::OnComponentRemoved(Entity& entity, ScriptComponent& component)
+    {
+        SceneCommand::OnScriptDetached(entity, component);
+    }
+    template<>
+    void Scene::OnComponentRemoved(Entity& entity, VisualScriptComponent& component)
     {
         SceneCommand::OnScriptDetached(entity, component);
     }

@@ -30,8 +30,9 @@
 #include "Hazard/Entity/Component.h"
 
 //Hazadrd script engine
-#include "Hazard/Scripting/ScriptEngine.h"
+#include "Hazard/Scripting/ScriptEngineManager.h"
 #include "Hazard/Scripting/ScriptCommand.h"
+#include "Hazard/Scripting/PublicField.h"
 
 //Hazard Math classes
 #include "Hazard/Math/Color.h"

@@ -89,24 +89,22 @@ namespace Hazard::ECS::Loader {
 		static Scene* DeserializeEditor(const char* file);
 		template<typename T>
 		static void Deserialize(Entity entity, YAML::Node node);
+		template<typename T>
+		static void TryDeserialize(const char* key, Entity entity, YAML::Node node) 
+		{
+			if (node[key]) {
+				Deserialize<T>(entity, node[key]);
+			}
+		}
 
 		template<>
-		static void Deserialize<TagComponent>(Entity entity, YAML::Node node) {
-
-			if (!node["TagComponent"]) return;
-			auto comp = node["TagComponent"];
-
+		static void Deserialize<TagComponent>(Entity entity, YAML::Node comp) {
 			std::string tag = comp["Tag"].as<std::string>();
 			entity.GetComponent<TagComponent>().tag = tag;
 		};
 
 		template<>
-		static void Deserialize<TransformComponent>(Entity entity, YAML::Node node) {
-
-
-			if (!node["TransformComponent"]) return;
-				auto comp = node["TransformComponent"];
-
+		static void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.GetComponent<TransformComponent>();
 
 			c.Translation = comp["Translation"].as<glm::vec3>();
@@ -114,12 +112,7 @@ namespace Hazard::ECS::Loader {
 			c.Scale = comp["Scale"].as<glm::vec3>();
 		};
 		template<>
-		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node node) {
-
-
-			if (!node["SpriteRendererComponent"]) return;
-			auto comp = node["SpriteRendererComponent"];
-
+		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 			component.tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
 			if (comp["Texture"]) {
@@ -128,29 +121,28 @@ namespace Hazard::ECS::Loader {
 
 		};
 		template<>
-		static void Deserialize<CameraComponent>(Entity entity, YAML::Node node) {
+		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
 
-
-			if (!node["CameraComponent"]) return;
-			auto comp = node["CameraComponent"];
 			auto& c = entity.AddComponent<CameraComponent>();
 			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.SetFov(comp["Fov"].as<float>());
 		};
 
 		template<>
-		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node node) {
-			if (!node["ScriptComponent"]) return;
-			auto comp = node["ScriptComponent"];
+		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
+			ScriptComponent c;
+			c.moduleName = comp["ModuleName"].as<std::string>();
+			entity.AddComponent(c);
+		};
+		template<>
+		static void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string moduleName = comp["ModuleName"].as<std::string>();
 			ScriptComponent c = ScriptComponent();
 			c.moduleName = moduleName;
 			entity.AddComponent(c);
 		};
 		template<>
-		static void Deserialize<MeshComponent>(Entity entity, YAML::Node node) {
-			if (!node["MeshComponent"]) return;
-			auto comp = node["MeshComponent"];
+		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
 			c.mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
 		};
