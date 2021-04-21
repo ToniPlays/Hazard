@@ -25,7 +25,7 @@ namespace Hazard::Rendering {
 		static Mesh* LoadCube();
 		static Mesh* LoadSphere();
 		static Mesh* LoadPlane();
-		static std::vector<Mesh*>& GetLoadedMeshes() { return loadedMeshes; }
+		static std::vector<Mesh*>& GetLoadedMeshes() { return m_LoadedMeshes; }
 
 	private:
 		static void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);
@@ -35,6 +35,6 @@ namespace Hazard::Rendering {
 		static void LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName);
 
 	private:
-		static std::vector<Mesh*> loadedMeshes;
+		static std::vector<Mesh*> m_LoadedMeshes;
 	};
 }

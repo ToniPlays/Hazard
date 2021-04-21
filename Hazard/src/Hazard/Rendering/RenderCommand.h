@@ -16,20 +16,20 @@ namespace Hazard::Rendering {
 	public:
 		static void Init();
 		static void ResetStats();
-		static RenderStats& GetStats() { return stats; }
+		static RenderStats& GetStats() { return s_Stats; }
 
-		static void Begin(Camera camera) { engine->BeginRendering(camera); }
-		static void End() { engine->EndRendering(); }
-		static void SetRenderTarget(RenderTexture* texture) { engine->SetRenderTarget(texture); }
+		static void Begin(Camera camera) { s_Engine->BeginRendering(camera); }
+		static void End() { s_Engine->EndRendering(); }
+		static void SetRenderTarget(RenderTexture* texture) { s_Engine->SetRenderTarget(texture); }
 
 		static void DrawIndexed(VertexArray* vao, uint32_t count);
 
 		template<typename T>
-		static void Submit(T element) { engine->Submit(element); }
+		static void Submit(T element) { s_Engine->Submit(element); }
 
 	private:
-		static RenderContext* context;
-		static RenderEngine* engine;
-		static RenderStats stats;
+		static RenderContext* s_Context;
+		static RenderEngine* s_Engine;
+		static RenderStats s_Stats;
 	};
 }

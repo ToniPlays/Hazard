@@ -14,9 +14,9 @@ namespace Hazard::Rendering {
 	class ColorBackground : public BackgroundRenderer {
 	public:
 		virtual void Render(glm::mat4 transform) override;
-		virtual glm::vec4 ClearColor() override { return color; }
+		virtual glm::vec4 ClearColor() override { return m_Color; }
 	private:
-		glm::vec4 color;
+		glm::vec4 m_Color;
 	};
 
 	class SkyboxBackground : public BackgroundRenderer {
@@ -28,9 +28,9 @@ namespace Hazard::Rendering {
 
 		void Render(glm::mat4 transform) override;
 		glm::vec4 ClearColor() override { return glm::vec4(0, 0, 0, 1.0); }
-		void SetSkyboxCubemap(CubemapTexture* texture) { skybox->SetCubemapTexture(texture); }
+		void SetSkyboxCubemap(CubemapTexture* texture) { m_Skybox->SetCubemapTexture(texture); }
 
 	private:
-		Skybox* skybox;
+		Skybox* m_Skybox;
 	};
 }

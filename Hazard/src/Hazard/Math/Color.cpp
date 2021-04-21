@@ -4,9 +4,8 @@
 
 namespace Hazard
 {
-
-	Color::Color() {
-
+	Color::Color() 
+	{
 		this->r = 0;
 		this->g = 0;
 		this->b = 0;
@@ -32,26 +31,20 @@ namespace Hazard
 		this->b = b;
 		this->a = a;
 	}
-	std::string Color::ToString()
+	Color Color::FromGLM(const glm::vec4 color)
 	{
-		std::stringstream ss;
-		ss << "R: " << this->r;
-		ss << " G: " << this->g;
-		ss << " B: " << this->b;
-		ss << " A: " << this->a;
-		return ss.str();
+		return Color(color.r, color.g, color.b, color.a);
 	}
 	Color Color::FromHex(std::string hex) {
 
+		if (hex.substr(0, 1) != "#") return Color();
+
 		int r, g, b, a = 255;
-		if (hex.substr(0, 1) != "#") {
-			return Color();
-		}
 		r = std::strtoul(hex.substr(1, 2).c_str(), 0, 16);
 		g = std::strtoul(hex.substr(3, 2).c_str(), 0, 16);
 		b = std::strtoul(hex.substr(5, 2).c_str(), 0, 16);
-		if (hex.length() == 9)
-			a = std::strtoul(hex.substr(7, 2).c_str(), 0, 16);
+
+		if (hex.length() == 9) a = std::strtoul(hex.substr(7, 2).c_str(), 0, 16);
 
 		return Color(r, g, b, a);
 	}

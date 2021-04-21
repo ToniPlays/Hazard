@@ -9,9 +9,9 @@ namespace Hazard::Rendering {
 
     Mesh::Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
     {
-        this->filename = file;
-        this->vertices = vertices;
-        this->indices = indices;
+        this->m_Filename = file;
+        this->m_Vertices = vertices;
+        this->m_Indices = indices;
 
         GenerateArrays();
     }
@@ -21,14 +21,14 @@ namespace Hazard::Rendering {
     }
     void Mesh::Render()
     {
-        RenderCommand::GetStats().vertices += vertices.size();
-        uint32_t size = meshVAO->GetIndexBuffer()->GetCount();
-        RenderCommand::DrawIndexed(meshVAO, size);
+        RenderCommand::GetStats().vertices += m_Vertices.size();
+        uint32_t size = m_MeshVAO->GetIndexBuffer()->GetCount();
+        RenderCommand::DrawIndexed(m_MeshVAO, size);
     }
     void Mesh::GenerateArrays()
     {
-        meshVAO = RenderUtils::Create<VertexArray>();
-        VertexBuffer* buffer = RenderUtils::Create<VertexBuffer>((uint32_t)(vertices.size() * sizeof(Vertex)));
+        m_MeshVAO = RenderUtils::Create<VertexArray>();
+        VertexBuffer* buffer = RenderUtils::Create<VertexBuffer>((uint32_t)(m_Vertices.size() * sizeof(Vertex)));
 
         buffer->SetLayout({ 
             { ShaderDataType::Float3, "v_position" },
@@ -36,11 +36,11 @@ namespace Hazard::Rendering {
             { ShaderDataType::Float3, "v_normals" },
             { ShaderDataType::Float2, "v-textCoords" }
             });
-        buffer->SetData(vertices.data(), vertices.size() * sizeof(Vertex));
-        meshVAO->AddBuffer(buffer);
+        buffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
+        m_MeshVAO->AddBuffer(buffer);
 
         IndexBuffer* iBuffer = RenderUtils::Create<IndexBuffer>();
-        iBuffer->SetData(indices.data(), indices.size());
-        meshVAO->SetIndexBuffer(iBuffer);
+        iBuffer->SetData(m_Indices.data(), m_Indices.size());
+        m_MeshVAO->SetIndexBuffer(iBuffer);
     }
 }

@@ -7,19 +7,19 @@
 namespace Hazard::Logging {
 
 	class Logger : public Module::Module {
+		using SPLogger = std::shared_ptr<spdlog::logger>;
+
 	public:
 		Logger();
 		~Logger();
 
 		void Close();
 
-		static std::shared_ptr<spdlog::logger> GetCoreLogger() { return coreLogger; }
-		static std::shared_ptr<spdlog::logger> GetClientLogger() { return clienLogger; }
-		
-
+		static SPLogger GetCoreLogger() { return m_CoreLogger; }
+		static SPLogger GetClientLogger() { return m_ClienLogger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> coreLogger;
-		static std::shared_ptr<spdlog::logger> clienLogger;
+		static SPLogger m_CoreLogger;
+		static SPLogger m_ClienLogger;
 	};
 }

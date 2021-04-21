@@ -17,8 +17,8 @@ namespace Hazard::Utility {
 
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filters.c_str();
@@ -30,46 +30,56 @@ namespace Hazard::Utility {
 		}
 		return "";
 	}
-	std::string File::SaveFile(const std::string& filters) {
-
-		OPENFILENAMEA ofn;
-
-		CHAR szFile[260] = { 0 };
-		ZeroMemory(&ofn, sizeof(OPENFILENAME));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
-		ofn.lpstrFile = szFile;
-		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = filters.c_str();
-		ofn.nFilterIndex = 1;
-		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-		if (GetSaveFileNameA(&ofn) == TRUE) {
-			return ofn.lpstrFile;
-		}
-		return "";
-	}
 	std::string File::SaveFolderDialog() {
 
 		OPENFILENAMEA ofn;
 
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)ModuleHandler::GetModule<RenderEngine>()->GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
 		if (GetSaveFileNameA(&ofn) == TRUE) {
-			std::vector<std::string> string = Utility::StringUtil::SplitString(ofn.lpstrFile, '\\');
+			std::vector<std::string> string = StringUtil::SplitString(ofn.lpstrFile, '\\');
 			string.erase(string.end() - 1);
+
 			std::string result = "";
+
 			for (std::string f : string)
 				result += f + "\\";
 			return result;
 		}
 		return "";
 
+	}
+	std::string File::SaveFile(const std::string& filters) {
+
+		OPENFILENAMEA ofn;
+
+		CHAR szFile[260] = { 0 };
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.lpstrFile = szFile;
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = filters.c_str();
+		ofn.nFilterIndex = 1;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+		if (GetSaveFileNameA(&ofn) == TRUE) {
+			return ofn.lpstrFile;
+		}
+		return "";
+	}
+
+	bool File::Exists(const char* file)
+	{
+		std::ifstream f(file);
+		return f.good();
 	}
 	std::string File::ReadFile(const std::string& file) {
 
@@ -86,31 +96,6 @@ namespace Hazard::Utility {
 		ifs.close();
 		return result;
 	}
-
-	std::string File::GetFileAbsolutePath(const std::string& file)
-	{
-		std::filesystem::path path(file);
-		return std::filesystem::absolute(path).string();
-	}
-	
-	std::string File::GetFileExtension(const std::string& file) {
-		return file.substr(file.find_last_of(".") + 1);
-	}
-
-	FolderData File::GetFolderFiles(const std::string& folder)
-	{
-		FolderData result;
-		result.path = folder;
-
-		for (const auto& file : directory_iterator(folder)) {
-			if (file.is_directory()) 
-				result.folders.emplace_back(file.path());
-			else 
-				result.files.emplace_back(file.path());
-		}
-		return result;
-	}
-
 	std::vector<char> File::ReadBinaryFile(const char* path)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
@@ -127,9 +112,26 @@ namespace Hazard::Utility {
 			HZR_CORE_ERROR("Cannot read file: {0}", path);
 		return buffer;
 	}
-	bool File::Exists(const char* file)
+
+	std::string File::GetFileAbsolutePath(const std::string& file)
 	{
-		std::ifstream f(file);
-		return f.good();
+		std::filesystem::path path(file);
+		return std::filesystem::absolute(path).string();
+	}
+	std::string File::GetFileExtension(const std::string& file) {
+		return file.substr(file.find_last_of(".") + 1);
+	}
+	FolderData File::GetFolderFiles(const std::string& folder)
+	{
+		FolderData result;
+		result.path = folder;
+
+		for (const auto& file : directory_iterator(folder)) {
+			if (file.is_directory()) 
+				result.folders.emplace_back(file.path());
+			else 
+				result.files.emplace_back(file.path());
+		}
+		return result;
 	}
 }

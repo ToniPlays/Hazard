@@ -32,10 +32,10 @@ namespace Hazard::Scripting {
 		static void ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component);
 
 		static bool ModuleExists(ScriptType type, const char* name) { 
-			return manager->ModuleExists(type, name); 
+			return s_manager->ModuleExists(type, name);
 		};
 		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) {
-			return manager->GetPublicFields(type, entity, moduleName);
+			return s_manager->GetPublicFields(type, entity, moduleName);
 		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) {
@@ -55,6 +55,6 @@ namespace Hazard::Scripting {
 	private:
 		static void(*debugCallback)(Severity, std::string);
 
-		static ScriptEngineManager* manager;
+		static ScriptEngineManager* s_manager;
 	};
 }

@@ -10,8 +10,8 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLCubemapTexture::OpenGLCubemapTexture() : CubemapTexture("")
 	{
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		glGenTextures(1, &m_TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
 		SetFilters();
 	}
 	OpenGLCubemapTexture::OpenGLCubemapTexture(const char* file) : CubemapTexture(file)
@@ -21,8 +21,8 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLCubemapTexture::OpenGLCubemapTexture(std::vector<std::string>& faces) : CubemapTexture(faces[0].c_str())
 	{
 		
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		glGenTextures(1, &m_TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
 
 		for (uint8_t i = 0; i < faces.size(); i++) {
 			SetTexture(i, faces[i]);
@@ -47,7 +47,7 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	OpenGLCubemapTexture::~OpenGLCubemapTexture()
 	{
-		glDeleteTextures(1, &textureID);
+		glDeleteTextures(1, &m_TextureID);
 	}
 	unsigned int OpenGLCubemapTexture::GetWidth() const
 	{
@@ -71,7 +71,7 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
-		glBindTextureUnit(slot, textureID);
+		glBindTextureUnit(slot, m_TextureID);
 	}
 	void OpenGLCubemapTexture::Unbind(uint32_t slot) const
 	{

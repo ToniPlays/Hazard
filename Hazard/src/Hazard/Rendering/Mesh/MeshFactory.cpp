@@ -12,15 +12,15 @@ namespace Hazard::Rendering {
 	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords 
 		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
 
-	std::vector<Mesh*> MeshFactory::loadedMeshes;
+	std::vector<Mesh*> MeshFactory::m_LoadedMeshes;
 
 	Mesh* MeshFactory::LoadMesh(const std::string& file)
 	{
 		std::string absoluteFile = Utility::File::GetFileAbsolutePath(file);
 
-		for (uint32_t i = 0; i < loadedMeshes.size(); i++) {
-			if (loadedMeshes[i]->GetFile() == file)
-				return loadedMeshes[i];
+		for (uint32_t i = 0; i < m_LoadedMeshes.size(); i++) {
+			if (m_LoadedMeshes[i]->GetFile() == file)
+				return m_LoadedMeshes[i];
 		}
 		
 		Assimp::Importer importer;
@@ -43,7 +43,7 @@ namespace Hazard::Rendering {
 		if (scene->HasMaterials())
 			GetMaterials(scene, *material);
 
-		loadedMeshes.push_back(mesh);
+		m_LoadedMeshes.push_back(mesh);
 		return mesh;
 	}
 	

@@ -13,28 +13,11 @@ namespace Hazard::Rendering {
 	namespace OpenGL
 	{
 
-		ErrorCallback OpenGLContext::callback;
-
-
-		/*void APIENTRY OpenGLContext::OnError(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-		{
-			std::stringstream ss;
-
-			ss << "[OpenGL]: " << message;
-			ErrorCallback callback = ((OpenGLContext*)userParam)->callback;
-
-			if (callback) {
-				ErrorData data(ss.str(), type);
-				OpenGLContext::callback(data);
-			}
-		}*/
-
-
-
+		ErrorCallback OpenGLContext::s_Callback;
 
 		OpenGLContext::OpenGLContext(Window* window, WindowProps* props)
 		{
-			this->window = (GLFWwindow*)window->GetNativeWindow();
+			this->m_Window = (GLFWwindow*)window->GetNativeWindow();
 			Init();
 		}
 
@@ -47,7 +30,7 @@ namespace Hazard::Rendering {
 
 		void OpenGLContext::Init() const
 		{
-			glfwMakeContextCurrent(window);
+			glfwMakeContextCurrent(m_Window);
 
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 				HZR_ASSERT(false, "Unable to init GLFW context");
@@ -128,7 +111,7 @@ namespace Hazard::Rendering {
 
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 		{
-			OpenGLContext::callback = callback;
+			OpenGLContext::s_Callback = callback;
 		}
 
 		std::string OpenGLContext::GetVersion() const

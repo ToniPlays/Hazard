@@ -7,33 +7,33 @@ namespace Hazard::Scripting::CSharp {
 
 	CSharpField::CSharpField(FieldType type) : PublicField(type)
 	{
-		buffer = ScriptUtils::AllocateBuffer(type);
+		m_Buffer = ScriptUtils::AllocateBuffer(type);
 	}
 	void CSharpField::CopyStoredToRuntimeValue()
 	{
-		Mono::SetFieldValue(entityInstance->GetInstance(), monoClassField, buffer);
+		Mono::SetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, m_Buffer);
 	}
 	bool CSharpField::RuntimeAvailable()
 	{
-		return entityInstance->handle != 0;
+		return m_EntityInstance->handle != 0;
 	}
 	void CSharpField::GetStoredValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(type);
-		memcpy(value, buffer, size);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		memcpy(value, m_Buffer, size);
 	}
 	void CSharpField::SetStoredValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(type);
-		memcpy(buffer, value, size);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		memcpy(m_Buffer, value, size);
 	}
 	void CSharpField::GetRuntimeValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(type);
-		Mono::GetFieldValue(entityInstance->GetInstance(), monoClassField, value);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		Mono::GetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, value);
 	}
 	void CSharpField::SetRuntimeValueInternal(void* value) const
 	{
-		Mono::SetFieldValue(entityInstance->GetInstance(), monoClassField, value);
+		Mono::SetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, value);
 	}
 }

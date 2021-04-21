@@ -33,7 +33,7 @@ namespace WindowElement {
 			selectionContext.SetVisible(!selectionContext.IsVisible());
 		}
 
-		auto tag = selectionContext.GetComponent<TagComponent>().tag;
+		auto tag = selectionContext.GetComponent<TagComponent>().m_Tag;
 		float textWidth = ImGui::CalcTextSize(tag.c_str()).x / 2;
 
 		ImGui::SameLine();

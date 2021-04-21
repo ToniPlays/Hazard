@@ -8,19 +8,21 @@ Light emitting components
 namespace Hazard::ECS {
 	//Skylight emits ambient light
 	struct SkyLightComponent {
-		float intensity = 1.0f;
-		Color tint;
+		float m_Intensity = 1.0f;
+		Color m_Tint;
 	};
+
 	//Represents sun
 	struct DirectionalLightComponent {
-		float intensity = 1.0f;
-		Color tint;
+		float m_Intensity = 1.0f;
+		Color m_Tint;
 	};
+
 	//Point light
 	struct PointLightComponent {
-		float intensity = 1.0f;
-		Color tint;
+		float m_Intensity = 1.0f;
+		Color m_Tint;
 
-		float radius = 10.0f;
+		float m_Radius = 10.0f;
 	};
 }

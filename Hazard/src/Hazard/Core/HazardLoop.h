@@ -8,51 +8,37 @@
 
 namespace Hazard::Core {
 
-	/*HazardLoop runs the application and is part of the application API
-	All modules can be accessed from within HazardLoop and GetCurrent();
-	*/
 	class HazardLoop {
 		friend class Application;
+
 	public:
 		HazardLoop(Application* app);
 		~HazardLoop();
 
-		//Starts application
 		void Start();
-		//Closes the application
 		bool Quit(WindowCloseEvent& e);
-		//Processses events
 		void OnEvent(Event& e);
 
 	public:
-		/*Static Processing of events, can be accessed anywhere
-		Directed to instance OnEvent
-		*/
 		static void Process(Event& e);
-		//Get current HazardLoop instance
-		static HazardLoop& GetCurrent() { return *instance; }
+		static HazardLoop& GetCurrent() { return *s_Instance; }
+
+		template<typename T>
+		static T& PushModule() { return s_Instance->m_ModuleHandler.AddModule<T>(); };
+		template<typename T>
+		static T& GetModule() { return s_Instance->m_ModuleHandler.GetModule<T>(); };
+
+		template<typename T>
+		static T& GetModule(bool& found) { return s_Instance->m_ModuleHandler.GetModule<T>(found); };
 
 	private:
-		//Push module to module stack
-		template<typename T>
-		static T& PushModule() {
-			return instance->moduleHandler.AddModule<T>();
-		};
-		//Get module from module stack
-		template<typename T>
-		static T& GetModule() { return instance->moduleHandler.GetModule<T>(); };
-
-		template<typename T>
-		static T& GetModule(bool& found) { return instance->moduleHandler.GetModule<T>(found); };
-		//Shutdown the application
 		void Shutdown();
 
 	private:
+		Application* m_Application = nullptr;
+		Module::ModuleHandler m_ModuleHandler;
+		bool m_ShouldClose = false;
 
-		Application* application = nullptr;
-		Module::ModuleHandler moduleHandler;
-		bool shouldClose = false;
-
-		static HazardLoop* instance;
+		static HazardLoop* s_Instance;
 	};
 }

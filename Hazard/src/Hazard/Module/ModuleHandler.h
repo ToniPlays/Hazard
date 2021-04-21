@@ -9,8 +9,6 @@ namespace Hazard::Module {
 		ModuleHandler();
 		~ModuleHandler();
 
-		void PreInit();
-		void Init();
 		void Update();
 		void Render();
 		void Close();
@@ -18,8 +16,7 @@ namespace Hazard::Module {
 		template<typename T>
 		T& AddModule() {
 			T* m = new T();
-			std::cout << "Added module " << m->GetName() << std::endl;
-			modules.push_back(m);
+			m_Modules.push_back(m);
 			m->PreInit();
 			m->Init();
 			return *m;
@@ -28,7 +25,7 @@ namespace Hazard::Module {
 		template<typename T>
 		T& GetModule()
 		{
-			for (Module* m : modules) {
+			for (Module* m : m_Modules) {
 				if (dynamic_cast<T*>(m))
 					return (T&)*m;
 			}
@@ -36,7 +33,7 @@ namespace Hazard::Module {
 		template<typename T>
 		T& GetModule(bool& found)
 		{
-			for (Module* m : modules) {
+			for (Module* m : m_Modules) {
 				if (dynamic_cast<T*>(m)) {
 					found = true;
 					return (T&)*m;
@@ -45,6 +42,6 @@ namespace Hazard::Module {
 			found = false;
 		}
 	private:
-		std::vector<Module*> modules;
+		std::vector<Module*> m_Modules;
 	};
 }

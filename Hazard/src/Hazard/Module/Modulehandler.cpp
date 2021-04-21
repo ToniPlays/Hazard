@@ -9,39 +9,29 @@ namespace Hazard::Module {
 
     ModuleHandler::ModuleHandler()
     {
-        modules = std::vector<Module*>();
+        m_Modules = std::vector<Module*>();
     }
     ModuleHandler::~ModuleHandler()
     {
-        for (Module* m : modules) 
+        for (Module* m : m_Modules)
             delete m;
     }
 
-    void ModuleHandler::PreInit()
-    {
-        /*for (Module* m : modules) 
-            m->PreInit();*/
-    }
-    void ModuleHandler::Init()
-    {
-        /*for (Module* m : modules) 
-            m->Init();*/
-    }
     void ModuleHandler::Update()
     {
-        for (Module* m : modules)
+        for (Module* m : m_Modules)
             if (m->GetActive())
                 m->Update();
     }
     void ModuleHandler::Render()
     {
-        for (Module* m : modules) 
+        for (Module* m : m_Modules)
             if (m->GetActive())
                 m->Render();
     }
     void ModuleHandler::Close()
     {
-        for (Module* m : modules) 
+        for (Module* m : m_Modules)
             m->Close();
     }
 }

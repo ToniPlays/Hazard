@@ -15,37 +15,37 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLRenderTexture::~OpenGLRenderTexture()
 	{
-		glDeleteFramebuffers(1, &RendererID);
-		glDeleteTextures(1, &colorAttachment);
-		glDeleteTextures(1, &depthAttachment);
+		glDeleteFramebuffers(1, &m_RendererID);
+		glDeleteTextures(1, &m_ColorAttachment);
+		glDeleteTextures(1, &m_DepthAttachment);
 	}
 
 	void OpenGLRenderTexture::Invalidate()
 	{
 
 		if (spec.height <= 0 || spec.height >= 8192 || spec.width <= 0 || spec.width >= 8192) return;
-		if (RendererID)
+		if (m_RendererID)
 		{
-			glDeleteFramebuffers(1, &RendererID);
-			glDeleteTextures(1, &colorAttachment);
-			glDeleteTextures(1, &colorAttachment);
+			glDeleteFramebuffers(1, &m_RendererID);
+			glDeleteTextures(1, &m_ColorAttachment);
+			glDeleteTextures(1, &m_ColorAttachment);
 		}
-		glGenFramebuffers(1, &RendererID);
-		glBindFramebuffer(GL_FRAMEBUFFER, RendererID);
+		glGenFramebuffers(1, &m_RendererID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
-		glBindTexture(GL_TEXTURE_2D, colorAttachment);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
+		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
-		glBindTexture(GL_TEXTURE_2D, depthAttachment);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
+		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
 		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, spec.width, spec.height);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 
 		HZR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
@@ -54,7 +54,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	void OpenGLRenderTexture::Bind(uint32_t slot) const
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, RendererID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glViewport(0, 0, spec.width, spec.height);
 	}
 

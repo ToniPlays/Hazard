@@ -41,11 +41,11 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	bool EntityBindings::IsActive(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).visible;
+		return ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).m_Visible;
 	}
 	void EntityBindings::SetActive(uint32_t id, bool active)
 	{
-		ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).visible = active;
+		ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).m_Visible = active;
 	}
 	bool EntityBindings::HasComponent(uint32_t id, void* type)
 	{

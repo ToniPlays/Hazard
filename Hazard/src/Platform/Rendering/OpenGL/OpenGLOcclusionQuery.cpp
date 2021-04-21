@@ -10,7 +10,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLOcclusionQuery::OpenGLOcclusionQuery()
 	{
-		glGenQueries(1, &queryID);
+		glGenQueries(1, &m_QueryID);
 	}
 	OpenGLOcclusionQuery::~OpenGLOcclusionQuery()
 	{
@@ -18,33 +18,33 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLOcclusionQuery::BeginQuery()
 	{
-		glBeginQuery(GL_SAMPLES_PASSED, queryID);
-		inUse = true;
+		glBeginQuery(GL_SAMPLES_PASSED, m_QueryID);
+		m_InUse = true;
 	}
 	void OpenGLOcclusionQuery::EndQuery()
 	{
-		glEndQuery(queryID);
-		inUse = false;
+		glEndQuery(m_QueryID);
+		m_InUse = false;
 	}
 	bool OpenGLOcclusionQuery::IsAvailable() const
 	{
 		GLint result;
-		glGetQueryObjectiv(queryID, GL_QUERY_RESULT_AVAILABLE, &result);
+		glGetQueryObjectiv(m_QueryID, GL_QUERY_RESULT_AVAILABLE, &result);
 		return result == GL_TRUE;
 	}
 	int OpenGLOcclusionQuery::GetResult()
 	{
 		GLint result;
-		glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &result);
-		inUse = false;
+		glGetQueryObjectiv(m_QueryID, GL_QUERY_RESULT, &result);
+		m_InUse = false;
 		return result;
 	}
 	void OpenGLOcclusionQuery::Flush()
 	{
-		glDeleteQueries(1, &queryID);
+		glDeleteQueries(1, &m_QueryID);
 	}
 	uint32_t OpenGLOcclusionQuery::GetID() const
 	{
-		return queryID;
+		return m_QueryID;
 	}
 }

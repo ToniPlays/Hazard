@@ -6,9 +6,9 @@
 
 namespace Hazard::Rendering {
 
-	RenderAPI RenderUtils::api;
-	std::vector<Shader*> RenderUtils::shaders = std::vector<Shader*>();
-	std::vector<Texture*> RenderUtils::textures = std::vector<Texture*>();
+	RenderAPI RenderUtils::s_Api;
+	std::vector<Shader*> RenderUtils::s_Shaders = std::vector<Shader*>();
+	std::vector<Texture*> RenderUtils::s_Textures = std::vector<Texture*>();
 
 	template<typename T>
 	T* RenderUtils::Create()
@@ -34,7 +34,7 @@ namespace Hazard::Rendering {
 
 	template<>
 	Shader* RenderUtils::Find(const char* file) {
-		for (Shader* shader : shaders) {
+		for (Shader* shader : s_Shaders) {
 			if (std::strcmp(shader->GetFile(), file) == 0)
 				return shader;
 		}
@@ -43,7 +43,7 @@ namespace Hazard::Rendering {
 
 	template<>
 	Texture* RenderUtils::Find(uint32_t textureID) {
-		for (Texture* texture : textures) {
+		for (Texture* texture : s_Textures) {
 			if (texture->GetID() == textureID) 
 				return texture;
 		}
@@ -51,7 +51,7 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	Texture* RenderUtils::Find(const char* file) {
-		for (Texture* texture : textures) {
+		for (Texture* texture : s_Textures) {
 			if (std::string(texture->GetFile()) == std::string(file)) 
 				return texture;
 		}
@@ -64,7 +64,7 @@ namespace Hazard::Rendering {
 
 	template<>
 	VertexArray* RenderUtils::Create<VertexArray>() {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray();
 		}
@@ -72,7 +72,7 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	VertexBuffer* RenderUtils::Create<VertexBuffer>(uint32_t size) {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexBuffer(size);
 		}
@@ -80,7 +80,7 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	IndexBuffer* RenderUtils::Create<IndexBuffer>() {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLIndexBuffer();
 		}
@@ -93,16 +93,16 @@ namespace Hazard::Rendering {
 		if (shader != nullptr)
 			return shader;
 
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(file);
 		}
-		shaders.push_back(shader);
+		s_Shaders.push_back(shader);
 		return shader;
 	}
 	template<>
 	OcclusionQuery* RenderUtils::Create<OcclusionQuery>() {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLOcclusionQuery();
 		}
@@ -113,7 +113,7 @@ namespace Hazard::Rendering {
 #pragma region Textures
 	template<>
 	RenderTexture* RenderUtils::Create<RenderTexture>() {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLRenderTexture();
 		}
@@ -128,11 +128,11 @@ namespace Hazard::Rendering {
 		if (texture != nullptr)
 			return texture;
 
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(size, name); break;
 		}
-		textures.push_back(texture);
+		s_Textures.push_back(texture);
 		return texture;
 	}
 	template<>
@@ -143,18 +143,18 @@ namespace Hazard::Rendering {
 		if (texture != nullptr) 
 			return texture;
 
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path); break;
 		}
-		textures.push_back(texture);
+		s_Textures.push_back(texture);
 		return texture;
 	}
 	template<>
 	CubemapTexture* RenderUtils::Create<CubemapTexture>() {
 
 
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture();
 		}
@@ -162,7 +162,7 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	CubemapTexture* RenderUtils::Create<CubemapTexture>(std::vector<std::string> faces) {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(faces);
 		}
@@ -173,7 +173,7 @@ namespace Hazard::Rendering {
 
 		HZR_CORE_INFO("Loading cubemap {0}, {1}", name, extension);
 
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(name, extension);
 		}
@@ -181,7 +181,7 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	CubemapTexture* RenderUtils::Create<CubemapTexture>(const char* file) {
-		switch (api)
+		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(file);
 		}
@@ -198,7 +198,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderUtils::Flush()
 	{
-		for (Texture* t : textures) {
+		for (Texture* t : s_Textures) {
 			UnloadTexture(t);
 		}
 	}
@@ -211,21 +211,21 @@ namespace Hazard::Rendering {
 		return Find<Texture>(textureID);
 	}
 	Texture* RenderUtils::GetFromTextures(uint32_t index) {
-		if (index > textures.size() - 1) 
+		if (index > s_Textures.size() - 1)
 			index = 0;
-		return textures[index];
+		return s_Textures[index];
 	}
 	uint32_t RenderUtils::GetTextureStackIndex(Texture* texture) {
-		for (int i = 0; i < textures.size(); i++) {
-			if (textures[i] == texture) 
+		for (int i = 0; i < s_Textures.size(); i++) {
+			if (s_Textures[i] == texture)
 				return i;
 		}
 		return 0;
 	}
 	void RenderUtils::UnloadTexture(Texture* texture)
 	{
-		auto i = std::find(textures.begin(), textures.end(), texture);
-		if (i != textures.end()) {
+		auto i = std::find(s_Textures.begin(), s_Textures.end(), texture);
+		if (i != s_Textures.end()) {
 			//textures.erase(i);
 			//delete texture;
 		}

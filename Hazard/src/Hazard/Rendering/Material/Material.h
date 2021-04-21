@@ -8,15 +8,15 @@ namespace Hazard::Rendering {
 		Material(Shader* shader);
 		~Material();
 
-		Shader& GetShader() { return *shader; }
-		std::vector<Texture2D*> GetTextures() { return textures; }
-		void SetTextures(std::vector<Texture2D*> textures) { this->textures = textures; };
+		Shader& GetShader() { return *m_Shader; }
+		std::vector<Texture2D*> GetTextures() { return m_Textures; }
+		void SetTextures(std::vector<Texture2D*> textures) { this->m_Textures = textures; };
 
 	public:
 		static Material* Create(const char* shader);
 
 	private:
-		Shader* shader;
-		std::vector<Texture2D*> textures;
+		Shader* m_Shader;
+		std::vector<Texture2D*> m_Textures;
 	};
 }

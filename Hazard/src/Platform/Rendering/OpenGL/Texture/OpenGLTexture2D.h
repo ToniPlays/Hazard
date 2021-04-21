@@ -17,16 +17,16 @@ namespace Hazard::Rendering::OpenGL {
 		void Bind(uint32_t slot) const override;
 		void Unbind(uint32_t slot) const override;
 
-		virtual uint32_t GetWidth() const { return width; }
-		virtual uint32_t GetHeight() const { return height; }
+		virtual uint32_t GetWidth() const { return m_Width; }
+		virtual uint32_t GetHeight() const { return m_Height; }
 		virtual void SetData(void* data, uint32_t size) override;
 
-		uint32_t GetID() const { return textureID; };
+		uint32_t GetID() const { return m_TextureID; };
 
 	private:
-		uint32_t width, height;
-		uint32_t textureID;
+		uint32_t m_Width, m_Height;
+		uint32_t m_TextureID;
 
-		uint32_t dataFormat, internalFormat;
+		uint32_t m_DataFormat, m_InternalFormat;
 	};
 }

@@ -25,29 +25,29 @@ namespace Hazard::Rendering {
 
 		void BeginRendering(Camera camera);
 		void EndRendering();
-		void SetRenderTarget(RenderTexture* texture) { renderTarget = texture; };
+		void SetRenderTarget(RenderTexture* texture) { m_RenderTarget = texture; };
 
-		RenderTexture* GetRenderTarget() { return renderTarget; }
+		RenderTexture* GetRenderTarget() { return m_RenderTarget; }
 
 		template<typename T>
 		void Submit(T element) {};
 		template<>
-		void Submit<Quad>(Quad element) { renderer2D->SubmitQuad(element); }
+		void Submit<Quad>(Quad element) { m_Renderer2D->SubmitQuad(element); }
 		template<>
 		void Submit<RenderableMesh>(RenderableMesh mesh) {
 			Shader& shader = mesh.mesh->GetMaterial().GetShader();
 			shader.Bind();
-			shader.SetUniformMat4("viewProjection", viewProjection);
+			shader.SetUniformMat4("viewProjection", m_ViewProjection);
 			shader.SetUniformMat4("model", mesh.transform);
-			shader.SetUniformVec3("cameraPos", cameraPosition);
+			shader.SetUniformVec3("cameraPos", m_CameraPosition);
 			mesh.mesh->Render();
 		}
 
 	private:
-		glm::mat4 viewProjection;
-		glm::vec3 cameraPosition;
+		glm::mat4 m_ViewProjection;
+		glm::vec3 m_CameraPosition;
 
-		RenderTexture* renderTarget = nullptr;
-		Renderer2D* renderer2D = nullptr;
+		RenderTexture* m_RenderTarget = nullptr;
+		Renderer2D* m_Renderer2D = nullptr;
 	};
 }

@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 extern Hazard::Application* Hazard::CreateApplication();
+
 #ifdef HZR_PLATFORM_WINDOWS
 
 	#if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)

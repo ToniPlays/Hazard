@@ -8,56 +8,58 @@
 
 namespace Hazard::ECS {
 
-    World::World(std::string file) : file(file)
-    {
-        
-    }
-    World::~World()
-    {
+    World::World(std::string file) : m_File(file) {}
 
-    }
-        
-    void World::Flush()
+    World::World(World& world)
     {
-        
+        std::unordered_map<UID, entt::entity> entityMap;
     }
+    World::~World() {}
+
     void World::RenderAll() {
 
-        auto sprites = registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
+        auto sprites = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         for (auto entity : sprites) {
 
             Entity e{ entity, this };
             if (!e.IsVisible()) continue;
 
-            auto& [sprite, transform] = registry.get<SpriteRendererComponent, TransformComponent>(entity);
+            auto& [sprite, transform] = m_Registry.get<SpriteRendererComponent, TransformComponent>(entity);
             SceneCommand::Render(sprite, transform);
         }
-        auto batches = registry.group<BatchComponent>(entt::get<TransformComponent>);
+        auto batches = m_Registry.group<BatchComponent>(entt::get<TransformComponent>);
         for (auto entity : batches) {
 
-            Entity e{ entity, this };
+            Entity e = GetEntity(entity);
             if (!e.IsVisible()) continue;
 
-            auto& [batch, transform] = registry.get<BatchComponent, TransformComponent>(entity);
+            auto& [batch, transform] = m_Registry.get<BatchComponent, TransformComponent>(entity);
             SceneCommand::Render(batch, transform);
         }
-        auto meshes = registry.group<MeshComponent>(entt::get<TransformComponent>);
+        auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
         for (auto entity : meshes) {
 
-            Entity e{ entity, this };
-            auto& [mesh, transform] = registry.get<MeshComponent, TransformComponent>(entity);
-            if (!e.IsVisible() || mesh.mesh == nullptr) continue;
+            Entity e = GetEntity(entity);
+            auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
+            if (!e.IsVisible() || mesh.m_Mesh == nullptr) continue;
 
             SceneCommand::Render(mesh, transform);
         }
     }
     Entity World::CreateEntity(const char* name)
     {
-        Entity entity{ registry.create(), this };
-        entity.AddComponent<TagComponent>().tag = name;
+        Entity entity{ m_Registry.create(), this };
+        TagComponent& tag = entity.AddComponent<TagComponent>();
+        tag.m_Tag = name;
+        tag.m_ID = {};
         entity.AddComponent<TransformComponent>();
         return entity;
     }
+    Entity World::CreateEntity(UID id, const char* name)
+    {
+        return Entity();
+    }
+
     Entity World::GetEntity(entt::entity id)
     {
         Entity e{ id, this };
@@ -65,15 +67,15 @@ namespace Hazard::ECS {
     }
     void World::DestroyEntity(Entity entity)
     {
-        registry.destroy(entity);
+        m_Registry.destroy(entity);
     }
     std::tuple<bool, CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
-        auto group = registry.group<CameraComponent>(entt::get<TransformComponent>);
+        auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 
         for (auto entity : group) {
 
-            Entity e{ entity, this };
+            Entity e = GetEntity(entity);
             if (!e.IsVisible()) continue;
 
             auto&[cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
@@ -85,14 +87,9 @@ namespace Hazard::ECS {
 #pragma region Component added and removed methods
     //Scene component added and removed
     template<typename T>
-    void World::OnComponentAdded(Entity& entity, T& component) {
-        
-    }
+    void World::OnComponentAdded(Entity& entity, T& component) {}
     template<typename T>
-    void World::OnComponentRemoved(Entity& entity, T& component)
-    {
-
-    }
+    void World::OnComponentRemoved(Entity& entity, T& component) {}
     //CAMERA COMPONENT
     template<>
     void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
@@ -104,7 +101,7 @@ namespace Hazard::ECS {
     //SPRITE RENDERER COMPONENT
     template<>
     void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-        component.texture = Rendering::RenderUtils::GetFromTextures(0);
+        component.m_Texture = Rendering::RenderUtils::GetFromTextures(0);
     }
     template<>
     void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}

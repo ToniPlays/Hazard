@@ -13,13 +13,13 @@ namespace Hazard::Rendering::OpenGL {
 		void EndQuery() override;
 
 		bool IsAvailable() const override;
-		bool InUse() const override { return inUse; };
+		bool InUse() const override { return m_InUse; };
 		int GetResult() override;
 		void Flush() override;
 
 		uint32_t GetID() const override;
 	private:
-		uint32_t queryID;
-		bool inUse = false;
+		uint32_t m_QueryID;
+		bool m_InUse = false;
 	};
 }

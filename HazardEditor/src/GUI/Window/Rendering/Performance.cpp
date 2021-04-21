@@ -36,14 +36,14 @@ namespace WindowElement {
 		Layout::TableNext();
 
 		std::stringstream ss;
-		ss << Math::Round(Time::unscaledDeltaTime * 1000, 3) << "ms";
+		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000, 3) << "ms";
 		Layout::Text(ss.str().c_str());
 		ss.str("");
 		Layout::TableNext();
 		Layout::Text("FPS");
 		Layout::TableNext();
 
-		ss << Math::Round(1.0f / Time::unscaledDeltaTime, 3) << " fps";
+		ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3) << " fps";
 		Layout::Text(ss.str().c_str());
 
 		Layout::TableNext();

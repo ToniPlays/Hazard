@@ -8,7 +8,7 @@ namespace Hazard::Rendering {
 
 	Skybox::Skybox()
 	{
-		vao = RenderUtils::Create<VertexArray>();
+		m_VAO = RenderUtils::Create<VertexArray>();
 
 		float skyboxVertices[] = {
 			// positions
@@ -26,7 +26,7 @@ namespace Hazard::Rendering {
 		buffer->SetData(skyboxVertices, 24 * sizeof(float));
 
 		buffer->SetLayout({ {ShaderDataType::Float3, "skybox_pos"} });
-		vao->AddBuffer(buffer);
+		m_VAO->AddBuffer(buffer);
 
 		uint32_t indices[] = {
 			0, 1, 3, 3, 1, 2,
@@ -39,24 +39,24 @@ namespace Hazard::Rendering {
 
 		IndexBuffer* iBuffer = RenderUtils::Create<IndexBuffer>();
 		iBuffer->SetData(indices, 36);
-		vao->SetIndexBuffer(iBuffer);
+		m_VAO->SetIndexBuffer(iBuffer);
 
-		skyboxShader = RenderUtils::Create<Shader>("res/shaders/skybox.glsl");
-		skyboxShader->SetUniformInt("SkyboxCubemap", 0);
-		skyboxShader->Bind();
-		skyboxShader->Unbind();
+		m_SkyboxShader = RenderUtils::Create<Shader>("res/shaders/skybox.glsl");
+		m_SkyboxShader->SetUniformInt("SkyboxCubemap", 0);
+		m_SkyboxShader->Bind();
+		m_SkyboxShader->Unbind();
 	}
 	Skybox::~Skybox()
 	{
-		delete vao;
+		delete m_VAO;
 	}
 	void Skybox::Render(glm::mat4 transform)
 	{
 		RenderContextCommand::SetDepthTest(DepthTest::LEqual);
-		skyboxShader->Bind();
-		skyboxShader->SetUniformMat4("viewProjection", transform);
-		texture->Bind(0);
-		RenderCommand::DrawIndexed(vao, 36);
+		m_SkyboxShader->Bind();
+		m_SkyboxShader->SetUniformMat4("viewProjection", transform);
+		m_Texture->Bind(0);
+		RenderCommand::DrawIndexed(m_VAO, 36);
 		RenderContextCommand::SetDepthTest(DepthTest::Less);
 	}
 }

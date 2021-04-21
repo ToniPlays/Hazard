@@ -5,26 +5,26 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext* RenderCommand::context;
-	RenderEngine* RenderCommand::engine;
-	RenderStats RenderCommand::stats;
+	RenderContext* RenderCommand::s_Context;
+	RenderEngine* RenderCommand::s_Engine;
+	RenderStats RenderCommand::s_Stats;
 
 	void RenderCommand::Init()
 	{
-		engine = &Application::GetModule<RenderEngine>();
-		context = &Application::GetModule<RenderContext>();
+		s_Engine = &Application::GetModule<RenderEngine>();
+		s_Context = &Application::GetModule<RenderContext>();
 	}
 	void RenderCommand::ResetStats()
 	{
-		stats.draws = 0;
-		stats.quads = 0;
-		stats.vertices = 0;
-		stats.indices = 0;
+		s_Stats.draws = 0;
+		s_Stats.quads = 0;
+		s_Stats.vertices = 0;
+		s_Stats.indices = 0;
 	}
 	void RenderCommand::DrawIndexed(VertexArray* vao, uint32_t count)
 	{
-		stats.draws++;
-		stats.indices += count;
-		context->GetContext().DrawIndexed(vao, count);
+		s_Stats.draws++;
+		s_Stats.indices += count;
+		s_Context->GetContext().DrawIndexed(vao, count);
 	}
 }

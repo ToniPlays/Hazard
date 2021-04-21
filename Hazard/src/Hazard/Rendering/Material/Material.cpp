@@ -6,7 +6,7 @@
 
 namespace Hazard::Rendering {
 
-	Material::Material(Shader* shader) : shader(shader)
+	Material::Material(Shader* shader) : m_Shader(shader)
 	{
 		
 	}

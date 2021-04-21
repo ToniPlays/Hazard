@@ -18,8 +18,8 @@ namespace Hazard::Rendering {
 			return;
 		}
 
-		windowData.Title = props.Title;
-		windowData.Platform = "Windows";
+		m_WindowData.Title = props.Title;
+		m_WindowData.Platform = "Windows";
 
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -28,31 +28,31 @@ namespace Hazard::Rendering {
 		//Headache
 		glfwWindowHint(GLFW_MAXIMIZED, props.maximized ? GLFW_TRUE : GLFW_FALSE);
 
-		window = glfwCreateWindow(windowData.Width, windowData.Height, windowData.Title, 0, 0);
+		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
 
-		if (!window) {
+		if (!m_Window) {
 			HZR_ASSERT(false, "Window was not initialized");
 			return;
 		}
 
-		glfwSetWindowUserPointer(window, &windowData);
-		context = GraphicsContext::Create(this, &windowData);
-		windowData.Renderer = context->GetVersion();
+		glfwSetWindowUserPointer(m_Window, &m_WindowData);
+		m_Context = GraphicsContext::Create(this, &m_WindowData);
+		m_WindowData.Renderer = m_Context->GetVersion();
 
 		SetCallbacks();
-		glfwShowWindow(window);
+		glfwShowWindow(m_Window);
 	}
 	void WindowsWindow::OnUpdate(Color color) {
 
-		glfwSwapBuffers(window);
-		context->ClearFrame(color.ToGlm());
+		glfwSwapBuffers(m_Window);
+		m_Context->ClearFrame(color);
 		glfwPollEvents();
 		//IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
 	{
-		windowData.Title = title;
-		glfwSetWindowTitle(window, title);
+		m_WindowData.Title = title;
+		glfwSetWindowTitle(m_Window, title);
 	}
 	void WindowsWindow::SetWindowIcon(const char* smallIcon, const char* bigIcon)
 	{
@@ -65,11 +65,11 @@ namespace Hazard::Rendering {
 		images[1].width = bx;
 		images[1].height = by;
 
-		glfwSetWindowIcon(window, 2, images);
+		glfwSetWindowIcon(m_Window, 2, images);
 	}
 	void WindowsWindow::SetCallbacks()
 	{
-		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int w, int h) {
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
@@ -79,14 +79,14 @@ namespace Hazard::Rendering {
 			data.EventCallback(event);
 
 			});
-		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent event;
 			data.EventCallback(event);
 
 			});
-		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
@@ -111,7 +111,7 @@ namespace Hazard::Rendering {
 			}
 			});
 
-		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
@@ -129,24 +129,24 @@ namespace Hazard::Rendering {
 			}
 			}
 			});
-		glfwSetScrollCallback(window, [](GLFWwindow* window, double xOffset, double yOffset) {
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent event((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
 
 			});
-		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos) {
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 			});
-		glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focus) {
+		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
 			WindowFocusEvent event(focus);
 			data.EventCallback(event);
 		});
-		glfwSetWindowIconifyCallback(window, [](GLFWwindow* window, int minimized) {
+		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.minimized = minimized;
 		});
@@ -154,8 +154,8 @@ namespace Hazard::Rendering {
 
 	WindowsWindow::~WindowsWindow() {
 
-		delete context;
-		glfwDestroyWindow(window);
+		delete m_Context;
+		glfwDestroyWindow(m_Window);
 		glfwTerminate();
 	}
 }

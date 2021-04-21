@@ -7,28 +7,13 @@
 
 namespace Hazard::ECS {
 
-	SceneHandler::SceneHandler() : Module::Module("Scene handler")
-	{
-		std::cout << "SceneHandler()" << std::endl;
-	}
-	SceneHandler::~SceneHandler()
-	{
+	SceneHandler::SceneHandler() : Module::Module("Scene handler") {}
+	SceneHandler::~SceneHandler() {}
 
-	}
-	void SceneHandler::Init()
-	{
-
-	}
-	void SceneHandler::Update()
-	{
-
-	}
-	//Load scene from file
 	bool SceneHandler::LoadScene(const char* file, Serialization type)
 	{
-		HZR_WARN("Loading file " + std::string(file));
 		if (type == Serialization::Editor) {
-			world = Loader::SceneSerializer::DeserializeEditor(file);
+			m_World = Loader::SceneSerializer::DeserializeEditor(file);
 			return true;
 		}
 		return false;

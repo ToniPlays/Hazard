@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "glad/glad.h"
-#include "ShaderData.h"
+#include "ShaderDataType.h"
 
 namespace Hazard::Rendering {
 
@@ -17,8 +17,12 @@ namespace Hazard::Rendering {
 		BufferElement() = default;
 
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
 		{
+			Name = name;
+			Type = type;
+			Size = ShaderDataTypeSize(type);
+			Offset = 0;
+			Normalized = normalized;
 		}
 		uint32_t GetComponentCount() const
 		{
@@ -36,19 +40,16 @@ namespace Hazard::Rendering {
 			case ShaderDataType::Int4:    return 4;
 			case ShaderDataType::Bool:    return 1;
 			}
-
 			HZR_ASSERT(false, "Unknown ShaderDataType!");
 			return 0;
 		}
-
 	};
 
 	class BufferLayout {
 	public:
 		BufferLayout() {}
 
-		BufferLayout(std::initializer_list<BufferElement> elements)
-			: m_Elements(elements)
+		BufferLayout(std::initializer_list<BufferElement> elements) : m_Elements(elements)
 		{
 			CalculateOffsetsAndStride();
 		}
@@ -60,11 +61,13 @@ namespace Hazard::Rendering {
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
 		std::vector<BufferElement>::const_iterator begin() const { return m_Elements.begin(); }
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
+
 	private:
 		void CalculateOffsetsAndStride()
 		{
 			size_t offset = 0;
 			m_Stride = 0;
+
 			for (auto& element : m_Elements)
 			{
 				element.Offset = offset;
@@ -80,6 +83,7 @@ namespace Hazard::Rendering {
 	class HAZARD_API VertexBuffer {
 
 	public:
+
 		virtual ~VertexBuffer() = default;
 
 		virtual void Bind() const = 0;
@@ -99,9 +103,7 @@ namespace Hazard::Rendering {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetID() const = 0;
-
-		virtual void SetData(uint32_t* indices, uint32_t count) = 0;
-
 		virtual uint32_t GetCount() const = 0;
+		virtual void SetData(uint32_t* indices, uint32_t count) = 0;
 	};
 }

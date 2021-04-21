@@ -56,11 +56,11 @@ namespace WindowElement {
 		glm::vec3 position, rotation, scale;
 		Hazard::Math::DecomposeTransform(transform, position, rotation, scale);
 
-		glm::vec3 deltaRotation = rotation - tc.Rotation;
+		glm::vec3 deltaRotation = rotation - tc.m_Rotation;
 
-		tc.Translation = position;
-		tc.Rotation = rotation + deltaRotation;
-		tc.Scale = scale;
+		tc.m_Translation = position;
+		tc.m_Rotation = rotation + deltaRotation;
+		tc.m_Scale = scale;
 
 	}
 	bool TransformationGizmo::OnEvent(Event& e)

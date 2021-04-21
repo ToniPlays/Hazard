@@ -17,27 +17,27 @@ namespace Hazard::Rendering {
 		void SetWindowIcon(const char* smallIcon, const char* bigIcon) override;
 
 		void SetVSync(bool enabled) override {
-			windowData.VSync = enabled;
+			m_WindowData.VSync = enabled;
 			glfwSwapInterval(enabled);
 		};
 		void SetFullscreen(bool fullscreen) {
-			windowData.fullscreen = fullscreen;
+			m_WindowData.fullscreen = fullscreen;
 		}
-		void* GetNativeWindow() const { return window; }
+		void* GetNativeWindow() const { return m_Window; }
 		void SetEventCallback(const EventCallbackFn& callback) {
-			windowData.EventCallback = callback;
+			m_WindowData.EventCallback = callback;
 		}
-		unsigned int GetWidth() const { return windowData.Width; }
-		unsigned int GetHeight() const { return windowData.Height; }
+		unsigned int GetWidth() const { return m_WindowData.Width; }
+		unsigned int GetHeight() const { return m_WindowData.Height; }
 		
-		bool IsVSync() const { return windowData.VSync; }
-		bool IsFocused() const { return windowData.focus; }
-		bool IsMinimized() const { return windowData.minimized; }
-		bool IsFullscreen() const { return windowData.fullscreen; }
-		WindowProps GetWindowInfo() { return windowData; }
+		bool IsVSync() const { return m_WindowData.VSync; }
+		bool IsFocused() const { return m_WindowData.focus; }
+		bool IsMinimized() const { return m_WindowData.minimized; }
+		bool IsFullscreen() const { return m_WindowData.fullscreen; }
+		WindowProps GetWindowInfo() { return m_WindowData; }
 
 	private:
-		GLFWwindow* window = nullptr;
+		GLFWwindow* m_Window = nullptr;
 		void SetCallbacks();
 	};
 }

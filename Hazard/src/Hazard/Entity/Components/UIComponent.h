@@ -5,14 +5,13 @@
 
 namespace Hazard::ECS {
 
-	//Quad sprite renderer
 	struct SpriteRendererComponent {
-		Color tint = Color::FromHex("#FFFFFFFF");
-		Rendering::Texture* texture = nullptr;
+		Color m_Tint = Color::FromHex("#FFFFFFFF");
+		Rendering::Texture* m_Texture = nullptr;
 	};
-	//TODO: Remove batch component
+
 	struct BatchComponent {
-		Color tint;
-		uint32_t size;
+		Color m_Tint;
+		uint32_t m_Size;
 	};
 }

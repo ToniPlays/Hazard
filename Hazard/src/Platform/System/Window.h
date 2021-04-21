@@ -55,13 +55,13 @@ namespace Hazard::Rendering {
 		virtual bool IsMinimized() const = 0;
 		virtual bool IsFullscreen() const = 0;
 
-		virtual WindowProps GetWindowInfo() { return windowData; }
+		virtual WindowProps GetWindowInfo() { return m_WindowData; }
 
 		static Window* Create(WindowProps& props = WindowProps());
-		GraphicsContext* GetContext() const { return context; }
+		GraphicsContext* GetContext() const { return m_Context; }
 
 	protected:
-		GraphicsContext* context = nullptr;
-		WindowProps windowData;
+		GraphicsContext* m_Context = nullptr;
+		WindowProps m_WindowData;
 	};
 }

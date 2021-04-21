@@ -25,34 +25,34 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::Init()
 	{
-		renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
-		renderer2D->Init(35000);
+		m_Renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
+		m_Renderer2D->Init(35000);
 
 		RenderCommand::Init();
 	}
 	void RenderEngine::Close()
 	{
-		renderer2D->Close();
+
 	}
 
 	void RenderEngine::BeginRendering(Camera camera)
 	{
 		RenderCommand::ResetStats();
-		renderTarget->Bind();
+		m_RenderTarget->Bind();
 		RenderContextCommand::ClearFrame(camera.renderer->ClearColor());
 
-		viewProjection = camera.projection * glm::inverse(camera.view);
-		cameraPosition = camera.position;
+		m_ViewProjection = camera.projection * glm::inverse(camera.view);
+		m_CameraPosition = camera.position;
 		
 		camera.renderer->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 
-		renderer2D->BeginScene(viewProjection);
-		renderer2D->BeginBatch();
+		m_Renderer2D->BeginScene(m_ViewProjection);
+		m_Renderer2D->BeginBatch();
 	}
 		
 	void RenderEngine::EndRendering()
 	{
-		renderer2D->Flush();
-		renderTarget->Unbind();
+		m_Renderer2D->Flush();
+		m_RenderTarget->Unbind();
 	}
 }

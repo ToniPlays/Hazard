@@ -13,13 +13,13 @@ namespace Hazard::Rendering {
 	}
 	SkyboxBackground::SkyboxBackground() 
 	{
-		skybox = new Skybox();
-		skybox->SetCubemapTexture(nullptr);
+		m_Skybox = new Skybox();
+		m_Skybox->SetCubemapTexture(nullptr);
 	}
 	SkyboxBackground::SkyboxBackground(CubemapTexture* texture)
 	{
-		skybox = new Skybox();
-		skybox->SetCubemapTexture(texture);
+		m_Skybox = new Skybox();
+		m_Skybox->SetCubemapTexture(texture);
 	}
 	SkyboxBackground::~SkyboxBackground() 
 	{
@@ -27,6 +27,6 @@ namespace Hazard::Rendering {
 	}
 	void SkyboxBackground::Render(glm::mat4 transform)
 	{
-		skybox->Render(transform);
+		m_Skybox->Render(transform);
 	}
 }

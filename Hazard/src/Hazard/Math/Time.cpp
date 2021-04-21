@@ -4,8 +4,8 @@
 
 namespace Hazard {
 
-	double Time::deltaTime = 0;
-	long double Time::time = 0;
-	double Time::unscaledDeltaTime = 0;
-	float Time::timeScale = 1.0f;
+	double Time::s_DeltaTime = 0;
+	long double Time::s_Time = 0;
+	double Time::s_UnscaledDeltaTime = 0;
+	float Time::s_TimeScale = 1.0f;
 }

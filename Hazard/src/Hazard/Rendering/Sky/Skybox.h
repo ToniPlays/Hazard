@@ -11,12 +11,12 @@ namespace Hazard::Rendering {
 		Skybox();
 		~Skybox();
 
-		void SetCubemapTexture(CubemapTexture* texture) { this->texture = texture; }
+		void SetCubemapTexture(CubemapTexture* texture) { this->m_Texture = texture; }
 		void Render(glm::mat4 transform);
 		
 	private:
-		VertexArray* vao = nullptr;
-		CubemapTexture* texture = nullptr;
-		Shader* skyboxShader = nullptr;
+		VertexArray* m_VAO = nullptr;
+		CubemapTexture* m_Texture = nullptr;
+		Shader* m_SkyboxShader = nullptr;
 	};
 }

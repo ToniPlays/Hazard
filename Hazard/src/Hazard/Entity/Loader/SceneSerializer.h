@@ -61,12 +61,10 @@ namespace YAML {
 			return true;
 		}
 	};
-
 }
 
 
 namespace Hazard::ECS::Loader {
-	
 
 	template<typename T>
 	static void Convert(YAML::Emitter& out, T v) {};
@@ -100,56 +98,55 @@ namespace Hazard::ECS::Loader {
 		template<>
 		static void Deserialize<TagComponent>(Entity entity, YAML::Node comp) {
 			std::string tag = comp["Tag"].as<std::string>();
-			entity.GetComponent<TagComponent>().tag = tag;
+			entity.GetComponent<TagComponent>().m_Tag = tag;
 		};
 
 		template<>
 		static void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.GetComponent<TransformComponent>();
 
-			c.Translation = comp["Translation"].as<glm::vec3>();
-			c.Rotation = comp["Rotation"].as<glm::vec3>();
-			c.Scale = comp["Scale"].as<glm::vec3>();
+			c.m_Translation = comp["Translation"].as<glm::vec3>();
+			c.m_Rotation = comp["Rotation"].as<glm::vec3>();
+			c.m_Scale = comp["Scale"].as<glm::vec3>();
 		};
 		template<>
 		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
-			component.tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
-			if (comp["Texture"]) {
-				component.texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(comp["Texture"].as<std::string>().c_str());
-			}
+			component.m_Tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
 
+			if (comp["Texture"]) {
+				component.m_Texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(comp["Texture"].as<std::string>().c_str());
+			}
 		};
 		template<>
 		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
 
 			auto& c = entity.AddComponent<CameraComponent>();
-			c.type = (comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
+			c.SetProjection(comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.SetFov(comp["Fov"].as<float>());
 		};
 
 		template<>
 		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 			ScriptComponent c;
-			c.moduleName = comp["ModuleName"].as<std::string>();
+			c.m_ModuleName = comp["ModuleName"].as<std::string>();
 			entity.AddComponent(c);
 		};
 		template<>
 		static void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp) {
-			std::string moduleName = comp["ModuleName"].as<std::string>();
-			ScriptComponent c = ScriptComponent();
-			c.moduleName = moduleName;
+			std::string filename = comp["ModuleName"].as<std::string>();
+			VisualScriptComponent c;
+			c.m_Filename = filename;
 			entity.AddComponent(c);
 		};
 		template<>
 		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
-			c.mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
+			c.m_Mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
 		};
 
 		//Deserialize runtime
 		static Scene* DeserializeRuntime(const char* file);
-
 
 		//Serialize
 		//Deserialize Editor
@@ -162,7 +159,7 @@ namespace Hazard::ECS::Loader {
 		static void SerializeComponentEditor<TagComponent>(Entity entity, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<TagComponent>()) return;
-			auto tag = entity.GetComponent<TagComponent>().tag;
+			auto tag = entity.GetComponent<TagComponent>().m_Tag;
 
 			out << YAML::Key << "TagComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Tag" << YAML::Value << tag;
@@ -175,9 +172,9 @@ namespace Hazard::ECS::Loader {
 			auto& c = entity.GetComponent<TransformComponent>();
 
 			out << YAML::Key << "TransformComponent" << YAML::Value << YAML::BeginMap;
-			out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.Translation);
-			out << YAML::Key << "Rotation" << YAML::Value; Convert(out, c.Rotation);
-			out << YAML::Key << "Scale" << YAML::Value; Convert(out, c.Scale);
+			out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.m_Translation);
+			out << YAML::Key << "Rotation" << YAML::Value; Convert(out, c.m_Rotation);
+			out << YAML::Key << "Scale" << YAML::Value; Convert(out, c.m_Scale);
 
 			out << YAML::EndMap;
 
@@ -189,12 +186,12 @@ namespace Hazard::ECS::Loader {
 			auto& c = entity.GetComponent<SpriteRendererComponent>();
 
 			out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
-			out << YAML::Key << "Tint" << YAML::Value; Convert(out, c.tint.ToGlm());
-			if (c.texture != nullptr) {
-				if(std::string(c.texture->GetFile()) != "White")
-					out << YAML::Key << "Texture" << YAML::Value << std::string(c.texture->GetFile());
-			}
+			out << YAML::Key << "Tint" << YAML::Value; Convert(out, c.m_Tint);
 
+			if (c.m_Texture != nullptr) {
+				if(std::string(c.m_Texture->GetFile()) != "White")
+					out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetFile());
+			}
 			out << YAML::EndMap;
 		}
 		template<>
@@ -213,7 +210,7 @@ namespace Hazard::ECS::Loader {
 			if (!entity.HasComponent<ScriptComponent>()) return;
 			auto& c = entity.GetComponent<ScriptComponent>();
 			out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
-			out << YAML::Key << "ModuleName" << YAML::Value << c.moduleName;
+			out << YAML::Key << "ModuleName" << YAML::Value << c.m_ModuleName;
 			out << YAML::EndMap;
 		}
 		template<>
@@ -222,7 +219,7 @@ namespace Hazard::ECS::Loader {
 			if (!entity.HasComponent<MeshComponent>()) return;
 			auto& c = entity.GetComponent<MeshComponent>();
 			out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
-			out << YAML::Key << "File" << YAML::Value << c.mesh->GetFile();
+			out << YAML::Key << "File" << YAML::Value << c.m_Mesh->GetFile();
 			out << YAML::EndMap;
 		}
 

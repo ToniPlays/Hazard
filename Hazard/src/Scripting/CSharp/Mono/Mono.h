@@ -46,7 +46,7 @@ namespace Hazard::Scripting::CSharp {
 		}
 
 		static bool ModuleExists(const char* name);
-		static MonoData& GetData() { return data; }
+		static MonoData& GetData() { return s_Data; }
 
 		static MonoClass* GetMonoClass(const char* moduleName);
 		static MonoClass* GetMonoClass(const char* nameSpace, const char* name);
@@ -73,6 +73,6 @@ namespace Hazard::Scripting::CSharp {
 
 	private:
 
-		static MonoData data;
+		static MonoData s_Data;
 	};
 }

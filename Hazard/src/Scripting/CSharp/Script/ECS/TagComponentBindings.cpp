@@ -18,11 +18,11 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	MonoString* TagComponentBindings::TagComponent_GetName_Native(uint32_t id)
 	{
 		auto& tag = ScriptCommand::EntityGetComponent<ECS::TagComponent>(id);
-		return ScriptUtils::StringToMonoString(tag.tag.c_str());
+		return ScriptUtils::StringToMonoString(tag.m_Tag.c_str());
 	}
 	void TagComponentBindings::TagComponent_SetName_Native(uint32_t id, MonoString* newName)
 	{
 		auto& tag = ScriptCommand::EntityGetComponent<ECS::TagComponent>(id);
-		tag.tag = ScriptUtils::MonoStringToString(newName);
+		tag.m_Tag = ScriptUtils::MonoStringToString(newName);
 	}
 }

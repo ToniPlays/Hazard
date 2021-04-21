@@ -8,68 +8,57 @@
 
 namespace Hazard::Core {
 
-	HazardLoop* HazardLoop::instance = nullptr;
+	HazardLoop* HazardLoop::s_Instance = nullptr;
 
-	HazardLoop::HazardLoop(Application* app) : application(app)
+	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
-		HazardLoop::instance = this;
+		HazardLoop::s_Instance = this;
 	}
 	HazardLoop::~HazardLoop()
 	{
-		delete application;
+		delete m_Application;
 	}
 	void HazardLoop::Start()
 	{
-
-		//PreInit moduleHandler
-		application->PreInit();
-		moduleHandler.PreInit();
-		//Init application and moduleHandler
-		application->Init();
-		moduleHandler.Init();
+		m_Application->PreInit();
+		m_Application->Init();
 
 		Input::Input::Init();
 		double lastTime = 0;
-		//Update and render while close is not requested
-		while (!shouldClose) {
 
-			//Update deltaTime and timeScale
+		while (!m_ShouldClose) {
+
 			double time = glfwGetTime();
-			Time::unscaledDeltaTime = time - lastTime;
-			Time::deltaTime = Time::unscaledDeltaTime * Time::timeScale;
-			Time::time = time;
-
-			//Update and render
-			application->Update();
-			moduleHandler.Update();
-
-			moduleHandler.Render();
-
+			Time::s_UnscaledDeltaTime = time - lastTime;
+			Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
+			Time::s_Time = time;
 			lastTime = time;
+
+			m_Application->Update();
+			m_ModuleHandler.Update();
+			m_ModuleHandler.Render();
 		}
-		//Close application and modules
-		application->Close();
-		moduleHandler.Close();
+
+		m_Application->Close();
+		m_ModuleHandler.Close();
 	}
-	//Stop application from running
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{
 		Shutdown();
 		return true;
 	}
 	void HazardLoop::Process(Event& e) {
-		instance->OnEvent(e);
+		s_Instance->OnEvent(e);
 	}
 	void HazardLoop::Shutdown()
 	{
-		instance->shouldClose = true;
+		s_Instance->m_ShouldClose = true;
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{
-		//Dispatch WindowCloseEvent
 		EventDispatcher dispatcher(e);
-		if(dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit))) return;
-
-		application->OnEvent(e);
+		if(dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit))) 
+			return;
+		m_Application->OnEvent(e);
 	}
 }

@@ -37,21 +37,21 @@ namespace Hazard::Rendering {
 		void Render();
 
 
-		std::string& GetFile() { return filename; }
-		Material& GetMaterial() { return *material; }
-		void SetMaterial(Material* material) { this->material = material; }
+		std::string& GetFile() { return m_Filename; }
+		Material& GetMaterial() { return *m_Material; }
+		void SetMaterial(Material* material) { this->m_Material = material; }
 		void GenerateArrays();
 
 	private:
 
-		std::string filename;
+		std::string m_Filename;
 
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indices;
+		std::vector<Vertex> m_Vertices;
+		std::vector<uint32_t> m_Indices;
 
-		std::vector<SubMesh> submeshes;
-		Material* material;
+		std::vector<SubMesh> m_Submeshes;
+		Material* m_Material;
 
-		VertexArray* meshVAO;
+		VertexArray* m_MeshVAO;
 	};
 }

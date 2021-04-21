@@ -9,20 +9,16 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext::RenderContext(RenderAPI api) : currentAPI(api), Module::Module("RenderContext")
+	RenderContext::RenderContext(RenderAPI api) : m_CurrentAPI(api), Module::Module("RenderContext")
 	{
 		RenderUtils::SetRenderAPI(api);
-		std::cout << "RenderContext()" << std::endl;
 	}
-	RenderContext::~RenderContext()
-	{
-
-	}
+	RenderContext::~RenderContext() {}
 
 	void RenderContext::Init()
 	{
-		window = Window::Create();
-		window->SetEventCallback(BIND_EVENT(RenderContext::Process));
+		m_Window = Window::Create();
+		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 		RenderUtils::Init();
 		RenderContextCommand::Init();
 		SetActive(true);
@@ -30,13 +26,13 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Update()
 	{
-		window->OnUpdate(clearColor);
+		m_Window->OnUpdate(m_ClearColor);
 	}
 
 	void RenderContext::Close()
 	{
 		RenderUtils::Flush();
-		delete window;
+		delete m_Window;
 	}
 
 	void RenderContext::Process(Event& e)

@@ -14,7 +14,7 @@
 
 namespace Hazard::Scripting::CSharp {
 
-	MonoData Mono::data;
+	MonoData Mono::s_Data;
 
 	void Mono::InitAssembly()
 	{
@@ -27,7 +27,7 @@ namespace Hazard::Scripting::CSharp {
 		std::stringstream ss;
 		ss << name << "-runtime";
 
-		data.mono_domain = mono_domain_create_appdomain((char*)ss.str().c_str(), nullptr);
+		s_Data.mono_domain = mono_domain_create_appdomain((char*)ss.str().c_str(), nullptr);
 	}
 	void Mono::LoadRuntimeAssembly(const char* path)
 	{
@@ -38,11 +38,11 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::Shutdown()
 	{
-		if (data.mono_domain != nullptr) {}
+		if (s_Data.mono_domain != nullptr) {}
 	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
-		MonoObject* obj = mono_object_new(data.mono_domain, monoClass);
+		MonoObject* obj = mono_object_new(s_Data.mono_domain, monoClass);
 		mono_runtime_object_init(obj);
 		return mono_gchandle_new(obj, false);
 	}
@@ -77,24 +77,25 @@ namespace Hazard::Scripting::CSharp {
 		MonoDomain* domain = nullptr;
 		bool cleanUp = false;
 
-		if (data.mono_domain) {
+		if (s_Data.mono_domain) {
 			domain = mono_domain_create_appdomain("Hazard-runtime", nullptr);
 			mono_domain_set(domain, false);
 			cleanUp = true;
 		}
-		data.core_assembly = LoadAssembly("c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll");
-		data.core_image = GetAssemblyImage(data.core_assembly);
+
+		s_Data.core_assembly = LoadAssembly("c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll");
+		s_Data.core_image = GetAssemblyImage(s_Data.core_assembly);
 
 		auto appAssembly = LoadAssembly(path);
 		auto appAssemblyImage = GetAssemblyImage(appAssembly);
 
 		if (cleanUp) {
 			//Something
-			data.mono_domain = domain;
+			s_Data.mono_domain = domain;
 		}
 
-		data.app_assembly = appAssembly;
-		data.app_image = appAssemblyImage;
+		s_Data.app_assembly = appAssembly;
+		s_Data.app_image = appAssemblyImage;
 	}
 	MonoAssembly* Mono::LoadAssembly(const char* path)
 	{
@@ -119,7 +120,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoClass* Mono::GetMonoClass(const char* nameSpace, const char* name)
 	{
-		return mono_class_from_name(data.app_image, nameSpace, name);
+		return mono_class_from_name(s_Data.app_image, nameSpace, name);
 	}
 	MonoObject* Mono::ObjectFromHandle(uint32_t handle)
 	{
@@ -136,14 +137,14 @@ namespace Hazard::Scripting::CSharp {
 	MonoMethod* Mono::GetCoreMethod(const std::string& name)
 	{
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
-		MonoMethod* method = mono_method_desc_search_in_image(desc, data.core_image);
+		MonoMethod* method = mono_method_desc_search_in_image(desc, s_Data.core_image);
 		HZR_CORE_ASSERT((method != nullptr), "Method {0} not found", name);
 		return method;
 	}
 	MonoMethod* Mono::GetAppMethod(const std::string& name)
 	{
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
-		MonoMethod* method = mono_method_desc_search_in_image(desc, data.app_image);
+		MonoMethod* method = mono_method_desc_search_in_image(desc, s_Data.app_image);
 
 		return method;
 	}
@@ -165,7 +166,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoType* Mono::TypeFromReflectionName(const std::string& name)
 	{
-		return mono_reflection_type_from_name((char*)name.c_str(), data.core_image);
+		return mono_reflection_type_from_name((char*)name.c_str(), s_Data.core_image);
 	}
 	FieldVisibility Mono::GetVisibility(MonoClassField* field)
 	{

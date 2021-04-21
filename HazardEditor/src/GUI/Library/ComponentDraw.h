@@ -28,11 +28,11 @@ namespace WindowElement {
 			Layout::Text("Tag");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::InputField(component.tag);
+			Input::InputField(component.m_Tag);
 			Layout::NextLine(10);
 		}, [&component]() {
 			Layout::MenuItem("Reset", [&component]() {
-				component.tag = "New entity";
+				component.m_Tag = "New entity";
 				});
 		});	
 	}
@@ -42,27 +42,27 @@ namespace WindowElement {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
 			glm::vec3 rot { 
-				glm::degrees(component.Rotation.x), 
-				glm::degrees(component.Rotation.y), 
-				glm::degrees(component.Rotation.z) };
+				glm::degrees(component.m_Rotation.x), 
+				glm::degrees(component.m_Rotation.y), 
+				glm::degrees(component.m_Rotation.z) };
 
 			Layout::IDGroup("Translation", [&]() {
-				Input::Vec3("Translation", component.Translation, 0, 75);
+				Input::Vec3("Translation", component.m_Translation, 0, 75);
 			});
 			Layout::IDGroup("Rotation", [&]() {
 				Input::Vec3("Rotation", rot, 0, 75);
 			});
 			Layout::IDGroup("Scale", [&]() {
-				Input::Vec3("Scale", component.Scale, 1.0f, 75);
+				Input::Vec3("Scale", component.m_Scale, 1.0f, 75);
 			});
 
-			component.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
+			component.m_Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 
 		}, [&]() {
 			Layout::MenuItem("Reset", [&]() {
-				component.Translation = { 0, 0, 0 };
-				component.Rotation = { 0, 0, 0 };
-				component.Scale = { 1, 1, 1 };
+				component.m_Translation = { 0, 0, 0 };
+				component.m_Rotation = { 0, 0, 0 };
+				component.m_Scale = { 1, 1, 1 };
 			});
 		});
 	}
@@ -151,20 +151,20 @@ namespace WindowElement {
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Sprite tint", component.tint, open);
+			Input::ColorPicker("Sprite tint", component.m_Tint, open);
 
 			Layout::TableNext();
 			Layout::Text("Sprite");
 			Layout::TableNext();
 
-			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.texture);
+			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.m_Texture);
 
-			ImGui::Image((void*)component.texture->GetID(), { 25, 25 });
+			ImGui::Image((void*)component.m_Texture->GetID(), { 25, 25 });
 			Layout::SameLine();
 			if (Input::TextureSlot("", value)) {
-				*&component.texture = Rendering::RenderUtils::GetFromTextures(value);
+				*&component.m_Texture = Rendering::RenderUtils::GetFromTextures(value);
 			}
-			Layout::Text(component.texture->GetFile().c_str());
+			Layout::Text(component.m_Texture->GetFile().c_str());
 
 			Layout::EndTable();
 
@@ -180,7 +180,7 @@ namespace WindowElement {
 			Layout::Text("Size");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::TextureSlot("##Size", component.size, 0, 1000);
+			Input::TextureSlot("##Size", component.m_Size, 0, 1000);
 			Layout::EndTable();
 
 			}, [&entity]() {
@@ -199,13 +199,13 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.intensity);
+			Input::Slider("##Intensity", component.m_Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Sky Light tint", component.tint, open);
+			Input::ColorPicker("Sky Light tint", component.m_Tint, open);
 			Layout::EndTable();
 
 		}, [&entity]() {
@@ -221,13 +221,13 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.intensity);
+			Input::Slider("##Intensity", component.m_Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Directional Light tint", component.tint, open);
+			Input::ColorPicker("Directional Light tint", component.m_Tint, open);
 			Layout::EndTable();
 
 			}, [&entity]() {
@@ -243,19 +243,19 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.intensity);
+			Input::Slider("##Intensity", component.m_Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Point Light tint", component.tint, open);
+			Input::ColorPicker("Point Light tint", component.m_Tint, open);
 			Layout::TableNext();
 
 			Layout::Text("Radius");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Radius", component.radius);
+			Input::Slider("##Radius", component.m_Radius);
 
 			Layout::EndTable();
 			
@@ -270,15 +270,15 @@ namespace WindowElement {
 		using namespace Hazard::Scripting;
 		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
-			std::string moduleName = component.moduleName;
+			std::string moduleName = component.m_ModuleName;
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
 
-			if (Input::ScriptField("Script", component.moduleName, exists))
+			if (Input::ScriptField("Script", component.m_ModuleName, exists))
 			{
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 					ScriptCommand::ClearEntity(entity, component);
 				}
-				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.moduleName.c_str())) {
+				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) {
 					ScriptCommand::InitEntity(entity, component);
 				}
 			}
@@ -316,10 +316,10 @@ namespace WindowElement {
 			if (Input::Button("Mesh")) {
 				std::string file = Hazard::Utility::File::OpenFileDialog("");
 				if (file != "") 
-					component.mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
+					component.m_Mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
 			}
 			Layout::TableNext();
-			std::string filename = component.mesh != nullptr ? component.mesh->GetFile() : "None";
+			std::string filename = component.m_Mesh != nullptr ? component.m_Mesh->GetFile() : "None";
 			Layout::Text(filename.c_str());
 			Layout::EndTable();
 		}, []() {

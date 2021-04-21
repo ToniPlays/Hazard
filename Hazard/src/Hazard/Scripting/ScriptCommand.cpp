@@ -8,11 +8,11 @@
 namespace Hazard::Scripting {
 
 	void(*ScriptCommand::debugCallback)(Severity, std::string);
-	ScriptEngineManager* ScriptCommand::manager;
+	ScriptEngineManager* ScriptCommand::s_manager;
 
 	void ScriptCommand::Init()
 	{
-		manager = &Application::GetModule<ScriptEngineManager>();
+		s_manager = &Application::GetModule<ScriptEngineManager>();
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
@@ -25,8 +25,8 @@ namespace Hazard::Scripting {
 			if (!e.IsVisible()) continue;
 
 			auto& c = e.GetComponent<ScriptComponent>();
-			if (ModuleExists(ScriptType::CSharpScript, c.moduleName.c_str())) {
-				manager->Instantiate(ScriptType::CSharpScript, e, c.moduleName);
+			if (ModuleExists(ScriptType::CSharpScript, c.m_ModuleName.c_str())) {
+				s_manager->Instantiate(ScriptType::CSharpScript, e, c.m_ModuleName);
 			}
 		}
 	}
@@ -38,25 +38,25 @@ namespace Hazard::Scripting {
 	{	
 		auto& scene = ECS::SceneCommand::GetCurrentWorld();
 		for (auto [id, component] : scene.FindEntitiesWith<ECS::ScriptComponent>()) {
-			if (manager->ModuleExists(ScriptType::CSharpScript, component.moduleName.c_str()));
-				manager->InitEntity(ScriptType::CSharpScript, id, component.moduleName);
+			if (s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str()));
+			s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
 		}
 	}
 	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::ScriptComponent& component)
 	{
-		manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.moduleName);
+		s_manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
 	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::ScriptComponent& component)
 	{
-		manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.moduleName);
+		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
 	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.filename);
+		s_manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_Filename);
 	}
 	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.filename);
+		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_Filename);
 	}
 	void ScriptCommand::SendDebugMessage(Severity severity, std::string message)
 	{

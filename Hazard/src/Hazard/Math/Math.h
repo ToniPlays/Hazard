@@ -7,9 +7,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
-
 #include <glm/gtc/matrix_transform.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
 namespace Hazard {
@@ -18,24 +16,29 @@ namespace Hazard {
 
 	public:
 		template<typename T>
-		static T MaxValue() {
+		static T MaxValue() 
+		{
 			return std::numeric_limits<T>::max();
 		}
 		template<typename T>
-		static T MinValue() {
+		static T MinValue() 
+		{
 			return std::numeric_limits<T>::min();
 		}
 
 		template<typename T, typename U>
-		static T Pow(T value, U pow) {
+		static T Pow(T value, U pow) 
+		{
 			return (T)glm::pow(value, pow);
 		}
 		template<typename T>
-		static T Sqrt(T value) {
+		static T Sqrt(T value) 
+		{
 			return glm::sqrt(value);
 		}
 		template<typename T>
-		static T Max(T a, T b) {
+		static T Max(T a, T b) 
+		{
 			return a >= b ? a : b;
 		}
 		template<typename T>
@@ -43,25 +46,29 @@ namespace Hazard {
 			return a <= b ? a : b;
 		}
 		template<typename T, typename U>
-		static T Clamp(T value, U min, U max) {
+		static T Clamp(T value, U min, U max) 
+		{
 			if (value <= min) return min;
 			else if (value >= max) return max;
 			return value;
 		}
 		template<typename T>
-		static T Round(T value, int digits) {
+		static T Round(T value, int digits) 
+		{
 			float pow = Pow(10, digits);
 			return glm::round(value * pow) / pow;
 		}
 
 		template<typename T>
-		static T ToRange(T value, T min, T max) {
+		static T ToRange(T value, T min, T max) 
+		{
 			if (value > max) return value - max;
 			else if (value < min) return value + max;
 			else return value;
 		}
 
-		static double ToRadians(double value) {
+		static double ToRadians(double value) 
+		{
 			return glm::radians(value);
 		}
 
@@ -79,12 +86,14 @@ namespace Hazard {
 		}
 
 		template<typename T>
-		static glm::vec2 AspectRatio(T width, T height) {
+		static glm::vec2 AspectRatio(T width, T height)
+		{
 			height = (height / width) * width;
 			return glm::vec2<double>(width * 0.01f, height * 0.01f);
 		}
 
-		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) {
+		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) 
+		{
 			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
 			return glm::translate(glm::mat4(1.0f), translation)	* rot

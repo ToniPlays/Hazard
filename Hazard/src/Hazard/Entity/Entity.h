@@ -12,16 +12,15 @@ namespace Hazard::ECS {
 		Entity(entt::entity handle, World* world);
 		Entity(const Entity& other) = default;
 
-		World& GetWorld() { return *world; }
+		World& GetWorld() { return *m_World; }
 
-		//Add component to entity
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			T& component = world->registry.emplace<T>(*this, std::forward<Args>(args)...);
-			world->OnComponentAdded<T>(*this, component);
+			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
+			m_World->OnComponentAdded<T>(*this, component);
 			return component;
 		}
 		template<typename T, typename... Args>
@@ -29,14 +28,13 @@ namespace Hazard::ECS {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			world->registry.emplace<T>(*this, std::forward<Args>(args)...);
-			world->OnComponentAdded<T>(*this, component);
+			m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
+			m_World->OnComponentAdded<T>(*this, component);
 		}
-		//Remove component from entity
 		template<typename T>
 		void RemoveComponent() {
-			world->OnComponentRemoved<T>(*this, GetComponent<T>());
-			world->registry.remove<T>(handle);
+			m_World->OnComponentRemoved<T>(*this, GetComponent<T>());
+			m_World->m_Registry.remove<T>(m_Handle);
 		}
 		template<>
 		void RemoveComponent<TagComponent>() {};
@@ -45,39 +43,38 @@ namespace Hazard::ECS {
 
 		template<typename T>
 		T& GetComponent() {
-			return world->registry.get<T>(handle);
+			return m_World->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
-		bool HasComponent() {
-			return world->registry.has<T>(handle);
-		}
+		bool HasComponent() { return m_World->m_Registry.has<T>(m_Handle); }
 
 		bool IsValid() { 
-			if (world == nullptr) return false;
-			return world->GetWorldRegistry().valid(handle);
-		}
+			if (m_World == nullptr) 
+				return false;
 
-		bool IsVisible() { return GetComponent<TagComponent>().visible; }
-		void SetVisible(bool visible) { GetComponent<TagComponent>().visible = visible; }
+			return m_World->GetWorldRegistry().valid(m_Handle);
+		}
+		bool IsVisible() { return GetComponent<TagComponent>().m_Visible; }
+		void SetVisible(bool visible) { GetComponent<TagComponent>().m_Visible = visible; }
 
 		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
 		TagComponent& GetTag() { return GetComponent<TagComponent>(); }
 
 	public:
-		operator bool() const { return handle != entt::null; }
-		operator entt::entity() const { return handle; }
-		operator uint32_t() const { return (uint32_t)handle; }
+		operator bool() const { return m_Handle != entt::null; }
+		operator entt::entity() const { return m_Handle; }
+		operator uint32_t() const { return (uint32_t)m_Handle; }
 
 		bool operator ==(const Entity& other) {
-			return handle == other.handle && world == other.world;
+			return m_Handle == other.m_Handle && m_World == other.m_World;
 		}
 		bool operator !=(const Entity& other) {
 			return !(*this == other);
 		}
 
 	private:
-		entt::entity handle { entt::null };
-		World* world = nullptr;
+		entt::entity m_Handle { entt::null };
+		World* m_World = nullptr;
 	};
 }

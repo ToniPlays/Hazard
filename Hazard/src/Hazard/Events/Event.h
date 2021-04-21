@@ -55,19 +55,19 @@ namespace Hazard {
 	class EventDispatcher {
 
 	public: 
-		EventDispatcher(Event& event) : event(event) {}
+		EventDispatcher(Event& event) : m_Event(event) {}
 
 		//Dispath the event for layer
 		template<typename T, typename F>
 		bool Dispatch(const F& func) {
-			if (event.GetEventType() == T::GetStaticType()) {
-				event.handled = func(static_cast<T&>(event));
+			if (m_Event.GetEventType() == T::GetStaticType()) {
+				m_Event.handled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;
 		}
 	private:
-		Event& event;
+		Event& m_Event;
 	};
 	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
 		return os << e.ToString();

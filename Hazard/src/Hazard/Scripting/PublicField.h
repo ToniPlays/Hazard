@@ -8,10 +8,10 @@ namespace Hazard::Scripting {
 
 	class PublicField {
 	public:
-		PublicField(FieldType type) : type(type) {};
+		PublicField(FieldType type) : m_Type(type) {};
 		virtual ~PublicField() = default;
 
-		virtual FieldType GetType() { return type; };
+		virtual FieldType GetType() { return m_Type; };
 		virtual void CopyStoredToRuntimeValue() = 0;
 		virtual bool RuntimeAvailable() = 0;
 
@@ -42,6 +42,6 @@ namespace Hazard::Scripting {
 		virtual void GetRuntimeValueInternal(void* value) const = 0;
 		virtual void SetRuntimeValueInternal(void* value) const = 0;
 
-		FieldType type;
+		FieldType m_Type;
 	};
 }

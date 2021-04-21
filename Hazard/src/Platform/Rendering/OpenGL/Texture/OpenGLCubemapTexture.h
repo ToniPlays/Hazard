@@ -20,11 +20,11 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void Bind(uint32_t slot = 0) const;
 		virtual void Unbind(uint32_t slot = 0) const;
 
-		virtual uint32_t GetID() const { return textureID; };
+		virtual uint32_t GetID() const { return m_TextureID; };
 	private:
 		void SetFilters();
 	private:
 
-		uint32_t textureID;
+		uint32_t m_TextureID;
 	};
 }

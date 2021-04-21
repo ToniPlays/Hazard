@@ -36,7 +36,7 @@ namespace WindowElement {
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(), 
-			transform->Translation, cam->bgRenderer));
+			transform->m_Translation, cam->bgRenderer));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();

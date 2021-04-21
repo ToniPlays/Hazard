@@ -13,9 +13,9 @@ namespace Hazard::Rendering {
 		static void SetVsync(bool vsync);
 		static void ClearFrame(glm::vec4 color);
 
-		static RenderContext& GetContext() { return *context; };
+		static RenderContext& GetContext() { return *m_Context; };
 
 	private:
-		static RenderContext* context;
+		static RenderContext* m_Context;
 	};
 }

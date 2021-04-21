@@ -14,21 +14,26 @@ namespace Hazard {
 		Color(int r, int g, int b, int a);
 		Color(float r, float g, float b, float a);
 
+		static Color FromGLM(const glm::vec4 color);
+		static Color FromHex(std::string hex);
 
-		glm::vec4 ToGlm() { return glm::vec4(r, g, b, a); }
-		static Color FromGLM(const glm::vec4 color) { return Color(color.r, color.g, color.b, color.a); }
-		
-
-		std::string ToString();
-
-		operator std::string() {
-			return this->ToString();
-		}
 
 		friend std::ostream& operator << (std::ostream& os, const Color color) {
 			os << color.r << ", " << color.g << ", " << color.b << ", " << color.a;
 			return os;
  		}
-		static Color FromHex(std::string hex);
+		operator glm::vec4()
+		{
+			return glm::vec4(r, g, b, a);
+		}
+
+		operator std::string() {
+			std::stringstream ss;
+			ss << "R: " << this->r;
+			ss << " G: " << this->g;
+			ss << " B: " << this->b;
+			ss << " A: " << this->a;
+			return ss.str();
+		}
 	};
 }

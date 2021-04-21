@@ -5,26 +5,26 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext* RenderContextCommand::context;
+	RenderContext* RenderContextCommand::m_Context;
 
 	void RenderContextCommand::Init()
 	{
-		context = &Application::GetModule<RenderContext>();
+		m_Context = &Application::GetModule<RenderContext>();
 	}
 	void RenderContextCommand::SetDepthTest(DepthTest type)
 	{
-		context->GetContext().SetDepthTest(type);
+		m_Context->GetContext().SetDepthTest(type);
 	}
 	bool RenderContextCommand::IsVsync()
 	{
-		return context->GetWindow().IsVSync();
+		return m_Context->GetWindow().IsVSync();
 	}
 	void RenderContextCommand::SetVsync(bool vsync)
 	{
-		context->GetWindow().SetVSync(vsync);
+		m_Context->GetWindow().SetVSync(vsync);
 	}
 	void RenderContextCommand::ClearFrame(glm::vec4 color)
 	{
-		context->GetWindow().GetContext()->ClearFrame(color);
+		m_Context->GetWindow().GetContext()->ClearFrame(color);
 	}
 }

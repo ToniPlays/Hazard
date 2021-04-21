@@ -2,6 +2,7 @@
 
 #include <entt.hpp>
 #include "Component.h"
+#include "Hazard/Core/UID.h"
 
 namespace Hazard::ECS {
 	class Entity;
@@ -10,39 +11,38 @@ namespace Hazard::ECS {
 		friend class Entity;
 	public:
 		World(std::string file);
+		World(World& other);
 		~World();
 
-		void Flush();
+		entt::registry& GetWorldRegistry() { return m_Registry; }
+		std::string& GetName() { return m_Name; }
+		std::string& GetWorldFile() { return m_File; }
 
 		void RenderAll();
 
 		Entity CreateEntity(const char* name);
+		Entity CreateEntity(UID id, const char* name);
 		Entity GetEntity(entt::entity id);
 		void DestroyEntity(Entity entity);
-
-		void SetName(std::string name) { this->name = name.c_str(); }
-
+		void SetName(std::string name) { this->m_Name = name.c_str(); }
 		std::tuple<bool, CameraComponent*, TransformComponent*> GetWorldCamera();
-		entt::registry& GetWorldRegistry() { return registry; }
-
-		std::string& GetWorldFile() { return file; }
-		std::string& GetName() { return name; }
 
 		template<typename T>
-		std::vector<std::tuple<uint32_t, T>> FindEntitiesWith() {
+		std::vector<std::tuple<uint32_t, T>> FindEntitiesWith() 
+		{
 			std::vector<std::tuple<uint32_t, T>> result;
-			auto view = registry.view<T>();
+			auto view = m_Registry.view<T>();
+
 			for (auto entity : view) {
-				auto comp = view.get<T>(entity);
-				result.push_back(std::tuple((uint32_t)entity, comp));
+				result.push_back(std::tuple((uint32_t)entity, view.get<T>(entity)));
 			}
 			return result;
 		}
-		
 	private:
-		entt::registry registry;
-		std::string name;
-		std::string file;
+		UID uid;
+		entt::registry m_Registry;
+		std::string m_Name;
+		std::string m_File;
 
 	private:
 		template<typename T>

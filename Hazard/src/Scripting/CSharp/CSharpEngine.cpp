@@ -48,7 +48,7 @@ namespace Hazard::Scripting::CSharp {
 			EntityInstance& instance = entity.instance;
 			if (instance.ScriptClass == nullptr) continue;
 
-			float delta = Time::deltaTime;
+			float delta = Time::s_DeltaTime;
 			void* param[] = { &delta };
 			Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, param);
 		}

@@ -79,11 +79,11 @@ namespace WindowElement {
 
 		auto& tag = entity.GetComponent<TagComponent>();
 		
-		if (searchValue != "" && strstr(tag.tag.c_str(), searchValue.c_str()) == 0) {
+		if (searchValue != "" && strstr(tag.m_Tag.c_str(), searchValue.c_str()) == 0) {
 			return;
 		}
 
-		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.tag.c_str(), flags, [&]() {});
+		bool opened = Layout::Treenode((void*)(uint64_t)(uint32_t)entity, tag.m_Tag.c_str(), flags, [&]() {});
 
 		bool entityDeleted = false;
 		if (ImGui::BeginPopupContextItem()) {

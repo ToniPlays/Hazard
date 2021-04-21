@@ -19,51 +19,51 @@ namespace Hazard::Rendering::OpenGL {
 			return;
 		}
 
-		width = w;
-		height = h;
+		m_Width = w;
+		m_Height = h;
 
-		internalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
-		dataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
+		m_InternalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
+		m_DataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
-		glTextureStorage2D(textureID, 1, internalFormat, width, height);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
+		glTextureStorage2D(m_TextureID, 1, m_InternalFormat, m_Width, m_Height);
 
-		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glTextureSubImage2D(textureID, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const glm::vec2 size, const char* name) : Texture2D(name)
 	{
-		width = size.x;
-		height = size.y;
+		m_Width = size.x;
+		m_Height = size.y;
 
-		dataFormat = GL_RGBA;
-		internalFormat = GL_RGBA8;
+		m_InternalFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
-		glTextureStorage2D(textureID, 1, GL_RGBA8, width, height);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
+		glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
 
-		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		glDeleteTextures(1, &textureID);
+		glDeleteTextures(1, &m_TextureID);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		glBindTextureUnit(slot, textureID);
+		glBindTextureUnit(slot, m_TextureID);
 	}
 
 	void OpenGLTexture2D::Unbind(uint32_t slot) const
@@ -72,8 +72,8 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-		uint32_t bpp = dataFormat == GL_RGBA ? 4 : 3;
-		HZR_CORE_ASSERT(size == width * height * bpp, "Data must be entire texture!");
-		glTextureSubImage2D(textureID, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
+		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+		HZR_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 }

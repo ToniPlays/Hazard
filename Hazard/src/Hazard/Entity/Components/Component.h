@@ -3,43 +3,41 @@
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Math.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
+#include "Hazard/Core/UID.h"
 
 
-/*
-General entity components
-*/
 namespace Hazard::ECS {
 
-	//Entity tag component and identity, non removable
 	struct TagComponent
 	{
-		std::string tag;
-		bool visible = true;
+		std::string m_Tag;
+		UID m_ID;
+		bool m_Visible = true;
 	};
-	//Entity transformation component, non removable
+
 	struct TransformComponent
 	{
-		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
+		glm::vec3 m_Translation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_Scale = { 1.0f, 1.0f, 1.0f };
 
 		glm::mat4 GetTransformMat4()
 		{
-			return Math::ToTransformMatrix(Translation, Rotation, Scale);
+			return Math::ToTransformMatrix(m_Translation, m_Rotation, m_Scale);
 		}
 		glm::mat4 GetTransformNoScale()
 		{
-			return Math::ToTransformMatrix(Translation, Rotation);
+			return Math::ToTransformMatrix(m_Translation, m_Rotation);
 		}
 	};
-	//Script component for entities
+
 	struct ScriptComponent {
-		std::string moduleName;
+		std::string m_ModuleName;
 	};
 	struct VisualScriptComponent {
-		std::string filename;
+		std::string m_Filename;
 	};
 	struct MeshComponent {
-		Rendering::Mesh* mesh;
+		Rendering::Mesh* m_Mesh;
 	};
 }

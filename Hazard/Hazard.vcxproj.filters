@@ -228,9 +228,6 @@
     <ClInclude Include="src\Hazard\Rendering\Buffers\Buffer.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderData.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
@@ -627,6 +624,11 @@
     <ClInclude Include="src\Hazard\Entity\World.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Core\UID.h" />
+    <ClInclude Include="src\Hazard\Rendering\2D\RenderData2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderDataType.h">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -769,5 +771,7 @@
     <ClCompile Include="src\Hazard\Entity\World.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Core\UID.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp" />
   </ItemGroup>
 </Project>

@@ -21,17 +21,17 @@ namespace Hazard::Rendering::OpenGL {
 		virtual uint32_t GetWidth() const override { return spec.width; }
 		virtual uint32_t GetHeight() const override { return spec.height; }
 
-		uint32_t GetColorID() const { return colorAttachment; }
-		uint32_t GetID() const override { return RendererID; }
+		uint32_t GetColorID() const { return m_ColorAttachment; }
+		uint32_t GetID() const override { return m_RendererID; }
 		RenderTextureSpec& GetSpec() { return spec; }
 		virtual void SetData(void* data, uint32_t size) {}
 
 	private:
 		RenderTextureSpec spec;
 
-		GLuint RendererID = 0;
-		GLuint colorAttachment = 0;
-		GLuint depthAttachment = 0;
+		GLuint m_RendererID = 0;
+		GLuint m_ColorAttachment = 0;
+		GLuint m_DepthAttachment = 0;
 
 	};
 }

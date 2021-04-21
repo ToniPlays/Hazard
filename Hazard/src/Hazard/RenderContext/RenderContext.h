@@ -8,8 +8,7 @@ namespace Hazard::Rendering {
 
 	enum class RenderAPI { 
 		Auto = 0,
-		OpenGL,
-		Vulkan
+		OpenGL
 	};
 
 	class RenderContext : public Module::Module {
@@ -21,19 +20,19 @@ namespace Hazard::Rendering {
 		void Init();
 		void Update() override;
 		void Close();
-		bool IsAvailable() { return true; }
 
-		void SetClearColor(Color color) { clearColor = color; };
+		void SetClearColor(Color color) { m_ClearColor = color; };
+		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }
+		GraphicsContext& GetContext() { return *m_Window->GetContext(); }
+		Window& GetWindow() { return *m_Window; }
 
-		RenderAPI GetCurrentAPI() { return currentAPI; }
-		GraphicsContext& GetContext() { return *window->GetContext(); }
-		Window& GetWindow() { return *window; }
-
-	private:
-		RenderAPI currentAPI;
-		Window* window = nullptr;
-		Color clearColor;
 	private:
 		void Process(Event& e);
+
+	private:
+		RenderAPI m_CurrentAPI;
+		Window* m_Window = nullptr;
+		Color m_ClearColor;
+
 	};
 }

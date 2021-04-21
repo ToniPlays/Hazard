@@ -10,21 +10,21 @@ namespace Hazard {
 
 	public: 
 		WindowResizeEvent(unsigned int width, unsigned int height) 
-			: width(width), height(height) {}
+			: m_Width(width), m_Height(height) {}
 
-		inline unsigned int GetWidth() const { return width; }
-		inline unsigned int GetHeight() const { return height; }
+		inline unsigned int GetWidth() const { return m_Width; }
+		inline unsigned int GetHeight() const { return m_Height; }
 
 		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "Window resized: " << width << "x" << height;
+			ss << "Window resized: " << m_Width << "x" << m_Height;
 			return ss.str();
 		}
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 	private:
-		unsigned int width, height;
+		unsigned int m_Width, m_Height;
 	};
 
 	class HAZARD_API WindowCloseEvent : public Event {
@@ -62,14 +62,14 @@ namespace Hazard {
 	};
 	class WindowFocusEvent : public Event {
 	public:
-		WindowFocusEvent(bool _focus) : focus(_focus) {};
-		inline bool GetFocus() { return focus; };
+		WindowFocusEvent(bool _focus) : m_Focus(_focus) {};
+		inline bool GetFocus() { return m_Focus; };
 
 		EVENT_CLASS_TYPE(WindowFocus)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 	private:
-		bool focus;
+		bool m_Focus;
 	};
 
 	class ModuleErrorEvent : public Event
