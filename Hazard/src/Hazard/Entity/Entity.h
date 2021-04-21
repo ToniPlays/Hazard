@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "World.h"
 #include "entt.hpp"
 
 namespace Hazard::ECS {
@@ -9,10 +9,10 @@ namespace Hazard::ECS {
 		friend class Scene;
 	public:
 		Entity() = default;
-		Entity(entt::entity handle, Scene* scene);
+		Entity(entt::entity handle, World* world);
 		Entity(const Entity& other) = default;
 
-		Scene& GetScene() { return *scene; }
+		World& GetWorld() { return *world; }
 
 		//Add component to entity
 		template<typename T, typename... Args>
@@ -20,8 +20,8 @@ namespace Hazard::ECS {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			T& component = scene->registry.emplace<T>(*this, std::forward<Args>(args)...);
-			scene->OnComponentAdded<T>(*this, component);
+			T& component = world->registry.emplace<T>(*this, std::forward<Args>(args)...);
+			world->OnComponentAdded<T>(*this, component);
 			return component;
 		}
 		template<typename T, typename... Args>
@@ -29,14 +29,14 @@ namespace Hazard::ECS {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			scene->registry.emplace<T>(*this, std::forward<Args>(args)...);
-			scene->OnComponentAdded<T>(*this, component);
+			world->registry.emplace<T>(*this, std::forward<Args>(args)...);
+			world->OnComponentAdded<T>(*this, component);
 		}
 		//Remove component from entity
 		template<typename T>
 		void RemoveComponent() {
-			scene->OnComponentRemoved<T>(*this, GetComponent<T>());
-			scene->registry.remove<T>(handle);
+			world->OnComponentRemoved<T>(*this, GetComponent<T>());
+			world->registry.remove<T>(handle);
 		}
 		template<>
 		void RemoveComponent<TagComponent>() {};
@@ -45,17 +45,17 @@ namespace Hazard::ECS {
 
 		template<typename T>
 		T& GetComponent() {
-			return scene->registry.get<T>(handle);
+			return world->registry.get<T>(handle);
 		}
 
 		template<typename T>
 		bool HasComponent() {
-			return scene->registry.has<T>(handle);
+			return world->registry.has<T>(handle);
 		}
 
 		bool IsValid() { 
-			if (scene == nullptr) return false;
-			return scene->GetSceneRegistry().valid(handle); 
+			if (world == nullptr) return false;
+			return world->GetWorldRegistry().valid(handle);
 		}
 
 		bool IsVisible() { return GetComponent<TagComponent>().visible; }
@@ -70,14 +70,14 @@ namespace Hazard::ECS {
 		operator uint32_t() const { return (uint32_t)handle; }
 
 		bool operator ==(const Entity& other) {
-			return handle == other.handle && scene == other.scene;
+			return handle == other.handle && world == other.world;
 		}
 		bool operator !=(const Entity& other) {
 			return !(*this == other);
 		}
 
 	private:
-		entt::entity handle{ entt::null };
-		Scene* scene = nullptr;
+		entt::entity handle { entt::null };
+		World* world = nullptr;
 	};
 }

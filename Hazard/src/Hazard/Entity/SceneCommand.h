@@ -21,6 +21,6 @@ namespace Hazard::ECS {
 		static Entity GetEntity(uint32_t id);
 
 		//Get current scene from SceneHandler
-		static Scene& GetCurrentScene();
+		static World& GetCurrentWorld();
 	};
 }

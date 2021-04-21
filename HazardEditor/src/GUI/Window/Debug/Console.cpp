@@ -120,7 +120,6 @@ namespace WindowElement {
 
 	void Console::Print(Severity severity, std::string message)
 	{
-		HZR_WARN(message);
 		messages.emplace_back(std::pair<Severity, std::string>(severity, message));
 	}
 

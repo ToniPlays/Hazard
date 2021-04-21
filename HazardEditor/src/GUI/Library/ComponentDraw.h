@@ -284,9 +284,9 @@ namespace WindowElement {
 			}
 
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
-				ScriptData data = ScriptCommand::GetData(ScriptType::CSharpScript, entity, moduleName);
-				for (PublicField* field : data.fields) {
-					Input::PublicField(field);
+				
+				for (auto [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, entity, moduleName)) {
+					Input::PublicField(name, field);
 				}
 			}
 

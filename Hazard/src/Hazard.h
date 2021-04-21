@@ -25,7 +25,7 @@
 #include "Hazard/Entity/SceneCommand.h"
 #include "Hazard/Entity/Loader/SceneHandler.h"
 #include "Hazard/Entity/Loader/SceneSerializer.h"
-#include "Hazard/Entity/Scene.h"
+#include "Hazard/Entity/World.h"
 #include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"
 

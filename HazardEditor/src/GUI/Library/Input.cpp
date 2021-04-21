@@ -319,13 +319,13 @@ namespace WindowElement {
 		ImGui::PopStyleColor(2);
 		return modified;
 	}
-	bool Input::PublicField(Scripting::PublicField* field)
+	bool Input::PublicField(const std::string& name, Scripting::PublicField* field)
 	{
 		bool modified = false;
 		using namespace Hazard::Scripting;
 
 		std::string id("##");
-		id.append(field->GetName());
+		id.append(name);
 
 		switch (field->GetType())
 		{
@@ -333,28 +333,40 @@ namespace WindowElement {
 			{
 				Layout::Table(2, false);
 				Layout::SetColumnWidth(75);
-				Layout::Text(field->GetName());
+				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
 				float f = field->GetStoredValue<float>();
 				modified = DragFloat(id.c_str(), f);
-				if (modified) field->SetStoredValue(f);
+				if (modified) {
+					field->SetStoredValue(f);
+					if (field->RuntimeAvailable()) 
+						field->CopyStoredToRuntimeValue();
+				}
 				Layout::EndTable();
 				break;
 			}
 			case FieldType::Float2: 
 			{
 				glm::vec2 f2 = field->GetStoredValue<glm::vec2>();
-				modified = Vec2(field->GetName(), f2, 0, 75);
-				if (modified) field->SetStoredValue(f2);
+				modified = Vec2(name.c_str(), f2, 0, 75);
+				if (modified) {
+					field->SetStoredValue(f2);
+					if (field->RuntimeAvailable())
+						field->CopyStoredToRuntimeValue();
+				}
 				Layout::NextLine(1);
 				break;
 			}
 			case FieldType::Float3:
 			{
 				glm::vec3 f3 = field->GetStoredValue<glm::vec3>();
-				modified = Vec3(field->GetName(), f3, 0, 75);
-				if (modified) field->SetStoredValue(f3);
+				modified = Vec3(name.c_str(), f3, 0, 75);
+				if (modified) {
+					field->SetStoredValue(f3);
+					if (field->RuntimeAvailable())
+						field->CopyStoredToRuntimeValue();
+				}
 				Layout::NextLine(1);
 				break;
 			}
@@ -362,12 +374,16 @@ namespace WindowElement {
 			{
 				Layout::Table(2, false);
 				Layout::SetColumnWidth(75);
-				Layout::Text(field->GetName());
+				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
 				int i = field->GetStoredValue<int>();
 				modified = DragInt(id.c_str(), i);
-				if (modified) field->SetStoredValue(i);
+				if (modified) {
+					field->SetStoredValue(i);
+					if (field->RuntimeAvailable())
+						field->CopyStoredToRuntimeValue();
+				}
 				Layout::EndTable();
 				break;
 			}
@@ -375,12 +391,16 @@ namespace WindowElement {
 			{
 				Layout::Table(2, false);
 				Layout::SetColumnWidth(75);
-				Layout::Text(field->GetName());
+				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
 				uint32_t uint = field->GetStoredValue<uint32_t>();
-				modified = DragUInt(field->GetName(), uint);
-				if (modified) field->SetStoredValue(uint);
+				modified = DragUInt(name.c_str(), uint);
+				if (modified) {
+					field->SetStoredValue(uint);
+					if (field->RuntimeAvailable())
+						field->CopyStoredToRuntimeValue();
+				}
 				Layout::EndTable();
 				break;
 			}

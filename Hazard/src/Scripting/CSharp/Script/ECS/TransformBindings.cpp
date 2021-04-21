@@ -24,13 +24,11 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		HZR_CORE_INFO("Getting position {0} {1} {2}", position->x, position->y, position->z);
 		*position = c.Translation;
 	}
 	void TransformBindings::Transform_SetPosition_Native(uint32_t id, glm::vec3* position)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		HZR_CORE_INFO("Setting position {0} {1} {2}", position->x, position->y, position->z);
 		c.Translation = *position;
 	}
 	void TransformBindings::Transform_GetRotation_Native(uint32_t id, glm::vec3* rotation)

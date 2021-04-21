@@ -2,6 +2,7 @@
 
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Mono/Mono.h"
+#include "Hazard/Entity/World.h"
 
 extern "C" 
 {
@@ -10,27 +11,43 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
-	struct MonoEntity {
+	struct EntityScript;
+	class CSharpField;
+	struct EntityInstance
+	{
+		EntityScript* ScriptClass;
+		uint32_t handle = 0;
+		ECS::World* instance = nullptr;
+		MonoObject* GetInstance() { return Mono::ObjectFromHandle(handle); }
+	};
+	using ModuleFieldMap = std::unordered_map<std::string, std::unordered_map<std::string, CSharpField*>>;
+	struct EntityInstanceData {
+		EntityInstance instance;
+		ModuleFieldMap moduleFieldMap;
+	};
 
-		uint32_t handle;
-		ScriptData data;
+	using EntityInstanceMap = std::unordered_map<uint32_t, EntityInstanceData>;
+
+	struct EntityScript {
+		std::string moduleName;
+		std::string className;
+		std::string nameSpace;
+
+		MonoClass* monoClass;
 		MonoMethod* Constructor = nullptr;
-		MonoMethod* OnCreate = nullptr;
+		MonoMethod* OnCreated = nullptr;
 		MonoMethod* OnStart = nullptr;
 		MonoMethod* OnUpdate = nullptr;
 		MonoMethod* OnLateUpdate = nullptr;
 		MonoMethod* OnFixedUpdate = nullptr;
 
-		MonoEntity() = default;
-
-		MonoEntity(ScriptData data) : data(data) {
-
+		void InitClassMethods() {
 			Constructor = Mono::GetCoreMethod("Hazard.Entity:.ctor(ulong)");
-			OnCreate = Mono::GetAppMethod(std::string(data.name) + ":OnCreate()");
-			OnStart = Mono::GetAppMethod(std::string(data.name) + ":Start()");
-			OnUpdate = Mono::GetAppMethod(std::string(data.name) + ":OnUpdate(single)");
-			OnLateUpdate = Mono::GetAppMethod(std::string(data.name) + ":OnLateUpdate(single)");
-			OnFixedUpdate = Mono::GetAppMethod(std::string(data.name) + ":OnFixedUpdate(single)");
+			OnCreated = Mono::GetAppMethod(moduleName + ":OnCreate()");
+			OnStart = Mono::GetAppMethod(moduleName + ":Start()");
+			OnUpdate = Mono::GetAppMethod(moduleName + ":OnUpdate(single)");
+			OnLateUpdate = Mono::GetAppMethod(moduleName + ":LateUpdate()");
+			OnFixedUpdate = Mono::GetAppMethod(moduleName + ":FixedUpdate()");
 		};
 	};
 
@@ -48,10 +65,12 @@ namespace Hazard::Scripting::CSharp {
 
 		void OnSceneLoaded() override;
 		void OnSceneUnloaded() override;
+		std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) override;
 
 		//Entity creation
-		void InitializeEntity(uint32_t entity, std::string moduleName) override;
-		void ClearEntity(uint32_t entity, std::string moduleName) override;
+		void InitializeEntity(uint32_t entity, const std::string& moduleName) override;
+		void Instantiate(uint32_t entity, const std::string& moduleName) override;
+		void ClearEntity(uint32_t entity, const std::string& moduleName) override;
 		void OnCreate(uint32_t entity) override;
 		void OnStart(uint32_t entity) override;
 		//Entity updates
@@ -64,15 +83,9 @@ namespace Hazard::Scripting::CSharp {
 		void OnDestroy(uint32_t entity) override;
 		void OnCollision(uint32_t entity) override;
 
+		EntityInstanceData& GetInstanceData(uint32_t entity);
+
 		void OnApplicationClose() override;
-
 		void Reload() override;
-		ScriptStats& GetStats() override { return stats; };
-		ScriptData& GetData(uint32_t entity, const std::string& moduleName) override;
-
-	private:
-		ScriptStats stats;
-		std::unordered_map<uint32_t, ScriptData> scripts;
-		std::unordered_map<uint32_t, MonoEntity> entities;
 	};
 }

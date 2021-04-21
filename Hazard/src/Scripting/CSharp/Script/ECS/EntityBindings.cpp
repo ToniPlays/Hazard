@@ -34,13 +34,26 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		BindMap result;
 		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);
+		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", CreateComponent);
+		result.emplace_back("Hazard.Entity::Entity_IsActive_Native", IsActive);
+		result.emplace_back("Hazard.Entity::Entity_SetActive_Native", SetActive);
 		return result;
+	}
+	bool EntityBindings::IsActive(uint32_t id)
+	{
+		return ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).visible;
+	}
+	void EntityBindings::SetActive(uint32_t id, bool active)
+	{
+		ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).visible = active;
 	}
 	bool EntityBindings::HasComponent(uint32_t id, void* type)
 	{
 		MonoType* compType = Mono::ReflectionToType(type);
-		HZR_CORE_INFO("Does have component yes? {0}", Mono::GetTypeName(compType));
-
 		return hasComponentFuncs[compType](id);
+	}
+	bool EntityBindings::CreateComponent(uint32_t id, void* type)
+	{
+		return false;
 	}
 }

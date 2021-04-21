@@ -29,36 +29,29 @@ namespace Hazard::Scripting {
 			engine->UpdateEntities();
 		}
 	}
-	void ScriptEngineManager::BeginRuntime()
+	void ScriptEngineManager::Instantiate(ScriptType type, uint32_t entityID, std::string moduleName)
 	{
-		for (auto [type, engine] : scriptEngines) {
-			engine->OnBeginRuntime();
-		}
+		scriptEngines[type]->Instantiate(entityID, moduleName);
 	}
-	void ScriptEngineManager::EndRuntime()
-	{
-		for (auto [type, engine] : scriptEngines) {
-			engine->OnEndRuntime();
-		}
-	}
-	void ScriptEngineManager::InitEntity(uint32_t entityID, std::string moduleName, ScriptType type)
+	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t entityID, std::string moduleName)
 	{
 		scriptEngines[type]->InitializeEntity(entityID, moduleName);
 	}
-	void ScriptEngineManager::ClearEntity(uint32_t entityID, std::string moduleName, ScriptType type)
+	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t entityID, std::string moduleName)
 	{
 		scriptEngines[type]->ClearEntity(entityID, moduleName);
+	}
+	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) {
+		return scriptEngines[type]->GetPublicFields(entity, moduleName);
 	}
 	void ScriptEngineManager::ReloadAll()
 	{
 		for (auto [type, engine] : scriptEngines) {
 			engine->Reload();
 		}
+		ScriptCommand::InitAllEntities();
 	}
 	bool ScriptEngineManager::ModuleExists(ScriptType type, const char* moduleName) {
 		return scriptEngines[type]->ModuleExists(moduleName);
-	}
-	ScriptData ScriptEngineManager::GetData(ScriptType type, uint32_t entity, std::string moduleName) {
-		return scriptEngines[type]->GetData(entity, moduleName);
 	}
 }

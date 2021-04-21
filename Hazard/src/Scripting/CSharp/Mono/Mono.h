@@ -17,6 +17,8 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
+	enum FieldVisibility { Private, Protected, Public };
+
 	struct MonoData {
 		MonoDomain* mono_domain;
 
@@ -29,34 +31,46 @@ namespace Hazard::Scripting::CSharp {
 
 	class Mono {
 	public:
-		static void InitAssembly(const char* path);
+		static void InitAssembly();
 		static void CreateDomain(const char* name);
 		static void LoadRuntimeAssembly(const char* path);
+		static void Shutdown();
 		static uint32_t InstantiateHandle(MonoClass* monoClass);
 
 		static std::vector<MonoClassField*> GetClassFields(MonoClass* monoClass);
 
-		static MonoObject* CallMethod(MonoClass* monoClass, MonoMethod* method, void** params = nullptr);
+		static MonoObject* CallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr);
+		static inline MonoObject* TryCallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr) {
+			if (method != nullptr) return CallMethod(object, method, params);
+			return nullptr;
+		}
 
 		static bool ModuleExists(const char* name);
 		static MonoData& GetData() { return data; }
+
 		static MonoClass* GetMonoClass(const char* moduleName);
 		static MonoClass* GetMonoClass(const char* nameSpace, const char* name);
+		static MonoObject* ObjectFromHandle(uint32_t handle);
 		static std::string GetFieldName(MonoClassField* field);
 		static MonoType* GetFieldType(MonoClassField* field);
 		static MonoMethod* GetCoreMethod(const std::string& name);
 		static MonoMethod* GetAppMethod(const std::string& name);
 		static int GetType(MonoType* type);
 		static char* GetTypeName(MonoType* type);
+		static const char* ClassName(MonoClass* monoClass);
 		static MonoType* ReflectionToType(void* type);
 		static MonoType* TypeFromReflectionName(const std::string& name);
+		static FieldVisibility GetVisibility(MonoClassField* field);
+		static MonoClassField* GetMonoField(MonoClass* monoClass, void** iter);
+
+		static void SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
+		static void GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
 
 	private:
 		static void LoadMonoAssebly(const char* path);
 		static MonoAssembly* LoadAssembly(const char* path);
 		static MonoImage* GetAssemblyImage(MonoAssembly* assembly);
 
-		static MonoClassField* GetMonoField(MonoClass* monoClass, void** iter);
 	private:
 
 		static MonoData data;

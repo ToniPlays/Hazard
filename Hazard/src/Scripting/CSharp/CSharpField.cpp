@@ -5,9 +5,17 @@
 
 namespace Hazard::Scripting::CSharp {
 
-	CSharpField::CSharpField(const std::string& name, FieldType type) : PublicField(name, type)
+	CSharpField::CSharpField(FieldType type) : PublicField(type)
 	{
 		buffer = ScriptUtils::AllocateBuffer(type);
+	}
+	void CSharpField::CopyStoredToRuntimeValue()
+	{
+		Mono::SetFieldValue(entityInstance->GetInstance(), monoClassField, buffer);
+	}
+	bool CSharpField::RuntimeAvailable()
+	{
+		return entityInstance->handle != 0;
 	}
 	void CSharpField::GetStoredValueInternal(void* value) const
 	{
@@ -22,11 +30,10 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpField::GetRuntimeValueInternal(void* value) const
 	{
 		uint32_t size = ScriptUtils::GetFieldSize(type);
-
+		Mono::GetFieldValue(entityInstance->GetInstance(), monoClassField, value);
 	}
 	void CSharpField::SetRuntimeValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(type);
-
+		Mono::SetFieldValue(entityInstance->GetInstance(), monoClassField, value);
 	}
 }

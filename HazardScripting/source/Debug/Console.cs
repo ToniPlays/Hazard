@@ -10,6 +10,7 @@ namespace Hazard
         public static void Error(object message) { Console_Error_Native(message); }
         public static void Critical(object message) { Console_Critical_Native(message); }
         public static void Trace(object message) { Console_Trace_Native(message); }
+        public static void Assert(bool success, object message) { if(!success) Console_Trace_Native(message); }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Console_Log_Native(object message);

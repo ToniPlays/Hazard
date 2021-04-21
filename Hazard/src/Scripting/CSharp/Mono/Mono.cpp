@@ -16,10 +16,8 @@ namespace Hazard::Scripting::CSharp {
 
 	MonoData Mono::data;
 
-	void Mono::InitAssembly(const char* path)
+	void Mono::InitAssembly()
 	{
-		HZR_CORE_INFO("Initializing mono from " + std::string(path));
-
 		mono_set_dirs("C:/Program Files/Mono/lib", "C:/Program Files/Mono/etc");
 		mono_set_assemblies_path("C:/dev/Hazard//vendor/mono/lib");
 	}
@@ -37,6 +35,10 @@ namespace Hazard::Scripting::CSharp {
 		LoadMonoAssebly(path);
 
 		ScriptRegistery::Init();
+	}
+	void Mono::Shutdown()
+	{
+		if (data.mono_domain != nullptr) {}
 	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
@@ -56,18 +58,19 @@ namespace Hazard::Scripting::CSharp {
 		}
 		return result;
 	}
-	MonoObject* Mono::CallMethod(MonoClass* monoClass, MonoMethod* method, void** params)
+	MonoObject* Mono::CallMethod(MonoObject* object, MonoMethod* method, void** params)
 	{
 		MonoObject* exception = nullptr;
-		MonoObject* result = mono_runtime_invoke(method, monoClass, params, &exception);
-		HZR_CORE_ASSERT((exception == nullptr), "Mono method failed {0}: {1}", mono_method_get_name(method));
+		MonoObject* result = mono_runtime_invoke(method, object, params, &exception);
 		return result;
 	}
 	bool Mono::ModuleExists(const char* name)
 	{
+		if (strcmp(name, "") == 0) return false;
+
 		std::string nameSpace, ClassName;
 		ScriptUtils::GetNames(name, nameSpace, ClassName);
-		return GetMonoClass(nameSpace.c_str(), ClassName.c_str());
+		return GetMonoClass(nameSpace.c_str(), ClassName.c_str()) != nullptr;
 	}
 	void Mono::LoadMonoAssebly(const char* path)
 	{
@@ -118,6 +121,10 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_class_from_name(data.app_image, nameSpace, name);
 	}
+	MonoObject* Mono::ObjectFromHandle(uint32_t handle)
+	{
+		return mono_gchandle_get_target(handle);
+	}
 	std::string Mono::GetFieldName(MonoClassField* field)
 	{
 		return mono_field_get_name(field);
@@ -148,6 +155,10 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_type_get_name(type);
 	}
+	const char* Mono::ClassName(MonoClass* monoClass)
+	{
+		return mono_class_get_name(monoClass);
+	}
 	MonoType* Mono::ReflectionToType(void* type)
 	{
 		return mono_reflection_type_get_type((MonoReflectionType*)type);
@@ -156,8 +167,20 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_reflection_type_from_name((char*)name.c_str(), data.core_image);
 	}
+	FieldVisibility Mono::GetVisibility(MonoClassField* field)
+	{
+		return FieldVisibility::Public;
+	}
 	MonoClassField* Mono::GetMonoField(MonoClass* monoClass, void** iter)
 	{
 		return mono_class_get_fields(monoClass, iter);
+	}
+	void Mono::SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
+	{
+		mono_field_set_value(object, field, buffer);
+	}
+	void Mono::GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
+	{
+		mono_field_get_value(object, field, buffer);
 	}
 }

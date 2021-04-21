@@ -24,7 +24,8 @@ namespace WindowElement {
 	{
 		if (!selectionContext.IsValid()) return;
 
-		if(ImGui::Button(ICON_FK_CUBE, { 35, 35 })) {
+		if(ImGui::Button(ICON_FK_CUBE, { 35, 35 })) 
+		{
 			
 		}
 		Layout::SameLine(0, 2);
@@ -38,6 +39,7 @@ namespace WindowElement {
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - textWidth + 72 / 2);
 		Layout::Text(tag.c_str());
+		Layout::Text(std::to_string(selectionContext).c_str());
 
 		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
 		DrawComponent<TransformComponent>(ICON_FK_ARROWS " Transform", selectionContext);

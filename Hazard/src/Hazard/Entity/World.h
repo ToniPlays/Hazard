@@ -6,11 +6,11 @@
 namespace Hazard::ECS {
 	class Entity;
 
-	class Scene {
+	class World {
 		friend class Entity;
 	public:
-		Scene(std::string file);
-		~Scene();
+		World(std::string file);
+		~World();
 
 		void Flush();
 
@@ -22,11 +22,22 @@ namespace Hazard::ECS {
 
 		void SetName(std::string name) { this->name = name.c_str(); }
 
-		std::tuple<bool, CameraComponent*, TransformComponent*> GetSceneCamera();
-		entt::registry& GetSceneRegistry() { return registry; }
+		std::tuple<bool, CameraComponent*, TransformComponent*> GetWorldCamera();
+		entt::registry& GetWorldRegistry() { return registry; }
 
-		std::string& GetSceneFile() { return file; }
+		std::string& GetWorldFile() { return file; }
 		std::string& GetName() { return name; }
+
+		template<typename T>
+		std::vector<std::tuple<uint32_t, T>> FindEntitiesWith() {
+			std::vector<std::tuple<uint32_t, T>> result;
+			auto view = registry.view<T>();
+			for (auto entity : view) {
+				auto comp = view.get<T>(entity);
+				result.push_back(std::tuple((uint32_t)entity, comp));
+			}
+			return result;
+		}
 		
 	private:
 		entt::registry registry;

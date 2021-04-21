@@ -11,23 +11,6 @@ extern "C"
 
 namespace Hazard::Scripting
 {
-	struct ScriptStats {
-		const char* name;
-		const char* assemblyPath;
-		
-	};
-
-	struct ScriptData
-	{
-		const char* name;
-		std::vector<PublicField*> fields;
-		MonoClass* scriptClass = nullptr;
-
-		ScriptData() = default;
-		ScriptData(const std::string& name, MonoClass* scriptClass) : name(name.c_str()), scriptClass(scriptClass) {};
-
-	};
-
 	class ScriptEngine {
 	public:
 
@@ -41,8 +24,11 @@ namespace Hazard::Scripting
 		virtual bool ModuleExists(const char* moduleName) = 0;
 	
 
-		virtual void InitializeEntity(uint32_t entity, std::string moduleName) = 0;
-		virtual void ClearEntity(uint32_t entity, std::string moduleName) = 0;
+		virtual std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) = 0;
+		virtual void InitializeEntity(uint32_t entity, const std::string& moduleName) = 0;
+		virtual void Instantiate(uint32_t entity, const std::string& moduleName) = 0;
+		virtual void ClearEntity(uint32_t entity, const std::string& moduleName) = 0;
+
 		//Entity creation
 		virtual void OnCreate(uint32_t entity) = 0;
 		virtual void OnStart(uint32_t entity) = 0;
@@ -55,11 +41,10 @@ namespace Hazard::Scripting
 		virtual void OnDisable(uint32_t entity) = 0;
 		virtual void OnDestroy(uint32_t entity) = 0;
 		virtual void OnCollision(uint32_t entity) = 0;
+
 	
 		virtual void OnApplicationClose() = 0;
 
 		virtual void Reload() = 0;
-		virtual ScriptStats& GetStats() = 0;
-		virtual ScriptData& GetData(uint32_t entity, const std::string& moduleName) = 0;
 	};
 }

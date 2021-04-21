@@ -24,15 +24,19 @@ namespace Hazard::Scripting {
 		static void OnBeginRuntime();
 		static void OnEndRuntime();
 
+		static void InitAllEntities();
+
 		static void InitEntity(ECS::Entity entity, ECS::ScriptComponent& component);
 		static void ClearEntity(ECS::Entity entity, ECS::ScriptComponent& component);
 		static void InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component);
 		static void ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component);
-		static ScriptData GetData(ScriptType type, ECS::Entity entity, std::string moduleName);
 
 		static bool ModuleExists(ScriptType type, const char* name) { 
 			return manager->ModuleExists(type, name); 
 		};
+		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) {
+			return manager->GetPublicFields(type, entity, moduleName);
+		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) {
 			return ECS::SceneCommand::GetEntity(entityID).GetComponent<T>();

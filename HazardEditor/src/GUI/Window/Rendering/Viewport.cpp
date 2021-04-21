@@ -26,9 +26,8 @@ namespace WindowElement {
 	}
 	void Viewport::OnWindowRender()
 	{
-		ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
-		auto&[found, camera, t] = scene.GetSceneCamera();
-
+		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
+		auto&[found, camera, t] = world.GetWorldCamera();
 
 		Rendering::RenderCommand::SetRenderTarget(renderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 

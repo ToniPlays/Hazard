@@ -7,14 +7,14 @@
 namespace Hazard::ECS::Loader {
 
 	//Deserialize scene editor
-	Scene* SceneSerializer::DeserializeEditor(const char* file)
+	World* SceneSerializer::DeserializeEditor(const char* file)
 	{
 		YAML::Node root = YAML::LoadFile(file);
-		Scene* scene = new Scene(file);
+		World* world = new World(file);
 
 		//Set scene name
-		if (!root["Scene"]) return scene;
-		scene->SetName(root["Scene"].as<std::string>());
+		if (!root["Scene"]) return world;
+		world->SetName(root["Scene"].as<std::string>());
 
 		//Loop entities
 		auto entities = root["Entities"];
@@ -22,7 +22,7 @@ namespace Hazard::ECS::Loader {
 			for (auto node : root["Entities"]) {
 				uint64_t uuid = node["Entity"].as<uint64_t>();
 
-				Entity entity = scene->CreateEntity("");
+				Entity entity = world->CreateEntity("");
 				//Deserialize components
 				TryDeserialize<TagComponent>("TagComponent", entity, node);
 				TryDeserialize<TransformComponent>("TransformComponent", entity, node);
@@ -33,7 +33,7 @@ namespace Hazard::ECS::Loader {
 				TryDeserialize<MeshComponent>("MeshComponent", entity, node);
 			}
 		}
-		return scene;
+		return world;
 	}
 	//Deserialize runtime file
 	Scene* SceneSerializer::DeserializeRuntime(const char* file)
@@ -42,15 +42,15 @@ namespace Hazard::ECS::Loader {
 		return nullptr;
 	}
 
-	bool SceneSerializer::SerializeEditor(const char* file, Scene& scene)
+	bool SceneSerializer::SerializeEditor(const char* file, World& world)
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		out << YAML::Key << "Scene" << YAML::Value << (scene.GetName() != "" ? scene.GetName() : "Untitled scene");
+		out << YAML::Key << "Scene" << YAML::Value << (world.GetName() != "" ? world.GetName() : "Untitled scene");
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
-		scene.GetSceneRegistry().each([&](auto entityID) {
-			Entity entity{ entityID, &scene };
+		world.GetWorldRegistry().each([&](auto entityID) {
+			Entity entity{ entityID, &world };
 			if (!entity) {
 				return;
 			}

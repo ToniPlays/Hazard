@@ -44,18 +44,18 @@ namespace Hazard::ECS {
 
 	Entity SceneCommand::GetEntity(uint32_t id)
 	{
-		return GetCurrentScene().GetEntity((entt::entity)id);
+		return GetCurrentWorld().GetEntity((entt::entity)id);
 	}
 
-	Scene& SceneCommand::GetCurrentScene()
+	World& SceneCommand::GetCurrentWorld()
 	{
-		return Application::GetModule<SceneHandler>().GetCurrentScene();
+		return Application::GetModule<SceneHandler>().GetCurrentWorld();
 	}
 
 	void SceneCommand::RenderScene(Rendering::Camera camera) {
 
 		Rendering::RenderCommand::Begin(camera);
-		GetCurrentScene().RenderAll();
+		GetCurrentWorld().RenderAll();
 		Rendering::RenderCommand::End();
 	}
 

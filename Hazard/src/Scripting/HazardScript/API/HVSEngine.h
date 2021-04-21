@@ -19,8 +19,10 @@ namespace Hazard::Scripting::Visual
 		void OnSceneLoaded() override;
 		void OnSceneUnloaded() override;
 
-		void InitializeEntity(uint32_t entity, std::string moduleName) override;
-		void ClearEntity(uint32_t entity, std::string moduleName) override;
+		std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) override;
+		void InitializeEntity(uint32_t entity, const std::string& moduleName) override;
+		void Instantiate(uint32_t entity, const std::string& moduleName);
+		void ClearEntity(uint32_t entity, const std::string& moduleName) override;
 
 		//Entity creation
 		void OnCreate(uint32_t entity) override;
@@ -38,10 +40,5 @@ namespace Hazard::Scripting::Visual
 		void OnApplicationClose() override;
 
 		void Reload() override;
-		ScriptStats& GetStats() override { return stats; };
-		ScriptData& GetData(uint32_t entity, const std::string& moduleName) override;
-
-	private:
-		ScriptStats stats;
 	};
 }

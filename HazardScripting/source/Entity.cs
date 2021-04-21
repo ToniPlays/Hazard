@@ -6,6 +6,10 @@ namespace Hazard
     public class Entity
     {
         protected Entity() { ID = 0; }
+        internal Entity(ulong ID)
+        {
+            this.ID = ID;
+        }
         ~Entity() { }
 
         public ulong ID { get; private set; }
@@ -13,18 +17,17 @@ namespace Hazard
             get => Get<TagComponent>().name;
             set => Get<TagComponent>().name = value;
         }
-        public bool active
-        {
-            get => Entity_Get_Active_Native(ID);
-            set => Entity_Set_Active_Native(ID, value);
-        }
+        public bool IsActive() { return Entity_GetActive_Native(ID); }
+        public void SetActive(bool active) { Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
         {
             if (!Has<T>()) 
                 return null;
 
-            T component = new T();
-            component.parent = this;
+            T component = new T
+            {
+                parent = this
+            };
 
             return component;
         }
@@ -32,14 +35,12 @@ namespace Hazard
             return Entity_HasComponent_Native(ID, typeof(T));
         }
         
-        internal Entity(ulong ID) {
-            this.ID = ID;
-        }
+        
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Entity_Get_Active_Native(ulong id);
+        private static extern bool Entity_GetActive_Native(ulong id);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Entity_Set_Active_Native(ulong id, bool active);
+        private static extern void Entity_SetActive_Native(ulong id, bool active);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Entity_HasComponent_Native(ulong id, Type type);
     }

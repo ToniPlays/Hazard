@@ -22,8 +22,8 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-		Hazard::ECS::Scene& scene = ECS::SceneCommand::GetCurrentScene();
-		auto&[found, cam, transform] = scene.GetSceneCamera();
+		Hazard::ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
+		auto&[found, cam, transform] = world.GetWorldCamera();
 
 		if (!found) {
 			const char* text = "No active camera";

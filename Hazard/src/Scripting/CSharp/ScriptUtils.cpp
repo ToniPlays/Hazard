@@ -66,16 +66,19 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoType* type = Mono::GetFieldType(field);
 
+		HZR_CORE_WARN(Mono::GetType(type));
+
 		switch (Mono::GetType(type))
 		{
 		case MONO_TYPE_R4:			return FieldType::Float;
 		case MONO_TYPE_I4:			return FieldType::Int;
 		case MONO_TYPE_U4:			return FieldType::UInt;
 		case MONO_TYPE_STRING:		return FieldType::String;
-		case MONO_TYPE_CLASS:
+		case MONO_TYPE_VALUETYPE:
 		{
 
 			char* name = Mono::GetTypeName(type);
+			HZR_CORE_WARN(name);
 			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
 			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
 			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
@@ -88,7 +91,8 @@ namespace Hazard::Scripting::CSharp {
 		std::vector<PublicField*> result;
 
 		for (MonoClassField* mono : fields) {
-			CSharpField* field = new CSharpField(Mono::GetFieldName(mono), ScriptUtils::GetFieldType(mono));
+		
+			CSharpField* field = new CSharpField(ScriptUtils::GetFieldType(mono));
 			result.emplace_back(field);
 		}
 

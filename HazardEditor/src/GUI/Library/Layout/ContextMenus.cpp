@@ -16,7 +16,7 @@ namespace WindowElement {
 			Layout::MenuItem("New scene", [&]() {});
 		});
 	}
-	void ContextMenus::HierarchyEntityMenu(Hazard::ECS::Scene& scene, void(*entityAdded)(Hazard::ECS::Entity))
+	void ContextMenus::HierarchyEntityMenu(Hazard::ECS::World& world, void(*entityAdded)(Hazard::ECS::Entity))
 	{
 		using namespace Hazard::ECS;
 		using namespace Hazard::Rendering;
@@ -24,43 +24,43 @@ namespace WindowElement {
 		Layout::ContextMenu([&]() {
 			Layout::Menu("Entity", [&]() {
 				Layout::MenuItem("Cube", [&]() {
-					Entity entity = scene.CreateEntity("Cube");
+					Entity entity = world.CreateEntity("Cube");
 					MeshComponent& component = entity.AddComponent<MeshComponent>();
 					component.mesh = MeshFactory::LoadCube();
 					entityAdded(entity);
 				});
 				Layout::MenuItem("Icosphere", [&]() {
-					Entity entity = scene.CreateEntity("Sphere");
+					Entity entity = world.CreateEntity("Sphere");
 					MeshComponent& component = entity.AddComponent<MeshComponent>();
 					component.mesh = MeshFactory::LoadSphere();
 					entityAdded(entity);
 				});
 				Layout::MenuItem("Mesh", [&]() {
-					Entity entity = scene.CreateEntity("Mesh");
+					Entity entity = world.CreateEntity("Mesh");
 					entity.AddComponent<MeshComponent>();
 					entityAdded(entity);
 				});
 			});
 			Layout::Menu("2D", [&]() {
 				Layout::MenuItem("Sprite", [&]() {
-					Entity entity = scene.CreateEntity("Sprite");
+					Entity entity = world.CreateEntity("Sprite");
 					entity.AddComponent<SpriteRendererComponent>();
 					entityAdded(entity);
 				});
 			});
 			Layout::Menu("Light", [&]() {
 				Layout::MenuItem("Skylight", [&]() {
-					Entity entity = scene.CreateEntity("Skylight");
+					Entity entity = world.CreateEntity("Skylight");
 					entity.AddComponent<SkyLightComponent>();
 					entityAdded(entity);
 				});
 				Layout::MenuItem("Directional light", [&]() {
-					Entity entity = scene.CreateEntity("Directional Light");
+					Entity entity = world.CreateEntity("Directional Light");
 					entity.AddComponent<DirectionalLightComponent>();
 					entityAdded(entity);
 				});
 				Layout::MenuItem("Point light", [&]() {
-					Entity entity = scene.CreateEntity("Point Light");
+					Entity entity = world.CreateEntity("Point Light");
 					entity.AddComponent<PointLightComponent>();
 					entityAdded(entity);
 					});

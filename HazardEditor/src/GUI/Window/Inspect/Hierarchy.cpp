@@ -50,15 +50,15 @@ namespace WindowElement {
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
-		Scene& scene = ECS::SceneCommand::GetCurrentScene();
-		Layout::Treenode(scene.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&scene, this]() {
-			scene.GetSceneRegistry().each([&](auto entityID) {
-				Entity entity{ entityID, &scene };
+		World& world = ECS::SceneCommand::GetCurrentWorld();
+		Layout::Treenode(world.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&world, this]() {
+			world.GetWorldRegistry().each([&](auto entityID) {
+				Entity entity{ entityID, &world };
 				DrawEntity(entity);
 			});
 		});
 
-		ContextMenus::HierarchyEntityMenu(scene, [](Entity entity) {
+		ContextMenus::HierarchyEntityMenu(world, [](Entity entity) {
 			Events::SelectionContextChange e(entity);
 			EditorView::GetInstance().OnEvent(e);
 		});
@@ -88,7 +88,7 @@ namespace WindowElement {
 		bool entityDeleted = false;
 		if (ImGui::BeginPopupContextItem()) {
 			Layout::MenuItem("Delete entity", [&entity]() {
-				entity.GetScene().GetSceneRegistry().destroy(entity);
+				entity.GetWorld().GetWorldRegistry().destroy(entity);
 				});
 			ImGui::EndPopup();
 		}
@@ -111,7 +111,7 @@ namespace WindowElement {
 	bool Hierarchy::KeyPressEvent(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == Key::Delete && selectionContext) {
-			selectionContext.GetScene().DestroyEntity(selectionContext);
+			selectionContext.GetWorld().DestroyEntity(selectionContext);
 			return true;
 		}
 		return false;

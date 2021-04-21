@@ -32,6 +32,6 @@ namespace WindowElement {
 		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size = { 0, 0 });
 		static bool ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size = { 0, 0 });
 
-		static bool PublicField(Scripting::PublicField* field);
+		static bool PublicField(const std::string& name, Scripting::PublicField* field);
 	};
 }

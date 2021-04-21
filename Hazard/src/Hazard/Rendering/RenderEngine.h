@@ -3,7 +3,7 @@
 #include "Hazard/Module/Module.h"
 #include "Platform/System/Window.h"
 
-#include "Hazard/Entity/Scene.h"
+#include "Hazard/Entity/World.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Sky/Skybox.h"
 

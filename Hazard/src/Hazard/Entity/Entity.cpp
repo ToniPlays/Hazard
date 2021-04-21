@@ -5,7 +5,7 @@
 
 namespace Hazard::ECS {
 
-	Entity::Entity(entt::entity handle, Scene* scene) : handle(handle), scene(scene)
+	Entity::Entity(entt::entity handle, World* world) : handle(handle), world(world)
 	{
 
 	}

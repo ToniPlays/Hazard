@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SceneHandler.h"
-#include "../Scene.h"
+#include "../World.h"
 #include "../Entity.h"
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
@@ -86,7 +86,7 @@ namespace Hazard::ECS::Loader {
 	public:
 
 		//Deserialize Editor
-		static Scene* DeserializeEditor(const char* file);
+		static World* DeserializeEditor(const char* file);
 		template<typename T>
 		static void Deserialize(Entity entity, YAML::Node node);
 		template<typename T>
@@ -153,7 +153,7 @@ namespace Hazard::ECS::Loader {
 
 		//Serialize
 		//Deserialize Editor
-		static bool SerializeEditor(const char* file, Scene& scene);
+		static bool SerializeEditor(const char* file, World& world);
 		static void SerializeEntityEditor(Entity entity, YAML::Emitter& out);
 		template<typename T>
 		static void SerializeComponentEditor(Entity entity, YAML::Emitter& out) {};

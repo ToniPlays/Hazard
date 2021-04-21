@@ -7,6 +7,7 @@
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 #include "GUI/EditorView.h"
+#include "Scripting/CSharp/CSharpEngine.h"
 
 using namespace WindowLayout;
 using namespace Hazard::Scripting;
@@ -27,17 +28,15 @@ namespace WindowElement {
 	}
 	void ScriptDebug::OnWindowRender()
 	{
-		auto engines = Application::GetModule<ScriptEngineManager>().GetScriptEngines();
-		for (std::pair<ScriptType, ScriptEngine*> engine : engines) {
-			Layout::Treenode(engine.second->GetStats().name, Appereance::Style::GetTreeNodeDefaultFlags(), [&]() {
-				Layout::Table(2);
-				Layout::SetColumnWidth(150);
-				Layout::Text("Assembly path");
-				Layout::TableNext();
-				Layout::Text(engine.second->GetStats().assemblyPath);
-
-				Layout::EndTable();
-			});
-		}
+		using namespace CSharp;
+		Layout::Table(2, true, "##Data");
+		Layout::Text("Assembly path");
+		Layout::TableNext();
+		Layout::Text("Assembly path goes BRRR");
+		Layout::TableNext();
+		Layout::Text("Script count");
+		Layout::TableNext();
+		Layout::Text("666");
+		Layout::EndTable();
 	}
 }

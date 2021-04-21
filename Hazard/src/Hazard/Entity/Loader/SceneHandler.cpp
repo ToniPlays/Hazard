@@ -28,7 +28,7 @@ namespace Hazard::ECS {
 	{
 		HZR_WARN("Loading file " + std::string(file));
 		if (type == Serialization::Editor) {
-			scene = Loader::SceneSerializer::DeserializeEditor(file);
+			world = Loader::SceneSerializer::DeserializeEditor(file);
 			return true;
 		}
 		return false;

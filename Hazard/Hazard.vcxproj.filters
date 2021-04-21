@@ -168,9 +168,6 @@
     <ClInclude Include="src\Hazard\Entity\Loader\SceneSerializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Scene.h">
-      <Filter>src\Hazard\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\SceneCommand.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
@@ -627,6 +624,9 @@
     <ClInclude Include="src\Scripting\CSharp\Script\ECS\EntityBindings.h" />
     <ClInclude Include="src\Scripting\CSharp\Script\ECS\TagComponentBindings.h" />
     <ClInclude Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.h" />
+    <ClInclude Include="src\Hazard\Entity\World.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -643,9 +643,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Loader\SceneSerializer.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Scene.cpp">
-      <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\SceneCommand.cpp">
       <Filter>src\Hazard\Entity</Filter>
@@ -769,5 +766,8 @@
     <ClCompile Include="src\Scripting\CSharp\Script\ECS\EntityBindings.cpp" />
     <ClCompile Include="src\Scripting\CSharp\Script\ECS\TagComponentBindings.cpp" />
     <ClCompile Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.cpp" />
+    <ClCompile Include="src\Hazard\Entity\World.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

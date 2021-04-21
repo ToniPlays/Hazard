@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Module/Module.h"
-#include "../Scene.h"
+#include "../World.h"
 
 namespace Hazard::ECS {
 
@@ -18,9 +18,9 @@ namespace Hazard::ECS {
 		//Load scene from file and deserialize with specified type
 		bool LoadScene(const char* file, Serialization type = Serialization::Runtime);
 		//Get current scene
-		Scene& GetCurrentScene() { return *scene; }
+		World& GetCurrentWorld() { return *world; }
 
 	private:
-		Scene* scene = nullptr;
+		World* world = nullptr;
 	};
 }
