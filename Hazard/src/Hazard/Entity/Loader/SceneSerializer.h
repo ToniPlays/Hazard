@@ -128,16 +128,17 @@ namespace Hazard::ECS::Loader {
 
 		template<>
 		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
-			ScriptComponent c;
-			c.m_ModuleName = comp["ModuleName"].as<std::string>();
-			entity.AddComponent(c);
+			std::string moduleName = comp["ModuleName"].as<std::string>();
+			entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& comp) {
+				comp.m_ModuleName = moduleName;
+			});
 		};
 		template<>
 		static void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string filename = comp["ModuleName"].as<std::string>();
-			VisualScriptComponent c;
-			c.m_Filename = filename;
-			entity.AddComponent(c);
+			entity.AddComponentWithCallback<VisualScriptComponent>([&](VisualScriptComponent& comp) {
+				comp.m_Filename = filename;
+			});
 		};
 		template<>
 		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {

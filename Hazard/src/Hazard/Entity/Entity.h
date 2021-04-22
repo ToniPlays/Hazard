@@ -15,7 +15,8 @@ namespace Hazard::ECS {
 		World& GetWorld() { return *m_World; }
 
 		template<typename T, typename... Args>
-		T& AddComponent(Args&&... args) {
+		T& AddComponent(Args&&... args) 
+		{
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
@@ -23,12 +24,14 @@ namespace Hazard::ECS {
 			m_World->OnComponentAdded<T>(*this, component);
 			return component;
 		}
-		template<typename T, typename... Args>
-		void AddComponent(T& component, Args&&... args) {
+		template<typename T, typename C, typename... Args>
+		void AddComponentWithCallback(C callback, Args&&... args)
+		{
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
+			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
+			callback(component);
 			m_World->OnComponentAdded<T>(*this, component);
 		}
 		template<typename T>

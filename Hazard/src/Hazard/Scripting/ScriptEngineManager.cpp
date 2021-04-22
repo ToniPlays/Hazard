@@ -10,7 +10,6 @@ namespace Hazard::Scripting {
 
 	ScriptEngineManager::ScriptEngineManager() : Module("ScriptManager")
 	{
-		HZR_CORE_INFO("ScriptEngineManager()");
 	}
 	void ScriptEngineManager::Init()
 	{

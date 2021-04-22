@@ -50,6 +50,7 @@ namespace WindowLayout {
 
 		template<typename T, typename UI, typename Prop>
 		static void ComponentTreenode(ECS::Entity entity, const char* name, UI uiCall, Prop propCall) {
+
 			const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
 			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
@@ -60,6 +61,7 @@ namespace WindowLayout {
 			bool open = ImGui::TreeNodeEx((void*)name, flags, name);
 			bool removed = false;
 			ImGui::PopStyleVar();
+
 
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f - 5);
 			if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))

@@ -19,7 +19,9 @@ namespace Hazard::ECS {
 	}
 	
 	template<>
-	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)  {}
+	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)  {
+		Scripting::ScriptCommand::InitEntity(entity, script);
+	}
 	template<>
 	void SceneCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script)  {}
 	template<typename T>

@@ -17,6 +17,10 @@ namespace Hazard
             get => Get<TagComponent>().name;
             set => Get<TagComponent>().name = value;
         }
+        public TransformComponent transform
+        {
+            get => Get<TransformComponent>();
+        }
         public bool IsActive() { return Entity_GetActive_Native(ID); }
         public void SetActive(bool active) { Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()

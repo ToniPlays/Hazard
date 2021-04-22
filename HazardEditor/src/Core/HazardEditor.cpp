@@ -37,7 +37,7 @@ void EditorApplication::PreInit()
 		HZR_ERROR("Valid project file required to run application");
 	}
 
-	PushModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
+	PushModule<ECS::SceneHandler>();
 
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
 		SetRootPath(manager.GetProject().absolutePath.c_str());
@@ -45,7 +45,8 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init() 
 {
-	
+	Project::ProjectManager manager = GetModule<Project::ProjectManager>();
+	GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
 }
 
 bool EditorApplication::OnEvent(Event& e)

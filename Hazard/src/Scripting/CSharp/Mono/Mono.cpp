@@ -31,9 +31,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::LoadRuntimeAssembly(const char* path)
 	{
-		HZR_CORE_INFO("Mono load runtime assembly");
 		LoadMonoAssebly(path);
-
 		ScriptRegistery::Init();
 	}
 	void Mono::Shutdown()

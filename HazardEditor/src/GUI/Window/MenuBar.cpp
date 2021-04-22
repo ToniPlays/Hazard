@@ -116,6 +116,10 @@ namespace WindowElement {
 			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
 			HZR_CORE_WARN("Saving scene");
 			return true;
+		case Key::R:
+			Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
+			HZR_CORE_WARN("Reloading assemblies");
+			return true;
 		}
 		return false;
 	}

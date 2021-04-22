@@ -71,6 +71,8 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::InitializeEntity(uint32_t entity, const std::string& moduleName)
 	{
+		if (!ModuleExists(moduleName.c_str())) return;
+
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 
@@ -114,7 +116,6 @@ namespace Hazard::Scripting::CSharp {
 				fieldMap.emplace(name, std::move(field));
 			}
 		}
-		HZR_CORE_INFO("Registered {0} with {1} fields", moduleName, fieldMap.size());
 	}
 	void CSharpEngine::Instantiate(uint32_t entity, const std::string& moduleName)
 	{

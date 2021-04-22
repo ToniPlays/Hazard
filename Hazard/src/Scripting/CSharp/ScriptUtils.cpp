@@ -78,7 +78,6 @@ namespace Hazard::Scripting::CSharp {
 		{
 
 			char* name = Mono::GetTypeName(type);
-			HZR_CORE_WARN(name);
 			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
 			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
 			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;

@@ -19,7 +19,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	void ConsoleBindings::Log(MonoObject* obj)
 	{
-		HZR_CORE_INFO("Loogging data");
 		ScriptCommand::SendDebugMessage(Severity::Debug, ScriptUtils::MonoObjectToChar(obj));
 	}
 	void ConsoleBindings::Info(MonoObject* obj)
