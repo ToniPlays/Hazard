@@ -12,7 +12,6 @@ namespace WindowElement {
 		virtual void OnFrameEnd() {};
 		virtual void OnMenuRender() {};
 		virtual void OnRender() {};
-
 		virtual bool OnEvent(Event& e) { return false; };
 	};
 }

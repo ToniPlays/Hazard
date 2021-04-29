@@ -6,41 +6,41 @@
 
 namespace Runtime {
 
-	bool SceneRuntimeHandler::sceneRunning = false;
-	bool SceneRuntimeHandler::scenePaused = false;
+	bool SceneRuntimeHandler::s_SceneRunning = false;
+	bool SceneRuntimeHandler::s_ScenePaused = false;
 
-	ScriptEngineManager* SceneRuntimeHandler::scriptManager;
+	ScriptEngineManager* SceneRuntimeHandler::s_ScriptManager;
 
 	void SceneRuntimeHandler::Init()
 	{
-		scriptManager = &Application::GetModule<ScriptEngineManager>();
+		s_ScriptManager = &Application::GetModule<ScriptEngineManager>();
 	}
 
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
 	{
-		sceneRunning = running;
+		s_SceneRunning = running;
 
-		if (sceneRunning) {
+		if (s_SceneRunning) {
 			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
 			ScriptCommand::OnBeginRuntime();
 		}
-		if (!sceneRunning) { 
+		if (!s_ScenePaused) {
 			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
 			ScriptCommand::OnEndRuntime(); 
 		}
-		if (scenePaused && sceneRunning) return;
-		scriptManager->SetActive(sceneRunning);
+		if (s_ScenePaused && s_SceneRunning) return;
+		s_ScriptManager->SetActive(s_SceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
 	{
-		scenePaused = paused;
-		if (!sceneRunning) return;
+		s_ScenePaused = paused;
+		if (!s_SceneRunning) return;
 
 		if (paused) {
 			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
 		}
 		else
 			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
-		scriptManager->SetActive(!paused);
+		s_ScriptManager->SetActive(!paused);
 	}
 }

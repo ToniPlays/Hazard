@@ -24,7 +24,7 @@ namespace WindowElement {
 	}
 	void MenuBar::OnMenuRender()
 	{
-		ImGui::BeginMenuBar();
+		ImGui::BeginMainMenuBar();
 
 		Layout::Menu("File", []() {
 			Layout::MenuItem("New", []() {});
@@ -98,7 +98,7 @@ namespace WindowElement {
 			});
 		});
 
-		ImGui::EndMenuBar();
+		ImGui::EndMainMenuBar();
 	}
 	bool MenuBar::OnEvent(Event& e)
 	{

@@ -9,7 +9,7 @@ namespace Project {
 
 	ProjectManager::ProjectManager() : Module::Module("ProjectManager")
 	{
-		std::cout << "ProjectManager()" << std::endl;
+
 	}
 
 	ProjectManager::~ProjectManager()
@@ -26,11 +26,11 @@ namespace Project {
 
 		YAML::Node root = YAML::LoadFile(file);
 		
-		project->name = root["project_name"].as<std::string>();
-		project->absolutePath = root["project_path"].as<std::string>();
-		project->startupScene = root["startup_scene"].as<std::string>();
+		project->m_Name = root["project_name"].as<std::string>();
+		project->m_AbsolutePath = root["project_path"].as<std::string>();
+		project->m_StartupScene = root["startup_scene"].as<std::string>();
 
-		projectData = project;
+		m_ProjectData = project;
 
 		return true;
 	}

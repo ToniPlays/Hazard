@@ -2,10 +2,13 @@
 
 #include "Hazard.h"
 #include "EditorWindow.h"
+#include "GUI/Window/Toolbar.h"
+#include "GUI/Window/MenuBar.h"
 
 using namespace Hazard;
 
 namespace WindowElement {
+
 	class EditorView : public Module::Module {
 	public:
 		EditorView();
@@ -20,15 +23,26 @@ namespace WindowElement {
 		template<typename T>
 		T& PushRenderable() {
 			T* w = new T();
-			elements.push_back(w);
+			m_Elements.push_back(w);
 			w->Init();
 			return *w;
 		} 
 		template<typename T>
 		T& GetRenderable() {
-			for (RenderableElement* e : elements) {
+			for (RenderableElement* e : m_Elements) {
 				if (dynamic_cast<T*>(e))
 					return (T&)*e;
+			}
+		}
+		template<typename T>
+		void RemoveRenderable() {
+			HZR_INFO("Removing renderable {0}", typeid(T).name());
+			for (size_t i = 0; i < m_Elements.size(); i++) {
+				RenderableElement* e = m_Elements[i];
+				if (dynamic_cast<T*>(e)) {
+					m_Elements.erase(m_Elements.begin() + i);
+					return;
+				}
 			}
 		}
 		template<typename T>
@@ -38,18 +52,20 @@ namespace WindowElement {
 		}
 		template<typename T>
 		static void SetWindowFocus() {
-			EditorWindow& window = static_cast<EditorWindow&>(instance->GetRenderable<T>());
+			EditorWindow& window = static_cast<EditorWindow&>(s_Instance->GetRenderable<T>());
 			ImGui::SetWindowFocus(window.GetTitle().c_str());
 		}
 
 	public:
-		static EditorView& GetInstance() { return *instance; }
+		static EditorView& GetInstance() { return *s_Instance; }
 	private:
-		std::vector<RenderableElement*> elements = std::vector<RenderableElement*>();
-		Rendering::RenderContext* context;
+		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
+		Rendering::RenderContext* m_Context;
 
 	private:
-		static EditorView* instance;
+		static EditorView* s_Instance;
+		MenuBar m_MenuBar;
+		Toolbar m_Toolbar;
 
 	private:
 		void BeginFrame();

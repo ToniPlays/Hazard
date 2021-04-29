@@ -25,7 +25,7 @@ namespace Editor {
 		glm::mat4 GetViewPprojection() const { return projectionMatrix * viewMatrix; }
 
 		glm::quat GetOrientation() const;
-		const void SetMousePosition(glm::vec2 pos) { initialMousePos = pos; }
+		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
 
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
@@ -33,7 +33,7 @@ namespace Editor {
 		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
-		const glm::vec3& GetPosition() const { return position; }
+		const glm::vec3& GetPosition() const { return m_Position; }
 
 	private:
 		float fov = 45.0f, aspectRatio = 1.778f, nearPlane = 0.1f, farPlane = 1000.0f;
@@ -41,9 +41,9 @@ namespace Editor {
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 
-		glm::vec3 position = { 0.0f, 0.0f, 0.0f };
-		glm::vec2 initialMousePos = { 0, 0 };
-		glm::vec3 focalPoint = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
+		glm::vec2 m_InitialMousePos = { 0, 0 };
+		glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
 
 		float pitch = 0, yaw = 0;
 		float distance = 10.0f;

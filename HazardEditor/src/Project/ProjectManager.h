@@ -14,9 +14,9 @@ namespace Project {
 		void Save();
 		void SaveCurrentScene();
 
-		HazardProject& GetProject() { return *projectData; }
+		HazardProject& GetProject() { return *m_ProjectData; }
 
 	private:
-		HazardProject* projectData;
+		HazardProject* m_ProjectData;
 	};
 }

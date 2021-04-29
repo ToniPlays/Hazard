@@ -18,13 +18,12 @@ using namespace Hazard;
 
 namespace WindowElement {
 
-	EditorView* EditorView::instance = nullptr;
+	EditorView* EditorView::s_Instance = nullptr;
 
 	EditorView::EditorView() : Module::Module("EditorViews")
 	{
-		instance = this;
-		elements = std::vector<RenderableElement*>();
-		std::cout << "EditorView()" << std::endl;
+		m_Elements = std::vector<RenderableElement*>();
+		s_Instance = this;
 	}
 	EditorView::~EditorView()
 	{
@@ -33,7 +32,7 @@ namespace WindowElement {
 	void EditorView::Init()
 	{
 		bool found = false;
-		context = &Hazard::Application::GetModule<Rendering::RenderContext>(found);
+		m_Context = &Hazard::Application::GetModule<Rendering::RenderContext>(found);
 		if (!found) {
 			SetActive(false);
 			HZR_WARN("EditorView unable to start without RenderContext");
@@ -57,8 +56,7 @@ namespace WindowElement {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
 
-
-		GLFWwindow* window = static_cast<GLFWwindow*>(context->GetWindow().GetNativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(m_Context->GetWindow().GetNativeWindow());
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 
@@ -66,7 +64,6 @@ namespace WindowElement {
 		config.MergeMode = true;
 		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 		io.Fonts->AddFontFromFileTTF("res/fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
-
 		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -95,12 +92,12 @@ namespace WindowElement {
 		PushRenderable<Console>();
 		PushRenderable<EngineAssets>();
 		PushRenderable<ScriptDebug>();
-
-		PushRenderable<Toolbar>();
 	}  
 	void EditorView::Render()
 	{
 		BeginFrame();
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		ImGui::Begin("WeDockBois", nullptr, window_flags);
 		{
 			static bool dockspaceOpen = true;
 			static bool opt_fullscreen_persistant = true;
@@ -108,7 +105,6 @@ namespace WindowElement {
 			
 			static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-			ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
 			if (opt_fullscreen)
 			{
@@ -126,13 +122,13 @@ namespace WindowElement {
 				window_flags |= ImGuiWindowFlags_NoBackground;
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-			ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+			ImGui::Begin("MyDockSpace", &dockspaceOpen, window_flags);
 			ImGui::PopStyleVar();
 
 			if (opt_fullscreen)
 				ImGui::PopStyleVar(2);
 
-			for (RenderableElement* element : elements) {
+			for (RenderableElement* element : m_Elements) {
 				element->OnMenuRender();
 			}
 
@@ -146,15 +142,15 @@ namespace WindowElement {
 			ImGui::End();
 		}
 
-		for (RenderableElement* element : elements) {
+		for (RenderableElement* element : m_Elements) {
 			element->OnRender();
 		}
-
+		ImGui::End();
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)
 	{
-		for (RenderableElement* element : elements) {
+		for (RenderableElement* element : m_Elements) {
 			if (element->OnEvent(e)) 
 				return true;
 		}
@@ -172,19 +168,19 @@ namespace WindowElement {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		for (RenderableElement* element : elements) {
+		for (RenderableElement* element : m_Elements) {
 			element->OnFrameBegin();
 		}
 
 	}
 	void EditorView::EndFrame()
 	{
-		for (RenderableElement* element : elements) {
+		for (RenderableElement* element : m_Elements) {
 			element->OnFrameEnd();
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2((float)context->GetWindow().GetWidth(), (float)context->GetWindow().GetHeight());
+		io.DisplaySize = ImVec2((float)m_Context->GetWindow().GetWidth(), (float)m_Context->GetWindow().GetHeight());
 
 		// Rendering 
 		ImGui::Render();

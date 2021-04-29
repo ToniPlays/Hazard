@@ -25,8 +25,8 @@ namespace Editor {
 	void EditorCamera::OnUpdate()
 	{
 		const glm::vec2& mouse = Input::GetMousePos();
-		glm::vec2 delta = (mouse - initialMousePos) * 0.003f;
-		initialMousePos = mouse;
+		glm::vec2 delta = (mouse - m_InitialMousePos) * 0.003f;
+		m_InitialMousePos = mouse;
 
 		if (Input::IsMouseButtonDown(Mouse::ButtonLeft)) {
 			MouseRotate(delta);
@@ -52,10 +52,10 @@ namespace Editor {
 
 	void EditorCamera::UpdateView()
 	{
-		position = CalculatePosition();
+		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
-		viewMatrix = glm::translate(glm::mat4(1.0f), position) * glm::toMat4(orientation);
+		viewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		viewMatrix = glm::inverse(viewMatrix);
 	}
 
@@ -70,8 +70,8 @@ namespace Editor {
 	void EditorCamera::MousePan(const glm::vec2& delta)
 	{
 		auto [xSpeed, ySpeed] = PanSpeed();
-		focalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
-		focalPoint += GetUpDirection() * delta.y * ySpeed * distance;
+		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
+		m_FocalPoint += GetUpDirection() * delta.y * ySpeed * distance;
 	}
 
 	void EditorCamera::MouseRotate(const glm::vec2& delta)
@@ -86,7 +86,7 @@ namespace Editor {
 		distance -= delta * ZoomSpeed();
 		if (distance < 1.0f)
 		{
-			focalPoint += GetForwardDirection();
+			m_FocalPoint += GetForwardDirection();
 			distance = 1.0f;
 		}
 	}
@@ -118,7 +118,7 @@ namespace Editor {
 
 	glm::vec3 EditorCamera::CalculatePosition() const
 	{
-		return focalPoint - GetForwardDirection() * distance;
+		return m_FocalPoint - GetForwardDirection() * distance;
 	}
 	glm::vec3 EditorCamera::GetUpDirection() const
 	{

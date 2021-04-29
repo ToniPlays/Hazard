@@ -3,6 +3,8 @@
 #include "MenuBar.h"
 #include "Toolbar.h"
 
+#include "GUI/Window/Editor/WelcomePopup.h"
+
 #include "Inspect/Properties.h"
 #include "Inspect/Hierarchy.h"
 #include "Inspect/FileView.h"

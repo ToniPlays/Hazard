@@ -40,13 +40,13 @@ void EditorApplication::PreInit()
 	PushModule<ECS::SceneHandler>();
 
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
-		SetRootPath(manager.GetProject().absolutePath.c_str());
+		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
 	
 }
 void EditorApplication::Init() 
 {
 	Project::ProjectManager manager = GetModule<Project::ProjectManager>();
-	GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().startupScene.c_str(), ECS::Serialization::Editor);
+	GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
 }
 
 bool EditorApplication::OnEvent(Event& e)

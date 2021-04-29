@@ -10,16 +10,16 @@ namespace Runtime {
 
 		static void Init();
 
-		static bool IsSceneRunning() { return sceneRunning; }
-		static bool IsScenePaused() { return scenePaused; }
+		static bool IsSceneRunning() { return s_SceneRunning; }
+		static bool IsScenePaused() { return s_ScenePaused; }
 
 		static void SetSceneRunning(bool running);
 		static void SetScenePaused(bool paused);
 
 	private:
-		static bool sceneRunning;
-		static bool scenePaused;
+		static bool s_SceneRunning;
+		static bool s_ScenePaused;
 
-		static ScriptEngineManager* scriptManager;
+		static ScriptEngineManager* s_ScriptManager;
 	};
 }

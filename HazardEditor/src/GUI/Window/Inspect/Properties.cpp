@@ -64,7 +64,8 @@ namespace WindowElement {
 	}
 	bool Properties::SelectionContextChange(Events::SelectionContextChange& e)
 	{
-		if(!IsLocked()) selectionContext = e.GetEntity();
+		if(!IsLocked()) 
+			selectionContext = e.GetEntity();
 		return false;
 	}
 }
