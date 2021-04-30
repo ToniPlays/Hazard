@@ -7,14 +7,9 @@ using namespace Hazard;
 
 namespace WindowElement {
 
-	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game")
-	{
+	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") {}
+	GameViewport::~GameViewport() {}
 
-	}
-	GameViewport::~GameViewport()
-	{
-
-	}
 	void GameViewport::Init()
 	{
 		SetActive(true);
@@ -22,7 +17,7 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-		Hazard::ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
+		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 		auto&[found, cam, transform] = world.GetWorldCamera();
 
 		if (!found) {

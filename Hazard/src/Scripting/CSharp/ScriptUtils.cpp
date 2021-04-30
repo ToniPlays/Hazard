@@ -66,8 +66,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoType* type = Mono::GetFieldType(field);
 
-		HZR_CORE_WARN(Mono::GetType(type));
-
 		switch (Mono::GetType(type))
 		{
 		case MONO_TYPE_R4:			return FieldType::Float;

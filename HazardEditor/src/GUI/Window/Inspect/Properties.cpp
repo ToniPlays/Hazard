@@ -28,10 +28,13 @@ namespace WindowElement {
 		{
 			
 		}
+		Layout::Tooltip("Gizmo maybe?");
 		Layout::SameLine(0, 2);
+
 		if (ImGui::Button(selectionContext.IsVisible() ? ICON_FK_EYE : ICON_FK_EYE_SLASH, { 35, 35 })) {
 			selectionContext.SetVisible(!selectionContext.IsVisible());
 		}
+		Layout::Tooltip("Toggle visibility");
 
 		auto tag = selectionContext.GetComponent<TagComponent>().m_Tag;
 		float textWidth = ImGui::CalcTextSize(tag.c_str()).x / 2;
@@ -39,7 +42,6 @@ namespace WindowElement {
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - textWidth + 72 / 2);
 		Layout::Text(tag.c_str());
-		Layout::Text(std::to_string(selectionContext).c_str());
 
 		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
 		DrawComponent<TransformComponent>(ICON_FK_ARROWS " Transform", selectionContext);

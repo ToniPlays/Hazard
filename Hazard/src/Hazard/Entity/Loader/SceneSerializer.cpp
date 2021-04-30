@@ -68,14 +68,14 @@ namespace Hazard::ECS::Loader {
 	void SceneSerializer::SerializeEntityEditor(Entity entity, YAML::Emitter& out)
 	{
 		out << YAML::BeginMap;
-		out << YAML::Key << "Entity" << YAML::Value << "43243234";
+		out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
 
-		SerializeComponentEditor<TagComponent>(entity, out);
-		SerializeComponentEditor<TransformComponent>(entity, out);
-		SerializeComponentEditor<SpriteRendererComponent>(entity, out);
-		SerializeComponentEditor<CameraComponent>(entity, out);
-		SerializeComponentEditor<ScriptComponent>(entity, out);
-		SerializeComponentEditor<MeshComponent>(entity, out);
+		TryDeserializeEditor<TagComponent>(entity, out);
+		TryDeserializeEditor<TransformComponent>(entity, out);
+		TryDeserializeEditor<SpriteRendererComponent>(entity, out);
+		TryDeserializeEditor<CameraComponent>(entity, out);
+		TryDeserializeEditor<ScriptComponent>(entity, out);
+		TryDeserializeEditor<MeshComponent>(entity, out);
 
 		out << YAML::EndMap;
 	}

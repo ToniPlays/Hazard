@@ -13,24 +13,14 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	Hierarchy::Hierarchy() : EditorWindow(ICON_FK_ALIGN_LEFT " Hierarchy")
-	{
-
-	}
-	Hierarchy::~Hierarchy()
-	{
-
-	}
-	void Hierarchy::Init()
-	{
-
-	}
+	Hierarchy::Hierarchy() : EditorWindow(ICON_FK_ALIGN_LEFT " Hierarchy") {}
+	Hierarchy::~Hierarchy() {}
+	void Hierarchy::Init() {}
 	bool Hierarchy::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Hierarchy::SelectionContextChange));
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::KeyPressEvent));
-		
 	}
 	void Hierarchy::OnWindowRender()
 	{

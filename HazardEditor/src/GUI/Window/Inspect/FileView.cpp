@@ -29,17 +29,25 @@ namespace WindowElement {
 		using namespace Appereance;
 		Color onColor = Color::FromHex("#404040");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
+		Layout::SameLine(0, 5);
 
-		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_FOLDER, offColor, onColor, Style::GetStyleColor(ColorType::Info), false, { 24, 24 })) {}
+		Layout::Tooltip("Create Folder");
 		Layout::SameLine(0, 5);
+
 		if (Input::ButtonColorChange(ICON_FK_ADDRESS_BOOK, offColor, onColor, Style::GetStyleColor(ColorType::Debug), false, { 24, 24 })) {}
+		Layout::Tooltip("Create script");
 		Layout::SameLine(0, 5);
+
 		if (Input::ButtonColorChange(ICON_FK_GLOBE, offColor, onColor, Style::GetStyleColor(ColorType::Error), false, { 24, 24 })) {}
+		Layout::Tooltip("Material");
 		Layout::SameLine(0, 5);
+
 		if (Input::ButtonColorChange(ICON_FK_REFRESH, offColor, onColor, Style::GetStyleColor(ColorType::Warning), false, { 24, 24 })) {
 			UpdateFileTree();
 		}
+
+		Layout::Tooltip("Update");
 		Layout::SameLine(0, 25);
 		Layout::Text(currentFolder.path.c_str());
 

@@ -21,43 +21,48 @@ namespace WindowElement {
 		instance.Print(severity, message);
 	}
 
-	Console::Console() : EditorWindow(ICON_FK_COMPASS " Console")
-	{
-
-	}
-	Console::~Console()
-	{
-
-	}
+	Console::Console() : EditorWindow(ICON_FK_COMPASS " Console") {}
+	Console::~Console() {}
 	void Console::Init()
 	{
 		void(*callback)(Severity, std::string) = PrintToConsole;
 		ScriptCommand::SetDebugCallback(callback);
-
 	}
 	void Console::OnWindowRender()
 	{
 		using namespace Appereance;
 		ImGuiStyle& style = Style::GetStyle();
+
 		if (Input::Button("Clear")) {
 			ClearLog();
 		}
+
 		Layout::SameLine(0, 5);
 		Input::DynamicToggleButton(ICON_FK_TIMES, ICON_FK_CHECK, Style::GetStyleColor(ColorType::Background), Style::GetStyleColor(ColorType::Primary), scrollLockEnable);
+		Layout::Tooltip("Toggle scrolling");
 
 		Color enableColor = Style::GetStyleColor(ColorType::Background);
 		Color disableColor = Color::FromHex("#803333");
 
 		Layout::SameLine(0, ImGui::GetContentRegionAvailWidth() - 200);
 		Input::ToggleButtonColorChange(ICON_FK_PAPERCLIP,				disableColor, enableColor, Style::GetStyleColor(ColorType::Trace), traceEnable);
+		Layout::Tooltip("Trace");
+
 		Layout::SameLine(0, 5);
 		Input::ToggleButtonColorChange(ICON_FK_INFO_CIRCLE,				disableColor, enableColor, Style::GetStyleColor(ColorType::Info), infoEnable);
+		Layout::Tooltip("Info");
+
 		Layout::SameLine(0, 5);
 		Input::ToggleButtonColorChange(ICON_FK_BUG,						disableColor, enableColor, Style::GetStyleColor(ColorType::Debug), debugEnable);
+		Layout::Tooltip("Debug");
+
 		Layout::SameLine(0, 5);
 		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_TRIANGLE,	disableColor, enableColor, Style::GetStyleColor(ColorType::Warning), warningEnable);
+		Layout::Tooltip("Warning");
+
 		Layout::SameLine(0, 5);
 		Input::ToggleButtonColorChange(ICON_FK_EXCLAMATION_CIRCLE,		disableColor, enableColor, Style::GetStyleColor(ColorType::Error), errorEnable);
+		Layout::Tooltip("Error");
 
 		ImGui::BeginChild(ICON_FK_LIST" Console", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 

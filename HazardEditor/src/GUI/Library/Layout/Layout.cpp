@@ -31,6 +31,20 @@ namespace WindowLayout {
     {
         ImGui::Columns(1); 
     }
+    bool Layout::Tooltip(const char* text)
+    {
+        bool hovered = false;
+        if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.1f)
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 30.0f);
+            ImGui::TextUnformatted(text);
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+            hovered = true;
+        }
+        return hovered;
+    }
     void Layout::Text(const char* text)
     {
         ImGui::Text(text);

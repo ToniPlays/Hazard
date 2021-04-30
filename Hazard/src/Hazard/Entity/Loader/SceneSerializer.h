@@ -67,7 +67,9 @@ namespace YAML {
 namespace Hazard::ECS::Loader {
 
 	template<typename T>
-	static void Convert(YAML::Emitter& out, T v) {};
+	static void Convert(YAML::Emitter& out, T v) {
+		static_assert(false);
+	};
 
 	template<>
 	static void Convert(YAML::Emitter& out, glm::vec3 v) {
@@ -151,13 +153,21 @@ namespace Hazard::ECS::Loader {
 
 		//Serialize
 		//Deserialize Editor
+
+		template<typename T>
+		static void TryDeserializeEditor(Entity entity, YAML::Emitter& out)
+		{
+			if (entity.HasComponent<T>()) {
+				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
+			}
+		}
 		static bool SerializeEditor(const char* file, World& world);
 		static void SerializeEntityEditor(Entity entity, YAML::Emitter& out);
 		template<typename T>
-		static void SerializeComponentEditor(Entity entity, YAML::Emitter& out) {};
+		static void SerializeComponentEditor(Entity entity, T& component, YAML::Emitter& out) {};
 
 		template<>
-		static void SerializeComponentEditor<TagComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<TagComponent>(Entity entity, TagComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<TagComponent>()) return;
 			auto tag = entity.GetComponent<TagComponent>().m_Tag;
@@ -167,7 +177,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::EndMap;
 		}
 		template<>
-		static void SerializeComponentEditor<TransformComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<TransformComponent>(Entity entity, TransformComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<TransformComponent>()) return;
 			auto& c = entity.GetComponent<TransformComponent>();
@@ -181,13 +191,13 @@ namespace Hazard::ECS::Loader {
 
 		}
 		template<>
-		static void SerializeComponentEditor<SpriteRendererComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<SpriteRendererComponent>()) return;
 			auto& c = entity.GetComponent<SpriteRendererComponent>();
 
 			out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
-			out << YAML::Key << "Tint" << YAML::Value; Convert(out, c.m_Tint);
+			out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)c.m_Tint);
 
 			if (c.m_Texture != nullptr) {
 				if(std::string(c.m_Texture->GetFile()) != "White")
@@ -196,7 +206,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::EndMap;
 		}
 		template<>
-		static void SerializeComponentEditor<CameraComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<CameraComponent>(Entity entity, CameraComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<CameraComponent>()) return;
 			auto& c = entity.GetComponent<CameraComponent>();
@@ -206,7 +216,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::EndMap;
 		}
 		template<>
-		static void SerializeComponentEditor<ScriptComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<ScriptComponent>(Entity entity, ScriptComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<ScriptComponent>()) return;
 			auto& c = entity.GetComponent<ScriptComponent>();
@@ -215,7 +225,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::EndMap;
 		}
 		template<>
-		static void SerializeComponentEditor<MeshComponent>(Entity entity, YAML::Emitter& out)
+		static void SerializeComponentEditor<MeshComponent>(Entity entity, MeshComponent& component, YAML::Emitter& out)
 		{
 			if (!entity.HasComponent<MeshComponent>()) return;
 			auto& c = entity.GetComponent<MeshComponent>();

@@ -96,15 +96,12 @@ namespace WindowElement {
 	void EditorView::Render()
 	{
 		BeginFrame();
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		ImGui::Begin("WeDockBois", nullptr, window_flags);
 		{
 			static bool dockspaceOpen = true;
 			static bool opt_fullscreen_persistant = true;
 			bool opt_fullscreen = opt_fullscreen_persistant;
-			
 			static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
 			if (opt_fullscreen)
 			{
@@ -145,7 +142,6 @@ namespace WindowElement {
 		for (RenderableElement* element : m_Elements) {
 			element->OnRender();
 		}
-		ImGui::End();
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)

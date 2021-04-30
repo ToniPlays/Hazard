@@ -34,7 +34,7 @@ namespace WindowElement {
 			Layout::MenuItem("Reset", [&component]() {
 				component.m_Tag = "New entity";
 				});
-		});	
+		});
 	}
 
 	template<>

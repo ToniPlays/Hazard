@@ -12,6 +12,17 @@ namespace WindowLayout {
 		static void SetColumnWidth(float width);
 		static float GetColumnWidth();
 		static void EndTable();
+		static bool Tooltip(const char* text);
+		static void Separator() { ImGui::Separator(); }
+		static void Text(const char* text);
+		static void TextColored(const char* text, Color color);
+		static void NextLine(float height = 15.0f);
+		static void ItemWidth(float width);
+		static void PushWidths(uint16_t cols);
+		static void PopWidths(uint16_t cols);
+		static void PopWidth();
+		static void MaxWidth();
+		static float GetMaxWidth();
 
 		template<typename T>
 		static void IDGroup(const char* id, T callback) {
@@ -62,12 +73,12 @@ namespace WindowLayout {
 			bool removed = false;
 			ImGui::PopStyleVar();
 
-
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f - 5);
 			if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
+
 			if (ImGui::BeginPopup("ComponentSettings")) {
 				propCall();
 				Layout::Separator();
@@ -106,16 +117,6 @@ namespace WindowLayout {
 				callback();
 		}
 
-		static void Separator() { ImGui::Separator(); }
-		static void Text(const char* text);
-		static void TextColored(const char* text, Color color);
-		static void NextLine(float height = 15.0f);
-		static void ItemWidth(float width);
-		static void PushWidths(uint16_t cols);
-		static void PopWidths(uint16_t cols);
-		static void PopWidth();
-		static void MaxWidth();
-		static float GetMaxWidth();
 
 	};
 }

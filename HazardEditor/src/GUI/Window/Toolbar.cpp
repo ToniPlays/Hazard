@@ -95,10 +95,11 @@ namespace WindowElement {
 		if(Input::ButtonColorChange(ICON_FK_SLIDERS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
 			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
 		}
+		Layout::Tooltip("VSync");
 		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
-			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
-		}
+		//if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
+		//	Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
+		//}
 
 		ImGui::End();
 	}
@@ -113,7 +114,7 @@ namespace WindowElement {
 		bool isShift = Hazard::Input::IsKeyDown(Key::LeftShift);
 
 		if (e.GetKeyCode() == Key::R) {
-			HZR_INFO("Now you should reload assemblies");
+			Application::GetModule<ScriptEngineManager>().ReloadAll();
 			return true;
 		}
 		return false;
