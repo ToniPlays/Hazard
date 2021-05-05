@@ -14,14 +14,9 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	MenuBar::MenuBar()
-	{
+	MenuBar::MenuBar() {}
+	MenuBar::~MenuBar() {}
 
-	}
-	MenuBar::~MenuBar()
-	{
-
-	}
 	void MenuBar::OnMenuRender()
 	{
 		ImGui::BeginMainMenuBar();
@@ -74,8 +69,9 @@ namespace WindowElement {
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
-			
-			
+				Layout::MenuItem("Shader editor", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<ShaderEditorWindow>(true);
+					});
 			});
 			Layout::Menu("Debug", [&]() {
 				Layout::MenuItem("Console", [&]() {

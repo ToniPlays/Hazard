@@ -28,18 +28,15 @@ namespace WindowElement {
 	}
 	void Toolbar::OnRender()
 	{
-
-		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>().GetGizmo();
 		using namespace Appereance;
-
-		ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
-		ImGui::SetWindowSize(ImVec2{ ImGui::GetWindowWidth(), 50.0f });
-		ImGui::Begin("Toolbar", false, flags);
-
-		static bool b = false;
 
 		Color onColor = Color::FromHex("#404040");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
+
+		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>().GetGizmo();
+		static bool b = false;
+
+		ImGui::Begin("##Toolbar");
 
 		ImGui::SameLine(5);
 		if(Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), gizmo.GetType() == Gizmo::Translate, { 28, 28 })) {
@@ -97,9 +94,9 @@ namespace WindowElement {
 		}
 		Layout::Tooltip("VSync");
 		Layout::SameLine(0, 5);
-		//if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
-		//	Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
-		//}
+		if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), false, { 28, 28 })) {
+			ImGui::SaveIniSettingsToDisk("imgui.ini");
+		}
 
 		ImGui::End();
 	}

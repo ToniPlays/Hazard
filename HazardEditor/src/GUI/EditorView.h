@@ -29,6 +29,7 @@ namespace WindowElement {
 		} 
 		template<typename T>
 		T& GetRenderable() {
+
 			for (RenderableElement* e : m_Elements) {
 				if (dynamic_cast<T*>(e))
 					return (T&)*e;
@@ -36,7 +37,7 @@ namespace WindowElement {
 		}
 		template<typename T>
 		void RemoveRenderable() {
-			HZR_INFO("Removing renderable {0}", typeid(T).name());
+
 			for (size_t i = 0; i < m_Elements.size(); i++) {
 				RenderableElement* e = m_Elements[i];
 				if (dynamic_cast<T*>(e)) {

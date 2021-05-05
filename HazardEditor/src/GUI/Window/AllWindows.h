@@ -17,4 +17,7 @@
 #include "Debug/Console.h"
 #include "Debug/ScriptDebug.h"
 
+#include "ShaderEditor/ShaderEditorWindow.h"
+
+
 #include "TransformationGizmo.h"

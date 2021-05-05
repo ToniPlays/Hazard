@@ -173,6 +173,8 @@
     </ClInclude>
     <ClInclude Include="src\GUI\EditorPopup.h" />
     <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h" />
+    <ClInclude Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.h" />
+    <ClInclude Include="src\GUI\Library\Layout\Dockspace.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -270,5 +272,7 @@
     </ClCompile>
     <ClCompile Include="src\GUI\EditorPopup.cpp" />
     <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp" />
+    <ClCompile Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.cpp" />
+    <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp" />
   </ItemGroup>
 </Project>
