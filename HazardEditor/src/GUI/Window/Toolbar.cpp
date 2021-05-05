@@ -9,6 +9,7 @@
 #include "Core/SceneRuntimeHandler.h"
 
 #include "Gui/Window/Rendering/Viewport.h"
+#include "Gui/Window/Rendering/GameViewport.h"
 
 using namespace WindowLayout;
 
@@ -20,8 +21,8 @@ namespace WindowElement {
 	}
 	Toolbar::~Toolbar()
 	{
-	}
 
+	}
 	void Toolbar::Init()
 	{
 		Runtime::SceneRuntimeHandler::Init();
@@ -73,17 +74,24 @@ namespace WindowElement {
 		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
 		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
+
 		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), sceneRunning, { 28, 28 })) {
 			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
+
+			if(!sceneRunning)
+				EditorView::SetWindowFocus<GameViewport>();
+			else 
+				EditorView::SetWindowFocus<Viewport>();
 		}
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), scenePaused, { 28, 28 })) {
 			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
+
 		}
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
-			if (Runtime::SceneRuntimeHandler::IsSceneRunning())
+			if (sceneRunning && scenePaused)
 				Application::GetModule<ScriptEngineManager>().Update();
 		}
 

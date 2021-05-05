@@ -19,7 +19,10 @@ namespace Hazard::ECS::Loader {
 		//Loop entities
 		auto entities = root["Entities"];
 		if (entities) {
-			for (auto node : root["Entities"]) {
+			
+			for (int i = entities.size() - 1; i >= 0; i--) {
+
+				auto node = entities[i];
 				uint64_t uuid = node["Entity"].as<uint64_t>();
 
 				Entity entity = world->CreateEntity("");

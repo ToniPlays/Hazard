@@ -32,7 +32,8 @@ namespace Hazard::ECS {
 
         auto& entityID = world.m_Registry.view<TagComponent>();
         
-        for (auto entity : entityID) {
+        for (int i = entityID.size() - 1; i >= 0; i--) {
+            auto entity = entityID[i];
 
             TagComponent& c = world.m_Registry.get<TagComponent>(entity);
             UID uid = c.m_ID;
@@ -43,9 +44,17 @@ namespace Hazard::ECS {
 
         CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
         CopyComponent<TransformComponent>(world.m_Registry, m_Registry, entityMap);
+
+        CopyComponent<ScriptComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<VisualScriptComponent>(world.m_Registry, m_Registry, entityMap);
+
         CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
         CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
         CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
+
+        CopyComponent<SkyLightComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<DirectionalLightComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
     }
 
     World::~World() {}

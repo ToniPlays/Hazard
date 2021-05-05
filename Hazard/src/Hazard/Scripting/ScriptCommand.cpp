@@ -21,10 +21,12 @@ namespace Hazard::Scripting {
 		auto view = current.GetWorldRegistry().view<ScriptComponent>();
 
 		for (auto entity : view) {
-			Entity e { entity, &current };
-			if (!e.IsVisible()) continue;
 
+			Entity e = current.GetEntity(entity);
+
+			HZR_CORE_INFO("Entity {0} {1}", entity, e.GetComponent<TagComponent>().m_Tag);
 			auto& c = e.GetComponent<ScriptComponent>();
+
 			if (ModuleExists(ScriptType::CSharpScript, c.m_ModuleName.c_str())) {
 				s_manager->Instantiate(ScriptType::CSharpScript, e, c.m_ModuleName);
 			}
@@ -38,8 +40,8 @@ namespace Hazard::Scripting {
 	{	
 		auto& scene = ECS::SceneCommand::GetCurrentWorld();
 		for (auto [id, component] : scene.FindEntitiesWith<ECS::ScriptComponent>()) {
-			if (s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str()));
-			s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
+			if (s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str()))
+				s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
 		}
 	}
 	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::ScriptComponent& component)

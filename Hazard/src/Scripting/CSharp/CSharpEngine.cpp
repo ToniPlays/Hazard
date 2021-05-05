@@ -73,6 +73,8 @@ namespace Hazard::Scripting::CSharp {
 	{
 		if (!ModuleExists(moduleName.c_str())) return;
 
+		HZR_CORE_INFO("Init entity {0} {1}", entity, moduleName);
+
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 
@@ -102,7 +104,7 @@ namespace Hazard::Scripting::CSharp {
 		while ((iter = Mono::GetMonoField(scriptClass.monoClass, &ptr))) {
 
 			std::string name = Mono::GetFieldName(iter);
-			//if (Mono::GetVisibility(iter) != FieldVisibility::Public) continue;
+			if (Mono::GetVisibility(iter) != FieldVisibility::Public) continue;
 
 			FieldType fieldType = ScriptUtils::GetFieldType(iter);
 

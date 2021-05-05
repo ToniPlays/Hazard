@@ -33,7 +33,6 @@ namespace Runtime {
 			World* runtimeWorld = new World(*s_EditorWorld);
 			handler.SetWorld(*runtimeWorld);
 
-			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
 			ScriptCommand::OnBeginRuntime();
 		}
 		else 
@@ -43,7 +42,6 @@ namespace Runtime {
 		}
 
 		if (!s_ScenePaused) {
-			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
 			ScriptCommand::OnEndRuntime(); 
 		}
 		if (s_ScenePaused && s_SceneRunning) return;

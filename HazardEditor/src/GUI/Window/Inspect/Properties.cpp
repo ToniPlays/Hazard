@@ -35,8 +35,8 @@ namespace WindowElement {
 			selectionContext.SetVisible(!selectionContext.IsVisible());
 		}
 		Layout::Tooltip("Toggle visibility");
-
-		auto tag = selectionContext.GetComponent<TagComponent>().m_Tag;
+		auto& c = selectionContext.GetComponent<TagComponent>();
+		auto tag = c.m_Tag + "\n" + std::to_string(selectionContext);
 		float textWidth = ImGui::CalcTextSize(tag.c_str()).x / 2;
 
 		ImGui::SameLine();
