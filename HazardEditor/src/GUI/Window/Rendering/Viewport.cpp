@@ -29,10 +29,11 @@ namespace WindowElement {
 		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 		auto&[found, camera, t] = world.GetWorldCamera();
 
-		Rendering::RenderCommand::SetRenderTarget(renderTexture);
-		ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()), 
-			editorCamera.GetPosition(), camera->bgRenderer));
-
+		if (found) {
+			Rendering::RenderCommand::SetRenderTarget(renderTexture);
+			ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()),
+				editorCamera.GetPosition(), camera->bgRenderer));
+		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();

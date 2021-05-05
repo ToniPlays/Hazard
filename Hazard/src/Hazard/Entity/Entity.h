@@ -58,6 +58,8 @@ namespace Hazard::ECS {
 
 			return m_World->GetWorldRegistry().valid(m_Handle);
 		}
+
+		entt::entity GetHandle() { return m_Handle; }
 		bool IsVisible() { return GetComponent<TagComponent>().m_Visible; }
 		void SetVisible(bool visible) { GetComponent<TagComponent>().m_Visible = visible; }
 

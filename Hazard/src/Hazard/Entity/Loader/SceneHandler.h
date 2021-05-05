@@ -13,6 +13,8 @@ namespace Hazard::ECS {
 		bool LoadScene(const char* file, Serialization type = Serialization::Runtime);
 
 		World& GetCurrentWorld() { return *m_World; }
+		void SetWorld(World& world) { m_World = &world; }
+
 	private:
 		World* m_World = nullptr;
 	};

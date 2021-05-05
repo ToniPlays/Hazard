@@ -21,5 +21,6 @@ namespace Runtime {
 		static bool s_ScenePaused;
 
 		static ScriptEngineManager* s_ScriptManager;
+		static ECS::World* s_EditorWorld;
 	};
 }

@@ -16,9 +16,7 @@ namespace Hazard::Module {
 		std::string GetName() { return m_Name; };
 		bool GetActive() { return m_IsActive; }
 		void SetActive(bool active) { m_IsActive = active; }
-
 	private:
-
 		std::string m_Name;
 		bool m_IsActive = false;
 	};

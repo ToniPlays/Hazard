@@ -16,6 +16,7 @@ namespace WindowElement {
 	Hierarchy::Hierarchy() : EditorWindow(ICON_FK_ALIGN_LEFT " Hierarchy") {}
 	Hierarchy::~Hierarchy() {}
 	void Hierarchy::Init() {}
+
 	bool Hierarchy::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);

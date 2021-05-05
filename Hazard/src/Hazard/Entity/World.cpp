@@ -8,12 +8,46 @@
 
 namespace Hazard::ECS {
 
+
+    template<typename T>
+    static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
+    {
+        auto components = src.view<T>();
+        for (auto srcEntity : components)
+        {
+            entt::entity destEntity = entityMap.at(src.get<TagComponent>(srcEntity).m_ID);
+
+            auto& srcComponent = src.get<T>(srcEntity);
+            auto& destComponent = dest.emplace_or_replace<T>(destEntity, srcComponent);
+        }
+    }
+
     World::World(std::string file) : m_File(file) {}
 
     World::World(World& world)
     {
+        m_File = std::string(world.GetWorldFile() + " (copy)").c_str();
+        m_Name = world.GetName() + " (copy)";
         std::unordered_map<UID, entt::entity> entityMap;
+
+        auto& entityID = world.m_Registry.view<TagComponent>();
+        
+        for (auto entity : entityID) {
+
+            TagComponent& c = world.m_Registry.get<TagComponent>(entity);
+            UID uid = c.m_ID;
+
+            Entity e = CreateEntity(uid, c.m_Tag.c_str());
+            entityMap[uid] = e.GetHandle();
+        }
+
+        CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<TransformComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
+        CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
     }
+
     World::~World() {}
 
     void World::RenderAll() {
@@ -57,7 +91,12 @@ namespace Hazard::ECS {
     }
     Entity World::CreateEntity(UID id, const char* name)
     {
-        return Entity();
+        Entity e = { m_Registry.create(), this };
+        TagComponent& tag = e.AddComponent<TagComponent>();
+        tag.m_ID = id;
+        tag.m_Tag = name;
+        e.AddComponent<TransformComponent>();
+        return e;
     }
 
     Entity World::GetEntity(entt::entity id)

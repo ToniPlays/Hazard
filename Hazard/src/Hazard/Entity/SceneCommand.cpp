@@ -17,7 +17,6 @@ namespace Hazard::ECS {
 	{
 		static_assert(false);
 	}
-	
 	template<>
 	void SceneCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)  {
 		Scripting::ScriptCommand::InitEntity(entity, script);

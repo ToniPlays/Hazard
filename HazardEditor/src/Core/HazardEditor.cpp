@@ -4,6 +4,7 @@
 #include "GUI/EditorView.h"
 #include "Project/ProjectManager.h"
 #include "GUI/Window/AllWindows.h"
+#include "SceneRuntimeHandler.h"
 
 EditorApplication::EditorApplication()
 {
@@ -47,6 +48,7 @@ void EditorApplication::Init()
 {
 	Project::ProjectManager manager = GetModule<Project::ProjectManager>();
 	GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
+	Runtime::SceneRuntimeHandler::Init();
 }
 
 bool EditorApplication::OnEvent(Event& e)

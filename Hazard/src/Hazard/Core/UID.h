@@ -20,7 +20,7 @@ namespace std {
 	template<>
 	struct hash<Hazard::UID> {
 
-		std::size_t operator() (const Hazard::UID& id) {
+		std::size_t operator() (const Hazard::UID& id) const {
 			return hash<uint64_t>()((uint64_t)id);
 		}
 	};
