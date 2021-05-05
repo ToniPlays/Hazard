@@ -23,6 +23,7 @@ namespace Hazard::Rendering {
     {
         RenderCommand::GetStats().vertices += m_Vertices.size();
         uint32_t size = m_MeshVAO->GetIndexBuffer()->GetCount();
+        
         RenderCommand::DrawIndexed(m_MeshVAO, size);
     }
     void Mesh::GenerateArrays()
@@ -36,6 +37,7 @@ namespace Hazard::Rendering {
             { ShaderDataType::Float3, "v_normals" },
             { ShaderDataType::Float2, "v-textCoords" }
             });
+
         buffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
         m_MeshVAO->AddBuffer(buffer);
 

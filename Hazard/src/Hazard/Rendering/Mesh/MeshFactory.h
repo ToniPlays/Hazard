@@ -31,8 +31,10 @@ namespace Hazard::Rendering {
 		static void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);
 		static void ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data);
 
-		static void GetMaterials(const aiScene* scene, Material& material);
-		static void LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName);
+		static void TraverseNode(aiNode* node, MeshData& data, const glm::mat4 parentTransform = glm::mat4(1.0f), uint32_t level = 0);
+
+		static void GetMaterials(const aiScene* scene, Material& material, const char* path);
+		static void LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName, const char* path);
 
 	private:
 		static std::vector<Mesh*> m_LoadedMeshes;
