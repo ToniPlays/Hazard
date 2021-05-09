@@ -4,22 +4,13 @@
 //Platform selection
 #ifdef HZR_PLATFORM_WINDOWS
 	#define HZR_PLATFORM "Windows"
-	#if _WIN64
-		#define HAZARD_SYSTEM_BIT "x64"
-	#elif _WIN32
-		#define HAZARD_SYSTEM_BIT "x86"
-	#endif
+		#if _WIN64
+			#define HAZARD_SYSTEM_BIT "x64"
+		#elif _WIN32
+			#define HAZARD_SYSTEM_BIT "x86"
+		#endif
 
-	#if HZR_DYNAMIC_LINK
-		#ifdef HZR_BUILD_DLL
-			#define HAZARD_API __declspec(dllexport)
-		#else
-		#define HAZARD_API __declspec(dllimport)
-		#endif
-	#else
-		#define HAZARD_API
-		#endif
-	#else 
+#else 
 	#error Hazard only supports windows!
 #endif // HRD_PLATFORM_WINDOWS
 
@@ -39,6 +30,7 @@
 
 #define BIT(x) (1 << x)
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
+#define PATH_TO(x) FileSystem::getPath
 
 //Accessible globally
 #include <iostream>

@@ -35,7 +35,7 @@ namespace Hazard {
 
 	//Actual event class
 
-	class HAZARD_API Event {
+	class  Event {
 
 		friend class EventDispathcer;
 	public:

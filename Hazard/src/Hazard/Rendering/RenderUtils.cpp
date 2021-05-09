@@ -112,29 +112,14 @@ namespace Hazard::Rendering {
 
 #pragma region Textures
 	template<>
-	RenderTexture* RenderUtils::Create<RenderTexture>() {
+	RenderTexture* RenderUtils::Create<RenderTexture>(TextureSpecs specs) {
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLRenderTexture();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLRenderTexture(specs);
 		}
 		return nullptr;
 	}
 
-	template<>
-	Texture2D* RenderUtils::Create<Texture2D>(glm::vec2 size, const char* name) {
-
-		Texture2D* texture = (Texture2D*)Find<Texture>(name);
-
-		if (texture != nullptr)
-			return texture;
-
-		switch (s_Api)
-		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(size, name); break;
-		}
-		s_Textures.push_back(texture);
-		return texture;
-	}
 	template<>
 	Texture2D* RenderUtils::Create<Texture2D>(const char* path) {
 
@@ -145,7 +130,22 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path); break;
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path, TextureSpecs()); break;
+		}
+		s_Textures.push_back(texture);
+		return texture;
+	}
+	template<>
+	Texture2D* RenderUtils::Create<Texture2D>(const char* name, TextureSpecs params) {
+
+		Texture2D* texture = (Texture2D*)Find<Texture>(name);
+
+		if (texture != nullptr)
+			return texture;
+
+		switch (s_Api)
+		{
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(name, params); break;
 		}
 		s_Textures.push_back(texture);
 		return texture;
@@ -156,7 +156,15 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture();
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(TextureSpecs());
+		}
+		return nullptr;
+	}
+	template<>
+	CubemapTexture* RenderUtils::Create<CubemapTexture>(TextureSpecs specs) {
+		switch (s_Api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(specs);
 		}
 		return nullptr;
 	}
@@ -180,10 +188,18 @@ namespace Hazard::Rendering {
 		return nullptr;
 	}
 	template<>
-	CubemapTexture* RenderUtils::Create<CubemapTexture>(const char* file) {
+	EnvinronmentMap* RenderUtils::Create<EnvinronmentMap>(const char* file) {
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLCubemapTexture(file);
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLEnvironmentMap(file, TextureSpecs());
+		}
+		return nullptr;
+	}
+	template<>
+	EnvinronmentMap* RenderUtils::Create<EnvinronmentMap>(const char* file, TextureSpecs specs) {
+		switch (s_Api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLEnvironmentMap(file, specs);
 		}
 		return nullptr;
 	}
@@ -192,7 +208,12 @@ namespace Hazard::Rendering {
 	//Initialize white texture for batch rendering
 	void RenderUtils::Init()
 	{
-		Texture2D* texture = Create<Texture2D>(glm::vec2{ 1, 1 }, "White");
+		TextureSpecs params;
+		params.width = 1;
+		params.height = 1;
+		params.diskImage = false;
+
+		Texture2D* texture = Create<Texture2D>("White", params);
 		uint32_t data = 0xFFFFFFFF;
 		texture->SetData(&data, sizeof(uint32_t));
 	}

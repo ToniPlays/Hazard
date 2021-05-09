@@ -94,7 +94,7 @@ namespace WindowElement {
 		folderData.subfolders.clear();
 		folderData.path = rootPath;
 		folderData.name = "Assets";
-		Utility::FolderData data = Utility::File::GetFolderFiles(rootPath.c_str());
+		FolderData data = File::GetFolderFiles(rootPath.c_str());
 
 		for (std::filesystem::directory_entry folder : data.folders) {
 			FolderViewData subData;
@@ -108,7 +108,7 @@ namespace WindowElement {
 	std::vector<FolderViewData> FileView::UpdateFolderFiles(FolderViewData& parent)
 	{
 		std::vector<FolderViewData> result;
-		for (std::filesystem::directory_entry folder : Utility::File::GetFolderFiles(parent.path.c_str()).folders) {
+		for (std::filesystem::directory_entry folder : File::GetFolderFiles(parent.path.c_str()).folders) {
 			FolderViewData subData;
 			subData.path = folder.path().string();
 			subData.name = folder.path().filename().string();

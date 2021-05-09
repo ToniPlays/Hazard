@@ -2,21 +2,22 @@
 
 #include <hzrpch.h>
 #include "OpenGLCubemapTexture.h"
+#include "../OpenGLUtils.h"
 #include <glad/glad.h>
 
 #include <stb_image.h>
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLCubemapTexture::OpenGLCubemapTexture() : CubemapTexture("")
+	OpenGLCubemapTexture::OpenGLCubemapTexture(TextureSpecs& spec) : CubemapTexture("")
 	{
+
+		m_Spec = spec;
 		glGenTextures(1, &m_TextureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
+
+		AllocateFree();
 		SetFilters();
-	}
-	OpenGLCubemapTexture::OpenGLCubemapTexture(const char* file) : CubemapTexture(file)
-	{
-		HZR_CORE_ERROR("Not implemented");
 	}
 	OpenGLCubemapTexture::OpenGLCubemapTexture(std::vector<std::string>& faces) : CubemapTexture(faces[0].c_str())
 	{
@@ -27,12 +28,16 @@ namespace Hazard::Rendering::OpenGL {
 		for (uint8_t i = 0; i < faces.size(); i++) {
 			SetTexture(i, faces[i]);
 		}
-
 		SetFilters();
 	}
 	OpenGLCubemapTexture::OpenGLCubemapTexture(const std::string& name, const std::string& extension) : CubemapTexture(name.c_str())
 	{
+
+		glGenTextures(1, &m_TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
+
 		std::vector<std::string> sides;
+
 		sides.push_back(name + "right" + extension);
 		sides.push_back(name + "left" + extension);
 		sides.push_back(name + "top" + extension);
@@ -49,24 +54,21 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		glDeleteTextures(1, &m_TextureID);
 	}
-	unsigned int OpenGLCubemapTexture::GetWidth() const
-	{
-		return 0;
-	}
-	unsigned int OpenGLCubemapTexture::GetHeight() const
-	{
-		return 0;
-	}
 	void OpenGLCubemapTexture::SetTexture(int side, const std::string& file)
 	{
 		int w, h, channels;
 		stbi_set_flip_vertically_on_load(false);
 		unsigned char* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
+
 		uint32_t internalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
 		uint32_t dataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
+
+		HZR_CORE_ASSERT(data, "Image could not be loaded");
+
 		if (data) {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, internalFormat, w, h, 0, dataFormat, GL_UNSIGNED_BYTE, data);
 		}
+
 		stbi_image_free(data);
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
@@ -79,10 +81,20 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLCubemapTexture::SetFilters()
 	{
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	void OpenGLCubemapTexture::AllocateFree()
+	{
+		GLuint dataType = OpenGLUtils::DataTypeToOpenGLType(m_Spec.dataType);
+
+		for (uint8_t i = 0; i < 6; i++) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, dataType, 
+				m_Spec.width, m_Spec.height, 0, GL_RGB, GL_FLOAT, nullptr);
+		}
 	}
 }

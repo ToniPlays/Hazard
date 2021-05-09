@@ -261,9 +261,6 @@
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
       <Filter>src\Hazard\Rendering\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Sky\Skybox.h">
       <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClInclude>
@@ -629,6 +626,9 @@
     <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderDataType.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Textures\EnvironmentMap.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -693,9 +693,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
       <Filter>src\Hazard\Rendering\Sky</Filter>
@@ -773,5 +770,7 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\UID.cpp" />
     <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLUtils.cpp" />
   </ItemGroup>
 </Project>

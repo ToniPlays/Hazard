@@ -46,7 +46,7 @@ namespace WindowElement {
 				Application::GetModule<ScriptEngineManager>().ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
-				Application::GetModule<EditorView>().GetRenderable<FileView>().UpdateFileTree();
+				Application::GetModule<EditorView>().GetRenderable<FileView>()->UpdateFileTree();
 				});
 		});
 		Layout::Menu("Window", []() {
@@ -71,6 +71,9 @@ namespace WindowElement {
 			Layout::Menu("Rendering", [&]() {
 				Layout::MenuItem("Shader editor", [&]() {
 					Application::GetModule<EditorView>().SetLayerActive<ShaderEditorWindow>(true);
+					});
+				Layout::MenuItem("Environment", [&]() {
+					Application::GetModule<EditorView>().SetLayerActive<WorldEnvironmentData>(true);
 					});
 			});
 			Layout::Menu("Debug", [&]() {

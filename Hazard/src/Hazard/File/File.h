@@ -4,9 +4,12 @@
 #include <vector>
 #include <filesystem>
 
+#include <string>
+#include <cstdlib>
+
 using std::filesystem::directory_iterator;
 
-namespace Hazard::Utility {
+namespace Hazard {
 
 	struct FolderData {
 		std::string path;
@@ -29,6 +32,5 @@ namespace Hazard::Utility {
 		static std::string GetFileExtension(const std::string& file);
 
 		static FolderData GetFolderFiles(const std::string& folder);
-
 	};
 }

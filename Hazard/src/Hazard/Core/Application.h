@@ -5,7 +5,7 @@
 
 namespace Hazard {
 
-	class HAZARD_API Application {
+	class Application {
 		friend class HazardLoop;
 	public:
 		Application() {};

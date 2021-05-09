@@ -6,7 +6,7 @@
 namespace Hazard::Rendering {
 
 
-	class HAZARD_API VertexArray {
+	class  VertexArray {
 	public:
 		virtual ~VertexArray() = default;
 		virtual void Bind() const = 0;

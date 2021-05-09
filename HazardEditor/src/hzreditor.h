@@ -5,6 +5,6 @@
 #include <locale> 
 #include <sstream>
 
-#include "Core/EditorEvent.h";
+#include "Core/EditorEvent.h"
 
 #include "GUI/Library/FontAwesome.h"

@@ -12,6 +12,7 @@
 #include "Rendering/Viewport.h"
 #include "Rendering/GameViewport.h"
 #include "Rendering/Performance.h"
+#include "Rendering/WorldEnvironmentData.h"
 
 #include "Debug/EngineAssets.h"
 #include "Debug/Console.h"

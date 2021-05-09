@@ -2,6 +2,7 @@
 
 #include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
+#include "Hazard/Rendering/Textures/EnvironmentMap.h"
 
 #include "Hazard/Rendering/Shader/Shader.h"
 #include "Hazard/RenderContext/RenderContext.h"

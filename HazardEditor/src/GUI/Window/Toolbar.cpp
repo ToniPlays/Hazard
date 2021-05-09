@@ -34,7 +34,7 @@ namespace WindowElement {
 		Color onColor = Color::FromHex("#404040");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 
-		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>().GetGizmo();
+		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>()->GetGizmo();
 		static bool b = false;
 
 		ImGui::Begin("##Toolbar");

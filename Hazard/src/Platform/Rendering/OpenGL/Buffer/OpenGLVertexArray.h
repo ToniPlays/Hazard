@@ -7,7 +7,7 @@
 
 
 namespace Hazard::Rendering::OpenGL {
-	class HAZARD_API OpenGLVertexArray : public VertexArray {
+	class  OpenGLVertexArray : public VertexArray {
 	public:
 
 		OpenGLVertexArray();

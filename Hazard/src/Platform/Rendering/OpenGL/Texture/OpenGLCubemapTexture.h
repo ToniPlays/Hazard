@@ -3,28 +3,33 @@
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
 
 namespace Hazard::Rendering::OpenGL {
+
 	class OpenGLCubemapTexture : public CubemapTexture {
 	public:
-		OpenGLCubemapTexture();
-		OpenGLCubemapTexture(const char* file);
+		OpenGLCubemapTexture(TextureSpecs& spec);
 		OpenGLCubemapTexture(std::vector<std::string>& faces);
 		OpenGLCubemapTexture(const std::string& name, const std::string& extension);
 
-		virtual ~OpenGLCubemapTexture();
+		~OpenGLCubemapTexture();
 
-		virtual unsigned int GetWidth() const;
-		virtual unsigned int GetHeight() const;
+		uint32_t GetWidth() const { return 0; };
+		uint32_t GetHeight() const { return 0; };
 
-		virtual void SetTexture(int side, const std::string& file);
+		void SetTexture(int side, const std::string& file);
 
-		virtual void Bind(uint32_t slot = 0) const;
-		virtual void Unbind(uint32_t slot = 0) const;
+		void Bind(uint32_t slot = 0) const;
+		void Unbind(uint32_t slot = 0) const;
 
-		virtual uint32_t GetID() const { return m_TextureID; };
+		TextureSpecs& GetSpec() { return m_Spec; };
+		uint32_t GetID() const { return m_TextureID; };
+
 	private:
 		void SetFilters();
-	private:
+		void AllocateFree();
 
+	private:
+		TextureSpecs m_Spec;
 		uint32_t m_TextureID;
+
 	};
 }

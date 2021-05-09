@@ -8,7 +8,7 @@
 
 namespace Hazard::Rendering {
 
-	class HAZARD_API Shader {
+	class  Shader {
 
 	public:
 		Shader() {};

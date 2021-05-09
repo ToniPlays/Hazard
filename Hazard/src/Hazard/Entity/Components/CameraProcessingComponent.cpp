@@ -11,10 +11,6 @@ namespace Hazard::ECS {
 		m_Type = t;
 		RecalculateProjection(m_Width, m_Height);
 	}
-	void CameraComponent::SetBackground(Background t)
-	{
-		m_BackgroundType = t;
-	}
 	void CameraComponent::SetFov(float fov)
 	{
 		this->m_Fov = fov;

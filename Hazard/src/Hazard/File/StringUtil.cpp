@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "StringUtil.h"
 
-namespace Hazard::Utility {
+namespace Hazard {
 
     std::vector<std::string> StringUtil::SplitString(std::string string, char delim) {
 

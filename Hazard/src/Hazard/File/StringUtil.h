@@ -1,7 +1,7 @@
 
 #include "Hazard/Core/Core.h"
 
-namespace Hazard::Utility {
+namespace Hazard {
 	class StringUtil {
 
 	public:

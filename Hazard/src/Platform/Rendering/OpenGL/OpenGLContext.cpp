@@ -10,8 +10,13 @@ namespace Hazard::Rendering {
 		return new OpenGL::OpenGLContext((Window*)window, (WindowProps*)props);
 	}
 
+
 	namespace OpenGL
 	{
+		void APIENTRY OnError(GLenum source, GLenum type, unsigned int id, GLenum severity,
+			GLsizei length, const char* message, const void* userParam) {
+			HZR_CORE_ERROR("[OpenGL]: " + std::string(message));
+		}
 
 		ErrorCallback OpenGLContext::s_Callback;
 
@@ -44,9 +49,9 @@ namespace Hazard::Rendering {
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			/*glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-			glDebugMessageCallback(OpenGLContext::OnError, this);*/
+			glDebugMessageCallback(OnError, this);
 		}
 
 		void OpenGLContext::ClearFrame(glm::vec4 clearColor) const

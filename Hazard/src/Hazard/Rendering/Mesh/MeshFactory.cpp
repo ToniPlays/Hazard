@@ -20,14 +20,14 @@ namespace Hazard::Rendering {
 		return result;
 	}
 
-	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords 
+	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords
 		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
 
 	std::vector<Mesh*> MeshFactory::m_LoadedMeshes;
 
 	Mesh* MeshFactory::LoadMesh(const std::string& file)
 	{
-		std::string absoluteFile = Utility::File::GetFileAbsolutePath(file);
+		std::string absoluteFile = File::GetFileAbsolutePath(file);
 
 		for (uint32_t i = 0; i < m_LoadedMeshes.size(); i++) {
 			if (m_LoadedMeshes[i]->GetFile() == file)
@@ -182,7 +182,7 @@ namespace Hazard::Rendering {
 
 			HZR_CORE_INFO("Getting " + std::string(typeName) + " from " + parentPath.string());
 
-			RenderUtils::Create<Texture2D>(texturePath.c_str());
+			//RenderUtils::Create<Texture2D>(texturePath.c_str());
 		}
 	}
 	Mesh* MeshFactory::LoadCube()

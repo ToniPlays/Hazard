@@ -10,7 +10,7 @@
 #include "GLFW/glfw3native.h"
 #include "StringUtil.h"
 
-namespace Hazard::Utility {
+namespace Hazard {
 
 	std::string File::OpenFileDialog(const std::string& filters) {
 		OPENFILENAMEA ofn;

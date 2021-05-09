@@ -35,7 +35,7 @@ namespace Hazard::Rendering {
 
 	using ErrorCallback = std::function<void(ErrorData&)>;
 
-	class HAZARD_API GraphicsContext {
+	class  GraphicsContext {
 	public:
 		virtual ~GraphicsContext() = default;
 

@@ -28,12 +28,13 @@ namespace WindowElement {
 			return *w;
 		} 
 		template<typename T>
-		T& GetRenderable() {
+		T* GetRenderable() {
 
 			for (RenderableElement* e : m_Elements) {
 				if (dynamic_cast<T*>(e))
-					return (T&)*e;
+					return (T*)e;
 			}
+			return nullptr;
 		}
 		template<typename T>
 		void RemoveRenderable() {
@@ -49,11 +50,11 @@ namespace WindowElement {
 		template<typename T>
 		void SetLayerActive(bool active) 
 		{
-			GetRenderable<T>().SetActive(active);
+			GetRenderable<T>()->SetActive(active);
 		}
 		template<typename T>
 		static void SetWindowFocus() {
-			EditorWindow& window = static_cast<EditorWindow&>(s_Instance->GetRenderable<T>());
+			EditorWindow& window = static_cast<EditorWindow&>(*s_Instance->GetRenderable<T>());
 			ImGui::SetWindowFocus(window.GetTitle().c_str());
 		}
 

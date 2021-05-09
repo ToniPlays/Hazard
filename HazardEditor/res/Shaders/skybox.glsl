@@ -1,5 +1,6 @@
 #type Vertex
 #version 330 core
+
 layout(location = 0) in vec3 v_position;
 
 uniform mat4 viewProjection;
@@ -12,7 +13,6 @@ void main() {
 	gl_Position = pos.xyww;
 }
 
-
 #type Fragment
 #version 330 core
 
@@ -20,8 +20,18 @@ in vec3 texCoords;
 
 uniform samplerCube SkyboxCubemap;
 
+const float gamma = 0.6;
+
 out vec4 color;
 
+vec4 mapHDR(vec3 color) {
+	vec3 mapped = color / (color + vec3(1.0));
+
+	mapped = pow(mapped, vec3(1.0 / gamma));
+
+	return vec4(mapped, 1.0);
+}
+
 void main() {
-	color = texture(SkyboxCubemap, texCoords);
+	color = mapHDR(texture(SkyboxCubemap, texCoords).rgb);
 }

@@ -10,7 +10,7 @@ namespace WindowElement {
 
 	}
 
-	EditorWindow::EditorWindow(const char* title) : title(title)
+	EditorWindow::EditorWindow(const char* title) : m_Title(title)
 	{
 		
 	}
@@ -23,9 +23,9 @@ namespace WindowElement {
 	void EditorWindow::OnRender()
 	{
 		if (GetActive()) {
-			ImGui::Begin(title.c_str(), &active);
-			focused = ImGui::IsWindowFocused();
-			hovered = ImGui::IsWindowHovered();
+			ImGui::Begin(m_Title.c_str(), &m_Active);
+			m_Focused = ImGui::IsWindowFocused();
+			m_Hovered = ImGui::IsWindowHovered();
 
 			OnWindowRender();
 			ImGui::End();

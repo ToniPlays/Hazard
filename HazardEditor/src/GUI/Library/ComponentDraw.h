@@ -95,29 +95,12 @@ namespace WindowElement {
 				}
 				ImGui::EndCombo();
 			}
-			Layout::TableNext();
+			/*Layout::TableNext();
 			Layout::Text("Color");
 			Layout::TableNext();
-			Layout::MaxWidth();
+			Layout::MaxWidth();*/
 
 			const char* backgroundTypeString[] = { "Solid", "Skybox" };
-			const char* currentBackgroundTypeString = backgroundTypeString[(int)component.GetBackgroundType()];
-
-			if (ImGui::BeginCombo("##backgroundType", currentBackgroundTypeString)) {
-				for (int i = 0; i < 2; i++) {
-					bool isSelected = currentBackgroundTypeString == backgroundTypeString[i];
-
-					if (ImGui::Selectable(backgroundTypeString[i], isSelected))
-					{
-						currentBackgroundTypeString = backgroundTypeString[i];
-						component.SetBackground((ECS::Background)i);
-					}
-
-					if (isSelected)
-						ImGui::SetItemDefaultFocus();
-				}
-				ImGui::EndCombo();
-			}
 
 			Layout::TableNext();
 			Layout::Text("Fov");
@@ -314,7 +297,7 @@ namespace WindowElement {
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
 			if (Input::Button("Mesh")) {
-				std::string file = Hazard::Utility::File::OpenFileDialog("");
+				std::string file = Hazard::File::OpenFileDialog("");
 				if (file != "") 
 					component.m_Mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
 			}

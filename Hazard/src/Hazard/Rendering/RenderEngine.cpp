@@ -5,6 +5,7 @@
 #include "Hazard/Rendering/RenderUtils.h"
 #include "Mesh/VertexData.h"
 #include "RenderCommand.h"
+#include "Hazard/File/File.h"
 
 #include "Mesh/MeshFactory.h"
 
@@ -21,14 +22,25 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::PreInit()
 	{
-		
+
 	}
 	void RenderEngine::Init()
 	{
+		RenderCommand::Init();
 		m_Renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		m_Renderer2D->Init(35000);
 
-		RenderCommand::Init();
+		TextureSpecs specs;
+		specs.width = 4096;
+		specs.height = 4096;
+
+		m_Skybox = new Skybox();
+		m_EnvironmentMap = RenderUtils::Create<EnvinronmentMap>(File::GetFileAbsolutePath("res/textures/modern_buildings_8k.hdr").c_str(), specs);
+		CubemapTexture* skyboxTexture = RenderUtils::Create<CubemapTexture>(File::GetFileAbsolutePath("res/textures/sea-").c_str(), ".jpg");
+		m_Skybox->SetCubemapTexture(m_EnvironmentMap);
+
+		//m_EnvironmentMap->GenerateIrradiance();
+		//m_EnvironmentMap->GeneratePreFilter();
 	}
 	void RenderEngine::Close()
 	{
@@ -39,12 +51,12 @@ namespace Hazard::Rendering {
 	{
 		RenderCommand::ResetStats();
 		m_RenderTarget->Bind();
-		RenderContextCommand::ClearFrame(camera.renderer->ClearColor());
+		RenderContextCommand::ClearFrame(camera.clearColor);
 
 		m_ViewProjection = camera.projection * glm::inverse(camera.view);
 		m_CameraPosition = camera.position;
-		
-		camera.renderer->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
+
+		m_Skybox->Render(camera.projection * glm::inverse(glm::mat4(glm::mat3(camera.view))));
 
 		m_Renderer2D->BeginScene(m_ViewProjection);
 		m_Renderer2D->BeginBatch();

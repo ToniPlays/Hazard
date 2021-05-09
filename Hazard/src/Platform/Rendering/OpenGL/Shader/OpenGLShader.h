@@ -8,7 +8,7 @@
 #include "glm/glm.hpp"
 
 namespace Hazard::Rendering::OpenGL {
-	class HAZARD_API OpenGLShader : public Shader {
+	class  OpenGLShader : public Shader {
 	public:
 		OpenGLShader(std::string path);
 		~OpenGLShader();

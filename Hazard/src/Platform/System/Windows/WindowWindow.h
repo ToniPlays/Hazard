@@ -7,7 +7,7 @@
 
 namespace Hazard::Rendering {
 
-	class HAZARD_API WindowsWindow : public Window {
+	class WindowsWindow : public Window {
 	public:
 		WindowsWindow(WindowProps& props);
 		virtual ~WindowsWindow();

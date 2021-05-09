@@ -125,7 +125,6 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::Flush()
 	{
-		m_Data.QuadShader->Bind();
 
 		if (m_Data.QuadIndexCount == 0)
 			return;
@@ -136,6 +135,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
 			m_Data.TextureSlots[i]->Bind(i);
 
+		m_Data.QuadShader->Bind();
 		RenderCommand::DrawIndexed(m_Data.QuadVertexArray, m_Data.QuadIndexCount);
 	}
 }

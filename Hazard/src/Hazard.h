@@ -16,7 +16,6 @@
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/RenderUtils.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
-#include "Hazard/Rendering/Sky/BackgroundRenderer.h"
 
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"

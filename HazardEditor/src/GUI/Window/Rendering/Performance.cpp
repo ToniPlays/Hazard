@@ -69,17 +69,17 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Quads");
 		Layout::TableNext();
-		Layout::Text(Utility::StringUtil::FormatNumber(stats.quads).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.quads).c_str());
 
 		Layout::TableNext();
 		Layout::Text("Vertices");
 		Layout::TableNext();
-		Layout::Text(Utility::StringUtil::FormatNumber(stats.vertices).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.vertices).c_str());
 
 		Layout::TableNext();
 		Layout::Text("Indices");
 		Layout::TableNext();
-		Layout::Text(Utility::StringUtil::FormatNumber(stats.indices).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.indices).c_str());
 
 		Layout::EndTable();
 	}

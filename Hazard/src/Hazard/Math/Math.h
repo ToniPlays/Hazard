@@ -12,7 +12,7 @@
 
 namespace Hazard {
 
-	class HAZARD_API Math {
+	class  Math {
 
 	public:
 		template<typename T>

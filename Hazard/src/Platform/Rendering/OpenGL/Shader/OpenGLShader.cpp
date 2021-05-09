@@ -21,7 +21,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::OpenGLShader(std::string path) : file(path) 
 	{
-		std::string file = Utility::File::ReadFile(path);
+		std::string file = File::ReadFile(path);
 		Compile(Process(file));
 	}
 

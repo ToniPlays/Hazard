@@ -32,7 +32,7 @@ namespace Hazard::Rendering {
 			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
 	};
 
-	class HAZARD_API Window {
+	class Window {
 
 	public:
 

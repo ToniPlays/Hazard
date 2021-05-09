@@ -175,6 +175,7 @@
     <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h" />
     <ClInclude Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.h" />
     <ClInclude Include="src\GUI\Library\Layout\Dockspace.h" />
+    <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -274,5 +275,9 @@
     <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp" />
     <ClCompile Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.cpp" />
     <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp" />
+    <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\equirectangularToCube.glsl" />
   </ItemGroup>
 </Project>

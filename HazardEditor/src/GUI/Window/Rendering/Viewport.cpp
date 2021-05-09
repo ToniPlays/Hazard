@@ -21,7 +21,11 @@ namespace WindowElement {
 		bool found = false;
 		renderer = &Application::GetModule<RenderEngine>(found);
 		SetActive(found);
-		renderTexture = RenderUtils::Create<RenderTexture>();
+
+		TextureSpecs specs;
+		specs.dataType = TextureDataType::RGBA;
+
+		renderTexture = RenderUtils::Create<RenderTexture>(specs);
 		
 	}
 	void Viewport::OnWindowRender()
@@ -32,7 +36,7 @@ namespace WindowElement {
 		if (found) {
 			Rendering::RenderCommand::SetRenderTarget(renderTexture);
 			ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()),
-				editorCamera.GetPosition(), camera->bgRenderer));
+				editorCamera.GetPosition(), world.GetWorldData().clearColor));
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });

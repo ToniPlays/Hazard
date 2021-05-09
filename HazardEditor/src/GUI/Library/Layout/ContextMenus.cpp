@@ -8,6 +8,7 @@
 using namespace WindowLayout;
 
 namespace WindowElement {
+
 	void ContextMenus::FileContextMenu()
 	{
 		Layout::ContextMenu([&]() {
@@ -22,6 +23,12 @@ namespace WindowElement {
 		using namespace Hazard::Rendering;
 
 		Layout::ContextMenu([&]() {
+
+			Layout::MenuItem("Empty entity", [&]() {
+				Entity entity = world.CreateEntity("Empty");
+				entityAdded(entity);
+			});
+
 			Layout::Menu("Entity", [&]() {
 				Layout::MenuItem("Cube", [&]() {
 					Entity entity = world.CreateEntity("Cube");

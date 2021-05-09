@@ -40,7 +40,7 @@ void EditorApplication::PreInit()
 
 	PushModule<ECS::SceneHandler>();
 
-	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>().
+	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
 		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
 	
 }

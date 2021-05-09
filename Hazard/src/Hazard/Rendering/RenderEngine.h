@@ -5,6 +5,7 @@
 
 #include "Hazard/Entity/World.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+#include "Textures/EnvironmentMap.h"
 #include "Sky/Skybox.h"
 
 #include "2D/Renderer2D.h"
@@ -46,6 +47,9 @@ namespace Hazard::Rendering {
 	private:
 		glm::mat4 m_ViewProjection;
 		glm::vec3 m_CameraPosition;
+
+		EnvinronmentMap* m_EnvironmentMap;
+		Skybox* m_Skybox;
 
 		RenderTexture* m_RenderTarget = nullptr;
 		Renderer2D* m_Renderer2D = nullptr;

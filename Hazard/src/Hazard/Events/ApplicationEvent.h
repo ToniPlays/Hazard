@@ -6,7 +6,7 @@ namespace Hazard {
 
 	//Contains all window events;
 
-	class HAZARD_API WindowResizeEvent : public Event {
+	class  WindowResizeEvent : public Event {
 
 	public: 
 		WindowResizeEvent(unsigned int width, unsigned int height) 
@@ -27,7 +27,7 @@ namespace Hazard {
 		unsigned int m_Width, m_Height;
 	};
 
-	class HAZARD_API WindowCloseEvent : public Event {
+	class  WindowCloseEvent : public Event {
 
 	public:
 		WindowCloseEvent() = default;
@@ -35,7 +35,7 @@ namespace Hazard {
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
-	class HAZARD_API AppTickEvent : public Event {
+	class  AppTickEvent : public Event {
 
 	public:
 		AppTickEvent() = default;

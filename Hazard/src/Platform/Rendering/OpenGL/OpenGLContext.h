@@ -7,7 +7,7 @@
 #include "GLFW/glfw3.h"
 
 namespace Hazard::Rendering::OpenGL {
-	class HAZARD_API OpenGLContext : public GraphicsContext {
+	class  OpenGLContext : public GraphicsContext {
 	public:
 		OpenGLContext(Window* window, WindowProps* props);
 		~OpenGLContext();

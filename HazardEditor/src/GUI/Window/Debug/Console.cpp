@@ -17,7 +17,7 @@ namespace WindowElement {
 
 	static void PrintToConsole(Severity severity, std::string message) 
 	{
-		Console& instance = EditorView::GetInstance().GetRenderable<Console>();
+		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
 		instance.Print(severity, message);
 	}
 

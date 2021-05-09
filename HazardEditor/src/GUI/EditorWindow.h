@@ -17,18 +17,19 @@ namespace WindowElement {
 		virtual void OnWindowRender() = 0;
 		virtual bool OnEvent(Event& e) override { return false; };
 
-		bool GetActive() { return active; }
-		bool IsFocused() { return focused; }
-		bool IsHovered() { return hovered; }
+		bool GetActive() { return m_Active; }
+		bool IsFocused() { return m_Focused; }
+		bool IsHovered() { return m_Hovered; }
 
-		std::string& GetTitle() { return title; }
+		std::string& GetTitle() { return m_Title; }
+		void SetActive(bool active) { this->m_Active = active; }
 
-		void SetActive(bool active) { this->active = active; }
 	protected:
-		std::string title = "Untitled";
+		std::string m_Title = "Untitled";
+
 	private:
-		bool focused = false;
-		bool hovered = false;
-		bool active = true;
+		bool m_Active = true;
+		bool m_Focused = false;
+		bool m_Hovered = false;
 	};
 }
