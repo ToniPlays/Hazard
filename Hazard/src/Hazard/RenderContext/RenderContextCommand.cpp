@@ -27,4 +27,8 @@ namespace Hazard::Rendering {
 	{
 		m_Context->GetWindow().GetContext()->ClearFrame(color);
 	}
+	void RenderContextCommand::SetDebugCallback(ErrorCallback& callback)
+	{
+		m_Context->GetContext().SetErrorListener(callback);
+	}
 }

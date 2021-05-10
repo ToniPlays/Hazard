@@ -8,5 +8,6 @@ namespace Hazard::Rendering::OpenGL
 	class OpenGLUtils {
 	public:
 		static GLuint DataTypeToOpenGLType(TextureDataType type);
+		static const char* GluintToString(GLuint value);
 	};
 }

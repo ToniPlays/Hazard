@@ -52,9 +52,9 @@ namespace Hazard::Scripting {
 
 		static void SendDebugMessage(Severity severity, std::string message);
 		static void SetDebugCallback(void(*callback)(Severity, std::string)) { debugCallback = callback; };
+
 	private:
 		static void(*debugCallback)(Severity, std::string);
-
 		static ScriptEngineManager* s_manager;
 	};
 }

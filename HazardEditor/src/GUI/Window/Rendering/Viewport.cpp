@@ -19,13 +19,13 @@ namespace WindowElement {
 	void Viewport::Init()
 	{
 		bool found = false;
-		renderer = &Application::GetModule<RenderEngine>(found);
+		m_Renderer = &Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 
 		TextureSpecs specs;
 		specs.dataType = TextureDataType::RGBA;
 
-		renderTexture = RenderUtils::Create<RenderTexture>(specs);
+		m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
 		
 	}
 	void Viewport::OnWindowRender()
@@ -34,36 +34,36 @@ namespace WindowElement {
 		auto&[found, camera, t] = world.GetWorldCamera();
 
 		if (found) {
-			Rendering::RenderCommand::SetRenderTarget(renderTexture);
-			ECS::SceneCommand::RenderScene(Rendering::Camera(editorCamera.GetProjection(), glm::inverse(editorCamera.GetView()),
-				editorCamera.GetPosition(), world.GetWorldData().clearColor));
+			Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
+			ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
+				m_EditorCamera.GetPosition(), world.GetWorldData().clearColor));
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		if (size.x != width || size.y != height) {
-			width = size.x;
-			height = size.y;
+		if (size.x != m_Width || size.y != m_Height) {
+			m_Width = size.x;
+			m_Height = size.y;
 
-			renderTexture->Resize(width, height);
-			editorCamera.SetViewpotSize(width, height);
+			m_RenderTexture->Resize(m_Width, m_Height);
+			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-		ImGui::Image((void*)renderTexture->GetColorID(),
+		ImGui::Image((void*)m_RenderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 
-		gizmos.OnRender(editorCamera);
+		m_Gizmos.OnRender(m_EditorCamera);
 
-		if (gizmos.IsUsing()) return;
+		if (m_Gizmos.IsUsing()) return;
 		
-		IsFocused() ? editorCamera.OnUpdate() : editorCamera.SetMousePosition(Input::GetMousePos());
+		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
 		if(IsHovered())
-			editorCamera.OnEvent(e);
-		gizmos.OnEvent(e);
+			m_EditorCamera.OnEvent(e);
+		m_Gizmos.OnEvent(e);
 
 		if (!IsHovered()) return false;
 
@@ -76,19 +76,19 @@ namespace WindowElement {
 	{
 		switch (e.GetKeyCode()) {
 		case Key::Q:
-			gizmos.SetType(Gizmo::Translate);
+			m_Gizmos.SetType(Gizmo::Translate);
 			return true;
 		case Key::W:
-			gizmos.SetType(Gizmo::Rotate);
+			m_Gizmos.SetType(Gizmo::Rotate);
 			return true;
 		case Key::E:
-			gizmos.SetType(Gizmo::Scale);
+			m_Gizmos.SetType(Gizmo::Scale);
 			return true;
 		case Key::R:
-			gizmos.SetType(Gizmo::Bounds);
+			m_Gizmos.SetType(Gizmo::Bounds);
 			return true;
 		case Key::G:
-			gizmos.SetGlobal(!gizmos.IsGlobal());
+			m_Gizmos.SetGlobal(!m_Gizmos.IsGlobal());
 			return true;
 		}
 		return false;

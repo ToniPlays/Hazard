@@ -86,9 +86,6 @@ namespace WindowElement {
 				Layout::MenuItem("Assets", [&]() {
 					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
 					});
-				Layout::MenuItem("Script debugger", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<ScriptDebug>(true);
-					});
 			});
 		});
 		Layout::Menu("Help", []() {

@@ -14,6 +14,7 @@ namespace Hazard::Rendering {
 		static void ClearFrame(glm::vec4 color);
 
 		static RenderContext& GetContext() { return *m_Context; };
+		static void SetDebugCallback(ErrorCallback& callback);
 
 	private:
 		static RenderContext* m_Context;

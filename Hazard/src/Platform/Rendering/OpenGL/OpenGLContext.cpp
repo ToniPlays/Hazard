@@ -2,6 +2,8 @@
 
 #include <hzrpch.h>
 #include "OpenGLContext.h"
+#include "OpenGLUtils.h"
+
 #include <glad/glad.h>
 
 namespace Hazard::Rendering {
@@ -10,15 +12,18 @@ namespace Hazard::Rendering {
 		return new OpenGL::OpenGLContext((Window*)window, (WindowProps*)props);
 	}
 
-
 	namespace OpenGL
 	{
-		void APIENTRY OnError(GLenum source, GLenum type, unsigned int id, GLenum severity,
-			GLsizei length, const char* message, const void* userParam) {
-			HZR_CORE_ERROR("[OpenGL]: " + std::string(message));
-		}
 
 		ErrorCallback OpenGLContext::s_Callback;
+
+		void APIENTRY OnDebugMessage(GLenum source, GLenum type, unsigned int id, GLenum severity,
+			GLsizei length, const char* message, const void* userParam) {
+
+			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+
+			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
+		}
 
 		OpenGLContext::OpenGLContext(Window* window, WindowProps* props)
 		{
@@ -42,6 +47,8 @@ namespace Hazard::Rendering {
 				return;
 			};
 
+			HZR_CORE_INFO("[OpenGL]: " + GetVersion());
+
 			Enable(CullFace);
 			glCullFace(GL_BACK);
 			Enable(Depth);
@@ -51,7 +58,7 @@ namespace Hazard::Rendering {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-			glDebugMessageCallback(OnError, this);
+			glDebugMessageCallback(OnDebugMessage, this);
 		}
 
 		void OpenGLContext::ClearFrame(glm::vec4 clearColor) const
@@ -136,6 +143,13 @@ namespace Hazard::Rendering {
 			std::stringstream ss;
 			ss << glGetString(GL_RENDERER);
 			return ss.str();
+		}
+		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
+		{
+			if (!s_Callback) return;
+
+			ErrorData data(message, code);
+			s_Callback(data);
 		}
 	}
 }

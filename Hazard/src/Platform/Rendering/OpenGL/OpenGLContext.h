@@ -7,7 +7,9 @@
 #include "GLFW/glfw3.h"
 
 namespace Hazard::Rendering::OpenGL {
-	class  OpenGLContext : public GraphicsContext {
+
+	class OpenGLContext : public GraphicsContext {
+
 	public:
 		OpenGLContext(Window* window, WindowProps* props);
 		~OpenGLContext();
@@ -24,9 +26,11 @@ namespace Hazard::Rendering::OpenGL {
 		void SetErrorListener(const ErrorCallback& callback) override;
 		std::string GetVersion() const override;
 		std::string GetDevice() const override;
-	private:
 
-		static ErrorCallback s_Callback;
+	public:
+		static void SendDebugMessage(const char* message, const char* code);
+	private:
 		GLFWwindow* m_Window;
+		static ErrorCallback s_Callback;
 	};
 }

@@ -31,12 +31,11 @@ namespace Hazard::Rendering {
 		m_Renderer2D->Init(35000);
 
 		TextureSpecs specs;
-		specs.width = 4096;
-		specs.height = 4096;
+		specs.width = 2048;
+		specs.height = 2048;
 
 		m_Skybox = new Skybox();
 		m_EnvironmentMap = RenderUtils::Create<EnvinronmentMap>(File::GetFileAbsolutePath("res/textures/modern_buildings_8k.hdr").c_str(), specs);
-		CubemapTexture* skyboxTexture = RenderUtils::Create<CubemapTexture>(File::GetFileAbsolutePath("res/textures/sea-").c_str(), ".jpg");
 		m_Skybox->SetCubemapTexture(m_EnvironmentMap);
 
 		//m_EnvironmentMap->GenerateIrradiance();

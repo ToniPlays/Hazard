@@ -19,7 +19,7 @@ namespace Hazard::Rendering::OpenGL {
 		return -1;
 	}
 
-	OpenGLShader::OpenGLShader(std::string path) : file(path) 
+	OpenGLShader::OpenGLShader(std::string path) : m_File(path) 
 	{
 		std::string file = File::ReadFile(path);
 		Compile(Process(file));
@@ -27,12 +27,12 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::~OpenGLShader()
 	{
-		glDeleteProgram(program);
+		glDeleteProgram(m_ProgramID);
 	}
 
 	void OpenGLShader::Bind() const
 	{
-		glUseProgram(program);
+		glUseProgram(m_ProgramID);
 	}
 	void OpenGLShader::Unbind() const
 	{
@@ -40,11 +40,11 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	GLint OpenGLShader::GetLocation(const std::string& name)
 	{
-		if (locations.count(name) > 0) {
-			return locations[name];
+		if (m_Locations.count(name) > 0) {
+			return m_Locations[name];
 		}
-		GLint location = glGetUniformLocation(program, name.c_str());
-		locations[name] = location;
+		GLint location = glGetUniformLocation(m_ProgramID, name.c_str());
+		m_Locations[name] = location;
 		return location;
 	}
 	//Uniforms 
@@ -111,9 +111,9 @@ namespace Hazard::Rendering::OpenGL {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& sources)
 	{
-		program = glCreateProgram();
+		m_ProgramID = glCreateProgram();
 
-		HZR_CORE_INFO("Compiling shader program {0}", program);
+		HZR_CORE_INFO("Compiling shader {0} program {1}", m_File, m_ProgramID);
 
 		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;
@@ -142,23 +142,23 @@ namespace Hazard::Rendering::OpenGL {
 				HZR_CORE_ERROR(infoLog.data());
 				return;
 			}
-			glAttachShader(program, shader);
+			glAttachShader(m_ProgramID, shader);
 		}
 
-		glLinkProgram(program);
+		glLinkProgram(m_ProgramID);
 
 		GLint isLinked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
+		glGetProgramiv(m_ProgramID, GL_LINK_STATUS, (int*)&isLinked);
 
 		if (isLinked == GL_FALSE) {
 
 			GLint maxLength = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetProgramiv(m_ProgramID, GL_INFO_LOG_LENGTH, &maxLength);
 
 			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+			glGetProgramInfoLog(m_ProgramID, maxLength, &maxLength, &infoLog[0]);
 
-			glDeleteProgram(program);
+			glDeleteProgram(m_ProgramID);
 			HZR_CORE_ERROR(infoLog.data());
 
 			for (auto id : shaderId)

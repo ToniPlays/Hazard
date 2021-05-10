@@ -10,9 +10,14 @@ namespace Hazard::Rendering {
 
 	struct ErrorData {
 		std::string info;
-		uint32_t errorCode;
+		std::string errorCode;
+		int severity;
 
-		ErrorData(std::string i, uint32_t error) : info(i), errorCode(error) {};
+		ErrorData(const char* message, const char* type) {
+			info = message;
+			errorCode = type;
+			severity = 0;
+		}
 	};
 
 	enum DepthTest {
@@ -31,9 +36,7 @@ namespace Hazard::Rendering {
 		Depth,
 		Blend
 	};
-
-
-	using ErrorCallback = std::function<void(ErrorData&)>;
+	using ErrorCallback = void(*)(ErrorData& data);
 
 	class  GraphicsContext {
 	public:

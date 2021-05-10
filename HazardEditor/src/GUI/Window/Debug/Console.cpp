@@ -15,18 +15,27 @@ using namespace Hazard::Scripting;
 
 namespace WindowElement {
 
-	static void PrintToConsole(Severity severity, std::string message) 
+	static void PrintScriptToConsole(Severity severity, std::string message) 
 	{
 		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
 		instance.Print(severity, message);
+	}
+	static void PrintDebugToConsole(Rendering::ErrorData& data)
+	{
+		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
+		instance.Print((Severity)data.severity, data.info);
 	}
 
 	Console::Console() : EditorWindow(ICON_FK_COMPASS " Console") {}
 	Console::~Console() {}
 	void Console::Init()
 	{
-		void(*callback)(Severity, std::string) = PrintToConsole;
-		ScriptCommand::SetDebugCallback(callback);
+		void(*scriptCallback)(Severity, std::string) = PrintScriptToConsole;
+		ScriptCommand::SetDebugCallback(scriptCallback);
+
+		Rendering::ErrorCallback renderCallback = PrintDebugToConsole;
+
+		Rendering::RenderContextCommand::SetDebugCallback(renderCallback);
 	}
 	void Console::OnWindowRender()
 	{

@@ -132,9 +132,6 @@
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\ScriptDebug.h">
-      <Filter>src\GUI\Window\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
     <ClInclude Include="src\GUI\Window\Toolbar.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\TransformationGizmo.h">
-      <Filter>src\GUI\Window</Filter>
-    </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
     </ClInclude>
@@ -176,6 +170,9 @@
     <ClInclude Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.h" />
     <ClInclude Include="src\GUI\Library\Layout\Dockspace.h" />
     <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h" />
+    <ClInclude Include="src\GUI\Window\Rendering\TransformationGizmo.h">
+      <Filter>src\GUI\Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -235,9 +232,6 @@
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\ScriptDebug.cpp">
-      <Filter>src\GUI\Window\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
@@ -262,9 +256,6 @@
     <ClCompile Include="src\GUI\Window\Toolbar.cpp">
       <Filter>src\GUI\Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\TransformationGizmo.cpp">
-      <Filter>src\GUI\Window</Filter>
-    </ClCompile>
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
@@ -276,6 +267,9 @@
     <ClCompile Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.cpp" />
     <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp" />
     <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp" />
+    <ClCompile Include="src\GUI\Window\Rendering\TransformationGizmo.cpp">
+      <Filter>src\GUI\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\equirectangularToCube.glsl" />

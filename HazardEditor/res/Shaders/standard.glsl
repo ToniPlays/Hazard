@@ -10,13 +10,13 @@ uniform mat4 viewProjection;
 
 out vec4 f_color;
 out vec2 texCoords;
-flat out int textureIndex;
+out float textureIndex;
 
 void main() {
 
 	f_color = v_color;
 	texCoords = v_tex_coords;
-	textureIndex = int(v_tex_index);
+	textureIndex = v_tex_index;
 
 	gl_Position = viewProjection * vec4(v_position, 1.0);
 }
@@ -26,7 +26,7 @@ void main() {
 
 in vec4 f_color;
 in vec2 texCoords;
-in flat int textureIndex;
+in float textureIndex;
 
 uniform sampler2D u_Textures[8];
 
@@ -36,7 +36,9 @@ void main() {
 
 	vec4 c = f_color;
 
-	switch(textureIndex)
+	int index = int(textureIndex);
+
+	switch(index)
 	{
 		case 0: c *= texture(u_Textures[0], texCoords); break;
 		case 1: c *= texture(u_Textures[1], texCoords); break;

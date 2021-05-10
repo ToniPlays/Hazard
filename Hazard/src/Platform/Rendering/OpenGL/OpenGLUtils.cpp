@@ -15,4 +15,17 @@ namespace Hazard::Rendering::OpenGL
 		case Hazard::Rendering::HDRA:	return GL_RGBA16F;
 		}
 	}
+	const char* OpenGLUtils::GluintToString(GLuint value)
+	{
+		switch (value)
+		{
+		case GL_DEBUG_SEVERITY_NOTIFICATION: return "Notification";
+		case GL_DEBUG_SEVERITY_LOW: return "Low";
+		case GL_DEBUG_SEVERITY_MEDIUM: return "Medium";
+		case GL_DEBUG_SEVERITY_HIGH: return "High";
+
+
+		}
+		return "";
+	}
 }
