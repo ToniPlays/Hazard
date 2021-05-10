@@ -11,3 +11,4 @@
 **/*.vcxproj
 /vendor/spdlog/*
 
+HazardEditor/res/Textures/chapmans_drive_8k.hdr

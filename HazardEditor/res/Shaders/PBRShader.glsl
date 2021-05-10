@@ -15,16 +15,16 @@ out vec3 f_normal;
 out vec2 texCoords;
 out vec3 reflectedVector;
 
-void main() {
-
-
+void main() 
+{
 	vec4 worldPos = model * vec4(v_position, 1.0);
 	gl_Position = viewProjection * worldPos;
+
 	f_color = v_color;
-	f_normal = v_normal;
+	f_normal = mat3(model) * v_normal;
 	texCoords = v_texCoords;
 
-	vec3 unitNormal = normalize(v_normal);
+	vec3 unitNormal = normalize(f_normal);
 	vec3 viewVector = normalize(worldPos.xyz - cameraPos);
 
 	reflectedVector = reflect(viewVector, unitNormal);
@@ -39,22 +39,18 @@ in vec2 texCoords;
 in vec3 reflectedVector;
 
 uniform samplerCube envMap;
+uniform float gamma;
 
 out vec4 color;
 
-const float gamma = 0.6;
-
 vec4 mapHDR(vec3 color) {
 	vec3 mapped = color / (color + vec3(1.0));
-
 	mapped = pow(mapped, vec3(1.0 / gamma));
-
 	return vec4(mapped, 1.0);
 }
 
 void main() 
 {
 	vec4 reflectedColor = texture(envMap, reflectedVector);
-
-	color = mapHDR(reflectedColor.rgb);
+	color = mapHDR(reflectedColor.rgb) + vec4(0.2);
 }

@@ -30,6 +30,7 @@ namespace WindowElement {
 			Layout::MaxWidth();
 			Input::InputField(component.m_Tag);
 			Layout::NextLine(10);
+
 		}, [&component]() {
 			Layout::MenuItem("Reset", [&component]() {
 				component.m_Tag = "New entity";
@@ -95,18 +96,13 @@ namespace WindowElement {
 				}
 				ImGui::EndCombo();
 			}
-			/*Layout::TableNext();
-			Layout::Text("Color");
-			Layout::TableNext();
-			Layout::MaxWidth();*/
-
-			const char* backgroundTypeString[] = { "Solid", "Skybox" };
 
 			Layout::TableNext();
 			Layout::Text("Fov");
 			Layout::TableNext();
 			Layout::MaxWidth();
 			float fov = component.GetFov();
+
 			if (Input::Slider("##FOV", fov, 0.001, 100)) {
 				component.SetFov(fov);
 			}
@@ -129,42 +125,19 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, SpriteRendererComponent& component) {
 		Layout::ComponentTreenode<SpriteRendererComponent>(entity, name, [&]() {
 
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text("Tint");
-			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Sprite tint", component.m_Tint, open);
 
-			Layout::TableNext();
-			Layout::Text("Sprite");
-			Layout::TableNext();
-
-			uint32_t value = Rendering::RenderUtils::GetTextureStackIndex(component.m_Texture);
-
-			ImGui::Image((void*)component.m_Texture->GetID(), { 25, 25 });
-			Layout::SameLine();
-			if (Input::TextureSlot("", value)) {
-				*&component.m_Texture = Rendering::RenderUtils::GetFromTextures(value);
-			}
-			Layout::Text(component.m_Texture->GetFile().c_str());
-
-			Layout::EndTable();
-
-			}, [&entity]() {
+			bool changed = Input::TextureSlot(component.m_Texture, [&]() {
+				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 			});
+
+		}, [&entity]() {
+
+		});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
-
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text("Size");
-			Layout::TableNext();
-			Layout::MaxWidth();
-			Input::TextureSlot("##Size", component.m_Size, 0, 1000);
-			Layout::EndTable();
 
 			}, [&entity]() {
 				

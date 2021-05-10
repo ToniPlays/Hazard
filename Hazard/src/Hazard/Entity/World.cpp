@@ -30,6 +30,8 @@ namespace Hazard::ECS {
         m_Name = world.GetName() + " (copy)";
         std::unordered_map<UID, entt::entity> entityMap;
 
+        memcpy(&m_WorldData, &world.m_WorldData, sizeof(WorldData));
+
         auto& entityID = world.m_Registry.view<TagComponent>();
         
         for (int i = entityID.size() - 1; i >= 0; i--) {

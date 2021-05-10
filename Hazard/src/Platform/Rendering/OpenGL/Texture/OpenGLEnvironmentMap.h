@@ -23,6 +23,8 @@ namespace Hazard::Rendering::OpenGL {
 		void GenerateIrradiance() override;
 		void GeneratePreFilter() override;
 
+
+		Texture2D* GetTexture() { return m_RawTexture; };
 		TextureSpecs& GetSpec() override { return m_Spec; }
 		uint32_t GetID() const override { return m_rendererID; }
 

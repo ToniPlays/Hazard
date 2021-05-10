@@ -137,8 +137,6 @@ namespace WindowElement {
 	}
 	void FileView::DrawFolder(FolderViewData& data)
 	{
-		Input::IconButton(data.name.c_str(), data.name.c_str(), { buttonWidth, buttonWidth });
-
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 			currentFolder = data;
 		}
@@ -151,7 +149,6 @@ namespace WindowElement {
 	}
 	void FileView::DrawFile(const char* file)
 	{
-		Input::IconButton(file, file, { buttonWidth, buttonWidth });
 		windowElementWidth += buttonWidth + 5;
 		if (windowElementWidth + buttonWidth + 5 <= Layout::GetColumnWidth()) {
 			ImGui::SameLine(0, 5);

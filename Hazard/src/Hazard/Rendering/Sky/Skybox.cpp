@@ -52,9 +52,12 @@ namespace Hazard::Rendering {
 	}
 	void Skybox::Render(glm::mat4 transform)
 	{
+		if (m_Texture == nullptr) return;
+
 		RenderContextCommand::SetDepthTest(DepthTest::LEqual);
 		m_SkyboxShader->Bind();
 		m_SkyboxShader->SetUniformMat4("viewProjection", transform);
+		m_SkyboxShader->SetUniformFloat("gamma", m_Gamma);
 		m_Texture->Bind(0);
 
 		RenderCommand::DrawIndexed(m_VAO, 36);

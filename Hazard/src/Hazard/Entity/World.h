@@ -3,12 +3,16 @@
 #include <entt.hpp>
 #include "Component.h"
 #include "Hazard/Core/UID.h"
+#include "Hazard/Rendering/Sky/BackgroundRenderer.h"
 
 namespace Hazard::ECS {
 
+	enum WorldBackground { Colored = 0, Sky, HDRI };
+
 	struct WorldData 
 	{
-		Color clearColor;
+		WorldBackground background;
+		Rendering::BackgroundRenderer* renderer = new Rendering::ColorBackgroundRenderer();
 	};
 
 	class Entity;

@@ -6,7 +6,7 @@
 #include "Hazard/Entity/World.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Textures/EnvironmentMap.h"
-#include "Sky/Skybox.h"
+#include "Sky/BackgroundRenderer.h"
 
 #include "2D/Renderer2D.h"
 #include "Camera.h"
@@ -24,7 +24,7 @@ namespace Hazard::Rendering {
 		void Init() override;
 		void Close() override;
 
-		void BeginRendering(Camera camera);
+		void BeginRendering(Camera camera, BackgroundRenderer& renderer);
 		void EndRendering();
 		void SetRenderTarget(RenderTexture* texture) { m_RenderTarget = texture; };
 
@@ -41,6 +41,7 @@ namespace Hazard::Rendering {
 			shader.SetUniformMat4("viewProjection", m_ViewProjection);
 			shader.SetUniformMat4("model", mesh.transform);
 			shader.SetUniformVec3("cameraPos", m_CameraPosition);
+			shader.SetUniformFloat("gamma", m_BackgroundRenderer->GetGamma());
 			mesh.mesh->Render();
 		}
 
@@ -48,10 +49,9 @@ namespace Hazard::Rendering {
 		glm::mat4 m_ViewProjection;
 		glm::vec3 m_CameraPosition;
 
-		EnvinronmentMap* m_EnvironmentMap;
-		Skybox* m_Skybox;
-
 		RenderTexture* m_RenderTarget = nullptr;
 		Renderer2D* m_Renderer2D = nullptr;
+
+		BackgroundRenderer* m_BackgroundRenderer;
 	};
 }

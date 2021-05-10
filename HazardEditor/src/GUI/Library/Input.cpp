@@ -29,11 +29,6 @@ namespace WindowElement {
 	{
 		return ImGui::Button(name, size);
 	}
-	bool Input::IconButton(const char* icon, const char* name, ImVec2 size)
-	{
-		bool clicked = ImGui::Button(name, size);
-		return clicked;
-	}
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		bool modified = false;
@@ -215,7 +210,7 @@ namespace WindowElement {
 	{
 		ImGui::Checkbox(label, &value);
 	}
-	void Input::ColorPicker(const char* label, Hazard::Color& color, bool& open)
+	void Input::ColorPicker(const char* label, Color& color, bool& open)
 	{
 		if (ImGui::ColorButton(label, Style::ColorAsImVec4(color))) {
 			open = true;
@@ -234,10 +229,6 @@ namespace WindowElement {
 			}
 			ImGui::End();
 		}
-	}
-	bool Input::TextureSlot(const char* label, uint32_t& index, uint32_t min, uint32_t max)
-	{
-		return ImGui::DragInt(label, (int*)&index, 0.1f, min, max);
 	}
 	bool Input::Slider(const char* label, float& value, float min, float max)
 	{
@@ -318,6 +309,10 @@ namespace WindowElement {
 		}
 		ImGui::PopStyleColor(2);
 		return modified;
+	}
+	bool Input::ImageButton(uint32_t imageID, ImVec2 size)
+	{
+		return ImGui::ImageButton((void*)imageID, size);;
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field)
 	{

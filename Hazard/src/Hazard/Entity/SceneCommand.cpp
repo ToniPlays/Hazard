@@ -51,7 +51,7 @@ namespace Hazard::ECS {
 
 	void SceneCommand::RenderScene(Rendering::Camera camera) {
 
-		RenderCommand::Begin(camera);
+		RenderCommand::Begin(camera, *GetCurrentWorld().GetWorldData().renderer);
 		GetCurrentWorld().RenderAll();
 		RenderCommand::End();
 	}

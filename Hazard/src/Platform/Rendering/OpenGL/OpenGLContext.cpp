@@ -22,6 +22,8 @@ namespace Hazard::Rendering {
 
 			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 
+			HZR_CORE_INFO("[OpenGL]: {0}", message);
+
 			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
 		}
 
@@ -148,7 +150,7 @@ namespace Hazard::Rendering {
 		{
 			if (!s_Callback) return;
 
-			ErrorData data(message, code);
+			ErrorData data(("[OpenGL]:" + std::string(message)).c_str(), code);
 			s_Callback(data);
 		}
 	}

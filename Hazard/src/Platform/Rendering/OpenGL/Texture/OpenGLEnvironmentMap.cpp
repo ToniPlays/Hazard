@@ -18,6 +18,9 @@ namespace Hazard::Rendering::OpenGL {
     {
         m_Spec = specs;
 
+        m_Spec.width  = m_Spec.width  == -1 ? 1024 : m_Spec.width;
+        m_Spec.height = m_Spec.height == -1 ? 1024 : m_Spec.height;
+
         TextureSpecs textSpec;
         textSpec.dataType = TextureDataType::HDR;
         m_RawTexture = RenderUtils::Create<Texture2D>(file, textSpec);

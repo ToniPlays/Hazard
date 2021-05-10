@@ -27,23 +27,11 @@ namespace WindowElement {
 			auto textures = Hazard::Rendering::RenderUtils::GetTextures();
 			Layout::Table(2, false);
 
-			std::stringstream ss;
-
 			for (Texture* t : textures) {
-				ss.str("");
-
-				Layout::SetColumnWidth(90);
-				ImGui::Image((void*)t->GetID(), { 50, 50 }, { 0, 1 }, { 1, 0 });
-				Layout::TableNext();
-				Layout::Text(t->GetFile().c_str());
-				ss << "Texture ID: " << t->GetID() << "\nSize: " << t->GetWidth() << "x" << t->GetHeight();
-				Layout::Text(ss.str().c_str());
-
-				if (std::string(t->GetFile()) != "White") {
-					if (Input::Button("Unload texture")) {
-						Rendering::RenderUtils::UnloadTexture(t);
-					}
-				}
+				
+				bool changed = Input::TextureSlot(t, [&]() {
+					
+				});
 				Layout::TableNext();
 			}
 			Layout::EndTable();
