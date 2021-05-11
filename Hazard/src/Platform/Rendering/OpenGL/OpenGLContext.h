@@ -21,7 +21,7 @@ namespace Hazard::Rendering::OpenGL {
 		void Enable(Function fn) const;
 		void Disable(Function fn) const;
 
-		void DrawIndexed(VertexArray* array, uint32_t size) const override;
+		void DrawIndexed(VertexArray& array, uint32_t size) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		std::string GetVersion() const override;

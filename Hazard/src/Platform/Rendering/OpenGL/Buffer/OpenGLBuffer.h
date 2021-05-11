@@ -4,7 +4,7 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	class  OpenGLVertexBuffer : public VertexBuffer {
+	class OpenGLVertexBuffer : public VertexBuffer {
 	public:
 		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
@@ -22,7 +22,7 @@ namespace Hazard::Rendering::OpenGL {
 		BufferLayout bufferLayout;
 	};
 
-	class  OpenGLIndexBuffer : public IndexBuffer {
+	class OpenGLIndexBuffer : public IndexBuffer {
 	public:
 		OpenGLIndexBuffer();
 		virtual ~OpenGLIndexBuffer();

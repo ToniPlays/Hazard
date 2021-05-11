@@ -630,6 +630,7 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLUtils.h" />
     <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h" />
+    <ClInclude Include="src\Hazard\Core\Ref.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -774,5 +775,6 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.cpp" />
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLUtils.cpp" />
     <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Textures\Texture.cpp" />
   </ItemGroup>
 </Project>

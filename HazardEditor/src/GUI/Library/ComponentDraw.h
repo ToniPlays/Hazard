@@ -127,7 +127,7 @@ namespace WindowElement {
 
 			static bool open = false;
 
-			bool changed = Input::TextureSlot(component.m_Texture, [&]() {
+			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 			});
 

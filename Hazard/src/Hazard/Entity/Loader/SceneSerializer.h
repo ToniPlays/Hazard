@@ -199,7 +199,7 @@ namespace Hazard::ECS::Loader {
 			out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
 			out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)c.m_Tint);
 
-			if (c.m_Texture != nullptr) {
+			if (c.m_Texture) {
 				if(std::string(c.m_Texture->GetFile()) != "White")
 					out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetFile());
 			}

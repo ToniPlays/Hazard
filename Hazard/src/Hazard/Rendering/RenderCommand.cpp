@@ -25,6 +25,6 @@ namespace Hazard::Rendering {
 	{
 		s_Stats.draws++;
 		s_Stats.indices += count;
-		s_Context->GetContext().DrawIndexed(vao, count);
+		s_Context->GetContext().DrawIndexed(*vao, count);
 	}
 }

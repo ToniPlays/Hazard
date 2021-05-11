@@ -12,34 +12,25 @@ namespace Hazard::Rendering {
 	class RenderUtils {
 	public:
 		static void Init();
-		static void Flush();
-		static void UnloadPending();
 
 		static void SetRenderAPI(RenderAPI api) { s_Api = api; }
 
 		template<typename T>
-		static T* Create();
+		static T* CreateRaw();
 
 		template<typename T, typename Arg>
-		static T* Create(Arg arg);
+		static T* CreateRaw(Arg arg);
 
-		template<typename T, typename Arg, typename C>
-		static T* Create(Arg arg, C name);
+		template<typename T>
+		static Ref<T> Create();
 
 		template<typename T, typename Arg>
-		static T* Find(Arg args);
+		static Ref<T> Create(Arg arg);
 
-		static Texture* GetTexture(uint32_t textureID);
-		static Texture* GetFromTextures(uint32_t index);
-		static uint32_t GetTextureStackIndex(Texture* texture);
-		static void UnloadTexture(Texture* texture);
+		template<typename T, typename F, typename Arg>
+		static Ref<T> Create(F file, Arg args);
 
-		static std::vector<Shader*> GetShaders() { return s_Shaders; }
-		static std::vector<Texture*> GetTextures() { return s_Textures; }
 	private:
 		static RenderAPI s_Api;
-		static std::vector<Shader*> s_Shaders;
-		static std::vector<Texture*> s_Textures;
-
 	};
 }

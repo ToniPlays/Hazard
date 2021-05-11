@@ -80,8 +80,7 @@ namespace Hazard::Rendering {
 		uint32_t m_Stride = 0;
 	};
 
-	class  VertexBuffer {
-
+	class VertexBuffer {
 	public:
 
 		virtual ~VertexBuffer() = default;
@@ -95,7 +94,7 @@ namespace Hazard::Rendering {
 
 	};
 
-	class  IndexBuffer {
+	class IndexBuffer {
 
 	public:
 		virtual ~IndexBuffer() = default;

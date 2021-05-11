@@ -77,15 +77,15 @@ namespace Hazard::Rendering::OpenGL {
 
         HZR_CORE_WARN("Generating cubemap from .hrd file");
 
-        VertexArray* cubeArray = RenderUtils::Create<VertexArray>();
-        VertexBuffer* positions = RenderUtils::Create<VertexBuffer>((uint32_t)sizeof(vertices));
+        VertexArray* cubeArray = RenderUtils::CreateRaw<VertexArray>();
+        VertexBuffer* positions = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)sizeof(vertices));
 
         positions->SetLayout({ { ShaderDataType::Float3, "pos" } });
 
         positions->SetData(vertices, 24 * sizeof(float));
         cubeArray->AddBuffer(positions);
 
-        IndexBuffer* indexBuffer = RenderUtils::Create<IndexBuffer>();
+        IndexBuffer* indexBuffer = RenderUtils::CreateRaw<IndexBuffer>();
         indexBuffer->SetData(indices, 36);
         cubeArray->SetIndexBuffer(indexBuffer);
 
@@ -100,7 +100,7 @@ namespace Hazard::Rendering::OpenGL {
             glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
         };
 
-        Shader* convertShader = RenderUtils::Create<Shader>("res/shaders/equirectangularToCube.glsl");
+        Ref<Shader> convertShader = RenderUtils::Create<Shader>("res/shaders/equirectangularToCube.glsl");
 
         unsigned int captureFBO;
         unsigned int captureRBO;

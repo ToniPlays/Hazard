@@ -47,6 +47,7 @@ namespace WindowElement {
 						data.background = (ECS::WorldBackground)i;
 						
 						delete data.renderer;
+
 						if (data.background == ECS::WorldBackground::Colored) {
 							data.renderer = new ColorBackgroundRenderer();
 						}
@@ -70,25 +71,25 @@ namespace WindowElement {
 			}
 			else if(data.background == ECS::WorldBackground::Sky)
 			{
-				Texture2D* texture = RenderUtils::Create<Texture2D>("White");
+				Ref<Texture2D> texture = RenderUtils::Create<Texture2D>("White");
 				Layout::Text("Front");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 				Layout::Text("Back");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 				Layout::Text("Left");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 				Layout::Text("Right");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 				Layout::Text("Top");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 				Layout::Text("Bottom");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture.Raw(), [&]() {});
 			}
 			else 
 			{
 				SkyboxBackgroundRenderer* rd = (SkyboxBackgroundRenderer*)data.renderer;
 				Layout::Text("Environment map");
-				bool clicked = Input::TextureSlot(rd->GetRaw(), [&]() {
+				bool clicked = Input::TextureSlot(rd->GetRaw().Raw(), [&]() {
 					float gamma = rd->GetSkybox()->GetGamma();
 					Input::Slider("Gamma", gamma, 0.0, 10.0f);
 					rd->GetSkybox()->SetGamma(gamma);
@@ -103,9 +104,8 @@ namespace WindowElement {
 						specs.width = 2048;
 						specs.height = 2048;
 
-						EnvinronmentMap* newMap = RenderUtils::Create<EnvinronmentMap>(fileName.c_str(), specs);
-						delete rd->GetTexture();
-						rd->SetCubemap(newMap);
+						Ref<EnvinronmentMap>& newMap = RenderUtils::Create<EnvinronmentMap>(fileName.c_str(), specs);
+						rd->SetCubemap(static_cast<Ref<CubemapTexture>>(newMap));
 					}
 				}
 			}

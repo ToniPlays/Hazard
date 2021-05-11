@@ -23,8 +23,8 @@ namespace Hazard::Rendering {
 		m_Data.MaxVertices = m_Data.MaxQuads * 4;
 		m_Data.MaxIndices = m_Data.MaxQuads * 6;
 
-		m_Data.QuadVertexArray = RenderUtils::Create<VertexArray>();
-		m_Data.QuadVertexBuffer = RenderUtils::Create<VertexBuffer>((uint32_t)(m_Data.MaxVertices * sizeof(QuadVertex)));
+		m_Data.QuadVertexArray = RenderUtils::CreateRaw<VertexArray>();
+		m_Data.QuadVertexBuffer = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)(m_Data.MaxVertices * sizeof(QuadVertex)));
 
 		m_Data.QuadVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "v_position" },
@@ -52,7 +52,7 @@ namespace Hazard::Rendering {
 			offset += 4;
 		}
 
-		IndexBuffer* indexBuffer = RenderUtils::Create<IndexBuffer>();
+		IndexBuffer* indexBuffer = RenderUtils::CreateRaw<IndexBuffer>();
 		indexBuffer->SetData(indices, m_Data.MaxIndices);
 
 		delete[] indices;
@@ -63,7 +63,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < 8; i++)
 			samplers[i] = i;
 
-		m_Data.TextureSlots[0] = static_cast<Texture2D*>(RenderUtils::Find<Texture>("White"));
+		m_Data.TextureSlots[0] = RenderUtils::Create<Texture2D>("White").Raw();
 
 		m_Data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
 		m_Data.QuadShader->Bind();
@@ -132,8 +132,8 @@ namespace Hazard::Rendering {
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.QuadVertexBufferPtr - (uint8_t*)m_Data.QuadVertexBufferBase);
 		m_Data.QuadVertexBuffer->SetData(m_Data.QuadVertexBufferBase, dataSize);
 
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-			m_Data.TextureSlots[i]->Bind(i);
+		//for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
+		//	m_Data.TextureSlots[i]->Bind(i);
 
 		m_Data.QuadShader->Bind();
 		RenderCommand::DrawIndexed(m_Data.QuadVertexArray, m_Data.QuadIndexCount);

@@ -4,7 +4,8 @@
 
 
 namespace Hazard::Rendering {
-	class OcclusionQuery {
+
+	class OcclusionQuery : public RefCount {
 	public:
 		OcclusionQuery() {};
 		virtual ~OcclusionQuery() {};

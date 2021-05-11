@@ -14,7 +14,6 @@ namespace Hazard::Rendering {
 
 	namespace OpenGL
 	{
-
 		ErrorCallback OpenGLContext::s_Callback;
 
 		void APIENTRY OnDebugMessage(GLenum source, GLenum type, unsigned int id, GLenum severity,
@@ -117,9 +116,9 @@ namespace Hazard::Rendering {
 			}
 		}
 
-		void OpenGLContext::DrawIndexed(VertexArray* array, uint32_t size) const
+		void OpenGLContext::DrawIndexed(VertexArray& array, uint32_t size) const
 		{
-			array->EnableAll();
+			array.EnableAll();
 			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, nullptr);
 		}
 

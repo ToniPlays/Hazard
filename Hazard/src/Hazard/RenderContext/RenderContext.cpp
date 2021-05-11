@@ -31,7 +31,6 @@ namespace Hazard::Rendering {
 
 	void RenderContext::Close()
 	{
-		RenderUtils::Flush();
 		delete m_Window;
 	}
 

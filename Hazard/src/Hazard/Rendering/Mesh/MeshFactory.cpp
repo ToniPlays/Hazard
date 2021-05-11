@@ -150,7 +150,7 @@ namespace Hazard::Rendering {
 	}
 	void MeshFactory::GetMaterials(const aiScene* scene, Material& material, const char* path)
 	{
-		std::vector<Texture2D*> textures;
+		std::vector<Ref<Texture2D>> textures;
 		textures.reserve(scene->mNumMaterials);
 
 		for (uint16_t i = 0; i < scene->mNumMaterials; i++) {

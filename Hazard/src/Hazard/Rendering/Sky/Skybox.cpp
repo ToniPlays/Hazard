@@ -8,7 +8,7 @@ namespace Hazard::Rendering {
 
 	Skybox::Skybox()
 	{
-		m_VAO = RenderUtils::Create<VertexArray>();
+		m_VAO = RenderUtils::CreateRaw<VertexArray>();
 
 		float skyboxVertices[] = {
 			// positions
@@ -29,7 +29,7 @@ namespace Hazard::Rendering {
 			3, 2, 7, 7, 2, 6,
 			4, 5, 0, 0, 5, 1
 		};
-		VertexBuffer* buffer = RenderUtils::Create<VertexBuffer>((uint32_t)(24 * sizeof(float)));
+		VertexBuffer* buffer = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)(24 * sizeof(float)));
 
 		buffer->SetData(skyboxVertices, 24 * sizeof(float));
 
@@ -37,7 +37,7 @@ namespace Hazard::Rendering {
 		m_VAO->AddBuffer(buffer);
 
 
-		IndexBuffer* iBuffer = RenderUtils::Create<IndexBuffer>();
+		IndexBuffer* iBuffer = RenderUtils::CreateRaw<IndexBuffer>();
 		iBuffer->SetData(indices, 36);
 		m_VAO->SetIndexBuffer(iBuffer);
 
@@ -48,11 +48,11 @@ namespace Hazard::Rendering {
 	}
 	Skybox::~Skybox()
 	{
-		delete m_VAO;
+
 	}
 	void Skybox::Render(glm::mat4 transform)
 	{
-		if (m_Texture == nullptr) return;
+		if (!m_Texture) return;
 
 		RenderContextCommand::SetDepthTest(DepthTest::LEqual);
 		m_SkyboxShader->Bind();

@@ -16,10 +16,10 @@ namespace Hazard::Rendering {
 		bool diskImage = true;
 	};
 
-	class Texture {
+	class Texture : public RefCount {
 	public:
 		Texture(const char* file) : m_File(file) {};
-		virtual ~Texture() {};
+		virtual ~Texture();
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;

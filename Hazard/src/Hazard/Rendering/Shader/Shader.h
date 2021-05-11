@@ -8,7 +8,7 @@
 
 namespace Hazard::Rendering {
 
-	class  Shader {
+	class Shader : public RefCount {
 
 	public:
 		Shader() {};

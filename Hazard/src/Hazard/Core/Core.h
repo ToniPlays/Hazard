@@ -37,3 +37,4 @@
 #include <vector>
 #include <unordered_map>
 #include "Hazard/Events/Event.h"
+#include "Ref.h"

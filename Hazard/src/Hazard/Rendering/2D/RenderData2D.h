@@ -9,7 +9,7 @@ namespace Hazard::Rendering
 
 		VertexArray* QuadVertexArray;
 		VertexBuffer* QuadVertexBuffer;
-		Shader* QuadShader;
+		Ref<Shader> QuadShader;
 
 		uint32_t QuadIndexCount = 0;
 		uint32_t TextureIndex = 1;

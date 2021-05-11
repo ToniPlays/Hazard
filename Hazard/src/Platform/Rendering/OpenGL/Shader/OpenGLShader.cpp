@@ -27,6 +27,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		HZR_CORE_INFO("Unloaded shader {0}", m_File);
 		glDeleteProgram(m_ProgramID);
 	}
 

@@ -23,8 +23,7 @@ namespace Hazard::Rendering::OpenGL {
 		void GenerateIrradiance() override;
 		void GeneratePreFilter() override;
 
-
-		Texture2D* GetTexture() { return m_RawTexture; };
+		Ref<Texture2D> GetTexture() { return m_RawTexture; };
 		TextureSpecs& GetSpec() override { return m_Spec; }
 		uint32_t GetID() const override { return m_rendererID; }
 
@@ -36,8 +35,7 @@ namespace Hazard::Rendering::OpenGL {
 		TextureSpecs m_Spec;
 		uint32_t m_rendererID;
 
-		Texture2D* m_RawTexture;
-
-		CubemapTexture* m_Cubemap = nullptr;
+		Ref<Texture2D> m_RawTexture;
+		Ref<CubemapTexture> m_Cubemap;
 	};
 }

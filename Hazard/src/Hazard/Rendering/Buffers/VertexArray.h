@@ -6,7 +6,7 @@
 namespace Hazard::Rendering {
 
 
-	class  VertexArray {
+	class VertexArray : public RefCount {
 	public:
 		virtual ~VertexArray() = default;
 		virtual void Bind() const = 0;

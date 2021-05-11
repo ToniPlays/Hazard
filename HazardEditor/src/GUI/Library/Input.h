@@ -20,7 +20,7 @@ namespace WindowElement {
 		static void ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
 		template<typename T>
-		static bool TextureSlot(Rendering::Texture* texture, T callback) {
+		static bool TextureSlot(Ref<Rendering::Texture> texture, T callback) {
 			bool changed = false;
 
 			Layout::Table(2, false, "##textureSlot");

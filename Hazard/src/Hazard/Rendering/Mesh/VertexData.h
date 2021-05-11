@@ -11,9 +11,9 @@ namespace Hazard::Rendering {
 		glm::vec4 color;
 		Texture* texture;
 
-		Quad(glm::mat4 transform, glm::vec4 color, Texture* text) : transform(transform), 
+		Quad(glm::mat4 transform, glm::vec4 color, Ref<Texture> text) : transform(transform), 
 			color(color) {
-			texture = text;
+			texture = text.Raw();
 		};
 	};
 

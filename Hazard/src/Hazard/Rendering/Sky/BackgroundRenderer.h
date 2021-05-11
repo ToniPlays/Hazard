@@ -11,9 +11,7 @@ namespace Hazard::Rendering {
 		virtual ~BackgroundRenderer() {};
 
 		virtual float GetGamma() { return 1.0f; }
-		virtual Texture* GetTexture() { return nullptr; };
-		virtual void SetCubemap(CubemapTexture* texture) {};
-
+		virtual void SetCubemap(Ref<CubemapTexture>& texture) {};
 		virtual void Render(glm::mat4 view, glm::mat4 projection) {};
 		
 		Color m_Color;
@@ -29,15 +27,16 @@ namespace Hazard::Rendering {
 	{
 	public:
 		SkyboxBackgroundRenderer();
+		~SkyboxBackgroundRenderer();
 
 		float GetGamma() { return m_Skybox->GetGamma(); }
-		Texture* GetTexture() { return m_Skybox->GetCubemapTexture(); };
-		Skybox* GetSkybox() { return m_Skybox; };
-		Texture2D* GetRaw();
+		Ref<CubemapTexture> GetTexture() { return m_Skybox->GetCubemapTexture(); };
+		Ref<Skybox> GetSkybox() { return m_Skybox; };
+		Ref<Texture2D> GetRaw();
 
 		void Render(glm::mat4 view, glm::mat4 projection) override;
-		void SetCubemap(CubemapTexture* texture) override;
+		void SetCubemap(Ref<CubemapTexture>& texture) override;
 	private:
-		Skybox* m_Skybox = nullptr;
+		Ref<Skybox> m_Skybox;
 	};
 }

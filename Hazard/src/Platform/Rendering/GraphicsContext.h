@@ -50,7 +50,7 @@ namespace Hazard::Rendering {
 		virtual void Enable(Function fn) const = 0;
 		virtual void Disable(Function fn) const = 0;
 
-		virtual void DrawIndexed(VertexArray* array, uint32_t size) const = 0;
+		virtual void DrawIndexed(VertexArray& array, uint32_t size) const = 0;
 		virtual std::string GetVersion() const = 0;
 		virtual std::string GetDevice() const = 0;
 		

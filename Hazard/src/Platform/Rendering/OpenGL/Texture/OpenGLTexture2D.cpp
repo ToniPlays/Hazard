@@ -23,7 +23,7 @@ namespace Hazard::Rendering::OpenGL {
 				float* data = stbi_loadf(file, &w, &h, &channels, 0);
 				if (!data)
 				{
-					HZR_CORE_WARN("Texture file not found");
+					HZR_CORE_WARN("Texture file not found {0}", file);
 					return;
 				}
 
@@ -38,7 +38,7 @@ namespace Hazard::Rendering::OpenGL {
 				stbi_uc* data = stbi_load(file, &w, &h, &channels, 0);
 				if (!data)
 				{
-					HZR_CORE_WARN("Texture file not found");
+					HZR_CORE_WARN("Texture file not found {0}", file);
 					return;
 				}
 

@@ -20,7 +20,7 @@ namespace Hazard::Rendering {
 
 		static void Begin(Camera camera, BackgroundRenderer& renderer) { s_Engine->BeginRendering(camera, renderer); }
 		static void End() { s_Engine->EndRendering(); }
-		static void SetRenderTarget(RenderTexture* texture) { s_Engine->SetRenderTarget(texture); }
+		static void SetRenderTarget(Ref<RenderTexture>& texture) { s_Engine->SetRenderTarget(texture.Raw()); }
 
 		static void DrawIndexed(VertexArray* vao, uint32_t count);
 
