@@ -4,10 +4,21 @@
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
 
+#include <optional>
+
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
 namespace Hazard::Rendering::Vulkan {
+
+	struct QueueFamilyIndices {
+		std::optional<uint32_t> graphicsFamily;
+
+		bool isComplete() {
+			return graphicsFamily.has_value();
+		}
+	};
+
 
 	class VKContext : public GraphicsContext {
 
@@ -31,8 +42,6 @@ namespace Hazard::Rendering::Vulkan {
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
 		static GLFWvkproc GetProc(const char* adress);
-
-	private:
 		static ErrorCallback s_Callback;
 
 	private:
