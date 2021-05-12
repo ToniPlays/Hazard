@@ -12,11 +12,11 @@ namespace WindowElement {
 
 	void GameViewport::Init()
 	{
-		SetActive(true);
+
+		SetActive(false);
 
 		TextureSpecs specs;
 		specs.dataType = TextureDataType::RGBA;
-
 		renderTexture = RenderUtils::Create<RenderTexture>(specs);
 	}
 	void GameViewport::OnWindowRender()

@@ -60,17 +60,23 @@ namespace WindowElement {
 
 	public:
 		static EditorView& GetInstance() { return *s_Instance; }
-	private:
-		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
-		Rendering::RenderContext* m_Context;
-
-	private:
-		static EditorView* s_Instance;
-		MenuBar m_MenuBar;
-		Toolbar m_Toolbar;
 
 	private:
 		void BeginFrame();
 		void EndFrame();
+
+		void InitImGuiPlatform(Rendering::Window& window);
+
+	private:
+		static EditorView* s_Instance;
+
+	private:
+		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
+		Rendering::RenderContext* m_Context;
+
+		MenuBar m_MenuBar;
+		Toolbar m_Toolbar;
+		Rendering::RenderAPI m_Api;
+
 	};
 }

@@ -19,7 +19,7 @@ EditorApplication::~EditorApplication()
 void EditorApplication::PreInit()
 {
 	PushModule<Logging::Logger>();
-	PushModule<Rendering::RenderContext>();
+	PushModule<Rendering::RenderContext>().InitContext(RenderAPI::Vulkan);
 
 	std::stringstream ss;
 	ss << "Hazard Editor | Hazard "; 
@@ -39,7 +39,7 @@ void EditorApplication::PreInit()
 	}
 
 	PushModule<ECS::SceneHandler>();
-
+	
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
 		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
 	
@@ -53,7 +53,7 @@ void EditorApplication::Init()
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	 return GetModule<WindowElement::EditorView>().OnEvent(e);
+	return GetModule<WindowElement::EditorView>().OnEvent(e);
 }
 
 

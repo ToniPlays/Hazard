@@ -8,16 +8,17 @@ namespace Hazard::Rendering {
 
 	enum class RenderAPI { 
 		Auto = 0,
-		OpenGL
+		OpenGL,
+		Vulkan
 	};
 
 	class RenderContext : public Module::Module {
 
 	public:
-		RenderContext(RenderAPI api = RenderAPI::OpenGL);
+		RenderContext();
 		~RenderContext();
 
-		void Init();
+		void InitContext(RenderAPI api = RenderAPI::Auto);
 		void Update() override;
 		void Close();
 

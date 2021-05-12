@@ -55,8 +55,5 @@ namespace Hazard::Rendering {
 		virtual std::string GetDevice() const = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
-		
-		static GraphicsContext* Create(void* window, void* props);
-
 	};
 }

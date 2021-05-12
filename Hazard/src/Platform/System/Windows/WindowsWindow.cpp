@@ -3,6 +3,11 @@
 #include <hzrpch.h>
 #include "WindowWindow.h"
 #include "Hazard/Events/Input.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
+
+#include "Platform/Rendering/OpenGL/OpenGLContext.h"
+#include "Platform/Rendering/Vulkan/VKContext.h"
+
 #include <glad/glad.h>
 #include <stb_image.h>
 
@@ -14,19 +19,14 @@ namespace Hazard::Rendering {
 
 	WindowsWindow::WindowsWindow(WindowProps& props) {
 
-		if (!glfwInit()) {
-			return;
-		}
+		if (!glfwInit()) return;
 
 		m_WindowData.Title = props.Title;
 		m_WindowData.Platform = "Windows";
 
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-		//Move to somewhere else, please don't break this
-		//Headache
-		glfwWindowHint(GLFW_MAXIMIZED, props.maximized ? GLFW_TRUE : GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, true);
+		glfwWindowHint(GLFW_MAXIMIZED, props.maximized);
 
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
 
@@ -36,7 +36,20 @@ namespace Hazard::Rendering {
 		}
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
-		m_Context = GraphicsContext::Create(this, &m_WindowData);
+
+		switch (Application::GetModule<RenderContext>().GetCurrentAPI()) {
+
+		case RenderAPI::OpenGL:
+			m_Context = new OpenGL::OpenGLContext(this, &m_WindowData); 
+			break;
+		case RenderAPI::Vulkan:
+			m_Context = new Vulkan::VKContext(this, &m_WindowData);
+			break;
+		default:
+			HZR_CORE_INFO("RenderContext not supported ({0})", RenderContextCommand::GetContext().GetCurrentAPI());
+			break;
+		}
+
 		m_WindowData.Renderer = m_Context->GetVersion();
 
 		SetCallbacks();
@@ -47,7 +60,6 @@ namespace Hazard::Rendering {
 		glfwSwapBuffers(m_Window);
 		m_Context->ClearFrame(color);
 		glfwPollEvents();
-		//IsFocused() ? glfwPollEvents() : glfwWaitEventsTimeout(1.0f / 24.0f);
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
 	{

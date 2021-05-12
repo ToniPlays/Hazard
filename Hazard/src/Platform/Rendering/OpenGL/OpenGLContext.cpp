@@ -8,10 +8,6 @@
 
 namespace Hazard::Rendering {
 
-	GraphicsContext* GraphicsContext::Create(void* window, void* props) {
-		return new OpenGL::OpenGLContext((Window*)window, (WindowProps*)props);
-	}
-
 	namespace OpenGL
 	{
 		ErrorCallback OpenGLContext::s_Callback;

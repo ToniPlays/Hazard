@@ -19,6 +19,7 @@
 
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+#include "Platform/System/Window.h"
 
 //Hazard ECS includes
 #include "Hazard/Entity/SceneCommand.h"

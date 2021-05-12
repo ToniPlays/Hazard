@@ -9,17 +9,20 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext::RenderContext(RenderAPI api) : m_CurrentAPI(api), Module::Module("RenderContext")
+	RenderContext::RenderContext() : Module::Module("RenderContext")
 	{
-		RenderUtils::SetRenderAPI(api);
+		
 	}
 	RenderContext::~RenderContext() {}
 
-	void RenderContext::Init()
+	void RenderContext::InitContext(RenderAPI api)
 	{
+		m_CurrentAPI = api == RenderAPI::Auto ? RenderAPI::OpenGL : api;
+		RenderUtils::SetRenderAPI(m_CurrentAPI);
+
 		m_Window = Window::Create();
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
-		RenderUtils::Init();
+
 		RenderContextCommand::Init();
 		SetActive(true);
 	}

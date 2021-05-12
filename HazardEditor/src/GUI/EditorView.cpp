@@ -2,10 +2,8 @@
 #include <hzreditor.h>
 #include "EditorView.h"
 
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-
-#include "GLFW/imgui_impl_glfw.h"
-#include "GLFW/imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #include <GLFW/glfw3.h>
 
@@ -57,7 +55,6 @@ namespace WindowElement {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigDockingWithShift = true;
 
-		GLFWwindow* window = static_cast<GLFWwindow*>(m_Context->GetWindow().GetNativeWindow());
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 
@@ -74,10 +71,9 @@ namespace WindowElement {
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
-		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 330 core");
 
+		InitImGuiPlatform(m_Context->GetWindow());
+		
 		Appereance::Style::Init();
 
 		PushRenderable<WelcomePopup>();
@@ -123,14 +119,34 @@ namespace WindowElement {
 	}
 	void EditorView::Close()
 	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
+		switch (m_Api)
+		{
+		case RenderAPI::OpenGL:
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplGlfw_Shutdown();
+			break;
+		case RenderAPI::Vulkan:
+			//ImGui_ImplVulkan_Shutdown();
+			ImGui_ImplGlfw_Shutdown();
+			break;
+		}
+		
 		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
+		switch (m_Api)
+		{
+		case RenderAPI::OpenGL:
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			break;
+		case RenderAPI::Vulkan:
+			//ImGui_ImplVulkan_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			break;
+		}
+		
 		ImGui::NewFrame();
 
 		for (RenderableElement* element : m_Elements) {
@@ -156,6 +172,21 @@ namespace WindowElement {
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
+		}
+	}
+	void EditorView::InitImGuiPlatform(Rendering::Window& window)
+	{
+		m_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
+
+		switch (m_Api)
+		{
+		case RenderAPI::OpenGL:
+			ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
+			ImGui_ImplOpenGL3_Init("#version 330 core");
+			break;
+		case RenderAPI::Vulkan:
+			ImGui_ImplGlfw_InitForVulkan(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
+			break;
 		}
 	}
 }

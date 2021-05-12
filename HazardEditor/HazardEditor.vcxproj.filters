@@ -34,11 +34,17 @@
     <Filter Include="src\GUI\Window\Debug">
       <UniqueIdentifier>{FED2D974-EA61-633E-9380-77397FEE73E4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Window\Editor">
+      <UniqueIdentifier>{BE165B12-2A83-160D-F376-AE6A5FA23875}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Window\Inspect">
       <UniqueIdentifier>{4D0FADA9-3909-D6FB-2276-6C0C0E0F3C68}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\GUI\Window\Rendering">
       <UniqueIdentifier>{D59564F6-C1BA-B376-EA05-9906D689B294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI\Window\ShaderEditor">
+      <UniqueIdentifier>{75C9E195-E1D6-0F7C-6ABD-0B67D6C9DB32}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
@@ -93,6 +99,9 @@
     <ClInclude Include="src\Editor\EditorCamera.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\EditorPopup.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\EditorView.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -109,6 +118,9 @@
       <Filter>src\GUI\Library</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\Dockspace.h">
       <Filter>src\GUI\Library\Layout</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Library\Layout\Layout.h">
@@ -132,6 +144,9 @@
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
+      <Filter>src\GUI\Window\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
@@ -150,8 +165,17 @@
     <ClInclude Include="src\GUI\Window\Rendering\Performance.h">
       <Filter>src\GUI\Window\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\TransformationGizmo.h">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
       <Filter>src\GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.h">
+      <Filter>src\GUI\Window\ShaderEditor</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Toolbar.h">
       <Filter>src\GUI\Window</Filter>
@@ -164,14 +188,6 @@
     </ClInclude>
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\EditorPopup.h" />
-    <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h" />
-    <ClInclude Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.h" />
-    <ClInclude Include="src\GUI\Library\Layout\Dockspace.h" />
-    <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h" />
-    <ClInclude Include="src\GUI\Window\Rendering\TransformationGizmo.h">
-      <Filter>src\GUI\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +221,9 @@
     <ClCompile Include="src\Editor\EditorCamera.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\EditorPopup.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\EditorView.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
@@ -215,6 +234,9 @@
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp">
       <Filter>src\GUI\Library\Layout</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
@@ -231,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
+      <Filter>src\GUI\Window\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
@@ -250,8 +275,17 @@
     <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp">
       <Filter>src\GUI\Window\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\TransformationGizmo.cpp">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
       <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp">
+      <Filter>src\GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.cpp">
+      <Filter>src\GUI\Window\ShaderEditor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Toolbar.cpp">
       <Filter>src\GUI\Window</Filter>
@@ -262,16 +296,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\EditorPopup.cpp" />
-    <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp" />
-    <ClCompile Include="src\GUI\Window\ShaderEditor\ShaderEditorWindow.cpp" />
-    <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp" />
-    <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp" />
-    <ClCompile Include="src\GUI\Window\Rendering\TransformationGizmo.cpp">
-      <Filter>src\GUI\Window</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\equirectangularToCube.glsl" />
   </ItemGroup>
 </Project>
