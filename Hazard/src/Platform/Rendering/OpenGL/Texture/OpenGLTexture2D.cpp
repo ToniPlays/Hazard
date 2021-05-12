@@ -23,7 +23,7 @@ namespace Hazard::Rendering::OpenGL {
 				float* data = stbi_loadf(file, &w, &h, &channels, 0);
 				if (!data)
 				{
-					HZR_CORE_WARN("Texture file not found {0}", file);
+					HZR_CORE_WARN("HDR Texture file not found {0}", file);
 					return;
 				}
 
@@ -52,8 +52,6 @@ namespace Hazard::Rendering::OpenGL {
 				glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Spec.width, m_Spec.height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 			}
 
-			HZR_CORE_INFO("Loading texture from file {0}", file);
-
 			glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -61,8 +59,6 @@ namespace Hazard::Rendering::OpenGL {
 
 			return;
 		}
-
-		HZR_CORE_INFO("Creating texture from nothing");
 
 		m_Spec.width = params.width;
 		m_Spec.height = params.height;

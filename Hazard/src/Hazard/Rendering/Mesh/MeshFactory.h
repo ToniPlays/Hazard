@@ -21,10 +21,10 @@ namespace Hazard::Rendering {
 	class MeshFactory {
 
 	public:
-		static Mesh* LoadMesh(const std::string& file);
-		static Mesh* LoadCube();
-		static Mesh* LoadSphere();
-		static Mesh* LoadPlane();
+		static Ref<Mesh> LoadMesh(const std::string& file);
+		static Ref<Mesh> LoadCube();
+		static Ref<Mesh> LoadSphere();
+		static Ref<Mesh> LoadPlane();
 		static std::vector<Mesh*>& GetLoadedMeshes() { return m_LoadedMeshes; }
 
 	private:

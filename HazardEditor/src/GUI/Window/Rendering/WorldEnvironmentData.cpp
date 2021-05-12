@@ -71,19 +71,19 @@ namespace WindowElement {
 			}
 			else if(data.background == ECS::WorldBackground::Sky)
 			{
-				Ref<Texture2D> texture = RenderUtils::Create<Texture2D>("White");
+				Texture* texture = RenderUtils::Get<Texture2D>().Raw();
 				Layout::Text("Front");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 				Layout::Text("Back");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 				Layout::Text("Left");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 				Layout::Text("Right");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 				Layout::Text("Top");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 				Layout::Text("Bottom");
-				Input::TextureSlot(texture.Raw(), [&]() {});
+				Input::TextureSlot(texture, [&]() {});
 			}
 			else 
 			{

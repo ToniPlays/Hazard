@@ -63,7 +63,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < 8; i++)
 			samplers[i] = i;
 
-		m_Data.TextureSlots[0] = RenderUtils::Create<Texture2D>("White").Raw();
+		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
 
 		m_Data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
 		m_Data.QuadShader->Bind();
@@ -83,11 +83,11 @@ namespace Hazard::Rendering {
 		}
 		float textureIndex = 0.0f;
 		
-		if (quad.texture != nullptr) 
+		if (quad.texture->GetID() != m_Data.TextureSlots[0]->GetID()) 
 		{
 			bool found = false;
-			for (int i = 1; i < m_Data.TextureIndex; i++) {
-				if (&m_Data.TextureSlots[i] == &quad.texture) {
+			for (int i = 0; i < m_Data.TextureIndex; i++) {
+				if (m_Data.TextureSlots[i]->GetID() == quad.texture->GetID()) {
 					found = true;
 					textureIndex = float(i);
 					break;
@@ -125,17 +125,16 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::Flush()
 	{
-
 		if (m_Data.QuadIndexCount == 0)
 			return;
 
+		m_Data.QuadShader->Bind();
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.QuadVertexBufferPtr - (uint8_t*)m_Data.QuadVertexBufferBase);
 		m_Data.QuadVertexBuffer->SetData(m_Data.QuadVertexBufferBase, dataSize);
 
-		//for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-		//	m_Data.TextureSlots[i]->Bind(i);
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
+ 			m_Data.TextureSlots[i]->Bind(i);
 
-		m_Data.QuadShader->Bind();
 		RenderCommand::DrawIndexed(m_Data.QuadVertexArray, m_Data.QuadIndexCount);
 	}
 }

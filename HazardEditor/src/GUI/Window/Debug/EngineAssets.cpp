@@ -19,19 +19,25 @@ namespace WindowElement {
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
 
 		Layout::Treenode("Shaders", flags, []() {
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(50);
+			for (RefCount* ref : RenderUtils::GetAssetsOf(AssetType::ShaderAsset)) {
+				Shader* shader = (Shader*)ref;
 
+				Layout::Text(std::to_string(ref->GetRefCount()).c_str());
+				Layout::TableNext();
+				ImGui::Text(shader->GetFile().c_str());
+				Layout::TableNext();
+			}
+			Layout::EndTable();
 		});
 
 		Layout::Treenode("Textures", flags, []() {
-			Layout::Table(2, false);
-			Layout::EndTable();
-
-			static std::string texture;
-			if (Input::Button("Load texture")) {
-				Rendering::RenderUtils::Create<Texture2D>(texture.c_str());
+			for (RefCount* ref : RenderUtils::GetAssetsOf(AssetType::TextureAsset)) {
+				Texture* texture = (Texture*)ref;
+				Input::TextureSlot(texture, [&]() {});
 			}
-			Layout::SameLine(125);
-			Input::InputField(texture);
+			
 		});
 		Layout::Treenode("Meshes", flags, []() {
 			for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {

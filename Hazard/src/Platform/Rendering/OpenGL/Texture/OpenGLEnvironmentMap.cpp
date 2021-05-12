@@ -55,6 +55,7 @@ namespace Hazard::Rendering::OpenGL {
     }
     void OpenGLEnvironmentMap::GenerateCubemap()
     {
+        Ref<Shader> convertShader = RenderUtils::Create<Shader>("res/shaders/equirectangularToCube.glsl");
         float vertices[24] = {
             // positions
             -1.0f, -1.0f, -1.0f,
@@ -100,7 +101,6 @@ namespace Hazard::Rendering::OpenGL {
             glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
         };
 
-        Ref<Shader> convertShader = RenderUtils::Create<Shader>("res/shaders/equirectangularToCube.glsl");
 
         unsigned int captureFBO;
         unsigned int captureRBO;
@@ -132,9 +132,8 @@ namespace Hazard::Rendering::OpenGL {
             
             RenderCommand::DrawIndexed(cubeArray, indexBuffer->GetCount());
         }
-        
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        delete cubeArray;
+        HZR_CORE_WARN("HDR Cubemap finished");
     }
 
     void OpenGLEnvironmentMap::GenerateIrradiance()

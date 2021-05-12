@@ -3,6 +3,7 @@
 #include "OpenGLShader.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "Hazard/File/File.h"
+#include "Hazard/Rendering/RenderUtils.h"
 
 namespace Hazard::Rendering::OpenGL {
 
@@ -27,8 +28,8 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::~OpenGLShader()
 	{
-		HZR_CORE_INFO("Unloaded shader {0}", m_File);
 		glDeleteProgram(m_ProgramID);
+		RenderUtils::RemoveAsset((Shader*)this);
 	}
 
 	void OpenGLShader::Bind() const
@@ -113,8 +114,6 @@ namespace Hazard::Rendering::OpenGL {
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& sources)
 	{
 		m_ProgramID = glCreateProgram();
-
-		HZR_CORE_INFO("Compiling shader {0} program {1}", m_File, m_ProgramID);
 
 		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;

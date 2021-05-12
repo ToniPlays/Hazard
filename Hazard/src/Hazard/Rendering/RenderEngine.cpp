@@ -29,9 +29,6 @@ namespace Hazard::Rendering {
 		RenderCommand::Init();
 		m_Renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
 		m_Renderer2D->Init(35000);
-
-		//m_EnvironmentMap->GenerateIrradiance();
-		//m_EnvironmentMap->GeneratePreFilter();
 	}
 	void RenderEngine::Close()
 	{
@@ -42,12 +39,14 @@ namespace Hazard::Rendering {
 	{
 		RenderCommand::ResetStats();
 		m_RenderTarget->Bind();
+		RenderContextCommand::ClearFrame(renderer.m_Color);
 
 		m_BackgroundRenderer = &renderer;
 		m_ViewProjection = camera.projection * glm::inverse(camera.view);
+
 		m_CameraPosition = camera.position;
-		
-		renderer.Render(camera.view, camera.projection);
+		m_Projection = camera.projection;
+		m_View = camera.view;
 
 		m_Renderer2D->BeginScene(m_ViewProjection);
 		m_Renderer2D->BeginBatch();
@@ -56,6 +55,7 @@ namespace Hazard::Rendering {
 	void RenderEngine::EndRendering()
 	{
 		m_Renderer2D->Flush();
+		m_BackgroundRenderer->Render(m_View, m_Projection);
 		m_RenderTarget->Unbind();
 	}
 }

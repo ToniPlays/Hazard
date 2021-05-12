@@ -6,6 +6,8 @@ namespace Hazard {
 
 	class RefCount {
 	public:
+        RefCount() : m_RefCount(0) {};
+
 		void IncRefCount() const {
 			m_RefCount++;
 		}
@@ -15,12 +17,13 @@ namespace Hazard {
 		uint32_t GetRefCount() const { return m_RefCount; }
 
 	private:
-		mutable uint32_t m_RefCount = 0;
+		mutable uint32_t m_RefCount;
 	};
 
-	template<typename T>
-	class Ref {
-	public:
+    template<typename T>
+    class Ref
+    {
+    public:
         Ref()
             : m_Instance(nullptr) {}
 
@@ -121,22 +124,22 @@ namespace Hazard {
     private:
         void IncRef() const
         {
-            if (m_Instance)
+            if (m_Instance != nullptr)
                 m_Instance->IncRefCount();
         }
 
         void DecRef() const
         {
-            if (m_Instance)
+            if (m_Instance != nullptr)
             {
                 m_Instance->DecRefCount();
-                if (m_Instance->GetRefCount() > 0) return;
-                delete m_Instance;
+                if (m_Instance->GetRefCount() == 0)
+                    delete m_Instance;
             }
         }
 
         template<class T2>
         friend class Ref;
         T* m_Instance;
-	};
+    };
 }

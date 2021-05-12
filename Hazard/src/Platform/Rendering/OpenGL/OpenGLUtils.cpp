@@ -23,8 +23,6 @@ namespace Hazard::Rendering::OpenGL
 		case GL_DEBUG_SEVERITY_LOW: return "Low";
 		case GL_DEBUG_SEVERITY_MEDIUM: return "Medium";
 		case GL_DEBUG_SEVERITY_HIGH: return "High";
-
-
 		}
 		return "";
 	}

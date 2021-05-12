@@ -31,13 +31,10 @@ namespace WindowElement {
 	void Viewport::OnWindowRender()
 	{
 		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
-		auto&[found, camera, t] = world.GetWorldCamera();
 
-		if (found) {
-			Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
-			ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
-				m_EditorCamera.GetPosition()));
-		}
+		Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
+		ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
+			m_EditorCamera.GetPosition()));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();

@@ -7,6 +7,8 @@
 namespace Hazard::Rendering {
 
 	RenderAPI RenderUtils::s_Api;
+	Ref<Texture2D> RenderUtils::s_WhiteTexture;
+	std::unordered_map<AssetType, std::vector<RefCount*>> RenderUtils::s_Assets;
 
 	template<typename T>
 	T* RenderUtils::CreateRaw()
@@ -18,7 +20,6 @@ namespace Hazard::Rendering {
 	{
 		static_assert(false, "RenderUtils::CreateRaw(Arg)");
 	}
-
 	template<typename T>
 	Ref<T> RenderUtils::Create()
 	{
@@ -34,11 +35,19 @@ namespace Hazard::Rendering {
 	{
 		static_assert(false, "RenderUtils::Create(F, Arg)");
 	}
-
+	template<typename T>
+	Ref<T>& RenderUtils::Get() {
+		static_assert(false, "RenderUtils::Get()");
+	}
+	template<>
+	Ref<Texture2D>& RenderUtils::Get() {
+		return s_WhiteTexture;
+	}
 #pragma region Rendering
 
 	template<>
 	VertexArray* RenderUtils::CreateRaw<VertexArray>() {
+
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray();
@@ -63,11 +72,20 @@ namespace Hazard::Rendering {
 	}
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(const char* file) {
+		Shader* shader = Find<Shader>(file);
+		if (shader != nullptr) {
+			HZR_CORE_INFO("Shader {0} refs {1}", file, shader->GetRefCount());
+			return Ref(shader);
+		}
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLShader>::Create(file);
+		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(file);
 		}
+		Ref ref(shader);
+		HZR_CORE_INFO("Created new shader {0} refs {1} ", file, ref->GetRefCount());
+		s_Assets[AssetType::ShaderAsset].push_back(shader);
+		return ref;
 	}
 	template<>
 	Ref<OcclusionQuery> RenderUtils::Create<OcclusionQuery>() {
@@ -82,6 +100,7 @@ namespace Hazard::Rendering {
 #pragma region Textures
 	template<>
 	Ref<RenderTexture> RenderUtils::Create<RenderTexture>(TextureSpecs specs) {
+
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(specs);
@@ -91,28 +110,46 @@ namespace Hazard::Rendering {
 	template<>
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(const char* path) {
 
+		Texture* texture = Find<Texture>(path);
+		if (texture != nullptr) {
+			return Ref((Texture2D*)texture);
+		}
+
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLTexture2D>::Create(path, TextureSpecs());
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path, TextureSpecs());
 		}
+
+		HZR_CORE_INFO("Created new Texture2D {0}", path);
+		s_Assets[AssetType::TextureAsset].push_back(texture);
+
+		return Ref(texture);
 	}
 	template<>
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(const char* name, TextureSpecs params) {
 
+		Texture* texture = Find<Texture>(name);
+		if (texture != nullptr) {
+			return Ref((Texture2D*)texture);
+		}
+
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLTexture2D>::Create(name, params);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(name, params);
 		}
+
+		HZR_CORE_INFO("Created new Texture2D {0}", name);
+		s_Assets[AssetType::TextureAsset].push_back(texture);
+
+		return Ref(texture);
 	}
 	template<>
 	Ref<CubemapTexture> RenderUtils::Create<CubemapTexture>() {
-
 
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(TextureSpecs());
 		}
-		return nullptr;
 	}
 	template<>
 	Ref<CubemapTexture> RenderUtils::Create<CubemapTexture>(TextureSpecs specs) {
@@ -131,41 +168,81 @@ namespace Hazard::Rendering {
 	template<>
 	Ref<CubemapTexture> RenderUtils::Create<CubemapTexture>(const char* name, const char* extension) {
 
+		Ref<Texture> ref = Find<Texture>(name);
+		if (ref) {
+			return static_cast<Ref<CubemapTexture>>(ref);
+		}
+
+		CubemapTexture* texture;
 		HZR_CORE_INFO("Loading cubemap {0}, {1}", name, extension);
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(name, extension);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLCubemapTexture(name, extension);
 		}
+
+		HZR_CORE_INFO("Created new Texture2D {0}", name);
+		s_Assets[AssetType::TextureAsset].push_back(texture);
+
+		return ref;
 	}
 	template<>
 	Ref<EnvinronmentMap> RenderUtils::Create<EnvinronmentMap>(const char* file) {
+
+		Ref<Texture> ref = Find<Texture>(file);
+		if (ref) {
+			return static_cast<Ref<EnvinronmentMap>>(ref);
+		}
+		EnvinronmentMap* texture;
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLEnvironmentMap>::Create(file, TextureSpecs());
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, TextureSpecs());
 		}
+
+		HZR_CORE_INFO("Created new Texture2D {0}", file);
+		s_Assets[AssetType::TextureAsset].push_back(texture);
+
+		return Ref(texture);
 	}
 	template<>
 	Ref<EnvinronmentMap> RenderUtils::Create<EnvinronmentMap>(const char* file, TextureSpecs specs) {
+
+		Ref<Texture> ref = Find<Texture>(file);
+		if (ref) {
+			return static_cast<Ref<EnvinronmentMap>>(ref);
+		}
+
+		EnvinronmentMap* texture;
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLEnvironmentMap>::Create(file, specs);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, specs);
 		}
+
+		HZR_CORE_INFO("Created new Texture2D {0}", file);
+		s_Assets[AssetType::TextureAsset].push_back(texture);
+
+		return Ref(texture);
+
 	}
 #pragma endregion
 
 	//Initialize white texture for batch rendering
 	void RenderUtils::Init()
 	{
+		s_Assets = std::unordered_map<AssetType, std::vector<RefCount*>>();
+
 		TextureSpecs params;
 		params.width = 1;
 		params.height = 1;
 		params.diskImage = false;
 
-		Ref<Texture2D> texture = Create<Texture2D>("White", params);
+		s_WhiteTexture = Create<Texture2D>("White", params);
 		uint32_t data = 0xFFFFFFFF;
-		texture->SetData(&data, sizeof(uint32_t));
-
-
+		s_WhiteTexture->SetData(&data, sizeof(uint32_t));
 	}
+	template<typename T, typename Arg>
+	T* RenderUtils::Find(Arg args) {
+		static_assert(false, "RenderUtils::Find(Args)");
+	}
+	
 }

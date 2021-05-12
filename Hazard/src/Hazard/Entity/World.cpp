@@ -64,6 +64,15 @@ namespace Hazard::ECS {
     void World::RenderAll() {
 
         auto sprites = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
+        auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
+        for (auto entity : meshes) {
+
+            Entity e = GetEntity(entity);
+            auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
+            if (!e.IsVisible() || !mesh.m_Mesh) continue;
+
+            SceneCommand::Render(mesh, transform);
+        }
         for (auto entity : sprites) {
 
             Entity e{ entity, this };
@@ -80,15 +89,6 @@ namespace Hazard::ECS {
 
             auto& [batch, transform] = m_Registry.get<BatchComponent, TransformComponent>(entity);
             SceneCommand::Render(batch, transform);
-        }
-        auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
-        for (auto entity : meshes) {
-
-            Entity e = GetEntity(entity);
-            auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
-            if (!e.IsVisible() || mesh.m_Mesh == nullptr) continue;
-
-            SceneCommand::Render(mesh, transform);
         }
     }
     Entity World::CreateEntity(const char* name)
@@ -151,7 +151,7 @@ namespace Hazard::ECS {
     //SPRITE RENDERER COMPONENT
     template<>
     void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-        //component.m_Texture = Rendering::RenderUtils::GetFromTextures(0);
+        component.m_Texture = Rendering::RenderUtils::Get<Rendering::Texture2D>();
     }
     template<>
     void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}

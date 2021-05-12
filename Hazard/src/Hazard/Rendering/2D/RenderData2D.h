@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Hazard/Core/Core.h"
+
 namespace Hazard::Rendering 
 {
 	struct Renderer2DData {
+
 		uint32_t MaxQuads;
 		uint32_t MaxVertices;
 		uint32_t MaxIndices;
@@ -16,7 +19,7 @@ namespace Hazard::Rendering
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
-		std::array<Texture*, 8> TextureSlots;
+		std::array<Ref<Texture>, 8> TextureSlots;
 		glm::vec4 QuadVertexPos[4];
 	};
 }

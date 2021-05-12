@@ -64,11 +64,11 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void SceneCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
-		RenderCommand::Submit(Quad(transform.GetTransformMat4(), component.m_Tint, component.m_Texture));
+		RenderCommand::Submit(Quad(transform.GetTransformMat4(), component.m_Tint, component.m_Texture.Raw()));
 	}
 	template<>
 	void SceneCommand::Render(MeshComponent& component, TransformComponent& transform) {
-		RenderCommand::Submit(RenderableMesh(component.m_Mesh, transform.GetTransformMat4()));
+		RenderCommand::Submit(RenderableMesh(component.m_Mesh.Raw(), transform.GetTransformMat4()));
 	}
 
 	template<>

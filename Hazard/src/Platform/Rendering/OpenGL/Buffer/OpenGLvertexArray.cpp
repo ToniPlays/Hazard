@@ -36,6 +36,8 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		glDeleteVertexArrays(1, &ArrayID);
+		if(indexBuffer != nullptr)
+			delete indexBuffer;
 	}
 
 	void OpenGLVertexArray::Bind() const

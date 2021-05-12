@@ -28,7 +28,7 @@ namespace Hazard::Rendering {
 		RenderableMesh(Mesh* mesh, glm::mat4 transform) : mesh(mesh), transform(transform) {}
 	};
 
-	class Mesh {
+	class Mesh : public RefCount {
 	public:
 		Mesh() = default;
 		Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
@@ -36,10 +36,10 @@ namespace Hazard::Rendering {
 
 		void Render();
 
-
 		std::string& GetFile() { return m_Filename; }
-		Material& GetMaterial() { return *m_Material; }
-		void SetMaterial(Material* material) { this->m_Material = material; }
+		Ref<Material> GetMaterial() { return m_Material; }
+
+		void SetMaterial(const Ref<Material>& material) { this->m_Material = material; }
 		void GenerateArrays();
 
 	private:
@@ -50,7 +50,7 @@ namespace Hazard::Rendering {
 		std::vector<uint32_t> m_Indices;
 
 		std::vector<SubMesh> m_Submeshes;
-		Material* m_Material;
+		Ref<Material> m_Material;
 
 		VertexArray* m_MeshVAO;
 	};

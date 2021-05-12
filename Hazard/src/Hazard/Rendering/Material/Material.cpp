@@ -6,16 +6,17 @@
 
 namespace Hazard::Rendering {
 
-	Material::Material(Ref<Shader> shader) : m_Shader(shader)
+	Material::Material(const Ref<Shader>& shader)
 	{
-		
+		shader.Raw();
+		m_Shader = shader;
 	}
 	Material::~Material()
 	{
 
 	}
-	Material* Material::Create(const char* shader)
+	Ref<Material> Material::Create(const char* shader)
 	{
-		return new Material(RenderUtils::Create<Shader>(shader));
+		return Ref<Material>::Create(RenderUtils::Create<Shader>(shader));
 	}
 }

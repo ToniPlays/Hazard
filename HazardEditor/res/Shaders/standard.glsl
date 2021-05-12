@@ -10,7 +10,7 @@ uniform mat4 viewProjection;
 
 out vec4 f_color;
 out vec2 texCoords;
-out float textureIndex;
+flat out float textureIndex;
 
 void main() {
 
@@ -26,7 +26,7 @@ void main() {
 
 in vec4 f_color;
 in vec2 texCoords;
-in float textureIndex;
+flat in float textureIndex;
 
 uniform sampler2D u_Textures[8];
 

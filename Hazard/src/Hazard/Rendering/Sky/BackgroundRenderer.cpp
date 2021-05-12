@@ -8,7 +8,7 @@ namespace Hazard::Rendering {
 
 	void ColorBackgroundRenderer::Render(glm::mat4 view, glm::mat4 projection)
 	{
-		RenderContextCommand::ClearFrame(m_Color);
+
 	}
 	SkyboxBackgroundRenderer::SkyboxBackgroundRenderer() 
 	{
@@ -26,8 +26,6 @@ namespace Hazard::Rendering {
 
 	void SkyboxBackgroundRenderer::Render(glm::mat4 view, glm::mat4 projection)
 	{
-		RenderContextCommand::ClearFrame(m_Color);
-		
 		m_Skybox->Render(projection * glm::inverse(glm::mat4(glm::mat3(view))));
 	}
 	void SkyboxBackgroundRenderer::SetCubemap(Ref<CubemapTexture>& texture)

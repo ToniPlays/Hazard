@@ -3,17 +3,18 @@
 #include "../RenderUtils.h"
 
 namespace Hazard::Rendering {
-	class Material {
+
+	class Material : public RefCount {
 	public:
-		Material(Ref<Shader> shader);
+		Material(const Ref<Shader>& shader);
 		~Material();
 
-		Ref<Shader>& GetShader() { return m_Shader; }
+		Ref<Shader> GetShader() { return m_Shader; }
 		std::vector<Ref<Texture2D>> GetTextures() { return m_Textures; }
-		void SetTextures(std::vector<Ref<Texture2D>> textures) { this->m_Textures = textures; };
+		void SetTextures(const std::vector<Ref<Texture2D>>& textures) { this->m_Textures = textures; };
 
 	public:
-		static Material* Create(const char* shader);
+		static Ref<Material> Create(const char* shader);
 
 	private:
 		Ref<Shader> m_Shader;

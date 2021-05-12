@@ -10,6 +10,7 @@
 
 #include "Gui/Window/Rendering/Viewport.h"
 #include "Gui/Window/Rendering/GameViewport.h"
+#include "Gui/Window/Rendering/WorldEnvironmentData.h"
 
 using namespace WindowLayout;
 
@@ -86,13 +87,17 @@ namespace WindowElement {
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), scenePaused, { 28, 28 })) {
 			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
-
 		}
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
 			if (sceneRunning && scenePaused)
 				Application::GetModule<ScriptEngineManager>().Update();
+		}
+		Layout::SameLine(0, 5);
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33 * 3);
+		if (Input::ButtonColorChange(ICON_FK_LIGHTBULB_O, offColor, onColor, Style::GetStyleColor(ColorType::Warning), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
+			EditorView::GetInstance().SetLayerActive<WorldEnvironmentData>(true);
 		}
 
 		Layout::SameLine(0, 5);
@@ -101,11 +106,11 @@ namespace WindowElement {
 			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
 		}
 		Layout::Tooltip("VSync");
+
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), false, { 28, 28 })) {
 			ImGui::SaveIniSettingsToDisk("imgui.ini");
 		}
-
 		ImGui::End();
 	}
 	bool Toolbar::OnEvent(Event& e)

@@ -38,6 +38,6 @@ namespace Hazard::ECS {
 		std::string m_Filename;
 	};
 	struct MeshComponent {
-		Rendering::Mesh* m_Mesh;
+		Ref<Rendering::Mesh> m_Mesh;
 	};
 }

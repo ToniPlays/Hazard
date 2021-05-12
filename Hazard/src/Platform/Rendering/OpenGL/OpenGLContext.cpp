@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 
 			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 
-			HZR_CORE_INFO("[OpenGL]: {0}", message);
+			HZR_CORE_ERROR("[OpenGL]: {0}", message);
 
 			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
 		}
@@ -59,7 +59,7 @@ namespace Hazard::Rendering {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-			glDebugMessageCallback(OnDebugMessage, this);
+			glDebugMessageCallback(OnDebugMessage, nullptr);
 		}
 
 		void OpenGLContext::ClearFrame(glm::vec4 clearColor) const
@@ -149,7 +149,7 @@ namespace Hazard::Rendering {
 		{
 			if (!s_Callback) return;
 
-			ErrorData data(("[OpenGL]:" + std::string(message)).c_str(), code);
+			ErrorData data(("[OpenGL]: " + std::string(message)).c_str(), code);
 			s_Callback(data);
 		}
 	}

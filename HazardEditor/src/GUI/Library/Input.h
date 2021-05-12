@@ -20,11 +20,12 @@ namespace WindowElement {
 		static void ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
 		template<typename T>
-		static bool TextureSlot(Ref<Rendering::Texture> texture, T callback) {
+		static bool TextureSlot(Rendering::Texture* texture, T callback) {
 			bool changed = false;
 
 			Layout::Table(2, false, "##textureSlot");
 			Layout::SetColumnWidth(75);
+
 			changed = ImageButton(texture->GetID(), { 50, 50 });
 			Layout::Tooltip(texture->GetFile().c_str());
 			Layout::TableNext();

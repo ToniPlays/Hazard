@@ -25,13 +25,13 @@ namespace Hazard::Rendering {
 
 	std::vector<Mesh*> MeshFactory::m_LoadedMeshes;
 
-	Mesh* MeshFactory::LoadMesh(const std::string& file)
+	Ref<Mesh> MeshFactory::LoadMesh(const std::string& file)
 	{
 		std::string absoluteFile = File::GetFileAbsolutePath(file);
 
 		for (uint32_t i = 0; i < m_LoadedMeshes.size(); i++) {
 			if (m_LoadedMeshes[i]->GetFile() == file)
-				return m_LoadedMeshes[i];
+				return Ref(m_LoadedMeshes[i]);
 		}
 		
 		Assimp::Importer importer;
@@ -41,6 +41,7 @@ namespace Hazard::Rendering {
 			HZR_CORE_WARN("No meshes in {0}", absoluteFile);
 			return nullptr;
 		}
+
 		MeshData data;
 
 		data.subMeshes.reserve(scene->mNumMeshes);
@@ -48,7 +49,7 @@ namespace Hazard::Rendering {
 
 		TraverseNode(scene->mRootNode, data);
 
-		Material* material = Material::Create("res/shaders/PBRShader.glsl");
+		Ref<Material> material = Material::Create("res/shaders/PBRShader.glsl");
 		Mesh* mesh = new Mesh(absoluteFile, data.vertices, data.indices);
 		mesh->SetMaterial(material);
 
@@ -56,7 +57,7 @@ namespace Hazard::Rendering {
 			GetMaterials(scene, *material, file.c_str());
 
 		m_LoadedMeshes.push_back(mesh);
-		return mesh;
+		return Ref(mesh);
 	}
 	
 	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)
@@ -163,7 +164,7 @@ namespace Hazard::Rendering {
 			LoadMaterialTexture(aiMat, material, aiTextureType_AMBIENT   , "texture_ambient",  path);
 		}
 
-		material.SetTextures(textures);
+		//material.SetTextures(textures);
 	}
 	void MeshFactory::LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName, const char* path)
 	{
@@ -185,15 +186,15 @@ namespace Hazard::Rendering {
 			//RenderUtils::Create<Texture2D>(texturePath.c_str());
 		}
 	}
-	Mesh* MeshFactory::LoadCube()
+	Ref<Mesh> MeshFactory::LoadCube()
 	{
 		return LoadMesh("res/models/cube.obj");
 	}
-	Mesh* MeshFactory::LoadSphere()
+	Ref<Mesh> MeshFactory::LoadSphere()
 	{
 		return LoadMesh("res/models/ico.obj");
 	}
-	Mesh* MeshFactory::LoadPlane()
+	Ref<Mesh> MeshFactory::LoadPlane()
 	{
 		return LoadMesh("res/models/plane.obj");
 	}

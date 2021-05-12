@@ -37,19 +37,24 @@ namespace Hazard::Rendering {
 		template<>
 		void Submit<RenderableMesh>(RenderableMesh mesh) {
 
-			Ref<Shader>& shader = mesh.mesh->GetMaterial().GetShader();
+			Ref<Material> mat = mesh.mesh->GetMaterial();
+
+			Shader* shader = mat->GetShader().Raw();
 			shader->Bind();
 			shader->SetUniformMat4("viewProjection", m_ViewProjection);
 			shader->SetUniformMat4("model", mesh.transform);
 			shader->SetUniformVec3("cameraPos", m_CameraPosition);
 			shader->SetUniformFloat("gamma", m_BackgroundRenderer->GetGamma());
-
+			
 			mesh.mesh->Render();
 		}
 
 	private:
 		glm::mat4 m_ViewProjection;
 		glm::vec3 m_CameraPosition;
+		glm::mat4 m_Projection;
+		glm::mat4 m_View;
+
 
 		RenderTexture* m_RenderTarget = nullptr;
 		Renderer2D* m_Renderer2D = nullptr;

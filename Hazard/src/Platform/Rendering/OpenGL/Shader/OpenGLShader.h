@@ -16,7 +16,7 @@ namespace Hazard::Rendering::OpenGL {
 		void Bind() const;
 		void Unbind() const;
 
-		const char* GetFile() const override { return m_File.c_str(); }
+		std::string& GetFile() override { return m_File; }
 
 		void SetUniformInt(const std::string& name, int value) override;
 		void SetUniformIntArray(const std::string& name, int* value, uint32_t size) override;

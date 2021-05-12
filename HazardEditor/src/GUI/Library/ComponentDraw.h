@@ -130,6 +130,12 @@ namespace WindowElement {
 			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 			});
+			if (changed) {
+				std::string file = File::OpenFileDialog();
+				if (file != "") {
+					component.m_Texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(file.c_str());
+				}
+			}
 
 		}, [&entity]() {
 
@@ -275,7 +281,7 @@ namespace WindowElement {
 					component.m_Mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
 			}
 			Layout::TableNext();
-			std::string filename = component.m_Mesh != nullptr ? component.m_Mesh->GetFile() : "None";
+			std::string filename = component.m_Mesh ? component.m_Mesh->GetFile() : "None";
 			Layout::Text(filename.c_str());
 			Layout::EndTable();
 		}, []() {
