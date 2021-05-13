@@ -18,7 +18,7 @@ namespace WindowElement {
 		void OnWindowRender() override;
 
 	private:
-		Ref<RenderTexture> renderTexture;
-		uint32_t width = 0, height = 0;
+		Ref<RenderTexture> m_RenderTexture;
+		uint32_t m_Width = 0, m_Height = 0;
 	};
 }

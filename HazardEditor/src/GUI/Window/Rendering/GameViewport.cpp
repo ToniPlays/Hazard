@@ -17,7 +17,7 @@ namespace WindowElement {
 
 		TextureSpecs specs;
 		specs.dataType = TextureDataType::RGBA;
-		renderTexture = RenderUtils::Create<RenderTexture>(specs);
+		//m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
 	}
 	void GameViewport::OnWindowRender()
 	{
@@ -33,22 +33,22 @@ namespace WindowElement {
 			return;
 		}
 
-		Rendering::RenderCommand::SetRenderTarget(renderTexture);
+		Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(), 
 			transform->m_Translation));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		if (size.x != width || size.y != height) {
-			width = size.x;
-			height = size.y;
+		if (size.x != m_Width || size.y != m_Height) {
+			m_Width = size.x;
+			m_Height = size.y;
 
-			renderTexture->Resize(size.x, size.y);
+			m_RenderTexture->Resize(size.x, size.y);
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
-		ImGui::Image((void*)renderTexture->GetColorID(),
+		ImGui::Image((void*)m_RenderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}

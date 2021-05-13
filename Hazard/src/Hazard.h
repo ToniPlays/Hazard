@@ -11,7 +11,7 @@
 #include "Hazard/Events/KeyCode.h"
 #include "Hazard/Events/MouseCode.h"
 
-//Hazard render engien includes
+//Hazard render engine includes
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/RenderUtils.h"
@@ -20,6 +20,9 @@
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Platform/System/Window.h"
+
+#include "Platform/Rendering/OpenGL/OpenGLContext.h"
+#include "Platform/Rendering/Vulkan/VKContext.h"
 
 //Hazard ECS includes
 #include "Hazard/Entity/SceneCommand.h"

@@ -4,6 +4,7 @@
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_impl_vulkan.h"
 
 #include <GLFW/glfw3.h>
 
@@ -126,7 +127,7 @@ namespace WindowElement {
 			ImGui_ImplGlfw_Shutdown();
 			break;
 		case RenderAPI::Vulkan:
-			//ImGui_ImplVulkan_Shutdown();
+			ImGui_ImplVulkan_Shutdown();
 			ImGui_ImplGlfw_Shutdown();
 			break;
 		}
@@ -142,7 +143,7 @@ namespace WindowElement {
 			ImGui_ImplGlfw_NewFrame();
 			break;
 		case RenderAPI::Vulkan:
-			//ImGui_ImplVulkan_NewFrame();
+			ImGui_ImplVulkan_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			break;
 		}
@@ -186,6 +187,22 @@ namespace WindowElement {
 			break;
 		case RenderAPI::Vulkan:
 			ImGui_ImplGlfw_InitForVulkan(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
+			Vulkan::VKContext* context = static_cast<Vulkan::VKContext*>(window.GetContext());
+			Vulkan::VulkanData& data = context->GetVulkanData();
+
+			ImGui_ImplVulkan_InitInfo info = {};
+			info.Instance = data.instance;
+			info.PhysicalDevice = data.physicalDevice;
+			info.Device = data.device;
+			info.QueueFamily = data.queueFamily;
+			info.Queue = data.queue;
+			info.PipelineCache = data.pipelineCache;
+			info.DescriptorPool = data.descriptorPool;
+			info.MinImageCount = data.minImageCount;
+			info.ImageCount = data.imageCount;
+			info.MSAASamples = data.MSAASamples;
+
+			ImGui_ImplVulkan_Init(&info, data.renderPass);
 			break;
 		}
 	}

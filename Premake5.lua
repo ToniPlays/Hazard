@@ -66,6 +66,12 @@ project "IMGUI"
 		"c:/dev/hazard/vendor/IMGUI/imgui_draw.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp",
+		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.h",
+		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp"
+	}
+	includedirs {
+		"C:/dev/hazard/vendor/IMGUI",
+		"C:/dev/hazard/vendor/Vulkan/include"
 	}
 
 	filter "system:windows"

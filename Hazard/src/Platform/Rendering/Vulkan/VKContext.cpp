@@ -7,11 +7,6 @@ namespace Hazard::Rendering {
 
 	namespace Vulkan
 	{
-		VkInstance instance;
-		VkPhysicalDevice physicalDevice;
-		VkDevice device;
-		VkQueue graphicsQueue;
-
 		ErrorCallback VKContext::s_Callback;
 
 		bool VKSuitableDevice(VkPhysicalDevice device);
@@ -25,13 +20,13 @@ namespace Hazard::Rendering {
 
 		VKContext::~VKContext()
 		{
-			vkDestroyInstance(instance, nullptr);
+			vkDestroyInstance(m_VulkanData.instance, nullptr);
 		}
 
 		void VKContext::Init() const 
 		{
 			if (!glfwVulkanSupported()) {
-				HZR_CORE_ERROR("Vulkan not supported");
+				HZR_THROW("Vulkan not supported");
 			}
 
 			VkApplicationInfo appInfo = {};
@@ -46,41 +41,41 @@ namespace Hazard::Rendering {
 			createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 			createInfo.pApplicationInfo = &appInfo;
 
-			VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+			VkResult result = vkCreateInstance(&createInfo, nullptr, (VkInstance*)&m_VulkanData.instance);
 
 			if(result != VK_SUCCESS) {
-				HZR_CORE_ERROR("Vulkan failed to create instance");
-				return;
+				HZR_THROW("Vulkan vkCreateInstance failed");
 			}
 			
 			uint32_t deviceCount = 0;
-			vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+			vkEnumeratePhysicalDevices(m_VulkanData.instance, &deviceCount, nullptr);
 
 			if (deviceCount == 0) {
-				throw std::runtime_error("failed to find GPUs with Vulkan support!");
+				HZR_THROW("Failed to find Vulkan capable device!");
 			}
 
 			std::vector<VkPhysicalDevice> devices(deviceCount);
-			vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+			vkEnumeratePhysicalDevices(m_VulkanData.instance, &deviceCount, devices.data());
 
 			for (const auto& device : devices) {
 				if (VKSuitableDevice(device)) {
-					physicalDevice = device;
+					(VkPhysicalDevice)m_VulkanData.physicalDevice = device;
 					break;
 				}
 			}
 
-			if (physicalDevice == VK_NULL_HANDLE) {
-				HZR_CORE_INFO("Failed to get suitable Vulkan device");
-				return;
+			if (m_VulkanData.physicalDevice == VK_NULL_HANDLE) {
+				HZR_THROW("Failed to get suitable Vulkan device");
 			}
 
-			QueueFamilyIndices indices = VKFindQueueFamilies(physicalDevice);
+			QueueFamilyIndices indices = VKFindQueueFamilies(m_VulkanData.physicalDevice);
+			
 
 			VkDeviceQueueCreateInfo queueCreateInfo{};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 			queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
 			queueCreateInfo.queueCount = 1;
+
 
 			float queuePriority = 1.0f;
 			queueCreateInfo.pQueuePriorities = &queuePriority;
@@ -95,15 +90,31 @@ namespace Hazard::Rendering {
 			deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
 			deviceCreateInfo.enabledExtensionCount = 0;
 
-			if (vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &device) != VK_SUCCESS) {
-				throw std::runtime_error("failed to create logical device!");
+			if (vkCreateDevice(m_VulkanData.physicalDevice, &deviceCreateInfo, nullptr, (VkDevice*)&m_VulkanData.device) != VK_SUCCESS) {
+				HZR_THROW("failed to create Vulkan logical device!");
 			}
 
-			vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+			vkGetDeviceQueue((VkDevice)m_VulkanData.device, indices.graphicsFamily.value(), 0, (VkQueue*)&m_VulkanData.queue);
 
+			(uint32_t)m_VulkanData.queueFamily = indices.graphicsFamily.value();
+			vkGetDeviceQueue(m_VulkanData.device, m_VulkanData.queueFamily, 0, (VkQueue*)&m_VulkanData.queue);
+						
+			VkDescriptorPoolSize poolSizes = {};
+			poolSizes.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+
+
+			VkDescriptorPoolCreateInfo poolInfo = {};
+			poolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+			poolInfo.poolSizeCount = 1;
+			poolInfo.pPoolSizes = &poolSizes;
+
+			if (vkCreateDescriptorPool(m_VulkanData.device, &poolInfo, nullptr, (VkDescriptorPool*)&m_VulkanData.descriptorPool) != VK_SUCCESS) {
+				HZR_THROW("Vulkan Create descriptor pool failed");
+			}
 
 			HZR_CORE_WARN(GetVersion());
 			HZR_CORE_WARN(GetDevice());
+
 		}
 
 		void VKContext::ClearFrame(glm::vec4 clearColor) const
@@ -144,7 +155,7 @@ namespace Hazard::Rendering {
 		std::string VKContext::GetVersion() const
 		{
 			VkPhysicalDeviceProperties props;
-			vkGetPhysicalDeviceProperties(physicalDevice, &props);
+			vkGetPhysicalDeviceProperties(m_VulkanData.physicalDevice, &props);
 
 			std::stringstream ss;
 
@@ -157,7 +168,7 @@ namespace Hazard::Rendering {
 		std::string VKContext::GetDevice() const
 		{
 			VkPhysicalDeviceProperties props;
-			vkGetPhysicalDeviceProperties(physicalDevice, &props);
+			vkGetPhysicalDeviceProperties(m_VulkanData.physicalDevice, &props);
 
 			return props.deviceName;
 		}
@@ -169,7 +180,6 @@ namespace Hazard::Rendering {
 		{
 			return glfwGetInstanceProcAddress(NULL, adress);
 		}
-
 
 
 

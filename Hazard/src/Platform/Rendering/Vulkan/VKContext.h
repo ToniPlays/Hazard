@@ -9,6 +9,8 @@
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
+#include <vulkan/vulkan.h>
+
 namespace Hazard::Rendering::Vulkan {
 
 	struct QueueFamilyIndices {
@@ -18,6 +20,24 @@ namespace Hazard::Rendering::Vulkan {
 			return graphicsFamily.has_value();
 		}
 	};
+
+	struct VulkanData {
+		VkInstance instance;
+		VkDevice device;
+		VkPhysicalDevice physicalDevice;
+		uint32_t queueFamily;
+		VkQueue queue;
+		VkSwapchainKHR swapchain;
+
+		VkPipelineCache pipelineCache;
+		VkDescriptorPool descriptorPool;
+		uint32_t minImageCount = 3;
+		uint32_t imageCount = 3;
+		VkSampleCountFlagBits MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+
+		VkRenderPass renderPass;
+	};
+
 
 	class VKContext : public GraphicsContext {
 
@@ -40,10 +60,14 @@ namespace Hazard::Rendering::Vulkan {
 
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
+
 		static GLFWvkproc GetProc(const char* adress);
 		static ErrorCallback s_Callback;
 
+		VulkanData& GetVulkanData() { return m_VulkanData; }
+
 	private:
 		GLFWwindow* m_Window;
+		VulkanData m_VulkanData;
 	};
 }

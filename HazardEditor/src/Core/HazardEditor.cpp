@@ -29,7 +29,7 @@ void EditorApplication::PreInit()
 
 	SetTitle(ss.str());
 	SetWindowIcon("res/icons/logo.png", "res/icons/logo.png");
-	PushModule<Rendering::RenderEngine>();
+	//PushModule<Rendering::RenderEngine>();
 	PushModule<Scripting::ScriptEngineManager>();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
@@ -47,7 +47,7 @@ void EditorApplication::PreInit()
 void EditorApplication::Init() 
 {
 	Project::ProjectManager manager = GetModule<Project::ProjectManager>();
-	GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
+	//GetModule<ECS::SceneHandler>().LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
 	Runtime::SceneRuntimeHandler::Init();
 }
 
