@@ -20,6 +20,9 @@
 
 #include "Hazard/Math/Time.h"
 
+
+#define HZR_THROW(x) throw std::runtime_error(x)
+
 #if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
 	//Core logging macros
 	#define HZR_CORE_INFO(...)		 ::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)

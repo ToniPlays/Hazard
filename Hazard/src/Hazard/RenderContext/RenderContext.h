@@ -9,7 +9,9 @@ namespace Hazard::Rendering {
 	enum class RenderAPI { 
 		Auto = 0,
 		OpenGL,
-		Vulkan
+		Vulkan,
+		DX11,
+		DX12
 	};
 
 	class RenderContext : public Module::Module {
@@ -27,6 +29,8 @@ namespace Hazard::Rendering {
 		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }
 		GraphicsContext& GetContext() { return *m_Window->GetContext(); }
 		Window& GetWindow() { return *m_Window; }
+
+		static const char* APIToString(RenderAPI api);
 
 	private:
 		void Process(Event& e);

@@ -148,7 +148,7 @@ namespace Hazard::Rendering {
 
 			std::stringstream ss;
 
-			ss << VK_VERSION_MAJOR(props.apiVersion);
+			ss <<		 VK_VERSION_MAJOR(props.apiVersion);
 			ss << "." << VK_VERSION_MINOR(props.apiVersion);
 			ss << "." << VK_VERSION_PATCH(props.apiVersion);
 

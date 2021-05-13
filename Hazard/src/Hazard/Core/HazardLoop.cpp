@@ -20,27 +20,46 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Start()
 	{
-		m_Application->PreInit();
-		m_Application->Init();
+		try 
+		{
+			m_Application->PreInit();
+			m_Application->Init();
 
-		Input::Input::Init();
-		double lastTime = 0;
+			Input::Input::Init();
+			double lastTime = 0;
 
-		while (!m_ShouldClose) {
+			while (!m_ShouldClose) {
 
-			double time = glfwGetTime();
-			Time::s_UnscaledDeltaTime = time - lastTime;
-			Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
-			Time::s_Time = time;
-			lastTime = time;
+				double time = glfwGetTime();
+				Time::s_UnscaledDeltaTime = time - lastTime;
+				Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
+				Time::s_Time = time;
+				lastTime = time;
 
-			m_Application->Update();
-			m_ModuleHandler.Update();
-			m_ModuleHandler.Render();
+				m_Application->Update();
+				m_ModuleHandler.Update();
+				m_ModuleHandler.Render();
+			}
+
+			m_Application->Close();
+			m_ModuleHandler.Close();
 		}
+		catch (const std::runtime_error& error) 
+		{	
+			const char* errorCode = error.what();
 
-		m_Application->Close();
-		m_ModuleHandler.Close();
+			const WCHAR* pwcsName; //LPCWSTR
+
+			// required size
+			int size = MultiByteToWideChar(CP_ACP, 0, errorCode, -1, NULL, 0);
+			// allocate it
+			pwcsName = new WCHAR[256];
+			MultiByteToWideChar(CP_ACP, 0, errorCode, -1, (LPWSTR)pwcsName, size);
+			// use it....
+
+			MessageBox(NULL, pwcsName, (LPCTSTR)L"Error", MB_OK);
+			delete[] pwcsName;
+		}
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{

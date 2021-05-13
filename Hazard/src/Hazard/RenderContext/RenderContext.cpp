@@ -37,8 +37,20 @@ namespace Hazard::Rendering {
 		delete m_Window;
 	}
 
+
 	void RenderContext::Process(Event& e)
 	{
 		Core::HazardLoop::GetCurrent().Process(e);
+	}
+	const char* RenderContext::APIToString(RenderAPI api)
+	{
+		switch (api)
+		{
+		case Hazard::Rendering::RenderAPI::OpenGL:	return "OpenGL";
+		case Hazard::Rendering::RenderAPI::Vulkan:  return "Vulkan";
+		case Hazard::Rendering::RenderAPI::DX11:	return "DX11";
+		case Hazard::Rendering::RenderAPI::DX12:	return "DX12";
+		}
+		return "Auto";
 	}
 }

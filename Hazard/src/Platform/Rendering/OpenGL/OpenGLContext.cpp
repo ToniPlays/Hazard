@@ -40,11 +40,8 @@ namespace Hazard::Rendering {
 			glfwMakeContextCurrent(m_Window);
 
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-				HZR_ASSERT(false, "Unable to init GLFW context");
-				return;
+				HZR_THROW("Unable to init OpenGL GLFW context");
 			};
-
-			HZR_CORE_INFO("[OpenGL]: " + GetVersion());
 
 			Enable(CullFace);
 			glCullFace(GL_BACK);
@@ -144,7 +141,6 @@ namespace Hazard::Rendering {
 		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
 		{
 			if (!s_Callback) return;
-
 			ErrorData data(("[OpenGL]: " + std::string(message)).c_str(), code);
 			s_Callback(data);
 		}

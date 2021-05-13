@@ -19,7 +19,9 @@ namespace Hazard::Rendering {
 
 	WindowsWindow::WindowsWindow(WindowProps& props) {
 
-		if (!glfwInit()) return;
+		if (!glfwInit()) {
+			HZR_THROW("Failed to init GLFW");
+		}
 
 		m_WindowData.Title = props.Title;
 		m_WindowData.Platform = "Windows";
@@ -31,13 +33,14 @@ namespace Hazard::Rendering {
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
 
 		if (!m_Window) {
-			HZR_ASSERT(false, "Window was not initialized");
-			return;
+			HZR_THROW("Failed to create window");
 		}
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
-		switch (Application::GetModule<RenderContext>().GetCurrentAPI()) {
+		RenderAPI api = Application::GetModule<RenderContext>().GetCurrentAPI();
+
+		switch (api) {
 
 		case RenderAPI::OpenGL:
 			m_Context = new OpenGL::OpenGLContext(this, &m_WindowData); 
@@ -46,8 +49,10 @@ namespace Hazard::Rendering {
 			m_Context = new Vulkan::VKContext(this, &m_WindowData);
 			break;
 		default:
-			HZR_CORE_INFO("RenderContext not supported ({0})", RenderContextCommand::GetContext().GetCurrentAPI());
-			break;
+			std::stringstream ss;
+			ss << "RenderContext not supported: ";
+			ss << RenderContext::APIToString(api);
+			HZR_THROW(ss.str());
 		}
 
 		m_WindowData.Renderer = m_Context->GetVersion();

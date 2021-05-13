@@ -19,7 +19,6 @@ namespace Hazard::Rendering::Vulkan {
 		}
 	};
 
-
 	class VKContext : public GraphicsContext {
 
 	public:
