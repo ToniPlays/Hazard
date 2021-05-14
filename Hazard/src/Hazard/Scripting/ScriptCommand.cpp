@@ -12,12 +12,12 @@ namespace Hazard::Scripting {
 
 	void ScriptCommand::Init()
 	{
-		s_manager = &Application::GetModule<ScriptEngineManager>();
+		s_manager = Application::GetModule<ScriptEngineManager>();
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
 		using namespace ECS;
-		World& current = Application::GetModule<SceneHandler>().GetCurrentWorld();
+		World& current = Application::GetModule<SceneHandler>()->GetCurrentWorld();
 		auto view = current.GetWorldRegistry().view<ScriptComponent>();
 
 		for (auto entity : view) {

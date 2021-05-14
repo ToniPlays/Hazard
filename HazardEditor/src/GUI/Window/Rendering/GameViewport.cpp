@@ -17,7 +17,7 @@ namespace WindowElement {
 
 		TextureSpecs specs;
 		specs.dataType = TextureDataType::RGBA;
-		//m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
+		m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
 	}
 	void GameViewport::OnWindowRender()
 	{

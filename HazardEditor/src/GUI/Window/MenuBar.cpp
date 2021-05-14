@@ -26,7 +26,7 @@ namespace WindowElement {
 			Layout::MenuItem("Open", []() {});
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
-				Application::GetModule<Project::ProjectManager>().Save();
+				Application::GetModule<Project::ProjectManager>()->Save();
 			});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
@@ -43,48 +43,48 @@ namespace WindowElement {
 		});
 		Layout::Menu("Assets", []() {
 			Layout::MenuItem("Reload script assemblies", []() {
-				Application::GetModule<ScriptEngineManager>().ReloadAll();
+				Application::GetModule<ScriptEngineManager>()->ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
-				Application::GetModule<EditorView>().GetRenderable<FileView>()->UpdateFileTree();
+				Application::GetModule<EditorView>()->GetRenderable<FileView>()->UpdateFileTree();
 				});
 		});
 		Layout::Menu("Window", []() {
 			Layout::Menu("General", [&]() {
 				Layout::MenuItem("Viewport", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Viewport>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<Viewport>(true);
 					});
 				Layout::MenuItem("Game viewport", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<GameViewport>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<GameViewport>(true);
 					});
 				Layout::MenuItem("Hierarchy", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Hierarchy>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<Hierarchy>(true);
 					});
 				Layout::MenuItem("Properties", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Properties>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<Properties>(true);
 					});
 				Layout::MenuItem("Asset manager", [&]() {
 
-					Application::GetModule<EditorView>().SetLayerActive<FileView>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<FileView>(true);
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
 				Layout::MenuItem("Shader editor", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<ShaderEditorWindow>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<ShaderEditorWindow>(true);
 					});
 				Layout::MenuItem("Environment", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<WorldEnvironmentData>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<WorldEnvironmentData>(true);
 					});
 			});
 			Layout::Menu("Debug", [&]() {
 				Layout::MenuItem("Console", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Console>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<Console>(true);
 					});
 				Layout::MenuItem("Performance", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<Performance>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<Performance>(true);
 					});
 				Layout::MenuItem("Assets", [&]() {
-					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
+					Application::GetModule<EditorView>()->SetLayerActive<EngineAssets>(true);
 					});
 			});
 		});
@@ -109,11 +109,11 @@ namespace WindowElement {
 
 		switch (e.GetKeyCode()) {
 		case Key::S:
-			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
+			Application::GetModule<Project::ProjectManager>()->SaveCurrentScene();
 			HZR_CORE_WARN("Saving scene");
 			return true;
 		case Key::R:
-			Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
+			Application::GetModule<Scripting::ScriptEngineManager>()->ReloadAll();
 			HZR_CORE_WARN("Reloading assemblies");
 			return true;
 		}

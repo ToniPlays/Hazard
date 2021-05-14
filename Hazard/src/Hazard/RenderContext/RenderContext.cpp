@@ -37,7 +37,6 @@ namespace Hazard::Rendering {
 		delete m_Window;
 	}
 
-
 	void RenderContext::Process(Event& e)
 	{
 		Core::HazardLoop::GetCurrent().Process(e);

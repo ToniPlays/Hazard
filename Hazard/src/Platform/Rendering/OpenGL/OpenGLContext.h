@@ -11,10 +11,10 @@ namespace Hazard::Rendering::OpenGL {
 	class OpenGLContext : public GraphicsContext {
 
 	public:
-		OpenGLContext(Window* window, WindowProps* props);
+		OpenGLContext(WindowProps* props);
 		~OpenGLContext();
 
-		void Init() const override;
+		void Init(Window* window) override;
 		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
 		void SetDepthTest(DepthTest type) const override;

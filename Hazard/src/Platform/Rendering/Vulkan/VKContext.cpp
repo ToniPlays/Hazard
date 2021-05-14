@@ -2,6 +2,10 @@
 
 #include <hzrpch.h>
 #include "VKContext.h"
+#include "VKUtils.h"
+#include "VKValidationLayers.h"
+
+#include <set>
 
 namespace Hazard::Rendering {
 
@@ -9,112 +13,82 @@ namespace Hazard::Rendering {
 	{
 		ErrorCallback VKContext::s_Callback;
 
-		bool VKSuitableDevice(VkPhysicalDevice device);
-		QueueFamilyIndices VKFindQueueFamilies(VkPhysicalDevice device);
-
-		VKContext::VKContext(Window* window, WindowProps* props)
+		VKContext::VKContext(WindowProps* props)
 		{
-			this->m_Window = (GLFWwindow*)window->GetNativeWindow();
-			Init();
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		}
 
 		VKContext::~VKContext()
 		{
+			vkDestroySurfaceKHR(m_VulkanData.instance, m_VulkanData.vkSurface, nullptr);
+			vkDestroyDevice(m_VulkanData.device, nullptr);
 			vkDestroyInstance(m_VulkanData.instance, nullptr);
 		}
 
-		void VKContext::Init() const 
+		void VKContext::Init(Window* window)
 		{
-			if (!glfwVulkanSupported()) {
-				HZR_THROW("Vulkan not supported");
-			}
+			this->m_VulkanData.m_Window = (GLFWwindow*)window->GetNativeWindow();
 
-			VkApplicationInfo appInfo = {};
-			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-			appInfo.pApplicationName = "Hazard";
-			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-			appInfo.pEngineName = "Hazard";
-			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-			appInfo.apiVersion = VK_API_VERSION_1_0;
-
-			VkInstanceCreateInfo createInfo = {};
-			createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-			createInfo.pApplicationInfo = &appInfo;
-
-			VkResult result = vkCreateInstance(&createInfo, nullptr, (VkInstance*)&m_VulkanData.instance);
-
-			if(result != VK_SUCCESS) {
-				HZR_THROW("Vulkan vkCreateInstance failed");
-			}
+			if (!VKValidationLayer::IsValidationLayersSupported())
+				HZR_THROW("Vulkan validation layers not supported");
 			
-			uint32_t deviceCount = 0;
-			vkEnumeratePhysicalDevices(m_VulkanData.instance, &deviceCount, nullptr);
+			if (!CreateInstance()) 
+				HZR_THROW("Failed to create Vulkan instance");
 
-			if (deviceCount == 0) {
-				HZR_THROW("Failed to find Vulkan capable device!");
+			VkResult result = glfwCreateWindowSurface(m_VulkanData.instance, m_VulkanData.m_Window, nullptr, (VkSurfaceKHR*)&m_VulkanData.vkSurface);
+
+			switch (result)
+			{
+			case VK_ERROR_INITIALIZATION_FAILED: HZR_THROW("Vulkan surface failed to initialize");
+			case VK_ERROR_EXTENSION_NOT_PRESENT: HZR_THROW("Vulkan surface extension not available");
+			case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR: HZR_THROW("Vulkan surface error native window");
 			}
 
-			std::vector<VkPhysicalDevice> devices(deviceCount);
-			vkEnumeratePhysicalDevices(m_VulkanData.instance, &deviceCount, devices.data());
+			(VkPhysicalDevice)m_VulkanData.physicalDevice = VKUtils::GetVulkanDevice(m_VulkanData.instance, m_VulkanData);
+			if (m_VulkanData.physicalDevice == VK_NULL_HANDLE)
+				HZR_THROW("Failed to get Vulkan device");
 
-			for (const auto& device : devices) {
-				if (VKSuitableDevice(device)) {
-					(VkPhysicalDevice)m_VulkanData.physicalDevice = device;
-					break;
-				}
-			}
+			QueueFamilyIndices indices = VKUtils::VKFindQueueFamilies(m_VulkanData.physicalDevice, m_VulkanData.vkSurface);
 
-			if (m_VulkanData.physicalDevice == VK_NULL_HANDLE) {
-				HZR_THROW("Failed to get suitable Vulkan device");
-			}
-
-			QueueFamilyIndices indices = VKFindQueueFamilies(m_VulkanData.physicalDevice);
-			
-
-			VkDeviceQueueCreateInfo queueCreateInfo{};
-			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
-			queueCreateInfo.queueCount = 1;
-
+			std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+			std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
 			float queuePriority = 1.0f;
-			queueCreateInfo.pQueuePriorities = &queuePriority;
-
-			VkPhysicalDeviceFeatures deviceFeatures = {};
-
-			VkDeviceCreateInfo deviceCreateInfo = {};
-			deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-
-			deviceCreateInfo.pQueueCreateInfos = &queueCreateInfo;
-			deviceCreateInfo.queueCreateInfoCount = 1;
-			deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
-			deviceCreateInfo.enabledExtensionCount = 0;
-
-			if (vkCreateDevice(m_VulkanData.physicalDevice, &deviceCreateInfo, nullptr, (VkDevice*)&m_VulkanData.device) != VK_SUCCESS) {
-				HZR_THROW("failed to create Vulkan logical device!");
+			for (uint32_t queueFamily : uniqueQueueFamilies) {
+				VkDeviceQueueCreateInfo queueCreateInfo{};
+				queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+				queueCreateInfo.queueFamilyIndex = queueFamily;
+				queueCreateInfo.queueCount = 1;
+				queueCreateInfo.pQueuePriorities = &queuePriority;
+				queueCreateInfos.push_back(queueCreateInfo);
 			}
 
-			vkGetDeviceQueue((VkDevice)m_VulkanData.device, indices.graphicsFamily.value(), 0, (VkQueue*)&m_VulkanData.queue);
+			VkPhysicalDeviceFeatures deviceFeatures{};
 
-			(uint32_t)m_VulkanData.queueFamily = indices.graphicsFamily.value();
+			VkDeviceCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+			createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+			createInfo.pQueueCreateInfos = queueCreateInfos.data();
+
+			createInfo.pEnabledFeatures = &deviceFeatures;
+
+			createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+			createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+
+
+			if (vkCreateDevice(m_VulkanData.physicalDevice, &createInfo, nullptr, (VkDevice*)&m_VulkanData.device) != VK_SUCCESS) {
+				HZR_THROW("Failed to create Vulkan physical device!");
+			}
+
+			vkGetDeviceQueue(m_VulkanData.device, indices.graphicsFamily.value(), 0, (VkQueue*)&m_VulkanData.queue);
 			vkGetDeviceQueue(m_VulkanData.device, m_VulkanData.queueFamily, 0, (VkQueue*)&m_VulkanData.queue);
-						
-			VkDescriptorPoolSize poolSizes = {};
-			poolSizes.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-
-
-			VkDescriptorPoolCreateInfo poolInfo = {};
-			poolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-			poolInfo.poolSizeCount = 1;
-			poolInfo.pPoolSizes = &poolSizes;
-
-			if (vkCreateDescriptorPool(m_VulkanData.device, &poolInfo, nullptr, (VkDescriptorPool*)&m_VulkanData.descriptorPool) != VK_SUCCESS) {
-				HZR_THROW("Vulkan Create descriptor pool failed");
-			}
+			
+			VKUtils::CreateSwapchain(m_VulkanData);
+			CreateImageViews();
 
 			HZR_CORE_WARN(GetVersion());
 			HZR_CORE_WARN(GetDevice());
-
 		}
 
 		void VKContext::ClearFrame(glm::vec4 clearColor) const
@@ -169,7 +143,6 @@ namespace Hazard::Rendering {
 		{
 			VkPhysicalDeviceProperties props;
 			vkGetPhysicalDeviceProperties(m_VulkanData.physicalDevice, &props);
-
 			return props.deviceName;
 		}
 		void VKContext::SendDebugMessage(const char* message, const char* code)
@@ -181,32 +154,60 @@ namespace Hazard::Rendering {
 			return glfwGetInstanceProcAddress(NULL, adress);
 		}
 
-
-
-		bool VKSuitableDevice(VkPhysicalDevice device)
+		bool VKContext::CreateInstance() const
 		{
-			QueueFamilyIndices indices = VKFindQueueFamilies(device);
-			return indices.isComplete();
+			VkApplicationInfo appInfo{};
+			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+			appInfo.pApplicationName = "Hazard Application";
+			appInfo.pEngineName = "Hazard";
+			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+			appInfo.apiVersion = VK_API_VERSION_1_0;
+			appInfo.pNext = NULL;
+
+			VkInstanceCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+			createInfo.pApplicationInfo = &appInfo;
+
+			auto extensions = VKUtils::GetRequiredExtensions();
+
+			createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+			createInfo.ppEnabledExtensionNames = extensions.data();
+			createInfo.pNext = NULL;
+
+			VKValidationLayer::InitValidationLayers(true, createInfo);
+			
+			return vkCreateInstance(&createInfo, nullptr, (VkInstance*)&m_VulkanData.instance) == VK_SUCCESS;
 		}
-		QueueFamilyIndices VKFindQueueFamilies(VkPhysicalDevice device)
+		bool VKContext::CreateImageViews()
 		{
-			QueueFamilyIndices indices;
+			m_VulkanData.swapChainImageViews.resize(m_VulkanData.swapChainImages.size());
 
-			uint32_t familyCount = 0;
-			vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, nullptr);
+			for (size_t i = 0; i < m_VulkanData.swapChainImages.size(); i++) {
+				
+				VkImageViewCreateInfo createInfo{};
+				createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+				createInfo.image = m_VulkanData.swapChainImages[i];
+				createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+				createInfo.format = m_VulkanData.swapchainImageFormat;
+				createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+				createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+				createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+				createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
 
-			std::vector<VkQueueFamilyProperties> families(familyCount);
-			vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, families.data());
+				createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				createInfo.subresourceRange.baseMipLevel = 0;
+				createInfo.subresourceRange.levelCount = 1;
+				createInfo.subresourceRange.baseArrayLayer = 0;
+				createInfo.subresourceRange.layerCount = 1;
 
-			int i = 0;
-			for (const auto& family : families) {
-				if (family.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-					indices.graphicsFamily = i;
+
+				if (vkCreateImageView(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.swapChainImageViews[i]) != VK_SUCCESS) {
+					HZR_THROW("Failed to create Vulkan ImageView");
 				}
-				if (indices.isComplete()) break;
-				i++;
 			}
-			return indices;
+
+			return true;
 		}
 	}
 }

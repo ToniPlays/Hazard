@@ -5,6 +5,7 @@
 namespace Hazard::Rendering::OpenGL {
 
 	class OpenGLVertexBuffer : public VertexBuffer {
+
 	public:
 		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
@@ -14,12 +15,12 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void Unbind() const override;
 
 		virtual void SetData(const void* data, uint32_t size) override;
-		virtual const BufferLayout& GetLayout() const override { return bufferLayout; }
-		virtual void SetLayout(const BufferLayout& layout) override { bufferLayout = layout; }
+		virtual const BufferLayout& GetLayout() const override { return m_BufferLayout; }
+		virtual void SetLayout(const BufferLayout& layout) override { m_BufferLayout = layout; }
 
 	private:
-		uint32_t BufferID = 0;
-		BufferLayout bufferLayout;
+		uint32_t m_BufferID = 0;
+		BufferLayout m_BufferLayout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer {
@@ -30,10 +31,10 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void Bind() const;
 		virtual void Unbind() const;
 		virtual void SetData(uint32_t* indices, uint32_t count);
-		virtual uint32_t GetID() const override { return BufferID; }
-		virtual uint32_t GetCount() const { return count; }
+		virtual uint32_t GetID() const override { return m_BufferID; }
+		virtual uint32_t GetCount() const { return m_Count; }
 	private:
-		uint32_t BufferID = 0;
-		uint32_t count = 0;
+		uint32_t m_BufferID = 0;
+		uint32_t m_Count = 0;
 	};
 }

@@ -11,8 +11,8 @@ namespace Hazard::Rendering {
 
 	void RenderCommand::Init()
 	{
-		s_Engine = &Application::GetModule<RenderEngine>();
-		s_Context = &Application::GetModule<RenderContext>();
+		s_Engine = Application::GetModule<RenderEngine>();
+		s_Context = Application::GetModule<RenderContext>();
 
 		RenderUtils::Init();
 	}

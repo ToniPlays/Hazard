@@ -22,10 +22,10 @@ namespace Hazard::Rendering {
 			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
 		}
 
-		OpenGLContext::OpenGLContext(Window* window, WindowProps* props)
+		OpenGLContext::OpenGLContext(WindowProps* props)
 		{
-			this->m_Window = (GLFWwindow*)window->GetNativeWindow();
-			Init();
+			
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		}
 
 		OpenGLContext::~OpenGLContext()
@@ -35,8 +35,10 @@ namespace Hazard::Rendering {
 			glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		}
 
-		void OpenGLContext::Init() const
+		void OpenGLContext::Init(Window* window)
 		{
+			m_Window = (GLFWwindow*)window->GetNativeWindow();
+
 			glfwMakeContextCurrent(m_Window);
 
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {

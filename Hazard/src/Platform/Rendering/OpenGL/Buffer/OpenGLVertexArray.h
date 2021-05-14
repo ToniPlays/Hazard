@@ -15,17 +15,17 @@ namespace Hazard::Rendering::OpenGL {
 		void Bind() const;
 		void Unbind() const;
 		void EnableAll(uint32_t index) const override;
-		uint32_t GetID() const { return ArrayID; }
+		uint32_t GetID() const { return m_ArrayID; }
 
 		void AddBuffer(VertexBuffer* vertexBuffer) override;
-		IndexBuffer* GetIndexBuffer() const;
-		std::vector<VertexBuffer*> GetBuffers() override { return vertexBuffers; }
+		IndexBuffer* GetIndexBuffer() const { return m_IndexBuffer; };
+		std::vector<VertexBuffer*> GetBuffers() override { return m_Buffers; }
 		void SetIndexBuffer(IndexBuffer* indexBuffer) override;
 
 	private:
-		uint32_t ArrayID;
-		uint32_t vertexBufferIndex = 0;
-		std::vector<VertexBuffer*> vertexBuffers;
-		IndexBuffer* indexBuffer;
+		uint32_t m_ArrayID;
+		uint32_t m_VertexBufferIndex = 0;
+		std::vector<VertexBuffer*> m_Buffers;
+		IndexBuffer* m_IndexBuffer;
 	};
 }

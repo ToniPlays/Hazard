@@ -19,22 +19,22 @@ namespace WindowElement {
 	void Viewport::Init()
 	{
 		bool found = false;
-		m_Renderer = &Application::GetModule<RenderEngine>(found);
+		m_Renderer = Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 
 		TextureSpecs specs;
 		specs.dataType = TextureDataType::RGBA;
 
-		//m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
+		m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
 		
 	}
 	void Viewport::OnWindowRender()
 	{
 		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 
-		//Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
-		//ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
-		//	m_EditorCamera.GetPosition()));
+		Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
+		ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
+			m_EditorCamera.GetPosition()));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();

@@ -21,7 +21,7 @@ namespace WindowElement {
 	void Performance::Init()
 	{
 		bool found = false;
-		context = &Application::GetModule<Rendering::RenderContext>(found);
+		context = Application::GetModule<Rendering::RenderContext>(found);
 		SetActive(found);
 		HZR_ASSERT(!found, "Performance can't start without RenderContext");
 	}

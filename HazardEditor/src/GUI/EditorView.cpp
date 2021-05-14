@@ -32,7 +32,7 @@ namespace WindowElement {
 	void EditorView::Init()
 	{
 		bool found = false;
-		m_Context = &Hazard::Application::GetModule<Rendering::RenderContext>(found);
+		m_Context = Hazard::Application::GetModule<Rendering::RenderContext>(found);
 		if (!found) {
 			SetActive(false);
 			HZR_WARN("EditorView unable to start without RenderContext");
@@ -112,6 +112,7 @@ namespace WindowElement {
 	}
 	bool EditorView::OnEvent(Event& e)
 	{
+		if (EditorView::s_Instance == nullptr) return false;
 		for (RenderableElement* element : m_Elements) {
 			if (element->OnEvent(e)) 
 				return true;
@@ -177,7 +178,7 @@ namespace WindowElement {
 	}
 	void EditorView::InitImGuiPlatform(Rendering::Window& window)
 	{
-		m_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
+		m_Api = Application::GetModule<RenderContext>()->GetCurrentAPI();
 
 		switch (m_Api)
 		{

@@ -4,8 +4,6 @@
 #include "Hazard/Math/Color.h"
 #include "Hazard/Rendering/Buffers/VertexArray.h"
 
-
-
 namespace Hazard::Rendering {
 
 	struct ErrorData {
@@ -37,12 +35,13 @@ namespace Hazard::Rendering {
 		Blend
 	};
 	using ErrorCallback = void(*)(ErrorData& data);
+	class Window;
 
-	class  GraphicsContext {
+	class GraphicsContext {
 	public:
 		virtual ~GraphicsContext() = default;
 
-		virtual void Init() const = 0;
+		virtual void Init(Window* window) = 0;
 
 		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;

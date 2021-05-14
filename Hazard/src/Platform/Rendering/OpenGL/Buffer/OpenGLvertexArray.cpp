@@ -29,20 +29,20 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glGenVertexArrays(1, &ArrayID);
+		glGenVertexArrays(1, &m_ArrayID);
 		Bind();
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
-		glDeleteVertexArrays(1, &ArrayID);
-		if(indexBuffer != nullptr)
-			delete indexBuffer;
+		glDeleteVertexArrays(1, &m_ArrayID);
+		if(m_IndexBuffer != nullptr)
+			delete m_IndexBuffer;
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
-		glBindVertexArray(ArrayID);
+		glBindVertexArray(m_ArrayID);
 	}
 	void OpenGLVertexArray::Unbind() const
 	{
@@ -51,14 +51,14 @@ namespace Hazard::Rendering::OpenGL {
 	void OpenGLVertexArray::EnableAll(uint32_t index) const
 	{
 		Bind();
-		vertexBuffers.at(index)->Bind();
-		const BufferLayout& layout = vertexBuffers.at(index)->GetLayout();
+		m_Buffers.at(index)->Bind();
+		const BufferLayout& layout = m_Buffers.at(index)->GetLayout();
 		uint32_t offset = 0;
 
 		for (uint16_t i = 0; i < layout.GetElements().size(); i++) {
 
 			ShaderDataType type = layout.GetElements()[i].Type;
-			glEnableVertexArrayAttrib(ArrayID, i);
+			glEnableVertexArrayAttrib(m_ArrayID, i);
 			glVertexAttribPointer(i, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
 				GL_FALSE, layout.GetStride(), (const void*)offset);
 
@@ -86,14 +86,14 @@ namespace Hazard::Rendering::OpenGL {
 			case ShaderDataType::Int4:
 			case ShaderDataType::Bool:
 			{
-				glEnableVertexAttribArray(vertexBufferIndex);
-				glVertexAttribPointer(vertexBufferIndex,
+				glEnableVertexAttribArray(m_VertexBufferIndex);
+				glVertexAttribPointer(m_VertexBufferIndex,
 					element.GetComponentCount(),
 					ShaderDataTypeToOpenGLBaseType(element.Type),
 					element.Normalized ? GL_TRUE : GL_FALSE,
 					layout.GetStride(),
 					(const void*)element.Offset);
-				vertexBufferIndex++;
+				m_VertexBufferIndex++;
 				break;
 			}
 			case ShaderDataType::Mat3:
@@ -102,15 +102,15 @@ namespace Hazard::Rendering::OpenGL {
 				uint8_t count = element.GetComponentCount();
 				for (uint8_t i = 0; i < count; i++)
 				{
-					glEnableVertexAttribArray(vertexBufferIndex);
-					glVertexAttribPointer(vertexBufferIndex,
+					glEnableVertexAttribArray(m_VertexBufferIndex);
+					glVertexAttribPointer(m_VertexBufferIndex,
 						count,
 						ShaderDataTypeToOpenGLBaseType(element.Type),
 						element.Normalized ? GL_TRUE : GL_FALSE,
 						layout.GetStride(),
 						(const void*)(element.Offset + sizeof(float) * count * i));
-					glVertexAttribDivisor(vertexBufferIndex, 1);
-					vertexBufferIndex++;
+					glVertexAttribDivisor(m_VertexBufferIndex, 1);
+					m_VertexBufferIndex++;
 				}
 				break;
 			}
@@ -119,16 +119,12 @@ namespace Hazard::Rendering::OpenGL {
 			}
 		}
 
-		vertexBuffers.push_back(vertexBuffer);
-	}
-	IndexBuffer* OpenGLVertexArray::GetIndexBuffer() const
-	{
-		return indexBuffer;
+		m_Buffers.push_back(vertexBuffer);
 	}
 	void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer)
 	{
 		Bind();
 		indexBuffer->Bind();
-		this->indexBuffer = indexBuffer;
+		this->m_IndexBuffer = indexBuffer;
 	}
 }

@@ -15,7 +15,6 @@ namespace Hazard::Rendering {
 		virtual ~Shader() {};
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
-		virtual uint32_t GetProgram() const = 0;
 		virtual std::string& GetFile() = 0;
 
 	public:

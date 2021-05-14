@@ -27,9 +27,9 @@ namespace Hazard {
 		template<typename T>
 		T& PushModule() { return Core::HazardLoop::GetCurrent().PushModule<T>(); };
 		template<typename T>
-		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }
+		static T* GetModule() { return &Core::HazardLoop::GetModule<T>(); }
 		template<typename T>
-		static T& GetModule(bool& found) { return Core::HazardLoop::GetModule<T>(found); }
+		static T* GetModule(bool& found) { return &Core::HazardLoop::GetModule<T>(found); }
 	};
 
 	Hazard::Application* CreateApplication();

@@ -7,23 +7,23 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{
-		glGenBuffers(1, &BufferID);
+		glGenBuffers(1, &m_BufferID);
 		Bind();
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	{
-		glGenBuffers(1, &BufferID);
+		glGenBuffers(1, &m_BufferID);
 		Bind();
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_DYNAMIC_DRAW);
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &BufferID);
+		glDeleteBuffers(1, &m_BufferID);
 	}
 	void OpenGLVertexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
 	}
 	void OpenGLVertexBuffer::Unbind() const
 	{
@@ -36,16 +36,16 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer()
 	{
-		count = 0;
-		glGenBuffers(1, &BufferID);
+		m_Count = 0;
+		glGenBuffers(1, &m_BufferID);
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(1, &BufferID);
+		glDeleteBuffers(1, &m_BufferID);
 	}
 	void OpenGLIndexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, BufferID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
 	}
 	void OpenGLIndexBuffer::Unbind() const
 	{
@@ -53,8 +53,8 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLIndexBuffer::SetData(uint32_t* indices, uint32_t c)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
 		glBufferData(GL_ARRAY_BUFFER, c * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-		this->count = c;
+		this->m_Count = c;
 	}
 }

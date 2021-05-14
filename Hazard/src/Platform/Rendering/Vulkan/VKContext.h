@@ -4,30 +4,29 @@
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
 
-#include <optional>
-
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
 #include <vulkan/vulkan.h>
 
+
 namespace Hazard::Rendering::Vulkan {
 
-	struct QueueFamilyIndices {
-		std::optional<uint32_t> graphicsFamily;
+	struct VulkanData 
+	{
 
-		bool isComplete() {
-			return graphicsFamily.has_value();
-		}
-	};
+		GLFWwindow* m_Window;
 
-	struct VulkanData {
 		VkInstance instance;
 		VkDevice device;
 		VkPhysicalDevice physicalDevice;
 		uint32_t queueFamily;
 		VkQueue queue;
+		VkSurfaceKHR vkSurface;
 		VkSwapchainKHR swapchain;
+
+		VkFormat swapchainImageFormat;
+		VkExtent2D swapchainExtent;
 
 		VkPipelineCache pipelineCache;
 		VkDescriptorPool descriptorPool;
@@ -36,16 +35,19 @@ namespace Hazard::Rendering::Vulkan {
 		VkSampleCountFlagBits MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
 		VkRenderPass renderPass;
+
+		std::vector<VkImage> swapChainImages;
+		std::vector<VkImageView> swapChainImageViews;
 	};
 
 
 	class VKContext : public GraphicsContext {
 
 	public:
-		VKContext(Window* window, WindowProps* props);
+		VKContext(WindowProps* props);
 		~VKContext();
 
-		void Init() const override;
+		void Init(Window* window) override;
 		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
 		void SetDepthTest(DepthTest type) const override;
@@ -59,15 +61,18 @@ namespace Hazard::Rendering::Vulkan {
 		std::string GetDevice() const override;
 
 	public:
-		static void SendDebugMessage(const char* message, const char* code);
 
+		static void SendDebugMessage(const char* message, const char* code);
 		static GLFWvkproc GetProc(const char* adress);
 		static ErrorCallback s_Callback;
 
 		VulkanData& GetVulkanData() { return m_VulkanData; }
 
 	private:
-		GLFWwindow* m_Window;
+		bool CreateInstance() const;
+		bool CreateImageViews();
+
+	private:
 		VulkanData m_VulkanData;
 	};
 }

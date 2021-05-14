@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "RenderUtils.h"
 #include "Platform/Rendering/OpenGL/OpenGL.h"
+#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 namespace Hazard::Rendering {
 
@@ -51,27 +52,34 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray();
+		case RenderAPI::Vulkan:		return new Vulkan::VKVertexArray();
 		}
-		return nullptr;
+		HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
 	template<>
 	VertexBuffer* RenderUtils::CreateRaw<VertexBuffer>(uint32_t size) {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexBuffer(size);
+		case RenderAPI::Vulkan:		return new Vulkan::VKVertexBuffer(size);
+		default:
+			HZR_THROW(std::string("Failed to create VertexBuffer for ") + RenderContext::APIToString(s_Api));
 		}
-		return nullptr;
 	}
 	template<>
 	IndexBuffer* RenderUtils::CreateRaw<IndexBuffer>() {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLIndexBuffer();
+		case RenderAPI::Vulkan:		return new Vulkan::VKIndexBuffer();
+		default:
+			HZR_THROW(std::string("Failed to create IndexBuffer for ") + RenderContext::APIToString(s_Api));
 		}
-		return nullptr;
+		
 	}
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(const char* file) {
+
 		Shader* shader = Find<Shader>(file);
 		if (shader != nullptr) {
 			HZR_CORE_INFO("Shader {0} refs {1}", file, shader->GetRefCount());
@@ -80,7 +88,10 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(file);
+		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(file); break;
+		case RenderAPI::Vulkan:		shader = new Vulkan::VKShader(file); break;
+		default:
+			HZR_THROW(std::string("Failed to create Shader for ") + RenderContext::APIToString(s_Api));
 		}
 		Ref ref(shader);
 		HZR_CORE_INFO("Created new shader {0} refs {1} ", file, ref->GetRefCount());
@@ -91,9 +102,10 @@ namespace Hazard::Rendering {
 	Ref<OcclusionQuery> RenderUtils::Create<OcclusionQuery>() {
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLOcclusionQuery>::Create();
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLOcclusionQuery>::Create(); break;
+		default:
+			HZR_THROW(std::string("Failed to create OcclusionQuery for ") + RenderContext::APIToString(s_Api));
 		}
-		return nullptr;
 	}
 #pragma endregion
 
@@ -103,7 +115,9 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(specs);
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(specs); break;
+		default:
+			HZR_THROW(std::string("Failed to create RenderTexture for ") + RenderContext::APIToString(s_Api));
 		}
 	}
 
@@ -117,12 +131,14 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path, TextureSpecs());
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(path, TextureSpecs());	break;
+		case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(path, TextureSpecs());		break;
+		default:
+			HZR_THROW(std::string("Failed to create Texture2D for ") + RenderContext::APIToString(s_Api));
 		}
 
 		HZR_CORE_INFO("Created new Texture2D {0}", path);
 		s_Assets[AssetType::TextureAsset].push_back(texture);
-
 		return Ref(texture);
 	}
 	template<>
@@ -135,7 +151,10 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(name, params);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(name, params);		break;
+		case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(name, TextureSpecs());	break;
+		default:
+			HZR_THROW(std::string("Failed to create Texture2D for ") + RenderContext::APIToString(s_Api));
 		}
 
 		HZR_CORE_INFO("Created new Texture2D {0}", name);
@@ -149,6 +168,8 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(TextureSpecs());
+		default:
+			HZR_THROW(std::string("Failed to create CubemapTexture for ") + RenderContext::APIToString(s_Api));
 		}
 	}
 	template<>
@@ -156,6 +177,8 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(specs);
+		default:
+			HZR_THROW(std::string("Failed to create CubemapTexture for ") + RenderContext::APIToString(s_Api));
 		}
 	}
 	template<>
@@ -163,6 +186,8 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(faces);
+		default:
+			HZR_THROW(std::string("Failed to create CubemapTexture for ") + RenderContext::APIToString(s_Api));
 		}
 	}
 	template<>
@@ -178,7 +203,9 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLCubemapTexture(name, extension);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLCubemapTexture(name, extension);  break;
+		default:
+			HZR_THROW(std::string("Failed to create CubemapTexture for ") + RenderContext::APIToString(s_Api));
 		}
 
 		HZR_CORE_INFO("Created new Texture2D {0}", name);
@@ -196,7 +223,9 @@ namespace Hazard::Rendering {
 		EnvinronmentMap* texture;
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, TextureSpecs());
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, TextureSpecs());  break;
+		default:
+			HZR_THROW(std::string("Failed to create EnvinronmentMap for ") + RenderContext::APIToString(s_Api));
 		}
 
 		HZR_CORE_INFO("Created new Texture2D {0}", file);
@@ -215,7 +244,9 @@ namespace Hazard::Rendering {
 		EnvinronmentMap* texture;
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, specs);
+		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLEnvironmentMap(file, specs);  break;
+		default:
+			HZR_THROW(std::string("Failed to create EnvinronmentMap for ") + RenderContext::APIToString(s_Api));
 		}
 
 		HZR_CORE_INFO("Created new Texture2D {0}", file);
