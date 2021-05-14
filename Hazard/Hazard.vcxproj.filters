@@ -689,6 +689,7 @@
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKUtils.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKValidationLayers.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKSwapchain.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Texture\VKRenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -872,5 +873,7 @@
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKValidationLayers.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKSwapchain.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VKRrnderTexture.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VKRenderTexture.cpp" />
   </ItemGroup>
 </Project>

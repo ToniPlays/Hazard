@@ -166,7 +166,18 @@ namespace WindowElement {
 
 		// Rendering 
 		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		switch (m_Api)
+		{
+		case RenderAPI::OpenGL:
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			break;
+		case RenderAPI::Vulkan:
+			GraphicsContext& contex = Application::GetModule<RenderContext>()->GetContext();
+			Vulkan::VKContext& vkContext = static_cast<Vulkan::VKContext&>(contex);
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), vkContext.GetVulkanData().commandBuffers[0]);
+			break;
+		}
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -196,12 +207,13 @@ namespace WindowElement {
 			info.PhysicalDevice = data.physicalDevice;
 			info.Device = data.device;
 			info.QueueFamily = data.queueFamily;
-			info.Queue = data.queue;
+			info.Queue = data.graphicsQueue;
 			info.PipelineCache = data.pipelineCache;
 			info.DescriptorPool = data.descriptorPool;
 			info.MinImageCount = data.minImageCount;
 			info.ImageCount = data.imageCount;
-			info.MSAASamples = data.MSAASamples;
+			
+
 
 			ImGui_ImplVulkan_Init(&info, data.renderPass);
 			break;

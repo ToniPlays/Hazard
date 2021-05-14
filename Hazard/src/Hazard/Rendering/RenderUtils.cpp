@@ -116,6 +116,7 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(specs); break;
+		case RenderAPI::Vulkan:		return Ref<Vulkan::VKRenderTexture>::Create(specs); break;
 		default:
 			HZR_THROW(std::string("Failed to create RenderTexture for ") + RenderContext::APIToString(s_Api));
 		}

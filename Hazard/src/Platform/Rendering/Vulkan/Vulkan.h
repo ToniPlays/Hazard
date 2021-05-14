@@ -8,3 +8,4 @@
 #include "Shader/VKShader.h"
 
 #include "Texture/VKTexture2D.h"
+#include "Texture/VKRenderTexture.h"

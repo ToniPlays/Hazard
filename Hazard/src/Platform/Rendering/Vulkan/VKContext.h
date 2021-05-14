@@ -21,15 +21,21 @@ namespace Hazard::Rendering::Vulkan {
 		VkDevice device;
 		VkPhysicalDevice physicalDevice;
 		uint32_t queueFamily;
-		VkQueue queue;
+		VkQueue graphicsQueue;
 		VkSurfaceKHR vkSurface;
 		VkSwapchainKHR swapchain;
 
 		VkFormat swapchainImageFormat;
 		VkExtent2D swapchainExtent;
 
+		VkCommandPool commandPool;
+		std::vector<VkCommandBuffer> commandBuffers;
+
 		VkPipelineCache pipelineCache;
 		VkDescriptorPool descriptorPool;
+		VkDescriptorSetLayout descriptorSetLayout;
+
+
 		uint32_t minImageCount = 3;
 		uint32_t imageCount = 3;
 		VkSampleCountFlagBits MSAASamples = VK_SAMPLE_COUNT_1_BIT;
@@ -38,6 +44,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		std::vector<VkImage> swapChainImages;
 		std::vector<VkImageView> swapChainImageViews;
+		std::vector<VkFramebuffer> swapChainFrameBuffers;
 	};
 
 
@@ -71,6 +78,12 @@ namespace Hazard::Rendering::Vulkan {
 	private:
 		bool CreateInstance() const;
 		bool CreateImageViews();
+		bool CreateRenderPass();
+		bool CreateDescriptorPool();
+		bool CreateFramebuffers();
+		bool CreateCommandPool();
+		bool CreateCommandBuffers();
+
 
 	private:
 		VulkanData m_VulkanData;

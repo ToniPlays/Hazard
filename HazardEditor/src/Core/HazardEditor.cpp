@@ -19,7 +19,7 @@ EditorApplication::~EditorApplication()
 void EditorApplication::PreInit()
 {
 	PushModule<Logging::Logger>();
-	PushModule<Rendering::RenderContext>().InitContext(RenderAPI::Vulkan);
+	PushModule<Rendering::RenderContext>().InitContext(RenderAPI::OpenGL);
 
 	std::stringstream ss;
 	ss << "Hazard Editor | Hazard "; 

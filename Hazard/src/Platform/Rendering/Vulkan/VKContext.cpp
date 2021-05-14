@@ -20,6 +20,18 @@ namespace Hazard::Rendering {
 
 		VKContext::~VKContext()
 		{
+
+			vkDestroyCommandPool(m_VulkanData.device, m_VulkanData.commandPool, nullptr);
+
+			for (auto frameBuffer : m_VulkanData.swapChainFrameBuffers) {
+				vkDestroyFramebuffer(m_VulkanData.device, frameBuffer, nullptr);
+			}
+
+			for (auto imageView : m_VulkanData.swapChainImageViews) {
+				vkDestroyImageView(m_VulkanData.device, imageView, nullptr);
+			}
+
+			vkDestroyDescriptorPool(m_VulkanData.device, m_VulkanData.descriptorPool, nullptr);
 			vkDestroySurfaceKHR(m_VulkanData.instance, m_VulkanData.vkSurface, nullptr);
 			vkDestroyDevice(m_VulkanData.device, nullptr);
 			vkDestroyInstance(m_VulkanData.instance, nullptr);
@@ -81,11 +93,16 @@ namespace Hazard::Rendering {
 				HZR_THROW("Failed to create Vulkan physical device!");
 			}
 
-			vkGetDeviceQueue(m_VulkanData.device, indices.graphicsFamily.value(), 0, (VkQueue*)&m_VulkanData.queue);
-			vkGetDeviceQueue(m_VulkanData.device, m_VulkanData.queueFamily, 0, (VkQueue*)&m_VulkanData.queue);
+			vkGetDeviceQueue(m_VulkanData.device, indices.graphicsFamily.value(), 0, &m_VulkanData.graphicsQueue);
+			vkGetDeviceQueue(m_VulkanData.device, indices.presentFamily.value(), 0, &m_VulkanData.graphicsQueue);
 			
 			VKUtils::CreateSwapchain(m_VulkanData);
-			CreateImageViews();
+			if (!CreateImageViews()) HZR_THROW("Failed to create Vulkan image views");
+			if(!CreateRenderPass()) HZR_THROW("Failed to create Vulkan render pass");
+			if (!CreateDescriptorPool()) HZR_THROW("Failed to create Vulkan Descriptor pools");
+			if (!CreateFramebuffers()) HZR_THROW("Failed to create Vulkan Frame buffers");
+			if (!CreateCommandPool()) HZR_THROW("Failed to create Vulkan Command pool");
+			if (!CreateCommandBuffers()) HZR_THROW("Failed to create Vulkan Command Buffers");
 
 			HZR_CORE_WARN(GetVersion());
 			HZR_CORE_WARN(GetDevice());
@@ -207,6 +224,146 @@ namespace Hazard::Rendering {
 				}
 			}
 
+			return true;
+		}
+		bool VKContext::CreateRenderPass()
+		{
+			VkAttachmentDescription colorAttachment = {};
+			colorAttachment.format = m_VulkanData.swapchainImageFormat;
+			colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+			colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+			colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+			colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+			colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+			colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+			VkAttachmentReference colorAttachmentRef = {};
+			colorAttachmentRef.attachment = 0;
+			colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+			VkSubpassDescription subPass = {};
+			subPass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+			subPass.colorAttachmentCount = 1;
+			subPass.pColorAttachments = &colorAttachmentRef;
+
+			VkRenderPassCreateInfo createInfo = {};
+			createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+			createInfo.attachmentCount = 1;
+			createInfo.pAttachments = &colorAttachment;
+			createInfo.subpassCount = 1;
+			createInfo.pSubpasses = &subPass;
+
+			return vkCreateRenderPass(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.renderPass) == VK_SUCCESS;
+		}
+		bool VKContext::CreateDescriptorPool()
+		{
+			{
+				VkDescriptorSetLayoutBinding layoutBinding = {};
+				layoutBinding.binding = 0;
+				layoutBinding.descriptorCount = 1;
+				layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				layoutBinding.pImmutableSamplers = NULL;
+				layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+				VkDescriptorSetLayoutCreateInfo createInfo = {};
+				createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				createInfo.bindingCount = 1;
+				createInfo.pBindings = &layoutBinding;
+
+				if (vkCreateDescriptorSetLayout(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.descriptorSetLayout) != VK_SUCCESS)
+					return false;
+			}
+
+			uint32_t count = static_cast<uint32_t>(m_VulkanData.swapChainImages.size());
+
+			VkDescriptorPoolSize poolSize = {};
+			poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			poolSize.descriptorCount = count;
+
+			VkDescriptorPoolCreateInfo createInfo = {};
+			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			createInfo.poolSizeCount = 1;
+			createInfo.pPoolSizes = &poolSize;
+			createInfo.maxSets = count;
+			createInfo.pNext = NULL;
+
+			return vkCreateDescriptorPool(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.descriptorPool) == VK_SUCCESS;
+		}
+		bool VKContext::CreateFramebuffers()
+		{
+			uint32_t size = m_VulkanData.swapChainImageViews.size();
+			m_VulkanData.swapChainFrameBuffers.resize(size);
+
+			for (uint32_t i = 0; i < size; i++) {
+				VkImageView attachments[] = {
+					m_VulkanData.swapChainImageViews[i]
+				};
+			
+				VkFramebufferCreateInfo createInfo{};
+				createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+				createInfo.renderPass = m_VulkanData.renderPass;
+				createInfo.attachmentCount = 1;
+				createInfo.pAttachments = attachments;
+				createInfo.width = m_VulkanData.swapchainExtent.width;
+				createInfo.height = m_VulkanData.swapchainExtent.height;
+				createInfo.layers = 1;
+
+				if (vkCreateFramebuffer(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.swapChainFrameBuffers[i]) != VK_SUCCESS)
+					return false;
+			}
+			return true;
+		}
+		bool VKContext::CreateCommandPool()
+		{
+			QueueFamilyIndices indices = VKUtils::VKFindQueueFamilies(m_VulkanData.physicalDevice, m_VulkanData.vkSurface);
+
+			VkCommandPoolCreateInfo createInfo = {};
+			createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+			createInfo.queueFamilyIndex = indices.graphicsFamily.value();
+			createInfo.flags = 0;
+
+			return vkCreateCommandPool(m_VulkanData.device, &createInfo, nullptr, &m_VulkanData.commandPool) == VK_SUCCESS;
+		}
+		bool VKContext::CreateCommandBuffers() {
+			
+			VkCommandBufferAllocateInfo alloc = {};
+			alloc.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+			alloc.commandPool = m_VulkanData.commandPool;
+			alloc.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+			alloc.commandBufferCount = (uint32_t)m_VulkanData.commandBuffers.size();
+
+			if (vkAllocateCommandBuffers(m_VulkanData.device, &alloc, m_VulkanData.commandBuffers.data()) != VK_SUCCESS)
+				return false;
+
+			for (size_t i = 0; i < m_VulkanData.commandBuffers.size(); i++) {
+				VkCommandBufferBeginInfo beginInfo = {};
+				beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+				if (vkBeginCommandBuffer(m_VulkanData.commandBuffers[i], &beginInfo) != VK_SUCCESS)
+					return false;
+
+				VkRenderPassBeginInfo passInfo = {};
+				passInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+				passInfo.renderPass = m_VulkanData.renderPass;
+				passInfo.framebuffer = m_VulkanData.swapChainFrameBuffers[i];
+				passInfo.renderArea.offset = { 0, 0 };
+				passInfo.renderArea.extent = m_VulkanData.swapchainExtent;
+
+				VkClearValue clearColor = { 0, 0, 0, 1.0f };
+				passInfo.clearValueCount = 1;
+				passInfo.pClearValues = &clearColor;
+
+				
+				vkCmdBeginRenderPass(m_VulkanData.commandBuffers[i], &passInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+				vkCmdEndRenderPass(m_VulkanData.commandBuffers[i]);
+
+				if (vkEndCommandBuffer(m_VulkanData.commandBuffers[i]) != VK_SUCCESS)
+					return false;
+
+			}
 			return true;
 		}
 	}
