@@ -11,8 +11,8 @@ namespace Hazard::ECS {
 
 	struct WorldData 
 	{
-		WorldBackground background;
-		Rendering::BackgroundRenderer* renderer = new Rendering::ColorBackgroundRenderer();
+		WorldBackground background = WorldBackground::HDRI;
+		Rendering::BackgroundRenderer* renderer = new Rendering::SkyboxBackgroundRenderer();
 	};
 
 	class Entity;

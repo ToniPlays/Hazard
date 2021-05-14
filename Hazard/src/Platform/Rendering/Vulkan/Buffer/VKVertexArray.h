@@ -6,7 +6,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	class VKVertexArray : public VertexArray {
 	public:
-		VKVertexArray();
+		VKVertexArray(VertexArrayCreateInfo info);
 		~VKVertexArray();
 
 		void Bind() const override;

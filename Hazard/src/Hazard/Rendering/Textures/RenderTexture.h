@@ -4,15 +4,29 @@
 
 namespace Hazard::Rendering {
 
-	class RenderTexture : public Texture2D {
+	struct RenderTextureCreateInfo {
+
+		const char* name = "RenderTexture";
+		uint32_t width = 0;
+		uint32_t height = 0;
+		TextureDataType datatype = TextureDataType::Auto;
+	};
+	struct RenderTextureInfo {
+		const char* name = "RenderTexture";
+		uint32_t width = 0;
+		uint32_t height = 0;
+		TextureDataType datatype;
+
+		uint32_t colorID = 0;
+	};
+
+	class RenderTexture : public Texture {
 	public:
 
-		RenderTexture(const char* file) : Texture2D(file) {}
+		RenderTexture(const RenderTextureCreateInfo& info) : Texture(info.name) {}
 		~RenderTexture() {};
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
-
-		virtual TextureSpecs& GetSpec() = 0;
-		virtual uint32_t GetColorID() const = 0;
+		virtual RenderTextureInfo GetInfo() const = 0;
 	};
 }

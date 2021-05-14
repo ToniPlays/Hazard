@@ -10,7 +10,7 @@ namespace Hazard::Rendering::OpenGL {
 	class  OpenGLVertexArray : public VertexArray {
 	public:
 
-		OpenGLVertexArray();
+		OpenGLVertexArray(const VertexArrayCreateInfo& info);
 		~OpenGLVertexArray();
 		void Bind() const;
 		void Unbind() const;

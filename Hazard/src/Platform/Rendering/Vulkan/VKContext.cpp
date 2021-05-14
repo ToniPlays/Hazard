@@ -20,7 +20,6 @@ namespace Hazard::Rendering {
 
 		VKContext::~VKContext()
 		{
-
 			vkDestroyCommandPool(m_VulkanData.device, m_VulkanData.commandPool, nullptr);
 
 			for (auto frameBuffer : m_VulkanData.swapChainFrameBuffers) {
@@ -98,7 +97,7 @@ namespace Hazard::Rendering {
 			
 			VKUtils::CreateSwapchain(m_VulkanData);
 			if (!CreateImageViews()) HZR_THROW("Failed to create Vulkan image views");
-			if(!CreateRenderPass()) HZR_THROW("Failed to create Vulkan render pass");
+			if (!CreateRenderPass()) HZR_THROW("Failed to create Vulkan render pass");
 			if (!CreateDescriptorPool()) HZR_THROW("Failed to create Vulkan Descriptor pools");
 			if (!CreateFramebuffers()) HZR_THROW("Failed to create Vulkan Frame buffers");
 			if (!CreateCommandPool()) HZR_THROW("Failed to create Vulkan Command pool");

@@ -20,7 +20,7 @@ namespace Hazard::Rendering {
 	class ColorBackgroundRenderer : public BackgroundRenderer
 	{
 	public:
-		ColorBackgroundRenderer() {};
+		ColorBackgroundRenderer() {}
 		void Render(glm::mat4 view, glm::mat4 projection) override;
 	};
 	class SkyboxBackgroundRenderer : public BackgroundRenderer

@@ -22,10 +22,10 @@ namespace WindowElement {
 		m_Renderer = Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 
-		TextureSpecs specs;
-		specs.dataType = TextureDataType::RGBA;
+		Rendering::RenderTextureCreateInfo createInfo;
+		createInfo.datatype = TextureDataType::RGBA;
 
-		m_RenderTexture = RenderUtils::Create<RenderTexture>(specs);
+		m_RenderTexture = RenderUtils::Create<RenderTexture>(createInfo);
 		
 	}
 	void Viewport::OnWindowRender()
@@ -46,7 +46,7 @@ namespace WindowElement {
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-		ImGui::Image((void*)m_RenderTexture->GetColorID(),
+		ImGui::Image((void*)m_RenderTexture->GetInfo().colorID,
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 

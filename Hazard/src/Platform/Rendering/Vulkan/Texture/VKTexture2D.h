@@ -9,22 +9,21 @@ namespace Hazard::Rendering::Vulkan {
 	class VKTexture2D : public Texture2D {
 	public:
 
-		VKTexture2D(const char* file, TextureSpecs params);
+		VKTexture2D(const Texture2DCreateInfo& info);
 		~VKTexture2D();
 
 		void Bind(uint32_t slot) const override;
 		void Unbind(uint32_t slot) const override;
 
-		virtual uint32_t GetWidth() const { return m_Spec.width; }
-		virtual uint32_t GetHeight() const { return m_Spec.height; }
+		virtual uint32_t GetWidth() const { return 0; }
+		virtual uint32_t GetHeight() const { return 0; }
 		virtual void SetData(void* data, uint32_t size) override;
 
 		uint32_t GetID() const { return m_TextureID; };
-		TextureSpecs& GetSpec() { return m_Spec; };
+		Texture2DInfo GetData() const { return m_Info; }
 
 	private:
-
-		TextureSpecs m_Spec;
+		Texture2DInfo m_Info;
 		uint32_t m_TextureID;
 	};
 }

@@ -133,7 +133,12 @@ namespace WindowElement {
 			if (changed) {
 				std::string file = File::OpenFileDialog();
 				if (file != "") {
-					component.m_Texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(file.c_str());
+
+					using namespace Hazard::Rendering;
+					Texture2DCreateInfo createInfo;
+					createInfo.filename = file.c_str();
+
+					component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 				}
 			}
 

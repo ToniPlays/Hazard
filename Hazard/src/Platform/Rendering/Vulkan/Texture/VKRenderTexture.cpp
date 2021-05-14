@@ -5,7 +5,7 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKRenderTexture::VKRenderTexture(TextureSpecs params) : RenderTexture("RenderTexture")
+	VKRenderTexture::VKRenderTexture(const RenderTextureCreateInfo& info) : RenderTexture(info)
 	{
 
 	}

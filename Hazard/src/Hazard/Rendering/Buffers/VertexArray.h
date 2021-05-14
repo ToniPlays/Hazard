@@ -5,6 +5,11 @@
 
 namespace Hazard::Rendering {
 
+	struct VertexArrayCreateInfo {
+
+		VertexBufferCreateInfo* bufferInfo;
+		IndexBufferCreateInfo* indexBufferInfo;
+	};
 
 	class VertexArray : public RefCount {
 	public:

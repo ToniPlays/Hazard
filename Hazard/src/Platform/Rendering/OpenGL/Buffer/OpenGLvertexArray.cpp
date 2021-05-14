@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "OpenGLVertexArray.h"
+#include "OpenGLBuffer.h"
 
 namespace Hazard::Rendering::OpenGL {
 
@@ -27,10 +28,11 @@ namespace Hazard::Rendering::OpenGL {
 	}
 
 
-	OpenGLVertexArray::OpenGLVertexArray()
+	OpenGLVertexArray::OpenGLVertexArray(const VertexArrayCreateInfo& info)
 	{
 		glGenVertexArrays(1, &m_ArrayID);
-		Bind();
+		AddBuffer(new OpenGLVertexBuffer(*info.bufferInfo));
+		m_IndexBuffer = new OpenGLIndexBuffer(*info.indexBufferInfo);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
@@ -70,7 +72,6 @@ namespace Hazard::Rendering::OpenGL {
 		Bind();
 		vertexBuffer->Bind();
 		HZR_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
-
 		const BufferLayout& layout = vertexBuffer->GetLayout();
 		for (const BufferElement& element : layout)
 		{
@@ -118,7 +119,6 @@ namespace Hazard::Rendering::OpenGL {
 				HZR_ASSERT(false, "Unknown ShaderDataType!");
 			}
 		}
-
 		m_Buffers.push_back(vertexBuffer);
 	}
 	void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer)

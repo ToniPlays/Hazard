@@ -117,7 +117,13 @@ namespace Hazard::ECS::Loader {
 			component.m_Tint = Color::FromGLM(comp["Tint"].as<glm::vec4>());
 
 			if (comp["Texture"]) {
-				component.m_Texture = Rendering::RenderUtils::Create<Rendering::Texture2D>(comp["Texture"].as<std::string>().c_str());
+
+				/*using namespace Hazard::Rendering;
+
+				Texture2DCreateInfo createInfo;
+				createInfo.filename = comp["Texture"].as<std::string>().c_str();
+
+				component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);*/
 			}
 		};
 		template<>

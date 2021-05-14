@@ -28,22 +28,28 @@ namespace Hazard::Rendering {
     }
     void Mesh::GenerateArrays()
     {
-        m_MeshVAO = RenderUtils::CreateRaw<VertexArray>();
-        HZR_CORE_ASSERT(m_MeshVAO, "Mesh VAO failed");
-        VertexBuffer* buffer = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)(m_Vertices.size() * sizeof(Vertex)));
-
-        buffer->SetLayout({ 
+        BufferLayout layout = {
             { ShaderDataType::Float3, "v_position" },
             { ShaderDataType::Float4, "v_color" },
             { ShaderDataType::Float3, "v_normals" },
             { ShaderDataType::Float2, "v-textCoords" }
-            });
+        };
 
-        buffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
-        m_MeshVAO->AddBuffer(buffer);
+        VertexBufferCreateInfo bufferInfo;
+        bufferInfo.layout = &layout;
+        bufferInfo.data = m_Vertices.data();
+        bufferInfo.size = m_Vertices.size() * sizeof(Vertex);
+        bufferInfo.dataStream = DataStream::StaticDraw;
 
-        IndexBuffer* iBuffer = RenderUtils::CreateRaw<IndexBuffer>();
-        iBuffer->SetData(m_Indices.data(), m_Indices.size());
-        m_MeshVAO->SetIndexBuffer(iBuffer);
+        IndexBufferCreateInfo indexBufferInfo;
+        indexBufferInfo.size = m_Indices.size();
+        indexBufferInfo.data = m_Indices.data();
+
+        VertexArrayCreateInfo info;
+        info.bufferInfo = &bufferInfo;
+        info.indexBufferInfo = &indexBufferInfo;
+
+        m_MeshVAO = RenderUtils::CreateRaw<VertexArray>(info);
+        HZR_CORE_ASSERT(m_MeshVAO, "Mesh VAO failed");
     }
 }

@@ -8,8 +8,6 @@ namespace Hazard::Rendering {
 
 	Skybox::Skybox()
 	{
-		m_VAO = RenderUtils::CreateRaw<VertexArray>();
-
 		float skyboxVertices[] = {
 			// positions
 			-1.0f, -1.0f, -1.0f,
@@ -29,22 +27,30 @@ namespace Hazard::Rendering {
 			3, 2, 7, 7, 2, 6,
 			4, 5, 0, 0, 5, 1
 		};
-		VertexBuffer* buffer = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)(24 * sizeof(float)));
 
-		buffer->SetData(skyboxVertices, 24 * sizeof(float));
+		BufferLayout layout = { {ShaderDataType::Float3, "skybox_pos"} };
 
-		buffer->SetLayout({ {ShaderDataType::Float3, "skybox_pos"} });
-		m_VAO->AddBuffer(buffer);
+		VertexBufferCreateInfo bufferInfo;
+		bufferInfo.dataStream = DataStream::StaticDraw;
+		bufferInfo.layout = &layout;
+		bufferInfo.size = 24 * sizeof(float);
+		bufferInfo.data = &skyboxVertices;
+
+		IndexBufferCreateInfo indexBufferInfo;
+		indexBufferInfo.size = 36;
+		indexBufferInfo.data = indices;
 
 
-		IndexBuffer* iBuffer = RenderUtils::CreateRaw<IndexBuffer>();
-		iBuffer->SetData(indices, 36);
-		m_VAO->SetIndexBuffer(iBuffer);
+		VertexArrayCreateInfo createInfo;
+		createInfo.bufferInfo = &bufferInfo;
+		createInfo.indexBufferInfo = &indexBufferInfo;
 
+		m_VAO = RenderUtils::CreateRaw<VertexArray>(createInfo);
 		m_SkyboxShader = RenderUtils::Create<Shader>("res/shaders/skybox.glsl");
 		m_SkyboxShader->Bind();
 		m_SkyboxShader->SetUniformInt("SkyboxCubemap", 0);
 		m_SkyboxShader->Unbind();
+		
 	}
 	Skybox::~Skybox()
 	{

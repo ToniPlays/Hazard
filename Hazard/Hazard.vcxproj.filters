@@ -351,9 +351,6 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.h">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLRenderTexture.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
@@ -801,9 +798,6 @@
       <Filter>src\Platform\Rendering\OpenGL\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLEnvironmentMap.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLRenderTexture.cpp">

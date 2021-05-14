@@ -7,7 +7,7 @@ namespace Hazard::Rendering::Vulkan {
 	class VKRenderTexture : public RenderTexture {
 	public:
 
-		VKRenderTexture(TextureSpecs params = TextureSpecs());
+		VKRenderTexture(const RenderTextureCreateInfo& info);
 		virtual ~VKRenderTexture();
 
 		void Invalidate();
@@ -17,16 +17,13 @@ namespace Hazard::Rendering::Vulkan {
 
 		void Resize(uint32_t width, uint32_t height) override;
 
-		virtual uint32_t GetWidth() const override { return m_Spec.width; }
-		virtual uint32_t GetHeight() const override { return m_Spec.height; }
+		virtual uint32_t GetWidth() const override { return 0; }
+		virtual uint32_t GetHeight() const override { return 0; }
 
-		uint32_t GetColorID() const { return 0; }
-		uint32_t GetID() const override { return 0; }
+		RenderTextureInfo GetInfo() const override { return m_Info; }
 
-		TextureSpecs& GetSpec() override { return m_Spec; }
-		virtual void SetData(void* data, uint32_t size) {}
-
+		uint32_t GetID() const override { return 0; };
 	private:
-		TextureSpecs m_Spec;
+		RenderTextureInfo m_Info;
 	};
 }

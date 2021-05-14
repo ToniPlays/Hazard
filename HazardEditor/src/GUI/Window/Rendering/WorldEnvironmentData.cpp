@@ -28,7 +28,8 @@ namespace WindowElement {
 		Layout::Treenode("Environment", Style::GetTreeNodeDefaultFlags(), [&]() {
 
 			const char* bgText[] = { "Color", "Skybox", "Environment map" };
-			const char* currentBgText = bgText[(int)data.background];
+			const char* currentBgText;
+			currentBgText = bgText[(int)data.background];
 			static bool open = false;
 
 			Layout::Table(2, false, "##env");
@@ -100,12 +101,13 @@ namespace WindowElement {
 					std::string fileName = File::OpenFileDialog("");
 					if (fileName != "") {
 
-						TextureSpecs specs;
-						specs.width = 2048;
-						specs.height = 2048;
+						CubemapCreateInfo createInfo;
+						createInfo.width = 2048;
+						createInfo.height = 2048;
+						createInfo.datatype = TextureDataType::HDR;
+						createInfo.sides = { { CubeSide::All, fileName } };
 
-						Ref<EnvinronmentMap>& newMap = RenderUtils::Create<EnvinronmentMap>(fileName.c_str(), specs);
-						rd->SetCubemap(static_cast<Ref<CubemapTexture>>(newMap));
+						rd->SetCubemap(RenderUtils::Create<CubemapTexture>(createInfo));
 					}
 				}
 			}

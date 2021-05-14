@@ -5,17 +5,17 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexBufferCreateInfo& info)
 	{
 		glGenBuffers(1, &m_BufferID);
 		Bind();
-		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
-	}
-	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
-	{
-		glGenBuffers(1, &m_BufferID);
-		Bind();
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, info.size, nullptr, GL_DYNAMIC_DRAW);
+
+		SetLayout(*info.layout);
+
+		if (info.data != nullptr) 
+			SetData(info.data, info.size);
+
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
@@ -34,10 +34,13 @@ namespace Hazard::Rendering::OpenGL {
 		Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
-	OpenGLIndexBuffer::OpenGLIndexBuffer()
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const IndexBufferCreateInfo& info)
 	{
 		m_Count = 0;
 		glGenBuffers(1, &m_BufferID);
+		Bind();
+		if (info.data != nullptr)
+			SetData(info.data, info.size);
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{

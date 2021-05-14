@@ -23,20 +23,6 @@ namespace Hazard::Rendering {
 		m_Data.MaxVertices = m_Data.MaxQuads * 4;
 		m_Data.MaxIndices = m_Data.MaxQuads * 6;
 
-		m_Data.QuadVertexArray = RenderUtils::CreateRaw<VertexArray>();
-		m_Data.QuadVertexBuffer = RenderUtils::CreateRaw<VertexBuffer>((uint32_t)(m_Data.MaxVertices * sizeof(QuadVertex)));
-
-		m_Data.QuadVertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "v_position" },
-			{ ShaderDataType::Float4, "v_color" },
-			{ ShaderDataType::Float2, "v_tex_coords" },
-			{ ShaderDataType::Float, "v_tex_index" }
-			});
-
-		m_Data.QuadVertexArray->AddBuffer(m_Data.QuadVertexBuffer);
-		m_Data.QuadVertexBufferBase = new QuadVertex[m_Data.MaxVertices];
-		m_Data.QuadVertexBufferPtr = m_Data.QuadVertexBufferBase;
-		
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
 		uint32_t offset = 0;
 
@@ -52,24 +38,42 @@ namespace Hazard::Rendering {
 			offset += 4;
 		}
 
-		IndexBuffer* indexBuffer = RenderUtils::CreateRaw<IndexBuffer>();
-		indexBuffer->SetData(indices, m_Data.MaxIndices);
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "v_position" },
+			{ ShaderDataType::Float4, "v_color" },
+			{ ShaderDataType::Float2, "v_tex_coords" },
+			{ ShaderDataType::Float, "v_tex_index" }
+		};
 
+		VertexBufferCreateInfo bufferInfo = {};
+		bufferInfo.layout = &layout;
+		bufferInfo.size = m_Data.MaxVertices * sizeof(QuadVertex);
+
+		IndexBufferCreateInfo indexBufferInfo;
+		indexBufferInfo.size = m_Data.MaxIndices;
+		indexBufferInfo.data = indices;
+
+		VertexArrayCreateInfo createInfo = {};
+		createInfo.bufferInfo = &bufferInfo;
+		createInfo.indexBufferInfo = &indexBufferInfo;
+
+		m_Data.QuadVertexArray = RenderUtils::CreateRaw<VertexArray>(createInfo);
+		m_Data.QuadVertexBuffer = m_Data.QuadVertexArray->GetBuffers().at(0);
+		m_Data.QuadVertexBufferBase = new QuadVertex[m_Data.MaxVertices];
+		m_Data.QuadVertexBufferPtr = m_Data.QuadVertexBufferBase;
+		
 		delete[] indices;
 
-		m_Data.QuadVertexArray->SetIndexBuffer(indexBuffer);
-		
 		int samplers[8];
 		for (uint32_t i = 0; i < 8; i++)
 			samplers[i] = i;
-
+			
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
-
 		m_Data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
 		m_Data.QuadShader->Bind();
 		m_Data.QuadShader->SetUniformIntArray("u_Textures", samplers, 8);
 
-
+		
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };

@@ -55,7 +55,6 @@ namespace Hazard::Rendering {
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
 
-
 		RenderTexture* m_RenderTarget = nullptr;
 		Renderer2D* m_Renderer2D = nullptr;
 

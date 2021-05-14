@@ -5,7 +5,7 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKVertexArray::VKVertexArray()
+	VKVertexArray::VKVertexArray(VertexArrayCreateInfo info)
 	{
 
 	}

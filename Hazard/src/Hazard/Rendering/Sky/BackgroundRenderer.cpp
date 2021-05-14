@@ -14,8 +14,14 @@ namespace Hazard::Rendering {
 	{
 		m_Skybox = new Skybox();
 
-		Ref<EnvinronmentMap>& envMap = RenderUtils::Create<EnvinronmentMap>("res/textures/comfy_cafe_1k.hdr");
-		m_Skybox->SetCubemapTexture(static_cast<Ref<CubemapTexture>>(envMap));
+		CubemapCreateInfo createInfo;
+		createInfo.datatype = TextureDataType::HDR;
+		createInfo.width = 2048;
+		createInfo.height = 2048;
+		createInfo.sides = { { CubeSide::All, "res/textures/chapmans_drive_8k.hdr"} };
+
+		Ref<CubemapTexture>& envMap = RenderUtils::Create<CubemapTexture>(createInfo);
+		m_Skybox->SetCubemapTexture(envMap);
 	}
 
 	SkyboxBackgroundRenderer::~SkyboxBackgroundRenderer()
@@ -33,7 +39,6 @@ namespace Hazard::Rendering {
 		m_Skybox->SetCubemapTexture(texture);
 	}
 	Ref<Texture2D> SkyboxBackgroundRenderer::GetRaw() {
-		Ref<EnvinronmentMap> envMap = static_cast<Ref<EnvinronmentMap>>(m_Skybox->GetCubemapTexture());
-		return envMap->GetTexture();
+		return m_Skybox->GetCubemapTexture()->GetInfo().environmentRawTexture;
 	}
 }

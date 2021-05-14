@@ -8,31 +8,25 @@ namespace Hazard::Rendering::OpenGL {
 	class OpenGLRenderTexture : public RenderTexture {
 	public:
 
-		OpenGLRenderTexture(TextureSpecs params = TextureSpecs());
+		OpenGLRenderTexture(const RenderTextureCreateInfo& info);
 		virtual ~OpenGLRenderTexture();
 
-		void Invalidate();
 
 		void Bind(uint32_t slot = 0) const override;
 		void Unbind(uint32_t slot = 0) const override;
-
 		void Resize(uint32_t width, uint32_t height) override;
 
-		virtual uint32_t GetWidth() const override { return m_Spec.width; }
-		virtual uint32_t GetHeight() const override { return m_Spec.height; }
+		virtual uint32_t GetWidth() const override { return 0; }
+		virtual uint32_t GetHeight() const override { return 0; }
 
-		uint32_t GetColorID() const { return m_ColorAttachment; }
-		uint32_t GetID() const override { return m_RendererID; }
-
-		TextureSpecs& GetSpec() override { return m_Spec; }
-		virtual void SetData(void* data, uint32_t size) {}
-
+		RenderTextureInfo GetInfo() const override { return m_Info; }
+		uint32_t GetID() const { return m_RendererID; };
 	private:
-		TextureSpecs m_Spec;
+
+		void Invalidate();
+		RenderTextureInfo m_Info;
 
 		GLuint m_RendererID = 0;
-		GLuint m_ColorAttachment = 0;
 		GLuint m_DepthAttachment = 0;
-
 	};
 }

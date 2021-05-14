@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Hazard/Rendering/Textures/Texture2D.h"
 #include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
 #include "Hazard/Rendering/Textures/EnvironmentMap.h"
@@ -17,20 +18,11 @@ namespace Hazard::Rendering {
 
 		static void SetRenderAPI(RenderAPI api) { s_Api = api; }
 
-		template<typename T>
-		static T* CreateRaw();
-
 		template<typename T, typename Arg>
 		static T* CreateRaw(Arg arg);
 
-		template<typename T>
-		static Ref<T> Create();
-
 		template<typename T, typename Arg>
 		static Ref<T> Create(Arg arg);
-
-		template<typename T, typename F, typename Arg>
-		static Ref<T> Create(F file, Arg args);
 
 		template<typename T>
 		static Ref<T>& Get();

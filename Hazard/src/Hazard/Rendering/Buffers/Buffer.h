@@ -32,8 +32,8 @@ namespace Hazard::Rendering {
 			case ShaderDataType::Float2:  return 2;
 			case ShaderDataType::Float3:  return 3;
 			case ShaderDataType::Float4:  return 4;
-			case ShaderDataType::Mat3:    return 3; // 3* float3
-			case ShaderDataType::Mat4:    return 4; // 4* float4
+			case ShaderDataType::Mat3:    return 3; // 3 * float3
+			case ShaderDataType::Mat4:    return 4; // 4 * float4
 			case ShaderDataType::Int:     return 1;
 			case ShaderDataType::Int2:    return 2;
 			case ShaderDataType::Int3:    return 3;
@@ -80,9 +80,26 @@ namespace Hazard::Rendering {
 		uint32_t m_Stride = 0;
 	};
 
-	class VertexBuffer {
-	public:
+	enum DataStream { StaticDraw = 0, DynamicDraw };
 
+	struct VertexBufferCreateInfo 
+	{
+		BufferLayout* layout;
+		uint32_t size = 0;
+		void* data = nullptr;
+		DataStream dataStream = DataStream::StaticDraw;
+
+	};
+	struct IndexBufferCreateInfo 
+	{
+		uint32_t size = 0;
+		uint32_t* data = nullptr;
+	};
+
+
+	class VertexBuffer {
+		friend class VertexDataBuffer;
+	public:
 		virtual ~VertexBuffer() = default;
 
 		virtual void Bind() const = 0;
@@ -91,18 +108,20 @@ namespace Hazard::Rendering {
 
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
-
 	};
 
 	class IndexBuffer {
-
+		friend class VertexDataBuffer;
 	public:
 		virtual ~IndexBuffer() = default;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetID() const = 0;
+
 		virtual uint32_t GetCount() const = 0;
+
+	private:
 		virtual void SetData(uint32_t* indices, uint32_t count) = 0;
 	};
 }

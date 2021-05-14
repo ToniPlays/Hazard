@@ -5,7 +5,7 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKTexture2D::VKTexture2D(const char* file, TextureSpecs params) : Texture2D(file)
+	VKTexture2D::VKTexture2D(const Texture2DCreateInfo& info) : Texture2D(info)
 	{
 
 	}
