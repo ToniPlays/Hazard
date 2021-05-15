@@ -32,6 +32,7 @@ namespace Hazard::Scripting::CSharp {
 		case Hazard::Scripting::UInt:	return 4;
 		case Hazard::Scripting::String: return 16;
 		}
+		return 0;
 	}
 	void ScriptUtils::GetNames(const std::string& module, std::string& nameSpace, std::string& className)
 	{

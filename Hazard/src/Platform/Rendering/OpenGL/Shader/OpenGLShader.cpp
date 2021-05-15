@@ -20,9 +20,11 @@ namespace Hazard::Rendering::OpenGL {
 		return -1;
 	}
 
-	OpenGLShader::OpenGLShader(std::string path) : m_File(path) 
+	OpenGLShader::OpenGLShader(ShaderCreateInfo info) 
 	{
-		std::string file = File::ReadFile(path);
+		m_Info.filename = info.filename;
+
+		std::string file = File::ReadFile(info.filename);
 		Compile(Process(file));
 	}
 

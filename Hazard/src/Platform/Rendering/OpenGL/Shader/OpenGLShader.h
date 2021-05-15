@@ -11,13 +11,12 @@ namespace Hazard::Rendering::OpenGL {
 
 	class  OpenGLShader : public Shader {
 	public:
-		OpenGLShader(std::string path);
+		OpenGLShader(ShaderCreateInfo info);
 		~OpenGLShader();
 
 		void Bind() const;
 		void Unbind() const;
-
-		std::string& GetFile() override { return m_File; }
+		ShaderInfo GetInfo() const override { return m_Info; }
 
 		void SetUniformInt(const std::string& name, int value) override;
 		void SetUniformIntArray(const std::string& name, int* value, uint32_t size) override;
@@ -34,7 +33,7 @@ namespace Hazard::Rendering::OpenGL {
 		void Compile(const std::unordered_map<GLenum, std::string>& sources);
 
 	private:
-		std::string m_File;
+		ShaderInfo m_Info;
 		GLuint m_ProgramID = 0;
 		std::unordered_map <std::string, GLint> m_Locations;
 

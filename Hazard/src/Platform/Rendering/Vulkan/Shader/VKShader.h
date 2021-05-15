@@ -6,13 +6,13 @@ namespace Hazard::Rendering::Vulkan {
 
 	class VKShader : public Shader {
 	public:
-		VKShader(std::string path);
+		VKShader(ShaderCreateInfo info);
 		~VKShader();
 
 		void Bind() const override;
 		void Unbind() const override;
 
-		std::string& GetFile() { return m_File; }
+		ShaderInfo GetInfo() const { return m_Info; }
 
 		void SetUniformInt(const std::string& name, int value) override;
 		void SetUniformIntArray(const std::string& name, int* value, uint32_t size) override;
@@ -24,6 +24,6 @@ namespace Hazard::Rendering::Vulkan {
 		void SetUniformBool(const std::string& name, bool value) override;
 
 	private:
-		std::string m_File;
+		ShaderInfo m_Info;
 	};
 }

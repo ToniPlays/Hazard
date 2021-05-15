@@ -5,9 +5,9 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKShader::VKShader(std::string path)
+	VKShader::VKShader(ShaderCreateInfo info)
 	{
-		m_File = path;
+		
 	}
 	VKShader::~VKShader()
 	{

@@ -15,8 +15,8 @@ namespace Hazard::Rendering {
 	{
 
 	}
-	Ref<Material> Material::Create(const char* shader)
+	Ref<Material> Material::Create(const MaterialCreateInfo& info)
 	{
-		return Ref<Material>::Create(RenderUtils::Create<Shader>(shader));
+		return Ref<Material>::Create(RenderUtils::Create<Shader>(*info.shader));
 	}
 }

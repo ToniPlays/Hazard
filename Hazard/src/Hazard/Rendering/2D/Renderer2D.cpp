@@ -69,7 +69,11 @@ namespace Hazard::Rendering {
 			samplers[i] = i;
 			
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
-		m_Data.QuadShader = RenderUtils::Create<Shader>("res/Shaders/standard.glsl");
+
+		ShaderCreateInfo shaderInfo;
+		shaderInfo.filename = "res/Shaders/standard.glsl";
+
+		m_Data.QuadShader = RenderUtils::Create<Shader>(shaderInfo);
 		m_Data.QuadShader->Bind();
 		m_Data.QuadShader->SetUniformIntArray("u_Textures", samplers, 8);
 

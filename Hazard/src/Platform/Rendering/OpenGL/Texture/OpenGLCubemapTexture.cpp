@@ -90,7 +90,11 @@ namespace Hazard::Rendering::OpenGL {
 		textureCreateInfo.datatype = TextureDataType::HDR;
 
 		m_Info.environmentRawTexture = RenderUtils::Create<Texture2D>(textureCreateInfo);
-		Ref<Shader> convertShader = RenderUtils::Create<Shader>("res/shaders/equirectangularToCube.glsl");
+
+		ShaderCreateInfo shaderInfo;
+		shaderInfo.filename = "res/shaders/equirectangularToCube.glsl";
+
+		Ref<Shader> convertShader = RenderUtils::Create<Shader>(shaderInfo);
 		Bind();
 
 		float vertices[24] = {

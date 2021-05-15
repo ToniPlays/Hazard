@@ -49,7 +49,15 @@ namespace Hazard::Rendering {
 
 		TraverseNode(scene->mRootNode, data);
 
-		Ref<Material> material = Material::Create("res/shaders/PBRShader.glsl");
+		ShaderCreateInfo shader;
+		shader.filename = "res/shaders/PBRShader.glsl";
+
+		MaterialCreateInfo createInfo;
+		createInfo.shader = &shader;
+
+		Ref<Material> material = Material::Create(createInfo);
+
+
 		Mesh* mesh = new Mesh(absoluteFile, data.vertices, data.indices);
 		mesh->SetMaterial(material);
 

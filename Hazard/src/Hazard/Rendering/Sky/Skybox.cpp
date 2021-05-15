@@ -46,7 +46,12 @@ namespace Hazard::Rendering {
 		createInfo.indexBufferInfo = &indexBufferInfo;
 
 		m_VAO = RenderUtils::CreateRaw<VertexArray>(createInfo);
-		m_SkyboxShader = RenderUtils::Create<Shader>("res/shaders/skybox.glsl");
+
+		ShaderCreateInfo shaderInfo;
+		shaderInfo.filename = "res/shaders/skybox.glsl";
+
+
+		m_SkyboxShader = RenderUtils::Create<Shader>(shaderInfo);
 		m_SkyboxShader->Bind();
 		m_SkyboxShader->SetUniformInt("SkyboxCubemap", 0);
 		m_SkyboxShader->Unbind();

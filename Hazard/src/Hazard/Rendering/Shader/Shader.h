@@ -8,6 +8,13 @@
 
 namespace Hazard::Rendering {
 
+	struct ShaderCreateInfo {
+		std::string filename;
+	};
+	struct ShaderInfo {
+		std::string filename;
+	};
+	
 	class Shader : public RefCount {
 
 	public:
@@ -15,7 +22,7 @@ namespace Hazard::Rendering {
 		virtual ~Shader() {};
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
-		virtual std::string& GetFile() = 0;
+		virtual ShaderInfo GetInfo() const = 0;
 
 	public:
 		virtual void SetUniformInt(const std::string& name, int value) = 0;

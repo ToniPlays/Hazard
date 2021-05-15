@@ -4,6 +4,11 @@
 
 namespace Hazard::Rendering {
 
+	struct MaterialCreateInfo {
+		ShaderCreateInfo* shader;
+	};
+
+
 	class Material : public RefCount {
 	public:
 		Material(const Ref<Shader>& shader);
@@ -14,7 +19,7 @@ namespace Hazard::Rendering {
 		void SetTextures(const std::vector<Ref<Texture2D>>& textures) { this->m_Textures = textures; };
 
 	public:
-		static Ref<Material> Create(const char* shader);
+		static Ref<Material> Create(const MaterialCreateInfo& info);
 
 	private:
 		Ref<Shader> m_Shader;

@@ -40,7 +40,7 @@ namespace Hazard::Rendering {
 
 			HZR_CORE_INFO(refs.size());
 			if (it != refs.end()) {
-				HZR_CORE_ERROR("Removed {0}", shader->GetFile());
+				HZR_CORE_ERROR("Removed {0}", shader->GetInfo().filename);
 				refs.erase(it);
 			}
 			HZR_CORE_INFO(refs.size());
@@ -72,24 +72,24 @@ namespace Hazard::Rendering {
 		static T* Find(Arg args);
 
 		template<>
-		static Shader* Find(const char* args) {
+		static Shader* Find(const char* file) {
 			std::vector<RefCount*> shaders = s_Assets[AssetType::ShaderAsset];
 
 			for (RefCount* ref : shaders) {
 				Shader* shader = (Shader*)ref;
-				if (strcmp(shader->GetFile().c_str(), args) == 0) 
+				if (strcmp(shader->GetInfo().filename.c_str(), file) == 0) 
 					return shader;
 			}
 
 			return nullptr;
 		}
 		template<>
-		static Texture* Find(const char* args) {
+		static Texture* Find(const char* file) {
 			std::vector<RefCount*> textures = s_Assets[AssetType::TextureAsset];
 
 			for (RefCount* ref : textures) {
 				Texture* texture = (Texture*)ref;
-				if (strcmp(texture->GetFile().c_str(), args) == 0)
+				if (strcmp(texture->GetFile().c_str(), file) == 0)
 					return texture;
 				
 			}
