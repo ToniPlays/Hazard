@@ -8,11 +8,25 @@
 
 namespace Hazard::Rendering {
 
-	struct ShaderCreateInfo {
+	enum ShaderType { VertexShader = 0, FragmentShader = 1, GeometryShader = 2, ComputeShader = 3 };
+
+	struct ShaderStage {
+		ShaderType type;
 		std::string filename;
+
+		ShaderStage() = default;
+		ShaderStage(ShaderType type, const std::string& filename) {
+			this->type = type;
+			this->filename = filename;
+		}
+	};
+
+	struct ShaderCreateInfo {
+		std::string shaderName;
+		std::vector<ShaderStage> stages;
 	};
 	struct ShaderInfo {
-		std::string filename;
+		std::string shaderName;
 	};
 	
 	class Shader : public RefCount {

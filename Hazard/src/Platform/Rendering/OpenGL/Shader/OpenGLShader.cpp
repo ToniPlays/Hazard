@@ -7,14 +7,14 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	static GLenum ShaderTypeFromString(const std::string& type) {
-		if (type == "Vertex") {
+	static GLenum ShaderTypeFromType(ShaderType type) {
+		if (type == ShaderType::VertexShader) {
 			return GL_VERTEX_SHADER;
 		}
-		else if (type == "Geometry") {
+		else if (type == ShaderType::GeometryShader) {
 			return GL_GEOMETRY_SHADER;
 		}
-		else if (type == "Fragment" || type == "Pixel") {
+		else if (type == ShaderType::FragmentShader) {
 			return GL_FRAGMENT_SHADER;
 		}
 		return -1;
@@ -22,10 +22,9 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::OpenGLShader(ShaderCreateInfo info) 
 	{
-		m_Info.filename = info.filename;
+		m_Info.shaderName = info.shaderName;
+		Compile(info.stages);
 
-		std::string file = File::ReadFile(info.filename);
-		Compile(Process(file));
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -89,8 +88,7 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		SetUniformBool(name, value ? 1 : 0);
 	}
-
-	std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
+	/*std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 
@@ -111,42 +109,47 @@ namespace Hazard::Rendering::OpenGL {
 		}
 
 		return shaderSources;
-	}
+	}*/
 
-	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& sources)
+	void OpenGLShader::Compile(std::vector<ShaderStage> stages)
 	{
 		m_ProgramID = glCreateProgram();
 
-		std::vector<GLenum> shaderId(sources.size());
 		int glShaderIDIndex = 0;
+		std::vector<uint32_t> shaderID(stages.size());
 
-		for (auto& kv : sources) {
-			GLenum type = kv.first;
-			const GLchar* source = kv.second.c_str();
-			if (type == -1)
-				continue;
+		for (auto stage : stages)
+		{
+			GLuint shaderType = ShaderTypeFromType(stage.type);
+			std::string source = File::ReadFile(stage.filename);
 
-			GLuint shader = glCreateShader(type);
-			glShaderSource(shader, 1, &source, 0);
+			const GLchar* shaderSource = source.c_str();
 
+			GLuint shader = glCreateShader(shaderType);
+
+
+
+			shaderID.push_back(shader);
+
+			glShaderSource(shader, 1, &shaderSource, 0);
 			glCompileShader(shader);
+
 			GLint compiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
 
 			if (compiled == GL_FALSE) {
+
 				GLint maxLength = 0;
 				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
-
-				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+				std::vector<GLchar> buffer(maxLength);
+				glGetShaderInfoLog(shader, maxLength, &maxLength, &buffer[0]);
 
 				glDeleteShader(shader);
-				HZR_CORE_ERROR(infoLog.data());
+				HZR_CORE_ERROR(buffer.data());
 				return;
 			}
 			glAttachShader(m_ProgramID, shader);
 		}
-
 		glLinkProgram(m_ProgramID);
 
 		GLint isLinked = 0;
@@ -156,20 +159,18 @@ namespace Hazard::Rendering::OpenGL {
 
 			GLint maxLength = 0;
 			glGetProgramiv(m_ProgramID, GL_INFO_LOG_LENGTH, &maxLength);
-
 			std::vector<GLchar> infoLog(maxLength);
 			glGetProgramInfoLog(m_ProgramID, maxLength, &maxLength, &infoLog[0]);
-
 			glDeleteProgram(m_ProgramID);
 			HZR_CORE_ERROR(infoLog.data());
 
-			for (auto id : shaderId)
+			for (auto id : shaderID) {
 				glDeleteShader(id);
+			}
 
 			return;
 		}
-		for (GLuint id : shaderId)
-		{
+		for (auto id : shaderID) {
 			glDeleteShader(id);
 		}
 	}

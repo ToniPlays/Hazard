@@ -59,6 +59,7 @@ namespace Hazard::Rendering {
 
 		glfwShowWindow(m_Window);
 		SetCallbacks();
+		SetVSync(info->VSync);
 	}
 	void WindowsWindow::OnUpdate(Color color) {
 

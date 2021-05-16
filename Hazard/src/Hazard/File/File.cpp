@@ -81,11 +81,11 @@ namespace Hazard {
 		std::ifstream f(file);
 		return f.good();
 	}
-	std::string File::ReadFile(const std::string& file) {
-
+	std::string File::ReadFile(const std::string& file) 
+	{
 		std::ifstream ifs(file, std::ios::in, std::ios::binary);
 
-		HZR_ASSERT(!ifs.is_open(), "File " + file + " could not be opened");
+		HZR_ASSERT(ifs.is_open(), "File " + file + " could not be opened");
 
 		std::string result;
 		ifs.seekg(0, std::ios::end);
@@ -94,6 +94,7 @@ namespace Hazard {
 
 		ifs.read(&result[0], result.size());
 		ifs.close();
+
 		return result;
 	}
 	std::vector<char> File::ReadBinaryFile(const char* path)

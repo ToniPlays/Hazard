@@ -91,8 +91,13 @@ namespace Hazard::Rendering::OpenGL {
 
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
 
+		std::vector<ShaderStage> stages(2);
+		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/equirectangularToCubemap_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/equirectangularToCubemap_frag.glsl" };
+
 		ShaderCreateInfo shaderInfo;
-		shaderInfo.filename = "res/shaders/equirectangularToCube.glsl";
+		shaderInfo.shaderName = "EquirectangularToCubemap";
+		shaderInfo.stages = stages;
 
 		Ref<Shader> convertShader = RenderUtils::Create<Shader>(shaderInfo);
 		Bind();
@@ -173,7 +178,7 @@ namespace Hazard::Rendering::OpenGL {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, m_TextureID, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			RenderCommand::DrawIndexed(cubeArray, cubeArray->GetIndexBuffer()->GetCount());
+			RenderCommand::DrawIndexed(cubeArray, cubeArray->GetIndexBuffer()->GetInfo().count);
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		HZR_CORE_WARN("HDR Cubemap finished");

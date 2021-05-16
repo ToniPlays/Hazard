@@ -14,12 +14,11 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void Unbind() const override;
 		virtual void SetData(const void* data, uint32_t size) override;
 
-		virtual const BufferLayout& GetLayout() const override { return m_BufferLayout; }
-		virtual void SetLayout(const BufferLayout& layout) override { m_BufferLayout = layout; }
+		virtual VertexBufferInfo GetInfo() const override { return m_Info; }
 
 	private:
 		uint32_t m_BufferID = 0;
-		BufferLayout m_BufferLayout;
+		VertexBufferInfo m_Info;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer {
@@ -30,12 +29,10 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void Bind() const;
 		virtual void Unbind() const;
 		virtual void SetData(uint32_t* indices, uint32_t count);
-		virtual uint32_t GetID() const override { return m_BufferID; }
 
-		virtual uint32_t GetCount() const { return m_Count; }
-
+		virtual IndexBufferInfo GetInfo() const override { return m_Info; }
 	private:
 		uint32_t m_BufferID = 0;
-		uint32_t m_Count = 0;
+		IndexBufferInfo m_Info;
 	};
 }

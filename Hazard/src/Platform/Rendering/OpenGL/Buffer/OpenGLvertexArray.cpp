@@ -27,7 +27,6 @@ namespace Hazard::Rendering::OpenGL {
 		return 0;
 	}
 
-
 	OpenGLVertexArray::OpenGLVertexArray(const VertexArrayCreateInfo& info)
 	{
 		glGenVertexArrays(1, &m_ArrayID);
@@ -38,6 +37,7 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		glDeleteVertexArrays(1, &m_ArrayID);
+
 		if(m_IndexBuffer != nullptr)
 			delete m_IndexBuffer;
 	}
@@ -54,7 +54,7 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		Bind();
 		m_Buffers.at(index)->Bind();
-		const BufferLayout& layout = m_Buffers.at(index)->GetLayout();
+		const BufferLayout& layout = m_Buffers.at(index)->GetInfo().layout;
 		uint32_t offset = 0;
 
 		for (uint16_t i = 0; i < layout.GetElements().size(); i++) {
@@ -71,8 +71,10 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		Bind();
 		vertexBuffer->Bind();
+
 		HZR_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
-		const BufferLayout& layout = vertexBuffer->GetLayout();
+		const BufferLayout& layout = vertexBuffer->GetInfo().layout;
+
 		for (const BufferElement& element : layout)
 		{
 			switch (element.Type)
@@ -91,7 +93,7 @@ namespace Hazard::Rendering::OpenGL {
 				glVertexAttribPointer(m_VertexBufferIndex,
 					element.GetComponentCount(),
 					ShaderDataTypeToOpenGLBaseType(element.Type),
-					element.Normalized ? GL_TRUE : GL_FALSE,
+					element.Normalized,
 					layout.GetStride(),
 					(const void*)element.Offset);
 				m_VertexBufferIndex++;
@@ -107,7 +109,7 @@ namespace Hazard::Rendering::OpenGL {
 					glVertexAttribPointer(m_VertexBufferIndex,
 						count,
 						ShaderDataTypeToOpenGLBaseType(element.Type),
-						element.Normalized ? GL_TRUE : GL_FALSE,
+						element.Normalized,
 						layout.GetStride(),
 						(const void*)(element.Offset + sizeof(float) * count * i));
 					glVertexAttribDivisor(m_VertexBufferIndex, 1);

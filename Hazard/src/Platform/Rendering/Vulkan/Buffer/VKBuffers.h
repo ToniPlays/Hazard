@@ -12,11 +12,11 @@ namespace Hazard::Rendering::Vulkan {
 		void Bind() const;
 		void Unbind() const;
 		void SetData(const void* data, uint32_t size);
+		
+		VertexBufferInfo GetInfo() const override { return m_Info; }
 
-		const BufferLayout& GetLayout() const { return m_Layout; };
-		void SetLayout(const BufferLayout& layout) { m_Layout = layout; };
 	private:
-		BufferLayout m_Layout;
+		VertexBufferInfo m_Info;
 	};
 	class VKIndexBuffer : public IndexBuffer {
 	public:
@@ -25,11 +25,12 @@ namespace Hazard::Rendering::Vulkan {
 
 		void Bind() const;
 		void Unbind() const;
-		uint32_t GetID() const;
 
-		uint32_t GetCount() const;
+		IndexBufferInfo GetInfo() const override { return m_Info; }
 
 	private:
 		void SetData(uint32_t * indices, uint32_t count);
+
+		IndexBufferInfo m_Info;
 	};
 }

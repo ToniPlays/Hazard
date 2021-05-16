@@ -29,8 +29,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	private:
 		GLint GetLocation(const std::string& name);
-		std::unordered_map<GLenum, std::string> Process(std::string source);
-		void Compile(const std::unordered_map<GLenum, std::string>& sources);
+		void Compile(std::vector<ShaderStage> stages);
 
 	private:
 		ShaderInfo m_Info;

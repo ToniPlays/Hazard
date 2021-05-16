@@ -23,6 +23,7 @@ namespace Hazard {
 	{
 		RenderAPI renderer = RenderAPI::Auto;
 		bool fullScreen = false;
+		bool VSync = false;
 
 		uint32_t width = 0;
 		uint32_t height = 0;

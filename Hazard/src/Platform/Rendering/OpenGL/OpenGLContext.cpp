@@ -49,8 +49,8 @@ namespace Hazard::Rendering {
 			Enable(Depth);
 			Enable(Blend);
 
-
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 			if (!appInfo->logging) return;
 
 			glEnable(GL_DEBUG_OUTPUT);

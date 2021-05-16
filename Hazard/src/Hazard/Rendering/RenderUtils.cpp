@@ -48,7 +48,7 @@ namespace Hazard::Rendering {
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
 
-		Shader* shader = Find<Shader>(info.filename.c_str());
+		Shader* shader = Find<Shader>(info.shaderName.c_str());
 		if (shader != nullptr) {
 			return Ref(shader);
 		}

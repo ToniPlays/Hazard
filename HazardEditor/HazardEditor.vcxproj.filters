@@ -297,4 +297,14 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\compiled\equirectangularToCubemap_frag.glsl" />
+    <None Include="res\Shaders\compiled\equirectangularToCubemap_vert.glsl" />
+    <None Include="res\Shaders\compiled\skybox_frag.glsl" />
+    <None Include="res\Shaders\compiled\skybox_vert.glsl" />
+    <None Include="res\Shaders\compiled\standard_frag.glsl" />
+    <None Include="res\Shaders\compiled\standard_vert.glsl" />
+    <None Include="res\Shaders\compiled\pbr_frag.glsl" />
+    <None Include="res\Shaders\compiled\pbr_vert.glsl" />
+  </ItemGroup>
 </Project>

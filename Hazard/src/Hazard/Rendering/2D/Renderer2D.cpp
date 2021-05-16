@@ -50,6 +50,7 @@ namespace Hazard::Rendering {
 		VertexBufferCreateInfo bufferInfo = {};
 		bufferInfo.layout = &layout;
 		bufferInfo.size = m_Data.MaxVertices * sizeof(QuadVertex);
+		bufferInfo.dataStream = DataStream::DynamicDraw;
 
 		IndexBufferCreateInfo indexBufferInfo;
 		indexBufferInfo.size = m_Data.MaxIndices;
@@ -72,8 +73,13 @@ namespace Hazard::Rendering {
 			
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
 
+		std::vector<ShaderStage> stages(2);
+		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/standard_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/standard_frag.glsl" };
+
 		ShaderCreateInfo shaderInfo;
-		shaderInfo.filename = "res/Shaders/standard.glsl";
+		shaderInfo.shaderName = "standard";
+		shaderInfo.stages = stages;
 
 		m_Data.QuadShader = RenderUtils::Create<Shader>(shaderInfo);
 		m_Data.QuadShader->Bind();

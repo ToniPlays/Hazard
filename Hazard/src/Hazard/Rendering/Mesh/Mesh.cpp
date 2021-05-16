@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
     void Mesh::Render()
     {
         RenderCommand::GetStats().vertices += m_Vertices.size();
-        uint32_t size = m_MeshVAO->GetIndexBuffer()->GetCount();
+        uint32_t size = m_MeshVAO->GetIndexBuffer()->GetInfo().count;
         
         RenderCommand::DrawIndexed(m_MeshVAO, size);
     }
@@ -32,7 +32,7 @@ namespace Hazard::Rendering {
             { ShaderDataType::Float3, "v_position" },
             { ShaderDataType::Float4, "v_color" },
             { ShaderDataType::Float3, "v_normals" },
-            { ShaderDataType::Float2, "v-textCoords" }
+            { ShaderDataType::Float2, "v_textCoords" }
         };
 
         VertexBufferCreateInfo bufferInfo;

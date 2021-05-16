@@ -32,6 +32,7 @@ void EditorApplication::PreInit()
 	RenderContexCreateInfo contextInfo;
 	contextInfo.renderer = RenderAPI::OpenGL;
 	contextInfo.fullScreen = true;
+	contextInfo.VSync = true;
 	contextInfo.width = 1280;
 	contextInfo.height = 720;
 

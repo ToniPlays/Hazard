@@ -40,7 +40,7 @@ namespace Hazard::Rendering {
 
 			HZR_CORE_INFO(refs.size());
 			if (it != refs.end()) {
-				HZR_CORE_ERROR("Removed {0}", shader->GetInfo().filename);
+				HZR_CORE_ERROR("Removed {0}", shader->GetInfo().shaderName);
 				refs.erase(it);
 			}
 			HZR_CORE_INFO(refs.size());
@@ -77,7 +77,7 @@ namespace Hazard::Rendering {
 
 			for (RefCount* ref : shaders) {
 				Shader* shader = (Shader*)ref;
-				if (strcmp(shader->GetInfo().filename.c_str(), file) == 0) 
+				if (strcmp(shader->GetInfo().shaderName.c_str(), file) == 0) 
 					return shader;
 			}
 

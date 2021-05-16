@@ -47,8 +47,14 @@ namespace Hazard::Rendering {
 
 		m_VAO = RenderUtils::CreateRaw<VertexArray>(createInfo);
 
+		std::vector<ShaderStage> stages(2);
+
+		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/skybox_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/skybox_frag.glsl" };
+
 		ShaderCreateInfo shaderInfo;
-		shaderInfo.filename = "res/shaders/skybox.glsl";
+		shaderInfo.shaderName = "Skybox";
+		shaderInfo.stages = stages;
 
 
 		m_SkyboxShader = RenderUtils::Create<Shader>(shaderInfo);

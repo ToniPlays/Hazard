@@ -26,7 +26,7 @@ namespace WindowElement {
 
 				Layout::Text(std::to_string(ref->GetRefCount()).c_str());
 				Layout::TableNext();
-				ImGui::Text(shader->GetInfo().filename.c_str());
+				ImGui::Text(shader->GetInfo().shaderName.c_str());
 				Layout::TableNext();
 			}
 			Layout::EndTable();

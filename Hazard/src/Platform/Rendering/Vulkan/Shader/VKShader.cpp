@@ -7,7 +7,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	VKShader::VKShader(const ShaderCreateInfo& info)
 	{
-		m_Info.filename = info.filename;
+		m_Info.shaderName = info.shaderName;
 	}
 	VKShader::~VKShader()
 	{

@@ -80,22 +80,44 @@ namespace Hazard::Rendering {
 		uint32_t m_Stride = 0;
 	};
 
-	enum DataStream { StaticDraw = 0, DynamicDraw };
+	enum DataStream {
+		StreamDraw  = 0, 
+		StreamRead  = 1,
+		StreamCopy  = 2,
+		StaticDraw  = 4,
+		StaticRead  = 5,
+		StaticCopy  = 6,
+		DynamicDraw = 8,
+		DynamicRead = 9,
+		DynamicCopy = 10
+	};
 
 	struct VertexBufferCreateInfo 
 	{
+		DataStream dataStream = DataStream::StaticDraw;
 		BufferLayout* layout;
 		uint32_t size = 0;
 		void* data = nullptr;
-		DataStream dataStream = DataStream::StaticDraw;
 
 	};
+
+	struct VertexBufferInfo 
+	{
+		DataStream dataStream;
+		BufferLayout layout;
+	};
+
 	struct IndexBufferCreateInfo 
 	{
+		DataStream dataStream = DataStream::StaticDraw;
 		uint32_t size = 0;
 		uint32_t* data = nullptr;
 	};
 
+	struct IndexBufferInfo {
+		DataStream dataStream;
+		uint32_t count;
+	};
 
 	class VertexBuffer {
 		friend class VertexDataBuffer;
@@ -106,8 +128,7 @@ namespace Hazard::Rendering {
 		virtual void Unbind() const = 0;
 		virtual void SetData(const void* data, uint32_t size) = 0;
 
-		virtual const BufferLayout& GetLayout() const = 0;
-		virtual void SetLayout(const BufferLayout& layout) = 0;
+		virtual VertexBufferInfo GetInfo() const = 0;
 	};
 
 	class IndexBuffer {
@@ -117,9 +138,8 @@ namespace Hazard::Rendering {
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
-		virtual uint32_t GetID() const = 0;
 
-		virtual uint32_t GetCount() const = 0;
+		virtual IndexBufferInfo GetInfo() const = 0;
 
 	private:
 		virtual void SetData(uint32_t* indices, uint32_t count) = 0;
