@@ -3,11 +3,14 @@
 #include <hzrpch.h>
 #include "VKValidationLayer.h"
 #include "../VKUtils.h"
+#include "../VKContext.h"
 #include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan {
 
-	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
+		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 		if (func != nullptr) {
 			return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
@@ -27,8 +30,10 @@ namespace Hazard::Rendering::Vulkan {
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
 		VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) 
 	{
-		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) return VK_FALSE;
-		std::cerr << "Validation layer: " << pCallbackData->pMessage << std::endl;
+		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) 
+			return VK_FALSE;
+
+		VKContext::SendDebugMessage(pCallbackData->pMessage, "Vulkan");
 
 		return VK_FALSE;
 	}
@@ -43,20 +48,22 @@ namespace Hazard::Rendering::Vulkan {
 			return true;
 		}
 
-		VkDebugUtilsMessengerCreateInfoEXT* debugCreateInfo = VKValidationLayer::GetDebugCreateInfo();
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
+		VKValidationLayer::GetDebugCreateInfo(debugCreateInfo);
 
 		info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		info.ppEnabledLayerNames = validationLayers.data();
-		info.pNext = debugCreateInfo;
+		info.pNext = &debugCreateInfo;
 
 		HZR_CORE_INFO("Vulkan validation enabled");
 		return true;
 	}
 	void VKValidationLayer::SetupDebugger(VkInstance instance)
 	{
-		VkDebugUtilsMessengerCreateInfoEXT* createInfo = GetDebugCreateInfo();
+		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+		GetDebugCreateInfo(createInfo);
 
-		if (CreateDebugUtilsMessengerEXT(instance, createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+		if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
 			HZR_THROW("Failed to create Debug Messenger!");
 		}
 	}
@@ -83,13 +90,12 @@ namespace Hazard::Rendering::Vulkan {
 
 		return true;
 	}
-	VkDebugUtilsMessengerCreateInfoEXT* VKValidationLayer::GetDebugCreateInfo()
+	void VKValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 	{
-		VkDebugUtilsMessengerCreateInfoEXT* createInfo = new VkDebugUtilsMessengerCreateInfoEXT();
-		createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-		createInfo->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-		createInfo->messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-		createInfo->pfnUserCallback = debugCallback;
-		return createInfo;
+		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		createInfo.pfnUserCallback = debugCallback;
+		createInfo.pNext = NULL;
 	}
 }

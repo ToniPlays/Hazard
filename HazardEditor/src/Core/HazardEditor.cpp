@@ -30,7 +30,7 @@ void EditorApplication::PreInit()
 	appInfo.iconCount = icons.size();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.renderer = RenderAPI::Vulkan;
+	contextInfo.renderer = RenderAPI::OpenGL;
 	contextInfo.fullScreen = true;
 	contextInfo.width = 1280;
 	contextInfo.height = 720;
@@ -53,9 +53,9 @@ void EditorApplication::PreInit()
 		HZR_ERROR("Valid project file required to run application");
 	}
 	
+	PushModule<ECS::SceneHandler>();
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
 		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
-	PushModule<ECS::SceneHandler>();
 	
 }
 void EditorApplication::Init() 

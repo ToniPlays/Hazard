@@ -32,7 +32,6 @@ namespace Hazard::Rendering::Vulkan
 		createInfo.pNext					= NULL;
 
 		if (VKValidationLayer::IsValidationSupported()) {
-
 			VKValidationLayer::InitValidationLayers(createInfo, enableDebugging);
 		}
 

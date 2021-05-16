@@ -16,7 +16,6 @@ namespace Hazard::ECS {
         for (auto srcEntity : components)
         {
             entt::entity destEntity = entityMap.at(src.get<TagComponent>(srcEntity).m_ID);
-
             auto& srcComponent = src.get<T>(srcEntity);
             auto& destComponent = dest.emplace_or_replace<T>(destEntity, srcComponent);
         }
@@ -31,11 +30,12 @@ namespace Hazard::ECS {
         std::unordered_map<UID, entt::entity> entityMap;
 
         memcpy(&m_WorldData, &world.m_WorldData, sizeof(WorldData));
-
         auto& entityID = world.m_Registry.view<TagComponent>();
-        
-        for (size_t i = entityID.size() - 1; i >= 0; i--) {
-            auto entity = entityID[i];
+
+        entityMap.reserve(entityID.size());
+
+        for (size_t i = entityID.size(); i > 0; i--) {
+            auto entity = entityID[i - 1];
 
             TagComponent& c = world.m_Registry.get<TagComponent>(entity);
             UID uid = c.m_ID;

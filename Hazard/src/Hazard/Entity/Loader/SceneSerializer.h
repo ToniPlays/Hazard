@@ -118,12 +118,11 @@ namespace Hazard::ECS::Loader {
 
 			if (comp["Texture"]) {
 
-				/*using namespace Hazard::Rendering;
+				using namespace Hazard::Rendering;
 
 				Texture2DCreateInfo createInfo;
 				createInfo.filename = comp["Texture"].as<std::string>().c_str();
-
-				component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);*/
+				component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 			}
 		};
 		template<>

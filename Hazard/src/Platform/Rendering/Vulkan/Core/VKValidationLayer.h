@@ -12,7 +12,7 @@ namespace Hazard::Rendering::Vulkan
 		static bool InitValidationLayers(VkInstanceCreateInfo& info, bool enabled = false);
 		static void SetupDebugger(VkInstance instance);
 		static bool IsValidationSupported();
-		static VkDebugUtilsMessengerCreateInfoEXT* GetDebugCreateInfo();
+		static void GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 	private:
 		static VkDebugUtilsMessengerEXT debugMessenger;
 	};
