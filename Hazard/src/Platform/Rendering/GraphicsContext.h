@@ -18,6 +18,12 @@ namespace Hazard::Rendering {
 		}
 	};
 
+	struct DeviceSpec {
+		std::string name;
+		std::string renderer;
+		uint32_t textureSlots;
+	};
+
 	enum DepthTest {
 		Never = 0,
 		Less = 1,
@@ -50,8 +56,7 @@ namespace Hazard::Rendering {
 		virtual void Disable(Function fn) const = 0;
 
 		virtual void DrawIndexed(VertexArray& array, uint32_t size) const = 0;
-		virtual std::string GetVersion() const = 0;
-		virtual std::string GetDevice() const = 0;
+		virtual DeviceSpec GetDeviceSpec() const = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
 	};

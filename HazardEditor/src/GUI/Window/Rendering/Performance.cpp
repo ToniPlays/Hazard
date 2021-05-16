@@ -51,15 +51,17 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text(context->GetWindow().GetWindowInfo().Platform);
 
+		Hazard::Rendering::DeviceSpec spec = context->GetContext().GetDeviceSpec();
+
 		Layout::TableNext();
 		Layout::Text("Renderer");
 		Layout::TableNext();
-		Layout::Text(context->GetContext().GetDevice().c_str());
+		Layout::Text(spec.name.c_str());
 
 		Layout::TableNext();
 		Layout::Text("Rendering API");
 		Layout::TableNext();
-		Layout::Text(context->GetContext().GetVersion().c_str());
+		Layout::Text(spec.renderer.c_str());
 
 		Layout::TableNext();
 		Layout::Text("Drawcalls");

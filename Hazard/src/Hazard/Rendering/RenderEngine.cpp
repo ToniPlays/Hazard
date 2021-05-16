@@ -26,7 +26,7 @@ namespace Hazard::Rendering {
 	void RenderEngine::InitRenderer(RenderEngineCreateInfo* info)
 	{
 		RenderCommand::Init();
-		m_Renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
+		m_Renderer2D = new Renderer2D(info);
 		m_Renderer2D->Init(info->maxQuadCount);
 	}
 	void RenderEngine::Close()

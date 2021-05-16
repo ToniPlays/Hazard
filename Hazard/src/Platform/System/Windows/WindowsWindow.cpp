@@ -55,7 +55,7 @@ namespace Hazard::Rendering {
 		m_Context->Init(this, appInfo);
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
-		m_WindowData.Renderer = m_Context->GetVersion();
+		m_WindowData.Renderer = m_Context->GetDeviceSpec().renderer;
 
 		glfwShowWindow(m_Window);
 		SetCallbacks();

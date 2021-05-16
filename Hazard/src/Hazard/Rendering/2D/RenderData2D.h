@@ -19,7 +19,7 @@ namespace Hazard::Rendering
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
-		std::array<Ref<Texture>, 8> TextureSlots;
+		std::vector<Ref<Texture>> TextureSlots;
 		glm::vec4 QuadVertexPos[4];
 	};
 }

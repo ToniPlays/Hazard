@@ -24,8 +24,7 @@ namespace Hazard::Rendering::OpenGL {
 		void DrawIndexed(VertexArray& array, uint32_t size) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
-		std::string GetVersion() const override;
-		std::string GetDevice() const override;
+		DeviceSpec GetDeviceSpec() const override;
 
 	public:
 		static void SendDebugMessage(const char* message, const char* code);

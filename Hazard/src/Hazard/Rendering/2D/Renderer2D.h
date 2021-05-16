@@ -15,7 +15,7 @@ namespace Hazard::Rendering {
 
 	class Renderer2D {
 	public:
-		Renderer2D(RenderContext* context);
+		Renderer2D(RenderEngineCreateInfo* info);
 		~Renderer2D();
 
 		void Init(uint32_t size);

@@ -30,6 +30,7 @@ namespace Hazard {
 	struct RenderEngineCreateInfo 
 	{
 		uint32_t maxQuadCount = 35000;
+		uint32_t samplerCount = 0;
 	};
 
 	struct HazardCreateInfo {

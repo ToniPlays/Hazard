@@ -92,7 +92,7 @@ namespace WindowElement {
 				Layout::Text("Environment map");
 				bool clicked = Input::TextureSlot(rd->GetRaw().Raw(), [&]() {
 					float gamma = rd->GetSkybox()->GetGamma();
-					Input::Slider("Gamma", gamma, 0.0, 10.0f);
+					Input::Slider("Gamma", gamma, 0.0f, 10.0f);
 					rd->GetSkybox()->SetGamma(gamma);
 
 				});

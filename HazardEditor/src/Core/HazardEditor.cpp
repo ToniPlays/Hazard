@@ -37,6 +37,7 @@ void EditorApplication::PreInit()
 
 	RenderEngineCreateInfo engineInfo;
 	engineInfo.maxQuadCount = 50000;
+	engineInfo.samplerCount = 8;
 
 	HazardCreateInfo createInfo;
 	createInfo.appInfo = &appInfo;

@@ -49,8 +49,8 @@ namespace Hazard::Rendering {
 			if (!CreateCommandPool()) HZR_THROW("Failed to create Vulkan Command pool");
 			if (!CreateCommandBuffers()) HZR_THROW("Failed to create Vulkan Command Buffers");
 			*/
-			HZR_CORE_WARN(GetVersion());
-			HZR_CORE_WARN(GetDevice());
+			DeviceSpec spec = GetDeviceSpec();
+			HZR_CORE_INFO(spec.name);
 		}
 
 		void VKContext::ClearFrame(glm::vec4 clearColor) const
@@ -88,25 +88,22 @@ namespace Hazard::Rendering {
 			VKContext::s_Callback = callback;
 		}
 
-		std::string VKContext::GetVersion() const
+		DeviceSpec VKContext::GetDeviceSpec() const
 		{
+			DeviceSpec spec;
 			VkPhysicalDeviceProperties props;
 			vkGetPhysicalDeviceProperties(m_VulkanData.vkInstance->GetData().Device->GetPhysicalDevice(), &props);
-
 			std::stringstream ss;
 
-			ss <<		 VK_VERSION_MAJOR(props.apiVersion);
+			ss << VK_VERSION_MAJOR(props.apiVersion);
 			ss << "." << VK_VERSION_MINOR(props.apiVersion);
 			ss << "." << VK_VERSION_PATCH(props.apiVersion);
 
-			return ss.str();
-			return "";
-		}
-		std::string VKContext::GetDevice() const
-		{
-			VkPhysicalDeviceProperties props;
-			vkGetPhysicalDeviceProperties(m_VulkanData.vkInstance->GetData().Device->GetPhysicalDevice(), &props);
-			return props.deviceName;
+			spec.renderer = ss.str();
+			spec.name = props.deviceName;
+			spec.textureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
+
+			return spec;
 		}
 		void VKContext::SendDebugMessage(const char* message, const char* code)
 		{

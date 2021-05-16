@@ -14,7 +14,9 @@ namespace Hazard::Rendering {
 	constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr uint8_t quadVertexCount = 4;
 
-	Renderer2D::Renderer2D(RenderContext* context) {}
+	Renderer2D::Renderer2D(RenderEngineCreateInfo* info) {
+		m_Data.TextureSlots.resize(info->samplerCount);
+	}
 	Renderer2D::~Renderer2D() {}
 
 	void Renderer2D::Init(uint32_t size)
@@ -64,9 +66,9 @@ namespace Hazard::Rendering {
 		
 		delete[] indices;
 
-		int samplers[8];
-		for (uint32_t i = 0; i < 8; i++)
-			samplers[i] = i;
+		std::vector<int> samplers(m_Data.TextureSlots.size());
+		for (int i = 0; i < samplers.size(); i++)
+			samplers.at(i) = i;
 			
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
 
@@ -75,7 +77,7 @@ namespace Hazard::Rendering {
 
 		m_Data.QuadShader = RenderUtils::Create<Shader>(shaderInfo);
 		m_Data.QuadShader->Bind();
-		m_Data.QuadShader->SetUniformIntArray("u_Textures", samplers, 8);
+		m_Data.QuadShader->SetUniformIntArray("u_Textures", samplers.data(), 8);
 
 		
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };

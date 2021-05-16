@@ -49,7 +49,9 @@ namespace Hazard::Rendering {
 			Enable(Depth);
 			Enable(Blend);
 
+
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			if (!appInfo->logging) return;
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -121,23 +123,26 @@ namespace Hazard::Rendering {
 			OpenGLContext::s_Callback = callback;
 		}
 
-		std::string OpenGLContext::GetVersion() const
+		DeviceSpec OpenGLContext::GetDeviceSpec() const
 		{
+			DeviceSpec spec;
 			std::stringstream ss;
-			GLint major, minor;
+			GLint major, minor, slots;
 
 			glGetIntegerv(GL_MAJOR_VERSION, &major);
 			glGetIntegerv(GL_MINOR_VERSION, &minor);
+			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &slots);
 
 			ss << "OpenGL ";
 			ss << major << "." << minor;
-			return ss.str();
-		}
-		std::string OpenGLContext::GetDevice() const
-		{
-			std::stringstream ss;
+			spec.renderer = ss.str();
+			ss.str("");
+
 			ss << glGetString(GL_RENDERER);
-			return ss.str();
+
+			spec.name = ss.str();
+			spec.textureSlots = major;
+			return spec;
 		}
 		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
 		{

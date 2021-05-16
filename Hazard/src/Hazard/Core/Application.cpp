@@ -22,9 +22,6 @@ namespace Hazard {
 		if (info->appInfo == nullptr) 
 			HZR_THROW("Must assign ApplicationCreateInfo to HazardCreateInfo");
 
-		std::cout << info->appInfo->appName << " " << info->appInfo->buildVersion << std::endl;
-		std::cout << "Logging " << (info->appInfo->logging ? "True" : "False") << std::endl;
-
 #ifndef HZR_RELEASE
 			PushModule<Logging::Logger>();
 #endif // HZR_RELEASE
