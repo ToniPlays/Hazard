@@ -14,7 +14,6 @@ namespace Hazard::Rendering {
 	RenderEngine::RenderEngine() : Module("RenderEnginwe")
 	{
 		SetActive(true);
-		std::cout << "RenderEngine()" << std::endl;
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -24,11 +23,11 @@ namespace Hazard::Rendering {
 	{
 
 	}
-	void RenderEngine::Init()
+	void RenderEngine::InitRenderer(RenderEngineCreateInfo* info)
 	{
 		RenderCommand::Init();
 		m_Renderer2D = new Renderer2D(&RenderContextCommand::GetContext());
-		m_Renderer2D->Init(35000);
+		m_Renderer2D->Init(info->maxQuadCount);
 	}
 	void RenderEngine::Close()
 	{

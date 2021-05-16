@@ -1,18 +1,12 @@
 #pragma once
+
 #include "Hazard/Core/Core.h"
+#include "Hazard/Module/Module.h"
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
-
+#include "Hazard/Core/ApplicationCreateInfo.h"
 
 namespace Hazard::Rendering {
-
-	enum class RenderAPI { 
-		Auto = 0,
-		OpenGL,
-		Vulkan,
-		DX11,
-		DX12
-	};
 
 	class RenderContext : public Module::Module {
 
@@ -20,7 +14,7 @@ namespace Hazard::Rendering {
 		RenderContext();
 		~RenderContext();
 
-		void InitContext(RenderAPI api = RenderAPI::Auto);
+		void InitContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		void Update() override;
 		void Close();
 

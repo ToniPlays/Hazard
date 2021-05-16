@@ -173,9 +173,6 @@ namespace WindowElement {
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 			break;
 		case RenderAPI::Vulkan:
-			GraphicsContext& contex = Application::GetModule<RenderContext>()->GetContext();
-			Vulkan::VKContext& vkContext = static_cast<Vulkan::VKContext&>(contex);
-			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), vkContext.GetVulkanData().commandBuffers[0]);
 			break;
 		}
 
@@ -199,23 +196,6 @@ namespace WindowElement {
 			break;
 		case RenderAPI::Vulkan:
 			ImGui_ImplGlfw_InitForVulkan(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
-			Vulkan::VKContext* context = static_cast<Vulkan::VKContext*>(window.GetContext());
-			Vulkan::VulkanData& data = context->GetVulkanData();
-
-			ImGui_ImplVulkan_InitInfo info = {};
-			info.Instance = data.instance;
-			info.PhysicalDevice = data.physicalDevice;
-			info.Device = data.device;
-			info.QueueFamily = data.queueFamily;
-			info.Queue = data.graphicsQueue;
-			info.PipelineCache = data.pipelineCache;
-			info.DescriptorPool = data.descriptorPool;
-			info.MinImageCount = data.minImageCount;
-			info.ImageCount = data.imageCount;
-			
-
-
-			ImGui_ImplVulkan_Init(&info, data.renderPass);
 			break;
 		}
 	}

@@ -20,6 +20,15 @@ namespace Hazard::Rendering {
 		createInfo.height = 2048;
 		createInfo.sides = { { CubeSide::All, "res/textures/chapmans_drive_8k.hdr"} };
 
+		/*std::vector<CubemapSide> sides = {
+			{ CubeSide::Top,	"res/textures/sea-top.jpg"},
+			{ CubeSide::Bottom, "res/textures/sea-bottom.jpg"},
+			{ CubeSide::Left,	"res/textures/sea-left.jpg"},
+			{ CubeSide::Right,	"res/textures/sea-right.jpg"},
+			{ CubeSide::Front,	"res/textures/sea-front.jpg"},
+			{ CubeSide::Back,	"res/textures/sea-back.jpg"}
+		};*/
+
 		Ref<CubemapTexture>& envMap = RenderUtils::Create<CubemapTexture>(createInfo);
 		m_Skybox->SetCubemapTexture(envMap);
 	}
@@ -39,6 +48,6 @@ namespace Hazard::Rendering {
 		m_Skybox->SetCubemapTexture(texture);
 	}
 	Ref<Texture2D> SkyboxBackgroundRenderer::GetRaw() {
-		return m_Skybox->GetCubemapTexture()->GetInfo().environmentRawTexture;
+		return m_Skybox->GetCubemapTexture()->GetInfo().cubeSides.at(0);
 	}
 }

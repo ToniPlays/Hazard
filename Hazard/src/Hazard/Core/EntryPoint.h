@@ -16,9 +16,10 @@ extern Hazard::Application* Hazard::CreateApplication();
 		#pragma comment( linker, "/subsystem:console" )
 		int main()
 		{
+			using namespace Hazard;
 			//Create Hazard application from external source and start running
-			Hazard::Application* app = Hazard::CreateApplication();
-			Hazard::Core::HazardLoop loop(app);
+			Application* app = CreateApplication();
+			Core::HazardLoop loop(app);
 			loop.Start();
 		}
 

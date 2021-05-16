@@ -35,13 +35,12 @@ namespace Hazard::Rendering {
 	class Window {
 
 	public:
-
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
 		virtual void OnUpdate(Color color = Color("#000000")) = 0;
 		virtual void SetWindowTitle(const char* title) = 0;
-		virtual void SetWindowIcon(const char* smallIcon, const char* bigIcon) = 0;
+		virtual void SetWindowIcon(uint32_t count, std::string* images) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void SetFullscreen(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
@@ -57,7 +56,7 @@ namespace Hazard::Rendering {
 
 		virtual WindowProps GetWindowInfo() { return m_WindowData; }
 
-		static Window* Create(WindowProps& props = WindowProps());
+		static Window* Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		GraphicsContext* GetContext() const { return m_Context; }
 
 	protected:

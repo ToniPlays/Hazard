@@ -43,14 +43,13 @@ namespace Hazard::Rendering {
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray(info);
 		case RenderAPI::Vulkan:		return new Vulkan::VKVertexArray(info);
 		}
-		HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
+		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
 
 		Shader* shader = Find<Shader>(info.filename.c_str());
 		if (shader != nullptr) {
-			HZR_CORE_INFO("Shader {0} refs {1}", info.filename, shader->GetRefCount());
 			return Ref(shader);
 		}
 
@@ -58,13 +57,10 @@ namespace Hazard::Rendering {
 		{
 		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(info); break;
 		case RenderAPI::Vulkan:		shader = new Vulkan::VKShader(info); break;
-		default:
-			HZR_THROW(std::string("Failed to create Shader for ") + RenderContext::APIToString(s_Api));
 		}
-		Ref ref(shader);
-		HZR_CORE_INFO("Created new shader {0} refs {1} ", info.filename, ref->GetRefCount());
+
 		s_Assets[AssetType::ShaderAsset].push_back(shader);
-		return ref;
+		return Ref(shader);
 	}
 	template<>
 	Ref<OcclusionQuery> RenderUtils::Create<OcclusionQuery>(const char* dontUse) {
@@ -86,9 +82,9 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(info); break;
-		case RenderAPI::Vulkan:		return Ref<Vulkan::VKRenderTexture>::Create(info); break;
+		//case RenderAPI::Vulkan:		return Ref<Vulkan::VKRenderTexture>::Create(info); break;
 		}
-		HZR_THROW(std::string("Failed to create RenderTexture for ") + RenderContext::APIToString(s_Api));
+		//HZR_THROW(std::string("Failed to create RenderTexture for ") + RenderContext::APIToString(s_Api));
 	}
 
 	template<>
@@ -102,12 +98,9 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(info);	break;
-		case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(info);		break;
-		default:
-			HZR_THROW(std::string("Failed to create Texture2D for ") + RenderContext::APIToString(s_Api));
+		//case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(info);		break;
 		}
 
-		HZR_CORE_INFO("Created new Texture2D {0}", info.filename);
 		s_Assets[AssetType::TextureAsset].push_back(texture);
 		return Ref(texture);
 	}
@@ -117,7 +110,6 @@ namespace Hazard::Rendering {
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(info);
 		}
-		HZR_THROW(std::string("Failed to create CubemapTexture for ") + RenderContext::APIToString(s_Api));
 	}
 #pragma endregion
 

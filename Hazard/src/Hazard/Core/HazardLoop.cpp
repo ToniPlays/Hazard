@@ -73,6 +73,7 @@ namespace Hazard::Core {
 	{
 		s_Instance->m_ShouldClose = true;
 	}
+
 	void HazardLoop::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);

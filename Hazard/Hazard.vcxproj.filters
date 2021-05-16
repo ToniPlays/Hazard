@@ -85,6 +85,9 @@
     <Filter Include="src\Platform\Rendering\Vulkan">
       <UniqueIdentifier>{6E2E9E1C-DA46-8546-A3F3-14E00FCB19E0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform\Rendering\Vulkan\Core">
+      <UniqueIdentifier>{8687BB00-72C3-BE6A-DBD5-D661C7306785}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform\System">
       <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
     </Filter>
@@ -357,7 +360,25 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKDevice.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKInstance.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKSwapChain.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKWindowSurface.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKContext.h">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VKUtils.h">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Vulkan.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\System\Window.h">
@@ -678,15 +699,11 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffer.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Vulkan.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKValidationLayer.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\Shader\VKShader.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Texture\VKTexture2D.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VKUtils.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VKValidationLayers.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VKSwapchain.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Texture\VKRenderTexture.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.h" />
+    <ClInclude Include="src\Hazard\Core\ApplicationCreateInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -806,7 +823,22 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKDevice.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKSwapChain.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKWindowSurface.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VkInstance.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKContext.cpp">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
@@ -860,14 +892,9 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffer.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKValidationLayer.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Shader\VKShader.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VKTexture2D.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VKValidationLayers.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VKSwapchain.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VKRrnderTexture.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VKRenderTexture.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.cpp" />
   </ItemGroup>
 </Project>

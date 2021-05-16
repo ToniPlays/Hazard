@@ -1,31 +1,62 @@
 #pragma once
-
-#include "hzrpch.h"
+#include <hzrpch.h>
 #include "VKUtils.h"
-
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
 #include <set>
 
 namespace Hazard::Rendering::Vulkan {
 
-	
-
-	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VulkanData data)
+	std::vector<const char*> VKUtils::GetRequiredExtensions(bool validation)
 	{
-		QueueFamilyIndices indices = VKFindQueueFamilies(device, data.vkSurface);
+		uint32_t count = 0;
+		const char** glfwExtensions;
+		glfwExtensions = glfwGetRequiredInstanceExtensions(&count);
+		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + count);
+
+		if (validation)
+			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
+		return extensions;
+	}
+	VkPhysicalDevice VKUtils::GetVulkanCapableDevice(VKInstance& instance)
+	{
+		uint32_t deviceCount = 0;
+		VkInstance vkInstnce = instance.GetData().Instance;
+		vkEnumeratePhysicalDevices(vkInstnce, &deviceCount, nullptr);
+
+		if (deviceCount == 0) return VK_NULL_HANDLE;
+
+		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(vkInstnce, &deviceCount, devices.data());
+
+		VkPhysicalDevice resultDevice;
+
+		for (const auto& device : devices) {
+			if (VKUtils::SuitableDevice(device, instance)) {
+				resultDevice = device;
+				return resultDevice;
+			}
+		}
+		HZR_THROW("Failed to find Vulkan capable device");
+	}
+	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VKInstance& instance)
+	{
+		QueueFamilyIndices indices = GetQueueFamilyIndices(device, instance.GetData().Surface);
 
 		bool extensionSupported = CheckDeviceExtensionSupport(device);
 		bool swapchainAdequate = false;
 
 		if (extensionSupported) {
 
-			SwapChainSupportDetails details = GetSwapchainDetails(device, data.vkSurface);
+			SwapChainSupportDetails details = GetSwapChainDetails(device, instance.GetData().Surface);
 			swapchainAdequate = !details.formats.empty() && !details.presentModes.empty();
 		}
 
 		return indices.isComplete() && extensionSupported && swapchainAdequate;
 	}
+
 	bool VKUtils::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 	{
 		uint32_t extensionCount = 0;
@@ -42,98 +73,35 @@ namespace Hazard::Rendering::Vulkan {
 
 		return requiredExtensions.empty();
 	}
-	void VKUtils::CreateSwapchain(VulkanData& data)
-	{
-		SwapChainSupportDetails details = GetSwapchainDetails(data.physicalDevice, data.vkSurface);
 
-		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(details.formats);
-		VkPresentModeKHR presentMode = ChoosePresentMode(details.presentModes);
-		VkExtent2D extent = ChooseSwapExtent(details.capabilities, data.m_Window);
-
-		uint32_t imageCount = details.capabilities.minImageCount + 1;
-		if (details.capabilities.maxImageCount > 0 && imageCount > details.capabilities.maxImageCount)
-			imageCount = details.capabilities.maxImageCount;
-
-		VkSwapchainCreateInfoKHR createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = data.vkSurface;
-
-		createInfo.minImageCount = imageCount;
-		createInfo.imageFormat = surfaceFormat.format;
-		createInfo.imageColorSpace = surfaceFormat.colorSpace;
-		createInfo.imageExtent = extent;
-		createInfo.imageArrayLayers = 1;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-
-		QueueFamilyIndices indices = VKFindQueueFamilies(data.physicalDevice, data.vkSurface);
-		uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };;
-
-		if (indices.graphicsFamily != indices.presentFamily) {
-			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-			createInfo.queueFamilyIndexCount = 2;
-			createInfo.pQueueFamilyIndices = queueFamilyIndices;
-		}
-		else {
-			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		}
-
-		createInfo.preTransform = details.capabilities.currentTransform;
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = presentMode;
-		createInfo.clipped = VK_TRUE;
-
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
-
-		VkResult result = vkCreateSwapchainKHR(data.device, &createInfo, nullptr, (VkSwapchainKHR*)&data.swapchain);
-		HZR_CORE_INFO(result);
-		
-		vkGetSwapchainImagesKHR(data.device, data.swapchain, &imageCount, nullptr);
-		data.swapChainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR(data.device, data.swapchain, &imageCount, data.swapChainImages.data());
-
-		data.swapchainImageFormat = surfaceFormat.format;
-		data.swapchainExtent = extent;
-	}
-	SwapChainSupportDetails VKUtils::GetSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface)
+	SwapChainSupportDetails VKUtils::GetSwapChainDetails(VkPhysicalDevice device, VKWindowSurface* surface)
 	{
 		SwapChainSupportDetails details;
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface->GetSurface(), &details.capabilities);
 
 		uint32_t formatCount;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface->GetSurface(), &formatCount, nullptr);
 
 		if (formatCount != 0) {
 			details.formats.resize(formatCount);
-			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
+			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface->GetSurface(), &formatCount, details.formats.data());
 		}
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface->GetSurface(), &presentModeCount, nullptr);
 
 		if (presentModeCount != 0) {
 			details.presentModes.resize(presentModeCount);
-			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
+			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface->GetSurface(), &presentModeCount, details.presentModes.data());
 		}
 
 		return details;
-
 	}
-	std::vector<const char*> VKUtils::GetRequiredExtensions(bool validation)
-	{
-		uint32_t count = 0;
-		const char** glfwExtensions;
-		glfwExtensions = glfwGetRequiredInstanceExtensions(&count);
-		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + count);
 
-		if (validation) 
-			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-
-		return extensions;
-	}
-	QueueFamilyIndices VKUtils::VKFindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
+	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VKWindowSurface* surface)
 	{
-		QueueFamilyIndices indices;
+		QueueFamilyIndices indices = {};
 
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
@@ -148,7 +116,7 @@ namespace Hazard::Rendering::Vulkan {
 			}
 
 			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface->GetSurface(), &presentSupport);
 
 			if (presentSupport) {
 				indices.presentFamily = i;
@@ -160,67 +128,7 @@ namespace Hazard::Rendering::Vulkan {
 
 			i++;
 		}
-
+		
 		return indices;
-	}
-	VkPhysicalDevice VKUtils::GetVulkanDevice(VkInstance instance, VulkanData data)
-	{
-		uint32_t deviceCount = 0;
-		vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
-
-		if (deviceCount == 0) return VK_NULL_HANDLE;
-
-		std::vector<VkPhysicalDevice> devices(deviceCount);
-		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
-
-		VkPhysicalDevice resultDevice;
-
-		for (const auto& device : devices) {
-			if (VKUtils::SuitableDevice(device, data)) {
-				resultDevice = device;
-				break;
-			}
-		}
-		return resultDevice;
-	}
-	VkSurfaceFormatKHR VKUtils::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
-	{
-		for (const auto& availableFormat : formats) {
-			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && 
-				availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-				return availableFormat;
-			}
-		}
-
-		return formats[0];
-	}
-	VkPresentModeKHR VKUtils::ChoosePresentMode(const std::vector<VkPresentModeKHR>& modes)
-	{
-		for (const auto& availablePresentMode : modes) {
-			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-				return availablePresentMode;
-			}
-		}
-		return VK_PRESENT_MODE_FIFO_KHR;
-	}
-	VkExtent2D VKUtils::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window)
-	{
-		if (capability.currentExtent.width != UINT32_MAX) {
-			return capability.currentExtent;
-		}
-		else {
-			int width, height;
-			glfwGetFramebufferSize(window, &width, &height);
-
-			VkExtent2D actualExtent = {
-				static_cast<uint32_t>(width),
-				static_cast<uint32_t>(height)
-			};
-
-			actualExtent.width = std::max(capability.minImageExtent.width, std::min(capability.maxImageExtent.width, actualExtent.width));
-			actualExtent.height = std::max(capability.minImageExtent.height, std::min(capability.maxImageExtent.height, actualExtent.height));
-
-			return actualExtent;
-		}
 	}
 }

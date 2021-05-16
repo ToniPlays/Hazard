@@ -37,7 +37,7 @@ namespace Hazard::Rendering {
 
 		uint32_t width = 0;
 		uint32_t height = 0;
-		Ref<Texture2D> environmentRawTexture;
+		std::vector<Ref<Texture2D>> cubeSides;
 	};
 
 	class CubemapTexture : public Texture {

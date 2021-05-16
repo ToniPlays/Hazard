@@ -6,12 +6,12 @@ namespace Hazard::Rendering
 {
 	struct Renderer2DData {
 
-		uint32_t MaxQuads;
-		uint32_t MaxVertices;
-		uint32_t MaxIndices;
+		uint32_t MaxQuads = 0;
+		uint32_t MaxVertices = 0;
+		uint32_t MaxIndices = 0;
 
-		VertexArray* QuadVertexArray;
-		VertexBuffer* QuadVertexBuffer;
+		VertexArray* QuadVertexArray = nullptr;
+		VertexBuffer* QuadVertexBuffer = nullptr;
 		Ref<Shader> QuadShader;
 
 		uint32_t QuadIndexCount = 0;

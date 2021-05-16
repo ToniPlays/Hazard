@@ -34,7 +34,7 @@ namespace Hazard::ECS {
 
         auto& entityID = world.m_Registry.view<TagComponent>();
         
-        for (int i = entityID.size() - 1; i >= 0; i--) {
+        for (size_t i = entityID.size() - 1; i >= 0; i--) {
             auto entity = entityID[i];
 
             TagComponent& c = world.m_Registry.get<TagComponent>(entity);

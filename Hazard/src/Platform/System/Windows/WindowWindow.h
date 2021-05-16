@@ -9,12 +9,12 @@ namespace Hazard::Rendering {
 
 	class WindowsWindow : public Window {
 	public:
-		WindowsWindow(WindowProps& props);
+		WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		virtual ~WindowsWindow();
 		
 		void OnUpdate(Color color) override;
 		void SetWindowTitle(const char* title) override;
-		void SetWindowIcon(const char* smallIcon, const char* bigIcon) override;
+		void SetWindowIcon(uint32_t count, std::string* images) override;
 
 		void SetVSync(bool enabled) override {
 			m_WindowData.VSync = enabled;
@@ -37,6 +37,7 @@ namespace Hazard::Rendering {
 		WindowProps GetWindowInfo() { return m_WindowData; }
 
 	private:
+
 		GLFWwindow* m_Window = nullptr;
 		void SetCallbacks();
 	};

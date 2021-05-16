@@ -2,26 +2,26 @@
 
 #include "Hazard/Rendering/Buffers/VertexArray.h"
 
-namespace Hazard::Rendering::Vulkan {
-
+namespace Hazard::Rendering::Vulkan 
+{
 	class VKVertexArray : public VertexArray {
+
 	public:
-		VKVertexArray(VertexArrayCreateInfo info);
+		VKVertexArray(const VertexArrayCreateInfo& info);
 		~VKVertexArray();
 
-		void Bind() const override;
-		void Unbind() const override;
+		void Bind() const;
+		void Unbind() const;
+		void EnableAll(uint32_t index = 0) const ;
+		void AddBuffer(VertexBuffer* vertexBuffer) {};
 
-		void EnableAll(uint32_t index) const override;
-		uint32_t GetID() const override { return m_ID; }
+		IndexBuffer* GetIndexBuffer() const { return nullptr; };
+		void SetIndexBuffer(IndexBuffer* indexBuffer) { };
 
-		void AddBuffer(VertexBuffer* buffer) { m_Buffers.push_back(buffer); }
-		IndexBuffer* GetIndexBuffer() const { return m_IndexBuffer; }
-		std::vector<VertexBuffer*> GetBuffers() override { return m_Buffers; }
-		void SetIndexBuffer(IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; }
+		uint32_t GetID() const { return 0; };
+		std::vector<VertexBuffer*> GetBuffers() { return m_Buffers;	}
 
 	private:
-		uint32_t m_ID;
 		std::vector<VertexBuffer*> m_Buffers;
 		IndexBuffer* m_IndexBuffer;
 	};

@@ -26,14 +26,5 @@ namespace Hazard {
 		{
 			return glm::vec4(r, g, b, a);
 		}
-
-		operator std::string() {
-			std::stringstream ss;
-			ss << "R: " << this->r;
-			ss << " G: " << this->g;
-			ss << " B: " << this->b;
-			ss << " A: " << this->a;
-			return ss.str();
-		}
 	};
 }

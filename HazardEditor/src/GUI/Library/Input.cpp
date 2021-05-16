@@ -312,7 +312,7 @@ namespace WindowElement {
 	}
 	bool Input::ImageButton(uint32_t imageID, ImVec2 size)
 	{
-		return ImGui::ImageButton((void*)imageID, size);;
+		return ImGui::ImageButton((void*)imageID, size);
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field)
 	{

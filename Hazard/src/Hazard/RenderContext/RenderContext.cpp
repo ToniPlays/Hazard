@@ -1,6 +1,8 @@
 #pragma once
 #include <hzrpch.h>
 #include "RenderContext.h"
+
+#include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 
 #include "Hazard/Core/HazardLoop.h"
@@ -15,14 +17,17 @@ namespace Hazard::Rendering {
 	}
 	RenderContext::~RenderContext() {}
 
-	void RenderContext::InitContext(RenderAPI api)
+	void RenderContext::InitContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
 	{
-		m_CurrentAPI = api == RenderAPI::Auto ? RenderAPI::OpenGL : api;
+		m_CurrentAPI = info->renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->renderer;
 		RenderUtils::SetRenderAPI(m_CurrentAPI);
 
-		m_Window = Window::Create();
+		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 
+		if (appInfo->iconCount > 0) {
+			m_Window->SetWindowIcon(appInfo->iconCount, appInfo->icons);
+		}
 		RenderContextCommand::Init();
 		SetActive(true);
 	}
@@ -45,10 +50,10 @@ namespace Hazard::Rendering {
 	{
 		switch (api)
 		{
-		case Hazard::Rendering::RenderAPI::OpenGL:	return "OpenGL";
-		case Hazard::Rendering::RenderAPI::Vulkan:  return "Vulkan";
-		case Hazard::Rendering::RenderAPI::DX11:	return "DX11";
-		case Hazard::Rendering::RenderAPI::DX12:	return "DX12";
+		case Hazard::RenderAPI::OpenGL:	return "OpenGL";
+		case Hazard::RenderAPI::Vulkan: return "Vulkan";
+		case Hazard::RenderAPI::DX11:	return "DX11";
+		case Hazard::RenderAPI::DX12:	return "DX12";
 		}
 		return "Auto";
 	}

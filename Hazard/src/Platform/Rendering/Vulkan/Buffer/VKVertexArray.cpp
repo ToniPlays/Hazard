@@ -3,12 +3,16 @@
 #include <hzrpch.h>
 #include "VKVertexArray.h"
 
+#include "VKBuffers.h"
+
 namespace Hazard::Rendering::Vulkan {
 
-	VKVertexArray::VKVertexArray(VertexArrayCreateInfo info)
+	VKVertexArray::VKVertexArray(const VertexArrayCreateInfo& info) 
 	{
-
+		m_Buffers.push_back(new VKVertexBuffer(*info.bufferInfo));
+		m_IndexBuffer = new VKIndexBuffer(*info.indexBufferInfo);
 	}
+
 	VKVertexArray::~VKVertexArray()
 	{
 
@@ -19,7 +23,7 @@ namespace Hazard::Rendering::Vulkan {
 	}
 	void VKVertexArray::Unbind() const
 	{
-
+		
 	}
 	void VKVertexArray::EnableAll(uint32_t index) const
 	{

@@ -21,12 +21,12 @@ namespace Hazard::Rendering::OpenGL {
 		m_Info.datatype = info.datatype;
 		m_Info.width = info.width;
 		m_Info.height = info.height;
-		
 		if (info.sides.size() == 1) {
 			AllocateFree();
 			CreateCubemapFromTexture(info.sides.at(0).file);
 		}
 		else {
+			m_Info.cubeSides.resize(info.sides.size());
 			for (CubemapSide side : info.sides) {
 				SetTexture(side.side, side.file);
 			}
@@ -41,14 +41,14 @@ namespace Hazard::Rendering::OpenGL {
 
 	void OpenGLCubemapTexture::SetTexture(int side, const std::string& file)
 	{
+		m_Info.cubeSides[side] = Ref<Texture2D>();
+
 		int w, h, channels;
 		stbi_set_flip_vertically_on_load(false);
 		unsigned char* data = stbi_load(file.c_str(), &w, &h, &channels, 0);
 
 		uint32_t internalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
 		uint32_t dataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
-
-		HZR_CORE_ASSERT(data, "Image could not be loaded");
 
 		if (data) {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, internalFormat, w, h, 0, dataFormat, GL_UNSIGNED_BYTE, data);
@@ -89,7 +89,7 @@ namespace Hazard::Rendering::OpenGL {
 		textureCreateInfo.filename = file;
 		textureCreateInfo.datatype = TextureDataType::HDR;
 
-		m_Info.environmentRawTexture = RenderUtils::Create<Texture2D>(textureCreateInfo);
+		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
 
 		ShaderCreateInfo shaderInfo;
 		shaderInfo.filename = "res/shaders/equirectangularToCube.glsl";
@@ -160,7 +160,7 @@ namespace Hazard::Rendering::OpenGL {
 		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 
 		cubeArray->Bind();
-		m_Info.environmentRawTexture->Bind();
+		m_Info.cubeSides.at(0)->Bind();
 
 		convertShader->Bind();
 		convertShader->SetUniformInt("equirectangularMap", 0);

@@ -10,7 +10,12 @@ namespace Hazard {
 	GLFWwindow* window = nullptr;
 
 	void Input::Init() {
-		window = (GLFWwindow*)Application::GetModule<Rendering::RenderContext>()->GetWindow().GetNativeWindow();
+		bool found = false;
+		Rendering::RenderContext* context = Application::GetModule<Rendering::RenderContext>(found);
+		if (!found)
+			return;
+
+		window = (GLFWwindow*)context->GetWindow().GetNativeWindow();
 	}
 	bool Input::AnyKey()
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "ApplicationCreateInfo.h"
 #include "Hazard/Module/Module.h"
 
 namespace Hazard {
@@ -11,16 +12,17 @@ namespace Hazard {
 		Application() {};
 		~Application() {};
 
-		virtual void PreInit() {};
+		virtual void PreInit() = 0;
 		virtual void Init() {};
 		virtual void Update() {};
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
+
 		
 		void SetTitle(const std::string& title);
 		void SetTitle(const char* title);
-		void SetWindowIcon(const char* windowIcon, const char* barIcon);
 		
+		void CreateApplicationStack(HazardCreateInfo* info);
 	public:
 		static void Quit();
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
-#include "VKContext.h"
+#include "Core/VKInstance.h"
+#include "Core/VKWindowSurface.h"
 #include <optional>
 
 namespace Hazard::Rendering::Vulkan {
@@ -9,11 +9,10 @@ namespace Hazard::Rendering::Vulkan {
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
-	
-	
+
 	struct QueueFamilyIndices {
-		std::optional<uint32_t> graphicsFamily;
-		std::optional<uint32_t> presentFamily;
+		std::optional<uint32_t> graphicsFamily = 0;
+		std::optional<uint32_t> presentFamily = 0;
 
 		bool isComplete() {
 			return graphicsFamily.has_value() && presentFamily.has_value();
@@ -25,21 +24,16 @@ namespace Hazard::Rendering::Vulkan {
 		std::vector<VkPresentModeKHR> presentModes;
 	};
 
+
 	class VKUtils {
 	public:
-		static bool SuitableDevice(VkPhysicalDevice device, VulkanData data);
-		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-
-		static void CreateSwapchain(VulkanData& data);
-
-		static SwapChainSupportDetails GetSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
-		static std::vector<const char*> GetRequiredExtensions(bool validation = true);
-		static QueueFamilyIndices VKFindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
-		static VkPhysicalDevice GetVulkanDevice(VkInstance instance, VulkanData data);
+		static std::vector<const char*> GetRequiredExtensions(bool validation = false);
+		static VkPhysicalDevice GetVulkanCapableDevice(VKInstance& instance);
+		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VKWindowSurface* surface);
+		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VKWindowSurface* surface);
 
 	private:
-		static VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats);
-		static VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& modes);
-		static VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window);
+		static bool SuitableDevice(VkPhysicalDevice device, VKInstance& instance);
+		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	};
 }

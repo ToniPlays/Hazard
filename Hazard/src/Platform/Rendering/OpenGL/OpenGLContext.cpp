@@ -24,7 +24,6 @@ namespace Hazard::Rendering {
 
 		OpenGLContext::OpenGLContext(WindowProps* props)
 		{
-			
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		}
 
@@ -35,7 +34,7 @@ namespace Hazard::Rendering {
 			glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		}
 
-		void OpenGLContext::Init(Window* window)
+		void OpenGLContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 		{
 			m_Window = (GLFWwindow*)window->GetNativeWindow();
 

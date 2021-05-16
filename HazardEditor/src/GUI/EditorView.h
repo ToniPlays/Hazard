@@ -76,7 +76,7 @@ namespace WindowElement {
 
 		MenuBar m_MenuBar;
 		Toolbar m_Toolbar;
-		Rendering::RenderAPI m_Api;
+		RenderAPI m_Api;
 
 	};
 }

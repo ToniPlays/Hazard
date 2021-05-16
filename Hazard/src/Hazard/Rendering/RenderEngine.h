@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 		~RenderEngine();
 
 		void PreInit() override;
-		void Init() override;
+		void InitRenderer(RenderEngineCreateInfo* info);
 		void Close() override;
 
 		void BeginRendering(Camera camera, BackgroundRenderer& renderer);

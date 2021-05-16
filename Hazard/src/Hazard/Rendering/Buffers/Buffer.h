@@ -40,7 +40,7 @@ namespace Hazard::Rendering {
 			case ShaderDataType::Int4:    return 4;
 			case ShaderDataType::Bool:    return 1;
 			}
-			HZR_ASSERT(false, "Unknown ShaderDataType!");
+			//HZR_CORE_ASSERT(false, "Unknown ShaderDataType!");
 			return 0;
 		}
 	};

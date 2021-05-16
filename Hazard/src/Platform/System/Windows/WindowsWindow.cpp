@@ -13,18 +13,20 @@
 
 namespace Hazard::Rendering {
 
-	Window* Window::Create(WindowProps& props) {
-		return new WindowsWindow(props);
+	Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
+		return new WindowsWindow(info, appInfo);
 	}
 
-	WindowsWindow::WindowsWindow(WindowProps& props) {
+	WindowsWindow::WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
 
 		if (glfwInit() != GLFW_TRUE) {
 			HZR_THROW("Failed to init GLFW");
 		}
 
-		m_WindowData.Title = props.Title;
+		m_WindowData.Title = appInfo->appName.c_str();
 		m_WindowData.Platform = "Windows";
+		m_WindowData.Width = info->width;
+		m_WindowData.Height = info->height;
 
 		RenderAPI api = Application::GetModule<RenderContext>()->GetCurrentAPI();
 		switch (api) {
@@ -37,14 +39,12 @@ namespace Hazard::Rendering {
 			break;
 		default:
 			std::stringstream ss;
-			ss << "RenderContext not supported: ";
-			ss << RenderContext::APIToString(api);
+			ss << "RenderContext not supported: " << RenderContext::APIToString(api);
 			HZR_THROW(ss.str());
 		}
-
 		
 		glfwWindowHint(GLFW_RESIZABLE, true);
-		glfwWindowHint(GLFW_MAXIMIZED, props.maximized);
+		glfwWindowHint(GLFW_MAXIMIZED, info->fullScreen);
 
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
 
@@ -52,9 +52,9 @@ namespace Hazard::Rendering {
 			HZR_THROW("Failed to create window");
 		}
 
-		m_Context->Init(this);
-		glfwSetWindowUserPointer(m_Window, &m_WindowData);
+		m_Context->Init(this, appInfo);
 
+		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 		m_WindowData.Renderer = m_Context->GetVersion();
 
 		glfwShowWindow(m_Window);
@@ -71,18 +71,18 @@ namespace Hazard::Rendering {
 		m_WindowData.Title = title;
 		glfwSetWindowTitle(m_Window, title);
 	}
-	void WindowsWindow::SetWindowIcon(const char* smallIcon, const char* bigIcon)
+	void WindowsWindow::SetWindowIcon(uint32_t count, std::string* images)
 	{
-		GLFWimage images[2];
-		int sx, sy, bx, by, sChannels, bChannels;
-		images[0].pixels = stbi_load(smallIcon, &sx, &sy, &sChannels, 0);
-		images[0].width = sx;
-		images[0].height = sy;
-		images[1].pixels = stbi_load(bigIcon, &bx, &by, &bChannels, 0);
-		images[1].width = bx;
-		images[1].height = by;
+		std::vector<GLFWimage> glfwImages(count);
 
-		glfwSetWindowIcon(m_Window, 2, images);
+		for (uint32_t i = 0; i < count; i++) {
+
+			int sx, sy, sChannels, bChannels;
+			glfwImages.at(i).pixels = stbi_load(images[i].c_str(), &sx, &sy, &sChannels, 0);
+			glfwImages.at(i).width = sx;
+			glfwImages.at(i).height = sy;
+		}
+		glfwSetWindowIcon(m_Window, count, glfwImages.data());
 	}
 	void WindowsWindow::SetCallbacks()
 	{
@@ -91,7 +91,7 @@ namespace Hazard::Rendering {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
 			data.Width = w;
-			glViewport(0, 0, w, h);
+			Application::GetModule<RenderContext>()->GetContext().SetViewport(0, 0, w, h);
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
 
