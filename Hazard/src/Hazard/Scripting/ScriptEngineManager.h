@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Hazard/Core/Core.h"
+#include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/Module/Module.h"
 #include "ScriptEngine.h"
-#include "Hazard/Core/Core.h"
 #include "PublicField.h"
 
 namespace Hazard::Scripting {
@@ -17,7 +18,7 @@ namespace Hazard::Scripting {
 	public:
 		ScriptEngineManager();
 
-		void Init() override;
+		void InitEngines(ScriptEngineCreateInfo* info);
 		void Close() override;
 
 		void Update() override;

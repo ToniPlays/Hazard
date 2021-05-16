@@ -54,7 +54,7 @@ namespace Hazard::Scripting::CSharp {
 	class CSharpEngine : public ScriptEngine {
 	public:
 
-		CSharpEngine();
+		CSharpEngine(ScriptEngineCreateInfo* info);
 
 		void OnBeginRuntime() override;
 		void OnEndRuntime() override;

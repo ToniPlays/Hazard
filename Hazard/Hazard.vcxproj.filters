@@ -704,6 +704,7 @@
     <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.h" />
     <ClInclude Include="src\Hazard\Core\ApplicationCreateInfo.h" />
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -896,5 +897,6 @@
     <ClCompile Include="src\Platform\Rendering\Vulkan\Shader\VKShader.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.cpp" />
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneDeserializer.cpp" />
   </ItemGroup>
 </Project>

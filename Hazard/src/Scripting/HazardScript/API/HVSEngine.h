@@ -7,7 +7,7 @@ namespace Hazard::Scripting::Visual
 	class HVSEngine : public ScriptEngine {
 	public:
 
-		HVSEngine();
+		HVSEngine(ScriptEngineCreateInfo* info);
 
 		void OnBeginRuntime() override;
 		void OnEndRuntime() override;

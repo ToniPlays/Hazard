@@ -32,10 +32,17 @@ namespace Hazard {
 		uint32_t maxQuadCount = 35000;
 		uint32_t samplerCount = 0;
 	};
+	struct ScriptEngineCreateInfo 
+	{
+		std::string appAssemblyPath;
+		std::string coreAssemblyPath;
+		std::string monoDirectory;
+	};
 
 	struct HazardCreateInfo {
 		ApplicationCreateInfo* appInfo = nullptr;
 		RenderContexCreateInfo* renderContextInfo = nullptr;
 		RenderEngineCreateInfo* rendererInfo = nullptr;
+		ScriptEngineCreateInfo* scriptEngineInfo = nullptr;
 	};
 }

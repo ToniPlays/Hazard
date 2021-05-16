@@ -27,11 +27,13 @@ namespace Hazard::Scripting::CSharp {
 
 		MonoAssembly* app_assembly;
 		MonoImage* app_image;
+
+		std::string monoCoreAssemblyPath;
 	};
 
 	class Mono {
 	public:
-		static void InitAssembly();
+		static void InitAssembly(ScriptEngineCreateInfo* info);
 		static void CreateDomain(const char* name);
 		static void LoadRuntimeAssembly(const char* path);
 		static void Shutdown();

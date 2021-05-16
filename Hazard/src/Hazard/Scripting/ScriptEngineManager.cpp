@@ -3,18 +3,18 @@
 #include "hzrpch.h"
 #include "ScriptEngineManager.h"
 #include "ScriptCommand.h"
-
 #include "Scripting/ScriptEngines.h"
 
 namespace Hazard::Scripting {
 
 	ScriptEngineManager::ScriptEngineManager() : Module("ScriptManager")
 	{
+
 	}
-	void ScriptEngineManager::Init()
+	void ScriptEngineManager::InitEngines(ScriptEngineCreateInfo* info)
 	{
-		m_ScriptEngines.insert({ ScriptType::CSharpScript, new CSharp::CSharpEngine() });
-		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine() });
+		m_ScriptEngines.insert({ ScriptType::CSharpScript, new CSharp::CSharpEngine(info) });
+		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
 
 		ScriptCommand::Init();
 	}

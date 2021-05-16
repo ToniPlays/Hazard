@@ -23,11 +23,11 @@ namespace Hazard::Scripting::CSharp {
 
 	AssemblyData data;
 
-	CSharpEngine::CSharpEngine()
+	CSharpEngine::CSharpEngine(ScriptEngineCreateInfo* info)
 	{
-		Mono::InitAssembly();
+		Mono::InitAssembly(info);
 		Mono::CreateDomain("Hazard");
-		Mono::LoadRuntimeAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
+		Mono::LoadRuntimeAssembly(info->appAssemblyPath.c_str());
 	}
 	void CSharpEngine::OnBeginRuntime()
 	{

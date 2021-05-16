@@ -39,14 +39,18 @@ void EditorApplication::PreInit()
 	engineInfo.maxQuadCount = 50000;
 	engineInfo.samplerCount = 8;
 
+	ScriptEngineCreateInfo scriptInfo;
+	scriptInfo.appAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
+	scriptInfo.coreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
+	scriptInfo.monoDirectory = "C:/Program Files/Mono";
+
 	HazardCreateInfo createInfo;
 	createInfo.appInfo = &appInfo;
 	createInfo.renderContextInfo = &contextInfo;
 	createInfo.rendererInfo = &engineInfo;
+	createInfo.scriptEngineInfo = &scriptInfo;
 
 	CreateApplicationStack(&createInfo);
-
-	PushModule<ScriptEngineManager>();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 	if (!manager.Load("C:\\dev\\HazardProject\\Hazard.hzrproj")) {

@@ -16,9 +16,11 @@ namespace Hazard::Scripting::CSharp {
 
 	MonoData Mono::s_Data;
 
-	void Mono::InitAssembly()
+	void Mono::InitAssembly(ScriptEngineCreateInfo* info)
 	{
-		mono_set_dirs("C:/Program Files/Mono/lib", "C:/Program Files/Mono/etc");
+
+		s_Data.monoCoreAssemblyPath = info->coreAssemblyPath;
+		mono_set_dirs((info->monoDirectory + "/lib").c_str(), (info->monoDirectory + "/etc").c_str());
 		mono_set_assemblies_path("C:/dev/Hazard//vendor/mono/lib");
 	}
 	void Mono::CreateDomain(const char* name)
@@ -81,7 +83,7 @@ namespace Hazard::Scripting::CSharp {
 			cleanUp = true;
 		}
 
-		s_Data.core_assembly = LoadAssembly("c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll");
+		s_Data.core_assembly = LoadAssembly(s_Data.monoCoreAssemblyPath.c_str());
 		s_Data.core_image = GetAssemblyImage(s_Data.core_assembly);
 
 		auto appAssembly = LoadAssembly(path);

@@ -6,45 +6,6 @@
 
 namespace Hazard::ECS::Loader {
 
-	//Deserialize scene editor
-	World* SceneSerializer::DeserializeEditor(const char* file)
-	{
-		YAML::Node root = YAML::LoadFile(file);
-		World* world = new World(file);
-
-		//Set scene name
-		if (!root["Scene"]) return world;
-		world->SetName(root["Scene"].as<std::string>());
-
-		//Loop entities
-		auto entities = root["Entities"];
-		if (entities) {
-			
-			for (int i = entities.size() - 1; i >= 0; i--) {
-
-				auto node = entities[i];
-				uint64_t uuid = node["Entity"].as<uint64_t>();
-
-				Entity entity = world->CreateEntity("");
-				//Deserialize components
-				TryDeserialize<TagComponent>("TagComponent", entity, node);
-				TryDeserialize<TransformComponent>("TransformComponent", entity, node);
-				TryDeserialize<SpriteRendererComponent>("SpriteRendererComponent", entity, node);
-				TryDeserialize<CameraComponent>("CameraComponent", entity, node);
-				TryDeserialize<ScriptComponent>("ScriptComponent", entity, node);
-				TryDeserialize<VisualScriptComponent>("VisualScriptComponent", entity, node);
-				TryDeserialize<MeshComponent>("MeshComponent", entity, node);
-			}
-		}
-		return world;
-	}
-	//Deserialize runtime file
-	Scene* SceneSerializer::DeserializeRuntime(const char* file)
-	{
-		HZR_ERROR("Runtime serialization TODO");
-		return nullptr;
-	}
-
 	bool SceneSerializer::SerializeEditor(const char* file, World& world)
 	{
 		YAML::Emitter out;
@@ -73,13 +34,87 @@ namespace Hazard::ECS::Loader {
 		out << YAML::BeginMap;
 		out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
 
-		TryDeserializeEditor<TagComponent>(entity, out);
-		TryDeserializeEditor<TransformComponent>(entity, out);
-		TryDeserializeEditor<SpriteRendererComponent>(entity, out);
-		TryDeserializeEditor<CameraComponent>(entity, out);
-		TryDeserializeEditor<ScriptComponent>(entity, out);
-		TryDeserializeEditor<MeshComponent>(entity, out);
+		TrySerializeEditor<TagComponent>(entity, out);
+		TrySerializeEditor<TransformComponent>(entity, out);
+		TrySerializeEditor<SpriteRendererComponent>(entity, out);
+		TrySerializeEditor<CameraComponent>(entity, out);
+		TrySerializeEditor<ScriptComponent>(entity, out);
+		TrySerializeEditor<MeshComponent>(entity, out);
 
+		out << YAML::EndMap;
+	}
+
+	template<typename T>
+	static void SceneSerializer::SerializeComponentEditor(Entity entity, T& component, YAML::Emitter& out) {
+		static_assert(false, "Failed to serialize " + std::string(typeid(T).name()));
+	}
+
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<TagComponent>(Entity entity, TagComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<TagComponent>()) return;
+		auto tag = entity.GetComponent<TagComponent>().m_Tag;
+
+		out << YAML::Key << "TagComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Tag" << YAML::Value << tag;
+		out << YAML::EndMap;
+	}
+
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<TransformComponent>(Entity entity, TransformComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<TransformComponent>()) return;
+		auto& c = entity.GetComponent<TransformComponent>();
+
+		out << YAML::Key << "TransformComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.m_Translation);
+		out << YAML::Key << "Rotation" << YAML::Value; Convert(out, c.m_Rotation);
+		out << YAML::Key << "Scale" << YAML::Value; Convert(out, c.m_Scale);
+
+		out << YAML::EndMap;
+
+	}
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<SpriteRendererComponent>()) return;
+		auto& c = entity.GetComponent<SpriteRendererComponent>();
+
+		out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)c.m_Tint);
+
+		if (c.m_Texture) {
+			if (std::string(c.m_Texture->GetFile()) != "White")
+				out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetFile());
+		}
+		out << YAML::EndMap;
+	}
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<CameraComponent>(Entity entity, CameraComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<CameraComponent>()) return;
+		auto& c = entity.GetComponent<CameraComponent>();
+		out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
+		out << YAML::Key << "Fov" << YAML::Value << c.GetFov();
+		out << YAML::EndMap;
+	}
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<ScriptComponent>(Entity entity, ScriptComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<ScriptComponent>()) return;
+		auto& c = entity.GetComponent<ScriptComponent>();
+		out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "ModuleName" << YAML::Value << c.m_ModuleName;
+		out << YAML::EndMap;
+	}
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<MeshComponent>(Entity entity, MeshComponent& component, YAML::Emitter& out)
+	{
+		if (!entity.HasComponent<MeshComponent>()) return;
+		auto& c = entity.GetComponent<MeshComponent>();
+		out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "File" << YAML::Value << c.m_Mesh->GetFile();
 		out << YAML::EndMap;
 	}
 
