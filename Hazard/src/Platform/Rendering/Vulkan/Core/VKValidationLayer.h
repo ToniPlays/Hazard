@@ -4,7 +4,7 @@
 namespace Hazard::Rendering::Vulkan 
 {
 	const std::vector<const char*> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"
+	"VK_LAYER_KHRONOS_validation"
 	};
 
 	class VKValidationLayer {
@@ -12,8 +12,8 @@ namespace Hazard::Rendering::Vulkan
 		static bool InitValidationLayers(VkInstanceCreateInfo& info, bool enabled = false);
 		static void SetupDebugger(VkInstance instance);
 		static bool IsValidationSupported();
+		static VkDebugUtilsMessengerCreateInfoEXT* GetDebugCreateInfo();
 	private:
 		static VkDebugUtilsMessengerEXT debugMessenger;
-		static VkDebugUtilsMessengerCreateInfoEXT GetDebugCreateInfo();
 	};
 }

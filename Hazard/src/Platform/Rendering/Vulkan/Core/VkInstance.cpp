@@ -12,7 +12,7 @@ namespace Hazard::Rendering::Vulkan
 
 	VKInstance::VKInstance(GLFWwindow* window, bool enableDebugging)
 	{
-		auto extensions = VKUtils::GetRequiredExtensions();
+		auto extensions = VKUtils::GetRequiredExtensions(enableDebugging);
 
 		VkApplicationInfo appInfo = {};
 
@@ -32,6 +32,7 @@ namespace Hazard::Rendering::Vulkan
 		createInfo.pNext					= NULL;
 
 		if (VKValidationLayer::IsValidationSupported()) {
+
 			VKValidationLayer::InitValidationLayers(createInfo, enableDebugging);
 		}
 

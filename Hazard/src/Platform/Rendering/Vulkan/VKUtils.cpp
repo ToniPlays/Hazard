@@ -26,7 +26,8 @@ namespace Hazard::Rendering::Vulkan {
 		VkInstance vkInstnce = instance.GetData().Instance;
 		vkEnumeratePhysicalDevices(vkInstnce, &deviceCount, nullptr);
 
-		if (deviceCount == 0) return VK_NULL_HANDLE;
+		if (deviceCount == 0) 
+			return VK_NULL_HANDLE;
 
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(vkInstnce, &deviceCount, devices.data());
