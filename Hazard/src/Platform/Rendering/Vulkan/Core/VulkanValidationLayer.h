@@ -7,7 +7,7 @@ namespace Hazard::Rendering::Vulkan
 	"VK_LAYER_KHRONOS_validation"
 	};
 
-	class VKValidationLayer {
+	class VulkanValidationLayer {
 	public:
 		static bool InitValidationLayers(VkInstanceCreateInfo& info, bool enabled = false);
 		static void SetupDebugger(VkInstance instance);

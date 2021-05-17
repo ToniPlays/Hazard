@@ -92,8 +92,8 @@ namespace Hazard::Rendering::OpenGL {
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
 
 		std::vector<ShaderStage> stages(2);
-		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/equirectangularToCubemap_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/equirectangularToCubemap_frag.glsl" };
+		stages[0] = { ShaderType::VertexShader,		"equirectangularToCubemap_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"equirectangularToCubemap_frag.glsl" };
 
 		ShaderCreateInfo shaderInfo;
 		shaderInfo.shaderName = "EquirectangularToCubemap";

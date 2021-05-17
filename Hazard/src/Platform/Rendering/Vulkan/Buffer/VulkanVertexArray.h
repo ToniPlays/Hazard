@@ -4,11 +4,11 @@
 
 namespace Hazard::Rendering::Vulkan 
 {
-	class VKVertexArray : public VertexArray {
+	class VulkanVertexArray : public VertexArray {
 
 	public:
-		VKVertexArray(const VertexArrayCreateInfo& info);
-		~VKVertexArray();
+		VulkanVertexArray(const VertexArrayCreateInfo& info);
+		~VulkanVertexArray();
 
 		void Bind() const;
 		void Unbind() const;

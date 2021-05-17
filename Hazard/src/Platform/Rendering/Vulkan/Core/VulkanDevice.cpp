@@ -1,23 +1,23 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "VKDevice.h"
-#include "VKInstance.h"
+#include "VulkanDevice.h"
+#include "VulkanInstance.h"
 
 #include "../VKUtils.h"
 #include <set>
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKDevice::VKDevice()
+	VulkanDevice::VulkanDevice()
 	{
-		m_PhysicalDevice = VKUtils::GetVulkanCapableDevice(VKInstance::GetInstance());
+		m_PhysicalDevice = VKUtils::GetVulkanCapableDevice(VulkanInstance::GetInstance());
 
 		if (m_PhysicalDevice == VK_NULL_HANDLE) {
 			HZR_THROW("Vulkan physical device not found");
 		}
 
-		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VKInstance::GetData().Surface);
+		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VulkanInstance::GetData().Surface);
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
@@ -52,7 +52,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		HZR_CORE_INFO("Created Vulkan Queue for device");
 	}
-	VKDevice::~VKDevice()
+	VulkanDevice::~VulkanDevice()
 	{
 		vkDestroyDevice(m_Device, nullptr);
 	}

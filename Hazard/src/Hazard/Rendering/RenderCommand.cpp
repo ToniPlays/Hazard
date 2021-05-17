@@ -13,8 +13,6 @@ namespace Hazard::Rendering {
 	{
 		s_Engine = Application::GetModule<RenderEngine>();
 		s_Context = Application::GetModule<RenderContext>();
-
-		RenderUtils::Init();
 	}
 	void RenderCommand::ResetStats()
 	{

@@ -67,7 +67,11 @@ project "IMGUI"
 		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp",
 		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.h",
-		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp"
+		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
+		"c:/dev/Hazard/vendor/ImGui-node/*.h",
+		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
 	}
 	includedirs {
 		"C:/dev/hazard/vendor/IMGUI",
@@ -115,6 +119,7 @@ project "GLAD"
 		buildoptions { "-std=c11", "-lgdi32" }
 		systemversion "latest"
 		staticruntime "On"
+
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
 
@@ -154,22 +159,24 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/entt",
 		"c:/dev/Hazard/vendor/IMGUI/examples",
 		"c:/dev/Hazard/vendor/mono/include",
+		"c:/dev/Hazard/vendor/SPIR-V/include",
 		"Hazard/src"
 	}
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll",
 		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
-		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/VulkanSDK/1.2.176.1/lib/vulkan-1",
+		"C:/VulkanSDK/1.2.176.1/lib/spirv-tools.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"mono-2.0-sgen.dll",
 		"GLAD",
-		"yaml-cpp",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
+		"yaml-cpp"
 	}
 
 	filter "system:windows"
@@ -224,10 +231,6 @@ project "HazardEditor"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/platform/**.h",
 		"%{prj.name}/platform/**.cpp",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
-		"c:/dev/Hazard/vendor/ImGui-node/*.h",
-		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
 	}
 
 	includedirs {
@@ -262,10 +265,8 @@ project "HazardEditor"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/VulkanSDK/1.2.176.1/lib/spirv-tools.lib",
 		"yaml-cpp",
-		"msvcrt.lib",
-		"opengl32.lib",
 		"Hazard",
 		"GLAD",
 		"IMGUI"

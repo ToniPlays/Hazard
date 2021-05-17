@@ -6,8 +6,6 @@
 #include "GUI/Window/AllWindows.h"
 #include "SceneRuntimeHandler.h"
 
-RenderAPI api = RenderAPI::OpenGL;
-
 EditorApplication::EditorApplication()
 {
 
@@ -26,8 +24,8 @@ void EditorApplication::PreInit()
 	appInfo.appName = "Hazard Editor";
 	appInfo.buildVersion = HZR_BUILD_VERSION;
 	appInfo.logging = true;
-	appInfo.icons = icons.data();
 	appInfo.iconCount = icons.size();
+	appInfo.icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
 	contextInfo.renderer = RenderAPI::OpenGL;
@@ -39,6 +37,9 @@ void EditorApplication::PreInit()
 	RenderEngineCreateInfo engineInfo;
 	engineInfo.maxQuadCount = 50000;
 	engineInfo.samplerCount = 8;
+	engineInfo.shaderSourcePath = "res/shaders/compiled";
+	engineInfo.shaderCompilePath = "res/shaders/compiled";
+
 
 	ScriptEngineCreateInfo scriptInfo;
 	scriptInfo.appAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
@@ -61,7 +62,6 @@ void EditorApplication::PreInit()
 	PushModule<ECS::SceneHandler>();
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
 		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
-	
 }
 void EditorApplication::Init() 
 {

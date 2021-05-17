@@ -3,10 +3,10 @@
 #include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan {
-	class VKDevice {
+	class VulkanDevice {
 	public:
-		VKDevice();
-		~VKDevice();
+		VulkanDevice();
+		~VulkanDevice();
 
 		VkDevice GetDevice() { return m_Device; }
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }

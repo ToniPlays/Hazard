@@ -25,6 +25,19 @@ namespace WindowElement {
 		}
 		return false;
 	}
+	bool Input::InputField(std::string& text, const char* hint)
+	{
+		char buffer[512];
+		memset(buffer, 0, sizeof(buffer));
+		strcpy_s(buffer, sizeof(buffer), text.c_str());
+
+		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer)))
+		{
+			text = buffer;
+			return true;
+		}
+		return false;
+	}
 	bool Input::Button(const char* name, ImVec2 size)
 	{
 		return ImGui::Button(name, size);

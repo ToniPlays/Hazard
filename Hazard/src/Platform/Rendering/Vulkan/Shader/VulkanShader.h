@@ -3,10 +3,10 @@
 #include "Hazard/Rendering/Shader/Shader.h"
 
 namespace Hazard::Rendering::Vulkan {
-	class VKShader : public Shader {
+	class VulkanShader : public Shader {
 	public:
-		VKShader(const ShaderCreateInfo& info);
-		~VKShader();
+		VulkanShader(const ShaderCreateInfo& info);
+		~VulkanShader();
 		void Bind() const;
 		void Unbind() const;
 		ShaderInfo GetInfo() const { return m_Info; };

@@ -18,37 +18,14 @@ namespace Hazard::Rendering {
 		VKContext::~VKContext()
 		{
 			delete m_VulkanData.vkInstance;
-
-			/*vkDestroyCommandPool(m_VulkanData.device, m_VulkanData.commandPool, nullptr);
-
-			for (auto frameBuffer : m_VulkanData.swapChainFrameBuffers) {
-				vkDestroyFramebuffer(m_VulkanData.device, frameBuffer, nullptr);
-			}
-
-			for (auto imageView : m_VulkanData.swapChainImageViews) {
-				vkDestroyImageView(m_VulkanData.device, imageView, nullptr);
-			}
-
-			vkDestroyDescriptorPool(m_VulkanData.device, m_VulkanData.descriptorPool, nullptr);
-			vkDestroySurfaceKHR(m_VulkanData.instance, m_VulkanData.vkSurface, nullptr);
-			vkDestroyDevice(m_VulkanData.device, nullptr);
-			*/
 		}
 
 		void VKContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 		{
 
 			this->m_VulkanData.window = (GLFWwindow*)window->GetNativeWindow();
-			m_VulkanData.vkInstance = new VKInstance(m_VulkanData.window, appInfo->logging);
+			m_VulkanData.vkInstance = new VulkanInstance(m_VulkanData.window, appInfo->logging);
 			
-			
-			/*if (!CreateImageViews()) HZR_THROW("Failed to create Vulkan image views");
-			if (!CreateRenderPass()) HZR_THROW("Failed to create Vulkan render pass");
-			if (!CreateDescriptorPool()) HZR_THROW("Failed to create Vulkan Descriptor pools");
-			if (!CreateFramebuffers()) HZR_THROW("Failed to create Vulkan Frame buffers");
-			if (!CreateCommandPool()) HZR_THROW("Failed to create Vulkan Command pool");
-			if (!CreateCommandBuffers()) HZR_THROW("Failed to create Vulkan Command Buffers");
-			*/
 			DeviceSpec spec = GetDeviceSpec();
 			HZR_CORE_INFO(spec.name);
 		}

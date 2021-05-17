@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/VKInstance.h"
-#include "Core/VKWindowSurface.h"
+#include "Core/VulkanInstance.h"
+#include "Core/VulkanWindowSurface.h"
 #include <optional>
 
 namespace Hazard::Rendering::Vulkan {
@@ -28,12 +28,12 @@ namespace Hazard::Rendering::Vulkan {
 	class VKUtils {
 	public:
 		static std::vector<const char*> GetRequiredExtensions(bool validation = false);
-		static VkPhysicalDevice GetVulkanCapableDevice(VKInstance& instance);
-		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VKWindowSurface* surface);
-		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VKWindowSurface* surface);
+		static VkPhysicalDevice GetVulkanCapableDevice(VulkanInstance& instance);
+		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VulkanWindowSurface* surface);
+		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VulkanWindowSurface* surface);
 
 	private:
-		static bool SuitableDevice(VkPhysicalDevice device, VKInstance& instance);
+		static bool SuitableDevice(VkPhysicalDevice device, VulkanInstance& instance);
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	};
 }

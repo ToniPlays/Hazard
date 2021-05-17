@@ -36,12 +36,16 @@ namespace WindowElement {
 		}
 		Layout::Tooltip("Toggle visibility");
 		auto& c = selectionContext.GetComponent<TagComponent>();
-		auto tag = c.m_Tag + "\n" + std::to_string(selectionContext);
-		float textWidth = ImGui::CalcTextSize(tag.c_str()).x / 2;
+		ImVec2 textWidth = ImGui::CalcTextSize(c.m_Tag.c_str());
 
 		ImGui::SameLine();
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - textWidth + 72 / 2);
-		Layout::Text(tag.c_str());
+
+		Appereance::Style::SelectFont(1);
+
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - (textWidth.x / 2));
+		ImGui::SetCursorPosY(35 / 2 + (textWidth.y / 2));
+		Layout::Text(c.m_Tag.c_str());
+		ImGui::PopFont();
 
 		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
 		DrawComponent<TransformComponent>(ICON_FK_ARROWS " Transform", selectionContext);

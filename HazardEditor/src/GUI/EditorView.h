@@ -4,6 +4,7 @@
 #include "EditorWindow.h"
 #include "GUI/Window/Toolbar.h"
 #include "GUI/Window/MenuBar.h"
+#include "Editor/EditorGuiPlatform.h"
 
 using namespace Hazard;
 
@@ -72,11 +73,9 @@ namespace WindowElement {
 
 	private:
 		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
-		Rendering::RenderContext* m_Context;
-
 		MenuBar m_MenuBar;
 		Toolbar m_Toolbar;
-		RenderAPI m_Api;
-
+		EditorGuiPlatform* m_Renderer;
+		Rendering::RenderContext* m_Context;
 	};
 }

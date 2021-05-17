@@ -52,15 +52,25 @@ namespace WindowElement {
 		Layout::Text(currentFolder.path.c_str());
 
 		Layout::SameLine(0, 5);
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 300);
-		Layout::Text("Search");
-		Layout::SameLine(0, 10);
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 420);
+		ImGui::SetNextItemWidth(Layout::GetMaxWidth() - 20);
 		std::string value;
-		if (Input::InputField(value)) {
-			
+
+		Input::InputField(value, "Search");
+		Layout::SameLine();
+
+		Appereance::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Appereance::Style::SelectFont(1);
+
+		if (Input::Button("X", { 20, 20 })) {
+			value = "";
 		}
+		ImGui::PopStyleColor(3);
+		ImGui::PopFont();
+
 		Layout::Separator();
 		Layout::Table(2, true);
+
 		ImGui::BeginChild("Folders");
 		DrawFileTree(folderData);
 		ImGui::EndChild();

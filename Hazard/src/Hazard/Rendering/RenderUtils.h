@@ -12,9 +12,16 @@ namespace Hazard::Rendering {
 
 	enum AssetType { ShaderAsset = 0, TextureAsset };
 
+	struct RenderUtilsCreateInfo 
+	{
+		std::string shaderSourcePath;
+		std::string shaderCompilePath;
+	};
+
+
 	class RenderUtils {
 	public:
-		static void Init();
+		static void Init(RenderUtilsCreateInfo* info);
 
 		static void SetRenderAPI(RenderAPI api) { s_Api = api; }
 
@@ -100,5 +107,7 @@ namespace Hazard::Rendering {
 		static RenderAPI s_Api;
 		static Ref<Texture2D> s_WhiteTexture;
 		static std::unordered_map<AssetType, std::vector<RefCount*>> s_Assets;
+		
+		static RenderUtilsCreateInfo m_Info;
 	};
 }

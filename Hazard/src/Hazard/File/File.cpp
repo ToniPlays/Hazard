@@ -97,7 +97,7 @@ namespace Hazard {
 
 		return result;
 	}
-	std::vector<char> File::ReadBinaryFile(const char* path)
+	std::vector<char> File::ReadBinaryFile(const std::string& path)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 

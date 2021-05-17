@@ -74,8 +74,10 @@ namespace Hazard::Rendering {
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
 
 		std::vector<ShaderStage> stages(2);
-		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/standard_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/standard_frag.glsl" };
+		stages[0] = { ShaderType::VertexShader,		"standard_vert.glsl", true };
+		stages[0].fileType = ShaderFileType::Binary;
+		stages[1] = { ShaderType::FragmentShader,	"standard_frag.glsl", true };
+		stages[1].fileType = ShaderFileType::Binary;
 
 		ShaderCreateInfo shaderInfo;
 		shaderInfo.shaderName = "standard";

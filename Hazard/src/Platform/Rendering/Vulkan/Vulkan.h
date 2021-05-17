@@ -1,6 +1,6 @@
 #pragma once
 
 #include "VKContext.h"
-#include "Buffer/VKVertexArray.h"
+#include "Buffer/VulkanVertexArray.h"
 
-#include "Shader/VKShader.h"
+#include "Shader/VulkanShader.h"

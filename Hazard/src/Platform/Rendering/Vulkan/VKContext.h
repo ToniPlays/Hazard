@@ -3,16 +3,16 @@
 #include "Hazard/Core/Core.h"
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
-#include "Core/VKInstance.h"
-#include "Core/VKDevice.h"
-#include "Core/VKValidationLayer.h"
+#include "Core/VulkanInstance.h"
+#include "Core/VulkanDevice.h"
+#include "Core/VulkanValidationLayer.h"
 
 namespace Hazard::Rendering::Vulkan {
 
 	struct VulkanData 
 	{
 		GLFWwindow* window;
-		VKInstance* vkInstance;
+		VulkanInstance* vkInstance;
 	};
 
 
@@ -33,6 +33,8 @@ namespace Hazard::Rendering::Vulkan {
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;
+
+		VulkanData GetData() const { return m_VulkanData; }
 
 	public:
 		static void SendDebugMessage(const char* message, const char* code);

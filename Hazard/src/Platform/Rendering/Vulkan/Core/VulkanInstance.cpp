@@ -1,16 +1,16 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "VKInstance.h"
+#include "VulkanInstance.h"
 #include "../VKUtils.h"
-#include "VKValidationLayer.h"
+#include "VulkanValidationLayer.h"
 
 namespace Hazard::Rendering::Vulkan 
 {
 
-	VKInstance* VKInstance::m_VulkanInstance = nullptr;
+	VulkanInstance* VulkanInstance::m_VulkanInstance = nullptr;
 
-	VKInstance::VKInstance(GLFWwindow* window, bool enableDebugging)
+	VulkanInstance::VulkanInstance(GLFWwindow* window, bool enableDebugging)
 	{
 		auto extensions = VKUtils::GetRequiredExtensions(enableDebugging);
 
@@ -29,10 +29,9 @@ namespace Hazard::Rendering::Vulkan
 		createInfo.pApplicationInfo			= &appInfo;
 		createInfo.enabledExtensionCount	= static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames	= extensions.data();
-		createInfo.pNext					= NULL;
 
-		if (VKValidationLayer::IsValidationSupported()) {
-			VKValidationLayer::InitValidationLayers(createInfo, enableDebugging);
+		if (VulkanValidationLayer::IsValidationSupported()) {
+			VulkanValidationLayer::InitValidationLayers(createInfo, enableDebugging);
 		}
 
 		if (vkCreateInstance(&createInfo, nullptr, &data.Instance) != VK_SUCCESS) {
@@ -40,18 +39,18 @@ namespace Hazard::Rendering::Vulkan
 		}
 
 		if(enableDebugging)
-			VKValidationLayer::SetupDebugger(data.Instance);
+			VulkanValidationLayer::SetupDebugger(data.Instance);
 
 		HZR_CORE_INFO("Created Vulkan instance");
 
 		data.window = window;
 		m_VulkanInstance = this;
 
-		data.Surface = new VKWindowSurface();
-		data.Device = new VKDevice();
-		data.SwapChain = new VKSwapChain(data.Device);
+		data.Surface = new VulkanWindowSurface();
+		data.Device = new VulkanDevice();
+		data.SwapChain = new VulkanSwapChain(data.Device);
 	}
-	VKInstance::~VKInstance()
+	VulkanInstance::~VulkanInstance()
 	{
 		delete data.SwapChain;
 		delete data.Device;

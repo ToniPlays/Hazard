@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "VKValidationLayer.h"
+#include "VulkanValidationLayer.h"
 #include "../VKUtils.h"
 #include "../VKContext.h"
 #include <vulkan/vulkan.h>
@@ -38,18 +38,19 @@ namespace Hazard::Rendering::Vulkan {
 		return VK_FALSE;
 	}
 
-	VkDebugUtilsMessengerEXT VKValidationLayer::debugMessenger;
+	VkDebugUtilsMessengerEXT VulkanValidationLayer::debugMessenger;
 
-	bool VKValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, bool enabled)
+	bool VulkanValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, bool enabled)
 	{
-		if (!enabled) {
+		if (!enabled) 
+		{
 			info.enabledLayerCount = 0;
 			info.pNext = NULL;
 			return true;
 		}
 
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
-		VKValidationLayer::GetDebugCreateInfo(debugCreateInfo);
+		VulkanValidationLayer::GetDebugCreateInfo(debugCreateInfo);
 
 		info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		info.ppEnabledLayerNames = validationLayers.data();
@@ -58,7 +59,7 @@ namespace Hazard::Rendering::Vulkan {
 		HZR_CORE_INFO("Vulkan validation enabled");
 		return true;
 	}
-	void VKValidationLayer::SetupDebugger(VkInstance instance)
+	void VulkanValidationLayer::SetupDebugger(VkInstance instance)
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 		GetDebugCreateInfo(createInfo);
@@ -67,7 +68,7 @@ namespace Hazard::Rendering::Vulkan {
 			HZR_THROW("Failed to create Debug Messenger!");
 		}
 	}
-	bool VKValidationLayer::IsValidationSupported()
+	bool VulkanValidationLayer::IsValidationSupported()
 	{
 		uint32_t layerCount = 0;
 
@@ -90,7 +91,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		return true;
 	}
-	void VKValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+	void VulkanValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 	{
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;

@@ -30,6 +30,9 @@ namespace Hazard {
 	};
 	struct RenderEngineCreateInfo 
 	{
+		std::string shaderSourcePath;
+		std::string shaderCompilePath;
+
 		uint32_t maxQuadCount = 35000;
 		uint32_t samplerCount = 0;
 	};

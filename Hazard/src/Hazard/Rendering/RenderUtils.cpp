@@ -10,6 +10,8 @@ namespace Hazard::Rendering {
 	RenderAPI RenderUtils::s_Api;
 	Ref<Texture2D> RenderUtils::s_WhiteTexture;
 	std::unordered_map<AssetType, std::vector<RefCount*>> RenderUtils::s_Assets;
+	RenderUtilsCreateInfo RenderUtils::m_Info;
+
 
 	template<typename T, typename Arg>
 	T* RenderUtils::CreateRaw(Arg args)
@@ -41,7 +43,7 @@ namespace Hazard::Rendering {
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVertexArray(info);
-		case RenderAPI::Vulkan:		return new Vulkan::VKVertexArray(info);
+		case RenderAPI::Vulkan:		return new Vulkan::VulkanVertexArray(info);
 		}
 		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
@@ -53,10 +55,18 @@ namespace Hazard::Rendering {
 			return Ref(shader);
 		}
 
+		for (ShaderStage& stage : info.stages) {
+			switch (stage.fileType)
+			{
+			case ShaderFileType::Binary: stage.filename = m_Info.shaderCompilePath + "/" + stage.filename; break;
+			case ShaderFileType::Source: stage.filename = m_Info.shaderSourcePath  + "/" + stage.filename; break;
+			}
+		}
+
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(info); break;
-		case RenderAPI::Vulkan:		shader = new Vulkan::VKShader(info); break;
+		case RenderAPI::Vulkan:		shader = new Vulkan::VulkanShader(info); break;
 		}
 
 		s_Assets[AssetType::ShaderAsset].push_back(shader);
@@ -114,8 +124,10 @@ namespace Hazard::Rendering {
 #pragma endregion
 
 	//Initialize white texture for batch rendering
-	void RenderUtils::Init()
+	void RenderUtils::Init(RenderUtilsCreateInfo* info)
 	{
+		m_Info.shaderCompilePath = info->shaderCompilePath;
+		m_Info.shaderSourcePath = info->shaderSourcePath;
 		s_Assets = std::unordered_map<AssetType, std::vector<RefCount*>>();
 		uint32_t data = 0xFFFFFFFF;
 

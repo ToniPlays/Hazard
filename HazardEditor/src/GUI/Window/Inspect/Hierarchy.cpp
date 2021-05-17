@@ -26,10 +26,8 @@ namespace WindowElement {
 	void Hierarchy::OnWindowRender()
 	{
 		Layout::SameLine(0, 5);
-		Layout::Text("Find");
-		Layout::SameLine(45);
 		ImGui::SetNextItemWidth(Layout::GetMaxWidth() - 20);
-		Input::InputField(searchValue);
+		Input::InputField(searchValue, "Search");
 		Layout::SameLine();
 
 		Appereance::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
@@ -42,6 +40,7 @@ namespace WindowElement {
 		ImGui::PopStyleColor(3);
 
 		World& world = ECS::SceneCommand::GetCurrentWorld();
+
 		Layout::Treenode(world.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&world, this]() {
 			world.GetWorldRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, &world };

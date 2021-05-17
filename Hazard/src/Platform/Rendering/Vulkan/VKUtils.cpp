@@ -20,7 +20,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		return extensions;
 	}
-	VkPhysicalDevice VKUtils::GetVulkanCapableDevice(VKInstance& instance)
+	VkPhysicalDevice VKUtils::GetVulkanCapableDevice(VulkanInstance& instance)
 	{
 		uint32_t deviceCount = 0;
 		VkInstance vkInstnce = instance.GetData().Instance;
@@ -42,7 +42,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 		HZR_THROW("Failed to find Vulkan capable device");
 	}
-	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VKInstance& instance)
+	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VulkanInstance& instance)
 	{
 		QueueFamilyIndices indices = GetQueueFamilyIndices(device, instance.GetData().Surface);
 
@@ -75,7 +75,7 @@ namespace Hazard::Rendering::Vulkan {
 		return requiredExtensions.empty();
 	}
 
-	SwapChainSupportDetails VKUtils::GetSwapChainDetails(VkPhysicalDevice device, VKWindowSurface* surface)
+	SwapChainSupportDetails VKUtils::GetSwapChainDetails(VkPhysicalDevice device, VulkanWindowSurface* surface)
 	{
 		SwapChainSupportDetails details;
 
@@ -100,7 +100,7 @@ namespace Hazard::Rendering::Vulkan {
 		return details;
 	}
 
-	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VKWindowSurface* surface)
+	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VulkanWindowSurface* surface)
 	{
 		QueueFamilyIndices indices = {};
 

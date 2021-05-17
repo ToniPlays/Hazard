@@ -4,10 +4,10 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	class VKVertexBuffer : public VertexBuffer {
+	class VulkanVertexBuffer : public VertexBuffer {
 	public:
-		VKVertexBuffer(const VertexBufferCreateInfo& info);
-		~VKVertexBuffer();
+		VulkanVertexBuffer(const VertexBufferCreateInfo& info);
+		~VulkanVertexBuffer();
 
 		void Bind() const;
 		void Unbind() const;
@@ -18,10 +18,10 @@ namespace Hazard::Rendering::Vulkan {
 	private:
 		VertexBufferInfo m_Info;
 	};
-	class VKIndexBuffer : public IndexBuffer {
+	class VulkanIndexBuffer : public IndexBuffer {
 	public:
-		VKIndexBuffer(const IndexBufferCreateInfo& info);
-		~VKIndexBuffer();
+		VulkanIndexBuffer(const IndexBufferCreateInfo& info);
+		~VulkanIndexBuffer();
 
 		void Bind() const;
 		void Unbind() const;

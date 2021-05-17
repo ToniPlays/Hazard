@@ -24,9 +24,6 @@ namespace Runtime {
 		s_SceneRunning = running;
 		ECS::SceneHandler& handler = *Application::GetModule<ECS::SceneHandler>();
 
-		Events::SelectionContextChange e ({});
-		WindowElement::EditorView::GetInstance().OnEvent(e);
-
 		if (s_SceneRunning) {
 
 			s_EditorWorld = &handler.GetCurrentWorld();

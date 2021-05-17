@@ -26,6 +26,12 @@ namespace Hazard::Rendering {
 	void RenderEngine::InitRenderer(RenderEngineCreateInfo* info)
 	{
 		RenderCommand::Init();
+
+		RenderUtilsCreateInfo utilInfo = {};
+		utilInfo.shaderCompilePath = info->shaderCompilePath;
+		utilInfo.shaderSourcePath = info->shaderSourcePath;
+		RenderUtils::Init(&utilInfo);
+
 		m_Renderer2D = new Renderer2D(info);
 		m_Renderer2D->Init(info->maxQuadCount);
 	}

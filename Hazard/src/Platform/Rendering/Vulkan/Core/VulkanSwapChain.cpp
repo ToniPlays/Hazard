@@ -1,20 +1,20 @@
 #pragma once
 
 #include "hzrpch.h"
-#include "VKSwapChain.h"
+#include "VulkanSwapChain.h"
 
 #include "../VKUtils.h"
 
 namespace Hazard::Rendering::Vulkan {
 
-	VKSwapChain::VKSwapChain(VKDevice* device)
+	VulkanSwapChain::VulkanSwapChain(VulkanDevice* device)
 	{
 		m_Device = device;
-		SwapChainSupportDetails details = VKUtils::GetSwapChainDetails(device->GetPhysicalDevice(), VKInstance::GetData().Surface);
+		SwapChainSupportDetails details = VKUtils::GetSwapChainDetails(device->GetPhysicalDevice(), VulkanInstance::GetData().Surface);
 		
 		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(details.formats);
 		VkPresentModeKHR presentMode = ChoosePresentMode(details.presentModes);
-		VkExtent2D extent = ChooseSwapExtent(details.capabilities, VKInstance::GetData().window);
+		VkExtent2D extent = ChooseSwapExtent(details.capabilities, VulkanInstance::GetData().window);
 
 		uint32_t imageCount = details.capabilities.minImageCount + 1;
 		if (details.capabilities.maxImageCount > 0 && imageCount > details.capabilities.maxImageCount)
@@ -22,7 +22,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = VKInstance::GetData().Surface->GetSurface();
+		createInfo.surface = VulkanInstance::GetData().Surface->GetSurface();
 
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
@@ -31,7 +31,7 @@ namespace Hazard::Rendering::Vulkan {
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(device->GetPhysicalDevice(), VKInstance::GetData().Surface);
+		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(device->GetPhysicalDevice(), VulkanInstance::GetData().Surface);
 		uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };;
 
 		if (indices.graphicsFamily != indices.presentFamily) {
@@ -65,11 +65,11 @@ namespace Hazard::Rendering::Vulkan {
 
 		HZR_CORE_INFO("Created Vulkan SwapChain");
 	}
-	VKSwapChain::~VKSwapChain()
+	VulkanSwapChain::~VulkanSwapChain()
 	{
 		vkDestroySwapchainKHR(m_Device->GetDevice(), m_SwapChain, nullptr);
 	}
-	VkSurfaceFormatKHR VKSwapChain::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
+	VkSurfaceFormatKHR VulkanSwapChain::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
 	{
 		for (const auto& availableFormat : formats) {
 			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -80,7 +80,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		return formats[0];
 	}
-	VkPresentModeKHR VKSwapChain::ChoosePresentMode(const std::vector<VkPresentModeKHR>& modes)
+	VkPresentModeKHR VulkanSwapChain::ChoosePresentMode(const std::vector<VkPresentModeKHR>& modes)
 	{
 		for (const auto& availablePresentMode : modes) {
 			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -89,7 +89,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
-	VkExtent2D VKSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window)
+	VkExtent2D VulkanSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window)
 	{
 		if (capability.currentExtent.width != UINT32_MAX) {
 			return capability.currentExtent;

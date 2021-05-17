@@ -1,14 +1,14 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
-#include "VKDevice.h"
+#include "VulkanDevice.h"
 #include <GLFW/glfw3.h>
 
 namespace Hazard::Rendering::Vulkan {
-	class VKSwapChain {
+	class VulkanSwapChain {
 	public:
-		VKSwapChain(VKDevice* device);
-		~VKSwapChain();
+		VulkanSwapChain(VulkanDevice* device);
+		~VulkanSwapChain();
 
 
 	private:
@@ -18,7 +18,7 @@ namespace Hazard::Rendering::Vulkan {
 	private:
 
 		VkSwapchainKHR m_SwapChain;
-		VKDevice* m_Device;
+		VulkanDevice* m_Device;
 
 		std::vector<VkImage> m_SwapChainImages;
 		VkFormat m_ImageFormat;

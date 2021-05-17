@@ -49,8 +49,8 @@ namespace Hazard::Rendering {
 
 		std::vector<ShaderStage> stages(2);
 
-		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/skybox_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/skybox_frag.glsl" };
+		stages[0] = { ShaderType::VertexShader,		"skybox_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"skybox_frag.glsl" };
 
 		ShaderCreateInfo shaderInfo;
 		shaderInfo.shaderName = "Skybox";

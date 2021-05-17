@@ -14,6 +14,9 @@
 
 #include "GUI/Library/FontAwesome.h"
 
+#include "Editor/EditorPlatformOpenGL.h"
+#include "Editor/EditorPlatformVulkan.h"
+
 using namespace Hazard;
 
 namespace WindowElement {
@@ -33,6 +36,7 @@ namespace WindowElement {
 	{
 		bool found = false;
 		m_Context = Hazard::Application::GetModule<Rendering::RenderContext>(found);
+
 		if (!found) {
 			SetActive(false);
 			HZR_WARN("EditorView unable to start without RenderContext");
@@ -121,34 +125,13 @@ namespace WindowElement {
 	}
 	void EditorView::Close()
 	{
-		switch (m_Api)
-		{
-		case RenderAPI::OpenGL:
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplGlfw_Shutdown();
-			break;
-		case RenderAPI::Vulkan:
-			ImGui_ImplVulkan_Shutdown();
-			ImGui_ImplGlfw_Shutdown();
-			break;
-		}
-		
+
 		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()
 	{
-		switch (m_Api)
-		{
-		case RenderAPI::OpenGL:
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			break;
-		case RenderAPI::Vulkan:
-			ImGui_ImplVulkan_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			break;
-		}
-		
+
+		m_Renderer->BeginFrame();
 		ImGui::NewFrame();
 
 		for (RenderableElement* element : m_Elements) {
@@ -166,15 +149,7 @@ namespace WindowElement {
 
 		// Rendering 
 		ImGui::Render();
-
-		switch (m_Api)
-		{
-		case RenderAPI::OpenGL:
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			break;
-		case RenderAPI::Vulkan:
-			break;
-		}
+		m_Renderer->EndFrame();
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -186,16 +161,16 @@ namespace WindowElement {
 	}
 	void EditorView::InitImGuiPlatform(Rendering::Window& window)
 	{
-		m_Api = Application::GetModule<RenderContext>()->GetCurrentAPI();
+		GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
-		switch (m_Api)
+		switch (m_Context->GetCurrentAPI())
 		{
 		case RenderAPI::OpenGL:
-			ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
-			ImGui_ImplOpenGL3_Init("#version 330 core");
+			m_Renderer = new EditorPlatformOpenGL(nativeWindow);
 			break;
 		case RenderAPI::Vulkan:
-			ImGui_ImplGlfw_InitForVulkan(static_cast<GLFWwindow*>(window.GetNativeWindow()), true);
+			Rendering::Vulkan::VKContext* context = static_cast<Vulkan::VKContext*>(window.GetContext());
+			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
 		}
 	}

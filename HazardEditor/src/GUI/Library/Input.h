@@ -7,6 +7,7 @@ namespace WindowElement {
 	class Input {
 	public:
 		static bool InputField(std::string& text);
+		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = {0, 0});
 		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = {0, 0}, 
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);

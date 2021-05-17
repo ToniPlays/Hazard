@@ -85,8 +85,14 @@
     <Filter Include="src\Platform\Rendering\Vulkan">
       <UniqueIdentifier>{6E2E9E1C-DA46-8546-A3F3-14E00FCB19E0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform\Rendering\Vulkan\Buffer">
+      <UniqueIdentifier>{9768CC1B-834F-8E13-2CA0-F4301866077A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform\Rendering\Vulkan\Core">
       <UniqueIdentifier>{8687BB00-72C3-BE6A-DBD5-D661C7306785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\Vulkan\Shader">
+      <UniqueIdentifier>{54168642-40FD-473A-E94D-AE57D513C1A0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\System">
       <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
@@ -153,6 +159,9 @@
     <ClInclude Include="src\Hazard\Core\Application.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Core\ApplicationCreateInfo.h">
+      <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Core.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -185,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\SceneDeserializer.h">
+      <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Loader\SceneHandler.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
@@ -294,6 +306,9 @@
     <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
       <Filter>src\Hazard\Rendering\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Shader\ShaderCompiler.h">
+      <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h">
       <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClInclude>
@@ -360,17 +375,32 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKDevice.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VulkanBuffers.h">
+      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VulkanVertexArray.h">
+      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanCommandBuffer.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKInstance.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKSwapChain.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanInstance.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKWindowSurface.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanValidationLayer.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanWindowSurface.h">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Shader\VulkanShader.h">
+      <Filter>src\Platform\Rendering\Vulkan\Shader</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKContext.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
@@ -699,12 +729,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VKValidationLayer.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Shader\VKShader.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.h" />
-    <ClInclude Include="src\Hazard\Core\ApplicationCreateInfo.h" />
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -721,6 +745,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Entity.cpp">
       <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Loader\SceneDeserializer.cpp">
+      <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Loader\SceneHandler.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
@@ -779,6 +806,9 @@
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Shader\ShaderCompiler.cpp">
+      <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp">
       <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClCompile>
@@ -824,17 +854,32 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKDevice.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VulkanBuffers.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VulkanVertexArray.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanCommandBuffer.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKSwapChain.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKWindowSurface.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanInstance.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VkInstance.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanValidationLayer.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanWindowSurface.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Shader\VulkanShader.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKContext.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
@@ -893,10 +938,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VKValidationLayer.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Shader\VKShader.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKVertexArray.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VKBuffers.cpp" />
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneDeserializer.cpp" />
   </ItemGroup>
 </Project>

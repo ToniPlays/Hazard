@@ -51,8 +51,8 @@ namespace Hazard::Rendering {
 
 		std::vector<ShaderStage> stages(2);
 
-		stages[0] = { ShaderType::VertexShader,		"res/shaders/compiled/pbr_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"res/shaders/compiled/pbr_frag.glsl" };
+		stages[0] = { ShaderType::VertexShader,		"pbr_vert.glsl" };
+		stages[1] = { ShaderType::FragmentShader,	"pbr_frag.glsl" };
 
 		ShaderCreateInfo shader;
 		shader.shaderName = "PBR";
