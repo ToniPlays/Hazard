@@ -15,7 +15,7 @@ namespace Hazard::Rendering {
 		ShaderType type;
 		ShaderFileType fileType = ShaderFileType::Source;
 		std::string filename = "";
-		bool forceCompile;
+		bool forceCompile = false;
 
 
 		ShaderStage() = default;

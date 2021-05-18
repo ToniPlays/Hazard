@@ -11,7 +11,7 @@ layout(std140, binding = 0) uniform Camera {
 
 layout(location = 0) out vec4 f_color;
 layout(location = 1) out vec2 texCoords;
-layout(location = 2) flat out float textureIndex;
+layout(location = 2) out flat float textureIndex;
 
 void main() {
 

@@ -75,9 +75,11 @@ namespace Hazard::Rendering {
 
 		std::vector<ShaderStage> stages(2);
 		stages[0] = { ShaderType::VertexShader,		"standard_vert.glsl", true };
-		stages[0].fileType = ShaderFileType::Source;
+		stages[0].fileType = ShaderFileType::Binary;
+		stages[0].forceCompile = true;
 		stages[1] = { ShaderType::FragmentShader,	"standard_frag.glsl", true };
 		stages[1].fileType = ShaderFileType::Source;
+		stages[1].forceCompile = true;
 
 		ShaderCreateInfo shaderInfo;
 		shaderInfo.shaderName = "standard";

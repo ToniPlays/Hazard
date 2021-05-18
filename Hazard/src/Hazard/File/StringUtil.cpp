@@ -15,4 +15,8 @@ namespace Hazard {
         }
         return result;
     }
+    void StringUtil::RemoveAtEnd(std::string& source, char val)
+    {
+        source = source.substr(0, source.find_first_of(val));
+    }
 }
