@@ -49,8 +49,38 @@
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGui-node">
+      <UniqueIdentifier>{10A3FC65-7CB9-FAFB-C530-861D3186CB83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\vendor\ImGui-node\crude_json.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_bezier_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_canvas.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_extra_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor_internal.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClInclude>
     <ClInclude Include="platform\GLFW\imgui_impl_glfw.h">
       <Filter>platform\GLFW</Filter>
     </ClInclude>
@@ -170,6 +200,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_canvas.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor_api.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="platform\GLFW\imgui_impl_glfw.cpp">
       <Filter>platform\GLFW</Filter>
     </ClCompile>

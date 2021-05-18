@@ -20,6 +20,7 @@ namespace Hazard::Rendering::Vulkan {
 		void SetUniformMat4(const std::string& name, glm::mat4 value);
 		void SetUniformColor(const std::string& name, Color color);
 		void SetUniformBool(const std::string& name, bool value);
+		void SetUniformBlock(const std::string& name, void* value) {};
 	private:
 		ShaderInfo m_Info;
 	};

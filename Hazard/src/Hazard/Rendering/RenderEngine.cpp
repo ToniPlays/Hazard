@@ -34,6 +34,12 @@ namespace Hazard::Rendering {
 
 		m_Renderer2D = new Renderer2D(info);
 		m_Renderer2D->Init(info->maxQuadCount);
+
+		UniformBufferCreateInfo bufferInfo;
+		bufferInfo.size = sizeof(CameraData);
+		bufferInfo.binding = 0;
+
+		m_CameraUnformBuffer = RenderUtils::Create<UniformBuffer>(bufferInfo);
 	}
 	void RenderEngine::Close()
 	{
@@ -42,18 +48,22 @@ namespace Hazard::Rendering {
 
 	void RenderEngine::BeginRendering(Camera camera, BackgroundRenderer& renderer)
 	{
+
 		RenderCommand::ResetStats();
 		m_RenderTarget->Bind();
 		RenderContextCommand::ClearFrame(renderer.m_Color);
 
 		m_BackgroundRenderer = &renderer;
-		m_ViewProjection = camera.projection * glm::inverse(camera.view);
+		cameraData.viewProjection = camera.projection * glm::inverse(camera.view);
+		cameraData.cameraPos = camera.position;
 
-		m_CameraPosition = camera.position;
+		m_CameraUnformBuffer->SetData(&cameraData, sizeof(CameraData));
+
+
 		m_Projection = camera.projection;
 		m_View = camera.view;
 
-		m_Renderer2D->BeginScene(m_ViewProjection);
+		m_Renderer2D->BeginScene(cameraData.viewProjection);
 		m_Renderer2D->BeginBatch();
 	}
 		

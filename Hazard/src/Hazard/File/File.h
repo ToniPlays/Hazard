@@ -26,6 +26,7 @@ namespace Hazard {
 
 		static bool Exists(const char* file);
 		static std::vector<char> ReadBinaryFile(const std::string& path);
+		static std::vector<uint32_t> ReadBinaryFileUint32(const std::string& path);
 		static std::string ReadFile(const std::string& file);
 
 		static std::string GetFileAbsolutePath(const std::string& file);

@@ -35,4 +35,13 @@ namespace Hazard::Rendering::OpenGL {
 		uint32_t m_BufferID = 0;
 		IndexBufferInfo m_Info;
 	};
+	class OpenGLUniformBuffer : public UniformBuffer {
+	public:
+		OpenGLUniformBuffer(UniformBufferCreateInfo info);
+		~OpenGLUniformBuffer();
+
+		void SetData(const void* data, uint32_t size, uint32_t offset);
+	private:
+		uint32_t m_BufferID = 0;
+	};
 }

@@ -67,11 +67,7 @@ project "IMGUI"
 		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
 		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp",
 		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.h",
-		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
-		"c:/dev/Hazard/vendor/ImGui-node/*.h",
-		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
+		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp"
 	}
 	includedirs {
 		"C:/dev/hazard/vendor/IMGUI",
@@ -119,7 +115,6 @@ project "GLAD"
 		buildoptions { "-std=c11", "-lgdi32" }
 		systemversion "latest"
 		staticruntime "On"
-
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
 
@@ -166,17 +161,17 @@ project "Hazard"
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll",
 		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
-		"C:/VulkanSDK/1.2.176.1/lib/vulkan-1",
-		"C:/VulkanSDK/1.2.176.1/lib/spirv-tools.lib",
+		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/dev/Hazard/vendor/SPIR-V/libs/shaderc_shared.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"mono-2.0-sgen.dll",
 		"GLAD",
-		"yaml-cpp"
+		"yaml-cpp",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
+		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 	}
 
 	filter "system:windows"
@@ -231,6 +226,10 @@ project "HazardEditor"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/platform/**.h",
 		"%{prj.name}/platform/**.cpp",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
+		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
+		"c:/dev/Hazard/vendor/ImGui-node/*.h",
+		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
 	}
 
 	includedirs {
@@ -265,8 +264,10 @@ project "HazardEditor"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/VulkanSDK/1.2.176.1/lib/spirv-tools.lib",
+		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"yaml-cpp",
+		"msvcrt.lib",
+		"opengl32.lib",
 		"Hazard",
 		"GLAD",
 		"IMGUI"

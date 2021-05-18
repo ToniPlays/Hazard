@@ -118,6 +118,10 @@ namespace Hazard::Rendering {
 		DataStream dataStream;
 		uint32_t count;
 	};
+	struct UniformBufferCreateInfo {
+		uint32_t size;
+		uint32_t binding;
+	};
 
 	class VertexBuffer {
 		friend class VertexDataBuffer;
@@ -143,5 +147,12 @@ namespace Hazard::Rendering {
 
 	private:
 		virtual void SetData(uint32_t* indices, uint32_t count) = 0;
+	};
+	class UniformBuffer : public RefCount {
+	public:
+		virtual ~UniformBuffer() {};
+		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+
+
 	};
 }

@@ -50,6 +50,15 @@ namespace Hazard::Rendering::OpenGL {
 		m_Locations[name] = location;
 		return location;
 	}
+	GLint OpenGLShader::GetBlockLocation(const std::string& name)
+	{
+		if (m_Locations.count(name) > 0) {
+			return m_Locations[name];
+		}
+		GLint location = glGetUniformBlockIndex(m_ProgramID, name.c_str());
+		m_Locations[name] = location;
+		return location;
+	}
 	//Uniforms 
 	void OpenGLShader::SetUniformInt(const std::string& name, int value)
 	{
@@ -88,28 +97,6 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		SetUniformBool(name, value ? 1 : 0);
 	}
-	/*std::unordered_map<GLenum, std::string> OpenGLShader::Process(std::string source)
-	{
-		std::unordered_map<GLenum, std::string> shaderSources;
-
-		const char* typeToken = "#type";
-		size_t typeTokenLength = strlen(typeToken);
-		size_t pos = source.find(typeToken, 0);
-
-		while (pos != std::string::npos) {
-
-			size_t eol = source.find_first_of("\r\n", pos);
-			size_t begin = pos + typeTokenLength + 1;
-			std::string type = source.substr(begin, eol - begin);
-
-			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
-			pos = source.find(typeToken, nextLinePos);
-			shaderSources[ShaderTypeFromString(type)] =
-				source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
-		}
-
-		return shaderSources;
-	}*/
 
 	void OpenGLShader::Compile(std::vector<ShaderStage> stages)
 	{
@@ -134,13 +121,14 @@ namespace Hazard::Rendering::OpenGL {
 			}
 			else 
 			{
+				std::vector<uint32_t> binary;
+
 				if (stage.forceCompile)
 				{
-					if (!ShaderCompiler::CompileShader(stage.filename, stage.filename + ".spv")) {
-						HZR_CORE_FATAL("Failed to compile shader binary");
-					}
+					binary = ShaderCompiler::CompileShader(stage.filename, stage.filename + ".spv", stage.type);
 				}
-				std::vector<char> binary = File::ReadBinaryFile(stage.filename + ".spv");
+				else binary = File::ReadBinaryFileUint32(stage.filename + ".spv");
+
 				glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, binary.data(), binary.size());
 				glSpecializeShader(shader, "main", 0, 0, 0);
 			}

@@ -47,6 +47,7 @@ namespace Hazard::Rendering {
 		}
 		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
+
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
 
@@ -71,6 +72,15 @@ namespace Hazard::Rendering {
 
 		s_Assets[AssetType::ShaderAsset].push_back(shader);
 		return Ref(shader);
+	}
+	template<>
+	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
+
+		switch (s_Api)
+		{
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLUniformBuffer>::Create(info); break;
+		}
+		HZR_THROW(std::string("Failed to create OcclusionQuery for ") + RenderContext::APIToString(s_Api));
 	}
 	template<>
 	Ref<OcclusionQuery> RenderUtils::Create<OcclusionQuery>(const char* dontUse) {

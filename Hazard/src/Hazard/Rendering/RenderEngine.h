@@ -15,6 +15,12 @@
 
 namespace Hazard::Rendering {	
 
+	struct CameraData {
+		glm::mat4 viewProjection;
+		glm::vec3 cameraPos;
+	};
+
+
 	class RenderEngine : public Module::Module {
 	public:
 		RenderEngine();
@@ -41,17 +47,16 @@ namespace Hazard::Rendering {
 
 			Shader* shader = mat->GetShader().Raw();
 			shader->Bind();
-			shader->SetUniformMat4("viewProjection", m_ViewProjection);
 			shader->SetUniformMat4("model", mesh.transform);
-			shader->SetUniformVec3("cameraPos", m_CameraPosition);
 			shader->SetUniformFloat("gamma", m_BackgroundRenderer->GetGamma());
 			
 			mesh.mesh->Render();
 		}
 
 	private:
-		glm::mat4 m_ViewProjection;
-		glm::vec3 m_CameraPosition;
+		CameraData cameraData;
+
+		Ref<UniformBuffer> m_CameraUnformBuffer;
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
 

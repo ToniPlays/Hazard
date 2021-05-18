@@ -29,6 +29,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	private:
 		GLint GetLocation(const std::string& name);
+		GLint GetBlockLocation(const std::string& name);
 		void Compile(std::vector<ShaderStage> stages);
 
 	private:
