@@ -49,6 +49,8 @@ namespace Hazard::Rendering::Vulkan
 		data.Surface = new VulkanWindowSurface();
 		data.Device = new VulkanDevice();
 		data.SwapChain = new VulkanSwapChain(data.Device);
+
+		data.DescriptorPool = new VulkanDescriptorPool();
 	}
 	VulkanInstance::~VulkanInstance()
 	{

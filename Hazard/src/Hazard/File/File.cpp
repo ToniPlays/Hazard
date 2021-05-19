@@ -97,6 +97,20 @@ namespace Hazard {
 
 		return result;
 	}
+	void File::WriteFile(const std::string& dest, const std::string& source)
+	{
+		std::ofstream out(dest);
+		out << source;
+		out.close();
+
+	}
+	void File::WriteBinaryFile(const std::string& dest, std::vector<uint32_t> data)
+	{
+		std::ofstream out(dest);
+		out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+		out.flush();
+		out.close();
+	}
 	std::vector<char> File::ReadBinaryFile(const std::string& path)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);

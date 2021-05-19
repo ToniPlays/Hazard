@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "RenderUtils.h"
+#include "Pipeline/GraphicsPipeline.h"
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"
 
@@ -47,7 +48,16 @@ namespace Hazard::Rendering {
 		}
 		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
+	template<>
+	GraphicsPipeline* RenderUtils::CreateRaw<GraphicsPipeline>(GraphicsPipelineCreateInfo info) {
 
+		switch(s_Api)
+		{
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLGraphicsPipeline(info);
+		//case RenderAPI::Vulkan:		return new Vulkan::VulkanGraphicsPipeline(info);
+		}
+	}
+	//Remove shader stuff
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
 
@@ -73,14 +83,15 @@ namespace Hazard::Rendering {
 		s_Assets[AssetType::ShaderAsset].push_back(shader);
 		return Ref(shader);
 	}
+
 	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
 
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLUniformBuffer>::Create(info); break;
+		case RenderAPI::Vulkan:		return Ref<Vulkan::VulkanUniformBuffer>::Create(info); break;
 		}
-		HZR_THROW(std::string("Failed to create OcclusionQuery for ") + RenderContext::APIToString(s_Api));
 	}
 	template<>
 	Ref<OcclusionQuery> RenderUtils::Create<OcclusionQuery>(const char* dontUse) {

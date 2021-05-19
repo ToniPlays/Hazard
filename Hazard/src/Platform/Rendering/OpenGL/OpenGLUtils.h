@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include "Hazard/Rendering/Textures/Texture.h"
+#include "Hazard/Rendering/Pipeline/GraphicsPipeline.h"
 
 namespace Hazard::Rendering::OpenGL 
 {
@@ -9,5 +10,6 @@ namespace Hazard::Rendering::OpenGL
 	public:
 		static GLuint DataTypeToOpenGLType(TextureDataType type);
 		static const char* GluintToString(GLuint value);
+		static uint32_t DepthFuncToGL(DepthFunc value);
 	};
 }

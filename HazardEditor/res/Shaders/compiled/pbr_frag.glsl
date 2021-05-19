@@ -4,11 +4,11 @@ in vec4 f_color;
 in vec3 f_normal;
 in vec2 texCoords;
 in vec3 reflectedVector;
+in float gamma;
 
 uniform samplerCube envMap;
-uniform float gamma;
 
-out vec4 color;
+layout(location = 0) out vec4 color;
 
 vec4 mapHDR(vec3 color) {
 	vec3 mapped = color / (color + vec3(1.0));

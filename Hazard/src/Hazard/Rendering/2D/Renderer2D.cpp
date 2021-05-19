@@ -78,7 +78,7 @@ namespace Hazard::Rendering {
 		stages[0].fileType = ShaderFileType::Binary;
 		stages[0].forceCompile = true;
 		stages[1] = { ShaderType::FragmentShader,	"standard_frag.glsl", true };
-		stages[1].fileType = ShaderFileType::Source;
+		stages[1].fileType = ShaderFileType::Binary;
 		stages[1].forceCompile = true;
 
 		ShaderCreateInfo shaderInfo;
@@ -86,8 +86,8 @@ namespace Hazard::Rendering {
 		shaderInfo.stages = stages;
 
 		m_Data.QuadShader = RenderUtils::Create<Shader>(shaderInfo);
+
 		m_Data.QuadShader->Bind();
-		m_Data.QuadShader->SetUniformIntArray("u_Textures", samplers.data(), 8);
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
@@ -134,7 +134,6 @@ namespace Hazard::Rendering {
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
 	{
 		m_Data.QuadShader->Bind();
-		m_Data.QuadShader->SetUniformMat4("u_ViewProjection", viewProjection);
 	}
 	void Renderer2D::BeginBatch()
 	{

@@ -11,7 +11,6 @@ namespace Hazard::Rendering
 
 	private:
 		static std::string Preprocess(const std::string& source, shaderc_shader_kind kind);
-		static std::string GLSLToAssembly(const std::string& source, const char* sourceFile, shaderc_shader_kind kind);
 		static std::vector<uint32_t> CompileToSPIRV(const std::string& source, const char* sourceFile, shaderc_shader_kind kind);
 	};
 }

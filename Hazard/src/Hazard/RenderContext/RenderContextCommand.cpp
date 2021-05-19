@@ -11,7 +11,7 @@ namespace Hazard::Rendering {
 	{
 		m_Context = Application::GetModule<RenderContext>();
 	}
-	void RenderContextCommand::SetDepthTest(DepthTest type)
+	void RenderContextCommand::SetDepthTest(DepthFunc type)
 	{
 		m_Context->GetContext().SetDepthTest(type);
 	}

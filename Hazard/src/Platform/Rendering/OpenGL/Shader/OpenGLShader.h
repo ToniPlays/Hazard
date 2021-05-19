@@ -3,7 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include <glad/glad.h>
 
-#include "Hazard/Rendering/Shader/Shader.h"
+#include "Hazard/Rendering/Pipeline/Shader.h"
 #include <unordered_map>
 #include "glm/glm.hpp"
 

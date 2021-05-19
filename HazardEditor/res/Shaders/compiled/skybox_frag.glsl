@@ -1,9 +1,9 @@
 #version 450 core
 
 in vec3 texCoords;
+in float gamma;
 
 uniform samplerCube SkyboxCubemap;
-uniform float gamma;
 
 out vec4 color;
 

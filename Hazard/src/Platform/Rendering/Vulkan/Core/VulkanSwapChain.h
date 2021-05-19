@@ -2,14 +2,30 @@
 
 #include <vulkan/vulkan.h>
 #include "VulkanDevice.h"
+#include "VulkanPipeline.h"
+#include "../Texture/VulkanRenderTexture.h"
 #include <GLFW/glfw3.h>
 
 namespace Hazard::Rendering::Vulkan {
+
+	struct SwapChainData {
+		std::vector<VkImage> swapChainImages;
+
+		VkFormat imageFormat;
+		VkExtent2D extent;
+		VkSwapchainKHR swapChain;
+		VulkanRenderTexture* renderPass;
+
+		VulkanPipeline* defaultPipeline;
+	};
+
+
 	class VulkanSwapChain {
 	public:
 		VulkanSwapChain(VulkanDevice* device);
 		~VulkanSwapChain();
 
+		SwapChainData GetData() { return m_Data; }
 
 	private:
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats);
@@ -17,11 +33,9 @@ namespace Hazard::Rendering::Vulkan {
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window);
 	private:
 
-		VkSwapchainKHR m_SwapChain;
-		VulkanDevice* m_Device;
+		SwapChainData m_Data;
 
-		std::vector<VkImage> m_SwapChainImages;
-		VkFormat m_ImageFormat;
-		VkExtent2D m_extent;
+		
+		VulkanDevice* m_Device;
 	};
 }

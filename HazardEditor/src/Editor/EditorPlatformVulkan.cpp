@@ -17,13 +17,16 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan
 	createInfo.Instance = data.Instance;
 	createInfo.PhysicalDevice = data.Device->GetPhysicalDevice();
 	createInfo.Device = data.Device->GetDevice();
-
+	createInfo.DescriptorPool = data.DescriptorPool->GetPool();
+	createInfo.Allocator = nullptr;
+	createInfo.CheckVkResultFn = nullptr;
+	createInfo.PipelineCache = data.SwapChain->GetData().defaultPipeline->GetPipelineCache();
 
 
 	createInfo.MinImageCount = 2;
 	createInfo.ImageCount = 2;
 
-	ImGui_ImplVulkan_Init(&createInfo, nullptr);
+	ImGui_ImplVulkan_Init(&createInfo, data.SwapChain->GetData().renderPass->GetRenderPass());
 }
 
 EditorPlatformVulkan::~EditorPlatformVulkan()

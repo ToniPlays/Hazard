@@ -50,7 +50,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
-		VulkanValidationLayer::GetDebugCreateInfo(debugCreateInfo);
+		GetDebugCreateInfo(debugCreateInfo);
 
 		info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		info.ppEnabledLayerNames = validationLayers.data();

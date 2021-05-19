@@ -13,7 +13,7 @@ namespace WindowElement {
 
 	WorldEnvironmentData::WorldEnvironmentData() : EditorWindow(ICON_FK_GLOBE " World data")
 	{
-
+		SetActive(false);
 	}
 	WorldEnvironmentData::~WorldEnvironmentData()
 	{

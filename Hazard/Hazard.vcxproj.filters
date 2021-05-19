@@ -303,12 +303,6 @@
     <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Shader\Shader.h">
-      <Filter>src\Hazard\Rendering\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Shader\ShaderCompiler.h">
-      <Filter>src\Hazard\Rendering\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h">
       <Filter>src\Hazard\Rendering\Sky</Filter>
     </ClInclude>
@@ -729,6 +723,17 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Texture\VulkanRenderTexture.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanDescriptorPool.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanPipeline.h" />
+    <ClInclude Include="src\Hazard\Rendering\Pipeline\Shader.h">
+      <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Pipeline\ShaderCompiler.h">
+      <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Shader\OpenGLGraphicsPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -805,9 +810,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
       <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Shader\ShaderCompiler.cpp">
-      <Filter>src\Hazard\Rendering\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp">
       <Filter>src\Hazard\Rendering\Sky</Filter>
@@ -938,5 +940,14 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VulkanRenderTexture.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\Source.cppVulkanDescriptorPool.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanDescriptorPool.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanPipeline.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Pipeline\ShaderCompiler.cpp">
+      <Filter>src\Hazard\Rendering\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Shader\OpenGLGraphicsPipeline.cpp" />
   </ItemGroup>
 </Project>

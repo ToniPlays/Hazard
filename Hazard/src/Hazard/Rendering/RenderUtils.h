@@ -5,7 +5,7 @@
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
 #include "Hazard/Rendering/Textures/EnvironmentMap.h"
 
-#include "Hazard/Rendering/Shader/Shader.h"
+#include "Hazard/Rendering/Pipeline/Shader.h"
 #include "Hazard/RenderContext/RenderContext.h"
 
 namespace Hazard::Rendering {
@@ -17,7 +17,6 @@ namespace Hazard::Rendering {
 		std::string shaderSourcePath;
 		std::string shaderCompilePath;
 	};
-
 
 	class RenderUtils {
 	public:
@@ -98,7 +97,6 @@ namespace Hazard::Rendering {
 				Texture* texture = (Texture*)ref;
 				if (strcmp(texture->GetFile().c_str(), file) == 0)
 					return texture;
-				
 			}
 			return nullptr;
 		}

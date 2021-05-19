@@ -13,7 +13,7 @@ namespace Hazard::Rendering {
 
 		Ref<CubemapTexture> GetCubemapTexture() { return m_Texture; }
 		void SetCubemapTexture(Ref<CubemapTexture>& texture) { this->m_Texture = texture; }
-		void Render(glm::mat4 transform);
+		void Render();
 
 		float GetGamma() { return m_Gamma; }
 		void SetGamma(float gamma) { m_Gamma = gamma; }

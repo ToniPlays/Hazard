@@ -17,7 +17,7 @@ namespace Hazard::Rendering::OpenGL {
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
 		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-		void SetDepthTest(DepthTest type) const override;
+		void SetDepthTest(DepthFunc type) const override;
 		void Enable(Function fn) const;
 		void Disable(Function fn) const;
 

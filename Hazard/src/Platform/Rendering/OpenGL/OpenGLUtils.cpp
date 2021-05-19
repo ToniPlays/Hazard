@@ -26,4 +26,8 @@ namespace Hazard::Rendering::OpenGL
 		}
 		return "";
 	}
+	uint32_t OpenGLUtils::DepthFuncToGL(DepthFunc value)
+	{
+		return GL_NEVER + value;
+	}
 }

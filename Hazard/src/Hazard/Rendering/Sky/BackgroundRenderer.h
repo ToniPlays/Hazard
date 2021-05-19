@@ -12,7 +12,7 @@ namespace Hazard::Rendering {
 
 		virtual float GetGamma() { return 1.0f; }
 		virtual void SetCubemap(Ref<CubemapTexture>& texture) {};
-		virtual void Render(glm::mat4 view, glm::mat4 projection) {};
+		virtual void Render() {};
 		
 		Color m_Color;
 	};
@@ -21,7 +21,6 @@ namespace Hazard::Rendering {
 	{
 	public:
 		ColorBackgroundRenderer() {}
-		void Render(glm::mat4 view, glm::mat4 projection) override;
 	};
 	class SkyboxBackgroundRenderer : public BackgroundRenderer
 	{
@@ -34,7 +33,7 @@ namespace Hazard::Rendering {
 		Ref<Skybox> GetSkybox() { return m_Skybox; };
 		Ref<Texture2D> GetRaw();
 
-		void Render(glm::mat4 view, glm::mat4 projection) override;
+		void Render() override;
 		void SetCubemap(Ref<CubemapTexture>& texture) override;
 	private:
 		Ref<Skybox> m_Skybox;

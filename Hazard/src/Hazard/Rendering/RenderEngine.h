@@ -18,6 +18,7 @@ namespace Hazard::Rendering {
 	struct CameraData {
 		glm::mat4 viewProjection;
 		glm::vec3 cameraPos;
+		float gamma;
 	};
 
 
@@ -44,17 +45,14 @@ namespace Hazard::Rendering {
 		void Submit<RenderableMesh>(RenderableMesh mesh) {
 
 			Ref<Material> mat = mesh.mesh->GetMaterial();
-
 			Shader* shader = mat->GetShader().Raw();
 			shader->Bind();
-			shader->SetUniformMat4("model", mesh.transform);
-			shader->SetUniformFloat("gamma", m_BackgroundRenderer->GetGamma());
-			
+			shader->SetUniformMat4("u_Model", mesh.transform);
 			mesh.mesh->Render();
 		}
 
 	private:
-		CameraData cameraData;
+		CameraData m_CameraData;
 
 		Ref<UniformBuffer> m_CameraUnformBuffer;
 		glm::mat4 m_Projection;

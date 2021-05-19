@@ -44,4 +44,13 @@ namespace Hazard::Rendering::Vulkan
 	{
 
 	}
+	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& info)
+	{
+	}
+	VulkanUniformBuffer::~VulkanUniformBuffer()
+	{
+	}
+	void VulkanUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
+	{
+	}
 }

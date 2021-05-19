@@ -4,6 +4,7 @@
 #include "VulkanDevice.h"
 #include "VulkanWindowSurface.h"
 #include "VulkanSwapChain.h"
+#include "VulkanDescriptorPool.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -17,6 +18,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanWindowSurface* Surface;
 		VulkanDevice* Device;
 		VulkanSwapChain* SwapChain;
+		VulkanDescriptorPool* DescriptorPool;
 	};
 
 	class VulkanInstance {

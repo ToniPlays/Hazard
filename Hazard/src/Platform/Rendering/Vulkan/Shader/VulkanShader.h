@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Shader/Shader.h"
+#include "Hazard/Rendering/Pipeline/Shader.h"
 
 namespace Hazard::Rendering::Vulkan {
 	class VulkanShader : public Shader {

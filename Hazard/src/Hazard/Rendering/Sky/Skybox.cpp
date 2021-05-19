@@ -56,28 +56,23 @@ namespace Hazard::Rendering {
 		shaderInfo.shaderName = "Skybox";
 		shaderInfo.stages = stages;
 
-
 		m_SkyboxShader = RenderUtils::Create<Shader>(shaderInfo);
 		m_SkyboxShader->Bind();
 		m_SkyboxShader->SetUniformInt("SkyboxCubemap", 0);
 		m_SkyboxShader->Unbind();
-		
 	}
 	Skybox::~Skybox()
 	{
 
 	}
-	void Skybox::Render(glm::mat4 transform)
+	void Skybox::Render()
 	{
 		if (!m_Texture) return;
 
-		RenderContextCommand::SetDepthTest(DepthTest::LEqual);
+		RenderContextCommand::SetDepthTest(DepthFunc::LessOrEqual);
 		m_SkyboxShader->Bind();
-		m_SkyboxShader->SetUniformMat4("viewProjection", transform);
-		m_SkyboxShader->SetUniformFloat("gamma", m_Gamma);
 		m_Texture->Bind(0);
-
 		RenderCommand::DrawIndexed(m_VAO, 36);
-		RenderContextCommand::SetDepthTest(DepthTest::Less);
+		RenderContextCommand::SetDepthTest(DepthFunc::Less);
 	}
 }

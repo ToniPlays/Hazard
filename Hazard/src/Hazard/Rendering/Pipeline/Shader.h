@@ -3,13 +3,11 @@
 #include <hzrpch.h>
 #include "Hazard/Core/Core.h"
 #include "Hazard/Math/Color.h"
+#include "GraphicsPipeline.h"
 
 #include "glm/glm.hpp"
 
 namespace Hazard::Rendering {
-
-	enum ShaderType { VertexShader = 0, FragmentShader = 1, GeometryShader = 2, ComputeShader = 3 };
-	enum ShaderFileType { Binary = 0, Source = 1 };
 
 	struct ShaderStage {
 		ShaderType type;

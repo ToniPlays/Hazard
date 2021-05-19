@@ -35,7 +35,7 @@ namespace Hazard::Rendering::Vulkan {
 		VkPhysicalDevice resultDevice;
 
 		for (const auto& device : devices) {
-			if (VKUtils::SuitableDevice(device, instance)) {
+			if (SuitableDevice(device, instance)) {
 				resultDevice = device;
 				return resultDevice;
 			}

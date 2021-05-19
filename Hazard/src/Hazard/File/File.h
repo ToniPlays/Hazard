@@ -29,6 +29,9 @@ namespace Hazard {
 		static std::vector<uint32_t> ReadBinaryFileUint32(const std::string& path);
 		static std::string ReadFile(const std::string& file);
 
+		static void WriteFile(const std::string& dest, const std::string& source);
+		static void WriteBinaryFile(const std::string& dest, std::vector<uint32_t> data);
+
 		static std::string GetFileAbsolutePath(const std::string& file);
 		static std::string GetFileExtension(const std::string& file);
 

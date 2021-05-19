@@ -40,7 +40,7 @@ namespace Hazard::Rendering {
 
 		}
 
-		void VKContext::SetDepthTest(DepthTest type) const
+		void VKContext::SetDepthTest(DepthFunc type) const
 		{
 
 		}

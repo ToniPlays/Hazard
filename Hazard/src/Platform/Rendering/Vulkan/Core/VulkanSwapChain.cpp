@@ -49,25 +49,28 @@ namespace Hazard::Rendering::Vulkan {
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-		VkResult result = vkCreateSwapchainKHR(device->GetDevice(), &createInfo, nullptr, &m_SwapChain);
+		VkResult result = vkCreateSwapchainKHR(device->GetDevice(), &createInfo, nullptr, &m_Data.swapChain);
 
 		if (result != VK_SUCCESS) {
 			HZR_THROW("Failed to create Vulkan SwapChain");
 		}
 		
-		vkGetSwapchainImagesKHR(device->GetDevice(), m_SwapChain, &imageCount, nullptr);
+		vkGetSwapchainImagesKHR(device->GetDevice(), m_Data.swapChain, &imageCount, nullptr);
 
-		m_SwapChainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR(device->GetDevice(), m_SwapChain, &imageCount, m_SwapChainImages.data());
+		m_Data.swapChainImages.resize(imageCount);
+		vkGetSwapchainImagesKHR(device->GetDevice(), m_Data.swapChain, &imageCount, m_Data.swapChainImages.data());
 
-		m_ImageFormat = surfaceFormat.format;
-		m_extent = extent;
+		m_Data.imageFormat = surfaceFormat.format;
+		m_Data.extent = extent;
+
+		m_Data.renderPass = new VulkanRenderTexture(m_Data.imageFormat);
+		m_Data.defaultPipeline = new VulkanPipeline(m_Data.renderPass->GetRenderPass(), m_Data.extent);
 
 		HZR_CORE_INFO("Created Vulkan SwapChain");
 	}
 	VulkanSwapChain::~VulkanSwapChain()
 	{
-		vkDestroySwapchainKHR(m_Device->GetDevice(), m_SwapChain, nullptr);
+		vkDestroySwapchainKHR(m_Device->GetDevice(), m_Data.swapChain, nullptr);
 	}
 	VkSurfaceFormatKHR VulkanSwapChain::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats)
 	{

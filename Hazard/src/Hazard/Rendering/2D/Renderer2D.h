@@ -4,7 +4,7 @@
 
 #include "../Buffers/VertexArray.h"
 #include "../Buffers/Buffer.h"
-#include "../Shader/Shader.h"
+#include "../Pipeline/Shader.h"
 
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/Rendering/RenderUtils.h"

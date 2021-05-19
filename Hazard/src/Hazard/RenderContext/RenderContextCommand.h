@@ -7,7 +7,7 @@ namespace Hazard::Rendering {
 	class RenderContextCommand {
 	public:
 		static void Init();
-		static void SetDepthTest(DepthTest type);
+		static void SetDepthTest(DepthFunc type);
 
 		static bool IsVsync();
 		static void SetVsync(bool vsync);

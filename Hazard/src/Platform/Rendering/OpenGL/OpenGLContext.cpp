@@ -69,7 +69,7 @@ namespace Hazard::Rendering {
 			glViewport(x, y, w, h);
 		}
 
-		void OpenGLContext::SetDepthTest(DepthTest type) const
+		void OpenGLContext::SetDepthTest(DepthFunc type) const
 		{
 			glDepthFunc(GL_NEVER + type);
 		}

@@ -4,7 +4,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "Hazard/File/File.h"
 #include "Hazard/Rendering/RenderUtils.h"
-#include "Hazard/Rendering/Shader/ShaderCompiler.h"
+#include "Hazard/Rendering/Pipeline/ShaderCompiler.h"
 
 namespace Hazard::Rendering::OpenGL {
 
@@ -111,27 +111,12 @@ namespace Hazard::Rendering::OpenGL {
 			GLuint shader = glCreateShader(shaderType);
 			shaderID.push_back(shader);
 
-			if (stage.fileType == ShaderFileType::Source) {
+			std::string source = File::ReadFile(stage.filename);
+			const GLchar* shaderSource = source.c_str();
 
-				std::string source = File::ReadFile(stage.filename);
-				const GLchar* shaderSource = source.c_str();
-
-				glShaderSource(shader, 1, &shaderSource, 0);
-				glCompileShader(shader);
-			}
-			else 
-			{
-				std::vector<uint32_t> binary;
-
-				if (stage.forceCompile)
-				{
-					binary = ShaderCompiler::CompileShader(stage.filename, stage.filename + ".spv", stage.type);
-				}
-				else binary = File::ReadBinaryFileUint32(stage.filename + ".spv");
-
-				glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, binary.data(), binary.size());
-				glSpecializeShader(shader, "main", 0, 0, 0);
-			}
+			glShaderSource(shader, 1, &shaderSource, 0);
+			glCompileShader(shader);
+			
 
 			GLint compiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
