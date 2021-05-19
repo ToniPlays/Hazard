@@ -5,11 +5,10 @@
 namespace Hazard::Rendering::Vulkan {
 	class VulkanShader : public Shader {
 	public:
-		VulkanShader(const ShaderCreateInfo& info);
+		VulkanShader();
 		~VulkanShader();
 		void Bind() const;
 		void Unbind() const;
-		ShaderInfo GetInfo() const { return m_Info; };
 
 	public:
 		void SetUniformInt(const std::string& name, int value);
@@ -21,7 +20,6 @@ namespace Hazard::Rendering::Vulkan {
 		void SetUniformColor(const std::string& name, Color color);
 		void SetUniformBool(const std::string& name, bool value);
 		void SetUniformBlock(const std::string& name, void* value) {};
-	private:
-		ShaderInfo m_Info;
+
 	};
 }

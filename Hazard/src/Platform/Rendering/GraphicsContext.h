@@ -24,12 +24,6 @@ namespace Hazard::Rendering {
 		std::string renderer;
 		uint32_t textureSlots;
 	};
-	enum Function {
-		Multisample = 0,
-		CullFace,
-		Depth,
-		Blend
-	};
 	using ErrorCallback = void(*)(ErrorData& data);
 	class Window;
 
@@ -42,8 +36,6 @@ namespace Hazard::Rendering {
 		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
 		virtual void SetDepthTest(DepthFunc type) const = 0;
-		virtual void Enable(Function fn) const = 0;
-		virtual void Disable(Function fn) const = 0;
 
 		virtual void DrawIndexed(VertexArray& array, uint32_t size) const = 0;
 		virtual DeviceSpec GetDeviceSpec() const = 0;

@@ -5,9 +5,9 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VulkanShader::VulkanShader(const ShaderCreateInfo& info)
+	VulkanShader::VulkanShader()
 	{
-		m_Info.shaderName = info.shaderName;
+
 	}
 	VulkanShader::~VulkanShader()
 	{

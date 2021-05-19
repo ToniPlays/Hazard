@@ -28,6 +28,11 @@ namespace Hazard::Rendering {
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
 		uint32_t offset = 0;
 
+		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
 		for (uint32_t i = 0; i < m_Data.MaxIndices; i += 6) {
 			indices[i + 0] = offset + 0;
 			indices[i + 1] = offset + 1;
@@ -64,35 +69,43 @@ namespace Hazard::Rendering {
 		m_Data.QuadVertexBuffer = m_Data.QuadVertexArray->GetBuffers().at(0);
 		m_Data.QuadVertexBufferBase = new QuadVertex[m_Data.MaxVertices];
 		m_Data.QuadVertexBufferPtr = m_Data.QuadVertexBufferBase;
-		
+
 		delete[] indices;
 
 		std::vector<int> samplers(m_Data.TextureSlots.size());
 		for (int i = 0; i < samplers.size(); i++)
 			samplers.at(i) = i;
-			
+
 		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
 
-		std::vector<ShaderStage> stages(2);
-		stages[0] = { ShaderType::VertexShader,		"standard_vert.glsl", true };
-		stages[0].fileType = ShaderFileType::Binary;
-		stages[0].forceCompile = true;
-		stages[1] = { ShaderType::FragmentShader,	"standard_frag.glsl", true };
-		stages[1].fileType = ShaderFileType::Binary;
-		stages[1].forceCompile = true;
+		PipelineShaderStage stages[2];
 
-		ShaderCreateInfo shaderInfo;
-		shaderInfo.shaderName = "standard";
-		shaderInfo.stages = stages;
+		stages[0].shaderFileName = "res/shaders/compiled/standard_vert.glsl";
+		stages[0].stage = ShaderType::VertexShader;
+		stages[0].fileType = ShaderFileType::Source;
 
-		m_Data.QuadShader = RenderUtils::Create<Shader>(shaderInfo);
+		stages[1].shaderFileName = "res/shaders/compiled/standard_frag.glsl";
+		stages[1].stage = ShaderType::FragmentShader;
+		stages[1].fileType = ShaderFileType::Source;
 
-		m_Data.QuadShader->Bind();
+		PipelineRasterizer rasterizer = {};
+		rasterizer.cullFace = CullFace::BackFace;
+		rasterizer.depthFunc = DepthFunc::Less;
 
-		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		PipelineViewport viewport;
+		viewport.offset = { 0, 0 };
+		viewport.size = { 1920, 1080 };
+
+
+		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.inputAssembly = NULL;
+		pipelineInfo.stageCount = 2;
+		pipelineInfo.stages = stages;
+		pipelineInfo.rasterizer = &rasterizer;
+
+		pipelineInfo.viewport = &viewport;
+
+		m_Data.QuadPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
 	}
 	void Renderer2D::SubmitQuad(Quad quad)
 	{
@@ -133,7 +146,7 @@ namespace Hazard::Rendering {
 	}
 	void Renderer2D::BeginScene(glm::mat4 viewProjection)
 	{
-		m_Data.QuadShader->Bind();
+		m_Data.QuadPipeline->Bind();
 	}
 	void Renderer2D::BeginBatch()
 	{
@@ -146,7 +159,7 @@ namespace Hazard::Rendering {
 		if (m_Data.QuadIndexCount == 0)
 			return;
 
-		m_Data.QuadShader->Bind();
+		m_Data.QuadPipeline->Bind();
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.QuadVertexBufferPtr - (uint8_t*)m_Data.QuadVertexBufferBase);
 		m_Data.QuadVertexBuffer->SetData(m_Data.QuadVertexBufferBase, dataSize);
 

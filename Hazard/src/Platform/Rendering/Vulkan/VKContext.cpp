@@ -44,17 +44,6 @@ namespace Hazard::Rendering {
 		{
 
 		}
-
-		void VKContext::Enable(Function fn) const
-		{
-
-		}
-
-		void VKContext::Disable(Function fn) const
-		{
-
-		}
-
 		void VKContext::DrawIndexed(VertexArray& array, uint32_t size) const
 		{
 			array.EnableAll();

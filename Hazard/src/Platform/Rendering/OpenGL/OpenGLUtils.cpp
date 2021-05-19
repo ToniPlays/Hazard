@@ -30,4 +30,14 @@ namespace Hazard::Rendering::OpenGL
 	{
 		return GL_NEVER + value;
 	}
+	uint32_t OpenGLUtils::CullFaceToGL(CullFace face)
+	{
+		switch (face)
+		{
+		case None:				return GL_BACK;
+		case FrontFace:			return GL_FRONT;
+		case BackFace:			return GL_BACK;
+		case FontAndBackFace:	return GL_FRONT_AND_BACK;
+		}
+	}
 }

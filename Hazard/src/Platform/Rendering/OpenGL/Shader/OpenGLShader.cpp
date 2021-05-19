@@ -21,10 +21,9 @@ namespace Hazard::Rendering::OpenGL {
 		return -1;
 	}
 
-	OpenGLShader::OpenGLShader(ShaderCreateInfo info) 
+	OpenGLShader::OpenGLShader(uint32_t stageCount, PipelineShaderStage* stages)
 	{
-		m_Info.shaderName = info.shaderName;
-		Compile(info.stages);
+		Compile(stageCount, stages);
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -46,8 +45,10 @@ namespace Hazard::Rendering::OpenGL {
 		if (m_Locations.count(name) > 0) {
 			return m_Locations[name];
 		}
+
 		GLint location = glGetUniformLocation(m_ProgramID, name.c_str());
 		m_Locations[name] = location;
+
 		return location;
 	}
 	GLint OpenGLShader::GetBlockLocation(const std::string& name)
@@ -98,20 +99,24 @@ namespace Hazard::Rendering::OpenGL {
 		SetUniformBool(name, value ? 1 : 0);
 	}
 
-	void OpenGLShader::Compile(std::vector<ShaderStage> stages)
+	void OpenGLShader::Compile(uint32_t stageCount, PipelineShaderStage* stages)
 	{
 		m_ProgramID = glCreateProgram();
 
 		int glShaderIDIndex = 0;
-		std::vector<uint32_t> shaderID(stages.size());
+		std::vector<uint32_t> shaderID(stageCount);
 
-		for (auto stage : stages)
+		for (int i = 0; i < stageCount; i++)
 		{
-			GLuint shaderType = ShaderTypeFromType(stage.type);
+			PipelineShaderStage stage = stages[i];
+
+			HZR_CORE_INFO("Compiling shader " + stage.shaderFileName);
+
+			GLuint shaderType = ShaderTypeFromType(stage.stage);
 			GLuint shader = glCreateShader(shaderType);
 			shaderID.push_back(shader);
 
-			std::string source = File::ReadFile(stage.filename);
+			std::string source = File::ReadFile(stage.shaderFileName);
 			const GLchar* shaderSource = source.c_str();
 
 			glShaderSource(shader, 1, &shaderSource, 0);

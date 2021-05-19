@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 		createInfo.datatype = TextureDataType::HDR;
 		createInfo.width = 2048;
 		createInfo.height = 2048;
-		createInfo.sides = { { CubeSide::All, "res/textures/chapmans_drive_8k.hdr"} };
+		createInfo.sides = { { CubeSide::All, "res/textures/modern_buildings_8k.hdr"} };
 
 		/*std::vector<CubemapSide> sides = {
 			{ CubeSide::Top,	"res/textures/sea-top.jpg"},

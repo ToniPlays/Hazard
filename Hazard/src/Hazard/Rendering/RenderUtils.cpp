@@ -58,7 +58,7 @@ namespace Hazard::Rendering {
 		}
 	}
 	//Remove shader stuff
-	template<>
+	/*template<>
 	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
 
 		Shader* shader = Find<Shader>(info.shaderName.c_str());
@@ -83,7 +83,7 @@ namespace Hazard::Rendering {
 		s_Assets[AssetType::ShaderAsset].push_back(shader);
 		return Ref(shader);
 	}
-
+	*/
 	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
 

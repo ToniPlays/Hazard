@@ -9,31 +9,6 @@
 
 namespace Hazard::Rendering {
 
-	struct ShaderStage {
-		ShaderType type;
-		ShaderFileType fileType = ShaderFileType::Source;
-		std::string filename = "";
-		bool forceCompile = false;
-
-
-		ShaderStage() = default;
-		ShaderStage(ShaderType type, const std::string& filename, bool compile = false) {
-			this->type = type;
-			this->filename = filename;
-			this->forceCompile = compile;
-		}
-	};
-
-	struct ShaderCreateInfo {
-		std::string shaderName;
-		ShaderFileType filetype = ShaderFileType::Source;
-		std::vector<ShaderStage> stages;
-	};
-	struct ShaderInfo {
-		std::string shaderName;
-		ShaderFileType fileType;
-	};
-	
 	class Shader : public RefCount {
 
 	public:
@@ -41,8 +16,6 @@ namespace Hazard::Rendering {
 		virtual ~Shader() {};
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
-		virtual ShaderInfo GetInfo() const = 0;
-
 	public:
 		virtual void SetUniformInt(const std::string& name, int value) = 0;
 		virtual void SetUniformIntArray(const std::string& name, int* value, uint32_t size) = 0;

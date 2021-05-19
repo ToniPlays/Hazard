@@ -3,8 +3,8 @@
 #include <hzrpch.h>
 #include "OpenGLCubemapTexture.h"
 #include "../OpenGLUtils.h"
-#include "Hazard/Rendering/RenderUtils.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "../Shader/OpenGLGraphicsPipeline.h"
 #include <glad/glad.h>
 #include <stb_image.h>
 
@@ -90,18 +90,17 @@ namespace Hazard::Rendering::OpenGL {
 		textureCreateInfo.datatype = TextureDataType::HDR;
 
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
-
-		std::vector<ShaderStage> stages(2);
-		stages[0] = { ShaderType::VertexShader,		"equirectangularToCubemap_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"equirectangularToCubemap_frag.glsl" };
-
-		ShaderCreateInfo shaderInfo;
-		shaderInfo.shaderName = "EquirectangularToCubemap";
-		shaderInfo.stages = stages;
-
-		Ref<Shader> convertShader = RenderUtils::Create<Shader>(shaderInfo);
-		Bind();
-
+#pragma region Nonsense
+		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+		glm::mat4 captureViews[] =
+		{
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+		};
 		float vertices[24] = {
 			// positions
 			-1.0f, -1.0f, -1.0f,
@@ -122,6 +121,33 @@ namespace Hazard::Rendering::OpenGL {
 			4, 5, 0, 0, 5, 1
 		};
 
+#pragma endregion
+
+		PipelineRasterizer rasterizer = {};
+		rasterizer.cullFace = CullFace::BackFace;
+		rasterizer.depthFunc = DepthFunc::Less;
+
+		PipelineViewport viewport;
+		viewport.offset = { 0, 0 };
+		viewport.size = { m_Info.width, m_Info.height };
+
+		PipelineShaderStage stages[2];
+		stages[0].shaderFileName = "res/shaders/compiled/equirectangularToCubemap_vert.glsl";
+		stages[0].fileType = ShaderFileType::Source;
+		stages[0].stage = ShaderType::VertexShader;
+
+		stages[1].shaderFileName = "res/shaders/compiled/equirectangularToCubemap_frag.glsl";
+		stages[1].fileType = ShaderFileType::Source;
+		stages[1].stage = ShaderType::FragmentShader;
+
+		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.viewport = &viewport;
+		pipelineInfo.rasterizer = &rasterizer;
+		pipelineInfo.stageCount = 2;
+		pipelineInfo.stages = stages;
+
+		OpenGLGraphicsPipeline pipeline(pipelineInfo);
+
 		BufferLayout layout = { { ShaderDataType::Float3, "pos" } };
 
 		VertexBufferCreateInfo bufferInfo;
@@ -139,17 +165,6 @@ namespace Hazard::Rendering::OpenGL {
 
 		VertexArray* cubeArray = RenderUtils::CreateRaw<VertexArray>(createInfo);
 
-		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-		glm::mat4 captureViews[] =
-		{
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-		};
-
 		unsigned int captureFBO;
 		unsigned int captureRBO;
 
@@ -161,19 +176,18 @@ namespace Hazard::Rendering::OpenGL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_Info.width, m_Info.height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
-		glViewport(0, 0, m_Info.width, m_Info.height);
+		pipeline.Bind();
 		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 
 		cubeArray->Bind();
 		m_Info.cubeSides.at(0)->Bind();
 
-		convertShader->Bind();
-		convertShader->SetUniformInt("equirectangularMap", 0);
-		convertShader->SetUniformMat4("projection", captureProjection);
+		pipeline.GetShader()->SetUniformInt("u_EquirectangularMap", 0);
+		pipeline.GetShader()->SetUniformMat4("u_Projection", captureProjection);
 
 		for (uint8_t i = 0; i < 6; ++i)
 		{
-			convertShader->SetUniformMat4("view", captureViews[i]);
+			pipeline.GetShader()->SetUniformMat4("u_View", captureViews[i]);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, m_TextureID, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

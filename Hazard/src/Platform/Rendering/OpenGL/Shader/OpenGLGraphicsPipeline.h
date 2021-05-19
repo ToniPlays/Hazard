@@ -10,6 +10,8 @@ namespace Hazard::Rendering::OpenGL
 		~OpenGLGraphicsPipeline();
 
 		void Bind() override;
+
+		Ref<Shader> GetShader() override { return m_Info.pipelineShader; }
 	private:
 		GraphicsPipelineInfo m_Info;
 	};

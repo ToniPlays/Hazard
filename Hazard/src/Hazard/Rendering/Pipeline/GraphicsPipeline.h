@@ -1,10 +1,12 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Hazard/Core/Ref.h"
+
 
 namespace Hazard::Rendering 
 {
-
+	class Shader;
 	enum DepthFunc {
 		Never = 0,
 		Less = 1,
@@ -17,7 +19,7 @@ namespace Hazard::Rendering
 	};
 
 	enum InputTopology { TriangleList = 0 };
-	enum CullFace { FrontFace = 0, BackFace, LeftFace, RightFace };
+	enum CullFace { None = 0, FrontFace, BackFace, FontAndBackFace };
 	enum ShaderType { VertexShader = 0, FragmentShader = 1, GeometryShader = 2, ComputeShader = 3 };
 	enum ShaderFileType { Binary = 0, Source = 1 };
 
@@ -42,21 +44,25 @@ namespace Hazard::Rendering
 	struct PipelineRasterizer 
 	{
 		DepthFunc depthFunc;
+		CullFace cullFace;
 	};
-
 
 	struct GraphicsPipelineCreateInfo
 	{
 		InputAssembly* inputAssembly;
 		PipelineViewport* viewport;
-
 		PipelineRasterizer* rasterizer;
+
+		PipelineShaderStage* stages;
+		uint32_t stageCount;
 	};
 
 	struct GraphicsPipelineInfo 
 	{
 		uint32_t rawDepthFunc;
+		uint32_t rawCullFace;
 		PipelineViewport viewport;
+		Ref<Shader> pipelineShader;
 	};
 
 	class GraphicsPipeline {
@@ -64,5 +70,6 @@ namespace Hazard::Rendering
 		virtual ~GraphicsPipeline() {};
 
 		virtual void Bind() = 0;
+		virtual Ref<Shader> GetShader() = 0;
 	};
 }

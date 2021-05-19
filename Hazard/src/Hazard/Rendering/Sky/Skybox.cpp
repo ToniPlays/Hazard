@@ -40,26 +40,36 @@ namespace Hazard::Rendering {
 		indexBufferInfo.size = 36;
 		indexBufferInfo.data = indices;
 
-
 		VertexArrayCreateInfo createInfo;
 		createInfo.bufferInfo = &bufferInfo;
 		createInfo.indexBufferInfo = &indexBufferInfo;
 
 		m_VAO = RenderUtils::CreateRaw<VertexArray>(createInfo);
 
-		std::vector<ShaderStage> stages(2);
+		PipelineRasterizer rasterizer = {};
+		rasterizer.depthFunc = DepthFunc::LessOrEqual;
+		rasterizer.cullFace = CullFace::BackFace;
 
-		stages[0] = { ShaderType::VertexShader,		"skybox_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"skybox_frag.glsl" };
+		PipelineViewport viewport = {};
+		viewport.size = { 1920, 1080 };
 
-		ShaderCreateInfo shaderInfo;
-		shaderInfo.shaderName = "Skybox";
-		shaderInfo.stages = stages;
+		PipelineShaderStage stages[2];
+		stages[0].shaderFileName = "res/shaders/compiled/skybox_vert.glsl";
+		stages[0].fileType = ShaderFileType::Source;
+		stages[0].stage = ShaderType::VertexShader;
 
-		m_SkyboxShader = RenderUtils::Create<Shader>(shaderInfo);
-		m_SkyboxShader->Bind();
-		m_SkyboxShader->SetUniformInt("SkyboxCubemap", 0);
-		m_SkyboxShader->Unbind();
+		stages[1].shaderFileName = "res/shaders/compiled/skybox_frag.glsl";
+		stages[1].fileType = ShaderFileType::Source;
+		stages[1].stage = ShaderType::FragmentShader;
+
+		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.inputAssembly = NULL;
+		pipelineInfo.viewport = &viewport;
+		pipelineInfo.rasterizer = &rasterizer;
+		pipelineInfo.stageCount = 2;
+		pipelineInfo.stages = stages;
+
+		m_Pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
 	}
 	Skybox::~Skybox()
 	{
@@ -69,10 +79,9 @@ namespace Hazard::Rendering {
 	{
 		if (!m_Texture) return;
 
-		RenderContextCommand::SetDepthTest(DepthFunc::LessOrEqual);
-		m_SkyboxShader->Bind();
+		m_Pipeline->Bind();
 		m_Texture->Bind(0);
+
 		RenderCommand::DrawIndexed(m_VAO, 36);
-		RenderContextCommand::SetDepthTest(DepthFunc::Less);
 	}
 }

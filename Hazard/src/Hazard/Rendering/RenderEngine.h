@@ -45,7 +45,8 @@ namespace Hazard::Rendering {
 		void Submit<RenderableMesh>(RenderableMesh mesh) {
 
 			Ref<Material> mat = mesh.mesh->GetMaterial();
-			Shader* shader = mat->GetShader().Raw();
+			Shader* shader = mat->GetPipeline()->GetShader().Raw();
+
 			shader->Bind();
 			shader->SetUniformMat4("u_Model", mesh.transform);
 			mesh.mesh->Render();

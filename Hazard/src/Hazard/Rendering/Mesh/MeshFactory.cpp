@@ -46,29 +46,13 @@ namespace Hazard::Rendering {
 
 		data.subMeshes.reserve(scene->mNumMeshes);
 		ProcessNode(scene->mRootNode, scene, data);
-
 		TraverseNode(scene->mRootNode, data);
 
-		std::vector<ShaderStage> stages(2);
-
-		stages[0] = { ShaderType::VertexShader,		"pbr_vert.glsl" };
-		stages[1] = { ShaderType::FragmentShader,	"pbr_frag.glsl" };
-
-		ShaderCreateInfo shader;
-		shader.shaderName = "PBR";
-		shader.stages = stages;
-
-		MaterialCreateInfo createInfo;
-		createInfo.shader = &shader;
-
-		Ref<Material> material = Material::Create(createInfo);
-
 		Mesh* mesh = new Mesh(absoluteFile, data.vertices, data.indices);
+
+		Ref<Material> material = Material::Create();
 		mesh->SetMaterial(material);
-
-		if (scene->HasMaterials())
-			GetMaterials(scene, *material, file.c_str());
-
+	
 		m_LoadedMeshes.push_back(mesh);
 		return Ref(mesh);
 	}
