@@ -123,8 +123,7 @@ namespace Hazard
         W = 87,
         X = 88,
         Y = 89,
-        Z = 90,
-
+        Z = 90
     }
 
     public class Input

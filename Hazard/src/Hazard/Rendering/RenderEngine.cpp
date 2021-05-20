@@ -25,6 +25,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::InitRenderer(RenderEngineCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		RenderCommand::Init();
 
 		RenderUtilsCreateInfo utilInfo = {};
@@ -43,7 +44,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderEngine::Close()
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 
 	void RenderEngine::BeginRendering(Camera camera, BackgroundRenderer& renderer)

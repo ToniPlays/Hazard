@@ -2,7 +2,7 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "Hazard/Module/Module.h"
+#include "Hazard/Module.h"
 #include "ScriptEngine.h"
 #include "PublicField.h"
 

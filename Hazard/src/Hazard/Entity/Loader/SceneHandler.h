@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Module/Module.h"
+#include "Hazard/Module.h"
 #include "../World.h"
 
 namespace Hazard::ECS {

@@ -20,6 +20,7 @@ namespace Hazard {
 	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (info->appInfo == nullptr) 
 			HZR_THROW("Must assign ApplicationCreateInfo to HazardCreateInfo");
 

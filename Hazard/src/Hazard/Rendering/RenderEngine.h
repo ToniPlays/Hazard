@@ -1,6 +1,6 @@
 #pragma once
 #include "Hazard/Core/Core.h"
-#include "Hazard/Module/Module.h"
+#include "Hazard/Module.h"
 #include "Platform/System/Window.h"
 
 #include "Hazard/Entity/World.h"

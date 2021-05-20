@@ -2,7 +2,7 @@
 
 #include "Core.h"
 #include "ApplicationCreateInfo.h"
-#include "Hazard/Module/Module.h"
+#include "Hazard/Module.h"
 
 namespace Hazard {
 
@@ -17,7 +17,6 @@ namespace Hazard {
 		virtual void Update() {};
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
-
 		
 		void SetTitle(const std::string& title);
 		void SetTitle(const char* title);

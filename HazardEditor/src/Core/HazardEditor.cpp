@@ -18,6 +18,7 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::PreInit()
 {
+	HZR_PROFILE_FUNCTION();
 	std::vector<std::string> icons = { "res/icons/logo.png", "res/icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;
@@ -29,7 +30,7 @@ void EditorApplication::PreInit()
 
 	RenderContexCreateInfo contextInfo;
 	contextInfo.renderer = RenderAPI::OpenGL;
-	contextInfo.fullScreen = true;
+	contextInfo.fullScreen = false;
 	contextInfo.VSync = true;
 	contextInfo.width = 1280;
 	contextInfo.height = 720;
@@ -65,6 +66,7 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init() 
 {
+	HZR_PROFILE_FUNCTION();
 	Project::ProjectManager manager = *GetModule<Project::ProjectManager>();
 	GetModule<ECS::SceneHandler>()->LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
 	Runtime::SceneRuntimeHandler::Init();

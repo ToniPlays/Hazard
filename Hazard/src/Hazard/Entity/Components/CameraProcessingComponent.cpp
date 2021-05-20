@@ -2,7 +2,6 @@
 
 #include "hzrpch.h"
 #include "CameraProcessingComponent.h"
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace Hazard::ECS {
 

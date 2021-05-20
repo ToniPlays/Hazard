@@ -28,17 +28,20 @@ namespace Hazard::Rendering {
 		if (appInfo->iconCount > 0) {
 			m_Window->SetWindowIcon(appInfo->iconCount, appInfo->icons);
 		}
+
 		RenderContextCommand::Init();
 		SetActive(true);
 	}
 
 	void RenderContext::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Window->OnUpdate(m_ClearColor);
 	}
 
 	void RenderContext::Close()
 	{
+		HZR_PROFILE_FUNCTION();
 		delete m_Window;
 	}
 

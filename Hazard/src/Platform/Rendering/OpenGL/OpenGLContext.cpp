@@ -29,6 +29,7 @@ namespace Hazard::Rendering {
 
 		OpenGLContext::~OpenGLContext()
 		{
+			HZR_PROFILE_FUNCTION();
 			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_DEBUG_OUTPUT);
 			glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -36,6 +37,7 @@ namespace Hazard::Rendering {
 
 		void OpenGLContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 		{
+			HZR_PROFILE_FUNCTION();
 			m_Window = (GLFWwindow*)window->GetNativeWindow();
 
 			glfwMakeContextCurrent(m_Window);

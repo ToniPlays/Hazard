@@ -22,7 +22,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	void TransformBindings::Transform_GetPosition_Native(uint32_t id, glm::vec3* position)
 	{
-		
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
 		*position = c.m_Translation;
 	}

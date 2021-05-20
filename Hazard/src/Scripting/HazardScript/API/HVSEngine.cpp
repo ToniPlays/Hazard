@@ -7,7 +7,7 @@ namespace Hazard::Scripting::Visual {
 
 	HVSEngine::HVSEngine(ScriptEngineCreateInfo* info)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void HVSEngine::OnBeginRuntime()
 	{
@@ -87,7 +87,7 @@ namespace Hazard::Scripting::Visual {
 	}
 	void HVSEngine::OnApplicationClose()
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void HVSEngine::Reload()
 	{

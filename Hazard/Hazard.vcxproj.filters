@@ -249,12 +249,6 @@
     <ClInclude Include="src\Hazard\Math\Time.h">
       <Filter>src\Hazard\Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Module\Module.h">
-      <Filter>src\Hazard\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Module\ModuleHandler.h">
-      <Filter>src\Hazard\Module</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -734,6 +728,13 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\Shader\OpenGLGraphicsPipeline.h" />
+    <ClInclude Include="src\Hazard\Module.h">
+      <Filter>src\Hazard\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ModuleHandler.h">
+      <Filter>src\Hazard\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -780,9 +781,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Math\Time.cpp">
       <Filter>src\Hazard\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Module\Modulehandler.cpp">
-      <Filter>src\Hazard\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
@@ -949,5 +947,8 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.cpp" />
     <ClCompile Include="src\Platform\Rendering\OpenGL\Shader\OpenGLGraphicsPipeline.cpp" />
+    <ClCompile Include="src\Hazard\Modulehandler.cpp">
+      <Filter>src\Hazard\Module</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

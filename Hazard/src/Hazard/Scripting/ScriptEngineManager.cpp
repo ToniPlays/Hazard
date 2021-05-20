@@ -13,6 +13,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::InitEngines(ScriptEngineCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_ScriptEngines.insert({ ScriptType::CSharpScript, new CSharp::CSharpEngine(info) });
 		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
 
@@ -20,7 +21,10 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Close()
 	{
-
+		HZR_PROFILE_FUNCTION();
+		for (auto [type, engine] : m_ScriptEngines) {
+			engine->OnApplicationClose();
+		}
 	}
 	void ScriptEngineManager::Update() 
 	{

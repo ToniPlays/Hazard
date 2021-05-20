@@ -72,7 +72,7 @@ namespace Hazard::Rendering::OpenGL {
 		Bind();
 		vertexBuffer->Bind();
 
-		HZR_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
+		HZR_ASSERT(vertexBuffer->GetInfo().layout.GetElements().size(), "Vertex Buffer has no layout!");
 		const BufferLayout& layout = vertexBuffer->GetInfo().layout;
 
 		for (const BufferElement& element : layout)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "glm/glm.hpp"
-
 #include "Hazard/Rendering/RenderUtils.h"
 
 #include "Components/Component.h"

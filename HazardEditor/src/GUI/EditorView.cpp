@@ -34,6 +34,7 @@ namespace WindowElement {
 	}
 	void EditorView::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		bool found = false;
 		m_Context = Hazard::Application::GetModule<Rendering::RenderContext>(found);
 
@@ -125,7 +126,7 @@ namespace WindowElement {
 	}
 	void EditorView::Close()
 	{
-
+		HZR_PROFILE_FUNCTION();
 		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()

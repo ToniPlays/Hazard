@@ -22,12 +22,16 @@ namespace Hazard::Core {
 	{
 		try 
 		{
+			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
+			
 			m_Application->PreInit();
 			m_Application->Init();
 
 			Input::Input::Init();
 			double lastTime = 0;
+			HZR_PROFILE_SESSION_END();
 
+			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
 			while (!m_ShouldClose) {
 
 				double time = glfwGetTime();
@@ -36,13 +40,15 @@ namespace Hazard::Core {
 				Time::s_Time = time;
 				lastTime = time;
 
+				HZR_PROFILE_SCOPE("Frame");
 				m_Application->Update();
 				m_ModuleHandler.Update();
 				m_ModuleHandler.Render();
 			}
-
+			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
 			m_Application->Close();
 			m_ModuleHandler.Close();
+			HZR_PROFILE_SESSION_END();
 		}
 		catch (const std::runtime_error& error) 
 		{	

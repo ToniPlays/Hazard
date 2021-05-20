@@ -5,8 +5,6 @@
 #include "Hazard/Math/Color.h"
 #include "GraphicsPipeline.h"
 
-#include "glm/glm.hpp"
-
 namespace Hazard::Rendering {
 
 	class Shader : public RefCount {

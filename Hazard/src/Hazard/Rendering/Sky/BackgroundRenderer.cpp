@@ -8,6 +8,7 @@ namespace Hazard::Rendering {
 
 	SkyboxBackgroundRenderer::SkyboxBackgroundRenderer() 
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Skybox = new Skybox();
 
 		CubemapCreateInfo createInfo;

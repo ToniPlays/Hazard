@@ -4,11 +4,6 @@
 
 #include "PublicField.h"
 
-extern "C"
-{
-	typedef struct _MonoClass MonoClass;
-}
-
 namespace Hazard::Scripting
 {
 	class ScriptEngine {

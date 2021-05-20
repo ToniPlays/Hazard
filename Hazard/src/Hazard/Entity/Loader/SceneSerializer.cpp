@@ -8,6 +8,7 @@ namespace Hazard::ECS::Loader {
 
 	bool SceneSerializer::SerializeEditor(const char* file, World& world)
 	{
+		HZR_PROFILE_FUNCTION();
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << (world.GetName() != "" ? world.GetName() : "Untitled scene");

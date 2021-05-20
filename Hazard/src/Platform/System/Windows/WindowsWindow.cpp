@@ -19,6 +19,7 @@ namespace Hazard::Rendering {
 
 	WindowsWindow::WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
 
+		HZR_PROFILE_FUNCTION();
 		if (glfwInit() != GLFW_TRUE) {
 			HZR_THROW("Failed to init GLFW");
 		}
@@ -42,7 +43,7 @@ namespace Hazard::Rendering {
 			ss << "RenderContext not supported: " << RenderContext::APIToString(api);
 			HZR_THROW(ss.str());
 		}
-		
+
 		glfwWindowHint(GLFW_RESIZABLE, true);
 		glfwWindowHint(GLFW_MAXIMIZED, info->fullScreen);
 

@@ -22,10 +22,10 @@ namespace Hazard::Logging {
 	}
 	Logger::~Logger()
 	{
-		Close();
 	}
 	void Logger::Close()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_CoreLogger.reset();
 		m_ClienLogger.reset();
 	}

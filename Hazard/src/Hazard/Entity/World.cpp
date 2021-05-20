@@ -63,8 +63,10 @@ namespace Hazard::ECS {
 
     void World::RenderAll() {
 
+        HZR_PROFILE_FUNCTION();
         auto sprites = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
         auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
+
         for (auto entity : meshes) {
 
             Entity e = GetEntity(entity);

@@ -4,10 +4,6 @@
 #include "Renderer2D.h"
 #include "../RenderCommand.h"
 
-#include "glm/ext/matrix_transform.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 
 namespace Hazard::Rendering {
 
@@ -21,6 +17,7 @@ namespace Hazard::Rendering {
 
 	void Renderer2D::Init(uint32_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Data.MaxQuads = size;
 		m_Data.MaxVertices = m_Data.MaxQuads * 4;
 		m_Data.MaxIndices = m_Data.MaxQuads * 6;

@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include "Hazard/Core/Ref.h"
 
-
 namespace Hazard::Rendering 
 {
 	class Shader;

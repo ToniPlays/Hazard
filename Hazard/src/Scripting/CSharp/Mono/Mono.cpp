@@ -18,13 +18,14 @@ namespace Hazard::Scripting::CSharp {
 
 	void Mono::InitAssembly(ScriptEngineCreateInfo* info)
 	{
-
+		HZR_PROFILE_FUNCTION();
 		s_Data.monoCoreAssemblyPath = info->coreAssemblyPath;
 		mono_set_dirs((info->monoDirectory + "/lib").c_str(), (info->monoDirectory + "/etc").c_str());
 		mono_set_assemblies_path("C:/dev/Hazard//vendor/mono/lib");
 	}
 	void Mono::CreateDomain(const char* name)
 	{
+		HZR_PROFILE_FUNCTION();
 		MonoDomain* domain = mono_jit_init(name);
 		std::stringstream ss;
 		ss << name << "-runtime";
@@ -33,6 +34,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::LoadRuntimeAssembly(const char* path)
 	{
+		HZR_PROFILE_FUNCTION();
 		LoadMonoAssebly(path);
 		ScriptRegistery::Init();
 	}

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Core.h"
-
 #include "Hazard/Core/Application.h"
 #include "Hazard/Events/ApplicationEvent.h"
-#include "Hazard/Module/ModuleHandler.h"
+#include "Hazard/ModuleHandler.h"
 
 namespace Hazard::Core {
 

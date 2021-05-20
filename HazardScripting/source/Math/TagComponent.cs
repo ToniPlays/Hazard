@@ -7,7 +7,8 @@ namespace Hazard
 {
     public class TagComponent : Component
     {
-        public string name {
+        public string name 
+        {
             get => TagComponent_GetName_Native(parent.ID);
             set => TagComponent_SetName_Native(parent.ID, value);
         }

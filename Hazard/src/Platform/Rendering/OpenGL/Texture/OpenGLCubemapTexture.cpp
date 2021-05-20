@@ -85,6 +85,7 @@ namespace Hazard::Rendering::OpenGL {
 	}
 	void OpenGLCubemapTexture::CreateCubemapFromTexture(const std::string& file)
 	{
+		HZR_PROFILE_FUNCTION();
 		Texture2DCreateInfo textureCreateInfo;
 		textureCreateInfo.filename = file;
 		textureCreateInfo.datatype = TextureDataType::HDR;

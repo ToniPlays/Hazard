@@ -4,7 +4,6 @@
 #define CAMERA_STRUCT
 
 #include <hzrpch.h>
-#include <glm/glm.hpp>
 
 namespace Hazard::Rendering {
 
