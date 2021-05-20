@@ -179,6 +179,8 @@ namespace Hazard::Rendering::OpenGL {
 		pipeline.Bind();
 		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 
+		glViewport(0, 0, m_Info.width, m_Info.height);
+
 		cubeArray->Bind();
 		m_Info.cubeSides.at(0)->Bind();
 

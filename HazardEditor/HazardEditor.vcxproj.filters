@@ -198,6 +198,7 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\EditorTabWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -311,5 +312,6 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\EditorTabWindow.cpp" />
   </ItemGroup>
 </Project>

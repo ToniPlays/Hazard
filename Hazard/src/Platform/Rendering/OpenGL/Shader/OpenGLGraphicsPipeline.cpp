@@ -28,8 +28,6 @@ namespace Hazard::Rendering::OpenGL
 		glm::vec2 o = m_Info.viewport.offset;
 		glm::vec2 s = m_Info.viewport.size;
 
-		glViewport(o.x, o.y, s.x, s.y);
-
 		m_Info.pipelineShader->Bind();
 		
 	}
