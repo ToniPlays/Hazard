@@ -4,6 +4,7 @@
 
 namespace WindowElement {
 
+
 	struct FolderViewData {
 		std::string path;
 		std::string name;
@@ -15,6 +16,7 @@ namespace WindowElement {
 	public:
 		FileView();
 		~FileView();
+		void Init() override;
 
 		void OnWindowRender() override;
 		void SetRootPath(const char* path);
@@ -27,11 +29,13 @@ namespace WindowElement {
 
 		void DrawFileTree(FolderViewData& data);
 		void DrawFolder(FolderViewData& data);
-		void DrawFile(const char* file);
 
 		std::string rootPath;
 		FolderViewData currentFolder;
 
 		FolderViewData folderData;
+
+		Ref<Hazard::Rendering::Texture2D> m_Image;
+		Ref<Hazard::Rendering::Texture2D> m_FolderImage;
 	};
 }

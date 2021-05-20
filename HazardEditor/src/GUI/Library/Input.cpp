@@ -42,6 +42,14 @@ namespace WindowElement {
 	{
 		return ImGui::Button(name, size);
 	}
+	bool Input::FileButton(const char* name, Hazard::Rendering::Texture2D* texture, ImVec2 size)
+	{
+		ImGui::BeginGroup();
+		bool clicked = ImageButton(texture->GetID(), size);
+		ImGui::TextWrapped(name);
+		ImGui::EndGroup();
+		return clicked;
+	}
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		bool modified = false;
@@ -325,7 +333,7 @@ namespace WindowElement {
 	}
 	bool Input::ImageButton(uint32_t imageID, ImVec2 size)
 	{
-		return ImGui::ImageButton((void*)imageID, size);
+		return ImGui::ImageButton((void*)imageID, size, { 0, 1 }, { 1, 0});
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field)
 	{

@@ -14,7 +14,7 @@ namespace WindowElement {
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("New folder", [&]() {});
 			Layout::MenuItem("New C# script", [&]() {});
-			Layout::MenuItem("New scene", [&]() {});
+			Layout::MenuItem("New world", [&]() {});
 		});
 	}
 	void ContextMenus::HierarchyEntityMenu(Hazard::ECS::World& world, void(*entityAdded)(Hazard::ECS::Entity))

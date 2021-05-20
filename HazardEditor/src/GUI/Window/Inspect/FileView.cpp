@@ -11,10 +11,6 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	float windowElementWidth;
-
-	constexpr float buttonWidth = 54;
-
 	FileView::FileView() : EditorWindow(ICON_FK_FOLDER_OPEN" Project") 
 	{
 		
@@ -23,6 +19,18 @@ namespace WindowElement {
 	FileView::~FileView()
 	{
 
+	}
+	void FileView::Init()
+	{
+		using namespace Hazard::Rendering;
+
+		Texture2DCreateInfo info;
+		info.filename = "res/icons/logo.png";
+		m_Image = RenderUtils::Create<Texture2D>(info);
+
+		info.filename = "res/icons/folder.png";
+
+		m_FolderImage = RenderUtils::Create<Texture2D>(info);
 	}
 	void FileView::OnWindowRender()
 	{
@@ -68,29 +76,33 @@ namespace WindowElement {
 		ImGui::PopStyleColor(3);
 		ImGui::PopFont();
 
-		Layout::Separator();
-		Layout::Table(2, true);
-
-		ImGui::BeginChild("Folders");
-		DrawFileTree(folderData);
-		ImGui::EndChild();
-
-		Layout::TableNext();
-		ImGui::BeginChild("FolderData");
-
-		windowElementWidth = 0;
-
-		for (FolderViewData& data : currentFolder.subfolders) {
-			DrawFolder(data);
-		}
-		for (std::filesystem::directory_entry data : currentFolder.files) {
-			DrawFile(data.path().filename().string().c_str());
-		}
+		int cols = ImGui::GetContentRegionAvailWidth() / 75;
 		
-		ContextMenus::FileContextMenu();
+		if (cols != 0) {
 
+
+			ImGui::BeginChild("FolderData", { float(cols * 75), 0 });
+			ImGui::Columns(cols, "##files", false);
+
+			if (Input::FileButton("Back", m_FolderImage.Raw(), { 50, 50 })) {
+				
+			}
+			ImGui::NextColumn();
+			for (FolderViewData& data : currentFolder.subfolders) {
+				DrawFolder(data);
+				ImGui::NextColumn();
+			}
+
+			for (std::filesystem::directory_entry data : currentFolder.files) {
+				Input::FileButton(data.path().filename().string().c_str(), m_Image.Raw(), { 50, 50 });
+				ImGui::NextColumn();
+			}
+			ImGui::Columns(1);
+		}
+		ContextMenus::FileContextMenu();
 		ImGui::EndChild();
-		Layout::EndTable();
+		
+
 	}
 	void FileView::SetRootPath(const char* path)
 	{
@@ -150,19 +162,6 @@ namespace WindowElement {
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 			currentFolder = data;
 		}
-
-		windowElementWidth += buttonWidth + 5;
-		if (windowElementWidth + buttonWidth + 5 <= Layout::GetColumnWidth()) {
-			ImGui::SameLine(0, 5);
-		}
-		else windowElementWidth = 0;
-	}
-	void FileView::DrawFile(const char* file)
-	{
-		windowElementWidth += buttonWidth + 5;
-		if (windowElementWidth + buttonWidth + 5 <= Layout::GetColumnWidth()) {
-			ImGui::SameLine(0, 5);
-		}
-		else windowElementWidth = 0;
+		Input::FileButton(data.name.c_str(), m_FolderImage.Raw(), { 50, 50 });
 	}
 }
