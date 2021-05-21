@@ -9,20 +9,20 @@ namespace Hazard::Scripting::CSharp::Bindings {
     BindMap InputBindings::GetBindings()
     {
         BindMap result;
-        result.emplace_back("Hazard.Input::Input_Key_Down_Native", InputBindings::KeyDown);
-        result.emplace_back("Hazard.Input::Input_Key_Pressed_Native", InputBindings::KeyPressed);
-        result.emplace_back("Hazard.Input::Input_Key_Released_Native", InputBindings::KeyReleased);
+        result.emplace_back("Hazard.Input::Input_KeyDown_Native",      Input_KeyDown_Native);
+        result.emplace_back("Hazard.Input::Input_KeyPressed_Native",   Input_KeyPressed_Native);
+        result.emplace_back("Hazard.Input::Input_KeyReleased_Native",  Input_KeyReleased_Native);
         return result;
     }
-    bool InputBindings::KeyDown(uint16_t key)
+    bool InputBindings::Input_KeyDown_Native(uint16_t key)
     {
         return Input::IsKeyDown(key);
     }
-    bool InputBindings::KeyPressed(uint16_t key)
+    bool InputBindings::Input_KeyPressed_Native(uint16_t key)
     {
         return false;
     }
-    bool InputBindings::KeyReleased(uint16_t key)
+    bool InputBindings::Input_KeyReleased_Native(uint16_t key)
     {
         return false;
     }

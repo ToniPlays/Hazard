@@ -19,6 +19,7 @@ namespace Hazard::Rendering::OpenGL {
 
 		uint32_t GetID() const { return m_TextureID; };
 		CubemapInfo GetInfo() const { return m_Info; }
+		TextureInfo GetData() const override { return m_TextureInfo; }
 
 	private:
 		void SetFilters();
@@ -27,6 +28,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	private:
 		CubemapInfo m_Info;
+		TextureInfo m_TextureInfo;
 		uint32_t m_TextureID;
 
 	};

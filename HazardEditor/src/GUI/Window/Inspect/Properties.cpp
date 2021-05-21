@@ -59,6 +59,7 @@ namespace WindowElement {
 		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
 		DrawComponent<VisualScriptComponent>(ICON_FK_SITEMAP " Visual script", selectionContext);
 		DrawComponent<MeshComponent>(ICON_FK_CUBE " Mesh", selectionContext);
+		DrawComponent<AudioSourceComponent>(ICON_FK_VOLUME_UP" Audio Source", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);
 	}

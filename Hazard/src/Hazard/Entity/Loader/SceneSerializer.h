@@ -72,6 +72,11 @@ namespace Hazard::ECS::Loader
 	};
 
 	template<>
+	static void Convert(YAML::Emitter& out, glm::vec2 v) {
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+	};
+	template<>
 	static void Convert(YAML::Emitter& out, glm::vec3 v) {
 		out << YAML::Flow;
 		out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;

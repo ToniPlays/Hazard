@@ -40,4 +40,15 @@ namespace Hazard::Rendering::OpenGL
 		case FontAndBackFace:	return GL_FRONT_AND_BACK;
 		}
 	}
+	Color OpenGLUtils::ReadPixel(size_t x, size_t y, stbi_uc* data, size_t width)
+	{
+		const stbi_uc* p = data + ((size_t)4 * (y * width + x));
+
+		float r = p[0];
+		float g = p[1];
+		float b = p[2];
+		float a = p[3];
+
+		return Color(r, g, b, a);
+	}
 }

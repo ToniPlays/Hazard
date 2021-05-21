@@ -275,6 +275,15 @@ namespace WindowElement {
 			});
 	}
 	template<>
+	inline void Draw(const char* name, Entity entity, AudioSourceComponent& component) {
+		using namespace Hazard::Scripting;
+		Layout::ComponentTreenode<AudioSourceComponent>(entity, name, [&]() {
+
+			}, []() {
+				
+			});
+	}
+	template<>
 	inline void Draw(const char* name, Entity entity, MeshComponent& component) {
 		Layout::ComponentTreenode<MeshComponent>(entity, name, [&]() {
 

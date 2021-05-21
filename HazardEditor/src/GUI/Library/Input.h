@@ -29,7 +29,7 @@ namespace WindowElement {
 			Layout::SetColumnWidth(75);
 
 			changed = ImageButton(texture->GetID(), { 50, 50 });
-			Layout::Tooltip(texture->GetFile().c_str());
+			Layout::Tooltip(texture->GetData().file.c_str());
 			Layout::TableNext();
 			Button("Flip");
 			Layout::SameLine(0, 5);

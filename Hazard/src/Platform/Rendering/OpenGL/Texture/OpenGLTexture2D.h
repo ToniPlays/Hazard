@@ -5,6 +5,8 @@
 #include <iostream>
 #include "glm/glm.hpp"
 
+#include <stb_image.h>
+
 namespace Hazard::Rendering::OpenGL {
 
 	class OpenGLTexture2D : public Texture2D {
@@ -21,11 +23,13 @@ namespace Hazard::Rendering::OpenGL {
 		virtual void SetData(void* data, uint32_t size) override;
 
 		uint32_t GetID() const { return m_TextureID; }
-		Texture2DInfo GetData() const { return m_Info; };
+		TextureInfo GetData() const override { return m_Info; };
 
 	private:
 
-		Texture2DInfo m_Info;
+		void CheckTransparency(stbi_uc* data);
+
+		TextureInfo m_Info;
 
 		uint32_t m_TextureID;
 		uint32_t m_DataFormat, m_InternalFormat;

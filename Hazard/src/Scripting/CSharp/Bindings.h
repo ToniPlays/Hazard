@@ -1,5 +1,7 @@
 #pragma once
 
+//Use {Class}_{Method}_Native
+
 #include "Script/Debug/ConsoleBindings.h"
 
 #include "Script/Application/ApplicationBindings.h"

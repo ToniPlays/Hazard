@@ -104,6 +104,10 @@ namespace WindowElement {
 			selectionContext.GetWorld().DestroyEntity(selectionContext);
 			return true;
 		}
+		if (e.GetKeyCode() == Key::D && selectionContext && Hazard::Input::IsKeyDown(Key::LeftControl)) {
+			selectionContext.GetWorld().CreateEntity(selectionContext);
+			return true;
+		}
 		return false;
 	}
 }

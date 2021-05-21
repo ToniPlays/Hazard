@@ -120,30 +120,6 @@
     <ClInclude Include="src\GUI\EditorWindow.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Library\ComponentDraw.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\FontAwesome.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Input.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout\Dockspace.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Layout\Layout.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Node\NodeLibrary.h">
-      <Filter>src\GUI\Library\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Library\Style.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
     <ClInclude Include="src\GUI\RenderableElement.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -204,6 +180,30 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\ContextMenus.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\Dockspace.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Layout\Layout.h">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Node\NodeLibrary.h">
+      <Filter>src\GUI\Library\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\ComponentDraw.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\FontAwesome.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Input.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Library\Style.h">
+      <Filter>src\GUI\Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -253,24 +253,6 @@
     </ClCompile>
     <ClCompile Include="src\GUI\EditorWindow.cpp">
       <Filter>src\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Input.cpp">
-      <Filter>src\GUI\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Node\NodeLibrary.cpp">
-      <Filter>src\GUI\Library\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Library\Style.cpp">
-      <Filter>src\GUI\Library</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\Console.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
@@ -322,6 +304,24 @@
     </ClCompile>
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\ContextMenus.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\Dockspace.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Layout\Layout.cpp">
+      <Filter>src\GUI\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Node\NodeLibrary.cpp">
+      <Filter>src\GUI\Library\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Input.cpp">
+      <Filter>src\GUI\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Library\Style.cpp">
+      <Filter>src\GUI\Library</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

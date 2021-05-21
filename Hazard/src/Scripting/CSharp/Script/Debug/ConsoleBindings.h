@@ -7,11 +7,11 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	class ConsoleBindings {
 	public:
 		static BindMap GetBindings();
-		static void Log(MonoObject* object);
-		static void Info(MonoObject* object);
-		static void Warn(MonoObject* object);
-		static void Error(MonoObject* object);
-		static void Critical(MonoObject* object);
-		static void Trace(MonoObject* object);
+		static void Console_Log_Native(MonoObject* object);
+		static void Console_Info_Native(MonoObject* object);
+		static void Console_Warn_Native(MonoObject* object);
+		static void Console_Error_Native(MonoObject* object);
+		static void Console_Critical_Native(MonoObject* object);
+		static void Console_Trace_Native(MonoObject* object);
 	};
 }

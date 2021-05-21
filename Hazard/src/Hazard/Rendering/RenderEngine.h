@@ -5,7 +5,6 @@
 
 #include "Hazard/Entity/World.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
-#include "Textures/EnvironmentMap.h"
 #include "Sky/BackgroundRenderer.h"
 
 #include "2D/Renderer2D.h"
@@ -20,7 +19,6 @@ namespace Hazard::Rendering {
 		glm::vec3 cameraPos;
 		float gamma;
 	};
-
 
 	class RenderEngine : public Module::Module {
 	public:

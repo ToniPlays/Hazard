@@ -106,6 +106,10 @@ namespace WindowElement {
 				Layout::MenuItem("Script component", [&]() {
 				entity.AddComponent<ScriptComponent>();
 					});
+			if (!entity.HasComponent<AudioSourceComponent>())
+				Layout::MenuItem("Audio source component", [&]() {
+				entity.AddComponent<AudioSourceComponent>();
+					});
 			if (!entity.HasComponent<VisualScriptComponent>())
 				Layout::MenuItem("Visual script component", [&]() {
 				entity.AddComponent<VisualScriptComponent>();

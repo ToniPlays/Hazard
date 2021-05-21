@@ -8,8 +8,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	public:
 		static BindMap GetBindings();
 	private:
-		static bool KeyDown(uint16_t key);
-		static bool KeyPressed(uint16_t key);
-		static bool KeyReleased(uint16_t key);
+		static bool Input_KeyDown_Native(uint16_t key);
+		static bool Input_KeyPressed_Native(uint16_t key);
+		static bool Input_KeyReleased_Native(uint16_t key);
 	};
 }

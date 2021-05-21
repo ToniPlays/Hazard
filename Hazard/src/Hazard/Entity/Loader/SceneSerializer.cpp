@@ -87,7 +87,6 @@ namespace Hazard::ECS::Loader {
 		out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.m_Translation);
 		out << YAML::Key << "Rotation" << YAML::Value; Convert(out, c.m_Rotation);
 		out << YAML::Key << "Scale" << YAML::Value; Convert(out, c.m_Scale);
-
 		out << YAML::EndMap;
 
 	}
@@ -101,8 +100,8 @@ namespace Hazard::ECS::Loader {
 		out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)c.m_Tint);
 
 		if (c.m_Texture) {
-			if (std::string(c.m_Texture->GetFile()) != "White")
-				out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetFile());
+			if (c.m_Texture->GetData().file != "White")
+				out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetData().file);
 		}
 		out << YAML::EndMap;
 	}
@@ -114,6 +113,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
 		out << YAML::Key << "Fov" << YAML::Value << c.GetFov();
+		out << YAML::Key << "Clipping" << YAML::Value; Convert(out, c.GetClipping());
 		out << YAML::EndMap;
 	}
 	template<>

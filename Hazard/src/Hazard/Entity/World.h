@@ -33,8 +33,9 @@ namespace Hazard::ECS {
 
 		void RenderAll();
 
-		Entity CreateEntity(const char* name);
+		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UID id, const char* name);
+		Entity CreateEntity(Entity other);
 		Entity GetEntity(entt::entity id);
 
 		void DestroyEntity(Entity entity);

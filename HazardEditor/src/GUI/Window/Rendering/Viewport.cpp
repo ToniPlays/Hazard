@@ -41,13 +41,13 @@ namespace WindowElement {
 		using namespace Appereance;
 
 		bool is2D = m_EditorCamera.Is2DEnabled();
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		if (Input::ToggleButtonColorChange("2D", Style::GetStyleColor(ColorType::Debug), Style::GetStyleColor(ColorType::Info),
-			Style::GetStyleColor(ColorType::Text), is2D)) {
+			Style::GetStyleColor(ColorType::Text), is2D, { 35, 25 })) {
 			m_EditorCamera.SetIs2D(is2D);
 		}
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (size.x != m_Width || size.y != m_Height) {
 			m_Width = size.x;
@@ -59,9 +59,9 @@ namespace WindowElement {
 
 		ImGui::Image((void*)m_RenderTexture->GetInfo().colorID,
 			size, ImVec2(0, 1), ImVec2(1, 0));
-		ImGui::PopStyleVar();
 
-		m_Gizmos.OnRender(m_EditorCamera);
+		m_Gizmos.OnRender(m_EditorCamera, size);
+		ImGui::PopStyleVar();
 
 		if (m_Gizmos.IsUsing()) return;
 		

@@ -3,7 +3,6 @@
 #include "Hazard/Rendering/Textures/Texture2D.h"
 #include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
-#include "Hazard/Rendering/Textures/EnvironmentMap.h"
 
 #include "Hazard/Rendering/Pipeline/Shader.h"
 #include "Hazard/RenderContext/RenderContext.h"
@@ -60,7 +59,7 @@ namespace Hazard::Rendering {
 
 			HZR_CORE_INFO(refs.size());
 			if (it != refs.end()) {
-				HZR_CORE_ERROR("Removed {0}", texture->GetFile());
+				HZR_CORE_ERROR("Removed {0}", texture->GetData().file);
 				refs.erase(it);
 			}
 			HZR_CORE_INFO(refs.size());
@@ -82,7 +81,7 @@ namespace Hazard::Rendering {
 
 			for (RefCount* ref : textures) {
 				Texture* texture = (Texture*)ref;
-				if (strcmp(texture->GetFile().c_str(), file) == 0)
+				if (strcmp(texture->GetData().file.c_str(), file) == 0)
 					return texture;
 			}
 			return nullptr;

@@ -7,6 +7,29 @@
 namespace YAML {
 
 	template<>
+	struct convert<glm::vec2>
+	{
+		static Node encode(const glm::vec2& rhs)
+		{
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			node.SetStyle(EmitterStyle::Flow);
+			return node;
+		}
+
+		static bool decode(const Node& node, glm::vec2& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			return true;
+		}
+	};
+
+	template<>
 	struct convert<glm::vec3>
 	{
 		static Node encode(const glm::vec3& rhs)
@@ -158,6 +181,9 @@ namespace Hazard::ECS::Loader
 		auto& c = entity.AddComponent<CameraComponent>();
 		c.SetProjection(comp["Projection"].as<std::string>() == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 		c.SetFov(comp["Fov"].as<float>());
+		glm::vec2 clipping = comp["Clipping"].as<glm::vec2>();
+		c.SetZNear(clipping.x);
+		c.SetZFar(clipping.y);
 	};
 
 	template<>

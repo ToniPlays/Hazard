@@ -4,16 +4,17 @@
 #include "OpenGLTexture2D.h"
 #include "../OpenGLUtils.h"
 #include <glad/glad.h>
-#include <stb_image.h>
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLTexture2D::OpenGLTexture2D(const Texture2DCreateInfo& info) : Texture2D(info)
+	OpenGLTexture2D::OpenGLTexture2D(const Texture2DCreateInfo& info)
 	{
+		m_Info.file = info.filename;
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
 		if (info.filename != "") {
+
 			int w, h, channels;
 
 			stbi_set_flip_vertically_on_load(1);
@@ -51,6 +52,9 @@ namespace Hazard::Rendering::OpenGL {
 
 				glTextureStorage2D(m_TextureID, 1, m_InternalFormat, m_Info.width, m_Info.height);
 				glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Info.width, m_Info.height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+
+				if(channels == 4) 
+					CheckTransparency(data);
 			}
 
 			glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -96,5 +100,16 @@ namespace Hazard::Rendering::OpenGL {
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		HZR_CORE_ASSERT(size == m_Info.width * m_Info.height * bpp, "Data must be entire texture!");
 		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Info.width, m_Info.height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
+	void OpenGLTexture2D::CheckTransparency(stbi_uc* data)
+	{
+		for (uint32_t x = 0; x < m_Info.width; x++)
+			for (uint32_t y = 0; y < m_Info.height; y++) {
+				if (OpenGLUtils::ReadPixel(x, y, data, m_Info.width).a < 1.0f) {
+					m_Info.hasTransparency = true;
+					return;
+				}
+			}
+		m_Info.hasTransparency = false;
 	}
 }

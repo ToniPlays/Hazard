@@ -6,6 +6,7 @@
 namespace Hazard::Rendering 
 {
 	class Shader;
+
 	enum DepthFunc {
 		Never = 0,
 		Less = 1,
@@ -58,6 +59,8 @@ namespace Hazard::Rendering
 
 	struct GraphicsPipelineInfo 
 	{
+		std::string pipelineName;
+
 		uint32_t rawDepthFunc;
 		uint32_t rawCullFace;
 		PipelineViewport viewport;

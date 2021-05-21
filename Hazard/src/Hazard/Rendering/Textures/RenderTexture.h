@@ -12,18 +12,13 @@ namespace Hazard::Rendering {
 		TextureDataType datatype = TextureDataType::Auto;
 	};
 	struct RenderTextureInfo {
-		const char* name = "RenderTexture";
-		uint32_t width = 0;
-		uint32_t height = 0;
-		TextureDataType datatype;
-
 		uint32_t colorID = 0;
 	};
 
 	class RenderTexture : public Texture {
 	public:
 
-		RenderTexture(const RenderTextureCreateInfo& info) : Texture(info.name) {}
+		RenderTexture() {}
 		~RenderTexture() {};
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;

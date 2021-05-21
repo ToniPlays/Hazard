@@ -7,9 +7,18 @@ namespace Hazard::Rendering {
 
 	enum TextureDataType { Auto = 0, RGB, RGBA, HDR, HDRA };
 
+	struct TextureInfo
+	{
+		std::string file;
+		uint32_t width = 0;
+		uint32_t height = 0;
+		TextureDataType datatype;
+
+		bool hasTransparency = false;
+	};
+
 	class Texture : public RefCount {
 	public:
-		Texture(const std::string& file) : m_File(file) {};
 		virtual ~Texture();
 
 		virtual uint32_t GetWidth() const = 0;
@@ -19,9 +28,6 @@ namespace Hazard::Rendering {
 		virtual void Unbind(uint32_t slot = 0) const = 0;
 
 		virtual uint32_t GetID() const = 0;
-		std::string& GetFile() { return m_File; };
-
-	protected:
-		std::string m_File = "";
+		virtual TextureInfo GetData() const = 0;
 	};
 }

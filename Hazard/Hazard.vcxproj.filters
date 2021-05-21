@@ -324,9 +324,6 @@
     <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Textures\EnvironmentMap.h">
-      <Filter>src\Hazard\Rendering\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Textures\RenderTexture.h">
       <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
@@ -747,6 +744,7 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -974,5 +972,6 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.cpp" />
   </ItemGroup>
 </Project>

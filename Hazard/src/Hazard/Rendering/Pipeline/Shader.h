@@ -14,6 +14,7 @@ namespace Hazard::Rendering {
 		virtual ~Shader() {};
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
+
 	public:
 		virtual void SetUniformInt(const std::string& name, int value) = 0;
 		virtual void SetUniformIntArray(const std::string& name, int* value, uint32_t size) = 0;

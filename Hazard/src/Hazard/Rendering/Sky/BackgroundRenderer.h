@@ -32,7 +32,6 @@ namespace Hazard::Rendering {
 		float GetGamma() { return m_Skybox->GetGamma(); }
 		Ref<CubemapTexture> GetTexture() { return m_Skybox->GetCubemapTexture(); };
 		Ref<Skybox> GetSkybox() { return m_Skybox; };
-		virtual std::string GetFile() { return GetRaw()->GetFile(); }
 		Ref<Texture2D> GetRaw();
 
 		void Render() override;

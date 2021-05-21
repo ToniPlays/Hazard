@@ -4,12 +4,7 @@
 #include "TransformationGizmo.h"
 #include "imgui.h"
 #include "ImGuizmo.h"
-
-#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 
 using namespace Hazard::ECS;
 
@@ -31,17 +26,14 @@ namespace WindowElement {
 	{
 		ImGuizmo::BeginFrame();
 	}
-	void TransformationGizmo::OnRender(Editor::EditorCamera camera)
+	void TransformationGizmo::OnRender(Editor::EditorCamera camera, ImVec2 size)
 	{
 		if (!currentSelection.IsValid() || type == Gizmo::None) return;
 
-		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetOrthographic(true);
 		ImGuizmo::SetDrawlist();
 
-		float windowWidth = (float)ImGui::GetWindowWidth();
-		float windowHeight = (float)ImGui::GetWindowHeight();
-
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x + 4, ImGui::GetWindowPos().y + 53, size.x, size.y);
 
 		auto& tc = currentSelection.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();

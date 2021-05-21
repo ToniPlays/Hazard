@@ -5,6 +5,8 @@
 #include "Core/EditorEvent.h"
 #include "Editor/EditorCamera.h"
 
+#include "imgui.h"
+
 namespace WindowElement {
 	enum class Gizmo { Translate, Rotate, Scale, Bounds, None };
 	class TransformationGizmo : public RenderableElement {
@@ -15,7 +17,7 @@ namespace WindowElement {
 
 		void Init() override;
 		void OnFrameBegin() override;
-		void OnRender(Editor::EditorCamera camera);
+		void OnRender(Editor::EditorCamera camera, ImVec2 size);
 
 		bool IsUsing() { return isUsing; }
 

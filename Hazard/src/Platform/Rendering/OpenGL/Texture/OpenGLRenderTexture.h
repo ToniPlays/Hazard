@@ -21,10 +21,13 @@ namespace Hazard::Rendering::OpenGL {
 
 		RenderTextureInfo GetInfo() const override { return m_Info; }
 		uint32_t GetID() const { return m_RendererID; };
+
+		TextureInfo GetData() const override { return m_TextureInfo; };
 	private:
 
 		void Invalidate();
 		RenderTextureInfo m_Info;
+		TextureInfo m_TextureInfo;
 
 		GLuint m_RendererID = 0;
 		GLuint m_DepthAttachment = 0;

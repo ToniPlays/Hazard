@@ -72,8 +72,8 @@ namespace Editor {
 		auto [xSpeed, ySpeed] = PanSpeed();
 
 		if (m_Is2DEnabled) {
-			xSpeed *= size2D * 0.09f;
-			ySpeed *= size2D * 0.09f;
+			xSpeed *= size2D * 0.15f;
+			ySpeed *= size2D * 0.15f;
 		}
 
 		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
@@ -90,7 +90,7 @@ namespace Editor {
 	void EditorCamera::MouseZoom(float delta)
 	{
 		if (m_Is2DEnabled) {
-			size2D -= delta * ZoomSpeed();
+			size2D -= delta * size2D * 0.25f;
 			size2D = Math::Max(0.01f, size2D);
 			SetIs2D(true);
 			return;

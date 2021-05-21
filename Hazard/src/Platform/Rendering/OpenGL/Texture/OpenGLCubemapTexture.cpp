@@ -13,14 +13,16 @@
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLCubemapTexture::OpenGLCubemapTexture(const CubemapCreateInfo& info) : CubemapTexture(info)
+	OpenGLCubemapTexture::OpenGLCubemapTexture(const CubemapCreateInfo& info)
 	{
-		glGenTextures(1, &m_TextureID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
-
+		m_TextureInfo.file = info.sides.at(0).file;
 		m_Info.datatype = info.datatype;
 		m_Info.width = info.width;
 		m_Info.height = info.height;
+
+		glGenTextures(1, &m_TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
+
 		if (info.sides.size() == 1) {
 			AllocateFree();
 			CreateCubemapFromTexture(info.sides.at(0).file);
