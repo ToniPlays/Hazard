@@ -13,6 +13,7 @@ namespace Hazard::Rendering {
 		const char* Title;
 		const char* Platform;
 		std::string Renderer;
+		DeviceSpec deviceSpecs;
 
 		bool VSync = false;
 		bool focus = true;
@@ -23,13 +24,7 @@ namespace Hazard::Rendering {
 		int Height;
 
 		std::function<void(Event&)> EventCallback;
-
-		WindowProps(const char* title = "Hazard",
-			const char* platform = "Undefined platform",
-			std::string renderer = "Undefined renderer",
-			unsigned int width = 1280,
-			unsigned int height = 720, bool maxim = true)
-			: Title(title), Platform(platform), Renderer(renderer), Width(width), Height(height), maximized(maxim) {}
+		WindowProps() = default;
 	};
 
 	class Window {

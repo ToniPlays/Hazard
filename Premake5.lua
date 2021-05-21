@@ -153,6 +153,7 @@ project "Hazard"
 		"c:/dev/Hazard/Hazard/vendor/assimp/include",
 		"c:/dev/Hazard/vendor/entt",
 		"c:/dev/Hazard/vendor/IMGUI/examples",
+		"c:/dev/Hazard/vendor/JSON-develop/include",
 		"c:/dev/Hazard/vendor/mono/include",
 		"c:/dev/Hazard/vendor/SPIR-V/include",
 		"Hazard/src"
@@ -240,6 +241,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/Vulkan/include",
 		"c:/dev/Hazard/vendor/JSON/include",
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
+		"c:/dev/Hazard/vendor/JSON-develop/include",
 		"c:/dev/Hazard/Hazard/vendor/assimp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/IMGUI/used_backends",

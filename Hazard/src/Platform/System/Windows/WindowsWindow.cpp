@@ -23,7 +23,7 @@ namespace Hazard::Rendering {
 		if (glfwInit() != GLFW_TRUE) {
 			HZR_THROW("Failed to init GLFW");
 		}
-
+		
 		m_WindowData.Title = appInfo->appName.c_str();
 		m_WindowData.Platform = "Windows";
 		m_WindowData.Width = info->width;
@@ -44,7 +44,7 @@ namespace Hazard::Rendering {
 			HZR_THROW(ss.str());
 		}
 
-		glfwWindowHint(GLFW_RESIZABLE, true);
+		glfwWindowHint(GLFW_RESIZABLE, info->resizable);
 		glfwWindowHint(GLFW_MAXIMIZED, info->fullScreen);
 
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
@@ -54,6 +54,7 @@ namespace Hazard::Rendering {
 		}
 
 		m_Context->Init(this, appInfo);
+		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 		m_WindowData.Renderer = m_Context->GetDeviceSpec().renderer;

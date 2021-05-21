@@ -111,6 +111,9 @@
     <ClInclude Include="src\GUI\EditorPopup.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\EditorTabWindow.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\EditorView.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -151,6 +154,9 @@
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
@@ -198,7 +204,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\EditorTabWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -240,6 +245,9 @@
     <ClCompile Include="src\GUI\EditorPopup.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\EditorTabWindow.cpp">
+      <Filter>src\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\EditorView.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
@@ -268,6 +276,9 @@
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
+      <Filter>src\GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
@@ -312,6 +323,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\EditorTabWindow.cpp" />
   </ItemGroup>
 </Project>

@@ -81,6 +81,11 @@ namespace Hazard::ECS::Loader
 		out << YAML::Flow;
 		out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
 	};
+	template<>
+	static void Convert(YAML::Emitter& out, Color v) {
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.r << v.g << v.b << v.a << YAML::EndSeq;
+	};
 
 	class SceneSerializer {
 	public:

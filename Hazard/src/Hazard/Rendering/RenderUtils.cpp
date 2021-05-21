@@ -57,33 +57,6 @@ namespace Hazard::Rendering {
 		//case RenderAPI::Vulkan:		return new Vulkan::VulkanGraphicsPipeline(info);
 		}
 	}
-	//Remove shader stuff
-	/*template<>
-	Ref<Shader> RenderUtils::Create<Shader>(ShaderCreateInfo info) {
-
-		Shader* shader = Find<Shader>(info.shaderName.c_str());
-		if (shader != nullptr) {
-			return Ref(shader);
-		}
-
-		for (ShaderStage& stage : info.stages) {
-			switch (stage.fileType)
-			{
-			case ShaderFileType::Binary: stage.filename = m_Info.shaderCompilePath + "/" + stage.filename; break;
-			case ShaderFileType::Source: stage.filename = m_Info.shaderSourcePath  + "/" + stage.filename; break;
-			}
-		}
-
-		switch (s_Api)
-		{
-		case RenderAPI::OpenGL:		shader = new OpenGL::OpenGLShader(info); break;
-		case RenderAPI::Vulkan:		shader = new Vulkan::VulkanShader(info); break;
-		}
-
-		s_Assets[AssetType::ShaderAsset].push_back(shader);
-		return Ref(shader);
-	}
-	*/
 	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
 
@@ -120,7 +93,7 @@ namespace Hazard::Rendering {
 
 	template<>
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(Texture2DCreateInfo info) {
-
+		HZR_PROFILE_FUNCTION();
 		Texture* texture = Find<Texture>(info.filename.c_str());
 		if (texture != nullptr) {
 			return Ref((Texture2D*)texture);

@@ -3,6 +3,8 @@
 #include <hzreditor.h>
 #include "Viewport.h"
 #include "GUI/Library/Layout/Layout.h"
+#include "GUI/Library/Input.h"
+#include "GUI/Library/Style.h"
 
 using namespace Hazard;
 
@@ -36,6 +38,15 @@ namespace WindowElement {
 		ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
 			m_EditorCamera.GetPosition()));
 
+		using namespace Appereance;
+
+		bool is2D = m_EditorCamera.Is2DEnabled();
+
+		if (Input::ToggleButtonColorChange("2D", Style::GetStyleColor(ColorType::Debug), Style::GetStyleColor(ColorType::Info),
+			Style::GetStyleColor(ColorType::Text), is2D)) {
+			m_EditorCamera.SetIs2D(is2D);
+		}
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (size.x != m_Width || size.y != m_Height) {
@@ -54,7 +65,7 @@ namespace WindowElement {
 
 		if (m_Gizmos.IsUsing()) return;
 		
-		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
+		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Hazard::Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{

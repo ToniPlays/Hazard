@@ -17,5 +17,6 @@
 
 #include "Debug/EngineAssets.h"
 #include "Debug/Console.h"
+#include "Debug/Profiler.h"
 
 #include "ShaderEditor/ShaderEditorWindow.h"

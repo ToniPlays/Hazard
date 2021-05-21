@@ -6,7 +6,7 @@
 
 namespace Hazard::Rendering {
 
-	SkyboxBackgroundRenderer::SkyboxBackgroundRenderer() 
+	SkyboxBackgroundRenderer::SkyboxBackgroundRenderer(const std::string& file) 
 	{
 		HZR_PROFILE_FUNCTION();
 		m_Skybox = new Skybox();
@@ -15,7 +15,7 @@ namespace Hazard::Rendering {
 		createInfo.datatype = TextureDataType::HDR;
 		createInfo.width = 2048;
 		createInfo.height = 2048;
-		createInfo.sides = { { CubeSide::All, "res/textures/modern_buildings_8k.hdr"} };
+		createInfo.sides = { { CubeSide::All, file} };
 
 		/*std::vector<CubemapSide> sides = {
 			{ CubeSide::Top,	"res/textures/sea-top.jpg"},

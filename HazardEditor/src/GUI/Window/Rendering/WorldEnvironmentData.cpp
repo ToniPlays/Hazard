@@ -23,13 +23,13 @@ namespace WindowElement {
 	{
 
 		using namespace Rendering;
-		ECS::WorldData& data = ECS::SceneCommand::GetCurrentWorld().GetWorldData();
+		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 
 		Layout::Treenode("Environment", Style::GetTreeNodeDefaultFlags(), [&]() {
 
 			const char* bgText[] = { "Color", "Skybox", "Environment map" };
 			const char* currentBgText;
-			currentBgText = bgText[(int)data.background];
+			currentBgText = bgText[(int)world.GetWorldData().background];
 			static bool open = false;
 
 			Layout::Table(2, false, "##env");
@@ -45,14 +45,9 @@ namespace WindowElement {
 					if (ImGui::Selectable(bgText[i], isSelected))
 					{
 						currentBgText = bgText[i];
-						data.background = (ECS::WorldBackground)i;
-						
-						delete data.renderer;
+						ECS::WorldBackground bg = (ECS::WorldBackground)i;
 
-						if (data.background == ECS::WorldBackground::Colored) {
-							data.renderer = new ColorBackgroundRenderer();
-						}
-						else data.renderer = new SkyboxBackgroundRenderer();
+						world.SetBackground(bg, "");
 					}
 
 					if (isSelected)
@@ -62,15 +57,15 @@ namespace WindowElement {
 			}
 			Layout::EndTable();
 			
-			if (data.background == ECS::WorldBackground::Colored) {
+			if (world.GetWorldData().background == ECS::WorldBackground::Colored) {
 				Layout::Table(2, false, "##col");
 				Layout::SetColumnWidth(200);
 				Layout::Text("Background color");
 				Layout::TableNext();
-				Input::ColorPicker("Background color", data.renderer->m_Color, open);
+				Input::ColorPicker("Background color", world.GetWorldData().renderer->m_Color, open);
 				Layout::EndTable();
 			}
-			else if(data.background == ECS::WorldBackground::Sky)
+			else if(world.GetWorldData().background == ECS::WorldBackground::Sky)
 			{
 				Texture* texture = RenderUtils::Get<Texture2D>().Raw();
 				Layout::Text("Front");
@@ -88,7 +83,7 @@ namespace WindowElement {
 			}
 			else 
 			{
-				SkyboxBackgroundRenderer* rd = (SkyboxBackgroundRenderer*)data.renderer;
+				SkyboxBackgroundRenderer* rd = (SkyboxBackgroundRenderer*)world.GetWorldData().renderer;
 				Layout::Text("Environment map");
 				bool clicked = Input::TextureSlot(rd->GetRaw().Raw(), [&]() {
 					float gamma = rd->GetSkybox()->GetGamma();

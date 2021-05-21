@@ -84,10 +84,6 @@ namespace WindowElement {
 			ImGui::BeginChild("FolderData", { float(cols * 75), 0 });
 			ImGui::Columns(cols, "##files", false);
 
-			if (Input::FileButton("Back", m_FolderImage.Raw(), { 50, 50 })) {
-				
-			}
-			ImGui::NextColumn();
 			for (FolderViewData& data : currentFolder.subfolders) {
 				DrawFolder(data);
 				ImGui::NextColumn();
@@ -101,8 +97,6 @@ namespace WindowElement {
 		}
 		ContextMenus::FileContextMenu();
 		ImGui::EndChild();
-		
-
 	}
 	void FileView::SetRootPath(const char* path)
 	{
@@ -147,7 +141,6 @@ namespace WindowElement {
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered()) {
 			currentFolder = data;
-			HZR_WARN("Selected navigation path {0}", currentFolder.path);
 		}
 
 		if (opened) {

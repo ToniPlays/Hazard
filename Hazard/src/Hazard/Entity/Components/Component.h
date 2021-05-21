@@ -40,4 +40,8 @@ namespace Hazard::ECS {
 	struct MeshComponent {
 		Ref<Rendering::Mesh> m_Mesh;
 	};
+	struct AudioSourceComponent {
+		std::string sourceFile;
+		bool looping = true;
+	};
 }

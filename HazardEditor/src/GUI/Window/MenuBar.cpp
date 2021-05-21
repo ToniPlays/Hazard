@@ -80,6 +80,9 @@ namespace WindowElement {
 				Layout::MenuItem("Console", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<Console>(true);
 					});
+				Layout::MenuItem("Profiler", [&]() {
+					Application::GetModule<EditorView>()->SetLayerActive<Profiler>(true);
+					});
 				Layout::MenuItem("Performance", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<Performance>(true);
 					});

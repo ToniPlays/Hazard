@@ -60,9 +60,14 @@ namespace YAML {
 }
 
 
-
 namespace Hazard::ECS::Loader 
 {
+	static WorldBackground StringToWorldType(const std::string& value) {
+		if (value == "Colored") return WorldBackground::Colored;
+		if (value == "Sky")		return WorldBackground::Sky;
+		if (value == "HDRI")	return WorldBackground::HDRI;
+	}
+
 	World* SceneDeserializer::DeserializeEditor(const char* file)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -72,6 +77,19 @@ namespace Hazard::ECS::Loader
 		//Set scene name
 		if (!root["Scene"]) return world;
 		world->SetName(root["Scene"].as<std::string>());
+
+		if (root["Environment"]) 
+		{
+			auto env = root["Environment"];
+			world->GetWorldData().renderer->m_Color = Color::FromGLM(env["ClearColor"].as<glm::vec4>());
+
+			WorldBackground type = StringToWorldType(env["Type"].as<std::string>());
+			std::string file = "";
+			if (env["File"]) {
+				file = env["File"].as<std::string>();
+			}
+			world->SetBackground(type, file);
+		}
 
 		//Loop entities
 		auto entities = root["Entities"];

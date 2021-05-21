@@ -27,6 +27,9 @@ namespace Editor {
 		glm::quat GetOrientation() const;
 		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
 
+		void SetIs2D(bool enabled2D);
+
+
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 
@@ -34,12 +37,16 @@ namespace Editor {
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
 		const glm::vec3& GetPosition() const { return m_Position; }
+		const bool Is2DEnabled() const { return m_Is2DEnabled; }
 
 	private:
 		float fov = 45.0f, aspectRatio = 1.778f, nearPlane = 0.1f, farPlane = 1000.0f;
 
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
+
+		bool m_Is2DEnabled;
+		float size2D = 10.0f;
 
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 		glm::vec2 m_InitialMousePos = { 0, 0 };

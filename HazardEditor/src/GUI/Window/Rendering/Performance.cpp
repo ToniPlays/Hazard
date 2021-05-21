@@ -51,7 +51,7 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text(context->GetWindow().GetWindowInfo().Platform);
 
-		Hazard::Rendering::DeviceSpec spec = context->GetContext().GetDeviceSpec();
+		Hazard::Rendering::DeviceSpec spec = context->GetWindow().GetWindowInfo().deviceSpecs;
 
 		Layout::TableNext();
 		Layout::Text("Renderer");

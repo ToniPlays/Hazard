@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 namespace Hazard {
 
 	enum class RenderAPI {
@@ -23,7 +24,11 @@ namespace Hazard {
 	{
 		RenderAPI renderer = RenderAPI::Auto;
 		bool fullScreen = false;
+		bool maximized = false;
+		bool resizable = true;
 		bool VSync = false;
+
+		glm::vec3 color = { 0, 0, 0 };
 
 		uint32_t width = 0;
 		uint32_t height = 0;

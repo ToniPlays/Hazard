@@ -2,12 +2,6 @@
 #include <hzreditor.h>
 #include "EditorView.h"
 
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_impl_vulkan.h"
-
-#include <GLFW/glfw3.h>
-
 #include "Library/Style.h"
 #include "Library/Layout/Dockspace.h"
 #include "Window/AllWindows.h"
@@ -98,6 +92,7 @@ namespace WindowElement {
 		PushRenderable<EngineAssets>();
 
 		PushRenderable<ShaderEditorWindow>();
+		PushRenderable<Profiler>();
 	}  
 	void EditorView::Render()
 	{
@@ -131,7 +126,6 @@ namespace WindowElement {
 	}
 	void EditorView::BeginFrame()
 	{
-
 		m_Renderer->BeginFrame();
 		ImGui::NewFrame();
 

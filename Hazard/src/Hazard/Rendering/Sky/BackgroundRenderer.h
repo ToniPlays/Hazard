@@ -13,6 +13,7 @@ namespace Hazard::Rendering {
 		virtual float GetGamma() { return 1.0f; }
 		virtual void SetCubemap(Ref<CubemapTexture>& texture) {};
 		virtual void Render() {};
+		virtual std::string GetFile() { return ""; }
 		
 		Color m_Color;
 	};
@@ -25,12 +26,13 @@ namespace Hazard::Rendering {
 	class SkyboxBackgroundRenderer : public BackgroundRenderer
 	{
 	public:
-		SkyboxBackgroundRenderer();
+		SkyboxBackgroundRenderer(const std::string& file);
 		~SkyboxBackgroundRenderer();
 
 		float GetGamma() { return m_Skybox->GetGamma(); }
 		Ref<CubemapTexture> GetTexture() { return m_Skybox->GetCubemapTexture(); };
 		Ref<Skybox> GetSkybox() { return m_Skybox; };
+		virtual std::string GetFile() { return GetRaw()->GetFile(); }
 		Ref<Texture2D> GetRaw();
 
 		void Render() override;

@@ -26,8 +26,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#define HZR_PROFILE true
-
+#define HZR_PROFILE false
 
 
 #define HZR_THROW(x) throw std::runtime_error(x)

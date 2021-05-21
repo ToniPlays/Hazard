@@ -284,22 +284,26 @@ namespace WindowElement {
 		}
 		ImGui::PopStyleColor();
 	}
-	void Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
+	bool Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
 	{
+		bool edit = false;
 		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
 		if (modify) {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
 			if (Button(label, size)) {
 				modify = false;
+				edit = true;
 			}
 		}
 		else {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
 			if (Button(label, size)) {
 				modify = true;
+				edit = true;
 			}
 		}
 		ImGui::PopStyleColor(2);
+		return edit;
 	}
 	bool Input::ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size)
 	{

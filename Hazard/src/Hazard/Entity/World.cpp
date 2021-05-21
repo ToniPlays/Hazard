@@ -61,6 +61,21 @@ namespace Hazard::ECS {
 
     World::~World() {}
 
+    void World::SetBackground(WorldBackground type, std::string file)
+    {
+        if (type != m_WorldData.background) {
+            if (m_WorldData.renderer) delete m_WorldData.renderer;
+            
+            if (type == WorldBackground::Colored) {
+                m_WorldData.renderer = new Rendering::ColorBackgroundRenderer();
+            }
+            else {
+                m_WorldData.renderer = new Rendering::SkyboxBackgroundRenderer(file);
+            }
+        }
+        m_WorldData.background = type;
+    }
+
     void World::RenderAll() {
 
         HZR_PROFILE_FUNCTION();

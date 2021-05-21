@@ -28,7 +28,7 @@ namespace Editor {
 		glm::vec2 delta = (mouse - m_InitialMousePos) * 0.003f;
 		m_InitialMousePos = mouse;
 
-		if (Input::IsMouseButtonDown(Mouse::ButtonLeft)) {
+		if (Input::IsMouseButtonDown(Mouse::ButtonLeft) && !m_Is2DEnabled) {
 			MouseRotate(delta);
 		}
 		else if (Input::IsMouseButtonDown(Mouse::ButtonRight))
@@ -47,7 +47,7 @@ namespace Editor {
 	void EditorCamera::UpdateProjection()
 	{
 		aspectRatio = viewport_w / viewport_h;
-		projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+		SetIs2D(m_Is2DEnabled);
 	}
 
 	void EditorCamera::UpdateView()
@@ -70,6 +70,12 @@ namespace Editor {
 	void EditorCamera::MousePan(const glm::vec2& delta)
 	{
 		auto [xSpeed, ySpeed] = PanSpeed();
+
+		if (m_Is2DEnabled) {
+			xSpeed *= size2D * 0.09f;
+			ySpeed *= size2D * 0.09f;
+		}
+
 		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
 		m_FocalPoint += GetUpDirection() * delta.y * ySpeed * distance;
 	}
@@ -83,6 +89,13 @@ namespace Editor {
 
 	void EditorCamera::MouseZoom(float delta)
 	{
+		if (m_Is2DEnabled) {
+			size2D -= delta * ZoomSpeed();
+			size2D = Math::Max(0.01f, size2D);
+			SetIs2D(true);
+			return;
+		}
+		
 		distance -= delta * ZoomSpeed();
 		if (distance < 1.0f)
 		{
@@ -138,5 +151,21 @@ namespace Editor {
 	glm::quat EditorCamera::GetOrientation() const
 	{
 		return glm::quat(glm::vec3(-pitch, -yaw, 0.0f));
+	}
+	void EditorCamera::SetIs2D(bool enabled2D)
+	{
+
+		if (enabled2D) {
+			float side = aspectRatio * size2D;
+			projectionMatrix = glm::ortho(-side, side, -size2D, size2D, nearPlane, farPlane);
+			if (enabled2D != m_Is2DEnabled) 
+			{
+				pitch = 0;
+				yaw = 0;
+			}
+		}
+		else 
+			projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+		m_Is2DEnabled = enabled2D;
 	}
 }
