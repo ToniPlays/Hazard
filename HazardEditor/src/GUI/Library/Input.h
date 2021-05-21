@@ -55,6 +55,6 @@ namespace WindowElement {
 		static bool ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size = { 0, 0 });
 		static bool ImageButton(uint32_t imageID, ImVec2 size = { 50, 50 });
 
-		static bool PublicField(const std::string& name, Scripting::PublicField* field);
+		static bool PublicField(const std::string& name, Scripting::PublicField* field, bool runtime = false);
 	};
 }

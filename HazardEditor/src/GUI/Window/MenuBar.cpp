@@ -103,7 +103,6 @@ namespace WindowElement {
 	{
 		EventDispatcher dispatcher(e);
 		bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
-		HZR_CORE_INFO(returned);
 		return false;
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)

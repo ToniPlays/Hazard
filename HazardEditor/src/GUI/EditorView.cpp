@@ -76,10 +76,10 @@ namespace WindowElement {
 		
 		Appereance::Style::Init();
 
+		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
 		PushRenderable<MenuBar>();
-		PushRenderable<GameViewport>();
 		PushRenderable<WorldEnvironmentData>();
 
 		PushRenderable<Properties>();

@@ -3,9 +3,11 @@
 #include "Layout/Layout.h"
 #include "Style.h"
 #include "Input.h"
+#include "Core/SceneRuntimeHandler.h"
 
 using namespace Hazard::ECS;
 using namespace WindowLayout;
+
 
 namespace WindowElement {
 
@@ -251,9 +253,9 @@ namespace WindowElement {
 			}
 
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
-				
+				bool runtime = Runtime::SceneRuntimeHandler::IsSceneRunning();
 				for (auto [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, entity, moduleName)) {
-					Input::PublicField(name, field);
+					Input::PublicField(name, field, runtime);
 				}
 			}
 

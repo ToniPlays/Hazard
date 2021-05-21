@@ -34,7 +34,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::OnEndRuntime()
 	{
-
+		s_manager->OnRuntimeEnd();
 	}
 	void ScriptCommand::InitAllEntities()
 	{	

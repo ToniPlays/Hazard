@@ -36,6 +36,12 @@ namespace Hazard::Scripting {
 	{
 		m_ScriptEngines[type]->Instantiate(entityID, moduleName);
 	}
+	void ScriptEngineManager::OnRuntimeEnd()
+	{
+		for (auto [type, engine] : m_ScriptEngines) {
+			engine->OnEndRuntime();
+		}
+	}
 	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t entityID, std::string moduleName)
 	{
 		m_ScriptEngines[type]->InitializeEntity(entityID, moduleName);

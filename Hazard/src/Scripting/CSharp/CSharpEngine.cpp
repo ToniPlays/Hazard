@@ -36,7 +36,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::OnEndRuntime()
 	{
-
+	
 	}
 	bool CSharpEngine::ModuleExists(const char* name)
 	{
@@ -102,6 +102,8 @@ namespace Hazard::Scripting::CSharp {
 		MonoClassField* iter;
 		void* ptr = 0;
 
+		instance.handle = Mono::InstantiateHandle(instance.ScriptClass->monoClass);
+
 		while ((iter = Mono::GetMonoField(scriptClass.monoClass, &ptr))) {
 
 			std::string name = Mono::GetFieldName(iter);
@@ -116,6 +118,9 @@ namespace Hazard::Scripting::CSharp {
 				CSharpField* field = new CSharpField(fieldType);
 				field->SetEntityInstance(&instance);
 				field->SetField(iter);
+				float val;
+				Mono::GetFieldValue(Mono::ObjectFromHandle(instance.handle), iter, &val);
+				field->SetStoredValue<float>(val);
 				fieldMap.emplace(name, std::move(field));
 			}
 		}
@@ -124,7 +129,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		EntityInstanceData& data = GetInstanceData(entity);
 		EntityInstance& instance = data.instance;
-		instance.handle = Mono::InstantiateHandle(instance.ScriptClass->monoClass);
 
 		void* param[] = { &entity };
 		Mono::CallMethod(instance.GetInstance(), instance.ScriptClass->Constructor, param);

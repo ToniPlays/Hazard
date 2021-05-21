@@ -339,7 +339,7 @@ namespace WindowElement {
 	{
 		return ImGui::ImageButton((void*)imageID, size, { 0, 1 }, { 1, 0});
 	}
-	bool Input::PublicField(const std::string& name, Scripting::PublicField* field)
+	bool Input::PublicField(const std::string& name, Scripting::PublicField* field, bool runtime)
 	{
 		bool modified = false;
 		using namespace Hazard::Scripting;
@@ -356,7 +356,7 @@ namespace WindowElement {
 				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
-				float f = field->GetStoredValue<float>();
+				float f = runtime ? field->GetRuntimeValue<float>() : field->GetStoredValue<float>();
 				modified = DragFloat(id.c_str(), f);
 				if (modified) {
 					field->SetStoredValue(f);
@@ -368,7 +368,7 @@ namespace WindowElement {
 			}
 			case FieldType::Float2: 
 			{
-				glm::vec2 f2 = field->GetStoredValue<glm::vec2>();
+				glm::vec2 f2 = runtime ? field->GetRuntimeValue<glm::vec2>() : field->GetStoredValue<glm::vec2>();
 				modified = Vec2(name.c_str(), f2, 0, 75);
 				if (modified) {
 					field->SetStoredValue(f2);
@@ -380,7 +380,7 @@ namespace WindowElement {
 			}
 			case FieldType::Float3:
 			{
-				glm::vec3 f3 = field->GetStoredValue<glm::vec3>();
+				glm::vec3 f3 = runtime ? field->GetRuntimeValue<glm::vec3>() : field->GetStoredValue<glm::vec3>();
 				modified = Vec3(name.c_str(), f3, 0, 75);
 				if (modified) {
 					field->SetStoredValue(f3);
@@ -397,7 +397,7 @@ namespace WindowElement {
 				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
-				int i = field->GetStoredValue<int>();
+				int i = runtime ? field->GetRuntimeValue<int>() : field->GetStoredValue<int>();
 				modified = DragInt(id.c_str(), i);
 				if (modified) {
 					field->SetStoredValue(i);
@@ -414,7 +414,7 @@ namespace WindowElement {
 				Layout::Text(name.c_str());
 				Layout::TableNext();
 				Layout::MaxWidth();
-				uint32_t uint = field->GetStoredValue<uint32_t>();
+				uint32_t uint = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
 				modified = DragUInt(name.c_str(), uint);
 				if (modified) {
 					field->SetStoredValue(uint);

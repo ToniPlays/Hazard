@@ -25,6 +25,8 @@ namespace Hazard::Scripting {
 
 		void Instantiate(ScriptType type, uint32_t entityID, std::string moduleName);
 
+		void OnRuntimeEnd();
+
 		void InitEntity(ScriptType type, uint32_t entityID, std::string moduleName);
 		void ClearEntity(ScriptType type, uint32_t entityID, std::string moduleName);
 		void ReloadAll();
