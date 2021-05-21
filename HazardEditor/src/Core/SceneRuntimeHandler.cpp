@@ -22,6 +22,7 @@ namespace Runtime {
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
 	{
 		s_SceneRunning = running;
+
 		ECS::SceneHandler& handler = *Application::GetModule<ECS::SceneHandler>();
 
 		if (s_SceneRunning) {

@@ -53,6 +53,7 @@ namespace WindowElement {
 		{
 			GetRenderable<T>()->SetActive(active);
 		}
+
 		template<typename T>
 		static void SetWindowFocus() {
 			EditorWindow& window = static_cast<EditorWindow&>(*s_Instance->GetRenderable<T>());

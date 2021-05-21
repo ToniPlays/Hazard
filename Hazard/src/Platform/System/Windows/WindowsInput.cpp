@@ -9,12 +9,12 @@ namespace Hazard {
 
 	GLFWwindow* window = nullptr;
 
+	int Input::keyStates[384];
+
 	void Input::Init() {
 		bool found = false;
 		Rendering::RenderContext* context = Application::GetModule<Rendering::RenderContext>(found);
-		if (!found)
-			return;
-
+		if (!found) return;
 		window = (GLFWwindow*)context->GetWindow().GetNativeWindow();
 	}
 	bool Input::AnyKey()
@@ -22,12 +22,16 @@ namespace Hazard {
 		return false;
 	}
 	bool Input::IsKeyDown(const Key::KeyCode key) { 
-		auto state = glfwGetKey(window, static_cast<int32_t>(key));
+		auto state = keyStates[key];
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 	bool Input::IsKeyPressed(const Key::KeyCode key) {
-		auto state = glfwGetKey(window, static_cast<int32_t>(key));
+		auto state = keyStates[key];
 		return state == GLFW_PRESS;
+	}
+	bool Input::IsKeyReleased(const Key::KeyCode key) {
+		auto state = keyStates[key];
+		return state == GLFW_RELEASE;
 	}
 	bool Input::IsMouseButtonDown(const Mouse::MouseCode code) {
 		auto state = glfwGetMouseButton(window, static_cast<int32_t>(code));
@@ -43,5 +47,18 @@ namespace Hazard {
 		glfwGetCursorPos(window, &xpos, &ypos);
 
 		return { (float)xpos, (float)ypos };
+	}
+
+	void Input::Update() 
+	{
+		for (uint32_t i = 0; i < 384; i++) {
+			if (keyStates[i] == GLFW_PRESS) 
+				UpdateKey(i, GLFW_REPEAT);
+		}
+	}
+
+	void Input::UpdateKey(uint32_t code, int state) 
+	{
+		keyStates[code] = state;
 	}
 }

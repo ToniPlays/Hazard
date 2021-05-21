@@ -16,7 +16,6 @@ namespace Hazard::Rendering {
 			GLsizei length, const char* message, const void* userParam) {
 
 			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
-
 			HZR_CORE_ERROR("[OpenGL]: {0}", message);
 
 			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
@@ -42,9 +41,11 @@ namespace Hazard::Rendering {
 
 			glfwMakeContextCurrent(m_Window);
 
-			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
+			{
 				HZR_THROW("Unable to init OpenGL GLFW context");
 			};
+
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);

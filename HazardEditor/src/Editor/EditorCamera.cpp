@@ -72,8 +72,11 @@ namespace Editor {
 		auto [xSpeed, ySpeed] = PanSpeed();
 
 		if (m_Is2DEnabled) {
-			xSpeed *= size2D * 0.15f;
-			ySpeed *= size2D * 0.15f;
+			xSpeed *= size2D * 2.0f;
+			ySpeed *= size2D * 2.0f;
+			m_FocalPoint += -GetRightDirection() * delta.x * xSpeed;
+			m_FocalPoint += GetUpDirection()* delta.y* ySpeed;
+			return;
 		}
 
 		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;

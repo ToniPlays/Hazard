@@ -11,3 +11,4 @@
 #include "Script/ECS/EntityBindings.h"
 #include "Script/ECS/TagComponentBindings.h"
 #include "Script/ECS/TransformBindings.h"
+#include "Script/ECS/AudioSourceBindings.h"

@@ -172,7 +172,10 @@ namespace Hazard::Scripting::CSharp {
 	}
 	FieldVisibility Mono::GetVisibility(MonoClassField* field)
 	{
-		return FieldVisibility::Public;
+		uint32_t flags = mono_field_get_flags(field);
+		if (flags & MONO_FIELD_ATTR_PUBLIC) return FieldVisibility::Public;
+		if (flags & MONO_FIELD_ATTR_PRIVATE) return FieldVisibility::Protected;
+		return FieldVisibility::Protected;
 	}
 	MonoClassField* Mono::GetMonoField(MonoClass* monoClass, void** iter)
 	{

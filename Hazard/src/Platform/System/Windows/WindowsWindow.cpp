@@ -129,6 +129,7 @@ namespace Hazard::Rendering {
 				break;
 			}
 			}
+			Input::UpdateKey(key, action);
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {

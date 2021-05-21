@@ -13,5 +13,6 @@ namespace WindowElement {
 		bool OnEvent(Event& e) override;
 		bool OnKey(KeyPressedEvent& e);
 	private:
+		bool dontFocusAfterStop = false;
 	};
 }

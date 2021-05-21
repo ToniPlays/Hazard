@@ -24,6 +24,7 @@ namespace Hazard::Scripting::CSharp {
 			BindRegistery(EntityBindings::GetBindings());
 			BindRegistery(TagComponentBindings::GetBindings());
 			BindRegistery(TransformBindings::GetBindings());
+			BindRegistery(AudioSourceBindings::GetBindings());
 		}
 	}
 	void ScriptRegistery::BindRegistery(BindMap bindings) 

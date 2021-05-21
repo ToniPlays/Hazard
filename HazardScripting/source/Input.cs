@@ -139,8 +139,8 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Input_KeyDown_Native(int code);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_KeyPressed_Native(object message);
+        private static extern bool Input_KeyPressed_Native(int code);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_KeyReleased_Native(object message);
+        private static extern bool Input_KeyReleased_Native(int code);
     }
 }

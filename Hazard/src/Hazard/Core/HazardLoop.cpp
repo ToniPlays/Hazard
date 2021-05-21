@@ -34,11 +34,13 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
 			while (!m_ShouldClose) {
 
+				Input::Update();
 				double time = glfwGetTime();
 				Time::s_UnscaledDeltaTime = time - lastTime;
 				Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
 				Time::s_Time = time;
 				lastTime = time;
+
 
 				HZR_PROFILE_SCOPE("Frame");
 				m_Application->Update();

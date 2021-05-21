@@ -81,7 +81,7 @@ namespace WindowElement {
 
 			if(!sceneRunning)
 				EditorView::SetWindowFocus<GameViewport>();
-			else 
+			else if(!dontFocusAfterStop)
 				EditorView::SetWindowFocus<Viewport>();
 		}
 		Layout::SameLine(0, 5);

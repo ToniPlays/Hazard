@@ -20,7 +20,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
     }
     bool InputBindings::Input_KeyPressed_Native(uint16_t key)
     {
-        return false;
+        return Input::IsKeyPressed(key);
     }
     bool InputBindings::Input_KeyReleased_Native(uint16_t key)
     {
