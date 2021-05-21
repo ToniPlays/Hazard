@@ -69,6 +69,7 @@ namespace WindowElement {
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
+		
 		if(IsHovered())
 			m_EditorCamera.OnEvent(e);
 		m_Gizmos.OnEvent(e);
@@ -76,9 +77,7 @@ namespace WindowElement {
 		if (!IsHovered()) return false;
 
 		EventDispatcher dispacher(e);
-		dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
-
-		return false;
+		return dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{

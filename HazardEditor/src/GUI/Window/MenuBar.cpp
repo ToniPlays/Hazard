@@ -102,20 +102,25 @@ namespace WindowElement {
 	bool MenuBar::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
+		bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
+		HZR_CORE_INFO(returned);
 		return false;
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{
 		bool isCtrl = Input::IsKeyDown(Key::LeftControl);
-		if (!isCtrl) return false;
 
-		switch (e.GetKeyCode()) {
-		case Key::S:
+		if (!isCtrl) 
+			return false;
+
+		if (e.GetKeyCode() == Key::S) 
+		{
 			Application::GetModule<Project::ProjectManager>()->SaveCurrentScene();
 			HZR_CORE_WARN("Saving scene");
 			return true;
-		case Key::R:
+		}
+		if (e.GetKeyCode() == Key::R) 
+		{
 			Application::GetModule<Scripting::ScriptEngineManager>()->ReloadAll();
 			HZR_CORE_WARN("Reloading assemblies");
 			return true;

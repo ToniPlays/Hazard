@@ -40,8 +40,7 @@ namespace Editor {
 	bool EditorCamera::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
-		return true;
+		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
 	}
 
 	void EditorCamera::UpdateProjection()

@@ -77,12 +77,7 @@ namespace WindowElement {
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
 
 		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), sceneRunning, { 28, 28 })) {
-			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
-
-			if(!sceneRunning)
-				EditorView::SetWindowFocus<GameViewport>();
-			else if(!dontFocusAfterStop)
-				EditorView::SetWindowFocus<Viewport>();
+			SetPlaying(sceneRunning);
 		}
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), scenePaused, { 28, 28 })) {
@@ -123,10 +118,24 @@ namespace WindowElement {
 		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
 		bool isShift = Hazard::Input::IsKeyDown(Key::LeftShift);
 
-		if (e.GetKeyCode() == Key::R) {
+		if (e.GetKeyCode() == Key::R && isCtrl) 
+		{
 			Application::GetModule<ScriptEngineManager>()->ReloadAll();
 			return true;
 		}
+		if (e.GetKeyCode() == Key::P && isCtrl) 
+		{
+			SetPlaying(Runtime::SceneRuntimeHandler::IsSceneRunning());
+			return true;
+		}
 		return false;
+	}
+	void Toolbar::SetPlaying(bool playing) {
+		Runtime::SceneRuntimeHandler::SetSceneRunning(!playing);
+
+		if (!playing)
+			EditorView::SetWindowFocus<GameViewport>();
+		else
+			EditorView::SetWindowFocus<Viewport>();
 	}
 }

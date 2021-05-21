@@ -62,9 +62,8 @@ namespace Hazard {
 		bool Dispatch(const F& func) {
 			if (m_Event.GetEventType() == T::GetStaticType()) {
 				m_Event.handled = func(static_cast<T&>(m_Event));
-				return true;
 			}
-			return false;
+			return m_Event.handled;
 		}
 	private:
 		Event& m_Event;

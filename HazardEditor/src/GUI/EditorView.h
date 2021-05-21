@@ -43,6 +43,7 @@ namespace WindowElement {
 			for (size_t i = 0; i < m_Elements.size(); i++) {
 				RenderableElement* e = m_Elements[i];
 				if (dynamic_cast<T*>(e)) {
+					HZR_INFO("Removed Renderable {0}", typeid(T).name());
 					m_Elements.erase(m_Elements.begin() + i);
 					return;
 				}

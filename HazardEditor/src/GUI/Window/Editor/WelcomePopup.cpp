@@ -2,6 +2,7 @@
 #include <hzreditor.h>
 #include "WelcomePopup.h"
 #include "GUI/Library/Layout/Layout.h"
+#include "GUI/EditorView.h"
 
 namespace WindowElement {
 
@@ -26,9 +27,8 @@ namespace WindowElement {
 	}
 	bool WelcomePopup::Close(KeyPressedEvent& e)
 	{
-		
 		if (e.GetKeyCode() == Key::Escape) {
-			open = false;
+			EditorView::GetInstance().RemoveRenderable<WelcomePopup>();
 			return true;
 		}
 		return false;

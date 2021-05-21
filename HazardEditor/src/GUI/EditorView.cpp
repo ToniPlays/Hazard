@@ -76,11 +76,10 @@ namespace WindowElement {
 		
 		Appereance::Style::Init();
 
-		PushRenderable<WelcomePopup>();
-		PushRenderable<MenuBar>();
-
-		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
+
+		PushRenderable<MenuBar>();
+		PushRenderable<GameViewport>();
 		PushRenderable<WorldEnvironmentData>();
 
 		PushRenderable<Properties>();
@@ -93,6 +92,7 @@ namespace WindowElement {
 
 		PushRenderable<ShaderEditorWindow>();
 		PushRenderable<Profiler>();
+		PushRenderable<WelcomePopup>();
 	}  
 	void EditorView::Render()
 	{
@@ -112,12 +112,18 @@ namespace WindowElement {
 	}
 	bool EditorView::OnEvent(Event& e)
 	{
-		if (EditorView::s_Instance == nullptr) return false;
+		if (EditorView::s_Instance == nullptr) 
+			return false;
+
+		if (m_MenuBar.OnEvent(e)) return true;
+
 		for (RenderableElement* element : m_Elements) {
-			if (element->OnEvent(e)) 
+			if (element->OnEvent(e)) {
 				return true;
+			}
 		}
-		return false;
+
+		return m_Toolbar.OnEvent(e);
 	}
 	void EditorView::Close()
 	{
