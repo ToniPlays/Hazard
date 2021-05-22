@@ -24,11 +24,7 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glDepthFunc(m_Info.rawDepthFunc);
 		glCullFace(m_Info.rawCullFace);
-		
-		glm::vec2 o = m_Info.viewport.offset;
-		glm::vec2 s = m_Info.viewport.size;
 
 		m_Info.pipelineShader->Bind();
-		
 	}
 }

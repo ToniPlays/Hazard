@@ -745,6 +745,8 @@
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.h" />
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\Vignette.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLVignette.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -973,5 +975,6 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLVignette.cpp" />
   </ItemGroup>
 </Project>

@@ -72,6 +72,7 @@ namespace Hazard::Rendering
 		virtual ~GraphicsPipeline() {};
 
 		virtual void Bind() = 0;
+		virtual GraphicsPipelineInfo GetInfo() = 0;
 		virtual Ref<Shader> GetShader() = 0;
 	};
 }

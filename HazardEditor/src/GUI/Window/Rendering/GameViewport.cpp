@@ -18,6 +18,8 @@ namespace WindowElement {
 		createInfo.datatype = TextureDataType::RGBA;
 
 		m_RenderTexture = RenderUtils::Create<RenderTexture>(createInfo);
+
+		effect = RenderUtils::CreateRaw<VignetteEffect>("");
 	}
 	void GameViewport::OnWindowRender()
 	{
@@ -45,10 +47,13 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			m_RenderTexture->Resize(size.x, size.y);
+			effect->GetTargetTexture().Resize(size.x, size.y);
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
-		ImGui::Image((void*)m_RenderTexture->GetInfo().colorID,
+		effect->Process(m_RenderTexture.Raw(), { m_Width, m_Height });
+
+		ImGui::Image((void*)effect->GetTargetTexture().GetInfo().colorID,
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}

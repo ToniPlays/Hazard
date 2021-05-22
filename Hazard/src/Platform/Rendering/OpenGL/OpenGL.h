@@ -8,3 +8,5 @@
 #include "Shader/OpenGLShader.h"
 #include "Shader/OpenGLGraphicsPipeline.h"
 #include "OpenGLOcclusionQuery.h"
+
+#include "PostProcessing/OpenGLVignette.h"

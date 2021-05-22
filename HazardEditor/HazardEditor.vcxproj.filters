@@ -324,4 +324,8 @@
       <Filter>src\GUI\Library</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\compiled\vignette_vert.glsl" />
+    <None Include="res\Shaders\compiled\vignette_frag.glsl" />
+  </ItemGroup>
 </Project>

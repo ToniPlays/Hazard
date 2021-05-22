@@ -9,7 +9,7 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLRenderTexture::OpenGLRenderTexture(const RenderTextureCreateInfo& info)
 	{
 		m_TextureInfo.width  = info.width;
-		m_TextureInfo.height = info.width;
+		m_TextureInfo.height = info.height;
 		m_TextureInfo.datatype = info.datatype;
 		m_TextureInfo.file = info.name;
 

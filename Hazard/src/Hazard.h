@@ -20,6 +20,7 @@
 
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+
 #include "Platform/System/Window.h"
 
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"

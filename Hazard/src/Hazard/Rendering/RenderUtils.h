@@ -3,6 +3,7 @@
 #include "Hazard/Rendering/Textures/Texture2D.h"
 #include "Hazard/Rendering/Textures/RenderTexture.h"
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
+#include "PostProcessing/Vignette.h"
 
 #include "Hazard/Rendering/Pipeline/Shader.h"
 #include "Hazard/RenderContext/RenderContext.h"
