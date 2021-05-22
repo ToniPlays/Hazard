@@ -5,10 +5,8 @@
 
 namespace Hazard::Rendering {
 
-	class VignetteEffect : public PostProcessingEffect {
+	class GaussianBlurEffect : public PostProcessingEffect {
 	public:
-		virtual ~VignetteEffect() {};
-	public:
-		float m_Outer, m_Inner, m_Intensity;
+		virtual ~GaussianBlurEffect() {};
 	};
 }

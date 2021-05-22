@@ -5,6 +5,7 @@ layout(location = 1) in vec2 texCoords;
 
 out vec2 f_coords;
 
+
 void main()
 {
 	f_coords = texCoords;

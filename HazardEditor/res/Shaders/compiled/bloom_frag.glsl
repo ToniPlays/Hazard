@@ -8,6 +8,8 @@ layout(std140, binding = 1) uniform PostPro
 	float v_outer;
 	float v_inner;
 	float v_intensity;
+	float bloomTreshold;
+	float bloomIntensity;
 };
 
 uniform sampler2D sampleTexture;
@@ -18,9 +20,10 @@ void main() {
 
 	vec4 c = texture(sampleTexture, f_coords);
 
-	vec2 relativePos = gl_FragCoord.xy / resolution - 0.5;
-	float len = length(relativePos);
-	float vignette = smoothstep(v_outer, v_inner, len);
-	color = vec4(mix(c.rgb, c.rgb * vignette, v_intensity), 1.0);
+	float brightness = (c.r + c.g + c.b) / 3.0;
 
+	if(brightness >= bloomTreshold)
+		color = c * bloomIntensity;
+	else 
+		color = vec4(0.0);
 }

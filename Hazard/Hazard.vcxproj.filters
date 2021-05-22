@@ -747,6 +747,13 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLFrameBuffer.h">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingEffect.h" />
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingStack.h" />
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingUtils.h" />
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\GaussianBlurEffect.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLGaussianBlur.h" />
+    <ClInclude Include="src\Hazard\Rendering\PostProcessing\BloomEffect.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLBloom.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
@@ -976,5 +983,9 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLFrameBuffer.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\PostProcessing\PostProcessingStack.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\PostProcessing\PostProcessingUtils.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLGaussianBlur.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLBloom.cpp" />
   </ItemGroup>
 </Project>

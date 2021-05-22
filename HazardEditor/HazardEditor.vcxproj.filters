@@ -325,7 +325,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\Shaders\compiled\vignette_vert.glsl" />
     <None Include="res\Shaders\compiled\vignette_frag.glsl" />
+    <None Include="res\Shaders\compiled\horizontalGaussian_vert.glsl" />
+    <None Include="res\Shaders\compiled\gaussian_blurr_frag.glsl" />
+    <None Include="res\Shaders\compiled\verticalGaussian_vert.glsl" />
+    <None Include="res\Shaders\compiled\bloom_frag.glsl" />
+    <None Include="res\Shaders\compiled\combine_frag.glsl" />
+    <None Include="res\Shaders\compiled\passtrough_vert.glsl" />
   </ItemGroup>
 </Project>

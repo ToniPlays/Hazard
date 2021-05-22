@@ -21,6 +21,7 @@
 #include "Hazard/Events/MouseEvent.h"
 
 #include "Hazard/Math/Time.h"
+#include "Hazard/Math/Math.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>

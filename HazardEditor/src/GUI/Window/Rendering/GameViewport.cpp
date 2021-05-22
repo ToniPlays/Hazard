@@ -2,6 +2,7 @@
 #include <hzreditor.h>
 #include "GameViewport.h"
 #include "GUI/Library/Layout/Layout.h"
+#include "GUI/Library/Input.h"
 
 using namespace Hazard;
 
@@ -19,10 +20,29 @@ namespace WindowElement {
 
 		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 
-		effect = RenderUtils::CreateRaw<VignetteEffect>("");
+		VignetteEffectCreateInfo vignette;
+		vignette.outer = 0.5f;
+		vignette.inner = 0.3f;
+		vignette.intensity = 0.4f;
+
+		BloomCreateInfo bloom;
+		bloom.threshold = 0.2f;
+
+		PostProcessingStackCreateInfo info;
+		info.vignette = &vignette;
+		info.bloom = &bloom;
+
+		m_PostProcessing = new PostProcessingStack(info);
 	}
 	void GameViewport::OnWindowRender()
 	{
+
+		Rendering::BloomEffect* bloom = m_PostProcessing->Get<BloomEffect>();
+		if (bloom) {
+			Input::Slider("Bloom threshold", bloom->threshold, 0, 1);
+			Input::Slider("Bloom intensity", bloom->intensity, 0, 1);
+		}
+
 		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 		auto&[found, cam, transform] = world.GetWorldCamera();
 
@@ -47,13 +67,13 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			m_RenderTexture->Resize(size.x, size.y);
-			effect->GetTargetTexture().Resize(size.x, size.y);
+			m_PostProcessing->Resize(size.x, size.y);
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
-		effect->Process(m_RenderTexture.Raw(), { m_Width, m_Height });
+		FrameBuffer* result = m_PostProcessing->PostProcess(m_RenderTexture.Raw(), { m_Width, m_Height });
 
-		ImGui::Image((void*)effect->GetTargetTexture().GetColorID(0),
+		ImGui::Image((void*)result->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}

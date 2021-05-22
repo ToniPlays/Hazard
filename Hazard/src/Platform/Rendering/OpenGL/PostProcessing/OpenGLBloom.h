@@ -1,17 +1,16 @@
 #pragma once
 
-#include "Hazard/Rendering/PostProcessing/Vignette.h"
+#include "Hazard/Rendering/PostProcessing/BloomEffect.h"
 #include "Hazard/Rendering/Pipeline/GraphicsPipeline.h"
-#include "../Buffer/OpenGLVertexArray.h"
 #include "../Pipeline/OpenGLFrameBuffer.h"
 
-namespace Hazard::Rendering::OpenGL 
+namespace Hazard::Rendering::OpenGL
 {
-	class OpenGLVignette : public VignetteEffect
+	class OpenGLBloom : public BloomEffect
 	{
 	public:
-		OpenGLVignette(VignetteEffectCreateInfo* info);
-		~OpenGLVignette();
+		OpenGLBloom(BloomCreateInfo* info);
+		~OpenGLBloom();
 
 		FrameBuffer* Process(FrameBuffer* source, VertexArray* vao) override;
 		FrameBuffer& GetTargetTexture() override { return *m_Target; }
@@ -20,5 +19,6 @@ namespace Hazard::Rendering::OpenGL
 	private:
 		OpenGLFrameBuffer* m_Target;
 		GraphicsPipeline* m_Pipeline;
+		GraphicsPipeline* m_CombinePipeline;
 	};
 }

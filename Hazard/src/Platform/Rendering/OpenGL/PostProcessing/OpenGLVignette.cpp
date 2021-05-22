@@ -4,23 +4,28 @@
 #include "OpenGLVignette.h"
 #include "Hazard/Rendering/RenderUtils.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/PostProcessing/PostProcessingStack.h"
 
 namespace Hazard::Rendering::OpenGL {
 
-	OpenGLVignette::OpenGLVignette()
+	OpenGLVignette::OpenGLVignette(VignetteEffectCreateInfo* info)
 	{
+		m_Inner = info->inner;
+		m_Outer = info->outer;
+		m_Intensity = info->intensity;
+		use = info->use;
 
-		FrameBufferCreateInfo info;
-		info.name = "Vignette";
-		info.width = 1920;
-		info.height = 1080;
-		info.attachments = { FrameBufferTextureFormat::RGBA8 };
+		FrameBufferCreateInfo frameBufferInfo;
+		frameBufferInfo.name = "Vignette";
+		frameBufferInfo.width = 1920;
+		frameBufferInfo.height = 1080;
+		frameBufferInfo.attachments = { FrameBufferTextureFormat::RGBA8 };
 
-		m_Target = new OpenGLFrameBuffer(info);
+		m_Target = new OpenGLFrameBuffer(frameBufferInfo);
 
 		PipelineShaderStage stages[2];
 
-		stages[0].shaderFileName = "res/shaders/compiled/vignette_vert.glsl";
+		stages[0].shaderFileName = "res/shaders/compiled/passtrough_vert.glsl";
 		stages[0].stage = ShaderType::VertexShader;
 		stages[0].fileType = ShaderFileType::Source;
 
@@ -45,36 +50,6 @@ namespace Hazard::Rendering::OpenGL {
 
 		m_Pipeline->GetShader()->Bind();
 		m_Pipeline->GetShader()->SetUniformInt("sampleTexture", 0);
-
-		BufferLayout layout = { {ShaderDataType::Float2, "pos"}, { ShaderDataType::Float2, "texCoords"} };
-
-		float vertices[] = {
-			-1.0, -1.0f, 0.0f, 0.0f,
-			 1.0, -1.0f, 1.0f, 0.0f,
-			 1.0,  1.0f, 1.0f, 1.0f,
-			-1.0,  1.0f, 0.0f, 1.0f
-		};
-		uint32_t indices[] = {
-			0, 1, 2,
-			2, 3, 0
-		};
-
-		VertexBufferCreateInfo bufferInfo;
-		bufferInfo.dataStream = DataStream::DynamicDraw;
-		bufferInfo.layout = &layout;
-		bufferInfo.data = &vertices;
-		bufferInfo.size = sizeof(vertices);
-
-		IndexBufferCreateInfo indexInfo;
-		indexInfo.dataStream = DataStream::StaticDraw;
-		indexInfo.size = 6;
-		indexInfo.data = indices;
-
-		VertexArrayCreateInfo arrayInfo;
-		arrayInfo.bufferInfo = &bufferInfo;
-		arrayInfo.indexBufferInfo = &indexInfo;
-
-		m_VertexArray = RenderUtils::CreateRaw<VertexArray>(arrayInfo);
 	}
 
 	OpenGLVignette::~OpenGLVignette()
@@ -82,14 +57,21 @@ namespace Hazard::Rendering::OpenGL {
 
 	}
 
-	void OpenGLVignette::Process(FrameBuffer* source, glm::vec2 res)
+	FrameBuffer* OpenGLVignette::Process(FrameBuffer* source, VertexArray* vao)
 	{
-		glBindTexture(GL_TEXTURE_2D, source->GetColorID(0));
+		glBindTexture(GL_TEXTURE_2D, source->GetColorID());
 		m_Target->Bind();
+		RenderContextCommand::ClearFrame({ 0, 0, 0, 1.0 });
 		m_Pipeline->Bind();
-		m_Pipeline->GetShader()->SetUniformVec2("resolution", res);
 
-		RenderContextCommand::ClearFrame({ 1, 1, 1, 1.0 });
-		RenderCommand::DrawIndexed(m_VertexArray, m_VertexArray->GetIndexBuffer()->GetInfo().count);
+		RenderCommand::DrawIndexed(vao, vao->GetIndexBuffer()->GetInfo().count);
+
+		return m_Target;
+	}
+	void OpenGLVignette::UpdateData(PostProcessData& data)
+	{
+		data.v_Outer = m_Outer;
+		data.v_Inner = m_Inner;
+		data.v_Intensity = m_Intensity;
 	}
 }

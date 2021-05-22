@@ -58,14 +58,6 @@ namespace Hazard::Rendering {
 		}
 	}
 	template<>
-	VignetteEffect* RenderUtils::CreateRaw<VignetteEffect>(const char* name) {
-		switch (s_Api)
-		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLVignette();
-		}
-		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
-	}
-	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
 
 		switch (s_Api)

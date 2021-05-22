@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Hazard/Core/Core.h"
 #include "../Textures/Texture.h"
 
 namespace Hazard::Rendering {
@@ -58,7 +58,7 @@ namespace Hazard::Rendering {
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual uint32_t GetColorID(uint32_t index) const = 0;
+		virtual uint32_t GetColorID(uint32_t index = 0) const = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual FrameBufferInfo GetInfo() const = 0;

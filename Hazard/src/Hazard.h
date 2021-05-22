@@ -17,6 +17,10 @@
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/RenderUtils.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
+#include "Hazard/Rendering/PostProcessing/PostProcessingStack.h"
+#include "Hazard/Rendering/PostProcessing/Vignette.h"
+#include "Hazard/Rendering/PostProcessing/GaussianBlurEffect.h"
+#include "Hazard/Rendering/PostProcessing/BloomEffect.h"
 
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"

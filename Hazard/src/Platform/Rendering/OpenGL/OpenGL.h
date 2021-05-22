@@ -10,3 +10,5 @@
 #include "OpenGLOcclusionQuery.h"
 
 #include "PostProcessing/OpenGLVignette.h"
+#include "PostProcessing/OpenGLGaussianBlur.h"
+#include "PostProcessing/OpenGLBloom.h"

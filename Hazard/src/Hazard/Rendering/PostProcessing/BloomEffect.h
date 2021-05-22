@@ -1,14 +1,17 @@
 #pragma once
 
+#pragma once
+
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/PostProcessing/PostProcessingEffect.h"
 
 namespace Hazard::Rendering {
 
-	class VignetteEffect : public PostProcessingEffect {
+	class BloomEffect : public PostProcessingEffect {
 	public:
-		virtual ~VignetteEffect() {};
+		virtual ~BloomEffect() {};
 	public:
-		float m_Outer, m_Inner, m_Intensity;
+		float threshold;
+		float intensity;
 	};
 }

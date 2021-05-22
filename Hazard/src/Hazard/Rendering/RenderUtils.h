@@ -3,7 +3,6 @@
 #include "Hazard/Rendering/Textures/Texture2D.h"
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 #include "Hazard/Rendering/Textures/CubemapTexture.h"
-#include "PostProcessing/Vignette.h"
 
 #include "Hazard/Rendering/Pipeline/Shader.h"
 #include "Hazard/RenderContext/RenderContext.h"
@@ -21,8 +20,8 @@ namespace Hazard::Rendering {
 	class RenderUtils {
 	public:
 		static void Init(RenderUtilsCreateInfo* info);
-
 		static void SetRenderAPI(RenderAPI api) { s_Api = api; }
+		static RenderAPI GetRenderAPI() { return s_Api; }
 
 		template<typename T, typename Arg>
 		static T* CreateRaw(Arg arg);
