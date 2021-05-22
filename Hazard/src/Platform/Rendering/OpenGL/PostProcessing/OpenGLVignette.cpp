@@ -10,13 +10,13 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLVignette::OpenGLVignette()
 	{
 
-		RenderTextureCreateInfo info;
-		info.datatype = TextureDataType::RGBA;
+		FrameBufferCreateInfo info;
 		info.name = "Vignette";
 		info.width = 1920;
 		info.height = 1080;
+		info.attachments = { FrameBufferTextureFormat::RGBA8 };
 
-		m_Target = new OpenGLRenderTexture(info);
+		m_Target = new OpenGLFrameBuffer(info);
 
 		PipelineShaderStage stages[2];
 
@@ -82,17 +82,14 @@ namespace Hazard::Rendering::OpenGL {
 
 	}
 
-	void OpenGLVignette::Process(RenderTexture* source, glm::vec2 res)
+	void OpenGLVignette::Process(FrameBuffer* source, glm::vec2 res)
 	{
-		glBindTexture(GL_TEXTURE_2D, source->GetInfo().colorID);
+		glBindTexture(GL_TEXTURE_2D, source->GetColorID(0));
 		m_Target->Bind();
 		m_Pipeline->Bind();
 		m_Pipeline->GetShader()->SetUniformVec2("resolution", res);
 
 		RenderContextCommand::ClearFrame({ 1, 1, 1, 1.0 });
-
-		glDisable(GL_DEPTH_TEST);
 		RenderCommand::DrawIndexed(m_VertexArray, m_VertexArray->GetIndexBuffer()->GetInfo().count);
-		glEnable(GL_DEPTH_TEST);
 	}
 }

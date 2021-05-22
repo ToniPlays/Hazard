@@ -50,7 +50,7 @@ namespace Hazard::Rendering {
 	void RenderEngine::BeginRendering(Camera camera, BackgroundRenderer& renderer)
 	{
 		RenderCommand::ResetStats();
-		m_RenderTarget->Bind();
+		m_FrameBuffer->Bind();
 		RenderContextCommand::ClearFrame(renderer.m_Color);
 
 		m_BackgroundRenderer = &renderer;
@@ -74,6 +74,6 @@ namespace Hazard::Rendering {
 		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
 
 		m_BackgroundRenderer->Render();
-		m_RenderTarget->Unbind();
+		m_FrameBuffer->Unbind();
 	}
 }

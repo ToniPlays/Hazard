@@ -4,7 +4,7 @@
 #include "OpenGLCubemapTexture.h"
 #include "../OpenGLUtils.h"
 #include "Hazard/Rendering/RenderCommand.h"
-#include "../Shader/OpenGLGraphicsPipeline.h"
+#include "../Pipeline/OpenGLGraphicsPipeline.h"
 #include <glad/glad.h>
 #include <stb_image.h>
 

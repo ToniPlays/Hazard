@@ -24,17 +24,17 @@ namespace WindowElement {
 		m_Renderer = Application::GetModule<RenderEngine>(found);
 		SetActive(found);
 
-		Rendering::RenderTextureCreateInfo createInfo;
-		createInfo.datatype = TextureDataType::RGBA;
+		Rendering::FrameBufferCreateInfo createInfo;
+		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 
-		m_RenderTexture = RenderUtils::Create<RenderTexture>(createInfo);
+		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 		
 	}
 	void Viewport::OnWindowRender()
 	{
 		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
 
-		Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
 			m_EditorCamera.GetPosition()));
 
@@ -57,7 +57,7 @@ namespace WindowElement {
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-		ImGui::Image((void*)m_RenderTexture->GetInfo().colorID,
+		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		m_Gizmos.OnRender(m_EditorCamera, size);

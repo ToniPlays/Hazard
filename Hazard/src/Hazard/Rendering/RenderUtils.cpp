@@ -89,11 +89,11 @@ namespace Hazard::Rendering {
 
 #pragma region Textures
 	template<>
-	Ref<RenderTexture> RenderUtils::Create<RenderTexture>(RenderTextureCreateInfo info) {
+	Ref<FrameBuffer> RenderUtils::Create<FrameBuffer>(FrameBufferCreateInfo info) {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLRenderTexture>::Create(info); break;
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLFrameBuffer>::Create(info); break;
 		//case RenderAPI::Vulkan:		return Ref<Vulkan::VKRenderTexture>::Create(info); break;
 		}
 		//HZR_THROW(std::string("Failed to create RenderTexture for ") + RenderContext::APIToString(s_Api));

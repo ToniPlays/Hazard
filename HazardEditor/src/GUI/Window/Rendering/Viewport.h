@@ -28,7 +28,7 @@ namespace WindowElement {
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
-		Ref<RenderTexture> m_RenderTexture;
+		Ref<FrameBuffer> m_RenderTexture;
 
 		RenderEngine* m_Renderer;
 		TransformationGizmo m_Gizmos;

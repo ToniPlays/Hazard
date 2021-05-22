@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "../Textures/RenderTexture.h"
+#include "Hazard/Rendering/PostProcessing/PostProcessingEffect.h"
 
 namespace Hazard::Rendering {
 
-	class VignetteEffect {
+	class VignetteEffect : public PostProcessingEffect {
 	public:
-		virtual void Process(RenderTexture* source, glm::vec2 res) = 0;
-		virtual RenderTexture& GetTargetTexture() = 0;
+		virtual void Process(FrameBuffer* source, glm::vec2 res) = 0;
+		virtual FrameBuffer& GetTargetTexture() = 0;
 	};
 }

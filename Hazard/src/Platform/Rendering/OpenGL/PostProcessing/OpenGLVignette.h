@@ -3,7 +3,7 @@
 #include "Hazard/Rendering/PostProcessing/Vignette.h"
 #include "Hazard/Rendering/Pipeline/GraphicsPipeline.h"
 #include "../Buffer/OpenGLVertexArray.h"
-#include "../Texture/OpenGLRenderTexture.h"
+#include "../Pipeline/OpenGLFrameBuffer.h"
 
 namespace Hazard::Rendering::OpenGL {
 	class OpenGLVignette : public VignetteEffect {
@@ -11,11 +11,11 @@ namespace Hazard::Rendering::OpenGL {
 		OpenGLVignette();
 		~OpenGLVignette();
 
-		void Process(RenderTexture* source, glm::vec2 res) override;
-		RenderTexture& GetTargetTexture() { return *m_Target; }
+		void Process(FrameBuffer* source, glm::vec2 res) override;
+		FrameBuffer& GetTargetTexture() { return *m_Target; }
 
 	private:
-		OpenGLRenderTexture* m_Target;
+		OpenGLFrameBuffer* m_Target;
 		GraphicsPipeline* m_Pipeline;
 
 		VertexArray* m_VertexArray;

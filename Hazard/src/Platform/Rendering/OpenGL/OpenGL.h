@@ -2,11 +2,11 @@
 
 #include "Texture/OpenGLTexture2D.h"
 #include "Texture/OpenGLCubemapTexture.h"
-#include "Texture/OpenGLRenderTexture.h"
+#include "Pipeline/OpenGLFrameBuffer.h"
 #include "Buffer/OpenGLVertexArray.h"
 #include "Buffer/OpenGLBuffer.h"
-#include "Shader/OpenGLShader.h"
-#include "Shader/OpenGLGraphicsPipeline.h"
+#include "Pipeline/OpenGLShader.h"
+#include "Pipeline/OpenGLGraphicsPipeline.h"
 #include "OpenGLOcclusionQuery.h"
 
 #include "PostProcessing/OpenGLVignette.h"

@@ -9,15 +9,15 @@ namespace WindowElement {
 
 	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") {}
 	GameViewport::~GameViewport() {}
-
+		
 	void GameViewport::Init()
 	{
 		SetActive(true);
 
-		Rendering::RenderTextureCreateInfo createInfo;
-		createInfo.datatype = TextureDataType::RGBA;
+		Rendering::FrameBufferCreateInfo createInfo;
+		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 
-		m_RenderTexture = RenderUtils::Create<RenderTexture>(createInfo);
+		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 
 		effect = RenderUtils::CreateRaw<VignetteEffect>("");
 	}
@@ -35,7 +35,7 @@ namespace WindowElement {
 			return;
 		}
 
-		Rendering::RenderCommand::SetRenderTarget(m_RenderTexture);
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture);
 		ECS::SceneCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(), 
 			transform->m_Translation));
 
@@ -53,7 +53,7 @@ namespace WindowElement {
 
 		effect->Process(m_RenderTexture.Raw(), { m_Width, m_Height });
 
-		ImGui::Image((void*)effect->GetTargetTexture().GetInfo().colorID,
+		ImGui::Image((void*)effect->GetTargetTexture().GetColorID(0),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}

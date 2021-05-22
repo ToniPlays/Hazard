@@ -31,9 +31,9 @@ namespace Hazard::Rendering {
 
 		void BeginRendering(Camera camera, BackgroundRenderer& renderer);
 		void EndRendering();
-		void SetRenderTarget(RenderTexture* texture) { m_RenderTarget = texture; };
+		void SetFrameBuffer(FrameBuffer* texture) { m_FrameBuffer = texture; };
 
-		RenderTexture* GetRenderTarget() { return m_RenderTarget; }
+		FrameBuffer* GetFrameBuffer() { return m_FrameBuffer; }
 
 		template<typename T>
 		void Submit(T element) {};
@@ -57,7 +57,7 @@ namespace Hazard::Rendering {
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
 
-		RenderTexture* m_RenderTarget = nullptr;
+		FrameBuffer* m_FrameBuffer = nullptr;
 		Renderer2D* m_Renderer2D = nullptr;
 
 		BackgroundRenderer* m_BackgroundRenderer;
