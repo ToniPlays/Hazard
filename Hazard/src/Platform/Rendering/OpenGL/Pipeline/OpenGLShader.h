@@ -11,7 +11,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	class OpenGLShader : public Shader {
 	public:
-		OpenGLShader(uint32_t stageCount, PipelineShaderStage* stages);
+		OpenGLShader(const std::string& name, uint32_t stageCount, PipelineShaderStage* stages);
 		~OpenGLShader();
 
 		void Bind() const;

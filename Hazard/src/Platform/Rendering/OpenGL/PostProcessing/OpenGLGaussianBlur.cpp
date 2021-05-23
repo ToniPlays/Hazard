@@ -38,6 +38,7 @@ namespace Hazard::Rendering::OpenGL
         viewport.size = { 1280, 720 };
 
         GraphicsPipelineCreateInfo pipelineInfo;
+        pipelineInfo.shaderPipelineName = "HorizontalGaussian";
         pipelineInfo.viewport = &viewport;
         pipelineInfo.rasterizer = &rasterizer;
         pipelineInfo.stageCount = 2;
@@ -47,6 +48,7 @@ namespace Hazard::Rendering::OpenGL
         m_horizontalPipeline->GetShader()->SetUniformInt("sampleTexture", 0);
 
         stages[0].shaderFileName = "res/shaders/compiled/verticalGaussian_vert.glsl";
+        pipelineInfo.shaderPipelineName = "VerticalGaussian";
 
         m_verticalPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
         m_verticalPipeline->GetShader()->Bind();

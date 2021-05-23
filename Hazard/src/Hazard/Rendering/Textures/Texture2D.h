@@ -10,6 +10,7 @@ namespace Hazard::Rendering {
 		std::string filename = "";
 		uint32_t width, height;
 		TextureDataType datatype;
+		bool loadFromFile = true;
 		void* data = nullptr;
 	};
 
@@ -17,7 +18,6 @@ namespace Hazard::Rendering {
 
 	public:
 		virtual ~Texture2D() {};
-
 		virtual void SetData(void* data, uint32_t size) = 0;
 	};
 }

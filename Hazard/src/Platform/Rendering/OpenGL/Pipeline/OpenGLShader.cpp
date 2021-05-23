@@ -21,8 +21,9 @@ namespace Hazard::Rendering::OpenGL {
 		return -1;
 	}
 
-	OpenGLShader::OpenGLShader(uint32_t stageCount, PipelineShaderStage* stages)
+	OpenGLShader::OpenGLShader(const std::string& name, uint32_t stageCount, PipelineShaderStage* stages)
 	{
+		Vault::Add(name, (RefCount*)this);
 		Compile(stageCount, stages);
 	}
 
@@ -108,9 +109,9 @@ namespace Hazard::Rendering::OpenGL {
 
 		for (int i = 0; i < stageCount; i++)
 		{
-			PipelineShaderStage stage = stages[i];
 
-			HZR_CORE_INFO("Compiling shader " + stage.shaderFileName);
+			PipelineShaderStage stage = stages[i];
+			HZR_CORE_WARN("Shader: {0}", stage.shaderFileName);
 
 			GLuint shaderType = ShaderTypeFromType(stage.stage);
 			GLuint shader = glCreateShader(shaderType);

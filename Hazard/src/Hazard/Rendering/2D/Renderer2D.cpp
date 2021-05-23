@@ -95,11 +95,11 @@ namespace Hazard::Rendering {
 
 
 		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.shaderPipelineName = "2DQuadShader";
 		pipelineInfo.inputAssembly = NULL;
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 		pipelineInfo.rasterizer = &rasterizer;
-
 		pipelineInfo.viewport = &viewport;
 
 		m_Data.QuadPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);

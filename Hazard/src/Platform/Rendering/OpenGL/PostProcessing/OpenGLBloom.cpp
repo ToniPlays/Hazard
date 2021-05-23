@@ -14,7 +14,7 @@ namespace Hazard::Rendering::OpenGL {
 		intensity = info->intensity;
 
 		FrameBufferCreateInfo frameBufferInfo;
-		frameBufferInfo.name = "GaussianBlurr";
+		frameBufferInfo.name = "GaussianBlur";
 		frameBufferInfo.width = 1920;
 		frameBufferInfo.height = 1080;
 		frameBufferInfo.attachments = { FrameBufferTextureFormat::RGBA8 };
@@ -39,6 +39,7 @@ namespace Hazard::Rendering::OpenGL {
 		viewport.size = { 1280, 720 };
 
 		GraphicsPipelineCreateInfo pipelineInfo;
+		pipelineInfo.shaderPipelineName = "BloomPostProcess";
 		pipelineInfo.viewport = &viewport;
 		pipelineInfo.rasterizer = &rasterizer;
 		pipelineInfo.stageCount = 2;
@@ -49,6 +50,7 @@ namespace Hazard::Rendering::OpenGL {
 
 		stages[0].shaderFileName = "res/shaders/compiled/passtrough_vert.glsl";
 		stages[1].shaderFileName = "res/shaders/compiled/combine_frag.glsl";
+		pipelineInfo.shaderPipelineName = "CombineShader";
 
 		m_CombinePipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
 		m_CombinePipeline->GetShader()->Bind();

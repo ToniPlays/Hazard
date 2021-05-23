@@ -6,5 +6,6 @@ namespace Hazard::Audio {
 	class AudioCommand {
 	public:
 		static AudioClip Create(ECS::AudioSourceComponent& component);
+		static void StopAll();
 	};
 }

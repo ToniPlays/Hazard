@@ -14,7 +14,12 @@ namespace Hazard::Rendering::OpenGL
 		m_Info.rawCullFace = OpenGLUtils::CullFaceToGL(info.rasterizer->cullFace);
 		m_Info.viewport = *info.viewport;
 
-		m_Info.pipelineShader = Ref<OpenGLShader>::Create(info.stageCount, info.stages);
+		if (Vault::Has<Shader>(info.shaderPipelineName)) {
+			m_Info.pipelineShader = Ref(Vault::Get<Shader>(info.shaderPipelineName));
+			return;
+		}
+
+		m_Info.pipelineShader = Ref<OpenGLShader>::Create(info.shaderPipelineName ,info.stageCount, info.stages);
 	}
 	OpenGLGraphicsPipeline::~OpenGLGraphicsPipeline()
 	{

@@ -33,9 +33,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		RegisterComponent(TransformComponent);
 		RegisterComponent(AudioSourceComponent);
 
-		HZR_CORE_INFO("HasComponentFuncs: {0}", hasComponentFuncs.size());
-		HZR_CORE_INFO("CreateComponentFuncs: {0}", createComponentFuncs.size());
-
 		BindMap result;
 		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);
 		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", CreateComponent);

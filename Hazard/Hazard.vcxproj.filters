@@ -799,6 +799,7 @@
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioCommand.h" />
+    <ClInclude Include="src\Hazard\Vault\Vault.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -1060,5 +1061,6 @@
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp" />
+    <ClCompile Include="src\Hazard\Vault\Vault.cpp" />
   </ItemGroup>
 </Project>

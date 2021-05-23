@@ -5,7 +5,8 @@
 #include "Hazard/File/File.h"
 #include "AudioLoader.h"
 
-namespace Hazard::Audio {
+namespace Hazard::Audio 
+{
 	AudioClip AudioCommand::Create(ECS::AudioSourceComponent& component)
 	{
 		HZR_CORE_INFO("Creating source for {0}", component.sourceFile);
@@ -13,5 +14,9 @@ namespace Hazard::Audio {
 			return AudioLoader::LoadFile(component.sourceFile);
 		}
 		return AudioClip();
+	}
+	void AudioCommand::StopAll()
+	{
+
 	}
 }

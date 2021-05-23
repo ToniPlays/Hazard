@@ -54,6 +54,7 @@ namespace Hazard::Rendering
 		PipelineRasterizer* rasterizer;
 
 		PipelineShaderStage* stages;
+		std::string shaderPipelineName;
 		uint32_t stageCount;
 	};
 

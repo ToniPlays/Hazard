@@ -62,7 +62,8 @@ namespace Hazard::Scripting::CSharp {
 	}
 	std::unordered_map<std::string, PublicField*> CSharpEngine::GetPublicFields(uint32_t entity, const std::string& moduleName)
 	{
-		std::unordered_map<std::string, CSharpField*> fields = GetInstanceData(entity).moduleFieldMap.at(moduleName);
+		ModuleFieldMap& data = GetInstanceData(entity).moduleFieldMap;
+		std::unordered_map<std::string, CSharpField*> fields = data.at(moduleName);
 
 		std::unordered_map<std::string, PublicField*> result;
 		for (auto [name, f] : fields) {

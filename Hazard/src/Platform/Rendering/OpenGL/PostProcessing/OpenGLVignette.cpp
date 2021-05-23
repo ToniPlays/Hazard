@@ -41,6 +41,7 @@ namespace Hazard::Rendering::OpenGL {
 		viewport.size = { 1280, 720 };
 
 		GraphicsPipelineCreateInfo pipelineInfo;
+		pipelineInfo.shaderPipelineName = "VignettePostProcess";
 		pipelineInfo.viewport = &viewport;
 		pipelineInfo.rasterizer = &rasterizer;
 		pipelineInfo.stageCount = 2;

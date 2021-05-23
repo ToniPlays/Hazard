@@ -15,6 +15,8 @@
 #include "Hazard/Logging/Logger.h"
 #include "Hazard/Instrumentor.h"
 
+#include "Hazard/Vault/Vault.h"
+
 #include "Hazard/Events/Event.h"
 #include "Hazard/Events/ApplicationEvent.h"
 #include "Hazard/Events/KeyEvent.h"

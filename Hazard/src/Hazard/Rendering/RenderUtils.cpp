@@ -100,22 +100,24 @@ namespace Hazard::Rendering {
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(Texture2DCreateInfo info) {
 		HZR_PROFILE_FUNCTION();
 
-		Texture* texture = Find<Texture>(info.filename.c_str());
-		if (texture != nullptr) {
-			return Ref((Texture2D*)texture);
+		if (Vault::Has<Texture2D>(info.filename)) {
+			return Vault::Get<Texture2D>(info.filename);
 		}
+		Texture2D* texture;
+		HZR_CORE_WARN("Loading texture {0}", info.filename);
 
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		texture = new OpenGL::OpenGLTexture2D(info);	break;
-		//case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(info);		break;
+		//case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(info);	break;
 		}
-
-		s_Assets[AssetType::TextureAsset].push_back(texture);
+		HZR_CORE_ASSERT(texture, "Failed to get texture");
+		Vault::Add(info.filename, (RefCount*)texture);
 		return Ref(texture);
 	}
 	template<>
-	Ref<CubemapTexture> RenderUtils::Create<CubemapTexture>(CubemapCreateInfo info) {
+	Ref<CubemapTexture> RenderUtils::Create<CubemapTexture>(CubemapCreateInfo info)
+	{
 		switch (s_Api)
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLCubemapTexture>::Create(info);
@@ -132,6 +134,8 @@ namespace Hazard::Rendering {
 		uint32_t data = 0xFFFFFFFF;
 
 		Texture2DCreateInfo createInfo = {};
+		createInfo.filename = "White";
+		createInfo.loadFromFile = false;
 		createInfo.width = 1;
 		createInfo.height = 1;
 		createInfo.data = &data;
