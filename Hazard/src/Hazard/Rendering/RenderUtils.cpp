@@ -24,6 +24,11 @@ namespace Hazard::Rendering {
 	{
 		HZR_THROW("Failed to create: " + std::string(typeid(T).name()));
 	}
+	template<typename T, typename Arg, typename S>
+	Ref<T> RenderUtils::Create(Arg args, S sArgs)
+	{
+		HZR_THROW("Failed to create: " + std::string(typeid(T).name()));
+	}
 	template<typename T>
 	Ref<T>& RenderUtils::Get() {
 		HZR_THROW("Failed to get: " + std::string(typeid(T).name()));
@@ -94,6 +99,7 @@ namespace Hazard::Rendering {
 	template<>
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(Texture2DCreateInfo info) {
 		HZR_PROFILE_FUNCTION();
+
 		Texture* texture = Find<Texture>(info.filename.c_str());
 		if (texture != nullptr) {
 			return Ref((Texture2D*)texture);

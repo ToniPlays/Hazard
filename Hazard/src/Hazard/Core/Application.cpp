@@ -5,6 +5,7 @@
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngineManager.h"
+#include "Hazard/Audio/AudioEngine.h"
 #include "HazardLoop.h"
 
 namespace Hazard {
@@ -34,6 +35,10 @@ namespace Hazard {
 		if (info->rendererInfo != nullptr) {
 			if (info->renderContextInfo == nullptr) HZR_THROW("Hazard RenderEngine requires valid RenderContext");
 			PushModule<Rendering::RenderEngine>().InitRenderer(info->rendererInfo);
+		}
+		if (info->audioEngine) {
+		
+			PushModule<Audio::AudioEngine>().InitAudio(info->audioEngine);
 		}
 		if (info->scriptEngineInfo != nullptr) {
 			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->scriptEngineInfo);

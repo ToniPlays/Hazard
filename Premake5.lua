@@ -156,6 +156,10 @@ project "Hazard"
 		"c:/dev/Hazard/vendor/JSON-develop/include",
 		"c:/dev/Hazard/vendor/mono/include",
 		"c:/dev/Hazard/vendor/SPIR-V/include",
+		"c:/dev/Hazard/vendor/OpenAL/include",
+		"C:/dev/Hazard/vendor/minimp3",
+		"C:/dev/Hazard/vendor/libogg/include",
+		"C:/dev/Hazard/vendor/Vorbis/include",
 		"Hazard/src"
 	}
 
@@ -183,7 +187,8 @@ project "Hazard"
 		defines {
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
+			"GLFW_INCLUDE_NONE",
+			"AL_LIBTYPE_STATIC"
 		}
 
 		postbuildcommands {
@@ -245,6 +250,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/Hazard/vendor/assimp/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/IMGUI/used_backends",
+		"C:/dev/Hazard/vendor/OpenAL/lib/openAl32.lib",
 		"c:/dev/Hazard/vendor/ImGuizmo",
 		"c:/dev/Hazard/vendor/GLM",
 		"c:/dev/Hazard/vendor/entt",
@@ -266,6 +272,7 @@ project "HazardEditor"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
+		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"yaml-cpp",
 		"msvcrt.lib",

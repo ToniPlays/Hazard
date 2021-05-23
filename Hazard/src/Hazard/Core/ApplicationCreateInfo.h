@@ -20,6 +20,10 @@ namespace Hazard {
 
 		bool logging = false;
 	};
+	struct AudioEngineCreateInfo
+	{
+
+	};
 	struct RenderContexCreateInfo 
 	{
 		RenderAPI renderer = RenderAPI::Auto;
@@ -53,5 +57,6 @@ namespace Hazard {
 		RenderContexCreateInfo* renderContextInfo = nullptr;
 		RenderEngineCreateInfo* rendererInfo = nullptr;
 		ScriptEngineCreateInfo* scriptEngineInfo = nullptr;
+		AudioEngineCreateInfo* audioEngine = nullptr;
 	};
 }

@@ -42,6 +42,7 @@ void EditorApplication::PreInit()
 	engineInfo.shaderSourcePath = "res/shaders/compiled";
 	engineInfo.shaderCompilePath = "res/shaders/compiled";
 
+	AudioEngineCreateInfo audioInfo;
 
 	ScriptEngineCreateInfo scriptInfo;
 	scriptInfo.appAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
@@ -52,6 +53,7 @@ void EditorApplication::PreInit()
 	createInfo.appInfo = &appInfo;
 	createInfo.renderContextInfo = &contextInfo;
 	createInfo.rendererInfo = &engineInfo;
+	createInfo.audioEngine = &audioInfo;
 	createInfo.scriptEngineInfo = &scriptInfo;
 
 	CreateApplicationStack(&createInfo);

@@ -29,6 +29,9 @@ namespace Hazard::Rendering {
 		template<typename T, typename Arg>
 		static Ref<T> Create(Arg arg);
 
+		template<typename T, typename Arg, typename S>
+		static Ref<T> Create(Arg arg, S sArg);
+
 		template<typename T>
 		static Ref<T>& Get();
 
@@ -83,6 +86,16 @@ namespace Hazard::Rendering {
 				Texture* texture = (Texture*)ref;
 				if (strcmp(texture->GetData().file.c_str(), file) == 0)
 					return texture;
+			}
+			return nullptr;
+		}
+		template<>
+		static Shader* Find(std::vector<std::string> findShaders) {
+			std::vector<RefCount*> shaders = s_Assets[AssetType::ShaderAsset];
+
+			for (RefCount* ref : shaders) {
+				Shader* shader = (Shader*)ref;
+
 			}
 			return nullptr;
 		}

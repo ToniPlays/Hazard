@@ -12,3 +12,7 @@
 /vendor/spdlog/*
 
 HazardEditor/res/Textures/chapmans_drive_8k.hdr
+HazardEditor/res/Audio/Axel Wernberg  Infinity.mp3
+Logs/HazardProfile-Startup.json
+Logs/HazardProfile-Shutdown.json
+Logs/HazardProfile-Runtime.json
