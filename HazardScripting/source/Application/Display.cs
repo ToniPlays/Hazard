@@ -15,7 +15,7 @@ namespace Hazard
             get => Display_IsFullscreen_Native();
             private set => Display_SetFullscreen_Native(value);
         }
-        public static bool Vsync
+        public static bool VSync
         {
             get => Display_IsVsync_Native();
             set => Display_SetVsync_Native(value);

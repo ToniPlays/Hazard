@@ -14,7 +14,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	std::unordered_map<MonoType*, std::function<void(uint32_t)>> createComponentFuncs;
 
 	#define RegisterComponent(Type)	{																							\
-																																\
 		MonoType* monoType = Mono::TypeFromReflectionName("Hazard." #Type);														\
 		if (monoType)																											\
 		{																														\
@@ -29,8 +28,13 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		hasComponentFuncs.clear();
 		createComponentFuncs.clear();
+
 		RegisterComponent(TagComponent);
 		RegisterComponent(TransformComponent);
+		RegisterComponent(AudioSourceComponent);
+
+		HZR_CORE_INFO("HasComponentFuncs: {0}", hasComponentFuncs.size());
+		HZR_CORE_INFO("CreateComponentFuncs: {0}", createComponentFuncs.size());
 
 		BindMap result;
 		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);

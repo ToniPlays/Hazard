@@ -95,6 +95,7 @@ namespace WindowElement {
 			}
 		}
 		if (opened) {
+			Layout::Text(std::string("ID: " + std::to_string(entity)).c_str());
 			Layout::Text(entity.IsVisible() ? "Visible" : "Not visible");
 		}
 	}

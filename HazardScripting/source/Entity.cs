@@ -25,7 +25,7 @@ namespace Hazard
         public void SetActive(bool active) { Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
         {
-            if (!Has<T>()) 
+            if (!Has<T>())
                 return null;
 
             T component = new T
@@ -38,8 +38,6 @@ namespace Hazard
         public bool Has<T>() where T : Component, new() {
             return Entity_HasComponent_Native(ID, typeof(T));
         }
-        
-        
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Entity_GetActive_Native(ulong id);

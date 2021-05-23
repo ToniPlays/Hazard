@@ -23,8 +23,6 @@ namespace Hazard::Scripting {
 		for (auto entity : view) {
 
 			Entity e = current.GetEntity(entity);
-
-			HZR_CORE_INFO("Entity {0} {1}", entity, e.GetComponent<TagComponent>().m_Tag);
 			auto& c = e.GetComponent<ScriptComponent>();
 
 			if (ModuleExists(ScriptType::CSharpScript, c.m_ModuleName.c_str())) {

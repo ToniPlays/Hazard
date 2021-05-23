@@ -35,10 +35,6 @@ namespace Hazard::Audio
             return;
         }
         AudioLoader::Init();
-
-        AudioClip clip = AudioLoader::LoadFile("res/audio/Axel Wernberg Infinity.mp3");
-        clip.SetGain(0.5);
-        clip.Play();
     }
     void AudioEngine::Update()
     {

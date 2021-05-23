@@ -45,7 +45,7 @@ namespace WindowElement {
 
 		static bool DragInt(const char* label, int& value);
 		static bool DragUInt(const char* label, uint32_t& value);
-		static bool DragFloat(const char* label, float& value);
+		static bool DragFloat(const char* label, float& value, float speed = 0.025f, float min = 0, float max = 0);
 
 		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
 		static bool ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, 

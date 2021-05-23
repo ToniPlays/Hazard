@@ -19,7 +19,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	void ConsoleBindings::Console_Log_Native(MonoObject* obj)
 	{
-		ScriptCommand::SendDebugMessage(Severity::Debug, ScriptUtils::MonoObjectToChar(obj));
+		std::string value = ScriptUtils::MonoObjectToChar(obj);
+		ScriptCommand::SendDebugMessage(Severity::Debug, value);
 	}
 	void ConsoleBindings::Console_Info_Native(MonoObject* obj)
 	{

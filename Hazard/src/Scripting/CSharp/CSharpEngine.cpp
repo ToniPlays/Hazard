@@ -74,8 +74,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		if (!ModuleExists(moduleName.c_str())) return;
 
-		HZR_CORE_INFO("Init entity {0} {1}", entity, moduleName);
-
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 
@@ -196,6 +194,7 @@ namespace Hazard::Scripting::CSharp {
 
 		if (data.entityInstanceMap.size() == 0) return;
 		auto& entityMap = data.entityInstanceMap;
+
 		for (auto& [EntityID, instanceData] : entityMap) {
 			ScriptCommand::InitAllEntities();
 		}

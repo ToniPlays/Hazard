@@ -263,9 +263,9 @@ namespace WindowElement {
 	{
 		return ImGui::DragInt(label, (int*)&value, 1.0f, 0, 100000);
 	}
-	bool Input::DragFloat(const char* label, float& value)
+	bool Input::DragFloat(const char* label, float& value, float speed, float min, float max)
 	{
-		return ImGui::DragFloat(label, &value, 0.025f);
+		return ImGui::DragFloat(label, &value, speed, min, max);
 	}
 
 	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify)

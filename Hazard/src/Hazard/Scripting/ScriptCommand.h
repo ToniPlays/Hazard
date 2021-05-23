@@ -42,7 +42,8 @@ namespace Hazard::Scripting {
 			return ECS::SceneCommand::GetEntity(entityID).GetComponent<T>();
 		}
 		template<typename T>
-		static bool EntityHasComponent(uint32_t entityID) {
+		static bool EntityHasComponent(uint32_t entityID) 
+		{
 			return ECS::SceneCommand::GetEntity(entityID).HasComponent<T>();
 		}
 		template<typename T>

@@ -279,7 +279,28 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, AudioSourceComponent& component) {
 		using namespace Hazard::Scripting;
+
 		Layout::ComponentTreenode<AudioSourceComponent>(entity, name, [&]() {
+			Layout::Text("Source");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::InputField(component.sourceFile);
+
+			Layout::NextLine(5);
+
+			Layout::Text("Gain");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			float gain = component.source.GetGain();
+			Input::DragFloat("##Gain", gain, 0.005f, 0, 1.0f);
+			component.source.SetGain(gain);
+
+			Layout::Text("Looping");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			bool looping = component.source.IsLooping();
+			Input::Checkbox("##Looping", looping);
+			component.source.SetLoop(looping);
 
 			}, []() {
 				

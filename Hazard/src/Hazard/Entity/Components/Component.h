@@ -4,6 +4,7 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 #include "Hazard/Core/UID.h"
+#include "Hazard/Audio/AudioClip.h"
 
 
 namespace Hazard::ECS {
@@ -40,8 +41,9 @@ namespace Hazard::ECS {
 	struct MeshComponent {
 		Ref<Rendering::Mesh> m_Mesh;
 	};
-	struct AudioSourceComponent {
+	struct AudioSourceComponent 
+	{
 		std::string sourceFile;
-		bool looping = true;
+		Audio::AudioClip source;
 	};
 }

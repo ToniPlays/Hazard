@@ -132,6 +132,7 @@ namespace Hazard::ECS::Loader
 				TryDeserializeComponent<ScriptComponent>("ScriptComponent", entity, node);
 				TryDeserializeComponent<VisualScriptComponent>("VisualScriptComponent", entity, node);
 				TryDeserializeComponent<MeshComponent>("MeshComponent", entity, node);
+				TryDeserializeComponent<AudioSourceComponent>("AudioSourceComponent", entity, node);
 			}
 		}
 		return world;
@@ -189,8 +190,8 @@ namespace Hazard::ECS::Loader
 	template<>
 	static void SceneDeserializer::Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 		std::string moduleName = comp["ModuleName"].as<std::string>();
-		entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& comp) {
-			comp.m_ModuleName = moduleName;
+		entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
+			c.m_ModuleName = moduleName;
 			});
 	};
 	template<>
@@ -204,5 +205,19 @@ namespace Hazard::ECS::Loader
 	static void SceneDeserializer::Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 		auto& c = entity.AddComponent<MeshComponent>();
 		c.m_Mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
+	};
+	template<>
+	static void SceneDeserializer::Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
+		AudioSourceComponent& source = entity.AddComponentWithCallback<AudioSourceComponent>([&](AudioSourceComponent& c) {
+			c.sourceFile = comp["AudioFile"].as<std::string>();
+		});
+
+		if (comp["Gain"]) {
+			source.source.SetGain(comp["Gain"].as<float>());
+		}
+
+		if (comp["Looping"]) {
+			source.source.SetLoop(comp["Looping"].as<std::string>() == "True");
+		}
 	};
 }

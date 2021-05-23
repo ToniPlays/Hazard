@@ -57,6 +57,7 @@ namespace Hazard::ECS::Loader {
 		TrySerializeEditor<CameraComponent>(entity, out);
 		TrySerializeEditor<ScriptComponent>(entity, out);
 		TrySerializeEditor<MeshComponent>(entity, out);
+		TrySerializeEditor<AudioSourceComponent>(entity, out);
 
 		out << YAML::EndMap;
 	}
@@ -69,69 +70,63 @@ namespace Hazard::ECS::Loader {
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<TagComponent>(Entity entity, TagComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<TagComponent>()) return;
-		auto tag = entity.GetComponent<TagComponent>().m_Tag;
-
 		out << YAML::Key << "TagComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Tag" << YAML::Value << tag;
+		out << YAML::Key << "Tag" << YAML::Value << component.m_Tag;
 		out << YAML::EndMap;
 	}
 
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<TransformComponent>(Entity entity, TransformComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<TransformComponent>()) return;
-		auto& c = entity.GetComponent<TransformComponent>();
-
 		out << YAML::Key << "TransformComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Translation" << YAML::Value; Convert(out, c.m_Translation);
-		out << YAML::Key << "Rotation" << YAML::Value; Convert(out, c.m_Rotation);
-		out << YAML::Key << "Scale" << YAML::Value; Convert(out, c.m_Scale);
+		out << YAML::Key << "Translation" << YAML::Value; Convert(out, component.m_Translation);
+		out << YAML::Key << "Rotation" << YAML::Value; Convert(out, component.m_Rotation);
+		out << YAML::Key << "Scale" << YAML::Value; Convert(out, component.m_Scale);
 		out << YAML::EndMap;
 
 	}
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<SpriteRendererComponent>()) return;
-		auto& c = entity.GetComponent<SpriteRendererComponent>();
-
 		out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)c.m_Tint);
+		out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)component.m_Tint);
 
-		if (c.m_Texture) {
-			if (c.m_Texture->GetData().file != "White")
-				out << YAML::Key << "Texture" << YAML::Value << std::string(c.m_Texture->GetData().file);
+		if (component.m_Texture) {
+			if (component.m_Texture->GetData().file != "White")
+				out << YAML::Key << "Texture" << YAML::Value << std::string(component.m_Texture->GetData().file);
 		}
 		out << YAML::EndMap;
 	}
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<CameraComponent>(Entity entity, CameraComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<CameraComponent>()) return;
-		auto& c = entity.GetComponent<CameraComponent>();
 		out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Projection" << YAML::Value << (c.GetProjectionType() ? "Orthographic" : "Perspective");
-		out << YAML::Key << "Fov" << YAML::Value << c.GetFov();
-		out << YAML::Key << "Clipping" << YAML::Value; Convert(out, c.GetClipping());
+		out << YAML::Key << "Projection" << YAML::Value << (component.GetProjectionType() ? "Orthographic" : "Perspective");
+		out << YAML::Key << "Fov" << YAML::Value << component.GetFov();
+		out << YAML::Key << "Clipping" << YAML::Value; Convert(out, component.GetClipping());
 		out << YAML::EndMap;
 	}
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<ScriptComponent>(Entity entity, ScriptComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<ScriptComponent>()) return;
-		auto& c = entity.GetComponent<ScriptComponent>();
 		out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "ModuleName" << YAML::Value << c.m_ModuleName;
+		out << YAML::Key << "ModuleName" << YAML::Value << component.m_ModuleName;
 		out << YAML::EndMap;
 	}
 	template<>
 	static void SceneSerializer::SerializeComponentEditor<MeshComponent>(Entity entity, MeshComponent& component, YAML::Emitter& out)
 	{
-		if (!entity.HasComponent<MeshComponent>()) return;
-		auto& c = entity.GetComponent<MeshComponent>();
 		out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "File" << YAML::Value << c.m_Mesh->GetFile();
+		out << YAML::Key << "File" << YAML::Value << component.m_Mesh->GetFile();
+		out << YAML::EndMap;
+	}
+	template<>
+	static void SceneSerializer::SerializeComponentEditor<AudioSourceComponent>(Entity entity, AudioSourceComponent& component, YAML::Emitter& out)
+	{
+		out << YAML::Key << "AudioSourceComponent" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "AudioFile" << YAML::Value << component.sourceFile;
+		out << YAML::Key << "Gain" << YAML::Value << component.source.GetGain();
+		out << YAML::Key << "Looping" << YAML::Value; Convert(out, component.source.IsLooping());
 		out << YAML::EndMap;
 	}
 

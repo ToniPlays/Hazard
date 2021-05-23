@@ -32,6 +32,7 @@ namespace Hazard::Audio
     }
     void AudioClip::SetPosition(glm::vec3 pos)
     {
+        m_Pos = pos;
         alSource3f(m_Source, AL_POSITION, pos.x, pos.y, pos.z);
     }
     void AudioClip::SetGain(float gain)
@@ -41,15 +42,18 @@ namespace Hazard::Audio
     }
     void AudioClip::SetPitch(float pitch)
     {
+        m_Pitch = pitch;
         alSourcef(m_Source, AL_PITCH, pitch);
     }
     void AudioClip::SetSpatial(bool spatial)
     {
+        m_Spatial = spatial;
         alSourcei(m_Source, AL_SOURCE_SPATIALIZE_SOFT, spatial ? AL_TRUE : AL_FALSE);
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
     }
     void AudioClip::SetLoop(bool loop)
     {
+        m_Looping = loop;
         alSourcei(m_Source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
     }
     std::pair<uint32_t, uint32_t> AudioClip::GetLength() const

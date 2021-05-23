@@ -24,7 +24,7 @@ namespace Hazard::Scripting::CSharp {
 		static void GetNames(const std::string& module, std::string& nameSpace, std::string& className);
 		static std::string MonoStringToString(MonoString* string);
 		static MonoString* StringToMonoString(const char* string);
-		static char* MonoObjectToChar(MonoObject* object);
+		static std::string MonoObjectToChar(MonoObject* object);
 		static FieldType GetFieldType(MonoClassField* field);
 		static std::vector<PublicField*> MonoFieldsToFields(std::vector<MonoClassField*> fields);
 	};

@@ -53,7 +53,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_string_new(Mono::GetData().mono_domain, string);
 	}
-	char* ScriptUtils::MonoObjectToChar(MonoObject* object)
+	std::string ScriptUtils::MonoObjectToChar(MonoObject* object)
 	{
 		if (object == nullptr) {
 			char* a = "NULL";
@@ -61,7 +61,7 @@ namespace Hazard::Scripting::CSharp {
 		}
 		MonoString* string = mono_object_to_string(object, nullptr);
 		std::string b = MonoStringToString(string);
-		return _strdup(b.c_str());
+		return b;
 	}
 	FieldType ScriptUtils::GetFieldType(MonoClassField* field)
 	{

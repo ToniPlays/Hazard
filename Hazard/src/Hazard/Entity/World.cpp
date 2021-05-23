@@ -4,6 +4,7 @@
 #include "World.h"
 #include "Entity.h"
 #include "SceneCommand.h"
+#include "Hazard/Audio/AudioCommand.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 namespace Hazard::ECS {
@@ -51,6 +52,7 @@ namespace Hazard::ECS {
 		CopyComponent<VisualScriptComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
+		CopyComponent<AudioSourceComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
 
@@ -226,7 +228,10 @@ namespace Hazard::ECS {
 	template<>
 	void World::OnComponentRemoved(Entity& entity, BatchComponent& component) {}
 	template<>
-	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) {}
+	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
+	{
+		component.source = Audio::AudioCommand::Create(component);
+	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}
 	//SKY LIGHT COMPONENT
