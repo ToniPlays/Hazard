@@ -16,7 +16,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetGain_Native", AudioSource_SetGain_Native);
 
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetPitch_Native", AudioSource_GetPitch_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetPitch_Nativ", AudioSource_SetPitch_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetPitch_Native", AudioSource_SetPitch_Native);
 
 		return result;
 	}

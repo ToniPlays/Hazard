@@ -291,9 +291,16 @@ namespace WindowElement {
 			Layout::Text("Gain");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			float gain = component.source.GetGain();
-			Input::DragFloat("##Gain", gain, 0.005f, 0, 1.0f);
-			component.source.SetGain(gain);
+			float val = component.source.GetGain();
+			Input::DragFloat("##Gain", val, 0.005f, 0, 1.0f);
+			component.source.SetGain(val);
+
+			Layout::Text("Pitch");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			val = component.source.GetPitch();
+			Input::DragFloat("##Pitch", val, 0.005f, 0, 0);
+			component.source.SetPitch(val);
 
 			Layout::Text("Looping");
 			Layout::SameLine(75);

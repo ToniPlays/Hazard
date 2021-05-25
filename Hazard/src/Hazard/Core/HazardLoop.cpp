@@ -34,28 +34,28 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
 			while (!m_ShouldClose) {
 
-				Input::Update();
 				double time = glfwGetTime();
+
+				Input::Update();
 				Time::s_UnscaledDeltaTime = time - lastTime;
 				Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
 				Time::s_Time = time;
 				lastTime = time;
-
 
 				HZR_PROFILE_SCOPE("Frame");
 				m_Application->Update();
 				m_ModuleHandler.Update();
 				m_ModuleHandler.Render();
 			}
+
 			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
 			m_Application->Close();
 			m_ModuleHandler.Close();
 			HZR_PROFILE_SESSION_END();
 		}
-		catch (const std::runtime_error& error) 
+		catch (const HazardRuntimeError& error) 
 		{	
 			const char* errorCode = error.what();
-
 			const WCHAR* pwcsName; //LPCWSTR
 
 			// required size

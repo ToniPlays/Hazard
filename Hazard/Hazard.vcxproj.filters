@@ -67,6 +67,9 @@
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Vault">
+      <UniqueIdentifier>{51C08483-3DB9-A3D5-66EB-885A524383E1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -168,6 +171,9 @@
     <ClInclude Include="src\Hazard\Audio\AudioClip.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Audio\AudioCommand.h">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioEngine.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
@@ -193,6 +199,9 @@
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
+      <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\HazardRuntimeError.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\Ref.h">
@@ -386,6 +395,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngineManager.h">
       <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Vault\Vault.h">
+      <Filter>src\Hazard\Vault</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
       <Filter>src\Platform\Rendering</Filter>
@@ -798,11 +810,14 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioCommand.h" />
-    <ClInclude Include="src\Hazard\Vault\Vault.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Math\MathBindings.h" />
+    <ClInclude Include="src\Hazard\Math\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioEngine.cpp">
@@ -921,6 +936,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
       <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Vault\Vault.cpp">
+      <Filter>src\Hazard\Vault</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
@@ -1060,7 +1078,7 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp" />
-    <ClCompile Include="src\Hazard\Vault\Vault.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Math\MathBindings.cpp" />
+    <ClCompile Include="src\Hazard\Math\Random.cpp" />
   </ItemGroup>
 </Project>

@@ -12,6 +12,7 @@
 #include <utility>
 
 #include "Hazard/Core/HazardLoop.h"
+#include "Hazard/Core/HazardRuntimeError.h"
 #include "Hazard/Logging/Logger.h"
 #include "Hazard/Instrumentor.h"
 
@@ -24,14 +25,13 @@
 
 #include "Hazard/Math/Time.h"
 #include "Hazard/Math/Math.h"
+#include "Hazard/Math/Random.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#define HZR_PROFILE false
-
-#define HZR_THROW(x) throw std::runtime_error(x)
+//#define HZR_PROFILE
 
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
 #define HZR_FUNC_SIG __PRETTY_FUNCTION__
@@ -51,7 +51,11 @@
 #define HZR_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
 
-#if HZR_PROFILE 
+#define HZR_LINE " some line"
+
+#define HZR_THROW(x, y) throw HazardRuntimeError(x, "\nFrom: " HZR_FUNC_SIG)
+
+#ifdef HZR_PROFILE 
 	#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
 	#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
 	#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\

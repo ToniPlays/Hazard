@@ -5,5 +5,5 @@
 
 namespace Hazard 
 {
-	std::unordered_map<std::string, RefCount*> Vault::m_Refs;
+	std::unordered_map<std::string, RefCount*> Vault::s_Refs;
 }

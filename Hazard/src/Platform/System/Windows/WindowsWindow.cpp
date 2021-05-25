@@ -39,9 +39,7 @@ namespace Hazard::Rendering {
 			m_Context = new Vulkan::VKContext(&m_WindowData);
 			break;
 		default:
-			std::stringstream ss;
-			ss << "RenderContext not supported: " << RenderContext::APIToString(api);
-			HZR_THROW(ss.str());
+			HZR_THROW("RenderContext not supported: ", RenderContext::APIToString(api));
 		}
 
 		glfwWindowHint(GLFW_RESIZABLE, info->resizable);

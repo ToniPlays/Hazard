@@ -22,8 +22,8 @@ namespace Hazard {
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (info->appInfo == nullptr) 
-			HZR_THROW("Must assign ApplicationCreateInfo to HazardCreateInfo");
+		if (info->appInfo == nullptr)
+			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
 #ifndef HZR_RELEASE
 			PushModule<Logging::Logger>();
@@ -33,7 +33,7 @@ namespace Hazard {
 			PushModule<Rendering::RenderContext>().InitContext(info->renderContextInfo, info->appInfo);
 		}
 		if (info->rendererInfo != nullptr) {
-			if (info->renderContextInfo == nullptr) HZR_THROW("Hazard RenderEngine requires valid RenderContext");
+			if (info->renderContextInfo == nullptr) HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
 			PushModule<Rendering::RenderEngine>().InitRenderer(info->rendererInfo);
 		}
 		if (info->audioEngine) {

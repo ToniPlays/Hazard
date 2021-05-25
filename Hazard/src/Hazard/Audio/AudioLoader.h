@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "AudioClip.h"
-
-#include "AL/al.h"
+#include <AL/al.h>
 
 namespace Hazard::Audio {
+
+	class AudioClip;
 
 	enum class FileFormat {
 		None = 0,

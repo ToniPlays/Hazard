@@ -47,7 +47,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		for (auto& [id, entity] : data.entityInstanceMap) {
 			EntityInstance& instance = entity.instance;
-			if (instance.ScriptClass == nullptr) continue;
 
 			float delta = Time::s_DeltaTime;
 			void* param[] = { &delta };

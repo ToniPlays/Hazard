@@ -17,13 +17,12 @@ namespace Hazard
 		static void Vault::Add(std::string name, RefCount* ref) {
 			if (name == "")
 				throw std::runtime_error("Key cannot be null");
-			m_Refs[name] = ref;
+			s_Refs[name] = ref;
 		}
-
 		template<typename T, typename Arg>
 		static bool Has(Arg arg) 
 		{
-			for (auto [key, ref] : m_Refs) {
+			for (auto [key, ref] : s_Refs) {
 				if (key == arg) {
 					if (static_cast<T*>(ref))
 						return true;
@@ -36,7 +35,7 @@ namespace Hazard
 		template<typename T, typename Arg>
 		static T* Get(Arg arg)
 		{
-			for (auto [key, ref] : m_Refs) {
+			for (auto [key, ref] : s_Refs) {
 				if (key == arg) {
 					if (static_cast<T*>(ref))
 						return (T*)ref;
@@ -52,6 +51,6 @@ namespace Hazard
 		};
 
 	private:
-		static std::unordered_map<std::string, RefCount*> m_Refs;
+		static std::unordered_map<std::string, RefCount*> s_Refs;
 	};
 }

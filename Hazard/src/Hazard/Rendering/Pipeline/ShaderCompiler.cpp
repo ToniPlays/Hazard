@@ -36,9 +36,6 @@ namespace Hazard::Rendering
 		binary = CompileToSPIRV(source, sourceFile.c_str(), kind);
 
 		File::WriteBinaryFile(dest, binary);
-
-		HZR_CORE_INFO("Shader compiled");
-
 		return binary;
 	}
 	std::string ShaderCompiler::Preprocess(const std::string& source, shaderc_shader_kind kind)
@@ -47,10 +44,9 @@ namespace Hazard::Rendering
 		shaderc::PreprocessedSourceCompilationResult result = compiler.PreprocessGlsl(source, kind, "shader_src", options);
 
 		if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
-			HZR_THROW("Failed to preprocess shader file: " + result.GetErrorMessage());
+			HZR_THROW("[Hazard Shader Compiler]: Failed to preprocess: " + result.GetErrorMessage());
 			return source;
 		}
-		HZR_CORE_INFO("Shader file preprocessed");
 		return { result.begin(), result.end() };
 	}
 	std::vector<uint32_t> ShaderCompiler::CompileToSPIRV(const std::string& source, const char* sourceFile, shaderc_shader_kind kind)
@@ -61,7 +57,7 @@ namespace Hazard::Rendering
 			compiler.CompileGlslToSpv(source, kind, "shader_src");
 
 		if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-			HZR_THROW(module.GetErrorMessage());
+			HZR_THROW("[Hazard Shader Compiler]: " + module.GetErrorMessage());
 		}
 		return { module.begin(), module.end() };
 	}

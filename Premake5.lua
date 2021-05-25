@@ -112,11 +112,8 @@ project "GLAD"
 	}
 
 	filter "system:windows"
-		buildoptions { "-std=c11", "-lgdi32" }
 		systemversion "latest"
 		staticruntime "On"
-	filter { "system:windows", "configurations:Release" }
-		buildoptions "/MT"
 
 project "Hazard"
 
@@ -165,8 +162,6 @@ project "Hazard"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3dll.lib",
-		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll",
 		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"C:/dev/Hazard/vendor/SPIR-V/libs/shaderc_shared.lib",
@@ -180,8 +175,6 @@ project "Hazard"
 	}
 
 	filter "system:windows"
-		cppdialect "default"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines {
@@ -190,11 +183,6 @@ project "Hazard"
 			"GLFW_INCLUDE_NONE",
 			"AL_LIBTYPE_STATIC"
 		}
-
-		postbuildcommands {
-			("{COPY} C:/dev/Hazard/bin/" .. outputdir .. "/Hazard/ C:/dev/Hazard/bin/" .. outputdir .."/HazardEditor")
-		}
-
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
@@ -208,12 +196,6 @@ project "Hazard"
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		optimize "On"
-		cppdialect "C++17"
-
-	filter "configurations:Game"
-		defines "HZR_GAME_ONLY"
-		runtime "Release"
-		optimize "on"
 		cppdialect "C++17"
 
 project "HazardEditor"
@@ -293,6 +275,68 @@ project "HazardEditor"
 		defines "HZR_DIST"
 		optimize "On"
 
-	filter "configurations:Game"
-		defines "HZR_GAME_ONLY"
+project "HazardPlayer"
+	location "HazardPlayer"
+	kind "WindowedApp"
+	language "C++"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	pchheader "playerpch.h"
+	pchsource "HazardEditor/src/playerpch.cpp"
+
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/platform/**.h",
+		"%{prj.name}/platform/**.cpp"
+	}
+
+	includedirs {
+		"c:/dev/Hazard/vendor/spdlog/include",
+		"c:/dev/Hazard/vendor/GLFW/include",
+		"c:/dev/Hazard/vendor/GLAD/include",
+		"c:/dev/Hazard/vendor/Vulkan/include",
+		"c:/dev/Hazard/vendor/JSON/include",
+		"c:/dev/Hazard/vendor/yaml-cpp/include",
+		"c:/dev/Hazard/vendor/JSON-develop/include",
+		"c:/dev/Hazard/Hazard/vendor/assimp/include",
+		"C:/dev/Hazard/vendor/OpenAL/lib/openAl32.lib",
+		"c:/dev/Hazard/vendor/GLM",
+		"c:/dev/Hazard/vendor/entt",
+		"Hazard/src",
+		"Hazard/GLM/glm"
+	}
+
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+
+	defines {
+		"HZR_PLATFORM_WINDOWS",
+		"_CRT_SECURE_NO_WARNINGS"
+	}
+
+	links {
+		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
+		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
+		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"yaml-cpp",
+		"msvcrt.lib",
+		"opengl32.lib",
+		"Hazard",
+		"GLAD"
+	}
+
+	filter "configurations:Debug"
+		defines "HZR_DEBUG"
+
+	filter "configurations:Release"
+		defines "HZR_RELEASE"
+		optimize "On"
+
+	filter "configurations:Dist"
+		defines "HZR_DIST"
 		optimize "On"

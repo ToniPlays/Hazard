@@ -31,7 +31,7 @@ namespace Hazard::Audio
         HZR_CORE_INFO("Audio engine init");
 
         if (InitAL(m_AudioDevice, nullptr, 0) != 0) {
-            HZR_THROW("Failed to init audio engine");
+            HZR_THROW("[Hazard Audio]: Failed to init");
             return;
         }
         AudioLoader::Init();

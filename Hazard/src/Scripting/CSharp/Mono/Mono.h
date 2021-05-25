@@ -43,7 +43,8 @@ namespace Hazard::Scripting::CSharp {
 
 		static MonoObject* CallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr);
 		static inline MonoObject* TryCallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr) {
-			if (method != nullptr) return CallMethod(object, method, params);
+			if (method != nullptr) 
+				return CallMethod(object, method, params);
 			return nullptr;
 		}
 

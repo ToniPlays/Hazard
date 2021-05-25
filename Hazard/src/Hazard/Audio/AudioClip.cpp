@@ -8,7 +8,8 @@
 
 namespace Hazard::Audio 
 {
-    AudioClip::AudioClip(uint32_t buffer, bool loaded, float length) {
+    AudioClip::AudioClip(uint32_t buffer, bool loaded, float length) 
+    {
         m_Buffer = buffer;
         m_Loaded = loaded;
         m_TotalDuration = length;
@@ -42,7 +43,7 @@ namespace Hazard::Audio
     }
     void AudioClip::SetPitch(float pitch)
     {
-        m_Pitch = pitch;
+         m_Pitch = pitch;
         alSourcef(m_Source, AL_PITCH, pitch);
     }
     void AudioClip::SetSpatial(bool spatial)

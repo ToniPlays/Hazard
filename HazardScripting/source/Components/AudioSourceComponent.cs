@@ -6,8 +6,14 @@ namespace Hazard
     public class AudioSourceComponent : Component
     {
 
-        public float gain = 1.0f;
-        public float pitch = 1.0f;
+        public float gain {
+            get => AudioSource_GetGain_Native(parent.ID);
+            set => AudioSource_SetGain_Native(parent.ID, value);
+        }
+        public float pitch {
+            get => AudioSource_GetPitch_Native(parent.ID);
+            set => AudioSource_SetPitch_Native(parent.ID, value);
+        }
 
         public void Play() { AudioSource_Play_Native(parent.ID); }
         public void Stop() { AudioSource_Stop_Native(parent.ID); }

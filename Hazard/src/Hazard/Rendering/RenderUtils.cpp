@@ -80,7 +80,7 @@ namespace Hazard::Rendering {
 		{
 		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLOcclusionQuery>::Create(); break;
 		}
-		HZR_THROW(std::string("Failed to create OcclusionQuery for ") + RenderContext::APIToString(s_Api));
+		HZR_THROW("Failed to create OcclusionQuery for ", RenderContext::APIToString(s_Api));
 	}
 #pragma endregion
 

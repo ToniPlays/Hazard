@@ -12,3 +12,5 @@
 #include "Script/ECS/TagComponentBindings.h"
 #include "Script/ECS/TransformBindings.h"
 #include "Script/ECS/AudioSourceBindings.h"
+
+#include "Script/Math/MathBindings.h"

@@ -4,6 +4,21 @@
 
 namespace Hazard::Audio {
 
+	struct AudioBufferData : public RefCount
+	{
+	public:
+		AudioBufferData() {};
+		~AudioBufferData() {};
+
+		std::string name = "UndefinedAudio";
+		int16_t* audioData;
+		uint32_t size;
+		float sampleRate;
+		float channels;
+		float alFormat;
+		float lenSec;
+	};
+
 	class AudioClip {
 	public:
 		AudioClip() {};

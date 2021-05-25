@@ -64,6 +64,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(method, object, params, &exception);
+		HZR_CORE_ASSERT(exception == nullptr, "[MonoExeption]: {0}", mono_print_unhandled_exception(exception));
 		return result;
 	}
 	bool Mono::ModuleExists(const char* name)

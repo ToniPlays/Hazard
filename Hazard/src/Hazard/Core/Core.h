@@ -18,13 +18,11 @@
 //Hazard BUILD_VERSION
 
 #if HZR_DEBUG
-#define HZR_BUILD_VERSION "Debug"
+	#define HZR_BUILD_VERSION "Debug"
 #elif defined HZR_DIST
-#define HZR_BUILD_VERSION "Distribution"
-#elif defined(HZR_GAME_ONLY)
-#define HZR_BUILD_VERSION "Game"
+	#define HZR_BUILD_VERSION "Distribution"
 #else
-#define HZR_BUILD_VERSION "Release"
+	#define HZR_BUILD_VERSION "Release"
 #endif // HZR_DEBUG
 
 

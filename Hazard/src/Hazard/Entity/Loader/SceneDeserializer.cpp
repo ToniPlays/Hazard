@@ -86,9 +86,9 @@ namespace YAML {
 namespace Hazard::ECS::Loader 
 {
 	static WorldBackground StringToWorldType(const std::string& value) {
-		if (value == "Colored") return WorldBackground::Colored;
 		if (value == "Sky")		return WorldBackground::Sky;
 		if (value == "HDRI")	return WorldBackground::HDRI;
+		return WorldBackground::Colored;
 	}
 
 	World* SceneDeserializer::DeserializeEditor(const char* file)
@@ -121,7 +121,7 @@ namespace Hazard::ECS::Loader
 			for (int i = entities.size() - 1; i >= 0; i--) {
 
 				auto node = entities[i];
-				uint64_t uuid = node["Entity"].as<uint64_t>();
+				//uint64_t uuid = node["Entity"].as<uint64_t>();
 
 				Entity entity = world->CreateEntity("");
 				//Deserialize components

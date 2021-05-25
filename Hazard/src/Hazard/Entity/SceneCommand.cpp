@@ -73,8 +73,8 @@ namespace Hazard::ECS {
 
 	template<>
 	void SceneCommand::Render(BatchComponent& component, TransformComponent& transform) {
-		for (int x = 0; x < component.m_Size; x++) {
-			for (int y = 0; y < component.m_Size; y++) {
+		for (uint32_t x = 0; x < component.m_Size; x++) {
+			for (uint32_t y = 0; y < component.m_Size; y++) {
 				Quad quad = { transform.GetTransformMat4() * glm::translate(glm::mat4(1.0f), glm::vec3(float(x), float(y), 0.0f)),
 					component.m_Tint, nullptr };
 				RenderCommand::Submit(quad);

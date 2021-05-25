@@ -1,6 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "AudioLoader.h"
+#include "AudioClip.h"
 
 #include <string>
 #include <thread>
@@ -17,7 +18,6 @@
 namespace Hazard::Audio {
 
 	static mp3dec_t s_Mp3d;
-
 
 	void AudioLoader::Init()
 	{
@@ -62,31 +62,49 @@ namespace Hazard::Audio {
 	}
 	AudioClip AudioLoader::LoadMp3(const std::string& file)
 	{
-		mp3dec_file_info_t info;
-		int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
-
-		uint32_t size = info.samples * sizeof(mp3d_sample_t);
-		auto sampleRate = info.hz;
-		auto channels = info.channels;
-		auto alFormat = GetOpenALFormat(channels);
-		float lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
-
-		if (true) 
+		AudioBufferData* buffer;
+		if (Vault::Has<AudioBufferData>(file)) {
+			HZR_CORE_INFO("Loading from cache {0}", file);
+			buffer = Vault::Get<AudioBufferData>(file);
+		}
+		else 
 		{
-			HZR_CORE_WARN("Loaded audio file: {0}", file);
-			HZR_CORE_WARN("Channels: {0}", channels);
-			HZR_CORE_WARN("Format: {0}", alFormat);
-			HZR_CORE_WARN("Length: {0}", lenSec);
-		
+			HZR_CORE_INFO("Creating source for {0}", file);
+			mp3dec_file_info_t info;
+			int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
+
+			size_t size = info.samples * sizeof(mp3d_sample_t);
+			auto sampleRate = info.hz;
+			auto channels = info.channels;
+			auto alFormat = GetOpenALFormat(channels);
+			float lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
+
+			buffer = new AudioBufferData();
+			buffer->name = file;
+			buffer->size = size;
+			buffer->sampleRate = sampleRate;
+			buffer->channels = channels;
+			buffer->alFormat = alFormat;
+			buffer->lenSec = lenSec;
+			buffer->audioData = info.buffer;
+
+			Vault::Add(file, (RefCount*)buffer);
 		}
 
-		ALuint buffer;
-		alGenBuffers(1, &buffer);
-		alBufferData(buffer, alFormat, info.buffer, size, sampleRate);
+		ALuint bufferID;
+		alGenBuffers(1, &bufferID);
+		alBufferData(bufferID, buffer->alFormat, buffer->audioData, buffer->size, buffer->sampleRate);
 
-		AudioClip clip = { buffer, true, lenSec };
+		AudioClip clip = { bufferID, true, buffer->lenSec };
 		alGenSources(1, &clip.m_Source);
-		alSourcei(clip.m_Source, AL_BUFFER, buffer);
+		alSourcei(clip.m_Source, AL_BUFFER, bufferID);
+
+		
+
+		ALuint err = alGetError();
+		if (err != AL_NO_ERROR) {
+			HZR_CORE_INFO("Error: {0}", err);
+		}
 
 		return clip;
 	}
