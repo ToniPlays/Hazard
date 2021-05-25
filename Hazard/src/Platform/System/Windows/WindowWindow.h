@@ -20,9 +20,10 @@ namespace Hazard::Rendering {
 			m_WindowData.VSync = enabled;
 			glfwSwapInterval(enabled);
 		};
-		void SetFullscreen(bool fullscreen) {
-			m_WindowData.fullscreen = fullscreen;
+		void SetMaximized(bool maximized) {
+			m_WindowData.maximized = maximized;
 		}
+		void SetFullscreen(bool fullscreen);
 		void* GetNativeWindow() const { return m_Window; }
 		void SetEventCallback(const EventCallbackFn& callback) {
 			m_WindowData.EventCallback = callback;

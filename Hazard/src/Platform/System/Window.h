@@ -38,6 +38,7 @@ namespace Hazard::Rendering {
 		virtual void SetWindowIcon(uint32_t count, std::string* images) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void SetFullscreen(bool enabled) = 0;
+		virtual void SetMaximized(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 

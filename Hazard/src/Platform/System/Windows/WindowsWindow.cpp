@@ -46,7 +46,12 @@ namespace Hazard::Rendering {
 		glfwWindowHint(GLFW_RESIZABLE, info->resizable);
 		glfwWindowHint(GLFW_MAXIMIZED, info->fullScreen);
 
-		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
+		if (info->fullScreen) {
+			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, glfwGetPrimaryMonitor(), 0);
+		}
+		else {
+			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
+		}
 
 		if (!m_Window) {
 			HZR_THROW("Failed to create window");
@@ -85,6 +90,13 @@ namespace Hazard::Rendering {
 			glfwImages.at(i).height = sy;
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
+	}
+	void WindowsWindow::SetFullscreen(bool fullscreen)
+	{
+		m_WindowData.fullscreen = fullscreen;
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 	}
 	void WindowsWindow::SetCallbacks()
 	{

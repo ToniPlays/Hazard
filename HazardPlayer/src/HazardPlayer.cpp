@@ -63,13 +63,12 @@ void HazardPlayer::PreInit()
 void HazardPlayer::Init()
 {
 	Scripting::ScriptCommand::OnBeginRuntime();
-
+	Rendering::RenderCommand::SetFrameBuffer(nullptr);
 }
 void HazardPlayer::Update()
 {
 	auto[found, cam, transform] = ECS::WorldCommand::GetCurrentWorld().GetWorldCamera();
 
-	Rendering::RenderCommand::SetFrameBuffer(nullptr);
 	ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
 		transform->m_Translation));
 }
