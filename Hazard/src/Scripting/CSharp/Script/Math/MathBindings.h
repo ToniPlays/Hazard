@@ -12,5 +12,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		static float Math_RandomRange_Native(float min, float max);
 		static float Math_Pow_Native(float value, float pow);
 		static float Math_Sqrt_Native(float value);
+		static float Math_Min_Native(float first, float second);
+		static float Math_Max_Native(float first, float second);
 	};
 }

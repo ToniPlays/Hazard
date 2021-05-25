@@ -32,10 +32,11 @@ namespace WindowElement {
 	}
 	void Viewport::OnWindowRender()
 	{
-		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
+		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture);
-		ECS::SceneCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
+
+		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
 			m_EditorCamera.GetPosition()));
 
 		using namespace Appereance;

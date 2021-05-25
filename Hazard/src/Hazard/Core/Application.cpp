@@ -6,7 +6,9 @@
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngineManager.h"
 #include "Hazard/Audio/AudioEngine.h"
+#include "Hazard/Entity/WorldCommand.h"
 #include "HazardLoop.h"
+#include "Hazard/Entity/WorldHandler.h"
 
 namespace Hazard {
 
@@ -28,6 +30,7 @@ namespace Hazard {
 #ifndef HZR_RELEASE
 			PushModule<Logging::Logger>();
 #endif // HZR_RELEASE
+		
 
 		if (info->renderContextInfo != nullptr) {
 			PushModule<Rendering::RenderContext>().InitContext(info->renderContextInfo, info->appInfo);
@@ -42,6 +45,12 @@ namespace Hazard {
 		}
 		if (info->scriptEngineInfo != nullptr) {
 			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->scriptEngineInfo);
+		}
+		if (info->entityComponent != nullptr) {
+			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
+			if (info->entityComponent->startupFile != "") {
+				handler.LoadScene(info->entityComponent->startupFile);
+			}
 		}
 	}
 	void Application::Quit()

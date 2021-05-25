@@ -162,7 +162,6 @@ project "Hazard"
 
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"C:/dev/Hazard/vendor/SPIR-V/libs/shaderc_shared.lib",
 		"msvcrt.lib",
@@ -255,6 +254,7 @@ project "HazardEditor"
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
+		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"yaml-cpp",
 		"msvcrt.lib",
@@ -322,6 +322,7 @@ project "HazardPlayer"
 	links {
 		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
+		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"yaml-cpp",
 		"msvcrt.lib",

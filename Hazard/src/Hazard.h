@@ -31,9 +31,10 @@
 #include "Platform/Rendering/Vulkan/VKContext.h"
 
 //Hazard ECS includes
-#include "Hazard/Entity/SceneCommand.h"
-#include "Hazard/Entity/Loader/SceneHandler.h"
-#include "Hazard/Entity/Loader/SceneSerializer.h"
+#include "Hazard/Entity/WorldCommand.h"
+#include "Hazard/Entity/WorldHandler.h"
+#include "Hazard/Entity/Loader/WorldDeserializer.h"
+#include "Hazard/Entity/Loader/WorldSerializer.h"
 #include "Hazard/Entity/World.h"
 #include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"

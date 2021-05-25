@@ -48,6 +48,7 @@ void EditorApplication::PreInit()
 	scriptInfo.appAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
 	scriptInfo.coreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
 	scriptInfo.monoDirectory = "C:/Program Files/Mono";
+	scriptInfo.enable = false;
 
 	HazardCreateInfo createInfo;
 	createInfo.appInfo = &appInfo;
@@ -63,7 +64,7 @@ void EditorApplication::PreInit()
 		HZR_ERROR("Valid project file required to run application");
 	}
 	
-	PushModule<ECS::SceneHandler>();
+	PushModule<ECS::WorldHandler>();
 	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
 		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
 }
@@ -71,7 +72,7 @@ void EditorApplication::Init()
 {
 	HZR_PROFILE_FUNCTION();
 	Project::ProjectManager manager = *GetModule<Project::ProjectManager>();
-	GetModule<ECS::SceneHandler>()->LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
+	GetModule<ECS::WorldHandler>()->LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
 	Runtime::SceneRuntimeHandler::Init();
 }
 

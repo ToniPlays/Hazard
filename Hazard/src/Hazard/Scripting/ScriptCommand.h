@@ -2,7 +2,7 @@
 
 #include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"
-#include "Hazard/Entity/SceneCommand.h"
+#include "Hazard/Entity/WorldCommand.h"
 #include "ScriptEngineManager.h"
 #include "Hazard/Entity/Entity.h"
 
@@ -39,16 +39,16 @@ namespace Hazard::Scripting {
 		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) {
-			return ECS::SceneCommand::GetEntity(entityID).GetComponent<T>();
+			return ECS::WorldCommand::GetEntity(entityID).GetComponent<T>();
 		}
 		template<typename T>
 		static bool EntityHasComponent(uint32_t entityID) 
 		{
-			return ECS::SceneCommand::GetEntity(entityID).HasComponent<T>();
+			return ECS::WorldCommand::GetEntity(entityID).HasComponent<T>();
 		}
 		template<typename T>
 		static void EntityAddComponent(uint32_t entityID) {
-			ECS::SceneCommand::GetEntity(entityID).AddComponent<T>();
+			ECS::WorldCommand::GetEntity(entityID).AddComponent<T>();
 		}
 
 		static void SendDebugMessage(Severity severity, std::string message);

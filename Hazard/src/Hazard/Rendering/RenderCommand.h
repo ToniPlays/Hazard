@@ -20,7 +20,7 @@ namespace Hazard::Rendering {
 
 		static void Begin(Camera camera, BackgroundRenderer& renderer) { s_Engine->BeginRendering(camera, renderer); }
 		static void End() { s_Engine->EndRendering(); }
-		static void SetFrameBuffer(Ref<FrameBuffer>& texture) { s_Engine->SetFrameBuffer(texture.Raw()); }
+		static void SetFrameBuffer(FrameBuffer* texture) { s_Engine->SetFrameBuffer(texture); }
 
 		static void DrawIndexed(VertexArray* vao, uint32_t count);
 

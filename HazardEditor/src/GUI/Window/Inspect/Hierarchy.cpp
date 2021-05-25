@@ -39,7 +39,7 @@ namespace WindowElement {
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
-		World& world = ECS::SceneCommand::GetCurrentWorld();
+		World& world = ECS::WorldCommand::GetCurrentWorld();
 
 		Layout::Treenode(world.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&world, this]() {
 			world.GetWorldRegistry().each([&](auto entityID) {

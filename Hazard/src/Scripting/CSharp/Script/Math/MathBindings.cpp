@@ -12,6 +12,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
         result.emplace_back("Hazard.Math::Math_Random_Native", Math_Random_Native);
         result.emplace_back("Hazard.Math::Math_RandomRange_Native", Math_RandomRange_Native);
         result.emplace_back("Hazard.Math::Math_Pow_Native", Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Min_Native", Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Max_Native", Math_Pow_Native);
         return result;
     }
     float MathBindings::Math_Random_Native()
@@ -31,5 +33,13 @@ namespace Hazard::Scripting::CSharp::Bindings {
     float MathBindings::Math_Sqrt_Native(float value)
     {
         return Math::Sqrt(value);
+    }
+    float MathBindings::Math_Min_Native(float first, float second)
+    {
+        return Math::Min(first, second);
+    }
+    float MathBindings::Math_Max_Native(float first, float second)
+    {
+        return Math::Max(first, second);
     }
 }

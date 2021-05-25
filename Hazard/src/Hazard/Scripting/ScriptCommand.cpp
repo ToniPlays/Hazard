@@ -3,7 +3,7 @@
 #include "hzrpch.h"
 #include "ScriptCommand.h"
 #include "Hazard/Entity/Component.h"
-#include "Hazard/Entity/Loader/SceneHandler.h"
+#include "Hazard/Entity/WorldHandler.h"
 
 namespace Hazard::Scripting {
 
@@ -17,7 +17,7 @@ namespace Hazard::Scripting {
 	void ScriptCommand::OnBeginRuntime()
 	{
 		using namespace ECS;
-		World& current = Application::GetModule<SceneHandler>()->GetCurrentWorld();
+		World& current = Application::GetModule<WorldHandler>()->GetCurrentWorld();
 		auto view = current.GetWorldRegistry().view<ScriptComponent>();
 
 		for (auto entity : view) {
@@ -36,7 +36,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::InitAllEntities()
 	{	
-		auto& scene = ECS::SceneCommand::GetCurrentWorld();
+		auto& scene = ECS::WorldCommand::GetCurrentWorld();
 		for (auto [id, component] : scene.FindEntitiesWith<ECS::ScriptComponent>()) {
 			if (s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str()))
 				s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);

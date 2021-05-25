@@ -93,6 +93,8 @@ namespace WindowElement {
 		PushRenderable<ShaderEditorWindow>();
 		PushRenderable<Profiler>();
 		PushRenderable<WelcomePopup>();
+
+		PushRenderable<ExportView>();
 	}  
 	void EditorView::Render()
 	{

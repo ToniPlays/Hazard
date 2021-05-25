@@ -44,14 +44,8 @@ namespace Hazard {
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 		if (GetSaveFileNameA(&ofn) == TRUE) {
-			std::vector<std::string> string = StringUtil::SplitString(ofn.lpstrFile, '\\');
-			string.erase(string.end() - 1);
-
-			std::string result = "";
-
-			for (std::string f : string)
-				result += f + "\\";
-			return result;
+			
+			return GetDirectoryOf(ofn.lpstrFile);
 		}
 		return "";
 
@@ -76,10 +70,14 @@ namespace Hazard {
 		return "";
 	}
 
-	bool File::Exists(const char* file)
+	bool File::Exists(const std::string& file)
 	{
 		std::ifstream f(file);
 		return f.good();
+	}
+	bool File::DirectoryExists(const std::string& dir)
+	{
+		return std::filesystem::exists(dir);
 	}
 	void File::WriteFile(const std::string& dest, const std::string& source)
 	{
@@ -94,6 +92,14 @@ namespace Hazard {
 		out.write((char*)data.data(), data.size() * sizeof(uint32_t));
 		out.flush();
 		out.close();
+	}
+	bool File::CopyFileTo(const std::string& source, const std::string& dest) {
+	
+		std::string destFolder = GetDirectoryOf(dest);
+		if (!DirectoryExists(destFolder)) {
+			File::CreateDir(destFolder);
+		}
+		return std::filesystem::copy_file(source, dest);
 	}
 	std::string File::ReadFile(const std::string& file) 
 	{
@@ -151,8 +157,23 @@ namespace Hazard {
 		std::filesystem::path path(file);
 		return std::filesystem::absolute(path).string();
 	}
+	std::string Hazard::File::GetDirectoryOf(const std::string& file)
+	{
+		std::vector<std::string> string = StringUtil::SplitString(file, '\\');
+		string.erase(string.end() - 1);
+
+		std::string result = "";
+
+		for (std::string f : string)
+			result += f + "\\";
+		return result;
+	}
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of(".") + 1);
+	}
+	bool File::CreateDir(const std::string& dir)
+	{
+		return std::filesystem::create_directories(dir);
 	}
 	FolderData File::GetFolderFiles(const std::string& folder)
 	{

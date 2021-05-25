@@ -45,11 +45,12 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::UpdateEntities()
 	{
+		float delta = Time::s_DeltaTime;
+		void* param[] = { &delta };
+
 		for (auto& [id, entity] : data.entityInstanceMap) {
 			EntityInstance& instance = entity.instance;
 
-			float delta = Time::s_DeltaTime;
-			void* param[] = { &delta };
 			Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, param);
 		}
 	}
@@ -72,8 +73,10 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::InitializeEntity(uint32_t entity, const std::string& moduleName)
 	{
-		if (!ModuleExists(moduleName.c_str())) return;
-
+		if (!ModuleExists(moduleName.c_str())) {
+			HZR_CORE_ERROR("[Mono] Module does not exist {0}", moduleName);
+		}
+		HZR_CORE_INFO("Module added {0}", moduleName);
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 

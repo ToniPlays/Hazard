@@ -25,11 +25,11 @@ namespace Hazard::Rendering::OpenGL {
 
 		PipelineShaderStage stages[2];
 
-		stages[0].shaderFileName = "res/shaders/compiled/passtrough_vert.glsl";
+		stages[0].shaderFileName = "passtrough_vert.glsl";
 		stages[0].stage = ShaderType::VertexShader;
 		stages[0].fileType = ShaderFileType::Source;
 
-		stages[1].shaderFileName = "res/shaders/compiled/vignette_frag.glsl";
+		stages[1].shaderFileName = "vignette_frag.glsl";
 		stages[1].stage = ShaderType::FragmentShader;
 		stages[1].fileType = ShaderFileType::Source;
 

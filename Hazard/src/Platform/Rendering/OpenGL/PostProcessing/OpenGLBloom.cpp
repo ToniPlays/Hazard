@@ -23,11 +23,11 @@ namespace Hazard::Rendering::OpenGL {
 
 		PipelineShaderStage stages[2];
 
-		stages[0].shaderFileName = "res/shaders/compiled/passtrough_vert.glsl";
+		stages[0].shaderFileName = "passtrough_vert.glsl";
 		stages[0].stage = ShaderType::VertexShader;
 		stages[0].fileType = ShaderFileType::Source;
 
-		stages[1].shaderFileName = "res/shaders/compiled/bloom_frag.glsl";
+		stages[1].shaderFileName = "bloom_frag.glsl";
 		stages[1].stage = ShaderType::FragmentShader;
 		stages[1].fileType = ShaderFileType::Source;
 
@@ -48,8 +48,8 @@ namespace Hazard::Rendering::OpenGL {
 		m_Pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
 		m_Pipeline->GetShader()->SetUniformInt("sampleTexture", 0);
 
-		stages[0].shaderFileName = "res/shaders/compiled/passtrough_vert.glsl";
-		stages[1].shaderFileName = "res/shaders/compiled/combine_frag.glsl";
+		stages[0].shaderFileName = "passtrough_vert.glsl";
+		stages[1].shaderFileName = "combine_frag.glsl";
 		pipelineInfo.shaderPipelineName = "CombineShader";
 
 		m_CombinePipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);

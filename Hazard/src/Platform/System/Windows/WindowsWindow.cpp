@@ -20,11 +20,12 @@ namespace Hazard::Rendering {
 	WindowsWindow::WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
 
 		HZR_PROFILE_FUNCTION();
+
 		if (glfwInit() != GLFW_TRUE) {
 			HZR_THROW("Failed to init GLFW");
 		}
 		
-		m_WindowData.Title = appInfo->appName.c_str();
+		m_WindowData.Title = (appInfo->appName + " " + appInfo->buildVersion).c_str();
 		m_WindowData.Platform = "Windows";
 		m_WindowData.Width = info->width;
 		m_WindowData.Height = info->height;

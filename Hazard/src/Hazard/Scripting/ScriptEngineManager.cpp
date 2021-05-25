@@ -18,6 +18,7 @@ namespace Hazard::Scripting {
 		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
 
 		ScriptCommand::Init();
+		SetActive(info->enable);
 	}
 	void ScriptEngineManager::Close()
 	{

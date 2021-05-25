@@ -63,6 +63,19 @@ namespace Hazard::Rendering {
 		}
 	}
 	template<>
+	Ref<Shader> RenderUtils::Create<Shader>(const char* name, uint32_t stageCount, PipelineShaderStage* stages) {
+
+		if (Vault::Has<Shader>(name)) {
+			return Ref(Vault::Get<Shader>(name));
+		}
+
+		switch (s_Api)
+		{
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLShader>::Create(name, stageCount, stages); break;
+		//case RenderAPI::Vulkan:		return Ref<Vulkan::VulkanShader>::Create(name, stageCount, stages); break;
+		}
+	}
+	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {
 
 		switch (s_Api)
@@ -141,5 +154,11 @@ namespace Hazard::Rendering {
 		createInfo.data = &data;
 
 		s_WhiteTexture = Create<Texture2D>(createInfo);
+	}
+	std::string RenderUtils::GetShaderPath(ShaderFileType type)
+	{
+		if (type == ShaderFileType::Binary) 
+			return m_Info.shaderCompilePath;
+		return m_Info.shaderSourcePath;
 	}
 }

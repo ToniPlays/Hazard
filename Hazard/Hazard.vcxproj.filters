@@ -133,6 +133,9 @@
     <Filter Include="src\Scripting\CSharp\Script\ECS">
       <UniqueIdentifier>{4DDBC3F5-B9BE-D235-C2C1-00722E249986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scripting\CSharp\Script\Math">
+      <UniqueIdentifier>{3C2C44AE-287D-2FF0-51E1-1DB23D91C259}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Scripting\HazardScript">
       <UniqueIdentifier>{ED619A93-D971-4664-422B-AB822E5A35FD}</UniqueIdentifier>
     </Filter>
@@ -228,19 +231,19 @@
     <ClInclude Include="src\Hazard\Entity\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneDeserializer.h">
+    <ClInclude Include="src\Hazard\Entity\Loader\WorldDeserializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneHandler.h">
+    <ClInclude Include="src\Hazard\Entity\Loader\WorldSerializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\SceneSerializer.h">
-      <Filter>src\Hazard\Entity\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\SceneCommand.h">
-      <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\World.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\WorldCommand.h">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\WorldHandler.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Events\ApplicationEvent.h">
@@ -280,6 +283,9 @@
       <Filter>src\Hazard\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Math\Math.h">
+      <Filter>src\Hazard\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Math\Random.h">
       <Filter>src\Hazard\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Math\Time.h">
@@ -530,6 +536,9 @@
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\ECS\TransformBindings.h">
       <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Math\MathBindings.h">
+      <Filter>src\Scripting\CSharp\Script\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptRegistery.h">
       <Filter>src\Scripting\CSharp</Filter>
@@ -810,8 +819,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Math\MathBindings.h" />
-    <ClInclude Include="src\Hazard\Math\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -847,19 +854,19 @@
     <ClCompile Include="src\Hazard\Entity\Entity.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneDeserializer.cpp">
+    <ClCompile Include="src\Hazard\Entity\Loader\WorldDeserializer.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneHandler.cpp">
+    <ClCompile Include="src\Hazard\Entity\Loader\WorldSerializer.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\SceneSerializer.cpp">
-      <Filter>src\Hazard\Entity\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\SceneCommand.cpp">
-      <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\World.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\WorldCommand.cpp">
+      <Filter>src\Hazard\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\WorldHandler.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\File\File.cpp">
@@ -872,6 +879,9 @@
       <Filter>src\Hazard\Logging</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Math\Color.cpp">
+      <Filter>src\Hazard\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Math\Random.cpp">
       <Filter>src\Hazard\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Math\Time.cpp">
@@ -1063,6 +1073,9 @@
     <ClCompile Include="src\Scripting\CSharp\Script\ECS\TransformBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Math\MathBindings.cpp">
+      <Filter>src\Scripting\CSharp\Script\Math</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\ScriptRegistery.cpp">
       <Filter>src\Scripting\CSharp</Filter>
     </ClCompile>
@@ -1078,7 +1091,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Math\MathBindings.cpp" />
-    <ClCompile Include="src\Hazard\Math\Random.cpp" />
   </ItemGroup>
 </Project>

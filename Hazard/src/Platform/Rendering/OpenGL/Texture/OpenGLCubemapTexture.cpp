@@ -135,11 +135,11 @@ namespace Hazard::Rendering::OpenGL {
 		viewport.size = { m_Info.width, m_Info.height };
 
 		PipelineShaderStage stages[2];
-		stages[0].shaderFileName = "res/shaders/compiled/equirectangularToCubemap_vert.glsl";
+		stages[0].shaderFileName = "equirectangularToCubemap_vert.glsl";
 		stages[0].fileType = ShaderFileType::Source;
 		stages[0].stage = ShaderType::VertexShader;
 
-		stages[1].shaderFileName = "res/shaders/compiled/equirectangularToCubemap_frag.glsl";
+		stages[1].shaderFileName = "equirectangularToCubemap_frag.glsl";
 		stages[1].fileType = ShaderFileType::Source;
 		stages[1].stage = ShaderType::FragmentShader;
 

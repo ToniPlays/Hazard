@@ -54,11 +54,11 @@ namespace Hazard::Rendering {
 		viewport.size = { 1920, 1080 };
 
 		PipelineShaderStage stages[2];
-		stages[0].shaderFileName = "res/shaders/compiled/skybox_vert.glsl";
+		stages[0].shaderFileName = "skybox_vert.glsl";
 		stages[0].fileType = ShaderFileType::Source;
 		stages[0].stage = ShaderType::VertexShader;
 
-		stages[1].shaderFileName = "res/shaders/compiled/skybox_frag.glsl";
+		stages[1].shaderFileName = "skybox_frag.glsl";
 		stages[1].fileType = ShaderFileType::Source;
 		stages[1].stage = ShaderType::FragmentShader;
 

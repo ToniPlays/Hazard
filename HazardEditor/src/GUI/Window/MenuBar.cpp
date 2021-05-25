@@ -31,6 +31,10 @@ namespace WindowElement {
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
 			Layout::Separator();
+			Layout::MenuItem("Export", []() {
+				Application::GetModule<EditorView>()->SetLayerActive<ExportView>(true);
+				});
+			Layout::Separator();
 			Layout::MenuItem("Quit", []() {
 				Application::Quit();
 			});

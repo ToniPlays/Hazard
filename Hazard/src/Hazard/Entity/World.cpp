@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "World.h"
 #include "Entity.h"
-#include "SceneCommand.h"
+#include "WorldCommand.h"
 #include "Hazard/Audio/AudioCommand.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
@@ -90,7 +90,7 @@ namespace Hazard::ECS {
 			auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
 			if (!e.IsVisible() || !mesh.m_Mesh) continue;
 
-			SceneCommand::Render(mesh, transform);
+			WorldCommand::Render(mesh, transform);
 		}
 		for (auto entity : sprites) {
 
@@ -99,7 +99,7 @@ namespace Hazard::ECS {
 
 			auto& [sprite, transform] = m_Registry.get<SpriteRendererComponent, TransformComponent>(entity);
 			if (!sprite.m_Texture->GetData().hasTransparency)
-				SceneCommand::Render(sprite, transform);
+				WorldCommand::Render(sprite, transform);
 		}
 
 		for (auto entity : sprites) {
@@ -110,7 +110,7 @@ namespace Hazard::ECS {
 			auto& [sprite, transform] = m_Registry.get<SpriteRendererComponent, TransformComponent>(entity);
 
 			if (sprite.m_Texture->GetData().hasTransparency)
-				SceneCommand::Render(sprite, transform);
+				WorldCommand::Render(sprite, transform);
 		}
 
 		auto batches = m_Registry.group<BatchComponent>(entt::get<TransformComponent>);
@@ -120,7 +120,7 @@ namespace Hazard::ECS {
 			if (!e.IsVisible()) continue;
 
 			auto& [batch, transform] = m_Registry.get<BatchComponent, TransformComponent>(entity);
-			SceneCommand::Render(batch, transform);
+			WorldCommand::Render(batch, transform);
 		}
 	}
 	Entity World::CreateEntity(const std::string& name)
@@ -252,21 +252,21 @@ namespace Hazard::ECS {
 	//SCRIPT COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
-		SceneCommand::OnScriptAttached(entity, component);
+		WorldCommand::OnScriptAttached(entity, component);
 	}
 	template<>
 	void World::OnComponentAdded(Entity& entity, VisualScriptComponent& component) {
-		SceneCommand::OnScriptAttached(entity, component);
+		WorldCommand::OnScriptAttached(entity, component);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component)
 	{
-		SceneCommand::OnScriptDetached(entity, component);
+		WorldCommand::OnScriptDetached(entity, component);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, VisualScriptComponent& component)
 	{
-		SceneCommand::OnScriptDetached(entity, component);
+		WorldCommand::OnScriptDetached(entity, component);
 	}
 	//MESH COMPONENT
 	template<>

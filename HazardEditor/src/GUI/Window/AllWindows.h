@@ -19,4 +19,5 @@
 #include "Debug/Console.h"
 #include "Debug/Profiler.h"
 
+#include "Editor/ExportView.h"
 #include "ShaderEditor/ShaderEditorWindow.h"

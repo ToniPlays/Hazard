@@ -1,0 +1,205 @@
+World: Space test scene
+Environment:
+  ClearColor: [9.99989993e-07, 9.99998292e-07, 9.99999997e-07, 1]
+  Type: Color
+  File: ""
+Entities:
+  - Entity: 15
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [8, -4.55356979, 0.00593471527]
+      Rotation: [0, -0, 0]
+      Scale: [1, 6.1500001, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 14
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [7.9999876, 4.50001526, 0]
+      Rotation: [0, 0, -3.14158988]
+      Scale: [0.99999994, 6.1499958, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 13
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [2.9999876, 4.50000143, 0]
+      Rotation: [0, 0, -3.14158988]
+      Scale: [0.99999994, 6.1499958, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 12
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [3, -4.55356979, 0.00593471527]
+      Rotation: [0, -0, 0]
+      Scale: [1, 6.1500001, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 11
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [-2, -4.55356979, 0.00593471527]
+      Rotation: [0, -0, 0]
+      Scale: [1, 6.1500001, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 10
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [-2.0000124, 4.4999876, 0]
+      Rotation: [0, -0, -3.14158988]
+      Scale: [0.99999994, 6.1499958, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 9
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [13, -4.55356979, 0.00593471527]
+      Rotation: [0, -0, 0]
+      Scale: [1, 6.1500001, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 8
+    TagComponent:
+      Tag: Pipe
+    TransformComponent:
+      Translation: [12.9999876, 4.50002909, 0]
+      Rotation: [0, 0, -3.14158988]
+      Scale: [0.99999994, 6.1499958, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\pipe.png
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 7
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [-10, 0, -1]
+      Rotation: [0, 0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 0.999989986, 0.999989986, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 6
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [-5, 0, -1]
+      Rotation: [0, 0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 0.999989986, 0.999989986, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 5
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [-15, 0, -1]
+      Rotation: [0, -0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 0.999989986, 0.999989986, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 4
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [10, 0, -1]
+      Rotation: [0, -0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 3
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [5, 0, -1]
+      Rotation: [0, 0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall
+  - Entity: 2
+    TagComponent:
+      Tag: Bird
+    TransformComponent:
+      Translation: [-5.30000019, 0, 1]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bird.png
+    ScriptComponent:
+      ModuleName: FlappyBird
+    AudioSourceComponent:
+      AudioFile: res/audio/flap.mp3
+      Gain: 0.600000024
+      Looping: False
+  - Entity: 1
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [-1.64999998, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Projection: Orthographic
+      Fov: 7.10500002
+      Clipping: [-100, 100]
+    AudioSourceComponent:
+      AudioFile: res/audio/flap.mp3
+      Gain: 1
+      Looping: False
+  - Entity: 0
+    TagComponent:
+      Tag: Background
+    TransformComponent:
+      Translation: [0, 0, -1]
+      Rotation: [0, -0, 0]
+      Scale: [5, 9, 1]
+    SpriteRendererComponent:
+      Tint: [1, 1, 1, 1]
+      Texture: C:\dev\HazardProject\assets\Sprites\bg.jpeg
+    ScriptComponent:
+      ModuleName: ParallaxWall

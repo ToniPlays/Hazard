@@ -41,7 +41,7 @@ namespace Project {
 	}
 	void ProjectManager::SaveCurrentScene()
 	{
-		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
-		ECS::Loader::SceneSerializer::SerializeEditor(world.GetWorldFile().c_str(), world);
+		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
+		ECS::Loader::WorldSerializer::SerializeEditor(world.GetWorldFile().c_str(), world);
 	}
 }

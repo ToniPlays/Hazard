@@ -13,6 +13,7 @@ public:
 
 	void PreInit() override;
 	void Init() override;
+	void Update() override;
 	bool OnEvent(Event& e) override;
 };
 

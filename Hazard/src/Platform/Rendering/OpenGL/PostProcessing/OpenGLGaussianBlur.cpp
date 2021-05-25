@@ -22,11 +22,11 @@ namespace Hazard::Rendering::OpenGL
 
         PipelineShaderStage stages[2];
 
-        stages[0].shaderFileName = "res/shaders/compiled/horizontalGaussian_vert.glsl";
+        stages[0].shaderFileName = "horizontalGaussian_vert.glsl";
         stages[0].stage = ShaderType::VertexShader;
         stages[0].fileType = ShaderFileType::Source;
 
-        stages[1].shaderFileName = "res/shaders/compiled/gaussian_blurr_frag.glsl";
+        stages[1].shaderFileName = "gaussian_blurr_frag.glsl";
         stages[1].stage = ShaderType::FragmentShader;
         stages[1].fileType = ShaderFileType::Source;
 
@@ -47,7 +47,7 @@ namespace Hazard::Rendering::OpenGL
         m_horizontalPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
         m_horizontalPipeline->GetShader()->SetUniformInt("sampleTexture", 0);
 
-        stages[0].shaderFileName = "res/shaders/compiled/verticalGaussian_vert.glsl";
+        stages[0].shaderFileName = "verticalGaussian_vert.glsl";
         pipelineInfo.shaderPipelineName = "VerticalGaussian";
 
         m_verticalPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);

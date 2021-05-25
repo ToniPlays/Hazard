@@ -50,7 +50,9 @@ namespace Hazard::Rendering {
 	void RenderEngine::BeginRendering(Camera camera, BackgroundRenderer& renderer)
 	{
 		RenderCommand::ResetStats();
-		m_FrameBuffer->Bind();
+		if(m_FrameBuffer != nullptr)
+			m_FrameBuffer->Bind();
+
 		RenderContextCommand::ClearFrame(renderer.m_Color);
 
 		m_BackgroundRenderer = &renderer;
@@ -61,7 +63,6 @@ namespace Hazard::Rendering {
 		m_CameraData.cameraPos = camera.position;
 		m_CameraData.gamma = renderer.GetGamma();
 		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
-
 
 		m_Renderer2D->BeginScene(m_CameraData.viewProjection);
 		m_Renderer2D->BeginBatch();
@@ -74,6 +75,7 @@ namespace Hazard::Rendering {
 		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
 
 		m_BackgroundRenderer->Render();
-		m_FrameBuffer->Unbind();
+		if (m_FrameBuffer != nullptr)
+			m_FrameBuffer->Unbind();
 	}
 }

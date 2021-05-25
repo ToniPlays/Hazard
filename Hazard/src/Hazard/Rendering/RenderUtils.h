@@ -23,6 +23,8 @@ namespace Hazard::Rendering {
 		static void SetRenderAPI(RenderAPI api) { s_Api = api; }
 		static RenderAPI GetRenderAPI() { return s_Api; }
 
+		static std::string GetShaderPath(ShaderFileType type);
+
 		template<typename T, typename Arg>
 		static T* CreateRaw(Arg arg);
 
@@ -31,6 +33,8 @@ namespace Hazard::Rendering {
 
 		template<typename T, typename Arg, typename S>
 		static Ref<T> Create(Arg arg, S sArg);
+		template<typename T, typename Arg, typename S, typename C>
+		static Ref<T> Create(Arg arg, S sArg, C tArg);
 
 		template<typename T>
 		static Ref<T>& Get();

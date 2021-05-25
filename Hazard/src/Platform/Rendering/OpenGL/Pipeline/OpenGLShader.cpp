@@ -117,7 +117,9 @@ namespace Hazard::Rendering::OpenGL {
 			GLuint shader = glCreateShader(shaderType);
 			shaderID.push_back(shader);
 
-			std::string source = File::ReadFile(stage.shaderFileName);
+			std::string path = RenderUtils::GetShaderPath(stage.fileType);
+
+			std::string source = File::ReadFile(path + "/" + stage.shaderFileName);
 			const GLchar* shaderSource = source.c_str();
 
 			glShaderSource(shader, 1, &shaderSource, 0);

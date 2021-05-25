@@ -108,6 +108,9 @@
     <ClInclude Include="src\Editor\EditorPlatformVulkan.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GameExport.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\EditorPopup.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
       <Filter>src\GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\ExportView.h">
+      <Filter>src\GUI\Window\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
       <Filter>src\GUI\Window\Editor</Filter>
@@ -242,6 +248,9 @@
     <ClCompile Include="src\Editor\EditorPlatformVulkan.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GameExport.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\EditorPopup.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
@@ -280,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\ExportView.cpp">
+      <Filter>src\GUI\Window\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
       <Filter>src\GUI\Window\Editor</Filter>

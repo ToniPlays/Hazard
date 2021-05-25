@@ -24,6 +24,9 @@ namespace Hazard {
 	{
 
 	};
+	struct EntityComponentCreateInfo {
+		std::string startupFile;
+	};
 	struct RenderContexCreateInfo 
 	{
 		RenderAPI renderer = RenderAPI::Auto;
@@ -50,13 +53,16 @@ namespace Hazard {
 		std::string appAssemblyPath;
 		std::string coreAssemblyPath;
 		std::string monoDirectory;
+		bool enable = true;
 	};
 
-	struct HazardCreateInfo {
+	struct HazardCreateInfo 
+	{
 		ApplicationCreateInfo* appInfo = nullptr;
 		RenderContexCreateInfo* renderContextInfo = nullptr;
 		RenderEngineCreateInfo* rendererInfo = nullptr;
 		ScriptEngineCreateInfo* scriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* audioEngine = nullptr;
+		EntityComponentCreateInfo* entityComponent = nullptr;
 	};
 }

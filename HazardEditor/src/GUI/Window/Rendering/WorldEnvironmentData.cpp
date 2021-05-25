@@ -23,7 +23,7 @@ namespace WindowElement {
 	{
 
 		using namespace Rendering;
-		ECS::World& world = ECS::SceneCommand::GetCurrentWorld();
+		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 
 		Layout::Treenode("Environment", Style::GetTreeNodeDefaultFlags(), [&]() {
 

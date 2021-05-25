@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "OpenGLGraphicsPipeline.h"
 #include "OpenGLShader.h"
+#include "Hazard/Rendering/RenderUtils.h"
 #include "../OpenGLUtils.h"
 #include <glad/glad.h>
 
@@ -14,12 +15,7 @@ namespace Hazard::Rendering::OpenGL
 		m_Info.rawCullFace = OpenGLUtils::CullFaceToGL(info.rasterizer->cullFace);
 		m_Info.viewport = *info.viewport;
 
-		if (Vault::Has<Shader>(info.shaderPipelineName)) {
-			m_Info.pipelineShader = Ref(Vault::Get<Shader>(info.shaderPipelineName));
-			return;
-		}
-
-		m_Info.pipelineShader = Ref<OpenGLShader>::Create(info.shaderPipelineName ,info.stageCount, info.stages);
+		m_Info.pipelineShader = RenderUtils::Create<Shader>(info.shaderPipelineName.c_str(), info.stageCount, info.stages);
 	}
 	OpenGLGraphicsPipeline::~OpenGLGraphicsPipeline()
 	{

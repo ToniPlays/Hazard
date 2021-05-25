@@ -21,7 +21,6 @@ namespace Hazard::Scripting::CSharp {
 		HZR_PROFILE_FUNCTION();
 		s_Data.monoCoreAssemblyPath = info->coreAssemblyPath;
 		mono_set_dirs((info->monoDirectory + "/lib").c_str(), (info->monoDirectory + "/etc").c_str());
-		mono_set_assemblies_path("C:/dev/Hazard//vendor/mono/lib");
 	}
 	void Mono::CreateDomain(const char* name)
 	{
@@ -34,6 +33,9 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::LoadRuntimeAssembly(const char* path)
 	{
+		if (!File::Exists(path)) {
+			HZR_THROW("Runtime assembly does not exist " + std::string(path));
+		}
 		HZR_PROFILE_FUNCTION();
 		LoadMonoAssebly(path);
 		ScriptRegistery::Init();
@@ -64,7 +66,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(method, object, params, &exception);
-		HZR_CORE_ASSERT(exception == nullptr, "[MonoExeption]: {0}", mono_print_unhandled_exception(exception));
+		//HZR_CORE_ASSERT(exception == nullptr, "[MonoExeption]: {0}", mono_print_unhandled_exception(exception));
 		return result;
 	}
 	bool Mono::ModuleExists(const char* name)
