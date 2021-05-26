@@ -75,7 +75,7 @@ namespace WindowElement {
 	}
 	bool Input::Vec1(const char* label, float& value, float resetValue, float columnWidth)
 	{
-
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
 		bool modified = false;
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(columnWidth);
@@ -90,11 +90,12 @@ namespace WindowElement {
 		ImGui::PopStyleColor(3);
 		
 		Layout::EndTable();
-
+		ImGui::PopStyleVar();
 		return modified;
 	}
 	bool Input::Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth)
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
 		bool modified = false;
 		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 
@@ -137,11 +138,13 @@ namespace WindowElement {
 
 		ImGui::PopStyleVar();
 		Layout::EndTable();
+		ImGui::PopStyleVar();
 
 		return modified;
 	}
 	bool Input::Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth)
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
 		bool modified = true;
 		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 
@@ -199,7 +202,7 @@ namespace WindowElement {
 
 		ImGui::PopStyleVar();
 		Layout::EndTable();
-
+		ImGui::PopStyleVar();
 		return modified;
 	}
 	bool Input::ScriptField(const char* label, std::string& moduleName, bool exists)

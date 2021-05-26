@@ -10,7 +10,7 @@ namespace Project {
 		ProjectManager();
 		~ProjectManager();
 
-		bool Load(const char* file);
+		bool Load(const std::string& path);
 		void Save();
 		void SaveCurrentScene();
 

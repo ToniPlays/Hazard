@@ -30,7 +30,8 @@ void EditorApplication::PreInit()
 
 	RenderContexCreateInfo contextInfo;
 	contextInfo.renderer = RenderAPI::OpenGL;
-	contextInfo.fullScreen = true;
+	contextInfo.fullScreen = false;
+	contextInfo.maximized = true;
 	contextInfo.color = { 1, 1, 1 };
 	contextInfo.VSync = true;
 	contextInfo.width = 1280;
@@ -50,29 +51,25 @@ void EditorApplication::PreInit()
 	scriptInfo.monoDirectory = "C:/Program Files/Mono";
 	scriptInfo.enable = false;
 
+	EntityComponentCreateInfo entityInfo;
+
 	HazardCreateInfo createInfo;
 	createInfo.appInfo = &appInfo;
 	createInfo.renderContextInfo = &contextInfo;
 	createInfo.rendererInfo = &engineInfo;
 	createInfo.audioEngine = &audioInfo;
 	createInfo.scriptEngineInfo = &scriptInfo;
+	createInfo.entityComponent = &entityInfo;
 
 	CreateApplicationStack(&createInfo);
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	if (!manager.Load("C:\\dev\\HazardProject\\Hazard.hzrproj")) {
-		HZR_ERROR("Valid project file required to run application");
-	}
-	
-	PushModule<ECS::WorldHandler>();
-	PushModule<WindowElement::EditorView>().GetRenderable<WindowElement::FileView>()->
-		SetRootPath(manager.GetProject().m_AbsolutePath.c_str());
+	PushModule<WindowElement::EditorView>();
+
 }
 void EditorApplication::Init() 
 {
 	HZR_PROFILE_FUNCTION();
-	Project::ProjectManager manager = *GetModule<Project::ProjectManager>();
-	GetModule<ECS::WorldHandler>()->LoadScene(manager.GetProject().m_StartupScene.c_str(), ECS::Serialization::Editor);
 	Runtime::SceneRuntimeHandler::Init();
 }
 

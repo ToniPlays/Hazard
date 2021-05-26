@@ -124,7 +124,6 @@ namespace WindowElement {
 				return true;
 			}
 		}
-
 		return m_Toolbar.OnEvent(e);
 	}
 	void EditorView::Close()

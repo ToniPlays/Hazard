@@ -9,16 +9,20 @@ namespace Appereance {
 		ImGuiStyle* style = &GetStyle();
 
 		style->WindowPadding = ImVec2(4, 4);
-		style->FramePadding = ImVec2(4, 2);
+		style->FramePadding = ImVec2(6, 2);
 
 		style->WindowTitleAlign = ImVec2(0, 0.5);
-		style->WindowMenuButtonPosition = ImGuiDir_Right;
+		style->WindowMenuButtonPosition = ImGuiDir_None;
 
-		style->FrameRounding = 1;
+		style->IndentSpacing = 8;
+		style->ScrollbarSize = 16;
+
+		style->FrameRounding = 2;
+		style->ScrollbarRounding = 2;
 		style->WindowRounding = 0;
 		style->GrabRounding = 0;
 		style->ScrollbarRounding = 0;
-		style->TabRounding = 0;
+		style->TabRounding = 2;
 
 
 		//Window 

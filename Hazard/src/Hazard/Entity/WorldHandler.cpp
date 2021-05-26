@@ -13,13 +13,16 @@ namespace Hazard::ECS {
 
 	bool WorldHandler::LoadScene(const std::string& file, Serialization type)
 	{
-		if (!File::Exists(file)) {
-			HZR_THROW("Scene file not found: " + file);
+		if (File::Exists(file)) {
+			if (type == Serialization::Editor) {
+				m_World = Loader::WorldDeserializer::DeserializeEditor(file.c_str());
+				return true;
+			}
 		}
-		if (type == Serialization::Editor) {
-			m_World = Loader::WorldDeserializer::DeserializeEditor(file.c_str());
-			return true;
-		}
-		return false;
+		m_World = new World("New world");
+		Entity entity = m_World->CreateEntity("Camera");
+		entity.AddComponent<CameraComponent>();
+
+		return true;
 	}
 }

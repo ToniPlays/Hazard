@@ -44,10 +44,16 @@ namespace Hazard::Rendering {
 		}
 
 		glfwWindowHint(GLFW_RESIZABLE, info->resizable);
-		glfwWindowHint(GLFW_MAXIMIZED, info->fullScreen);
+		glfwWindowHint(GLFW_MAXIMIZED, info->maximized);
 
 		if (info->fullScreen) {
-			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, glfwGetPrimaryMonitor(), 0);
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+			if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0) {
+				m_WindowData.Width = glfwGetVideoMode(monitor)->width;
+				m_WindowData.Height = glfwGetVideoMode(monitor)->height;
+
+			}
+			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, monitor, 0);
 		}
 		else {
 			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);

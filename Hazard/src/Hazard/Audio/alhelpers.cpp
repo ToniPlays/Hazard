@@ -9,13 +9,10 @@
 
 #include "AL/al.h"
 
-/* InitAL opens a device and sets up a context using default attributes, making
- * the program ready to call OpenAL functions. */
 int InitAL(ALCdevice*& device, char*** argv, int* argc)
 {
 	ALCcontext* ctx;
 
-	/* Open and initialize a device */
 	device = NULL;
 	if (argc && argv && *argc > 1 && strcmp((*argv)[0], "-device") == 0)
 	{

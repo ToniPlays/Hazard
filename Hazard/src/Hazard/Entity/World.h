@@ -56,7 +56,7 @@ namespace Hazard::ECS {
 		}
 	private:
 		UID uid;
-		entt::registry m_Registry;
+		entt::registry m_Registry = entt::registry();
 		std::string m_Name;
 		std::string m_File;
 		WorldData m_WorldData;

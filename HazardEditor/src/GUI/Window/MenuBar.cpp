@@ -23,7 +23,13 @@ namespace WindowElement {
 
 		Layout::Menu("File", []() {
 			Layout::MenuItem("New", []() {});
-			Layout::MenuItem("Open", []() {});
+			Layout::MenuItem("Open project", []() {
+				std::string path = File::OpenFileDialog();
+
+				if (path != "")
+					Application::GetModule<Project::ProjectManager>()->Load(path);
+				
+			});
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
 				Application::GetModule<Project::ProjectManager>()->Save();
