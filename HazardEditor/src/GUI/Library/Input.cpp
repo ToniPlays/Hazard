@@ -8,7 +8,6 @@
 #include "imgui_internal.h"
 
 using namespace WindowLayout;
-using namespace Appereance;
 
 namespace WindowElement {
 

@@ -7,7 +7,6 @@
 #include "GUI/Library/Input.h"
 
 using namespace WindowLayout;
-using namespace Appereance;
 
 namespace WindowElement {
 

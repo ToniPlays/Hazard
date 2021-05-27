@@ -24,6 +24,8 @@ namespace WindowElement {
 	{
 		if (!selectionContext.IsValid()) return;
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
+
 		if(ImGui::Button(ICON_FK_CUBE, { 35, 35 })) 
 		{
 			
@@ -38,12 +40,13 @@ namespace WindowElement {
 		auto& c = selectionContext.GetComponent<TagComponent>();
 		ImVec2 textWidth = ImGui::CalcTextSize(c.m_Tag.c_str());
 
+		ImGui::PopStyleVar();
 		ImGui::SameLine();
 
-		Appereance::Style::SelectFont(1);
+		Style::SelectFont(1);
 
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - (textWidth.x / 2));
-		ImGui::SetCursorPosY(35 / 2 + (textWidth.y / 2));
+		ImGui::SetCursorPosY(35 / 2 + (textWidth.y / 2) + 10);
 		Layout::Text(c.m_Tag.c_str());
 		ImGui::PopFont();
 

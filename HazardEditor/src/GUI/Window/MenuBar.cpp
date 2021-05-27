@@ -58,7 +58,7 @@ namespace WindowElement {
 				Application::GetModule<ScriptEngineManager>()->ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
-				Application::GetModule<EditorView>()->GetRenderable<FileView>()->UpdateFileTree();
+				Application::GetModule<EditorView>()->GetRenderable<FileView>()->UpdateFolderData();
 				});
 		});
 		Layout::Menu("Window", []() {
@@ -109,10 +109,10 @@ namespace WindowElement {
 			});
 			Layout::Menu("Theme", [&]() {
 				Layout::MenuItem("Dark", [&]() {
-					Appereance::Style::InitTheme(Appereance::Theme::Dark);
+					Style::InitTheme(Theme::Dark);
 					});
 				Layout::MenuItem("Classic", [&]() {
-					Appereance::Style::InitTheme(Appereance::Theme::Classic);
+					Style::InitTheme(Theme::Classic);
 					});
 				});
 		});

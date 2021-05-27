@@ -38,6 +38,7 @@ namespace WindowElement {
 	{
 
 		Rendering::BloomEffect* bloom = m_PostProcessing->Get<BloomEffect>();
+
 		if (bloom) {
 			Input::Slider("Bloom threshold", bloom->threshold, 0, 1);
 			Input::Slider("Bloom intensity", bloom->intensity, 0, 1);

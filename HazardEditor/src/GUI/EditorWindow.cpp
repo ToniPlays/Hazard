@@ -24,7 +24,7 @@ namespace WindowElement {
 	void EditorWindow::OnRender()
 	{
 		if (GetActive()) {
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Appereance::Style::GetStyle().framePadding);
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().framePadding);
 			ImGui::Begin(m_Title.c_str(), &m_Active);
 			m_Focused = ImGui::IsWindowFocused();
 			m_Hovered = ImGui::IsWindowHovered();

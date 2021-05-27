@@ -30,8 +30,8 @@ namespace WindowElement {
 		Input::InputField(searchValue, "Search");
 		Layout::SameLine();
 
-		Appereance::Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-		Appereance::Style::SelectFont(1);
+		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+		Style::SelectFont(1);
 
 		if (Input::Button("X", { 20, 20 })) {
 			searchValue = "";
@@ -41,7 +41,7 @@ namespace WindowElement {
 
 		World& world = ECS::WorldCommand::GetCurrentWorld();
 
-		Layout::Treenode(world.GetName().c_str(), Appereance::Style::GetTreeNodeDefaultFlags(), [&world, this]() {
+		Layout::Treenode(world.GetName().c_str(), Style::GetTreeNodeDefaultFlags(), [&world, this]() {
 			world.GetWorldRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, &world };
 				DrawEntity(entity);

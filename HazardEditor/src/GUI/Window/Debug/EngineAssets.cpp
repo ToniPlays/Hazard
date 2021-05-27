@@ -15,7 +15,6 @@ namespace WindowElement {
 
 	void EngineAssets::OnWindowRender()
 	{
-		using namespace Appereance;
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
 
 		Layout::Treenode("Shaders", flags, []() {

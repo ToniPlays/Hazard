@@ -5,13 +5,6 @@
 namespace WindowElement {
 
 
-	struct FolderViewData {
-		std::string path;
-		std::string name;
-		std::vector<FolderViewData> subfolders;
-		std::vector<std::filesystem::directory_entry> files;
-	};
-
 	class FileView : public EditorWindow {
 	public:
 		FileView();
@@ -21,21 +14,19 @@ namespace WindowElement {
 		void OnWindowRender() override;
 		void SetRootPath(const char* path);
 		const char* GetRootPath() { return m_RootPath.c_str(); }
-
-		void UpdateFileTree();
+		void UpdateFolderData();
 
 	private:
-		std::vector<FolderViewData> UpdateFolderFiles(FolderViewData& parent);
-
-		void DrawFileTree(FolderViewData& data);
-		void DrawFolder(FolderViewData& data);
+		void DrawFolderTree();
+		void DrawFilePath();
+		Rendering::Texture2D* GetImageFor(std::string file);
 
 		std::string m_RootPath;
-		FolderViewData m_CurrentFolder;
+		std::string m_CurrentPath;
 
-		FolderViewData m_FolderData;
-
-		Ref<Hazard::Rendering::Texture2D> m_Image;
 		Ref<Hazard::Rendering::Texture2D> m_FolderImage;
+		Ref<Hazard::Rendering::Texture2D> m_Image;
+
+		FolderData m_FolderData;
 	};
 }

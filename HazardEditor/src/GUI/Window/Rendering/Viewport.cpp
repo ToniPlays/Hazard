@@ -38,15 +38,10 @@ namespace WindowElement {
 		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
 			m_EditorCamera.GetPosition()));
 
-		using namespace Appereance;
-
 		bool is2D = m_EditorCamera.Is2DEnabled();
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
-		if (Input::ToggleButtonColorChange("2D", Style::GetStyleColor(ColorType::Debug), Style::GetStyleColor(ColorType::Info),
-			Style::GetStyleColor(ColorType::Text), is2D, { 35, 25 })) {
-			m_EditorCamera.SetIs2D(is2D);
-		}
+		ImVec2 corner = ImGui::GetCursorPos();
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		if (size.x != m_Width || size.y != m_Height) {
@@ -63,9 +58,31 @@ namespace WindowElement {
 		m_Gizmos.OnRender(m_EditorCamera, size);
 		ImGui::PopStyleVar();
 
+		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, FLT_MAX);
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
+
+		if (Input::Button(ICON_FK_COG, { 25, 25 })) {
+			
+		}
+		ImGui::PopStyleVar();
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
+		ImGui::SameLine(0, 15);
+		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
+		if (Input::Button(text.c_str(), { 0, 25 })) {
+			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
+		}
+
+		ImGui::PopStyleVar(2);
+		/*if (Input::ToggleButtonColorChange("2D", Style::GetStyleColor(ColorType::Debug), Style::GetStyleColor(ColorType::Info),
+			Style::GetStyleColor(ColorType::Text), is2D, { 35, 25 })) {
+			m_EditorCamera.SetIs2D(is2D);
+		}*/
+
 		if (m_Gizmos.IsUsing()) return;
 		
 		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Hazard::Input::GetMousePos());
+		
 	}
 	bool Viewport::OnEvent(Event& e)
 	{

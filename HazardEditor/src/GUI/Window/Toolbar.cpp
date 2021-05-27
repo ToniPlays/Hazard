@@ -30,7 +30,6 @@ namespace WindowElement {
 	}
 	void Toolbar::OnRender()
 	{
-		using namespace Appereance;
 		Color onColor = Style::GetStyleColor(ColorType::Text);
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 

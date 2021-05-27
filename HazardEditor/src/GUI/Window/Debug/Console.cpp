@@ -39,8 +39,6 @@ namespace WindowElement {
 	}
 	void Console::OnWindowRender()
 	{
-		using namespace Appereance;
-
 		if (Input::Button("Clear")) {
 			ClearLog();
 		}

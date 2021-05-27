@@ -74,7 +74,7 @@ namespace WindowElement {
 
 		InitImGuiPlatform(m_Context->GetWindow());
 		
-		Appereance::Style::InitTheme(Appereance::Theme::Dark);
+		Style::InitTheme(Theme::Dark);
 
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
@@ -103,7 +103,7 @@ namespace WindowElement {
 			for (RenderableElement* element : m_Elements) {
 				element->OnMenuRender();
 			}
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Appereance::Style::GetStyle().dockPadding);
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().dockPadding);
 			WindowLayout::Dockspace::Begin("MainDockSpace");
 			WindowLayout::Dockspace::End();
 			ImGui::PopStyleVar();
@@ -112,6 +112,7 @@ namespace WindowElement {
 		for (RenderableElement* element : m_Elements) {
 			element->OnRender();
 		}
+		ImGui::ShowStyleEditor();
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)
