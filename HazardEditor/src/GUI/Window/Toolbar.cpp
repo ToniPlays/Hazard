@@ -31,29 +31,28 @@ namespace WindowElement {
 	void Toolbar::OnRender()
 	{
 		using namespace Appereance;
-
-		Color onColor = Color::FromHex("#404040");
+		Color onColor = Style::GetStyleColor(ColorType::Text);
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 
 		TransformationGizmo& gizmo = EditorView::GetInstance().GetRenderable<Viewport>()->GetGizmo();
 		static bool b = false;
-
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		ImGui::Begin("##Toolbar");
 
 		ImGui::SameLine(5);
-		if(Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), gizmo.GetType() == Gizmo::Translate, { 28, 28 })) {
+		if(Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), gizmo.GetType() != Gizmo::Translate, { 28, 28 })) {
 			gizmo.SetType(Gizmo::Translate);
 		}
 		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, onColor, Style::GetStyleColor(ColorType::Critical), gizmo.GetType() == Gizmo::Rotate, { 28, 28 })) {
+		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, onColor, Style::GetStyleColor(ColorType::Critical), gizmo.GetType() != Gizmo::Rotate, { 28, 28 })) {
 			gizmo.SetType(Gizmo::Rotate);
 		}
 		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, onColor, Style::GetStyleColor(ColorType::Warning), gizmo.GetType() == Gizmo::Scale, { 28, 28 })) {
+		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, onColor, Style::GetStyleColor(ColorType::Warning), gizmo.GetType() != Gizmo::Scale, { 28, 28 })) {
 			gizmo.SetType(Gizmo::Scale);
 		}
 		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_CODEPEN, offColor, onColor, Style::GetStyleColor(ColorType::Info), gizmo.GetType() == Gizmo::Bounds, { 28, 28 })) {
+		if (Input::ButtonColorChange(ICON_FK_CODEPEN, offColor, onColor, Style::GetStyleColor(ColorType::Info), gizmo.GetType() != Gizmo::Bounds, { 28, 28 })) {
 			gizmo.SetType(Gizmo::Bounds);
 		}
 		Layout::SameLine(0, 25);
@@ -75,6 +74,8 @@ namespace WindowElement {
 		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
 		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
+
+		onColor = Style::GetStyleColor(ColorType::Primary);
 
 		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), sceneRunning, { 28, 28 })) {
 			SetPlaying(sceneRunning);
@@ -106,6 +107,7 @@ namespace WindowElement {
 		if (Input::ButtonColorChange(ICON_FK_COGS, offColor, onColor, Style::GetStyleColor(ColorType::Critical), false, { 28, 28 })) {
 			ImGui::SaveIniSettingsToDisk("imgui.ini");
 		}
+		ImGui::PopStyleVar();
 		ImGui::End();
 	}
 	bool Toolbar::OnEvent(Event& e)

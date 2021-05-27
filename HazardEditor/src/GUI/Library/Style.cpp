@@ -4,26 +4,93 @@
 
 namespace Appereance {
 
-	void Style::Init()
+	Theme Style::s_Theme;
+	ThemeValues Style::s_Values;
+
+	void Style::InitTheme(Theme theme) {
+		s_Theme = theme;
+
+		switch (theme)
+		{
+		case Appereance::Dark:		InitDarkTheme(); break;
+		case Appereance::Classic:	InitClassic(); break;
+		}
+	}
+	void Style::SetColor(ImGuiCol_ color, Color value)
 	{
-		ImGuiStyle* style = &GetStyle();
+		SetColor(color, ColorAsImVec4(value));
+	}
+	void Style::SetColor(ImGuiCol_ color, ImVec4 value)
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.Colors[color] = value;
+	}
+	void Style::SetButtonColors(const char* button, const char* hovered, const char* active)
+	{
+		SetButtonColors(Color(button), Color(hovered), Color(active));
+	}
+	void Style::SetButtonColors(Color button, Color hovered, Color active)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ColorAsImVec4(button));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ColorAsImVec4(hovered));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ColorAsImVec4(active));
+	}
+	void Style::SelectFont(uint8_t index)
+	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index]);
+	}
+	ImFont* Style::AddFont(const char* file, float size)
+	{
+		return ImGui::GetIO().Fonts->AddFontFromFileTTF(file, size);
+	}
+	ImVec4 Style::ColorAsImVec4(Color color)
+	{
+		return { color.r, color.g, color.b, color.a };
+	}
+	ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
+	{
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
+		return flags;
+	}
+	Color Style::GetStyleColor(ColorType type)
+	{
+		switch (type)
+		{
+		case ColorType::Primary:		return Color("#53B305");
+		case ColorType::Secondary:		return Color("#242424");
+		case ColorType::Info:			return Color("#1AE61A");
+		case ColorType::Debug:			return Color("#0080ff");
+		case ColorType::Warning:		return Color("#FFE600");
+		case ColorType::Error:			return Color("#FF331A");
+		case ColorType::Critical:		return Color("#FF0000");
+		case ColorType::Trace:			return Color("#FFFFFF");
+		case ColorType::Background:		return Color("#181818");
+		case ColorType::Text:			return Color("#B9B9B9");
+		}
+		return Color();
+	}
+	void Style::InitClassic()
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
 
-		style->WindowPadding = ImVec2(4, 4);
-		style->FramePadding = ImVec2(6, 2);
+		style.WindowPadding = ImVec2(4, 4);
+		style.FramePadding = ImVec2(6, 2);
 
-		style->WindowTitleAlign = ImVec2(0, 0.5);
-		style->WindowMenuButtonPosition = ImGuiDir_None;
+		style.WindowTitleAlign = ImVec2(0, 0.5);
+		style.WindowMenuButtonPosition = ImGuiDir_None;
 
-		style->IndentSpacing = 8;
-		style->ScrollbarSize = 16;
+		style.IndentSpacing = 8;
+		style.ScrollbarSize = 16;
 
-		style->FrameRounding = 2;
-		style->ScrollbarRounding = 2;
-		style->WindowRounding = 0;
-		style->GrabRounding = 0;
-		style->ScrollbarRounding = 0;
-		style->TabRounding = 2;
+		style.FrameRounding = 2;
+		style.ScrollbarRounding = 2;
+		style.WindowRounding = 0;
+		style.GrabRounding = 0;
+		style.ScrollbarRounding = 0;
+		style.TabRounding = 2;
 
+		s_Values.dockPadding = { 6, 2 };
+		s_Values.framePadding = { 6, 2 };
 
 		//Window 
 		SetColor(ImGuiCol_WindowBg, GetStyleColor(ColorType::Background));
@@ -80,60 +147,64 @@ namespace Appereance {
 		SetColor(ImGuiCol_ScrollbarGrabHovered, "#4A9F04");
 		SetColor(ImGuiCol_ScrollbarGrabActive, "#418B04");
 	}
-	void Style::SetColor(ImGuiCol_ color, Color value)
+	void Style::InitDarkTheme()
 	{
-		SetColor(color, ColorAsImVec4(value));
-		
-	}
-	void Style::SetColor(ImGuiCol_ color, ImVec4 value)
-	{
-		ImGuiStyle* style = &GetStyle();
-		ImVec4* colors = style->Colors;
+		ImGuiStyle& style = ImGui::GetStyle();
 
-		colors[color] = value;
-	}
-	void Style::SetButtonColors(const char* button, const char* hovered, const char* active)
-	{
-		SetButtonColors(Color(button), Color(hovered), Color(active));
-	}
-	void Style::SetButtonColors(Color button, Color hovered, Color active)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Button, ColorAsImVec4(button));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ColorAsImVec4(hovered));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ColorAsImVec4(active));
-	}
-	void Style::SelectFont(uint8_t index)
-	{
-		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index]);
-	}
-	ImFont* Style::AddFont(const char* file, float size)
-	{
-		return ImGui::GetIO().Fonts->AddFontFromFileTTF(file, size);
-	}
-	ImVec4 Style::ColorAsImVec4(Color color)
-	{
-		return { color.r, color.g, color.b, color.a };
-	}
-	ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
-	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
-		return flags;
-	}
-	Color Style::GetStyleColor(ColorType type)
-	{
-		switch (type)
-		{
-		case ColorType::Primary:		return Color("#53B305");
-		case ColorType::Secondary:		return Color("#242424");
-		case ColorType::Info:			return Color("#1AE61A");
-		case ColorType::Debug:			return Color("#0080ff");
-		case ColorType::Warning:		return Color("#FFE600");
-		case ColorType::Error:			return Color("#FF331A");
-		case ColorType::Critical:		return Color("#FF0000");
-		case ColorType::Trace:			return Color("#FFFFFF");
-		case ColorType::Background:		return Color("#181818");
-		case ColorType::Text:			return Color("#E9E9E9");
-		}
-		return Color();
+		style.WindowPadding = { 2, 2 };
+		style.WindowBorderSize = 0;
+
+		style.FrameRounding = 2;
+		style.WindowRounding = 2;
+		style.FrameBorderSize = 1;
+		style.ScrollbarRounding = 6;
+		style.IndentSpacing = 16;
+		style.GrabRounding = 2;
+		style.ItemInnerSpacing = { 6, 4 };
+		style.TabRounding = 2;
+		style.WindowMenuButtonPosition = ImGuiDir_None;
+
+		s_Values.dockPadding = { 16, 8 };
+		s_Values.framePadding = { 0, 8 };
+
+		SetColor(ImGuiCol_MenuBarBg, "#181816");
+		SetColor(ImGuiCol_Text, "#B9B9B9");
+		SetColor(ImGuiCol_TextSelectedBg, "##5DC5054B");
+
+		SetColor(ImGuiCol_WindowBg, "#222222");
+		SetColor(ImGuiCol_ScrollbarBg, "#222222");
+		SetColor(ImGuiCol_TitleBgActive, "#181816");
+
+		SetColor(ImGuiCol_Separator, "#181816");
+		SetColor(ImGuiCol_SeparatorHovered, "#5DC50570");
+		SetColor(ImGuiCol_SeparatorActive, GetStyleColor(ColorType::Primary));
+
+		SetColor(ImGuiCol_Border, "#303030");
+		SetColor(ImGuiCol_CheckMark, "#5DC505");
+		SetColor(ImGuiCol_NavHighlight, "#5DC50590");
+
+		SetColor(ImGuiCol_FrameBg, "#0D0D0B");
+		SetColor(ImGuiCol_FrameBgHovered, "#0B0B09");
+		SetColor(ImGuiCol_FrameBgActive, "#0B0B09");
+
+		SetColor(ImGuiCol_Header, "#323234");
+		SetColor(ImGuiCol_HeaderHovered, "#2e2e30");
+
+		SetColor(ImGuiCol_Tab, "#181816");
+		SetColor(ImGuiCol_TabActive, "#222222");
+		SetColor(ImGuiCol_TabUnfocused, "#161616");
+		SetColor(ImGuiCol_TabUnfocusedActive, "#222222");
+
+		SetColor(ImGuiCol_DockingPreview, "#5DC5052A");
+
+		SetColor(ImGuiCol_Button, "#222222");
+		SetColor(ImGuiCol_ButtonHovered, "#181818");
+		SetColor(ImGuiCol_ButtonActive, "#222222");
+
+		SetColor(ImGuiCol_SliderGrab, "#303030");
+
+		SetColor(ImGuiCol_ResizeGrip, "#181816");
+		SetColor(ImGuiCol_ResizeGripHovered, "#5DC50570");
+		SetColor(ImGuiCol_ResizeGripActive, GetStyleColor(ColorType::Primary));
 	}
 }

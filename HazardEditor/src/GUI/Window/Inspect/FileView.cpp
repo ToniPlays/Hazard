@@ -37,6 +37,7 @@ namespace WindowElement {
 		using namespace Appereance;
 		Color onColor = Color::FromHex("#404040");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		Layout::SameLine(0, 5);
 
 		if (Input::ButtonColorChange(ICON_FK_FOLDER, offColor, onColor, Style::GetStyleColor(ColorType::Info), false, { 24, 24 })) {}
@@ -54,10 +55,11 @@ namespace WindowElement {
 		if (Input::ButtonColorChange(ICON_FK_REFRESH, offColor, onColor, Style::GetStyleColor(ColorType::Warning), false, { 24, 24 })) {
 			UpdateFileTree();
 		}
+		
 
 		Layout::Tooltip("Update");
 		Layout::SameLine(0, 25);
-		Layout::Text(currentFolder.path.c_str());
+		Layout::Text(m_CurrentFolder.path.c_str());
 
 		Layout::SameLine(0, 5);
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 420);
@@ -78,18 +80,18 @@ namespace WindowElement {
 
 		int cols = ImGui::GetContentRegionAvailWidth() / 75;
 		
-		if (cols != 0) {
-
+		if (cols != 0) 
+		{
 
 			ImGui::BeginChild("FolderData", { float(cols * 75), 0 });
 			ImGui::Columns(cols, "##files", false);
 
-			for (FolderViewData& data : currentFolder.subfolders) {
+			for (FolderViewData& data : m_CurrentFolder.subfolders) {
 				DrawFolder(data);
 				ImGui::NextColumn();
 			}
 
-			for (std::filesystem::directory_entry data : currentFolder.files) {
+			for (std::filesystem::directory_entry data : m_CurrentFolder.files) {
 				Input::FileButton(data.path().filename().string().c_str(), m_Image.Raw(), { 50, 50 });
 				ImGui::NextColumn();
 			}
@@ -97,29 +99,31 @@ namespace WindowElement {
 		}
 		ContextMenus::FileContextMenu();
 		ImGui::EndChild();
+		ImGui::PopStyleVar();
 	}
 	void FileView::SetRootPath(const char* path)
 	{
-		rootPath = (std::string(path) + "\\assets").c_str();
+		m_RootPath = (std::string(path) + "\\assets").c_str();
 		UpdateFileTree();
-		currentFolder = folderData;
+		m_CurrentFolder = m_FolderData;
 	}
 	void FileView::UpdateFileTree()
 	{
-		folderData.files.clear();
-		folderData.subfolders.clear();
-		folderData.path = rootPath;
-		folderData.name = "Assets";
-		FolderData data = File::GetFolderFiles(rootPath.c_str());
+		if (m_RootPath == "") return;
+		m_FolderData.files.clear();
+		m_FolderData.subfolders.clear();
+		m_FolderData.path = m_RootPath;
+		m_FolderData.name = "Assets";
+		FolderData data = File::GetFolderFiles(m_RootPath.c_str());
 
 		for (std::filesystem::directory_entry folder : data.folders) {
 			FolderViewData subData;
 			subData.path = folder.path().string();
 			subData.name = folder.path().filename().string();
 			subData.subfolders = UpdateFolderFiles(subData);
-			folderData.subfolders.push_back(subData);
+			m_FolderData.subfolders.push_back(subData);
 		}
-		folderData.files = data.files;
+		m_FolderData.files = data.files;
 	}
 	std::vector<FolderViewData> FileView::UpdateFolderFiles(FolderViewData& parent)
 	{
@@ -140,7 +144,7 @@ namespace WindowElement {
 		bool opened = Layout::Treenode(data.name.c_str(), flags);
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered()) {
-			currentFolder = data;
+			m_CurrentFolder = data;
 		}
 
 		if (opened) {
@@ -153,7 +157,7 @@ namespace WindowElement {
 	void FileView::DrawFolder(FolderViewData& data)
 	{
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
-			currentFolder = data;
+			m_CurrentFolder = data;
 		}
 		Input::FileButton(data.name.c_str(), m_FolderImage.Raw(), { 50, 50 });
 	}

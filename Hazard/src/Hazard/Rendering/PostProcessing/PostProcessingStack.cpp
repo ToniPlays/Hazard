@@ -106,7 +106,6 @@ namespace Hazard::Rendering {
 		for (auto effect : m_Effects) {
 			if (!effect->use) 
 				continue;
-
 			dest = effect->Process(dest, m_VertexArray);
 		}
 		return dest;

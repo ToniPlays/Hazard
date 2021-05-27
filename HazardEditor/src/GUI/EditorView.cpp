@@ -74,7 +74,7 @@ namespace WindowElement {
 
 		InitImGuiPlatform(m_Context->GetWindow());
 		
-		Appereance::Style::Init();
+		Appereance::Style::InitTheme(Appereance::Theme::Dark);
 
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
@@ -103,8 +103,10 @@ namespace WindowElement {
 			for (RenderableElement* element : m_Elements) {
 				element->OnMenuRender();
 			}
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Appereance::Style::GetStyle().dockPadding);
 			WindowLayout::Dockspace::Begin("MainDockSpace");
 			WindowLayout::Dockspace::End();
+			ImGui::PopStyleVar();
 			m_Toolbar.OnRender();
 		}
 		for (RenderableElement* element : m_Elements) {

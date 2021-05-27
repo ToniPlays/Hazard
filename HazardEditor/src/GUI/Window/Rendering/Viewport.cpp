@@ -35,7 +35,6 @@ namespace WindowElement {
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 
 		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-
 		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
 			m_EditorCamera.GetPosition()));
 

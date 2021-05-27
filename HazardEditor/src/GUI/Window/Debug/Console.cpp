@@ -40,7 +40,6 @@ namespace WindowElement {
 	void Console::OnWindowRender()
 	{
 		using namespace Appereance;
-		ImGuiStyle& style = Style::GetStyle();
 
 		if (Input::Button("Clear")) {
 			ClearLog();

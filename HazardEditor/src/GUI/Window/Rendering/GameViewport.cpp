@@ -43,6 +43,7 @@ namespace WindowElement {
 			Input::Slider("Bloom intensity", bloom->intensity, 0, 1);
 		}
 
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 		auto&[found, cam, transform] = world.GetWorldCamera();
 
@@ -55,7 +56,6 @@ namespace WindowElement {
 			return;
 		}
 
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
 		ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
 			transform->m_Translation));
 

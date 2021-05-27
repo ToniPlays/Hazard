@@ -20,7 +20,7 @@ namespace WindowElement {
 
 		void OnWindowRender() override;
 		void SetRootPath(const char* path);
-		const char* GetRootPath() { return rootPath.c_str(); }
+		const char* GetRootPath() { return m_RootPath.c_str(); }
 
 		void UpdateFileTree();
 
@@ -30,10 +30,10 @@ namespace WindowElement {
 		void DrawFileTree(FolderViewData& data);
 		void DrawFolder(FolderViewData& data);
 
-		std::string rootPath;
-		FolderViewData currentFolder;
+		std::string m_RootPath;
+		FolderViewData m_CurrentFolder;
 
-		FolderViewData folderData;
+		FolderViewData m_FolderData;
 
 		Ref<Hazard::Rendering::Texture2D> m_Image;
 		Ref<Hazard::Rendering::Texture2D> m_FolderImage;

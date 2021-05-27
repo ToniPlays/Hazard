@@ -4,6 +4,7 @@
 #include "MenuBar.h"
 
 #include "GUI/Library/Layout/Layout.h"
+#include "GUI/Library/Style.h"
 #include "Project/ProjectManager.h"
 
 #include "GUI/EditorView.h"
@@ -19,6 +20,7 @@ namespace WindowElement {
 
 	void MenuBar::OnMenuRender()
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0);
 		ImGui::BeginMainMenuBar();
 
 		Layout::Menu("File", []() {
@@ -105,8 +107,16 @@ namespace WindowElement {
 			Layout::MenuItem("About", [&]() {
 				
 			});
+			Layout::Menu("Theme", [&]() {
+				Layout::MenuItem("Dark", [&]() {
+					Appereance::Style::InitTheme(Appereance::Theme::Dark);
+					});
+				Layout::MenuItem("Classic", [&]() {
+					Appereance::Style::InitTheme(Appereance::Theme::Classic);
+					});
+				});
 		});
-
+		ImGui::PopStyleVar();
 		ImGui::EndMainMenuBar();
 	}
 	bool MenuBar::OnEvent(Event& e)
@@ -125,13 +135,13 @@ namespace WindowElement {
 		if (e.GetKeyCode() == Key::S) 
 		{
 			Application::GetModule<Project::ProjectManager>()->SaveCurrentScene();
-			HZR_CORE_WARN("Saving scene");
+			HZR_WARN("Saving scene");
 			return true;
 		}
 		if (e.GetKeyCode() == Key::R) 
 		{
 			Application::GetModule<Scripting::ScriptEngineManager>()->ReloadAll();
-			HZR_CORE_WARN("Reloading assemblies");
+			HZR_WARN("Reloading assemblies");
 			return true;
 		}
 		return false;

@@ -41,7 +41,6 @@ namespace Project {
 		if (project->m_StartupScene != "") {
 			Application::GetModule<ECS::WorldHandler>()->LoadScene(project->m_StartupScene);
 		}
-
 		return true;
 	}
 

@@ -313,18 +313,20 @@ namespace WindowElement {
 		bool modified = false;
 		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
 		if (state) {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
+			ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(onColor));
 			if (Button(label, size)) {
 				modified = true;
 			}
+			ImGui::PopStyleColor();
 		}
 		else {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
 			if (Button(label, size)) {
 				modified = true;
 			}
+			ImGui::PopStyleColor();
 		}
-		ImGui::PopStyleColor(2);
+		ImGui::PopStyleColor();
 		return modified;
 	}
 	bool Input::ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size)
