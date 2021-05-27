@@ -100,6 +100,7 @@ namespace Hazard::ECS::Loader
 		//Set scene name
 		if (!root["World"]) 
 			return world;
+
 		world->SetName(root["World"].as<std::string>());
 
 		if (root["Environment"]) 
@@ -200,7 +201,7 @@ namespace Hazard::ECS::Loader
 		std::string filename = comp["ModuleName"].as<std::string>();
 		entity.AddComponentWithCallback<VisualScriptComponent>([&](VisualScriptComponent& comp) {
 			comp.m_Filename = filename;
-			});
+		});
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {

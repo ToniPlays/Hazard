@@ -3,6 +3,7 @@
 #include "Layout/Layout.h"
 #include "Style.h"
 #include "Input.h"
+#include "GUI/Window/DragDropUtils.h"
 #include "Core/SceneRuntimeHandler.h"
 
 using namespace Hazard::ECS;
@@ -26,48 +27,48 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, TagComponent& component) {
 		if (!entity.HasComponent<TagComponent>()) return;
 		Layout::ComponentTreenode<TagComponent>(entity, name, [&]() {
-			
+
 			Layout::Text("Tag");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 			Input::InputField(component.m_Tag);
 			Layout::NextLine(10);
 
-		}, [&component]() {
-			Layout::MenuItem("Reset", [&component]() {
-				component.m_Tag = "New entity";
-				});
-		});
+			}, [&component]() {
+				Layout::MenuItem("Reset", [&component]() {
+					component.m_Tag = "New entity";
+					});
+			});
 	}
 
 	template<>
 	inline void Draw(const char* name, Entity entity, TransformComponent& component) {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
-			glm::vec3 rot { 
-				glm::degrees(component.m_Rotation.x), 
-				glm::degrees(component.m_Rotation.y), 
+			glm::vec3 rot{
+				glm::degrees(component.m_Rotation.x),
+				glm::degrees(component.m_Rotation.y),
 				glm::degrees(component.m_Rotation.z) };
 
 			Layout::IDGroup("Translation", [&]() {
 				Input::Vec3("Translation", component.m_Translation, 0, 75);
-			});
+				});
 			Layout::IDGroup("Rotation", [&]() {
 				Input::Vec3("Rotation", rot, 0, 75);
-			});
+				});
 			Layout::IDGroup("Scale", [&]() {
 				Input::Vec3("Scale", component.m_Scale, 1.0f, 75);
-			});
+				});
 
 			component.m_Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 
-		}, [&]() {
-			Layout::MenuItem("Reset", [&]() {
-				component.m_Translation = { 0, 0, 0 };
-				component.m_Rotation = { 0, 0, 0 };
-				component.m_Scale = { 1, 1, 1 };
+			}, [&]() {
+				Layout::MenuItem("Reset", [&]() {
+					component.m_Translation = { 0, 0, 0 };
+					component.m_Rotation = { 0, 0, 0 };
+					component.m_Scale = { 1, 1, 1 };
+					});
 			});
-		});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, CameraComponent& component) {
@@ -120,7 +121,7 @@ namespace WindowElement {
 					component.SetFov(60);
 					component.SetZNear(0.03f);
 					component.SetZFar(1000);
-				});
+					});
 			});
 	}
 	template<>
@@ -130,8 +131,13 @@ namespace WindowElement {
 			static bool open = false;
 
 			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
-				Input::ColorPicker("Sprite tint", component.m_Tint, open);
-			});
+					Input::ColorPicker("Sprite tint", component.m_Tint, open);
+				}, [&]() {
+				DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
+					const char* file = (const char*)payload->Data;
+					component.m_Texture = Vault::Get<Rendering::Texture2D>(file);
+					}); 
+				});
 			if (changed) {
 				std::string file = File::OpenFileDialog();
 				if (file != "") {
@@ -144,16 +150,16 @@ namespace WindowElement {
 				}
 			}
 
-		}, [&entity]() {
+			}, [&entity]() {
 
-		});
+			});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
 
 			}, [&entity]() {
-				
+
 			});
 	}
 
@@ -177,13 +183,13 @@ namespace WindowElement {
 			Input::ColorPicker("Sky Light tint", component.m_Tint, open);
 			Layout::EndTable();
 
-		}, [&entity]() {
-		});
+			}, [&entity]() {
+			});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, DirectionalLightComponent& component) {
 		Layout::ComponentTreenode<DirectionalLightComponent>(entity, name, [&]() {
-			
+
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(75);
 
@@ -227,7 +233,7 @@ namespace WindowElement {
 			Input::Slider("##Radius", component.m_Radius);
 
 			Layout::EndTable();
-			
+
 			}, [&entity]() {
 			});
 	}
@@ -262,7 +268,7 @@ namespace WindowElement {
 			}, []() {
 				Layout::MenuItem("Reload", []() {
 					Application::GetModule<ScriptEngineManager>()->ReloadAll();
-				});
+					});
 			});
 	}
 	template<>
@@ -273,7 +279,7 @@ namespace WindowElement {
 			}, []() {
 				Layout::MenuItem("Reload", []() {
 					Application::GetModule<ScriptEngineManager>()->ReloadAll();
-				});
+					});
 			});
 	}
 	template<>
@@ -285,6 +291,12 @@ namespace WindowElement {
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 			Input::InputField(component.sourceFile);
+
+			DragDropUtils::DragTarget("AudioClip", [&](const ImGuiPayload* payload) {
+				const char* file = (const char*)payload->Data;
+				component.sourceFile = file;
+				component.source.LoadFromFile(file);
+			});
 
 			Layout::NextLine(5);
 
@@ -310,7 +322,7 @@ namespace WindowElement {
 			component.source.SetLoop(looping);
 
 			}, []() {
-				
+
 			});
 	}
 	template<>
@@ -321,15 +333,15 @@ namespace WindowElement {
 			Layout::SetColumnWidth(75);
 			if (Input::Button("Mesh")) {
 				std::string file = Hazard::File::OpenFileDialog("");
-				if (file != "") 
+				if (file != "")
 					component.m_Mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
 			}
 			Layout::TableNext();
 			std::string filename = component.m_Mesh ? component.m_Mesh->GetFile() : "None";
 			Layout::Text(filename.c_str());
 			Layout::EndTable();
-		}, []() {
-			
-		});
+			}, []() {
+
+			});
 	}
 }

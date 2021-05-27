@@ -41,7 +41,7 @@ namespace Hazard
 						return (T*)ref;
 				}
 			}
-			throw std::runtime_error("Error finding Texture2D from Vault");
+			return nullptr;
 		};
 		
 		template<typename T>

@@ -19,10 +19,11 @@ namespace WindowElement {
 	private:
 		void DrawFolderTree();
 		void DrawFilePath();
-		Rendering::Texture2D* GetImageFor(std::string file);
+		Rendering::Texture2D* GetImageFor(const std::string& file);
 
 		std::string m_RootPath;
 		std::string m_CurrentPath;
+		std::string m_SearchValue;
 
 		Ref<Hazard::Rendering::Texture2D> m_FolderImage;
 		Ref<Hazard::Rendering::Texture2D> m_Image;

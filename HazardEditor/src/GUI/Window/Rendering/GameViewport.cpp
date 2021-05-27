@@ -36,14 +36,6 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-
-		Rendering::BloomEffect* bloom = m_PostProcessing->Get<BloomEffect>();
-
-		if (bloom) {
-			Input::Slider("Bloom threshold", bloom->threshold, 0, 1);
-			Input::Slider("Bloom intensity", bloom->intensity, 0, 1);
-		}
-
 		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 		auto&[found, cam, transform] = world.GetWorldCamera();

@@ -21,14 +21,15 @@ namespace WindowElement {
 		static void Checkbox(const char* label, bool& value);
 		static void ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
-		template<typename T>
-		static bool TextureSlot(Rendering::Texture* texture, T callback) {
+		template<typename T, typename C>
+		static bool TextureSlot(Rendering::Texture* texture, T callback, C dropCallback) {
 			bool changed = false;
 
 			Layout::Table(2, false, "##textureSlot");
 			Layout::SetColumnWidth(75);
 
 			changed = ImageButton(texture->GetID(), { 50, 50 });
+			dropCallback();
 			Layout::Tooltip(texture->GetData().file.c_str());
 			Layout::TableNext();
 			Button("Flip");

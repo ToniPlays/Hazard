@@ -68,17 +68,17 @@ namespace WindowElement {
 			{
 				Texture* texture = RenderUtils::Get<Texture2D>().Raw();
 				Layout::Text("Front");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Back");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Left");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Right");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Top");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Bottom");
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 			}
 			else 
 			{
@@ -89,7 +89,7 @@ namespace WindowElement {
 					Input::Slider("Gamma", gamma, 0.0f, 10.0f);
 					rd->GetSkybox()->SetGamma(gamma);
 
-				});
+				}, [&]() {});
 
 				if (clicked) {
 					std::string fileName = File::OpenFileDialog("");

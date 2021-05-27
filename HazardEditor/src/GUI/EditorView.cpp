@@ -112,7 +112,6 @@ namespace WindowElement {
 		for (RenderableElement* element : m_Elements) {
 			element->OnRender();
 		}
-		ImGui::ShowStyleEditor();
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)

@@ -47,6 +47,8 @@ namespace Hazard::Audio {
 
 		std::pair<uint32_t, uint32_t> GetLength() const;
 		
+		void ChangeFile(const std::string& file);
+
 		static AudioClip LoadFromFile(const std::string& file, bool spatial = false);
 
 	private:

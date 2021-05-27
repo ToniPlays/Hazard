@@ -65,9 +65,9 @@ namespace WindowElement {
 	{
 		if (Input::IsKeyDown(Key::LeftControl) || forcedSnapping) {
 
-			if (type == Gizmo::Translate) return new float[] { 0.5f, 0.5f, 0.5f };
-			if (type == Gizmo::Rotate) return new float[] { 10.0f, 10.0f, 10.0f };
-			if (type == Gizmo::Scale) return new float[] { 1.0f, 1.0f, 1.0f };
+			if (type == Gizmo::Translate) return new float[] { transformSnap, transformSnap, transformSnap };
+			if (type == Gizmo::Rotate) return new float[] { rotationSnap, rotationSnap, rotationSnap };
+			if (type == Gizmo::Scale) return new float[] { scaleSnap, scaleSnap, scaleSnap };
 		}
 		return nullptr;
 	}

@@ -30,6 +30,10 @@ namespace WindowElement {
 		bool ForcedSnapping() { return forcedSnapping; }
 		void SetForcedSnapping(bool snapping) { forcedSnapping = snapping; }
 
+	public:
+		float transformSnap = 0.5f;
+		float rotationSnap = 10.0f;
+		float scaleSnap = 1.0f;
 	private:
 		Hazard::ECS::Entity currentSelection;
 		Gizmo type = Gizmo::Translate;

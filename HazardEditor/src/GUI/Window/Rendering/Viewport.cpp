@@ -59,6 +59,7 @@ namespace WindowElement {
 		ImGui::PopStyleVar();
 
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, FLT_MAX);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
 
@@ -72,12 +73,37 @@ namespace WindowElement {
 		if (Input::Button(text.c_str(), { 0, 25 })) {
 			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
 		}
+		ImGui::SameLine(0, 15);
+		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) {
+			
+		}
 
 		ImGui::PopStyleVar(2);
-		/*if (Input::ToggleButtonColorChange("2D", Style::GetStyleColor(ColorType::Debug), Style::GetStyleColor(ColorType::Info),
-			Style::GetStyleColor(ColorType::Text), is2D, { 35, 25 })) {
-			m_EditorCamera.SetIs2D(is2D);
-		}*/
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(size.x - 100);
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#222222")));
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 25);
+
+		Color onColor = Style::GetStyleColor(ColorType::Text);
+		Color offColor = Style::GetStyleColor(ColorType::Secondary);
+
+		ImGui::BeginChild("##gizmoTools", { 92, 25 });
+		ImGui::SameLine(0, 10);
+		if (Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(Debug), m_Gizmos.GetType() != Gizmo::Translate, { 0, 25 })) {
+			m_Gizmos.SetType(Gizmo::Translate);
+		}
+		ImGui::SameLine(0, 0);
+		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, onColor, Style::GetStyleColor(Critical), m_Gizmos.GetType() != Gizmo::Rotate, { 0, 25 })) {
+			m_Gizmos.SetType(Gizmo::Rotate);
+		}
+		ImGui::SameLine(0, 0);
+		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, onColor, Style::GetStyleColor(Warning), m_Gizmos.GetType() != Gizmo::Scale, { 0, 25 })) {
+			m_Gizmos.SetType(Gizmo::Scale);
+		}
+
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(2);
 
 		if (m_Gizmos.IsUsing()) return;
 		

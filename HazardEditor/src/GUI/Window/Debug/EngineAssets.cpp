@@ -34,7 +34,7 @@ namespace WindowElement {
 		Layout::Treenode("Textures", flags, []() {
 			for (RefCount* ref : RenderUtils::GetAssetsOf(AssetType::TextureAsset)) {
 				Texture* texture = (Texture*)ref;
-				Input::TextureSlot(texture, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});
 			}
 			
 		});

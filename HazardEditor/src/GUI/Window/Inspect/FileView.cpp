@@ -6,6 +6,7 @@
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Layout/ContextMenus.h"
+#include "GUI/Window/DragDropUtils.h"
 
 using namespace WindowLayout;
 
@@ -52,11 +53,16 @@ namespace WindowElement {
 			UpdateFolderData();
 		}
 
-
 		Layout::Tooltip("Refresh");
 		Layout::SameLine(0, 25);
 
 		DrawFilePath();
+		ImGui::SameLine();
+		float width = ImGui::GetContentRegionAvailWidth();
+		float maxWidth = width < 200 ? width : 200;
+		ImGui::SetCursorPosX(width - maxWidth);
+		Input::InputField(m_SearchValue, ICON_FK_SEARCH " Search");
+
 		Layout::Separator();
 		ImGui::Columns(2);
 
@@ -79,15 +85,22 @@ namespace WindowElement {
 				Input::FileButton(name.c_str(), m_FolderImage.Raw(), { 50, 50 });
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
-					HZR_INFO("Clicked on {0}", name);
 					m_CurrentPath = folder.path().string();
 					UpdateFolderData();
 				}
 				ImGui::NextColumn();
 			}
-			for (std::filesystem::directory_entry file : m_FolderData.files) {
+			char filePath[256];
+			for (std::filesystem::directory_entry file : m_FolderData.files)
+			{
 				std::string name = file.path().filename().string();
-				Input::FileButton(name.c_str(), GetImageFor(file.path().string()), { 50, 50 });
+				Rendering::Texture2D* texture = GetImageFor(file.path().string());
+				Input::FileButton(name.c_str(), texture, { 50, 50 });
+
+				memcpy(filePath, file.path().string().c_str(), sizeof(filePath));
+
+				DragDropUtils::DragSource(DragDropUtils::TypeFromFile(name).c_str(), 
+					file.path().filename().string(), filePath, sizeof(filePath));
 				ImGui::NextColumn();
 			}
 			ImGui::EndChild();
@@ -108,10 +121,10 @@ namespace WindowElement {
 			flags = ImGuiTreeNodeFlags_OpenOnArrow;
 			for (std::filesystem::directory_entry folder : m_FolderData.folders) {
 				Layout::Treenode(folder.path().filename().string().c_str(), flags, [&]() {
-				
+
 				});
 			}
-		});
+			});
 	}
 	void FileView::DrawFilePath()
 	{
@@ -139,7 +152,7 @@ namespace WindowElement {
 			}
 		}
 	}
-	Rendering::Texture2D* FileView::GetImageFor(std::string file)
+	Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
 	{
 		std::string extension = File::GetFileExtension(file);
 
