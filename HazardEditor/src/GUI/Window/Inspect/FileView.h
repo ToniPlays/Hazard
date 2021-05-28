@@ -12,11 +12,14 @@ namespace WindowElement {
 		void Init() override;
 
 		void OnWindowRender() override;
+		void OnBeforeRender() override;
 		void SetRootPath(const char* path);
 		const char* GetRootPath() { return m_RootPath.c_str(); }
 		void UpdateFolderData();
 
 	private:
+		bool m_Open;
+
 		void DrawFolderTree();
 		void DrawFilePath();
 		Rendering::Texture2D* GetImageFor(const std::string& file);

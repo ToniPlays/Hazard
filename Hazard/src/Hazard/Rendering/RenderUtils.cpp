@@ -114,9 +114,10 @@ namespace Hazard::Rendering {
 		HZR_PROFILE_FUNCTION();
 
 		if (Vault::Has<Texture2D>(info.filename.c_str())) {
-			return Vault::Get<Texture2D>(info.filename);
+			return Vault::Get<Texture2D>(info.filename.c_str());
 		}
-		Texture2D* texture;
+
+		Texture2D* texture = nullptr;
 		HZR_CORE_WARN("Loading texture {0}", info.filename);
 
 		switch (s_Api)

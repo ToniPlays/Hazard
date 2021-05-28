@@ -63,7 +63,7 @@ namespace Hazard::Audio {
 	{
 		AudioBufferData* buffer;
 		if (Vault::Has<AudioBufferData>(file.c_str())) {
-			buffer = Vault::Get<AudioBufferData>(file);
+			buffer = Vault::Get<AudioBufferData>(file.c_str());
 		}
 		else 
 		{

@@ -30,8 +30,15 @@ namespace WindowElement {
 		info.filename = "res/icons/logo.png";
 		m_Image = RenderUtils::Create<Texture2D>(info);
 	}
+	void FileView::OnBeforeRender()
+	{
+
+	}
 	void FileView::OnWindowRender()
 	{
+		ImGuiHoveredFlags flags = ImGuiHoveredFlags_RootWindow | ImGuiHoveredFlags_ChildWindows;
+		m_Open = ImGui::IsItemHovered() || ImGui::IsWindowHovered(flags);
+
 		Color onColor = Color::FromHex("#404040");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -157,7 +164,7 @@ namespace WindowElement {
 		std::string extension = File::GetFileExtension(file);
 
 		if (extension == "jpeg" || extension == "png") {
-			return Vault::Get<Rendering::Texture2D>(file);
+			return Vault::Get<Rendering::Texture2D>(file.c_str());
 		}
 		return m_Image.Raw();
 	}

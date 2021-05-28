@@ -74,6 +74,7 @@ namespace Hazard
 		template<typename T, typename Arg>
 		static T* Get(Arg arg)
 		{
+			static_assert(false);
 			return nullptr;
 		};
 
@@ -92,11 +93,11 @@ namespace Hazard
 		{
 			std::string val = File::GetName(arg);
 			for (auto [key, texture] : s_Textures) {
-				if (key == val)
+				if (strcmp(val.c_str(), key.c_str()) == 0)
 					return (Rendering::Texture2D*)texture;
 			}
 			std::cout << "Texture2D not found " << arg << std::endl;
-			return nullptr;
+			return Get<Rendering::Texture2D>("White");
 		};
 		template<>
 		static Audio::AudioBufferData* Get(const char* arg)

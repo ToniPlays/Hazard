@@ -125,10 +125,11 @@ namespace WindowElement {
 		ss << "/" << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 2) << "ms";
 		ImGui::Text(ss.str().c_str());
 		ss.str("Mem: ");
-		ss << Application::GetData().memoryUsage << " mb";
+		ss << Math::Round(Application::GetData().memoryUsage, 2) << " mb";
 
 		ImGui::SetCursorPosX(width + 125);
 		ImGui::Text(ss.str().c_str());
+
 		/*ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		Style::SetButtonColors("#181816", "#181816", "#181816");
