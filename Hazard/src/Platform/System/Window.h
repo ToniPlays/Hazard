@@ -36,9 +36,11 @@ namespace Hazard::Rendering {
 		virtual void OnUpdate(Color color = Color("#000000")) = 0;
 		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(uint32_t count, std::string* images) = 0;
+		virtual void SetPosition(glm::vec2 position, glm::vec2 dragPoint) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void SetFullscreen(bool enabled) = 0;
 		virtual void SetMaximized(bool enabled) = 0;
+		virtual void SetMinimized(bool enabled) = 0;
 		virtual void* GetNativeWindow() const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
@@ -49,6 +51,7 @@ namespace Hazard::Rendering {
 		virtual bool IsFocused() const = 0;
 		virtual bool IsMinimized() const = 0;
 		virtual bool IsFullscreen() const = 0;
+		virtual bool IsMaximized() const = 0;
 
 		virtual WindowProps GetWindowInfo() { return m_WindowData; }
 

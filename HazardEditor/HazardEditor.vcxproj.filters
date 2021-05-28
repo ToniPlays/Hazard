@@ -211,6 +211,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\DragDropUtils.h" />
+    <ClInclude Include="src\Editor\EditorSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -337,5 +338,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\DragDropUtils.cpp" />
+    <ClCompile Include="src\Editor\EditorSettings.cpp" />
   </ItemGroup>
 </Project>

@@ -76,10 +76,10 @@ namespace WindowElement {
 		
 		Style::InitTheme(Theme::Dark);
 
+		PushRenderable<MenuBar>();
 		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
 
-		PushRenderable<MenuBar>();
 		PushRenderable<WorldEnvironmentData>();
 
 		PushRenderable<Properties>();
@@ -118,8 +118,6 @@ namespace WindowElement {
 	{
 		if (EditorView::s_Instance == nullptr) 
 			return false;
-
-		if (m_MenuBar.OnEvent(e)) return true;
 
 		for (RenderableElement* element : m_Elements) {
 			if (element->OnEvent(e)) {

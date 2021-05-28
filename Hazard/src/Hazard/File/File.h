@@ -35,6 +35,7 @@ namespace Hazard {
 
 		static std::string GetFileAbsolutePath(const std::string& file);
 		static std::string GetDirectoryOf(const std::string& file);
+		static std::string GetName(const std::string& file);
 		static std::string GetFileExtension(const std::string& file);
 
 		static bool CreateDir(const std::string& dir);

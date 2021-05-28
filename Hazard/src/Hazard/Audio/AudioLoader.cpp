@@ -35,8 +35,7 @@ namespace Hazard::Audio {
 
 	FileFormat AudioLoader::GetFileFormat(const std::string& file)
 	{
-		std::filesystem::path path = file;
-		std::string ext = path.extension().string();
+		std::string ext = File::GetFileExtension(file);
 
 		if (ext == ".ogg") return FileFormat::Ogg;
 		if (ext == ".mp3") return FileFormat::Mp3;
@@ -63,13 +62,11 @@ namespace Hazard::Audio {
 	AudioClip AudioLoader::LoadMp3(const std::string& file)
 	{
 		AudioBufferData* buffer;
-		if (Vault::Has<AudioBufferData>(file)) {
-			HZR_CORE_INFO("Loading from cache {0}", file);
+		if (Vault::Has<AudioBufferData>(file.c_str())) {
 			buffer = Vault::Get<AudioBufferData>(file);
 		}
 		else 
 		{
-			HZR_CORE_INFO("Creating source for {0}", file);
 			mp3dec_file_info_t info;
 			int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
 
@@ -88,7 +85,7 @@ namespace Hazard::Audio {
 			buffer->lenSec = lenSec;
 			buffer->audioData = info.buffer;
 
-			Vault::Add(file, (RefCount*)buffer);
+			Vault::Add(file, buffer);
 		}
 
 		ALuint bufferID;

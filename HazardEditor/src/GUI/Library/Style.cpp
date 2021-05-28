@@ -77,6 +77,7 @@ void Style::InitClassic()
 
 	style.WindowTitleAlign = ImVec2(0, 0.5);
 	style.WindowMenuButtonPosition = ImGuiDir_None;
+	style.DisplaySafeAreaPadding = { 0, 6 };
 
 	style.IndentSpacing = 8;
 	style.ScrollbarSize = 16;
@@ -152,6 +153,7 @@ void Style::InitDarkTheme()
 
 	style.WindowPadding = { 2, 2 };
 	style.WindowBorderSize = 0;
+	style.DisplaySafeAreaPadding = { 0, 6 };
 
 	style.FrameRounding = 2;
 	style.WindowRounding = 2;

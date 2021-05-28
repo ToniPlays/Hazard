@@ -5,5 +5,7 @@
 
 namespace Hazard 
 {
-	std::unordered_map<std::string, RefCount*> Vault::s_Refs;
+	std::unordered_map<std::string, Rendering::Shader*> Vault::s_Shaders;
+	std::unordered_map<std::string, Rendering::Texture*> Vault::s_Textures;
+	std::unordered_map<std::string, Audio::AudioBufferData*> Vault::s_Audio;
 }

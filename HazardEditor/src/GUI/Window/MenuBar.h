@@ -13,5 +13,6 @@ namespace WindowElement {
 		bool OnEvent(Event& e) override;
 	private:
 		bool KeyPressed(KeyPressedEvent& e);
+		glm::vec2 dragPos = { 0, 0 };
 	};
 }

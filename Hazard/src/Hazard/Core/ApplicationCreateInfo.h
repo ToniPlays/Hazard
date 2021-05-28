@@ -34,7 +34,8 @@ namespace Hazard {
 		bool maximized = false;
 		bool resizable = true;
 		bool VSync = false;
-
+		bool decorated = true;
+		
 		glm::vec3 color = { 0, 0, 0 };
 
 		uint32_t width = 0;

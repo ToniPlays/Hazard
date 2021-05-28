@@ -23,7 +23,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLShader::OpenGLShader(const std::string& name, uint32_t stageCount, PipelineShaderStage* stages)
 	{
-		Vault::Add(name, (RefCount*)this);
+		Vault::Add(name, (Shader*)this);
 		Compile(stageCount, stages);
 	}
 

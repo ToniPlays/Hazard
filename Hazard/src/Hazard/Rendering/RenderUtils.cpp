@@ -113,7 +113,7 @@ namespace Hazard::Rendering {
 	Ref<Texture2D> RenderUtils::Create<Texture2D>(Texture2DCreateInfo info) {
 		HZR_PROFILE_FUNCTION();
 
-		if (Vault::Has<Texture2D>(info.filename)) {
+		if (Vault::Has<Texture2D>(info.filename.c_str())) {
 			return Vault::Get<Texture2D>(info.filename);
 		}
 		Texture2D* texture;
@@ -125,7 +125,7 @@ namespace Hazard::Rendering {
 		//case RenderAPI::Vulkan:		texture = new Vulkan::VKTexture2D(info);	break;
 		}
 		HZR_CORE_ASSERT(texture, "Failed to get texture");
-		Vault::Add(info.filename, (RefCount*)texture);
+		Vault::Add(info.filename, texture);
 		return Ref(texture);
 	}
 	template<>

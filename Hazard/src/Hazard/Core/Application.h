@@ -6,8 +6,13 @@
 
 namespace Hazard {
 
+	struct ApplicationData 
+	{
+		float memoryUsage = 0;
+	};
+
 	class Application {
-		friend class HazardLoop;
+		
 	public:
 		Application() {};
 		~Application() {};
@@ -20,10 +25,12 @@ namespace Hazard {
 		
 		void SetTitle(const std::string& title);
 		void SetTitle(const char* title);
+		void UpdateData();
 		
 		void CreateApplicationStack(HazardCreateInfo* info);
 	public:
 		static void Quit();
+		static ApplicationData GetData() { return s_Data; }
 
 		template<typename T>
 		T& PushModule() { return Core::HazardLoop::GetCurrent().PushModule<T>(); };
@@ -31,6 +38,10 @@ namespace Hazard {
 		static T* GetModule() { return &Core::HazardLoop::GetModule<T>(); }
 		template<typename T>
 		static T* GetModule(bool& found) { return &Core::HazardLoop::GetModule<T>(found); }
+	private:
+
+		static ApplicationData s_Data;
+		
 	};
 
 	Hazard::Application* CreateApplication();

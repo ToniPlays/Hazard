@@ -1,9 +1,9 @@
 #pragma once
 
 //Hazard Application and Module
+#include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/Application.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Module.h"
 
 

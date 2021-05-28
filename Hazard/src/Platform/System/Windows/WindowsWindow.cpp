@@ -11,6 +11,9 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
 namespace Hazard::Rendering {
 
 	Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
@@ -45,6 +48,9 @@ namespace Hazard::Rendering {
 
 		glfwWindowHint(GLFW_RESIZABLE, info->resizable);
 		glfwWindowHint(GLFW_MAXIMIZED, info->maximized);
+		glfwWindowHint(GLFW_DECORATED, info->decorated);
+
+		
 
 		if (info->fullScreen) {
 			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -96,6 +102,18 @@ namespace Hazard::Rendering {
 			glfwImages.at(i).height = sy;
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
+	}
+	void WindowsWindow::SetPosition(glm::vec2 position, glm::vec2 dragPoint)
+	{
+		int x, y;
+		glfwGetWindowPos(m_Window, &x, &y);
+
+		glm::vec2 delta = position - dragPoint;
+		HZR_CORE_INFO("{0} x {1}", delta.x, delta.y);
+		position.x += (float)x;
+		position.y += (float)y;
+
+		glfwSetWindowPos(m_Window, x + delta.x, y + delta.y);
 	}
 	void WindowsWindow::SetFullscreen(bool fullscreen)
 	{

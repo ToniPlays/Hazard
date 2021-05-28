@@ -35,7 +35,6 @@ namespace Hazard::Core {
 			while (!m_ShouldClose) {
 
 				double time = glfwGetTime();
-
 				Input::Update();
 				Time::s_UnscaledDeltaTime = time - lastTime;
 				Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
@@ -46,6 +45,7 @@ namespace Hazard::Core {
 				m_Application->Update();
 				m_ModuleHandler.Update();
 				m_ModuleHandler.Render();
+				m_Application->UpdateData();
 			}
 
 			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");

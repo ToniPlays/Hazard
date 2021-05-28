@@ -5,6 +5,7 @@
 
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Style.h"
+#include "GUI/Library/Input.h"
 #include "Project/ProjectManager.h"
 
 #include "GUI/EditorView.h"
@@ -116,6 +117,39 @@ namespace WindowElement {
 					});
 				});
 		});
+		float width = ImGui::GetWindowWidth() - 250;
+
+		ImGui::SetCursorPosX(width);
+		std::stringstream ss;
+		ss << "FPS: " << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 1);
+		ss << "/" << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 2) << "ms";
+		ImGui::Text(ss.str().c_str());
+		ss.str("Mem: ");
+		ss << Application::GetData().memoryUsage << " mb";
+
+		ImGui::SetCursorPosX(width + 125);
+		ImGui::Text(ss.str().c_str());
+		/*ImGui::PopStyleVar();
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
+		Style::SetButtonColors("#181816", "#181816", "#181816");
+
+		if (Input::Button(ICON_FK_WINDOW_MINIMIZE, { 25, 25 })) 
+		{
+			Application::GetModule<RenderContext>()->GetWindow().SetMinimized(true);
+		}
+		ImGui::SameLine(0, 0);
+		if (Input::Button(ICON_FK_WINDOW_MAXIMIZE, { 25, 25 })) 
+		{
+			Window& window = Application::GetModule<RenderContext>()->GetWindow();
+			window.SetMaximized(!window.IsMaximized());
+		}
+		ImGui::SameLine(0, 0);
+		if (Input::Button(ICON_FK_TIMES, { 25, 25 })) 
+		{
+			Application::Quit();
+		}
+
+		ImGui::PopStyleColor(3);*/
 		ImGui::PopStyleVar();
 		ImGui::EndMainMenuBar();
 	}
@@ -127,8 +161,15 @@ namespace WindowElement {
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{
-		bool isCtrl = Input::IsKeyDown(Key::LeftControl);
+		bool isSuper = Hazard::Input::IsKeyDown(Key::LeftAlt);
+		if (e.GetKeyCode() == Key::Up)
+		{
+			Window& window = Application::GetModule<RenderContext>()->GetWindow();
+			window.SetMaximized(!window.IsMaximized());
+			return true;
+		}
 
+		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
 		if (!isCtrl) 
 			return false;
 
@@ -144,6 +185,7 @@ namespace WindowElement {
 			HZR_WARN("Reloading assemblies");
 			return true;
 		}
+		
 		return false;
 	}
 }
