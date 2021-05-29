@@ -65,6 +65,7 @@ namespace Hazard::ECS {
 
 	void World::SetBackground(WorldBackground type, std::string file)
 	{
+		HZR_CORE_ERROR("Loading background");
 		if (type != m_WorldData.background) {
 			if (m_WorldData.renderer) delete m_WorldData.renderer;
 

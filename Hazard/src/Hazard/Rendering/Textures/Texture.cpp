@@ -6,8 +6,4 @@
 
 namespace Hazard::Rendering {
 
-	Texture::~Texture()
-	{
-		RenderUtils::RemoveAsset((Texture*)this);
-	}
 }

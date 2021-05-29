@@ -17,7 +17,7 @@ namespace Hazard::Audio
 
     AudioClip::~AudioClip()
     {
-
+        Stop();
     }
     void AudioClip::Play()
     {

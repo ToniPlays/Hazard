@@ -37,8 +37,8 @@ namespace Hazard::Audio {
 	{
 		std::string ext = File::GetFileExtension(file);
 
-		if (ext == ".ogg") return FileFormat::Ogg;
-		if (ext == ".mp3") return FileFormat::Mp3;
+		if (ext == "ogg") return FileFormat::Ogg;
+		if (ext == "mp3") return FileFormat::Mp3;
 		return FileFormat::None;
 	}
 	AudioClip AudioLoader::LoadFile(const std::string& file)

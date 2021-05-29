@@ -43,10 +43,12 @@ namespace WindowElement {
 	{
 		return ImGui::Button(name, size);
 	}
-	bool Input::FileButton(const char* name, Hazard::Rendering::Texture2D* texture, ImVec2 size)
+	bool Input::FileButton(const char* name, Hazard::Rendering::Texture2D* texture, ImVec2 size, const std::string& id)
 	{
 		ImGui::BeginGroup();
+		ImGui::PushID(id.c_str());
 		bool clicked = ImageButton(texture->GetID(), size);
+		ImGui::PopID();
 		ImGui::TextWrapped(name);
 		ImGui::EndGroup();
 		return clicked;
@@ -263,9 +265,9 @@ namespace WindowElement {
 	{
 		return ImGui::DragInt(label, &value);
 	}
-	bool Input::DragUInt(const char* label, uint32_t& value)
+	bool Input::DragUInt(const char* label, uint32_t& value, uint32_t min, uint32_t max)
 	{
-		return ImGui::DragInt(label, (int*)&value, 1.0f, 0, 100000);
+		return ImGui::DragInt(label, (int*)&value, 1.0f, min, max);
 	}
 	bool Input::DragFloat(const char* label, float& value, float speed, float min, float max)
 	{

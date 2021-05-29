@@ -39,7 +39,7 @@ void EditorApplication::PreInit()
 	contextInfo.height = 720;
 
 	RenderEngineCreateInfo engineInfo;
-	engineInfo.maxQuadCount = 50000;
+	engineInfo.maxQuadCount = 25600;
 	engineInfo.samplerCount = 8;
 	engineInfo.shaderSourcePath = "res/shaders/compiled";
 	engineInfo.shaderCompilePath = "res/shaders/compiled";

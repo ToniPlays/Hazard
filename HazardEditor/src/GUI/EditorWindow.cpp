@@ -20,7 +20,6 @@ namespace WindowElement {
 	{
 
 	}
-
 	void EditorWindow::OnRender()
 	{
 		if (GetActive()) {
@@ -30,7 +29,6 @@ namespace WindowElement {
 			ImGui::PopStyleVar();
 			m_Focused = ImGui::IsWindowFocused();
 			m_Hovered = ImGui::IsWindowHovered();
-
 			OnWindowRender();
 			ImGui::End();
 		}

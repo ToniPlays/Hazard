@@ -33,6 +33,7 @@ namespace Hazard::Rendering {
 		Ref<CubemapTexture> GetTexture() { return m_Skybox->GetCubemapTexture(); };
 		Ref<Skybox> GetSkybox() { return m_Skybox; };
 		Ref<Texture2D> GetRaw();
+		std::string GetFile() override { return GetTexture()->GetData().file; }
 
 		void Render() override;
 		void SetCubemap(Ref<CubemapTexture>& texture) override;

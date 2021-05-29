@@ -36,7 +36,7 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
+
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 		auto&[found, cam, transform] = world.GetWorldCamera();
 
@@ -49,6 +49,7 @@ namespace WindowElement {
 			return;
 		}
 
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
 		ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
 			transform->m_Translation));
 
@@ -64,9 +65,9 @@ namespace WindowElement {
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
-		FrameBuffer* result = m_PostProcessing->PostProcess(m_RenderTexture.Raw(), { m_Width, m_Height });
+		//FrameBuffer* result = m_PostProcessing->PostProcess(m_RenderTexture.Raw(), { m_Width, m_Height });
 
-		ImGui::Image((void*)result->GetColorID(),
+		ImGui::Image((void*)m_RenderTexture->GetColorID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}

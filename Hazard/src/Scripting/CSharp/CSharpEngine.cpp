@@ -75,8 +75,8 @@ namespace Hazard::Scripting::CSharp {
 	{
 		if (!ModuleExists(moduleName.c_str())) {
 			HZR_CORE_ERROR("[Mono] Module does not exist {0}", moduleName);
+			return;
 		}
-		HZR_CORE_INFO("Module added {0}", moduleName);
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
 

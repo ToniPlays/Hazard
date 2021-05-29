@@ -27,7 +27,8 @@ namespace Hazard::Rendering::OpenGL {
 			AllocateFree();
 			CreateCubemapFromTexture(info.sides.at(0).file);
 		}
-		else {
+		else 
+		{
 			m_Info.cubeSides.resize(info.sides.size());
 			for (CubemapSide side : info.sides) {
 				SetTexture(side.side, side.file);
@@ -91,8 +92,9 @@ namespace Hazard::Rendering::OpenGL {
 		Texture2DCreateInfo textureCreateInfo;
 		textureCreateInfo.filename = file;
 		textureCreateInfo.datatype = TextureDataType::HDR;
-
+		m_Info.cubeSides.clear();
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
+		if (file == "") return;
 #pragma region Nonsense
 		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 		glm::mat4 captureViews[] =
@@ -128,7 +130,7 @@ namespace Hazard::Rendering::OpenGL {
 
 		PipelineRasterizer rasterizer = {};
 		rasterizer.cullFace = CullFace::BackFace;
-		rasterizer.depthFunc = DepthFunc::Less;
+		rasterizer.depthFunc = DepthFunc::Always;
 
 		PipelineViewport viewport;
 		viewport.offset = { 0, 0 };
@@ -144,12 +146,13 @@ namespace Hazard::Rendering::OpenGL {
 		stages[1].stage = ShaderType::FragmentShader;
 
 		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.shaderPipelineName = "EquirectangularMap";
 		pipelineInfo.viewport = &viewport;
 		pipelineInfo.rasterizer = &rasterizer;
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		OpenGLGraphicsPipeline pipeline(pipelineInfo);
+		GraphicsPipeline* pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
 
 		BufferLayout layout = { { ShaderDataType::Float3, "pos" } };
 
@@ -179,20 +182,19 @@ namespace Hazard::Rendering::OpenGL {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_Info.width, m_Info.height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
-		pipeline.Bind();
+		//pipeline.Bind();
 		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-
 		glViewport(0, 0, m_Info.width, m_Info.height);
 
 		cubeArray->Bind();
 		m_Info.cubeSides.at(0)->Bind();
-
-		pipeline.GetShader()->SetUniformInt("u_EquirectangularMap", 0);
-		pipeline.GetShader()->SetUniformMat4("u_Projection", captureProjection);
+		pipeline->GetShader()->Bind();
+		pipeline->GetShader()->SetUniformInt("u_EquirectangularMap", 0);
+		pipeline->GetShader()->SetUniformMat4("u_Projection", captureProjection);
 
 		for (uint8_t i = 0; i < 6; ++i)
 		{
-			pipeline.GetShader()->SetUniformMat4("u_View", captureViews[i]);
+			pipeline->GetShader()->SetUniformMat4("u_View", captureViews[i]);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, m_TextureID, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -201,5 +203,6 @@ namespace Hazard::Rendering::OpenGL {
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		HZR_CORE_WARN("HDR Cubemap finished");
+		delete pipeline;
 	}
 }

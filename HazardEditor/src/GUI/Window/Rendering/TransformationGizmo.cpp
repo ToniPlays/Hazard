@@ -33,7 +33,7 @@ namespace WindowElement {
 		ImGuizmo::SetOrthographic(true);
 		ImGuizmo::SetDrawlist();
 
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x + 4, ImGui::GetWindowPos().y + 53, size.x, size.y);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
 
 		auto& tc = currentSelection.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();

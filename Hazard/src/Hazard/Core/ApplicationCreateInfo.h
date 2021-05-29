@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+
 namespace Hazard {
 
 	enum class RenderAPI {

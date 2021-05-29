@@ -4,14 +4,12 @@ namespace WindowElement
 {
 	class DragDropUtils {
 	public:
-		static void DragSource(const char* type, const std::string& text, void* data, uint32_t size);
+		static void DragSource(const char* type, const std::string& text, std::string file);
 		template<typename T>
 		static void DragTarget(const char* type, T fn) 
 		{
-			ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceAllowNullID;
-
 			if (ImGui::BeginDragDropTarget()) {
-				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type, flags);
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type);
 				if (payload) {
 					fn(payload);
 				}

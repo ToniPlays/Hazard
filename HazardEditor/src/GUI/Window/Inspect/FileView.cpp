@@ -7,6 +7,7 @@
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Layout/ContextMenus.h"
 #include "GUI/Window/DragDropUtils.h"
+#include <future>
 
 using namespace WindowLayout;
 
@@ -23,12 +24,8 @@ namespace WindowElement {
 	}
 	void FileView::Init()
 	{
-		using namespace Hazard::Rendering;
-		Texture2DCreateInfo info;
-		info.filename = "res/icons/folder.png";
-		m_FolderImage = RenderUtils::Create<Texture2D>(info);
-		info.filename = "res/icons/logo.png";
-		m_Image = RenderUtils::Create<Texture2D>(info);
+		LoadFile("res/icons/folder.png");
+		LoadFile("res/icons/logo.png");
 	}
 	void FileView::OnBeforeRender()
 	{
@@ -74,10 +71,9 @@ namespace WindowElement {
 		ImGui::Columns(2);
 
 		ImGui::BeginChild("##folderTree");
-
 		DrawFolderTree();
-
 		ImGui::EndChild();
+
 		ImGui::NextColumn();
 
 		int cols = ImGui::GetContentRegionAvailWidth() / 75;
@@ -86,10 +82,12 @@ namespace WindowElement {
 			ImGui::BeginChild("##list", { cols * 75.0f, 0 }, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::Columns(cols, "##files", false);
 
+			Ref<Rendering::Texture2D> folderImage = Vault::Get<Rendering::Texture2D>("res/icons/folder.png");
+
 			for (std::filesystem::directory_entry folder : m_FolderData.folders)
 			{
 				std::string name = folder.path().filename().string();
-				Input::FileButton(name.c_str(), m_FolderImage.Raw(), { 50, 50 });
+				Input::FileButton(name.c_str(), folderImage.Raw(), { 50, 50 });
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 					m_CurrentPath = folder.path().string();
@@ -97,21 +95,20 @@ namespace WindowElement {
 				}
 				ImGui::NextColumn();
 			}
-			char filePath[256];
 			for (std::filesystem::directory_entry file : m_FolderData.files)
 			{
 				std::string name = file.path().filename().string();
 				Rendering::Texture2D* texture = GetImageFor(file.path().string());
-				Input::FileButton(name.c_str(), texture, { 50, 50 });
 
-				memcpy(filePath, file.path().string().c_str(), sizeof(filePath));
-
+				Input::FileButton(name.c_str(), texture, { 50, 50 }, name);
 				DragDropUtils::DragSource(DragDropUtils::TypeFromFile(name).c_str(), 
-					file.path().filename().string(), filePath, sizeof(filePath));
+					name, file.path().string());
 				ImGui::NextColumn();
 			}
+			ContextMenus::FileContextMenu(*this);
 			ImGui::EndChild();
 		}
+
 		ImGui::Columns();
 		ImGui::PopStyleVar();
 	}
@@ -119,7 +116,9 @@ namespace WindowElement {
 	{
 		m_RootPath = (std::string(path) + "\\assets").c_str();
 		m_CurrentPath = m_RootPath;
+
 		UpdateFolderData();
+		LoadAllFiles(m_FolderData);
 	}
 	void FileView::DrawFolderTree()
 	{
@@ -159,19 +158,40 @@ namespace WindowElement {
 			}
 		}
 	}
+	void FileView::LoadAllFiles(FolderData data)
+	{
+		HZR_CORE_INFO("Loading files from " + data.path);
+		for (std::filesystem::directory_entry folder : data.folders) 
+		{
+			LoadAllFiles(File::GetFolderFiles(folder.path().string()));
+		}
+		for (std::filesystem::directory_entry file : data.files) {
+			LoadFile(file.path().string());
+		}
+	}
+	void FileView::LoadFile(const std::string& file)
+	{
+		std::string ext = File::GetFileExtension(file);
+		if (ext == "jpg" || ext == "jpeg" || ext == "png")
+		{
+			Rendering::Texture2DCreateInfo info;
+			info.filename = file;
+			Rendering::RenderUtils::Create<Rendering::Texture2D>(info).Raw()->IncRefCount();
+		}
+	}
 	Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
 	{
-		std::string extension = File::GetFileExtension(file);
+		std::string ext = File::GetFileExtension(file);
 
-		if (extension == "jpeg" || extension == "png") {
+		if (ext == "jpg" || ext == "jpeg" || ext == "png") {
 			return Vault::Get<Rendering::Texture2D>(file.c_str());
 		}
-		return m_Image.Raw();
+		return Vault::Get<Rendering::Texture2D>("res/icons/logo.png");
 	}
 	void FileView::UpdateFolderData()
 	{
-		HZR_INFO("Selected path {0}", m_CurrentPath);
-		if (m_RootPath == "") return;
+		if (m_RootPath == "") 
+			return;
 		m_FolderData = File::GetFolderFiles(m_CurrentPath);
 	}
 }

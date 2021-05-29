@@ -14,7 +14,8 @@ namespace WindowElement {
 		void OnWindowRender() override;
 		void OnBeforeRender() override;
 		void SetRootPath(const char* path);
-		const char* GetRootPath() { return m_RootPath.c_str(); }
+		const std::string& GetRootPath() { return m_RootPath; }
+		const std::string& GetCurrentPath() { return m_CurrentPath; }
 		void UpdateFolderData();
 
 	private:
@@ -22,14 +23,14 @@ namespace WindowElement {
 
 		void DrawFolderTree();
 		void DrawFilePath();
+		void LoadAllFiles(FolderData data);
+		void LoadFile(const std::string& file);
+
 		Rendering::Texture2D* GetImageFor(const std::string& file);
 
 		std::string m_RootPath;
 		std::string m_CurrentPath;
 		std::string m_SearchValue;
-
-		Ref<Hazard::Rendering::Texture2D> m_FolderImage;
-		Ref<Hazard::Rendering::Texture2D> m_Image;
 
 		FolderData m_FolderData;
 	};

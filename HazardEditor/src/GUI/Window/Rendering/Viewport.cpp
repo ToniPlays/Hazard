@@ -5,6 +5,9 @@
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 #include "GUI/Library/Style.h"
+#include "GUI/Window/DragDropUtils.h"
+#include "Core/EditorEvent.h"
+#include "GUI/EditorView.h"
 
 using namespace Hazard;
 
@@ -16,7 +19,7 @@ namespace WindowElement {
 	}
 	Viewport::~Viewport()
 	{
-		
+
 	}
 	void Viewport::Init()
 	{
@@ -28,7 +31,7 @@ namespace WindowElement {
 		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 
 		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
-		
+
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -55,7 +58,16 @@ namespace WindowElement {
 		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 
+		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
+			const char* file = (const char*)payload->Data;
+			Events::SelectionContextChange e({});
+			EditorView::GetInstance().OnEvent(e);
+
+			Application::GetModule<ECS::WorldHandler>()->LoadWorld(file);
+			});
+
 		m_Gizmos.OnRender(m_EditorCamera, size);
+
 		ImGui::PopStyleVar();
 
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
@@ -64,8 +76,9 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
 
 		if (Input::Button(ICON_FK_COG, { 25, 25 })) {
-			
+
 		}
+
 		ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
 		ImGui::SameLine(0, 15);
@@ -75,7 +88,7 @@ namespace WindowElement {
 		}
 		ImGui::SameLine(0, 15);
 		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) {
-			
+
 		}
 
 		ImGui::PopStyleVar(2);
@@ -106,14 +119,12 @@ namespace WindowElement {
 		ImGui::PopStyleVar(2);
 
 		if (m_Gizmos.IsUsing()) return;
-		
+
 		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Hazard::Input::GetMousePos());
-		
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
-		
-		if(IsHovered())
+		if (IsHovered())
 			m_EditorCamera.OnEvent(e);
 		m_Gizmos.OnEvent(e);
 

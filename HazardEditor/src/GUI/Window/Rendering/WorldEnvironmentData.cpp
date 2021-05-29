@@ -37,7 +37,7 @@ namespace WindowElement {
 			Layout::TableNext();
 			Layout::MaxWidth();
 
-			if (ImGui::BeginCombo("##bgType", currentBgText)) {
+			if (ImGui::BeginCombo("##background7", currentBgText)) {
 				for (int i = 0; i < 3; i++) {
 
 					bool isSelected = currentBgText == bgText[i];
@@ -55,8 +55,9 @@ namespace WindowElement {
 				ImGui::EndCombo();
 			}
 			Layout::EndTable();
-			
-			if (world.GetWorldData().background == ECS::WorldBackground::Colored) {
+			ECS::WorldBackground bg = world.GetWorldData().background;
+
+			if (bg == ECS::WorldBackground::Colored) {
 				Layout::Table(2, false, "##col");
 				Layout::SetColumnWidth(200);
 				Layout::Text("Background color");
@@ -64,7 +65,7 @@ namespace WindowElement {
 				Input::ColorPicker("Background color", world.GetWorldData().renderer->m_Color, open);
 				Layout::EndTable();
 			}
-			else if(world.GetWorldData().background == ECS::WorldBackground::Sky)
+			else if(bg == ECS::WorldBackground::Sky)
 			{
 				Texture* texture = RenderUtils::Get<Texture2D>().Raw();
 				Layout::Text("Front");

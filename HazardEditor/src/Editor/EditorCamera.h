@@ -1,6 +1,5 @@
 #pragma once
 
-#include "glm/glm.hpp"
 #include "Hazard.h"
 
 using namespace Hazard;

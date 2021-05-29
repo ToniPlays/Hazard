@@ -12,7 +12,7 @@
 
 namespace Hazard {
 
-	std::string File::OpenFileDialog(const std::string& filters) {
+	std::string File::OpenFileDialog(const char* filters) {
 		OPENFILENAMEA ofn;
 
 		CHAR szFile[260] = { 0 };
@@ -21,7 +21,7 @@ namespace Hazard {
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = filters.c_str();
+		ofn.lpstrFilter = filters;
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
@@ -50,7 +50,7 @@ namespace Hazard {
 		return "";
 
 	}
-	std::string File::SaveFile(const std::string& filters) {
+	std::string File::SaveFile(const char* filters) {
 
 		OPENFILENAMEA ofn;
 
@@ -60,7 +60,7 @@ namespace Hazard {
 		ofn.lStructSize = sizeof(OPENFILENAME);
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = filters.c_str();
+		ofn.lpstrFilter = filters;
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
@@ -172,6 +172,11 @@ namespace Hazard {
 	{
 		std::filesystem::path path(file);
 		return path.filename().string();
+	}
+	std::string File::GetNameNoExt(const std::string& file)
+	{
+		std::string name = GetName(file);
+		return name.substr(0, name.find_last_of('.'));
 	}
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of(".") + 1);

@@ -1,9 +1,18 @@
-Scene: Untitled scene
+World: New World
 Environment:
   ClearColor: [0, 0, 0, 1]
-  Type: Color
+  Type: HDRI
   File: ""
 Entities:
+  - Entity: 1
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+    MeshComponent:
+      File: C:\dev\HazardProject\assets\Models\veqnci0db_LOD0.fbx
   - Entity: 0
     TagComponent:
       Tag: Camera

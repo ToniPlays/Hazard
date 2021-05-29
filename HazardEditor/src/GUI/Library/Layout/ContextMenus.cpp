@@ -9,12 +9,18 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	void ContextMenus::FileContextMenu()
+	void ContextMenus::FileContextMenu(FileView& view)
 	{
 		Layout::ContextMenu([&]() {
 			Layout::MenuItem("New folder", [&]() {});
 			Layout::MenuItem("New C# script", [&]() {});
-			Layout::MenuItem("New world", [&]() {});
+			Layout::MenuItem("New world", [&]() {
+				ECS::World world("New world");
+				world.SetName("Unnamed World");
+				std::string path = view.GetCurrentPath() + "/world.hazard";
+				ECS::Loader::WorldSerializer::SerializeEditor(path.c_str(), world);
+				view.UpdateFolderData();
+			});
 		});
 	}
 	void ContextMenus::HierarchyEntityMenu(Hazard::ECS::World& world, void(*entityAdded)(Hazard::ECS::Entity))

@@ -39,70 +39,11 @@ namespace Hazard::Rendering {
 		template<typename T>
 		static Ref<T>& Get();
 
-		template<typename T>
-		static void RemoveAsset(T* asset) {
-			static_assert(false);
-		};
-
-		template<>
-		static void RemoveAsset(Shader* shader) {
-			
-			std::vector<RefCount*> refs = s_Assets[AssetType::ShaderAsset];
-			auto it = std::find(refs.begin(), refs.end(), shader);
-
-			HZR_CORE_INFO(refs.size());
-			if (it != refs.end()) {
-				refs.erase(it);
-			}
-			HZR_CORE_INFO(refs.size());
-			s_Assets[AssetType::ShaderAsset] = refs;
-		}
-
-		template<>
-		static void RemoveAsset(Texture* texture) {
-
-			std::vector<RefCount*> refs = s_Assets[AssetType::TextureAsset];
-			auto it = std::find(refs.begin(), refs.end(), texture);
-
-			HZR_CORE_INFO(refs.size());
-			if (it != refs.end()) {
-				HZR_CORE_ERROR("Removed {0}", texture->GetData().file);
-				refs.erase(it);
-			}
-			HZR_CORE_INFO(refs.size());
-			s_Assets[AssetType::TextureAsset] = refs;
-		}
-
 		static std::vector<RefCount*> GetAssetsOf(AssetType type) {
 			return s_Assets[type];
 		};
 		
 	private:
-
-		template<typename T, typename Arg>
-		static T* Find(Arg args);
-
-		template<>
-		static Texture* Find(const char* file) {
-			std::vector<RefCount*> textures = s_Assets[AssetType::TextureAsset];
-
-			for (RefCount* ref : textures) {
-				Texture* texture = (Texture*)ref;
-				if (strcmp(texture->GetData().file.c_str(), file) == 0)
-					return texture;
-			}
-			return nullptr;
-		}
-		template<>
-		static Shader* Find(std::vector<std::string> findShaders) {
-			std::vector<RefCount*> shaders = s_Assets[AssetType::ShaderAsset];
-
-			for (RefCount* ref : shaders) {
-				Shader* shader = (Shader*)ref;
-
-			}
-			return nullptr;
-		}
 
 	private:
 		static RenderAPI s_Api;

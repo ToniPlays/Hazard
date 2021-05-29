@@ -9,7 +9,7 @@ namespace WindowElement {
 		static bool InputField(std::string& text);
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = {0, 0});
-		static bool FileButton(const char* name, Hazard::Rendering::Texture2D* texture, ImVec2 size = { 0, 0 });
+		static bool FileButton(const char* name, Hazard::Rendering::Texture2D* texture, ImVec2 size = { 0, 0 }, const std::string& id = "##id");
 		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = {0, 0}, 
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);
 		static bool Vec1(const char* label, float& value, float resetValue, float columnWidth);
@@ -45,7 +45,7 @@ namespace WindowElement {
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
 
 		static bool DragInt(const char* label, int& value);
-		static bool DragUInt(const char* label, uint32_t& value);
+		static bool DragUInt(const char* label, uint32_t& value, uint32_t min = 0, uint32_t max = 0);
 		static bool DragFloat(const char* label, float& value, float speed = 0.025f, float min = 0, float max = 0);
 
 		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);

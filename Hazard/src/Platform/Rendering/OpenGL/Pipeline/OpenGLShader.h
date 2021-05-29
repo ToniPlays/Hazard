@@ -32,6 +32,7 @@ namespace Hazard::Rendering::OpenGL {
 		void Compile(uint32_t stageCount, PipelineShaderStage* stages);
 
 	private:
+		std::string m_Name;
 		GLuint m_ProgramID = 0;
 		std::unordered_map <std::string, GLint> m_Locations;
 

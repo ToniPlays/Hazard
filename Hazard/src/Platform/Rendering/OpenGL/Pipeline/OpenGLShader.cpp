@@ -24,13 +24,14 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLShader::OpenGLShader(const std::string& name, uint32_t stageCount, PipelineShaderStage* stages)
 	{
 		Vault::Add(name, (Shader*)this);
+		m_Name = name;
 		Compile(stageCount, stages);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(m_ProgramID);
-		RenderUtils::RemoveAsset((Shader*)this);
+		Vault::Delete((Shader*)this);
 	}
 
 	void OpenGLShader::Bind() const

@@ -7,11 +7,11 @@
 
 namespace Hazard::ECS {
 
-	enum WorldBackground { Colored = 0, Sky, HDRI };
+	enum WorldBackground { Colored = 0, Sky, HDRI, None };
 
 	struct WorldData 
 	{
-		WorldBackground background = WorldBackground::Colored;
+		WorldBackground background = WorldBackground::None;
 		Rendering::BackgroundRenderer* renderer = new Rendering::ColorBackgroundRenderer();
 	};
 

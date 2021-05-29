@@ -111,21 +111,22 @@ namespace Hazard::Rendering {
 			BeginBatch();
 		}
 		float textureIndex = 0.0f;
-		
-		if (quad.texture->GetID() != m_Data.TextureSlots[0]->GetID()) 
-		{
-			bool found = false;
-			for (int i = 0; i < m_Data.TextureIndex; i++) {
-				if (m_Data.TextureSlots[i]->GetID() == quad.texture->GetID()) {
-					found = true;
-					textureIndex = float(i);
-					break;
+		if (quad.texture.Raw() != nullptr) {
+			if (quad.texture->GetID() != m_Data.TextureSlots[0]->GetID())
+			{
+				bool found = false;
+				for (int i = 0; i < m_Data.TextureIndex; i++) {
+					if (m_Data.TextureSlots[i]->GetID() == quad.texture->GetID()) {
+						found = true;
+						textureIndex = float(i);
+						break;
+					}
 				}
-			}
-			if (!found) {
-				textureIndex = float(m_Data.TextureIndex);
-				m_Data.TextureSlots[m_Data.TextureIndex] = quad.texture;
-				m_Data.TextureIndex++;
+				if (!found) {
+					textureIndex = float(m_Data.TextureIndex);
+					m_Data.TextureSlots[m_Data.TextureIndex] = quad.texture;
+					m_Data.TextureIndex++;
+				}
 			}
 		}
 

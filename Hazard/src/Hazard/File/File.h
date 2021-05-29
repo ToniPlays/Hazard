@@ -19,9 +19,9 @@ namespace Hazard {
 
 	class File {
 	public:
-		static std::string OpenFileDialog(const std::string& filters = "");
+		static std::string OpenFileDialog(const char* filters);
 		static std::string SaveFolderDialog();
-		static std::string SaveFile(const std::string& filters = "");
+		static std::string SaveFile(const char* filters);
 
 		static bool Exists(const std::string& file);
 		static bool DirectoryExists(const std::string& dir);
@@ -36,6 +36,7 @@ namespace Hazard {
 		static std::string GetFileAbsolutePath(const std::string& file);
 		static std::string GetDirectoryOf(const std::string& file);
 		static std::string GetName(const std::string& file);
+		static std::string GetNameNoExt(const std::string& file);
 		static std::string GetFileExtension(const std::string& file);
 
 		static bool CreateDir(const std::string& dir);

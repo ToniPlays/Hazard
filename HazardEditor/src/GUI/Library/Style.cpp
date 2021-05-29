@@ -193,6 +193,7 @@ void Style::InitDarkTheme()
 
 	SetColor(ImGuiCol_Tab, "#181816");
 	SetColor(ImGuiCol_TabActive, "#222222");
+	SetColor(ImGuiCol_TabHovered, "#5DC50594");
 	SetColor(ImGuiCol_TabUnfocused, "#161616");
 	SetColor(ImGuiCol_TabUnfocusedActive, "#222222");
 
@@ -207,4 +208,6 @@ void Style::InitDarkTheme()
 	SetColor(ImGuiCol_ResizeGrip, "#181816");
 	SetColor(ImGuiCol_ResizeGripHovered, "#5DC50570");
 	SetColor(ImGuiCol_ResizeGripActive, GetStyleColor(ColorType::Primary));
+
+	SetColor(ImGuiCol_DragDropTarget, "#5DC50594");
 }

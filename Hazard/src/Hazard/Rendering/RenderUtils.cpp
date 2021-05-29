@@ -37,10 +37,6 @@ namespace Hazard::Rendering {
 	Ref<Texture2D>& RenderUtils::Get() {
 		return s_WhiteTexture;
 	}
-	template<typename T, typename Arg>
-	T* RenderUtils::Find(Arg args) {
-		HZR_THROW("Failed to find: " + std::string(typeid(T).name()));
-	}
 
 #pragma region Rendering
 
@@ -71,9 +67,10 @@ namespace Hazard::Rendering {
 
 		switch (s_Api)
 		{
-		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLShader>::Create(name, stageCount, stages); break;
+		case RenderAPI::OpenGL:		return Ref<OpenGL::OpenGLShader>::Create(name, stageCount, stages);
 		//case RenderAPI::Vulkan:		return Ref<Vulkan::VulkanShader>::Create(name, stageCount, stages); break;
 		}
+		HZR_THROW("Failed to find shader");
 	}
 	template<>
 	Ref<UniformBuffer> RenderUtils::Create<UniformBuffer>(UniformBufferCreateInfo info) {

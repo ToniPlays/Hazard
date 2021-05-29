@@ -27,8 +27,7 @@ namespace WindowElement {
 		Layout::Menu("File", []() {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open project", []() {
-				std::string path = File::OpenFileDialog();
-
+				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
 				if (path != "")
 					Application::GetModule<Project::ProjectManager>()->Load(path);
 				
@@ -117,18 +116,13 @@ namespace WindowElement {
 					});
 				});
 		});
-		float width = ImGui::GetWindowWidth() - 250;
+		float width = ImGui::GetWindowWidth() - 275;
 
 		ImGui::SetCursorPosX(width);
-		std::stringstream ss;
-		ss << "FPS: " << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 1);
-		ss << "/" << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 2) << "ms";
-		ImGui::Text(ss.str().c_str());
-		ss.str("Mem: ");
-		ss << Math::Round(Application::GetData().memoryUsage, 2) << " mb";
+		ImGui::Text("FPS: %.1f/%.2f ms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 
-		ImGui::SetCursorPosX(width + 125);
-		ImGui::Text(ss.str().c_str());
+		ImGui::SetCursorPosX(width + 130);
+		ImGui::Text("Mem: %.2f mb", Application::GetData().memoryUsage);
 
 		/*ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -162,14 +156,6 @@ namespace WindowElement {
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{
-		bool isSuper = Hazard::Input::IsKeyDown(Key::LeftAlt);
-		if (e.GetKeyCode() == Key::Up)
-		{
-			Window& window = Application::GetModule<RenderContext>()->GetWindow();
-			window.SetMaximized(!window.IsMaximized());
-			return true;
-		}
-
 		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
 		if (!isCtrl) 
 			return false;

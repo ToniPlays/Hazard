@@ -10,7 +10,7 @@ namespace Hazard::ECS {
 	public:
 		WorldHandler();
 		~WorldHandler();
-		bool LoadScene(const std::string& file, Serialization type = Serialization::Editor);
+		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
 		World& GetCurrentWorld() { return *m_World; }
 		void SetWorld(World& world) { m_World = &world; }

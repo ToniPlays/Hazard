@@ -25,7 +25,7 @@ namespace Hazard::Rendering {
 			{ CubeSide::Front,	"res/textures/sea-front.jpg"},
 			{ CubeSide::Back,	"res/textures/sea-back.jpg"}
 		};*/
-
+		HZR_CORE_INFO("Creating skybox from {0}", file);
 		Ref<CubemapTexture>& envMap = RenderUtils::Create<CubemapTexture>(createInfo);
 		m_Skybox->SetCubemapTexture(envMap);
 	}

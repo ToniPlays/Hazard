@@ -22,7 +22,7 @@ namespace WindowElement {
 	void Profiler::OnWindowRender()
 	{
 		if (Input::Button("Load")) {
-			std::string file = File::OpenFileDialog();
+			std::string file = File::OpenFileDialog("");
 			if (file != "") {
 				GenerateSequence(file);
 			}

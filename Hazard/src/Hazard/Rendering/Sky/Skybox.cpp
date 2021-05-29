@@ -63,6 +63,7 @@ namespace Hazard::Rendering {
 		stages[1].stage = ShaderType::FragmentShader;
 
 		GraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.shaderPipelineName = "SkyboxShader";
 		pipelineInfo.inputAssembly = NULL;
 		pipelineInfo.viewport = &viewport;
 		pipelineInfo.rasterizer = &rasterizer;

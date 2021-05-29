@@ -44,10 +44,10 @@ namespace Hazard
 		{
 			for (auto[key, shader] : s_Shaders) {
 				if (key == arg) 
-					return shader;
+					return true;
 			}
 			std::cout << "Shader not found " << arg << std::endl;
-			return nullptr;
+			return false;
 		};
 		template<>
 		static bool Has<Rendering::Texture2D>(const char* arg)
@@ -55,20 +55,20 @@ namespace Hazard
 			std::string val = File::GetName(arg);
 			for (auto [key, texture] : s_Textures) {
 				if (key == val)
-					return texture;
+					return true;
 			}
 			std::cout << "Texture2D not found " << arg << std::endl;
-			return nullptr;
+			return false;
 		};
 		template<>
 		static bool Has<Audio::AudioBufferData>(const char* arg)
 		{
 			for (auto [key, clip] : s_Audio) {
 				if (strcmp(key.c_str(), arg) == 0)
-					return clip;
+					return true;
 			}
 			std::cout << "AudioBuffer not found " << arg << std::endl;
-			return nullptr;
+			return false;
 		};
 
 		template<typename T, typename Arg>
@@ -82,7 +82,7 @@ namespace Hazard
 		static Rendering::Shader* Get(const char* arg)
 		{
 			for (auto [key, shader] : s_Shaders) {
-				if (key == arg)
+				if (strcmp(key.c_str(), arg) == 0)
 					return shader;
 			}
 			std::cout << "Shader not found " << arg << std::endl;
@@ -109,13 +109,24 @@ namespace Hazard
 			std::cout << "AudioBuffer not found " << arg << std::endl;
 			return nullptr;
 		};
-
 		
 		template<typename T>
 		static bool Delete(T*)
 		{
 			static_assert(false, "Vault::Delete(Arg, T)");
 		};
+		template<>
+		static bool Delete(Rendering::Shader* shader) 
+		{
+			for (auto [key, s] : s_Shaders) {
+				if (s == shader) 
+				{
+					s_Shaders.erase(key);
+					return true;
+				}
+			}
+			return false;
+		}
 
 	private:
 		static std::unordered_map<std::string, Rendering::Shader*> s_Shaders;

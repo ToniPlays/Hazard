@@ -117,7 +117,8 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor<MeshComponent>(Entity entity, MeshComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "File" << YAML::Value << component.m_Mesh->GetFile();
+		std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "";
+		out << YAML::Key << "File" << YAML::Value << file;
 		out << YAML::EndMap;
 	}
 	template<>

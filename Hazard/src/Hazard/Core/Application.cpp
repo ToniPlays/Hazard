@@ -52,7 +52,7 @@ namespace Hazard {
 		}
 		if (info->entityComponent != nullptr) {
 			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
-			handler.LoadScene(info->entityComponent->startupFile);
+			handler.LoadWorld(info->entityComponent->startupFile);
 		}
 	}
 	void Application::Quit()

@@ -28,6 +28,9 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Math/Random.h"
 
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+#define GLM_FORCE_SIMD_AVX2
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -52,9 +55,8 @@
 #define HZR_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
 
-#define HZR_LINE " some line"
-
 #define HZR_THROW(x, y) throw HazardRuntimeError(x, "\nFrom: " HZR_FUNC_SIG)
+
 
 #ifdef HZR_PROFILE 
 	#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)

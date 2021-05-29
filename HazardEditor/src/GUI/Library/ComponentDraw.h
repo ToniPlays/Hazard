@@ -139,9 +139,9 @@ namespace WindowElement {
 					}); 
 				});
 			if (changed) {
-				std::string file = File::OpenFileDialog();
-				if (file != "") {
-
+				std::string file = File::OpenFileDialog("");
+				if (file != "") 
+				{
 					using namespace Hazard::Rendering;
 					Texture2DCreateInfo createInfo;
 					createInfo.filename = file.c_str();
@@ -157,6 +157,7 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
+			Input::DragUInt("Size", component.m_Size, 0.0f, 1000.0f);
 
 			}, [&entity]() {
 
@@ -248,8 +249,16 @@ namespace WindowElement {
 			std::string moduleName = component.m_ModuleName;
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
 
-			if (Input::ScriptField("Script", component.m_ModuleName, exists))
-			{
+			bool changed = Input::ScriptField("Script", component.m_ModuleName, exists);
+			
+			DragDropUtils::DragTarget("Script", [&](const ImGuiPayload* payload) {
+				moduleName = (const char*)payload->Data;
+				
+				component.m_ModuleName = File::GetNameNoExt(moduleName);
+				changed = true;
+			});
+
+			if(changed) {
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 					ScriptCommand::ClearEntity(entity, component);
 				}
@@ -329,17 +338,24 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, MeshComponent& component) {
 		Layout::ComponentTreenode<MeshComponent>(entity, name, [&]() {
 
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			if (Input::Button("Mesh")) {
-				std::string file = Hazard::File::OpenFileDialog("");
-				if (file != "")
-					component.m_Mesh = Hazard::Rendering::MeshFactory::LoadMesh(file);
+			Layout::Text("Mesh");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Ref<Rendering::Mesh> mesh = component.m_Mesh;
+			std::string file = mesh.Raw() ? component.m_Mesh->GetFile() : "None";
+			bool changed = Input::InputField(file);
+
+			DragDropUtils::DragTarget("Mesh", [&](const ImGuiPayload* payload) {
+				file = (const char*)payload->Data;
+				changed = true;
+				});
+
+			if (changed) {
+				if (!File::Exists(file)) return;
+
+				component.m_Mesh = Rendering::MeshFactory::LoadMesh(file);
+				HZR_CORE_INFO("New mesh file {0}", file);
 			}
-			Layout::TableNext();
-			std::string filename = component.m_Mesh ? component.m_Mesh->GetFile() : "None";
-			Layout::Text(filename.c_str());
-			Layout::EndTable();
 			}, []() {
 
 			});
