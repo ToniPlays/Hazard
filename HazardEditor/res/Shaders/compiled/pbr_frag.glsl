@@ -7,6 +7,16 @@ in vec3 reflectedVector;
 in float gamma;
 
 uniform samplerCube envMap;
+uniform sampler2D albedoMap;
+uniform vec4 u_color;
+
+layout(std140, binding = 0) uniform Camera 
+{
+	mat4 u_ViewProjection;
+	vec3 u_CameraPos;
+	float u_Gamma;
+};
+
 
 layout(location = 0) out vec4 color;
 
@@ -19,5 +29,7 @@ vec4 mapHDR(vec3 color) {
 void main() 
 {
 	vec4 reflectedColor = texture(envMap, reflectedVector);
-	color = mapHDR(reflectedColor.rgb) + vec4(0.2);
+	vec4 albedo = texture(albedoMap, texCoords);
+
+	color = albedo;
 }

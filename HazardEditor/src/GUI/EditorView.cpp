@@ -89,6 +89,7 @@ namespace WindowElement {
 		PushRenderable<Console>();
 		PushRenderable<FileView>();
 		PushRenderable<EngineAssets>();
+		PushRenderable<MaterialInspector>();
 
 		PushRenderable<ShaderEditorWindow>();
 		PushRenderable<Profiler>();

@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
 		float m_Gamma = 1.0f;
 		VertexArray* m_VAO;
 
-		GraphicsPipeline* m_Pipeline;
+		Ref<GraphicsPipeline> m_Pipeline;
 		Ref<CubemapTexture> m_Texture;
 	};
 }

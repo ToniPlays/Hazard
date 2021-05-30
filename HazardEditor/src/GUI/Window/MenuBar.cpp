@@ -30,12 +30,12 @@ namespace WindowElement {
 				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
 				if (path != "")
 					Application::GetModule<Project::ProjectManager>()->Load(path);
-				
-			});
+
+				});
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
 				Application::GetModule<Project::ProjectManager>()->Save();
-			});
+				});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
 			Layout::Separator();
@@ -45,14 +45,14 @@ namespace WindowElement {
 			Layout::Separator();
 			Layout::MenuItem("Quit", []() {
 				Application::Quit();
+				});
 			});
-		});
 		Layout::Menu("Edit", []() {
-			
-		});
+
+			});
 		Layout::Menu("View", []() {
-			
-		});
+
+			});
 		Layout::Menu("Assets", []() {
 			Layout::MenuItem("Reload script assemblies", []() {
 				Application::GetModule<ScriptEngineManager>()->ReloadAll();
@@ -60,7 +60,7 @@ namespace WindowElement {
 			Layout::MenuItem("Reload asset folder", []() {
 				Application::GetModule<EditorView>()->GetRenderable<FileView>()->UpdateFolderData();
 				});
-		});
+			});
 		Layout::Menu("Window", []() {
 			Layout::Menu("General", [&]() {
 				Layout::MenuItem("Viewport", [&]() {
@@ -76,8 +76,10 @@ namespace WindowElement {
 					Application::GetModule<EditorView>()->SetLayerActive<Properties>(true);
 					});
 				Layout::MenuItem("Asset manager", [&]() {
-
 					Application::GetModule<EditorView>()->SetLayerActive<FileView>(true);
+					});
+				Layout::MenuItem("Material inspector", [&]() {
+					Application::GetModule<EditorView>()->SetLayerActive<MaterialInspector>(true);
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
@@ -87,7 +89,7 @@ namespace WindowElement {
 				Layout::MenuItem("Environment", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<WorldEnvironmentData>(true);
 					});
-			});
+				});
 			Layout::Menu("Debug", [&]() {
 				Layout::MenuItem("Console", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<Console>(true);
@@ -101,12 +103,12 @@ namespace WindowElement {
 				Layout::MenuItem("Assets", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<EngineAssets>(true);
 					});
+				});
 			});
-		});
 		Layout::Menu("Help", []() {
 			Layout::MenuItem("About", [&]() {
-				
-			});
+
+				});
 			Layout::Menu("Theme", [&]() {
 				Layout::MenuItem("Dark", [&]() {
 					Style::InitTheme(Theme::Dark);
@@ -115,39 +117,57 @@ namespace WindowElement {
 					Style::InitTheme(Theme::Classic);
 					});
 				});
-		});
-		float width = ImGui::GetWindowWidth() - 275;
+			});
+		float width = ImGui::GetWindowWidth() - 475;
 
 		ImGui::SetCursorPosX(width);
-		ImGui::Text("FPS: %.1f/%.2f ms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+		ImGui::Text("FPS %.1f/%.2fms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 
 		ImGui::SetCursorPosX(width + 130);
-		ImGui::Text("Mem: %.2f mb", Application::GetData().memoryUsage);
+		ImGui::Text("Mem: %.2fmb", Application::GetData().memoryUsage);
+		ImGui::SameLine(0, 15);
+		width = ImGui::GetCursorPosX();
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
+
+		ImGui::BeginChild("##projectName", { 200, 0 }, false);
+		Project::ProjectManager* manager = Application::GetModule<Project::ProjectManager>();
+		if (manager->ProjectLoaded()) {
+			const char* name = manager->GetProject().m_Name.c_str();
+			ImGui::SetCursorPosX(ImGui::CalcTextSize(name).x / 2.0f);
+			ImGui::Text(name);
+		}
+		else 
+		{
+			ImGui::SetCursorPosX(ImGui::CalcTextSize("Untitled project").x / 2.0f);
+			ImGui::Text("Untitled project");
+		}
+		ImGui::EndChild();
 
 		/*ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		Style::SetButtonColors("#181816", "#181816", "#181816");
 
-		if (Input::Button(ICON_FK_WINDOW_MINIMIZE, { 25, 25 })) 
+		if (Input::Button(ICON_FK_WINDOW_MINIMIZE, { 25, 25 }))
 		{
 			Application::GetModule<RenderContext>()->GetWindow().SetMinimized(true);
 		}
 		ImGui::SameLine(0, 0);
-		if (Input::Button(ICON_FK_WINDOW_MAXIMIZE, { 25, 25 })) 
+		if (Input::Button(ICON_FK_WINDOW_MAXIMIZE, { 25, 25 }))
 		{
 			Window& window = Application::GetModule<RenderContext>()->GetWindow();
 			window.SetMaximized(!window.IsMaximized());
 		}
 		ImGui::SameLine(0, 0);
-		if (Input::Button(ICON_FK_TIMES, { 25, 25 })) 
+		if (Input::Button(ICON_FK_TIMES, { 25, 25 }))
 		{
 			Application::Quit();
 		}
-
-		ImGui::PopStyleColor(3);*/
+		*/
+		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 		ImGui::EndMainMenuBar();
 	}
+
 	bool MenuBar::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
@@ -157,22 +177,22 @@ namespace WindowElement {
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{
 		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
-		if (!isCtrl) 
+		if (!isCtrl)
 			return false;
 
-		if (e.GetKeyCode() == Key::S) 
+		if (e.GetKeyCode() == Key::S)
 		{
 			Application::GetModule<Project::ProjectManager>()->SaveCurrentScene();
 			HZR_WARN("Saving scene");
 			return true;
 		}
-		if (e.GetKeyCode() == Key::R) 
+		if (e.GetKeyCode() == Key::R)
 		{
 			Application::GetModule<Scripting::ScriptEngineManager>()->ReloadAll();
 			HZR_WARN("Reloading assemblies");
 			return true;
 		}
-		
+
 		return false;
 	}
 }

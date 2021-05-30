@@ -8,6 +8,7 @@
 #include "Inspect/Properties.h"
 #include "Inspect/Hierarchy.h"
 #include "Inspect/FileView.h"
+#include "Inspect/MaterialInspector.h"
 
 #include "Rendering/Viewport.h"
 #include "Rendering/GameViewport.h"

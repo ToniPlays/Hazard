@@ -12,7 +12,7 @@ namespace Hazard::Rendering
 
 		VertexArray* QuadVertexArray = nullptr;
 		VertexBuffer* QuadVertexBuffer = nullptr;
-		GraphicsPipeline* QuadPipeline;
+		Ref<GraphicsPipeline> QuadPipeline;
 
 		uint32_t QuadIndexCount = 0;
 		uint32_t TextureIndex = 1;

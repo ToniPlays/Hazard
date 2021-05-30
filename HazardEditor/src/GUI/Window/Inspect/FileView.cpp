@@ -160,7 +160,6 @@ namespace WindowElement {
 	}
 	void FileView::LoadAllFiles(FolderData data)
 	{
-		HZR_CORE_INFO("Loading files from " + data.path);
 		for (std::filesystem::directory_entry folder : data.folders) 
 		{
 			LoadAllFiles(File::GetFolderFiles(folder.path().string()));

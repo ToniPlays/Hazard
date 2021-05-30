@@ -18,7 +18,7 @@ namespace Hazard::Rendering::OpenGL
 
 	private:
 		OpenGLFrameBuffer* m_Target;
-		GraphicsPipeline* m_Pipeline;
-		GraphicsPipeline* m_CombinePipeline;
+		Ref<GraphicsPipeline> m_Pipeline;
+		Ref<GraphicsPipeline> m_CombinePipeline;
 	};
 }

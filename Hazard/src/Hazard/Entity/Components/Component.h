@@ -40,6 +40,7 @@ namespace Hazard::ECS {
 	};
 	struct MeshComponent {
 		Ref<Rendering::Mesh> m_Mesh;
+		Ref<Rendering::Material> m_Material;
 	};
 	struct AudioSourceComponent 
 	{

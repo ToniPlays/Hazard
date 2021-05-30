@@ -70,7 +70,7 @@ namespace Hazard::Rendering {
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		m_Pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		m_Pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 	}
 	Skybox::~Skybox()
 	{

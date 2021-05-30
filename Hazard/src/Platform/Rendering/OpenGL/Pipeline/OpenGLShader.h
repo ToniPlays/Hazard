@@ -23,7 +23,7 @@ namespace Hazard::Rendering::OpenGL {
 		void SetUniformVec2(const std::string& name, glm::vec2 value);
 		void SetUniformVec3(const std::string& name, glm::vec3  value);
 		void SetUniformMat4(const std::string& name, glm::mat4 value);
-		void SetUniformColor(const std::string& name, Color color);
+		void SetUniformColor(const std::string& name, glm::vec4 value);
 		void SetUniformBool(const std::string& name, bool value);
 
 	private:

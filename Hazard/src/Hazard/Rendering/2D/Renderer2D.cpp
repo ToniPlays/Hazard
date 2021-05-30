@@ -102,7 +102,7 @@ namespace Hazard::Rendering {
 		pipelineInfo.rasterizer = &rasterizer;
 		pipelineInfo.viewport = &viewport;
 
-		m_Data.QuadPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		m_Data.QuadPipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 	}
 	void Renderer2D::SubmitQuad(Quad quad)
 	{

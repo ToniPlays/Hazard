@@ -47,7 +47,7 @@ namespace Hazard::Rendering::OpenGL {
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		m_Pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		m_Pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 
 		m_Pipeline->GetShader()->Bind();
 		m_Pipeline->GetShader()->SetUniformInt("sampleTexture", 0);
@@ -66,7 +66,7 @@ namespace Hazard::Rendering::OpenGL {
 		m_Pipeline->Bind();
 
 		RenderCommand::DrawIndexed(vao, vao->GetIndexBuffer()->GetInfo().count);
-
+		
 		return m_Target;
 	}
 	void OpenGLVignette::UpdateData(PostProcessData& data)

@@ -19,7 +19,7 @@ namespace WindowElement {
 		static bool ScriptField(const char* label, std::string& moduleName, bool exists);
 
 		static void Checkbox(const char* label, bool& value);
-		static void ColorPicker(const char* label, Hazard::Color& color, bool& open);
+		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
 		template<typename T, typename C>
 		static bool TextureSlot(Rendering::Texture* texture, T callback, C dropCallback) {

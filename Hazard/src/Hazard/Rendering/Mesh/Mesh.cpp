@@ -17,13 +17,12 @@ namespace Hazard::Rendering {
     }
     Mesh::~Mesh()
     {
-
+        delete m_MeshVAO;
     }
     void Mesh::Render()
     {
         RenderCommand::GetStats().vertices += m_Vertices.size();
         uint32_t size = m_MeshVAO->GetIndexBuffer()->GetInfo().count;
-        
         RenderCommand::DrawIndexed(m_MeshVAO, size);
     }
     void Mesh::GenerateArrays()

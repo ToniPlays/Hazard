@@ -68,7 +68,7 @@ namespace Hazard::Rendering
 		Ref<Shader> pipelineShader;
 	};
 
-	class GraphicsPipeline {
+	class GraphicsPipeline : public RefCount {
 	public:
 		virtual ~GraphicsPipeline() {};
 

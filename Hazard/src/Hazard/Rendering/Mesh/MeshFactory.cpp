@@ -49,10 +49,6 @@ namespace Hazard::Rendering {
 		TraverseNode(scene->mRootNode, data);
 
 		Mesh* mesh = new Mesh(absoluteFile, data.vertices, data.indices);
-
-		Ref<Material> material = Material::Create();
-		mesh->SetMaterial(material);
-	
 		m_LoadedMeshes.push_back(mesh);
 		return Ref(mesh);
 	}
@@ -145,43 +141,6 @@ namespace Hazard::Rendering {
 			TraverseNode(node->mChildren[i], data, transform, ++level);
 		}
 
-	}
-	void MeshFactory::GetMaterials(const aiScene* scene, Material& material, const char* path)
-	{
-		std::vector<Ref<Texture2D>> textures;
-		textures.reserve(scene->mNumMaterials);
-
-		for (uint16_t i = 0; i < scene->mNumMaterials; i++) {
-
-			aiMaterial* aiMat = scene->mMaterials[i];
-
-			LoadMaterialTexture(aiMat, material, aiTextureType_BASE_COLOR, "texture_albedo",   path);
-			LoadMaterialTexture(aiMat, material, aiTextureType_DIFFUSE   , "texture_diffuse",  path);
-			LoadMaterialTexture(aiMat, material, aiTextureType_SPECULAR  , "texture_specular", path);
-			LoadMaterialTexture(aiMat, material, aiTextureType_AMBIENT   , "texture_ambient",  path);
-		}
-
-		//material.SetTextures(textures);
-	}
-	void MeshFactory::LoadMaterialTexture(aiMaterial* material, Material& mat, aiTextureType type, const char* typeName, const char* path)
-	{
-		std::vector<Texture2D*> textures;
-		aiString aiTexPath;
-
-
-		for (uint32_t i = 0; i < material->GetTextureCount(type); i++) {
-
-			if (material->GetTexture(type, i, &aiTexPath) != AI_SUCCESS) continue;
-
-			std::filesystem::path _path = path;
-			auto parentPath = _path.parent_path();
-			parentPath /= std::string(aiTexPath.data);
-			std::string texturePath = parentPath.string();
-
-			HZR_CORE_INFO("Getting " + std::string(typeName) + " from " + parentPath.string());
-
-			//RenderUtils::Create<Texture2D>(texturePath.c_str());
-		}
 	}
 	Ref<Mesh> MeshFactory::LoadCube()
 	{

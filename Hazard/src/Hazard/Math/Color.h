@@ -14,6 +14,7 @@ namespace Hazard {
 		Color(int r, int g, int b, int a);
 		Color(float r, float g, float b, float a);
 
+		static Color FromGLM(const glm::vec3 color);
 		static Color FromGLM(const glm::vec4 color);
 		static Color FromHex(std::string hex);
 

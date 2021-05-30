@@ -94,6 +94,7 @@ namespace Hazard::Rendering::OpenGL {
 		textureCreateInfo.datatype = TextureDataType::HDR;
 		m_Info.cubeSides.clear();
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
+
 		if (file == "") return;
 #pragma region Nonsense
 		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -152,7 +153,7 @@ namespace Hazard::Rendering::OpenGL {
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		GraphicsPipeline* pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		Ref<GraphicsPipeline> pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 
 		BufferLayout layout = { { ShaderDataType::Float3, "pos" } };
 
@@ -203,6 +204,5 @@ namespace Hazard::Rendering::OpenGL {
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		HZR_CORE_WARN("HDR Cubemap finished");
-		delete pipeline;
 	}
 }

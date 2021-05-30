@@ -9,7 +9,10 @@
 using namespace WindowLayout;
 
 namespace WindowElement {
-	EngineAssets::EngineAssets() : EditorWindow(ICON_FK_EXCLAMATION_TRIANGLE" Engine assets") {}
+	EngineAssets::EngineAssets() : EditorWindow(ICON_FK_EXCLAMATION_TRIANGLE" Engine assets") 
+	{
+		SetActive(false);
+	}
 	EngineAssets::~EngineAssets() {}
 	void EngineAssets::Init() {}
 

@@ -45,16 +45,17 @@ namespace Hazard::Rendering::OpenGL {
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		m_Pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		m_Pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 		m_Pipeline->GetShader()->SetUniformInt("sampleTexture", 0);
 
 		stages[0].shaderFileName = "passtrough_vert.glsl";
 		stages[1].shaderFileName = "combine_frag.glsl";
 		pipelineInfo.shaderPipelineName = "CombineShader";
 
-		m_CombinePipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		m_CombinePipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 		m_CombinePipeline->GetShader()->Bind();
 		m_CombinePipeline->GetShader()->SetUniformInt("sampleTextures", 1);
+		
 	}
 	OpenGLBloom::~OpenGLBloom()
 	{

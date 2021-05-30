@@ -68,7 +68,7 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void WorldCommand::Render(MeshComponent& component, TransformComponent& transform) {
-		RenderCommand::Submit(RenderableMesh(component.m_Mesh.Raw(), transform.GetTransformMat4()));
+		RenderCommand::Submit(RenderableMesh(component.m_Mesh.Raw(), component.m_Material.Raw(), transform.GetTransformMat4()));
 	}
 
 	template<>

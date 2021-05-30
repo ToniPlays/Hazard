@@ -212,6 +212,7 @@
     </ClInclude>
     <ClInclude Include="src\GUI\Window\DragDropUtils.h" />
     <ClInclude Include="src\Editor\EditorSettings.h" />
+    <ClInclude Include="src\GUI\Window\Inspect\MaterialInspector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -339,5 +340,6 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\DragDropUtils.cpp" />
     <ClCompile Include="src\Editor\EditorSettings.cpp" />
+    <ClCompile Include="src\GUI\Window\Inspect\MaterialInspector.cpp" />
   </ItemGroup>
 </Project>

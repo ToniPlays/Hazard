@@ -11,6 +11,7 @@ namespace Hazard::Rendering::OpenGL
 {
 	OpenGLGraphicsPipeline::OpenGLGraphicsPipeline(GraphicsPipelineCreateInfo info)
 	{
+		m_Info.pipelineName = info.shaderPipelineName;
 		m_Info.rawDepthFunc = OpenGLUtils::DepthFuncToGL(info.rasterizer->depthFunc);
 		m_Info.rawCullFace = OpenGLUtils::CullFaceToGL(info.rasterizer->cullFace);
 		m_Info.viewport = *info.viewport;
@@ -19,7 +20,7 @@ namespace Hazard::Rendering::OpenGL
 	}
 	OpenGLGraphicsPipeline::~OpenGLGraphicsPipeline()
 	{
-
+		Vault::Delete((GraphicsPipeline*)this);
 	}
 	void OpenGLGraphicsPipeline::Bind()
 	{

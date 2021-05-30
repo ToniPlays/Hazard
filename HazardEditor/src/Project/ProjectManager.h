@@ -13,7 +13,7 @@ namespace Project {
 		bool Load(const std::string& path);
 		void Save();
 		void SaveCurrentScene();
-
+		bool ProjectLoaded() { return m_ProjectData != nullptr; }
 		HazardProject& GetProject() { return *m_ProjectData; }
 
 	private:

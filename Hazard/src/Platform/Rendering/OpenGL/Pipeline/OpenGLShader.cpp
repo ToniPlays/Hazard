@@ -92,8 +92,8 @@ namespace Hazard::Rendering::OpenGL {
 	{
 		glUniformMatrix4fv(GetLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
-	void OpenGLShader::SetUniformColor(const std::string& name, Color color) {
-		SetUniformVec3(name, { color.r, color.g, color.b });
+	void OpenGLShader::SetUniformColor(const std::string& name, glm::vec4 value) {
+		glUniform4f(GetLocation(name), value.x, value.y, value.z, value.w);
 	}
 
 	void OpenGLShader::SetUniformBool(const std::string& name, bool value)

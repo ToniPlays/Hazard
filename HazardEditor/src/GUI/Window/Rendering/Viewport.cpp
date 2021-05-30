@@ -60,7 +60,7 @@ namespace WindowElement {
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
-			Events::SelectionContextChange e({});
+			Events::SelectionContextChange e({ });
 			EditorView::GetInstance().OnEvent(e);
 
 			Application::GetModule<ECS::WorldHandler>()->LoadWorld(file);
@@ -83,9 +83,11 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
 		ImGui::SameLine(0, 15);
 		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
+
 		if (Input::Button(text.c_str(), { 0, 25 })) {
 			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
 		}
+
 		ImGui::SameLine(0, 15);
 		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) {
 

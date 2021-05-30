@@ -6,13 +6,23 @@
 
 namespace Hazard::Rendering {
 
-	Material::Material(GraphicsPipeline* pipeline)
+	Material::Material()
 	{
-		m_Pipeline = pipeline;
 	}
 	Material::~Material()
 	{
 
+	}
+	void Material::Bind()
+	{
+		m_Pipeline->GetShader()->Bind();
+		m_Pipeline->GetShader()->SetUniformInt("albedoMap", 0);
+
+		for (int i = 0; i < m_Textures.size(); i++) {
+			m_Textures[i]->Bind(i);
+		}
+
+		m_Pipeline->GetShader()->SetUniformColor("u_color", m_MaterialBuffer.color);
 	}
 	Ref<Material> Material::Create()
 	{
@@ -34,13 +44,16 @@ namespace Hazard::Rendering {
 		viewport.size = { 1920, 1080 };
 
 		GraphicsPipelineCreateInfo pipelineInfo;
+		pipelineInfo.shaderPipelineName = "PBRPipeline";
 		pipelineInfo.rasterizer = &rasterizer;
 		pipelineInfo.viewport = &viewport;
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 
-		GraphicsPipeline* pipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+		Ref<GraphicsPipeline> pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
+		Ref<Material> material = Ref<Material>::Create();
+		material->SetPipeline(pipeline);
 
-		return Ref<Material>::Create(pipeline);
+		return material;
 	}
 }

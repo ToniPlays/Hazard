@@ -22,7 +22,7 @@ namespace Hazard::Rendering {
 		virtual void SetUniformVec2(const std::string& name, glm::vec2 value) = 0;
 		virtual void SetUniformVec3(const std::string& name, glm::vec3  value) = 0;
 		virtual void SetUniformMat4(const std::string& name, glm::mat4 value) = 0;
-		virtual void SetUniformColor(const std::string& name, Color color) = 0;
+		virtual void SetUniformColor(const std::string& name, glm::vec4 value) = 0;
 		virtual void SetUniformBool(const std::string& name, bool value) = 0;
 	};
 }

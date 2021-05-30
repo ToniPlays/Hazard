@@ -237,8 +237,9 @@ namespace WindowElement {
 	{
 		ImGui::Checkbox(label, &value);
 	}
-	void Input::ColorPicker(const char* label, Color& color, bool& open)
+	bool Input::ColorPicker(const char* label, Color& color, bool& open)
 	{
+		bool modified = false;
 		if (ImGui::ColorButton(label, Style::ColorAsImVec4(color))) {
 			open = true;
 		}
@@ -253,9 +254,11 @@ namespace WindowElement {
 				color.g = c[1];
 				color.b = c[2];
 				color.a = c[3];
+				modified = true;
 			}
 			ImGui::End();
 		}
+		return modified;
 	}
 	bool Input::Slider(const char* label, float& value, float min, float max)
 	{

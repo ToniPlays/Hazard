@@ -50,13 +50,21 @@ namespace Hazard::Rendering {
 		//HZR_THROW(std::string("Failed to create VertexArray for ")+ RenderContext::APIToString(s_Api));
 	}
 	template<>
-	GraphicsPipeline* RenderUtils::CreateRaw<GraphicsPipeline>(GraphicsPipelineCreateInfo info) {
+	Ref<GraphicsPipeline> RenderUtils::Create<GraphicsPipeline>(GraphicsPipelineCreateInfo info) {
+
+		if (Vault::Has<GraphicsPipeline>(info.shaderPipelineName.c_str())) {
+			return Ref(Vault::Get<GraphicsPipeline>(info.shaderPipelineName.c_str()));
+		}
+
+		GraphicsPipeline* pipeline = nullptr;
 
 		switch(s_Api)
 		{
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLGraphicsPipeline(info);
+		case RenderAPI::OpenGL:		pipeline = new OpenGL::OpenGLGraphicsPipeline(info);
 		//case RenderAPI::Vulkan:		return new Vulkan::VulkanGraphicsPipeline(info);
 		}
+		Vault::Add(info.shaderPipelineName, pipeline);
+		return pipeline;
 	}
 	template<>
 	Ref<Shader> RenderUtils::Create<Shader>(const char* name, uint32_t stageCount, PipelineShaderStage* stages) {
@@ -152,6 +160,39 @@ namespace Hazard::Rendering {
 		createInfo.data = &data;
 
 		s_WhiteTexture = Create<Texture2D>(createInfo);
+
+		InputAssembly assembly = {};
+		assembly.topology = InputTopology::TriangleList;
+
+		PipelineRasterizer rasterizer;
+		rasterizer.cullFace = CullFace::BackFace;
+		rasterizer.depthFunc = DepthFunc::Less;
+
+		PipelineViewport viewport = {};
+		viewport.offset = { 0, 0 };
+		viewport.size = { 1920, 1080 };
+
+		PipelineShaderStage stages[2];
+
+		stages[0].shaderFileName = "pbr_vert.glsl";
+		stages[0].stage = ShaderType::VertexShader;
+		stages[0].fileType = ShaderFileType::Source;
+
+		stages[1].shaderFileName = "pbr_frag.glsl";
+		stages[1].stage = ShaderType::FragmentShader;
+		stages[1].fileType = ShaderFileType::Source;
+
+
+		GraphicsPipelineCreateInfo pipelineInfo;
+		pipelineInfo.shaderPipelineName = "DefaultMeshShader";
+		pipelineInfo.inputAssembly = &assembly;
+		pipelineInfo.rasterizer = &rasterizer;
+		pipelineInfo.viewport = &viewport;
+		pipelineInfo.stageCount = 2;
+		pipelineInfo.stages = stages;
+		Ref<GraphicsPipeline> pipeline = Create<GraphicsPipeline>(pipelineInfo);
+		Material* mat = new Material();
+		mat->SetPipeline(pipeline);
 	}
 	std::string RenderUtils::GetShaderPath(ShaderFileType type)
 	{

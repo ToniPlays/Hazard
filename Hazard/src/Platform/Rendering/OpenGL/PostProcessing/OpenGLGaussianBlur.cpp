@@ -44,16 +44,16 @@ namespace Hazard::Rendering::OpenGL
         pipelineInfo.stageCount = 2;
         pipelineInfo.stages = stages;
 
-        m_horizontalPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+        m_horizontalPipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
         m_horizontalPipeline->GetShader()->SetUniformInt("sampleTexture", 0);
 
         stages[0].shaderFileName = "verticalGaussian_vert.glsl";
         pipelineInfo.shaderPipelineName = "VerticalGaussian";
 
-        m_verticalPipeline = RenderUtils::CreateRaw<GraphicsPipeline>(pipelineInfo);
+        m_verticalPipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
         m_verticalPipeline->GetShader()->Bind();
         m_verticalPipeline->GetShader()->SetUniformInt("sampleTexture", 0);
-
+        
     }
     OpenGLGaussianBlur::~OpenGLGaussianBlur()
     {
@@ -73,6 +73,7 @@ namespace Hazard::Rendering::OpenGL
 
         m_verticalPipeline->GetShader()->Bind();
         RenderCommand::DrawIndexed(vao, vao->GetIndexBuffer()->GetInfo().count);
+
         return m_Target;
 
     }

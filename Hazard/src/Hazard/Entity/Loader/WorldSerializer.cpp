@@ -24,6 +24,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::Key << "Environment" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "ClearColor" << YAML::Value; Convert(out, world.GetWorldData().renderer->m_Color);
 		out << YAML::Key << "Type" << YAML::Value << BackgroundTypeToString(world.GetWorldData().background);
+		out << YAML::Key << "Gamma" << YAML::Value << world.GetWorldData().renderer->GetGamma();
 		out << YAML::Key << "File" << YAML::Value << world.GetWorldData().renderer->GetFile();
 
 		out << YAML::EndMap;

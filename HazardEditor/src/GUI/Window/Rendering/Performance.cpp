@@ -12,7 +12,7 @@ namespace WindowElement {
 
 	Performance::Performance() : EditorWindow(ICON_FK_BAR_CHART " Performance")
 	{
-
+		SetActive(false);
 	}
 	Performance::~Performance()
 	{
@@ -20,10 +20,6 @@ namespace WindowElement {
 	}
 	void Performance::Init()
 	{
-		bool found = false;
-		context = Application::GetModule<Rendering::RenderContext>(found);
-		SetActive(found);
-		HZR_ASSERT(!found, "Performance can't start without RenderContext");
 	}
 	void Performance::OnWindowRender()
 	{

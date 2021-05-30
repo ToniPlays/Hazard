@@ -83,7 +83,7 @@ namespace YAML {
 }
 
 
-namespace Hazard::ECS::Loader 
+namespace Hazard::ECS::Loader
 {
 	static WorldBackground StringToWorldType(const std::string& value) {
 		if (value == "Sky")		return WorldBackground::Sky;
@@ -98,12 +98,12 @@ namespace Hazard::ECS::Loader
 		World* world = new World(file);
 
 		//Set scene name
-		if (!root["World"]) 
+		if (!root["World"])
 			return world;
 
 		world->SetName(root["World"].as<std::string>());
 
-		if (root["Environment"]) 
+		if (root["Environment"])
 		{
 			auto env = root["Environment"];
 			world->GetWorldData().renderer->m_Color = Color::FromGLM(env["ClearColor"].as<glm::vec4>());
@@ -114,6 +114,8 @@ namespace Hazard::ECS::Loader
 				file = env["File"].as<std::string>();
 			}
 			world->SetBackground(type, file);
+			if (env["Gamma"])
+				world->GetWorldData().renderer->SetGamma(env["Gamma"].as<float>());
 		}
 
 		//Loop entities
@@ -201,18 +203,22 @@ namespace Hazard::ECS::Loader
 		std::string filename = comp["ModuleName"].as<std::string>();
 		entity.AddComponentWithCallback<VisualScriptComponent>([&](VisualScriptComponent& comp) {
 			comp.m_Filename = filename;
-		});
+			});
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 		auto& c = entity.AddComponent<MeshComponent>();
 		c.m_Mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
+		c.m_Material = Ref<Rendering::Material>::Create();
+
+		Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
+		c.m_Material->SetPipeline(pipeline);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
 		AudioSourceComponent& source = entity.AddComponentWithCallback<AudioSourceComponent>([&](AudioSourceComponent& c) {
 			c.sourceFile = comp["AudioFile"].as<std::string>();
-		});
+			});
 
 		if (comp["Gain"]) {
 			source.source.SetGain(comp["Gain"].as<float>());

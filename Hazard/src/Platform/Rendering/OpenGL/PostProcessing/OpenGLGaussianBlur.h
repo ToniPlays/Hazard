@@ -19,7 +19,7 @@ namespace Hazard::Rendering::OpenGL
 		FrameBuffer* m_Target;
 		FrameBuffer* m_BackBuffer;
 
-		GraphicsPipeline* m_horizontalPipeline;
-		GraphicsPipeline* m_verticalPipeline;
+		Ref<GraphicsPipeline> m_horizontalPipeline;
+		Ref<GraphicsPipeline> m_verticalPipeline;
 	};
 }
