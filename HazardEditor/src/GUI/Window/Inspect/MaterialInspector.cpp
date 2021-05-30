@@ -39,11 +39,18 @@ namespace WindowElement {
 			Input::TextureSlot(Vault::Get<Rendering::Texture2D>("White"), [&]() {
 				Color color = meshComponent.m_Material->Get<Color>("Material.AlbedoColor");
 				static bool open = false;
-				if (Input::ColorPicker("Albedo tint", color, open)) 
+				if (Input::ColorPicker("Albedo tint", color, open))
 				{
 					meshComponent.m_Material->Set<Color>("Material.AlbedoColor", color);
 				}
-				}, []() {});
+				}, [&]() {
+					DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
+						const char* file = (const char*)payload->Data;
+						Ref<Rendering::Texture2D> texture = Ref<Rendering::Texture2D>(Vault::Get<Rendering::Texture2D>(file));
+
+						meshComponent.m_Material->Set("Material.AlbedoMap", texture);
+					});
+				});
 			});
 
 	}

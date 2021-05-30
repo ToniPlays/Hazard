@@ -22,6 +22,7 @@ namespace WindowElement
 		std::string ext = File::GetFileExtension(file);
 
 		if (ext == "jpeg") return "Texture2D";
+		if (ext == "jpg") return "Texture2D";
 		if (ext == "png") return "Texture2D";
 
 		if (ext == "mp3") return "AudioClip";

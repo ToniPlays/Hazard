@@ -52,7 +52,7 @@ namespace Hazard::Rendering {
 		template<>
 		void Set(const char* key, Ref<Texture2D> texture)
 		{
-			if (strcmp(key, "Material.AlbedoColor") == 0) {
+			if (strcmp(key, "Material.AlbedoMap") == 0) {
 				m_Textures[0] = texture;
 			}
 		}

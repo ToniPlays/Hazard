@@ -31,5 +31,5 @@ void main()
 	vec4 reflectedColor = texture(envMap, reflectedVector);
 	vec4 albedo = texture(albedoMap, texCoords);
 
-	color = albedo;
+	color = albedo * u_color;
 }
