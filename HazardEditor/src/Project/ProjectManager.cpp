@@ -16,7 +16,11 @@ namespace Project {
 
 	ProjectManager::~ProjectManager()
 	{
+	}
 
+	void ProjectManager::Close()
+	{
+		Save();
 	}
 
 	bool ProjectManager::Load(const std::string& path)
@@ -29,23 +33,41 @@ namespace Project {
 
 		YAML::Node root = YAML::LoadFile(path);
 
-		project->m_Name = root["project_name"].as<std::string>();
-		project->m_AbsolutePath = root["project_path"].as<std::string>();
-		project->m_StartupScene = root["startup_scene"].as<std::string>();
+		YAML::Node general = root["General"];
+
+		project->m_Name = general["Project name"].as<std::string>();
+		project->m_AbsolutePath = general["Project path"].as<std::string>();
+		project->m_StartupWorld = general["Startup world"].as<std::string>();
 		m_ProjectData = project;
 
 		Application::GetModule<WindowElement::EditorView>()->GetRenderable<WindowElement::FileView>()->
 			SetRootPath(project->m_AbsolutePath.c_str());
 
-		if (project->m_StartupScene != "") {
-			Application::GetModule<ECS::WorldHandler>()->LoadWorld(project->m_StartupScene);
+		if (project->m_StartupWorld != "") {
+			if (!Application::GetModule<ECS::WorldHandler>()->LoadWorld(project->m_StartupWorld), ECS::Serialization::Editor) {
+				HZR_WARN("Startup world could not be loaded");
+			}
 		}
+		m_ProjectPath = path;
 		return true;
 	}
 
 	void ProjectManager::Save()
 	{
-		HZR_INFO("Saving TODO");
+		if (!ProjectLoaded()) return;
+
+		YAML::Emitter out;
+		std::ofstream fout(m_ProjectPath);
+		out << YAML::BeginMap;
+		out << YAML::Key << "General" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Project name" << YAML::Value << m_ProjectData->m_Name;
+		out << YAML::Key << "Project path" << YAML::Value << m_ProjectData->m_AbsolutePath;
+		out << YAML::Key << "Startup world" << YAML::Value << m_ProjectData->m_StartupWorld;
+		
+		out << YAML::EndMap;
+		out << YAML::EndMap;
+		fout << out.c_str();
+		fout.close();
 	}
 	void ProjectManager::SaveCurrentScene()
 	{

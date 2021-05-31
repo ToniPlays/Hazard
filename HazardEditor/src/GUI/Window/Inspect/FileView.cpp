@@ -27,6 +27,8 @@ namespace WindowElement {
 		LoadFile("res/icons/folder.png");
 		LoadFile("res/icons/logo.png");
 		LoadFile("res/icons/textureBG.png");
+		LoadFile("res/icons/csharp.png");
+		LoadFile("res/icons/world.png");
 	}
 	void FileView::OnBeforeRender()
 	{
@@ -63,22 +65,31 @@ namespace WindowElement {
 
 		DrawFilePath();
 		ImGui::SameLine();
-		float width = ImGui::GetContentRegionAvailWidth();
-		float maxWidth = width < 200 ? width : 200;
-		ImGui::SetCursorPosX(width - maxWidth);
+
+		float width = ImGui::GetWindowWidth();
+		
+		float maxWidth = width < 300 ? width : 300;
+		ImGui::SetCursorPosX(width - maxWidth - 55);
+		ImGui::SetNextItemWidth(maxWidth);
 		Input::InputField(m_SearchValue, ICON_FK_SEARCH " Search");
+		ImGui::SameLine();
+
+		ImGui::SetCursorPosX(width - 50);
+		ImGui::SetNextItemWidth(50);
+		ImGui::DragFloat("##Scale", &m_Scale,0.5f, 100.0f, 150.0f, "%.2f");
 
 		Layout::Separator();
 		ImGui::Columns(2);
 
 		ImGui::BeginChild("##folderTree");
 		DrawFolderTree();
+		
 		ImGui::EndChild();
 
 		ImGui::NextColumn();
 
-		float colWidth = 130 * m_Scale;
-		float colHeight = 200 * m_Scale;
+		float colWidth = 0.97f * m_Scale;
+		float colHeight = 1.50f * m_Scale;
 		int cols = ImGui::GetContentRegionAvailWidth() / colWidth;
 
 		if (cols > 0)
@@ -129,7 +140,6 @@ namespace WindowElement {
 			ImGui::PopStyleVar();
 			ImGui::EndChild();
 		}
-
 		ImGui::Columns();
 		ImGui::PopStyleVar();
 	}
@@ -201,7 +211,8 @@ namespace WindowElement {
 	}
 	ImVec4 FileView::GetFileColor(const std::string& type)
 	{
-		if (type == "Texture2D")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
+		if (type == "Texture2D")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Warning));
+		if (type == "Script")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
 		if (type == "World")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
 		if (type == "Material")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
 		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
@@ -212,6 +223,11 @@ namespace WindowElement {
 
 		if (ext == "jpg" || ext == "jpeg" || ext == "png") {
 			return Vault::Get<Rendering::Texture2D>(file.c_str());
+		}
+		if (ext == "cs") 
+			return Vault::Get<Rendering::Texture2D>("res/icons/csharp.png");
+		if (ext == "hazard") {
+			return Vault::Get<Rendering::Texture2D>("res/icons/world.png");
 		}
 		return Vault::Get<Rendering::Texture2D>("res/icons/logo.png");
 	}

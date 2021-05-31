@@ -96,6 +96,7 @@ namespace WindowElement {
 		PushRenderable<WelcomePopup>();
 
 		PushRenderable<ExportView>();
+		PushRenderable<SettingsView>();
 	}  
 	void EditorView::Render()
 	{
@@ -104,6 +105,7 @@ namespace WindowElement {
 			for (RenderableElement* element : m_Elements) {
 				element->OnMenuRender();
 			}
+
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().dockPadding);
 			WindowLayout::Dockspace::Begin("MainDockSpace");
 			WindowLayout::Dockspace::End();
@@ -113,6 +115,7 @@ namespace WindowElement {
 		for (RenderableElement* element : m_Elements) {
 			element->OnRender();
 		}
+
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)

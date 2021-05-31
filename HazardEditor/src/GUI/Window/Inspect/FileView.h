@@ -20,7 +20,7 @@ namespace WindowElement {
 
 	private:
 		bool m_Open;
-		float m_Scale = 0.9f;
+		float m_Scale = 100.0f;
 
 		void DrawFolderTree();
 		void DrawFilePath();

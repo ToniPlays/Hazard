@@ -142,6 +142,9 @@ namespace WindowElement {
 			ImGui::Text("Untitled project");
 		}
 		ImGui::EndChild();
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)) {
+			EditorView::GetInstance().SetLayerActive<SettingsView>(true);
+		}
 
 		/*ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);

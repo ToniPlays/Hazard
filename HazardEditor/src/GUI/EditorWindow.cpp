@@ -31,6 +31,7 @@ namespace WindowElement {
 			m_Hovered = ImGui::IsWindowHovered();
 			OnWindowRender();
 			ImGui::End();
+			OnAfterRender();
 		}
 	}
 }

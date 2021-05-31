@@ -38,10 +38,6 @@ namespace WindowElement {
 	{
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
-			m_EditorCamera.GetPosition()));
-
 		bool is2D = m_EditorCamera.Is2DEnabled();
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
@@ -49,9 +45,6 @@ namespace WindowElement {
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		bool changed = false;
-
-		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
-			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		if (size.x != m_Width || size.y != m_Height) {
 			m_Width = size.x;
@@ -61,6 +54,15 @@ namespace WindowElement {
 			m_RenderTexture->Resize(m_Width, m_Height);
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
+
+
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
+		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
+			m_EditorCamera.GetPosition()));
+
+		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
+			size, ImVec2(0, 1), ImVec2(1, 0));
+
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;

@@ -49,10 +49,6 @@ namespace WindowElement {
 			return;
 		}
 
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-		ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
-			transform->m_Translation));
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -65,6 +61,9 @@ namespace WindowElement {
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
+		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
+		ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
+			transform->m_Translation));
 		//FrameBuffer* result = m_PostProcessing->PostProcess(m_RenderTexture.Raw(), { m_Width, m_Height });
 
 		ImGui::Image((void*)m_RenderTexture->GetColorID(),

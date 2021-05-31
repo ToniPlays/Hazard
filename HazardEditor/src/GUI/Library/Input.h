@@ -71,7 +71,7 @@ namespace WindowElement {
 		static bool DragUInt(const char* label, uint32_t& value, uint32_t min = 0, uint32_t max = 0);
 		static bool DragFloat(const char* label, float& value, float speed = 0.025f, float min = 0, float max = 0);
 
-		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify);
+		static void DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify, ImVec2 size = { 0, 0 });
 		static bool ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor,
 			bool& modify, ImVec2 size = { 0, 0 });
 

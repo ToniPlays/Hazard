@@ -61,7 +61,9 @@ namespace Hazard::ECS {
 		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
 	}
 
-	World::~World() {}
+	World::~World() {
+		m_Registry.clear();
+	}
 
 	void World::SetBackground(WorldBackground type, std::string file)
 	{

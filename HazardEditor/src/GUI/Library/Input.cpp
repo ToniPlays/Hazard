@@ -267,17 +267,17 @@ namespace WindowElement {
 		return ImGui::DragFloat(label, &value, speed, min, max);
 	}
 
-	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify)
+	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify, ImVec2 size)
 	{
 		if (modify) {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
-			if (Button(onLabel)) {
+			if (Button(onLabel, size)) {
 				modify = false;
 			}
 		}
 		else {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
-			if (Button(offLabel)) {
+			if (Button(offLabel, size)) {
 				modify = true;
 			}
 		}

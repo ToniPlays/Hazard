@@ -12,10 +12,6 @@ namespace WindowLayout {
     {
         ImGui::Columns(columns, id, border);
     }
-    void Layout::TableNext()
-    {
-        ImGui::NextColumn();
-    }
     void Layout::SameLine(float offset, float spacing) 
     {
         ImGui::SameLine(offset, spacing);
@@ -27,10 +23,6 @@ namespace WindowLayout {
     float Layout::GetColumnWidth()
     {
         return ImGui::GetColumnWidth(ImGui::GetColumnIndex());
-    }
-    void Layout::EndTable()
-    {
-        ImGui::Columns(1); 
     }
     bool Layout::Tooltip(const char* text)
     {
@@ -78,17 +70,5 @@ namespace WindowLayout {
         for (int i = 0; i < cols; i++) {
             PopWidth();
         }
-    }
-    void Layout::PopWidth()
-    {
-        ImGui::PopItemWidth();
-    }
-    void Layout::MaxWidth()
-    {
-        ItemWidth(ImGui::GetContentRegionAvail().x);
-    }
-    float Layout::GetMaxWidth()
-    {
-        return ImGui::GetContentRegionAvail().x;
     }
 }

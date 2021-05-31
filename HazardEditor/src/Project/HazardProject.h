@@ -5,6 +5,6 @@ namespace Project {
 		std::string m_Name;
 		std::string m_AbsolutePath;
 
-		std::string m_StartupScene;
+		std::string m_StartupWorld;
 	};
 }

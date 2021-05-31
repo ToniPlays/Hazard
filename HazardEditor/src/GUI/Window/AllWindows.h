@@ -21,4 +21,5 @@
 #include "Debug/Profiler.h"
 
 #include "Editor/ExportView.h"
+#include "Editor/SettingsView.h"
 #include "ShaderEditor/ShaderEditorWindow.h"

@@ -14,8 +14,8 @@
 
 using namespace WindowLayout;
 
-namespace WindowElement {
-
+namespace WindowElement 
+{
 	Toolbar::Toolbar()
 	{
 

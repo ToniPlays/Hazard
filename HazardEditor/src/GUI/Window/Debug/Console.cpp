@@ -44,7 +44,8 @@ namespace WindowElement {
 		}
 
 		Layout::SameLine(0, 5);
-		Input::DynamicToggleButton(ICON_FK_TIMES, ICON_FK_CHECK, Style::GetStyleColor(ColorType::Background), Style::GetStyleColor(ColorType::Primary), scrollLockEnable);
+		Input::DynamicToggleButton(ICON_FK_TIMES, ICON_FK_CHECK, Style::GetStyleColor(ColorType::Background), 
+			Style::GetStyleColor(ColorType::Debug), scrollLockEnable, { 25, 0 });
 		Layout::Tooltip("Toggle scrolling");
 
 		Color enableColor = Style::GetStyleColor(ColorType::Background);

@@ -7,11 +7,11 @@ namespace WindowLayout {
 	class Layout {
 	public:
 		static void Table(uint8_t columns, bool border = true, const char* id = "#aa");
-		static void TableNext();
+		inline static void TableNext() { ImGui::NextColumn(); }
 		static void SameLine(float offset = 0.0f, float spacing = 0.0f);
 		static void SetColumnWidth(float width);
-		static float GetColumnWidth();
-		static void EndTable();
+		inline static float GetColumnWidth();
+		inline static void EndTable() { ImGui::Columns(1); }
 		static bool Tooltip(const char* text);
 		static void Separator(float height = 1.0f);
 		static void Text(const char* text);
@@ -20,9 +20,9 @@ namespace WindowLayout {
 		static void ItemWidth(float width);
 		static void PushWidths(uint16_t cols);
 		static void PopWidths(uint16_t cols);
-		static void PopWidth();
-		static void MaxWidth();
-		static float GetMaxWidth();
+		inline static void PopWidth() { ImGui::PopItemWidth(); }
+		inline static void MaxWidth() { ItemWidth(ImGui::GetContentRegionAvail().x); }
+		inline static float GetMaxWidth() { return ImGui::GetContentRegionAvail().x; }
 
 		template<typename T>
 		static void IDGroup(const char* id, T callback) {
@@ -116,7 +116,5 @@ namespace WindowLayout {
 			if (ImGui::MenuItem(name)) 
 				callback();
 		}
-
-
 	};
 }
