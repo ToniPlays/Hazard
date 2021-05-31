@@ -209,7 +209,6 @@ namespace Hazard::ECS::Loader
 	static void WorldDeserializer::Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 		auto& c = entity.AddComponent<MeshComponent>();
 		c.m_Mesh = Rendering::MeshFactory::LoadMesh(comp["File"].as<std::string>());
-		c.m_Material = Ref<Rendering::Material>::Create();
 
 		Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
 		c.m_Material->SetPipeline(pipeline);

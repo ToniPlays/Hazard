@@ -14,24 +14,20 @@ layout(std140, binding = 0) uniform Camera
 
 uniform mat4 u_Model;
 
-out vec4 f_color;
-out vec3 f_normal;
-out vec2 texCoords;
-out vec3 reflectedVector;
-out float gamma;
+out VertexOut {
+	vec3 worldPos;
+	vec4 color;
+	vec3 normal;
+	vec2 texCoord;
+} vsOut;
 
 void main() 
 {
-	vec4 worldPos = u_Model * vec4(v_position, 1.0);
-	gl_Position = u_ViewProjection * worldPos;
+	vec3 worldPos = vec3(u_Model * vec4(v_position, 1.0));
+	gl_Position = u_ViewProjection * vec4(worldPos, 1.0);
 
-	f_color = v_color;
-	f_normal = mat3(u_Model) * v_normal;
-	texCoords = v_texCoords;
-
-	vec3 unitNormal = normalize(f_normal);
-	vec3 viewVector = normalize(worldPos.xyz - u_CameraPos);
-
-	reflectedVector = reflect(viewVector, unitNormal);
-	gamma = u_Gamma;
+	vsOut.worldPos = worldPos;
+	vsOut.color = v_color;
+	vsOut.normal = mat3(u_Model) * v_normal;
+	vsOut.texCoord = v_texCoords;
 }

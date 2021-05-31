@@ -21,7 +21,9 @@ namespace Hazard::Rendering {
 		void Bind();
 
 		MaterialBuffer GetMaterialData() const { return m_MaterialBuffer; }
-		void SetPipeline(Ref<GraphicsPipeline> pipeline) { m_Pipeline = pipeline; }
+		void SetPipeline(Ref<GraphicsPipeline> pipeline) { 
+			m_Pipeline = pipeline; 
+		}
 		GraphicsPipeline* GetPipeline() { return m_Pipeline.Raw(); }
 
 
@@ -36,6 +38,12 @@ namespace Hazard::Rendering {
 			if (strcmp(value, "Material.AlbedoColor") == 0) 
 				return Color::FromGLM(m_MaterialBuffer.color);
 			return Color();
+		}
+		template<>
+		Texture2D* Get(const char* value)
+		{
+			if (strcmp(value, "Material.AlbedoMap") == 0)
+				return m_Textures[0].Raw();
 		}
 		template<typename T>
 		void Set(const char* key, T value) {

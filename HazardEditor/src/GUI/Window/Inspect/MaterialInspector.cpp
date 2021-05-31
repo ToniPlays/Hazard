@@ -36,7 +36,10 @@ namespace WindowElement {
 		Input::InputField(name);
 		Layout::EndTable();
 		Layout::Treenode("Albedo", Style::GetTreeNodeDefaultFlags(), [&]() {
-			Input::TextureSlot(Vault::Get<Rendering::Texture2D>("White"), [&]() {
+
+			Rendering::Texture2D* texture = meshComponent.m_Material->Get<Rendering::Texture2D*>("Material.AlbedoMap");
+
+			Input::TextureSlot(texture, [&]() {
 				Color color = meshComponent.m_Material->Get<Color>("Material.AlbedoColor");
 				static bool open = false;
 				if (Input::ColorPicker("Albedo tint", color, open))

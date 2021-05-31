@@ -271,7 +271,11 @@ namespace Hazard::ECS {
 	}
 	//MESH COMPONENT
 	template<>
-	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {}
+	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
+		component.m_Material = Ref<Rendering::Material>::Create();
+		Ref<Rendering::GraphicsPipeline> pipeline = Ref(Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader"));
+		component.m_Material->SetPipeline(pipeline);
+	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, MeshComponent& component) {}
 #pragma endregion
