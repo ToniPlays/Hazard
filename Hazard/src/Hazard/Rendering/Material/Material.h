@@ -11,6 +11,8 @@ namespace Hazard::Rendering {
 	struct MaterialBuffer 
 	{
 		glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float metallic = 0.0f;
+		float smoothness = 0.0f;
 	};
 
 	class Material : public RefCount {
@@ -33,6 +35,15 @@ namespace Hazard::Rendering {
 		}
 
 		template<>
+		float Get(const char* value) 
+		{
+			if (strcmp(value, "Material.Metallic") == 0)
+				return m_MaterialBuffer.metallic;
+			if (strcmp(value, "Material.Smoothness") == 0)
+				return m_MaterialBuffer.smoothness;
+			return 0.0f;
+		}
+		template<>
 		Color Get(const char* value) 
 		{
 			if (strcmp(value, "Material.AlbedoColor") == 0) 
@@ -44,12 +55,25 @@ namespace Hazard::Rendering {
 		{
 			if (strcmp(value, "Material.AlbedoMap") == 0)
 				return m_Textures[0].Raw();
+			if (strcmp(value, "Material.NormalMap") == 0)
+				return m_Textures[1].Raw();
 		}
 		template<typename T>
 		void Set(const char* key, T value) {
 			static_assert(false);
 		}
-
+		template<>
+		void Set(const char* key, float value)
+		{
+			if (strcmp(key, "Material.Metallic") == 0) {
+				m_MaterialBuffer.metallic = value;
+				return;
+			}
+			if (strcmp(key, "Material.Smoothness") == 0) {
+				m_MaterialBuffer.smoothness = value;
+				return;
+			}
+		}
 		template<>
 		void Set(const char* key, Color color) 
 		{
@@ -62,6 +86,9 @@ namespace Hazard::Rendering {
 		{
 			if (strcmp(key, "Material.AlbedoMap") == 0) {
 				m_Textures[0] = texture;
+			}
+			if (strcmp(key, "Material.NormalMap") == 0) {
+				m_Textures[1] = texture;
 			}
 		}
 

@@ -67,7 +67,7 @@ namespace WindowElement {
 			}
 			else if(bg == ECS::WorldBackground::Sky)
 			{
-				Texture* texture = RenderUtils::Get<Texture2D>().Raw();
+				Texture* texture = Vault::Get<Rendering::Texture2D>("White");
 				Layout::Text("Front");
 				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Back");

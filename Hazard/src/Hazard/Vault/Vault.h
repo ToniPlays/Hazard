@@ -25,12 +25,12 @@ namespace Hazard
 		static void Vault::Add(std::string name, Rendering::Texture2D* ref)
 		{
 			std::string key = File::GetName(name);
+			std::cout << "Added texture " << key << std::endl;
 			s_Textures[key] = ref;
 		}
 		template<>
 		static void Vault::Add(std::string name, Rendering::GraphicsPipeline* ref)
 		{
-			std::cout << "Added pipeline " << name << std::endl;
 			s_Pipelines.push_back(ref);
 		}
 		template<>
@@ -148,9 +148,20 @@ namespace Hazard
 		{
 			auto it = std::find(s_Pipelines.begin(), s_Pipelines.end(), graphicsPipeline);
 			if (it != s_Pipelines.end()) {
-				std::cout << "Removed pipeline " << graphicsPipeline->GetInfo().pipelineName << std::endl;
 				s_Pipelines.erase(it);
 				return true;
+			}
+			return false;
+		}
+		template<>
+		static bool Delete(Rendering::Texture2D* texture)
+		{
+			for (auto [key, s] : s_Textures) {
+				if (s == texture)
+				{
+					s_Textures.erase(key);
+					return true;
+				}
 			}
 			return false;
 		}

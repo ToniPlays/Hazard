@@ -23,22 +23,10 @@ namespace WindowElement {
 		Layout::Treenode("Shaders", flags, []() {
 			Layout::Table(2, false);
 			Layout::SetColumnWidth(50);
-			for (RefCount* ref : RenderUtils::GetAssetsOf(AssetType::ShaderAsset)) {
-				Shader* shader = (Shader*)ref;
-
-				Layout::Text(std::to_string(ref->GetRefCount()).c_str());
-				Layout::TableNext();
-				//ImGui::Text(shader->GetInfo().shaderName.c_str());
-				Layout::TableNext();
-			}
 			Layout::EndTable();
 		});
 
 		Layout::Treenode("Textures", flags, []() {
-			for (RefCount* ref : RenderUtils::GetAssetsOf(AssetType::TextureAsset)) {
-				Texture* texture = (Texture*)ref;
-				Input::TextureSlot(texture, [&]() {}, [&]() {});
-			}
 			
 		});
 		Layout::Treenode("Meshes", flags, []() {

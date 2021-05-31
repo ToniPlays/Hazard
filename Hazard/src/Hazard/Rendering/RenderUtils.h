@@ -39,15 +39,10 @@ namespace Hazard::Rendering {
 		template<typename T>
 		static Ref<T>& Get();
 
-		static std::vector<RefCount*> GetAssetsOf(AssetType type) {
-			return s_Assets[type];
-		};
-		
 	private:
 
 	private:
 		static RenderAPI s_Api;
-		static Ref<Texture2D> s_WhiteTexture;
 		static std::unordered_map<AssetType, std::vector<RefCount*>> s_Assets;
 		
 		static RenderUtilsCreateInfo m_Info;

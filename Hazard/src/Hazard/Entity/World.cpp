@@ -219,7 +219,7 @@ namespace Hazard::ECS {
 	//SPRITE RENDERER COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		component.m_Texture = Rendering::RenderUtils::Get<Rendering::Texture2D>();
+		component.m_Texture = Ref(Vault::Get<Rendering::Texture2D>("White"));
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}

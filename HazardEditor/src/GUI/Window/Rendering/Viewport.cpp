@@ -31,6 +31,7 @@ namespace WindowElement {
 		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 
 		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
+		m_RenderTexture->Resize(1920, 1080);
 
 	}
 	void Viewport::OnWindowRender()
@@ -45,18 +46,21 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		ImVec2 corner = ImGui::GetCursorPos();
-
 		ImVec2 size = ImGui::GetContentRegionAvail();
+
+		bool changed = false;
+
+		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
+			size, ImVec2(0, 1), ImVec2(1, 0));
+
 		if (size.x != m_Width || size.y != m_Height) {
 			m_Width = size.x;
 			m_Height = size.y;
 
+			changed = true;
 			m_RenderTexture->Resize(m_Width, m_Height);
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
-
-		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
-			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;

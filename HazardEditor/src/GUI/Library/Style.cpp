@@ -170,7 +170,7 @@ void Style::InitDarkTheme()
 
 	SetColor(ImGuiCol_MenuBarBg, "#181816");
 	SetColor(ImGuiCol_Text, "#B9B9B9");
-	SetColor(ImGuiCol_TextSelectedBg, "##5DC5054B");
+	SetColor(ImGuiCol_TextSelectedBg, "#5DC5054B");
 
 	SetColor(ImGuiCol_WindowBg, "#222222");
 	SetColor(ImGuiCol_ScrollbarBg, "#222222");

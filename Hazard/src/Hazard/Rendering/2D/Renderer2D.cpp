@@ -73,7 +73,7 @@ namespace Hazard::Rendering {
 		for (int i = 0; i < samplers.size(); i++)
 			samplers.at(i) = i;
 
-		m_Data.TextureSlots[0] = RenderUtils::Get<Texture2D>().Raw();
+		m_Data.TextureSlots[0] = Ref(Vault::Get<Texture2D>("White"));
 
 		PipelineShaderStage stages[2];
 

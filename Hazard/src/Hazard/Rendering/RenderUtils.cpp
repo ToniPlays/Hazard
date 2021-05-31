@@ -9,7 +9,6 @@
 namespace Hazard::Rendering {
 
 	RenderAPI RenderUtils::s_Api;
-	Ref<Texture2D> RenderUtils::s_WhiteTexture;
 	std::unordered_map<AssetType, std::vector<RefCount*>> RenderUtils::s_Assets;
 	RenderUtilsCreateInfo RenderUtils::m_Info;
 
@@ -32,10 +31,6 @@ namespace Hazard::Rendering {
 	template<typename T>
 	Ref<T>& RenderUtils::Get() {
 		HZR_THROW("Failed to get: " + std::string(typeid(T).name()));
-	}
-	template<>
-	Ref<Texture2D>& RenderUtils::Get() {
-		return s_WhiteTexture;
 	}
 
 #pragma region Rendering
@@ -159,7 +154,23 @@ namespace Hazard::Rendering {
 		createInfo.height = 1;
 		createInfo.data = &data;
 
-		s_WhiteTexture = Create<Texture2D>(createInfo);
+		Ref<Texture2D> texture = Create<Texture2D>(createInfo);
+		texture->IncRefCount();
+		Vault::Add(createInfo.filename, texture.Raw());
+
+		data = 0xFFFF0000;
+
+		Texture2DCreateInfo normalCreateInfo = {};
+		normalCreateInfo.filename = "DefaultNormalMap";
+		normalCreateInfo.loadFromFile = false;
+		normalCreateInfo.width = 1;
+		normalCreateInfo.height = 1;
+		normalCreateInfo.data = &data;
+
+		Ref<Texture2D> normalTexture = Create<Texture2D>(normalCreateInfo);
+		normalTexture->IncRefCount();
+		Vault::Add(normalCreateInfo.filename, normalTexture.Raw());
+
 
 		InputAssembly assembly = {};
 		assembly.topology = InputTopology::TriangleList;
@@ -191,6 +202,7 @@ namespace Hazard::Rendering {
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.stages = stages;
 		Ref<GraphicsPipeline> pipeline = Create<GraphicsPipeline>(pipelineInfo);
+
 		Material* mat = new Material();
 		mat->SetPipeline(pipeline);
 	}

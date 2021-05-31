@@ -8,11 +8,13 @@ namespace Hazard::Rendering {
 
 	Material::Material()
 	{
-		m_Textures = std::vector<Ref<Texture2D>>(1);
+		m_Textures = std::vector<Ref<Texture2D>>(2);
 		Ref<Texture2D> white = Vault::Get<Texture2D>("White");
 		for (int i = 0; i < m_Textures.size(); i++) {
 			m_Textures[i] = white;
 		}
+
+		m_Textures[1] = Ref<Texture2D>(Vault::Get<Texture2D>("DefaultNormalMap"));
 	}
 	Material::~Material()
 	{
@@ -22,12 +24,15 @@ namespace Hazard::Rendering {
 	{
 		m_Pipeline->GetShader()->Bind();
 		m_Pipeline->GetShader()->SetUniformInt("albedoMap", 1);
+		m_Pipeline->GetShader()->SetUniformInt("normalMap", 2);
 
 		for (int i = 0; i < m_Textures.size(); i++) {
 			m_Textures[i]->Bind(i + 1);
 		}
 
 		m_Pipeline->GetShader()->SetUniformColor("u_color", m_MaterialBuffer.color);
+		m_Pipeline->GetShader()->SetUniformFloat("u_metallic", m_MaterialBuffer.metallic);
+		m_Pipeline->GetShader()->SetUniformFloat("u_smoothness", m_MaterialBuffer.smoothness);
 	}
 	Ref<Material> Material::Create()
 	{

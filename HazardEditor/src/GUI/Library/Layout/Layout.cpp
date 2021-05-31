@@ -46,6 +46,13 @@ namespace WindowLayout {
         }
         return hovered;
     }
+    void Layout::Separator(float height)
+    {
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetColorU32(ImGuiCol_Separator));
+        ImGui::BeginChild("separ", { 0, height });
+        ImGui::EndChild();
+        ImGui::PopStyleColor();
+    }
     void Layout::Text(const char* text)
     {
         ImGui::Text(text);

@@ -2,6 +2,7 @@
 
 in VertexOut {
 	vec3 worldPos;
+	vec3 viewDir;
 	vec4 color;
 	vec3 normal;
 	vec2 texCoord;
@@ -10,7 +11,10 @@ in VertexOut {
 
 uniform samplerCube envMap;
 uniform sampler2D albedoMap;
+uniform sampler2D normalMap;
 uniform vec4 u_color;
+uniform float u_metallic;
+uniform float u_smoothness;
 
 layout(std140, binding = 0) uniform Camera 
 {
@@ -29,20 +33,21 @@ vec4 mapHDR(vec3 color) {
 }
 
 vec3 CalculateFresnel(float cosTheta, vec3 F0) {
-	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+	return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
 
 void main() 
 {
 	vec3 norm = normalize(vsIn.normal);
-	vec3 viewDir = normalize(vsIn.worldPos - u_CameraPos);
-	vec3 modelDir = normalize(u_CameraPos - vsIn.worldPos);
-
-	vec3 reflectVector = reflect(viewDir, norm);
+	vec3 viewDir = normalize(vsIn.viewDir);
 
 	vec4 albedo = texture(albedoMap, vsIn.texCoord);
 
-	float cosTheta = max(dot(modelDir, norm), 0.0);
+	float cosTheta = max(dot(norm, viewDir), 0.0);
+	vec3 fresnel = CalculateFresnel(cosTheta, albedo.rgb);
 
-	color = albedo * u_color * vsIn.color;
+	vec3 reflectVector = reflect(vsIn.viewDir, norm);
+	vec3 environmentColor = texture(envMap, reflectVector).rgb;
+
+	color = mix(albedo, vec4(fresnel, 1.0), u_metallic) * u_color;
 }

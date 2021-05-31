@@ -13,7 +13,7 @@ namespace WindowLayout {
 		static float GetColumnWidth();
 		static void EndTable();
 		static bool Tooltip(const char* text);
-		static void Separator() { ImGui::Separator(); }
+		static void Separator(float height = 1.0f);
 		static void Text(const char* text);
 		static void TextColored(const char* text, Color color);
 		static void NextLine(float height = 15.0f);

@@ -84,6 +84,7 @@ namespace Hazard::Rendering::OpenGL {
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &m_TextureID);
+		Vault::Delete((Texture2D*)this);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

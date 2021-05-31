@@ -26,6 +26,7 @@ namespace WindowElement {
 	{
 		LoadFile("res/icons/folder.png");
 		LoadFile("res/icons/logo.png");
+		LoadFile("res/icons/textureBG.png");
 	}
 	void FileView::OnBeforeRender()
 	{
@@ -76,18 +77,27 @@ namespace WindowElement {
 
 		ImGui::NextColumn();
 
-		int cols = ImGui::GetContentRegionAvailWidth() / 75;
+		float colWidth = 130 * m_Scale;
+		float colHeight = 200 * m_Scale;
+		int cols = ImGui::GetContentRegionAvailWidth() / colWidth;
 
-		if (cols > 0) {
-			ImGui::BeginChild("##list", { cols * 75.0f, 0 }, false, ImGuiWindowFlags_NoScrollbar);
+		if (cols > 0)
+		{
+			ImGui::BeginChild("##list", { cols * colWidth, 0 }, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::Columns(cols, "##files", false);
 
 			Ref<Rendering::Texture2D> folderImage = Vault::Get<Rendering::Texture2D>("res/icons/folder.png");
 
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#323234")));
+			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(Color::FromHex("#181816")));
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 5, 5 });
+
+			ImGui::PushStyleColor(ImGuiCol_Separator, Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Text)));
 			for (std::filesystem::directory_entry folder : m_FolderData.folders)
 			{
 				std::string name = folder.path().filename().string();
-				Input::FileButton(name.c_str(), folderImage.Raw(), { 50, 50 });
+				Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 10, colHeight });
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 					m_CurrentPath = folder.path().string();
@@ -95,17 +105,28 @@ namespace WindowElement {
 				}
 				ImGui::NextColumn();
 			}
+			ImGui::PopStyleColor();
 			for (std::filesystem::directory_entry file : m_FolderData.files)
 			{
 				std::string name = file.path().filename().string();
+				std::string type = DragDropUtils::TypeFromFile(name);
 				Rendering::Texture2D* texture = GetImageFor(file.path().string());
+				ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
+				Input::FileButton(name.c_str(), texture, [&]() {
 
-				Input::FileButton(name.c_str(), texture, { 50, 50 }, name);
-				DragDropUtils::DragSource(DragDropUtils::TypeFromFile(name).c_str(), 
-					name, file.path().string());
+					DragDropUtils::DragSource(type.c_str(),
+						name, file.path().string());
+
+					}, { colWidth - 10, colHeight });
+
+
 				ImGui::NextColumn();
+				ImGui::PopStyleColor();
 			}
+
 			ContextMenus::FileContextMenu(*this);
+			ImGui::PopStyleColor(2);
+			ImGui::PopStyleVar();
 			ImGui::EndChild();
 		}
 
@@ -128,7 +149,7 @@ namespace WindowElement {
 			for (std::filesystem::directory_entry folder : m_FolderData.folders) {
 				Layout::Treenode(folder.path().filename().string().c_str(), flags, [&]() {
 
-				});
+					});
 			}
 			});
 	}
@@ -160,7 +181,7 @@ namespace WindowElement {
 	}
 	void FileView::LoadAllFiles(FolderData data)
 	{
-		for (std::filesystem::directory_entry folder : data.folders) 
+		for (std::filesystem::directory_entry folder : data.folders)
 		{
 			LoadAllFiles(File::GetFolderFiles(folder.path().string()));
 		}
@@ -178,6 +199,13 @@ namespace WindowElement {
 			Rendering::RenderUtils::Create<Rendering::Texture2D>(info).Raw()->IncRefCount();
 		}
 	}
+	ImVec4 FileView::GetFileColor(const std::string& type)
+	{
+		if (type == "Texture2D")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
+		if (type == "World")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+		if (type == "Material")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
+		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+	}
 	Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
 	{
 		std::string ext = File::GetFileExtension(file);
@@ -189,7 +217,7 @@ namespace WindowElement {
 	}
 	void FileView::UpdateFolderData()
 	{
-		if (m_RootPath == "") 
+		if (m_RootPath == "")
 			return;
 		m_FolderData = File::GetFolderFiles(m_CurrentPath);
 	}

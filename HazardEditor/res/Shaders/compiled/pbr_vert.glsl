@@ -16,6 +16,7 @@ uniform mat4 u_Model;
 
 out VertexOut {
 	vec3 worldPos;
+	vec3 viewDir;
 	vec4 color;
 	vec3 normal;
 	vec2 texCoord;
@@ -27,7 +28,8 @@ void main()
 	gl_Position = u_ViewProjection * vec4(worldPos, 1.0);
 
 	vsOut.worldPos = worldPos;
+	vsOut.viewDir = u_CameraPos - worldPos;
 	vsOut.color = v_color;
-	vsOut.normal = mat3(u_Model) * v_normal;
+	vsOut.normal = v_normal;
 	vsOut.texCoord = v_texCoords;
 }
