@@ -19,6 +19,7 @@ out VertexOut {
 	vec3 viewDir;
 	vec4 color;
 	vec3 normal;
+	vec3 screenNormal;
 	vec2 texCoord;
 } vsOut;
 
@@ -31,5 +32,6 @@ void main()
 	vsOut.viewDir = u_CameraPos - worldPos;
 	vsOut.color = v_color;
 	vsOut.normal = v_normal;
+	vsOut.screenNormal = mat3(u_Model) * v_normal;
 	vsOut.texCoord = v_texCoords;
 }

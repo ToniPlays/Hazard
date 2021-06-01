@@ -11,11 +11,12 @@ namespace Project {
 
 	ProjectManager::ProjectManager() : Module::Module("ProjectManager")
 	{
-
+		m_ProjectData = new HazardProject();
 	}
 
 	ProjectManager::~ProjectManager()
 	{
+
 	}
 
 	void ProjectManager::Close()

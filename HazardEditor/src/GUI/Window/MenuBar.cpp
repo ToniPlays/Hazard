@@ -131,16 +131,11 @@ namespace WindowElement {
 
 		ImGui::BeginChild("##projectName", { 200, 0 }, false);
 		Project::ProjectManager* manager = Application::GetModule<Project::ProjectManager>();
-		if (manager->ProjectLoaded()) {
-			const char* name = manager->GetProject().m_Name.c_str();
-			ImGui::SetCursorPosX(ImGui::CalcTextSize(name).x / 2.0f);
-			ImGui::Text(name);
-		}
-		else 
-		{
-			ImGui::SetCursorPosX(ImGui::CalcTextSize("Untitled project").x / 2.0f);
-			ImGui::Text("Untitled project");
-		}
+
+		std::string projectName = manager->GetProject().m_Name;
+		ImGui::SetCursorPosX(ImGui::CalcTextSize(projectName.c_str()).x / 2.0f);
+		ImGui::Text(projectName.c_str());
+
 		ImGui::EndChild();
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)) {
 			EditorView::GetInstance().SetLayerActive<SettingsView>(true);

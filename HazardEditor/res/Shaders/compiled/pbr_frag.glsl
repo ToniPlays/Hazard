@@ -5,6 +5,7 @@ in VertexOut {
 	vec3 viewDir;
 	vec4 color;
 	vec3 normal;
+	vec3 screenNormal;
 	vec2 texCoord;
 } vsIn;
 
@@ -43,7 +44,7 @@ void main()
 
 	vec4 albedo = texture(albedoMap, vsIn.texCoord);
 
-	float cosTheta = max(dot(norm, viewDir), 0.0);
+	float cosTheta = max(dot(normalize(vsIn.screenNormal), viewDir), 0.0);
 	vec3 fresnel = CalculateFresnel(cosTheta, albedo.rgb);
 
 	vec3 reflectVector = reflect(vsIn.viewDir, norm);

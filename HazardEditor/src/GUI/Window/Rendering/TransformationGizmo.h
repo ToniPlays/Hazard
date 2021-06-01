@@ -8,7 +8,9 @@
 #include "imgui.h"
 
 namespace WindowElement {
+
 	enum class Gizmo { Translate, Rotate, Scale, Bounds, None };
+
 	class TransformationGizmo : public RenderableElement {
 
 	public:

@@ -76,7 +76,7 @@ namespace WindowElement {
 
 		ImGui::SetCursorPosX(width - 50);
 		ImGui::SetNextItemWidth(50);
-		ImGui::DragFloat("##Scale", &m_Scale,0.5f, 100.0f, 150.0f, "%.2f");
+		ImGui::DragFloat("##Scale", &m_Scale,0.5f, 80.0f, 150.0f, "%.2f");
 
 		Layout::Separator();
 		ImGui::Columns(2);
@@ -123,13 +123,12 @@ namespace WindowElement {
 				std::string type = DragDropUtils::TypeFromFile(name);
 				Rendering::Texture2D* texture = GetImageFor(file.path().string());
 				ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
-				Input::FileButton(name.c_str(), texture, [&]() {
+				Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
 
 					DragDropUtils::DragSource(type.c_str(),
 						name, file.path().string());
 
 					}, { colWidth - 10, colHeight });
-
 
 				ImGui::NextColumn();
 				ImGui::PopStyleColor();

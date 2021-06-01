@@ -30,10 +30,10 @@ namespace WindowElement {
 	{
 		if (!currentSelection.IsValid() || type == Gizmo::None) return;
 
-		ImGuizmo::SetOrthographic(true);
+		ImGuizmo::SetOrthographic(camera.Is2DEnabled());
 		ImGuizmo::SetDrawlist();
 
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + 17, size.x, size.y);
 
 		auto& tc = currentSelection.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();
@@ -49,7 +49,6 @@ namespace WindowElement {
 		Hazard::Math::DecomposeTransform(transform, position, rotation, scale);
 
 		glm::vec3 deltaRotation = rotation - tc.m_Rotation;
-
 		tc.m_Translation = position;
 		tc.m_Rotation = rotation + deltaRotation;
 		tc.m_Scale = scale;

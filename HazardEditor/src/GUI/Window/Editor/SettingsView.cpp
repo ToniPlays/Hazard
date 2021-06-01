@@ -72,9 +72,10 @@ namespace WindowElement
 	}
 	void SettingsView::CreateContent()
 	{
+		Project::ProjectManager& manager = *Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
 		using namespace Hazard::Rendering;
-		Ref<Texture2D> texture = Vault::Get<Texture2D>("WorldIcon");
+		Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));
 
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(150);
@@ -82,13 +83,17 @@ namespace WindowElement
 		Layout::TableNext();
 		Layout::MaxWidth();
 
-		if (Input::ImageButton(texture)) {
+		if (Input::ImageButton(texture->GetID())) {
 		
 		}
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
-			Application::GetModule<Project::ProjectManager>()->Set("Editor.StartupWorld", file);
+			manager.Set("Editor.StartupWorld", file);
 			});
+		ImGui::SameLine(0, 5);
+		ImGui::Text(File::GetNameNoExt(manager.GetProject().m_StartupWorld).c_str());
+
+		Layout::TableNext();
 		Layout::EndTable();
 	}
 }
