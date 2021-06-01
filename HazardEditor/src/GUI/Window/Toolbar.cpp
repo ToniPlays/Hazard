@@ -30,6 +30,7 @@ namespace WindowElement
 	}
 	void Toolbar::OnRender()
 	{
+		return;
 		Color onColor = Style::GetStyleColor(ColorType::Text);
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 

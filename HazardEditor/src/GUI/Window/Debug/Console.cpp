@@ -7,6 +7,7 @@
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Input.h"
 #include "GUI/EditorView.h"
+#include "GUI/Window/Tabs/EditorMainTab.h"
 
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
@@ -22,7 +23,7 @@ namespace WindowElement {
 	}
 	static void PrintDebugToConsole(Rendering::ErrorData& data)
 	{
-		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
+		Console& instance = *EditorView::GetInstance().GetRenderable<EditorMainTab>()->GetRenderable<Console>();
 		instance.Print((Severity)data.severity, data.info);
 	}
 

@@ -4,6 +4,7 @@
 #include "ProjectManager.h"
 #include "GUI/EditorView.h"
 #include "GUI/Window/Inspect/FileView.h"
+#include "GUI/Window/Tabs/EditorMainTab.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -41,7 +42,7 @@ namespace Project {
 		project->m_StartupWorld = general["Startup world"].as<std::string>();
 		m_ProjectData = project;
 
-		Application::GetModule<WindowElement::EditorView>()->GetRenderable<WindowElement::FileView>()->
+		Application::GetModule<WindowElement::EditorView>()->GetRenderable<WindowElement::EditorMainTab>()->GetRenderable<WindowElement::FileView>()->
 			SetRootPath(project->m_AbsolutePath.c_str());
 
 		if (project->m_StartupWorld != "") {

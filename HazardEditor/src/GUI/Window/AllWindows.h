@@ -23,3 +23,6 @@
 #include "Editor/ExportView.h"
 #include "Editor/SettingsView.h"
 #include "ShaderEditor/ShaderEditorWindow.h"
+
+#include "Tabs/EditorMainTab.h"
+#include "Tabs/NodeGraphTab.h"

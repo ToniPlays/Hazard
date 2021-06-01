@@ -2,8 +2,12 @@
 
 #include <hzreditor.h>
 #include "EditorTabWindow.h"
+#include <imgui.h>
 
-namespace WindowElement 
+namespace WindowElement
 {
-
+	void EditorTabWindow::OnRender()
+	{
+		Render();
+	}
 }

@@ -64,27 +64,27 @@ namespace WindowElement {
 		Layout::Menu("Window", []() {
 			Layout::Menu("General", [&]() {
 				Layout::MenuItem("Viewport", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Viewport>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Viewport>(true);
 					});
 				Layout::MenuItem("Game viewport", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<GameViewport>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<GameViewport>(true);
 					});
 				Layout::MenuItem("Hierarchy", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Hierarchy>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Hierarchy>(true);
 					});
 				Layout::MenuItem("Properties", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Properties>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Properties>(true);
 					});
 				Layout::MenuItem("Asset manager", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<FileView>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<FileView>(true);
 					});
 				Layout::MenuItem("Material inspector", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<MaterialInspector>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<MaterialInspector>(true);
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
 				Layout::MenuItem("Shader editor", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<ShaderEditorWindow>(true);
+					Application::GetModule<EditorView>()->GetRenderable<NodeGraphTab>()->SetLayerActive<ShaderEditorWindow>(true);
 					});
 				Layout::MenuItem("Environment", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<WorldEnvironmentData>(true);
@@ -92,7 +92,7 @@ namespace WindowElement {
 				});
 			Layout::Menu("Debug", [&]() {
 				Layout::MenuItem("Console", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Console>(true);
+					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Console>(true);
 					});
 				Layout::MenuItem("Profiler", [&]() {
 					Application::GetModule<EditorView>()->SetLayerActive<Profiler>(true);

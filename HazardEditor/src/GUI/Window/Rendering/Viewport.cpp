@@ -29,6 +29,7 @@ namespace WindowElement {
 
 		Rendering::FrameBufferCreateInfo createInfo;
 		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
+		createInfo.samples = 1;
 
 		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 		m_RenderTexture->Resize(1920, 1080);

@@ -77,19 +77,13 @@ namespace WindowElement {
 		Style::InitTheme(Theme::Dark);
 
 		PushRenderable<MenuBar>();
-		PushRenderable<GameViewport>();
-		PushRenderable<Viewport>();
-
+		PushRenderable<EditorMainTab>();
+		PushRenderable<NodeGraphTab>();
+		
 		PushRenderable<WorldEnvironmentData>();
 
-		PushRenderable<Properties>();
-		PushRenderable<Hierarchy>();
 		PushRenderable<Performance>();
-
-		PushRenderable<Console>();
-		PushRenderable<FileView>();
 		PushRenderable<EngineAssets>();
-		PushRenderable<MaterialInspector>();
 
 		PushRenderable<ShaderEditorWindow>();
 		PushRenderable<Profiler>();
@@ -110,10 +104,11 @@ namespace WindowElement {
 			WindowLayout::Dockspace::Begin("MainDockSpace");
 			WindowLayout::Dockspace::End();
 			ImGui::PopStyleVar();
-			m_Toolbar.OnRender();
-		}
-		for (RenderableElement* element : m_Elements) {
-			element->OnRender();
+
+			for (RenderableElement* element : m_Elements) {
+				element->OnRender();
+			}
+
 		}
 
 		EndFrame();
