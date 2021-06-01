@@ -17,6 +17,9 @@ uniform vec4 u_color;
 uniform float u_metallic;
 uniform float u_smoothness;
 
+uniform vec3 lightPositions[1];
+uniform vec3 lightColors[1];
+
 layout(std140, binding = 0) uniform Camera 
 {
 	mat4 u_ViewProjection;
@@ -42,13 +45,14 @@ void main()
 	vec3 norm = normalize(vsIn.normal);
 	vec3 viewDir = normalize(vsIn.viewDir);
 
+	vec3 reflectVector = reflect(vsIn.viewDir, norm);
+	vec3 environmentColor = texture(envMap, reflectVector).rgb;
+
 	vec4 albedo = texture(albedoMap, vsIn.texCoord);
 
 	float cosTheta = max(dot(normalize(vsIn.screenNormal), viewDir), 0.0);
 	vec3 fresnel = CalculateFresnel(cosTheta, albedo.rgb);
 
-	vec3 reflectVector = reflect(vsIn.viewDir, norm);
-	vec3 environmentColor = texture(envMap, reflectVector).rgb;
 
 	color = mix(albedo, vec4(fresnel, 1.0), u_metallic) * u_color;
 }

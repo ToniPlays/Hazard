@@ -75,7 +75,7 @@ namespace WindowElement {
 		static bool ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor,
 			bool& modify, ImVec2 size = { 0, 0 });
 
-		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size = { 0, 0 });
+		static bool ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color background, const bool state, ImVec2 size = { 0, 0 });
 		static bool ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size = { 0, 0 });
 		static bool ImageButton(uint32_t imageID, ImVec2 size = { 50, 50 });
 

@@ -20,10 +20,10 @@ namespace WindowElement {
 	}
 	void Performance::Init()
 	{
+		context = Application::GetModule<Rendering::RenderContext>();
 	}
 	void Performance::OnWindowRender()
 	{
-
 		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
 
 		Layout::Table(2, true);

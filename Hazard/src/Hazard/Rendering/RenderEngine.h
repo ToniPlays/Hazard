@@ -29,7 +29,7 @@ namespace Hazard::Rendering {
 		void InitRenderer(RenderEngineCreateInfo* info);
 		void Close() override;
 
-		void BeginRendering(Camera camera, BackgroundRenderer& renderer);
+		void BeginRendering(Camera camera, ECS::World& world);
 		void EndRendering();
 		void SetFrameBuffer(FrameBuffer* texture) { m_FrameBuffer = texture; };
 

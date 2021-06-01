@@ -47,21 +47,21 @@ namespace Hazard::Rendering {
 		HZR_PROFILE_FUNCTION();
 	}
 
-	void RenderEngine::BeginRendering(Camera camera, BackgroundRenderer& renderer)
+	void RenderEngine::BeginRendering(Camera camera, ECS::World& world)
 	{
 		RenderCommand::ResetStats();
 		if(m_FrameBuffer != nullptr)
 			m_FrameBuffer->Bind();
 
-		RenderContextCommand::ClearFrame(renderer.m_Color);
+		m_BackgroundRenderer = world.GetWorldData().renderer;
+		RenderContextCommand::ClearFrame(m_BackgroundRenderer->m_Color);
 
-		m_BackgroundRenderer = &renderer;
 		m_Projection = camera.projection;
 		m_View = camera.view;
 
 		m_CameraData.viewProjection = camera.projection * glm::inverse(camera.view);
 		m_CameraData.cameraPos = camera.position;
-		m_CameraData.gamma = renderer.GetGamma();
+		m_CameraData.gamma = m_BackgroundRenderer->GetGamma();
 		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
 
 		m_Renderer2D->BeginScene(m_CameraData.viewProjection);

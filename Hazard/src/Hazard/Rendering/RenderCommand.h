@@ -18,7 +18,7 @@ namespace Hazard::Rendering {
 		static void ResetStats();
 		static RenderStats& GetStats() { return s_Stats; }
 
-		static void Begin(Camera camera, BackgroundRenderer& renderer) { s_Engine->BeginRendering(camera, renderer); }
+		static void Begin(Camera camera, ECS::World& world) { s_Engine->BeginRendering(camera, world); }
 		static void End() { s_Engine->EndRendering(); }
 		static void SetFrameBuffer(FrameBuffer* texture) { s_Engine->SetFrameBuffer(texture); }
 

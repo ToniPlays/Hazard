@@ -304,10 +304,10 @@ namespace WindowElement {
 		ImGui::PopStyleColor(2);
 		return edit;
 	}
-	bool Input::ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, const bool state, ImVec2 size)
+	bool Input::ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color background, const bool state, ImVec2 size)
 	{
 		bool modified = false;
-		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
+		ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(background));
 		if (state) {
 			ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(onColor));
 			if (Button(label, size)) {
@@ -316,7 +316,7 @@ namespace WindowElement {
 			ImGui::PopStyleColor();
 		}
 		else {
-			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(offColor));
+			ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(offColor));
 			if (Button(label, size)) {
 				modified = true;
 			}

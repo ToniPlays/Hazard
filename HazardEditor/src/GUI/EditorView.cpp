@@ -53,7 +53,7 @@ namespace WindowElement {
 
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
-		io.ConfigDockingWithShift = true;
+		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
@@ -156,14 +156,6 @@ namespace WindowElement {
 		// Rendering 
 		ImGui::Render();
 		m_Renderer->EndFrame();
-
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
 	}
 	void EditorView::InitImGuiPlatform(Rendering::Window& window)
 	{

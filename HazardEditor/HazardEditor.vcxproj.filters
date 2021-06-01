@@ -108,6 +108,9 @@
     <ClInclude Include="src\Editor\EditorPlatformVulkan.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorSettings.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GameExport.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
@@ -162,7 +165,13 @@
     <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\DragDropUtils.h">
+      <Filter>src\GUI\Window</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\ExportView.h">
+      <Filter>src\GUI\Window\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\SettingsView.h">
       <Filter>src\GUI\Window\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
@@ -172,6 +181,9 @@
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\MaterialInspector.h">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
@@ -210,10 +222,6 @@
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\DragDropUtils.h" />
-    <ClInclude Include="src\Editor\EditorSettings.h" />
-    <ClInclude Include="src\GUI\Window\Inspect\MaterialInspector.h" />
-    <ClInclude Include="src\GUI\Window\Editor\SettingsView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
@@ -250,6 +258,9 @@
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorPlatformVulkan.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GameExport.cpp">
@@ -294,7 +305,13 @@
     <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
       <Filter>src\GUI\Window\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\DragDropUtils.cpp">
+      <Filter>src\GUI\Window</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\ExportView.cpp">
+      <Filter>src\GUI\Window\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp">
       <Filter>src\GUI\Window\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
@@ -304,6 +321,9 @@
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
+      <Filter>src\GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\MaterialInspector.cpp">
       <Filter>src\GUI\Window\Inspect</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
@@ -339,9 +359,5 @@
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\DragDropUtils.cpp" />
-    <ClCompile Include="src\Editor\EditorSettings.cpp" />
-    <ClCompile Include="src\GUI\Window\Inspect\MaterialInspector.cpp" />
-    <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp" />
   </ItemGroup>
 </Project>

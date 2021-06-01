@@ -76,7 +76,7 @@ namespace WindowElement {
 
 		ImGui::SetCursorPosX(width - 50);
 		ImGui::SetNextItemWidth(50);
-		ImGui::DragFloat("##Scale", &m_Scale,0.5f, 80.0f, 150.0f, "%.2f");
+		ImGui::DragFloat("##Scale", &m_Scale,0.25f, 80.0f, 150.0f, "%.1f");
 
 		Layout::Separator();
 		ImGui::Columns(2);

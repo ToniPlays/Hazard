@@ -39,17 +39,6 @@ namespace WindowElement
 		ImGui::Begin("##Toolbar");
 
 		ImGui::SameLine(5);
-		if(Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), gizmo.GetType() != Gizmo::Translate, { 28, 28 })) {
-			gizmo.SetType(Gizmo::Translate);
-		}
-		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, onColor, Style::GetStyleColor(ColorType::Critical), gizmo.GetType() != Gizmo::Rotate, { 28, 28 })) {
-			gizmo.SetType(Gizmo::Rotate);
-		}
-		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, onColor, Style::GetStyleColor(ColorType::Warning), gizmo.GetType() != Gizmo::Scale, { 28, 28 })) {
-			gizmo.SetType(Gizmo::Scale);
-		}
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_CODEPEN, offColor, onColor, Style::GetStyleColor(ColorType::Info), gizmo.GetType() != Gizmo::Bounds, { 28, 28 })) {
 			gizmo.SetType(Gizmo::Bounds);

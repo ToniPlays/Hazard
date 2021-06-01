@@ -80,6 +80,7 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, FLT_MAX);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
+		Style::SetButtonColors("#222222B0", "#1818180B0", "#222222B0");
 
 		if (Input::Button(ICON_FK_COG, { 25, 25 })) {
 
@@ -102,28 +103,28 @@ namespace WindowElement {
 		ImGui::PopStyleVar(2);
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(size.x - 100);
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#222222")));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#222222A0")));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 25);
 
-		Color onColor = Style::GetStyleColor(ColorType::Text);
+		Color color("#22222200");
 		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 
 		ImGui::BeginChild("##gizmoTools", { 92, 25 });
 		ImGui::SameLine(0, 10);
-		if (Input::ButtonColorChange(ICON_FK_ARROWS, offColor, onColor, Style::GetStyleColor(Debug), m_Gizmos.GetType() != Gizmo::Translate, { 0, 25 })) {
+		if (Input::ButtonColorChange(ICON_FK_ARROWS, offColor, Style::GetStyleColor(Debug), color, m_Gizmos.GetType() == Gizmo::Translate, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Translate);
 		}
 		ImGui::SameLine(0, 0);
-		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, onColor, Style::GetStyleColor(Critical), m_Gizmos.GetType() != Gizmo::Rotate, { 0, 25 })) {
+		if (Input::ButtonColorChange(ICON_FK_REPEAT, offColor, Style::GetStyleColor(Critical), color, m_Gizmos.GetType() == Gizmo::Rotate, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Rotate);
 		}
 		ImGui::SameLine(0, 0);
-		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, onColor, Style::GetStyleColor(Warning), m_Gizmos.GetType() != Gizmo::Scale, { 0, 25 })) {
+		if (Input::ButtonColorChange(ICON_FK_EXPAND, offColor, Style::GetStyleColor(Warning), color, m_Gizmos.GetType() == Gizmo::Scale, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Scale);
 		}
 
 		ImGui::EndChild();
-		ImGui::PopStyleColor();
+		ImGui::PopStyleColor(4);
 		ImGui::PopStyleVar(2);
 
 		if (m_Gizmos.IsUsing()) return;
