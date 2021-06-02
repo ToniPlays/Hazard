@@ -20,7 +20,7 @@ namespace WindowElement {
 	}
 	void Performance::Init()
 	{
-		context = Application::GetModule<Rendering::RenderContext>();
+		context = &Application::GetModule<Rendering::RenderContext>();
 	}
 	void Performance::OnWindowRender()
 	{

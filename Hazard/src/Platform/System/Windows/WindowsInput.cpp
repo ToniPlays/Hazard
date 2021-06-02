@@ -12,9 +12,9 @@ namespace Hazard {
 	int Input::keyStates[384];
 
 	void Input::Init() {
-		bool found = false;
-		Rendering::RenderContext* context = Application::GetModule<Rendering::RenderContext>(found);
-		if (!found) return;
+		if (!Application::HasModule<Rendering::RenderContext>()) return;
+
+		Rendering::RenderContext* context = &Application::GetModule<Rendering::RenderContext>();
 		window = (GLFWwindow*)context->GetWindow().GetNativeWindow();
 	}
 	bool Input::AnyKey()

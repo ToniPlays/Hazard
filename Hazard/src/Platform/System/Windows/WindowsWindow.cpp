@@ -33,7 +33,7 @@ namespace Hazard::Rendering {
 		m_WindowData.Width = info->width;
 		m_WindowData.Height = info->height;
 
-		RenderAPI api = Application::GetModule<RenderContext>()->GetCurrentAPI();
+		RenderAPI api = Application::GetModule<RenderContext>().GetCurrentAPI();
 		switch (api) {
 
 		case RenderAPI::OpenGL:
@@ -129,7 +129,7 @@ namespace Hazard::Rendering {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
 			data.Width = w;
-			Application::GetModule<RenderContext>()->GetContext().SetViewport(0, 0, w, h);
+			Application::GetModule<RenderContext>().GetContext().SetViewport(0, 0, w, h);
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
 

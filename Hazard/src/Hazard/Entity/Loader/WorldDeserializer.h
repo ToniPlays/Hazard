@@ -15,6 +15,5 @@ namespace Hazard::ECS::Loader
 		static void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
 		template<typename T>
 		static void Deserialize(Entity entity, YAML::Node node);
-
 	};
 }

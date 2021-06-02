@@ -3,10 +3,8 @@
 #include "AudioLoader.h"
 #include "AudioClip.h"
 
-#include <string>
 #include <thread>
 #include <filesystem>
-
 
 #define MINIMP3_IMPLEMENTATION
 #include "minimp3.h"
@@ -61,7 +59,7 @@ namespace Hazard::Audio {
 	}
 	AudioClip AudioLoader::LoadMp3(const std::string& file)
 	{
-		AudioBufferData* buffer;
+		AudioBufferData* buffer = nullptr;
 		if (Vault::Has<AudioBufferData>(file.c_str())) {
 			buffer = Vault::Get<AudioBufferData>(file.c_str());
 		}
@@ -69,20 +67,15 @@ namespace Hazard::Audio {
 		{
 			mp3dec_file_info_t info;
 			int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
-
 			size_t size = info.samples * sizeof(mp3d_sample_t);
-			auto sampleRate = info.hz;
-			auto channels = info.channels;
-			auto alFormat = GetOpenALFormat(channels);
-			float lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
 
 			buffer = new AudioBufferData();
 			buffer->name = file;
 			buffer->size = size;
-			buffer->sampleRate = sampleRate;
-			buffer->channels = channels;
-			buffer->alFormat = alFormat;
-			buffer->lenSec = lenSec;
+			buffer->sampleRate = info.hz;
+			buffer->channels = info.channels;
+			buffer->alFormat = GetOpenALFormat(buffer->channels);
+			buffer->lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
 			buffer->audioData = info.buffer;
 
 			Vault::Add(file, buffer);
@@ -95,13 +88,6 @@ namespace Hazard::Audio {
 		AudioClip clip = { bufferID, true, buffer->lenSec };
 		alGenSources(1, &clip.m_Source);
 		alSourcei(clip.m_Source, AL_BUFFER, bufferID);
-
-		
-
-		ALuint err = alGetError();
-		if (err != AL_NO_ERROR) {
-			HZR_CORE_INFO("Error: {0}", err);
-		}
 
 		return clip;
 	}

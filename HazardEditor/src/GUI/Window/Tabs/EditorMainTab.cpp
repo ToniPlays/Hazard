@@ -4,9 +4,10 @@
 #include "EditorMainTab.h"
 #include "GUI/Library/Layout/Dockspace.h"
 #include "GUI/Window/AllWindows.h"
+#include <imgui_internal.h>
 
 using namespace WindowLayout;
-namespace WindowElement 
+namespace WindowElement
 {
 	void EditorMainTab::Init()
 	{

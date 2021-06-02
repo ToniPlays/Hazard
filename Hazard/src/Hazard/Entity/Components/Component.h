@@ -32,13 +32,16 @@ namespace Hazard::ECS {
 		}
 	};
 
-	struct ScriptComponent {
+	struct ScriptComponent 
+	{
 		std::string m_ModuleName;
 	};
-	struct VisualScriptComponent {
+	struct VisualScriptComponent 
+	{
 		std::string m_Filename;
 	};
-	struct MeshComponent {
+	struct MeshComponent 
+	{
 		Ref<Rendering::Mesh> m_Mesh;
 		Ref<Rendering::Material> m_Material;
 	};

@@ -5,5 +5,12 @@
 
 namespace Hazard::Audio 
 {
+    AudioListener::AudioListener()
+    {
 
+    }
+    AudioListener::~AudioListener()
+    {
+
+    }
 }

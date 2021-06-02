@@ -17,7 +17,7 @@ namespace Hazard::ECS {
 
 	class Entity;
 
-	class World {
+	class World : public RefCount {
 		friend class Entity;
 
 	public:
@@ -27,6 +27,8 @@ namespace Hazard::ECS {
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
 		std::string& GetName() { return m_Name; }
+		void SetName(std::string name) { this->m_Name = name.c_str(); }
+
 		std::string& GetWorldFile() { return m_File; }
 		WorldData& GetWorldData() {	return m_WorldData;	}
 		void SetBackground(WorldBackground type, std::string file);
@@ -39,9 +41,7 @@ namespace Hazard::ECS {
 		Entity GetEntity(entt::entity id);
 
 		void DestroyEntity(Entity entity);
-		void SetName(std::string name) { this->m_Name = name.c_str(); }
-
-		std::tuple<bool, CameraComponent*, TransformComponent*> GetWorldCamera();
+		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
 		template<typename T>
 		std::vector<std::tuple<uint32_t, T>> FindEntitiesWith() 

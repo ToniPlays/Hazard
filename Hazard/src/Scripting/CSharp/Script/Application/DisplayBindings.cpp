@@ -19,26 +19,26 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	float DisplayBindings::GetDisplayWidth()
 	{
-		return Application::GetModule<Rendering::RenderContext>()->GetWindow().GetWidth();
+		return Application::GetModule<Rendering::RenderContext>().GetWindow().GetWidth();
 	}
 	float DisplayBindings::GetDisplayHeight()
 	{
-		return Application::GetModule<Rendering::RenderContext>()->GetWindow().GetHeight();
+		return Application::GetModule<Rendering::RenderContext>().GetWindow().GetHeight();
 	}
 	bool DisplayBindings::GetDisplayFullscreen()
 	{
-		return Application::GetModule<Rendering::RenderContext>()->GetWindow().IsFullscreen();
+		return Application::GetModule<Rendering::RenderContext>().GetWindow().IsFullscreen();
 	}
 	bool DisplayBindings::GetDisplayVSync()
 	{
-		return Application::GetModule<Rendering::RenderContext>()->GetWindow().IsVSync();
+		return Application::GetModule<Rendering::RenderContext>().GetWindow().IsVSync();
 	}
 	void DisplayBindings::SetDisplayFullscreen(MonoObject* obj)
 	{
-		Application::GetModule<Rendering::RenderContext>()->GetWindow().SetFullscreen(obj);
+		Application::GetModule<Rendering::RenderContext>().GetWindow().SetFullscreen(obj);
 	}
 	void DisplayBindings::SetDisplayVsync(MonoObject* obj)
 	{
-		Application::GetModule<Rendering::RenderContext>()->GetWindow().SetVSync(obj);
+		Application::GetModule<Rendering::RenderContext>().GetWindow().SetVSync(obj);
 	}
 }

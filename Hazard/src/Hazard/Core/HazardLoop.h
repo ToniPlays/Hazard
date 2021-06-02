@@ -26,18 +26,18 @@ namespace Hazard::Core {
 		static T& PushModule() { return s_Instance->m_ModuleHandler.AddModule<T>(); };
 		template<typename T>
 		static T& GetModule() { return s_Instance->m_ModuleHandler.GetModule<T>(); };
-
 		template<typename T>
-		static T& GetModule(bool& found) { return s_Instance->m_ModuleHandler.GetModule<T>(found); };
+		static bool HasModule() { return s_Instance->m_ModuleHandler.HasModule<T>(); };
 
 	private:
+		void Run();
 		void Shutdown();
 
 	private:
 		Application* m_Application = nullptr;
 		Module::ModuleHandler m_ModuleHandler;
-		bool m_ShouldClose = false;
 
+		bool m_ShouldClose = false;
 		static HazardLoop* s_Instance;
 	};
 }

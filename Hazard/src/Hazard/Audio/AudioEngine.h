@@ -11,8 +11,6 @@ namespace Hazard::Audio {
 		~AudioEngine();
 
 		void InitAudio(AudioEngineCreateInfo* info);
-
-		void Update() override;
 		void Close() override;
 		
 	};

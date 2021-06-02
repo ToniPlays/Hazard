@@ -29,18 +29,18 @@ namespace WindowElement {
 			Layout::MenuItem("Open project", []() {
 				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
 				if (path != "")
-					Application::GetModule<Project::ProjectManager>()->Load(path);
+					Application::GetModule<Project::ProjectManager>().Load(path);
 
 				});
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
-				Application::GetModule<Project::ProjectManager>()->Save();
+				Application::GetModule<Project::ProjectManager>().Save();
 				});
 			Layout::MenuItem("Save as", []() {});
 			Layout::MenuItem("New scene", []() {});
 			Layout::Separator();
 			Layout::MenuItem("Export", []() {
-				Application::GetModule<EditorView>()->SetLayerActive<ExportView>(true);
+				Application::GetModule<EditorView>().SetLayerActive<ExportView>(true);
 				});
 			Layout::Separator();
 			Layout::MenuItem("Quit", []() {
@@ -55,53 +55,53 @@ namespace WindowElement {
 			});
 		Layout::Menu("Assets", []() {
 			Layout::MenuItem("Reload script assemblies", []() {
-				Application::GetModule<ScriptEngineManager>()->ReloadAll();
+				Application::GetModule<ScriptEngineManager>().ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
-				Application::GetModule<EditorView>()->GetRenderable<FileView>()->UpdateFolderData();
+				Application::GetModule<EditorView>().GetRenderable<FileView>()->UpdateFolderData();
 				});
 			});
 		Layout::Menu("Window", []() {
 			Layout::Menu("General", [&]() {
 				Layout::MenuItem("Viewport", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Viewport>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<Viewport>(true);
 					});
 				Layout::MenuItem("Game viewport", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<GameViewport>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<GameViewport>(true);
 					});
 				Layout::MenuItem("Hierarchy", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Hierarchy>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<Hierarchy>(true);
 					});
 				Layout::MenuItem("Properties", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Properties>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<Properties>(true);
 					});
 				Layout::MenuItem("Asset manager", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<FileView>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<FileView>(true);
 					});
 				Layout::MenuItem("Material inspector", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<MaterialInspector>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<MaterialInspector>(true);
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
 				Layout::MenuItem("Shader editor", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<NodeGraphTab>()->SetLayerActive<ShaderEditorWindow>(true);
+					Application::GetModule<EditorView>().GetRenderable<NodeGraphTab>()->SetLayerActive<ShaderEditorWindow>(true);
 					});
 				Layout::MenuItem("Environment", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<WorldEnvironmentData>(true);
+					Application::GetModule<EditorView>().SetLayerActive<WorldEnvironmentData>(true);
 					});
 				});
 			Layout::Menu("Debug", [&]() {
 				Layout::MenuItem("Console", [&]() {
-					Application::GetModule<EditorView>()->GetRenderable<EditorMainTab>()->SetLayerActive<Console>(true);
+					Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->SetLayerActive<Console>(true);
 					});
 				Layout::MenuItem("Profiler", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Profiler>(true);
+					Application::GetModule<EditorView>().SetLayerActive<Profiler>(true);
 					});
 				Layout::MenuItem("Performance", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<Performance>(true);
+					Application::GetModule<EditorView>().SetLayerActive<Performance>(true);
 					});
 				Layout::MenuItem("Assets", [&]() {
-					Application::GetModule<EditorView>()->SetLayerActive<EngineAssets>(true);
+					Application::GetModule<EditorView>().SetLayerActive<EngineAssets>(true);
 					});
 				});
 			});
@@ -130,7 +130,7 @@ namespace WindowElement {
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
 
 		ImGui::BeginChild("##projectName", { 200, 0 }, false);
-		Project::ProjectManager* manager = Application::GetModule<Project::ProjectManager>();
+		Project::ProjectManager* manager = &Application::GetModule<Project::ProjectManager>();
 
 		std::string projectName = manager->GetProject().m_Name;
 		ImGui::SetCursorPosX(ImGui::CalcTextSize(projectName.c_str()).x / 2.0f);
@@ -141,26 +141,6 @@ namespace WindowElement {
 			EditorView::GetInstance().SetLayerActive<SettingsView>(true);
 		}
 
-		/*ImGui::PopStyleVar();
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
-		Style::SetButtonColors("#181816", "#181816", "#181816");
-
-		if (Input::Button(ICON_FK_WINDOW_MINIMIZE, { 25, 25 }))
-		{
-			Application::GetModule<RenderContext>()->GetWindow().SetMinimized(true);
-		}
-		ImGui::SameLine(0, 0);
-		if (Input::Button(ICON_FK_WINDOW_MAXIMIZE, { 25, 25 }))
-		{
-			Window& window = Application::GetModule<RenderContext>()->GetWindow();
-			window.SetMaximized(!window.IsMaximized());
-		}
-		ImGui::SameLine(0, 0);
-		if (Input::Button(ICON_FK_TIMES, { 25, 25 }))
-		{
-			Application::Quit();
-		}
-		*/
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 		ImGui::EndMainMenuBar();
@@ -180,13 +160,13 @@ namespace WindowElement {
 
 		if (e.GetKeyCode() == Key::S)
 		{
-			Application::GetModule<Project::ProjectManager>()->SaveCurrentScene();
+			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
 			HZR_WARN("Saving scene");
 			return true;
 		}
 		if (e.GetKeyCode() == Key::R)
 		{
-			Application::GetModule<Scripting::ScriptEngineManager>()->ReloadAll();
+			Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
 			HZR_WARN("Reloading assemblies");
 			return true;
 		}

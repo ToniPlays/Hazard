@@ -9,7 +9,7 @@ namespace Hazard::Rendering {
 
 	void RenderContextCommand::Init()
 	{
-		m_Context = Application::GetModule<RenderContext>();
+		m_Context = &Application::GetModule<RenderContext>();
 	}
 	void RenderContextCommand::SetDepthTest(DepthFunc type)
 	{

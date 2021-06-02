@@ -7,8 +7,7 @@ namespace WindowElement {
 
 	class EditorWindow : public RenderableElement {
 	public:
-		EditorWindow();
-		EditorWindow(const char* title);
+		EditorWindow(const char* title, ImGuiWindowFlags flags = 0);
 		~EditorWindow();
 
 
@@ -33,5 +32,7 @@ namespace WindowElement {
 		bool m_Active = true;
 		bool m_Focused = false;
 		bool m_Hovered = false;
+
+		ImGuiWindowFlags m_Flags;
 	};
 }

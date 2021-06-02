@@ -17,7 +17,7 @@ namespace Hazard {
 		Application() {};
 		~Application() {};
 
-		virtual void PreInit() = 0;
+		virtual void PreInit() {};
 		virtual void Init() {};
 		virtual void Update() {};
 		virtual void Close() {};
@@ -28,20 +28,20 @@ namespace Hazard {
 		void UpdateData();
 		
 		void CreateApplicationStack(HazardCreateInfo* info);
+
 	public:
 		static void Quit();
 		static ApplicationData GetData() { return s_Data; }
 
 		template<typename T>
-		T& PushModule() { return Core::HazardLoop::GetCurrent().PushModule<T>(); };
+		static T& PushModule() { return Core::HazardLoop::GetCurrent().PushModule<T>(); };
 		template<typename T>
-		static T* GetModule() { return &Core::HazardLoop::GetModule<T>(); }
+		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }
 		template<typename T>
-		static T* GetModule(bool& found) { return &Core::HazardLoop::GetModule<T>(found); }
-	private:
+		static bool HasModule() { return Core::HazardLoop::HasModule<T>(); }
 
+	private:
 		static ApplicationData s_Data;
-		
 	};
 
 	Hazard::Application* CreateApplication();

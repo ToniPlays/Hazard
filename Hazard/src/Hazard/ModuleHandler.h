@@ -31,15 +31,14 @@ namespace Hazard::Module {
 			}
 		}
 		template<typename T>
-		T& GetModule(bool& found)
+		bool HasModule()
 		{
 			for (Module* m : m_Modules) {
 				if (dynamic_cast<T*>(m)) {
-					found = true;
-					return (T&)*m;
+					return true;
 				}
 			}
-			found = false;
+			return false;
 		}
 	private:
 		std::vector<Module*> m_Modules;

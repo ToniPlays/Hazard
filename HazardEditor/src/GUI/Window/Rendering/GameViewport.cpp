@@ -38,9 +38,9 @@ namespace WindowElement {
 	{
 
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
-		auto&[found, cam, transform] = world.GetWorldCamera();
+		auto&[cam, transform] = world.GetWorldCamera();
 
-		if (!found) {
+		if (!cam) {
 			const char* text = "No active camera";
 			ImVec2 size = ImGui::CalcTextSize(text);
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - size.x) / 2);

@@ -16,7 +16,7 @@ namespace Hazard {
 		std::string appName;
 		std::string buildVersion;
 
-		std::string* icons;
+		std::string* icons = nullptr;
 		uint32_t iconCount = 0;
 
 		bool logging = false;
@@ -25,7 +25,8 @@ namespace Hazard {
 	{
 
 	};
-	struct EntityComponentCreateInfo {
+	struct EntityComponentCreateInfo 
+	{
 		std::string startupFile = "";
 	};
 	struct RenderContexCreateInfo 

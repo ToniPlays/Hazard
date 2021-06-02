@@ -16,14 +16,14 @@ namespace Runtime {
 
 	void SceneRuntimeHandler::Init()
 	{
-		s_ScriptManager = Application::GetModule<ScriptEngineManager>();
+		s_ScriptManager = &Application::GetModule<ScriptEngineManager>();
 	}
 
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
 	{
 		s_SceneRunning = running;
 
-		ECS::WorldHandler& handler = *Application::GetModule<ECS::WorldHandler>();
+		ECS::WorldHandler& handler = Application::GetModule<ECS::WorldHandler>();
 
 		if (s_SceneRunning) {
 

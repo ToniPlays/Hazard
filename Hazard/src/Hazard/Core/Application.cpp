@@ -22,8 +22,8 @@ namespace Hazard {
 	}
 	void Application::SetTitle(const char* title)
 	{
-		auto* context = GetModule<Rendering::RenderContext>();
-		context->GetWindow().SetWindowTitle(title);
+		auto& context = GetModule<Rendering::RenderContext>();
+		context.GetWindow().SetWindowTitle(title);
 	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
@@ -36,20 +36,30 @@ namespace Hazard {
 #endif // HZR_RELEASE
 		
 
-		if (info->renderContextInfo != nullptr) {
+		if (info->renderContextInfo != nullptr) 
+		{
 			PushModule<Rendering::RenderContext>().InitContext(info->renderContextInfo, info->appInfo);
 		}
-		if (info->rendererInfo != nullptr) {
-			if (info->renderContextInfo == nullptr) HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+
+		if (info->rendererInfo != nullptr) 
+		{
+			if (info->renderContextInfo == nullptr) 
+				HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+
 			PushModule<Rendering::RenderEngine>().InitRenderer(info->rendererInfo);
 		}
-		if (info->audioEngine) {
+
+		if (info->audioEngine) 
+		{
 		
 			PushModule<Audio::AudioEngine>().InitAudio(info->audioEngine);
 		}
-		if (info->scriptEngineInfo != nullptr) {
+
+		if (info->scriptEngineInfo != nullptr) 
+		{
 			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->scriptEngineInfo);
 		}
+
 		if (info->entityComponent != nullptr) {
 			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
 			handler.LoadWorld(info->entityComponent->startupFile);

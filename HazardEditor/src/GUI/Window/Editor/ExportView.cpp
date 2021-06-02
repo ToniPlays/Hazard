@@ -4,8 +4,9 @@
 #include "Editor/GameExport.h"
 #include "GUI/Library/Input.h"
 
-namespace WindowElement {
-	ExportView::ExportView()
+namespace WindowElement 
+{
+	ExportView::ExportView() : EditorWindow("Export application")
 	{
 		SetActive(false);
 	}

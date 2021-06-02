@@ -42,11 +42,11 @@ namespace Project {
 		project->m_StartupWorld = general["Startup world"].as<std::string>();
 		m_ProjectData = project;
 
-		Application::GetModule<WindowElement::EditorView>()->GetRenderable<WindowElement::EditorMainTab>()->GetRenderable<WindowElement::FileView>()->
+		Application::GetModule<WindowElement::EditorView>().GetRenderable<WindowElement::EditorMainTab>()->GetRenderable<WindowElement::FileView>()->
 			SetRootPath(project->m_AbsolutePath.c_str());
 
 		if (project->m_StartupWorld != "") {
-			if (!Application::GetModule<ECS::WorldHandler>()->LoadWorld(project->m_StartupWorld), ECS::Serialization::Editor) {
+			if (!Application::GetModule<ECS::WorldHandler>().LoadWorld(project->m_StartupWorld), ECS::Serialization::Editor) {
 				HZR_WARN("Startup world could not be loaded");
 			}
 		}

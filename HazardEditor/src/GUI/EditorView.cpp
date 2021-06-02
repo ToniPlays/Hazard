@@ -29,14 +29,14 @@ namespace WindowElement {
 	void EditorView::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		bool found = false;
-		m_Context = Hazard::Application::GetModule<Rendering::RenderContext>(found);
 
-		if (!found) {
+		if (!Hazard::Application::HasModule<Rendering::RenderContext>()) {
 			SetActive(false);
 			HZR_WARN("EditorView unable to start without RenderContext");
 			return;
 		}
+
+		m_Context = &Hazard::Application::GetModule<Rendering::RenderContext>();
 		SetActive(true);
 
 
@@ -101,14 +101,14 @@ namespace WindowElement {
 			}
 
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().dockPadding);
-			WindowLayout::Dockspace::Begin("MainDockSpace");
-			WindowLayout::Dockspace::End();
+			WindowLayout::Dockspace::Begin("MainDockSpace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit);
+			WindowLayout::Dockspace::End("MainDockSpace");
 			ImGui::PopStyleVar();
 
-			for (RenderableElement* element : m_Elements) {
+			for (RenderableElement* element : m_Elements) 
+			{
 				element->OnRender();
 			}
-
 		}
 
 		EndFrame();

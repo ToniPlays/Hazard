@@ -16,7 +16,6 @@
 
 
 //Hazard BUILD_VERSION
-
 #if HZR_DEBUG
 	#define HZR_BUILD_VERSION "Debug"
 #elif defined HZR_DIST
@@ -30,9 +29,9 @@
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 #define PATH_TO(x) FileSystem::getPath
 
-//Accessible globally
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+
 #include "Hazard/Events/Event.h"
 #include "Ref.h"

@@ -11,12 +11,12 @@ namespace Hazard::Audio {
 		~AudioBufferData() {};
 
 		std::string name = "UndefinedAudio";
-		int16_t* audioData;
-		uint32_t size;
-		float sampleRate;
-		float channels;
-		float alFormat;
-		float lenSec;
+		int16_t* audioData = nullptr;
+		uint32_t size = 0;
+		float sampleRate = 0;
+		float channels = 0;
+		float alFormat = 0;
+		float lenSec = 0;
 	};
 
 	class AudioClip {
@@ -46,7 +46,7 @@ namespace Hazard::Audio {
 		void SetLoop(bool loop);
 
 		std::pair<uint32_t, uint32_t> GetLength() const;
-		
+
 		void ChangeFile(const std::string& file);
 
 		static AudioClip LoadFromFile(const std::string& file, bool spatial = false);
@@ -55,15 +55,15 @@ namespace Hazard::Audio {
 
 		AudioClip(uint32_t buffer, bool loaded, float length);
 
-		uint32_t m_Buffer;
-		uint32_t m_Source;
+		uint32_t m_Buffer = 0;
+		uint32_t m_Source = 0;
 
 		bool m_Loaded = false;
 		bool m_Spatial = false;
 
-		glm::vec3 m_Pos;
+		glm::vec3 m_Pos = { 0, 0, 0 };
 
-		float m_TotalDuration = 0;
+		float m_TotalDuration = 0.0f;
 		float m_Gain = 1.0f;
 		float m_Pitch = 1.0f;
 		bool m_Looping = false;

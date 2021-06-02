@@ -20,6 +20,7 @@ namespace Hazard::ECS {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
+
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 			m_World->OnComponentAdded<T>(*this, component);
 			return component;
@@ -30,8 +31,8 @@ namespace Hazard::ECS {
 			if (HasComponent<T>()) {
 				HZR_CORE_WARN("Entity already has component");
 			}
-			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 
+			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 			callback(component);
 			m_World->OnComponentAdded<T>(*this, component);
 			return component;
@@ -47,7 +48,8 @@ namespace Hazard::ECS {
 		void RemoveComponent<TransformComponent>() {};
 
 		template<typename T>
-		T& GetComponent() {
+		T& GetComponent() 
+		{
 			return m_World->m_Registry.get<T>(m_Handle);
 		}
 

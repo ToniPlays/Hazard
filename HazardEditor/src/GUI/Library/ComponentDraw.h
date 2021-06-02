@@ -276,7 +276,7 @@ namespace WindowElement {
 
 			}, []() {
 				Layout::MenuItem("Reload", []() {
-					Application::GetModule<ScriptEngineManager>()->ReloadAll();
+					Application::GetModule<ScriptEngineManager>().ReloadAll();
 					});
 			});
 	}
@@ -287,7 +287,7 @@ namespace WindowElement {
 
 			}, []() {
 				Layout::MenuItem("Reload", []() {
-					Application::GetModule<ScriptEngineManager>()->ReloadAll();
+					Application::GetModule<ScriptEngineManager>().ReloadAll();
 					});
 			});
 	}

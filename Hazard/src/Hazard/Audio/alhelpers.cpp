@@ -43,8 +43,6 @@ int InitAL(ALCdevice*& device, char*** argv, int* argc)
 	return 0;
 }
 
-/* CloseAL closes the device belonging to the current context, and destroys the
- * context. */
 void CloseAL(void)
 {
 	ALCdevice* device;
@@ -90,7 +88,6 @@ int altime_get(void)
 		ULARGE_INTEGER ulint;
 	} systime;
 	GetSystemTimeAsFileTime(&systime.ftime);
-	/* FILETIME is in 100-nanosecond units, or 1/10th of a microsecond. */
 	cur_time = (int)(systime.ulint.QuadPart / 10000);
 
 	if (!start_time)

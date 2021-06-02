@@ -82,7 +82,6 @@ namespace YAML {
 	};
 }
 
-
 namespace Hazard::ECS::Loader
 {
 	static WorldBackground StringToWorldType(const std::string& value) {
@@ -125,8 +124,6 @@ namespace Hazard::ECS::Loader
 			for (int i = entities.size() - 1; i >= 0; i--) {
 
 				auto node = entities[i];
-				//uint64_t uuid = node["Entity"].as<uint64_t>();
-
 				Entity entity = world->CreateEntity("");
 				//Deserialize components
 				TryDeserializeComponent<TagComponent>("TagComponent", entity, node);
@@ -217,7 +214,7 @@ namespace Hazard::ECS::Loader
 	static void WorldDeserializer::Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
 		AudioSourceComponent& source = entity.AddComponentWithCallback<AudioSourceComponent>([&](AudioSourceComponent& c) {
 			c.sourceFile = comp["AudioFile"].as<std::string>();
-			});
+		});
 
 		if (comp["Gain"]) {
 			source.source.SetGain(comp["Gain"].as<float>());

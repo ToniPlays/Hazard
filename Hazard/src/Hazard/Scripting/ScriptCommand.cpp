@@ -12,12 +12,12 @@ namespace Hazard::Scripting {
 
 	void ScriptCommand::Init()
 	{
-		s_manager = Application::GetModule<ScriptEngineManager>();
+		s_manager = &Application::GetModule<ScriptEngineManager>();
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
 		using namespace ECS;
-		World& current = Application::GetModule<WorldHandler>()->GetCurrentWorld();
+		World& current = Application::GetModule<WorldHandler>().GetCurrentWorld();
 		auto view = current.GetWorldRegistry().view<ScriptComponent>();
 
 		for (auto entity : view) {
@@ -50,13 +50,14 @@ namespace Hazard::Scripting {
 	{
 		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
+
 	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		s_manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_Filename);
+		s_manager->InitEntity(ScriptType::VisualScript, (uint32_t)entity, component.m_Filename);
 	}
 	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
 	{
-		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_Filename);
+		s_manager->ClearEntity(ScriptType::VisualScript, (uint32_t)entity, component.m_Filename);
 	}
 	void ScriptCommand::SendDebugMessage(Severity severity, std::string message)
 	{

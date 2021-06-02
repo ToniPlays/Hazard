@@ -23,9 +23,8 @@ namespace WindowElement {
 	}
 	void Viewport::Init()
 	{
-		bool found = false;
-		m_Renderer = Application::GetModule<RenderEngine>(found);
-		SetActive(found);
+		m_Renderer = &Application::GetModule<RenderEngine>();
+		SetActive(Application::HasModule<RenderEngine>());
 
 		Rendering::FrameBufferCreateInfo createInfo;
 		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
@@ -70,7 +69,7 @@ namespace WindowElement {
 			Events::SelectionContextChange e({ });
 			EditorView::GetInstance().OnEvent(e);
 
-			Application::GetModule<ECS::WorldHandler>()->LoadWorld(file);
+			Application::GetModule<ECS::WorldHandler>().LoadWorld(file);
 			});
 
 		m_Gizmos.OnRender(m_EditorCamera, ImGui::GetWindowSize());

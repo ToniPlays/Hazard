@@ -63,7 +63,6 @@ namespace YAML {
 	};
 }
 
-
 namespace Hazard::ECS::Loader 
 {
 	template<typename T>

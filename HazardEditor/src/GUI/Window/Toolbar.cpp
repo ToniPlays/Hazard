@@ -77,7 +77,7 @@ namespace WindowElement
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
 			if (sceneRunning && scenePaused)
-				Application::GetModule<ScriptEngineManager>()->Update();
+				Application::GetModule<ScriptEngineManager>().Update();
 		}
 		Layout::SameLine(0, 5);
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33 * 3);
@@ -111,7 +111,7 @@ namespace WindowElement
 
 		if (e.GetKeyCode() == Key::R && isCtrl) 
 		{
-			Application::GetModule<ScriptEngineManager>()->ReloadAll();
+			Application::GetModule<ScriptEngineManager>().ReloadAll();
 			return true;
 		}
 		if (e.GetKeyCode() == Key::P && isCtrl) 

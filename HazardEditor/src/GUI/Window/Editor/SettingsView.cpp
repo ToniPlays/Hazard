@@ -10,7 +10,7 @@
 using namespace WindowLayout;
 namespace WindowElement
 {
-	SettingsView::SettingsView() : EditorWindow("Settings")
+	SettingsView::SettingsView() : EditorWindow("Settings", ImGuiWindowFlags_NoDocking)
 	{
 		SetActive(false);
 	}
@@ -42,7 +42,7 @@ namespace WindowElement
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
 
 		if (Input::Button("Save", { 80, 25 })) {
-			Application::GetModule<Project::ProjectManager>()->Save();
+			Application::GetModule<Project::ProjectManager>().Save();
 		}
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
@@ -72,7 +72,7 @@ namespace WindowElement
 	}
 	void SettingsView::CreateContent()
 	{
-		Project::ProjectManager& manager = *Application::GetModule<Project::ProjectManager>();
+		Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
 		using namespace Hazard::Rendering;
 		Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));

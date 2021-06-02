@@ -6,12 +6,7 @@
 
 namespace WindowElement {
 
-	EditorWindow::EditorWindow()
-	{
-
-	}
-
-	EditorWindow::EditorWindow(const char* title) : m_Title(title)
+	EditorWindow::EditorWindow(const char* title, ImGuiWindowFlags flags) : m_Title(title), m_Flags(flags)
 	{
 		
 	}
@@ -25,7 +20,7 @@ namespace WindowElement {
 		if (GetActive()) {
 			OnBeforeRender();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().framePadding);
-			ImGui::Begin(m_Title.c_str(), &m_Active);
+			ImGui::Begin(m_Title.c_str(), &m_Active, m_Flags);
 			ImGui::PopStyleVar();
 			m_Focused = ImGui::IsWindowFocused();
 			m_Hovered = ImGui::IsWindowHovered();

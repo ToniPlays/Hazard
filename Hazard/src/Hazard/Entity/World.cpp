@@ -61,8 +61,8 @@ namespace Hazard::ECS {
 		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
 	}
 
-	World::~World() {
-		m_Registry.clear();
+	World::~World() 
+	{
 	}
 
 	void World::SetBackground(WorldBackground type, std::string file)
@@ -87,14 +87,6 @@ namespace Hazard::ECS {
 		auto sprites = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
 		auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
 
-		for (auto entity : meshes) {
-
-			Entity e = GetEntity(entity);
-			auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
-			if (!e.IsVisible() || !mesh.m_Mesh) continue;
-
-			WorldCommand::Render(mesh, transform);
-		}
 		for (auto entity : sprites) {
 
 			Entity e{ entity, this };
@@ -115,6 +107,14 @@ namespace Hazard::ECS {
 			if (sprite.m_Texture->GetData().hasTransparency)
 				WorldCommand::Render(sprite, transform);
 		}
+		for (auto entity : meshes) {
+
+			Entity e = GetEntity(entity);
+			auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
+			if (!e.IsVisible() || !mesh.m_Mesh) continue;
+
+			WorldCommand::Render(mesh, transform);
+		}
 
 		auto batches = m_Registry.group<BatchComponent>(entt::get<TransformComponent>);
 		for (auto entity : batches) {
@@ -128,7 +128,7 @@ namespace Hazard::ECS {
 	}
 	Entity World::CreateEntity(const std::string& name)
 	{
-		Entity entity{ m_Registry.create(), this };
+		Entity entity { m_Registry.create(), this };
 		TagComponent& tag = entity.AddComponent<TagComponent>();
 		tag.m_Tag = name;
 		tag.m_ID = {};
@@ -176,20 +176,18 @@ namespace Hazard::ECS {
 		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
-
 		return entity;
 	}
 
 	Entity World::GetEntity(entt::entity id)
 	{
-		Entity e{ id, this };
-		return e;
+		return { id, this };
 	}
 	void World::DestroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
 	}
-	std::tuple<bool, CameraComponent*, TransformComponent*> World::GetWorldCamera() {
+	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 
@@ -199,9 +197,9 @@ namespace Hazard::ECS {
 			if (!e.IsVisible()) continue;
 
 			auto& [cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
-			return std::tuple(true, &cam, &e.GetTransform());
+			return std::tuple(&cam, &e.GetTransform());
 		}
-		return std::tuple(false, nullptr, nullptr);
+		return std::tuple(nullptr, nullptr);
 	}
 
 #pragma region Component added and removed methods
