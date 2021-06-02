@@ -8,6 +8,7 @@
 #include "GUI/Library/Style.h"
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Layout/ContextMenus.h"
+#include "GUI/Window/Rendering/WorldEnvironmentData.h"
 
 using namespace WindowLayout;
 
@@ -41,12 +42,18 @@ namespace WindowElement {
 
 		World& world = ECS::WorldCommand::GetCurrentWorld();
 
-		Layout::Treenode(world.GetName().c_str(), Style::GetTreeNodeDefaultFlags(), [&world, this]() {
+		bool open = Layout::Treenode(world.GetName().c_str(), Style::GetTreeNodeDefaultFlags());
+
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
+			EditorView::GetInstance().SetLayerActive<WorldEnvironmentData>(true);
+		}
+		if (open) {
 			world.GetWorldRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, &world };
 				DrawEntity(entity);
-			});
-		});
+				});
+			ImGui::TreePop();
+		}
 
 		ContextMenus::HierarchyEntityMenu(world, [](Entity entity) {
 			Events::SelectionContextChange e(entity);

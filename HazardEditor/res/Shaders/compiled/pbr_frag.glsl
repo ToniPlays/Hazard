@@ -30,10 +30,10 @@ layout(std140, binding = 0) uniform Camera
 
 layout(location = 0) out vec4 color;
 
-vec4 mapHDR(vec3 color) {
+vec3 mapHDR(vec3 color) {
 	vec3 mapped = color / (color + vec3(1.0));
 	mapped = pow(mapped, vec3(1.0 / u_Gamma));
-	return vec4(mapped, 1.0);
+	return mapped;
 }
 
 vec3 CalculateFresnel(float cosTheta, vec3 F0) {
@@ -51,7 +51,7 @@ void main()
 	vec4 albedo = texture(albedoMap, vsIn.texCoord);
 
 	float cosTheta = max(dot(norm, viewDir), 0.0);
-	vec3 fresnel = CalculateFresnel(cosTheta, vec3(1.0)) * environmentColor.rgb;
+	vec3 fresnel = CalculateFresnel(cosTheta, vec3(1.0)) * mapHDR(environmentColor.rgb);
 
 
 	color = mix(albedo, albedo * vec4(fresnel, 1.0), u_metallic) * u_color;

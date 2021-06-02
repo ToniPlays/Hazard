@@ -39,24 +39,30 @@ namespace WindowElement {
 		ImGuiHoveredFlags flags = ImGuiHoveredFlags_RootWindow | ImGuiHoveredFlags_ChildWindows;
 		m_Open = ImGui::IsItemHovered() || ImGui::IsWindowHovered(flags);
 
-		Color onColor = Color::FromHex("#404040");
-		Color offColor = Style::GetStyleColor(ColorType::Secondary);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		Layout::SameLine(0, 5);
 
-		if (Input::ButtonColorChange(ICON_FK_FOLDER, offColor, onColor, Style::GetStyleColor(ColorType::Info), false, { 24, 24 })) {}
+		Color bgColor = Color::FromHex("#404040");
+		Color color = Style::GetStyleColor(ColorType::Info);
+
+		if (Input::ButtonColorChange(ICON_FK_FOLDER, color, color, bgColor, false, { 24, 24 })) {}
 		Layout::Tooltip("Create Folder");
 		Layout::SameLine(0, 5);
 
-		if (Input::ButtonColorChange(ICON_FK_ADDRESS_BOOK, offColor, onColor, Style::GetStyleColor(ColorType::Debug), false, { 24, 24 })) {}
+		color = Style::GetStyleColor(ColorType::Debug);
+
+		if (Input::ButtonColorChange(ICON_FK_ADDRESS_BOOK, color, color, bgColor, false, { 24, 24 })) {}
 		Layout::Tooltip("Create script");
 		Layout::SameLine(0, 5);
 
-		if (Input::ButtonColorChange(ICON_FK_GLOBE, offColor, onColor, Style::GetStyleColor(ColorType::Error), false, { 24, 24 })) {}
+		color = Style::GetStyleColor(ColorType::Error);
+
+		if (Input::ButtonColorChange(ICON_FK_GLOBE, color, color, bgColor, false, { 24, 24 })) {}
 		Layout::Tooltip("Material");
 		Layout::SameLine(0, 5);
 
-		if (Input::ButtonColorChange(ICON_FK_REFRESH, offColor, onColor, Style::GetStyleColor(ColorType::Warning), false, { 24, 24 })) {
+		color = Style::GetStyleColor(ColorType::Warning);
+		if (Input::ButtonColorChange(ICON_FK_REFRESH, color, color, bgColor, false, { 24, 24 })) {
 			UpdateFolderData();
 		}
 
@@ -108,7 +114,7 @@ namespace WindowElement {
 			for (std::filesystem::directory_entry folder : m_FolderData.folders)
 			{
 				std::string name = folder.path().filename().string();
-				Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 10, colHeight });
+				Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 5, colHeight });
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 					m_CurrentPath = folder.path().string();
@@ -123,12 +129,12 @@ namespace WindowElement {
 				std::string type = DragDropUtils::TypeFromFile(name);
 				Rendering::Texture2D* texture = GetImageFor(file.path().string());
 				ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
-				Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
 
+				Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
 					DragDropUtils::DragSource(type.c_str(),
 						name, file.path().string());
 
-					}, { colWidth - 10, colHeight });
+					}, { colWidth - 5, colHeight });
 
 				ImGui::NextColumn();
 				ImGui::PopStyleColor();

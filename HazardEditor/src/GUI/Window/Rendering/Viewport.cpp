@@ -80,7 +80,7 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, FLT_MAX);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
-		Style::SetButtonColors("#222222B0", "#1818180B0", "#222222B0");
+		Style::SetButtonColors("#222222D0", "#181818D0", "#222222D0");
 
 		if (Input::Button(ICON_FK_COG, { 25, 25 })) {
 
@@ -103,7 +103,7 @@ namespace WindowElement {
 		ImGui::PopStyleVar(2);
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(size.x - 100);
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#222222A0")));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#222222D0")));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 25);
 
 		Color color("#22222200");
