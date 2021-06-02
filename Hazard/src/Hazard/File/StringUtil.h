@@ -7,6 +7,7 @@ namespace Hazard {
 	public:
 		static std::vector<std::string> SplitString(std::string string, char delim);
 		static std::string RemoveAtEnd(std::string& source, char val);
+
 		template<typename T>
 		static std::string FormatNumber(T number) {
 			std::string num = std::to_string(number);

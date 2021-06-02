@@ -18,8 +18,6 @@ namespace Hazard::Rendering {
 		void Update() override;
 		void Close();
 
-		void SetClearColor(Color color) { m_ClearColor = color; };
-
 		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }
 		GraphicsContext& GetContext() { return *m_Window->GetContext(); }
 		Window& GetWindow() { return *m_Window; }

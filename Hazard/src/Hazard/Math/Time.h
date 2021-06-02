@@ -2,7 +2,7 @@
 #include "Hazard/Core/Core.h"
 
 namespace Hazard {
-	class  Time {
+	class Time {
 	public:
 		static double s_DeltaTime;
 		static long double s_Time;

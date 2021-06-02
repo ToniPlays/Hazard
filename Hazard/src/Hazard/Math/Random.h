@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Hazard 
 {
 	class Random {
