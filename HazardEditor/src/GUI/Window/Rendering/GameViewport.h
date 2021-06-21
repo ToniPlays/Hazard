@@ -21,6 +21,6 @@ namespace WindowElement {
 		Ref<FrameBuffer> m_RenderTexture;
 		uint32_t m_Width = 0, m_Height = 0;
 
-		PostProcessingStack* m_PostProcessing;
+		PostProcessingStack* m_PostProcessing = nullptr;
 	};
 }

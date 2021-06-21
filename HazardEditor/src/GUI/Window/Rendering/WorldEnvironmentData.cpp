@@ -94,7 +94,7 @@ namespace WindowElement {
 
 				if (clicked) {
 					std::string fileName = File::OpenFileDialog("");
-					if (fileName != "") {
+					if (!fileName.empty()) {
 
 						CubemapCreateInfo createInfo;
 						createInfo.width = 2048;

@@ -13,5 +13,5 @@ public:
 	void EndFrame();
 
 private:
-	Rendering::GraphicsContext* context;
+	Rendering::GraphicsContext* context = nullptr;
 };

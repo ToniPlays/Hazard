@@ -16,7 +16,7 @@ using namespace Hazard::Scripting;
 
 namespace WindowElement {
 
-	static void PrintScriptToConsole(Severity severity, std::string message) 
+	static void PrintScriptToConsole(Severity severity, const std::string& message) 
 	{
 		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
 		instance.Print(severity, message);
@@ -31,7 +31,7 @@ namespace WindowElement {
 	Console::~Console() {}
 	void Console::Init()
 	{
-		void(*scriptCallback)(Severity, std::string) = PrintScriptToConsole;
+		void(*scriptCallback)(Severity, const std::string&) = PrintScriptToConsole;
 		ScriptCommand::SetDebugCallback(scriptCallback);
 
 		Rendering::ErrorCallback renderCallback = PrintDebugToConsole;
@@ -130,7 +130,7 @@ namespace WindowElement {
 		ImGui::EndChild();
 	}
 
-	void Console::Print(Severity severity, std::string message)
+	void Console::Print(Severity severity, const std::string& message)
 	{
 		messages.emplace_back(std::pair<Severity, std::string>(severity, message));
 	}

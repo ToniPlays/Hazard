@@ -9,7 +9,7 @@ void GameExport::ExportGame(const std::string& file, std::vector<ECS::World*> wo
 	HZR_WARN("Game exported: {0}", file);
 }
 
-void GameExport::Export(const std::string& file, std::vector<ECS::World*> worlds)
+void GameExport::Export(const std::string& file, std::vector<ECS::World*>& worlds)
 {
 	File::CopyFileTo("res\\shaders\\compiled\\standard_vert.glsl", file + "res\\shaders\\standard_vert.glsl");
 	File::CopyFileTo("res\\shaders\\compiled\\standard_frag.glsl", file + "res\\shaders\\standard_frag.glsl");

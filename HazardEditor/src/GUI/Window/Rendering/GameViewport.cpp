@@ -9,7 +9,10 @@ using namespace Hazard;
 namespace WindowElement {
 
 	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") {}
-	GameViewport::~GameViewport() {}
+	GameViewport::~GameViewport() 
+	{
+		delete m_PostProcessing;
+	}
 		
 	void GameViewport::Init()
 	{

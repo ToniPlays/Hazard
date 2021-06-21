@@ -37,8 +37,8 @@ namespace Hazard::Scripting::CSharp {
 	void ScriptUtils::GetNames(const std::string& module, std::string& nameSpace, std::string& className)
 	{
 		if (module.find('.') != std::string::npos) {
-			nameSpace = module.substr(0, module.find_last_of("."));
-			className = module.substr(module.find_last_of(".") + 1);
+			nameSpace = module.substr(0, module.find_last_of('.'));
+			className = module.substr(module.find_last_of('.') + 1);
 		}
 		else className = module;
 	}
@@ -84,7 +84,7 @@ namespace Hazard::Scripting::CSharp {
 		}
 		return FieldType::None;
 	}
-	std::vector<PublicField*> ScriptUtils::MonoFieldsToFields(std::vector<MonoClassField*> fields)
+	std::vector<PublicField*> ScriptUtils::MonoFieldsToFields(const std::vector<MonoClassField*>& fields)
 	{
 		std::vector<PublicField*> result;
 

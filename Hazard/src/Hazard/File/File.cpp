@@ -129,7 +129,7 @@ namespace Hazard {
 		return name.substr(0, name.find_last_of('.'));
 	}
 	std::string File::GetFileExtension(const std::string& file) {
-		return file.substr(file.find_last_of(".") + 1);
+		return file.substr(file.find_last_of('.') + 1);
 	}
 	bool File::CreateDir(const std::string& dir)
 	{

@@ -9,6 +9,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
     BindMap MathBindings::GetBindings()
     {
         BindMap result;
+        result.reserve(5);
         result.emplace_back("Hazard.Math::Math_Random_Native", Math_Random_Native);
         result.emplace_back("Hazard.Math::Math_RandomRange_Native", Math_RandomRange_Native);
         result.emplace_back("Hazard.Math::Math_Pow_Native", Math_Pow_Native);

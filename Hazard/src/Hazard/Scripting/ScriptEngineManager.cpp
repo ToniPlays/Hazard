@@ -33,7 +33,7 @@ namespace Hazard::Scripting {
 			engine->UpdateEntities();
 		}
 	}
-	void ScriptEngineManager::Instantiate(ScriptType type, uint32_t entityID, std::string moduleName)
+	void ScriptEngineManager::Instantiate(ScriptType type, uint32_t entityID, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->Instantiate(entityID, moduleName);
 	}
@@ -43,11 +43,11 @@ namespace Hazard::Scripting {
 			engine->OnEndRuntime();
 		}
 	}
-	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t entityID, std::string moduleName)
+	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t entityID, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->InitializeEntity(entityID, moduleName);
 	}
-	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t entityID, std::string moduleName)
+	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t entityID, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->ClearEntity(entityID, moduleName);
 	}

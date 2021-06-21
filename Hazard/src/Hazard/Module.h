@@ -5,7 +5,7 @@ namespace Hazard::Module {
 	class Module {
 	public:
 		Module(const char* name) : m_Name(name) {}
-		~Module() {}
+		virtual ~Module() {}
 
 		virtual void PreInit() {}
 		virtual void Init() {}

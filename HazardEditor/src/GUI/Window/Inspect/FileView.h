@@ -19,12 +19,12 @@ namespace WindowElement {
 		void UpdateFolderData();
 
 	private:
-		bool m_Open;
+		bool m_Open = true;
 		float m_Scale = 100.0f;
 
 		void DrawFolderTree();
 		void DrawFilePath();
-		void LoadAllFiles(FolderData data);
+		void LoadAllFiles(const FolderData& data);
 		void LoadFile(const std::string& file);
 		ImVec4 GetFileColor(const std::string& type);
 

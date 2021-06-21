@@ -43,7 +43,7 @@ namespace WindowElement {
 		}
 
 	protected:
-		bool m_Open;
+		bool m_Open = true;
 	private:
 		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
 		std::string m_Title;

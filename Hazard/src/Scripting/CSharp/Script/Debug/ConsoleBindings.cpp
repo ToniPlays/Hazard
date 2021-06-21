@@ -8,14 +8,15 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 	BindMap ConsoleBindings::GetBindings()
 	{
-		BindMap results;
-		results.emplace_back("Hazard.Console::Console_Log_Native",		Console_Log_Native);
-		results.emplace_back("Hazard.Console::Console_Info_Native",		Console_Info_Native);
-		results.emplace_back("Hazard.Console::Console_Warn_Native",		Console_Warn_Native);
-		results.emplace_back("Hazard.Console::Console_Error_Native",	Console_Error_Native);
-		results.emplace_back("Hazard.Console::Console_Critical_Native", Console_Critical_Native);
-		results.emplace_back("Hazard.Console::Console_Trace_Native",	Console_Trace_Native);
-		return results;
+		BindMap result;
+		result.reserve(6);
+		result.emplace_back("Hazard.Console::Console_Log_Native",		Console_Log_Native);
+		result.emplace_back("Hazard.Console::Console_Info_Native",		Console_Info_Native);
+		result.emplace_back("Hazard.Console::Console_Warn_Native",		Console_Warn_Native);
+		result.emplace_back("Hazard.Console::Console_Error_Native",	Console_Error_Native);
+		result.emplace_back("Hazard.Console::Console_Critical_Native", Console_Critical_Native);
+		result.emplace_back("Hazard.Console::Console_Trace_Native",	Console_Trace_Native);
+		return result;
 	}
 	void ConsoleBindings::Console_Log_Native(MonoObject* obj)
 	{

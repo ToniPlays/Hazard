@@ -27,20 +27,20 @@ namespace Hazard::ECS {
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
 		std::string& GetName() { return m_Name; }
-		void SetName(std::string name) { this->m_Name = name.c_str(); }
+		void SetName(std::string name) { m_Name = std::move(name); }
 
 		std::string& GetWorldFile() { return m_File; }
 		WorldData& GetWorldData() {	return m_WorldData;	}
-		void SetBackground(WorldBackground type, std::string file);
+		void SetBackground(WorldBackground type, const std::string& file);
 
 		void RenderAll();
 
 		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UID id, const char* name);
 		Entity CreateEntity(Entity other);
-		Entity GetEntity(entt::entity id);
+		Entity GetEntity(entt::entity entity);
 
-		void DestroyEntity(Entity entity);
+		void DestroyEntity(const Entity& entity);
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
 		template<typename T>

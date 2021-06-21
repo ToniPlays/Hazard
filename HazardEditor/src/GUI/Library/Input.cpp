@@ -267,7 +267,7 @@ namespace WindowElement {
 		return ImGui::DragFloat(label, &value, speed, min, max);
 	}
 
-	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color offColor, const Hazard::Color onColor, bool& modify, ImVec2 size)
+	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color& offColor, const Hazard::Color& onColor, bool& modify, ImVec2 size)
 	{
 		if (modify) {
 			ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(onColor));
@@ -283,7 +283,7 @@ namespace WindowElement {
 		}
 		ImGui::PopStyleColor();
 	}
-	bool Input::ToggleButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color textColor, bool& modify, ImVec2 size)
+	bool Input::ToggleButtonColorChange(const char* label, const Hazard::Color& offColor, const Hazard::Color& onColor, const Hazard::Color& textColor, bool& modify, ImVec2 size)
 	{
 		bool edit = false;
 		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));
@@ -304,7 +304,7 @@ namespace WindowElement {
 		ImGui::PopStyleColor(2);
 		return edit;
 	}
-	bool Input::ButtonColorChange(const char* label, const Hazard::Color offColor, const Hazard::Color onColor, const Hazard::Color background, const bool state, ImVec2 size)
+	bool Input::ButtonColorChange(const char* label, const Hazard::Color& offColor, const Hazard::Color& onColor, const Hazard::Color& background, const bool state, ImVec2 size)
 	{
 		bool modified = false;
 		ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(background));
@@ -325,7 +325,7 @@ namespace WindowElement {
 		ImGui::PopStyleColor();
 		return modified;
 	}
-	bool Input::ColoredButton(const char* label, const Hazard::Color color, const Hazard::Color textColor, ImVec2 size)
+	bool Input::ColoredButton(const char* label, const Hazard::Color& color, const Hazard::Color& textColor, ImVec2 size)
 	{
 		bool modified = false;
 		ImGui::PushStyleColor(ImGuiCol_Text, Style::ColorAsImVec4(textColor));

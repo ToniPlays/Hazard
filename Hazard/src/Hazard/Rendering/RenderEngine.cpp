@@ -11,7 +11,7 @@
 
 namespace Hazard::Rendering {
 
-	RenderEngine::RenderEngine() : Module("RenderEnginwe")
+	RenderEngine::RenderEngine() : Module("RenderEngine")
 	{
 		SetActive(true);
 	}
@@ -47,7 +47,7 @@ namespace Hazard::Rendering {
 		HZR_PROFILE_FUNCTION();
 	}
 
-	void RenderEngine::BeginRendering(Camera camera, ECS::World& world)
+	void RenderEngine::BeginRendering(const Camera& camera, ECS::World& world)
 	{
 		RenderCommand::ResetStats();
 		if(m_FrameBuffer != nullptr)

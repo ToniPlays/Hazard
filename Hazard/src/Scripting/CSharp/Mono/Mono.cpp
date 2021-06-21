@@ -119,7 +119,8 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoClass* Mono::GetMonoClass(const char* moduleName)
 	{
-		if (moduleName == "") return nullptr;
+		if (strcmp(moduleName, "") == 0) return nullptr;
+
 		std::string nameSpace, name;
 		ScriptUtils::GetNames(moduleName, nameSpace, name);
 		return GetMonoClass(nameSpace.c_str(), name.c_str());

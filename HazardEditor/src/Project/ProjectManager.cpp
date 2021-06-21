@@ -31,7 +31,10 @@ namespace Project {
 		std::ifstream stream(path);
 
 		if (!stream.good()) 
+		{
+			delete project;
 			return false;
+		}
 
 		YAML::Node root = YAML::LoadFile(path);
 
@@ -45,7 +48,7 @@ namespace Project {
 		Application::GetModule<WindowElement::EditorView>().GetRenderable<WindowElement::EditorMainTab>()->GetRenderable<WindowElement::FileView>()->
 			SetRootPath(project->m_AbsolutePath.c_str());
 
-		if (project->m_StartupWorld != "") {
+		if (!project->m_StartupWorld.empty()) {
 			if (!Application::GetModule<ECS::WorldHandler>().LoadWorld(project->m_StartupWorld), ECS::Serialization::Editor) {
 				HZR_WARN("Startup world could not be loaded");
 			}

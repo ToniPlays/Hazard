@@ -59,7 +59,7 @@ namespace Hazard {
 
 	void Input::UpdateKey(uint32_t code, int state) 
 	{
-		if (code > 384) 
+		if (code >= 384) 
 			return;
 		keyStates[code] = state;
 	}

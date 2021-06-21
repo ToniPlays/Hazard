@@ -77,7 +77,7 @@ namespace WindowElement {
 		std::vector<RenderableElement*> m_Elements = std::vector<RenderableElement*>();
 		MenuBar m_MenuBar;
 		Toolbar m_Toolbar;
-		EditorGuiPlatform* m_Renderer;
-		Rendering::RenderContext* m_Context;
+		EditorGuiPlatform* m_Renderer = nullptr;
+		Rendering::RenderContext* m_Context = nullptr;
 	};
 }

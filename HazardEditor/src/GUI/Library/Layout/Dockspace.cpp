@@ -7,8 +7,6 @@
 
 namespace WindowLayout {
 
-	static constexpr ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
 	void Dockspace::Begin(const char* title, ImGuiDockNodeFlags flags)
 	{
 		static bool dockspaceOpen = true;
@@ -16,7 +14,7 @@ namespace WindowLayout {
 		bool opt_fullscreen = opt_fullscreen_persistant;
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 
-		ImGuiDockNodeFlags dockFlags = dockspace_flags & flags;
+		ImGuiDockNodeFlags dockFlags = flags;
 
 		if (opt_fullscreen)
 		{
@@ -46,7 +44,7 @@ namespace WindowLayout {
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID(id);
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
 		}
 		ImGui::End();
 	}

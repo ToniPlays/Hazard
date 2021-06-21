@@ -189,12 +189,12 @@ namespace WindowElement {
 				{
 					foldePath += "\\" + paths[i];
 				}
-				m_CurrentPath = foldePath;
+				m_CurrentPath = std::move(foldePath);
 				UpdateFolderData();
 			}
 		}
 	}
-	void FileView::LoadAllFiles(FolderData data)
+	void FileView::LoadAllFiles(const FolderData& data)
 	{
 		for (std::filesystem::directory_entry folder : data.folders)
 		{

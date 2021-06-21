@@ -3,13 +3,14 @@
 #include <hzrpch.h>
 #include "OpenGLUtils.h"
 
-namespace Hazard::Rendering::OpenGL 
+namespace Hazard::Rendering::OpenGL
 {
 	GLuint OpenGLUtils::DataTypeToOpenGLType(TextureDataType type)
 	{
 		switch (type)
 		{
 		case RGB:	return GL_RGB;
+		case Auto:
 		case RGBA:	return GL_RGBA;
 		case HDR:	return GL_RGB16F;
 		case HDRA:	return GL_RGBA16F;
@@ -42,12 +43,7 @@ namespace Hazard::Rendering::OpenGL
 	}
 	bool OpenGLUtils::IsDepthFormat(FrameBufferTextureFormat format)
 	{
-		switch (format)
-		{
-		case FrameBufferTextureFormat::DEPTH32F:			return true;
-		case FrameBufferTextureFormat::DEPTH32_STENCIL8:	return true;
-		}
-		return false;
+		return format >= FrameBufferTextureFormat::DEPTH32F;
 	}
 	void OpenGLUtils::CreateTextures(bool multisample, uint32_t* outID, uint32_t count)
 	{
@@ -63,7 +59,7 @@ namespace Hazard::Rendering::OpenGL
 		if (multisampled) {
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
 		}
-		else 
+		else
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -78,7 +74,8 @@ namespace Hazard::Rendering::OpenGL
 	void OpenGLUtils::AttachDepthTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t attachmetType, uint32_t width, uint32_t height)
 	{
 		bool multisampled = samples > 1;
-		if (multisampled) {
+		if (multisampled)
+		{
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
 		}
 		else
@@ -106,6 +103,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	uint32_t OpenGLUtils::TextureTarget(bool multisample)
 	{
-		return multisample ? GL_TEXTURE_2D_MULTISAMPLE: GL_TEXTURE_2D;
+		return multisample ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	}
 }

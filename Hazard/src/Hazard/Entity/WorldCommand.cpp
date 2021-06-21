@@ -49,7 +49,7 @@ namespace Hazard::ECS {
 		return Application::GetModule<WorldHandler>().GetCurrentWorld();
 	}
 
-	void WorldCommand::RenderScene(Rendering::Camera camera) {
+	void WorldCommand::RenderScene(const Rendering::Camera& camera) {
 
 		RenderCommand::Begin(camera, GetCurrentWorld());
 		GetCurrentWorld().RenderAll();

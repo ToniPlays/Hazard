@@ -22,17 +22,18 @@ namespace Hazard::Rendering {
 	}
 	void Material::Bind()
 	{
-		m_Pipeline->GetShader()->Bind();
-		m_Pipeline->GetShader()->SetUniformInt("albedoMap", 1);
-		m_Pipeline->GetShader()->SetUniformInt("normalMap", 2);
+		Shader* shader = m_Pipeline->GetShader().Raw();
+		shader->Bind();
+		shader->SetUniformInt("albedoMap", 1);
+		shader->SetUniformInt("normalMap", 2);
 
 		for (int i = 0; i < m_Textures.size(); i++) {
 			m_Textures[i]->Bind(i + 1);
 		}
 
-		m_Pipeline->GetShader()->SetUniformColor("u_color", m_MaterialBuffer.color);
-		m_Pipeline->GetShader()->SetUniformFloat("u_metallic", m_MaterialBuffer.metallic);
-		m_Pipeline->GetShader()->SetUniformFloat("u_smoothness", m_MaterialBuffer.smoothness);
+		shader->SetUniformColor("u_color", m_MaterialBuffer.color);
+		shader->SetUniformFloat("u_metallic", m_MaterialBuffer.metallic);
+		shader->SetUniformFloat("u_smoothness", m_MaterialBuffer.smoothness);
 	}
 	Ref<Material> Material::Create()
 	{

@@ -7,12 +7,8 @@
 
 namespace Hazard::Rendering {
 
-    Mesh::Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+    Mesh::Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices) : m_Filename(file), m_Vertices(vertices), m_Indices(indices)
     {
-        this->m_Filename = file;
-        this->m_Vertices = vertices;
-        this->m_Indices = indices;
-
         GenerateArrays();
     }
     Mesh::~Mesh()

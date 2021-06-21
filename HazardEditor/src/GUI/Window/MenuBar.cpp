@@ -28,7 +28,7 @@ namespace WindowElement {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open project", []() {
 				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
-				if (path != "")
+				if (!path.empty())
 					Application::GetModule<Project::ProjectManager>().Load(path);
 
 				});
@@ -83,9 +83,6 @@ namespace WindowElement {
 					});
 				});
 			Layout::Menu("Rendering", [&]() {
-				Layout::MenuItem("Shader editor", [&]() {
-					Application::GetModule<EditorView>().GetRenderable<NodeGraphTab>()->SetLayerActive<ShaderEditorWindow>(true);
-					});
 				Layout::MenuItem("Environment", [&]() {
 					Application::GetModule<EditorView>().SetLayerActive<WorldEnvironmentData>(true);
 					});

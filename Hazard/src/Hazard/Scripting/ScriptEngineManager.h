@@ -23,12 +23,12 @@ namespace Hazard::Scripting {
 
 		void Update() override;
 
-		void Instantiate(ScriptType type, uint32_t entityID, std::string moduleName);
+		void Instantiate(ScriptType type, uint32_t entityID, const std::string& moduleName);
 
 		void OnRuntimeEnd();
 
-		void InitEntity(ScriptType type, uint32_t entityID, std::string moduleName);
-		void ClearEntity(ScriptType type, uint32_t entityID, std::string moduleName);
+		void InitEntity(ScriptType type, uint32_t entityID, const std::string& moduleName);
+		void ClearEntity(ScriptType type, uint32_t entityID, const std::string& moduleName);
 		void ReloadAll();
 
 		bool ModuleExists(ScriptType type, const char* moduleName);

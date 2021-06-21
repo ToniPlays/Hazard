@@ -26,7 +26,7 @@ namespace Hazard::ECS {
 
 	World::World(World& world)
 	{
-		m_File = std::string(world.GetWorldFile() + " (copy)").c_str();
+		m_File = std::string(world.GetWorldFile() + " (copy)");
 		m_Name = world.GetName() + " (copy)";
 		std::unordered_map<UID, entt::entity> entityMap;
 
@@ -65,12 +65,10 @@ namespace Hazard::ECS {
 	{
 	}
 
-	void World::SetBackground(WorldBackground type, std::string file)
+	void World::SetBackground(WorldBackground type, const std::string& file)
 	{
 		HZR_CORE_ERROR("Loading background");
 		if (type != m_WorldData.background) {
-			if (m_WorldData.renderer) delete m_WorldData.renderer;
-
 			if (type == WorldBackground::Colored) {
 				m_WorldData.renderer = new Rendering::ColorBackgroundRenderer();
 			}
@@ -179,11 +177,12 @@ namespace Hazard::ECS {
 		return entity;
 	}
 
-	Entity World::GetEntity(entt::entity id)
+	Entity World::GetEntity(entt::entity entity)
 	{
-		return { id, this };
+		return { entity, this };
 	}
-	void World::DestroyEntity(Entity entity)
+
+	void World::DestroyEntity(const Entity& entity)
 	{
 		m_Registry.destroy(entity);
 	}

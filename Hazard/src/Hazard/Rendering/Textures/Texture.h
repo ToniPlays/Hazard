@@ -12,7 +12,7 @@ namespace Hazard::Rendering {
 		std::string file;
 		uint32_t width = 0;
 		uint32_t height = 0;
-		TextureDataType datatype;
+		TextureDataType datatype = TextureDataType::Auto;
 
 		bool hasTransparency = false;
 	};

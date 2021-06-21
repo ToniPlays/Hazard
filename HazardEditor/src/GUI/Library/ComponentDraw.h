@@ -140,11 +140,11 @@ namespace WindowElement {
 				});
 			if (changed) {
 				std::string file = File::OpenFileDialog("");
-				if (file != "") 
+				if (!file.empty()) 
 				{
 					using namespace Hazard::Rendering;
 					Texture2DCreateInfo createInfo;
-					createInfo.filename = file.c_str();
+					createInfo.filename = file;
 
 					component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 				}

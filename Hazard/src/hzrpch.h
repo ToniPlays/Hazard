@@ -83,7 +83,7 @@
 	#define HZR_CORE_ERROR(...)	 		::Hazard::Logging::Logger::GetCoreLogger()->error(__VA_ARGS__)
 	#define HZR_CORE_FATAL(...)			::Hazard::Logging::Logger::GetCoreLogger()->critical(__VA_ARGS__)
 	#define HZR_CORE_TRACE(...)			::Hazard::Logging::Logger::GetCoreLogger()->trace(__VA_ARGS__)
-	#define HZR_CORE_ASSERT(success, ...)	 if(!success) HZR_CORE_ERROR(__VA_ARGS__)
+	#define HZR_CORE_ASSERT(success, ...)	 if(!(success)) HZR_CORE_ERROR(__VA_ARGS__)
 
 	//Client logging macros
 	#define HZR_INFO(...)				::Hazard::Logging::Logger::GetClientLogger()->info(__VA_ARGS__)

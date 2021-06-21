@@ -25,7 +25,7 @@ namespace Hazard::Rendering::OpenGL {
 
 		if (info.sides.size() == 1) {
 			AllocateFree();
-			CreateCubemapFromTexture(info.sides.at(0).file);
+			CreateCubemapFromTexture(info.sides[0].file);
 		}
 		else 
 		{
@@ -95,7 +95,7 @@ namespace Hazard::Rendering::OpenGL {
 		m_Info.cubeSides.clear();
 		m_Info.cubeSides.push_back(RenderUtils::Create<Texture2D>(textureCreateInfo));
 
-		if (file == "") return;
+		if (file.empty()) return;
 #pragma region Nonsense
 		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 		glm::mat4 captureViews[] =
@@ -189,13 +189,14 @@ namespace Hazard::Rendering::OpenGL {
 
 		cubeArray->Bind();
 		m_Info.cubeSides.at(0)->Bind();
-		pipeline->GetShader()->Bind();
-		pipeline->GetShader()->SetUniformInt("u_EquirectangularMap", 0);
-		pipeline->GetShader()->SetUniformMat4("u_Projection", captureProjection);
+		Shader* shader = pipeline->GetShader().Raw();
+		shader->Bind();
+		shader->SetUniformInt("u_EquirectangularMap", 0);
+		shader->SetUniformMat4("u_Projection", captureProjection);
 
 		for (uint8_t i = 0; i < 6; ++i)
 		{
-			pipeline->GetShader()->SetUniformMat4("u_View", captureViews[i]);
+			shader->SetUniformMat4("u_View", captureViews[i]);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, m_TextureID, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

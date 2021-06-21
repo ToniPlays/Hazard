@@ -79,10 +79,10 @@ namespace Hazard::Rendering {
 		SetCallbacks();
 		SetVSync(info->VSync);
 	}
-	void WindowsWindow::OnUpdate(Color color) {
+	void WindowsWindow::OnUpdate(const Color& color) {
 
 		glfwSwapBuffers(m_Window);
-		m_Context->ClearFrame(color);
+		m_Context->ClearFrame({color.r, color.g, color.b, color.a});
 		glfwPollEvents();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
@@ -95,11 +95,11 @@ namespace Hazard::Rendering {
 		std::vector<GLFWimage> glfwImages(count);
 
 		for (uint32_t i = 0; i < count; i++) {
-
+			GLFWimage img = glfwImages[i];
 			int sx, sy, sChannels, bChannels;
-			glfwImages.at(i).pixels = stbi_load(images[i].c_str(), &sx, &sy, &sChannels, 0);
-			glfwImages.at(i).width = sx;
-			glfwImages.at(i).height = sy;
+			img.pixels = stbi_load(images[i].c_str(), &sx, &sy, &sChannels, 0);
+			img.width = sx;
+			img.height = sy;
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
 	}
@@ -179,7 +179,7 @@ namespace Hazard::Rendering {
 			}
 			case GLFW_RELEASE:
 			{
-				MouseButtonPressedEvent event(button);
+				MouseButtonReleasedEvent event(button);
 				data.EventCallback(event);
 				break;
 			}

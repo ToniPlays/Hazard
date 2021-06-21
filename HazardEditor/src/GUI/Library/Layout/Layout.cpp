@@ -49,7 +49,7 @@ namespace WindowLayout {
     {
         ImGui::Text(text);
     }
-    void Layout::TextColored(const char* text, Color color)
+    void Layout::TextColored(const char* text, const Color& color)
     {
         ImGui::TextColored(Style::ColorAsImVec4(color), text);
     }

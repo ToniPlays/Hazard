@@ -10,6 +10,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	BindMap TransformBindings::GetBindings()
 	{
 		BindMap result;
+		result.reserve(6);
 		result.emplace_back("Hazard.TransformComponent::Transform_GetPosition_Native", Transform_GetPosition_Native);
 		result.emplace_back("Hazard.TransformComponent::Transform_SetPosition_Native", Transform_SetPosition_Native);
 

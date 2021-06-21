@@ -28,6 +28,7 @@ namespace Hazard::Rendering
 		case ShaderType::FragmentShader:	kind = shaderc_fragment_shader; break;
 		case ShaderType::GeometryShader:	kind = shaderc_geometry_shader; break;
 		case ShaderType::ComputeShader:		kind = shaderc_compute_shader;	break;
+		case ShaderType::None:	   HZR_WARN("ShaderDataType was None"); break;
 		}
 
 		source = Preprocess(source, kind);

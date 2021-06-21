@@ -19,13 +19,16 @@ namespace Hazard::ECS::Loader {
 	{
 		HZR_PROFILE_FUNCTION();
 		YAML::Emitter out;
+
+		WorldData& worldData = world.GetWorldData();
+
 		out << YAML::BeginMap;
-		out << YAML::Key << "World" << YAML::Value << (world.GetName() != "" ? world.GetName() : "Untitled world");
+		out << YAML::Key << "World" << YAML::Value << (!world.GetName().empty() ? world.GetName() : "Untitled world");
 		out << YAML::Key << "Environment" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "ClearColor" << YAML::Value; Convert(out, world.GetWorldData().renderer->m_Color);
-		out << YAML::Key << "Type" << YAML::Value << BackgroundTypeToString(world.GetWorldData().background);
-		out << YAML::Key << "Gamma" << YAML::Value << world.GetWorldData().renderer->GetGamma();
-		out << YAML::Key << "File" << YAML::Value << world.GetWorldData().renderer->GetFile();
+		out << YAML::Key << "ClearColor" << YAML::Value; Convert(out, worldData.renderer->m_Color);
+		out << YAML::Key << "Type" << YAML::Value << BackgroundTypeToString(worldData.background);
+		out << YAML::Key << "Gamma" << YAML::Value << worldData.renderer->GetGamma();
+		out << YAML::Key << "File" << YAML::Value << worldData.renderer->GetFile();
 
 		out << YAML::EndMap;
 
@@ -47,7 +50,7 @@ namespace Hazard::ECS::Loader {
 
 		return true;
 	}
-	void WorldSerializer::SerializeEntityEditor(Entity entity, YAML::Emitter& out)
+	void WorldSerializer::SerializeEntityEditor(Entity& entity, YAML::Emitter& out)
 	{
 		out << YAML::BeginMap;
 		out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
@@ -64,12 +67,12 @@ namespace Hazard::ECS::Loader {
 	}
 
 	template<typename T>
-	static void WorldSerializer::SerializeComponentEditor(Entity entity, T& component, YAML::Emitter& out) {
+	static void WorldSerializer::SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out) {
 		static_assert(false, "Failed to serialize " + std::string(typeid(T).name()));
 	}
 
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<TagComponent>(Entity entity, TagComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<TagComponent>(Entity& entity, TagComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "TagComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "Tag" << YAML::Value << component.m_Tag;
@@ -77,7 +80,7 @@ namespace Hazard::ECS::Loader {
 	}
 
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<TransformComponent>(Entity entity, TransformComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<TransformComponent>(Entity& entity, TransformComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "TransformComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "Translation" << YAML::Value; Convert(out, component.m_Translation);
@@ -87,7 +90,7 @@ namespace Hazard::ECS::Loader {
 
 	}
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<SpriteRendererComponent>(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "SpriteRendererComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "Tint" << YAML::Value; Convert(out, (glm::vec4)component.m_Tint);
@@ -99,7 +102,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::EndMap;
 	}
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<CameraComponent>(Entity entity, CameraComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<CameraComponent>(Entity& entity, CameraComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "CameraComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "Projection" << YAML::Value << (component.GetProjectionType() ? "Orthographic" : "Perspective");
@@ -108,14 +111,14 @@ namespace Hazard::ECS::Loader {
 		out << YAML::EndMap;
 	}
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<ScriptComponent>(Entity entity, ScriptComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<ScriptComponent>(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "ScriptComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "ModuleName" << YAML::Value << component.m_ModuleName;
 		out << YAML::EndMap;
 	}
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<MeshComponent>(Entity entity, MeshComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "MeshComponent" << YAML::Value << YAML::BeginMap;
 		std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "";
@@ -123,7 +126,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::EndMap;
 	}
 	template<>
-	static void WorldSerializer::SerializeComponentEditor<AudioSourceComponent>(Entity entity, AudioSourceComponent& component, YAML::Emitter& out)
+	static void WorldSerializer::SerializeComponentEditor<AudioSourceComponent>(Entity& entity, AudioSourceComponent& component, YAML::Emitter& out)
 	{
 		out << YAML::Key << "AudioSourceComponent" << YAML::Value << YAML::BeginMap;
 		out << YAML::Key << "AudioFile" << YAML::Value << component.sourceFile;
@@ -132,7 +135,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::EndMap;
 	}
 
-	bool WorldSerializer::SerializeRuntime(const char* file, Scene& scene)
+	bool WorldSerializer::SerializeRuntime(const char* file, World& scene)
 	{
 		return false;
 	}

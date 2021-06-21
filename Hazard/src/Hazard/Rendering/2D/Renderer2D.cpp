@@ -71,7 +71,7 @@ namespace Hazard::Rendering {
 
 		std::vector<int> samplers(m_Data.TextureSlots.size());
 		for (int i = 0; i < samplers.size(); i++)
-			samplers.at(i) = i;
+			samplers[i] = i;
 
 		m_Data.TextureSlots[0] = Ref(Vault::Get<Texture2D>("White"));
 

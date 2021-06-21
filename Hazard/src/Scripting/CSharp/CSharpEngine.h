@@ -13,6 +13,7 @@ namespace Hazard::Scripting::CSharp {
 
 	struct EntityScript;
 	class CSharpField;
+
 	struct EntityInstance
 	{
 		EntityScript* ScriptClass;

@@ -13,7 +13,7 @@ namespace Hazard::Rendering::OpenGL {
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
-		if (info.filename != "" && info.loadFromFile) {
+		if (!info.filename.empty() && info.loadFromFile) {
 
 			int w, h, channels;
 

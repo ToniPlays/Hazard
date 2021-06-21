@@ -17,15 +17,14 @@ namespace Hazard::Rendering {
 		CubeSide side;
 		std::string file;
 
-		CubemapSide(CubeSide side, const std::string& file) {
-			this->side = side;
-			this->file = file;
+		CubemapSide(CubeSide side, const std::string& file) : side(side), file(file) 
+		{
 		}
 	};
 
-	struct CubemapCreateInfo {
-		TextureDataType datatype;
-
+	struct CubemapCreateInfo 
+	{
+		TextureDataType datatype = TextureDataType::Auto;
 		uint32_t width = 0;
 		uint32_t height = 0;
 
@@ -33,7 +32,7 @@ namespace Hazard::Rendering {
 	};
 
 	struct CubemapInfo {
-		TextureDataType datatype;
+		TextureDataType datatype = TextureDataType::Auto;
 
 		uint32_t width = 0;
 		uint32_t height = 0;

@@ -14,6 +14,6 @@ namespace WindowElement {
 		void OnWindowRender() override;
 
 	private:
-		Hazard::Rendering::RenderContext* context;
+		Hazard::Rendering::RenderContext* context = nullptr;
 	};
 }

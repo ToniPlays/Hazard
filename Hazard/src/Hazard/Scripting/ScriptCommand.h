@@ -26,10 +26,10 @@ namespace Hazard::Scripting {
 
 		static void InitAllEntities();
 
-		static void InitEntity(ECS::Entity entity, ECS::ScriptComponent& component);
-		static void ClearEntity(ECS::Entity entity, ECS::ScriptComponent& component);
-		static void InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component);
-		static void ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component);
+		static void InitEntity(const ECS::Entity& entity, ECS::ScriptComponent& component);
+		static void ClearEntity(const ECS::Entity& entity, ECS::ScriptComponent& component);
+		static void InitEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
+		static void ClearEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
 
 		static bool ModuleExists(ScriptType type, const char* name) { 
 			return s_manager->ModuleExists(type, name);
@@ -51,11 +51,11 @@ namespace Hazard::Scripting {
 			ECS::WorldCommand::GetEntity(entityID).AddComponent<T>();
 		}
 
-		static void SendDebugMessage(Severity severity, std::string message);
-		static void SetDebugCallback(void(*callback)(Severity, std::string)) { debugCallback = callback; };
+		static void SendDebugMessage(Severity severity, const std::string& message);
+		static void SetDebugCallback(void(*callback)(Severity, const std::string&)) { debugCallback = callback; };
 
 	private:
-		static void(*debugCallback)(Severity, std::string);
+		static void(*debugCallback)(Severity, const std::string&);
 		static ScriptEngineManager* s_manager;
 	};
 }

@@ -7,7 +7,7 @@
 
 namespace Hazard::Scripting {
 
-	void(*ScriptCommand::debugCallback)(Severity, std::string);
+	void(*ScriptCommand::debugCallback)(Severity, const std::string&);
 	ScriptEngineManager* ScriptCommand::s_manager;
 
 	void ScriptCommand::Init()
@@ -42,24 +42,24 @@ namespace Hazard::Scripting {
 				s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
 		}
 	}
-	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::ScriptComponent& component)
+	void ScriptCommand::InitEntity(const ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
 		s_manager->InitEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
-	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::ScriptComponent& component)
+	void ScriptCommand::ClearEntity(const ECS::Entity& entity, ECS::ScriptComponent& component)
 	{
 		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
 
-	void ScriptCommand::InitEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
+	void ScriptCommand::InitEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component)
 	{
 		s_manager->InitEntity(ScriptType::VisualScript, (uint32_t)entity, component.m_Filename);
 	}
-	void ScriptCommand::ClearEntity(ECS::Entity entity, ECS::VisualScriptComponent& component)
+	void ScriptCommand::ClearEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component)
 	{
 		s_manager->ClearEntity(ScriptType::VisualScript, (uint32_t)entity, component.m_Filename);
 	}
-	void ScriptCommand::SendDebugMessage(Severity severity, std::string message)
+	void ScriptCommand::SendDebugMessage(Severity severity, const std::string& message)
 	{
 		debugCallback(severity, message);
 	}

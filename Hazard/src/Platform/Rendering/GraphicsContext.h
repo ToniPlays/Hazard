@@ -12,10 +12,8 @@ namespace Hazard::Rendering {
 		std::string errorCode;
 		int severity;
 
-		ErrorData(const char* message, const char* type) {
-			info = message;
-			errorCode = type;
-			severity = 0;
+		ErrorData(const char* message, const char* type) : info(message), errorCode(type), severity(0) 
+		{
 		}
 	};
 

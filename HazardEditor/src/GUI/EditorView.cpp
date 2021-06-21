@@ -85,7 +85,6 @@ namespace WindowElement {
 		PushRenderable<Performance>();
 		PushRenderable<EngineAssets>();
 
-		PushRenderable<ShaderEditorWindow>();
 		PushRenderable<Profiler>();
 		PushRenderable<WelcomePopup>();
 

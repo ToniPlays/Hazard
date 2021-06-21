@@ -15,7 +15,7 @@ namespace Editor {
 		bool OnEvent(Event& e);
 
 		inline float GetDistance() const { return distance; }
-		inline float SetDistance(float distance) { this->distance = distance; }
+		inline void SetDistance(float distance) { this->distance = distance; }
 
 		inline void SetViewpotSize(float w, float h) { viewport_w = w; viewport_h = h; UpdateProjection(); }
 

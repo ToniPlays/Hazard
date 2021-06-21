@@ -8,8 +8,8 @@ namespace Hazard::Rendering {
 	struct Texture2DCreateInfo
 	{
 		std::string filename = "";
-		uint32_t width, height;
-		TextureDataType datatype;
+		uint32_t width = 0, height = 0;
+		TextureDataType datatype = TextureDataType::Auto;
 		bool loadFromFile = true;
 		void* data = nullptr;
 	};

@@ -24,7 +24,7 @@ namespace Hazard::Rendering {
 
 		MaterialBuffer GetMaterialData() const { return m_MaterialBuffer; }
 		void SetPipeline(Ref<GraphicsPipeline> pipeline) { 
-			m_Pipeline = pipeline; 
+			m_Pipeline = std::move(pipeline); 
 		}
 		GraphicsPipeline* GetPipeline() { return m_Pipeline.Raw(); }
 
@@ -57,6 +57,7 @@ namespace Hazard::Rendering {
 				return m_Textures[0].Raw();
 			if (strcmp(value, "Material.NormalMap") == 0)
 				return m_Textures[1].Raw();
+			return nullptr;
 		}
 		template<typename T>
 		void Set(const char* key, T value) {

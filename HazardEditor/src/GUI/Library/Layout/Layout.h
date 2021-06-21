@@ -15,7 +15,7 @@ namespace WindowLayout {
 		static bool Tooltip(const char* text);
 		static void Separator(float height = 1.0f);
 		static void Text(const char* text);
-		static void TextColored(const char* text, Color color);
+		static void TextColored(const char* text, const Color& color);
 		static void NextLine(float height = 15.0f);
 		static void ItemWidth(float width);
 		static void PushWidths(uint16_t cols);

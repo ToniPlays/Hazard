@@ -19,8 +19,8 @@ namespace Hazard::Rendering
 	};
 
 	enum InputTopology { TriangleList = 0 };
-	enum CullFace { None = 0, FrontFace, BackFace, FontAndBackFace };
-	enum ShaderType { VertexShader = 0, FragmentShader = 1, GeometryShader = 2, ComputeShader = 3 };
+	enum CullFace { Default = 0, FrontFace, BackFace, FontAndBackFace };
+	enum ShaderType { None = 0, VertexShader, FragmentShader, GeometryShader, ComputeShader };
 	enum ShaderFileType { Binary = 0, Source = 1 };
 
 	struct PipelineViewport 
@@ -37,7 +37,7 @@ namespace Hazard::Rendering
 	struct PipelineShaderStage
 	{
 		std::string shaderFileName;
-		ShaderType stage;
+		ShaderType stage = ShaderType::None;
 		ShaderFileType fileType = ShaderFileType::Source;
 	};
 

@@ -203,6 +203,8 @@ namespace Hazard::Rendering {
 		pipelineInfo.stages = stages;
 		Ref<GraphicsPipeline> pipeline = Create<GraphicsPipeline>(pipelineInfo);
 
+
+		//Handle somehow, causes memoryleak possibly
 		Material* mat = new Material();
 		mat->SetPipeline(pipeline);
 	}

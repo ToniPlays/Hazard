@@ -28,7 +28,7 @@ void Style::SetButtonColors(const char* button, const char* hovered, const char*
 {
 	SetButtonColors(Color(button), Color(hovered), Color(active));
 }
-void Style::SetButtonColors(Color button, Color hovered, Color active)
+void Style::SetButtonColors(const Color& button, const Color& hovered, const Color& active)
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ColorAsImVec4(button));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ColorAsImVec4(hovered));
@@ -42,7 +42,7 @@ ImFont* Style::AddFont(const char* file, float size)
 {
 	return ImGui::GetIO().Fonts->AddFontFromFileTTF(file, size);
 }
-ImVec4 Style::ColorAsImVec4(Color color)
+ImVec4 Style::ColorAsImVec4(const Color& color)
 {
 	return { color.r, color.g, color.b, color.a };
 }
@@ -83,7 +83,6 @@ void Style::InitClassic()
 	style.ScrollbarSize = 16;
 
 	style.FrameRounding = 2;
-	style.ScrollbarRounding = 2;
 	style.WindowRounding = 0;
 	style.GrabRounding = 0;
 	style.ScrollbarRounding = 0;

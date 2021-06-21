@@ -39,7 +39,7 @@ namespace Hazard
 	{
 		return Color(color.r, color.g, color.b, color.a);
 	}
-	Color Color::FromHex(std::string hex) {
+	Color Color::FromHex(const std::string& hex) {
 
 		if (hex.substr(0, 1) != "#") return Color();
 

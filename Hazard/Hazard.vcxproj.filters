@@ -207,6 +207,9 @@
     <ClInclude Include="src\Hazard\Core\HazardRuntimeError.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Core\PlatrofmUtils.h">
+      <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Ref.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -819,7 +822,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\PlatrofmUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -1038,6 +1040,9 @@
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
       <Filter>src\Platform\System\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\System\Windows\WindowsUtils.cpp">
+      <Filter>src\Platform\System\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\System\Windows</Filter>
     </ClCompile>
@@ -1092,6 +1097,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\System\Windows\WindowsUtils.cpp" />
   </ItemGroup>
 </Project>

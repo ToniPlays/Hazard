@@ -15,7 +15,7 @@ namespace Hazard {
 		
 	public:
 		Application() {};
-		~Application() {};
+		virtual ~Application() {};
 
 		virtual void PreInit() {};
 		virtual void Init() {};

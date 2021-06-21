@@ -6,7 +6,7 @@
 namespace Hazard::ECS {
 
 	class Entity {
-		friend class Scene;
+		friend class World;
 	public:
 		Entity() = default;
 		Entity(entt::entity handle, World* world);

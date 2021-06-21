@@ -15,8 +15,8 @@ namespace Hazard::Rendering {
 
 		DEPTH32F,
 		DEPTH32_STENCIL8,
-
 		Depth = DEPTH32_STENCIL8
+
 	};
 
 
@@ -41,7 +41,7 @@ namespace Hazard::Rendering {
 	struct FrameBufferInfo {
 		uint32_t width = 0;
 		uint32_t height = 0;
-		uint32_t samples;
+		uint32_t samples = 1;
 
 		std::vector<FrameBufferAttachment> colorAttachments;
 		FrameBufferAttachment depthAttachment;

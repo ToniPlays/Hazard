@@ -12,8 +12,8 @@ namespace Hazard::Rendering {
 		Ref<Texture> texture;
 
 		Quad(glm::mat4 transform, glm::vec4 color, Texture* text) : transform(transform), 
-			color(color) {
-			texture = text;
+			color(color), texture(text) 
+		{
 		};
 	};
 

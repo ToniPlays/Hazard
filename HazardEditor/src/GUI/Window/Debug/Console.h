@@ -13,7 +13,7 @@ namespace WindowElement {
 		void Init() override;
 		void OnWindowRender() override;
 
-		void Print(Severity severity, std::string message);
+		void Print(Severity severity, const std::string& message);
 	private:
 		void ClearLog() { messages.clear(); };
 		bool LogEnabled(Severity severity);

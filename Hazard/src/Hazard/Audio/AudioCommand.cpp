@@ -9,7 +9,7 @@ namespace Hazard::Audio
 {
 	AudioClip AudioCommand::Create(ECS::AudioSourceComponent& component)
 	{
-		if (File::Exists(component.sourceFile.c_str())) {
+		if (File::Exists(component.sourceFile)) {
 			return AudioLoader::LoadFile(component.sourceFile);
 		}
 		return AudioClip();

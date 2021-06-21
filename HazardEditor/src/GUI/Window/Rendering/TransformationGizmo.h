@@ -19,7 +19,7 @@ namespace WindowElement {
 
 		void Init() override;
 		void OnFrameBegin() override;
-		void OnRender(Editor::EditorCamera camera, ImVec2 size);
+		void OnRender(const Editor::EditorCamera& camera, ImVec2 size);
 
 		bool IsUsing() { return isUsing; }
 

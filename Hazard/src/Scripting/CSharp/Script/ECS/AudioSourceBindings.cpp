@@ -8,6 +8,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	BindMap AudioSourceBindings::GetBindings()
 	{
 		BindMap result;
+		result.reserve(7);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Play_Native", AudioSource_Play_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Stop_Native", AudioSource_Stop_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Pause_Native", AudioSource_Pause_Native);

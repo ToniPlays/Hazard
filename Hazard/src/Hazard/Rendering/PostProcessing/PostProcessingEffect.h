@@ -10,9 +10,9 @@ namespace Hazard::Rendering
 	struct VignetteEffectCreateInfo 
 	{
 		bool use = true;
-		float intensity;
-		float outer;
-		float inner;
+		float intensity = 0.0f;
+		float outer = 0.0f;
+		float inner = 0.0f;
 	};
 
 	struct GaussianBlurCreateInfo 

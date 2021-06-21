@@ -20,8 +20,8 @@ namespace Hazard::Rendering {
 		bool maximized = false;
 		bool minimized = false;
 		bool fullscreen = false;
-		int Width;
-		int Height;
+		int Width = 0;
+		int Height = 0;
 
 		std::function<void(Event&)> EventCallback;
 		WindowProps() = default;
@@ -33,7 +33,7 @@ namespace Hazard::Rendering {
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
-		virtual void OnUpdate(Color color = Color("#000000")) = 0;
+		virtual void OnUpdate(const Color& color = Color("#000000")) = 0;
 		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(uint32_t count, std::string* images) = 0;
 		virtual void SetPosition(glm::vec2 position, glm::vec2 dragPoint) = 0;

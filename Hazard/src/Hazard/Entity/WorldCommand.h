@@ -14,7 +14,7 @@ namespace Hazard::ECS {
 
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);
-		static void RenderScene(Rendering::Camera camera);
+		static void RenderScene(const Rendering::Camera& camera);
 
 		template<typename T>
 		static void OnScriptAttached(Entity& entity, T& script);

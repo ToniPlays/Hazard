@@ -34,6 +34,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		RegisterComponent(AudioSourceComponent);
 
 		BindMap result;
+		result.reserve(4);
 		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);
 		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", CreateComponent);
 		result.emplace_back("Hazard.Entity::Entity_IsActive_Native", IsActive);

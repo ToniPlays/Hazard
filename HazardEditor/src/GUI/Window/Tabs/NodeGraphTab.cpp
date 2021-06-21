@@ -8,7 +8,7 @@ namespace WindowElement
 {
 	void NodeGraphTab::Init()
 	{
-		PushRenderable<ShaderEditorWindow>();
+
 	}
 	void NodeGraphTab::Render()
 	{

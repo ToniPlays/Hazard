@@ -99,17 +99,17 @@ namespace Hazard::ECS::Loader
 	public:
 
 		template<typename T>
-		static void TrySerializeEditor(Entity entity, YAML::Emitter& out)
+		static void TrySerializeEditor(Entity& entity, YAML::Emitter& out)
 		{
 			if (entity.HasComponent<T>()) {
 				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
 			}
 		}
 		static bool SerializeEditor(const char* file, World& world);
-		static void SerializeEntityEditor(Entity entity, YAML::Emitter& out);
+		static void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
-		static void SerializeComponentEditor(Entity entity, T& component, YAML::Emitter& out);
+		static void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
 
-		static bool SerializeRuntime(const char* file, Scene& scene);
+		static bool SerializeRuntime(const char* file, World& scene);
 	};
 }

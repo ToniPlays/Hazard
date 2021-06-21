@@ -30,7 +30,7 @@ namespace WindowElement {
 
 		Ref<FrameBuffer> m_RenderTexture;
 
-		RenderEngine* m_Renderer;
+		RenderEngine* m_Renderer = nullptr;
 		TransformationGizmo m_Gizmos;
 		uint32_t m_Width = 0, m_Height = 0;
 

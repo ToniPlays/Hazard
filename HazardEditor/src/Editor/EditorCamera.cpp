@@ -11,7 +11,7 @@
 namespace Editor {
 
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearPlane, float farPlane) : fov(fov), 
-		aspectRatio(aspectRatio), nearPlane(nearPlane), farPlane(farPlane)
+		aspectRatio(aspectRatio), nearPlane(nearPlane), farPlane(farPlane), m_Is2DEnabled(false)
 	{
 		projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		UpdateView();

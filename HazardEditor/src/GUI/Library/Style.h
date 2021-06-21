@@ -36,10 +36,10 @@ public:
 	static void SetColor(ImGuiCol_ color, Color value);
 	static void SetColor(ImGuiCol_ color, ImVec4 value);
 	static void SetButtonColors(const char* button, const char* hovered, const char* active);
-	static void SetButtonColors(Color button, Color hovered, Color active);
+	static void SetButtonColors(const Color& button, const Color& hovered, const Color& active);
 	static void SelectFont(uint8_t index);
 	static ImFont* AddFont(const char* file, float size);
-	static ImVec4 ColorAsImVec4(Color color);
+	static ImVec4 ColorAsImVec4(const Color& color);
 
 	static ImGuiTreeNodeFlags GetTreeNodeDefaultFlags();
 	static ThemeValues& GetStyle() { return s_Values; }
