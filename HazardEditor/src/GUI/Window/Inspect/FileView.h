@@ -19,13 +19,14 @@ namespace WindowElement {
 		void UpdateFolderData();
 
 	private:
-		bool m_Open = true;
-		float m_Scale = 100.0f;
 
 		void DrawFolderTree();
 		void DrawFilePath();
 		void LoadAllFiles(const FolderData& data);
 		void LoadFile(const std::string& file);
+		void DrawContentRows(float colWidth, float colHeight, int cols);
+		bool m_Open = true;
+		float m_Scale = 100.0f;
 		ImVec4 GetFileColor(const std::string& type);
 
 		Rendering::Texture2D* GetImageFor(const std::string& file);

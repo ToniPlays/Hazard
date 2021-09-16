@@ -8,7 +8,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	BindMap AudioSourceBindings::GetBindings()
 	{
 		BindMap result;
-		result.reserve(7);
+		result.reserve(11);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Play_Native", AudioSource_Play_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Stop_Native", AudioSource_Stop_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Pause_Native", AudioSource_Pause_Native);
@@ -18,6 +18,13 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetPitch_Native", AudioSource_GetPitch_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetPitch_Native", AudioSource_SetPitch_Native);
+
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLoaded_Native", AudioSource_IsLoaded_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLooping_Native", AudioSource_IsLooping_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetLooping_Native", AudioSource_SetLooping_Native);
+
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsSpatial_Native", AudioSource_IsSpatial_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetSpatial_Native", AudioSource_SetSpatial_Native);
 
 		return result;
 	}
@@ -48,5 +55,25 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	void AudioSourceBindings::AudioSource_SetPitch_Native(uint32_t id, float value)
 	{
 		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.SetPitch(value);
+	}
+	bool AudioSourceBindings::AudioSource_IsLoaded_Native(uint32_t id)
+	{
+		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.IsLoaded();
+	}
+	bool AudioSourceBindings::AudioSource_IsLooping_Native(uint32_t id)
+	{
+		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.IsLooping();
+	}
+	void AudioSourceBindings::AudioSource_SetLooping_Native(uint32_t id, bool value)
+	{
+		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.SetLoop(value);
+	}
+	bool AudioSourceBindings::AudioSource_IsSpatial_Native(uint32_t id)
+	{
+		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.IsSpatial();
+	}
+	void AudioSourceBindings::AudioSource_SetSpatial_Native(uint32_t id, bool value)
+	{
+		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.SetSpatial(value);
 	}
 }

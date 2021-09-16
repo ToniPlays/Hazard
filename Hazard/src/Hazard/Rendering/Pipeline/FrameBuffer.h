@@ -50,7 +50,7 @@ namespace Hazard::Rendering {
 	class FrameBuffer : public RefCount {
 	public:
 
-		~FrameBuffer() {};
+		~FrameBuffer() = default;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
 		virtual void Unbind(uint32_t slot = 0) const = 0;

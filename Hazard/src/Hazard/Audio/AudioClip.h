@@ -7,8 +7,8 @@ namespace Hazard::Audio {
 	struct AudioBufferData : public RefCount
 	{
 	public:
-		AudioBufferData() {};
-		~AudioBufferData() {};
+		AudioBufferData() = default;
+		~AudioBufferData() = default;
 
 		std::string name = "UndefinedAudio";
 		int16_t* audioData = nullptr;
@@ -21,7 +21,7 @@ namespace Hazard::Audio {
 
 	class AudioClip {
 	public:
-		AudioClip() {};
+		AudioClip() = default;
 		~AudioClip();
 
 		void Play();
@@ -45,9 +45,8 @@ namespace Hazard::Audio {
 		bool IsLooping() { return m_Looping; }
 		void SetLoop(bool loop);
 
+		float GetTotalDuration() { return m_TotalDuration; }
 		std::pair<uint32_t, uint32_t> GetLength() const;
-
-		void ChangeFile(const std::string& file);
 
 		static AudioClip LoadFromFile(const std::string& file, bool spatial = false);
 

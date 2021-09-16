@@ -25,7 +25,8 @@ namespace Hazard::Rendering {
 		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 
-		if (appInfo->iconCount > 0) {
+		if (appInfo->iconCount > 0) 
+		{
 			m_Window->SetWindowIcon(appInfo->iconCount, appInfo->icons);
 		}
 

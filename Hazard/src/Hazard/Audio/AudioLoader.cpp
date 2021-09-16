@@ -21,7 +21,7 @@ namespace Hazard::Audio {
 	{
 		mp3dec_init(&s_Mp3d);
 
-		// Init listener
+		// Init default listener
 		ALfloat listenerPos[] = { 0.0, 0.0, 0.0 };
 		ALfloat listenerVel[] = { 0.0, 0.0, 0.0 };
 		ALfloat listenerOri[] = { 0.0, 0.0,-1.0, 0.0, 1.0, 0.0 };
@@ -37,6 +37,7 @@ namespace Hazard::Audio {
 
 		if (ext == "ogg") return FileFormat::Ogg;
 		if (ext == "mp3") return FileFormat::Mp3;
+
 		return FileFormat::None;
 	}
 	AudioClip AudioLoader::LoadFile(const std::string& file)
@@ -45,7 +46,7 @@ namespace Hazard::Audio {
 		{
 		case FileFormat::Mp3: return LoadMp3(file);
 		}
-		HZR_ERROR("Failed to load {0}", file);
+		HZR_ERROR("[Audio]: Failed to load {0}", file);
 		return AudioClip();
 	}
 	ALenum AudioLoader::GetOpenALFormat(uint32_t channels)
@@ -59,12 +60,14 @@ namespace Hazard::Audio {
 	}
 	AudioClip AudioLoader::LoadMp3(const std::string& file)
 	{
+		//Check if file is already loaded
 		AudioBufferData* buffer = nullptr;
 		if (Vault::Has<AudioBufferData>(file.c_str())) {
 			buffer = Vault::Get<AudioBufferData>(file.c_str());
 		}
 		else 
 		{
+			//Load new MP3 track
 			mp3dec_file_info_t info;
 			int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
 			size_t size = info.samples * sizeof(mp3d_sample_t);
@@ -80,7 +83,7 @@ namespace Hazard::Audio {
 
 			Vault::Add(file, buffer);
 		}
-
+		//Initialize AudioClip
 		ALuint bufferID;
 		alGenBuffers(1, &bufferID);
 		alBufferData(bufferID, buffer->alFormat, buffer->audioData, buffer->size, buffer->sampleRate);

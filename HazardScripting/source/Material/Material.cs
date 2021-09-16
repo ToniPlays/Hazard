@@ -7,6 +7,7 @@ namespace Hazard
 {
     class Material
     {
+        //TODO: LINK
         public Shader shader {
             get { 
                 Material_GetShader_Native(out Shader shader);

@@ -6,7 +6,7 @@ namespace Hazard::Audio
 {
 	class AudioListener {
 	public:
-		AudioListener();
-		~AudioListener();
+		AudioListener() = default;
+		~AudioListener() = default;
 	};
 }

@@ -12,7 +12,8 @@ namespace Hazard {
 		DX12
 	};
 
-	struct ApplicationCreateInfo {
+	struct ApplicationCreateInfo 
+	{
 		std::string appName;
 		std::string buildVersion;
 

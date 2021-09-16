@@ -12,7 +12,7 @@ namespace Hazard::ECS {
 	}
 	void CameraComponent::SetFov(float fov)
 	{
-		this->m_Fov = fov;
+		m_Fov = fov;
 		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::SetZNear(float plane)
@@ -34,15 +34,14 @@ namespace Hazard::ECS {
 
 		if (m_Type == Perspective) {
 			m_Projection = glm::perspective(glm::radians(m_Fov), aspectRatio, Math::Max(0.003f, m_ZNear), m_ZFar);
+			return;
 		}
-		else
-		{
-			float orthoLeft = -m_Fov * aspectRatio * 0.5f;
-			float orthoRight = m_Fov * aspectRatio * 0.5f;
-			float orthoBottom = -m_Fov * 0.5f;
-			float orthoTop = m_Fov * 0.5f;
 
-			m_Projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_ZNear, m_ZFar);
-		}
+		float orthoLeft = -m_Fov * aspectRatio * 0.5f;
+		float orthoRight = m_Fov * aspectRatio * 0.5f;
+		float orthoBottom = -m_Fov * 0.5f;
+		float orthoTop = m_Fov * 0.5f;
+
+		m_Projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_ZNear, m_ZFar);
 	}
 }

@@ -42,10 +42,11 @@ namespace Hazard::Scripting::CSharp {
 		static std::vector<MonoClassField*> GetClassFields(MonoClass* monoClass);
 
 		static MonoObject* CallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr);
-		static inline MonoObject* TryCallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr) {
-			if (method != nullptr) 
-				return CallMethod(object, method, params);
-			return nullptr;
+		static inline MonoObject* TryCallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr) 
+		{
+			if (method == nullptr) 
+				return nullptr;
+			return CallMethod(object, method, params);
 		}
 
 		static bool ModuleExists(const char* name);
@@ -73,9 +74,7 @@ namespace Hazard::Scripting::CSharp {
 		static void LoadMonoAssebly(const char* path);
 		static MonoAssembly* LoadAssembly(const char* path);
 		static MonoImage* GetAssemblyImage(MonoAssembly* assembly);
-
 	private:
-
 		static MonoData s_Data;
 	};
 }

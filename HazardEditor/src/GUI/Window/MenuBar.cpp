@@ -10,6 +10,7 @@
 
 #include "GUI/EditorView.h"
 #include "GUI/Window/AllWindows.h"
+#include "Core/SceneRuntimeHandler.h"
 
 using namespace Hazard;
 using namespace WindowLayout;
@@ -115,6 +116,36 @@ namespace WindowElement {
 					});
 				});
 			});
+
+		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
+		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
+		
+		Color onColor = Style::GetStyleColor(ColorType::Primary);
+		Color offColor = Style::GetStyleColor(ColorType::Text);
+
+		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Background), sceneRunning, { 25, 25 })) {
+			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
+
+			if (!sceneRunning)
+				EditorView::SetWindowFocus<GameViewport>();
+			else
+				EditorView::SetWindowFocus<Viewport>();
+		}
+		Layout::SameLine(0, 5);
+		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Background), scenePaused, { 25, 25 })) {
+			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
+		}
+		Layout::SameLine(0, 5);
+
+		if (Input::Button(ICON_FK_FORWARD, { 25, 25 })) {
+			if (sceneRunning && scenePaused)
+				Application::GetModule<ScriptEngineManager>().Update();
+		}
+
+		ImGui::PopStyleVar();
+
 		float width = ImGui::GetWindowWidth() - 475;
 
 		ImGui::SetCursorPosX(width);

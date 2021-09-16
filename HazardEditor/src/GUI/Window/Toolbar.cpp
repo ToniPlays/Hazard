@@ -68,6 +68,7 @@ namespace WindowElement
 
 		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Text), sceneRunning, { 28, 28 })) {
 			SetPlaying(sceneRunning);
+
 		}
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Text), scenePaused, { 28, 28 })) {

@@ -12,10 +12,10 @@ namespace Hazard {
 	};
 
 	class Application {
-		
+
 	public:
-		Application() {};
-		virtual ~Application() {};
+		Application() = default;
+		virtual ~Application() = default;
 
 		virtual void PreInit() {};
 		virtual void Init() {};
@@ -25,20 +25,20 @@ namespace Hazard {
 		
 		void SetTitle(const std::string& title);
 		void SetTitle(const char* title);
-		void UpdateData();
 		
 		void CreateApplicationStack(HazardCreateInfo* info);
+		void UpdateData();
 
 	public:
 		static void Quit();
 		static ApplicationData GetData() { return s_Data; }
 
 		template<typename T>
-		static T& PushModule() { return Core::HazardLoop::GetCurrent().PushModule<T>(); };
+		static T& PushModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler.AddModule<T>(); };
 		template<typename T>
-		static T& GetModule() { return Core::HazardLoop::GetModule<T>(); }
+		static T& GetModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler.GetModule<T>(); }
 		template<typename T>
-		static bool HasModule() { return Core::HazardLoop::HasModule<T>(); }
+		static bool HasModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler.HasModule<T>(); }
 
 	private:
 		static ApplicationData s_Data;

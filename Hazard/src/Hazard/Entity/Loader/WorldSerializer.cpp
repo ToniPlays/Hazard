@@ -35,10 +35,10 @@ namespace Hazard::ECS::Loader {
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 		world.GetWorldRegistry().each([&](auto entityID) {
-			Entity entity{ entityID, &world };
-			if (!entity) {
+			Entity entity { entityID, &world };
+			if (!entity) 
 				return;
-			}
+			
 			SerializeEntityEditor(entity, out);
 			});
 

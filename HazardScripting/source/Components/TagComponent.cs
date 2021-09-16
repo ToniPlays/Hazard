@@ -7,6 +7,7 @@ namespace Hazard
 {
     public class TagComponent : Component
     {
+        //TODO: LINK
         public string name 
         {
             get => TagComponent_GetName_Native(parent.ID);

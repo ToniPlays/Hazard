@@ -4,23 +4,26 @@ namespace Hazard
 {
     public class Display
     {
-        public static float Width {
+        //TODO: LINK
+        public static float Width {                                 
             get => Display_Width_Native();
         }
+        //TODO: LINK
         public static float Height
         {
             get => Display_Height_Native();
         }
+        //TODO: LINK
         public static bool Fullscreen { 
             get => Display_IsFullscreen_Native();
             private set => Display_SetFullscreen_Native(value);
         }
+        //TODO: LINK
         public static bool VSync
         {
             get => Display_IsVsync_Native();
             set => Display_SetVsync_Native(value);
         }
-
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Display_Width_Native();

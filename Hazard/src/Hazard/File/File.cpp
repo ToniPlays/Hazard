@@ -12,9 +12,7 @@ namespace Hazard {
 		return PlatformUtils::OpenFileDialog(filters);
 	}
 	std::string File::SaveFolderDialog() {
-
 		return PlatformUtils::SaveFolderDialog();
-
 	}
 	std::string File::SaveFile(const char* filters) {
 		return PlatformUtils::SaveFileDialog(filters);
@@ -34,7 +32,6 @@ namespace Hazard {
 		std::ofstream out(dest);
 		out << source;
 		out.close();
-
 	}
 	void File::WriteBinaryFile(const std::string& dest, std::vector<uint32_t> data)
 	{

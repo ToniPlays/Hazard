@@ -30,10 +30,10 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpField::GetRuntimeValueInternal(void* value) const
 	{
 		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
-		Mono::GetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, value);
+		Mono::GetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, &value);
 	}
 	void CSharpField::SetRuntimeValueInternal(void* value) const
 	{
-		Mono::SetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, value);
+		Mono::SetFieldValue(m_EntityInstance->GetInstance(), m_MonoClassField, &value);
 	}
 }

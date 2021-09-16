@@ -14,9 +14,6 @@
 
 namespace Hazard::Audio 
 {
-
-    ALCdevice* m_AudioDevice = nullptr;
-
     AudioEngine::AudioEngine() : Module::Module("AudioEngine")
     {
 
@@ -37,5 +34,6 @@ namespace Hazard::Audio
     }
     void AudioEngine::Close()
     {
+        //Close all sounds
     }
 }

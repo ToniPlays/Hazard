@@ -41,6 +41,7 @@ namespace Hazard::Rendering {
 
 			offset += 4;
 		}
+		
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "v_position" },
@@ -57,13 +58,14 @@ namespace Hazard::Rendering {
 		IndexBufferCreateInfo indexBufferInfo;
 		indexBufferInfo.size = m_Data.MaxIndices;
 		indexBufferInfo.data = indices;
+		
 
 		VertexArrayCreateInfo createInfo = {};
 		createInfo.bufferInfo = &bufferInfo;
 		createInfo.indexBufferInfo = &indexBufferInfo;
 
 		m_Data.QuadVertexArray = RenderUtils::CreateRaw<VertexArray>(createInfo);
-		m_Data.QuadVertexBuffer = m_Data.QuadVertexArray->GetBuffers().at(0);
+		m_Data.QuadVertexBuffer = m_Data.QuadVertexArray->GetBuffers()[0];
 		m_Data.QuadVertexBufferBase = new QuadVertex[m_Data.MaxVertices];
 		m_Data.QuadVertexBufferPtr = m_Data.QuadVertexBufferBase;
 

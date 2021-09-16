@@ -11,8 +11,8 @@ namespace Hazard {
 		std::string s;
 
 		while (getline(f, s, delim)) {
-			if (s.empty()) continue;
-			result.push_back(s);
+			if (!s.empty()) 
+				result.push_back(s);
 		}
 		return result;
 	}

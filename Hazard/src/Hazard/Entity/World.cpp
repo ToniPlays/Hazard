@@ -63,6 +63,7 @@ namespace Hazard::ECS {
 
 	World::~World() 
 	{
+		HZR_CORE_INFO("Unloaded world: " + GetName());
 	}
 
 	void World::SetBackground(WorldBackground type, const std::string& file)

@@ -7,12 +7,19 @@ namespace Hazard
 {
     public class Math
     {
+        //TODO: LINK
         public static float Random() { return Math_Random_Native(); }
+        //TODO: LINK
         public static float RandomRange(float min, float max) { return Math_RandomRange_Native(min, max); }
+        //TODO: LINK
         public static float Pow(float value, float pow) { return Math_Pow_Native(value, pow); }
+        //TODO: LINK
         public static float Sqrt(float value, float pow) { return Math_Sqrt_Native(value); }
+        //TODO: LINK
         public static float Min(float first, float second) { return Math_Min_Native(first, second); }
+        //TODO: LINK
         public static float Max(float first, float second) { return Math_Max_Native(first, second); }
+        //TODO: LINK
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Math_Random_Native();

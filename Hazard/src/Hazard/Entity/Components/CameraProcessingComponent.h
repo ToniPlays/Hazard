@@ -10,20 +10,17 @@ namespace Hazard::ECS
 
 	public:
 			
-		Projection GetProjectionType() { return m_Type; }
-
-		float GetFov() { return m_Fov; }
-		glm::mat4 GetProjection() { return m_Projection; }
-		glm::vec2 GetClipping() { return { m_ZNear, m_ZFar }; }
-
 		void SetProjection(Projection t);
 		void SetFov(float fov);
 		void SetZNear(float plane);
 		void SetZFar(float plane);
 		void RecalculateProjection(float w, float h);
 
+		Projection GetProjectionType() { return m_Type; }
+		float GetFov() { return m_Fov; }
+		glm::mat4 GetProjection() { return m_Projection; }
+		glm::vec2 GetClipping() { return { m_ZNear, m_ZFar }; }
 	private:
-
 		Projection m_Type = Projection::Perspective;
 		glm::mat4 m_Projection;
 

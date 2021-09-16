@@ -63,6 +63,7 @@ namespace Hazard::Rendering::OpenGL {
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
 		glBufferData(GL_ARRAY_BUFFER, c * sizeof(uint32_t), indices, GL_STREAM_DRAW + m_Info.dataStream);
 		this->m_Info.count = c;
+
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo info)
 	{

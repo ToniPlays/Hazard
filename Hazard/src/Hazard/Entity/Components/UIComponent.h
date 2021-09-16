@@ -11,7 +11,7 @@ namespace Hazard::ECS {
 	};
 
 	struct BatchComponent {
-		Color m_Tint;
-		uint32_t m_Size;
+		Color m_Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);;
+		uint32_t m_Size = 0;
 	};
 }

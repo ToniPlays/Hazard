@@ -21,6 +21,7 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Start()
 	{
+		//Engine runtime
 		try 
 		{
 			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
@@ -44,7 +45,7 @@ namespace Hazard::Core {
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{
-		Shutdown();
+		s_Instance->m_ShouldClose = true;
 		return true;
 	}
 	void HazardLoop::Process(Event& e) {
@@ -60,23 +61,22 @@ namespace Hazard::Core {
 			HZR_PROFILE_SCOPE("Frame");
 			double time = glfwGetTime();
 
+			//Update Time
 			Time::s_UnscaledDeltaTime = time - lastTime;
 			Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
 			Time::s_Time = time;
 			lastTime = time;
 
+			m_Application->UpdateData();
+			//Update
 			Input::Update();
 			m_Application->Update();
 			m_ModuleHandler.Update();
+			//Render
 			m_ModuleHandler.Render();
-			m_Application->UpdateData();
 		}
 
 		HZR_PROFILE_SESSION_END();
-	}
-	void HazardLoop::Shutdown()
-	{
-		s_Instance->m_ShouldClose = true;
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{

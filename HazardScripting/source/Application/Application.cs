@@ -5,6 +5,7 @@ namespace Hazard
 {
     public class Application
     {
+        //TODO: LINK
         public static void Quit() { Application_Quit_Native(); }
 
         [MethodImpl(MethodImplOptions.InternalCall)]

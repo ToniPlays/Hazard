@@ -58,7 +58,7 @@ namespace WindowElement {
 		template<typename T>
 		static void SetWindowFocus() {
 			EditorWindow& window = static_cast<EditorWindow&>(*s_Instance->GetRenderable<T>());
-			ImGui::SetWindowFocus(window.GetTitle().c_str());
+			//ImGui::SetWindowFocus(window.GetTitle().c_str());
 		}
 
 	public:

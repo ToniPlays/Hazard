@@ -22,6 +22,10 @@ namespace Hazard {
 	}
 	void Application::SetTitle(const char* title)
 	{
+		if (!HasModule<Rendering::RenderContext>()) 
+			return;
+
+		//Get rendering context and set window title
 		auto& context = GetModule<Rendering::RenderContext>();
 		context.GetWindow().SetWindowTitle(title);
 	}
@@ -45,13 +49,11 @@ namespace Hazard {
 		{
 			if (info->renderContextInfo == nullptr) 
 				HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-
 			PushModule<Rendering::RenderEngine>().InitRenderer(info->rendererInfo);
 		}
 
 		if (info->audioEngine) 
 		{
-		
 			PushModule<Audio::AudioEngine>().InitAudio(info->audioEngine);
 		}
 
@@ -67,7 +69,7 @@ namespace Hazard {
 	}
 	void Application::Quit()
 	{
-		Core::HazardLoop::GetCurrent().Shutdown();
+		Core::HazardLoop::GetCurrent().m_ShouldClose = true;
 	}
 	void Application::UpdateData()
 	{

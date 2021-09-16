@@ -17,5 +17,12 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		static float AudioSource_GetPitch_Native(uint32_t id);
 		static void AudioSource_SetPitch_Native(uint32_t id, float value);
+
+		static bool AudioSource_IsLoaded_Native(uint32_t id);
+		static bool AudioSource_IsLooping_Native(uint32_t id);
+		static void AudioSource_SetLooping_Native(uint32_t id, bool value);
+
+		static bool AudioSource_IsSpatial_Native(uint32_t id);
+		static void AudioSource_SetSpatial_Native(uint32_t id, bool value);
 	};
 }

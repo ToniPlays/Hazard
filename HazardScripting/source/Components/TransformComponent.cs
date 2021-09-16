@@ -7,7 +7,7 @@ namespace Hazard
 {
     public class TransformComponent : Component
     {
-
+        //TODO: LINK
         public Vector3 position {
             get {
                 Transform_GetPosition_Native(parent.ID, out Vector3 result);
@@ -18,6 +18,7 @@ namespace Hazard
                 Transform_SetPosition_Native(parent.ID, ref value);
             }
         }
+        //TODO: LINK
         public Vector3 rotation {
             get
             {
@@ -29,6 +30,7 @@ namespace Hazard
                 Transform_SetRotation_Native(parent.ID, ref value);
             }
         }
+        //TODO: LINK
         public Vector3 scale {
             get
             {

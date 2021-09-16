@@ -14,7 +14,6 @@ namespace Hazard::Audio
         m_Loaded = loaded;
         m_TotalDuration = length;
     }
-
     AudioClip::~AudioClip()
     {
         Stop();
@@ -49,7 +48,7 @@ namespace Hazard::Audio
     void AudioClip::SetSpatial(bool spatial)
     {
         m_Spatial = spatial;
-        alSourcei(m_Source, AL_SOURCE_SPATIALIZE_SOFT, spatial ? AL_TRUE : AL_FALSE);
+        alSourcei(m_Source, AL_SOURCE_SPATIALIZE_SOFT, spatial);
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
     }
     void AudioClip::SetLoop(bool loop)
@@ -59,6 +58,7 @@ namespace Hazard::Audio
     }
     std::pair<uint32_t, uint32_t> AudioClip::GetLength() const
     {
+        //Return audio duration in minutes and seconds
         return { (uint32_t)(m_TotalDuration / 60.0f), (uint32_t)m_TotalDuration % 60 };
     }
     AudioClip AudioClip::LoadFromFile(const std::string& file, bool spatial)

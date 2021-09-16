@@ -12,6 +12,7 @@ namespace Hazard::Audio {
 
 		void InitAudio(AudioEngineCreateInfo* info);
 		void Close() override;
-		
+	private:
+		ALCdevice* m_AudioDevice = nullptr;
 	};
 }

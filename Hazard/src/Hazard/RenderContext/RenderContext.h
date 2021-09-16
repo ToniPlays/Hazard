@@ -21,12 +21,10 @@ namespace Hazard::Rendering {
 		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }
 		GraphicsContext& GetContext() { return *m_Window->GetContext(); }
 		Window& GetWindow() { return *m_Window; }
-
+	public:
 		static const char* APIToString(RenderAPI api);
-
 	private:
 		void Process(Event& e);
-
 	private:
 		RenderAPI m_CurrentAPI;
 		Window* m_Window = nullptr;

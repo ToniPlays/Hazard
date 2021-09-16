@@ -33,7 +33,7 @@ void EditorApplication::PreInit()
 	contextInfo.fullScreen = false;
 	contextInfo.maximized = true;
 	contextInfo.decorated = true;
-	contextInfo.VSync = true;
+	contextInfo.VSync = false;
 	contextInfo.color = { 1, 1, 1 };
 	contextInfo.width = 1280;
 	contextInfo.height = 720;
