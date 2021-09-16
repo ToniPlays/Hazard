@@ -5,7 +5,7 @@
 
 namespace Hazard::Scripting::CSharp {
 
-	CSharpField::CSharpField(FieldType type) : PublicField(type)
+	CSharpField::CSharpField(FieldType type, std::string customType) : PublicField(type, customType)
 	{
 		m_Buffer = ScriptUtils::AllocateBuffer(type);
 	}

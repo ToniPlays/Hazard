@@ -4,6 +4,7 @@
 #include "ScriptEngineManager.h"
 #include "ScriptCommand.h"
 #include "Scripting/ScriptEngines.h"
+#include "Hazard/Physics/PhysicsCommand.h"
 
 namespace Hazard::Scripting {
 
@@ -29,6 +30,8 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Update() 
 	{
+		Physics::PhysicsCommand::UpdateAll(&ECS::WorldCommand::GetCurrentWorld());
+
 		for (auto[type, engine] : m_ScriptEngines) {
 			engine->UpdateEntities();
 		}

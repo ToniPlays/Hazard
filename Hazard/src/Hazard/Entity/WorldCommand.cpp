@@ -7,6 +7,7 @@
 #include "Component.h"
 #include "WorldHandler.h"
 #include "Hazard/Scripting/ScriptEngine.h"
+#include "Hazard/Physics/PhysicsCommand.h"
 
 namespace Hazard::ECS {
 
@@ -49,8 +50,8 @@ namespace Hazard::ECS {
 		return Application::GetModule<WorldHandler>().GetCurrentWorld();
 	}
 
-	void WorldCommand::RenderScene(const Rendering::Camera& camera) {
-
+	void WorldCommand::RenderScene(const Rendering::Camera& camera) 
+	{
 		RenderCommand::Begin(camera, GetCurrentWorld());
 		GetCurrentWorld().RenderAll();
 		RenderCommand::End();

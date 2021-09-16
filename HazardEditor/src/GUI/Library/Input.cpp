@@ -427,7 +427,48 @@ namespace WindowElement {
 			}
 			default:
 			{
-				ImGui::Text("Type not recognized");
+				using namespace Hazard::ECS;
+				uint32_t entityID = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
+				std::string tag = "None";
+
+				if (entityID != 0) {
+					Entity entity = WorldCommand::GetEntity(entityID - 1);
+					if (entity.IsValid())
+						tag = entity.GetTag().m_Tag;
+				}
+
+				Layout::Table(2, false);
+				Layout::SetColumnWidth(75);
+				Layout::Text(name.c_str());
+				Layout::TableNext();
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 20);
+				
+				bool modified = false;
+
+				Input::InputField(tag, "");
+				DragDropUtils::DragTarget("Hazard.Entity", [&](const ImGuiPayload* payload) {
+					const char* value = (const char*)payload->Data;
+					entityID = atoi(value);
+					modified = true;
+				});
+				Layout::SameLine();
+
+				Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+				Style::SelectFont(1);
+
+				if (Input::Button("X", { 20, 20 })) {
+					modified = true;
+					entityID = 0;
+				}
+				ImGui::PopFont();
+				ImGui::PopStyleColor(3);
+
+				if (modified) {
+					field->SetStoredValue(entityID);
+					if (field->RuntimeAvailable())
+						field->CopyStoredToRuntimeValue();
+				}
+				Layout::EndTable();
 			}
 		}
 		Layout::EndTable();

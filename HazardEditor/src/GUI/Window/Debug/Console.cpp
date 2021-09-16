@@ -18,7 +18,7 @@ namespace WindowElement {
 
 	static void PrintScriptToConsole(Severity severity, const std::string& message) 
 	{
-		Console& instance = *EditorView::GetInstance().GetRenderable<Console>();
+		Console& instance = *EditorView::GetInstance().GetRenderable<EditorMainTab>()->GetRenderable<Console>();
 		instance.Print(severity, message);
 	}
 	static void PrintDebugToConsole(Rendering::ErrorData& data)

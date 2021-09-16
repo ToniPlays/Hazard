@@ -2,6 +2,7 @@
 #include "Hazard.h"
 
 using namespace Hazard::Scripting;
+using namespace Hazard::Physics;
 
 namespace Runtime {
 

@@ -9,6 +9,7 @@
 #include "GUI/Library/Layout/Layout.h"
 #include "GUI/Library/Layout/ContextMenus.h"
 #include "GUI/Window/Rendering/WorldEnvironmentData.h"
+#include "GUI/Window/DragDropUtils.h"
 
 using namespace WindowLayout;
 
@@ -58,8 +59,8 @@ namespace WindowElement {
 		ContextMenus::HierarchyEntityMenu(world, [](Entity entity) {
 			Events::SelectionContextChange e(entity);
 			EditorView::GetInstance().OnEvent(e);
-		});
-		
+			});
+
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0)) {
 			Events::SelectionContextChange e({});
 			EditorView::GetInstance().OnEvent(e);
@@ -75,7 +76,7 @@ namespace WindowElement {
 			ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		auto& tag = entity.GetComponent<TagComponent>();
-		
+
 		if (searchValue != "" && strstr(tag.m_Tag.c_str(), searchValue.c_str()) == 0) {
 			return;
 		}
@@ -90,7 +91,9 @@ namespace WindowElement {
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::IsItemClicked()) {
+		bool drag = DragDropUtils::DragSource("Hazard.Entity", entity.GetTag().m_Tag, std::to_string((uint32_t)entity + 1));
+
+		if (ImGui::IsMouseReleased(0) && ImGui::IsItemHovered()) {
 			if (entityDeleted) {
 				Events::SelectionContextChange e({});
 				EditorView::GetInstance().OnEvent(e);
@@ -101,6 +104,7 @@ namespace WindowElement {
 				EditorView::GetInstance().OnEvent(e);
 			}
 		}
+
 		if (opened) {
 			Layout::Text(std::string("ID: " + std::to_string(entity)).c_str());
 			Layout::Text(entity.IsVisible() ? "Visible" : "Not visible");

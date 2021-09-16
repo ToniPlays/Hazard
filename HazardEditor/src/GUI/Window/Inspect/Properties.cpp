@@ -63,6 +63,8 @@ namespace WindowElement {
 		DrawComponent<VisualScriptComponent>(ICON_FK_SITEMAP " Visual script", selectionContext);
 		DrawComponent<MeshComponent>(ICON_FK_CUBE " Mesh", selectionContext);
 		DrawComponent<AudioSourceComponent>(ICON_FK_VOLUME_UP" Audio Source", selectionContext);
+		DrawComponent<Rigidbody2DComponent>(ICON_FK_APPLE" RigidBody2D", selectionContext);
+		DrawComponent<BoxCollider2DComponent>(ICON_FK_APPLE" BoxCollider2D", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);
 	}

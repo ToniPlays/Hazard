@@ -14,7 +14,7 @@ namespace Hazard::Scripting::CSharp {
 	class CSharpField : public PublicField {
 	public:
 		CSharpField() = default;
-		CSharpField(FieldType type);
+		CSharpField(FieldType type, std::string customType = "");
 	public: 
 		void SetEntityInstance(EntityInstance* instance) { m_EntityInstance = instance; }
 		void SetField(MonoClassField* field) { m_MonoClassField = field; }

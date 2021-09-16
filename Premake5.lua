@@ -115,6 +115,29 @@ project "GLAD"
 		systemversion "latest"
 		staticruntime "On"
 
+project "Box2D"
+	location "c:/dev/Hazard/Box2D"
+	kind "StaticLib"
+	language "C++"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}");
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {
+		"c:/dev/Hazard/vendor/box2d/include/**.h",
+		"c:/dev/Hazard/vendor/box2d/include/**.cpp",
+		"c:/dev/Hazard/vendor/box2d/src/**.h",
+		"c:/dev/Hazard/vendor/box2d/src/**.cpp"
+	}
+
+	includedirs {
+		"c:/dev/Hazard/vendor/box2d/include",
+		"c:/dev/Hazard/vendor/box2d/src"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		staticruntime "On"
 project "Hazard"
 
 	location "Hazard"
@@ -157,6 +180,7 @@ project "Hazard"
 		"C:/dev/Hazard/vendor/minimp3",
 		"C:/dev/Hazard/vendor/libogg/include",
 		"C:/dev/Hazard/vendor/Vorbis/include",
+		"C:/dev/Hazard/vendor/box2d/include",
 		"Hazard/src"
 	}
 
@@ -169,6 +193,7 @@ project "Hazard"
 		"mono-2.0-sgen.dll",
 		"GLAD",
 		"yaml-cpp",
+		"Box2D",
 		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
 		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 	}
@@ -229,6 +254,7 @@ project "HazardEditor"
 		"c:/dev/Hazard/vendor/yaml-cpp/include",
 		"c:/dev/Hazard/vendor/JSON-develop/include",
 		"c:/dev/Hazard/Hazard/vendor/assimp/include",
+		"C:/dev/Hazard/vendor/box2d/include",
 		"c:/dev/Hazard/vendor/IMGUI",
 		"c:/dev/Hazard/vendor/IMGUI/used_backends",
 		"C:/dev/Hazard/vendor/OpenAL/lib/openAl32.lib",

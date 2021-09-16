@@ -57,15 +57,16 @@ namespace Hazard {
 			PushModule<Audio::AudioEngine>().InitAudio(info->audioEngine);
 		}
 
+		if (info->entityComponent != nullptr) {
+			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
+			handler.LoadWorld(info->entityComponent->startupFile);
+		}
+
 		if (info->scriptEngineInfo != nullptr) 
 		{
 			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->scriptEngineInfo);
 		}
 
-		if (info->entityComponent != nullptr) {
-			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
-			handler.LoadWorld(info->entityComponent->startupFile);
-		}
 	}
 	void Application::Quit()
 	{

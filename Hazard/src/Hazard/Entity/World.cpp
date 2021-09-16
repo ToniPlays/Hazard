@@ -7,6 +7,13 @@
 #include "Hazard/Audio/AudioCommand.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
+
+#define REGISTER_COMPONENT(x)	template<>															\
+								void World::OnComponentAdded<x>(Entity& entity, x& component) {}	\
+								template<>															\
+								void World::OnComponentRemoved<x>(Entity& entity, x& component) {}	\
+
+
 namespace Hazard::ECS {
 
 
@@ -59,6 +66,8 @@ namespace Hazard::ECS {
 		CopyComponent<SkyLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<DirectionalLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
+		CopyComponent<Rigidbody2DComponent>(world.m_Registry, m_Registry, entityMap);
+		CopyComponent<BoxCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
 	}
 
 	World::~World() 
@@ -208,6 +217,14 @@ namespace Hazard::ECS {
 	void World::OnComponentAdded(Entity& entity, T& component) {}
 	template<typename T>
 	void World::OnComponentRemoved(Entity& entity, T& component) {}
+
+	REGISTER_COMPONENT(BatchComponent);
+	REGISTER_COMPONENT(SkyLightComponent);
+	REGISTER_COMPONENT(DirectionalLightComponent);
+	REGISTER_COMPONENT(PointLightComponent);
+	REGISTER_COMPONENT(Rigidbody2DComponent);
+	REGISTER_COMPONENT(BoxCollider2DComponent);
+
 	//CAMERA COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
@@ -223,11 +240,7 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
-	//BATCH COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, BatchComponent& component) {}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, BatchComponent& component) {}
+	
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
 	{
@@ -236,21 +249,6 @@ namespace Hazard::ECS {
 	template<>
 	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}
 	//SKY LIGHT COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, SkyLightComponent& component) {}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, SkyLightComponent& component) {}
-	//DIRECTIONAL LIGHT COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, DirectionalLightComponent& component) {}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, DirectionalLightComponent& component) {}
-	//POINT LIGHT COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, PointLightComponent& component) {}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, PointLightComponent& component) {}
-	//SCRIPT COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
 		WorldCommand::OnScriptAttached(entity, component);

@@ -131,16 +131,16 @@ namespace WindowElement {
 			static bool open = false;
 
 			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
-					Input::ColorPicker("Sprite tint", component.m_Tint, open);
+				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 				}, [&]() {
-				DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
-					const char* file = (const char*)payload->Data;
-					component.m_Texture = Vault::Get<Rendering::Texture2D>(file);
-					}); 
+					DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
+						const char* file = (const char*)payload->Data;
+						component.m_Texture = Vault::Get<Rendering::Texture2D>(file);
+						});
 				});
 			if (changed) {
 				std::string file = File::OpenFileDialog("");
-				if (!file.empty()) 
+				if (!file.empty())
 				{
 					using namespace Hazard::Rendering;
 					Texture2DCreateInfo createInfo;
@@ -250,15 +250,15 @@ namespace WindowElement {
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
 
 			bool changed = Input::ScriptField("Script", component.m_ModuleName, exists);
-			
+
 			DragDropUtils::DragTarget("Script", [&](const ImGuiPayload* payload) {
 				moduleName = (const char*)payload->Data;
-				
+
 				component.m_ModuleName = File::GetNameNoExt(moduleName);
 				changed = true;
-			});
+				});
 
-			if(changed) {
+			if (changed) {
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 					ScriptCommand::ClearEntity(entity, component);
 				}
@@ -305,7 +305,7 @@ namespace WindowElement {
 				const char* file = (const char*)payload->Data;
 				component.sourceFile = file;
 				component.source.LoadFromFile(file);
-			});
+				});
 
 			Layout::NextLine(5);
 
@@ -358,6 +358,53 @@ namespace WindowElement {
 			}
 			}, []() {
 
+			});
+	}
+	template<>
+	inline void Draw(const char* name, Entity entity, Rigidbody2DComponent& component) {
+		Layout::ComponentTreenode<Rigidbody2DComponent>(entity, name, [&]() {
+
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text("Body type");
+			Layout::TableNext();
+
+			const char* text[] = { "Static", "Kinematic", "Dynamic" };
+			const char* currentText;
+			currentText = text[(int)component.type];
+
+			if(ImGui::BeginCombo("##bodyType", currentText)) {
+				for (int i = 0; i < 3; i++) {
+
+					bool isSelected = currentText == text[i];
+					if (ImGui::Selectable(text[i], isSelected))
+					{
+						currentText = text[i];
+						component.type = (ECS::Rigidbody2DComponent::BodyType)i;
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+			Layout::TableNext();
+			Layout::Text("Fixed rotation");
+			Layout::TableNext();
+			Layout::MaxWidth();
+			Input::Checkbox("##", component.FixedRotation);
+
+			Layout::EndTable();
+		}, []() {
+
+		});
+	}
+
+	template<>
+	inline void Draw(const char* name, Entity entity, BoxCollider2DComponent& component) {
+		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {}, 
+			[]() {
 			});
 	}
 }

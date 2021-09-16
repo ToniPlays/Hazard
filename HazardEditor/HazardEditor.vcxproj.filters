@@ -25,9 +25,6 @@
     <Filter Include="src\GUI\Library\Layout">
       <UniqueIdentifier>{D2549FC7-BE4E-C819-A7BB-5E2A93542E86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\GUI\Library\Node">
-      <UniqueIdentifier>{9AB04CC7-863F-D690-2F5E-EA8B1BCCE636}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\GUI\Window">
       <UniqueIdentifier>{8802468C-74D0-3992-5D64-AAB849D115F7}</UniqueIdentifier>
     </Filter>
@@ -43,9 +40,6 @@
     <Filter Include="src\GUI\Window\Rendering">
       <UniqueIdentifier>{D59564F6-C1BA-B376-EA05-9906D689B294}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\GUI\Window\ShaderEditor">
-      <UniqueIdentifier>{75C9E195-E1D6-0F7C-6ABD-0B67D6C9DB32}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\GUI\Window\Tabs">
       <UniqueIdentifier>{C1101713-2D72-F420-B6DF-3AD322402BE0}</UniqueIdentifier>
     </Filter>
@@ -55,11 +49,32 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\ImGui-node">
+      <UniqueIdentifier>{10A3FC65-7CB9-FAFB-C530-861D3186CB83}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\ImGuizmo">
       <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\vendor\ImGui-node\crude_json.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_bezier_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_canvas.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_extra_math.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\ImGui-node\imgui_node_editor_internal.h">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClInclude>
     <ClInclude Include="..\vendor\ImGuizmo\ImGuizmo.h">
       <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
@@ -206,6 +221,18 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\vendor\ImGui-node\crude_json.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_canvas.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\ImGui-node\imgui_node_editor_api.cpp">
+      <Filter>vendor\ImGui-node</Filter>
+    </ClCompile>
     <ClCompile Include="..\vendor\ImGuizmo\ImGuizmo.cpp">
       <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>

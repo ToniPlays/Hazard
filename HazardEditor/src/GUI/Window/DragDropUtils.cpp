@@ -6,7 +6,7 @@
 
 namespace WindowElement
 {
-	void DragDropUtils::DragSource(const char* type, const std::string& text, std::string file)
+	bool DragDropUtils::DragSource(const char* type, const std::string& text, std::string file)
 	{
 		
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
@@ -15,7 +15,9 @@ namespace WindowElement
 			ImGui::Text(text.c_str());
 			ImGui::Text(type);
 			ImGui::EndDragDropSource();
+			return true;
 		}
+		return false;
 	}
 	std::string DragDropUtils::TypeFromFile(const std::string& file)
 	{

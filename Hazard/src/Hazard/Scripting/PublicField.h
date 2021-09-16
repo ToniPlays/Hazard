@@ -8,10 +8,11 @@ namespace Hazard::Scripting {
 
 	class PublicField {
 	public:
-		PublicField(FieldType type) : m_Type(type) {};
+		PublicField(FieldType type, std::string customType = "") : m_Type(type), customType(customType) {};
 		virtual ~PublicField() = default;
 
 		virtual FieldType GetType() { return m_Type; };
+		virtual const std::string GetCustomType() { return customType; }
 		virtual void CopyStoredToRuntimeValue() = 0;
 		virtual bool RuntimeAvailable() = 0;
 
@@ -43,5 +44,6 @@ namespace Hazard::Scripting {
 		virtual void SetRuntimeValueInternal(void* value) const = 0;
 
 		FieldType m_Type;
+		std::string customType;
 	};
 }

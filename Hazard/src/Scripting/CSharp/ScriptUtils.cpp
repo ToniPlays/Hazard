@@ -31,6 +31,7 @@ namespace Hazard::Scripting::CSharp {
 		case Hazard::Scripting::Int:	return 4;
 		case Hazard::Scripting::UInt:	return 4;
 		case Hazard::Scripting::String: return 16;
+		case Hazard::Scripting::None:	return 4;
 		}
 		return 0;
 	}

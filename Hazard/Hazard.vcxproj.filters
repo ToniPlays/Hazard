@@ -34,6 +34,9 @@
     <Filter Include="src\Hazard\Math">
       <UniqueIdentifier>{AFC8C849-1B54-360E-2465-B902906F920E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Physics">
+      <UniqueIdentifier>{88DF78BA-74C3-3910-DD23-3463C9262492}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\RenderContext">
       <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
     </Filter>
@@ -139,9 +142,6 @@
     <Filter Include="src\Scripting\HazardScript">
       <UniqueIdentifier>{ED619A93-D971-4664-422B-AB822E5A35FD}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scripting\HazardScript\API">
-      <UniqueIdentifier>{5675BEBC-429B-8823-2BE1-0DEF17A6ADEF}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -228,6 +228,9 @@
     <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Components\PhysicsComponent.h">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
@@ -299,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\ModuleHandler.h">
       <Filter>src\Hazard</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
+      <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
       <Filter>src\Hazard\RenderContext</Filter>
@@ -548,6 +554,9 @@
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptUtils.h">
       <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\HazardScript\HVSEngine.h">
+      <Filter>src\Scripting\HazardScript</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\ScriptEngines.h">
       <Filter>src\Scripting</Filter>
@@ -819,9 +828,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scripting\HazardScript\HVSEngine.h">
-      <Filter>src\Scripting\HazardScript\API</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -892,6 +898,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Modulehandler.cpp">
       <Filter>src\Hazard</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
+      <Filter>src\Hazard\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
@@ -1088,14 +1097,14 @@
     <ClCompile Include="src\Scripting\CSharp\ScriptUtils.cpp">
       <Filter>src\Scripting\CSharp</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\HazardScript\HVSEngine.cpp">
+      <Filter>src\Scripting\HazardScript</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\HazardScript\HVSEngine.cpp">
-      <Filter>src\Scripting\HazardScript\API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

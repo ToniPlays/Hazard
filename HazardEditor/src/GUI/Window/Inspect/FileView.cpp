@@ -207,8 +207,7 @@ namespace WindowElement {
 			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
 
 			Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
-				DragDropUtils::DragSource(type.c_str(),
-					name, file.path().string());
+				DragDropUtils::DragSource(type.c_str(),	name, file.path().string());
 
 				}, { colWidth - 5, colHeight });
 

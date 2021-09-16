@@ -124,6 +124,14 @@ namespace WindowElement {
 				Layout::MenuItem("Mesh component", [&]() {
 				entity.AddComponent<MeshComponent>();
 					});
+			if (!entity.HasComponent<Rigidbody2DComponent>())
+				Layout::MenuItem("Rigidbody 2D", [&]() {
+				entity.AddComponent<Rigidbody2DComponent>();
+					});
+			if (!entity.HasComponent<BoxCollider2DComponent>())
+				Layout::MenuItem("Box collider 2D", [&]() {
+				entity.AddComponent<BoxCollider2DComponent>();
+					});
 			});
 	}
 }
