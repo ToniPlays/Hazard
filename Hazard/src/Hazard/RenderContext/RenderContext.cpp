@@ -20,15 +20,13 @@ namespace Hazard::Rendering {
 		m_CurrentAPI = info->renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->renderer;
 		RenderUtils::SetRenderAPI(m_CurrentAPI);
 
-		m_ClearColor = Color(info->color.r, info->color.g, info->color.b, 1.0);
+		m_ClearColor = Color(info->color, 1.0f);
 
 		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 
 		if (appInfo->iconCount > 0) 
-		{
 			m_Window->SetWindowIcon(appInfo->iconCount, appInfo->icons);
-		}
 
 		RenderContextCommand::Init();
 		SetActive(true);

@@ -29,6 +29,5 @@ namespace Hazard::Rendering {
 		RenderAPI m_CurrentAPI;
 		Window* m_Window = nullptr;
 		Color m_ClearColor;
-
 	};
 }

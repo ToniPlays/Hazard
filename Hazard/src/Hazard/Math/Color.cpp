@@ -34,6 +34,13 @@ namespace Hazard
 		this->b = b;
 		this->a = a;
 	}
+	Color::Color(glm::vec3 col, float a)
+	{
+		this->r = col.r;
+		this->g = col.g;
+		this->b = col.b;
+		this->a = a;
+	}
 	Color Color::FromGLM(const glm::vec3 color)
 	{
 		return Color(color.r, color.g, color.b, 1.0f);

@@ -830,6 +830,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.h" />
     <ClInclude Include="src\Hazard\File\YamlUtils.h" />
+    <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -1111,5 +1112,6 @@
     <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.cpp" />
     <ClCompile Include="src\Hazard\File\YamlUtils.cpp" />
     <ClCompile Include="src\Hazard\Entity\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2D.cpp" />
   </ItemGroup>
 </Project>

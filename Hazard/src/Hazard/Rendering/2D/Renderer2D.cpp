@@ -10,11 +10,10 @@ namespace Hazard::Rendering {
 	constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr uint8_t quadVertexCount = 4;
 
-	Renderer2D::Renderer2D(RenderEngineCreateInfo* info) {
+	Renderer2D::Renderer2D(RenderEngineCreateInfo* info)
+	{
 		m_Data.TextureSlots.resize(info->samplerCount);
 	}
-	Renderer2D::~Renderer2D() {}
-
 	void Renderer2D::Init(uint32_t size)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -41,7 +40,6 @@ namespace Hazard::Rendering {
 
 			offset += 4;
 		}
-		
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "v_position" },
@@ -58,7 +56,6 @@ namespace Hazard::Rendering {
 		IndexBufferCreateInfo indexBufferInfo;
 		indexBufferInfo.size = m_Data.MaxIndices;
 		indexBufferInfo.data = indices;
-		
 
 		VertexArrayCreateInfo createInfo = {};
 		createInfo.bufferInfo = &bufferInfo;
@@ -95,7 +92,6 @@ namespace Hazard::Rendering {
 		viewport.offset = { 0, 0 };
 		viewport.size = { 1920, 1080 };
 
-
 		GraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.shaderPipelineName = "2DQuadShader";
 		pipelineInfo.inputAssembly = NULL;
@@ -114,22 +110,7 @@ namespace Hazard::Rendering {
 		}
 		float textureIndex = 0.0f;
 		if (quad.texture.Raw() != nullptr) {
-			if (quad.texture->GetID() != m_Data.TextureSlots[0]->GetID())
-			{
-				bool found = false;
-				for (int i = 0; i < m_Data.TextureIndex; i++) {
-					if (m_Data.TextureSlots[i]->GetID() == quad.texture->GetID()) {
-						found = true;
-						textureIndex = float(i);
-						break;
-					}
-				}
-				if (!found) {
-					textureIndex = float(m_Data.TextureIndex);
-					m_Data.TextureSlots[m_Data.TextureIndex] = quad.texture;
-					m_Data.TextureIndex++;
-				}
-			}
+			textureIndex = FindTexture(quad.texture.Raw());
 		}
 
 		for (uint8_t i = 0; i < quadVertexCount; i++) {
@@ -164,8 +145,24 @@ namespace Hazard::Rendering {
 		m_Data.QuadVertexBuffer->SetData(m_Data.QuadVertexBufferBase, dataSize);
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
- 			m_Data.TextureSlots[i]->Bind(i);
+			m_Data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(m_Data.QuadVertexArray, m_Data.QuadIndexCount);
+	}
+	float Renderer2D::FindTexture(Texture* texture)
+	{
+		if (texture->GetID() == m_Data.TextureSlots[0]->GetID()) return 0;
+
+		bool found = false;
+		for (int i = 0; i < m_Data.TextureIndex; i++) {
+			if (m_Data.TextureSlots[i]->GetID() == texture->GetID()) {
+				found = true;
+				return (float)i;
+			}
+		}
+		float textureIndex = float(m_Data.TextureIndex);
+		m_Data.TextureSlots[m_Data.TextureIndex] = texture;
+		m_Data.TextureIndex++;
+		return textureIndex;
 	}
 }

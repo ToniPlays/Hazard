@@ -20,6 +20,8 @@ namespace Hazard::Scripting {
 
 		ScriptCommand::Init();
 		SetActive(info->enable);
+		//TODO: Move to module
+		Physics::PhysicsCommand::Init();
 	}
 	void ScriptEngineManager::Close()
 	{
@@ -30,6 +32,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Update() 
 	{
+		//Same here
 		Physics::PhysicsCommand::UpdateAll(&ECS::WorldCommand::GetCurrentWorld());
 
 		for (auto[type, engine] : m_ScriptEngines) {
