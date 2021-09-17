@@ -8,7 +8,7 @@ namespace Hazard::Audio {
 	{
 	public:
 		AudioEngine();
-		~AudioEngine();
+		~AudioEngine() = default;
 
 		void InitAudio(AudioEngineCreateInfo* info);
 		void Close() override;

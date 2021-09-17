@@ -18,10 +18,6 @@ namespace Hazard::Audio
     {
 
     }
-    AudioEngine::~AudioEngine()
-    {
-
-    }
     void AudioEngine::InitAudio(AudioEngineCreateInfo* info)
     {
         HZR_PROFILE_FUNCTION();
@@ -34,6 +30,6 @@ namespace Hazard::Audio
     }
     void AudioEngine::Close()
     {
-        //Close all sounds
+
     }
 }

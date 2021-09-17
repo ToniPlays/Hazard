@@ -21,7 +21,8 @@ namespace Hazard::Scripting::CSharp {
 		ECS::World* instance = nullptr;
 		MonoObject* GetInstance() { return Mono::ObjectFromHandle(handle); }
 	};
-	using ModuleFieldMap = std::unordered_map<std::string, std::unordered_map<std::string, CSharpField*>>;
+	using PublicFieldMap = std::unordered_map<std::string, CSharpField*>;
+	using ModuleFieldMap = std::unordered_map<std::string, PublicFieldMap>;
 	struct EntityInstanceData {
 		EntityInstance instance;
 		ModuleFieldMap moduleFieldMap;
@@ -41,14 +42,23 @@ namespace Hazard::Scripting::CSharp {
 		MonoMethod* OnUpdate = nullptr;
 		MonoMethod* OnLateUpdate = nullptr;
 		MonoMethod* OnFixedUpdate = nullptr;
+		MonoMethod* OnColliderEnter2D = nullptr;
+		MonoMethod* OnTriggerEnter2D = nullptr;
+		MonoMethod* OnColliderExit2D = nullptr;
+		MonoMethod* OnTriggerExit2D = nullptr;
 
-		void InitClassMethods() {
+		void InitClassMethods() 
+		{
 			Constructor = Mono::GetCoreMethod("Hazard.Entity:.ctor(ulong)");
 			OnCreated = Mono::GetAppMethod(moduleName + ":OnCreate()");
-			OnStart = Mono::GetAppMethod(moduleName + ":Start()");
+			OnStart = Mono::GetAppMethod(moduleName + ":OnStart()");
 			OnUpdate = Mono::GetAppMethod(moduleName + ":OnUpdate(single)");
 			OnLateUpdate = Mono::GetAppMethod(moduleName + ":LateUpdate()");
 			OnFixedUpdate = Mono::GetAppMethod(moduleName + ":FixedUpdate()");
+			OnColliderEnter2D = Mono::GetAppMethod(moduleName + ":OnColliderEnter2D(Collider2D)");
+			OnTriggerEnter2D = Mono::GetAppMethod(moduleName + ":OnTriggerEnter2D(Collider2D)");
+			OnColliderExit2D = Mono::GetAppMethod(moduleName + ":OnColliderExit2D(Collider2D)");
+			OnTriggerExit2D = Mono::GetAppMethod(moduleName + ":OnTriggerExit2D(Collider2D)");
 		};
 	};
 
@@ -61,29 +71,28 @@ namespace Hazard::Scripting::CSharp {
 		void OnEndRuntime() override;
 
 		bool ModuleExists(const char* name) override;
-
 		void UpdateEntities() override;
 
-		void OnSceneLoaded() override;
-		void OnSceneUnloaded() override;
+		void OnWorldLoaded() override;
+		void OnWorldUnloaded() override;
 		std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) override;
 
 		//Entity creation
 		void InitializeEntity(uint32_t entity, const std::string& moduleName) override;
 		void Instantiate(uint32_t entity, const std::string& moduleName) override;
 		void ClearEntity(uint32_t entity, const std::string& moduleName) override;
-		void OnCreate(uint32_t entity) override;
-		void OnStart(uint32_t entity) override;
+		void OnCreate(EntityInstance& entity);
+		void OnStart(EntityInstance& entity);
 		//Entity updates
-		void OnUpdate(uint32_t entity) override;
-		void OnLateUpdate(uint32_t entity) override;
+		void OnUpdate(EntityInstanceData& entity, void** param);
+		void OnLateUpdate(EntityInstanceData& entity, void** param);
 		void OnFixedUpdate(uint32_t entity) override;
 		//Entity remove
 		void OnEnable(uint32_t entity) override;
 		void OnDisable(uint32_t entity) override;
 		void OnDestroy(uint32_t entity) override;
-		void OnCollision(uint32_t entity) override;
 
+		bool EntityInstanceExits(uint32_t entity);
 		EntityInstanceData& GetInstanceData(uint32_t entity);
 
 		void OnApplicationClose() override;

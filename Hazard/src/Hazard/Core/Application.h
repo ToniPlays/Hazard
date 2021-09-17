@@ -43,6 +43,5 @@ namespace Hazard {
 	private:
 		static ApplicationData s_Data;
 	};
-
 	Hazard::Application* CreateApplication();
 }

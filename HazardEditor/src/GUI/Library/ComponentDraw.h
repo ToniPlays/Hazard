@@ -380,7 +380,7 @@ namespace WindowElement {
 					if (ImGui::Selectable(text[i], isSelected))
 					{
 						currentText = text[i];
-						component.type = (ECS::Rigidbody2DComponent::BodyType)i;
+						component.type = (ECS::BodyType)i;
 					}
 
 					if (isSelected)
@@ -403,7 +403,22 @@ namespace WindowElement {
 
 	template<>
 	inline void Draw(const char* name, Entity entity, BoxCollider2DComponent& component) {
-		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {}, 
+		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {
+			Input::Vec2("Offset", component.Offset, 1.0f, 75);
+			Input::Vec2("Size", component.Size, 1.0f, 75);
+			Layout::NextLine(5);
+
+			Layout::Text("Sensor");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::Checkbox("##sensor", component.IsSensor);
+			Layout::NextLine(5);
+
+			Layout::Text("Density");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::DragFloat("##Density", component.Density);
+			}, 
 			[]() {
 			});
 	}

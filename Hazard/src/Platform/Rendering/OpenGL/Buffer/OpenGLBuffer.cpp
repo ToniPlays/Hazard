@@ -7,7 +7,6 @@ namespace Hazard::Rendering::OpenGL {
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexBufferCreateInfo& info)
 	{
-
 		m_Info.dataStream = info.dataStream;
 		m_Info.layout = *info.layout;
 

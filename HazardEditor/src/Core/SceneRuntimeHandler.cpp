@@ -25,8 +25,8 @@ namespace Runtime {
 
 		ECS::WorldHandler& handler = Application::GetModule<ECS::WorldHandler>();
 
-		if (s_SceneRunning) {
-
+		if (s_SceneRunning) 
+		{
 			s_EditorWorld = &handler.GetCurrentWorld();
 			World* runtimeWorld = new World(*s_EditorWorld);
 			handler.SetWorld(*runtimeWorld);
@@ -41,11 +41,6 @@ namespace Runtime {
 
 			delete &handler.GetCurrentWorld();
 			handler.SetWorld(*s_EditorWorld);
-		}
-
-		if (!s_ScenePaused) {
-			
-			
 		}
 		if (s_ScenePaused && s_SceneRunning) return;
 

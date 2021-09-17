@@ -40,8 +40,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	bool CSharpEngine::ModuleExists(const char* name)
 	{
-		MonoClass* monoClass = Mono::GetMonoClass(name);
-		return monoClass != nullptr;
+		return Mono::GetMonoClass(name) != nullptr;
 	}
 	void CSharpEngine::UpdateEntities()
 	{
@@ -49,21 +48,24 @@ namespace Hazard::Scripting::CSharp {
 		void* param[] = { &delta };
 
 		for (auto& [id, entity] : data.entityInstanceMap) {
-			EntityInstance& instance = entity.instance;
-
-			Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, param);
+			OnUpdate(entity, param);
+		}
+		for (auto& [id, entity] : data.entityInstanceMap) {
+			OnLateUpdate(entity, param);
 		}
 	}
-	void CSharpEngine::OnSceneLoaded()
+	void CSharpEngine::OnWorldLoaded()
 	{
+
 	}
-	void CSharpEngine::OnSceneUnloaded()
+	void CSharpEngine::OnWorldUnloaded()
 	{
+
 	}
 	std::unordered_map<std::string, PublicField*> CSharpEngine::GetPublicFields(uint32_t entity, const std::string& moduleName)
 	{
 		ModuleFieldMap& data = GetInstanceData(entity).moduleFieldMap;
-		std::unordered_map<std::string, CSharpField*> fields = data.at(moduleName);
+		PublicFieldMap fields = data.at(moduleName);
 
 		std::unordered_map<std::string, PublicField*> result;
 		for (auto [name, f] : fields) {
@@ -79,7 +81,6 @@ namespace Hazard::Scripting::CSharp {
 		}
 		EntityScript& scriptClass = data.entityClassMap[moduleName];
 		scriptClass.moduleName = moduleName;
-
 		ScriptUtils::GetNames(moduleName, scriptClass.nameSpace, scriptClass.className);
 		scriptClass.monoClass = Mono::GetMonoClass(scriptClass.className.c_str());
 
@@ -144,7 +145,8 @@ namespace Hazard::Scripting::CSharp {
 				field->CopyStoredToRuntimeValue();
 			}
 		}
-		Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnCreated);
+		OnCreate(instance);
+		OnStart(instance);
 	}
 	void CSharpEngine::ClearEntity(uint32_t entity, const std::string& moduleName)
 	{
@@ -155,34 +157,44 @@ namespace Hazard::Scripting::CSharp {
 			moduleFieldMap.erase(moduleName);
 		}
 	}
-	void CSharpEngine::OnCreate(uint32_t entity)
+	void CSharpEngine::OnCreate(EntityInstance& entity)
 	{
-
+		Mono::TryCallMethod(entity.GetInstance(), entity.ScriptClass->OnCreated);
 	}
-	void CSharpEngine::OnStart(uint32_t entity)
+	void CSharpEngine::OnStart(EntityInstance& entity)
 	{
-
+		Mono::TryCallMethod(entity.GetInstance(), entity.ScriptClass->OnStart);
 	}
-	void CSharpEngine::OnUpdate(uint32_t entity)
+	void CSharpEngine::OnUpdate(EntityInstanceData& entity, void** param)
 	{
+		EntityInstance& instance = entity.instance;
+		Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnUpdate, param);
 	}
-	void CSharpEngine::OnLateUpdate(uint32_t entity)
+	void CSharpEngine::OnLateUpdate(EntityInstanceData& entity, void** param)
 	{
+		EntityInstance& instance = entity.instance;
+		Mono::TryCallMethod(instance.GetInstance(), instance.ScriptClass->OnLateUpdate, param);
 	}
 	void CSharpEngine::OnFixedUpdate(uint32_t entity)
 	{
+
 	}
 	void CSharpEngine::OnEnable(uint32_t entity)
 	{
+
 	}
 	void CSharpEngine::OnDisable(uint32_t entity)
 	{
+
 	}
 	void CSharpEngine::OnDestroy(uint32_t entity)
 	{
+
 	}
-	void CSharpEngine::OnCollision(uint32_t entity)
+	bool CSharpEngine::EntityInstanceExits(uint32_t entity)
 	{
+		auto iter = data.entityInstanceMap.find(entity);
+		return iter != data.entityInstanceMap.end();
 	}
 	EntityInstanceData& CSharpEngine::GetInstanceData(uint32_t entity)
 	{
@@ -195,7 +207,6 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpEngine::Reload()
 	{
 		Mono::LoadRuntimeAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
-
 		if (data.entityInstanceMap.size() == 0) return;
 		auto& entityMap = data.entityInstanceMap;
 

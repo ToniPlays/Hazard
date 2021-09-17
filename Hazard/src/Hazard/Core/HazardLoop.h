@@ -16,7 +16,6 @@ namespace Hazard::Core {
 		void Start();
 		bool Quit(WindowCloseEvent& e);
 		void OnEvent(Event& e);
-
 	public:
 		static void Process(Event& e);
 		static HazardLoop& GetCurrent() { return *s_Instance; }
@@ -29,6 +28,7 @@ namespace Hazard::Core {
 		Module::ModuleHandler m_ModuleHandler;
 
 		bool m_ShouldClose = false;
+	private:
 		static HazardLoop* s_Instance;
 	};
 }

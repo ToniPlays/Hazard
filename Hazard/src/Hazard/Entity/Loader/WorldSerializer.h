@@ -69,32 +69,6 @@ namespace Hazard::ECS::Loader
 	static void Convert(YAML::Emitter& out, T v) {
 		static_assert(false);
 	};
-
-	template<>
-	static void Convert(YAML::Emitter& out, glm::vec2 v) {
-		out << YAML::Flow;
-		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
-	};
-	template<>
-	static void Convert(YAML::Emitter& out, glm::vec3 v) {
-		out << YAML::Flow;
-		out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
-	};
-	template<>
-	static void Convert(YAML::Emitter& out, glm::vec4 v) {
-		out << YAML::Flow;
-		out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
-	};
-	template<>
-	static void Convert(YAML::Emitter& out, Color v) {
-		out << YAML::Flow;
-		out << YAML::BeginSeq << v.r << v.g << v.b << v.a << YAML::EndSeq;
-	};
-	template<>
-	static void Convert(YAML::Emitter& out, bool v) {
-		out << (v ? "True" : "False");
-	};
-
 	class WorldSerializer {
 	public:
 
@@ -109,6 +83,7 @@ namespace Hazard::ECS::Loader
 		static void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		static void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
+
 
 		static bool SerializeRuntime(const char* file, World& scene);
 	};

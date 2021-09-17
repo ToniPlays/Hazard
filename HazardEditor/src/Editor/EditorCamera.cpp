@@ -16,12 +16,6 @@ namespace Editor {
 		projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		UpdateView();
 	}
-
-	EditorCamera::~EditorCamera()
-	{
-
-	}
-
 	void EditorCamera::OnUpdate()
 	{
 		const glm::vec2& mouse = Input::GetMousePos();

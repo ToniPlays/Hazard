@@ -57,14 +57,13 @@ namespace Hazard::Audio {
 		uint32_t m_Buffer = 0;
 		uint32_t m_Source = 0;
 
-		bool m_Loaded = false;
-		bool m_Spatial = false;
-
 		glm::vec3 m_Pos = { 0, 0, 0 };
-
 		float m_TotalDuration = 0.0f;
 		float m_Gain = 1.0f;
 		float m_Pitch = 1.0f;
+
+		bool m_Loaded = false;
+		bool m_Spatial = false;
 		bool m_Looping = false;
 
 		friend class AudioLoader;

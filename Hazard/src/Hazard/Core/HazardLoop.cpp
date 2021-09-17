@@ -27,8 +27,7 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
 			m_Application->PreInit();
 			m_Application->Init();
-
-			Input::Input::Init();
+			Input::Init();
 			HZR_PROFILE_SESSION_END();
 
 			Run();

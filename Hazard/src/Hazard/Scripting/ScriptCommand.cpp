@@ -63,4 +63,8 @@ namespace Hazard::Scripting {
 	{
 		debugCallback(severity, message);
 	}
+	ScriptEngine& ScriptCommand::GetEngine(ScriptType type)
+	{
+		return s_manager->GetEngine(type);
+	}
 }

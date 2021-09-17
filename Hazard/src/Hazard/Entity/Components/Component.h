@@ -6,7 +6,6 @@
 #include "Hazard/Core/UID.h"
 #include "Hazard/Audio/AudioClip.h"
 
-
 namespace Hazard::ECS {
 
 	struct TagComponent

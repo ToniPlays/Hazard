@@ -38,6 +38,7 @@ namespace Hazard::Audio {
 		if (ext == "ogg") return FileFormat::Ogg;
 		if (ext == "mp3") return FileFormat::Mp3;
 
+		HZR_ERROR("[Audio]: Failed to load {0}", file);
 		return FileFormat::None;
 	}
 	AudioClip AudioLoader::LoadFile(const std::string& file)
@@ -46,6 +47,7 @@ namespace Hazard::Audio {
 		{
 		case FileFormat::Mp3: return LoadMp3(file);
 		}
+
 		HZR_ERROR("[Audio]: Failed to load {0}", file);
 		return AudioClip();
 	}

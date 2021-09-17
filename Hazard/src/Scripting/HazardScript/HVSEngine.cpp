@@ -23,13 +23,14 @@ namespace Hazard::Scripting::Visual {
 	}
 	void HVSEngine::UpdateEntities()
 	{
+
 	}
 
-	void HVSEngine::OnSceneLoaded()
+	void HVSEngine::OnWorldLoaded()
 	{
 
 	}
-	void HVSEngine::OnSceneUnloaded()
+	void HVSEngine::OnWorldUnloaded()
 	{
 
 	}
@@ -49,22 +50,6 @@ namespace Hazard::Scripting::Visual {
 	{
 
 	}
-	void HVSEngine::OnCreate(uint32_t entity)
-	{
-
-	}
-	void HVSEngine::OnStart(uint32_t entity)
-	{
-
-	}
-	void HVSEngine::OnUpdate(uint32_t entity)
-	{
-
-	}
-	void HVSEngine::OnLateUpdate(uint32_t entity)
-	{
-
-	}
 	void HVSEngine::OnFixedUpdate(uint32_t entity)
 	{
 
@@ -78,10 +63,6 @@ namespace Hazard::Scripting::Visual {
 
 	}
 	void HVSEngine::OnDestroy(uint32_t entity)
-	{
-
-	}
-	void HVSEngine::OnCollision(uint32_t entity)
 	{
 
 	}

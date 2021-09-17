@@ -2,13 +2,19 @@
 
 #include "glm/glm.hpp"
 
-namespace Hazard::ECS {
+namespace Hazard::ECS
+{
+	enum class BodyType { Static = 0, Kinematic, Dynamic };
+
+	std::string BodyTypeToString(BodyType type);
+	BodyType StringToBodyType(const std::string& value);
+
 	struct Rigidbody2DComponent
 	{
-		enum class BodyType { Static = 0, Kinematic, Dynamic };
 		BodyType type = BodyType::Static;
 
 		bool FixedRotation = false;
+		bool UseGravity = true;
 		void* runtimeBody = nullptr;
 
 		Rigidbody2DComponent() = default;
@@ -22,8 +28,9 @@ namespace Hazard::ECS {
 		float Density = 1.0f;
 		float Friction = 0.5f;
 		float Restitution = 0.5f;
-		float RestitutionTreshold = 0.5f;
+		float RestitutionThreshold = 0.5f;
 
+		bool IsSensor = false;
 		void* runtimeFixture = nullptr;
 
 		BoxCollider2DComponent() = default;

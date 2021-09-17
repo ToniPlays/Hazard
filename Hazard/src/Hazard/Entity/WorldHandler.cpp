@@ -22,6 +22,7 @@ namespace Hazard::ECS {
 		m_World = new World("New world");
 		m_World->SetName("New World");
 		m_World->SetBackground(WorldBackground::Colored, "");
+
 		Entity entity = m_World->CreateEntity("Camera");
 		entity.AddComponent<CameraComponent>();
 

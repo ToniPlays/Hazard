@@ -9,6 +9,8 @@ namespace Hazard::Rendering {
 		static void Init();
 		static void SetDepthTest(DepthFunc type);
 
+		static void SetTitle(const char* title);
+
 		static bool IsVsync();
 		static void SetVsync(bool vsync);
 		static void ClearFrame(glm::vec4 color);

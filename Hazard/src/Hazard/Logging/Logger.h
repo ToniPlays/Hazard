@@ -11,7 +11,7 @@ namespace Hazard::Logging {
 
 	public:
 		Logger();
-		~Logger();
+		~Logger() = default;
 
 		void Close();
 

@@ -5,7 +5,7 @@
 
 namespace Hazard {
 
-	class  Color {
+	class Color {
 	public:
 		float r = 0, g = 0, b = 0, a = 0;
 	public:
@@ -27,5 +27,7 @@ namespace Hazard {
 		{
 			return glm::vec4(r, g, b, a);
 		}
+		static Color Black;
+		static Color White;
 	};
 }

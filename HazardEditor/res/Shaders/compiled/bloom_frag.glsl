@@ -8,7 +8,7 @@ layout(std140, binding = 1) uniform PostPro
 	float v_outer;
 	float v_inner;
 	float v_intensity;
-	float bloomTreshold;
+	float bloomThreshold;
 	float bloomIntensity;
 };
 
@@ -22,7 +22,7 @@ void main() {
 
 	float brightness = (c.r + c.g + c.b) / 3.0;
 
-	if(brightness >= bloomTreshold)
+	if(brightness >= bloomThreshold)
 		color = c * bloomIntensity;
 	else 
 		color = vec4(0.0);

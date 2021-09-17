@@ -22,23 +22,17 @@ namespace Hazard {
 	}
 	void Application::SetTitle(const char* title)
 	{
-		if (!HasModule<Rendering::RenderContext>()) 
-			return;
-
-		//Get rendering context and set window title
-		auto& context = GetModule<Rendering::RenderContext>();
-		context.GetWindow().SetWindowTitle(title);
+		Rendering::RenderContextCommand::SetTitle(title);
 	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
+#ifndef HZR_RELEASE
+		PushModule<Logging::Logger>();
+#endif // HZR_RELEASE
+
 		HZR_PROFILE_FUNCTION();
 		if (info->appInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
-
-#ifndef HZR_RELEASE
-			PushModule<Logging::Logger>();
-#endif // HZR_RELEASE
-		
 
 		if (info->renderContextInfo != nullptr) 
 		{

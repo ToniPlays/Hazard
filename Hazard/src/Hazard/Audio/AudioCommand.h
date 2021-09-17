@@ -7,6 +7,5 @@ namespace Hazard::Audio {
 	public:
 		static AudioClip Create(ECS::AudioSourceComponent& component);
 		static void StopAll();
-
 	};
 }

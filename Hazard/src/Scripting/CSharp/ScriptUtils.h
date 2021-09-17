@@ -17,7 +17,6 @@ namespace Hazard::Scripting::CSharp {
 
 	class ScriptUtils {
 	public:
-
 		static std::byte* AllocateBuffer(FieldType type);
 		static uint32_t GetFieldSize(FieldType type);
 

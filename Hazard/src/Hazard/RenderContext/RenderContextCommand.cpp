@@ -15,6 +15,11 @@ namespace Hazard::Rendering {
 	{
 		m_Context->GetContext().SetDepthTest(type);
 	}
+	void RenderContextCommand::SetTitle(const char* title)
+	{
+		if (m_Context == nullptr) return;
+		m_Context->GetWindow().SetWindowTitle(title);
+	}
 	bool RenderContextCommand::IsVsync()
 	{
 		return m_Context->GetWindow().IsVSync();

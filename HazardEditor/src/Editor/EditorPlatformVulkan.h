@@ -11,7 +11,6 @@ public:
 
 	void BeginFrame();
 	void EndFrame();
-
 private:
 	Rendering::GraphicsContext* context = nullptr;
 };

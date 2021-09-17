@@ -9,7 +9,7 @@ namespace Editor {
 	public:
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspecRatio, float nearPlane, float farPlane);
-		~EditorCamera();
+		~EditorCamera() = default;
 
 		void OnUpdate();
 		bool OnEvent(Event& e);
@@ -27,8 +27,6 @@ namespace Editor {
 		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
 
 		void SetIs2D(bool enabled2D);
-
-
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 

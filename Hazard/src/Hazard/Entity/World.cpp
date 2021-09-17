@@ -55,19 +55,25 @@ namespace Hazard::ECS {
 		CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<TransformComponent>(world.m_Registry, m_Registry, entityMap);
 
+		CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
+
 		CopyComponent<ScriptComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<VisualScriptComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<AudioSourceComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<SkyLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<DirectionalLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
+
+		CopyComponent<AudioSourceComponent>(world.m_Registry, m_Registry, entityMap);
+
+		CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
+		CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
+
 		CopyComponent<Rigidbody2DComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<BoxCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
+
+		CopyComponent<BatchComponent>(world.m_Registry, m_Registry, entityMap);
+
 	}
 
 	World::~World() 
@@ -174,15 +180,23 @@ namespace Hazard::ECS {
 
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+
 		CopyComponentIfExists<ScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<VisualScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<AudioSourceComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
 		CopyComponentIfExists<SkyLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+
+		CopyComponentIfExists<AudioSourceComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+
+		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+
+		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+
+		CopyComponentIfExists<BatchComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
 		return entity;
 	}

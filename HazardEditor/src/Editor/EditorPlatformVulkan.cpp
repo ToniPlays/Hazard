@@ -7,9 +7,9 @@
 
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan::VKContext* context)
 {
-	ImGui_ImplGlfw_InitForVulkan(window, true);
-
 	using namespace Hazard::Rendering::Vulkan;
+
+	ImGui_ImplGlfw_InitForVulkan(window, true);
 
 	VKInstanceData data = context->GetData().vkInstance->GetData();
 
@@ -21,8 +21,6 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan
 	createInfo.Allocator = nullptr;
 	createInfo.CheckVkResultFn = nullptr;
 	createInfo.PipelineCache = data.SwapChain->GetData().defaultPipeline->GetPipelineCache();
-
-
 	createInfo.MinImageCount = 2;
 	createInfo.ImageCount = 2;
 

@@ -53,6 +53,7 @@ namespace Hazard::Scripting {
 
 		static void SendDebugMessage(Severity severity, const std::string& message);
 		static void SetDebugCallback(void(*callback)(Severity, const std::string&)) { debugCallback = callback; };
+		static ScriptEngine& GetEngine(ScriptType type);
 
 	private:
 		static void(*debugCallback)(Severity, const std::string&);
