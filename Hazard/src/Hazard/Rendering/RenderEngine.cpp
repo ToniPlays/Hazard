@@ -15,14 +15,6 @@ namespace Hazard::Rendering {
 	{
 		SetActive(true);
 	}
-	RenderEngine::~RenderEngine()
-	{
-
-	}
-	void RenderEngine::PreInit()
-	{
-
-	}
 	void RenderEngine::InitRenderer(RenderEngineCreateInfo* info)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -75,6 +67,7 @@ namespace Hazard::Rendering {
 		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
 
 		m_BackgroundRenderer->Render();
+
 		if (m_FrameBuffer != nullptr)
 			m_FrameBuffer->Unbind();
 	}

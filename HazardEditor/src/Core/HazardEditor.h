@@ -6,8 +6,8 @@
 class EditorApplication : public Application {
 
 public:
-	EditorApplication();
-	~EditorApplication();
+	EditorApplication() = default;
+	~EditorApplication() = default;
 
 	void PreInit() override;
 	void Init() override;

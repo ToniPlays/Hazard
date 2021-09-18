@@ -8,7 +8,7 @@ namespace WindowElement {
 	class WelcomePopup : public EditorPopup {
 	public:
 		WelcomePopup();
-		~WelcomePopup();
+		~WelcomePopup() = default;
 
 		void OnWindowRender() override;
 		virtual void Init() {};

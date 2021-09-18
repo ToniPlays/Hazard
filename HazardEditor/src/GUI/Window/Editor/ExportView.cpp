@@ -4,27 +4,22 @@
 #include "Editor/GameExport.h"
 #include "GUI/Library/Input.h"
 
-namespace WindowElement 
+namespace WindowElement
 {
 	ExportView::ExportView() : EditorWindow("Export application")
 	{
 		SetActive(false);
 	}
-	ExportView::~ExportView()
-	{
-	}
 	void ExportView::OnWindowRender()
 	{
 		if (Input::Button("Export")) {
 			std::string location = File::SaveFolderDialog();
+			if (location == "") return;
 
-			if (location != "") {
+			std::vector<ECS::World*> worlds;
+			worlds.push_back(&ECS::WorldCommand::GetCurrentWorld());
 
-				std::vector<ECS::World*> worlds;
-				worlds.push_back(&ECS::WorldCommand::GetCurrentWorld());
-
-				GameExport::ExportGame(location, worlds);
-			}
+			GameExport::ExportGame(location, worlds);
 		}
 	}
 }

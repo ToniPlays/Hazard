@@ -14,10 +14,6 @@ namespace WindowElement {
 	{
 		SetActive(false);
 	}
-	WorldEnvironmentData::~WorldEnvironmentData()
-	{
-
-	}
 	void WorldEnvironmentData::OnWindowRender()
 	{
 

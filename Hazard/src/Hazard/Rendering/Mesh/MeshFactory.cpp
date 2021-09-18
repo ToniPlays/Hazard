@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 	}
 
 	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords
-		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
+					   | aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
 
 	std::vector<Mesh*> MeshFactory::m_LoadedMeshes;
 

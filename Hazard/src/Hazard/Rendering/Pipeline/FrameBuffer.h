@@ -35,7 +35,6 @@ namespace Hazard::Rendering {
 		uint32_t height = 0;
 		uint32_t samples = 1;
 
-
 		std::vector<FrameBufferAttachment> attachments;
 	};
 	struct FrameBufferInfo {

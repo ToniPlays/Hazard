@@ -15,12 +15,6 @@ namespace WindowElement {
 
 	FileView::FileView() : EditorWindow(ICON_FK_FOLDER_OPEN" Project")
 	{
-
-	}
-
-	FileView::~FileView()
-	{
-
 	}
 	void FileView::Init()
 	{
@@ -29,10 +23,6 @@ namespace WindowElement {
 		LoadFile("res/icons/textureBG.png");
 		LoadFile("res/icons/csharp.png");
 		LoadFile("res/icons/world.png");
-	}
-	void FileView::OnBeforeRender()
-	{
-
 	}
 	void FileView::OnWindowRender()
 	{

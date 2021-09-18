@@ -13,7 +13,6 @@
 namespace WindowElement {
 
 	Profiler::Profiler() : EditorWindow(ICON_FK_COMPASS " Profiler") {}
-	Profiler::~Profiler() {}
 
 	void Profiler::Init()
 	{

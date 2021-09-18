@@ -9,7 +9,8 @@ namespace Hazard::Rendering {
 
 	class BloomEffect : public PostProcessingEffect {
 	public:
-		virtual ~BloomEffect() {};
+		BloomEffect() = default;
+		virtual ~BloomEffect() = default;
 	public:
 		float threshold;
 		float intensity;

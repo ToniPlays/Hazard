@@ -4,7 +4,8 @@
 
 namespace WindowElement {
 
-	struct ProfileSessionData {
+	struct ProfileSessionData 
+	{
 		std::string name;
 		uint32_t duration;
 	};
@@ -12,7 +13,7 @@ namespace WindowElement {
 	class Profiler : public EditorWindow {
 	public:
 		Profiler();
-		~Profiler();
+		~Profiler() = default;
 
 		void Init() override;
 		void OnWindowRender() override;

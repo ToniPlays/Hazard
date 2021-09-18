@@ -7,7 +7,7 @@ namespace WindowElement {
 	class SettingsView : public EditorWindow {
 	public:
 		SettingsView();
-		~SettingsView();
+		~SettingsView() = default;
 
 		void OnWindowRender() override;
 		void OnBeforeRender() override;

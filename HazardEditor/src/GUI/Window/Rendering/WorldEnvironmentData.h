@@ -9,7 +9,7 @@ namespace WindowElement {
 	class WorldEnvironmentData : public EditorWindow {
 	public:
 		WorldEnvironmentData();
-		~WorldEnvironmentData();
+		~WorldEnvironmentData() = default;
 
 		void OnWindowRender() override;
 	};

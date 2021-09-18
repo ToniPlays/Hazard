@@ -14,15 +14,11 @@ namespace WindowElement {
 
 	MaterialInspector::MaterialInspector() : EditorWindow(ICON_FK_WRENCH " Material Inspector")
 	{
-
-	}
-	MaterialInspector::~MaterialInspector()
-	{
-
 	}
 	void MaterialInspector::OnWindowRender()
 	{
 		if (!selectionContext.IsValid()) return;
+
 		ImGui::Text(selectionContext.GetTag().m_Tag.c_str());
 		if (!selectionContext.HasComponent<MeshComponent>()) return;
 
@@ -32,6 +28,7 @@ namespace WindowElement {
 		Layout::Text("Shader");
 		Layout::TableNext();
 		Layout::MaxWidth();
+
 		std::string name = meshComponent.m_Material->GetPipeline()->GetInfo().pipelineName;
 		Input::InputField(name);
 		Layout::EndTable();
@@ -88,8 +85,6 @@ namespace WindowElement {
 				meshComponent.m_Material->Set("Material.NormalMap", texture);
 			}
 			});
-
-
 	}
 	bool MaterialInspector::OnEvent(Event& e)
 	{

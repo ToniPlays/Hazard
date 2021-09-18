@@ -8,10 +8,7 @@
 
 namespace Hazard::Scripting {
 
-	ScriptEngineManager::ScriptEngineManager() : Module("ScriptManager")
-	{
-
-	}
+	ScriptEngineManager::ScriptEngineManager() : Module("ScriptManager") {}
 	void ScriptEngineManager::InitEngines(ScriptEngineCreateInfo* info)
 	{
 		HZR_PROFILE_FUNCTION();

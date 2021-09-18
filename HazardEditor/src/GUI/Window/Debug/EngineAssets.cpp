@@ -13,9 +13,6 @@ namespace WindowElement {
 	{
 		SetActive(false);
 	}
-	EngineAssets::~EngineAssets() {}
-	void EngineAssets::Init() {}
-
 	void EngineAssets::OnWindowRender()
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;

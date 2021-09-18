@@ -7,7 +7,7 @@ namespace WindowElement {
 	class MaterialInspector : public EditorWindow {
 	public:
 		MaterialInspector();
-		~MaterialInspector();
+		~MaterialInspector() = default;
 
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;

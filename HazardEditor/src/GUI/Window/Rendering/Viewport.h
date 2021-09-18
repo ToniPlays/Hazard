@@ -13,7 +13,7 @@ namespace WindowElement {
 	class Viewport : public EditorWindow {
 	public:
 		Viewport();
-		~Viewport();
+		~Viewport() = default;
 		
 		void Init() override;
 		void OnFrameBegin() override { m_Gizmos.OnFrameBegin(); };
@@ -25,6 +25,8 @@ namespace WindowElement {
 	private:
 		bool KeyPressed(KeyPressedEvent& e);
 
+		void DrawStatsWindow();
+
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
@@ -33,6 +35,6 @@ namespace WindowElement {
 		RenderEngine* m_Renderer = nullptr;
 		TransformationGizmo m_Gizmos;
 		uint32_t m_Width = 0, m_Height = 0;
-
+		bool m_DrawStats = false;
 	};
 }

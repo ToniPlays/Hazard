@@ -80,10 +80,6 @@ namespace Hazard::Rendering {
 		m_VertexArray = RenderUtils::CreateRaw<VertexArray>(arrayInfo);
 	}
 
-	PostProcessingStack::~PostProcessingStack()
-	{
-
-	}
 	void PostProcessingStack::Resize(uint32_t width, uint32_t height)
 	{
 		for (auto effect : m_Effects) {

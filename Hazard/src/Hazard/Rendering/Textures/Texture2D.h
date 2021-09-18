@@ -17,7 +17,7 @@ namespace Hazard::Rendering {
 	class Texture2D : public Texture {
 
 	public:
-		virtual ~Texture2D() {};
+		virtual ~Texture2D() = default;
 		virtual void SetData(void* data, uint32_t size) = 0;
 	};
 }

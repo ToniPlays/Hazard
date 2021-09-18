@@ -17,9 +17,7 @@ namespace Hazard::Rendering {
 		CubeSide side;
 		std::string file;
 
-		CubemapSide(CubeSide side, const std::string& file) : side(side), file(file) 
-		{
-		}
+		CubemapSide(CubeSide side, const std::string& file) : side(side), file(file) {}
 	};
 
 	struct CubemapCreateInfo 
@@ -42,8 +40,8 @@ namespace Hazard::Rendering {
 	class CubemapTexture : public Texture {
 
 	public:
-		CubemapTexture() {};
-		virtual ~CubemapTexture() {};
+		CubemapTexture() = default;
+		virtual ~CubemapTexture() = default;
 		virtual void SetTexture(int side, const std::string& file) = 0;
 		virtual CubemapInfo GetInfo() const = 0;
 

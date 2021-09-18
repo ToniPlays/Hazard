@@ -27,15 +27,15 @@ namespace Hazard::Rendering
 	{
 	public:
 		PostProcessingStack(PostProcessingStackCreateInfo info);
-		~PostProcessingStack();
+		~PostProcessingStack() = default;
 
 		void Resize(uint32_t width, uint32_t height);
 
 		FrameBuffer* PostProcess(FrameBuffer* source, glm::vec2 size);
 
 		template<typename T>
-		static T* Get() {
-			
+		static T* Get() 
+		{
 			for (auto effect : s_Instance->m_Effects) {
 				if (dynamic_cast<T*>(effect)) 
 					return (T*)effect;

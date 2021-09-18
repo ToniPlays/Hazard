@@ -38,8 +38,9 @@ namespace Hazard::Scripting {
 	{	
 		auto& scene = ECS::WorldCommand::GetCurrentWorld();
 		for (auto [id, component] : scene.FindEntitiesWith<ECS::ScriptComponent>()) {
-			if (s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str()))
-				s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
+			if (!s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) 
+				continue;
+			s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);
 		}
 	}
 	void ScriptCommand::InitEntity(const ECS::Entity& entity, ECS::ScriptComponent& component)
@@ -50,7 +51,6 @@ namespace Hazard::Scripting {
 	{
 		s_manager->ClearEntity(ScriptType::CSharpScript, (uint32_t)entity, component.m_ModuleName);
 	}
-
 	void ScriptCommand::InitEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component)
 	{
 		s_manager->InitEntity(ScriptType::VisualScript, (uint32_t)entity, component.m_Filename);

@@ -17,10 +17,6 @@ namespace WindowElement {
 	{
 
 	}
-	Viewport::~Viewport()
-	{
-
-	}
 	void Viewport::Init()
 	{
 		m_Renderer = &Application::GetModule<RenderEngine>();
@@ -81,7 +77,8 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
 		Style::SetButtonColors("#222222D0", "#181818D0", "#222222D0");
 
-		if (Input::Button(ICON_FK_COG, { 25, 25 })) {
+		if (Input::Button(ICON_FK_COG, { 25, 25 })) 
+		{
 
 		}
 
@@ -95,9 +92,11 @@ namespace WindowElement {
 		}
 
 		ImGui::SameLine(0, 15);
-		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) {
-
+		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) 
+		{
+			m_DrawStats = !m_DrawStats;
 		}
+		
 
 		ImGui::PopStyleVar(2);
 		ImGui::SameLine();
@@ -125,6 +124,9 @@ namespace WindowElement {
 		ImGui::EndChild();
 		ImGui::PopStyleColor(4);
 		ImGui::PopStyleVar(2);
+
+		if (m_DrawStats)
+			DrawStatsWindow();
 
 		if (m_Gizmos.IsUsing()) return;
 
@@ -161,5 +163,64 @@ namespace WindowElement {
 			return true;
 		}
 		return false;
+	}
+	void Viewport::DrawStatsWindow()
+	{
+		using namespace WindowLayout;
+
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Background)));
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5);
+		ImGui::SetCursorPosX(165);
+		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
+		
+		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
+		ApplicationData& data = Application::GetData();
+
+		Layout::NextLine(3);
+		Layout::Table(2, true);
+		Layout::SetColumnWidth(100);
+		Layout::Text("Frametime");
+		Layout::TableNext();
+
+		std::stringstream ss;
+		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000, 3) << "ms";
+		Layout::Text(ss.str().c_str());
+		ss.str("");
+		Layout::TableNext();
+		Layout::Text("FPS");
+		Layout::TableNext();
+
+		ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3);
+		Layout::Text(ss.str().c_str());
+		Layout::TableNext();
+
+		Layout::Text("Memory");
+		Layout::TableNext();
+		ImGui::Text("%.2fmb", Application::GetData().memoryUsage);
+
+		Layout::TableNext();
+		Layout::Text("Draw calls");
+		Layout::TableNext();
+		ImGui::Text("%u", stats.draws);
+
+		Layout::TableNext();
+		Layout::Text("Quads");
+		Layout::TableNext();
+		ImGui::Text("%u", stats.quads);
+
+		Layout::TableNext();
+		Layout::Text("Vertices");
+		Layout::TableNext();
+		ImGui::Text("%u", stats.vertices);
+
+		Layout::TableNext();
+		Layout::Text("Indices");
+		Layout::TableNext();
+		ImGui::Text("%u", stats.indices);
+
+		Layout::EndTable();
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
 	}
 }

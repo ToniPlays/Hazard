@@ -14,10 +14,6 @@ namespace WindowElement {
 	{
 		SetActive(false);
 	}
-	Performance::~Performance()
-	{
-
-	}
 	void Performance::Init()
 	{
 		context = &Application::GetModule<Rendering::RenderContext>();

@@ -28,7 +28,6 @@ namespace Hazard::Rendering {
 		}
 		GraphicsPipeline* GetPipeline() { return m_Pipeline.Raw(); }
 
-
 		template<typename T>
 		T Get(const char* value) {
 			static_assert(false);

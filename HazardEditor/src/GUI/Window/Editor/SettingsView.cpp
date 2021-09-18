@@ -14,10 +14,6 @@ namespace WindowElement
 	{
 		SetActive(false);
 	}
-	SettingsView::~SettingsView()
-	{
-
-	}
 	void SettingsView::OnWindowRender()
 	{
 		Layout::Table(2, true);
@@ -72,9 +68,9 @@ namespace WindowElement
 	}
 	void SettingsView::CreateContent()
 	{
+		using namespace Hazard::Rendering;
 		Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
-		using namespace Hazard::Rendering;
 		Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));
 
 		Layout::Table(2, false);

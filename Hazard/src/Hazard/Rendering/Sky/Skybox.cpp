@@ -72,10 +72,6 @@ namespace Hazard::Rendering {
 
 		m_Pipeline = RenderUtils::Create<GraphicsPipeline>(pipelineInfo);
 	}
-	Skybox::~Skybox()
-	{
-
-	}
 	void Skybox::Render()
 	{
 		if (!m_Texture) return;

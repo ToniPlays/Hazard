@@ -923,9 +923,6 @@
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.cpp">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Pipeline\ShaderCompiler.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
@@ -949,12 +946,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
       <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Textures\Texture.cpp">
-      <Filter>src\Hazard\Rendering\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScripEngine.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>

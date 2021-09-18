@@ -6,16 +6,6 @@
 #include "GUI/Window/AllWindows.h"
 #include "SceneRuntimeHandler.h"
 
-EditorApplication::EditorApplication()
-{
-
-}
-
-EditorApplication::~EditorApplication()
-{
-
-}
-
 void EditorApplication::PreInit()
 {
 	HZR_PROFILE_FUNCTION();
@@ -78,6 +68,3 @@ bool EditorApplication::OnEvent(Event& e)
 {
 	return GetModule<WindowElement::EditorView>().OnEvent(e);
 }
-
-
-

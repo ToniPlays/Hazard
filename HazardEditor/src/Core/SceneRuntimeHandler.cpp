@@ -42,14 +42,16 @@ namespace Runtime {
 			delete &handler.GetCurrentWorld();
 			handler.SetWorld(*s_EditorWorld);
 		}
-		if (s_ScenePaused && s_SceneRunning) return;
-
+		if (s_ScenePaused && s_SceneRunning) 
+			return;
 		s_ScriptManager->SetActive(s_SceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
 	{
 		s_ScenePaused = paused;
-		if (!s_SceneRunning) return;
+
+		if (!s_SceneRunning) 
+			return;
 
 		if (paused) {
 			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();

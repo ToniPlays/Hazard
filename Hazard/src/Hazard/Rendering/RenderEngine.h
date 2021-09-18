@@ -23,9 +23,8 @@ namespace Hazard::Rendering {
 	class RenderEngine : public Module::Module {
 	public:
 		RenderEngine();
-		~RenderEngine();
+		~RenderEngine() = default;
 
-		void PreInit() override;
 		void InitRenderer(RenderEngineCreateInfo* info);
 		void Close() override;
 

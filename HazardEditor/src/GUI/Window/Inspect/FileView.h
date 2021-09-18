@@ -8,18 +8,16 @@ namespace WindowElement {
 	class FileView : public EditorWindow {
 	public:
 		FileView();
-		~FileView();
+		~FileView() = default;
 		void Init() override;
 
 		void OnWindowRender() override;
-		void OnBeforeRender() override;
 		void SetRootPath(const char* path);
 		const std::string& GetRootPath() { return m_RootPath; }
 		const std::string& GetCurrentPath() { return m_CurrentPath; }
 		void UpdateFolderData();
 
 	private:
-
 		void DrawFolderTree();
 		void DrawFilePath();
 		void LoadAllFiles(const FolderData& data);

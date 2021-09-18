@@ -104,6 +104,7 @@ namespace Hazard {
 
 			WriteFooter();
 			m_OutputStream.close();
+
 			delete m_CurrentSession;
 			m_CurrentSession = nullptr;
 		}
@@ -116,8 +117,7 @@ namespace Hazard {
 
 	class InstrumentationTimer {
 	public:
-		InstrumentationTimer(const char* name)
-			: m_Name(name), m_Stopped(false)
+		InstrumentationTimer(const char* name) : m_Name(name), m_Stopped(false)
 		{
 			m_StartTimepoint = std::chrono::steady_clock::now();
 		}

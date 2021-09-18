@@ -9,7 +9,7 @@ namespace Hazard::Rendering {
 	public:
 
 		Skybox();
-		~Skybox();
+		~Skybox() = default;
 
 		Ref<CubemapTexture> GetCubemapTexture() { return m_Texture; }
 		void SetCubemapTexture(Ref<CubemapTexture>& texture) { this->m_Texture = texture; }

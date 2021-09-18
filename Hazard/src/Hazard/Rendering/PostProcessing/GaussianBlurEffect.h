@@ -7,6 +7,6 @@ namespace Hazard::Rendering {
 
 	class GaussianBlurEffect : public PostProcessingEffect {
 	public:
-		virtual ~GaussianBlurEffect() {};
+		virtual ~GaussianBlurEffect() = default;
 	};
 }

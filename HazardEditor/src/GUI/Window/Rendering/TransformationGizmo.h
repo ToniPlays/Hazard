@@ -14,10 +14,9 @@ namespace WindowElement {
 	class TransformationGizmo : public RenderableElement {
 
 	public:
-		TransformationGizmo();
-		~TransformationGizmo();
+		TransformationGizmo() = default;
+		~TransformationGizmo() = default;
 
-		void Init() override;
 		void OnFrameBegin() override;
 		void OnRender(const Editor::EditorCamera& camera, ImVec2 size);
 

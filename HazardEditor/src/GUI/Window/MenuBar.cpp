@@ -17,14 +17,78 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	MenuBar::MenuBar() {}
-	MenuBar::~MenuBar() {}
-
 	void MenuBar::OnMenuRender()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0);
 		ImGui::BeginMainMenuBar();
 
+		DrawMenu();
+
+		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
+		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
+		
+		Color onColor = Style::GetStyleColor(ColorType::Primary);
+		Color offColor = Style::GetStyleColor(ColorType::Text);
+
+		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Background), sceneRunning, { 25, 25 })) {
+			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
+
+			if (!sceneRunning)
+				EditorView::SetWindowFocus<GameViewport>();
+			else
+				EditorView::SetWindowFocus<Viewport>();
+		}
+		Layout::SameLine(0, 5);
+		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Background), scenePaused, { 25, 25 })) {
+			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
+		}
+		Layout::SameLine(0, 5);
+
+		if (Input::Button(ICON_FK_FORWARD, { 25, 25 })) {
+			if (sceneRunning && scenePaused)
+				Application::GetModule<ScriptEngineManager>().Update();
+		}
+
+		ImGui::PopStyleVar();
+
+		float width = ImGui::GetWindowWidth() - 475;
+
+		ImGui::SetCursorPosX(width);
+		ImGui::Text("FPS %.1f/%.2fms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+
+		ImGui::SetCursorPosX(width + 130);
+		ImGui::Text("Mem: %.2fmb", Application::GetData().memoryUsage);
+		ImGui::SameLine(0, 15);
+		width = ImGui::GetCursorPosX();
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
+
+		ImGui::BeginChild("##projectName", { 200, 0 }, false);
+		Project::ProjectManager* manager = &Application::GetModule<Project::ProjectManager>();
+
+		std::string projectName = manager->GetProject().m_Name;
+		ImGui::SetCursorPosX(ImGui::CalcTextSize(projectName.c_str()).x / 2.0f);
+		ImGui::Text(projectName.c_str());
+
+		ImGui::EndChild();
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)) {
+			EditorView::GetInstance().SetLayerActive<SettingsView>(true);
+		}
+
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::EndMainMenuBar();
+	}
+
+	bool MenuBar::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
+		return false;
+	}
+	void MenuBar::DrawMenu()
+	{
 		Layout::Menu("File", []() {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open project", []() {
@@ -116,69 +180,6 @@ namespace WindowElement {
 					});
 				});
 			});
-
-		bool sceneRunning = Runtime::SceneRuntimeHandler::IsSceneRunning();
-		bool scenePaused = Runtime::SceneRuntimeHandler::IsScenePaused();
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 16 * 3);
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
-		
-		Color onColor = Style::GetStyleColor(ColorType::Primary);
-		Color offColor = Style::GetStyleColor(ColorType::Text);
-
-		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Background), sceneRunning, { 25, 25 })) {
-			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
-
-			if (!sceneRunning)
-				EditorView::SetWindowFocus<GameViewport>();
-			else
-				EditorView::SetWindowFocus<Viewport>();
-		}
-		Layout::SameLine(0, 5);
-		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Background), scenePaused, { 25, 25 })) {
-			Runtime::SceneRuntimeHandler::SetScenePaused(!scenePaused);
-		}
-		Layout::SameLine(0, 5);
-
-		if (Input::Button(ICON_FK_FORWARD, { 25, 25 })) {
-			if (sceneRunning && scenePaused)
-				Application::GetModule<ScriptEngineManager>().Update();
-		}
-
-		ImGui::PopStyleVar();
-
-		float width = ImGui::GetWindowWidth() - 475;
-
-		ImGui::SetCursorPosX(width);
-		ImGui::Text("FPS %.1f/%.2fms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-
-		ImGui::SetCursorPosX(width + 130);
-		ImGui::Text("Mem: %.2fmb", Application::GetData().memoryUsage);
-		ImGui::SameLine(0, 15);
-		width = ImGui::GetCursorPosX();
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
-
-		ImGui::BeginChild("##projectName", { 200, 0 }, false);
-		Project::ProjectManager* manager = &Application::GetModule<Project::ProjectManager>();
-
-		std::string projectName = manager->GetProject().m_Name;
-		ImGui::SetCursorPosX(ImGui::CalcTextSize(projectName.c_str()).x / 2.0f);
-		ImGui::Text(projectName.c_str());
-
-		ImGui::EndChild();
-		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)) {
-			EditorView::GetInstance().SetLayerActive<SettingsView>(true);
-		}
-
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
-		ImGui::EndMainMenuBar();
-	}
-
-	bool MenuBar::OnEvent(Event& e)
-	{
-		EventDispatcher dispatcher(e);
-		bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
-		return false;
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{

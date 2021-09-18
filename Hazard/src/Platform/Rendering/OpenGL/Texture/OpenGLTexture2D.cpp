@@ -78,7 +78,8 @@ namespace Hazard::Rendering::OpenGL {
 		glTextureParameteri(m_TextureID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_TextureID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		if (info.data != nullptr) SetData(info.data, info.width * info.height);
+		if (info.data != nullptr) 
+			SetData(info.data, info.width * info.height * m_DataFormat == GL_RGBA ? 4 : 3);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()

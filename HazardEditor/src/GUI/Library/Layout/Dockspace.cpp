@@ -12,8 +12,8 @@ namespace WindowLayout {
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
 		bool opt_fullscreen = opt_fullscreen_persistant;
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 		ImGuiDockNodeFlags dockFlags = flags;
 
 		if (opt_fullscreen)

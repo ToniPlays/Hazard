@@ -7,7 +7,7 @@ namespace WindowElement {
 	class ExportView : public EditorWindow {
 	public:
 		ExportView();
-		~ExportView();
+		~ExportView() = default;
 
 		void OnWindowRender() override;
 

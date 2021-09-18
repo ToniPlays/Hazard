@@ -14,8 +14,8 @@ namespace WindowElement {
 
 	template<typename T>
 	void DrawComponent(const char* name, Entity entity) {
-		if (!entity.HasComponent<T>()) return;
-		Draw(name, entity, entity.GetComponent<T>());
+		if (entity.HasComponent<T>())
+			Draw(name, entity, entity.GetComponent<T>());
 	}
 
 	template<typename T>
@@ -45,10 +45,11 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, TransformComponent& component) {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
-			glm::vec3 rot{
+			glm::vec3 rot {
 				glm::degrees(component.m_Rotation.x),
 				glm::degrees(component.m_Rotation.y),
-				glm::degrees(component.m_Rotation.z) };
+				glm::degrees(component.m_Rotation.z) 
+			};
 
 			Layout::IDGroup("Translation", [&]() {
 				Input::Vec3("Translation", component.m_Translation, 0, 75);

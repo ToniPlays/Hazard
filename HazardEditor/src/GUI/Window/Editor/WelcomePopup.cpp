@@ -12,10 +12,6 @@ namespace WindowElement {
 	{
 		m_Size = { 480, 280 };
 	}
-	WelcomePopup::~WelcomePopup()
-	{
-
-	}
 	void WelcomePopup::OnWindowRender()
 	{
 		ImGui::Text("Hazard engine is ready to be used");

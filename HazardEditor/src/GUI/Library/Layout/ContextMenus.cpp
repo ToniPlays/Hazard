@@ -119,6 +119,8 @@ namespace WindowElement {
 				if (!entity.HasComponent<BoxCollider2DComponent>())
 					Layout::MenuItem("Box collider 2D", [&]() {
 					entity.AddComponent<BoxCollider2DComponent>();
+					if (!entity.HasComponent<Rigidbody2DComponent>())
+						entity.AddComponent<Rigidbody2DComponent>();
 						});
 				if (!entity.HasComponent<SpriteRendererComponent>())
 					Layout::MenuItem("Sprite renderer", [&]() {

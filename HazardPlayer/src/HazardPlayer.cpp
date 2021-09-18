@@ -3,16 +3,6 @@
 #include "playerpch.h"
 #include "HazardPlayer.h"
 
-HazardPlayer::HazardPlayer()
-{
-
-}
-
-HazardPlayer::~HazardPlayer()
-{
-
-}
-
 void HazardPlayer::PreInit()
 {
 	HZR_PROFILE_FUNCTION();
@@ -67,10 +57,10 @@ void HazardPlayer::Init()
 }
 void HazardPlayer::Update()
 {
-	auto[found, cam, transform] = ECS::WorldCommand::GetCurrentWorld().GetWorldCamera();
+	auto[cam, tc] = ECS::WorldCommand::GetCurrentWorld().GetWorldCamera();
 
-	ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
-		transform->m_Translation));
+	ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), tc->GetTransformNoScale(),
+		tc->m_Translation));
 }
 
 bool HazardPlayer::OnEvent(Event& e)

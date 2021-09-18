@@ -7,8 +7,8 @@ namespace Hazard::Rendering {
 
 	class OcclusionQuery : public RefCount {
 	public:
-		OcclusionQuery() {};
-		virtual ~OcclusionQuery() {};
+		OcclusionQuery() = default;
+		virtual ~OcclusionQuery() = default;
 
 		virtual void BeginQuery() = 0;
 		virtual void EndQuery() = 0;

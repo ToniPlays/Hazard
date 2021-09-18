@@ -7,9 +7,8 @@ namespace WindowElement {
 	class EngineAssets : public EditorWindow {
 	public:
 		EngineAssets();
-		~EngineAssets();
+		~EngineAssets() = default;
 
-		void Init() override;
 		void OnWindowRender() override;
 	};
 }

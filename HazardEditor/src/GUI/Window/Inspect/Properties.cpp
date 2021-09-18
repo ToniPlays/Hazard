@@ -14,11 +14,6 @@ namespace WindowElement {
 
 	Properties::Properties() : EditorWindow(ICON_FK_WRENCH " Properties")
 	{
-
-	}
-	Properties::~Properties()
-	{
-
 	}
 	void Properties::OnWindowRender()
 	{
@@ -53,18 +48,22 @@ namespace WindowElement {
 		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
 		DrawComponent<TransformComponent>(ICON_FK_ARROWS " Transform", selectionContext);
 		DrawComponent<CameraComponent>(ICON_FK_CAMERA " Camera", selectionContext);
-		DrawComponent<SpriteRendererComponent>(ICON_FK_PICTURE_O" Sprite", selectionContext);
+
+		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
+		DrawComponent<VisualScriptComponent>(ICON_FK_SITEMAP " Visual script", selectionContext);
 
 		DrawComponent<SkyLightComponent>(ICON_FK_CLOUD " Sky light", selectionContext);
 		DrawComponent<DirectionalLightComponent>(ICON_FK_SUN_O " Directional light", selectionContext);
 		DrawComponent<PointLightComponent>(ICON_FK_LIGHTBULB_O " Point light", selectionContext);
-		DrawComponent<BatchComponent>("Batch", selectionContext);
-		DrawComponent<ScriptComponent>(ICON_FK_SLACK " Script", selectionContext);
-		DrawComponent<VisualScriptComponent>(ICON_FK_SITEMAP " Visual script", selectionContext);
+
 		DrawComponent<MeshComponent>(ICON_FK_CUBE " Mesh", selectionContext);
+		DrawComponent<SpriteRendererComponent>(ICON_FK_PICTURE_O" Sprite", selectionContext);
+
 		DrawComponent<AudioSourceComponent>(ICON_FK_VOLUME_UP" Audio Source", selectionContext);
+
 		DrawComponent<Rigidbody2DComponent>(ICON_FK_APPLE" RigidBody2D", selectionContext);
 		DrawComponent<BoxCollider2DComponent>(ICON_FK_APPLE" BoxCollider2D", selectionContext);
+		DrawComponent<BatchComponent>("Batch", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);
 	}

@@ -8,7 +8,7 @@ namespace WindowElement {
 	class Console : public EditorWindow {
 	public:
 		Console();
-		~Console();
+		~Console() = default;
 
 		void Init() override;
 		void OnWindowRender() override;
@@ -21,7 +21,6 @@ namespace WindowElement {
 	private:
 
 		bool scrollLockEnable = true;
-
 		bool infoEnable = true;
 		bool debugEnable = true;
 		bool warningEnable = true;

@@ -10,18 +10,6 @@ using namespace Hazard::ECS;
 
 namespace WindowElement {
 
-	TransformationGizmo::TransformationGizmo()
-	{
-
-	}
-	TransformationGizmo::~TransformationGizmo()
-	{
-
-	}
-	void TransformationGizmo::Init()
-	{
-
-	}
 	void TransformationGizmo::OnFrameBegin()
 	{
 		ImGuizmo::BeginFrame();

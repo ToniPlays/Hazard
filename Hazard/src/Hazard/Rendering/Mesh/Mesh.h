@@ -32,7 +32,7 @@ namespace Hazard::Rendering {
 	class Mesh : public RefCount {
 	public:
 		Mesh() = default;
-		Mesh(std::string file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+		Mesh(const std::string& file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 		~Mesh();
 
 		void Render();

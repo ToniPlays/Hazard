@@ -22,13 +22,16 @@ namespace Hazard::Rendering {
 	class ColorBackgroundRenderer : public BackgroundRenderer
 	{
 	public:
-		ColorBackgroundRenderer() {}
+		ColorBackgroundRenderer() = default;
 	};
 	class SkyboxBackgroundRenderer : public BackgroundRenderer
 	{
 	public:
 		SkyboxBackgroundRenderer(const std::string& file);
 		~SkyboxBackgroundRenderer();
+
+		void Render() override;
+		void SetCubemap(Ref<CubemapTexture>& texture) override;
 
 		float GetGamma() { return m_Skybox->GetGamma(); }
 		void SetGamma(float gamma) override { m_Skybox->SetGamma(gamma); }
@@ -37,9 +40,6 @@ namespace Hazard::Rendering {
 		Ref<Texture2D> GetRaw();
 		std::string GetFile() override { return GetTexture()->GetData().file; }
 
-
-		void Render() override;
-		void SetCubemap(Ref<CubemapTexture>& texture) override;
 	private:
 		Ref<Skybox> m_Skybox;
 	};

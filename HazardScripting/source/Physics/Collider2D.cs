@@ -14,7 +14,6 @@ namespace Hazard
         public Entity parent {
             get
             {
-                Console.Log(entityID);
                 return new Entity(entityID);
             }
         }

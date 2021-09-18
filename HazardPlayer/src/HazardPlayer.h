@@ -8,8 +8,8 @@ class HazardPlayer : public Application {
 
 public:
 
-	HazardPlayer();
-	~HazardPlayer();
+	HazardPlayer() = default;
+	~HazardPlayer() = default;
 
 	void PreInit() override;
 	void Init() override;

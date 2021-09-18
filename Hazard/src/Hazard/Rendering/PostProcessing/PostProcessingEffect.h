@@ -28,6 +28,9 @@ namespace Hazard::Rendering
 	class PostProcessingEffect 
 	{
 	public:
+		PostProcessingEffect() = default;
+		~PostProcessingEffect() = default;
+
 		virtual FrameBuffer* Process(FrameBuffer* source, VertexArray* vao) = 0;
 		virtual void UpdateData(PostProcessData& data) = 0;
 		virtual FrameBuffer& GetTargetTexture() = 0;

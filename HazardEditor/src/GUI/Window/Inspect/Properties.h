@@ -7,7 +7,7 @@ namespace WindowElement {
 	class Properties : public EditorWindow {
 	public:
 		Properties();
-		~Properties();
+		~Properties() = default;
 
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;

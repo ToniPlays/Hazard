@@ -39,7 +39,6 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-
 		ECS::World& world = ECS::WorldCommand::GetCurrentWorld();
 		auto&[cam, transform] = world.GetWorldCamera();
 

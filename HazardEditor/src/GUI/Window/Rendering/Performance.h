@@ -7,8 +7,7 @@ namespace WindowElement {
 	class Performance : public EditorWindow {
 	public:
 		Performance();
-		~Performance();
-
+		~Performance() = default;
 
 		void Init() override;
 		void OnWindowRender() override;

@@ -21,8 +21,10 @@ namespace Hazard::Scripting::CSharp {
 		ECS::World* instance = nullptr;
 		MonoObject* GetInstance() { return Mono::ObjectFromHandle(handle); }
 	};
+
 	using PublicFieldMap = std::unordered_map<std::string, CSharpField*>;
 	using ModuleFieldMap = std::unordered_map<std::string, PublicFieldMap>;
+
 	struct EntityInstanceData {
 		EntityInstance instance;
 		ModuleFieldMap moduleFieldMap;

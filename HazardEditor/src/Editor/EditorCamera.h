@@ -13,7 +13,6 @@ namespace Editor {
 
 		void OnUpdate();
 		bool OnEvent(Event& e);
-
 		inline float GetDistance() const { return distance; }
 		inline void SetDistance(float distance) { this->distance = distance; }
 
@@ -21,9 +20,9 @@ namespace Editor {
 
 		const glm::mat4& GetView() const { return viewMatrix; }
 		const glm::mat4& GetProjection() const { return projectionMatrix; }
+		glm::quat GetOrientation() const;
 		glm::mat4 GetViewPprojection() const { return projectionMatrix * viewMatrix; }
 
-		glm::quat GetOrientation() const;
 		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
 
 		void SetIs2D(bool enabled2D);
