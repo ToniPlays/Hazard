@@ -1,41 +1,32 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
 #include "VulkanDevice.h"
-#include "VulkanPipeline.h"
-#include "../Texture/VulkanRenderTexture.h"
+#include "VulkanWindowSurface.h"
+#include "VulkanRenderPass.h"
+#include "vulkan/vulkan.h"
+
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-namespace Hazard::Rendering::Vulkan {
-
-	struct SwapChainData {
-		std::vector<VkImage> swapChainImages;
-
-		VkFormat imageFormat;
-		VkExtent2D extent;
-		VkSwapchainKHR swapChain;
-		VulkanRenderTexture* renderPass;
-
-		VulkanPipeline* defaultPipeline;
-	};
-
-
+namespace Hazard::Rendering::Vulkan
+{
 	class VulkanSwapChain {
 	public:
 		VulkanSwapChain(VulkanDevice* device);
 		~VulkanSwapChain();
 
-		SwapChainData GetData() { return m_Data; }
+		void CreateImageViews(VulkanDevice* device);
+		void CreateFrameBuffers(VulkanDevice* device, VulkanRenderPass* renderPass);
+
+		VkFormat GetImageFormat() { return m_ImageFormat; }
+		uint32_t GetImageCount() { return m_Images.size(); }
 
 	private:
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats);
-		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& modes);
-		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capability, GLFWwindow* window);
-	private:
-
-		SwapChainData m_Data;
-
-		
-		VulkanDevice* m_Device;
+		VkSwapchainKHR m_SwapChain;
+		std::vector<VkImage> m_Images;
+		std::vector<VkImageView> m_ImageViews;
+		std::vector<VkFramebuffer> m_FrameBuffers;
+		VkFormat m_ImageFormat;
+		VkExtent2D m_Extent;
 	};
 }

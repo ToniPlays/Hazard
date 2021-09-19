@@ -43,6 +43,15 @@
     <Filter Include="src\GUI\Window\Tabs">
       <UniqueIdentifier>{C1101713-2D72-F420-B6DF-3AD322402BE0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Vulkan">
+      <UniqueIdentifier>{81084748-ED69-2456-76D7-6A08E2375B15}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
     </Filter>
@@ -94,15 +103,6 @@
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\EditorGuiPlatform.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\EditorPlatformOpenGL.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\EditorPlatformVulkan.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorSettings.h">
@@ -210,6 +210,15 @@
     <ClInclude Include="src\GUI\Window\Toolbar.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\EditorGuiPlatform.h">
+      <Filter>src\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\EditorPlatformOpenGL.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
+      <Filter>src\Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
     </ClInclude>
@@ -249,12 +258,6 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp">
-      <Filter>src\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\EditorPlatformOpenGL.cpp">
-      <Filter>src\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\EditorPlatformVulkan.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorSettings.cpp">
@@ -349,6 +352,12 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Toolbar.cpp">
       <Filter>src\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\EditorPlatformOpenGL.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\EditorPlatformVulkan.cpp">
+      <Filter>src\Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>

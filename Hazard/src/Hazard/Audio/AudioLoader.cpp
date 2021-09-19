@@ -64,10 +64,10 @@ namespace Hazard::Audio {
 	{
 		//Check if file is already loaded
 		AudioBufferData* buffer = nullptr;
-		if (Vault::Has<AudioBufferData>(file.c_str())) {
-			buffer = Vault::Get<AudioBufferData>(file.c_str());
-		}
-		else 
+		//if (Vault::Has<AudioBufferData>(file.c_str())) {
+		//	buffer = Vault::Get<AudioBufferData>(file.c_str());
+		//}
+		//else 
 		{
 			//Load new MP3 track
 			mp3dec_file_info_t info;
@@ -83,7 +83,7 @@ namespace Hazard::Audio {
 			buffer->lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
 			buffer->audioData = info.buffer;
 
-			Vault::Add(file, buffer);
+			//Vault::Add(file, buffer);
 		}
 		//Initialize AudioClip
 		ALuint bufferID;

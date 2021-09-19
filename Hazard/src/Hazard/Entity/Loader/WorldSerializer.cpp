@@ -25,10 +25,10 @@ namespace Hazard::ECS::Loader {
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", !world.GetName().empty() ? world.GetName() : "Untitled world");
 		YamlUtils::Map(out, "Environment", [&]() {
-			YamlUtils::Serialize(out, "ClearColor", worldData.renderer->m_Color);
+			YamlUtils::Serialize(out, "ClearColor", Color());
 			YamlUtils::Serialize(out, "Type", BackgroundTypeToString(worldData.background));
-			YamlUtils::Serialize(out, "Gamma", worldData.renderer->GetGamma());
-			YamlUtils::Serialize(out, "File", worldData.renderer->GetFile());
+			YamlUtils::Serialize(out, "Gamma", 1.0f);
+			YamlUtils::Serialize(out, "File", "NULL FILE");
 			});
 
 		YamlUtils::Sequence(out, "Entities", [&]() {
@@ -165,7 +165,7 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "MeshComponent", [&]() {
-			YamlUtils::Serialize(out, "File", component.m_Mesh ? component.m_Mesh->GetFile() : "");
+			YamlUtils::Serialize(out, "File", "");
 			});
 	}
 	template<>
@@ -173,10 +173,10 @@ namespace Hazard::ECS::Loader {
 	{
 		YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
 			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			if (component.m_Texture) {
+			/*if (component.m_Texture) {
 				if (component.m_Texture->GetData().file != "White")
 					YamlUtils::Serialize(out, "Texture", component.m_Texture->GetData().file);
-			}
+			}*/
 			});
 	}
 	template<>

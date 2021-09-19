@@ -12,7 +12,7 @@ namespace Hazard::Rendering {
 
 	public:
 		RenderContext();
-		~RenderContext();
+		~RenderContext() = default;
 
 		void InitContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		void Update() override;

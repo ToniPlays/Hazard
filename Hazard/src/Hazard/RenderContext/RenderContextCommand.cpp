@@ -11,10 +11,10 @@ namespace Hazard::Rendering {
 	{
 		m_Context = &Application::GetModule<RenderContext>();
 	}
-	void RenderContextCommand::SetDepthTest(DepthFunc type)
+	/*void RenderContextCommand::SetDepthTest(DepthFunc type)
 	{
 		m_Context->GetContext().SetDepthTest(type);
-	}
+	}*/
 	void RenderContextCommand::SetTitle(const char* title)
 	{
 		if (m_Context == nullptr) return;

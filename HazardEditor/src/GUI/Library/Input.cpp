@@ -79,7 +79,9 @@ namespace WindowElement {
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
 		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-		if (Input::ResettableDragButton("X", value, resetValue, buttonSize, 1, 0)) modified = true;
+		modified = Input::ResettableDragButton("X", value, resetValue, buttonSize, 1, 0);
+			
+
 		ImGui::PopStyleColor(3);
 		
 		Layout::EndTable();

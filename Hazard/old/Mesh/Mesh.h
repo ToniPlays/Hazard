@@ -38,6 +38,7 @@ namespace Hazard::Rendering {
 		void Render();
 
 		std::string& GetFile() { return m_Filename; }
+		VertexArray& GetVertexArray() { return *m_MeshVAO; }
 		void GenerateArrays();
 
 	private:

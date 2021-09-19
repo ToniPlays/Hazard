@@ -37,41 +37,14 @@
     <Filter Include="src\Hazard\Physics">
       <UniqueIdentifier>{88DF78BA-74C3-3910-DD23-3463C9262492}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Physics\Physics2D">
+      <UniqueIdentifier>{30985A61-1C53-4A0D-C50A-C357B1A4949D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\RenderContext">
       <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Rendering">
-      <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\2D">
-      <UniqueIdentifier>{A80A7A05-1442-C29C-1D4C-26C08902E995}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Buffers">
-      <UniqueIdentifier>{5FF592A6-4BB0-8252-F467-FB9CE001CDE2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Material">
-      <UniqueIdentifier>{E120D6BC-4D39-BDE6-16E6-4C8082BD5180}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Mesh">
-      <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Pipeline">
-      <UniqueIdentifier>{689A15E0-D4B2-FC09-9D5F-8CA3093791A3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\PostProcessing">
-      <UniqueIdentifier>{75130DD7-E1CC-7781-6A2C-925BD6E42DF1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Sky">
-      <UniqueIdentifier>{89F1BBB4-7516-0B35-9E61-F0C48AE50953}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Textures">
-      <UniqueIdentifier>{16C4F170-82DC-D89A-4B89-6834B7606D34}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Vault">
-      <UniqueIdentifier>{51C08483-3DB9-A3D5-66EB-885A524383E1}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -82,32 +55,14 @@
     <Filter Include="src\Platform\Rendering\OpenGL">
       <UniqueIdentifier>{22CAEB0B-8EE2-D235-578F-62CFC36667CF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Platform\Rendering\OpenGL\Buffer">
-      <UniqueIdentifier>{CB51A72C-B738-6924-6089-CF414C4FE28A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Rendering\OpenGL\Pipeline">
-      <UniqueIdentifier>{87F8E65A-734A-BE4A-5C69-FB5A485AD733}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Rendering\OpenGL\PostProcessing">
-      <UniqueIdentifier>{D44C3A9F-C05F-3AF8-6949-17E5553BD745}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Rendering\OpenGL\Texture">
-      <UniqueIdentifier>{82F12407-EEB5-23F7-B71B-54C1239FBF2C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Platform\Rendering\Vulkan">
       <UniqueIdentifier>{6E2E9E1C-DA46-8546-A3F3-14E00FCB19E0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Platform\Rendering\Vulkan\Buffer">
-      <UniqueIdentifier>{9768CC1B-834F-8E13-2CA0-F4301866077A}</UniqueIdentifier>
+    <Filter Include="src\Platform\Rendering\Vulkan\Buffers">
+      <UniqueIdentifier>{EA7B5995-5640-5885-1FA6-884F8B29F4BA}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\Rendering\Vulkan\Core">
       <UniqueIdentifier>{8687BB00-72C3-BE6A-DBD5-D661C7306785}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Rendering\Vulkan\Shader">
-      <UniqueIdentifier>{54168642-40FD-473A-E94D-AE57D513C1A0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Rendering\Vulkan\Texture">
-      <UniqueIdentifier>{CEE1ECDA-3AA6-EBCA-030C-1C956F8F8700}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\System">
       <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
@@ -279,6 +234,9 @@
     <ClInclude Include="src\Hazard\File\StringUtil.h">
       <Filter>src\Hazard\File</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\File\YamlUtils.h">
+      <Filter>src\Hazard\File</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
@@ -303,6 +261,12 @@
     <ClInclude Include="src\Hazard\ModuleHandler.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2D.h">
+      <Filter>src\Hazard\Physics\Physics2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.h">
+      <Filter>src\Hazard\Physics\Physics2D</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
@@ -311,93 +275,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h">
       <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\2D\RenderData2D.h">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\Buffer.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderDataType.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Camera.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Material\Material.h">
-      <Filter>src\Hazard\Rendering\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\OcclusionQuery.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\FrameBuffer.h">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\GraphicsPipeline.h">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\Shader.h">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\ShaderCompiler.h">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\BloomEffect.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\GaussianBlurEffect.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingEffect.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingStack.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\PostProcessingUtils.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\PostProcessing\Vignette.h">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderUtils.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Sky\BackgroundRenderer.h">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Sky\Skybox.h">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Textures\CubemapTexture.h">
-      <Filter>src\Hazard\Rendering\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Textures\Texture.h">
-      <Filter>src\Hazard\Rendering\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Textures\Texture2D.h">
-      <Filter>src\Hazard\Rendering\Textures</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -411,62 +288,17 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptEngineManager.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Vault\Vault.h">
-      <Filter>src\Hazard\Vault</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
       <Filter>src\Platform\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.h">
-      <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLVertexArray.h">
-      <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h">
-      <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.h">
-      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\VulkanBuffer.h">
+      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLUtils.h">
-      <Filter>src\Platform\Rendering\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLFrameBuffer.h">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLGraphicsPipeline.h">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLShader.h">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLBloom.h">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLGaussianBlur.h">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLVignette.h">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.h">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.h">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VulkanBuffers.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffer\VulkanVertexArray.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanCommandBuffer.h">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\VulkanCommandPool.h">
+      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanDescriptorPool.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
@@ -477,7 +309,7 @@
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanInstance.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanPipeline.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanRenderPass.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.h">
@@ -488,12 +320,6 @@
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanWindowSurface.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Shader\VulkanShader.h">
-      <Filter>src\Platform\Rendering\Vulkan\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Texture\VulkanRenderTexture.h">
-      <Filter>src\Platform\Rendering\Vulkan\Texture</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VKContext.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
@@ -828,9 +654,6 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.h" />
-    <ClInclude Include="src\Hazard\File\YamlUtils.h" />
-    <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
@@ -863,6 +686,9 @@
     <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Entity\Components\PhysicsComponent.cpp">
+      <Filter>src\Hazard\Entity\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Entity.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
@@ -887,6 +713,9 @@
     <ClCompile Include="src\Hazard\File\StringUtil.cpp">
       <Filter>src\Hazard\File</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\File\YamlUtils.cpp">
+      <Filter>src\Hazard\File</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
     </ClCompile>
@@ -902,6 +731,12 @@
     <ClCompile Include="src\Hazard\Modulehandler.cpp">
       <Filter>src\Hazard</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2D.cpp">
+      <Filter>src\Hazard\Physics\Physics2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.cpp">
+      <Filter>src\Hazard\Physics\Physics2D</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
     </ClCompile>
@@ -911,101 +746,20 @@
     <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Material\Material.cpp">
-      <Filter>src\Hazard\Rendering\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\ShaderCompiler.cpp">
-      <Filter>src\Hazard\Rendering\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\PostProcessing\PostProcessingStack.cpp">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\PostProcessing\PostProcessingUtils.cpp">
-      <Filter>src\Hazard\Rendering\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderUtils.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Sky\BackgroundRenderer.cpp">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Sky\Skybox.cpp">
-      <Filter>src\Hazard\Rendering\Sky</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Vault\Vault.cpp">
-      <Filter>src\Hazard\Vault</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLBuffer.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Buffer\OpenGLvertexArray.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLOcclusionQuery.cpp">
-      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\VulkanBuffer.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLUtils.cpp">
-      <Filter>src\Platform\Rendering\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLFrameBuffer.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLGraphicsPipeline.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Pipeline\OpenGLShader.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLBloom.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLGaussianBlur.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\PostProcessing\OpenGLVignette.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLCubemapTexture.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Texture\OpenGLTexture2D.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VulkanBuffers.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffer\VulkanVertexArray.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\Source.cppVulkanDescriptorPool.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanCommandBuffer.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\VulkanCommandPool.cpp">
+      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanDescriptorPool.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
@@ -1016,7 +770,7 @@
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanInstance.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanPipeline.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanRenderpass.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.cpp">
@@ -1027,12 +781,6 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanWindowSurface.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Shader\VulkanShader.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Texture\VulkanRenderTexture.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKContext.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
@@ -1100,9 +848,5 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2DContactListener.cpp" />
-    <ClCompile Include="src\Hazard\File\YamlUtils.cpp" />
-    <ClCompile Include="src\Hazard\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Hazard\Physics\Physics2D\Physics2D.cpp" />
   </ItemGroup>
 </Project>

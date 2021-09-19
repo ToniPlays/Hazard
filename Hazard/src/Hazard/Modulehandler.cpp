@@ -2,7 +2,6 @@
 
 #include <hzrpch.h>
 #include "ModuleHandler.h"
-#include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Logging/Logger.h"
 
 namespace Hazard::Module {

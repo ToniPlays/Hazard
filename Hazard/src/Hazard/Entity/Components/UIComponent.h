@@ -1,13 +1,12 @@
 #pragma once
 
 #include "Hazard/Math/Color.h"
-#include "Hazard/Rendering/Textures/Texture.h"
 
 namespace Hazard::ECS {
 
 	struct SpriteRendererComponent {
 		Color m_Tint = Color::White;
-		Ref<Rendering::Texture> m_Texture;
+		//Ref<Rendering::Texture> m_Texture;
 
 		SpriteRendererComponent() = default;
 	};

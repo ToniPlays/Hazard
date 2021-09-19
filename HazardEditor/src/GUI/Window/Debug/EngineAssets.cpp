@@ -27,9 +27,9 @@ namespace WindowElement {
 			
 		});
 		Layout::Treenode("Meshes", flags, []() {
-			for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {
+			/*for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {
 				Layout::Text(mesh->GetFile().c_str());
-			}
+			}*/
 		});
 		Layout::NextLine(25);
 	}

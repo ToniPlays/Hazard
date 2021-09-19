@@ -12,7 +12,6 @@ namespace Hazard::Rendering {
 
 		const char* Title;
 		const char* Platform;
-		std::string Renderer;
 		DeviceSpec deviceSpecs;
 
 		bool VSync = false;

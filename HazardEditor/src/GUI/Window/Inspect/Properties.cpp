@@ -45,6 +45,14 @@ namespace WindowElement {
 		Layout::Text(c.m_Tag.c_str());
 		ImGui::PopFont();
 
+		if (selectionContext.HasComponent<MeshComponent>()) {
+			auto& m = selectionContext.GetComponent<MeshComponent>();
+			/*if (m.m_Mesh.Raw() != nullptr) {
+				Rendering::VertexArray& arr = m.m_Mesh->GetVertexArray();
+				Rendering::RenderCommand::DrawGizmo(&arr, arr.GetIndexBuffer()->GetInfo().count);
+			}*/
+		}
+
 		DrawComponent<TagComponent>(ICON_FK_TAG " Tag", selectionContext);
 		DrawComponent<TransformComponent>(ICON_FK_ARROWS " Transform", selectionContext);
 		DrawComponent<CameraComponent>(ICON_FK_CAMERA " Camera", selectionContext);
@@ -66,6 +74,8 @@ namespace WindowElement {
 		DrawComponent<BatchComponent>("Batch", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);
+
+		
 	}
 	bool Properties::OnEvent(Event& e)
 	{

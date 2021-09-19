@@ -157,9 +157,9 @@ namespace WindowElement {
 		std::string ext = File::GetFileExtension(file);
 		if (ext == "jpg" || ext == "jpeg" || ext == "png")
 		{
-			Rendering::Texture2DCreateInfo info;
-			info.filename = file;
-			Rendering::RenderUtils::Create<Rendering::Texture2D>(info).Raw()->IncRefCount();
+			//Rendering::Texture2DCreateInfo info;
+			//info.filename = file;
+			//Rendering::RenderUtils::Create<Rendering::Texture2D>(info).Raw()->IncRefCount();
 		}
 	}
 	void FileView::DrawContentRows(float colWidth, float colHeight, int cols)
@@ -169,7 +169,7 @@ namespace WindowElement {
 		ImGui::BeginChild("##list", { cols * colWidth, 0 }, false, ImGuiWindowFlags_NoScrollbar);
 		ImGui::Columns(cols, "##files", false);
 
-		Ref<Rendering::Texture2D> folderImage = Vault::Get<Rendering::Texture2D>("res/icons/folder.png");
+		//Ref<Rendering::Texture2D> folderImage = Vault::Get<Rendering::Texture2D>("res/icons/folder.png");
 
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#323234")));
 		ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(Color::FromHex("#181816")));
@@ -180,7 +180,7 @@ namespace WindowElement {
 		for (std::filesystem::directory_entry folder : m_FolderData.folders)
 		{
 			std::string name = folder.path().filename().string();
-			Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 5, colHeight });
+			//Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 5, colHeight });
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 				m_CurrentPath = folder.path().string();
@@ -193,16 +193,16 @@ namespace WindowElement {
 		{
 			std::string name = file.path().filename().string();
 			std::string type = DragDropUtils::TypeFromFile(name);
-			Rendering::Texture2D* texture = GetImageFor(file.path().string());
+			/*Rendering::Texture2D* texture = GetImageFor(file.path().string());
 			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
 
 			Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
 				DragDropUtils::DragSource(type.c_str(),	name, file.path().string());
 
 				}, { colWidth - 5, colHeight });
-
-			ImGui::NextColumn();
 			ImGui::PopStyleColor();
+			*/
+			ImGui::NextColumn();
 		}
 
 		ContextMenus::FileContextMenu(*this);
@@ -218,7 +218,7 @@ namespace WindowElement {
 		if (type == "Material")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
 		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
 	}
-	Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
+	/*Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
 	{
 		std::string ext = File::GetFileExtension(file);
 
@@ -231,11 +231,10 @@ namespace WindowElement {
 			return Vault::Get<Rendering::Texture2D>("res/icons/world.png");
 		}
 		return Vault::Get<Rendering::Texture2D>("res/icons/logo.png");
-	}
+	}*/
 	void FileView::UpdateFolderData()
 	{
-		if (m_RootPath == "")
-			return;
-		m_FolderData = File::GetFolderFiles(m_CurrentPath);
+		if (!m_RootPath.empty())
+			m_FolderData = File::GetFolderFiles(m_CurrentPath);
 	}
 }

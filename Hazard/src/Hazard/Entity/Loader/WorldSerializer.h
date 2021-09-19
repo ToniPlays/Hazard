@@ -4,7 +4,6 @@
 #include "../World.h"
 #include "../Entity.h"
 #include "Hazard/RenderContext/RenderContext.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 #include <yaml-cpp/yaml.h>
 

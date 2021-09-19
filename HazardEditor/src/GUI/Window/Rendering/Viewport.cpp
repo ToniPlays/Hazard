@@ -19,14 +19,14 @@ namespace WindowElement {
 	}
 	void Viewport::Init()
 	{
-		m_Renderer = &Application::GetModule<RenderEngine>();
-		SetActive(Application::HasModule<RenderEngine>());
+		//m_Renderer = &Application::GetModule<RenderEngine>();
+		//SetActive(Application::HasModule<RenderEngine>());
 
-		Rendering::FrameBufferCreateInfo createInfo;
-		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
+		//Rendering::FrameBufferCreateInfo createInfo;
+		//createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 
-		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
-		m_RenderTexture->Resize(1920, 1080);
+		//m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
+		//m_RenderTexture->Resize(1920, 1080);
 
 	}
 	void Viewport::OnWindowRender()
@@ -46,17 +46,13 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			changed = true;
-			m_RenderTexture->Resize(m_Width, m_Height);
+			//m_RenderTexture->Resize(m_Width, m_Height);
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-		ECS::WorldCommand::RenderScene(Rendering::Camera(m_EditorCamera.GetProjection(), glm::inverse(m_EditorCamera.GetView()),
-			m_EditorCamera.GetPosition()));
-
-		ImGui::Image((void*)m_RenderTexture->GetColorID(0),
-			size, ImVec2(0, 1), ImVec2(1, 0));
+		//Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
+		//ImGui::Image((void*)m_RenderTexture->GetColorID(0),
+		//	size, ImVec2(0, 1), ImVec2(1, 0));
 
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
@@ -79,7 +75,6 @@ namespace WindowElement {
 
 		if (Input::Button(ICON_FK_COG, { 25, 25 })) 
 		{
-
 		}
 
 		ImGui::PopStyleVar();
@@ -173,7 +168,7 @@ namespace WindowElement {
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 		
-		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
+		//Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
 		ApplicationData& data = Application::GetData();
 
 		Layout::NextLine(3);
@@ -201,22 +196,22 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Draw calls");
 		Layout::TableNext();
-		ImGui::Text("%u", stats.draws);
+		ImGui::Text("%u", 0);
 
 		Layout::TableNext();
 		Layout::Text("Quads");
 		Layout::TableNext();
-		ImGui::Text("%u", stats.quads);
+		ImGui::Text("%u", 0);
 
 		Layout::TableNext();
 		Layout::Text("Vertices");
 		Layout::TableNext();
-		ImGui::Text("%u", stats.vertices);
+		ImGui::Text("%u", 0);
 
 		Layout::TableNext();
 		Layout::Text("Indices");
 		Layout::TableNext();
-		ImGui::Text("%u", stats.indices);
+		ImGui::Text("%u", 0);
 
 		Layout::EndTable();
 		ImGui::EndChild();

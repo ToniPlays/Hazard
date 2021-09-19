@@ -27,8 +27,6 @@ namespace WindowElement {
 		float m_Scale = 100.0f;
 		ImVec4 GetFileColor(const std::string& type);
 
-		Rendering::Texture2D* GetImageFor(const std::string& file);
-
 		std::string m_RootPath;
 		std::string m_CurrentPath;
 		std::string m_SearchValue;

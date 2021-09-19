@@ -8,7 +8,7 @@ namespace Project {
 	class ProjectManager : public Hazard::Module::Module {
 	public:
 		ProjectManager();
-		~ProjectManager();
+		~ProjectManager() = default;
 
 		void Close() override;
 
@@ -29,7 +29,6 @@ namespace Project {
 				return;
 			}
 		}
-
 	private:
 		std::string m_ProjectPath;
 		HazardProject* m_ProjectData;

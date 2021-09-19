@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
-#include "EditorGuiPlatform.h"
+#include "../EditorGuiPlatform.h"
 
 class EditorPlatformVulkan : public EditorGuiPlatform {
 public:
@@ -12,5 +12,5 @@ public:
 	void BeginFrame();
 	void EndFrame();
 private:
-	Rendering::GraphicsContext* context = nullptr;
+	Rendering::Vulkan::VKContext* context = nullptr;
 };

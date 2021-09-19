@@ -31,7 +31,7 @@ namespace Hazard::Rendering::Vulkan {
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		VkPhysicalDeviceFeatures deviceFeatures{};
+		VkPhysicalDeviceFeatures deviceFeatures {};
 
 		VkDeviceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -51,6 +51,8 @@ namespace Hazard::Rendering::Vulkan {
 		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_GraphicsQueue);
 
 		HZR_CORE_INFO("Created Vulkan Queue for device");
+
+
 	}
 	VulkanDevice::~VulkanDevice()
 	{

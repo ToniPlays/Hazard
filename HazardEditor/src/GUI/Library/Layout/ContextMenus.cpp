@@ -41,13 +41,13 @@ namespace WindowElement {
 				Layout::MenuItem("Cube", [&]() {
 					Entity entity = world.CreateEntity("Cube");
 					MeshComponent& component = entity.AddComponent<MeshComponent>();
-					component.m_Mesh = MeshFactory::LoadCube();
+					//component.m_Mesh = MeshFactory::LoadCube();
 					entityAdded(entity);
 					});
 				Layout::MenuItem("Icosphere", [&]() {
 					Entity entity = world.CreateEntity("Sphere");
 					MeshComponent& component = entity.AddComponent<MeshComponent>();
-					component.m_Mesh = MeshFactory::LoadSphere();
+					//component.m_Mesh = MeshFactory::LoadSphere();
 					entityAdded(entity);
 					});
 				Layout::MenuItem("Mesh", [&]() {

@@ -5,8 +5,6 @@
 #include "Entity.h"
 #include "WorldCommand.h"
 #include "Hazard/Audio/AudioCommand.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
-
 
 #define REGISTER_COMPONENT(x)	template<>															\
 								void World::OnComponentAdded<x>(Entity& entity, x& component) {}	\
@@ -15,8 +13,6 @@
 
 
 namespace Hazard::ECS {
-
-
 	template<typename T>
 	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
 	{
@@ -86,59 +82,13 @@ namespace Hazard::ECS {
 		HZR_CORE_ERROR("Loading background");
 		if (type != m_WorldData.background) {
 			if (type == WorldBackground::Colored) {
-				m_WorldData.renderer = new Rendering::ColorBackgroundRenderer();
+				//m_WorldData.renderer = new Rendering::ColorBackgroundRenderer();
 			}
 			else {
-				m_WorldData.renderer = new Rendering::SkyboxBackgroundRenderer(file);
+				//m_WorldData.renderer = new Rendering::SkyboxBackgroundRenderer(file);
 			}
 		}
 		m_WorldData.background = type;
-	}
-
-	void World::RenderAll() {
-
-		HZR_PROFILE_FUNCTION();
-		auto sprites = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
-		auto meshes = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
-
-		for (auto entity : sprites) {
-
-			Entity e{ entity, this };
-			if (!e.IsVisible()) continue;
-
-			auto& [sprite, transform] = m_Registry.get<SpriteRendererComponent, TransformComponent>(entity);
-			if (!sprite.m_Texture->GetData().hasTransparency)
-				WorldCommand::Render(sprite, transform);
-		}
-
-		for (auto entity : sprites) {
-
-			Entity e{ entity, this };
-			if (!e.IsVisible()) continue;
-
-			auto& [sprite, transform] = m_Registry.get<SpriteRendererComponent, TransformComponent>(entity);
-
-			if (sprite.m_Texture->GetData().hasTransparency)
-				WorldCommand::Render(sprite, transform);
-		}
-		for (auto entity : meshes) {
-
-			Entity e = GetEntity(entity);
-			auto& [mesh, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
-			if (!e.IsVisible() || !mesh.m_Mesh) continue;
-
-			WorldCommand::Render(mesh, transform);
-		}
-
-		auto batches = m_Registry.group<BatchComponent>(entt::get<TransformComponent>);
-		for (auto entity : batches) {
-
-			Entity e = GetEntity(entity);
-			if (!e.IsVisible()) continue;
-
-			auto& [batch, transform] = m_Registry.get<BatchComponent, TransformComponent>(entity);
-			WorldCommand::Render(batch, transform);
-		}
 	}
 	Entity World::CreateEntity(const std::string& name)
 	{
@@ -250,7 +200,7 @@ namespace Hazard::ECS {
 	//SPRITE RENDERER COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		component.m_Texture = Ref(Vault::Get<Rendering::Texture2D>("White"));
+		//component.m_Texture = Ref(Vault::Get<Rendering::Texture2D>("White"));
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
@@ -284,9 +234,9 @@ namespace Hazard::ECS {
 	//MESH COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
-		component.m_Material = Ref<Rendering::Material>::Create();
-		Ref<Rendering::GraphicsPipeline> pipeline = Ref(Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader"));
-		component.m_Material->SetPipeline(pipeline);
+		//component.m_Material = Ref<Rendering::Material>::Create();
+		//Ref<Rendering::GraphicsPipeline> pipeline = Ref(Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader"));
+		//component.m_Material->SetPipeline(pipeline);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, MeshComponent& component) {}

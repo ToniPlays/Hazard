@@ -6,7 +6,6 @@
 #include "Mesh/VertexData.h"
 #include "RenderCommand.h"
 #include "Hazard/File/File.h"
-
 #include "Mesh/MeshFactory.h"
 
 namespace Hazard::Rendering {
@@ -42,33 +41,10 @@ namespace Hazard::Rendering {
 	void RenderEngine::BeginRendering(const Camera& camera, ECS::World& world)
 	{
 		RenderCommand::ResetStats();
-		if(m_FrameBuffer != nullptr)
-			m_FrameBuffer->Bind();
-
-		m_BackgroundRenderer = world.GetWorldData().renderer;
-		RenderContextCommand::ClearFrame(m_BackgroundRenderer->m_Color);
-
-		m_Projection = camera.projection;
-		m_View = camera.view;
-
-		m_CameraData.viewProjection = camera.projection * glm::inverse(camera.view);
-		m_CameraData.cameraPos = camera.position;
-		m_CameraData.gamma = m_BackgroundRenderer->GetGamma();
-		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
-
-		m_Renderer2D->BeginScene(m_CameraData.viewProjection);
-		m_Renderer2D->BeginBatch();
 	}
 		
 	void RenderEngine::EndRendering()
 	{
-		m_Renderer2D->Flush();
-		m_CameraData.viewProjection = m_Projection * glm::inverse(glm::mat4(glm::mat3(m_View)));
-		m_CameraUnformBuffer->SetData(&m_CameraData, sizeof(CameraData));
-
-		m_BackgroundRenderer->Render();
-
-		if (m_FrameBuffer != nullptr)
-			m_FrameBuffer->Unbind();
+		
 	}
 }

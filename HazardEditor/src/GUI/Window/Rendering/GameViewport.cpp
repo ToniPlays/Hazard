@@ -9,33 +9,14 @@ using namespace Hazard;
 namespace WindowElement {
 
 	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") {}
-	GameViewport::~GameViewport() 
-	{
-		delete m_PostProcessing;
-	}
 		
 	void GameViewport::Init()
 	{
 		SetActive(true);
 
-		Rendering::FrameBufferCreateInfo createInfo;
-		createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
-
-		m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
-
-		VignetteEffectCreateInfo vignette;
-		vignette.outer = 0.5f;
-		vignette.inner = 0.3f;
-		vignette.intensity = 0.4f;
-
-		BloomCreateInfo bloom;
-		bloom.threshold = 0.2f;
-
-		PostProcessingStackCreateInfo info;
-		info.vignette = &vignette;
-		info.bloom = &bloom;
-
-		m_PostProcessing = new PostProcessingStack(info);
+		//Rendering::FrameBufferCreateInfo createInfo;
+		//createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
+		//m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 	}
 	void GameViewport::OnWindowRender()
 	{
@@ -58,18 +39,14 @@ namespace WindowElement {
 			m_Width = size.x;
 			m_Height = size.y;
 
-			m_RenderTexture->Resize(size.x, size.y);
-			m_PostProcessing->Resize(size.x, size.y);
+			//m_RenderTexture->Resize(size.x, size.y);
 			cam->RecalculateProjection(size.x, size.y);
 		}
 
-		Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-		ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), transform->GetTransformNoScale(),
-			transform->m_Translation));
-		//FrameBuffer* result = m_PostProcessing->PostProcess(m_RenderTexture.Raw(), { m_Width, m_Height });
+		//Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
 
-		ImGui::Image((void*)m_RenderTexture->GetColorID(),
-			size, ImVec2(0, 1), ImVec2(1, 0));
+		//ImGui::Image((void*)m_RenderTexture->GetColorID(),
+		//	size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}
 }

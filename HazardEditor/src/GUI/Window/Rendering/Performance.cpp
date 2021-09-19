@@ -20,7 +20,7 @@ namespace WindowElement {
 	}
 	void Performance::OnWindowRender()
 	{
-		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
+		//Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
 
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
@@ -58,22 +58,22 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Drawcalls");
 		Layout::TableNext();
-		Layout::Text(std::to_string(stats.draws).c_str());
+		Layout::Text(std::to_string(0).c_str());
 
 		Layout::TableNext();
 		Layout::Text("Quads");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.quads).c_str());
+		Layout::Text(StringUtil::FormatNumber(0).c_str());
 
 		Layout::TableNext();
 		Layout::Text("Vertices");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.vertices).c_str());
+		Layout::Text(StringUtil::FormatNumber(0).c_str());
 
 		Layout::TableNext();
 		Layout::Text("Indices");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.indices).c_str());
+		Layout::Text(StringUtil::FormatNumber(0).c_str());
 
 		Layout::EndTable();
 	}

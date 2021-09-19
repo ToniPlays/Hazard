@@ -13,22 +13,15 @@
 #include "Hazard/Events/MouseCode.h"
 
 //Hazard render engine includes
-#include "Hazard/Rendering/RenderEngine.h"
-#include "Hazard/Rendering/RenderCommand.h"
-#include "Hazard/Rendering/RenderUtils.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
-#include "Hazard/Rendering/PostProcessing/PostProcessingStack.h"
-#include "Hazard/Rendering/PostProcessing/Vignette.h"
-#include "Hazard/Rendering/PostProcessing/GaussianBlurEffect.h"
-#include "Hazard/Rendering/PostProcessing/BloomEffect.h"
 
+//Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
-#include "Platform/System/Window.h"
-
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 #include "Platform/Rendering/Vulkan/VKContext.h"
+
+#include "Platform/System/Window.h"
 
 //Hazard ECS includes
 #include "Hazard/Entity/WorldCommand.h"
@@ -53,4 +46,5 @@
 
 //Hazard utility
 #include "Hazard/File/StringUtil.h"
+#include "Hazard/File/YamlUtils.h"
 #include "Hazard/File/File.h"

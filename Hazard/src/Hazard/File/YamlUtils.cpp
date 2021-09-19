@@ -1,6 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "YamlUtils.h"
+#include "Hazard/Math/Color.h"
 
 namespace YAML {
 

@@ -9,8 +9,7 @@ namespace WindowElement {
 	public:
 
 		EditorPopup(const char* title);
-		~EditorPopup();
-
+		~EditorPopup() = default;
 
 		virtual void Init() {};
 		virtual void OnWindowRender() = 0;

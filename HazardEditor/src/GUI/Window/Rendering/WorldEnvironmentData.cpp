@@ -54,16 +54,16 @@ namespace WindowElement {
 			ECS::WorldBackground bg = world.GetWorldData().background;
 
 			if (bg == ECS::WorldBackground::Colored) {
-				Layout::Table(2, false, "##col");
+				/*Layout::Table(2, false, "##col");
 				Layout::SetColumnWidth(200);
 				Layout::Text("Background color");
 				Layout::TableNext();
 				Input::ColorPicker("Background color", world.GetWorldData().renderer->m_Color, open);
-				Layout::EndTable();
+				Layout::EndTable();*/
 			}
 			else if(bg == ECS::WorldBackground::Sky)
 			{
-				Texture* texture = Vault::Get<Rendering::Texture2D>("White");
+				/*Texture* texture = Vault::Get<Rendering::Texture2D>("White");
 				Layout::Text("Front");
 				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Back");
@@ -75,30 +75,29 @@ namespace WindowElement {
 				Layout::Text("Top");
 				Input::TextureSlot(texture, [&]() {}, [&]() {});
 				Layout::Text("Bottom");
-				Input::TextureSlot(texture, [&]() {}, [&]() {});
+				Input::TextureSlot(texture, [&]() {}, [&]() {});*/
 			}
 			else 
 			{
-				SkyboxBackgroundRenderer* rd = (SkyboxBackgroundRenderer*)world.GetWorldData().renderer;
+				/*SkyboxBackgroundRenderer* rd = (SkyboxBackgroundRenderer*)world.GetWorldData().renderer;
 				Layout::Text("Environment map");
 				bool clicked = Input::TextureSlot(rd->GetRaw().Raw(), [&]() {
 					float gamma = rd->GetSkybox()->GetGamma();
 					Input::Slider("Gamma", gamma, 0.0f, 10.0f);
 					rd->GetSkybox()->SetGamma(gamma);
+				}, [&]() {});*/
 
-				}, [&]() {});
-
-				if (clicked) {
+				if (false) {
 					std::string fileName = File::OpenFileDialog("");
 					if (!fileName.empty()) {
 
-						CubemapCreateInfo createInfo;
+						/*CubemapCreateInfo createInfo;
 						createInfo.width = 2048;
 						createInfo.height = 2048;
 						createInfo.datatype = TextureDataType::HDR;
 						createInfo.sides = { { CubeSide::All, fileName } };
 
-						rd->SetCubemap(RenderUtils::Create<CubemapTexture>(createInfo));
+						rd->SetCubemap(RenderUtils::Create<CubemapTexture>(createInfo));*/
 					}
 				}
 			}

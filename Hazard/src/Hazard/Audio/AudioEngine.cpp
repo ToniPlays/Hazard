@@ -16,7 +16,6 @@ namespace Hazard::Audio
 {
     AudioEngine::AudioEngine() : Module::Module("AudioEngine")
     {
-
     }
     void AudioEngine::InitAudio(AudioEngineCreateInfo* info)
     {

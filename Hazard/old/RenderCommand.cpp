@@ -27,4 +27,12 @@ namespace Hazard::Rendering {
 		s_Stats.indices += count;
 		s_Context->GetContext().DrawIndexed(*vao, count);
 	}
+	void RenderCommand::DrawGizmo(VertexArray* vao, uint32_t count)
+	{
+		s_Context->GetContext().DrawIndexed(*vao, count, DrawType::Line);
+	}
+	void RenderCommand::DrawOutline(VertexArray* vao, uint32_t count)
+	{
+		s_Context->GetContext().DrawIndexed(*vao, count, DrawType::Outline);
+	}
 }

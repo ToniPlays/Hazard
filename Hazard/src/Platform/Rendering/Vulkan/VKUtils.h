@@ -31,6 +31,9 @@ namespace Hazard::Rendering::Vulkan {
 		static VkPhysicalDevice GetVulkanCapableDevice(VulkanInstance& instance);
 		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VulkanWindowSurface* surface);
 		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VulkanWindowSurface* surface);
+		static VkSurfaceFormatKHR ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space);
+		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred, VkPresentModeKHR defaultMode);
+		static VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h);
 
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VulkanInstance& instance);

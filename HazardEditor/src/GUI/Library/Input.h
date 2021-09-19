@@ -12,7 +12,7 @@ namespace WindowElement {
 		static bool InputField(std::string& text);
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = { 0, 0 });
-		template<typename T>
+		/*template<typename T>
 		static bool FileButton(const char* name, Hazard::Rendering::Texture2D* texture, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
 		{
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
@@ -29,7 +29,7 @@ namespace WindowElement {
 			ImGui::TextWrapped(name);
 			ImGui::EndChild();
 			return false;
-		}
+		}*/
 		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = { 0, 0 },
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);
 		static bool Vec1(const char* label, float& value, float resetValue, float columnWidth);
@@ -41,7 +41,7 @@ namespace WindowElement {
 		static void Checkbox(const char* label, bool& value);
 		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
-		template<typename T, typename C>
+		/*template<typename T, typename C>
 		static InputType TextureSlot(Ref<Rendering::Texture> texture, T callback, C dropCallback) {
 			InputType input = InputType::None;
 
@@ -64,9 +64,8 @@ namespace WindowElement {
 			Layout::EndTable();
 
 			return input;
-		};
+		};*/
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
-
 		static bool DragInt(const char* label, int& value);
 		static bool DragUInt(const char* label, uint32_t& value, uint32_t min = 0, uint32_t max = 0);
 		static bool DragFloat(const char* label, float& value, float speed = 0.025f, float min = 0, float max = 0);

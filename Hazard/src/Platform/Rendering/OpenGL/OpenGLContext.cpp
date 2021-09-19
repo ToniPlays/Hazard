@@ -2,7 +2,6 @@
 
 #include <hzrpch.h>
 #include "OpenGLContext.h"
-#include "OpenGLUtils.h"
 
 #include <glad/glad.h>
 
@@ -18,7 +17,7 @@ namespace Hazard::Rendering {
 			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 			HZR_CORE_ERROR("[OpenGL]: {0}", message);
 
-			OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
+			//OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
 		}
 
 		OpenGLContext::OpenGLContext(WindowProps* props)
@@ -70,16 +69,16 @@ namespace Hazard::Rendering {
 			glViewport(x, y, w, h);
 		}
 
-		void OpenGLContext::SetDepthTest(DepthFunc type) const
+		/*void OpenGLContext::SetDepthTest(DepthFunc type) const
 		{
 			glDepthFunc(GL_NEVER + type);
-		}
+		}*/
 
-		void OpenGLContext::DrawIndexed(VertexArray& array, uint32_t size) const
+		/*void OpenGLContext::DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const
 		{
 			array.EnableAll();
-			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, nullptr);
-		}
+			glDrawElements(GL_POINTS + type, size, GL_UNSIGNED_INT, nullptr);
+		}*/
 
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 		{

@@ -2,7 +2,6 @@
 
 #include <hzrpch.h>
 #include "WorldDeserializer.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
 #include "Hazard/File/YamlUtils.h"
 
 namespace Hazard::ECS::Loader
@@ -28,7 +27,7 @@ namespace Hazard::ECS::Loader
 		if (root["Environment"])
 		{
 			auto env = root["Environment"];
-			YamlUtils::Deserialize(env, "ClearColor", world->GetWorldData().renderer->m_Color);
+			//YamlUtils::Deserialize(env, "ClearColor", world->GetWorldData().renderer->m_Color);
 			WorldBackground type = StringToWorldType(env["Type"].as<std::string>());
 
 			std::string file = "";
@@ -39,7 +38,7 @@ namespace Hazard::ECS::Loader
 			float gamma = 0;
 			if (env["Gamma"])
 				YamlUtils::Deserialize(env, "Gamma", gamma);
-			world->GetWorldData().renderer->SetGamma(gamma);
+			//world->GetWorldData().renderer->SetGamma(gamma);
 		}
 
 		//Loop entities
@@ -172,10 +171,10 @@ namespace Hazard::ECS::Loader
 		auto& c = entity.AddComponent<MeshComponent>();
 		std::string fileName;
 		YamlUtils::Deserialize(comp, "File", fileName);
-		c.m_Mesh = Rendering::MeshFactory::LoadMesh(fileName);
+		//c.m_Mesh = Rendering::MeshFactory::LoadMesh(fileName);
 
-		Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
-		c.m_Material->SetPipeline(pipeline);
+		//Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
+		//c.m_Material->SetPipeline(pipeline);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -183,12 +182,11 @@ namespace Hazard::ECS::Loader
 
 		YamlUtils::Deserialize(comp, "Tint", component.m_Tint);
 		if (comp["Texture"]) {
+			//using namespace Hazard::Rendering;
 
-			using namespace Hazard::Rendering;
-
-			Texture2DCreateInfo createInfo;
-			YamlUtils::Deserialize(comp, "Texture", createInfo.filename);
-			component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
+			//Texture2DCreateInfo createInfo;
+			//YamlUtils::Deserialize(comp, "Texture", createInfo.filename);
+			//component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 		}
 	};
 	template<>

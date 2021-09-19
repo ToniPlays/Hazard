@@ -12,15 +12,13 @@ namespace WindowElement {
 	class GameViewport : public EditorWindow {
 	public:
 		GameViewport();
-		~GameViewport();
+		~GameViewport() = default;
 
 		void Init() override;
 		void OnWindowRender() override;
 
 	private:
-		Ref<FrameBuffer> m_RenderTexture;
+		//Ref<FrameBuffer> m_RenderTexture;
 		uint32_t m_Width = 0, m_Height = 0;
-
-		PostProcessingStack* m_PostProcessing = nullptr;
 	};
 }

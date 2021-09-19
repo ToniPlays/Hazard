@@ -2,8 +2,8 @@
 #include "hzreditor.h"
 #include "EditorPlatformOpenGL.h"
 
-#include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
 
 EditorPlatformOpenGL::EditorPlatformOpenGL(GLFWwindow* window)
 {

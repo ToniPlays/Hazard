@@ -131,7 +131,7 @@ namespace WindowElement {
 
 			static bool open = false;
 
-			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
+			/*bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 				}, [&]() {
 					DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
@@ -149,7 +149,7 @@ namespace WindowElement {
 
 					component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 				}
-			}
+			}*/
 
 			}, [&entity]() {
 
@@ -342,8 +342,8 @@ namespace WindowElement {
 			Layout::Text("Mesh");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Ref<Rendering::Mesh> mesh = component.m_Mesh;
-			std::string file = mesh.Raw() ? component.m_Mesh->GetFile() : "None";
+			//Ref<Rendering::Mesh> mesh = component.m_Mesh;
+			std::string file = "None";
 			bool changed = Input::InputField(file);
 
 			DragDropUtils::DragTarget("Mesh", [&](const ImGuiPayload* payload) {
@@ -353,8 +353,7 @@ namespace WindowElement {
 
 			if (changed) {
 				if (!File::Exists(file)) return;
-
-				component.m_Mesh = Rendering::MeshFactory::LoadMesh(file);
+				//component.m_Mesh = Rendering::MeshFactory::LoadMesh(file);
 				HZR_CORE_INFO("New mesh file {0}", file);
 			}
 			}, []() {

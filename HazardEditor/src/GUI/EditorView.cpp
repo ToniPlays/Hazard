@@ -7,9 +7,8 @@
 #include "Window/AllWindows.h"
 
 #include "GUI/Library/FontAwesome.h"
-
-#include "Editor/EditorPlatformOpenGL.h"
-#include "Editor/EditorPlatformVulkan.h"
+#include "Platform/OpenGL/EditorPlatformOpenGL.h"
+#include "Platform/Vulkan/EditorPlatformVulkan.h"
 
 using namespace Hazard;
 
@@ -21,10 +20,6 @@ namespace WindowElement {
 	{
 		m_Elements = std::vector<RenderableElement*>();
 		s_Instance = this;
-	}
-	EditorView::~EditorView()
-	{
-
 	}
 	void EditorView::Init()
 	{
@@ -54,7 +49,6 @@ namespace WindowElement {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
-
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 
@@ -147,7 +141,6 @@ namespace WindowElement {
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2((float)m_Context->GetWindow().GetWidth(), (float)m_Context->GetWindow().GetHeight());
 
-		// Rendering 
 		ImGui::Render();
 		m_Renderer->EndFrame();
 	}

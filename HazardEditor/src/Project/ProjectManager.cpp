@@ -14,12 +14,6 @@ namespace Project {
 	{
 		m_ProjectData = new HazardProject();
 	}
-
-	ProjectManager::~ProjectManager()
-	{
-
-	}
-
 	void ProjectManager::Close()
 	{
 		Save();
@@ -27,6 +21,7 @@ namespace Project {
 
 	bool ProjectManager::Load(const std::string& path)
 	{
+		using namespace WindowElement;
 		HazardProject* project = new HazardProject();
 		std::ifstream stream(path);
 
@@ -40,12 +35,12 @@ namespace Project {
 
 		YAML::Node general = root["General"];
 
-		project->m_Name = general["Project name"].as<std::string>();
-		project->m_AbsolutePath = general["Project path"].as<std::string>();
-		project->m_StartupWorld = general["Startup world"].as<std::string>();
+		YamlUtils::Deserialize(general, "Project name", project->m_Name);
+		YamlUtils::Deserialize(general, "Project path", project->m_AbsolutePath);
+		YamlUtils::Deserialize(general, "Startup world", project->m_StartupWorld);
 		m_ProjectData = project;
 
-		Application::GetModule<WindowElement::EditorView>().GetRenderable<WindowElement::EditorMainTab>()->GetRenderable<WindowElement::FileView>()->
+		Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
 			SetRootPath(project->m_AbsolutePath.c_str());
 
 		if (!project->m_StartupWorld.empty()) {
@@ -64,12 +59,11 @@ namespace Project {
 		YAML::Emitter out;
 		std::ofstream fout(m_ProjectPath);
 		out << YAML::BeginMap;
-		out << YAML::Key << "General" << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Project name" << YAML::Value << m_ProjectData->m_Name;
-		out << YAML::Key << "Project path" << YAML::Value << m_ProjectData->m_AbsolutePath;
-		out << YAML::Key << "Startup world" << YAML::Value << m_ProjectData->m_StartupWorld;
-		
-		out << YAML::EndMap;
+		YamlUtils::Map(out, "General", [&]() {
+			YamlUtils::Serialize(out, "Project name", m_ProjectData->m_Name);
+			YamlUtils::Serialize(out, "Project path", m_ProjectData->m_AbsolutePath);
+			YamlUtils::Serialize(out, "Startup world", m_ProjectData->m_StartupWorld);
+			});
 		out << YAML::EndMap;
 		fout << out.c_str();
 		fout.close();

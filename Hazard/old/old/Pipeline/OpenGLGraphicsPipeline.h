@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/GraphicsPipeline.h"
-
 namespace Hazard::Rendering::OpenGL 
 {
 	class OpenGLGraphicsPipeline : public GraphicsPipeline {

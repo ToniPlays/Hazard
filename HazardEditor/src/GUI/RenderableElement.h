@@ -4,8 +4,8 @@ namespace WindowElement {
 
 	class RenderableElement {
 	public:
-		RenderableElement() {};
-		virtual ~RenderableElement() {};
+		RenderableElement() = default;
+		virtual ~RenderableElement() = default;
 
 		virtual void Init() {};
 		virtual void OnFrameBegin() {};

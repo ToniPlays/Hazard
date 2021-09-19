@@ -3,7 +3,6 @@
 #include <entt.hpp>
 #include "Component.h"
 #include "Hazard/Core/UID.h"
-#include "Hazard/Rendering/Sky/BackgroundRenderer.h"
 
 namespace Hazard::ECS {
 
@@ -12,7 +11,7 @@ namespace Hazard::ECS {
 	struct WorldData 
 	{
 		WorldBackground background = WorldBackground::None;
-		Rendering::BackgroundRenderer* renderer = new Rendering::ColorBackgroundRenderer();
+		//Rendering::BackgroundRenderer* renderer = new Rendering::ColorBackgroundRenderer();
 	};
 
 	class Entity;
@@ -26,10 +25,7 @@ namespace Hazard::ECS {
 		~World();
 
 		void SetName(std::string name) { m_Name = std::move(name); }
-
 		void SetBackground(WorldBackground type, const std::string& file);
-
-		void RenderAll();
 
 		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UID id, const char* name);

@@ -25,9 +25,7 @@ namespace Hazard::Rendering {
 
 			this->m_VulkanData.window = (GLFWwindow*)window->GetNativeWindow();
 			m_VulkanData.vkInstance = new VulkanInstance(m_VulkanData.window, appInfo->logging);
-			
 			DeviceSpec spec = GetDeviceSpec();
-			HZR_CORE_INFO(spec.name);
 		}
 
 		void VKContext::ClearFrame(glm::vec4 clearColor) const
@@ -37,17 +35,17 @@ namespace Hazard::Rendering {
 
 		void VKContext::SetViewport(int x, int y, int w, int h) const
 		{
-
+			
 		}
 
-		void VKContext::SetDepthTest(DepthFunc type) const
-		{
+		//void VKContext::SetDepthTest(DepthFunc type) const
+		//{
 
-		}
-		void VKContext::DrawIndexed(VertexArray& array, uint32_t size) const
-		{
-			array.EnableAll();
-		}
+		//}
+		//void VKContext::DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const
+		//{
+		//	array.EnableAll();
+		//}
 
 		void VKContext::SetErrorListener(const ErrorCallback& callback)
 		{
@@ -68,7 +66,6 @@ namespace Hazard::Rendering {
 			spec.renderer = ss.str();
 			spec.name = props.deviceName;
 			spec.textureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
-
 			return spec;
 		}
 		void VKContext::SendDebugMessage(const char* message, const char* code)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EditorGuiPlatform.h"
+#include "../EditorGuiPlatform.h"
 
 class EditorPlatformOpenGL : public EditorGuiPlatform {
 public:

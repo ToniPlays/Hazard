@@ -8,13 +8,8 @@ namespace WindowElement {
 
 	EditorWindow::EditorWindow(const char* title, ImGuiWindowFlags flags) : m_Title(title), m_Flags(flags)
 	{
-		
 	}
 
-	EditorWindow::~EditorWindow()
-	{
-
-	}
 	void EditorWindow::OnRender()
 	{
 		if (GetActive()) {

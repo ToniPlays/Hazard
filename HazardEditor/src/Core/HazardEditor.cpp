@@ -19,9 +19,9 @@ void EditorApplication::PreInit()
 	appInfo.icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.renderer = RenderAPI::OpenGL;
+	contextInfo.renderer = RenderAPI::Vulkan;
 	contextInfo.fullScreen = false;
-	contextInfo.maximized = true;
+	contextInfo.maximized = false;
 	contextInfo.decorated = true;
 	contextInfo.VSync = false;
 	contextInfo.color = { 1, 1, 1 };

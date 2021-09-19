@@ -18,16 +18,20 @@ namespace Hazard::Rendering {
 
 		static void Begin(const Camera& camera, ECS::World& world) { s_Engine->BeginRendering(camera, world); }
 		static void End() { s_Engine->EndRendering(); }
+
 		static void SetFrameBuffer(FrameBuffer* texture) { s_Engine->SetFrameBuffer(texture); }
+
 		static void DrawIndexed(VertexArray* vao, uint32_t count);
+		static void DrawGizmo(VertexArray* vao, uint32_t count);
+		static void DrawOutline(VertexArray* vao, uint32_t count);
 
 		static void ResetStats();
 		static RenderStats& GetStats() { return s_Stats; }
 
 		template<typename T>
 		static void Submit(T element) { s_Engine->Submit(element); }
-
 	private:
+
 		static RenderContext* s_Context;
 		static RenderEngine* s_Engine;
 		static RenderStats s_Stats;

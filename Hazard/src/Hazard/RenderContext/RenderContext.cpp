@@ -3,7 +3,6 @@
 #include "RenderContext.h"
 
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "Platform/Rendering/OpenGL/OpenGLContext.h"
 
 #include "RenderContextCommand.h"
 
@@ -11,14 +10,11 @@ namespace Hazard::Rendering {
 
 	RenderContext::RenderContext() : Module::Module("RenderContext")
 	{
-		
 	}
-	RenderContext::~RenderContext() {}
-
 	void RenderContext::InitContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
 	{
 		m_CurrentAPI = info->renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->renderer;
-		RenderUtils::SetRenderAPI(m_CurrentAPI);
+		//RenderUtils::SetRenderAPI(m_CurrentAPI);
 
 		m_ClearColor = Color(info->color, 1.0f);
 

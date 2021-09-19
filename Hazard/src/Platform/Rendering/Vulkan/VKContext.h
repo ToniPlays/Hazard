@@ -3,9 +3,10 @@
 #include "Hazard/Core/Core.h"
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
+#include <GLFW/glfw3.h>
 #include "Core/VulkanInstance.h"
-#include "Core/VulkanDevice.h"
-#include "Core/VulkanValidationLayer.h"
+//#include "Core/VulkanDevice.h"
+//#include "Core/VulkanValidationLayer.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -25,9 +26,8 @@ namespace Hazard::Rendering::Vulkan {
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
 		void ClearFrame(glm::vec4 clearColor) const override;
 		void SetViewport(int x, int y, int w, int h) const override;
-		void SetDepthTest(DepthFunc type) const override;
-
-		void DrawIndexed(VertexArray& array, uint32_t size) const override;
+		//void SetDepthTest(DepthFunc type) const override;
+		//void DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;

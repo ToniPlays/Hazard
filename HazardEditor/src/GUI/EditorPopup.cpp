@@ -10,11 +10,6 @@ namespace WindowElement {
 	{
 
 	}
-
-	EditorPopup::~EditorPopup()
-	{
-
-	}
 	void EditorPopup::OnRender()
 	{
 		if (!open)

@@ -22,7 +22,7 @@ namespace WindowElement {
 		ImGui::Text(selectionContext.GetTag().m_Tag.c_str());
 		if (!selectionContext.HasComponent<MeshComponent>()) return;
 
-		MeshComponent meshComponent = selectionContext.GetComponent<MeshComponent>();
+		/*MeshComponent meshComponent = selectionContext.GetComponent<MeshComponent>();
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(75);
 		Layout::Text("Shader");
@@ -85,6 +85,7 @@ namespace WindowElement {
 				meshComponent.m_Material->Set("Material.NormalMap", texture);
 			}
 			});
+			*/
 	}
 	bool MaterialInspector::OnEvent(Event& e)
 	{

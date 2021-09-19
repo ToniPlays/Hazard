@@ -10,7 +10,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkDevice GetDevice() { return m_Device; }
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
-
+		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
 	private:
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;

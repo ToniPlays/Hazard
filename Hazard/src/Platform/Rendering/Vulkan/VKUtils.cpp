@@ -100,6 +100,36 @@ namespace Hazard::Rendering::Vulkan {
 		return details;
 	}
 
+	VkSurfaceFormatKHR VKUtils::ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space)
+	{
+		for (const auto& f : formats) {
+			if (f.format == format && f.colorSpace == space) 
+				return f;
+		}
+		return formats[0];
+	}
+
+	VkPresentModeKHR VKUtils::ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred, VkPresentModeKHR defaultMode)
+	{
+		for (const auto& mode : modes) {
+			if (mode == preferred) 
+				return mode;
+		}
+		return defaultMode;
+	}
+
+	VkExtent2D VKUtils::ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h)
+	{
+		if (capabilities.currentExtent.width != UINT32_MAX)
+			return capabilities.currentExtent;
+		VkExtent2D actualExtent = { static_cast<uint32_t>(w),
+									static_cast<uint32_t>(h) };
+		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+		actualExtent.width = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+		return actualExtent;
+	}
+
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VulkanWindowSurface* surface)
 	{
 		QueueFamilyIndices indices = {};

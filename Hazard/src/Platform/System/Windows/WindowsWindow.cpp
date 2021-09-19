@@ -4,7 +4,6 @@
 #include "WindowWindow.h"
 #include "Hazard/Events/Input.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
-
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 #include "Platform/Rendering/Vulkan/VKContext.h"
 
@@ -49,8 +48,6 @@ namespace Hazard::Rendering {
 		glfwWindowHint(GLFW_MAXIMIZED, info->maximized);
 		glfwWindowHint(GLFW_DECORATED, info->decorated);
 
-		
-
 		if (info->fullScreen) {
 			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 			if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0) {
@@ -72,7 +69,6 @@ namespace Hazard::Rendering {
 		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
-		m_WindowData.Renderer = m_Context->GetDeviceSpec().renderer;
 
 		glfwShowWindow(m_Window);
 		SetCallbacks();

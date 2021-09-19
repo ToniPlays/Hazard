@@ -8,7 +8,7 @@ namespace WindowElement {
 	class EditorWindow : public RenderableElement {
 	public:
 		EditorWindow(const char* title, ImGuiWindowFlags flags = 0);
-		~EditorWindow();
+		~EditorWindow() = default;
 
 
 		void OnRender() override;

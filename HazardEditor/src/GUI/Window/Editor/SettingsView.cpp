@@ -71,7 +71,7 @@ namespace WindowElement
 		using namespace Hazard::Rendering;
 		Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
-		Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));
+		//Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));
 
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(150);
@@ -79,9 +79,9 @@ namespace WindowElement
 		Layout::TableNext();
 		Layout::MaxWidth();
 
-		if (Input::ImageButton(texture->GetID())) {
+		/*if (Input::ImageButton(texture->GetID())) {
 		
-		}
+		}*/
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
 			manager.Set("Editor.StartupWorld", file);

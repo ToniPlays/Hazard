@@ -4,7 +4,7 @@
 #include "EditorWindow.h"
 #include "GUI/Window/Toolbar.h"
 #include "GUI/Window/MenuBar.h"
-#include "Editor/EditorGuiPlatform.h"
+#include "Platform/EditorGuiPlatform.h"
 
 using namespace Hazard;
 
@@ -13,7 +13,7 @@ namespace WindowElement {
 	class EditorView : public Module::Module {
 	public:
 		EditorView();
-		~EditorView();
+		~EditorView() = default;
 
 		void Init();
 		void Render();

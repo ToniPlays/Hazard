@@ -7,7 +7,7 @@ namespace Hazard::Rendering {
 	class RenderContextCommand {
 	public:
 		static void Init();
-		static void SetDepthTest(DepthFunc type);
+		//static void SetDepthTest(DepthFunc type);
 
 		static void SetTitle(const char* title);
 
