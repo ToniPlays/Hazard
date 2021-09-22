@@ -1,0 +1,19 @@
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "vendor/ImGui-docking"]
+	path = vendor/ImGui-docking
+	url = https://github.com/ToniPlays/imgui
+	branch = docking
+[submodule "vendor/yaml-cpp"]
+	path = vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "vendor/Box2D"]
+	path = vendor/Box2D
+	url = https://github.com/erincatto/box2d
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/glfw/glfw
+[submodule "vendor/ImGuizmo"]
+	path = vendor/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo

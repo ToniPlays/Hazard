@@ -36,3 +36,8 @@ void EditorPlatformOpenGL::EndFrame()
 		glfwMakeContextCurrent(backup_current_context);
 	}
 }
+
+void EditorPlatformOpenGL::Close()
+{
+	ImGui::DestroyContext();
+}

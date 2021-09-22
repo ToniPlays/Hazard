@@ -8,6 +8,7 @@ public:
 	EditorPlatformOpenGL(GLFWwindow* window);
 	~EditorPlatformOpenGL();
 
-	void BeginFrame();
-	void EndFrame();
+	void BeginFrame() override;
+	void EndFrame() override;
+	void Close() override;
 };

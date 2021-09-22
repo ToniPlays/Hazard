@@ -58,8 +58,9 @@ namespace Hazard::Rendering {
 			glDebugMessageCallback(OnDebugMessage, nullptr);
 		}
 
-		void OpenGLContext::ClearFrame(glm::vec4 clearColor) const
+		void OpenGLContext::ClearFrame() const
 		{
+			glfwSwapBuffers(m_Window);
 			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}

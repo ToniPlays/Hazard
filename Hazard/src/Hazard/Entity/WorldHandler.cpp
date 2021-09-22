@@ -26,6 +26,6 @@ namespace Hazard::ECS {
 		Entity entity = m_World->CreateEntity("Camera");
 		entity.AddComponent<CameraComponent>();
 
-		return true;
+		return false;
 	}
 }

@@ -1,15 +1,14 @@
 /.vs
 /bin
 /bin-int
-/vendor
 /Assimp
 /GLAD
 /ImGui
 /JSONParser
+/vendor
 
 /*.vcxproj.*
 **/*.vcxproj
-/vendor/spdlog/*
 
 HazardEditor/res/Textures/chapmans_drive_8k.hdr
 HazardEditor/res/Audio/Axel Wernberg  Infinity.mp3

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan 
@@ -7,9 +8,9 @@ namespace Hazard::Rendering::Vulkan
 	"VK_LAYER_KHRONOS_validation"
 	};
 
-	class VulkanValidationLayer {
+	class ValidationLayer {
 	public:
-		static bool InitValidationLayers(VkInstanceCreateInfo& info, bool enabled = false);
+		static bool InitValidationLayers(VkInstanceCreateInfo& info, VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo, bool enabled = false);
 		static void SetupDebugger(VkInstance instance);
 		static bool IsValidationSupported();
 		static void GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);

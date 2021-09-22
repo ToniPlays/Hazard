@@ -2,75 +2,75 @@
 
 #include <hzrpch.h>
 #include "VKContext.h"
+#include "Device/SwapChain.h"
 #include <GLFW/glfw3.h>
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering::Vulkan {
 
-	namespace Vulkan
+	ErrorCallback VKContext::s_Callback;
+
+	VKContext::VKContext(WindowProps* props)
 	{
-		ErrorCallback VKContext::s_Callback;
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		m_ImagesInFlight = props->ImagesInFlight;
+	}
 
-		VKContext::VKContext(WindowProps* props)
-		{
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	VKContext::~VKContext()
+	{
+		delete m_Instance;
+	}
+
+	void VKContext::Init(Window* window, ApplicationCreateInfo* appInfo)
+	{
+		m_Instance = new Instance((GLFWwindow*)window->GetNativeWindow(), appInfo->logging);
+		m_Device = new VulkanDevice(m_Instance, m_ImagesInFlight);
+	}
+
+	void VKContext::ClearFrame() const
+	{
+
+	}
+
+	void VKContext::SetClearColor(glm::vec4 clearColor)
+	{
+
+	}
+
+	void VKContext::SetViewport(int x, int y, int w, int h) const
+	{
+		m_Device->GetSwapChain().ResizeSwapChain(w, h);
+	}
+
+	void VKContext::Submit(CommandBuffer* buffer)
+	{
+		uint32_t index;
+		auto result = m_Device->GetSwapChain().AcquireNextImage(&index);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+			return;
 		}
+		m_Device->GetSwapChain().SubmitCommandBuffer(buffer, &index);
+	}
 
-		VKContext::~VKContext()
-		{
-			delete m_VulkanData.vkInstance;
-		}
+	//void VKContext::SetDepthTest(DepthFunc type) const
+	//{
 
-		void VKContext::Init(Window* window, ApplicationCreateInfo* appInfo)
-		{
+	//}
+	//void VKContext::DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const
+	//{
+	//	array.EnableAll();
+	//}
 
-			this->m_VulkanData.window = (GLFWwindow*)window->GetNativeWindow();
-			m_VulkanData.vkInstance = new VulkanInstance(m_VulkanData.window, appInfo->logging);
-			DeviceSpec spec = GetDeviceSpec();
-		}
+	void VKContext::SetErrorListener(const ErrorCallback& callback)
+	{
+		VKContext::s_Callback = callback;
+	}
 
-		void VKContext::ClearFrame(glm::vec4 clearColor) const
-		{
-
-		}
-
-		void VKContext::SetViewport(int x, int y, int w, int h) const
-		{
-			
-		}
-
-		//void VKContext::SetDepthTest(DepthFunc type) const
-		//{
-
-		//}
-		//void VKContext::DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const
-		//{
-		//	array.EnableAll();
-		//}
-
-		void VKContext::SetErrorListener(const ErrorCallback& callback)
-		{
-			VKContext::s_Callback = callback;
-		}
-
-		DeviceSpec VKContext::GetDeviceSpec() const
-		{
-			DeviceSpec spec;
-			VkPhysicalDeviceProperties props;
-			vkGetPhysicalDeviceProperties(m_VulkanData.vkInstance->GetData().Device->GetPhysicalDevice(), &props);
-			std::stringstream ss;
-
-			ss << VK_VERSION_MAJOR(props.apiVersion);
-			ss << "." << VK_VERSION_MINOR(props.apiVersion);
-			ss << "." << VK_VERSION_PATCH(props.apiVersion);
-
-			spec.renderer = ss.str();
-			spec.name = props.deviceName;
-			spec.textureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
-			return spec;
-		}
-		void VKContext::SendDebugMessage(const char* message, const char* code)
-		{
-
-		}
+	DeviceSpec VKContext::GetDeviceSpec() const
+	{
+		return m_Device->GetSpec();
+	}
+	void VKContext::SendDebugMessage(const char* message, const char* code)
+	{
+		std::cout << message << std::endl;
 	}
 }

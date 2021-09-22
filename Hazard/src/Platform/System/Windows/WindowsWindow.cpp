@@ -29,7 +29,9 @@ namespace Hazard::Rendering {
 		
 		m_WindowData.Title = (appInfo->appName + " " + appInfo->buildVersion).c_str();
 		m_WindowData.Platform = "Windows";
-		m_WindowData.Width = info->width;		m_WindowData.Height = info->height;
+		m_WindowData.Width = info->width;		
+		m_WindowData.Height = info->height;
+		m_WindowData.ImagesInFlight = info->imagesInFlight;
 
 		RenderAPI api = Application::GetModule<RenderContext>().GetCurrentAPI();
 		switch (api) {
@@ -74,10 +76,9 @@ namespace Hazard::Rendering {
 		SetCallbacks();
 		SetVSync(info->VSync);
 	}
-	void WindowsWindow::OnUpdate(const Color& color) {
-
-		glfwSwapBuffers(m_Window);
-		m_Context->ClearFrame({color.r, color.g, color.b, color.a});
+	void WindowsWindow::OnUpdate() 
+	{
+		m_Context->ClearFrame();
 		glfwPollEvents();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)

@@ -9,8 +9,15 @@ public:
 	EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan::VKContext* context);
 	~EditorPlatformVulkan();
 
-	void BeginFrame();
-	void EndFrame();
+	void BeginFrame() override;
+	void EndFrame() override;
+	void Close() override;
+
 private:
-	Rendering::Vulkan::VKContext* context = nullptr;
+	void FrameRender();
+	void FramePresent();
+private:
+
+	Rendering::Vulkan::VKContext* m_Context = nullptr;
+	VkDescriptorPool m_DescriptorPool;
 };

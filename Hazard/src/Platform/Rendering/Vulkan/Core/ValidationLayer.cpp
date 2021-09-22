@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "VulkanValidationLayer.h"
+#include "ValidationLayer.h"
 #include "../VKUtils.h"
 #include "../VKContext.h"
 #include <vulkan/vulkan.h>
@@ -38,9 +38,9 @@ namespace Hazard::Rendering::Vulkan {
 		return VK_FALSE;
 	}
 
-	VkDebugUtilsMessengerEXT VulkanValidationLayer::debugMessenger;
+	VkDebugUtilsMessengerEXT ValidationLayer::debugMessenger;
 
-	bool VulkanValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, bool enabled)
+	bool ValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo, bool enabled)
 	{
 		if (!enabled) 
 		{
@@ -49,7 +49,6 @@ namespace Hazard::Rendering::Vulkan {
 			return true;
 		}
 
-		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
 		GetDebugCreateInfo(debugCreateInfo);
 
 		info.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -59,7 +58,7 @@ namespace Hazard::Rendering::Vulkan {
 		HZR_CORE_INFO("Vulkan validation enabled");
 		return true;
 	}
-	void VulkanValidationLayer::SetupDebugger(VkInstance instance)
+	void ValidationLayer::SetupDebugger(VkInstance instance)
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 		GetDebugCreateInfo(createInfo);
@@ -68,7 +67,7 @@ namespace Hazard::Rendering::Vulkan {
 			HZR_THROW("Failed to create Debug Messenger!");
 		}
 	}
-	bool VulkanValidationLayer::IsValidationSupported()
+	bool ValidationLayer::IsValidationSupported()
 	{
 		uint32_t layerCount = 0;
 
@@ -91,7 +90,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		return true;
 	}
-	void VulkanValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+	void ValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 	{
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;

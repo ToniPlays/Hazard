@@ -93,6 +93,9 @@
     <ClInclude Include="platform\GLFW\imgui_impl_opengl3.h">
       <Filter>platform\GLFW</Filter>
     </ClInclude>
+    <ClInclude Include="platform\GLFW\imgui_impl_vulkan.h">
+      <Filter>platform\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -249,6 +252,9 @@
       <Filter>platform\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="platform\GLFW\imgui_impl_opengl3.cpp">
+      <Filter>platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\GLFW\imgui_impl_vulkan.cpp">
       <Filter>platform\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">

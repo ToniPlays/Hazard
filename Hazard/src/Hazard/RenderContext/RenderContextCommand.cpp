@@ -28,12 +28,16 @@ namespace Hazard::Rendering {
 	{
 		m_Context->GetWindow().SetVSync(vsync);
 	}
-	void RenderContextCommand::ClearFrame(glm::vec4 color)
+	void RenderContextCommand::ClearFrame()
 	{
-		m_Context->GetWindow().GetContext()->ClearFrame(color);
+		m_Context->GetWindow().GetContext()->ClearFrame();
 	}
 	void RenderContextCommand::SetDebugCallback(ErrorCallback& callback)
 	{
 		m_Context->GetContext().SetErrorListener(callback);
+	}
+	void RenderContextCommand::SetClearColor(Color color)
+	{
+		m_Context->GetContext().SetClearColor(color);
 	}
 }

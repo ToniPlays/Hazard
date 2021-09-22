@@ -14,17 +14,18 @@ void EditorApplication::PreInit()
 	ApplicationCreateInfo appInfo;
 	appInfo.appName = "Hazard Editor";
 	appInfo.buildVersion = HZR_BUILD_VERSION;
-	appInfo.logging = true;
+	appInfo.logging = false;
 	appInfo.iconCount = icons.size();
 	appInfo.icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
 	contextInfo.renderer = RenderAPI::Vulkan;
+	contextInfo.imagesInFlight = 2;
 	contextInfo.fullScreen = false;
-	contextInfo.maximized = false;
+	contextInfo.maximized = true;
 	contextInfo.decorated = true;
 	contextInfo.VSync = false;
-	contextInfo.color = { 1, 1, 1 };
+	contextInfo.color = { 0.06f, 0.06f, 0.06f };
 	contextInfo.width = 1280;
 	contextInfo.height = 720;
 
@@ -55,10 +56,12 @@ void EditorApplication::PreInit()
 	CreateApplicationStack(&createInfo);
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
+	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
+
 	PushModule<WindowElement::EditorView>();
 
 }
-void EditorApplication::Init() 
+void EditorApplication::Init()
 {
 	HZR_PROFILE_FUNCTION();
 	Runtime::SceneRuntimeHandler::Init();

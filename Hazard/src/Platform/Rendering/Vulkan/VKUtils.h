@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/VulkanInstance.h"
-#include "Core/VulkanWindowSurface.h"
+#include "Core/Instance.h"
+#include "Core/WindowSurface.h"
 #include <optional>
 
 namespace Hazard::Rendering::Vulkan {
 
 	const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
 	struct QueueFamilyIndices {
@@ -24,19 +24,18 @@ namespace Hazard::Rendering::Vulkan {
 		std::vector<VkPresentModeKHR> presentModes;
 	};
 
-
 	class VKUtils {
 	public:
 		static std::vector<const char*> GetRequiredExtensions(bool validation = false);
-		static VkPhysicalDevice GetVulkanCapableDevice(VulkanInstance& instance);
-		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VulkanWindowSurface* surface);
-		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VulkanWindowSurface* surface);
-		static VkSurfaceFormatKHR ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space);
-		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred, VkPresentModeKHR defaultMode);
+		static VkPhysicalDevice GetVulkanCapableDevice(VkInstance instance, VkSurfaceKHR surface);
+		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface);
+		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
+		static VkSurfaceFormatKHR ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format = VK_FORMAT_A8B8G8R8_USCALED_PACK32, VkColorSpaceKHR space = VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT);
+		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred = VK_PRESENT_MODE_IMMEDIATE_KHR, VkPresentModeKHR defaultMode = VK_PRESENT_MODE_FIFO_KHR);
 		static VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h);
-
+		static VkFormat FindSupportedFormat(VkPhysicalDevice device, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	private:
-		static bool SuitableDevice(VkPhysicalDevice device, VulkanInstance& instance);
+		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	};
 }

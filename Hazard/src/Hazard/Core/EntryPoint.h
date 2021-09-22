@@ -20,6 +20,7 @@ extern Hazard::Application* Hazard::CreateApplication();
 			Application* app = CreateApplication();
 			Core::HazardLoop loop(app);
 			loop.Start();
+			return 0;
 		}
 
 	#else

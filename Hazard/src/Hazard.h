@@ -19,7 +19,7 @@
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
-#include "Platform/Rendering/Vulkan/VKContext.h"
+#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 #include "Platform/System/Window.h"
 

@@ -14,6 +14,7 @@ namespace Hazard::Rendering {
 
 		ErrorData(const char* message, const char* type) : info(message), errorCode(type), severity(0) 
 		{
+
 		}
 	};
 
@@ -31,8 +32,9 @@ namespace Hazard::Rendering {
 
 		virtual void Init(Window* window, ApplicationCreateInfo* appInfo) = 0;
 
-		virtual void ClearFrame(glm::vec4 clearColor = { 0.0, 0.0, 0.0, 1.0 }) const = 0;
+		virtual void ClearFrame() const = 0;
 		virtual void SetViewport(int x, int y, int w, int h) const = 0;
+		virtual void SetClearColor(glm::vec4 clearColor) = 0;
 		//virtual void SetDepthTest(DepthFunc type) const = 0;
 
 		//virtual void DrawIndexed(VertexArray& array, uint32_t size, DrawType type = DrawType::Triangle) const = 0;

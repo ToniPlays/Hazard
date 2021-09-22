@@ -1,8 +1,11 @@
 #pragma once
 
 #include "VKContext.h"
-#include "Buffer/VulkanVertexArray.h"
-#include "Buffer/VulkanBuffers.h"
+#include "VKUtils.h"
 
+#include "Buffers/CommandBuffer.h"
+#include "Buffers/VulkanImage.h"
 
-#include "Shader/VulkanShader.h"
+#include "Device/VulkanDevice.h"
+#include "Device/SwapChain.h"
+

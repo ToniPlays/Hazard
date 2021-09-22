@@ -121,7 +121,7 @@ namespace WindowElement {
 	void EditorView::Close()
 	{
 		HZR_PROFILE_FUNCTION();
-		ImGui::DestroyContext();
+		m_Renderer->Close();
 	}
 	void EditorView::BeginFrame()
 	{

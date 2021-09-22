@@ -10,7 +10,7 @@ workspace "Hazard"
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "yaml-cpp"
-	location "c:/dev/Hazard/yaml-cpp"
+	location "yaml-cpp"
 	kind "StaticLib"
 	language "C++"
 
@@ -18,12 +18,12 @@ project "yaml-cpp"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"C:/dev/Hazard/vendor/yaml-cpp/src/**.h",
-		"C:/dev/Hazard/vendor/yaml-cpp/src/**.cpp"
+		"vendor/yaml-cpp/src/**.h",
+		"vendor/yaml-cpp/src/**.cpp"
 	}
 
 	includedirs	{
-		"C:/dev/Hazard/vendor/yaml-cpp/include"
+		"vendor/yaml-cpp/include"
 	}
 
 	filter "system:windows"
@@ -46,7 +46,7 @@ project "yaml-cpp"
 		optimize "on"
 
 project "IMGUI"
-	location "c:/dev/Hazard/ImGui"
+	location "ImGui"
 	kind "StaticLib"
 	language "C++"
 
@@ -55,23 +55,21 @@ project "IMGUI"
 
 	files
 	{
-		"c:/dev/hazard/vendor/IMGUI/imconfig.h",
-		"c:/dev/hazard/vendor/IMGUI/imgui.h",
-		"c:/dev/hazard/vendor/IMGUI/imgui_internal.h",
-		"c:/dev/hazard/vendor/IMGUI/imstb_rectpack.h",
-		"c:/dev/hazard/vendor/IMGUI/imstb_textedit.h",
-		"c:/dev/hazard/vendor/IMGUI/imstb_truetype.h",
-		"c:/dev/hazard/vendor/IMGUI/imgui.cpp",
-		"c:/dev/hazard/vendor/IMGUI/imgui_demo.cpp",
-		"c:/dev/hazard/vendor/IMGUI/imgui_draw.cpp",
-		"c:/dev/hazard/vendor/IMGUI/imgui_tables.cpp",
-		"c:/dev/hazard/vendor/IMGUI/imgui_widgets.cpp",
-		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.h",
-		"c:/dev/hazard/vendor/IMGUI/used_backends/imgui_impl_vulkan.cpp"
+		"vendor/IMGUI-docking/imconfig.h",
+		"vendor/IMGUI-docking/imgui.h",
+		"vendor/IMGUI-docking/imgui_internal.h",
+		"vendor/IMGUI-docking/imstb_rectpack.h",
+		"vendor/IMGUI-docking/imstb_textedit.h",
+		"vendor/IMGUI-docking/imstb_truetype.h",
+		"vendor/IMGUI-docking/imgui.cpp",
+		"vendor/IMGUI-docking/imgui_demo.cpp",
+		"vendor/IMGUI-docking/imgui_draw.cpp",
+		"vendor/IMGUI-docking/imgui_tables.cpp",
+		"vendor/IMGUI-docking/imgui_widgets.cpp"
 	}
 	includedirs {
-		"C:/dev/hazard/vendor/IMGUI",
-		"C:/dev/hazard/vendor/Vulkan/include"
+		"vendor/IMGUI-docking",
+		"vendor/Vulkan/include"
 	}
 
 	filter "system:windows"
@@ -93,8 +91,52 @@ project "IMGUI"
 		runtime "Release"
 		optimize "on"
 
+project "GLFW"
+	location "GLFW"
+	kind "StaticLib"
+	language "C"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}");
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"vendor/glfw/include/GLFW/glfw3.h",
+		"vendor/glfw/include/GLFW/glfw3native.h",
+		"vendor/glfw/src/glfw_config.h",
+		"vendor/glfw/src/context.c",
+		"vendor/glfw/src/init.c",
+		"vendor/glfw/src/input.c",
+		"vendor/glfw/src/monitor.c",
+		"vendor/glfw/src/vulkan.c",
+		"vendor/glfw/src/window.c"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		staticruntime "On"
+
+		files
+		{
+			"vendor/glfw/src/win32_init.c",
+			"vendor/glfw/src/win32_joystick.c",
+			"vendor/glfw/src/win32_monitor.c",
+			"vendor/glfw/src/win32_time.c",
+			"vendor/glfw/src/win32_thread.c",
+			"vendor/glfw/src/win32_window.c",
+			"vendor/glfw/src/wgl_context.c",
+			"vendor/glfw/src/egl_context.c",
+			"vendor/glfw/src/osmesa_context.c"
+		}
+
+		defines 
+		{ 
+			"_GLFW_WIN32",
+			"_CRT_SECURE_NO_WARNINGS"
+		}
+
 project "GLAD"
-	location "c:/dev/Hazard/GLAD"
+	location "GLAD"
 	kind "StaticLib"
 	language "C"
 
@@ -102,13 +144,13 @@ project "GLAD"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"c:/dev/Hazard/vendor/glad/include/glad/glad.h",
-		"c:/dev/Hazard/vendor/glad/include/KHR/khrplatform.h",
-		"c:/dev/Hazard/vendor/glad/src/glad.c"
+		"vendor/glad/include/glad/glad.h",
+		"vendor/glad/include/KHR/khrplatform.h",
+		"vendor/glad/src/glad.c"
 	}
 
 	includedirs {
-		"c:/dev/Hazard/vendor/glad/include"
+		"vendor/glad/include"
 	}
 
 	filter "system:windows"
@@ -116,7 +158,7 @@ project "GLAD"
 		staticruntime "On"
 
 project "Box2D"
-	location "c:/dev/Hazard/Box2D"
+	location "Box2D"
 	kind "StaticLib"
 	language "C++"
 
@@ -124,15 +166,15 @@ project "Box2D"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"c:/dev/Hazard/vendor/box2d/include/**.h",
-		"c:/dev/Hazard/vendor/box2d/include/**.cpp",
-		"c:/dev/Hazard/vendor/box2d/src/**.h",
-		"c:/dev/Hazard/vendor/box2d/src/**.cpp"
+		"vendor/box2d/include/**.h",
+		"vendor/box2d/include/**.cpp",
+		"vendor/box2d/src/**.h",
+		"vendor/box2d/src/**.cpp"
 	}
 
 	includedirs {
-		"c:/dev/Hazard/vendor/box2d/include",
-		"c:/dev/Hazard/vendor/box2d/src"
+		"vendor/box2d/include",
+		"vendor/box2d/src"
 	}
 
 	filter "system:windows"
@@ -162,40 +204,37 @@ project "Hazard"
 	}
 
 	includedirs {
-		"c:/dev/Hazard/vendor/spdlog/include",
-		"c:/dev/Hazard/vendor/GLFW/include",
-		"c:/dev/Hazard/vendor/GLAD/include",
-		"c:/dev/Hazard/vendor/Vulkan/include",
-		"c:/dev/Hazard/vendor/JSON/include",
-		"c:/dev/Hazard/vendor/yaml-cpp/include",
-		"c:/dev/Hazard/vendor/GLM",
-		"c:/dev/Hazard/Hazard/vendor/stb-image",
-		"c:/dev/Hazard/Hazard/vendor/assimp/include",
-		"c:/dev/Hazard/vendor/entt",
-		"c:/dev/Hazard/vendor/IMGUI/examples",
-		"c:/dev/Hazard/vendor/JSON-develop/include",
-		"c:/dev/Hazard/vendor/mono/include",
-		"c:/dev/Hazard/vendor/SPIR-V/include",
-		"c:/dev/Hazard/vendor/OpenAL/include",
-		"C:/dev/Hazard/vendor/minimp3",
-		"C:/dev/Hazard/vendor/libogg/include",
-		"C:/dev/Hazard/vendor/Vorbis/include",
-		"C:/dev/Hazard/vendor/box2d/include",
+		"vendor/spdlog/include",
+		"vendor/GLFW/include",
+		"vendor/GLAD/include",
+		"vendor/Vulkan/include",
+		"vendor/JSON/include",
+		"vendor/yaml-cpp/include",
+		"vendor/GLM",
+		"Hazard/vendor/stb-image",
+		"Hazard/vendor/assimp/include",
+		"vendor/entt/single_include/entt",
+		"vendor/JSON-develop/include",
+		"vendor/mono/include",
+		"vendor/SPIR-V/include",
+		"vendor/OpenAL/include",
+		"vendor/minimp3",
+		"vendor/libogg/include",
+		"vendor/Vorbis/include",
+		"vendor/box2d/include",
 		"Hazard/src"
 	}
 
 	links {
-		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
-		"C:/dev/Hazard/vendor/SPIR-V/libs/shaderc_shared.lib",
+		"vendor/SPIR-V/libs/shaderc_shared.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"mono-2.0-sgen.dll",
 		"GLAD",
 		"yaml-cpp",
 		"Box2D",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/eglib.lib",
-		"c:/dev/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib",
+		"GLFW"
 	}
 
 	filter "system:windows"
@@ -238,30 +277,29 @@ project "HazardEditor"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/platform/**.h",
 		"%{prj.name}/platform/**.cpp",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.h",
-		"c:/dev/Hazard/vendor/ImGuizmo/ImGuizmo.cpp",
-		"c:/dev/Hazard/vendor/ImGui-node/*.h",
-		"c:/dev/Hazard/vendor/ImGui-node/*.cpp"
+		"vendor/ImGuizmo/ImGuizmo.h",
+		"vendor/ImGuizmo/ImGuizmo.cpp",
+		"vendor/ImGui-node/*.h",
+		"vendor/ImGui-node/*.cpp"
 	}
 
 	includedirs {
-		"c:/dev/Hazard/vendor/imgui-node",
-		"c:/dev/Hazard/vendor/spdlog/include",
-		"c:/dev/Hazard/vendor/GLFW/include",
-		"c:/dev/Hazard/vendor/GLAD/include",
-		"c:/dev/Hazard/vendor/Vulkan/include",
-		"c:/dev/Hazard/vendor/JSON/include",
-		"c:/dev/Hazard/vendor/yaml-cpp/include",
-		"c:/dev/Hazard/vendor/JSON-develop/include",
-		"c:/dev/Hazard/Hazard/vendor/assimp/include",
-		"C:/dev/Hazard/vendor/box2d/include",
-		"c:/dev/Hazard/vendor/IMGUI",
-		"c:/dev/Hazard/vendor/IMGUI/used_backends",
-		"C:/dev/Hazard/vendor/OpenAL/lib/openAl32.lib",
-		"c:/dev/Hazard/vendor/ImGuizmo",
-		"c:/dev/Hazard/vendor/GLM",
-		"c:/dev/Hazard/vendor/entt",
-		"HazardEditor/Platform",
+		"vendor/imgui-node",
+		"vendor/spdlog/include",
+		"vendor/GLFW/include",
+		"vendor/GLAD/include",
+		"vendor/Vulkan/include",
+		"vendor/JSON/include",
+		"vendor/yaml-cpp/include",
+		"vendor/JSON-develop/include",
+		"Hazard/vendor/assimp/include",
+		"vendor/box2d/include",
+		"vendor/IMGUI-docking",
+		"vendor/OpenAL/lib/openAl32.lib",
+		"vendor/ImGuizmo",
+		"vendor/GLM",
+		"vendor/entt/single_include/entt",
+		"HazardEditor/Platform/GLFW",
 		"HazardEditor/src",
 		"Hazard/src",
 		"Hazard/GLM/glm"
@@ -278,16 +316,17 @@ project "HazardEditor"
 	}
 
 	links {
-		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
-		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
+		"vendor/OpenAL/lib/openal32.lib",
+		"Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"yaml-cpp",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"Hazard",
 		"GLAD",
-		"IMGUI"
+		"IMGUI",
+		"GLFW"
 	}
 
 	filter "configurations:Debug"
@@ -320,17 +359,17 @@ project "HazardPlayer"
 	}
 
 	includedirs {
-		"c:/dev/Hazard/vendor/spdlog/include",
-		"c:/dev/Hazard/vendor/GLFW/include",
-		"c:/dev/Hazard/vendor/GLAD/include",
-		"c:/dev/Hazard/vendor/Vulkan/include",
-		"c:/dev/Hazard/vendor/JSON/include",
-		"c:/dev/Hazard/vendor/yaml-cpp/include",
-		"c:/dev/Hazard/vendor/JSON-develop/include",
-		"c:/dev/Hazard/Hazard/vendor/assimp/include",
-		"C:/dev/Hazard/vendor/OpenAL/lib/openAl32.lib",
-		"c:/dev/Hazard/vendor/GLM",
-		"c:/dev/Hazard/vendor/entt",
+		"vendor/spdlog/include",
+		"vendor/GLFW/include",
+		"vendor/GLAD/include",
+		"vendor/Vulkan/include",
+		"vendor/JSON/include",
+		"vendor/yaml-cpp/include",
+		"vendor/JSON-develop/include",
+		"Hazard/vendor/assimp/include",
+		"vendor/OpenAL/lib/openAl32.lib",
+		"vendor/GLM",
+		"vendor/entt",
 		"Hazard/src",
 		"Hazard/GLM/glm"
 	}
@@ -346,9 +385,9 @@ project "HazardPlayer"
 	}
 
 	links {
-		"C:/dev/Hazard/vendor/glfw/lib-vc2019/glfw3.lib",
-		"C:/dev/Hazard/vendor/OpenAL/lib/openal32.lib",
-		"C:/dev/Hazard/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
+		"vendor/glfw/lib-vc2019/glfw3.lib",
+		"vendor/OpenAL/lib/openal32.lib",
+		"/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
 		"yaml-cpp",
 		"msvcrt.lib",
