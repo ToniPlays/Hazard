@@ -14,7 +14,7 @@ void EditorApplication::PreInit()
 	ApplicationCreateInfo appInfo;
 	appInfo.appName = "Hazard Editor";
 	appInfo.buildVersion = HZR_BUILD_VERSION;
-	appInfo.logging = false;
+	appInfo.logging = true;
 	appInfo.iconCount = icons.size();
 	appInfo.icons = icons.data();
 
@@ -58,13 +58,12 @@ void EditorApplication::PreInit()
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
 
-	PushModule<WindowElement::EditorView>();
-
 }
 void EditorApplication::Init()
 {
 	HZR_PROFILE_FUNCTION();
 	Runtime::SceneRuntimeHandler::Init();
+	PushModule<WindowElement::EditorView>();
 }
 
 bool EditorApplication::OnEvent(Event& e)

@@ -2,9 +2,9 @@
 #include <hzreditor.h>
 #include "Toolbar.h"
 
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Input.h"
-#include "GUI/Library/Style.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Input.h"
+#include "Library/Style.h"
 #include "GUI/EditorView.h"
 #include "Core/SceneRuntimeHandler.h"
 

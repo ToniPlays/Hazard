@@ -2,12 +2,14 @@
 
 #include <hzreditor.h>
 #include "Viewport.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Input.h"
-#include "GUI/Library/Style.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Input.h"
+#include "Library/Style.h"
 #include "GUI/Window/DragDropUtils.h"
 #include "Core/EditorEvent.h"
 #include "GUI/EditorView.h"
+
+#include "imgui_impl_vulkan.h"
 
 using namespace Hazard;
 
@@ -28,6 +30,8 @@ namespace WindowElement {
 		//m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
 		//m_RenderTexture->Resize(1920, 1080);
 
+		texture = new Rendering::Vulkan::VulkanTexture("res/textures/starfield_bottom.png");
+		EditorView::GetContext().AddTexture((Hazard::Rendering::Texture*)texture);
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -50,10 +54,8 @@ namespace WindowElement {
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-		//Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-		//ImGui::Image((void*)m_RenderTexture->GetColorID(0),
-		//	size, ImVec2(0, 1), ImVec2(1, 0));
-
+		ImGui::Image((void*)texture->GetID(),
+			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;

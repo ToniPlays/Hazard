@@ -14,6 +14,8 @@
 
 //Hazard render engine includes
 
+#include "Hazard/Rendering/Texture/Texture.h"
+
 //Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"

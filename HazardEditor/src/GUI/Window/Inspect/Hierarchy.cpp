@@ -4,10 +4,10 @@
 #include "Hierarchy.h"
 #include "GUI/EditorView.h"
 
-#include "GUI/Library/Input.h"
-#include "GUI/Library/Style.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Layout/ContextMenus.h"
+#include "Library/Input.h"
+#include "Library/Style.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Layout/ContextMenus.h"
 #include "GUI/Window/Rendering/WorldEnvironmentData.h"
 #include "GUI/Window/DragDropUtils.h"
 

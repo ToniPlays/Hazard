@@ -4,10 +4,15 @@
 #include "VKContext.h"
 #include "Device/SwapChain.h"
 #include <GLFW/glfw3.h>
+#include "Buffers/VulkanBuffer.h"
+#include "Textures/VulkanTexture.h"
 
 namespace Hazard::Rendering::Vulkan {
 
-	ErrorCallback VKContext::s_Callback;
+	ErrorCallback VKContext::s_Callback = nullptr;
+	Instance* VKContext::m_Instance = nullptr;
+	VulkanDevice* VKContext::m_Device = nullptr;
+
 
 	VKContext::VKContext(WindowProps* props)
 	{
@@ -23,7 +28,8 @@ namespace Hazard::Rendering::Vulkan {
 	void VKContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 	{
 		m_Instance = new Instance((GLFWwindow*)window->GetNativeWindow(), appInfo->logging);
-		m_Device = new VulkanDevice(m_Instance, m_ImagesInFlight);
+		m_Device = new VulkanDevice(m_Instance);
+		m_Device->CreateSwapchain(m_ImagesInFlight, true);
 	}
 
 	void VKContext::ClearFrame() const
@@ -72,5 +78,7 @@ namespace Hazard::Rendering::Vulkan {
 	void VKContext::SendDebugMessage(const char* message, const char* code)
 	{
 		std::cout << message << std::endl;
+		if (s_Callback != nullptr)
+			s_Callback(ErrorData(message, code));
 	}
 }

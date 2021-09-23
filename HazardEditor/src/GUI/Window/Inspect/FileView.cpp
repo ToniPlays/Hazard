@@ -2,10 +2,10 @@
 
 #include <hzreditor.h>
 #include "FileView.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Style.h"
-#include "GUI/Library/Input.h"
-#include "GUI/Library/Layout/ContextMenus.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Style.h"
+#include "Library/Input.h"
+#include "Library/Layout/ContextMenus.h"
 #include "GUI/Window/DragDropUtils.h"
 #include <future>
 

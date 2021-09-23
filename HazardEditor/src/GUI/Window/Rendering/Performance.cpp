@@ -2,8 +2,8 @@
 
 #include <hzreditor.h>
 #include "Performance.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Input.h"
 
 using namespace WindowLayout;
 using namespace Hazard;

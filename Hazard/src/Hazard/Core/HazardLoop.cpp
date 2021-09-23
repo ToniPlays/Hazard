@@ -4,6 +4,7 @@
 #include "HazardLoop.h"
 #include "Hazard/Math/Time.h"
 #include "GLFW/glfw3.h"
+#include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Events/Input.h"
 #include "PlatrofmUtils.h"
 
@@ -25,6 +26,9 @@ namespace Hazard::Core {
 		try 
 		{
 			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
+
+			AssetManager::Init();
+
 			m_Application->PreInit();
 			m_Application->Init();
 			Input::Init();
@@ -35,6 +39,7 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
 			m_Application->Close();
 			m_ModuleHandler.Close();
+			AssetManager::Shutdown();
 			HZR_PROFILE_SESSION_END();
 		}
 		catch (const HazardRuntimeError& error) 

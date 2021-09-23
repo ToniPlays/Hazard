@@ -2,9 +2,9 @@
 
 #include <hzreditor.h>
 #include "EngineAssets.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Style.h"
-#include "GUI/Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Style.h"
+#include "Library/Input.h"
 
 using namespace WindowLayout;
 

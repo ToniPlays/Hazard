@@ -3,7 +3,6 @@
 #include "Hazard/Core/Core.h"
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
-#include <GLFW/glfw3.h>
 #include "Core/Instance.h"
 #include "Device/VulkanDevice.h"
 
@@ -26,18 +25,19 @@ namespace Hazard::Rendering::Vulkan {
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;
 
-		Instance* GetInstance() { return m_Instance; }
-		VulkanDevice* GetDevice() { return m_Device; }
 
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
-		static ErrorCallback s_Callback;
+		static Instance* GetInstance() { return m_Instance; }
+		static VulkanDevice* GetDevice() { return m_Device; }
 
 	private:
-		GLFWwindow* m_Window;
-		Instance* m_Instance;
-		VulkanDevice* m_Device;
+		GLFWwindow* m_Window = nullptr;
+		uint32_t m_ImagesInFlight = 1;
 
-		uint32_t m_ImagesInFlight;
+		static ErrorCallback s_Callback;
+		static Instance* m_Instance;
+		static VulkanDevice* m_Device;
+
 	};
 }

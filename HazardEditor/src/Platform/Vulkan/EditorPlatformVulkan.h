@@ -13,11 +13,12 @@ public:
 	void EndFrame() override;
 	void Close() override;
 
+	void AddTexture(Hazard::Rendering::Texture* texture);
+
 private:
 	void FrameRender();
 	void FramePresent();
 private:
 
 	Rendering::Vulkan::VKContext* m_Context = nullptr;
-	VkDescriptorPool m_DescriptorPool;
 };

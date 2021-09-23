@@ -107,8 +107,8 @@ namespace Hazard::Rendering::Vulkan
 		m_DepthImageViews.resize(count);
 		
 		for (size_t i = 0; i < count; i++) {
-			VulkanImage::CreateImage(device, m_DepthImages[i], m_DepthMemorys[i], VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR, VK_IMAGE_TYPE_2D, extent, depthFormat);
-			VulkanImage::CreateImageView(device->GetDevice(), m_DepthImages[i], m_DepthImageViews[i], VK_IMAGE_VIEW_TYPE_2D, depthFormat,
+			m_DepthImages[i] = VulkanImage::CreateImage(m_DepthMemorys[i], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_TYPE_2D,  extent, depthFormat);
+			m_DepthImageViews[i] = VulkanImage::CreateImageView(m_DepthImages[i], VK_IMAGE_VIEW_TYPE_2D, depthFormat,
 				VK_IMAGE_ASPECT_DEPTH_BIT);
 		}
 	}

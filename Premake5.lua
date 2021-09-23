@@ -222,6 +222,7 @@ project "Hazard"
 		"vendor/libogg/include",
 		"vendor/Vorbis/include",
 		"vendor/box2d/include",
+		"vendor/VMA/include",
 		"Hazard/src"
 	}
 

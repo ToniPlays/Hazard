@@ -11,7 +11,7 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VulkanDevice::VulkanDevice(Instance* instance, uint32_t imagesInFlight)
+	VulkanDevice::VulkanDevice(Instance* instance)
 	{
 		m_Surface = &instance->GetSurface();
 
@@ -59,8 +59,28 @@ namespace Hazard::Rendering::Vulkan {
 		if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create command pool!");
 		}
-
-		m_SwapChain = std::make_unique<SwapChain>(*this, imagesInFlight, true);
+		VkDescriptorPoolSize pool_sizes[] =
+		{
+			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+		};
+		VkDescriptorPoolCreateInfo pool_info = {};
+		pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+		pool_info.maxSets = 1000 * ((int)(sizeof(pool_sizes) / sizeof(*(pool_sizes))));
+		pool_info.poolSizeCount = (uint32_t)((int)(sizeof(pool_sizes) / sizeof(*(pool_sizes))));
+		pool_info.pPoolSizes = pool_sizes;
+		VkResult result = vkCreateDescriptorPool(m_Device, &pool_info, nullptr, &m_DescriptorPool);
+		
 	}
 	VulkanDevice::~VulkanDevice()
 	{
@@ -74,6 +94,10 @@ namespace Hazard::Rendering::Vulkan {
 	void VulkanDevice::WaitUntilIdle() {
 
 		vkDeviceWaitIdle(m_Device);
+	}
+	void VulkanDevice::CreateSwapchain(uint32_t imagesInFlight, bool vSync)
+	{
+		m_SwapChain = std::make_unique<SwapChain>(*this, imagesInFlight, vSync);
 	}
 	VkCommandBuffer VulkanDevice::BeginSingleTimeCommands()
 	{
@@ -105,16 +129,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(m_GraphicsQueue);
-
 		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &buffer);
-	}
-	CommandBuffer* VulkanDevice::CreateCommandBuffer()
-	{
-		return new CommandBuffer(m_Device, m_CommandPool);
-	}
-	void VulkanDevice::FreeCommandBuffer(CommandBuffer* buffer)
-	{
-		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, buffer->GetBuffer());
 	}
 	DeviceSpec VulkanDevice::GetSpec()
 	{

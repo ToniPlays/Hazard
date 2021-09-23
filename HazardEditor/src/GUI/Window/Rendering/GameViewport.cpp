@@ -1,8 +1,8 @@
 
 #include <hzreditor.h>
 #include "GameViewport.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Input.h"
 
 using namespace Hazard;
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "CommandBuffer.h"
+#include "Platform/Rendering/Vulkan/VKContext.h"
 
 namespace Hazard::Rendering::Vulkan 
 {
@@ -17,7 +18,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	CommandBuffer::~CommandBuffer()
 	{
-
+		CommandBuffer::Free(this);
 	}
 	void CommandBuffer::Begin()
 	{
@@ -29,5 +30,16 @@ namespace Hazard::Rendering::Vulkan
 	void CommandBuffer::End()
 	{
 		vkEndCommandBuffer(m_CommandBuffer);
+	}
+	CommandBuffer* CommandBuffer::Create()
+	{
+		auto device = VKContext::GetDevice();
+		return new CommandBuffer(device->GetDevice(), device->GetCommandPool());
+
+	}
+	void CommandBuffer::Free(CommandBuffer* buffer)
+	{
+		auto device = VKContext::GetDevice();
+		vkFreeCommandBuffers(device->GetDevice(), device->GetCommandPool(), 1, buffer->GetBuffer());
 	}
 }

@@ -14,7 +14,7 @@
 
 namespace Hazard::ECS {
 	template<typename T>
-	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
+	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& entityMap)
 	{
 		auto components = src.view<T>();
 		for (auto srcEntity : components)
@@ -31,7 +31,7 @@ namespace Hazard::ECS {
 	{
 		m_File = std::string(world.GetWorldFile() + " (copy)");
 		m_Name = world.GetName() + " (copy)";
-		std::unordered_map<UID, entt::entity> entityMap;
+		std::unordered_map<UUID, entt::entity> entityMap;
 
 		memcpy(&m_WorldData, &world.m_WorldData, sizeof(WorldData));
 		auto& entityID = world.m_Registry.view<TagComponent>();
@@ -42,7 +42,7 @@ namespace Hazard::ECS {
 			auto entity = entityID[i - 1];
 
 			TagComponent& c = world.m_Registry.get<TagComponent>(entity);
-			UID uid = c.m_ID;
+			UUID uid = c.m_ID;
 
 			Entity e = CreateEntity(uid, c.m_Tag.c_str());
 			entityMap[uid] = e.GetHandle();
@@ -99,7 +99,7 @@ namespace Hazard::ECS {
 		entity.AddComponent<TransformComponent>();
 		return entity;
 	}
-	Entity World::CreateEntity(UID id, const char* name)
+	Entity World::CreateEntity(UUID id, const char* name)
 	{
 		Entity e = { m_Registry.create(), this };
 		TagComponent& tag = e.AddComponent<TagComponent>();

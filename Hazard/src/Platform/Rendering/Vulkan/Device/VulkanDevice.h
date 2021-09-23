@@ -11,16 +11,16 @@ namespace Hazard::Rendering::Vulkan
 
 	class VulkanDevice {
 	public:
-		VulkanDevice(Instance* instance, uint32_t imagesInFlight);
+		VulkanDevice(Instance* instance);
 		~VulkanDevice();
 
 		void SetClearColor(glm::vec4 clearColor);
 		void WaitUntilIdle();
+		void CreateSwapchain(uint32_t imagesInFlight, bool vSync);
+
+
 		VkCommandBuffer BeginSingleTimeCommands();
 		void EndSingleTimeCommands(VkCommandBuffer buffer);
-
-		CommandBuffer* CreateCommandBuffer();
-		void FreeCommandBuffer(CommandBuffer* buffer);
 
 		operator VkDevice() const { return m_Device; }
 		operator VkPhysicalDevice() const { return m_PhysicalDevice; }
@@ -33,6 +33,7 @@ namespace Hazard::Rendering::Vulkan
 		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
 		VkQueue GetPresentQueue() { return m_PresentQueue; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
+		VkDescriptorPool GetDescriptorPool() { return m_DescriptorPool; }
 		DeviceSpec GetSpec();
 
 		VkFormat GetDepthFormat();
@@ -47,5 +48,6 @@ namespace Hazard::Rendering::Vulkan
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;
 		VkCommandPool m_CommandPool;
+		VkDescriptorPool m_DescriptorPool;
 	};
 }

@@ -63,6 +63,7 @@ namespace WindowElement {
 
 	public:
 		static EditorView& GetInstance() { return *s_Instance; }
+		static EditorGuiPlatform& GetContext() { return *s_Instance->m_Renderer; }
 
 	private:
 		void BeginFrame();

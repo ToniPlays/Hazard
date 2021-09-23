@@ -4,7 +4,7 @@
 #include "Profiler.h"
 
 #include <ImSequencer.h>
-#include "GUI/Library/Input.h"
+#include "Library/Input.h"
 #include "nlohmann/json.hpp"
 
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)

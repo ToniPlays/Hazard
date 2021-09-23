@@ -128,10 +128,7 @@ namespace Hazard::Rendering::Vulkan
 		m_SwapChainImageViews.resize(m_ImageCount);
 
 		for (uint32_t i = 0; i < m_ImageCount; i++) {
-			VulkanImage::CreateImageView(m_Device->GetDevice(),
-				m_SwapChainImages[i], m_SwapChainImageViews[i],
-				VK_IMAGE_VIEW_TYPE_2D, m_SurfaceFormat.format,
-				VK_IMAGE_ASPECT_COLOR_BIT);
+			m_SwapChainImageViews[i] = VulkanImage::CreateImageView(m_SwapChainImages[i], VK_IMAGE_VIEW_TYPE_2D, m_SurfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 		m_RenderPass = std::make_unique<RenderPass>(m_Device, m_SurfaceFormat.format);
 		m_RenderPass->CreateDepthImages(m_Device, m_Extent, m_ImageCount);
@@ -149,8 +146,9 @@ namespace Hazard::Rendering::Vulkan
 		m_ImagesInFlight.resize(m_ImageCount, VK_NULL_HANDLE);
 
 		m_Buffers.resize(m_ImageCount);
-		for (size_t i = 0; i < m_Buffers.size(); i++) {
-			m_Buffers[i] = m_Device->CreateCommandBuffer();
+		for (size_t i = 0; i < m_Buffers.size(); i++) 
+		{
+			m_Buffers[i] = CommandBuffer::Create();
 		}
 
 	}
@@ -160,7 +158,7 @@ namespace Hazard::Rendering::Vulkan
 			delete frameBuffer;
 		}
 		for (auto commandBuffer : m_Buffers) {
-			m_Device->FreeCommandBuffer(commandBuffer);
+			CommandBuffer::Free(commandBuffer);
 			delete commandBuffer;
 		}
 		m_RenderPass.reset();

@@ -1,9 +1,9 @@
 #pragma once
 #include <hzreditor.h>
 #include "WelcomePopup.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/EditorView.h"
-#include "GUI/Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Gui/EditorView.h"
+#include "Library/Input.h"
 #include "Project/ProjectManager.h"
 
 namespace WindowElement {

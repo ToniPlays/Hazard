@@ -2,7 +2,7 @@
 
 #include <hzreditor.h>
 #include "EditorMainTab.h"
-#include "GUI/Library/Layout/Dockspace.h"
+#include "Library/Layout/Dockspace.h"
 #include "GUI/Window/AllWindows.h"
 #include <imgui_internal.h>
 

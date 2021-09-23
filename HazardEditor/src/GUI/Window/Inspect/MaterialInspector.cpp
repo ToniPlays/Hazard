@@ -2,11 +2,11 @@
 
 #include <hzreditor.h>
 #include "MaterialInspector.h"
-#include "GUI/Library/Input.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Style.h"
-#include "GUI/Library/ComponentDraw.h"
-#include "GUI/Library/Layout/ContextMenus.h"
+#include "Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Style.h"
+#include "Library/ComponentDraw.h"
+#include "Library/Layout/ContextMenus.h"
 
 using namespace WindowLayout;
 

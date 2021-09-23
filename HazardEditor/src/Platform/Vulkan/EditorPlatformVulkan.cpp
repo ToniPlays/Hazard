@@ -2,58 +2,39 @@
 #include "hzreditor.h"
 #include "EditorPlatformVulkan.h"
 
+#include <imgui_impl_vulkan.h>
 #include "imgui_impl_glfw.h"
-#include "imgui_impl_vulkan.h"
 
 using namespace Hazard::Rendering::Vulkan;
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan::VKContext* context)
 {
 	this->m_Context = context;
-
-	VkDescriptorPoolSize pool_sizes[] =
-	{
-		{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
-	};
-	VkDescriptorPoolCreateInfo pool_info = {};
-	pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-	pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
-	pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
-	pool_info.pPoolSizes = pool_sizes;
-	VkResult result = vkCreateDescriptorPool(context->GetDevice()->GetDevice(), &pool_info, nullptr, &m_DescriptorPool);
-
+	auto& swapchain = m_Context->GetDevice()->GetSwapChain();
+	auto device = m_Context->GetDevice();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan(window, true);
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	init_info.Instance = context->GetInstance()->GetInstance();
-	init_info.PhysicalDevice = context->GetDevice()->GetPhysicalDevice();
-	init_info.Device = context->GetDevice()->GetDevice();
-	init_info.QueueFamily = VKUtils::GetQueueFamilyIndices(context->GetDevice()->GetPhysicalDevice(),
-		context->GetDevice()->GetDeviceSurface()->GetVkSurface()).graphicsFamily.value();
-	init_info.Queue = context->GetDevice()->GetGraphicsQueue();
+	init_info.PhysicalDevice = device->GetPhysicalDevice();
+	init_info.Device = device->GetDevice();
+	init_info.QueueFamily = VKUtils::GetQueueFamilyIndices(device->GetPhysicalDevice(),
+		device->GetDeviceSurface()->GetVkSurface()).graphicsFamily.value();
+	init_info.Queue = device->GetGraphicsQueue();
 	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = m_DescriptorPool;
+	init_info.DescriptorPool = m_Context->GetDevice()->GetDescriptorPool();
 	init_info.Allocator = nullptr;
 	init_info.MinImageCount = 2;
-	init_info.ImageCount = context->GetDevice()->GetSwapChain().GetImageCount();
+	init_info.ImageCount = swapchain.GetImageCount();
 	init_info.CheckVkResultFn = nullptr;
-	ImGui_ImplVulkan_Init(&init_info, context->GetDevice()->GetSwapChain().GetRenderPass()->GetRenderPass());
 
-	VkCommandBuffer singleBuffer = context->GetDevice()->BeginSingleTimeCommands();
+	ImGui_ImplVulkan_Init(&init_info, swapchain.GetRenderPass()->GetRenderPass());
+
+	VkCommandBuffer singleBuffer = device->BeginSingleTimeCommands();
 	ImGui_ImplVulkan_CreateFontsTexture(singleBuffer);
-	context->GetDevice()->EndSingleTimeCommands(singleBuffer);
+	device->EndSingleTimeCommands(singleBuffer);
 }
+
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
@@ -66,6 +47,8 @@ void EditorPlatformVulkan::BeginFrame()
 {
 	ImGui_ImplVulkan_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
+	CommandBuffer& buffer = m_Context->GetDevice()->GetSwapChain().GetCurrentBuffer();
+	buffer.Begin();
 }
 
 void EditorPlatformVulkan::EndFrame()
@@ -73,8 +56,6 @@ void EditorPlatformVulkan::EndFrame()
 	ImGuiIO& io = ImGui::GetIO();
 
 	CommandBuffer& buffer = m_Context->GetDevice()->GetSwapChain().GetCurrentBuffer();
-	buffer.Begin();
-
 	FrameBuffer* frameBuffer = m_Context->GetDevice()->GetSwapChain().GetCurrentFrameBuffer();
 	m_Context->GetDevice()->GetSwapChain().GetRenderPass()->Begin(&buffer, frameBuffer->GetBuffer(), frameBuffer->GetExtent());
 
@@ -96,6 +77,11 @@ void EditorPlatformVulkan::EndFrame()
 void EditorPlatformVulkan::Close()
 {
 
+}
+void EditorPlatformVulkan::AddTexture(Hazard::Rendering::Texture* texture)
+{
+	Rendering::Vulkan::VulkanTexture* vt = (Rendering::Vulkan::VulkanTexture*)texture;
+	vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetSampler(), vt->GetView(), vt->GetLayout()));
 }
 void EditorPlatformVulkan::FrameRender()
 {

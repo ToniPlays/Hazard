@@ -15,6 +15,9 @@ namespace Hazard::Rendering::Vulkan
 
 		VkCommandBuffer* GetBuffer() { return &m_CommandBuffer; }
 
+		static CommandBuffer* Create();
+		static void Free(CommandBuffer* buffer);
+
 	private:
 		VkCommandBuffer m_CommandBuffer;
 	};

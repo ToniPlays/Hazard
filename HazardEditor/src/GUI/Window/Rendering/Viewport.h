@@ -30,6 +30,7 @@ namespace WindowElement {
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
+		Rendering::Vulkan::VulkanTexture* texture;
 		//Ref<FrameBuffer> m_RenderTexture;
 		//RenderEngine* m_Renderer = nullptr;
 		TransformationGizmo m_Gizmos;

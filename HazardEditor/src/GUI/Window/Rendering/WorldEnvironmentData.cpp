@@ -2,9 +2,9 @@
 
 #include "hzreditor.h"
 #include "WorldEnvironmentData.h"
-#include "GUI/Library/Layout/Layout.h"
-#include "GUI/Library/Style.h"
-#include "GUI/Library/Input.h"
+#include "Library/Layout/Layout.h"
+#include "Library/Style.h"
+#include "Library/Input.h"
 
 using namespace WindowLayout;
 
@@ -33,7 +33,7 @@ namespace WindowElement {
 			Layout::TableNext();
 			Layout::MaxWidth();
 
-			if (ImGui::BeginCombo("##background7", currentBgText)) {
+			if (ImGui::BeginCombo("##background", currentBgText)) {
 				for (int i = 0; i < 3; i++) {
 
 					bool isSelected = currentBgText == bgText[i];

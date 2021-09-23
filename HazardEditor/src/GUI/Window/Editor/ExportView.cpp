@@ -2,7 +2,7 @@
 #include <hzreditor.h>
 #include "ExportView.h"
 #include "Editor/GameExport.h"
-#include "GUI/Library/Input.h"
+#include "Library/Input.h"
 
 namespace WindowElement
 {

@@ -2,7 +2,7 @@
 
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Math.h"
-#include "Hazard/Core/UID.h"
+#include "Hazard/Core/UUID.h"
 #include "Hazard/Audio/AudioClip.h"
 
 namespace Hazard::ECS {
@@ -10,7 +10,7 @@ namespace Hazard::ECS {
 	struct TagComponent
 	{
 		std::string m_Tag;
-		UID m_ID;
+		UUID m_ID;
 		bool m_Visible = true;
 	};
 

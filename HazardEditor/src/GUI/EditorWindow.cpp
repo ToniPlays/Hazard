@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hzreditor.h>
-#include "GUI/Library/Style.h"
+#include "Library/Style.h"
 #include "EditorWindow.h"
 
 namespace WindowElement {

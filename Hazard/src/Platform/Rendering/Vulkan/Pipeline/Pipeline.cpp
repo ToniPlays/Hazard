@@ -7,6 +7,7 @@ namespace Hazard::Rendering::Vulkan
 {
 	Pipeline::Pipeline(SwapChain* swapChain)
     {
+
 	}
 	Pipeline::~Pipeline()
 	{

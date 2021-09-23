@@ -6,7 +6,7 @@
 #include "Library/Layout/Dockspace.h"
 #include "Window/AllWindows.h"
 
-#include "GUI/Library/FontAwesome.h"
+#include "Library/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 

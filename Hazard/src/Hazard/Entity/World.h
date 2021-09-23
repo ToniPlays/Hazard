@@ -2,7 +2,7 @@
 
 #include <entt.hpp>
 #include "Component.h"
-#include "Hazard/Core/UID.h"
+#include "Hazard/Core/UUID.h"
 
 namespace Hazard::ECS {
 
@@ -28,7 +28,7 @@ namespace Hazard::ECS {
 		void SetBackground(WorldBackground type, const std::string& file);
 
 		Entity CreateEntity(const std::string& name);
-		Entity CreateEntity(UID id, const char* name);
+		Entity CreateEntity(UUID id, const char* name);
 		Entity CreateEntity(Entity other);
 		Entity GetEntity(entt::entity entity);
 		void DestroyEntity(const Entity& entity);
@@ -51,7 +51,7 @@ namespace Hazard::ECS {
 			return result;
 		}
 	private:
-		UID uid;
+		UUID uid;
 		entt::registry m_Registry = entt::registry();
 		std::string m_Name;
 		std::string m_File;
