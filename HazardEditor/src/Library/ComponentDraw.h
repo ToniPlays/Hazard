@@ -131,12 +131,13 @@ namespace WindowElement {
 
 			static bool open = false;
 
-			/*bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
+			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 				}, [&]() {
 					DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
 						const char* file = (const char*)payload->Data;
-						component.m_Texture = Vault::Get<Rendering::Texture2D>(file);
+						AssetHandle handle = AssetManager::GetHandleFromFile(file);
+						component.m_Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 						});
 				});
 			if (changed) {
@@ -145,11 +146,11 @@ namespace WindowElement {
 				{
 					using namespace Hazard::Rendering;
 					Texture2DCreateInfo createInfo;
-					createInfo.filename = file;
+					createInfo.filePath = file;
 
-					component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
+					//component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 				}
-			}*/
+			}
 
 			}, [&entity]() {
 

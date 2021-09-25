@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "Application.h"
 #include "Hazard/RenderContext/RenderContext.h"
+#include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngineManager.h"
 #include "Hazard/Audio/AudioEngine.h"
 #include "HazardLoop.h"
@@ -30,36 +31,35 @@ namespace Hazard {
 #endif // HZR_RELEASE
 
 		HZR_PROFILE_FUNCTION();
-		if (info->appInfo == nullptr)
+		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
-		if (info->renderContextInfo != nullptr) 
+		if (info->RenderContextInfo != nullptr) 
 		{
-			PushModule<Rendering::RenderContext>().InitContext(info->renderContextInfo, info->appInfo);
+			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
 		}
 
-		if (info->rendererInfo != nullptr) 
+		if (info->RendererInfo != nullptr) 
 		{
-			if (info->renderContextInfo == nullptr) 
+			if (info->RenderContextInfo == nullptr) 
 				HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-			//PushModule<Rendering::RenderEngine>().InitRenderer(info->rendererInfo);
+			PushModule<Rendering::RenderEngine>(info->RendererInfo, info->RenderContextInfo->Renderer);
 		}
 
-		if (info->audioEngine) 
+		if (info->AudioEngine) 
 		{
-			PushModule<Audio::AudioEngine>().InitAudio(info->audioEngine);
+			PushModule<Audio::AudioEngine>().InitAudio(info->AudioEngine);
 		}
 
-		if (info->entityComponent != nullptr) {
+		if (info->ScriptEngineInfo != nullptr) 
+		{
+			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->ScriptEngineInfo);
+		}
+
+		if (info->EntityComponent != nullptr) {
 			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
-			handler.LoadWorld(info->entityComponent->startupFile);
+			handler.LoadWorld(info->EntityComponent->StartupFile);
 		}
-
-		if (info->scriptEngineInfo != nullptr) 
-		{
-			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->scriptEngineInfo);
-		}
-
 	}
 	void Application::Quit()
 	{

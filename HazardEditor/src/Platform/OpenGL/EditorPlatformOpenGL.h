@@ -11,5 +11,5 @@ public:
 	void BeginFrame() override;
 	void EndFrame() override;
 	void Close() override;
-	void AddTexture(Hazard::Rendering::Texture* texture) override {};
+	void AddTexture(Ref<Rendering::Texture> texture) override {};
 };

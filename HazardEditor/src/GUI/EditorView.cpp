@@ -6,9 +6,8 @@
 #include "Library/Layout/Dockspace.h"
 #include "Window/AllWindows.h"
 
-#include "Library/FontAwesome.h"
+#include "FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
-#include "Platform/Vulkan/EditorPlatformVulkan.h"
 
 using namespace Hazard;
 
@@ -154,8 +153,8 @@ namespace WindowElement {
 			m_Renderer = new EditorPlatformOpenGL(nativeWindow);
 			break;
 		case RenderAPI::Vulkan:
-			Rendering::Vulkan::VKContext* context = static_cast<Vulkan::VKContext*>(window.GetContext());
-			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
+			//Rendering::Vulkan::VKContext* context = static_cast<Vulkan::VKContext*>(window.GetContext());
+			//m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
 		}
 	}

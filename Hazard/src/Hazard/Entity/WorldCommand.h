@@ -1,7 +1,7 @@
 #pragma once
 
-#include "entt.hpp"
 #include "Hazard/Scripting/ScriptCommand.h"
+#include "entt.hpp"
 
 namespace Hazard::ECS {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imgui.h"
-#include "../FontAwesome.h"
+#include "FontAwesome.h"
 
 namespace WindowLayout {
 	class Layout {

@@ -26,7 +26,7 @@ void main() {
 
 in vec4 f_color;
 in vec2 texCoords;
-flat in float textureIndex;
+in flat float textureIndex;
 
 uniform sampler2D u_Textures[32];
 

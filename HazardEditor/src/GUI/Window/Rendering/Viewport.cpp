@@ -24,14 +24,15 @@ namespace WindowElement {
 		//m_Renderer = &Application::GetModule<RenderEngine>();
 		//SetActive(Application::HasModule<RenderEngine>());
 
-		//Rendering::FrameBufferCreateInfo createInfo;
-		//createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
+		FrameBufferCreateInfo createInfo;
+		createInfo.Attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
+		createInfo.AttachmentCount = 2;
 
-		//m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
+		AssetHandle handle = AssetManager::ImportAsset("c:/dev/hazardproject/textures/starfield_front.png");
+		m_FrameBuffer = AssetManager::GetAsset<Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_FrameBuffer);
+
 		//m_RenderTexture->Resize(1920, 1080);
-
-		texture = new Rendering::Vulkan::VulkanTexture("res/textures/starfield_bottom.png");
-		EditorView::GetContext().AddTexture((Hazard::Rendering::Texture*)texture);
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -54,7 +55,8 @@ namespace WindowElement {
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
 
-		ImGui::Image((void*)texture->GetID(),
+		//RenderCommand::Draw(m_FrameBuffer);
+		ImGui::Image((void*)m_FrameBuffer->GetID(),
 			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {

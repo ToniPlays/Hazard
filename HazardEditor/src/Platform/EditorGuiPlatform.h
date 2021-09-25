@@ -11,5 +11,5 @@ public:
 	virtual void BeginFrame() = 0;
 	virtual void EndFrame() = 0;
 	virtual void Close() = 0;
-	virtual void AddTexture(Hazard::Rendering::Texture* texture) = 0;
+	virtual void AddTexture(Ref<Rendering::Texture> texture) = 0;
 };

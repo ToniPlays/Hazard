@@ -13,7 +13,7 @@ namespace Hazard {
 		operator const uint64_t() const { return m_Uid; }
 
 	private:
-		uint64_t m_Uid = 0;
+		uint64_t m_Uid;
 	};
 }
 namespace std {

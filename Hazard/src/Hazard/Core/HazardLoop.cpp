@@ -38,8 +38,8 @@ namespace Hazard::Core {
 
 			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
 			m_Application->Close();
-			m_ModuleHandler.Close();
 			AssetManager::Shutdown();
+			m_ModuleHandler.Close();
 			HZR_PROFILE_SESSION_END();
 		}
 		catch (const HazardRuntimeError& error) 

@@ -360,6 +360,7 @@ project "HazardPlayer"
 	}
 
 	includedirs {
+		"vendor/imgui-node",
 		"vendor/spdlog/include",
 		"vendor/GLFW/include",
 		"vendor/GLAD/include",
@@ -368,9 +369,12 @@ project "HazardPlayer"
 		"vendor/yaml-cpp/include",
 		"vendor/JSON-develop/include",
 		"Hazard/vendor/assimp/include",
+		"vendor/box2d/include",
 		"vendor/OpenAL/lib/openAl32.lib",
 		"vendor/GLM",
-		"vendor/entt",
+		"vendor/entt/single_include/entt",
+		"HazardEditor/Platform/GLFW",
+		"HazardPlayer/src",
 		"Hazard/src",
 		"Hazard/GLM/glm"
 	}
@@ -386,15 +390,16 @@ project "HazardPlayer"
 	}
 
 	links {
-		"vendor/glfw/lib-vc2019/glfw3.lib",
 		"vendor/OpenAL/lib/openal32.lib",
-		"/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
+		"Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
 		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"yaml-cpp",
 		"msvcrt.lib",
 		"opengl32.lib",
 		"Hazard",
-		"GLAD"
+		"GLAD",
+		"GLFW"
 	}
 
 	filter "configurations:Debug"

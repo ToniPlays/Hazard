@@ -19,12 +19,6 @@
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\GUI\Library">
-      <UniqueIdentifier>{C50274C5-318E-E189-3A9F-647EA6A93D8A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Library\Layout">
-      <UniqueIdentifier>{D2549FC7-BE4E-C819-A7BB-5E2A93542E86}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\GUI\Window">
       <UniqueIdentifier>{8802468C-74D0-3992-5D64-AAB849D115F7}</UniqueIdentifier>
     </Filter>
@@ -42,6 +36,12 @@
     </Filter>
     <Filter Include="src\GUI\Window\Tabs">
       <UniqueIdentifier>{C1101713-2D72-F420-B6DF-3AD322402BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Library">
+      <UniqueIdentifier>{31E15EE3-9D96-D7D8-268B-D1AF923FCEDC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Library\Layout">
+      <UniqueIdentifier>{BE41AA9C-AA25-6BF2-1386-6545FF885574}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -86,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="..\vendor\ImGuizmo\ImGuizmo.h">
       <Filter>vendor\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\GLFW\FontAwesome.h">
+      <Filter>platform\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="platform\GLFW\imgui_impl_glfw.h">
       <Filter>platform\GLFW</Filter>
@@ -192,6 +195,24 @@
     <ClInclude Include="src\GUI\Window\Toolbar.h">
       <Filter>src\GUI\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Library\ComponentDraw.h">
+      <Filter>src\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Input.h">
+      <Filter>src\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\ContextMenus.h">
+      <Filter>src\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\Dockspace.h">
+      <Filter>src\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\Layout.h">
+      <Filter>src\Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Style.h">
+      <Filter>src\Library</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\EditorGuiPlatform.h">
       <Filter>src\Platform</Filter>
     </ClInclude>
@@ -209,27 +230,6 @@
     </ClInclude>
     <ClInclude Include="src\hzreditor.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\ContextMenus.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\Dockspace.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\Layout.h">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\ComponentDraw.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\FontAwesome.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Input.h">
-      <Filter>src\GUI\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Style.h">
-      <Filter>src\GUI\Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +344,21 @@
     <ClCompile Include="src\GUI\Window\Toolbar.cpp">
       <Filter>src\GUI\Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Library\Input.cpp">
+      <Filter>src\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\ContextMenus.cpp">
+      <Filter>src\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\Dockspace.cpp">
+      <Filter>src\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\Layout.cpp">
+      <Filter>src\Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Style.cpp">
+      <Filter>src\Library</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\EditorPlatformOpenGL.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -355,21 +370,6 @@
     </ClCompile>
     <ClCompile Include="src\hzreditor.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\ContextMenus.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\Dockspace.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\Layout.cpp">
-      <Filter>src\GUI\Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Input.cpp">
-      <Filter>src\GUI\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Style.cpp">
-      <Filter>src\GUI\Library</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

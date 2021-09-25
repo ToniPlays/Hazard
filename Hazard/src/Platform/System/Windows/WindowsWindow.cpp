@@ -5,7 +5,7 @@
 #include "Hazard/Events/Input.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
-#include "Platform/Rendering/Vulkan/VKContext.h"
+#include "Platform/Rendering/Vulkan/VulkanContext.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -23,62 +23,67 @@ namespace Hazard::Rendering {
 
 		HZR_PROFILE_FUNCTION();
 
-		if (glfwInit() != GLFW_TRUE) {
+		if (!glfwInit()) {
 			HZR_THROW("Failed to init GLFW");
 		}
-		
-		m_WindowData.Title = (appInfo->appName + " " + appInfo->buildVersion).c_str();
+
+		m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
 		m_WindowData.Platform = "Windows";
-		m_WindowData.Width = info->width;		
-		m_WindowData.Height = info->height;
-		m_WindowData.ImagesInFlight = info->imagesInFlight;
+		m_WindowData.Width = info->Width;
+		m_WindowData.Height = info->Height;
+		m_WindowData.ImagesInFlight = info->ImagesInFlight;
 
-		RenderAPI api = Application::GetModule<RenderContext>().GetCurrentAPI();
-		switch (api) {
-
+		switch (info->Renderer)
+		{
 		case RenderAPI::OpenGL:
-			m_Context = new OpenGL::OpenGLContext(&m_WindowData); 
+			m_Context = new OpenGL::OpenGLContext(&m_WindowData);
 			break;
-		case RenderAPI::Vulkan:
-			m_Context = new Vulkan::VKContext(&m_WindowData);
-			break;
+			case RenderAPI::Vulkan:
+				m_Context = new Vulkan::VulkanContext(&m_WindowData);
+				break;
 		default:
 			HZR_THROW("RenderContext not supported: ", RenderContext::APIToString(api));
+			break;
 		}
 
-		glfwWindowHint(GLFW_RESIZABLE, info->resizable);
-		glfwWindowHint(GLFW_MAXIMIZED, info->maximized);
-		glfwWindowHint(GLFW_DECORATED, info->decorated);
+		glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
+		glfwWindowHint(GLFW_DECORATED, info->Decorated);
 
-		if (info->fullScreen) {
+		if (info->FullScreen) {
 			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 			if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0) {
 				m_WindowData.Width = glfwGetVideoMode(monitor)->width;
 				m_WindowData.Height = glfwGetVideoMode(monitor)->height;
 
 			}
-			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, monitor, 0);
+			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 		}
 		else {
-			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title, 0, 0);
+			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), NULL, NULL);
 		}
 
 		if (!m_Window) {
-			HZR_THROW("Failed to create window");
+			HZR_CORE_INFO("Failed to create window");
 		}
-
+		m_Context->SetClearColor(info->Color);
 		m_Context->Init(this, appInfo);
 		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
+		if(info->Maximized)
+			glfwMaximizeWindow(m_Window);
+
 		glfwShowWindow(m_Window);
 		SetCallbacks();
 		SetVSync(info->VSync);
+
+		HZR_CORE_INFO(m_Context->GetDeviceSpec().name);
+
 	}
-	void WindowsWindow::OnUpdate() 
+	void WindowsWindow::OnUpdate()
 	{
-		m_Context->ClearFrame();
+		m_Context->SwapBuffers();
 		glfwPollEvents();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
@@ -126,6 +131,7 @@ namespace Hazard::Rendering {
 			data.Height = h;
 			data.Width = w;
 			Application::GetModule<RenderContext>().GetContext().SetViewport(0, 0, w, h);
+
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
 
@@ -197,11 +203,11 @@ namespace Hazard::Rendering {
 			data.focus = focus;
 			WindowFocusEvent event(focus);
 			data.EventCallback(event);
-		});
+			});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.minimized = minimized;
-		});
+			});
 	}
 
 	WindowsWindow::~WindowsWindow() {

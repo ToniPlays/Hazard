@@ -8,59 +8,56 @@ void HazardPlayer::PreInit()
 	HZR_PROFILE_FUNCTION();
 	std::vector<std::string> icons = { "res/icons/logo.png", "res/icons/logo.png" };
 
-	ApplicationCreateInfo appInfo;
-	appInfo.appName = "Hazard Runtime Game";
-	appInfo.buildVersion = HZR_BUILD_VERSION;
-	appInfo.logging = true;
-	appInfo.iconCount = icons.size();
-	appInfo.icons = icons.data();
+	ApplicationCreateInfo appInfo = {};
+	appInfo.AppName = "Hazard Runtime Game";
+	appInfo.BuildVersion = HZR_BUILD_VERSION;
+	appInfo.Logging = true;
+	appInfo.IconCount = icons.size();
+	appInfo.Icons = icons.data();
 
-	RenderContexCreateInfo contextInfo;
-	contextInfo.renderer = RenderAPI::OpenGL;
-	contextInfo.fullScreen = true;
-	contextInfo.color = { 1, 1, 1 };
+	RenderContexCreateInfo contextInfo = {};
+	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.FullScreen = false;
+	contextInfo.Maximized = true;
+	contextInfo.Color = Color::FromHex("#323232");
 	contextInfo.VSync = true;
-	contextInfo.width = 1280;
-	contextInfo.height = 720;
+	contextInfo.Width = 1280;
+	contextInfo.Height = 720;
 
-	RenderEngineCreateInfo engineInfo;
-	engineInfo.maxQuadCount = 50000;
-	engineInfo.samplerCount = 8;
-	engineInfo.shaderSourcePath = "res/shaders";
-	engineInfo.shaderCompilePath = "res/shaders";
+	RenderEngineCreateInfo engineInfo = {};
+	engineInfo.MaxQuadCount = 25000;
+	engineInfo.SamplerCount = 8;
+	engineInfo.ShaderSourcePath = "res/shaders";
+	engineInfo.ShaderCompilePath = "res/shaders";
 
-	AudioEngineCreateInfo audioInfo;
+	AudioEngineCreateInfo audioInfo = {};
 
-	ScriptEngineCreateInfo scriptInfo;
-	scriptInfo.appAssemblyPath = "data/HazardProject.dll";
-	scriptInfo.coreAssemblyPath = "data/HazardScripting.dll";
-	scriptInfo.monoDirectory = "data/mono";
-	scriptInfo.enable = true;
+	ScriptEngineCreateInfo scriptInfo = {};
+	scriptInfo.AppAssemblyPath = "data/HazardProject.dll";
+	scriptInfo.CoreAssemblyPath = "data/HazardScripting.dll";
+	scriptInfo.MonoDirectory = "data/mono";
+	scriptInfo.Enable = true;
 
-	EntityComponentCreateInfo entityComponent;
-	entityComponent.startupFile = "res/worlds/testScene.hazard";
+	EntityComponentCreateInfo entityComponent = {};
+	entityComponent.StartupFile = "C:/dev/HazardProject/assets/world.hazard";
 
-	HazardCreateInfo createInfo;
-	createInfo.appInfo = &appInfo;
-	createInfo.renderContextInfo = &contextInfo;
-	createInfo.rendererInfo = &engineInfo;
-	createInfo.audioEngine = &audioInfo;
-	createInfo.scriptEngineInfo = &scriptInfo;
-	createInfo.entityComponent = &entityComponent;
+	HazardCreateInfo createInfo = {};
+	createInfo.AppInfo = &appInfo;
+	createInfo.RenderContextInfo = &contextInfo;
+	createInfo.RendererInfo = &engineInfo;
+	createInfo.AudioEngine = &audioInfo;
+	createInfo.ScriptEngineInfo = &scriptInfo;
+	createInfo.EntityComponent = &entityComponent;
 
 	CreateApplicationStack(&createInfo);
 }
 void HazardPlayer::Init()
 {
 	Scripting::ScriptCommand::OnBeginRuntime();
-	Rendering::RenderCommand::SetFrameBuffer(nullptr);
 }
 void HazardPlayer::Update()
 {
-	auto[cam, tc] = ECS::WorldCommand::GetCurrentWorld().GetWorldCamera();
 
-	ECS::WorldCommand::RenderScene(Rendering::Camera(cam->GetProjection(), tc->GetTransformNoScale(),
-		tc->m_Translation));
 }
 
 bool HazardPlayer::OnEvent(Event& e)

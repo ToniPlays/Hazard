@@ -3,6 +3,8 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Math/Color.h"
 
+#include "Hazard/Rendering/Buffers/VertexArray.h"
+
 namespace Hazard::Rendering {
 
 	enum DrawType { Points, Line, LineLoop, LineStrip, Triangle, TriangleStrip, TriangleFan, Outline };
@@ -16,9 +18,9 @@ namespace Hazard::Rendering {
 	};
 
 	struct DeviceSpec {
-		std::string name;
-		std::string renderer;
-		uint32_t textureSlots;
+		std::string name = "Undefined";
+		std::string renderer = "Undefined";
+		uint32_t textureSlots = 0;
 	};
 	using ErrorCallback = void(*)(ErrorData& data);
 	class Window;
@@ -29,13 +31,13 @@ namespace Hazard::Rendering {
 
 		virtual void Init(Window* window, ApplicationCreateInfo* appInfo) = 0;
 
-		virtual void ClearFrame() const = 0;
-		virtual void SetViewport(int x, int y, int w, int h) const = 0;
-		virtual void SetClearColor(glm::vec4 clearColor) = 0;
-		//virtual void SetDepthTest(DepthFunc type) const = 0;
+		virtual void SwapBuffers() = 0;
 
-		//virtual void DrawIndexed(VertexArray& array, uint32_t size, DrawType type = DrawType::Triangle) const = 0;
+		virtual void SetViewport(int x, int y, int w, int h) = 0;
+		virtual void SetClearColor(glm::vec4 clearColor) = 0;
 		virtual DeviceSpec GetDeviceSpec() const = 0;
+
+		virtual void DrawIndexed(VertexArray* array, uint32_t size) = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
 	};

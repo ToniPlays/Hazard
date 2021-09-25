@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core/Instance.h"
-#include "Core/WindowSurface.h"
 #include <optional>
+#include "Hazard/Rendering/Texture/FrameBuffer.h"
+
+#include "vulkan/vulkan.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -34,6 +35,10 @@ namespace Hazard::Rendering::Vulkan {
 		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred = VK_PRESENT_MODE_IMMEDIATE_KHR, VkPresentModeKHR defaultMode = VK_PRESENT_MODE_FIFO_KHR);
 		static VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h);
 		static VkFormat FindSupportedFormat(VkPhysicalDevice device, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		static VkAttachmentDescription CreateAttachmentDescription(FrameBufferAttachment& attachment);
+		static std::vector<VkAttachmentReference> CreateColorRefs(std::vector<FrameBufferAttachment>& attachments);
+		static std::vector<VkAttachmentReference> CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex = 1);
+		static VkFormat GetFormat(FrameBufferTextureFormat format);
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);

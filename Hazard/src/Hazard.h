@@ -6,6 +6,8 @@
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
 
+#include "Hazard/Assets/AssetManager.h"
+#include "Hazard/Assets/Asset.h"
 
 //Hazard Event system
 #include "Hazard/Events/Input.h"
@@ -14,14 +16,14 @@
 
 //Hazard render engine includes
 
-#include "Hazard/Rendering/Texture/Texture.h"
+#include "Hazard/Rendering/Texture/Texture2D.h"
+#include "Hazard/Rendering/RenderCommand.h"
 
 //Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
-#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 #include "Platform/System/Window.h"
 

@@ -13,9 +13,10 @@ namespace Hazard::Module {
 		void Render();
 		void Close();
 
-		template<typename T>
-		T& AddModule() {
-			T* m = new T();
+		template<typename T, typename... Args>
+		T& AddModule(Args... args)
+		{
+			T* m = new T(std::forward<Args>(args)...);
 			m_Modules.push_back(m);
 			m->PreInit();
 			m->Init();

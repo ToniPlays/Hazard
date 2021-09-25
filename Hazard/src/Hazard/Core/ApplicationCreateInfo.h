@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Hazard/Math/Color.h"
 
 namespace Hazard {
 
@@ -9,18 +10,19 @@ namespace Hazard {
 		OpenGL,
 		Vulkan,
 		DX11,
-		DX12
+		DX12,
+		Metal
 	};
 
 	struct ApplicationCreateInfo 
 	{
-		std::string appName;
-		std::string buildVersion;
+		std::string AppName;
+		std::string BuildVersion;
 
-		std::string* icons = nullptr;
-		uint32_t iconCount = 0;
+		std::string* Icons = nullptr;
+		uint32_t IconCount = 0;
 
-		bool logging = false;
+		bool Logging = false;
 	};
 	struct AudioEngineCreateInfo
 	{
@@ -28,46 +30,46 @@ namespace Hazard {
 	};
 	struct EntityComponentCreateInfo 
 	{
-		std::string startupFile = "";
+		std::string StartupFile = "";
 	};
 	struct RenderContexCreateInfo 
 	{
-		RenderAPI renderer = RenderAPI::Auto;
-		bool fullScreen = false;
-		bool maximized = false;
-		bool resizable = true;
+		RenderAPI Renderer = RenderAPI::Auto;
+		bool FullScreen = false;
+		bool Maximized = false;
+		bool Resizable = true;
 		bool VSync = false;
-		bool decorated = true;
+		bool Decorated = true;
 		
-		glm::vec3 color = { 0, 0, 0 };
+		Color Color = { 0, 0, 0, 1.0 };
 
-		uint32_t width = 0;
-		uint32_t height = 0;
-		uint32_t imagesInFlight = 2;
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+		uint32_t ImagesInFlight = 2;
 	};
 	struct RenderEngineCreateInfo 
 	{
-		std::string shaderSourcePath;
-		std::string shaderCompilePath;
+		std::string ShaderSourcePath;
+		std::string ShaderCompilePath;
 
-		uint32_t maxQuadCount = 35000;
-		uint32_t samplerCount = 0;
+		uint32_t MaxQuadCount = 35000;
+		uint32_t SamplerCount = 0;
 	};
 	struct ScriptEngineCreateInfo 
 	{
-		std::string appAssemblyPath;
-		std::string coreAssemblyPath;
-		std::string monoDirectory;
-		bool enable = true;
+		std::string AppAssemblyPath;
+		std::string CoreAssemblyPath;
+		std::string MonoDirectory;
+		bool Enable = true;
 	};
 
 	struct HazardCreateInfo 
 	{
-		ApplicationCreateInfo* appInfo = nullptr;
-		RenderContexCreateInfo* renderContextInfo = nullptr;
-		RenderEngineCreateInfo* rendererInfo = nullptr;
-		ScriptEngineCreateInfo* scriptEngineInfo = nullptr;
-		AudioEngineCreateInfo* audioEngine = nullptr;
-		EntityComponentCreateInfo* entityComponent = nullptr;
+		ApplicationCreateInfo* AppInfo = nullptr;
+		RenderContexCreateInfo* RenderContextInfo = nullptr;
+		RenderEngineCreateInfo* RendererInfo = nullptr;
+		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
+		AudioEngineCreateInfo* AudioEngine = nullptr;
+		EntityComponentCreateInfo* EntityComponent = nullptr;
 	};
 }

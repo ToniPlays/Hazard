@@ -8,27 +8,21 @@
 
 namespace Hazard::Rendering {
 
-	RenderContext::RenderContext() : Module::Module("RenderContext")
+	RenderContext::RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) : Module::Module("RenderContext")
 	{
-	}
-	void RenderContext::InitContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
-	{
-		m_CurrentAPI = info->renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->renderer;
-		//RenderUtils::SetRenderAPI(m_CurrentAPI);
-
-		m_ClearColor = Color(info->color, 1.0f);
+		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->Renderer;
+		m_ClearColor = info->Color;
 
 		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 
-		if (appInfo->iconCount > 0) 
-			m_Window->SetWindowIcon(appInfo->iconCount, appInfo->icons);
+		if (appInfo->IconCount > 0)
+			m_Window->SetWindowIcon(appInfo->IconCount, appInfo->Icons);
 
-		RenderContextCommand::Init();
-		m_Window->GetContext()->SetClearColor({ info->color.r, info->color.g, info->color.b, 1.0f });
+		RenderContextCommand::Init(this);
+		m_Window->GetContext()->SetClearColor({ info->Color.r, info->Color.g, info->Color.b, 1.0f });
 		SetActive(true);
 	}
-
 	void RenderContext::Update()
 	{
 		HZR_PROFILE_FUNCTION();

@@ -28,7 +28,7 @@ namespace Hazard::Scripting::CSharp {
 		HZR_PROFILE_FUNCTION();
 		Mono::InitAssembly(info);
 		Mono::CreateDomain("Hazard");
-		Mono::LoadRuntimeAssembly(info->appAssemblyPath.c_str());
+		Mono::LoadRuntimeAssembly(info->AppAssemblyPath.c_str());
 	}
 	void CSharpEngine::OnBeginRuntime()
 	{

@@ -20,17 +20,19 @@ namespace WindowElement {
 	private:
 		void DrawFolderTree();
 		void DrawFilePath();
-		void LoadAllFiles(const FolderData& data);
-		void LoadFile(const std::string& file);
+		Ref<Rendering::Texture2D> GetFileImageFromType(AssetMetadata& metadata);
+		ImVec4 GetFileColor(AssetMetadata& metadata);
+
 		void DrawContentRows(float colWidth, float colHeight, int cols);
 		bool m_Open = true;
 		float m_Scale = 100.0f;
-		ImVec4 GetFileColor(const std::string& type);
 
 		std::string m_RootPath;
 		std::string m_CurrentPath;
 		std::string m_SearchValue;
 
 		FolderData m_FolderData;
+
+		std::unordered_map<std::string, Ref<Rendering::Texture2D>> m_Images;
 	};
 }

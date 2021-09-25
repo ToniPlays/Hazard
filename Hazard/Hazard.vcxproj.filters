@@ -7,6 +7,9 @@
     <Filter Include="src\Hazard">
       <UniqueIdentifier>{16265114-02DE-9261-6BE5-6BBD57BC2D52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Assets">
+      <UniqueIdentifier>{38F864C4-A40E-635A-ED85-EE7B59DB33E2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Audio">
       <UniqueIdentifier>{976C1382-8365-32D4-AC97-175998EF11E0}</UniqueIdentifier>
     </Filter>
@@ -46,6 +49,9 @@
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\2D">
+      <UniqueIdentifier>{A80A7A05-1442-C29C-1D4C-26C08902E995}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering\Buffers">
       <UniqueIdentifier>{5FF592A6-4BB0-8252-F467-FB9CE001CDE2}</UniqueIdentifier>
     </Filter>
@@ -64,6 +70,12 @@
     <Filter Include="src\Platform\Rendering\OpenGL">
       <UniqueIdentifier>{22CAEB0B-8EE2-D235-578F-62CFC36667CF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform\Rendering\OpenGL\Buffers">
+      <UniqueIdentifier>{9E8B91C1-0A50-90B1-D3B5-C07B3F392CE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\OpenGL\Textures">
+      <UniqueIdentifier>{3522C3EB-2174-9ADB-0A93-D7EBF683B3C4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform\Rendering\Vulkan">
       <UniqueIdentifier>{6E2E9E1C-DA46-8546-A3F3-14E00FCB19E0}</UniqueIdentifier>
     </Filter>
@@ -78,6 +90,9 @@
     </Filter>
     <Filter Include="src\Platform\Rendering\Vulkan\Pipeline">
       <UniqueIdentifier>{53F2ACA7-3F44-8497-2863-C1A714549D80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Rendering\Vulkan\Textures">
+      <UniqueIdentifier>{011C8938-ED6D-6028-D68C-9D38C27D7911}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\System">
       <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
@@ -141,6 +156,27 @@
     <ClInclude Include="src\Hazard.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\Asset.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetEnums.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetLoader.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetManager.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetMetadata.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetRegistry.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\IAssetLoader.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioClip.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
@@ -181,6 +217,9 @@
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\Ref.h">
+      <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\UUID.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Component.h">
@@ -288,10 +327,37 @@
     <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
+      <Filter>src\Hazard\Rendering\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Buffers\BufferLayout.h">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Buffers\Buffers.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderDataType.h">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Loaders.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Texture\FrameBuffer.h">
+      <Filter>src\Hazard\Rendering\Texture</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture\Texture.h">
+      <Filter>src\Hazard\Rendering\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Texture\Texture2D.h">
       <Filter>src\Hazard\Rendering\Texture</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
@@ -309,50 +375,20 @@
     <ClInclude Include="src\Platform\Rendering\GraphicsContext.h">
       <Filter>src\Platform\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLBuffers.h">
+      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLVertexArray.h">
+      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\CommandBuffer.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\FrameBuffer.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\RenderPass.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\VulkanBuffer.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Buffers\VulkanImage.h">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\Instance.h">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.h">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\WindowSurface.h">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Device\SwapChain.h">
-      <Filter>src\Platform\Rendering\Vulkan\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Device\VulkanDevice.h">
-      <Filter>src\Platform\Rendering\Vulkan\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Pipeline\Pipeline.h">
-      <Filter>src\Platform\Rendering\Vulkan\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VKContext.h">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VKUtils.h">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Vulkan.h">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.h">
+      <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\System\Window.h">
       <Filter>src\Platform\System</Filter>
@@ -678,15 +714,24 @@
     <ClInclude Include="vendor\stb-image\stb_image.h">
       <Filter>vendor\stb-image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanContext.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VKUtils.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\WindowSurface.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanAllocator.h" />
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Textures\VulkanTexture.h" />
-    <ClInclude Include="src\Hazard\Assets\AssetManager.h" />
-    <ClInclude Include="src\Hazard\Assets\Asset.h" />
-    <ClInclude Include="src\Hazard\Core\UUID.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Assets\AssetManager.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Assets\AssetRegistry.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
@@ -709,6 +754,9 @@
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
+      <Filter>src\Hazard\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Core\UUID.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp">
@@ -774,53 +822,47 @@
     <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
+      <Filter>src\Hazard\Rendering\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Buffers\Buffers.cpp">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Buffers\VertexArray.cpp">
+      <Filter>src\Hazard\Rendering\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Loaders.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Texture\FrameBuffer.cpp">
+      <Filter>src\Hazard\Rendering\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Texture\Texture2D.cpp">
+      <Filter>src\Hazard\Rendering\Texture</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLBuffers.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\CommandBuffer.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\FrameBuffer.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\RenderPass.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\VulkanBuffer.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Buffers\VulkanImage.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\Instance.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\WindowSurface.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Device\SwapChain.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Device\VulkanDevice.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Pipeline\Pipeline.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VKContext.cpp">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.cpp">
+      <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
       <Filter>src\Platform\System\Windows</Filter>
@@ -882,12 +924,12 @@
     <ClCompile Include="vendor\stb-image\stb_image.cpp">
       <Filter>vendor\stb-image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanContext.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\WindowSurface.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanAllocator.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Buffers\Buffers.cpp" />
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Textures\VulkanTexture.cpp" />
-    <ClCompile Include="src\Hazard\Assets\AssetManager.cpp" />
-    <ClCompile Include="src\Hazard\Core\UUID.cpp">
-      <Filter>src\Hazard\Core</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.cpp" />
   </ItemGroup>
 </Project>

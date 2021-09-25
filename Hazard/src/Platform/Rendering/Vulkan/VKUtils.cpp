@@ -1,6 +1,7 @@
 #pragma once
 #include <hzrpch.h>
 #include "VKUtils.h"
+#include "VulkanContext.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -146,6 +147,64 @@ namespace Hazard::Rendering::Vulkan {
 			}
 		}
 		HZR_THROW("Failed to find suported VkFormat!");
+	}
+
+	VkAttachmentDescription VKUtils::CreateAttachmentDescription(FrameBufferAttachment& attachment)
+	{
+		VkAttachmentDescription description;
+		description.flags = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+		description.format = GetFormat(attachment.format);
+		description.samples = VK_SAMPLE_COUNT_1_BIT;
+		description.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		description.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		description.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		description.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+		description.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		description.finalLayout = !attachment.IsDepth() ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+		return description;
+	}
+
+	std::vector<VkAttachmentReference> VKUtils::CreateColorRefs(std::vector<FrameBufferAttachment>& attachments)
+	{
+		uint32_t count = 0;
+		std::vector<VkAttachmentReference> refs;
+
+		for (auto& attachment : attachments) {
+			if (attachment.IsDepth()) continue;
+			refs.push_back({ count, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
+		}
+		return refs;
+	}
+
+	std::vector<VkAttachmentReference> VKUtils::CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex)
+	{
+		uint32_t count = startIndex;
+		std::vector<VkAttachmentReference> refs;
+
+		for (auto& attachment : attachments) {
+			if (!attachment.IsDepth()) continue;
+			refs.push_back({ count, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL });
+		}
+		return refs;
+	}
+
+	VkFormat VKUtils::GetFormat(FrameBufferTextureFormat format)
+	{
+		switch (format)
+		{
+		case Hazard::Rendering::FrameBufferTextureFormat::RGBA8:			return VK_FORMAT_R8G8B8A8_SRGB;
+		case Hazard::Rendering::FrameBufferTextureFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case Hazard::Rendering::FrameBufferTextureFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case Hazard::Rendering::FrameBufferTextureFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
+			/*case Hazard::Rendering::FrameBufferTextureFormat::DEPTH32_STENCIL8:
+		case Hazard::Rendering::FrameBufferTextureFormat::DEPTH32F: {
+			auto device = VulkanContext::GetDevice();
+			return device->GetDepthFormat();
+		}*/
+		}
+		HZR_CORE_INFO("[VKUtils] Failed to convert format");
 	}
 
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)

@@ -14,7 +14,8 @@ namespace Project {
 
 		bool Load(const std::string& path);
 		void Save();
-		void SaveCurrentScene();
+
+		void SaveCurrentWorld();
 		bool ProjectLoaded() { return m_ProjectData != nullptr; }
 		HazardProject& GetProject() { return *m_ProjectData; }
 

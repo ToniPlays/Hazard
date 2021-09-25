@@ -7,10 +7,6 @@ namespace Hazard::Rendering {
 
 	RenderContext* RenderContextCommand::m_Context;
 
-	void RenderContextCommand::Init()
-	{
-		m_Context = &Application::GetModule<RenderContext>();
-	}
 	/*void RenderContextCommand::SetDepthTest(DepthFunc type)
 	{
 		m_Context->GetContext().SetDepthTest(type);
@@ -28,9 +24,9 @@ namespace Hazard::Rendering {
 	{
 		m_Context->GetWindow().SetVSync(vsync);
 	}
-	void RenderContextCommand::ClearFrame()
+	void RenderContextCommand::SwapBuffers()
 	{
-		m_Context->GetWindow().GetContext()->ClearFrame();
+		m_Context->GetWindow().GetContext()->SwapBuffers();
 	}
 	void RenderContextCommand::SetDebugCallback(ErrorCallback& callback)
 	{

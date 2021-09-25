@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "WorldDeserializer.h"
 #include "Hazard/File/YamlUtils.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard::ECS::Loader
 {
@@ -154,8 +155,12 @@ namespace Hazard::ECS::Loader
 	}
 	template<>
 	static void WorldDeserializer::Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
+		std::string fileName;
+		YamlUtils::Deserialize(comp, "AudioFile", fileName);
+		AssetManager::ImportAsset(fileName);
+
 		AudioSourceComponent& source = entity.AddComponentWithCallback<AudioSourceComponent>([&](AudioSourceComponent& c) {
-			YamlUtils::Deserialize(comp, "AudioFile", c.sourceFile);
+			c.sourceFile = fileName;
 		});
 
 		if (comp["Gain"]) {
@@ -171,6 +176,7 @@ namespace Hazard::ECS::Loader
 		auto& c = entity.AddComponent<MeshComponent>();
 		std::string fileName;
 		YamlUtils::Deserialize(comp, "File", fileName);
+		AssetManager::ImportAsset(fileName);
 		//c.m_Mesh = Rendering::MeshFactory::LoadMesh(fileName);
 
 		//Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
@@ -182,10 +188,13 @@ namespace Hazard::ECS::Loader
 
 		YamlUtils::Deserialize(comp, "Tint", component.m_Tint);
 		if (comp["Texture"]) {
-			//using namespace Hazard::Rendering;
+			using namespace Hazard::Rendering;
+			std::string fileName;
+			YamlUtils::Deserialize(comp, "Texture", fileName);
 
+			AssetHandle handle = AssetManager::ImportAsset(fileName);
+			AssetManager::GetAsset<Texture2D>(handle);
 			//Texture2DCreateInfo createInfo;
-			//YamlUtils::Deserialize(comp, "Texture", createInfo.filename);
 			//component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 		}
 	};

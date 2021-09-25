@@ -19,7 +19,6 @@ namespace Hazard {
 		static Color FromGLM(const glm::vec4 color);
 		static Color FromHex(const std::string& hex);
 
-
 		friend std::ostream& operator << (std::ostream& os, const Color color) {
 			os << color.r << ", " << color.g << ", " << color.b << ", " << color.a;
 			return os;

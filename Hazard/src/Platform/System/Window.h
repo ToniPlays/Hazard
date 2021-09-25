@@ -10,7 +10,7 @@ namespace Hazard::Rendering {
 
 	struct WindowProps {
 
-		const char* Title;
+		std::string Title;
 		const char* Platform;
 		DeviceSpec deviceSpecs;
 

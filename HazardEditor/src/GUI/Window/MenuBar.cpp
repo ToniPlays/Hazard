@@ -189,14 +189,12 @@ namespace WindowElement {
 
 		if (e.GetKeyCode() == Key::S)
 		{
-			Application::GetModule<Project::ProjectManager>().SaveCurrentScene();
-			HZR_WARN("Saving scene");
+			Application::GetModule<Project::ProjectManager>().SaveCurrentWorld();
 			return true;
 		}
 		if (e.GetKeyCode() == Key::R)
 		{
 			Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
-			HZR_WARN("Reloading assemblies");
 			return true;
 		}
 

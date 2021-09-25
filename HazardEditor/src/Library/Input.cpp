@@ -338,9 +338,9 @@ namespace WindowElement {
 		ImGui::PopStyleColor(2);
 		return modified;
 	}
-	bool Input::ImageButton(uint32_t imageID, ImVec2 size)
+	bool Input::ImageButton(void* imageID, ImVec2 size)
 	{
-		return ImGui::ImageButton((void*)imageID, size, { 0, 1 }, { 1, 0});
+		return ImGui::ImageButton(imageID, size, { 0, 1 }, { 1, 0});
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field, bool runtime)
 	{

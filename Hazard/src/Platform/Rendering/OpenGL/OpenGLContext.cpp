@@ -14,7 +14,8 @@ namespace Hazard::Rendering {
 		void APIENTRY OnDebugMessage(GLenum source, GLenum type, unsigned int id, GLenum severity,
 			GLsizei length, const char* message, const void* userParam) {
 
-			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) 
+				return;
 			HZR_CORE_ERROR("[OpenGL]: {0}", message);
 
 			//OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
@@ -51,35 +52,30 @@ namespace Hazard::Rendering {
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			if (!appInfo->logging) return;
+			if (!appInfo->Logging) return;
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 			glDebugMessageCallback(OnDebugMessage, nullptr);
 		}
 
-		void OpenGLContext::ClearFrame() const
+		void OpenGLContext::SwapBuffers()
 		{
 			glfwSwapBuffers(m_Window);
 			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
-		void OpenGLContext::SetViewport(int x, int y, int w, int h) const
+		void OpenGLContext::SetViewport(int x, int y, int w, int h)
 		{
 			glViewport(x, y, w, h);
 		}
 
-		/*void OpenGLContext::SetDepthTest(DepthFunc type) const
+		void OpenGLContext::DrawIndexed(VertexArray* array, uint32_t size)
 		{
-			glDepthFunc(GL_NEVER + type);
-		}*/
-
-		/*void OpenGLContext::DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const
-		{
-			array.EnableAll();
-			glDrawElements(GL_POINTS + type, size, GL_UNSIGNED_INT, nullptr);
-		}*/
+			array->Bind();
+			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, nullptr);
+		}
 
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 		{
@@ -99,8 +95,8 @@ namespace Hazard::Rendering {
 			ss << "OpenGL ";
 			ss << major << "." << minor;
 			spec.renderer = ss.str();
-			ss.str("");
 
+			ss.str("");
 			ss << glGetString(GL_RENDERER);
 
 			spec.name = ss.str();
@@ -109,7 +105,9 @@ namespace Hazard::Rendering {
 		}
 		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
 		{
-			if (!s_Callback) return;
+			if (!s_Callback) 
+				return;
+
 			ErrorData data(("[OpenGL]: " + std::string(message)).c_str(), code);
 			s_Callback(data);
 		}

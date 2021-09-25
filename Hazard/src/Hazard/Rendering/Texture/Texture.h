@@ -1,21 +1,12 @@
 #pragma once
-#include "Hazard/Core/Core.h"
+
+#include "Hazard/Assets/Asset.h"
 
 namespace Hazard::Rendering 
 {
-
-	enum TextureDataType {Auto = 0, RGB, RGBA, HRD, HDRA };
-
-	class Texture 
-	{
+	class Texture : public Asset {
 	public:
-		virtual ~Texture() = default;
-
-		virtual uint32_t GetWidth() = 0;
-		virtual uint32_t GetHeight() = 0;
-
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+		Texture() = default;
 
 		virtual void* GetID() const = 0;
 	};

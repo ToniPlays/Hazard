@@ -15,14 +15,14 @@ namespace Hazard::Rendering::OpenGL {
 		~OpenGLContext();
 
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
-		void ClearFrame() const override;
+		void SwapBuffers() override;
 		void SetClearColor(glm::vec4 clearColor) override {
 			this->clearColor = clearColor;
 		};
-		void SetViewport(int x, int y, int w, int h) const override;
+		void SetViewport(int x, int y, int w, int h) override;
 		//void SetDepthTest(DepthFunc type) const override;
 
-		//void DrawIndexed(VertexArray& array, uint32_t size, DrawType type) const override;
+		void DrawIndexed(VertexArray* array, uint32_t size) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;

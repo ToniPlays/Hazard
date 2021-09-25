@@ -5,7 +5,10 @@
 #include <imgui_impl_vulkan.h>
 #include "imgui_impl_glfw.h"
 
+#if 0
+
 using namespace Hazard::Rendering::Vulkan;
+
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, Rendering::Vulkan::VKContext* context)
 {
 	this->m_Context = context;
@@ -55,12 +58,14 @@ void EditorPlatformVulkan::EndFrame()
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	CommandBuffer& buffer = m_Context->GetDevice()->GetSwapChain().GetCurrentBuffer();
-	FrameBuffer* frameBuffer = m_Context->GetDevice()->GetSwapChain().GetCurrentFrameBuffer();
-	m_Context->GetDevice()->GetSwapChain().GetRenderPass()->Begin(&buffer, frameBuffer->GetBuffer(), frameBuffer->GetExtent());
+	auto& swapChain = m_Context->GetDevice()->GetSwapChain();
+
+	CommandBuffer& buffer = swapChain.GetCurrentBuffer();
+	VulkanFrameBuffer* frameBuffer = swapChain.GetCurrentFrameBuffer();
+	swapChain.GetRenderPass()->Begin(&buffer, frameBuffer->GetBuffer(), frameBuffer->GetExtent());
 
 	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), *buffer.GetBuffer());
-	m_Context->GetDevice()->GetSwapChain().GetRenderPass()->End(&buffer);
+	swapChain.GetRenderPass()->End(&buffer);
 
 	buffer.End();
 	m_Context->Submit(&buffer);
@@ -78,16 +83,14 @@ void EditorPlatformVulkan::Close()
 {
 
 }
-void EditorPlatformVulkan::AddTexture(Hazard::Rendering::Texture* texture)
+void EditorPlatformVulkan::AddTexture(Ref<Rendering::Texture> texture)
 {
-	Rendering::Vulkan::VulkanTexture* vt = (Rendering::Vulkan::VulkanTexture*)texture;
-	vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetSampler(), vt->GetView(), vt->GetLayout()));
+	if (dynamic_cast<Rendering::Vulkan::VulkanTexture2D*>(texture.Raw())) {
+		Rendering::Vulkan::VulkanTexture2D* vt = (Rendering::Vulkan::VulkanTexture2D*)texture.Raw();
+		vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetData().Sampler, vt->GetData().ImageView, vt->GetData().Layout));
+		return;
+	}
+	Rendering::Vulkan::VulkanFrameBuffer* vt = (Rendering::Vulkan::VulkanFrameBuffer*)texture.Raw();
+	vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetData(0).Sampler, vt->GetData(0).ImageView, vt->GetData(0).Layout));
 }
-void EditorPlatformVulkan::FrameRender()
-{
-
-}
-void EditorPlatformVulkan::FramePresent()
-{
-
-}
+#endif

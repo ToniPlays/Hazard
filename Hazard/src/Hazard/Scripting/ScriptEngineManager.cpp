@@ -16,7 +16,7 @@ namespace Hazard::Scripting {
 		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
 
 		ScriptCommand::Init();
-		SetActive(info->enable);
+		SetActive(info->Enable);
 		//TODO: Move to module
 		Physics::PhysicsCommand::Init();
 	}
@@ -30,7 +30,7 @@ namespace Hazard::Scripting {
 	void ScriptEngineManager::Update() 
 	{
 		//Same here
-		Physics::PhysicsCommand::UpdateAll(&ECS::WorldCommand::GetCurrentWorld());
+		//Physics::PhysicsCommand::UpdateAll(&ECS::WorldCommand::GetCurrentWorld());
 
 		for (auto[type, engine] : m_ScriptEngines) {
 			engine->UpdateEntities();

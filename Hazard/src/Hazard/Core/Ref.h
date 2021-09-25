@@ -97,6 +97,11 @@ namespace Hazard {
             other.m_Instance = nullptr;
             return *this;
         }
+        template<typename T2>
+        [[nodiscard]] Ref<T2> As() const
+        {
+            return Ref<T2>(*this);
+        }
 
         operator bool() { return m_Instance != nullptr; }
         operator bool() const { return m_Instance != nullptr; }

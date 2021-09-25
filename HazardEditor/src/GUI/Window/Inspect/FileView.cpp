@@ -7,7 +7,6 @@
 #include "Library/Input.h"
 #include "Library/Layout/ContextMenus.h"
 #include "GUI/Window/DragDropUtils.h"
-#include <future>
 
 using namespace WindowLayout;
 
@@ -18,11 +17,25 @@ namespace WindowElement {
 	}
 	void FileView::Init()
 	{
-		LoadFile("res/icons/folder.png");
-		LoadFile("res/icons/logo.png");
-		LoadFile("res/icons/textureBG.png");
-		LoadFile("res/icons/csharp.png");
-		LoadFile("res/icons/world.png");
+		AssetHandle handle = AssetManager::ImportAsset("res/icons/folder.png");
+		m_Images["folder"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_Images["folder"]);
+
+		handle = AssetManager::ImportAsset("res/icons/logo.png");
+		m_Images["logo"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_Images["logo"]);
+
+		handle = AssetManager::ImportAsset("res/icons/textureBG.png");
+		m_Images["textureBG"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_Images["textureBG"]);
+
+		handle = AssetManager::ImportAsset("res/icons/csharp.png");
+		m_Images["csharp"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_Images["csharp"]);
+
+		handle = AssetManager::ImportAsset("res/icons/world.png");
+		m_Images["world"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		EditorView::GetContext().AddTexture(m_Images["world"]);
 	}
 	void FileView::OnWindowRender()
 	{
@@ -102,7 +115,6 @@ namespace WindowElement {
 		m_CurrentPath = m_RootPath;
 
 		UpdateFolderData();
-		LoadAllFiles(m_FolderData);
 	}
 	void FileView::DrawFolderTree()
 	{
@@ -112,7 +124,7 @@ namespace WindowElement {
 			for (std::filesystem::directory_entry folder : m_FolderData.folders) {
 				Layout::Treenode(folder.path().filename().string().c_str(), flags, [&]() {
 
-					});
+				});
 			}
 			});
 	}
@@ -142,34 +154,12 @@ namespace WindowElement {
 			}
 		}
 	}
-	void FileView::LoadAllFiles(const FolderData& data)
-	{
-		for (std::filesystem::directory_entry folder : data.folders)
-		{
-			LoadAllFiles(File::GetFolderFiles(folder.path().string()));
-		}
-		for (std::filesystem::directory_entry file : data.files) {
-			LoadFile(file.path().string());
-		}
-	}
-	void FileView::LoadFile(const std::string& file)
-	{
-		std::string ext = File::GetFileExtension(file);
-		if (ext == "jpg" || ext == "jpeg" || ext == "png")
-		{
-			//Rendering::Texture2DCreateInfo info;
-			//info.filename = file;
-			//Rendering::RenderUtils::Create<Rendering::Texture2D>(info).Raw()->IncRefCount();
-		}
-	}
 	void FileView::DrawContentRows(float colWidth, float colHeight, int cols)
 	{
 		//TODO: Add scroll zooming
 
 		ImGui::BeginChild("##list", { cols * colWidth, 0 }, false, ImGuiWindowFlags_NoScrollbar);
 		ImGui::Columns(cols, "##files", false);
-
-		//Ref<Rendering::Texture2D> folderImage = Vault::Get<Rendering::Texture2D>("res/icons/folder.png");
 
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#323234")));
 		ImGui::PushStyleColor(ImGuiCol_Button, Style::ColorAsImVec4(Color::FromHex("#181816")));
@@ -180,7 +170,7 @@ namespace WindowElement {
 		for (std::filesystem::directory_entry folder : m_FolderData.folders)
 		{
 			std::string name = folder.path().filename().string();
-			//Input::FileButton(name.c_str(), folderImage.Raw(), [&]() {}, { colWidth - 5, colHeight });
+			Input::FileButton(name.c_str(), m_Images["folder"].Raw(), [&]() {}, { colWidth - 5, colHeight });
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 				m_CurrentPath = folder.path().string();
@@ -191,17 +181,16 @@ namespace WindowElement {
 		ImGui::PopStyleColor();
 		for (std::filesystem::directory_entry file : m_FolderData.files)
 		{
-			std::string name = file.path().filename().string();
-			std::string type = DragDropUtils::TypeFromFile(name);
-			/*Rendering::Texture2D* texture = GetImageFor(file.path().string());
-			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(DragDropUtils::TypeFromFile(name)));
+			std::filesystem::path relative = AssetManager::ToRelative(file.path());
+			AssetHandle handle = AssetManager::GetHandleFromFile(relative.string());
+			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(metadata));
 
-			Input::FileButton(File::GetNameNoExt(name).c_str(), texture, [&]() {
-				DragDropUtils::DragSource(type.c_str(),	name, file.path().string());
+			Input::FileButton(File::GetNameNoExt(metadata.Path.string()).c_str(), GetFileImageFromType(metadata).Raw(), [&]() {
+				DragDropUtils::DragSource(Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), metadata.Path.string());
 
 				}, { colWidth - 5, colHeight });
 			ImGui::PopStyleColor();
-			*/
 			ImGui::NextColumn();
 		}
 
@@ -210,28 +199,37 @@ namespace WindowElement {
 		ImGui::PopStyleVar();
 		ImGui::EndChild();
 	}
-	ImVec4 FileView::GetFileColor(const std::string& type)
+	ImVec4 FileView::GetFileColor(AssetMetadata& metadata)
 	{
-		if (type == "Texture2D")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Warning));
-		if (type == "Script")	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
-		if (type == "World")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
-		if (type == "Material")		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
-		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+		
+		switch (metadata.Type)
+		{
+		case Hazard::AssetType::None:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Warning));
+		case Hazard::AssetType::AudioClip:			return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
+		case Hazard::AssetType::World:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+		case Hazard::AssetType::Texture:			return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
+		case Hazard::AssetType::EnvironmentMap:		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+		case Hazard::AssetType::PhysicsMaterial:	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+		}
 	}
-	/*Rendering::Texture2D* FileView::GetImageFor(const std::string& file)
+	Ref<Rendering::Texture2D> FileView::GetFileImageFromType(AssetMetadata& metadata)
 	{
-		std::string ext = File::GetFileExtension(file);
-
-		if (ext == "jpg" || ext == "jpeg" || ext == "png") {
-			return Vault::Get<Rendering::Texture2D>(file.c_str());
+		switch (metadata.Type)
+		{
+		case Hazard::AssetType::AudioClip:			return m_Images["folder"];
+		case Hazard::AssetType::World:				return m_Images["world"];
+		case Hazard::AssetType::Texture: {
+			Ref<Rendering::Texture2D> asset = AssetManager::GetAsset<Rendering::Texture2D>(metadata.Handle);
+			if (asset.Raw()->GetID() == nullptr) {
+				EditorView::GetContext().AddTexture(asset);
+			}
+			return asset;
 		}
-		if (ext == "cs")
-			return Vault::Get<Rendering::Texture2D>("res/icons/csharp.png");
-		if (ext == "hazard") {
-			return Vault::Get<Rendering::Texture2D>("res/icons/world.png");
+		case Hazard::AssetType::EnvironmentMap:		return m_Images["folder"];
+		case Hazard::AssetType::PhysicsMaterial:	return m_Images["folder"];
 		}
-		return Vault::Get<Rendering::Texture2D>("res/icons/logo.png");
-	}*/
+		return m_Images["folder"];
+	}
 	void FileView::UpdateFolderData()
 	{
 		if (!m_RootPath.empty())

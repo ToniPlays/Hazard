@@ -12,7 +12,7 @@ namespace WindowElement {
 		static bool InputField(std::string& text);
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = { 0, 0 });
-		/*template<typename T>
+		template<typename T>
 		static bool FileButton(const char* name, Hazard::Rendering::Texture2D* texture, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
 		{
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
@@ -29,7 +29,7 @@ namespace WindowElement {
 			ImGui::TextWrapped(name);
 			ImGui::EndChild();
 			return false;
-		}*/
+		}
 		static bool ResettableDragButton(const char* label, float& value, float resetValue = 0.0f, ImVec2 size = { 0, 0 },
 			uint16_t buttonFont = 0, uint16_t dragFont = 0);
 		static bool Vec1(const char* label, float& value, float resetValue, float columnWidth);
@@ -41,8 +41,8 @@ namespace WindowElement {
 		static void Checkbox(const char* label, bool& value);
 		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
-		/*template<typename T, typename C>
-		static InputType TextureSlot(Ref<Rendering::Texture> texture, T callback, C dropCallback) {
+		template<typename T, typename C>
+		static InputType TextureSlot(Ref<Rendering::Texture2D> texture, T callback, C dropCallback) {
 			InputType input = InputType::None;
 
 			Layout::Table(2, false, "##textureSlot");
@@ -52,7 +52,7 @@ namespace WindowElement {
 				input = InputType::ImageChange;
 
 			dropCallback();
-			Layout::Tooltip(texture->GetData().file.c_str());
+			Layout::Tooltip("Image");
 			Layout::TableNext();
 			Button("Flip");
 			Layout::SameLine(0, 5);
@@ -64,7 +64,7 @@ namespace WindowElement {
 			Layout::EndTable();
 
 			return input;
-		};*/
+		};
 		static bool Slider(const char* label, float& value, float min = 0.0f, float max = 1000.0f);
 		static bool DragInt(const char* label, int& value);
 		static bool DragUInt(const char* label, uint32_t& value, uint32_t min = 0, uint32_t max = 0);
@@ -76,7 +76,7 @@ namespace WindowElement {
 
 		static bool ButtonColorChange(const char* label, const Hazard::Color& offColor, const Hazard::Color& onColor, const Hazard::Color& background, const bool state, ImVec2 size = { 0, 0 });
 		static bool ColoredButton(const char* label, const Hazard::Color& color, const Hazard::Color& textColor, ImVec2 size = { 0, 0 });
-		static bool ImageButton(uint32_t imageID, ImVec2 size = { 50, 50 });
+		static bool ImageButton(void* imageID, ImVec2 size = { 50, 50 });
 
 		static bool PublicField(const std::string& name, Scripting::PublicField* field, bool runtime = false);
 	};
