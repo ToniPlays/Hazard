@@ -55,12 +55,7 @@ namespace Hazard::ECS {
 		template<typename T>
 		bool HasComponent() { return m_World->m_Registry.has<T>(m_Handle); }
 
-		bool IsValid() { 
-			if (m_World == nullptr) 
-				return false;
-
-			return m_World->GetWorldRegistry().valid(m_Handle);
-		}
+		bool IsValid();
 
 		entt::entity GetHandle() { return m_Handle; }
 		bool IsVisible() { return GetComponent<TagComponent>().m_Visible; }

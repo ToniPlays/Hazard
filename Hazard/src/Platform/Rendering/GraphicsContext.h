@@ -31,6 +31,8 @@ namespace Hazard::Rendering {
 
 		virtual void Init(Window* window, ApplicationCreateInfo* appInfo) = 0;
 
+		virtual void Begin() = 0;
+		virtual void End() = 0;
 		virtual void SwapBuffers() = 0;
 
 		virtual void SetViewport(int x, int y, int w, int h) = 0;

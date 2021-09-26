@@ -34,8 +34,13 @@ namespace Hazard::Rendering::Vulkan {
 		static VkInstance GetInstance() { return m_Instance; }
 		static VkSurfaceKHR GetSurface() { return m_WindowSurface->GetVkSurface(); }
 		static VulkanDevice* GetDevice() { return m_Device.get(); }
+		static VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
+		
+		VulkanSwapChain GetSwapchain() { return m_SwapChain; }
 
-		void Begin();
+		void BeginFrame();
+		void Begin() override;
+		void End();
 
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
@@ -47,7 +52,7 @@ namespace Hazard::Rendering::Vulkan {
 		inline static Scope<WindowSurface> m_WindowSurface;
 		inline static Scope<VulkanDevice> m_Device;
 
-		VkPipelineCache m_PipelineCache;
+		inline static VkPipelineCache m_PipelineCache;
 
 		VulkanSwapChain m_SwapChain;
 

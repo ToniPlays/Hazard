@@ -6,7 +6,7 @@ namespace Hazard::Rendering::OpenGL
 {
 	class OpenGLVertexArray : public VertexArray {
 	public:
-		OpenGLVertexArray(VertexArrayCreateInfo* info);
+		OpenGLVertexArray(const VertexArrayCreateInfo& info);
 		~OpenGLVertexArray();
 		
 		void Bind() override;
@@ -18,7 +18,7 @@ namespace Hazard::Rendering::OpenGL
 		void SetIndexBuffer(IndexBuffer* buffer) override;
 	private:
 		std::vector<VertexBuffer*> m_Buffers;
-		IndexBuffer* m_IndexBuffer;
+		IndexBuffer* m_IndexBuffer = nullptr;
 
 		uint32_t m_ID = 0;
 		uint32_t m_VertexBufferIndex = 0;

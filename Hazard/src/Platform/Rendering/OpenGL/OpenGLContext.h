@@ -20,8 +20,8 @@ namespace Hazard::Rendering::OpenGL {
 			this->clearColor = clearColor;
 		};
 		void SetViewport(int x, int y, int w, int h) override;
-		//void SetDepthTest(DepthFunc type) const override;
-
+		void Begin() override {};
+		void End() override {};
 		void DrawIndexed(VertexArray* array, uint32_t size) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;

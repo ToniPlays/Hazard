@@ -4,6 +4,7 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Core/UUID.h"
 #include "Hazard/Audio/AudioClip.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 namespace Hazard::ECS {
 
@@ -41,7 +42,7 @@ namespace Hazard::ECS {
 	struct MeshComponent 
 	{
 		float yes;
-		//Ref<Rendering::Mesh> m_Mesh;
+		Ref<Rendering::Mesh> m_Mesh;
 		//Ref<Rendering::Material> m_Material;
 	};
 	struct AudioSourceComponent 

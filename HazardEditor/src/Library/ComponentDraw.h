@@ -25,7 +25,6 @@ namespace WindowElement {
 
 	template<>
 	inline void Draw(const char* name, Entity entity, TagComponent& component) {
-		if (!entity.HasComponent<TagComponent>()) return;
 		Layout::ComponentTreenode<TagComponent>(entity, name, [&]() {
 
 			Layout::Text("Tag");
@@ -45,10 +44,10 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, TransformComponent& component) {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
-			glm::vec3 rot {
+			glm::vec3 rot{
 				glm::degrees(component.m_Rotation.x),
 				glm::degrees(component.m_Rotation.y),
-				glm::degrees(component.m_Rotation.z) 
+				glm::degrees(component.m_Rotation.z)
 			};
 
 			Layout::IDGroup("Translation", [&]() {
@@ -147,8 +146,6 @@ namespace WindowElement {
 					using namespace Hazard::Rendering;
 					Texture2DCreateInfo createInfo;
 					createInfo.filePath = file;
-
-					//component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 				}
 			}
 
@@ -343,7 +340,8 @@ namespace WindowElement {
 			Layout::Text("Mesh");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			//Ref<Rendering::Mesh> mesh = component.m_Mesh;
+			Ref<Rendering::Mesh> mesh = component.m_Mesh;
+
 			std::string file = "None";
 			bool changed = Input::InputField(file);
 
@@ -374,7 +372,7 @@ namespace WindowElement {
 			const char* currentText;
 			currentText = text[(int)component.type];
 
-			if(ImGui::BeginCombo("##bodyType", currentText)) {
+			if (ImGui::BeginCombo("##bodyType", currentText)) {
 				for (int i = 0; i < 3; i++) {
 
 					bool isSelected = currentText == text[i];
@@ -397,9 +395,9 @@ namespace WindowElement {
 			Input::Checkbox("##", component.FixedRotation);
 
 			Layout::EndTable();
-		}, []() {
+			}, []() {
 
-		});
+			});
 	}
 
 	template<>
@@ -419,7 +417,7 @@ namespace WindowElement {
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 			Input::DragFloat("##Density", component.Density);
-			}, 
+			},
 			[]() {
 			});
 	}

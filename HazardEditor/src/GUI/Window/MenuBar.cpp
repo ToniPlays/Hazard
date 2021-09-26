@@ -93,19 +93,24 @@ namespace WindowElement {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open project", []() {
 				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
+
 				if (!path.empty())
 					Application::GetModule<Project::ProjectManager>().Load(path);
-
 				});
+
 			Layout::Separator();
 			Layout::MenuItem("Save", []() {
 				Application::GetModule<Project::ProjectManager>().Save();
 				});
-			Layout::MenuItem("Save as", []() {});
-			Layout::MenuItem("New scene", []() {});
+			Layout::MenuItem("Save as", []() {
+				HZR_ASSERT(false, "Save as TODO"); 
+				});
+			Layout::MenuItem("New world", []() {
+				HZR_ASSERT(false, "New world TODO"); 
+				});
 			Layout::Separator();
 			Layout::MenuItem("Export", []() {
-				Application::GetModule<EditorView>().SetLayerActive<ExportView>(true);
+				HZR_ASSERT(false, "Export TODO");
 				});
 			Layout::Separator();
 			Layout::MenuItem("Quit", []() {

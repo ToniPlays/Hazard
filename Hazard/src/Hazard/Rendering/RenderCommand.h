@@ -3,6 +3,7 @@
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Texture/FrameBuffer.h"
 #include "Buffers/VertexArray.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
 
 namespace Hazard::Rendering {
@@ -23,6 +24,6 @@ namespace Hazard::Rendering {
 	template<typename T>
 	inline void RenderCommand::Submit(T fn)
 	{
-		fn();
+		RenderContextCommand::Submit(fn);
 	}
 }

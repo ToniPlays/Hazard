@@ -9,7 +9,7 @@ namespace Hazard::Rendering::OpenGL
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(VertexBufferCreateInfo* info);
+		OpenGLVertexBuffer(const VertexBufferCreateInfo& createInfo);
 		~OpenGLVertexBuffer();
 
 		void Bind() override;
@@ -28,7 +28,7 @@ namespace Hazard::Rendering::OpenGL
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(IndexBufferCreateInfo* info);
+		OpenGLIndexBuffer(const IndexBufferCreateInfo& createInfo);
 		~OpenGLIndexBuffer();
 
 		void Bind() override;
@@ -38,6 +38,23 @@ namespace Hazard::Rendering::OpenGL
 
 	private:
 		void SetData(uint32_t* data, uint32_t size);
+
+		BufferUsage m_Usage;
+
+		uint32_t m_ID;
+		uint32_t m_Size;
+
+	};
+	class OpenGLUniformBuffer : public UniformBuffer
+	{
+	public:
+		OpenGLUniformBuffer(const UniformBufferCreateInfo& createInfo);
+		~OpenGLUniformBuffer();
+
+		void Bind() override;
+		void Unbind() override;
+
+	private:
 
 		BufferUsage m_Usage;
 

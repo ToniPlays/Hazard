@@ -6,17 +6,17 @@
 
 namespace Hazard::Rendering::OpenGL
 {
-	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexBufferCreateInfo& info) : m_Size(info.Size)
 	{
-		m_Usage = info->Usage;
-		m_Layout = *info->Layout;
+		m_Usage = info.Usage;
+		m_Layout = *info.Layout;
 
 		glCreateBuffers(1, &m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 		glBufferData(GL_ARRAY_BUFFER, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
 
-		if (info->Data) {
-			SetData(info->Data, m_Size);
+		if (info.Data) {
+			SetData(info.Data, m_Size);
 		}
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -36,14 +36,14 @@ namespace Hazard::Rendering::OpenGL
 		Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
-	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const IndexBufferCreateInfo& info) : m_Size(info.Size)
 	{
-		m_Usage = info->Usage;
+		m_Usage = info.Usage;
 		glGenBuffers(1, &m_ID);
 		Bind();
 
-		if (info->Data != nullptr) 
-			SetData(info->Data, info->Size);
+		if (info.Data != nullptr) 
+			SetData(info.Data, info.Size);
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
@@ -62,5 +62,21 @@ namespace Hazard::Rendering::OpenGL
 		m_Size = size;
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 		glBufferData(GL_ARRAY_BUFFER, size * sizeof(uint32_t), data, GL_STREAM_DRAW + m_Usage);
+	}
+	OpenGLUniformBuffer::OpenGLUniformBuffer(const UniformBufferCreateInfo& createInfo)
+	{
+
+	}
+	OpenGLUniformBuffer::~OpenGLUniformBuffer()
+	{
+
+	}
+	void OpenGLUniformBuffer::Bind()
+	{
+
+	}
+	void OpenGLUniformBuffer::Unbind()
+	{
+
 	}
 }

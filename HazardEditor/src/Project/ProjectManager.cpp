@@ -40,8 +40,8 @@ namespace Project {
 		YamlUtils::Deserialize(general, "Startup world", project->m_StartupWorld);
 		m_ProjectData = project;
 
-		Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
-			SetRootPath(project->m_AbsolutePath.c_str());
+		//Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
+		//	SetRootPath(project->m_AbsolutePath.c_str());
 
 		if (!project->m_StartupWorld.empty()) {
 			if (!Application::GetModule<ECS::WorldHandler>().LoadWorld(project->m_StartupWorld, ECS::Serialization::Editor)) {

@@ -81,7 +81,6 @@ namespace WindowElement {
 		PushRenderable<Profiler>();
 		PushRenderable<WelcomePopup>();
 
-		PushRenderable<ExportView>();
 		PushRenderable<SettingsView>();
 	}  
 	void EditorView::Render()

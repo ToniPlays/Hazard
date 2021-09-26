@@ -11,8 +11,8 @@
 								template<>															\
 								void World::OnComponentRemoved<x>(Entity& entity, x& component) {}	\
 
-
-namespace Hazard::ECS {
+namespace Hazard::ECS 
+{
 	template<typename T>
 	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& entityMap)
 	{
@@ -33,11 +33,9 @@ namespace Hazard::ECS {
 		m_Name = world.GetName() + " (copy)";
 		std::unordered_map<UUID, entt::entity> entityMap;
 
-		memcpy(&m_WorldData, &world.m_WorldData, sizeof(WorldData));
 		auto& entityID = world.m_Registry.view<TagComponent>();
 
 		entityMap.reserve(entityID.size());
-
 		for (size_t i = entityID.size(); i > 0; i--) {
 			auto entity = entityID[i - 1];
 
@@ -77,19 +75,6 @@ namespace Hazard::ECS {
 		HZR_CORE_INFO("Unloaded world: " + GetName());
 	}
 
-	void World::SetBackground(WorldBackground type, const std::string& file)
-	{
-		HZR_CORE_ERROR("Loading background");
-		if (type != m_WorldData.background) {
-			if (type == WorldBackground::Colored) {
-				//m_WorldData.renderer = new Rendering::ColorBackgroundRenderer();
-			}
-			else {
-				//m_WorldData.renderer = new Rendering::SkyboxBackgroundRenderer(file);
-			}
-		}
-		m_WorldData.background = type;
-	}
 	Entity World::CreateEntity(const std::string& name)
 	{
 		Entity entity { m_Registry.create(), this };
@@ -175,7 +160,6 @@ namespace Hazard::ECS {
 		return std::tuple(nullptr, nullptr);
 	}
 
-#pragma region Component added and removed methods
 	//Scene component added and removed
 	template<typename T>
 	void World::OnComponentAdded(Entity& entity, T& component) {}
@@ -188,8 +172,9 @@ namespace Hazard::ECS {
 	REGISTER_COMPONENT(PointLightComponent);
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
+	REGISTER_COMPONENT(SpriteRendererComponent);
+	REGISTER_COMPONENT(MeshComponent);
 
-	//CAMERA COMPONENT
 	template<>
 	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
 		component.RecalculateProjection(1920, 1080);
@@ -197,14 +182,6 @@ namespace Hazard::ECS {
 	template<>
 	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
 
-	//SPRITE RENDERER COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		//component.m_Texture = Ref(Vault::Get<Rendering::Texture2D>("White"));
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
-	
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
 	{
@@ -212,7 +189,7 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}
-	//SKY LIGHT COMPONENT
+
 	template<>
 	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
 		WorldCommand::OnScriptAttached(entity, component);
@@ -231,14 +208,4 @@ namespace Hazard::ECS {
 	{
 		WorldCommand::OnScriptDetached(entity, component);
 	}
-	//MESH COMPONENT
-	template<>
-	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
-		//component.m_Material = Ref<Rendering::Material>::Create();
-		//Ref<Rendering::GraphicsPipeline> pipeline = Ref(Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader"));
-		//component.m_Material->SetPipeline(pipeline);
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, MeshComponent& component) {}
-#pragma endregion
 }

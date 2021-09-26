@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-namespace Hazard::Rendering 
+namespace Hazard::Rendering
 {
 	Renderer2D::Renderer2D(RenderEngineCreateInfo* info)
 	{
@@ -33,7 +33,7 @@ namespace Hazard::Rendering
 
 			offset += 4;
 		}
-		
+
 		BufferLayout layout = {
 			{ "v_position",		ShaderDataType::Float3 },
 			{ "v_color",		ShaderDataType::Float4 }
@@ -54,7 +54,7 @@ namespace Hazard::Rendering
 		vertexArrayInfo.VertexBuffer = &vertexInfo;
 		vertexArrayInfo.IndexBuffer = &indexBuffer;
 
-		m_Array = VertexArray::Create(&vertexArrayInfo);
+		m_Array = VertexArray::Create(vertexArrayInfo);
 		delete[] indices;
 
 		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
@@ -66,12 +66,15 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Update()
 	{
-		return;
-		BeginWorld();
-		BeginBatch();
-		Submit({ { 0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
-		Submit({ {-0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
-		Flush();
+		RenderCommand::Submit([=]() {
+			BeginWorld();
+			BeginBatch();
+
+			Submit({ { 0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
+			Submit({ {-0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
+
+			Flush();
+			});
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
@@ -101,8 +104,8 @@ namespace Hazard::Rendering
 		if (m_Data.QuadIndexCount == 0) return;
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
-		m_Array->GetVertexBuffer().SetData(m_Data.BufferBase, dataSize);
-
-		RenderCommand::DrawIndexed(m_Array, m_Data.QuadIndexCount);
+		//m_Array->GetVertexBuffer().SetData(m_Data.BufferBase, dataSize);
+		RenderContextCommand::SetClearColor({0.0f, 0.0f, (1.0f + (float)Math::Sin(Time::s_Time)) * 0.5f, 1.0f});
+		//RenderCommand::DrawIndexed(m_Array, m_Data.QuadIndexCount);
 	}
 }

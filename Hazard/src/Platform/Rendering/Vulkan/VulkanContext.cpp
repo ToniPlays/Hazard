@@ -69,7 +69,7 @@ namespace Hazard::Rendering::Vulkan {
 		CreateDrawBuffers();
 	}
 
-	void VulkanContext::Begin()
+	void VulkanContext::BeginFrame()
 	{
 		auto result = m_SwapChain.AcquireNextImage(&m_CurrentBufferIndex);
 
@@ -79,12 +79,20 @@ namespace Hazard::Rendering::Vulkan {
 		}
 	}
 
+	void VulkanContext::Begin()
+	{
+		
+	}
+
+	void VulkanContext::End()
+	{
+		
+	}
+
 	void VulkanContext::SwapBuffers()
 	{
-		Begin();
-
+		BeginFrame();
 		CreateDrawBuffers();
-
 		m_SwapChain.SwapBuffers();
 	}
 

@@ -7,8 +7,6 @@ namespace Hazard::Rendering {
 	class RenderContextCommand {
 		friend class RenderContext;
 	public:
-		//static void SetDepthTest(DepthFunc type);
-
 		static void SetTitle(const char* title);
 
 		static bool IsVsync();
@@ -16,10 +14,12 @@ namespace Hazard::Rendering {
 		static void SwapBuffers();
 
 		template<typename T>
-		static void Submit(T func) {
-			m_Context->GetContext().Submit(func);
+		static void Submit(T func) 
+		{
+			m_Context->GetContext().Begin();
+			func();
+			m_Context->GetContext().End();
 		}
-
 		static void DrawIndexed(VertexArray* vertexArray, uint32_t size) { m_Context->GetContext().DrawIndexed(vertexArray, size); }
 
 		static RenderContext& GetContext() { return *m_Context; };

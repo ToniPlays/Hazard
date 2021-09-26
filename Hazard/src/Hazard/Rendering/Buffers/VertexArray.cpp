@@ -8,7 +8,7 @@
 
 namespace Hazard::Rendering
  {
-    VertexArray* VertexArray::Create(VertexArrayCreateInfo* info)
+    VertexArray* VertexArray::Create(const VertexArrayCreateInfo& info)
     {
 		switch (RenderCommand::GetAPI())
 		{

@@ -51,7 +51,7 @@ namespace Hazard::Rendering
 		virtual void SetData(const void* data, uint32_t size) = 0;
 		virtual BufferLayout GetLayout() = 0;
 
-		static VertexBuffer* Create(VertexBufferCreateInfo* info);
+		static VertexBuffer* Create(const VertexBufferCreateInfo& createInfo);
 	};
 
 	class IndexBuffer 
@@ -65,12 +65,15 @@ namespace Hazard::Rendering
 		virtual void SetData(uint32_t* data, uint32_t size) = 0;
 		virtual uint32_t GetCount() = 0;
 
-		static IndexBuffer* Create(IndexBufferCreateInfo* info);
+		static IndexBuffer* Create(const IndexBufferCreateInfo& createInfo);
 	};
 	class UniformBuffer 
 	{
+	public:
 		virtual ~UniformBuffer() = default;
 		virtual void Bind() = 0;
-		virtual void Unind() = 0;
+		virtual void Unbind() = 0;
+
+		static UniformBuffer* Create(const UniformBufferCreateInfo& createInfo);
 	};
 }

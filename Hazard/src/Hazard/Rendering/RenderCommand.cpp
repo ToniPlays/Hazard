@@ -11,6 +11,6 @@ namespace Hazard::Rendering
 
 	void RenderCommand::DrawIndexed(VertexArray* vertexArray, uint32_t size)
 	{
-
+		RenderContextCommand::DrawIndexed(vertexArray, size);
 	}
 }

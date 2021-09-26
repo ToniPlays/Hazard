@@ -7,12 +7,6 @@
 
 namespace Hazard::ECS::Loader
 {
-	static WorldBackground StringToWorldType(const std::string& value) {
-		if (value == "Sky")		return WorldBackground::Sky;
-		if (value == "HDRI")	return WorldBackground::HDRI;
-		return WorldBackground::Colored;
-	}
-
 	World* WorldDeserializer::DeserializeEditor(const char* file)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -24,23 +18,6 @@ namespace Hazard::ECS::Loader
 			return world;
 
 		world->SetName(root["World"].as<std::string>());
-
-		if (root["Environment"])
-		{
-			auto env = root["Environment"];
-			//YamlUtils::Deserialize(env, "ClearColor", world->GetWorldData().renderer->m_Color);
-			WorldBackground type = StringToWorldType(env["Type"].as<std::string>());
-
-			std::string file = "";
-			if (env["File"]) {
-				YamlUtils::Deserialize(env, "File", file);
-			}
-			world->SetBackground(type, file);
-			float gamma = 0;
-			if (env["Gamma"])
-				YamlUtils::Deserialize(env, "Gamma", gamma);
-			//world->GetWorldData().renderer->SetGamma(gamma);
-		}
 
 		//Loop entities
 		auto entities = root["Entities"];
@@ -176,11 +153,8 @@ namespace Hazard::ECS::Loader
 		auto& c = entity.AddComponent<MeshComponent>();
 		std::string fileName;
 		YamlUtils::Deserialize(comp, "File", fileName);
-		AssetManager::ImportAsset(fileName);
-		//c.m_Mesh = Rendering::MeshFactory::LoadMesh(fileName);
-
-		//Ref<Rendering::GraphicsPipeline> pipeline = Vault::Get<Rendering::GraphicsPipeline>("DefaultMeshShader");
-		//c.m_Material->SetPipeline(pipeline);
+		AssetHandle handle = AssetManager::ImportAsset(fileName);
+		c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -194,8 +168,6 @@ namespace Hazard::ECS::Loader
 
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
 			AssetManager::GetAsset<Texture2D>(handle);
-			//Texture2DCreateInfo createInfo;
-			//component.m_Texture = RenderUtils::Create<Texture2D>(createInfo);
 		}
 	};
 	template<>

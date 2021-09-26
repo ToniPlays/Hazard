@@ -6,30 +6,14 @@
 
 namespace Hazard::ECS::Loader {
 
-	static std::string BackgroundTypeToString(WorldBackground type) {
-		switch (type)
-		{
-		case Hazard::ECS::Sky:	return "Sky";
-		case Hazard::ECS::HDRI:	return "HDRI";
-		}
-		return "Color";
-	}
-
 	bool WorldSerializer::SerializeEditor(const char* file, World& world)
 	{
 		HZR_PROFILE_FUNCTION();
 		YAML::Emitter out;
 
-		WorldData& worldData = world.GetWorldData();
 
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", !world.GetName().empty() ? world.GetName() : "Untitled world");
-		YamlUtils::Map(out, "Environment", [&]() {
-			YamlUtils::Serialize(out, "ClearColor", Color());
-			YamlUtils::Serialize(out, "Type", BackgroundTypeToString(worldData.background));
-			YamlUtils::Serialize(out, "Gamma", 1.0f);
-			YamlUtils::Serialize(out, "File", "NULL FILE");
-			});
 
 		YamlUtils::Sequence(out, "Entities", [&]() {
 			world.GetWorldRegistry().each([&](auto entityID) {

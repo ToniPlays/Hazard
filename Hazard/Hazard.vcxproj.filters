@@ -721,6 +721,15 @@
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanAllocator.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Textures\VulkanTexture2D.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Vulkan.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h" />
+    <ClInclude Include="src\Hazard\Rendering\Pipeline.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanPipeline.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanShader.h" />
+    <ClInclude Include="src\Hazard\Rendering\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -931,5 +940,11 @@
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanDevice.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanAllocator.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\VulkanSwapChain.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Textures\VulkanTexture2D.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Pipeline.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanPipeline.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanShader.cpp" />
   </ItemGroup>
 </Project>

@@ -28,11 +28,11 @@ namespace Hazard::Rendering::OpenGL
 		return 0;
 	}
 
-	OpenGLVertexArray::OpenGLVertexArray(VertexArrayCreateInfo* info)
+	OpenGLVertexArray::OpenGLVertexArray(const VertexArrayCreateInfo& info)
 	{
 		glCreateVertexArrays(1, &m_ID);
-		AddBuffer(VertexBuffer::Create(info->VertexBuffer));
-		SetIndexBuffer(IndexBuffer::Create(info->IndexBuffer));
+		AddBuffer(VertexBuffer::Create(*info.VertexBuffer));
+		SetIndexBuffer(IndexBuffer::Create(*info.IndexBuffer));
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()

@@ -21,6 +21,6 @@ namespace Hazard::Rendering
 
 		virtual VertexBuffer& GetVertexBuffer() = 0;
 
-		static VertexArray* Create(VertexArrayCreateInfo* info);
+		static VertexArray* Create(const VertexArrayCreateInfo& info);
 	};
 }

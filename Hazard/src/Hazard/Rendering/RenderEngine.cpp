@@ -15,6 +15,7 @@ namespace Hazard::Rendering
 		RenderCommand::m_Engine = this;
 		RenderCommand::s_Api = api;
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Texture);
+		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
 
 		m_Renderer2D = new Renderer2D(info);
 	}
