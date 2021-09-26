@@ -208,13 +208,11 @@ project "Hazard"
 		"vendor/GLFW/include",
 		"vendor/GLAD/include",
 		"vendor/Vulkan/include",
-		"vendor/JSON/include",
 		"vendor/yaml-cpp/include",
 		"vendor/GLM",
 		"Hazard/vendor/stb-image",
 		"Hazard/vendor/assimp/include",
 		"vendor/entt/single_include/entt",
-		"vendor/JSON-develop/include",
 		"vendor/mono/include",
 		"vendor/SPIR-V/include",
 		"vendor/OpenAL/include",
@@ -227,7 +225,7 @@ project "Hazard"
 	}
 
 	links {
-		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/VulkanSDK/1.2.176.2/Lib/vulkan-1.lib",
 		"vendor/SPIR-V/libs/shaderc_shared.lib",
 		"msvcrt.lib",
 		"opengl32.lib",
@@ -279,9 +277,7 @@ project "HazardEditor"
 		"%{prj.name}/platform/**.h",
 		"%{prj.name}/platform/**.cpp",
 		"vendor/ImGuizmo/ImGuizmo.h",
-		"vendor/ImGuizmo/ImGuizmo.cpp",
-		"vendor/ImGui-node/*.h",
-		"vendor/ImGui-node/*.cpp"
+		"vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs {
@@ -290,9 +286,7 @@ project "HazardEditor"
 		"vendor/GLFW/include",
 		"vendor/GLAD/include",
 		"vendor/Vulkan/include",
-		"vendor/JSON/include",
 		"vendor/yaml-cpp/include",
-		"vendor/JSON-develop/include",
 		"Hazard/vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/IMGUI-docking",
@@ -319,7 +313,7 @@ project "HazardEditor"
 	links {
 		"vendor/OpenAL/lib/openal32.lib",
 		"Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
-		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/VulkanSDK/1.2.176.2/Lib/vulkan-1.lib",
 		"vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"yaml-cpp",
 		"msvcrt.lib",
@@ -329,6 +323,11 @@ project "HazardEditor"
 		"IMGUI",
 		"GLFW"
 	}
+
+	filter "files:platform/**.cpp"
+	flags { "NoPCH" }
+	filter "files:vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
@@ -365,9 +364,7 @@ project "HazardPlayer"
 		"vendor/GLFW/include",
 		"vendor/GLAD/include",
 		"vendor/Vulkan/include",
-		"vendor/JSON/include",
 		"vendor/yaml-cpp/include",
-		"vendor/JSON-develop/include",
 		"Hazard/vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/OpenAL/lib/openAl32.lib",
@@ -392,7 +389,7 @@ project "HazardPlayer"
 	links {
 		"vendor/OpenAL/lib/openal32.lib",
 		"Hazard/vendor/assimp/lib/assimp-vc142-mt.lib",
-		"C:/VulkanSDK/1.2.176.1/Lib/vulkan-1.lib",
+		"C:/VulkanSDK/1.2.176.2/Lib/vulkan-1.lib",
 		"vendor/mono/lib/Debug/mono-2.0-sgen.lib",
 		"yaml-cpp",
 		"msvcrt.lib",

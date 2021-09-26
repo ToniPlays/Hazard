@@ -59,6 +59,10 @@ namespace Hazard::Rendering
 
 		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
 		m_Data.BufferPtr = m_Data.BufferBase;
+
+		PipelineSpecification pipelineSpecs = {};
+		pipelineSpecs.ShaderPath = "C:/dev/Hazard/HazardEditor/res/Shaders/sources/standard.glsl";
+		m_Pipeline = Pipeline::Create(pipelineSpecs);
 	}
 	Renderer2D::~Renderer2D()
 	{
@@ -91,7 +95,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginWorld()
 	{
-
+		m_Pipeline->Bind();
 	}
 	void Renderer2D::BeginBatch()
 	{

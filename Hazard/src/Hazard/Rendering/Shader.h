@@ -8,8 +8,6 @@ namespace Hazard::Rendering
 	public:
 		virtual void Reload() = 0;
 		virtual void Bind() = 0;
-
-
-
+		virtual void Unbind() = 0;
 	};
 }

@@ -50,17 +50,16 @@ namespace Hazard {
 	}
 	std::string File::ReadFile(const std::string& file) 
 	{
-		std::ifstream ifs(file, std::ios::in, std::ios::binary);
+		std::string result;
+		std::ifstream ifs(file, std::ios::in | std::ios::binary);
 
 		HZR_ASSERT(ifs.is_open(), "File " + file + " could not be opened");
 
-		std::string result;
 		ifs.seekg(0, std::ios::end);
-		result.resize(ifs.tellg());
+		size_t size = ifs.tellg();
+		result.resize(size);
 		ifs.seekg(0, std::ios::beg);
-
-		ifs.read(&result[0], result.size());
-		ifs.close();
+		ifs.read(&result[0], size);
 
 		return result;
 	}

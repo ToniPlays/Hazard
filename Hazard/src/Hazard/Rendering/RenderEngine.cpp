@@ -17,6 +17,9 @@ namespace Hazard::Rendering
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Texture);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
 
+		m_ShaderCompilePath = info->ShaderCompilePath;
+		m_ShaderSourcePath = info->ShaderSourcePath;
+
 		m_Renderer2D = new Renderer2D(info);
 	}
 	void RenderEngine::Update()

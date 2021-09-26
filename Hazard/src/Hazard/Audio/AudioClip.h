@@ -12,9 +12,9 @@ namespace Hazard::Audio {
 
 		std::string name = "UndefinedAudio";
 		int16_t* audioData = nullptr;
-		uint32_t size = 0;
-		float sampleRate = 0;
-		float channels = 0;
+		size_t size = 0;
+		uint32_t sampleRate = 0;
+		uint32_t channels = 0;
 		float alFormat = 0;
 		float lenSec = 0;
 	};

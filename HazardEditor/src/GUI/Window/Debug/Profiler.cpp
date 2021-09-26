@@ -5,7 +5,6 @@
 
 #include <ImSequencer.h>
 #include "Library/Input.h"
-#include "nlohmann/json.hpp"
 
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
@@ -36,15 +35,5 @@ namespace WindowElement {
 	}
 	void Profiler::GenerateSequence(const std::string& file)
 	{
-		using namespace nlohmann;
-		std::string source = File::ReadFile(file);
-		auto obj = json::parse(source)["traceEvents"];
-		
-		m_Data.clear();
-
-		for (auto instrument : obj) {
-			if (!instrument.contains("name")) continue;
-			m_Data.push_back({ instrument["name"], instrument["dur"] });
-		}
 	}
 }

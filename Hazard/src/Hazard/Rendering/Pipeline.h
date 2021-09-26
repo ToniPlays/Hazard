@@ -5,7 +5,7 @@ namespace Hazard::Rendering
 {
 	struct PipelineSpecification
 	{
-
+		std::string ShaderPath;
 	};
 
 
