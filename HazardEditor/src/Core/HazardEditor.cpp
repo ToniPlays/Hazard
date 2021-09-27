@@ -15,7 +15,7 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.Renderer = RenderAPI::Vulkan;
 	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;

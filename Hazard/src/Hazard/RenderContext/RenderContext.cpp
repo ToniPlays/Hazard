@@ -43,10 +43,12 @@ namespace Hazard::Rendering {
 	{
 		switch (api)
 		{
-		case Hazard::RenderAPI::OpenGL:	return "OpenGL";
-		case Hazard::RenderAPI::Vulkan: return "Vulkan";
-		case Hazard::RenderAPI::DX11:	return "DX11";
-		case Hazard::RenderAPI::DX12:	return "DX12";
+		case RenderAPI::Auto:	return "Auto";
+		case RenderAPI::OpenGL:	return "OpenGL";
+		case RenderAPI::Vulkan: return "Vulkan";
+		case RenderAPI::DX11:	return "DX11";
+		case RenderAPI::DX12:	return "DX12";
+		case RenderAPI::Metal:	return "Metal";
 		}
 		return "Auto";
 	}

@@ -18,7 +18,6 @@ namespace Hazard::Rendering::OpenGL
 
 	private:
 		PipelineSpecification m_Specs;
-
-		OpenGLShader* m_Shader;
+		Shader* m_Shader;
 	};
 }

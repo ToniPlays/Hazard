@@ -16,7 +16,7 @@ namespace Hazard::Scripting::CSharp {
 
 	struct EntityInstance
 	{
-		EntityScript* ScriptClass;
+		EntityScript* ScriptClass = nullptr;
 		uint32_t handle = 0;
 		ECS::World* instance = nullptr;
 		MonoObject* GetInstance() { return Mono::ObjectFromHandle(handle); }

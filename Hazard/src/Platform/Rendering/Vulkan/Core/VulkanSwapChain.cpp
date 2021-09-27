@@ -207,7 +207,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::CreateDepthStencil()
 	{
-		std::vector<VkFormat> depthFormats = {
+		std::array<VkFormat, 5> depthFormats = {
 			VK_FORMAT_D32_SFLOAT_S8_UINT,
 			VK_FORMAT_D32_SFLOAT,
 			VK_FORMAT_D24_UNORM_S8_UINT,

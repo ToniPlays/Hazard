@@ -8,8 +8,8 @@ namespace Hazard::Rendering
 	struct BufferElement {
 		std::string Name;
 		ShaderDataType Type;
-		uint32_t Size;
-		size_t Offset;
+		uint32_t Size = 0;
+		size_t Offset = 0;
 		bool Normalized;
 
 		BufferElement() = default;

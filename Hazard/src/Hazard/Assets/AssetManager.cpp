@@ -35,7 +35,6 @@ namespace Hazard
         data.Handle = AssetHandle();
         data.Path = path;
         data.Type = type;
-        data.IsLoaded = false;
 
         s_Registry[data.Path] = data;
         HZR_CORE_INFO("[AssetManager]: Importing asset {0}", data.Path.string());

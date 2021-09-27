@@ -33,45 +33,34 @@ namespace Hazard::Rendering {
 		m_WindowData.Height = info->Height;
 		m_WindowData.ImagesInFlight = info->ImagesInFlight;
 
-		switch (info->Renderer)
-		{
-		case RenderAPI::OpenGL:
-			m_Context = new OpenGL::OpenGLContext(&m_WindowData);
-			break;
-			case RenderAPI::Vulkan:
-				m_Context = new Vulkan::VulkanContext(&m_WindowData);
-				break;
-		default:
-			HZR_THROW("RenderContext not supported: ", RenderContext::APIToString(api));
-			break;
-		}
+		m_Context = GraphicsContext::Create(info->Renderer, &m_WindowData);
 
 		glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
 		glfwWindowHint(GLFW_DECORATED, info->Decorated);
 
+		GLFWmonitor* monitor = NULL;
+
 		if (info->FullScreen) {
-			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-			if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0) {
+			monitor = glfwGetPrimaryMonitor();
+			if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0)
+			{
 				m_WindowData.Width = glfwGetVideoMode(monitor)->width;
 				m_WindowData.Height = glfwGetVideoMode(monitor)->height;
-
 			}
-			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 		}
-		else {
-			m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), NULL, NULL);
-		}
+		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 
 		if (!m_Window) {
 			HZR_CORE_INFO("Failed to create window");
 		}
-		m_Context->SetClearColor(info->Color);
+
 		m_Context->Init(this, appInfo);
+		m_Context->SetClearColor(info->Color);
 		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
-		if(info->Maximized)
+		if (info->Maximized)
 			glfwMaximizeWindow(m_Window);
 
 		glfwShowWindow(m_Window);

@@ -5,6 +5,7 @@
 #include "../RenderCommand.h"
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
+#include "Platform/Rendering/Vulkan/VulkanBuffers.h"
 
 namespace Hazard::Rendering {
 
@@ -19,7 +20,7 @@ namespace Hazard::Rendering {
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLVertexBuffer(createInfo);
-		//case RenderAPI::Vulkan: return new Vulkan::VulkanVertexBuffer(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanVertexBuffer(createInfo);
 		}
 	}
 	IndexBuffer* IndexBuffer::Create(const IndexBufferCreateInfo& createInfo)
@@ -27,7 +28,7 @@ namespace Hazard::Rendering {
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLIndexBuffer(createInfo);
-		//case RenderAPI::Vulkan: return new Vulkan::VulkanIndexBuffer(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanIndexBuffer(createInfo);
 		}
 	}
 	UniformBuffer* UniformBuffer::Create(const UniformBufferCreateInfo& createInfo)
@@ -35,7 +36,7 @@ namespace Hazard::Rendering {
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLUniformBuffer(createInfo);
-			//case RenderAPI::Vulkan: return new Vulkan::VulkanIndexBuffer(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanUniformBuffer(createInfo);
 		}
 	}
 }

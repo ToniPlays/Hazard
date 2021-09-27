@@ -84,6 +84,7 @@ namespace Hazard::Rendering::Vulkan {
 				return i;
 			}
 		}
+		return 0;
 	}
 	void VulkanDevice::CreateCommandPool()
 	{

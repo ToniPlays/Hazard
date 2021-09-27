@@ -2,9 +2,12 @@
 
 #include "Hazard/Rendering/Pipeline.h"
 #include <vulkan/vulkan.h>
+#include "VulkanShader.h"
 
-namespace Hazard::Rendering::Vulkan {
-	class VulkanPipeline : public Pipeline {
+namespace Hazard::Rendering::Vulkan 
+{
+	class VulkanPipeline : public Pipeline 
+	{
 	public:
 		VulkanPipeline(const PipelineSpecification& specs);
 		virtual ~VulkanPipeline();
@@ -18,5 +21,7 @@ namespace Hazard::Rendering::Vulkan {
 	private:
 		PipelineSpecification m_Specs;
 		VkPipeline m_Pipeline;
+
+		VulkanShader* m_Shader;
 	};
 }

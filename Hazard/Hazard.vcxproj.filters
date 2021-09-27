@@ -432,6 +432,9 @@
     <ClInclude Include="src\Platform\Rendering\Vulkan\Vulkan.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanBuffers.h">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanContext.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
@@ -439,6 +442,9 @@
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanShader.h">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanVertexArray.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\System\Window.h">
@@ -1931,6 +1937,9 @@
     <ClCompile Include="src\Platform\Rendering\Vulkan\VKUtils.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanBuffers.cpp">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanContext.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
@@ -1938,6 +1947,9 @@
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanShader.cpp">
+      <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanVertexArray.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
@@ -2000,5 +2012,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

@@ -4,32 +4,31 @@
 
 #include "Hazard/Rendering/Buffers/Buffers.h"
 
-namespace Hazard::Rendering::OpenGL
+namespace Hazard::Rendering::Vulkan
 {
-	class OpenGLVertexBuffer : public VertexBuffer
+	class VulkanVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(const VertexBufferCreateInfo& createInfo);
-		~OpenGLVertexBuffer();
+		VulkanVertexBuffer(const VertexBufferCreateInfo& createInfo);
+		~VulkanVertexBuffer();
 
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
-		BufferLayout GetLayout() override { return m_Layout; }
+		virtual BufferLayout GetLayout() { return m_Layout; }
 
 	private:
 
 		BufferUsage m_Usage;
-		uint32_t m_ID;
 		BufferLayout m_Layout;
 		uint32_t m_Size;
 	};
 
-	class OpenGLIndexBuffer : public IndexBuffer
+	class VulkanIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(const IndexBufferCreateInfo& createInfo);
-		~OpenGLIndexBuffer();
+		VulkanIndexBuffer(const IndexBufferCreateInfo& createInfo);
+		~VulkanIndexBuffer();
 
 		void Bind() override;
 		void Unbind() override;
@@ -40,16 +39,14 @@ namespace Hazard::Rendering::OpenGL
 		void SetData(uint32_t* data, uint32_t size);
 
 		BufferUsage m_Usage;
-
-		uint32_t m_ID;
 		uint32_t m_Size;
 
 	};
-	class OpenGLUniformBuffer : public UniformBuffer
+	class VulkanUniformBuffer : public UniformBuffer
 	{
 	public:
-		OpenGLUniformBuffer(const UniformBufferCreateInfo& createInfo);
-		~OpenGLUniformBuffer();
+		VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo);
+		~VulkanUniformBuffer();
 
 		void Bind() override;
 		void Unbind() override;
@@ -57,8 +54,6 @@ namespace Hazard::Rendering::OpenGL
 	private:
 
 		BufferUsage m_Usage;
-
-		uint32_t m_ID;
 		uint32_t m_Size;
 
 	};

@@ -4,9 +4,11 @@
 
 namespace Hazard::Rendering::OpenGL
 {
-	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& specs)
+	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& specs) : m_Specs(specs)
 	{
-		m_Shader = new OpenGLShader(specs.ShaderPath);
+		m_Shader = Shader::Create(specs.ShaderPath);
+
+
 	}
 	OpenGLPipeline::~OpenGLPipeline()
 	{
@@ -18,6 +20,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Bind()
 	{
-
+		m_Shader->Bind();
 	}
 }

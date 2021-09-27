@@ -15,12 +15,13 @@ namespace Hazard::Rendering::OpenGL
 		void Reload() override;
 		void Bind() override;
 		void Unbind() override;
+		std::unordered_map<ShaderType, ShaderStageData> GetShaderData() { return m_ShaderStageData; };
 
 	private:
 
-		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
-		void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& sources);
+		void CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources);
 		void CompileOrGetOpenGLBinaries();
+		void CreateProgram();
 		void Reflect(GLenum stage, std::vector<uint32_t> data);
 
 		std::string m_FilePath;
@@ -32,6 +33,7 @@ namespace Hazard::Rendering::OpenGL
 		std::unordered_map<GLenum, std::vector<uint32_t>> m_OpenGLSPIRV;
 
 		std::unordered_map<GLenum, std::string> m_OpenGLSourceCode;
+		std::unordered_map<ShaderType, ShaderStageData> m_ShaderStageData;
 
 	};
 }

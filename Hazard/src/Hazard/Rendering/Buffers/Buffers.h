@@ -20,10 +20,10 @@ namespace Hazard::Rendering
 
 	struct VertexBufferCreateInfo 
 	{
+		BufferLayout* Layout;
+		BufferUsage Usage;
 		uint32_t Size;
 		void* Data = nullptr;
-		BufferUsage Usage;
-		BufferLayout* Layout;
 	};
 	struct IndexBufferCreateInfo 
 	{

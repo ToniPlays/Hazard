@@ -24,6 +24,7 @@ namespace Hazard::Rendering {
 	};
 	using ErrorCallback = void(*)(ErrorData& data);
 	class Window;
+	struct WindowProps;
 
 	class GraphicsContext {
 	public:
@@ -42,5 +43,7 @@ namespace Hazard::Rendering {
 		virtual void DrawIndexed(VertexArray* array, uint32_t size) = 0;
 		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
+
+		static GraphicsContext* Create(RenderAPI API, WindowProps* props);
 	};
 }

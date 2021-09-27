@@ -23,15 +23,16 @@ namespace Hazard {
 		static std::string SaveFolderDialog();
 		static std::string SaveFile(const char* filters);
 
-		static bool Exists(const std::string& file);
+		static bool Exists(const std::filesystem::path& path);
 		static bool DirectoryExists(const std::string& dir);
 		static std::vector<char> ReadBinaryFile(const std::string& path);
-		static std::vector<uint32_t> ReadBinaryFileUint32(const std::string& path);
+		static bool ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer);
 		static std::string ReadFile(const std::string& file);
 
 		static void WriteFile(const std::string& dest, const std::string& source);
-		static void WriteBinaryFile(const std::string& dest, std::vector<uint32_t> data);
+		static bool WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32_t> data);
 		static bool CopyFileTo(const std::string& source, const std::string& dest);
+		static bool IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo);
 
 		static std::string GetFileAbsolutePath(const std::string& file);
 		static std::string GetDirectoryOf(const std::string& file);

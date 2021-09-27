@@ -18,10 +18,9 @@ namespace Hazard {
 		return PlatformUtils::SaveFileDialog(filters);
 	}
 
-	bool File::Exists(const std::string& file)
+	bool File::Exists(const std::filesystem::path& path)
 	{
-		std::ifstream f(file);
-		return f.good();
+		return std::filesystem::exists(path);
 	}
 	bool File::DirectoryExists(const std::string& dir)
 	{
@@ -33,22 +32,33 @@ namespace Hazard {
 		out << source;
 		out.close();
 	}
-	void File::WriteBinaryFile(const std::string& dest, std::vector<uint32_t> data)
+	bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32_t> data)
 	{
-		std::ofstream out(dest);
-		out.write((char*)data.data(), data.size() * sizeof(uint32_t));
-		out.flush();
-		out.close();
+		std::ofstream out(path, std::ios::out | std::ios::binary);
+
+		if (out.is_open()) {
+			out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+			out.flush();
+			out.close();
+			return true;
+		}
+		return false;
 	}
 	bool File::CopyFileTo(const std::string& source, const std::string& dest) {
-	
+
 		std::string destFolder = GetDirectoryOf(dest);
 		if (!DirectoryExists(destFolder)) {
 			File::CreateDir(destFolder);
 		}
 		return std::filesystem::copy_file(source, dest);
 	}
-	std::string File::ReadFile(const std::string& file) 
+	bool File::IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo)
+	{
+		auto fTime = std::filesystem::last_write_time(file);
+		auto sTime = std::filesystem::last_write_time(compareTo);
+		return fTime > sTime;
+	}
+	std::string File::ReadFile(const std::string& file)
 	{
 		std::string result;
 		std::ifstream ifs(file, std::ios::in | std::ios::binary);
@@ -83,22 +93,27 @@ namespace Hazard {
 			HZR_CORE_ERROR("Cannot read file: {0}", path);
 		return buffer;
 	}
-	std::vector<uint32_t> File::ReadBinaryFileUint32(const std::string& path)
+	bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
-		HZR_CORE_ASSERT(stream, "Cannot open filepath: {0}", path);
+		if (!stream.is_open())
+			return false;
 
-		auto end = stream.tellg();
+		stream.seekg(0, std::ios::end);
+		auto size = stream.tellg();
 		stream.seekg(0, std::ios::beg);
 
-		auto size = std::size_t(end - stream.tellg());
-		if (size == 0) return {};
+		if (size == 0)
+			return false;
 
-		std::vector<uint32_t> buffer(size);
-		if (!stream.read((char*)buffer.data(), buffer.size()))
-			HZR_CORE_ERROR("Cannot read file: {0}", path);
-		return buffer;
+		buffer.resize(size / sizeof(uint32_t));
+
+		if (!stream.read((char*)buffer.data(), size)) {
+			HZR_CORE_ERROR("Cannot read file: {0}", path.string());
+		}
+
+		return true;
 	}
 
 	std::string File::GetFileAbsolutePath(const std::string& file)
@@ -140,9 +155,9 @@ namespace Hazard {
 		result.path = folder;
 
 		for (const auto& file : directory_iterator(folder)) {
-			if (file.is_directory()) 
+			if (file.is_directory())
 				result.folders.emplace_back(file.path());
-			else 
+			else
 				result.files.emplace_back(file.path());
 		}
 		return result;

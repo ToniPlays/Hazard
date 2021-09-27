@@ -6,9 +6,34 @@
 
 namespace Hazard::Rendering::Vulkan 
 {
-	VulkanPipeline::VulkanPipeline(const PipelineSpecification& specs)
+	VulkanPipeline::VulkanPipeline(const PipelineSpecification& specs) : m_Specs(specs)
 	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
+		m_Shader = (VulkanShader*)Shader::Create(specs.ShaderPath);
+		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 
+		m_Shader->GetStageInfo(shaderStages);
+		
+		std::unordered_map<ShaderType, ShaderStageData> data = m_Shader->GetShaderData();
+
+		VkPipelineLayoutCreateInfo pipelineLayout = {};
+		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayout.setLayoutCount = 1;
+		pipelineLayout.pSetLayouts = 0;
+
+		VkDescriptorBufferInfo info = {};
+
+		VkGraphicsPipelineCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+		createInfo.stageCount = shaderStages.size();
+		createInfo.pStages = shaderStages.data();
+
+
+
+
+		//vkCreateGraphicsPipelines(device, VulkanContext::GetPipelineCache(), 1, &createInfo, nullptr, &m_Pipeline);
+
+		m_Shader->DestroyModules();
 	}
 	VulkanPipeline::~VulkanPipeline()
 	{

@@ -5,6 +5,7 @@
 #include "../RenderCommand.h"
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
+#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 namespace Hazard::Rendering
  {
@@ -13,7 +14,7 @@ namespace Hazard::Rendering
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLVertexArray(info);
-		//case RenderAPI::Vulkan: return new Vulkan::VulkanVertexArray(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanVertexArray(info);
 		}
     }
 }

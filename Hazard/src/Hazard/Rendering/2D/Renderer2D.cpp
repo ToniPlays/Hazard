@@ -74,15 +74,17 @@ namespace Hazard::Rendering
 			BeginWorld();
 			BeginBatch();
 
-			Submit({ { 0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
-			Submit({ {-0.6, 0, 0 }, { 1.0f, 1.0f, 0.5f, 1.0f} });
+			Submit({ { 0.6f, 0.2f, 0.0f }, { 1.0f, 0.95f, 0.5f, 1.0f} });
+			Submit({ {-0.6f, 0.2f, 0.6f }, { 1.0f, 1.0f, 0.5f, 1.0f} });
+			Submit({ { 0.0f,-0.3f, 0.0f }, { 1.0f, 1.0f, 0.75f, 1.0f} });
 
 			Flush();
 			});
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
-		if (m_Data.QuadIndexCount >= m_Data.MaxIndices) {
+		if (m_Data.QuadIndexCount >= m_Data.MaxIndices) 
+		{
 			Flush();
 			BeginBatch();
 		}
@@ -107,9 +109,9 @@ namespace Hazard::Rendering
 	{
 		if (m_Data.QuadIndexCount == 0) return;
 
+		m_Pipeline->Bind();
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
-		//m_Array->GetVertexBuffer().SetData(m_Data.BufferBase, dataSize);
-		RenderContextCommand::SetClearColor({0.0f, 0.0f, (1.0f + (float)Math::Sin(Time::s_Time)) * 0.5f, 1.0f});
-		//RenderCommand::DrawIndexed(m_Array, m_Data.QuadIndexCount);
+		m_Array->GetVertexBuffer().SetData(m_Data.BufferBase, dataSize);
+		RenderCommand::DrawIndexed(m_Array, m_Data.QuadIndexCount);
 	}
 }

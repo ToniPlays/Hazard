@@ -8,7 +8,7 @@ namespace Hazard
 	struct AssetMetadata 
 	{
 		AssetHandle Handle;
-		AssetType Type;
+		AssetType Type = AssetType::None;
 		
 		std::filesystem::path Path = "";
 		bool IsLoaded = false;

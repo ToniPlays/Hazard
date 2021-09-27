@@ -39,7 +39,7 @@ namespace Hazard::Physics
 		bodyDef.position.Set(position.x, position.y);
 		bodyDef.angle = rotation.z;
 		bodyDef.userData = userData;
-		bodyDef.gravityScale = useGravity;
+		bodyDef.gravityScale = useGravity ? 1.0f : 0.0f;
 
 		b2Body* body = m_World2D->CreateBody(&bodyDef);
 		body->SetFixedRotation(fixedRotation);
