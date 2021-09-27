@@ -6,6 +6,8 @@
 /ImGui
 /JSONParser
 /vendor
+/Hazard/vendor/VulkanSDK
+
 
 /*.vcxproj.*
 **/*.vcxproj

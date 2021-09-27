@@ -1,7 +1,7 @@
 #pragma once
 
+#include <hzrpch.h>
 #include "Hazard/Core/Core.h"
-#include "hzrpch.h"
 
 namespace Hazard {
 	enum class AssetType {

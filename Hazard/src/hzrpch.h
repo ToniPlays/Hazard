@@ -91,7 +91,7 @@
 	#define HZR_ERROR(...)				::Hazard::Logging::Logger::GetClientLogger()->error(__VA_ARGS__)
 	#define HZR_FATAL(...)				::Hazard::Logging::Logger::GetClientLogger()->critical(__VA_ARGS__)
 	#define HZR_TRACE(...)				::Hazard::Logging::Logger::GetClientLogger()->trace(__VA_ARGS__)
-	#define HZR_ASSERT(success, ...)	if(!(success)) assert(false, __VA_ARGS__)
+	#define HZR_ASSERT(success, ...)	if(!(success)) assert(false);
 	
 #else
 

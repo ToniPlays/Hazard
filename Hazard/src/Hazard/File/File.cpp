@@ -53,7 +53,10 @@ namespace Hazard {
 		std::string result;
 		std::ifstream ifs(file, std::ios::in | std::ios::binary);
 
-		HZR_ASSERT(ifs.is_open(), "File " + file + " could not be opened");
+		if (!ifs.is_open()) {
+			HZR_CORE_ERROR("File " + file + " could not be opened");
+			HZR_ASSERT(false);
+		}
 
 		ifs.seekg(0, std::ios::end);
 		size_t size = ifs.tellg();

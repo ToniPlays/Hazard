@@ -4,7 +4,7 @@
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace Hazard::Rendering::OpenGL {
 

@@ -1,22 +1,15 @@
-[submodule "vendor/spdlog"]
-	path = vendor/spdlog
+[submodule "Hazard/vendor/glfw"]
+	path = Hazard/vendor/glfw
+	url = https://github.com/TheCherno/glfw
+[submodule "Hazard/vendor/glm"]
+	path = Hazard/vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "Hazard/vendor/spdlog"]
+	path = Hazard/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "vendor/ImGui-docking"]
-	path = vendor/ImGui-docking
-	url = https://github.com/ToniPlays/imgui
-	branch = docking
-[submodule "vendor/yaml-cpp"]
-	path = vendor/yaml-cpp
-	url = https://github.com/jbeder/yaml-cpp
-[submodule "vendor/Box2D"]
-	path = vendor/Box2D
-	url = https://github.com/erincatto/box2d
-[submodule "vendor/glfw"]
-	path = vendor/glfw
-	url = https://github.com/glfw/glfw
-[submodule "vendor/ImGuizmo"]
-	path = vendor/ImGuizmo
-	url = https://github.com/CedricGuillemet/ImGuizmo
-[submodule "vendor/VMA"]
-	path = vendor/VMA
-	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+[submodule "Hazard/vendor/yaml-cpp"]
+	path = Hazard/vendor/yaml-cpp
+	url = https://github.com/TheCherno/yaml-cpp
+[submodule "hazard/vendor/box2d"]
+	path = hazard/vendor/box2d
+	url = https://github.com/TheCherno/box2d

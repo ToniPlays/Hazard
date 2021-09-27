@@ -2,16 +2,14 @@
 
 #include <hzrpch.h>
 #include "OpenGLShader.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
 
-#include "Hazard/Rendering/RenderEngine.h"
-
 namespace Hazard::Rendering::OpenGL 
 {
-
 	namespace Utils 
 	{
 		static GLenum ShaderTypeFromString(const std::string& type) {
@@ -115,6 +113,27 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLShader::Reflect(GLenum stage, std::vector<uint32_t> data)
 	{
+		spirv_cross::Compiler compiler(data);
+		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
+
+		HZR_CORE_TRACE("[OpenGLShader] Reflect - {0}, {1}", Utils::ShaderTypeToString(stage), m_FilePath);
+		HZR_CORE_TRACE("     {0} uniform buffers", resources.uniform_buffers.size());
+		HZR_CORE_TRACE("     {0} resources", resources.sampled_images.size());
+
+		HZR_CORE_TRACE("	Uniform buffers");
+
+		for (const auto& resource : resources.uniform_buffers) {
+			const auto& bufferType = compiler.get_type(resource.base_type_id);
+			uint32_t bufferSize = compiler.get_declared_struct_size(bufferType);
+			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
+
+			int members = bufferType.member_types.size();
+
+			HZR_CORE_TRACE("   {0}", resource.name);
+			HZR_CORE_TRACE("	  Size = {0}", bufferSize);
+			HZR_CORE_TRACE("      Binding = {0}", binding);
+			HZR_CORE_TRACE("      Members = {0}", members);
+		}
 
 	}
 	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& sources)
@@ -201,8 +220,9 @@ namespace Hazard::Rendering::OpenGL
 			}
 			else 
 			{
-				//spirv_cross::CompilerGLSL glslCompiler(spirv);
-				/*m_OpenGLSourceCode[stage] = glslCompiler.compile();
+				//TODO: Make this garbage working garbage
+				spirv_cross::CompilerGLSL glslCompiler(spirv);
+				m_OpenGLSourceCode[stage] = glslCompiler.compile();
 
 				auto& source = m_OpenGLSourceCode[stage];
 
@@ -221,7 +241,6 @@ namespace Hazard::Rendering::OpenGL
 					out.flush();
 					out.close();
 				}
-				*/
 			}
 		}
 	}

@@ -1,10 +1,6 @@
 #pragma once
-#include <hzreditor.h>
+
 #include "HazardEditor.h"
-#include "GUI/EditorView.h"
-#include "Project/ProjectManager.h"
-#include "GUI/Window/AllWindows.h"
-#include "SceneRuntimeHandler.h"
 
 void EditorApplication::PreInit()
 {
@@ -62,12 +58,13 @@ void EditorApplication::Init()
 	//PushModule<WindowElement::EditorView>();
 	//Runtime::SceneRuntimeHandler::Init();
 
-	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
+	//Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
+	//manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
 
 }
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	return GetModule<WindowElement::EditorView>().OnEvent(e);
+	return false;
+	//GetModule<WindowElement::EditorView>().OnEvent(e);
 }
