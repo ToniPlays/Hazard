@@ -14,8 +14,6 @@ namespace Hazard::Rendering::Vulkan
 		void Bind() override;
 		void Unbind() override;
 
-		VkShaderModule GetModule(VkShaderStageFlagBits index) { return m_Modules[index]; }
-
 		VkVertexInputBindingDescription GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
 

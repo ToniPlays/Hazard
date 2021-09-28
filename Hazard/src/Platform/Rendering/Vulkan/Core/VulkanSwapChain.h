@@ -23,13 +23,13 @@ namespace Hazard::Rendering::Vulkan
 		VkImageView view;
 	} SwapChainBuffer;
 
-	class VulkanSwapChain {
+	class VulkanSwapChain : public RefCount {
 	public:
 		VulkanSwapChain() = default;
 		~VulkanSwapChain() { Cleanup(); }
 
 		void Connect(VkInstance instance, VulkanDevice* device, VkSurfaceKHR surface);
-		void Create(uint32_t* width, uint32_t* height, bool vsync = false);
+		void CreateSwapChain(uint32_t* width, uint32_t* height, bool vsync = false);
 		void SwapBuffers();
 
 		uint32_t GetImageCount() { return m_ImageCount; }

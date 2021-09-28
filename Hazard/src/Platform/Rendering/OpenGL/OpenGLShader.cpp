@@ -77,6 +77,7 @@ namespace Hazard::Rendering::OpenGL
 
 	OpenGLShader::OpenGLShader(const std::string& filePath) : m_FilePath(filePath)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::string result = File::ReadFile(filePath);
 		auto shaderSources = PreProcess(result);
 		{
@@ -120,48 +121,23 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLShader::Reflect(GLenum stage, std::vector<uint32_t> data)
 	{
+		HZR_PROFILE_FUNCTION();
+		HZR_CORE_TRACE("Reflecting shader {0}", m_FilePath);
 		m_ShaderStageData.clear();
 
 		for (auto&& [stage, binary] : m_OpenGLSPIRV) {
-			ShaderStageData shaderStage;
 
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-			uint32_t offset = 0;
-			for (auto& resource : resources.stage_inputs) {
-
-				auto spvType = compiler.get_type(resource.base_type_id);
-				ShaderStageInput input;
-				input.Name = resource.name;
-				input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-				input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
-				input.Size = ShaderDataTypeSize(input.Type);
-				input.Offset = offset;
-				offset += input.Size;
-
-				shaderStage.Inputs[input.Location] = input;
-			}
-			shaderStage.Stride = offset;
-
-			for (auto& resource : resources.stage_outputs) {
-
-				auto spvType = compiler.get_type(resource.base_type_id);
-				ShaderStageOutput output;
-				output.Name = resource.name;
-				output.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-				output.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
-				output.Size = ShaderDataTypeSize(output.Type);
-
-				shaderStage.Outputs[output.Location] = output;
-			}
-
+			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
 			m_ShaderStageData[GLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
 		}
-
+		Utils::PrintReflectResults(m_FilePath, m_ShaderStageData);
 	}
 	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_ID = glCreateProgram();
 
 		shaderc::Compiler compiler;
@@ -177,6 +153,7 @@ namespace Hazard::Rendering::OpenGL
 		shaderData.clear();
 
 		for (auto&& [stage, source] : sources) {
+			HZR_PROFILE_FUNCTION("Shader stage");
 			std::filesystem::path shaderFilePath = m_FilePath;
 			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + GLUtils::GLShaderStageCachedVulkanExtension(stage));
 
@@ -199,14 +176,11 @@ namespace Hazard::Rendering::OpenGL
 			}
 			shaderData[glType] = std::vector<uint32_t>(module.begin(), module.cend());
 			File::WriteBinaryFile(cachedFilePath, shaderData[glType]);
-
-		}
-		for (auto&& [stage, data] : shaderData) {
-			Reflect(stage, data);
 		}
 	}
 	void OpenGLShader::CompileOrGetOpenGLBinaries()
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& shaderData = m_OpenGLSPIRV;
 
 		shaderc::Compiler compiler;
@@ -221,6 +195,7 @@ namespace Hazard::Rendering::OpenGL
 		m_OpenGLSourceCode.clear();
 
 		for (auto&& [stage, spirv] : m_VulkanSPIRV) {
+			HZR_PROFILE_FUNCTION("Shader stage");
 			std::filesystem::path shaderFilePath = m_FilePath;
 			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + GLUtils::GLShaderStageCachedOpenGLExtension(stage));
 
@@ -240,9 +215,13 @@ namespace Hazard::Rendering::OpenGL
 				File::WriteBinaryFile(cachedFilePath, shaderData[stage]);
 			}
 		}
+		for (auto&& [stage, data] : shaderData) {
+			Reflect(stage, data);
+		}
 	}
 	void OpenGLShader::CreateProgram()
 	{
+		HZR_PROFILE_FUNCTION();
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;

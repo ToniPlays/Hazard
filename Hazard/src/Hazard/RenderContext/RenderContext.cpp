@@ -10,6 +10,7 @@ namespace Hazard::Rendering {
 
 	RenderContext::RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) : Module::Module("RenderContext")
 	{
+		HZR_PROFILE_FUNCTION();
 		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->Renderer;
 		m_ClearColor = info->Color;
 
@@ -25,7 +26,6 @@ namespace Hazard::Rendering {
 	}
 	void RenderContext::Update()
 	{
-		HZR_PROFILE_FUNCTION();
 		m_Window->OnUpdate();
 	}
 

@@ -30,7 +30,6 @@ namespace Hazard {
 		PushModule<Logging::Logger>();
 #endif // HZR_RELEASE
 
-		HZR_PROFILE_FUNCTION();
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
@@ -48,12 +47,12 @@ namespace Hazard {
 
 		if (info->AudioEngine) 
 		{
-			PushModule<Audio::AudioEngine>().InitAudio(info->AudioEngine);
+			PushModule<Audio::AudioEngine>(info->AudioEngine);
 		}
 
 		if (info->ScriptEngineInfo != nullptr) 
 		{
-			PushModule<Scripting::ScriptEngineManager>().InitEngines(info->ScriptEngineInfo);
+			PushModule<Scripting::ScriptEngineManager>(info->ScriptEngineInfo);
 		}
 
 		if (info->EntityComponent != nullptr) {

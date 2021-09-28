@@ -10,7 +10,7 @@ namespace Hazard::Rendering::Vulkan
 
 	VulkanPipeline::VulkanPipeline(const PipelineSpecification& specs) : m_Specs(specs)
 	{
-
+		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
 
@@ -31,10 +31,10 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages = m_Shader->GetStageInfo();
 
+		auto& shaderData = m_Shader->GetShaderData();
+
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
-
-		std::cout << "Stride " << inputBindings.stride << std::endl;
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -92,7 +92,15 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
 		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		colorBlendAttachment.blendEnable = VK_FALSE;
+		colorBlendAttachment.blendEnable = VK_TRUE;
+
+		colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+		colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+		colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+
+		colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 
 		VkPipelineColorBlendStateCreateInfo colorBlending = {};
 		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -139,7 +147,7 @@ namespace Hazard::Rendering::Vulkan
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.renderPass = VulkanContext::GetSwapchain().GetRenderPass();
+		pipelineInfo.renderPass = VulkanContext::GetSwapchain()->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
@@ -149,15 +157,15 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind()
 	{
-		auto buffer = VulkanContext::GetSwapchain().GetCurrentDrawCommandBuffer();
+		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 
 		vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(VulkanContext::GetSwapchain().GetWidth());
-		viewport.height = static_cast<float>(VulkanContext::GetSwapchain().GetHeight());
+		viewport.width = static_cast<float>(VulkanContext::GetSwapchain()->GetWidth());
+		viewport.height = static_cast<float>(VulkanContext::GetSwapchain()->GetHeight());
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
@@ -169,7 +177,7 @@ namespace Hazard::Rendering::Vulkan
 		m_IndexBuffer->Bind();
 	}
 	void VulkanPipeline::Draw(uint32_t size) {
-		auto buffer = VulkanContext::GetSwapchain().GetCurrentDrawCommandBuffer();
+		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 		vkCmdDrawIndexed(buffer, 24, 1, 0, 0, 0);
 	}
 }

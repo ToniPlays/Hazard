@@ -7,10 +7,9 @@ namespace Hazard::Audio {
 	class AudioEngine : public Module::Module
 	{
 	public:
-		AudioEngine();
+		AudioEngine(AudioEngineCreateInfo* info);
 		~AudioEngine() = default;
 
-		void InitAudio(AudioEngineCreateInfo* info);
 		void Close() override;
 	private:
 		ALCdevice* m_AudioDevice = nullptr;

@@ -25,7 +25,6 @@ namespace Hazard::Scripting::CSharp {
 
 	CSharpEngine::CSharpEngine(ScriptEngineCreateInfo* info)
 	{
-		HZR_PROFILE_FUNCTION();
 		Mono::InitAssembly(info);
 		Mono::CreateDomain("Hazard");
 		Mono::LoadRuntimeAssembly(info->AppAssemblyPath.c_str());

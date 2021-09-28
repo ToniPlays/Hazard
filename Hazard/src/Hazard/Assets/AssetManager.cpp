@@ -12,10 +12,12 @@ namespace Hazard
 
     void AssetManager::Init()
     {
+        HZR_PROFILE_FUNCTION();
         s_Registry.Clear();
     }
     void AssetManager::Shutdown()
     {
+        HZR_PROFILE_FUNCTION();
         s_LoadedAssets.clear();
     }
     AssetHandle AssetManager::ImportAsset(const std::string& filePath)

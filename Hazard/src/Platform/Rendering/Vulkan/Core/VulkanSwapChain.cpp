@@ -7,6 +7,7 @@ namespace Hazard::Rendering::Vulkan
 {
 	void VulkanSwapChain::Connect(VkInstance instance, VulkanDevice* device, VkSurfaceKHR surface)
 	{
+		HZR_PROFILE_FUNCTION();
 		this->m_Device = device;
 		m_Surface = surface;
 
@@ -40,7 +41,7 @@ namespace Hazard::Rendering::Vulkan
 			vkCreateFence(m_Device->GetDevice(), &fenceCI, nullptr, &fence);
 		}
 	}
-	void VulkanSwapChain::Create(uint32_t* width, uint32_t* height, bool vsync)
+	void VulkanSwapChain::CreateSwapChain(uint32_t* width, uint32_t* height, bool vsync)
 	{
 		m_Device->WaitUntilIdle();
 		m_Width = *width;
@@ -122,6 +123,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::SwapBuffers()
 	{
+		HZR_PROFILE_FUNCTION();
 		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
 		VkSubmitInfo info = {};
@@ -138,24 +140,28 @@ namespace Hazard::Rendering::Vulkan
 
 		VkQueue queue = m_Device->GetGraphicsQueue();
 		auto submit = vkQueueSubmit(queue, 1, &info, m_WaitFences[m_CurrentBufferIndex]);
+
+
+
 		VkResult present = QueuePresent(m_Device->GetPresentQueue(), m_CurrentBufferIndex, m_Semaphores.RenderComplete);
+
 		if (present == VK_ERROR_OUT_OF_DATE_KHR) {
 			Clear();
-			Create(&m_Width, &m_Height);
+			CreateSwapChain(&m_Width, &m_Height);
 			return;
 		}
 	}
 	VkResult VulkanSwapChain::AcquireNextImage(uint32_t* imageIndex)
 	{
 		auto result = vkAcquireNextImageKHR(m_Device->GetDevice(), m_SwapChain, UINT64_MAX, m_Semaphores.PresentComplete, (VkFence)nullptr, imageIndex);
+		vkWaitForFences(m_Device->GetDevice(), 1, &m_WaitFences[*imageIndex], VK_TRUE, UINT64_MAX);
+
 		m_CurrentBufferIndex = *imageIndex;
-
-		vkWaitForFences(m_Device->GetDevice(), 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX);
-
 		return result;
 	}
 	VkResult VulkanSwapChain::QueuePresent(VkQueue queue, uint32_t imageIndex, VkSemaphore waitSemaphore)
 	{
+		HZR_PROFILE_FUNCTION();
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.swapchainCount = 1;
@@ -172,6 +178,8 @@ namespace Hazard::Rendering::Vulkan
 	{
 		auto device = m_Device->GetDevice();
 
+		m_Device->WaitUntilIdle();
+
 		for (auto& frameBuffer : m_FrameBuffers) {
 			vkDestroyFramebuffer(device, frameBuffer, nullptr);
 		}
@@ -183,6 +191,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::Cleanup()
 	{
+		HZR_PROFILE_FUNCTION();
 		VkDevice device = m_Device->GetDevice();
 		m_Device->WaitUntilIdle();
 		vkDestroyRenderPass(device, m_RenderPass, nullptr);
@@ -212,6 +221,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::AllocateCommandBuffers()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DrawCommandBuffers.resize(m_ImageCount);
 
 		VkCommandBufferAllocateInfo commandBufferAlloc = {};

@@ -20,11 +20,13 @@ namespace Hazard::Rendering::Vulkan {
 
 	VulkanContext::~VulkanContext()
 	{
+		HZR_PROFILE_FUNCTION();
 		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
 	}
 
 	void VulkanContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Window = window;
 
 		auto extensions = VKUtils::GetRequiredExtensions(appInfo->Logging);
@@ -52,25 +54,28 @@ namespace Hazard::Rendering::Vulkan {
 			ValidationLayer::SetupDebugger(m_Instance);
 		}
 
+		m_SwapChain = Ref<VulkanSwapChain>::Create();
 		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
 		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface());
 
-		m_SwapChain.Connect(m_Instance, m_Device.get(), m_WindowSurface->GetVkSurface());
+		m_SwapChain->Connect(m_Instance, m_Device.get(), m_WindowSurface->GetVkSurface());
 
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 
-		m_SwapChain.Create(&w, &h, window->IsVSync());
-		
+
+		m_SwapChain->CreateSwapChain(&w, &h, window->IsVSync());
 		BeginFrame();
+		Begin();
+		End();
 	}
 
 	void VulkanContext::BeginFrame()
 	{
-		auto result = m_SwapChain.AcquireNextImage(&m_CurrentBufferIndex);
+		auto result = m_SwapChain->AcquireNextImage(&m_CurrentBufferIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			SetViewport(0, 0, m_SwapChain.GetWidth(), m_SwapChain.GetHeight());
+			SetViewport(0, 0, m_SwapChain->GetWidth(), m_SwapChain->GetHeight());
 			return;
 		}
 	}
@@ -79,27 +84,30 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		VkCommandBufferBeginInfo cmdInfo = {};
 		cmdInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		cmdInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 		VkClearValue clearVal[2];
 		clearVal[0].color = { clearColor.r, clearColor.g, clearColor.b, clearColor.a };
 		clearVal[1].depthStencil = { 1.0f, 0 };
 
-		uint32_t w = m_SwapChain.GetWidth();
-		uint32_t h = m_SwapChain.GetHeight();
+		uint32_t w = m_SwapChain->GetWidth();
+		uint32_t h = m_SwapChain->GetHeight();
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = m_SwapChain.GetRenderPass();
+		renderPassBeginInfo.renderPass = m_SwapChain->GetRenderPass();
 		renderPassBeginInfo.renderArea.offset = { 0, 0 };
 		renderPassBeginInfo.renderArea.extent = { w, h };
 		renderPassBeginInfo.clearValueCount = 2;
 		renderPassBeginInfo.pClearValues = clearVal;
 
-		auto buffer = m_SwapChain.GetCurrentDrawCommandBuffer();
-		renderPassBeginInfo.framebuffer = m_SwapChain.GetCurrentFrameBuffer();
+		auto buffer = m_SwapChain->GetCurrentDrawCommandBuffer();
+		renderPassBeginInfo.framebuffer = m_SwapChain->GetCurrentFrameBuffer();
 
-		vkBeginCommandBuffer(buffer, &cmdInfo);
+		auto result = vkBeginCommandBuffer(buffer, &cmdInfo);
+
+		if (result != VK_SUCCESS) {
+			std::cout << result << std::endl;
+		}
 
 		vkCmdBeginRenderPass(buffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		VkViewport viewport = {};
@@ -114,33 +122,31 @@ namespace Hazard::Rendering::Vulkan {
 		scissors.offset = { 0, 0 };
 
 		vkCmdSetScissor(buffer, 0, 1, &scissors);
-		
 	}
 
 	void VulkanContext::End()
 	{
-		auto buffer = m_SwapChain.GetCurrentDrawCommandBuffer();
+		auto buffer = m_SwapChain->GetCurrentDrawCommandBuffer();
 		vkCmdEndRenderPass(buffer);
 		vkEndCommandBuffer(buffer);
 	}
 
 	void VulkanContext::SwapBuffers()
-	{
+	{	
+		m_SwapChain->SwapBuffers();
 		BeginFrame();
-		m_SwapChain.SwapBuffers();
 	}
 
 	void VulkanContext::SetViewport(int x, int y, int w, int h)
 	{
-		m_Device->WaitUntilIdle();
+		if (w == 0 || h == 0) return;
 		auto device = m_Device->GetDevice();
+		m_Device->WaitUntilIdle();
 
 		uint32_t width = w;
 		uint32_t height = h;
-		m_SwapChain.Clear();
-		m_SwapChain.Create(&width, &height, m_Window->IsVSync());
-
-		m_Device->WaitUntilIdle();
+		m_SwapChain->Clear();
+		m_SwapChain->CreateSwapChain(&width, &height, m_Window->IsVSync());
 	}
 
 	void VulkanContext::SetErrorListener(const ErrorCallback& callback)

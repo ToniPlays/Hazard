@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "Logging/Logger.h"
+#include "Hazard/File/File.h"
 
 namespace Hazard {
 
@@ -32,17 +33,21 @@ namespace Hazard {
 		Instrumentor(const Instrumentor&) = delete;
 		Instrumentor(Instrumentor&&) = delete;
 
-		void BeginSession(const std::string& name, const std::string& filePath) {
+		void BeginSession(const std::string& name, const std::filesystem::path& filePath) {
 			std::lock_guard lock(m_Mutex);
 			
 			if (m_CurrentSession) {
 				
-				if (Logging::Logger::GetCoreLogger()) {
+				if (Logging::Logger::GetCoreLogger()) 
+				{
 					std::cout << "Instrumentor::BeginSession(" << name << ") when session '" << m_CurrentSession->sessionName << "' already open." << std::endl;
 				}
 				EndSessionInternal();
 			}
 			m_OutputStream.open(filePath);
+
+			if (!File::DirectoryExists(filePath.string())) 
+				File::CreateDir(filePath.parent_path().string());
 
 			if (m_OutputStream.is_open()) {
 				m_CurrentSession = new InstrumentationSession({ name });

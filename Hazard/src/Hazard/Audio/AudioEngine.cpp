@@ -14,13 +14,9 @@
 
 namespace Hazard::Audio 
 {
-    AudioEngine::AudioEngine() : Module::Module("AudioEngine")
-    {
-    }
-    void AudioEngine::InitAudio(AudioEngineCreateInfo* info)
+    AudioEngine::AudioEngine(AudioEngineCreateInfo* info) : Module::Module("AudioEngine")
     {
         HZR_PROFILE_FUNCTION();
-
         if (InitAL(m_AudioDevice, nullptr, 0) != 0) {
             HZR_THROW("[Hazard Audio]: Failed to init");
             return;
@@ -29,6 +25,6 @@ namespace Hazard::Audio
     }
     void AudioEngine::Close()
     {
-
+        HZR_PROFILE_FUNCTION();
     }
 }

@@ -10,6 +10,8 @@ namespace Hazard::ECS {
 	public:
 		WorldHandler();
 		~WorldHandler();
+		
+		void Close() override;
 		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
 		Ref<World> GetCurrentWorld() { return m_World; }

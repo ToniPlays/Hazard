@@ -101,7 +101,6 @@ namespace Hazard::Rendering {
 		{
 			if (!s_Callback) 
 				return;
-
 			ErrorData data(("[OpenGL]: " + std::string(message)).c_str(), code);
 			s_Callback(data);
 		}

@@ -42,7 +42,7 @@ namespace Hazard::Rendering
 		Renderer2D(RenderEngineCreateInfo* info);
 		~Renderer2D();
 
-		void Update();
+		void Render();
 		void Submit(Quad quad);
 
 		void BeginWorld();

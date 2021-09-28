@@ -49,7 +49,7 @@ namespace Hazard::Rendering
 
 		PipelineSpecification pipelineSpecs = {};
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.ShaderPath = "C:/dev/Hazard/HazardEditor/res/Shaders/sources/standard.glsl";
+		pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
 		pipelineSpecs.pVertexBuffer = &vertexInfo;
 		pipelineSpecs.pIndexBuffer = &indexBuffer;
 
@@ -60,7 +60,7 @@ namespace Hazard::Rendering
 	Renderer2D::~Renderer2D()
 	{
 	}
-	void Renderer2D::Update()
+	void Renderer2D::Render()
 	{
 		RenderCommand::Submit([=]() {
 			BeginWorld();
@@ -103,8 +103,8 @@ namespace Hazard::Rendering
 			return;
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
-		m_Pipeline->Bind();
 		m_Pipeline->GetBuffer()->SetData(m_Data.BufferBase, dataSize);
+		m_Pipeline->Bind();
 		m_Pipeline->Draw(m_Data.QuadIndexCount);
 	}
 }

@@ -11,7 +11,9 @@ namespace Hazard {
 
 	int Input::keyStates[384];
 
-	void Input::Init() {
+	void Input::Init() 
+	{
+		HZR_PROFILE_FUNCTION();
 		if (!Application::HasModule<Rendering::RenderContext>()) return;
 
 		Rendering::RenderContext* context = &Application::GetModule<Rendering::RenderContext>();

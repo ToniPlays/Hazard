@@ -21,14 +21,12 @@ namespace Hazard::Module {
 
     void ModuleHandler::Update()
     {
-        HZR_PROFILE_FUNCTION();
         for (Module* m : m_Modules)
             if (m->GetActive())
                 m->Update();
     }
     void ModuleHandler::Render()
     {
-        HZR_PROFILE_FUNCTION();
         for (Module* m : m_Modules)
             if (m->GetActive())
                 m->Render();

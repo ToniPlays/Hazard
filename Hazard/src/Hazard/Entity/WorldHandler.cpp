@@ -11,6 +11,11 @@ namespace Hazard::ECS {
 	WorldHandler::WorldHandler() : Module::Module("World handler") {}
 	WorldHandler::~WorldHandler() {}
 
+	void WorldHandler::Close()
+	{
+		HZR_PROFILE_FUNCTION();
+	}
+
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)
 	{
 		if (File::Exists(file)) {

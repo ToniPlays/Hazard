@@ -11,6 +11,7 @@ namespace Hazard::Rendering
 {
 	RenderEngine::RenderEngine(RenderEngineCreateInfo* info, RenderAPI api) : Module("RenderEngine")
 	{
+		HZR_PROFILE_FUNCTION();
 		SetActive(true);
 		RenderCommand::m_Engine = this;
 		RenderCommand::s_Api = api;
@@ -26,8 +27,12 @@ namespace Hazard::Rendering
 	{
 		delete m_Renderer2D;
 	}
-	void RenderEngine::Update()
+	void RenderEngine::Render()
 	{
-		m_Renderer2D->Update();
+		m_Renderer2D->Render();
+	}
+	void RenderEngine::Close()
+	{
+		HZR_PROFILE_FUNCTION();
 	}
 }

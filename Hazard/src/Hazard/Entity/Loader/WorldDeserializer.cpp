@@ -9,7 +9,6 @@ namespace Hazard::ECS::Loader
 {
 	Ref<World> WorldDeserializer::DeserializeEditor(const char* file)
 	{
-		HZR_PROFILE_FUNCTION();
 		YAML::Node root = YAML::LoadFile(file);
 		Ref<World> world = Ref<World>::Create(file);
 

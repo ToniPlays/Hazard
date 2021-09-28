@@ -8,10 +8,7 @@ namespace Hazard::ECS::Loader {
 
 	bool WorldSerializer::SerializeEditor(const char* file, World& world)
 	{
-		HZR_PROFILE_FUNCTION();
 		YAML::Emitter out;
-
-
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", !world.GetName().empty() ? world.GetName() : "Untitled world");
 

@@ -54,7 +54,6 @@ void EditorApplication::PreInit()
 void EditorApplication::Init()
 {
 	HZR_PROFILE_FUNCTION();
-
 	//PushModule<WindowElement::EditorView>();
 	//Runtime::SceneRuntimeHandler::Init();
 

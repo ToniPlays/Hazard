@@ -9,8 +9,10 @@
 
 namespace Hazard::Rendering 
 {
+
     Ref<Shader> Shader::Create(const std::string& path)
     {
+		HZR_PROFILE_FUNCTION();
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLShader>::Create(path);
@@ -19,6 +21,7 @@ namespace Hazard::Rendering
     }
 	std::unordered_map<ShaderType, std::string> Shader::PreProcess(const std::string& source)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::unordered_map<ShaderType, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -42,5 +45,58 @@ namespace Hazard::Rendering
 		}
 		return shaderSources;
 
+	}
+	ShaderStageData Shader::ProcessShaderStage(const spirv_cross::Compiler& compiler, const spirv_cross::ShaderResources& resources)
+	{
+		HZR_PROFILE_FUNCTION();
+		ShaderStageData shaderStage;
+
+		uint32_t stride = 0;
+		for (auto& resource : resources.stage_inputs) {
+
+			auto spvType = compiler.get_type(resource.base_type_id);
+			ShaderStageInput input;
+			input.Name = resource.name;
+			input.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+			input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
+			input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
+			input.Size = ShaderDataTypeSize(input.Type);
+
+			stride += input.Size;
+			shaderStage.Inputs[input.Location] = input;
+		}
+		shaderStage.Stride = stride;
+		uint32_t offset = 0;
+		
+		for (uint32_t i = 0; i < shaderStage.Inputs.size(); i++)
+		{
+			shaderStage.Inputs[i].Offset = offset;
+			offset += shaderStage.Inputs[i].Size;
+		}
+
+		for (auto& resource : resources.stage_outputs) {
+
+			auto spvType = compiler.get_type(resource.base_type_id);
+			ShaderStageOutput output;
+			output.Name = resource.name;
+			output.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
+			output.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
+			output.Size = ShaderDataTypeSize(output.Type);
+
+			shaderStage.Outputs[output.Location] = output;
+		}
+
+		for (auto& resource : resources.uniform_buffers) {
+			ShaderUniform uniform;
+			auto& type = compiler.get_type(resource.base_type_id);
+
+			uniform.Name = resource.name;
+			uniform.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+			uniform.MemberCount = type.member_types.size();
+			uniform.Size = compiler.get_declared_struct_size(type);
+			
+			shaderStage.Uniforms.push_back(uniform);
+		}
+		return shaderStage;
 	}
 }

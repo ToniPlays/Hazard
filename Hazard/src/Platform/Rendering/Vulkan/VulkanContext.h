@@ -34,7 +34,7 @@ namespace Hazard::Rendering::Vulkan {
 		static VkSurfaceKHR GetSurface() { return m_WindowSurface->GetVkSurface(); }
 		static VulkanDevice* GetDevice() { return m_Device.get(); }
 		static VkPipelineCache GetPipelineCache() { return m_Device->GetPipelineCache(); }
-		inline static VulkanSwapChain& GetSwapchain() { return m_SwapChain; }
+		inline static Ref<VulkanSwapChain> GetSwapchain() { return m_SwapChain; }
 
 		void BeginFrame();
 		void Begin() override;
@@ -49,7 +49,7 @@ namespace Hazard::Rendering::Vulkan {
 		inline static Scope<VulkanDevice> m_Device;
 		inline static Scope<WindowSurface> m_WindowSurface;
 		inline static VkPipelineCache m_PipelineCache;
-		static inline VulkanSwapChain m_SwapChain;
+		static inline Ref<VulkanSwapChain> m_SwapChain;
 
 		glm::vec4 clearColor = { 0, 0, 0, 1 };
 		

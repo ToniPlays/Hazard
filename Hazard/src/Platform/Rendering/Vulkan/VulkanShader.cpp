@@ -72,6 +72,7 @@ namespace Hazard::Rendering::Vulkan
 
 	VulkanShader::VulkanShader(const std::string& file) : m_Path(file)
 	{
+		HZR_PROFILE_FUNCTION();
 		Reload();
 	}
 	VulkanShader::~VulkanShader()
@@ -149,6 +150,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::filesystem::path cache = RenderEngine::GetShaderCompilePath();
 
 		shaderc::Compiler compiler;
@@ -162,6 +164,7 @@ namespace Hazard::Rendering::Vulkan
 
 		for (auto&& [stage, source] : sources)
 		{
+			HZR_PROFILE_SCOPE("Shader stage");
 			std::filesystem::path shaderFilePath = m_Path;
 			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + Utils::ShaderStageCachedVulkanExtension(stage));
 
@@ -189,6 +192,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::CreateModules()
 	{
+		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
 		for (auto&& [stage, binary] : m_ShaderCode) {
@@ -202,50 +206,17 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::Reflect()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_ShaderStageData.clear();
 
 		for (auto&& [stage, binary] : m_ShaderCode) {
-			ShaderStageData shaderStage;
 
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-			uint32_t stride = 0;
-			for (auto& resource : resources.stage_inputs) {
-
-				auto spvType = compiler.get_type(resource.base_type_id);
-				ShaderStageInput input;
-				input.Name = resource.name;
-				input.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-				input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-				input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
-				input.Size = ShaderDataTypeSize(input.Type);
-
-				stride += input.Size;
-				shaderStage.Inputs[input.Location] = input;
-			}
-			shaderStage.Stride = stride;
-
-			uint32_t offset = 0;
-			for (uint32_t i = 0; i < shaderStage.Inputs.size(); i++) 
-			{
-				shaderStage.Inputs[i].Offset = offset;
-				offset += shaderStage.Inputs[i].Size;
-			}
-
-			for (auto& resource : resources.stage_outputs) {
-
-				auto spvType = compiler.get_type(resource.base_type_id);
-				ShaderStageOutput output;
-				output.Name = resource.name;
-				output.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-				output.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
-				output.Size = ShaderDataTypeSize(output.Type);
-
-				shaderStage.Outputs[output.Location] = output;
-			}
-
+			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
 			m_ShaderStageData[Utils::ShaderTypeFromVkType(stage)] = shaderStage;
 		}
+		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderStageData);
 	}
 }

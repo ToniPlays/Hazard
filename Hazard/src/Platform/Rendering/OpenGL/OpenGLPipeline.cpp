@@ -28,13 +28,14 @@ namespace Hazard::Rendering::OpenGL
 
 	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& specs) : m_Specs(specs)
 	{
+		HZR_PROFILE_FUNCTION();
 		glCreateVertexArrays(1, &m_ID);
 
 		m_Shader = Shader::Create(specs.ShaderPath);
 
 		m_Buffer = VertexBuffer::Create(*specs.pVertexBuffer);
 		m_IndexBuffer = IndexBuffer::Create(*specs.pIndexBuffer);
-		
+
 		Invalidate();
 	}
 	OpenGLPipeline::~OpenGLPipeline()
@@ -47,26 +48,19 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Bind()
 	{
-		glBindVertexArray(m_ID);
 		m_Shader->Bind();
 		glBindVertexArray(m_ID);
 		m_Buffer->Bind();
-		BufferLayout layout = m_Buffer->GetLayout();
-		uint32_t offset = 0;
+		ShaderStageData data = m_Shader->GetShaderData()[ShaderType::Vertex];
 
-		for (uint16_t i = 0; i < layout.GetElements().size(); i++) {
-
-			ShaderDataType type = layout.GetElements()[i].Type;
-			glEnableVertexArrayAttrib(m_ID, i);
-			glVertexAttribPointer(i, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
-				layout.GetElements()[i].Normalized, layout.GetStride(), (const void*)offset);
-
-			offset += ShaderDataTypeSize(type);
+		for (auto [location, input] : data.Inputs) {
+			glEnableVertexArrayAttrib(m_ID, location);
+			ShaderDataType type = input.Type;
+			glVertexAttribPointer(location, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
+				GL_FALSE, data.Stride, (const void*)input.Offset);
 		}
 		if (m_IndexBuffer)
 			m_IndexBuffer->Bind();
-
-		glDrawArrays(GL_TRIANGLES, 0, m_IndexBuffer->GetCount());
 	}
 	void OpenGLPipeline::Draw(uint32_t count)
 	{

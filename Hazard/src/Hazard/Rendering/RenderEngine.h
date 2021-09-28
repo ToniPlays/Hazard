@@ -14,7 +14,8 @@ namespace Hazard::Rendering {
 		RenderEngine(RenderEngineCreateInfo* info, RenderAPI api);
 		~RenderEngine();
 
-		void Update() override;
+		void Render() override;
+		void Close();
 
 		static std::filesystem::path GetShaderCompilePath() { return m_ShaderCompilePath; }
 		static std::filesystem::path GetShaderSourcePath() { return m_ShaderSourcePath; }

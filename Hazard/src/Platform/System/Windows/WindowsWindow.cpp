@@ -15,14 +15,13 @@
 
 namespace Hazard::Rendering {
 
-	Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
+	Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) 
+	{
 		return new WindowsWindow(info, appInfo);
 	}
 
-	WindowsWindow::WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) {
-
-		HZR_PROFILE_FUNCTION();
-
+	WindowsWindow::WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) 
+	{
 		if (!glfwInit()) {
 			HZR_THROW("Failed to init GLFW");
 		}
@@ -114,6 +113,7 @@ namespace Hazard::Rendering {
 	}
 	void WindowsWindow::SetCallbacks()
 	{
+		HZR_PROFILE_FUNCTION();
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
@@ -199,8 +199,9 @@ namespace Hazard::Rendering {
 			});
 	}
 
-	WindowsWindow::~WindowsWindow() {
-
+	WindowsWindow::~WindowsWindow() 
+	{
+		HZR_PROFILE_FUNCTION();
 		delete m_Context;
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();

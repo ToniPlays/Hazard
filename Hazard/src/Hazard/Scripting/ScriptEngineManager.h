@@ -16,11 +16,9 @@ namespace Hazard::Scripting {
 	class ScriptEngineManager : public Module::Module 
 	{
 	public:
-		ScriptEngineManager();
+		ScriptEngineManager(ScriptEngineCreateInfo* info);
 
-		void InitEngines(ScriptEngineCreateInfo* info);
 		void Close() override;
-
 		void Update() override;
 
 		void Instantiate(ScriptType type, uint32_t entityID, const std::string& moduleName);

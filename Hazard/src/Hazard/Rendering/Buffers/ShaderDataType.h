@@ -42,4 +42,21 @@ namespace Hazard::Rendering
 		}
 		return 0;
 	}
+	static std::string ShaderDataTypeToString(ShaderDataType type) {
+		switch (type)
+		{
+		case ShaderDataType::Float:    return "Float";
+		case ShaderDataType::Float2:   return "Float2";
+		case ShaderDataType::Float3:   return "Float3";
+		case ShaderDataType::Float4:   return "Float4";
+		case ShaderDataType::Mat3:     return "Mat3";
+		case ShaderDataType::Mat4:     return "Mat4";
+		case ShaderDataType::Int:      return "Int";
+		case ShaderDataType::Int2:     return "Int2";
+		case ShaderDataType::Int3:     return "Int3";
+		case ShaderDataType::Int4:     return "Int4";
+		case ShaderDataType::Bool:     return "Bool";
+		}
+		return "";
+	}
 }

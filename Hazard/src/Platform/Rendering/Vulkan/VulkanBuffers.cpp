@@ -48,7 +48,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanVertexBuffer::Bind()
 	{
-		auto buffer = VulkanContext::GetSwapchain().GetCurrentDrawCommandBuffer();
+		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(buffer, 0, 1, &m_Buffer, offsets);
 	}
@@ -59,7 +59,6 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanVertexBuffer::SetData(const void* data, uint32_t size)
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
-
 		VkDeviceSize bufferSize = size;
 		void* gpuData;
 		vkMapMemory(device, m_BufferMemory, 0, bufferSize, 0, &gpuData);
@@ -80,8 +79,8 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanIndexBuffer::Bind()
 	{
-		auto buffer = VulkanContext::GetSwapchain().GetCurrentDrawCommandBuffer();
-		VkDeviceSize offsets = 0;
+		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
+		VkDeviceSize offsets = { 0 };
 		vkCmdBindIndexBuffer(buffer, m_Buffer, offsets, VK_INDEX_TYPE_UINT32);
 	}
 	void VulkanIndexBuffer::Unbind()

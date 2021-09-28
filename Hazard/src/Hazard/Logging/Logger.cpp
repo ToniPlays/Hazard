@@ -22,7 +22,6 @@ namespace Hazard::Logging {
 	}
 	Logger::~Logger()
 	{
-		HZR_PROFILE_FUNCTION();
 		m_CoreLogger.reset();
 		m_ClienLogger.reset();
 	}

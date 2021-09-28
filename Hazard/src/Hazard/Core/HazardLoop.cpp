@@ -30,8 +30,8 @@ namespace Hazard::Core {
 			AssetManager::Init();
 
 			m_Application->PreInit();
-			m_Application->Init();
 			Input::Init();
+			m_Application->Init();
 			HZR_PROFILE_SESSION_END();
 
 			Run();
@@ -62,7 +62,7 @@ namespace Hazard::Core {
 
 		while (!m_ShouldClose)
 		{
-			HZR_PROFILE_SCOPE("Frame");
+			HZR_PROFILE_FUNCTION("Frame");
 			double time = glfwGetTime();
 
 			//Update Time
@@ -79,7 +79,6 @@ namespace Hazard::Core {
 			//Render
 			m_ModuleHandler.Render();
 		}
-
 		HZR_PROFILE_SESSION_END();
 	}
 	void HazardLoop::OnEvent(Event& e)

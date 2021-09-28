@@ -57,8 +57,9 @@
 
 #define HZR_THROW(x, y) throw HazardRuntimeError(x, "\nFrom: " HZR_FUNC_SIG)
 
+#define HZR_PROFILE 0
 
-#ifdef HZR_PROFILE 
+#if HZR_PROFILE 
 	#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
 	#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
 	#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
