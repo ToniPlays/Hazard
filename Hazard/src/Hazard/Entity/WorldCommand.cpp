@@ -41,10 +41,10 @@ namespace Hazard::ECS {
 
 	Entity WorldCommand::GetEntity(uint32_t id)
 	{
-		return GetCurrentWorld().GetEntity((entt::entity)id);
+		return GetCurrentWorld()->GetEntity((entt::entity)id);
 	}
 
-	World& WorldCommand::GetCurrentWorld()
+	Ref<World> WorldCommand::GetCurrentWorld()
 	{
 		return Application::GetModule<WorldHandler>().GetCurrentWorld();
 	}

@@ -16,6 +16,7 @@ public:
 	bool OnEvent(Event& e) override;
 };
 
-Hazard::Application* Hazard::CreateApplication() {
+Hazard::Application* Hazard::CreateApplication() 
+{
 	return new EditorApplication();
 }

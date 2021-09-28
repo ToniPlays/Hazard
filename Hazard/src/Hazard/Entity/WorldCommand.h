@@ -8,7 +8,7 @@ namespace Hazard::ECS {
 	class WorldCommand {
 	public:
 		static Entity GetEntity(uint32_t id);
-		static World& GetCurrentWorld();
+		static Ref<World> GetCurrentWorld();
 
 		template<typename C, typename T>
 		static void Render(C& component, T& transform);

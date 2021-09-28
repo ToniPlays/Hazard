@@ -22,6 +22,10 @@ namespace Hazard::Rendering
 
 		m_Renderer2D = new Renderer2D(info);
 	}
+	RenderEngine::~RenderEngine()
+	{
+		delete m_Renderer2D;
+	}
 	void RenderEngine::Update()
 	{
 		m_Renderer2D->Update();

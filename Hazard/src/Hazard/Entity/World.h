@@ -44,8 +44,8 @@ namespace Hazard::ECS {
 	private:
 		UUID uid;
 		entt::registry m_Registry = entt::registry();
-		std::string m_Name;
-		std::string m_File;
+		std::string m_Name = "";
+		std::string m_File = "";
 
 	private:
 		template<typename T>

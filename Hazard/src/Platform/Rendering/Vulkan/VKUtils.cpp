@@ -207,6 +207,25 @@ namespace Hazard::Rendering::Vulkan {
 		HZR_CORE_INFO("[VKUtils] Failed to convert format");
 	}
 
+	VkFormat VKUtils::ShaderDataTypeToVkFormat(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
+		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
+		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
+		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ShaderDataType::Mat3:     return VK_FORMAT_R32G32B32_SFLOAT;
+		case ShaderDataType::Mat4:     return VK_FORMAT_UNDEFINED;
+		case ShaderDataType::Int:      return VK_FORMAT_R32_UINT;
+		case ShaderDataType::Int2:     return VK_FORMAT_R32G32_UINT;
+		case ShaderDataType::Int3:     return VK_FORMAT_R32G32B32_UINT;
+		case ShaderDataType::Int4:     return VK_FORMAT_R32G32B32A32_UINT;
+		case ShaderDataType::Bool:     return VK_FORMAT_R8_UINT;
+		}
+		return VK_FORMAT_UNDEFINED;
+	}
+
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		QueueFamilyIndices indices = {};

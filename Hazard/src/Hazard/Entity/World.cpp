@@ -72,7 +72,7 @@ namespace Hazard::ECS
 
 	World::~World() 
 	{
-		HZR_CORE_INFO("Unloaded world: " + GetName());
+		HZR_CORE_INFO("Unloaded world: " + m_Name);
 	}
 
 	Entity World::CreateEntity(const std::string& name)

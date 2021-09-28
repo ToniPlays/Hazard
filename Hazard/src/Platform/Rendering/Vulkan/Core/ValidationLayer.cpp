@@ -41,6 +41,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	bool ValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo, bool enabled)
 	{
+
 		if (!enabled) 
 		{
 			info.enabledLayerCount = 0;
@@ -74,7 +75,6 @@ namespace Hazard::Rendering::Vulkan {
 
 		for (const char* name : validationLayers) {
 			bool layerFound = false;
-
 			for (const auto& layerProps : layers) {
 				if (strcmp(name, layerProps.layerName) == 0) {
 					layerFound = true;

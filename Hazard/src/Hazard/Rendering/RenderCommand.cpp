@@ -8,9 +8,4 @@ namespace Hazard::Rendering
 {
 	RenderAPI RenderCommand::s_Api;
 	RenderEngine* RenderCommand::m_Engine;
-
-	void RenderCommand::DrawIndexed(VertexArray* vertexArray, uint32_t size)
-	{
-		RenderContextCommand::DrawIndexed(vertexArray, size);
-	}
 }

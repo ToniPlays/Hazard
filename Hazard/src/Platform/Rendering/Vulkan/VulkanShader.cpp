@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "VulkanShader.h"
 #include "VulkanContext.h"
+#include "VKUtils.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/File/File.h"
 
@@ -75,7 +76,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanShader::~VulkanShader()
 	{
-
+		DestroyModules();
 	}
 	void VulkanShader::Reload()
 	{
@@ -100,19 +101,43 @@ namespace Hazard::Rendering::Vulkan
 	{
 
 	}
-	void VulkanShader::GetStageInfo(std::vector<VkPipelineShaderStageCreateInfo>& info)
+	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
 	{
-		info.resize(m_ShaderCode.size());
+		VkVertexInputBindingDescription description;
+		description.binding = 0;
+		description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		description.stride = m_ShaderStageData[ShaderType::Vertex].Stride;
+		return description;
+	}
+	std::vector<VkVertexInputAttributeDescription> VulkanShader::GetAttriDescriptions()
+	{
+		auto& data = m_ShaderStageData[ShaderType::Vertex].Inputs;
+		std::vector<VkVertexInputAttributeDescription> descriptions(data.size());
+
+		for (uint32_t i = 0; i < data.size(); i++) {
+			auto& input = data[i];
+			descriptions[i] = {};
+			descriptions[i].binding = 0;
+			descriptions[i].location = input.Location;
+			descriptions[i].format = VKUtils::ShaderDataTypeToVkFormat(input.Type);
+			descriptions[i].offset = input.Offset;
+		}
+		return descriptions;
+	}
+	std::vector<VkPipelineShaderStageCreateInfo> VulkanShader::GetStageInfo()
+	{
+		std::vector<VkPipelineShaderStageCreateInfo> info(m_ShaderCode.size());
 
 		uint32_t i = 0;
 		for (auto&& [stage, source] : m_ShaderCode) {
+			info[i] = {};
 			info[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 			info[i].stage = stage;
 			info[i].module = m_Modules[stage];
 			info[i].pName = "main";
 			i++;
 		}
-
+		return info;
 	}
 	void VulkanShader::DestroyModules()
 	{
@@ -129,7 +154,9 @@ namespace Hazard::Rendering::Vulkan
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
-		options.SetOptimizationLevel(shaderc_optimization_level_performance);
+
+		if (false)
+			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
 		m_ShaderCode.clear();
 
@@ -167,8 +194,8 @@ namespace Hazard::Rendering::Vulkan
 		for (auto&& [stage, binary] : m_ShaderCode) {
 			VkShaderModuleCreateInfo moduleInfo = {};
 			moduleInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			moduleInfo.codeSize = binary.size();
-			moduleInfo.pCode = binary.data();
+			moduleInfo.codeSize = 4 * binary.size();
+			moduleInfo.pCode = reinterpret_cast<const uint32_t*>(binary.data());
 
 			vkCreateShaderModule(device, &moduleInfo, nullptr, &m_Modules[stage]);
 		}
@@ -183,17 +210,29 @@ namespace Hazard::Rendering::Vulkan
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
+			uint32_t stride = 0;
 			for (auto& resource : resources.stage_inputs) {
 
 				auto spvType = compiler.get_type(resource.base_type_id);
 				ShaderStageInput input;
 				input.Name = resource.name;
+				input.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
 				input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
 				input.Size = ShaderDataTypeSize(input.Type);
 
-				shaderStage.Inputs.push_back(input);
+				stride += input.Size;
+				shaderStage.Inputs[input.Location] = input;
 			}
+			shaderStage.Stride = stride;
+
+			uint32_t offset = 0;
+			for (uint32_t i = 0; i < shaderStage.Inputs.size(); i++) 
+			{
+				shaderStage.Inputs[i].Offset = offset;
+				offset += shaderStage.Inputs[i].Size;
+			}
+
 			for (auto& resource : resources.stage_outputs) {
 
 				auto spvType = compiler.get_type(resource.base_type_id);
@@ -203,7 +242,7 @@ namespace Hazard::Rendering::Vulkan
 				output.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
 				output.Size = ShaderDataTypeSize(output.Type);
 
-				shaderStage.Outputs.push_back(output);
+				shaderStage.Outputs[output.Location] = output;
 			}
 
 			m_ShaderStageData[Utils::ShaderTypeFromVkType(stage)] = shaderStage;

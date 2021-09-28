@@ -18,7 +18,8 @@ namespace Hazard
 
 	using AssetHandle = UUID;
 
-	class Asset : public RefCount {
+	class Asset : public RefCount 
+	{
 		friend class AssetManager;
 	public:
 

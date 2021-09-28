@@ -34,13 +34,7 @@ namespace Hazard::Rendering
 			offset += 4;
 		}
 
-		BufferLayout layout = {
-			{ "v_position",		ShaderDataType::Float3 },
-			{ "v_color",		ShaderDataType::Float4 }
-		};
-
 		VertexBufferCreateInfo vertexInfo = {};
-		vertexInfo.Layout = &layout;
 		vertexInfo.Data = nullptr;
 		vertexInfo.Size = m_Data.MaxVertices;
 		vertexInfo.Usage = BufferUsage::DynamicDraw;
@@ -50,23 +44,21 @@ namespace Hazard::Rendering
 		indexBuffer.Size = m_Data.MaxIndices;
 		indexBuffer.Usage = BufferUsage::StaticDraw;
 
-		VertexArrayCreateInfo vertexArrayInfo = {};
-		vertexArrayInfo.VertexBuffer = &vertexInfo;
-		vertexArrayInfo.IndexBuffer = &indexBuffer;
-
-		m_Array = VertexArray::Create(vertexArrayInfo);
-		delete[] indices;
-
 		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
 		m_Data.BufferPtr = m_Data.BufferBase;
 
 		PipelineSpecification pipelineSpecs = {};
+		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.ShaderPath = "C:/dev/Hazard/HazardEditor/res/Shaders/sources/standard.glsl";
+		pipelineSpecs.pVertexBuffer = &vertexInfo;
+		pipelineSpecs.pIndexBuffer = &indexBuffer;
+
 		m_Pipeline = Pipeline::Create(pipelineSpecs);
+
+		delete[] indices;
 	}
 	Renderer2D::~Renderer2D()
 	{
-		delete m_Array;
 	}
 	void Renderer2D::Update()
 	{
@@ -107,11 +99,12 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Flush()
 	{
-		if (m_Data.QuadIndexCount == 0) return;
+		if (m_Data.QuadIndexCount == 0) 
+			return;
 
-		m_Pipeline->Bind();
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
-		m_Array->GetVertexBuffer().SetData(m_Data.BufferBase, dataSize);
-		RenderCommand::DrawIndexed(m_Array, m_Data.QuadIndexCount);
+		m_Pipeline->Bind();
+		m_Pipeline->GetBuffer()->SetData(m_Data.BufferBase, dataSize);
+		m_Pipeline->Draw(m_Data.QuadIndexCount);
 	}
 }

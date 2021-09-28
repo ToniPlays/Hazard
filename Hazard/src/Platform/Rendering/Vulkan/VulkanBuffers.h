@@ -18,7 +18,8 @@ namespace Hazard::Rendering::Vulkan
 		virtual BufferLayout GetLayout() { return m_Layout; }
 
 	private:
-
+		VkBuffer m_Buffer;
+		VkDeviceMemory m_BufferMemory;
 		BufferUsage m_Usage;
 		BufferLayout m_Layout;
 		uint32_t m_Size;
@@ -37,6 +38,9 @@ namespace Hazard::Rendering::Vulkan
 
 	private:
 		void SetData(uint32_t* data, uint32_t size);
+
+		VkBuffer m_Buffer;
+		VkDeviceMemory m_BufferMemory;
 
 		BufferUsage m_Usage;
 		uint32_t m_Size;

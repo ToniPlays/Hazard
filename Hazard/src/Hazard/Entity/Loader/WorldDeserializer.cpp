@@ -7,11 +7,11 @@
 
 namespace Hazard::ECS::Loader
 {
-	World* WorldDeserializer::DeserializeEditor(const char* file)
+	Ref<World> WorldDeserializer::DeserializeEditor(const char* file)
 	{
 		HZR_PROFILE_FUNCTION();
 		YAML::Node root = YAML::LoadFile(file);
-		World* world = new World(file);
+		Ref<World> world = Ref<World>::Create(file);
 
 		//Set scene name
 		if (!root["World"])

@@ -9,7 +9,6 @@ namespace Hazard::Rendering::OpenGL
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexBufferCreateInfo& info) : m_Size(info.Size)
 	{
 		m_Usage = info.Usage;
-		m_Layout = *info.Layout;
 
 		glCreateBuffers(1, &m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);

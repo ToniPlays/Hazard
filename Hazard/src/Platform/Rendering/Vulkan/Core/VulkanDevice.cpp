@@ -47,11 +47,16 @@ namespace Hazard::Rendering::Vulkan {
 		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
 		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
 
+		VkPipelineCacheCreateInfo cache = {};
+		cache.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		vkCreatePipelineCache(m_Device, &cache, nullptr, &m_PipelineCache);
+
 		CreateCommandPool();
 	}
 	VulkanDevice::~VulkanDevice()
 	{
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
 	}
 	void VulkanDevice::WaitUntilIdle() {

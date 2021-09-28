@@ -26,7 +26,6 @@ namespace Hazard::Rendering::Vulkan {
 			this->clearColor = clearColor;
 		};
 		void SetViewport(int x, int y, int w, int h) override;
-		void DrawIndexed(VertexArray* array, uint32_t size) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;
@@ -34,9 +33,8 @@ namespace Hazard::Rendering::Vulkan {
 		static VkInstance GetInstance() { return m_Instance; }
 		static VkSurfaceKHR GetSurface() { return m_WindowSurface->GetVkSurface(); }
 		static VulkanDevice* GetDevice() { return m_Device.get(); }
-		static VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
-		
-		VulkanSwapChain GetSwapchain() { return m_SwapChain; }
+		static VkPipelineCache GetPipelineCache() { return m_Device->GetPipelineCache(); }
+		inline static VulkanSwapChain& GetSwapchain() { return m_SwapChain; }
 
 		void BeginFrame();
 		void Begin() override;
@@ -45,16 +43,13 @@ namespace Hazard::Rendering::Vulkan {
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
 	private:
-		void CreateDrawBuffers();
 
 		Window* m_Window;
 		inline static VkInstance m_Instance;
-		inline static Scope<WindowSurface> m_WindowSurface;
 		inline static Scope<VulkanDevice> m_Device;
-
+		inline static Scope<WindowSurface> m_WindowSurface;
 		inline static VkPipelineCache m_PipelineCache;
-
-		VulkanSwapChain m_SwapChain;
+		static inline VulkanSwapChain m_SwapChain;
 
 		glm::vec4 clearColor = { 0, 0, 0, 1 };
 		

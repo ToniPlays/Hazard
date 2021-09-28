@@ -2,7 +2,6 @@
 
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Texture/FrameBuffer.h"
-#include "Buffers/VertexArray.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 
@@ -12,7 +11,7 @@ namespace Hazard::Rendering {
 		friend class RenderEngine;
 	public:
 		static RenderAPI GetAPI() { return s_Api; }
-		static void DrawIndexed(VertexArray* vertexArray, uint32_t size);
+		//static void DrawIndexed(VertexArray* vertexArray, uint32_t size);
 		template<typename T>
 		static void Submit(T fn);
 

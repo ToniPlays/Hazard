@@ -1,7 +1,6 @@
 #pragma once
 
 #include "VertexData.h"
-#include "../Buffers/VertexArray.h"
 #include "Hazard/Assets/Asset.h"
 
 namespace Hazard::Rendering {
@@ -36,7 +35,6 @@ namespace Hazard::Rendering {
 		~Mesh();
 
 		std::string& GetFile() { return m_Filename; }
-		VertexArray& GetVertexArray() { return *m_MeshVAO; }
 		void GenerateArrays();
 	private:
 		std::string m_Filename;
@@ -44,6 +42,5 @@ namespace Hazard::Rendering {
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;
 		std::vector<SubMesh> m_Submeshes;
-		VertexArray* m_MeshVAO;
 	};
 }

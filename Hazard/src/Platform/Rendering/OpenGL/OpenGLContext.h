@@ -22,7 +22,6 @@ namespace Hazard::Rendering::OpenGL {
 		void SetViewport(int x, int y, int w, int h) override;
 		void Begin() override {};
 		void End() override {};
-		void DrawIndexed(VertexArray* array, uint32_t size) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;

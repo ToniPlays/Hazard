@@ -11,9 +11,7 @@ namespace Hazard::Logging {
 
 	public:
 		Logger();
-		~Logger() = default;
-
-		void Close();
+		~Logger();
 
 		static SPLogger GetCoreLogger() { return m_CoreLogger; }
 		static SPLogger GetClientLogger() { return m_ClienLogger; }

@@ -20,7 +20,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	VulkanContext::~VulkanContext()
 	{
-
+		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
 	}
 
 	void VulkanContext::Init(Window* window, ApplicationCreateInfo* appInfo)
@@ -61,12 +61,8 @@ namespace Hazard::Rendering::Vulkan {
 		uint32_t h = window->GetHeight();
 
 		m_SwapChain.Create(&w, &h, window->IsVSync());
-
-		VkPipelineCacheCreateInfo cache = {};
-		cache.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-		vkCreatePipelineCache(m_Device->GetDevice(), &cache, nullptr, &m_PipelineCache);
-
-		CreateDrawBuffers();
+		
+		BeginFrame();
 	}
 
 	void VulkanContext::BeginFrame()
@@ -80,57 +76,6 @@ namespace Hazard::Rendering::Vulkan {
 	}
 
 	void VulkanContext::Begin()
-	{
-		
-	}
-
-	void VulkanContext::End()
-	{
-		
-	}
-
-	void VulkanContext::SwapBuffers()
-	{
-		BeginFrame();
-		CreateDrawBuffers();
-		m_SwapChain.SwapBuffers();
-	}
-
-	void VulkanContext::SetViewport(int x, int y, int w, int h)
-	{
-		m_Device->WaitUntilIdle();
-		auto device = m_Device->GetDevice();
-
-		uint32_t width = w;
-		uint32_t height = h;
-		m_SwapChain.Clear();
-		m_SwapChain.Create(&width, &height, m_Window->IsVSync());
-
-		CreateDrawBuffers();
-
-		m_Device->WaitUntilIdle();
-	}
-
-	void VulkanContext::DrawIndexed(VertexArray* array, uint32_t size)
-	{
-
-	}
-
-	void VulkanContext::SetErrorListener(const ErrorCallback& callback)
-	{
-
-	}
-
-	DeviceSpec VulkanContext::GetDeviceSpec() const
-	{
-		return m_Device->GetSpec();
-	}
-	void VulkanContext::SendDebugMessage(const char* message, const char* code)
-	{
-		std::cout << message << std::endl;
-	}
-
-	void VulkanContext::CreateDrawBuffers()
 	{
 		VkCommandBufferBeginInfo cmdInfo = {};
 		cmdInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -169,7 +114,46 @@ namespace Hazard::Rendering::Vulkan {
 		scissors.offset = { 0, 0 };
 
 		vkCmdSetScissor(buffer, 0, 1, &scissors);
+		
+	}
+
+	void VulkanContext::End()
+	{
+		auto buffer = m_SwapChain.GetCurrentDrawCommandBuffer();
 		vkCmdEndRenderPass(buffer);
 		vkEndCommandBuffer(buffer);
+	}
+
+	void VulkanContext::SwapBuffers()
+	{
+		BeginFrame();
+		m_SwapChain.SwapBuffers();
+	}
+
+	void VulkanContext::SetViewport(int x, int y, int w, int h)
+	{
+		m_Device->WaitUntilIdle();
+		auto device = m_Device->GetDevice();
+
+		uint32_t width = w;
+		uint32_t height = h;
+		m_SwapChain.Clear();
+		m_SwapChain.Create(&width, &height, m_Window->IsVSync());
+
+		m_Device->WaitUntilIdle();
+	}
+
+	void VulkanContext::SetErrorListener(const ErrorCallback& callback)
+	{
+
+	}
+
+	DeviceSpec VulkanContext::GetDeviceSpec() const
+	{
+		return m_Device->GetSpec();
+	}
+	void VulkanContext::SendDebugMessage(const char* message, const char* code)
+	{
+		std::cout << message << std::endl;
 	}
 }

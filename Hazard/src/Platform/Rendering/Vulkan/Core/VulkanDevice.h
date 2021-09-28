@@ -14,14 +14,10 @@ namespace Hazard::Rendering::Vulkan
 		~VulkanDevice();
 
 		void WaitUntilIdle();
-		void CreateSwapchain(uint32_t imagesInFlight, bool vSync);
-
-		VkCommandBuffer BeginSingleTimeCommands();
-		void EndSingleTimeCommands(VkCommandBuffer buffer);
-
 		inline VkDevice GetDevice() { return m_Device; }
 
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
+		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
 		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
 		VkQueue GetPresentQueue() { return m_PresentQueue; }
@@ -36,7 +32,7 @@ namespace Hazard::Rendering::Vulkan
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
 		VkCommandPool m_CommandPool;
-
+		VkPipelineCache m_PipelineCache;
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;
 	};

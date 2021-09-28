@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Hazard/Rendering/Pipeline.h"
-#include <vulkan/vulkan.h>
 #include "VulkanShader.h"
+#include "VulkanBuffers.h"
+
+#include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan 
 {
@@ -14,14 +16,20 @@ namespace Hazard::Rendering::Vulkan
 
 		virtual PipelineSpecification GetSpecifications() { return m_Specs; }
 		virtual const PipelineSpecification GetSpecifications() const { return m_Specs; }
+		virtual Ref<VertexBuffer> GetBuffer() override { return m_VertexBuffer; }
 
 		virtual void Invalidate() override;
 		virtual void Bind() override;
+		virtual void Draw(uint32_t count) override;
 
 	private:
 		PipelineSpecification m_Specs;
-		VkPipeline m_Pipeline;
 
-		VulkanShader* m_Shader;
+		VkPipeline m_Pipeline;
+		VkPipelineLayout m_PipelineLayout;
+
+		Ref<VulkanVertexBuffer> m_VertexBuffer;
+		Ref<VulkanIndexBuffer> m_IndexBuffer;
+		Ref<VulkanShader> m_Shader;
 	};
 }

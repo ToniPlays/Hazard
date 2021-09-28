@@ -34,12 +34,14 @@ namespace Hazard::Rendering::Vulkan
 
 		uint32_t GetImageCount() { return m_ImageCount; }
 		VkFormat GetColorFormat() { return m_ColorFormat; }
+
 		SwapChainBuffer GetBuffer(uint32_t index) { return m_Buffers[index]; }
 		VkCommandBuffer GetDrawCommandBuffer(uint32_t index) { return m_DrawCommandBuffers[index]; }
 		VkCommandBuffer GetCurrentDrawCommandBuffer() { return m_DrawCommandBuffers[m_CurrentBufferIndex]; }
 
 		VkFramebuffer GetFrameBuffer(uint32_t index) { return m_FrameBuffers[index]; }
 		VkFramebuffer GetCurrentFrameBuffer() { return m_FrameBuffers[m_CurrentBufferIndex]; }
+
 		DepthStencil GetDepthStencil() { return m_DepthStencil; }
 		VkRenderPass GetRenderPass() { return m_RenderPass; }
 		uint32_t GetWidth() { return m_Width; }

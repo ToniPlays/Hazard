@@ -336,9 +336,6 @@
     <ClInclude Include="src\Hazard\Rendering\Buffers\ShaderDataType.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\VertexArray.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Loaders.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
@@ -390,9 +387,6 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLBuffers.h">
       <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLVertexArray.h">
-      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGL.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
@@ -442,9 +436,6 @@
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanShader.h">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanVertexArray.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\System\Window.h">
@@ -1862,9 +1853,6 @@
     <ClCompile Include="src\Hazard\Rendering\Buffers\Buffers.cpp">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Buffers\VertexArray.cpp">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Loaders.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
@@ -1897,6 +1885,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
       <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\GraphicsContext.cpp">
+      <Filter>src\Platform\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLBuffers.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
@@ -1947,9 +1938,6 @@
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanShader.cpp">
-      <Filter>src\Platform\Rendering\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanVertexArray.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
@@ -2012,6 +2000,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

@@ -12,10 +12,10 @@ namespace Hazard::ECS {
 		~WorldHandler();
 		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
-		World& GetCurrentWorld() { return *m_World; }
-		void SetWorld(World& world) { m_World = &world; }
+		Ref<World> GetCurrentWorld() { return m_World; }
+		void SetWorld(Ref<World> world) { m_World = world; }
 
 	private:
-		World* m_World = nullptr;
+		Ref<World> m_World = nullptr;
 	};
 }

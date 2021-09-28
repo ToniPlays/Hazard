@@ -52,9 +52,11 @@ namespace Hazard::Rendering
 	struct ShaderStageInput 
 	{
 		std::string Name;
+		uint32_t Binding;
 		uint32_t Location;
 		ShaderDataType Type;
 		uint32_t Size;
+		uint32_t Offset;
 	};
 	struct ShaderStageOutput
 	{
@@ -69,13 +71,14 @@ namespace Hazard::Rendering
 	};
 
 	struct ShaderStageData {
-		std::vector<ShaderStageInput> Inputs;
-		std::vector<ShaderStageOutput> Outputs;
+		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
+		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
 		std::vector<ShaderUniform> Uniforms;
+		uint32_t Stride;
 
 	};
 
-	class Shader {
+	class Shader : public RefCount {
 	public:
 
 		virtual ~Shader() = default;
@@ -85,7 +88,7 @@ namespace Hazard::Rendering
 		virtual std::unordered_map<ShaderType, ShaderStageData> GetShaderData() = 0;
 
 
-		static Shader* Create(const std::string& path);
+		static Ref<Shader> Create(const std::string& path);
 		static std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source);
 	};
 }

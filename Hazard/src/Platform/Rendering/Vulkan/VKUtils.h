@@ -4,11 +4,12 @@
 #include "Hazard/Rendering/Texture/FrameBuffer.h"
 
 #include "vulkan/vulkan.h"
+#include "Hazard/Rendering/Shader.h"
 
 namespace Hazard::Rendering::Vulkan {
 
 	const std::vector<const char*> deviceExtensions = {
-	VK_KHR_SWAPCHAIN_EXTENSION_NAME
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
 	struct QueueFamilyIndices {
@@ -39,6 +40,9 @@ namespace Hazard::Rendering::Vulkan {
 		static std::vector<VkAttachmentReference> CreateColorRefs(std::vector<FrameBufferAttachment>& attachments);
 		static std::vector<VkAttachmentReference> CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex = 1);
 		static VkFormat GetFormat(FrameBufferTextureFormat format);
+
+		static VkFormat ShaderDataTypeToVkFormat(ShaderDataType type);
+
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);

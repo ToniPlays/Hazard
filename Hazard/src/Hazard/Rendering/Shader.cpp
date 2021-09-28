@@ -9,12 +9,12 @@
 
 namespace Hazard::Rendering 
 {
-    Shader* Shader::Create(const std::string& path)
+    Ref<Shader> Shader::Create(const std::string& path)
     {
 		switch (RenderCommand::GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLShader(path);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanShader(path);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLShader>::Create(path);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanShader>::Create(path);
 		}
     }
 	std::unordered_map<ShaderType, std::string> Shader::PreProcess(const std::string& source)

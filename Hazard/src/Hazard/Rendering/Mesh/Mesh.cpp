@@ -13,33 +13,8 @@ namespace Hazard::Rendering {
     }
     Mesh::~Mesh()
     {
-        delete m_MeshVAO;
     }
     void Mesh::GenerateArrays()
     {
-        BufferLayout layout = {
-            { "v_position",     ShaderDataType::Float3 },
-            { "v_color",        ShaderDataType::Float4 },
-            { "v_normals",      ShaderDataType::Float3 },
-            { "v_textCoords",   ShaderDataType::Float2 }
-        };
-
-        VertexBufferCreateInfo bufferInfo;
-        bufferInfo.Layout = &layout;
-        bufferInfo.Data = m_Vertices.data();
-        bufferInfo.Size = m_Vertices.size() * sizeof(Vertex);
-        bufferInfo.Usage = BufferUsage::StaticDraw;
-
-        IndexBufferCreateInfo indexBufferInfo;
-        indexBufferInfo.Size = m_Indices.size();
-        indexBufferInfo.Data = m_Indices.data();
-        indexBufferInfo.Usage = BufferUsage::StaticDraw;
-
-        VertexArrayCreateInfo info;
-        info.VertexBuffer = &bufferInfo;
-        info.IndexBuffer = &indexBufferInfo;
-
-        m_MeshVAO = VertexArray::Create(info);
-        HZR_CORE_ASSERT(m_MeshVAO, "Mesh VAO failed");
     }
 }

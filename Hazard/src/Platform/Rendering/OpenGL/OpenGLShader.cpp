@@ -128,6 +128,7 @@ namespace Hazard::Rendering::OpenGL
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
+			uint32_t offset = 0;
 			for (auto& resource : resources.stage_inputs) {
 
 				auto spvType = compiler.get_type(resource.base_type_id);
@@ -136,9 +137,13 @@ namespace Hazard::Rendering::OpenGL
 				input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
 				input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
 				input.Size = ShaderDataTypeSize(input.Type);
+				input.Offset = offset;
+				offset += input.Size;
 
-				shaderStage.Inputs.push_back(input);
+				shaderStage.Inputs[input.Location] = input;
 			}
+			shaderStage.Stride = offset;
+
 			for (auto& resource : resources.stage_outputs) {
 
 				auto spvType = compiler.get_type(resource.base_type_id);
@@ -148,7 +153,7 @@ namespace Hazard::Rendering::OpenGL
 				output.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
 				output.Size = ShaderDataTypeSize(output.Type);
 
-				shaderStage.Outputs.push_back(output);
+				shaderStage.Outputs[output.Location] = output;
 			}
 
 			m_ShaderStageData[GLUtils::ShaderTypeFromGLType(stage)] = shaderStage;

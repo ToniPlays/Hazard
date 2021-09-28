@@ -1,6 +1,6 @@
-#pragma once
-
 #include <hzrpch.h>
+/*#pragma once
+
 #include "OpenGLVertexArray.h"
 
 #include "glad/glad.h"
@@ -41,22 +41,8 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLVertexArray::Bind()
 	{
-		glBindVertexArray(m_ID);
-		m_Buffers[0]->Bind();
-		BufferLayout layout = m_Buffers[0]->GetLayout();
-		uint32_t offset = 0;
+		
 
-		for (uint16_t i = 0; i < layout.GetElements().size(); i++) {
-
-			ShaderDataType type = layout.GetElements()[i].Type;
-			glEnableVertexArrayAttrib(m_ID, i);
-			glVertexAttribPointer(i, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
-				layout.GetElements()[i].Normalized, layout.GetStride(), (const void*)offset);
-
-			offset += ShaderDataTypeSize(type);
-		}
-		if(m_IndexBuffer != nullptr)
-			m_IndexBuffer->Bind();
 	}
 	void OpenGLVertexArray::Unbind()
 	{
@@ -124,4 +110,4 @@ namespace Hazard::Rendering::OpenGL
 		buffer->Bind();
 		this->m_IndexBuffer = buffer;
 	}
-}
+}*/

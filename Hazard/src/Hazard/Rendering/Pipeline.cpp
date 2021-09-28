@@ -8,11 +8,11 @@
 
 namespace Hazard::Rendering 
 {
-	Pipeline* Pipeline::Create(const PipelineSpecification& specs)
+	Ref<Pipeline> Pipeline::Create(const PipelineSpecification& specs)
 	{
 		switch (RenderCommand::GetAPI()) {
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLPipeline(specs);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanPipeline(specs);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLPipeline>::Create(specs);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanPipeline>::Create(specs);
 		}
 	}
 }

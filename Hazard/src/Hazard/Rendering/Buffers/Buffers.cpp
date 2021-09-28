@@ -15,28 +15,28 @@ namespace Hazard::Rendering {
 		memcpy(copiedData, data, size);
 		return copiedData;
 	}
-	VertexBuffer* VertexBuffer::Create(const VertexBufferCreateInfo& createInfo)
+	Ref<VertexBuffer> VertexBuffer::Create(const VertexBufferCreateInfo& createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLVertexBuffer(createInfo);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanVertexBuffer(createInfo);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo);
 		}
 	}
-	IndexBuffer* IndexBuffer::Create(const IndexBufferCreateInfo& createInfo)
+	Ref<IndexBuffer> IndexBuffer::Create(const IndexBufferCreateInfo& createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLIndexBuffer(createInfo);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanIndexBuffer(createInfo);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo);
 		}
 	}
-	UniformBuffer* UniformBuffer::Create(const UniformBufferCreateInfo& createInfo)
+	Ref<UniformBuffer> UniformBuffer::Create(const UniformBufferCreateInfo& createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLUniformBuffer(createInfo);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanUniformBuffer(createInfo);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLUniformBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo);
 		}
 	}
 }

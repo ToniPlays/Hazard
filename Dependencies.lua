@@ -20,13 +20,13 @@ IncludeDir["Entt"] = "%{wks.location}/Hazard/vendor/entt/include"
 IncludeDir["Assimp"] = "%{wks.location}/Hazard/vendor/assimp/include"
 IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
 IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
-IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}//1.2.198.2/Include"
+IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 LibraryDir = {}
 
-LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}//1.2.198.2/Lib"
-LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Hazard/vendor/VulkanSDK/1.2.198.2/Lib"
-LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/1.2.198.2/Bin"
+LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
+LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Lib"
+LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Bin"
 
 Library = {}
 Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"

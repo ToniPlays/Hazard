@@ -20,7 +20,7 @@ namespace Hazard::Rendering {
 			func();
 			m_Context->GetContext().End();
 		}
-		static void DrawIndexed(VertexArray* vertexArray, uint32_t size) { m_Context->GetContext().DrawIndexed(vertexArray, size); }
+		//static void DrawIndexed(VertexArray* vertexArray, uint32_t size) { m_Context->GetContext().DrawIndexed(vertexArray, size); }
 
 		static RenderContext& GetContext() { return *m_Context; };
 		static void SetDebugCallback(ErrorCallback& callback);

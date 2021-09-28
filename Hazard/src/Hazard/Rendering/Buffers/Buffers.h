@@ -20,7 +20,6 @@ namespace Hazard::Rendering
 
 	struct VertexBufferCreateInfo 
 	{
-		BufferLayout* Layout;
 		BufferUsage Usage;
 		uint32_t Size;
 		void* Data = nullptr;
@@ -42,7 +41,7 @@ namespace Hazard::Rendering
 		static void* Copy(const void* data, size_t size);
 	};
 
-	class VertexBuffer 
+	class VertexBuffer : public RefCount
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -51,10 +50,10 @@ namespace Hazard::Rendering
 		virtual void SetData(const void* data, uint32_t size) = 0;
 		virtual BufferLayout GetLayout() = 0;
 
-		static VertexBuffer* Create(const VertexBufferCreateInfo& createInfo);
+		static Ref<VertexBuffer> Create(const VertexBufferCreateInfo& createInfo);
 	};
 
-	class IndexBuffer 
+	class IndexBuffer : public RefCount
 	{
 	public:
 		virtual ~IndexBuffer() = default;
@@ -65,15 +64,15 @@ namespace Hazard::Rendering
 		virtual void SetData(uint32_t* data, uint32_t size) = 0;
 		virtual uint32_t GetCount() = 0;
 
-		static IndexBuffer* Create(const IndexBufferCreateInfo& createInfo);
+		static Ref<IndexBuffer> Create(const IndexBufferCreateInfo& createInfo);
 	};
-	class UniformBuffer 
+	class UniformBuffer : public RefCount
 	{
 	public:
 		virtual ~UniformBuffer() = default;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
-		static UniformBuffer* Create(const UniformBufferCreateInfo& createInfo);
+		static Ref<UniformBuffer> Create(const UniformBufferCreateInfo& createInfo);
 	};
 }

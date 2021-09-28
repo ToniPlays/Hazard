@@ -14,10 +14,15 @@ namespace Hazard::Rendering::Vulkan
 		void Bind() override;
 		void Unbind() override;
 
-		virtual std::unordered_map<ShaderType, ShaderStageData> GetShaderData() { return m_ShaderStageData; };
+		VkShaderModule GetModule(VkShaderStageFlagBits index) { return m_Modules[index]; }
 
-		void GetStageInfo(std::vector<VkPipelineShaderStageCreateInfo>& info);
+		VkVertexInputBindingDescription GetBindingDescriptions();
+		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
+
+		std::unordered_map<ShaderType, ShaderStageData> GetShaderData() { return m_ShaderStageData; };
+		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
 		void DestroyModules();
+
 	private:
 
 		void CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources);

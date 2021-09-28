@@ -20,6 +20,7 @@ namespace Hazard::Rendering::Vulkan
 		m_ColorSpace = surfaceFormat.colorSpace;
 
 		m_ImageCount = details.capabilities.minImageCount + 1;
+
 		if (details.capabilities.maxImageCount > 0 && m_ImageCount > details.capabilities.maxImageCount) {
 			m_ImageCount = details.capabilities.maxImageCount;
 		}
@@ -41,6 +42,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::Create(uint32_t* width, uint32_t* height, bool vsync)
 	{
+		m_Device->WaitUntilIdle();
 		m_Width = *width;
 		m_Height = *height;
 
@@ -182,6 +184,20 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanSwapChain::Cleanup()
 	{
 		VkDevice device = m_Device->GetDevice();
+		m_Device->WaitUntilIdle();
+		vkDestroyRenderPass(device, m_RenderPass, nullptr);
+		vkDestroyImageView(device, m_DepthStencil.view, nullptr);
+		vkDestroyImage(device, m_DepthStencil.image, nullptr);
+		vkFreeMemory(device, m_DepthStencil.mem, nullptr);
+
+		for(auto fence : m_WaitFences)
+			vkDestroyFence(device, fence, nullptr);
+
+		vkDestroySemaphore(device, m_Semaphores.PresentComplete, nullptr);
+		vkDestroySemaphore(device, m_Semaphores.RenderComplete, nullptr);
+
+		for (auto frameBuffer : m_FrameBuffers)
+			vkDestroyFramebuffer(device, frameBuffer, nullptr);
 
 		if (m_SwapChain) {
 			for (uint32_t i = 0; i < m_ImageCount; i++) {

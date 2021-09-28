@@ -17,12 +17,12 @@ namespace Hazard::Scripting {
 	void ScriptCommand::OnBeginRuntime()
 	{
 		using namespace ECS;
-		World& current = Application::GetModule<WorldHandler>().GetCurrentWorld();
-		auto view = current.GetWorldRegistry().view<ScriptComponent>();
+		Ref<World> current = Application::GetModule<WorldHandler>().GetCurrentWorld();
+		auto view = current->GetWorldRegistry().view<ScriptComponent>();
 
 		for (auto entity : view) {
 
-			Entity e = current.GetEntity(entity);
+			Entity e = current->GetEntity(entity);
 			auto& c = e.GetComponent<ScriptComponent>();
 
 			if (ModuleExists(ScriptType::CSharpScript, c.m_ModuleName.c_str())) {
@@ -36,8 +36,9 @@ namespace Hazard::Scripting {
 	}
 	void ScriptCommand::InitAllEntities()
 	{	
-		auto& scene = ECS::WorldCommand::GetCurrentWorld();
-		for (auto [id, component] : scene.FindEntitiesWith<ECS::ScriptComponent>()) {
+		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
+
+		for (auto [id, component] : world->FindEntitiesWith<ECS::ScriptComponent>()) {
 			if (!s_manager->ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) 
 				continue;
 			s_manager->InitEntity(ScriptType::CSharpScript, id, component.m_ModuleName);

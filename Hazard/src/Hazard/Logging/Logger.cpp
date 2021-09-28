@@ -20,7 +20,7 @@ namespace Hazard::Logging {
 		m_ClienLogger = spdlog::stdout_color_mt("Client");
 		m_ClienLogger->set_level(spdlog::level::trace);
 	}
-	void Logger::Close()
+	Logger::~Logger()
 	{
 		HZR_PROFILE_FUNCTION();
 		m_CoreLogger.reset();

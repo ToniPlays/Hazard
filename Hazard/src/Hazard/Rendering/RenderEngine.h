@@ -12,7 +12,7 @@ namespace Hazard::Rendering {
 	{
 	public:
 		RenderEngine(RenderEngineCreateInfo* info, RenderAPI api);
-		~RenderEngine() = default;
+		~RenderEngine();
 
 		void Update() override;
 

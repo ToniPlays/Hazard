@@ -71,12 +71,6 @@ namespace Hazard::Rendering {
 			glViewport(x, y, w, h);
 		}
 
-		void OpenGLContext::DrawIndexed(VertexArray* array, uint32_t size)
-		{
-			array->Bind();
-			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, nullptr);
-		}
-
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 		{
 			OpenGLContext::s_Callback = callback;

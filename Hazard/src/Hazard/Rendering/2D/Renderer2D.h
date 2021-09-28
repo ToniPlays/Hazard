@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../RenderEngine.h"
-#include "../Buffers/VertexArray.h"
 #include "../Pipeline.h"
 
 
@@ -51,8 +50,7 @@ namespace Hazard::Rendering
 		void Flush();
 
 	private:
-		VertexArray* m_Array;
 		Renderer2DData m_Data;
-		Pipeline* m_Pipeline;
+		Ref<Pipeline> m_Pipeline;
 	};
 }
