@@ -125,31 +125,60 @@ namespace Hazard::Rendering::OpenGL
 		HZR_CORE_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
-	void OpenGLShader::Reflect(GLenum stage, std::vector<uint32_t> data)
+	void OpenGLShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_TRACE("Reflecting shader {0}", m_FilePath);
-		m_ShaderStageData.clear();
+		m_ShaderData.Stages.clear();
+
+		uint32_t uniformCount = 0;
 
 		for (auto&& [stage, binary] : m_OpenGLSPIRV) {
+
+			std::cout << Utils::ShaderTypeToString(GLUtils::ShaderTypeFromGLType(stage)) << std::endl;
 
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
-			m_ShaderStageData[GLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
-
-			for (auto& uniformDescription : shaderStage.UniformsDescriptions)
+			m_ShaderData.Stages[GLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
+			
+			for (auto& resource : resources.uniform_buffers) 
 			{
-				UniformBufferCreateInfo bufferInfo = {};
-				bufferInfo.Name = uniformDescription.Name;
-				bufferInfo.Binding = uniformDescription.Binding;
-				bufferInfo.Size = uniformDescription.Size;
+				bool found = false;
+				for (auto& uniform : m_ShaderData.UniformsDescriptions) {
+					if (uniform.Name == resource.name) {
+						uniform.ShaderUsage |= GLUtils::ShaderTypeFromGLType(stage);
+						found = true;
+						break;
+					}
+				}
+				if (found) continue;
 
-				m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(bufferInfo);
+				auto& type = compiler.get_type(resource.base_type_id);
+
+				ShaderUniformBufferDescription desc = {};
+				desc.Name = resource.name;
+				desc.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+				desc.MemberCount = type.member_types.size();
+				desc.Size = compiler.get_declared_struct_size(type);
+				desc.ShaderUsage |= GLUtils::ShaderTypeFromGLType(stage);
+
+				m_ShaderData.UniformsDescriptions.push_back(desc);
 			}
 		}
-		Utils::PrintReflectResults(m_FilePath, m_ShaderStageData);
+
+		for (auto& uniformBuffer : m_ShaderData.UniformsDescriptions) 
+		{
+			UniformBufferCreateInfo bufferInfo = {};
+			bufferInfo.Name = uniformBuffer.Name;
+			bufferInfo.Binding = uniformBuffer.Binding;
+			bufferInfo.Size = uniformBuffer.Size;
+
+			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(bufferInfo);
+		}
+
+		Utils::PrintReflectResults(m_FilePath, m_ShaderData);
 	}
 	bool OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
@@ -237,9 +266,7 @@ namespace Hazard::Rendering::OpenGL
 			shaderData[stage] = std::vector<uint32_t>(module.begin(), module.cend());
 			File::WriteBinaryFile(cachedFilePath, shaderData[stage]);
 		}
-		for (auto&& [stage, data] : shaderData) {
-			Reflect(stage, data);
-		}
+		Reflect();
 	}
 	void OpenGLShader::CreateProgram()
 	{

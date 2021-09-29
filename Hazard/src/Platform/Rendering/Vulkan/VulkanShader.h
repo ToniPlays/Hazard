@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Rendering/Shader.h"
+#include "Hazard/Rendering/Buffers/Buffers.h"
 #include "vulkan/vulkan.h"
 
 namespace Hazard::Rendering::Vulkan
@@ -15,11 +16,14 @@ namespace Hazard::Rendering::Vulkan
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
 
+		VkResult CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout);
+
 		VkVertexInputBindingDescription GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
 
-		std::unordered_map<ShaderType, ShaderStageData> GetShaderData() { return m_ShaderStageData; };
+		const ShaderData& GetShaderData() override { return m_ShaderData; };
 		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
+
 		void DestroyModules();
 
 	private:
@@ -31,7 +35,9 @@ namespace Hazard::Rendering::Vulkan
 		std::string m_Path;
 		std::unordered_map<VkShaderStageFlagBits, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
-		std::unordered_map<ShaderType, ShaderStageData> m_ShaderStageData;
+		ShaderData m_ShaderData;
+
+		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};
 }
 

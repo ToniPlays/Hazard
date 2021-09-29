@@ -7,7 +7,13 @@
 
 namespace Hazard::Rendering
 {
-	enum ShaderType { Unknown = 0, Vertex, Fragment, Compute, Geometry };
+	enum ShaderType {
+		Unknown = BIT(0),
+		Vertex = BIT(1),
+		Fragment = BIT(2),
+		Compute = BIT(3),
+		Geometry = BIT(4)
+	};
 
 	struct ShaderStageInput
 	{
@@ -31,18 +37,23 @@ namespace Hazard::Rendering
 		uint32_t Binding;
 		uint32_t Size;
 		uint32_t MemberCount;
+		uint32_t ShaderUsage = 0;
 	};
 
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
+		uint32_t Stride = 0;
+	};
+
+	struct ShaderData {
+		std::unordered_map<ShaderType, ShaderStageData> Stages;
 		std::vector<ShaderUniformBufferDescription> UniformsDescriptions;
-		uint32_t Stride;
 	};
 
 
-	namespace Utils 
+	namespace Utils
 	{
 		static ShaderType ShaderTypeFromString(const std::string& type) {
 			if (type == "Vertex")		return ShaderType::Vertex;
@@ -69,7 +80,7 @@ namespace Hazard::Rendering
 				case 3: return ShaderDataType::Float3;
 				case 4: return ShaderDataType::Float4;
 				}
-			case SPIRType::Int: 
+			case SPIRType::Int:
 				switch (type.vecsize)
 				{
 				case 1: return ShaderDataType::Int;
@@ -81,14 +92,14 @@ namespace Hazard::Rendering
 			}
 		}
 
-		static void PrintReflectResults(const std::string& filename, const std::unordered_map<ShaderType, ShaderStageData>& data)
+		static void PrintReflectResults(const std::string& filename, const ShaderData& data)
 		{
 			HZR_CORE_TRACE("Shader {0}");
-			for (auto& [type, stage] : data) {
+			for (auto& [type, stage] : data.Stages) {
 				HZR_CORE_TRACE("  {0} stage:", Utils::ShaderTypeToString(type));
 				HZR_CORE_TRACE("    Inputs: ");
-				
-				for (uint32_t i = 0; i < stage.Inputs.size(); i++) 
+
+				for (uint32_t i = 0; i < stage.Inputs.size(); i++)
 				{
 					auto& input = stage.Inputs.at(i);
 					HZR_CORE_TRACE("      {0}", input.Name);
@@ -107,15 +118,16 @@ namespace Hazard::Rendering
 					HZR_CORE_TRACE("        Type = {0}", ShaderDataTypeToString(output.Type));
 					HZR_CORE_TRACE("        Size = {0}", output.Size);
 				}
-				HZR_CORE_TRACE("    Unforms: ");
-				for (uint32_t i = 0; i < stage.UniformsDescriptions.size(); i++)
-				{
-					auto& uniform = stage.UniformsDescriptions.at(i);
-					HZR_CORE_TRACE("      {0}", uniform.Name);
-					HZR_CORE_TRACE("        Binding = {0}", uniform.Binding);
-					HZR_CORE_TRACE("        MemberCount = {0}", uniform.MemberCount);
-					HZR_CORE_TRACE("        Size = {0}", uniform.Size);
-				}
+			}
+			HZR_CORE_TRACE("    Unforms: ");
+			for (uint32_t i = 0; i < data.UniformsDescriptions.size(); i++)
+			{
+				auto& uniform = data.UniformsDescriptions.at(i);
+				HZR_CORE_TRACE("      {0}", uniform.Name);
+				HZR_CORE_TRACE("        Binding = {0}", uniform.Binding);
+				HZR_CORE_TRACE("        MemberCount = {0}", uniform.MemberCount);
+				HZR_CORE_TRACE("        Size = {0}", uniform.Size);
+				HZR_CORE_TRACE("        Usage = {0}", uniform.ShaderUsage);
 			}
 		}
 	}
@@ -129,7 +141,7 @@ namespace Hazard::Rendering
 		virtual void Unbind() = 0;
 		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
 
-		virtual std::unordered_map<ShaderType, ShaderStageData> GetShaderData() = 0;
+		virtual const ShaderData& GetShaderData() = 0;
 
 		static Ref<Shader> Create(const std::string& path);
 		static std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source);

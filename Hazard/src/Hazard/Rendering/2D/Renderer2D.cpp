@@ -71,6 +71,13 @@ namespace Hazard::Rendering
 			glm::mat4 tempMat = Math::ToTransformMatrix({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 			Submit({ tempMat, "#EF2E2E" });
 
+			tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+			Submit({ tempMat, "#ED1414" });
+
+			tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+			Submit({ tempMat, "#EF2E2E" });
+
+
 			Flush();
 			});
 	}

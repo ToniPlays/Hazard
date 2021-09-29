@@ -51,7 +51,6 @@ namespace Hazard::Rendering
 		HZR_PROFILE_FUNCTION();
 		ShaderStageData shaderStage;
 
-		uint32_t stride = 0;
 		for (auto& resource : resources.stage_inputs) {
 
 			auto spvType = compiler.get_type(resource.base_type_id);
@@ -62,10 +61,9 @@ namespace Hazard::Rendering
 			input.Type = Rendering::Utils::ShaderTypeFromSPV(spvType);
 			input.Size = ShaderDataTypeSize(input.Type);
 
-			stride += input.Size;
 			shaderStage.Inputs[input.Location] = input;
+			shaderStage.Stride += input.Size;
 		}
-		shaderStage.Stride = stride;
 		uint32_t offset = 0;
 		
 		for (uint32_t i = 0; i < shaderStage.Inputs.size(); i++)
@@ -84,19 +82,6 @@ namespace Hazard::Rendering
 			output.Size = ShaderDataTypeSize(output.Type);
 
 			shaderStage.Outputs[output.Location] = output;
-		}
-
-		for (auto& resource : resources.uniform_buffers) 
-		{
-			ShaderUniformBufferDescription uniform;
-			auto& type = compiler.get_type(resource.base_type_id);
-
-			uniform.Name = resource.name;
-			uniform.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-			uniform.MemberCount = type.member_types.size();
-			uniform.Size = compiler.get_declared_struct_size(type);
-			
-			shaderStage.UniformsDescriptions.push_back(uniform);
 		}
 		return shaderStage;
 	}

@@ -12,8 +12,8 @@ layout(std140, binding = 0) uniform Camera
 
 layout(location = 0) out vec4 f_color;
 
-void main() {
-
+void main() 
+{
 	f_color = v_Color;
 	gl_Position = camera.u_ViewProjection * vec4(v_Position, 1.0);
 }
@@ -23,9 +23,14 @@ void main() {
 
 layout(location = 0) in vec4 f_color;
 
+layout(std140, binding = 0) uniform Camera 
+{
+	mat4 u_ViewProjection;
+} camera;
+
 layout(location = 0) out vec4 color;
 
 void main() {
 
-	color = f_Color;
+	color = f_color;
 }

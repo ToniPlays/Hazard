@@ -53,7 +53,7 @@ namespace Hazard::Rendering::OpenGL
 		m_Shader->Bind();
 		glBindVertexArray(m_ID);
 		m_Buffer->Bind();
-		ShaderStageData data = m_Shader->GetShaderData()[ShaderType::Vertex];
+		ShaderStageData data = m_Shader->GetShaderData().Stages.at(ShaderType::Vertex);
 
 		for (auto [location, input] : data.Inputs) {
 			glEnableVertexArrayAttrib(m_ID, location);

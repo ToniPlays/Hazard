@@ -36,11 +36,8 @@ namespace Hazard::Rendering::Vulkan
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
-		VkDescriptorSetLayoutBinding uniformBindings = {};
-		uniformBindings.binding = 0;
-		uniformBindings.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		uniformBindings.descriptorCount = 1;
-		uniformBindings.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		//m_Shader->CreateUniformDescriptorLayout(&m_UniformLayout);
+
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

@@ -106,17 +106,42 @@ namespace Hazard::Rendering::Vulkan
 	{
 
 	}
+	VkResult VulkanShader::CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout)
+	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
+
+		std::vector< VkDescriptorSetLayoutBinding> bindings(m_UniformBuffers.size());
+		size_t i = 0;
+
+		for (auto&& [type, stage] : m_ShaderData.Stages)
+		{
+			/*for (auto& uniform : stage.UniformsDescriptions) {
+				bindings[i].binding = uniform.Binding;
+				bindings[i].descriptorCount = 1;
+				bindings[i].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				bindings[i].pImmutableSamplers = nullptr;
+				bindings[i].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+			}*/
+		}
+
+		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+		layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+
+		layoutInfo.bindingCount = i;
+
+		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout);
+	}
 	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
 	{
 		VkVertexInputBindingDescription description;
 		description.binding = 0;
 		description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-		description.stride = m_ShaderStageData[ShaderType::Vertex].Stride;
+		description.stride = m_ShaderData.Stages[ShaderType::Vertex].Stride;
 		return description;
 	}
 	std::vector<VkVertexInputAttributeDescription> VulkanShader::GetAttriDescriptions()
 	{
-		auto& data = m_ShaderStageData[ShaderType::Vertex].Inputs;
+		auto& data = m_ShaderData.Stages[ShaderType::Vertex].Inputs;
 		std::vector<VkVertexInputAttributeDescription> descriptions(data.size());
 
 		for (uint32_t i = 0; i < data.size(); i++) {
@@ -211,7 +236,7 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_ShaderStageData.clear();
+		m_ShaderData.Stages.clear();
 
 		for (auto&& [stage, binary] : m_ShaderCode) {
 
@@ -219,8 +244,20 @@ namespace Hazard::Rendering::Vulkan
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
-			m_ShaderStageData[Utils::ShaderTypeFromVkType(stage)] = shaderStage;
+			m_ShaderData.Stages[Utils::ShaderTypeFromVkType(stage)] = shaderStage;
 		}
-		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderStageData);
+
+
+
+		for (auto& uniformDescription : m_ShaderData.UniformsDescriptions)
+		{
+			UniformBufferCreateInfo bufferInfo = {};
+			bufferInfo.Name = uniformDescription.Name;
+			bufferInfo.Binding = uniformDescription.Binding;
+			bufferInfo.Size = uniformDescription.Size;
+
+			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(bufferInfo);
+		}
+		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
 }
