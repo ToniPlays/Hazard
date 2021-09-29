@@ -15,13 +15,11 @@ namespace Hazard::Rendering::Vulkan
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
-		virtual BufferLayout GetLayout() { return m_Layout; }
 
 	private:
 		VkBuffer m_Buffer;
 		VkDeviceMemory m_BufferMemory;
 		BufferUsage m_Usage;
-		BufferLayout m_Layout;
 		uint32_t m_Size;
 	};
 
@@ -54,11 +52,13 @@ namespace Hazard::Rendering::Vulkan
 
 		void Bind() override;
 		void Unbind() override;
+		void SetData(const void* data) override;
 
 	private:
 
 		BufferUsage m_Usage;
 		uint32_t m_Size;
+		uint32_t m_Binding;
 
 	};
 }

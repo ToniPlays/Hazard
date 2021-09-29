@@ -24,7 +24,7 @@ namespace Hazard::Rendering {
 
 		static RenderContext& GetContext() { return *m_Context; };
 		static void SetDebugCallback(ErrorCallback& callback);
-		static void SetClearColor(Color color);
+		static void SetClearColor(const Color& color);
 
 	private:
 		static void Init(RenderContext* context) { m_Context = context; }

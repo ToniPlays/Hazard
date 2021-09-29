@@ -32,7 +32,8 @@ namespace Hazard::Scripting::CSharp {
 
 	using EntityInstanceMap = std::unordered_map<uint32_t, EntityInstanceData>;
 
-	struct EntityScript {
+	struct EntityScript 
+	{
 		std::string moduleName;
 		std::string className;
 		std::string nameSpace;

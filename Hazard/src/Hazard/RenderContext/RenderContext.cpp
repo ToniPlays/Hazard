@@ -24,7 +24,7 @@ namespace Hazard::Rendering {
 		m_Window->GetContext()->SetClearColor({ info->Color.r, info->Color.g, info->Color.b, 1.0f });
 		SetActive(true);
 	}
-	void RenderContext::Update()
+	void RenderContext::Render()
 	{
 		m_Window->OnUpdate();
 	}

@@ -123,7 +123,7 @@ namespace Hazard::Rendering::Vulkan
 		vkUnmapMemory(device, m_BufferMemory);
 
 	}
-	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo)
+	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding)
 	{
 
 	}
@@ -136,6 +136,10 @@ namespace Hazard::Rendering::Vulkan
 
 	}
 	void VulkanUniformBuffer::Unbind()
+	{
+
+	}
+	void VulkanUniformBuffer::SetData(const void* data)
 	{
 
 	}

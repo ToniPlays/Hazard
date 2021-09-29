@@ -26,12 +26,16 @@ namespace Hazard::Core {
 		try 
 		{
 			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
+			{
+				Timer timer;
+				AssetManager::Init();
+				m_Application->PreInit();
+				Input::Init();
+				m_Application->Init();
 
-			AssetManager::Init();
+				HZR_CORE_INFO("Startup took {0} ms", timer.ElapsedMillis());
+			}
 
-			m_Application->PreInit();
-			Input::Init();
-			m_Application->Init();
 			HZR_PROFILE_SESSION_END();
 
 			Run();
@@ -86,6 +90,8 @@ namespace Hazard::Core {
 		EventDispatcher dispatcher(e);
 		if(dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit))) 
 			return;
-		m_Application->OnEvent(e);
+
+		if(!m_ModuleHandler.OnEvent(e))
+			m_Application->OnEvent(e);
 	}
 }

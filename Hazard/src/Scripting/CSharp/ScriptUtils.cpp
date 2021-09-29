@@ -15,7 +15,7 @@
 namespace Hazard::Scripting::CSharp {
 	std::byte* ScriptUtils::AllocateBuffer(FieldType type)
 	{
-		uint32_t size = GetFieldSize(type);
+		size_t size = GetFieldSize(type);
 		std::byte* buffer = new std::byte[size];
 		memset(buffer, 0, size);
 		return buffer;

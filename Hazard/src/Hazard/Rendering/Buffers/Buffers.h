@@ -1,6 +1,5 @@
 #pragma once
 #include "Hazard/Core/Core.h"
-#include "BufferLayout.h"
 #include "ShaderDataType.h"
 
 namespace Hazard::Rendering 
@@ -20,19 +19,21 @@ namespace Hazard::Rendering
 
 	struct VertexBufferCreateInfo 
 	{
-		BufferUsage Usage;
-		uint32_t Size;
+		uint32_t Size = 0;
+		BufferUsage Usage = BufferUsage::StaticDraw;
 		void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo 
 	{
 		uint32_t Size;
-		uint32_t* Data = nullptr;
 		BufferUsage Usage;
+		uint32_t* Data = nullptr;
 	};
 	struct UniformBufferCreateInfo 
 	{
-
+		std::string Name;
+		uint32_t Size;
+		uint32_t Binding;
 	};
 
 
@@ -48,7 +49,6 @@ namespace Hazard::Rendering
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data, uint32_t size) = 0;
-		virtual BufferLayout GetLayout() = 0;
 
 		static Ref<VertexBuffer> Create(const VertexBufferCreateInfo& createInfo);
 	};
@@ -72,6 +72,7 @@ namespace Hazard::Rendering
 		virtual ~UniformBuffer() = default;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
+		virtual void SetData(const void* data) = 0;
 
 		static Ref<UniformBuffer> Create(const UniformBufferCreateInfo& createInfo);
 	};

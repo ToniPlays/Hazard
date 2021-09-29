@@ -10,7 +10,8 @@ namespace Hazard::Audio {
 	enum class FileFormat {
 		None = 0,
 		Ogg,
-		Mp3
+		Mp3,
+		Waw
 	};
 
 	class AudioLoader {

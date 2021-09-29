@@ -86,10 +86,14 @@ namespace Hazard {
 		}
 
 		template<typename T>
+		static T ToDec(const std::string& value) {
+			return std::strtoul(value.c_str(), 0, 16);
+		}
+		template<typename T>
 		static glm::vec2 AspectRatio(T width, T height)
 		{
 			height = (height / width) * width;
-			return glm::vec2<double>(width * 0.01f, height * 0.01f);
+			return glm::vec2(width * 0.01f, height * 0.01f);
 		}
 
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) 

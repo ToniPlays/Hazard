@@ -12,8 +12,10 @@ namespace Hazard::Rendering::OpenGL
 
 		virtual PipelineSpecification GetSpecifications() { return m_Specs; }
 		virtual const PipelineSpecification GetSpecifications() const { return m_Specs; }
-
+		virtual Ref<Shader> GetShader() { return m_Shader; }
 		virtual Ref<VertexBuffer> GetBuffer() override { return m_Buffer; }
+		
+
 
 		virtual void Invalidate() override;
 		virtual void Bind() override;

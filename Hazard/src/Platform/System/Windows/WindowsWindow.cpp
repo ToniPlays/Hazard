@@ -30,6 +30,7 @@ namespace Hazard::Rendering {
 		m_WindowData.Platform = "Windows";
 		m_WindowData.Width = info->Width;
 		m_WindowData.Height = info->Height;
+		m_WindowData.VSync = info->VSync;
 		m_WindowData.ImagesInFlight = info->ImagesInFlight;
 
 		m_Context = GraphicsContext::Create(info->Renderer, &m_WindowData);
@@ -71,7 +72,8 @@ namespace Hazard::Rendering {
 	}
 	void WindowsWindow::OnUpdate()
 	{
-		m_Context->SwapBuffers();
+		if(!m_WindowData.minimized)
+			m_Context->SwapBuffers();
 		glfwPollEvents();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
@@ -196,6 +198,7 @@ namespace Hazard::Rendering {
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.minimized = minimized;
+			Application::GetData().Minimized = minimized == 1;
 			});
 	}
 

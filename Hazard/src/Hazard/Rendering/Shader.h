@@ -25,7 +25,7 @@ namespace Hazard::Rendering
 		ShaderDataType Type;
 		uint32_t Size;
 	};
-	struct ShaderUniform
+	struct ShaderUniformBufferDescription
 	{
 		std::string Name;
 		uint32_t Binding;
@@ -37,7 +37,7 @@ namespace Hazard::Rendering
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
-		std::vector<ShaderUniform> Uniforms;
+		std::vector<ShaderUniformBufferDescription> UniformsDescriptions;
 		uint32_t Stride;
 	};
 
@@ -108,9 +108,9 @@ namespace Hazard::Rendering
 					HZR_CORE_TRACE("        Size = {0}", output.Size);
 				}
 				HZR_CORE_TRACE("    Unforms: ");
-				for (uint32_t i = 0; i < stage.Uniforms.size(); i++)
+				for (uint32_t i = 0; i < stage.UniformsDescriptions.size(); i++)
 				{
-					auto& uniform = stage.Uniforms.at(i);
+					auto& uniform = stage.UniformsDescriptions.at(i);
 					HZR_CORE_TRACE("      {0}", uniform.Name);
 					HZR_CORE_TRACE("        Binding = {0}", uniform.Binding);
 					HZR_CORE_TRACE("        MemberCount = {0}", uniform.MemberCount);
@@ -127,8 +127,9 @@ namespace Hazard::Rendering
 		virtual void Reload() = 0;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
-		virtual std::unordered_map<ShaderType, ShaderStageData> GetShaderData() = 0;
+		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
 
+		virtual std::unordered_map<ShaderType, ShaderStageData> GetShaderData() = 0;
 
 		static Ref<Shader> Create(const std::string& path);
 		static std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source);

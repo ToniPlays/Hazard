@@ -6,7 +6,7 @@ namespace Hazard {
 
 	//Contains all window events;
 
-	class  WindowResizeEvent : public Event {
+	class WindowResizeEvent : public Event {
 
 	public: 
 		WindowResizeEvent(unsigned int width, unsigned int height) 
@@ -27,7 +27,7 @@ namespace Hazard {
 		unsigned int m_Width, m_Height;
 	};
 
-	class  WindowCloseEvent : public Event {
+	class WindowCloseEvent : public Event {
 
 	public:
 		WindowCloseEvent() = default;

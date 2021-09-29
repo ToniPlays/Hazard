@@ -13,6 +13,7 @@ namespace Hazard::Rendering::Vulkan
 		void Reload() override;
 		void Bind() override;
 		void Unbind() override;
+		void SetUniformBuffer(const std::string& name, void* data) override;
 
 		VkVertexInputBindingDescription GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();

@@ -86,8 +86,9 @@ namespace Hazard::Rendering
 			shaderStage.Outputs[output.Location] = output;
 		}
 
-		for (auto& resource : resources.uniform_buffers) {
-			ShaderUniform uniform;
+		for (auto& resource : resources.uniform_buffers) 
+		{
+			ShaderUniformBufferDescription uniform;
 			auto& type = compiler.get_type(resource.base_type_id);
 
 			uniform.Name = resource.name;
@@ -95,7 +96,7 @@ namespace Hazard::Rendering
 			uniform.MemberCount = type.member_types.size();
 			uniform.Size = compiler.get_declared_struct_size(type);
 			
-			shaderStage.Uniforms.push_back(uniform);
+			shaderStage.UniformsDescriptions.push_back(uniform);
 		}
 		return shaderStage;
 	}

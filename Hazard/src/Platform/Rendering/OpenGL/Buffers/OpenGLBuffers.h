@@ -15,13 +15,11 @@ namespace Hazard::Rendering::OpenGL
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
-		BufferLayout GetLayout() override { return m_Layout; }
 
 	private:
 
 		BufferUsage m_Usage;
 		uint32_t m_ID;
-		BufferLayout m_Layout;
 		uint32_t m_Size;
 	};
 
@@ -53,13 +51,12 @@ namespace Hazard::Rendering::OpenGL
 
 		void Bind() override;
 		void Unbind() override;
+		void SetData(const void* data) override;
 
 	private:
-
-		BufferUsage m_Usage;
-
 		uint32_t m_ID;
 		uint32_t m_Size;
+		uint32_t m_Binding;
 
 	};
 }

@@ -36,6 +36,21 @@ namespace Hazard::Rendering::Vulkan
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
+		VkDescriptorSetLayoutBinding uniformBindings = {};
+		uniformBindings.binding = 0;
+		uniformBindings.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		uniformBindings.descriptorCount = 1;
+		uniformBindings.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
+		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = 0;
+		pipelineLayoutInfo.pushConstantRangeCount = 0;
+
+		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create pipeline layout!");
+		}
+
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexBindingDescriptionCount = 1;
@@ -49,12 +64,12 @@ namespace Hazard::Rendering::Vulkan
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
 
 		VkViewport viewport = {};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
 		viewport.width = (float)1280;
-		viewport.height = (float)720;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
+		viewport.height = -(float)720;
+		viewport.x = 0;
+		viewport.y = 720.0f;
+		viewport.minDepth = (float)0.0f;
+		viewport.maxDepth = (float)1.0f;
 
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
@@ -73,7 +88,6 @@ namespace Hazard::Rendering::Vulkan
 		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 		dynamicState.dynamicStateCount = 2;
 		dynamicState.pDynamicStates = dynamicStates;
-		dynamicState.flags = 0;
 
 		VkPipelineRasterizationStateCreateInfo rasterizer{};
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -82,7 +96,7 @@ namespace Hazard::Rendering::Vulkan
 		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizer.lineWidth = 1.0f;
 		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-		rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 
 		VkPipelineMultisampleStateCreateInfo multisampling = {};
@@ -125,15 +139,6 @@ namespace Hazard::Rendering::Vulkan
 		depthStencil.stencilTestEnable = VK_FALSE;
 
 
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-
-		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create pipeline layout!");
-		}
-
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = shaderStages.size();
@@ -160,18 +165,6 @@ namespace Hazard::Rendering::Vulkan
 		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 
 		vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(VulkanContext::GetSwapchain()->GetWidth());
-		viewport.height = static_cast<float>(VulkanContext::GetSwapchain()->GetHeight());
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-
-		VkRect2D scissor{ {0, 0}, { viewport.width, viewport.height } };
-		vkCmdSetViewport(buffer, 0, 1, &viewport);
-		vkCmdSetScissor(buffer, 0, 1, &scissor);
 
 		m_VertexBuffer->Bind();
 		m_IndexBuffer->Bind();

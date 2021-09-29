@@ -2,6 +2,8 @@
 #include <hzrpch.h>
 #include "OpenGLPipeline.h"
 
+#include <glad/glad.h>
+
 namespace Hazard::Rendering::OpenGL
 {
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)

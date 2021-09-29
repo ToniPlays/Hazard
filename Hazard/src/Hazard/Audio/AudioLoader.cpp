@@ -88,7 +88,7 @@ namespace Hazard::Audio {
 		//Initialize AudioClip
 		ALuint bufferID;
 		alGenBuffers(1, &bufferID);
-		alBufferData(bufferID, buffer->alFormat, buffer->audioData, buffer->size, buffer->sampleRate);
+		alBufferData(bufferID, buffer->alFormat, buffer->audioData, (size_t)buffer->size, buffer->sampleRate);
 
 		AudioClip clip = { bufferID, true, buffer->lenSec };
 		alGenSources(1, &clip.m_Source);

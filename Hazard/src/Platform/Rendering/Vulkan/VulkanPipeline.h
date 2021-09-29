@@ -17,6 +17,7 @@ namespace Hazard::Rendering::Vulkan
 		virtual PipelineSpecification GetSpecifications() { return m_Specs; }
 		virtual const PipelineSpecification GetSpecifications() const { return m_Specs; }
 		virtual Ref<VertexBuffer> GetBuffer() override { return m_VertexBuffer; }
+		virtual Ref<Shader> GetShader() { return m_Shader; }
 
 		virtual void Invalidate() override;
 		virtual void Bind() override;
@@ -27,6 +28,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipeline m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
+		VkDescriptorSetLayout m_UniformDescriptor;
 
 		Ref<VulkanVertexBuffer> m_VertexBuffer;
 		Ref<VulkanIndexBuffer> m_IndexBuffer;

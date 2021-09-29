@@ -18,6 +18,7 @@ namespace Hazard {
         std::filesystem::path key = GetKey(path);
         return m_Registry.find(key) != m_Registry.end();
     }
+
     size_t AssetRegistry::Remove(const std::filesystem::path& path) 
     {
         std::filesystem::path key = GetKey(path);

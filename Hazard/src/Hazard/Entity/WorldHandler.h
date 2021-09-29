@@ -15,7 +15,7 @@ namespace Hazard::ECS {
 		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
 		Ref<World> GetCurrentWorld() { return m_World; }
-		void SetWorld(Ref<World> world) { m_World = world; }
+		void SetWorld(Ref<World> world) { m_World = std::move(world); }
 
 	private:
 		Ref<World> m_World = nullptr;

@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 		RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		~RenderContext() = default;
 
-		void Update() override;
+		void Render() override;
 		void Close();
 
 		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }

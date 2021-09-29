@@ -3,8 +3,10 @@
 #include <hzrpch.h>
 #include "Hazard/Core/Core.h"
 
-namespace Hazard {
-	enum class AssetType {
+namespace Hazard 
+{
+	enum class AssetType 
+	{
 		None = 0,
 		AudioClip,
 		World,
@@ -14,7 +16,8 @@ namespace Hazard {
 		PhysicsMaterial
 	};
 
-	namespace Utils {
+	namespace Utils 
+	{
 		inline AssetType StringToAssetType(const std::string& type) {
 			if (type == "None")					return AssetType::None;
 			if (type == "AudioClip")			return AssetType::AudioClip;
@@ -22,11 +25,13 @@ namespace Hazard {
 			if (type == "Texture")				return AssetType::Texture;
 			if (type == "PhysicsMaterial")		return AssetType::PhysicsMaterial;
 			if (type == "Mesh")					return AssetType::Mesh;
+			if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
 
 			HZR_CORE_WARN("Failed to find asset of type {0}, check if type is correct", type);
 
 			return AssetType::None;
 		}
+
 		inline const char* AssetTypeToString(AssetType type) {
 			switch (type)
 			{
@@ -34,10 +39,12 @@ namespace Hazard {
 			case AssetType::AudioClip:			return "AudioClip";
 			case AssetType::World:				return "World";
 			case AssetType::Texture:			return "Texture";
-			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::Mesh:				return "Mesh";
+			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
+			case AssetType::EnvironmentMap:		return "EnvironmentMap";
 			}
 		}
+
 		inline AssetType AssetTypeFromExtension(const std::string& ext) {
 			if (ext == "jpeg")		return AssetType::Texture;
 			if (ext == "jpg")		return AssetType::Texture;
@@ -46,7 +53,8 @@ namespace Hazard {
 			if (ext == "ogg")		return AssetType::AudioClip;
 			if (ext == "hazard")	return AssetType::World;
 			if (ext == "obj")		return AssetType::Mesh;
-			if (ext == "fbk")		return AssetType::Mesh;
+			if (ext == "fbx")		return AssetType::Mesh;
+			if (ext == "hdr")		return AssetType::EnvironmentMap;
 			
 			HZR_CORE_WARN("Failed convert extesion {0} to AssetType, check if type is correct", ext);
 			return AssetType::None;

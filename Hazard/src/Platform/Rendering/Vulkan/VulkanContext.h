@@ -21,10 +21,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
 		void SwapBuffers() override;
-		void SetClearColor(glm::vec4 clearColor) override 
-		{
-			this->clearColor = clearColor;
-		};
+		void SetClearColor(const glm::vec4& color) override { clearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;

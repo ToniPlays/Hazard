@@ -25,6 +25,7 @@ namespace Hazard::Rendering {
 
 	Ref<Mesh> MeshFactory::LoadMesh(const MeshCreateInfo& createInfo)
 	{
+		Timer timer;
 		std::string absoluteFile = File::GetFileAbsolutePath(createInfo.Path);
 
 		Assimp::Importer importer;
@@ -40,6 +41,7 @@ namespace Hazard::Rendering {
 		data.subMeshes.reserve(scene->mNumMeshes);
 		ProcessNode(scene->mRootNode, scene, data);
 		TraverseNode(scene->mRootNode, data);
+		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo.Path, timer.ElapsedMillis());
 		return Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
 	}
 

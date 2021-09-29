@@ -49,12 +49,13 @@ namespace Hazard
 
 			return asset.As<T>();
 		}
+
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);
 
 	private:
 		static std::unordered_map<AssetHandle, Ref<Asset>> s_LoadedAssets;
-		static AssetRegistry s_Registry;
-		static AssetMetadata s_NullMetadata;
-		static AssetLoader s_AssetLoader;
+		inline static AssetRegistry s_Registry;
+		inline static AssetMetadata s_NullMetadata;
+		inline static AssetLoader s_AssetLoader;
 	};
 }

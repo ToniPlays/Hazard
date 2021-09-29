@@ -32,8 +32,8 @@ namespace Hazard::Rendering {
 	{
 		m_Context->GetContext().SetErrorListener(callback);
 	}
-	void RenderContextCommand::SetClearColor(Color color)
+	void RenderContextCommand::SetClearColor(const Color& color)
 	{
-		m_Context->GetContext().SetClearColor(color);
+		m_Context->GetContext().SetClearColor({ color.r, color.g, color.b, color.a });
 	}
 }

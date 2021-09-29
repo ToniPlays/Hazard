@@ -34,6 +34,7 @@ namespace Hazard {
 	}
 	bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32_t> data)
 	{
+		HZR_CORE_INFO("Writing file: {0}", path.string());
 		std::ofstream out(path, std::ios::out | std::ios::binary);
 
 		if (out.is_open()) {
@@ -63,10 +64,7 @@ namespace Hazard {
 		std::string result;
 		std::ifstream ifs(file, std::ios::in | std::ios::binary);
 
-		if (!ifs.is_open()) {
-			HZR_CORE_ERROR("File " + file + " could not be opened");
-			HZR_ASSERT(false);
-		}
+		HZR_CORE_ASSERT(ifs.is_open(), "File {0} could not be opened", file);
 
 		ifs.seekg(0, std::ios::end);
 		size_t size = ifs.tellg();
@@ -80,7 +78,7 @@ namespace Hazard {
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
-		HZR_CORE_ASSERT(stream, "Cannot open filepath: {0}", path);
+		HZR_CORE_ASSERT(stream.is_open(), "File {0} could not be opened", path);
 
 		auto end = stream.tellg();
 		stream.seekg(0, std::ios::beg);

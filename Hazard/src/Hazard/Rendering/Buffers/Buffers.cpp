@@ -12,6 +12,7 @@ namespace Hazard::Rendering {
 	void* Buffer::Copy(const void* data, size_t size)
 	{
 		void* copiedData = malloc(size);
+		HZR_CORE_ASSERT(copiedData != nullptr, "Failed to allocate memory");
 		memcpy(copiedData, data, size);
 		return copiedData;
 	}
@@ -22,6 +23,8 @@ namespace Hazard::Rendering {
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo);
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo);
 		}
+		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(const IndexBufferCreateInfo& createInfo)
 	{
@@ -30,6 +33,8 @@ namespace Hazard::Rendering {
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo);
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo);
 		}
+		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(const UniformBufferCreateInfo& createInfo)
 	{
@@ -38,5 +43,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLUniformBuffer>::Create(createInfo);
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo);
 		}
+		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
 	}
 }

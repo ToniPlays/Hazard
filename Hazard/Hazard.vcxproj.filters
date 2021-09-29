@@ -327,9 +327,6 @@
     <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Buffers\BufferLayout.h">
-      <Filter>src\Hazard\Rendering\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Buffers\Buffers.h">
       <Filter>src\Hazard\Rendering\Buffers</Filter>
     </ClInclude>
@@ -1890,9 +1887,6 @@
       <Filter>src\Platform\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLBuffers.cpp">
-      <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Buffers\OpenGLVertexArray.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">

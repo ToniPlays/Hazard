@@ -41,6 +41,7 @@ namespace Hazard
 		this->b = col.b;
 		this->a = a;
 	}
+
 	Color Color::FromGLM(const glm::vec3 color)
 	{
 		return Color(color.r, color.g, color.b, 1.0f);
@@ -54,11 +55,13 @@ namespace Hazard
 		if (hex.substr(0, 1) != "#") return Color();
 
 		int r, g, b, a = 255;
-		r = std::strtoul(hex.substr(1, 2).c_str(), 0, 16);
-		g = std::strtoul(hex.substr(3, 2).c_str(), 0, 16);
-		b = std::strtoul(hex.substr(5, 2).c_str(), 0, 16);
+		
+		r = Math::ToDec<int>(hex.substr(1, 2));
+		g = Math::ToDec<int>(hex.substr(3, 2));
+		b = Math::ToDec<int>(hex.substr(5, 2));
 
-		if (hex.length() == 9) a = std::strtoul(hex.substr(7, 2).c_str(), 0, 16);
+		if (hex.length() == 9) 
+			a = Math::ToDec<int>(hex.substr(7, 2));
 
 		return Color(r, g, b, a);
 	}

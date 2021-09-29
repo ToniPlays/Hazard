@@ -21,7 +21,7 @@ namespace Hazard::Rendering::Vulkan
 			case Vertex:	return ".cached_vulkan.vert";
 			case Fragment:	return ".cached_vulkan.frag";
 			}
-			HZR_CORE_ASSERT(false);
+			HZR_CORE_ASSERT(false, "[VulkanShader]: No cache file extension for {0} shader", Rendering::Utils::ShaderTypeToString(type));
 			return "";
 		}
 		static VkShaderStageFlagBits ShaderTypeToVkType(ShaderType type) {
@@ -32,19 +32,8 @@ namespace Hazard::Rendering::Vulkan
 			case Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
 			case Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
 			}
-			HZR_CORE_ASSERT(false);
+			HZR_CORE_ASSERT(false, "[VulkanShader]: Undefined ShaderType {0}", Rendering::Utils::ShaderTypeToString(type));
 			return (VkShaderStageFlagBits)0;
-		}
-		static ShaderType ShaderTypeFromVkType(VkShaderStageFlagBits type) {
-			switch (type)
-			{
-			case VK_SHADER_STAGE_VERTEX_BIT:	return Vertex;
-			case VK_SHADER_STAGE_FRAGMENT_BIT:	return Fragment;
-			case VK_SHADER_STAGE_COMPUTE_BIT:	return Compute;
-			case VK_SHADER_STAGE_GEOMETRY_BIT:	return Geometry;
-			}
-			HZR_CORE_ASSERT(false);
-			return ShaderType::Unknown;
 		}
 		static std::string VkTypeToString(VkShaderStageFlagBits type) {
 			switch (type)
@@ -54,10 +43,21 @@ namespace Hazard::Rendering::Vulkan
 			case VK_SHADER_STAGE_COMPUTE_BIT:	return "Compute";
 			case VK_SHADER_STAGE_GEOMETRY_BIT:	return "Geometry";
 			}
-			HZR_CORE_ASSERT(false);
+			HZR_CORE_ASSERT(false, "[VulkanShader]: Unknown conversion from ShaderStageFlag to string");
 			return "";
 		}
-		static shaderc_shader_kind VkShaderStageToShaderC(VkShaderStageFlags stage) {
+		static ShaderType ShaderTypeFromVkType(VkShaderStageFlagBits type) {
+			switch (type)
+			{
+			case VK_SHADER_STAGE_VERTEX_BIT:	return Vertex;
+			case VK_SHADER_STAGE_FRAGMENT_BIT:	return Fragment;
+			case VK_SHADER_STAGE_COMPUTE_BIT:	return Compute;
+			case VK_SHADER_STAGE_GEOMETRY_BIT:	return Geometry;
+			}
+			HZR_CORE_ASSERT(false, "[VulkanShader]: Undefined Vulkan ShaderStageFlags {0}", VkTypeToString(type));
+			return ShaderType::Unknown;
+		}
+		static shaderc_shader_kind VkShaderStageToShaderC(VkShaderStageFlagBits stage) {
 			switch (stage)
 			{
 			case VK_SHADER_STAGE_VERTEX_BIT:		return shaderc_glsl_vertex_shader;
@@ -65,7 +65,7 @@ namespace Hazard::Rendering::Vulkan
 			case VK_SHADER_STAGE_COMPUTE_BIT:		return shaderc_glsl_compute_shader;
 			case VK_SHADER_STAGE_GEOMETRY_BIT:		return shaderc_glsl_geometry_shader;
 			}
-			HZR_ASSERT(false);
+			HZR_CORE_ASSERT(false, "[VulkanShader]: UNdefined conversion from {0} to ShaderC type", VkTypeToString(stage));
 			return (shaderc_shader_kind)0;
 		}
 	}
@@ -99,6 +99,10 @@ namespace Hazard::Rendering::Vulkan
 
 	}
 	void VulkanShader::Unbind()
+	{
+
+	}
+	void VulkanShader::SetUniformBuffer(const std::string& name, void* data)
 	{
 
 	}

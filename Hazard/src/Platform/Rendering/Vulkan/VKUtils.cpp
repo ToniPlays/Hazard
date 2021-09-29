@@ -126,8 +126,9 @@ namespace Hazard::Rendering::Vulkan {
 			return capabilities.currentExtent;
 		VkExtent2D actualExtent = { static_cast<uint32_t>(w),
 									static_cast<uint32_t>(h) };
+
 		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-		actualExtent.width = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
 		return actualExtent;
 	}

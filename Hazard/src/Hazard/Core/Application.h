@@ -9,6 +9,7 @@ namespace Hazard {
 	struct ApplicationData 
 	{
 		float memoryUsage = 0;
+		bool Minimized = false;
 	};
 
 	class Application {
@@ -31,7 +32,7 @@ namespace Hazard {
 
 	public:
 		static void Quit();
-		static ApplicationData GetData() { return s_Data; }
+		static ApplicationData& GetData() { return s_Data; }
 
 		template<typename T, typename... Args>
 		static T& PushModule(Args... args) { return Core::HazardLoop::GetCurrent().m_ModuleHandler.AddModule<T>(std::forward<Args>(args)...); };

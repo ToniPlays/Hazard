@@ -17,6 +17,8 @@ namespace Hazard {
 			m_Loaders[type] = CreateScope<T>();
 		};
 		bool Load(AssetMetadata& metadata, Ref<Asset>& asset);
+		bool Save(Ref<Asset>& asset);
+
 	private:
 		std::unordered_map<AssetType, Scope<IAssetLoader>> m_Loaders;
 	};

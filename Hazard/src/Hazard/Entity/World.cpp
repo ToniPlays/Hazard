@@ -40,10 +40,10 @@ namespace Hazard::ECS
 			auto entity = entityID[i - 1];
 
 			TagComponent& c = world.m_Registry.get<TagComponent>(entity);
-			UUID uid = c.m_ID;
+			UUID uuid = c.m_ID;
 
-			Entity e = CreateEntity(uid, c.m_Tag.c_str());
-			entityMap[uid] = e.GetHandle();
+			Entity e = CreateEntity(uuid, c.m_Tag.c_str());
+			entityMap[uuid] = e.GetHandle();
 		}
 
 		CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
@@ -67,7 +67,6 @@ namespace Hazard::ECS
 		CopyComponent<BoxCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<BatchComponent>(world.m_Registry, m_Registry, entityMap);
-
 	}
 
 	World::~World() 

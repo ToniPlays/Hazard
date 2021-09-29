@@ -13,6 +13,7 @@ namespace Hazard::Rendering
 	{
 		HZR_PROFILE_FUNCTION();
 		SetActive(true);
+
 		RenderCommand::m_Engine = this;
 		RenderCommand::s_Api = api;
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Texture);
@@ -22,6 +23,10 @@ namespace Hazard::Rendering
 		m_ShaderSourcePath = info->ShaderSourcePath;
 
 		m_Renderer2D = new Renderer2D(info);
+
+		WindowResizeEvent e = { 1280, 720 };
+		OnResize(e);
+
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -29,10 +34,28 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Render()
 	{
-		m_Renderer2D->Render();
+		RenderPassData data;
+		data.viewProjection = m_ViewProjection;
+
+		m_Renderer2D->Render(data);
+	}
+	bool RenderEngine::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT(RenderEngine::OnResize));
 	}
 	void RenderEngine::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+	}
+	bool RenderEngine::OnResize(WindowResizeEvent& e)
+	{
+		constexpr float size = 2.0f;
+		float aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+		aspectRatio *= size;
+
+		m_ViewProjection = glm::ortho(-aspectRatio, aspectRatio, -size, size, -1.0f, 1.0f);
+
+		return true;
 	}
 }

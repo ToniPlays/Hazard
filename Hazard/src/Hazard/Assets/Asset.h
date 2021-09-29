@@ -4,12 +4,12 @@
 #include "Hazard/Core/UUID.h"
 #include "AssetEnums.h"
 
-#define INVALID_ASSET_HANDLE 0;
+#define INVALID_ASSET_HANDLE 0
 
 namespace Hazard 
 {
 	enum class AssetFlags : uint16_t {
-		None			= 0,
+		None			= -1,
 		Valid			= BIT(0),
 		Missing			= BIT(1),
 		Invalid			= BIT(2),
@@ -25,12 +25,13 @@ namespace Hazard
 
 		virtual ~Asset() = default;
 		const AssetType GetType() const { return m_Type; }
+		UUID GetHandle() { return m_Handle; }
+		AssetFlags GetFlags() { return m_Flags; }
 	
 	protected:
 		UUID m_Handle;
 		AssetType m_Type;
 		AssetFlags m_Flags;
-		UUID GetHandle() { return m_Handle; }
 
 	private:
 		void SetHandle(UUID handle) { m_Handle = handle; };

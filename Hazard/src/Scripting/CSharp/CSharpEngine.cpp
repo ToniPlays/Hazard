@@ -35,7 +35,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::OnEndRuntime()
 	{
-	
+
 	}
 	bool CSharpEngine::ModuleExists(const char* name)
 	{
@@ -111,12 +111,12 @@ namespace Hazard::Scripting::CSharp {
 			if (Mono::GetVisibility(iter) != FieldVisibility::Public) continue;
 
 			FieldType fieldType = ScriptUtils::GetFieldType(iter);
-			std::string customType = Mono::GetTypeName(Mono::GetFieldType(iter));
 
 			if (oldFields.find(name) != oldFields.end()) {
 				fieldMap.emplace(name, std::move(oldFields.at(name)));
 			}
 			else {
+				std::string customType = Mono::GetTypeName(Mono::GetFieldType(iter));
 				CSharpField* field = new CSharpField(fieldType, customType);
 				field->SetEntityInstance(&instance);
 				field->SetField(iter);

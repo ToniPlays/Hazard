@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Buffers/Buffers.h"
+#include "Shader.h"
 
 namespace Hazard::Rendering
 {
@@ -8,10 +9,10 @@ namespace Hazard::Rendering
 
 	struct PipelineSpecification
 	{
-		PipelineUsage Usage = PipelineUsage::NoUsage;
 		std::string ShaderPath;
-		VertexBufferCreateInfo* pVertexBuffer;
-		IndexBufferCreateInfo* pIndexBuffer;
+		PipelineUsage Usage = PipelineUsage::NoUsage;
+		VertexBufferCreateInfo* pVertexBuffer = nullptr;
+		IndexBufferCreateInfo* pIndexBuffer = nullptr;
 	};
 
 
@@ -21,7 +22,9 @@ namespace Hazard::Rendering
 
 		virtual PipelineSpecification GetSpecifications() = 0;
 		virtual const PipelineSpecification GetSpecifications() const = 0;
+
 		virtual Ref<VertexBuffer> GetBuffer() = 0;
+		virtual Ref<Shader> GetShader() = 0;
 
 		virtual void Invalidate() = 0;
 		virtual void Bind() = 0;

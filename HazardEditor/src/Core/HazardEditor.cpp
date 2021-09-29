@@ -15,18 +15,16 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.Renderer = RenderAPI::Vulkan;
-	contextInfo.ImagesInFlight = 2;
+	contextInfo.Renderer = RenderAPI::OpenGL;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
-	contextInfo.Decorated = true;
 	contextInfo.VSync = true;
-	contextInfo.Color = Color::FromHex("#323232");
+	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
 
 	RenderEngineCreateInfo engineInfo;
-	engineInfo.MaxQuadCount = 5000;
+	engineInfo.MaxQuadCount = 10000;
 	engineInfo.SamplerCount = 8;
 	engineInfo.ShaderSourcePath = "res/shaders/compiled";
 	engineInfo.ShaderCompilePath = "res/shaders/compiled";
@@ -40,6 +38,7 @@ void EditorApplication::PreInit()
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo;
+	entityInfo.StartupFile = "c:/dev/HazardProject/assets/world.hazard";
 
 	HazardCreateInfo createInfo;
 	createInfo.AppInfo = &appInfo;

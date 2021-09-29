@@ -12,6 +12,7 @@ namespace Hazard::Module {
 		virtual void Update() {}
 		virtual void Render() {}
 		virtual void Close() {}
+		virtual bool OnEvent(Event& e) { return false; }
 		
 		std::string GetName() { return m_Name; };
 		bool GetActive() { return m_IsActive; }

@@ -41,6 +41,15 @@ namespace Hazard::Module {
 			}
 			return false;
 		}
+		bool OnEvent(Event& e)
+		{
+			for (Module* m : m_Modules) 
+			{
+				if(m->OnEvent(e))
+					return true;
+			}
+			return false;
+		}
 	private:
 		std::vector<Module*> m_Modules;
 	};

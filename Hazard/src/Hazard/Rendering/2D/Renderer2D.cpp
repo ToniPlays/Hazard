@@ -35,7 +35,6 @@ namespace Hazard::Rendering
 		}
 
 		VertexBufferCreateInfo vertexInfo = {};
-		vertexInfo.Data = nullptr;
 		vertexInfo.Size = m_Data.MaxVertices;
 		vertexInfo.Usage = BufferUsage::DynamicDraw;
 
@@ -59,29 +58,32 @@ namespace Hazard::Rendering
 	}
 	Renderer2D::~Renderer2D()
 	{
+
 	}
-	void Renderer2D::Render()
+	void Renderer2D::Render(const RenderPassData& renderPassData)
 	{
 		RenderCommand::Submit([=]() {
 			BeginWorld();
 			BeginBatch();
 
-			Submit({ { 0.6f, 0.2f, 0.0f }, { 1.0f, 0.95f, 0.5f, 1.0f} });
-			Submit({ {-0.6f, 0.2f, 0.6f }, { 1.0f, 1.0f, 0.5f, 1.0f} });
-			Submit({ { 0.0f,-0.3f, 0.0f }, { 1.0f, 1.0f, 0.75f, 1.0f} });
+			m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+
+			glm::mat4 tempMat = Math::ToTransformMatrix({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+			Submit({ tempMat, "#EF2E2E" });
 
 			Flush();
 			});
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
-		if (m_Data.QuadIndexCount >= m_Data.MaxIndices) 
+		if (m_Data.QuadIndexCount >= m_Data.MaxIndices)
 		{
 			Flush();
 			BeginBatch();
 		}
-		for (uint8_t i = 0; i < quadVertexCount; i++) {
-			m_Data.BufferPtr->Position = glm::vec4(quad.Position, 1.0f) + m_Data.QuadVertexPos[i];
+		for (uint8_t i = 0; i < quadVertexCount; i++)
+		{
+			m_Data.BufferPtr->Position = quad.Transform * m_Data.QuadVertexPos[i];
 			m_Data.BufferPtr->Color = quad.Color;
 			m_Data.BufferPtr++;
 		}
@@ -99,7 +101,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Flush()
 	{
-		if (m_Data.QuadIndexCount == 0) 
+		if (m_Data.QuadIndexCount == 0)
 			return;
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);

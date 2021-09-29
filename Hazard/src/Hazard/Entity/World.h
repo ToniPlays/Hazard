@@ -8,9 +8,9 @@ namespace Hazard::ECS {
 
 	class Entity;
 
-	class World : public RefCount {
+	class World : public RefCount 
+	{
 		friend class Entity;
-
 	public:
 		World(std::string file);
 		World(World& other);
@@ -42,7 +42,7 @@ namespace Hazard::ECS {
 			return result;
 		}
 	private:
-		UUID uid;
+		UUID m_Uuid;
 		entt::registry m_Registry = entt::registry();
 		std::string m_Name = "";
 		std::string m_File = "";

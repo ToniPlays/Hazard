@@ -13,8 +13,10 @@ namespace Hazard::Rendering {
     }
     Mesh::~Mesh()
     {
+
     }
     void Mesh::GenerateArrays()
     {
+
     }
 }

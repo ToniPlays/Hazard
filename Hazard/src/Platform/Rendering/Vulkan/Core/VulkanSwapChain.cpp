@@ -62,7 +62,8 @@ namespace Hazard::Rendering::Vulkan
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		createInfo.preTransform = details.capabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = m_PresentMode;
+		createInfo.presentMode = VKUtils::ChooseSwapChainPresentMode(details.presentModes, 
+			vsync ? VK_PRESENT_MODE_FIFO_KHR : VK_PRESENT_MODE_IMMEDIATE_KHR);
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = m_OldSwapChain;
 
@@ -140,8 +141,6 @@ namespace Hazard::Rendering::Vulkan
 
 		VkQueue queue = m_Device->GetGraphicsQueue();
 		auto submit = vkQueueSubmit(queue, 1, &info, m_WaitFences[m_CurrentBufferIndex]);
-
-
 
 		VkResult present = QueuePresent(m_Device->GetPresentQueue(), m_CurrentBufferIndex, m_Semaphores.RenderComplete);
 

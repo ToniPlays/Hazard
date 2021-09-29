@@ -5,6 +5,8 @@
 
 namespace Hazard {
 
+
+
 	class Color {
 	public:
 		float r = 0, g = 0, b = 0, a = 0;
@@ -25,7 +27,10 @@ namespace Hazard {
  		}
 		operator glm::vec4()
 		{
-			return glm::vec4(r, g, b, a);
+			return { r, g, b, a };
+		}
+		Color operator = (const std::string& value) {
+			return FromHex(value);
 		}
 		static Color Black;
 		static Color White;

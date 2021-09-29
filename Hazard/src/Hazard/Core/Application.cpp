@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "Application.h"
-#include "Hazard/RenderContext/RenderContext.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngineManager.h"
 #include "Hazard/Audio/AudioEngine.h"
@@ -22,7 +22,7 @@ namespace Hazard {
 	}
 	void Application::SetTitle(const char* title)
 	{
-		//Rendering::RenderContextCommand::SetTitle(title);
+		Rendering::RenderContextCommand::SetTitle(title);
 	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
@@ -40,8 +40,7 @@ namespace Hazard {
 
 		if (info->RendererInfo != nullptr) 
 		{
-			if (info->RenderContextInfo == nullptr) 
-				HZR_THROW("[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
 			PushModule<Rendering::RenderEngine>(info->RendererInfo, info->RenderContextInfo->Renderer);
 		}
 

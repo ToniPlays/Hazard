@@ -63,7 +63,6 @@ namespace Hazard::Rendering::Vulkan {
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 
-
 		m_SwapChain->CreateSwapChain(&w, &h, window->IsVSync());
 		BeginFrame();
 		Begin();
@@ -108,20 +107,25 @@ namespace Hazard::Rendering::Vulkan {
 		if (result != VK_SUCCESS) {
 			std::cout << result << std::endl;
 		}
-
 		vkCmdBeginRenderPass(buffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
 		VkViewport viewport = {};
+		viewport.x = 0.0f;
+		viewport.y = (float)h;
 		viewport.width = (float)w;
-		viewport.height = (float)h;
-		viewport.minDepth = (float)0.0f;
-		viewport.maxDepth = (float)1.0f;
+		viewport.height = -(float)h;
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+
+		VkRect2D scissor = {};
+
+		scissor.offset.x = 0;
+		scissor.offset.y = 0;
+		scissor.extent.width = w;
+		scissor.extent.height = h;
 
 		vkCmdSetViewport(buffer, 0, 1, &viewport);
-		VkRect2D scissors = {};
-		scissors.extent = { w, h };
-		scissors.offset = { 0, 0 };
-
-		vkCmdSetScissor(buffer, 0, 1, &scissors);
+		vkCmdSetScissor(buffer, 0, 1, &scissor);
 	}
 
 	void VulkanContext::End()
@@ -145,6 +149,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		uint32_t width = w;
 		uint32_t height = h;
+
 		m_SwapChain->Clear();
 		m_SwapChain->CreateSwapChain(&width, &height, m_Window->IsVSync());
 	}
