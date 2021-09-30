@@ -54,11 +54,18 @@ namespace Hazard::Rendering::Vulkan
 		void Unbind() override;
 		void SetData(const void* data) override;
 
-	private:
+		virtual uint32_t GetUsageFlags() { return m_Usage; };
 
-		BufferUsage m_Usage;
+		uint32_t GetSize() { return m_Size; }
+		uint32_t GetBinding() { return m_Binding; }
+		VkBuffer GetBuffer() { return m_Buffer; }
+
+	private:
 		uint32_t m_Size;
 		uint32_t m_Binding;
+		uint32_t m_Usage;
 
+		VkBuffer m_Buffer;
+		VkDeviceMemory m_BufferMemory;
 	};
 }

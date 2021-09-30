@@ -123,8 +123,32 @@ namespace Hazard::Rendering::Vulkan
 		vkUnmapMemory(device, m_BufferMemory);
 
 	}
-	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding)
+	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding), m_Usage(createInfo.Usage)
 	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
+
+		VkBufferCreateInfo bufferInfo = {};
+		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		bufferInfo.size = m_Size;
+		bufferInfo.queueFamilyIndexCount = 0;
+		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		vkCreateBuffer(device, &bufferInfo, nullptr, &m_Buffer);
+
+		VkMemoryRequirements memRequirements;
+		vkGetBufferMemoryRequirements(device, m_Buffer, &memRequirements);
+
+		VkMemoryAllocateInfo bufferAllocInfo = {};
+		bufferAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		bufferAllocInfo.allocationSize = memRequirements.size;
+		bufferAllocInfo.memoryTypeIndex = VulkanContext::GetDevice()->FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		if (vkAllocateMemory(device, &bufferAllocInfo, nullptr, &m_BufferMemory) != VK_SUCCESS) {
+			throw std::runtime_error("failed to allocate vertex buffer memory!");
+		}
+
+		vkBindBufferMemory(device, m_Buffer, m_BufferMemory, 0);
 
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
@@ -133,7 +157,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::Bind()
 	{
-
+		
 	}
 	void VulkanUniformBuffer::Unbind()
 	{
@@ -141,6 +165,11 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::SetData(const void* data)
 	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
 
+		void* gpuData;
+		vkMapMemory(device, m_BufferMemory, 0, m_Size, 0, &gpuData);
+		memcpy(gpuData, data, static_cast<size_t>(m_Size));
+		vkUnmapMemory(device, m_BufferMemory);
 	}
 }

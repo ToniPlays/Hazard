@@ -34,6 +34,7 @@ namespace Hazard::Rendering
 		std::string Name;
 		uint32_t Size;
 		uint32_t Binding;
+		uint32_t Usage;
 	};
 
 
@@ -73,6 +74,7 @@ namespace Hazard::Rendering
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data) = 0;
+		virtual uint32_t GetUsageFlags() = 0;
 
 		static Ref<UniformBuffer> Create(const UniformBufferCreateInfo& createInfo);
 	};

@@ -66,9 +66,17 @@ namespace Hazard::Rendering
 			BeginWorld();
 			BeginBatch();
 
-			m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+			struct Block {
+				glm::vec4 tint;
+			} block;
 
-			glm::mat4 tempMat = Math::ToTransformMatrix({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+			block.tint = { Math::Sin(Time::s_Time), 1.0f, 0.5f, 1.0f };
+
+			m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+			m_Pipeline->GetShader()->SetUniformBuffer("Block", (void*)&block);
+
+
+			glm::mat4 tempMat = Math::ToTransformMatrix({ block.tint.x * 0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 			Submit({ tempMat, "#EF2E2E" });
 
 			tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });

@@ -91,6 +91,16 @@ namespace Hazard::Rendering
 			}
 			}
 		}
+		static std::string UsageFlagsToString(const uint32_t& flags) {
+			std::string result;
+
+			if (flags & ShaderType::Vertex) result += "Vertex";
+			if (flags & ShaderType::Fragment) result += ", Fragment";
+			if (flags & ShaderType::Compute) result += ", Compute";
+			if (flags & ShaderType::Geometry) result += ", Geometry";
+			return result;
+
+		}
 
 		static void PrintReflectResults(const std::string& filename, const ShaderData& data)
 		{
@@ -127,7 +137,7 @@ namespace Hazard::Rendering
 				HZR_CORE_TRACE("        Binding = {0}", uniform.Binding);
 				HZR_CORE_TRACE("        MemberCount = {0}", uniform.MemberCount);
 				HZR_CORE_TRACE("        Size = {0}", uniform.Size);
-				HZR_CORE_TRACE("        Usage = {0}", uniform.ShaderUsage);
+				HZR_CORE_TRACE("        Usage = {0}", UsageFlagsToString(uniform.ShaderUsage));
 			}
 		}
 	}

@@ -52,11 +52,12 @@ namespace Hazard::Rendering::OpenGL
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data) override;
+		uint32_t GetUsageFlags() { return m_Usage; };
 
 	private:
 		uint32_t m_ID;
 		uint32_t m_Size;
 		uint32_t m_Binding;
-
+		uint32_t m_Usage;
 	};
 }

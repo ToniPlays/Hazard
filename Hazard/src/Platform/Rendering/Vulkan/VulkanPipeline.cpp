@@ -23,6 +23,7 @@ namespace Hazard::Rendering::Vulkan
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
+		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 	}
@@ -36,16 +37,19 @@ namespace Hazard::Rendering::Vulkan
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
-		//m_Shader->CreateUniformDescriptorLayout(&m_UniformLayout);
-
+		if (m_Shader->CreateUniformDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
+			__debugbreak();
+		}
+		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0;
+		pipelineLayoutInfo.setLayoutCount = 1;
 		pipelineLayoutInfo.pushConstantRangeCount = 0;
+		pipelineLayoutInfo.pSetLayouts = &m_UniformDescriptorLayout;
 
 		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create pipeline layout!");
+			HZR_THROW("Failed to create Vulkan Pipeline Layout!");
 		}
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
@@ -135,7 +139,6 @@ namespace Hazard::Rendering::Vulkan
 		depthStencil.maxDepthBounds = 1.0f;  // Optional
 		depthStencil.stencilTestEnable = VK_FALSE;
 
-
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = shaderStages.size();
@@ -154,17 +157,20 @@ namespace Hazard::Rendering::Vulkan
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 		if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create graphics pipeline!");
+			HZR_THROW("Failed to create Vulkan Graphics Pipeline!");
 		}
 	}
 	void VulkanPipeline::Bind()
 	{
-		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
+		auto commandBuffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 
-		vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
 
+		m_Shader->Bind();
 		m_VertexBuffer->Bind();
 		m_IndexBuffer->Bind();
+
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
 	}
 	void VulkanPipeline::Draw(uint32_t size) {
 		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();

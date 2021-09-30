@@ -17,14 +17,17 @@ namespace Hazard::Rendering::Vulkan
 		void SetUniformBuffer(const std::string& name, void* data) override;
 
 		VkResult CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout);
+		std::unordered_map<std::string, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
 
 		VkVertexInputBindingDescription GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
 
 		const ShaderData& GetShaderData() override { return m_ShaderData; };
+		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSet; }
 		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
 
 		void DestroyModules();
+		void CreateDescriptorSet(VkDescriptorSetLayout* layout);
 
 	private:
 
@@ -33,9 +36,10 @@ namespace Hazard::Rendering::Vulkan
 		void Reflect();
 
 		std::string m_Path;
+		ShaderData m_ShaderData;
+		VkDescriptorSet m_DescriptorSet;
 		std::unordered_map<VkShaderStageFlagBits, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
-		ShaderData m_ShaderData;
 
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};

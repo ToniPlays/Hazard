@@ -51,7 +51,7 @@ namespace Hazard::Rendering::Vulkan {
 		cache.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		vkCreatePipelineCache(m_Device, &cache, nullptr, &m_PipelineCache);
 
-		CreateCommandPool();
+		CreatePools();
 	}
 	VulkanDevice::~VulkanDevice()
 	{
@@ -91,7 +91,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 		return 0;
 	}
-	void VulkanDevice::CreateCommandPool()
+	void VulkanDevice::CreatePools()
 	{
 		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VulkanContext::GetSurface());
 
@@ -102,5 +102,18 @@ namespace Hazard::Rendering::Vulkan {
 		
 		auto result = vkCreateCommandPool(m_Device, &createInfo, nullptr, &m_CommandPool);
 		HZR_CORE_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan CommandPool");
+
+		VkDescriptorPoolSize poolSize = {};
+		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		poolSize.descriptorCount = 100;
+
+		VkDescriptorPoolCreateInfo poolInfo = {};
+		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		poolInfo.poolSizeCount = 1;
+		poolInfo.pPoolSizes = &poolSize;
+		poolInfo.maxSets = 1 * sizeof(poolSize);
+
+		vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool);
+
 	}
 }

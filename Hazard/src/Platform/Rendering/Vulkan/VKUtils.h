@@ -40,8 +40,11 @@ namespace Hazard::Rendering::Vulkan {
 		static std::vector<VkAttachmentReference> CreateColorRefs(std::vector<FrameBufferAttachment>& attachments);
 		static std::vector<VkAttachmentReference> CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex = 1);
 		static VkFormat GetFormat(FrameBufferTextureFormat format);
-
 		static VkFormat ShaderDataTypeToVkFormat(ShaderDataType type);
+		static VkShaderStageFlagBits ShaderTypeToVulkanStage(ShaderType type);
+		static ShaderType ShaderTypeFromVulkanStage(VkShaderStageFlagBits type);
+
+		static VkShaderStageFlags ShaderUsageToVulkanUsage(uint32_t usage);
 
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);

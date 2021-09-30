@@ -227,6 +227,39 @@ namespace Hazard::Rendering::Vulkan {
 		return VK_FORMAT_UNDEFINED;
 	}
 
+	VkShaderStageFlagBits VKUtils::ShaderTypeToVulkanStage(ShaderType type)
+	{
+		switch (type)
+		{
+		case Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
+		case Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
+		case Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
+		case Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
+		}
+	}
+
+	ShaderType VKUtils::ShaderTypeFromVulkanStage(VkShaderStageFlagBits type)
+	{
+		switch (type)
+		{
+		case VK_SHADER_STAGE_VERTEX_BIT:	return Vertex;
+		case VK_SHADER_STAGE_FRAGMENT_BIT:	return Fragment;
+		case VK_SHADER_STAGE_COMPUTE_BIT:	return Compute;
+		case VK_SHADER_STAGE_GEOMETRY_BIT:	return Geometry;
+		}
+	}
+
+	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
+	{
+		VkShaderStageFlags flags = 0;
+
+		if (usage & ShaderType::Vertex)		flags |= VK_SHADER_STAGE_VERTEX_BIT;
+		if (usage & ShaderType::Fragment)	flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+		if (usage & ShaderType::Compute)	flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+		if (usage & ShaderType::Geometry)	flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+		return flags;
+	}
+
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		QueueFamilyIndices indices = {};

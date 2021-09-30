@@ -19,6 +19,7 @@ namespace Hazard::Rendering::Vulkan
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
 		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
+		VkDescriptorPool GetDescriptorPool() { return m_DescriptorPool; }
 		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
 		VkQueue GetPresentQueue() { return m_PresentQueue; }
 		DeviceSpec GetSpec();
@@ -27,11 +28,12 @@ namespace Hazard::Rendering::Vulkan
 
 	private:
 
-		void CreateCommandPool();
+		void CreatePools();
 
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
 		VkCommandPool m_CommandPool;
+		VkDescriptorPool m_DescriptorPool;
 		VkPipelineCache m_PipelineCache;
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;

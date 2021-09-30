@@ -62,7 +62,7 @@ namespace Hazard::Rendering::OpenGL
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 		glBufferData(GL_ARRAY_BUFFER, size * sizeof(uint32_t), data, GL_STREAM_DRAW + m_Usage);
 	}
-	OpenGLUniformBuffer::OpenGLUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding)
+	OpenGLUniformBuffer::OpenGLUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding), m_Usage(createInfo.Usage)
 	{
 		glCreateBuffers(1, &m_ID);
 		glNamedBufferData(m_ID, m_Size, nullptr, GL_DYNAMIC_DRAW);

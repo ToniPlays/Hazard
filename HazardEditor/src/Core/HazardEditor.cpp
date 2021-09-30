@@ -16,9 +16,10 @@ void EditorApplication::PreInit()
 
 	RenderContexCreateInfo contextInfo;
 	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.ImagesInFlight = 1;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
-	contextInfo.VSync = true;
+	contextInfo.VSync = false;
 	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;

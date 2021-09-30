@@ -28,7 +28,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipeline m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
-		VkDescriptorSetLayout m_UniformDescriptor;
+		VkDescriptorSetLayout m_UniformDescriptorLayout;
 
 		Ref<VulkanVertexBuffer> m_VertexBuffer;
 		Ref<VulkanIndexBuffer> m_IndexBuffer;

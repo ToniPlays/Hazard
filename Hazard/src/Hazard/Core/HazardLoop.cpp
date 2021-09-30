@@ -7,6 +7,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Events/Input.h"
 #include "PlatrofmUtils.h"
+#include "Analyzer.h"
 
 namespace Hazard::Core {
 

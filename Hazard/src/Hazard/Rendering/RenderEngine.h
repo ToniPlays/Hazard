@@ -8,7 +8,8 @@
 namespace Hazard::Rendering {
 
 	struct RenderPassData {
-		glm::mat4 viewProjection;
+		glm::mat4 ViewProjection;
+		glm::mat4 Transform;
 	};
 
 	class Renderer2D;

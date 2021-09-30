@@ -7,7 +7,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "2D/Renderer2D.h"
 
-namespace Hazard::Rendering 
+namespace Hazard::Rendering
 {
 	RenderEngine::RenderEngine(RenderEngineCreateInfo* info, RenderAPI api) : Module("RenderEngine")
 	{
@@ -35,7 +35,9 @@ namespace Hazard::Rendering
 	void RenderEngine::Render()
 	{
 		RenderPassData data;
-		data.viewProjection = m_ViewProjection;
+		data.ViewProjection = m_ViewProjection;
+		float sin = (1 + Math::Sin(Time::s_Time) * 0.5f);
+		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 0.0f }));
 
 		m_Renderer2D->Render(data);
 	}
