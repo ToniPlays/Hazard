@@ -172,7 +172,7 @@ namespace Hazard::Rendering::Vulkan
 
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
 	}
-	void VulkanPipeline::Draw(uint32_t size) {
+	void VulkanPipeline::Draw(uint32_t count) {
 		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 		vkCmdDrawIndexed(buffer, 24, 1, 0, 0, 0);
 	}

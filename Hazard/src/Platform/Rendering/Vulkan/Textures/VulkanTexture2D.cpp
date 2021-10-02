@@ -14,7 +14,7 @@ namespace Hazard::Rendering::Vulkan
 	{
 		int channels;
 
-		std::string& file = File::GetFileAbsolutePath(info->filePath.string());
+		std::string& file = File::GetFileAbsolutePath(info->FilePath.string());
 
 		stbi_set_flip_vertically_on_load(true);
 		stbi_uc* data = stbi_load(file.c_str(), &m_Width, &m_Height, &channels, STBI_rgb_alpha);
@@ -28,9 +28,6 @@ namespace Hazard::Rendering::Vulkan
 	{
 	}
 	void VulkanTexture2D::Bind(uint32_t slot) const
-	{
-	}
-	void VulkanTexture2D::Unbind(uint32_t slot) const
 	{
 	}
 }

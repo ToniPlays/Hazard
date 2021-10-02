@@ -19,7 +19,7 @@ namespace Hazard::Scripting::CSharp {
 	void Mono::InitAssembly(ScriptEngineCreateInfo* info)
 	{
 		s_Data.monoCoreAssemblyPath = info->CoreAssemblyPath;
-		mono_set_dirs((info->MonoDirectory + "/lib").c_str(), (info->MonoDirectory + "/etc").c_str());
+		mono_set_dirs(info->MonoDirectoryLib, info->MonoDirectoryEtc);
 	}
 	void Mono::CreateDomain(const char* name)
 	{

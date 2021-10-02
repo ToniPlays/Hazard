@@ -34,9 +34,7 @@ namespace Hazard {
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
 		if (info->RenderContextInfo != nullptr) 
-		{
 			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
-		}
 
 		if (info->RendererInfo != nullptr) 
 		{
@@ -45,19 +43,13 @@ namespace Hazard {
 		}
 
 		if (info->AudioEngine) 
-		{
 			PushModule<Audio::AudioEngine>(info->AudioEngine);
-		}
 
 		if (info->ScriptEngineInfo != nullptr) 
-		{
 			PushModule<Scripting::ScriptEngineManager>(info->ScriptEngineInfo);
-		}
 
-		if (info->EntityComponent != nullptr) {
-			ECS::WorldHandler& handler = PushModule<ECS::WorldHandler>();
-			handler.LoadWorld(info->EntityComponent->StartupFile);
-		}
+		if (info->EntityComponent != nullptr)
+			PushModule<ECS::WorldHandler>(info->EntityComponent);
 	}
 	void Application::Quit()
 	{

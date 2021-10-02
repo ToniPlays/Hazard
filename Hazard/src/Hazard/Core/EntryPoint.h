@@ -7,6 +7,14 @@
 
 #include <stdio.h>
 
+uint32_t allocs = 0;
+
+void* operator new(size_t size)
+{
+	allocs++;
+	return malloc(size);
+}
+
 extern Hazard::Application* Hazard::CreateApplication();
 
 #ifdef HZR_PLATFORM_WINDOWS
@@ -20,6 +28,10 @@ extern Hazard::Application* Hazard::CreateApplication();
 			Application* app = CreateApplication();
 			Core::HazardLoop loop(app);
 			loop.Start();
+			while (!loop.ShouldClose()) {
+				loop.Run();
+				allocs = 0;
+			}
 			return 0;
 		}
 
@@ -27,9 +39,16 @@ extern Hazard::Application* Hazard::CreateApplication();
 		#pragma comment( linker, "/subsystem:windows" )
 		int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 		{
-			Hazard::Application* app = Hazard::CreateApplication();
-			Hazard::Core::HazardLoop loop(app);
+			using namespace Hazard;
+			Application* app = CreateApplication();
+			Core::HazardLoop loop(app);
 			loop.Start();
+			while (loop.ShouldClose()) {
+				loop.Run();
+				std::cout << allocs << std::endl;
+				allocs = 0;
+			}
+			return 0;
 		}
 	#endif // HZR_DEBUG
 

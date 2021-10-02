@@ -38,6 +38,7 @@ namespace Hazard::Rendering {
 		glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
 		glfwWindowHint(GLFW_DECORATED, info->Decorated);
 
+
 		GLFWmonitor* monitor = NULL;
 
 		if (info->FullScreen) {
@@ -49,13 +50,17 @@ namespace Hazard::Rendering {
 			}
 		}
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
-
+		
 		if (!m_Window) {
 			HZR_CORE_INFO("Failed to create window");
 		}
 
+		if (appInfo->IconCount > 0)
+			SetWindowIcon(appInfo->IconCount, appInfo->Icons);
+
 		m_Context->Init(this, appInfo);
 		m_Context->SetClearColor(info->Color);
+
 		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
 
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
@@ -63,12 +68,10 @@ namespace Hazard::Rendering {
 		if (info->Maximized)
 			glfwMaximizeWindow(m_Window);
 
+
 		glfwShowWindow(m_Window);
 		SetCallbacks();
 		SetVSync(info->VSync);
-
-		HZR_CORE_INFO(m_Context->GetDeviceSpec().name);
-
 	}
 	void WindowsWindow::OnUpdate()
 	{
@@ -81,18 +84,24 @@ namespace Hazard::Rendering {
 		m_WindowData.Title = title;
 		glfwSetWindowTitle(m_Window, title);
 	}
-	void WindowsWindow::SetWindowIcon(uint32_t count, std::string* images)
+	void WindowsWindow::SetWindowIcon(uint32_t count, const char** images)
 	{
 		std::vector<GLFWimage> glfwImages(count);
 
 		for (uint32_t i = 0; i < count; i++) {
 			GLFWimage img = glfwImages[i];
+			const std::string& path = File::GetFileAbsolutePath(images[i]);
 			int sx, sy, sChannels, bChannels;
-			img.pixels = stbi_load(images[i].c_str(), &sx, &sy, &sChannels, 0);
+			img.pixels = stbi_load(path.c_str(), &sx, &sy, &sChannels, 3);
+			HZR_ASSERT(img.pixels, "Could not load Window Icon {0}", images[i]);
 			img.width = sx;
 			img.height = sy;
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
+
+		for (auto image : glfwImages) {
+			stbi_image_free(image.pixels);
+		}
 	}
 	void WindowsWindow::SetPosition(glm::vec2 position, glm::vec2 dragPoint)
 	{

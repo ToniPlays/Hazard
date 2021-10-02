@@ -12,7 +12,6 @@ namespace Hazard::Rendering::Vulkan
 		~VulkanTexture2D();
 
 		void Bind(uint32_t slot = 0) const override;
-		void Unbind(uint32_t slot = 0) const override;
 
 		uint32_t GetWidth() override { return m_Width; };
 		uint32_t GetHeight() override { return m_Height; };

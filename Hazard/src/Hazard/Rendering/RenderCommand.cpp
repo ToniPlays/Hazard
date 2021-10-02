@@ -6,6 +6,5 @@
 
 namespace Hazard::Rendering 
 {
-	RenderAPI RenderCommand::s_Api;
-	RenderEngine* RenderCommand::m_Engine;
+
 }

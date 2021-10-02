@@ -135,8 +135,6 @@ namespace Hazard::Rendering::OpenGL
 
 		for (auto&& [stage, binary] : m_OpenGLSPIRV) {
 
-			std::cout << Utils::ShaderTypeToString(GLUtils::ShaderTypeFromGLType(stage)) << std::endl;
-
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 

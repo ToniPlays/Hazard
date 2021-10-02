@@ -55,6 +55,6 @@ namespace Hazard::Rendering
 
 		virtual void* GetID() const = 0;
 
-		static FrameBuffer* Create(FrameBufferCreateInfo* info);
+		static Ref<FrameBuffer> Create(FrameBufferCreateInfo* info);
 	};
 }

@@ -19,12 +19,13 @@ namespace Hazard::Core {
 	}
 	HazardLoop::~HazardLoop()
 	{
+		HZR_PROFILE_SESSION_END();
 		delete m_Application;
 	}
 	void HazardLoop::Start()
 	{
 		//Engine runtime
-		try 
+		try
 		{
 			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
 			{
@@ -46,9 +47,10 @@ namespace Hazard::Core {
 			AssetManager::Shutdown();
 			m_ModuleHandler.Close();
 			HZR_PROFILE_SESSION_END();
+			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
 		}
-		catch (const HazardRuntimeError& error) 
-		{	
+		catch (const HazardRuntimeError& error)
+		{
 			PlatformUtils::Messagebox("Runtime error", error.what());
 		}
 	}
@@ -62,37 +64,30 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Run()
 	{
-		HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
-		double lastTime = 0;
+		HZR_PROFILE_FUNCTION("Frame");
+		double time = glfwGetTime();
 
-		while (!m_ShouldClose)
-		{
-			HZR_PROFILE_FUNCTION("Frame");
-			double time = glfwGetTime();
+		//Update Time
+		Time::s_UnscaledDeltaTime = time - m_LastTime;
+		Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
+		Time::s_Time = time;
+		m_LastTime = time;
 
-			//Update Time
-			Time::s_UnscaledDeltaTime = time - lastTime;
-			Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
-			Time::s_Time = time;
-			lastTime = time;
-
-			m_Application->UpdateData();
-			//Update
-			Input::Update();
-			m_Application->Update();
-			m_ModuleHandler.Update();
-			//Render
-			m_ModuleHandler.Render();
-		}
-		HZR_PROFILE_SESSION_END();
+		m_Application->UpdateData();
+		//Update
+		Input::Update();
+		m_Application->Update();
+		m_ModuleHandler.Update();
+		//Render
+		m_ModuleHandler.Render();
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		if(dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit))) 
+		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;
 
-		if(!m_ModuleHandler.OnEvent(e))
+		if (!m_ModuleHandler.OnEvent(e))
 			m_Application->OnEvent(e);
 	}
 }

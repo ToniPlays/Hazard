@@ -17,7 +17,6 @@ namespace Hazard::Scripting::CSharp {
 	struct AssemblyData {
 		EntityInstanceMap entityInstanceMap;
 		std::unordered_map<std::string, EntityScript> entityClassMap;
-
 		std::string assemblyPath;
 	};
 
@@ -27,7 +26,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		Mono::InitAssembly(info);
 		Mono::CreateDomain("Hazard");
-		Mono::LoadRuntimeAssembly(info->AppAssemblyPath.c_str());
+		Mono::LoadRuntimeAssembly(info->AppAssemblyPath);
 	}
 	void CSharpEngine::OnBeginRuntime()
 	{

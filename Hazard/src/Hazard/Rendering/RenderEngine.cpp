@@ -14,10 +14,28 @@ namespace Hazard::Rendering
 		HZR_PROFILE_FUNCTION();
 		SetActive(true);
 
-		RenderCommand::m_Engine = this;
+		RenderCommand::s_Engine = this;
 		RenderCommand::s_Api = api;
+
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Texture);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
+
+		uint32_t data = 0xFFFFFFFF;
+
+		TextureFilter filters;
+		filters.MinFilter = FilterMode::Nearest;
+		filters.MagFilter = FilterMode::Nearest;
+
+		Texture2DCreateInfo whiteTexture = {};
+		whiteTexture.FilePath = "res/textures/checker.png";
+		whiteTexture.Filter = &filters;
+		whiteTexture.Width = 1;
+		whiteTexture.Height = 1;
+
+
+		//whiteTexture.Data = &data;
+
+		//m_WhiteTexture = Texture2D::Create(&whiteTexture);
 
 		m_ShaderCompilePath = info->ShaderCompilePath;
 		m_ShaderSourcePath = info->ShaderSourcePath;
@@ -35,11 +53,14 @@ namespace Hazard::Rendering
 	void RenderEngine::Render()
 	{
 		RenderPassData data;
-		data.ViewProjection = m_ViewProjection;
+		data.ViewProjection = m_ViewProjection * data.Transform;
 		float sin = (1 + Math::Sin(Time::s_Time) * 0.5f);
-		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 0.0f }));
+		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 4.0f }));
 
-		m_Renderer2D->Render(data);
+		RenderCommand::Submit([=]() {
+			//m_WhiteTexture->Bind();
+			m_Renderer2D->Render(data);
+			});
 	}
 	bool RenderEngine::OnEvent(Event& e)
 	{
@@ -54,10 +75,10 @@ namespace Hazard::Rendering
 	{
 		constexpr float size = 2.0f;
 		float aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		aspectRatio *= size;
+		float scalar = aspectRatio * size;
 
-		m_ViewProjection = glm::ortho(-aspectRatio, aspectRatio, -size, size, -1.0f, 1.0f);
-
+		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1.0f, 1.0f);
+		m_ViewProjection = glm::perspective(glm::radians(70.0f), aspectRatio, 0.003f, 1000.0f);
 		return true;
 	}
 }

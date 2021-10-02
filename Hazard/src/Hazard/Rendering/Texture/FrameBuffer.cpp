@@ -5,7 +5,7 @@
 #include "Hazard/Rendering/RenderCommand.h"
 
 namespace Hazard::Rendering {
-	FrameBuffer* FrameBuffer::Create(FrameBufferCreateInfo* info)
+	Ref<FrameBuffer> FrameBuffer::Create(FrameBufferCreateInfo* info)
 	{
 		switch (RenderCommand::GetAPI())
 		{

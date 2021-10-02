@@ -12,11 +12,11 @@ namespace Hazard::ECS {
 	{
 		friend class Entity;
 	public:
-		World(std::string file);
+		World(const std::string& file);
 		World(World& other);
 		~World();
 
-		void SetName(std::string name) { m_Name = std::move(name); }
+		void SetName(const std::string& name) { m_Name = std::move(name); }
 
 		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UUID id, const char* name);

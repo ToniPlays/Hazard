@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
 
 		void OnUpdate() override;
 		void SetWindowTitle(const char* title) override;
-		void SetWindowIcon(uint32_t count, std::string* images) override;
+		void SetWindowIcon(uint32_t count, const char** images) override;
 		void SetPosition(glm::vec2 position, glm::vec2 dragPoint);
 
 		void SetVSync(bool enabled) override {

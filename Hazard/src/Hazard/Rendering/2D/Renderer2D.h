@@ -14,12 +14,15 @@ namespace Hazard::Rendering
 	{
 		glm::vec3 Position;
 		glm::vec4 Color;
+		glm::vec2 TextureCoords;
+		float TextureIndex;
 	};
 
 	struct Quad 
 	{
 		glm::mat4 Transform;
 		Color Color;
+		float TextureIndex;
 	};
 
 	struct Renderer2DData 

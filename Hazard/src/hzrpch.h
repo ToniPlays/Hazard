@@ -113,4 +113,3 @@
 #define HZR_ASSERT(status, ...)
 
 #endif // !
-

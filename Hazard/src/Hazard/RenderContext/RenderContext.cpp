@@ -21,6 +21,7 @@ namespace Hazard::Rendering {
 			m_Window->SetWindowIcon(appInfo->IconCount, appInfo->Icons);
 
 		RenderContextCommand::Init(this);
+
 		m_Window->GetContext()->SetClearColor({ info->Color.r, info->Color.g, info->Color.b, 1.0f });
 		SetActive(true);
 	}

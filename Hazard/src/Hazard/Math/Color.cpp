@@ -16,7 +16,7 @@ namespace Hazard
 	}
 	Color::Color(const char* color)
 	{
-		Color c = Color::FromHex(color);
+		const Color& c = Color::FromHex(color);
 		this->r = c.r;
 		this->g = c.g;
 		this->b = c.b;
@@ -52,10 +52,11 @@ namespace Hazard
 	}
 	Color Color::FromHex(const std::string& hex) {
 
-		if (hex.substr(0, 1) != "#") return Color();
+		if (hex[0] != '#') 
+			return Color();
 
 		int r, g, b, a = 255;
-		
+
 		r = Math::ToDec<int>(hex.substr(1, 2));
 		g = Math::ToDec<int>(hex.substr(3, 2));
 		b = Math::ToDec<int>(hex.substr(5, 2));

@@ -4,12 +4,13 @@
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Buffers/Buffers.h"
+#include "Texture/Texture2D.h"
 
 namespace Hazard::Rendering {
 
 	struct RenderPassData {
 		glm::mat4 ViewProjection;
-		glm::mat4 Transform;
+		glm::mat4 Transform {1.0f};
 	};
 
 	class Renderer2D;
@@ -31,8 +32,11 @@ namespace Hazard::Rendering {
 
 	private:
 		Renderer2D* m_Renderer2D;
+		glm::mat4 m_ViewProjection;
+		Ref<Texture2D> m_WhiteTexture;
+
 		inline static std::filesystem::path m_ShaderCompilePath;
 		inline static std::filesystem::path m_ShaderSourcePath;
-		glm::mat4 m_ViewProjection;
+
 	};
 }

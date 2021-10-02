@@ -8,7 +8,7 @@ namespace Hazard::ECS {
 
 	class WorldHandler : public Module::Module {
 	public:
-		WorldHandler();
+		WorldHandler(EntityComponentCreateInfo* info);
 		~WorldHandler();
 		
 		void Close() override;

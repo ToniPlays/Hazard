@@ -51,8 +51,6 @@ namespace Hazard::Rendering
 		std::unordered_map<ShaderType, ShaderStageData> Stages;
 		std::vector<ShaderUniformBufferDescription> UniformsDescriptions;
 	};
-
-
 	namespace Utils
 	{
 		static ShaderType ShaderTypeFromString(const std::string& type) {

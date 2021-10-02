@@ -19,7 +19,7 @@ namespace Hazard {
 		std::string AppName;
 		std::string BuildVersion;
 
-		std::string* Icons = nullptr;
+		const char** Icons = nullptr;
 		uint32_t IconCount = 0;
 
 		bool Logging = false;
@@ -49,17 +49,18 @@ namespace Hazard {
 	};
 	struct RenderEngineCreateInfo 
 	{
-		std::string ShaderSourcePath;
-		std::string ShaderCompilePath;
+		const char* ShaderSourcePath;
+		const char* ShaderCompilePath;
 
 		uint32_t MaxQuadCount = 35000;
 		uint32_t SamplerCount = 0;
 	};
 	struct ScriptEngineCreateInfo 
 	{
-		std::string AppAssemblyPath;
-		std::string CoreAssemblyPath;
-		std::string MonoDirectory;
+		const char* AppAssemblyPath;
+		const char* CoreAssemblyPath;
+		const char* MonoDirectoryEtc;
+		const char* MonoDirectoryLib;
 		bool Enable = true;
 	};
 

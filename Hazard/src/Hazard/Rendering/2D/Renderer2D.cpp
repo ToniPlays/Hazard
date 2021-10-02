@@ -62,32 +62,24 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Render(const RenderPassData& renderPassData)
 	{
-		RenderCommand::Submit([=]() {
-			BeginWorld();
-			BeginBatch();
+		static float offset = 0;
+		offset += Time::s_DeltaTime;
 
-			struct Block {
-				glm::vec4 tint;
-			} block;
+		BeginWorld();
+		BeginBatch();
 
-			block.tint = { Math::Sin(Time::s_Time), 1.0f, 0.5f, 1.0f };
+		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 
-			m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
-			m_Pipeline->GetShader()->SetUniformBuffer("Block", (void*)&block);
+		glm::mat4 tempMat = Math::ToTransformMatrix({ 1.0f, 0.0f, -3.0f - Math::Sin(offset) }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		Submit({ tempMat, "#EF2E2E", 0.0f });
 
+		tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, glm::radians(45.0f) }, { 1.0f, 1.0f, 1.0f });
+		Submit({ tempMat, "#ED1414", 0.0f });
 
-			glm::mat4 tempMat = Math::ToTransformMatrix({ block.tint.x * 0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
-			Submit({ tempMat, "#EF2E2E" });
+		tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, -5.0f }, { -Math::Sin(offset) * 2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-			tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
-			Submit({ tempMat, "#ED1414" });
-
-			tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
-			Submit({ tempMat, "#EF2E2E" });
-
-
-			Flush();
-			});
+		Flush();
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
@@ -100,6 +92,8 @@ namespace Hazard::Rendering
 		{
 			m_Data.BufferPtr->Position = quad.Transform * m_Data.QuadVertexPos[i];
 			m_Data.BufferPtr->Color = quad.Color;
+			m_Data.BufferPtr->TextureCoords = textureCoords[i];
+			m_Data.BufferPtr->TextureIndex = quad.TextureIndex;
 			m_Data.BufferPtr++;
 		}
 		m_Data.QuadIndexCount += 6;

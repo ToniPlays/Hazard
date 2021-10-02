@@ -11,6 +11,7 @@ namespace Hazard::Scripting {
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
 	{
 		HZR_PROFILE_FUNCTION();
+		m_ScriptEngines.reserve(2);
 		m_ScriptEngines.insert({ ScriptType::CSharpScript, new CSharp::CSharpEngine(info) });
 		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
 

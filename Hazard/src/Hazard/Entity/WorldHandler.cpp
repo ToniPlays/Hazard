@@ -8,7 +8,9 @@
 
 namespace Hazard::ECS {
 
-	WorldHandler::WorldHandler() : Module::Module("World handler") {}
+	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler") {
+		LoadWorld(info->StartupFile, Serialization::Editor);
+	}
 	WorldHandler::~WorldHandler() {}
 
 	void WorldHandler::Close()

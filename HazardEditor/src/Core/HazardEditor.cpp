@@ -5,7 +5,7 @@
 void EditorApplication::PreInit()
 {
 	HZR_PROFILE_FUNCTION();
-	std::vector<std::string> icons = { "res/icons/logo.png", "res/icons/logo.png" };
+	std::vector<const char*> icons = { "res/icons/logo.png", "res/icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
@@ -15,7 +15,7 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.Renderer = RenderAPI::Vulkan;
 	contextInfo.ImagesInFlight = 1;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
@@ -27,7 +27,7 @@ void EditorApplication::PreInit()
 	RenderEngineCreateInfo engineInfo;
 	engineInfo.MaxQuadCount = 10000;
 	engineInfo.SamplerCount = 8;
-	engineInfo.ShaderSourcePath = "res/shaders/compiled";
+	engineInfo.ShaderSourcePath = "res/shaders/sources";
 	engineInfo.ShaderCompilePath = "res/shaders/compiled";
 
 	AudioEngineCreateInfo audioInfo;
@@ -35,7 +35,8 @@ void EditorApplication::PreInit()
 	ScriptEngineCreateInfo scriptInfo;
 	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
 	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
-	scriptInfo.MonoDirectory = "C:/Program Files/Mono";
+	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
+	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo;

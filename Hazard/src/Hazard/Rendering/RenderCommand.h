@@ -16,9 +16,8 @@ namespace Hazard::Rendering {
 		static void Submit(T fn);
 
 	private:
-		static RenderEngine* m_Engine;
-
-		static RenderAPI s_Api;
+		inline static RenderEngine* s_Engine;
+		inline static RenderAPI s_Api;
 	};
 	template<typename T>
 	inline void RenderCommand::Submit(T fn)
