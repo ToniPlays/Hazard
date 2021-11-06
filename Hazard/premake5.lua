@@ -18,6 +18,8 @@ project "Hazard"
 		"vendor/stb_image/**.cpp",
 		"vendor/glm/glm/**.hpp",
 		"vendor/glm/glm/**.inl",
+		"vendor/VulkanMemoryAllocator/**.h",
+		"vendor/VulkanMemoryAllocator/**.cpp"
 	}
 
 	defines
@@ -43,7 +45,8 @@ project "Hazard"
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.VulkanSDK}"
+		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.VMA}"
 	}
 
 	links
@@ -61,7 +64,7 @@ project "Hazard"
 
 	filter "system:windows"
 		systemversion "latest"
-		defines { 
+		defines {
 			"HZR_PLATFORM_WINDOWS"
 		}
 

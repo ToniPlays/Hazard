@@ -20,7 +20,7 @@ namespace Hazard::Scripting {
 	class ScriptCommand {
 
 	public:
-		static void Init();
+		static void Init(ScriptEngineManager& manager);
 		static void OnBeginRuntime();
 		static void OnEndRuntime();
 

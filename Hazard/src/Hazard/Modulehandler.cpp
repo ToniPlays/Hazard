@@ -25,11 +25,23 @@ namespace Hazard::Module {
             if (m->GetActive())
                 m->Update();
     }
+    void ModuleHandler::PreRender()
+    {
+        for (Module* m : m_Modules)
+            if (m->GetActive())
+                m->PreRender();
+    }
     void ModuleHandler::Render()
     {
         for (Module* m : m_Modules)
             if (m->GetActive())
                 m->Render();
+    }
+    void ModuleHandler::PostRender()
+    {
+        for (Module* m : m_Modules)
+            if (m->GetActive())
+                m->PostRender();
     }
     void ModuleHandler::Close()
     {

@@ -4,6 +4,7 @@
 #include "OpenGLShader.h"
 #include "Hazard/Rendering/RenderEngine.h"
 
+#include <glad/glad.h>
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>

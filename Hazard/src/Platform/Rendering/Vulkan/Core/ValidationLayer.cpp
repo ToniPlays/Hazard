@@ -34,6 +34,8 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) 
 			return VK_FALSE;
+		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) 
+			return VK_FALSE;
 
 		VulkanContext::SendDebugMessage(pCallbackData->pMessage, "Vulkan");
 		return VK_FALSE;
@@ -69,9 +71,9 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		uint32_t layerCount = 0;
 
-		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+		VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
 		std::vector<VkLayerProperties> layers(layerCount);
-		vkEnumerateInstanceLayerProperties(&layerCount, layers.data());
+		VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, layers.data()));
 
 		for (const char* name : validationLayers) {
 			bool layerFound = false;

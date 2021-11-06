@@ -2,6 +2,7 @@
 
 #include "VertexData.h"
 #include "Hazard/Assets/Asset.h"
+#include "../Pipeline/Pipeline.h"
 
 namespace Hazard::Rendering {
 
@@ -31,15 +32,17 @@ namespace Hazard::Rendering {
 	class Mesh : public Asset {
 	public:
 		Mesh() = default;
-		Mesh(const std::string& file, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+		Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices);
 		~Mesh();
 
 		std::string& GetFile() { return m_Filename; }
-		void GenerateArrays();
+		void GeneratePipeline();
 	private:
 		std::string m_Filename;
 
-		std::vector<Vertex> m_Vertices;
+		Ref<Pipeline> m_Pipeline;
+
+		std::vector<Vertex3D> m_Vertices;
 		std::vector<uint32_t> m_Indices;
 		std::vector<SubMesh> m_Submeshes;
 	};

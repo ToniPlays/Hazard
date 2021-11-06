@@ -10,7 +10,9 @@ namespace Hazard::Module {
 		~ModuleHandler();
 
 		void Update();
+		void PreRender();
 		void Render();
+		void PostRender();
 		void Close();
 
 		template<typename T, typename... Args>
@@ -30,6 +32,7 @@ namespace Hazard::Module {
 				if (dynamic_cast<T*>(m))
 					return (T&)*m;
 			}
+			
 		}
 		template<typename T>
 		bool HasModule()

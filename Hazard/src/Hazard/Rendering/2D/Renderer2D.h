@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../RenderEngine.h"
-#include "../Pipeline.h"
-#include "../Texture/Texture2D.h"
+#include "../Pipeline/Pipeline.h"
+#include "../Image/Image2D.h"
+#include "../RenderCommandBuffer.h"
 
 
 namespace Hazard::Rendering 
@@ -55,5 +56,7 @@ namespace Hazard::Rendering
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
+
+		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 	};
 }

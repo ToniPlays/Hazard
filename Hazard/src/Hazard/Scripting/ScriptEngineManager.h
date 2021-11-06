@@ -10,13 +10,14 @@ namespace Hazard::Scripting {
 
 	enum ScriptType {
 		CSharpScript = 0,
-		VisualScript
+		VisualScript = 1
 	};
 
 	class ScriptEngineManager : public Module::Module 
 	{
 	public:
 		ScriptEngineManager(ScriptEngineCreateInfo* info);
+		~ScriptEngineManager();
 
 		void Close() override;
 		void Update() override;

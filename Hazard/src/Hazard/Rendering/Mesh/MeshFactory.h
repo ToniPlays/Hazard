@@ -19,7 +19,7 @@ namespace Hazard::Rendering {
 		uint32_t vertexIndex = 0, baseIndex = 0;
 		std::vector<SubMesh> subMeshes;
 
-		std::vector<Vertex> vertices;
+		std::vector<Vertex3D> vertices;
 		std::vector<uint32_t> indices;
 	};
 

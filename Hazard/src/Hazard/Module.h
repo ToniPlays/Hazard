@@ -10,7 +10,9 @@ namespace Hazard::Module {
 		virtual void PreInit() {}
 		virtual void Init() {}
 		virtual void Update() {}
+		virtual void PreRender() {}
 		virtual void Render() {}
+		virtual void PostRender() {}
 		virtual void Close() {}
 		virtual bool OnEvent(Event& e) { return false; }
 		

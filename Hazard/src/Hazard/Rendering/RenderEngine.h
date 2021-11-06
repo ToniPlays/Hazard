@@ -3,8 +3,8 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "Buffers/Buffers.h"
-#include "Texture/Texture2D.h"
+#include "Pipeline/Buffers.h"
+#include "Image/Image2D.h"
 
 namespace Hazard::Rendering {
 
@@ -33,7 +33,7 @@ namespace Hazard::Rendering {
 	private:
 		Renderer2D* m_Renderer2D;
 		glm::mat4 m_ViewProjection;
-		Ref<Texture2D> m_WhiteTexture;
+		Ref<Image2D> m_WhiteTexture;
 
 		inline static std::filesystem::path m_ShaderCompilePath;
 		inline static std::filesystem::path m_ShaderSourcePath;

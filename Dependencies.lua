@@ -20,6 +20,8 @@ IncludeDir["Entt"] = "%{wks.location}/Hazard/vendor/entt/include"
 IncludeDir["Assimp"] = "%{wks.location}/Hazard/vendor/assimp/include"
 IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
 IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
+IncludeDir["VMA"] = "%{wks.location}/Hazard/vendor/VulkanMemoryAllocator"
+IncludeDir["ImGui"] = "%{wks.location}/HazardEditor/vendor/ImGui"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 LibraryDir = {}

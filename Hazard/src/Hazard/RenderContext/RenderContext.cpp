@@ -13,6 +13,8 @@ namespace Hazard::Rendering {
 		HZR_PROFILE_FUNCTION();
 		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->Renderer;
 		m_ClearColor = info->Color;
+		m_ImagesInFlight = info->ImagesInFlight;
+		RenderContextCommand::Init(this);
 
 		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
@@ -20,14 +22,16 @@ namespace Hazard::Rendering {
 		if (appInfo->IconCount > 0)
 			m_Window->SetWindowIcon(appInfo->IconCount, appInfo->Icons);
 
-		RenderContextCommand::Init(this);
 
 		m_Window->GetContext()->SetClearColor({ info->Color.r, info->Color.g, info->Color.b, 1.0f });
 		SetActive(true);
 	}
-	void RenderContext::Render()
+	void RenderContext::PreRender()
 	{
-		m_Window->OnUpdate();
+		m_Window->OnBeginFrame();
+	}
+	void RenderContext::PostRender() {
+		m_Window->OnEndFrame();
 	}
 
 	void RenderContext::Close()

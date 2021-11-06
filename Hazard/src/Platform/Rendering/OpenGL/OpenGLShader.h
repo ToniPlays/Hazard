@@ -1,8 +1,6 @@
 #pragma once
-#include "Hazard/Rendering/Shader.h"
-#include "Hazard/Rendering/Buffers/Buffers.h"
-
-#include <glad/glad.h>
+#include "Hazard/Rendering/Pipeline/Shader.h"
+#include "Hazard/Rendering/Pipeline/Buffers.h"
 
 namespace Hazard::Rendering::OpenGL 
 {
@@ -31,10 +29,10 @@ namespace Hazard::Rendering::OpenGL
 
 		uint32_t m_ID;
 
-		std::unordered_map<GLenum, std::vector<uint32_t>> m_VulkanSPIRV;
-		std::unordered_map<GLenum, std::vector<uint32_t>> m_OpenGLSPIRV;
+		std::unordered_map<uint32_t, std::vector<uint32_t>> m_VulkanSPIRV;
+		std::unordered_map<uint32_t, std::vector<uint32_t>> m_OpenGLSPIRV;
 
-		std::unordered_map<GLenum, std::string> m_OpenGLSourceCode;
+		std::unordered_map<uint32_t, std::string> m_OpenGLSourceCode;
 		ShaderData m_ShaderData;
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};

@@ -13,3 +13,6 @@
 [submodule "hazard/vendor/box2d"]
 	path = hazard/vendor/box2d
 	url = https://github.com/TheCherno/box2d
+[submodule "HazardEditor/vendor/imgui"]
+	path = HazardEditor/vendor/imgui
+	url = https://github.com/TheCherno/imgui

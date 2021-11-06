@@ -6,11 +6,6 @@ layout(location = 1) in vec4 v_Color;
 layout(location = 2) in vec2 v_TextureCoords;
 layout(location = 3) in float v_TextureIndex;
 
-layout(std140, binding = 0) uniform Camera 
-{
-	mat4 u_ViewProjection;
-} camera;
-
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec2 f_TextureCoords;
 layout(location = 2) out float f_TextureIndex;
@@ -21,7 +16,7 @@ void main()
 	f_TextureCoords = v_TextureCoords;
 	f_TextureIndex = v_TextureIndex;
 
-	gl_Position = camera.u_ViewProjection * vec4(v_Position, 1.0);
+	gl_Position = vec4(v_Position, 1.0);
 }
 
 #type Fragment

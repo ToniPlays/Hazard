@@ -7,9 +7,13 @@
 #include "Core/WindowSurface.h""
 #include "Core/VulkanAllocator.h"
 #include "Core/VulkanSwapChain.h"
+#include "Core/RenderCommandQueue.h"
+#include "VulkanRenderCommandBuffer.h"
 
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
+
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ERROR("Vulkan function failed");}
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -21,7 +25,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
 		void SwapBuffers() override;
-		void SetClearColor(const glm::vec4& color) override { clearColor = color; }
+		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
 
 		void SetErrorListener(const ErrorCallback& callback) override;
@@ -33,10 +37,16 @@ namespace Hazard::Rendering::Vulkan {
 		static VkPipelineCache GetPipelineCache() { return m_Device->GetPipelineCache(); }
 		inline static Ref<VulkanSwapChain> GetSwapchain() { return m_SwapChain; }
 
+		static RenderCommandQueue& GetRenderCommandQueue() { return *s_CommandQueue; }
+		static glm::vec4 GetClearColor() { return m_ClearColor; }
+
 		void BeginFrame();
 		void Begin() override;
 		void End();
 
+		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
+		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
+		
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
 	private:
@@ -45,10 +55,11 @@ namespace Hazard::Rendering::Vulkan {
 		inline static VkInstance m_Instance;
 		inline static Scope<VulkanDevice> m_Device;
 		inline static Scope<WindowSurface> m_WindowSurface;
+		inline static Ref<VulkanSwapChain> m_SwapChain;
 		inline static VkPipelineCache m_PipelineCache;
-		static inline Ref<VulkanSwapChain> m_SwapChain;
+		inline static RenderCommandQueue* s_CommandQueue;
+		inline static glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
 
-		glm::vec4 clearColor = { 0, 0, 0, 1 };
 		
 		uint32_t m_CurrentBufferIndex = 0;
 		static ErrorCallback s_Callback;

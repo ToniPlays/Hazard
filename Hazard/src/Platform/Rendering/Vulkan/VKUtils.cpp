@@ -154,7 +154,7 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		VkAttachmentDescription description;
 		description.flags = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-		description.format = GetFormat(attachment.format);
+		description.format = GetFormat(attachment.Format);
 		description.samples = VK_SAMPLE_COUNT_1_BIT;
 		description.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 		description.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -191,20 +191,20 @@ namespace Hazard::Rendering::Vulkan {
 		return refs;
 	}
 
-	VkFormat VKUtils::GetFormat(FrameBufferTextureFormat format)
+	VkFormat VKUtils::GetFormat(ImageFormat format)
 	{
 		switch (format)
 		{
-		case Hazard::Rendering::FrameBufferTextureFormat::RGBA8:			return VK_FORMAT_R8G8B8A8_SRGB;
-		case Hazard::Rendering::FrameBufferTextureFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case Hazard::Rendering::FrameBufferTextureFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case Hazard::Rendering::FrameBufferTextureFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
-			/*case Hazard::Rendering::FrameBufferTextureFormat::DEPTH32_STENCIL8:
-		case Hazard::Rendering::FrameBufferTextureFormat::DEPTH32F: {
-			auto device = VulkanContext::GetDevice();
-			return device->GetDepthFormat();
-		}*/
+		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
+		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
+		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
+		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ImageFormat::DEPTH32F:        return VK_FORMAT_D32_SFLOAT;
+		case ImageFormat::DEPTH24STENCIL8: return VulkanContext::GetDevice()->GetDepthFormat();
 		}
+		return VK_FORMAT_UNDEFINED;
 		HZR_CORE_INFO("[VKUtils] Failed to convert format");
 	}
 
@@ -260,6 +260,53 @@ namespace Hazard::Rendering::Vulkan {
 		return flags;
 	}
 
+	bool VKUtils::IsDepth(ImageFormat format)
+	{
+		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F) 
+			return true;
+		return false;
+	}
+
+	VkFormat VKUtils::GetImageFormat(ImageFormat format)
+	{
+		switch (format)
+		{
+		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
+		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
+		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
+		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ImageFormat::DEPTH32F:        return VK_FORMAT_D32_SFLOAT;
+		case ImageFormat::DEPTH24STENCIL8: return VulkanContext::GetDevice()->GetDepthFormat();
+		}
+		return VK_FORMAT_UNDEFINED;
+	}
+
+	void VKUtils::InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageSubresourceRange subresourceRange)
+	{
+		VkImageMemoryBarrier imageMemoryBarrier{};
+		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+		imageMemoryBarrier.srcAccessMask = srcAccessMask;
+		imageMemoryBarrier.dstAccessMask = dstAccessMask;
+		imageMemoryBarrier.oldLayout = oldImageLayout;
+		imageMemoryBarrier.newLayout = newImageLayout;
+		imageMemoryBarrier.image = image;
+		imageMemoryBarrier.subresourceRange = subresourceRange;
+
+		vkCmdPipelineBarrier(
+			cmdbuffer,
+			srcStageMask,
+			dstStageMask,
+			0,
+			0, nullptr,
+			0, nullptr,
+			1, &imageMemoryBarrier);
+	}
+
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		QueueFamilyIndices indices = {};
@@ -290,5 +337,11 @@ namespace Hazard::Rendering::Vulkan {
 		}
 
 		return indices;
+	}
+	VkSurfaceCapabilitiesKHR VKUtils::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+	{
+		VkSurfaceCapabilitiesKHR surfCaps;
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfCaps);
+		return surfCaps;
 	}
 }

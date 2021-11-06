@@ -9,11 +9,11 @@
 namespace Hazard 
 {
 	enum class AssetFlags : uint16_t {
-		None			= -1,
-		Valid			= BIT(0),
-		Missing			= BIT(1),
-		Invalid			= BIT(2),
-		InvalidInput	= BIT(3)
+		None			= BIT(0),
+		Valid			= BIT(1),
+		Missing			= BIT(2),
+		Invalid			= BIT(3),
+		InvalidInput	= BIT(4)
 	};
 
 	using AssetHandle = UUID;

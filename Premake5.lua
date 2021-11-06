@@ -26,10 +26,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 	include "vendor/premake"
-	include "Hazard/vendor/Box2D"
-	include "Hazard/vendor/GLFW"
 	include "Hazard/vendor/Glad"
+	include "Hazard/vendor/GLFW"
+	include "Hazard/vendor/Box2D"
 	include "Hazard/vendor/yaml-cpp"
+	include "HazardEditor/vendor/imgui"
 group ""
 
 include "Hazard"

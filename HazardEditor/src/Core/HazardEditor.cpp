@@ -1,6 +1,9 @@
 #pragma once
 
 #include "HazardEditor.h"
+#include "GUI/EditorView.h"
+#include "SceneRuntimeHandler.h"
+#include "Project/ProjectManager.h"
 
 void EditorApplication::PreInit()
 {
@@ -66,5 +69,5 @@ void EditorApplication::Init()
 bool EditorApplication::OnEvent(Event& e)
 {
 	return false;
-	//GetModule<WindowElement::EditorView>().OnEvent(e);
+	//return GetModule<WindowElement::EditorView>().OnEvent(e);
 }

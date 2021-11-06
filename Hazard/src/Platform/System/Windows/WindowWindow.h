@@ -12,7 +12,9 @@ namespace Hazard::Rendering {
 		WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		virtual ~WindowsWindow();
 
-		void OnUpdate() override;
+		void OnBeginFrame() override;
+		void OnEndFrame() override;
+
 		void SetWindowTitle(const char* title) override;
 		void SetWindowIcon(uint32_t count, const char** images) override;
 		void SetPosition(glm::vec2 position, glm::vec2 dragPoint);
@@ -23,10 +25,7 @@ namespace Hazard::Rendering {
 		};
 		void SetMaximized(bool maximized) override {
 			m_WindowData.maximized = maximized;
-			if (maximized)
-				glfwMaximizeWindow(m_Window);
-			else
-				glfwRestoreWindow(m_Window);
+			maximized ? glfwMaximizeWindow(m_Window) : glfwRestoreWindow(m_Window);
 		}
 		void SetMinimized(bool minimized) override {
 			m_WindowData.minimized = minimized;

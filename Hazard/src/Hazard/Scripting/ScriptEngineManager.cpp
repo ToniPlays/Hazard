@@ -11,14 +11,17 @@ namespace Hazard::Scripting {
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
 	{
 		HZR_PROFILE_FUNCTION();
-		m_ScriptEngines.reserve(2);
-		m_ScriptEngines.insert({ ScriptType::CSharpScript, new CSharp::CSharpEngine(info) });
-		m_ScriptEngines.insert({ ScriptType::VisualScript, new Visual::HVSEngine(info) });
+		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
+		m_ScriptEngines[ScriptType::VisualScript] = new Visual::HVSEngine(info);
 
-		ScriptCommand::Init();
+		ScriptCommand::Init(*this);
 		SetActive(info->Enable);
 		//TODO: Move to module
-		Physics::PhysicsCommand::Init();
+		//Physics::PhysicsCommand::Init();
+	}
+	ScriptEngineManager::~ScriptEngineManager()
+	{
+
 	}
 	void ScriptEngineManager::Close()
 	{
@@ -29,7 +32,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Update() 
 	{
-		//Same here
+		//TODO: Same here
 		//Physics::PhysicsCommand::UpdateAll(&ECS::WorldCommand::GetCurrentWorld());
 
 		for (auto[type, engine] : m_ScriptEngines) {

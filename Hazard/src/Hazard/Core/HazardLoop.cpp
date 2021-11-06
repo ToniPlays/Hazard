@@ -19,8 +19,13 @@ namespace Hazard::Core {
 	}
 	HazardLoop::~HazardLoop()
 	{
-		HZR_PROFILE_SESSION_END();
+		HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
+		m_Application->Close();
+		AssetManager::Shutdown();
+		m_ModuleHandler.Close();
 		delete m_Application;
+
+		HZR_PROFILE_SESSION_END();
 	}
 	void HazardLoop::Start()
 	{
@@ -38,14 +43,6 @@ namespace Hazard::Core {
 				HZR_CORE_INFO("Startup took {0} ms", timer.ElapsedMillis());
 			}
 
-			HZR_PROFILE_SESSION_END();
-
-			Run();
-
-			HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
-			m_Application->Close();
-			AssetManager::Shutdown();
-			m_ModuleHandler.Close();
 			HZR_PROFILE_SESSION_END();
 			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
 		}
@@ -79,7 +76,9 @@ namespace Hazard::Core {
 		m_Application->Update();
 		m_ModuleHandler.Update();
 		//Render
+		m_ModuleHandler.PreRender();
 		m_ModuleHandler.Render();
+		m_ModuleHandler.PostRender();
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{

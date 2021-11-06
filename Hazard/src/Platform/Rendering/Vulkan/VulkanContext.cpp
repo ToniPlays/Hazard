@@ -5,6 +5,8 @@
 #include "Core/ValidationLayer.h"
 #include "VKUtils.h"
 #include "Platform/System/Window.h"
+#include "Pipeline/VulkanRenderPass.h"
+#include "VulkanFrameBuffer.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -22,6 +24,14 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		HZR_PROFILE_FUNCTION();
 		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
+
+		m_SwapChain.Reset();
+		m_WindowSurface.reset();
+		delete s_CommandQueue;
+		VulkanAllocator::Shutdown();
+		m_Device.reset();
+
+		vkDestroyInstance(m_Instance, nullptr);
 	}
 
 	void VulkanContext::Init(Window* window, ApplicationCreateInfo* appInfo)
@@ -54,109 +64,135 @@ namespace Hazard::Rendering::Vulkan {
 			ValidationLayer::SetupDebugger(m_Instance);
 		}
 
-		m_SwapChain = Ref<VulkanSwapChain>::Create();
 		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
 		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface());
 
-		m_SwapChain->Connect(m_Instance, m_Device.get(), m_WindowSurface->GetVkSurface());
+		VulkanAllocator::Init();
 
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
+		m_SwapChain = Ref<VulkanSwapChain>::Create();
+		m_SwapChain->Create(&w, &h, false);
 
-		m_SwapChain->CreateSwapChain(&w, &h, window->IsVSync());
-		BeginFrame();
-		Begin();
-		End();
-	}
-
-	void VulkanContext::BeginFrame()
-	{
-		auto result = m_SwapChain->AcquireNextImage(&m_CurrentBufferIndex);
-
-		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			SetViewport(0, 0, m_SwapChain->GetWidth(), m_SwapChain->GetHeight());
-			return;
-		}
+		s_CommandQueue = new RenderCommandQueue();
 	}
 
 	void VulkanContext::Begin()
 	{
-		VkCommandBufferBeginInfo cmdInfo = {};
-		cmdInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		m_SwapChain->BeginFrame();
+	}
+	 
+	void VulkanContext::End()
+	{
+		
+	}
 
-		VkClearValue clearVal[2];
-		clearVal[0].color = { clearColor.r, clearColor.g, clearColor.b, clearColor.a };
-		clearVal[1].depthStencil = { 1.0f, 0 };
+	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+	{
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
-		uint32_t w = m_SwapChain->GetWidth();
-		uint32_t h = m_SwapChain->GetHeight();
+		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+
+		uint32_t width = 1280;
+		uint32_t height = 720;
+
+		VkViewport viewport = {};
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		viewport.width = width;
+		viewport.height = height;
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = m_SwapChain->GetRenderPass();
-		renderPassBeginInfo.renderArea.offset = { 0, 0 };
-		renderPassBeginInfo.renderArea.extent = { w, h };
-		renderPassBeginInfo.clearValueCount = 2;
-		renderPassBeginInfo.pClearValues = clearVal;
+		renderPassBeginInfo.pNext = nullptr;
+		renderPassBeginInfo.renderPass = fb->GetRenderPass();
+		renderPassBeginInfo.renderArea.offset.x = 0;
+		renderPassBeginInfo.renderArea.offset.y = 0;
+		renderPassBeginInfo.renderArea.extent.width = width;
+		renderPassBeginInfo.renderArea.extent.height = height;
 
-		auto buffer = m_SwapChain->GetCurrentDrawCommandBuffer();
-		renderPassBeginInfo.framebuffer = m_SwapChain->GetCurrentFrameBuffer();
+		if (fb->GetSpecification().SwapChainTarget) {
+			Ref<VulkanSwapChain> swapchain = VulkanContext::GetSwapchain();
 
-		auto result = vkBeginCommandBuffer(buffer, &cmdInfo);
+			width = swapchain->GetWidth();
+			height = swapchain->GetHeight();
+			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			renderPassBeginInfo.pNext = nullptr;
+			renderPassBeginInfo.renderPass = fb->GetRenderPass();
+			renderPassBeginInfo.renderArea.offset.x = 0;
+			renderPassBeginInfo.renderArea.offset.y = 0;
+			renderPassBeginInfo.renderArea.extent.width = width;
+			renderPassBeginInfo.renderArea.extent.height = height;
+			renderPassBeginInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
 
-		if (result != VK_SUCCESS) {
-			std::cout << result << std::endl;
+			viewport.x = 0.0f;
+			viewport.y = (float)height;
+			viewport.width = (float)width;
+			viewport.height = -(float)height;
 		}
-		vkCmdBeginRenderPass(buffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		else
+		{
+			width = fb->GetWidth();
+			height = fb->GetHeight();
+			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			renderPassBeginInfo.pNext = nullptr;
+			renderPassBeginInfo.renderPass = fb->GetRenderPass();
+			renderPassBeginInfo.renderArea.offset.x = 0;
+			renderPassBeginInfo.renderArea.offset.y = 0;
+			renderPassBeginInfo.renderArea.extent.width = width;
+			renderPassBeginInfo.renderArea.extent.height = height;
+			renderPassBeginInfo.framebuffer = fb->GetFrameBuffer();
 
-		VkViewport viewport = {};
-		viewport.x = 0.0f;
-		viewport.y = (float)h;
-		viewport.width = (float)w;
-		viewport.height = -(float)h;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
+			viewport.x = 0.0f;
+			viewport.y = 0.0f;
+			viewport.width = (float)width;
+			viewport.height = (float)height;
+		}
 
-		VkRect2D scissor = {};
+		const auto& clearValues = fb->GetVulkanClearValues();
+		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
+		renderPassBeginInfo.pClearValues = clearValues.data();
 
-		scissor.offset.x = 0;
-		scissor.offset.y = 0;
-		scissor.extent.width = w;
-		scissor.extent.height = h;
 
-		vkCmdSetViewport(buffer, 0, 1, &viewport);
-		vkCmdSetScissor(buffer, 0, 1, &scissor);
+		VkRect2D scissors = {};
+		scissors.extent.width = width;
+		scissors.extent.height = height;
+		scissors.offset = { 0, 0 };
+
+		vkCmdBeginRenderPass(vkBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdSetViewport(vkBuffer, 0, 1, &viewport);
+		vkCmdSetScissor(vkBuffer, 0, 1, &scissors);
 	}
 
-	void VulkanContext::End()
+	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
 	{
-		auto buffer = m_SwapChain->GetCurrentDrawCommandBuffer();
-		vkCmdEndRenderPass(buffer);
-		vkEndCommandBuffer(buffer);
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		vkCmdEndRenderPass(vkBuffer);
 	}
 
 	void VulkanContext::SwapBuffers()
 	{	
-		m_SwapChain->SwapBuffers();
-		BeginFrame();
+		m_SwapChain->Present();
 	}
 
 	void VulkanContext::SetViewport(int x, int y, int w, int h)
 	{
 		if (w == 0 || h == 0) return;
+
 		auto device = m_Device->GetDevice();
 		m_Device->WaitUntilIdle();
 
 		uint32_t width = w;
 		uint32_t height = h;
 
-		m_SwapChain->Clear();
-		m_SwapChain->CreateSwapChain(&width, &height, m_Window->IsVSync());
+		m_SwapChain->Resize(width, height);
 	}
 
 	void VulkanContext::SetErrorListener(const ErrorCallback& callback)
 	{
-
+		s_Callback = callback;
 	}
 
 	DeviceSpec VulkanContext::GetDeviceSpec() const

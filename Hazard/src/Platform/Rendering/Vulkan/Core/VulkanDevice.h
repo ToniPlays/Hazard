@@ -5,6 +5,11 @@
 
 namespace Hazard::Rendering::Vulkan 
 {
+	struct QueueIndices {
+		VkQueue Queue;
+		uint32_t Index;
+	};
+
 	class SwapChain;
 	class CommandBuffer;
 
@@ -19,15 +24,19 @@ namespace Hazard::Rendering::Vulkan
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
 		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
+		VkCommandBuffer GetCommandBuffer(bool begin);
+		void FlushCommandBuffer(VkCommandBuffer buffer);
+		void FlushGraphicsCommandBuffer(VkCommandBuffer buffer);
+
 		VkDescriptorPool GetDescriptorPool() { return m_DescriptorPool; }
-		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
-		VkQueue GetPresentQueue() { return m_PresentQueue; }
+		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
+		QueueIndices GetPresentQueue() { return m_PresentQueue; }
 		DeviceSpec GetSpec();
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+		VkFormat GetDepthFormat() const { return m_DepthFormat; }
 
 	private:
-
 		void CreatePools();
 
 		VkDevice m_Device;
@@ -35,7 +44,10 @@ namespace Hazard::Rendering::Vulkan
 		VkCommandPool m_CommandPool;
 		VkDescriptorPool m_DescriptorPool;
 		VkPipelineCache m_PipelineCache;
-		VkQueue m_GraphicsQueue;
-		VkQueue m_PresentQueue;
+
+		QueueIndices m_GraphicsQueue;
+		QueueIndices m_PresentQueue;
+
+		VkFormat m_DepthFormat = VK_FORMAT_UNDEFINED;
 	};
 }

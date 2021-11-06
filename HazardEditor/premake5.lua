@@ -1,5 +1,6 @@
 project "HazardEditor"
-	kind "ConsoleApp"
+
+	kind "WindowedApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "off"
@@ -19,16 +20,22 @@ project "HazardEditor"
 		"%{wks.location}/Hazard/src",
 		"%{wks.location}/Hazard/vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.Box2D}"
+		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.VMA}",
+		"src",
 	}
 
 	links
 	{
-		"Hazard"
+		"Hazard",
+		"ImGui"
 	}
 
 	filter "system:windows"

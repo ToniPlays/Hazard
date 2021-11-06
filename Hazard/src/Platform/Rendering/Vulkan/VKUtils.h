@@ -1,10 +1,9 @@
 #pragma once
 
 #include <optional>
-#include "Hazard/Rendering/Texture/FrameBuffer.h"
-
+#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 #include "vulkan/vulkan.h"
-#include "Hazard/Rendering/Shader.h"
+#include "Hazard/Rendering/Pipeline/Shader.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -31,6 +30,7 @@ namespace Hazard::Rendering::Vulkan {
 		static std::vector<const char*> GetRequiredExtensions(bool validation = false);
 		static VkPhysicalDevice GetVulkanCapableDevice(VkInstance instance, VkSurfaceKHR surface);
 		static QueueFamilyIndices GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface);
+		static VkSurfaceCapabilitiesKHR GetSurfaceCapabilities(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 		static SwapChainSupportDetails GetSwapChainDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
 		static VkSurfaceFormatKHR ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format = VK_FORMAT_A8B8G8R8_USCALED_PACK32, VkColorSpaceKHR space = VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT);
 		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred = VK_PRESENT_MODE_IMMEDIATE_KHR, VkPresentModeKHR defaultMode = VK_PRESENT_MODE_FIFO_KHR);
@@ -39,12 +39,24 @@ namespace Hazard::Rendering::Vulkan {
 		static VkAttachmentDescription CreateAttachmentDescription(FrameBufferAttachment& attachment);
 		static std::vector<VkAttachmentReference> CreateColorRefs(std::vector<FrameBufferAttachment>& attachments);
 		static std::vector<VkAttachmentReference> CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex = 1);
-		static VkFormat GetFormat(FrameBufferTextureFormat format);
+		static VkFormat GetFormat(ImageFormat format);
 		static VkFormat ShaderDataTypeToVkFormat(ShaderDataType type);
 		static VkShaderStageFlagBits ShaderTypeToVulkanStage(ShaderType type);
 		static ShaderType ShaderTypeFromVulkanStage(VkShaderStageFlagBits type);
 
 		static VkShaderStageFlags ShaderUsageToVulkanUsage(uint32_t usage);
+		static bool IsDepth(ImageFormat format);
+		static VkFormat GetImageFormat(ImageFormat format);
+
+		static void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer,
+			VkImage image,
+			VkAccessFlags srcAccessMask,
+			VkAccessFlags dstAccessMask,
+			VkImageLayout oldImageLayout,
+			VkImageLayout newImageLayout,
+			VkPipelineStageFlags srcStageMask,
+			VkPipelineStageFlags dstStageMask,
+			VkImageSubresourceRange subresourceRange);
 
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);

@@ -7,7 +7,6 @@
 #include "Platform/Rendering/OpenGL/OpenGLContext.h"
 #include "Platform/Rendering/Vulkan/VulkanContext.h"
 
-#include <glad/glad.h>
 #include <stb_image.h>
 
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -73,9 +72,14 @@ namespace Hazard::Rendering {
 		SetCallbacks();
 		SetVSync(info->VSync);
 	}
-	void WindowsWindow::OnUpdate()
+	void WindowsWindow::OnBeginFrame()
 	{
-		if(!m_WindowData.minimized)
+		m_Context->Begin();
+	}
+	void WindowsWindow::OnEndFrame()
+	{
+		m_Context->End();
+		if (!m_WindowData.minimized)
 			m_Context->SwapBuffers();
 		glfwPollEvents();
 	}

@@ -15,9 +15,9 @@ namespace Hazard::Rendering::OpenGL {
 		~OpenGLContext();
 
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
-		void SwapBuffers() override;
-		void SetClearColor(const glm::vec4& color) override { clearColor = color; }
+		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
+		void SwapBuffers() override;
 		void Begin() override {};
 		void End() override {};
 
@@ -28,7 +28,7 @@ namespace Hazard::Rendering::OpenGL {
 		static void SendDebugMessage(const char* message, const char* code);
 	private:
 		GLFWwindow* m_Window;
-		glm::vec4 clearColor = { 0, 0, 0, 1 };
+		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		static ErrorCallback s_Callback;
 	};
 }

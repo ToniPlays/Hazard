@@ -44,24 +44,96 @@ namespace Hazard::Rendering::Vulkan {
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
 			HZR_THROW("Failed to create Vulkan physical device!");
 		}
-		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
-		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
+
+		m_GraphicsQueue.Index = indices.graphicsFamily.value();
+		m_PresentQueue.Index = indices.presentFamily.value();
+		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue.Queue);
+		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue.Queue);
 
 		VkPipelineCacheCreateInfo cache = {};
 		cache.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-		vkCreatePipelineCache(m_Device, &cache, nullptr, &m_PipelineCache);
+		VK_CHECK_RESULT(vkCreatePipelineCache(m_Device, &cache, nullptr, &m_PipelineCache));
 
+		// Since all depth formats may be optional, we need to find a suitable depth format to use
+		// Start with the highest precision packed format
+		std::vector<VkFormat> depthFormats = {
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM
+		};
+
+		// TODO: Move to VulkanPhysicalDevice
+		for (auto& format : depthFormats)
+		{
+			VkFormatProperties formatProps;
+			vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, format, &formatProps);
+			// Format must support depth stencil attachment for optimal tiling
+			if (formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+				m_DepthFormat = format;
+				break;
+			}
+		}
 		CreatePools();
 	}
 	VulkanDevice::~VulkanDevice()
 	{
+		vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
 	}
 	void VulkanDevice::WaitUntilIdle() {
 
-		vkDeviceWaitIdle(m_Device);
+		VK_CHECK_RESULT(vkDeviceWaitIdle(m_Device));
+	}
+	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin)
+	{
+		VkCommandBuffer cmdBuffer;
+
+		VkCommandBufferAllocateInfo cmdAllocInfo = {};
+		cmdAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		cmdAllocInfo.commandPool = m_CommandPool;
+		cmdAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		cmdAllocInfo.commandBufferCount = 1;
+
+		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_Device, &cmdAllocInfo, &cmdBuffer));
+		
+		if (begin) {
+			VkCommandBufferBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			VK_CHECK_RESULT(vkBeginCommandBuffer(cmdBuffer, &beginInfo));
+		}
+
+		return cmdBuffer;
+	}
+	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer buffer)
+	{
+		FlushGraphicsCommandBuffer(buffer);
+	}
+	void VulkanDevice::FlushGraphicsCommandBuffer(VkCommandBuffer buffer)
+	{
+		const uint64_t TIMEOUT = 100000000000;
+
+		VK_CHECK_RESULT(vkEndCommandBuffer(buffer));
+
+		VkSubmitInfo submitInfo = {};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &buffer;
+
+		VkFenceCreateInfo fenceCreateInfo = {};
+		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fenceCreateInfo.flags = 0;
+
+		VkFence fence;
+		VK_CHECK_RESULT(vkCreateFence(m_Device, &fenceCreateInfo, nullptr, &fence));
+		VK_CHECK_RESULT(vkQueueSubmit(m_GraphicsQueue.Queue, 1, &submitInfo, fence));
+
+		VK_CHECK_RESULT(vkWaitForFences(m_Device, 1, &fence, VK_TRUE, TIMEOUT));
+		vkDestroyFence(m_Device, fence, nullptr);
+		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &buffer);
 	}
 	DeviceSpec VulkanDevice::GetSpec()
 	{
@@ -74,9 +146,9 @@ namespace Hazard::Rendering::Vulkan {
 		ss << "." << VK_VERSION_MINOR(props.apiVersion);
 		ss << "." << VK_VERSION_PATCH(props.apiVersion);
 
-		spec.renderer = ss.str();
-		spec.name = props.deviceName;
-		spec.textureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
+		spec.Renderer = ss.str();
+		spec.Name = props.deviceName;
+		spec.TextureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
 		return spec;
 	}
 	uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
@@ -113,7 +185,7 @@ namespace Hazard::Rendering::Vulkan {
 		poolInfo.pPoolSizes = &poolSize;
 		poolInfo.maxSets = 1 * sizeof(poolSize);
 
-		vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool);
+		VK_CHECK_RESULT(vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool));
 
 	}
 }

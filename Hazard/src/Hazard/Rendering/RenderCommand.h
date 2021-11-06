@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "Texture/FrameBuffer.h"
+#include "Pipeline/FrameBuffer.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
-
+#include "RenderCommandBuffer.h"
 
 namespace Hazard::Rendering {
 	class RenderCommand 
@@ -14,6 +14,8 @@ namespace Hazard::Rendering {
 		//static void DrawIndexed(VertexArray* vertexArray, uint32_t size);
 		template<typename T>
 		static void Submit(T fn);
+		static void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) { RenderContextCommand::BeginRenderPass(buffer, renderPass); }
+		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
 
 	private:
 		inline static RenderEngine* s_Engine;

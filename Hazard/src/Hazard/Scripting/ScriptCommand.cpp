@@ -10,9 +10,9 @@ namespace Hazard::Scripting {
 	void(*ScriptCommand::debugCallback)(Severity, const std::string&);
 	ScriptEngineManager* ScriptCommand::s_manager;
 
-	void ScriptCommand::Init()
+	void ScriptCommand::Init(ScriptEngineManager& manager)
 	{
-		s_manager = &Application::GetModule<ScriptEngineManager>();
+		s_manager = &manager;
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{

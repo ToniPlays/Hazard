@@ -3,16 +3,19 @@
 #include "Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
 
-#include <glad/glad.h>
-
 namespace Hazard::Rendering
 {
 	Renderer2D::Renderer2D(RenderEngineCreateInfo* info)
 	{
+		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Renderer2D");
+
 		m_Data.MaxQuadCount = info->MaxQuadCount;
 		m_Data.MaxVertices = info->MaxQuadCount * 4;
 		m_Data.MaxIndices = info->MaxQuadCount * 6;
 		m_Data.Samplers = info->SamplerCount;
+
+		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
+		m_Data.BufferPtr = m_Data.BufferBase;
 
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
 		uint32_t offset = 0;
@@ -43,14 +46,29 @@ namespace Hazard::Rendering
 		indexBuffer.Size = m_Data.MaxIndices;
 		indexBuffer.Usage = BufferUsage::StaticDraw;
 
-		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
-		m_Data.BufferPtr = m_Data.BufferBase;
+		std::vector<FrameBufferAttachment> attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
+
+		FrameBufferCreateInfo frameBufferInfo = {};
+		frameBufferInfo.SwapChainTarget = true;
+		frameBufferInfo.Attachments = attachments;
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Samples = 1;
+		frameBufferInfo.ClearColor = { 0.1f, 0.5f, 0.5f, 1.0f };
+		frameBufferInfo.DebugName = "Renderer2D FrameBuffer";
+
+		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = "Renderer2D";
+		renderPassInfo.pTargetFrameBuffer = frameBuffer;
+		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
 
 		PipelineSpecification pipelineSpecs = {};
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
 		pipelineSpecs.pVertexBuffer = &vertexInfo;
 		pipelineSpecs.pIndexBuffer = &indexBuffer;
+		pipelineSpecs.RenderPass = renderPass;
 
 		m_Pipeline = Pipeline::Create(pipelineSpecs);
 
@@ -58,7 +76,8 @@ namespace Hazard::Rendering
 	}
 	Renderer2D::~Renderer2D()
 	{
-
+		m_Pipeline.Reset();
+		m_RenderCommandBuffer.Reset();
 	}
 	void Renderer2D::Render(const RenderPassData& renderPassData)
 	{
@@ -68,15 +87,15 @@ namespace Hazard::Rendering
 		BeginWorld();
 		BeginBatch();
 
-		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+		//m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 
-		glm::mat4 tempMat = Math::ToTransformMatrix({ 1.0f, 0.0f, -3.0f - Math::Sin(offset) }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		glm::mat4 tempMat = Math::ToTransformMatrix({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, glm::radians(45.0f) }, { 1.0f, 1.0f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, glm::radians(45.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#ED1414", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, -5.0f }, { -Math::Sin(offset) * 2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, 0.0f }, { -Math::Sin(offset) * 2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
 		Flush();
@@ -100,6 +119,8 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginWorld()
 	{
+		m_RenderCommandBuffer->Begin();
+		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);
 		m_Pipeline->Bind();
 	}
 	void Renderer2D::BeginBatch()
@@ -115,7 +136,10 @@ namespace Hazard::Rendering
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
 		m_Pipeline->GetBuffer()->SetData(m_Data.BufferBase, dataSize);
-		m_Pipeline->Bind();
 		m_Pipeline->Draw(m_Data.QuadIndexCount);
+
+		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
+		m_RenderCommandBuffer->End();
+		m_RenderCommandBuffer->Submit();
 	}
 }

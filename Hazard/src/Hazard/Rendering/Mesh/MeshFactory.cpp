@@ -83,7 +83,7 @@ namespace Hazard::Rendering {
 		}
 
 		for (size_t i = 0; i < mesh->mNumVertices; i++) {
-			Vertex vertex;
+			Vertex3D vertex;
 
 			vertex.position.x = mesh->mVertices[i].x;
 			vertex.position.y = mesh->mVertices[i].y;

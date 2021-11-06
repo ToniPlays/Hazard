@@ -10,7 +10,7 @@ namespace Hazard
 		None = 0,
 		AudioClip,
 		World,
-		Texture,
+		Image,
 		Mesh,
 		EnvironmentMap,
 		PhysicsMaterial
@@ -22,7 +22,7 @@ namespace Hazard
 			if (type == "None")					return AssetType::None;
 			if (type == "AudioClip")			return AssetType::AudioClip;
 			if (type == "World")				return AssetType::World;
-			if (type == "Texture")				return AssetType::Texture;
+			if (type == "Texture")				return AssetType::Image;
 			if (type == "PhysicsMaterial")		return AssetType::PhysicsMaterial;
 			if (type == "Mesh")					return AssetType::Mesh;
 			if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
@@ -38,7 +38,7 @@ namespace Hazard
 			case AssetType::None:				return "None";
 			case AssetType::AudioClip:			return "AudioClip";
 			case AssetType::World:				return "World";
-			case AssetType::Texture:			return "Texture";
+			case AssetType::Image:			return "Texture";
 			case AssetType::Mesh:				return "Mesh";
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";
@@ -46,9 +46,9 @@ namespace Hazard
 		}
 
 		inline AssetType AssetTypeFromExtension(const std::string& ext) {
-			if (ext == "jpeg")		return AssetType::Texture;
-			if (ext == "jpg")		return AssetType::Texture;
-			if (ext == "png")		return AssetType::Texture;
+			if (ext == "jpeg")		return AssetType::Image;
+			if (ext == "jpg")		return AssetType::Image;
+			if (ext == "png")		return AssetType::Image;
 			if (ext == "mp3")		return AssetType::AudioClip;
 			if (ext == "ogg")		return AssetType::AudioClip;
 			if (ext == "hazard")	return AssetType::World;

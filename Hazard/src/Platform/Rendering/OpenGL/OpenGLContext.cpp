@@ -2,7 +2,6 @@
 
 #include <hzrpch.h>
 #include "OpenGLContext.h"
-
 #include <glad/glad.h>
 
 namespace Hazard::Rendering {
@@ -62,7 +61,7 @@ namespace Hazard::Rendering {
 		void OpenGLContext::SwapBuffers()
 		{
 			glfwSwapBuffers(m_Window);
-			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
@@ -88,13 +87,13 @@ namespace Hazard::Rendering {
 
 			ss << "OpenGL ";
 			ss << major << "." << minor;
-			spec.renderer = ss.str();
+			spec.Renderer = ss.str();
 
 			ss.str("");
 			ss << glGetString(GL_RENDERER);
 
-			spec.name = ss.str();
-			spec.textureSlots = major;
+			spec.Name = ss.str();
+			spec.TextureSlots = major;
 			return spec;
 		}
 		void OpenGLContext::SendDebugMessage(const char* message, const char* code)

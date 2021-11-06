@@ -78,7 +78,7 @@ namespace Hazard::ECS::Loader
 				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
 			}
 		}
-		static bool SerializeEditor(const char* file, World& world);
+		static bool SerializeEditor(const char* file, Ref<World> world);
 		static void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		static void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);

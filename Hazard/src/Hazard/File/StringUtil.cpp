@@ -20,4 +20,17 @@ namespace Hazard {
 	{
 		return source.substr(0, source.find_first_of(val));
 	}
+	std::string StringUtil::BytesToString(const size_t& bytes)
+	{
+		constexpr uint64_t GB = 1024 * 1024 * 1024;
+		constexpr uint64_t MB = 1024 * 1024;
+		constexpr uint64_t KB = 1024;
+
+		char buffer[16];
+		if (bytes > GB) sprintf_s(buffer, "%.02f GB", (float)bytes / (float)GB);
+		else if (bytes > MB) sprintf_s(buffer, "%.02f MB", (float)bytes / (float)MB);
+		else if (bytes > KB) sprintf_s(buffer, "%.02f KB", (float)bytes / (float)KB);
+		else sprintf_s(buffer, "%.02f bytes", (float)bytes);
+		return std::string(buffer);
+	}
 }

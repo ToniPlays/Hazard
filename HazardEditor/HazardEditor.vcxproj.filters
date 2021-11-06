@@ -4,17 +4,312 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{2AEC870B-96F5-877C-1F71-9E7C8B79937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window">
+      <UniqueIdentifier>{D1653F55-BD1D-81A2-2625-5AFE12FC1B93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window\Debug">
+      <UniqueIdentifier>{07C96C0D-F3C1-8B5F-1CF4-70E4084C6B6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window\Editor">
+      <UniqueIdentifier>{E7CD4CBD-53E4-4A53-9C5B-D67408B11BDB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window\Inspect">
+      <UniqueIdentifier>{96ABD5B2-828F-9608-EBEF-905BD7F2808A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window\Rendering">
+      <UniqueIdentifier>{5E6825EC-4AF7-AEB5-F315-C3B0DF83BF5B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Window\Tabs">
+      <UniqueIdentifier>{AAE9AEF8-1675-1CBD-1F86-9FB18B9078BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{1AE124DA-86C0-A375-8FD8-2E4CFB360AD7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Layout">
+      <UniqueIdentifier>{8721C63E-73EF-B944-5C83-2A6B48F095A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\GLFW">
+      <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Vulkan">
+      <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project">
+      <UniqueIdentifier>{5C2CF323-C80B-72BF-D123-FD953D82D820}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\EditorEvent.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\hzreditor.h" />
+    <ClInclude Include="src\Core\SceneRuntimeHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\EditorCamera.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\EditorSettings.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\EditorPopup.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\EditorTabWindow.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\EditorView.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\EditorWindow.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ImGuizmo.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\RenderableElement.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\AllWindows.h">
+      <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\Console.h">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\DragDropUtils.h">
+      <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\SettingsView.h">
+      <Filter>GUI\Window\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
+      <Filter>GUI\Window\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\MaterialInspector.h">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\MenuBar.h">
+      <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\Performance.h">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\TransformationGizmo.h">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Tabs\EditorMainTab.h">
+      <Filter>GUI\Window\Tabs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Tabs\NodeGraphTab.h">
+      <Filter>GUI\Window\Tabs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Toolbar.h">
+      <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\ComponentDraw.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Input.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\ContextMenus.h">
+      <Filter>Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\Dockspace.h">
+      <Filter>Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Layout\Layout.h">
+      <Filter>Library\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Library\Style.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\EditorGuiPlatform.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\FontAwesome.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\imgui_impl_glfw.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\imgui_impl_opengl3.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\imgui_impl_vulkan.h">
+      <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\EditorPlatformOpenGL.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\HazardProject.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\ProjectManager.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\HazardEditor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\hzreditor.cpp" />
+    <ClCompile Include="src\Core\SceneRuntimeHandler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorCamera.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorSettings.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\EditorPopup.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\EditorTabWindow.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\EditorView.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\EditorWindow.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\ImGuizmo.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\Console.cpp">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\DragDropUtils.cpp">
+      <Filter>GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp">
+      <Filter>GUI\Window\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
+      <Filter>GUI\Window\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\MaterialInspector.cpp">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
+      <Filter>GUI\Window\Inspect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\MenuBar.cpp">
+      <Filter>GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\TransformationGizmo.cpp">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp">
+      <Filter>GUI\Window\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Tabs\EditorMainTab.cpp">
+      <Filter>GUI\Window\Tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Tabs\NodeGraphTab.cpp">
+      <Filter>GUI\Window\Tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Toolbar.cpp">
+      <Filter>GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Input.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\ContextMenus.cpp">
+      <Filter>Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\Dockspace.cpp">
+      <Filter>Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Layout\Layout.cpp">
+      <Filter>Library\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Library\Style.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\imgui_impl_glfw.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\imgui_impl_opengl3.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\imgui_impl_vulkan.cpp">
+      <Filter>Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\EditorPlatformOpenGL.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\EditorPlatformVulkan.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectManager.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\sources\pbr.glsl" />
   </ItemGroup>
 </Project>
