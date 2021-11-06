@@ -144,7 +144,7 @@ namespace WindowElement {
 				if (!file.empty())
 				{
 					using namespace Hazard::Rendering;
-					Image2DCreateInfo createInfo;
+					Texture2DCreateInfo createInfo;
 					createInfo.FilePath = file;
 				}
 			}

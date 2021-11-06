@@ -15,6 +15,7 @@ namespace Hazard::Rendering::OpenGL
 		void Bind() override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
+		UniformBuffer& GetUniform(const std::string name) override { return *m_UniformBuffers[name]; };
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 

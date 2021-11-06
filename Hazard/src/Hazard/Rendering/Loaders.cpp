@@ -1,15 +1,15 @@
 #include "hzrpch.h"
 #include "Loaders.h"
-#include "Image/Image2D.h"
+#include "Texture.h"
 #include "Mesh/MeshFactory.h"
 
 namespace Hazard::Rendering 
 {
-    bool ImageLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+    bool TextureLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
     {
-        Image2DCreateInfo info = { };
+        Texture2DCreateInfo info = { };
         info.FilePath = metadata.Path.string();
-        asset = Image2D::Create(&info);
+        asset = Texture2D::Create(&info);
         return asset;
     }
     bool MeshLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)

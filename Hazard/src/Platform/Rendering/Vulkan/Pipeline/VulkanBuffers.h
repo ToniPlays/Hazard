@@ -10,7 +10,7 @@ namespace Hazard::Rendering::Vulkan
 	class VulkanVertexBuffer : public VertexBuffer
 	{
 	public:
-		VulkanVertexBuffer(const VertexBufferCreateInfo& createInfo);
+		VulkanVertexBuffer(VertexBufferCreateInfo* info);
 		~VulkanVertexBuffer();
 
 		void Bind() override;
@@ -34,7 +34,7 @@ namespace Hazard::Rendering::Vulkan
 	class VulkanIndexBuffer : public IndexBuffer
 	{
 	public:
-		VulkanIndexBuffer(const IndexBufferCreateInfo& createInfo);
+		VulkanIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~VulkanIndexBuffer();
 
 		void Bind() override;
@@ -59,13 +59,14 @@ namespace Hazard::Rendering::Vulkan
 	class VulkanUniformBuffer : public UniformBuffer
 	{
 	public:
-		VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo);
+		VulkanUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~VulkanUniformBuffer();
 
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data) override;
 		void RT_SetData(const void* data);
+		const uint32_t GetSize() const { return m_Size; };
 
 		virtual uint32_t GetUsageFlags() { return m_Usage; };
 

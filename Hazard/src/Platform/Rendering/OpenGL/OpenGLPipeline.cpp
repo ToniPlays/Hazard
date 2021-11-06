@@ -35,8 +35,8 @@ namespace Hazard::Rendering::OpenGL
 
 		m_Shader = Shader::Create(specs.ShaderPath);
 
-		m_Buffer = VertexBuffer::Create(*specs.pVertexBuffer);
-		m_IndexBuffer = IndexBuffer::Create(*specs.pIndexBuffer);
+		m_Buffer = VertexBuffer::Create(specs.pVertexBuffer);
+		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer);
 
 		Invalidate();
 	}

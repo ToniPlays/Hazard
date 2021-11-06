@@ -25,6 +25,9 @@ namespace Hazard::Rendering::Vulkan
 		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
 		VkCommandBuffer GetCommandBuffer(bool begin);
+
+		VkCommandBuffer CreateSecondaryCommandBuffer();
+
 		void FlushCommandBuffer(VkCommandBuffer buffer);
 		void FlushGraphicsCommandBuffer(VkCommandBuffer buffer);
 

@@ -33,8 +33,9 @@ namespace Hazard::Rendering
 		size_t MaxIndices;
 		size_t QuadIndexCount;
 		uint32_t Samplers;
+		std::vector<Ref<Texture2D>> TextureSlots;
 
-		uint32_t TextureIndex;
+		uint32_t TextureIndex = 0;
 		Vertex2D* BufferBase;
 		Vertex2D* BufferPtr;
 
@@ -56,6 +57,8 @@ namespace Hazard::Rendering
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
+		
+		Ref<Texture2D> m_WhiteTexture;
 
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 	};

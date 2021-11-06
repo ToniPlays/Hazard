@@ -1,22 +1,19 @@
 #pragma once
 
-#include "Hazard/Rendering/Image/Image2D.h"
+#include "Hazard/Rendering/Texture.h"
 
 
 namespace Hazard::Rendering::OpenGL
 {
-	class OpenGLImage2D : public Image2D {
+	class OpenGLTexture2D : public Texture2D {
 	public:
-		OpenGLImage2D(Image2DCreateInfo* info);
-		~OpenGLImage2D();
+		OpenGLTexture2D(Texture2DCreateInfo* info);
+		~OpenGLTexture2D();
 
-		virtual void Invalidate() {};
-		virtual void Release() {};
+		uint32_t GetWidth() const override { return m_Width; };
+		uint32_t GetHeight() const override { return m_Height; };
 
-		uint32_t GetWidth() override { return m_Width; };
-		uint32_t GetHeight() override { return m_Height; };
-
-		void* GetID() const override { return (void*)m_ID; }
+		uint32_t GetID() const override { return m_ID; }
 
 		virtual float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
 		virtual Buffer GetBuffer() const { return Buffer(); };

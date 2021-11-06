@@ -100,7 +100,7 @@ namespace Hazard::Rendering
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data, uint32_t size) = 0;
 
-		static Ref<VertexBuffer> Create(const VertexBufferCreateInfo& createInfo);
+		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 
 	class IndexBuffer : public RefCount
@@ -114,7 +114,7 @@ namespace Hazard::Rendering
 		virtual void SetData(uint32_t* data, uint32_t size) = 0;
 		virtual uint32_t GetCount() = 0;
 
-		static Ref<IndexBuffer> Create(const IndexBufferCreateInfo& createInfo);
+		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
 	class UniformBuffer : public RefCount
 	{
@@ -124,7 +124,8 @@ namespace Hazard::Rendering
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data) = 0;
 		virtual uint32_t GetUsageFlags() = 0;
+		virtual const uint32_t GetSize() const = 0;
 
-		static Ref<UniformBuffer> Create(const UniformBufferCreateInfo& createInfo);
+		static Ref<UniformBuffer> Create(UniformBufferCreateInfo* createInfo);
 	};
 }

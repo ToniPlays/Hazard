@@ -174,7 +174,7 @@ namespace Hazard::Rendering::OpenGL
 			bufferInfo.Binding = uniformBuffer.Binding;
 			bufferInfo.Size = uniformBuffer.Size;
 
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(bufferInfo);
+			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
 
 		Utils::PrintReflectResults(m_FilePath, m_ShaderData);

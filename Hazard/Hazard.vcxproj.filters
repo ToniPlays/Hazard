@@ -1756,10 +1756,11 @@
     <ClInclude Include="src\Hazard\Rendering\Image\Image2D.h">
       <Filter>src\Hazard\Rendering\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLImage2D.h">
+    <ClInclude Include="src\Platform\Rendering\Vulkan\Image\VulkanImage2D.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.h">
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Image\VulkanImage2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -2015,9 +2016,9 @@
     <ClCompile Include="src\Hazard\Rendering\Image\Image2D.cpp">
       <Filter>src\Hazard\Rendering\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLImage2D.cpp">
+    <ClCompile Include="src\Platform\Rendering\Vulkan\Image\VulkanImage2D.cpp" />
+    <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Image\VulkanImage2D.cpp" />
   </ItemGroup>
 </Project>

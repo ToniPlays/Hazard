@@ -14,6 +14,8 @@ namespace Hazard::Rendering
 		m_Data.MaxIndices = info->MaxQuadCount * 6;
 		m_Data.Samplers = info->SamplerCount;
 
+		m_Data.TextureSlots.resize(info->SamplerCount);
+
 		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
 		m_Data.BufferPtr = m_Data.BufferBase;
 
@@ -72,6 +74,18 @@ namespace Hazard::Rendering
 
 		m_Pipeline = Pipeline::Create(pipelineSpecs);
 
+		uint32_t data = 0xFFFFFFFF;
+
+		Texture2DCreateInfo whiteTextureInfo = {};
+		whiteTextureInfo.Width = 1;
+		whiteTextureInfo.Height = 1;
+		//whiteTextureInfo.Data = &data;
+		whiteTextureInfo.FilePath = "res/textures/checker.png";
+		whiteTextureInfo.Usage = ImageUsage::Texture;
+
+		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
+		m_Data.TextureSlots[0] = m_WhiteTexture;
+
 		delete[] indices;
 	}
 	Renderer2D::~Renderer2D()
@@ -87,16 +101,15 @@ namespace Hazard::Rendering
 		BeginWorld();
 		BeginBatch();
 
-		//m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+		float rotation = Math::Sin(Time::s_Time);
 
-		glm::mat4 tempMat = Math::ToTransformMatrix({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+
+		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, glm::radians(45.0f) }, { 1.0f, 1.0f, 1.0f });
-		Submit({ tempMat, "#ED1414", 0.0f });
-
-		tempMat = Math::ToTransformMatrix({ -2.0f, 1.0f, 0.0f }, { -Math::Sin(offset) * 2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
-		Submit({ tempMat, "#EF2E2E", 0.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, glm::radians(rotation * 60.0f) }, { 1.0f, 1.0f, 1.0f });
+		Submit({ tempMat, "#ED1414", 1.0f });
 
 		Flush();
 	}
@@ -119,6 +132,10 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginWorld()
 	{
+		for (uint32_t i = 1; i < m_Data.TextureIndex; i++) {
+			m_Data.TextureSlots[i] = nullptr;
+		}
+
 		m_RenderCommandBuffer->Begin();
 		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);
 		m_Pipeline->Bind();

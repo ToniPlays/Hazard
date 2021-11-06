@@ -61,13 +61,12 @@ void EditorApplication::Init()
 	//PushModule<WindowElement::EditorView>();
 	//Runtime::SceneRuntimeHandler::Init();
 
-	//Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	//manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
-
+	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
+	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
 }
 
 bool EditorApplication::OnEvent(Event& e)
 {
 	return false;
-	//return GetModule<WindowElement::EditorView>().OnEvent(e);
+	return GetModule<WindowElement::EditorView>().OnEvent(e);
 }

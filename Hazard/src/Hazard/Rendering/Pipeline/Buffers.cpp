@@ -9,7 +9,7 @@
 
 namespace Hazard::Rendering {
 
-	Ref<VertexBuffer> VertexBuffer::Create(const VertexBufferCreateInfo& createInfo)
+	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
@@ -19,7 +19,7 @@ namespace Hazard::Rendering {
 		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
-	Ref<IndexBuffer> IndexBuffer::Create(const IndexBufferCreateInfo& createInfo)
+	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
@@ -29,7 +29,7 @@ namespace Hazard::Rendering {
 		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
-	Ref<UniformBuffer> UniformBuffer::Create(const UniformBufferCreateInfo& createInfo)
+	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{

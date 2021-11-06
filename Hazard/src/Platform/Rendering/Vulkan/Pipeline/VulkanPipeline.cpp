@@ -14,8 +14,8 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
 
-		m_VertexBuffer = VertexBuffer::Create(*specs.pVertexBuffer).As<VulkanVertexBuffer>();
-		m_IndexBuffer = IndexBuffer::Create(*specs.pIndexBuffer).As<VulkanIndexBuffer>();
+		m_VertexBuffer = VertexBuffer::Create(specs.pVertexBuffer).As<VulkanVertexBuffer>();
+		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer).As<VulkanIndexBuffer>();
 
 		m_Specs.RenderPass = specs.RenderPass;
 		m_Specs.Usage = specs.Usage;

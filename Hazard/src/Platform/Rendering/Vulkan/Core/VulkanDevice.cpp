@@ -108,6 +108,21 @@ namespace Hazard::Rendering::Vulkan {
 
 		return cmdBuffer;
 	}
+
+	VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer()
+	{
+		VkCommandBuffer cmdBuffer;
+
+		VkCommandBufferAllocateInfo cmdBufAllocateInfo = {};
+		cmdBufAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		cmdBufAllocateInfo.commandPool = m_CommandPool;
+		cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+		cmdBufAllocateInfo.commandBufferCount = 1;
+
+		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_Device, &cmdBufAllocateInfo, &cmdBuffer));
+		return cmdBuffer;
+	}
+
 	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer buffer)
 	{
 		FlushGraphicsCommandBuffer(buffer);

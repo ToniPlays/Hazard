@@ -20,7 +20,7 @@ namespace Hazard::Rendering
 		m_ShaderCompilePath = info->ShaderCompilePath;
 		m_ShaderSourcePath = info->ShaderSourcePath;
 
-		//AssetManager::RegisterLoader<ImageLoader>(AssetType::Image);
+		//AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		//AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
 
 		uint32_t data = 0xFFFFFFFF;
@@ -29,7 +29,7 @@ namespace Hazard::Rendering
 		filters.MinFilter = FilterMode::Nearest;
 		filters.MagFilter = FilterMode::Nearest;
 
-		Image2DCreateInfo whiteTexture = {};
+		Texture2DCreateInfo whiteTexture = {};
 		whiteTexture.FilePath = "res/textures/checker.png";
 		whiteTexture.Filter = &filters;
 		whiteTexture.Width = 1;
@@ -41,7 +41,7 @@ namespace Hazard::Rendering
 
 		m_Renderer2D = new Renderer2D(info);
 
-		WindowResizeEvent e = { 1280, 720 };
+		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
 
 	}
@@ -51,7 +51,7 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Render()
 	{
-		RenderPassData data;
+		RenderPassData data = {};
 		data.ViewProjection = m_ViewProjection * data.Transform;
 		float sin = (1 + Math::Sin(Time::s_Time) * 0.5f);
 		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 4.0f }));

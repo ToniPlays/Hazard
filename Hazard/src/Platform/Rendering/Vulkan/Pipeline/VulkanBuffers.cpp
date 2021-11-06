@@ -5,29 +5,29 @@
 
 namespace Hazard::Rendering::Vulkan
 {
-	VulkanVertexBuffer::VulkanVertexBuffer(const VertexBufferCreateInfo& info) : m_Size(info.Size)
+	VulkanVertexBuffer::VulkanVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		m_Usage = info.Usage;
+		m_Usage = info->Usage;
 		auto device = VulkanContext::GetDevice();
 
 		VulkanAllocator allocator("VertexBuffer");
 		
-		if (info.Data == nullptr) {
+		if (info->Data == nullptr) {
 
 			VkBufferCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			createInfo.size = info.Size;
+			createInfo.size = info->Size;
 			createInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_TO_CPU, m_Buffer);
 			m_LocalData.Allocate(m_Size);
 		}
 		else {
-			m_LocalData = Buffer::Copy(info.Data, info.Size);
+			m_LocalData = Buffer::Copy(info->Data, info->Size);
 
 			VkBufferCreateInfo stagingCreateInfo = {};
 			stagingCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			stagingCreateInfo.size = info.Size;
+			stagingCreateInfo.size = info->Size;
 			stagingCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 			stagingCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -40,7 +40,7 @@ namespace Hazard::Rendering::Vulkan
 
 			VkBufferCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			createInfo.size = info.Size;
+			createInfo.size = info->Size;
 			createInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Buffer);
@@ -84,13 +84,33 @@ namespace Hazard::Rendering::Vulkan
 		memcpy(pData, (uint8_t*)data, size);
 		allocator.UnmapMemory(m_Allocation);
 	}
-	VulkanIndexBuffer::VulkanIndexBuffer(const IndexBufferCreateInfo& info) : m_Size(info.Size)
+	VulkanIndexBuffer::VulkanIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		if (info.Data == nullptr) return;
+		if (info->Data == nullptr) return;
+		SetData(info->Data, info->Size);
+	}
+	VulkanIndexBuffer::~VulkanIndexBuffer()
+	{
+		VkBuffer buffer = m_Buffer;
+		VmaAllocation allocation = m_Allocation;
 
+		VulkanAllocator allocator("IndexBuffer");
+		allocator.DestroyBuffer(buffer, allocation);
+	}
+	void VulkanIndexBuffer::Bind()
+	{
+		
+	}
+	void VulkanIndexBuffer::Unbind()
+	{
+
+	}
+	void VulkanIndexBuffer::SetData(uint32_t* data, uint32_t size)
+	{
+		m_Size = size;
 		auto device = VulkanContext::GetDevice();
 		VulkanAllocator allocator("IndexBuffer");
-		m_LocalData = Buffer::Copy(info.Data, m_Size);
+		m_LocalData = Buffer::Copy(data, m_Size);
 
 		VkBufferCreateInfo bufferCreateInfo{};
 		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -125,34 +145,13 @@ namespace Hazard::Rendering::Vulkan
 
 		allocator.DestroyBuffer(stagingBuffer, stagingBufferAllocation);
 	}
-	VulkanIndexBuffer::~VulkanIndexBuffer()
-	{
-		VkBuffer buffer = m_Buffer;
-		VmaAllocation allocation = m_Allocation;
-
-		VulkanAllocator allocator("IndexBuffer");
-		allocator.DestroyBuffer(buffer, allocation);
-	}
-	void VulkanIndexBuffer::Bind()
-	{
-		
-	}
-	void VulkanIndexBuffer::Unbind()
-	{
-
-	}
-	void VulkanIndexBuffer::SetData(uint32_t* data, uint32_t size)
-	{
-		m_Size = size;
-
-		auto device = VulkanContext::GetDevice()->GetDevice();
-		
-
-	}
-	VulkanUniformBuffer::VulkanUniformBuffer(const UniformBufferCreateInfo& createInfo) : m_Size(createInfo.Size), m_Binding(createInfo.Binding), m_Usage(createInfo.Usage)
+	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size), 
+		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_LocalData = new uint8_t[m_Size];
-		auto device = VulkanContext::GetDevice()->GetDevice();
+		m_Binding = createInfo->Binding;
+		m_Size = createInfo->Size;
+		m_Usage = createInfo->Usage;
 
 		RT_Invalidate();
 	}
@@ -211,6 +210,6 @@ namespace Hazard::Rendering::Vulkan
 		bufferInfo.size = m_Size;
 
 		VulkanAllocator allocator("UniformBuffer");
-		allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_ONLY, m_Buffer);
+		m_Allocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_ONLY, m_Buffer);
 	}
 }

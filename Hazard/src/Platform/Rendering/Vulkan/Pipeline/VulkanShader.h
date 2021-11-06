@@ -15,6 +15,7 @@ namespace Hazard::Rendering::Vulkan
 		void Bind() override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
+		UniformBuffer& GetUniform(const std::string name) override { return *m_UniformBuffers[name]; };
 
 		VkResult CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout);
 		std::unordered_map<std::string, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }

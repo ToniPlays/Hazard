@@ -280,7 +280,7 @@ namespace Hazard::Rendering::Vulkan
 			bufferInfo.Size = uniformDescription.Size;
 			bufferInfo.Usage = uniformDescription.ShaderUsage;
 
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(bufferInfo);
+			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
 		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}

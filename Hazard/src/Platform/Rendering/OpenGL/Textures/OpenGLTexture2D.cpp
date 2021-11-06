@@ -2,7 +2,7 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "OpenGLImage2D.h"
+#include "OpenGLTexture2D.h"
 #include "Hazard/File/File.h"
 
 #include <stb_image.h>
@@ -31,8 +31,7 @@ namespace Hazard::Rendering::OpenGL
 		}
 	}
 
-
-	OpenGLImage2D::OpenGLImage2D(Image2DCreateInfo* info)
+	OpenGLTexture2D::OpenGLTexture2D(Texture2DCreateInfo* info)
 	{
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
@@ -44,11 +43,11 @@ namespace Hazard::Rendering::OpenGL
 
 		SetFilters(info->Filter, info->WrapMode);
 	}
-	OpenGLImage2D::~OpenGLImage2D()
+	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-
+		glDeleteTextures(1, &m_ID);
 	}
-	void OpenGLImage2D::LoadFromFile(const std::string& path)
+	void OpenGLTexture2D::LoadFromFile(const std::string& path)
 	{
 		int channels;
 		std::string& file = File::GetFileAbsolutePath(path);
@@ -67,11 +66,11 @@ namespace Hazard::Rendering::OpenGL
 		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_Format, GL_UNSIGNED_BYTE, data);
 	}
-	void OpenGLImage2D::LoadFromData(const void* data, uint32_t width, uint32_t height)
+	void OpenGLTexture2D::LoadFromData(const void* data, uint32_t width, uint32_t height)
 	{
 
 	}
-	void OpenGLImage2D::SetFilters(TextureFilter* filters, ImageWrap wrap)
+	void OpenGLTexture2D::SetFilters(TextureFilter* filters, ImageWrap wrap)
 	{
 		if (filters == nullptr)
 		{
