@@ -31,6 +31,9 @@ namespace Hazard::Rendering
 	{
 		FilterMode MinFilter;
 		FilterMode MagFilter;
+
+		TextureFilter() = default;
+		TextureFilter(FilterMode minFilter, FilterMode magFilter) : MinFilter(minFilter), MagFilter(magFilter) {}
 	};
 
 

@@ -76,15 +76,32 @@ namespace Hazard::Rendering
 
 		uint32_t data = 0xFFFFFFFF;
 
+		TextureFilter filter = { FilterMode::Nearest, FilterMode::Nearest };
+
 		Texture2DCreateInfo whiteTextureInfo = {};
 		whiteTextureInfo.Width = 1;
 		whiteTextureInfo.Height = 1;
-		//whiteTextureInfo.Data = &data;
-		whiteTextureInfo.FilePath = "res/textures/checker.png";
+		whiteTextureInfo.Data = &data;
 		whiteTextureInfo.Usage = ImageUsage::Texture;
+		whiteTextureInfo.Filter = &filter;
+		whiteTextureInfo.Format = ImageFormat::RGBA;
 
 		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 		m_Data.TextureSlots[0] = m_WhiteTexture;
+
+		Texture2DCreateInfo starfield = {};
+		starfield.FilePath = "res/textures/checker.png";
+		starfield.Usage = ImageUsage::Texture;
+		starfield.Filter = &filter;
+
+		m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
+
+		Ref<Shader> shader = m_Pipeline->GetShader();
+		shader->Bind();
+
+		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
+			shader->Set("u_Textures", i, i);
+		}
 
 		delete[] indices;
 	}
@@ -108,7 +125,7 @@ namespace Hazard::Rendering
 		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, glm::radians(rotation * 60.0f) }, { 1.0f, 1.0f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#ED1414", 1.0f });
 
 		Flush();
@@ -132,24 +149,29 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginWorld()
 	{
-		for (uint32_t i = 1; i < m_Data.TextureIndex; i++) {
+		for (uint32_t i = 2; i < m_Data.Samplers; i++) {
 			m_Data.TextureSlots[i] = nullptr;
 		}
 
 		m_RenderCommandBuffer->Begin();
 		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);
-		m_Pipeline->Bind();
 	}
 	void Renderer2D::BeginBatch()
 	{
 		m_Data.QuadIndexCount = 0;
 		m_Data.BufferPtr = m_Data.BufferBase;
-		m_Data.TextureIndex = 1;
+		m_Data.TextureIndex = 2.0f;
 	}
 	void Renderer2D::Flush()
 	{
 		if (m_Data.QuadIndexCount == 0)
 			return;
+
+		m_Pipeline->Bind();
+		
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
+			m_Data.TextureSlots[i]->Bind(i);
+		}
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
 		m_Pipeline->GetBuffer()->SetData(m_Data.BufferBase, dataSize);

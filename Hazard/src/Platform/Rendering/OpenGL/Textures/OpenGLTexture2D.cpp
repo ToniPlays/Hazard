@@ -33,6 +33,7 @@ namespace Hazard::Rendering::OpenGL
 
 	OpenGLTexture2D::OpenGLTexture2D(Texture2DCreateInfo* info)
 	{
+		m_Format = info->Format;
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
 
@@ -47,28 +48,49 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glDeleteTextures(1, &m_ID);
 	}
+	void OpenGLTexture2D::Bind(uint32_t slot) const
+	{
+		glBindTextureUnit(slot, m_ID);
+	}
 	void OpenGLTexture2D::LoadFromFile(const std::string& path)
 	{
 		int channels;
 		std::string& file = File::GetFileAbsolutePath(path);
 
 		stbi_set_flip_vertically_on_load(true);
-		stbi_uc* data = stbi_load(file.c_str(), &m_Width, &m_Height, &channels, 0);
+		
+		stbi_uc* data;
+		{
+			Timer timer;
+			data = stbi_load(file.c_str(), &m_Width, &m_Height, &channels, 0);
+			HZR_CORE_INFO("Loading Texture {0} took {1} ms", path, timer.ElapsedMillis());
+
+		}
 
 		if (!data) {
 			HZR_CORE_INFO("[OpenGLTexture2D]: Failed to load image data from {0}", file);
 			return;
 		}
 
-		m_Format = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
+		m_DataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
 		m_InternalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
 
 		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_Format, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+
+		HZR_CORE_INFO("Loaded OpenGL texture from {0}", path);
 	}
 	void OpenGLTexture2D::LoadFromData(const void* data, uint32_t width, uint32_t height)
 	{
+		m_Width = width;
+		m_Height = height;
 
+		uint32_t bpp = m_Format == ImageFormat::RGBA ? 4 : 3;
+		m_DataFormat = (bpp == 4) * GL_RGBA + (bpp == 3) * GL_RGB;
+		m_InternalFormat = (bpp == 4) * GL_RGBA8 + (bpp == 3) * GL_RGB8;
+
+		glTextureStorage2D(m_ID, 1, m_InternalFormat, width, height);
+		glTextureSubImage2D(m_ID, 0, 0, 0, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 	void OpenGLTexture2D::SetFilters(TextureFilter* filters, ImageWrap wrap)
 	{
@@ -77,7 +99,8 @@ namespace Hazard::Rendering::OpenGL
 			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
-		else {
+		else 
+		{
 			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GLUtils::TextureFilterToGLFilter(filters->MinFilter));
 			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GLUtils::TextureFilterToGLFilter(filters->MagFilter));
 		}

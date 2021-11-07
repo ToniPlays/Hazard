@@ -126,6 +126,18 @@ namespace Hazard::Rendering::OpenGL
 		HZR_CORE_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
+	void OpenGLShader::Set(const std::string name, uint32_t index, uint32_t value)
+	{
+		std::stringstream ss;
+		ss << name << "[" << index << "]";
+
+		GLuint location = glGetUniformLocation(m_ID, ss.str().c_str());
+		glUniform1i(location, value);
+	}
+	void OpenGLShader::Set(const std::string name, uint32_t index, Ref<Texture2D>& value)
+	{
+		Set(name, index, value->GetID());
+	}
 	void OpenGLShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();

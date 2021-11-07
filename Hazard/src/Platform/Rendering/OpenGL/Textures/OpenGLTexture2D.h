@@ -12,6 +12,12 @@ namespace Hazard::Rendering::OpenGL
 
 		uint32_t GetWidth() const override { return m_Width; };
 		uint32_t GetHeight() const override { return m_Height; };
+		virtual void Bind(uint32_t slot = 0) const override;
+
+		virtual void Resize(uint32_t width, uint32_t height) {};
+		virtual Buffer GetWriteBuffer() { return Buffer(); };
+		virtual bool Loaded() const { return m_Loaded; };
+		virtual ImageFormat GetFormat() const override { return m_Format; }
 
 		uint32_t GetID() const override { return m_ID; }
 
@@ -25,8 +31,11 @@ namespace Hazard::Rendering::OpenGL
 		void LoadFromData(const void* data, uint32_t width, uint32_t height);
 		void SetFilters(TextureFilter* filters, ImageWrap wrap);
 
-		uint32_t m_Format;
 		uint32_t m_InternalFormat;
+		uint32_t m_DataFormat;
+
+		ImageFormat m_Format;
+		bool m_Loaded = false;
 
 		int m_Width;
 		int m_Height;

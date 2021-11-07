@@ -2020,5 +2020,6 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Texture.cpp" />
   </ItemGroup>
 </Project>

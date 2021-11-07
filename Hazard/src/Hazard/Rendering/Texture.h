@@ -11,7 +11,7 @@ namespace Hazard::Rendering
 		uint32_t Width = 0;
 		uint32_t Height = 0;
 		uint32_t Mips = 1;
-		ImageWrap WrapMode = Repeat;
+		ImageWrap WrapMode = ImageWrap::Repeat;
 		TextureFilter* Filter = nullptr;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format;
@@ -37,6 +37,6 @@ namespace Hazard::Rendering
 		virtual Buffer GetWriteBuffer() = 0;
 		virtual bool Loaded() const = 0;
 
-		static Ref<Texture2D> Create(Texture2DCreateInfo* info) { return nullptr; };
+		static Ref<Texture2D> Create(Texture2DCreateInfo* info);
 	};
 }

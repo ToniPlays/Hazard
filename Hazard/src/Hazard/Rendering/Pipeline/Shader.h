@@ -8,6 +8,7 @@
 
 namespace Hazard::Rendering
 {
+	class Texture2D;
 	enum ShaderType {
 		Unknown = BIT(0),
 		Vertex = BIT(1),
@@ -150,6 +151,9 @@ namespace Hazard::Rendering
 		virtual void Unbind() = 0;
 		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
 		virtual UniformBuffer& GetUniform(const std::string name) = 0;
+
+		virtual void Set(const std::string name, uint32_t index, uint32_t value) = 0;
+		virtual void Set(const std::string name, uint32_t index, Ref<Texture2D>& value) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 
