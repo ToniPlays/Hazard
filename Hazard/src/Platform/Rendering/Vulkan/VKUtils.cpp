@@ -262,7 +262,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	bool VKUtils::IsDepth(ImageFormat format)
 	{
-		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F) 
+		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
 			return true;
 		return false;
 	}
@@ -281,6 +281,94 @@ namespace Hazard::Rendering::Vulkan {
 		case ImageFormat::DEPTH24STENCIL8: return VulkanContext::GetDevice()->GetDepthFormat();
 		}
 		return VK_FORMAT_UNDEFINED;
+	}
+
+	VkFilter VKUtils::GetSamplerFilter(const FilterMode& filter)
+	{
+		switch (filter) {
+		case FilterMode::Linear:		return VK_FILTER_LINEAR;
+		case FilterMode::LinearMip:		return VK_FILTER_LINEAR;
+		case FilterMode::Nearest:		return VK_FILTER_NEAREST;
+		case FilterMode::NearestMip:	return VK_FILTER_NEAREST;
+		}
+	}
+
+	VkSamplerAddressMode VKUtils::GetSamplerWrap(const ImageWrap& wrap)
+	{
+		switch (wrap) {
+		case ImageWrap::ClampBorder:	return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+		case ImageWrap::ClampEdge:		return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		case ImageWrap::Repeat:			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		case ImageWrap::RepeatMirror:	return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+		}
+	}
+
+	void VKUtils::SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
+		VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
+	{
+		VkImageMemoryBarrier memoryBarrier = {};
+		memoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		memoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		memoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		memoryBarrier.oldLayout = oldImageLayout;
+		memoryBarrier.newLayout = newImageLayout;
+		memoryBarrier.image = image;
+		memoryBarrier.subresourceRange = subresourceRange;
+
+		switch (oldImageLayout) {
+		case VK_IMAGE_LAYOUT_UNDEFINED:
+			memoryBarrier.srcAccessMask = 0;
+			break;
+		case VK_IMAGE_LAYOUT_PREINITIALIZED:
+			memoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR:
+			memoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+			memoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			memoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			memoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			memoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			break;
+		}
+		switch (newImageLayout)
+		{
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			memoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			memoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			memoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+			memoryBarrier.dstAccessMask = memoryBarrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			break;
+
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			if (memoryBarrier.srcAccessMask == 0)
+			{
+				memoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+			}
+			memoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			break;
+		default:
+			break;
+		}
+
+		vkCmdPipelineBarrier(cmdbuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &memoryBarrier);
+
 	}
 
 	void VKUtils::InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageSubresourceRange subresourceRange)

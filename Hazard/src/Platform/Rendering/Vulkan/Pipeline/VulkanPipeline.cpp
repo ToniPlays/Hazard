@@ -39,14 +39,16 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages = m_Shader->GetStageInfo();
 
+		std::vector<VkDescriptorSetLayout> descriptors;
+
 		auto& shaderData = m_Shader->GetShaderData();
 
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
-		if (m_Shader->CreateUniformDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-			__debugbreak();
-		}
+		//if (m_Shader->CreateUniformDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
+		//	__debugbreak();
+		//}
 		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};

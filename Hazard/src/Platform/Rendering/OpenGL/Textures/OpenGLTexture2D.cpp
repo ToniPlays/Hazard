@@ -4,8 +4,8 @@
 #include <hzrpch.h>
 #include "OpenGLTexture2D.h"
 #include "Hazard/File/File.h"
+#include "Hazard/Rendering/TextureFactory.h"
 
-#include <stb_image.h>
 #include <glad/glad.h>
 
 namespace Hazard::Rendering::OpenGL
@@ -54,29 +54,21 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLTexture2D::LoadFromFile(const std::string& path)
 	{
-		int channels;
-		std::string& file = File::GetFileAbsolutePath(path);
+		TextureHeader header = TextureFactory::LoadFromCacheIfExists(path, true);
 
-		stbi_set_flip_vertically_on_load(true);
-		
-		stbi_uc* data;
-		{
-			Timer timer;
-			data = stbi_load(file.c_str(), &m_Width, &m_Height, &channels, 0);
-			HZR_CORE_INFO("Loading Texture {0} took {1} ms", path, timer.ElapsedMillis());
-
-		}
-
-		if (!data) {
-			HZR_CORE_INFO("[OpenGLTexture2D]: Failed to load image data from {0}", file);
+		if (!header.IsValid()) {
+			HZR_CORE_INFO("[OpenGLTexture2D]: Failed to load image data from {0}", path);
 			return;
 		}
 
-		m_DataFormat = (channels == 4) * GL_RGBA + (channels == 3) * GL_RGB;
-		m_InternalFormat = (channels == 4) * GL_RGBA8 + (channels == 3) * GL_RGB8;
+		m_Width = header.Width;
+		m_Height = header.Height;
+
+		m_DataFormat = (header.Channels == 4) * GL_RGBA + (header.Channels == 3) * GL_RGB;
+		m_InternalFormat = (header.Channels == 4) * GL_RGBA8 + (header.Channels == 3) * GL_RGB8;
 
 		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, header.Data);
 
 		HZR_CORE_INFO("Loaded OpenGL texture from {0}", path);
 	}

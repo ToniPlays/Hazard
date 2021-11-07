@@ -22,7 +22,7 @@ namespace Hazard {
 	{
 		return std::filesystem::exists(path);
 	}
-	bool File::DirectoryExists(const std::string& dir)
+	bool File::DirectoryExists(const std::filesystem::path& dir)
 	{
 		return std::filesystem::exists(dir);
 	}
@@ -39,6 +39,19 @@ namespace Hazard {
 
 		if (out.is_open()) {
 			out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+			out.flush();
+			out.close();
+			return true;
+		}
+		return false;
+	}
+	bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t size)
+	{
+		HZR_CORE_INFO("Writing file: {0}", path.string());
+		std::ofstream out(path, std::ios::out | std::ios::binary);
+
+		if (out.is_open()) {
+			out.write((char*)data, size);
 			out.flush();
 			out.close();
 			return true;
@@ -89,6 +102,28 @@ namespace Hazard {
 		std::vector<char> buffer(size);
 		if (!stream.read((char*)buffer.data(), buffer.size()))
 			HZR_CORE_ERROR("Cannot read file: {0}", path);
+		return buffer;
+	}
+	uint32_t* File::ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize)
+	{
+		std::ifstream stream(path, std::ios::binary | std::ios::ate);
+
+		if (!stream.is_open())
+			return false;
+
+		stream.seekg(0, std::ios::end);
+		auto size = stream.tellg();
+		stream.seekg(0, std::ios::beg);
+
+		if (size == 0)
+			return nullptr;
+
+		uint32_t* buffer = new uint32_t[size];
+
+		if (!stream.read((char*)buffer, size)) {
+			HZR_CORE_ERROR("Cannot read file: {0}", path.string());
+		}
+
 		return buffer;
 	}
 	bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer)
@@ -143,7 +178,7 @@ namespace Hazard {
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of('.') + 1);
 	}
-	bool File::CreateDir(const std::string& dir)
+	bool File::CreateDir(const std::filesystem::path& dir)
 	{
 		return std::filesystem::create_directories(dir);
 	}

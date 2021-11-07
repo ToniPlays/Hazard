@@ -33,4 +33,18 @@ namespace Hazard {
 		else sprintf_s(buffer, "%.02f bytes", (float)bytes);
 		return std::string(buffer);
 	}
+	std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replace)
+	{
+		if (find.empty())
+			return value;
+
+		std::string result = value;
+
+		size_t start_pos = 0;
+		while ((start_pos = value.find(find, start_pos)) != std::string::npos) {
+			result.replace(start_pos, find.length(), replace);
+			start_pos += replace.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+		}
+		return result;
+	}
 }

@@ -20,7 +20,7 @@ namespace Hazard::Rendering::Vulkan
 
 		UniformBuffer& GetUniform(const std::string name) override { return *m_UniformBuffers[name]; };
 
-		VkResult CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout);
+		VkResult CreateDescriptorLayout(VkDescriptorSetLayout* layout);
 		std::unordered_map<std::string, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
 
 		VkVertexInputBindingDescription GetBindingDescriptions();
@@ -45,6 +45,7 @@ namespace Hazard::Rendering::Vulkan
 		std::unordered_map<VkShaderStageFlagBits, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
 
+		std::unordered_map<std::string, VkWriteDescriptorSet> m_WriteDescriptors;
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};
 }

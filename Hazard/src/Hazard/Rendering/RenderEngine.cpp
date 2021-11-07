@@ -52,9 +52,11 @@ namespace Hazard::Rendering
 	void RenderEngine::Render()
 	{
 		RenderPassData data = {};
-		data.ViewProjection = m_ViewProjection * data.Transform;
+
 		float sin = (1 + Math::Sin(Time::s_Time) * 0.5f);
 		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 4.0f }));
+
+		data.ViewProjection = m_ViewProjection * data.Transform;
 
 		m_Renderer2D->Render(data);
 	}
@@ -69,6 +71,7 @@ namespace Hazard::Rendering
 	}
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0) return false;
 		constexpr float size = 2.0f;
 		float aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		float scalar = aspectRatio * size;

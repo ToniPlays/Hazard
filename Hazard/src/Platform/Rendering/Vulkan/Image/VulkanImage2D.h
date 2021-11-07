@@ -29,11 +29,13 @@ namespace Hazard::Rendering::Vulkan
 		uint32_t GetWidth() { return m_Width; };
 		uint32_t GetHeight() { return m_Height; };
 		float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
+		ImageFormat GetFormat() const { return m_Info.Format; };
 
 		Buffer GetBuffer() const { return m_Buffer; };
 		Buffer& GetBuffer() { return m_Buffer; };
 		
-		VkImageView GetImageView() { return m_Info.ImageView; }
+		VulkanImageInfo GetImageInfo() { return m_Info; }
+		const VkDescriptorImageInfo& GetDescriptor() { return m_DescriptorImageInfo; }
 
 		void* GetID() const override { return (void*)m_ID; }
 

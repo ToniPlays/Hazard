@@ -109,28 +109,9 @@ namespace Hazard::Rendering::Vulkan
 		HZR_CORE_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
-	VkResult VulkanShader::CreateUniformDescriptorLayout(VkDescriptorSetLayout* layout)
+	VkResult VulkanShader::CreateDescriptorLayout(VkDescriptorSetLayout* layout)
 	{
-		auto device = VulkanContext::GetDevice()->GetDevice();
-		std::vector<VkDescriptorSetLayoutBinding> bindings(m_UniformBuffers.size());
-
-		uint32_t i = 0;
-		for (auto& uniform : m_ShaderData.UniformsDescriptions)
-		{
-			bindings[i].binding = uniform.Binding;
-			bindings[i].descriptorCount = 1;
-			bindings[i].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			bindings[i].pImmutableSamplers = nullptr;
-			bindings[i].stageFlags = VKUtils::ShaderUsageToVulkanUsage(uniform.ShaderUsage);
-			i++;
-		}
-
-		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
-		layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		layoutInfo.bindingCount = i;
-		layoutInfo.pBindings = bindings.data();
-
-		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout);
+		return VkResult();
 	}
 	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
 	{
@@ -202,7 +183,9 @@ namespace Hazard::Rendering::Vulkan
 
 			if (File::Exists(cachedFilePath)) {
 				if (!File::IsNewerThan(shaderFilePath, cachedFilePath)) {
+					Timer timer;
 					File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[vkStage]);
+					HZR_CORE_INFO("Reading VulkanShader binaries took {0} ms", timer.ElapsedMillis());
 					continue;
 				}
 			}

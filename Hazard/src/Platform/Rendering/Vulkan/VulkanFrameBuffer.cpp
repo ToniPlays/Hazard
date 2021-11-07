@@ -271,11 +271,11 @@ namespace Hazard::Rendering::Vulkan
 		for (uint32_t i = 0; i < m_AttachmentImages.size(); i++)
 		{
 			Ref<VulkanImage2D> image = m_AttachmentImages[i].As<VulkanImage2D>();
-			attachments[i] = image->GetImageView();
+			attachments[i] = image->GetImageInfo().ImageView;
 		}
 		if (m_DepthAttachment)
 		{
-			attachments.emplace_back(m_DepthAttachment->GetImageView());
+			attachments.emplace_back(m_DepthAttachment->GetImageInfo().ImageView);
 		}
 
 		VkFramebufferCreateInfo framebufferCreateInfo = {};

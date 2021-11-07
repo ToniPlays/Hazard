@@ -41,11 +41,18 @@ namespace Hazard::Rendering
 		uint32_t MemberCount;
 		uint32_t ShaderUsage = 0;
 	};
+	struct ShaderSampledImage {
+		std::string Name;
+		uint32_t Binding;
+		uint32_t Dimension;
+		uint32_t ArraySize;
+	};
 
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
+		std::unordered_map<uint32_t, ShaderSampledImage> SampledImages;
 		uint32_t Stride = 0;
 	};
 
@@ -127,6 +134,15 @@ namespace Hazard::Rendering
 					HZR_CORE_TRACE("        Location = {0}", output.Location);
 					HZR_CORE_TRACE("        Type = {0}", ShaderDataTypeToString(output.Type));
 					HZR_CORE_TRACE("        Size = {0}", output.Size);
+				}
+				HZR_CORE_TRACE("    Sampled Images: ");
+				for (uint32_t i = 0; i < stage.SampledImages.size(); i++)
+				{
+					auto& sampledImage = stage.SampledImages.at(i);
+					HZR_CORE_TRACE("      {0}", sampledImage.Name);
+					HZR_CORE_TRACE("        Binding = {0}", sampledImage.Binding);
+					HZR_CORE_TRACE("        Dimension = {0}", sampledImage.Dimension);
+					HZR_CORE_TRACE("        ArraySize = {0}", sampledImage.ArraySize);
 				}
 			}
 			HZR_CORE_TRACE("    Unforms: ");

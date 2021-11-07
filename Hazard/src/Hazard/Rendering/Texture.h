@@ -7,6 +7,7 @@ namespace Hazard::Rendering
 {
 	struct Texture2DCreateInfo
 	{
+		//Relative to "res" folder
 		std::filesystem::path FilePath;
 		uint32_t Width = 0;
 		uint32_t Height = 0;

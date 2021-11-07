@@ -76,5 +76,6 @@ void main()
 		case 30: 	 textureColor = texture(u_Textures[30], f_TextureCoords); break;
 		case 31: 	 textureColor = texture(u_Textures[31], f_TextureCoords); break;
 	}
+	
 	color = textureColor * f_Color;
 }

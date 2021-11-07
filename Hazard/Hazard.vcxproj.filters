@@ -1761,6 +1761,8 @@
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture.h" />
+    <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -2021,5 +2023,7 @@
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp" />
+    <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
   </ItemGroup>
 </Project>

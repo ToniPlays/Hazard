@@ -47,6 +47,13 @@ namespace Hazard::Rendering::Vulkan {
 		static VkShaderStageFlags ShaderUsageToVulkanUsage(uint32_t usage);
 		static bool IsDepth(ImageFormat format);
 		static VkFormat GetImageFormat(ImageFormat format);
+		static VkFilter GetSamplerFilter(const FilterMode& filter);
+		static VkSamplerAddressMode GetSamplerWrap(const ImageWrap& wrap);
+
+
+		static void SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout,
+			VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
 		static void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer,
 			VkImage image,

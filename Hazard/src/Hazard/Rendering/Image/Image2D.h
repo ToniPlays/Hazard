@@ -19,6 +19,8 @@ namespace Hazard::Rendering
 	public:
 		virtual ~Image2D() = default;
 
+		virtual ImageFormat GetFormat() const = 0;
+
 		static Ref<Image2D> Create(Image2DCreateInfo* info);
 	};
 }

@@ -39,6 +39,24 @@ namespace Hazard::Rendering
 			offset += 4;
 		}
 
+		uint32_t data = 0xFFFFFFFF;
+		TextureFilter filter = { FilterMode::Nearest, FilterMode::Nearest };
+
+		Texture2DCreateInfo whiteTextureInfo = {};
+		whiteTextureInfo.Width = 1;
+		whiteTextureInfo.Height = 1;
+		whiteTextureInfo.Data = &data;
+		whiteTextureInfo.Usage = ImageUsage::Texture;
+		whiteTextureInfo.Filter = &filter;
+		whiteTextureInfo.Format = ImageFormat::RGBA;
+
+		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
+
+		Texture2DCreateInfo starfield = {};
+		starfield.FilePath = "textures/8k_wallpaper.png";
+		starfield.Usage = ImageUsage::Texture;
+		starfield.Filter = &filter;
+
 		VertexBufferCreateInfo vertexInfo = {};
 		vertexInfo.Size = m_Data.MaxVertices;
 		vertexInfo.Usage = BufferUsage::DynamicDraw;
@@ -74,26 +92,7 @@ namespace Hazard::Rendering
 
 		m_Pipeline = Pipeline::Create(pipelineSpecs);
 
-		uint32_t data = 0xFFFFFFFF;
-
-		TextureFilter filter = { FilterMode::Nearest, FilterMode::Nearest };
-
-		Texture2DCreateInfo whiteTextureInfo = {};
-		whiteTextureInfo.Width = 1;
-		whiteTextureInfo.Height = 1;
-		whiteTextureInfo.Data = &data;
-		whiteTextureInfo.Usage = ImageUsage::Texture;
-		whiteTextureInfo.Filter = &filter;
-		whiteTextureInfo.Format = ImageFormat::RGBA;
-
-		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 		m_Data.TextureSlots[0] = m_WhiteTexture;
-
-		Texture2DCreateInfo starfield = {};
-		starfield.FilePath = "res/textures/checker.png";
-		starfield.Usage = ImageUsage::Texture;
-		starfield.Filter = &filter;
-
 		m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
 
 		Ref<Shader> shader = m_Pipeline->GetShader();
@@ -122,11 +121,11 @@ namespace Hazard::Rendering
 
 		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 
-		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, -1.0f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
-		Submit({ tempMat, "#ED1414", 1.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, 0.0f }, { 12.8f, 7.2f, 1.0f });
+		Submit({ tempMat, "#FFFFFF", 1.0f });
 
 		Flush();
 	}
