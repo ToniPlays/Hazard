@@ -78,7 +78,7 @@ namespace Hazard::Rendering
 		float scalar = aspectRatio * size;
 
 		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1000.0f, 1000.0f);
-		m_ViewProjection = glm::perspective(glm::radians(70.0f), aspectRatio, 0.003f, 1000.0f);
+		m_ViewProjection = glm::perspective(glm::radians(80.0f), aspectRatio, 0.003f, 1000.0f);
 		return true;
 	}
 }

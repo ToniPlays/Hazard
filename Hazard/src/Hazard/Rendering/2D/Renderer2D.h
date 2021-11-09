@@ -4,6 +4,7 @@
 #include "../Pipeline/Pipeline.h"
 #include "../Image/Image2D.h"
 #include "../RenderCommandBuffer.h"
+#include "../Batch.h"
 
 
 namespace Hazard::Rendering 
@@ -31,14 +32,9 @@ namespace Hazard::Rendering
 		size_t MaxQuadCount;
 		size_t MaxVertices;
 		size_t MaxIndices;
-		size_t QuadIndexCount;
 		uint32_t Samplers;
 		std::vector<Ref<Texture2D>> TextureSlots;
-
 		uint32_t TextureIndex = 0;
-		Vertex2D* BufferBase;
-		Vertex2D* BufferPtr;
-
 		glm::vec4 QuadVertexPos[4];
 	};
 
@@ -57,6 +53,8 @@ namespace Hazard::Rendering
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
+
+		Batch<Vertex2D> m_QuadBatch;
 		
 		Ref<Texture2D> m_WhiteTexture;
 

@@ -15,10 +15,9 @@ namespace Hazard::Rendering
 		m_Data.MaxIndices = info->MaxQuadCount * 6;
 		m_Data.Samplers = info->SamplerCount;
 
-		m_Data.TextureSlots.resize(info->SamplerCount);
+		HZR_CORE_INFO("Quad batch size {0}", m_QuadBatch.GetSize());
 
-		m_Data.BufferBase = new Vertex2D[m_Data.MaxVertices];
-		m_Data.BufferPtr = m_Data.BufferBase;
+		m_Data.TextureSlots.resize(info->SamplerCount);
 
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
 		uint32_t offset = 0;
@@ -39,72 +38,75 @@ namespace Hazard::Rendering
 
 			offset += 4;
 		}
+		{
+			uint32_t data = 0xFFFFFFFF;
+			TextureFilter filter = { FilterMode::Nearest, FilterMode::Nearest };
 
-		uint32_t data = 0xFFFFFFFF;
-		TextureFilter filter = { FilterMode::Nearest, FilterMode::Nearest };
+			Texture2DCreateInfo whiteTextureInfo = {};
+			whiteTextureInfo.Width = 1;
+			whiteTextureInfo.Height = 1;
+			whiteTextureInfo.Data = &data;
+			whiteTextureInfo.Usage = ImageUsage::Texture;
+			whiteTextureInfo.Filter = &filter;
+			whiteTextureInfo.Format = ImageFormat::RGBA;
 
-		Texture2DCreateInfo whiteTextureInfo = {};
-		whiteTextureInfo.Width = 1;
-		whiteTextureInfo.Height = 1;
-		whiteTextureInfo.Data = &data;
-		whiteTextureInfo.Usage = ImageUsage::Texture;
-		whiteTextureInfo.Filter = &filter;
-		whiteTextureInfo.Format = ImageFormat::RGBA;
+			m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 
-		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
+			Texture2DCreateInfo starfield = {};
+			starfield.FilePath = "textures/starfield_left.png";
+			starfield.Usage = ImageUsage::Texture;
+			starfield.Filter = &filter;
 
-		Texture2DCreateInfo starfield = {};
-		starfield.FilePath = "textures/starfield_left.png";
-		starfield.Usage = ImageUsage::Texture;
-		starfield.Filter = &filter;
+			VertexBufferCreateInfo vertexInfo = {};
+			vertexInfo.Size = m_Data.MaxVertices;
+			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
-		VertexBufferCreateInfo vertexInfo = {};
-		vertexInfo.Size = m_Data.MaxVertices;
-		vertexInfo.Usage = BufferUsage::DynamicDraw;
+			IndexBufferCreateInfo indexBuffer = {};
+			indexBuffer.Data = indices;
+			indexBuffer.Size = m_Data.MaxIndices;
+			indexBuffer.Usage = BufferUsage::StaticDraw;
 
-		IndexBufferCreateInfo indexBuffer = {};
-		indexBuffer.Data = indices;
-		indexBuffer.Size = m_Data.MaxIndices;
-		indexBuffer.Usage = BufferUsage::StaticDraw;
+			std::vector<FrameBufferAttachment> attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
 
-		std::vector<FrameBufferAttachment> attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
+			FrameBufferCreateInfo frameBufferInfo = {};
+			frameBufferInfo.SwapChainTarget = true;
+			frameBufferInfo.Attachments = attachments;
+			frameBufferInfo.AttachmentCount = 2;
+			frameBufferInfo.Samples = 1;
+			frameBufferInfo.ClearColor = { 0.1f, 0.5f, 0.5f, 1.0f };
+			frameBufferInfo.DebugName = "Renderer2D FrameBuffer";
 
-		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.SwapChainTarget = true;
-		frameBufferInfo.Attachments = attachments;
-		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Samples = 1;
-		frameBufferInfo.ClearColor = { 0.1f, 0.5f, 0.5f, 1.0f };
-		frameBufferInfo.DebugName = "Renderer2D FrameBuffer";
+			Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
 
-		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+			RenderPassCreateInfo renderPassInfo = {};
+			renderPassInfo.DebugName = "Renderer2D";
+			renderPassInfo.pTargetFrameBuffer = frameBuffer;
+			Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
 
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "Renderer2D";
-		renderPassInfo.pTargetFrameBuffer = frameBuffer;
-		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
+			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
+			pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
+			pipelineSpecs.pVertexBuffer = &vertexInfo;
+			pipelineSpecs.pIndexBuffer = &indexBuffer;
+			pipelineSpecs.RenderPass = std::move(renderPass);
 
-		PipelineSpecification pipelineSpecs = {};
-		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
-		pipelineSpecs.pVertexBuffer = &vertexInfo;
-		pipelineSpecs.pIndexBuffer = &indexBuffer;
-		pipelineSpecs.RenderPass = std::move(renderPass);
+			m_Pipeline = Pipeline::Create(pipelineSpecs);
+			m_Data.TextureSlots[0] = m_WhiteTexture;
 
-		m_Pipeline = Pipeline::Create(pipelineSpecs);
-		m_Data.TextureSlots[0] = m_WhiteTexture;
+			Ref<Shader> shader = m_Pipeline->GetShader();
+			shader->Bind();
 
-		Ref<Shader> shader = m_Pipeline->GetShader();
-		shader->Bind();
+			for (uint32_t i = 0; i < m_Data.Samplers; i++) {
+				m_Data.TextureSlots[i] = m_WhiteTexture;
+			}
+			m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
 
-		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
-			m_Data.TextureSlots[i] = m_WhiteTexture;
+			for (uint32_t i = 0; i < m_Data.Samplers; i++) {
+				shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
+			}
 		}
-		m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
 
-		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
-			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
-		}
+		m_QuadBatch = Batch<Vertex2D>(info->MaxQuadCount);
 
 		delete[] indices;
 	}
@@ -135,20 +137,22 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
-		if (m_Data.QuadIndexCount >= m_Data.MaxIndices)
+		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices)
 		{
 			Flush();
 			BeginBatch();
 		}
 		for (uint8_t i = 0; i < quadVertexCount; i++)
 		{
-			m_Data.BufferPtr->Position = quad.Transform * m_Data.QuadVertexPos[i];
-			m_Data.BufferPtr->Color = quad.Color;
-			m_Data.BufferPtr->TextureCoords = textureCoords[i];
-			m_Data.BufferPtr->TextureIndex = quad.TextureIndex;
-			m_Data.BufferPtr++;
+			Vertex2D vertex = {};
+			vertex.Position = quad.Transform * m_Data.QuadVertexPos[i];
+			vertex.Color = quad.Color;
+			vertex.TextureCoords = textureCoords[i];
+			vertex.TextureIndex = quad.TextureIndex;
+
+			m_QuadBatch.Push(vertex);
 		}
-		m_Data.QuadIndexCount += 6;
+		m_QuadBatch.AddIndices(6);
 	}
 	void Renderer2D::BeginWorld()
 	{
@@ -161,13 +165,12 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginBatch()
 	{
-		m_Data.QuadIndexCount = 0;
-		m_Data.BufferPtr = m_Data.BufferBase;
 		m_Data.TextureIndex = 2.0f;
+		m_QuadBatch.Reset();
 	}
 	void Renderer2D::Flush()
 	{
-		if (m_Data.QuadIndexCount == 0)
+		if (!m_QuadBatch)
 			return;
 
 		m_Pipeline->Bind();
@@ -176,9 +179,8 @@ namespace Hazard::Rendering
 			m_Data.TextureSlots[i]->Bind(i);
 		}
 
-		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.BufferPtr - (uint8_t*)m_Data.BufferBase);
-		m_Pipeline->GetBuffer()->SetData(m_Data.BufferBase, dataSize);
-		m_Pipeline->Draw(m_Data.QuadIndexCount);
+		m_Pipeline->GetBuffer()->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+		m_Pipeline->Draw(m_QuadBatch.GetIndexCount());
 
 		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
 		m_RenderCommandBuffer->End();
