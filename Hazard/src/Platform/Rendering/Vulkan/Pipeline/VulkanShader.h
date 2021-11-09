@@ -15,10 +15,10 @@ namespace Hazard::Rendering::Vulkan
 		void Bind() override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
-		void Set(const std::string name, uint32_t index, uint32_t value) override {};
-		void Set(const std::string name, uint32_t index, Ref<Texture2D>& value) override {};
+		void Set(const std::string& name, uint32_t index, uint32_t value) override {};
+		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
 
-		UniformBuffer& GetUniform(const std::string name) override { return *m_UniformBuffers[name]; };
+		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };
 
 		VkResult CreateDescriptorLayout(VkDescriptorSetLayout* layout);
 		std::unordered_map<std::string, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
@@ -42,11 +42,10 @@ namespace Hazard::Rendering::Vulkan
 		std::string m_Path;
 		ShaderData m_ShaderData;
 		VkDescriptorSet m_DescriptorSet;
-		std::unordered_map<VkShaderStageFlagBits, std::vector<uint32_t>> m_ShaderCode;
+		std::unordered_map<ShaderType, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
 
 		std::unordered_map<std::string, VkWriteDescriptorSet> m_WriteDescriptors;
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};
 }
-

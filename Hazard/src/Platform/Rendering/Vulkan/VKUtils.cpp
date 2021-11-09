@@ -132,65 +132,6 @@ namespace Hazard::Rendering::Vulkan {
 
 		return actualExtent;
 	}
-
-	VkFormat VKUtils::FindSupportedFormat(VkPhysicalDevice device, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
-	{
-		for (VkFormat format : candidates) {
-			VkFormatProperties props;
-			vkGetPhysicalDeviceFormatProperties(device, format, &props);
-
-			if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
-				return format;
-			}
-			else if (
-				tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
-				return format;
-			}
-		}
-		HZR_THROW("Failed to find suported VkFormat!");
-	}
-
-	VkAttachmentDescription VKUtils::CreateAttachmentDescription(FrameBufferAttachment& attachment)
-	{
-		VkAttachmentDescription description;
-		description.flags = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-		description.format = GetFormat(attachment.Format);
-		description.samples = VK_SAMPLE_COUNT_1_BIT;
-		description.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		description.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-		description.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		description.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-
-		description.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		description.finalLayout = !attachment.IsDepth() ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-		return description;
-	}
-
-	std::vector<VkAttachmentReference> VKUtils::CreateColorRefs(std::vector<FrameBufferAttachment>& attachments)
-	{
-		uint32_t count = 0;
-		std::vector<VkAttachmentReference> refs;
-
-		for (auto& attachment : attachments) {
-			if (attachment.IsDepth()) continue;
-			refs.push_back({ count, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
-		}
-		return refs;
-	}
-
-	std::vector<VkAttachmentReference> VKUtils::CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex)
-	{
-		uint32_t count = startIndex;
-		std::vector<VkAttachmentReference> refs;
-
-		for (auto& attachment : attachments) {
-			if (!attachment.IsDepth()) continue;
-			refs.push_back({ count, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL });
-		}
-		return refs;
-	}
-
 	VkFormat VKUtils::GetFormat(ImageFormat format)
 	{
 		switch (format)
@@ -225,17 +166,6 @@ namespace Hazard::Rendering::Vulkan {
 		case ShaderDataType::Bool:     return VK_FORMAT_R8_UINT;
 		}
 		return VK_FORMAT_UNDEFINED;
-	}
-
-	VkShaderStageFlagBits VKUtils::ShaderTypeToVulkanStage(ShaderType type)
-	{
-		switch (type)
-		{
-		case Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
-		case Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
-		case Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
-		case Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
-		}
 	}
 
 	ShaderType VKUtils::ShaderTypeFromVulkanStage(VkShaderStageFlagBits type)
@@ -274,6 +204,7 @@ namespace Hazard::Rendering::Vulkan {
 		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
 		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
 		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGB:			   return VK_FORMAT_R32G32B32A32_SFLOAT;
 		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
 		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
 		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;

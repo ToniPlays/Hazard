@@ -62,14 +62,14 @@ namespace WindowElement {
 
 		if (ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f")) 
 			modified = true;
-		ImGui::PopFont();
 
+		ImGui::PopFont();
 		return modified;
 	}
 	bool Input::Vec1(const char* label, float& value, float resetValue, float columnWidth)
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
 		bool modified = false;
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(columnWidth);
 		Layout::Text(label);
@@ -80,12 +80,12 @@ namespace WindowElement {
 
 		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
 		modified = Input::ResettableDragButton("X", value, resetValue, buttonSize, 1, 0);
-			
 
 		ImGui::PopStyleColor(3);
 		
 		Layout::EndTable();
 		ImGui::PopStyleVar();
+
 		return modified;
 	}
 	bool Input::Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth)
@@ -140,7 +140,7 @@ namespace WindowElement {
 	bool Input::Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
-		bool modified = true;
+		bool modified = false;
 		auto boldFont = ImGui::GetIO().Fonts->Fonts[1];
 
 		Layout::Table(2, false);

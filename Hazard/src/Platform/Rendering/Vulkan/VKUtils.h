@@ -35,13 +35,8 @@ namespace Hazard::Rendering::Vulkan {
 		static VkSurfaceFormatKHR ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format = VK_FORMAT_A8B8G8R8_USCALED_PACK32, VkColorSpaceKHR space = VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT);
 		static VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred = VK_PRESENT_MODE_IMMEDIATE_KHR, VkPresentModeKHR defaultMode = VK_PRESENT_MODE_FIFO_KHR);
 		static VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h);
-		static VkFormat FindSupportedFormat(VkPhysicalDevice device, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-		static VkAttachmentDescription CreateAttachmentDescription(FrameBufferAttachment& attachment);
-		static std::vector<VkAttachmentReference> CreateColorRefs(std::vector<FrameBufferAttachment>& attachments);
-		static std::vector<VkAttachmentReference> CreateDepthRefs(std::vector<FrameBufferAttachment>& attachments, uint32_t startIndex = 1);
 		static VkFormat GetFormat(ImageFormat format);
 		static VkFormat ShaderDataTypeToVkFormat(ShaderDataType type);
-		static VkShaderStageFlagBits ShaderTypeToVulkanStage(ShaderType type);
 		static ShaderType ShaderTypeFromVulkanStage(VkShaderStageFlagBits type);
 
 		static VkShaderStageFlags ShaderUsageToVulkanUsage(uint32_t usage);
@@ -49,7 +44,6 @@ namespace Hazard::Rendering::Vulkan {
 		static VkFormat GetImageFormat(ImageFormat format);
 		static VkFilter GetSamplerFilter(const FilterMode& filter);
 		static VkSamplerAddressMode GetSamplerWrap(const ImageWrap& wrap);
-
 
 		static void SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout,
 			VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,

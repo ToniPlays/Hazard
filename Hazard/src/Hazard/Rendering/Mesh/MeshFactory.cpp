@@ -5,7 +5,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "Hazard/File/File.h"
 
 namespace Hazard::Rendering {
 

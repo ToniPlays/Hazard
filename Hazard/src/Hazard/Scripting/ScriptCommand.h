@@ -8,7 +8,8 @@
 
 namespace Hazard::Scripting {
 
-	enum class Severity {
+	enum class Severity 
+	{
 		Debug,
 		Trace,
 		Info,
@@ -31,14 +32,17 @@ namespace Hazard::Scripting {
 		static void InitEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
 		static void ClearEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
 
-		static bool ModuleExists(ScriptType type, const char* name) { 
+		static bool ModuleExists(ScriptType type, const char* name) 
+		{ 
 			return s_manager->ModuleExists(type, name);
 		};
-		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) {
+		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) 
+		{
 			return s_manager->GetPublicFields(type, entity, moduleName);
 		}
 		template<typename T>
-		static T& EntityGetComponent(uint32_t entityID) {
+		static T& EntityGetComponent(uint32_t entityID) 
+		{
 			return ECS::WorldCommand::GetEntity(entityID).GetComponent<T>();
 		}
 		template<typename T>
@@ -47,7 +51,8 @@ namespace Hazard::Scripting {
 			return ECS::WorldCommand::GetEntity(entityID).HasComponent<T>();
 		}
 		template<typename T>
-		static void EntityAddComponent(uint32_t entityID) {
+		static void EntityAddComponent(uint32_t entityID) 
+		{
 			ECS::WorldCommand::GetEntity(entityID).AddComponent<T>();
 		}
 

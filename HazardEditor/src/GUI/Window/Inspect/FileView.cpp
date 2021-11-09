@@ -216,7 +216,6 @@ namespace WindowElement {
 	{
 		switch (metadata.Type)
 		{
-		case Hazard::AssetType::AudioClip:			return m_Images["folder"];
 		case Hazard::AssetType::World:				return m_Images["world"];
 		case Hazard::AssetType::Image: {
 			Ref<Rendering::Image2D> asset = AssetManager::GetAsset<Rendering::Image2D>(metadata.Handle);
@@ -225,8 +224,10 @@ namespace WindowElement {
 			}
 			return asset;
 		}
-		case Hazard::AssetType::EnvironmentMap:		return m_Images["folder"];
-		case Hazard::AssetType::PhysicsMaterial:	return m_Images["folder"];
+		case Hazard::AssetType::AudioClip:
+		case Hazard::AssetType::EnvironmentMap:
+		case Hazard::AssetType::PhysicsMaterial:	
+			return m_Images["folder"];
 		}
 		return m_Images["folder"];
 	}

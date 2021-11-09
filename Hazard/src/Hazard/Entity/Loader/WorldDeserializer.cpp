@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "WorldDeserializer.h"
-#include "Hazard/File/YamlUtils.h"
+#include "Hazard/Utils/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard::ECS::Loader

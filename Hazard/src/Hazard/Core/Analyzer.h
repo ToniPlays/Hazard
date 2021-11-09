@@ -18,8 +18,10 @@ namespace Hazard {
 		}
 		void AddSample(double value) 
 		{
-			if (value > m_Highest) m_Highest = value;
-			else if (value < m_Lowest) m_Lowest = value;
+			if (value > m_Highest) 
+				m_Highest = value;
+			else if (value < m_Lowest) 
+				m_Lowest = value;
 
 			m_Count++;
 			m_Average += (value - m_Average) / m_Count;
@@ -29,11 +31,11 @@ namespace Hazard {
 		double Highest() { return m_Highest; }
 		double Lowers() { return m_Lowest; }
 	private:
-		double m_Average;
-		uint32_t m_Count;
-		double m_Total;
+		double m_Average = 0.0;
+		size_t m_Count = 0;
+		double m_Total = 0.0;
 
-		double m_Highest;
-		double m_Lowest;
+		double m_Highest = 0.0;
+		double m_Lowest = 0.0;
 	};
 }

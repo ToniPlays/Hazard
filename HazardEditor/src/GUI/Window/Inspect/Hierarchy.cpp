@@ -34,7 +34,7 @@ namespace WindowElement {
 		Style::SelectFont(1);
 
 		if (Input::Button("X", { 20, 20 })) {
-			searchValue = "";
+			searchValue.clear();
 		}
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
@@ -75,7 +75,7 @@ namespace WindowElement {
 
 		auto& tag = entity.GetComponent<TagComponent>();
 
-		if (searchValue != "" && strstr(tag.m_Tag.c_str(), searchValue.c_str()) == 0) {
+		if (!searchValue.empty() && strstr(tag.m_Tag.c_str(), searchValue.c_str()) == 0) {
 			return;
 		}
 

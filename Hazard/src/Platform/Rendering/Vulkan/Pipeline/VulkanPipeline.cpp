@@ -4,6 +4,7 @@
 #include "VulkanPipeline.h"
 #include "../VulkanContext.h"
 #include "Hazard/Rendering/2D/Renderer2D.h"
+#include "Hazard/Rendering/RenderCommand.h"
 
 namespace Hazard::Rendering::Vulkan
 {
@@ -17,9 +18,6 @@ namespace Hazard::Rendering::Vulkan
 		m_VertexBuffer = VertexBuffer::Create(specs.pVertexBuffer).As<VulkanVertexBuffer>();
 		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer).As<VulkanIndexBuffer>();
 
-		m_Specs.RenderPass = specs.RenderPass;
-		m_Specs.Usage = specs.Usage;
-
 		Invalidate();
 	}
 	VulkanPipeline::~VulkanPipeline()
@@ -29,26 +27,20 @@ namespace Hazard::Rendering::Vulkan
 		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
-
-		if (m_VertexBuffer) m_VertexBuffer.Reset();
-		if (m_IndexBuffer) m_IndexBuffer.Reset();
-		if (m_Shader) m_Shader.Reset();
 	}
 	void VulkanPipeline::Invalidate()
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages = m_Shader->GetStageInfo();
 
-		std::vector<VkDescriptorSetLayout> descriptors;
-
 		auto& shaderData = m_Shader->GetShaderData();
 
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
-		//if (m_Shader->CreateUniformDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-		//	__debugbreak();
-		//}
+		if (m_Shader->CreateDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
+			__debugbreak();
+		}
 		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
@@ -73,19 +65,17 @@ namespace Hazard::Rendering::Vulkan
 		inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
 
-		auto swapchain = VulkanContext::GetSwapchain();
-
 		VkViewport viewport = {};
-		viewport.width = (float)swapchain->GetWidth();
-		viewport.height = -(float)swapchain->GetHeight();
+		viewport.width = (float)1280;
+		viewport.height = -(float)720;
 		viewport.x = 0;
-		viewport.y = (float)swapchain->GetHeight();
+		viewport.y = 720.0f;
 		viewport.minDepth = (float)0.0f;
 		viewport.maxDepth = (float)1.0f;
 
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
-		scissor.extent = { swapchain->GetWidth(), swapchain->GetHeight() };
+		scissor.extent = { 1280, 720 };
 
 		VkPipelineViewportStateCreateInfo viewportState = {};
 		viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -104,6 +94,7 @@ namespace Hazard::Rendering::Vulkan
 		VkPipelineRasterizationStateCreateInfo rasterizer{};
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizer.depthClampEnable = VK_FALSE;
+		rasterizer.depthBiasSlopeFactor = -1.0f;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizer.lineWidth = 1.0f;
@@ -173,22 +164,19 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind()
 	{
-		auto commandBuffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
+		RenderCommand::Submit([=]() {
+			auto cmdBuffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 
-		m_Shader->Bind();
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
+			VkBuffer vertexBuffer = m_VertexBuffer->GetVulkanBuffer();
+			VkDeviceSize offsets[1] = { 0 };
 
-		VkBuffer vertexBuffer = m_VertexBuffer->GetVulkanBuffer();
-		VkDeviceSize offsets[1] = { 0 };
-
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
+			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+			vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vertexBuffer, offsets);
+			vkCmdBindIndexBuffer(cmdBuffer, m_IndexBuffer->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
+		});
 	}
-	void VulkanPipeline::Draw(uint32_t count) 
+	void VulkanPipeline::Draw(uint32_t size) 
 	{
 		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
 		vkCmdDrawIndexed(buffer, 24, 1, 0, 0, 0);

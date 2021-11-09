@@ -3,7 +3,6 @@
 
 #include <hzrpch.h>
 #include "OpenGLTexture2D.h"
-#include "Hazard/File/File.h"
 #include "Hazard/Rendering/TextureFactory.h"
 
 #include <glad/glad.h>
@@ -68,8 +67,7 @@ namespace Hazard::Rendering::OpenGL
 		m_InternalFormat = (header.Channels == 4) * GL_RGBA8 + (header.Channels == 3) * GL_RGB8;
 
 		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, header.Data);
-
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, header.ImageData.Data);
 		HZR_CORE_INFO("Loaded OpenGL texture from {0}", path);
 	}
 	void OpenGLTexture2D::LoadFromData(const void* data, uint32_t width, uint32_t height)

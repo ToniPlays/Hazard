@@ -10,7 +10,7 @@ namespace Hazard::Rendering
 		uint32_t Height = 0;
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
-		ImageFormat Format;
+		ImageFormat Format = ImageFormat::None;
 		void* Data = nullptr;
 	};
 

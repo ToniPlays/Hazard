@@ -1,6 +1,6 @@
 #pragma once
+#include "Hazard/Core/Buffer.h"
 #include "Hazard/Assets/Asset.h"
-#include "../Pipeline/Buffers.h"
 
 namespace Hazard::Rendering 
 {

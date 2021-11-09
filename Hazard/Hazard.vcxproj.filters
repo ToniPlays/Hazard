@@ -285,15 +285,6 @@
     <ClInclude Include="src\Hazard\Events\MouseEvent.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\File\File.h">
-      <Filter>src\Hazard\File</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\File\StringUtil.h">
-      <Filter>src\Hazard\File</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\File\YamlUtils.h">
-      <Filter>src\Hazard\File</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
@@ -1763,6 +1754,17 @@
     <ClInclude Include="src\Hazard\Rendering\Texture.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.h" />
     <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
+    <ClInclude Include="src\Hazard\Core\Buffer.h" />
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLUtils.h" />
+    <ClInclude Include="src\Hazard\Utils\File.h">
+      <Filter>src\Hazard\File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\StringUtil.h">
+      <Filter>src\Hazard\File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Utils\YamlUtils.h">
+      <Filter>src\Hazard\File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1824,15 +1826,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\WorldHandler.cpp">
       <Filter>src\Hazard\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\File\File.cpp">
-      <Filter>src\Hazard\File</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\File\StringUtil.cpp">
-      <Filter>src\Hazard\File</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\File\YamlUtils.cpp">
-      <Filter>src\Hazard\File</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
@@ -2025,5 +2018,14 @@
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.cpp" />
     <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
+    <ClCompile Include="src\Hazard\Utils\File.cpp">
+      <Filter>src\Hazard\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\StringUtil.cpp">
+      <Filter>src\Hazard\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Utils\YamlUtils.cpp">
+      <Filter>src\Hazard\File</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

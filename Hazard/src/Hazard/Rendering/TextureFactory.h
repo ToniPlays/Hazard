@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "Hazard/Core/Buffer.h"
+#include "Hazard/Rendering/Pipeline/Buffers.h"
 
 namespace Hazard::Rendering 
 {
@@ -9,9 +11,9 @@ namespace Hazard::Rendering
 		uint32_t Width, Height;
 		uint32_t Channels;
 		uint32_t DataSize;
-		void* Data;
+		Buffer ImageData;
 
-		bool IsValid() { return Data && DataSize != 0; }
+		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
 	};
 	
 

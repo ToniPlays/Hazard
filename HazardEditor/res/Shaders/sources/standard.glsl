@@ -10,7 +10,7 @@ layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec2 f_TextureCoords;
 layout(location = 2) out float f_TextureIndex;
 
-layout(std140, binding = 1) uniform Camera {
+layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
 	uniform mat4 u_Transform;
 } u_Camera;
@@ -32,7 +32,7 @@ layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec2 f_TextureCoords;
 layout(location = 2) in flat float f_TextureIndex;
 
-layout (binding = 0) uniform sampler2D u_Textures[32];
+layout (binding = 1) uniform sampler2D u_Textures[32];
 
 layout(location = 0) out vec4 color;
 
@@ -41,18 +41,18 @@ void main()
 	int index = int(f_TextureIndex);
 	
 	vec4 textureColor = vec4(1.0);
-
+	
 	switch(index) {
-		case  0: 	 textureColor = texture(u_Textures[0], f_TextureCoords);  break;
-		case  1: 	 textureColor = texture(u_Textures[1], f_TextureCoords);  break;
-		case  2: 	 textureColor = texture(u_Textures[2], f_TextureCoords);  break;
-		case  3: 	 textureColor = texture(u_Textures[3], f_TextureCoords);  break;
-		case  4: 	 textureColor = texture(u_Textures[4], f_TextureCoords);  break;
-		case  5: 	 textureColor = texture(u_Textures[5], f_TextureCoords);  break;
-		case  6: 	 textureColor = texture(u_Textures[6], f_TextureCoords);  break;
-		case  7: 	 textureColor = texture(u_Textures[7], f_TextureCoords);  break;
-		case  8: 	 textureColor = texture(u_Textures[8], f_TextureCoords);  break;
-		case  9: 	 textureColor = texture(u_Textures[9], f_TextureCoords);  break;
+		case  0: 	 textureColor = texture(u_Textures[ 0], f_TextureCoords);  break;
+		case  1: 	 textureColor = texture(u_Textures[ 1], f_TextureCoords);  break;
+		case  2: 	 textureColor = texture(u_Textures[ 2], f_TextureCoords);  break;
+		case  3: 	 textureColor = texture(u_Textures[ 3], f_TextureCoords);  break;
+		case  4: 	 textureColor = texture(u_Textures[ 4], f_TextureCoords);  break;
+		case  5: 	 textureColor = texture(u_Textures[ 5], f_TextureCoords);  break;
+		case  6: 	 textureColor = texture(u_Textures[ 6], f_TextureCoords);  break;
+		case  7: 	 textureColor = texture(u_Textures[ 7], f_TextureCoords);  break;
+		case  8: 	 textureColor = texture(u_Textures[ 8], f_TextureCoords);  break;
+		case  9: 	 textureColor = texture(u_Textures[ 9], f_TextureCoords);  break;
 		case 10: 	 textureColor = texture(u_Textures[10], f_TextureCoords); break;
 		case 11: 	 textureColor = texture(u_Textures[11], f_TextureCoords); break;
 		case 12: 	 textureColor = texture(u_Textures[12], f_TextureCoords); break;

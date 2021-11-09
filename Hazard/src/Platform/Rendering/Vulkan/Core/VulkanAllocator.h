@@ -16,7 +16,7 @@ namespace Hazard::Rendering::Vulkan
 	public:
 		VulkanAllocator() = default;
 		VulkanAllocator(const std::string& name);
-		~VulkanAllocator();
+		~VulkanAllocator() = default;
 
 		VmaAllocation AllocateBuffer(VkBufferCreateInfo bufferCreateInfo, VmaMemoryUsage usage, VkBuffer& outBuffer);
 		VmaAllocation AllocateImage(VkImageCreateInfo imageCreateInfo, VmaMemoryUsage usage, VkImage& outImage);

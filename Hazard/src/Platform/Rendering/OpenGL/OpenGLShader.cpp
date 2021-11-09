@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "OpenGLShader.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "OpenGLUtils.h"
 
 #include <glad/glad.h>
 #include <shaderc/shaderc.hpp>
@@ -11,71 +12,6 @@
 
 namespace Hazard::Rendering::OpenGL
 {
-	namespace GLUtils {
-
-		static GLenum ShaderTypeToGLType(ShaderType type) {
-			switch (type)
-			{
-			case Vertex:	return GL_VERTEX_SHADER;
-			case Fragment:	return GL_FRAGMENT_SHADER;
-			case Compute:	return GL_COMPUTE_SHADER;
-			case Geometry:	return GL_GEOMETRY_SHADER;
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown ShaderType {0}", Utils::ShaderTypeToString(type));
-			return 0;
-		}
-		static ShaderType ShaderTypeFromGLType(GLenum type) {
-			switch (type)
-			{
-			case GL_VERTEX_SHADER:		return Vertex;
-			case GL_FRAGMENT_SHADER:	return Fragment;
-			case GL_COMPUTE_SHADER:		return Compute;
-			case GL_GEOMETRY_SHADER:	return Geometry;
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown conversion from glType to ShaderType");
-			return ShaderType::Unknown;
-		}
-		static std::string GLTypeToString(GLenum type) {
-			switch (type)
-			{
-			case GL_VERTEX_SHADER:		return "Vertex";
-			case GL_FRAGMENT_SHADER:	return "Fragment";
-			case GL_COMPUTE_SHADER:		return "Compute";
-			case GL_GEOMETRY_SHADER:	return "Geometry";
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unknown conversion from GLenum to string");
-			return "";
-		}
-
-		static std::string GLShaderStageCachedVulkanExtension(ShaderType type) {
-			switch (type)
-			{
-			case Vertex:	return ".cached_vulkan.vert";
-			case Fragment:	return ".cached_vulkan.frag";
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown Vulkan cache filename for {0}", Utils::ShaderTypeToString(type));
-			return "";
-		}
-		static std::string GLShaderStageCachedOpenGLExtension(GLenum type) {
-			switch (type)
-			{
-			case GL_VERTEX_SHADER:		return ".cached_opengl.vert";
-			case GL_FRAGMENT_SHADER:	return ".cached_opengl.frag";
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown OpenGL cache filename for {0}", GLTypeToString(type));
-			return "";
-		}
-		static shaderc_shader_kind GLShaderStageToShaderC(GLenum stage) {
-			switch (stage)
-			{
-			case GL_VERTEX_SHADER:		return shaderc_glsl_vertex_shader;
-			case GL_FRAGMENT_SHADER:	return shaderc_glsl_fragment_shader;
-			}
-			HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown OpenGL type to ShaderC type");
-			return (shaderc_shader_kind)0;
-		}
-	}
-
 	OpenGLShader::OpenGLShader(const std::string& filePath) : m_FilePath(filePath)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -126,7 +62,7 @@ namespace Hazard::Rendering::OpenGL
 		HZR_CORE_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
-	void OpenGLShader::Set(const std::string name, uint32_t index, uint32_t value)
+	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
 	{
 		std::stringstream ss;
 		ss << name << "[" << index << "]";
@@ -134,9 +70,9 @@ namespace Hazard::Rendering::OpenGL
 		GLuint location = glGetUniformLocation(m_ID, ss.str().c_str());
 		glUniform1i(location, value);
 	}
-	void OpenGLShader::Set(const std::string name, uint32_t index, Ref<Texture2D>& value)
+	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
 	{
-		Set(name, index, value->GetID());
+		Set(name, index, index);
 	}
 	void OpenGLShader::Reflect()
 	{
@@ -152,20 +88,10 @@ namespace Hazard::Rendering::OpenGL
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
-			m_ShaderData.Stages[GLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
+			m_ShaderData.Stages[OpenGLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
 			
 			for (auto& resource : resources.uniform_buffers) 
 			{
-				bool found = false;
-				for (auto& uniform : m_ShaderData.UniformsDescriptions) {
-					if (uniform.Name == resource.name) {
-						uniform.ShaderUsage |= GLUtils::ShaderTypeFromGLType(stage);
-						found = true;
-						break;
-					}
-				}
-				if (found) continue;
-
 				auto& type = compiler.get_type(resource.base_type_id);
 
 				ShaderUniformBufferDescription desc = {};
@@ -173,20 +99,25 @@ namespace Hazard::Rendering::OpenGL
 				desc.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				desc.MemberCount = type.member_types.size();
 				desc.Size = compiler.get_declared_struct_size(type);
-				desc.ShaderUsage |= GLUtils::ShaderTypeFromGLType(stage);
+				desc.ShaderUsage |= OpenGLUtils::ShaderTypeFromGLType(stage);
 
-				m_ShaderData.UniformsDescriptions.push_back(desc);
+				auto it = m_UniformBuffers.find(desc.Name);
+				if (it != m_UniformBuffers.end()) 
+				{
+					auto& buffer = m_UniformBuffers[desc.Name];
+					HZR_CORE_ASSERT(desc.Binding == buffer->GetBinding() , "OpenGL UniformBuffer Binding missmatch for name: {0}", desc.Name);
+					continue;
+				}
+
+				m_ShaderData.UniformsDescriptions[desc.Binding] = desc;
+
+				UniformBufferCreateInfo bufferInfo = {};
+				bufferInfo.Name = desc.Name;
+				bufferInfo.Binding = desc.Binding;
+				bufferInfo.Size = desc.Size;
+
+				m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 			}
-		}
-
-		for (auto& uniformBuffer : m_ShaderData.UniformsDescriptions) 
-		{
-			UniformBufferCreateInfo bufferInfo = {};
-			bufferInfo.Name = uniformBuffer.Name;
-			bufferInfo.Binding = uniformBuffer.Binding;
-			bufferInfo.Size = uniformBuffer.Size;
-
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
 
 		Utils::PrintReflectResults(m_FilePath, m_ShaderData);
@@ -212,9 +143,9 @@ namespace Hazard::Rendering::OpenGL
 		for (auto&& [stage, source] : sources) {
 			HZR_PROFILE_FUNCTION("Shader stage");
 			std::filesystem::path shaderFilePath = m_FilePath;
-			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + GLUtils::GLShaderStageCachedVulkanExtension(stage));
+			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + OpenGLUtils::GLShaderStageCachedVulkanExtension(stage));
 
-			GLenum glType = GLUtils::ShaderTypeToGLType(stage);
+			GLenum glType = OpenGLUtils::ShaderTypeToGLType(stage);
 
 			if (File::Exists(cachedFilePath)) {
 				if (!File::IsNewerThan(shaderFilePath, cachedFilePath)) {
@@ -224,7 +155,7 @@ namespace Hazard::Rendering::OpenGL
 			}
 
 			HZR_CORE_INFO("[VulkanShader]: Reload, source modified");
-			shaderc::CompilationResult module = compiler.CompileGlslToSpv(source, GLUtils::GLShaderStageToShaderC(GLUtils::ShaderTypeToGLType(stage)), m_FilePath.c_str(), options);
+			shaderc::CompilationResult module = compiler.CompileGlslToSpv(source, OpenGLUtils::GLShaderStageToShaderC(OpenGLUtils::ShaderTypeToGLType(stage)), m_FilePath.c_str(), options);
 
 			if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
 				HZR_CORE_ERROR("Error {0} : {1}, using cached shader binary", Rendering::Utils::ShaderTypeToString(stage), module.GetErrorMessage());
@@ -245,6 +176,7 @@ namespace Hazard::Rendering::OpenGL
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderc_env_version_opengl_4_5);
+
 		if (false)
 			options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
@@ -256,7 +188,7 @@ namespace Hazard::Rendering::OpenGL
 		for (auto&& [stage, spirv] : m_VulkanSPIRV) {
 			HZR_PROFILE_FUNCTION("Shader stage");
 			std::filesystem::path shaderFilePath = m_FilePath;
-			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + GLUtils::GLShaderStageCachedOpenGLExtension(stage));
+			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + OpenGLUtils::GLShaderStageCachedOpenGLExtension(stage));
 
 			if (File::Exists(cachedFilePath)) {
 				if (!File::IsNewerThan(shaderFilePath, cachedFilePath) && !forceCompile) {
@@ -266,14 +198,15 @@ namespace Hazard::Rendering::OpenGL
 			}
 
 			spirv_cross::CompilerGLSL glslCompiler(spirv);
-			m_OpenGLSourceCode[stage] = glslCompiler.compile();
 
-			auto& source = m_OpenGLSourceCode[stage];
+			auto& source = glslCompiler.compile();
+			m_OpenGLSourceCode[stage] = source;
 
-			shaderc::CompilationResult module = compiler.CompileGlslToSpv(source, GLUtils::GLShaderStageToShaderC(stage), m_FilePath.c_str(), options);
-			if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-				HZR_CORE_ERROR("{0} : {1}", GLUtils::GLTypeToString(stage), module.GetErrorMessage());
-			}
+			shaderc::CompilationResult module = compiler.CompileGlslToSpv(source, OpenGLUtils::GLShaderStageToShaderC(stage), m_FilePath.c_str(), options);
+
+			if (module.GetCompilationStatus() != shaderc_compilation_status_success)
+				HZR_CORE_ERROR("{0} : {1}", OpenGLUtils::GLTypeToString(stage), module.GetErrorMessage());
+
 			shaderData[stage] = std::vector<uint32_t>(module.begin(), module.cend());
 			File::WriteBinaryFile(cachedFilePath, shaderData[stage]);
 		}
@@ -285,7 +218,8 @@ namespace Hazard::Rendering::OpenGL
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;
-		for (auto& [stage, spirv] : m_OpenGLSPIRV) {
+		for (auto& [stage, spirv] : m_OpenGLSPIRV) 
+		{
 			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(stage));
 			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
 			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);

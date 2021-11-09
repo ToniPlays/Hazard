@@ -10,7 +10,7 @@
 #include <sstream>
 
 #include "Logging/Logger.h"
-#include "Hazard/File/File.h"
+#include "Hazard/Utils/File.h"
 
 namespace Hazard {
 

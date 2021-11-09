@@ -61,7 +61,7 @@ namespace WindowElement {
 			Application::GetModule<ECS::WorldHandler>().LoadWorld(file);
 			});
 
-		m_Gizmos.OnRender(m_EditorCamera, ImGui::GetWindowSize());
+		m_Gizmos.RenderGizmo(m_EditorCamera, ImGui::GetWindowSize());
 
 		ImGui::PopStyleVar();
 

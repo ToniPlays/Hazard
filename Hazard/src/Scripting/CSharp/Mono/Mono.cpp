@@ -2,15 +2,15 @@
 #include <hzrpch.h>
 #include "Mono.h"
 
+#include "../ScriptUtils.h"
+#include "../ScriptRegistery.h"
+
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/object.h>
 
-#include "Hazard/File/File.h"
-#include "../ScriptUtils.h"
-#include "../ScriptRegistery.h"
 
 namespace Hazard::Scripting::CSharp {
 

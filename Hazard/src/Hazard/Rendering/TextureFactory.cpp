@@ -2,7 +2,6 @@
 
 #include <hzrpch.h>
 #include "TextureFactory.h"
-#include "Hazard/File/StringUtil.h"
 
 #include <stb_image.h>
 
@@ -35,11 +34,20 @@ namespace Hazard::Rendering
 		if (!File::DirectoryExists(cacheDir.parent_path()))
 			File::CreateDir(cacheDir.parent_path());
 		
-		uint32_t dataSize = sizeof(TextureHeader) + header.DataSize;
-		uint32_t* textureData = new uint32_t[dataSize];
+		uint32_t dataSize;
+		uint32_t* textureData;
+		if (header.Channels == 4) {
 
-		memcpy(textureData, &header, sizeof(TextureHeader));
-		memcpy(textureData + sizeof(TextureHeader), header.Data, header.DataSize);
+			dataSize = sizeof(TextureHeader) + header.ImageData.Size;
+			textureData = new uint32_t[dataSize];
+
+			memcpy(textureData, &header, sizeof(TextureHeader));
+			memcpy(textureData + sizeof(TextureHeader), header.ImageData.Data, header.ImageData.Size);
+		}
+		else 
+		{
+			return false;
+		}
 
 		return File::WriteBinaryFile(cacheDir, textureData, dataSize);
 	}
@@ -64,8 +72,9 @@ namespace Hazard::Rendering
 
 		TextureHeader header = {};
 		memcpy(&header, data, sizeof(TextureHeader));
-		header.Data = new uint32_t[header.DataSize];
-		memcpy(header.Data, data + sizeof(TextureHeader), header.DataSize * sizeof(uint32_t));
+
+		header.ImageData = Buffer::Copy(data, header.DataSize, sizeof(TextureHeader));
+
 		HZR_CORE_INFO("Texture {0} loaded from cache in {1} ms", path, timer.ElapsedMillis());
 		return header;
 	}
@@ -94,14 +103,15 @@ namespace Hazard::Rendering
 		{
 			Timer timer;
 			stbi_set_flip_vertically_on_load(verticalFlip);
-			header.Data = stbi_load(sourceFile.c_str(), &w, &h, &channels, 0);
+			void* data = stbi_load(sourceFile.c_str(), &w, &h, &channels, 4);
+			header.ImageData = Buffer(data, w * h * channels);
 			HZR_CORE_INFO("Texture \"{0}\" loaded from source in {1} ms", sourceFile, timer.ElapsedMillis());
 		}
 
-		header.DataSize = w * h * channels;
 		header.Width = w;
 		header.Height = h;
 		header.Channels = channels;
+		header.DataSize = w * h * channels;
 
 		return header;
 	}

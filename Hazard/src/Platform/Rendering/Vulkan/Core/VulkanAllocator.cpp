@@ -2,8 +2,9 @@
 
 #include <hzrpch.h>
 #include "VulkanAllocator.h"
-#include "Hazard/File/StringUtil.h"
 #include "../VulkanContext.h"
+
+#include "Hazard/Utils/StringUtil.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -14,7 +15,6 @@ namespace Hazard::Rendering::Vulkan {
 	static AllocatorData* s_Data = nullptr;
 
 	VulkanAllocator::VulkanAllocator(const std::string& name) : m_Tag(name) {}
-	VulkanAllocator::~VulkanAllocator() {}
 
 	VmaAllocation VulkanAllocator::AllocateBuffer(VkBufferCreateInfo bufferCreateInfo, VmaMemoryUsage usage, VkBuffer& outBuffer)
 	{

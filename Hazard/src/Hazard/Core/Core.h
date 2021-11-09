@@ -25,7 +25,7 @@
 #endif // HZR_DEBUG
 
 
-#define BIT(x) (1 << x)
+#define BIT(x) (1 << (x))
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 #define PATH_TO(x) FileSystem::getPath
 

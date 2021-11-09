@@ -18,18 +18,19 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.Renderer = RenderAPI::OpenGL;
-	contextInfo.ImagesInFlight = 1;
+	contextInfo.Renderer = RenderAPI::Vulkan;
+	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
-	contextInfo.VSync = false;
+	contextInfo.Decorated = true;
+	contextInfo.VSync = true; 
 	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
 
 	RenderEngineCreateInfo engineInfo;
 	engineInfo.MaxQuadCount = 10000;
-	engineInfo.SamplerCount = 8;
+	engineInfo.SamplerCount = 32;
 	engineInfo.ShaderSourcePath = "res/shaders/sources";
 	engineInfo.ShaderCompilePath = "res/shaders/compiled";
 

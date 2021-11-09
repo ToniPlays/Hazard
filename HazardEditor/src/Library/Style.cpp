@@ -14,11 +14,11 @@ void Style::InitTheme(Theme theme) {
 	case Classic:	InitClassic(); break;
 	}
 }
-void Style::SetColor(ImGuiCol_ color, Color value)
+void Style::SetColor(ImGuiCol_ color, const Color& value)
 {
 	SetColor(color, ColorAsImVec4(value));
 }
-void Style::SetColor(ImGuiCol_ color, ImVec4 value)
+void Style::SetColor(ImGuiCol_ color, const ImVec4& value)
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[color] = value;

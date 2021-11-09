@@ -5,7 +5,7 @@
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
 #include "Hazard/Rendering/RenderEngine.h"
-#include "Hazard/File/File.h"
+#include "../VulkanTexture2D.h"
 #include "VulkanBuffers.h"
 
 #include <shaderc/shaderc.hpp>
@@ -97,7 +97,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::Bind()
 	{
-		
+
 	}
 	void VulkanShader::Unbind()
 	{
@@ -109,9 +109,70 @@ namespace Hazard::Rendering::Vulkan
 		HZR_CORE_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
+	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
+	{
+		if (!value) return;
+
+		for (auto& [binding, sampler] : m_ShaderData.Stages[ShaderType::Fragment].SampledImages)
+		{
+			if (strcmp(sampler.Name.c_str(), name.c_str()) == 0) {
+
+				Ref<VulkanImage2D> image = value.As<VulkanTexture2D>()->GetImage();
+				if (!image) return;
+
+				VkDescriptorImageInfo imageInfo = image->GetDescriptor();
+
+				auto device = VulkanContext::GetDevice()->GetDevice();
+				VkWriteDescriptorSet descriptorWrite = {};
+				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrite.dstSet = m_DescriptorSet;
+				descriptorWrite.dstBinding = sampler.Binding;
+				descriptorWrite.dstArrayElement = index;
+				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptorWrite.descriptorCount = 1;
+				descriptorWrite.pImageInfo = &imageInfo;
+
+				vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+				return;
+			}
+		}
+	}
 	VkResult VulkanShader::CreateDescriptorLayout(VkDescriptorSetLayout* layout)
 	{
-		return VkResult();
+		auto device = VulkanContext::GetDevice()->GetDevice();
+		std::vector<VkDescriptorSetLayoutBinding> bindings;
+
+		for (auto& [binding, uniform] : m_ShaderData.UniformsDescriptions)
+		{
+			VkDescriptorSetLayoutBinding& layoutBinding = bindings.emplace_back();
+			layoutBinding.binding = binding;
+			layoutBinding.descriptorCount = 1;
+			layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			layoutBinding.pImmutableSamplers = nullptr;
+			layoutBinding.stageFlags = VKUtils::ShaderUsageToVulkanUsage(uniform.ShaderUsage);
+		}
+
+		if (m_ShaderData.Stages.find(ShaderType::Fragment) != m_ShaderData.Stages.end()) {
+			auto& fragStage = m_ShaderData.Stages[ShaderType::Fragment];
+
+			for (auto& [binding, sampler] : fragStage.SampledImages) {
+
+				VkDescriptorSetLayoutBinding& samplerLayoutBinding = bindings.emplace_back();
+				samplerLayoutBinding.binding = sampler.Binding;
+				samplerLayoutBinding.descriptorCount = sampler.ArraySize;
+				samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				samplerLayoutBinding.pImmutableSamplers = nullptr;
+				samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+			}
+		}
+
+		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+		layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		layoutInfo.bindingCount = (uint32_t)bindings.size();
+		layoutInfo.pBindings = bindings.data();
+
+		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout);
 	}
 	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
 	{
@@ -141,11 +202,11 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkPipelineShaderStageCreateInfo> info(m_ShaderCode.size());
 
 		uint32_t i = 0;
-		for (auto&& [stage, source] : m_ShaderCode) {
+		for (auto& [stage, source] : m_ShaderCode) {
 			info[i] = {};
 			info[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			info[i].stage = stage;
-			info[i].module = m_Modules[stage];
+			info[i].stage = Utils::ShaderTypeToVkType(stage);
+			info[i].module = m_Modules[Utils::ShaderTypeToVkType(stage)];
 			info[i].pName = "main";
 			i++;
 		}
@@ -184,7 +245,7 @@ namespace Hazard::Rendering::Vulkan
 			if (File::Exists(cachedFilePath)) {
 				if (!File::IsNewerThan(shaderFilePath, cachedFilePath)) {
 					Timer timer;
-					File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[vkStage]);
+					File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[stage]);
 					HZR_CORE_INFO("Reading VulkanShader binaries took {0} ms", timer.ElapsedMillis());
 					continue;
 				}
@@ -195,12 +256,12 @@ namespace Hazard::Rendering::Vulkan
 
 			if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
 				HZR_CORE_ERROR("Error {0} : {1}, using cached shader binary", Rendering::Utils::ShaderTypeToString(stage), module.GetErrorMessage());
-				File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[vkStage]);
+				File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[stage]);
 				continue;
 			}
 
-			m_ShaderCode[vkStage] = std::vector<uint32_t>(module.begin(), module.cend());
-			File::WriteBinaryFile(cachedFilePath, m_ShaderCode[vkStage]);
+			m_ShaderCode[stage] = std::vector<uint32_t>(module.begin(), module.cend());
+			File::WriteBinaryFile(cachedFilePath, m_ShaderCode[stage]);
 		}
 	}
 	void VulkanShader::CreateModules()
@@ -214,7 +275,7 @@ namespace Hazard::Rendering::Vulkan
 			moduleInfo.codeSize = 4 * binary.size();
 			moduleInfo.pCode = reinterpret_cast<const uint32_t*>(binary.data());
 
-			vkCreateShaderModule(device, &moduleInfo, nullptr, &m_Modules[stage]);
+			vkCreateShaderModule(device, &moduleInfo, nullptr, &m_Modules[Utils::ShaderTypeToVkType(stage)]);
 		}
 	}
 	void VulkanShader::Reflect()
@@ -228,20 +289,10 @@ namespace Hazard::Rendering::Vulkan
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
-			m_ShaderData.Stages[Utils::ShaderTypeFromVkType(stage)] = shaderStage;
+			m_ShaderData.Stages[stage] = shaderStage;
 
 			for (auto& resource : resources.uniform_buffers)
 			{
-				bool found = false;
-				for (auto& uniform : m_ShaderData.UniformsDescriptions) {
-					if (uniform.Name == resource.name) {
-						uniform.ShaderUsage |= VKUtils::ShaderTypeFromVulkanStage(stage);
-						found = true;
-						break;
-					}
-				}
-				if (found) continue;
-
 				auto& type = compiler.get_type(resource.base_type_id);
 
 				ShaderUniformBufferDescription desc = {};
@@ -249,22 +300,29 @@ namespace Hazard::Rendering::Vulkan
 				desc.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				desc.MemberCount = type.member_types.size();
 				desc.Size = compiler.get_declared_struct_size(type);
-				desc.ShaderUsage |= VKUtils::ShaderTypeFromVulkanStage(stage);
+				desc.ShaderUsage |= stage;
 
-				m_ShaderData.UniformsDescriptions.push_back(desc);
+				auto it = m_UniformBuffers.find(desc.Name);
+				if (it != m_UniformBuffers.end())
+				{
+					auto& buffer = m_UniformBuffers[desc.Name];
+					
+					HZR_CORE_ASSERT(desc.Binding == buffer->GetBinding(), "OpenGL UniformBuffer Binding missmatch for name: {0}", desc.Name);
+					continue;
+				}
+
+				//TODO: Maybe use binding as key?
+				m_ShaderData.UniformsDescriptions[desc.Binding] = desc;
+
+				UniformBufferCreateInfo bufferInfo = {};
+				bufferInfo.Name = desc.Name;
+				bufferInfo.Binding = desc.Binding;
+				bufferInfo.Size = desc.Size;
+
+				m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 			}
 		}
 
-		for (auto& uniformDescription : m_ShaderData.UniformsDescriptions)
-		{
-			UniformBufferCreateInfo bufferInfo = {};
-			bufferInfo.Name = uniformDescription.Name;
-			bufferInfo.Binding = uniformDescription.Binding;
-			bufferInfo.Size = uniformDescription.Size;
-			bufferInfo.Usage = uniformDescription.ShaderUsage;
-
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
-		}
 		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
 	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)

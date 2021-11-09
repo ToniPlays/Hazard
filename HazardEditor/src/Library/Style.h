@@ -33,8 +33,8 @@ struct ThemeValues
 class Style {
 public:
 	static void InitTheme(Theme theme);
-	static void SetColor(ImGuiCol_ color, Color value);
-	static void SetColor(ImGuiCol_ color, ImVec4 value);
+	static void SetColor(ImGuiCol_ color, const Color& value);
+	static void SetColor(ImGuiCol_ color, const ImVec4& value);
 	static void SetButtonColors(const char* button, const char* hovered, const char* active);
 	static void SetButtonColors(const Color& button, const Color& hovered, const Color& active);
 	static void SelectFont(uint8_t index);

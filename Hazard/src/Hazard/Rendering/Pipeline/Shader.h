@@ -58,7 +58,7 @@ namespace Hazard::Rendering
 
 	struct ShaderData {
 		std::unordered_map<ShaderType, ShaderStageData> Stages;
-		std::vector<ShaderUniformBufferDescription> UniformsDescriptions;
+		std::unordered_map<uint32_t, ShaderUniformBufferDescription> UniformsDescriptions;
 	};
 	namespace Utils
 	{
@@ -116,9 +116,8 @@ namespace Hazard::Rendering
 				HZR_CORE_TRACE("  {0} stage:", Utils::ShaderTypeToString(type));
 				HZR_CORE_TRACE("    Inputs: ");
 
-				for (uint32_t i = 0; i < stage.Inputs.size(); i++)
+				for (auto& [binding, input] : stage.Inputs)
 				{
-					auto& input = stage.Inputs.at(i);
 					HZR_CORE_TRACE("      {0}", input.Name);
 					HZR_CORE_TRACE("        Binding = {0}", input.Binding);
 					HZR_CORE_TRACE("        Location = {0}", input.Location);
@@ -127,18 +126,16 @@ namespace Hazard::Rendering
 					HZR_CORE_TRACE("        Offset = {0}", input.Offset);
 				}
 				HZR_CORE_TRACE("    Outputs: ");
-				for (uint32_t i = 0; i < stage.Outputs.size(); i++)
+				for (auto& [binding, output] : stage.Outputs)
 				{
-					auto& output = stage.Outputs.at(i);
 					HZR_CORE_TRACE("      {0}", output.Name);
 					HZR_CORE_TRACE("        Location = {0}", output.Location);
 					HZR_CORE_TRACE("        Type = {0}", ShaderDataTypeToString(output.Type));
 					HZR_CORE_TRACE("        Size = {0}", output.Size);
 				}
 				HZR_CORE_TRACE("    Sampled Images: ");
-				for (uint32_t i = 0; i < stage.SampledImages.size(); i++)
+				for (auto& [binding, sampledImage] : stage.SampledImages)
 				{
-					auto& sampledImage = stage.SampledImages.at(i);
 					HZR_CORE_TRACE("      {0}", sampledImage.Name);
 					HZR_CORE_TRACE("        Binding = {0}", sampledImage.Binding);
 					HZR_CORE_TRACE("        Dimension = {0}", sampledImage.Dimension);
@@ -146,9 +143,8 @@ namespace Hazard::Rendering
 				}
 			}
 			HZR_CORE_TRACE("    Unforms: ");
-			for (uint32_t i = 0; i < data.UniformsDescriptions.size(); i++)
+			for (auto& [binding, uniform] : data.UniformsDescriptions)
 			{
-				auto& uniform = data.UniformsDescriptions.at(i);
 				HZR_CORE_TRACE("      {0}", uniform.Name);
 				HZR_CORE_TRACE("        Binding = {0}", uniform.Binding);
 				HZR_CORE_TRACE("        MemberCount = {0}", uniform.MemberCount);
@@ -166,10 +162,10 @@ namespace Hazard::Rendering
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
-		virtual UniformBuffer& GetUniform(const std::string name) = 0;
+		virtual UniformBuffer& GetUniform(const std::string& name) = 0;
 
-		virtual void Set(const std::string name, uint32_t index, uint32_t value) = 0;
-		virtual void Set(const std::string name, uint32_t index, Ref<Texture2D>& value) = 0;
+		virtual void Set(const std::string& name, uint32_t index, uint32_t value) = 0;
+		virtual void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 

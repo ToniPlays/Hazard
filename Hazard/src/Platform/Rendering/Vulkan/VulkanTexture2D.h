@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Hazard/Rendering/Texture.h"
 #include "Image/VulkanImage2D.h"
+#include "Hazard/Rendering/Texture.h"
+#include "Hazard/Rendering/TextureFactory.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -11,38 +12,32 @@ namespace Hazard::Rendering::Vulkan {
 		VulkanTexture2D(Texture2DCreateInfo* info);
 		~VulkanTexture2D();
 
-		uint32_t GetWidth() const override { return m_Width; };
-		uint32_t GetHeight() const override { return m_Height; };
+		uint32_t GetWidth() const override { return m_Header.Width; };
+		uint32_t GetHeight() const override { return m_Header.Height; };
 		void Bind(uint32_t slot = 0) const override;
 
 		void Invalidate();
 
 		void Resize(uint32_t width, uint32_t height) {};
 		Buffer GetWriteBuffer() { return Buffer(); };
-		bool Loaded() const { return m_Loaded; };
+		bool Loaded() const { return m_Header.ImageData.Data; };
 		ImageFormat GetFormat() const override { return m_Format; }
 
 		uint32_t GetID() const override { return m_ID; }
 
-		float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
+		float GetAspectRatio() { return (float)m_Header.Width / (float)m_Header.Height; }
 		Buffer GetBuffer() const { return Buffer(); };
 		Buffer& GetBuffer() { return Buffer(); }
+		Ref<VulkanImage2D> GetImage() { return m_Image; }
 
 	private:
 		bool LoadImageFromFile(const std::string& path);
 
 	private:
-
-		uint32_t m_Width;
-		uint32_t m_Height;
+		TextureHeader m_Header;
 		uint32_t m_ID;
-		bool m_Loaded = false;
-
-		Ref<Image2D> m_Image;
-
+		Ref<VulkanImage2D> m_Image;
 		ImageFormat m_Format;
 		ImageUsage m_Usage;
-		Buffer m_ImageData;
-
 	};
 }

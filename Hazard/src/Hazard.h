@@ -51,6 +51,6 @@
 #include "Hazard/Physics/PhysicsCommand.h"
 
 //Hazard utility
-#include "Hazard/File/StringUtil.h"
-#include "Hazard/File/YamlUtils.h"
-#include "Hazard/File/File.h"
+#include "Hazard/Utils/YamlUtils.h"
+#include "Hazard/Utils/StringUtil.h"
+#include "Hazard/Utils/File.h"

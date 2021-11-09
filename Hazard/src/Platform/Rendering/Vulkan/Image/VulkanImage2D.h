@@ -51,6 +51,7 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkImageView> m_PerLayerImageViews;
 		std::map<uint32_t, VkImageView> m_MipImageViews;
 		VkDescriptorImageInfo m_DescriptorImageInfo = {};
+
 		Buffer m_Buffer;
 
 	};

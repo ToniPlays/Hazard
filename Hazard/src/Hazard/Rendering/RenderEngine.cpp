@@ -72,11 +72,12 @@ namespace Hazard::Rendering
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{
 		if (e.GetWidth() == 0 || e.GetHeight() == 0) return false;
+
 		constexpr float size = 2.0f;
 		float aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		float scalar = aspectRatio * size;
 
-		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1.0f, 1.0f);
+		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1000.0f, 1000.0f);
 		m_ViewProjection = glm::perspective(glm::radians(70.0f), aspectRatio, 0.003f, 1000.0f);
 		return true;
 	}

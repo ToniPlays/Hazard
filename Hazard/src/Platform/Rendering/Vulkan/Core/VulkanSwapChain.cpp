@@ -301,7 +301,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkResult result = AcquireNextImage(m_Semaphores.PresentComplete, &m_CurrentImageIndex);
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
-			if (result == VK_ERROR_OUT_OF_DATE_KHR || VK_SUBOPTIMAL_KHR) {
+			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
 				Resize(m_Width, m_Height);
 			}
 		}
@@ -328,7 +328,7 @@ namespace Hazard::Rendering::Vulkan
 		VkResult result = QueuePresent(m_Device->GetGraphicsQueue().Queue, m_CurrentImageIndex, m_Semaphores.RenderComplete);
 
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
-			if (result == VK_ERROR_OUT_OF_DATE_KHR || VK_SUBOPTIMAL_KHR) {
+			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
 				Resize(m_Width, m_Height);
 				return;
 			}

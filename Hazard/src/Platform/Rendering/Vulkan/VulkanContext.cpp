@@ -105,7 +105,6 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.pNext = nullptr;
 		renderPassBeginInfo.renderPass = fb->GetRenderPass();
 		renderPassBeginInfo.renderArea.offset.x = 0;
 		renderPassBeginInfo.renderArea.offset.y = 0;
@@ -118,7 +117,6 @@ namespace Hazard::Rendering::Vulkan {
 			width = swapchain->GetWidth();
 			height = swapchain->GetHeight();
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.pNext = nullptr;
 			renderPassBeginInfo.renderPass = fb->GetRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
@@ -136,7 +134,6 @@ namespace Hazard::Rendering::Vulkan {
 			width = fb->GetWidth();
 			height = fb->GetHeight();
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.pNext = nullptr;
 			renderPassBeginInfo.renderPass = fb->GetRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
@@ -153,7 +150,6 @@ namespace Hazard::Rendering::Vulkan {
 		const auto& clearValues = fb->GetVulkanClearValues();
 		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
 		renderPassBeginInfo.pClearValues = clearValues.data();
-
 
 		VkRect2D scissors = {};
 		scissors.extent.width = width;

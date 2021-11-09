@@ -20,7 +20,7 @@ namespace WindowElement {
 	{
 		if (Input::Button("Load")) {
 			std::string file = File::OpenFileDialog("");
-			if (file != "") {
+			if (!file.empty()) {
 				GenerateSequence(file);
 			}
 		}

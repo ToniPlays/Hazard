@@ -6,9 +6,9 @@
 
 #include <vulkan/vulkan.h>
 
-namespace Hazard::Rendering::Vulkan 
+namespace Hazard::Rendering::Vulkan
 {
-	class VulkanPipeline : public Pipeline 
+	class VulkanPipeline : public Pipeline
 	{
 	public:
 		VulkanPipeline(const PipelineSpecification& specs);

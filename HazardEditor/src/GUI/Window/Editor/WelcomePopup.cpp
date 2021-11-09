@@ -25,7 +25,7 @@ namespace WindowElement {
 
 		if (Input::Button("Load project", { 200, 80 })) {
 			std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
-			if (path != "") {
+			if (!path.empty()) {
 				Application::GetModule<Project::ProjectManager>().Load(path);
 				EditorView::GetInstance().RemoveRenderable<WelcomePopup>();
 			}

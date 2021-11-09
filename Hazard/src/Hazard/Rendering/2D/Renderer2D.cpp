@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <hzrpch.h>
 #include "Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
@@ -53,7 +54,7 @@ namespace Hazard::Rendering
 		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 
 		Texture2DCreateInfo starfield = {};
-		starfield.FilePath = "textures/8k_wallpaper.png";
+		starfield.FilePath = "textures/starfield_left.png";
 		starfield.Usage = ImageUsage::Texture;
 		starfield.Filter = &filter;
 
@@ -88,18 +89,21 @@ namespace Hazard::Rendering
 		pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
 		pipelineSpecs.pVertexBuffer = &vertexInfo;
 		pipelineSpecs.pIndexBuffer = &indexBuffer;
-		pipelineSpecs.RenderPass = renderPass;
+		pipelineSpecs.RenderPass = std::move(renderPass);
 
 		m_Pipeline = Pipeline::Create(pipelineSpecs);
-
 		m_Data.TextureSlots[0] = m_WhiteTexture;
-		m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
 
 		Ref<Shader> shader = m_Pipeline->GetShader();
 		shader->Bind();
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
-			shader->Set("u_Textures", i, i);
+			m_Data.TextureSlots[i] = m_WhiteTexture;
+		}
+		m_Data.TextureSlots[1] = Texture2D::Create(&starfield);
+
+		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
+			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 		}
 
 		delete[] indices;
@@ -121,10 +125,10 @@ namespace Hazard::Rendering
 
 		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 
-		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, -1.0f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
+		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, 0.2f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, -2.0f }, { 0.0f, 0.0f, 0.0f }, { 12.8f, 7.2f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f * 13.0f, 1.0f * 13.0f, 1.0f });
 		Submit({ tempMat, "#FFFFFF", 1.0f });
 
 		Flush();
@@ -148,9 +152,9 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::BeginWorld()
 	{
-		for (uint32_t i = 2; i < m_Data.Samplers; i++) {
+		/*for (uint32_t i = 2; i < m_Data.Samplers; i++) {
 			m_Data.TextureSlots[i] = nullptr;
-		}
+		}*/
 
 		m_RenderCommandBuffer->Begin();
 		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);

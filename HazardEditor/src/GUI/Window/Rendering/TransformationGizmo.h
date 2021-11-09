@@ -18,7 +18,7 @@ namespace WindowElement {
 		~TransformationGizmo() = default;
 
 		void OnFrameBegin() override;
-		void OnRender(const Editor::EditorCamera& camera, ImVec2 size);
+		void RenderGizmo(const Editor::EditorCamera& camera, ImVec2 size);
 
 		bool IsUsing() { return isUsing; }
 

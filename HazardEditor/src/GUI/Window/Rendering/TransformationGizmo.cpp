@@ -14,7 +14,7 @@ namespace WindowElement {
 	{
 		ImGuizmo::BeginFrame();
 	}
-	void TransformationGizmo::OnRender(const Editor::EditorCamera& camera, ImVec2 size)
+	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, ImVec2 size)
 	{
 		if (!currentSelection.IsValid() || type == Gizmo::None) return;
 

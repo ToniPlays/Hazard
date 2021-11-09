@@ -14,9 +14,8 @@ namespace Hazard::Rendering {
 		case Hazard::RenderAPI::Auto:		return new OpenGL::OpenGLContext(props);
 		case Hazard::RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);
 		case Hazard::RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
-		case Hazard::RenderAPI::DX11:		return nullptr;
-		case Hazard::RenderAPI::DX12:		return nullptr;
-		case Hazard::RenderAPI::Metal:		return nullptr;
 		}
+		HZR_CORE_ASSERT(false, "Unkonw RenderAPI");
+		return nullptr;
 	}
 }

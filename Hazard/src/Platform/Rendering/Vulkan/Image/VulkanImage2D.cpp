@@ -45,6 +45,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanAllocator allocator("Image2D");
 
 		VkImageUsageFlags usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+
 		if (m_Info.Usage == ImageUsage::Attachment) {
 			if (VKUtils::IsDepth(m_Info.Format))
 				usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -77,6 +78,7 @@ namespace Hazard::Rendering::Vulkan
 		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		imageCreateInfo.usage = usage;
+
 		m_Info.MemoryAlloc = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Info.Image);
 
 		// Create a default image view
@@ -92,6 +94,7 @@ namespace Hazard::Rendering::Vulkan
 		imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
 		imageViewCreateInfo.subresourceRange.layerCount = 1;
 		imageViewCreateInfo.image = m_Info.Image;
+
 		VK_CHECK_RESULT(vkCreateImageView(device, &imageViewCreateInfo, nullptr, &m_Info.ImageView));
 		
 		VkSamplerCreateInfo samplerCreateInfo = {};

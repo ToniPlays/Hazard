@@ -67,7 +67,6 @@ namespace Hazard::Rendering {
 		if (info->Maximized)
 			glfwMaximizeWindow(m_Window);
 
-
 		glfwShowWindow(m_Window);
 		SetCallbacks();
 		SetVSync(info->VSync);
@@ -95,6 +94,7 @@ namespace Hazard::Rendering {
 		for (uint32_t i = 0; i < count; i++) {
 			GLFWimage img = glfwImages[i];
 			const std::string& path = File::GetFileAbsolutePath(images[i]);
+
 			int sx, sy, sChannels, bChannels;
 			img.pixels = stbi_load(path.c_str(), &sx, &sy, &sChannels, 3);
 			HZR_ASSERT(img.pixels, "Could not load Window Icon {0}", images[i]);

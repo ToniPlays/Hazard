@@ -19,11 +19,30 @@ namespace Hazard::Rendering::Vulkan
 
 			Image2DCreateInfo imageSpecs = {};
 			imageSpecs.Format = m_Format;
-			imageSpecs.Width = m_Width;
-			imageSpecs.Height = m_Height;
+			imageSpecs.Width = m_Header.Width;
+			imageSpecs.Height = m_Header.Height;
 			imageSpecs.Mips = 1;
+			imageSpecs.Usage = ImageUsage::Texture;
 
-			m_Image = Image2D::Create(&imageSpecs);
+			m_Image = Image2D::Create(&imageSpecs).As<VulkanImage2D>();
+			Invalidate();
+		}
+		else 
+		{
+			m_Header.Width = info->Width;
+			m_Header.Height = info->Height;
+			m_Header.Channels = 4;
+			m_Header.DataSize = info->Width * info->Height * 4;
+			m_Header.ImageData = Buffer::Copy(info->Data, m_Header.DataSize);
+
+			Image2DCreateInfo imageSpecs = {};
+			imageSpecs.Format = m_Format;
+			imageSpecs.Width = m_Header.Width;
+			imageSpecs.Height = m_Header.Height;
+			imageSpecs.Mips = 1;
+			imageSpecs.Usage = ImageUsage::Texture;
+
+			m_Image = Image2D::Create(&imageSpecs).As<VulkanImage2D>();
 			Invalidate();
 		}
 	}
@@ -41,24 +60,13 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice();
 		
 		m_Image->Release();
-		uint32_t mipCount = 1;
+		m_Image->RT_Invalidate();
 
-		Image2DCreateInfo imageSpecs = {};
-		imageSpecs.Width = m_Image->GetWidth();
-		imageSpecs.Height = m_Image->GetHeight();
-		imageSpecs.Format = m_Image->GetFormat();
+		auto& info = m_Image->GetImageInfo();
 
-		if (!m_ImageData) 
-			imageSpecs.Usage = ImageUsage::Texture;
-
-		Ref<VulkanImage2D> image = m_Image.As<VulkanImage2D>();
-		image->RT_Invalidate();
-
-		auto& info = image->GetImageInfo();
-
-		if (m_ImageData) 
+		if (m_Header.IsValid())
 		{
-			VkDeviceSize size = m_ImageData.Size;
+			VkDeviceSize size = m_Header.DataSize;
 
 			VkMemoryAllocateInfo memAllocInfo{};
 			memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -76,7 +84,7 @@ namespace Hazard::Rendering::Vulkan
 
 			// Copy data to staging buffer
 			uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAllocation);
-			memcpy(destData, m_ImageData.Data, size);
+			memcpy(destData, m_Header.ImageData.Data, size);
 			allocator.UnmapMemory(stagingBufferAllocation);
 
 			VkCommandBuffer copyCmd = device->GetCommandBuffer(true);
@@ -112,8 +120,8 @@ namespace Hazard::Rendering::Vulkan
 			bufferCopyRegion.imageSubresource.mipLevel = 0;
 			bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
 			bufferCopyRegion.imageSubresource.layerCount = 1;
-			bufferCopyRegion.imageExtent.width = m_Width;
-			bufferCopyRegion.imageExtent.height = m_Height;
+			bufferCopyRegion.imageExtent.width = m_Header.Width;
+			bufferCopyRegion.imageExtent.height = m_Header.Height;
 			bufferCopyRegion.imageExtent.depth = 1;
 			bufferCopyRegion.bufferOffset = 0;
 
@@ -128,7 +136,7 @@ namespace Hazard::Rendering::Vulkan
 
 			VKUtils::InsertImageMemoryBarrier(copyCmd, info.Image,
 				VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
-				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, image->GetDescriptor().imageLayout,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_Image->GetDescriptor().imageLayout,
 				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 				subresourceRange);
 
@@ -144,7 +152,7 @@ namespace Hazard::Rendering::Vulkan
 			subResourceRange.layerCount = 1;
 			subResourceRange.levelCount = 1;
 
-			VKUtils::SetImageLayout(transitionCmdBuffer, info.Image, VK_IMAGE_LAYOUT_UNDEFINED, image->GetDescriptor().imageLayout, subResourceRange);
+			VKUtils::SetImageLayout(transitionCmdBuffer, info.Image, VK_IMAGE_LAYOUT_UNDEFINED, m_Image->GetDescriptor().imageLayout, subResourceRange);
 			device->FlushCommandBuffer(transitionCmdBuffer);
 		}
 
@@ -160,7 +168,7 @@ namespace Hazard::Rendering::Vulkan
 		sampler.mipLodBias = 0.0f;
 		sampler.compareOp = VK_COMPARE_OP_NEVER;
 		sampler.minLod = 0.0f;
-		sampler.maxLod = (float)mipCount;
+		sampler.maxLod = (float)1;
 
 		sampler.maxAnisotropy = 1.0;
 		sampler.anisotropyEnable = VK_FALSE;
@@ -179,28 +187,22 @@ namespace Hazard::Rendering::Vulkan
 			view.subresourceRange.baseMipLevel = 0;
 			view.subresourceRange.baseArrayLayer = 0;
 			view.subresourceRange.layerCount = 1;
-			view.subresourceRange.levelCount = mipCount;
+			view.subresourceRange.levelCount = 1;
 			view.image = info.Image;
 			VK_CHECK_RESULT(vkCreateImageView(device->GetDevice(), &view, nullptr, &info.ImageView));
 
-
-			image->UpdateDescriptor();
+			m_Image->UpdateDescriptor();
 		}
 	}
 	bool VulkanTexture2D::LoadImageFromFile(const std::string& path)
 	{
-		int width, height, channels;
+		TextureHeader header = TextureFactory::LoadFromCacheIfExists(path);
+		m_Format = header.Channels == 4 ? ImageFormat::RGBA : ImageFormat::RGB;
 
-		Timer timer;
-		m_ImageData.Data = stbi_load(path.c_str(), &width, &height, &channels, 4);
-		HZR_CORE_INFO("VulkanTexture2D Load took {0} ms", timer.ElapsedMillis());
-		m_ImageData.Size = width * height * 4;
-		m_Format = ImageFormat::RGBA;
+		if (!header.IsValid())
+			return false;
 
-		if (!m_ImageData.Data) return false;
-
-		m_Width = width;
-		m_Height = height;
+		m_Header = header;
 		HZR_CORE_INFO("Loaded VulkanTexture2D from {0}", path);
 		return true;
 	}

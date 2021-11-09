@@ -22,7 +22,8 @@ namespace Hazard::Rendering::Vulkan
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_TO_CPU, m_Buffer);
 			m_LocalData.Allocate(m_Size);
 		}
-		else {
+		else 
+		{
 			m_LocalData = Buffer::Copy(info->Data, info->Size);
 
 			VkBufferCreateInfo stagingCreateInfo = {};
