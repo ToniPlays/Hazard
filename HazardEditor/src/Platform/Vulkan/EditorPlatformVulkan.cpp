@@ -17,6 +17,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* co
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan(window, true);
+
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	init_info.Instance = context->GetInstance();
 	init_info.PhysicalDevice = device->GetPhysicalDevice();
@@ -33,6 +34,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* co
 
 	ImGui_ImplVulkan_Init(&init_info, swapchain->GetRenderPass());
 	VkCommandBuffer cmdBuffer = device->GetCommandBuffer(true);
+
 	ImGui_ImplVulkan_CreateFontsTexture(cmdBuffer);
 	device->FlushGraphicsCommandBuffer(cmdBuffer);
 
@@ -41,6 +43,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* co
 
 	uint32_t framesInFlight = Hazard::Rendering::RenderContextCommand::GetImagesInFlight();
 	s_ImGuiCommandBuffers.resize(framesInFlight);
+
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = VulkanContext::GetDevice()->CreateSecondaryCommandBuffer();
 }
@@ -135,7 +138,7 @@ void EditorPlatformVulkan::EndFrame()
 	vkCmdEndRenderPass(drawCommandBuffer);
 
 	VK_CHECK_RESULT(vkEndCommandBuffer(drawCommandBuffer));
-	
+
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();

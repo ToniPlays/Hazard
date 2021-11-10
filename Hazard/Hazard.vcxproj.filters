@@ -327,7 +327,7 @@
     <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Loaders.h">
+    <ClInclude Include="src\Hazard\Rendering\Loaders\Loaders.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
@@ -1753,7 +1753,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture.h" />
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.h" />
-    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
+    <ClInclude Include="src\Hazard\Rendering\Loaders\TextureFactory.h" />
     <ClInclude Include="src\Hazard\Core\Buffer.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLUtils.h" />
     <ClInclude Include="src\Hazard\Utils\File.h">
@@ -1766,6 +1766,7 @@
       <Filter>src\Hazard\File</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Batch.h" />
+    <ClInclude Include="src\Hazard\Rendering\Loaders\ShaderFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1861,7 +1862,7 @@
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Loaders.cpp">
+    <ClCompile Include="src\Hazard\Rendering\Loaders\Loaders.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
@@ -2018,7 +2019,7 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp" />
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Loaders\TextureFactory.cpp" />
     <ClCompile Include="src\Hazard\Utils\File.cpp">
       <Filter>src\Hazard\File</Filter>
     </ClCompile>
@@ -2028,5 +2029,6 @@
     <ClCompile Include="src\Hazard\Utils\YamlUtils.cpp">
       <Filter>src\Hazard\File</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Loaders\ShaderFactory.cpp" />
   </ItemGroup>
 </Project>

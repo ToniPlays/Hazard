@@ -54,17 +54,21 @@ namespace WindowElement {
 
 		ImGui::PopStyleVar();
 
-		float width = ImGui::GetWindowWidth() - 475;
+		float width = ImGui::GetWindowWidth() - 550;
+		ImGui::SetCursorPosY(0);
 
 		ImGui::SetCursorPosX(width);
-		ImGui::Text("FPS %.1f/%.2fms", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+		ImGui::Text("%.2fms", 1000.0f / ImGui::GetIO().Framerate);
 
-		ImGui::SetCursorPosX(width + 130);
+		ImGui::SetCursorPosX(width + 75);
 		ImGui::Text("Mem: %.2fmb", Application::GetData().memoryUsage);
 		ImGui::SameLine(0, 15);
+
 		width = ImGui::GetCursorPosX();
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
 
+		ImGui::SetCursorPosY(0);
+		ImGui::SetCursorPosX(width + 125);
 		ImGui::BeginChild("##projectName", { 200, 0 }, false);
 		Project::ProjectManager* manager = &Application::GetModule<Project::ProjectManager>();
 

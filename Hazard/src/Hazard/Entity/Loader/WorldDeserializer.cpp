@@ -84,6 +84,7 @@ namespace Hazard::ECS::Loader
 		YamlUtils::Deserialize(comp, "Projection", projection);
 		c.SetProjection(projection == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 		c.SetFov(comp["Fov"].as<float>());
+
 		glm::vec2 clipping;
 		YamlUtils::Deserialize(comp, "Clipping", clipping);
 		c.SetZNear(clipping.x);

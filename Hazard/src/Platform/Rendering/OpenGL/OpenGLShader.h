@@ -32,7 +32,7 @@ namespace Hazard::Rendering::OpenGL
 
 		uint32_t m_ID;
 
-		std::unordered_map<uint32_t, std::vector<uint32_t>> m_VulkanSPIRV;
+		std::unordered_map<ShaderType, std::vector<uint32_t>> m_VulkanSPIRV;
 		std::unordered_map<uint32_t, std::vector<uint32_t>> m_OpenGLSPIRV;
 
 		std::unordered_map<uint32_t, std::string> m_OpenGLSourceCode;

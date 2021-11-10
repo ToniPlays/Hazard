@@ -6,12 +6,12 @@
 
 namespace Hazard::Rendering
 {
-	enum PipelineUsage { NoUsage = 0, GraphicsBit, ComputeBit };
+	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit };
 
 	struct PipelineSpecification
 	{
 		std::string ShaderPath;
-		PipelineUsage Usage = PipelineUsage::NoUsage;
+		PipelineUsage Usage = PipelineUsage::None;
 		VertexBufferCreateInfo* pVertexBuffer = nullptr;
 		IndexBufferCreateInfo* pIndexBuffer = nullptr;
 		Ref<RenderPass> RenderPass = nullptr;

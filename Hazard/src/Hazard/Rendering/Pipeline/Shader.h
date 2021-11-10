@@ -3,14 +3,16 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Pipeline/ShaderDataType.h"
 #include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "../Loaders/ShaderFactory.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 
 namespace Hazard::Rendering
 {
 	class Texture2D;
-	enum ShaderType {
-		Unknown = BIT(0),
+
+	enum class ShaderType {
+		None = BIT(0),
 		Vertex = BIT(1),
 		Fragment = BIT(2),
 		Compute = BIT(3),
@@ -67,7 +69,7 @@ namespace Hazard::Rendering
 			if (type == "Fragment")		return ShaderType::Fragment;
 			if (type == "Pixel")		return ShaderType::Fragment;
 			if (type == "Compute")		return ShaderType::Compute;
-			return ShaderType::Unknown;
+			return ShaderType::None;
 		}
 		static std::string ShaderTypeToString(ShaderType type) {
 			if (type == ShaderType::Vertex)			return "Vertex";
@@ -101,10 +103,10 @@ namespace Hazard::Rendering
 		static std::string UsageFlagsToString(const uint32_t& flags) {
 			std::string result;
 
-			if (flags & ShaderType::Vertex) result += "Vertex";
-			if (flags & ShaderType::Fragment) result += ", Fragment";
-			if (flags & ShaderType::Compute) result += ", Compute";
-			if (flags & ShaderType::Geometry) result += ", Geometry";
+			if (flags & (uint32_t)ShaderType::Vertex)	result += "Vertex";
+			if (flags & (uint32_t)ShaderType::Fragment) result += ", Fragment";
+			if (flags & (uint32_t)ShaderType::Compute)	result += ", Compute";
+			if (flags & (uint32_t)ShaderType::Geometry) result += ", Geometry";
 			return result;
 
 		}
@@ -170,7 +172,5 @@ namespace Hazard::Rendering
 		virtual const ShaderData& GetShaderData() = 0;
 
 		static Ref<Shader> Create(const std::string& path);
-		static std::unordered_map<ShaderType, std::string> PreProcess(const std::string& source);
-		static ShaderStageData ProcessShaderStage(const spirv_cross::Compiler& compiler, const spirv_cross::ShaderResources& resources);
 	};
 }

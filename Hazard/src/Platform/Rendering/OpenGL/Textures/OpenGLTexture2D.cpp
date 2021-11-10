@@ -3,7 +3,7 @@
 
 #include <hzrpch.h>
 #include "OpenGLTexture2D.h"
-#include "Hazard/Rendering/TextureFactory.h"
+#include "Hazard/Rendering/Loaders/TextureFactory.h"
 
 #include <glad/glad.h>
 
@@ -13,19 +13,19 @@ namespace Hazard::Rendering::OpenGL
 		static GLenum TextureWrapToGLWrapMode(ImageWrap wrap) {
 			switch (wrap)
 			{
-			case Repeat:		return GL_REPEAT;
-			case RepeatMirror:	return GL_MIRRORED_REPEAT;
-			case ClampBorder:	return GL_CLAMP_TO_BORDER;
-			case ClampEdge:		return GL_CLAMP_TO_EDGE;
+			case ImageWrap::Repeat:			return GL_REPEAT;
+			case ImageWrap::RepeatMirror:	return GL_MIRRORED_REPEAT;
+			case ImageWrap::ClampBorder:	return GL_CLAMP_TO_BORDER;
+			case ImageWrap::ClampEdge:		return GL_CLAMP_TO_EDGE;
 			}
 		}
 		static GLenum TextureFilterToGLFilter(FilterMode filter) {
 			switch (filter)
 			{
-			case Linear:		return GL_LINEAR;
-			case Nearest:		return GL_NEAREST;
-			case LinearMip:		return GL_LINEAR_MIPMAP_LINEAR;
-			case NearestMip:	return GL_NEAREST_MIPMAP_NEAREST;
+			case FilterMode::Linear:		return GL_LINEAR;
+			case FilterMode::Nearest:		return GL_NEAREST;
+			case FilterMode::LinearMip:		return GL_LINEAR_MIPMAP_LINEAR;
+			case FilterMode::NearestMip:	return GL_NEAREST_MIPMAP_NEAREST;
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 
 #include "Image/VulkanImage2D.h"
 #include "Hazard/Rendering/Texture.h"
-#include "Hazard/Rendering/TextureFactory.h"
+#include "Hazard/Rendering/Loaders/TextureFactory.h"
 
 namespace Hazard::Rendering::Vulkan {
 

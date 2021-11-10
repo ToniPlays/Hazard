@@ -172,21 +172,20 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		switch (type)
 		{
-		case VK_SHADER_STAGE_VERTEX_BIT:	return Vertex;
-		case VK_SHADER_STAGE_FRAGMENT_BIT:	return Fragment;
-		case VK_SHADER_STAGE_COMPUTE_BIT:	return Compute;
-		case VK_SHADER_STAGE_GEOMETRY_BIT:	return Geometry;
+		case VK_SHADER_STAGE_VERTEX_BIT:	return ShaderType::Vertex;
+		case VK_SHADER_STAGE_FRAGMENT_BIT:	return ShaderType::Fragment;
+		case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
+		case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
 		}
 	}
 
 	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
 	{
 		VkShaderStageFlags flags = 0;
-
-		if (usage & ShaderType::Vertex)		flags |= VK_SHADER_STAGE_VERTEX_BIT;
-		if (usage & ShaderType::Fragment)	flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-		if (usage & ShaderType::Compute)	flags |= VK_SHADER_STAGE_COMPUTE_BIT;
-		if (usage & ShaderType::Geometry)	flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+		if (usage & (uint32_t)ShaderType::Vertex)		flags |= VK_SHADER_STAGE_VERTEX_BIT;
+		if (usage & (uint32_t)ShaderType::Fragment)		flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+		if (usage & (uint32_t)ShaderType::Compute)		flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+		if (usage & (uint32_t)ShaderType::Geometry)		flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 		return flags;
 	}
 

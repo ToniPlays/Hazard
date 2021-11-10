@@ -22,10 +22,10 @@ namespace Hazard::Rendering
 		// Defaults
 		Depth = DEPTH24STENCIL8,
 	};
-	enum ImageWrap { Repeat = 0, RepeatMirror, ClampBorder, ClampEdge };
-	enum FilterMode { Linear = 0, Nearest, LinearMip, NearestMip };
-	enum ImageDataType { Auto = 0, RGB, RGBA, HRD, HDRA };
-	enum ImageUsage { None = 0, Texture, Attachment, Storage };
+	enum class ImageWrap { Repeat = 0, RepeatMirror, ClampBorder, ClampEdge };
+	enum class FilterMode { Linear = 0, Nearest, LinearMip, NearestMip };
+	enum class ImageDataType { Auto = 0, RGB, RGBA, HRD, HDRA };
+	enum class ImageUsage { None = 0, Texture, Attachment, Storage };
 
 	struct TextureFilter
 	{

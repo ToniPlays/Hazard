@@ -15,8 +15,6 @@ namespace Hazard::Rendering
 		m_Data.MaxIndices = info->MaxQuadCount * 6;
 		m_Data.Samplers = info->SamplerCount;
 
-		HZR_CORE_INFO("Quad batch size {0}", m_QuadBatch.GetSize());
-
 		m_Data.TextureSlots.resize(info->SamplerCount);
 
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
@@ -85,10 +83,12 @@ namespace Hazard::Rendering
 
 			PipelineSpecification pipelineSpecs = {};
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-			pipelineSpecs.ShaderPath = "res/Shaders/sources/standard.glsl";
+			pipelineSpecs.ShaderPath = "Shaders/standard.glsl";
 			pipelineSpecs.pVertexBuffer = &vertexInfo;
 			pipelineSpecs.pIndexBuffer = &indexBuffer;
 			pipelineSpecs.RenderPass = std::move(renderPass);
+
+
 
 			m_Pipeline = Pipeline::Create(pipelineSpecs);
 			m_Data.TextureSlots[0] = m_WhiteTexture;
@@ -107,6 +107,7 @@ namespace Hazard::Rendering
 		}
 
 		m_QuadBatch = Batch<Vertex2D>(info->MaxQuadCount);
+		HZR_CORE_INFO("Quad batch size {0}", m_QuadBatch.GetSize());
 
 		delete[] indices;
 	}
@@ -130,7 +131,7 @@ namespace Hazard::Rendering
 		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, 0.2f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f * 13.0f, 1.0f * 13.0f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f * 1.0f, 1.0f * 1.0f, 1.0f });
 		Submit({ tempMat, "#FFFFFF", 1.0f });
 
 		Flush();

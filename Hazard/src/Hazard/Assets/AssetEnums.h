@@ -7,7 +7,7 @@ namespace Hazard
 {
 	enum class AssetType 
 	{
-		None = 0,
+		Undefined = 0,
 		AudioClip,
 		World,
 		Image,
@@ -19,7 +19,7 @@ namespace Hazard
 	namespace Utils 
 	{
 		inline AssetType StringToAssetType(const std::string& type) {
-			if (type == "None")					return AssetType::None;
+			if (type == "None")					return AssetType::Undefined;
 			if (type == "AudioClip")			return AssetType::AudioClip;
 			if (type == "World")				return AssetType::World;
 			if (type == "Texture")				return AssetType::Image;
@@ -29,13 +29,13 @@ namespace Hazard
 
 			HZR_CORE_WARN("Failed to find asset of type {0}, check if type is correct", type);
 
-			return AssetType::None;
+			return AssetType::Undefined;
 		}
 
 		inline const char* AssetTypeToString(AssetType type) {
 			switch (type)
 			{
-			case AssetType::None:				return "None";
+			case AssetType::Undefined:				return "None";
 			case AssetType::AudioClip:			return "AudioClip";
 			case AssetType::World:				return "World";
 			case AssetType::Image:			return "Texture";
@@ -57,7 +57,7 @@ namespace Hazard
 			if (ext == "hdr")		return AssetType::EnvironmentMap;
 			
 			HZR_CORE_WARN("Failed convert extesion {0} to AssetType, check if type is correct", ext);
-			return AssetType::None;
+			return AssetType::Undefined;
 		}
 	}
 }

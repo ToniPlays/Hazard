@@ -16,22 +16,13 @@ namespace Hazard::Rendering::Vulkan
 {
 	namespace Utils
 	{
-		static std::string ShaderStageCachedVulkanExtension(ShaderType type) {
-			switch (type)
-			{
-			case Vertex:	return ".cached_vulkan.vert";
-			case Fragment:	return ".cached_vulkan.frag";
-			}
-			HZR_CORE_ASSERT(false, "[VulkanShader]: No cache file extension for {0} shader", Rendering::Utils::ShaderTypeToString(type));
-			return "";
-		}
 		static VkShaderStageFlagBits ShaderTypeToVkType(ShaderType type) {
 			switch (type)
 			{
-			case Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
-			case Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
-			case Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
-			case Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
+			case ShaderType::Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
+			case ShaderType::Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
+			case ShaderType::Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
+			case ShaderType::Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
 			}
 			HZR_CORE_ASSERT(false, "[VulkanShader]: Undefined ShaderType {0}", Rendering::Utils::ShaderTypeToString(type));
 			return (VkShaderStageFlagBits)0;
@@ -50,13 +41,13 @@ namespace Hazard::Rendering::Vulkan
 		static ShaderType ShaderTypeFromVkType(VkShaderStageFlagBits type) {
 			switch (type)
 			{
-			case VK_SHADER_STAGE_VERTEX_BIT:	return Vertex;
-			case VK_SHADER_STAGE_FRAGMENT_BIT:	return Fragment;
-			case VK_SHADER_STAGE_COMPUTE_BIT:	return Compute;
-			case VK_SHADER_STAGE_GEOMETRY_BIT:	return Geometry;
+			case VK_SHADER_STAGE_VERTEX_BIT:	return ShaderType::Vertex;
+			case VK_SHADER_STAGE_FRAGMENT_BIT:	return ShaderType::Fragment;
+			case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
+			case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
 			}
 			HZR_CORE_ASSERT(false, "[VulkanShader]: Undefined Vulkan ShaderStageFlags {0}", VkTypeToString(type));
-			return ShaderType::Unknown;
+			return ShaderType::None;
 		}
 		static shaderc_shader_kind VkShaderStageToShaderC(VkShaderStageFlagBits stage) {
 			switch (stage)
@@ -84,9 +75,7 @@ namespace Hazard::Rendering::Vulkan
 	{
 		Timer timer;
 		std::cout << "Reloading Shader " << m_Path << std::endl;
-
-		std::string result = File::ReadFile(m_Path);
-		auto shaderSources = PreProcess(result);
+		auto shaderSources = ShaderFactory::GetShaderSources(m_Path);
 
 		CompileOrGetVulkanBinaries(shaderSources);
 		Reflect();
@@ -115,26 +104,25 @@ namespace Hazard::Rendering::Vulkan
 
 		for (auto& [binding, sampler] : m_ShaderData.Stages[ShaderType::Fragment].SampledImages)
 		{
-			if (strcmp(sampler.Name.c_str(), name.c_str()) == 0) {
+			if (strcmp(sampler.Name.c_str(), name.c_str()) != 0) continue;
 
-				Ref<VulkanImage2D> image = value.As<VulkanTexture2D>()->GetImage();
-				if (!image) return;
+			Ref<VulkanImage2D> image = value.As<VulkanTexture2D>()->GetImage();
+			if (!image) return;
 
-				VkDescriptorImageInfo imageInfo = image->GetDescriptor();
+			VkDescriptorImageInfo imageInfo = image->GetDescriptor();
 
-				auto device = VulkanContext::GetDevice()->GetDevice();
-				VkWriteDescriptorSet descriptorWrite = {};
-				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				descriptorWrite.dstSet = m_DescriptorSet;
-				descriptorWrite.dstBinding = sampler.Binding;
-				descriptorWrite.dstArrayElement = index;
-				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-				descriptorWrite.descriptorCount = 1;
-				descriptorWrite.pImageInfo = &imageInfo;
+			auto device = VulkanContext::GetDevice()->GetDevice();
+			VkWriteDescriptorSet descriptorWrite = {};
+			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrite.dstSet = m_DescriptorSet;
+			descriptorWrite.dstBinding = sampler.Binding;
+			descriptorWrite.dstArrayElement = index;
+			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrite.descriptorCount = 1;
+			descriptorWrite.pImageInfo = &imageInfo;
 
-				vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
-				return;
-			}
+			vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+			break;
 		}
 	}
 	VkResult VulkanShader::CreateDescriptorLayout(VkDescriptorSetLayout* layout)
@@ -224,44 +212,37 @@ namespace Hazard::Rendering::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		std::filesystem::path cache = RenderEngine::GetShaderCompilePath();
-
-		shaderc::Compiler compiler;
-		shaderc::CompileOptions options;
-		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
-
-		if (false)
-			options.SetOptimizationLevel(shaderc_optimization_level_performance);
-
 		m_ShaderCode.clear();
 
 		for (auto&& [stage, source] : sources)
 		{
 			HZR_PROFILE_SCOPE("Shader stage");
-			std::filesystem::path shaderFilePath = m_Path;
-			std::filesystem::path cachedFilePath = cache / (shaderFilePath.filename().string() + Utils::ShaderStageCachedVulkanExtension(stage));
 
 			VkShaderStageFlagBits vkStage = Utils::ShaderTypeToVkType(stage);
+			auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
 
-			if (File::Exists(cachedFilePath)) {
-				if (!File::IsNewerThan(shaderFilePath, cachedFilePath)) {
-					Timer timer;
-					File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[stage]);
-					HZR_CORE_INFO("Reading VulkanShader binaries took {0} ms", timer.ElapsedMillis());
-					continue;
-				}
-			}
-
-			HZR_CORE_INFO("[VulkanShader]: Reload, source modified");
-			shaderc::CompilationResult module = compiler.CompileGlslToSpv(source, Utils::VkShaderStageToShaderC(Utils::ShaderTypeToVkType(stage)), m_Path.c_str(), options);
-
-			if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-				HZR_CORE_ERROR("Error {0} : {1}, using cached shader binary", Rendering::Utils::ShaderTypeToString(stage), module.GetErrorMessage());
-				File::ReadBinaryFileUint32(cachedFilePath, m_ShaderCode[stage]);
+			if (binaries.size() > 0) {
+				m_ShaderCode[stage] = binaries;
 				continue;
 			}
 
-			m_ShaderCode[stage] = std::vector<uint32_t>(module.begin(), module.cend());
-			File::WriteBinaryFile(cachedFilePath, m_ShaderCode[stage]);
+			CompileInfo compileInfo = {};
+			compileInfo.Path = m_Path;
+			compileInfo.Environment = RenderAPI::Vulkan;
+			compileInfo.Optimization = Optimization::None;
+			compileInfo.Stage = stage;
+			compileInfo.Source = source;
+
+			ShaderFactory::Compile(&compileInfo);
+
+			if (!compileInfo.Succeeded()) {
+				HZR_CORE_ERROR(compileInfo.Error);
+				auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
+				m_ShaderCode[stage] = binaries;
+				continue;
+			}
+
+			m_ShaderCode[stage] = compileInfo.Binary;
 		}
 	}
 	void VulkanShader::CreateModules()
@@ -287,8 +268,7 @@ namespace Hazard::Rendering::Vulkan
 
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-			ShaderStageData shaderStage = ProcessShaderStage(compiler, resources);
+			ShaderStageData shaderStage = ShaderFactory::GetShaderResources(binary);
 			m_ShaderData.Stages[stage] = shaderStage;
 
 			for (auto& resource : resources.uniform_buffers)
@@ -300,13 +280,13 @@ namespace Hazard::Rendering::Vulkan
 				desc.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				desc.MemberCount = type.member_types.size();
 				desc.Size = compiler.get_declared_struct_size(type);
-				desc.ShaderUsage |= stage;
+				desc.ShaderUsage |= (uint32_t)stage;
 
 				auto it = m_UniformBuffers.find(desc.Name);
 				if (it != m_UniformBuffers.end())
 				{
 					auto& buffer = m_UniformBuffers[desc.Name];
-					
+
 					HZR_CORE_ASSERT(desc.Binding == buffer->GetBinding(), "OpenGL UniformBuffer Binding missmatch for name: {0}", desc.Name);
 					continue;
 				}

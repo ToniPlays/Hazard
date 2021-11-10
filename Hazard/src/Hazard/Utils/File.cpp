@@ -72,12 +72,12 @@ namespace Hazard {
 		auto sTime = std::filesystem::last_write_time(compareTo);
 		return fTime > sTime;
 	}
-	std::string File::ReadFile(const std::string& file)
+	std::string File::ReadFile(const std::filesystem::path& file)
 	{
 		std::string result;
 		std::ifstream ifs(file, std::ios::in | std::ios::binary);
 
-		HZR_CORE_ASSERT(ifs.is_open(), "File {0} could not be opened", file);
+		HZR_CORE_ASSERT(ifs.is_open(), "File {0} could not be opened", file.string());
 
 		ifs.seekg(0, std::ios::end);
 		size_t size = ifs.tellg();
@@ -174,6 +174,10 @@ namespace Hazard {
 	{
 		std::string name = GetName(file);
 		return name.substr(0, name.find_last_of('.'));
+	}
+	std::string File::GetPathNoExt(const std::string& file)
+	{
+		return file.substr(0, file.find_last_of('.'));
 	}
 	std::string File::GetFileExtension(const std::string& file) {
 		return file.substr(file.find_last_of('.') + 1);

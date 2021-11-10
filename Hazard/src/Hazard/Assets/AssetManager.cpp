@@ -27,7 +27,7 @@ namespace Hazard
 
 		AssetType type = Utils::AssetTypeFromExtension(File::GetFileExtension(path.string()));
 
-		if (type == AssetType::None)
+		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
 		//Create Asset metada, don't load until requested
