@@ -49,7 +49,7 @@ namespace Hazard::Rendering
 		void BeginWorld();
 		void BeginBatch();
 		void Flush();
-
+		void EndWorld();
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;

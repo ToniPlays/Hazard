@@ -20,7 +20,6 @@ void main()
 	f_Color = v_Color;
 	f_TextureCoords = v_TextureCoords;
 	f_TextureIndex = v_TextureIndex;
-
 	gl_Position = u_Camera.u_ViewProjection * vec4(v_Position, 1.0);
 }
 
@@ -34,6 +33,7 @@ layout(location = 2) in flat float f_TextureIndex;
 layout (binding = 1) uniform sampler2D u_Textures[32];
 
 layout(location = 0) out vec4 color;
+
 
 void main() 
 {

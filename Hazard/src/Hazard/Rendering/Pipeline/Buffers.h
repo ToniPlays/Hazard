@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Core/Buffer.h"
 #include "ShaderDataType.h"
+#include "../RenderCommandBuffer.h"
 
 namespace Hazard::Rendering 
 {

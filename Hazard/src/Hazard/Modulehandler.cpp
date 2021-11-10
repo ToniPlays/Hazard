@@ -14,7 +14,6 @@ namespace Hazard::Module {
     {
         for (uint32_t i = m_Modules.size() - 1; i > 0; i--) 
         {
-            std::cout << m_Modules[i]->GetName();
             delete m_Modules[i];
         }
     }

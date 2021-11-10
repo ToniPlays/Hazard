@@ -32,6 +32,7 @@ extern Hazard::Application* Hazard::CreateApplication();
 				loop.Run();
 				allocs = 0;
 			}
+
 			return 0;
 		}
 

@@ -23,6 +23,8 @@ namespace Hazard::Rendering::Vulkan {
 	VulkanContext::~VulkanContext()
 	{
 		HZR_PROFILE_FUNCTION();
+		m_Device->WaitUntilIdle();
+
 		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
 
 		m_SwapChain.Reset();
@@ -81,10 +83,10 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		m_SwapChain->BeginFrame();
 	}
-	 
+
 	void VulkanContext::End()
 	{
-		
+
 	}
 
 	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
@@ -157,8 +159,9 @@ namespace Hazard::Rendering::Vulkan {
 		scissors.offset = { 0, 0 };
 
 		vkCmdBeginRenderPass(vkBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdSetViewport(vkBuffer, 0, 1, &viewport);
+ 		vkCmdSetViewport(vkBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(vkBuffer, 0, 1, &scissors);
+
 	}
 
 	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
@@ -169,7 +172,7 @@ namespace Hazard::Rendering::Vulkan {
 	}
 
 	void VulkanContext::SwapBuffers()
-	{	
+	{
 		m_SwapChain->Present();
 	}
 

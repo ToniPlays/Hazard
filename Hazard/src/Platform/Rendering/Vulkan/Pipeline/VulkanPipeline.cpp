@@ -91,7 +91,7 @@ namespace Hazard::Rendering::Vulkan
 		dynamicState.dynamicStateCount = 2;
 		dynamicState.pDynamicStates = dynamicStates;
 
-		VkPipelineRasterizationStateCreateInfo rasterizer{};
+		VkPipelineRasterizationStateCreateInfo rasterizer = {};
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizer.depthClampEnable = VK_FALSE;
 		rasterizer.depthBiasSlopeFactor = -1.0f;
@@ -131,14 +131,11 @@ namespace Hazard::Rendering::Vulkan
 		colorBlending.blendConstants[3] = 0.0f;
 
 		VkPipelineDepthStencilStateCreateInfo depthStencil = {};
-
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 		depthStencil.depthTestEnable = VK_TRUE;
 		depthStencil.depthWriteEnable = VK_TRUE;
 		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
-		depthStencil.minDepthBounds = 0.0f;  // Optional
-		depthStencil.maxDepthBounds = 1.0f;  // Optional
 		depthStencil.stencilTestEnable = VK_FALSE;
 
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
@@ -179,6 +176,6 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanPipeline::Draw(uint32_t size) 
 	{
 		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
-		vkCmdDrawIndexed(buffer, 24, 1, 0, 0, 0);
+		vkCmdDrawIndexed(buffer, size, 1, 0, 0, 0);
 	}
 }

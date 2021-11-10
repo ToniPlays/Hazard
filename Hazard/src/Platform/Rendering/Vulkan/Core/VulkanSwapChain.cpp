@@ -211,8 +211,7 @@ namespace Hazard::Rendering::Vulkan
 		for (auto& fence : m_WaitFences)
 			VK_CHECK_RESULT(vkCreateFence(m_Device->GetDevice(), &fenceCreateInfo, nullptr, &fence));
 
-		// NOTE(Yan): we don't need a depth buffer for the swapchain (most likely)
-		// CreateDepthStencil();
+		CreateDepthStencil();
 
 		VkFormat depthFormat = m_Device->GetDepthFormat();
 
@@ -227,6 +226,7 @@ namespace Hazard::Rendering::Vulkan
 		attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
 		// Depth attachment
 		attachments[1].format = depthFormat;
 		attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
@@ -249,12 +249,7 @@ namespace Hazard::Rendering::Vulkan
 		subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 		subpassDescription.colorAttachmentCount = 1;
 		subpassDescription.pColorAttachments = &colorReference;
-		//subpassDescription.pDepthStencilAttachment = &depthReference;
-		subpassDescription.inputAttachmentCount = 0;
-		subpassDescription.pInputAttachments = nullptr;
-		subpassDescription.preserveAttachmentCount = 0;
-		subpassDescription.pPreserveAttachments = nullptr;
-		subpassDescription.pResolveAttachments = nullptr;
+		subpassDescription.pDepthStencilAttachment = &depthReference;
 
 		VkSubpassDependency dependency = {};
 		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -266,7 +261,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkRenderPassCreateInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-		renderPassInfo.attachmentCount = 1;// static_cast<uint32_t>(attachments.size());
+		renderPassInfo.attachmentCount = 2;
 		renderPassInfo.pAttachments = attachments.data();
 		renderPassInfo.subpassCount = 1;
 		renderPassInfo.pSubpasses = &subpassDescription;
@@ -274,7 +269,6 @@ namespace Hazard::Rendering::Vulkan
 		renderPassInfo.pDependencies = &dependency;
 
 		VK_CHECK_RESULT(vkCreateRenderPass(m_Device->GetDevice(), &renderPassInfo, nullptr, &m_RenderPass));
-
 		CreateFramebuffer();
 	}
 	void VulkanSwapChain::Resize(uint32_t width, uint32_t height)
@@ -382,7 +376,7 @@ namespace Hazard::Rendering::Vulkan
 		frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		frameBufferCreateInfo.pNext = NULL;
 		frameBufferCreateInfo.renderPass = m_RenderPass;
-		frameBufferCreateInfo.attachmentCount = 1;
+		frameBufferCreateInfo.attachmentCount = 2;
 		frameBufferCreateInfo.pAttachments = ivAttachments;
 		frameBufferCreateInfo.width = m_Width;
 		frameBufferCreateInfo.height = m_Height;

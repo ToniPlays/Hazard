@@ -23,6 +23,13 @@ namespace Hazard::Rendering
 		}
 
 		options.SetOptimizationLevel((shaderc_optimization_level)info.Optimization);
+
+		for (auto& [Name, value] : info.Defines) {
+			if (!value.empty())
+				options.AddMacroDefinition(Name, value);
+			else options.AddMacroDefinition(Name);
+		}
+
 		return options;
 	}
 	static shaderc_shader_kind ShaderStageToShaderC(ShaderType type) {
@@ -102,15 +109,17 @@ namespace Hazard::Rendering
 	{
 		std::vector<uint32_t> binaries;
 		std::filesystem::path cachePath = GetShaderBinaryCache(GetShaderCacheFile(path).string(), type, renderer);
-		HZR_CORE_WARN("Loading shader {0} from cache {1}", path, cachePath.string());
-
-		if (!File::Exists(cachePath))
-			return binaries;
 
 		if (SourceFileChanged(path, type, renderer)) {
 			HZR_CORE_INFO("Shader source changed, forcing compilation");
 			return binaries;
 		}
+
+		HZR_CORE_WARN("Loading shader {0} from cache {1}", path, cachePath.string());
+
+		if (!File::Exists(cachePath))
+			return binaries;
+
 
 		File::ReadBinaryFileUint32(cachePath, binaries);
 		return binaries;
@@ -126,6 +135,7 @@ namespace Hazard::Rendering
 			compileInfo->Error = "Compilation failed: No source or binary provided";
 			return;
 		}
+
 		HZR_CORE_WARN("Compiling shader {0}", compileInfo->Path);
 
 		if (compileInfo->Binary.size() != 0 && compileInfo->Source.empty()) {
@@ -135,12 +145,14 @@ namespace Hazard::Rendering
 		}
 
 		shaderc::CompileOptions options = GetCompileOptions(*compileInfo);
+		options.SetGenerateDebugInfo();
 		shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source, ShaderStageToShaderC(compileInfo->Stage), compileInfo->Path.c_str(), options);
 
 		if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
 			compileInfo->Error = result.GetErrorMessage();
 			return;
 		}
+
 		compileInfo->Binary = std::vector<uint32_t>(result.begin(), result.end());
 
 		if (compileInfo->CacheResult)

@@ -17,7 +17,7 @@ namespace Hazard::Rendering::Vulkan
 			VkBufferCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 			createInfo.size = info->Size;
-			createInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			createInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_TO_CPU, m_Buffer);
 			m_LocalData.Allocate(m_Size);
@@ -111,11 +111,11 @@ namespace Hazard::Rendering::Vulkan
 		m_Size = size;
 		auto device = VulkanContext::GetDevice();
 		VulkanAllocator allocator("IndexBuffer");
-		m_LocalData = Buffer::Copy(data, m_Size);
+		m_LocalData = Buffer::Copy(data, m_Size * sizeof(uint32_t));
 
 		VkBufferCreateInfo bufferCreateInfo{};
 		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		bufferCreateInfo.size = m_Size;
+		bufferCreateInfo.size = m_LocalData.Size;
 		bufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		VkBuffer stagingBuffer;
@@ -128,7 +128,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkBufferCreateInfo indexBufferCreateInfo = {};
 		indexBufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		indexBufferCreateInfo.size = m_Size;
+		indexBufferCreateInfo.size = m_LocalData.Size;
 		indexBufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		m_Allocation = allocator.AllocateBuffer(indexBufferCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Buffer);
 

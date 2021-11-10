@@ -9,6 +9,14 @@ namespace Hazard::Rendering
 
 	struct ShaderStageData;
 
+	struct ShaderDefine {
+		std::string Name;
+		std::string Value;
+
+		ShaderDefine(std::string name) : Name(name), Value("") {};
+		ShaderDefine(std::string name, std::string value) : Name(name), Value(value) {};
+	};
+
 	struct CompileInfo 
 	{
 		RenderAPI Environment;
@@ -20,6 +28,7 @@ namespace Hazard::Rendering
 		std::string Error;
 		//Returned by compilation if succeeded
 		std::vector<uint32_t> Binary;
+		std::vector<ShaderDefine> Defines;
 
 		bool Succeeded() { return Error.empty(); }
 	};

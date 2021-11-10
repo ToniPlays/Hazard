@@ -204,7 +204,7 @@ namespace WindowElement {
 		
 		switch (metadata.Type)
 		{
-		case Hazard::AssetType::None:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Warning));
+		case Hazard::AssetType::Undefined:			return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Warning));
 		case Hazard::AssetType::AudioClip:			return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Debug));
 		case Hazard::AssetType::World:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
 		case Hazard::AssetType::Image:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));

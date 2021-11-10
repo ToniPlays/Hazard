@@ -84,10 +84,11 @@ namespace Hazard::Rendering::OpenGL
 
 		for (auto&& [stage, binary] : m_OpenGLSPIRV) {
 
+			ShaderStageData shaderStage = ShaderFactory::GetShaderResources(binary);
+
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-			ShaderStageData shaderStage = ShaderFactory::GetShaderResources(binary);
 			m_ShaderData.Stages[OpenGLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
 
 			for (auto resource : resources.uniform_buffers)
@@ -141,12 +142,15 @@ namespace Hazard::Rendering::OpenGL
 				continue;
 			}
 
+			std::vector<ShaderDefine> defines = { { "RENDERER_VULKAN" } };
+
 			CompileInfo compileInfo = {};
 			compileInfo.Path = m_FilePath;
 			compileInfo.Environment = RenderAPI::Vulkan;
 			compileInfo.Optimization = Optimization::None;
 			compileInfo.Source = source;
 			compileInfo.Stage = stage;
+			compileInfo.Defines = defines;
 
 			ShaderFactory::Compile(&compileInfo);
 
@@ -184,12 +188,15 @@ namespace Hazard::Rendering::OpenGL
 				}
 			}
 
+			std::vector<ShaderDefine> defines = { { "RENDERER_OPENGL" } };
+
 			CompileInfo compileInfo = {};
 			compileInfo.Environment = RenderAPI::OpenGL;
 			compileInfo.Optimization = Optimization::None;
 			compileInfo.Path = m_FilePath;
 			compileInfo.Stage = stage;
 			compileInfo.Binary = spirv;
+			compileInfo.Defines = defines;
 
 			ShaderFactory::Compile(&compileInfo);
 

@@ -27,6 +27,7 @@ namespace Hazard::Rendering::Vulkan
 			m_Specs.Width = info->Width;
 			m_Specs.Height = info->Height;
 		}
+
 		uint32_t attachmentIndex = 0;
 		if (!info->pFrameBuffer) {
 			for (auto& attachment : m_Specs.Attachments) {
@@ -74,6 +75,7 @@ namespace Hazard::Rendering::Vulkan
 
 			glm::vec4 c = VulkanContext::GetClearColor();
 			m_ClearValues.emplace_back().color = { c.r, c.g, c.b, c.a };
+			m_ClearValues.emplace_back().depthStencil = { 1.0f, 0 };
 		}
 
 	}

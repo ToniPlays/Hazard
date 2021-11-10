@@ -13,12 +13,12 @@ void EditorApplication::PreInit()
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
-	appInfo.Logging = false;
+	appInfo.Logging = true;
 	appInfo.IconCount = icons.size();
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo;
-	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.Renderer = RenderAPI::Vulkan;
 	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;

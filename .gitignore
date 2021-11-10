@@ -17,4 +17,5 @@ HazardEditor/res/Audio/Axel Wernberg  Infinity.mp3
 Logs/HazardProfile-Startup.json
 Logs/HazardProfile-Shutdown.json
 Logs/HazardProfile-Runtime.json
-*.cfg
+Hazard/vendor/Glad/bin
+HazardEditor/library/

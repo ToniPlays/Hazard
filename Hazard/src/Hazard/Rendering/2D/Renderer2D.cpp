@@ -56,7 +56,7 @@ namespace Hazard::Rendering
 			starfield.Filter = &filter;
 
 			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.Size = m_Data.MaxVertices;
+			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
 			IndexBufferCreateInfo indexBuffer = {};
@@ -68,6 +68,7 @@ namespace Hazard::Rendering
 
 			FrameBufferCreateInfo frameBufferInfo = {};
 			frameBufferInfo.SwapChainTarget = true;
+			frameBufferInfo.ClearOnLoad = false;
 			frameBufferInfo.Attachments = attachments;
 			frameBufferInfo.AttachmentCount = 2;
 			frameBufferInfo.Samples = 1;
@@ -87,8 +88,6 @@ namespace Hazard::Rendering
 			pipelineSpecs.pVertexBuffer = &vertexInfo;
 			pipelineSpecs.pIndexBuffer = &indexBuffer;
 			pipelineSpecs.RenderPass = std::move(renderPass);
-
-
 
 			m_Pipeline = Pipeline::Create(pipelineSpecs);
 			m_Data.TextureSlots[0] = m_WhiteTexture;
@@ -128,13 +127,13 @@ namespace Hazard::Rendering
 
 		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 
-		glm::mat4 tempMat = Math::ToTransformMatrix({ -0.4f, 0.0f, 0.2f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
+		glm::mat4 tempMat = Math::ToTransformMatrix({ 1.0f, 0.0f, 2.0f }, { 0.0f, 0.0f,  glm::radians(rotation * 90.0f) }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#EF2E2E", 0.0f });
 
-		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f * 1.0f, 1.0f * 1.0f, 1.0f });
+		tempMat = Math::ToTransformMatrix({ 0.6f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 		Submit({ tempMat, "#FFFFFF", 1.0f });
 
-		Flush();
+		EndWorld();
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
@@ -162,7 +161,6 @@ namespace Hazard::Rendering
 		}*/
 
 		m_RenderCommandBuffer->Begin();
-		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);
 	}
 	void Renderer2D::BeginBatch()
 	{
@@ -173,17 +171,20 @@ namespace Hazard::Rendering
 	{
 		if (!m_QuadBatch)
 			return;
-
-		m_Pipeline->Bind();
 		
+		m_Pipeline->Bind();
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
 			m_Data.TextureSlots[i]->Bind(i);
 		}
 
 		m_Pipeline->GetBuffer()->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_Pipeline->GetSpecifications().RenderPass);
 		m_Pipeline->Draw(m_QuadBatch.GetIndexCount());
-
 		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
+	}
+	void Renderer2D::EndWorld()
+	{
+		Flush();
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();
 	}

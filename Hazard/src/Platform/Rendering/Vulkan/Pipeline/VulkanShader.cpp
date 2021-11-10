@@ -202,10 +202,10 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::DestroyModules()
 	{
-		auto device = VulkanContext::GetDevice()->GetDevice();
+		auto device = VulkanContext::GetDevice();
 
 		for (auto&& [stage, module] : m_Modules) {
-			vkDestroyShaderModule(device, module, nullptr);
+			vkDestroyShaderModule(device->GetDevice(), module, nullptr);
 		}
 	}
 	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
@@ -226,12 +226,15 @@ namespace Hazard::Rendering::Vulkan
 				continue;
 			}
 
+			std::vector<ShaderDefine> defines = { { "RENDERER_VULKAN" } };
+
 			CompileInfo compileInfo = {};
 			compileInfo.Path = m_Path;
 			compileInfo.Environment = RenderAPI::Vulkan;
 			compileInfo.Optimization = Optimization::None;
 			compileInfo.Stage = stage;
 			compileInfo.Source = source;
+			compileInfo.Defines = defines;
 
 			ShaderFactory::Compile(&compileInfo);
 
@@ -241,7 +244,6 @@ namespace Hazard::Rendering::Vulkan
 				m_ShaderCode[stage] = binaries;
 				continue;
 			}
-
 			m_ShaderCode[stage] = compileInfo.Binary;
 		}
 	}
