@@ -90,9 +90,9 @@ namespace Hazard::Rendering::OpenGL
 			ShaderStageData shaderStage = ShaderFactory::GetShaderResources(binary);
 			m_ShaderData.Stages[OpenGLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
 
-			for (auto& resource : resources.uniform_buffers)
+			for (auto resource : resources.uniform_buffers)
 			{
-				auto& type = compiler.get_type(resource.base_type_id);
+				auto type = compiler.get_type(resource.base_type_id);
 
 				ShaderUniformBufferDescription desc = {};
 				desc.Name = resource.name;
@@ -134,7 +134,7 @@ namespace Hazard::Rendering::OpenGL
 		for (auto&& [stage, source] : sources) {
 			HZR_PROFILE_FUNCTION("Shader stage");
 
-			auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::Vulkan);
+			auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::Vulkan);
 
 			if (binaries.size() > 0) {
 				shaderData[stage] = binaries;
@@ -152,7 +152,7 @@ namespace Hazard::Rendering::OpenGL
 
 			if (!compileInfo.Succeeded()) {
 				HZR_CORE_ERROR(compileInfo.Error);
-				auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
+				auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 				shaderData[stage] = binaries;
 				continue;
 			}
@@ -172,13 +172,16 @@ namespace Hazard::Rendering::OpenGL
 		for (auto&& [stage, spirv] : m_VulkanSPIRV)
 		{
 			HZR_PROFILE_FUNCTION("Shader stage");
-
-			auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 			GLenum glStage = OpenGLUtils::ShaderTypeToGLType(stage);
 
-			if (binaries.size() > 0) {
-				shaderData[glStage] = binaries;
-				continue;
+			if (!forceCompile) {
+
+				auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
+
+				if (binaries.size() > 0) {
+					shaderData[glStage] = binaries;
+					continue;
+				}
 			}
 
 			CompileInfo compileInfo = {};

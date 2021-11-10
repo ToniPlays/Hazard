@@ -57,20 +57,21 @@ namespace Hazard::Rendering
 		return "";
 	}
 
-	bool ShaderFactory::CacheExists(const std::string& path)
+	bool ShaderFactory::CacheExists(const std::string& path, ShaderType type, RenderAPI renderer)
 	{
-		auto cacheDir = GetShaderCacheFile(path);
+		auto cacheDir = GetShaderCacheFile(GetShaderBinaryCache(path, type, renderer).string());
 		return File::Exists(cacheDir);
 	}
-	bool ShaderFactory::CacheFileChanged(const std::string& path)
+	bool ShaderFactory::SourceFileChanged(const std::string& path, ShaderType type, RenderAPI renderer)
 	{
 		auto sourceFile = GetShaderSourcePath(path);
-		auto cacheFile = GetShaderCacheFile(path);
+		auto cacheFile = GetShaderCacheFile(GetShaderBinaryCache(path, type, renderer).string());
 
 		if (!File::Exists(cacheFile))
 			return false;
 
-		return File::IsNewerThan(sourceFile, cacheFile);
+		bool newer = File::IsNewerThan(sourceFile, cacheFile);
+		return newer;
 	}
 	std::filesystem::path ShaderFactory::GetShaderCacheFile(const std::string& path)
 	{
@@ -105,6 +106,11 @@ namespace Hazard::Rendering
 
 		if (!File::Exists(cachePath))
 			return binaries;
+
+		if (SourceFileChanged(path, type, renderer)) {
+			HZR_CORE_INFO("Shader source changed, forcing compilation");
+			return binaries;
+		}
 
 		File::ReadBinaryFileUint32(cachePath, binaries);
 		return binaries;
