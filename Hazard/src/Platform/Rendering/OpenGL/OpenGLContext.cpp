@@ -63,9 +63,22 @@ namespace Hazard::Rendering {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+		void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+		{
+			renderPass->GetSpecs().TargetFrameBuffer->Bind();
+		}
+
+		void OpenGLContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+
 		void OpenGLContext::SetViewport(int x, int y, int w, int h)
 		{
 			glViewport(x, y, w, h);
+			for (auto& fn : m_ResizeCallback) {
+				fn(w, h);
+			}
 		}
 
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)

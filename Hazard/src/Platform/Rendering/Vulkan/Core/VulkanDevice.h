@@ -15,7 +15,7 @@ namespace Hazard::Rendering::Vulkan
 
 	class VulkanDevice {
 	public:
-		VulkanDevice(VkInstance instance, VkSurfaceKHR surface);
+		VulkanDevice(VkInstance instance, VkSurfaceKHR surface, uint32_t imagesInFlight);
 		~VulkanDevice();
 
 		void WaitUntilIdle();
@@ -31,7 +31,7 @@ namespace Hazard::Rendering::Vulkan
 		void FlushCommandBuffer(VkCommandBuffer buffer);
 		void FlushGraphicsCommandBuffer(VkCommandBuffer buffer);
 
-		VkDescriptorPool GetDescriptorPool() { return m_DescriptorPool; }
+		VkDescriptorPool GetDescriptorPool(uint32_t index) { return m_DescriptorPools[index]; }
 		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
 		QueueIndices GetPresentQueue() { return m_PresentQueue; }
 		DeviceSpec GetSpec();
@@ -40,12 +40,12 @@ namespace Hazard::Rendering::Vulkan
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
 
 	private:
-		void CreatePools();
+		void CreatePools(uint32_t count);
 
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
 		VkCommandPool m_CommandPool;
-		VkDescriptorPool m_DescriptorPool;
+		std::vector<VkDescriptorPool> m_DescriptorPools;
 		VkPipelineCache m_PipelineCache;
 
 		QueueIndices m_GraphicsQueue;

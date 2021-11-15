@@ -5,6 +5,7 @@
 #include "../VulkanContext.h"
 
 #include "Hazard/Utils/StringUtil.h"
+#include "../VKUtils.h"
 
 namespace Hazard::Rendering::Vulkan {
 

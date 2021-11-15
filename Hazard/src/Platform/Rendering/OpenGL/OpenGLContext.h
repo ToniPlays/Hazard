@@ -20,15 +20,21 @@ namespace Hazard::Rendering::OpenGL {
 		void SwapBuffers() override;
 		void Begin() override {};
 		void End() override {};
+		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
+		void EndRenderPass(Ref<RenderCommandBuffer> buffer);
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;
 
+		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeCallback.push_back(callback); };
+
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
+
 	private:
 		GLFWwindow* m_Window;
 		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		static ErrorCallback s_Callback;
+		std::vector<ResizeCallback> m_ResizeCallback;
 	};
 }

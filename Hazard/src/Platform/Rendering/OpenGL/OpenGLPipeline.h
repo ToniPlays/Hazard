@@ -16,8 +16,8 @@ namespace Hazard::Rendering::OpenGL
 		virtual Ref<VertexBuffer> GetBuffer() override { return m_Buffer; }
 
 		virtual void Invalidate() override;
-		virtual void Bind() override;
-		virtual void Draw(uint32_t count) override;
+		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
+		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
 
 	private:
 		PipelineSpecification m_Specs;
@@ -25,5 +25,6 @@ namespace Hazard::Rendering::OpenGL
 		Ref<VertexBuffer> m_Buffer;
 		Ref<IndexBuffer> m_IndexBuffer;
 		uint32_t m_ID;
+		uint32_t m_DrawType;
 	};
 }

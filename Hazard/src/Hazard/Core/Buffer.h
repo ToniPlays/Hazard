@@ -11,7 +11,9 @@ namespace Hazard
 
 		void Allocate(uint32_t size) 
 		{
-			delete[] Data;
+			if(Data != nullptr)
+				delete[] Data;
+
 			Data = nullptr;
 
 			if (size == 0) return;
@@ -28,17 +30,22 @@ namespace Hazard
 			if (Data) memset(Data, 0, Size);
 		}
 		template<typename T>
+		void Initialize(T value) {
+			if (Data) 
+				memset(Data, value, Size);
+		}
+		template<typename T>
 		T& Read(uint32_t offset = 0) {
 			return *(T*)((byte*)Data + offset);
 		}
 		byte* ReadBytes(uint32_t size, uint32_t offset) {
-			HZR_CORE_ASSERT(offset + size <= Size, "Vulkan Buffer Overflow");
+			HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
 			byte* buffer = new byte[size];
 			memcpy(buffer, (byte*)Data + offset, size);
 			return buffer;
 		}
 		void Write(void* data, uint32_t size, uint32_t offset = 0) {
-			HZR_CORE_ASSERT(offset + size <= Size, "Vulkan Buffer Overflow");
+			HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
 			memcpy((byte*)Data + offset, data, size);
 		}
 		operator bool() const { return Data; }
@@ -54,6 +61,5 @@ namespace Hazard
 			memcpy(buffer.Data, (byte*)data + offset, size);
 			return buffer;
 		}
-
 	};
 }

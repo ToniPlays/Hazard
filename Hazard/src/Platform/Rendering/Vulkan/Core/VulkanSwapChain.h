@@ -1,14 +1,12 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
 #include "Platform/System/Window.h"
 #include "VulkanDevice.h"
 #include "VulkanAllocator.h"
+#include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan
 {
-	using ResizeCallback = std::function<void(uint32_t, uint32_t)>;
-
 	class VulkanSwapChain : public RefCount {
 	public:
 		VulkanSwapChain();

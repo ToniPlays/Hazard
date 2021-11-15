@@ -100,13 +100,14 @@ namespace Hazard::Rendering
 			}
 			}
 		}
-		static std::string UsageFlagsToString(const uint32_t& flags) {
+		static std::string UsageFlagsToString(const uint32_t& flags) 
+		{
 			std::string result;
 
 			if (flags & (uint32_t)ShaderType::Vertex)	result += "Vertex";
-			if (flags & (uint32_t)ShaderType::Fragment) result += ", Fragment";
-			if (flags & (uint32_t)ShaderType::Compute)	result += ", Compute";
-			if (flags & (uint32_t)ShaderType::Geometry) result += ", Geometry";
+			if (flags & (uint32_t)ShaderType::Fragment) result += " Fragment";
+			if (flags & (uint32_t)ShaderType::Compute)	result += " Compute";
+			if (flags & (uint32_t)ShaderType::Geometry) result += " Geometry";
 			return result;
 
 		}

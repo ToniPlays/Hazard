@@ -4,6 +4,7 @@
 #include "GUI/Window/Rendering/TransformationGizmo.h"
 
 #include "Editor/EditorCamera.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 using namespace Hazard;
 using namespace Hazard::Rendering;

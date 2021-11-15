@@ -19,7 +19,7 @@ namespace Hazard::Rendering::OpenGL
 		virtual bool Loaded() const { return m_Loaded; };
 		virtual ImageFormat GetFormat() const override { return m_Format; }
 
-		uint32_t GetID() const override { return m_ID; }
+		uint32_t GetID() const { return m_ID; }
 
 		virtual float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
 		virtual Buffer GetBuffer() const { return Buffer(); };

@@ -82,7 +82,8 @@ namespace Hazard::Rendering
 	}
 	std::filesystem::path ShaderFactory::GetShaderCacheFile(const std::string& path)
 	{
-		return m_CacheDir + "/" + path;
+		std::string fileName = File::GetName(path);
+		return m_CacheDir + "/" + fileName;
 	}
 	std::filesystem::path ShaderFactory::GetShaderSourcePath(const std::string& path)
 	{
@@ -115,11 +116,8 @@ namespace Hazard::Rendering
 			return binaries;
 		}
 
-		HZR_CORE_WARN("Loading shader {0} from cache {1}", path, cachePath.string());
-
 		if (!File::Exists(cachePath))
 			return binaries;
-
 
 		File::ReadBinaryFileUint32(cachePath, binaries);
 		return binaries;

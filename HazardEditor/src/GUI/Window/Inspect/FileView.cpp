@@ -17,25 +17,22 @@ namespace WindowElement {
 	}
 	void FileView::Init()
 	{
-		AssetHandle handle = AssetManager::ImportAsset("res/icons/folder.png");
+		SetActive(false);
+		return;
+		AssetHandle handle = AssetManager::ImportAsset("icons/folder.png");
 		m_Images["folder"] = AssetManager::GetAsset<Rendering::Image2D>(handle);
-		EditorView::GetContext().AddTexture(m_Images["folder"]);
 
-		handle = AssetManager::ImportAsset("res/icons/logo.png");
+		handle = AssetManager::ImportAsset("icons/logo.png");
 		m_Images["logo"] = AssetManager::GetAsset<Rendering::Image2D>(handle);
-		EditorView::GetContext().AddTexture(m_Images["logo"]);
 
-		handle = AssetManager::ImportAsset("res/icons/textureBG.png");
+		handle = AssetManager::ImportAsset("icons/textureBG.png");
 		m_Images["textureBG"] = AssetManager::GetAsset<Rendering::Image2D>(handle);
-		EditorView::GetContext().AddTexture(m_Images["textureBG"]);
 
-		handle = AssetManager::ImportAsset("res/icons/csharp.png");
+		handle = AssetManager::ImportAsset("icons/csharp.png");
 		m_Images["csharp"] = AssetManager::GetAsset<Rendering::Image2D>(handle);
-		EditorView::GetContext().AddTexture(m_Images["csharp"]);
 
-		handle = AssetManager::ImportAsset("res/icons/world.png");
+		handle = AssetManager::ImportAsset("icons/world.png");
 		m_Images["world"] = AssetManager::GetAsset<Rendering::Image2D>(handle);
-		EditorView::GetContext().AddTexture(m_Images["world"]);
 	}
 	void FileView::OnWindowRender()
 	{
@@ -187,7 +184,7 @@ namespace WindowElement {
 			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(metadata));
 
 			Input::FileButton(File::GetNameNoExt(metadata.Path.string()).c_str(), GetFileImageFromType(metadata).Raw(), [&]() {
-				DragDropUtils::DragSource(Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), metadata.Path.string());
+				DragDropUtils::DragSource(Hazard::Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), metadata.Path.string());
 
 				}, { colWidth - 5, colHeight });
 			ImGui::PopStyleColor();
@@ -219,9 +216,6 @@ namespace WindowElement {
 		case Hazard::AssetType::World:				return m_Images["world"];
 		case Hazard::AssetType::Image: {
 			Ref<Rendering::Image2D> asset = AssetManager::GetAsset<Rendering::Image2D>(metadata.Handle);
-			if (asset.Raw()->GetID() == nullptr) {
-				EditorView::GetContext().AddTexture(asset);
-			}
 			return asset;
 		}
 		case Hazard::AssetType::AudioClip:

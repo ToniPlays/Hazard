@@ -9,20 +9,21 @@ namespace Hazard::Rendering::Vulkan {
 	public:
 		VulkanFrameBuffer(FrameBufferCreateInfo* info);
 
-		virtual void Bind() const {};
-		virtual void Unbind() const {};
+		void Bind() const {};
+		void Unbind() const {};
 
-		virtual void Resize(uint32_t width, uint32_t height, bool force = false);
-		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const {};
+		void Resize(uint32_t width, uint32_t height, bool force = false);
+		void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const {};
 
-		virtual uint32_t GetWidth() const { return m_Specs.Width; };
-		virtual uint32_t GetHeight() const { return m_Specs.Height; };
+		uint32_t GetWidth() const { return m_Specs.Width; };
+		uint32_t GetHeight() const { return m_Specs.Height; };
 
-		virtual uint32_t GetID() const { return 0; };
-		virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
-		virtual VkRenderPass GetRenderPass() { return m_RenderPass; };
-		virtual VkFramebuffer GetFrameBuffer() { return m_FrameBuffer; };
-		virtual Ref<VulkanImage2D> GetDepthImage() { return m_DepthAttachment; }
+		FrameBufferSpecification& GetSpecification() override { return m_Specs; }
+		VkRenderPass GetRenderPass() { return m_RenderPass; };
+		VkFramebuffer GetFrameBuffer() { return m_FrameBuffer; };
+		Ref<VulkanImage2D> GetDepthImage() { return m_DepthAttachment; }
+		Ref<Image2D> GetImage() const { return m_AttachmentImages[0].As<Image2D>(); };
+
 		const std::vector<VkClearValue>& GetVulkanClearValues() const { return m_ClearValues; }
 
 		void Invalidate();

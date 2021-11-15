@@ -3,9 +3,7 @@
 #include "Hazard.h"
 #include "Hazard/Core/EntryPoint.h"
 
-using namespace Hazard;
-
-class EditorApplication : public Application {
+class EditorApplication : public Hazard::Application {
 
 public:
 	EditorApplication() = default;
@@ -13,7 +11,7 @@ public:
 
 	void PreInit() override;
 	void Init() override;
-	bool OnEvent(Event& e) override;
+	bool OnEvent(Hazard::Event& e) override;
 };
 
 Hazard::Application* Hazard::CreateApplication() 

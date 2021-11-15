@@ -26,7 +26,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* co
 		context->GetSurface()).graphicsFamily.value();
 	init_info.Queue = device->GetGraphicsQueue().Queue;
 	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = m_Context->GetDevice()->GetDescriptorPool();
+	init_info.DescriptorPool = m_Context->GetDevice()->GetDescriptorPool(0);
 	init_info.Allocator = nullptr;
 	init_info.MinImageCount = 2;
 	init_info.ImageCount = swapchain->GetImageCount();
@@ -151,14 +151,4 @@ void EditorPlatformVulkan::EndFrame()
 void EditorPlatformVulkan::Close()
 {
 
-}
-void EditorPlatformVulkan::AddTexture(Ref<Rendering::Image> image)
-{
-	if (dynamic_cast<Rendering::Vulkan::VulkanImage2D*>(image.Raw())) {
-		Rendering::Vulkan::VulkanImage2D* vt = (Rendering::Vulkan::VulkanImage2D*)image.Raw();
-		//vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetData().Sampler, vt->GetData().ImageView, vt->GetData().Layout));
-		return;
-	}
-	//Rendering::Vulkan::VulkanFrameBuffer* vt = (Rendering::Vulkan::VulkanFrameBuffer*)texture.Raw();
-	//vt->SetID(ImGui_ImplVulkan_AddTexture(vt->GetData(0).Sampler, vt->GetData(0).ImageView, vt->GetData(0).Layout));
 }

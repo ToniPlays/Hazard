@@ -13,7 +13,7 @@
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
 
-#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ERROR("Vulkan function failed");}
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ERROR("Vulkan function failed: {0}", VKUtils::ResultToString(result));}
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -28,6 +28,7 @@ namespace Hazard::Rendering::Vulkan {
 		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
 
+		void AddResizeCallback(const ResizeCallback& callback) { m_SwapChain->AddResizeCallback(callback); };
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;
 
@@ -39,6 +40,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		static RenderCommandQueue& GetRenderCommandQueue() { return *s_CommandQueue; }
 		static glm::vec4 GetClearColor() { return m_ClearColor; }
+		static VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 
 		void BeginFrame();
 		void Begin() override;
@@ -60,6 +62,7 @@ namespace Hazard::Rendering::Vulkan {
 		inline static RenderCommandQueue* s_CommandQueue;
 		inline static glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
 
+		inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
 		
 		uint32_t m_CurrentBufferIndex = 0;
 		static ErrorCallback s_Callback;

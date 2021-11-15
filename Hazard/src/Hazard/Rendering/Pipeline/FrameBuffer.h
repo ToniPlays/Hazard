@@ -3,7 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "glm/glm.hpp"
 #include "RenderPass.h"
-#include "../Image/Image.h"
+#include "../Image/Image2D.h"
 
 namespace Hazard::Rendering {
 
@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 
 	struct FrameBufferCreateInfo
 	{
-		uint32_t Width = 1024, Height = 1024;
+		uint32_t Width = 0, Height = 0;
 		uint32_t Samples = 1;
 		uint32_t AttachmentCount = 0;
 		glm::vec4 ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -56,7 +56,7 @@ namespace Hazard::Rendering {
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual uint32_t GetID() const = 0;
+		virtual Ref<Image2D> GetImage() const = 0;
 		virtual FrameBufferSpecification& GetSpecification() = 0;
 
 		static Ref<FrameBuffer> Create(FrameBufferCreateInfo* info);

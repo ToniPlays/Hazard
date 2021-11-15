@@ -14,7 +14,7 @@ namespace Hazard::Rendering {
     }
     Mesh::~Mesh()
     {
-
+        
     }
     void Mesh::GeneratePipeline()
     {
@@ -28,11 +28,32 @@ namespace Hazard::Rendering {
         indexInfo.Data = m_Indices.data();
         indexInfo.Usage = BufferUsage::StaticDraw;
 
+        FrameBufferCreateInfo frameBufferInfo = {};
+        frameBufferInfo.SwapChainTarget = false;
+        frameBufferInfo.AttachmentCount = 2;
+        frameBufferInfo.Attachments = { {ImageFormat::RGBA }, {ImageFormat::Depth } };
+        frameBufferInfo.ClearOnLoad = true;
+        frameBufferInfo.ClearColor = Color::White;
+        frameBufferInfo.DebugName = "Mesh3D";
+        frameBufferInfo.Width = 1920;
+        frameBufferInfo.Height = 1080;
+
+        Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+        RenderPassCreateInfo renderPassInfo = {};
+        renderPassInfo.pTargetFrameBuffer = frameBuffer;
+        renderPassInfo.DebugName = "Mesh3D";
+
+        Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
+
         PipelineSpecification spec = {};
         spec.Usage = PipelineUsage::GraphicsBit;
+        spec.DrawType = DrawType::Fill;
+        spec.LineWidth = 1.0f;
         spec.pVertexBuffer = &vertexInfo;
         spec.pIndexBuffer = &indexInfo;
-        spec.ShaderPath = "res/Shaders/sources/pbr.glsl";
+        spec.ShaderPath = "Shaders/pbr.glsl";
+        spec.RenderPass = renderPass;
 
         m_Pipeline = Pipeline::Create(spec);
     }

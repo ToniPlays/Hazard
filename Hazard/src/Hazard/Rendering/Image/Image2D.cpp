@@ -13,7 +13,7 @@ namespace Hazard::Rendering
     {
 		switch (RenderCommand::GetAPI())
 		{
-		//case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);
+		case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);
 		case RenderAPI::Vulkan: return new Vulkan::VulkanImage2D(info);
 		}
     }

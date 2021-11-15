@@ -39,13 +39,15 @@ namespace Hazard::Rendering::Vulkan
 		auto device = m_Device->GetDevice();
 		VkPhysicalDevice physicalDevice = m_Device->GetPhysicalDevice();
 
+		VkPresentModeKHR preferred = m_VSync ? VK_PRESENT_MODE_FIFO_KHR : VK_PRESENT_MODE_MAILBOX_KHR;
+
 		VkSwapchainKHR oldSwapchain = m_Swapchain;
 		VkSurfaceCapabilitiesKHR surfCaps = VKUtils::GetSurfaceCapabilities(m_Device->GetPhysicalDevice(), m_Surface);
 		SwapChainSupportDetails details = VKUtils::GetSwapChainDetails(m_Device->GetPhysicalDevice(), m_Surface);
 
 		VkExtent2D swapchainExtent = VKUtils::ChooseSwapChainExtent(details.capabilities, (int)&width, (int)&height);
-		VkPresentModeKHR swapchainPresentMode = VKUtils::ChooseSwapChainPresentMode(details.presentModes);
-		VkSurfaceFormatKHR format = VKUtils::ChooseSwapChainFormat(details.formats);
+		VkPresentModeKHR swapchainPresentMode = VKUtils::ChooseSwapChainPresentMode(details.presentModes, preferred);
+		VkSurfaceFormatKHR format = VKUtils::ChooseSwapChainFormat(details.formats, VKUtils::GetFormat(ImageFormat::RGBA));
 		m_ColorFormat = format.format;
 		m_ColorSpace = format.colorSpace;
 

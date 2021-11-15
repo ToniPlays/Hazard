@@ -50,7 +50,5 @@ namespace Hazard::Rendering
 		virtual float GetAspectRatio() = 0;
 		virtual Buffer GetBuffer() const = 0;
 		virtual Buffer& GetBuffer() = 0;
-
-		virtual void* GetID() const = 0;
 	};
 }

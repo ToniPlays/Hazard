@@ -37,6 +37,10 @@ namespace Hazard::Rendering {
 
 		std::string& GetFile() { return m_Filename; }
 		void GeneratePipeline();
+
+		Ref<Pipeline> GetPipeline() { return m_Pipeline; }
+		size_t GetIndexCount() { return m_Indices.size(); }
+
 	private:
 		std::string m_Filename;
 

@@ -11,7 +11,6 @@ namespace Hazard::Rendering
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
-		void* Data = nullptr;
 	};
 
 	class Image2D : public Image
@@ -20,7 +19,6 @@ namespace Hazard::Rendering
 		virtual ~Image2D() = default;
 
 		virtual ImageFormat GetFormat() const = 0;
-
 		static Ref<Image2D> Create(Image2DCreateInfo* info);
 	};
 }

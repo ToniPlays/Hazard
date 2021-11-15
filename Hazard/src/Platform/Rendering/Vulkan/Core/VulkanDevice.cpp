@@ -10,7 +10,7 @@
 
 namespace Hazard::Rendering::Vulkan {
 
-	VulkanDevice::VulkanDevice(VkInstance instance, VkSurfaceKHR surface)
+	VulkanDevice::VulkanDevice(VkInstance instance, VkSurfaceKHR surface, uint32_t imagesInFlight)
 	{
 		m_PhysicalDevice = VKUtils::GetVulkanCapableDevice(instance, surface);
 
@@ -32,6 +32,8 @@ namespace Hazard::Rendering::Vulkan {
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 		VkPhysicalDeviceFeatures deviceFeatures = {};
+		deviceFeatures.fillModeNonSolid = VK_TRUE;
+
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
@@ -40,6 +42,7 @@ namespace Hazard::Rendering::Vulkan {
 		createInfo.pEnabledFeatures = &deviceFeatures;
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
 			HZR_THROW("Failed to create Vulkan physical device!");
@@ -75,11 +78,13 @@ namespace Hazard::Rendering::Vulkan {
 				break;
 			}
 		}
-		CreatePools();
+		CreatePools(imagesInFlight);
 	}
 	VulkanDevice::~VulkanDevice()
 	{
-		vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+		for(auto pool : m_DescriptorPools)
+			vkDestroyDescriptorPool(m_Device, pool, nullptr);
+
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
@@ -178,7 +183,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 		return 0;
 	}
-	void VulkanDevice::CreatePools()
+	void VulkanDevice::CreatePools(uint32_t count)
 	{
 		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VulkanContext::GetSurface());
 
@@ -190,17 +195,30 @@ namespace Hazard::Rendering::Vulkan {
 		auto result = vkCreateCommandPool(m_Device, &createInfo, nullptr, &m_CommandPool);
 		HZR_CORE_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan CommandPool");
 
-		VkDescriptorPoolSize poolSize = {};
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSize.descriptorCount = 100;
+		VkDescriptorPoolSize pool_sizes[] =
+		{
+			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+		};
 
 		VkDescriptorPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		poolInfo.poolSizeCount = 1;
-		poolInfo.pPoolSizes = &poolSize;
-		poolInfo.maxSets = 1 * sizeof(poolSize);
+		poolInfo.poolSizeCount = 11;
+		poolInfo.pPoolSizes = pool_sizes;
+		poolInfo.maxSets = 100000;
 
-		VK_CHECK_RESULT(vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool));
-
+		m_DescriptorPools.resize(count);
+		for (size_t i = 0; i < count; i++) {
+			VK_CHECK_RESULT(vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPools[i]));
+		}
 	}
 }

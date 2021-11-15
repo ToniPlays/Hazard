@@ -93,32 +93,35 @@ namespace Hazard::Rendering::OpenGL
 
 			for (auto resource : resources.uniform_buffers)
 			{
-				auto type = compiler.get_type(resource.base_type_id);
+				auto& type = compiler.get_type(resource.base_type_id);
 
-				ShaderUniformBufferDescription desc = {};
-				desc.Name = resource.name;
-				desc.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-				desc.MemberCount = type.member_types.size();
-				desc.Size = compiler.get_declared_struct_size(type);
-				desc.ShaderUsage |= (int)stage;
+				ShaderUniformBufferDescription spec = {};
+				spec.Name = resource.name;
+				spec.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+				spec.MemberCount = type.member_types.size();
+				spec.Size = compiler.get_declared_struct_size(type);
+				spec.ShaderUsage |= (uint32_t)stage;
 
-				auto it = m_UniformBuffers.find(desc.Name);
-				if (it != m_UniformBuffers.end())
+				auto it = m_ShaderData.UniformsDescriptions.find(spec.Binding);
+				if (it != m_ShaderData.UniformsDescriptions.end())
 				{
-					auto& buffer = m_UniformBuffers[desc.Name];
-					HZR_CORE_ASSERT(desc.Binding == buffer->GetBinding(), "OpenGL UniformBuffer Binding missmatch for name: {0}", desc.Name);
+					auto& buffer = m_ShaderData.UniformsDescriptions[spec.Binding];
+					buffer.ShaderUsage |= (uint32_t)stage;
 					continue;
 				}
 
-				m_ShaderData.UniformsDescriptions[desc.Binding] = desc;
-
-				UniformBufferCreateInfo bufferInfo = {};
-				bufferInfo.Name = desc.Name;
-				bufferInfo.Binding = desc.Binding;
-				bufferInfo.Size = desc.Size;
-
-				m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
+				m_ShaderData.UniformsDescriptions[spec.Binding] = spec;
 			}
+		}
+
+		for (auto& [binding, spec] : m_ShaderData.UniformsDescriptions) {
+			UniformBufferCreateInfo bufferInfo = {};
+			bufferInfo.Name = spec.Name;
+			bufferInfo.Binding = spec.Binding;
+			bufferInfo.Size = spec.Size;
+			bufferInfo.Usage = spec.ShaderUsage;
+
+			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
 
 		Utils::PrintReflectResults(m_FilePath, m_ShaderData);

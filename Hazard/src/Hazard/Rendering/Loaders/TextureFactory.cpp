@@ -16,7 +16,8 @@ namespace Hazard::Rendering
 
 	std::filesystem::path TextureFactory::GetFileCachePath(const std::string& path)
 	{
-		std::string dir = m_CacheDirectory + "/" + path + ".hzrche";
+		std::string fileName = File::GetName(path);
+		std::string dir = m_CacheDirectory + "/" + fileName + ".hzrche";
 		return std::filesystem::path(dir);
 	}
 
@@ -29,11 +30,9 @@ namespace Hazard::Rendering
 	{
 		std::filesystem::path cacheDir = GetFileCachePath(path);
 
-		HZR_CORE_INFO("Creating texture cache {0}", path);
-
 		if (!File::DirectoryExists(cacheDir.parent_path()))
 			File::CreateDir(cacheDir.parent_path());
-		
+
 		uint32_t dataSize;
 		uint32_t* textureData;
 		if (header.Channels == 4) {
@@ -44,7 +43,7 @@ namespace Hazard::Rendering
 			memcpy(textureData, &header, sizeof(TextureHeader));
 			memcpy(textureData + sizeof(TextureHeader), header.ImageData.Data, header.ImageData.Size);
 		}
-		else 
+		else
 		{
 			return false;
 		}
@@ -60,6 +59,24 @@ namespace Hazard::Rendering
 		if (!File::Exists(cacheFile)) return false;
 
 		return File::IsNewerThan(sourceFile, cacheFile);
+	}
+
+	uint32_t TextureFactory::PixelSize(const ImageFormat& format)
+	{
+		switch (format)
+		{
+		case ImageFormat::None:				return 0;
+		case ImageFormat::RED32F:			return 3;
+		case ImageFormat::RGB:				return 3;
+		case ImageFormat::RGBA:				return 4;
+		case ImageFormat::RGBA16F:			return 4;
+		case ImageFormat::RGBA32F:			return 4;
+		case ImageFormat::RG16F:			return 2;
+		case ImageFormat::RG32F:			return 2;
+		case ImageFormat::SRGB:				return 2;
+		case ImageFormat::DEPTH32F:			return 1;
+		case ImageFormat::DEPTH24STENCIL8:	return 1;
+		}
 	}
 
 	TextureHeader TextureFactory::LoadTextureFromCache(const std::string& path)
@@ -80,7 +97,6 @@ namespace Hazard::Rendering
 	}
 	TextureHeader TextureFactory::LoadFromCacheIfExists(const std::string& path, bool reloadIfOutdated)
 	{
-		
 		bool cacheExists = TextureCacheExists(path);
 		bool isNewer = CacheFileChanged(path) && reloadIfOutdated;
 
@@ -96,16 +112,19 @@ namespace Hazard::Rendering
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)
 	{
-		std::string sourceFile = "res/" + path;
+		auto sourceFile = GetFileSourcePath(path);
+		HZR_CORE_ASSERT(File::Exists(sourceFile), "Texture file does not exist");
+
 		TextureHeader header = {};
 
 		int w, h, channels;
 		{
 			Timer timer;
 			stbi_set_flip_vertically_on_load(verticalFlip);
-			void* data = stbi_load(sourceFile.c_str(), &w, &h, &channels, 4);
+			
+			stbi_uc* data = stbi_load(sourceFile.string().c_str(), &w, &h, &channels, 4);
 			header.ImageData = Buffer(data, w * h * channels);
-			HZR_CORE_INFO("Texture \"{0}\" loaded from source in {1} ms", sourceFile, timer.ElapsedMillis());
+			HZR_CORE_INFO("Texture \"{0}\" loaded from source in {1} ms", sourceFile.string(), timer.ElapsedMillis());
 		}
 
 		header.Width = w;

@@ -26,6 +26,7 @@ namespace Hazard::ECS {
 				return true;
 			}
 		}
+
 		m_World = new World("New world");
 		m_World->SetName("New World");
 

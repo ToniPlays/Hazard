@@ -1,7 +1,8 @@
 #pragma once
 #include <hzrpch.h>
 #include "OpenGLPipeline.h"
-
+#include "OpenGLFrameBuffer.h"
+#include "OpenGLUtils.h"
 #include <glad/glad.h>
 
 namespace Hazard::Rendering::OpenGL
@@ -34,7 +35,6 @@ namespace Hazard::Rendering::OpenGL
 		glCreateVertexArrays(1, &m_ID);
 
 		m_Shader = Shader::Create(specs.ShaderPath);
-
 		m_Buffer = VertexBuffer::Create(specs.pVertexBuffer);
 		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer);
 
@@ -46,9 +46,9 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Invalidate()
 	{
-
+		m_DrawType = OpenGLUtils::DrawTypeToGLType(m_Specs.DrawType);
 	}
-	void OpenGLPipeline::Bind()
+	void OpenGLPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		m_Shader->Bind();
 		glBindVertexArray(m_ID);
@@ -64,8 +64,9 @@ namespace Hazard::Rendering::OpenGL
 		if (m_IndexBuffer)
 			m_IndexBuffer->Bind();
 	}
-	void OpenGLPipeline::Draw(uint32_t count)
+	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+		glLineWidth(m_Specs.LineWidth);
+		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
 	}
 }

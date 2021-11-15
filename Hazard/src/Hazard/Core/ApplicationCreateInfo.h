@@ -41,7 +41,7 @@ namespace Hazard {
 		bool VSync = false;
 		bool Decorated = true;
 		
-		Color Color = { 0, 0, 0, 1.0 };
+		Color Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		uint32_t Width = 0;
 		uint32_t Height = 0;
@@ -49,9 +49,6 @@ namespace Hazard {
 	};
 	struct RenderEngineCreateInfo 
 	{
-		const char* ShaderSourcePath;
-		const char* ShaderCompilePath;
-
 		uint32_t MaxQuadCount = 35000;
 		uint32_t SamplerCount = 0;
 	};

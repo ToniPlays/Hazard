@@ -21,20 +21,20 @@ namespace Hazard::Rendering
 
 	struct VertexBufferCreateInfo 
 	{
-		uint32_t Size = 0;
+		size_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
 		void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo 
 	{
-		uint32_t Size;
+		size_t Size;
 		BufferUsage Usage;
 		uint32_t* Data = nullptr;
 	};
 	struct UniformBufferCreateInfo 
 	{
 		std::string Name;
-		uint32_t Size;
+		size_t Size;
 		uint32_t Binding;
 		uint32_t Usage;
 	};

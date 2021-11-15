@@ -58,6 +58,7 @@ namespace Hazard::Rendering::Vulkan
 	};
 	class VulkanUniformBuffer : public UniformBuffer
 	{
+		friend class VulkanShader;
 	public:
 		VulkanUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~VulkanUniformBuffer();
@@ -69,7 +70,7 @@ namespace Hazard::Rendering::Vulkan
 
 		const uint32_t GetBinding() const override { return m_Binding; };
 		const uint32_t GetSize() const { return m_Size; };
-		virtual uint32_t GetUsageFlags() { return m_Usage; };
+		uint32_t GetUsageFlags() { return m_Usage; };
 		VkBuffer GetBuffer() { return m_Buffer; }
 
 	private:

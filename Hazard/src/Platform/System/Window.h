@@ -8,6 +8,8 @@
 
 namespace Hazard::Rendering {
 
+	class GraphicsContext;
+
 	struct WindowProps {
 
 		std::string Title;
@@ -54,13 +56,9 @@ namespace Hazard::Rendering {
 		virtual bool IsFullscreen() const = 0;
 		virtual bool IsMaximized() const = 0;
 
-		virtual WindowProps GetWindowInfo() { return m_WindowData; }
+		virtual WindowProps GetWindowInfo() = 0;
+		virtual GraphicsContext* GetContext() const = 0;
 
 		static Window* Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
-		GraphicsContext* GetContext() const { return m_Context; }
-
-	protected:
-		GraphicsContext* m_Context = nullptr;
-		WindowProps m_WindowData;
 	};
 }

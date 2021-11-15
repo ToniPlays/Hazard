@@ -27,6 +27,8 @@ namespace Hazard::Rendering {
 		Timer timer;
 		std::string absoluteFile = File::GetFileAbsolutePath(createInfo.Path);
 
+		HZR_CORE_ASSERT(File::Exists(absoluteFile), "Mesh file does not exist");
+
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(absoluteFile, meshFlags);
 
@@ -41,6 +43,7 @@ namespace Hazard::Rendering {
 		ProcessNode(scene->mRootNode, scene, data);
 		TraverseNode(scene->mRootNode, data);
 		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo.Path, timer.ElapsedMillis());
+
 		return Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
 	}
 
@@ -74,6 +77,7 @@ namespace Hazard::Rendering {
 
 		uint32_t colors = 0;
 
+		HZR_CORE_INFO("Submesh {0} has {1} color channels", subMesh.meshName, mesh->GetNumColorChannels());
 		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++) {
 			if (mesh->HasVertexColors(i)) {
 				colors = i;
@@ -83,16 +87,16 @@ namespace Hazard::Rendering {
 
 		for (size_t i = 0; i < mesh->mNumVertices; i++) {
 			Vertex3D vertex;
-
 			vertex.position.x = mesh->mVertices[i].x;
 			vertex.position.y = mesh->mVertices[i].y;
 			vertex.position.z = mesh->mVertices[i].z;
 
 			if (mesh->HasVertexColors(colors)) {
-				vertex.color.r = mesh->mColors[i]->r;
-				vertex.color.g = mesh->mColors[i]->g;
-				vertex.color.b = mesh->mColors[i]->b;
-				vertex.color.a = mesh->mColors[i]->a;
+				aiColor4D color = mesh->mColors[colors][i];
+				vertex.color.r = color.r;
+				vertex.color.g = color.g;
+				vertex.color.b = color.b;
+				vertex.color.a = color.a;
 			}
 			if (mesh->HasNormals()) {
 				vertex.normals.x = mesh->mNormals[i].x;

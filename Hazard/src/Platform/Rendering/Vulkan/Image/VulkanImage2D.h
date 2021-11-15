@@ -37,7 +37,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanImageInfo GetImageInfo() { return m_Info; }
 		const VkDescriptorImageInfo& GetDescriptor() { return m_DescriptorImageInfo; }
 
-		void* GetID() const override { return (void*)m_ID; }
+		uint32_t GetID() const { return m_ID; }
 
 		void UpdateDescriptor();
 	private:
@@ -53,6 +53,5 @@ namespace Hazard::Rendering::Vulkan
 		VkDescriptorImageInfo m_DescriptorImageInfo = {};
 
 		Buffer m_Buffer;
-
 	};
 }

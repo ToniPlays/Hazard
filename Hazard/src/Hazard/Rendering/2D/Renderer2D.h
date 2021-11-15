@@ -40,7 +40,7 @@ namespace Hazard::Rendering
 
 	class Renderer2D {
 	public:
-		Renderer2D(RenderEngineCreateInfo* info);
+		Renderer2D(RenderEngineCreateInfo* info, Ref<RenderCommandBuffer> buffer);
 		~Renderer2D();
 
 		void Render(const RenderPassData& renderPassData);
@@ -50,14 +50,13 @@ namespace Hazard::Rendering
 		void BeginBatch();
 		void Flush();
 		void EndWorld();
+		void Recreate(Ref<RenderPass> renderPass);
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
 
 		Batch<Vertex2D> m_QuadBatch;
-		
 		Ref<Texture2D> m_WhiteTexture;
-
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 	};
 }

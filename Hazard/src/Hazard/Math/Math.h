@@ -104,6 +104,11 @@ namespace Hazard {
 				* glm::scale(glm::mat4(1.0f), scale);
 
 		}
+		static void RotateAround() 
+		{
+
+		}
+		//
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
 			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 

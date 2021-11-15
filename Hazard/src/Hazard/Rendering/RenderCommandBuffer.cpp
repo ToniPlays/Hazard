@@ -9,7 +9,7 @@
 
 namespace Hazard::Rendering {
 
-	Ref<RenderCommandBuffer> Hazard::Rendering::RenderCommandBuffer::Create(uint32_t count, const std::string& debugName)
+	Ref<RenderCommandBuffer> RenderCommandBuffer::Create(const std::string& debugName, uint32_t count)
 	{
 		switch (RenderCommand::GetAPI()) {
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLRenderCommandBuffer(count, debugName);

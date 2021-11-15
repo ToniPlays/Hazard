@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
 #include <hzrpch.h>
-#include "Hazard/Rendering/Pipeline/Shader.h"
+#include "Hazard/Core/Core.h"
+#include "Hazard/Rendering/Image/Image.h"
+#include "Hazard/Rendering/Pipeline/Pipeline.h"
 #include <glad/glad.h>
 #include <shaderc/shaderc.h>
 
@@ -49,5 +50,67 @@ namespace Hazard::Rendering::OpenGLUtils
 		}
 		HZR_CORE_ASSERT(false, "[OpenGLShader]: Unkown OpenGL type to ShaderC type");
 		return (shaderc_shader_kind)0;
+	}
+	static GLenum DrawTypeToGLType(const DrawType& type) {
+		switch (type)
+		{
+		case DrawType::Fill: return GL_TRIANGLES;
+		case DrawType::Line: return GL_LINES;
+		case DrawType::Point: return GL_POINTS;
+		}
+		return GL_TRIANGLES;
+	}
+	static bool IsDepthFormat(const ImageFormat& format) {
+		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
+			return true;
+		return false;
+	}
+	static uint32_t TextureTarget(bool multisample)
+	{
+		return multisample ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
+	}
+	static void CreateTextures(bool multisample, uint32_t* outID, uint32_t count)
+	{
+		glCreateTextures(TextureTarget(multisample), count, outID);
+	}
+	static void BindTexture(uint32_t id, bool multisampled) {
+		glBindTexture(TextureTarget(multisampled), id);
+	}
+	static void AttachColorTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t width, uint32_t height, uint32_t iter)
+	{
+		bool multisampled = samples > 1;
+		if (multisampled) {
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+		}
+		else
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + iter, TextureTarget(multisampled), target, 0);
+	}
+	static void AttachDepthTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t attachmetType, uint32_t width, uint32_t height)
+	{
+		bool multisampled = samples > 1;
+		if (multisampled)
+		{
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+		}
+		else
+		{
+			glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmetType, TextureTarget(multisampled), target, 0);
 	}
 }

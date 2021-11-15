@@ -40,7 +40,7 @@ namespace Hazard::Core {
 				Input::Init();
 				m_Application->Init();
 
-				HZR_CORE_INFO("Startup took {0} ms", timer.ElapsedMillis());
+				HZR_CORE_WARN("Startup took {0} ms", timer.ElapsedMillis());
 			}
 
 			HZR_PROFILE_SESSION_END();

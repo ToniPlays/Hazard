@@ -309,10 +309,4 @@
       <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\pbr.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\Textures\8k_wallpaper.jpg" />
-  </ItemGroup>
 </Project>

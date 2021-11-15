@@ -3,15 +3,19 @@
 #include "Buffers.h"
 #include "Shader.h"
 #include "RenderPass.h"
+#include "Hazard/Rendering/RenderCommandBuffer.h"
 
 namespace Hazard::Rendering
 {
 	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit };
+	enum class DrawType { None = 0, Fill, Line, Point };
 
 	struct PipelineSpecification
 	{
 		std::string ShaderPath;
 		PipelineUsage Usage = PipelineUsage::None;
+		DrawType DrawType;
+		float LineWidth = 1.0f;
 		VertexBufferCreateInfo* pVertexBuffer = nullptr;
 		IndexBufferCreateInfo* pIndexBuffer = nullptr;
 		Ref<RenderPass> RenderPass = nullptr;
@@ -29,8 +33,8 @@ namespace Hazard::Rendering
 		virtual Ref<Shader> GetShader() = 0;
 
 		virtual void Invalidate() = 0;
-		virtual void Bind() = 0;
-		virtual void Draw(uint32_t count) = 0;
+		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
+		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
 
 		static Ref<Pipeline> Create(const PipelineSpecification& specs);
 	};

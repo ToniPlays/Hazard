@@ -5,6 +5,8 @@
 #include "SceneRuntimeHandler.h"
 #include "Project/ProjectManager.h"
 
+using namespace Hazard;
+
 void EditorApplication::PreInit()
 {
 	HZR_PROFILE_FUNCTION();
@@ -17,36 +19,34 @@ void EditorApplication::PreInit()
 	appInfo.IconCount = icons.size();
 	appInfo.Icons = icons.data();
 
-	RenderContexCreateInfo contextInfo;
+	RenderContexCreateInfo contextInfo = {};
 	contextInfo.Renderer = RenderAPI::Vulkan;
 	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
-	contextInfo.VSync = true; 
+	contextInfo.VSync = false; 
 	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
 
-	RenderEngineCreateInfo engineInfo;
+	RenderEngineCreateInfo engineInfo = {};
 	engineInfo.MaxQuadCount = 10000;
 	engineInfo.SamplerCount = 32;
-	engineInfo.ShaderSourcePath = "res/shaders/sources";
-	engineInfo.ShaderCompilePath = "res/shaders/compiled";
 
-	AudioEngineCreateInfo audioInfo;
+	AudioEngineCreateInfo audioInfo = {};
 
-	ScriptEngineCreateInfo scriptInfo;
+	ScriptEngineCreateInfo scriptInfo = {};
 	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
 	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
 	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
 	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
 	scriptInfo.Enable = false;
 
-	EntityComponentCreateInfo entityInfo;
-	entityInfo.StartupFile = "c:/dev/HazardProject/assets/world.hazard";
+	EntityComponentCreateInfo entityInfo = {};
+	entityInfo.StartupFile = "c:/dev/HazardProject/assets/testscene.hazard";
 
-	HazardCreateInfo createInfo;
+	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &contextInfo;
 	createInfo.RendererInfo = &engineInfo;
@@ -59,7 +59,7 @@ void EditorApplication::PreInit()
 void EditorApplication::Init()
 {
 	HZR_PROFILE_FUNCTION();
-	//PushModule<WindowElement::EditorView>();
+	PushModule<WindowElement::EditorView>();
 	Runtime::SceneRuntimeHandler::Init();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();

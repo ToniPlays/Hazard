@@ -4,9 +4,10 @@
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 #include "vulkan/vulkan.h"
 #include "Hazard/Rendering/Pipeline/Shader.h"
+#include "Hazard/Rendering/Pipeline/Pipeline.h"
 
-namespace Hazard::Rendering::Vulkan {
-
+namespace Hazard::Rendering::Vulkan 
+{
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
@@ -44,6 +45,7 @@ namespace Hazard::Rendering::Vulkan {
 		static VkFormat GetImageFormat(ImageFormat format);
 		static VkFilter GetSamplerFilter(const FilterMode& filter);
 		static VkSamplerAddressMode GetSamplerWrap(const ImageWrap& wrap);
+		static VkPolygonMode DrawTypeToVKType(const DrawType& type);
 
 		static void SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout,
 			VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -58,6 +60,7 @@ namespace Hazard::Rendering::Vulkan {
 			VkPipelineStageFlags srcStageMask,
 			VkPipelineStageFlags dstStageMask,
 			VkImageSubresourceRange subresourceRange);
+		static std::string ResultToString(VkResult result);
 
 	private:
 		static bool SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface);

@@ -150,9 +150,6 @@ namespace Hazard::Rendering::Vulkan
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_LocalData = new uint8_t[m_Size];
-		m_Binding = createInfo->Binding;
-		m_Size = createInfo->Size;
-		m_Usage = createInfo->Usage;
 
 		RT_Invalidate();
 	}

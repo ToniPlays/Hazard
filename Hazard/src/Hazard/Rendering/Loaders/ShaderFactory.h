@@ -50,6 +50,6 @@ namespace Hazard::Rendering
 		static bool SaveShaderBinary(const std::filesystem::path& path, const std::vector<uint32_t>& binary);
 		static ShaderStageData GetShaderResources(const std::vector<uint32_t>& binary);
 	private:
-		static inline std::string m_CacheDir = "library";
+		static inline std::string m_CacheDir = "library/Shaders";
 	};
 }

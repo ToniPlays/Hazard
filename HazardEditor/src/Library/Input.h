@@ -15,12 +15,12 @@ namespace WindowElement {
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = { 0, 0 });
 		template<typename T>
-		static bool FileButton(const char* name, Hazard::Rendering::Image* texture, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
+		static bool FileButton(const char* name, Ref<Hazard::Rendering::Image> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
 		{
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::PushID(id.c_str());
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-			ImGui::Image((void*)texture->GetID(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
+			Layout::Image(image, { size.x, size.x }, { 0, 1 }, { 1, 0 });
 			fn();
 			Layout::Separator(5);
 

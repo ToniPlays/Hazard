@@ -29,6 +29,7 @@ namespace Hazard::Rendering::Vulkan
 		}
 
 		uint32_t attachmentIndex = 0;
+
 		if (!info->pFrameBuffer) {
 			for (auto& attachment : m_Specs.Attachments) {
 				if (VKUtils::IsDepth(attachment.Format))
@@ -88,6 +89,7 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice();
 
 		if (m_FrameBuffer) {
+			device->WaitUntilIdle();
 			vkDestroyFramebuffer(device->GetDevice(), m_FrameBuffer, nullptr);
 
 			if (!m_Specs.pFrameBuffer) {
@@ -290,5 +292,6 @@ namespace Hazard::Rendering::Vulkan
 		framebufferCreateInfo.layers = 1;
 
 		VK_CHECK_RESULT(vkCreateFramebuffer(device->GetDevice(), &framebufferCreateInfo, nullptr, &m_FrameBuffer));
+		device->WaitUntilIdle();
 	}
 }

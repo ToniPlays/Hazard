@@ -20,8 +20,8 @@ namespace Hazard::Rendering::Vulkan
 		virtual Ref<Shader> GetShader() { return m_Shader; }
 
 		virtual void Invalidate() override;
-		virtual void Bind() override;
-		virtual void Draw(uint32_t count) override;
+		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
+		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
 
 	private:
 		PipelineSpecification m_Specs;

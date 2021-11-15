@@ -11,6 +11,7 @@
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 
 using namespace Hazard;
+using namespace WindowLayout;
 
 namespace WindowElement {
 
@@ -20,13 +21,8 @@ namespace WindowElement {
 	}
 	void Viewport::Init()
 	{
-		SetActive(false);
-		//m_Renderer = &Application::GetModule<RenderEngine>();
-
-		FrameBufferCreateInfo createInfo;
-		createInfo.Attachments = { ImageFormat::RGBA, ImageFormat::Depth };
-		createInfo.AttachmentCount = 2;
-
+		SetActive(Application::HasModule<RenderEngine>());
+		m_Renderer = &Application::GetModule<RenderEngine>();
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -40,18 +36,16 @@ namespace WindowElement {
 
 		bool changed = false;
 
+		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+
 		if (size.x != m_Width || size.y != m_Height) {
 			m_Width = size.x;
 			m_Height = size.y;
 
 			changed = true;
-			//m_RenderTexture->Resize(m_Width, m_Height);
+			m_Renderer->SetViewportSize(m_Width, m_Height);
 			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
 		}
-
-		//RenderCommand::Draw(m_FrameBuffer);
-		ImGui::Image((void*)m_FrameBuffer->GetID(),
-			size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
@@ -73,6 +67,7 @@ namespace WindowElement {
 
 		if (Input::Button(ICON_FK_COG, { 25, 25 })) 
 		{
+
 		}
 
 		ImGui::PopStyleVar();
@@ -176,7 +171,7 @@ namespace WindowElement {
 		Layout::TableNext();
 
 		std::stringstream ss;
-		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000, 3) << "ms";
+		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 3) << "ms";
 		Layout::Text(ss.str().c_str());
 		ss.str("");
 		Layout::TableNext();

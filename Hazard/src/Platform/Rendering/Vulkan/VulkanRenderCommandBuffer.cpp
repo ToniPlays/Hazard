@@ -4,6 +4,7 @@
 #include "VulkanRenderCommandBuffer.h"
 #include "VulkanContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+#include "VKUtils.h"
 
 namespace Hazard::Rendering::Vulkan 
 {
@@ -32,9 +33,10 @@ namespace Hazard::Rendering::Vulkan
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-		m_WaitFences.reserve(framesInFlight);
+		m_WaitFences.resize(count);
 		for (auto& fence : m_WaitFences)
 			VK_CHECK_RESULT(vkCreateFence(device->GetDevice(), &fenceCreateInfo, nullptr, &fence));
+
 	}
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(std::move(name)), m_OwnedBySwapchain(swapchain)
 	{

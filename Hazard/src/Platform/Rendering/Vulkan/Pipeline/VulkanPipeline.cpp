@@ -3,6 +3,8 @@
 #include <hzrpch.h>
 #include "VulkanPipeline.h"
 #include "../VulkanContext.h"
+#include "../VulkanFrameBuffer.h"
+#include "../VKUtils.h"
 #include "Hazard/Rendering/2D/Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
 
@@ -13,10 +15,10 @@ namespace Hazard::Rendering::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
-		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
 
 		m_VertexBuffer = VertexBuffer::Create(specs.pVertexBuffer).As<VulkanVertexBuffer>();
 		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer).As<VulkanIndexBuffer>();
+		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
 
 		Invalidate();
 	}
@@ -96,9 +98,9 @@ namespace Hazard::Rendering::Vulkan
 		rasterizer.depthClampEnable = VK_FALSE;
 		rasterizer.depthBiasSlopeFactor = -1.0f;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
-		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-		rasterizer.lineWidth = 1.0f;
-		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+		rasterizer.polygonMode = VKUtils::DrawTypeToVKType(m_Specs.DrawType);
+		rasterizer.lineWidth = m_Specs.LineWidth;
+		rasterizer.cullMode = VK_CULL_MODE_FRONT_BIT;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 
@@ -151,7 +153,7 @@ namespace Hazard::Rendering::Vulkan
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.renderPass = VulkanContext::GetSwapchain()->GetRenderPass();
+		pipelineInfo.renderPass = m_Specs.RenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
@@ -159,13 +161,14 @@ namespace Hazard::Rendering::Vulkan
 			HZR_THROW("Failed to create Vulkan Graphics Pipeline!");
 		}
 	}
-	void VulkanPipeline::Bind()
-	{
+	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
+	{	
 		RenderCommand::Submit([=]() {
-			auto cmdBuffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
-
 			VkBuffer vertexBuffer = m_VertexBuffer->GetVulkanBuffer();
 			VkDeviceSize offsets[1] = { 0 };
+
+			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
 			vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vertexBuffer, offsets);
@@ -173,9 +176,10 @@ namespace Hazard::Rendering::Vulkan
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
 		});
 	}
-	void VulkanPipeline::Draw(uint32_t size) 
+	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		auto buffer = VulkanContext::GetSwapchain()->GetCurrentDrawCommandBuffer();
-		vkCmdDrawIndexed(buffer, size, 1, 0, 0, 0);
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
 	}
 }

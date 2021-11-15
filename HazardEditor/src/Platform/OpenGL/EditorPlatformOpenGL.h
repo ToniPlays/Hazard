@@ -12,5 +12,4 @@ public:
 	void BeginFrame() override;
 	void EndFrame() override;
 	void Close() override;
-	void AddTexture(Ref<Rendering::Image> texture) override {};
 };

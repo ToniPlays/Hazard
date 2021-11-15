@@ -12,7 +12,7 @@ namespace Hazard::Rendering
 	{
 		switch (RenderCommand::GetAPI())
 		{
-		//case RenderAPI::OpenGL: return new OpenGL::OpenGLFrameBuffer(info);
+		case RenderAPI::OpenGL: return new OpenGL::OpenGLFrameBuffer(info);
 		case RenderAPI::Vulkan: return new Vulkan::VulkanFrameBuffer(info);
 		}
 		return nullptr;

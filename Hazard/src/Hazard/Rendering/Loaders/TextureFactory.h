@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Core/Buffer.h"
 #include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/Rendering/Image/Image.h"
 
 namespace Hazard::Rendering 
 {
@@ -29,8 +30,9 @@ namespace Hazard::Rendering
 
 		static bool SaveTextureToCache(const std::string& path, const TextureHeader& header);
 		static bool CacheFileChanged(const std::string& path);
+		static uint32_t PixelSize(const ImageFormat& format);
 
 	private:
-		static inline std::string m_CacheDirectory = "library";
+		static inline std::string m_CacheDirectory = "library/textures/";
 	};
 }

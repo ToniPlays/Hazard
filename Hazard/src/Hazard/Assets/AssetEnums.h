@@ -35,10 +35,10 @@ namespace Hazard
 		inline const char* AssetTypeToString(AssetType type) {
 			switch (type)
 			{
-			case AssetType::Undefined:				return "None";
+			case AssetType::Undefined:			return "None";
 			case AssetType::AudioClip:			return "AudioClip";
 			case AssetType::World:				return "World";
-			case AssetType::Image:			return "Texture";
+			case AssetType::Image:				return "Texture";
 			case AssetType::Mesh:				return "Mesh";
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";
@@ -54,6 +54,7 @@ namespace Hazard
 			if (ext == "hazard")	return AssetType::World;
 			if (ext == "obj")		return AssetType::Mesh;
 			if (ext == "fbx")		return AssetType::Mesh;
+			if (ext == "dae")		return AssetType::Mesh;
 			if (ext == "hdr")		return AssetType::EnvironmentMap;
 			
 			HZR_CORE_WARN("Failed convert extesion {0} to AssetType, check if type is correct", ext);

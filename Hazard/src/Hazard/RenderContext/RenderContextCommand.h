@@ -26,7 +26,6 @@ namespace Hazard::Rendering {
 		}
 		static void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) { m_Context->GetContext().BeginRenderPass(buffer, renderPass); }
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { m_Context->GetContext().EndRenderPass(buffer); }
-		//static void DrawIndexed(VertexArray* vertexArray, uint32_t size) { m_Context->GetContext().DrawIndexed(vertexArray, size); }
 		static RenderContext& GetContext() { return *m_Context; };
 		static void SetDebugCallback(ErrorCallback& callback);
 		static void SetClearColor(const Color& color);

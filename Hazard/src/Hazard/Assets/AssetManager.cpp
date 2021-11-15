@@ -19,13 +19,13 @@ namespace Hazard
 	AssetHandle AssetManager::ImportAsset(const std::string& filePath)
 	{
 		//TODO: Proper relative path
-		std::filesystem::path path = std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
+		std::filesystem::path path = filePath; //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
 
 		if (s_Registry.Contains(path)) {
 			return s_Registry.Get(path).Handle;
 		}
-
-		AssetType type = Utils::AssetTypeFromExtension(File::GetFileExtension(path.string()));
+		std::string extension = File::GetFileExtension(path.string());
+		AssetType type = Utils::AssetTypeFromExtension(extension);
 
 		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
@@ -37,7 +37,6 @@ namespace Hazard
 		data.Type = type;
 
 		s_Registry[data.Path] = data;
-		HZR_CORE_INFO("[AssetManager]: Importing asset {0}", data.Path.string());
 
 		return data.Handle;
 	}

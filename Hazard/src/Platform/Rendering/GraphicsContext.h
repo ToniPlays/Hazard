@@ -7,7 +7,9 @@
 
 namespace Hazard::Rendering {
 
-	enum DrawType { Points, Line, LineLoop, LineStrip, Triangle, TriangleStrip, TriangleFan, Outline };
+	using ResizeCallback = std::function<void(uint32_t, uint32_t)>;
+
+	enum class Topology { Points, Line, LineLoop, LineStrip, Triangle, TriangleStrip, TriangleFan, Outline };
 
 	struct ErrorData {
 		std::string Info;
@@ -22,7 +24,9 @@ namespace Hazard::Rendering {
 		std::string Renderer = "Undefined";
 		uint32_t TextureSlots = 0;
 	};
+
 	using ErrorCallback = void(*)(ErrorData& data);
+	
 	class Window;
 	struct WindowProps;
 
@@ -39,12 +43,11 @@ namespace Hazard::Rendering {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual DeviceSpec GetDeviceSpec() const = 0;
 
-		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) {};
-		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) {};
+		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;
+		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) = 0;
 
-		//virtual void DrawIndexed(VertexArray* array, uint32_t size) = 0;
-		
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
+		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;
 
 		static GraphicsContext* Create(RenderAPI API, WindowProps* props);
 	};

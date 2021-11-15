@@ -6,6 +6,7 @@
 #include "Loaders/Loaders.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "2D/Renderer2D.h"
+#include "Mesh/MeshFactory.h"
 
 namespace Hazard::Rendering
 {
@@ -17,33 +18,26 @@ namespace Hazard::Rendering
 		RenderCommand::s_Engine = this;
 		RenderCommand::s_Api = api;
 
-		m_ShaderCompilePath = info->ShaderCompilePath;
-		m_ShaderSourcePath = info->ShaderSourcePath;
+		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
+		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
 
-		//AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
-		//AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
-
-		uint32_t data = 0xFFFFFFFF;
-
-		TextureFilter filters;
-		filters.MinFilter = FilterMode::Nearest;
-		filters.MagFilter = FilterMode::Nearest;
-
-		Texture2DCreateInfo whiteTexture = {};
-		whiteTexture.FilePath = "res/textures/checker.png";
-		whiteTexture.Filter = &filters;
-		whiteTexture.Width = 1;
-		whiteTexture.Height = 1;
-
-		//whiteTexture.Data = &data;
-
-		//m_WhiteTexture = Texture2D::Create(&whiteTexture);
-
-		m_Renderer2D = new Renderer2D(info);
+		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
+		AssetHandle handle = AssetManager::ImportAsset("C:/dev/HazardProject/assets/Models/c8_Corvette_colored.fbx");
+		m_TestMesh = AssetManager::GetAsset<Mesh>(handle);
 
 		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
 
+		glm::vec3 position = { 0, 2, 4 };
+		glm::vec3 rotation = { glm::radians(-25.0f), 0, 0 };
+
+		m_CameraTransform = glm::inverse(Math::ToTransformMatrix(position, rotation));
+		m_RenderPassData.CameraPosition = glm::vec4(position, 1.0f);
+		m_RenderPass = m_TestMesh->GetPipeline()->GetSpecifications().RenderPass;
+
+		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
+
+		m_Renderer2D->Recreate(m_RenderPass);
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -51,14 +45,29 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Render()
 	{
-		RenderPassData data = {};
+		m_RenderCommandBuffer->Begin();
+		m_RenderPassData.ViewProjection = m_Projection * m_CameraTransform;
 
-		float sin = (1 + Math::Sin(Time::s_Time) * 0.5f);
-		data.Transform = glm::inverse(glm::translate(glm::mat4(1.0f), { sin, 1.0f - sin, 4.0f }));
+		struct Model {
+			glm::mat4 transform { 1.0f };
+		} model;
 
-		data.ViewProjection = m_ViewProjection * data.Transform;
+		model.transform = Math::ToTransformMatrix(glm::vec3(0.0f), { glm::radians(0.0), glm::radians(Time::s_Time * 5.0f), glm::radians(0.0) });
+		
+		Ref<Pipeline> meshPipeline = m_TestMesh->GetPipeline();
+		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, meshPipeline->GetSpecifications().RenderPass);
 
-		m_Renderer2D->Render(data);
+		m_Renderer2D->Render(m_RenderPassData);
+		meshPipeline->GetShader()->SetUniformBuffer("Camera", &m_RenderPassData);
+		meshPipeline->GetShader()->SetUniformBuffer("Model", &model);
+
+		meshPipeline->GetSpecifications().RenderPass;
+		meshPipeline->Bind(m_RenderCommandBuffer);
+		meshPipeline->Draw(m_RenderCommandBuffer, m_TestMesh->GetIndexCount());
+
+		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
+		m_RenderCommandBuffer->End();
+		m_RenderCommandBuffer->Submit();
 	}
 	bool RenderEngine::OnEvent(Event& e)
 	{
@@ -71,14 +80,19 @@ namespace Hazard::Rendering
 	}
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{
-		if (e.GetWidth() == 0 || e.GetHeight() == 0) return false;
+		if (e.GetWidth() == 0 || e.GetHeight() == 0 && !m_RenderPass->GetSpecs().TargetFrameBuffer->GetSpecification().SwapChainTarget) return false;
 
+		SetViewportSize(e.GetWidth(), e.GetHeight());
+
+		return true;
+	}
+	void RenderEngine::SetViewportSize(uint32_t width, uint32_t height) 
+	{
 		constexpr float size = 2.0f;
-		float aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+		float aspectRatio = (float)width / (float)height;
 		float scalar = aspectRatio * size;
 
 		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1000.0f, 1000.0f);
-		m_ViewProjection = glm::perspective(glm::radians(80.0f), aspectRatio, 0.003f, 1000.0f);
-		return true;
+		m_Projection = glm::perspective(glm::radians(60.0f), aspectRatio, 0.003f, 1000.0f);
 	}
 }

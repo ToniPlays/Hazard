@@ -13,8 +13,6 @@ public:
 	void EndFrame() override;
 	void Close() override;
 
-	void AddTexture(Ref<Rendering::Image> image);
-
 private:
 	Hazard::Rendering::Vulkan::VulkanContext* m_Context = nullptr;
 };

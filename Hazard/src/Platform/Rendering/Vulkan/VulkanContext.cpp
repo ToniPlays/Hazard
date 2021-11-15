@@ -7,6 +7,7 @@
 #include "Platform/System/Window.h"
 #include "Pipeline/VulkanRenderPass.h"
 #include "VulkanFrameBuffer.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
 namespace Hazard::Rendering::Vulkan {
 
@@ -24,6 +25,7 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		HZR_PROFILE_FUNCTION();
 		m_Device->WaitUntilIdle();
+		s_Callback = nullptr;
 
 		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
 
@@ -58,7 +60,7 @@ namespace Hazard::Rendering::Vulkan {
 		VkDebugUtilsMessengerCreateInfoEXT debugInfo = {};
 
 		if (ValidationLayer::IsValidationSupported()) {
-			ValidationLayer::InitValidationLayers(createInfo, debugInfo, appInfo->Logging);
+			//ValidationLayer::InitValidationLayers(createInfo, debugInfo, appInfo->Logging);
 		}
 		vkCreateInstance(&createInfo, nullptr, &m_Instance);
 
@@ -67,7 +69,7 @@ namespace Hazard::Rendering::Vulkan {
 		}
 
 		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
-		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface());
+		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface(), RenderContextCommand::GetImagesInFlight());
 
 		VulkanAllocator::Init();
 
@@ -201,5 +203,18 @@ namespace Hazard::Rendering::Vulkan {
 	void VulkanContext::SendDebugMessage(const char* message, const char* code)
 	{
 		std::cout << message << std::endl;
+		if (s_Callback != nullptr) {
+			ErrorData data(message, code);
+			s_Callback(data);
+		}
+	}
+	VkDescriptorSet VulkanContext::RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo) 
+	{
+		uint32_t bufferIndex = m_SwapChain->GetCurrentBufferIndex();
+		allocInfo.descriptorPool = m_Device->GetDescriptorPool(bufferIndex);
+		VkDescriptorSet result;
+		VK_CHECK_RESULT(vkAllocateDescriptorSets(m_Device->GetDevice(), &allocInfo, &result));
+		m_DescriptorAllocations[bufferIndex] += allocInfo.descriptorSetCount;
+		return result;
 	}
 }

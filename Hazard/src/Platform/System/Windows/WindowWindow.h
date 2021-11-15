@@ -46,8 +46,11 @@ namespace Hazard::Rendering {
 		bool IsMaximized() const { return m_WindowData.maximized; }
 		WindowProps GetWindowInfo() { return m_WindowData; }
 
-	private:
+		GraphicsContext* GetContext() const { return m_Context; };
 
+	private:
+		WindowProps m_WindowData;
+		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
 		void SetCallbacks();
 	};
