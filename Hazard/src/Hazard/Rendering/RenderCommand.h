@@ -4,8 +4,10 @@
 #include "Pipeline/FrameBuffer.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "RenderCommandBuffer.h"
+#include "RenderEngine.h"
 
-namespace Hazard::Rendering {
+namespace Hazard::Rendering 
+{
 	class RenderCommand 
 	{
 		friend class RenderEngine;
@@ -16,6 +18,8 @@ namespace Hazard::Rendering {
 		static void Submit(T fn);
 		static void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) { RenderContextCommand::BeginRenderPass(buffer, renderPass); }
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
+
+		static RenderStats GetStats() { return s_Engine->GetStats(); };
 
 	private:
 		inline static RenderEngine* s_Engine;

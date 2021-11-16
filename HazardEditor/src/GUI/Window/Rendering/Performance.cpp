@@ -19,7 +19,7 @@ namespace WindowElement {
 	}
 	void Performance::OnWindowRender()
 	{
-		//Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
+		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
 
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
@@ -47,32 +47,32 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Renderer");
 		Layout::TableNext();
-		Layout::Text(spec.Name.c_str());
+		Layout::Text(spec.Name);
 
 		Layout::TableNext();
 		Layout::Text("Rendering API");
 		Layout::TableNext();
-		Layout::Text(spec.Renderer.c_str());
+		Layout::Text(spec.Renderer);
 
 		Layout::TableNext();
 		Layout::Text("Drawcalls");
 		Layout::TableNext();
-		Layout::Text(std::to_string(0).c_str());
+		Layout::Text(std::to_string(stats.DrawCalls));
 
 		Layout::TableNext();
 		Layout::Text("Quads");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(0).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.QuadCount));
 
 		Layout::TableNext();
 		Layout::Text("Vertices");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(0).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.VertexCount));
 
 		Layout::TableNext();
 		Layout::Text("Indices");
 		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(0).c_str());
+		Layout::Text(StringUtil::FormatNumber(stats.IndexCount));
 
 		Layout::EndTable();
 	}

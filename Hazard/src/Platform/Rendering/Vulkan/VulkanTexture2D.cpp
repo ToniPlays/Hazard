@@ -13,6 +13,9 @@ namespace Hazard::Rendering::Vulkan
 	{
 		m_Format = info->Format;
 		m_Usage = info->Usage;
+		m_WrapMode = info->WrapMode;
+		if(info->Filter != nullptr)
+			m_Filter = *info->Filter;
 
 		if (info->Data == nullptr) {
 			bool loaded = LoadImageFromFile(info->FilePath.string());
@@ -156,15 +159,15 @@ namespace Hazard::Rendering::Vulkan
 			device->FlushCommandBuffer(transitionCmdBuffer);
 		}
 
-		VkSamplerCreateInfo sampler{};
+		VkSamplerCreateInfo sampler {};
 		sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 		sampler.maxAnisotropy = 1.0f;
-		sampler.magFilter = VKUtils::GetSamplerFilter(FilterMode::Linear);
-		sampler.minFilter = VKUtils::GetSamplerFilter(FilterMode::Linear);
+		sampler.minFilter = VKUtils::GetSamplerFilter(m_Filter.MinFilter);
+		sampler.magFilter = VKUtils::GetSamplerFilter(m_Filter.MagFilter);
 		sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		sampler.addressModeU = VKUtils::GetSamplerWrap(ImageWrap::Repeat);
-		sampler.addressModeV = VKUtils::GetSamplerWrap(ImageWrap::Repeat);
-		sampler.addressModeW = VKUtils::GetSamplerWrap(ImageWrap::Repeat);
+		sampler.addressModeU = VKUtils::GetSamplerWrap(m_WrapMode);
+		sampler.addressModeV = VKUtils::GetSamplerWrap(m_WrapMode);
+		sampler.addressModeW = VKUtils::GetSamplerWrap(m_WrapMode);
 		sampler.mipLodBias = 0.0f;
 		sampler.compareOp = VK_COMPARE_OP_NEVER;
 		sampler.minLod = 0.0f;

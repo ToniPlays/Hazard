@@ -11,7 +11,7 @@ namespace Hazard::Physics
 		static void Init();
 		static void OnBeginRuntime(float gravity, ECS::World* world);
 		static void OnEndRuntime();
-		static void UpdateAll(ECS::World* world);
+		static void UpdateAll(Ref<ECS::World> world);
 	private:
 		static Physics2D* s_Physics2D;
 	};

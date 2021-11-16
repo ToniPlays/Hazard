@@ -50,8 +50,8 @@ namespace WindowElement {
 			Layout::Table(2, false, "##textureSlot");
 			Layout::SetColumnWidth(75);
 
-			if (ImageButton(texture->GetID(), { 50, 50 })) 
-				input = InputType::ImageChange;
+			//if (ImageButton(texture->GetID(), { 50, 50 })) 
+			//	input = InputType::ImageChange;
 
 			dropCallback();
 			Layout::Tooltip("Image");

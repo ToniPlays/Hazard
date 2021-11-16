@@ -7,14 +7,17 @@
 
 namespace Hazard::ECS::Loader
 {
-	Ref<World> WorldDeserializer::DeserializeEditor(const char* file)
+	bool WorldDeserializer::DeserializeEditor(Ref<World>& world, const char* file)
 	{
 		YAML::Node root = YAML::LoadFile(file);
-		Ref<World> world = Ref<World>::Create(file);
+
+		if (!world) 
+			world = Ref<World>::Create(file);
 
 		//Set scene name
-		if (!root["World"])
-			return world;
+		if (!root["World"]) {
+			return false;
+		}
 
 		world->SetName(root["World"].as<std::string>());
 
@@ -49,7 +52,7 @@ namespace Hazard::ECS::Loader
 				TryDeserializeComponent<BatchComponent>("BatchComponent", entity, node);
 			}
 		}
-		return world;
+		return true;
 	}
 	template<typename T>
 	void WorldDeserializer::TryDeserializeComponent(const char* key, Entity entity, YAML::Node node) {

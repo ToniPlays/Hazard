@@ -8,8 +8,8 @@ namespace Hazard::ECS::Loader
 	class WorldDeserializer {
 	public:
 
-		static Ref<World> DeserializeEditor(const char* file);
-		static Ref<World> DeserializeRuntime(const char* file) { return nullptr; };
+		static bool DeserializeEditor(Ref<World>& world, const char* file);
+		static bool DeserializeRuntime(Ref<World>& world, const char* file) { return false; };
 
 		template<typename T>
 		static void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);

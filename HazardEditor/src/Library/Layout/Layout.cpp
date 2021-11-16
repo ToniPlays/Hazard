@@ -66,9 +66,9 @@ namespace WindowLayout {
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
 	}
-	void Layout::Text(const char* text)
+	void Layout::Text(const std::string& text)
 	{
-		ImGui::Text(text);
+		ImGui::Text(text.c_str());
 	}
 	void Layout::TextColored(const char* text, const Color& color)
 	{

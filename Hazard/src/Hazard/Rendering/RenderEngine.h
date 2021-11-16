@@ -3,11 +3,13 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
+#include "RenderCommandBuffer.h"
 #include "Pipeline/Buffers.h"
 #include "Texture.h"
 #include "Mesh/Mesh.h"
 #include "Image/Image2D.h"
 #include "Pipeline/FrameBuffer.h"
+#include "Camera.h"
 
 namespace Hazard::Rendering {
 
@@ -30,8 +32,11 @@ namespace Hazard::Rendering {
 		 
 		bool OnResize(WindowResizeEvent& e);
 		void SetViewportSize(uint32_t width, uint32_t heigth);
+		void SetCamera(Camera* camera) { m_RenderingCamera = camera; }
+
 		Ref<Image2D> GetFinalPassImage() { return m_RenderPass->GetSpecs().TargetFrameBuffer->GetImage(); }
 		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }
+		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }
 
 	private:
 		Renderer2D* m_Renderer2D;
@@ -42,7 +47,7 @@ namespace Hazard::Rendering {
 		Ref<Mesh> m_TestMesh;
 		RenderPassData m_RenderPassData;
 		Ref<RenderPass> m_RenderPass;
+		Camera* m_RenderingCamera;
 
-		double* deltaTime;
 	};
 }

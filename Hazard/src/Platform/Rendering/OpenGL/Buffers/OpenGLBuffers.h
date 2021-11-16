@@ -14,6 +14,7 @@ namespace Hazard::Rendering::OpenGL
 		void Bind() override;
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
+		uint32_t GetSize() override { return m_Size; }
 
 	private:
 

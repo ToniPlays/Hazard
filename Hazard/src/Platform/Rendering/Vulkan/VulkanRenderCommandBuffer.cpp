@@ -70,6 +70,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanRenderCommandBuffer::Begin()
 	{
+		m_Stats.Reset();
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 
 		VkCommandBufferBeginInfo beginInfo = {};

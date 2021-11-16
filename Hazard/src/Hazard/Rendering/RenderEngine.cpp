@@ -28,15 +28,8 @@ namespace Hazard::Rendering
 		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
 
-		glm::vec3 position = { 0, 2, 4 };
-		glm::vec3 rotation = { glm::radians(-25.0f), 0, 0 };
-
-		m_CameraTransform = glm::inverse(Math::ToTransformMatrix(position, rotation));
-		m_RenderPassData.CameraPosition = glm::vec4(position, 1.0f);
 		m_RenderPass = m_TestMesh->GetPipeline()->GetSpecifications().RenderPass;
-
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
-
 		m_Renderer2D->Recreate(m_RenderPass);
 	}
 	RenderEngine::~RenderEngine()
@@ -46,7 +39,7 @@ namespace Hazard::Rendering
 	void RenderEngine::Render()
 	{
 		m_RenderCommandBuffer->Begin();
-		m_RenderPassData.ViewProjection = m_Projection * m_CameraTransform;
+		m_RenderPassData.ViewProjection = m_RenderingCamera->GetViewPprojection();
 
 		struct Model {
 			glm::mat4 transform { 1.0f };

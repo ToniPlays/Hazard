@@ -17,6 +17,7 @@ namespace Hazard::Rendering::Vulkan
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
 		void RT_SetData(const void* data, uint32_t size);
+		uint32_t GetSize() override { return m_Size; }
 
 		VkBuffer GetVulkanBuffer() const {
 			return m_Buffer;

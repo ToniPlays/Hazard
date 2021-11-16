@@ -43,7 +43,7 @@ namespace Hazard::Physics
 	{
 		s_Physics2D->End();
 	}
-	void PhysicsCommand::UpdateAll(ECS::World* world)
+	void PhysicsCommand::UpdateAll(Ref<ECS::World> world)
 	{
 		const int32_t velocityIterations = 6;
 		const int32_t positionIterations = 2;
@@ -51,7 +51,7 @@ namespace Hazard::Physics
 
 		for (auto entityID : view)
 		{
-			ECS::Entity entity{ entityID, world };
+			ECS::Entity entity{ entityID, world.Raw()};
 			auto& tc = entity.GetComponent<ECS::TransformComponent>();
 			auto& rb = entity.GetComponent<ECS::Rigidbody2DComponent>();
 
@@ -62,7 +62,7 @@ namespace Hazard::Physics
 		s_Physics2D->Step(Time::s_DeltaTime);
 		for (auto entityID : view)
 		{
-			ECS::Entity entity { entityID, world };
+			ECS::Entity entity { entityID, world.Raw() };
 			auto& tc = entity.GetComponent<ECS::TransformComponent>();
 			auto& rb = entity.GetComponent<ECS::Rigidbody2DComponent>();
 

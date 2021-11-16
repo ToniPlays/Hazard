@@ -77,7 +77,6 @@ namespace Hazard::Rendering {
 
 		uint32_t colors = 0;
 
-		HZR_CORE_INFO("Submesh {0} has {1} color channels", subMesh.meshName, mesh->GetNumColorChannels());
 		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++) {
 			if (mesh->HasVertexColors(i)) {
 				colors = i;
@@ -87,25 +86,25 @@ namespace Hazard::Rendering {
 
 		for (size_t i = 0; i < mesh->mNumVertices; i++) {
 			Vertex3D vertex;
-			vertex.position.x = mesh->mVertices[i].x;
-			vertex.position.y = mesh->mVertices[i].y;
-			vertex.position.z = mesh->mVertices[i].z;
+			vertex.Position.x = mesh->mVertices[i].x;
+			vertex.Position.y = mesh->mVertices[i].y;
+			vertex.Position.z = mesh->mVertices[i].z;
 
 			if (mesh->HasVertexColors(colors)) {
 				aiColor4D color = mesh->mColors[colors][i];
-				vertex.color.r = color.r;
-				vertex.color.g = color.g;
-				vertex.color.b = color.b;
-				vertex.color.a = color.a;
+				vertex.Color.r = color.r;
+				vertex.Color.g = color.g;
+				vertex.Color.b = color.b;
+				vertex.Color.a = color.a;
 			}
 			if (mesh->HasNormals()) {
-				vertex.normals.x = mesh->mNormals[i].x;
-				vertex.normals.y = mesh->mNormals[i].y;
-				vertex.normals.z = mesh->mNormals[i].z;
+				vertex.Normals.x = mesh->mNormals[i].x;
+				vertex.Normals.y = mesh->mNormals[i].y;
+				vertex.Normals.z = mesh->mNormals[i].z;
 			}
 			if (mesh->HasTextureCoords(0)) {
-				vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
-				vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
+				vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
+				vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
 			}
 			data.vertices.push_back(vertex);
 		}

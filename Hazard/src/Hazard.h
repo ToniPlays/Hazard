@@ -4,6 +4,7 @@
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/Application.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
+#include "Hazard/Core/Ref.h"
 #include "Hazard/Module.h"
 
 #include "Hazard/Assets/AssetManager.h"
@@ -16,6 +17,7 @@
 
 //Hazard render engine includes
 
+#include "Hazard/Rendering/Camera.h"
 #include "Hazard/Rendering/Image/Image2D.h"
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 #include "Hazard/Rendering/RenderCommand.h"

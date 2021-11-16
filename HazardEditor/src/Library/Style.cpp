@@ -45,6 +45,13 @@ ImVec4 Style::ColorAsImVec4(const Color& color)
 {
 	return { color.r, color.g, color.b, color.a };
 }
+ImU32 Style::ColorWithMultiplier(ImVec4 color, float multiplier)
+{
+	const ImVec4& colRow = color;
+	float hue, sat, val;
+	ImGui::ColorConvertRGBtoHSV(colRow.x, colRow.y, colRow.z, hue, sat, val);
+	return ImColor::HSV(hue, sat, std::min(val * multiplier, 1.0f));
+}
 ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
 {
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;
@@ -66,6 +73,10 @@ Color Style::GetStyleColor(ColorType type)
 	case ColorType::Text:			return Color("#B9B9B9");
 	}
 	return Color();
+}
+ImU32 Style::GetStyleColor32(ColorType type)
+{
+	return ImGui::ColorConvertFloat4ToU32(ColorAsImVec4(GetStyleColor(type)));
 }
 void Style::InitClassic()
 {

@@ -7,6 +7,12 @@
 
 namespace Hazard::Rendering
 {
+	struct FileHeader {
+		uint32_t Width;
+		uint32_t Height;
+		uint32_t Channels;
+		uint32_t DataSize;
+	};
 
 	bool TextureFactory::TextureCacheExists(const std::string& path)
 	{
@@ -34,21 +40,27 @@ namespace Hazard::Rendering
 			File::CreateDir(cacheDir.parent_path());
 
 		uint32_t dataSize;
-		uint32_t* textureData;
+		byte* textureData;
+
 		if (header.Channels == 4) {
 
-			dataSize = sizeof(TextureHeader) + header.ImageData.Size;
-			textureData = new uint32_t[dataSize];
+			dataSize = sizeof(FileHeader) + header.ImageData.Size;
+			textureData = new byte[dataSize];
 
-			memcpy(textureData, &header, sizeof(TextureHeader));
-			memcpy(textureData + sizeof(TextureHeader), header.ImageData.Data, header.ImageData.Size);
-		}
-		else
-		{
-			return false;
-		}
+			FileHeader fileHeader = {};
+			fileHeader.Width = header.Width;
+			fileHeader.Height = header.Height;
+			fileHeader.Channels = header.Channels;
+			fileHeader.DataSize = header.DataSize;
 
-		return File::WriteBinaryFile(cacheDir, textureData, dataSize);
+			memcpy(textureData, &fileHeader, sizeof(FileHeader));
+			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
+			bool result = File::WriteBinaryFile(cacheDir, textureData, dataSize);
+
+			delete textureData;
+			return result;
+		}
+		return false;
 	}
 
 	bool TextureFactory::CacheFileChanged(const std::string& path)
@@ -85,12 +97,18 @@ namespace Hazard::Rendering
 		auto cacheFile = GetFileCachePath(path);
 
 		size_t fileSize = 0;
-		uint32_t* data = File::ReadBinaryFile(cacheFile, fileSize);
+		byte* data = File::ReadBinaryFile(cacheFile, fileSize);
 
 		TextureHeader header = {};
-		memcpy(&header, data, sizeof(TextureHeader));
+		FileHeader fileHeader = {};
 
-		header.ImageData = Buffer::Copy(data, header.DataSize, sizeof(TextureHeader));
+		memcpy(&fileHeader, data, sizeof(FileHeader));
+
+		header.Width = fileHeader.Width;
+		header.Height = fileHeader.Height;
+		header.Channels = fileHeader.Channels;
+		header.DataSize = fileHeader.DataSize;
+		header.ImageData = Buffer::Copy(data, header.DataSize, sizeof(FileHeader));
 
 		HZR_CORE_INFO("Texture {0} loaded from cache in {1} ms", path, timer.ElapsedMillis());
 		return header;
@@ -121,7 +139,7 @@ namespace Hazard::Rendering
 		{
 			Timer timer;
 			stbi_set_flip_vertically_on_load(verticalFlip);
-			
+
 			stbi_uc* data = stbi_load(sourceFile.string().c_str(), &w, &h, &channels, 4);
 			header.ImageData = Buffer(data, w * h * channels);
 			HZR_CORE_INFO("Texture \"{0}\" loaded from source in {1} ms", sourceFile.string(), timer.ElapsedMillis());

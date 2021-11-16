@@ -38,8 +38,6 @@ namespace Runtime {
 		{
 			PhysicsCommand::OnEndRuntime();
 			ScriptCommand::OnEndRuntime();
-
-			delete &handler.GetCurrentWorld();
 			handler.SetWorld(s_EditorWorld);
 		}
 		if (s_ScenePaused && s_SceneRunning) 

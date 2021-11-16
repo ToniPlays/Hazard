@@ -6,10 +6,13 @@ namespace Hazard
 	class StringUtil {
 
 	public:
-		static std::vector<std::string> SplitString(std::string string, char delim);
+		static std::vector<std::string> SplitString(const std::string& string, char delim);
 		static std::string RemoveAtEnd(std::string& source, char val);
 		static std::string BytesToString(const size_t& bytes);
 		static std::string Replace(const std::string& value, const std::string& find, const std::string& replace);
+		static std::string& ToLower(std::string& string);
+		static bool IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive = false, bool stripWhiteSpaces = true, bool stripUnderScores = true);
+		static bool Contains(std::string_view t, std::string_view s) { return t.find(s) != std::string::npos; }
 		/*
 		Split source by token, returns type and source until next type token
 		*/
@@ -34,7 +37,7 @@ namespace Hazard
 		template<typename T>
 		static std::string FormatNumber(T number) {
 			std::string num = std::to_string(number);
-			size_t n = num.length() - 3;
+			int n = num.length() - 3;
 
 			while (n > 0) {
 				num.insert(n, ",");

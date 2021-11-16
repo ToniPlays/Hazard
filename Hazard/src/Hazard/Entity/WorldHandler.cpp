@@ -22,7 +22,7 @@ namespace Hazard::ECS {
 	{
 		if (File::Exists(file)) {
 			if (type == Serialization::Editor) {
-				m_World = Loader::WorldDeserializer::DeserializeEditor(file.c_str());
+				Loader::WorldDeserializer::DeserializeEditor(m_World, file.c_str());
 				return true;
 			}
 		}
@@ -32,7 +32,6 @@ namespace Hazard::ECS {
 
 		Entity entity = m_World->CreateEntity("Camera");
 		entity.AddComponent<CameraComponent>();
-
 		
 		return false;
 	}

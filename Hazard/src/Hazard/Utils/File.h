@@ -27,7 +27,7 @@ namespace Hazard {
 		static bool DirectoryExists(const std::filesystem::path& dir);
 
 		static std::vector<char> ReadBinaryFile(const std::string& path);
-		static uint32_t* ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize);
+		static byte* ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize);
 		static bool ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer);
 		static std::string ReadFile(const std::filesystem::path& file);
 

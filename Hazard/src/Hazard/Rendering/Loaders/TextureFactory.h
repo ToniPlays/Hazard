@@ -17,7 +17,6 @@ namespace Hazard::Rendering
 		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
 	};
 	
-
 	class TextureFactory 
 	{
 	public:
@@ -33,6 +32,6 @@ namespace Hazard::Rendering
 		static uint32_t PixelSize(const ImageFormat& format);
 
 	private:
-		static inline std::string m_CacheDirectory = "library/textures/";
+		static inline std::string m_CacheDirectory = "library/Textures/";
 	};
 }

@@ -178,6 +178,10 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
+		commandBuffer->GetStats().IndexCount += count;
+		commandBuffer->GetStats().VertexCount += m_VertexBuffer->GetSize();
+		commandBuffer->GetStats().DrawCalls++;
+
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);

@@ -1803,6 +1803,7 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.h" />
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">

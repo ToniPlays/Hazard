@@ -25,10 +25,10 @@ void EditorApplication::PreInit()
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
-	contextInfo.VSync = false; 
+	contextInfo.VSync = true; 
 	contextInfo.Color = "#323232";
-	contextInfo.Width = 1280;
-	contextInfo.Height = 720;
+	contextInfo.Width = 1920;
+	contextInfo.Height = 1080;
 
 	RenderEngineCreateInfo engineInfo = {};
 	engineInfo.MaxQuadCount = 10000;

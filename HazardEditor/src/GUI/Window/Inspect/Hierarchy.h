@@ -22,9 +22,8 @@ namespace WindowElement {
 		bool KeyPressEvent(KeyPressedEvent& e);
 
 	private:
-		WorldHandler* handler = nullptr;
-		Entity selectionContext;
+		Entity m_SelectionContext;
 
-		std::string searchValue;
+		std::string m_SearchValue;
 	};
 }

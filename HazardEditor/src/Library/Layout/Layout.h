@@ -1,7 +1,9 @@
 #pragma once
 #include "Hazard.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "Platform/GLFW/FontAwesome.h"
+#include "library/Style.h"
 
 using namespace Hazard::Rendering;
 namespace WindowLayout 
@@ -17,7 +19,7 @@ namespace WindowLayout
 		inline static void EndTable() { ImGui::Columns(1); }
 		static bool Tooltip(const char* text);
 		static void Separator(float height = 1.0f);
-		static void Text(const char* text);
+		static void Text(const std::string& text);
 		static void TextColored(const char* text, const Hazard::Color& color);
 		static void NextLine(float height = 15.0f);
 		static void ItemWidth(float width);
@@ -26,6 +28,16 @@ namespace WindowLayout
 		inline static void PopWidth() { ImGui::PopItemWidth(); }
 		inline static void MaxWidth() { ItemWidth(ImGui::GetContentRegionAvail().x); }
 		inline static float GetMaxWidth() { return ImGui::GetContentRegionAvail().x; }
+		inline static void Shift(float x, float y) {
+			ShiftX(x);
+			ShiftY(y);
+		}
+		inline static void ShiftX(float amount) {
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
+		}
+		inline static void ShiftY(float amount) {
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + amount);
+		}
 
 		template<typename T>
 		static void IDGroup(const char* id, T callback) {
@@ -118,6 +130,36 @@ namespace WindowLayout
 		static void MenuItem(const char* name, T callback) {
 			if (ImGui::MenuItem(name)) 
 				callback();
+		}
+		static void Underline(bool fullWidth = false, float offsetX = 0.0f, float offsetY = -1.0f)
+		{
+			if (fullWidth)
+			{
+				if (ImGui::GetCurrentWindow()->DC.CurrentColumns != nullptr)
+					ImGui::PushColumnsBackground();
+				else if (ImGui::GetCurrentTable() != nullptr)
+					ImGui::TablePushBackgroundChannel();
+			}
+
+			const float width = fullWidth ? ImGui::GetWindowWidth() : ImGui::GetContentRegionAvail().x;
+			const ImVec2 cursor = ImGui::GetCursorScreenPos();
+
+			ImGui::GetWindowDrawList()->AddLine(ImVec2(cursor.x + offsetX, cursor.y + offsetY),
+				ImVec2(cursor.x + width, cursor.y + offsetY),
+				Style::GetStyleColor32(ColorType::Background), 1.0f);
+
+			if (fullWidth)
+			{
+				if (ImGui::GetCurrentWindow()->DC.CurrentColumns != nullptr)
+					ImGui::PopColumnsBackground();
+				else if (ImGui::GetCurrentTable() != nullptr)
+					ImGui::TablePopBackgroundChannel();
+			}
+		}
+		static bool NavigatedTo()
+		{
+			ImGuiContext& g = *GImGui;
+			return g.NavJustMovedToId == g.LastItemData.ID;
 		}
 	};
 }

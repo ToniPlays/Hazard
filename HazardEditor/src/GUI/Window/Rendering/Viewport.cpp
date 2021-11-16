@@ -23,6 +23,7 @@ namespace WindowElement {
 	{
 		SetActive(Application::HasModule<RenderEngine>());
 		m_Renderer = &Application::GetModule<RenderEngine>();
+		m_Renderer->SetCamera(&m_EditorCamera);
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -65,7 +66,7 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 6, 5 });
 		Style::SetButtonColors("#222222D0", "#181818D0", "#222222D0");
 
-		if (Input::Button(ICON_FK_COG, { 25, 25 })) 
+		if (Input::Button(ICON_FK_COG, { 25, 25 }))
 		{
 
 		}
@@ -80,11 +81,11 @@ namespace WindowElement {
 		}
 
 		ImGui::SameLine(0, 15);
-		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 })) 
+		if (Input::Button(ICON_FK_EYE " Show", { 0, 25 }))
 		{
 			m_DrawStats = !m_DrawStats;
 		}
-		
+
 
 		ImGui::PopStyleVar(2);
 		ImGui::SameLine();
@@ -160,8 +161,8 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5);
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
-		
-		//Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
+
+		const RenderStats& stats = m_Renderer->GetStats();
 		ApplicationData& data = Application::GetData();
 
 		Layout::NextLine(3);
@@ -189,22 +190,22 @@ namespace WindowElement {
 		Layout::TableNext();
 		Layout::Text("Draw calls");
 		Layout::TableNext();
-		ImGui::Text("%u", 0);
+		ImGui::Text("%u", stats.DrawCalls);
 
 		Layout::TableNext();
 		Layout::Text("Quads");
 		Layout::TableNext();
-		ImGui::Text("%u", 0);
+		ImGui::Text("%u", stats.QuadCount);
 
 		Layout::TableNext();
 		Layout::Text("Vertices");
 		Layout::TableNext();
-		ImGui::Text("%u", 0);
+		ImGui::Text("%u", stats.VertexCount);
 
 		Layout::TableNext();
 		Layout::Text("Indices");
 		Layout::TableNext();
-		ImGui::Text("%u", 0);
+		ImGui::Text("%u", stats.IndexCount);
 
 		Layout::EndTable();
 		ImGui::EndChild();

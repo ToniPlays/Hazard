@@ -5,7 +5,7 @@
 
 namespace Hazard {
 
-	std::vector<std::string> StringUtil::SplitString(std::string string, char delim) {
+	std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim) {
 
 		std::vector<std::string> result;
 		std::istringstream f(string);
@@ -47,5 +47,33 @@ namespace Hazard {
 			start_pos += replace.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
 		}
 		return result;
+	}
+	std::string& StringUtil::ToLower(std::string& string)
+	{
+		std::transform(string.begin(), string.end(), string.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+		return string;
+	}
+	bool StringUtil::IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive, bool stripWhiteSpaces, bool stripUnderScores) {
+		if (compareTo.empty())
+			return true;
+
+		if (value.empty())
+			return false;
+
+		std::string nameSanitized = stripUnderScores ? Replace(value, "_", " ") : value;
+
+		if (stripWhiteSpaces)
+			nameSanitized = Replace(nameSanitized, " ", "");
+
+		std::string searchString = stripWhiteSpaces ? Replace(compareTo, " ", "") : compareTo;
+
+		if (!caseSensitive)
+		{
+			nameSanitized = ToLower(nameSanitized);
+			searchString = ToLower(searchString);
+		}
+
+		return Contains(nameSanitized, searchString);
 	}
 }

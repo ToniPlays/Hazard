@@ -104,7 +104,7 @@ namespace Hazard {
 			HZR_CORE_ERROR("Cannot read file: {0}", path);
 		return buffer;
 	}
-	uint32_t* File::ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize)
+	byte* File::ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
@@ -118,7 +118,7 @@ namespace Hazard {
 		if (size == 0)
 			return nullptr;
 
-		uint32_t* buffer = new uint32_t[size];
+		byte* buffer = new byte[size];
 
 		if (!stream.read((char*)buffer, size)) {
 			HZR_CORE_ERROR("Cannot read file: {0}", path.string());

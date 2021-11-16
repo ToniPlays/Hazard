@@ -94,6 +94,7 @@ public:
 
 		m_Instance = other.m_Instance;
 		other.m_Instance = nullptr;
+
 		return *this;
 	}
 	template<typename T2>

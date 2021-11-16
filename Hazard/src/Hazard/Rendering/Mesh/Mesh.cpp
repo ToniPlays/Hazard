@@ -33,7 +33,7 @@ namespace Hazard::Rendering {
         frameBufferInfo.AttachmentCount = 2;
         frameBufferInfo.Attachments = { {ImageFormat::RGBA }, {ImageFormat::Depth } };
         frameBufferInfo.ClearOnLoad = true;
-        frameBufferInfo.ClearColor = Color::White;
+        frameBufferInfo.ClearColor = Color::Black;
         frameBufferInfo.DebugName = "Mesh3D";
         frameBufferInfo.Width = 1920;
         frameBufferInfo.Height = 1080;

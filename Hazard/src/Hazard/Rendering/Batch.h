@@ -13,7 +13,9 @@ namespace Hazard::Rendering
 		};
 		~Batch() {};
 
-		void Push(const Type& data) {
+		void Push(const Type& data) 
+		{
+			m_Count++;
 			memcpy(m_BufferPointer, &data, m_DataSize);
 			m_BufferPointer++;
 		};
@@ -21,6 +23,7 @@ namespace Hazard::Rendering
 		void Reset() {
 			m_BufferPointer = m_BufferBase;
 			m_IndexCount = 0;
+			m_Count = 0;
 		};
 		void Resize(size_t size) 
 		{
@@ -32,6 +35,7 @@ namespace Hazard::Rendering
 		}
 
 		void* GetData() { return m_BufferBase; }
+		uint32_t GetCount() { return m_Count; }
 		uint32_t GetSize() { return m_Size; }
 		size_t GetDataSize() { return (uint32_t)((uint8_t*)m_BufferPointer - (uint8_t*)m_BufferBase); }
 		size_t GetIndexCount() { return m_IndexCount; }
@@ -42,6 +46,7 @@ namespace Hazard::Rendering
 		uint32_t m_Size = 0;
 		uint32_t m_BufferSize = 0;
 		uint32_t m_IndexCount = 0;
+		uint32_t m_Count = 0;
 
 		Type* m_BufferBase;
 		Type* m_BufferPointer;

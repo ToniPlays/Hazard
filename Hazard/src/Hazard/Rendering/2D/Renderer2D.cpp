@@ -1,5 +1,6 @@
 #pragma once
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
 #include <hzrpch.h>
 #include "Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
@@ -81,6 +82,7 @@ namespace Hazard::Rendering
 
 		m_Pipeline->GetBuffer()->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
+		m_RenderCommandBuffer->GetStats().QuadCount += m_QuadBatch.GetCount() / 4.0f;
 	}
 	void Renderer2D::EndWorld()
 	{

@@ -29,8 +29,8 @@ namespace Hazard::Rendering
 
 	struct TextureFilter
 	{
-		FilterMode MinFilter;
-		FilterMode MagFilter;
+		FilterMode MinFilter = FilterMode::Linear;
+		FilterMode MagFilter = FilterMode::Linear;
 
 		TextureFilter() = default;
 		TextureFilter(FilterMode minFilter, FilterMode magFilter) : MinFilter(minFilter), MagFilter(magFilter) {}

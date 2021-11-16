@@ -39,5 +39,7 @@ namespace Hazard::Rendering::Vulkan {
 		Ref<VulkanImage2D> m_Image;
 		ImageFormat m_Format;
 		ImageUsage m_Usage;
+		ImageWrap m_WrapMode;
+		TextureFilter m_Filter;
 	};
 }

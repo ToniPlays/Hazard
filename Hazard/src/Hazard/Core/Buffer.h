@@ -3,8 +3,8 @@ namespace Hazard
 {
 	struct Buffer {
 
-		void* Data = nullptr;
 		uint32_t Size = 0;
+		void* Data = nullptr;
 
 		Buffer() : Data(nullptr), Size(0) {};
 		Buffer(void* data, uint32_t size) : Data(data), Size(size) {};

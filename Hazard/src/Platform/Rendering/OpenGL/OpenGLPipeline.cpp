@@ -66,6 +66,9 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
+		commandBuffer->GetStats().DrawCalls++;
+		commandBuffer->GetStats().IndexCount += count;
+
 		glLineWidth(m_Specs.LineWidth);
 		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
 	}
