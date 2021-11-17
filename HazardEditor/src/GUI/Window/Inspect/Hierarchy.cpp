@@ -188,13 +188,18 @@ namespace WindowElement {
 		//Type
 		ImGui::TableNextColumn();
 
+		Layout::ShiftX(edgeOffset);
+		ImGui::Text("Entity");
+
 		//Modifiers
 		ImGui::TableNextColumn();
 
 		ScopedStyle frame(ImGuiStyleVar_FrameBorderSize, 0);
-		Color col = Style::GetStyleColor(ColorType::Background);
+		Color col = Style::GetStyleColor(c.m_Visible ? ColorType::Debug : ColorType::Secondary);
+		ScopedColour textColor(ImGuiCol_Text, Style::ColorAsImVec4(col));
 
-		Input::ToggleButtonColorChange(ICON_FK_EYE, col, col, Style::GetStyleColor(c.m_Visible ? ColorType::Debug : ColorType::Secondary), c.m_Visible);
+		Layout::ShiftX(edgeOffset);
+		ImGui::Text(ICON_FK_EYE);
 	}
 	bool Hierarchy::KeyPressEvent(KeyPressedEvent& e)
 	{

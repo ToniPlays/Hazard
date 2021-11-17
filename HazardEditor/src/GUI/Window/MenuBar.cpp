@@ -115,7 +115,7 @@ namespace WindowElement {
 				});
 			Layout::Separator();
 			Layout::MenuItem("Export", []() {
-				HZR_ASSERT(false, "Export TODO");
+				Application::GetModule<EditorView>().GetRenderable<BuildWindow>()->SetActive(true);
 				});
 			Layout::Separator();
 			Layout::MenuItem("Quit", []() {

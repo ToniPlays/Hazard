@@ -189,6 +189,9 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\BuildWindow.h" />
+    <ClInclude Include="src\BuildSystem\GameExportManager.h" />
+    <ClInclude Include="src\BuildSystem\BuildReport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\HazardEditor.cpp">
@@ -308,5 +311,7 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\BuildWindow.cpp" />
+    <ClCompile Include="src\BuildSystem\GameExportManager.cpp" />
   </ItemGroup>
 </Project>

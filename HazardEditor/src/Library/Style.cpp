@@ -62,17 +62,17 @@ Color Style::GetStyleColor(ColorType type)
 	switch (type)
 	{
 	case ColorType::Primary:		return Color("#53B305");
-	case ColorType::Secondary:		return Color("#242424");
+	case ColorType::Secondary:		return Color("#282828");
 	case ColorType::Info:			return Color("#1AE61A");
 	case ColorType::Debug:			return Color("#0080ff");
 	case ColorType::Warning:		return Color("#FFE600");
 	case ColorType::Error:			return Color("#FF331A");
 	case ColorType::Critical:		return Color("#FF0000");
-	case ColorType::Trace:			return Color("#FFFFFF");
+	case ColorType::Trace:			return Color::White;
 	case ColorType::Background:		return Color("#181818");
 	case ColorType::Text:			return Color("#B9B9B9");
 	}
-	return Color();
+	return Color::Black;
 }
 ImU32 Style::GetStyleColor32(ColorType type)
 {

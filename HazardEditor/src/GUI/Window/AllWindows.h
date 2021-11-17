@@ -4,6 +4,7 @@
 #include "Toolbar.h"
 
 #include "GUI/Window/Editor/WelcomePopup.h"
+#include "GUI/Window/Editor/BuildWindow.h"
 
 #include "Inspect/Properties.h"
 #include "Inspect/Hierarchy.h"

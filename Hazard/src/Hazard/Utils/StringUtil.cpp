@@ -27,7 +27,7 @@ namespace Hazard {
 		constexpr uint64_t MB = 1024 * 1024;
 		constexpr uint64_t KB = 1024;
 
-		char buffer[16];
+		char buffer[32];
 		if (bytes > GB) sprintf_s(buffer, "%.02f GB", (float)bytes / (float)GB);
 		else if (bytes > MB) sprintf_s(buffer, "%.02f MB", (float)bytes / (float)MB);
 		else if (bytes > KB) sprintf_s(buffer, "%.02f KB", (float)bytes / (float)KB);

@@ -57,6 +57,7 @@ namespace WindowElement {
 		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 		io.Fonts->AddFontFromFileTTF("res/fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 32.0f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 
@@ -83,6 +84,7 @@ namespace WindowElement {
 		PushRenderable<WelcomePopup>();
 
 		PushRenderable<SettingsView>();
+		PushRenderable<BuildWindow>();
 	}
 	void EditorView::Render()
 	{
