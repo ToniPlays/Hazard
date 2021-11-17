@@ -5,7 +5,7 @@
 
 namespace Hazard 
 {
-	enum class AssetType 
+	enum class AssetType
 	{
 		Undefined = 0,
 		AudioClip,
@@ -38,7 +38,7 @@ namespace Hazard
 			case AssetType::Undefined:			return "None";
 			case AssetType::AudioClip:			return "AudioClip";
 			case AssetType::World:				return "World";
-			case AssetType::Image:				return "Texture";
+			case AssetType::Image:				return "Image";
 			case AssetType::Mesh:				return "Mesh";
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";

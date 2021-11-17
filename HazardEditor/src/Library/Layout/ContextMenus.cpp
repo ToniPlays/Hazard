@@ -98,7 +98,10 @@ namespace WindowElement {
 						});
 				});
 			Layout::Menu("2D", [&]() {
-
+				if (!entity.HasComponent<SpriteRendererComponent>())
+					Layout::MenuItem("Sprite renderer", [&]() {
+					entity.AddComponent<SpriteRendererComponent>();
+						});
 				});
 			Layout::Menu("Script", [&]() {
 				if (!entity.HasComponent<ScriptComponent>())
@@ -122,10 +125,7 @@ namespace WindowElement {
 					if (!entity.HasComponent<Rigidbody2DComponent>())
 						entity.AddComponent<Rigidbody2DComponent>();
 						});
-				if (!entity.HasComponent<SpriteRendererComponent>())
-					Layout::MenuItem("Sprite renderer", [&]() {
-					entity.AddComponent<SpriteRendererComponent>();
-						});
+
 				ImGui::Separator();
 				});
 			Layout::Menu("Lighting", [&]() {

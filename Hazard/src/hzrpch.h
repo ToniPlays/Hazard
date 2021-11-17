@@ -16,6 +16,7 @@
 #include "Hazard/Core/Timer.h"
 #include "Hazard/Logging/Logger.h"
 #include "Hazard/Instrumentor.h"
+#include "Hazard/PerformanceProfiler.h"
 
 #include "Hazard/Utils/File.h";
 
@@ -27,6 +28,7 @@
 #include "Hazard/Math/Time.h"
 #include "Hazard/Math/Math.h"
 #include "Hazard/Math/Random.h"
+
 
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #define GLM_FORCE_SIMD_AVX2

@@ -22,6 +22,7 @@ namespace Hazard::Rendering {
 
 	class RenderEngine : public Module::Module
 	{
+		friend class RenderCommand;
 	public:
 		RenderEngine(RenderEngineCreateInfo* info, RenderAPI api);
 		~RenderEngine();
@@ -31,7 +32,6 @@ namespace Hazard::Rendering {
 		void Close() override;
 		 
 		bool OnResize(WindowResizeEvent& e);
-		void SetViewportSize(uint32_t width, uint32_t heigth);
 		void SetCamera(Camera* camera) { m_RenderingCamera = camera; }
 
 		Ref<Image2D> GetFinalPassImage() { return m_RenderPass->GetSpecs().TargetFrameBuffer->GetImage(); }
@@ -40,14 +40,12 @@ namespace Hazard::Rendering {
 
 	private:
 		Renderer2D* m_Renderer2D;
-		glm::mat4 m_Projection;
-		glm::mat4 m_CameraTransform;
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		Ref<Mesh> m_TestMesh;
 		RenderPassData m_RenderPassData;
 		Ref<RenderPass> m_RenderPass;
-		Camera* m_RenderingCamera;
+		Camera* m_RenderingCamera = nullptr;
 
 	};
 }

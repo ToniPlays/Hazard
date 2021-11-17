@@ -17,7 +17,7 @@ namespace Editor {
 		inline float GetDistance() const { return distance; }
 		inline void SetDistance(float distance) { this->distance = distance; }
 
-		inline void SetViewpotSize(float w, float h) { viewport_w = w; viewport_h = h; UpdateProjection(); }
+		inline void SetViewport(uint32_t width, uint32_t height) override { viewport_w = width; viewport_h = height; UpdateProjection(); }
 
 		const glm::mat4& GetView() const override { return viewMatrix; }
 		const glm::mat4& GetProjection() const override { return projectionMatrix; }

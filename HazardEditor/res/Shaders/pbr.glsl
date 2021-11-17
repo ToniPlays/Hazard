@@ -52,7 +52,7 @@ const vec4 lightColor = { 1.0, 1.0, 1.0, 1.0 };
 
 const float ambient = 0.15;
 const float gamma = 2.2;
-const float specularStrength = 0.5;
+const float specularStrength = 0.25;
 
 vec3 GammaCorrection(vec4 color) {
 	return pow(color.rgb, vec3(1.0 / gamma));
@@ -74,7 +74,7 @@ void main()
 	//Specular
 	vec3 viewDir = normalize(u_Camera.u_Position.xyz - FragPos);
 	vec3 reflected = reflect(-lightDir, norm);
-	float specular = pow(max(dot(viewDir, reflected), 0.0), 32);
+	float specular = pow(max(dot(viewDir, reflected), 0.0), 16);
 	vec3 specColor = specularStrength * specular * lightColor.rgb;
 
 	vec3 outColor = GammaCorrection(f_Color) * diffuseColor.rgb;

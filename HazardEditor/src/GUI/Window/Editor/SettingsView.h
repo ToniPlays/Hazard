@@ -12,10 +12,12 @@ namespace WindowElement {
 		void OnWindowRender() override;
 		void OnBeforeRender() override;
 		void OnAfterRender() override;
+
 	private:
 		void CreateMenus();
 		void CreateContent();
 
 		std::string m_SearchValue;
+		std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
 	};
 }

@@ -15,15 +15,15 @@ namespace WindowElement {
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = { 0, 0 });
 		template<typename T>
-		static bool FileButton(const char* name, Ref<Hazard::Rendering::Image> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
+		static bool FileButton(const char* name, Ref<Hazard::Rendering::Texture2D> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
 		{
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::PushID(id.c_str());
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-			Layout::Image(image, { size.x, size.x }, { 0, 1 }, { 1, 0 });
+			Layout::Texture(image, { size.x, size.x }, { 0, 1 }, { 1, 0 });
 			fn();
-			Layout::Separator(5);
 
+			Layout::Separator(5);
 			ImGui::PopStyleVar();
 			ImGui::PopID();
 			Layout::NextLine(1);
@@ -44,16 +44,16 @@ namespace WindowElement {
 		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
 		template<typename T, typename C>
-		static InputType TextureSlot(Ref<Rendering::Image2D> texture, T callback, C dropCallback) {
+		static InputType TextureSlot(Ref<Rendering::Texture2D> texture, T callback, C dropCallback) {
 			InputType input = InputType::None;
 
 			Layout::Table(2, false, "##textureSlot");
 			Layout::SetColumnWidth(75);
 
-			//if (ImageButton(texture->GetID(), { 50, 50 })) 
-			//	input = InputType::ImageChange;
-
+			if (ImageButton(texture, { 50, 50 })) 
+				input = InputType::ImageChange;
 			dropCallback();
+
 			Layout::Tooltip("Image");
 			Layout::TableNext();
 			Button("Flip");
@@ -78,7 +78,7 @@ namespace WindowElement {
 
 		static bool ButtonColorChange(const char* label, const Hazard::Color& offColor, const Hazard::Color& onColor, const Hazard::Color& background, const bool state, ImVec2 size = { 0, 0 });
 		static bool ColoredButton(const char* label, const Hazard::Color& color, const Hazard::Color& textColor, ImVec2 size = { 0, 0 });
-		static bool ImageButton(void* imageID, ImVec2 size = { 50, 50 });
+		static bool ImageButton(Ref<Rendering::Texture2D> image, ImVec2 size = { 50, 50 });
 
 		static bool PublicField(const std::string& name, Scripting::PublicField* field, bool runtime = false);
 	};

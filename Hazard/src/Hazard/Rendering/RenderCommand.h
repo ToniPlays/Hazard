@@ -20,6 +20,7 @@ namespace Hazard::Rendering
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
 
 		static RenderStats GetStats() { return s_Engine->GetStats(); };
+		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }
 
 	private:
 		inline static RenderEngine* s_Engine;

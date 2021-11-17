@@ -123,7 +123,7 @@ namespace Hazard {
 		if (!stream.read((char*)buffer, size)) {
 			HZR_CORE_ERROR("Cannot read file: {0}", path.string());
 		}
-
+		fileSize = size;
 		return buffer;
 	}
 	bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer)
@@ -188,14 +188,16 @@ namespace Hazard {
 	}
 	FolderData File::GetFolderFiles(const std::string& folder)
 	{
-		FolderData result;
-		result.path = folder;
+		FolderData result = {};
+		result.Path = folder;
 
-		for (const auto& file : directory_iterator(folder)) {
+		std::filesystem::directory_iterator iter(folder);
+
+		for (const auto& file : iter) {
 			if (file.is_directory())
-				result.folders.emplace_back(file.path());
+				result.Folders.emplace_back(file.path());
 			else
-				result.files.emplace_back(file.path());
+				result.Files.emplace_back(file.path());
 		}
 		return result;
 	}

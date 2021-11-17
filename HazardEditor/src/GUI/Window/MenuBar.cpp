@@ -61,7 +61,7 @@ namespace WindowElement {
 		ImGui::Text("%.2fms", 1000.0f / ImGui::GetIO().Framerate);
 
 		ImGui::SetCursorPosX(width + 75);
-		ImGui::Text("Mem: %.2fmb", Application::GetData().memoryUsage);
+		ImGui::Text("Mem: %.2fmb", Application::GetData().MemoryUsage);
 		ImGui::SameLine(0, 15);
 
 		width = ImGui::GetCursorPosX();
@@ -108,10 +108,10 @@ namespace WindowElement {
 				Application::GetModule<Project::ProjectManager>().Save();
 				});
 			Layout::MenuItem("Save as", []() {
-				HZR_ASSERT(false, "Save as TODO"); 
+				HZR_CORE_INFO("Save as TODO");
 				});
 			Layout::MenuItem("New world", []() {
-				HZR_ASSERT(false, "New world TODO"); 
+				HZR_CORE_INFO("New world TODO"); 
 				});
 			Layout::Separator();
 			Layout::MenuItem("Export", []() {

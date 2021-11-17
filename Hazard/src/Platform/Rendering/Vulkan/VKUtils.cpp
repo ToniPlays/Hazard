@@ -139,6 +139,7 @@ namespace Hazard::Rendering::Vulkan {
 		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
 		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
 		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGB:			   return VK_FORMAT_R8G8B8_UNORM;
 		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
 		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
 		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;

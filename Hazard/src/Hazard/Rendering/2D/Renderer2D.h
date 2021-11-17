@@ -51,6 +51,7 @@ namespace Hazard::Rendering
 		void Flush();
 		void EndWorld();
 		void Recreate(Ref<RenderPass> renderPass);
+		Ref<Texture2D> GetWhiteTexture() { return m_WhiteTexture; }
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;

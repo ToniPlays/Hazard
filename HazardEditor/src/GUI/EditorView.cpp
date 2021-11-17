@@ -104,7 +104,6 @@ namespace WindowElement {
 				element->OnRender();
 			}
 		}
-
 		EndFrame();
 	}
 	bool EditorView::OnEvent(Event& e)

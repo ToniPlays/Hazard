@@ -10,7 +10,9 @@ namespace WindowLayout
 {
 	class Layout {
 	public:
+		static ImTextureID GetTextureID(const Ref<Image2D>& image);
 		static void Image(const Ref<Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
+		static void Texture(const Ref<Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
 		static void Table(uint8_t columns, bool border = true, const char* id = "#aa");
 		inline static void TableNext() { ImGui::NextColumn(); }
 		static void SameLine(float offset = 0.0f, float spacing = 0.0f);

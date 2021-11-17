@@ -23,7 +23,6 @@ namespace WindowElement {
 
 	private:
 		Entity m_SelectionContext;
-
 		std::string m_SearchValue;
 	};
 }

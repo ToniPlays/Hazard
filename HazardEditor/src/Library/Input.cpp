@@ -47,7 +47,7 @@ namespace WindowElement {
 	{
 		bool modified = false;
 		Style::SelectFont(buttonFont);
-		
+
 		if (Button(label, size)) {
 			value = resetValue;
 			modified = true;
@@ -60,7 +60,7 @@ namespace WindowElement {
 		ss << "##" << label;
 		Layout::SameLine();
 
-		if (ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f")) 
+		if (ImGui::DragFloat(ss.str().c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f"))
 			modified = true;
 
 		ImGui::PopFont();
@@ -82,7 +82,7 @@ namespace WindowElement {
 		modified = Input::ResettableDragButton("X", value, resetValue, buttonSize, 1, 0);
 
 		ImGui::PopStyleColor(3);
-		
+
 		Layout::EndTable();
 		ImGui::PopStyleVar();
 
@@ -153,10 +153,10 @@ namespace WindowElement {
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-		
+
 		Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
 		ImGui::PushFont(boldFont);
-		
+
 		if (ImGui::Button("X", buttonSize)) {
 			modified = true;
 			value.x = resetValue;
@@ -222,7 +222,7 @@ namespace WindowElement {
 			}
 
 			Layout::EndTable();
-		});
+			});
 		return modified;
 	}
 	void Input::Checkbox(const char* label, bool& value)
@@ -338,9 +338,18 @@ namespace WindowElement {
 		ImGui::PopStyleColor(2);
 		return modified;
 	}
-	bool Input::ImageButton(void* imageID, ImVec2 size)
+	bool Input::ImageButton(Ref<Rendering::Texture2D> image, ImVec2 size)
 	{
-		return ImGui::ImageButton(imageID, size, { 0, 1 }, { 1, 0});
+		switch (RenderCommand::GetAPI())
+		{
+		case RenderAPI::OpenGL:
+			return ImGui::ImageButton((ImTextureID)image.As<OpenGL::OpenGLTexture2D>()->GetID(), size, {0, 1}, {1, 0});
+		case RenderAPI::Vulkan: {
+			Ref<Vulkan::VulkanTexture2D> vulkanTexture = image.As<Vulkan::VulkanTexture2D>();
+			return ImGui::ImageButton(Layout::GetTextureID(vulkanTexture->GetImage()), size, { 0, 1 }, { 1, 0 });
+		}
+		}
+		return false;
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field, bool runtime)
 	{
@@ -352,126 +361,126 @@ namespace WindowElement {
 
 		switch (field->GetType())
 		{
-			case FieldType::Float: 
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(name.c_str());
-				Layout::TableNext();
-				Layout::MaxWidth();
-				float f = runtime ? field->GetRuntimeValue<float>() : field->GetStoredValue<float>();
-				modified = DragFloat(id.c_str(), f);
-				if (modified) {
-					field->SetStoredValue(f);
-					if (field->RuntimeAvailable()) 
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::EndTable();
-				break;
+		case FieldType::Float:
+		{
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text(name.c_str());
+			Layout::TableNext();
+			Layout::MaxWidth();
+			float f = runtime ? field->GetRuntimeValue<float>() : field->GetStoredValue<float>();
+			modified = DragFloat(id.c_str(), f);
+			if (modified) {
+				field->SetStoredValue(f);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
 			}
-			case FieldType::Float2: 
-			{
-				glm::vec2 f2 = runtime ? field->GetRuntimeValue<glm::vec2>() : field->GetStoredValue<glm::vec2>();
-				modified = Vec2(name.c_str(), f2, 0, 75);
-				if (modified) {
-					field->SetStoredValue(f2);
-					if (field->RuntimeAvailable())
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::NextLine(1);
-				break;
+			Layout::EndTable();
+			break;
+		}
+		case FieldType::Float2:
+		{
+			glm::vec2 f2 = runtime ? field->GetRuntimeValue<glm::vec2>() : field->GetStoredValue<glm::vec2>();
+			modified = Vec2(name.c_str(), f2, 0, 75);
+			if (modified) {
+				field->SetStoredValue(f2);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
 			}
-			case FieldType::Float3:
-			{
-				glm::vec3 f3 = runtime ? field->GetRuntimeValue<glm::vec3>() : field->GetStoredValue<glm::vec3>();
-				modified = Vec3(name.c_str(), f3, 0, 75);
-				if (modified) {
-					field->SetStoredValue(f3);
-					if (field->RuntimeAvailable())
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::NextLine(1);
-				break;
+			Layout::NextLine(1);
+			break;
+		}
+		case FieldType::Float3:
+		{
+			glm::vec3 f3 = runtime ? field->GetRuntimeValue<glm::vec3>() : field->GetStoredValue<glm::vec3>();
+			modified = Vec3(name.c_str(), f3, 0, 75);
+			if (modified) {
+				field->SetStoredValue(f3);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
 			}
-			case FieldType::Int:
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(name.c_str());
-				Layout::TableNext();
-				Layout::MaxWidth();
-				int i = runtime ? field->GetRuntimeValue<int>() : field->GetStoredValue<int>();
-				modified = DragInt(id.c_str(), i);
-				if (modified) {
-					field->SetStoredValue(i);
-					if (field->RuntimeAvailable())
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::EndTable();
-				break;
+			Layout::NextLine(1);
+			break;
+		}
+		case FieldType::Int:
+		{
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text(name.c_str());
+			Layout::TableNext();
+			Layout::MaxWidth();
+			int i = runtime ? field->GetRuntimeValue<int>() : field->GetStoredValue<int>();
+			modified = DragInt(id.c_str(), i);
+			if (modified) {
+				field->SetStoredValue(i);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
 			}
-			case FieldType::UInt:
-			{
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(name.c_str());
-				Layout::TableNext();
-				Layout::MaxWidth();
-				uint32_t uint = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
-				modified = DragUInt(name.c_str(), uint);
-				if (modified) {
-					field->SetStoredValue(uint);
-					if (field->RuntimeAvailable())
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::EndTable();
-				break;
+			Layout::EndTable();
+			break;
+		}
+		case FieldType::UInt:
+		{
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text(name.c_str());
+			Layout::TableNext();
+			Layout::MaxWidth();
+			uint32_t uint = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
+			modified = DragUInt(name.c_str(), uint);
+			if (modified) {
+				field->SetStoredValue(uint);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
 			}
-			default:
-			{
-				using namespace Hazard::ECS;
-				uint32_t entityID = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
-				std::string tag = "None";
+			Layout::EndTable();
+			break;
+		}
+		default:
+		{
+			using namespace Hazard::ECS;
+			uint32_t entityID = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
+			std::string tag = "None";
 
-				if (entityID != 0) {
-					Entity entity = WorldCommand::GetEntity(entityID - 1);
-					if (entity.IsValid())
-						tag = entity.GetTag().m_Tag;
-				}
+			if (entityID != 0) {
+				Entity entity = WorldCommand::GetEntity(entityID - 1);
+				if (entity.IsValid())
+					tag = entity.GetTag().m_Tag;
+			}
 
-				Layout::Table(2, false);
-				Layout::SetColumnWidth(75);
-				Layout::Text(name.c_str());
-				Layout::TableNext();
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 20);
-				
-				bool modified = false;
+			Layout::Table(2, false);
+			Layout::SetColumnWidth(75);
+			Layout::Text(name.c_str());
+			Layout::TableNext();
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 20);
 
-				Input::InputField(tag, "");
-				DragDropUtils::DragTarget("Hazard.Entity", [&](const ImGuiPayload* payload) {
-					const char* value = (const char*)payload->Data;
-					entityID = atoi(value);
-					modified = true;
+			bool modified = false;
+
+			Input::InputField(tag, "");
+			DragDropUtils::DragTarget("Hazard.Entity", [&](const ImGuiPayload* payload) {
+				const char* value = (const char*)payload->Data;
+				entityID = atoi(value);
+				modified = true;
 				});
-				Layout::SameLine();
+			Layout::SameLine();
 
-				Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-				Style::SelectFont(1);
+			Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
+			Style::SelectFont(1);
 
-				if (Input::Button("X", { 20, 20 })) {
-					modified = true;
-					entityID = 0;
-				}
-				ImGui::PopFont();
-				ImGui::PopStyleColor(3);
-
-				if (modified) {
-					field->SetStoredValue(entityID);
-					if (field->RuntimeAvailable())
-						field->CopyStoredToRuntimeValue();
-				}
-				Layout::EndTable();
+			if (Input::Button("X", { 20, 20 })) {
+				modified = true;
+				entityID = 0;
 			}
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+
+			if (modified) {
+				field->SetStoredValue(entityID);
+				if (field->RuntimeAvailable())
+					field->CopyStoredToRuntimeValue();
+			}
+			Layout::EndTable();
+		}
 		}
 		Layout::EndTable();
 		return modified;

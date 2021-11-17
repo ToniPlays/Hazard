@@ -31,6 +31,9 @@ namespace Project {
 			}
 		}
 	private:
+		void ImportFiles(const std::vector<std::filesystem::directory_entry>& files);
+		void ImportFromFolder(const std::vector<std::filesystem::directory_entry>& directories);
+
 		std::string m_ProjectPath;
 		HazardProject* m_ProjectData;
 	};

@@ -130,13 +130,13 @@ namespace WindowElement {
 
 			static bool open = false;
 
-			bool changed = Input::TextureSlot(component.m_Texture.Raw(), [&]() {
+			bool changed = Input::TextureSlot(component.m_Texture, [&]() {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 				}, [&]() {
-					DragDropUtils::DragTarget("Texture2D", [&](const ImGuiPayload* payload) {
+					DragDropUtils::DragTarget("Image", [&](const ImGuiPayload* payload) {
 						const char* file = (const char*)payload->Data;
 						AssetHandle handle = AssetManager::GetHandleFromFile(file);
-						component.m_Texture = AssetManager::GetAsset<Rendering::Image2D>(handle);
+						component.m_Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 						});
 				});
 			if (changed) {

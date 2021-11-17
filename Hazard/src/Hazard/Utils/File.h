@@ -12,9 +12,9 @@ using std::filesystem::directory_iterator;
 namespace Hazard {
 
 	struct FolderData {
-		std::string path;
-		std::vector<std::filesystem::directory_entry> folders;
-		std::vector<std::filesystem::directory_entry> files;
+		std::string Path;
+		std::vector<std::filesystem::directory_entry> Folders;
+		std::vector<std::filesystem::directory_entry> Files;
 	};
 
 	class File {

@@ -304,6 +304,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::Present()
 	{
+		HZ_SCOPE_PERF("Present");
 		const uint64_t DEFAULT_FENCE_TIMEOUT = 100000000000;
 
 		VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;

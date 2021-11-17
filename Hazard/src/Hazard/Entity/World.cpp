@@ -4,6 +4,7 @@
 #include "World.h"
 #include "Entity.h"
 #include "WorldCommand.h"
+#include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Audio/AudioCommand.h"
 
 #define REGISTER_COMPONENT(x)	template<>															\
@@ -73,7 +74,7 @@ namespace Hazard::ECS
 
 	World::~World() 
 	{
-
+		std::cout << "Unloaded world: " << m_Name << std::endl;
 	}
 
 	Entity World::CreateEntity(const std::string& name)
@@ -173,7 +174,6 @@ namespace Hazard::ECS
 	REGISTER_COMPONENT(PointLightComponent);
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
-	REGISTER_COMPONENT(SpriteRendererComponent);
 	REGISTER_COMPONENT(MeshComponent);
 
 	template<>
@@ -182,6 +182,13 @@ namespace Hazard::ECS
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
+
+	template<>
+	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
+		component.m_Texture = Rendering::RenderCommand::GetWhiteTexture();
+	}
+	template<>
+	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 

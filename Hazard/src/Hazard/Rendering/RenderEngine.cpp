@@ -31,6 +31,7 @@ namespace Hazard::Rendering
 		m_RenderPass = m_TestMesh->GetPipeline()->GetSpecifications().RenderPass;
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
 		m_Renderer2D->Recreate(m_RenderPass);
+		m_WhiteTexture = m_Renderer2D->GetWhiteTexture();
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -75,17 +76,8 @@ namespace Hazard::Rendering
 	{
 		if (e.GetWidth() == 0 || e.GetHeight() == 0 && !m_RenderPass->GetSpecs().TargetFrameBuffer->GetSpecification().SwapChainTarget) return false;
 
-		SetViewportSize(e.GetWidth(), e.GetHeight());
-
+		if(m_RenderingCamera != nullptr)
+			m_RenderingCamera->SetViewport(e.GetWidth(), e.GetHeight());
 		return true;
-	}
-	void RenderEngine::SetViewportSize(uint32_t width, uint32_t height) 
-	{
-		constexpr float size = 2.0f;
-		float aspectRatio = (float)width / (float)height;
-		float scalar = aspectRatio * size;
-
-		//m_ViewProjection = glm::ortho(-scalar, scalar, -size, size, -1000.0f, 1000.0f);
-		m_Projection = glm::perspective(glm::radians(60.0f), aspectRatio, 0.003f, 1000.0f);
 	}
 }

@@ -14,12 +14,13 @@ namespace Hazard::Rendering::Vulkan
 		m_Format = info->Format;
 		m_Usage = info->Usage;
 		m_WrapMode = info->WrapMode;
+
 		if(info->Filter != nullptr)
 			m_Filter = *info->Filter;
 
 		if (info->Data == nullptr) {
 			bool loaded = LoadImageFromFile(info->FilePath.string());
-
+			HZR_CORE_ASSERT(loaded, "Failed to load Vulkan Image");
 			Image2DCreateInfo imageSpecs = {};
 			imageSpecs.Format = m_Format;
 			imageSpecs.Width = m_Header.Width;

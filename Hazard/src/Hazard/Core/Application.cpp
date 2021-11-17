@@ -59,6 +59,6 @@ namespace Hazard {
 	{
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-		s_Data.memoryUsage = pmc.PrivateUsage / 1048576.0f;
+		s_Data.MemoryUsage = pmc.PrivateUsage / 1048576.0f;
 	}
 }

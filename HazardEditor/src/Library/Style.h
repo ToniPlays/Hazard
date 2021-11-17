@@ -134,6 +134,7 @@ public:
 	static ImFont* AddFont(const char* file, float size);
 	static ImVec4 ColorAsImVec4(const Color& color);
 	static ImU32 ColorWithMultiplier(ImVec4 color, float multiplier);
+    static ImVec4 AssetTypeColor(Hazard::AssetType type);
 
 	static ImGuiTreeNodeFlags GetTreeNodeDefaultFlags();
 	static ThemeValues& GetStyle() { return s_Values; }

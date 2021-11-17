@@ -172,7 +172,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "Texture", fileName);
 
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
-			AssetManager::GetAsset<Image2D>(handle);
+			AssetManager::GetAsset<Texture2D>(handle);
 		}
 	};
 	template<>

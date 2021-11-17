@@ -11,7 +11,7 @@ namespace WindowElement {
 		void Init() override;
 
 		void OnWindowRender() override;
-		void SetRootPath(const char* path);
+		void SetRootPath(const std::string& path);
 		const std::string& GetRootPath() { return m_RootPath; }
 		const std::string& GetCurrentPath() { return m_CurrentPath; }
 		void UpdateFolderData();
@@ -19,7 +19,7 @@ namespace WindowElement {
 	private:
 		void DrawFolderTree();
 		void DrawFilePath();
-		Ref<Hazard::Rendering::Image2D> GetFileImageFromType(const Hazard::AssetMetadata& metadata);
+		Ref<Hazard::Rendering::Texture2D> GetFileImageFromType(const Hazard::AssetMetadata& metadata);
 		ImVec4 GetFileColor(Hazard::AssetMetadata& metadata);
 
 		void DrawContentRows(float colWidth, float colHeight, int cols);
@@ -32,6 +32,6 @@ namespace WindowElement {
 
 		Hazard::FolderData m_FolderData;
 
-		std::unordered_map<std::string, Ref<Hazard::Rendering::Image2D>> m_Images;
+		std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
 	};
 }

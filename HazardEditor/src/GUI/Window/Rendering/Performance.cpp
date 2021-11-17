@@ -75,5 +75,11 @@ namespace WindowElement {
 		Layout::Text(StringUtil::FormatNumber(stats.IndexCount));
 
 		Layout::EndTable();
+
+		PerformanceProfiler* profiler = Application::GetData().Profiler;
+		for (auto [name, time] : profiler->GetPerFrameData()) {
+			ImGui::Text("%s: %.3fms", name, time);
+		}
+		profiler->Clear();
 	}
 }

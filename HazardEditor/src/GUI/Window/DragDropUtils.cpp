@@ -8,7 +8,7 @@ using namespace Hazard;
 
 namespace WindowElement
 {
-	bool DragDropUtils::DragSource(const char* type, const std::string& text, std::string file)
+	bool DragDropUtils::DragSource(const char* type, const std::string& text, const std::string& file)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 		{

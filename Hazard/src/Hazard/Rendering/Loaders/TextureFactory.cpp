@@ -29,6 +29,8 @@ namespace Hazard::Rendering
 
 	std::filesystem::path TextureFactory::GetFileSourcePath(const std::string& path)
 	{
+		if (std::filesystem::path(path).is_absolute()) 
+			return path;
 		return std::filesystem::path("res/" + path);
 	}
 
@@ -60,6 +62,7 @@ namespace Hazard::Rendering
 			delete textureData;
 			return result;
 		}
+		HZR_CORE_ASSERT(false, "What");
 		return false;
 	}
 
@@ -136,19 +139,20 @@ namespace Hazard::Rendering
 		TextureHeader header = {};
 
 		int w, h, channels;
+		constexpr int desired = 4;
 		{
 			Timer timer;
 			stbi_set_flip_vertically_on_load(verticalFlip);
 
-			stbi_uc* data = stbi_load(sourceFile.string().c_str(), &w, &h, &channels, 4);
-			header.ImageData = Buffer(data, w * h * channels);
+			stbi_uc* data = stbi_load(sourceFile.string().c_str(), &w, &h, &channels, desired);
+			header.ImageData = Buffer(data, w * h * desired);
 			HZR_CORE_INFO("Texture \"{0}\" loaded from source in {1} ms", sourceFile.string(), timer.ElapsedMillis());
 		}
 
 		header.Width = w;
 		header.Height = h;
-		header.Channels = channels;
-		header.DataSize = w * h * channels;
+		header.Channels = desired;
+		header.DataSize = w * h * desired;
 
 		return header;
 	}

@@ -6,7 +6,7 @@
 namespace Hazard {
 
     static std::filesystem::path GetKey(const std::filesystem::path& path) {
-        auto key = std::filesystem::relative(path, APPLICATION_PERSISTENT_PATH);
+        auto key = path;
         
         if (key.empty()) 
             key = path.lexically_normal();

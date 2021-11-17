@@ -19,9 +19,10 @@ namespace Exporter
 
 		void SetBuildSettings(BuildSettings settings) { m_Settings = settings; };
 		BuildSettings GetSettings() { return m_Settings; }
+		bool SaveBuildSettings(const std::string& path, const BuildSettings& settings);
 		void SetErrorCallback(BuildErrorCallback callback) { m_ErrorCallback = callback; }
 		
-		bool ValidateBuildSettings() { return true; }
+		bool ValidateBuildSettings();
 		bool ExportGame(const std::filesystem::path& location);
 
 		BuildReport GetBuildReport() { return m_Report; }

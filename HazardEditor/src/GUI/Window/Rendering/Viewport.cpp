@@ -30,35 +30,36 @@ namespace WindowElement {
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 
 		bool is2D = m_EditorCamera.Is2DEnabled();
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		bool changed = false;
+		size.x -= 6.0f;
+		size.y -= 6.0f;
 
-		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+		Layout::Shift(3, 3);
+
+		bool changed = false;
 
 		if (size.x != m_Width || size.y != m_Height) {
 			m_Width = size.x;
 			m_Height = size.y;
 
 			changed = true;
-			m_Renderer->SetViewportSize(m_Width, m_Height);
-			m_EditorCamera.SetViewpotSize(m_Width, m_Height);
+			m_Renderer->GetRenderPass()->GetSpecs().TargetFrameBuffer->Resize(m_Width, m_Height);
+			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
+		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
 			Events::SelectionContextChange e({ });
-			EditorView::GetInstance().OnEvent(e);
 
+			EditorView::GetInstance().OnEvent(e);
 			Application::GetModule<ECS::WorldHandler>().LoadWorld(file);
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, ImGui::GetWindowSize());
-
-		ImGui::PopStyleVar();
 
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -185,7 +186,7 @@ namespace WindowElement {
 
 		Layout::Text("Memory");
 		Layout::TableNext();
-		ImGui::Text("%.2fmb", Application::GetData().memoryUsage);
+		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
 
 		Layout::TableNext();
 		Layout::Text("Draw calls");

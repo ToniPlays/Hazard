@@ -3,13 +3,15 @@
 #include "Core.h"
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
+#include "Hazard/PerformanceProfiler.h"
 
 namespace Hazard {
 
 	struct ApplicationData 
 	{
-		float memoryUsage = 0;
+		float MemoryUsage = 0;
 		bool Minimized = false;
+		PerformanceProfiler* Profiler = new PerformanceProfiler();
 	};
 
 	class Application {

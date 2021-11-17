@@ -25,6 +25,7 @@ namespace Hazard::ECS::Loader {
 
 		std::ofstream fout(file);
 		fout << out.c_str();
+		fout.close();
 
 		return true;
 	}

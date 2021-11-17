@@ -21,8 +21,10 @@ namespace Hazard::ECS {
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)
 	{
 		if (File::Exists(file)) {
+			Ref<World> loadedWorld;
 			if (type == Serialization::Editor) {
-				Loader::WorldDeserializer::DeserializeEditor(m_World, file.c_str());
+				Loader::WorldDeserializer::DeserializeEditor(loadedWorld, file.c_str());
+				m_World = loadedWorld;
 				return true;
 			}
 		}
@@ -32,7 +34,7 @@ namespace Hazard::ECS {
 
 		Entity entity = m_World->CreateEntity("Camera");
 		entity.AddComponent<CameraComponent>();
-		
+
 		return false;
 	}
 }

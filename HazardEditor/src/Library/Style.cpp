@@ -52,6 +52,19 @@ ImU32 Style::ColorWithMultiplier(ImVec4 color, float multiplier)
 	ImGui::ColorConvertRGBtoHSV(colRow.x, colRow.y, colRow.z, hue, sat, val);
 	return ImColor::HSV(hue, sat, std::min(val * multiplier, 1.0f));
 }
+ImVec4 Style::AssetTypeColor(Hazard::AssetType type)
+{
+	switch (type)
+	{
+	case AssetType::Undefined:			return ColorAsImVec4(GetStyleColor(ColorType::Warning));
+	case AssetType::AudioClip:			return ColorAsImVec4(GetStyleColor(ColorType::Debug));
+	case AssetType::World:				return ColorAsImVec4(GetStyleColor(ColorType::Primary));
+	case AssetType::Image:				return ColorAsImVec4(GetStyleColor(ColorType::Critical));
+	case AssetType::Mesh:				return ColorAsImVec4(GetStyleColor(ColorType::Info));
+	case AssetType::PhysicsMaterial:	return ColorAsImVec4(GetStyleColor(ColorType::Primary));
+	case AssetType::EnvironmentMap:		return ColorAsImVec4(Style::GetStyleColor(ColorType::Trace));
+	}
+}
 ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
 {
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Framed;

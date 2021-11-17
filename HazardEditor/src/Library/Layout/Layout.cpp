@@ -2,32 +2,54 @@
 
 #include "Layout.h"
 #include "../Style.h"
+#include "Hazard.h"
 
 #include <Platform/GLFW/imgui_impl_vulkan.h>
 #include <Platform/GLFW/imgui_impl_glfw.h>
 #include "imgui_internal.h"
 
-namespace WindowLayout {
-	void Layout::Image(const Ref<Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
+namespace WindowLayout
+{
+	static std::unordered_map<const Image2D*, ImTextureID> m_ImageIDS;
+
+	ImTextureID Layout::GetTextureID(const Ref<Image2D>& image)
 	{
+		if (m_ImageIDS.find(image.Raw()) != m_ImageIDS.end()) {
+			return m_ImageIDS[image.Raw()];
+		}
+
 		switch (RenderCommand::GetAPI()) {
 		case RenderAPI::OpenGL: {
 			using namespace Hazard::Rendering::OpenGL;
 			Ref<OpenGLImage2D> glImage = image.As<OpenGLImage2D>();
-			ImGui::Image((void*)glImage->GetID(), size, t0, t1);
-			break;
+			m_ImageIDS[image.Raw()] = (ImTextureID)glImage->GetID();
+			return (ImTextureID)glImage->GetID();
 		}
 		case RenderAPI::Vulkan:
 			using namespace Hazard::Rendering::Vulkan;
 			Ref<VulkanImage2D> vulkanImage = image.As<VulkanImage2D>();
 			const auto& imageInfo = vulkanImage->GetImageInfo();
-			if (!imageInfo.ImageView) 
-				return;
 
 			const auto id = ImGui_ImplVulkan_AddTexture(imageInfo.Sampler, imageInfo.ImageView, vulkanImage->GetDescriptor().imageLayout);
-			ImGui::Image(id, size, t0, t1);
-			break;
+			m_ImageIDS[image.Raw()] = id;
+			return id;
 		}
+	}
+	void Layout::Texture(const Ref<Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
+	{
+		switch (RenderCommand::GetAPI())
+		{
+		case RenderAPI::OpenGL:
+			ImGui::Image((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, t0, t1);
+		case RenderAPI::Vulkan: 
+		{
+			ImGui::Image(GetTextureID(image.As<Vulkan::VulkanTexture2D>()->GetImage()), size, t0, t1);
+		}
+		}
+	}
+	void Layout::Image(const Ref<Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
+	{
+		ImGui::Image(GetTextureID(image), size, t0, t1);
 	}
 	void Layout::Table(uint8_t columns, bool border, const char* id)
 	{

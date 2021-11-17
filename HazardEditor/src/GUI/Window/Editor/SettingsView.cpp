@@ -13,6 +13,11 @@ namespace WindowElement
 	SettingsView::SettingsView() : EditorWindow("Settings", ImGuiWindowFlags_NoDocking)
 	{
 		SetActive(false);
+		
+		m_Images.clear();
+		AssetHandle handle = AssetManager::GetHandleFromFile("icons/world.png");
+		m_Images["world"] = AssetManager::GetAsset<Texture2D>(handle);
+
 	}
 	void SettingsView::OnWindowRender()
 	{
@@ -71,7 +76,6 @@ namespace WindowElement
 		using namespace Hazard::Rendering;
 		Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
-		//Ref<Texture2D> texture = Ref(Vault::Get<Texture2D>("res/icons/world.png"));
 
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(150);
@@ -79,13 +83,15 @@ namespace WindowElement
 		Layout::TableNext();
 		Layout::MaxWidth();
 
-		/*if (Input::ImageButton(texture->GetID())) {
-		
-		}*/
+		if (Input::ImageButton(m_Images["world"])) {
+			
+		}
+
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			const char* file = (const char*)payload->Data;
 			manager.Set("Editor.StartupWorld", file);
-			});
+			}); 
+
 		ImGui::SameLine(0, 5);
 		ImGui::Text(File::GetNameNoExt(manager.GetProject().StartupWorld).c_str());
 

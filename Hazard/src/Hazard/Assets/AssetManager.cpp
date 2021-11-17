@@ -81,6 +81,7 @@ namespace Hazard
 	}
 	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)
 	{
+		return path;
 		return std::filesystem::relative(path, APPLICATION_PERSISTENT_PATH);
 	}
 }
