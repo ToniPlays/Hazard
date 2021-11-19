@@ -16,6 +16,7 @@ namespace WindowElement {
 		void ShowBuildSettings();
 
 		Exporter::BuildReport m_Report;
+		Exporter::BuildSettings m_BuildSettings;
 		bool m_HasBuilt = false;
 	};
 }

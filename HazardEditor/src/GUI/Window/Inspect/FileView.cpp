@@ -6,7 +6,7 @@
 #include "Library/Style.h"
 #include "Library/Input.h"
 #include "Library/Layout/ContextMenus.h"
-#include "GUI/Window/DragDropUtils.h"
+#include "Library/DragDropUtils.h"
 
 using namespace WindowLayout;
 
@@ -184,7 +184,7 @@ namespace WindowElement {
 			ImGui::PushStyleColor(ImGuiCol_Separator, GetFileColor(metadata));
 
 			Input::FileButton(File::GetNameNoExt(metadata.Path.string()).c_str(), GetFileImageFromType(metadata), [&]() {
-				DragDropUtils::DragSource(Hazard::Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), metadata.Path.string());
+				DragDropUtils::DragSource(Hazard::Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), (AssetHandle*)&metadata.Handle);
 
 				}, { colWidth - 5, colHeight });
 

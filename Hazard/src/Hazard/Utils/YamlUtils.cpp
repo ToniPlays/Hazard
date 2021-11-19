@@ -109,6 +109,11 @@ namespace Hazard
 		out << YAML::Key << key << YAML::Value << value;
 	}
 	template<>
+	void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, size_t value)
+	{
+		out << YAML::Key << key << YAML::Value << value;
+	}
+	template<>
 	void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, float value)
 	{
 		out << YAML::Key << key << YAML::Value << value;

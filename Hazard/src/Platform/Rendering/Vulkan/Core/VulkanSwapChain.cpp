@@ -292,6 +292,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::BeginFrame()
 	{
+		HZ_SCOPE_PERF("BeginFrame");
 		auto& queue = VulkanContext::GetRenderCommandQueue();
 		queue.Excecute();
 

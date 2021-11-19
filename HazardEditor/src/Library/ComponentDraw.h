@@ -3,7 +3,7 @@
 #include "Layout/Layout.h"
 #include "Style.h"
 #include "Input.h"
-#include "GUI/Window/DragDropUtils.h"
+#include "Library/DragDropUtils.h"
 #include "Core/SceneRuntimeHandler.h"
 
 using namespace Hazard::ECS;
@@ -134,8 +134,7 @@ namespace WindowElement {
 				Input::ColorPicker("Sprite tint", component.m_Tint, open);
 				}, [&]() {
 					DragDropUtils::DragTarget("Image", [&](const ImGuiPayload* payload) {
-						const char* file = (const char*)payload->Data;
-						AssetHandle handle = AssetManager::GetHandleFromFile(file);
+						AssetHandle handle = *(AssetHandle*)payload->Data;
 						component.m_Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 						});
 				});

@@ -30,7 +30,7 @@ namespace Hazard
 		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
-		//Create Asset metada, don't load until requested
+		//Create Asset metadata, don't load until requested
 		AssetMetadata data;
 		data.Handle = AssetHandle();
 		data.Path = path;

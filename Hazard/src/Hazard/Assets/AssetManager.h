@@ -42,6 +42,8 @@ namespace Hazard
 				if (!meta.IsLoaded) {
 					return nullptr;
 				}
+				asset->SetHandle(meta.Handle);
+				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;
 			}
 			else

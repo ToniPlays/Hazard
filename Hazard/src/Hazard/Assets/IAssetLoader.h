@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Asset.h"
-#include "AssetMetadata.h"
 
 namespace Hazard 
 {

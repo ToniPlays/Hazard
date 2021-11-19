@@ -24,7 +24,7 @@ namespace Project {
 		HazardProject* project = new HazardProject();
 		std::ifstream stream(path);
 
-		if (!stream.good()) 
+		if (!stream.good())
 		{
 			delete project;
 			return false;
@@ -79,9 +79,10 @@ namespace Project {
 	}
 	void ProjectManager::ImportFiles(const std::vector<std::filesystem::directory_entry>& files)
 	{
-		for (auto file : files) 
+		for (auto file : files)
 		{
-			AssetManager::ImportAsset(file.path().string());
+			if (strcmp(File::GetFileExtension(file.path().string()).c_str(), "meta"))
+				AssetManager::ImportAsset(file.path().string());
 		}
 	}
 	void ProjectManager::ImportFromFolder(const std::vector<std::filesystem::directory_entry>& directories)

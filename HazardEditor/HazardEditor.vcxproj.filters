@@ -96,7 +96,7 @@
     <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
       <Filter>GUI\Window\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\DragDropUtils.h">
+    <ClInclude Include="src\Library\DragDropUtils.h">
       <Filter>GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\SettingsView.h">
@@ -230,7 +230,7 @@
     <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
       <Filter>GUI\Window\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\DragDropUtils.cpp">
+    <ClCompile Include="src\Library\DragDropUtils.cpp">
       <Filter>GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp">

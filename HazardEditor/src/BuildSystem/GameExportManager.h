@@ -6,10 +6,10 @@
 namespace Exporter 
 {
 	using BuildErrorCallback = std::function<void()>;
+	using namespace Hazard;
 
-	using namespace Hazard::ECS;
 	struct BuildSettings {
-		std::vector<Ref<World>> m_Worlds;
+		std::vector<AssetMetadata> m_Worlds;
 	};
 
 	class GameExportManager {

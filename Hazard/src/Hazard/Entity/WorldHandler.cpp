@@ -13,6 +13,11 @@ namespace Hazard::ECS {
 	}
 	WorldHandler::~WorldHandler() {}
 
+	void WorldHandler::Init()
+	{
+		WorldCommand::Init();
+	}
+
 	void WorldHandler::Close()
 	{
 		HZR_PROFILE_FUNCTION();

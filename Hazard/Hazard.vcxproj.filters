@@ -171,9 +171,6 @@
     <ClInclude Include="src\Hazard\Assets\AssetManager.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Assets\AssetMetadata.h">
-      <Filter>src\Hazard\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Assets\AssetRegistry.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
@@ -2095,5 +2092,6 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.cpp" />
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.cpp" />
+    <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
   </ItemGroup>
 </Project>

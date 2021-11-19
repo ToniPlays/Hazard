@@ -7,10 +7,12 @@
 #include "WorldHandler.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/Physics/PhysicsCommand.h"
+#include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/2D/Renderer2D.h"
 
 namespace Hazard::ECS {
 
-	//using namespace Hazard::Rendering;
+	using namespace Hazard::Rendering;
 
 	template<typename T>
 	void WorldCommand::OnScriptAttached(Entity& entity, T& script)
@@ -39,6 +41,12 @@ namespace Hazard::ECS {
 		Scripting::ScriptCommand::ClearEntity(entity, script);
 	}
 
+	void WorldCommand::Init()
+	{
+		m_Handler = &Application::GetModule<WorldHandler>();
+		RenderCommand::AddRenderCallback(ProcessWorld);
+	}
+
 	Entity WorldCommand::GetEntity(uint32_t id)
 	{
 		return GetCurrentWorld()->GetEntity((entt::entity)id);
@@ -46,7 +54,22 @@ namespace Hazard::ECS {
 
 	Ref<World> WorldCommand::GetCurrentWorld()
 	{
-		return Application::GetModule<WorldHandler>().GetCurrentWorld();
+		return m_Handler->GetCurrentWorld();
+	}
+
+	void WorldCommand::ProcessWorld()
+	{
+		Ref<World> world = GetCurrentWorld();
+		auto group = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
+
+		for (auto entity : group) {
+
+			Entity e = { entity, world.Raw() };
+			if (!e.IsVisible()) continue;
+
+			auto& [sprite, transform] = group.get<SpriteRendererComponent, TransformComponent>(entity);
+			RenderCommand::DrawQuad(sprite, transform);
+		}
 	}
 
 	//Submit element to RenderEngine
@@ -57,7 +80,7 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void WorldCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
-		//RenderCommand::Submit(Quad(transform.GetTransformMat4(), component.m_Tint, component.m_Texture.Raw()));
+		RenderCommand::DrawQuad(component, transform);
 	}
 	template<>
 	void WorldCommand::Render(MeshComponent& component, TransformComponent& transform) {

@@ -24,7 +24,7 @@ namespace Hazard::Rendering
 	{
 		glm::mat4 Transform;
 		Color Color;
-		float TextureIndex;
+		Ref<Texture2D> Texture;
 	};
 
 	struct Renderer2DData 
@@ -43,21 +43,20 @@ namespace Hazard::Rendering
 		Renderer2D(RenderEngineCreateInfo* info, Ref<RenderCommandBuffer> buffer);
 		~Renderer2D();
 
-		void Render(const RenderPassData& renderPassData);
 		void Submit(Quad quad);
 
-		void BeginWorld();
+		void BeginWorld(const RenderPassData& renderPassData);
 		void BeginBatch();
 		void Flush();
 		void EndWorld();
 		void Recreate(Ref<RenderPass> renderPass);
-		Ref<Texture2D> GetWhiteTexture() { return m_WhiteTexture; }
+		float FindTexture(const Ref<Texture2D>& texture);
+
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
 
 		Batch<Vertex2D> m_QuadBatch;
-		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 	};
 }

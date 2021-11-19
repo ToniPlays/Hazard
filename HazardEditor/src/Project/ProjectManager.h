@@ -24,12 +24,13 @@ namespace Project {
 			static_assert(false);
 		}
 		template<>
-		void Set(const char* key, const char* value) {
+		void Set(const char* key, std::string value) {
 			if (strcmp(key, "Editor.StartupWorld") == 0) {
 				m_ProjectData->StartupWorld = value;
 				return;
 			}
 		}
+
 	private:
 		void ImportFiles(const std::vector<std::filesystem::directory_entry>& files);
 		void ImportFromFolder(const std::vector<std::filesystem::directory_entry>& directories);

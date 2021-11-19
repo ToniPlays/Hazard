@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Hazard/Scripting/ScriptCommand.h"
+#include "WorldHandler.h"
 #include "entt.hpp"
 
 namespace Hazard::ECS {
 
 	class WorldCommand {
 	public:
+		static void Init();
 		static Entity GetEntity(uint32_t id);
 		static Ref<World> GetCurrentWorld();
 
@@ -18,5 +20,8 @@ namespace Hazard::ECS {
 		template<typename T>
 		static void OnScriptDetached(Entity& entity, T& script);
 
+	private:
+		static void ProcessWorld();
+		inline static WorldHandler* m_Handler;
 	};
 }

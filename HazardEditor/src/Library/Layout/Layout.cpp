@@ -41,9 +41,11 @@ namespace WindowLayout
 		{
 		case RenderAPI::OpenGL:
 			ImGui::Image((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, t0, t1);
+			break;
 		case RenderAPI::Vulkan: 
 		{
 			ImGui::Image(GetTextureID(image.As<Vulkan::VulkanTexture2D>()->GetImage()), size, t0, t1);
+			break;
 		}
 		}
 	}

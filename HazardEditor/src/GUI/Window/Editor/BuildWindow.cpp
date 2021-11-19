@@ -4,6 +4,9 @@
 #include "library/Layout/Layout.h"
 #include "imgui.h"
 #include "Library/Input.h"
+#include "Library/DragDropUtils.h"
+#include "Project/ProjectManager.h"
+
 
 using namespace WindowLayout;
 
@@ -26,7 +29,7 @@ namespace WindowElement
 		using namespace Exporter;
 		GameExportManager exporter;
 
-		exporter.SetBuildSettings(BuildSettings());
+		exporter.SetBuildSettings(m_BuildSettings);
 		exporter.ValidateBuildSettings();
 		exporter.ExportGame(path);
 
@@ -62,7 +65,6 @@ namespace WindowElement
 			ImGui::Text("Something random here");
 
 			Layout::EndTable();
-
 		}
 		Layout::Table(2, false, "#restypes");
 		//Assets		
@@ -114,10 +116,66 @@ namespace WindowElement
 	}
 	void BuildWindow::ShowBuildSettings()
 	{
-		if (ImGui::Button("Build")) {
-			std::filesystem::path path = File::SaveFolderDialog();
-			if (path.string() != "")
-				ExportProject(path);
+		//Title bar
+		{
+			Style::SelectFont(2);
+			Layout::ShiftY(5.0f);
+			float textWidth = ImGui::CalcTextSize("Build settings").x;
+			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - textWidth) / 2.0f);
+			ImGui::Text("Build settings");
+			ImGui::PopFont();
+
+			Layout::Underline(true, 0.0f, 5.0f);
+			Layout::ShiftY(10.0f);
+		}
+
+		{
+			ImGui::Text("Included worlds");
+			ImVec2 avail = ImGui::GetContentRegionAvail();
+			ScopedColour childBG(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
+			Layout::Shift(10, 5);
+			ImGui::BeginChild("##buildWorlds", { avail.x - 20, avail.y - 55 });
+			
+			ImVec2 offset = ImGui::GetCursorPos();
+			ImVec2 windowSize = ImVec2(offset.x + avail.x, offset.y + avail.y);
+
+			DragDropUtils::DragTargetCustom("World", ImRect(offset, windowSize), ImGuiID("worldDrag"), [&](const ImGuiPayload* payload) {
+				AssetHandle handle = *(AssetHandle*)payload->Data;
+				m_BuildSettings.m_Worlds.push_back(AssetManager::GetMetadata(handle));
+				});
+
+			for (auto world : m_BuildSettings.m_Worlds)
+			{
+				ImGui::Text(world.Path.string().c_str());
+			}
+
+			ImGui::EndChild();
+
+		}
+		//Bottom panel
+		{
+			ImGui::SetCursorPosY(ImGui::GetWindowContentRegionMax().y - 35);
+			ScopedColour childBG(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
+			ImGui::BeginChild("##settingsBar", { 0, 35 });
+
+			ImGui::SetCursorPosX(ImGui::GetContentRegionAvailWidth() - 85 - 100);
+			Layout::ShiftY(5.0f);
+
+			if (Input::Button("Save", { 80, 25 }))
+			{
+				std::string& projectPath = Application::GetModule<Project::ProjectManager>().GetProject().AbsolutePath;
+				Exporter::GameExportManager manager;
+				manager.SaveBuildSettings(projectPath + "/editor/buildsettings.hzrbld", m_BuildSettings);
+			}
+			ImGui::SameLine();
+
+			if (Input::Button("Build", { 80, 25 }))
+			{
+				std::filesystem::path path = File::SaveFolderDialog();
+				if (path.string() != "")
+					ExportProject(path);
+			}
+			ImGui::EndChild();
 		}
 	}
 }

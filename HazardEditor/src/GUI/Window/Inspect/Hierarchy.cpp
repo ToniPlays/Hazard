@@ -9,7 +9,7 @@
 #include "Library/Layout/Layout.h"
 #include "Library/Layout/ContextMenus.h"
 #include "GUI/Window/Rendering/WorldEnvironmentData.h"
-#include "GUI/Window/DragDropUtils.h"
+#include "Library/DragDropUtils.h"
 #include "Library/Layout/Dockspace.h"
 
 using namespace WindowLayout;

@@ -22,16 +22,39 @@ namespace Hazard::Rendering
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
 
 		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
-		AssetHandle handle = AssetManager::ImportAsset("C:/dev/HazardProject/assets/Models/c8_Corvette_colored.fbx");
-		m_TestMesh = AssetManager::GetAsset<Mesh>(handle);
 
 		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
 
-		m_RenderPass = m_TestMesh->GetPipeline()->GetSpecifications().RenderPass;
+		uint32_t data = 0xFFFFFFFF;
+		Texture2DCreateInfo whiteTextureInfo = {};
+		whiteTextureInfo.Width = 1;
+		whiteTextureInfo.Height = 1;
+		whiteTextureInfo.Data = &data;
+		whiteTextureInfo.Usage = ImageUsage::Texture;
+		whiteTextureInfo.Format = ImageFormat::RGBA;
+
+		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
+
+		FrameBufferCreateInfo frameBufferInfo = {};
+		frameBufferInfo.SwapChainTarget = false;
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { {ImageFormat::RGBA }, {ImageFormat::Depth } };
+		frameBufferInfo.ClearOnLoad = true;
+		frameBufferInfo.ClearColor = Color::Black;
+		frameBufferInfo.DebugName = "Mesh3D";
+		frameBufferInfo.Width = 1920;
+		frameBufferInfo.Height = 1080;
+
+		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = "MainRenderPass";
+		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+
+		m_RenderPass = RenderPass::Create(&renderPassInfo);
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
 		m_Renderer2D->Recreate(m_RenderPass);
-		m_WhiteTexture = m_Renderer2D->GetWhiteTexture();
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -48,16 +71,11 @@ namespace Hazard::Rendering
 
 		model.transform = Math::ToTransformMatrix(glm::vec3(0.0f), { glm::radians(0.0), glm::radians(Time::s_Time * 5.0f), glm::radians(0.0) });
 		
-		Ref<Pipeline> meshPipeline = m_TestMesh->GetPipeline();
-		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, meshPipeline->GetSpecifications().RenderPass);
+		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_RenderPass);
+		m_Renderer2D->BeginWorld(m_RenderPassData);
 
-		m_Renderer2D->Render(m_RenderPassData);
-		meshPipeline->GetShader()->SetUniformBuffer("Camera", &m_RenderPassData);
-		meshPipeline->GetShader()->SetUniformBuffer("Model", &model);
-
-		meshPipeline->GetSpecifications().RenderPass;
-		meshPipeline->Bind(m_RenderCommandBuffer);
-		meshPipeline->Draw(m_RenderCommandBuffer, m_TestMesh->GetIndexCount());
+		RenderCommand::ExecuteCallbacks();
+		m_Renderer2D->EndWorld();
 
 		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
 		m_RenderCommandBuffer->End();

@@ -112,6 +112,11 @@ public:
 	T& operator*() { return *m_Instance; }
 	const T& operator*() const { return *m_Instance; }
 
+	bool operator==(const Ref<T>& other) const
+	{
+		return m_Instance == other.m_Instance;
+	}
+
 	T* Raw() { return  m_Instance; }
 	const T* Raw() const { return  m_Instance; }
 

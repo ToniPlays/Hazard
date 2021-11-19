@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "WorldSerializer.h"
 #include "Hazard/Utils/YamlUtils.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard::ECS::Loader {
 
@@ -155,10 +156,11 @@ namespace Hazard::ECS::Loader {
 	{
 		YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
 			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			/*if (component.m_Texture) {
-				if (component.m_Texture->GetData().file != "White")
-					YamlUtils::Serialize(out, "Texture", component.m_Texture->GetData().file);
-			}*/
+			if (component.m_Texture->IsValid()) {
+				AssetMetadata& meta = component.m_Texture->GetMetadata();
+				HZR_CORE_INFO("Texture {0}", component.m_Texture->GetHandle());
+				YamlUtils::Serialize(out, "Texture", meta.Path.string());
+			}
 			});
 	}
 	template<>
@@ -168,7 +170,7 @@ namespace Hazard::ECS::Loader {
 			YamlUtils::Serialize(out, "Type", BodyTypeToString(component.type));
 			YamlUtils::Serialize(out, "FixedRotation", component.FixedRotation);
 			YamlUtils::Serialize(out, "UseGravity", component.UseGravity);
-		});
+			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, BoxCollider2DComponent& component, YAML::Emitter& out)

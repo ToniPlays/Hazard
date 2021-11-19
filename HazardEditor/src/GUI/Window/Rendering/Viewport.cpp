@@ -4,7 +4,7 @@
 #include "Library/Layout/Layout.h"
 #include "Library/Input.h"
 #include "Library/Style.h"
-#include "GUI/Window/DragDropUtils.h"
+#include "Library/DragDropUtils.h"
 #include "Core/EditorEvent.h"
 #include "GUI/EditorView.h"
 
@@ -34,10 +34,7 @@ namespace WindowElement {
 		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		size.x -= 6.0f;
-		size.y -= 6.0f;
-
-		Layout::Shift(3, 3);
+		ScopedStyle framePadding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 		bool changed = false;
 
@@ -52,11 +49,12 @@ namespace WindowElement {
 
 		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
-			const char* file = (const char*)payload->Data;
+			AssetHandle handle = *(AssetHandle*)payload->Data;
 			Events::SelectionContextChange e({ });
 
 			EditorView::GetInstance().OnEvent(e);
-			Application::GetModule<ECS::WorldHandler>().LoadWorld(file);
+			AssetMetadata data = AssetManager::GetMetadata(handle);
+			Application::GetModule<ECS::WorldHandler>().LoadWorld(data.Path.string());
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, ImGui::GetWindowSize());

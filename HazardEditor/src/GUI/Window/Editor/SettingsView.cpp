@@ -4,7 +4,7 @@
 #include "Library/Input.h"
 #include "Library/Style.h"
 #include "Library/Layout/Layout.h"
-#include "GUI/Window/DragDropUtils.h"
+#include "Library/DragDropUtils.h"
 #include "Project/ProjectManager.h"
 
 using namespace WindowLayout;
@@ -88,8 +88,8 @@ namespace WindowElement
 		}
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
-			const char* file = (const char*)payload->Data;
-			manager.Set("Editor.StartupWorld", file);
+			AssetHandle handle = *(AssetHandle*)payload->Data;
+			manager.Set("Editor.StartupWorld", AssetManager::GetMetadata(handle).Path.string());
 			}); 
 
 		ImGui::SameLine(0, 5);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Assets/AssetMetadata.h"
+#include "Hazard/Assets/Asset.h"
 
 #define APPLICATION_PERSISTENT_PATH "C:/dev/Hazard/HazardEditor"
 

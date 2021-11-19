@@ -11,6 +11,7 @@ namespace Hazard::ECS {
 		WorldHandler(EntityComponentCreateInfo* info);
 		~WorldHandler();
 		
+		void Init() override;
 		void Close() override;
 		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
