@@ -84,10 +84,12 @@ namespace WindowElement {
 					DrawEntity(e);
 				}
 			}
-
+			ContextMenus::HierarchyEntityMenu(world, [](Entity entity) {
+				Events::SelectionContextChange e(entity);
+				EditorView::GetInstance().OnEvent(e);
+				});
 			ImGui::EndTable();
 		}
-
 	}
 	bool Hierarchy::SelectionContextChange(Events::SelectionContextChange& e)
 	{

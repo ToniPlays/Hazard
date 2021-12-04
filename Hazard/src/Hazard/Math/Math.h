@@ -95,9 +95,19 @@ namespace Hazard {
 			height = (height / width) * width;
 			return glm::vec2(width * 0.01f, height * 0.01f);
 		}
+		static glm::mat4 ToTransformMatrix(glm::vec3 translation) {
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(1)", 10);
+			return glm::translate(glm::mat4(1.0f), translation);
+		}
+		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(2)", 10);
+			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
+			return glm::translate(glm::mat4(1.0f), translation) * rot;
+		}
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) 
 		{
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(3)", 10);
 			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
 			return glm::translate(glm::mat4(1.0f), translation)	* rot
@@ -108,12 +118,8 @@ namespace Hazard {
 		{
 
 		}
-		//
-		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
-			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
-			return glm::translate(glm::mat4(1.0f), translation) * rot;
-		}
+		//
 		static bool DecomposeTransform(const glm::mat4& transform, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale) {
 			using namespace glm;
 			using T = float;

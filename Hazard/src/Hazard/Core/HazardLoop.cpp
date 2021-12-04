@@ -19,7 +19,7 @@ namespace Hazard::Core {
 	}
 	HazardLoop::~HazardLoop()
 	{
-		HZR_PROFILE_SESSION_BEGIN("Shutdown", "c:/dev/Hazard/Logs/HazardProfile-Shutdown.json");
+		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 		m_Application->Close();
 		AssetManager::Shutdown();
 		m_ModuleHandler.Close();
@@ -32,7 +32,7 @@ namespace Hazard::Core {
 		//Engine runtime
 		try
 		{
-			HZR_PROFILE_SESSION_BEGIN("Startup", "c:/dev/Hazard/Logs/HazardProfile-Startup.json");
+			HZR_PROFILE_SESSION_BEGIN("Startup", "Logs/HazardProfile-Startup.json");
 			{
 				Timer timer;
 				AssetManager::Init();
@@ -44,7 +44,7 @@ namespace Hazard::Core {
 			}
 
 			HZR_PROFILE_SESSION_END();
-			HZR_PROFILE_SESSION_BEGIN("Runtime", "c:/dev/Hazard/Logs/HazardProfile-Runtime.json");
+			HZR_PROFILE_SESSION_BEGIN("Runtime", "Logs/HazardProfile-Runtime.json");
 		}
 		catch (const HazardRuntimeError& error)
 		{

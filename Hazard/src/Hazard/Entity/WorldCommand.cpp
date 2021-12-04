@@ -20,11 +20,11 @@ namespace Hazard::ECS {
 		static_assert(false);
 	}
 	template<>
-	void WorldCommand::OnScriptAttached(Entity& entity, ScriptComponent& script)  {
+	void WorldCommand::OnScriptAttached(Entity& entity, ScriptComponent& script) {
 		Scripting::ScriptCommand::InitEntity(entity, script);
 	}
 	template<>
-	void WorldCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script)  {}
+	void WorldCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script) {}
 	template<typename T>
 	void WorldCommand::OnScriptDetached(Entity& entity, T& script)
 	{
@@ -59,16 +59,32 @@ namespace Hazard::ECS {
 
 	void WorldCommand::ProcessWorld()
 	{
+		HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
 		Ref<World> world = GetCurrentWorld();
-		auto group = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
+		auto spriteRenderers = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
-		for (auto entity : group) {
+		for (auto entity : spriteRenderers) {
 
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
 
-			auto& [sprite, transform] = group.get<SpriteRendererComponent, TransformComponent>(entity);
-			RenderCommand::DrawQuad(sprite, transform);
+			auto& [sprite, transform] = spriteRenderers.get<SpriteRendererComponent, TransformComponent>(entity);
+			RenderCommand::DrawQuadTextured(sprite, transform);
+		}
+
+
+		auto batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
+		for (auto entity : batches)
+		{
+			Entity e = { entity, world.Raw() };
+			if (!e.IsVisible()) continue;
+			auto& [batch, tc] = batches.get<BatchComponent, TransformComponent>(entity);
+
+			for (size_t x = 0; x < batch.m_Size; x++) {
+				for (size_t y = 0; y < batch.m_Size; y++) {
+					RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.m_Tint);
+				}
+			}
 		}
 	}
 

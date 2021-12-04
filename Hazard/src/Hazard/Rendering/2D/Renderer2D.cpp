@@ -52,13 +52,11 @@ namespace Hazard::Rendering
 	void Renderer2D::BeginBatch()
 	{
 		m_Data.TextureIndex = 1.0f;
-		for (uint32_t i = 1; i < m_Data.Samplers; i++) {
-			m_Data.TextureSlots[i] = nullptr;
-		}
 		m_QuadBatch.Reset();
 	}
 	void Renderer2D::Flush()
 	{
+		HZ_SCOPE_PERF("Renderer2D::Flush");
 		if (!m_QuadBatch)
 			return;
 		
@@ -141,7 +139,7 @@ namespace Hazard::Rendering
 			}
 		}
 
-		m_QuadBatch = Batch<Vertex2D>(m_Data.MaxQuadCount);
+		m_QuadBatch = Batch<Vertex2D>(m_Data.MaxQuadCount * 4);
 
 		delete[] indices;
 	}

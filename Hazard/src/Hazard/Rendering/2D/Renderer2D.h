@@ -38,7 +38,8 @@ namespace Hazard::Rendering
 		glm::vec4 QuadVertexPos[4];
 	};
 
-	class Renderer2D {
+	class Renderer2D 
+	{
 	public:
 		Renderer2D(RenderEngineCreateInfo* info, Ref<RenderCommandBuffer> buffer);
 		~Renderer2D();

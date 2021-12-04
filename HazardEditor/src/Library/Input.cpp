@@ -352,8 +352,8 @@ namespace WindowElement {
 	}
 	bool Input::PublicField(const std::string& name, Scripting::PublicField* field, bool runtime)
 	{
-		bool modified = false;
 		using namespace Hazard::Scripting;
+		bool modified = false;
 
 		std::string id("##");
 		id.append(name);

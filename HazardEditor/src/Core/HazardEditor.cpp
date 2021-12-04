@@ -20,7 +20,7 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
-	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.Renderer = RenderAPI::Vulkan;
 	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
@@ -31,7 +31,7 @@ void EditorApplication::PreInit()
 	contextInfo.Height = 720;
 
 	RenderEngineCreateInfo engineInfo = {};
-	engineInfo.MaxQuadCount = 10000;
+	engineInfo.MaxQuadCount = 15000;
 	engineInfo.SamplerCount = 32;
 
 	AudioEngineCreateInfo audioInfo = {};

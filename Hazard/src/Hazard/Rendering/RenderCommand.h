@@ -23,9 +23,15 @@ namespace Hazard::Rendering
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
 		static void AddRenderCallback(const RenderPassCallback& callback) { m_OnRender.push_back(callback); }
 
-		static void DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& transform);
+		static void DrawQuad(const glm::mat4& transform, const Color& tint);
+		static void DrawQuad(const glm::mat4& transform, const Color& tint, const Ref<Texture2D>& texture);
+		static void DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc);
+		static void DrawQuadTextured(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc);
 		static void DrawRotatedQuad() {};
 		static void DrawScreenSpaceQuad() {};
+
+		//Debug rendering
+		static void DrawLine(const glm::vec3& start, const glm::vec3 end, const Color color);
 
 		static void DrawMesh() {};
 		static void DrawAnimatedMesh() {};

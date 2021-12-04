@@ -5,7 +5,8 @@
 
 namespace Hazard::ECS {
 
-	struct SpriteRendererComponent {
+	struct SpriteRendererComponent 
+	{
 		Color m_Tint = Color::White;
 		Ref<Rendering::Texture2D> m_Texture;
 

@@ -77,8 +77,6 @@ namespace Hazard::Rendering::OpenGL
 		m_Specs.Width = width;
 		m_Specs.Height = height;
 
-		HZR_CORE_INFO("{0}x{1}", width, height);
-
 		Invalidate();
 	}
 	void OpenGLFrameBuffer::Invalidate()

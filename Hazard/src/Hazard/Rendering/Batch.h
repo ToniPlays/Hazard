@@ -15,8 +15,8 @@ namespace Hazard::Rendering
 
 		void Push(const Type& data) 
 		{
-			m_Count++;
 			memcpy(m_BufferPointer, &data, m_DataSize);
+			m_Count++;
 			m_BufferPointer++;
 		};
 		void AddIndices(uint32_t count) { m_IndexCount += count; }

@@ -7,8 +7,7 @@ namespace Hazard
 	class ScopedTimer
 	{
 	public:
-		ScopedTimer(const std::string& name)
-			: m_Name(name) {}
+		ScopedTimer(const std::string& name): m_Name(name) {}
 		~ScopedTimer()
 		{
 			float time = m_Timer.ElapsedMillis();
@@ -21,7 +20,7 @@ namespace Hazard
 	class PerformanceProfiler
 	{
 	public:
-		void SetPerFrameTiming(const char* name, float time) {
+		void SetPerFrameTiming(const char* name, float time, float maxTime = 0.0f) {
 			if (m_PerFrameData.find(name) == m_PerFrameData.end()) {
 				m_PerFrameData[name] = 0.0f;
 			}
@@ -49,6 +48,7 @@ namespace Hazard
 		const char* m_Name;
 		PerformanceProfiler* m_Profiler;
 		Timer m_Timer;
+		
 	};
 }
 #define HZ_SCOPE_PERF(name)\

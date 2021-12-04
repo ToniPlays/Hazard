@@ -150,10 +150,9 @@ namespace Editor {
 	}
 	void EditorCamera::SetIs2D(bool enabled2D)
 	{
-
 		if (enabled2D) {
 			float side = aspectRatio * size2D;
-			projectionMatrix = glm::ortho(-side, side, -size2D, size2D, nearPlane, farPlane);
+			projectionMatrix = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);
 			if (enabled2D != m_Is2DEnabled) 
 			{
 				pitch = 0;

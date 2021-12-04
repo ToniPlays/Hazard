@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hazard
 {
-    class Material
+    public class Material : Asset
     {
         //TODO: LINK
         public Shader shader {
