@@ -26,9 +26,11 @@ namespace Hazard::Scripting
 		ScriptRegistry() = default;
 		
 		bool HasScript(const std::string& script);
+		bool HasInstance(uint32_t handle);
 		ScriptMetaData& GetScriptMetadata(const std::string& script);
 
 		void Add(ScriptMetaData script) { m_Scripts[script.ModuleName] = script; };
+		void Remove(uint32_t handle);
 		void RegisterEntityScript(uint32_t handle, Script* script);
 
 		InstanceData& GetInstanceData(uint32_t handle) {

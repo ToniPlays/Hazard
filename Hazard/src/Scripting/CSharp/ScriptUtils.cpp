@@ -80,18 +80,6 @@ namespace Hazard::Scripting::CSharp {
 			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
 		}
 		}
-		return FieldType::None;
-	}
-	std::vector<PublicField*> ScriptUtils::MonoFieldsToFields(const std::vector<MonoClassField*>& fields)
-	{
-		std::vector<PublicField*> result;
-
-		for (MonoClassField* mono : fields) {
-		
-			CSharpField* field = new CSharpField(ScriptUtils::GetFieldType(mono));
-			result.emplace_back(field);
-		}
-
-		return result;
+		return FieldType::Custom;
 	}
 }

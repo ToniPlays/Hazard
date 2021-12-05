@@ -367,36 +367,30 @@ namespace WindowElement {
 			Layout::Text(name.c_str());
 			Layout::TableNext();
 			Layout::MaxWidth();
-			float f = runtime ? field->GetRuntimeValue<float>() : field->GetStoredValue<float>();
+			float f = field->GetValue<float>(runtime);
 			modified = DragFloat(id.c_str(), f);
 			if (modified) {
-				field->SetStoredValue(f);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue(f, runtime);
 			}
 			Layout::EndTable();
 			break;
 		}
 		case FieldType::Float2:
 		{
-			glm::vec2 f2 = runtime ? field->GetRuntimeValue<glm::vec2>() : field->GetStoredValue<glm::vec2>();
+			glm::vec2 f2 = field->GetValue<glm::vec2>(runtime);
 			modified = Vec2(name.c_str(), f2, 0, 75);
 			if (modified) {
-				field->SetStoredValue(f2);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue(f2, runtime);
 			}
 			Layout::NextLine(1);
 			break;
 		}
 		case FieldType::Float3:
 		{
-			glm::vec3 f3 = runtime ? field->GetRuntimeValue<glm::vec3>() : field->GetStoredValue<glm::vec3>();
+			glm::vec3 f3 = field->GetValue<glm::vec3>(runtime);
 			modified = Vec3(name.c_str(), f3, 0, 75);
 			if (modified) {
-				field->SetStoredValue(f3);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue(f3, runtime);
 			}
 			Layout::NextLine(1);
 			break;
@@ -408,12 +402,10 @@ namespace WindowElement {
 			Layout::Text(name.c_str());
 			Layout::TableNext();
 			Layout::MaxWidth();
-			int i = runtime ? field->GetRuntimeValue<int>() : field->GetStoredValue<int>();
+			int i = field->GetValue<int>(runtime);
 			modified = DragInt(id.c_str(), i);
 			if (modified) {
-				field->SetStoredValue(i);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue(i, runtime);
 			}
 			Layout::EndTable();
 			break;
@@ -425,12 +417,10 @@ namespace WindowElement {
 			Layout::Text(name.c_str());
 			Layout::TableNext();
 			Layout::MaxWidth();
-			uint32_t uint = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
+			uint32_t uint = field->GetValue<uint32_t>(runtime);
 			modified = DragUInt(name.c_str(), uint);
 			if (modified) {
-				field->SetStoredValue(uint);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue(uint, runtime);
 			}
 			Layout::EndTable();
 			break;
@@ -438,7 +428,7 @@ namespace WindowElement {
 		default:
 		{
 			using namespace Hazard::ECS;
-			uint32_t entityID = runtime ? field->GetRuntimeValue<uint32_t>() : field->GetStoredValue<uint32_t>();
+			uint32_t entityID = field->GetValue<uint32_t>(runtime);
 			std::string tag = "None";
 
 			if (entityID != 0) {
@@ -474,9 +464,7 @@ namespace WindowElement {
 			ImGui::PopStyleColor(3);
 
 			if (modified) {
-				field->SetStoredValue(entityID);
-				if (field->RuntimeAvailable())
-					field->CopyStoredToRuntimeValue();
+				field->SetValue<uint32_t>(entityID, runtime);
 			}
 			Layout::EndTable();
 		}

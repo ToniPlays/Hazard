@@ -66,6 +66,10 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_gchandle_get_target(handle);
 	}
+	void Mono::FreeHandle(uint32_t handle)
+	{
+		mono_gchandle_free(handle);
+	}
 	MonoMethod* Mono::GetCoreMethod(const std::string& name)
 	{
 		MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
@@ -100,13 +104,13 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_class_get_name(monoClass);
 	}
-	MonoMethod* Mono::GetClassMethods(MonoClass* monoClass, void* iter)
-	{
-		return mono_class_get_methods(monoClass, &iter);
-	}
 	uint32_t Mono::ClassMethodCount(MonoClass* monoClass)
 	{
 		return mono_class_num_methods(monoClass);
+	}
+	MonoMethod* Mono::GetClassMethod(MonoClass* monoClass, void** iter)
+	{
+		return mono_class_get_methods(monoClass, iter);
 	}
 	std::vector<MonoClassField*> Mono::GetClassFields(MonoClass* monoClass)
 	{

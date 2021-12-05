@@ -12,6 +12,7 @@ namespace Hazard
 		World,
 		Image,
 		Mesh,
+		Script,
 		EnvironmentMap,
 		PhysicsMaterial
 	};
@@ -26,6 +27,7 @@ namespace Hazard
 			if (type == "PhysicsMaterial")		return AssetType::PhysicsMaterial;
 			if (type == "Mesh")					return AssetType::Mesh;
 			if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
+			if (type == "Script")				return AssetType::Script;
 
 			HZR_CORE_WARN("Failed to find asset of type {0}, check if type is correct", type);
 
@@ -42,6 +44,7 @@ namespace Hazard
 			case AssetType::Mesh:				return "Mesh";
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";
+			case AssetType::Script:				return "Scrípt";
 			}
 		}
 
@@ -56,6 +59,7 @@ namespace Hazard
 			if (ext == "fbx")		return AssetType::Mesh;
 			if (ext == "dae")		return AssetType::Mesh;
 			if (ext == "hdr")		return AssetType::EnvironmentMap;
+			if (ext == "cs")		return AssetType::Script;
 			
 			HZR_CORE_WARN("Failed convert extesion {0} to AssetType, check if type is correct", ext);
 			return AssetType::Undefined;

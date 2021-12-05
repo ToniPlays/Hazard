@@ -17,7 +17,7 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
-	enum FieldVisibility { Private, Protected, Public };
+	enum class FieldVisibility { Private, Protected, Public };
 
 	struct MonoData {
 		MonoDomain* mono_domain;
@@ -51,6 +51,7 @@ namespace Hazard::Scripting::CSharp {
 		static bool ModuleExists(const char* name);
 
 		static MonoObject* ObjectFromHandle(uint32_t handle);
+		static void FreeHandle(uint32_t handle);
 		static MonoMethod* GetCoreMethod(const std::string& name);
 		static MonoMethod* GetAppMethod(const std::string& name);
 		static const char* GetMethodFullName(MonoMethod* method);
@@ -59,8 +60,8 @@ namespace Hazard::Scripting::CSharp {
 		static MonoClass* GetMonoClass(const char* moduleName);
 		static MonoClass* GetMonoClass(const char* nameSpace, const char* name);
 		static const char* ClassName(MonoClass* monoClass);
-		static MonoMethod* GetClassMethods(MonoClass* monoClass, void* iter);
 		static uint32_t ClassMethodCount(MonoClass* monoClass);
+		static MonoMethod* GetClassMethod(MonoClass* monoClass, void** iter);
 
 		static std::vector<MonoClassField*> GetClassFields(MonoClass* monoClass);
 		//Field functions

@@ -72,7 +72,6 @@ namespace Hazard::Core {
 
 		m_Application->UpdateData();
 		//Update
-		Input::Update();
 		m_Application->Update();
 		m_ModuleHandler.Update();
 		//Render

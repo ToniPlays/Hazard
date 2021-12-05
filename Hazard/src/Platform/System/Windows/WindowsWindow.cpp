@@ -80,6 +80,7 @@ namespace Hazard::Rendering {
 		m_Context->End();
 		if (!m_WindowData.minimized)
 			m_Context->SwapBuffers();
+		Input::Update();
 		glfwPollEvents();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)

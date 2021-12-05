@@ -15,8 +15,8 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
-	struct AssemblyData {
-		std::unordered_map<std::string, EntityScript> entityClassMap;
+	struct AssemblyData 
+	{
 		std::string assemblyPath;
 	};
 
@@ -46,9 +46,7 @@ namespace Hazard::Scripting::CSharp {
 		void* param[] = { &delta };
 		for (auto& [handle, instance] : m_Registry.GetRegisteredInstances()) {
 			for (auto& script : instance.Scripts)
-			{
 				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnUpdate, param);
-			}
 		}
 	}
 	void CSharpEngine::OnWorldLoaded()
@@ -59,9 +57,9 @@ namespace Hazard::Scripting::CSharp {
 	{
 
 	}
-	std::unordered_map<std::string, PublicField*> CSharpEngine::GetPublicFields(uint32_t handle, const std::string& moduleName)
+	PublicField* CSharpEngine::GetPublicField(uint32_t handle, uint32_t index)
 	{
-		return std::unordered_map<std::string, PublicField*>();
+		return (PublicField*)m_Registry.GetInstanceData(handle).Scripts[index];
 	}
 	void CSharpEngine::InitializeEntity(uint32_t handle, const std::string& moduleName)
 	{
@@ -78,6 +76,7 @@ namespace Hazard::Scripting::CSharp {
 
 		CSharpScript* script = new CSharpScript(moduleName);
 		script->InitClassMethods();
+		script->UpdatePublicFields();
 		m_Registry.RegisterEntityScript(handle, script);
 
 	}
@@ -90,6 +89,11 @@ namespace Hazard::Scripting::CSharp {
 		{
 			Mono::CallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->Constructor, param);
 		}
+
+		for (auto& script : data.Scripts) {
+			((CSharpScript*)script)->SetRuntimeValues();
+		}
+
 		for (auto& script : data.Scripts)
 		{
 			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnCreated, param);
@@ -101,15 +105,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::ClearEntity(uint32_t handle, const std::string& moduleName)
 	{
-
-	}
-	void CSharpEngine::OnCreate(EntityInstance& handle)
-	{
-
-	}
-	void CSharpEngine::OnStart(EntityInstance& handle)
-	{
-
+		m_Registry.Remove(handle);
 	}
 	void CSharpEngine::OnFixedUpdate(uint32_t handle)
 	{

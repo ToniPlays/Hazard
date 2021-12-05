@@ -15,7 +15,6 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!Application::HasModule<Rendering::RenderContext>()) return;
-
 		Rendering::RenderContext* context = &Application::GetModule<Rendering::RenderContext>();
 		window = (GLFWwindow*)context->GetWindow().GetNativeWindow();
 	}
@@ -54,9 +53,10 @@ namespace Hazard {
 	void Input::Update() 
 	{
 		for (uint32_t i = 0; i < 384; i++) {
-			if (keyStates[i] == GLFW_PRESS) 
-				UpdateKey(i, GLFW_REPEAT);
+			if (keyStates[i] == GLFW_PRESS)  
+ 				UpdateKey(i, GLFW_REPEAT);
 		}
+		HZR_CORE_WARN(keyStates[Key::Space]);
 	}
 
 	void Input::UpdateKey(uint32_t code, int state) 

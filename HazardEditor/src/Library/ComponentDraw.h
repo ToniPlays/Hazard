@@ -246,7 +246,6 @@ namespace WindowElement {
 
 			std::string moduleName = component.m_ModuleName;
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
-
 			bool changed = Input::ScriptField("Script", component.m_ModuleName, exists);
 
 			DragDropUtils::DragTarget("Script", [&](const ImGuiPayload* payload) {
@@ -258,16 +257,16 @@ namespace WindowElement {
 
 			if (changed) {
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
-					ScriptCommand::ClearEntity(entity.GetTag().m_ID, component);
+					ScriptCommand::ClearEntity((uint32_t)entity, component);
 				}
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) {
-					ScriptCommand::InitEntity(entity.GetTag().m_ID, component);
+					ScriptCommand::InitEntity((uint32_t)entity, component);
 				}
 			}
 
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 				bool runtime = Runtime::SceneRuntimeHandler::IsSceneRunning();
-				for (auto [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, entity.GetTag().m_ID, moduleName)) {
+				for (auto& [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, (uint32_t)entity, moduleName)) {
 					Input::PublicField(name, field, runtime);
 				}
 			}

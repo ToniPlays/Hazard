@@ -11,13 +11,23 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
-	class CSharpField : public PublicField {
+	class CSharpScript;
+
+	class CSharpField : public PublicField 
+	{
 	public:
 		CSharpField() = default;
-		CSharpField(FieldType type, std::string customType = "");
+		CSharpField(const std::string& name, FieldType type);
+		CSharpField(const std::string& name, const std::string& customType);
+
 	public: 
-		void SetEntityInstance(EntityInstance* instance) { m_EntityInstance = instance; }
+
+		std::string GetName() override { return m_Name; }
+		FieldType GetType() { return m_Type; }
+		const std::string GetCustomType() { return m_CustomType; }
+
 		void SetField(MonoClassField* field) { m_MonoClassField = field; }
+		void SetParentScript(CSharpScript* script) { m_Script = script; }
 
 		void CopyStoredToRuntimeValue() override;
 		bool RuntimeAvailable() override;
@@ -29,9 +39,13 @@ namespace Hazard::Scripting::CSharp {
 		void SetRuntimeValueInternal(void* value) const override;
 
 	private:
+
+		std::string m_Name;
+		FieldType m_Type;
+		std::string m_CustomType;
 		std::byte* m_Buffer;
 
-		EntityInstance* m_EntityInstance;
+		CSharpScript* m_Script;
 		MonoClassField* m_MonoClassField;
 	};
 }

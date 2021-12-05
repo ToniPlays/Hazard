@@ -25,6 +25,5 @@ namespace Hazard::Scripting::CSharp {
 		static MonoString* StringToMonoString(const char* string);
 		static std::string MonoObjectToChar(MonoObject* object);
 		static FieldType GetFieldType(MonoClassField* field);
-		static std::vector<PublicField*> MonoFieldsToFields(const std::vector<MonoClassField*>& fields);
 	};
 }

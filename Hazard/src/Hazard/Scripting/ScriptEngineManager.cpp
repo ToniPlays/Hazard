@@ -38,7 +38,7 @@ namespace Hazard::Scripting {
 			engine->UpdateEntities();
 		}
 	}
-	void ScriptEngineManager::Instantiate(ScriptType type, UUID handle, const std::string& moduleName)
+	void ScriptEngineManager::Instantiate(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->Instantiate(handle, moduleName);
 	}
@@ -48,17 +48,35 @@ namespace Hazard::Scripting {
 			engine->OnEndRuntime();
 		}
 	}
-	void ScriptEngineManager::InitEntity(ScriptType type, UUID handle, const std::string& moduleName)
+	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->InitializeEntity(handle, moduleName);
 	}
-	void ScriptEngineManager::ClearEntity(ScriptType type, UUID handle, const std::string& moduleName)
+	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
 		m_ScriptEngines[type]->ClearEntity(handle, moduleName);
 	}
-	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, UUID handle, const std::string& moduleName)
+	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
-		return m_ScriptEngines[type]->GetPublicFields(handle, moduleName);
+		std::unordered_map<std::string, PublicField*> result;
+		ScriptRegistry registry = m_ScriptEngines[type]->GetRegistry();
+
+		if (!registry.HasInstance(handle)) 
+			return result;
+
+		for (auto& script : registry.GetInstanceData(handle).Scripts)
+		{
+			if (script->GetModuleName() == moduleName) {
+				result.reserve(script->GetPublicFieldCount());
+				for (uint32_t i = 0; i < script->GetPublicFieldCount(); i++) {
+					PublicField& field = script->GetPublicField(i);
+					result[field.GetName()] = &field;
+				}
+				break;
+			}
+		}
+
+		return result;
 	}
 	void ScriptEngineManager::ReloadAll()
 	{
