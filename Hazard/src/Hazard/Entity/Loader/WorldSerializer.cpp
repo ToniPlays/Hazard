@@ -158,7 +158,6 @@ namespace Hazard::ECS::Loader {
 			YamlUtils::Serialize(out, "Tint", component.m_Tint);
 			if (component.m_Texture->IsValid()) {
 				AssetMetadata& meta = component.m_Texture->GetMetadata();
-				HZR_CORE_INFO("Texture {0}", component.m_Texture->GetHandle());
 				YamlUtils::Serialize(out, "Texture", meta.Path.string());
 			}
 			});

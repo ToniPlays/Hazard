@@ -48,10 +48,15 @@ namespace Project {
 			}
 		}
 
-		FolderData data = File::GetFolderFiles(project->AbsolutePath);
-		ImportFiles(data.Files);
-		ImportFromFolder(data.Folders);
+		{
+			Timer timer;
 
+			FolderData data = File::GetFolderFiles(project->AbsolutePath);
+			ImportFiles(data.Files);
+			ImportFromFolder(data.Folders);
+
+			HZR_WARN("Importing additional assets took {0} ms", timer.ElapsedMillis());
+		}
 		m_ProjectPath = path;
 		return true;
 	}

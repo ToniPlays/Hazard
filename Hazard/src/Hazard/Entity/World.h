@@ -31,13 +31,13 @@ namespace Hazard::ECS {
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
 		template<typename T>
-		std::vector<std::tuple<uint32_t, T>> FindEntitiesWith() 
+		std::vector<std::tuple<entt::entity, T>> FindEntitiesWith() 
 		{
-			std::vector<std::tuple<uint32_t, T>> result;
+			std::vector<std::tuple<entt::entity, T>> result;
 			auto view = m_Registry.view<T>();
 
 			for (auto entity : view) {
-				result.push_back(std::tuple((uint32_t)entity, view.get<T>(entity)));
+				result.push_back(std::tuple(entity, view.get<T>(entity)));
 			}
 			return result;
 		}

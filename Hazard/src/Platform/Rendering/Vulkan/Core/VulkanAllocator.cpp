@@ -28,7 +28,7 @@ namespace Hazard::Rendering::Vulkan {
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, alloc, &info);
 
-		HZR_CORE_TRACE("VulkanAllocator ({0}) allocated {1}", m_Tag, StringUtil::BytesToString(info.size));
+		//HZR_CORE_TRACE("VulkanAllocator ({0}) allocated {1}", m_Tag, StringUtil::BytesToString(info.size));
 		s_Data->TotalAllocated += info.size;
 
 		return alloc;
@@ -44,7 +44,7 @@ namespace Hazard::Rendering::Vulkan {
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, alloc, &info);
 
-		HZR_CORE_TRACE("VulkanAllocator ({0}) allocated {1}", m_Tag, StringUtil::BytesToString(info.size));
+		//HZR_CORE_TRACE("VulkanAllocator ({0}) allocated {1}", m_Tag, StringUtil::BytesToString(info.size));
 		s_Data->TotalAllocated += info.size;
 
 		return alloc;
@@ -58,7 +58,7 @@ namespace Hazard::Rendering::Vulkan {
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, allocation, &info);
 		s_Data->TotalAllocated -= info.size;
-		HZR_CORE_INFO("Total allocated {0}", StringUtil::BytesToString(s_Data->TotalAllocated));
+		//HZR_CORE_INFO("Total allocated {0}", StringUtil::BytesToString(s_Data->TotalAllocated));
 
 		vmaDestroyBuffer(s_Data->Allocator, buffer, allocation);
 	}
@@ -67,7 +67,7 @@ namespace Hazard::Rendering::Vulkan {
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, allocation, &info);
 		s_Data->TotalAllocated -= info.size;
-		HZR_CORE_INFO("Total allocated {0}", StringUtil::BytesToString(s_Data->TotalAllocated));
+		//HZR_CORE_INFO("Total allocated {0}", StringUtil::BytesToString(s_Data->TotalAllocated));
 		vmaDestroyImage(s_Data->Allocator, image, allocation);
 	}
 	void VulkanAllocator::UnmapMemory(VmaAllocation allocation)

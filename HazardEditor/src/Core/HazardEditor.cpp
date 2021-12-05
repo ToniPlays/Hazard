@@ -44,7 +44,6 @@ void EditorApplication::PreInit()
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo = {};
-	entityInfo.StartupFile = "c:/dev/HazardProject/assets/testscene.hazard";
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;

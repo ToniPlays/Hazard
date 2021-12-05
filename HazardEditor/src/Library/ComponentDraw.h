@@ -258,16 +258,16 @@ namespace WindowElement {
 
 			if (changed) {
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
-					ScriptCommand::ClearEntity(entity, component);
+					ScriptCommand::ClearEntity(entity.GetTag().m_ID, component);
 				}
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) {
-					ScriptCommand::InitEntity(entity, component);
+					ScriptCommand::InitEntity(entity.GetTag().m_ID, component);
 				}
 			}
 
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 				bool runtime = Runtime::SceneRuntimeHandler::IsSceneRunning();
-				for (auto [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, entity, moduleName)) {
+				for (auto [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, entity.GetTag().m_ID, moduleName)) {
 					Input::PublicField(name, field, runtime);
 				}
 			}

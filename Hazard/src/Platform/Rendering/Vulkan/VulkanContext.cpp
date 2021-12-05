@@ -215,7 +215,6 @@ namespace Hazard::Rendering::Vulkan {
 		VkDescriptorSet result;
 		VK_CHECK_RESULT(vkAllocateDescriptorSets(m_Device->GetDevice(), &allocInfo, &result));
 		m_DescriptorAllocations[bufferIndex] += allocInfo.descriptorSetCount;
-		HZR_CORE_INFO("Allocs {0}", m_DescriptorAllocations[bufferIndex]);
 		return result;
 	}
 }

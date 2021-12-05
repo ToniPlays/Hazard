@@ -1802,6 +1802,10 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.h" />
     <ClInclude Include="src\Hazard\Rendering\Camera.h" />
     <ClInclude Include="src\Hazard\PerformanceProfiler.h" />
+    <ClInclude Include="src\Scripting\CSharp\CSharpScript.h" />
+    <ClInclude Include="src\Scripting\CSharp\ScriptRegistry.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h" />
+    <ClInclude Include="src\Hazard\Scripting\Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -2093,5 +2097,7 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.cpp" />
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.cpp" />
     <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\CSharpScript.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp" />
   </ItemGroup>
 </Project>

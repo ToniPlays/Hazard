@@ -21,14 +21,14 @@ namespace Hazard::Scripting::CSharp {
 	{
 		switch (type)
 		{
-		case Hazard::Scripting::Float:	return 4;
-		case Hazard::Scripting::Float2:	return 2 * 4;
-		case Hazard::Scripting::Float3: return 3 * 4;
-		case Hazard::Scripting::Float4:	return 4 * 4;
-		case Hazard::Scripting::Int:	return 4;
-		case Hazard::Scripting::UInt:	return 4;
-		case Hazard::Scripting::String: return 16;
-		case Hazard::Scripting::None:	return 4;
+		case FieldType::Float:	return 4;
+		case FieldType::Float2:	return 2 * 4;
+		case FieldType::Float3: return 3 * 4;
+		case FieldType::Float4:	return 4 * 4;
+		case FieldType::Int:	return 4;
+		case FieldType::UInt:	return 4;
+		case FieldType::String: return 16;
+		case FieldType::None:	return 4;
 		}
 		return 0;
 	}

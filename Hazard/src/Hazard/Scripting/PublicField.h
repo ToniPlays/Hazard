@@ -4,7 +4,7 @@
 
 namespace Hazard::Scripting {
 
-	enum FieldType { Float, Float2, Float3, Float4, Int, UInt, String, None };
+	enum class FieldType { Float, Float2, Float3, Float4, Int, UInt, String, None };
 
 	class PublicField {
 	public:

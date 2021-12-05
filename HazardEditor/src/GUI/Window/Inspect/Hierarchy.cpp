@@ -98,7 +98,7 @@ namespace WindowElement {
 	}
 	void Hierarchy::DrawEntity(Entity entity)
 	{
-		TagComponent c = entity.GetTag();
+		TagComponent& c = entity.GetTag();
 
 		if (!Hazard::StringUtil::IsMatching(c.m_Tag, m_SearchValue))
 			return;
@@ -173,7 +173,9 @@ namespace WindowElement {
 
 		bool previousState = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetID(entityIDStr.c_str()));
 
-		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, c.m_Tag.c_str(), nullptr);
+		std::stringstream ss;
+		ss << c.m_Tag << " (" << c.m_ID << ")";
+		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, ss.str().c_str(), nullptr);
 
 		if (isRowClicked)
 		{

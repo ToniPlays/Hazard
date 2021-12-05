@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "Hazard/Scripting/ScriptEngine.h"
 
@@ -9,10 +9,12 @@ namespace Hazard::Scripting::Visual
 
 		HVSEngine(ScriptEngineCreateInfo* info);
 
+		ScriptRegistry& GetRegistry() { return m_Registry; }
+
 		void OnBeginRuntime() override;
 		void OnEndRuntime() override;
 
-		bool ModuleExists(const char* name) override;
+		bool ModuleExists(const std::string& name) override;
 
 		void UpdateEntities() override;
 
@@ -34,5 +36,8 @@ namespace Hazard::Scripting::Visual
 		void OnApplicationClose() override;
 
 		void Reload() override;
+	private:
+		ScriptRegistry m_Registry;
 	};
 }
+*/

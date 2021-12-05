@@ -20,6 +20,7 @@
 #include "Debug/EngineAssets.h"
 #include "Debug/Console.h"
 #include "Debug/Profiler.h"
+#include "Debug/ScriptEngineDebug.h"
 
 #include "Editor/SettingsView.h"
 

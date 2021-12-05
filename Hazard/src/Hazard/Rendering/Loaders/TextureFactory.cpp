@@ -62,7 +62,7 @@ namespace Hazard::Rendering
 			delete textureData;
 			return result;
 		}
-		HZR_CORE_ASSERT(false, "What");
+		HZR_CORE_ASSERT(false, "Texture cache file most likely broken");
 		return false;
 	}
 

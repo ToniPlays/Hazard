@@ -1,6 +1,6 @@
-#pragma once
-
 #include <hzrpch.h>
+/*#pragma once
+
 #include "HVSEngine.h"
 
 namespace Hazard::Scripting::Visual {
@@ -16,7 +16,7 @@ namespace Hazard::Scripting::Visual {
 	{
 
 	}
-	bool HVSEngine::ModuleExists(const char* name)
+	bool HVSEngine::ModuleExists(const std::string& name)
 	{
 		return false;
 	}
@@ -73,4 +73,4 @@ namespace Hazard::Scripting::Visual {
 	{
 
 	}
-}
+}*/

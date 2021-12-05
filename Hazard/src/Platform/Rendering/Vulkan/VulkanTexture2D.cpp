@@ -207,7 +207,7 @@ namespace Hazard::Rendering::Vulkan
 			return false;
 
 		m_Header = header;
-		HZR_CORE_INFO("Loaded VulkanTexture2D from {0}", path);
+		//HZR_CORE_INFO("Loaded VulkanTexture2D from {0}", path);
 		return true;
 	}
 }

@@ -25,12 +25,6 @@ namespace Hazard::Scripting::CSharp {
 	using PublicFieldMap = std::unordered_map<std::string, CSharpField*>;
 	using ModuleFieldMap = std::unordered_map<std::string, PublicFieldMap>;
 
-	struct EntityInstanceData {
-		EntityInstance instance;
-		ModuleFieldMap moduleFieldMap;
-	};
-
-	using EntityInstanceMap = std::unordered_map<uint32_t, EntityInstanceData>;
 
 	struct EntityScript 
 	{
@@ -70,35 +64,39 @@ namespace Hazard::Scripting::CSharp {
 
 		CSharpEngine(ScriptEngineCreateInfo* info);
 
+
+		ScriptRegistry& GetRegistry() override { return m_Registry; }
+
 		void OnBeginRuntime() override;
 		void OnEndRuntime() override;
 
-		bool ModuleExists(const char* name) override;
+		bool ModuleExists(const std::string& name) override;
 		void UpdateEntities() override;
 
 		void OnWorldLoaded() override;
 		void OnWorldUnloaded() override;
-		std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) override;
+
+		std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t handle, const std::string& moduleName) override;
 
 		//Entity creation
-		void InitializeEntity(uint32_t entity, const std::string& moduleName) override;
-		void Instantiate(uint32_t entity, const std::string& moduleName) override;
-		void ClearEntity(uint32_t entity, const std::string& moduleName) override;
-		void OnCreate(EntityInstance& entity);
-		void OnStart(EntityInstance& entity);
-		//Entity updates
-		void OnUpdate(EntityInstanceData& entity, void** param);
-		void OnLateUpdate(EntityInstanceData& entity, void** param);
-		void OnFixedUpdate(uint32_t entity) override;
-		//Entity remove
-		void OnEnable(uint32_t entity) override;
-		void OnDisable(uint32_t entity) override;
-		void OnDestroy(uint32_t entity) override;
+		void InitializeEntity(uint32_t handle, const std::string& moduleName) override;
+		void Instantiate(uint32_t handle, const std::string& moduleName) override;
+		void ClearEntity(uint32_t handle, const std::string& moduleName) override;
+		void OnCreate(EntityInstance& handle);
+		void OnStart(EntityInstance& handle);
 
-		bool EntityInstanceExits(uint32_t entity);
-		EntityInstanceData& GetInstanceData(uint32_t entity);
+		//Entity updates
+		void OnFixedUpdate(uint32_t handle) override;
+		//Entity remove
+		void OnEnable(uint32_t handle) override;
+		void OnDisable(uint32_t handle) override;
+		void OnDestroy(uint32_t handle) override;
+
+		bool EntityInstanceExits(uint32_t handle);
 
 		void OnApplicationClose() override;
 		void Reload() override;
+	private:
+		ScriptRegistry m_Registry;
 	};
 }

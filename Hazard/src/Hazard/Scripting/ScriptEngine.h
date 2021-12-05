@@ -2,11 +2,16 @@
 
 #include "Hazard/Core/Core.h"
 #include "PublicField.h"
+#include "ScriptRegistry.h"
 
 namespace Hazard::Scripting
 {
 	class ScriptEngine {
 	public:
+
+		ScriptEngine() = default;
+
+		virtual ScriptRegistry& GetRegistry() = 0;
 
 		virtual void OnBeginRuntime() = 0;
 		virtual void OnEndRuntime() = 0;
@@ -15,7 +20,7 @@ namespace Hazard::Scripting
 		virtual void OnWorldLoaded() = 0;
 		virtual void OnWorldUnloaded() = 0;
 
-		virtual bool ModuleExists(const char* moduleName) = 0;
+		virtual bool ModuleExists(const std::string& name) = 0;
 
 		virtual std::unordered_map<std::string, PublicField*> GetPublicFields(uint32_t entity, const std::string& moduleName) = 0;
 		virtual void InitializeEntity(uint32_t entity, const std::string& moduleName) = 0;

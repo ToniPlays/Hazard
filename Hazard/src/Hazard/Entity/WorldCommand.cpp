@@ -21,7 +21,7 @@ namespace Hazard::ECS {
 	}
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, ScriptComponent& script) {
-		Scripting::ScriptCommand::InitEntity(entity, script);
+		Scripting::ScriptCommand::InitEntity((uint32_t)entity, script);
 	}
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script) {}
@@ -33,12 +33,12 @@ namespace Hazard::ECS {
 	template<>
 	void WorldCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
-		Scripting::ScriptCommand::ClearEntity(entity, script);
+		Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
 	}
 	template<>
 	void WorldCommand::OnScriptDetached(Entity& entity, VisualScriptComponent& script)
 	{
-		Scripting::ScriptCommand::ClearEntity(entity, script);
+		Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
 	}
 
 	void WorldCommand::Init()

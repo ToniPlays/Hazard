@@ -12,7 +12,6 @@ namespace Hazard::Scripting {
 	{
 		HZR_PROFILE_FUNCTION();
 		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
-		m_ScriptEngines[ScriptType::VisualScript] = new Visual::HVSEngine(info);
 
 		ScriptCommand::Init(*this);
 		SetActive(info->Enable);
@@ -39,9 +38,9 @@ namespace Hazard::Scripting {
 			engine->UpdateEntities();
 		}
 	}
-	void ScriptEngineManager::Instantiate(ScriptType type, uint32_t entityID, const std::string& moduleName)
+	void ScriptEngineManager::Instantiate(ScriptType type, UUID handle, const std::string& moduleName)
 	{
-		m_ScriptEngines[type]->Instantiate(entityID, moduleName);
+		m_ScriptEngines[type]->Instantiate(handle, moduleName);
 	}
 	void ScriptEngineManager::OnRuntimeEnd()
 	{
@@ -49,16 +48,17 @@ namespace Hazard::Scripting {
 			engine->OnEndRuntime();
 		}
 	}
-	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t entityID, const std::string& moduleName)
+	void ScriptEngineManager::InitEntity(ScriptType type, UUID handle, const std::string& moduleName)
 	{
-		m_ScriptEngines[type]->InitializeEntity(entityID, moduleName);
+		m_ScriptEngines[type]->InitializeEntity(handle, moduleName);
 	}
-	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t entityID, const std::string& moduleName)
+	void ScriptEngineManager::ClearEntity(ScriptType type, UUID handle, const std::string& moduleName)
 	{
-		m_ScriptEngines[type]->ClearEntity(entityID, moduleName);
+		m_ScriptEngines[type]->ClearEntity(handle, moduleName);
 	}
-	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) {
-		return m_ScriptEngines[type]->GetPublicFields(entity, moduleName);
+	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, UUID handle, const std::string& moduleName)
+	{
+		return m_ScriptEngines[type]->GetPublicFields(handle, moduleName);
 	}
 	void ScriptEngineManager::ReloadAll()
 	{

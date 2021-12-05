@@ -304,7 +304,7 @@ namespace Hazard::Rendering::Vulkan
 			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
 
-		Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
+		//Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
 	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)
 	{

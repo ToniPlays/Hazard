@@ -58,6 +58,7 @@ namespace Hazard::Physics
 	}
 	void Physics2DContactListener::ProcessEntityEnter(CollisionType type, uint32_t entityID, void** param)
 	{
+		/*
 		using namespace Scripting;
 		ECS::Entity entity = ECS::WorldCommand::GetEntity(entityID);
 		CSharp::CSharpEngine& engine = (CSharp::CSharpEngine&)ScriptCommand::GetEngine(ScriptType::CSharpScript);
@@ -75,5 +76,6 @@ namespace Hazard::Physics
 			CSharp::Mono::TryCallMethod(instance.instance.GetInstance(), instance.instance.ScriptClass->OnTriggerEnter2D, param);
 			break;
 		}
+		*/
 	}
 }

@@ -97,6 +97,7 @@ namespace Hazard::ECS::Loader
 	static void WorldDeserializer::Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 		std::string moduleName;
 		YamlUtils::Deserialize(comp, "ModuleName", moduleName);
+
 		entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
 			c.m_ModuleName = moduleName;
 			});

@@ -22,23 +22,24 @@ namespace Hazard::Scripting {
 
 	public:
 		static void Init(ScriptEngineManager& manager);
+
 		static void OnBeginRuntime();
 		static void OnEndRuntime();
 
 		static void InitAllEntities();
 
-		static void InitEntity(const ECS::Entity& entity, ECS::ScriptComponent& component);
-		static void ClearEntity(const ECS::Entity& entity, ECS::ScriptComponent& component);
-		static void InitEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
-		static void ClearEntity(const ECS::Entity& entity, ECS::VisualScriptComponent& component);
+		static void InitEntity(UUID entity, ECS::ScriptComponent& component);
+		static void ClearEntity(UUID entity, ECS::ScriptComponent& component);
+		static void InitEntity(UUID entity, ECS::VisualScriptComponent& component);
+		static void ClearEntity(UUID entity, ECS::VisualScriptComponent& component);
 
 		static bool ModuleExists(ScriptType type, const char* name) 
 		{ 
-			return s_manager->ModuleExists(type, name);
+			return s_Manager->ModuleExists(type, name);
 		};
-		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t entity, const std::string& moduleName) 
+		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, UUID handle, const std::string& moduleName)
 		{
-			return s_manager->GetPublicFields(type, entity, moduleName);
+			return s_Manager->GetPublicFields(type, handle, moduleName);
 		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) 
@@ -59,9 +60,10 @@ namespace Hazard::Scripting {
 		static void SendDebugMessage(Severity severity, const std::string& message);
 		static void SetDebugCallback(void(*callback)(Severity, const std::string&)) { debugCallback = callback; };
 		static ScriptEngine& GetEngine(ScriptType type);
+		static std::unordered_map<ScriptType, ScriptEngine*>& GetEngines() { return s_Manager->GetScriptEngines(); };
 
 	private:
 		static void(*debugCallback)(Severity, const std::string&);
-		static ScriptEngineManager* s_manager;
+		static ScriptEngineManager* s_Manager;
 	};
 }

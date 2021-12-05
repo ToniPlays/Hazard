@@ -192,6 +192,7 @@
     <ClInclude Include="src\GUI\Window\Editor\BuildWindow.h" />
     <ClInclude Include="src\BuildSystem\GameExportManager.h" />
     <ClInclude Include="src\BuildSystem\BuildReport.h" />
+    <ClInclude Include="src\GUI\Window\Debug\ScriptEngineDebug.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\HazardEditor.cpp">
@@ -313,5 +314,6 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\BuildWindow.cpp" />
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp" />
+    <ClCompile Include="src\GUI\Window\Debug\ScriptEngineDebug.cpp" />
   </ItemGroup>
 </Project>
