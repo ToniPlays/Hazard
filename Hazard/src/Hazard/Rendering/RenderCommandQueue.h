@@ -1,11 +1,12 @@
 #pragma once
 #include "Hazard/Core/Core.h"
 
-namespace Hazard {
+namespace Hazard::Rendering
+{
 	class RenderCommandQueue {
 	public:
-		typedef void(*RenderCommandFn)(void*);
 
+		typedef void(*RenderCommandFn)(void*);
 		RenderCommandQueue();
 		~RenderCommandQueue();
 

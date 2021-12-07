@@ -31,7 +31,6 @@ namespace Hazard::Rendering::Vulkan {
 
 		m_SwapChain.Reset();
 		m_WindowSurface.reset();
-		delete s_CommandQueue;
 		VulkanAllocator::Shutdown();
 		m_Device.reset();
 
@@ -77,8 +76,6 @@ namespace Hazard::Rendering::Vulkan {
 		uint32_t h = window->GetHeight();
 		m_SwapChain = Ref<VulkanSwapChain>::Create();
 		m_SwapChain->Create(&w, &h, false);
-
-		s_CommandQueue = new RenderCommandQueue();
 	}
 
 	void VulkanContext::Begin()

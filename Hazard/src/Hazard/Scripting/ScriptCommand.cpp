@@ -23,13 +23,15 @@ namespace Hazard::Scripting {
 			uint32_t p = data.CollidedTo;
 			void* param[] = { &p };
 
-			if (data.Type == ContactType::Collision) {
+			if (data.Type == ContactType::Collision) 
+			{
 				for (auto& [type, engine] : GetEngines())
 				{
 					engine->OnCollided(data.Collider, param, data.State == CollisionState::ContactBegin);
 				}
 			}
-			else {
+			else 
+			{
 				for (auto& [type, engine] : GetEngines())
 				{
 					engine->OnTrigger(data.Collider, param, data.State == CollisionState::ContactBegin);
@@ -38,7 +40,6 @@ namespace Hazard::Scripting {
 		};
 
 		Physics::PhysicsCommand::AddContact2DCallback(fn);
-
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{

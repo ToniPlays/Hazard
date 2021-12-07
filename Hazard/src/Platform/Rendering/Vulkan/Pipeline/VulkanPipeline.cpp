@@ -163,7 +163,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{	
-		RenderCommand::Submit([=]() {
+		RenderContextCommand::Submit([=]() {
 			VkBuffer vertexBuffer = m_VertexBuffer->GetVulkanBuffer();
 			VkDeviceSize offsets[1] = { 0 };
 

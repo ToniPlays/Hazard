@@ -312,6 +312,9 @@
     <ClInclude Include="src\Hazard\ModuleHandler.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\PerformanceProfiler.h">
+      <Filter>src\Hazard</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2D.h">
       <Filter>src\Hazard\Physics\Physics2D</Filter>
     </ClInclude>
@@ -331,6 +334,9 @@
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Batch.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Camera.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Image\Image.h">
@@ -381,13 +387,22 @@
     <ClInclude Include="src\Hazard\Rendering\RenderCommandBuffer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderCommandQueue.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Script.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h">
@@ -397,6 +412,9 @@
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngineManager.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Utils\File.h">
@@ -420,10 +438,19 @@
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLPipeline.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLRenderCommandBuffer.h">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.h">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLShader.h">
@@ -434,9 +461,6 @@
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.h">
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\Vulkan\Core\RenderCommandQueue.h">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.h">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
@@ -501,6 +525,9 @@
     <ClInclude Include="src\Scripting\CSharp\CSharpField.h">
       <Filter>src\Scripting\CSharp</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\CSharpScript.h">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Mono\Mono.h">
       <Filter>src\Scripting\CSharp\Mono</Filter>
     </ClInclude>
@@ -532,6 +559,9 @@
       <Filter>src\Scripting\CSharp\Script\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptRegistery.h">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\ScriptRegistry.h">
       <Filter>src\Scripting\CSharp</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptUtils.h">
@@ -1797,18 +1827,11 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.h" />
-    <ClInclude Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.h" />
-    <ClInclude Include="src\Hazard\Rendering\Camera.h" />
-    <ClInclude Include="src\Hazard\PerformanceProfiler.h" />
-    <ClInclude Include="src\Scripting\CSharp\CSharpScript.h" />
-    <ClInclude Include="src\Scripting\CSharp\ScriptRegistry.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h" />
-    <ClInclude Include="src\Hazard\Scripting\Script.h" />
-    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazard\Assets\Asset.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
@@ -1941,16 +1964,25 @@
     <ClCompile Include="src\Hazard\Rendering\RenderCommandBuffer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderCommandQueue.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Utils\File.cpp">
@@ -1971,10 +2003,19 @@
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLPipeline.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLRenderCommandBuffer.cpp">
+      <Filter>src\Platform\Rendering\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.cpp">
       <Filter>src\Platform\Rendering\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLShader.cpp">
@@ -1982,9 +2023,6 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\OpenGL\Textures\OpenGLTexture2D.cpp">
       <Filter>src\Platform\Rendering\OpenGL\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\Vulkan\Core\RenderCommandQueue.cpp">
-      <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\Core\ValidationLayer.cpp">
       <Filter>src\Platform\Rendering\Vulkan\Core</Filter>
@@ -2046,6 +2084,9 @@
     <ClCompile Include="src\Scripting\CSharp\CSharpField.cpp">
       <Filter>src\Scripting\CSharp</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\CSharpScript.cpp">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Mono\Mono.cpp">
       <Filter>src\Scripting\CSharp\Mono</Filter>
     </ClCompile>
@@ -2094,12 +2135,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLRenderPass.cpp" />
-    <ClCompile Include="src\Platform\Rendering\OpenGL\OpenGLImage2D.cpp" />
-    <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
-    <ClCompile Include="src\Scripting\CSharp\CSharpScript.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp" />
   </ItemGroup>
 </Project>

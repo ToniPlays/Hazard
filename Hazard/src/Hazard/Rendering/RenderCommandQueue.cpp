@@ -2,7 +2,7 @@
 #include "hzrpch.h"
 #include "RenderCommandQueue.h"
 
-namespace Hazard {
+namespace Hazard::Rendering {
 
 	RenderCommandQueue::RenderCommandQueue()
 	{

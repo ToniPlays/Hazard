@@ -7,7 +7,6 @@
 #include "Core/WindowSurface.h""
 #include "Core/VulkanAllocator.h"
 #include "Core/VulkanSwapChain.h"
-#include "Core/RenderCommandQueue.h"
 #include "VulkanRenderCommandBuffer.h"
 
 #include "GLFW/glfw3.h"
@@ -38,7 +37,6 @@ namespace Hazard::Rendering::Vulkan {
 		static VkPipelineCache GetPipelineCache() { return m_Device->GetPipelineCache(); }
 		inline static Ref<VulkanSwapChain> GetSwapchain() { return m_SwapChain; }
 
-		static RenderCommandQueue& GetRenderCommandQueue() { return *s_CommandQueue; }
 		static glm::vec4 GetClearColor() { return m_ClearColor; }
 		static VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 
@@ -59,7 +57,6 @@ namespace Hazard::Rendering::Vulkan {
 		inline static Scope<WindowSurface> m_WindowSurface;
 		inline static Ref<VulkanSwapChain> m_SwapChain;
 		inline static VkPipelineCache m_PipelineCache;
-		inline static RenderCommandQueue* s_CommandQueue;
 		inline static glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
 
 		inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;

@@ -20,8 +20,8 @@ namespace Hazard::Rendering
 
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
-
 		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
+		m_Queue = new RenderCommandQueue();
 
 		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
@@ -39,7 +39,7 @@ namespace Hazard::Rendering
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Attachments = { {ImageFormat::RGBA }, {ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.ClearColor = Color::Black;
 		frameBufferInfo.DebugName = "Mesh3D";
@@ -68,7 +68,7 @@ namespace Hazard::Rendering
 		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_RenderPass);
 		m_Renderer2D->BeginWorld(m_RenderPassData);
 
-		RenderCommand::ExecuteCallbacks();
+		m_Queue->Excecute();
 		m_Renderer2D->EndWorld();
 
 		RenderCommand::EndRenderPass(m_RenderCommandBuffer);

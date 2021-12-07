@@ -13,6 +13,7 @@ namespace Hazard::ECS {
 		
 		void Init() override;
 		void Close() override;
+		void Render() override;
 		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
 
 		Ref<World> GetCurrentWorld() { return m_World; }

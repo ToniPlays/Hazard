@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="BuildSystem">
+      <UniqueIdentifier>{1A861F75-863B-986A-0F30-92417BE48E6E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
@@ -51,6 +54,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BuildSystem\BuildReport.h">
+      <Filter>BuildSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BuildSystem\GameExportManager.h">
+      <Filter>BuildSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -96,8 +105,11 @@
     <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
       <Filter>GUI\Window\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\Library\DragDropUtils.h">
-      <Filter>GUI\Window</Filter>
+    <ClInclude Include="src\GUI\Window\Debug\ScriptEngineDebug.h">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Editor\BuildWindow.h">
+      <Filter>GUI\Window\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Editor\SettingsView.h">
       <Filter>GUI\Window\Editor</Filter>
@@ -147,6 +159,9 @@
     <ClInclude Include="src\Library\ComponentDraw.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="src\Library\DragDropUtils.h">
+      <Filter>Library</Filter>
+    </ClInclude>
     <ClInclude Include="src\Library\Input.h">
       <Filter>Library</Filter>
     </ClInclude>
@@ -189,12 +204,11 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Window\Editor\BuildWindow.h" />
-    <ClInclude Include="src\BuildSystem\GameExportManager.h" />
-    <ClInclude Include="src\BuildSystem\BuildReport.h" />
-    <ClInclude Include="src\GUI\Window\Debug\ScriptEngineDebug.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
+      <Filter>BuildSystem</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -231,8 +245,11 @@
     <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
       <Filter>GUI\Window\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\Library\DragDropUtils.cpp">
-      <Filter>GUI\Window</Filter>
+    <ClCompile Include="src\GUI\Window\Debug\ScriptEngineDebug.cpp">
+      <Filter>GUI\Window\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Editor\BuildWindow.cpp">
+      <Filter>GUI\Window\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp">
       <Filter>GUI\Window\Editor</Filter>
@@ -279,6 +296,9 @@
     <ClCompile Include="src\GUI\Window\Toolbar.cpp">
       <Filter>GUI\Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Library\DragDropUtils.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
     <ClCompile Include="src\Library\Input.cpp">
       <Filter>Library</Filter>
     </ClCompile>
@@ -312,8 +332,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Window\Editor\BuildWindow.cpp" />
-    <ClCompile Include="src\BuildSystem\GameExportManager.cpp" />
-    <ClCompile Include="src\GUI\Window\Debug\ScriptEngineDebug.cpp" />
   </ItemGroup>
 </Project>

@@ -12,6 +12,22 @@ namespace Hazard::Rendering {
 		if (m_Context == nullptr) return;
 		m_Context->GetWindow().SetWindowTitle(title);
 	}
+	float RenderContextCommand::GetWindowWidth()
+	{
+		return m_Context->GetWindow().GetWidth();
+	}
+	float RenderContextCommand::GetWindowHeight()
+	{
+		return m_Context->GetWindow().GetHeight();
+	}
+	bool RenderContextCommand::IsFullscreen()
+	{
+		return m_Context->GetWindow().IsFullscreen();
+	}
+	void RenderContextCommand::SetFullscreen(bool fullscreen)
+	{
+		m_Context->GetWindow().SetFullscreen(fullscreen);
+	}
 	bool RenderContextCommand::IsVsync()
 	{
 		return m_Context->GetWindow().IsVSync();

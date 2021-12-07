@@ -5,6 +5,7 @@ namespace Hazard
 {
     public class AudioSourceComponent : Component
     {
+
         public float gain 
         {
             get => AudioSource_GetGain_Native(parent.ID);
@@ -26,9 +27,15 @@ namespace Hazard
         public void SetLooping(bool looping) { AudioSource_SetLooping_Native(parent.ID, looping); }
         public bool IsSpatial() { return AudioSource_IsSpatial_Native(parent.ID); }
         public void SetSpatial(bool spatial) { AudioSource_SetSpatial_Native(parent.ID, spatial); }
-        //TODO: LINK
-        public float GetDuration() { return 0; }
+        public float GetDuration() { return AudioSource_GetDuration_Native(parent.ID); }
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void AudioSource_Play_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void AudioSource_Stop_Native(ulong id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void AudioSource_Pause_Native(ulong id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float AudioSource_GetGain_Native(ulong id);
@@ -41,14 +48,6 @@ namespace Hazard
 
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void AudioSource_Play_Native(ulong id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void AudioSource_Stop_Native(ulong id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void AudioSource_Pause_Native(ulong id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool AudioSource_IsLoaded_Native(ulong id);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool AudioSource_IsLooping_Native(ulong id);
@@ -58,5 +57,8 @@ namespace Hazard
         private static extern bool AudioSource_IsSpatial_Native(ulong id);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool AudioSource_SetSpatial_Native(ulong id, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float AudioSource_GetDuration_Native(ulong id);
     }
 }

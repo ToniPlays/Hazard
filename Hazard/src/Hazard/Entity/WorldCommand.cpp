@@ -44,7 +44,6 @@ namespace Hazard::ECS {
 	void WorldCommand::Init()
 	{
 		m_Handler = &Application::GetModule<WorldHandler>();
-		RenderCommand::AddRenderCallback(RenderWorld);
 	}
 
 	Entity WorldCommand::GetEntity(uint32_t id)

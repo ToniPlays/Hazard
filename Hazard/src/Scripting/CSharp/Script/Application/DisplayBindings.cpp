@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "DisplayBindings.h"
 #include "Hazard/RenderContext/RenderContext.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
 
@@ -20,26 +21,26 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	float DisplayBindings::GetDisplayWidth()
 	{
-		return Application::GetModule<Rendering::RenderContext>().GetWindow().GetWidth();
+		return Rendering::RenderContextCommand::GetWindowWidth();
 	}
 	float DisplayBindings::GetDisplayHeight()
 	{
-		return Application::GetModule<Rendering::RenderContext>().GetWindow().GetHeight();
+		return Rendering::RenderContextCommand::GetWindowHeight();
 	}
 	bool DisplayBindings::GetDisplayFullscreen()
 	{
-		return Application::GetModule<Rendering::RenderContext>().GetWindow().IsFullscreen();
-	}
-	bool DisplayBindings::GetDisplayVSync()
-	{
-		return Application::GetModule<Rendering::RenderContext>().GetWindow().IsVSync();
+		return Rendering::RenderContextCommand::IsFullscreen();
 	}
 	void DisplayBindings::SetDisplayFullscreen(MonoObject* obj)
 	{
-		Application::GetModule<Rendering::RenderContext>().GetWindow().SetFullscreen(obj);
+		return Rendering::RenderContextCommand::SetFullscreen(obj);
+	}
+	bool DisplayBindings::GetDisplayVSync()
+	{
+		return Rendering::RenderContextCommand::IsVsync();
 	}
 	void DisplayBindings::SetDisplayVsync(MonoObject* obj)
 	{
-		Application::GetModule<Rendering::RenderContext>().GetWindow().SetVSync(obj);
+		Rendering::RenderContextCommand::SetVsync(obj);
 	}
 }

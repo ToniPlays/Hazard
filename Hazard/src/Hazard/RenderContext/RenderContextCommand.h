@@ -9,6 +9,12 @@ namespace Hazard::Rendering {
 	public:
 		static void SetTitle(const char* title);
 
+
+		static float GetWindowWidth();
+		static float GetWindowHeight();
+		static bool IsFullscreen();
+		static void SetFullscreen(bool fullscreen);
+
 		static bool IsVsync();
 		static void SetVsync(bool vsync);
 

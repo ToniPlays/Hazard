@@ -2,7 +2,6 @@
 #include <hzrpch.h>
 #include "VulkanSwapChain.h"
 #include "../VulkanContext.h"
-#include "RenderCommandQueue.h"
 #include "../VKUtils.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
@@ -293,8 +292,6 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanSwapChain::BeginFrame()
 	{
 		HZ_SCOPE_PERF("BeginFrame");
-		auto& queue = VulkanContext::GetRenderCommandQueue();
-		queue.Excecute();
 
 		VkResult result = AcquireNextImage(m_Semaphores.PresentComplete, &m_CurrentImageIndex);
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {

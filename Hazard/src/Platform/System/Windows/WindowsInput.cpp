@@ -20,6 +20,7 @@ namespace Hazard {
 	}
 	bool Input::AnyKey()
 	{
+		//TODO: Make work
 		return false;
 	}
 	bool Input::IsKeyDown(const Key::KeyCode key) { 

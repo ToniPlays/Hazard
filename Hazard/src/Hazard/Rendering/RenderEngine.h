@@ -4,6 +4,7 @@
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "RenderCommandBuffer.h"
+#include "RenderCommandQueue.h"
 #include "Pipeline/Buffers.h"
 #include "Texture.h"
 #include "Mesh/Mesh.h"
@@ -30,6 +31,20 @@ namespace Hazard::Rendering {
 		void Render() override;
 		bool OnEvent(Event& e) override;
 		void Close() override;
+
+		template<typename Func>
+		void Submit(Func&& fn) 
+		{
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (Func*)ptr;
+				(*pFunc)();
+
+				pFunc->~Func();
+			};
+
+			auto storageBuffer = m_Queue->Allocate(renderCmd, sizeof(fn));
+			new (storageBuffer) Func(std::forward<Func>(fn));
+		}
 		 
 		bool OnResize(WindowResizeEvent& e);
 		void SetCamera(Camera* camera) { m_RenderingCamera = camera; }
@@ -43,6 +58,7 @@ namespace Hazard::Rendering {
 		Renderer2D* m_Renderer2D;
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		RenderCommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;
 		Ref<RenderPass> m_RenderPass;
 		Ref<FrameBuffer> m_FrameBuffer;

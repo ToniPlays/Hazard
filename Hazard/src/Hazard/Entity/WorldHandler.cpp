@@ -10,6 +10,7 @@ namespace Hazard::ECS {
 
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler") {
 		LoadWorld(info->StartupFile, Serialization::Editor);
+		SetActive(true);
 	}
 	WorldHandler::~WorldHandler() {}
 
@@ -21,6 +22,11 @@ namespace Hazard::ECS {
 	void WorldHandler::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+	}
+
+	void WorldHandler::Render()
+	{
+		WorldCommand::RenderWorld();
 	}
 
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)

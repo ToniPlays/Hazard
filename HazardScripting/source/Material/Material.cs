@@ -7,7 +7,6 @@ namespace Hazard
 {
     public class Material : Asset
     {
-        //TODO: LINK
         public Shader shader {
             get { 
                 Material_GetShader_Native(out Shader shader);
@@ -16,9 +15,9 @@ namespace Hazard
             
             set => Material_SetShader_Native(ref value);
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)] //TODO: LINK
         private static extern bool Material_GetShader_Native(out Shader shader);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)] //TODO: LINK
         private static extern bool Material_SetShader_Native(ref Shader shader);
     }
 }

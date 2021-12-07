@@ -16,7 +16,10 @@ namespace Hazard::Rendering
 		quad.Transform = transform;
 		quad.Color = tint;
 		quad.Texture = texture;
-		s_Engine->Get2D().Submit(quad);
+
+		s_Engine->Submit([quad]() mutable {
+			s_Engine->Get2D().Submit(quad);
+			});
 	}
 	void RenderCommand::DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc)
 	{
@@ -29,16 +32,14 @@ namespace Hazard::Rendering
 		quad.Transform = Math::ToTransformMatrix(tc.m_Translation, tc.m_Rotation, tc.m_Scale);
 		quad.Color = comp.m_Tint;
 		quad.Texture = comp.m_Texture;
-		s_Engine->Get2D().Submit(quad);
+
+		s_Engine->Submit([quad]() mutable {
+			s_Engine->Get2D().Submit(quad);
+			});
 	}
 	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3 end, const Color color)
 	{
 		//s_Engine->GetDebugRenderer()->SubmitLine();
-	}
-	void RenderCommand::ExecuteCallbacks()
-	{
-		for (auto& callback : m_OnRender)
-			callback();
 	}
 	void RenderCommand::Clear()
 	{

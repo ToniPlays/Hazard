@@ -37,7 +37,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		result.reserve(4);
 		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);
 		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", CreateComponent);
-		result.emplace_back("Hazard.Entity::Entity_IsActive_Native", IsActive);
+		result.emplace_back("Hazard.Entity::Entity_GetActive_Native", IsActive);
 		result.emplace_back("Hazard.Entity::Entity_SetActive_Native", SetActive);
 		return result;
 	}
@@ -56,6 +56,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	bool EntityBindings::CreateComponent(uint32_t id, void* type)
 	{
+		//TODO: Fix
 		return false;
 	}
 }

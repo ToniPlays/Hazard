@@ -26,6 +26,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsSpatial_Native", AudioSource_IsSpatial_Native);
 		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetSpatial_Native", AudioSource_SetSpatial_Native);
 
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetDuration_Native", AudioSource_GetDuration_Native);
+
 		return result;
 	}
 	void AudioSourceBindings::AudioSource_Play_Native(uint32_t id)
@@ -75,5 +77,9 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	void AudioSourceBindings::AudioSource_SetSpatial_Native(uint32_t id, bool value)
 	{
 		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.SetSpatial(value);
+	}
+	void AudioSourceBindings::AudioSource_GetDuration_Native(uint32_t id)
+	{
+		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).source.GetTotalDuration();
 	}
 }

@@ -24,5 +24,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		static bool AudioSource_IsSpatial_Native(uint32_t id);
 		static void AudioSource_SetSpatial_Native(uint32_t id, bool value);
+
+		static void AudioSource_GetDuration_Native(uint32_t id);
 	};
 }

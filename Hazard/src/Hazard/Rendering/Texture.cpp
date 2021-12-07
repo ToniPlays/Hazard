@@ -7,7 +7,8 @@
 #include "Platform/Rendering/Vulkan/Vulkan.h"
 
 namespace Hazard::Rendering {
-	Ref<Texture2D> Texture2D::Create(Texture2DCreateInfo* info) {
+	Ref<Texture2D> Texture2D::Create(Texture2DCreateInfo* info) 
+	{
 		switch (RenderCommand::GetAPI()) {
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLTexture2D(info);
 		case RenderAPI::Vulkan: return new Vulkan::VulkanTexture2D(info);
