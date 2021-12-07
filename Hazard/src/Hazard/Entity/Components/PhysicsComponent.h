@@ -1,20 +1,17 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "Hazard/Physics/Physics2D/Physics2D.h"
 
 namespace Hazard::ECS
 {
-	enum class BodyType { Static = 0, Kinematic, Dynamic };
-
-	std::string BodyTypeToString(BodyType type);
-	BodyType StringToBodyType(const std::string& value);
-
 	struct Rigidbody2DComponent
 	{
-		BodyType type = BodyType::Static;
+		Physics::BodyType Type = Physics::BodyType::Static;
 
 		bool FixedRotation = false;
 		bool UseGravity = true;
+
 		void* runtimeBody = nullptr;
 
 		Rigidbody2DComponent() = default;
@@ -31,6 +28,7 @@ namespace Hazard::ECS
 		float RestitutionThreshold = 0.5f;
 
 		bool IsSensor = false;
+
 		void* runtimeFixture = nullptr;
 
 		BoxCollider2DComponent() = default;

@@ -1806,6 +1806,7 @@
     <ClInclude Include="src\Scripting\CSharp\ScriptRegistry.h" />
     <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h" />
     <ClInclude Include="src\Hazard\Scripting\Script.h" />
+    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -2099,5 +2100,6 @@
     <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
     <ClCompile Include="src\Scripting\CSharp\CSharpScript.cpp" />
     <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp" />
   </ItemGroup>
 </Project>

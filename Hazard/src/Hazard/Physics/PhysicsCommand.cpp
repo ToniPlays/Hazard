@@ -11,66 +11,33 @@
 
 namespace Hazard::Physics 
 {
+	std::string BodyTypeToString(BodyType type)
+	{
+		switch (type)
+		{
+		case BodyType::Static:		return "Static";
+		case BodyType::Kinematic:	return "Kinematic";
+		case BodyType::Dynamic:		return "Dynamic";
+		}
+	}
+	BodyType StringToBodyType(const std::string& value)
+	{
+		if (value == "Kinematic")	return BodyType::Kinematic;
+		if (value == "Dynamic")		return BodyType::Dynamic;
+		return BodyType::Static;
+	}
 	Physics2D* PhysicsCommand::s_Physics2D = nullptr;
 
 	void PhysicsCommand::Init()
 	{
 		s_Physics2D = new Physics2D();
 	}
-	void PhysicsCommand::OnBeginRuntime(float gravity, ECS::World* world)
+	void PhysicsCommand::BeginSimulation(PhysicsBeginInfo* info)
 	{
-		s_Physics2D->Begin(gravity);
-		s_Physics2D->SetIterations(6, 2);
-		auto view = world->GetWorldRegistry().view<ECS::Rigidbody2DComponent>();
-
-		for (auto entityID : view) 
-		{
-			ECS::Entity entity = { entityID, world };
-			auto& tc = entity.GetComponent<ECS::TransformComponent>();
-			auto& rb = entity.GetComponent<ECS::Rigidbody2DComponent>();
-
-			rb.runtimeBody = s_Physics2D->CreateBody((uint32_t)entityID, (b2BodyType)rb.type, tc.m_Translation, tc.m_Rotation, rb.UseGravity, rb.FixedRotation);
-
-			if (entity.HasComponent<ECS::BoxCollider2DComponent>()) 
-			{
-				auto& bc = entity.GetComponent<ECS::BoxCollider2DComponent>();
-				s_Physics2D->CreateBoxCollider(rb.runtimeBody, { bc.Size.x * tc.m_Scale.x, bc.Size.y * tc.m_Scale.y }, bc.Density,
-					bc.Friction, bc.Restitution, bc.RestitutionThreshold, bc.IsSensor);
-			}
-		}
+		s_Physics2D->Begin(info->Gravity);
 	}
-	void PhysicsCommand::OnEndRuntime()
+	void PhysicsCommand::StopSimulation()
 	{
 		s_Physics2D->End();
-	}
-	void PhysicsCommand::UpdateAll(Ref<ECS::World> world)
-	{
-		const int32_t velocityIterations = 6;
-		const int32_t positionIterations = 2;
-		auto view = world->GetWorldRegistry().view<ECS::Rigidbody2DComponent>();
-
-		for (auto entityID : view)
-		{
-			ECS::Entity entity{ entityID, world.Raw()};
-			auto& tc = entity.GetComponent<ECS::TransformComponent>();
-			auto& rb = entity.GetComponent<ECS::Rigidbody2DComponent>();
-
-			b2Body* body = (b2Body*)rb.runtimeBody;
-			body->SetTransform({ tc.m_Translation.x, tc.m_Translation.y }, tc.m_Rotation.z);
-		}
-
-		s_Physics2D->Step(Time::s_DeltaTime);
-		for (auto entityID : view)
-		{
-			ECS::Entity entity { entityID, world.Raw() };
-			auto& tc = entity.GetComponent<ECS::TransformComponent>();
-			auto& rb = entity.GetComponent<ECS::Rigidbody2DComponent>();
-
-			b2Body* body = (b2Body*)rb.runtimeBody;
-			const auto& position = body->GetPosition();
-			tc.m_Translation.x = position.x;
-			tc.m_Translation.y = position.y;
-			tc.m_Rotation.z = body->GetAngle();
-		}
 	}
 }

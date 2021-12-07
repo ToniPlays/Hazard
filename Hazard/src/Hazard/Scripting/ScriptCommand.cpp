@@ -4,6 +4,8 @@
 #include "ScriptCommand.h"
 #include "Hazard/Entity/Component.h"
 #include "Hazard/Entity/WorldHandler.h"
+//TODO: Remove usage
+#include "Hazard/Physics/PhysicsCommand.h"
 
 namespace Hazard::Scripting {
 
@@ -12,7 +14,31 @@ namespace Hazard::Scripting {
 
 	void ScriptCommand::Init(ScriptEngineManager& manager)
 	{
+		Physics::PhysicsCommand::Init();
 		s_Manager = &manager;
+
+		auto fn = [&](Physics::Contact2DData data) 
+		{
+			using namespace Physics;
+			uint32_t p = data.CollidedTo;
+			void* param[] = { &p };
+
+			if (data.Type == ContactType::Collision) {
+				for (auto& [type, engine] : GetEngines())
+				{
+					engine->OnCollided(data.Collider, param, data.State == CollisionState::ContactBegin);
+				}
+			}
+			else {
+				for (auto& [type, engine] : GetEngines())
+				{
+					engine->OnTrigger(data.Collider, param, data.State == CollisionState::ContactBegin);
+				}
+			}
+		};
+
+		Physics::PhysicsCommand::AddContact2DCallback(fn);
+
 	}
 	void ScriptCommand::OnBeginRuntime()
 	{
@@ -46,19 +72,19 @@ namespace Hazard::Scripting {
 			s_Manager->InitEntity(ScriptType::CSharpScript, (uint32_t)id, component.m_ModuleName);
 		}
 	}
-	void ScriptCommand::InitEntity(UUID handle, ECS::ScriptComponent& component)
+	void ScriptCommand::InitEntity(uint32_t handle, ECS::ScriptComponent& component)
 	{
 		s_Manager->InitEntity(ScriptType::CSharpScript, handle, component.m_ModuleName);
 	}
-	void ScriptCommand::ClearEntity(UUID handle, ECS::ScriptComponent& component)
+	void ScriptCommand::ClearEntity(uint32_t handle, ECS::ScriptComponent& component)
 	{
 		s_Manager->ClearEntity(ScriptType::CSharpScript, handle, component.m_ModuleName);
 	}
-	void ScriptCommand::InitEntity(UUID handle, ECS::VisualScriptComponent& component)
+	void ScriptCommand::InitEntity(uint32_t handle, ECS::VisualScriptComponent& component)
 	{
 		s_Manager->InitEntity(ScriptType::VisualScript, handle, component.m_Filename);
 	}
-	void ScriptCommand::ClearEntity(UUID handle, ECS::VisualScriptComponent& component)
+	void ScriptCommand::ClearEntity(uint32_t handle, ECS::VisualScriptComponent& component)
 	{
 		s_Manager->ClearEntity(ScriptType::VisualScript, handle, component.m_Filename);
 	}

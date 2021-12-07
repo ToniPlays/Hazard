@@ -44,12 +44,60 @@ namespace Hazard::ECS {
 	void WorldCommand::Init()
 	{
 		m_Handler = &Application::GetModule<WorldHandler>();
-		RenderCommand::AddRenderCallback(ProcessWorld);
+		RenderCommand::AddRenderCallback(RenderWorld);
 	}
 
 	Entity WorldCommand::GetEntity(uint32_t id)
 	{
 		return GetCurrentWorld()->GetEntity((entt::entity)id);
+	}
+	void WorldCommand::WorldRuntimeBegin()
+	{
+		using namespace Physics;
+
+		World* world = GetCurrentWorld().Raw();
+
+		auto& rb2dView = world->GetWorldRegistry().view<Rigidbody2DComponent>();
+
+		for (auto& e : rb2dView)
+		{
+			Entity entity = { e, world };
+			TransformComponent& tc = entity.GetComponent<TransformComponent>();
+			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+			Physics2DObjectCreateInfo objInfo = {};
+			objInfo.Handle = (uint32_t)entity;
+			objInfo.Position = { tc.m_Translation.x, tc.m_Translation.y };
+			objInfo.Angle = tc.m_Rotation.z;
+			objInfo.BodyType = rb2d.Type;
+			objInfo.FixedRotation = rb2d.FixedRotation;
+			objInfo.GravityScale = rb2d.UseGravity ? 1.0f : 0.0f;
+
+			rb2d.runtimeBody = PhysicsCommand::CreateObject(&objInfo);
+
+			if (entity.HasComponent<BoxCollider2DComponent>()) {
+				BoxCollider2DComponent& bc2d = entity.GetComponent<BoxCollider2DComponent>();
+
+				PhysicsCollider2DCreateInfo info = {};
+
+				info.Handle = (uint32_t)entity;
+				info.Body = rb2d.runtimeBody;
+				info.Type = ColliderType::Box;
+				info.Scale = { tc.m_Scale.x, tc.m_Scale.y };
+				info.Size = bc2d.Size;
+				info.Density = bc2d.Density;
+				info.Friction = bc2d.Friction;
+				info.Restitution = bc2d.Restitution;
+				info.RestitutionThreshold = bc2d.RestitutionThreshold;
+				info.IsSensor = bc2d.IsSensor;
+
+				bc2d.runtimeFixture = PhysicsCommand::CreateCollider(&info);
+			}
+		}
+	}
+	void WorldCommand::WorldRuntimeEnd()
+	{
+
 	}
 
 	Ref<World> WorldCommand::GetCurrentWorld()
@@ -57,10 +105,12 @@ namespace Hazard::ECS {
 		return m_Handler->GetCurrentWorld();
 	}
 
-	void WorldCommand::ProcessWorld()
+	void WorldCommand::RenderWorld()
 	{
-		HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
 		Ref<World> world = GetCurrentWorld();
+
+		HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
+
 		auto spriteRenderers = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
 		for (auto entity : spriteRenderers) {
@@ -72,8 +122,8 @@ namespace Hazard::ECS {
 			RenderCommand::DrawQuadTextured(sprite, transform);
 		}
 
-
 		auto batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
+
 		for (auto entity : batches)
 		{
 			Entity e = { entity, world.Raw() };
@@ -88,6 +138,25 @@ namespace Hazard::ECS {
 		}
 	}
 
+	void WorldCommand::UpdatePhysics()
+	{
+		Ref<World> world = GetCurrentWorld();
+		auto& rbView = world->FindEntitiesWith<Rigidbody2DComponent>();
+
+		for (auto& [entityID, rb2d] : rbView)
+		{
+			Entity entity = { entityID, world.Raw() };
+			auto& tc = entity.GetComponent<TransformComponent>();
+
+			glm::vec2 pos = Physics::PhysicsCommand::GetPosition(rb2d.runtimeBody);
+			float angle = Physics::PhysicsCommand::GetAngle(rb2d.runtimeBody);
+
+			tc.m_Translation.x = pos.x;
+			tc.m_Translation.y = pos.y;
+			tc.m_Rotation.z = angle;
+		}
+	}
+
 	//Submit element to RenderEngine
 	template<typename C, typename T>
 	void WorldCommand::Render(C& component, T& transform)
@@ -95,22 +164,19 @@ namespace Hazard::ECS {
 		static_assert(false);
 	}
 	template<>
-	void WorldCommand::Render(SpriteRendererComponent& component, TransformComponent& transform) {
+	void WorldCommand::Render(SpriteRendererComponent& component, TransformComponent& transform)
+	{
 		RenderCommand::DrawQuad(component, transform);
 	}
 	template<>
-	void WorldCommand::Render(MeshComponent& component, TransformComponent& transform) {
-		//RenderCommand::Submit(RenderableMesh(component.m_Mesh.Raw(), component.m_Material.Raw(), transform.GetTransformMat4()));
+	void WorldCommand::Render(MeshComponent& component, TransformComponent& transform)
+	{
+
 	}
 
 	template<>
-	void WorldCommand::Render(BatchComponent& component, TransformComponent& transform) {
-		for (uint32_t x = 0; x < component.m_Size; x++) {
-			for (uint32_t y = 0; y < component.m_Size; y++) {
-				//Quad quad = { transform.GetTransformMat4() * glm::translate(glm::mat4(1.0f), glm::vec3(float(x), float(y), 0.0f)),
-				//	component.m_Tint, nullptr };
-				//RenderCommand::Submit(quad);
-			}
-		}
+	void WorldCommand::Render(BatchComponent& component, TransformComponent& transform)
+	{
+
 	}
 }

@@ -368,7 +368,7 @@ namespace WindowElement {
 
 			const char* text[] = { "Static", "Kinematic", "Dynamic" };
 			const char* currentText;
-			currentText = text[(int)component.type];
+			currentText = text[(int)component.Type];
 
 			if (ImGui::BeginCombo("##bodyType", currentText)) {
 				for (int i = 0; i < 3; i++) {
@@ -377,7 +377,7 @@ namespace WindowElement {
 					if (ImGui::Selectable(text[i], isSelected))
 					{
 						currentText = text[i];
-						component.type = (ECS::BodyType)i;
+						component.Type = (Physics::BodyType)i;
 					}
 
 					if (isSelected)

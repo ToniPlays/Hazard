@@ -36,6 +36,10 @@ namespace Hazard::Scripting::CSharp {
 
 		//Entity updates
 		void OnFixedUpdate(uint32_t handle) override;
+
+		void OnCollided(uint32_t handle, void** param, bool entered);
+		void OnTrigger(uint32_t handle, void** param, bool entered);
+
 		//Entity remove
 		void OnEnable(uint32_t handle) override;
 		void OnDisable(uint32_t handle) override;

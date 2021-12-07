@@ -28,16 +28,16 @@ namespace Hazard::Scripting {
 
 		static void InitAllEntities();
 
-		static void InitEntity(UUID entity, ECS::ScriptComponent& component);
-		static void ClearEntity(UUID entity, ECS::ScriptComponent& component);
-		static void InitEntity(UUID entity, ECS::VisualScriptComponent& component);
-		static void ClearEntity(UUID entity, ECS::VisualScriptComponent& component);
+		static void InitEntity(uint32_t entity, ECS::ScriptComponent& component);
+		static void ClearEntity(uint32_t entity, ECS::ScriptComponent& component);
+		static void InitEntity(uint32_t entity, ECS::VisualScriptComponent& component);
+		static void ClearEntity(uint32_t entity, ECS::VisualScriptComponent& component);
 
 		static bool ModuleExists(ScriptType type, const char* name) 
 		{ 
 			return s_Manager->ModuleExists(type, name);
 		};
-		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, UUID handle, const std::string& moduleName)
+		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t handle, const std::string& moduleName)
 		{
 			return s_Manager->GetPublicFields(type, handle, moduleName);
 		}

@@ -15,6 +15,8 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
+	RenderEngine* engine = nullptr;
+
 	Viewport::Viewport() : EditorWindow(ICON_FK_GLOBE " Viewport")
 	{
 
@@ -22,8 +24,15 @@ namespace WindowElement {
 	void Viewport::Init()
 	{
 		SetActive(Application::HasModule<RenderEngine>());
-		m_Renderer = &Application::GetModule<RenderEngine>();
-		m_Renderer->SetCamera(&m_EditorCamera);
+
+		engine = &Application::GetModule<RenderEngine>();
+
+		WorldRendererSettings settings = {};
+		settings.Camera = &m_EditorCamera;
+
+		m_WorldRenderer = WorldRenderer::Create(&settings);
+
+		engine->SetCamera(&m_EditorCamera);
 	}
 	void Viewport::OnWindowRender()
 	{
@@ -43,11 +52,12 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			changed = true;
-			m_Renderer->GetRenderPass()->GetSpecs().TargetFrameBuffer->Resize(m_Width, m_Height);
+			engine->GetRenderPass()->GetSpecs().TargetFrameBuffer->Resize(m_Width, m_Height);
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
-		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+		Layout::Image(engine->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			AssetHandle handle = *(AssetHandle*)payload->Data;
 			Events::SelectionContextChange e({ });
@@ -161,7 +171,7 @@ namespace WindowElement {
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 
-		const RenderStats& stats = m_Renderer->GetStats();
+		const RenderStats& stats = RenderCommand::GetStats();
 		ApplicationData& data = Application::GetData();
 
 		Layout::NextLine(3);

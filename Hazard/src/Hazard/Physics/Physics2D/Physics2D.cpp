@@ -14,7 +14,7 @@ namespace Hazard::Physics
 	void Physics2D::Begin(float gravity)
 	{
 		m_World2D = new b2World({ 0.0f, gravity });
-		Physics2DContactListener* listener = new Physics2DContactListener();
+		Physics2DContactListener* listener = new Physics2DContactListener(this);
 		m_World2D->SetContactListener(listener);
 
 	}
@@ -27,37 +27,72 @@ namespace Hazard::Physics
 		delete m_World2D;
 		m_World2D = nullptr;
 	}
-	void* Physics2D::CreateBody(uint32_t entityID, b2BodyType type, glm::vec3 position, glm::vec3 rotation, bool useGravity, bool fixedRotation)
+	void* Physics2D::CreatePhysicsObject(Physics2DObjectCreateInfo* createInfo)
 	{
-		uint32_t* data = (uint32_t*)&entityID;
-		HZR_CORE_INFO(*data);
+		uint32_t* data = (uint32_t*)&createInfo->Handle;
 		b2BodyUserData userData;
 		userData.pointer = *data;
 
 		b2BodyDef bodyDef;
-		bodyDef.type = type;
-		bodyDef.position.Set(position.x, position.y);
-		bodyDef.angle = rotation.z;
+		bodyDef.type = (b2BodyType)createInfo->BodyType;
+		bodyDef.position.Set(createInfo->Position.x, createInfo->Position.y);
+		bodyDef.angle = createInfo->Angle;
+		bodyDef.gravityScale = createInfo->GravityScale;
+		bodyDef.enabled = createInfo->Enabled;
 		bodyDef.userData = userData;
-		bodyDef.gravityScale = useGravity ? 1.0f : 0.0f;
 
 		b2Body* body = m_World2D->CreateBody(&bodyDef);
-		body->SetFixedRotation(fixedRotation);
+		body->SetFixedRotation(createInfo->FixedRotation);
 		return body;
 	}
-	void Physics2D::CreateBoxCollider(void* body, glm::vec2 size, float density, float friction, float restitution, float restitutionThreshold, bool sensor)
+	void* Physics2D::CreateCollider(PhysicsCollider2DCreateInfo* createInfo)
 	{
-		b2PolygonShape boxShape;
-		boxShape.SetAsBox(size.x, size.y);
+		if (createInfo->Body == nullptr) 
+		{
+			HZR_CORE_WARN("Cannot create Collider for null body");
+			return nullptr;
+		}
 
-		b2FixtureDef fixtureDef;
-		fixtureDef.shape = &boxShape;
-		fixtureDef.density = density;
-		fixtureDef.friction = friction;
-		fixtureDef.restitution = restitution;
-		fixtureDef.restitutionThreshold = restitutionThreshold;
-		fixtureDef.isSensor = sensor;
+		b2FixtureDef fixture;
 
-		((b2Body*)body)->CreateFixture(&fixtureDef);
+		switch (createInfo->Type) {
+		case ColliderType::Box: 
+		{
+			b2PolygonShape box;
+			box.SetAsBox(createInfo->Size.x * createInfo->Scale.x, createInfo->Size.y * createInfo->Scale.y);
+
+			fixture.shape = &box;
+			fixture.density = createInfo->Density;
+			fixture.friction = createInfo->Friction;
+			fixture.restitution = createInfo->Restitution;
+			fixture.restitutionThreshold = createInfo->RestitutionThreshold;
+			fixture.isSensor = createInfo->IsSensor;
+
+			return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
+		}
+		case ColliderType::Circle: 
+		{
+			b2CircleShape circle;
+			circle.m_p.Set(createInfo->Offset.x, createInfo->Offset.y);
+
+			fixture.shape = &circle;
+			fixture.density = createInfo->Density;
+			fixture.friction = createInfo->Friction;
+			fixture.restitution = createInfo->Restitution;
+			fixture.restitutionThreshold = createInfo->RestitutionThreshold;
+			fixture.isSensor = createInfo->IsSensor;
+			
+			return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
+		}
+		case ColliderType::Capsule: 
+		{
+		
+		}
+		case ColliderType::Custom: 
+		{
+
+		}
+		}
+		return nullptr;
 	}
 }

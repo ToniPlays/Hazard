@@ -15,8 +15,6 @@ namespace Hazard::Scripting {
 
 		ScriptCommand::Init(*this);
 		SetActive(info->Enable);
-		//TODO: Move to module
-		Physics::PhysicsCommand::Init();
 	}
 	ScriptEngineManager::~ScriptEngineManager()
 	{
@@ -31,8 +29,9 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Update() 
 	{
-		//TODO: Same here
-		Physics::PhysicsCommand::UpdateAll(ECS::WorldCommand::GetCurrentWorld());
+		//TODO: Remove
+		Physics::PhysicsCommand::Step(Time::s_DeltaTime);
+		ECS::WorldCommand::UpdatePhysics();
 
 		for (auto[type, engine] : m_ScriptEngines) {
 			engine->UpdateEntities();

@@ -21,11 +21,11 @@ namespace Hazard::ECS {
 		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_Scale = { 1.0f, 1.0f, 1.0f };
 
-		glm::mat4 GetTransformMat4()
+		inline glm::mat4 GetTransformMat4()
 		{
 			return Math::ToTransformMatrix(m_Translation, m_Rotation, m_Scale);
 		}
-		glm::mat4 GetTransformNoScale()
+		inline glm::mat4 GetTransformNoScale()
 		{
 			return Math::ToTransformMatrix(m_Translation, m_Rotation);
 		}

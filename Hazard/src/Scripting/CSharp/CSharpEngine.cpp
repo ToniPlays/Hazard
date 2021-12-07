@@ -7,6 +7,8 @@
 #include "ScriptUtils.h"
 #include "CSharpScript.h"
 #include "Hazard/Scripting/ScriptCommand.h"
+#include "Hazard/Physics/PhysicsCommand.h"
+
 
 extern "C"
 {
@@ -44,6 +46,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		float delta = Time::s_DeltaTime;
 		void* param[] = { &delta };
+
 		for (auto& [handle, instance] : m_Registry.GetRegisteredInstances()) {
 			for (auto& script : instance.Scripts)
 				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnUpdate, param);
@@ -83,6 +86,7 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpEngine::Instantiate(uint32_t handle, const std::string& moduleName)
 	{
 		InstanceData& data = m_Registry.GetInstanceData(handle);
+
 		void* param[] = { &handle };
 
 		for (auto& script : data.Scripts)
@@ -96,11 +100,11 @@ namespace Hazard::Scripting::CSharp {
 
 		for (auto& script : data.Scripts)
 		{
-			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnCreated, param);
+			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnCreated, nullptr);
 		}
 		for (auto& script : data.Scripts)
 		{
-			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnStart, param);
+			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnStart, nullptr);
 		}
 	}
 	void CSharpEngine::ClearEntity(uint32_t handle, const std::string& moduleName)
@@ -114,6 +118,44 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpEngine::OnEnable(uint32_t handle)
 	{
 
+	}
+	void CSharpEngine::OnCollided(uint32_t handle, void** param, bool entered)
+	{
+		if (!m_Registry.HasInstance(handle)) return;
+		auto& instance = m_Registry.GetInstanceData(handle);
+
+		if (entered) 
+		{
+			for (auto& script : instance.Scripts)
+			{
+				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnColliderEnter2D, param);
+			}
+		}
+		else {
+			for (auto& script : instance.Scripts)
+			{
+				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnColliderExit2D, param);
+			}
+		}
+	}
+	void CSharpEngine::OnTrigger(uint32_t handle, void** param, bool entered)
+	{
+		if(!m_Registry.HasInstance(handle)) return;
+		auto& instance = m_Registry.GetInstanceData(handle);
+
+		if (entered)
+		{
+			for (auto& script : instance.Scripts)
+			{
+				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnTriggerEnter2D, param);
+			}
+		}
+		else {
+			for (auto& script : instance.Scripts)
+			{
+				Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnTriggerExit2D, param);
+			}
+		}
 	}
 	void CSharpEngine::OnDisable(uint32_t handle)
 	{

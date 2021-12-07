@@ -4,7 +4,7 @@
 #include "GUI/Window/Rendering/TransformationGizmo.h"
 
 #include "Editor/EditorCamera.h"
-#include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
 using namespace Hazard;
 using namespace Hazard::Rendering;
@@ -25,14 +25,13 @@ namespace WindowElement {
 
 	private:
 		bool KeyPressed(KeyPressedEvent& e);
-
 		void DrawStatsWindow();
 
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
 		Ref<FrameBuffer> m_FrameBuffer;
-		RenderEngine* m_Renderer = nullptr;
+		Ref<WorldRenderer> m_WorldRenderer = nullptr;
 		TransformationGizmo m_Gizmos;
 		uint32_t m_Width = 0, m_Height = 0;
 		bool m_DrawStats = false;

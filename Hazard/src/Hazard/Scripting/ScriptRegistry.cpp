@@ -34,5 +34,6 @@ namespace Hazard::Scripting {
         data.Handle = handle;
         data.Scripts.push_back(script);
         m_InstanceData[handle] = data;
+
     }
 }

@@ -9,6 +9,9 @@ namespace Hazard::ECS {
 	class WorldCommand {
 	public:
 		static void Init();
+		static void WorldRuntimeBegin();
+		static void WorldRuntimeEnd();
+
 		static Entity GetEntity(uint32_t id);
 		static Ref<World> GetCurrentWorld();
 
@@ -19,9 +22,10 @@ namespace Hazard::ECS {
 		static void OnScriptAttached(Entity& entity, T& script);
 		template<typename T>
 		static void OnScriptDetached(Entity& entity, T& script);
+		static void UpdatePhysics();
+		static void RenderWorld();
 
 	private:
-		static void ProcessWorld();
 		inline static WorldHandler* m_Handler;
 	};
 }

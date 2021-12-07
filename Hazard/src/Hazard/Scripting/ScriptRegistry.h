@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "Hazard/Core/UUID.h"
 #include "Script.h"
 
 namespace Hazard::Scripting 
@@ -16,7 +15,7 @@ namespace Hazard::Scripting
 
 	struct InstanceData 
 	{
-		UUID Handle = 0;
+		uint32_t Handle = 0;
 		std::vector<Script*> Scripts;
 	};
 

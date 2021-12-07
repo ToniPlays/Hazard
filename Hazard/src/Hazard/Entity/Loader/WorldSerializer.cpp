@@ -4,6 +4,7 @@
 #include "WorldSerializer.h"
 #include "Hazard/Utils/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/Physics/PhysicsCommand.h"
 
 namespace Hazard::ECS::Loader {
 
@@ -166,7 +167,7 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, Rigidbody2DComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "Rigidbody2DComponent", [&]() {
-			YamlUtils::Serialize(out, "Type", BodyTypeToString(component.type));
+			YamlUtils::Serialize(out, "Type", Physics::BodyTypeToString(component.Type));
 			YamlUtils::Serialize(out, "FixedRotation", component.FixedRotation);
 			YamlUtils::Serialize(out, "UseGravity", component.UseGravity);
 			});

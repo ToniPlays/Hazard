@@ -64,12 +64,6 @@ namespace Hazard::Rendering
 	{
 		m_RenderCommandBuffer->Begin();
 		m_RenderPassData.ViewProjection = m_RenderingCamera->GetViewPprojection();
-
-		struct Model {
-			glm::mat4 transform { 1.0f };
-		} model;
-
-		model.transform = Math::ToTransformMatrix(glm::vec3(0.0f), { glm::radians(0.0), glm::radians(Time::s_Time * 5.0f), glm::radians(0.0) });
 		
 		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_RenderPass);
 		m_Renderer2D->BeginWorld(m_RenderPassData);

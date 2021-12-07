@@ -41,9 +41,13 @@ namespace Hazard::Rendering
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }
 
 	private:
+		
+		static void Clear();
+
 		inline static RenderEngine* s_Engine;
 		inline static RenderAPI s_Api;
 		inline static std::vector<RenderPassCallback> m_OnRender;
+
 	};
 	template<typename T>
 	inline void RenderCommand::Submit(T fn)

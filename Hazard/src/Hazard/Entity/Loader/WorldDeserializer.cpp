@@ -4,6 +4,7 @@
 #include "WorldDeserializer.h"
 #include "Hazard/Utils/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/Physics/PhysicsCommand.h"
 
 namespace Hazard::ECS::Loader
 {
@@ -183,7 +184,7 @@ namespace Hazard::ECS::Loader
 		auto& component = entity.AddComponent<Rigidbody2DComponent>();
 		std::string bodyType;
 		YamlUtils::Deserialize(comp, "Type", bodyType);
-		component.type = StringToBodyType(bodyType);
+		component.Type = Physics::StringToBodyType(bodyType);
 		YamlUtils::Deserialize(comp, "FixedRotation", component.FixedRotation);
 		YamlUtils::Deserialize(comp, "UseGravity", component.UseGravity);
 	}

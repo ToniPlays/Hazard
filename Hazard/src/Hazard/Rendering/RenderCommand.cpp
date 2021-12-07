@@ -40,4 +40,8 @@ namespace Hazard::Rendering
 		for (auto& callback : m_OnRender)
 			callback();
 	}
+	void RenderCommand::Clear()
+	{
+
+	}
 }

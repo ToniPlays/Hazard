@@ -31,17 +31,21 @@ namespace Runtime {
 			World* runtimeWorld = new World(*s_EditorWorld);
 			handler.SetWorld(runtimeWorld);
 
-			PhysicsCommand::OnBeginRuntime(-9.8f, runtimeWorld);
+			PhysicsBeginInfo physicsInfo = {};
+
+			PhysicsCommand::BeginSimulation(&physicsInfo);
+			WorldCommand::WorldRuntimeBegin();
 			ScriptCommand::OnBeginRuntime();
 		}
 		else 
 		{
-			PhysicsCommand::OnEndRuntime();
 			ScriptCommand::OnEndRuntime();
+			WorldCommand::WorldRuntimeEnd();
+			PhysicsCommand::StopSimulation();
 			handler.SetWorld(s_EditorWorld);
 		}
-		if (s_ScenePaused && s_SceneRunning) 
-			return;
+		if (s_ScenePaused && s_SceneRunning) return;
+
 		s_ScriptManager->SetActive(s_SceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
