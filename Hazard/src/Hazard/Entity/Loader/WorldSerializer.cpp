@@ -75,7 +75,7 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, TagComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "TagComponent", [&]() {
-			YamlUtils::Serialize(out, "Tag", component.m_Tag);
+			YamlUtils::Serialize(out, "Tag", component.Tag);
 			});
 	}
 
@@ -83,9 +83,9 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, TransformComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "TransformComponent", [&]() {
-			YamlUtils::Serialize(out, "Translation", component.m_Translation);
-			YamlUtils::Serialize(out, "Rotation", component.m_Rotation);
-			YamlUtils::Serialize(out, "Scale", component.m_Scale);
+			YamlUtils::Serialize(out, "Translation", component.Translation);
+			YamlUtils::Serialize(out, "Rotation", component.Rotation);
+			YamlUtils::Serialize(out, "Scale", component.Scale);
 			});
 	}
 	template<>
@@ -101,48 +101,48 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "ScriptComponent", [&]() {
-			YamlUtils::Serialize(out, "ModuleName", component.m_ModuleName);
+			YamlUtils::Serialize(out, "ModuleName", component.ModuleName);
 			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, VisualScriptComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "VisualScriptComponent", [&]() {
-			YamlUtils::Serialize(out, "FileName", component.m_Filename);
+			YamlUtils::Serialize(out, "FileName", component.Filename);
 			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "SkyLightComponent", [&]() {
-			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			YamlUtils::Serialize(out, "Intensity", component.m_Intensity);
+			YamlUtils::Serialize(out, "Tint", component.Tint);
+			YamlUtils::Serialize(out, "Intensity", component.Intensity);
 			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "DirectionalLightComponent", [&]() {
-			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			YamlUtils::Serialize(out, "Intensity", component.m_Intensity);
+			YamlUtils::Serialize(out, "Tint", component.Tint);
+			YamlUtils::Serialize(out, "Intensity", component.Intensity);
 			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "PointLightComponent", [&]() {
-			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			YamlUtils::Serialize(out, "Intensity", component.m_Intensity);
-			YamlUtils::Serialize(out, "Radius", component.m_Radius);
+			YamlUtils::Serialize(out, "Tint", component.Tint);
+			YamlUtils::Serialize(out, "Intensity", component.Intensity);
+			YamlUtils::Serialize(out, "Radius", component.Radius);
 			});
 	}
 	template<>
 	static void WorldSerializer::SerializeComponentEditor<AudioSourceComponent>(Entity& entity, AudioSourceComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "AudioSourceComponent", [&]() {
-			YamlUtils::Serialize(out, "AudioFile", component.sourceFile);
-			YamlUtils::Serialize(out, "Gain", component.source.GetGain());
-			YamlUtils::Serialize(out, "Looping", component.source.IsLooping());
+			YamlUtils::Serialize(out, "AudioFile", component.SourceFile);
+			YamlUtils::Serialize(out, "Gain", component.Source.GetGain());
+			YamlUtils::Serialize(out, "Looping", component.Source.IsLooping());
 			});
 	}
 	template<>
@@ -156,9 +156,9 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
-			YamlUtils::Serialize(out, "Tint", component.m_Tint);
-			if (component.m_Texture->IsValid()) {
-				AssetMetadata& meta = component.m_Texture->GetMetadata();
+			YamlUtils::Serialize(out, "Tint", component.Tint);
+			if (component.Texture->IsValid()) {
+				AssetMetadata& meta = component.Texture->GetMetadata();
 				YamlUtils::Serialize(out, "Texture", meta.Path.string());
 			}
 			});
@@ -189,8 +189,8 @@ namespace Hazard::ECS::Loader {
 	static void WorldSerializer::SerializeComponentEditor(Entity& entity, BatchComponent& component, YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "BatchRendererComponent", [&]() {
-			YamlUtils::Serialize(out, "Size", component.m_Size);
-			YamlUtils::Serialize(out, "Tint", component.m_Tint);
+			YamlUtils::Serialize(out, "Size", component.Size);
+			YamlUtils::Serialize(out, "Tint", component.Tint);
 			});
 	}
 

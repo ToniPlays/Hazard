@@ -14,5 +14,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		static float Math_Sqrt_Native(float value);
 		static float Math_Min_Native(float first, float second);
 		static float Math_Max_Native(float first, float second);
+		static float Math_Radians_Native(float degrees);
 	};
 }

@@ -10,13 +10,13 @@ namespace Hazard::Audio {
 		AudioBufferData() = default;
 		~AudioBufferData() = default;
 
-		std::string name = "UndefinedAudio";
-		int16_t* audioData = nullptr;
-		size_t size = 0;
-		uint32_t sampleRate = 0;
-		uint32_t channels = 0;
-		float alFormat = 0;
-		float lenSec = 0;
+		std::string Name = "UndefinedAudio";
+		int16_t* AudioData = nullptr;
+		size_t Size = 0;
+		uint32_t SampleRate = 0;
+		uint32_t Channels = 0;
+		float AlFormat = 0;
+		float LenSec = 0;
 	};
 
 	class AudioClip {

@@ -4,17 +4,38 @@
 
 #include "../ScriptUtils.h"
 #include "../ScriptRegistery.h"
+#include "../AttributeBuilder.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/object.h>
+#include <mono/metadata/reflection.h>
 
 
 namespace Hazard::Scripting::CSharp {
 
 	MonoData Mono::s_Data;
+
+	static std::vector<Attribute*> CreateAttribs(MonoCustomAttrInfo* info) 
+	{
+		std::vector<Attribute*> result;
+		result.reserve(info->num_attrs);
+
+		for (uint32_t i = 0; i < info->num_attrs; i++) {
+			MonoCustomAttrEntry entry = info->attrs[i];
+
+			MonoClass* a = Mono::GetMethodClass(entry.ctor);
+			MonoObject* obj = mono_custom_attrs_get_attr(info, a);
+			MonoClass* attribClass = mono_object_get_class(obj);
+
+			Attribute* attrib = AttributeBuilder::Create(Mono::ClassName(attribClass), obj);
+			result.push_back(attrib);
+		}
+		return result;
+	}
+
 
 	void Mono::InitAssembly(ScriptEngineCreateInfo* info)
 	{
@@ -100,9 +121,26 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_class_from_name(s_Data.app_image, nameSpace, name);
 	}
+	MonoClass* Mono::GetClassFromObject(MonoObject* object)
+	{
+		return mono_object_get_class(object);
+	}
 	const char* Mono::ClassName(MonoClass* monoClass)
 	{
 		return mono_class_get_name(monoClass);
+	}
+	std::vector<Attribute*> Mono::GetClassAttributes(const std::string& moduleName)
+	{
+		MonoClass* monoClass = GetMonoClass(moduleName.c_str());
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(monoClass);
+
+		if (info == nullptr) return std::vector<Attribute*>();
+
+		return CreateAttribs(info);
+	}
+	MonoClass* Mono::GetMethodClass(MonoMethod* method)
+	{
+		return mono_method_get_class(method);
 	}
 	uint32_t Mono::ClassMethodCount(MonoClass* monoClass)
 	{
@@ -112,6 +150,32 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_class_get_methods(monoClass, iter);
 	}
+	std::vector<ScriptMethodMetadata> Mono::GetClassMethods(MonoClass* monoClass)
+	{
+		MonoMethod* monoMethod = nullptr;
+		void* ptr = nullptr;
+
+		std::vector<ScriptMethodMetadata> result;
+		result.reserve(ClassMethodCount(monoClass));
+
+		while ((monoMethod = GetClassMethod(monoClass, &ptr)))
+		{
+			ScriptMethodMetadata method;
+			method.Name = GetMethodFullName(monoMethod);
+			method.Visibility = GetVisibility(monoMethod);
+			method.MethodAttributes = GetMethodAttributes(monoMethod);
+			result.push_back(method);
+		}
+		return result;
+	}
+	std::vector<Attribute*> Mono::GetMethodAttributes(MonoMethod* monoMethod)
+	{
+
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_method(monoMethod);
+		if (info == nullptr) return std::vector<Attribute*>();
+
+		return CreateAttribs(info);
+	}
 	std::vector<MonoClassField*> Mono::GetClassFields(MonoClass* monoClass)
 	{
 		std::vector<MonoClassField*> result;
@@ -119,10 +183,38 @@ namespace Hazard::Scripting::CSharp {
 		MonoClassField* field;
 		void* ptr = 0;
 
-		while ((field = GetMonoField(monoClass, &ptr))) {
+		while ((field = GetMonoField(monoClass, &ptr))) 
+			result.push_back(field);
+		return result;
+	}
+	MonoClassField* Mono::GetField(MonoClass* monoClass, const std::string& name)
+	{
+		return mono_class_get_field_from_name(monoClass, name.c_str());
+	}
+	std::vector<ScriptFieldMetadata> Mono::GetFields(MonoClass* monoClass)
+	{
+		std::vector<MonoClassField*> fields = GetClassFields(monoClass);
+		std::vector<ScriptFieldMetadata> result;
+
+		for (auto* monoField : fields) {
+			ScriptFieldMetadata field;
+			field.Name = GetFieldName(monoField);
+			field.Type = ScriptUtils::GetFieldType(monoField);
+			field.Visibility = GetVisibility(monoField);
+			field.FieldAttributes = GetFieldAttributes(monoField);
+
 			result.push_back(field);
 		}
+
 		return result;
+	}
+	std::vector<Attribute*> Mono::GetFieldAttributes(MonoClassField* field)
+	{
+		MonoClass* monoClass = mono_field_get_parent(field);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, field);
+		if (info == nullptr) return std::vector<Attribute*>();
+
+		return CreateAttribs(info);
 	}
 	void Mono::GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
 	{
@@ -144,7 +236,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		return mono_class_get_fields(monoClass, iter);
 	}
-
 	int Mono::GetType(MonoType* type)
 	{
 		return mono_type_get_type(type);
@@ -165,10 +256,22 @@ namespace Hazard::Scripting::CSharp {
 	{
 		uint32_t flags = mono_field_get_flags(field);
 
-		if (flags & MONO_FIELD_ATTR_PUBLIC) 
+		if (flags & MONO_FIELD_ATTR_PUBLIC)
 			return FieldVisibility::Public;
-		if (flags & MONO_FIELD_ATTR_PRIVATE) 
-			return FieldVisibility::Protected;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)
+			return FieldVisibility::Private;
+
+		return FieldVisibility::Protected;
+	}
+	FieldVisibility Mono::GetVisibility(MonoMethod* method)
+	{
+		uint32_t iFlags = 0;
+		uint32_t flags = mono_method_get_flags(method, &iFlags);
+
+		if (flags & MONO_FIELD_ATTR_PUBLIC)
+			return FieldVisibility::Public;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)
+			return FieldVisibility::Private;
 
 		return FieldVisibility::Protected;
 	}
@@ -197,9 +300,10 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoAssembly* Mono::LoadAssembly(const char* path)
 	{
-		std::vector<char> data = File::ReadBinaryFile(path);
+		Buffer data = File::ReadBinaryFile(std::filesystem::path(path));
+
 		MonoImageOpenStatus status;
-		MonoImage* image = mono_image_open_from_data_full(data.data(), data.size(), 1, &status, 0);
+		MonoImage* image = mono_image_open_from_data_full((char*)data.Data, data.Size, 1, &status, 0);
 		MonoAssembly* loaded = mono_assembly_load_from_full(image, path, &status, 0);
 		mono_image_close(image);
 		return loaded;

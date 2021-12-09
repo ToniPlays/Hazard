@@ -69,16 +69,16 @@ namespace Hazard::ECS::Loader
 	template<>
 	static void WorldDeserializer::Deserialize<TagComponent>(Entity entity, YAML::Node comp) 
 	{
-		YamlUtils::Deserialize(comp, "Tag", entity.GetComponent<TagComponent>().m_Tag);
+		YamlUtils::Deserialize(comp, "Tag", entity.GetComponent<TagComponent>().Tag);
 	};
 
 	template<>
 	static void WorldDeserializer::Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 		auto& c = entity.GetComponent<TransformComponent>();
 
-		YamlUtils::Deserialize(comp, "Translation", c.m_Translation);
-		YamlUtils::Deserialize(comp, "Rotation", c.m_Rotation);
-		YamlUtils::Deserialize(comp, "Scale", c.m_Scale);
+		YamlUtils::Deserialize(comp, "Translation", c.Translation);
+		YamlUtils::Deserialize(comp, "Rotation", c.Rotation);
+		YamlUtils::Deserialize(comp, "Scale", c.Scale);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
@@ -100,7 +100,7 @@ namespace Hazard::ECS::Loader
 		YamlUtils::Deserialize(comp, "ModuleName", moduleName);
 
 		entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
-			c.m_ModuleName = moduleName;
+			c.ModuleName = moduleName;
 			});
 	};
 	template<>
@@ -110,30 +110,30 @@ namespace Hazard::ECS::Loader
 		YamlUtils::Deserialize(comp, "FileName", filename);
 
 		entity.AddComponentWithCallback<VisualScriptComponent>([&](VisualScriptComponent& comp) {
-			comp.m_Filename = filename;
+			comp.Filename = filename;
 			});
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp) 
 	{
 		auto& c = entity.AddComponent<SkyLightComponent>();
-		YamlUtils::Deserialize(comp, "Tint", c.m_Tint);
-		YamlUtils::Deserialize(comp, "Intensity", c.m_Intensity);
+		YamlUtils::Deserialize(comp, "Tint", c.Tint);
+		YamlUtils::Deserialize(comp, "Intensity", c.Intensity);
 	}
 	template<>
 	static void WorldDeserializer::Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp) 
 	{
 		auto& c = entity.AddComponent<DirectionalLightComponent>();
-		YamlUtils::Deserialize(comp, "Tint", c.m_Tint);
-		YamlUtils::Deserialize(comp, "Intensity", c.m_Intensity);
+		YamlUtils::Deserialize(comp, "Tint", c.Tint);
+		YamlUtils::Deserialize(comp, "Intensity", c.Intensity);
 	}
 	template<>
 	static void WorldDeserializer::Deserialize<PointLightComponent>(Entity entity, YAML::Node comp) 
 	{
 		auto& c = entity.AddComponent<PointLightComponent>();
-		YamlUtils::Deserialize(comp, "Tint", c.m_Tint);
-		YamlUtils::Deserialize(comp, "Intensity", c.m_Intensity);
-		YamlUtils::Deserialize(comp, "Radius", c.m_Radius);
+		YamlUtils::Deserialize(comp, "Tint", c.Tint);
+		YamlUtils::Deserialize(comp, "Intensity", c.Intensity);
+		YamlUtils::Deserialize(comp, "Radius", c.Radius);
 	}
 	template<>
 	static void WorldDeserializer::Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
@@ -142,15 +142,15 @@ namespace Hazard::ECS::Loader
 		AssetManager::ImportAsset(fileName);
 
 		AudioSourceComponent& source = entity.AddComponentWithCallback<AudioSourceComponent>([&](AudioSourceComponent& c) {
-			c.sourceFile = fileName;
+			c.SourceFile = fileName;
 		});
 
 		if (comp["Gain"]) {
-			source.source.SetGain(comp["Gain"].as<float>());
+			source.Source.SetGain(comp["Gain"].as<float>());
 		}
 
 		if (comp["Looping"]) {
-			source.source.SetLoop(comp["Looping"].as<std::string>() == "True");
+			source.Source.SetLoop(comp["Looping"].as<std::string>() == "True");
 		}
 	};
 	template<>
@@ -167,7 +167,7 @@ namespace Hazard::ECS::Loader
 	static void WorldDeserializer::Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 		auto& component = entity.AddComponent<SpriteRendererComponent>();
 
-		YamlUtils::Deserialize(comp, "Tint", component.m_Tint);
+		YamlUtils::Deserialize(comp, "Tint", component.Tint);
 		if (comp["Texture"]) {
 			using namespace Hazard::Rendering;
 			std::string fileName;
@@ -175,7 +175,7 @@ namespace Hazard::ECS::Loader
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
 
 			if(handle != INVALID_ASSET_HANDLE)
-				component.m_Texture = AssetManager::GetAsset<Texture2D>(handle);
+				component.Texture = AssetManager::GetAsset<Texture2D>(handle);
 		}
 	};
 	template<>
@@ -204,7 +204,7 @@ namespace Hazard::ECS::Loader
 	static void WorldDeserializer::Deserialize<BatchComponent>(Entity entity, YAML::Node comp)
 	{
 		auto& component = entity.AddComponent<BatchComponent>();
-		YamlUtils::Deserialize(comp, "Size", component.m_Size);
-		YamlUtils::Deserialize(comp, "Tint", component.m_Tint);
+		YamlUtils::Deserialize(comp, "Size", component.Size);
+		YamlUtils::Deserialize(comp, "Tint", component.Tint);
 	}
 }

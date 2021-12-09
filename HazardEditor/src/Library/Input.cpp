@@ -5,6 +5,8 @@
 #include "Layout/Layout.h"
 #include "Library/DragDropUtils.h"
 
+#include "Hazard/Scripting/Attributes/AllAttributes.h"
+
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -199,7 +201,7 @@ namespace WindowElement {
 		ImGui::PopStyleVar();
 		return modified;
 	}
-	bool Input::ScriptField(const char* label, std::string& moduleName, bool exists)
+	bool Input::ModuleField(const char* label, std::string& moduleName, bool exists)
 	{
 		bool modified = false;
 
@@ -350,126 +352,43 @@ namespace WindowElement {
 		}
 		return false;
 	}
-	bool Input::PublicField(const std::string& name, Scripting::PublicField* field, bool runtime)
+	template<typename T>
+	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, T& value)
+	{
+		static_assert(false);
+	}
+	template<>
+	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, float& value)
+	{
+		Layout::Table(2, false);
+		Layout::SetColumnWidth(75);
+		Layout::Text(field->GetName().c_str());
+		Layout::TableNext();
+		Layout::MaxWidth();
+		bool modified = DragFloat(field->GetName().c_str(), value);
+		Layout::EndTable();
+
+		return modified;
+	}
+	bool Input::ScriptField(Scripting::ScriptField* field, bool runtime)
 	{
 		using namespace Hazard::Scripting;
 		bool modified = false;
 
-		std::string id("##");
-		id.append(name);
+		ScriptFieldMetadata& meta = field->GetFieldMetadata();
 
-		switch (field->GetType())
-		{
-		case FieldType::Float:
-		{
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text(name.c_str());
-			Layout::TableNext();
-			Layout::MaxWidth();
-			float f = field->GetValue<float>(runtime);
-			modified = DragFloat(id.c_str(), f);
-			if (modified) {
-				field->SetValue(f, runtime);
-			}
-			Layout::EndTable();
-			break;
-		}
-		case FieldType::Float2:
-		{
-			glm::vec2 f2 = field->GetValue<glm::vec2>(runtime);
-			modified = Vec2(name.c_str(), f2, 0, 75);
-			if (modified) {
-				field->SetValue(f2, runtime);
-			}
-			Layout::NextLine(1);
-			break;
-		}
-		case FieldType::Float3:
-		{
-			glm::vec3 f3 = field->GetValue<glm::vec3>(runtime);
-			modified = Vec3(name.c_str(), f3, 0, 75);
-			if (modified) {
-				field->SetValue(f3, runtime);
-			}
-			Layout::NextLine(1);
-			break;
-		}
-		case FieldType::Int:
-		{
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text(name.c_str());
-			Layout::TableNext();
-			Layout::MaxWidth();
-			int i = field->GetValue<int>(runtime);
-			modified = DragInt(id.c_str(), i);
-			if (modified) {
-				field->SetValue(i, runtime);
-			}
-			Layout::EndTable();
-			break;
-		}
-		case FieldType::UInt:
-		{
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text(name.c_str());
-			Layout::TableNext();
-			Layout::MaxWidth();
-			uint32_t uint = field->GetValue<uint32_t>(runtime);
-			modified = DragUInt(name.c_str(), uint);
-			if (modified) {
-				field->SetValue(uint, runtime);
-			}
-			Layout::EndTable();
-			break;
-		}
-		default:
-		{
-			using namespace Hazard::ECS;
-			uint32_t entityID = field->GetValue<uint32_t>(runtime);
-			std::string tag = "None";
+		if (meta.Has<HideInPropertiesAttribute>()) return false;
+		if (field->GetVisibility() != FieldVisibility::Public && !meta.Has<ShowInPropertiesAttribute>()) 
+			return false;
 
-			if (entityID != 0) {
-				Entity entity = WorldCommand::GetEntity(entityID - 1);
-				if (entity.IsValid())
-					tag = entity.GetTag().m_Tag;
-			}
-
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(75);
-			Layout::Text(name.c_str());
-			Layout::TableNext();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 20);
-
-			bool modified = false;
-
-			Input::InputField(tag, "");
-			DragDropUtils::DragTarget("Hazard.Entity", [&](const ImGuiPayload* payload) {
-				const char* value = (const char*)payload->Data;
-				entityID = atoi(value);
-				modified = true;
-				});
-			Layout::SameLine();
-
-			Style::SetButtonColors("#DB3721", "#C3311D", "#A02818");
-			Style::SelectFont(1);
-
-			if (Input::Button("X", { 20, 20 })) {
-				modified = true;
-				entityID = 0;
-			}
-			ImGui::PopFont();
-			ImGui::PopStyleColor(3);
-
-			if (modified) {
-				field->SetValue<uint32_t>(entityID, runtime);
-			}
-			Layout::EndTable();
+		switch (field->GetType()) {
+		case FieldType::Float: {
+			float value = field->GetValue<float>(runtime);
+			modified = ScriptFieldOfType<float>(field, value);
+			if (modified) 
+				field->SetValue<float>(value, runtime);
 		}
 		}
-		Layout::EndTable();
 		return modified;
 	}
 }

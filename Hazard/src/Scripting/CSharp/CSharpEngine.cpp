@@ -60,9 +60,9 @@ namespace Hazard::Scripting::CSharp {
 	{
 
 	}
-	PublicField* CSharpEngine::GetPublicField(uint32_t handle, uint32_t index)
+	ScriptField* CSharpEngine::GetPublicField(uint32_t handle, uint32_t index)
 	{
-		return (PublicField*)m_Registry.GetInstanceData(handle).Scripts[index];
+		return (ScriptField*)m_Registry.GetInstanceData(handle).Scripts[index];
 	}
 	void CSharpEngine::InitializeEntity(uint32_t handle, const std::string& moduleName)
 	{
@@ -71,17 +71,16 @@ namespace Hazard::Scripting::CSharp {
 		HZR_CORE_ERROR("Initializing {1} for handle {0}", handle, moduleName);
 
 		if (!m_Registry.HasScript(moduleName)) {
-			ScriptMetaData script;
+			ScriptMetadata script;
 			script.ModuleName = moduleName;
+			script.ClassAttributes = Mono::GetClassAttributes(moduleName);
+			script.Fields = Mono::GetFields(Mono::GetMonoClass(moduleName.c_str()));
+			script.Methods = Mono::GetClassMethods(Mono::GetMonoClass(moduleName.c_str()));
+
 			ScriptUtils::GetNames(moduleName, script.Namespace, script.ClassName);
 			m_Registry.Add(script);
 		}
-
-		CSharpScript* script = new CSharpScript(moduleName);
-		script->InitClassMethods();
-		script->UpdatePublicFields();
-		m_Registry.RegisterEntityScript(handle, script);
-
+		m_Registry.RegisterEntityScript(handle, new CSharpScript(m_Registry.GetScriptMetadata(moduleName)));
 	}
 	void CSharpEngine::Instantiate(uint32_t handle, const std::string& moduleName)
 	{

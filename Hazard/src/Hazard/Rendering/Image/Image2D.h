@@ -11,6 +11,7 @@ namespace Hazard::Rendering
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
+		bool ClearLocalBuffer = true;
 	};
 
 	class Image2D : public Image

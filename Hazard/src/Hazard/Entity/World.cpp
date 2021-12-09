@@ -20,7 +20,7 @@ namespace Hazard::ECS
 		auto components = src.view<T>();
 		for (auto srcEntity : components)
 		{
-			entt::entity destEntity = entityMap.at(src.get<TagComponent>(srcEntity).m_ID);
+			entt::entity destEntity = entityMap.at(src.get<TagComponent>(srcEntity).Uid);
 			auto& srcComponent = src.get<T>(srcEntity);
 			auto& destComponent = dest.emplace_or_replace<T>(destEntity, srcComponent);
 		}
@@ -43,9 +43,9 @@ namespace Hazard::ECS
 			auto entity = entityID[i - 1];
 
 			TagComponent& c = world.m_Registry.get<TagComponent>(entity);
-			UUID uuid = c.m_ID;
+			UUID uuid = c.Uid;
 
-			Entity e = CreateEntity(uuid, c.m_Tag.c_str());
+			Entity e = CreateEntity(uuid, c.Tag.c_str());
 			entityMap[uuid] = e.GetHandle();
 		}
 
@@ -81,8 +81,8 @@ namespace Hazard::ECS
 	{
 		Entity entity { m_Registry.create(), this };
 		TagComponent& tag = entity.AddComponent<TagComponent>();
-		tag.m_Tag = name;
-		tag.m_ID = {};
+		tag.Uid = {};
+		tag.Tag = name;
 		entity.AddComponent<TransformComponent>();
 		return entity;
 	}
@@ -90,8 +90,8 @@ namespace Hazard::ECS
 	{
 		Entity e = { m_Registry.create(), this };
 		TagComponent& tag = e.AddComponent<TagComponent>();
-		tag.m_ID = id;
-		tag.m_Tag = name;
+		tag.Uid = id;
+		tag.Tag = name;
 		e.AddComponent<TransformComponent>();
 		return e;
 	}
@@ -110,7 +110,7 @@ namespace Hazard::ECS
 	{
 		Entity entity;
 		if (other.HasComponent<TagComponent>()) {
-			std::string tag = other.GetComponent<TagComponent>().m_Tag;
+			std::string tag = other.GetComponent<TagComponent>().Tag;
 			entity = CreateEntity(tag);
 		}
 		else entity = CreateEntity("Duplicate");
@@ -185,7 +185,7 @@ namespace Hazard::ECS
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		component.m_Texture = Rendering::RenderCommand::GetWhiteTexture();
+		component.Texture = Rendering::RenderCommand::GetWhiteTexture();
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
@@ -193,7 +193,7 @@ namespace Hazard::ECS
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
 	{
-		component.source = Audio::AudioCommand::Create(component);
+		component.Source = Audio::AudioCommand::Create(component);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}

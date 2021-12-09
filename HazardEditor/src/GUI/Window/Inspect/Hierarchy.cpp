@@ -100,7 +100,7 @@ namespace WindowElement {
 	{
 		TagComponent& c = entity.GetTag();
 
-		if (!Hazard::StringUtil::IsMatching(c.m_Tag, m_SearchValue))
+		if (!Hazard::StringUtil::IsMatching(c.Tag, m_SearchValue))
 			return;
 
 		constexpr float edgeOffset = 4.0f;
@@ -120,7 +120,7 @@ namespace WindowElement {
 		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		const std::string entityIDStr = c.m_Tag + std::to_string(entity);
+		const std::string entityIDStr = c.Tag + std::to_string(entity);
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
@@ -174,7 +174,7 @@ namespace WindowElement {
 		bool previousState = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetID(entityIDStr.c_str()));
 
 		std::stringstream ss;
-		ss << c.m_Tag << " (" << c.m_ID << ")";
+		ss << c.Tag << " (" << c.Uid << ")";
 		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, ss.str().c_str(), nullptr);
 
 		if (isRowClicked)
@@ -199,7 +199,7 @@ namespace WindowElement {
 		ImGui::TableNextColumn();
 
 		ScopedStyle frame(ImGuiStyleVar_FrameBorderSize, 0);
-		Color col = Style::GetStyleColor(c.m_Visible ? ColorType::Debug : ColorType::Secondary);
+		Color col = Style::GetStyleColor(c.Visible ? ColorType::Debug : ColorType::Secondary);
 		ScopedColour textColor(ImGuiCol_Text, Style::ColorAsImVec4(col));
 
 		Layout::ShiftX(edgeOffset);

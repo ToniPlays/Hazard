@@ -16,17 +16,17 @@ namespace Hazard::Scripting::CSharp
 	{
 	public:
 		CSharpScript() = default;
-		CSharpScript(const std::string& moduleName);
+		CSharpScript(const ScriptMetadata& data);
 		~CSharpScript();
 
-		const std::string& GetModuleName() override { return m_ModuleName; }
+		const std::string& GetModuleName() override { return m_Metadata.ModuleName; }
 		bool IsValid() const override { return true; }
 		virtual uint32_t GetHandle() const { return m_ScriptHandle; };
-		uint32_t GetPublicFieldCount() override { return m_PublicFields.size(); }
-		PublicField& GetPublicField(uint32_t index) override { return *m_PublicFields[index]; }
+		uint32_t GetFieldCount() override { return m_Fields.size(); }
+		std::unordered_map<uint32_t, ScriptField*> GetFields() override { return m_Fields; };
 
 		void InitClassMethods();
-		void UpdatePublicFields();
+		void UpdateFields();
 		void SetRuntimeValues();
 
 		MonoClass* m_MonoClass;
@@ -43,8 +43,8 @@ namespace Hazard::Scripting::CSharp
 
 	private:
 		uint32_t m_ScriptHandle;
-		std::string m_ModuleName;
-		std::vector<CSharpField*> m_PublicFields;
+		ScriptMetadata m_Metadata;
 
+		std::unordered_map<uint32_t, ScriptField*> m_Fields;
 	};
 }

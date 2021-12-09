@@ -15,7 +15,7 @@ namespace WindowElement {
 		static bool InputField(std::string& text, const char* hint);
 		static bool Button(const char* name, ImVec2 size = { 0, 0 });
 		template<typename T>
-		static bool FileButton(const char* name, Ref<Hazard::Rendering::Texture2D> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id") 
+		static bool FileButton(const char* name, Ref<Hazard::Rendering::Texture2D> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id")
 		{
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::PushID(id.c_str());
@@ -38,7 +38,7 @@ namespace WindowElement {
 		static bool Vec2(const char* label, glm::vec2& value, float resetValue, float columnWidth);
 		static bool Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth);
 
-		static bool ScriptField(const char* label, std::string& moduleName, bool exists);
+		static bool ModuleField(const char* label, std::string& moduleName, bool exists);
 
 		static void Checkbox(const char* label, bool& value);
 		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
@@ -50,7 +50,7 @@ namespace WindowElement {
 			Layout::Table(2, false, "##textureSlot");
 			Layout::SetColumnWidth(75);
 
-			if (ImageButton(texture, { 50, 50 })) 
+			if (ImageButton(texture, { 50, 50 }))
 				input = InputType::ImageChange;
 			dropCallback();
 
@@ -60,7 +60,7 @@ namespace WindowElement {
 			Layout::SameLine(0, 5);
 			Button("Preview");
 			Layout::SameLine(0, 5);
-			if (Button("Remove")) 
+			if (Button("Remove"))
 				input = InputType::Remove;
 			callback();
 			Layout::EndTable();
@@ -80,6 +80,10 @@ namespace WindowElement {
 		static bool ColoredButton(const char* label, const Hazard::Color& color, const Hazard::Color& textColor, ImVec2 size = { 0, 0 });
 		static bool ImageButton(Ref<Rendering::Texture2D> image, ImVec2 size = { 50, 50 });
 
-		static bool PublicField(const std::string& name, Scripting::PublicField* field, bool runtime = false);
+		static bool ScriptField(Scripting::ScriptField* field, bool runtime = false);
+
+	private:
+		template<typename T>
+		static bool ScriptFieldOfType(Scripting::ScriptField* field, T& value);
 	};
 }

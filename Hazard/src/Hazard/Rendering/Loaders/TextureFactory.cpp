@@ -42,7 +42,7 @@ namespace Hazard::Rendering
 			File::CreateDir(cacheDir.parent_path());
 
 		uint32_t dataSize;
-		byte* textureData;
+		byte* textureData = nullptr;
 
 		if (header.Channels == 4) {
 
@@ -59,7 +59,7 @@ namespace Hazard::Rendering
 			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
 			bool result = File::WriteBinaryFile(cacheDir, textureData, dataSize);
 
-			delete textureData;
+			delete[] textureData;
 			return result;
 		}
 		HZR_CORE_ASSERT(false, "Texture cache file most likely broken");
@@ -99,21 +99,27 @@ namespace Hazard::Rendering
 		Timer timer;
 		auto cacheFile = GetFileCachePath(path);
 
-		size_t fileSize = 0;
-		byte* data = File::ReadBinaryFile(cacheFile, fileSize);
+		Buffer data = File::ReadBinaryFile(cacheFile);
 
 		TextureHeader header = {};
-		FileHeader fileHeader = {};
 
-		memcpy(&fileHeader, data, sizeof(FileHeader));
+		if (!data) 
+		{
+			data.Release();
+			return header;
+		}
+
+		FileHeader fileHeader = Buffer::Get<FileHeader>(data.Data);
 
 		header.Width = fileHeader.Width;
 		header.Height = fileHeader.Height;
 		header.Channels = fileHeader.Channels;
 		header.DataSize = fileHeader.DataSize;
-		header.ImageData = Buffer::Copy(data, header.DataSize, sizeof(FileHeader));
+		header.ImageData = Buffer::Copy(data.Data, header.DataSize, sizeof(FileHeader));
 
 		HZR_CORE_INFO("Texture {0} loaded from cache in {1} ms", path, timer.ElapsedMillis());
+
+		data.Release();
 		return header;
 	}
 	TextureHeader TextureFactory::LoadFromCacheIfExists(const std::string& path, bool reloadIfOutdated)
@@ -129,6 +135,12 @@ namespace Hazard::Rendering
 		}
 
 		TextureHeader header = LoadTextureFromCache(path);
+
+		if (!header.IsValid()) {
+			header = LoadTextureFromSourceFile(path, true);
+			SaveTextureToCache(path, header);
+		}
+			
 		return header;
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)

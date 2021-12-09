@@ -13,18 +13,19 @@ namespace Hazard::Scripting::CSharp {
 
 	class CSharpScript;
 
-	class CSharpField : public PublicField 
+	class CSharpField : public ScriptField 
 	{
 	public:
 		CSharpField() = default;
-		CSharpField(const std::string& name, FieldType type);
-		CSharpField(const std::string& name, const std::string& customType);
-
+		CSharpField(const ScriptFieldMetadata& metadata, CSharpScript* parent);
 	public: 
 
-		std::string GetName() override { return m_Name; }
-		FieldType GetType() { return m_Type; }
-		const std::string GetCustomType() { return m_CustomType; }
+		std::string GetName() override { return m_Metadata.Name; }
+		FieldType GetType() override { return m_Metadata.Type; }
+
+		FieldVisibility GetVisibility() override { return m_Metadata.Visibility; }
+		const std::string GetCustomType() { return m_Metadata.CustomType; }
+		ScriptFieldMetadata GetFieldMetadata() override { return m_Metadata; };
 
 		void SetField(MonoClassField* field) { m_MonoClassField = field; }
 		void SetParentScript(CSharpScript* script) { m_Script = script; }
@@ -40,10 +41,8 @@ namespace Hazard::Scripting::CSharp {
 
 	private:
 
-		std::string m_Name;
-		FieldType m_Type;
-		std::string m_CustomType;
 		std::byte* m_Buffer;
+		ScriptFieldMetadata m_Metadata;
 
 		CSharpScript* m_Script;
 		MonoClassField* m_MonoClassField;

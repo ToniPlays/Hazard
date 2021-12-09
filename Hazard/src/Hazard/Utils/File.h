@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Hazard/Core/Buffer.h"
+
 #include <iostream>
 #include <vector>
 #include <filesystem>
@@ -27,7 +29,7 @@ namespace Hazard {
 		static bool DirectoryExists(const std::filesystem::path& dir);
 
 		static std::vector<char> ReadBinaryFile(const std::string& path);
-		static byte* ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize);
+		static Buffer ReadBinaryFile(const std::filesystem::path& path);
 		static bool ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer);
 		static std::string ReadFile(const std::filesystem::path& file);
 

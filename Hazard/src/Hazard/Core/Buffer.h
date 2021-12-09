@@ -1,4 +1,5 @@
 #pragma once
+
 namespace Hazard 
 {
 	struct Buffer {
@@ -21,7 +22,8 @@ namespace Hazard
 			Data = new byte[size];
 			Size = size;
 		}
-		void Release() {
+		void Release() 
+		{
 			delete[] Data;
 			Data = nullptr;
 			Size = 0;
@@ -39,13 +41,13 @@ namespace Hazard
 			return *(T*)((byte*)Data + offset);
 		}
 		byte* ReadBytes(uint32_t size, uint32_t offset) {
-			HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
+			//HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
 			byte* buffer = new byte[size];
 			memcpy(buffer, (byte*)Data + offset, size);
 			return buffer;
 		}
 		void Write(void* data, uint32_t size, uint32_t offset = 0) {
-			HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
+			//HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
 			memcpy((byte*)Data + offset, data, size);
 		}
 		operator bool() const { return Data; }
@@ -60,6 +62,18 @@ namespace Hazard
 			buffer.Allocate(size);
 			memcpy(buffer.Data, (byte*)data + offset, size);
 			return buffer;
+		}
+		template<typename T>
+		static T Get(void* data, uint32_t startIndex = 0) {
+			T value;
+			memcpy(&value, (byte*)data + startIndex, sizeof(T));
+			return value;
+		}
+		template<typename T>
+		static T GetRaw(void* data, uint32_t len, uint32_t startIndex = 0) {
+			T value;
+			memcpy(&value, data, len);
+			return value;
 		}
 	};
 }

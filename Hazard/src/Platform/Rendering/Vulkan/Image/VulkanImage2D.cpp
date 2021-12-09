@@ -18,6 +18,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanImage2D::~VulkanImage2D()
 	{
+		m_Buffer.Release();
 		if (!m_Info.Image) return;
 
 		const auto device = VulkanContext::GetDevice()->GetDevice();
@@ -30,6 +31,7 @@ namespace Hazard::Rendering::Vulkan
 		}
 		VulkanAllocator allocator("VulkanImage2D");
 		allocator.DestroyImage(m_Info.Image, m_Info.MemoryAlloc);
+
 
 		m_PerLayerImageViews.clear();
 	}

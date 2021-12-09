@@ -30,12 +30,12 @@ namespace WindowElement {
 			Layout::Text("Tag");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::InputField(component.m_Tag);
+			Input::InputField(component.Tag);
 			Layout::NextLine(10);
 
 			}, [&component]() {
 				Layout::MenuItem("Reset", [&component]() {
-					component.m_Tag = "New entity";
+					component.Tag = "New entity";
 					});
 			});
 	}
@@ -45,28 +45,28 @@ namespace WindowElement {
 		Layout::ComponentTreenode<TransformComponent>(entity, name, [&]() {
 
 			glm::vec3 rot{
-				glm::degrees(component.m_Rotation.x),
-				glm::degrees(component.m_Rotation.y),
-				glm::degrees(component.m_Rotation.z)
+				glm::degrees(component.Rotation.x),
+				glm::degrees(component.Rotation.y),
+				glm::degrees(component.Rotation.z)
 			};
 
 			Layout::IDGroup("Translation", [&]() {
-				Input::Vec3("Translation", component.m_Translation, 0, 75);
+				Input::Vec3("Translation", component.Translation, 0, 75);
 				});
 			Layout::IDGroup("Rotation", [&]() {
 				Input::Vec3("Rotation", rot, 0, 75);
 				});
 			Layout::IDGroup("Scale", [&]() {
-				Input::Vec3("Scale", component.m_Scale, 1.0f, 75);
+				Input::Vec3("Scale", component.Scale, 1.0f, 75);
 				});
 
-			component.m_Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
+			component.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 
 			}, [&]() {
 				Layout::MenuItem("Reset", [&]() {
-					component.m_Translation = { 0, 0, 0 };
-					component.m_Rotation = { 0, 0, 0 };
-					component.m_Scale = { 1, 1, 1 };
+					component.Translation = { 0, 0, 0 };
+					component.Rotation = { 0, 0, 0 };
+					component.Scale = { 1, 1, 1 };
 					});
 			});
 	}
@@ -130,12 +130,12 @@ namespace WindowElement {
 
 			static bool open = false;
 
-			bool changed = Input::TextureSlot(component.m_Texture, [&]() {
-				Input::ColorPicker("Sprite tint", component.m_Tint, open);
+			bool changed = Input::TextureSlot(component.Texture, [&]() {
+				Input::ColorPicker("Sprite tint", component.Tint, open);
 				}, [&]() {
 					DragDropUtils::DragTarget("Image", [&](const ImGuiPayload* payload) {
 						AssetHandle handle = *(AssetHandle*)payload->Data;
-						component.m_Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+						component.Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 						});
 				});
 			if (changed) {
@@ -155,7 +155,7 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
-			Input::DragUInt("Size", component.m_Size, 0.0f, 1000.0f);
+			Input::DragUInt("Size", component.Size, 0.0f, 1000.0f);
 
 			}, [&entity]() {
 
@@ -173,13 +173,13 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.m_Intensity);
+			Input::Slider("##Intensity", component.Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Sky Light tint", component.m_Tint, open);
+			Input::ColorPicker("Sky Light tint", component.Tint, open);
 			Layout::EndTable();
 
 			}, [&entity]() {
@@ -195,13 +195,13 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.m_Intensity);
+			Input::Slider("##Intensity", component.Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Directional Light tint", component.m_Tint, open);
+			Input::ColorPicker("Directional Light tint", component.Tint, open);
 			Layout::EndTable();
 
 			}, [&entity]() {
@@ -217,19 +217,19 @@ namespace WindowElement {
 			Layout::Text("Intensity");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Intensity", component.m_Intensity);
+			Input::Slider("##Intensity", component.Intensity);
 
 			Layout::TableNext();
 			Layout::Text("Tint");
 			Layout::TableNext();
 			static bool open = false;
-			Input::ColorPicker("Point Light tint", component.m_Tint, open);
+			Input::ColorPicker("Point Light tint", component.Tint, open);
 			Layout::TableNext();
 
 			Layout::Text("Radius");
 			Layout::TableNext();
 			Layout::MaxWidth();
-			Input::Slider("##Radius", component.m_Radius);
+			Input::Slider("##Radius", component.Radius);
 
 			Layout::EndTable();
 
@@ -240,34 +240,38 @@ namespace WindowElement {
 #pragma endregion
 
 	template<>
-	inline void Draw(const char* name, Entity entity, ScriptComponent& component) {
+	inline void Draw(const char* name, Entity entity, ScriptComponent& component)
+	{
 		using namespace Hazard::Scripting;
 		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
-			std::string moduleName = component.m_ModuleName;
+			std::string moduleName = component.ModuleName;
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
-			bool changed = Input::ScriptField("Script", component.m_ModuleName, exists);
+			bool changed = Input::ModuleField("Script", component.ModuleName, exists);
 
 			DragDropUtils::DragTarget("Script", [&](const ImGuiPayload* payload) {
 				moduleName = (const char*)payload->Data;
 
-				component.m_ModuleName = File::GetNameNoExt(moduleName);
+				component.ModuleName = File::GetNameNoExt(moduleName);
 				changed = true;
 				});
 
+			Layout::Separator(2.0f);
 			if (changed) {
 				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 					ScriptCommand::ClearEntity((uint32_t)entity, component);
 				}
-				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.m_ModuleName.c_str())) {
+				if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, component.ModuleName.c_str())) {
 					ScriptCommand::InitEntity((uint32_t)entity, component);
 				}
 			}
 
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 				bool runtime = Runtime::SceneRuntimeHandler::IsSceneRunning();
-				for (auto& [name, field] : ScriptCommand::GetPublicFields(ScriptType::CSharpScript, (uint32_t)entity, moduleName)) {
-					Input::PublicField(name, field, runtime);
+
+				for (auto& [index, field] : ScriptCommand::GetFields(ScriptType::CSharpScript, (uint32_t)entity, moduleName)) 
+				{
+					Input::ScriptField(field, runtime);
 				}
 			}
 
@@ -296,12 +300,12 @@ namespace WindowElement {
 			Layout::Text("Source");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::InputField(component.sourceFile);
+			Input::InputField(component.SourceFile);
 
 			DragDropUtils::DragTarget("AudioClip", [&](const ImGuiPayload* payload) {
 				const char* file = (const char*)payload->Data;
-				component.sourceFile = file;
-				component.source.LoadFromFile(file);
+				component.SourceFile = file;
+				component.Source.LoadFromFile(file);
 				});
 
 			Layout::NextLine(5);
@@ -309,23 +313,23 @@ namespace WindowElement {
 			Layout::Text("Gain");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			float val = component.source.GetGain();
+			float val = component.Source.GetGain();
 			Input::DragFloat("##Gain", val, 0.005f, 0, 1.0f);
-			component.source.SetGain(val);
+			component.Source.SetGain(val);
 
 			Layout::Text("Pitch");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			val = component.source.GetPitch();
+			val = component.Source.GetPitch();
 			Input::DragFloat("##Pitch", val, 0.005f, 0, 0);
-			component.source.SetPitch(val);
+			component.Source.SetPitch(val);
 
 			Layout::Text("Looping");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			bool looping = component.source.IsLooping();
+			bool looping = component.Source.IsLooping();
 			Input::Checkbox("##Looping", looping);
-			component.source.SetLoop(looping);
+			component.Source.SetLoop(looping);
 
 			}, []() {
 
@@ -350,7 +354,6 @@ namespace WindowElement {
 
 			if (changed) {
 				if (!File::Exists(file)) return;
-				//component.m_Mesh = Rendering::MeshFactory::LoadMesh(file);
 				HZR_CORE_INFO("New mesh file {0}", file);
 			}
 			}, []() {

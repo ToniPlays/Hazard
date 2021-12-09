@@ -104,27 +104,28 @@ namespace Hazard {
 			HZR_CORE_ERROR("Cannot read file: {0}", path);
 		return buffer;
 	}
-	byte* File::ReadBinaryFile(const std::filesystem::path& path, size_t& fileSize)
+	Buffer File::ReadBinaryFile(const std::filesystem::path& path)
 	{
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
+		Buffer result;
+
 		if (!stream.is_open())
-			return false;
+			return result;
 
 		stream.seekg(0, std::ios::end);
 		auto size = stream.tellg();
 		stream.seekg(0, std::ios::beg);
 
 		if (size == 0)
-			return nullptr;
+			return result;
 
-		byte* buffer = new byte[size];
+		result.Allocate(size);
 
-		if (!stream.read((char*)buffer, size)) {
+		if (!stream.read((char*)result.Data, size)) {
 			HZR_CORE_ERROR("Cannot read file: {0}", path.string());
 		}
-		fileSize = size;
-		return buffer;
+		return result;
 	}
 	bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer)
 	{

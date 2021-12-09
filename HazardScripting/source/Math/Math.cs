@@ -13,6 +13,7 @@ namespace Hazard
         public static float Sqrt(float value, float pow) { return Math_Sqrt_Native(value); }
         public static float Min(float first, float second) { return Math_Min_Native(first, second); }
         public static float Max(float first, float second) { return Math_Max_Native(first, second); }
+        public static float Radians(float degrees) { return Math_Radians_Native(degrees); }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Math_Random_Native();
@@ -26,5 +27,7 @@ namespace Hazard
         private static extern float Math_Min_Native(float fist, float second);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Math_Max_Native(float fist, float second);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float Math_Radians_Native(float degrees);
     }
 }

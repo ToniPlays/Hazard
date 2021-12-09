@@ -11,7 +11,8 @@ namespace Hazard::Rendering
 		Batch(size_t size) : m_DataSize(sizeof(Type)) {
 			Resize(size);
 		};
-		~Batch() {};
+		~Batch() {
+		};
 
 		void Push(const Type& data) 
 		{

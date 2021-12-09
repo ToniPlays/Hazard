@@ -4,8 +4,7 @@
 #include "Hazard/Scripting/ScriptCommand.h"
 #include "../../ScriptUtils.h"
 #include "Hazard/Entity/Component.h"
-
-
+#include "../../Mono/Mono.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
 
@@ -43,11 +42,11 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	bool EntityBindings::IsActive(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).m_Visible;
+		return ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).Visible;
 	}
 	void EntityBindings::SetActive(uint32_t id, bool active)
 	{
-		ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).m_Visible = active;
+		ScriptCommand::EntityGetComponent<ECS::TagComponent>(id).Visible = active;
 	}
 	bool EntityBindings::HasComponent(uint32_t id, void* type)
 	{

@@ -18,7 +18,6 @@ namespace Hazard::Scripting {
 	}
 	ScriptEngineManager::~ScriptEngineManager()
 	{
-
 	}
 	void ScriptEngineManager::Close()
 	{
@@ -55,10 +54,10 @@ namespace Hazard::Scripting {
 	{
 		m_ScriptEngines[type]->ClearEntity(handle, moduleName);
 	}
-	std::unordered_map<std::string, PublicField*> ScriptEngineManager::GetPublicFields(ScriptType type, uint32_t handle, const std::string& moduleName)
+	std::unordered_map<uint32_t, ScriptField*> ScriptEngineManager::GetFields(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
-		std::unordered_map<std::string, PublicField*> result;
 		ScriptRegistry registry = m_ScriptEngines[type]->GetRegistry();
+		std::unordered_map<uint32_t, ScriptField*> result;
 
 		if (!registry.HasInstance(handle)) 
 			return result;
@@ -66,15 +65,9 @@ namespace Hazard::Scripting {
 		for (auto& script : registry.GetInstanceData(handle).Scripts)
 		{
 			if (script->GetModuleName() == moduleName) {
-				result.reserve(script->GetPublicFieldCount());
-				for (uint32_t i = 0; i < script->GetPublicFieldCount(); i++) {
-					PublicField& field = script->GetPublicField(i);
-					result[field.GetName()] = &field;
-				}
-				break;
+				return script->GetFields();
 			}
 		}
-
 		return result;
 	}
 	void ScriptEngineManager::ReloadAll()

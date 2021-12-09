@@ -43,7 +43,7 @@ namespace Hazard::Scripting {
 
 		bool ModuleExists(ScriptType type, const char* moduleName);
 
-		std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t handle, const std::string& moduleName);
+		std::unordered_map<uint32_t, ScriptField*> GetFields(ScriptType type, uint32_t handle, const std::string& moduleName);
 		std::unordered_map<ScriptType, ScriptEngine*>& GetScriptEngines() { return m_ScriptEngines; };
 		ScriptEngine& GetEngine(ScriptType type) { return *m_ScriptEngines[type]; }
 

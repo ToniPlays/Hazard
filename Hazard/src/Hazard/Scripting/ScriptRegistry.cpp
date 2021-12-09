@@ -11,13 +11,12 @@ namespace Hazard::Scripting {
     {
         return m_InstanceData.find(handle) != m_InstanceData.end();
     }
-    ScriptMetaData& ScriptRegistry::GetScriptMetadata(const std::string& script)
+    ScriptMetadata& ScriptRegistry::GetScriptMetadata(const std::string& script)
     {
         return m_Scripts[script];
     }
     void ScriptRegistry::Remove(uint32_t handle)
     {
-
         InstanceData& data = GetInstanceData(handle);
         for (auto& script : data.Scripts) 
         {
@@ -28,12 +27,9 @@ namespace Hazard::Scripting {
     }
     void ScriptRegistry::RegisterEntityScript(uint32_t handle, Script* script)
     {
-        GetScriptMetadata(script->GetModuleName()).Count++;
-
         InstanceData data;
         data.Handle = handle;
         data.Scripts.push_back(script);
         m_InstanceData[handle] = data;
-
     }
 }

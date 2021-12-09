@@ -30,7 +30,6 @@ extern Hazard::Application* Hazard::CreateApplication();
 			loop.Start();
 			while (!loop.ShouldClose()) {
 				loop.Run();
-				allocs = 0;
 			}
 
 			return 0;
@@ -44,10 +43,9 @@ extern Hazard::Application* Hazard::CreateApplication();
 			Application* app = CreateApplication();
 			Core::HazardLoop loop(app);
 			loop.Start();
-			while (loop.ShouldClose()) {
+			while (!loop.ShouldClose()) {
 				loop.Run();
 				std::cout << allocs << std::endl;
-				allocs = 0;
 			}
 			return 0;
 		}

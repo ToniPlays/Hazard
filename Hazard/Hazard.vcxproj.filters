@@ -399,6 +399,9 @@
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\Attribute.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="src\Platform\System\Windows\WindowWindow.h">
       <Filter>src\Platform\System\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\AttributeBuilder.h">
+      <Filter>src\Scripting\CSharp</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Bindings.h">
       <Filter>src\Scripting\CSharp</Filter>
@@ -1827,6 +1833,10 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2078,6 +2088,9 @@
     <ClCompile Include="src\Platform\System\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\System\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\AttributeBuilder.cpp">
+      <Filter>src\Scripting\CSharp</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\CSharpEngine.cpp">
       <Filter>src\Scripting\CSharp</Filter>
     </ClCompile>
@@ -2135,5 +2148,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
   </ItemGroup>
 </Project>

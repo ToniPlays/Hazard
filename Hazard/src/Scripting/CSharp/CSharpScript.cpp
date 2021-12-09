@@ -8,10 +8,27 @@
 
 namespace Hazard::Scripting::CSharp {
 
-	CSharpScript::CSharpScript(const std::string& moduleName) : m_ModuleName(moduleName)
+	CSharpScript::CSharpScript(const ScriptMetadata& data) : m_Metadata(data)
 	{
-		m_MonoClass = Mono::GetMonoClass(moduleName.c_str());
+		m_MonoClass = Mono::GetMonoClass(data.ModuleName.c_str());
 		m_ScriptHandle = Mono::InstantiateHandle(m_MonoClass);
+
+		InitClassMethods();
+		UpdateFields();
+
+		auto* obj = Mono::ObjectFromHandle(m_ScriptHandle);
+
+		for (auto& [index, field] : m_Fields)
+		{
+			switch (field->GetType()) {
+			case FieldType::Float:	field->SetStoredValue(Mono::GetFieldValue<float>(obj, field->GetName()));
+			case FieldType::Float2:	field->SetStoredValue(Mono::GetFieldValue<glm::vec2>(obj, field->GetName()));
+			case FieldType::Float3:	field->SetStoredValue(Mono::GetFieldValue<glm::vec3>(obj, field->GetName()));
+			case FieldType::Float4:	field->SetStoredValue(Mono::GetFieldValue<glm::vec4>(obj, field->GetName()));
+			case FieldType::Int:	field->SetStoredValue(Mono::GetFieldValue<int>(obj, field->GetName()));
+			case FieldType::UInt:	field->SetStoredValue(Mono::GetFieldValue<uint32_t>(obj, field->GetName()));
+			}
+		}
 	}
 	CSharpScript::~CSharpScript()
 	{
@@ -19,47 +36,30 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpScript::InitClassMethods()
 	{
+		//TODO constructo should not be like thiss
 		Constructor = Mono::GetCoreMethod("Hazard.Entity:.ctor(ulong)");
-		OnCreated = Mono::GetAppMethod(m_ModuleName + ":OnCreate()");
-		OnStart = Mono::GetAppMethod(m_ModuleName + ":OnStart()");
-		OnUpdate = Mono::GetAppMethod(m_ModuleName + ":OnUpdate(single)");
-		OnLateUpdate = Mono::GetAppMethod(m_ModuleName + ":LateUpdate()");
-		OnFixedUpdate = Mono::GetAppMethod(m_ModuleName + ":FixedUpdate()");
-		OnColliderEnter2D = Mono::GetAppMethod(m_ModuleName + ":OnColliderEnter2D(Collider2D)");
-		OnTriggerEnter2D = Mono::GetAppMethod(m_ModuleName + ":OnTriggerEnter2D(Collider2D)");
-		OnColliderExit2D = Mono::GetAppMethod(m_ModuleName + ":OnColliderExit2D(Collider2D)");
-		OnTriggerExit2D = Mono::GetAppMethod(m_ModuleName + ":OnTriggerExit2D(Collider2D)");
+		OnCreated = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnCreate()");
+		OnStart = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnStart()");
+		OnUpdate = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnUpdate(single)");
+		OnLateUpdate = Mono::GetAppMethod(m_Metadata.ModuleName + ":LateUpdate()");
+		OnFixedUpdate = Mono::GetAppMethod(m_Metadata.ModuleName + ":FixedUpdate()");
+		OnColliderEnter2D = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnColliderEnter2D(Collider2D)");
+		OnTriggerEnter2D = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnTriggerEnter2D(Collider2D)");
+		OnColliderExit2D = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnColliderExit2D(Collider2D)");
+		OnTriggerExit2D = Mono::GetAppMethod(m_Metadata.ModuleName + ":OnTriggerExit2D(Collider2D)");
 	}
-	void CSharpScript::UpdatePublicFields()
+	void CSharpScript::UpdateFields()
 	{
-		m_PublicFields.clear();
-
-		MonoClassField* iter;
-		void* ptr = nullptr;
-
-		while (iter = Mono::GetMonoField(m_MonoClass, &ptr)) {
-
-			std::string name = Mono::GetFieldName(iter);
-			if (Mono::GetVisibility(iter) != FieldVisibility::Public) 
-				continue;
-
-			FieldType fieldType = ScriptUtils::GetFieldType(iter);
-			
-			if (fieldType != FieldType::Custom) {
-				CSharpField* field = new CSharpField(name, fieldType);
-				field->SetParentScript(this);
-				field->SetField(iter);
-				float value = 0;
-				Mono::GetFieldValue(Mono::ObjectFromHandle(m_ScriptHandle), iter, &value);
-				field->SetStoredValue<float>(value);
-				m_PublicFields.push_back(field);
-			}
+		uint32_t i = 0;
+		for (auto& field : m_Metadata.Fields) 
+		{
+			m_Fields[i] = new CSharpField(field, this);
+			i++;
 		}
-
 	}
 	void CSharpScript::SetRuntimeValues()
 	{
-		for (auto& field : m_PublicFields) 
+		for (auto& [index, field] : m_Fields) 
 		{
 			field->CopyStoredToRuntimeValue();
 		}

@@ -16,7 +16,7 @@ namespace Hazard::Scripting
 		virtual bool IsValid() const = 0;
 		virtual uint32_t GetHandle() const = 0;
 
-		virtual uint32_t GetPublicFieldCount() = 0;
-		virtual PublicField& GetPublicField(uint32_t index) = 0;
+		virtual uint32_t GetFieldCount() = 0;
+		virtual std::unordered_map<uint32_t, ScriptField*> GetFields() = 0;
 	};
 }

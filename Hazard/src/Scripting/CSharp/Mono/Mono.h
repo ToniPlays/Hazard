@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "Hazard/Scripting/Attributes/Attribute.h"
+#include "../ScriptUtils.h"
 
 extern "C"
 {
@@ -9,6 +11,7 @@ extern "C"
 	typedef struct _MonoClass MonoClass;
 	typedef struct _MonoType MonoType;
 	typedef struct _MonoMethod MonoMethod;
+	typedef struct _MonoString MonoString;
 
 	typedef struct _MonoDomain MonoDomain;
 	typedef struct _MonoAssembly MonoAssembly;
@@ -16,8 +19,6 @@ extern "C"
 }
 
 namespace Hazard::Scripting::CSharp {
-
-	enum class FieldVisibility { Private, Protected, Public };
 
 	struct MonoData {
 		MonoDomain* mono_domain;
@@ -59,14 +60,40 @@ namespace Hazard::Scripting::CSharp {
 		//Class functions
 		static MonoClass* GetMonoClass(const char* moduleName);
 		static MonoClass* GetMonoClass(const char* nameSpace, const char* name);
+		static MonoClass* GetClassFromObject(MonoObject* object);
 		static const char* ClassName(MonoClass* monoClass);
+		static std::vector<Attribute*> GetClassAttributes(const std::string& moduleName);
+		static MonoClass* GetMethodClass(MonoMethod* method);
 		static uint32_t ClassMethodCount(MonoClass* monoClass);
 		static MonoMethod* GetClassMethod(MonoClass* monoClass, void** iter);
+		static std::vector<ScriptMethodMetadata> GetClassMethods(MonoClass* monoClass);
+		static std::vector<Attribute*> GetMethodAttributes(MonoMethod* monoMethod);
 
 		static std::vector<MonoClassField*> GetClassFields(MonoClass* monoClass);
 		//Field functions
+		static MonoClassField* GetField(MonoClass* monoClass, const std::string& name);
+		static std::vector<ScriptFieldMetadata> GetFields(MonoClass* monoClass);
+		static std::vector<Attribute*> GetFieldAttributes(MonoClassField* field);
+
 		static void GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
 		static void SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
+		template<typename T>
+		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
+			T value;
+			GetFieldValue(object, field, &value);
+			return value;
+		}
+		template<>
+		static std::string GetFieldValue(MonoObject* object, MonoClassField* field) {
+			MonoString* value;
+			GetFieldValue(object, field, &value);
+			return ScriptUtils::MonoStringToString(value);
+		}
+		template<typename T>
+		static T GetFieldValue(MonoObject* object, const std::string& name) {
+			MonoClass* monoClass = GetClassFromObject(object);
+			return Mono::GetFieldValue<T>(object, Mono::GetField(monoClass, name));
+		}
 		static std::string GetFieldName(MonoClassField* field);
 		static MonoType* GetFieldType(MonoClassField* field);
 		static MonoClassField* GetMonoField(MonoClass* monoClass, void** iter);
@@ -76,6 +103,7 @@ namespace Hazard::Scripting::CSharp {
 		static MonoType* ReflectionToType(void* type);
 		static MonoType* TypeFromReflectionName(const std::string& name);
 		static FieldVisibility GetVisibility(MonoClassField* field);
+		static FieldVisibility GetVisibility(MonoMethod* field);
 
 		static MonoData& GetData() { return s_Data; }
 	private:

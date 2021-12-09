@@ -10,44 +10,43 @@ namespace Hazard::ECS {
 
 	struct TagComponent
 	{
-		std::string m_Tag;
-		UUID m_ID;
-		bool m_Visible = true;
+		std::string Tag;
+		UUID Uid;
+		bool Visible = true;
 	};
 
 	struct TransformComponent
 	{
-		glm::vec3 m_Translation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 m_Scale = { 1.0f, 1.0f, 1.0f };
+		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 
 		inline glm::mat4 GetTransformMat4()
 		{
-			return Math::ToTransformMatrix(m_Translation, m_Rotation, m_Scale);
+			return Math::ToTransformMatrix(Translation, Rotation, Scale);
 		}
 		inline glm::mat4 GetTransformNoScale()
 		{
-			return Math::ToTransformMatrix(m_Translation, m_Rotation);
+			return Math::ToTransformMatrix(Translation, Rotation);
 		}
 	};
 
 	struct ScriptComponent 
 	{
-		std::string m_ModuleName;
+		std::string ModuleName;
 	};
 	struct VisualScriptComponent 
 	{
-		std::string m_Filename;
+		std::string Filename;
 	};
 	struct MeshComponent 
 	{
-		float yes;
 		Ref<Rendering::Mesh> m_Mesh;
 		//Ref<Rendering::Material> m_Material;
 	};
 	struct AudioSourceComponent 
 	{
-		std::string sourceFile;
-		Audio::AudioClip source;
+		std::string SourceFile;
+		Audio::AudioClip Source;
 	};
 }

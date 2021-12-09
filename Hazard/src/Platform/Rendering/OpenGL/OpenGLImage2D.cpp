@@ -23,9 +23,11 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLImage2D::Invalidate()
 	{
-		if (m_ID) {
+		if (m_ID)
+		{
 			Release();
 		}
+
 		bool multisampled = m_Samples > 1;
 		OpenGLUtils::CreateTextures(multisampled, &m_ID, 1);
 	}

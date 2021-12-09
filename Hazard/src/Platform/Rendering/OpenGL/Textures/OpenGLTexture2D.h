@@ -34,6 +34,8 @@ namespace Hazard::Rendering::OpenGL
 		uint32_t m_InternalFormat;
 		uint32_t m_DataFormat;
 
+		Buffer m_LocalData;
+
 		ImageFormat m_Format;
 		bool m_Loaded = false;
 

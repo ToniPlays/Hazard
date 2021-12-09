@@ -3,16 +3,15 @@
 #include <hzrpch.h>
 #include "CSharpField.h"
 #include "CSharpScript.h"
+#include "Mono/Mono.h"
 
 namespace Hazard::Scripting::CSharp {
 
-	CSharpField::CSharpField(const std::string& name, FieldType type) : m_Name(name), m_Type(type)
+	CSharpField::CSharpField(const ScriptFieldMetadata& metadata, CSharpScript* parent) : m_Metadata(metadata)
 	{
-		m_Buffer = ScriptUtils::AllocateBuffer(type);
-	}
-	CSharpField::CSharpField(const std::string& name, const std::string& customType) : m_Name(name), m_CustomType(customType), m_Type(FieldType::Custom)
-	{
-		HZR_CORE_ASSERT(false, "No support for custom type yet");
+		m_Buffer = ScriptUtils::AllocateBuffer(metadata.Type);
+		m_Script = parent;
+		m_MonoClassField = Mono::GetField(Mono::GetMonoClass(parent->GetModuleName().c_str()), metadata.Name);
 	}
 	void CSharpField::CopyStoredToRuntimeValue()
 	{
@@ -24,24 +23,21 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpField::GetStoredValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Metadata.Type);
 		memcpy(value, m_Buffer, size);
 	}
 	void CSharpField::SetStoredValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Metadata.Type);
 		memcpy(m_Buffer, value, size);
 	}
 	void CSharpField::GetRuntimeValueInternal(void* value) const
 	{
-		uint32_t size = ScriptUtils::GetFieldSize(m_Type);
+		uint32_t size = ScriptUtils::GetFieldSize(m_Metadata.Type);
 		Mono::GetFieldValue(Mono::ObjectFromHandle(m_Script->GetHandle()), m_MonoClassField, value);
 	}
 	void CSharpField::SetRuntimeValueInternal(void* value) const
 	{
-		float val = *(float*)value;
-
-
 		Mono::SetFieldValue(Mono::ObjectFromHandle(m_Script->GetHandle()), m_MonoClassField, value);
 	}
 }

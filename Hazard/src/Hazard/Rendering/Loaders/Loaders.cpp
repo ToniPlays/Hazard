@@ -7,7 +7,7 @@ namespace Hazard::Rendering
 {
     bool TextureLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
     {
-        Texture2DCreateInfo info = { };
+        Texture2DCreateInfo info = {};
         info.FilePath = metadata.Path.string();
         asset = Texture2D::Create(&info);
 

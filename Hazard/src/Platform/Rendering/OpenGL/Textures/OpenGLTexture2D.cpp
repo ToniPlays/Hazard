@@ -42,6 +42,11 @@ namespace Hazard::Rendering::OpenGL
 			LoadFromData(info->Data, info->Width, info->Height);
 
 		SetFilters(info->Filter, info->WrapMode);
+
+		if (info->ClearLocalBuffer) {
+			HZR_CORE_WARN("Releasing texture data for {0}", info->FilePath.string());
+			m_LocalData.Release();
+		}
 	}
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
@@ -65,6 +70,8 @@ namespace Hazard::Rendering::OpenGL
 
 		m_DataFormat = (header.Channels == 4) * GL_RGBA + (header.Channels == 3) * GL_RGB;
 		m_InternalFormat = (header.Channels == 4) * GL_RGBA8 + (header.Channels == 3) * GL_RGB8;
+
+		m_LocalData = header.ImageData;
 
 		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, header.ImageData.Data);

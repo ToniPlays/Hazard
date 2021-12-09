@@ -16,6 +16,7 @@ namespace Hazard::Rendering
 		TextureFilter* Filter = nullptr;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format;
+		bool ClearLocalBuffer = true;
 		void* Data = nullptr;
 	};
 

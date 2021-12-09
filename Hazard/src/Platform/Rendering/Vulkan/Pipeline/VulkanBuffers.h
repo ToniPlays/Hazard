@@ -43,9 +43,7 @@ namespace Hazard::Rendering::Vulkan
 
 		uint32_t GetCount() override { return m_Size; }
 
-		VkBuffer GetVulkanBuffer() const {
-			return m_Buffer;
-		}
+		VkBuffer GetVulkanBuffer() const { return m_Buffer;	}
 
 	private:
 		void SetData(uint32_t* data, uint32_t size);

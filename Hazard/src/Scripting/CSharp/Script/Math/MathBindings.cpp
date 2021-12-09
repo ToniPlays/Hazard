@@ -15,6 +15,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
         result.emplace_back("Hazard.Math::Math_Pow_Native", Math_Pow_Native);
         result.emplace_back("Hazard.Math::Math_Min_Native", Math_Pow_Native);
         result.emplace_back("Hazard.Math::Math_Max_Native", Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Radians_Native", Math_Radians_Native);
         return result;
     }
     float MathBindings::Math_Random_Native()
@@ -42,5 +43,9 @@ namespace Hazard::Scripting::CSharp::Bindings {
     float MathBindings::Math_Max_Native(float first, float second)
     {
         return Math::Max(first, second);
+    }
+    float MathBindings::Math_Radians_Native(float degrees)
+    {
+        return Math::ToRadians(degrees);
     }
 }

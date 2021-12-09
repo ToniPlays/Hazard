@@ -33,7 +33,7 @@ namespace WindowElement {
 		}
 		Layout::Tooltip("Toggle visibility");
 		auto& c = selectionContext.GetComponent<TagComponent>();
-		ImVec2 textWidth = ImGui::CalcTextSize(c.m_Tag.c_str());
+		ImVec2 textWidth = ImGui::CalcTextSize(c.Tag.c_str());
 
 		ImGui::PopStyleVar();
 		ImGui::SameLine();
@@ -42,7 +42,7 @@ namespace WindowElement {
 
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - (textWidth.x / 2));
 		ImGui::SetCursorPosY(35 / 2 + (textWidth.y / 2) + 10);
-		Layout::Text(c.m_Tag.c_str());
+		Layout::Text(c.Tag.c_str());
 		ImGui::PopFont();
 
 		if (selectionContext.HasComponent<MeshComponent>()) {

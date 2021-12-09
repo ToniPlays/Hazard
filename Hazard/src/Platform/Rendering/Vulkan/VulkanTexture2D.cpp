@@ -21,6 +21,7 @@ namespace Hazard::Rendering::Vulkan
 		if (info->Data == nullptr) {
 			bool loaded = LoadImageFromFile(info->FilePath.string());
 			HZR_CORE_ASSERT(loaded, "Failed to load Vulkan Image");
+
 			Image2DCreateInfo imageSpecs = {};
 			imageSpecs.Format = m_Format;
 			imageSpecs.Width = m_Header.Width;
@@ -48,6 +49,10 @@ namespace Hazard::Rendering::Vulkan
 
 			m_Image = Image2D::Create(&imageSpecs).As<VulkanImage2D>();
 			Invalidate();
+		}
+		if (info->ClearLocalBuffer) 
+		{
+			m_Header.ImageData.Release();
 		}
 	}
 	VulkanTexture2D::~VulkanTexture2D() 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Hazard/Scripting/ScriptEngine.h"
-#include "Mono/Mono.h"
 #include "Hazard/Entity/World.h"
 
 extern "C" 
@@ -27,7 +26,7 @@ namespace Hazard::Scripting::CSharp {
 		void OnWorldLoaded() override;
 		void OnWorldUnloaded() override;
 
-		PublicField* GetPublicField(uint32_t handle, uint32_t index) override;
+		ScriptField* GetPublicField(uint32_t handle, uint32_t index) override;
 
 		//Entity creation
 		void InitializeEntity(uint32_t handle, const std::string& moduleName) override;

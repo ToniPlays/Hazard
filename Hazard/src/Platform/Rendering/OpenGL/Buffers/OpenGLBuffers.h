@@ -38,7 +38,6 @@ namespace Hazard::Rendering::OpenGL
 		void SetData(uint32_t* data, uint32_t size);
 
 		BufferUsage m_Usage;
-
 		uint32_t m_ID;
 		uint32_t m_Size;
 

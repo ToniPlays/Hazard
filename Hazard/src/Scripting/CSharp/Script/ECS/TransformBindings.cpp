@@ -24,31 +24,31 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	void TransformBindings::Transform_GetPosition_Native(uint32_t id, glm::vec3* position)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		*position = c.m_Translation;
+		*position = c.Translation;
 	}
 	void TransformBindings::Transform_SetPosition_Native(uint32_t id, glm::vec3* position)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		c.m_Translation = *position;
+		c.Translation = *position;
 	}
 	void TransformBindings::Transform_GetRotation_Native(uint32_t id, glm::vec3* rotation)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		*rotation = c.m_Rotation;
+		*rotation = c.Rotation;
 	}
 	void TransformBindings::Transform_SetRotation_Native(uint32_t id, glm::vec3* rotation)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		c.m_Rotation = *rotation;
+		c.Rotation = *rotation;
 	}
 	void TransformBindings::Transform_GetScale_Native(uint32_t id, glm::vec3* scale)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		*scale = c.m_Scale;
+		*scale = c.Scale;
 	}
 	void TransformBindings::Transform_SetScale_Native(uint32_t id, glm::vec3* scale)
 	{
 		auto& c = ScriptCommand::EntityGetComponent<ECS::TransformComponent>(id);
-		c.m_Scale = *scale;
+		c.Scale = *scale;
 	}
 }

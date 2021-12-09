@@ -21,6 +21,8 @@ namespace Hazard::Scripting {
 	class ScriptCommand {
 
 	public:
+
+		static ScriptMetadata GetMetadata(const std::string& moduleName);
 		static void Init(ScriptEngineManager& manager);
 
 		static void OnBeginRuntime();
@@ -37,9 +39,9 @@ namespace Hazard::Scripting {
 		{ 
 			return s_Manager->ModuleExists(type, name);
 		};
-		static std::unordered_map<std::string, PublicField*> GetPublicFields(ScriptType type, uint32_t handle, const std::string& moduleName)
+		static std::unordered_map<uint32_t, ScriptField*> GetFields(ScriptType type, uint32_t handle, const std::string& moduleName)
 		{
-			return s_Manager->GetPublicFields(type, handle, moduleName);
+			return s_Manager->GetFields(type, handle, moduleName);
 		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) 

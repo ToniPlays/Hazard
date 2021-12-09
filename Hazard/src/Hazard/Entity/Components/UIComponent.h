@@ -7,15 +7,15 @@ namespace Hazard::ECS {
 
 	struct SpriteRendererComponent 
 	{
-		Color m_Tint = Color::White;
-		Ref<Rendering::Texture2D> m_Texture;
+		Color Tint = Color::White;
+		Ref<Rendering::Texture2D> Texture;
 
 		SpriteRendererComponent() = default;
 	};
 
 	struct BatchComponent {
-		Color m_Tint = Color::White;
-		uint32_t m_Size = 0;
+		Color Tint = Color::White;
+		uint32_t Size = 0;
 
 		BatchComponent() = default;
 	};

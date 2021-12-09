@@ -23,15 +23,15 @@ namespace Hazard::Rendering
 	}
 	void RenderCommand::DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc)
 	{
-		glm::mat4 transform = Math::ToTransformMatrix(tc.m_Translation, tc.m_Rotation, tc.m_Scale);
-		DrawQuad(transform, comp.m_Tint, comp.m_Texture);
+		glm::mat4 transform = Math::ToTransformMatrix(tc.Translation, tc.Rotation, tc.Scale);
+		DrawQuad(transform, comp.Tint, comp.Texture);
 	}
 	void RenderCommand::DrawQuadTextured(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc)
 	{
 		Quad quad;
-		quad.Transform = Math::ToTransformMatrix(tc.m_Translation, tc.m_Rotation, tc.m_Scale);
-		quad.Color = comp.m_Tint;
-		quad.Texture = comp.m_Texture;
+		quad.Transform = Math::ToTransformMatrix(tc.Translation, tc.Rotation, tc.Scale);
+		quad.Color = comp.Tint;
+		quad.Texture = comp.Texture;
 
 		s_Engine->Submit([quad]() mutable {
 			s_Engine->Get2D().Submit(quad);

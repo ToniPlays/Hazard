@@ -66,8 +66,8 @@ namespace Hazard::ECS {
 
 			Physics2DObjectCreateInfo objInfo = {};
 			objInfo.Handle = (uint32_t)entity;
-			objInfo.Position = { tc.m_Translation.x, tc.m_Translation.y };
-			objInfo.Angle = tc.m_Rotation.z;
+			objInfo.Position = { tc.Translation.x, tc.Translation.y };
+			objInfo.Angle = tc.Rotation.z;
 			objInfo.BodyType = rb2d.Type;
 			objInfo.FixedRotation = rb2d.FixedRotation;
 			objInfo.GravityScale = rb2d.UseGravity ? 1.0f : 0.0f;
@@ -82,7 +82,7 @@ namespace Hazard::ECS {
 				info.Handle = (uint32_t)entity;
 				info.Body = rb2d.runtimeBody;
 				info.Type = ColliderType::Box;
-				info.Scale = { tc.m_Scale.x, tc.m_Scale.y };
+				info.Scale = { tc.Scale.x, tc.Scale.y };
 				info.Size = bc2d.Size;
 				info.Density = bc2d.Density;
 				info.Friction = bc2d.Friction;
@@ -129,9 +129,9 @@ namespace Hazard::ECS {
 			if (!e.IsVisible()) continue;
 			auto& [batch, tc] = batches.get<BatchComponent, TransformComponent>(entity);
 
-			for (size_t x = 0; x < batch.m_Size; x++) {
-				for (size_t y = 0; y < batch.m_Size; y++) {
-					RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.m_Tint);
+			for (size_t x = 0; x < batch.Size; x++) {
+				for (size_t y = 0; y < batch.Size; y++) {
+					RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.Tint);
 				}
 			}
 		}
@@ -150,9 +150,9 @@ namespace Hazard::ECS {
 			glm::vec2 pos = Physics::PhysicsCommand::GetPosition(rb2d.runtimeBody);
 			float angle = Physics::PhysicsCommand::GetAngle(rb2d.runtimeBody);
 
-			tc.m_Translation.x = pos.x;
-			tc.m_Translation.y = pos.y;
-			tc.m_Rotation.z = angle;
+			tc.Translation.x = pos.x;
+			tc.Translation.y = pos.y;
+			tc.Rotation.z = angle;
 		}
 	}
 

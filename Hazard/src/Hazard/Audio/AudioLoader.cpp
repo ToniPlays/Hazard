@@ -64,10 +64,6 @@ namespace Hazard::Audio {
 	{
 		//Check if file is already loaded
 		AudioBufferData* buffer = nullptr;
-		//if (Vault::Has<AudioBufferData>(file.c_str())) {
-		//	buffer = Vault::Get<AudioBufferData>(file.c_str());
-		//}
-		//else 
 		{
 			//Load new MP3 track
 			mp3dec_file_info_t info;
@@ -75,22 +71,22 @@ namespace Hazard::Audio {
 			size_t size = info.samples * sizeof(mp3d_sample_t);
 
 			buffer = new AudioBufferData();
-			buffer->name = file;
-			buffer->size = size;
-			buffer->sampleRate = info.hz;
-			buffer->channels = info.channels;
-			buffer->alFormat = GetOpenALFormat(buffer->channels);
-			buffer->lenSec = size / (info.avg_bitrate_kbps * 1024.0f);
-			buffer->audioData = info.buffer;
+			buffer->Name = file;
+			buffer->Size = size;
+			buffer->SampleRate = info.hz;
+			buffer->Channels = info.channels;
+			buffer->AlFormat = GetOpenALFormat(buffer->Channels);
+			buffer->LenSec = size / (info.avg_bitrate_kbps * 1024.0f);
+			buffer->AudioData = info.buffer;
 
 			//Vault::Add(file, buffer);
 		}
 		//Initialize AudioClip
 		ALuint bufferID;
 		alGenBuffers(1, &bufferID);
-		alBufferData(bufferID, buffer->alFormat, buffer->audioData, (size_t)buffer->size, buffer->sampleRate);
+		alBufferData(bufferID, buffer->AlFormat, buffer->AudioData, (size_t)buffer->Size, buffer->SampleRate);
 
-		AudioClip clip = { bufferID, true, buffer->lenSec };
+		AudioClip clip = { bufferID, true, buffer->LenSec };
 		alGenSources(1, &clip.m_Source);
 		alSourcei(clip.m_Source, AL_BUFFER, bufferID);
 

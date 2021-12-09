@@ -36,7 +36,6 @@ namespace Hazard {
 	//Actual event class
 
 	class  Event {
-
 		friend class EventDispathcer;
 	public:
 		bool handled = false;

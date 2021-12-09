@@ -58,8 +58,8 @@ namespace Hazard::ECS {
 		bool IsValid();
 
 		entt::entity GetHandle() { return m_Handle; }
-		bool IsVisible() { return GetComponent<TagComponent>().m_Visible; }
-		void SetVisible(bool visible) { GetComponent<TagComponent>().m_Visible = visible; }
+		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
+		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
 
 		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
 		TagComponent& GetTag() { return GetComponent<TagComponent>(); }

@@ -3,7 +3,6 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Scripting/PublicField.h"
 #include "CSharpField.h"
-#include "Mono/Mono.h"
 
 extern "C"
 {
