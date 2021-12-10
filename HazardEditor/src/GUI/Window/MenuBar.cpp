@@ -35,10 +35,11 @@ namespace WindowElement {
 		if (Input::ButtonColorChange(ICON_FK_PLAY, offColor, onColor, Style::GetStyleColor(ColorType::Background), sceneRunning, { 25, 25 })) {
 			Runtime::SceneRuntimeHandler::SetSceneRunning(!sceneRunning);
 
-			if (!sceneRunning)
-				EditorView::SetWindowFocus<GameViewport>();
-			else
-				EditorView::SetWindowFocus<Viewport>();
+			if (!sceneRunning) {}
+				//EditorView::SetWindowFocus<GameViewport>();
+			else {
+				//EditorView::SetWindowFocus<Viewport>();
+			}
 		}
 		Layout::SameLine(0, 5);
 		if (Input::ButtonColorChange(ICON_FK_PAUSE, offColor, onColor, Style::GetStyleColor(ColorType::Background), scenePaused, { 25, 25 })) {

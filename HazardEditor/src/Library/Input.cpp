@@ -360,12 +360,41 @@ namespace WindowElement {
 	template<>
 	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, float& value)
 	{
+		using namespace Hazard::Scripting;
 		Layout::Table(2, false);
 		Layout::SetColumnWidth(75);
 		Layout::Text(field->GetName().c_str());
+
+		ScriptFieldMetadata& meta = field->GetFieldMetadata();
+
+		if (meta.Has<TooltipAttribute>()) 
+		{
+			Layout::Tooltip(meta.Get<TooltipAttribute>().Tooltip.c_str());
+		}
+
 		Layout::TableNext();
 		Layout::MaxWidth();
-		bool modified = DragFloat(field->GetName().c_str(), value);
+		bool modified = false;
+
+		if (meta.Has<SliderAttribute>()) {
+			SliderAttribute& attrib = meta.Get<SliderAttribute>();
+			std::stringstream ss;
+			ss << "#" << field->GetName();
+			modified = ImGui::SliderFloat(ss.str().c_str(), &value, attrib.Min, attrib.Max);
+			Layout::EndTable();
+			return modified;
+		}
+		else if (meta.Has<RangeAttribute>()) 
+		{
+			RangeAttribute& attrib = meta.Get<RangeAttribute>();
+			std::stringstream ss;
+			ss << "#" << field->GetName();
+			modified = ImGui::SliderFloat(ss.str().c_str(), &value, attrib.Min, attrib.Max);
+			Layout::EndTable();
+			return modified;
+		}
+			
+		modified = DragFloat(field->GetName().c_str(), value);
 		Layout::EndTable();
 
 		return modified;
@@ -381,7 +410,14 @@ namespace WindowElement {
 		if (field->GetVisibility() != FieldVisibility::Public && !meta.Has<ShowInPropertiesAttribute>()) 
 			return false;
 
-		switch (field->GetType()) {
+		if (meta.Has<HeaderAttribute>()) {
+			Style::SelectFont(1);
+			ImGui::Text(meta.Get<HeaderAttribute>().Header.c_str());
+			ImGui::PopFont();
+		}
+
+		switch (field->GetType()) 
+		{
 		case FieldType::Float: {
 			float value = field->GetValue<float>(runtime);
 			modified = ScriptFieldOfType<float>(field, value);

@@ -18,6 +18,7 @@ namespace Hazard::Scripting {
 	}
 	ScriptEngineManager::~ScriptEngineManager()
 	{
+
 	}
 	void ScriptEngineManager::Close()
 	{
@@ -73,9 +74,11 @@ namespace Hazard::Scripting {
 	void ScriptEngineManager::ReloadAll()
 	{
 		HZR_CORE_INFO("Reloading assemblies");
+
 		for (auto [type, engine] : m_ScriptEngines) {
 			engine->Reload();
 		}
+
 		ScriptCommand::InitAllEntities();
 	}
 	bool ScriptEngineManager::ModuleExists(ScriptType type, const char* moduleName) {

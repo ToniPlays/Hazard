@@ -1,8 +1,8 @@
 #pragma once
+
 #include "Hazard.h"
 #include "GUI/EditorWindow.h"
 
-using namespace Hazard::Scripting;
 
 namespace WindowElement {
 	class Console : public EditorWindow {
@@ -13,10 +13,10 @@ namespace WindowElement {
 		void Init() override;
 		void OnWindowRender() override;
 
-		void Print(Severity severity, const std::string& message);
+		void Print(Hazard::Severity severity, const std::string& message);
 	private:
 		void ClearLog() { messages.clear(); };
-		bool LogEnabled(Severity severity);
+		bool LogEnabled(Hazard::Severity severity);
 
 	private:
 
@@ -27,7 +27,6 @@ namespace WindowElement {
 		bool errorEnable = true;
 		bool traceEnable = true;
 
-		std::vector<std::pair<Severity, std::string>> messages;
-
+		std::vector<std::pair<Hazard::Severity, std::string>> messages;
 	};
 }

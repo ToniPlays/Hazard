@@ -33,6 +33,11 @@ namespace Hazard::Scripting::CSharp {
 	CSharpScript::~CSharpScript()
 	{
 		Mono::FreeHandle(m_ScriptHandle);
+
+		for (auto& [index, field] : m_Fields) {
+			delete field;
+		}
+		m_Fields.clear();
 	}
 	void CSharpScript::InitClassMethods()
 	{

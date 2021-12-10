@@ -67,6 +67,6 @@ void EditorApplication::Init()
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	return false;
+	if (!HasModule<WindowElement::EditorView>()) return false;
 	return GetModule<WindowElement::EditorView>().OnEvent(e);
 }

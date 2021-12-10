@@ -53,12 +53,6 @@ namespace WindowElement {
 			GetRenderable<T>()->SetActive(active);
 		}
 
-		template<typename T>
-		static void SetWindowFocus() {
-			EditorWindow& window = static_cast<EditorWindow&>(*s_Instance->GetRenderable<T>());
-			//ImGui::SetWindowFocus(window.GetTitle().c_str());
-		}
-
 	public:
 		static EditorView& GetInstance() { return *s_Instance; }
 		static EditorGuiPlatform& GetContext() { return *s_Instance->m_Renderer; }
@@ -68,6 +62,7 @@ namespace WindowElement {
 		void EndFrame();
 
 		void InitImGuiPlatform(Rendering::Window& window);
+		bool OnWindowFocus(WindowFocusEvent& e);
 
 	private:
 		static EditorView* s_Instance;

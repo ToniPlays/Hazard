@@ -114,7 +114,7 @@ namespace Hazard::Scripting
 			return m_InstanceData[handle]; 
 		}
 
-		void Clear() { m_Scripts.clear(); }
+		void Clear();
 		std::unordered_map<std::string, ScriptMetadata> GetScripts() { return m_Scripts; }
 		std::unordered_map<uint32_t, InstanceData> GetRegisteredInstances() { return m_InstanceData; }
 

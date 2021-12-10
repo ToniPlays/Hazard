@@ -37,21 +37,28 @@ namespace Hazard::Scripting::CSharp
 		else if (className == "Slider")
 		{
 			SliderAttribute* attrib = new SliderAttribute();
-			attrib->Min = Mono::GetFieldValue<float>(obj, "Min");
-			attrib->Max = Mono::GetFieldValue<float>(obj, "Max");
+			attrib->Min = Mono::GetFieldValue<float>(obj, "min");
+			attrib->Max = Mono::GetFieldValue<float>(obj, "max");
 			return attrib;
 		}
 		else if (className == "Range")
 		{
-			return new RangeAttribute();
+			RangeAttribute* attrib = new RangeAttribute();
+			attrib->Min = Mono::GetFieldValue<float>(obj, "min");
+			attrib->Max = Mono::GetFieldValue<float>(obj, "max");
+			return attrib;
 		}
 		else if (className == "Header")
 		{
-			return new HeaderAttribute();
+			HeaderAttribute* attrib = new HeaderAttribute();
+			attrib->Header = Mono::GetFieldValue<std::string>(obj, "header");
+			return attrib;
 		}
 		else if (className == "Tooltip")
 		{
-			return new TooltipAttribute();
+			TooltipAttribute* attrib = new TooltipAttribute();
+			attrib->Tooltip = Mono::GetFieldValue<std::string>(obj, "tooltip");
+			return attrib;
 		}
 		else if (className == "TextArea")
 		{

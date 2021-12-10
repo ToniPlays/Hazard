@@ -8,22 +8,13 @@
 
 namespace Hazard::Scripting {
 
-	enum class Severity 
-	{
-		Debug,
-		Trace,
-		Info,
-		Warning,
-		Error,
-		Critical
-	};
-
 	class ScriptCommand {
 
 	public:
 
 		static ScriptMetadata GetMetadata(const std::string& moduleName);
 		static void Init(ScriptEngineManager& manager);
+		static bool ReloadAssemblies();
 
 		static void OnBeginRuntime();
 		static void OnEndRuntime();

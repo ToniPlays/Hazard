@@ -56,10 +56,11 @@ namespace Runtime {
 			return;
 
 		if (paused) {
-			WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
+			//WindowElement::EditorView::SetWindowFocus<WindowElement::Viewport>();
 		}
-		else
-			WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
+		else {
+			//WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
+		}
 		s_ScriptManager->SetActive(!paused);
 	}
 }

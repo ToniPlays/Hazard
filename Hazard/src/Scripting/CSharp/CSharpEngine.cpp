@@ -175,5 +175,6 @@ namespace Hazard::Scripting::CSharp {
 	void CSharpEngine::Reload()
 	{
 		Mono::LoadRuntimeAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
+		m_Registry.Clear();
 	}
 }

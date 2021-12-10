@@ -22,23 +22,25 @@ namespace Hazard::Scripting
 	{
 	public:
 		float Min, Max;
-
 		ATTRIBUTE_CLASS_TYPE(Slider)
 	};
 	class RangeAttribute : public Attribute 
 	{
 	public:
+		float Min, Max;
 		ATTRIBUTE_CLASS_TYPE(Range)
 	};
 	class HeaderAttribute : public Attribute 
 	{
 	public:
+		std::string Header;
 		ATTRIBUTE_CLASS_TYPE(Header)
 	};
 	class TooltipAttribute : public Attribute 
 	{
 	public:
-		ATTRIBUTE_CLASS_TYPE(Header)
+		std::string Tooltip;
+		ATTRIBUTE_CLASS_TYPE(Tooltip)
 	};
 	class TextAreaAttribute : public Attribute 
 	{

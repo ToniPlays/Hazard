@@ -18,6 +18,7 @@ namespace Hazard::Scripting::CSharp {
 	public:
 		CSharpField() = default;
 		CSharpField(const ScriptFieldMetadata& metadata, CSharpScript* parent);
+		~CSharpField();
 	public: 
 
 		std::string GetName() override { return m_Metadata.Name; }

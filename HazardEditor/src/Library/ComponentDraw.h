@@ -274,7 +274,6 @@ namespace WindowElement {
 					Input::ScriptField(field, runtime);
 				}
 			}
-
 			}, []() {
 				Layout::MenuItem("Reload", []() {
 					Application::GetModule<ScriptEngineManager>().ReloadAll();

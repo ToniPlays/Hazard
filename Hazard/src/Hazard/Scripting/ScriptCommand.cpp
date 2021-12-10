@@ -46,6 +46,11 @@ namespace Hazard::Scripting {
 
 		Physics::PhysicsCommand::AddContact2DCallback(fn);
 	}
+	bool ScriptCommand::ReloadAssemblies() 
+	{
+		s_Manager->ReloadAll();
+		return true;
+	}
 
 	void ScriptCommand::OnBeginRuntime()
 	{

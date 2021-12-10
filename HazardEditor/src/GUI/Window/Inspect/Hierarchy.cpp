@@ -173,9 +173,7 @@ namespace WindowElement {
 
 		bool previousState = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetID(entityIDStr.c_str()));
 
-		std::stringstream ss;
-		ss << c.Tag << " (" << c.Uid << ")";
-		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, ss.str().c_str(), nullptr);
+		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, c.Tag.c_str(), nullptr);
 
 		if (isRowClicked)
 		{

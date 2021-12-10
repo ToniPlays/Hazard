@@ -13,6 +13,15 @@ namespace Hazard {
 		DX12,
 		Metal
 	};
+	enum class Severity
+	{
+		Debug,
+		Trace,
+		Info,
+		Warning,
+		Error,
+		Critical
+	};
 
 	struct ApplicationCreateInfo 
 	{

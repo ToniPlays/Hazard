@@ -13,6 +13,10 @@ namespace Hazard::Scripting::CSharp {
 		m_Script = parent;
 		m_MonoClassField = Mono::GetField(Mono::GetMonoClass(parent->GetModuleName().c_str()), metadata.Name);
 	}
+	CSharpField::~CSharpField()
+	{
+		delete m_Buffer;
+	}
 	void CSharpField::CopyStoredToRuntimeValue()
 	{
 		SetRuntimeValueInternal((void*)m_Buffer);

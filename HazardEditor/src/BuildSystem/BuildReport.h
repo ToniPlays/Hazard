@@ -3,20 +3,13 @@
 #include "Hazard.h"
 
 namespace Exporter {
-	enum class BuildMessageSeverity 
-	{
-		Info = 0,
-		Warning,
-		Error,
-		Fatal
-	};
 
 	struct BuildMessage {
 		std::string Message;
 		std::string Context;
-		BuildMessageSeverity Severity;
+		Hazard::Severity Severity;
 
-		BuildMessage(std::string message, std::string context, BuildMessageSeverity severity) : Message(message), Context(context), Severity(severity) {}
+		BuildMessage(std::string message, std::string context, Hazard::Severity severity) : Message(message), Context(context), Severity(severity) {}
 	};
 	struct BuildResource {
 		Hazard::AssetType Type;

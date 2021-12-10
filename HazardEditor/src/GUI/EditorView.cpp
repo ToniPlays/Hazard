@@ -109,8 +109,8 @@ namespace WindowElement {
 	}
 	bool EditorView::OnEvent(Event& e)
 	{
-		if (EditorView::s_Instance == nullptr)
-			return false;
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(EditorView::OnWindowFocus));
 
 		for (RenderableElement* element : m_Elements) {
 			if (element->OnEvent(e)) {
@@ -160,5 +160,11 @@ namespace WindowElement {
 			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
 		}
+	}
+	bool EditorView::OnWindowFocus(WindowFocusEvent& e)
+	{
+		if(e.GetFocus())
+			ScriptCommand::ReloadAssemblies();
+		return true;
 	}
 }

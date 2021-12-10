@@ -231,13 +231,13 @@
     <ClInclude Include="src\Hazard\Core\UUID.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Component.h">
+    <ClInclude Include="src\Hazard\Entity\Loader\Component.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\Component.h">
+    <ClInclude Include="src\Hazard\Entity\Component.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h">

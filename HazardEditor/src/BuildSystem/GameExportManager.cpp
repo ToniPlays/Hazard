@@ -42,7 +42,7 @@ namespace Exporter
 		Timer timer;
 
 		m_Report = BuildReport();
-		m_Report.AddMessage({ "Build has started", "GameExport", BuildMessageSeverity::Info });
+		m_Report.AddMessage({ "Build has started", "GameExport", Severity::Info });
 		m_Report.TotalSize = 4095;
 
 		for (auto world : m_Settings.m_Worlds) {
