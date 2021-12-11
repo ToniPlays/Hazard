@@ -30,7 +30,6 @@ namespace Editor {
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 
-		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
 		const glm::vec3& GetPosition() const { return m_Position; }

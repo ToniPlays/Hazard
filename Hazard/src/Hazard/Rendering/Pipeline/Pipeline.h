@@ -16,11 +16,8 @@ namespace Hazard::Rendering
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType;
 		float LineWidth = 1.0f;
-		VertexBufferCreateInfo* pVertexBuffer = nullptr;
-		IndexBufferCreateInfo* pIndexBuffer = nullptr;
 		Ref<RenderPass> RenderPass = nullptr;
 	};
-
 
 	class Pipeline : public RefCount {
 	public:
@@ -29,12 +26,12 @@ namespace Hazard::Rendering
 		virtual PipelineSpecification GetSpecifications() = 0;
 		virtual const PipelineSpecification GetSpecifications() const = 0;
 
-		virtual Ref<VertexBuffer> GetBuffer() = 0;
 		virtual Ref<Shader> GetShader() = 0;
 
 		virtual void Invalidate() = 0;
 		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
 		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
+		virtual void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
 
 		static Ref<Pipeline> Create(const PipelineSpecification& specs);
 	};

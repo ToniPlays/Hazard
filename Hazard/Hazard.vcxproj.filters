@@ -1838,6 +1838,7 @@
     <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
     <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
     <ClInclude Include="src\Hazard\Core\CommandLineArgs.h" />
+    <ClInclude Include="src\Hazard\Rendering\DebugRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2151,5 +2152,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
     <ClCompile Include="src\Hazard\Core\CommandLineArgs.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\DebugRenderer.cpp" />
   </ItemGroup>
 </Project>

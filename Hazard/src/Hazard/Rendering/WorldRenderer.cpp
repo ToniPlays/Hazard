@@ -33,6 +33,7 @@ namespace Hazard::Rendering
 	void WorldRenderer::End(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		RenderCommand::EndRenderPass(cmdBuffer);
+		m_FrameBuffer->Unbind();
 	}
 	void WorldRenderer::Invalidate()
 	{

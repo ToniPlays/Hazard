@@ -11,6 +11,7 @@ namespace WindowElement {
 		Properties();
 		~Properties() = default;
 
+		void OnUpdate() override;
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;
 		bool SelectionContextChange(Events::SelectionContextChange& e);

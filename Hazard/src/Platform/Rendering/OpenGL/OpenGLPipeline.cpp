@@ -35,9 +35,6 @@ namespace Hazard::Rendering::OpenGL
 		glCreateVertexArrays(1, &m_ID);
 
 		m_Shader = Shader::Create(specs.ShaderPath);
-		m_Buffer = VertexBuffer::Create(specs.pVertexBuffer);
-		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer);
-
 		Invalidate();
 	}
 	OpenGLPipeline::~OpenGLPipeline()
@@ -52,7 +49,6 @@ namespace Hazard::Rendering::OpenGL
 	{
 		m_Shader->Bind();
 		glBindVertexArray(m_ID);
-		m_Buffer->Bind();
 		const ShaderStageData& data = m_Shader->GetShaderData().Stages.at(ShaderType::Vertex);
 
 		for (auto& [location, input] : data.Inputs) {
@@ -61,8 +57,6 @@ namespace Hazard::Rendering::OpenGL
 			glVertexAttribPointer(location, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
 				GL_FALSE, data.Stride, (const void*)input.Offset);
 		}
-		if (m_IndexBuffer)
-			m_IndexBuffer->Bind();
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
@@ -71,5 +65,13 @@ namespace Hazard::Rendering::OpenGL
 
 		glLineWidth(m_Specs.LineWidth);
 		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
+	{
+		commandBuffer->GetStats().DrawCalls++;
+
+		glLineWidth(m_Specs.LineWidth);
+		glDrawArrays(m_DrawType, 0, count);
 	}
 }

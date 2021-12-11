@@ -11,8 +11,8 @@ namespace Hazard::Rendering::OpenGL
 		OpenGLVertexBuffer(VertexBufferCreateInfo* createInfo);
 		~OpenGLVertexBuffer();
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void SetData(const void* data, uint32_t size) override;
 		uint32_t GetSize() override { return m_Size; }
 
@@ -29,8 +29,8 @@ namespace Hazard::Rendering::OpenGL
 		OpenGLIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~OpenGLIndexBuffer();
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 
 		uint32_t GetCount() override { return m_Size; }
 

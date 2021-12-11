@@ -13,7 +13,7 @@ namespace WindowElement {
 
 	void EditorWindow::OnRender()
 	{
-		if (GetActive()) {
+		if (IsActive()) {
 			OnBeforeRender();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, Style::GetStyle().framePadding);
 			ImGui::Begin(m_Title.c_str(), &m_Active, m_Flags);

@@ -245,6 +245,16 @@ namespace Hazard::Rendering::Vulkan {
 		return VK_POLYGON_MODE_FILL;
 	}
 
+	VkPrimitiveTopology VKUtils::DrawTypeToVKTopology(const DrawType& type)
+	{
+		switch (type) {
+		case DrawType::Fill: return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case DrawType::Line: return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+		case DrawType::Point: return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+		}
+		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
+	}
+
 	void VKUtils::SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
 		VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
 	{

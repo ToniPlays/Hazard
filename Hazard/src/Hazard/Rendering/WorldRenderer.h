@@ -5,19 +5,20 @@
 #include "Pipeline/FrameBuffer.h"
 #include "RenderCommandBuffer.h"
 #include "RenderCommandQueue.h"
-#include "2D/Renderer2D.h"
 
 #include <glm/glm.hpp>
 
 namespace Hazard::Rendering 
 {
-	enum class WorldRenderFlags
+	enum WorldRenderFlags_
 	{
-		Enabled = BIT(0),
-		Geometry = BIT(1),
-		Quads = BIT(2),
-		Lines = BIT(3),
-		Points = BIT(4)
+		Enabled =			BIT(0),
+		Geometry =			BIT(1),
+		Quads =				BIT(2),
+		Lines =				BIT(3),
+		Points =			BIT(4),
+		DirectionalLight =	BIT(5),
+		PointLight =		BIT(6)
 	};
 
 	struct WorldRendererSettings
@@ -28,7 +29,7 @@ namespace Hazard::Rendering
 		Ref<FrameBuffer> Target = nullptr;
 		bool SwapchainTarget = false;
 		bool IsDebugRenderer = false;
-		WorldRenderFlags Flags;
+		int Flags;
 	};
 
 	class WorldRenderer : public RefCount
@@ -48,7 +49,6 @@ namespace Hazard::Rendering
 
 		Ref<Image2D> GetFinalPassImage() { return m_FrameBuffer->GetImage(); }
 		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }
-
 
 		static Ref<WorldRenderer> Create() { return Ref<WorldRenderer>::Create(); };
 		static Ref<WorldRenderer> Create(WorldRendererSettings* settings) { return Ref<WorldRenderer>::Create(settings); };

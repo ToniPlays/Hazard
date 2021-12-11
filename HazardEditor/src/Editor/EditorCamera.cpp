@@ -68,17 +68,17 @@ namespace Editor {
 			xSpeed *= size2D * 2.0f;
 			ySpeed *= size2D * 2.0f;
 			m_FocalPoint += -GetRightDirection() * delta.x * xSpeed;
-			m_FocalPoint += GetUpDirection()* delta.y* ySpeed;
+			m_FocalPoint += Math::GetUpDirection(GetOrientation()) * delta.y* ySpeed;
 			return;
 		}
 
 		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
-		m_FocalPoint += GetUpDirection() * delta.y * ySpeed * distance;
+		m_FocalPoint += Math::GetUpDirection(GetOrientation()) * delta.y * ySpeed * distance;
 	}
 
 	void EditorCamera::MouseRotate(const glm::vec2& delta)
 	{
-		float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
+		float yawSign = Math::GetUpDirection(GetOrientation()).y < 0 ? -1.0f : 1.0f;
 		yaw += yawSign * delta.x * RotationSpeed();
 		pitch += delta.y * RotationSpeed();
 	}
@@ -128,10 +128,6 @@ namespace Editor {
 	glm::vec3 EditorCamera::CalculatePosition() const
 	{
 		return m_FocalPoint - GetForwardDirection() * distance;
-	}
-	glm::vec3 EditorCamera::GetUpDirection() const
-	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::vec3 EditorCamera::GetRightDirection() const

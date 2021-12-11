@@ -1,14 +1,15 @@
 #pragma once
 #include "hzrpch.h"
 #include "RenderCommandQueue.h"
+#include "Hazard/PerformanceProfiler.h"
 
 namespace Hazard::Rendering {
 
-	RenderCommandQueue::RenderCommandQueue()
+	RenderCommandQueue::RenderCommandQueue(size_t size)
 	{
-		m_CommandBuffer = new uint8_t[10 * 1024 * 1024];
+		m_CommandBuffer = new uint8_t[size];
 		m_CommandBufferPtr = m_CommandBuffer;
-		memset(m_CommandBuffer, 0, 10 * 1024 * 1024);
+		memset(m_CommandBuffer, 0, size);
 	}
 	RenderCommandQueue::~RenderCommandQueue()
 	{
@@ -30,6 +31,7 @@ namespace Hazard::Rendering {
 	}
 	void RenderCommandQueue::Excecute()
 	{
+		HZ_SCOPE_PERF("RenderCommandQueue::Execute");
 		byte* buffer = m_CommandBuffer;
 
 		for (uint32_t i = 0; i < m_CommandCount; i++) {

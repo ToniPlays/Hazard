@@ -18,7 +18,7 @@ namespace WindowElement {
 		virtual void OnAfterRender() {};
 		virtual bool OnEvent(Hazard::Event& e) override { return false; };
 
-		bool GetActive() { return m_Active; }
+		bool IsActive() { return m_Active; }
 		bool IsFocused() { return m_Focused; }
 		bool IsHovered() { return m_Hovered; }
 

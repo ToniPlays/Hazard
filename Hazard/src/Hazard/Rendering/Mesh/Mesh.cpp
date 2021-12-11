@@ -50,8 +50,6 @@ namespace Hazard::Rendering {
         spec.Usage = PipelineUsage::GraphicsBit;
         spec.DrawType = DrawType::Fill;
         spec.LineWidth = 1.0f;
-        spec.pVertexBuffer = &vertexInfo;
-        spec.pIndexBuffer = &indexInfo;
         spec.ShaderPath = "Shaders/pbr.glsl";
         spec.RenderPass = renderPass;
 

@@ -11,13 +11,19 @@ namespace WindowElement
 {
 	void EditorMainTab::Init()
 	{
-		PushRenderable<Viewport>();
 		PushRenderable<GameViewport>();
+		PushRenderable<Viewport>();
 		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<Console>();
 		PushRenderable<FileView>();
 		PushRenderable<MaterialInspector>();
+	}
+	void EditorMainTab::OnUpdate()
+	{
+		for (RenderableElement* element : GetElements()) {
+			element->OnUpdate();
+		}
 	}
 	void EditorMainTab::Render()
 	{

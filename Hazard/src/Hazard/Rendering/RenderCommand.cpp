@@ -2,7 +2,8 @@
 #include <hzrpch.h>
 #include "RenderCommand.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
-#include "Hazard/Rendering/2D/Renderer2D.h"
+#include "2D/Renderer2D.h"
+#include "DebugRenderer.h"
 
 namespace Hazard::Rendering
 {
@@ -38,9 +39,16 @@ namespace Hazard::Rendering
 			s_Engine->Get2D().Submit(quad);
 			});
 	}
-	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3 end, const Color color)
+	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color)
 	{
-		//s_Engine->GetDebugRenderer()->SubmitLine();
+		Line line;
+		line.Start = start;
+		line.End = end;
+		line.Color = { color.r, color.g, color.b, color.a };
+
+		s_Engine->Submit([line]() mutable {
+			s_Engine->GetDebugRenderer().SubmitLine(line);
+			});
 	}
 	void RenderCommand::Clear()
 	{

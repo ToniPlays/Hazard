@@ -83,7 +83,6 @@ namespace WindowElement {
 			Layout::TableNext();
 			Layout::MaxWidth();
 
-
 			if (ImGui::BeginCombo("##Projection", currentProjectionTypeString)) {
 				for (int i = 0; i < 2; i++) {
 					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];

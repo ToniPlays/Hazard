@@ -26,7 +26,7 @@ namespace Hazard::Rendering
 		static void DrawScreenSpaceQuad() {};
 
 		//Debug rendering
-		static void DrawLine(const glm::vec3& start, const glm::vec3 end, const Color color);
+		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color);
 
 		static void DrawMesh() {};
 		static void DrawAnimatedMesh() {};

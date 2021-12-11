@@ -22,24 +22,24 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glDeleteBuffers(1, &m_ID);
 	}
-	void OpenGLVertexBuffer::Bind()
+	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 	}
-	void OpenGLVertexBuffer::Unbind()
+	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
 	{
-		Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		m_Usage = info->Usage;
 		glGenBuffers(1, &m_ID);
-		Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 
 		if (info->Data != nullptr)
 			SetData(info->Data, info->Size);
@@ -48,11 +48,11 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glDeleteBuffers(1, &m_ID);
 	}
-	void OpenGLIndexBuffer::Bind()
+	void OpenGLIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
 	}
-	void OpenGLIndexBuffer::Unbind()
+	void OpenGLIndexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}

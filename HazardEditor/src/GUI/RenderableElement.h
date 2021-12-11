@@ -14,6 +14,7 @@ namespace WindowElement
 		virtual void OnFrameBegin() {};
 		virtual void OnFrameEnd() {};
 		virtual void OnMenuRender() {};
+		virtual void OnUpdate() {};
 		virtual void OnRender() {};
 		virtual bool OnEvent(Hazard::Event& e) { return false; };
 	};

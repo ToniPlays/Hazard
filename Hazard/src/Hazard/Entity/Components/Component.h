@@ -29,6 +29,10 @@ namespace Hazard::ECS {
 		{
 			return Math::ToTransformMatrix(Translation, Rotation);
 		}
+		inline glm::quat GetOrientation() 
+		{
+			return glm::quat(Rotation);
+		}
 	};
 
 	struct ScriptComponent 

@@ -60,6 +60,7 @@ namespace Hazard {
 	{
 		uint32_t MaxQuadCount = 35000;
 		uint32_t SamplerCount = 0;
+		bool Enabled = true;
 	};
 	struct ScriptEngineCreateInfo 
 	{

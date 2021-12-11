@@ -46,6 +46,7 @@ namespace Hazard::Rendering::Vulkan
 		static VkFilter GetSamplerFilter(const FilterMode& filter);
 		static VkSamplerAddressMode GetSamplerWrap(const ImageWrap& wrap);
 		static VkPolygonMode DrawTypeToVKType(const DrawType& type);
+		static VkPrimitiveTopology DrawTypeToVKTopology(const DrawType& type);
 
 		static void SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout,
 			VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,

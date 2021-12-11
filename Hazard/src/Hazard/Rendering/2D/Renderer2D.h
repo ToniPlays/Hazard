@@ -5,7 +5,7 @@
 #include "../Image/Image2D.h"
 #include "../RenderCommandBuffer.h"
 #include "../Batch.h"
-
+#include "../WorldRenderer.h"
 
 namespace Hazard::Rendering 
 {
@@ -47,8 +47,7 @@ namespace Hazard::Rendering
 		void Submit(Quad quad);
 
 		void SetTargetRenderPass(Ref<RenderPass> renderPass);
-
-		void BeginWorld(const RenderPassData& renderPassData);
+		void BeginWorld(const RenderPassData& renderPassData, WorldRenderFlags_ flags);
 		void BeginBatch();
 		void Flush();
 		void EndWorld();
@@ -58,8 +57,11 @@ namespace Hazard::Rendering
 	private:
 		Renderer2DData m_Data;
 		Ref<Pipeline> m_Pipeline;
+		Ref<VertexBuffer> m_VertexBuffer;
+		Ref<IndexBuffer> m_IndexBuffer;
 
 		Batch<Vertex2D> m_QuadBatch;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		WorldRenderFlags_ m_CurrentFlags;
 	};
 }

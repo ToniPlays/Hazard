@@ -15,9 +15,6 @@ namespace Hazard::Rendering::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
-
-		m_VertexBuffer = VertexBuffer::Create(specs.pVertexBuffer).As<VulkanVertexBuffer>();
-		m_IndexBuffer = IndexBuffer::Create(specs.pIndexBuffer).As<VulkanIndexBuffer>();
 		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
 
 		Invalidate();
@@ -64,7 +61,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		inputAssembly.topology = VKUtils::DrawTypeToVKTopology(m_Specs.DrawType);
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
 
 		VkViewport viewport = {};
@@ -162,28 +159,32 @@ namespace Hazard::Rendering::Vulkan
 		}
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
-	{	
+	{
 		RenderContextCommand::Submit([=]() {
-			VkBuffer vertexBuffer = m_VertexBuffer->GetVulkanBuffer();
 			VkDeviceSize offsets[1] = { 0 };
 
 			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
 			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-			vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vertexBuffer, offsets);
-			vkCmdBindIndexBuffer(cmdBuffer, m_IndexBuffer->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32);
 			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
-		});
+			});
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
 		commandBuffer->GetStats().IndexCount += count;
-		commandBuffer->GetStats().VertexCount += m_VertexBuffer->GetSize();
 		commandBuffer->GetStats().DrawCalls++;
 
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
+	}
+	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
+	{
+		commandBuffer->GetStats().DrawCalls++;
+
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		vkCmdDraw(cmdBuffer, count, 1, 0, 0);
 	}
 }

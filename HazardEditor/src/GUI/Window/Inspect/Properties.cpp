@@ -15,15 +15,41 @@ namespace WindowElement {
 	Properties::Properties() : EditorWindow(ICON_FK_WRENCH " Properties")
 	{
 	}
+	void Properties::OnUpdate()
+	{
+		if (!selectionContext.IsValid()) return;
+
+		if (selectionContext.HasComponent<CameraComponent>())
+		{
+			auto& comp = selectionContext.GetComponent<CameraComponent>();
+			auto& tc = selectionContext.GetComponent<TransformComponent>();
+
+			std::vector<glm::vec3> points = Math::GetProjectionBounds(tc.GetOrientation(), tc.GetTransformMat4(), comp.GetFov(),
+				comp.GetClipping().x, comp.GetClipping().y, comp.GetAspectRatio());
+
+			for (uint32_t i = 0; i < 4; i++) 
+			{
+				RenderCommand::DrawLine(points[i] + tc.Translation, points[(i + 1) % 4] + tc.Translation, Color::White);
+			}
+			for (uint32_t i = 0; i < 4; i++) 
+			{
+				RenderCommand::DrawLine(points[i] + tc.Translation, points[i + 4] + tc.Translation, Color::White);
+			}
+			for (uint32_t i = 0; i < 4; i++) 
+			{
+				RenderCommand::DrawLine(points[i + 4] + tc.Translation, points[((i + 1) % 4) + 4] + tc.Translation, Color::White);
+			}
+		}
+	}
 	void Properties::OnWindowRender()
 	{
 		if (!selectionContext.IsValid()) return;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
 
-		if(ImGui::Button(ICON_FK_CUBE, { 35, 35 })) 
+		if (ImGui::Button(ICON_FK_CUBE, { 35, 35 }))
 		{
-			
+
 		}
 		Layout::Tooltip("Gizmo maybe?");
 		Layout::SameLine(0, 2);
@@ -74,8 +100,6 @@ namespace WindowElement {
 		DrawComponent<BatchComponent>("Batch", selectionContext);
 
 		ContextMenus::PropertiesContextMenu(selectionContext);
-
-		
 	}
 	bool Properties::OnEvent(Event& e)
 	{
@@ -85,7 +109,7 @@ namespace WindowElement {
 	}
 	bool Properties::SelectionContextChange(Events::SelectionContextChange& e)
 	{
-		if(!IsLocked()) 
+		if (!IsLocked())
 			selectionContext = e.GetEntity();
 		return false;
 	}

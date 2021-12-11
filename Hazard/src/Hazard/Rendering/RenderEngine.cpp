@@ -6,6 +6,7 @@
 #include "Loaders/Loaders.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "2D/Renderer2D.h"
+#include "DebugRenderer.h"
 #include "Mesh/MeshFactory.h"
 #include "WorldRenderer.h"
 
@@ -14,7 +15,7 @@ namespace Hazard::Rendering
 	RenderEngine::RenderEngine(RenderEngineCreateInfo* info) : Module("RenderEngine")
 	{
 		HZR_PROFILE_FUNCTION();
-		SetActive(true);
+		SetActive(info->Enabled);
 
 		RenderCommand::s_Engine = this;
 		RenderCommand::s_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
@@ -38,10 +39,12 @@ namespace Hazard::Rendering
 		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
 
+		m_DebugRenderer = new DebugRenderer(1500, m_RenderCommandBuffer);
 	}
 	RenderEngine::~RenderEngine()
 	{
 		delete m_Renderer2D;
+		delete m_DebugRenderer;
 	}
 	void RenderEngine::Render()
 	{
@@ -49,21 +52,32 @@ namespace Hazard::Rendering
 		{
 			worldRenderer->Invalidate();
 		}
+
 		m_RenderCommandBuffer->Begin();
 
 		for (auto& worldRenderer : WorldRenderer::s_Renderers)
 		{
+			if (!worldRenderer->IsValid()) continue;
+
 			worldRenderer->Begin(m_RenderCommandBuffer, m_Queue);
-			if (worldRenderer->IsValid()) {
-				if ((uint32_t)worldRenderer->m_Settings.Flags & (uint32_t)WorldRenderFlags::Enabled) {
-					m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
+
+			if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Enabled)
+			{
+				m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
+				if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Geometry)
+				{
 					m_Renderer2D->SetTargetRenderPass(worldRenderer->GetRenderPass());
-					m_Renderer2D->BeginWorld(m_RenderPassData);
+					m_DebugRenderer->SetTargetRenderPass(worldRenderer->GetRenderPass());
+
+					m_Renderer2D->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
+					m_DebugRenderer->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
+
 					m_Queue->Excecute();
 					m_Renderer2D->EndWorld();
+					m_DebugRenderer->EndWorld();
 				}
-				worldRenderer->End(m_RenderCommandBuffer);
 			}
+			worldRenderer->End(m_RenderCommandBuffer);
 		}
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();

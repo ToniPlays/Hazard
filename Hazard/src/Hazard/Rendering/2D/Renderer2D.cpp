@@ -28,6 +28,9 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
+		if (!(m_CurrentFlags & WorldRenderFlags_::Geometry)) 
+			return;
+
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices)
 		{
 			Flush();
@@ -61,8 +64,9 @@ namespace Hazard::Rendering
 			m_Pipeline = Pipeline::Create(specs);
 		}
 	}
-	void Renderer2D::BeginWorld(const RenderPassData& renderPassData)
+	void Renderer2D::BeginWorld(const RenderPassData& renderPassData, WorldRenderFlags_ flags)
 	{
+		m_CurrentFlags = flags;
 		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
 		BeginBatch();
 	}
@@ -81,12 +85,14 @@ namespace Hazard::Rendering
 		Ref<Shader> shader = m_Pipeline->GetShader();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
-{
+		{
 			m_Data.TextureSlots[i]->Bind(i);
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 		}
 
-		m_Pipeline->GetBuffer()->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+		m_VertexBuffer->Bind(m_RenderCommandBuffer);
+		m_IndexBuffer->Bind(m_RenderCommandBuffer);
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
 		m_RenderCommandBuffer->GetStats().QuadCount += m_QuadBatch.GetCount() / 4.0f;
 	}
@@ -120,29 +126,19 @@ namespace Hazard::Rendering
 			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
+			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
+
 			IndexBufferCreateInfo indexBuffer = {};
 			indexBuffer.Data = indices;
 			indexBuffer.Size = m_Data.MaxIndices;
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
-			std::vector<FrameBufferAttachment> attachments = { ImageFormat::RGBA32F, ImageFormat::Depth };
-
-			FrameBufferCreateInfo frameBufferInfo = {};
-			frameBufferInfo.SwapChainTarget = true;
-			frameBufferInfo.ClearOnLoad = true;
-			frameBufferInfo.Attachments = attachments;
-			frameBufferInfo.AttachmentCount = 2;
-			frameBufferInfo.Samples = 1;
-			frameBufferInfo.ClearColor = { 0.1f, 0.5f, 0.5f, 1.0f };
-			frameBufferInfo.DebugName = "Renderer2D FrameBuffer";
-
-			Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 
 			PipelineSpecification pipelineSpecs = {};
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
+			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-			pipelineSpecs.pVertexBuffer = &vertexInfo;
-			pipelineSpecs.pIndexBuffer = &indexBuffer;
 			pipelineSpecs.RenderPass = std::move(renderPass);
 
 			m_Pipeline = Pipeline::Create(pipelineSpecs);

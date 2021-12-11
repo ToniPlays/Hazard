@@ -33,6 +33,7 @@ void EditorApplication::PreInit()
 	RenderEngineCreateInfo engineInfo = {};
 	engineInfo.MaxQuadCount = 15000;
 	engineInfo.SamplerCount = 32;
+	engineInfo.Enabled = true;
 
 	AudioEngineCreateInfo audioInfo = {};
 

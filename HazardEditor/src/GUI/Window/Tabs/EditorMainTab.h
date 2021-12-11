@@ -9,6 +9,7 @@ namespace WindowElement {
 		EditorMainTab() : EditorTabWindow("Editor") {};
 
 		virtual void Init() override;
+		virtual void OnUpdate() override;
 		virtual void Render() override;
 		bool OnEvent(Event& e) override;
 	};

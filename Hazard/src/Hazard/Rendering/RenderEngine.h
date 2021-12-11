@@ -5,18 +5,16 @@
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "RenderCommandBuffer.h"
 #include "RenderCommandQueue.h"
-#include "Pipeline/Buffers.h"
-#include "Texture.h"
-#include "Mesh/Mesh.h"
-#include "Image/Image2D.h"
 #include "Pipeline/FrameBuffer.h"
+#include "Texture.h"
 #include "Camera.h"
 
 namespace Hazard::Rendering {
 
-	struct RenderPassData {
+	class DebugRenderer;
+	struct RenderPassData 
+	{
 		glm::mat4 ViewProjection;
-		glm::vec4 CameraPosition;
 	};
 
 	class Renderer2D;
@@ -38,8 +36,6 @@ namespace Hazard::Rendering {
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (Func*)ptr;
 				(*pFunc)();
-
-				pFunc->~Func();
 			};
 
 			auto storageBuffer = m_Queue->Allocate(renderCmd, sizeof(fn));
@@ -50,9 +46,11 @@ namespace Hazard::Rendering {
 		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }
 
 		Renderer2D& Get2D() { return *m_Renderer2D; }
+		DebugRenderer& GetDebugRenderer() { return *m_DebugRenderer; }
 
 	private:
 		Renderer2D* m_Renderer2D;
+		DebugRenderer* m_DebugRenderer;
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		RenderCommandQueue* m_Queue;

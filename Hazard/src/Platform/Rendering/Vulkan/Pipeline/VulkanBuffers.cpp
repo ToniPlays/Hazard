@@ -65,11 +65,14 @@ namespace Hazard::Rendering::Vulkan
 		VulkanAllocator allocator("VertexBuffer");
 		allocator.DestroyBuffer(buffer, allocation);
 	}
-	void VulkanVertexBuffer::Bind()
+	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(vkCmdBuffer, 0, 1, &m_Buffer, offsets);
 	}
-	void VulkanVertexBuffer::Unbind()
+	void VulkanVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 
 	}
@@ -98,11 +101,14 @@ namespace Hazard::Rendering::Vulkan
 		VulkanAllocator allocator("IndexBuffer");
 		allocator.DestroyBuffer(buffer, allocation);
 	}
-	void VulkanIndexBuffer::Bind()
+	void VulkanIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindIndexBuffer(vkCmdBuffer, m_Buffer, 0, VK_INDEX_TYPE_UINT32);
 	}
-	void VulkanIndexBuffer::Unbind()
+	void VulkanIndexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 
 	}

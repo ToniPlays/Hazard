@@ -7,7 +7,7 @@ namespace Hazard::Rendering
 	public:
 
 		typedef void(*RenderCommandFn)(void*);
-		RenderCommandQueue();
+		RenderCommandQueue(size_t size = 10 * 1024 * 1024);
 		~RenderCommandQueue();
 
 		void* Allocate(RenderCommandFn func, uint32_t size);

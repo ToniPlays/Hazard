@@ -14,6 +14,7 @@ namespace Hazard::ECS
 		void SetFov(float fov);
 		void SetZNear(float plane);
 		void SetZFar(float plane);
+		float GetAspectRatio() { return m_Width / m_Height; }
 		void RecalculateProjection(float w, float h);
 
 		Projection GetProjectionType() { return m_Type; }

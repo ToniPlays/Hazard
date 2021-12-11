@@ -12,8 +12,11 @@ namespace WindowElement {
 		
 	void GameViewport::Init()
 	{
+		SetActive(Application::HasModule<RenderEngine>());
+		if (!IsActive()) return;
+
 		WorldRendererSettings settings = {};
-		settings.Flags = WorldRenderFlags::Enabled;
+		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry;
 		settings.ClearColor = Color::FromHex("#646464");
 		m_Renderer = WorldRenderer::Create(&settings);
 	}

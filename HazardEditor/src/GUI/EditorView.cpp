@@ -87,6 +87,12 @@ namespace WindowElement {
 		PushRenderable<BuildWindow>();
 		PushRenderable<ScriptEngineDebug>();
 	}
+	void EditorView::Update()
+	{
+		for (RenderableElement* element : m_Elements) {
+			element->OnUpdate();
+		}
+	}
 	void EditorView::Render()
 	{
 		BeginFrame();

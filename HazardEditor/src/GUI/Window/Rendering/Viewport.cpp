@@ -19,16 +19,18 @@ namespace WindowElement {
 
 	Viewport::Viewport() : EditorWindow(ICON_FK_GLOBE " Viewport")
 	{
+
 	}
 	void Viewport::Init()
 	{
 		SetActive(Application::HasModule<RenderEngine>());
+		if (!IsActive()) return;
 
 		WorldRendererSettings settings = {};
 		settings.Camera = &m_EditorCamera;
 		settings.ViewportSize = { 1920, 1080 };
 		settings.ClearColor = Color::FromHex("#101010");
-		settings.Flags = WorldRenderFlags::Enabled;
+		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
 	}
 	void Viewport::OnWindowRender()
