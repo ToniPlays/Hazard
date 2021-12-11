@@ -33,7 +33,6 @@ namespace Hazard::Scripting::CSharp {
 	void ScriptRegistery::BindRegistery(BindMap bindings) 
 	{
 		for (auto& [name, method] : bindings) {
-			//std::cout << name << std::endl;
 			mono_add_internal_call(name, method);
 		}
 	}

@@ -2,9 +2,10 @@
 #include <hzrpch.h>
 #include "File.h"
 
-#include <shlobj.h>
 #include "Hazard/Core/PlatrofmUtils.h"
 #include "StringUtil.h"
+
+#include <shlobj.h>
 
 namespace Hazard {
 
@@ -106,8 +107,8 @@ namespace Hazard {
 	}
 	Buffer File::ReadBinaryFile(const std::filesystem::path& path)
 	{
+		Timer timer;
 		std::ifstream stream(path, std::ios::binary | std::ios::ate);
-
 		Buffer result;
 
 		if (!stream.is_open())
@@ -117,14 +118,18 @@ namespace Hazard {
 		auto size = stream.tellg();
 		stream.seekg(0, std::ios::beg);
 
+
 		if (size == 0)
 			return result;
 
 		result.Allocate(size);
 
-		if (!stream.read((char*)result.Data, size)) {
+		if (!stream.read((char*)result.Data, size))
+		{
 			HZR_CORE_ERROR("Cannot read file: {0}", path.string());
 		}
+
+		stream.close();
 		return result;
 	}
 	bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer)

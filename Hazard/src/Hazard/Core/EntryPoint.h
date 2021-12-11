@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <windows.h>
 #include "Hazard/Core/HazardLoop.h"
+#include "Hazard/Core/CommandLineArgs.h"
 
 #include <stdio.h>
 
@@ -22,10 +23,13 @@ extern Hazard::Application* Hazard::CreateApplication();
 	#ifdef HZR_DEBUG
 
 		#pragma comment( linker, "/subsystem:console" )
-		int main()
+		int main(int* argc, char* argv[])
 		{
 			using namespace Hazard;
+
+			CommandLineArgs::Init(reinterpret_cast<int>(argc), argv);
 			Application* app = CreateApplication();
+
 			Core::HazardLoop loop(app);
 			loop.Start();
 			while (!loop.ShouldClose()) {

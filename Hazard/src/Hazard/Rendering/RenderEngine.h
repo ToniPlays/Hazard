@@ -25,7 +25,7 @@ namespace Hazard::Rendering {
 	{
 		friend class RenderCommand;
 	public:
-		RenderEngine(RenderEngineCreateInfo* info, RenderAPI api);
+		RenderEngine(RenderEngineCreateInfo* info);
 		~RenderEngine();
 
 		void Render() override;
@@ -47,11 +47,8 @@ namespace Hazard::Rendering {
 		}
 		 
 		bool OnResize(WindowResizeEvent& e);
-		void SetCamera(Camera* camera) { m_RenderingCamera = camera; }
-
-		Ref<Image2D> GetFinalPassImage() { return m_RenderPass->GetSpecs().TargetFrameBuffer->GetImage(); }
-		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }
 		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }
+
 		Renderer2D& Get2D() { return *m_Renderer2D; }
 
 	private:
@@ -60,9 +57,5 @@ namespace Hazard::Rendering {
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		RenderCommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;
-		Ref<RenderPass> m_RenderPass;
-		Ref<FrameBuffer> m_FrameBuffer;
-		Camera* m_RenderingCamera = nullptr;
-
 	};
 }

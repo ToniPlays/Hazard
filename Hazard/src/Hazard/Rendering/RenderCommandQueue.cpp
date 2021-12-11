@@ -41,7 +41,5 @@ namespace Hazard::Rendering {
 			func(buffer);
 			buffer += size;
 		}
-		m_CommandBufferPtr = m_CommandBuffer;
-		m_CommandCount = 0;
 	}
 }

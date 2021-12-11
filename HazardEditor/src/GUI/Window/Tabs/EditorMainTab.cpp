@@ -11,8 +11,8 @@ namespace WindowElement
 {
 	void EditorMainTab::Init()
 	{
-		PushRenderable<GameViewport>();
 		PushRenderable<Viewport>();
+		PushRenderable<GameViewport>();
 		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<Console>();

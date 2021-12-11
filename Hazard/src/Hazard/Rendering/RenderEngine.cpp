@@ -7,16 +7,17 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "2D/Renderer2D.h"
 #include "Mesh/MeshFactory.h"
+#include "WorldRenderer.h"
 
 namespace Hazard::Rendering
 {
-	RenderEngine::RenderEngine(RenderEngineCreateInfo* info, RenderAPI api) : Module("RenderEngine")
+	RenderEngine::RenderEngine(RenderEngineCreateInfo* info) : Module("RenderEngine")
 	{
 		HZR_PROFILE_FUNCTION();
 		SetActive(true);
 
 		RenderCommand::s_Engine = this;
-		RenderCommand::s_Api = api;
+		RenderCommand::s_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
 
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
@@ -35,26 +36,8 @@ namespace Hazard::Rendering
 		whiteTextureInfo.Format = ImageFormat::RGBA;
 
 		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
-
-		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.SwapChainTarget = false;
-		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-		frameBufferInfo.ClearOnLoad = true;
-		frameBufferInfo.ClearColor = Color::Black;
-		frameBufferInfo.DebugName = "Mesh3D";
-		frameBufferInfo.Width = 1920;
-		frameBufferInfo.Height = 1080;
-
-		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
-
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "MainRenderPass";
-		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
-
-		m_RenderPass = RenderPass::Create(&renderPassInfo);
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
-		m_Renderer2D->Recreate(m_RenderPass);
+
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -62,18 +45,29 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Render()
 	{
+		for (auto& worldRenderer : WorldRenderer::s_Renderers)
+		{
+			worldRenderer->Invalidate();
+		}
 		m_RenderCommandBuffer->Begin();
-		m_RenderPassData.ViewProjection = m_RenderingCamera->GetViewPprojection();
-		
-		RenderCommand::BeginRenderPass(m_RenderCommandBuffer, m_RenderPass);
-		m_Renderer2D->BeginWorld(m_RenderPassData);
 
-		m_Queue->Excecute();
-		m_Renderer2D->EndWorld();
-
-		RenderCommand::EndRenderPass(m_RenderCommandBuffer);
+		for (auto& worldRenderer : WorldRenderer::s_Renderers)
+		{
+			worldRenderer->Begin(m_RenderCommandBuffer, m_Queue);
+			if (worldRenderer->IsValid()) {
+				if ((uint32_t)worldRenderer->m_Settings.Flags & (uint32_t)WorldRenderFlags::Enabled) {
+					m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
+					m_Renderer2D->SetTargetRenderPass(worldRenderer->GetRenderPass());
+					m_Renderer2D->BeginWorld(m_RenderPassData);
+					m_Queue->Excecute();
+					m_Renderer2D->EndWorld();
+				}
+				worldRenderer->End(m_RenderCommandBuffer);
+			}
+		}
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();
+		m_Queue->Clear();
 	}
 	bool RenderEngine::OnEvent(Event& e)
 	{
@@ -86,10 +80,6 @@ namespace Hazard::Rendering
 	}
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{
-		if (e.GetWidth() == 0 || e.GetHeight() == 0 && !m_RenderPass->GetSpecs().TargetFrameBuffer->GetSpecification().SwapChainTarget) return false;
-
-		if(m_RenderingCamera != nullptr)
-			m_RenderingCamera->SetViewport(e.GetWidth(), e.GetHeight());
-		return true;
+		return false;
 	}
 }

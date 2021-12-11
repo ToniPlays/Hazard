@@ -17,7 +17,8 @@ namespace Hazard::Rendering
 		quad.Color = tint;
 		quad.Texture = texture;
 
-		s_Engine->Submit([quad]() mutable {
+		s_Engine->Submit([quad]() mutable 
+			{
 			s_Engine->Get2D().Submit(quad);
 			});
 	}

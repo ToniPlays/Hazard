@@ -59,6 +59,8 @@ namespace Hazard::Rendering::Vulkan
 	{
 		if (m_Image) 
 			m_Image->Release();
+
+		HZR_CORE_ERROR("Destroyed Texture2D {0}", GetMetadata().Path.string());
 	}
 	void VulkanTexture2D::Bind(uint32_t slot) const
 	{

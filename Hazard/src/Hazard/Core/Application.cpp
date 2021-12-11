@@ -30,6 +30,7 @@ namespace Hazard {
 		PushModule<Logging::Logger>();
 #endif // HZR_RELEASE
 
+
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
@@ -39,7 +40,7 @@ namespace Hazard {
 		if (info->RendererInfo != nullptr) 
 		{
 			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-			PushModule<Rendering::RenderEngine>(info->RendererInfo, info->RenderContextInfo->Renderer);
+			PushModule<Rendering::RenderEngine>(info->RendererInfo);
 		}
 
 		if (info->AudioEngine) 

@@ -12,6 +12,10 @@ namespace Hazard::Rendering
 
 		void* Allocate(RenderCommandFn func, uint32_t size);
 		void Excecute();
+		void Clear() {
+			m_CommandBufferPtr = m_CommandBuffer;
+			m_CommandCount = 0;
+		};
 
 	private:
 		uint8_t* m_CommandBuffer;

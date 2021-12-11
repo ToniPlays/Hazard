@@ -60,7 +60,8 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
-		if (!force && (width == m_Specs.Width && height == m_Specs.Height)) return;
+		if (!force && (width == m_Specs.Width && height == m_Specs.Height)) 
+			return;
 
 		m_Specs.Width = width;
 		m_Specs.Height = height;
@@ -88,7 +89,8 @@ namespace Hazard::Rendering::Vulkan
 	{
 		auto device = VulkanContext::GetDevice();
 
-		if (m_FrameBuffer) {
+		if (m_FrameBuffer) 
+		{
 			device->WaitUntilIdle();
 			vkDestroyFramebuffer(device->GetDevice(), m_FrameBuffer, nullptr);
 

@@ -25,6 +25,7 @@ namespace Hazard::Rendering {
 
 	public:
 		static const char* APIToString(RenderAPI api);
+		static RenderAPI StringToApi(const std::string& api);
 
 	private:
 		void Process(Event& e);

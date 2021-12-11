@@ -10,7 +10,6 @@ namespace Hazard::Rendering
         Texture2DCreateInfo info = {};
         info.FilePath = metadata.Path.string();
         asset = Texture2D::Create(&info);
-
         return asset;
     }
     bool MeshLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
@@ -18,7 +17,6 @@ namespace Hazard::Rendering
         MeshCreateInfo meshCreateInfo = {};
         meshCreateInfo.Path = metadata.Path.string();
         asset = MeshFactory::LoadMesh(meshCreateInfo);
-
         return asset;
     }
 }

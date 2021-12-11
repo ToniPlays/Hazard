@@ -20,7 +20,7 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
-	contextInfo.Renderer = RenderAPI::Vulkan;
+	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>();
 	contextInfo.ImagesInFlight = 2;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;

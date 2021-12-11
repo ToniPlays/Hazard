@@ -4,6 +4,7 @@
 #include "Library/Input.h"
 
 using namespace Hazard;
+using namespace WindowLayout;
 
 namespace WindowElement {
 
@@ -11,11 +12,10 @@ namespace WindowElement {
 		
 	void GameViewport::Init()
 	{
-		SetActive(true);
-
-		//Rendering::FrameBufferCreateInfo createInfo;
-		//createInfo.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
-		//m_RenderTexture = RenderUtils::Create<FrameBuffer>(createInfo);
+		WorldRendererSettings settings = {};
+		settings.Flags = WorldRenderFlags::Enabled;
+		settings.ClearColor = Color::FromHex("#646464");
+		m_Renderer = WorldRenderer::Create(&settings);
 	}
 	void GameViewport::OnWindowRender()
 	{
@@ -34,18 +34,15 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		if (size.x != m_Width || size.y != m_Height) {
+		if (size.x != m_Width || size.y != m_Height) 
+		{
 			m_Width = size.x;
 			m_Height = size.y;
 
-			//m_RenderTexture->Resize(size.x, size.y);
-			cam->RecalculateProjection(size.x, size.y);
+			m_Renderer->SetViewport(size.x, size.y);
 		}
 
-		//Rendering::RenderCommand::SetFrameBuffer(m_RenderTexture.Raw());
-
-		//ImGui::Image((void*)m_RenderTexture->GetColorID(),
-		//	size, ImVec2(0, 1), ImVec2(1, 0));
+		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}
 }

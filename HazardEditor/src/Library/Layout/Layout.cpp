@@ -51,6 +51,7 @@ namespace WindowLayout
 	}
 	void Layout::Image(const Ref<Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
 	{
+		HZR_ASSERT(image, "What image?");
 		ImGui::Image(GetTextureID(image), size, t0, t1);
 	}
 	void Layout::Table(uint8_t columns, bool border, const char* id)

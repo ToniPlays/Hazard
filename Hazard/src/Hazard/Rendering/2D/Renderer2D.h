@@ -46,6 +46,8 @@ namespace Hazard::Rendering
 
 		void Submit(Quad quad);
 
+		void SetTargetRenderPass(Ref<RenderPass> renderPass);
+
 		void BeginWorld(const RenderPassData& renderPassData);
 		void BeginBatch();
 		void Flush();

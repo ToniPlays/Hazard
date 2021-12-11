@@ -6,6 +6,7 @@
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/Core/Ref.h"
 #include "Hazard/Module.h"
+#include "Hazard/Core/CommandLineArgs.h"
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Assets/Asset.h"
@@ -19,8 +20,8 @@
 
 #include "Hazard/Rendering/Camera.h"
 #include "Hazard/Rendering/Image/Image2D.h"
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
 //Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"

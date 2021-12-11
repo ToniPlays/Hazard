@@ -26,7 +26,7 @@ namespace Hazard
 		std::filesystem::path Path = "";
 		bool IsLoaded = false;
 
-		bool IsValid() { return Handle && Type != AssetType::Undefined && IsLoaded; }
+		bool IsValid() { return Handle && Type != AssetType::Undefined; }
 	};
 
 	class Asset : public RefCount

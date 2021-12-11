@@ -95,8 +95,8 @@ namespace Hazard::Rendering::Vulkan {
 
 		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
-		uint32_t width = 1280;
-		uint32_t height = 720;
+		uint32_t width = fb->GetWidth();
+		uint32_t height = fb->GetHeight();
 
 		VkViewport viewport = {};
 		viewport.minDepth = 0.0f;
@@ -160,7 +160,6 @@ namespace Hazard::Rendering::Vulkan {
 		vkCmdBeginRenderPass(vkBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
  		vkCmdSetViewport(vkBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(vkBuffer, 0, 1, &scissors);
-
 	}
 
 	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)

@@ -285,7 +285,6 @@ namespace Hazard::Scripting::CSharp {
 			mono_domain_set(domain, false);
 			cleanUp = true;
 		}
-
 		s_Data.core_assembly = LoadAssembly(s_Data.monoCoreAssemblyPath.c_str());
 		s_Data.core_image = GetAssemblyImage(s_Data.core_assembly);
 

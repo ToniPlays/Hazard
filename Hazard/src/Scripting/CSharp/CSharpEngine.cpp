@@ -17,9 +17,9 @@ extern "C"
 
 namespace Hazard::Scripting::CSharp {
 
-	struct AssemblyData 
+	struct AssemblyData
 	{
-		std::string assemblyPath;
+		std::string AssemblyPath;
 	};
 
 	AssemblyData data;
@@ -123,7 +123,7 @@ namespace Hazard::Scripting::CSharp {
 		if (!m_Registry.HasInstance(handle)) return;
 		auto& instance = m_Registry.GetInstanceData(handle);
 
-		if (entered) 
+		if (entered)
 		{
 			for (auto& script : instance.Scripts)
 			{
@@ -139,7 +139,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::OnTrigger(uint32_t handle, void** param, bool entered)
 	{
-		if(!m_Registry.HasInstance(handle)) return;
+		if (!m_Registry.HasInstance(handle)) return;
 		auto& instance = m_Registry.GetInstanceData(handle);
 
 		if (entered)

@@ -124,9 +124,10 @@ namespace WindowElement
 	void Toolbar::SetPlaying(bool playing) {
 		Runtime::SceneRuntimeHandler::SetSceneRunning(!playing);
 
-		if (!playing)
+		/*if (!playing)
 			EditorView::SetWindowFocus<GameViewport>();
 		else
 			EditorView::SetWindowFocus<Viewport>();
+			*/
 	}
 }

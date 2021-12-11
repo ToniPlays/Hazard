@@ -14,6 +14,7 @@ namespace WindowElement {
 
 	FileView::FileView() : EditorWindow(ICON_FK_FOLDER_OPEN" Project")
 	{
+		SetActive(false);
 	}
 	void FileView::Init()
 	{
@@ -214,8 +215,7 @@ namespace WindowElement {
 		{
 		case Hazard::AssetType::World:				return m_Images["world"];
 		case Hazard::AssetType::Image: {
-			Ref<Rendering::Image2D> asset = AssetManager::GetAsset<Rendering::Image2D>(metadata.Handle);
-			return asset;
+			return AssetManager::GetAsset<Rendering::Image2D>(metadata.Handle);
 		}
 		case Hazard::AssetType::AudioClip:
 		case Hazard::AssetType::EnvironmentMap:

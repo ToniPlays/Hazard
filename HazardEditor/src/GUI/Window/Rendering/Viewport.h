@@ -30,8 +30,7 @@ namespace WindowElement {
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 
-		Ref<FrameBuffer> m_FrameBuffer;
-		Ref<WorldRenderer> m_WorldRenderer = nullptr;
+		Ref<WorldRenderer> m_WorldRenderer;
 		TransformationGizmo m_Gizmos;
 		uint32_t m_Width = 0, m_Height = 0;
 		bool m_DrawStats = false;

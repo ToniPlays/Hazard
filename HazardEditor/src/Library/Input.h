@@ -17,6 +17,7 @@ namespace WindowElement {
 		template<typename T>
 		static bool FileButton(const char* name, Ref<Hazard::Rendering::Texture2D> image, T fn, ImVec2 size = { 0, 0 }, const std::string& id = "##id")
 		{
+			HZR_ASSERT(image, "What is this image");
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::PushID(id.c_str());
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });

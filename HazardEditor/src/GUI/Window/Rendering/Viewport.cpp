@@ -19,27 +19,22 @@ namespace WindowElement {
 
 	Viewport::Viewport() : EditorWindow(ICON_FK_GLOBE " Viewport")
 	{
-
 	}
 	void Viewport::Init()
 	{
 		SetActive(Application::HasModule<RenderEngine>());
 
-		engine = &Application::GetModule<RenderEngine>();
-
 		WorldRendererSettings settings = {};
 		settings.Camera = &m_EditorCamera;
-
+		settings.ViewportSize = { 1920, 1080 };
+		settings.ClearColor = Color::FromHex("#101010");
+		settings.Flags = WorldRenderFlags::Enabled;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
-
-		engine->SetCamera(&m_EditorCamera);
 	}
 	void Viewport::OnWindowRender()
 	{
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
-
 		bool is2D = m_EditorCamera.Is2DEnabled();
-
 		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -52,11 +47,11 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			changed = true;
-			engine->GetRenderPass()->GetSpecs().TargetFrameBuffer->Resize(m_Width, m_Height);
 			m_EditorCamera.SetViewport(m_Width, m_Height);
+			m_WorldRenderer->SetViewport(m_Width, m_Height);
 		}
 
-		Layout::Image(engine->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+		Layout::Image(m_WorldRenderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
 			AssetHandle handle = *(AssetHandle*)payload->Data;

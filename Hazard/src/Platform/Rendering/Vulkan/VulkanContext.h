@@ -12,7 +12,7 @@
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
 
-#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ERROR("Vulkan function failed: {0}", VKUtils::ResultToString(result));}
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ASSERT(false, "Vulkan function failed: {0}", VKUtils::ResultToString(result));}
 
 namespace Hazard::Rendering::Vulkan {
 

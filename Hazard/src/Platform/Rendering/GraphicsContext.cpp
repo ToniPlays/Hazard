@@ -11,7 +11,6 @@ namespace Hazard::Rendering {
 	{
 		switch (API)
 		{
-		case Hazard::RenderAPI::Auto:		return new OpenGL::OpenGLContext(props);
 		case Hazard::RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);
 		case Hazard::RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
 		}

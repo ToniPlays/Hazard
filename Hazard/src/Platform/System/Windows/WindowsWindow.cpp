@@ -25,6 +25,10 @@ namespace Hazard::Rendering {
 			HZR_THROW("Failed to init GLFW");
 		}
 
+		if (info->Renderer == RenderAPI::Auto) {
+			info->Renderer = RenderAPI::Vulkan;
+		}
+
 		m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
 		m_WindowData.Platform = "Windows";
 		m_WindowData.Width = info->Width;

@@ -173,7 +173,6 @@ namespace Hazard::ECS::Loader
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "Texture", fileName);
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
-
 			if(handle != INVALID_ASSET_HANDLE)
 				component.Texture = AssetManager::GetAsset<Texture2D>(handle);
 		}

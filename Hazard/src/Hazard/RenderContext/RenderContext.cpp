@@ -11,7 +11,7 @@ namespace Hazard::Rendering {
 	RenderContext::RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) : Module::Module("RenderContext")
 	{
 		HZR_PROFILE_FUNCTION();
-		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::OpenGL : info->Renderer;
+		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::Vulkan : info->Renderer;
 		m_ClearColor = info->Color;
 		m_ImagesInFlight = info->ImagesInFlight;
 		RenderContextCommand::Init(this);
@@ -55,5 +55,14 @@ namespace Hazard::Rendering {
 		case RenderAPI::Metal:	return "Metal";
 		}
 		return "Auto";
+	}
+	RenderAPI RenderContext::StringToApi(const std::string& api)
+	{
+		if (api == "Auto")		return RenderAPI::Auto;
+		if (api == "OpenGL")	return RenderAPI::OpenGL;
+		if (api == "Vulkan")	return RenderAPI::Vulkan;
+		if (api == "DX11")		return RenderAPI::DX11;
+		if (api == "DX12")		return RenderAPI::DX12;
+		if (api == "Metal")		return RenderAPI::Metal;
 	}
 }

@@ -16,6 +16,10 @@ namespace Hazard::Rendering
 
 		m_Data.TextureSlots.resize(info->SamplerCount);
 		m_RenderCommandBuffer = buffer;
+
+		for (uint32_t i = 0; i < m_Data.Samplers; i++) {
+			m_Data.TextureSlots[i] = RenderCommand::GetWhiteTexture();
+		}
 	}
 	Renderer2D::~Renderer2D()
 	{
@@ -44,6 +48,19 @@ namespace Hazard::Rendering
 		}
 		m_QuadBatch.AddIndices(6);
 	}
+	void Renderer2D::SetTargetRenderPass(Ref<RenderPass> renderPass)
+	{
+		if (!m_Pipeline) {
+			Recreate(renderPass);
+			return;
+		}
+
+		if (m_Pipeline->GetSpecifications().RenderPass != renderPass) {
+			PipelineSpecification specs = m_Pipeline->GetSpecifications();
+			specs.RenderPass = renderPass;
+			m_Pipeline = Pipeline::Create(specs);
+		}
+	}
 	void Renderer2D::BeginWorld(const RenderPassData& renderPassData)
 	{
 		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
@@ -62,7 +79,9 @@ namespace Hazard::Rendering
 		
 		m_Pipeline->Bind(m_RenderCommandBuffer);
 		Ref<Shader> shader = m_Pipeline->GetShader();
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
+
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
+{
 			m_Data.TextureSlots[i]->Bind(i);
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 		}
@@ -132,15 +151,11 @@ namespace Hazard::Rendering
 			shader->Bind();
 
 			for (uint32_t i = 0; i < m_Data.Samplers; i++) {
-				m_Data.TextureSlots[i] = RenderCommand::GetWhiteTexture();
-			}
-			for (uint32_t i = 0; i < m_Data.Samplers; i++) {
 				shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 			}
 		}
 
 		m_QuadBatch = Batch<Vertex2D>(m_Data.MaxQuadCount * 4);
-
 		delete[] indices;
 	}
 	float Renderer2D::FindTexture(const Ref<Texture2D>& texture)
