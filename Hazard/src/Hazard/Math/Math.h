@@ -188,7 +188,7 @@ namespace Hazard {
 		{
 			glm::vec3 up = Math::GetUpDirection(orientation);
 			glm::vec3 right = Math::GetRightDirection(orientation);
-			glm::vec3 forward = Math::GetForwardDirection(orientation);
+			glm::vec3 forward = -Math::GetForwardDirection(orientation);
 
 			verticalFOV = glm::radians(verticalFOV);
 			float heightNear = 2.0f * tan(verticalFOV / 2.0f) * zNear;

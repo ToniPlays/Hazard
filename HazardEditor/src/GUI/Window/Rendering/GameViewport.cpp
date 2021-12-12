@@ -16,16 +16,25 @@ namespace WindowElement {
 		if (!IsActive()) return;
 
 		WorldRendererSettings settings = {};
-		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry;
+		settings.ViewportSize = { 1920, 1080 };
+		settings.Camera = &m_Camera;
+		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
 		settings.ClearColor = Color::FromHex("#646464");
 		m_Renderer = WorldRenderer::Create(&settings);
 	}
-	void GameViewport::OnWindowRender()
+	void GameViewport::OnUpdate()
 	{
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
-		auto&[cam, transform] = world->GetWorldCamera();
+		auto& [cam, transform] = world->GetWorldCamera();
 
-		if (!cam) {
+		if (cam) {
+			m_Camera.SetView(glm::inverse(transform->GetTransformNoScale()));
+			m_Camera.SetProjection(cam->GetProjection());
+		}
+	}
+	void GameViewport::OnWindowRender()
+	{
+		if (!m_Renderer->IsValid()) {
 			const char* text = "No active camera";
 			ImVec2 size = ImGui::CalcTextSize(text);
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - size.x) / 2);
@@ -43,6 +52,7 @@ namespace WindowElement {
 			m_Height = size.y;
 
 			m_Renderer->SetViewport(size.x, size.y);
+			m_Camera.SetViewport(size.x, size.y);
 		}
 
 		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));

@@ -19,26 +19,35 @@ namespace WindowElement {
 	{
 		if (!selectionContext.IsValid()) return;
 
+		auto& tc = selectionContext.GetComponent<TransformComponent>();
+
 		if (selectionContext.HasComponent<CameraComponent>())
 		{
 			auto& comp = selectionContext.GetComponent<CameraComponent>();
-			auto& tc = selectionContext.GetComponent<TransformComponent>();
 
 			std::vector<glm::vec3> points = Math::GetProjectionBounds(tc.GetOrientation(), tc.GetTransformMat4(), comp.GetFov(),
 				comp.GetClipping().x, comp.GetClipping().y, comp.GetAspectRatio());
 
-			for (uint32_t i = 0; i < 4; i++) 
+			for (uint32_t i = 0; i < 4; i++)
 			{
 				RenderCommand::DrawLine(points[i] + tc.Translation, points[(i + 1) % 4] + tc.Translation, Color::White);
 			}
-			for (uint32_t i = 0; i < 4; i++) 
+			for (uint32_t i = 0; i < 4; i++)
 			{
 				RenderCommand::DrawLine(points[i] + tc.Translation, points[i + 4] + tc.Translation, Color::White);
 			}
-			for (uint32_t i = 0; i < 4; i++) 
+			for (uint32_t i = 0; i < 4; i++)
 			{
 				RenderCommand::DrawLine(points[i + 4] + tc.Translation, points[((i + 1) % 4) + 4] + tc.Translation, Color::White);
 			}
+		}
+		if (selectionContext.HasComponent<BoxCollider2DComponent>())
+		{
+			auto& bc2d = selectionContext.GetComponent<BoxCollider2DComponent>();
+			glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, tc.Translation.z + 0.001f);
+			glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+			RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::White);
 		}
 	}
 	void Properties::OnWindowRender()

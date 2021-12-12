@@ -4,6 +4,7 @@
 #include "Hazard/Core/Buffer.h"
 #include "ShaderDataType.h"
 #include "../RenderCommandBuffer.h"
+#include "Shader.h"
 
 namespace Hazard::Rendering 
 {
@@ -23,6 +24,7 @@ namespace Hazard::Rendering
 	{
 		size_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
+		ShaderStageData InputStage;
 		void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo 
@@ -68,7 +70,7 @@ namespace Hazard::Rendering
 	{
 	public:
 		virtual ~UniformBuffer() = default;
-		virtual void Bind() = 0;
+		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data) = 0;
 		virtual uint32_t GetUsageFlags() = 0;

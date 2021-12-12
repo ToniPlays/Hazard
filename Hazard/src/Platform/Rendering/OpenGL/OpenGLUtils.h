@@ -60,6 +60,15 @@ namespace Hazard::Rendering::OpenGLUtils
 		}
 		return GL_TRIANGLES;
 	}
+	static GLenum DrawTypeToGLPolygon(const DrawType& type) {
+		switch (type)
+		{
+		case DrawType::Fill: return GL_FILL;
+		case DrawType::Line: return GL_LINE;
+		case DrawType::Point: return GL_POINT;
+		}
+		return GL_TRIANGLES;
+	}
 	static bool IsDepthFormat(const ImageFormat& format) {
 		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
 			return true;

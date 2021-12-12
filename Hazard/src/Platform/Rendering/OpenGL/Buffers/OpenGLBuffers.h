@@ -17,10 +17,11 @@ namespace Hazard::Rendering::OpenGL
 		uint32_t GetSize() override { return m_Size; }
 
 	private:
-
 		BufferUsage m_Usage;
-		uint32_t m_ID;
+		uint32_t m_ID, m_VAO;
 		uint32_t m_Size;
+		uint32_t m_Stride;
+		ShaderStageData m_Layout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -48,7 +49,7 @@ namespace Hazard::Rendering::OpenGL
 		OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~OpenGLUniformBuffer();
 
-		void Bind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
 		void SetData(const void* data) override;
 		const uint32_t GetBinding() const override { return m_Binding; };

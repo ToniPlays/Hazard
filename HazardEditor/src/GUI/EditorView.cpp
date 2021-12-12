@@ -89,12 +89,14 @@ namespace WindowElement {
 	}
 	void EditorView::Update()
 	{
+		HZ_SCOPE_PERF("EditorView::Update()");
 		for (RenderableElement* element : m_Elements) {
 			element->OnUpdate();
 		}
 	}
 	void EditorView::Render()
 	{
+		HZ_SCOPE_PERF("EditorView::Render()");
 		BeginFrame();
 		{
 			for (RenderableElement* element : m_Elements) {

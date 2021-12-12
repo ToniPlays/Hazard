@@ -71,14 +71,14 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanRenderCommandBuffer::Begin()
 	{
 		m_Stats.Reset();
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		m_FrameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		beginInfo.pNext = nullptr;
 
-		VkCommandBuffer commandBuffer = m_CommandBuffers[frameIndex];
+		VkCommandBuffer commandBuffer = m_CommandBuffers[m_FrameIndex];
 		HZR_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer failed");
 		VK_CHECK_RESULT(vkBeginCommandBuffer(commandBuffer, &beginInfo));
 	}

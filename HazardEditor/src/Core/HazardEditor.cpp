@@ -21,11 +21,11 @@ void EditorApplication::PreInit()
 
 	RenderContexCreateInfo contextInfo = {};
 	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>();
-	contextInfo.ImagesInFlight = 2;
+	contextInfo.ImagesInFlight = 3;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
-	contextInfo.VSync = true; 
+	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;

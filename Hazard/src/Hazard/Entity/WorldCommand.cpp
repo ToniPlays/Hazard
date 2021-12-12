@@ -83,6 +83,7 @@ namespace Hazard::ECS {
 				info.Body = rb2d.runtimeBody;
 				info.Type = ColliderType::Box;
 				info.Scale = { tc.Scale.x, tc.Scale.y };
+				info.Offset = bc2d.Offset;
 				info.Size = bc2d.Size;
 				info.Density = bc2d.Density;
 				info.Friction = bc2d.Friction;

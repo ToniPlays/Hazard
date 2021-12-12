@@ -18,8 +18,7 @@ namespace Hazard::Rendering
 		quad.Color = tint;
 		quad.Texture = texture;
 
-		s_Engine->Submit([quad]() mutable 
-			{
+		s_Engine->Submit([quad]() mutable {
 			s_Engine->Get2D().Submit(quad);
 			});
 	}
@@ -41,13 +40,38 @@ namespace Hazard::Rendering
 	}
 	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color)
 	{
-		Line line;
-		line.Start = start;
-		line.End = end;
+		Line line = { start, end };
 		line.Color = { color.r, color.g, color.b, color.a };
 
 		s_Engine->Submit([line]() mutable {
 			s_Engine->GetDebugRenderer().SubmitLine(line);
+			});
+	}
+	void RenderCommand::DrawRectangle(const glm::mat4& transform, const Color& color)
+	{
+		glm::vec3 topLeft		= transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
+		glm::vec3 topRight		= transform * glm::vec4( 0.5f, 0.5f, 0.0f, 1.0f);
+		glm::vec3 bottomRight	= transform * glm::vec4( 0.5f,-0.5f, 0.0f, 1.0f);
+		glm::vec3 bottomLeft	= transform * glm::vec4(-0.5f,-0.5f, 0.0f, 1.0f);
+
+		Line line1 = { topLeft, topRight };
+		line1.Color = { color.r, color.g, color.b, color.a };
+
+		Line line2 = { topRight, bottomRight };
+		line2.Color = { color.r, color.g, color.b, color.a };
+
+		Line line3 = { bottomRight, bottomLeft };
+		line3.Color = { color.r, color.g, color.b, color.a };
+
+		Line line4 = { bottomLeft, topLeft };
+		line4.Color = { color.r, color.g, color.b, color.a };
+
+		s_Engine->Submit([line1, line2, line3, line4]() mutable {
+			DebugRenderer& rd = s_Engine->GetDebugRenderer();
+			rd.SubmitLine(line1);
+			rd.SubmitLine(line2);
+			rd.SubmitLine(line3);
+			rd.SubmitLine(line4);
 			});
 	}
 	void RenderCommand::Clear()

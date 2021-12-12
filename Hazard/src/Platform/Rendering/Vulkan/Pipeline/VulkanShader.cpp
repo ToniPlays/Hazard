@@ -4,9 +4,10 @@
 #include "VulkanShader.h"
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
-#include "Hazard/Rendering/RenderEngine.h"
 #include "../VulkanTexture2D.h"
 #include "VulkanBuffers.h"
+#include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Rendering/Loaders/ShaderFactory.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>

@@ -10,6 +10,7 @@ namespace Hazard::Rendering::OpenGL {
 		~OpenGLRenderCommandBuffer() = default;
 
 		virtual RenderStats& GetStats() { return m_Stats; };
+		virtual uint32_t GetFrameIndex() { return 0; };
 
 		void Begin() { m_Stats.Reset(); };
 		void End() {};

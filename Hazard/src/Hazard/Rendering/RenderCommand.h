@@ -27,6 +27,7 @@ namespace Hazard::Rendering
 
 		//Debug rendering
 		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color);
+		static void DrawRectangle(const glm::mat4& transform, const Color& color);
 
 		static void DrawMesh() {};
 		static void DrawAnimatedMesh() {};

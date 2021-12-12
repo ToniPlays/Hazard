@@ -2,13 +2,12 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Pipeline/ShaderDataType.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
-#include "../Loaders/ShaderFactory.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 
 namespace Hazard::Rendering
 {
+	class UniformBuffer;
 	class Texture2D;
 
 	enum class ShaderType {

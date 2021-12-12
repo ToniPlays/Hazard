@@ -13,7 +13,7 @@ namespace Editor {
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearPlane, float farPlane) : fov(fov), 
 		aspectRatio(aspectRatio), nearPlane(nearPlane), farPlane(farPlane), m_Is2DEnabled(false)
 	{
-		projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+		m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		UpdateView();
 	}
 	void EditorCamera::OnUpdate()
@@ -48,8 +48,8 @@ namespace Editor {
 		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
-		viewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
-		viewMatrix = glm::inverse(viewMatrix);
+		m_View = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
+		m_View = glm::inverse(m_View);
 	}
 
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)
@@ -148,7 +148,7 @@ namespace Editor {
 	{
 		if (enabled2D) {
 			float side = aspectRatio * size2D;
-			projectionMatrix = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);
+			m_Projection = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);
 			if (enabled2D != m_Is2DEnabled) 
 			{
 				pitch = 0;
@@ -156,7 +156,7 @@ namespace Editor {
 			}
 		}
 		else 
-			projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+			m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		m_Is2DEnabled = enabled2D;
 	}
 }

@@ -28,7 +28,6 @@ namespace Hazard::ECS
 		float RestitutionThreshold = 0.5f;
 
 		bool IsSensor = false;
-
 		void* runtimeFixture = nullptr;
 
 		BoxCollider2DComponent() = default;

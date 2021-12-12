@@ -6,6 +6,7 @@
 #include "RenderCommandBuffer.h"
 #include "RenderCommandQueue.h"
 #include "Pipeline/FrameBuffer.h"
+#include "pipeline/Buffers.h"
 #include "Texture.h"
 #include "Camera.h"
 

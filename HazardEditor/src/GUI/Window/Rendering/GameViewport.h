@@ -15,9 +15,11 @@ namespace WindowElement {
 		~GameViewport() = default;
 
 		void Init() override;
+		void OnUpdate() override;
 		void OnWindowRender() override;
 
 	private:
+		Camera m_Camera;
 		Ref<WorldRenderer> m_Renderer;
 		uint32_t m_Width = 0, m_Height = 0;
 	};

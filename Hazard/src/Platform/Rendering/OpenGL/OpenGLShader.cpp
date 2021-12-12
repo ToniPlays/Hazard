@@ -4,6 +4,7 @@
 #include "OpenGLShader.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "OpenGLUtils.h"
+#include "Hazard/Rendering/Loaders/ShaderFactory.h"
 
 #include <glad/glad.h>
 #include <shaderc/shaderc.hpp>

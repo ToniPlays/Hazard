@@ -19,9 +19,6 @@ namespace Editor {
 
 		inline void SetViewport(uint32_t width, uint32_t height) override { viewport_w = width; viewport_h = height; UpdateProjection(); }
 
-		const glm::mat4& GetView() const override { return viewMatrix; }
-		const glm::mat4& GetProjection() const override { return projectionMatrix; }
-		glm::mat4 GetViewPprojection() const override { return projectionMatrix * viewMatrix; }
 		glm::quat GetOrientation() const;
 
 		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
@@ -37,9 +34,6 @@ namespace Editor {
 
 	private:
 		float fov = 45.0f, aspectRatio = 1.778f, nearPlane = 0.1f, farPlane = 1000.0f;
-
-		glm::mat4 viewMatrix;
-		glm::mat4 projectionMatrix;
 
 		bool m_Is2DEnabled;
 		float size2D = 10.0f;

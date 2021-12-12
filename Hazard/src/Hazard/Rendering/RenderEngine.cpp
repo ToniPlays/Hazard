@@ -7,7 +7,6 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "2D/Renderer2D.h"
 #include "DebugRenderer.h"
-#include "Mesh/MeshFactory.h"
 #include "WorldRenderer.h"
 
 namespace Hazard::Rendering
@@ -22,6 +21,7 @@ namespace Hazard::Rendering
 
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
+
 		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
 		m_Queue = new RenderCommandQueue();
 
@@ -48,11 +48,11 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Render()
 	{
+		HZ_SCOPE_PERF("RenderEngine::Render()");
 		for (auto& worldRenderer : WorldRenderer::s_Renderers)
 		{
 			worldRenderer->Invalidate();
 		}
-
 		m_RenderCommandBuffer->Begin();
 
 		for (auto& worldRenderer : WorldRenderer::s_Renderers)
@@ -64,6 +64,7 @@ namespace Hazard::Rendering
 			if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Enabled)
 			{
 				m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
+
 				if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Geometry)
 				{
 					m_Renderer2D->SetTargetRenderPass(worldRenderer->GetRenderPass());
@@ -73,6 +74,7 @@ namespace Hazard::Rendering
 					m_DebugRenderer->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
 
 					m_Queue->Excecute();
+
 					m_Renderer2D->EndWorld();
 					m_DebugRenderer->EndWorld();
 				}

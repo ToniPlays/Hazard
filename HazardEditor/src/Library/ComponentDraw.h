@@ -402,8 +402,12 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, BoxCollider2DComponent& component) {
 		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {
+			Layout::IDGroup("#offset", [&]() {
 			Input::Vec2("Offset", component.Offset, 1.0f, 75);
-			Input::Vec2("Size", component.Size, 1.0f, 75);
+				});
+			Layout::IDGroup("#Size", [&]() {
+				Input::Vec2("Size", component.Size, 1.0f, 75);
+				});
 			Layout::NextLine(5);
 
 			Layout::Text("Sensor");

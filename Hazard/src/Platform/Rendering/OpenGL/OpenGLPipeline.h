@@ -22,7 +22,6 @@ namespace Hazard::Rendering::OpenGL
 	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;
-		uint32_t m_ID;
-		uint32_t m_DrawType;
+		uint32_t m_DrawType, m_PolygonMode;
 	};
 }

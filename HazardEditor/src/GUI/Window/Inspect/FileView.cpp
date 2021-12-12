@@ -14,7 +14,6 @@ namespace WindowElement {
 
 	FileView::FileView() : EditorWindow(ICON_FK_FOLDER_OPEN" Project")
 	{
-		SetActive(false);
 	}
 	void FileView::Init()
 	{

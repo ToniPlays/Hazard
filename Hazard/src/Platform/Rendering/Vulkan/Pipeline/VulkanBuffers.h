@@ -62,7 +62,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~VulkanUniformBuffer();
 
-		void Bind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
 		void SetData(const void* data) override;
 		void RT_SetData(const void* data);

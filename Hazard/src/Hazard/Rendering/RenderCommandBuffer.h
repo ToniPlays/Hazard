@@ -29,6 +29,7 @@ namespace Hazard::Rendering {
 		virtual void Submit() = 0;
 
 		virtual RenderStats& GetStats() = 0;
+		virtual uint32_t GetFrameIndex() = 0;
 
 		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", uint32_t count = 0);
 		static Ref<RenderCommandBuffer> CreateFromSwapchain(const std::string& debugName = "");

@@ -2,7 +2,7 @@
 
 #include "box2d/box2d.h"
 
-namespace Hazard::Physics 
+namespace Hazard::Physics
 {
 	enum class ContactType { Collision = 0, Sensor };
 	enum class CollisionState { ContactBegin = 0, ContactEnd };
@@ -17,7 +17,7 @@ namespace Hazard::Physics
 		CollisionState State;
 	};
 
-	struct Physics2DObjectCreateInfo 
+	struct Physics2DObjectCreateInfo
 	{
 		uint32_t Handle;
 		BodyType BodyType;
@@ -28,13 +28,13 @@ namespace Hazard::Physics
 		bool FixedRotation = false;
 	};
 
-	struct PhysicsCollider2DCreateInfo 
+	struct PhysicsCollider2DCreateInfo
 	{
 		uint32_t Handle;
 		ColliderType Type;
-		glm::vec2 Scale;
-		glm::vec2 Size;
-		glm::vec2 Offset;
+		glm::vec2 Scale = { 1.0f, 1.0f };;
+		glm::vec2 Size = { 1.0f, 1.0f };
+		glm::vec2 Offset = { 0.0f, 0.0f };
 		float Radius;
 		float Density;
 		float Friction;
@@ -67,7 +67,7 @@ namespace Hazard::Physics
 		void* CreateCollider(PhysicsCollider2DCreateInfo* createInfo);
 		void AddContactCallback(ContactCallback callback) { m_Callbacks.push_back(callback); };
 
-		void OnContact(Contact2DData data) 
+		void OnContact(Contact2DData data)
 		{
 			for (auto& callback : m_Callbacks) {
 				callback(data);

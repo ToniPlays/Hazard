@@ -59,7 +59,8 @@ namespace Hazard::Physics
 		case ColliderType::Box: 
 		{
 			b2PolygonShape box;
-			box.SetAsBox(createInfo->Size.x * createInfo->Scale.x, createInfo->Size.y * createInfo->Scale.y);
+			box.SetAsBox(createInfo->Size.x * createInfo->Scale.x, createInfo->Size.y * createInfo->Scale.y, 
+				b2Vec2(createInfo->Offset.x, createInfo->Offset.y), 0.0f);
 
 			fixture.shape = &box;
 			fixture.density = createInfo->Density;

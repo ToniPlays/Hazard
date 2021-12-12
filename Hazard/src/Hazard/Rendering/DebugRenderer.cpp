@@ -1,7 +1,7 @@
 #include <hzrpch.h>
 #include "DebugRenderer.h"
 
-namespace Hazard::Rendering 
+namespace Hazard::Rendering
 {
 	DebugRenderer::DebugRenderer(uint32_t lines, Ref<RenderCommandBuffer> cmdBuffer)
 	{
@@ -27,10 +27,10 @@ namespace Hazard::Rendering
 			m_LinePipeline = Pipeline::Create(specs);
 		}
 	}
-	void DebugRenderer::BeginWorld(const RenderPassData& renderPassData, WorldRenderFlags_ flags)
+	void DebugRenderer::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
-		m_LinePipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+		m_LinePipeline->GetShader()->GetUniform("Camera").SetData(&passData);
 		BeginBatch();
 	}
 	void DebugRenderer::BeginBatch()
@@ -43,11 +43,10 @@ namespace Hazard::Rendering
 	}
 	void DebugRenderer::Flush()
 	{
-		if (m_LineBatch.GetCount() == 0) 
+		if (m_LineBatch.GetCount() == 0)
 			return;
 
 		m_LinePipeline->Bind(m_CommandBuffer);
-
 		m_LineVertexBuffer->SetData(m_LineBatch.GetData(), m_LineBatch.GetDataSize());
 		m_LineVertexBuffer->Bind(m_CommandBuffer);
 
@@ -66,7 +65,7 @@ namespace Hazard::Rendering
 		LineVertex startVertex = {};
 		startVertex.Position = line.Start;
 		startVertex.Color = line.Color;
-		
+
 		m_LineBatch.Push(startVertex);
 
 		LineVertex endVertex = {};
@@ -77,20 +76,22 @@ namespace Hazard::Rendering
 	}
 	void DebugRenderer::Recreate(Ref<RenderPass> renderPass)
 	{
-		VertexBufferCreateInfo vertexInfo = {};
-		vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(LineVertex);
-		vertexInfo.Usage = BufferUsage::DynamicDraw;
-
-		m_LineVertexBuffer = VertexBuffer::Create(&vertexInfo);
-		m_LineBatch = Batch<LineVertex>(m_RenderData.MaxVertices);
-
 		PipelineSpecification pipelineSpecs = {};
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.LineWidth = 5.0f;
+		pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 		pipelineSpecs.DrawType = DrawType::Line;
 		pipelineSpecs.ShaderPath = "Shaders/lineShader.glsl";
 		pipelineSpecs.RenderPass = std::move(renderPass);
 
 		m_LinePipeline = Pipeline::Create(pipelineSpecs);
+		VertexBufferCreateInfo vertexInfo = {};
+
+		vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(LineVertex);
+		vertexInfo.Usage = BufferUsage::DynamicDraw;
+		vertexInfo.InputStage = m_LinePipeline->GetShader()->GetShaderData().Stages.at(ShaderType::Vertex);
+
+		m_LineVertexBuffer = VertexBuffer::Create(&vertexInfo);
+		m_LineBatch = Batch<LineVertex>(m_RenderData.MaxVertices);
+
 	}
 }

@@ -163,7 +163,7 @@ namespace Hazard::Rendering::Vulkan
 	{
 		Release();
 	}
-	void VulkanUniformBuffer::Bind()
+	void VulkanUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		
 	}

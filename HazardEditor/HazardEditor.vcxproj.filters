@@ -333,7 +333,4 @@
       <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\lineShader.glsl" />
-  </ItemGroup>
 </Project>

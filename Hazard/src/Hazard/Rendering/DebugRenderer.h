@@ -10,6 +10,7 @@ namespace Hazard::Rendering
 	{
 		uint32_t MaxLineCount;
 		uint32_t MaxVertices;
+		float LineWidth = 1.0f;
 	};
 	struct LineVertex 
 	{
@@ -20,7 +21,9 @@ namespace Hazard::Rendering
 	{
 		glm::vec3 Start;
 		glm::vec3 End;
-		glm::vec4 Color;
+		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f};
+		Line() = default;
+		Line(const glm::vec3& start, const glm::vec3& end) : Start(start), End(end) {}
 	};
 
 	class DebugRenderer 
@@ -30,7 +33,7 @@ namespace Hazard::Rendering
 		~DebugRenderer();
 
 		void SetTargetRenderPass(Ref<RenderPass> renderPass);
-		void BeginWorld(const RenderPassData& renderPassData, WorldRenderFlags_ flags);
+		void BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags);
 		void BeginBatch();
 		void EndWorld();
 		void Flush();

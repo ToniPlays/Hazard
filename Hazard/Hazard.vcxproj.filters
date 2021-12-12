@@ -64,6 +64,9 @@
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Scripting\Attributes">
+      <UniqueIdentifier>{EE66C660-5A4A-D5A0-634D-03DDCFAF9BF1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Utils">
       <UniqueIdentifier>{F6DF7C83-E2D8-9BD5-0B0B-815AF7627BE1}</UniqueIdentifier>
     </Filter>
@@ -207,6 +210,9 @@
     <ClInclude Include="src\Hazard\Core\Buffer.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Core\CommandLineArgs.h">
+      <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Core.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -231,13 +237,13 @@
     <ClInclude Include="src\Hazard\Core\UUID.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\Component.h">
+    <ClInclude Include="src\Hazard\Entity\Component.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Component.h">
+    <ClInclude Include="src\Hazard\Entity\Components\Component.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h">
@@ -251,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Entity\Loader\Component.h">
+      <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Loader\WorldDeserializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
@@ -339,6 +348,9 @@
     <ClInclude Include="src\Hazard\Rendering\Camera.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\DebugRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Image\Image.h">
       <Filter>src\Hazard\Rendering\Image</Filter>
     </ClInclude>
@@ -399,8 +411,20 @@
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Attributes\Attribute.h">
-      <Filter>src\Hazard\Scripting</Filter>
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -1833,12 +1857,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
-    <ClInclude Include="src\Hazard\Core\CommandLineArgs.h" />
-    <ClInclude Include="src\Hazard\Rendering\DebugRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1872,6 +1890,9 @@
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
+      <Filter>src\Hazard\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Core\CommandLineArgs.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
@@ -1937,6 +1958,9 @@
     <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\DebugRenderer.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Image\Image2D.cpp">
       <Filter>src\Hazard\Rendering\Image</Filter>
     </ClCompile>
@@ -1987,6 +2011,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
       <Filter>src\Hazard\Scripting</Filter>
@@ -2150,8 +2177,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp" />
-    <ClCompile Include="src\Hazard\Core\CommandLineArgs.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\DebugRenderer.cpp" />
   </ItemGroup>
 </Project>

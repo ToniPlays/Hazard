@@ -57,17 +57,16 @@ namespace Hazard::Rendering
 			Recreate(renderPass);
 			return;
 		}
-
 		if (m_Pipeline->GetSpecifications().RenderPass != renderPass) {
 			PipelineSpecification specs = m_Pipeline->GetSpecifications();
 			specs.RenderPass = renderPass;
 			m_Pipeline = Pipeline::Create(specs);
 		}
 	}
-	void Renderer2D::BeginWorld(const RenderPassData& renderPassData, WorldRenderFlags_ flags)
+	void Renderer2D::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
-		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&renderPassData);
+		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&passData);
 		BeginBatch();
 	}
 	void Renderer2D::BeginBatch()
@@ -93,6 +92,7 @@ namespace Hazard::Rendering
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
 		m_VertexBuffer->Bind(m_RenderCommandBuffer);
 		m_IndexBuffer->Bind(m_RenderCommandBuffer);
+
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
 		m_RenderCommandBuffer->GetStats().QuadCount += m_QuadBatch.GetCount() / 4.0f;
 	}
@@ -122,9 +122,18 @@ namespace Hazard::Rendering
 			offset += 4;
 		}
 		{
+			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
+			pipelineSpecs.DrawType = DrawType::Fill;
+			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
+			pipelineSpecs.RenderPass = std::move(renderPass);
+
+			m_Pipeline = Pipeline::Create(pipelineSpecs);
+
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
+			vertexInfo.InputStage = m_Pipeline->GetShader()->GetShaderData().Stages.at(ShaderType::Vertex);
 
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
@@ -135,13 +144,6 @@ namespace Hazard::Rendering
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 
-			PipelineSpecification pipelineSpecs = {};
-			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-			pipelineSpecs.DrawType = DrawType::Fill;
-			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-			pipelineSpecs.RenderPass = std::move(renderPass);
-
-			m_Pipeline = Pipeline::Create(pipelineSpecs);
 
 			Ref<Shader> shader = m_Pipeline->GetShader();
 			shader->Bind();
