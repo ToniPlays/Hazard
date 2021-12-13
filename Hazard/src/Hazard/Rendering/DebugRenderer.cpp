@@ -30,7 +30,7 @@ namespace Hazard::Rendering
 	void DebugRenderer::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
-		m_LinePipeline->GetShader()->GetUniform("Camera").SetData(&passData);
+		m_LinePipeline->GetShader()->SetUniformBuffer("Camera", (void*)&passData);
 		BeginBatch();
 	}
 	void DebugRenderer::BeginBatch()

@@ -22,6 +22,8 @@
 #include "Hazard/Rendering/Image/Image2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/WorldRenderer.h"
+#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/Rendering/Pipeline/Pipeline.h"
 
 //Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"

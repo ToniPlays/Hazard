@@ -24,6 +24,10 @@ namespace Hazard::Rendering
 		static void DrawQuadTextured(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc);
 		static void DrawRotatedQuad() {};
 		static void DrawScreenSpaceQuad() {};
+		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
+		static void DrawCustomGeometry() {};
+		static void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
+		static void DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count);
 
 		//Debug rendering
 		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color);
@@ -36,7 +40,6 @@ namespace Hazard::Rendering
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }
 
 	private:
-		
 		static void Clear();
 
 		inline static RenderEngine* s_Engine;

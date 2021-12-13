@@ -7,6 +7,7 @@
 #include "RenderCommandQueue.h"
 #include "Pipeline/FrameBuffer.h"
 #include "pipeline/Buffers.h"
+#include "pipeline/Pipeline.h"
 #include "Texture.h"
 #include "Camera.h"
 
@@ -42,6 +43,20 @@ namespace Hazard::Rendering {
 			auto storageBuffer = m_Queue->Allocate(renderCmd, sizeof(fn));
 			new (storageBuffer) Func(std::forward<Func>(fn));
 		}
+		template<typename Func>
+		void SubmitPostPass(Func&& fn)
+		{
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (Func*)ptr;
+				(*pFunc)();
+			};
+
+			auto storageBuffer = m_PostPassQueue->Allocate(renderCmd, sizeof(fn));
+			new (storageBuffer) Func(std::forward<Func>(fn));
+		}
+
+		void DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
+		void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
 		 
 		bool OnResize(WindowResizeEvent& e);
 		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }
@@ -54,6 +69,7 @@ namespace Hazard::Rendering {
 		DebugRenderer* m_DebugRenderer;
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		RenderCommandQueue* m_PostPassQueue;
 		RenderCommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;
 	};

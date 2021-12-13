@@ -11,8 +11,10 @@
 namespace Editor {
 
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearPlane, float farPlane) : fov(fov), 
-		aspectRatio(aspectRatio), nearPlane(nearPlane), farPlane(farPlane), m_Is2DEnabled(false)
+		aspectRatio(aspectRatio), m_Is2DEnabled(false)
 	{
+		m_ZNear = nearPlane;
+		m_ZFar = farPlane;
 		m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		UpdateView();
 	}
@@ -156,7 +158,7 @@ namespace Editor {
 			}
 		}
 		else 
-			m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+			m_Projection = glm::perspective(glm::radians(fov), aspectRatio, m_ZNear, m_ZFar);
 		m_Is2DEnabled = enabled2D;
 	}
 }

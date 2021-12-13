@@ -33,7 +33,7 @@ namespace Editor {
 		const bool Is2DEnabled() const { return m_Is2DEnabled; }
 
 	private:
-		float fov = 45.0f, aspectRatio = 1.778f, nearPlane = 0.1f, farPlane = 1000.0f;
+		float fov = 45.0f, aspectRatio = 1.778f;
 
 		bool m_Is2DEnabled;
 		float size2D = 10.0f;

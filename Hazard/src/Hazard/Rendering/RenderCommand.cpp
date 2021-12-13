@@ -74,6 +74,25 @@ namespace Hazard::Rendering
 			rd.SubmitLine(line4);
 			});
 	}
+	void RenderCommand::DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline) {
+		s_Engine->Submit([vertexBuffer, indexBuffer, pipeline]() mutable {
+			s_Engine->DrawGeometry(vertexBuffer, indexBuffer, pipeline);
+		});
+	}
+
+	void RenderCommand::DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count)
+	{
+		s_Engine->Submit([pipeline, count]() mutable {
+			s_Engine->DispatchPipeline(pipeline, count);
+		});
+	}
+	void RenderCommand::DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count)
+	{
+		s_Engine->SubmitPostPass([pipeline, count]() mutable {
+			s_Engine->DispatchPipeline(pipeline, count);
+			});
+	}
+
 	void RenderCommand::Clear()
 	{
 

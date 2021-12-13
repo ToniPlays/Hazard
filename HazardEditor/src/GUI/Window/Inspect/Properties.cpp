@@ -44,7 +44,7 @@ namespace WindowElement {
 		if (selectionContext.HasComponent<BoxCollider2DComponent>())
 		{
 			auto& bc2d = selectionContext.GetComponent<BoxCollider2DComponent>();
-			glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, tc.Translation.z + 0.001f);
+			glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
 			glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
 
 			RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::White);

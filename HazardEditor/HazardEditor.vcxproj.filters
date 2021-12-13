@@ -204,6 +204,7 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorGrid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -332,5 +333,9 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\EditorGrid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\Grid.glsl" />
   </ItemGroup>
 </Project>

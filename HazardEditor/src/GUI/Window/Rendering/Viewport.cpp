@@ -7,6 +7,7 @@
 #include "Library/DragDropUtils.h"
 #include "Core/EditorEvent.h"
 #include "GUI/EditorView.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 
@@ -30,8 +31,15 @@ namespace WindowElement {
 		settings.Camera = &m_EditorCamera;
 		settings.ViewportSize = { 1920, 1080 };
 		settings.ClearColor = Color::FromHex("#101010");
+		settings.LineWidth = 5.0f;
 		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
+
+		m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
+	}
+	void Viewport::OnUpdate()
+	{
+		m_Grid.Render(m_EditorCamera);
 	}
 	void Viewport::OnWindowRender()
 	{

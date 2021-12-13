@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "VulkanBuffers.h"
 #include "../VulkanContext.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 namespace Hazard::Rendering::Vulkan
 {
@@ -156,7 +157,6 @@ namespace Hazard::Rendering::Vulkan
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_LocalData = new uint8_t[m_Size];
-
 		RT_Invalidate();
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
@@ -173,14 +173,12 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::SetData(const void* data)
 	{
-		auto device = VulkanContext::GetDevice()->GetDevice();
-
 		memcpy(m_LocalData, data, m_Size);
 		RT_SetData(m_LocalData);
 	}
 	void VulkanUniformBuffer::RT_SetData(const void* data)
 	{
-		VulkanAllocator allocator("UniformBuffer");
+		VulkanAllocator allocator("VulkanUniformBuffer");
 		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
 		memcpy(pData, (const uint8_t*)data, m_Size);
 		allocator.UnmapMemory(m_Allocation);
@@ -205,6 +203,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkMemoryAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.pNext = nullptr;
 		allocInfo.allocationSize = 0;
 		allocInfo.memoryTypeIndex = 0;
 

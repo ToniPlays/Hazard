@@ -16,6 +16,8 @@ namespace Hazard::Rendering
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType;
 		float LineWidth = 1.0f;
+		bool Culling = true;
+		bool IsBackground = false;
 		Ref<RenderPass> RenderPass = nullptr;
 	};
 

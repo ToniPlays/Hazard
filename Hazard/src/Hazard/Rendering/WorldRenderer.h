@@ -28,6 +28,7 @@ namespace Hazard::Rendering
 		glm::vec2 ViewportSize = { 1, 1 };
 		bool SwapchainTarget = false;
 		bool IsDebugRenderer = false;
+		float LineWidth = 1.0f;
 		int Flags;
 	};
 

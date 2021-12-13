@@ -15,9 +15,13 @@ namespace Hazard::Rendering {
 		virtual void SetView(const glm::mat4& view) { m_View = view; }
 		virtual void SetProjection(const glm::mat4& projection) { m_Projection = projection; }
 		virtual void SetViewport(uint32_t width, uint32_t heigth) {};
+		virtual const float GetNearClipping() const { return m_ZNear; }
+		virtual const float GetFarClipping() const { return m_ZFar; }
 
 	protected:
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
+		float m_ZNear = 0.03f;
+		float m_ZFar = 100.0f;
 	};
 }

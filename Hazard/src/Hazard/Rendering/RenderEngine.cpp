@@ -24,6 +24,7 @@ namespace Hazard::Rendering
 
 		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
 		m_Queue = new RenderCommandQueue();
+		m_PostPassQueue = new RenderCommandQueue(1024 * 1024);
 
 		WindowResizeEvent e = { 1920, 1080 };
 		OnResize(e);
@@ -77,6 +78,8 @@ namespace Hazard::Rendering
 
 					m_Renderer2D->EndWorld();
 					m_DebugRenderer->EndWorld();
+
+					m_PostPassQueue->Excecute();
 				}
 			}
 			worldRenderer->End(m_RenderCommandBuffer);
@@ -84,6 +87,7 @@ namespace Hazard::Rendering
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();
 		m_Queue->Clear();
+		m_PostPassQueue->Clear();
 	}
 	bool RenderEngine::OnEvent(Event& e)
 	{
@@ -93,6 +97,17 @@ namespace Hazard::Rendering
 	void RenderEngine::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+	}
+	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
+	{
+		pipeline->Bind(m_RenderCommandBuffer);
+		indexBuffer->Bind(m_RenderCommandBuffer);
+		pipeline->Bind(m_RenderCommandBuffer);
+		pipeline->Draw(m_RenderCommandBuffer, indexBuffer->GetCount());
+	}
+	void RenderEngine::DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count) {
+		pipeline->Bind(m_RenderCommandBuffer);
+		pipeline->DrawArrays(m_RenderCommandBuffer, count);
 	}
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{

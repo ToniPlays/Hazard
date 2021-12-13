@@ -54,10 +54,20 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexBindingDescriptionCount = 1;
-		vertexInputInfo.pVertexBindingDescriptions = &inputBindings;
-		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(inputAttribs.size());
-		vertexInputInfo.pVertexAttributeDescriptions = inputAttribs.data();
+
+		//If vertex shader has no inputs
+		if (shaderData.Stages.at(ShaderType::Vertex).Inputs.size() != 0) {
+			vertexInputInfo.vertexBindingDescriptionCount = 1;
+			vertexInputInfo.pVertexBindingDescriptions = &inputBindings;
+			vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(inputAttribs.size());
+			vertexInputInfo.pVertexAttributeDescriptions = inputAttribs.data();
+		}
+		else {
+			vertexInputInfo.vertexBindingDescriptionCount = 0;
+			vertexInputInfo.pVertexBindingDescriptions = nullptr;
+			vertexInputInfo.vertexAttributeDescriptionCount = 0;
+			vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+		}
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -97,7 +107,7 @@ namespace Hazard::Rendering::Vulkan
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = VKUtils::DrawTypeToVKType(m_Specs.DrawType);
 		rasterizer.lineWidth = m_Specs.LineWidth;
-		rasterizer.cullMode = VK_CULL_MODE_FRONT_BIT;
+		rasterizer.cullMode = m_Specs.Culling ? VK_CULL_MODE_FRONT_BIT : VK_CULL_MODE_NONE;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 
@@ -115,8 +125,8 @@ namespace Hazard::Rendering::Vulkan
 		colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
 		colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
 		VkPipelineColorBlendStateCreateInfo colorBlending = {};
 		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -131,9 +141,9 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineDepthStencilStateCreateInfo depthStencil = {};
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = VK_TRUE;
-		depthStencil.depthWriteEnable = VK_TRUE;
-		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthTestEnable = !m_Specs.IsBackground ? VK_TRUE : VK_FALSE;
+		depthStencil.depthWriteEnable = !m_Specs.IsBackground ? VK_TRUE : VK_FALSE;
+		depthStencil.depthCompareOp = !m_Specs.IsBackground ? VK_COMPARE_OP_LESS : VK_COMPARE_OP_ALWAYS;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
 		depthStencil.stencilTestEnable = VK_FALSE;
 
@@ -160,15 +170,13 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		RenderContextCommand::Submit([=]() {
-			VkDeviceSize offsets[1] = { 0 };
+		VkDeviceSize offsets[1] = { 0 };
 
-			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
-			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
-			});
+		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{

@@ -2,6 +2,7 @@
 #include "Hazard.h"
 #include "GUI/EditorWindow.h"
 #include "GUI/Window/Rendering/TransformationGizmo.h"
+#include "Editor/EditorGrid.h"
 
 #include "Editor/EditorCamera.h"
 #include "Hazard/Rendering/WorldRenderer.h"
@@ -17,6 +18,7 @@ namespace WindowElement {
 		~Viewport() = default;
 		
 		void Init() override;
+		void OnUpdate() override;
 		void OnFrameBegin() override { m_Gizmos.OnFrameBegin(); };
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;
@@ -29,6 +31,7 @@ namespace WindowElement {
 
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
+		Editor::Grid m_Grid;
 
 		Ref<WorldRenderer> m_WorldRenderer;
 		TransformationGizmo m_Gizmos;

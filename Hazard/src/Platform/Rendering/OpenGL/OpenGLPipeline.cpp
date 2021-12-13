@@ -29,6 +29,10 @@ namespace Hazard::Rendering::OpenGL
 		glLineWidth(m_Specs.LineWidth);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		if (m_Specs.Culling) glEnable(GL_CULL_FACE); 
+		else glDisable(GL_CULL_FACE);
+
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{

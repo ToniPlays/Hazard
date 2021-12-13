@@ -19,7 +19,9 @@ namespace WindowElement {
 		void OnWindowRender() override;
 
 	private:
+
 		Camera m_Camera;
+		bool m_Resize = false;
 		Ref<WorldRenderer> m_Renderer;
 		uint32_t m_Width = 0, m_Height = 0;
 	};

@@ -8,17 +8,20 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") {}
+	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") 
+	{
+	}
 		
 	void GameViewport::Init()
 	{
 		SetActive(Application::HasModule<RenderEngine>());
 		if (!IsActive()) return;
 
+		SetActive(false);
 		WorldRendererSettings settings = {};
 		settings.ViewportSize = { 1920, 1080 };
 		settings.Camera = &m_Camera;
-		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
+		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
 		settings.ClearColor = Color::FromHex("#646464");
 		m_Renderer = WorldRenderer::Create(&settings);
 	}
@@ -27,7 +30,13 @@ namespace WindowElement {
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 		auto& [cam, transform] = world->GetWorldCamera();
 
-		if (cam) {
+		if (cam) 
+		{
+			if (m_Resize) {
+				cam->RecalculateProjection(m_Width, m_Height);
+			}
+
+
 			m_Camera.SetView(glm::inverse(transform->GetTransformNoScale()));
 			m_Camera.SetProjection(cam->GetProjection());
 		}
@@ -51,8 +60,8 @@ namespace WindowElement {
 			m_Width = size.x;
 			m_Height = size.y;
 
-			m_Renderer->SetViewport(size.x, size.y);
-			m_Camera.SetViewport(size.x, size.y);
+			m_Renderer->SetViewport(m_Width, m_Height);
+			m_Resize = true;
 		}
 
 		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
