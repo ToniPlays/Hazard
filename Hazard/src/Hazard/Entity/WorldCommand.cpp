@@ -5,6 +5,7 @@
 #include "Hazard/Core/Application.h"
 #include "Component.h"
 #include "WorldHandler.h"
+#include "Hazard/Audio/AudioCommand.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 #include "Hazard/Rendering/RenderCommand.h"
@@ -54,13 +55,12 @@ namespace Hazard::ECS {
 	{
 		using namespace Physics;
 
-		World* world = GetCurrentWorld().Raw();
+		Ref<World> world = GetCurrentWorld();
 
-		auto& rb2dView = world->GetWorldRegistry().view<Rigidbody2DComponent>();
-
+		auto& rb2dView = world->GetEntitiesWith<Rigidbody2DComponent>();
 		for (auto& e : rb2dView)
 		{
-			Entity entity = { e, world };
+			Entity entity = { e, world.Raw()};
 			TransformComponent& tc = entity.GetComponent<TransformComponent>();
 			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
 
@@ -93,6 +93,44 @@ namespace Hazard::ECS {
 
 				bc2d.runtimeFixture = PhysicsCommand::CreateCollider(&info);
 			}
+			if (entity.HasComponent<CircleCollider2DComponent>()) {
+				CircleCollider2DComponent& cc2d = entity.GetComponent<CircleCollider2DComponent>();
+
+				PhysicsCollider2DCreateInfo info = {};
+
+				info.Handle = (uint32_t)entity;
+				info.Body = rb2d.runtimeBody;
+				info.Type = ColliderType::Circle;
+				info.Scale = { tc.Scale.x, tc.Scale.y };
+				info.Offset = cc2d.Offset;
+				info.Radius = cc2d.Radius;
+				info.Density = cc2d.Density;
+				info.Friction = cc2d.Friction;
+				info.Restitution = cc2d.Restitution;
+				info.RestitutionThreshold = cc2d.RestitutionThreshold;
+				info.IsSensor = cc2d.IsSensor;
+
+				cc2d.runtimeFixture = PhysicsCommand::CreateCollider(&info);
+			}
+		}
+
+		auto& acView = world->GetEntitiesWith<AudioSourceComponent>();
+
+		for (auto& e : acView) {
+			Entity entity = { e, world.Raw() };
+			
+			using namespace Hazard::Audio;
+			auto comp = entity.GetComponent<AudioSourceComponent>();
+
+			AudioClipCreateInfo createInfo = {};
+			createInfo.FileName = comp.SourceFile;
+			createInfo.Gain = comp.Gain;
+			createInfo.Pitch = comp.Pitch;
+			createInfo.Looping = comp.Looping;
+			createInfo.Spatial = comp.Spatial;
+			createInfo.PlayOnCreate = true;
+
+			comp.AudioClip = Audio::AudioCommand::Create(&createInfo);
 		}
 	}
 	void WorldCommand::WorldRuntimeEnd()
@@ -119,7 +157,7 @@ namespace Hazard::ECS {
 			if (!e.IsVisible()) continue;
 
 			auto& [sprite, transform] = spriteRenderers.get<SpriteRendererComponent, TransformComponent>(entity);
-			RenderCommand::DrawQuadTextured(sprite, transform);
+			RenderCommand::DrawQuad(transform.GetTransformMat4(), sprite.Tint, sprite.Texture);
 		}
 
 		auto batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
@@ -141,12 +179,13 @@ namespace Hazard::ECS {
 	void WorldCommand::UpdatePhysics()
 	{
 		Ref<World> world = GetCurrentWorld();
-		auto& rbView = world->FindEntitiesWith<Rigidbody2DComponent>();
+		auto& rbView = world->GetEntitiesWith<Rigidbody2DComponent>();
 
-		for (auto& [entityID, rb2d] : rbView)
+		for (auto& e : rbView)
 		{
-			Entity entity = { entityID, world.Raw() };
+			Entity entity = { e, world.Raw() };
 			auto& tc = entity.GetComponent<TransformComponent>();
+			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
 
 			glm::vec2 pos = Physics::PhysicsCommand::GetPosition(rb2d.runtimeBody);
 			float angle = Physics::PhysicsCommand::GetAngle(rb2d.runtimeBody);
@@ -155,28 +194,5 @@ namespace Hazard::ECS {
 			tc.Translation.y = pos.y;
 			tc.Rotation.z = angle;
 		}
-	}
-
-	//Submit element to RenderEngine
-	template<typename C, typename T>
-	void WorldCommand::Render(C& component, T& transform)
-	{
-		static_assert(false);
-	}
-	template<>
-	void WorldCommand::Render(SpriteRendererComponent& component, TransformComponent& transform)
-	{
-		RenderCommand::DrawQuad(component, transform);
-	}
-	template<>
-	void WorldCommand::Render(MeshComponent& component, TransformComponent& transform)
-	{
-
-	}
-
-	template<>
-	void WorldCommand::Render(BatchComponent& component, TransformComponent& transform)
-	{
-
 	}
 }

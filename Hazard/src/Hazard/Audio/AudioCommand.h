@@ -8,7 +8,7 @@ namespace Hazard::Audio
 	class AudioCommand 
 	{
 	public:
-		static void Create(const std::string& fileName);
+		static Ref<AudioClip> Create(AudioClipCreateInfo* createInfo);
 		static void StopAll();
 
 		static std::vector<Ref<AudioClip>> GetAudioClips() { return AudioLoader::GetAllClips(); }

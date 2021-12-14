@@ -5,11 +5,17 @@
 #include "imgui.h"
 #include "GUI/ImGuizmo.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Core/SceneRuntimeHandler.h"
 
 using namespace Hazard::ECS;
 
 namespace WindowElement {
-
+	TransformationGizmo::TransformationGizmo()
+	{
+		Runtime::SceneRuntimeHandler::AddRuntimeCallback([&](bool runtime) {
+			currentSelection = Application::GetModule<WorldHandler>().GetCurrentWorld()->GetEntity(currentSelection);
+		});
+	}
 	void TransformationGizmo::OnFrameBegin()
 	{
 		ImGuizmo::BeginFrame();

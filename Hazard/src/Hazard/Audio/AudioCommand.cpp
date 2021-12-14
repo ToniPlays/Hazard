@@ -6,10 +6,10 @@
 
 namespace Hazard::Audio 
 {
-	void AudioCommand::Create(const std::string& fileName)
+	Ref<AudioClip> AudioCommand::Create(AudioClipCreateInfo* createInfo)
 	{
-		HZR_CORE_INFO("[Audio]: Loading file");
-		//return Ref<AudioClip>::Create();
+		HZR_CORE_INFO("[Audio]: Loading file {0}", createInfo->FileName);
+		return nullptr;
 	}
 	void AudioCommand::StopAll()
 	{

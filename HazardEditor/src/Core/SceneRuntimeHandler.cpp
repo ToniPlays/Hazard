@@ -5,6 +5,7 @@
 #include "GUI/Window/AllWindows.h"
 #include "EditorEvent.h"
 #include "GUI/EditorView.h"
+#include "Core/EditorEvent.h"
 
 namespace Runtime {
 
@@ -44,6 +45,11 @@ namespace Runtime {
 			PhysicsCommand::StopSimulation();
 			handler.SetWorld(s_EditorWorld);
 		}
+
+		for (auto& callback : m_Callbacks) {
+			callback(s_SceneRunning);
+		}
+
 		if (s_ScenePaused && s_SceneRunning) return;
 
 		s_ScriptManager->SetActive(s_SceneRunning);

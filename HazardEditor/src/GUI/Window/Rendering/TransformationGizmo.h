@@ -14,7 +14,7 @@ namespace WindowElement {
 	class TransformationGizmo : public RenderableElement {
 
 	public:
-		TransformationGizmo() = default;
+		TransformationGizmo();
 		~TransformationGizmo() = default;
 
 		void OnFrameBegin() override;

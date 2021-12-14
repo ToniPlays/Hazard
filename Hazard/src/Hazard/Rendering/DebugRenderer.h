@@ -17,6 +17,22 @@ namespace Hazard::Rendering
 		glm::vec3 Position;
 		glm::vec4 Color;
 	};
+	struct CircleVertex2D
+	{
+		glm::vec3 Position;
+		glm::vec3 LocalPosition;
+		glm::vec4 Color;
+		float Thickness;
+		float Fade;
+	};
+	struct Circle
+	{
+		glm::mat4 Transform;
+		Color Color;
+		float Radius;
+		float Thickness;
+		float Fade;
+	};
 	struct Line
 	{
 		glm::vec3 Start;
@@ -34,10 +50,15 @@ namespace Hazard::Rendering
 
 		void SetTargetRenderPass(Ref<RenderPass> renderPass);
 		void BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags);
-		void BeginBatch();
 		void EndWorld();
-		void Flush();
+
+		void BeginLineBatch();
+		void FlushLines();
 		void SubmitLine(Line line);
+
+		void BeginCircleBatch();
+		void FlushCircles();
+		void SubmitCircle(Circle cirlce);
 
 		void Recreate(Ref<RenderPass> renderPass);
 
@@ -49,5 +70,12 @@ namespace Hazard::Rendering
 		Ref<Pipeline> m_LinePipeline = nullptr;
 		Ref<VertexBuffer> m_LineVertexBuffer;
 		Batch<LineVertex> m_LineBatch;
+
+		Ref<Pipeline> m_CirclePipeline = nullptr;
+		Ref<VertexBuffer> m_CircleVertexBuffer;
+		Ref<IndexBuffer> m_CircleIndexBuffer;
+		Batch<CircleVertex2D> m_CircleBatch;
+
+		glm::vec4 m_QuadPos[4];
 	};
 }

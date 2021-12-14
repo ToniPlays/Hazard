@@ -75,7 +75,7 @@ namespace Hazard::Physics
 		{
 			b2CircleShape circle;
 			circle.m_p.Set(createInfo->Offset.x, createInfo->Offset.y);
-
+			circle.m_radius = createInfo->Radius * createInfo->Scale.x;
 			fixture.shape = &circle;
 			fixture.density = createInfo->Density;
 			fixture.friction = createInfo->Friction;

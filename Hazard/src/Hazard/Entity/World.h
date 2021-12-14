@@ -30,16 +30,10 @@ namespace Hazard::ECS {
 
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
-		template<typename T>
-		std::vector<std::tuple<entt::entity, T>> FindEntitiesWith() 
+		template<typename... T>
+		auto GetEntitiesWith() 
 		{
-			std::vector<std::tuple<entt::entity, T>> result;
-			auto view = m_Registry.view<T>();
-
-			for (auto entity : view) {
-				result.push_back(std::tuple(entity, view.get<T>(entity)));
-			}
-			return result;
+			return m_Registry.view<T...>();
 		}
 	private:
 		UUID m_Uuid;

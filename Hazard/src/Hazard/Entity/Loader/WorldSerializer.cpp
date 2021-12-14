@@ -60,6 +60,7 @@ namespace Hazard::ECS::Loader {
 		//Physics
 		TrySerializeEditor<Rigidbody2DComponent>(entity, out);
 		TrySerializeEditor<BoxCollider2DComponent>(entity, out);
+		TrySerializeEditor<CircleCollider2DComponent>(entity, out);
 
 		TrySerializeEditor<BatchComponent>(entity, out);
 
@@ -180,6 +181,19 @@ namespace Hazard::ECS::Loader {
 		YamlUtils::Map(out, "BoxCollider2DComponent", [&]() {
 			YamlUtils::Serialize(out, "Offset", component.Offset);
 			YamlUtils::Serialize(out, "Size", component.Size);
+			YamlUtils::Serialize(out, "Density", component.Density);
+			YamlUtils::Serialize(out, "Friction", component.Friction);
+			YamlUtils::Serialize(out, "Restitution", component.Restitution);
+			YamlUtils::Serialize(out, "RestitutionThreshold", component.RestitutionThreshold);
+			YamlUtils::Serialize(out, "IsSensor", component.IsSensor);
+			});
+	}
+	template<>
+	static void WorldSerializer::SerializeComponentEditor(Entity& entity, CircleCollider2DComponent& component, YAML::Emitter& out)
+	{
+		YamlUtils::Map(out, "CircleCollider2DComponent", [&]() {
+			YamlUtils::Serialize(out, "Offset", component.Offset);
+			YamlUtils::Serialize(out, "Radius", component.Radius);
 			YamlUtils::Serialize(out, "Density", component.Density);
 			YamlUtils::Serialize(out, "Friction", component.Friction);
 			YamlUtils::Serialize(out, "Restitution", component.Restitution);

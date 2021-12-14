@@ -125,6 +125,12 @@ namespace WindowElement {
 					if (!entity.HasComponent<Rigidbody2DComponent>())
 						entity.AddComponent<Rigidbody2DComponent>();
 						});
+				if (!entity.HasComponent<CircleCollider2DComponent>())
+					Layout::MenuItem("Circle collider 2D", [&]() {
+					entity.AddComponent<CircleCollider2DComponent>();
+					if (!entity.HasComponent<Rigidbody2DComponent>())
+						entity.AddComponent<Rigidbody2DComponent>();
+						});
 
 				ImGui::Separator();
 				});

@@ -28,22 +28,6 @@ namespace Hazard::Rendering
 			s_Engine->Get2D().Submit(quad);
 			});
 	}
-	void RenderCommand::DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc)
-	{
-		glm::mat4 transform = Math::ToTransformMatrix(tc.Translation, tc.Rotation, tc.Scale);
-		DrawQuad(transform, comp.Tint, comp.Texture);
-	}
-	void RenderCommand::DrawQuadTextured(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc)
-	{
-		Quad quad;
-		quad.Transform = Math::ToTransformMatrix(tc.Translation, tc.Rotation, tc.Scale);
-		quad.Color = comp.Tint;
-		quad.Texture = comp.Texture;
-
-		s_Engine->Submit([quad]() mutable {
-			s_Engine->Get2D().Submit(quad);
-			});
-	}
 	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color)
 	{
 		Line line = { start, end };
@@ -78,6 +62,19 @@ namespace Hazard::Rendering
 			rd.SubmitLine(line2);
 			rd.SubmitLine(line3);
 			rd.SubmitLine(line4);
+			});
+	}
+	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const Color& tint)
+	{
+		Circle circle;
+		circle.Transform = transform;
+		circle.Color = tint;
+		circle.Radius = radius;
+		circle.Thickness = thickness;
+		circle.Fade = 0.01f;
+
+		s_Engine->Submit([circle]() {
+			s_Engine->GetDebugRenderer().SubmitCircle(circle);
 			});
 	}
 	void RenderCommand::DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline) {

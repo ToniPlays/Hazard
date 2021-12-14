@@ -68,6 +68,7 @@ namespace Hazard::ECS
 
 		CopyComponent<Rigidbody2DComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<BoxCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
+		CopyComponent<CircleCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<BatchComponent>(world.m_Registry, m_Registry, entityMap);
 	}
@@ -174,6 +175,7 @@ namespace Hazard::ECS
 	REGISTER_COMPONENT(PointLightComponent);
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
+	REGISTER_COMPONENT(CircleCollider2DComponent);
 	REGISTER_COMPONENT(MeshComponent);
 
 	template<>

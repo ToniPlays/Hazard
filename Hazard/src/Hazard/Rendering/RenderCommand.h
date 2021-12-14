@@ -21,10 +21,11 @@ namespace Hazard::Rendering
 
 		static void DrawQuad(const glm::mat4& transform, const Color& tint);
 		static void DrawQuad(const glm::mat4& transform, const Color& tint, const Ref<Texture2D>& texture);
-		static void DrawQuad(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc);
-		static void DrawQuadTextured(const ECS::SpriteRendererComponent& comp, const ECS::TransformComponent& tc);
+		//TODO: Remove these?
 		static void DrawRotatedQuad() {};
 		static void DrawScreenSpaceQuad() {};
+		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const Color& tint = Color::White);
+
 		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
 		static void DrawCustomGeometry() {};
 		static void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);

@@ -11,16 +11,17 @@ namespace WindowElement {
 		Properties();
 		~Properties() = default;
 
+		void Init();
 		void OnUpdate() override;
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;
 		bool SelectionContextChange(Events::SelectionContextChange& e);
 
-		bool IsLocked() { return locked; }
-		void SetLocked(bool locked) { this->locked = locked; }
+		bool IsLocked() { return m_Locked; }
+		void SetLocked(bool locked) { this->m_Locked = locked; }
 
 	private:
-		Hazard::ECS::Entity selectionContext;
-		bool locked = false;
+		Hazard::ECS::Entity m_SelectionContext;
+		bool m_Locked = false;
 	};
 }

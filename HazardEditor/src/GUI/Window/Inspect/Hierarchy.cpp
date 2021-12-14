@@ -12,12 +12,20 @@
 #include "Library/Layout/Dockspace.h"
 #include "../Rendering/WorldEnvironmentData.h"
 #include "../Tabs/EditorMainTab.h"
+#include "Core/SceneRuntimeHandler.h"
 
 using namespace WindowLayout;
 
 namespace WindowElement {
 
 	Hierarchy::Hierarchy() : EditorWindow(ICON_FK_ALIGN_LEFT " Hierarchy") {}
+
+	void Hierarchy::Init()
+	{
+		Runtime::SceneRuntimeHandler::AddRuntimeCallback([&](bool runtime) {
+			m_SelectionContext = Application::GetModule<WorldHandler>().GetCurrentWorld()->GetEntity(m_SelectionContext);
+			});
+	}
 
 	bool Hierarchy::OnEvent(Event& e)
 	{

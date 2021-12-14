@@ -13,6 +13,16 @@ namespace Hazard::Audio {
 		Waw
 	};
 
+	struct AudioClipCreateInfo {
+		std::string FileName;
+		float Gain = 1.0f;
+		float Pitch = 1.0f;
+		bool PlayOnCreate = false;
+		bool Looping = false;
+		bool Spatial = false;
+	};
+
+
 	class AudioLoader {
 	public:
 		static void Init();

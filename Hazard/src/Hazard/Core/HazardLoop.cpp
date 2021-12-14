@@ -16,16 +16,16 @@ namespace Hazard::Core {
 	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
 		HazardLoop::s_Instance = this;
+		m_ModuleHandler = CreateScope<Module::ModuleHandler>();
 	}
 	HazardLoop::~HazardLoop()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 		m_Application->Close();
 		AssetManager::Shutdown();
-		m_ModuleHandler.Close();
-		delete m_Application;
-
+		m_ModuleHandler->Close();
 		HZR_PROFILE_SESSION_END();
+		delete m_Application;
 	}
 	void HazardLoop::Start()
 	{
@@ -73,11 +73,11 @@ namespace Hazard::Core {
 		m_Application->UpdateData();
 		//Update
 		m_Application->Update();
-		m_ModuleHandler.Update();
+		m_ModuleHandler->Update();
 		//Render
-		m_ModuleHandler.PreRender();
-		m_ModuleHandler.Render();
-		m_ModuleHandler.PostRender();
+		m_ModuleHandler->PreRender();
+		m_ModuleHandler->Render();
+		m_ModuleHandler->PostRender();
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{
@@ -85,7 +85,7 @@ namespace Hazard::Core {
 		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;
 
-		if (!m_ModuleHandler.OnEvent(e))
+		if (!m_ModuleHandler->OnEvent(e))
 			m_Application->OnEvent(e);
 	}
 }

@@ -37,11 +37,11 @@ namespace Hazard {
 		static ApplicationData& GetData() { return s_Data; }
 
 		template<typename T, typename... Args>
-		static T& PushModule(Args... args) { return Core::HazardLoop::GetCurrent().m_ModuleHandler.AddModule<T>(std::forward<Args>(args)...); };
+		static T& PushModule(Args... args) { return Core::HazardLoop::GetCurrent().m_ModuleHandler->AddModule<T>(std::forward<Args>(args)...); };
 		template<typename T>
-		static T& GetModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler.GetModule<T>(); }
+		static T& GetModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler->GetModule<T>(); }
 		template<typename T>
-		static bool HasModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler.HasModule<T>(); }
+		static bool HasModule() { return Core::HazardLoop::GetCurrent().m_ModuleHandler->HasModule<T>(); }
 
 	private:
 		static ApplicationData s_Data;

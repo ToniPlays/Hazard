@@ -422,4 +422,28 @@ namespace WindowElement {
 			[]() {
 			});
 	}
+	template<>
+	inline void Draw(const char* name, Entity entity, CircleCollider2DComponent& component) {
+		Layout::ComponentTreenode<CircleCollider2DComponent>(entity, name, [&]() {
+			Layout::IDGroup("#offset", [&]() {
+				Input::Vec2("Offset", component.Offset, 1.0f, 75);
+				});
+
+			Input::DragFloat("Radius", component.Radius);
+			Layout::NextLine(5);
+
+			Layout::Text("Sensor");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::Checkbox("##sensor", component.IsSensor);
+			Layout::NextLine(5);
+
+			Layout::Text("Density");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::DragFloat("##Density", component.Density);
+			},
+			[]() {
+			});
+	}
 }

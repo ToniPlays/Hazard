@@ -25,7 +25,7 @@ namespace Hazard::Core
 
 	private:
 		Application* m_Application = nullptr;
-		Module::ModuleHandler m_ModuleHandler;
+		Scope<Module::ModuleHandler> m_ModuleHandler;
 
 		bool m_ShouldClose = false;
 		double m_LastTime = 0;

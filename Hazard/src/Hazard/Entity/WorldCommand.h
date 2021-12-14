@@ -15,9 +15,6 @@ namespace Hazard::ECS {
 		static Entity GetEntity(uint32_t id);
 		static Ref<World> GetCurrentWorld();
 
-		template<typename C, typename T>
-		static void Render(C& component, T& transform);
-
 		template<typename T>
 		static void OnScriptAttached(Entity& entity, T& script);
 		template<typename T>

@@ -49,6 +49,7 @@ namespace Hazard::ECS::Loader
 
 				TryDeserializeComponent<Rigidbody2DComponent>("Rigidbody2DComponent", entity, node);
 				TryDeserializeComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, node);
+				TryDeserializeComponent<CircleCollider2DComponent>("CircleCollider2DComponent", entity, node);
 
 				TryDeserializeComponent<BatchComponent>("BatchComponent", entity, node);
 			}
@@ -186,6 +187,18 @@ namespace Hazard::ECS::Loader
 		auto& component = entity.AddComponent<BoxCollider2DComponent>();
 		YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
 		YamlUtils::Deserialize(comp, "Size", component.Size, glm::vec2(1.0f));
+		YamlUtils::Deserialize(comp, "Density", component.Density, 1.0f);
+		YamlUtils::Deserialize(comp, "Friction", component.Friction, 1.0f);
+		YamlUtils::Deserialize(comp, "Restitution", component.Restitution, 1.0f);
+		YamlUtils::Deserialize(comp, "RestitutionThreshold", component.RestitutionThreshold, 0.1f);
+		YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
+	}
+	template<>
+	static void WorldDeserializer::Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
+	{
+		auto& component = entity.AddComponent<CircleCollider2DComponent>();
+		YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
+		YamlUtils::Deserialize(comp, "Radius", component.Radius, 0.5f);
 		YamlUtils::Deserialize(comp, "Density", component.Density, 1.0f);
 		YamlUtils::Deserialize(comp, "Friction", component.Friction, 1.0f);
 		YamlUtils::Deserialize(comp, "Restitution", component.Restitution, 1.0f);
