@@ -10,7 +10,7 @@ namespace Hazard
 		static void Serialize(YAML::Emitter& out, const std::string& key, T value);
 
 		template<typename T>
-		static void Deserialize(YAML::Node node, const std::string& key, T& value);
+		static void Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue);
 
 		template<typename T>
 		static void Map(YAML::Emitter& out, const std::string& key, T fn) 

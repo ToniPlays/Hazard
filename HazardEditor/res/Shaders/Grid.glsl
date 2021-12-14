@@ -8,7 +8,7 @@ layout(std140, binding = 1) uniform Grid {
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;
-	uniform float xxx;
+	uniform float u_ScaleFading;
 
 } u_Grid;
 
@@ -52,7 +52,7 @@ layout(std140, binding = 1) uniform Grid {
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;
-	uniform float xxx;
+	uniform float u_ScaleFading;
 
 } u_Grid;
 
@@ -68,7 +68,7 @@ vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
     float minimumz = min(derivative.y, 1);
     float minimumx = min(derivative.x, 1);
     vec4 color = vec4(0.2, 0.2, 0.2, 1.0 - min(line, 1.0));
-
+    if(!drawAxis) return color;
     // z axis
     if(fragPos3D.x > -axisWidth * minimumx && fragPos3D.x < axisWidth * minimumx) {
         color = vec4(0.0, 0.5, 1.0, 0.8);
@@ -79,7 +79,8 @@ vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
     }
     return color;
 }
-float computeDepth(vec3 pos) {
+float computeDepth(vec3 pos) 
+{
     vec4 clip_space_pos = u_Grid.u_Proj * u_Grid.u_View * vec4(pos.xyz, 1.0);
     return (clip_space_pos.z / clip_space_pos.w);
 }

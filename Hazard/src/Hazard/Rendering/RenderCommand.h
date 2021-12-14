@@ -17,6 +17,7 @@ namespace Hazard::Rendering
 
 		static void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) { RenderContextCommand::BeginRenderPass(buffer, renderPass); }
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
+		static void SetLineWidth(float lineWidth);
 
 		static void DrawQuad(const glm::mat4& transform, const Color& tint);
 		static void DrawQuad(const glm::mat4& transform, const Color& tint, const Ref<Texture2D>& texture);

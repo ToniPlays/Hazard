@@ -45,6 +45,7 @@ namespace Hazard::Rendering {
 
 		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;
 		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) = 0;
+		virtual void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) = 0;
 
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
 		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;

@@ -32,6 +32,7 @@ namespace Hazard::Rendering {
 		}
 		static void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) { m_Context->GetContext().BeginRenderPass(buffer, renderPass); }
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { m_Context->GetContext().EndRenderPass(buffer); }
+		static void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) { m_Context->GetContext().SetLineWidth(buffer, lineWidth); }
 		static RenderContext& GetContext() { return *m_Context; };
 		static void SetDebugCallback(ErrorCallback& callback);
 		static void SetClearColor(const Color& color);

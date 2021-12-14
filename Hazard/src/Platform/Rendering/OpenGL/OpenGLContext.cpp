@@ -73,6 +73,11 @@ namespace Hazard::Rendering {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
+		void OpenGLContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
+		{
+			glLineWidth(lineWidth);
+		}
+
 		void OpenGLContext::SetViewport(int x, int y, int w, int h)
 		{
 			glViewport(x, y, w, h);

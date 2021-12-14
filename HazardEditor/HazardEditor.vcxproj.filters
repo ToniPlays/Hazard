@@ -72,6 +72,9 @@
     <ClInclude Include="src\Editor\EditorCamera.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorGrid.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -95,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="src\GUI\Window\AllWindows.h">
       <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Window\Debug\AudioEngineDebug.h">
+      <Filter>GUI\Window\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Window\Debug\Console.h">
       <Filter>GUI\Window\Debug</Filter>
@@ -204,7 +210,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorGrid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -217,6 +222,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorGrid.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorSettings.cpp">
@@ -236,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\ImGuizmo.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Window\Debug\AudioEngineDebug.cpp">
+      <Filter>GUI\Window\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Window\Debug\Console.cpp">
       <Filter>GUI\Window\Debug</Filter>
@@ -333,9 +344,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\EditorGrid.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\Grid.glsl" />
   </ItemGroup>
 </Project>

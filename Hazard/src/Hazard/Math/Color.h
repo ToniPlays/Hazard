@@ -5,11 +5,10 @@
 
 namespace Hazard {
 
-
-
 	class Color {
 	public:
 		float r = 0, g = 0, b = 0, a = 0;
+
 	public:
 		Color();
 		Color(const char* color);
@@ -32,7 +31,15 @@ namespace Hazard {
 		Color operator = (const std::string& value) {
 			return FromHex(value);
 		}
+
+	public:
 		static Color Black;
 		static Color White;
+		static Color Red;
+		static Color Green;
+		static Color Blue;
+		static Color Yellow;
+		static Color Purple;
+		static Color Turqoise;
 	};
 }

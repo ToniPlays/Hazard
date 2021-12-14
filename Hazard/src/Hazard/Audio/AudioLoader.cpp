@@ -41,15 +41,16 @@ namespace Hazard::Audio {
 		HZR_ERROR("[Audio]: Failed to load {0}", file);
 		return FileFormat::None;
 	}
-	AudioClip AudioLoader::LoadFile(const std::string& file)
+	Ref<AudioClip> AudioLoader::LoadFile(const std::string& file)
 	{
+		return nullptr;
 		switch (GetFileFormat(file))
 		{
-		case FileFormat::Mp3: return LoadMp3(file);
+		case FileFormat::Mp3: LoadMp3(file);
 		}
 
 		HZR_ERROR("[Audio]: Failed to load {0}", file);
-		return AudioClip();
+		return nullptr;
 	}
 	ALenum AudioLoader::GetOpenALFormat(uint32_t channels)
 	{
@@ -60,7 +61,7 @@ namespace Hazard::Audio {
 		}
 		return 0;
 	}
-	AudioClip AudioLoader::LoadMp3(const std::string& file)
+	void AudioLoader::LoadMp3(const std::string& file)
 	{
 		//Check if file is already loaded
 		AudioBufferData* buffer = nullptr;
@@ -78,18 +79,16 @@ namespace Hazard::Audio {
 			buffer->AlFormat = GetOpenALFormat(buffer->Channels);
 			buffer->LenSec = size / (info.avg_bitrate_kbps * 1024.0f);
 			buffer->AudioData = info.buffer;
-
-			//Vault::Add(file, buffer);
 		}
 		//Initialize AudioClip
 		ALuint bufferID;
 		alGenBuffers(1, &bufferID);
 		alBufferData(bufferID, buffer->AlFormat, buffer->AudioData, (size_t)buffer->Size, buffer->SampleRate);
+		/*
+		Ref<AudioClip> clip = Ref<AudioClip>::Create(bufferID, true, buffer->LenSec);
+		alGenSources(1, &clip->m_Source);
+		alSourcei(clip->m_Source, AL_BUFFER, bufferID);
 
-		AudioClip clip = { bufferID, true, buffer->LenSec };
-		alGenSources(1, &clip.m_Source);
-		alSourcei(clip.m_Source, AL_BUFFER, bufferID);
-
-		return clip;
+		return clip;*/
 	}
 }

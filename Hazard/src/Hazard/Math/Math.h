@@ -18,71 +18,76 @@ namespace Hazard {
 
 	public:
 		template<typename T>
-		static T MaxValue() 
+		inline static T MaxValue() 
 		{
 			return std::numeric_limits<T>::max();
 		}
 		template<typename T>
-		static T MinValue() 
+		inline static T MinValue()
 		{
 			return std::numeric_limits<T>::min();
 		}
 
 		template<typename T, typename U>
-		static T Pow(T value, U pow) 
+		inline static T Pow(T value, U pow)
 		{
 			return (T)glm::pow(value, pow);
 		}
 		template<typename T>
-		static T Sqrt(T value) 
+		inline static T Sqrt(T value)
 		{
 			return glm::sqrt(value);
 		}
 		template<typename T>
-		static T Max(T a, T b) 
+		inline static T Floor(T value)
+		{
+			return glm::floor(value);
+		}
+		template<typename T>
+		inline static T Max(T a, T b)
 		{
 			return a >= b ? a : b;
 		}
 		template<typename T>
-		static T Min(T a, T b) {
+		inline static T Min(T a, T b) {
 			return a <= b ? a : b;
 		}
 		template<typename T, typename U>
-		static T Clamp(T value, U min, U max) 
+		inline static T Clamp(T value, U min, U max)
 		{
 			if (value <= min) return min;
 			else if (value >= max) return max;
 			return value;
 		}
 		template<typename T>
-		static T Round(T value, int digits) 
+		inline static T Round(T value, int digits)
 		{
 			float pow = Pow(10, digits);
 			return glm::round(value * pow) / pow;
 		}
 
 		template<typename T>
-		static T ToRange(T value, T min, T max) 
+		inline static T ToRange(T value, T min, T max)
 		{
 			if (value > max) return value - max;
 			else if (value < min) return value + max;
 			else return value;
 		}
 
-		static double ToRadians(double value) 
+		inline static double ToRadians(double value)
 		{
 			return glm::radians(value);
 		}
 
-		static double Sin(double value)
+		inline static double Sin(double value)
 		{
 			return glm::sin(value);
 		}
-		static double Cos(double value)
+		inline static double Cos(double value)
 		{
 			return glm::cos(value);
 		}
-		static double Tan(double value)
+		inline static double Tan(double value)
 		{
 			return glm::tan(value);
 		}
@@ -114,7 +119,6 @@ namespace Hazard {
 
 			return glm::translate(glm::mat4(1.0f), translation)	* rot
 				* glm::scale(glm::mat4(1.0f), scale);
-
 		}
 		static glm::vec3 GetUpDirection(glm::quat orientation) 
 		{
@@ -128,7 +132,6 @@ namespace Hazard {
 		{
 			return glm::rotate(orientation, glm::vec3(0.0f, 0.0f, 1.0f));
 		}
-
 		//
 		static bool DecomposeTransform(const glm::mat4& transform, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale) {
 			using namespace glm;

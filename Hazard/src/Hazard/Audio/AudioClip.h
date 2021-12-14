@@ -19,9 +19,9 @@ namespace Hazard::Audio {
 		float LenSec = 0;
 	};
 
-	class AudioClip {
+	class AudioClip : public RefCount {
 	public:
-		AudioClip() = default;
+		AudioClip() = delete;
 		~AudioClip();
 
 		void Play();
@@ -48,8 +48,6 @@ namespace Hazard::Audio {
 		float GetTotalDuration() { return m_TotalDuration; }
 		std::pair<uint32_t, uint32_t> GetLength() const;
 
-		static AudioClip LoadFromFile(const std::string& file, bool spatial = false);
-
 	private:
 
 		AudioClip(uint32_t buffer, bool loaded, float length);
@@ -65,6 +63,8 @@ namespace Hazard::Audio {
 		bool m_Loaded = false;
 		bool m_Spatial = false;
 		bool m_Looping = false;
+
+		static inline std::vector<Ref<AudioClip>> s_AudioClips;
 
 		friend class AudioLoader;
 	};

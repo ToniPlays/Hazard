@@ -7,6 +7,12 @@
 
 namespace Hazard::Rendering
 {
+	void RenderCommand::SetLineWidth(float lineWidth)
+	{
+		s_Engine->Submit([lineWidth]() mutable {
+			s_Engine->SetLineWidth(lineWidth);
+			});
+	}
 	void RenderCommand::DrawQuad(const glm::mat4& transform, const Color& tint)
 	{
 		DrawQuad(transform, tint, s_Engine->m_WhiteTexture);

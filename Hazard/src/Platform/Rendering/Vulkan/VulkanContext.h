@@ -46,6 +46,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
+		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 		
 	public:
 		static void SendDebugMessage(const char* message, const char* code);

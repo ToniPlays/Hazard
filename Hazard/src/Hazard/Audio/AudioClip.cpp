@@ -61,10 +61,4 @@ namespace Hazard::Audio
         //Return audio duration in minutes and seconds
         return { (uint32_t)(m_TotalDuration / 60.0f), (uint32_t)m_TotalDuration % 60 };
     }
-    AudioClip AudioClip::LoadFromFile(const std::string& file, bool spatial)
-    {
-        AudioClip result;
-        result.SetSpatial(spatial);
-        return result;
-    }
 }

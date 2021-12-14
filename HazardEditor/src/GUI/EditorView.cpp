@@ -86,6 +86,7 @@ namespace WindowElement {
 		PushRenderable<SettingsView>();
 		PushRenderable<BuildWindow>();
 		PushRenderable<ScriptEngineDebug>();
+		PushRenderable<AudioEngineDebug>();
 	}
 	void EditorView::Update()
 	{

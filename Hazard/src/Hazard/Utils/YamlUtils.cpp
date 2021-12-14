@@ -146,35 +146,42 @@ namespace Hazard
 
 
 	template<typename T>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, T& value) {
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue) {
 		static_assert(false);
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, bool& value) {
-		value = node[key].as<std::string>() == "True";
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<std::string>() == "True";
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, std::string& value) {
-		value = node[key].as<std::string>();
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, std::string& value, std::string defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<std::string>();
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, uint32_t& value) {
-		value = node[key].as<uint32_t>();
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, uint32_t& value,  uint32_t defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<uint32_t>();
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, float& value) {
-		value = node[key].as<float>();
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, float& value, float defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<float>();
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, glm::vec2& value) {
-		value = node[key].as<glm::vec2>();
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, glm::vec2& value, glm::vec2 defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<glm::vec2>();
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, glm::vec3& value) {
-		value = node[key].as<glm::vec3>();
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, glm::vec3& value, glm::vec3 defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<glm::vec3>();
 	}
 	template<>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, Color& value) {
-		value = Color::FromGLM(node[key].as<glm::vec4>());
+	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = Color::FromGLM(node[key].as<glm::vec4>());
 	}
 }

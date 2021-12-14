@@ -3,7 +3,8 @@
 #include "Hazard/Module.h"
 #include "AL/alc.h"
 
-namespace Hazard::Audio {
+namespace Hazard::Audio 
+{
 	class AudioEngine : public Module::Module
 	{
 	public:

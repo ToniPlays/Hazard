@@ -16,6 +16,7 @@ namespace WindowElement {
 
 		void OnWindowRender() override;
 		bool SelectionContextChange(Events::SelectionContextChange& e);
+		static ECS::Entity GetSelectedEntity();
 
 	private:
 		void DrawEntity(Entity entity);

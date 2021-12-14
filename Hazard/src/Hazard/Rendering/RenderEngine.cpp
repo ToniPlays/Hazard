@@ -109,6 +109,10 @@ namespace Hazard::Rendering
 		pipeline->Bind(m_RenderCommandBuffer);
 		pipeline->DrawArrays(m_RenderCommandBuffer, count);
 	}
+	void RenderEngine::SetLineWidth(float lineWidth)
+	{
+		RenderContextCommand::SetLineWidth(m_RenderCommandBuffer, lineWidth);
+	}
 	bool RenderEngine::OnResize(WindowResizeEvent& e)
 	{
 		return false;

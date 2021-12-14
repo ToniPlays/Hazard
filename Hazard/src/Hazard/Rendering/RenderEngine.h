@@ -57,6 +57,7 @@ namespace Hazard::Rendering {
 
 		void DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
 		void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
+		void SetLineWidth(float lineWidth);
 		 
 		bool OnResize(WindowResizeEvent& e);
 		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }

@@ -8,9 +8,10 @@
 #include "Library/Style.h"
 #include "Library/Layout/Layout.h"
 #include "Library/Layout/ContextMenus.h"
-#include "GUI/Window/Rendering/WorldEnvironmentData.h"
 #include "Library/DragDropUtils.h"
 #include "Library/Layout/Dockspace.h"
+#include "../Rendering/WorldEnvironmentData.h"
+#include "../Tabs/EditorMainTab.h"
 
 using namespace WindowLayout;
 
@@ -95,6 +96,10 @@ namespace WindowElement {
 	{
 		m_SelectionContext = e.GetEntity();
 		return false;
+	}
+	ECS::Entity Hierarchy::GetSelectedEntity()
+	{
+		return EditorView::GetInstance().GetRenderable<EditorMainTab>()->GetRenderable<Hierarchy>()->m_SelectionContext;
 	}
 	void Hierarchy::DrawEntity(Entity entity)
 	{

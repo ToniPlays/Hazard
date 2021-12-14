@@ -8,6 +8,7 @@
 #include "Core/EditorEvent.h"
 #include "GUI/EditorView.h"
 #include "Hazard/Rendering/WorldRenderer.h"
+#include "../Inspect/Hierarchy.h"
 
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 
@@ -146,6 +147,12 @@ namespace WindowElement {
 		EventDispatcher dispacher(e);
 		return dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 	}
+	bool Viewport::FocusOnEntity(ECS::Entity entity)
+	{
+		if (!entity.IsValid()) return false;
+		m_EditorCamera.SetFocalPoint(entity.GetTransform().Translation);
+		return true;
+	}
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
 		switch (e.GetKeyCode()) {
@@ -164,6 +171,10 @@ namespace WindowElement {
 		case Key::G:
 			m_Gizmos.SetGlobal(!m_Gizmos.IsGlobal());
 			return true;
+		case Key::F: {
+			FocusOnEntity(Hierarchy::GetSelectedEntity());
+			return true;
+		}
 		}
 		return false;
 	}

@@ -15,9 +15,9 @@ namespace WindowElement {
 	void GameViewport::Init()
 	{
 		SetActive(Application::HasModule<RenderEngine>());
+		SetActive(false);
 		if (!IsActive()) return;
 
-		SetActive(false);
 		WorldRendererSettings settings = {};
 		settings.ViewportSize = { 1920, 1080 };
 		settings.Camera = &m_Camera;

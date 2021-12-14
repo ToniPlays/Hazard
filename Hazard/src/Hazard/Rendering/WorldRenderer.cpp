@@ -29,6 +29,7 @@ namespace Hazard::Rendering
 	void WorldRenderer::Begin(Ref<RenderCommandBuffer> cmdBuffer, RenderCommandQueue* queue)
 	{
 		RenderCommand::BeginRenderPass(cmdBuffer, m_RenderPass);
+		RenderCommand::SetLineWidth(m_Settings.LineWidth);
 	}
 	void WorldRenderer::End(Ref<RenderCommandBuffer> cmdBuffer)
 	{

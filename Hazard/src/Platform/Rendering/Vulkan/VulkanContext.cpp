@@ -168,6 +168,13 @@ namespace Hazard::Rendering::Vulkan {
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdEndRenderPass(vkBuffer);
 	}
+	void VulkanContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
+	{
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+
+		vkCmdSetLineWidth(vkBuffer, lineWidth);
+	}
 
 	void VulkanContext::SwapBuffers()
 	{

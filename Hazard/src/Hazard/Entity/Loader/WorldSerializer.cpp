@@ -141,8 +141,10 @@ namespace Hazard::ECS::Loader {
 	{
 		YamlUtils::Map(out, "AudioSourceComponent", [&]() {
 			YamlUtils::Serialize(out, "AudioFile", component.SourceFile);
-			YamlUtils::Serialize(out, "Gain", component.Source.GetGain());
-			YamlUtils::Serialize(out, "Looping", component.Source.IsLooping());
+			YamlUtils::Serialize(out, "Gain", component.Gain);
+			YamlUtils::Serialize(out, "Pitch", component.Pitch);
+			YamlUtils::Serialize(out, "Looping", component.Looping);
+			YamlUtils::Serialize(out, "Spatial", component.Spatial);
 			});
 	}
 	template<>

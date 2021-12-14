@@ -193,7 +193,7 @@ namespace Hazard::ECS
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
 	{
-		component.Source = Audio::AudioCommand::Create(component);
+		//component.AudioClip = Audio::AudioCommand::Create(component.SourceFile);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}

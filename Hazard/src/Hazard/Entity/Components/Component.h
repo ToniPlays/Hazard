@@ -51,6 +51,12 @@ namespace Hazard::ECS {
 	struct AudioSourceComponent 
 	{
 		std::string SourceFile;
-		Audio::AudioClip Source;
+		Ref<Audio::AudioClip> AudioClip;
+
+		float Gain = 1.0f;
+		float Pitch = 1.0f;
+
+		bool Looping = false;
+		bool Spatial = false;
 	};
 }

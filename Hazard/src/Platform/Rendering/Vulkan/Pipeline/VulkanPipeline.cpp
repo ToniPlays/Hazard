@@ -93,11 +93,11 @@ namespace Hazard::Rendering::Vulkan
 		viewportState.scissorCount = 1;
 		viewportState.pScissors = &scissor;
 
-		VkDynamicState dynamicStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+		VkDynamicState dynamicStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_LINE_WIDTH };
 
 		VkPipelineDynamicStateCreateInfo dynamicState = {};
 		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		dynamicState.dynamicStateCount = 2;
+		dynamicState.dynamicStateCount = 3;
 		dynamicState.pDynamicStates = dynamicStates;
 
 		VkPipelineRasterizationStateCreateInfo rasterizer = {};
@@ -180,9 +180,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		commandBuffer->GetStats().IndexCount += count;
 		commandBuffer->GetStats().DrawCalls++;
-
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
@@ -190,7 +188,6 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
 		commandBuffer->GetStats().DrawCalls++;
-
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDraw(cmdBuffer, count, 1, 0, 0);

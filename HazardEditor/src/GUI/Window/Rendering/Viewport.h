@@ -24,6 +24,7 @@ namespace WindowElement {
 		bool OnEvent(Event& e) override;
 
 		TransformationGizmo& GetGizmo() { return m_Gizmos; }
+		bool FocusOnEntity(ECS::Entity entity);
 
 	private:
 		bool KeyPressed(KeyPressedEvent& e);

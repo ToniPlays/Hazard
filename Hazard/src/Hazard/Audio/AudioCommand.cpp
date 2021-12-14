@@ -6,14 +6,13 @@
 
 namespace Hazard::Audio 
 {
-	AudioClip AudioCommand::Create(ECS::AudioSourceComponent& component)
+	void AudioCommand::Create(const std::string& fileName)
 	{
-		if (!File::Exists(component.SourceFile)) 
-			return AudioClip();
-		return AudioLoader::LoadFile(component.SourceFile);
+		HZR_CORE_INFO("[Audio]: Loading file");
+		//return Ref<AudioClip>::Create();
 	}
 	void AudioCommand::StopAll()
 	{
-		//TODO: Stop all clips when needed
+		
 	}
 }

@@ -47,7 +47,7 @@ namespace WindowElement {
 			glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
 			glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
 
-			RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::White);
+			RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::Blue);
 		}
 	}
 	void Properties::OnWindowRender()

@@ -301,9 +301,8 @@ namespace WindowElement {
 			Input::InputField(component.SourceFile);
 
 			DragDropUtils::DragTarget("AudioClip", [&](const ImGuiPayload* payload) {
-				const char* file = (const char*)payload->Data;
-				component.SourceFile = file;
-				component.Source.LoadFromFile(file);
+				AssetHandle handle = *(AssetHandle*)payload->Data;
+				//component.Source = AssetManager::GetAsset<Audio::AudioClip>(handle);
 				});
 
 			Layout::NextLine(5);
@@ -311,23 +310,22 @@ namespace WindowElement {
 			Layout::Text("Gain");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			float val = component.Source.GetGain();
-			Input::DragFloat("##Gain", val, 0.005f, 0, 1.0f);
-			component.Source.SetGain(val);
+			Input::DragFloat("##Gain", component.Gain, 0.005f, 0, 1.0f);
 
 			Layout::Text("Pitch");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			val = component.Source.GetPitch();
-			Input::DragFloat("##Pitch", val, 0.005f, 0, 0);
-			component.Source.SetPitch(val);
+			Input::DragFloat("##Pitch", component.Pitch, 0.005f, 0, 0);
 
 			Layout::Text("Looping");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			bool looping = component.Source.IsLooping();
-			Input::Checkbox("##Looping", looping);
-			component.Source.SetLoop(looping);
+			Input::Checkbox("##Looping", component.Looping);
+
+			Layout::Text("Spatial");
+			Layout::SameLine(75);
+			Layout::MaxWidth();
+			Input::Checkbox("##spatial", component.Spatial);
 
 			}, []() {
 

@@ -34,9 +34,9 @@ namespace Project {
 
 		YAML::Node general = root["General"];
 
-		YamlUtils::Deserialize(general, "Project name", project->Name);
-		YamlUtils::Deserialize(general, "Project path", project->AbsolutePath);
-		YamlUtils::Deserialize(general, "Startup world", project->StartupWorld);
+		YamlUtils::Deserialize(general, "Project name", project->Name, std::string("Unnamed project"));
+		YamlUtils::Deserialize(general, "Project path", project->AbsolutePath, std::string("Unnamed project"));
+		YamlUtils::Deserialize(general, "Startup world", project->StartupWorld, std::string("Unnamed project"));
 		m_ProjectData = project;
 
 		Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->

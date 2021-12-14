@@ -15,7 +15,7 @@ namespace Editor
 			float Near;
 			float Far;
 			float Scale;
-			float Nothing;
+			float ScaleFade;
 
 		} gridData;
 

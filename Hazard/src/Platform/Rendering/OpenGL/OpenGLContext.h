@@ -22,6 +22,7 @@ namespace Hazard::Rendering::OpenGL {
 		void End() override {};
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer);
+		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		DeviceSpec GetDeviceSpec() const override;

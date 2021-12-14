@@ -18,12 +18,16 @@ namespace Editor {
 		inline void SetDistance(float distance) { this->distance = distance; }
 
 		inline void SetViewport(uint32_t width, uint32_t height) override { viewport_w = width; viewport_h = height; UpdateProjection(); }
-
+		
 		glm::quat GetOrientation() const;
 
 		const void SetMousePosition(glm::vec2 pos) { m_InitialMousePos = pos; }
 
 		void SetIs2D(bool enabled2D);
+		void SetFocalPoint(const glm::vec3 point) {
+			m_FocalPoint = point;
+			UpdateView();
+		};
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 
