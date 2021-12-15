@@ -23,7 +23,7 @@ namespace Hazard::Rendering
 	struct Quad 
 	{
 		glm::mat4 Transform;
-		Color Color;
+		glm::vec4 Color;
 		Ref<Texture2D> Texture;
 	};
 

@@ -113,24 +113,14 @@ namespace Hazard::ECS {
 				cc2d.runtimeFixture = PhysicsCommand::CreateCollider(&info);
 			}
 		}
-
-		auto& acView = world->GetEntitiesWith<AudioSourceComponent>();
-
-		for (auto& e : acView) {
+		for (auto& e : world->GetEntitiesWith<AudioSourceComponent>()) 
+		{
 			Entity entity = { e, world.Raw() };
-			
-			using namespace Hazard::Audio;
-			auto comp = entity.GetComponent<AudioSourceComponent>();
+			auto& as = entity.GetComponent<AudioSourceComponent>();
 
-			AudioClipCreateInfo createInfo = {};
-			createInfo.FileName = comp.SourceFile;
-			createInfo.Gain = comp.Gain;
-			createInfo.Pitch = comp.Pitch;
-			createInfo.Looping = comp.Looping;
-			createInfo.Spatial = comp.Spatial;
-			createInfo.PlayOnCreate = true;
+			if (as.PlayOnCreate) 
+				as.Source.Play();
 
-			comp.AudioClip = Audio::AudioCommand::Create(&createInfo);
 		}
 	}
 	void WorldCommand::WorldRuntimeEnd()

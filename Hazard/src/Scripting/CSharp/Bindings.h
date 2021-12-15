@@ -3,6 +3,7 @@
 //Use {Class}_{Method}_Native
 
 #include "Script/Debug/ConsoleBindings.h"
+#include "Script/Debug/GizmoBindings.h"
 
 #include "Script/Application/ApplicationBindings.h"
 #include "Script/Application/DisplayBindings.h"

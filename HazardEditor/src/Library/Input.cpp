@@ -226,9 +226,9 @@ namespace WindowElement {
 			});
 		return modified;
 	}
-	void Input::Checkbox(const char* label, bool& value)
+	bool Input::Checkbox(const char* label, bool& value)
 	{
-		ImGui::Checkbox(label, &value);
+		return ImGui::Checkbox(label, &value);
 	}
 	bool Input::ColorPicker(const char* label, Color& color, bool& open)
 	{

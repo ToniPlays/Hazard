@@ -13,11 +13,11 @@ namespace Hazard::Rendering
 			s_Engine->SetLineWidth(lineWidth);
 			});
 	}
-	void RenderCommand::DrawQuad(const glm::mat4& transform, const Color& tint)
+	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint)
 	{
 		DrawQuad(transform, tint, s_Engine->m_WhiteTexture);
 	}
-	void RenderCommand::DrawQuad(const glm::mat4& transform, const Color& tint, const Ref<Texture2D>& texture)
+	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture)
 	{
 		Quad quad;
 		quad.Transform = transform;
@@ -28,16 +28,16 @@ namespace Hazard::Rendering
 			s_Engine->Get2D().Submit(quad);
 			});
 	}
-	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color)
+	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color)
 	{
 		Line line = { start, end };
-		line.Color = { color.r, color.g, color.b, color.a };
+		line.Color = color;
 
 		s_Engine->Submit([line]() mutable {
 			s_Engine->GetDebugRenderer().SubmitLine(line);
 			});
 	}
-	void RenderCommand::DrawRectangle(const glm::mat4& transform, const Color& color)
+	void RenderCommand::DrawRectangle(const glm::mat4& transform, const glm::vec4& color)
 	{
 		glm::vec3 topLeft		= transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
 		glm::vec3 topRight		= transform * glm::vec4( 0.5f, 0.5f, 0.0f, 1.0f);
@@ -45,16 +45,16 @@ namespace Hazard::Rendering
 		glm::vec3 bottomLeft	= transform * glm::vec4(-0.5f,-0.5f, 0.0f, 1.0f);
 
 		Line line1 = { topLeft, topRight };
-		line1.Color = { color.r, color.g, color.b, color.a };
+		line1.Color = color;
 
 		Line line2 = { topRight, bottomRight };
-		line2.Color = { color.r, color.g, color.b, color.a };
+		line2.Color = color;
 
 		Line line3 = { bottomRight, bottomLeft };
-		line3.Color = { color.r, color.g, color.b, color.a };
+		line3.Color = color;
 
 		Line line4 = { bottomLeft, topLeft };
-		line4.Color = { color.r, color.g, color.b, color.a };
+		line4.Color = color;
 
 		s_Engine->Submit([line1, line2, line3, line4]() mutable {
 			DebugRenderer& rd = s_Engine->GetDebugRenderer();
@@ -64,7 +64,7 @@ namespace Hazard::Rendering
 			rd.SubmitLine(line4);
 			});
 	}
-	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const Color& tint)
+	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const glm::vec4& tint)
 	{
 		Circle circle;
 		circle.Transform = transform;

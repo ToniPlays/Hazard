@@ -141,13 +141,19 @@ namespace Hazard::ECS::Loader
 		AudioSourceComponent& source = entity.AddComponent<AudioSourceComponent>();
 
 		YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
-		AssetManager::ImportAsset(source.SourceFile);
+		AssetHandle handle = AssetManager::ImportAsset(source.SourceFile);
+
+		if (handle != INVALID_ASSET_HANDLE) {
+			Ref<Audio::AudioBufferData> buffer = AssetManager::GetAsset<Audio::AudioBufferData>(handle);
+			source.Source.SetSourceBuffer(buffer);
+		}
 
 		YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
 		YamlUtils::Deserialize(comp, "Gain", source.Gain, 1.0f);
 		YamlUtils::Deserialize(comp, "Pitch", source.Pitch, 1.0f);
 		YamlUtils::Deserialize(comp, "Looping", source.Looping, false);
 		YamlUtils::Deserialize(comp, "Spatial", source.Spatial, false);
+		YamlUtils::Deserialize(comp, "PlayOnCreate", source.PlayOnCreate, false);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {

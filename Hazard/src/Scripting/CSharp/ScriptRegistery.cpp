@@ -13,6 +13,7 @@ namespace Hazard::Scripting::CSharp {
 		//Debug bindings
 		{
 			BindRegistery(ConsoleBindings::GetBindings());
+			BindRegistery(GizmoBindings::GetBindings());
 		}
 		//Application bindings 
 		{

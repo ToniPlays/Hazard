@@ -146,6 +146,7 @@ namespace Hazard::ECS::Loader {
 			YamlUtils::Serialize(out, "Pitch", component.Pitch);
 			YamlUtils::Serialize(out, "Looping", component.Looping);
 			YamlUtils::Serialize(out, "Spatial", component.Spatial);
+			YamlUtils::Serialize(out, "PlayOnCreate", component.PlayOnCreate);
 			});
 	}
 	template<>

@@ -268,7 +268,7 @@ namespace WindowElement {
 			if (ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str())) {
 				bool runtime = Runtime::SceneRuntimeHandler::IsSceneRunning();
 
-				for (auto& [index, field] : ScriptCommand::GetFields(ScriptType::CSharpScript, (uint32_t)entity, moduleName)) 
+				for (auto& [index, field] : ScriptCommand::GetFields(ScriptType::CSharpScript, (uint32_t)entity, moduleName))
 				{
 					Input::ScriptField(field, runtime);
 				}
@@ -302,7 +302,10 @@ namespace WindowElement {
 
 			DragDropUtils::DragTarget("AudioClip", [&](const ImGuiPayload* payload) {
 				AssetHandle handle = *(AssetHandle*)payload->Data;
-				//component.Source = AssetManager::GetAsset<Audio::AudioClip>(handle);
+				if (handle != INVALID_ASSET_HANDLE) {
+					component.SourceFile = AssetManager::GetMetadata(handle).Path.string();
+					component.Source.SetSourceBuffer(AssetManager::GetAsset<Audio::AudioBufferData>(handle));
+				}
 				});
 
 			Layout::NextLine(5);
@@ -310,22 +313,31 @@ namespace WindowElement {
 			Layout::Text("Gain");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::DragFloat("##Gain", component.Gain, 0.005f, 0, 1.0f);
+			if (Input::DragFloat("##Gain", component.Gain, 0.005f, 0, 1.0f))
+				component.Source.SetGain(component.Gain);
 
 			Layout::Text("Pitch");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Input::DragFloat("##Pitch", component.Pitch, 0.005f, 0, 0);
+			if (Input::DragFloat("##Pitch", component.Pitch, 0.005f, 0, 0))
+				component.Source.SetPitch(component.Pitch);
 
 			Layout::Text("Looping");
-			Layout::SameLine(75);
+			Layout::SameLine(200);
 			Layout::MaxWidth();
-			Input::Checkbox("##Looping", component.Looping);
+			if (Input::Checkbox("##Looping", component.Looping))
+				component.Source.SetLoop(component.Looping);
 
 			Layout::Text("Spatial");
-			Layout::SameLine(75);
+			Layout::SameLine(200);
 			Layout::MaxWidth();
-			Input::Checkbox("##spatial", component.Spatial);
+			if (Input::Checkbox("##spatial", component.Spatial))
+				component.Source.SetSpatial(component.Spatial);
+
+			Layout::Text("Play on Create");
+			Layout::SameLine(200);
+			Layout::MaxWidth();
+			Input::Checkbox("##playOnCreate", component.PlayOnCreate);
 
 			}, []() {
 
@@ -401,7 +413,7 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, BoxCollider2DComponent& component) {
 		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {
 			Layout::IDGroup("#offset", [&]() {
-			Input::Vec2("Offset", component.Offset, 1.0f, 75);
+				Input::Vec2("Offset", component.Offset, 1.0f, 75);
 				});
 			Layout::IDGroup("#Size", [&]() {
 				Input::Vec2("Size", component.Size, 1.0f, 75);

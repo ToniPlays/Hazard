@@ -3,7 +3,7 @@
 #include "Hazard/Math/Color.h"
 #include "Hazard/Math/Math.h"
 #include "Hazard/Core/UUID.h"
-#include "Hazard/Audio/AudioClip.h"
+#include "Hazard/Audio/AudioSource.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 
 namespace Hazard::ECS {
@@ -51,12 +51,13 @@ namespace Hazard::ECS {
 	struct AudioSourceComponent 
 	{
 		std::string SourceFile;
-		Ref<Audio::AudioClip> AudioClip;
+		Audio::AudioSource Source;
 
 		float Gain = 1.0f;
 		float Pitch = 1.0f;
 
 		bool Looping = false;
 		bool Spatial = false;
+		bool PlayOnCreate = false;
 	};
 }

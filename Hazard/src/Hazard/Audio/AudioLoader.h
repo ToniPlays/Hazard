@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
-#include "AudioClip.h"
-#include <AL/al.h>
+#include "Hazard/Assets/IAssetLoader.h"
 
 namespace Hazard::Audio {
 
+	class AudioClip;
 	enum class FileFormat {
 		None = 0,
 		Ogg,
@@ -13,7 +13,8 @@ namespace Hazard::Audio {
 		Waw
 	};
 
-	struct AudioClipCreateInfo {
+	struct AudioClipCreateInfo 
+	{
 		std::string FileName;
 		float Gain = 1.0f;
 		float Pitch = 1.0f;
@@ -23,16 +24,11 @@ namespace Hazard::Audio {
 	};
 
 
-	class AudioLoader {
+	class AudioLoader : public IAssetLoader {
 	public:
-		static void Init();
-		static FileFormat GetFileFormat(const std::string& file);
-		static Ref<AudioClip> LoadFile(const std::string& file);
 
-		static std::vector<Ref<AudioClip>> GetAllClips() { return AudioClip::s_AudioClips; }
-
-	private:
-		static ALenum GetOpenALFormat(uint32_t channels);
-		static void LoadMp3(const std::string& file);
+		AudioLoader();
+		virtual bool Load(AssetMetadata& metadata, Ref<Asset>& asset);
+		virtual bool Save(Ref<Asset>& asset) { return false; };
 	};
 }

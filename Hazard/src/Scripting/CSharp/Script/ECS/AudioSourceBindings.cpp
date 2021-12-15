@@ -32,54 +32,71 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	void AudioSourceBindings::AudioSource_Play_Native(uint32_t id)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->Play();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Source.Play();
 	}
 	void AudioSourceBindings::AudioSource_Stop_Native(uint32_t id)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->Stop();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Source.Stop();
 	}
 	void AudioSourceBindings::AudioSource_Pause_Native(uint32_t id)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->Pause();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Source.Pause();
 	}
 	float AudioSourceBindings::AudioSource_GetGain_Native(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->GetGain();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Gain;
 	}
 	void AudioSourceBindings::AudioSource_SetGain_Native(uint32_t id, float value)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->SetGain(value);
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Gain = value;
+		as.Source.SetGain(value);
 	}
 	float AudioSourceBindings::AudioSource_GetPitch_Native(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->GetPitch();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Pitch;
 	}
 	void AudioSourceBindings::AudioSource_SetPitch_Native(uint32_t id, float value)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->SetPitch(value);
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Pitch = value;
+		as.Source.SetPitch(value);
 	}
 	bool AudioSourceBindings::AudioSource_IsLoaded_Native(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->IsLoaded();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Source.IsLoaded();
 	}
 	bool AudioSourceBindings::AudioSource_IsLooping_Native(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->IsLooping();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Looping;
 	}
 	void AudioSourceBindings::AudioSource_SetLooping_Native(uint32_t id, bool value)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->SetLoop(value);
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Looping = value;
+		as.Source.SetLoop(value);
 	}
 	bool AudioSourceBindings::AudioSource_IsSpatial_Native(uint32_t id)
 	{
-		return ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->IsSpatial();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Spatial;
 	}
 	void AudioSourceBindings::AudioSource_SetSpatial_Native(uint32_t id, bool value)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->SetSpatial(value);
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		as.Spatial = value;
+		as.Source.SetSpatial(value);
 	}
-	void AudioSourceBindings::AudioSource_GetDuration_Native(uint32_t id)
+	float AudioSourceBindings::AudioSource_GetDuration_Native(uint32_t id)
 	{
-		ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id).AudioClip->GetTotalDuration();
+		auto& as = ScriptCommand::EntityGetComponent<ECS::AudioSourceComponent>(id);
+		return as.Source.GetTotalDuration();
 	}
 }

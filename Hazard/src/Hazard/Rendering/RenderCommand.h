@@ -19,12 +19,12 @@ namespace Hazard::Rendering
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
 		static void SetLineWidth(float lineWidth);
 
-		static void DrawQuad(const glm::mat4& transform, const Color& tint);
-		static void DrawQuad(const glm::mat4& transform, const Color& tint, const Ref<Texture2D>& texture);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture);
 		//TODO: Remove these?
 		static void DrawRotatedQuad() {};
 		static void DrawScreenSpaceQuad() {};
-		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const Color& tint = Color::White);
+		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const glm::vec4& tint = Color::White);
 
 		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
 		static void DrawCustomGeometry() {};
@@ -32,8 +32,8 @@ namespace Hazard::Rendering
 		static void DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count);
 
 		//Debug rendering
-		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const Color& color);
-		static void DrawRectangle(const glm::mat4& transform, const Color& color);
+		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color);
+		static void DrawRectangle(const glm::mat4& transform, const glm::vec4& color);
 
 		static void DrawMesh() {};
 		static void DrawAnimatedMesh() {};

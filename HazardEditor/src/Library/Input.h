@@ -41,7 +41,7 @@ namespace WindowElement {
 
 		static bool ModuleField(const char* label, std::string& moduleName, bool exists);
 
-		static void Checkbox(const char* label, bool& value);
+		static bool Checkbox(const char* label, bool& value);
 		static bool ColorPicker(const char* label, Hazard::Color& color, bool& open);
 
 		template<typename T, typename C>

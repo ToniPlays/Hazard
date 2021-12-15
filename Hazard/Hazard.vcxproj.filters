@@ -180,7 +180,7 @@
     <ClInclude Include="src\Hazard\Assets\IAssetLoader.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioClip.h">
+    <ClInclude Include="src\Hazard\Audio\AudioSource.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioCommand.h">
@@ -1857,6 +1857,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Audio\AudioFactory.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1871,7 +1873,7 @@
     <ClCompile Include="src\Hazard\Assets\AssetRegistry.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioClip.cpp">
+    <ClCompile Include="src\Hazard\Audio\AudioSource.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp">
@@ -2177,5 +2179,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Audio\AudioFactory.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.cpp" />
   </ItemGroup>
 </Project>

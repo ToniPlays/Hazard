@@ -1,95 +1,20 @@
 #pragma once
 #include <hzrpch.h>
 #include "AudioLoader.h"
-#include "AudioClip.h"
+#include "AudioFactory.h"
 
 #include <thread>
 #include <filesystem>
 
-#define MINIMP3_IMPLEMENTATION
-#include "minimp3.h"
-#include "minimp3_ex.h"
+namespace Hazard::Audio 
+{
 
-#include "vorbis/codec.h"
-#include "vorbis/vorbisfile.h"
-
-
-namespace Hazard::Audio {
-
-	static mp3dec_t s_Mp3d;
-
-	void AudioLoader::Init()
-	{
-		mp3dec_init(&s_Mp3d);
-
-		// Init default listener
-		ALfloat listenerPos[] = { 0.0, 0.0, 0.0 };
-		ALfloat listenerVel[] = { 0.0, 0.0, 0.0 };
-		ALfloat listenerOri[] = { 0.0, 0.0,-1.0, 0.0, 1.0, 0.0 };
-
-		alListenerfv(AL_POSITION, listenerPos);
-		alListenerfv(AL_VELOCITY, listenerVel);
-		alListenerfv(AL_ORIENTATION, listenerOri);
+	AudioLoader::AudioLoader() {
+		AudioFactory::Init();
 	}
-
-	FileFormat AudioLoader::GetFileFormat(const std::string& file)
+	bool AudioLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
-		std::string ext = File::GetFileExtension(file);
-
-		if (ext == "ogg") return FileFormat::Ogg;
-		if (ext == "mp3") return FileFormat::Mp3;
-
-		HZR_ERROR("[Audio]: Failed to load {0}", file);
-		return FileFormat::None;
-	}
-	Ref<AudioClip> AudioLoader::LoadFile(const std::string& file)
-	{
-		return nullptr;
-		switch (GetFileFormat(file))
-		{
-		case FileFormat::Mp3: LoadMp3(file);
-		}
-
-		HZR_ERROR("[Audio]: Failed to load {0}", file);
-		return nullptr;
-	}
-	ALenum AudioLoader::GetOpenALFormat(uint32_t channels)
-	{
-		switch (channels)
-		{
-		case 1: return AL_FORMAT_MONO16;
-		case 2: return AL_FORMAT_STEREO16;
-		}
-		return 0;
-	}
-	void AudioLoader::LoadMp3(const std::string& file)
-	{
-		//Check if file is already loaded
-		AudioBufferData* buffer = nullptr;
-		{
-			//Load new MP3 track
-			mp3dec_file_info_t info;
-			int loadResult = mp3dec_load(&s_Mp3d, file.c_str(), &info, NULL, NULL);
-			size_t size = info.samples * sizeof(mp3d_sample_t);
-
-			buffer = new AudioBufferData();
-			buffer->Name = file;
-			buffer->Size = size;
-			buffer->SampleRate = info.hz;
-			buffer->Channels = info.channels;
-			buffer->AlFormat = GetOpenALFormat(buffer->Channels);
-			buffer->LenSec = size / (info.avg_bitrate_kbps * 1024.0f);
-			buffer->AudioData = info.buffer;
-		}
-		//Initialize AudioClip
-		ALuint bufferID;
-		alGenBuffers(1, &bufferID);
-		alBufferData(bufferID, buffer->AlFormat, buffer->AudioData, (size_t)buffer->Size, buffer->SampleRate);
-		/*
-		Ref<AudioClip> clip = Ref<AudioClip>::Create(bufferID, true, buffer->LenSec);
-		alGenSources(1, &clip->m_Source);
-		alSourcei(clip->m_Source, AL_BUFFER, bufferID);
-
-		return clip;*/
+		asset = AudioFactory::Load(metadata.Path.string());
+		return asset;
 	}
 }

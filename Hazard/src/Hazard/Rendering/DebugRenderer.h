@@ -28,7 +28,7 @@ namespace Hazard::Rendering
 	struct Circle
 	{
 		glm::mat4 Transform;
-		Color Color;
+		glm::vec4 Color;
 		float Radius;
 		float Thickness;
 		float Fade;

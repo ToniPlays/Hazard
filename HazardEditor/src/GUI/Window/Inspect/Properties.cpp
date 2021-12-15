@@ -63,7 +63,7 @@ namespace WindowElement {
 			glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.005f);
 			glm::vec3 scale = tc.Scale.x * glm::vec3(cc2d.Radius * 2.0f, cc2d.Radius * 2.0f, 1.0f);
 
-			RenderCommand::DrawCircle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, 0.0f }, scale), cc2d.Radius, 0.025f, Color::Blue);
+			RenderCommand::DrawCircle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, 0.0f }, scale), cc2d.Radius, 0.03f, Color::Blue);
 		}
 	}
 	void Properties::OnWindowRender()

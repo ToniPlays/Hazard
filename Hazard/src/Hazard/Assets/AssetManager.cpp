@@ -18,6 +18,7 @@ namespace Hazard
 	}
 	AssetHandle AssetManager::ImportAsset(const std::string& filePath)
 	{
+		if (filePath == "") return INVALID_ASSET_HANDLE;
 		//TODO: Proper relative path
 		std::filesystem::path path = filePath; //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
 
