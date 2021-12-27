@@ -61,7 +61,7 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Run()
 	{
-		HZR_PROFILE_FUNCTION("Frame");
+		HZR_PROFILE_FUNCTION();
 		double time = glfwGetTime();
 
 		//Update Time

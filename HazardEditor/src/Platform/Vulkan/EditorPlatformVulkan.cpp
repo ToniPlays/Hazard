@@ -87,7 +87,7 @@ void EditorPlatformVulkan::EndFrame()
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassBeginInfo.pNext = nullptr;
-	renderPassBeginInfo.renderPass = swapchain->GetRenderPass();
+	renderPassBeginInfo.Pass = swapchain->GetRenderPass();
 	renderPassBeginInfo.renderArea.offset.x = 0;
 	renderPassBeginInfo.renderArea.offset.y = 0;
 	renderPassBeginInfo.renderArea.extent.width = width;
@@ -100,7 +100,7 @@ void EditorPlatformVulkan::EndFrame()
 
 	VkCommandBufferInheritanceInfo inheritanceInfo = {};
 	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	inheritanceInfo.renderPass = swapchain->GetRenderPass();
+	inheritanceInfo.Pass = swapchain->GetRenderPass();
 	inheritanceInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
 
 	VkCommandBufferBeginInfo cmdBufInfo = {};

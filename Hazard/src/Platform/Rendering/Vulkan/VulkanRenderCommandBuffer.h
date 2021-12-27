@@ -10,7 +10,6 @@ namespace Hazard::Rendering::Vulkan
 		VulkanRenderCommandBuffer(uint32_t size = 0, const std::string& name = "");
 		VulkanRenderCommandBuffer(const std::string& name, bool swapchain);
 		~VulkanRenderCommandBuffer();
-		virtual RenderStats& GetStats() { return m_Stats; };
 		virtual uint32_t GetFrameIndex() { return m_FrameIndex; };
 
 		void Begin();
@@ -24,7 +23,6 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 		std::vector<VkFence> m_WaitFences;
 
-		RenderStats m_Stats;
 		uint32_t m_FrameIndex = 0;
 
 		bool m_OwnedBySwapchain = false;

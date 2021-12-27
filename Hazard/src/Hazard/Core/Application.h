@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HazardLoop.h"
 #include "Core.h"
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"

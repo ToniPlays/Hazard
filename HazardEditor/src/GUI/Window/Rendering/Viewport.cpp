@@ -187,7 +187,6 @@ namespace WindowElement {
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 
-		const RenderStats& stats = RenderCommand::GetStats();
 		ApplicationData& data = Application::GetData();
 
 		Layout::NextLine(3);

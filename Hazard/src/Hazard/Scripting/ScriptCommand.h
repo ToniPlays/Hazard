@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Hazard/Entity/WorldCommand.h"
 #include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"
-#include "Hazard/Entity/WorldCommand.h"
 #include "ScriptEngineManager.h"
 #include "Hazard/Entity/Entity.h"
 

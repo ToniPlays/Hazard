@@ -19,8 +19,6 @@ namespace WindowElement {
 	}
 	void Performance::OnWindowRender()
 	{
-		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
-
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
 		Layout::Text("Frametime");

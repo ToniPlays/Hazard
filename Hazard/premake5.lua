@@ -68,6 +68,11 @@ project "Hazard"
 			"HZR_PLATFORM_WINDOWS"
 		}
 
+	filter "system:macosx"
+		defines {
+			"HZR_PLATFORM_MACOS"
+		}
+
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"

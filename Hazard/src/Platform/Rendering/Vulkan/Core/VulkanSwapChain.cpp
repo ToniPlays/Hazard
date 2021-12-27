@@ -376,7 +376,7 @@ namespace Hazard::Rendering::Vulkan
 		VkFramebufferCreateInfo frameBufferCreateInfo = {};
 		frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		frameBufferCreateInfo.pNext = NULL;
-		frameBufferCreateInfo.renderPass = m_RenderPass;
+		frameBufferCreateInfo.Pass = m_RenderPass;
 		frameBufferCreateInfo.attachmentCount = 2;
 		frameBufferCreateInfo.pAttachments = ivAttachments;
 		frameBufferCreateInfo.width = m_Width;

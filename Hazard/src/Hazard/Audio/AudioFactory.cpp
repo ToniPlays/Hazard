@@ -23,7 +23,7 @@ namespace Hazard::Audio
     }
     FileFormat AudioFactory::GetFileFormat(const std::string& path)
     {
-        std::string& ext = File::GetFileExtension(path);
+        const std::string& ext = File::GetFileExtension(path);
 
         if (ext == "ogg") return FileFormat::Ogg;
         if (ext == "mp3") return FileFormat::Mp3;

@@ -9,9 +9,11 @@
 		#elif _WIN32
 			#define HAZARD_SYSTEM_BIT "x86"
 		#endif
-
+#elif defined(HZR_PLATFORM_MACOS)
+	#define HZR_PLATFORM "macOS"
+	#define HAZARD_SYSTEM_BIT "x64"
 #else 
-	#error Hazard only supports windows!
+	#error Unsupported platform!
 #endif // HRD_PLATFORM_WINDOWS
 
 

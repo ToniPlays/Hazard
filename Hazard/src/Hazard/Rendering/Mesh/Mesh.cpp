@@ -51,7 +51,7 @@ namespace Hazard::Rendering {
         spec.DrawType = DrawType::Fill;
         spec.LineWidth = 1.0f;
         spec.ShaderPath = "Shaders/pbr.glsl";
-        spec.RenderPass = renderPass;
+        spec.Pass = renderPass;
 
         m_Pipeline = Pipeline::Create(spec);
     }

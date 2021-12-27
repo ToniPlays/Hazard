@@ -789,7 +789,7 @@ bool ImGui_ImplVulkan_CreateDeviceObjects()
     info.pColorBlendState = &blend_info;
     info.pDynamicState = &dynamic_state;
     info.layout = g_PipelineLayout;
-    info.renderPass = g_RenderPass;
+    info.Pass = g_RenderPass;
     err = vkCreateGraphicsPipelines(v->Device, v->PipelineCache, 1, &info, v->Allocator, &g_Pipeline);
     check_vk_result(err);
 
@@ -1064,8 +1064,8 @@ void ImGui_ImplVulkanH_CreateWindowSwapChain(VkPhysicalDevice physical_device, V
     wd->Frames = NULL;
     wd->FrameSemaphores = NULL;
     wd->ImageCount = 0;
-    if (wd->RenderPass)
-        vkDestroyRenderPass(device, wd->RenderPass, allocator);
+    if (wd->Pass)
+        vkDestroyRenderPass(device, wd->Pass, allocator);
 
     // If min image count was not specified, request different count of images dependent on selected present mode
     if (min_image_count == 0)
@@ -1159,7 +1159,7 @@ void ImGui_ImplVulkanH_CreateWindowSwapChain(VkPhysicalDevice physical_device, V
         info.pSubpasses = &subpass;
         info.dependencyCount = 1;
         info.pDependencies = &dependency;
-        err = vkCreateRenderPass(device, &info, allocator, &wd->RenderPass);
+        err = vkCreateRenderPass(device, &info, allocator, &wd->Pass);
         check_vk_result(err);
     }
 
@@ -1189,7 +1189,7 @@ void ImGui_ImplVulkanH_CreateWindowSwapChain(VkPhysicalDevice physical_device, V
         VkImageView attachment[1];
         VkFramebufferCreateInfo info = {};
         info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        info.renderPass = wd->RenderPass;
+        info.Pass = wd->Pass;
         info.attachmentCount = 1;
         info.pAttachments = attachment;
         info.width = wd->Width;
@@ -1227,7 +1227,7 @@ void ImGui_ImplVulkanH_DestroyWindow(VkInstance instance, VkDevice device, ImGui
     IM_FREE(wd->FrameSemaphores);
     wd->Frames = NULL;
     wd->FrameSemaphores = NULL;
-    vkDestroyRenderPass(device, wd->RenderPass, allocator);
+    vkDestroyRenderPass(device, wd->Pass, allocator);
     vkDestroySwapchainKHR(device, wd->Swapchain, allocator);
     vkDestroySurfaceKHR(instance, wd->Surface, allocator);
 
@@ -1439,7 +1439,7 @@ static void ImGui_ImplVulkan_RenderWindow(ImGuiViewport* viewport, void*)
 
             VkRenderPassBeginInfo info = {};
             info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-            info.renderPass = wd->RenderPass;
+            info.Pass = wd->Pass;
             info.framebuffer = fd->Framebuffer;
             info.renderArea.extent.width = wd->Width;
             info.renderArea.extent.height = wd->Height;

@@ -9,8 +9,10 @@
 #include "HazardLoop.h"
 #include "Hazard/Entity/WorldHandler.h"
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
 #include <Psapi.h>
+#endif
 
 namespace Hazard {
 
@@ -58,8 +60,14 @@ namespace Hazard {
 	}
 	void Application::UpdateData()
 	{
+		#ifdef HZR_PLATFORM_WINDOWS
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		s_Data.MemoryUsage = pmc.PrivateUsage / 1048576.0f;
+		#else
+		// TODO: Implement on other platforms using RLimit etc.
+		s_Data.MemoryUsage = 0.0f;
+		#endif
 	}
 }
+

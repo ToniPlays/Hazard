@@ -18,7 +18,7 @@ namespace Hazard::Rendering::OpenGL
 
 		virtual float GetAspectRatio() { return (float)m_Width / (float)m_Height; };
 		virtual Buffer GetBuffer() const { return Buffer(); };
-		virtual Buffer& GetBuffer() { return Buffer(); };
+		virtual const Buffer& GetBuffer() { return Buffer(); };
 		
 		uint32_t GetID() const { return m_ID; }
 

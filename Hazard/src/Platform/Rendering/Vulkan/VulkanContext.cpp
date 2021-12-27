@@ -106,7 +106,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = fb->GetRenderPass();
+		renderPassBeginInfo.Pass = fb->GetRenderPass();
 		renderPassBeginInfo.renderArea.offset.x = 0;
 		renderPassBeginInfo.renderArea.offset.y = 0;
 		renderPassBeginInfo.renderArea.extent.width = width;
@@ -118,7 +118,7 @@ namespace Hazard::Rendering::Vulkan {
 			width = swapchain->GetWidth();
 			height = swapchain->GetHeight();
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = fb->GetRenderPass();
+			renderPassBeginInfo.Pass = fb->GetRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
 			renderPassBeginInfo.renderArea.extent.width = width;
@@ -135,7 +135,7 @@ namespace Hazard::Rendering::Vulkan {
 			width = fb->GetWidth();
 			height = fb->GetHeight();
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = fb->GetRenderPass();
+			renderPassBeginInfo.Pass = fb->GetRenderPass();
 			renderPassBeginInfo.renderArea.offset.x = 0;
 			renderPassBeginInfo.renderArea.offset.y = 0;
 			renderPassBeginInfo.renderArea.extent.width = width;

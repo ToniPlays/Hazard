@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "WorldCommand.h"
+#include "Hazard/Scripting/ScriptCommand.h"
 #include "Hazard/Core/Application.h"
 #include "Component.h"
 #include "WorldHandler.h"
@@ -15,22 +16,12 @@ namespace Hazard::ECS {
 
 	using namespace Hazard::Rendering;
 
-	template<typename T>
-	void WorldCommand::OnScriptAttached(Entity& entity, T& script)
-	{
-		static_assert(false);
-	}
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, ScriptComponent& script) {
 		Scripting::ScriptCommand::InitEntity((uint32_t)entity, script);
 	}
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script) {}
-	template<typename T>
-	void WorldCommand::OnScriptDetached(Entity& entity, T& script)
-	{
-		static_assert(false);
-	}
 	template<>
 	void WorldCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
@@ -57,7 +48,7 @@ namespace Hazard::ECS {
 
 		Ref<World> world = GetCurrentWorld();
 
-		auto& rb2dView = world->GetEntitiesWith<Rigidbody2DComponent>();
+		const auto& rb2dView = world->GetEntitiesWith<Rigidbody2DComponent>();
 		for (auto& e : rb2dView)
 		{
 			Entity entity = { e, world.Raw()};
@@ -146,7 +137,7 @@ namespace Hazard::ECS {
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
 
-			auto& [sprite, transform] = spriteRenderers.get<SpriteRendererComponent, TransformComponent>(entity);
+			const auto& [sprite, transform] = spriteRenderers.get<SpriteRendererComponent, TransformComponent>(entity);
 			RenderCommand::DrawQuad(transform.GetTransformMat4(), sprite.Tint, sprite.Texture);
 		}
 
@@ -156,7 +147,7 @@ namespace Hazard::ECS {
 		{
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
-			auto& [batch, tc] = batches.get<BatchComponent, TransformComponent>(entity);
+			const auto& [batch, tc] = batches.get<BatchComponent, TransformComponent>(entity);
 
 			for (size_t x = 0; x < batch.Size; x++) {
 				for (size_t y = 0; y < batch.Size; y++) {
@@ -169,7 +160,7 @@ namespace Hazard::ECS {
 	void WorldCommand::UpdatePhysics()
 	{
 		Ref<World> world = GetCurrentWorld();
-		auto& rbView = world->GetEntitiesWith<Rigidbody2DComponent>();
+		const auto& rbView = world->GetEntitiesWith<Rigidbody2DComponent>();
 
 		for (auto& e : rbView)
 		{

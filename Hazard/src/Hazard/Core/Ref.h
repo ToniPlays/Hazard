@@ -2,7 +2,6 @@
 
 #include "Hazard/Core/Core.h"
 
-
 class RefCount {
 public:
 	RefCount() : m_RefCount(0) {};
