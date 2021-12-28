@@ -19,3 +19,4 @@ Logs/HazardProfile-Shutdown.json
 Logs/HazardProfile-Runtime.json
 Hazard/vendor/Glad/bin
 HazardEditor/library/
+*.pyc

@@ -11,7 +11,7 @@
 	path = Hazard/vendor/yaml-cpp
 	url = https://github.com/TheCherno/yaml-cpp
 [submodule "hazard/vendor/box2d"]
-	path = hazard/vendor/box2d
+	path = Hazard/vendor/box2d
 	url = https://github.com/TheCherno/box2d
 [submodule "HazardEditor/vendor/imgui"]
 	path = HazardEditor/vendor/imgui
