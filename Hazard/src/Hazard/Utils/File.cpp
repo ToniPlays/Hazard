@@ -192,6 +192,9 @@ namespace Hazard {
 	{
 		return std::filesystem::create_directories(dir);
 	}
+	void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
+		std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
+	}
 	FolderData File::GetFolderFiles(const std::string& folder)
 	{
 		FolderData result = {};

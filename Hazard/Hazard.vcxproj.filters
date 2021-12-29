@@ -180,19 +180,22 @@
     <ClInclude Include="src\Hazard\Assets\IAssetLoader.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioSource.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioCommand.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioEngine.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Audio\AudioFactory.h">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioListener.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Audio\AudioLoader.h">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Audio\AudioSource.h">
       <Filter>src\Hazard\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Audio\alhelpers.h">
@@ -571,6 +574,9 @@
       <Filter>src\Scripting\CSharp\Script\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.h">
+      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.h">
       <Filter>src\Scripting\CSharp\Script\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.h">
@@ -1857,8 +1863,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioFactory.h" />
-    <ClInclude Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1873,19 +1877,22 @@
     <ClCompile Include="src\Hazard\Assets\AssetRegistry.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioSource.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioEngine.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Audio\AudioFactory.cpp">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioListener.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\AudioLoader.cpp">
+      <Filter>src\Hazard\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Audio\AudioSource.cpp">
       <Filter>src\Hazard\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Audio\alhelpers.cpp">
@@ -2146,6 +2153,9 @@
     <ClCompile Include="src\Scripting\CSharp\Script\Debug\ConsoleBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.cpp">
+      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\ECS\AudioSourceBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\ECS</Filter>
     </ClCompile>
@@ -2179,7 +2189,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioFactory.cpp" />
-    <ClCompile Include="src\Scripting\CSharp\Script\Debug\GizmoBindings.cpp" />
   </ItemGroup>
 </Project>

@@ -40,7 +40,7 @@ namespace Hazard::Scripting::CSharp {
 	void Mono::InitAssembly(ScriptEngineCreateInfo* info)
 	{
 		s_Data.monoCoreAssemblyPath = info->CoreAssemblyPath;
-		mono_set_dirs(info->MonoDirectoryLib, info->MonoDirectoryEtc);
+		mono_set_dirs(info->MonoDirectoryLib.c_str(), info->MonoDirectoryEtc.c_str());
 	}
 	void Mono::CreateDomain(const char* name)
 	{
@@ -288,9 +288,11 @@ namespace Hazard::Scripting::CSharp {
 		s_Data.core_assembly = LoadAssembly(s_Data.monoCoreAssemblyPath.c_str());
 		s_Data.core_image = GetAssemblyImage(s_Data.core_assembly);
 
+		HZR_CORE_ERROR("Loading App core from {}", path);
+
 		auto appAssembly = LoadAssembly(path);
 		auto appAssemblyImage = GetAssemblyImage(appAssembly);
-
+		
 		if (cleanUp) {
 			s_Data.mono_domain = domain;
 		}
@@ -299,6 +301,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoAssembly* Mono::LoadAssembly(const char* path)
 	{
+		
 		Buffer data = File::ReadBinaryFile(std::filesystem::path(path));
 
 		MonoImageOpenStatus status;

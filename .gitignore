@@ -1,22 +1,19 @@
-/.vs
-/bin
-/bin-int
-/Assimp
-/GLAD
-/ImGui
-/JSONParser
-/vendor
-/Hazard/vendor/VulkanSDK
-
+.vs
+bin
+bin-int
+vendor
+Hazard/vendor
 
 /*.vcxproj.*
 **/*.vcxproj
 
-HazardEditor/res/Textures/chapmans_drive_8k.hdr
-HazardEditor/res/Audio/Axel Wernberg  Infinity.mp3
 Logs/HazardProfile-Startup.json
 Logs/HazardProfile-Shutdown.json
 Logs/HazardProfile-Runtime.json
-Hazard/vendor/Glad/bin
 HazardEditor/library/
 *.pyc
+*.log
+*.obj
+*.pdb
+*.lastbuildstate
+*.tlog

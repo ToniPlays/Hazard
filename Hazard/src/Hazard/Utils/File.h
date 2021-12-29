@@ -13,6 +13,15 @@ using std::filesystem::directory_iterator;
 
 namespace Hazard {
 
+	enum class CopyOptions { 
+		None = (int)std::filesystem::copy_options::none,
+		OverwriteExisting = (int)std::filesystem::copy_options::overwrite_existing,
+		SkipExisting = (int)std::filesystem::copy_options::skip_existing,
+		UpdateExisting = (int)std::filesystem::copy_options::update_existing,
+		Recursive = (int)std::filesystem::copy_options::recursive,
+		DirectoriesOnly = (int)std::filesystem::copy_options::directories_only
+	};
+
 	struct FolderData {
 		std::string Path;
 		std::vector<std::filesystem::directory_entry> Folders;
@@ -47,6 +56,7 @@ namespace Hazard {
 		static std::string GetFileExtension(const std::string& file);
 
 		static bool CreateDir(const std::filesystem::path& dir);
+		static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);
 
 		static FolderData GetFolderFiles(const std::string& folder);
 	};

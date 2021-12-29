@@ -30,7 +30,7 @@ namespace Hazard::Core {
 	void HazardLoop::Start()
 	{
 		//Engine runtime
-		try
+		//try
 		{
 			HZR_PROFILE_SESSION_BEGIN("Startup", "Logs/HazardProfile-Startup.json");
 			{
@@ -46,10 +46,10 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_END();
 			HZR_PROFILE_SESSION_BEGIN("Runtime", "Logs/HazardProfile-Runtime.json");
 		}
-		catch (const HazardRuntimeError& error)
+		/*catch (const HazardRuntimeError& error)
 		{
 			PlatformUtils::Messagebox("Runtime error", error.what());
-		}
+		}*/
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{

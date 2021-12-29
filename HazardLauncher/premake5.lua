@@ -1,6 +1,6 @@
-project "HazardEditor"
+project "HazardLauncher"
 
-	kind "WindowedApp"
+	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "off"
@@ -29,13 +29,10 @@ project "HazardEditor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.VMA}",
-		"src"
+		"src",
 	}
-
-	links
-	{
-		"Hazard",
-		"ImGui"
+	links {
+		"Hazard"
 	}
 
 	filter "system:windows"
@@ -48,11 +45,6 @@ project "HazardEditor"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
-
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
-		}
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

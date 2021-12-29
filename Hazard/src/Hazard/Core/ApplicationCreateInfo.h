@@ -64,10 +64,10 @@ namespace Hazard {
 	};
 	struct ScriptEngineCreateInfo 
 	{
-		const char* AppAssemblyPath;
-		const char* CoreAssemblyPath;
-		const char* MonoDirectoryEtc;
-		const char* MonoDirectoryLib;
+		std::string AppAssemblyPath;
+		std::string CoreAssemblyPath;
+		std::string MonoDirectoryEtc;
+		std::string MonoDirectoryLib;
 		bool Enable = true;
 	};
 

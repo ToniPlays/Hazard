@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HazardScripting.source
+namespace Hazard
 {
     class Time
     {

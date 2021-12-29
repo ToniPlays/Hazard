@@ -38,8 +38,8 @@ void EditorApplication::PreInit()
 	AudioEngineCreateInfo audioInfo = {};
 
 	ScriptEngineCreateInfo scriptInfo = {};
-	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
-	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
+	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore").c_str();
+	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/bin/Debug-windows-x86_64/HazardScripting/HazardScripting.dll";
 	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
 	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
 	scriptInfo.Enable = false;
@@ -63,7 +63,10 @@ void EditorApplication::Init()
 	Runtime::SceneRuntimeHandler::Init();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
+
+	std::string projectPath = CommandLineArgs::Get<std::string>("ProjectPath");
+	if (!projectPath.empty())
+		manager.Load(projectPath);
 }
 
 bool EditorApplication::OnEvent(Event& e)
