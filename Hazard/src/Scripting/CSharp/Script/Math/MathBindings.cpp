@@ -10,12 +10,12 @@ namespace Hazard::Scripting::CSharp::Bindings {
     {
         BindMap result;
         result.reserve(5);
-        result.emplace_back("Hazard.Math::Math_Random_Native", Math_Random_Native);
-        result.emplace_back("Hazard.Math::Math_RandomRange_Native", Math_RandomRange_Native);
-        result.emplace_back("Hazard.Math::Math_Pow_Native", Math_Pow_Native);
-        result.emplace_back("Hazard.Math::Math_Min_Native", Math_Pow_Native);
-        result.emplace_back("Hazard.Math::Math_Max_Native", Math_Pow_Native);
-        result.emplace_back("Hazard.Math::Math_Radians_Native", Math_Radians_Native);
+        result.emplace_back("Hazard.Math::Math_Random_Native", (void*) Math_Random_Native);
+        result.emplace_back("Hazard.Math::Math_RandomRange_Native", (void*) Math_RandomRange_Native);
+        result.emplace_back("Hazard.Math::Math_Pow_Native", (void*) Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Min_Native", (void*) Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Max_Native", (void*) Math_Pow_Native);
+        result.emplace_back("Hazard.Math::Math_Radians_Native", (void*) Math_Radians_Native);
         return result;
     }
     float MathBindings::Math_Random_Native()

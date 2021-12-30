@@ -10,9 +10,6 @@
 #include "Hazard/Scripting/ScriptRegistry.h"
 #include "Hazard/Scripting/Attributes/AllAttributes.h"
 
-using namespace WindowLayout;
-using namespace Hazard::Scripting;
-
 namespace WindowElement
 {
 	ScriptEngineDebug::ScriptEngineDebug() : EditorWindow("Script engine debugger")
@@ -23,45 +20,45 @@ namespace WindowElement
 	{
 
 	}
-	void ScriptEngineDebug::ProcessFields(std::vector<ScriptFieldMetadata> fields)
+	void ScriptEngineDebug::ProcessFields(std::vector<Hazard::Scripting::ScriptFieldMetadata> fields)
 	{
 		ImGuiTreeNodeFlags scriptFlags = ImGuiTreeNodeFlags_Framed;
-		Layout::Treenode("Class fields", scriptFlags, [&]() {
+		WindowLayout::Layout::Treenode("Class fields", scriptFlags, [&]() {
 			for (auto& field : fields)
 			{
 				std::stringstream ss;
 				ss << FieldVisibilityToChar(field.Visibility) << " ";
 				ss << FieldTypeToChar(field.Type) << " " << field.Name;
 
-				Layout::Treenode(ss.str().c_str(), scriptFlags, [&]() {
+				WindowLayout::Layout::Treenode(ss.str().c_str(), scriptFlags, [&]() {
 					ImGui::Text("Attributes:");
 
-					TryProcessAttribute<ShowInPropertiesAttribute>(field);
-					TryProcessAttribute<HideInPropertiesAttribute>(field);
-					TryProcessAttribute<SliderAttribute>(field);
-					TryProcessAttribute<RangeAttribute>(field);
-					TryProcessAttribute<HeaderAttribute>(field);
-					TryProcessAttribute<TooltipAttribute>(field);
-					TryProcessAttribute<TextAreaAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::ShowInPropertiesAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::HideInPropertiesAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::SliderAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::RangeAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::HeaderAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::TooltipAttribute>(field);
+					TryProcessAttribute<Hazard::Scripting::TextAreaAttribute>(field);
 
 				});
 			}
 			});
 	}
-	void ScriptEngineDebug::ProcessMethods(std::vector<ScriptMethodMetadata> methods)
+	void ScriptEngineDebug::ProcessMethods(std::vector<Hazard::Scripting::ScriptMethodMetadata> methods)
 	{
 		ImGuiTreeNodeFlags scriptFlags = ImGuiTreeNodeFlags_Framed;
-		Layout::Treenode("Class methods", scriptFlags, [&]() {
+		WindowLayout::Layout::Treenode("Class methods", scriptFlags, [&]() {
 			for (auto& method : methods)
 			{
 				std::stringstream ss;
 				ss << FieldVisibilityToChar(method.Visibility) << " " << method.Name;
 
-				Layout::Treenode(ss.str().c_str(), scriptFlags, [&]() {
+				WindowLayout::Layout::Treenode(ss.str().c_str(), scriptFlags, [&]() {
 					ImGui::Text("Attributes:");
 
-					TryProcessAttribute<VisualFuncAttribute>(method);
-					TryProcessAttribute<ExposeFuncAttribute>(method);
+					TryProcessAttribute<Hazard::Scripting::VisualFuncAttribute>(method);
+					TryProcessAttribute<Hazard::Scripting::ExposeFuncAttribute>(method);
 
 					});
 			}
@@ -71,22 +68,22 @@ namespace WindowElement
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
-		for (auto& [type, scriptEngine] : ScriptCommand::GetEngines()) {
+		for (auto& [type, scriptEngine] : Hazard::Scripting::ScriptCommand::GetEngines()) {
 
-			ScriptRegistry registry = scriptEngine->GetRegistry();
+			Hazard::Scripting::ScriptRegistry registry = scriptEngine->GetRegistry();
 
-			Layout::Treenode(ScriptTypeToString(type), flags, [&]() {
+			WindowLayout::Layout::Treenode(ScriptTypeToString(type), flags, [&]() {
 				for (auto& [moduleName, script] : registry.GetScripts())
 				{
-					ScriptMetadata sc = script;
+					Hazard::Scripting::ScriptMetadata sc = script;
 					ImGuiTreeNodeFlags scriptFlags = ImGuiTreeNodeFlags_Framed;
 
-					Layout::Treenode(script.ClassName.c_str(), scriptFlags, [&]() {
+					WindowLayout::Layout::Treenode(script.ClassName.c_str(), scriptFlags, [&]() {
 						ImGui::Text("Count: %u", sc.Count);
 						ImGui::Text("Attributes:");
 
-						TryProcessAttribute<AuthorAttribute>(sc);
-						TryProcessAttribute<TodoAttribute>(sc);
+						TryProcessAttribute<Hazard::Scripting::AuthorAttribute>(sc);
+						TryProcessAttribute<Hazard::Scripting::TodoAttribute>(sc);
 
 						ProcessFields(sc.Fields);
 						ProcessMethods(sc.Methods);
@@ -96,86 +93,86 @@ namespace WindowElement
 		}
 	}
 	template<typename T>
-	void ScriptEngineDebug::TryProcessAttribute(ScriptMetadata meta)
+	void ScriptEngineDebug::TryProcessAttribute(Hazard::Scripting::ScriptMetadata meta)
 	{
 		if (meta.Has<T>()) {
-			T& attribute = meta.Get<T>();
+			const T& attribute = meta.Get<T>();
 			ProcessAttribute<T>(attribute);
 		}
 	}
 	template<typename T>
-	void ScriptEngineDebug::TryProcessAttribute(ScriptFieldMetadata field)
+	void ScriptEngineDebug::TryProcessAttribute(Hazard::Scripting::ScriptFieldMetadata field)
 	{
 		if (field.Has<T>()) {
-			T& attribute = field.Get<T>();
+			const T& attribute = field.Get<T>();
 			ProcessAttribute<T>(attribute);
 		}
 	}
 	template<typename T>
-	void ScriptEngineDebug::TryProcessAttribute(ScriptMethodMetadata method)
+	void ScriptEngineDebug::TryProcessAttribute(Hazard::Scripting::ScriptMethodMetadata method)
 	{
 		if (method.Has<T>()) {
-			T& attribute = method.Get<T>();
+			const T& attribute = method.Get<T>();
 			ProcessAttribute<T>(attribute);
 		}
 	}
 	template<typename T>
 	void ScriptEngineDebug::ProcessAttribute(T attribute) {
-		static_assert(false);
+		assert(false);
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(AuthorAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::AuthorAttribute attribute)
 	{
 		ImGui::Text("[Author] %s, Version: %.2f", attribute.Author.c_str(), attribute.Version);
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(TodoAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::TodoAttribute attribute)
 	{
 		ImGui::Text("{Todo]: %s, Progress: %s", attribute.Detail.c_str(), Scripting::Utils::ProgressToString(attribute.Progress));
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(ShowInPropertiesAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::ShowInPropertiesAttribute attribute)
 	{
 		ImGui::Text("[HideInProperties]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(HideInPropertiesAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::HideInPropertiesAttribute attribute)
 	{
 		ImGui::Text("[ShowInProperties]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(SliderAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::SliderAttribute attribute)
 	{
 		ImGui::Text("[Slider] Min: %.2f, Max: %.2f", attribute.Min, attribute.Max);
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(RangeAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::RangeAttribute attribute)
 	{
 		ImGui::Text("[Range]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(HeaderAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::HeaderAttribute attribute)
 	{
 		ImGui::Text("[Header]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(TooltipAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::TooltipAttribute attribute)
 	{
 		ImGui::Text("[Tooltip]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(TextAreaAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::TextAreaAttribute attribute)
 	{
 		ImGui::Text("[TextArea]");
 	}
 
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(VisualFuncAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::VisualFuncAttribute attribute)
 	{
 		ImGui::Text("[VisualFunc]");
 	}
 	template<>
-	void ScriptEngineDebug::ProcessAttribute(ExposeFuncAttribute attribute)
+	void ScriptEngineDebug::ProcessAttribute(Hazard::Scripting::ExposeFuncAttribute attribute)
 	{
 		ImGui::Text("[ExposeFunc]");
 	}

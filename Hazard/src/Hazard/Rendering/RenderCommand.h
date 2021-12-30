@@ -38,7 +38,6 @@ namespace Hazard::Rendering
 		static void DrawMesh() {};
 		static void DrawAnimatedMesh() {};
 
-		static RenderStats GetStats() { return s_Engine->GetStats(); };
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }
 
 	private:

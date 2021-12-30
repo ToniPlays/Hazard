@@ -2,7 +2,7 @@
 
 #include "Hazard/Audio/AudioSource.h"
 
-#include <AL/al.h>
+// #include <AL/al.h>
 
 namespace Hazard::Audio 
 {
@@ -12,7 +12,7 @@ namespace Hazard::Audio
 		static Ref<AudioBufferData> Load(const std::string& path);
 		static FileFormat GetFileFormat(const std::string& path);
 		static Ref<AudioBufferData> LoadMp3(const std::string& path);
-		static ALenum GetOpenALFormat(uint32_t channels);
+		// static ALenum GetOpenALFormat(uint32_t channels);
 
 	private:
 		static void Init();

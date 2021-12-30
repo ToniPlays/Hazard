@@ -48,7 +48,7 @@ namespace Hazard::Core {
 		}
 		catch (const HazardRuntimeError& error)
 		{
-			PlatformUtils::Messagebox("Runtime error", error.what());
+			// PlatformUtils::Messagebox("Runtime error", error.what());
 		}
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
@@ -61,7 +61,7 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Run()
 	{
-		HZR_PROFILE_FUNCTION("Frame");
+		HZR_PROFILE_FUNCTION();
 		double time = glfwGetTime();
 
 		//Update Time

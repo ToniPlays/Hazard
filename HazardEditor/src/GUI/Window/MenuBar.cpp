@@ -98,10 +98,10 @@ namespace WindowElement {
 		Layout::Menu("File", []() {
 			Layout::MenuItem("New", []() {});
 			Layout::MenuItem("Open project", []() {
-				std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
+				// std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
 
-				if (!path.empty())
-					Application::GetModule<Project::ProjectManager>().Load(path);
+				// if (!path.empty())
+				// 	Application::GetModule<Project::ProjectManager>().Load(path);
 				});
 
 			Layout::Separator();

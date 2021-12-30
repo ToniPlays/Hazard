@@ -1,8 +1,10 @@
 #pragma once
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
+#endif
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/CommandLineArgs.h"
 
@@ -23,11 +25,11 @@ extern Hazard::Application* Hazard::CreateApplication();
 	#ifdef HZR_DEBUG
 
 		#pragma comment( linker, "/subsystem:console" )
-		int main(int* argc, char* argv[])
+		int main(int argc, char* argv[])
 		{
 			using namespace Hazard;
 
-			CommandLineArgs::Init(reinterpret_cast<int>(argc), argv);
+			CommandLineArgs::Init(argc, argv);
 			Application* app = CreateApplication();
 
 			Core::HazardLoop loop(app);
@@ -54,7 +56,20 @@ extern Hazard::Application* Hazard::CreateApplication();
 			return 0;
 		}
 	#endif // HZR_DEBUG
-
 #else
-	#error Unsupported platform for Hazard
+	int main(int argc, char* argv[])
+	{
+		using namespace Hazard;
+
+		CommandLineArgs::Init(argc, argv);
+		Application* app = CreateApplication();
+
+		Core::HazardLoop loop(app);
+		loop.Start();
+		while (!loop.ShouldClose()) {
+			loop.Run();
+		}
+
+		return 0;
+	}
 #endif // HZR_PLATFORM_WINDOWS

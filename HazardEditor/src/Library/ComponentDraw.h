@@ -13,14 +13,8 @@ using namespace WindowLayout;
 namespace WindowElement {
 
 	template<typename T>
-	void DrawComponent(const char* name, Entity entity) {
-		if (entity.HasComponent<T>())
-			Draw(name, entity, entity.GetComponent<T>());
-	}
-
-	template<typename T>
 	void Draw(const char* name, Entity entity, T& component) {
-		static_assert(false);
+		assert(false);
 	}
 
 	template<>
@@ -138,13 +132,13 @@ namespace WindowElement {
 						});
 				});
 			if (changed) {
-				std::string file = File::OpenFileDialog("");
-				if (!file.empty())
-				{
-					using namespace Hazard::Rendering;
-					Texture2DCreateInfo createInfo;
-					createInfo.FilePath = file;
-				}
+				// std::string file = File::OpenFileDialog("");
+				// if (!file.empty())
+				// {
+				// 	using namespace Hazard::Rendering;
+				// 	Texture2DCreateInfo createInfo;
+				// 	createInfo.FilePath = file;
+				// }
 			}
 
 			}, [&entity]() {
@@ -458,4 +452,10 @@ namespace WindowElement {
 			[]() {
 			});
 	}
+	template<typename T>
+	void DrawComponent(const char* name, Entity entity) {
+		if (entity.HasComponent<T>())
+			Draw(name, entity, entity.GetComponent<T>());
+	}
+
 }

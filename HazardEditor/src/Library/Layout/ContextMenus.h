@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "GUI/Window/Inspect/FileView.h"
 
 namespace WindowElement {

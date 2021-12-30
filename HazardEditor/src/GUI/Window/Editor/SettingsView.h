@@ -1,5 +1,6 @@
 #pragma once
 #include "GUI/EditorWindow.h"
+#include "Hazard/Rendering/Texture.h"
 #include "imgui.h"
 
 namespace WindowElement {

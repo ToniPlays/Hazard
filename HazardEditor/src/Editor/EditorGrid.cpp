@@ -33,13 +33,13 @@ namespace Editor
 	{
 		if (m_Pipeline) {
 			PipelineSpecification spec = m_Pipeline->GetSpecifications();
-			spec.RenderPass = renderPass;
+			spec.Pass = renderPass;
 			m_Pipeline = Pipeline::Create(spec);
 			return;
 		}
 
 		PipelineSpecification specs = {};
-		specs.RenderPass = renderPass;
+		specs.Pass = renderPass;
 		specs.DrawType = DrawType::Fill;
 		specs.ShaderPath = "Shaders/Grid.glsl";
 		specs.Usage = PipelineUsage::GraphicsBit;

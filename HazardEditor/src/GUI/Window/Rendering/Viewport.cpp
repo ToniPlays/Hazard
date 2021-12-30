@@ -25,18 +25,18 @@ namespace WindowElement {
 	}
 	void Viewport::Init()
 	{
-		SetActive(Application::HasModule<RenderEngine>());
-		if (!IsActive()) return;
+		// SetActive(Application::HasModule<RenderEngine>());
+		// if (!IsActive()) return;
 
-		WorldRendererSettings settings = {};
-		settings.Camera = &m_EditorCamera;
-		settings.ViewportSize = { 1920, 1080 };
-		settings.ClearColor = Color::FromHex("#101010");
-		settings.LineWidth = 5.0f;
-		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
-		m_WorldRenderer = WorldRenderer::Create(&settings);
+		// WorldRendererSettings settings = {};
+		// settings.Camera = &m_EditorCamera;
+		// settings.ViewportSize = { 1920, 1080 };
+		// settings.ClearColor = Color::FromHex("#101010");
+		// settings.LineWidth = 5.0f;
+		// settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
+		// m_WorldRenderer = WorldRenderer::Create(&settings);
 
-		m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
+		// m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
 	}
 	void Viewport::OnUpdate()
 	{
@@ -187,7 +187,6 @@ namespace WindowElement {
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 
-		const RenderStats& stats = RenderCommand::GetStats();
 		ApplicationData& data = Application::GetData();
 
 		Layout::NextLine(3);
@@ -211,26 +210,6 @@ namespace WindowElement {
 		Layout::Text("Memory");
 		Layout::TableNext();
 		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
-
-		Layout::TableNext();
-		Layout::Text("Draw calls");
-		Layout::TableNext();
-		ImGui::Text("%u", stats.DrawCalls);
-
-		Layout::TableNext();
-		Layout::Text("Quads");
-		Layout::TableNext();
-		ImGui::Text("%u", stats.QuadCount);
-
-		Layout::TableNext();
-		Layout::Text("Vertices");
-		Layout::TableNext();
-		ImGui::Text("%u", stats.VertexCount);
-
-		Layout::TableNext();
-		Layout::Text("Indices");
-		Layout::TableNext();
-		ImGui::Text("%u", stats.IndexCount);
 
 		Layout::EndTable();
 		ImGui::EndChild();

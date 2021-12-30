@@ -34,7 +34,6 @@ namespace Hazard::Rendering::Vulkan
 
 		void UnmapMemory(VmaAllocation allocation);
 
-		static void GetStats();
 		static GPUMemoryStats GetGPUStats();
 
 		static void Init();

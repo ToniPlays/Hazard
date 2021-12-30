@@ -2,6 +2,7 @@
 #include "GameViewport.h"
 #include "Library/Layout/Layout.h"
 #include "Library/Input.h"
+#include "Hazard/Entity/WorldCommand.h"
 
 using namespace Hazard;
 using namespace WindowLayout;
@@ -14,21 +15,20 @@ namespace WindowElement {
 		
 	void GameViewport::Init()
 	{
-		SetActive(Application::HasModule<RenderEngine>());
-		SetActive(false);
-		if (!IsActive()) return;
+		// SetActive(false);
+		// if (!IsActive()) return;
 
-		WorldRendererSettings settings = {};
-		settings.ViewportSize = { 1920, 1080 };
-		settings.Camera = &m_Camera;
-		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
-		settings.ClearColor = Color::FromHex("#646464");
-		m_Renderer = WorldRenderer::Create(&settings);
+		// WorldRendererSettings settings = {};
+		// settings.ViewportSize = { 1920, 1080 };
+		// settings.Camera = &m_Camera;
+		// settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
+		// settings.ClearColor = Color::FromHex("#646464");
+		// m_Renderer = WorldRenderer::Create(&settings);
 	}
 	void GameViewport::OnUpdate()
 	{
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
-		auto& [cam, transform] = world->GetWorldCamera();
+		const auto& [cam, transform] = world->GetWorldCamera();
 
 		if (cam) 
 		{

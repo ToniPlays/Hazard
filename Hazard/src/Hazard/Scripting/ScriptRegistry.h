@@ -15,7 +15,7 @@ namespace Hazard::Scripting
 		std::vector<Attribute*> FieldAttributes;
 
 		template<typename T>
-		bool Has() {
+		bool Has() const {
 			for (Attribute* attrib : FieldAttributes) {
 				if (attrib->GetAttributeType() == T::GetStaticType())
 					return true;
@@ -23,7 +23,7 @@ namespace Hazard::Scripting
 			return false;
 		}
 		template<typename T>
-		T& Get() {
+		T Get() const {
 			for (Attribute* attrib : FieldAttributes)
 			{
 				if (attrib->GetAttributeType() == T::GetStaticType())
@@ -49,7 +49,7 @@ namespace Hazard::Scripting
 			return false;
 		}
 		template<typename T>
-		T& Get() {
+		T Get() {
 			for (Attribute* attrib : MethodAttributes)
 			{
 				if (attrib->GetAttributeType() == T::GetStaticType())
@@ -79,7 +79,7 @@ namespace Hazard::Scripting
 			return false;
 		}
 		template<typename T>
-		T& Get() {
+		T Get() {
 			for (Attribute* attrib : ClassAttributes) 
 			{
 				if (attrib->GetAttributeType() == T::GetStaticType())

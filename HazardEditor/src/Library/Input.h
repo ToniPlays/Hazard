@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
+#include "Layout/Layout.h"
 #include "imgui.h"
+#include "Hazard/Scripting/PublicField.h"
+#include "Hazard/Scripting/ScriptRegistry.h"
 
 using namespace Hazard;
 
@@ -21,13 +24,13 @@ namespace WindowElement {
 			ImGui::BeginChild(name, size, false, ImGuiWindowFlags_NoScrollbar);
 			ImGui::PushID(id.c_str());
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-			Layout::Texture(image, { size.x, size.x }, { 0, 1 }, { 1, 0 });
+			WindowLayout::Layout::Texture(image, { size.x, size.x }, { 0, 1 }, { 1, 0 });
 			fn();
 
-			Layout::Separator(5);
+			WindowLayout::Layout::Separator(5);
 			ImGui::PopStyleVar();
 			ImGui::PopID();
-			Layout::NextLine(1);
+			WindowLayout::Layout::NextLine(1);
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 5);
 			ImGui::TextWrapped(name);
 			ImGui::EndChild();
@@ -48,23 +51,23 @@ namespace WindowElement {
 		static InputType TextureSlot(Ref<Rendering::Texture2D> texture, T callback, C dropCallback) {
 			InputType input = InputType::None;
 
-			Layout::Table(2, false, "##textureSlot");
-			Layout::SetColumnWidth(75);
+			WindowLayout::Layout::Table(2, false, "##textureSlot");
+			WindowLayout::Layout::SetColumnWidth(75);
 
 			if (ImageButton(texture, { 50, 50 }))
 				input = InputType::ImageChange;
 			dropCallback();
 
-			Layout::Tooltip("Image");
-			Layout::TableNext();
+			WindowLayout::Layout::Tooltip("Image");
+			WindowLayout::Layout::TableNext();
 			Button("Flip");
-			Layout::SameLine(0, 5);
+			WindowLayout::Layout::SameLine(0, 5);
 			Button("Preview");
-			Layout::SameLine(0, 5);
+			WindowLayout::Layout::SameLine(0, 5);
 			if (Button("Remove"))
 				input = InputType::Remove;
 			callback();
-			Layout::EndTable();
+			WindowLayout::Layout::EndTable();
 
 			return input;
 		};

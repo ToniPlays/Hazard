@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "DragDropUtils.h"
 #include <imgui.h>
 

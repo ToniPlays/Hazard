@@ -33,7 +33,7 @@ namespace Hazard::Rendering::OpenGL
 	OpenGLTexture2D::OpenGLTexture2D(Texture2DCreateInfo* info)
 	{
 		m_Format = info->Format;
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
+		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
 
 		if (info->Data == nullptr)

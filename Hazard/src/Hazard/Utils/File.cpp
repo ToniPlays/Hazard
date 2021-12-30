@@ -5,19 +5,21 @@
 #include "Hazard/Core/PlatrofmUtils.h"
 #include "StringUtil.h"
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include <shlobj.h>
+#endif
 
 namespace Hazard {
 
-	std::string File::OpenFileDialog(const char* filters) {
-		return PlatformUtils::OpenFileDialog(filters);
-	}
-	std::string File::SaveFolderDialog() {
-		return PlatformUtils::SaveFolderDialog();
-	}
-	std::string File::SaveFile(const char* filters) {
-		return PlatformUtils::SaveFileDialog(filters);
-	}
+	// std::string File::OpenFileDialog(const char* filters) {
+	// 	return PlatformUtils::OpenFileDialog(filters);
+	// }
+	// std::string File::SaveFolderDialog() {
+	// 	return PlatformUtils::SaveFolderDialog();
+	// }
+	// std::string File::SaveFile(const char* filters) {
+	// 	return PlatformUtils::SaveFileDialog(filters);
+	// }
 
 	bool File::Exists(const std::filesystem::path& path)
 	{

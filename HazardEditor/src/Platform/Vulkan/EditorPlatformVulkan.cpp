@@ -12,7 +12,7 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* context)
 {
 	this->m_Context = context;
-	auto& swapchain = m_Context->GetSwapchain();
+	const auto& swapchain = m_Context->GetSwapchain();
 	auto device = m_Context->GetDevice();
 
 	// Setup Platform/Renderer bindings
@@ -64,7 +64,7 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
-	auto& swapchain = m_Context->GetSwapchain();
+	const auto& swapchain = m_Context->GetSwapchain();
 	ImGuiIO& io = ImGui::GetIO();
 
 	VkClearValue clearValues[2];

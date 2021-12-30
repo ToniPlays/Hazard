@@ -2,6 +2,7 @@
 
 #include "RenderableElement.h"
 #include "Hazard.h"
+#include "EditorView.h"
 
 using namespace Hazard;
 
@@ -41,7 +42,7 @@ namespace WindowElement {
 
 		template<typename T>
 		static void SetWindowFocus() {
-			EditorWindow& window = static_cast<EditorWindow&>(*s_Instance->GetRenderable<T>());
+			EditorWindow& window = static_cast<EditorWindow&>(*EditorView::GetInstance().GetRenderable<T>());
 			ImGui::SetWindowFocus(window.GetTitle().c_str());
 		}
 

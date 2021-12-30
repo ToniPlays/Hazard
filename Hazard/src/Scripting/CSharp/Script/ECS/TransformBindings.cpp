@@ -11,14 +11,14 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		BindMap result;
 		result.reserve(6);
-		result.emplace_back("Hazard.TransformComponent::Transform_GetPosition_Native", Transform_GetPosition_Native);
-		result.emplace_back("Hazard.TransformComponent::Transform_SetPosition_Native", Transform_SetPosition_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_GetPosition_Native", (void*) Transform_GetPosition_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_SetPosition_Native", (void*) Transform_SetPosition_Native);
 
-		result.emplace_back("Hazard.TransformComponent::Transform_GetRotation_Native", Transform_GetRotation_Native);
-		result.emplace_back("Hazard.TransformComponent::Transform_SetRotation_Native", Transform_SetRotation_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_GetRotation_Native", (void*) Transform_GetRotation_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_SetRotation_Native", (void*) Transform_SetRotation_Native);
 
-		result.emplace_back("Hazard.TransformComponent::Transform_GetScale_Native", Transform_GetScale_Native);
-		result.emplace_back("Hazard.TransformComponent::Transform_SetScale_Native", Transform_SetScale_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_GetScale_Native", (void*) Transform_GetScale_Native);
+		result.emplace_back("Hazard.TransformComponent::Transform_SetScale_Native", (void*) Transform_SetScale_Native);
 		return result;
 	}
 	void TransformBindings::Transform_GetPosition_Native(uint32_t id, glm::vec3* position)

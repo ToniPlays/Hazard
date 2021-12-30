@@ -9,8 +9,10 @@
 #include "HazardLoop.h"
 #include "Hazard/Entity/WorldHandler.h"
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
 #include <Psapi.h>
+#endif
 
 namespace Hazard {
 
@@ -34,14 +36,14 @@ namespace Hazard {
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
-		if (info->RenderContextInfo != nullptr) 
-			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
+		// if (info->RenderContextInfo != nullptr) 
+		// 	PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
 
-		if (info->RendererInfo != nullptr) 
-		{
-			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-			PushModule<Rendering::RenderEngine>(info->RendererInfo);
-		}
+		// if (info->RendererInfo != nullptr) 
+		// {
+		// 	HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+		// 	PushModule<Rendering::RenderEngine>(info->RendererInfo);
+		// }
 
 		if (info->AudioEngine) 
 			PushModule<Audio::AudioEngine>(info->AudioEngine);
@@ -58,8 +60,14 @@ namespace Hazard {
 	}
 	void Application::UpdateData()
 	{
+		#ifdef HZR_PLATFORM_WINDOWS
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		s_Data.MemoryUsage = pmc.PrivateUsage / 1048576.0f;
+		#else
+		// TODO: Implement on other platforms using RLimit etc.
+		s_Data.MemoryUsage = 0.0f;
+		#endif
 	}
 }
+

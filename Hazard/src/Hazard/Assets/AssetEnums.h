@@ -44,7 +44,7 @@ namespace Hazard
 			case AssetType::Mesh:				return "Mesh";
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";
-			case AssetType::Script:				return "Scrípt";
+			case AssetType::Script:				return "Script";
 			}
 		}
 

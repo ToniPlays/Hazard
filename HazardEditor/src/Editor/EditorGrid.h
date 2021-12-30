@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
+#include "Hazard/Rendering/Pipeline/RenderPass.h"
+#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/Rendering/Pipeline/Pipeline.h"
+#include "Hazard/Rendering/RenderCommand.h"
 #include "EditorCamera.h"
 
 using namespace Hazard::Rendering;

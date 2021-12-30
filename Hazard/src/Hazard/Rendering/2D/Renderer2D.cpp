@@ -57,9 +57,9 @@ namespace Hazard::Rendering
 			Recreate(renderPass);
 			return;
 		}
-		if (m_Pipeline->GetSpecifications().RenderPass != renderPass) {
+		if (m_Pipeline->GetSpecifications().Pass != renderPass) {
 			PipelineSpecification specs = m_Pipeline->GetSpecifications();
-			specs.RenderPass = renderPass;
+			specs.Pass = renderPass;
 			m_Pipeline = Pipeline::Create(specs);
 		}
 	}
@@ -94,10 +94,6 @@ namespace Hazard::Rendering
 		m_IndexBuffer->Bind(m_RenderCommandBuffer);
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
 
-		auto& stats = m_RenderCommandBuffer->GetStats();
-		stats.VertexCount += m_QuadBatch.GetCount();
-		stats.IndexCount += m_QuadBatch.GetIndexCount();
-		stats.QuadCount = m_QuadBatch.GetCount() / 4;
 	}
 	void Renderer2D::EndWorld()
 	{
@@ -129,7 +125,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-			pipelineSpecs.RenderPass = std::move(renderPass);
+			pipelineSpecs.Pass = std::move(renderPass);
 
 			m_Pipeline = Pipeline::Create(pipelineSpecs);
 

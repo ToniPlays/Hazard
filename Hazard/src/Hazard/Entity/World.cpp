@@ -1,9 +1,9 @@
 #pragma once
 
 #include <hzrpch.h>
+#include "WorldCommand.h"
 #include "World.h"
 #include "Entity.h"
-#include "WorldCommand.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Audio/AudioCommand.h"
 
@@ -36,7 +36,7 @@ namespace Hazard::ECS
 		m_Name = world.GetName() + " (copy)";
 		std::unordered_map<UUID, entt::entity> entityMap;
 
-		auto& entityID = world.m_Registry.view<TagComponent>();
+		const auto& entityID = world.m_Registry.view<TagComponent>();
 
 		entityMap.reserve(entityID.size());
 		for (size_t i = entityID.size(); i > 0; i--) {
@@ -157,7 +157,7 @@ namespace Hazard::ECS
 			Entity e = GetEntity(entity);
 			if (!e.IsVisible()) continue;
 
-			auto& [cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
+			const auto& [cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
 			return std::tuple(&cam, &e.GetTransform());
 		}
 		return std::tuple(nullptr, nullptr);
@@ -187,7 +187,7 @@ namespace Hazard::ECS
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		component.Texture = Rendering::RenderCommand::GetWhiteTexture();
+		// component.Texture = Rendering::RenderCommand::GetWhiteTexture();
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}

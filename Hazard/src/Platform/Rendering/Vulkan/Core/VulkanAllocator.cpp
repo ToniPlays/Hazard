@@ -74,10 +74,6 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		vmaUnmapMemory(s_Data->Allocator, allocation);
 	}
-	void VulkanAllocator::GetStats()
-	{
-
-	}
 	GPUMemoryStats VulkanAllocator::GetGPUStats()
 	{
 		return { 0, 0 };

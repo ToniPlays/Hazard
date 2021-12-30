@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Hazard/Scripting/ScriptCommand.h"
 #include "WorldHandler.h"
 #include "entt.hpp"
 

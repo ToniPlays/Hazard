@@ -9,24 +9,24 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		BindMap result;
 		result.reserve(11);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Play_Native", AudioSource_Play_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Stop_Native", AudioSource_Stop_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Pause_Native", AudioSource_Pause_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Play_Native", (void*) AudioSource_Play_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Stop_Native", (void*) AudioSource_Stop_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_Pause_Native", (void*) AudioSource_Pause_Native);
 
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetGain_Native", AudioSource_GetGain_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetGain_Native", AudioSource_SetGain_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetGain_Native", (void*) AudioSource_GetGain_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetGain_Native", (void*) AudioSource_SetGain_Native);
 
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetPitch_Native", AudioSource_GetPitch_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetPitch_Native", AudioSource_SetPitch_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetPitch_Native", (void*) AudioSource_GetPitch_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetPitch_Native", (void*) AudioSource_SetPitch_Native);
 
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLoaded_Native", AudioSource_IsLoaded_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLooping_Native", AudioSource_IsLooping_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetLooping_Native", AudioSource_SetLooping_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLoaded_Native", (void*) AudioSource_IsLoaded_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsLooping_Native", (void*) AudioSource_IsLooping_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetLooping_Native", (void*) AudioSource_SetLooping_Native);
 
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsSpatial_Native", AudioSource_IsSpatial_Native);
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetSpatial_Native", AudioSource_SetSpatial_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_IsSpatial_Native", (void*) AudioSource_IsSpatial_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_SetSpatial_Native", (void*) AudioSource_SetSpatial_Native);
 
-		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetDuration_Native", AudioSource_GetDuration_Native);
+		result.emplace_back("Hazard.AudioSourceComponent::AudioSource_GetDuration_Native", (void*) AudioSource_GetDuration_Native);
 
 		return result;
 	}

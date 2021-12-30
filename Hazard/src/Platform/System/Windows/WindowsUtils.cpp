@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include <hzrpch.h>
 #include "Hazard/Core/PlatrofmUtils.h"
 
@@ -79,3 +80,4 @@ namespace Hazard
 		return "";
 	}
 }
+#endif

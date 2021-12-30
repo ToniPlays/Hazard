@@ -24,11 +24,11 @@ namespace WindowElement {
 		ImGui::SetCursorPosY(height - 80 - 15);
 
 		if (Input::Button("Load project", { 200, 80 })) {
-			std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
-			if (!path.empty()) {
-				Application::GetModule<Project::ProjectManager>().Load(path);
-				EditorView::GetInstance().RemoveRenderable<WelcomePopup>();
-			}
+			// std::string path = File::OpenFileDialog("Hazard project (*.hzrproj)\0*.hzrproj\0");
+			// if (!path.empty()) {
+			// 	Application::GetModule<Project::ProjectManager>().Load(path);
+			// 	EditorView::GetInstance().RemoveRenderable<WelcomePopup>();
+			// }
 		}
 	}
 	bool WelcomePopup::OnEvent(Event& e)

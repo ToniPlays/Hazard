@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
+#include "Hazard/Assets/AssetEnums.h"
 #include "imgui.h"
 #include "imgui_internal.h"
 

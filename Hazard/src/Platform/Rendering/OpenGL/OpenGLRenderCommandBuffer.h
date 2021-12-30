@@ -9,13 +9,10 @@ namespace Hazard::Rendering::OpenGL {
 		OpenGLRenderCommandBuffer(const std::string& name, bool swapchain) {};
 		~OpenGLRenderCommandBuffer() = default;
 
-		virtual RenderStats& GetStats() { return m_Stats; };
 		virtual uint32_t GetFrameIndex() { return 0; };
 
-		void Begin() { m_Stats.Reset(); };
+		void Begin() {};
 		void End() {};
 		void Submit() {};
-	private:
-		RenderStats m_Stats;
 	};
 }

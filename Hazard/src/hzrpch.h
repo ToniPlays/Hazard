@@ -18,7 +18,7 @@
 #include "Hazard/Instrumentor.h"
 #include "Hazard/PerformanceProfiler.h"
 
-#include "Hazard/Utils/File.h";
+#include "Hazard/Utils/File.h"
 
 #include "Hazard/Events/Event.h"
 #include "Hazard/Events/ApplicationEvent.h"
@@ -57,7 +57,7 @@
 #define HZR_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
 
-#define HZR_THROW(x, y) throw HazardRuntimeError(x, "\nFrom: " HZR_FUNC_SIG)
+#define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
 
 #define HZR_PROFILE 0
 

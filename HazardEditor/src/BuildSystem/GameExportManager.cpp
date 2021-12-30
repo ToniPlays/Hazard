@@ -1,5 +1,7 @@
 #pragma once
 #include "GameExportManager.h"
+#include "Hazard/Utils/YamlUtils.h"
+#include <yaml-cpp/yaml.h>
 
 namespace Exporter
 {

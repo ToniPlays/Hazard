@@ -19,8 +19,6 @@ namespace WindowElement {
 	}
 	void Performance::OnWindowRender()
 	{
-		Rendering::RenderStats& stats = Rendering::RenderCommand::GetStats();
-
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
 		Layout::Text("Frametime");
@@ -53,26 +51,6 @@ namespace WindowElement {
 		Layout::Text("Rendering API");
 		Layout::TableNext();
 		Layout::Text(spec.Renderer);
-
-		Layout::TableNext();
-		Layout::Text("Drawcalls");
-		Layout::TableNext();
-		Layout::Text(std::to_string(stats.DrawCalls));
-
-		Layout::TableNext();
-		Layout::Text("Quads");
-		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.QuadCount));
-
-		Layout::TableNext();
-		Layout::Text("Vertices");
-		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.VertexCount));
-
-		Layout::TableNext();
-		Layout::Text("Indices");
-		Layout::TableNext();
-		Layout::Text(StringUtil::FormatNumber(stats.IndexCount));
 
 		Layout::EndTable();
 
