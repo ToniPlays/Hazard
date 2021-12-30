@@ -31,9 +31,6 @@ namespace Hazard::Scripting::CSharp {
 			BindRegistry(MathBindings::GetBindings());
 		}
 		{
-			BindRegistry(ResourceBindings::GetBindings());
-		}
-		{
 			BindRegistry(BufferBindings::GetBindings());
 		}
 	}

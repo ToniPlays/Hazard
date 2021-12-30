@@ -34,7 +34,6 @@ namespace Hazard::Scripting {
 		void Update() override;
 
 		void Instantiate(ScriptType type, uint32_t handle, const std::string& moduleName);
-
 		void OnRuntimeEnd();
 
 		void InitEntity(ScriptType type, uint32_t handle, const std::string& moduleName);

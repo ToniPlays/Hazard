@@ -136,7 +136,6 @@ namespace Hazard::Rendering
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
-			vertexInfo.InputStage = m_Pipeline->GetShader()->GetShaderData().Stages.at(ShaderType::Vertex);
 
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 

@@ -11,6 +11,8 @@
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/2D/Renderer2D.h"
 
+#include "Hazard/Scripting/ScriptCommand.h"
+
 namespace Hazard::ECS {
 
 	using namespace Hazard::Rendering;

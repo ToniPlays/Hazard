@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "File.h"
 
-#include "Hazard/Core/PlatrofmUtils.h"
+#include "Hazard/Core/PlatformUtils.h"
 #include "StringUtil.h"
 
 #include <shlobj.h>

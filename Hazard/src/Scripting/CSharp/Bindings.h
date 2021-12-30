@@ -15,7 +15,6 @@
 #include "Script/Hazard/ECS/AudioSourceBindings.h"
 
 #include "Script/Hazard/Math/MathBindings.h"
-#include "Script/Hazard/ResourceBindings.h"
 
 
 #include "Script/Rendering/BufferBindings.h"

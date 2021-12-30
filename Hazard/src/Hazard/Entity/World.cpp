@@ -26,7 +26,8 @@ namespace Hazard::ECS
 		}
 	}
 
-	World::World(const std::string& file) : m_File(file) {
+	World::World(const std::string& file) : m_File(file) 
+	{
 	
 	}
 

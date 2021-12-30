@@ -49,4 +49,11 @@ namespace Hazard
 		void SetHandle(UUID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }
 	};
+
+	class Resource : public RefCount
+	{
+	public:
+		virtual ~Resource() = default;
+	private:
+	};
 }

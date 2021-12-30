@@ -78,12 +78,12 @@
     <Compile Include="source\Hazard\Math\Vector3.cs" />
     <Compile Include="source\Hazard\Physics\Collider2D.cs" />
     <Compile Include="source\Hazard\Physics\Rigidbody2D.cs" />
-    <Compile Include="source\Hazard\Resource.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />
     <Compile Include="source\Hazard\Resources\AssetMetadata.cs" />
     <Compile Include="source\Hazard\Resources\Resources.cs" />
     <Compile Include="source\Hazard\Time.cs" />
     <Compile Include="source\Rendering\VertexBuffer.cs" />
+    <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

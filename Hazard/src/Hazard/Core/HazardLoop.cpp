@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Events/Input.h"
-#include "PlatrofmUtils.h"
+#include "PlatformUtils.h"
 #include "Analyzer.h"
 
 namespace Hazard::Core {

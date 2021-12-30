@@ -6,6 +6,8 @@
 #include "Scripting/ScriptEngines.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
+#include "ScriptResourceManager.h"
+
 namespace Hazard::Scripting {
 
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
@@ -14,7 +16,9 @@ namespace Hazard::Scripting {
 		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
 
 		ScriptCommand::Init(*this);
+		ScriptResourceManager::Init();
 		SetActive(info->Enable);
+
 	}
 	ScriptEngineManager::~ScriptEngineManager()
 	{
@@ -43,6 +47,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::OnRuntimeEnd()
 	{
+		ScriptResourceManager::Clear();
 		for (auto [type, engine] : m_ScriptEngines) {
 			engine->OnEndRuntime();
 		}

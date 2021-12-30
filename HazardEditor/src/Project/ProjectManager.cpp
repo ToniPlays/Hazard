@@ -83,6 +83,7 @@ namespace Project {
 		if (world->GetWorldFile().empty()) {
 			std::string filePath = File::SaveFile("");
 			if (filePath.empty()) return;
+
 			world->SetWorldFile(filePath);
 		}
 		ECS::Loader::WorldSerializer::SerializeEditor(world->GetWorldFile().c_str(), world);

@@ -228,7 +228,7 @@
     <ClInclude Include="src\Hazard\Core\HazardRuntimeError.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\PlatrofmUtils.h">
+    <ClInclude Include="src\Hazard\Core\PlatformUtils.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\Ref.h">
@@ -1861,7 +1861,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.h" />
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ResourceBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2189,6 +2189,5 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.cpp" />
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ResourceBindings.cpp" />
   </ItemGroup>
 </Project>

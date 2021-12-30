@@ -30,8 +30,6 @@ namespace Hazard::Rendering::OpenGL
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		m_Usage = info->Usage;
-		m_Layout = info->InputStage;
-		m_Stride = info->InputStage.Stride;
 
 		glCreateVertexArrays(1, &m_VAO);
 
@@ -41,7 +39,6 @@ namespace Hazard::Rendering::OpenGL
 
 		if (info->Data) {
 			SetData(info->Data, m_Size);
-
 		}
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -53,14 +50,7 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glBindVertexArray(m_VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-
-		for (auto& [location, input] : m_Layout.Inputs) {
-			glEnableVertexArrayAttrib(m_VAO, location);
-			ShaderDataType type = input.Type;
-			glVertexAttribPointer(location, ComponentCount(type), ShaderDataTypeToOpenGLBaseType(type),
-				GL_FALSE, m_Stride, (const void*)input.Offset);
-		}
-	}
+}
 	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

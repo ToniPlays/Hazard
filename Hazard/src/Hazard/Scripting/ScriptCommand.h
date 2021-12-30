@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Hazard/Entity/Entity.h"
 #include "Hazard/Entity/Component.h"
 #include "Hazard/Entity/WorldCommand.h"
 #include "ScriptEngineManager.h"
@@ -11,7 +10,6 @@ namespace Hazard::Scripting {
 	class ScriptCommand {
 
 	public:
-
 		static ScriptMetadata GetMetadata(const std::string& moduleName);
 		static void Init(ScriptEngineManager& manager);
 		static bool ReloadAssemblies();
@@ -34,10 +32,14 @@ namespace Hazard::Scripting {
 		{
 			return s_Manager->GetFields(type, handle, moduleName);
 		}
+		static ECS::Entity GetEntity(uint32_t entityID)
+		{
+			return ECS::WorldCommand::GetEntity(entityID);
+		}
 		template<typename T>
 		static T& EntityGetComponent(uint32_t entityID) 
 		{
-			return ECS::WorldCommand::GetEntity(entityID).GetComponent<T>();
+			return GetEntity(entityID).GetComponent<T>();
 		}
 		template<typename T>
 		static bool EntityHasComponent(uint32_t entityID) 

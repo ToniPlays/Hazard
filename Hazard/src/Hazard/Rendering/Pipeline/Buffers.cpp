@@ -11,6 +11,7 @@ namespace Hazard::Rendering {
 
 	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
+		HZR_CORE_INFO("Creating VertexArray");
 		switch (RenderCommand::GetAPI())
 		{
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo);

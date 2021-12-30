@@ -55,7 +55,12 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	}
 	bool EntityBindings::CreateComponent(uint32_t id, void* type)
 	{
-		//TODO: Fix
+		MonoType* compType = Mono::ReflectionToType(type);
+		if (createComponentFuncs.find(compType) != createComponentFuncs.end()) {
+			
+			createComponentFuncs.at(compType)(id);
+			return true;
+		}
 		return false;
 	}
 }
