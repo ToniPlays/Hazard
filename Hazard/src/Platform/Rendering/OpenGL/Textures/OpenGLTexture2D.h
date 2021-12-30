@@ -2,7 +2,6 @@
 
 #include "Hazard/Rendering/Texture.h"
 
-
 namespace Hazard::Rendering::OpenGL
 {
 	class OpenGLTexture2D : public Texture2D {

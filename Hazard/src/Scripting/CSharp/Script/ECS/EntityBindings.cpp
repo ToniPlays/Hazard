@@ -34,10 +34,10 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
 		BindMap result;
 		result.reserve(4);
-		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", HasComponent);
-		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", CreateComponent);
-		result.emplace_back("Hazard.Entity::Entity_GetActive_Native", IsActive);
-		result.emplace_back("Hazard.Entity::Entity_SetActive_Native", SetActive);
+		result.emplace_back("Hazard.Entity::Entity_HasComponent_Native", (void*) HasComponent);
+		result.emplace_back("Hazard.Entity::Entity_CreateComponent_Native", (void*) CreateComponent);
+		result.emplace_back("Hazard.Entity::Entity_GetActive_Native", (void*) IsActive);
+		result.emplace_back("Hazard.Entity::Entity_SetActive_Native", (void*) SetActive);
 		return result;
 	}
 	bool EntityBindings::IsActive(uint32_t id)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hzrpch.h"
 #include "HazardEditor.h"
 #include "GUI/EditorView.h"
 #include "SceneRuntimeHandler.h"
@@ -20,13 +21,12 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
-	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>();
+	contextInfo.Renderer = RenderAPI::OpenGL;
 	contextInfo.ImagesInFlight = 3;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
 	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
 

@@ -1,8 +1,6 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "GUI/EditorWindow.h"
-
-using namespace Hazard::Audio;
 
 namespace WindowElement {
 	class AudioEngineDebug : public EditorWindow {

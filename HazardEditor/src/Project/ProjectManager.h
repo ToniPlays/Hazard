@@ -1,7 +1,7 @@
 #pragma once
 
+#include <hzrpch.h>
 #include "HazardProject.h"
-#include "Hazard.h"
 
 namespace Project {
 
@@ -19,10 +19,11 @@ namespace Project {
 		bool ProjectLoaded() { return m_ProjectData != nullptr; }
 		HazardProject& GetProject() { return *m_ProjectData; }
 
-		template<typename T>
-		void Set(const char* key, T value) {
-			static_assert(false);
+		template<typename T, typename C>
+		void Set(T value, C value2) {
+			assert(false);
 		}
+
 		template<>
 		void Set(const char* key, std::string value) {
 			if (strcmp(key, "Editor.StartupWorld") == 0) {

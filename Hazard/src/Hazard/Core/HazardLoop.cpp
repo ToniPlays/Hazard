@@ -48,7 +48,7 @@ namespace Hazard::Core {
 		}
 		catch (const HazardRuntimeError& error)
 		{
-			PlatformUtils::Messagebox("Runtime error", error.what());
+			// PlatformUtils::Messagebox("Runtime error", error.what());
 		}
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)

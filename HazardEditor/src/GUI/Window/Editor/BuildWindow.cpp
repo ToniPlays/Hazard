@@ -6,7 +6,8 @@
 #include "Library/Input.h"
 #include "Library/DragDropUtils.h"
 #include "Project/ProjectManager.h"
-
+#include "Hazard/Utils/StringUtil.h"
+#include "Hazard/Assets/AssetManager.h"
 
 using namespace WindowLayout;
 
@@ -139,7 +140,7 @@ namespace WindowElement
 			ImVec2 offset = ImGui::GetCursorPos();
 			ImVec2 windowSize = ImVec2(offset.x + avail.x, offset.y + avail.y);
 
-			DragDropUtils::DragTargetCustom("World", ImRect(offset, windowSize), ImGuiID("worldDrag"), [&](const ImGuiPayload* payload) {
+			DragDropUtils::DragTargetCustom("World", ImRect(offset, windowSize), ImGui::GetID("worldDrag"), [&](const ImGuiPayload* payload) {
 				AssetHandle handle = *(AssetHandle*)payload->Data;
 				m_BuildSettings.m_Worlds.push_back(AssetManager::GetMetadata(handle));
 				});

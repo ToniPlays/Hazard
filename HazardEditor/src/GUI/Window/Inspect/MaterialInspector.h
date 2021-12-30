@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "Core/EditorEvent.h"
 #include "GUI/EditorWindow.h"
 

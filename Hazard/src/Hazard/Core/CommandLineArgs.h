@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Hazard/Utils/StringUtil.h"
+
 namespace Hazard {
 	class CommandLineArgs {
-	private:
-		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
 	public:
-		void Init(int count, char* values[])
+		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
+		static void Init(int count, char* values[])
 		{
 			std::stringstream ss;
 			for (uint32_t i = 1; i < count; i++) {
@@ -21,6 +22,11 @@ namespace Hazard {
 			}
 		}
 
+		template<typename C>
+		static C Get(const std::string& key)
+		{
+			assert(false);
+		}
 		template<>
 		bool Get(const std::string& key)
 		{
@@ -37,12 +43,6 @@ namespace Hazard {
 		std::vector<std::string> Get(const std::string& key)
 		{
 			return m_Arguments[key];
-		}
-
-		template<>
-		RenderAPI Get()
-		{
-			return Rendering::RenderContext::StringToApi(Get<std::string>("RenderAPI"));
 		}
 	};
 }

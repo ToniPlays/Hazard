@@ -32,9 +32,9 @@ namespace Runtime {
 			World* runtimeWorld = new World(*s_EditorWorld);
 			handler.SetWorld(runtimeWorld);
 
-			PhysicsBeginInfo physicsInfo = {};
+			Hazard::Physics::PhysicsBeginInfo physicsInfo = {};
 
-			PhysicsCommand::BeginSimulation(&physicsInfo);
+			Hazard::Physics::PhysicsCommand::BeginSimulation(&physicsInfo);
 			WorldCommand::WorldRuntimeBegin();
 			ScriptCommand::OnBeginRuntime();
 		}
@@ -42,7 +42,7 @@ namespace Runtime {
 		{
 			ScriptCommand::OnEndRuntime();
 			WorldCommand::WorldRuntimeEnd();
-			PhysicsCommand::StopSimulation();
+			Hazard::Physics::PhysicsCommand::StopSimulation();
 			handler.SetWorld(s_EditorWorld);
 		}
 

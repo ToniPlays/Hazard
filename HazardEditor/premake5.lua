@@ -34,6 +34,13 @@ project "HazardEditor"
 
 	links
 	{
+		"%{Library.Mono_Debug_Lib}",
+		"%{Library.Assimp_Lib}",
+		"%{Library.Vulkan}",
+		"GLFW",
+		"Glad",
+		"Box2D",
+		"yaml-cpp",
 		"Hazard",
 		"ImGui"
 	}
@@ -43,6 +50,13 @@ project "HazardEditor"
 		defines { 
 			"HZR_PLATFORM_WINDOWS"
 		}
+
+	filter "system:macosx"
+		defines {
+			"HZR_PLATFORM_MACOS"
+		}
+		links {"IOKit.framework", "CoreFoundation.framework", "Cocoa.framework"}
+		links {"shaderc_util"}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
@@ -54,12 +68,31 @@ project "HazardEditor"
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
 		}
 
+		links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}"
+		}
+
 	filter "configurations:Release"
 		defines "HZR_RELEASE"
 		runtime "Release"
 		optimize "on"
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
 
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		runtime "Release"
 		optimize "on"
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}

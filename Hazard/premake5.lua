@@ -35,7 +35,6 @@ project "Hazard"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Mono}",
-		"%{IncludeDir.OpenAL}",
 		"%{IncludeDir.Vorbis}",
 		"%{IncludeDir.Minimp3}",
 		"%{IncludeDir.Libogg}",
@@ -59,7 +58,6 @@ project "Hazard"
 		"Glad",
 		"Box2D",
 		"yaml-cpp",
-		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -67,11 +65,14 @@ project "Hazard"
 		defines {
 			"HZR_PLATFORM_WINDOWS"
 		}
+		links {"opengl32.lib"}
 
 	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS"
 		}
+		links {"IOKit.framework", "CoreFoundation.framework", "Cocoa.framework"}
+		links {"shaderc_util"}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"

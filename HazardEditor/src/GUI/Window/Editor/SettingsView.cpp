@@ -6,6 +6,7 @@
 #include "Library/Layout/Layout.h"
 #include "Library/DragDropUtils.h"
 #include "Project/ProjectManager.h"
+#include "Hazard/Assets/AssetManager.h"
 
 using namespace WindowLayout;
 namespace WindowElement
@@ -15,8 +16,8 @@ namespace WindowElement
 		SetActive(false);
 		
 		m_Images.clear();
-		AssetHandle handle = AssetManager::GetHandleFromFile("icons/world.png");
-		m_Images["world"] = AssetManager::GetAsset<Texture2D>(handle);
+		AssetHandle handle = Hazard::AssetManager::GetHandleFromFile("icons/world.png");
+		m_Images["world"] = Hazard::AssetManager::GetAsset<Hazard::Rendering::Texture2D>(handle);
 
 	}
 	void SettingsView::OnWindowRender()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/Rendering/Pipeline/RenderPass.h"
 
 namespace Hazard::Rendering::OpenGL {
 	class OpenGLRenderPass : public RenderPass {

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Hazard.h"
+#include "hzrpch.h"
+#include "Hazard/Assets/AssetEnums.h"
+#include "Hazard/Assets/Asset.h"
 
 namespace Exporter {
 

@@ -9,7 +9,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		BindMap result;
 		result.reserve(1);
-		result.emplace_back("Hazard.Gizmo::Gizmo_DrawLine_Native", Gizmo_DrawLine_Native);
+		result.emplace_back("Hazard.Gizmo::Gizmo_DrawLine_Native", (void*) Gizmo_DrawLine_Native);
 		return result;
 	}
 	void GizmoBindings::Gizmo_DrawLine_Native(glm::vec3 start, glm::vec3 end, glm::vec4 color)

@@ -38,7 +38,7 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
 		if (m_Shader->CreateDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-			__debugbreak();
+			abort();
 		}
 		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
@@ -160,7 +160,7 @@ namespace Hazard::Rendering::Vulkan
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.Pass = m_Specs.Pass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
+		pipelineInfo.renderPass = m_Specs.Pass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 

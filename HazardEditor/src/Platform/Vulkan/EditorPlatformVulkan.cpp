@@ -12,7 +12,7 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* context)
 {
 	this->m_Context = context;
-	auto& swapchain = m_Context->GetSwapchain();
+	const auto& swapchain = m_Context->GetSwapchain();
 	auto device = m_Context->GetDevice();
 
 	// Setup Platform/Renderer bindings
@@ -64,7 +64,7 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
-	auto& swapchain = m_Context->GetSwapchain();
+	const auto& swapchain = m_Context->GetSwapchain();
 	ImGuiIO& io = ImGui::GetIO();
 
 	VkClearValue clearValues[2];
@@ -87,7 +87,7 @@ void EditorPlatformVulkan::EndFrame()
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassBeginInfo.pNext = nullptr;
-	renderPassBeginInfo.Pass = swapchain->GetRenderPass();
+	renderPassBeginInfo.renderPass = swapchain->GetRenderPass();
 	renderPassBeginInfo.renderArea.offset.x = 0;
 	renderPassBeginInfo.renderArea.offset.y = 0;
 	renderPassBeginInfo.renderArea.extent.width = width;
@@ -100,7 +100,7 @@ void EditorPlatformVulkan::EndFrame()
 
 	VkCommandBufferInheritanceInfo inheritanceInfo = {};
 	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	inheritanceInfo.Pass = swapchain->GetRenderPass();
+	inheritanceInfo.renderPass = swapchain->GetRenderPass();
 	inheritanceInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
 
 	VkCommandBufferBeginInfo cmdBufInfo = {};

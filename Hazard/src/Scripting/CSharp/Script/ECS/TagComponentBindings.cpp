@@ -11,8 +11,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	BindMap TagComponentBindings::GetBindings()
 	{
 		BindMap result;
-		result.emplace_back("Hazard.TagComponent::TagComponent_GetName_Native", TagComponent_GetName_Native);
-		result.emplace_back("Hazard.TagComponent::TagComponent_SetName_Native", TagComponent_SetName_Native);
+		result.emplace_back("Hazard.TagComponent::TagComponent_GetName_Native", (void*) TagComponent_GetName_Native);
+		result.emplace_back("Hazard.TagComponent::TagComponent_SetName_Native", (void*) TagComponent_SetName_Native);
 		return result;
 	}
 	MonoString* TagComponentBindings::TagComponent_GetName_Native(uint32_t id)

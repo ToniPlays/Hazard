@@ -274,9 +274,11 @@ namespace Hazard::Rendering::Vulkan {
 		case VK_IMAGE_LAYOUT_PREINITIALIZED:
 			memoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
 			break;
+#ifndef HZR_PLATFORM_MACOS // MVK
 		case VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR:
 			memoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			break;
+#endif
 		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
 			memoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 			break;

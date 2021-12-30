@@ -73,7 +73,7 @@ namespace Hazard::Rendering::Vulkan
 		m_Image->Release();
 		m_Image->RT_Invalidate();
 
-		auto& info = m_Image->GetImageInfo();
+		const auto& info = m_Image->GetImageInfo();
 
 		if (m_Header.IsValid())
 		{
@@ -184,7 +184,9 @@ namespace Hazard::Rendering::Vulkan
 		sampler.maxAnisotropy = 1.0;
 		sampler.anisotropyEnable = VK_FALSE;
 		sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+#ifndef HZR_PLATFORM_MACOS // MVK
 		VK_CHECK_RESULT(vkCreateSampler(device->GetDevice(), &sampler, nullptr, &info.Sampler));
+#endif
 
 		if (!false) {
 			VkImageViewCreateInfo view{};
@@ -200,8 +202,9 @@ namespace Hazard::Rendering::Vulkan
 			view.subresourceRange.layerCount = 1;
 			view.subresourceRange.levelCount = 1;
 			view.image = info.Image;
+#ifndef HZR_PLATFORM_MACOS // MVK
 			VK_CHECK_RESULT(vkCreateImageView(device->GetDevice(), &view, nullptr, &info.ImageView));
-
+#endif
 			m_Image->UpdateDescriptor();
 		}
 	}

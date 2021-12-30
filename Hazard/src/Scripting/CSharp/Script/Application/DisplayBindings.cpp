@@ -11,12 +11,12 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		BindMap result;
 		result.reserve(6);
-		result.emplace_back("Hazard.Display::Display_Width_Native", GetDisplayWidth);
-		result.emplace_back("Hazard.Display::Display_Height_Native", GetDisplayHeight);
-		result.emplace_back("Hazard.Display::Display_IsFullscreen_Native", GetDisplayFullscreen);
-		result.emplace_back("Hazard.Display::Display_SetFullscreen_Native", SetDisplayFullscreen);
-		result.emplace_back("Hazard.Display::Display_IsVsync_Native", GetDisplayVSync);
-		result.emplace_back("Hazard.Display::Display_SetVsync_Native", SetDisplayVsync);
+		result.emplace_back("Hazard.Display::Display_Width_Native", (void*) GetDisplayWidth);
+		result.emplace_back("Hazard.Display::Display_Height_Native", (void*) GetDisplayHeight);
+		result.emplace_back("Hazard.Display::Display_IsFullscreen_Native", (void*) GetDisplayFullscreen);
+		result.emplace_back("Hazard.Display::Display_SetFullscreen_Native", (void*) SetDisplayFullscreen);
+		result.emplace_back("Hazard.Display::Display_IsVsync_Native", (void*) GetDisplayVSync);
+		result.emplace_back("Hazard.Display::Display_SetVsync_Native", (void*) SetDisplayVsync);
 		return result;
 	}
 	float DisplayBindings::GetDisplayWidth()

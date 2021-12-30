@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "EditorView.h"
 
 #include "Library/Style.h"
@@ -173,7 +173,7 @@ namespace WindowElement {
 	bool EditorView::OnWindowFocus(WindowFocusEvent& e)
 	{
 		if(e.GetFocus())
-			ScriptCommand::ReloadAssemblies();
+			Hazard::Scripting::ScriptCommand::ReloadAssemblies();
 		return true;
 	}
 }

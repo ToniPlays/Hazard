@@ -2,7 +2,8 @@
 
 #include <imgui_internal.h>
 #include <imgui.h>
-#include "Hazard.h"
+#include <hzrpch.h>
+#include "Hazard/Rendering/Texture.h"
 
 namespace WindowLayout {
 	class Dockspace {

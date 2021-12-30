@@ -1,7 +1,7 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "GUI/EditorWindow.h"
-
+#include "Hazard/Rendering/WorldRenderer.h"
 #include "Editor/EditorCamera.h"
 
 using namespace Hazard;

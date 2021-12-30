@@ -5,7 +5,11 @@
 #include "Layout/Layout.h"
 #include "Library/DragDropUtils.h"
 
+#include <hzrpch.h>
 #include "Hazard/Scripting/Attributes/AllAttributes.h"
+#include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/Texture.h"
+#include "Platform/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -16,9 +20,8 @@ namespace WindowElement {
 
 	bool Input::InputField(std::string& text)
 	{
-		char buffer[512];
-		memset(buffer, 0, sizeof(buffer));
-		strcpy_s(buffer, sizeof(buffer), text.c_str());
+		char buffer[512] = {0};
+		strcpy(buffer, text.c_str());
 
 		if (ImGui::InputText("##InputField", buffer, sizeof(buffer)))
 		{
@@ -29,9 +32,8 @@ namespace WindowElement {
 	}
 	bool Input::InputField(std::string& text, const char* hint)
 	{
-		char buffer[512];
-		memset(buffer, 0, sizeof(buffer));
-		strcpy_s(buffer, sizeof(buffer), text.c_str());
+		char buffer[512] = {0};
+		strcpy(buffer, text.c_str());
 
 		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer)))
 		{
@@ -341,21 +343,12 @@ namespace WindowElement {
 	}
 	bool Input::ImageButton(Ref<Rendering::Texture2D> image, ImVec2 size)
 	{
-		switch (RenderCommand::GetAPI())
-		{
-		case RenderAPI::OpenGL:
-			return ImGui::ImageButton((ImTextureID)image.As<OpenGL::OpenGLTexture2D>()->GetID(), size, {0, 1}, {1, 0});
-		case RenderAPI::Vulkan: {
-			Ref<Vulkan::VulkanTexture2D> vulkanTexture = image.As<Vulkan::VulkanTexture2D>();
-			return ImGui::ImageButton(Layout::GetTextureID(vulkanTexture->GetImage()), size, { 0, 1 }, { 1, 0 });
-		}
-		}
-		return false;
+		return ImGui::ImageButton((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, {0, 1}, {1, 0});
 	}
 	template<typename T>
 	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, T& value)
 	{
-		static_assert(false);
+		assert(false);
 	}
 	template<>
 	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, float& value)
@@ -365,7 +358,7 @@ namespace WindowElement {
 		Layout::SetColumnWidth(75);
 		Layout::Text(field->GetName().c_str());
 
-		ScriptFieldMetadata& meta = field->GetFieldMetadata();
+		const ScriptFieldMetadata& meta = field->GetFieldMetadata();
 
 		if (meta.Has<TooltipAttribute>()) 
 		{
@@ -377,7 +370,7 @@ namespace WindowElement {
 		bool modified = false;
 
 		if (meta.Has<SliderAttribute>()) {
-			SliderAttribute& attrib = meta.Get<SliderAttribute>();
+			const SliderAttribute& attrib = meta.Get<SliderAttribute>();
 			std::stringstream ss;
 			ss << "#" << field->GetName();
 			modified = ImGui::SliderFloat(ss.str().c_str(), &value, attrib.Min, attrib.Max);
@@ -386,7 +379,7 @@ namespace WindowElement {
 		}
 		else if (meta.Has<RangeAttribute>()) 
 		{
-			RangeAttribute& attrib = meta.Get<RangeAttribute>();
+			const RangeAttribute& attrib = meta.Get<RangeAttribute>();
 			std::stringstream ss;
 			ss << "#" << field->GetName();
 			modified = ImGui::SliderFloat(ss.str().c_str(), &value, attrib.Min, attrib.Max);
@@ -404,7 +397,7 @@ namespace WindowElement {
 		using namespace Hazard::Scripting;
 		bool modified = false;
 
-		ScriptFieldMetadata& meta = field->GetFieldMetadata();
+		const ScriptFieldMetadata& meta = field->GetFieldMetadata();
 
 		if (meta.Has<HideInPropertiesAttribute>()) return false;
 		if (field->GetVisibility() != FieldVisibility::Public && !meta.Has<ShowInPropertiesAttribute>()) 

@@ -1,5 +1,6 @@
 #pragma once
 #include <hzrpch.h>
+#include <vulkan/vulkan.h>
 #include "VulkanSwapChain.h"
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
@@ -44,7 +45,7 @@ namespace Hazard::Rendering::Vulkan
 		VkSurfaceCapabilitiesKHR surfCaps = VKUtils::GetSurfaceCapabilities(m_Device->GetPhysicalDevice(), m_Surface);
 		SwapChainSupportDetails details = VKUtils::GetSwapChainDetails(m_Device->GetPhysicalDevice(), m_Surface);
 
-		VkExtent2D swapchainExtent = VKUtils::ChooseSwapChainExtent(details.capabilities, (int)&width, (int)&height);
+		VkExtent2D swapchainExtent = VKUtils::ChooseSwapChainExtent(details.capabilities, (int)*width, (int)*height);
 		VkPresentModeKHR swapchainPresentMode = VKUtils::ChooseSwapChainPresentMode(details.presentModes, preferred);
 		VkSurfaceFormatKHR format = VKUtils::ChooseSwapChainFormat(details.formats, VKUtils::GetFormat(ImageFormat::RGBA));
 		m_ColorFormat = format.format;
@@ -376,7 +377,7 @@ namespace Hazard::Rendering::Vulkan
 		VkFramebufferCreateInfo frameBufferCreateInfo = {};
 		frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		frameBufferCreateInfo.pNext = NULL;
-		frameBufferCreateInfo.Pass = m_RenderPass;
+		frameBufferCreateInfo.renderPass = m_RenderPass;
 		frameBufferCreateInfo.attachmentCount = 2;
 		frameBufferCreateInfo.pAttachments = ivAttachments;
 		frameBufferCreateInfo.width = m_Width;

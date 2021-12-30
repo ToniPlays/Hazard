@@ -2,8 +2,10 @@
 
 
 #include "EditorCamera.h"
+#include "Library/Input.h"
+#include "Hazard/Events/Input.h"
 
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -20,14 +22,14 @@ namespace Editor {
 	}
 	void EditorCamera::OnUpdate()
 	{
-		const glm::vec2& mouse = Input::GetMousePos();
+		const glm::vec2& mouse = Hazard::Input::GetMousePos();
 		glm::vec2 delta = (mouse - m_InitialMousePos) * 0.003f;
 		m_InitialMousePos = mouse;
 
-		if (Input::IsMouseButtonDown(Mouse::ButtonLeft) && !m_Is2DEnabled) {
+		if (Hazard::Input::IsMouseButtonDown(Mouse::ButtonLeft) && !m_Is2DEnabled) {
 			MouseRotate(delta);
 		}
-		else if (Input::IsMouseButtonDown(Mouse::ButtonRight))
+		else if (Hazard::Input::IsMouseButtonDown(Mouse::ButtonRight))
 			MousePan(delta);
 
 		UpdateView();

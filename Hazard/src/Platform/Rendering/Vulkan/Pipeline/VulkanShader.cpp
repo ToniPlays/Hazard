@@ -219,7 +219,7 @@ namespace Hazard::Rendering::Vulkan
 			HZR_PROFILE_SCOPE("Shader stage");
 
 			VkShaderStageFlagBits vkStage = Utils::ShaderTypeToVkType(stage);
-			auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
+			const auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
 
 			if (binaries.size() > 0) {
 				m_ShaderCode[stage] = binaries;
@@ -240,7 +240,7 @@ namespace Hazard::Rendering::Vulkan
 
 			if (!compileInfo.Succeeded()) {
 				HZR_CORE_ERROR(compileInfo.Error);
-				auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
+				const auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
 				m_ShaderCode[stage] = binaries;
 				continue;
 			}

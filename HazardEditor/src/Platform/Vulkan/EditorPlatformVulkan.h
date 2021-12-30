@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 
 class EditorPlatformVulkan : public EditorGuiPlatform {
