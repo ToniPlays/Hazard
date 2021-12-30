@@ -172,9 +172,9 @@ namespace WindowElement
 
 			if (Input::Button("Build", { 80, 25 }))
 			{
-				std::filesystem::path path = File::SaveFolderDialog();
-				if (path.string() != "")
-					ExportProject(path);
+				// std::filesystem::path path = File::SaveFolderDialog();
+				// if (path.string() != "")
+				// 	ExportProject(path);
 			}
 			ImGui::EndChild();
 		}

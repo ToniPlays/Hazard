@@ -36,14 +36,14 @@ namespace Hazard {
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
-		if (info->RenderContextInfo != nullptr) 
-			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
+		// if (info->RenderContextInfo != nullptr) 
+		// 	PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
 
-		if (info->RendererInfo != nullptr) 
-		{
-			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-			PushModule<Rendering::RenderEngine>(info->RendererInfo);
-		}
+		// if (info->RendererInfo != nullptr) 
+		// {
+		// 	HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+		// 	PushModule<Rendering::RenderEngine>(info->RendererInfo);
+		// }
 
 		if (info->AudioEngine) 
 			PushModule<Audio::AudioEngine>(info->AudioEngine);

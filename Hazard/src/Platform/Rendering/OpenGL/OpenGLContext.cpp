@@ -53,7 +53,6 @@ namespace Hazard::Rendering {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-			glDebugMessageCallback(OnDebugMessage, nullptr);
 		}
 
 		void OpenGLContext::SwapBuffers()

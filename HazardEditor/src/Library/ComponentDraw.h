@@ -132,13 +132,13 @@ namespace WindowElement {
 						});
 				});
 			if (changed) {
-				std::string file = File::OpenFileDialog("");
-				if (!file.empty())
-				{
-					using namespace Hazard::Rendering;
-					Texture2DCreateInfo createInfo;
-					createInfo.FilePath = file;
-				}
+				// std::string file = File::OpenFileDialog("");
+				// if (!file.empty())
+				// {
+				// 	using namespace Hazard::Rendering;
+				// 	Texture2DCreateInfo createInfo;
+				// 	createInfo.FilePath = file;
+				// }
 			}
 
 			}, [&entity]() {

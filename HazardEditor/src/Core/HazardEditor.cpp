@@ -40,16 +40,16 @@ void EditorApplication::PreInit()
 	ScriptEngineCreateInfo scriptInfo = {};
 	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
 	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
-	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
-	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
+	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
+	scriptInfo.MonoDirectoryEtc = "/usr/local/Cellar/mono/6.12.0.122/etc/";
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo = {};
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
-	createInfo.RenderContextInfo = &contextInfo;
-	createInfo.RendererInfo = &engineInfo;
+	createInfo.RenderContextInfo = nullptr;
+	createInfo.RendererInfo = nullptr;
 	createInfo.AudioEngine = &audioInfo;
 	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;
