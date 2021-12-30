@@ -80,6 +80,11 @@ namespace Project {
 	void ProjectManager::SaveCurrentWorld()
 	{
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
+		if (world->GetWorldFile().empty()) {
+			std::string filePath = File::SaveFile("");
+			if (filePath.empty()) return;
+			world->SetWorldFile(filePath);
+		}
 		ECS::Loader::WorldSerializer::SerializeEditor(world->GetWorldFile().c_str(), world);
 	}
 	void ProjectManager::ImportFiles(const std::vector<std::filesystem::directory_entry>& files)

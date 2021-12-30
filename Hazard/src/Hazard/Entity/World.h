@@ -27,6 +27,7 @@ namespace Hazard::ECS {
 		entt::registry& GetWorldRegistry() { return m_Registry; }
 		std::string& GetName() { return m_Name; }
 		std::string& GetWorldFile() { return m_File; }
+		void SetWorldFile(const std::string& file) { m_File = file; }
 
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 

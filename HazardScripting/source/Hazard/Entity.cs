@@ -39,6 +39,16 @@ namespace Hazard
         {
             return Entity_HasComponent_Native(ID, typeof(T));
         }
+        public T Add<T>() where T : Component, new() 
+        {
+            Entity_CreateComponent_Native(ID, typeof(T));
+
+            T component = new T
+            {
+                parent = this
+            };
+            return component;
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Entity_GetActive_Native(ulong id);

@@ -2,9 +2,9 @@
 #include <hzrpch.h>
 #include "EntityBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"
-#include "../../ScriptUtils.h"
+#include "Scripting/CSharp/ScriptUtils.h"
 #include "Hazard/Entity/Component.h"
-#include "../../Mono/Mono.h"
+#include "Scripting/CSharp/Mono/Mono.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
 

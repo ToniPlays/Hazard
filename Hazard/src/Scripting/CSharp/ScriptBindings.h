@@ -13,9 +13,9 @@ namespace Hazard::Scripting::CSharp {
 
 	using BindMap = std::vector<std::pair<const char*, void*>>;
 
-	class ScriptRegistery {
+	class ScriptBindings {
 	public:
 		static void Init();
-		static void BindRegistery(BindMap bindings);
+		static void BindRegistry(BindMap bindings);
 	};
 }

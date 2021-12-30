@@ -39,7 +39,7 @@ void EditorApplication::PreInit()
 
 	ScriptEngineCreateInfo scriptInfo = {};
 	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore").c_str();
-	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/bin/Debug-windows-x86_64/HazardScripting/HazardScripting.dll";
+	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
 	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
 	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
 	scriptInfo.Enable = false;

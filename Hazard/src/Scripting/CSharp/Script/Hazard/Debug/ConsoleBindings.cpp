@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "ConsoleBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"
-#include "../../ScriptUtils.h"
+#include "Scripting/CSharp/ScriptUtils.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
 

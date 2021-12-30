@@ -24,5 +24,5 @@ workspace "%{ProjectName}"
       "Assets/Scripts/**.cs"
     }
     links {
-      "%{HazardDirectory}/bin/Debug-windows-x86_64/HazardScripting/HazardScripting.dll"
+      "%{HazardDirectory}/HazardScripting/bin/debug/HazardScripting.dll"
     }

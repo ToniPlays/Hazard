@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../ScriptRegistery.h"
+#include "Scripting/CSharp/ScriptBindings.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
 	//Bind debug calls internal

@@ -3,7 +3,7 @@
 #include "Mono.h"
 
 #include "../ScriptUtils.h"
-#include "../ScriptRegistery.h"
+#include "Scripting/CSharp/ScriptBindings.h"
 #include "../AttributeBuilder.h"
 
 #include <mono/jit/jit.h>
@@ -56,7 +56,7 @@ namespace Hazard::Scripting::CSharp {
 			HZR_THROW("Runtime assembly does not exist " + std::string(path));
 		}
 		LoadMonoAssebly(path);
-		ScriptRegistery::Init();
+		ScriptBindings::Init();
 	}
 	void Mono::Shutdown()
 	{
@@ -72,7 +72,15 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(method, object, params, &exception);
-		HZR_ASSERT(exception == nullptr, "[Mono]: Failed to call method: " + std::string(GetMethodFullName(method)));
+		if (exception) {
+			MonoClass* exceptionClass = Mono::GetClassFromObject(result);
+			MonoType* type = mono_class_get_type(exceptionClass);
+			const char* typeName = Mono::GetTypeName(type);
+			std::string message = Mono::GetStringProperty("Message", exceptionClass, result);
+			std::string stackTrace = Mono::GetStringProperty("StackTrace", exceptionClass, result);
+			
+			HZR_CORE_ERROR("[Mono]: {0} from {1}", message, stackTrace);
+		}
 		return result;
 	}
 	bool Mono::ModuleExists(const char* name)
@@ -243,6 +251,13 @@ namespace Hazard::Scripting::CSharp {
 	char* Mono::GetTypeName(MonoType* type)
 	{
 		return mono_type_get_name(type);
+	}
+	std::string Mono::GetStringProperty(const char* name, MonoClass* monoClass, MonoObject* obj)
+	{
+		MonoProperty* property = mono_class_get_property_from_name(monoClass, name);
+		MonoMethod* getter = mono_property_get_get_method(property);
+		MonoString* result = (MonoString*)mono_runtime_invoke(getter, obj, NULL, NULL);
+		return result != nullptr ? ScriptUtils::MonoStringToString(result) : "";
 	}
 	MonoType* Mono::ReflectionToType(void* type)
 	{

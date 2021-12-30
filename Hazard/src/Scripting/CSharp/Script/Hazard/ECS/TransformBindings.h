@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../ScriptRegistery.h"
+#include "Scripting/CSharp/ScriptBindings.h"
 #include <glm/glm.hpp>
 
 namespace Hazard::Scripting::CSharp::Bindings {

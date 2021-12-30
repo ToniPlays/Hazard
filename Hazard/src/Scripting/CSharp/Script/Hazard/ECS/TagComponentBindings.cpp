@@ -3,7 +3,7 @@
 #include "TagComponentBindings.h"
 #include "EntityBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"
-#include "../../ScriptUtils.h"
+#include "Scripting/CSharp/ScriptUtils.h"
 
 
 namespace Hazard::Scripting::CSharp::Bindings {

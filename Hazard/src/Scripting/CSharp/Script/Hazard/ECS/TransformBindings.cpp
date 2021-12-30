@@ -2,8 +2,6 @@
 #include <hzrpch.h>
 #include "TransformBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"
-#include "../../ScriptUtils.h"
-
 
 namespace Hazard::Scripting::CSharp::Bindings {
 
