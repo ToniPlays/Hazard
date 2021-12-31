@@ -7,7 +7,7 @@ project "Hazard"
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "hzrpch.h"
+	pchheader "src/hzrpch.h"
 	pchsource "src/hzrpch.cpp"
 
 	files

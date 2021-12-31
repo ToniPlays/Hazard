@@ -24,3 +24,8 @@ Hazard/vendor/Glad/bin
 HazardEditor/library/
 
 Makefile
+*.pbxproj
+*.plist
+*.xcsettings
+*.xcuserstate
+*.xcworkspacedata
