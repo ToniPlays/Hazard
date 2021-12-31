@@ -5,7 +5,6 @@ namespace Hazard
 {
     public class AudioSourceComponent : Component
     {
-
         public float gain 
         {
             get => AudioSource_GetGain_Native(parent.ID);

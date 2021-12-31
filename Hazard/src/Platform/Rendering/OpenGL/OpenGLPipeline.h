@@ -7,7 +7,7 @@ namespace Hazard::Rendering::OpenGL
 {
 	class OpenGLPipeline : public Pipeline {
 	public:
-		OpenGLPipeline(const PipelineSpecification& specs);
+		OpenGLPipeline(PipelineSpecification* specs);
 		virtual ~OpenGLPipeline();
 
 		PipelineSpecification GetSpecifications() { return m_Specs; }

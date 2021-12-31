@@ -7,11 +7,11 @@
 
 namespace Hazard::Rendering::OpenGL
 {
-	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& specs) : m_Specs(specs)
+	OpenGLPipeline::OpenGLPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		m_Shader = Shader::Create(specs.ShaderPath);
+		m_Shader = Shader::Create(specs->ShaderPath);
 		Invalidate();
 	}
 	OpenGLPipeline::~OpenGLPipeline()

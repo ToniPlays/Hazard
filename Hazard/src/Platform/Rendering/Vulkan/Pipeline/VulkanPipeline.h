@@ -11,7 +11,7 @@ namespace Hazard::Rendering::Vulkan
 	class VulkanPipeline : public Pipeline
 	{
 	public:
-		VulkanPipeline(const PipelineSpecification& specs);
+		VulkanPipeline(PipelineSpecification* specs);
 		virtual ~VulkanPipeline();
 
 		PipelineSpecification GetSpecifications() { return m_Specs; }

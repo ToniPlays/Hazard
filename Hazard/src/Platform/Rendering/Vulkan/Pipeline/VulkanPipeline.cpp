@@ -11,11 +11,14 @@
 namespace Hazard::Rendering::Vulkan
 {
 
-	VulkanPipeline::VulkanPipeline(const PipelineSpecification& specs) : m_Specs(specs)
+	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs)
 	{
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
-		m_Shader = Shader::Create(specs.ShaderPath).As<VulkanShader>();
+
+		if(m_Specs.ShaderPath != specs->ShaderPath)
+			m_Shader = Shader::Create(specs->ShaderPath).As<VulkanShader>();
+		m_Specs = *specs;
 
 		Invalidate();
 	}

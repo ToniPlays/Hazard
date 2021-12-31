@@ -21,13 +21,12 @@ namespace Hazard::Rendering
 
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint);
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture);
+
 		//TODO: Remove these?
-		static void DrawRotatedQuad() {};
 		static void DrawScreenSpaceQuad() {};
 		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const glm::vec4& tint = Color::White);
 
 		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
-		static void DrawCustomGeometry() {};
 		static void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
 		static void DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count);
 
@@ -35,7 +34,7 @@ namespace Hazard::Rendering
 		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color);
 		static void DrawRectangle(const glm::mat4& transform, const glm::vec4& color);
 
-		static void DrawMesh() {};
+		static void DrawMesh(Ref<Mesh> mesh, glm::mat4 transform);
 		static void DrawAnimatedMesh() {};
 
 		static RenderStats GetStats() { return s_Engine->GetStats(); };

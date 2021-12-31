@@ -60,7 +60,7 @@ namespace Hazard::Rendering
 		if (m_Pipeline->GetSpecifications().RenderPass != renderPass) {
 			PipelineSpecification specs = m_Pipeline->GetSpecifications();
 			specs.RenderPass = renderPass;
-			m_Pipeline = Pipeline::Create(specs);
+			m_Pipeline = Pipeline::Create(&specs);
 		}
 	}
 	void Renderer2D::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
@@ -131,7 +131,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
 			pipelineSpecs.RenderPass = std::move(renderPass);
 
-			m_Pipeline = Pipeline::Create(pipelineSpecs);
+			m_Pipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);

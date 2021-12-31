@@ -161,7 +161,7 @@ namespace Hazard::ECS::Loader
 		std::string fileName;
 		YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
 		AssetHandle handle = AssetManager::ImportAsset(fileName);
-		c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
+		//c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
 	};
 	template<>
 	static void WorldDeserializer::Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {

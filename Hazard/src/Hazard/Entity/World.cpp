@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "WorldCommand.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "Hazard/Rendering/Mesh/MeshFactory.h"
 #include "Hazard/Audio/AudioCommand.h"
 
 #define REGISTER_COMPONENT(x)	template<>															\
@@ -177,7 +178,6 @@ namespace Hazard::ECS
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
 	REGISTER_COMPONENT(CircleCollider2DComponent);
-	REGISTER_COMPONENT(MeshComponent);
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
@@ -206,17 +206,26 @@ namespace Hazard::ECS
 		WorldCommand::OnScriptAttached(entity, component);
 	}
 	template<>
-	void World::OnComponentAdded(Entity& entity, VisualScriptComponent& component) {
-		WorldCommand::OnScriptAttached(entity, component);
-	}
-	template<>
 	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component)
 	{
 		WorldCommand::OnScriptDetached(entity, component);
+	}
+
+	template<>
+	void World::OnComponentAdded(Entity& entity, VisualScriptComponent& component) {
+		WorldCommand::OnScriptAttached(entity, component);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, VisualScriptComponent& component)
 	{
 		WorldCommand::OnScriptDetached(entity, component);
+	}
+	template<>
+	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
+		component.m_Mesh = Rendering::MeshFactory::LoadCube();
+	}
+	template<>
+	void World::OnComponentRemoved(Entity& entity, MeshComponent& component)
+	{
 	}
 }

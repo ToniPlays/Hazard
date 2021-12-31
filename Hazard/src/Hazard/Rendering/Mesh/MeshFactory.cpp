@@ -22,10 +22,10 @@ namespace Hazard::Rendering {
 	uint32_t meshFlags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords
 		| aiProcess_OptimizeMeshes | aiProcess_ValidateDataStructure | aiProcess_JoinIdenticalVertices;
 
-	Ref<Mesh> MeshFactory::LoadMesh(const MeshCreateInfo& createInfo)
+	Ref<Mesh> MeshFactory::LoadMesh(MeshCreateInfo* createInfo)
 	{
 		Timer timer;
-		std::string absoluteFile = File::GetFileAbsolutePath(createInfo.Path);
+		std::string absoluteFile = File::GetFileAbsolutePath(createInfo->Path);
 
 		HZR_CORE_ASSERT(File::Exists(absoluteFile), "Mesh file does not exist");
 
@@ -42,9 +42,16 @@ namespace Hazard::Rendering {
 		data.subMeshes.reserve(scene->mNumMeshes);
 		ProcessNode(scene->mRootNode, scene, data);
 		TraverseNode(scene->mRootNode, data);
-		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo.Path, timer.ElapsedMillis());
+		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo->Path, timer.ElapsedMillis());
 
 		return Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
+	}
+
+	Ref<Mesh> MeshFactory::LoadCube()
+	{
+		MeshCreateInfo info = {};
+		info.Path = "res/mesh/cube.obj";
+		return LoadMesh(&info);
 	}
 
 	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)

@@ -66,10 +66,11 @@ namespace Hazard::Rendering
 			{
 				m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
 
+				m_CurrentRenderPass = worldRenderer->GetRenderPass();
 				if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Geometry)
 				{
-					m_Renderer2D->SetTargetRenderPass(worldRenderer->GetRenderPass());
-					m_DebugRenderer->SetTargetRenderPass(worldRenderer->GetRenderPass());
+					m_Renderer2D->SetTargetRenderPass(m_CurrentRenderPass);
+					m_DebugRenderer->SetTargetRenderPass(m_CurrentRenderPass);
 
 					m_Renderer2D->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
 					m_DebugRenderer->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
@@ -84,6 +85,7 @@ namespace Hazard::Rendering
 			}
 			worldRenderer->End(m_RenderCommandBuffer);
 		}
+
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();
 		m_Queue->Clear();
@@ -100,7 +102,7 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
-		pipeline->Bind(m_RenderCommandBuffer);
+		vertexBuffer->Bind(m_RenderCommandBuffer);
 		indexBuffer->Bind(m_RenderCommandBuffer);
 		pipeline->Bind(m_RenderCommandBuffer);
 		pipeline->Draw(m_RenderCommandBuffer, indexBuffer->GetCount());

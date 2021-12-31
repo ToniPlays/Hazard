@@ -25,11 +25,11 @@ namespace Hazard::Rendering
 		{
 			PipelineSpecification lineSpec = m_LinePipeline->GetSpecifications();
 			lineSpec.RenderPass = renderPass;
-			m_LinePipeline = Pipeline::Create(lineSpec);
+			m_LinePipeline = Pipeline::Create(&lineSpec);
 
 			PipelineSpecification circleSpec = m_CirclePipeline->GetSpecifications();
 			circleSpec.RenderPass = renderPass;
-			m_CirclePipeline = Pipeline::Create(circleSpec);
+			m_CirclePipeline = Pipeline::Create(&circleSpec);
 		}
 	}
 	void DebugRenderer::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
@@ -133,7 +133,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.ShaderPath = "Shaders/lineShader.glsl";
 			pipelineSpecs.RenderPass = renderPass;
 
-			m_LinePipeline = Pipeline::Create(pipelineSpecs);
+			m_LinePipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(LineVertex);
@@ -166,7 +166,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.ShaderPath = "Shaders/circleShader.glsl";
 			pipelineSpecs.RenderPass = renderPass;
 
-			m_CirclePipeline = Pipeline::Create(pipelineSpecs);
+			m_CirclePipeline = Pipeline::Create(&pipelineSpecs);
 
 			//TODO: Circle count?
 			VertexBufferCreateInfo vertexInfo = {};

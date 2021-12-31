@@ -16,7 +16,7 @@ namespace Hazard::Rendering
     {
         MeshCreateInfo meshCreateInfo = {};
         meshCreateInfo.Path = metadata.Path.string();
-        asset = MeshFactory::LoadMesh(meshCreateInfo);
+        asset = MeshFactory::LoadMesh(&meshCreateInfo);
         return asset;
     }
 }

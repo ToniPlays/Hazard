@@ -8,51 +8,49 @@
 
 namespace Hazard::Rendering {
 
-    Mesh::Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices) : m_Filename(file), m_Vertices(vertices), m_Indices(indices)
-    {
-        GeneratePipeline();
-    }
-    Mesh::~Mesh()
-    {
-        
-    }
-    void Mesh::GeneratePipeline()
-    {
-        VertexBufferCreateInfo vertexInfo = {};
-        vertexInfo.Size = m_Vertices.size() * sizeof(Vertex3D);
-        vertexInfo.Data = m_Vertices.data();
-        vertexInfo.Usage = BufferUsage::StaticDraw;
+	Mesh::Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices) : m_Filename(file), m_Vertices(vertices), m_Indices(indices)
+	{
+		GeneratePipeline();
+	}
+	Mesh::~Mesh()
+	{
 
-        IndexBufferCreateInfo indexInfo = {};
-        indexInfo.Size = m_Indices.size();
-        indexInfo.Data = m_Indices.data();
-        indexInfo.Usage = BufferUsage::StaticDraw;
+	}
+	void Mesh::GeneratePipeline()
+	{
+		VertexBufferCreateInfo vertexInfo = {};
+		vertexInfo.Size = m_Vertices.size() * sizeof(Vertex3D);
+		vertexInfo.Usage = BufferUsage::StaticDraw;
+		vertexInfo.Data = m_Vertices.data();
 
-        FrameBufferCreateInfo frameBufferInfo = {};
-        frameBufferInfo.SwapChainTarget = false;
-        frameBufferInfo.AttachmentCount = 2;
-        frameBufferInfo.Attachments = { {ImageFormat::RGBA }, {ImageFormat::Depth } };
-        frameBufferInfo.ClearOnLoad = true;
-        frameBufferInfo.ClearColor = Color::Black;
-        frameBufferInfo.DebugName = "Mesh3D";
-        frameBufferInfo.Width = 1920;
-        frameBufferInfo.Height = 1080;
+		m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
-        Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+		IndexBufferCreateInfo indexInfo = {};
+		indexInfo.Size = m_Indices.size();
+		indexInfo.Data = m_Indices.data();
+		indexInfo.Usage = BufferUsage::StaticDraw;
 
-        RenderPassCreateInfo renderPassInfo = {};
-        renderPassInfo.pTargetFrameBuffer = frameBuffer;
-        renderPassInfo.DebugName = "Mesh3D";
+		m_IndexBuffer = IndexBuffer::Create(&indexInfo);
+	}
+	void Mesh::SetRenderPass(const Ref<RenderPass>& renderPass)
+	{
+		if (!m_Pipeline) {
 
-        Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
+			PipelineSpecification spec = {};
+			spec.Usage = PipelineUsage::GraphicsBit;
+			spec.DrawType = DrawType::Fill;
+			spec.LineWidth = 1.0f;
+			spec.ShaderPath = "Shaders/pbr.glsl";
+			spec.RenderPass = renderPass;
 
-        PipelineSpecification spec = {};
-        spec.Usage = PipelineUsage::GraphicsBit;
-        spec.DrawType = DrawType::Fill;
-        spec.LineWidth = 1.0f;
-        spec.ShaderPath = "Shaders/pbr.glsl";
-        spec.RenderPass = renderPass;
+			m_Pipeline = Pipeline::Create(&spec);
+			return;
+		}
+		if (m_Pipeline->GetSpecifications().RenderPass == renderPass) 
+			return;
 
-        m_Pipeline = Pipeline::Create(spec);
-    }
+		auto spec = m_Pipeline->GetSpecifications();
+		spec.RenderPass = renderPass;
+		m_Pipeline = Pipeline::Create(&spec);
+	}
 }

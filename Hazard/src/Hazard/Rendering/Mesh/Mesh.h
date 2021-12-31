@@ -37,14 +37,18 @@ namespace Hazard::Rendering {
 
 		std::string& GetFile() { return m_Filename; }
 		void GeneratePipeline();
+		void SetRenderPass(const Ref<RenderPass>& renderPass);
 
 		Ref<Pipeline> GetPipeline() { return m_Pipeline; }
+		Ref<VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
+		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		size_t GetIndexCount() { return m_Indices.size(); }
 
 	private:
 		std::string m_Filename;
-
 		Ref<Pipeline> m_Pipeline;
+		Ref<VertexBuffer> m_VertexBuffer;
+		Ref<IndexBuffer> m_IndexBuffer;
 
 		std::vector<Vertex3D> m_Vertices;
 		std::vector<uint32_t> m_Indices;

@@ -34,7 +34,7 @@ namespace Editor
 		if (m_Pipeline) {
 			PipelineSpecification spec = m_Pipeline->GetSpecifications();
 			spec.RenderPass = renderPass;
-			m_Pipeline = Pipeline::Create(spec);
+			m_Pipeline = Pipeline::Create(&spec);
 			return;
 		}
 
@@ -45,6 +45,6 @@ namespace Editor
 		specs.Usage = PipelineUsage::GraphicsBit;
 		specs.Culling = false;
 		specs.IsBackground = false;
-		m_Pipeline = Pipeline::Create(specs);
+		m_Pipeline = Pipeline::Create(&specs);
 	}
 }

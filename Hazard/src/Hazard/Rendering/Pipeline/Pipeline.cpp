@@ -8,7 +8,7 @@
 
 namespace Hazard::Rendering 
 {
-	Ref<Pipeline> Pipeline::Create(const PipelineSpecification& specs)
+	Ref<Pipeline> Pipeline::Create(PipelineSpecification* specs)
 	{
 		switch (RenderCommand::GetAPI()) {
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLPipeline>::Create(specs);

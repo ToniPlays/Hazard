@@ -26,7 +26,8 @@ namespace Hazard::Rendering {
 	class MeshFactory {
 
 	public:
-		static Ref<Mesh> LoadMesh(const MeshCreateInfo& file);
+		static Ref<Mesh> LoadMesh(MeshCreateInfo* file);
+		static Ref<Mesh> LoadCube();
 
 	private:
 		static void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);

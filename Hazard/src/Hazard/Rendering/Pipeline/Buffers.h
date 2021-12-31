@@ -9,7 +9,8 @@
 
 namespace Hazard::Rendering 
 {
-	enum BufferUsage {
+	enum BufferUsage 
+	{
 		StreamDraw = 0,
 		StreamRead = 1,
 		StreamCopy = 2,

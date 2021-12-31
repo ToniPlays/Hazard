@@ -64,12 +64,14 @@ namespace Hazard::Rendering {
 
 		Renderer2D& Get2D() { return *m_Renderer2D; }
 		DebugRenderer& GetDebugRenderer() { return *m_DebugRenderer; }
+		Ref<RenderPass> GetCurrentRenderPass() { return m_CurrentRenderPass; }
 
 	private:
 		Renderer2D* m_Renderer2D;
 		DebugRenderer* m_DebugRenderer;
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		Ref<RenderPass> m_CurrentRenderPass;
 		RenderCommandQueue* m_PostPassQueue;
 		RenderCommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;

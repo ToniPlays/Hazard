@@ -5,7 +5,8 @@
 
 namespace Hazard::Rendering {
 
-	struct Vertex3D {
+	struct Vertex3D 
+	{
 		glm::vec3 Position	= { 0, 0, 0 };
 		glm::vec4 Color		= Color::White;
 		glm::vec3 Normals	= { 0, 0, 0 };

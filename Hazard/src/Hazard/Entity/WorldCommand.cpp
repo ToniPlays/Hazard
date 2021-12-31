@@ -62,7 +62,7 @@ namespace Hazard::ECS {
 		auto& rb2dView = world->GetEntitiesWith<Rigidbody2DComponent>();
 		for (auto& e : rb2dView)
 		{
-			Entity entity = { e, world.Raw()};
+			Entity entity = { e, world.Raw() };
 			TransformComponent& tc = entity.GetComponent<TransformComponent>();
 			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
 
@@ -115,12 +115,12 @@ namespace Hazard::ECS {
 				cc2d.runtimeFixture = PhysicsCommand::CreateCollider(&info);
 			}
 		}
-		for (auto& e : world->GetEntitiesWith<AudioSourceComponent>()) 
+		for (auto& e : world->GetEntitiesWith<AudioSourceComponent>())
 		{
 			Entity entity = { e, world.Raw() };
 			auto& as = entity.GetComponent<AudioSourceComponent>();
 
-			if (as.PlayOnCreate) 
+			if (as.PlayOnCreate)
 				as.Source.Play();
 
 		}
@@ -165,6 +165,17 @@ namespace Hazard::ECS {
 					RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.Tint);
 				}
 			}
+		}
+		auto meshes = world->GetWorldRegistry().group<MeshComponent>(entt::get<TransformComponent>);
+
+		for (auto entity : meshes)
+		{
+			Entity e = { entity, world.Raw() };
+			if (!e.IsVisible()) continue;
+
+			auto& [mesh, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
+			if (mesh.m_Mesh)
+				RenderCommand::DrawMesh(mesh.m_Mesh, tc.GetTransformMat4());
 		}
 	}
 
