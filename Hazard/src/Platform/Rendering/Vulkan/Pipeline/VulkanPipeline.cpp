@@ -41,7 +41,7 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
 		if (m_Shader->CreateDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-			__debugbreak();
+			abort();
 		}
 		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
@@ -163,7 +163,7 @@ namespace Hazard::Rendering::Vulkan
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.renderPass = m_Specs.RenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
+		pipelineInfo.renderPass = m_Specs.Pass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
@@ -183,14 +183,12 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		commandBuffer->GetStats().DrawCalls++;
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
 	}
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		commandBuffer->GetStats().DrawCalls++;
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDraw(cmdBuffer, count, 1, 0, 0);

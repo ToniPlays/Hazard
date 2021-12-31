@@ -83,10 +83,6 @@ namespace YAML {
 
 namespace Hazard 
 {
-	template<typename T>
-	void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, T value) {
-		static_assert(false);
-	}
 	template<>
 	void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, bool value)
 	{
@@ -145,10 +141,6 @@ namespace Hazard
 
 
 
-	template<typename T>
-	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue) {
-		static_assert(false);
-	}
 	template<>
 	void YamlUtils::Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) {
 		if (!node[key]) value = defaultValue;

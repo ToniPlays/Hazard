@@ -1,10 +1,11 @@
 #pragma once
 
+#include "FrameBuffer.h"
 #include "Hazard/Core/Core.h"
+
 namespace Hazard::Rendering {
-
 	class FrameBuffer;
-
+	
 	struct RenderPassCreateInfo {
 		Ref<FrameBuffer> pTargetFrameBuffer = nullptr;
 		std::string DebugName = "";

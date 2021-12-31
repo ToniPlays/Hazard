@@ -1,8 +1,9 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
+#include "Hazard/Scripting/ScriptEngineManager.h"
+#include "Hazard/Entity/World.h"
 
 using namespace Hazard::Scripting;
-using namespace Hazard::Physics;
 
 namespace Runtime {
 

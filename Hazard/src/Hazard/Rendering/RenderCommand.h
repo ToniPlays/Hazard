@@ -37,7 +37,6 @@ namespace Hazard::Rendering
 		static void DrawMesh(Ref<Mesh> mesh, glm::mat4 transform);
 		static void DrawAnimatedMesh() {};
 
-		static RenderStats GetStats() { return s_Engine->GetStats(); };
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }
 
 	private:

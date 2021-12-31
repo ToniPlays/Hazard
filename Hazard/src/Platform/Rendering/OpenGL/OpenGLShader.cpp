@@ -137,7 +137,7 @@ namespace Hazard::Rendering::OpenGL
 		shaderData.clear();
 
 		for (auto&& [stage, source] : sources) {
-			HZR_PROFILE_FUNCTION("Shader stage");
+			HZR_PROFILE_FUNCTION();
 
 			auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::Vulkan);
 
@@ -179,12 +179,12 @@ namespace Hazard::Rendering::OpenGL
 
 		for (auto&& [stage, spirv] : m_VulkanSPIRV)
 		{
-			HZR_PROFILE_FUNCTION("Shader stage");
+			HZR_PROFILE_FUNCTION();
 			GLenum glStage = OpenGLUtils::ShaderTypeToGLType(stage);
 
 			if (!forceCompile) {
 
-				auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
+				const auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 
 				if (binaries.size() > 0) {
 					shaderData[glStage] = binaries;

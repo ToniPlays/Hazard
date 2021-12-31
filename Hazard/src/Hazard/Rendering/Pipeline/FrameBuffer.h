@@ -2,10 +2,10 @@
 
 #include "Hazard/Core/Core.h"
 #include "glm/glm.hpp"
-#include "RenderPass.h"
 #include "../Image/Image2D.h"
 
 namespace Hazard::Rendering {
+	class FrameBuffer;
 
 	struct FrameBufferAttachment
 	{

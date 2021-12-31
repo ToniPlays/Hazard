@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "GUI/EditorWindow.h"
 #include "GUI/Window/Rendering/TransformationGizmo.h"
 #include "Editor/EditorGrid.h"

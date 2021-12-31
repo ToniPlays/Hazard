@@ -2,7 +2,6 @@
 
 #include "Hazard/Rendering/Texture.h"
 
-
 namespace Hazard::Rendering::OpenGL
 {
 	class OpenGLTexture2D : public Texture2D {
@@ -23,7 +22,7 @@ namespace Hazard::Rendering::OpenGL
 
 		virtual float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
 		virtual Buffer GetBuffer() const { return Buffer(); };
-		virtual Buffer& GetBuffer() { return Buffer(); }
+		virtual const Buffer& GetBuffer() { return Buffer(); }
 
 	private:
 

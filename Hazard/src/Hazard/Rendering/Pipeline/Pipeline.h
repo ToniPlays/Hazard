@@ -18,7 +18,7 @@ namespace Hazard::Rendering
 		float LineWidth = 1.0f;
 		bool Culling = true;
 		bool IsBackground = false;
-		Ref<RenderPass> RenderPass = nullptr;
+		Ref<RenderPass> Pass = nullptr;
 	};
 
 	class Pipeline : public RefCount {

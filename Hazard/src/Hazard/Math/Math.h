@@ -4,6 +4,8 @@
 #include <numeric>
 
 #include "Hazard/Rendering/Camera.h"
+#include "Hazard/Core/Application.h"
+#include "Hazard/Core/HazardLoop.h"
 
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
@@ -103,18 +105,18 @@ namespace Hazard {
 			return glm::vec2(width * 0.01f, height * 0.01f);
 		}
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation) {
-			HZ_SCOPE_PERF("Math::ToTransformMatrix(1)", 10);
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(1)");
 			return glm::translate(glm::mat4(1.0f), translation);
 		}
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
-			HZ_SCOPE_PERF("Math::ToTransformMatrix(2)", 10);
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(2)");
 			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
 			return glm::translate(glm::mat4(1.0f), translation) * rot;
 		}
 		static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) 
 		{
-			HZ_SCOPE_PERF("Math::ToTransformMatrix(3)", 10);
+			HZ_SCOPE_PERF("Math::ToTransformMatrix(3)");
 			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
 			return glm::translate(glm::mat4(1.0f), translation)	* rot

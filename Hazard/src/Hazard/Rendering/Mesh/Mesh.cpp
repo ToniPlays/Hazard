@@ -46,7 +46,7 @@ namespace Hazard::Rendering {
 			m_Pipeline = Pipeline::Create(&spec);
 			return;
 		}
-		if (m_Pipeline->GetSpecifications().RenderPass == renderPass) 
+		if (m_Pipeline->GetSpecifications().RenderPass == renderPass)
 			return;
 
 		auto spec = m_Pipeline->GetSpecifications();

@@ -18,25 +18,25 @@ namespace Hazard::Rendering::Vulkan
 		void BeginFrame();
 		void Present();
 
-		uint32_t GetImageCount() { return m_ImageCount; }
+		uint32_t GetImageCount() const { return m_ImageCount; }
 
-		uint32_t GetWidth() { return m_Width; }
-		uint32_t GetHeight() { return m_Height; }
+		uint32_t GetWidth() const { return m_Width; }
+		uint32_t GetHeight() const { return m_Height; }
 
-		VkRenderPass GetRenderPass() { return m_RenderPass; }
-		VkFramebuffer GetCurrentFrameBuffer() { return GetFrameBuffer(m_CurrentImageIndex); }
-		VkCommandBuffer GetCurrentDrawCommandBuffer() { return GetCommandBuffer(m_CurrentBufferIndex); }
+		VkRenderPass GetRenderPass() const { return m_RenderPass; }
+		VkFramebuffer GetCurrentFrameBuffer() const { return GetFrameBuffer(m_CurrentImageIndex); }
+		VkCommandBuffer GetCurrentDrawCommandBuffer() const { return GetCommandBuffer(m_CurrentBufferIndex); }
 
-		VkFormat GetColorFormat() { return m_ColorFormat; }
-		uint32_t GetCurrentBufferIndex() { return m_CurrentBufferIndex; }
+		VkFormat GetColorFormat() const { return m_ColorFormat; }
+		uint32_t GetCurrentBufferIndex() const { return m_CurrentBufferIndex; }
 
-		VkFramebuffer GetFrameBuffer(uint32_t index) {
+		VkFramebuffer GetFrameBuffer(uint32_t index) const {
 			return m_FrameBuffers[index];
 		}
-		VkCommandBuffer GetCommandBuffer(uint32_t index) {
+		VkCommandBuffer GetCommandBuffer(uint32_t index) const {
 			return m_CommandBuffers[index];
 		}
-		VkSemaphore GetRenderCompleteSemaphore() { return m_Semaphores.RenderComplete; }
+		VkSemaphore GetRenderCompleteSemaphore() const { return m_Semaphores.RenderComplete; }
 		void Cleanup();
 
 		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeEvent.push_back(callback); }

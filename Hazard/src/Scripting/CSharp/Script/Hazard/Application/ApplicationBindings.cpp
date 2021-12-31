@@ -9,7 +9,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	BindMap ApplicationBindings::GetBindings()
 	{
 		BindMap results;
-		results.emplace_back("Hazard.Application::Application_Quit_Native", Application::Quit);
+		results.emplace_back(std::pair<const char*, void*>("Hazard.Application::Application_Quit_Native", (void*) Application::Quit));
 		return results;
 	}
 }

@@ -7,7 +7,7 @@ project "Hazard"
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "hzrpch.h"
+	pchheader "src/hzrpch.h"
 	pchsource "src/hzrpch.cpp"
 
 	files
@@ -24,8 +24,8 @@ project "Hazard"
 
 	defines
 	{
-		"_CRT_SECURE_NO_WARNINGS",
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+		"IMGUI_IMPL_OPENGL_LOADER_GLAD"
 	}
 
 	includedirs
@@ -35,7 +35,6 @@ project "Hazard"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Mono}",
-		"%{IncludeDir.OpenAL}",
 		"%{IncludeDir.Vorbis}",
 		"%{IncludeDir.Minimp3}",
 		"%{IncludeDir.Libogg}",
@@ -49,18 +48,7 @@ project "Hazard"
 		"%{IncludeDir.VMA}"
 	}
 
-	links
-	{
-		"%{Library.OpenAL_Lib}",
-		"%{Library.Mono_Debug_Lib}",
-		"%{Library.Assimp_Lib}",
-		"%{Library.Vulkan}",
-		"GLFW",
-		"Glad",
-		"Box2D",
-		"yaml-cpp",
-		"opengl32.lib"
-	}
+	links {}
 
 	filter "system:windows"
 		systemversion "latest"
@@ -68,38 +56,22 @@ project "Hazard"
 			"HZR_PLATFORM_WINDOWS"
 		}
 
+	filter "system:macosx"
+		defines {
+			"HZR_PLATFORM_MACOS"
+		}
+
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
-
-		links
-		{
-			"%{Library.ShaderC_Debug}",
-			"%{Library.SPIRV_Cross_Debug}",
-			"%{Library.SPIRV_Cross_GLSL_Debug}"
-		}
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"
 		runtime "Release"
 		optimize "on"
 
-		links
-		{
-			"%{Library.ShaderC_Release}",
-			"%{Library.SPIRV_Cross_Release}",
-			"%{Library.SPIRV_Cross_GLSL_Release}"
-		}
-
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		runtime "Release"
 		optimize "on"
-
-		links
-		{
-			"%{Library.ShaderC_Release}",
-			"%{Library.SPIRV_Cross_Release}",
-			"%{Library.SPIRV_Cross_GLSL_Release}"
-		}

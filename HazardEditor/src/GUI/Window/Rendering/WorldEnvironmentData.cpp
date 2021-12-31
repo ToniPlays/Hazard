@@ -4,6 +4,7 @@
 #include "Library/Layout/Layout.h"
 #include "Library/Style.h"
 #include "Library/Input.h"
+#include "Hazard/Entity/WorldCommand.h"
 
 using namespace WindowLayout;
 

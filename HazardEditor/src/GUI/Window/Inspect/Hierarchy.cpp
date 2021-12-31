@@ -133,7 +133,7 @@ namespace WindowElement {
 		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		const std::string entityIDStr = c.Tag + std::to_string(entity);
+		const std::string entityIDStr = c.Tag;
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);

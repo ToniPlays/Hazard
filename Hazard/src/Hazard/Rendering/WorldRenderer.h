@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Camera.h"
 #include "Pipeline/FrameBuffer.h"
+#include "Pipeline/RenderPass.h"
 #include "RenderCommandBuffer.h"
 #include "RenderCommandQueue.h"
 
@@ -50,8 +51,6 @@ namespace Hazard::Rendering
 		Ref<Image2D> GetFinalPassImage() { return m_FrameBuffer->GetImage(); }
 		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }
 
-		static Ref<WorldRenderer> Create() { return Ref<WorldRenderer>::Create(); };
-		static Ref<WorldRenderer> Create(WorldRendererSettings* settings) { return Ref<WorldRenderer>::Create(settings); };
 
 	private:
 		void Invalidate();

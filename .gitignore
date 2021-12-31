@@ -17,3 +17,9 @@ HazardEditor/library/
 *.pdb
 *.lastbuildstate
 *.tlog
+*.plist
+*.xcsettings
+*.xcworkspacedata
+*.xcuserstate
+*.pbxproj
+Makefile

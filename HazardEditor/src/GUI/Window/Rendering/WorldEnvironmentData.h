@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazard.h"
+#include <hzrpch.h>
 #include "GUI/EditorWindow.h"
 
 #include "Editor/EditorCamera.h"

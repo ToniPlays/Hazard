@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hzrpch.h"
 #include "HazardEditor.h"
 #include "GUI/EditorView.h"
 #include "SceneRuntimeHandler.h"
@@ -20,13 +21,12 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
-	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>();
+	contextInfo.Renderer = RenderAPI::OpenGL;
 	contextInfo.ImagesInFlight = 3;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
 	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	contextInfo.Color = "#323232";
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
 
@@ -38,18 +38,18 @@ void EditorApplication::PreInit()
 	AudioEngineCreateInfo audioInfo = {};
 
 	ScriptEngineCreateInfo scriptInfo = {};
-	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore").c_str();
-	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
-	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/Lib";
-	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/Etc";
+	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
+	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
+	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
+	scriptInfo.MonoDirectoryEtc = "/usr/local/Cellar/mono/6.12.0.122/etc/";
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo = {};
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
-	createInfo.RenderContextInfo = &contextInfo;
-	createInfo.RendererInfo = &engineInfo;
+	createInfo.RenderContextInfo = nullptr;
+	createInfo.RendererInfo = nullptr;
 	createInfo.AudioEngine = &audioInfo;
 	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;
@@ -63,10 +63,7 @@ void EditorApplication::Init()
 	Runtime::SceneRuntimeHandler::Init();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-
-	std::string projectPath = CommandLineArgs::Get<std::string>("ProjectPath");
-	if (!projectPath.empty())
-		manager.Load(projectPath);
+	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
 }
 
 bool EditorApplication::OnEvent(Event& e)

@@ -28,7 +28,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
-		if (!(m_CurrentFlags & WorldRenderFlags_::Geometry)) 
+		if (!(m_CurrentFlags & WorldRenderFlags_::Geometry))
 			return;
 
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices)
@@ -57,10 +57,10 @@ namespace Hazard::Rendering
 			Recreate(renderPass);
 			return;
 		}
-		if (m_Pipeline->GetSpecifications().RenderPass != renderPass) {
+		if (m_Pipeline->GetSpecifications().Pass != renderPass) {
 			PipelineSpecification specs = m_Pipeline->GetSpecifications();
-			specs.RenderPass = renderPass;
-			m_Pipeline = Pipeline::Create(&specs);
+			specs.Pass = renderPass;
+			m_Pipeline = Pipeline::Create(specs);
 		}
 	}
 	void Renderer2D::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
@@ -79,11 +79,11 @@ namespace Hazard::Rendering
 		HZ_SCOPE_PERF("Renderer2D::Flush");
 		if (!m_QuadBatch)
 			return;
-		
+
 		m_Pipeline->Bind(m_RenderCommandBuffer);
 		Ref<Shader> shader = m_Pipeline->GetShader();
 
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
 		{
 			m_Data.TextureSlots[i]->Bind(i);
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
@@ -94,10 +94,6 @@ namespace Hazard::Rendering
 		m_IndexBuffer->Bind(m_RenderCommandBuffer);
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
 
-		auto& stats = m_RenderCommandBuffer->GetStats();
-		stats.VertexCount += m_QuadBatch.GetCount();
-		stats.IndexCount += m_QuadBatch.GetIndexCount();
-		stats.QuadCount = m_QuadBatch.GetCount() / 4;
 	}
 	void Renderer2D::EndWorld()
 	{
@@ -129,7 +125,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-			pipelineSpecs.RenderPass = std::move(renderPass);
+			pipelineSpecs.Pass = std::move(renderPass);
 
 			m_Pipeline = Pipeline::Create(&pipelineSpecs);
 

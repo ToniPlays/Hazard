@@ -1,5 +1,3 @@
-#pragma once
-
 #include <hzrpch.h>
 #include "AudioListener.h"
 

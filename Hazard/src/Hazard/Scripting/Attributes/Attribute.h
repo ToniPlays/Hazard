@@ -36,7 +36,7 @@ namespace Hazard::Scripting
 		}
 	}
 
-#define ATTRIBUTE_CLASS_TYPE(type)	static AttributeType GetStaticType() { return AttributeType::##type; } \
+#define ATTRIBUTE_CLASS_TYPE(type)	static AttributeType GetStaticType() { return AttributeType::type; } \
 									virtual AttributeType GetAttributeType() const override { return GetStaticType(); } \
 									virtual const char* GetName() const override { return #type; }
 

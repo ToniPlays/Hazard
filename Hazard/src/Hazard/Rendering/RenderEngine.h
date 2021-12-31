@@ -6,8 +6,8 @@
 #include "RenderCommandBuffer.h"
 #include "RenderCommandQueue.h"
 #include "Pipeline/FrameBuffer.h"
-#include "pipeline/Buffers.h"
-#include "pipeline/Pipeline.h"
+#include "Pipeline/Buffers.h"
+#include "Pipeline/Pipeline.h"
 #include "Texture.h"
 #include "Camera.h"
 
@@ -60,7 +60,6 @@ namespace Hazard::Rendering {
 		void SetLineWidth(float lineWidth);
 		 
 		bool OnResize(WindowResizeEvent& e);
-		RenderStats GetStats() { return m_RenderCommandBuffer->GetStats(); }
 
 		Renderer2D& Get2D() { return *m_Renderer2D; }
 		DebugRenderer& GetDebugRenderer() { return *m_DebugRenderer; }

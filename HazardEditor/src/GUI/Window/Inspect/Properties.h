@@ -1,7 +1,7 @@
 #pragma once
 
+#include <hzrpch.h>
 #include "Core/EditorEvent.h"
-#include "Hazard.h"
 #include "GUI/EditorWindow.h"
 
 namespace WindowElement {

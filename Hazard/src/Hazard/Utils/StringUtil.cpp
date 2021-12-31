@@ -28,10 +28,10 @@ namespace Hazard {
 		constexpr uint64_t KB = 1024;
 
 		char buffer[32];
-		if (bytes > GB) sprintf_s(buffer, "%.02f GB", (float)bytes / (float)GB);
-		else if (bytes > MB) sprintf_s(buffer, "%.02f MB", (float)bytes / (float)MB);
-		else if (bytes > KB) sprintf_s(buffer, "%.02f KB", (float)bytes / (float)KB);
-		else sprintf_s(buffer, "%.02f bytes", (float)bytes);
+		if (bytes > GB) sprintf(buffer, "%.02f GB", (float)bytes / (float)GB);
+		else if (bytes > MB) sprintf(buffer, "%.02f MB", (float)bytes / (float)MB);
+		else if (bytes > KB) sprintf(buffer, "%.02f KB", (float)bytes / (float)KB);
+		else sprintf(buffer, "%.02f bytes", (float)bytes);
 		return std::string(buffer);
 	}
 	std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replace)

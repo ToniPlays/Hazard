@@ -36,13 +36,11 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		commandBuffer->GetStats().DrawCalls++;
 		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		commandBuffer->GetStats().DrawCalls++;
 		glDrawArrays(m_DrawType, 0, count);
 	}
 }

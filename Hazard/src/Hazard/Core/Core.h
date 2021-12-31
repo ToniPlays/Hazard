@@ -9,10 +9,12 @@
 		#elif _WIN32
 			#define HAZARD_SYSTEM_BIT "x86"
 		#endif
-
+#elif defined(HZR_PLATFORM_MACOS)
+	#define HZR_PLATFORM "macOS"
+	#define HAZARD_SYSTEM_BIT "x64"
 #else 
-	#error Hazard only supports windows!
-#endif // HRD_PLATFORM_WINDOWS
+	#error Unsupported platform!
+#endif // HZR_PLATFORM_WINDOWS
 
 
 //Hazard BUILD_VERSION
@@ -35,7 +37,8 @@
 #include <unordered_map>
 
 #include "Hazard/Events/Event.h"
-#include "Ref.h"
+
+#include "Hazard/Core/Ref.h"
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

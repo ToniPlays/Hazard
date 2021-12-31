@@ -3,6 +3,7 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Math/Color.h"
 #include "Hazard/Rendering/RenderCommandBuffer.h"
+#include "Hazard/Rendering/Pipeline/RenderPass.h"
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
 
 namespace Hazard::Rendering {
