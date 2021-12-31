@@ -138,7 +138,6 @@ namespace Hazard::Rendering
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(LineVertex);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
-			vertexInfo.InputStage = m_LinePipeline->GetShader()->GetShaderData().Stages.at(ShaderType::Vertex);
 
 			m_LineVertexBuffer = VertexBuffer::Create(&vertexInfo);
 			m_LineBatch = Batch<LineVertex>(m_RenderData.MaxVertices);
@@ -173,7 +172,6 @@ namespace Hazard::Rendering
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(CircleVertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
-			vertexInfo.InputStage = m_LinePipeline->GetShader()->GetShaderData().Stages.at(ShaderType::Vertex);
 
 			m_CircleVertexBuffer = VertexBuffer::Create(&vertexInfo);
 

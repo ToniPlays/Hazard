@@ -59,6 +59,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanVertexBuffer::~VulkanVertexBuffer()
 	{
+		HZR_CORE_INFO("Destroying VertexBuffer");
 		m_LocalData.Release();
 		VkBuffer buffer = m_Buffer;
 		VmaAllocation allocation = m_Allocation;

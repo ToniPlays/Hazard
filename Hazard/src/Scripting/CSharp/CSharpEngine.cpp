@@ -20,15 +20,18 @@ namespace Hazard::Scripting::CSharp {
 	struct AssemblyData
 	{
 		std::string AssemblyPath;
+		std::string AppAssemblyPath;
 	};
 
 	AssemblyData data;
 
 	CSharpEngine::CSharpEngine(ScriptEngineCreateInfo* info)
 	{
+		data.AppAssemblyPath = info->AppAssemblyPath;
+
 		Mono::InitAssembly(info);
 		Mono::CreateDomain("Hazard");
-		Mono::LoadRuntimeAssembly(info->AppAssemblyPath);
+		Mono::LoadRuntimeAssembly(info->AppAssemblyPath.c_str());
 	}
 	void CSharpEngine::OnBeginRuntime()
 	{
@@ -174,7 +177,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::Reload()
 	{
-		Mono::LoadRuntimeAssembly("c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll");
+		Mono::LoadRuntimeAssembly(data.AppAssemblyPath.c_str());
 		m_Registry.Clear();
 	}
 }

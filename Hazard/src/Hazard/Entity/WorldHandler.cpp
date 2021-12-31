@@ -40,7 +40,7 @@ namespace Hazard::ECS {
 			}
 		}
 
-		m_World = new World("New world");
+		m_World = new World("");
 		m_World->SetName("New World");
 
 		Entity entity = m_World->CreateEntity("Camera");

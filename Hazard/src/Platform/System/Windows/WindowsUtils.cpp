@@ -2,7 +2,7 @@
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <hzrpch.h>
-#include "Hazard/Core/PlatrofmUtils.h"
+#include "Hazard/Core/PlatformUtils.h"
 
 #include <commdlg.h>
 

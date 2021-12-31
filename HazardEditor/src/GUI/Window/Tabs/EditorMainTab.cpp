@@ -16,7 +16,7 @@ namespace WindowElement
 		PushRenderable<Properties>();
 		PushRenderable<Hierarchy>();
 		PushRenderable<Console>();
-		PushRenderable<FileView>();
+		//PushRenderable<FileView>();
 		PushRenderable<MaterialInspector>();
 	}
 	void EditorMainTab::OnUpdate()

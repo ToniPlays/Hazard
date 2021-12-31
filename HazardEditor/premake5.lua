@@ -33,7 +33,7 @@ project "HazardEditor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.VMA}",
-		"src",
+		"src"
 	}
 
 	links
@@ -60,7 +60,7 @@ project "HazardEditor"
 
 	filter "system:windows"
 		systemversion "latest"
-		defines { 
+		defines {
 			"HZR_PLATFORM_WINDOWS"
 		}
 

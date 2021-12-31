@@ -100,6 +100,7 @@ namespace Hazard::Scripting::CSharp {
 		//Type functions
 		static int GetType(MonoType* type);
 		static char* GetTypeName(MonoType* type);
+		static std::string GetStringProperty(const char* name, MonoClass* monoClass, MonoObject* obj);
 		static MonoType* ReflectionToType(void* type);
 		static MonoType* TypeFromReflectionName(const std::string& name);
 		static FieldVisibility GetVisibility(MonoClassField* field);

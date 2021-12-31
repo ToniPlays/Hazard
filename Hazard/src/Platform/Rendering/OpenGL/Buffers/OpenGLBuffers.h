@@ -20,8 +20,6 @@ namespace Hazard::Rendering::OpenGL
 		BufferUsage m_Usage;
 		uint32_t m_ID, m_VAO;
 		uint32_t m_Size;
-		uint32_t m_Stride;
-		ShaderStageData m_Layout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer

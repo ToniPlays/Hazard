@@ -39,9 +39,9 @@ namespace Project {
 		YamlUtils::Deserialize(general, "Startup world", project->StartupWorld, std::string("Unnamed project"));
 		m_ProjectData = project;
 
-		Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
+		/*Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
 			SetRootPath(project->AbsolutePath);
-
+			*/
 		if (!project->StartupWorld.empty()) {
 			if (!Application::GetModule<ECS::WorldHandler>().LoadWorld(project->StartupWorld, ECS::Serialization::Editor)) {
 				HZR_WARN("Startup world could not be loaded");
@@ -50,10 +50,10 @@ namespace Project {
 
 		{
 			Timer timer;
-
+			/*
 			FolderData data = File::GetFolderFiles(project->AbsolutePath);
 			ImportFiles(data.Files);
-			ImportFromFolder(data.Folders);
+			ImportFromFolder(data.Folders);*/
 
 			HZR_WARN("Importing additional assets took {0} ms", timer.ElapsedMillis());
 		}
@@ -80,6 +80,12 @@ namespace Project {
 	void ProjectManager::SaveCurrentWorld()
 	{
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
+		if (world->GetWorldFile().empty()) {
+			std::string filePath = File::SaveFile("");
+			if (filePath.empty()) return;
+
+			world->SetWorldFile(filePath);
+		}
 		ECS::Loader::WorldSerializer::SerializeEditor(world->GetWorldFile().c_str(), world);
 	}
 	void ProjectManager::ImportFiles(const std::vector<std::filesystem::directory_entry>& files)

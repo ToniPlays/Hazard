@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "File.h"
 
-#include "Hazard/Core/PlatrofmUtils.h"
+#include "Hazard/Core/PlatformUtils.h"
 #include "StringUtil.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
@@ -193,6 +193,9 @@ namespace Hazard {
 	bool File::CreateDir(const std::filesystem::path& dir)
 	{
 		return std::filesystem::create_directories(dir);
+	}
+	void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
+		std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 	}
 	FolderData File::GetFolderFiles(const std::string& folder)
 	{

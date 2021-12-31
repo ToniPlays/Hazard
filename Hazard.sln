@@ -1,11 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B804D027-2471-8B22-ED64-23805990AD8A}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
@@ -18,11 +13,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Hazard\vendor\Glad\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "HazardEditor\vendor\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Premake", "vendor\premake\Premake.vcxproj", "{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml-cpp", "Hazard\vendor\yaml-cpp\yaml-cpp.vcxproj", "{88F1A057-74BE-FB62-9DD7-E90A890331F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcxproj", "{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardLauncher", "HazardLauncher\HazardLauncher.vcxproj", "{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardScripting", "HazardScripting\HazardScripting.csproj", "{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,12 +58,6 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Dist|x64.Build.0 = Dist|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Debug|x64.ActiveCfg = Debug|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Debug|x64.Build.0 = Debug|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Dist|x64.ActiveCfg = Dist|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Dist|x64.Build.0 = Dist|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Release|x64.ActiveCfg = Release|x64
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520}.Release|x64.Build.0 = Release|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Debug|x64.ActiveCfg = Debug|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Debug|x64.Build.0 = Debug|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Dist|x64.ActiveCfg = Dist|x64
@@ -79,6 +70,18 @@ Global
 		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Dist|x64.Build.0 = Dist|x64
 		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.ActiveCfg = Release|x64
 		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.Build.0 = Release|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Debug|x64.ActiveCfg = Debug|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Debug|x64.Build.0 = Debug|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Dist|x64.ActiveCfg = Dist|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Dist|x64.Build.0 = Dist|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Release|x64.ActiveCfg = Release|x64
+		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Release|x64.Build.0 = Release|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.ActiveCfg = Debug|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.Build.0 = Debug|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Dist|x64.ActiveCfg = Dist|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Dist|x64.Build.0 = Dist|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Release|x64.ActiveCfg = Release|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,7 +91,6 @@ Global
 		{154B857C-0182-860D-AA6E-6C109684020F} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{BDD6857C-A90D-870D-52FA-6C103E10030F} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {53E47842-3FC8-3998-A828-34EB942B241A}
-		{6ACC3F23-D6AB-BEBE-DFC3-49954B222520} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1} = {53E47842-3FC8-3998-A828-34EB942B241A}
 	EndGlobalSection
 EndGlobal

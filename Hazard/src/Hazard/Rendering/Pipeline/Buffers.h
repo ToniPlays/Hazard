@@ -5,6 +5,7 @@
 #include "ShaderDataType.h"
 #include "../RenderCommandBuffer.h"
 #include "Shader.h"
+#include "Hazard/Assets/Asset.h"
 
 namespace Hazard::Rendering 
 {
@@ -24,7 +25,6 @@ namespace Hazard::Rendering
 	{
 		size_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
-		ShaderStageData InputStage;
 		void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo 
@@ -41,7 +41,7 @@ namespace Hazard::Rendering
 		uint32_t Usage;
 	};
 
-	class VertexBuffer : public RefCount
+	class VertexBuffer : public Resource
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -51,9 +51,10 @@ namespace Hazard::Rendering
 		virtual uint32_t GetSize() = 0;
 
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
+		static Ref<VertexBuffer> Create(void* createInfo) { return Create((VertexBufferCreateInfo*)createInfo); }
 	};
 
-	class IndexBuffer : public RefCount
+	class IndexBuffer : public Resource
 	{
 	public:
 		virtual ~IndexBuffer() = default;
@@ -65,8 +66,9 @@ namespace Hazard::Rendering
 		virtual uint32_t GetCount() = 0;
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
+		static Ref<IndexBuffer> Create(void* createInfo) { return Create((IndexBufferCreateInfo*)createInfo); }
 	};
-	class UniformBuffer : public RefCount
+	class UniformBuffer : public Resource
 	{
 	public:
 		virtual ~UniformBuffer() = default;
@@ -78,5 +80,6 @@ namespace Hazard::Rendering
 		virtual const uint32_t GetSize() const = 0;
 
 		static Ref<UniformBuffer> Create(UniformBufferCreateInfo* createInfo);
+		static Ref<UniformBuffer> Create(void* createInfo) { return Create((UniformBufferCreateInfo*)createInfo); }
 	};
 }
