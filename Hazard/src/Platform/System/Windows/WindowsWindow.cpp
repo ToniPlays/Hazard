@@ -1,6 +1,7 @@
-#pragma once
 
 #include <hzrpch.h>
+#ifdef HZR_PLATFORM_WINDOWS
+
 #include "WindowWindow.h"
 #include "Hazard/Events/Input.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
@@ -230,3 +231,4 @@ namespace Hazard::Rendering {
 		glfwTerminate();
 	}
 }
+#endif

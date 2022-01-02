@@ -7,9 +7,9 @@
 #include "Window/AllWindows.h"
 
 #include "Platform/GLFW/FontAwesome.h"
+#include "Platform/RenderPlatforms.h"
 
-#include "Platform//OpenGL/EditorPlatformOpenGL.h"
-#include "Platform/Vulkan/EditorPlatformVulkan.h"
+#include <glfw/glfw3.h>
 
 using namespace Hazard;
 
@@ -161,13 +161,17 @@ namespace WindowElement {
 
 		switch (m_Context->GetCurrentAPI())
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 			m_Renderer = new EditorPlatformOpenGL(nativeWindow);
 			break;
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan:
 			Rendering::Vulkan::VulkanContext* context = static_cast<Vulkan::VulkanContext*>(window.GetContext());
 			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
+#endif
 		}
 	}
 	bool EditorView::OnWindowFocus(WindowFocusEvent& e)

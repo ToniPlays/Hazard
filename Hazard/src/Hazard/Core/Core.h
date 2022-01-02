@@ -1,21 +1,22 @@
 #pragma once
 
+#ifndef HZR_CUSTOM_ENTRY
+    //Platform selection
+    #ifdef HZR_PLATFORM_WINDOWS
+        #define HZR_PLATFORM "Windows"
+            #if _WIN64
+                #define HAZARD_SYSTEM_BIT "x64"
+            #elif _WIN32
+                #define HAZARD_SYSTEM_BIT "x86"
+            #endif
+    #elif defined(HZR_PLATFORM_MACOS)
+        #define HZR_PLATFORM "macOS"
+        #define HAZARD_SYSTEM_BIT "arm64"
+    #else
+        #error Unsupported platform!
+    #endif // HZR_PLATFORM_WINDOWS
 
-//Platform selection
-#ifdef HZR_PLATFORM_WINDOWS
-	#define HZR_PLATFORM "Windows"
-		#if _WIN64
-			#define HAZARD_SYSTEM_BIT "x64"
-		#elif _WIN32
-			#define HAZARD_SYSTEM_BIT "x86"
-		#endif
-#elif defined(HZR_PLATFORM_MACOS)
-	#define HZR_PLATFORM "macOS"
-	#define HAZARD_SYSTEM_BIT "x64"
-#else 
-	#error Unsupported platform!
-#endif // HZR_PLATFORM_WINDOWS
-
+#endif
 
 //Hazard BUILD_VERSION
 #if HZR_DEBUG

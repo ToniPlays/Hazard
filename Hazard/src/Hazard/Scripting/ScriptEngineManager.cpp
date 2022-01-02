@@ -1,4 +1,3 @@
-#pragma once
 
 #include "hzrpch.h"
 #include "ScriptEngineManager.h"
@@ -13,7 +12,9 @@ namespace Hazard::Scripting {
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
 	{
 		HZR_PROFILE_FUNCTION();
+#ifdef HZR_INCLUDE_MONO
 		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
+#endif
 
 		ScriptCommand::Init(*this);
 		ScriptResourceManager::Init();

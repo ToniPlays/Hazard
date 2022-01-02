@@ -1,4 +1,4 @@
-#pragma once
+
 #include "hzrpch.h"
 #include "Physics2D.h"
 #include "Physics2DContactListener.h"

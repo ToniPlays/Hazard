@@ -1,75 +1,78 @@
 #pragma once
 
-#ifdef HZR_PLATFORM_WINDOWS
-#include <io.h>
-#include <fcntl.h>
-#include <windows.h>
-#endif
-#include "Hazard/Core/HazardLoop.h"
-#include "Hazard/Core/CommandLineArgs.h"
+#ifndef HZR_CUSTOM_ENTRY
 
-#include <stdio.h>
+    #ifdef HZR_PLATFORM_WINDOWS
+    #include <io.h>
+    #include <fcntl.h>
+    #include <windows.h>
+    #endif
+    #include "Hazard/Core/HazardLoop.h"
+    #include "Hazard/Core/CommandLineArgs.h"
 
-uint32_t allocs = 0;
+    #include <stdio.h>
 
-void* operator new(size_t size)
-{
-	allocs++;
-	return malloc(size);
-}
+    uint32_t allocs = 0;
 
-extern Hazard::Application* Hazard::CreateApplication();
+    void* operator new(size_t size)
+    {
+        allocs++;
+        return malloc(size);
+    }
 
-#ifdef HZR_PLATFORM_WINDOWS
+    extern Hazard::Application* Hazard::CreateApplication();
 
-	#ifdef HZR_DEBUG
+    #ifdef HZR_PLATFORM_WINDOWS
 
-		#pragma comment( linker, "/subsystem:console" )
-		int main(int argc, char* argv[])
-		{
-			using namespace Hazard;
+        #ifdef HZR_DEBUG
 
-			CommandLineArgs::Init(argc, argv);
-			Application* app = CreateApplication();
+            #pragma comment( linker, "/subsystem:console" )
+            int main(int argc, char* argv[])
+            {
+                using namespace Hazard;
 
-			Core::HazardLoop loop(app);
-			loop.Start();
-			while (!loop.ShouldClose()) {
-				loop.Run();
-			}
+                CommandLineArgs::Init(argc, argv);
+                Application* app = CreateApplication();
 
-			return 0;
-		}
+                Core::HazardLoop loop(app);
+                loop.Start();
+                while (!loop.ShouldClose()) {
+                    loop.Run();
+                }
 
-	#else
-		#pragma comment( linker, "/subsystem:windows" )
-		int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-		{
-			using namespace Hazard;
-			Application* app = CreateApplication();
-			Core::HazardLoop loop(app);
-			loop.Start();
-			while (!loop.ShouldClose()) {
-				loop.Run();
-				std::cout << allocs << std::endl;
-			}
-			return 0;
-		}
-	#endif // HZR_DEBUG
-#else
-	int main(int argc, char* argv[])
-	{
-		using namespace Hazard;
+                return 0;
+            }
 
-		CommandLineArgs::Init(argc, argv);
-		Application* app = CreateApplication();
+        #else
+            #pragma comment( linker, "/subsystem:windows" )
+            int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+            {
+                using namespace Hazard;
+                Application* app = CreateApplication();
+                Core::HazardLoop loop(app);
+                loop.Start();
+                while (!loop.ShouldClose()) {
+                    loop.Run();
+                    std::cout << allocs << std::endl;
+                }
+                return 0;
+            }
+        #endif // HZR_DEBUG
+    #else
+        int main(int argc, char* argv[])
+        {
+            using namespace Hazard;
 
-		Core::HazardLoop loop(app);
-		loop.Start();
-		while (!loop.ShouldClose()) {
-			loop.Run();
-		}
+            CommandLineArgs::Init(argc, argv);
+            Application* app = CreateApplication();
 
-		return 0;
-	}
+            Core::HazardLoop loop(app);
+            loop.Start();
+            while (!loop.ShouldClose()) {
+                loop.Run();
+            }
+
+            return 0;
+        }
 #endif // HZR_PLATFORM_WINDOWS
+#endif

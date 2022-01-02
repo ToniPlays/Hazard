@@ -1,4 +1,3 @@
-#pragma once
 
 #include "ProjectManager.h"
 #include "GUI/EditorView.h"

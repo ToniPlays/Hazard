@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Module.h"
-// #include "AL/alc.h"
+ #include "AL/alc.h"
 
 namespace Hazard::Audio 
 {
@@ -13,6 +13,6 @@ namespace Hazard::Audio
 
 		void Close() override;
 	private:
-		// ALCdevice* m_AudioDevice = nullptr;
+		 ALCdevice* m_AudioDevice = nullptr;
 	};
 }

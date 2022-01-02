@@ -1,9 +1,8 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "RenderContext.h"
 
 #include "Hazard/Core/ApplicationCreateInfo.h"
-
 #include "RenderContextCommand.h"
 
 namespace Hazard::Rendering {

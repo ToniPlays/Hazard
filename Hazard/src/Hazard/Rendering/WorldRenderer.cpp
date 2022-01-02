@@ -1,4 +1,4 @@
-#pragma once
+
 #include "hzrpch.h"
 #include "WorldRenderer.h"
 #include "RenderCommand.h"

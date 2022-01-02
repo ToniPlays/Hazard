@@ -11,8 +11,17 @@ namespace Hazard::Rendering {
 	{
 		switch (API)
 		{
-		case Hazard::RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);
-		case Hazard::RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
+#ifdef HZR_INCLUDE_OPENGL
+		case RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
+		case RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
+#endif
+#ifdef HZR_INCLUDE_METAL
+        case RenderAPI::Metal:      return nullptr;
+#endif
+        default:
+            return nullptr;
 		}
 		HZR_CORE_ASSERT(false, "Unkonw RenderAPI");
 		return nullptr;

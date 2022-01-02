@@ -19,7 +19,7 @@ namespace Hazard
 
 			if (size == 0) return;
 
-			Data = new byte[size];
+			Data = new uint8_t[size];
 			Size = size;
 		}
 		void Release() 
@@ -38,21 +38,21 @@ namespace Hazard
 		}
 		template<typename T>
 		T& Read(uint32_t offset = 0) {
-			return *(T*)((byte*)Data + offset);
+			return *(T*)((uint8_t*)Data + offset);
 		}
-		byte* ReadBytes(uint32_t size, uint32_t offset) {
+		uint8_t* ReadBytes(uint32_t size, uint32_t offset) {
 			//HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
-			byte* buffer = new byte[size];
-			memcpy(buffer, (byte*)Data + offset, size);
+			uint8_t* buffer = new uint8_t[size];
+			memcpy(buffer, (uint8_t*)Data + offset, size);
 			return buffer;
 		}
 		void Write(void* data, uint32_t size, uint32_t offset = 0) {
 			//HZR_CORE_ASSERT(offset + size <= Size, "Buffer Overflow");
-			memcpy((byte*)Data + offset, data, size);
+			memcpy((uint8_t*)Data + offset, data, size);
 		}
 		operator bool() const { return Data; }
-		byte& operator[](int index) { return ((byte*)Data)[index]; }
-		byte operator[](int index) const { return ((byte*)Data)[index]; }
+        uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }
+        uint8_t operator[](int index) const { return ((uint8_t*)Data)[index]; }
 		template<typename T>
 		T* As() { return (T*)Data; }
 		inline uint32_t GetSize() { return Size; }
@@ -60,13 +60,13 @@ namespace Hazard
 		static Buffer Copy(const void* data, uint32_t size, uint32_t offset = 0) {
 			Buffer buffer;
 			buffer.Allocate(size);
-			memcpy(buffer.Data, (byte*)data + offset, size);
+			memcpy(buffer.Data, (uint8_t*)data + offset, size);
 			return buffer;
 		}
 		template<typename T>
 		static T Get(void* data, uint32_t startIndex = 0) {
 			T value;
-			memcpy(&value, (byte*)data + startIndex, sizeof(T));
+			memcpy(&value, (uint8_t*)data + startIndex, sizeof(T));
 			return value;
 		}
 		template<typename T>

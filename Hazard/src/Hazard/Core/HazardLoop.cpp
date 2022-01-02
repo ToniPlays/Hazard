@@ -1,4 +1,3 @@
-#pragma once
 
 #include <hzrpch.h>
 #include "HazardLoop.h"

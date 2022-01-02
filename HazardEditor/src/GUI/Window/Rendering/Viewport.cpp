@@ -10,7 +10,6 @@
 #include "Hazard/Rendering/WorldRenderer.h"
 #include "../Inspect/Hierarchy.h"
 
-#include "Platform/Vulkan/EditorPlatformVulkan.h"
 
 using namespace Hazard;
 using namespace WindowLayout;

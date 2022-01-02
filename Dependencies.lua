@@ -23,6 +23,7 @@ IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
 IncludeDir["VMA"] = "%{wks.location}/Hazard/vendor/VulkanMemoryAllocator"
 IncludeDir["ImGui"] = "%{wks.location}/HazardEditor/vendor/ImGui"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
+IncludeDir["Metal"] = "%{wks.location}/Hazard/vendor/Metal-CPP"
 
 LibraryDir = {}
 
@@ -65,5 +66,5 @@ if os.host() == "macosx" then
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
 
     Library["Mono_Debug_Lib"] = "/usr/local/homebrew/Cellar/mono/6.12.0.122/lib/mono-2.0"
-    Library["Assimp_Lib"] = "/opt/homebrew/Cellar/assimp/5.1.4/bin/assimp"
+    Library["Assimp_Lib"] = "/opt/homebrew/Cellar/assimp/5.1.4/lib/assimp"
 end

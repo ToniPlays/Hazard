@@ -32,6 +32,7 @@ project "HazardEditor"
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.VMA}",
 		"src"
 	}
@@ -43,7 +44,9 @@ project "HazardEditor"
 		"%{Library.Mono_Debug_Lib}",
 		"%{Library.Assimp_Lib}",
 		"GLFW",
-		"Glad"
+		"Glad",
+		"Box2D",
+		"yaml-cpp"
 	}
 
 	filter "system:windows"
@@ -52,7 +55,8 @@ project "HazardEditor"
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_OPENGL",
 			"HZR_INCLUDE_VULKAN",
-			"HZR_INCLUDE_OPENAL"
+			"HZR_INCLUDE_OPENAL",
+			"HZR_INCLUDE_MONO"
 		}
 		links {
 			"%{Library.Vulkan}",
@@ -73,16 +77,25 @@ project "HazardEditor"
 			"Metal.frameWork",
 			"MetalKit.framework"
 		}
+		includedirs {
+			"%{IncludeDir.SPIRV_Cross}"
+		}
+		removefiles {
+			"src/Platform/OpenGL/**",
+			"src/Platform/Vulkan/**"
+		}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
+	if os.host() == "windows" then
 		postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
 		}
+	end
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

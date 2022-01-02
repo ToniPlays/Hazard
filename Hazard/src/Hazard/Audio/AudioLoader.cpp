@@ -1,4 +1,4 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "AudioLoader.h"
 #include "AudioFactory.h"
@@ -9,12 +9,12 @@
 namespace Hazard::Audio 
 {
 
-	// AudioLoader::AudioLoader() {
-	// 	AudioFactory::Init();
-	// }
-	// bool AudioLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
-	// {
-	// 	asset = AudioFactory::Load(metadata.Path.string());
-	// 	return asset;
-	// }
+	 AudioLoader::AudioLoader() {
+	 	AudioFactory::Init();
+	 }
+	 bool AudioLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	 {
+	 	asset = AudioFactory::Load(metadata.Path.string());
+	 	return asset;
+	 }
 }

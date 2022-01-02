@@ -1,4 +1,4 @@
-#include "hzrpch.h"
+#include <hzrpch.h>
 #include "ScriptRegistry.h"
 
 namespace Hazard::Scripting {

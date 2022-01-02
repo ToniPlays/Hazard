@@ -1,7 +1,11 @@
-#pragma once
 
-#include "Hazard.h"
+#define HZR_CUSTOM_ENTRY
 #include <iostream>
+#include <cstdint>
+#include <fstream>
+#include <sstream>
+#include "Hazard/Utils/File.h"
+#include "Hazard/Utils/StringUtil.h"
 
 struct CreateProjectInfo {
 	std::string ProjectName;

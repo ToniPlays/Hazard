@@ -45,6 +45,8 @@ project "Hazard"
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.SPIRV_Cross}",
+		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.VMA}"
 	}
 
@@ -62,7 +64,8 @@ project "Hazard"
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_OPENGL",
 			"HZR_INCLUDE_VULKAN",
-			"HZR_INCLUDE_OPENAL"
+			"HZR_INCLUDE_OPENAL",
+			"HZR_INCLUDE_MONO"
 		}
 
 		links {
@@ -71,17 +74,20 @@ project "Hazard"
 			"%{Library.OpenAL_Lib}"
 		}
 		removefiles {
-			"src/Platform/Rendering/Metal/**"
+			"src/Platform/Rendering/Metal/**",
+			"src/Scripting/CSharp/**"
 		} 
 
 	filter "system:macosx"
+
 		pchheader "src/hzrpch.h"
 		defines {
 			"HZR_PLATFORM_MACOS",
 			"HZR_INCLUDE_METAL"
 		}
 		includedirs {
-			"/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
+			"%{IncludeDir.SPIRV_Cross}",
+			"%{IncludeDir.Metal}"
 		}
 		removefiles {
 			"src/Platform/Rendering/Vulkan/**",

@@ -1,4 +1,4 @@
-#pragma once
+
 #include "hzrpch.h"
 #include "RenderCommandQueue.h"
 #include "Hazard/PerformanceProfiler.h"

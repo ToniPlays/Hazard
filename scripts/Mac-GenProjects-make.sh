@@ -1,3 +1,3 @@
 cd ..
 vendor/premake/bin/premake5 gmake; make
-/bin/debug/macosx-universal/HazardEditor/HazardEditor.app
+bin/Debug-macosx-universal/HazardEditor/HazardEditor.app

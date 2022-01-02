@@ -16,3 +16,6 @@
 [submodule "HazardEditor/vendor/imgui"]
 	path = HazardEditor/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Hazard/vendor/Metal-CPP"]
+	path = Hazard/vendor/Metal-CPP
+	url = https://github.com/bkaradzic/metal-cpp

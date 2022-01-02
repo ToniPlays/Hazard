@@ -37,4 +37,7 @@ group ""
 include "Hazard"
 include "HazardEditor"
 include "HazardLauncher"
+
+if os.host() == "windows" then
 include "HazardScripting"
+end

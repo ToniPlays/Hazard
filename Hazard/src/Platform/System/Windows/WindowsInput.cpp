@@ -1,4 +1,4 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "Hazard/Events/Input.h"
 

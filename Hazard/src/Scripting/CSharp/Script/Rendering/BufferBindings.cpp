@@ -14,9 +14,9 @@ namespace Hazard::Scripting::CSharp::Bindings {
     {
         BindMap result;
         result.reserve(3);
-        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Create_Native", VertexBuffer_Create_Native);
-        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Destroy_Native", VertexBuffer_Destroy_Native);
-        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_GetSize_Native", VertexBuffer_GetSize_Native);
+        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Create_Native", (void*) VertexBuffer_Create_Native);
+        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Destroy_Native", (void*) VertexBuffer_Destroy_Native);
+        result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_GetSize_Native", (void*) VertexBuffer_GetSize_Native);
         return result;
     }
 
