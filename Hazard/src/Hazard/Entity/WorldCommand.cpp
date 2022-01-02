@@ -132,7 +132,7 @@ namespace Hazard::ECS {
 
 		HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
 
-		auto spriteRenderers = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
+		const auto& spriteRenderers = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
 		for (auto entity : spriteRenderers) {
 
@@ -143,7 +143,7 @@ namespace Hazard::ECS {
 			RenderCommand::DrawQuad(transform.GetTransformMat4(), sprite.Tint, sprite.Texture);
 		}
 
-		auto batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
+		const auto& batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
 
 		for (auto entity : batches)
 		{
@@ -157,14 +157,14 @@ namespace Hazard::ECS {
 				}
 			}
 		}
-		auto meshes = world->GetWorldRegistry().group<MeshComponent>(entt::get<TransformComponent>);
+		const auto& meshes = world->GetWorldRegistry().group<MeshComponent>(entt::get<TransformComponent>);
 
 		for (auto entity : meshes)
 		{
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
 
-			auto& [mesh, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
+			const auto& [mesh, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
 			if (mesh.m_Mesh)
 				RenderCommand::DrawMesh(mesh.m_Mesh, tc.GetTransformMat4());
 		}

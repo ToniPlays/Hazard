@@ -70,12 +70,18 @@ project "Hazard"
 			"%{Library.VulkanUtils}",
 			"%{Library.OpenAL_Lib}"
 		}
+		removefiles {
+			"src/Platform/Rendering/Metal/**"
+		} 
 
 	filter "system:macosx"
 		pchheader "src/hzrpch.h"
 		defines {
 			"HZR_PLATFORM_MACOS",
 			"HZR_INCLUDE_METAL"
+		}
+		includedirs {
+			"/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
 		}
 		removefiles {
 			"src/Platform/Rendering/Vulkan/**",

@@ -29,3 +29,7 @@ Makefile
 *.dll
 *.filters
 *.user
+.DS_Store
+Hazard/.DS_Store
+Hazard/vendor/.DS_Store
+Hazard/.DS_Store
