@@ -33,3 +33,8 @@ Makefile
 Hazard/.DS_Store
 Hazard/vendor/.DS_Store
 Hazard/.DS_Store
+*.cs
+*.lib
+*.lastbuildstate
+*.filters
+*.obj

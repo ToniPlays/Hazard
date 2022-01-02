@@ -34,13 +34,16 @@ LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Bin"
 Library = {}
 
   if os.host() == "windows" then
+    
+    IncludeDir["SPIRV_Cross"] = "%{VulkanSDK}/Include"
+
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
     Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
 
     Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_sharedd.lib"
     Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-cored.lib"
     Library["SPIRV_Cross_GLSL_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-glsld.lib"
-    Library["SPIRV_Tools_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/SPIRV-Toolsd.lib"
+    Library["SPIRV_Tools_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-Toolsd.lib"
 
     Library["ShaderC_Release"] = "%{LibraryDir.VulkanSDK}/shaderc_shared.lib"
     Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-core.lib"

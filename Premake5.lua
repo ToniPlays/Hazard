@@ -2,6 +2,7 @@
 include "Dependencies.lua"
 
 workspace "Hazard"
+	architecture "x86_64"
 	startproject "HazardEditor"
 
 	configurations
@@ -17,7 +18,6 @@ workspace "Hazard"
 	}
 
 	filter "system:windows"
-		architecture "x86_64"
 
 	filter "system:macosx"
 		architecture "universal"

@@ -54,7 +54,8 @@ project "Hazard"
 		"GLFW",
 		"Glad",
 		"yaml-cpp",
-		"Box2D"
+		"Box2D",
+		"%{Library.Assimp_Lib}"
 	}
 
 	filter "system:windows"
@@ -64,18 +65,16 @@ project "Hazard"
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_OPENGL",
 			"HZR_INCLUDE_VULKAN",
-			"HZR_INCLUDE_OPENAL",
 			"HZR_INCLUDE_MONO"
 		}
 
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
-			"%{Library.OpenAL_Lib}"
+			"opengl32.lib"
 		}
 		removefiles {
-			"src/Platform/Rendering/Metal/**",
-			"src/Scripting/CSharp/**"
+			"src/Platform/Rendering/Metal/**"
 		} 
 
 	filter "system:macosx"
@@ -103,7 +102,6 @@ project "Hazard"
 			links {
 				"%{Library.ShaderC_Debug}",
 				"%{Library.SPIRV_Cross_Debug}",
-				"%{Library.SPIRV_Tools_Debug}",
 				"%{Library.SPIRV_Cross_GLSL_Debug}",
 			}
 		end
@@ -118,7 +116,6 @@ project "Hazard"
 			links {
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
-				"%{Library.SPIRV_Tools_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
 			}
 		end
@@ -132,7 +129,6 @@ project "Hazard"
 			links {
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
-				"%{Library.SPIRV_Tools_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
 			}
 		end

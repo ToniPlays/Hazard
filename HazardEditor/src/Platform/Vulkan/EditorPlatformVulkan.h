@@ -2,6 +2,7 @@
 
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
+#include "Platform/Vulkan/imgui_impl_vulkan.h"
 
 class EditorPlatformVulkan : public EditorGuiPlatform {
 public:

@@ -100,6 +100,9 @@
     <Filter Include="src\Platform\System">
       <UniqueIdentifier>{15EE9341-814F-714F-0ABD-B701761DA80E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Platform\System\MacOS">
+      <UniqueIdentifier>{971E204C-03E1-53D6-4C91-E262B8922CB4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform\System\Windows">
       <UniqueIdentifier>{4FDDE4E9-BBEA-12D0-44D1-0EBBB0DDDE86}</UniqueIdentifier>
     </Filter>
@@ -548,6 +551,9 @@
     </ClInclude>
     <ClInclude Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.h">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\System\MacOS\MacOSWindow.h">
+      <Filter>src\Platform\System\MacOS</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\System\Window.h">
       <Filter>src\Platform\System</Filter>
@@ -2128,6 +2134,12 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Rendering\Vulkan\VulkanTexture2D.cpp">
       <Filter>src\Platform\Rendering\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\System\MacOS\MacOSUtils.cpp">
+      <Filter>src\Platform\System\MacOS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\System\MacOS\MacOSWindow.cpp">
+      <Filter>src\Platform\System\MacOS</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\System\Windows\WindowsInput.cpp">
       <Filter>src\Platform\System\Windows</Filter>

@@ -4,8 +4,7 @@
 
 #include "imgui_internal.h"
 
-#include "Platform/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
-#include "Platform/Rendering/OpenGL/OpenGLImage2D.h"
+#include "Platform/RenderPlatforms.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/Texture.h"
 

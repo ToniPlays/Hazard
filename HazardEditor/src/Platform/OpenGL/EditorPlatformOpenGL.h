@@ -3,6 +3,8 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 
+#include <glfw/glfw3.h>
+
 class EditorPlatformOpenGL : public EditorGuiPlatform {
 public:
 

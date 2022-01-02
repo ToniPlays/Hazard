@@ -198,6 +198,9 @@
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\RenderPlatforms.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
