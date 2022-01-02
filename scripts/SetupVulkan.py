@@ -10,6 +10,7 @@ from urllib.request import urlopen
 
 class VulkanConfiguration:
     requiredVulkanVersion = "1.2.189.2"
+    requiredDebugLibVersion = "1.2.189.0";
     vulkanDirectory = "./Hazard/vendor/VulkanSDK"
 
     @classmethod
@@ -62,13 +63,13 @@ class VulkanConfiguration:
         shadercdLib = Path(f"{cls.vulkanDirectory}/Lib/shaderc_sharedd.lib")
 
         VulkanSDKDebugLibsURLlist = [
-            f"https://sdk.lunarg.com/sdk/download/{cls.requiredVulkanVersion}/windows/VulkanSDK-{cls.requiredVulkanVersion}-DebugLibs.zip",
-            f"https://files.lunarg.com/SDK-{cls.requiredVulkanVersion}/VulkanSDK-{cls.requiredVulkanVersion}-DebugLibs.zip"
+            f"https://sdk.lunarg.com/sdk/download/{cls.requiderDebugLibVersion}/windows/VulkanSDK-{cls.requiderDebugLibVersion}-DebugLibs.zip",
+            f"https://files.lunarg.com/SDK-{cls.requiderDebugLibVersion}/VulkanSDK-{cls.requiderDebugLibVersion}-DebugLibs.zip"
         ]
 
         if not shadercdLib.exists():
             print(f"\nNo Vulkan SDK debug libs found. (Checked {shadercdLib})")
-            vulkanPath = f"{cls.vulkanDirectory}/VulkanSDK-{cls.requiredVulkanVersion}-DebugLibs.zip"
+            vulkanPath = f"{cls.vulkanDirectory}/VulkanSDK-{cls.requiredDebugLibVersion}-DebugLibs.zip"
             Utils.DownloadFile(VulkanSDKDebugLibsURLlist, vulkanPath)
             print("Extracting", vulkanPath)
             Utils.UnzipFile(vulkanPath, deleteZipFile=False)

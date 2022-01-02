@@ -1,6 +1,0 @@
-C:\dev\Hazard\HazardScripting\bin\Debug\HazardScripting.dll
-C:\dev\Hazard\HazardScripting\bin\Debug\HazardScripting.pdb
-C:\dev\Hazard\HazardScripting\obj\Debug\HazardScripting.csproj.AssemblyReference.cache
-C:\dev\Hazard\HazardScripting\obj\Debug\HazardScripting.csproj.CoreCompileInputs.cache
-C:\dev\Hazard\HazardScripting\obj\Debug\HazardScripting.dll
-C:\dev\Hazard\HazardScripting\obj\Debug\HazardScripting.pdb

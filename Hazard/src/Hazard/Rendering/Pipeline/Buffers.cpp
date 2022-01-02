@@ -11,33 +11,59 @@ namespace Hazard::Rendering {
 
 	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
-		HZR_CORE_INFO("Creating VertexArray");
 		switch (RenderCommand::GetAPI())
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return nullptr;
+#endif
+		default:
+			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+			return nullptr;
 		}
-		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return nullptr;
+#endif
+		default:
+			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+			return nullptr;
 		}
-		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
 	{
 		switch (RenderCommand::GetAPI())
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLUniformBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return nullptr;
+#endif
+		default:
+			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+			return nullptr;
 		}
-		HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 }

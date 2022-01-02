@@ -20,8 +20,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <BaseIntermediateOutputPath>obj\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -32,8 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <BaseIntermediateOutputPath>obj\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -44,8 +42,7 @@
     <OutputPath>bin\Dist\</OutputPath>
     <BaseIntermediateOutputPath>obj\Dist\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -67,10 +64,6 @@
     <Compile Include="source\Hazard\Debug\Gizmo.cs" />
     <Compile Include="source\Hazard\Entity.cs" />
     <Compile Include="source\Hazard\Input.cs" />
-    <Compile Include="source\Hazard\Mesh\Material.cs" />
-    <Compile Include="source\Hazard\Mesh\Mesh.cs" />
-    <Compile Include="source\Hazard\Mesh\Shader.cs" />
-    <Compile Include="source\Hazard\Mesh\Texture.cs" />
     <Compile Include="source\Hazard\Math\Color.cs" />
     <Compile Include="source\Hazard\Math\Math.cs" />
     <Compile Include="source\Hazard\Math\Noise.cs" />
@@ -78,6 +71,10 @@
     <Compile Include="source\Hazard\Math\Random.cs" />
     <Compile Include="source\Hazard\Math\Vector2.cs" />
     <Compile Include="source\Hazard\Math\Vector3.cs" />
+    <Compile Include="source\Hazard\Mesh\Material.cs" />
+    <Compile Include="source\Hazard\Mesh\Mesh.cs" />
+    <Compile Include="source\Hazard\Mesh\Shader.cs" />
+    <Compile Include="source\Hazard\Mesh\Texture.cs" />
     <Compile Include="source\Hazard\Physics\Collider2D.cs" />
     <Compile Include="source\Hazard\Physics\Rigidbody2D.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />

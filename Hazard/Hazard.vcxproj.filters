@@ -115,17 +115,23 @@
     <Filter Include="src\Scripting\CSharp\Script">
       <UniqueIdentifier>{83DDBF85-EFEA-ED6B-78D1-E956E4DDB922}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Application">
-      <UniqueIdentifier>{C675D285-3205-9470-3B01-7588A70FCF7C}</UniqueIdentifier>
+    <Filter Include="src\Scripting\CSharp\Script\Hazard">
+      <UniqueIdentifier>{AC9B5944-98D7-5CAE-01EA-74A5ED4405C9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Debug">
-      <UniqueIdentifier>{39BE2876-A52C-7EF5-EE15-39F55AC37391}</UniqueIdentifier>
+    <Filter Include="src\Scripting\CSharp\Script\Hazard\Application">
+      <UniqueIdentifier>{6FB93131-5B37-82CA-442F-4062304CC4F2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\ECS">
-      <UniqueIdentifier>{4DDBC3F5-B9BE-D235-C2C1-00722E249986}</UniqueIdentifier>
+    <Filter Include="src\Scripting\CSharp\Script\Hazard\Debug">
+      <UniqueIdentifier>{22B7AC10-0E34-A053-37B1-A067238D3CE7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Math">
-      <UniqueIdentifier>{3C2C44AE-287D-2FF0-51E1-1DB23D91C259}</UniqueIdentifier>
+    <Filter Include="src\Scripting\CSharp\Script\Hazard\ECS">
+      <UniqueIdentifier>{F685F2C9-E2D7-C9B9-CBF6-06CAB7E7E2A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\CSharp\Script\Hazard\Math">
+      <UniqueIdentifier>{052C4808-71BB-09F3-7AB7-EA0AE6C544FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting\CSharp\Script\Rendering">
+      <UniqueIdentifier>{90A65C8F-FC6A-5B7F-C5D0-8B493154F7B4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scripting\HazardScript">
       <UniqueIdentifier>{ED619A93-D971-4664-422B-AB822E5A35FD}</UniqueIdentifier>
@@ -447,6 +453,9 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptResourceManager.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Utils\File.h">
       <Filter>src\Hazard\Utils</Filter>
     </ClInclude>
@@ -565,34 +574,37 @@
       <Filter>src\Scripting\CSharp\Mono</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\ApplicationBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\DisplayBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\InputBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Debug\ConsoleBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Debug\GizmoBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\AudioSourceBindings.h">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.h">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.h">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\TransformBindings.h">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Math\MathBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Math</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.h">
+      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptBindings.h">
       <Filter>src\Scripting\CSharp</Filter>
@@ -1860,8 +1872,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2141,34 +2151,37 @@
       <Filter>src\Scripting\CSharp\Mono</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\ApplicationBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\DisplayBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\InputBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Application</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Debug\ConsoleBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Debug\GizmoBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Debug</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\AudioSourceBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\TransformBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\ECS</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Math\MathBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Math</Filter>
+      <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.cpp">
+      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\ScriptBindings.cpp">
       <Filter>src\Scripting\CSharp</Filter>
@@ -2188,6 +2201,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.cpp" />
+    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 #include "EditorPlatformOpenGL.h"
 
-#include "Platform/GLFW/imgui_impl_opengl3.h"
+#include "Platform/OpenGL/imgui_impl_opengl3.h"
 #include "Platform/GLFW/imgui_impl_glfw.h"
 
 EditorPlatformOpenGL::EditorPlatformOpenGL(GLFWwindow* window)

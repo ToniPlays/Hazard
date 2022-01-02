@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Events/Input.h"
-#include "PlatrofmUtils.h"
+#include "PlatformUtils.h"
 #include "Analyzer.h"
 
 namespace Hazard::Core {
@@ -46,7 +46,7 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_END();
 			HZR_PROFILE_SESSION_BEGIN("Runtime", "Logs/HazardProfile-Runtime.json");
 		}
-		catch (const HazardRuntimeError& error)
+		catch (HazardRuntimeError error)
 		{
 			// PlatformUtils::Messagebox("Runtime error", error.what());
 		}

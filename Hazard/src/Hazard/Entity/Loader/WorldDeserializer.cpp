@@ -26,7 +26,7 @@ namespace Hazard::ECS::Loader
 		auto entities = root["Entities"];
 		if (entities) {
 
-			for (int i = entities.size() - 1; i >= 0; i--) {
+			for (size_t i = entities.size() - 1; i >= 0; i--) {
 
 				auto node = entities[i];
 				Entity entity = world->CreateEntity("");

@@ -1,3 +1,2 @@
 cd ..
-vendor/premake/bin/premake5 gmake; make
-
+vendor/premake/bin/premake5 xcode4

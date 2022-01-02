@@ -2,7 +2,7 @@
 #include "EditorPlatformVulkan.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
-#include <Platform/GLFW/imgui_impl_vulkan.h>
+#include <Platform/Vulkan/imgui_impl_vulkan.h>
 #include <Platform/GLFW/imgui_impl_glfw.h>
 
 using namespace Hazard::Rendering::Vulkan;

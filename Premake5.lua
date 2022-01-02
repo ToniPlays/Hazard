@@ -35,3 +35,5 @@ group ""
 
 include "Hazard"
 include "HazardEditor"
+include "HazardLauncher"
+include "HazardScripting"

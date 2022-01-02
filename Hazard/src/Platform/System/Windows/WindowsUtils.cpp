@@ -1,7 +1,8 @@
 #pragma once
 
-#ifdef HZR_PLATFORM_WINDOWS
 #include <hzrpch.h>
+
+#ifdef HZR_PLATFORM_WINDOWS
 #include "Hazard/Core/PlatformUtils.h"
 
 #include <commdlg.h>

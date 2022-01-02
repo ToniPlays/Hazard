@@ -21,7 +21,7 @@ namespace Hazard::Rendering {
 
 	struct FrameBufferCreateInfo
 	{
-		uint32_t Width = 0, Height = 0;
+		float Width = 0, Height = 0;
 		uint32_t Samples = 1;
 		uint32_t AttachmentCount = 0;
 		glm::vec4 ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -40,35 +40,41 @@ project "HazardEditor"
 	{
 		"ImGui",
 		"Hazard",
-		"mono-2.0",
-		"assimp",
-		"vulkan",
-		"glfw3",
+		"%{Library.Mono_Debug_Lib}",
+		"%{Library.Assimp_Lib}",
+		"GLFW",
 		"Glad",
 		"Box2D",
 		"yaml-cpp",
-		"shaderc_combined",
-		"spirv-cross-core",
-		"spirv-cross-glsl",
-		"spirv-cross-hlsl",
-		"spirv-cross-c",
-		"spirv-cross-cpp",
-		"spirv-cross-reflect",
-		"SPIRV-Tools",
-		"glslang",
 	}
 
 	filter "system:windows"
 		systemversion "latest"
 		defines {
-			"HZR_PLATFORM_WINDOWS"
+			"HZR_PLATFORM_WINDOWS",
+			"HZR_INCLUDE_OPENGL",
+			"HZR_INCLUDE_VULKAN",
+			"HZR_INCLUDE_OPENAL"
+		}
+		links {
+			"%{Library.Vulkan}",
+			"%{Library.OpenAL_Lib}",
+			"%{Library.Assimp_DLL}"
 		}
 
 	filter "system:macosx"
 		defines {
-			"HZR_PLATFORM_MACOS"
+			"HZR_PLATFORM_MACOS",
+			"HZR_INCLUDE_METAL"
 		}
-		links {"IOKit.framework", "CoreFoundation.framework", "Cocoa.framework", "OpenGL.framework"}
+		links {
+			"IOKit.framework",
+			"CoreFoundation.framework",
+			"Cocoa.framework",
+			"OpenGL.framework",
+			"Metal.frameWork",
+			"MetalKit.framework"
+		}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
@@ -79,9 +85,8 @@ project "HazardEditor"
 		defines "HZR_RELEASE"
 		runtime "Release"
 		optimize "on"
-		
+
 	filter "configurations:Dist"
 		defines "HZR_DIST"
 		runtime "Release"
 		optimize "on"
-		

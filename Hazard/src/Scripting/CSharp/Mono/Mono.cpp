@@ -23,7 +23,7 @@ namespace Hazard::Scripting::CSharp {
 		std::vector<Attribute*> result;
 		result.reserve(info->num_attrs);
 
-		for (uint32_t i = 0; i < info->num_attrs; i++) {
+		for (int i = 0; i < info->num_attrs; i++) {
 			MonoCustomAttrEntry entry = info->attrs[i];
 
 			MonoClass* a = Mono::GetMethodClass(entry.ctor);

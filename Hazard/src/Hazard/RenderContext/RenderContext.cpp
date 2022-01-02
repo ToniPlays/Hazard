@@ -53,6 +53,8 @@ namespace Hazard::Rendering {
 		case RenderAPI::DX11:	return "DX11";
 		case RenderAPI::DX12:	return "DX12";
 		case RenderAPI::Metal:	return "Metal";
+		default:
+			return "Auto";
 		}
 		return "Auto";
 	}
@@ -64,5 +66,6 @@ namespace Hazard::Rendering {
 		if (api == "DX11")		return RenderAPI::DX11;
 		if (api == "DX12")		return RenderAPI::DX12;
 		if (api == "Metal")		return RenderAPI::Metal;
+		return RenderAPI::Auto;
 	}
 }

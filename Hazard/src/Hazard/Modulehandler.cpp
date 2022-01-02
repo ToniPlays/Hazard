@@ -12,7 +12,7 @@ namespace Hazard::Module {
 	}
 	ModuleHandler::~ModuleHandler()
 	{
-		for (uint32_t i = m_Modules.size() - 1; i > 0; i--)
+		for (size_t i = m_Modules.size() - 1; i > 0; i--)
 		{
 			auto* module = m_Modules[i];
 			auto it = std::find(m_Modules.begin(), m_Modules.end(), module);

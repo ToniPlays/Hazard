@@ -31,7 +31,8 @@ LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Lib"
 LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Bin"
 
 Library = {}
-filter "system:windows"
+
+  if os.host() == "windows" then
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
     Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 
@@ -47,19 +48,23 @@ filter "system:windows"
     Library["OpenAL_Lib"] = "%{wks.location}/Hazard/vendor/OpenAl/lib/openal32.lib"
     Library["Mono_Debug_Lib"] = "%{wks.location}/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib"
     Library["Assimp_Lib"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"
-filter "system:macosx"
-    Library["Vulkan"] = "vulkan"
+    Library["Assimp_DLL"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll"
+
+end
+if os.host() == "macosx" then
+    --Library["Vulkan"] = "vulkan"
     -- Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 
-    Library["ShaderC_Debug"] = "shaderc"
-    Library["SPIRV_Cross_Debug"] = "spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Debug"] = "spirv-cross-glsl"
-    Library["SPIRV_Tools_Debug"] = "SPIRV-Tools"
+    --Library["ShaderC_Debug"] = "shaderc"
+    Library["SPIRV_Cross_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-core"
+    Library["SPIRV_Cross_GLSL_Debug"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-glsl"
+    Library["SPIRV_Tools_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/SPIRV-Tools"
 
-    Library["ShaderC_Release"] = "shaderc"
-    Library["SPIRV_Cross_Release"] = "spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Release"] = "spirv-cross-glsl"
+    --Library["ShaderC_Release"] = "shaderc"
+    Library["SPIRV_Cross_Release"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-core"
+    Library["SPIRV_Cross_GLSL_Release"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
 
-    Library["Mono_Debug_Lib"] = "mono-2.0"
-    Library["Assimp_Lib"] = "assimp"
+    Library["Mono_Debug_Lib"] = "/usr/local/homebrew/Cellar/mono/6.12.0.122/lib/mono-2.0"
+    Library["Assimp_Lib"] = "/opt/homebrew/Cellar/assimp/5.1.4/bin/assimp"
+end

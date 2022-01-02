@@ -12,8 +12,19 @@ namespace Hazard::Rendering {
     {
 		switch (RenderCommand::GetAPI())
 		{
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLRenderPass(info);
-		case RenderAPI::Vulkan: return new Vulkan::VulkanRenderPass(info);
+#ifdef HZR_INCLUDE_OPENGL
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderPass>::Create(info);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderPass>::Create(info);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return nullptr;
+#endif
+		default:
+			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+			return nullptr;
 		}
+		return nullptr;
     }
 }

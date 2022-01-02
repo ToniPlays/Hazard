@@ -1,5 +1,4 @@
 #pragma once
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include <hzrpch.h>
 #include "Renderer2D.h"
@@ -57,10 +56,10 @@ namespace Hazard::Rendering
 			Recreate(renderPass);
 			return;
 		}
-		if (m_Pipeline->GetSpecifications().Pass != renderPass) {
+		if (m_Pipeline->GetSpecifications().TargetRenderPass != renderPass) {
 			PipelineSpecification specs = m_Pipeline->GetSpecifications();
-			specs.Pass = renderPass;
-			m_Pipeline = Pipeline::Create(specs);
+			specs.TargetRenderPass = renderPass;
+			m_Pipeline = Pipeline::Create(&specs);
 		}
 	}
 	void Renderer2D::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
@@ -125,7 +124,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-			pipelineSpecs.Pass = std::move(renderPass);
+			pipelineSpecs.TargetRenderPass = std::move(renderPass);
 
 			m_Pipeline = Pipeline::Create(&pipelineSpecs);
 

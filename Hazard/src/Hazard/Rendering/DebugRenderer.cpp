@@ -21,15 +21,15 @@ namespace Hazard::Rendering
 			return;
 		}
 
-		if (m_LinePipeline->GetSpecifications().Pass != renderPass)
+		if (m_LinePipeline->GetSpecifications().TargetRenderPass != renderPass)
 		{
 			PipelineSpecification lineSpec = m_LinePipeline->GetSpecifications();
-			lineSpec.Pass = renderPass;
-			m_LinePipeline = Pipeline::Create(lineSpec);
+			lineSpec.TargetRenderPass = renderPass;
+			m_LinePipeline = Pipeline::Create(&lineSpec);
 
 			PipelineSpecification circleSpec = m_CirclePipeline->GetSpecifications();
-			circleSpec.Pass = renderPass;
-			m_CirclePipeline = Pipeline::Create(circleSpec);
+			circleSpec.TargetRenderPass = renderPass;
+			m_CirclePipeline = Pipeline::Create(&circleSpec);
 		}
 	}
 	void DebugRenderer::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
@@ -131,7 +131,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 			pipelineSpecs.DrawType = DrawType::Line;
 			pipelineSpecs.ShaderPath = "Shaders/lineShader.glsl";
-			pipelineSpecs.Pass = renderPass;
+			pipelineSpecs.TargetRenderPass = renderPass;
 
 			m_LinePipeline = Pipeline::Create(&pipelineSpecs);
 
@@ -164,7 +164,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/circleShader.glsl";
-			pipelineSpecs.Pass = renderPass;
+			pipelineSpecs.TargetRenderPass = renderPass;
 
 			m_CirclePipeline = Pipeline::Create(&pipelineSpecs);
 

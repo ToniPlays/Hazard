@@ -192,16 +192,16 @@
     <ClInclude Include="src\Platform\GLFW\imgui_impl_glfw.h">
       <Filter>Platform\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\imgui_impl_opengl3.h">
-      <Filter>Platform\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\GLFW\imgui_impl_vulkan.h">
-      <Filter>Platform\GLFW</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\EditorPlatformOpenGL.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
@@ -329,16 +329,16 @@
     <ClCompile Include="src\Platform\GLFW\imgui_impl_glfw.cpp">
       <Filter>Platform\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\imgui_impl_opengl3.cpp">
-      <Filter>Platform\GLFW</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\GLFW\imgui_impl_vulkan.cpp">
-      <Filter>Platform\GLFW</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\EditorPlatformOpenGL.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\imgui_impl_opengl3.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\EditorPlatformVulkan.cpp">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\ProjectManager.cpp">

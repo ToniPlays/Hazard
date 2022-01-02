@@ -16,23 +16,23 @@ namespace Hazard::Module {
 		void Close();
 
 		template<typename T, typename... Args>
-		T& AddModule(Args... args)
+		T* AddModule(Args... args)
 		{
 			T* m = new T(std::forward<Args>(args)...);
 			m_Modules.push_back(m);
 			m->PreInit();
 			m->Init();
-			return *m;
+			return m;
 		};
 
 		template<typename T>
-		T& GetModule()
+		T* GetModule()
 		{
 			for (Module* m : m_Modules) {
 				if (dynamic_cast<T*>(m))
-					return (T&)*m;
+					return (T*)m;
 			}
-			
+			return nullptr;
 		}
 		template<typename T>
 		bool HasModule()

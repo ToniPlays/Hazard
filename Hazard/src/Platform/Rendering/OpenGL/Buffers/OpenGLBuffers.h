@@ -19,7 +19,7 @@ namespace Hazard::Rendering::OpenGL
 	private:
 		BufferUsage m_Usage;
 		uint32_t m_ID, m_VAO;
-		uint32_t m_Size;
+		size_t m_Size;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -38,7 +38,7 @@ namespace Hazard::Rendering::OpenGL
 
 		BufferUsage m_Usage;
 		uint32_t m_ID;
-		uint32_t m_Size;
+		size_t m_Size;
 
 	};
 	class OpenGLUniformBuffer : public UniformBuffer
@@ -57,7 +57,7 @@ namespace Hazard::Rendering::OpenGL
 
 	private:
 		uint32_t m_ID;
-		uint32_t m_Size;
+		size_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
 	};

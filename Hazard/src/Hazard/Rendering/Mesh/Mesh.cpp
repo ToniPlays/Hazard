@@ -41,16 +41,16 @@ namespace Hazard::Rendering {
 			spec.DrawType = DrawType::Fill;
 			spec.LineWidth = 1.0f;
 			spec.ShaderPath = "Shaders/pbr.glsl";
-			spec.RenderPass = renderPass;
+			spec.TargetRenderPass = renderPass;
 
 			m_Pipeline = Pipeline::Create(&spec);
 			return;
 		}
-		if (m_Pipeline->GetSpecifications().RenderPass == renderPass)
+		if (m_Pipeline->GetSpecifications().TargetRenderPass == renderPass)
 			return;
 
 		auto spec = m_Pipeline->GetSpecifications();
-		spec.RenderPass = renderPass;
+		spec.TargetRenderPass = renderPass;
 		m_Pipeline = Pipeline::Create(&spec);
 	}
 }

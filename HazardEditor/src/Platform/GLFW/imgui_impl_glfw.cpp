@@ -41,7 +41,7 @@
 
 
 #include "imgui.h"
-#include "imgui_impl_opengl3.h"
+#include "Platform/OpenGL/imgui_impl_opengl3.h"
 
 // GLFW
 #include <GLFW/glfw3.h>

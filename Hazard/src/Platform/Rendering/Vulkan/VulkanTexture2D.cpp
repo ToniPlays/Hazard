@@ -73,7 +73,7 @@ namespace Hazard::Rendering::Vulkan
 		m_Image->Release();
 		m_Image->RT_Invalidate();
 
-		const auto& info = m_Image->GetImageInfo();
+		auto& info = m_Image->GetImageInfo();
 
 		if (m_Header.IsValid())
 		{

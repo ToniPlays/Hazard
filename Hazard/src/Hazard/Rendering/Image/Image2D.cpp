@@ -13,8 +13,18 @@ namespace Hazard::Rendering
     {
 		switch (RenderCommand::GetAPI())
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: return new Vulkan::VulkanImage2D(info);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return nullptr;
+#endif
+		default:
+			return nullptr;
 		}
+		return nullptr;
     }
 }
