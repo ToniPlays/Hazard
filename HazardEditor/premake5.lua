@@ -43,9 +43,7 @@ project "HazardEditor"
 		"%{Library.Mono_Debug_Lib}",
 		"%{Library.Assimp_Lib}",
 		"GLFW",
-		"Glad",
-		"Box2D",
-		"yaml-cpp",
+		"Glad"
 	}
 
 	filter "system:windows"
@@ -58,8 +56,8 @@ project "HazardEditor"
 		}
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.OpenAL_Lib}",
-			"%{Library.Assimp_DLL}"
+			"%{Library.VulkanUtils}",
+			"%{Library.OpenAL_Lib}"
 		}
 
 	filter "system:macosx"
@@ -80,6 +78,11 @@ project "HazardEditor"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
+
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+		}
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

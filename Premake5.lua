@@ -1,8 +1,7 @@
--- include "./vendor/premake/premake_customization/solution_items.lua"
+
 include "Dependencies.lua"
 
 workspace "Hazard"
-	architecture "x86_64"
 	startproject "HazardEditor"
 
 	configurations
@@ -12,20 +11,22 @@ workspace "Hazard"
 		"Dist"
 	}
 
-	-- solution_items
-	-- {
-	-- 	".editorconfig"
-	-- }
-
 	flags
 	{
 		"MultiProcessorCompile"
 	}
 
+	filter "system:windows"
+		architecture "x86_64"
+
+	filter "system:macosx"
+		architecture "universal"
+
+	filter ""
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
-	-- include "vendor/premake"
 	include "Hazard/vendor/Glad"
 	include "Hazard/vendor/GLFW"
 	include "Hazard/vendor/Box2D"

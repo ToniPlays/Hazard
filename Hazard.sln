@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "Hazard\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "HazardEditor\vendor\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml-cpp", "Hazard\vendor\yaml-cpp\yaml-cpp.vcxproj", "{88F1A057-74BE-FB62-9DD7-E90A890331F1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcxproj", "{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardLauncher", "HazardLauncher\HazardLauncher.vcxproj", "{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}"
 EndProject
@@ -64,12 +62,6 @@ Global
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Dist|x64.Build.0 = Dist|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.ActiveCfg = Release|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.Build.0 = Release|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Debug|x64.ActiveCfg = Debug|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Debug|x64.Build.0 = Debug|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Dist|x64.ActiveCfg = Dist|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Dist|x64.Build.0 = Dist|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.ActiveCfg = Release|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.Build.0 = Release|x64
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Debug|x64.ActiveCfg = Debug|x64
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Debug|x64.Build.0 = Debug|x64
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Dist|x64.ActiveCfg = Dist|x64

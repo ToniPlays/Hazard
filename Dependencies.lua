@@ -34,7 +34,7 @@ Library = {}
 
   if os.host() == "windows" then
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
-    Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
+    Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
 
     Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_sharedd.lib"
     Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-cored.lib"
@@ -48,7 +48,6 @@ Library = {}
     Library["OpenAL_Lib"] = "%{wks.location}/Hazard/vendor/OpenAl/lib/openal32.lib"
     Library["Mono_Debug_Lib"] = "%{wks.location}/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib"
     Library["Assimp_Lib"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"
-    Library["Assimp_DLL"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll"
 
 end
 if os.host() == "macosx" then

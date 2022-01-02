@@ -1877,6 +1877,9 @@
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
@@ -2201,6 +2204,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp" />
   </ItemGroup>
 </Project>

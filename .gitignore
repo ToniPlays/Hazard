@@ -23,3 +23,9 @@ HazardEditor/library/
 *.xcuserstate
 *.pbxproj
 Makefile
+**.log
+*.cache
+*.txt
+*.dll
+*.filters
+*.user
