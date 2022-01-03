@@ -38,3 +38,5 @@ Hazard/.DS_Store
 *.lastbuildstate
 *.filters
 *.obj
+*.pdb
+*.obj

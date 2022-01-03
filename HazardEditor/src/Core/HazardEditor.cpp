@@ -38,18 +38,21 @@ void EditorApplication::PreInit()
 	AudioEngineCreateInfo audioInfo = {};
 
 	ScriptEngineCreateInfo scriptInfo = {};
-	scriptInfo.AppAssemblyPath = "c:/dev/HazardProject/bin/Debug/netstandard2.0/HazardProject.dll";
-	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/netstandard2.0/HazardScripting.dll";
+#ifdef HZR_PLATFORM_WINDOWS
+	scriptInfo.AppAssemblyPath = "c:/dev/HazardCraft/Assets/Scripts/Binaries/HazardCraft.dll";
+	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
+#else
 	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
 	scriptInfo.MonoDirectoryEtc = "/usr/local/Cellar/mono/6.12.0.122/etc/";
+#endif
 	scriptInfo.Enable = false;
 
 	EntityComponentCreateInfo entityInfo = {};
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
-	createInfo.RenderContextInfo = nullptr;
-	createInfo.RendererInfo = nullptr;
+	createInfo.RenderContextInfo = &contextInfo;
+	createInfo.RendererInfo = &engineInfo;
 	createInfo.AudioEngine = &audioInfo;
 	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;

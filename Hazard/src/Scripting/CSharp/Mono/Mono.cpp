@@ -44,9 +44,9 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::CreateDomain(const char* name)
 	{
-		MonoDomain* domain = mono_jit_init(name);
 		std::stringstream ss;
 		ss << name << "-runtime";
+		MonoDomain* domain = mono_jit_init(ss.str().c_str());
 
 		s_Data.mono_domain = mono_domain_create_appdomain((char*)ss.str().c_str(), nullptr);
 	}

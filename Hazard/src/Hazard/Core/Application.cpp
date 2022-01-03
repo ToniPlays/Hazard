@@ -35,19 +35,19 @@ namespace Hazard {
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
 
-		// if (info->RenderContextInfo != nullptr) 
-		// 	PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
+		if (info->RenderContextInfo != nullptr)
+			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
 
-		// if (info->RendererInfo != nullptr) 
-		// {
-		// 	HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-		// 	PushModule<Rendering::RenderEngine>(info->RendererInfo);
-		// }
+		if (info->RendererInfo != nullptr)
+		{
+			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
+			PushModule<Rendering::RenderEngine>(info->RendererInfo);
+		}
 
-		if (info->AudioEngine) 
+		if (info->AudioEngine)
 			PushModule<Audio::AudioEngine>(info->AudioEngine);
 
-		if (info->ScriptEngineInfo != nullptr) 
+		if (info->ScriptEngineInfo != nullptr)
 			PushModule<Scripting::ScriptEngineManager>(info->ScriptEngineInfo);
 
 		if (info->EntityComponent != nullptr)
@@ -59,14 +59,14 @@ namespace Hazard {
 	}
 	void Application::UpdateData()
 	{
-		#ifdef HZR_PLATFORM_WINDOWS
+#ifdef HZR_PLATFORM_WINDOWS
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		s_Data.MemoryUsage = pmc.PrivateUsage / 1048576.0f;
-		#else
+#else
 		// TODO: Implement on other platforms using RLimit etc.
 		s_Data.MemoryUsage = 0.0f;
-		#endif
+#endif
 	}
 }
 
