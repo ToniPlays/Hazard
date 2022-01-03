@@ -7,12 +7,20 @@ import Utils
 
 class PremakeConfiguration:
     premakeVersion = "5.0.0-alpha16"
-    premakeZipUrls = f"https://github.com/premake/premake-core/releases/download/v{premakeVersion}/premake-{premakeVersion}-windows.zip"
+    premakePlatform = ""
+    premakeZipUrls = f"https://github.com/premake/premake-core/releases/download/"
     premakeLicenseUrl = "https://raw.githubusercontent.com/premake/premake-core/master/LICENSE.txt"
     premakeDirectory = "./vendor/premake/bin"
 
     @classmethod
     def Validate(cls):
+        if platform.system() == "Windows":
+            cls.premakeVersion = "5.0.0-alpha16"
+            cls.premakePlatform = f"-windows.zip"
+        elif platform.system() == "Darwin":
+            cls.premakeVersion = "5.0.0-beta1"
+            cls.premakePlatform = f"-macosx.tar.gz"
+                        
         if (not cls.CheckIfPremakeInstalled()):
             print("Premake is not installed.")
             return False
@@ -25,8 +33,9 @@ class PremakeConfiguration:
         premakeApp = Path("")
         if platform.system() == "Windows":
             premakeApp = Path(f"{cls.premakeDirectory}/premake5.exe");
-        elif platform.system() == "MacOS":
-            premakeApp = Path(f"{cls.premakeDirectory}/premake5.app");
+        elif platform.system() == "Darwin":
+            premakeApp = Path(f"{cls.premakeDirectory}/premake5");
+
         if (not premakeApp.exists()):
             return cls.InstallPremake()
 
@@ -41,11 +50,17 @@ class PremakeConfiguration:
                 return False
             permissionGranted = (reply == 'y')
 
-        premakePath = f"{cls.premakeDirectory}/premake-{cls.premakeVersion}-windows.zip"
-        print("Downloading {0:s} to {1:s}".format(cls.premakeZipUrls, premakePath))
-        Utils.DownloadFile(cls.premakeZipUrls, premakePath)
+        premakePath = f"{cls.premakeDirectory}/premake-{cls.premakeVersion}{cls.premakePlatform}"
+        
+        premakeUrl = cls.premakeZipUrls + "v" + cls.premakeVersion + "/premake-" + cls.premakeVersion + cls.premakePlatform
+        print("Downloading {0:s} to {1:s}".format(premakeUrl, premakePath))
+        Utils.DownloadFile(premakeUrl, premakePath)
+        
         print("Extracting", premakePath)
-        Utils.UnzipFile(premakePath, deleteZipFile=True)
+        if platform.system() == "Windows":
+            Utils.UnzipFile(premakePath, deleteZipFile=True)
+        elif platform.system() == "Darwin":
+            Utils.UnzipTar(premakePath, deleteZipFile=True)
         print(f"Premake {cls.premakeVersion} has been downloaded to '{cls.premakeDirectory}'")
 
         premakeLicensePath = f"{cls.premakeDirectory}/LICENSE.txt"

@@ -5,7 +5,7 @@ import platform
 
 from SetupPython import PythonConfiguration as PythonRequirements
 
-
+print(platform.system())
     
 # Make sure everything we need for the setup is installed
 PythonRequirements.Validate()
@@ -27,9 +27,9 @@ if (premakeInstalled):
     if platform.system() == "Windows":
         print("\nRunning Premake...")
         subprocess.call([os.path.abspath("./scripts/Win-GenProjects.bat"), "nopause"])
-    elif platform.system() == "MacOS":
+    elif platform.system() == "Darwin":
         print("\Running Premake...")
-        subprocess.call([os.path.abspath("./scripts/Mac-GenProjects.sh", "nopause")]);
+        subprocess.call(["sudo", os.path.abspath("./scripts/Mac-GenProjects.sh"), "nopause"]);
         
     print("\nSetup completed!")
 else:

@@ -10,6 +10,7 @@ import time
 import urllib
 
 from zipfile import ZipFile
+import tarfile
 
 def GetSystemEnvironmentVariable(name):
     key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, r"System\CurrentControlSet\Control\Session Manager\Environment")
@@ -128,3 +129,14 @@ def UnzipFile(filepath, deleteZipFile=True):
 
     if deleteZipFile:
         os.remove(zipFilePath) # delete zip file
+
+def UnzipTar(filepath, deleteZipFile=True):
+    zipFilePath = os.path.abspath(filepath) # get full path of files
+    zipFileLocation = os.path.dirname(zipFilePath)
+    
+    if zipFilePath.endswith("tar.gz"):
+        print(zipFilePath)
+        tar = tarfile.open(zipFilePath)
+        tar.extractall(zipFileLocation)
+        tar.close()
+
