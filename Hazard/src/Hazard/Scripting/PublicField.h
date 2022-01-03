@@ -28,6 +28,7 @@ namespace Hazard::Scripting {
 		case FieldType::UInt:		return "UInt";
 		case FieldType::String:		return "String";
 		case FieldType::Custom:		return "Custom";
+        case FieldType::None:       return "None";
 		}
 		return "Unknown";
 	}

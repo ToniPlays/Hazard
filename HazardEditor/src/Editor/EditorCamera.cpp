@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "EditorCamera.h"
 #include "Library/Input.h"

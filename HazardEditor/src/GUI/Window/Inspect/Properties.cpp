@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "Properties.h"
 #include "Library/Input.h"

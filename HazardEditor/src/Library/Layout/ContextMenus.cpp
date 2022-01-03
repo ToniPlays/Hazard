@@ -19,7 +19,8 @@ namespace WindowElement {
 				Ref<ECS::World> world = new ECS::World("Unnamed World");
 				world->SetName("Unnamed World");
 				std::string path = view.GetCurrentPath() + "/world.hazard";
-				ECS::Loader::WorldSerializer::SerializeEditor(path.c_str(), world);
+                ECS::Loader::WorldSerializer serializer(world);
+				serializer.SerializeEditor(path.c_str());
 				view.UpdateFolderData();
 				});
 			});

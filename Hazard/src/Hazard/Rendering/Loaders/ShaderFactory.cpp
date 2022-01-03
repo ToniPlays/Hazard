@@ -19,6 +19,7 @@ namespace Hazard::Rendering
 		switch (info.Environment) {
 		case RenderAPI::OpenGL:	options.SetTargetEnvironment(shaderc_target_env_opengl, 450); break;
 		case RenderAPI::Vulkan:	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
+        default: break;
 		}
 
 		options.SetOptimizationLevel((shaderc_optimization_level)info.Optimization);
@@ -38,6 +39,7 @@ namespace Hazard::Rendering
 		case ShaderType::Fragment:	return shaderc_glsl_fragment_shader;
 		case ShaderType::Compute:	return shaderc_glsl_compute_shader;
 		case ShaderType::Geometry:	return shaderc_glsl_geometry_shader;
+        case ShaderType::None:      return (shaderc_shader_kind)0;
 		}
 	}
 
@@ -48,6 +50,7 @@ namespace Hazard::Rendering
 		case ShaderType::Fragment:	return "frag";
 		case ShaderType::Compute:	return "comp";
 		case ShaderType::Geometry:	return "geom";
+        case ShaderType::None:      return "non";
 		}
 		return "";
 	}
@@ -59,6 +62,7 @@ namespace Hazard::Rendering
 		case RenderAPI::DX11:		return "dx11";
 		case RenderAPI::DX12:		return "dx12";
 		case RenderAPI::Metal:		return "met";
+        case RenderAPI::Auto:       return "";
 		}
 		return "";
 	}

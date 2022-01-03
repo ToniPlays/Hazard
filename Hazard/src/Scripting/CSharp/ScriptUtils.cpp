@@ -1,4 +1,3 @@
-#pragma once
 
 #include "hzrpch.h"
 #include "ScriptUtils.h"
@@ -31,6 +30,7 @@ namespace Hazard::Scripting::CSharp
 		case FieldType::UInt:	return 4;
 		case FieldType::String: return 16;
 		case FieldType::None:	return 4;
+        case FieldType::Custom: return 0;
 		}
 		return 0;
 	}

@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "TransformationGizmo.h"
 #include "imgui.h"

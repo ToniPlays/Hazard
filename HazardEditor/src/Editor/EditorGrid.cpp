@@ -1,4 +1,3 @@
-#pragma once
 
 #include "EditorGrid.h"
 

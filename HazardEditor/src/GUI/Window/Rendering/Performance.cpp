@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Performance.h"
 #include "Library/Layout/Layout.h"

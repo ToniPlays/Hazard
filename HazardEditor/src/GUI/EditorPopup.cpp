@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "EditorPopup.h"
 #include "EditorView.h"

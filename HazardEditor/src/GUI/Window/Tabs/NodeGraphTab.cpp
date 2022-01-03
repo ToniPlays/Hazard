@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "NodeGraphTab.h"
 #include "GUI/Window/AllWindows.h"

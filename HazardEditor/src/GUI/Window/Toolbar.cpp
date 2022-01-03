@@ -1,4 +1,4 @@
-#pragma once
+
 #include "Toolbar.h"
 
 #include "Library/Layout/Layout.h"

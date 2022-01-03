@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Platform/GLFW/FontAwesome.h"
 #include "Profiler.h"

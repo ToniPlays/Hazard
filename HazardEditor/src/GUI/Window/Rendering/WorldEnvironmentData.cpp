@@ -1,4 +1,3 @@
-#pragma once
 
 #include "WorldEnvironmentData.h"
 #include "Library/Layout/Layout.h"

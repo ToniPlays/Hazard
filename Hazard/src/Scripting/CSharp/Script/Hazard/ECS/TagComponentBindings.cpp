@@ -1,4 +1,4 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "TagComponentBindings.h"
 #include "EntityBindings.h"

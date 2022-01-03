@@ -85,7 +85,8 @@ namespace Project {
 
 			world->SetWorldFile(filePath);
 		}
-		ECS::Loader::WorldSerializer::SerializeEditor(world->GetWorldFile().c_str(), world);
+        ECS::Loader::WorldSerializer serializer(world);
+		serializer.SerializeEditor(world->GetWorldFile().c_str());
 	}
 	void ProjectManager::ImportFiles(const std::vector<std::filesystem::directory_entry>& files)
 	{

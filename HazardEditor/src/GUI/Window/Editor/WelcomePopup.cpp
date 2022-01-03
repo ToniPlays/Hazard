@@ -1,4 +1,3 @@
-#pragma once
 
 #include "WelcomePopup.h"
 #include "Library/Layout/Layout.h"

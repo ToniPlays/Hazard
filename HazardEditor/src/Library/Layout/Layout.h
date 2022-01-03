@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "Platform/GLFW/FontAwesome.h"
-#include "library/Style.h"
+#include "Library/Style.h"
 #include "Hazard/Rendering/Texture.h"
 #include "Hazard/Rendering/Image/Image2D.h"
 #include "Hazard/Entity/Entity.h"

@@ -31,10 +31,9 @@ namespace Hazard::ECS {
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)
 	{
 		if (File::Exists(file)) {
-			Ref<World> loadedWorld;
 			if (type == Serialization::Editor) {
-				Loader::WorldDeserializer::DeserializeEditor(loadedWorld, file.c_str());
-				m_World = loadedWorld;
+                Loader::WorldDeserializer deserializer;
+				m_World = deserializer.DeserializeEditor(file);
 				return true;
 			}
 		}

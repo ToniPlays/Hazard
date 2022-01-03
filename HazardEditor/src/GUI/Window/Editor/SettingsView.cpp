@@ -1,4 +1,3 @@
-#pragma once
 
 #include "SettingsView.h"
 #include "Library/Input.h"

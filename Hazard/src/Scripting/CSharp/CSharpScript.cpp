@@ -1,4 +1,3 @@
-#pragma once
 
 #include "hzrpch.h"
 #include "CSharpScript.h"
@@ -21,12 +20,13 @@ namespace Hazard::Scripting::CSharp {
 		for (auto& [index, field] : m_Fields)
 		{
 			switch (field->GetType()) {
-			case FieldType::Float:	field->SetStoredValue(Mono::GetFieldValue<float>(obj, field->GetName()));
-			case FieldType::Float2:	field->SetStoredValue(Mono::GetFieldValue<glm::vec2>(obj, field->GetName()));
-			case FieldType::Float3:	field->SetStoredValue(Mono::GetFieldValue<glm::vec3>(obj, field->GetName()));
-			case FieldType::Float4:	field->SetStoredValue(Mono::GetFieldValue<glm::vec4>(obj, field->GetName()));
-			case FieldType::Int:	field->SetStoredValue(Mono::GetFieldValue<int>(obj, field->GetName()));
-			case FieldType::UInt:	field->SetStoredValue(Mono::GetFieldValue<uint32_t>(obj, field->GetName()));
+            case FieldType::Float:	field->SetStoredValue(Mono::GetFieldValue<float>(obj, field->GetName())); break;
+            case FieldType::Float2:	field->SetStoredValue(Mono::GetFieldValue<glm::vec2>(obj, field->GetName())); break;
+            case FieldType::Float3:	field->SetStoredValue(Mono::GetFieldValue<glm::vec3>(obj, field->GetName())); break;
+            case FieldType::Float4:	field->SetStoredValue(Mono::GetFieldValue<glm::vec4>(obj, field->GetName())); break;
+            case FieldType::Int:	field->SetStoredValue(Mono::GetFieldValue<int>(obj, field->GetName())); break;
+            case FieldType::UInt:	field->SetStoredValue(Mono::GetFieldValue<uint32_t>(obj, field->GetName())); break;
+            default: break;
 			}
 		}
 	}

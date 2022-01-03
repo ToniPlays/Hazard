@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "Hierarchy.h"
 #include "GUI/EditorView.h"

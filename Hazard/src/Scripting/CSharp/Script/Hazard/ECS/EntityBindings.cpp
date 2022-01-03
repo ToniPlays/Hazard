@@ -1,4 +1,4 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "EntityBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"

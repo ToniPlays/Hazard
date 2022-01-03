@@ -83,20 +83,24 @@ namespace Hazard::Rendering
 			case SPIRType::Float: {
 				switch (type.vecsize)
 				{
-				case 1: return ShaderDataType::Float;
-				case 2: return ShaderDataType::Float2;
-				case 3: return ShaderDataType::Float3;
-				case 4: return ShaderDataType::Float4;
+				case 1:     return ShaderDataType::Float;
+				case 2:     return ShaderDataType::Float2;
+				case 3:     return ShaderDataType::Float3;
+				case 4:     return ShaderDataType::Float4;
+                default:    return ShaderDataType::None;
 				}
+            }
 			case SPIRType::Int:
 				switch (type.vecsize)
 				{
-				case 1: return ShaderDataType::Int;
-				case 2: return ShaderDataType::Int2;
-				case 3: return ShaderDataType::Int3;
-				case 4: return ShaderDataType::Int4;
+				case 1:     return ShaderDataType::Int;
+				case 2:     return ShaderDataType::Int2;
+				case 3:     return ShaderDataType::Int3;
+				case 4:     return ShaderDataType::Int4;
+                default:    return ShaderDataType::None;
 				}
-			}
+            default:
+                return ShaderDataType::None;
 			}
 		}
 		static std::string UsageFlagsToString(const uint32_t& flags) 

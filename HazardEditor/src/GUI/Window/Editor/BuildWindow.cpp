@@ -1,4 +1,3 @@
-#pragma once
 
 #include "BuildWindow.h"
 #include "library/Layout/Layout.h"

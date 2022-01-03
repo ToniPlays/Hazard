@@ -16,7 +16,7 @@ namespace Hazard::Rendering {
 
 		void PreRender() override;
 		void PostRender() override;
-		void Close();
+		void Close() override;
 
 		RenderAPI GetCurrentAPI() { return m_CurrentAPI; }
 		GraphicsContext& GetContext() { return *m_Window->GetContext(); }

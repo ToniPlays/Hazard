@@ -1,5 +1,4 @@
 
-#pragma once
 #include <hzrpch.h>
 #include "DisplayBindings.h"
 #include "Hazard/RenderContext/RenderContext.h"

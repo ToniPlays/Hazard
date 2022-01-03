@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "Library/Style.h"
 #include "EditorWindow.h"

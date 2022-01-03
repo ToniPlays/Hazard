@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "MaterialInspector.h"
 #include "Library/Input.h"

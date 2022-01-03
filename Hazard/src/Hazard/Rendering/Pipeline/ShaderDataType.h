@@ -22,6 +22,7 @@ namespace Hazard::Rendering
 		case ShaderDataType::Int3:     return (uint32_t)4 * 3;
 		case ShaderDataType::Int4:     return (uint32_t)4 * 4;
 		case ShaderDataType::Bool:     return (uint32_t)1;
+        case ShaderDataType::None:     return (uint32_t)0;
 		}
 		return 0;
 	}
@@ -39,6 +40,7 @@ namespace Hazard::Rendering
 		case ShaderDataType::Int3:     return 3;
 		case ShaderDataType::Int4:     return 4;
 		case ShaderDataType::Bool:     return 1;
+        case ShaderDataType::None:     return (uint32_t)0;
 		}
 		return 0;
 	}
@@ -56,6 +58,7 @@ namespace Hazard::Rendering
 		case ShaderDataType::Int3:     return "Int3";
 		case ShaderDataType::Int4:     return "Int4";
 		case ShaderDataType::Bool:     return "Bool";
+        case ShaderDataType::None:     return "None";
 		}
 		return "";
 	}

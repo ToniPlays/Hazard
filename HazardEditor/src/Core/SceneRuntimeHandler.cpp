@@ -1,4 +1,3 @@
-#pragma once
 
 #include "SceneRuntimeHandler.h"
 #include "GUI/EditorView.h"

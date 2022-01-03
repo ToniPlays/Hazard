@@ -1,4 +1,3 @@
-#pragma once
 
 #include "GUI/EditorView.h"
 #include "FileView.h"

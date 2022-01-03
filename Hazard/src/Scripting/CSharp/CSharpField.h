@@ -25,7 +25,7 @@ namespace Hazard::Scripting::CSharp {
 		FieldType GetType() override { return m_Metadata.Type; }
 
 		FieldVisibility GetVisibility() override { return m_Metadata.Visibility; }
-		const std::string GetCustomType() { return m_Metadata.CustomType; }
+		const std::string GetCustomType() override { return m_Metadata.CustomType; }
 		ScriptFieldMetadata GetFieldMetadata() override { return m_Metadata; };
 
 		void SetField(MonoClassField* field) { m_MonoClassField = field; }

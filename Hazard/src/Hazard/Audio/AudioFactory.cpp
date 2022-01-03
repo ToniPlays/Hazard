@@ -16,6 +16,9 @@ namespace Hazard::Audio
          switch (GetFileFormat(path))
          {
          case FileFormat::Mp3: return LoadMp3(path);
+         case FileFormat::Ogg: return nullptr;
+         case FileFormat::Waw: return nullptr;
+         default:              return nullptr;
          }
 
          return nullptr;
@@ -54,8 +57,9 @@ namespace Hazard::Audio
      ALenum AudioFactory::GetOpenALFormat(uint32_t channels)
      {
          switch (channels) {
-         case 1: return AL_FORMAT_MONO16;
-         case 2: return AL_FORMAT_STEREO16;
+         case 1:    return AL_FORMAT_MONO16;
+         case 2:    return AL_FORMAT_STEREO16;
+         default:   return AL_FORMAT_MONO16;
          }
      }
      void AudioFactory::Init()

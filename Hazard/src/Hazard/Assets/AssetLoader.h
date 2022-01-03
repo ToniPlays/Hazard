@@ -8,7 +8,7 @@ namespace Hazard {
 	public:
 	public:
 		AssetLoader() = default;
-		~AssetLoader() = default;
+        ~AssetLoader() = default;
 
 		template<typename T>
 		void RegisterLoader(AssetType type) 

@@ -11,22 +11,24 @@ namespace Hazard::ECS::Loader
 	class WorldDeserializer {
 	public:
 
-		static bool DeserializeEditor(Ref<World>& world, const char* file);
-		static bool DeserializeRuntime(Ref<World>& world, const char* file) { return false; };
+        WorldDeserializer() = default;
+        
+        Ref<World> DeserializeEditor(const std::string& file);
+        Ref<World> DeserializeRuntime(const std::string& file) { return nullptr; };
 
 		template<typename T>
-		static void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
+		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
 		template<typename T>
-		static void Deserialize(Entity entity, YAML::Node node);
+		void Deserialize(Entity entity, YAML::Node node);
 
 		template<>
-		static void Deserialize<TagComponent>(Entity entity, YAML::Node comp) 
+		void Deserialize<TagComponent>(Entity entity, YAML::Node comp)
 		{
 			YamlUtils::Deserialize(comp, "Tag", entity.GetComponent<TagComponent>().Tag, std::string("New entity"));
 		};
 
 		template<>
-		static void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.GetComponent<TransformComponent>();
 
 			YamlUtils::Deserialize(comp, "Translation", c.Translation, glm::vec3(0.0f));
@@ -34,7 +36,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "Scale", c.Scale, glm::vec3(1.0f));
 		};
 		template<>
-		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
 
 			auto& c = entity.AddComponent<CameraComponent>();
 			std::string projection;
@@ -48,7 +50,7 @@ namespace Hazard::ECS::Loader
 			c.SetZFar(clipping.y);
 		};
 		template<>
-		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string moduleName;
 			YamlUtils::Deserialize(comp, "ModuleName", moduleName, std::string(""));
 
@@ -57,7 +59,7 @@ namespace Hazard::ECS::Loader
 				});
 		};
 		template<>
-		static void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp) 
+		void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp)
 		{
 			std::string filename;
 			YamlUtils::Deserialize(comp, "FileName", filename, std::string(""));
@@ -67,21 +69,21 @@ namespace Hazard::ECS::Loader
 				});
 		};
 		template<>
-		static void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp) 
+		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
 			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
-		static void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp) 
+		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<DirectionalLightComponent>();
 			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
-		static void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp) 
+		void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<PointLightComponent>();
 			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
@@ -89,7 +91,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
 		template<>
-		static void Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
 			AudioSourceComponent& source = entity.AddComponent<AudioSourceComponent>();
 
 			YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
@@ -108,7 +110,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "PlayOnCreate", source.PlayOnCreate, false);
 		};
 		template<>
-		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
@@ -116,7 +118,7 @@ namespace Hazard::ECS::Loader
 			c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
 		};
 		template<>
-		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
+		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 
 			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
@@ -130,7 +132,7 @@ namespace Hazard::ECS::Loader
 			}
 		};
 		template<>
-		static void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
+		void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<Rigidbody2DComponent>();
 			std::string bodyType;
@@ -140,7 +142,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "UseGravity", component.UseGravity, true);
 		}
 		template<>
-		static void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
+		void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<BoxCollider2DComponent>();
 			YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
@@ -152,7 +154,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
 		template<>
-		static void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
+		void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<CircleCollider2DComponent>();
 			YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
@@ -164,7 +166,7 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
 		template<>
-		static void Deserialize<BatchComponent>(Entity entity, YAML::Node comp)
+		void Deserialize<BatchComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<BatchComponent>();
 			YamlUtils::Deserialize(comp, "Size", component.Size, (uint32_t)1);

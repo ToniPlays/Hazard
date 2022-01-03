@@ -1,4 +1,4 @@
-#pragma once
+
 #include <hzrpch.h>
 #include "TransformBindings.h"
 #include "Hazard/Scripting/ScriptCommand.h"

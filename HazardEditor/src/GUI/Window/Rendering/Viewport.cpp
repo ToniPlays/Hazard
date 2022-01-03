@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Viewport.h"
 #include "Library/Layout/Layout.h"

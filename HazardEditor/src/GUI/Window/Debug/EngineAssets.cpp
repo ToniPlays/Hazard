@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "EngineAssets.h"
 #include "Library/Layout/Layout.h"

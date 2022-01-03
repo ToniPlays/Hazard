@@ -7,15 +7,15 @@
 
 namespace Hazard::ECS::Loader {
 
-	bool WorldSerializer::SerializeEditor(const char* file, Ref<World> world)
+	bool WorldSerializer::SerializeEditor(const std::string& file)
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		YamlUtils::Serialize(out, "World", !world->GetName().empty() ? world->GetName() : "Untitled world");
+		YamlUtils::Serialize(out, "World", !m_World->GetName().empty() ? m_World->GetName() : "Untitled world");
 
 		YamlUtils::Sequence(out, "Entities", [&]() {
-			world->GetWorldRegistry().each([&](auto entityID) {
-				Entity entity{ entityID, world.Raw() };
+            m_World->GetWorldRegistry().each([&](auto entityID) {
+				Entity entity{ entityID, m_World.Raw() };
 				if (!entity)
 					return;
 
@@ -66,7 +66,7 @@ namespace Hazard::ECS::Loader {
 		out << YAML::EndMap;
 	}
 
-	bool WorldSerializer::SerializeRuntime(const char* file, World& scene)
+	bool WorldSerializer::SerializeRuntime(const std::string& file)
 	{
 		return false;
 	}
