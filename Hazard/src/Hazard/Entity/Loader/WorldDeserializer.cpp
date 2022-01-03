@@ -25,9 +25,9 @@ namespace Hazard::ECS::Loader
 		auto entities = root["Entities"];
 		if (entities) {
 
-			for (size_t i = entities.size() - 1; i >= 0; i--) {
-
-				auto node = entities[i];
+			for (size_t i = entities.size(); i > 0; --i) 
+			{
+				auto node = entities[i - 1];
 				Entity entity = world->CreateEntity("");
 				//Deserialize components
 				TryDeserializeComponent<TagComponent>("TagComponent", entity, node);

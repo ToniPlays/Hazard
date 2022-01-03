@@ -21,7 +21,7 @@ void EditorApplication::PreInit()
 	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
-	contextInfo.Renderer = RenderAPI::OpenGL;
+	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>("RenderAPI");
 	contextInfo.ImagesInFlight = 3;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
@@ -39,7 +39,7 @@ void EditorApplication::PreInit()
 
 	ScriptEngineCreateInfo scriptInfo = {};
 #ifdef HZR_PLATFORM_WINDOWS
-	scriptInfo.AppAssemblyPath = "c:/dev/HazardCraft/Assets/Scripts/Binaries/HazardCraft.dll";
+	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore");
 	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
 #else
 	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
@@ -66,7 +66,7 @@ void EditorApplication::Init()
 	Runtime::SceneRuntimeHandler::Init();
 
 	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	manager.Load("C:/dev/HazardProject/Hazard.hzrproj");
+	manager.Load("C:/dev/HazardCraft/project.hzrproj");
 }
 
 bool EditorApplication::OnEvent(Event& e)

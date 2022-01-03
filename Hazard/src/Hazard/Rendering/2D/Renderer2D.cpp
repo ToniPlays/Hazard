@@ -154,6 +154,8 @@ namespace Hazard::Rendering
 	}
 	float Renderer2D::FindTexture(const Ref<Texture2D>& texture)
 	{
+		if (!texture) return 0;
+
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
 			if (m_Data.TextureSlots[i] == texture) {
 				return (float)i;

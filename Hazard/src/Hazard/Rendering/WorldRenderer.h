@@ -51,6 +51,7 @@ namespace Hazard::Rendering
 		Ref<Image2D> GetFinalPassImage() { return m_FrameBuffer->GetImage(); }
 		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }
 
+		static Ref<WorldRenderer> Create(WorldRendererSettings* settings) { return new WorldRenderer(settings); }
 
 	private:
 		void Invalidate();

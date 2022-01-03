@@ -9,14 +9,14 @@ using namespace WindowLayout;
 
 namespace WindowElement {
 
-	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game") 
+	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game")
 	{
 	}
-		
+
 	void GameViewport::Init()
 	{
-		// SetActive(false);
-		// if (!IsActive()) return;
+		SetActive(false);
+		if (!IsActive()) return;
 
 		// WorldRendererSettings settings = {};
 		// settings.ViewportSize = { 1920, 1080 };
@@ -30,7 +30,7 @@ namespace WindowElement {
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 		const auto& [cam, transform] = world->GetWorldCamera();
 
-		if (cam) 
+		if (cam)
 		{
 			if (m_Resize) {
 				cam->RecalculateProjection(m_Width, m_Height);
@@ -54,7 +54,7 @@ namespace WindowElement {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		if (size.x != m_Width || size.y != m_Height) 
+		if (size.x != m_Width || size.y != m_Height)
 		{
 			m_Width = size.x;
 			m_Height = size.y;

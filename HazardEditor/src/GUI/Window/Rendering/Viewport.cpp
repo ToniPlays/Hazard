@@ -24,18 +24,18 @@ namespace WindowElement {
 	}
 	void Viewport::Init()
 	{
-		// SetActive(Application::HasModule<RenderEngine>());
-		// if (!IsActive()) return;
+		SetActive(Application::HasModule<RenderEngine>());
+		if (!IsActive()) return;
 
-		// WorldRendererSettings settings = {};
-		// settings.Camera = &m_EditorCamera;
-		// settings.ViewportSize = { 1920, 1080 };
-		// settings.ClearColor = Color::FromHex("#101010");
-		// settings.LineWidth = 5.0f;
-		// settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
-		// m_WorldRenderer = WorldRenderer::Create(&settings);
+		WorldRendererSettings settings = {};
+		settings.Camera = &m_EditorCamera;
+		settings.ViewportSize = { 1920, 1080 };
+		settings.ClearColor = Color::FromHex("#101010");
+		settings.LineWidth = 5.0f;
+		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
+		m_WorldRenderer = WorldRenderer::Create(&settings);
 
-		// m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
+		m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
 	}
 	void Viewport::OnUpdate()
 	{

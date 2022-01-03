@@ -13,7 +13,7 @@ namespace Hazard::Scripting {
 	{
 		HZR_PROFILE_FUNCTION();
 #ifdef HZR_INCLUDE_MONO
-		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
+		//m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
 #endif
 
 		ScriptCommand::Init(*this);
@@ -55,6 +55,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::InitEntity(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
+		if (m_ScriptEngines.find(type) == m_ScriptEngines.end()) return;
 		m_ScriptEngines[type]->InitializeEntity(handle, moduleName);
 	}
 	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t handle, const std::string& moduleName)

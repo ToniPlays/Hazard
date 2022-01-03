@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Utils/StringUtil.h"
+#include "Hazard/RenderContext/RenderContext.h"
 
 namespace Hazard {
 	class CommandLineArgs {
@@ -43,6 +44,10 @@ namespace Hazard {
 		static std::vector<std::string> Get(const std::string& key)
 		{
 			return m_Arguments[key];
+		}
+		template<>
+		static RenderAPI Get(const std::string& key) {
+			return Rendering::RenderContext::StringToApi(Get<std::string>(key));
 		}
 	};
 }
