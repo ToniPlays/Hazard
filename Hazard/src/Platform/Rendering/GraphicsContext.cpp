@@ -2,9 +2,15 @@
 #include "GraphicsContext.h"
 #include "Platform/System/Window.h"
 
+#ifdef HZR_INCLUDE_OPENGL
 #include "Platform/Rendering/OpenGL/OpenGL.h"
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 #include "Platform/Rendering/Vulkan/Vulkan.h"
+#endif
+#ifdef HZR_INCLUDE_METAL
 #include "Platform/Rendering/Metal/MetalContext.h"
+#endif
 
 namespace Hazard::Rendering {
 

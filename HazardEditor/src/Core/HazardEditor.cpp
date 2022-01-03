@@ -52,8 +52,10 @@ void EditorApplication::PreInit()
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &contextInfo;
-	//createInfo.RendererInfo = &engineInfo;
-	//createInfo.AudioEngine = &audioInfo;
+#ifdef HZR_PLATFORM_WINDOWS
+	createInfo.RendererInfo = &engineInfo;
+	createInfo.AudioEngine = &audioInfo;
+#endif
 	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;
 
