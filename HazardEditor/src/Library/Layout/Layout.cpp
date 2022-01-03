@@ -46,7 +46,7 @@ namespace WindowLayout
     }
     void Layout::Texture(const Ref<Hazard::Rendering::Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
     {
-        ImGui::Image((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, t0, t1);
+        //ImGui::Image((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, t0, t1);
     }
     void Layout::Image(const Ref<Hazard::Rendering::Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
     {

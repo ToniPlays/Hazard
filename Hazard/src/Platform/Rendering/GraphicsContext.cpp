@@ -4,6 +4,7 @@
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"
+#include "Platform/Rendering/Metal/MetalContext.h"
 
 namespace Hazard::Rendering {
 
@@ -18,7 +19,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal:      return nullptr;
+        case RenderAPI::Metal:      return new Metal::MetalContext(props);
 #endif
         default:
             return nullptr;

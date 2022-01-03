@@ -23,6 +23,7 @@ namespace Hazard::Rendering
         if (info->Renderer == RenderAPI::Auto) {
             info->Renderer = RenderAPI::Metal;
         }
+
         
         m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
         m_WindowData.Platform = "MacOS";
@@ -54,6 +55,7 @@ namespace Hazard::Rendering
         m_Context->Init((Window*)this, appInfo);
         m_Context->SetClearColor(info->Color);
         
+        HZR_CORE_INFO("Yes");
         m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
         HZR_CORE_INFO("Renderer: {0}", m_WindowData.deviceSpecs.Name);
 
