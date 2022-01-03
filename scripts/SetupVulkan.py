@@ -11,7 +11,7 @@ from urllib.request import urlopen
 class VulkanConfiguration:
     requiredVulkanVersion = "1.2.189.0"
     requiredDebugLibVersion = "1.2.189.0";
-    vulkanDirectory = "./Hazard/vendor/VulkanSDK"
+    vulkanDirectory = "../Hazard/vendor/VulkanSDK"
 
     @classmethod
     def Validate(cls):

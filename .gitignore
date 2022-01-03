@@ -1,3 +1,4 @@
+
 .vs
 bin
 bin-int
@@ -27,6 +28,7 @@ Makefile
 *.cache
 *.txt
 *.dll
+!scripts/res/*.dll
 *.filters
 *.user
 .DS_Store
