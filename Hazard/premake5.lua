@@ -90,7 +90,8 @@ project "Hazard"
 		}
 		removefiles {
 			"src/Platform/Rendering/Vulkan/**",
-			"src/Platform/Rendering/OpenGL/**"
+			"src/Platform/Rendering/OpenGL/**",
+			"vendor/VulkanMemoryAllocator/**"
 		}
 
 	filter "configurations:Debug"

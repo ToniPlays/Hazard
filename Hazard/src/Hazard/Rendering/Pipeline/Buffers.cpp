@@ -4,7 +4,7 @@
 #include "../RenderCommand.h"
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
-#include "Platform/Rendering/Vulkan/Pipeline/VulkanBuffers.h"
+#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 namespace Hazard::Rendering {
 

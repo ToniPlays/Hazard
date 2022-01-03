@@ -3,6 +3,7 @@ import os
 import subprocess
 import platform
 import Utils
+from os import path
 
 from SetupPython import PythonConfiguration as PythonRequirements
 
@@ -31,8 +32,9 @@ if platform.system() == "Darwin":
     print("\nDownloading ShaderC")
     Utils.DownloadFile("https://github.com/google/shaderc/archive/refs/heads/main.zip", "Hazard/vendor/shaderc.zip");
     Utils.UnzipFile("Hazard/vendor/shaderc.zip", True)
-    os.mkdir("Hazard/vendor/shaderc")
-    os.rename("Hazard/vendor/shaderc-main/libshaderc/include", "Hazard/vendor/shaderc/include")
+    if not path.exists("Hazard/vendor/shaderc"):
+        os.mkdir("Hazard/vendor/shaderc")
+        os.rename("Hazard/vendor/shaderc-main/libshaderc/include", "Hazard/vendor/shaderc/include")
     
 
 if (premakeInstalled):
@@ -41,7 +43,7 @@ if (premakeInstalled):
         subprocess.call([os.path.abspath("./scripts/Win-GenProjects.bat"), "nopause"])
     elif platform.system() == "Darwin":
         print("\Running Premake...")
-        subprocess.call(["sudo", "sh", os.path.abspath("./scripts/Mac-GenProjects.sh"), "nopause"]);
+        subprocess.call(["sh", os.path.abspath("./scripts/Mac-GenProjects.sh"), "nopause"]);
         
     print("\nSetup completed!")
 else:
