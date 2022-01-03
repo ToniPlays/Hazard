@@ -2,6 +2,7 @@
 import os
 import subprocess
 import platform
+import Utils
 
 from SetupPython import PythonConfiguration as PythonRequirements
 
@@ -23,13 +24,16 @@ premakeInstalled = PremakeRequirements.Validate()
 print("\nUpdating submodules...")
 subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 
+Utils.CopyContents("scripts/res/glfw-premake5.lua", "Hazard/vendor/glfw/premake5.lua")
+Utils.CopyContents("scripts/res/yaml-premake5.lua", "Hazard/vendor/yaml-cpp/premake5.lua")
+
 if (premakeInstalled):
     if platform.system() == "Windows":
         print("\nRunning Premake...")
         subprocess.call([os.path.abspath("./scripts/Win-GenProjects.bat"), "nopause"])
     elif platform.system() == "Darwin":
         print("\Running Premake...")
-        subprocess.call(["sudo", os.path.abspath("./scripts/Mac-GenProjects.sh"), "nopause"]);
+        subprocess.call(["sudo", "sh", os.path.abspath("./scripts/Mac-GenProjects.sh"), "nopause"]);
         
     print("\nSetup completed!")
 else:

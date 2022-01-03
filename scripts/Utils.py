@@ -140,3 +140,12 @@ def UnzipTar(filepath, deleteZipFile=True):
         tar.extractall(zipFileLocation)
         tar.close()
 
+def CopyContents(sourcePath, destPath):
+    with open(os.path.abspath(sourcePath), "r") as f:
+        content = f.read()
+        with open(os.path.abspath(destPath), "w") as dest:
+            dest.write(content)
+            dest.truncate()
+            dest.close()
+        f.close()
+            
