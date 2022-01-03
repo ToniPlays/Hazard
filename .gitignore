@@ -31,14 +31,10 @@ Makefile
 !scripts/res/*.dll
 *.filters
 *.user
-.DS_Store
-Hazard/.DS_Store
-Hazard/vendor/.DS_Store
-Hazard/.DS_Store
 *.cs
 *.lib
 *.lastbuildstate
 *.filters
-*.obj
 *.pdb
 *.obj
+!HazardEditor/res/**/*.obj
