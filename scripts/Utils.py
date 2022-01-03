@@ -1,6 +1,9 @@
 import sys
 import os
-import winreg
+
+import platform;
+if platform.system() == "Windows":
+    import winreg
 
 import requests
 import time

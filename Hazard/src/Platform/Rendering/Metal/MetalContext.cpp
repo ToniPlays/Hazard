@@ -13,29 +13,35 @@ namespace Hazard::Rendering::Metal
     MetalContext::~MetalContext() {
         
     }
-    void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo) {
+    void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo)
+    {
         m_Device = MTL::CreateSystemDefaultDevice();
     }
     void MetalContext::SetViewport(int x, int y, int w, int h) {
         
     }
-    void MetalContext::SwapBuffers() {
+    void MetalContext::SwapBuffers()
+    {
         
     }
-    void MetalContext::Begin() {
+    void MetalContext::Begin()
+    {
         
     }
     void MetalContext::End()
     {
         
     }
-    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) {
+    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+    {
     
     }
-    void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer) {
+    void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
+    {
         
     }
-    void MetalContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) {
+    void MetalContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
+    {
         
     }
     void MetalContext::SetErrorListener(const ErrorCallback &callback) {

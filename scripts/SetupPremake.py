@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 from pathlib import Path
 
 import Utils
@@ -21,8 +22,12 @@ class PremakeConfiguration:
 
     @classmethod
     def CheckIfPremakeInstalled(cls):
-        premakeExe = Path(f"{cls.premakeDirectory}/premake5.exe");
-        if (not premakeExe.exists()):
+        premakeApp = Path("")
+        if platform.system() == "Windows":
+            premakeApp = Path(f"{cls.premakeDirectory}/premake5.exe");
+        elif platform.system() == "MacOS":
+            premakeApp = Path(f"{cls.premakeDirectory}/premake5.app");
+        if (not premakeApp.exists()):
             return cls.InstallPremake()
 
         return True

@@ -55,7 +55,6 @@ namespace Hazard::Rendering
         m_Context->Init((Window*)this, appInfo);
         m_Context->SetClearColor(info->Color);
         
-        HZR_CORE_INFO("Yes");
         m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
         HZR_CORE_INFO("Renderer: {0}", m_WindowData.deviceSpecs.Name);
 

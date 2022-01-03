@@ -1,0 +1,52 @@
+In file included from src/context.c:30:
+src/internal.h:194:3: error: "No supported window creation API selected"
+ #error "No supported window creation API selected"
+  ^
+src/internal.h:360:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_CONTEXT_STATE;
+    ^
+src/internal.h:362:5: error: type name requires a specifier or qualifier
+    _GLFW_EGL_CONTEXT_STATE;
+    ^
+src/internal.h:364:5: error: type name requires a specifier or qualifier
+    _GLFW_OSMESA_CONTEXT_STATE;
+    ^
+src/internal.h:422:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_WINDOW_STATE;
+    ^
+src/internal.h:446:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_MONITOR_STATE;
+    ^
+src/internal.h:456:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_CURSOR_STATE;
+    ^
+src/internal.h:496:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_JOYSTICK_STATE;
+    ^
+src/internal.h:504:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_TLS_STATE;
+    ^
+src/internal.h:512:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_MUTEX_STATE;
+    ^
+src/internal.h:547:9: error: type name requires a specifier or qualifier
+        _GLFW_PLATFORM_LIBRARY_TIMER_STATE;
+        ^
+src/internal.h:578:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_LIBRARY_WINDOW_STATE;
+    ^
+src/internal.h:580:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_LIBRARY_CONTEXT_STATE;
+    ^
+src/internal.h:582:5: error: type name requires a specifier or qualifier
+    _GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE;
+    ^
+src/internal.h:584:5: error: type name requires a specifier or qualifier
+    _GLFW_EGL_LIBRARY_CONTEXT_STATE;
+    ^
+src/internal.h:586:5: error: type name requires a specifier or qualifier
+    _GLFW_OSMESA_LIBRARY_CONTEXT_STATE;
+    ^
+16 errors generated.
+make[1]: *** [bin-int/Debug-macosx-universal/GLFW/context.o] Error 1
+make: *** [GLFW] Error 2
