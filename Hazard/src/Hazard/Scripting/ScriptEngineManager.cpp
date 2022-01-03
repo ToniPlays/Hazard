@@ -60,6 +60,7 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::ClearEntity(ScriptType type, uint32_t handle, const std::string& moduleName)
 	{
+		if (m_ScriptEngines.find(type) == m_ScriptEngines.end()) return;
 		m_ScriptEngines[type]->ClearEntity(handle, moduleName);
 	}
 	std::unordered_map<uint32_t, ScriptField*> ScriptEngineManager::GetFields(ScriptType type, uint32_t handle, const std::string& moduleName)
@@ -89,6 +90,7 @@ namespace Hazard::Scripting {
 		ScriptCommand::InitAllEntities();
 	}
 	bool ScriptEngineManager::ModuleExists(ScriptType type, const char* moduleName) {
+		if (m_ScriptEngines.find(type) == m_ScriptEngines.end()) return false;
 		return m_ScriptEngines[type]->ModuleExists(moduleName);
 	}
 }
