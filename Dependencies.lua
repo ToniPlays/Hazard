@@ -55,6 +55,9 @@ Library = {}
 
 end
 if os.host() == "macosx" then
+
+    IncludeDir["SPIRV_Cross"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
+	
     --Library["Vulkan"] = "vulkan"
     -- Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 

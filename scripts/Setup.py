@@ -27,6 +27,14 @@ subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 Utils.CopyContents("scripts/res/glfw-premake5.lua", "Hazard/vendor/glfw/premake5.lua")
 Utils.CopyContents("scripts/res/yaml-premake5.lua", "Hazard/vendor/yaml-cpp/premake5.lua")
 
+if platform.system() == "Darwin":
+    print("\nDownloading ShaderC")
+    Utils.DownloadFile("https://github.com/google/shaderc/archive/refs/heads/main.zip", "Hazard/vendor/shaderc.zip");
+    Utils.UnzipFile("Hazard/vendor/shaderc.zip", True)
+    os.mkdir("Hazard/vendor/shaderc")
+    os.rename("Hazard/vendor/shaderc-main/libshaderc/include", "Hazard/vendor/shaderc/include")
+    
+
 if (premakeInstalled):
     if platform.system() == "Windows":
         print("\nRunning Premake...")
