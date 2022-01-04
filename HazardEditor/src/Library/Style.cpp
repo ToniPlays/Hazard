@@ -32,7 +32,7 @@ void Style::SetButtonColors(const Color& button, const Color& hovered, const Col
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ColorAsImVec4(hovered));
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ColorAsImVec4(active));
 }
-void Style::SelectFont(uint8_t index)
+void Style::SelectFont(uint16_t index)
 {
 	ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index]);
 }

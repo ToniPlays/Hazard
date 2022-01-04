@@ -61,7 +61,8 @@ namespace Hazard {
 			std::lock_guard lock(m_Mutex);
 			EndSessionInternal();
 		}
-		void WriteProfile(const ProfileResult& result) {
+		void WriteProfile(const ProfileResult& result) 
+		{
 			std::stringstream json;
 
 			json << std::setprecision(3) << std::fixed;

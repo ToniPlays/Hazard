@@ -5,7 +5,8 @@
 
 namespace Hazard::Rendering::OpenGL 
 {
-	class OpenGLPipeline : public Pipeline {
+	class OpenGLPipeline : public Pipeline 
+	{
 	public:
 		OpenGLPipeline(PipelineSpecification* specs);
 		virtual ~OpenGLPipeline();

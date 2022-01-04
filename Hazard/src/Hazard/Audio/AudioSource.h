@@ -16,7 +16,7 @@ namespace Hazard::Audio {
 		size_t Size = 0;
 		uint32_t SampleRate = 0;
 		uint32_t Channels = 0;
-		float AlFormat = 0;
+		int AlFormat = 0;
 		float LenSec = 0;
 
 		uint32_t bufferID;

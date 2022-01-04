@@ -131,7 +131,7 @@ public:
 	static void SetColor(ImGuiCol_ color, const ImVec4& value);
 	static void SetButtonColors(const char* button, const char* hovered, const char* active);
 	static void SetButtonColors(const Color& button, const Color& hovered, const Color& active);
-	static void SelectFont(uint8_t index);
+	static void SelectFont(uint16_t index);
 	static ImFont* AddFont(const char* file, float size);
 	static ImVec4 ColorAsImVec4(const Color& color);
 	static ImU32 ColorWithMultiplier(ImVec4 color, float multiplier);

@@ -13,11 +13,11 @@ namespace Hazard::Rendering {
 	}
 	float RenderContextCommand::GetWindowWidth()
 	{
-		return m_Context->GetWindow().GetWidth();
+		return (float)m_Context->GetWindow().GetWidth();
 	}
 	float RenderContextCommand::GetWindowHeight()
 	{
-		return m_Context->GetWindow().GetHeight();
+		return (float)m_Context->GetWindow().GetHeight();
 	}
 	bool RenderContextCommand::IsFullscreen()
 	{

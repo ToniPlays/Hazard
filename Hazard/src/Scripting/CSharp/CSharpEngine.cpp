@@ -46,7 +46,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::UpdateEntities()
 	{
-		float delta = Time::s_DeltaTime;
+		float delta = (float)Time::s_DeltaTime;
 		void* param[] = { &delta };
 
 		for (auto& [handle, instance] : m_Registry.GetRegisteredInstances()) {

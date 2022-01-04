@@ -18,6 +18,7 @@ namespace Hazard::Rendering::OpenGL
 			case ImageWrap::ClampBorder:	return GL_CLAMP_TO_BORDER;
 			case ImageWrap::ClampEdge:		return GL_CLAMP_TO_EDGE;
 			}
+			return GL_REPEAT;
 		}
 		static GLenum TextureFilterToGLFilter(FilterMode filter) {
 			switch (filter)
@@ -27,6 +28,7 @@ namespace Hazard::Rendering::OpenGL
 			case FilterMode::LinearMip:		return GL_LINEAR_MIPMAP_LINEAR;
 			case FilterMode::NearestMip:	return GL_NEAREST_MIPMAP_NEAREST;
 			}
+			return GL_LINEAR;
 		}
 	}
 

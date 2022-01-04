@@ -24,8 +24,8 @@ namespace Hazard::Rendering::Vulkan
 		}
 		else
 		{
-			m_Specs.Width = info->Width;
-			m_Specs.Height = info->Height;
+			m_Specs.Width = (uint32_t)info->Width;
+			m_Specs.Height = (uint32_t)info->Height;
 		}
 
 		uint32_t attachmentIndex = 0;

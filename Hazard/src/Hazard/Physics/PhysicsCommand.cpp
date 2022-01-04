@@ -19,6 +19,7 @@ namespace Hazard::Physics
 		case BodyType::Kinematic:	return "Kinematic";
 		case BodyType::Dynamic:		return "Dynamic";
 		}
+		return "Unknows";
 	}
 	BodyType StringToBodyType(const std::string& value)
 	{

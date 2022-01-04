@@ -114,7 +114,7 @@ namespace Hazard::ECS::Loader
         void SerializeComponentEditor(Entity& entity, CameraComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "CameraComponent", [&]() {
-                YamlUtils::Serialize(out, "Projection", component.GetProjectionType() ? "Orthographic" : "Perspective");
+                YamlUtils::Serialize(out, "Projection", component.GetProjectionType() == Projection::Orthographic ? "Orthographic" : "Perspective");
                 YamlUtils::Serialize(out, "Fov", component.GetFov());
                 YamlUtils::Serialize(out, "Clipping", component.GetClipping());
                 });

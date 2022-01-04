@@ -41,6 +41,7 @@ namespace Hazard::Rendering
 		case ShaderType::Geometry:	return shaderc_glsl_geometry_shader;
         case ShaderType::None:      return (shaderc_shader_kind)0;
 		}
+		return (shaderc_shader_kind)0;
 	}
 
 	static std::string GetShaderTypeCache(ShaderType type) {

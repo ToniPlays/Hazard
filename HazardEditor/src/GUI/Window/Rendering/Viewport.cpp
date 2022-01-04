@@ -52,11 +52,11 @@ namespace WindowElement {
 		bool changed = false;
 
 		if (size.x != m_Width || size.y != m_Height) {
-			m_Width = size.x;
-			m_Height = size.y;
+			m_Width = (uint32_t)size.x;
+			m_Height = (uint32_t)size.y;
 
 			changed = true;
-			m_EditorCamera.SetViewport(m_Width, m_Height);
+			m_EditorCamera.SetViewport(size.x, size.y);
 			m_WorldRenderer->SetViewport(m_Width, m_Height);
 		}
 

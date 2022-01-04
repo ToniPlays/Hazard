@@ -134,5 +134,6 @@ namespace WindowElement {
 		case Severity::Error:		return errorEnable;
 		case Severity::Critical:	return true;
 		}
+		return true;
 	}
 }

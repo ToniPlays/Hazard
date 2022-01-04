@@ -152,7 +152,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-		pipelineInfo.stageCount = shaderStages.size();
+		pipelineInfo.stageCount = (uint32_t)shaderStages.size();
 		pipelineInfo.pStages = shaderStages.data();
 		pipelineInfo.pViewportState = &viewportState;
 		pipelineInfo.pVertexInputState = &vertexInputInfo;

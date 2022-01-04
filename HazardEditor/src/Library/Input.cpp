@@ -415,9 +415,10 @@ namespace WindowElement {
 			modified = ScriptFieldOfType<float>(field, value);
 			if (modified) 
 				field->SetValue<float>(value, runtime);
+			break;
 		}
-            default:
-                return false;
+		default:
+			break;
 		}
 		return modified;
 	}

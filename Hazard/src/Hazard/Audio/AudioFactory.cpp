@@ -50,11 +50,11 @@ namespace Hazard::Audio
           buffer->AudioData = info.buffer;
 
           alGenBuffers(1, &buffer->bufferID);
-          alBufferData(buffer->bufferID, buffer->AlFormat, buffer->AudioData, (size_t)buffer->Size, buffer->SampleRate);
+          alBufferData(buffer->bufferID, buffer->AlFormat, buffer->AudioData, (ALsizei)buffer->Size, buffer->SampleRate);
 
           return buffer;
      }
-     ALenum AudioFactory::GetOpenALFormat(uint32_t channels)
+     int AudioFactory::GetOpenALFormat(uint32_t channels)
      {
          switch (channels) {
          case 1:    return AL_FORMAT_MONO16;

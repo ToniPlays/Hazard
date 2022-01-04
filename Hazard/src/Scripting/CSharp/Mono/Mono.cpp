@@ -316,11 +316,10 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoAssembly* Mono::LoadAssembly(const char* path)
 	{
-		
 		Buffer data = File::ReadBinaryFile(std::filesystem::path(path));
 
 		MonoImageOpenStatus status;
-		MonoImage* image = mono_image_open_from_data_full((char*)data.Data, data.Size, 1, &status, 0);
+		MonoImage* image = mono_image_open_from_data_full((char*)data.Data, (uint32_t)data.Size, 1, &status, 0);
 		MonoAssembly* loaded = mono_assembly_load_from_full(image, path, &status, 0);
 		mono_image_close(image);
 		return loaded;

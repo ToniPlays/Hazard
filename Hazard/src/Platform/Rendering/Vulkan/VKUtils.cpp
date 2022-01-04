@@ -178,6 +178,7 @@ namespace Hazard::Rendering::Vulkan {
 		case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
 		case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
 		}
+		return ShaderType::None;
 	}
 
 	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
@@ -222,6 +223,7 @@ namespace Hazard::Rendering::Vulkan {
 		case FilterMode::Nearest:		return VK_FILTER_NEAREST;
 		case FilterMode::NearestMip:	return VK_FILTER_NEAREST;
 		}
+		return VK_FILTER_LINEAR;
 	}
 
 	VkSamplerAddressMode VKUtils::GetSamplerWrap(const ImageWrap& wrap)
@@ -232,6 +234,7 @@ namespace Hazard::Rendering::Vulkan {
 		case ImageWrap::Repeat:			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 		case ImageWrap::RepeatMirror:	return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
 		}
+		return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
 	}
 
 	VkPolygonMode VKUtils::DrawTypeToVKType(const DrawType& type)
@@ -392,6 +395,7 @@ namespace Hazard::Rendering::Vulkan {
 		case VK_OPERATION_NOT_DEFERRED_KHR:							return "VK_OPERATION_NOT_DEFERRED_KHR";
 		case VK_PIPELINE_COMPILE_REQUIRED_EXT:						return "VK_PIPELINE_COMPILE_REQUIRED_EXT";
 		}
+		return "VK_UNKNONW_ERROR";
 	}
 
 	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)

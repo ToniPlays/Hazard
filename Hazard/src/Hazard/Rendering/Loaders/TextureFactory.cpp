@@ -40,7 +40,7 @@ namespace Hazard::Rendering
 		if (!File::DirectoryExists(cacheDir.parent_path()))
 			File::CreateDir(cacheDir.parent_path());
 
-		uint32_t dataSize;
+		size_t dataSize;
 		byte* textureData = nullptr;
 
 		if (header.Channels == 4) {
@@ -91,6 +91,7 @@ namespace Hazard::Rendering
 		case ImageFormat::DEPTH32F:			return 1;
 		case ImageFormat::DEPTH24STENCIL8:	return 1;
 		}
+		return 0;
 	}
 
 	TextureHeader TextureFactory::LoadTextureFromCache(const std::string& path)

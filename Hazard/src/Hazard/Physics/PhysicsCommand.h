@@ -30,7 +30,7 @@ namespace Hazard::Physics
 		static float GetAngle(void* handle) { return s_Physics2D->GetAngle(handle); };
 
 		static void SetGravity(float gravity) {};
-		static void Step(float delta) { s_Physics2D->Step(delta); };
+		static void Step(double delta) { s_Physics2D->Step((float)delta); };
 	private:
 		static Physics2D* s_Physics2D;
 	};

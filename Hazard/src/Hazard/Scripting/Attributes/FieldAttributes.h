@@ -21,13 +21,13 @@ namespace Hazard::Scripting
 	class SliderAttribute : public Attribute 
 	{
 	public:
-		float Min, Max;
+		float Min = 0.0f, Max = 0.0f;
 		ATTRIBUTE_CLASS_TYPE(Slider)
 	};
 	class RangeAttribute : public Attribute 
 	{
 	public:
-		float Min, Max;
+		float Min = 0.0f, Max = 0.0f;
 		ATTRIBUTE_CLASS_TYPE(Range)
 	};
 	class HeaderAttribute : public Attribute 

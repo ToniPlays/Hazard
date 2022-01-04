@@ -45,6 +45,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
     }
     float MathBindings::Math_Radians_Native(float degrees)
     {
-        return Math::ToRadians(degrees);
+        return (float)Math::ToRadians(degrees);
     }
 }

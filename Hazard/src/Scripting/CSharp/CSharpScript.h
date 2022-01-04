@@ -22,7 +22,7 @@ namespace Hazard::Scripting::CSharp
 		const std::string& GetModuleName() override { return m_Metadata.ModuleName; }
 		bool IsValid() const override { return true; }
 		virtual uint32_t GetHandle() const override { return m_ScriptHandle; };
-		uint32_t GetFieldCount() override { return m_Fields.size(); }
+		uint32_t GetFieldCount() override { return (uint32_t)m_Fields.size(); }
 		std::unordered_map<uint32_t, ScriptField*> GetFields() override { return m_Fields; };
 
 		void InitClassMethods();

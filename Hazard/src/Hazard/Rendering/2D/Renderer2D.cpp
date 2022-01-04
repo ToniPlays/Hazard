@@ -128,14 +128,14 @@ namespace Hazard::Rendering
 			m_Pipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.Size = m_Data.MaxVertices * sizeof(Vertex2D);
+			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 			IndexBufferCreateInfo indexBuffer = {};
 			indexBuffer.Data = indices;
-			indexBuffer.Size = m_Data.MaxIndices;
+			indexBuffer.Size = (uint32_t)m_Data.MaxIndices;
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
@@ -149,19 +149,19 @@ namespace Hazard::Rendering
 			}
 		}
 
-		m_QuadBatch = Batch<Vertex2D>(m_Data.MaxQuadCount * 4);
+		m_QuadBatch = Batch<Vertex2D>((uint32_t)m_Data.MaxQuadCount * 4);
 		delete[] indices;
 	}
 	float Renderer2D::FindTexture(const Ref<Texture2D>& texture)
 	{
-		if (!texture) return 0;
+		if (!texture) return 0.0f;
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
 			if (m_Data.TextureSlots[i] == texture) {
 				return (float)i;
 			}
 		}
-		m_Data.TextureSlots[m_Data.TextureIndex] = texture;
-		return (float)m_Data.TextureIndex++;
+		m_Data.TextureSlots[(size_t)m_Data.TextureIndex] = texture;
+		return m_Data.TextureIndex++;
 	}
 }

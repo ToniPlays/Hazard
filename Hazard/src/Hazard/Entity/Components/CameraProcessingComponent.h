@@ -4,7 +4,7 @@
 
 namespace Hazard::ECS 
 {
-	enum Projection { Perspective = 0, Orthographic };
+	enum class Projection { Perspective = 0, Orthographic };
 
 	struct CameraComponent {
 

@@ -34,7 +34,7 @@ namespace Hazard::Rendering
 		size_t MaxIndices;
 		uint32_t Samplers;
 		std::vector<Ref<Texture2D>> TextureSlots;
-		uint32_t TextureIndex = 0;
+		float TextureIndex = 0.0f;
 		glm::vec4 QuadVertexPos[4];
 	};
 

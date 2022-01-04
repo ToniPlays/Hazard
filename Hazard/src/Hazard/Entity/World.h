@@ -16,7 +16,7 @@ namespace Hazard::ECS {
 		World(World& other);
 		~World();
 
-		void SetName(const std::string& name) { m_Name = std::move(name); }
+		void SetName(const std::string& name) { m_Name = name; }
 
 		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UUID id, const char* name);

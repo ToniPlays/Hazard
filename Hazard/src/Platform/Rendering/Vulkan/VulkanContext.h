@@ -4,7 +4,7 @@
 #include "Platform/Rendering/GraphicsContext.h"
 #include "Platform/System/Window.h"
 #include "Core/VulkanDevice.h"
-#include "Core/WindowSurface.h""
+#include "Core/WindowSurface.h"
 #include "Core/VulkanAllocator.h"
 #include "Core/VulkanSwapChain.h"
 #include "VulkanRenderCommandBuffer.h"

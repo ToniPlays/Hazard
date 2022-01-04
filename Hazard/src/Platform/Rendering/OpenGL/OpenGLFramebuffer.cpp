@@ -20,8 +20,8 @@ namespace Hazard::Rendering::OpenGL
 		m_Specs.AttachmentCount = info->AttachmentCount;
 		m_Specs.Attachments = info->Attachments;
 		m_Specs.ClearColor = info->ClearColor;
-		m_Specs.Width = info->Width;
-		m_Specs.Height = info->Height;
+		m_Specs.Width = (uint32_t)info->Width;
+		m_Specs.Height = (uint32_t)info->Height;
 
 		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget) {
 			Window& window = RenderContextCommand::GetContext().GetWindow();
@@ -122,7 +122,7 @@ namespace Hazard::Rendering::OpenGL
 				m_ColorImages[i] = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
 			}
 	
-			for (size_t i = 0; i < m_ColorImages.size(); i++) 
+			for (uint32_t i = 0; i < (uint32_t)m_ColorImages.size(); i++)
 			{
 				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
 
@@ -154,7 +154,7 @@ namespace Hazard::Rendering::OpenGL
 		if (m_ColorImages.size() > 1) {
 			HZR_CORE_ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-			glDrawBuffers(m_ColorImages.size(), buffers);
+			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
 		else if (m_ColorImages.empty()) {
 			glDrawBuffer(GL_NONE);

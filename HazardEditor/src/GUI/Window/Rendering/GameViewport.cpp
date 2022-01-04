@@ -33,7 +33,7 @@ namespace WindowElement {
 		if (cam)
 		{
 			if (m_Resize) {
-				cam->RecalculateProjection(m_Width, m_Height);
+				cam->RecalculateProjection((float)m_Width, (float)m_Height);
 			}
 
 			m_Camera.SetView(glm::inverse(transform->GetTransformNoScale()));

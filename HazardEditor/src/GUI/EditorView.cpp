@@ -167,13 +167,15 @@ namespace WindowElement {
 			break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan:
+		case RenderAPI::Vulkan: {
 			Rendering::Vulkan::VulkanContext* context = static_cast<Vulkan::VulkanContext*>(window.GetContext());
 			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
+		}
 #endif
-            default:
-                break;
+		default:
+			m_Renderer = nullptr;
+			break;
 		}
 	}
 	bool EditorView::OnWindowFocus(WindowFocusEvent& e)

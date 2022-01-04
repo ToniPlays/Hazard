@@ -17,7 +17,7 @@ namespace Editor {
 		inline float GetDistance() const { return distance; }
 		inline void SetDistance(float distance) { this->distance = distance; }
 
-		inline void SetViewport(uint32_t width, uint32_t height) override { viewport_w = width; viewport_h = height; UpdateProjection(); }
+		inline void SetViewport(float width, float height) override { viewport_w = width; viewport_h = height; UpdateProjection(); }
 		
 		glm::quat GetOrientation() const;
 

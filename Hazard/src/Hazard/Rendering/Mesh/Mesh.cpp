@@ -18,14 +18,14 @@ namespace Hazard::Rendering {
 	void Mesh::GeneratePipeline()
 	{
 		VertexBufferCreateInfo vertexInfo = {};
-		vertexInfo.Size = m_Vertices.size() * sizeof(Vertex3D);
+		vertexInfo.Size = (uint32_t)m_Vertices.size() * sizeof(Vertex3D);
 		vertexInfo.Usage = BufferUsage::StaticDraw;
 		vertexInfo.Data = m_Vertices.data();
 
 		m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 		IndexBufferCreateInfo indexInfo = {};
-		indexInfo.Size = m_Indices.size();
+		indexInfo.Size = (uint32_t)m_Indices.size();
 		indexInfo.Data = m_Indices.data();
 		indexInfo.Usage = BufferUsage::StaticDraw;
 

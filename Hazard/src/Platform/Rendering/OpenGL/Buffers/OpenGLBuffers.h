@@ -19,7 +19,7 @@ namespace Hazard::Rendering::OpenGL
 	private:
 		BufferUsage m_Usage;
 		uint32_t m_ID, m_VAO;
-		size_t m_Size;
+		uint32_t m_Size;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -34,11 +34,11 @@ namespace Hazard::Rendering::OpenGL
 		uint32_t GetCount() override { return m_Size; }
 
 	private:
-		void SetData(uint32_t* data, uint32_t size);
+		void SetData(uint32_t* data, uint32_t size) override;
 
 		BufferUsage m_Usage;
 		uint32_t m_ID;
-		size_t m_Size;
+		uint32_t m_Size;
 
 	};
 	class OpenGLUniformBuffer : public UniformBuffer
@@ -57,7 +57,7 @@ namespace Hazard::Rendering::OpenGL
 
 	private:
 		uint32_t m_ID;
-		size_t m_Size;
+		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
 	};

@@ -52,7 +52,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkInstanceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		createInfo.enabledExtensionCount = extensions.size();
+		createInfo.enabledExtensionCount = (uint32_t)extensions.size();
 		createInfo.ppEnabledExtensionNames = extensions.data();
 		createInfo.pApplicationInfo = &vkApp;
 
@@ -101,8 +101,8 @@ namespace Hazard::Rendering::Vulkan {
 		VkViewport viewport = {};
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		viewport.width = width;
-		viewport.height = height;
+		viewport.width = (float)width;
+		viewport.height = (float)height;
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

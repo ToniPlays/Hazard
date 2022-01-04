@@ -99,7 +99,7 @@ namespace WindowElement {
 			Layout::MaxWidth();
 			float fov = component.GetFov();
 
-			if (Input::Slider("##FOV", fov, 0.001, 100)) {
+			if (Input::Slider("##FOV", fov, 0.001f, 100.0f)) {
 				component.SetFov(fov);
 			}
 			Layout::EndTable();
@@ -148,7 +148,7 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, BatchComponent& component) {
 		Layout::ComponentTreenode<BatchComponent>(entity, name, [&]() {
-			Input::DragUInt("Size", component.Size, 0.0f, 1000.0f);
+			Input::DragUInt("Size", component.Size, 0, 1000);
 
 			}, [&entity]() {
 
