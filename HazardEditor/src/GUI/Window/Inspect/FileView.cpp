@@ -205,6 +205,7 @@ namespace WindowElement {
 		case Hazard::AssetType::Image:				return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Critical));
 		case Hazard::AssetType::EnvironmentMap:		return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
 		case Hazard::AssetType::PhysicsMaterial:	return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Primary));
+        default:                                    return Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Text));
 		}
 	}
 	Ref<Rendering::Texture2D> FileView::GetFileImageFromType(const AssetMetadata& metadata)
@@ -218,9 +219,10 @@ namespace WindowElement {
 		case Hazard::AssetType::AudioClip:
 		case Hazard::AssetType::EnvironmentMap:
 		case Hazard::AssetType::PhysicsMaterial:	
-			return m_Images["folder"];
+			return m_Images["logo"];
+        default:
+            return m_Images["logo"];
 		}
-		return m_Images["logo"];
 	}
 	void FileView::UpdateFolderData()
 	{

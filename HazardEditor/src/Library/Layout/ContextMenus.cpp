@@ -1,5 +1,3 @@
-#pragma once
-
 
 #include "ContextMenus.h"
 #include "Layout.h"

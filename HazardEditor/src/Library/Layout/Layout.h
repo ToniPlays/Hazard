@@ -88,7 +88,7 @@ namespace WindowLayout
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 			ImGui::Separator();
-			bool open = ImGui::TreeNodeEx((void*)name, flags, name);
+			bool open = ImGui::TreeNodeEx((void*)name, flags, "%s", name);
 			bool removed = false;
 			ImGui::PopStyleVar();
 

@@ -172,6 +172,8 @@ namespace WindowElement {
 			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
 #endif
+            default:
+                break;
 		}
 	}
 	bool EditorView::OnWindowFocus(WindowFocusEvent& e)

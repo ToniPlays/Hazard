@@ -11,7 +11,6 @@ namespace WindowElement {
 		~WelcomePopup() = default;
 
 		void OnWindowRender() override;
-		virtual void Init() {};
 		virtual bool OnEvent(Hazard::Event& e) override;
 
 	private:

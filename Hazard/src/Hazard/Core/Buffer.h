@@ -13,7 +13,7 @@ namespace Hazard
 		void Allocate(uint32_t size) 
 		{
 			if(Data != nullptr)
-				delete[] Data;
+				 free(Data);
 
 			Data = nullptr;
 
@@ -24,7 +24,7 @@ namespace Hazard
 		}
 		void Release() 
 		{
-			delete[] Data;
+			free(Data);
 			Data = nullptr;
 			Size = 0;
 		}

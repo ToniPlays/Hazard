@@ -12,11 +12,9 @@ namespace WindowElement {
 
 
 		void OnRender() override;
-		virtual void Init() {};
 		virtual void OnWindowRender() = 0;
 		virtual void OnBeforeRender() {};
 		virtual void OnAfterRender() {};
-		virtual bool OnEvent(Hazard::Event& e) override { return false; };
 
 		bool IsActive() { return m_Active; }
 		bool IsFocused() { return m_Focused; }

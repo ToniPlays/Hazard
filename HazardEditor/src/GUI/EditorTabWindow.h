@@ -14,7 +14,7 @@ namespace WindowElement {
 
 		void OnRender() override;
 		virtual void Render() = 0;
-		virtual bool OnEvent(Event& e) = 0;
+		virtual bool OnEvent(Event& e) override = 0;
 
 		const std::vector<RenderableElement*>& GetElements() { return m_Elements; }
 

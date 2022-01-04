@@ -92,11 +92,11 @@ namespace WindowLayout
     }
     void Layout::Text(const std::string& text)
     {
-        ImGui::Text(text.c_str());
+        ImGui::Text("%s", text.c_str());
     }
     void Layout::TextColored(const char* text, const Color& color)
     {
-        ImGui::TextColored(Style::ColorAsImVec4(color), text);
+        ImGui::TextColored(Style::ColorAsImVec4(color), "%s", text);
     }
     void Layout::NextLine(float height)
     {

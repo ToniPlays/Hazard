@@ -13,10 +13,10 @@ namespace WindowElement {
 		EditorView();
 		~EditorView() = default;
 
-		void Init();
+		void Init() override;
 		void Update() override;
 		void Render() override;
-		bool OnEvent(Hazard::Event& e);
+		bool OnEvent(Hazard::Event& e) override;
 
 		void Close() override;
 

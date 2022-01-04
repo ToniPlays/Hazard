@@ -11,7 +11,7 @@ namespace WindowElement {
 		Properties();
 		~Properties() = default;
 
-		void Init();
+		void Init() override;
 		void OnUpdate() override;
 		void OnWindowRender() override;
 		bool OnEvent(Event& e) override;

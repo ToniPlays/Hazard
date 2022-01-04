@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Input.h"
 #include "Style.h"
@@ -405,7 +404,7 @@ namespace WindowElement {
 
 		if (meta.Has<HeaderAttribute>()) {
 			Style::SelectFont(1);
-			ImGui::Text(meta.Get<HeaderAttribute>().Header.c_str());
+			ImGui::Text("%s", meta.Get<HeaderAttribute>().Header.c_str());
 			ImGui::PopFont();
 		}
 
@@ -417,6 +416,8 @@ namespace WindowElement {
 			if (modified) 
 				field->SetValue<float>(value, runtime);
 		}
+            default:
+                return false;
 		}
 		return modified;
 	}

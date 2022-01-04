@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Style.h"
 
@@ -63,6 +62,7 @@ ImVec4 Style::AssetTypeColor(Hazard::AssetType type)
 	case AssetType::Mesh:				return ColorAsImVec4(GetStyleColor(ColorType::Info));
 	case AssetType::PhysicsMaterial:	return ColorAsImVec4(GetStyleColor(ColorType::Primary));
 	case AssetType::EnvironmentMap:		return ColorAsImVec4(Style::GetStyleColor(ColorType::Trace));
+    default:                            return ColorAsImVec4(GetStyleColor(ColorType::Text));
 	}
 }
 ImGuiTreeNodeFlags Style::GetTreeNodeDefaultFlags()
