@@ -7,6 +7,12 @@
 #include "Hazard/Utils/File.h"
 #include "Hazard/Utils/StringUtil.h"
 
+#if _WIN32
+#define DEFAULT_PATH ""
+#else
+#define PATH_PREFIX "../../../HazardLauncher/"
+#endif
+
 struct CreateProjectInfo {
 	std::string ProjectName;
 	std::filesystem::path Path;
@@ -16,7 +22,10 @@ using namespace Hazard;
 
 static void CreateProject(CreateProjectInfo* info) {
 	std::cout << "Creating project: " << info->ProjectName << std::endl;
-	File::Copy("./res/TemplateProject", info->Path, CopyOptions::Recursive);
+
+    std::cout << File::GetFileAbsolutePath(PATH_PREFIX "res/TemplateProject") << std::endl;
+    
+	File::Copy(PATH_PREFIX "res/TemplateProject", info->Path, CopyOptions::Recursive);
 
 	{
 		std::ifstream stream(info->Path / "premake5.lua");
@@ -44,18 +53,23 @@ static void CreateProject(CreateProjectInfo* info) {
 	}
 	//Run premake script
 	std::string batchFilePath = info->Path.string();
-	std::replace(batchFilePath.begin(), batchFilePath.end(), '/', '\\');
+#ifdef HZR_PLATFORM_WINDOWS
+    std::replace(batchFilePath.begin(), batchFilePath.end(), '/', '\\');
 	batchFilePath += "\\Win-CreateScriptProject.bat";
+#else
+    batchFilePath += "/Mac-CreateScriptProject.sh";
+#endif
+    std::cout << "Running: " << batchFilePath << std::endl;
 	system(batchFilePath.c_str());
 }
 
 int main() {
 
 	CreateProjectInfo info = {};
-
+    
 	std::cout << "Create project" << std::endl;
 
-	info.Path = File::SaveFile("");
+	info.Path = File::SaveFolderDialog();
 	info.ProjectName = File::GetName(info.Path.string());
 
 

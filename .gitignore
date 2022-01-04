@@ -38,3 +38,5 @@ Makefile
 *.pdb
 *.obj
 !HazardEditor/res/**/*.obj
+*.xcscheme
+*.xcbkptlist

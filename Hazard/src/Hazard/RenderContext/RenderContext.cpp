@@ -10,7 +10,6 @@ namespace Hazard::Rendering {
 	RenderContext::RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) : Module::Module("RenderContext")
 	{
 		HZR_PROFILE_FUNCTION();
-		m_CurrentAPI = info->Renderer == RenderAPI::Auto ? RenderAPI::Vulkan : info->Renderer;
 		m_ClearColor = info->Color;
 		m_ImagesInFlight = info->ImagesInFlight;
 		RenderContextCommand::Init(this);
@@ -18,6 +17,9 @@ namespace Hazard::Rendering {
 		m_Window = Window::Create(info, appInfo);
 		m_Window->SetEventCallback(BIND_EVENT(RenderContext::Process));
 
+        m_CurrentAPI = m_Window->GetWindowInfo().SelectedAPI;
+        HZR_CORE_ASSERT(m_CurrentAPI != RenderAPI::Auto, "RenderAPI cannot be auto after window creation");
+        
 		if (appInfo->IconCount > 0)
 			m_Window->SetWindowIcon(appInfo->IconCount, appInfo->Icons);
 

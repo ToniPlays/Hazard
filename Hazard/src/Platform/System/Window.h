@@ -15,6 +15,7 @@ namespace Hazard::Rendering {
 		std::string Title;
 		const char* Platform;
 		DeviceSpec deviceSpecs;
+        RenderAPI SelectedAPI = RenderAPI::Auto;
 
 		bool VSync = false;
 		bool focus = true;

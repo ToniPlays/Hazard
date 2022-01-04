@@ -3,6 +3,7 @@
 #include "RenderCommandBuffer.h"
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"
+#include "Platform/Rendering/Metal/Metal.h"
 
 #include "RenderCommand.h"
 
@@ -19,7 +20,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(count, debugName);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+            case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(count, debugName);
 #endif
 		default:
 			HZR_CORE_ASSERT(false, "Unknown RendererAPI");

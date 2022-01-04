@@ -23,10 +23,10 @@ namespace Hazard::Rendering
         if (info->Renderer == RenderAPI::Auto) {
             info->Renderer = RenderAPI::Metal;
         }
-
         
         m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
         m_WindowData.Platform = "MacOS";
+        m_WindowData.SelectedAPI = info->Renderer;
         m_WindowData.Width = info->Width;
         m_WindowData.Height = info->Height;
         m_WindowData.VSync = info->VSync;

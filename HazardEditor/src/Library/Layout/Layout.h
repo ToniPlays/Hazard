@@ -1,5 +1,5 @@
 #pragma once
-#include <hzrpch.h>
+
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "Platform/GLFW/FontAwesome.h"

@@ -34,6 +34,7 @@ namespace Hazard::Rendering {
 
 		m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
 		m_WindowData.Platform = "Windows";
+        m_WindowData.SelectedAPI = info->Renderer;
 		m_WindowData.Width = info->Width;
 		m_WindowData.Height = info->Height;
 		m_WindowData.VSync = info->VSync;

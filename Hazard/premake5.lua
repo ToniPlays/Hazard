@@ -47,6 +47,7 @@ project "Hazard"
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
+		"%{IncludeDir.NativeFileDialogs}",
 		"%{IncludeDir.VMA}"
 	}
 

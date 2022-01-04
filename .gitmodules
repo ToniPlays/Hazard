@@ -19,3 +19,6 @@
 [submodule "Hazard/vendor/Metal-CPP"]
 	path = Hazard/vendor/Metal-CPP
 	url = https://github.com/bkaradzic/metal-cpp
+[submodule "Hazard/vendor/nfd-extended"]
+	path = Hazard/vendor/nfd-extended
+	url = https://github.com/btzy/nativefiledialog-extended

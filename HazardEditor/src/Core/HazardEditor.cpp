@@ -65,11 +65,11 @@ void EditorApplication::Init()
 #ifdef HZR_PLATFORM_WINDOWS
 	HZR_PROFILE_FUNCTION();
 	PushModule<WindowElement::EditorView>();
-	Runtime::SceneRuntimeHandler::Init();
-
-	Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	manager.Load("C:/dev/HazardCraft/project.hzrproj");
 #endif
+    Runtime::SceneRuntimeHandler::Init();
+
+    Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
+    manager.Load("../HazardCraft/project.hzrproj");
 }
 
 bool EditorApplication::OnEvent(Event& e)

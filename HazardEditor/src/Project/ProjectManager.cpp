@@ -20,14 +20,13 @@ namespace Project {
 	bool ProjectManager::Load(const std::string& path)
 	{
 		using namespace WindowElement;
-		HazardProject* project = new HazardProject();
-		std::ifstream stream(path);
-
-		if (!stream.good())
-		{
-			delete project;
-			return false;
-		}
+        
+        if(!File::Exists(path)) {
+            HZR_CORE_WARN("Project file does not exist");
+            return false;
+        }
+        
+        HazardProject* project = new HazardProject();
 
 		YAML::Node root = YAML::LoadFile(path);
 
