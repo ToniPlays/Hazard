@@ -9,6 +9,7 @@ namespace Hazard::Rendering::Metal
     MetalContext::MetalContext(WindowProps* props)
     {
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        s_Instance = this;
     }
     MetalContext::~MetalContext() {
         
@@ -16,6 +17,7 @@ namespace Hazard::Rendering::Metal
     void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo)
     {
         m_Device = MTL::CreateSystemDefaultDevice();
+        m_CommandQueue = m_Device->newCommandQueue();
     }
     void MetalContext::SetViewport(int x, int y, int w, int h) {
         

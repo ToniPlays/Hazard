@@ -4,7 +4,6 @@
 
 #define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3.h>
-//#include <GLFW/glfw3native.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -32,13 +31,18 @@ namespace Hazard::Rendering::Metal
 
         void AddResizeCallback(const ResizeCallback& callback) override { m_ResizeCallback.push_back(callback); };
         
+        static MTL::Device* GetMetalDevice() { return s_Instance->m_Device; }
+        static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_CommandQueue; }
+        
     private:
         GLFWwindow* m_Window;
         glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
         static ErrorCallback s_Callback;
         std::vector<ResizeCallback> m_ResizeCallback;
         
-        MTL::Device* m_Device;
+        inline static MetalContext* s_Instance;
         
+        MTL::Device* m_Device;
+        MTL::CommandQueue* m_CommandQueue;
     };
 }

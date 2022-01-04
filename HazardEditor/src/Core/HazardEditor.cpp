@@ -4,8 +4,14 @@
 #include "GUI/EditorView.h"
 #include "SceneRuntimeHandler.h"
 #include "Project/ProjectManager.h"
+#include "Editor/EditorCamera.h"
 
 using namespace Hazard;
+
+#if 1
+Ref<Rendering::WorldRenderer> renderer;
+Editor::EditorCamera camera;
+#endif
 
 void EditorApplication::PreInit()
 {
@@ -69,7 +75,20 @@ void EditorApplication::Init()
     Runtime::SceneRuntimeHandler::Init();
 
     Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-    manager.Load("../HazardCraft/project.hzrproj");
+    manager.Load("/Users/tonisimoska/HazardCraft/project.hzrproj");
+    
+#if 1
+    using namespace Hazard::Rendering;
+    
+    
+    WorldRendererSettings settings = {};
+    settings.Camera = &camera;
+    settings.ViewportSize = { 1920, 1080 };
+    settings.ClearColor = Color::FromHex("#101010");
+    settings.LineWidth = 5.0f;
+    settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
+    renderer = WorldRenderer::Create(&settings);
+#endif
 }
 
 bool EditorApplication::OnEvent(Event& e)
