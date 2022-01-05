@@ -9,7 +9,7 @@
 #include "Platform/GLFW/FontAwesome.h"
 #include "Platform/RenderPlatforms.h"
 
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 using namespace Hazard;
 

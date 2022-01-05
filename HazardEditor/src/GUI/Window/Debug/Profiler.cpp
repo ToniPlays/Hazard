@@ -28,7 +28,7 @@ namespace WindowElement {
 		for (auto instrument : m_Data) {
 			std::stringstream ss;
 			ss << instrument.name << " duration: " << instrument.duration / 1000.0f << "ms";
-			ImGui::Text(ss.str().c_str());
+			ImGui::Text("%s", ss.str().c_str());
 		}
 	}
 	void Profiler::GenerateSequence(const std::string& file)

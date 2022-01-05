@@ -10,7 +10,7 @@ namespace Hazard
 		ScopedTimer(const std::string& name): m_Name(name) {}
 		~ScopedTimer()
 		{
-			float time = m_Timer.ElapsedMillis();
+
 		}
 	private:
 		std::string m_Name;

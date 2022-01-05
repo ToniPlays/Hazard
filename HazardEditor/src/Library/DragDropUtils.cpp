@@ -12,8 +12,8 @@ namespace WindowElement
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 		{
 			ImGui::SetDragDropPayload(type, (void*)handle, 256);
-			ImGui::Text(text.c_str());
-			ImGui::Text(type);
+			ImGui::Text("%s", text.c_str());
+			ImGui::Text("%s", type);
 			ImGui::EndDragDropSource();
 			return true;
 		}

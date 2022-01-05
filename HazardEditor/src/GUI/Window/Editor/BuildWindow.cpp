@@ -1,6 +1,6 @@
 
 #include "BuildWindow.h"
-#include "library/Layout/Layout.h"
+#include "Library/Layout/Layout.h"
 #include "imgui.h"
 #include "Library/Input.h"
 #include "Library/DragDropUtils.h"
@@ -57,7 +57,7 @@ namespace WindowElement
 
 			ss << "Size: " << Hazard::StringUtil::BytesToString(m_Report.TotalSize);
 
-			ImGui::Text(ss.str().c_str());
+			ImGui::Text("%s", ss.str().c_str());
 			Layout::TableNext();
 			ImGui::Text("Time: %.2f", m_Report.BuildTime / 1000.0f);
 
@@ -77,7 +77,7 @@ namespace WindowElement
 				Layout::SameLine();
 				Layout::ShiftX(15);
 				ImGui::PopStyleColor();
-				ImGui::Text(Hazard::Utils::AssetTypeToString(type));
+				ImGui::Text("%s", Hazard::Utils::AssetTypeToString(type));
 				Layout::ShiftY(5.0f);
 			}
 		}
@@ -91,7 +91,7 @@ namespace WindowElement
 			{
 				for (auto& resources : resources) {
 					Layout::ShiftX(5.0f);
-					ImGui::Text(resources.FileName.c_str());
+					ImGui::Text("%s", resources.FileName.c_str());
 				}
 			}
 			ImGui::EndChild();
@@ -146,7 +146,7 @@ namespace WindowElement
 
 			for (auto world : m_BuildSettings.m_Worlds)
 			{
-				ImGui::Text(world.Path.string().c_str());
+				ImGui::Text("%s", world.Path.string().c_str());
 			}
 
 			ImGui::EndChild();

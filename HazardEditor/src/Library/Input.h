@@ -32,7 +32,7 @@ namespace WindowElement {
 			ImGui::PopID();
 			WindowLayout::Layout::NextLine(1);
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 5);
-			ImGui::TextWrapped(name);
+			ImGui::TextWrapped("%s", name);
 			ImGui::EndChild();
 			return false;
 		}

@@ -73,7 +73,7 @@ namespace WindowElement {
 
 		std::string projectName = manager->GetProject().Name;
 		ImGui::SetCursorPosX(ImGui::CalcTextSize(projectName.c_str()).x / 2.0f);
-		ImGui::Text(projectName.c_str());
+		ImGui::Text("%s", projectName.c_str());
 
 		ImGui::EndChild();
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0)) {

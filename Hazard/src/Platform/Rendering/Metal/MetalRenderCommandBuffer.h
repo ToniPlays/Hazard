@@ -15,13 +15,18 @@ namespace Hazard::Rendering::Metal {
         ~MetalRenderCommandBuffer() = default;
 
         virtual uint32_t GetFrameIndex() { return 0; };
+        MTL::CommandBuffer* GetMetalCommandBuffer() { return m_CommandBuffer; }
 
-        void Begin() {};
-        void End() {};
-        void Submit() {};
+        void Begin();
+        void End();
+        void Submit();
+        
+        void BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor);
+        void EndRenderEncoder() { m_Encoder->endEncoding(); }
         
     private:
-        std::vector<MTL::CommandBuffer*> m_CommandBuffers;
-        
+        bool m_OwnedBySwapchain;
+        MTL::CommandBuffer* m_CommandBuffer;
+        MTL::RenderCommandEncoder* m_Encoder;
     };
 }

@@ -9,16 +9,16 @@ namespace Hazard::Rendering::Metal
     {
     public:
         MetalPipeline(PipelineSpecification* specs);
-        virtual ~MetalPipeline() {};
+        virtual ~MetalPipeline();
 
         PipelineSpecification GetSpecifications() override { return m_Specs; }
         const PipelineSpecification GetSpecifications() const override { return m_Specs; }
         Ref<Shader> GetShader() override { return m_Shader; }
 
-        void Invalidate() override {};
-        void Bind(Ref<RenderCommandBuffer> commandBuffer) override {};
-        void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override {};
-        void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override {};
+        void Invalidate() override;
+        void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
+        void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
+        void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
 
     private:
         PipelineSpecification m_Specs;

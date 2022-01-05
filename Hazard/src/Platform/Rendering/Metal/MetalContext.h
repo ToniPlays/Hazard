@@ -2,15 +2,13 @@
 
 #include "Platform/Rendering/GraphicsContext.h"
 
-#define GLFW_EXPOSE_NATIVE_COCOA
-#include <GLFW/glfw3.h>
-
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
 
 namespace Hazard::Rendering::Metal
 {
+    struct GLFWwindow;
+    class MetalLayer;
+
     class MetalContext : public GraphicsContext {
     public:
         MetalContext(WindowProps* props);
@@ -43,6 +41,7 @@ namespace Hazard::Rendering::Metal
         inline static MetalContext* s_Instance;
         
         MTL::Device* m_Device;
+        MetalLayer* m_MetalLayer;
         MTL::CommandQueue* m_CommandQueue;
     };
 }

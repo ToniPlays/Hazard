@@ -93,7 +93,7 @@ namespace WindowElement
 			}); 
 
 		ImGui::SameLine(0, 5);
-		ImGui::Text(File::GetNameNoExt(manager.GetProject().StartupWorld).c_str());
+		ImGui::Text("%s", File::GetNameNoExt(manager.GetProject().StartupWorld).c_str());
 
 		Layout::TableNext();
 		Layout::EndTable();

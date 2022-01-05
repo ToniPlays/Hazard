@@ -1,7 +1,7 @@
 
 #include "WelcomePopup.h"
 #include "Library/Layout/Layout.h"
-#include "Gui/EditorView.h"
+#include "GUI/EditorView.h"
 #include "Library/Input.h"
 #include "Project/ProjectManager.h"
 

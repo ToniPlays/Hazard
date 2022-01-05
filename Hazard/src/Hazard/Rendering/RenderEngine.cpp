@@ -17,13 +17,11 @@ namespace Hazard::Rendering
 
 		RenderCommand::s_Engine = this;
 		RenderCommand::s_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
-
-        HZR_CORE_INFO("What do you mean dude?");
         
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
        
-		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
+		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("RenderEngine");
 		m_Queue = new RenderCommandQueue();
 		m_PostPassQueue = new RenderCommandQueue(1024 * 1024);
 

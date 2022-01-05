@@ -56,8 +56,7 @@ namespace Hazard::Scripting::CSharp
 	std::string ScriptUtils::MonoObjectToChar(MonoObject* object)
 	{
 		if (object == nullptr) {
-			char* a = "NULL";
-			return a;
+			return "NULL";
 		}
 		MonoString* string = mono_object_to_string(object, nullptr);
 		std::string b = MonoStringToString(string);

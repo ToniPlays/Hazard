@@ -8,15 +8,29 @@ namespace Hazard::Rendering::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t size, const std::string& name)
     {
-        m_CommandBuffers.reserve(size);
-        MTL::CommandQueue* queue = MetalContext::GetMetalCommandQueue();
-        
-        for(uint32_t i = 0; i < size; i++) {
-            m_CommandBuffers[i] = queue->commandBuffer();
-        }
+        HZR_CORE_INFO("Creating command buffer for {0}", name);
     }
-    MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain)
+    MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain) : m_OwnedBySwapchain((swapchain))
     {
         HZR_CORE_INFO("Generating command buffers");
+    }
+    void MetalRenderCommandBuffer::Begin()
+    {
+        MTL::CommandQueue* queue = MetalContext::GetMetalCommandQueue();
+        m_CommandBuffer = queue->commandBuffer();
+    }
+    void MetalRenderCommandBuffer::End()
+    {
+        
+    }
+    void MetalRenderCommandBuffer::Submit()
+    {
+        if(m_OwnedBySwapchain) {}
+        //m_CommandBuffer->present();
+        m_CommandBuffer->commit();
+    }
+    void MetalRenderCommandBuffer::BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor)
+    {
+        m_Encoder = m_CommandBuffer->renderCommandEncoder(descriptor);
     }
 }

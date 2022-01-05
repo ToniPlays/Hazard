@@ -7,9 +7,9 @@
 #include "GUI/EditorView.h"
 #include "Core/SceneRuntimeHandler.h"
 
-#include "Gui/Window/Rendering/Viewport.h"
-#include "Gui/Window/Rendering/GameViewport.h"
-#include "Gui/Window/Rendering/WorldEnvironmentData.h"
+#include "GUI/Window/Rendering/Viewport.h"
+#include "GUI/Window/Rendering/GameViewport.h"
+#include "GUI/Window/Rendering/WorldEnvironmentData.h"
 
 using namespace WindowLayout;
 

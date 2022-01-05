@@ -18,7 +18,7 @@ namespace WindowElement {
 	{
 		if (!selectionContext.IsValid()) return;
 
-		ImGui::Text(selectionContext.GetTag().Tag.c_str());
+		ImGui::Text("%s", selectionContext.GetTag().Tag.c_str());
 		if (!selectionContext.HasComponent<MeshComponent>()) return;
 
 		/*MeshComponent meshComponent = selectionContext.GetComponent<MeshComponent>();

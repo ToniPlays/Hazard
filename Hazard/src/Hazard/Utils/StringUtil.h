@@ -37,7 +37,7 @@ namespace Hazard
 		template<typename T>
 		static std::string FormatNumber(T number) {
 			std::string num = std::to_string(number);
-			int n = num.length() - 3;
+			int n = (int)num.length() - 3;
 
 			while (n > 0) {
 				num.insert(n, ",");

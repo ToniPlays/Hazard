@@ -2,29 +2,35 @@
 
 #include "Hazard/Rendering/Pipeline/Buffers.h"
 
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace Hazard::Rendering::Metal
 {
     class MetalVertexBuffer : public VertexBuffer
     {
     public:
-        MetalVertexBuffer(VertexBufferCreateInfo* createInfo) {};
-        ~MetalVertexBuffer() {};
+        MetalVertexBuffer(VertexBufferCreateInfo* createInfo);
+        ~MetalVertexBuffer();
 
         void Bind(Ref<RenderCommandBuffer> cmdBuffer) override {};
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override {};
-        void SetData(const void* data, uint32_t size) override {};
+        void SetData(const void* data, uint32_t size) override;
         uint32_t GetSize() override { return m_Size; }
 
     private:
         BufferUsage m_Usage;
         uint32_t m_Size;
+        
+        MTL::Buffer* m_Buffer;
     };
 
     class MetalIndexBuffer : public IndexBuffer
     {
     public:
-        MetalIndexBuffer(IndexBufferCreateInfo* createInfo) {};
-        ~MetalIndexBuffer() {};
+        MetalIndexBuffer(IndexBufferCreateInfo* createInfo);
+        ~MetalIndexBuffer();
 
         void Bind(Ref<RenderCommandBuffer> cmdBuffer) override {};
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override {};
@@ -36,6 +42,8 @@ namespace Hazard::Rendering::Metal
 
         BufferUsage m_Usage;
         uint32_t m_Size;
+        
+        MTL::Buffer* m_Buffer;
 
     };
     class MetalUniformBuffer : public UniformBuffer

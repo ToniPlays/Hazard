@@ -40,7 +40,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(debugName, true);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+        case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, true);
 #endif
 		default:
 			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
