@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Platform/Rendering/GraphicsContext.h"
-
 #include <Metal/Metal.hpp>
+
+#include <GLFW/glfw3.h>
 
 namespace Hazard::Rendering::Metal
 {
-    struct GLFWwindow;
     class MetalLayer;
 
     class MetalContext : public GraphicsContext {
@@ -28,7 +28,7 @@ namespace Hazard::Rendering::Metal
         DeviceSpec GetDeviceSpec() const override;
 
         void AddResizeCallback(const ResizeCallback& callback) override { m_ResizeCallback.push_back(callback); };
-        
+        static void Present(MTL::CommandBuffer* buffer);
         static MTL::Device* GetMetalDevice() { return s_Instance->m_Device; }
         static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_CommandQueue; }
         

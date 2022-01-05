@@ -27,8 +27,7 @@ namespace Hazard::Rendering::Metal
     void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo)
     {
         m_Device = MTL::CreateSystemDefaultDevice();
-        m_MetalLayer = new MetalLayer();
-        
+        m_MetalLayer = new MetalLayer((GLFWwindow*)window->GetNativeWindow(), m_Device);
         m_CommandQueue = m_Device->newCommandQueue();
     }
     void MetalContext::SetViewport(int x, int y, int w, int h) {
@@ -80,5 +79,9 @@ namespace Hazard::Rendering::Metal
         DeviceSpec spec = {};
         spec.Name = m_Device->name()->utf8String();
         return spec;
+    }
+    void MetalContext::Present(MTL::CommandBuffer* buffer) {
+        s_Instance->m_MetalLayer->Present(buffer);
+        
     }
 }

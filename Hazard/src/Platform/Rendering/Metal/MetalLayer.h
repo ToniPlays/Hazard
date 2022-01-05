@@ -1,17 +1,25 @@
 #pragma once
 
-namespace CA
+
+
+struct GLFWwindow;
+
+namespace MTL
 {
-    class MetalLayer;
+class Device;
+class CommandBuffer;
 }
 
 namespace Hazard::Rendering::Metal
 {
     class MetalLayer {
     public:
-        MetalLayer();
+        MetalLayer(GLFWwindow* window, MTL::Device* device);
         ~MetalLayer() = default;
+        
+        void Present(MTL::CommandBuffer* buffer);
+        
     private:
-        CA::MetalLayer* m_Layer;
+        
     };
 }

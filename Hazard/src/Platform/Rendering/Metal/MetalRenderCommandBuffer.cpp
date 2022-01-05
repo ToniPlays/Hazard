@@ -3,7 +3,6 @@
 #include "MetalRenderCommandBuffer.h"
 #include "MetalContext.h"
 
-
 namespace Hazard::Rendering::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t size, const std::string& name)
@@ -26,7 +25,7 @@ namespace Hazard::Rendering::Metal
     void MetalRenderCommandBuffer::Submit()
     {
         if(m_OwnedBySwapchain) {}
-        //m_CommandBuffer->present();
+        MetalContext::Present(m_CommandBuffer);
         m_CommandBuffer->commit();
     }
     void MetalRenderCommandBuffer::BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor)
