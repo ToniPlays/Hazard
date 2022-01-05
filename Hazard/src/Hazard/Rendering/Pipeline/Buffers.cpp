@@ -5,6 +5,7 @@
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"
+#include "Platform/Rendering/Metal/Metal.h"
 
 namespace Hazard::Rendering {
 
@@ -19,7 +20,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+        case RenderAPI::Metal: return Ref<Metal::MetalVertexBuffer>::Create(createInfo);
 #endif
 		default:
 			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
@@ -38,7 +39,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+        case RenderAPI::Metal: return Ref<Metal::MetalIndexBuffer>::Create(createInfo);
 #endif
 		default:
 			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
@@ -57,7 +58,7 @@ namespace Hazard::Rendering {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+        case RenderAPI::Metal: return Ref<Metal::MetalUniformBuffer>::Create(createInfo);
 #endif
 		default:
 			HZR_CORE_ASSERT(false, "Unknown RendererAPI");

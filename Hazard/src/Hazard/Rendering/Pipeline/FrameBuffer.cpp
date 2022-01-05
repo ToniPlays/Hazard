@@ -22,7 +22,7 @@ namespace Hazard::Rendering
         case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);
 #endif
 		default:
-			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
+			HZR_CORE_ASSERT(false, "Unknown RendererAPI, {0}", RenderContext::APIToString(RenderCommand::GetAPI()));
 			return nullptr;
 		}
 		return nullptr;

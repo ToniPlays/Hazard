@@ -11,9 +11,9 @@ namespace Hazard::Rendering::Metal
         MetalPipeline(PipelineSpecification* specs);
         virtual ~MetalPipeline() {};
 
-        PipelineSpecification GetSpecifications() { return m_Specs; }
-        const PipelineSpecification GetSpecifications() const { return m_Specs; }
-        Ref<Shader> GetShader() { return m_Shader; }
+        PipelineSpecification GetSpecifications() override { return m_Specs; }
+        const PipelineSpecification GetSpecifications() const override { return m_Specs; }
+        Ref<Shader> GetShader() override { return m_Shader; }
 
         void Invalidate() override {};
         void Bind(Ref<RenderCommandBuffer> commandBuffer) override {};
