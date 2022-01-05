@@ -26,9 +26,9 @@ namespace Hazard::Rendering::Metal
     }
     void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo)
     {
-        m_Device = MTL::CreateSystemDefaultDevice();
-        m_MetalLayer = new MetalLayer((GLFWwindow*)window->GetNativeWindow(), m_Device);
-        m_CommandQueue = m_Device->newCommandQueue();
+        //m_Device = MTL::CreateSystemDefaultDevice();
+        m_MetalLayer = new MetalLayer((GLFWwindow*)window->GetNativeWindow());
+        m_CommandQueue = GetMetalDevice()->newCommandQueue();
     }
     void MetalContext::SetViewport(int x, int y, int w, int h) {
         
@@ -54,12 +54,15 @@ namespace Hazard::Rendering::Metal
         MTL::ClearColor clearColor = { spec.ClearColor.r, spec.ClearColor.g, spec.ClearColor.b, spec.ClearColor.a };
         
         MTL::RenderPassDescriptor* renderPassDescriptor = MTL::RenderPassDescriptor::alloc()->init();
-        renderPassDescriptor->setRenderTargetWidth(spec.Width);
-        renderPassDescriptor->setRenderTargetHeight(spec.Height);
+        renderPassDescriptor->setRenderTargetWidth(1280);
+        renderPassDescriptor->setRenderTargetHeight(720);
         renderPassDescriptor->setDefaultRasterSampleCount(1);
         
         MTL::RenderPassColorAttachmentDescriptor* colorAttachment = renderPassDescriptor->colorAttachments()->object(0);
         colorAttachment->setClearColor(clearColor);
+        colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
+        colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
+        colorAttachment->setTexture(m_MetalLayer->GetDrawableTexture());
         
         buffer.As<MetalRenderCommandBuffer>()->BeginRenderEncoder(renderPassDescriptor);
     }
@@ -77,11 +80,15 @@ namespace Hazard::Rendering::Metal
     DeviceSpec MetalContext::GetDeviceSpec() const
     {
         DeviceSpec spec = {};
-        spec.Name = m_Device->name()->utf8String();
+        spec.Name = GetMetalDevice()->name()->utf8String();
         return spec;
     }
     void MetalContext::Present(MTL::CommandBuffer* buffer) {
         s_Instance->m_MetalLayer->Present(buffer);
         
+    }
+    MTL::Device* MetalContext::GetMetalDevice()
+    {
+        return s_Instance->m_MetalLayer->GetDevice();
     }
 }

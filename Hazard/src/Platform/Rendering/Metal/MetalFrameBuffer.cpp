@@ -27,7 +27,6 @@ namespace Hazard::Rendering::Metal
             m_Specs.Height = (uint32_t)info->Height;
         }
         
-        
         Resize(m_Specs.Width, m_Specs.Height, true);
     }
     MetalFrameBuffer::~MetalFrameBuffer() {
@@ -35,7 +34,17 @@ namespace Hazard::Rendering::Metal
     }
     void MetalFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
     {
-    
+        if (!force && (width == m_Specs.Width && height == m_Specs.Height))
+            return;
+        
+        m_Specs.Width = width;
+        m_Specs.Height = height;
+        
+        if(!m_Specs.SwapChainTarget) {
+            Invalidate();
+            return;
+        }
+        
     }
     void MetalFrameBuffer::Bind() const {
         

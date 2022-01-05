@@ -3,6 +3,9 @@
 #include "Hazard/Rendering/Pipeline/Pipeline.h"
 #include "Hazard/Rendering/Pipeline/Shader.h"
 
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+
 namespace Hazard::Rendering::Metal
 {
     class MetalPipeline : public Pipeline
@@ -24,5 +27,7 @@ namespace Hazard::Rendering::Metal
         PipelineSpecification m_Specs;
         Ref<Shader> m_Shader;
         uint32_t m_DrawType, m_PolygonMode;
+        
+        MTL::RenderPipelineState* m_Pipeline;
     };
 }

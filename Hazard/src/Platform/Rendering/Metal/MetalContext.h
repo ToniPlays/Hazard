@@ -29,7 +29,7 @@ namespace Hazard::Rendering::Metal
 
         void AddResizeCallback(const ResizeCallback& callback) override { m_ResizeCallback.push_back(callback); };
         static void Present(MTL::CommandBuffer* buffer);
-        static MTL::Device* GetMetalDevice() { return s_Instance->m_Device; }
+        static MTL::Device* GetMetalDevice();
         static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_CommandQueue; }
         
     private:
@@ -40,7 +40,6 @@ namespace Hazard::Rendering::Metal
         
         inline static MetalContext* s_Instance;
         
-        MTL::Device* m_Device;
         MetalLayer* m_MetalLayer;
         MTL::CommandQueue* m_CommandQueue;
     };

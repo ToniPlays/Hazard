@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "MetalBuffers.h"
 #include "MetalContext.h"
+#include "MetalRenderCommandBuffer.h"
 
 namespace Hazard::Rendering::Metal
 {
@@ -20,6 +21,20 @@ namespace Hazard::Rendering::Metal
     {
         m_Buffer = nullptr;
     }
+    void MetalVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
+    {
+        auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
+        auto encoder = mtCmdBuffer->GetEncoder();
+        
+        encoder->setVertexBuffer(m_Buffer, 0, 0);
+    }
+    
+    void MetalVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
+    {
+        auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
+        auto encoder = mtCmdBuffer->GetEncoder();
+    }
+
     void MetalVertexBuffer::SetData(const void *data, uint32_t size) {
         void* contents = m_Buffer->contents();
         memcpy(contents, data, size);

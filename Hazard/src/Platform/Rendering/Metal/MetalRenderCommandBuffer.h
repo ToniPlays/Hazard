@@ -16,7 +16,8 @@ namespace Hazard::Rendering::Metal {
 
         virtual uint32_t GetFrameIndex() { return 0; };
         MTL::CommandBuffer* GetMetalCommandBuffer() { return m_CommandBuffer; }
-
+        MTL::RenderCommandEncoder* GetEncoder() { return m_Encoder; }
+        
         void Begin();
         void End();
         void Submit();
