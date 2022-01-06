@@ -301,10 +301,10 @@ namespace Hazard::Rendering::Vulkan
 			bufferInfo.Binding = spec.Binding;
 			bufferInfo.Size = spec.Size;
 			bufferInfo.Usage = spec.ShaderUsage;
+			bufferInfo.IsShared = spec.Name != "Model";
 
 			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
-
 		//Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
 	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)

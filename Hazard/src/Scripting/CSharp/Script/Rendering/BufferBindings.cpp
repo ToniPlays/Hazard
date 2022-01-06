@@ -36,6 +36,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
         CSharpInfo* cInfo = static_cast<CSharpInfo*>(createInfo);
 
         VertexBufferCreateInfo info = {};
+        info.DebugName = "C#CreatedVertexBuffer";
+        info.IsShared = false;
         info.Size = cInfo->size;
         info.Usage = cInfo->usage;
         info.Data = cInfo->data ? Mono::GetArrayValuePointer(cInfo->data) : nullptr;

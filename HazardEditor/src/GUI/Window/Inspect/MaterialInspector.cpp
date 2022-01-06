@@ -16,10 +16,10 @@ namespace WindowElement {
 	}
 	void MaterialInspector::OnWindowRender()
 	{
-		if (!selectionContext.IsValid()) return;
+		//if (!selectionContext.IsValid()) return;
 
-		ImGui::Text("%s", selectionContext.GetTag().Tag.c_str());
-		if (!selectionContext.HasComponent<MeshComponent>()) return;
+		//ImGui::Text("%s", selectionContext.GetTag().Tag.c_str());
+		//if (!selectionContext.HasComponent<MeshComponent>()) return;
 
 		/*MeshComponent meshComponent = selectionContext.GetComponent<MeshComponent>();
 		Layout::Table(2, false);

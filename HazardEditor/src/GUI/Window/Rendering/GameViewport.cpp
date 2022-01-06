@@ -16,14 +16,14 @@ namespace WindowElement {
 	void GameViewport::Init()
 	{
 		SetActive(false);
-		if (!IsActive()) return;
+		return;
 
-		// WorldRendererSettings settings = {};
-		// settings.ViewportSize = { 1920, 1080 };
-		// settings.Camera = &m_Camera;
-		// settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
-		// settings.ClearColor = Color::FromHex("#646464");
-		// m_Renderer = WorldRenderer::Create(&settings);
+		WorldRendererSettings settings = {};
+		settings.ViewportSize = { 1920, 1080 };
+		settings.Camera = &m_Camera;
+		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
+		settings.ClearColor = Color::FromHex("#646464");
+		m_Renderer = WorldRenderer::Create(&settings);
 	}
 	void GameViewport::OnUpdate()
 	{

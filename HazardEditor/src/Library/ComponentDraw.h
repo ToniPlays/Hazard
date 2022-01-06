@@ -344,19 +344,30 @@ namespace WindowElement {
 			Layout::Text("Mesh");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			Ref<Rendering::Mesh> mesh = component.m_Mesh;
 
-			std::string file = "None";
+			std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "None";
 			bool changed = Input::InputField(file);
 
 			DragDropUtils::DragTarget("Mesh", [&](const ImGuiPayload* payload) {
-				file = (const char*)payload->Data;
+				AssetHandle handle = *(AssetHandle*)payload->Data;
+
 				changed = true;
 				});
 
+			if (ImGui::Button("Find")) {
+				std::string path = File::OpenFileDialog("");
+				HZR_ERROR(path);
+				if (!path.empty()) {
+					AssetHandle handle = AssetManager::ImportAsset(path);
+					component.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
+				}
+			}
+
 			if (changed) {
-				if (!File::Exists(file)) return;
-				HZR_INFO("New mesh file {0}", file);
+				if (File::Exists(file)) 
+				{
+					HZR_INFO("New mesh file {0}", file);
+				}
 			}
 			}, []() {
 

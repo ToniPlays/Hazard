@@ -70,7 +70,6 @@ namespace Hazard::Rendering
 			m_RenderPassData.ViewProjection = worldRenderer->GetSettings().Camera->GetViewPprojection();
 
 			m_CameraUBO->SetData(&m_RenderPassData);
-
 			worldRenderer->Begin(m_RenderCommandBuffer, m_Queue);
 
 			if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Enabled)

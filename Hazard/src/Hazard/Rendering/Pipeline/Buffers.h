@@ -44,6 +44,7 @@ namespace Hazard::Rendering
 		uint32_t Size;
 		uint32_t Binding;
 		uint32_t Usage;
+		bool IsShared = true;
 	};
 
 	class VertexBuffer : public Resource
