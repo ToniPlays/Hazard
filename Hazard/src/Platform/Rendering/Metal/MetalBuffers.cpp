@@ -25,19 +25,18 @@ namespace Hazard::Rendering::Metal
     {
         auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
         auto encoder = mtCmdBuffer->GetEncoder();
-        
         encoder->setVertexBuffer(m_Buffer, 0, 0);
     }
     
     void MetalVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
     {
-        auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
-        auto encoder = mtCmdBuffer->GetEncoder();
+        //auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
+        //auto encoder = mtCmdBuffer->GetEncoder();
     }
 
     void MetalVertexBuffer::SetData(const void *data, uint32_t size) {
-        void* contents = m_Buffer->contents();
-        memcpy(contents, data, size);
+        //void* contents = m_Buffer->contents();
+        //memcpy(contents, data, size);
     }
     MetalIndexBuffer::MetalIndexBuffer(IndexBufferCreateInfo* createInfo)
     {

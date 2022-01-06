@@ -4,6 +4,8 @@
 #include "MetalRenderCommandBuffer.h"
 #include "MetalContext.h"
 
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace Hazard::Rendering::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
@@ -62,7 +64,8 @@ namespace Hazard::Rendering::Metal
     }
     void MetalPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {
-        
+        MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        //encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, (NS::UInteger)0, (NS::UInteger)count);
     }
     void MetalPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {

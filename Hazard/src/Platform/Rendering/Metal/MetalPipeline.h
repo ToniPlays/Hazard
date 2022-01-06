@@ -28,6 +28,6 @@ namespace Hazard::Rendering::Metal
         Ref<Shader> m_Shader;
         uint32_t m_DrawType, m_PolygonMode;
         
-        MTL::RenderPipelineState* m_Pipeline;
+        MTL::RenderPipelineState* m_Pipeline = nullptr;
     };
 }
