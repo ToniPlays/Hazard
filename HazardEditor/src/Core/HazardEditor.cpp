@@ -22,8 +22,8 @@ void EditorApplication::PreInit()
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
 	appInfo.Logging = true;
-	//appInfo.IconCount = icons.size();
-	//appInfo.Icons = icons.data();
+	appInfo.IconCount = icons.size();
+	appInfo.Icons = icons.data();
 
 	RenderContexCreateInfo contextInfo = {};
 	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>("RenderAPI");
@@ -45,7 +45,11 @@ void EditorApplication::PreInit()
 	ScriptEngineCreateInfo scriptInfo = {};
 #ifdef HZR_PLATFORM_WINDOWS
 	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore");
-	scriptInfo.CoreAssemblyPath = "c:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
+	scriptInfo.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
+	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/lib";
+	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/etc/";
+
+	
 #else
 	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
 	scriptInfo.MonoDirectoryEtc = "/usr/local/Cellar/mono/6.12.0.122/etc/";
@@ -75,20 +79,7 @@ void EditorApplication::Init()
     Runtime::SceneRuntimeHandler::Init();
 
     Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-    manager.Load("/Users/tonisimoska/HazardCraft/project.hzrproj");
-    
-#if 1
-    using namespace Hazard::Rendering;
-    
-    
-    WorldRendererSettings settings = {};
-    settings.Camera = &camera;
-    settings.ViewportSize = { 1920, 1080 };
-    settings.ClearColor = Color::FromHex("#101010");
-    settings.LineWidth = 5.0f;
-    settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
-    renderer = WorldRenderer::Create(&settings);
-#endif
+	manager.Load(CommandLineArgs::Get<std::string>("ProjectPath"));
 }
 
 bool EditorApplication::OnEvent(Event& e)

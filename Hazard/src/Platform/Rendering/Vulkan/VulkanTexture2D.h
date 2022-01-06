@@ -23,8 +23,6 @@ namespace Hazard::Rendering::Vulkan {
 		bool Loaded() const { return m_Header.ImageData.Data; };
 		ImageFormat GetFormat() const override { return m_Format; }
 
-		uint32_t GetID() const override { return m_ID; }
-
 		float GetAspectRatio() { return (float)m_Header.Width / (float)m_Header.Height; }
 		Buffer GetBuffer() const { return m_Buffer; };
 		Buffer& GetBuffer() { return m_Buffer; }
@@ -35,7 +33,6 @@ namespace Hazard::Rendering::Vulkan {
 
 	private:
 		TextureHeader m_Header;
-		uint32_t m_ID;
 		Ref<VulkanImage2D> m_Image;
 		ImageFormat m_Format;
 		ImageUsage m_Usage;

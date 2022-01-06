@@ -13,7 +13,7 @@ namespace Hazard::Scripting {
 	{
 		HZR_PROFILE_FUNCTION();
 #ifdef HZR_INCLUDE_MONO
-		//m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
+		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
 #endif
 
 		ScriptCommand::Init(*this);

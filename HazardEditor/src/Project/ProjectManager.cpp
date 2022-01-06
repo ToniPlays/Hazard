@@ -3,6 +3,7 @@
 #include "GUI/EditorView.h"
 #include "GUI/Window/Inspect/FileView.h"
 #include "GUI/Window/Tabs/EditorMainTab.h"
+#include "Core/SceneRuntimeHandler.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -77,6 +78,8 @@ namespace Project {
 	}
 	void ProjectManager::SaveCurrentWorld()
 	{
+		if (Runtime::SceneRuntimeHandler::IsSceneRunning()) return;
+
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 		if (world->GetWorldFile().empty()) {
 			std::string filePath = File::SaveFile("");

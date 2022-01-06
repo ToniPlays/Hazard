@@ -29,7 +29,7 @@ namespace Hazard::Rendering::OpenGL
 			m_Specs.Height = window.GetHeight();
 		}
 
-		for (auto attachment : info->Attachments) 
+		for (auto& attachment : info->Attachments) 
 		{
 			if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
 				m_ColorAttachments.emplace_back(attachment);

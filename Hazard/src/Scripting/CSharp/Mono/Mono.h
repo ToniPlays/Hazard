@@ -12,6 +12,7 @@ extern "C"
 	typedef struct _MonoType MonoType;
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoString MonoString;
+	typedef struct _MonoArray MonoArray;
 
 	typedef struct _MonoDomain MonoDomain;
 	typedef struct _MonoAssembly MonoAssembly;
@@ -97,6 +98,10 @@ namespace Hazard::Scripting::CSharp {
 		static std::string GetFieldName(MonoClassField* field);
 		static MonoType* GetFieldType(MonoClassField* field);
 		static MonoClassField* GetMonoField(MonoClass* monoClass, void** iter);
+		static void* GetArrayValuePointer(MonoArray* monoArray);
+
+
+
 		//Type functions
 		static int GetType(MonoType* type);
 		static char* GetTypeName(MonoType* type);
@@ -107,6 +112,7 @@ namespace Hazard::Scripting::CSharp {
 		static FieldVisibility GetVisibility(MonoMethod* field);
 
 		static MonoData& GetData() { return s_Data; }
+		
 	private:
 		static void LoadMonoAssebly(const char* path);
 		static MonoAssembly* LoadAssembly(const char* path);

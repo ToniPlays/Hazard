@@ -12,6 +12,6 @@ namespace Hazard
         
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void AudioSource_Play_Native(ulong id);
+        private static extern void MeshComponent_SetMesh_Native(ulong id);
     }
 }

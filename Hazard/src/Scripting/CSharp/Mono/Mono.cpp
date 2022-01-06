@@ -52,7 +52,8 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void Mono::LoadRuntimeAssembly(const char* path)
 	{
-		if (!File::Exists(path)) {
+		if (!File::Exists(path)) 
+		{
 			HZR_THROW("Runtime assembly does not exist " + std::string(path));
 		}
 		LoadMonoAssebly(path);
@@ -243,6 +244,13 @@ namespace Hazard::Scripting::CSharp {
 	MonoClassField* Mono::GetMonoField(MonoClass* monoClass, void** iter)
 	{
 		return mono_class_get_fields(monoClass, iter);
+	}
+	void* Mono::GetArrayValuePointer(MonoArray* monoArray)
+	{
+		uint32_t size = mono_array_length(monoArray);
+		
+		HZR_CORE_INFO("Array size is {0}", size);
+		return mono_array_addr_with_size(monoArray, size, 0);
 	}
 	int Mono::GetType(MonoType* type)
 	{

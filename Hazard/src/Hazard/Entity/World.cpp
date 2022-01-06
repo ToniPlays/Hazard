@@ -187,7 +187,7 @@ namespace Hazard::ECS
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		// component.Texture = Rendering::RenderCommand::GetWhiteTexture();
+		component.Texture = Rendering::RenderCommand::GetWhiteTexture();
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}

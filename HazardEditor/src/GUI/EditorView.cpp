@@ -81,7 +81,7 @@ namespace WindowElement {
 		PushRenderable<EngineAssets>();
 
 		PushRenderable<Profiler>();
-		PushRenderable<WelcomePopup>();
+		//PushRenderable<WelcomePopup>();
 
 		PushRenderable<SettingsView>();
 		PushRenderable<BuildWindow>();

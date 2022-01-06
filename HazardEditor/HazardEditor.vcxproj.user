@@ -5,7 +5,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-AppCore C:/dev/HazardCraft/assets/Scripts/Binaries/HazardCraft.dll -ProjectPath C:/dev/HazardCraft/project.hzrproj </LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-VSync -AppCore C:/dev/HazardCraft/assets/Scripts/Binaries/HazardCraft.dll -ProjectPath C:/dev/HazardCraft/project.hzrproj </LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LocalDebuggerCommandArguments>

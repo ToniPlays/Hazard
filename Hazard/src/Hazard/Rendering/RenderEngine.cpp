@@ -21,7 +21,7 @@ namespace Hazard::Rendering
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
        
-		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("RenderEngine");
+		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
 		m_Queue = new RenderCommandQueue();
 		m_PostPassQueue = new RenderCommandQueue(1024 * 1024);
 

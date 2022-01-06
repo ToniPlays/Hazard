@@ -75,7 +75,7 @@ namespace Hazard::Rendering::Vulkan {
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 		m_SwapChain = Ref<VulkanSwapChain>::Create();
-		m_SwapChain->Create(&w, &h, false);
+		m_SwapChain->Create(&w, &h, window->IsVSync());
 	}
 
 	void VulkanContext::Begin()
