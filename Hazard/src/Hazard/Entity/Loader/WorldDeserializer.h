@@ -115,6 +115,7 @@ namespace Hazard::ECS::Loader
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
 			if (fileName.empty()) return;
+
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
 			c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
 		};

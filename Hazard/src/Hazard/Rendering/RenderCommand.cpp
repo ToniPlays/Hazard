@@ -66,9 +66,11 @@ namespace Hazard::Rendering
 	}
 	void RenderCommand::DrawMesh(Ref<Mesh> mesh, glm::mat4 transform)
 	{
-		s_Engine->Submit([mesh, transform]() mutable {
-			mesh->SetRenderPass(s_Engine->GetCurrentRenderPass());
-			s_Engine->DrawGeometry(mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+		Ref<Mesh> instance = mesh;
+		s_Engine->Submit([instance, transform]() mutable {
+			instance->SetRenderPass(s_Engine->GetCurrentRenderPass());
+			instance->GetPipeline()->GetShader()->SetUniformBuffer("Model", &transform);
+			s_Engine->DrawGeometry(instance->GetVertexBuffer(), instance->GetIndexBuffer(), instance->GetPipeline());
 			});
 	}
 	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const glm::vec4& tint)

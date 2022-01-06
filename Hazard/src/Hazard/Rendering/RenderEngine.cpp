@@ -111,7 +111,7 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
-		vertexBuffer->Bind(m_RenderCommandBuffer);
+ 		vertexBuffer->Bind(m_RenderCommandBuffer);
 		indexBuffer->Bind(m_RenderCommandBuffer);
 		pipeline->Bind(m_RenderCommandBuffer);
 		pipeline->Draw(m_RenderCommandBuffer, indexBuffer->GetCount());

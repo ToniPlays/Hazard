@@ -8,14 +8,12 @@ layout(location = 3) in vec2 v_TextureCoords;
 
 layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
-	uniform vec4 u_Position;
 } u_Camera;
 
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 FragPos;
 layout(location = 2) out vec3 f_Normal;
-
 
 layout(std140, binding = 1) uniform Model {
 	uniform mat4 u_Transform;

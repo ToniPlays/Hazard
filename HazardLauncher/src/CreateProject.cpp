@@ -8,7 +8,7 @@
 #include "Hazard/Utils/StringUtil.h"
 
 #if _WIN32
-#define DEFAULT_PATH ""
+#define PATH_PREFIX ""
 #else
 #define PATH_PREFIX "../../../HazardLauncher/"
 #endif
