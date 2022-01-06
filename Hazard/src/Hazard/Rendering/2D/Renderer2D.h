@@ -3,7 +3,7 @@
 #include "../RenderEngine.h"
 #include "../Pipeline/Pipeline.h"
 #include "../Image/Image2D.h"
-#include "../RenderCommandBuffer.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 #include "../Batch.h"
 #include "../WorldRenderer.h"
 
@@ -47,7 +47,7 @@ namespace Hazard::Rendering
 		void Submit(Quad quad);
 
 		void SetTargetRenderPass(Ref<RenderPass> renderPass);
-		void BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags);
+		void BeginWorld(WorldRenderFlags_ flags);
 		void BeginBatch();
 		void Flush();
 		void EndWorld();

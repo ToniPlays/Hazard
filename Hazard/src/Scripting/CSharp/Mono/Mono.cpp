@@ -248,8 +248,6 @@ namespace Hazard::Scripting::CSharp {
 	void* Mono::GetArrayValuePointer(MonoArray* monoArray)
 	{
 		uint32_t size = mono_array_length(monoArray);
-		
-		HZR_CORE_INFO("Array size is {0}", size);
 		return mono_array_addr_with_size(monoArray, size, 0);
 	}
 	int Mono::GetType(MonoType* type)

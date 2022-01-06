@@ -30,7 +30,6 @@ namespace Hazard::Rendering {
         default:
             return nullptr;
 		}
-		HZR_CORE_ASSERT(false, "Unkonw RenderAPI");
 		return nullptr;
 	}
 }

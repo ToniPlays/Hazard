@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
+#include "../RenderLibrary.h"
 
 namespace Hazard::Rendering
 {
@@ -61,10 +62,8 @@ namespace Hazard::Rendering
 			m_Pipeline = Pipeline::Create(&specs);
 		}
 	}
-	void Renderer2D::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
-		m_Pipeline->GetShader()->SetUniformBuffer("Camera", (void*)&passData);
 		BeginBatch();
 	}
 	void Renderer2D::BeginBatch()
@@ -128,19 +127,20 @@ namespace Hazard::Rendering
 			m_Pipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
+			vertexInfo.DebugName = "Renderer2DQuadBatch";
 			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(Vertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 			IndexBufferCreateInfo indexBuffer = {};
+			indexBuffer.DebugName = "2DQuadIndexBuffer";
 			indexBuffer.Data = indices;
 			indexBuffer.Size = (uint32_t)m_Data.MaxIndices;
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
-
-
+			
 			Ref<Shader> shader = m_Pipeline->GetShader();
 			shader->Bind();
 

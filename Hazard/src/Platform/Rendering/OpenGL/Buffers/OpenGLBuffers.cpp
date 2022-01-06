@@ -29,8 +29,8 @@ namespace Hazard::Rendering::OpenGL
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
-
 		glCreateVertexArrays(1, &m_VAO);
 
 		glCreateBuffers(1, &m_ID);
@@ -63,7 +63,9 @@ namespace Hazard::Rendering::OpenGL
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
+
 		glGenBuffers(1, &m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 
@@ -91,6 +93,7 @@ namespace Hazard::Rendering::OpenGL
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size), 
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
+		m_Name = createInfo->Name;
 		glCreateBuffers(1, &m_ID);
 		glNamedBufferData(m_ID, m_Size, nullptr, GL_DYNAMIC_DRAW);
 	}

@@ -408,10 +408,10 @@
     <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderCommandBuffer.h">
+    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderCommandQueue.h">
+    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandQueue.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
@@ -1878,6 +1878,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2024,10 +2025,10 @@
     <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderCommandBuffer.cpp">
+    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderCommandQueue.cpp">
+    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandQueue.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
@@ -2216,5 +2217,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderLibrary.cpp" />
   </ItemGroup>
 </Project>

@@ -356,7 +356,7 @@ namespace WindowElement {
 
 			if (changed) {
 				if (!File::Exists(file)) return;
-				HZR_CORE_INFO("New mesh file {0}", file);
+				HZR_INFO("New mesh file {0}", file);
 			}
 			}, []() {
 

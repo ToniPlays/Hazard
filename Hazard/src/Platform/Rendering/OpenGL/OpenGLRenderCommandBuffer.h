@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/RenderCommandBuffer.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 namespace Hazard::Rendering::OpenGL {
 	class OpenGLRenderCommandBuffer : public RenderCommandBuffer {

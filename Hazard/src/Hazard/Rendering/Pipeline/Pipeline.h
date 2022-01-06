@@ -3,7 +3,7 @@
 #include "Buffers.h"
 #include "Shader.h"
 #include "RenderPass.h"
-#include "Hazard/Rendering/RenderCommandBuffer.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 namespace Hazard::Rendering
 {

@@ -49,7 +49,7 @@ namespace Hazard::Rendering
 		~DebugRenderer();
 
 		void SetTargetRenderPass(Ref<RenderPass> renderPass);
-		void BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags);
+		void BeginWorld(WorldRenderFlags_ flags);
 		void EndWorld();
 
 		void BeginLineBatch();
@@ -60,7 +60,7 @@ namespace Hazard::Rendering
 		void FlushCircles();
 		void SubmitCircle(Circle cirlce);
 
-		void Recreate(Ref<RenderPass> renderPass);
+		void CreateResources(Ref<RenderPass> renderPass);
 
 	private:
 		DebugRendererData m_RenderData;

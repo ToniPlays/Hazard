@@ -46,7 +46,6 @@ namespace Hazard::Rendering::OpenGL
 		SetFilters(info->Filter, info->WrapMode);
 
 		if (info->ClearLocalBuffer) {
-			HZR_CORE_WARN("Releasing texture data for {0}", info->FilePath.string());
 			m_LocalData.Release();
 		}
 	}

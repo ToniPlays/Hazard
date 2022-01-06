@@ -17,7 +17,7 @@ namespace Hazard::Rendering
 	void DebugRenderer::SetTargetRenderPass(Ref<RenderPass> renderPass)
 	{
 		if (!m_LinePipeline) {
-			Recreate(renderPass);
+			CreateResources(renderPass);
 			return;
 		}
 
@@ -32,11 +32,9 @@ namespace Hazard::Rendering
 			m_CirclePipeline = Pipeline::Create(&circleSpec);
 		}
 	}
-	void DebugRenderer::BeginWorld(const RenderPassData& passData, WorldRenderFlags_ flags)
+	void DebugRenderer::BeginWorld(WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
-		m_LinePipeline->GetShader()->SetUniformBuffer("Camera", (void*)&passData);
-		m_CirclePipeline->GetShader()->SetUniformBuffer("Camera", (void*)&passData);
 		BeginLineBatch();
 		BeginCircleBatch();
 	}
@@ -122,7 +120,7 @@ namespace Hazard::Rendering
 		}
 		m_CircleBatch.AddIndices(6);
 	}
-	void DebugRenderer::Recreate(Ref<RenderPass> renderPass)
+	void DebugRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		//Lines
 		{
@@ -136,6 +134,7 @@ namespace Hazard::Rendering
 			m_LinePipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
+			vertexInfo.DebugName = "DebugLineVertexBuffer";
 			vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(LineVertex);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
@@ -157,7 +156,6 @@ namespace Hazard::Rendering
 				offset += 4;
 			}
 
-
 			//Circles
 			PipelineSpecification pipelineSpecs = {};
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
@@ -170,12 +168,14 @@ namespace Hazard::Rendering
 
 			//TODO: Circle count?
 			VertexBufferCreateInfo vertexInfo = {};
+			vertexInfo.DebugName = "DebugCircleVertexBuffer";
 			vertexInfo.Size = m_RenderData.MaxLineCount * sizeof(CircleVertex2D);
 			vertexInfo.Usage = BufferUsage::DynamicDraw;
 
 			m_CircleVertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 			IndexBufferCreateInfo indexBufferInfo = {};
+			indexBufferInfo.DebugName = "2DQuadIndexBuffer";
 			indexBufferInfo.Size = 1500 * 6;
 			indexBufferInfo.Usage = BufferUsage::StaticDraw;
 			indexBufferInfo.Data = indices;
@@ -186,6 +186,7 @@ namespace Hazard::Rendering
 			delete[] indices;
 
 		}
+
 		m_QuadPos[0] = {-0.5f, -0.5f, 0.0f, 1.0f };
 		m_QuadPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		m_QuadPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };

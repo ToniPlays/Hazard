@@ -25,7 +25,7 @@ namespace WindowElement
 	}
 	void BuildWindow::ExportProject(const std::filesystem::path& path)
 	{
-		HZR_CORE_INFO("Exporting game to {0}", path.string());
+		HZR_INFO("Exporting game to {0}", path.string());
 		using namespace Exporter;
 		GameExportManager exporter;
 

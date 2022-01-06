@@ -6,64 +6,101 @@
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"
 #include "Platform/Rendering/Metal/Metal.h"
+#include "../RenderLibrary.h"
 
 namespace Hazard::Rendering {
 
 	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
+		HZR_CORE_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+
+		if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) {
+			return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
+		}
+
+		Ref<VertexBuffer> buffer = nullptr;
 		switch (RenderCommand::GetAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo);
+		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalVertexBuffer>::Create(createInfo);
+		case RenderAPI::Metal: buffer =  Ref<Metal::MetalVertexBuffer>::Create(createInfo); break;
 #endif
 		default:
-			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
-		return nullptr;
+
+		HZR_CORE_INFO("Created VertexBuffer {0}", createInfo->DebugName);
+		if (createInfo->IsShared) {
+			RenderLibrary::AddVertexBuffer(buffer);
+		}
+
+		return buffer;
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
+		HZR_CORE_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+
+		if (createInfo->IsShared && RenderLibrary::HasIndexBuffer(createInfo->DebugName)) {
+			return RenderLibrary::GetIndexBuffer(createInfo->DebugName);
+		}
+		Ref<IndexBuffer> buffer = nullptr;
+
 		switch (RenderCommand::GetAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo);
+		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalIndexBuffer>::Create(createInfo);
+		case RenderAPI::Metal: return Ref<Metal::MetalIndexBuffer>::Create(createInfo); break;
 #endif
 		default:
-			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
-		return nullptr;
+
+		HZR_CORE_INFO("Created IndexBuffer {0}", createInfo->DebugName);
+		if (createInfo->IsShared) {
+			RenderLibrary::AddIndexBuffer(buffer);
+		}
+
+		return buffer;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
 	{
+		if (RenderLibrary::GetUniformBuffer(createInfo->Name)) {
+			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
+			HZR_CORE_ASSERT(buffer->GetBinding() == createInfo->Binding, "UniformBuffer: {0} binding does not match", createInfo->Name);
+			return buffer;
+		}
+
+		Ref<UniformBuffer> buffer;
+
+		HZR_CORE_WARN("Creating UniformBuffer: {0}", createInfo->Name);
+
 		switch (RenderCommand::GetAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLUniformBuffer>::Create(createInfo);
+		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLUniformBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo);
+		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanUniformBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalUniformBuffer>::Create(createInfo);
+		case RenderAPI::Metal: buffer = Ref<Metal::MetalUniformBuffer>::Create(createInfo); break;
 #endif
 		default:
-			HZR_CORE_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
-		return nullptr;
+
+		RenderLibrary::AddUniformBuffer(buffer);
+
+		return buffer;
 	}
 }

@@ -7,6 +7,7 @@
 #include "2D/Renderer2D.h"
 #include "DebugRenderer.h"
 #include "WorldRenderer.h"
+#include "RenderLibrary.h"
 
 namespace Hazard::Rendering
 {
@@ -38,8 +39,15 @@ namespace Hazard::Rendering
 
 		m_WhiteTexture = Texture2D::Create(&whiteTextureInfo);
 		m_Renderer2D = new Renderer2D(info, m_RenderCommandBuffer);
-
 		m_DebugRenderer = new DebugRenderer(1500, m_RenderCommandBuffer);
+
+		UniformBufferCreateInfo uboInfo = {};
+		uboInfo.Name = "Camera";
+		uboInfo.Usage = BufferUsage::DynamicDraw;
+		uboInfo.Size = sizeof(RenderPassData);
+		uboInfo.Binding = 0;
+
+		m_CameraUBO = UniformBuffer::Create(&uboInfo);
 	}
 	RenderEngine::~RenderEngine()
 	{
@@ -59,20 +67,22 @@ namespace Hazard::Rendering
 		{
 			if (!worldRenderer->IsValid()) continue;
 
+			m_RenderPassData.ViewProjection = worldRenderer->GetSettings().Camera->GetViewPprojection();
+
+			m_CameraUBO->SetData(&m_RenderPassData);
+
 			worldRenderer->Begin(m_RenderCommandBuffer, m_Queue);
 
 			if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Enabled)
 			{
-				m_RenderPassData.ViewProjection = worldRenderer->m_Settings.Camera->GetViewPprojection();
-
 				m_CurrentRenderPass = worldRenderer->GetRenderPass();
 				if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Geometry)
 				{
 					m_Renderer2D->SetTargetRenderPass(m_CurrentRenderPass);
 					m_DebugRenderer->SetTargetRenderPass(m_CurrentRenderPass);
 
-					m_Renderer2D->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
-					m_DebugRenderer->BeginWorld(m_RenderPassData, (WorldRenderFlags_)worldRenderer->m_Settings.Flags);
+					m_Renderer2D->BeginWorld((WorldRenderFlags_)worldRenderer->m_Settings.Flags);
+					m_DebugRenderer->BeginWorld((WorldRenderFlags_)worldRenderer->m_Settings.Flags);
 
 					m_Queue->Excecute();
 

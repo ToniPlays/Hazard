@@ -70,8 +70,6 @@ namespace Hazard::Scripting::CSharp {
 	{
 		if (!ModuleExists(moduleName)) return;
 
-		HZR_CORE_ERROR("Initializing {1} for handle {0}", handle, moduleName);
-
 		if (!m_Registry.HasScript(moduleName)) {
 			ScriptMetadata script;
 			script.ModuleName = moduleName;

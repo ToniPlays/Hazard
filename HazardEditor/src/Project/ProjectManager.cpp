@@ -23,7 +23,7 @@ namespace Project {
 		using namespace WindowElement;
         
         if(!File::Exists(path)) {
-            HZR_CORE_WARN("Project file does not exist");
+            HZR_WARN("Project file does not exist");
             return false;
         }
         

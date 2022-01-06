@@ -11,7 +11,7 @@ namespace Hazard::Scripting
 		std::string Name;
 		std::string CustomType;
 		FieldType Type;
-		FieldVisibility Visibility;
+		FieldVisibility Visibility = FieldVisibility::Private;
 		std::vector<Attribute*> FieldAttributes;
 
 		template<typename T>

@@ -162,7 +162,6 @@ namespace Hazard::Rendering
 
 	class Shader : public RefCount {
 	public:
-
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
 		virtual void Bind() = 0;

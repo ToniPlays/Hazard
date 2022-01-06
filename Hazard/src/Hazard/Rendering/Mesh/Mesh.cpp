@@ -18,6 +18,8 @@ namespace Hazard::Rendering {
 	void Mesh::GeneratePipeline()
 	{
 		VertexBufferCreateInfo vertexInfo = {};
+		vertexInfo.IsShared = false;
+		vertexInfo.DebugName = m_Filename;
 		vertexInfo.Size = (uint32_t)m_Vertices.size() * sizeof(Vertex3D);
 		vertexInfo.Usage = BufferUsage::StaticDraw;
 		vertexInfo.Data = m_Vertices.data();
@@ -25,6 +27,8 @@ namespace Hazard::Rendering {
 		m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 		IndexBufferCreateInfo indexInfo = {};
+		indexInfo.IsShared = false;
+		indexInfo.DebugName = m_Filename;
 		indexInfo.Size = (uint32_t)m_Indices.size();
 		indexInfo.Data = m_Indices.data();
 		indexInfo.Usage = BufferUsage::StaticDraw;

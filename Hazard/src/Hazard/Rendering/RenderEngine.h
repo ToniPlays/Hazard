@@ -3,8 +3,8 @@
 #include "Hazard/Core/Core.h"
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
-#include "RenderCommandBuffer.h"
-#include "RenderCommandQueue.h"
+#include "Queue/RenderCommandBuffer.h"
+#include "Queue/RenderCommandQueue.h"
 #include "Pipeline/FrameBuffer.h"
 #include "Pipeline/Buffers.h"
 #include "Pipeline/Pipeline.h"
@@ -71,6 +71,7 @@ namespace Hazard::Rendering {
 		Ref<Texture2D> m_WhiteTexture;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		Ref<RenderPass> m_CurrentRenderPass;
+		Ref<UniformBuffer> m_CameraUBO;
 		RenderCommandQueue* m_PostPassQueue;
 		RenderCommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;

@@ -4,8 +4,8 @@
 #include "Camera.h"
 #include "Pipeline/FrameBuffer.h"
 #include "Pipeline/RenderPass.h"
-#include "RenderCommandBuffer.h"
-#include "RenderCommandQueue.h"
+#include "Queue/RenderCommandBuffer.h"
+#include "Queue/RenderCommandQueue.h"
 
 #include <glm/glm.hpp>
 

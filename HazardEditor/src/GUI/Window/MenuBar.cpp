@@ -107,10 +107,10 @@ namespace WindowElement {
 				Application::GetModule<Project::ProjectManager>().Save();
 				});
 			Layout::MenuItem("Save as", []() {
-				HZR_CORE_INFO("Save as TODO");
+				HZR_INFO("Save as TODO");
 				});
 			Layout::MenuItem("New world", []() {
-				HZR_CORE_INFO("New world TODO"); 
+				HZR_INFO("New world TODO"); 
 				});
 			Layout::Separator();
 			Layout::MenuItem("Export", []() {

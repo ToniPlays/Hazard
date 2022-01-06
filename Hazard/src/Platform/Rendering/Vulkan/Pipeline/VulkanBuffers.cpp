@@ -8,6 +8,7 @@ namespace Hazard::Rendering::Vulkan
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 		auto device = VulkanContext::GetDevice();
 
@@ -92,6 +93,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanIndexBuffer::VulkanIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		m_DebugName = info->DebugName;
 		if (info->Data == nullptr) return;
 		SetData(info->Data, info->Size);
 	}
@@ -157,6 +159,7 @@ namespace Hazard::Rendering::Vulkan
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size), 
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
+		m_Name = createInfo->Name;
 		m_LocalData = new uint8_t[m_Size];
 		RT_Invalidate();
 	}

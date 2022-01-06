@@ -5,7 +5,7 @@
 #include "Platform/Rendering/Vulkan/Vulkan.h"
 #include "Platform/Rendering/Metal/Metal.h"
 
-#include "RenderCommand.h"
+#include "../RenderCommand.h"
 
 namespace Hazard::Rendering {
 
