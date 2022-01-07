@@ -27,7 +27,7 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
 
 		const ShaderData& GetShaderData() override { return m_ShaderData; };
-		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSet; }
+		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSets[0]; }
 		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
 
 		void DestroyModules();
@@ -41,7 +41,7 @@ namespace Hazard::Rendering::Vulkan
 
 		std::string m_Path;
 		ShaderData m_ShaderData;
-		VkDescriptorSet m_DescriptorSet;
+		std::vector<VkDescriptorSet> m_DescriptorSets;
 		std::unordered_map<ShaderType, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
 

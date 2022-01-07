@@ -26,6 +26,10 @@ namespace Hazard::Rendering
 		m_Settings.ViewportSize = { width, height };
 		m_Resize = true;
 	}
+	bool WorldRenderer::Prepare()
+	{
+		return false;
+	}
 	void WorldRenderer::Begin(Ref<RenderCommandBuffer> cmdBuffer, RenderCommandQueue* queue)
 	{
 		RenderCommand::BeginRenderPass(cmdBuffer, m_RenderPass);
@@ -40,7 +44,7 @@ namespace Hazard::Rendering
 	{
 		if (!m_Resize) return;
 		m_Resize = false;
-		//m_FrameBuffer->Resize(m_Settings.ViewportSize.x, m_Settings.ViewportSize.y);
+		m_FrameBuffer->Resize(m_Settings.ViewportSize.x, m_Settings.ViewportSize.y);
 	}
 	void WorldRenderer::CreateResources()
 	{

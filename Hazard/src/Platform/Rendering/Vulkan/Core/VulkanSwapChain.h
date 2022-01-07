@@ -12,7 +12,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanSwapChain();
 		virtual ~VulkanSwapChain();
 
-		void Create(uint32_t* width, uint32_t* height, bool vSync);
+		void Create(uint32_t width, uint32_t height, bool vSync);
 		void Resize(uint32_t width, uint32_t height);
 
 		void BeginFrame();

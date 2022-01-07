@@ -8,6 +8,7 @@
 #include "VulkanBuffers.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/Loaders/ShaderFactory.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
@@ -115,7 +116,7 @@ namespace Hazard::Rendering::Vulkan
 			auto device = VulkanContext::GetDevice()->GetDevice();
 			VkWriteDescriptorSet descriptorWrite = {};
 			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = m_DescriptorSet;
+			descriptorWrite.dstSet = m_DescriptorSets[VulkanContext::GetSwapchain()->GetCurrentBufferIndex()];
 			descriptorWrite.dstBinding = sampler.Binding;
 			descriptorWrite.dstArrayElement = index;
 			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -309,35 +310,45 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)
 	{
+
 		auto device = VulkanContext::GetDevice()->GetDevice();
+		uint32_t framesInFlight = RenderContextCommand::GetImagesInFlight();
+		std::vector<VkDescriptorSetLayout> layouts(framesInFlight, *layout);
 
-		VkDescriptorSetAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = VulkanContext::GetDevice()->GetDescriptorPool(0);
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = layout;
+		m_DescriptorSets.resize(framesInFlight);
 
-		auto result = vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSet);
+		for (uint32_t i = 0; i < framesInFlight; i++) {
+			VkDescriptorSetAllocateInfo allocInfo = {};
+			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocInfo.descriptorPool = VulkanContext::GetDevice()->GetDescriptorPool(i);
+			allocInfo.descriptorSetCount = framesInFlight;
+			allocInfo.pSetLayouts = layouts.data();
 
-		for (auto& [name, buffer] : m_UniformBuffers) {
+			auto result = vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSets[i]);
+		}
 
-			Ref<VulkanUniformBuffer> buf = buffer.As<VulkanUniformBuffer>();
+		for (uint32_t i = 0; i < framesInFlight; i++) {
 
-			VkDescriptorBufferInfo descriptorBufferInfo = {};
-			descriptorBufferInfo.buffer = buf->GetBuffer();
-			descriptorBufferInfo.offset = 0;
-			descriptorBufferInfo.range = buf->GetSize();
+			for (auto& [name, buffer] : m_UniformBuffers) {
 
-			VkWriteDescriptorSet descriptorWrite = {};
-			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = m_DescriptorSet;
-			descriptorWrite.dstBinding = buf->GetBinding();
-			descriptorWrite.dstArrayElement = 0;
-			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			descriptorWrite.descriptorCount = 1;
-			descriptorWrite.pBufferInfo = &descriptorBufferInfo;
+				Ref<VulkanUniformBuffer> buf = buffer.As<VulkanUniformBuffer>();
 
-			vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+				VkDescriptorBufferInfo descriptorBufferInfo = {};
+				descriptorBufferInfo.buffer = buf->GetBuffer();
+				descriptorBufferInfo.offset = 0;
+				descriptorBufferInfo.range = buf->GetSize();
+
+				VkWriteDescriptorSet descriptorWrite = {};
+				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrite.dstSet = m_DescriptorSets[i];
+				descriptorWrite.dstBinding = buf->GetBinding();
+				descriptorWrite.dstArrayElement = 0;
+				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrite.descriptorCount = 1;
+				descriptorWrite.pBufferInfo = &descriptorBufferInfo;
+
+				vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+			}
 		}
 	}
 }

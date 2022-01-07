@@ -32,18 +32,18 @@ namespace Editor
 	{
 		if (m_Pipeline) {
 			PipelineSpecification spec = m_Pipeline->GetSpecifications();
-			spec.TargetRenderPass = renderPass;
-			m_Pipeline = Pipeline::Create(&spec);
+			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
 
 		PipelineSpecification specs = {};
+		specs.DebugName = "EditorGrid";
 		specs.TargetRenderPass = renderPass;
 		specs.DrawType = DrawType::Fill;
 		specs.ShaderPath = "Shaders/Grid.glsl";
 		specs.Usage = PipelineUsage::GraphicsBit;
 		specs.Culling = false;
-		specs.IsBackground = false;
+		specs.IsShared = false;
 		m_Pipeline = Pipeline::Create(&specs);
 	}
 }

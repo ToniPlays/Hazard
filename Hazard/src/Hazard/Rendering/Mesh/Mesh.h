@@ -33,16 +33,21 @@ namespace Hazard::Rendering {
 	public:
 		Mesh() = default;
 		Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices);
+		Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
 		~Mesh();
 
 		std::string& GetFile() { return m_Filename; }
-		void GeneratePipeline();
 		void SetRenderPass(const Ref<RenderPass>& renderPass);
+		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; };
 
 		Ref<Pipeline> GetPipeline() { return m_Pipeline; }
 		Ref<VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		size_t GetIndexCount() { return m_Indices.size(); }
+
+		void SetPipeline(Ref<Pipeline> pipeline) { m_Pipeline = pipeline; };
+		void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer) { m_VertexBuffer = vertexBuffer; }
+		void SetIndexBuffer(Ref<IndexBuffer> indexBuffer) { m_IndexBuffer = indexBuffer; }
 
 	private:
 		std::string m_Filename;

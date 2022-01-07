@@ -66,6 +66,8 @@ namespace Hazard::Rendering
 	}
 	void RenderCommand::DrawMesh(Ref<Mesh> mesh, glm::mat4 transform)
 	{
+		if (!mesh->IsValid()) return;
+
 		Ref<Mesh> instance = mesh;
 		s_Engine->Submit([instance, transform]() mutable {
 			instance->SetRenderPass(s_Engine->GetCurrentRenderPass());

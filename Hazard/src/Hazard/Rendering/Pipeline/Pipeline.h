@@ -12,12 +12,13 @@ namespace Hazard::Rendering
 
 	struct PipelineSpecification
 	{
+		std::string DebugName;
 		std::string ShaderPath;
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType;
 		float LineWidth = 1.0f;
 		bool Culling = true;
-		bool IsBackground = false;
+		bool IsShared = true;
 		Ref<RenderPass> TargetRenderPass = nullptr;
 	};
 
@@ -29,6 +30,7 @@ namespace Hazard::Rendering
 		virtual const PipelineSpecification GetSpecifications() const = 0;
 
 		virtual Ref<Shader> GetShader() = 0;
+		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
 
 		virtual void Invalidate() = 0;
 		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;

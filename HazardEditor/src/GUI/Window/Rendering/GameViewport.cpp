@@ -15,6 +15,7 @@ namespace WindowElement {
 
 	void GameViewport::Init()
 	{
+
 		SetActive(false);
 		return;
 

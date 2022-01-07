@@ -9,14 +9,6 @@ namespace Hazard::Rendering {
 
 	Mesh::Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices) : m_Filename(file), m_Vertices(vertices), m_Indices(indices)
 	{
-		GeneratePipeline();
-	}
-	Mesh::~Mesh()
-	{
-
-	}
-	void Mesh::GeneratePipeline()
-	{
 		VertexBufferCreateInfo vertexInfo = {};
 		vertexInfo.IsShared = false;
 		vertexInfo.DebugName = m_Filename;
@@ -34,26 +26,36 @@ namespace Hazard::Rendering {
 		indexInfo.Usage = BufferUsage::StaticDraw;
 
 		m_IndexBuffer = IndexBuffer::Create(&indexInfo);
+		
+	}
+	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
+	{
+		m_VertexBuffer = vertexBuffer;
+		m_IndexBuffer = indexBuffer;
+		m_Pipeline = pipeline;
+	}
+	Mesh::~Mesh()
+	{
+
 	}
 	void Mesh::SetRenderPass(const Ref<RenderPass>& renderPass)
 	{
 		if (!m_Pipeline) {
 
 			PipelineSpecification spec = {};
+			spec.DebugName = "MeshPipeline";
 			spec.Usage = PipelineUsage::GraphicsBit;
 			spec.DrawType = DrawType::Fill;
 			spec.LineWidth = 1.0f;
 			spec.ShaderPath = "Shaders/pbr.glsl";
 			spec.TargetRenderPass = renderPass;
+			spec.IsShared = false;
 
 			m_Pipeline = Pipeline::Create(&spec);
 			return;
 		}
 		if (m_Pipeline->GetSpecifications().TargetRenderPass == renderPass)
 			return;
-
-		auto spec = m_Pipeline->GetSpecifications();
-		spec.TargetRenderPass = renderPass;
-		m_Pipeline = Pipeline::Create(&spec);
+		m_Pipeline->SetRenderPass(renderPass);
 	}
 }

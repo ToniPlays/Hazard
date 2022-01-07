@@ -47,6 +47,7 @@ namespace Hazard::Rendering
 		void SetViewport(uint32_t width, uint32_t height);
 		WorldRendererSettings& GetSettings() { return m_Settings; }
 		bool IsValid() { return m_Settings.Camera != nullptr; }
+		bool Prepare();
 
 		Ref<Image2D> GetFinalPassImage() { return m_FrameBuffer->GetImage(); }
 		Ref<RenderPass> GetRenderPass() { return m_RenderPass; }

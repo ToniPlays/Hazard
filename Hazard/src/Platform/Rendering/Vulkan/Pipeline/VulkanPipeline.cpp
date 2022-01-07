@@ -30,6 +30,18 @@ namespace Hazard::Rendering::Vulkan
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 	}
+	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
+	{
+
+		auto device = VulkanContext::GetDevice()->GetDevice();
+
+		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
+		vkDestroyPipeline(device, m_Pipeline, nullptr);
+		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+
+		m_Specs.TargetRenderPass = renderPass;
+		Invalidate();
+	}
 	void VulkanPipeline::Invalidate()
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
@@ -41,7 +53,7 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
 		if (m_Shader->CreateDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-			abort();
+			HZR_CORE_ASSERT(false, "Oops");
 		}
 		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
 
@@ -109,7 +121,7 @@ namespace Hazard::Rendering::Vulkan
 		rasterizer.depthBiasSlopeFactor = -1.0f;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = VKUtils::DrawTypeToVKType(m_Specs.DrawType);
-		rasterizer.lineWidth = m_Specs.LineWidth;
+		rasterizer.lineWidth = 1.0f;
 		rasterizer.cullMode = m_Specs.Culling ? VK_CULL_MODE_FRONT_BIT : VK_CULL_MODE_NONE;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
@@ -144,9 +156,9 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineDepthStencilStateCreateInfo depthStencil = {};
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = !m_Specs.IsBackground ? VK_TRUE : VK_FALSE;
-		depthStencil.depthWriteEnable = !m_Specs.IsBackground ? VK_TRUE : VK_FALSE;
-		depthStencil.depthCompareOp = !m_Specs.IsBackground ? VK_COMPARE_OP_LESS : VK_COMPARE_OP_ALWAYS;
+		depthStencil.depthTestEnable = VK_TRUE;
+		depthStencil.depthWriteEnable = VK_TRUE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
 		depthStencil.stencilTestEnable = VK_FALSE;
 

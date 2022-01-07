@@ -57,11 +57,10 @@ namespace Hazard::Rendering
 			return;
 		}
 		if (m_Pipeline->GetSpecifications().TargetRenderPass != renderPass) {
-			PipelineSpecification specs = m_Pipeline->GetSpecifications();
-			specs.TargetRenderPass = renderPass;
-			m_Pipeline = Pipeline::Create(&specs);
+			m_Pipeline->SetRenderPass(renderPass);
 		}
 	}
+	void Renderer2D::BeginWorld(WorldRenderFlags_ flags)
 	{
 		m_CurrentFlags = flags;
 		BeginBatch();
@@ -119,6 +118,7 @@ namespace Hazard::Rendering
 		}
 		{
 			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.DebugName = "2DQuadBatchPipeline";
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.DrawType = DrawType::Fill;
 			pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";

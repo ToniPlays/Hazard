@@ -17,6 +17,7 @@ namespace Hazard::Rendering::Vulkan
 		PipelineSpecification GetSpecifications() { return m_Specs; }
 		const PipelineSpecification GetSpecifications() const { return m_Specs; }
 		Ref<Shader> GetShader() { return m_Shader; }
+		void SetRenderPass(Ref<RenderPass> renderPass);
 
 		void Invalidate() override;
 		void Bind(Ref<RenderCommandBuffer> commandBuffer) override;

@@ -24,12 +24,10 @@ namespace Hazard::Rendering
 		if (m_LinePipeline->GetSpecifications().TargetRenderPass != renderPass)
 		{
 			PipelineSpecification lineSpec = m_LinePipeline->GetSpecifications();
-			lineSpec.TargetRenderPass = renderPass;
-			m_LinePipeline = Pipeline::Create(&lineSpec);
+			m_LinePipeline->SetRenderPass(renderPass);
 
 			PipelineSpecification circleSpec = m_CirclePipeline->GetSpecifications();
-			circleSpec.TargetRenderPass = renderPass;
-			m_CirclePipeline = Pipeline::Create(&circleSpec);
+			m_CirclePipeline->SetRenderPass(renderPass);
 		}
 	}
 	void DebugRenderer::BeginWorld(WorldRenderFlags_ flags)
@@ -125,6 +123,7 @@ namespace Hazard::Rendering
 		//Lines
 		{
 			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.DebugName = "DebugLineRenderer";
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 			pipelineSpecs.DrawType = DrawType::Line;
@@ -158,6 +157,7 @@ namespace Hazard::Rendering
 
 			//Circles
 			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.DebugName = "DebugCircleRenderer";	
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 			pipelineSpecs.DrawType = DrawType::Fill;

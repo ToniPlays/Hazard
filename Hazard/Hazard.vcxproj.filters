@@ -61,6 +61,9 @@
     <Filter Include="src\Hazard\Rendering\Pipeline">
       <UniqueIdentifier>{689A15E0-D4B2-FC09-9D5F-8CA3093791A3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\Queue">
+      <UniqueIdentifier>{F77C5FD3-E38C-0BA4-4C46-70C23875FA3C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
@@ -405,16 +408,19 @@
     <ClInclude Include="src\Hazard\Rendering\Pipeline\ShaderDataType.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.h">
+      <Filter>src\Hazard\Rendering\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandQueue.h">
+      <Filter>src\Hazard\Rendering\Queue</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandQueue.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderLibrary.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture.h">
@@ -1878,7 +1884,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2022,16 +2027,19 @@
     <ClCompile Include="src\Hazard\Rendering\Pipeline\Shader.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.cpp">
+      <Filter>src\Hazard\Rendering\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandQueue.cpp">
+      <Filter>src\Hazard\Rendering\Queue</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandQueue.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderLibrary.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp">
@@ -2217,6 +2225,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderLibrary.cpp" />
   </ItemGroup>
 </Project>

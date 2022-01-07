@@ -29,10 +29,10 @@ namespace Hazard::Rendering::Vulkan
 			vkDestroyFramebuffer(device, fb, nullptr);
 		}
 	}
-	void VulkanSwapChain::Create(uint32_t* width, uint32_t* height, bool vSync)
+	void VulkanSwapChain::Create(uint32_t width, uint32_t height, bool vSync)
 	{
-		m_Width = *width;
-		m_Height = *height;
+		m_Width = width;
+		m_Height = height;
 		m_VSync = vSync;
 		m_Surface = VulkanContext::GetSurface();
 
@@ -45,7 +45,7 @@ namespace Hazard::Rendering::Vulkan
 		VkSurfaceCapabilitiesKHR surfCaps = VKUtils::GetSurfaceCapabilities(m_Device->GetPhysicalDevice(), m_Surface);
 		SwapChainSupportDetails details = VKUtils::GetSwapChainDetails(m_Device->GetPhysicalDevice(), m_Surface);
 
-		VkExtent2D swapchainExtent = VKUtils::ChooseSwapChainExtent(details.capabilities, (int)*width, (int)*height);
+		VkExtent2D swapchainExtent = VKUtils::ChooseSwapChainExtent(details.capabilities, (int)width, (int)height);
 		VkPresentModeKHR swapchainPresentMode = VKUtils::ChooseSwapChainPresentMode(details.presentModes, preferred);
 		VkSurfaceFormatKHR format = VKUtils::ChooseSwapChainFormat(details.formats, VKUtils::GetFormat(ImageFormat::RGBA));
 		m_ColorFormat = format.format;
@@ -282,7 +282,7 @@ namespace Hazard::Rendering::Vulkan
 		}
 		vkFreeCommandBuffers(m_Device->GetDevice(), m_Device->GetCommandPool(), m_CommandBuffers.size(), m_CommandBuffers.data());
 
-		Create(&width, &height, m_VSync);
+		Create(width, height, m_VSync);
 
 		m_Device->WaitUntilIdle();
 

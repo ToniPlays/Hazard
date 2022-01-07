@@ -27,7 +27,6 @@ void EditorApplication::PreInit()
 
 	RenderContexCreateInfo contextInfo = {};
 	contextInfo.Renderer = CommandLineArgs::Get<RenderAPI>("RenderAPI");
-	contextInfo.ImagesInFlight = 3;
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;

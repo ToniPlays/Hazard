@@ -12,7 +12,9 @@ namespace Hazard::Rendering {
 
 	struct MeshCreateInfo {
 		std::string Path;
-
+		Ref<VertexBuffer> VertexBuffer = nullptr;
+		Ref<IndexBuffer> IndexBuffer = nullptr;
+		Ref<Pipeline> Pipeline = nullptr;
 	};
 
 	struct MeshData {
