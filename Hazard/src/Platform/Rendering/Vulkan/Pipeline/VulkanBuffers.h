@@ -76,7 +76,7 @@ namespace Hazard::Rendering::Vulkan
 		const uint32_t GetBinding() const override { return m_Binding; };
 		const uint32_t GetSize() const { return m_Size; };
 		uint32_t GetUsageFlags() { return m_Usage; };
-		VkBuffer GetBuffer() { return m_Buffers[m_FrameIndex]; }
+		VkBuffer GetBuffer() { return m_Buffer; }
 
 	private:
 		void Release();
@@ -90,9 +90,9 @@ namespace Hazard::Rendering::Vulkan
 
 		uint32_t m_FrameIndex = 0;
 
-		std::vector<VkBuffer> m_Buffers;
+		VkBuffer m_Buffer = nullptr;
 		
-		std::vector<VmaAllocation> m_Allocations;
+		VmaAllocation m_Allocation = nullptr;
 		uint8_t* m_LocalData = nullptr;
 	};
 }

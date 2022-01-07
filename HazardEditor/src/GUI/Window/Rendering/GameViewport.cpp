@@ -15,11 +15,10 @@ namespace WindowElement {
 
 	void GameViewport::Init()
 	{
-
 		SetActive(false);
-		return;
 
 		WorldRendererSettings settings = {};
+		settings.DebugName = "GameViewport";
 		settings.ViewportSize = { 1920, 1080 };
 		settings.Camera = &m_Camera;
 		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;

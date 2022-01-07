@@ -24,6 +24,7 @@ namespace Hazard::Rendering
 
 	struct WorldRendererSettings
 	{
+		std::string DebugName;
 		glm::vec4 ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Camera* Camera = nullptr;
 		glm::vec2 ViewportSize = { 1, 1 };

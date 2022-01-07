@@ -42,7 +42,7 @@ namespace WindowElement {
 
 		glm::vec3 deltaRotation = rotation - tc.Rotation;
 		tc.Translation = position;
-		tc.Rotation = rotation + deltaRotation;
+		tc.Rotation += deltaRotation;
 		tc.Scale = scale;
 
 	}

@@ -174,7 +174,9 @@ namespace Hazard::ECS::Loader
         void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "MeshComponent", [&]() {
-                YamlUtils::Serialize(out, "File", "");
+                if (component.m_Mesh) {
+                    YamlUtils::Serialize(out, "File", component.m_Mesh->GetFile());
+                }
                 });
         }
         template<>

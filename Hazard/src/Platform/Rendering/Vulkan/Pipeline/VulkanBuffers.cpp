@@ -14,7 +14,7 @@ namespace Hazard::Rendering::Vulkan
 		auto device = VulkanContext::GetDevice();
 
 		VulkanAllocator allocator("VertexBuffer");
-		
+
 		if (info->Data == nullptr) {
 
 			VkBufferCreateInfo createInfo = {};
@@ -25,7 +25,7 @@ namespace Hazard::Rendering::Vulkan
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_TO_CPU, m_Buffer);
 			m_LocalData.Allocate(m_Size);
 		}
-		else 
+		else
 		{
 			m_LocalData = Buffer::Copy(info->Data, info->Size);
 
@@ -156,7 +156,7 @@ namespace Hazard::Rendering::Vulkan
 
 		allocator.DestroyBuffer(stagingBuffer, stagingBufferAllocation);
 	}
-	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size), 
+	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_Name = createInfo->Name;
@@ -183,20 +183,18 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanUniformBuffer::RT_SetData(const void* data)
 	{
 		VulkanAllocator allocator("VulkanUniformBuffer");
-		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocations[m_FrameIndex]);
+		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
 		memcpy(pData, (const uint8_t*)data, m_Size);
-		allocator.UnmapMemory(m_Allocations[m_FrameIndex]);
+		allocator.UnmapMemory(m_Allocation);
 	}
 	void VulkanUniformBuffer::Release()
 	{
-		if (m_Allocations.size() == 0) return;
+		if (!m_Allocation) return;
 
 		VulkanAllocator allocator("UniformBuffer");
-		for (uint32_t i = 0; i < m_Buffers.size(); i++) {
-			allocator.DestroyBuffer(m_Buffers[i], m_Allocations[i]);
-		}
-		m_Buffers.clear();
-		m_Allocations.clear();
+		allocator.DestroyBuffer(m_Buffer, m_Allocation);
+		m_Buffer = nullptr;
+		m_Allocation = nullptr;
 
 		delete[] m_LocalData;
 		m_LocalData = nullptr;
@@ -220,11 +218,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VulkanAllocator allocator("UniformBuffer");
 
-		m_Allocations.resize(framesInFlight);
-		m_Buffers.resize(framesInFlight);
+		m_Allocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_ONLY, m_Buffer);
 
-		for (uint32_t i = 0; i < framesInFlight; i++) {
-			m_Allocations[i] = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_ONLY, m_Buffers[i]);
-		}
 	}
 }

@@ -11,5 +11,9 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		static uint32_t VertexBuffer_Create_Native(void* createInfo);
 		static void VertexBuffer_Destroy_Native(uint32_t resourceID);
 		static uint32_t VertexBuffer_GetSize_Native(uint32_t resourceID);
+
+		static uint32_t IndexBuffer_Create_Native(void* createInfo);
+		static void IndexBuffer_Destroy_Native(uint32_t resourceID);
+		static uint32_t IndexBuffer_GetSize_Native(uint32_t resourceID);
 	};
 }

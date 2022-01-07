@@ -15,12 +15,16 @@ namespace Hazard::Scripting::CSharp::Bindings {
     BindMap BufferBindings::GetBindings()
     {
         BindMap result;
-        result.reserve(3);
+        result.reserve(6);
         result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Create_Native", (void*) VertexBuffer_Create_Native);
         result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_Destroy_Native", (void*) VertexBuffer_Destroy_Native);
         result.emplace_back("Hazard.Rendering.VertexBuffer::VertexBuffer_GetSize_Native", (void*) VertexBuffer_GetSize_Native);
 
-        //result.emplace_back("Hazard.Rendering.IndexBuffer::IndexBuffer_Create_Native", )
+
+        result.emplace_back("Hazard.Rendering.IndexBuffer::IndexBuffer_Create_Native", (void*)IndexBuffer_Create_Native);
+        result.emplace_back("Hazard.Rendering.IndexBuffer::IndexBuffer_Destroy_Native", (void*)IndexBuffer_Destroy_Native);
+        result.emplace_back("Hazard.Rendering.IndexBuffer::IndexBuffer_GetSize_Native", (void*)IndexBuffer_GetSize_Native);
+
         return result;
     }
 
@@ -54,5 +58,16 @@ namespace Hazard::Scripting::CSharp::Bindings {
     {
         using namespace Hazard::Rendering;
         return ScriptResourceManager::GetResource<VertexBuffer>(resourceID)->GetSize();
+    }
+    uint32_t BufferBindings::IndexBuffer_Create_Native(void* createInfo)
+    {
+        return uint32_t();
+    }
+    void BufferBindings::IndexBuffer_Destroy_Native(uint32_t resourceID)
+    {
+    }
+    uint32_t BufferBindings::IndexBuffer_GetSize_Native(uint32_t resourceID)
+    {
+        return uint32_t();
     }
 }

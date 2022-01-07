@@ -9,9 +9,9 @@ namespace Hazard::Rendering
 	Renderer2D::Renderer2D(RenderEngineCreateInfo* info, Ref<RenderCommandBuffer> buffer)
 	{
 		m_Data.MaxQuadCount = info->MaxQuadCount;
-		m_Data.MaxVertices = info->MaxQuadCount * 4;
-		m_Data.MaxIndices = info->MaxQuadCount * 6;
-		m_Data.Samplers = info->SamplerCount;
+		m_Data.MaxVertices = info->MaxQuadCount * (uint32_t)4;
+		m_Data.MaxIndices = info->MaxQuadCount * (uint32_t)6;
+		m_Data.Samplers = info->SamplerCount;	
 
 		m_Data.TextureSlots.resize(info->SamplerCount);
 		m_RenderCommandBuffer = buffer;
