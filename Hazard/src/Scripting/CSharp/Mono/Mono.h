@@ -101,7 +101,6 @@ namespace Hazard::Scripting::CSharp {
 		static void* GetArrayValuePointer(MonoArray* monoArray);
 
 
-
 		//Type functions
 		static int GetType(MonoType* type);
 		static char* GetTypeName(MonoType* type);
@@ -110,6 +109,9 @@ namespace Hazard::Scripting::CSharp {
 		static MonoType* TypeFromReflectionName(const std::string& name);
 		static FieldVisibility GetVisibility(MonoClassField* field);
 		static FieldVisibility GetVisibility(MonoMethod* field);
+
+		//GarbageCollection
+		static void RunGarbageCollection();
 
 		static MonoData& GetData() { return s_Data; }
 		

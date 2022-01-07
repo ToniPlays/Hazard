@@ -31,6 +31,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
 		RegisterComponent(TagComponent);
 		RegisterComponent(TransformComponent);
 		RegisterComponent(AudioSourceComponent);
+		RegisterComponent(MeshComponent);
 
 		BindMap result;
 		result.reserve(4);

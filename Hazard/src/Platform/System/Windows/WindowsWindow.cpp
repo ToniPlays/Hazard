@@ -228,6 +228,7 @@ namespace Hazard::Rendering {
 	{
 		HZR_PROFILE_FUNCTION();
 		delete m_Context;
+		
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
 	}

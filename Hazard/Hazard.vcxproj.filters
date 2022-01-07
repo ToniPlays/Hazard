@@ -462,9 +462,6 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptResourceManager.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Utils\File.h">
       <Filter>src\Hazard\Utils</Filter>
     </ClInclude>
@@ -1884,6 +1881,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.h" />
+    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2225,5 +2224,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.cpp" />
+    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.cpp" />
   </ItemGroup>
 </Project>

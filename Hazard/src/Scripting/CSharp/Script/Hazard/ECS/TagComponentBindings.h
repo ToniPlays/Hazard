@@ -3,7 +3,7 @@
 #include "Scripting/CSharp/ScriptBindings.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
-	//Bind debug calls internal
+	//Bind Tah component calls internal
 	class TagComponentBindings {
 	public:
 		static BindMap GetBindings();

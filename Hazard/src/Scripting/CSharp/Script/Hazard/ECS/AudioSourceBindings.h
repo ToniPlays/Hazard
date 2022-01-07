@@ -3,7 +3,7 @@
 #include "Scripting/CSharp/ScriptBindings.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
-	//Bind debug calls internal
+	//Bind Audio source calls internal
 	class AudioSourceBindings {
 	public:
 		static BindMap GetBindings();

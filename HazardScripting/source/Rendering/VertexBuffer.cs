@@ -32,6 +32,9 @@ namespace Hazard.Rendering
             return buffer;
         }
 
+        internal ulong GetID() { return ID; }
+
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern ulong VertexBuffer_GetSize_Native(ulong id);
 

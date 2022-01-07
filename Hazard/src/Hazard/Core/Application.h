@@ -16,7 +16,7 @@ namespace Hazard {
 	};
 
 	class Application {
-
+		
 	public:
 		Application() = default;
 		virtual ~Application() = default;

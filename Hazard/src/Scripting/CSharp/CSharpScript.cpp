@@ -11,7 +11,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		m_MonoClass = Mono::GetMonoClass(data.ModuleName.c_str());
 		m_ScriptHandle = Mono::InstantiateHandle(m_MonoClass);
-
+		;
 		InitClassMethods();
 		UpdateFields();
 

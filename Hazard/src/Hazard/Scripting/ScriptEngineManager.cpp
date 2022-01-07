@@ -5,7 +5,6 @@
 #include "Scripting/ScriptEngines.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
-#include "ScriptResourceManager.h"
 
 namespace Hazard::Scripting {
 
@@ -17,7 +16,6 @@ namespace Hazard::Scripting {
 #endif
 
 		ScriptCommand::Init(*this);
-		ScriptResourceManager::Init();
 		SetActive(info->Enable);
 
 	}
@@ -48,7 +46,6 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::OnRuntimeEnd()
 	{
-		ScriptResourceManager::Clear();
 		for (auto [type, engine] : m_ScriptEngines) {
 			engine->OnEndRuntime();
 		}

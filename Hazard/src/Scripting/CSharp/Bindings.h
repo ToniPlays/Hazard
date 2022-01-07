@@ -13,8 +13,10 @@
 #include "Script/Hazard/ECS/TagComponentBindings.h"
 #include "Script/Hazard/ECS/TransformBindings.h"
 #include "Script/Hazard/ECS/AudioSourceBindings.h"
+#include "Script/Hazard/ECS/MeshComponentBindings.h"
 
 #include "Script/Hazard/Math/MathBindings.h"
 
 
 #include "Script/Rendering/BufferBindings.h"
+#include "Script/Rendering/MeshBindings.h"

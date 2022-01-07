@@ -28,7 +28,7 @@ namespace Hazard
             z = scalar;
         }
 
-        public Vector3(float x, float y, float z)
+        public Vector3(float x, float y, float z = 0.0f)
         {
             this.x = x;
             this.y = y;
@@ -41,12 +41,34 @@ namespace Hazard
             this.z = z;
         }
 
-        public override string ToString()
+        public static Vector3 operator +(Vector3 left, Vector3 right) {
+            return new Vector3(left.x + right.x, left.y + right.y, left.z + right.z);
+        }
+        public static Vector3 operator -(Vector3 left, Vector3 right)
         {
-            return "(" + x + ", " + y + ", " + z + ")";
+            return new Vector3(left.x - right.x, left.y - right.y, left.z - right.z);
+        }
+        public static Vector3 operator *(Vector3 left, Vector3 right)
+        {
+            return new Vector3(left.x * right.x, left.y * right.y, left.z * right.z);
+        }
+        public static Vector3 operator *(Vector3 left, float right)
+        {
+            return new Vector3(left.x * right, left.y * right, left.z * right);
         }
 
-        public static Vector3 zero = new Vector3(0, 0, 0);
-        public static Vector3 one = new Vector3(1, 1, 1);
+        public override string ToString()
+        {
+            return "[" + x + ", " + y + ", " + z + "]";
+        }
+
+        public static Vector3 Zero = new Vector3(0, 0, 0);
+        public static Vector3 One = new Vector3(1, 1, 1);
+        public static Vector3 Up = new Vector3(0, 1, 0);
+        public static Vector3 Down = new Vector3(0, -1, 0);
+        public static Vector3 Left = new Vector3(-1, 0, 0);
+        public static Vector3 Right = new Vector3(1, 0, 0);
+        public static Vector3 Front = new Vector3(0, 0, 1);
+        public static Vector3 Back = new Vector3(0, 0, -1);
     }
 }

@@ -47,7 +47,7 @@ namespace Hazard::Rendering
 		bool IsShared = true;
 	};
 
-	class VertexBuffer : public Resource
+	class VertexBuffer : public Asset
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -60,7 +60,7 @@ namespace Hazard::Rendering
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 
-	class IndexBuffer : public Resource
+	class IndexBuffer : public Asset
 	{
 	public:
 		virtual ~IndexBuffer() = default;
@@ -74,7 +74,7 @@ namespace Hazard::Rendering
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
-	class UniformBuffer : public Resource
+	class UniformBuffer : public Asset
 	{
 	public:
 		virtual ~UniformBuffer() = default;

@@ -107,6 +107,7 @@ namespace Hazard::Rendering
 	void RenderEngine::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+
 	}
 	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{

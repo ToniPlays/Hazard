@@ -13,7 +13,8 @@ namespace Hazard
 		Valid = BIT(1),
 		Missing = BIT(2),
 		Invalid = BIT(3),
-		InvalidInput = BIT(4)
+		InvalidInput = BIT(4),
+		RuntimeGenerated = BIT(5)
 	};
 
 	using AssetHandle = UUID;
@@ -48,12 +49,5 @@ namespace Hazard
 	private:
 		void SetHandle(UUID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }
-	};
-
-	class Resource : public RefCount
-	{
-	public:
-		virtual ~Resource() = default;
-	private:
 	};
 }

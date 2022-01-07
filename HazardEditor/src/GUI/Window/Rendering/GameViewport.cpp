@@ -16,6 +16,7 @@ namespace WindowElement {
 	void GameViewport::Init()
 	{
 		SetActive(false);
+		if (!IsActive()) return;
 
 		WorldRendererSettings settings = {};
 		settings.DebugName = "GameViewport";

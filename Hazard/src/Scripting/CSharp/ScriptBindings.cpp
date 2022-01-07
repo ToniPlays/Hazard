@@ -5,6 +5,8 @@
 
 #include <mono/jit/jit.h>
 
+#define BIND_REGISTRY(x) BindRegistry(x::GetBindings());
+
 namespace Hazard::Scripting::CSharp {
 
 	void ScriptBindings::Init()
@@ -12,26 +14,30 @@ namespace Hazard::Scripting::CSharp {
 		using namespace Bindings;
 		//Debug bindings
 		{
-			BindRegistry(ConsoleBindings::GetBindings());
-			BindRegistry(GizmoBindings::GetBindings());
+			BIND_REGISTRY(ConsoleBindings);
+			BIND_REGISTRY(GizmoBindings);
 		}
 		//Application bindings 
 		{
-			BindRegistry(ApplicationBindings::GetBindings());
-			BindRegistry(InputBindings::GetBindings());
+			BIND_REGISTRY(ApplicationBindings);
+			BIND_REGISTRY(InputBindings);
 		}
 		//Component bindings 
 		{
-			BindRegistry(EntityBindings::GetBindings());
-			BindRegistry(TagComponentBindings::GetBindings());
-			BindRegistry(TransformBindings::GetBindings());
-			BindRegistry(AudioSourceBindings::GetBindings());
+			BIND_REGISTRY(EntityBindings);
+			BIND_REGISTRY(TagComponentBindings);
+			BIND_REGISTRY(TransformBindings);
+			BIND_REGISTRY(AudioSourceBindings);
+			BIND_REGISTRY(MeshComponentBindings);
 		}
+		//Utility
 		{
-			BindRegistry(MathBindings::GetBindings());
+			BIND_REGISTRY(MathBindings);
 		}
+		//Rendering
 		{
-			BindRegistry(BufferBindings::GetBindings());
+			BIND_REGISTRY(BufferBindings);
+			BIND_REGISTRY(MeshBindings);
 		}
 	}
 	void ScriptBindings::BindRegistry(BindMap bindings)

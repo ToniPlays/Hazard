@@ -10,8 +10,8 @@ namespace Hazard.Rendering
     [StructLayout(LayoutKind.Sequential)]
     public struct VertexBufferCreateInfo
     {
-        public ulong Size;
+        public uint Size;
         public BufferUsage Usage;
-        public byte[] Data;
+        public Vertex3D[] Data;
     }
 }

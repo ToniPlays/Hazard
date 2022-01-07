@@ -12,7 +12,7 @@
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
-
+#include <mono/metadata/mono-gc.h>
 
 namespace Hazard::Scripting::CSharp {
 
@@ -94,7 +94,9 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoObject* Mono::ObjectFromHandle(uint32_t handle)
 	{
-		return mono_gchandle_get_target(handle);
+		MonoObject* obj = mono_gchandle_get_target(handle);
+		HZR_CORE_ASSERT(obj, "Object null for handle {0}", handle);
+		return obj;
 	}
 	void Mono::FreeHandle(uint32_t handle)
 	{
@@ -295,6 +297,17 @@ namespace Hazard::Scripting::CSharp {
 			return FieldVisibility::Private;
 
 		return FieldVisibility::Protected;
+	}
+	void Mono::RunGarbageCollection()
+	{
+		Timer timer;
+		mono_gc_collect(mono_gc_max_generation());
+		using namespace std::chrono_literals;
+		while (mono_gc_pending_finalizers()) 
+		{
+			std::this_thread::sleep_for(500ns);
+		}
+		HZR_CORE_INFO("Garbage collection took: {0}ms", timer.ElapsedMillis());
 	}
 	void Mono::LoadMonoAssebly(const char* path)
 	{

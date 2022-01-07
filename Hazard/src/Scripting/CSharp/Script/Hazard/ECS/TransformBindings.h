@@ -3,8 +3,9 @@
 #include "Scripting/CSharp/ScriptBindings.h"
 #include <glm/glm.hpp>
 
-namespace Hazard::Scripting::CSharp::Bindings {
-	//Bind debug calls internal
+namespace Hazard::Scripting::CSharp::Bindings 
+{
+	//Bind Transform calls internal
 	class TransformBindings {
 	public:
 		static BindMap GetBindings();

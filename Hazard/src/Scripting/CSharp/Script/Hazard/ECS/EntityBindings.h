@@ -3,7 +3,7 @@
 #include "Scripting/CSharp/ScriptBindings.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
-	//Bind debug calls internal
+	//Bind Entity calls internal
 	class EntityBindings {
 	public:
 		static BindMap GetBindings();

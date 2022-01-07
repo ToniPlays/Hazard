@@ -3,12 +3,11 @@
 #include "Scripting/CSharp/ScriptBindings.h"
 
 namespace Hazard::Scripting::CSharp::Bindings {
-
-	class MeshBindings {
+	//Bind Mesh calls internal
+	class MeshComponentBindings {
 	public:
 		static BindMap GetBindings();
 	private:
-		static uint64_t Mesh_Create_Native(void* createInfo);
-		static void Mesh_Destroy_Native(uint64_t assetID);
+		static void MeshComponent_SetMesh_Native(uint32_t entityID, uint64_t meshHandle);
 	};
 }

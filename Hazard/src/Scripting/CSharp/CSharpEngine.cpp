@@ -38,7 +38,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	void CSharpEngine::OnEndRuntime()
 	{
-
+		Mono::RunGarbageCollection();
 	}
 	bool CSharpEngine::ModuleExists(const std::string& name)
 	{
@@ -99,11 +99,11 @@ namespace Hazard::Scripting::CSharp {
 
 		for (auto& script : data.Scripts)
 		{
-			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnCreated, nullptr);
+			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnCreated);
 		}
 		for (auto& script : data.Scripts)
 		{
-			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnStart, nullptr);
+			Mono::TryCallMethod(Mono::ObjectFromHandle(script->GetHandle()), ((CSharpScript*)script)->OnStart);
 		}
 	}
 	void CSharpEngine::ClearEntity(uint32_t handle, const std::string& moduleName)

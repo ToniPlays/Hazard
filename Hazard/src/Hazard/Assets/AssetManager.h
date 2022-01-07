@@ -22,6 +22,12 @@ namespace Hazard
 			s_AssetLoader.RegisterLoader<T>(type);
 		}
 
+		void CreateRuntimeAsset(Ref<Asset> asset) 
+		{
+
+			
+		}
+
 		static AssetHandle ImportAsset(const std::string& filePath);
 		static AssetHandle GetHandleFromFile(const std::string& filePath);
 

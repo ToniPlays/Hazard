@@ -33,6 +33,7 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
+		
 		Ref<World> world = ECS::WorldCommand::GetCurrentWorld();
 		if (!world) return;
 

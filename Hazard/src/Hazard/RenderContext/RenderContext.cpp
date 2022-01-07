@@ -38,6 +38,7 @@ namespace Hazard::Rendering {
 	void RenderContext::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+		delete m_Window;
 	}
 
 	void RenderContext::Process(Event& e)

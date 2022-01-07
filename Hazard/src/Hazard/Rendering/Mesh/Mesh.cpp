@@ -36,7 +36,7 @@ namespace Hazard::Rendering {
 	}
 	Mesh::~Mesh()
 	{
-
+		HZR_CORE_WARN("Deleted mesh: {0}", m_Filename);
 	}
 	void Mesh::SetRenderPass(const Ref<RenderPass>& renderPass)
 	{

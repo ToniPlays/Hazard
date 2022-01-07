@@ -345,7 +345,7 @@ namespace WindowElement {
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 
-			std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "None";
+			std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "Null mesh";
 			bool changed = Input::InputField(file);
 
 			DragDropUtils::DragTarget("Mesh", [&](const ImGuiPayload* payload) {
