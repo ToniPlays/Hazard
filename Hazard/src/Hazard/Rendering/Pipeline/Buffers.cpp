@@ -38,7 +38,9 @@ namespace Hazard::Rendering {
 		if (createInfo->IsShared) {
 			RenderLibrary::AddVertexBuffer(buffer);
 		}
+		else AssetManager::AddRuntimeResource(buffer);
 
+		buffer->m_Type = ResourceType::VertexBuffer;
 		return buffer;
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
@@ -69,7 +71,9 @@ namespace Hazard::Rendering {
 		if (createInfo->IsShared) {
 			RenderLibrary::AddIndexBuffer(buffer);
 		}
+		else AssetManager::AddRuntimeResource(buffer);
 
+		buffer->m_Type = ResourceType::IndexBuffer;
 		return buffer;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
@@ -80,8 +84,7 @@ namespace Hazard::Rendering {
 			return buffer;
 		}
 
-		Ref<UniformBuffer> buffer;
-
+		Ref<UniformBuffer> buffer = nullptr;
 		HZR_CORE_WARN("Creating UniformBuffer: {0}", createInfo->Name);
 
 		switch (RenderCommand::GetAPI())
@@ -102,6 +105,9 @@ namespace Hazard::Rendering {
 		if (createInfo->IsShared) {
 			RenderLibrary::AddUniformBuffer(buffer);
 		}
+		else AssetManager::AddRuntimeResource(buffer);
+
+		buffer->m_Type = ResourceType::UniformBuffer;
 		return buffer;
 	}
 }

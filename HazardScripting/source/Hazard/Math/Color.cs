@@ -17,7 +17,7 @@ namespace Hazard
             this.a = a;
         }
 
-        public Color RandomColor() 
+        public static Color RandomColor() 
         { 
             return new Color(Math.RandomRange(0, 255), Math.RandomRange(0, 255), Math.RandomRange(0, 255));        
         }

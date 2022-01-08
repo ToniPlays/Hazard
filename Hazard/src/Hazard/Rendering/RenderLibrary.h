@@ -14,8 +14,8 @@ namespace Hazard::Rendering {
 		static void AddVertexBuffer(Ref<VertexBuffer> buffer) {
 			std::string& name = "VBO_" + buffer->GetDebugName();
 			HZR_CORE_ASSERT(!HasVertexBuffer(buffer->GetDebugName()), "RenderLibrary already contains {0} VertexBuffer", name);
-			s_RuntimeResources[name] = buffer;
 			AssetManager::AddRuntimeResource(buffer);
+			s_RuntimeResources[name] = buffer;
 		};
 		static void AddIndexBuffer(Ref<IndexBuffer> buffer) {
 			std::string& name = "IBO_" + buffer->GetDebugName();

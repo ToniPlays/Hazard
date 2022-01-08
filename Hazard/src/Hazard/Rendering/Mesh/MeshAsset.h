@@ -7,6 +7,10 @@ namespace Hazard::Rendering {
 	{
 		friend class MeshLoader;
 	public:
+
+		MeshAsset() = default;
+		MeshAsset(UUID meshHandle) : m_MeshSourceHandle(meshHandle) {}
+
 		float GetScaleFactor() { return m_ScaleFactor; }
 		UUID GetSourceHandle() { return m_MeshSourceHandle; }
 	private:

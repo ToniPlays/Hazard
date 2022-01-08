@@ -14,6 +14,11 @@ namespace WindowElement {
 	}
 	void EngineAssets::OnWindowRender()
 	{
+		if (ImGui::Button("Refresh")) {
+			AssetManager::RemoveUnreferencedResources();
+		}
+		return;
+
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed;
 		for (auto& [path, meta] : Hazard::AssetManager::GetMetadataRegistry()) 
 		{
@@ -27,9 +32,11 @@ namespace WindowElement {
 		for (auto& [handle, resource] : Hazard::AssetManager::GetRuntimeResources())
 		{
 			AssetHandle resourceHandle = handle;
+			Ref<RuntimeResource> res = resource;
 			ImGui::PushID(std::to_string(handle).c_str());
 			Layout::Treenode(Utils::ResourceTypeToString(resource->GetType()), flags, [&]() {
 				ImGui::Text("Handle: %s", std::to_string(resourceHandle).c_str());
+				ImGui::Text("References: %s", std::to_string(res->GetRefCount() - 2).c_str());
 				});
 			ImGui::PopID();
 		}

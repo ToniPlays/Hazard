@@ -3,8 +3,11 @@
 #include "MeshBindings.h"
 #include "Scripting/CSharp/Mono/Mono.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
+#include "Hazard/Assets/AssetManager.h"
 
 #include "mono/jit/jit.h"
+
+using namespace Hazard::Rendering;
 
 namespace Hazard::Scripting::CSharp::Bindings {
 
@@ -22,22 +25,23 @@ namespace Hazard::Scripting::CSharp::Bindings {
     {
         using namespace Hazard::Rendering;
         struct CSharpMesh {
-            uint64_t MeshVertexBuffer;
-            uint64_t MeshIndexBuffer;
+            uint64_t MeshVertexHandle;
+            uint64_t MeshIndexHandle;
         };
 
         CSharpMesh* csMesh = (CSharpMesh*)createInfo;
 
         MeshCreateInfo meshInfo = {};
-        //meshInfo.VertexBuffer = ScriptResourceManager::GetResource<VertexBuffer>(csMesh->MeshVertexBuffer);
-        //meshInfo.IndexBuffer = ScriptResourceManager::GetResource<IndexBuffer>(csMesh->MeshIndexBuffer);
+        meshInfo.VertexBuffer = AssetManager::GetRuntimeResource<VertexBuffer>(csMesh->MeshVertexHandle);
+        meshInfo.IndexBuffer = AssetManager::GetRuntimeResource<IndexBuffer>(csMesh->MeshIndexHandle);
 
-        Ref<Mesh> mesh =  Ref<Mesh>::Create(meshInfo.VertexBuffer, meshInfo.IndexBuffer, nullptr);
+        Ref<Mesh> mesh = MeshFactory::LoadMesh(&meshInfo);
+
         mesh->IncRefCount();
         return mesh->GetHandle();
     }
     void MeshBindings::Mesh_Destroy_Native(uint64_t assetID)
     {
-        
+        AssetManager::GetRuntimeResource<Mesh>(assetID)->DecRefCount();
     }
 }

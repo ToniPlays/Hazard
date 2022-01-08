@@ -21,6 +21,7 @@ namespace Hazard
 		VertexBuffer,
 		IndexBuffer,
 		UniformBuffer,
+		Pipeline,
 		Mesh
 	};
 

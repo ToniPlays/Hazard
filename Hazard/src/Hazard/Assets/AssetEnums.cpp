@@ -51,10 +51,11 @@ namespace Hazard {
 		{
 			switch (type)
 			{
-			case Hazard::ResourceType::VertexBuffer:	return "VertexBuffer";
-			case Hazard::ResourceType::IndexBuffer:		return "IndexBuffer";
-			case Hazard::ResourceType::UniformBuffer:	return "UniformBuffer";
-			case Hazard::ResourceType::Mesh:			return "Mesh";
+			case ResourceType::VertexBuffer:	return "VertexBuffer";
+			case ResourceType::IndexBuffer:		return "IndexBuffer";
+			case ResourceType::UniformBuffer:	return "UniformBuffer";
+			case ResourceType::Pipeline:		return "Pipeline";
+			case ResourceType::Mesh:			return "Mesh";
 			default:
 				return "Undefined";
 			}

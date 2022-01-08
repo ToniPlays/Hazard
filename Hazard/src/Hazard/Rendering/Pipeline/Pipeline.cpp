@@ -40,6 +40,7 @@ namespace Hazard::Rendering
 			RenderLibrary::AddPipeline(pipeline);
 		}
 
+		pipeline->m_Type = ResourceType::Pipeline;
 		return pipeline;
 	}
 }

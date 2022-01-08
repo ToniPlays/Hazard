@@ -5,8 +5,11 @@
 
 #include "Hazard/Rendering/Pipeline/Buffers.h"
 #include "Scripting/CSharp/Mono/Mono.h"
+#include "Hazard/Assets/AssetManager.h"
 
 #include "mono/jit/jit.h"
+
+using namespace Hazard::Rendering;
 
 namespace Hazard::Scripting::CSharp::Bindings {
 
@@ -26,7 +29,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 
     uint64_t BufferBindings::VertexBuffer_Create_Native(void* createInfo)
     {
-        using namespace Hazard::Rendering;
         struct CSharpInfo {
             uint32_t size;
             BufferUsage usage;
@@ -42,22 +44,25 @@ namespace Hazard::Scripting::CSharp::Bindings {
         info.Usage = cInfo->usage;
         info.Data = cInfo->data ? Mono::GetArrayValuePointer(cInfo->data) : nullptr;
         
-        return 0;
+        Ref<VertexBuffer> buffer = VertexBuffer::Create(&info);
+        buffer->IncRefCount();
+        return buffer->GetHandle();
     }
 
-    void BufferBindings::VertexBuffer_Destroy_Native(uint32_t resourceID)
+    void BufferBindings::VertexBuffer_Destroy_Native(uint64_t resourceID)
     {
-
+        Ref<VertexBuffer> buffer = AssetManager::GetRuntimeResource<VertexBuffer>(resourceID);
+        buffer->DecRefCount();
     }
 
-    uint32_t BufferBindings::VertexBuffer_GetSize_Native(uint32_t resourceID)
+    uint32_t BufferBindings::VertexBuffer_GetSize_Native(uint64_t resourceID)
     {
-        using namespace Hazard::Rendering;
-        return 0;
+        Ref<VertexBuffer> buffer = AssetManager::GetRuntimeResource<VertexBuffer>(resourceID);
+        return buffer->GetSize();
     }
     uint64_t BufferBindings::IndexBuffer_Create_Native(void* createInfo)
     {
-        using namespace Hazard::Rendering;
+        
         struct CSharpInfo {
             uint32_t size;
             BufferUsage usage;
@@ -71,14 +76,18 @@ namespace Hazard::Scripting::CSharp::Bindings {
         info.Usage = cInfo->usage;
         info.Data = cInfo->data ? (uint32_t*)Mono::GetArrayValuePointer(cInfo->data) : nullptr;
         
-        return 0;
-    }
-    void BufferBindings::IndexBuffer_Destroy_Native(uint32_t resourceID)
-    {
+        Ref<IndexBuffer> buffer = IndexBuffer::Create(&info);
+        buffer->IncRefCount();
 
+        return buffer->GetHandle();
     }
-    uint32_t BufferBindings::IndexBuffer_GetSize_Native(uint32_t resourceID)
+    void BufferBindings::IndexBuffer_Destroy_Native(uint64_t resourceID)
     {
-        return uint32_t();
+        Ref<IndexBuffer> buffer = AssetManager::GetRuntimeResource<IndexBuffer>(resourceID);
+        buffer->DecRefCount();
+    }
+    uint32_t BufferBindings::IndexBuffer_GetSize_Native(uint64_t resourceID)
+    {
+        return AssetManager::GetRuntimeResource<IndexBuffer>(resourceID)->GetCount();
     }
 }

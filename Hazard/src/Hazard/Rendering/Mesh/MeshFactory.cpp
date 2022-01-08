@@ -1,6 +1,8 @@
 
 #include <hzrpch.h>
 #include "MeshFactory.h"
+#include "Hazard/Assets/AssetManager.h"
+
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,6 +26,12 @@ namespace Hazard::Rendering {
 
 	Ref<Mesh> MeshFactory::LoadMesh(MeshCreateInfo* createInfo)
 	{
+		if (createInfo->VertexBuffer || createInfo->IndexBuffer) {
+			Ref<Mesh> mesh = Ref<Mesh>::Create(createInfo->VertexBuffer, createInfo->IndexBuffer, nullptr);
+			AssetManager::AddRuntimeResource(mesh);
+			return mesh;
+		}
+
 		Timer timer;
 		std::string absoluteFile = File::GetFileAbsolutePath(createInfo->Path);
 
@@ -44,6 +52,8 @@ namespace Hazard::Rendering {
 		TraverseNode(scene->mRootNode, data);
 		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo->Path, timer.ElapsedMillis());
 
+		Ref<Mesh> mesh = Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
+		AssetManager::AddRuntimeResource(mesh);
 		return Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
 	}
 

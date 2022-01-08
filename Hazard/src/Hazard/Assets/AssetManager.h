@@ -15,11 +15,13 @@ namespace Hazard
 
 		static void Init();
 		static void Shutdown();
+		static void RemoveUnreferencedResources();
 
 		static std::unordered_map<std::filesystem::path, AssetMetadata> GetMetadataRegistry() { 
 			return s_Registry.GetRegistry(); 
 		}
-		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> GetRuntimeResources() {
+		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> GetRuntimeResources() 
+		{
 			return s_RuntimeResources;
 		}
 		
@@ -40,6 +42,7 @@ namespace Hazard
 		static void AddRuntimeResource(Ref<RuntimeResource> resource) 
 		{
 			resource->m_Handle = UUID();
+			resource->DecRefCount();
 			s_RuntimeResources[resource->GetHandle()] = resource;
 		}
 		template<typename T>

@@ -73,6 +73,7 @@ namespace Hazard::Scripting::CSharp {
 	{
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(method, object, params, &exception);
+
 		if (exception) {
 			MonoClass* exceptionClass = Mono::GetClassFromObject(exception);
 			MonoType* type = mono_class_get_type(exceptionClass);
