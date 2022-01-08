@@ -12,7 +12,10 @@ namespace Hazard::Rendering
 	}
 	DebugRenderer::~DebugRenderer()
 	{
-
+		m_CirclePipeline.Reset();
+		m_LinePipeline.Reset();
+		m_CircleIndexBuffer.Reset();
+		m_LineVertexBuffer.Reset();
 	}
 	void DebugRenderer::SetTargetRenderPass(Ref<RenderPass> renderPass)
 	{

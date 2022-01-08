@@ -59,7 +59,7 @@ namespace Hazard::Rendering::Vulkan {
 		VkDebugUtilsMessengerCreateInfoEXT debugInfo = {};
 
 		if (ValidationLayer::IsValidationSupported()) {
-			//ValidationLayer::InitValidationLayers(createInfo, debugInfo, appInfo->Logging);
+			ValidationLayer::InitValidationLayers(createInfo, debugInfo, appInfo->Logging);
 		}
 		vkCreateInstance(&createInfo, nullptr, &m_Instance);
 
@@ -69,8 +69,10 @@ namespace Hazard::Rendering::Vulkan {
 
 		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
 		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface(), RenderContextCommand::GetImagesInFlight());
+		m_PhysicalDevice = new PhysicalDevice();
 
 		VulkanAllocator::Init();
+
 
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
@@ -200,9 +202,9 @@ namespace Hazard::Rendering::Vulkan {
 		s_Callback = callback;
 	}
 
-	DeviceSpec VulkanContext::GetDeviceSpec() const
+	PhysicalDevice& VulkanContext::GetPhysicalDevice() const
 	{
-		return m_Device->GetSpec();
+		return *m_PhysicalDevice;
 	}
 	void VulkanContext::SendDebugMessage(const char* message, const char* code)
 	{

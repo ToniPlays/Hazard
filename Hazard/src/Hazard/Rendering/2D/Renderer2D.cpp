@@ -22,6 +22,8 @@ namespace Hazard::Rendering
 	}
 	Renderer2D::~Renderer2D()
 	{
+		m_VertexBuffer.Reset();
+		m_IndexBuffer.Reset();
 		m_Pipeline.Reset();
 		m_RenderCommandBuffer.Reset();
 	}

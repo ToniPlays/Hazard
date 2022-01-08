@@ -21,6 +21,10 @@ namespace Hazard {
 		Application() = default;
 		virtual ~Application() = default;
 
+		/// <summary>
+		/// Preinit is called before the engine is started.
+		/// This should be used for building the application stack
+		/// </summary>
 		virtual void PreInit() {};
 		virtual void Init() {};
 		virtual void Update() {};

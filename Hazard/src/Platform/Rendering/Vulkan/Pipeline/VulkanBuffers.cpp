@@ -61,9 +61,11 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanVertexBuffer::~VulkanVertexBuffer()
 	{
+		HZR_CORE_INFO("Deleting {0}", m_DebugName);
 		m_LocalData.Release();
 		VkBuffer buffer = m_Buffer;
 		VmaAllocation allocation = m_Allocation;
+
 
 		VulkanAllocator allocator("VertexBuffer");
 		allocator.DestroyBuffer(buffer, allocation);
@@ -99,6 +101,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanIndexBuffer::~VulkanIndexBuffer()
 	{
+		HZR_CORE_INFO("Deleting {0}", m_DebugName);
 		VkBuffer buffer = m_Buffer;
 		VmaAllocation allocation = m_Allocation;
 
@@ -165,6 +168,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
 	{
+		HZR_CORE_INFO("Deleting UBO {0}", m_Name);
 		Release();
 	}
 	void VulkanUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)

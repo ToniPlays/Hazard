@@ -43,11 +43,14 @@ namespace Hazard::Module {
 		HZR_PROFILE_FUNCTION();
 		for (size_t i = m_Modules.size() - 1; i > 0; i--)
 		{
-			auto* module = m_Modules[i];
-			auto it = std::find(m_Modules.begin(), m_Modules.end(), module);
+			auto* mod = m_Modules[i];
+			mod->Close();
+
+			auto it = std::find(m_Modules.begin(), m_Modules.end(), mod);
 			if (it != m_Modules.end())
 			{
 				m_Modules.erase(it);
+				delete mod;
 			}
 		}
 		m_Modules.clear();

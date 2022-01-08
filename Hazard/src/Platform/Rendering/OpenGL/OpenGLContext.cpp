@@ -45,6 +45,8 @@ namespace Hazard::Rendering {
 				HZR_THROW("Unable to init OpenGL GLFW context");
 			};
 
+			m_PhysicalDevice = new PhysicalDevice();
+
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
@@ -53,6 +55,7 @@ namespace Hazard::Rendering {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
 		}
 
 		void OpenGLContext::SwapBuffers()
@@ -90,26 +93,9 @@ namespace Hazard::Rendering {
 			OpenGLContext::s_Callback = callback;
 		}
 
-		DeviceSpec OpenGLContext::GetDeviceSpec() const
+		PhysicalDevice& OpenGLContext::GetPhysicalDevice() const
 		{
-			DeviceSpec spec;
-			std::stringstream ss;
-			GLint major, minor, slots;
-
-			glGetIntegerv(GL_MAJOR_VERSION, &major);
-			glGetIntegerv(GL_MINOR_VERSION, &minor);
-			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &slots);
-
-			ss << "OpenGL ";
-			ss << major << "." << minor;
-			spec.Renderer = ss.str();
-
-			ss.str("");
-			ss << glGetString(GL_RENDERER);
-
-			spec.Name = ss.str();
-			spec.TextureSlots = major;
-			return spec;
+			return *m_PhysicalDevice;
 		}
 		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
 		{

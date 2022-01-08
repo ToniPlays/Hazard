@@ -156,22 +156,6 @@ namespace Hazard::Rendering::Vulkan {
 		vkDestroyFence(m_Device, fence, nullptr);
 		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &buffer);
 	}
-	DeviceSpec VulkanDevice::GetSpec()
-	{
-		DeviceSpec spec;
-		VkPhysicalDeviceProperties props = {};
-		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &props);
-		std::stringstream ss;
-
-		ss << "Vulkan " << VK_VERSION_MAJOR(props.apiVersion);
-		ss << "." << VK_VERSION_MINOR(props.apiVersion);
-		ss << "." << VK_VERSION_PATCH(props.apiVersion);
-
-		spec.Renderer = ss.str();
-		spec.Name = props.deviceName;
-		spec.TextureSlots = props.limits.framebufferNoAttachmentsSampleCounts + 1;
-		return spec;
-	}
 	uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 	{
 		VkPhysicalDeviceMemoryProperties memProperties;

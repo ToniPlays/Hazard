@@ -51,8 +51,7 @@ namespace Hazard::Rendering
 	}
 	RenderEngine::~RenderEngine()
 	{
-		delete m_Renderer2D;
-		delete m_DebugRenderer;
+		
 	}
 	void RenderEngine::Render()
 	{
@@ -107,7 +106,10 @@ namespace Hazard::Rendering
 	void RenderEngine::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+		RenderLibrary::Clear();
 
+		delete m_Renderer2D;
+		delete m_DebugRenderer;
 	}
 	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{

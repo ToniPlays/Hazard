@@ -29,7 +29,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		void AddResizeCallback(const ResizeCallback& callback) { m_SwapChain->AddResizeCallback(callback); };
 		void SetErrorListener(const ErrorCallback& callback) override;
-		DeviceSpec GetDeviceSpec() const override;
+		PhysicalDevice& GetPhysicalDevice() const override;
 
 		static VkInstance GetInstance() { return m_Instance; }
 		static VkSurfaceKHR GetSurface() { return m_WindowSurface->GetVkSurface(); }
@@ -53,6 +53,7 @@ namespace Hazard::Rendering::Vulkan {
 	private:
 
 		Window* m_Window;
+		PhysicalDevice* m_PhysicalDevice;
 		inline static VkInstance m_Instance;
 		inline static Scope<VulkanDevice> m_Device;
 		inline static Scope<WindowSurface> m_WindowSurface;

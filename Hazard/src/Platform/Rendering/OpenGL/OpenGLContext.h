@@ -25,7 +25,7 @@ namespace Hazard::Rendering::OpenGL {
 		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 
 		void SetErrorListener(const ErrorCallback& callback) override;
-		DeviceSpec GetDeviceSpec() const override;
+		PhysicalDevice& GetPhysicalDevice() const override;
 
 		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeCallback.push_back(callback); };
 
@@ -34,6 +34,7 @@ namespace Hazard::Rendering::OpenGL {
 
 	private:
 		GLFWwindow* m_Window;
+		PhysicalDevice* m_PhysicalDevice;
 		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		static ErrorCallback s_Callback;
 		std::vector<ResizeCallback> m_ResizeCallback;

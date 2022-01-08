@@ -68,8 +68,6 @@ namespace Hazard::Rendering {
 		m_Context->Init(this, appInfo);
 		m_Context->SetClearColor(info->Color);
 
-		m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
-
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
 		if (info->Maximized)

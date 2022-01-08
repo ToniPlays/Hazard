@@ -72,6 +72,9 @@ namespace Hazard::Rendering::Vulkan
 	VulkanShader::~VulkanShader()
 	{
 		DestroyModules();
+		m_UniformBuffers.clear();
+		m_ShaderData.Stages.clear();
+		m_ShaderData.UniformsDescriptions.clear();
 	}
 	void VulkanShader::Reload()
 	{
@@ -209,6 +212,8 @@ namespace Hazard::Rendering::Vulkan
 		for (auto&& [stage, module] : m_Modules) {
 			vkDestroyShaderModule(device->GetDevice(), module, nullptr);
 		}
+
+		m_Modules.clear();
 	}
 	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{

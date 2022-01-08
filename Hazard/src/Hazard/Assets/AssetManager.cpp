@@ -16,6 +16,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		s_LoadedAssets.clear();
+		s_RuntimeResources.clear();
 	}
 	void AssetManager::RemoveUnreferencedResources()
 	{
@@ -24,6 +25,11 @@ namespace Hazard
 				s_RuntimeResources.erase(handle);
 		}
 	}
+	/// <summary>
+	/// Import asset, asset is not loaded until it is reguested
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	AssetHandle AssetManager::ImportAsset(const std::string& filePath)
 	{
 		if (filePath == "") return INVALID_ASSET_HANDLE;

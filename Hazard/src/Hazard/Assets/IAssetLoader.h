@@ -4,6 +4,9 @@
 
 namespace Hazard 
 {
+	/// <summary>
+	/// Interface for registering asset loaders for a given asset type
+	/// </summary>
 	class IAssetLoader {
 	public:
 		IAssetLoader() = default;

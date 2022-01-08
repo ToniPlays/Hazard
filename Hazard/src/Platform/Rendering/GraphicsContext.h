@@ -5,6 +5,7 @@
 #include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 #include "Hazard/Rendering/Pipeline/RenderPass.h"
 #include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/PhysicalDevice.h"
 
 namespace Hazard::Rendering {
 
@@ -18,12 +19,6 @@ namespace Hazard::Rendering {
 		int Severity;
 
 		ErrorData(const char* message, const char* type) : Info(message), ErrorCode(type), Severity(0) {}
-	};
-
-	struct DeviceSpec {
-		std::string Name = "Undefined";
-		std::string Renderer = "Undefined";
-		uint32_t TextureSlots = 0;
 	};
 
 	using ErrorCallback = void(*)(ErrorData& data);
@@ -42,7 +37,7 @@ namespace Hazard::Rendering {
 
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
-		virtual DeviceSpec GetDeviceSpec() const = 0;
+		virtual PhysicalDevice& GetPhysicalDevice() const = 0;
 
 		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;
 		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) = 0;

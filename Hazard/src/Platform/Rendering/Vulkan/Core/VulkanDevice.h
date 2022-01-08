@@ -34,7 +34,7 @@ namespace Hazard::Rendering::Vulkan
 		VkDescriptorPool GetDescriptorPool(uint32_t index) { return m_DescriptorPools[index]; }
 		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
 		QueueIndices GetPresentQueue() { return m_PresentQueue; }
-		DeviceSpec GetSpec();
+		
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }

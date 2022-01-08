@@ -29,6 +29,8 @@ namespace Hazard::Rendering::Vulkan
 		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		
+		HZR_CORE_INFO("Destroyed pipeline {0}", m_Specs.DebugName);
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{

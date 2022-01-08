@@ -11,7 +11,7 @@ namespace WindowElement {
 	class EditorView : public Module::Module {
 	public:
 		EditorView();
-		~EditorView() = default;
+		~EditorView();
 
 		void Init() override;
 		void Update() override;

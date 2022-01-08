@@ -22,6 +22,13 @@ namespace WindowElement {
 		m_Elements = std::vector<RenderableElement*>();
 		s_Instance = this;
 	}
+	EditorView::~EditorView()
+	{
+		for (auto element : m_Elements) {
+			delete element;
+		}
+		m_Elements.clear();
+	}
 	void EditorView::Init()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -131,6 +138,13 @@ namespace WindowElement {
 	void EditorView::Close()
 	{
 		HZR_PROFILE_FUNCTION();
+		
+		for (uint32_t i = 0; i < m_Elements.size(); i++) {
+			delete m_Elements[i];
+		}
+		m_Elements.clear();
+
+		delete m_Renderer;
 		ImGui::DestroyContext();
 	}
 	void EditorView::BeginFrame()

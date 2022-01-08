@@ -38,7 +38,7 @@ namespace WindowElement {
 		Layout::Text("Platform");
 		Layout::TableNext();
 		Layout::Text(context->GetWindow().GetWindowInfo().Platform);
-
+		/*
 		Hazard::Rendering::DeviceSpec spec = context->GetWindow().GetWindowInfo().deviceSpecs;
 
 		Layout::TableNext();
@@ -50,7 +50,7 @@ namespace WindowElement {
 		Layout::Text("Rendering API");
 		Layout::TableNext();
 		Layout::Text(spec.Renderer);
-
+		*/
 		Layout::EndTable();
 
 		PerformanceProfiler* profiler = Application::GetData().Profiler;
