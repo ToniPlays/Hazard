@@ -5,7 +5,7 @@
 #include "Hazard/RenderContext/RenderContextCommand.h"
 #include "Queue/RenderCommandBuffer.h"
 #include "RenderEngine.h"
-#include "Hazard/Entity/Component.h"
+#include "Mesh/Mesh.h"
 
 namespace Hazard::Rendering 
 {

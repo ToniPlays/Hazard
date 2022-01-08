@@ -16,6 +16,6 @@ namespace Hazard::Scripting::CSharp::Bindings {
 	{
 		using namespace Hazard::Rendering;
 		auto& mc = ScriptCommand::EntityGetComponent<ECS::MeshComponent>(entityID);
-		mc.m_Mesh = AssetManager::GetAsset<Mesh>(meshHandle);
+		//mc.m_Mesh = AssetManager::GetAsset<Mesh>(meshHandle);
 	}
 }

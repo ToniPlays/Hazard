@@ -117,7 +117,7 @@ namespace Hazard::ECS::Loader
 			if (fileName.empty()) return;
 
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
-			c.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
+			c.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -125,12 +125,12 @@ namespace Hazard::ECS::Loader
 
 			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
 			if (comp["Texture"]) {
-				using namespace Hazard::Rendering;
 				std::string fileName;
 				YamlUtils::Deserialize(comp, "Texture", fileName, std::string(""));
 				AssetHandle handle = AssetManager::ImportAsset(fileName);
-				if(handle != INVALID_ASSET_HANDLE)
-					component.Texture = AssetManager::GetAsset<Texture2D>(handle);
+
+				//if(handle != INVALID_ASSET_HANDLE)
+				//	component.Texture = AssetManager::GetAsset<TextureAsset>(handle);
 			}
 		};
 		template<>

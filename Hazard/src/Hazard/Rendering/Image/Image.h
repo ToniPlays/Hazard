@@ -37,7 +37,7 @@ namespace Hazard::Rendering
 	};
 
 
-	class Image : public Asset {
+	class Image : public RuntimeResource {
 	public:
 		virtual ~Image() = default;
 

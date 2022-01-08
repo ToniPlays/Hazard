@@ -5,6 +5,7 @@
 namespace Hazard
 {
 	std::unordered_map<AssetHandle, Ref<Asset>> AssetManager::s_LoadedAssets;
+	std::unordered_map<AssetHandle, Ref<RuntimeResource>> AssetManager::s_RuntimeResources;
 
 	void AssetManager::Init()
 	{

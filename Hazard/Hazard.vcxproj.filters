@@ -1883,6 +1883,7 @@
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.h" />
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

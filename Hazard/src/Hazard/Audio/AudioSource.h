@@ -6,7 +6,7 @@
 
 namespace Hazard::Audio {
 
-	struct AudioBufferData : public Asset
+	struct AudioBufferData : public RuntimeResource
 	{
 	public:
 		AudioBufferData() = default;

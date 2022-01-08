@@ -16,12 +16,20 @@ namespace Hazard
 		PhysicsMaterial
 	};
 
+	enum class ResourceType {
+		Undefined = 0,
+		VertexBuffer,
+		IndexBuffer,
+		UniformBuffer,
+		Mesh
+	};
+
 	namespace Utils 
 	{
 		AssetType StringToAssetType(const std::string& type);
-
 		const char* AssetTypeToString(AssetType type);
-
 		AssetType AssetTypeFromExtension(const std::string& ext);
+
+		const char* ResourceTypeToString(ResourceType type);
 	}
 } 

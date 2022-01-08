@@ -15,17 +15,18 @@ namespace Hazard
 
 		static void Init();
 		static void Shutdown();
+
+		static std::unordered_map<std::filesystem::path, AssetMetadata> GetMetadataRegistry() { 
+			return s_Registry.GetRegistry(); 
+		}
+		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> GetRuntimeResources() {
+			return s_RuntimeResources;
+		}
 		
 		template<typename T>
 		static void RegisterLoader(AssetType type) 
 		{
 			s_AssetLoader.RegisterLoader<T>(type);
-		}
-
-		void CreateRuntimeAsset(Ref<Asset> asset) 
-		{
-
-			
 		}
 
 		static AssetHandle ImportAsset(const std::string& filePath);
@@ -35,6 +36,18 @@ namespace Hazard
 		static bool IsLoaded(const AssetHandle& handle);
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
+
+		static void AddRuntimeResource(Ref<RuntimeResource> resource) 
+		{
+			resource->m_Handle = UUID();
+			s_RuntimeResources[resource->GetHandle()] = resource;
+		}
+		template<typename T>
+		static Ref<T> GetRuntimeResource(AssetHandle handle) {
+			if (s_RuntimeResources.find(handle) == s_RuntimeResources.end()) 
+				return nullptr;
+			return s_RuntimeResources[handle].As<T>();
+		}
 
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle) 
@@ -62,6 +75,7 @@ namespace Hazard
 
 	private:
 		static std::unordered_map<AssetHandle, Ref<Asset>> s_LoadedAssets;
+		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> s_RuntimeResources;
 		inline static AssetRegistry s_Registry;
 		inline static AssetMetadata s_NullMetadata;
 		inline static AssetLoader s_AssetLoader;

@@ -86,6 +86,7 @@ namespace Hazard::Rendering
 		}
 
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+
 		m_VertexBuffer->Bind(m_RenderCommandBuffer);
 		m_IndexBuffer->Bind(m_RenderCommandBuffer);
 		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());

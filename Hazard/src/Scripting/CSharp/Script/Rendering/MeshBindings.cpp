@@ -1,7 +1,6 @@
 
 #include "hzrpch.h"
 #include "MeshBindings.h"
-#include "Hazard/Scripting/ScriptResourceManager.h"
 #include "Scripting/CSharp/Mono/Mono.h"
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
@@ -30,8 +29,8 @@ namespace Hazard::Scripting::CSharp::Bindings {
         CSharpMesh* csMesh = (CSharpMesh*)createInfo;
 
         MeshCreateInfo meshInfo = {};
-        meshInfo.VertexBuffer = ScriptResourceManager::GetResource<VertexBuffer>(csMesh->MeshVertexBuffer);
-        meshInfo.IndexBuffer = ScriptResourceManager::GetResource<IndexBuffer>(csMesh->MeshIndexBuffer);
+        //meshInfo.VertexBuffer = ScriptResourceManager::GetResource<VertexBuffer>(csMesh->MeshVertexBuffer);
+        //meshInfo.IndexBuffer = ScriptResourceManager::GetResource<IndexBuffer>(csMesh->MeshIndexBuffer);
 
         Ref<Mesh> mesh =  Ref<Mesh>::Create(meshInfo.VertexBuffer, meshInfo.IndexBuffer, nullptr);
         mesh->IncRefCount();

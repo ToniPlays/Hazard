@@ -344,8 +344,8 @@ namespace WindowElement {
 			Layout::Text("Mesh");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-
-			std::string file = component.m_Mesh ? component.m_Mesh->GetFile() : "Null mesh";
+			
+			std::string file = component.SourceAsset ? std::to_string(component.SourceAsset->GetHandle()) : "Null mesh";
 			bool changed = Input::InputField(file);
 
 			DragDropUtils::DragTarget("Mesh", [&](const ImGuiPayload* payload) {
@@ -359,10 +359,9 @@ namespace WindowElement {
 				HZR_ERROR(path);
 				if (!path.empty()) {
 					AssetHandle handle = AssetManager::ImportAsset(path);
-					component.m_Mesh = AssetManager::GetAsset<Rendering::Mesh>(handle);
+					component.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);
 				}
 			}
-
 			if (changed) {
 				if (File::Exists(file)) 
 				{
@@ -370,7 +369,7 @@ namespace WindowElement {
 				}
 			}
 			}, []() {
-
+				
 			});
 	}
 	template<>

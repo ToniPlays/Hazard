@@ -50,4 +50,16 @@ namespace Hazard
 		void SetHandle(UUID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }
 	};
+	class RuntimeResource : public RefCount {
+		friend class AssetManager;
+	public:
+		virtual ~RuntimeResource() = default;
+
+		UUID GetHandle() { return m_Handle; }
+		ResourceType GetType() { return m_Type; }
+
+	protected:
+		UUID m_Handle;
+		ResourceType m_Type = ResourceType::Undefined;
+	};
 }

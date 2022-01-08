@@ -14,7 +14,7 @@ namespace Hazard::Audio
 	 }
 	 bool AudioLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	 {
-	 	asset = AudioFactory::Load(metadata.Path.string());
+	 	//asset = AudioFactory::Load(metadata.Path.string());
 	 	return asset;
 	 }
 }

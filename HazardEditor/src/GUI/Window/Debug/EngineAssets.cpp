@@ -3,32 +3,35 @@
 #include "Library/Layout/Layout.h"
 #include "Library/Style.h"
 #include "Library/Input.h"
+#include "Hazard/Assets/AssetManager.h"
 
 using namespace WindowLayout;
 
 namespace WindowElement {
 	EngineAssets::EngineAssets() : EditorWindow(ICON_FK_EXCLAMATION_TRIANGLE" Engine assets") 
 	{
-		SetActive(false);
+		SetActive(true);
 	}
 	void EngineAssets::OnWindowRender()
 	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed;
+		for (auto& [path, meta] : Hazard::AssetManager::GetMetadataRegistry()) 
+		{
+			AssetMetadata& data = meta;
+			Layout::Treenode(path.string().c_str(), flags, [&]() {
+				ImGui::Text("Loaded: %s", data.IsLoaded ? "True" : "False");
+			});
+		}
+		ImGui::Separator();
 
-		Layout::Treenode("Shaders", flags, []() {
-			Layout::Table(2, false);
-			Layout::SetColumnWidth(50);
-			Layout::EndTable();
-		});
-
-		Layout::Treenode("Textures", flags, []() {
-			
-		});
-		Layout::Treenode("Meshes", flags, []() {
-			/*for (Mesh* mesh : MeshFactory::GetLoadedMeshes()) {
-				Layout::Text(mesh->GetFile().c_str());
-			}*/
-		});
-		Layout::NextLine(25);
+		for (auto& [handle, resource] : Hazard::AssetManager::GetRuntimeResources())
+		{
+			AssetHandle resourceHandle = handle;
+			ImGui::PushID(std::to_string(handle).c_str());
+			Layout::Treenode(Utils::ResourceTypeToString(resource->GetType()), flags, [&]() {
+				ImGui::Text("Handle: %s", std::to_string(resourceHandle).c_str());
+				});
+			ImGui::PopID();
+		}
 	}
 }

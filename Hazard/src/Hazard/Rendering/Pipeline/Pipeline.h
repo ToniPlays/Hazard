@@ -22,7 +22,7 @@ namespace Hazard::Rendering
 		Ref<RenderPass> TargetRenderPass = nullptr;
 	};
 
-	class Pipeline : public RefCount {
+	class Pipeline : public RuntimeResource {
 	public:
 		virtual ~Pipeline() = default;
 

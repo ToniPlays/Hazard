@@ -2,35 +2,38 @@
 
 #include "Hazard/Rendering/Pipeline/Buffers.h"
 #include "Hazard/Rendering/Pipeline/Pipeline.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard::Rendering {
 	class RenderLibrary 
 	{
 	public:
 		static void Clear() {
-			m_VertexBuffers.clear();
-			m_IndexBuffers.clear();
-			m_UniformBuffers.clear();
+			s_RuntimeResources.clear();
 		};
 		static void AddVertexBuffer(Ref<VertexBuffer> buffer) {
-			std::string& name = buffer->GetDebugName();
-			HZR_CORE_ASSERT(!HasVertexBuffer(name), "RenderLibrary already contains {0} VertexBuffer", name);
-			m_VertexBuffers[name] = buffer;
+			std::string& name = "VBO_" + buffer->GetDebugName();
+			HZR_CORE_ASSERT(!HasVertexBuffer(buffer->GetDebugName()), "RenderLibrary already contains {0} VertexBuffer", name);
+			s_RuntimeResources[name] = buffer;
+			AssetManager::AddRuntimeResource(buffer);
 		};
 		static void AddIndexBuffer(Ref<IndexBuffer> buffer) {
-			std::string& name = buffer->GetDebugName();
-			HZR_CORE_ASSERT(!HasIndexBuffer(name), "RenderLibrary already contains {0} IndexBuffer", name);
-			m_IndexBuffers[name] = buffer;
+			std::string& name = "IBO_" + buffer->GetDebugName();
+			HZR_CORE_ASSERT(!HasIndexBuffer(buffer->GetDebugName()), "RenderLibrary already contains {0} IndexBuffer", name);
+			s_RuntimeResources[name] = buffer;
+			AssetManager::AddRuntimeResource(buffer);
 		};
 		static void AddUniformBuffer(Ref<UniformBuffer> buffer) {
-			std::string& name = buffer->GetName();
-			HZR_CORE_ASSERT(!HasUniformBuffer(name), "RenderLibrary already contains {0} UniformBuffer", name);
-			m_UniformBuffers[name] = buffer;
+			std::string& name = "UBO_" + buffer->GetName();
+			HZR_CORE_ASSERT(!HasUniformBuffer(buffer->GetName()), "RenderLibrary already contains {0} UniformBuffer", name);
+			s_RuntimeResources[name] = buffer;
+			AssetManager::AddRuntimeResource(buffer);
 		};
 		static void AddPipeline(Ref<Pipeline> pipeline) {
-			std::string name = pipeline->GetSpecifications().DebugName;
-			HZR_CORE_ASSERT(!GetPipeline(name), "")
-			m_Pipelines[name] = pipeline;
+			std::string name = "RP_" + pipeline->GetSpecifications().DebugName;
+			HZR_CORE_ASSERT(!GetPipeline(pipeline->GetSpecifications().DebugName), "No pipeline {0}", name);
+			s_RuntimeResources[name] = pipeline;
+			AssetManager::AddRuntimeResource(pipeline);
 		};
 		static bool HasVertexBuffer(const std::string& name) { return GetVertexBuffer(name); }
 		static bool HasIndexBuffer(const std::string& name) { return GetIndexBuffer(name); }
@@ -38,31 +41,32 @@ namespace Hazard::Rendering {
 		static bool HasPipeline(const std::string& name) { return GetPipeline(name); }
 
 		static Ref<VertexBuffer> GetVertexBuffer(const std::string& name) {
-			if (m_VertexBuffers.find(name) == m_VertexBuffers.end()) 
+			std::string key = "VBO_" + name;
+			if (s_RuntimeResources.find(key) == s_RuntimeResources.end())
 				return nullptr;
-			return m_VertexBuffers[name];
+			return AssetManager::GetRuntimeResource<VertexBuffer>(s_RuntimeResources[key]->GetHandle()).As<VertexBuffer>();
 		};
 		static Ref<IndexBuffer> GetIndexBuffer(const std::string& name) {
-			if (m_IndexBuffers.find(name) == m_IndexBuffers.end())
+			std::string key = "IBO_" + name;
+			if (s_RuntimeResources.find(key) == s_RuntimeResources.end())
 				return nullptr;
-			return m_IndexBuffers[name];
+			return AssetManager::GetRuntimeResource<IndexBuffer>(s_RuntimeResources[key]->GetHandle()).As<IndexBuffer>();
 		};
 		static Ref<UniformBuffer> GetUniformBuffer(const std::string& name) {
-			if (m_UniformBuffers.find(name) == m_UniformBuffers.end())
+			std::string key = "UBO_" + name;
+			if (s_RuntimeResources.find(key) == s_RuntimeResources.end())
 				return nullptr;
-			return m_UniformBuffers[name];
+			return AssetManager::GetRuntimeResource<UniformBuffer>(s_RuntimeResources[key]->GetHandle()).As<UniformBuffer>();
 		};
 		static Ref<Pipeline> GetPipeline(const std::string& name) {
-			if (m_Pipelines.find(name) == m_Pipelines.end())
+			std::string key = "RP_" + name;
+			if (s_RuntimeResources.find(key) == s_RuntimeResources.end())
 				return nullptr;
-			return m_Pipelines[name];
+			return AssetManager::GetRuntimeResource<Pipeline>(s_RuntimeResources[key]->GetHandle()).As<Pipeline>();
 		};
 		
 	private:
-		inline static std::unordered_map<std::string, Ref<VertexBuffer>> m_VertexBuffers;
-		inline static std::unordered_map<std::string, Ref<IndexBuffer>> m_IndexBuffers;
-		inline static std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
-		inline static std::unordered_map<std::string, Ref<Pipeline>> m_Pipelines;
+		inline static std::unordered_map<std::string, Ref<RuntimeResource>> s_RuntimeResources;
 
 	};
 }

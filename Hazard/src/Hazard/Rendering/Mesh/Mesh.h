@@ -22,14 +22,16 @@ namespace Hazard::Rendering {
 
 	class Mesh;
 
-	struct RenderableMesh {
+	struct RenderableMesh 
+	{
 		Mesh* mesh;
 		glm::mat4 transform;
 
 		RenderableMesh(Mesh* mesh, glm::mat4 transform) : mesh(mesh), transform(transform) {}
 	};
 
-	class Mesh : public Asset {
+	class Mesh : public RuntimeResource {
+		friend class MeshLoader;
 	public:
 		Mesh() = default;
 		Mesh(const std::string& file, std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices);

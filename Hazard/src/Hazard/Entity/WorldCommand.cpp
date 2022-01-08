@@ -13,6 +13,8 @@
 
 #include "Hazard/Scripting/ScriptCommand.h"
 
+#include "Hazard/Assets/AssetManager.h"
+
 namespace Hazard::ECS {
 
 	using namespace Hazard::Rendering;
@@ -163,9 +165,11 @@ namespace Hazard::ECS {
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
 
-			const auto& [mesh, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
-			if (mesh.m_Mesh)
-				RenderCommand::DrawMesh(mesh.m_Mesh, tc.GetTransformMat4());
+			const auto& [meshAsset, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
+			if (!meshAsset.SourceAsset) continue;
+
+			Ref<Mesh> mesh = AssetManager::GetRuntimeResource<Mesh>(meshAsset.SourceAsset->GetSourceHandle());
+			if (mesh) RenderCommand::DrawMesh(mesh, tc.GetTransformMat4());
 		}
 	}
 

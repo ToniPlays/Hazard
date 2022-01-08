@@ -47,5 +47,18 @@ namespace Hazard {
 
 			return AssetType::Undefined;
 		}
+		const char* ResourceTypeToString(ResourceType type)
+		{
+			switch (type)
+			{
+			case Hazard::ResourceType::VertexBuffer:	return "VertexBuffer";
+			case Hazard::ResourceType::IndexBuffer:		return "IndexBuffer";
+			case Hazard::ResourceType::UniformBuffer:	return "UniformBuffer";
+			case Hazard::ResourceType::Mesh:			return "Mesh";
+			default:
+				return "Undefined";
+			}
+			return "Undefined";
+		}
 	}
 }

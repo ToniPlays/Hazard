@@ -221,7 +221,7 @@ namespace Hazard::ECS
 	}
 	template<>
 	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
-		component.m_Mesh = Rendering::MeshFactory::LoadCube();
+		//component.Asset = Rendering::MeshFactory::LoadCube();
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, MeshComponent& component)

@@ -8,6 +8,7 @@
 #include "Hazard/Utils/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -174,8 +175,10 @@ namespace Hazard::ECS::Loader
         void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "MeshComponent", [&]() {
-                if (component.m_Mesh) {
-                    YamlUtils::Serialize(out, "File", component.m_Mesh->GetFile());
+                if (component.SourceAsset) {
+                    Ref<Hazard::Rendering::Mesh> mesh = AssetManager::GetRuntimeResource<Hazard::Rendering::Mesh>(component.SourceAsset->GetSourceHandle());
+                    if(mesh)
+                        YamlUtils::Serialize(out, "File", mesh->GetFile());
                 }
                 });
         }
