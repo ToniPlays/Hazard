@@ -6,6 +6,7 @@
 #include "Hazard/Rendering/Pipeline/Buffers.h"
 #include "Scripting/CSharp/Mono/Mono.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 #include "mono/jit/jit.h"
 
@@ -43,6 +44,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
         info.Size = cInfo->size;
         info.Usage = cInfo->usage;
         info.Data = cInfo->data ? Mono::GetArrayValuePointer(cInfo->data) : nullptr;
+
         
         Ref<VertexBuffer> buffer = VertexBuffer::Create(&info);
         buffer->IncRefCount();
@@ -68,6 +70,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
             BufferUsage usage;
             MonoArray* data;
         };
+
         CSharpInfo* cInfo = (CSharpInfo*)createInfo;
         IndexBufferCreateInfo info = {};
         info.DebugName = "C#CreatedIndexBuffer";
@@ -75,7 +78,7 @@ namespace Hazard::Scripting::CSharp::Bindings {
         info.Size = cInfo->size;
         info.Usage = cInfo->usage;
         info.Data = cInfo->data ? (uint32_t*)Mono::GetArrayValuePointer(cInfo->data) : nullptr;
-        
+
         Ref<IndexBuffer> buffer = IndexBuffer::Create(&info);
         buffer->IncRefCount();
 

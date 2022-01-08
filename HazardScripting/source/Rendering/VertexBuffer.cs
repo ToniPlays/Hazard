@@ -23,6 +23,7 @@ namespace Hazard.Rendering
 
         public static VertexBuffer Create(VertexBufferCreateInfo info) 
         {
+            info.Size *= 12 * 4;
             ulong resourceID = VertexBuffer_Create_Native(ref info);
 
             VertexBuffer buffer = new VertexBuffer

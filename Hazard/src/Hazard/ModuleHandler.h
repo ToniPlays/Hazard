@@ -48,7 +48,6 @@ namespace Hazard::Module {
 		{
 			for (Module* m : m_Modules) 
 			{
-				if (!m) continue;
 				if(m->OnEvent(e))
 					return true;
 			}
