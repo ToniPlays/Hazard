@@ -15,7 +15,7 @@ class PremakeConfiguration:
     @classmethod
     def Validate(cls):
         if platform.system() == "Windows":
-            cls.premakeVersion = "5.0.0-alpha16"
+            cls.premakeVersion = "5.0.0-beta1"
             cls.premakePlatform = f"-windows.zip"
         elif platform.system() == "Darwin":
             cls.premakeVersion = "5.0.0-beta1"

@@ -384,6 +384,9 @@
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAsset.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
@@ -603,6 +606,9 @@
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.h">
       <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.h">
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.h">
       <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClInclude>
@@ -613,6 +619,9 @@
       <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.h">
+      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.h">
       <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\ScriptBindings.h">
@@ -1881,9 +1890,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.h" />
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -2195,6 +2201,9 @@
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.cpp">
+      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
     </ClCompile>
@@ -2205,6 +2214,9 @@
       <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.cpp">
+      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.cpp">
       <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\ScriptBindings.cpp">
@@ -2225,7 +2237,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.cpp" />
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.cpp" />
   </ItemGroup>
 </Project>
