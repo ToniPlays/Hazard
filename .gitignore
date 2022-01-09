@@ -12,6 +12,9 @@ Logs/HazardProfile-Startup.json
 Logs/HazardProfile-Shutdown.json
 Logs/HazardProfile-Runtime.json
 HazardEditor/library/
+HazardScripting/obj/**
+Scripts/__pycache__/**
+*.DS_Store
 *.pyc
 *.log
 *.obj
@@ -32,6 +35,7 @@ Makefile
 *.filters
 *.user
 *.cs
+!HazardScripting/**/**.cs
 *.lib
 *.lastbuildstate
 *.filters

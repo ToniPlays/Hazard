@@ -14,11 +14,8 @@ namespace Hazard {
 	std::string File::OpenFileDialog(const char* filters) {
 		return PlatformUtils::OpenFileDialog(filters);
 	}
-	std::string File::OpenFolderDialog() {
-		return PlatformUtils::OpenFolderDialog();
-	}
-	std::string File::SaveFolderDialog() {
-		return PlatformUtils::SaveFolderDialog();
+	std::string File::OpenFolderDialog(const std::string& title) {
+		return PlatformUtils::OpenFolderDialog(title);
 	}
 	std::string File::SaveFile(const char* filters) {
 		return PlatformUtils::SaveFileDialog(filters);

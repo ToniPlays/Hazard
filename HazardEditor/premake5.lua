@@ -33,6 +33,7 @@ project "HazardEditor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.SPIRV_Cross}",
+		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
 		"src"
 	}
@@ -49,10 +50,10 @@ project "HazardEditor"
 		"yaml-cpp"
 	}
 
-	postbuildcommands {	
+	postbuildcommands {
 		"{COPYDIR} \"%{wks.location}/HazardEditor/res\" \"%{cfg.targetdir}/res\""
 	}
-		
+
 
 	filter "system:windows"
 		systemversion "latest"

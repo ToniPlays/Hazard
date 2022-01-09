@@ -17,7 +17,7 @@ IncludeDir["Libogg"] = "%{wks.location}/Hazard/vendor/libogg/include"
 IncludeDir["Box2D"] = "%{wks.location}/Hazard/vendor/Box2D/include"
 IncludeDir["Minimp3"] = "%{wks.location}/Hazard/vendor/minimp3"
 IncludeDir["Entt"] = "%{wks.location}/Hazard/vendor/entt/include"
-IncludeDir["NativeFileDialogs"] = "%{wks.location}/Hazard/vendor/nfd-extended/src/include"
+IncludeDir["PortableFileDialogs"] = "%{wks.location}/Hazard/vendor/portable-file-dialogs"
 IncludeDir["Assimp"] = "%{wks.location}/Hazard/vendor/assimp/include"
 IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
 IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
@@ -35,7 +35,7 @@ LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Bin"
 Library = {}
 
   if os.host() == "windows" then
-    
+
     IncludeDir["SPIRV_Cross"] = "%{VulkanSDK}/Include"
 
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
@@ -58,7 +58,7 @@ end
 if os.host() == "macosx" then
 
     IncludeDir["SPIRV_Cross"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
-	
+
     --Library["Vulkan"] = "vulkan"
     -- Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 

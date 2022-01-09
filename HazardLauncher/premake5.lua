@@ -29,6 +29,7 @@ project "HazardLauncher"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.PortableFileDialogs}",
 		"src",
 	}
 	links {

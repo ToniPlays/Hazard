@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HazardScripting</RootNamespace>
     <AssemblyName>HazardScripting</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -91,6 +91,10 @@
     <Compile Include="source\Hazard\Resources\AssetMetadata.cs" />
     <Compile Include="source\Hazard\Resources\Resources.cs" />
     <Compile Include="source\Hazard\Time.cs" />
+    <Compile Include="source\Rendering\BufferEnums.cs" />
+    <Compile Include="source\Rendering\IndexBuffeCreateInfo.cs" />
+    <Compile Include="source\Rendering\IndexBuffer.cs" />
+    <Compile Include="source\Rendering\Mesh.cs" />
     <Compile Include="source\Rendering\VertexBuffer.cs" />
     <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>

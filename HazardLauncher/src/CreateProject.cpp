@@ -71,7 +71,7 @@ static void CreateProject(CreateProjectInfo* info) {
 bool ValidatePath() 
 {
 	if (File::HasEnvinronmentVar("HAZARD_DIR")) return true;
-	std::string hazardFolder = File::OpenFolderDialog();
+	std::string hazardFolder = File::OpenFolderDialog("Where is Hazard repository located?");
 	return File::SetEnvironmentVar("HAZARD_DIR", hazardFolder);
 }
 
@@ -85,9 +85,8 @@ int main() {
 	}
 	std::cout << "Create project" << std::endl;
 
-	info.Path = File::SaveFolderDialog();
+	info.Path = File::OpenFolderDialog("Save project to folder");
 	info.ProjectName = File::GetName(info.Path.string());
-
 
 	if (!info.Path.empty())
 	{

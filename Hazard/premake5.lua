@@ -47,7 +47,7 @@ project "Hazard"
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.NativeFileDialogs}",
+		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}"
 	}
 
@@ -76,7 +76,7 @@ project "Hazard"
 		}
 		removefiles {
 			"src/Platform/Rendering/Metal/**"
-		} 
+		}
 
 	filter "system:macosx"
 

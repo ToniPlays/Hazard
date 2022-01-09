@@ -12,14 +12,6 @@
 
     #include <stdio.h>
 
-    uint32_t allocs = 0;
-
-    void* operator new(size_t size)
-    {
-        allocs++;
-        return malloc(size);
-    }
-
     extern Hazard::Application* Hazard::CreateApplication();
 
     #ifdef HZR_PLATFORM_WINDOWS
