@@ -49,10 +49,11 @@ namespace Hazard.Rendering
         }
 
         internal ulong GetID() { return ID; }
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ulong Mesh_Create_Native(ref MeshCreateInfoInternal info);
+        internal static extern ulong Mesh_Create_Native(ref MeshCreateInfoInternal info);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Mesh_Destroy_Native(ulong id);
-
+        internal static extern void Mesh_Destroy_Native(ulong id);
+        #endregion
     }
 }

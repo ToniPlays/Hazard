@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace Hazard
@@ -12,6 +13,7 @@ namespace Hazard
         }
         ~Entity() { }
 
+        #region Variables
         public ulong ID { get; private set; }
         public string name {
             get => Get<TagComponent>().name;
@@ -21,12 +23,13 @@ namespace Hazard
         {
             get => Get<TransformComponent>();
         }
+        #endregion
+        #region Getters/Setters
         public bool IsActive() { return Entity_GetActive_Native(ID); }
         public void SetActive(bool active) { Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
         {
-            if (!Has<T>())
-                return null;
+            if (!Has<T>()) return null;
 
             T component = new T
             {
@@ -49,14 +52,30 @@ namespace Hazard
             };
             return component;
         }
-
+        #endregion
+        #region Coroutines
+        public Coroutine BeginCoroutine(IEnumerator enumerator) 
+        {
+            return null;
+        }
+        public void StopCoroutine(Coroutine coroutine) 
+        { 
+            
+        }
+        public void StopAllCoroutines() 
+        { 
+            
+        }
+        #endregion
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Entity_GetActive_Native(ulong id);
+        internal static extern bool Entity_GetActive_Native(ulong id);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Entity_SetActive_Native(ulong id, bool active);
+        internal static extern void Entity_SetActive_Native(ulong id, bool active);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Entity_HasComponent_Native(ulong id, Type type);
+        internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Entity_CreateComponent_Native(ulong id, Type type);
+        internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
+        #endregion
     }
 }

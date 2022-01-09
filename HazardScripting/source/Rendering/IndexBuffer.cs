@@ -28,12 +28,14 @@ namespace Hazard.Rendering
         }
         internal ulong GetID() { return ID; }
 
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern uint IndexBuffer_GetSize_Native(ulong id);
+        internal static extern uint IndexBuffer_GetSize_Native(ulong id);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ulong IndexBuffer_Create_Native(ref IndexBufferCreateInfo info);
+        internal static extern ulong IndexBuffer_Create_Native(ref IndexBufferCreateInfo info);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void IndexBuffer_Destroy_Native(ulong id);
+        internal static extern void IndexBuffer_Destroy_Native(ulong id);
+        #endregion
 
     }
 }

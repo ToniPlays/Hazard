@@ -15,19 +15,21 @@ namespace Hazard
         public static float Max(float first, float second) { return Math_Max_Native(first, second); }
         public static float Radians(float degrees) { return Math_Radians_Native(degrees); }
 
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Random_Native();
+        internal static extern float Math_Random_Native();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_RandomRange_Native(float min, float max);
+        internal static extern float Math_RandomRange_Native(float min, float max);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Pow_Native(float value, float pow);
+        internal static extern float Math_Pow_Native(float value, float pow);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Sqrt_Native(float value);
+        internal static extern float Math_Sqrt_Native(float value);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Min_Native(float fist, float second);
+        internal static extern float Math_Min_Native(float fist, float second);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Max_Native(float fist, float second);
+        internal static extern float Math_Max_Native(float fist, float second);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Math_Radians_Native(float degrees);
+        internal static extern float Math_Radians_Native(float degrees);
+        #endregion
     }
 }

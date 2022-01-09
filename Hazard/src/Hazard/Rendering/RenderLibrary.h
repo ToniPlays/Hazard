@@ -8,7 +8,8 @@ namespace Hazard::Rendering {
 	class RenderLibrary 
 	{
 	public:
-		static void Clear() {
+		static void Clear() 
+		{
 			s_RuntimeResources.clear();
 		};
 		static void AddVertexBuffer(Ref<VertexBuffer> buffer) {

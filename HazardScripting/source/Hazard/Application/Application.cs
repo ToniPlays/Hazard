@@ -5,9 +5,11 @@ namespace Hazard
 {
     public class Application
     {
-        public static void Quit() { Application_Quit_Native(); }    
+        public static void Quit() { Application_Quit_Native(); }
 
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Application_Quit_Native();   
+        internal static extern void Application_Quit_Native();
+        #endregion
     }
 }

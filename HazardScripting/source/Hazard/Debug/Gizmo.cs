@@ -9,7 +9,9 @@ namespace Hazard
     {
         public static void DrawLine(Vector3 start, Vector3 end, Color color) { Gizmo_DrawLine_Native(start, end, color); }
 
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Gizmo_DrawLine_Native(Vector3 start, Vector3 end, Color color);
+        internal static extern float Gizmo_DrawLine_Native(Vector3 start, Vector3 end, Color color);
+        #endregion
     }
 }

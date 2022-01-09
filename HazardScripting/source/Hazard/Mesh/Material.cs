@@ -15,9 +15,11 @@ namespace Hazard
             
             set => Material_SetShader_Native(ref value);
         }
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)] //TODO: LINK
-        private static extern bool Material_GetShader_Native(out Shader shader);
+        internal static extern bool Material_GetShader_Native(out Shader shader);
         [MethodImpl(MethodImplOptions.InternalCall)] //TODO: LINK
-        private static extern bool Material_SetShader_Native(ref Shader shader);
+        internal static extern bool Material_SetShader_Native(ref Shader shader);
+        #endregion
     }
 }

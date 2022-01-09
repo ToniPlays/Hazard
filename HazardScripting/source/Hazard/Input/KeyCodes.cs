@@ -1,9 +1,13 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Hazard
 {
-
-    public enum Key { 
+    public enum Key
+    {
         Space = 32,
         Apostrophe = 39,
         Comma = 44,
@@ -124,23 +128,5 @@ namespace Hazard
         X = 88,
         Y = 89,
         Z = 90
-    }
-
-    public class Input
-    {
-        public static bool AnyKey() { return Input_AnyKey_Native(); }
-        public static bool KeyDown(Key code) { return Input_KeyDown_Native((int)code); }
-        public static bool KeyPressed(Key code) { return Input_KeyPressed_Native((int)code); }
-        public static bool KeyReleased(Key code) { return Input_KeyReleased_Native((int)code); }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_AnyKey_Native();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_KeyDown_Native(int code);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_KeyPressed_Native(int code);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Input_KeyReleased_Native(int code);
     }
 }

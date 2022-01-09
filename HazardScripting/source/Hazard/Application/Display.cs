@@ -20,20 +20,21 @@ namespace Hazard
             get => Display_IsVsync_Native();
             set => Display_SetVsync_Native(value);
         }
+        #region InternalCalls
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Display_Width_Native();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Display_Height_Native();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Display_Width_Native();
+        internal static extern bool Display_IsFullscreen_Native();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Display_Height_Native();
+        internal static extern void Display_SetFullscreen_Native(bool value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Display_IsFullscreen_Native();
+        internal static extern bool Display_IsVsync_Native();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Display_SetFullscreen_Native(bool value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Display_IsVsync_Native();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Display_SetVsync_Native(bool value);
+        internal static extern void Display_SetVsync_Native(bool value);
+        #endregion
     }
 }

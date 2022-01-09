@@ -15,7 +15,9 @@ namespace Hazard
             MeshComponent_SetMesh_Native(parent.ID, mesh.GetID());
         }
 
+        #region InternalCalls
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
+        internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
+        #endregion
     }
 }

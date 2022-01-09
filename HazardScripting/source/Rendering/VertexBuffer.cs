@@ -35,13 +35,14 @@ namespace Hazard.Rendering
 
         internal ulong GetID() { return ID; }
 
+        #region InternalCalls
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong VertexBuffer_GetSize_Native(ulong id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ulong VertexBuffer_GetSize_Native(ulong id);
-
+        internal static extern ulong VertexBuffer_Create_Native(ref VertexBufferCreateInfo info);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ulong VertexBuffer_Create_Native(ref VertexBufferCreateInfo info);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void VertexBuffer_Destroy_Native(ulong id);
+        internal static extern void VertexBuffer_Destroy_Native(ulong id);
+        #endregion
     }
 }

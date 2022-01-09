@@ -71,10 +71,15 @@
     <Compile Include="source\Hazard\Components\MeshComponent.cs" />
     <Compile Include="source\Hazard\Components\TagComponent.cs" />
     <Compile Include="source\Hazard\Components\TransformComponent.cs" />
+    <Compile Include="source\Hazard\Coroutines\Coroutine.cs" />
+    <Compile Include="source\Hazard\Coroutines\WaitForInput.cs" />
+    <Compile Include="source\Hazard\Coroutines\WaitForNextFrame.cs" />
+    <Compile Include="source\Hazard\Coroutines\WaitSeconds.cs" />
     <Compile Include="source\Hazard\Debug\Console.cs" />
     <Compile Include="source\Hazard\Debug\Gizmo.cs" />
     <Compile Include="source\Hazard\Entity.cs" />
-    <Compile Include="source\Hazard\Input.cs" />
+    <Compile Include="source\Hazard\Input\Input.cs" />
+    <Compile Include="source\Hazard\Input\KeyCodes.cs" />
     <Compile Include="source\Hazard\Math\Color.cs" />
     <Compile Include="source\Hazard\Math\Math.cs" />
     <Compile Include="source\Hazard\Math\Noise.cs" />
