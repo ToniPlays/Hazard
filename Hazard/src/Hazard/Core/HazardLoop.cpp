@@ -47,6 +47,7 @@ namespace Hazard::Core {
 		}
 		catch (HazardRuntimeError error)
 		{
+			std::cout << error.what() << "\n" << error.where() << std::endl;
 			// PlatformUtils::Messagebox("Runtime error", error.what());
 		}
 	}

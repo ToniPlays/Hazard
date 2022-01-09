@@ -36,10 +36,9 @@
 
                 Core::HazardLoop loop(app);
                 loop.Start();
-                while (loop.ShouldClose()) {
+                while (!loop.ShouldClose()) {
                     loop.Run();
                 }
-
                 return 0;
             }
 

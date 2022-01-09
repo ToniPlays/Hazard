@@ -49,6 +49,7 @@ namespace Hazard {
 		bool Resizable = true;
 		bool VSync = false;
 		bool Decorated = true;
+		bool Logging = true;
 		
 		Color Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 

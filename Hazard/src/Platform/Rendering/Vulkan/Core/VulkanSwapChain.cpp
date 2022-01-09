@@ -344,6 +344,12 @@ namespace Hazard::Rendering::Vulkan
 				vkDestroyImageView(device, m_Buffers[i].View, nullptr);
 			vkDestroySwapchainKHR(device, m_Swapchain, nullptr);
 		}
+		if (m_DepthStencil.allocation) 
+		{
+			VulkanAllocator allocator("Swapchain");
+			//vkDestroyImageView(device, m_DepthStencil.View, nullptr);
+			//allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
+		}
 
 		m_Surface = VK_NULL_HANDLE;
 		m_Swapchain = VK_NULL_HANDLE;

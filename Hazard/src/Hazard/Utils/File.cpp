@@ -14,6 +14,9 @@ namespace Hazard {
 	std::string File::OpenFileDialog(const char* filters) {
 		return PlatformUtils::OpenFileDialog(filters);
 	}
+	std::string File::OpenFolderDialog() {
+		return PlatformUtils::OpenFolderDialog();
+	}
 	std::string File::SaveFolderDialog() {
 		return PlatformUtils::SaveFolderDialog();
 	}
@@ -211,5 +214,14 @@ namespace Hazard {
 				result.Files.emplace_back(file.path());
 		}
 		return result;
+	}
+	bool File::HasEnvinronmentVar(const std::string& key) {
+		return PlatformUtils::HasEnvVariable(key);
+	}
+	std::string File::GetEnvironmentVar(const std::string& key) {
+		return PlatformUtils::GetEnvVariable(key);
+	}
+	bool File::SetEnvironmentVar(const std::string& key, const std::string& value) {
+		return PlatformUtils::SetEnvVariable(key, value);
 	}
 }

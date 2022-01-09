@@ -30,6 +30,7 @@ void EditorApplication::PreInit()
 	contextInfo.FullScreen = false;
 	contextInfo.Maximized = false;
 	contextInfo.Decorated = true;
+	contextInfo.Logging = false;
 	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	contextInfo.Width = 1280;
 	contextInfo.Height = 720;
@@ -71,6 +72,7 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init()
 {
+
 #ifdef HZR_PLATFORM_WINDOWS
 	HZR_PROFILE_FUNCTION();
 	PushModule<WindowElement::EditorView>();

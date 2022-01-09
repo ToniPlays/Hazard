@@ -348,6 +348,9 @@
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\PhysicalDevice.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -1890,7 +1893,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\PhysicalDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1988,6 +1990,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\PhysicalDevice.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
@@ -2238,6 +2243,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\PhysicalDevice.cpp" />
   </ItemGroup>
 </Project>

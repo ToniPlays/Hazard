@@ -31,8 +31,9 @@ namespace Hazard {
 	class File {
 	public:
 		static std::string OpenFileDialog(const char* filters);
-		static std::string SaveFolderDialog();
+		static std::string OpenFolderDialog();
 		static std::string SaveFile(const char* filters);
+		static std::string SaveFolderDialog();
 
 		static bool Exists(const std::filesystem::path& path);
 		static bool DirectoryExists(const std::filesystem::path& dir);
@@ -59,5 +60,9 @@ namespace Hazard {
 		static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);
 
 		static FolderData GetFolderFiles(const std::string& folder);
+
+		static bool HasEnvinronmentVar(const std::string& key);
+		static std::string GetEnvironmentVar(const std::string& key);
+		static bool SetEnvironmentVar(const std::string& key, const std::string& value);
 	};
 }

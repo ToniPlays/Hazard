@@ -71,6 +71,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanShader::~VulkanShader()
 	{
+		HZR_CORE_INFO("Deleting shader {0}", m_Path);
 		DestroyModules();
 		m_UniformBuffers.clear();
 		m_ShaderData.Stages.clear();
