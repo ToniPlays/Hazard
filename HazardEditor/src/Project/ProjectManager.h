@@ -16,7 +16,7 @@ namespace Project {
 		void Save();
 
 		void SaveCurrentWorld();
-		bool ProjectLoaded() { return m_ProjectData != nullptr; }
+		bool ProjectLoaded() { return m_ProjectData; }
 		HazardProject& GetProject() { return *m_ProjectData; }
 
 		template<typename T, typename C>

@@ -53,8 +53,9 @@ namespace Hazard::Rendering {
 		HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took {1} ms", createInfo->Path, timer.ElapsedMillis());
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
+		
 		AssetManager::AddRuntimeResource(mesh);
-		return Ref<Mesh>::Create(absoluteFile, data.vertices, data.indices);
+		return mesh;
 	}
 
 	Ref<Mesh> MeshFactory::LoadCube()

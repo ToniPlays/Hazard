@@ -163,9 +163,7 @@ namespace WindowElement
 
 			if (Input::Button("Save", { 80, 25 }))
 			{
-				std::string& projectPath = Application::GetModule<Project::ProjectManager>().GetProject().AbsolutePath;
-				Exporter::GameExportManager manager;
-				manager.SaveBuildSettings(projectPath + "/editor/buildsettings.hzrbld", m_BuildSettings);
+				//Exporter::GameExportManager manager;
 			}
 			ImGui::SameLine();
 

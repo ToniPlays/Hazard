@@ -34,8 +34,7 @@ namespace Project {
 		YAML::Node general = root["General"];
 
 		YamlUtils::Deserialize(general, "Project name", project->Name, std::string("Unnamed project"));
-		YamlUtils::Deserialize(general, "Project path", project->AbsolutePath, std::string("Unnamed project"));
-		YamlUtils::Deserialize(general, "Startup world", project->StartupWorld, std::string("Unnamed project"));
+		YamlUtils::Deserialize(general, "Startup world", project->StartupWorld, std::string(""));
 		m_ProjectData = project;
 
 		/*Application::GetModule<EditorView>().GetRenderable<EditorMainTab>()->GetRenderable<FileView>()->
@@ -69,7 +68,6 @@ namespace Project {
 		out << YAML::BeginMap;
 		YamlUtils::Map(out, "General", [&]() {
 			YamlUtils::Serialize(out, "Project name", m_ProjectData->Name);
-			YamlUtils::Serialize(out, "Project path", m_ProjectData->AbsolutePath);
 			YamlUtils::Serialize(out, "Startup world", m_ProjectData->StartupWorld);
 			});
 		out << YAML::EndMap;
@@ -87,6 +85,13 @@ namespace Project {
 
 			world->SetWorldFile(filePath);
 		}
+
+		if (m_ProjectData->StartupWorld.empty()) 
+		{
+			m_ProjectData->StartupWorld = world->GetWorldFile();
+			Save();
+		}
+
         ECS::Loader::WorldSerializer serializer(world);
 		serializer.SerializeEditor(world->GetWorldFile().c_str());
 	}
