@@ -33,7 +33,6 @@ namespace Editor {
 
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
-		const glm::vec3& GetPosition() const { return m_Position; }
 		const bool Is2DEnabled() const { return m_Is2DEnabled; }
 
 	private:
@@ -42,7 +41,6 @@ namespace Editor {
 		bool m_Is2DEnabled;
 		float size2D = 10.0f;
 
-		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 		glm::vec2 m_InitialMousePos = { 0, 0 };
 		glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
 

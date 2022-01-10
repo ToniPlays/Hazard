@@ -87,12 +87,16 @@ namespace Hazard::Rendering::Vulkan
 		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
+		
+		uint32_t m_Writes = 0;
+		uint32_t m_Offset = 0;
 
-		uint32_t m_FrameIndex = 0;
+		uint32_t m_FrameIndex = -1;
 
 		VkBuffer m_Buffer = nullptr;
 		
 		VmaAllocation m_Allocation = nullptr;
 		uint8_t* m_LocalData = nullptr;
+		uint32_t m_LocalDataSize = 0;
 	};
 }

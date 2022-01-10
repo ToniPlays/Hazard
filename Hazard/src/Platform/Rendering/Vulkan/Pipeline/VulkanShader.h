@@ -12,7 +12,7 @@ namespace Hazard::Rendering::Vulkan
 		~VulkanShader();
 
 		void Reload() override;
-		void Bind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBufer) override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
 		void Set(const std::string& name, uint32_t index, uint32_t value) override {};
@@ -29,6 +29,7 @@ namespace Hazard::Rendering::Vulkan
 		const ShaderData& GetShaderData() override { return m_ShaderData; };
 		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSets[0]; }
 		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
+		std::vector<uint32_t> GetDynamicOffsets();
 
 		void DestroyModules();
 		void CreateDescriptorSet(VkDescriptorSetLayout* layout);
@@ -47,5 +48,6 @@ namespace Hazard::Rendering::Vulkan
 
 		std::unordered_map<std::string, VkWriteDescriptorSet> m_WriteDescriptors;
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
+		std::vector<uint32_t> m_DynamicOffsets;
 	};
 }

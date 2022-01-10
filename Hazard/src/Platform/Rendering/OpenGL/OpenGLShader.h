@@ -12,7 +12,7 @@ namespace Hazard::Rendering::OpenGL
 		~OpenGLShader();
 
 		void Reload() override;
-		void Bind() override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
 		void Set(const std::string& name, uint32_t index, uint32_t value) override;

@@ -24,7 +24,7 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		m_Shader->Bind();
+		m_Shader->Bind(commandBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, m_PolygonMode);
 		glLineWidth(m_Specs.LineWidth);
 		glEnable(GL_BLEND);

@@ -15,14 +15,12 @@ namespace WindowElement {
 
 	void GameViewport::Init()
 	{
-		SetActive(false);
-		if (!IsActive()) return;
-
 		WorldRendererSettings settings = {};
 		settings.DebugName = "GameViewport";
 		settings.ViewportSize = { 1920, 1080 };
 		settings.Camera = &m_Camera;
-		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
+		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
+		settings.Flags |= WorldRenderFlags_::Enabled;
 		settings.ClearColor = Color::FromHex("#646464");
 		m_Renderer = WorldRenderer::Create(&settings);
 	}
@@ -43,6 +41,7 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
+
 		if (!m_Renderer->IsValid()) {
 			const char* text = "No active camera";
 			ImVec2 size = ImGui::CalcTextSize(text);

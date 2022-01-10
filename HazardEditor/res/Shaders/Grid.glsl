@@ -1,9 +1,16 @@
 #type Vertex
 #version 450
 
-layout(std140, binding = 1) uniform Grid {
-	uniform mat4 u_Proj;
+
+layout(std140, binding = 0) uniform Camera {
+	uniform mat4 u_ViewProjection;
+	uniform mat4 u_Projection;
 	uniform mat4 u_View;
+	uniform vec4 u_Position;
+} u_Camera;
+
+
+layout(std140, binding = 1) uniform Grid {
 	uniform vec3 pos;
 	uniform float u_ZNear;
 	uniform float u_ZFar;
@@ -33,8 +40,8 @@ vec3 Unproject(vec2 pos, float z, mat4 view, mat4 projection) {
 void main() 
 {
 	vec3 pos = gridPlane[gl_VertexIndex];
-	nearPoint = Unproject(pos.xy, 0.0, u_Grid.u_View, u_Grid.u_Proj).xyz;
-	farPoint = Unproject(pos.xy, 1.0, u_Grid.u_View, u_Grid.u_Proj).xyz;
+	nearPoint = Unproject(pos.xy, 0.0, u_Camera.u_View, u_Camera.u_Projection).xyz;
+	farPoint = Unproject(pos.xy, 1.0, u_Camera.u_View, u_Camera.u_Projection).xyz;
 
 	gl_Position = vec4(pos, 1.0);
 }
@@ -45,9 +52,15 @@ void main()
 layout(location = 0) in vec3 nearPoint;
 layout(location = 1) in vec3 farPoint;
 
-layout(std140, binding = 1) uniform Grid {
-	uniform mat4 u_Proj;
+layout(std140, binding = 0) uniform Camera {
+	uniform mat4 u_ViewProjection;
+	uniform mat4 u_Projection;
 	uniform mat4 u_View;
+	uniform vec3 u_Position;
+} u_Camera;
+
+
+layout(std140, binding = 1) uniform Grid {
 	uniform vec3 pos;
 	uniform float u_ZNear;
 	uniform float u_ZFar;
@@ -81,12 +94,12 @@ vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
 }
 float computeDepth(vec3 pos) 
 {
-    vec4 clip_space_pos = u_Grid.u_Proj * u_Grid.u_View * vec4(pos.xyz, 1.0);
+    vec4 clip_space_pos = u_Camera.u_Projection * u_Camera.u_View * vec4(pos.xyz, 1.0);
     return (clip_space_pos.z / clip_space_pos.w);
 }
 float computeLinearDepth(vec3 pos) 
 {
-    vec4 clip_space_pos = u_Grid.u_Proj * u_Grid.u_View * vec4(pos.xyz, 1.0);
+    vec4 clip_space_pos = u_Camera.u_Projection * u_Camera.u_View * vec4(pos.xyz, 1.0);
     float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
     float linearDepth = (2.0 * u_Grid.u_ZNear * u_Grid.u_ZFar) / (u_Grid.u_ZFar + u_Grid.u_ZNear - clip_space_depth * (u_Grid.u_ZFar - u_Grid.u_ZNear)); // get linear value between 0.01 and 100
     return linearDepth / u_Grid.u_ZFar - 0.002; // normalize

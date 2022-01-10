@@ -18,10 +18,10 @@ namespace Hazard::Rendering
 
 		RenderCommand::s_Engine = this;
 		RenderCommand::s_Api = Application::GetModule<RenderContext>().GetCurrentAPI();
-        
+
 		AssetManager::RegisterLoader<TextureLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<MeshLoader>(AssetType::Mesh);
-       
+
 		m_RenderCommandBuffer = RenderCommandBuffer::Create("RenderEngine");
 		m_Queue = new RenderCommandQueue();
 		m_PostPassQueue = new RenderCommandQueue(1024 * 1024);
@@ -44,14 +44,14 @@ namespace Hazard::Rendering
 		UniformBufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Camera";
 		uboInfo.Usage = BufferUsage::DynamicDraw;
-		uboInfo.Size = sizeof(RenderPassData);
+		uboInfo.Size = sizeof(RenderPassData) * 4;
 		uboInfo.Binding = 0;
 
 		m_CameraUBO = UniformBuffer::Create(&uboInfo);
 	}
 	RenderEngine::~RenderEngine()
 	{
-		
+
 	}
 	void RenderEngine::Render()
 	{
@@ -61,14 +61,20 @@ namespace Hazard::Rendering
 			worldRenderer->Invalidate();
 		}
 		m_RenderCommandBuffer->Begin();
+		m_CameraUBO->Bind(m_RenderCommandBuffer);
 
 		for (auto& worldRenderer : WorldRenderer::s_Renderers)
 		{
 			if (!worldRenderer->IsValid()) continue;
 
-			m_RenderPassData.ViewProjection = worldRenderer->GetSettings().Camera->GetViewPprojection();
+			Camera* cam = worldRenderer->GetSettings().Camera;
 
+			m_RenderPassData.ViewProjection = cam->GetViewPprojection();
+			m_RenderPassData.Projection = cam->GetProjection();
+			m_RenderPassData.View = cam->GetView();
+			//m_RenderPassData.Position = glm::vec4(cam->GetPosition(), 1.0);
 			m_CameraUBO->SetData(&m_RenderPassData);
+
 			worldRenderer->Begin(m_RenderCommandBuffer, m_Queue);
 
 			if (worldRenderer->m_Settings.Flags & WorldRenderFlags_::Enabled)
@@ -92,7 +98,6 @@ namespace Hazard::Rendering
 			}
 			worldRenderer->End(m_RenderCommandBuffer);
 		}
-
 		m_RenderCommandBuffer->End();
 		m_RenderCommandBuffer->Submit();
 		m_Queue->Clear();
@@ -113,7 +118,7 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
- 		vertexBuffer->Bind(m_RenderCommandBuffer);
+		vertexBuffer->Bind(m_RenderCommandBuffer);
 		indexBuffer->Bind(m_RenderCommandBuffer);
 		pipeline->Bind(m_RenderCommandBuffer);
 		pipeline->Draw(m_RenderCommandBuffer, indexBuffer->GetCount());

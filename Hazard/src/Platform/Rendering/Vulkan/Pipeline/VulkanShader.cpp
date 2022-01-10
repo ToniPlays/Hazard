@@ -89,9 +89,11 @@ namespace Hazard::Rendering::Vulkan
 		HZR_CORE_TRACE("[VulkanShader]: Creation took {0} ms", timer.ElapsedMillis());
 
 	}
-	void VulkanShader::Bind()
+	void VulkanShader::Bind(Ref<RenderCommandBuffer> cmdBufer)
 	{
-
+		for (auto& [name, buffer] : m_UniformBuffers) {
+			buffer->Bind(cmdBufer);
+		}
 	}
 	void VulkanShader::Unbind()
 	{
@@ -140,7 +142,7 @@ namespace Hazard::Rendering::Vulkan
 			VkDescriptorSetLayoutBinding& layoutBinding = bindings.emplace_back();
 			layoutBinding.binding = binding;
 			layoutBinding.descriptorCount = 1;
-			layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 			layoutBinding.pImmutableSamplers = nullptr;
 			layoutBinding.stageFlags = VKUtils::ShaderUsageToVulkanUsage(uniform.ShaderUsage);
 		}
@@ -204,6 +206,15 @@ namespace Hazard::Rendering::Vulkan
 			i++;
 		}
 		return info;
+	}
+	std::vector<uint32_t> VulkanShader::GetDynamicOffsets()
+	{
+		uint32_t i = 0;
+		for (auto& [name, buffer] : m_UniformBuffers) {
+			m_DynamicOffsets[i] = buffer.As<VulkanUniformBuffer>()->m_Offset;
+			i++;
+		}
+		return m_DynamicOffsets;
 	}
 	void VulkanShader::DestroyModules()
 	{
@@ -283,11 +294,13 @@ namespace Hazard::Rendering::Vulkan
 			{
 				auto& type = compiler.get_type(resource.base_type_id);
 
+				uint32_t size = compiler.get_declared_struct_size(type);
+
 				ShaderUniformBufferDescription spec = {};
 				spec.Name = resource.name;
 				spec.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				spec.MemberCount = type.member_types.size();
-				spec.Size = compiler.get_declared_struct_size(type);
+				spec.Size = size = Math::Max<float>(256, spec.Size);
 				spec.ShaderUsage |= (uint32_t)stage;
 
 				auto it = m_ShaderData.UniformsDescriptions.find(spec.Binding);
@@ -305,12 +318,13 @@ namespace Hazard::Rendering::Vulkan
 			UniformBufferCreateInfo bufferInfo = {};
 			bufferInfo.Name = spec.Name;
 			bufferInfo.Binding = spec.Binding;
-			bufferInfo.Size = spec.Size;
+			bufferInfo.Size = Math::Max<float>(256, spec.Size);
 			bufferInfo.Usage = spec.ShaderUsage;
 			bufferInfo.IsShared = spec.Name != "Model";
 
 			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
+		m_DynamicOffsets.resize(m_UniformBuffers.size());
 		//Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
 	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)
@@ -331,7 +345,7 @@ namespace Hazard::Rendering::Vulkan
 
 			auto result = vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSets[i]);
 		}
-
+		//TODO: Flip this to reduce n buffer updates
 		for (uint32_t i = 0; i < framesInFlight; i++) {
 
 			for (auto& [name, buffer] : m_UniformBuffers) {
@@ -348,7 +362,7 @@ namespace Hazard::Rendering::Vulkan
 				descriptorWrite.dstSet = m_DescriptorSets[i];
 				descriptorWrite.dstBinding = buf->GetBinding();
 				descriptorWrite.dstArrayElement = 0;
-				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 				descriptorWrite.descriptorCount = 1;
 				descriptorWrite.pBufferInfo = &descriptorBufferInfo;
 

@@ -145,8 +145,7 @@ namespace Hazard::Rendering
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 			
 			Ref<Shader> shader = m_Pipeline->GetShader();
-			shader->Bind();
-
+			shader->Bind(m_RenderCommandBuffer);
 			for (uint32_t i = 0; i < m_Data.Samplers; i++) {
 				shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 			}

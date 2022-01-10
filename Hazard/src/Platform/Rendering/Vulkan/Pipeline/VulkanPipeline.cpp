@@ -187,13 +187,14 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		VkDeviceSize offsets[1] = { 0 };
+		auto& offsets = m_Shader->GetDynamicOffsets();
 
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
+		m_Shader->Bind(commandBuffer);
 		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), 0, nullptr);
+		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), offsets.size(), offsets.data());
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{

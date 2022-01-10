@@ -162,8 +162,11 @@ namespace Hazard::Rendering::Vulkan
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
+		
+		HZR_CORE_ASSERT(m_Size >= 256, "Need a bigger buffer");
 		m_Name = createInfo->Name;
-		m_LocalData = new uint8_t[m_Size];
+		m_LocalDataSize = m_Size * 8;
+		m_LocalData = new uint8_t[m_LocalDataSize];
 		RT_Invalidate();
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
@@ -173,7 +176,13 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		m_FrameIndex = cmdBuffer->GetFrameIndex();
+		uint32_t frameIndex = cmdBuffer->GetFrameIndex();
+		if (m_FrameIndex == frameIndex) return;
+
+		m_FrameIndex = frameIndex;
+		m_Writes = 0;
+		m_Offset = 0;
+
 	}
 	void VulkanUniformBuffer::Unbind()
 	{
@@ -181,15 +190,22 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::SetData(const void* data)
 	{
-		memcpy(m_LocalData, data, m_Size);
+		HZR_CORE_ASSERT(m_Writes * m_Size <= m_LocalDataSize, "Dude are you even trying?");
+		memcpy(m_LocalData + m_Writes * m_Size, data, m_Size);
 		RT_SetData(m_LocalData);
 	}
 	void VulkanUniformBuffer::RT_SetData(const void* data)
 	{
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
-		memcpy(pData, (const uint8_t*)data, m_Size);
+		memcpy(pData, (const uint8_t*)data, m_LocalDataSize);
 		allocator.UnmapMemory(m_Allocation);
+
+		if (m_Writes > 0) {
+			m_Offset += m_Size;
+		}
+		m_Writes++;
+
 	}
 	void VulkanUniformBuffer::Release()
 	{
@@ -218,7 +234,7 @@ namespace Hazard::Rendering::Vulkan
 		VkBufferCreateInfo bufferInfo = {};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-		bufferInfo.size = m_Size;
+		bufferInfo.size = m_LocalDataSize;
 
 		VulkanAllocator allocator("UniformBuffer");
 

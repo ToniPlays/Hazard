@@ -27,11 +27,13 @@ namespace WindowElement {
 		if (!IsActive()) return;
 
 		WorldRendererSettings settings = {};
+		settings.DebugName = "Viewport";
 		settings.Camera = &m_EditorCamera;
 		settings.ViewportSize = { 1920, 1080 };
 		settings.ClearColor = Color::FromHex("#101010");
 		settings.LineWidth = 5.0f;
-		settings.Flags = WorldRenderFlags_::Enabled | WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
+		settings.Flags |= WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads | WorldRenderFlags_::Lines;
+		settings.Flags |= WorldRenderFlags_::Enabled;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
 
 		m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());

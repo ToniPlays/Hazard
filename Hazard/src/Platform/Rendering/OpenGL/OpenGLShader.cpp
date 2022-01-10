@@ -49,7 +49,7 @@ namespace Hazard::Rendering::OpenGL
 	{
 
 	}
-	void OpenGLShader::Bind()
+	void OpenGLShader::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glUseProgram(m_ID);
 	}

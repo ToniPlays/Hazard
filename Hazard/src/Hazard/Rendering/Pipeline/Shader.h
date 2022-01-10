@@ -2,6 +2,7 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Pipeline/ShaderDataType.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 
@@ -164,7 +165,7 @@ namespace Hazard::Rendering
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
-		virtual void Bind() = 0;
+		virtual void Bind(Ref<RenderCommandBuffer> cmdBufer) = 0;
 		virtual void Unbind() = 0;
 		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
 		virtual UniformBuffer& GetUniform(const std::string& name) = 0;

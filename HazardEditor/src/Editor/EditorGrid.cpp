@@ -8,18 +8,14 @@ namespace Editor
 	void Grid::Render(const Editor::EditorCamera& camera)
 	{
 		struct GridData {
-			glm::mat4 proj;
-			glm::mat4 view;
 			glm::vec3 pos;
 			float Near;
 			float Far;
 			float Scale;
-			float ScaleFade;
+			float ScaleFade = 0.0f;
 
 		} gridData;
 
-		gridData.proj = camera.GetProjection();
-		gridData.view = camera.GetView();
 		gridData.pos = camera.GetPosition();
 		gridData.Near = camera.GetNearClipping();
 		gridData.Far = camera.GetFarClipping();

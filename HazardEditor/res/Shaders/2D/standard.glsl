@@ -12,6 +12,9 @@ layout(location = 2) out float f_TextureIndex;
 
 layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
+	uniform mat4 u_Projection;
+	uniform mat4 u_View;
+	uniform vec4 u_Position;
 } u_Camera;
 
 void main() 
@@ -36,6 +39,7 @@ layout(location = 0) out vec4 color;
 
 void main() 
 {
+
 	int index = int(f_TextureIndex);
 	
 	vec4 textureColor = vec4(1.0);
