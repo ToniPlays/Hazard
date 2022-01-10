@@ -34,7 +34,7 @@ namespace Hazard::Rendering
 		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color);
 		static void DrawRectangle(const glm::mat4& transform, const glm::vec4& color);
 
-		static void DrawMesh(Ref<Mesh> mesh, glm::mat4 transform);
+		static void DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform);
 		static void DrawAnimatedMesh() {};
 
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }

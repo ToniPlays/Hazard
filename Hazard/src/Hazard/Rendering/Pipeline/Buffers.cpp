@@ -85,7 +85,7 @@ namespace Hazard::Rendering {
 		}
 
 		Ref<UniformBuffer> buffer = nullptr;
-		HZR_CORE_WARN("Creating UniformBuffer: {0}", createInfo->Name);
+		HZR_CORE_WARN("Creating UniformBuffer: {0} at binding {1}", createInfo->Name, createInfo->Binding);
 
 		switch (RenderCommand::GetAPI())
 		{

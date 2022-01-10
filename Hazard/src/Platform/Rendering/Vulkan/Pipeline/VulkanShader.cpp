@@ -101,7 +101,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::SetUniformBuffer(const std::string& name, void* data)
 	{
-		auto& uniformBuffer = m_UniformBuffers[name];
+		auto& uniformBuffer = m_UniformBuffers[m_UnformBufferBindings[name]];
 		HZR_CORE_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data);
 	}
@@ -209,10 +209,8 @@ namespace Hazard::Rendering::Vulkan
 	}
 	std::vector<uint32_t> VulkanShader::GetDynamicOffsets()
 	{
-		uint32_t i = 0;
-		for (auto& [name, buffer] : m_UniformBuffers) {
-			m_DynamicOffsets[i] = buffer.As<VulkanUniformBuffer>()->m_Offset;
-			i++;
+		for (auto& [binding, buffer] : m_UniformBuffers) {
+			m_DynamicOffsets[binding] = buffer.As<VulkanUniformBuffer>()->m_Offset;
 		}
 		return m_DynamicOffsets;
 	}
@@ -320,10 +318,13 @@ namespace Hazard::Rendering::Vulkan
 			bufferInfo.Binding = spec.Binding;
 			bufferInfo.Size = Math::Max<float>(256, spec.Size);
 			bufferInfo.Usage = spec.ShaderUsage;
-			bufferInfo.IsShared = spec.Name != "Model";
+			bufferInfo.IsShared = true;
 
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
+			Ref<UniformBuffer> buffer = UniformBuffer::Create(&bufferInfo);
+			m_UniformBuffers[bufferInfo.Binding] = buffer;
+			m_UnformBufferBindings[bufferInfo.Name] = bufferInfo.Binding;
 		}
+
 		m_DynamicOffsets.resize(m_UniformBuffers.size());
 		//Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}

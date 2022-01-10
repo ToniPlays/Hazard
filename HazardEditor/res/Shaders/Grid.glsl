@@ -11,7 +11,6 @@ layout(std140, binding = 0) uniform Camera {
 
 
 layout(std140, binding = 1) uniform Grid {
-	uniform vec3 pos;
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;
@@ -61,7 +60,6 @@ layout(std140, binding = 0) uniform Camera {
 
 
 layout(std140, binding = 1) uniform Grid {
-	uniform vec3 pos;
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;

@@ -13,7 +13,6 @@ layout(std140, binding = 0) uniform Camera {
 	uniform vec4 u_Position;
 } u_Camera;
 
-
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 FragPos;
 layout(location = 2) out vec3 f_Normal;
@@ -25,7 +24,7 @@ layout(std140, binding = 1) uniform Model {
 void main() 
 {
 	f_Color = v_Color;
-	f_Normal = (u_Model.u_Transform * vec4(v_Normal, 1.0)).xyz;
+	f_Normal = ( u_Model.u_Transform * vec4(v_Normal, 1.0)).xyz;
 
 	vec4 worldPosition = u_Model.u_Transform * vec4(v_Position, 1.0);
 	FragPos = worldPosition.xyz;

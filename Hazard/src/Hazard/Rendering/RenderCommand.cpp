@@ -39,10 +39,10 @@ namespace Hazard::Rendering
 	}
 	void RenderCommand::DrawRectangle(const glm::mat4& transform, const glm::vec4& color)
 	{
-		glm::vec3 topLeft		= transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
-		glm::vec3 topRight		= transform * glm::vec4( 0.5f, 0.5f, 0.0f, 1.0f);
-		glm::vec3 bottomRight	= transform * glm::vec4( 0.5f,-0.5f, 0.0f, 1.0f);
-		glm::vec3 bottomLeft	= transform * glm::vec4(-0.5f,-0.5f, 0.0f, 1.0f);
+		glm::vec3 topLeft = transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
+		glm::vec3 topRight = transform * glm::vec4(0.5f, 0.5f, 0.0f, 1.0f);
+		glm::vec3 bottomRight = transform * glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
+		glm::vec3 bottomLeft = transform * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 
 		Line line1 = { topLeft, topRight };
 		line1.Color = color;
@@ -64,14 +64,15 @@ namespace Hazard::Rendering
 			rd.SubmitLine(line4);
 			});
 	}
-	void RenderCommand::DrawMesh(Ref<Mesh> mesh, glm::mat4 transform)
+	void RenderCommand::DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform)
 	{
 		if (!mesh->IsValid()) return;
 
 		Ref<Mesh> instance = mesh;
-		s_Engine->Submit([instance, transform]() mutable {
+		glm::mat4 mat = transform;
+		s_Engine->Submit([instance, mat]() mutable {
 			instance->SetRenderPass(s_Engine->GetCurrentRenderPass());
-			instance->GetPipeline()->GetShader()->SetUniformBuffer("Model", &transform);
+			instance->GetPipeline()->GetShader()->SetUniformBuffer("Model", &mat);
 			s_Engine->DrawGeometry(instance->GetVertexBuffer(), instance->GetIndexBuffer(), instance->GetPipeline());
 			});
 	}
@@ -91,14 +92,14 @@ namespace Hazard::Rendering
 	void RenderCommand::DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline) {
 		s_Engine->Submit([vertexBuffer, indexBuffer, pipeline]() mutable {
 			s_Engine->DrawGeometry(vertexBuffer, indexBuffer, pipeline);
-		});
+			});
 	}
 
 	void RenderCommand::DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count)
 	{
 		s_Engine->Submit([pipeline, count]() mutable {
 			s_Engine->DispatchPipeline(pipeline, count);
-		});
+			});
 	}
 	void RenderCommand::DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count)
 	{

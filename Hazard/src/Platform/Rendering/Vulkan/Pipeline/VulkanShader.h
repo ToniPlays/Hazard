@@ -18,10 +18,10 @@ namespace Hazard::Rendering::Vulkan
 		void Set(const std::string& name, uint32_t index, uint32_t value) override {};
 		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
 
-		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };
+		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[m_UnformBufferBindings[name]]; };
 
 		VkResult CreateDescriptorLayout(VkDescriptorSetLayout* layout);
-		std::unordered_map<std::string, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
+		std::unordered_map<uint32_t, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
 
 		VkVertexInputBindingDescription GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
@@ -47,7 +47,8 @@ namespace Hazard::Rendering::Vulkan
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;
 
 		std::unordered_map<std::string, VkWriteDescriptorSet> m_WriteDescriptors;
-		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
+		std::unordered_map<uint32_t, Ref<UniformBuffer>> m_UniformBuffers;
+		std::unordered_map<std::string, uint32_t> m_UnformBufferBindings;
 		std::vector<uint32_t> m_DynamicOffsets;
 	};
 }
