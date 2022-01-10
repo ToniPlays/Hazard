@@ -85,6 +85,8 @@ namespace Hazard::Rendering::Vulkan
 		CompileOrGetVulkanBinaries(shaderSources);
 		Reflect();
 		CreateModules();
+		CreateDescriptorLayout();
+		CreateDescriptorSets();
 
 		HZR_CORE_TRACE("[VulkanShader]: Creation took {0} ms", timer.ElapsedMillis());
 
@@ -132,7 +134,7 @@ namespace Hazard::Rendering::Vulkan
 			break;
 		}
 	}
-	VkResult VulkanShader::CreateDescriptorLayout(VkDescriptorSetLayout* layout)
+	VkResult VulkanShader::CreateDescriptorLayout()
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		std::vector<VkDescriptorSetLayoutBinding> bindings;
@@ -167,7 +169,7 @@ namespace Hazard::Rendering::Vulkan
 		layoutInfo.bindingCount = (uint32_t)bindings.size();
 		layoutInfo.pBindings = bindings.data();
 
-		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout);
+		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_Layout);
 	}
 	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
 	{
@@ -328,12 +330,11 @@ namespace Hazard::Rendering::Vulkan
 		m_DynamicOffsets.resize(m_UniformBuffers.size());
 		//Rendering::Utils::PrintReflectResults(m_Path, m_ShaderData);
 	}
-	void VulkanShader::CreateDescriptorSet(VkDescriptorSetLayout* layout)
+	VkResult VulkanShader::CreateDescriptorSets()
 	{
-
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		uint32_t framesInFlight = RenderContextCommand::GetImagesInFlight();
-		std::vector<VkDescriptorSetLayout> layouts(framesInFlight, *layout);
+		std::vector<VkDescriptorSetLayout> layouts(framesInFlight, m_Layout);
 
 		m_DescriptorSets.resize(framesInFlight);
 
@@ -350,25 +351,30 @@ namespace Hazard::Rendering::Vulkan
 		for (uint32_t i = 0; i < framesInFlight; i++) {
 
 			for (auto& [name, buffer] : m_UniformBuffers) {
-
-				Ref<VulkanUniformBuffer> buf = buffer.As<VulkanUniformBuffer>();
-
-				VkDescriptorBufferInfo descriptorBufferInfo = {};
-				descriptorBufferInfo.buffer = buf->GetBuffer();
-				descriptorBufferInfo.offset = 0;
-				descriptorBufferInfo.range = buf->GetSize();
-
-				VkWriteDescriptorSet descriptorWrite = {};
-				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				descriptorWrite.dstSet = m_DescriptorSets[i];
-				descriptorWrite.dstBinding = buf->GetBinding();
-				descriptorWrite.dstArrayElement = 0;
-				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-				descriptorWrite.descriptorCount = 1;
-				descriptorWrite.pBufferInfo = &descriptorBufferInfo;
-
-				vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+				UpdateBufferDescriptor(buffer.As<VulkanUniformBuffer>(), i);
 			}
 		}
+		return VK_SUCCESS;
+	}
+	void VulkanShader::UpdateBufferDescriptor(Ref<VulkanUniformBuffer> buffer, uint32_t index)
+	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
+		Ref<VulkanUniformBuffer> buf = buffer.As<VulkanUniformBuffer>();
+
+		VkDescriptorBufferInfo descriptorBufferInfo = {};
+		descriptorBufferInfo.buffer = buf->GetBuffer();
+		descriptorBufferInfo.offset = 0;
+		descriptorBufferInfo.range = buf->GetSize();
+
+		VkWriteDescriptorSet descriptorWrite = {};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = m_DescriptorSets[index];
+		descriptorWrite.dstBinding = buf->GetBinding();
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pBufferInfo = &descriptorBufferInfo;
+
+		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 }

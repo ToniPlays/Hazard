@@ -16,7 +16,7 @@ namespace Hazard::Rendering::Vulkan
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
-		if(m_Specs.ShaderPath != specs->ShaderPath)
+		if (m_Specs.ShaderPath != specs->ShaderPath)
 			m_Shader = Shader::Create(specs->ShaderPath).As<VulkanShader>();
 		m_Specs = *specs;
 
@@ -29,15 +29,13 @@ namespace Hazard::Rendering::Vulkan
 		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
-		
+
 		//HZR_CORE_INFO("Destroyed pipeline {0}", m_Specs.DebugName);
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
-
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
-		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
 		vkDestroyPipeline(device, m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 
@@ -54,10 +52,7 @@ namespace Hazard::Rendering::Vulkan
 		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
 		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
 
-		if (m_Shader->CreateDescriptorLayout(&m_UniformDescriptorLayout) != VK_SUCCESS) {
-			HZR_CORE_ASSERT(false, "Oops");
-		}
-		m_Shader->CreateDescriptorSet(&m_UniformDescriptorLayout);
+		m_UniformDescriptorLayout = m_Shader->GetDescriptorLayout();
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -133,24 +128,34 @@ namespace Hazard::Rendering::Vulkan
 		multisampling.sampleShadingEnable = VK_FALSE;
 		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
-		VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		colorBlendAttachment.blendEnable = VK_TRUE;
+		uint32_t attachmentCount = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer->GetColorAttachmentCount();
 
-		colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-		colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-		colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+		std::vector<VkPipelineColorBlendAttachmentState> attachments(attachmentCount);
+		uint32_t index = 0;
 
-		colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+		for (auto& attachment : attachments) {
+
+			Ref<VulkanImage2D> image = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer->GetImage(index).As<VulkanImage2D>();
+
+			attachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+			attachment.blendEnable = image->GetFormat() == ImageFormat::RGB;
+
+			attachment.colorBlendOp = VK_BLEND_OP_ADD;
+			attachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+			attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+
+			attachment.alphaBlendOp = VK_BLEND_OP_ADD;
+			attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+			attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			index++;
+		}
 
 		VkPipelineColorBlendStateCreateInfo colorBlending = {};
 		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		colorBlending.logicOpEnable = VK_FALSE;
 		colorBlending.logicOp = VK_LOGIC_OP_COPY;
-		colorBlending.attachmentCount = 1;
-		colorBlending.pAttachments = &colorBlendAttachment;
+		colorBlending.attachmentCount = attachments.size();
+		colorBlending.pAttachments = attachments.data();
 		colorBlending.blendConstants[0] = 0.0f;
 		colorBlending.blendConstants[1] = 0.0f;
 		colorBlending.blendConstants[2] = 0.0f;
@@ -187,14 +192,19 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		auto& offsets = m_Shader->GetDynamicOffsets();
+		VkPipeline pipeline = m_Pipeline;
+		VkPipelineLayout layout = m_PipelineLayout;
+		Ref<VulkanShader> shader = m_Shader;
 
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		//RenderContextCommand::Submit([commandBuffer, pipeline, layout, &shader]() {
+			auto& offsets = shader->GetDynamicOffsets();
+			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
-		m_Shader->Bind(commandBuffer);
-		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), offsets.size(), offsets.data());
+			shader->Bind(commandBuffer);
+			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, shader->GetDescriptorSet(), offsets.size(), offsets.data());
+			//});
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
@@ -204,8 +214,10 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDraw(cmdBuffer, count, 1, 0, 0);
+		RenderContextCommand::Submit([commandBuffer, count]() {
+			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			vkCmdDraw(cmdBuffer, count, 1, 0, 0);
+			});
 	}
 }

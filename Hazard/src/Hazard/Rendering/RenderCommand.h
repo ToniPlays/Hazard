@@ -19,22 +19,22 @@ namespace Hazard::Rendering
 		static void EndRenderPass(Ref<RenderCommandBuffer> buffer) { RenderContextCommand::EndRenderPass(buffer); }
 		static void SetLineWidth(float lineWidth);
 
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint);
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint, int id = 0);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture, int id = 0);
 
 		//TODO: Remove these?
 		static void DrawScreenSpaceQuad() {};
-		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const glm::vec4& tint = Color::White);
+		static void DrawCircle(const glm::mat4& transform, float radius = 1.0f, float thickness = 0.02f, const glm::vec4& tint = Color::White, int id = 0);
 
-		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
-		static void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
-		static void DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count);
+		static void DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, int id = 0);
+		static void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count, int id = 0);
+		static void DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count, int id = 0);
 
 		//Debug rendering
-		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color);
-		static void DrawRectangle(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color, int id = 0);
+		static void DrawRectangle(const glm::mat4& transform, const glm::vec4& color, int id = 0);
 
-		static void DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform);
+		static void DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform, int id = 0);
 		static void DrawAnimatedMesh() {};
 
 		static Ref<Texture2D> GetWhiteTexture() { return s_Engine->m_WhiteTexture; }

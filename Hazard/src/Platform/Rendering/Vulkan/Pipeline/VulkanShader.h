@@ -6,6 +6,8 @@
 
 namespace Hazard::Rendering::Vulkan
 {
+	class VulkanUniformBuffer;
+
 	class VulkanShader : public Shader {
 	public:
 		VulkanShader(const std::string& file);
@@ -20,7 +22,7 @@ namespace Hazard::Rendering::Vulkan
 
 		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[m_UnformBufferBindings[name]]; };
 
-		VkResult CreateDescriptorLayout(VkDescriptorSetLayout* layout);
+		VkDescriptorSetLayout GetDescriptorLayout() { return m_Layout; }
 		std::unordered_map<uint32_t, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
 
 		VkVertexInputBindingDescription GetBindingDescriptions();
@@ -32,16 +34,19 @@ namespace Hazard::Rendering::Vulkan
 		std::vector<uint32_t> GetDynamicOffsets();
 
 		void DestroyModules();
-		void CreateDescriptorSet(VkDescriptorSetLayout* layout);
-
+		
 	private:
 
 		void CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources);
 		void CreateModules();
 		void Reflect();
+		VkResult CreateDescriptorLayout();
+		VkResult CreateDescriptorSets();
+		void UpdateBufferDescriptor(Ref<VulkanUniformBuffer> buffer, uint32_t index);
 
 		std::string m_Path;
 		ShaderData m_ShaderData;
+		VkDescriptorSetLayout m_Layout;
 		std::vector<VkDescriptorSet> m_DescriptorSets;
 		std::unordered_map<ShaderType, std::vector<uint32_t>> m_ShaderCode;
 		std::unordered_map<VkShaderStageFlagBits, VkShaderModule> m_Modules;

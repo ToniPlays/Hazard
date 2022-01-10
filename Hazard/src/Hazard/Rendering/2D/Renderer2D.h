@@ -18,6 +18,7 @@ namespace Hazard::Rendering
 		glm::vec4 Color;
 		glm::vec2 TextureCoords;
 		float TextureIndex;
+		int ID;
 	};
 
 	struct Quad 
@@ -25,6 +26,7 @@ namespace Hazard::Rendering
 		glm::mat4 Transform;
 		glm::vec4 Color;
 		Ref<Texture2D> Texture;
+		int ID;
 	};
 
 	struct Renderer2DData 

@@ -66,7 +66,7 @@ namespace Hazard::Rendering::Vulkan
 		if (m_Info.Format == ImageFormat::DEPTH24STENCIL8) 
 			aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
-		VkFormat vulkanFormat = VKUtils::GetImageFormat(m_Info.Format);
+		VkFormat vulkanFormat = VKUtils::GetFormat(m_Info.Format);
 
 		VkImageCreateInfo imageCreateInfo = {};
 		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;

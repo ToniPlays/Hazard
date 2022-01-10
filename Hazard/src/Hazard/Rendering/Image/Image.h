@@ -15,6 +15,7 @@ namespace Hazard::Rendering
 		RG16F,
 		RG32F,
 		SRGB,
+		RED32I,
 
 		DEPTH32F,
 		DEPTH24STENCIL8,

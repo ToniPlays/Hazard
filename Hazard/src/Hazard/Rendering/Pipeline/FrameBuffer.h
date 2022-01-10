@@ -56,7 +56,9 @@ namespace Hazard::Rendering {
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual Ref<Image2D> GetImage() const = 0;
+		virtual uint32_t GetColorAttachmentCount() = 0;
+
+		virtual Ref<Image2D> GetImage(uint32_t index = 0) const = 0;
 		virtual FrameBufferSpecification& GetSpecification() = 0;
 
 		static Ref<FrameBuffer> Create(FrameBufferCreateInfo* info);

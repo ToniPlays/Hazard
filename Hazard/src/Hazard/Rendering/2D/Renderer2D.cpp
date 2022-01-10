@@ -47,6 +47,7 @@ namespace Hazard::Rendering
 			vertex.Color = quad.Color;
 			vertex.TextureCoords = textureCoords[i];
 			vertex.TextureIndex = textureIndex;
+			vertex.ID = quad.ID;
 
 			m_QuadBatch.Push(vertex);
 		}

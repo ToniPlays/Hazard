@@ -58,7 +58,7 @@ namespace Hazard::Rendering::Vulkan {
 
 		VkDebugUtilsMessengerCreateInfoEXT debugInfo = {};
 
-		if (ValidationLayer::IsValidationSupported() && false) {
+		if (ValidationLayer::IsValidationSupported() && true) {
 			ValidationLayer::InitValidationLayers(createInfo, debugInfo, appInfo->Logging);
 		}
 		vkCreateInstance(&createInfo, nullptr, &m_Instance);

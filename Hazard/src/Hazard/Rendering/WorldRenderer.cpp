@@ -50,8 +50,8 @@ namespace Hazard::Rendering
 	{
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.SwapChainTarget = m_Settings.SwapchainTarget;
-		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+		frameBufferInfo.AttachmentCount = 3;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::RED32I }, { ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.ClearColor = m_Settings.ClearColor;
 		frameBufferInfo.DebugName = "WorldRenderer";

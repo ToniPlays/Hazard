@@ -136,15 +136,16 @@ namespace Hazard::Rendering::Vulkan {
 	{
 		switch (format)
 		{
-		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
-		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
-		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
-		case ImageFormat::RGB:			   return VK_FORMAT_R8G8B8_UNORM;
-		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
-		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ImageFormat::DEPTH32F:        return VK_FORMAT_D32_SFLOAT;
-		case ImageFormat::DEPTH24STENCIL8: return VulkanContext::GetDevice()->GetDepthFormat();
+		case ImageFormat::RED32F:			return VK_FORMAT_R32_SFLOAT;
+		case ImageFormat::RG16F:			return VK_FORMAT_R16G16_SFLOAT;
+		case ImageFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGB:				return VK_FORMAT_R8G8B8_UNORM;
+		case ImageFormat::RGBA:				return VK_FORMAT_R8G8B8A8_UNORM;
+		case ImageFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case ImageFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ImageFormat::DEPTH32F:			return VK_FORMAT_D32_SFLOAT;
+		case ImageFormat::RED32I:			return VK_FORMAT_R32_SINT;
+		case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetDevice()->GetDepthFormat();
 		}
 		HZR_CORE_ASSERT(false, "[VKUtils] Failed to convert format");
 		return VK_FORMAT_UNDEFINED;
@@ -196,23 +197,6 @@ namespace Hazard::Rendering::Vulkan {
 		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
 			return true;
 		return false;
-	}
-
-	VkFormat VKUtils::GetImageFormat(ImageFormat format)
-	{
-		switch (format)
-		{
-		case ImageFormat::RED32F:          return VK_FORMAT_R32_SFLOAT;
-		case ImageFormat::RG16F:		   return VK_FORMAT_R16G16_SFLOAT;
-		case ImageFormat::RG32F:		   return VK_FORMAT_R32G32_SFLOAT;
-		case ImageFormat::RGB:			   return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ImageFormat::RGBA:            return VK_FORMAT_R8G8B8A8_UNORM;
-		case ImageFormat::RGBA16F:         return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case ImageFormat::RGBA32F:         return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ImageFormat::DEPTH32F:        return VK_FORMAT_D32_SFLOAT;
-		case ImageFormat::DEPTH24STENCIL8: return VulkanContext::GetDevice()->GetDepthFormat();
-		}
-		return VK_FORMAT_UNDEFINED;
 	}
 
 	VkFilter VKUtils::GetSamplerFilter(const FilterMode& filter)

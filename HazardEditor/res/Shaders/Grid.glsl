@@ -68,6 +68,7 @@ layout(std140, binding = 1) uniform Grid {
 } u_Grid;
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int OutID;
 
 const float axisWidth = 2.0;
 
@@ -114,4 +115,6 @@ void main()
 
     color = (grid(fragPos3D, u_Grid.u_Scale, true)) * float(t > 0); // adding multiple resolution for the grid
     color.a *= fading;
+
+    OutID = 0;
 }

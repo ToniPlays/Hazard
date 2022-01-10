@@ -18,8 +18,9 @@ namespace Hazard::Rendering::OpenGL
 
 		virtual uint32_t GetWidth() const { return m_Specs.Width; };
 		virtual uint32_t GetHeight() const { return m_Specs.Height; };
+		uint32_t GetColorAttachmentCount() { return m_ColorAttachments.size(); }
 
-		virtual Ref<Image2D> GetImage() const { return m_ColorImages[0].As<Image2D>(); };
+		virtual Ref<Image2D> GetImage(uint32_t index = 0) const { return m_ColorImages[index].As<Image2D>(); };
 		virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 
 		void Invalidate();

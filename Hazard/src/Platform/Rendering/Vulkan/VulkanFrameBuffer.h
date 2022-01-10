@@ -18,11 +18,13 @@ namespace Hazard::Rendering::Vulkan {
 		uint32_t GetWidth() const { return m_Specs.Width; };
 		uint32_t GetHeight() const { return m_Specs.Height; };
 
+		uint32_t GetColorAttachmentCount() { return m_AttachmentImages.size(); }
+
 		FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 		VkRenderPass GetRenderPass() { return m_RenderPass; };
 		VkFramebuffer GetFrameBuffer() { return m_FrameBuffer; };
 		Ref<VulkanImage2D> GetDepthImage() { return m_DepthAttachment; }
-		Ref<Image2D> GetImage() const { return m_AttachmentImages[0].As<Image2D>(); };
+		Ref<Image2D> GetImage(uint32_t index = 0) const override { return m_AttachmentImages[index].As<Image2D>(); };
 
 		const std::vector<VkClearValue>& GetVulkanClearValues() const { return m_ClearValues; }
 
