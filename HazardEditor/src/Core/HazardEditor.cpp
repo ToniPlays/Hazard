@@ -31,8 +31,8 @@ void EditorApplication::PreInit()
 	contextInfo.Decorated = true;
 	contextInfo.Logging = false;
 	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	contextInfo.Width = 1280;
-	contextInfo.Height = 720;
+	contextInfo.Width = 2560;
+	contextInfo.Height = 1440;
 
 	RenderEngineCreateInfo engineInfo = {};
 	engineInfo.MaxQuadCount = 15000;

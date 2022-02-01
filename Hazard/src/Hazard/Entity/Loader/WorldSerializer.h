@@ -187,6 +187,7 @@ namespace Hazard::ECS::Loader
         {
             YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
                 YamlUtils::Serialize(out, "Tint", component.Tint);
+                if (!component.Texture) return;
                 if (component.Texture->IsValid()) {
                     AssetMetadata& meta = component.Texture->GetMetadata();
                     YamlUtils::Serialize(out, "Texture", meta.Path.string());

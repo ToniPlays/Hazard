@@ -25,7 +25,7 @@ namespace WindowElement {
 		settings.Camera = &m_Camera;
 		settings.ClearColor = Color::FromHex("#323232");
 		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
-		//settings.Flags |= WorldRenderFlags_::Enabled;
+		settings.Flags |= WorldRenderFlags_::Enabled;
 		m_Renderer = WorldRenderer::Create(&settings);
 	}
 	void GameViewport::OnUpdate()

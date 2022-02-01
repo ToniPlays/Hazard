@@ -30,7 +30,6 @@ namespace Hazard::Rendering::Vulkan
 	VulkanPipeline::~VulkanPipeline()
 	{
 		RenderContextCommand::SubmitResourceFree([uboLayout = m_UniformDescriptorLayout, pipeline = m_Pipeline, layout = m_PipelineLayout]() {
-
 			auto device = VulkanContext::GetDevice()->GetDevice();
 			vkDestroyDescriptorSetLayout(device, uboLayout, nullptr);
 			vkDestroyPipeline(device, pipeline, nullptr);
@@ -46,8 +45,15 @@ namespace Hazard::Rendering::Vulkan
 
 		RenderContextCommand::Submit([instance]() mutable {
 			HZR_PROFILE_FUNCTION("VulkanPipeline::SetRenderPass() RT");
-			instance->Destroy();
 			instance->Invalidate();
+			});
+		RenderContextCommand::SubmitResourceFree([pipeline = m_Pipeline, layout = m_PipelineLayout]() {
+			HZR_PROFILE_FUNCTION("VulkanPipeline::SetRenderPass() Release RT");
+			if (!pipeline) return;
+
+			auto device = VulkanContext::GetDevice()->GetDevice();
+			//vkDestroyPipeline(device, pipeline, nullptr);
+			//vkDestroyPipelineLayout(device, layout, nullptr);
 			});
 	}
 	void VulkanPipeline::Invalidate()
@@ -232,6 +238,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Destroy()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_Pipeline) return;
 
 		auto device = VulkanContext::GetDevice()->GetDevice();

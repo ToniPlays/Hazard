@@ -41,15 +41,15 @@ namespace Hazard::Rendering {
 	{
 		HZR_PROFILE_FUNCTION();
 
+		m_ResourceFreeCommadQueue->Excecute();
 		m_ResourceCreateCommadQueue->Excecute();
 		m_RenderCommadQueue->Excecute();
-		m_ResourceFreeCommadQueue->Excecute();
 
 		m_Window->Present();
 
+		m_ResourceFreeCommadQueue->Clear();
 		m_ResourceCreateCommadQueue->Clear();
 		m_RenderCommadQueue->Clear();
-		m_ResourceFreeCommadQueue->Clear();
 	}
 
 	void RenderContext::Close()
