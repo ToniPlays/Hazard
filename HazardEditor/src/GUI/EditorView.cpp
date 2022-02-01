@@ -31,8 +31,6 @@ namespace WindowElement {
 	}
 	void EditorView::Init()
 	{
-		HZR_PROFILE_FUNCTION();
-
 		if (!Hazard::Application::HasModule<Rendering::RenderContext>()) {
 			SetActive(false);
 			HZR_WARN("EditorView unable to start without RenderContext");
@@ -97,14 +95,14 @@ namespace WindowElement {
 	}
 	void EditorView::Update()
 	{
-		HZ_SCOPE_PERF("EditorView::Update()");
+		HZR_PROFILE_FUNCTION();
 		for (RenderableElement* element : m_Elements) {
 			element->OnUpdate();
 		}
 	}
 	void EditorView::Render()
 	{
-		HZ_SCOPE_PERF("EditorView::Render()");
+		HZR_PROFILE_FUNCTION();
 		BeginFrame();
 		{
 			for (RenderableElement* element : m_Elements) {
@@ -137,8 +135,6 @@ namespace WindowElement {
 	}
 	void EditorView::Close()
 	{
-		HZR_PROFILE_FUNCTION();
-		
 		for (uint32_t i = 0; i < m_Elements.size(); i++) {
 			delete m_Elements[i];
 		}

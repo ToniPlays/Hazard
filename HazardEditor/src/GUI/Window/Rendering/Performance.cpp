@@ -18,6 +18,7 @@ namespace WindowElement {
 	}
 	void Performance::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		Layout::Table(2, true);
 		Layout::SetColumnWidth(115);
 		Layout::Text("Frametime");

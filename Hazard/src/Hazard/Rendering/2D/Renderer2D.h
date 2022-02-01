@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../RenderEngine.h"
-#include "../Pipeline/Pipeline.h"
 #include "../Image/Image2D.h"
-#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 #include "../Batch.h"
 #include "../WorldRenderer.h"
+
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 namespace Hazard::Rendering 
 {
@@ -18,7 +19,6 @@ namespace Hazard::Rendering
 		glm::vec4 Color;
 		glm::vec2 TextureCoords;
 		float TextureIndex;
-		int ID;
 	};
 
 	struct Quad 
@@ -26,7 +26,6 @@ namespace Hazard::Rendering
 		glm::mat4 Transform;
 		glm::vec4 Color;
 		Ref<Texture2D> Texture;
-		int ID;
 	};
 
 	struct Renderer2DData 

@@ -33,7 +33,7 @@ namespace WindowElement {
 	}
 	void Hierarchy::OnWindowRender()
 	{
-		
+		HZR_PROFILE_FUNCTION();
 		Ref<World> world = ECS::WorldCommand::GetCurrentWorld();
 		if (!world) return;
 

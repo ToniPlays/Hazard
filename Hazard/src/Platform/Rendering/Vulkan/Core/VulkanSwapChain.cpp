@@ -17,7 +17,11 @@ namespace Hazard::Rendering::Vulkan
 		auto device = m_Device->GetDevice();
 		Cleanup();
 
+		vkDestroyImageView(device, m_DepthStencil.View, nullptr);
 		vkDestroyRenderPass(device, m_RenderPass, nullptr);
+
+		VulkanAllocator allocator("Swapchain");
+		allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
 
 		vkDestroySemaphore(device, m_Semaphores.RenderComplete, nullptr);
 		vkDestroySemaphore(device, m_Semaphores.PresentComplete, nullptr);
@@ -292,7 +296,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::BeginFrame()
 	{
-		HZ_SCOPE_PERF("BeginFrame");
+		HZR_PROFILE_FUNCTION();
 
 		VkResult result = AcquireNextImage(m_Semaphores.PresentComplete, &m_CurrentImageIndex);
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
@@ -303,7 +307,6 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanSwapChain::Present()
 	{
-		HZ_SCOPE_PERF("Present");
 		const uint64_t DEFAULT_FENCE_TIMEOUT = 100000000000;
 
 		VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -344,13 +347,6 @@ namespace Hazard::Rendering::Vulkan
 				vkDestroyImageView(device, m_Buffers[i].View, nullptr);
 			vkDestroySwapchainKHR(device, m_Swapchain, nullptr);
 		}
-		if (m_DepthStencil.allocation) 
-		{
-			VulkanAllocator allocator("Swapchain");
-			//vkDestroyImageView(device, m_DepthStencil.View, nullptr);
-			//allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
-		}
-
 		m_Surface = VK_NULL_HANDLE;
 		m_Swapchain = VK_NULL_HANDLE;
 	}

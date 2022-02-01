@@ -10,7 +10,6 @@ namespace Hazard::Module {
 		~ModuleHandler();
 
 		void Update();
-		void PreRender();
 		void Render();
 		void PostRender();
 		void Close();

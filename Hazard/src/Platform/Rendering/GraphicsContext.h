@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "Hazard/Core/CommandQueue.h"
 #include "Hazard/Math/Color.h"
 #include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
-#include "Hazard/Rendering/Pipeline/RenderPass.h"
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/RenderPass.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 #include "Hazard/RenderContext/PhysicalDevice.h"
 
 namespace Hazard::Rendering {
@@ -31,9 +32,9 @@ namespace Hazard::Rendering {
 		virtual ~GraphicsContext() = default;
 
 		virtual void Init(Window* window, ApplicationCreateInfo* appInfo) = 0;
-		virtual void SwapBuffers() = 0;
-		virtual void Begin() = 0;
-		virtual void End() = 0;
+		virtual void BeginFrame() = 0;
+		virtual void Present() = 0;
+		virtual void Close() = 0;
 
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;

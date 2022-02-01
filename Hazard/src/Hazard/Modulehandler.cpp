@@ -16,31 +16,27 @@ namespace Hazard::Module {
 
 	void ModuleHandler::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->Update();
 	}
-	void ModuleHandler::PreRender()
-	{
-		for (Module* m : m_Modules)
-			if (m->GetActive())
-				m->PreRender();
-	}
 	void ModuleHandler::Render()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->Render();
 	}
 	void ModuleHandler::PostRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->PostRender();
 	}
 	void ModuleHandler::Close()
 	{
-		HZR_PROFILE_FUNCTION();
 		for (size_t i = m_Modules.size() - 1; i > 0; i--)
 		{
 			auto* mod = m_Modules[i];

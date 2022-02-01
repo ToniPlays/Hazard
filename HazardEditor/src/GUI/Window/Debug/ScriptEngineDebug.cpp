@@ -65,6 +65,7 @@ namespace WindowElement
 	}
 	void ScriptEngineDebug::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
 		for (auto& [type, scriptEngine] : Hazard::Scripting::ScriptCommand::GetEngines()) {

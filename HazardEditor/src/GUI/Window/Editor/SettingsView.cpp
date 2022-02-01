@@ -21,6 +21,7 @@ namespace WindowElement
 	}
 	void SettingsView::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		Layout::Table(2, true);
 		float height = ImGui::GetContentRegionAvail().y - 39;
 		ImGui::BeginChild("##menus", {0, height });

@@ -38,6 +38,7 @@ namespace WindowElement {
 	}
 	void Console::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (Input::Button("Clear"))
 			ClearLog();
 

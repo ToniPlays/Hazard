@@ -17,9 +17,10 @@ namespace Hazard::Rendering::OpenGL {
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
 		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
-		void SwapBuffers() override;
-		void Begin() override {};
-		void End() override {};
+		void BeginFrame() override;
+		void Present() override;
+		void Close() override {};
+
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer);
 		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);

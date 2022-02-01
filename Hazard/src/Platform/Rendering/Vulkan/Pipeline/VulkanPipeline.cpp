@@ -13,34 +13,42 @@ namespace Hazard::Rendering::Vulkan
 
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs)
 	{
-		HZR_PROFILE_FUNCTION();
+		HZR_CORE_WARN("Created pipeline {0}", specs->DebugName);
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
 		if (m_Specs.ShaderPath != specs->ShaderPath)
 			m_Shader = Shader::Create(specs->ShaderPath).As<VulkanShader>();
+
 		m_Specs = *specs;
 
-		Invalidate();
+		Ref<VulkanPipeline> instance = this;
+		RenderContextCommand::SubmitResourceCreate([instance]() mutable {
+			instance->Invalidate();
+			});
+
 	}
 	VulkanPipeline::~VulkanPipeline()
 	{
-		auto device = VulkanContext::GetDevice()->GetDevice();
+		RenderContextCommand::SubmitResourceFree([uboLayout = m_UniformDescriptorLayout, pipeline = m_Pipeline, layout = m_PipelineLayout]() {
 
-		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
-		vkDestroyPipeline(device, m_Pipeline, nullptr);
-		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+			auto device = VulkanContext::GetDevice()->GetDevice();
+			vkDestroyDescriptorSetLayout(device, uboLayout, nullptr);
+			vkDestroyPipeline(device, pipeline, nullptr);
+			vkDestroyPipelineLayout(device, layout, nullptr);
 
-		//HZR_CORE_INFO("Destroyed pipeline {0}", m_Specs.DebugName);
+			});
+		HZR_CORE_ERROR("Destroyed pipeline {0}", m_Specs.DebugName);
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
-		auto device = VulkanContext::GetDevice()->GetDevice();
-
-		vkDestroyPipeline(device, m_Pipeline, nullptr);
-		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
-
 		m_Specs.TargetRenderPass = renderPass;
-		Invalidate();
+		Ref<VulkanPipeline> instance = this;
+
+		RenderContextCommand::Submit([instance]() mutable {
+			HZR_PROFILE_FUNCTION("VulkanPipeline::SetRenderPass() RT");
+			instance->Destroy();
+			instance->Invalidate();
+			});
 	}
 	void VulkanPipeline::Invalidate()
 	{
@@ -119,8 +127,8 @@ namespace Hazard::Rendering::Vulkan
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = VKUtils::DrawTypeToVKType(m_Specs.DrawType);
 		rasterizer.lineWidth = 1.0f;
-		rasterizer.cullMode = m_Specs.Culling ? VK_CULL_MODE_FRONT_BIT : VK_CULL_MODE_NONE;
-		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		rasterizer.cullMode = VKUtils::CullModeToVKMode(m_Specs.CullMode);
+		rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 
 		VkPipelineMultisampleStateCreateInfo multisampling = {};
@@ -138,7 +146,7 @@ namespace Hazard::Rendering::Vulkan
 			Ref<VulkanImage2D> image = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer->GetImage(index).As<VulkanImage2D>();
 
 			attachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-			attachment.blendEnable = image->GetFormat() == ImageFormat::RGB;
+			attachment.blendEnable = image->GetFormat() == ImageFormat::RGB ? VK_FALSE : VK_TRUE;
 
 			attachment.colorBlendOp = VK_BLEND_OP_ADD;
 			attachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
@@ -163,7 +171,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkPipelineDepthStencilStateCreateInfo depthStencil = {};
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = VK_TRUE;
+		depthStencil.depthTestEnable = m_Specs.DepthTest ? VK_TRUE : VK_FALSE;
 		depthStencil.depthWriteEnable = VK_TRUE;
 		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
@@ -192,32 +200,42 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		VkPipeline pipeline = m_Pipeline;
-		VkPipelineLayout layout = m_PipelineLayout;
-		Ref<VulkanShader> shader = m_Shader;
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanPipeline::Bind() RT");
+		HZR_CORE_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
-		//RenderContextCommand::Submit([commandBuffer, pipeline, layout, &shader]() {
-			auto& offsets = shader->GetDynamicOffsets();
-			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		auto& offsets = m_Shader->GetDynamicOffsets();
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
-			shader->Bind(commandBuffer);
-			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, shader->GetDescriptorSet(), offsets.size(), offsets.data());
-			//});
+		m_Shader->Bind(commandBuffer);
+		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), offsets.size(), offsets.data());
+
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanPipeline::Draw() RT");
+		HZR_CORE_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
 	}
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		RenderContextCommand::Submit([commandBuffer, count]() {
-			uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-			vkCmdDraw(cmdBuffer, count, 1, 0, 0);
-			});
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanPipeline::DrawArrays() RT");
+		HZR_CORE_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		vkCmdDraw(cmdBuffer, count, 1, 0, 0);
+	}
+	void VulkanPipeline::Destroy()
+	{
+		if (!m_Pipeline) return;
+
+		auto device = VulkanContext::GetDevice()->GetDevice();
+		vkDestroyPipeline(device, m_Pipeline, nullptr);
+		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 	}
 }

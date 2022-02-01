@@ -2,7 +2,7 @@
 
 #include "VertexData.h"
 #include "Hazard/Assets/Asset.h"
-#include "../Pipeline/Pipeline.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
 
 namespace Hazard::Rendering {
 

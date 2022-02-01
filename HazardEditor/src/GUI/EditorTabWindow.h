@@ -11,6 +11,7 @@ namespace WindowElement {
 
 	public:
 		EditorTabWindow(const std::string& title) : m_Title(title) {}
+		virtual ~EditorTabWindow();
 
 		void OnRender() override;
 		virtual void Render() = 0;

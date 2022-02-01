@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 #include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::OpenGL

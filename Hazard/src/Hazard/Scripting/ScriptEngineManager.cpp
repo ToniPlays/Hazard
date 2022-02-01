@@ -10,7 +10,6 @@ namespace Hazard::Scripting {
 
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
 	{
-		HZR_PROFILE_FUNCTION();
 #ifdef HZR_INCLUDE_MONO
 		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
 #endif
@@ -25,13 +24,13 @@ namespace Hazard::Scripting {
 	}
 	void ScriptEngineManager::Close()
 	{
-		HZR_PROFILE_FUNCTION();
 		for (auto [type, engine] : m_ScriptEngines) {
 			engine->OnApplicationClose();
 		}
 	}
 	void ScriptEngineManager::Update() 
 	{
+		HZR_PROFILE_FUNCTION();
 		//TODO: Remove
 		Physics::PhysicsCommand::Step(Time::s_DeltaTime);
 		ECS::WorldCommand::UpdatePhysics();

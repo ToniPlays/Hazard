@@ -171,6 +171,7 @@ namespace Hazard::ECS
 	void World::OnComponentRemoved(Entity& entity, T& component) {}
 
 	REGISTER_COMPONENT(BatchComponent);
+	REGISTER_COMPONENT(SpriteRendererComponent);
 	REGISTER_COMPONENT(SkyLightComponent);
 	REGISTER_COMPONENT(DirectionalLightComponent);
 	REGISTER_COMPONENT(PointLightComponent);
@@ -184,13 +185,6 @@ namespace Hazard::ECS
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
-
-	template<>
-	void World::OnComponentAdded(Entity& entity, SpriteRendererComponent& component) {
-		component.Texture = Rendering::RenderCommand::GetWhiteTexture();
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, SpriteRendererComponent& component) {}
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 

@@ -16,9 +16,8 @@ namespace Hazard::ECS::Loader {
 		YamlUtils::Sequence(out, "Entities", [&]() {
             m_World->GetWorldRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, m_World.Raw() };
-				if (!entity)
-					return;
 
+				HZR_GUARD(entity);
 				SerializeEntityEditor(entity, out);
 				});
 			});

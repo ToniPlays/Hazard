@@ -9,8 +9,6 @@ namespace Hazard::Rendering::OpenGL
 {
 	OpenGLPipeline::OpenGLPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
-		HZR_PROFILE_FUNCTION();
-
 		m_Shader = Shader::Create(specs->ShaderPath);
 		Invalidate();
 	}
@@ -30,8 +28,18 @@ namespace Hazard::Rendering::OpenGL
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if (m_Specs.Culling) glEnable(GL_CULL_FACE); 
-		else glDisable(GL_CULL_FACE);
+		switch (m_Specs.CullMode)
+		{
+		case CullMode::None: glDisable(GL_CULL_FACE); break;
+		case CullMode::FrontFace: 
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT); 
+			break;
+		case CullMode::BackFace: 
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK); 
+			break;
+		}
 
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)

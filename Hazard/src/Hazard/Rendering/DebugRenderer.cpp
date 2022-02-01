@@ -1,5 +1,6 @@
 #include <hzrpch.h>
 #include "DebugRenderer.h"
+#include "Hazard/RenderContext/RenderContextCommand.h"
 
 namespace Hazard::Rendering
 {
@@ -12,10 +13,11 @@ namespace Hazard::Rendering
 	}
 	DebugRenderer::~DebugRenderer()
 	{
-		m_CirclePipeline.Reset();
 		m_LinePipeline.Reset();
-		m_CircleIndexBuffer.Reset();
 		m_LineVertexBuffer.Reset();
+
+		m_CirclePipeline.Reset();
+		m_CircleIndexBuffer.Reset();
 	}
 	void DebugRenderer::SetTargetRenderPass(Ref<RenderPass> renderPass)
 	{
@@ -53,11 +55,8 @@ namespace Hazard::Rendering
 		if (m_LineBatch.GetCount() == 0)
 			return;
 
-		m_LinePipeline->Bind(m_CommandBuffer);
 		m_LineVertexBuffer->SetData(m_LineBatch.GetData(), m_LineBatch.GetDataSize());
-		m_LineVertexBuffer->Bind(m_CommandBuffer);
-
-		m_LinePipeline->DrawArrays(m_CommandBuffer, m_LineBatch.GetCount());
+		RenderContextCommand::DrawGeometryArray(m_CommandBuffer, m_LineVertexBuffer, m_LinePipeline, m_LineBatch.GetCount());
 	}
 	void DebugRenderer::SubmitLine(Line line)
 	{
@@ -89,13 +88,8 @@ namespace Hazard::Rendering
 	{
 		if (!m_CircleBatch)
 			return;
-
-		m_CirclePipeline->Bind(m_CommandBuffer);
 		m_CircleVertexBuffer->SetData(m_CircleBatch.GetData(), m_CircleBatch.GetDataSize());
-		m_CircleVertexBuffer->Bind(m_CommandBuffer);
-		m_CircleIndexBuffer->Bind(m_CommandBuffer);
-
-		m_CirclePipeline->Draw(m_CommandBuffer, m_CircleBatch.GetIndexCount());
+		RenderContextCommand::DrawGeometry(m_CommandBuffer, m_CircleVertexBuffer, m_CircleIndexBuffer, m_CirclePipeline, m_CircleBatch.GetCount());
 	}
 	void DebugRenderer::SubmitCircle(Circle circle)
 	{

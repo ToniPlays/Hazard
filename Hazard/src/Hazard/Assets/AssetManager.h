@@ -45,11 +45,17 @@ namespace Hazard
 			resource->DecRefCount();
 			s_RuntimeResources[resource->GetHandle()] = resource;
 		}
+		static void RemoveRuntimeResource(AssetHandle handle)
+		{
+			s_RuntimeResources.erase(handle);
+		}
 		template<typename T>
 		static Ref<T> GetRuntimeResource(AssetHandle handle) {
 			if (s_RuntimeResources.find(handle) == s_RuntimeResources.end()) 
 				return nullptr;
-			return s_RuntimeResources[handle].As<T>();
+
+			Ref<T> resource = s_RuntimeResources[handle].As<T>();
+			return resource;
 		}
 
 		template<typename T>

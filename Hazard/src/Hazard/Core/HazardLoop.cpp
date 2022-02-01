@@ -14,17 +14,19 @@ namespace Hazard::Core {
 
 	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
+		OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<Module::ModuleHandler>();
 	}
 	HazardLoop::~HazardLoop()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-		m_Application->Close();
 		AssetManager::Shutdown();
+		m_Application->Close();
 		m_ModuleHandler->Close();
 
 		HZR_PROFILE_SESSION_END();
+		OPTICK_SHUTDOWN();
 	}
 	void HazardLoop::Start()
 	{
@@ -61,7 +63,7 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::Run()
 	{
-		HZR_PROFILE_FUNCTION();
+		HZR_PROFILE_FRAME("MainThread");
 		double time = glfwGetTime();
 
 		//Update Time
@@ -75,7 +77,6 @@ namespace Hazard::Core {
 		m_Application->Update();
 		m_ModuleHandler->Update();
 		//Render
-		m_ModuleHandler->PreRender();
 		m_ModuleHandler->Render();
 		m_ModuleHandler->PostRender();
 	}

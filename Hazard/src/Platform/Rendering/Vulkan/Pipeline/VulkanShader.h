@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/Shader.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Shader.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 #include "vulkan/vulkan.h"
 
 namespace Hazard::Rendering::Vulkan
@@ -17,6 +17,7 @@ namespace Hazard::Rendering::Vulkan
 		void Bind(Ref<RenderCommandBuffer> cmdBufer) override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data) override;
+
 		void Set(const std::string& name, uint32_t index, uint32_t value) override {};
 		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
 

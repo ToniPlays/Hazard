@@ -29,6 +29,9 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Math/Random.h"
 
+#include <optick.h>
+#include <chrono>
+using namespace std::chrono_literals;
 
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #define GLM_FORCE_SIMD_AVX2
@@ -58,24 +61,42 @@
 #endif
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
+#define HZR_THREAD_DELAY(x) std::this_thread::sleep_for(x);
+//Return if false
+#define HZR_GUARD(x) if(!x) return
 
-#define HZR_PROFILE 0
+#define HZR_PROFILE 1
+#define HZR_OPTICK 1
 
 #if HZR_PROFILE 
-	#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
-	#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
-	#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-													::Hazard::InstrumentationTimer timer##line(fixedName##line.Data)
-	#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
-	#define HZR_PROFILE_SCOPE(name)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
-	#define HZR_PROFILE_FUNCTION()					HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
+	#if !HZR_OPTICK
+		#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
+		#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
+		#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+														::Hazard::InstrumentationTimer timer##line(fixedName##line.Data)
+		#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
+		#define HZR_PROFILE_SCOPE(name, ...)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
+		#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
+		#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
+	#else 
+		#define HZR_PROFILE_SESSION_BEGIN(x, y)			
+		#define HZR_PROFILE_SESSION_END()				
+		#define HZR_PROFILE_SCOPE_LINE2(name, line)		
+														
+		#define HZR_PROFILE_SCOPE_LINE(name, line)		
+		#define HZR_PROFILE_SCOPE(name, ...)			OPTICK_EVENT_DYNAMIC(name, __VA_ARGS__)
+		#define HZR_PROFILE_FUNCTION(...)				OPTICK_EVENT(__VA_ARGS__)	
+		#define HZR_PROFILE_FRAME(...)					OPTICK_FRAME(__VA_ARGS__)
+	#endif
+
 #else
 	#define HZR_PROFILE_SESSION_BEGIN(x, y)
 	#define HZR_PROFILE_SESSION_END()
 	#define HZR_PROFILE_SCOPE_LINE2(name, line)
 	#define HZR_PROFILE_SCOPE_LINE(name, line)
-	#define HZR_PROFILE_SCOPE(name)
-	#define HZR_PROFILE_FUNCTION()
+	#define HZR_PROFILE_SCOPE(name, ...)
+	#define HZR_PROFILE_FUNCTION(...)
+	#define HZR_PROFILE_FRAME(...)
 #endif
 
 

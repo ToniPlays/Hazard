@@ -396,28 +396,28 @@
     <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\Buffers.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Buffers.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\FrameBuffer.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\FrameBuffer.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\Pipeline.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Pipeline.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\RenderPass.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\RenderPass.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\Shader.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Shader.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Pipeline\ShaderDataType.h">
+    <ClInclude Include="src\Hazard\RenderContext\Pipeline\ShaderDataType.h">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.h">
       <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandQueue.h">
+    <ClInclude Include="src\Hazard\Core\CommandQueue.h">
       <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
@@ -426,7 +426,7 @@
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderLibrary.h">
+    <ClInclude Include="src\Hazard\RenderContext\RenderLibrary.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture.h">
@@ -2024,25 +2024,25 @@
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\Buffers.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Buffers.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\FrameBuffer.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Pipeline\FrameBuffer.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\Pipeline.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Pipeline.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\RenderPass.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Pipeline\RenderPass.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Pipeline\Shader.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Shader.cpp">
       <Filter>src\Hazard\Rendering\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.cpp">
       <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandQueue.cpp">
+    <ClCompile Include="src\Hazard\Core\CommandQueue.cpp">
       <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
@@ -2051,7 +2051,7 @@
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderLibrary.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\RenderLibrary.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Texture.cpp">
@@ -2243,5 +2243,8 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="log.txt" />
   </ItemGroup>
 </Project>

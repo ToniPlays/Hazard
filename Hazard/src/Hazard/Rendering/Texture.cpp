@@ -10,7 +10,7 @@ namespace Hazard::Rendering
 {
 	Ref<Texture2D> Texture2D::Create(Texture2DCreateInfo* info) 
 	{
-		switch (RenderCommand::GetAPI())
+		switch (RenderContextCommand::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLTexture2D>::Create(info);

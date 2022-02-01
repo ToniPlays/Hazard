@@ -12,8 +12,9 @@ namespace Hazard::Rendering {
 		WindowsWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
 		virtual ~WindowsWindow();
 
-		void OnBeginFrame() override;
-		void OnEndFrame() override;
+		void BeginFrame() override;
+		void Present() override;
+		void Close() override;
 
 		void SetWindowTitle(const char* title) override;
 		void SetWindowIcon(uint32_t count, const char** images) override;

@@ -9,4 +9,8 @@ namespace Hazard
 	{
 		return AssetManager::GetMetadata(m_Handle);
 	}
+	RuntimeResource::~RuntimeResource()
+	{
+		AssetManager::RemoveRuntimeResource(m_Handle);
+	}
 }

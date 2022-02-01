@@ -4,27 +4,34 @@
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 IncludeDir = {}
-IncludeDir["stb_image"] = "%{wks.location}/Hazard/vendor/stb_image"
 IncludeDir["yaml_cpp"] = "%{wks.location}/Hazard/vendor/yaml-cpp/include"
-IncludeDir["Glad"] = "%{wks.location}/Hazard/vendor/Glad/include"
-IncludeDir["GLFW"] = "%{wks.location}/Hazard/vendor/GLFW/include"
 IncludeDir["glm"] = "%{wks.location}/Hazard/vendor/glm"
+
 IncludeDir["Mono"] = "%{wks.location}/Hazard/vendor/mono/include"
+IncludeDir["Optick"] = "%{wks.location}/Hazard/vendor/Optick/src"
+
 IncludeDir["OpenAL"] = "%{wks.location}/Hazard/vendor/OpenAL/include"
 IncludeDir["Vorbis"] = "%{wks.location}/Hazard/vendor/Vorbis/include"
 IncludeDir["AudioFile"] = "%{wks.location}/Hazard/vendor/AudioFile"
 IncludeDir["Libogg"] = "%{wks.location}/Hazard/vendor/libogg/include"
-IncludeDir["Box2D"] = "%{wks.location}/Hazard/vendor/Box2D/include"
 IncludeDir["Minimp3"] = "%{wks.location}/Hazard/vendor/minimp3"
+
+IncludeDir["Box2D"] = "%{wks.location}/Hazard/vendor/Box2D/include"
 IncludeDir["Entt"] = "%{wks.location}/Hazard/vendor/entt/include"
+
 IncludeDir["PortableFileDialogs"] = "%{wks.location}/Hazard/vendor/portable-file-dialogs"
 IncludeDir["Assimp"] = "%{wks.location}/Hazard/vendor/assimp/include"
-IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
-IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
 IncludeDir["VMA"] = "%{wks.location}/Hazard/vendor/VulkanMemoryAllocator"
 IncludeDir["ImGui"] = "%{wks.location}/HazardEditor/vendor/ImGui"
+
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 IncludeDir["Metal"] = "%{wks.location}/Hazard/vendor/Metal-CPP"
+IncludeDir["Glad"] = "%{wks.location}/Hazard/vendor/Glad/include"
+IncludeDir["GLFW"] = "%{wks.location}/Hazard/vendor/GLFW/include"
+
+IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
+IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
+IncludeDir["stb_image"] = "%{wks.location}/Hazard/vendor/stb_image"
 
 LibraryDir = {}
 

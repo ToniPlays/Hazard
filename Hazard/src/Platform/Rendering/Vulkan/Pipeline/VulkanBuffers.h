@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 
-#include "Hazard/Rendering/Pipeline/Buffers.h"
 #include "vk_mem_alloc.h"
+#include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan
 {
@@ -70,7 +70,7 @@ namespace Hazard::Rendering::Vulkan
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
 		void SetData(const void* data) override;
-		void RT_SetData(const void* data);
+		void RT_SetData();
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };
@@ -81,6 +81,7 @@ namespace Hazard::Rendering::Vulkan
 	private:
 		void Release();
 		void RT_Invalidate();
+		void SetCurrentReadPointer(uint32_t writes, uint32_t size);
 
 	private:
 		std::string m_Name;

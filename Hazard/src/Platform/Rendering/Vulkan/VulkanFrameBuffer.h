@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 #include "Image/VulkanImage2D.h"
 #include <vulkan/vulkan.h>
 
@@ -8,6 +8,7 @@ namespace Hazard::Rendering::Vulkan {
 	class VulkanFrameBuffer : public FrameBuffer {
 	public:
 		VulkanFrameBuffer(FrameBufferCreateInfo* info);
+		virtual ~VulkanFrameBuffer();
 
 		void Bind() const {};
 		void Unbind() const {};

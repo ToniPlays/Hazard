@@ -12,9 +12,9 @@ namespace Hazard::Rendering {
 
 	public:
 		RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo);
-		~RenderContext() = default;
+		~RenderContext();
 
-		void PreRender() override;
+		void Render() override;
 		void PostRender() override;
 		void Close() override;
 
@@ -22,6 +22,9 @@ namespace Hazard::Rendering {
 		GraphicsContext& GetContext() { return *m_Window->GetContext(); }
 		Window& GetWindow() { return *m_Window; }
 		uint32_t GetImagesInFlight() { return m_ImagesInFlight; }
+		CommandQueue& GetRenderCommandQueue() { return *m_RenderCommadQueue; }
+		CommandQueue& GetResourceCreateCommandQueue() { return *m_ResourceCreateCommadQueue; }
+		CommandQueue& GetResourceFreeCommandQueue() { return *m_ResourceFreeCommadQueue; }
 
 	public:
 		static const char* APIToString(RenderAPI api);
@@ -29,11 +32,16 @@ namespace Hazard::Rendering {
 
 	private:
 		void Process(Event& e);
+		void SetupQueues();
 
 	private:
 		RenderAPI m_CurrentAPI;
 		Window* m_Window = nullptr;
 		Color m_ClearColor;
 		uint32_t m_ImagesInFlight;
+
+		CommandQueue* m_RenderCommadQueue;
+		CommandQueue* m_ResourceCreateCommadQueue;
+		CommandQueue* m_ResourceFreeCommadQueue;
 	};
 }

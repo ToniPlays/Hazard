@@ -10,6 +10,7 @@ namespace Hazard::Rendering::OpenGL {
 		~OpenGLRenderCommandBuffer() = default;
 
 		virtual uint32_t GetFrameIndex() { return 0; };
+		virtual bool IsRecording() { return true;  };
 
 		void Begin() {};
 		void End() {};

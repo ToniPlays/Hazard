@@ -15,7 +15,6 @@ namespace Hazard::Audio
 {
 	AudioEngine::AudioEngine(AudioEngineCreateInfo* info) : Module::Module("AudioEngine")
 	{
-		HZR_PROFILE_FUNCTION();
 #ifdef HZR_INCLUDE_OPENAL
 		 int result = InitAL(m_AudioDevice, nullptr, 0);
 
@@ -34,6 +33,5 @@ namespace Hazard::Audio
 	}
 	void AudioEngine::Close()
 	{
-		HZR_PROFILE_FUNCTION();
 	}
 }

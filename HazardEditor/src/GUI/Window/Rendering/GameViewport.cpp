@@ -13,19 +13,24 @@ namespace WindowElement {
 	{
 	}
 
+	GameViewport::~GameViewport()
+	{
+	}
+
 	void GameViewport::Init()
 	{
 		WorldRendererSettings settings = {};
 		settings.DebugName = "GameViewport";
 		settings.ViewportSize = { 1920, 1080 };
 		settings.Camera = &m_Camera;
+		settings.ClearColor = Color::FromHex("#323232");
 		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
-		settings.Flags |= WorldRenderFlags_::Enabled;
-		settings.ClearColor = Color::FromHex("#646464");
+		//settings.Flags |= WorldRenderFlags_::Enabled;
 		m_Renderer = WorldRenderer::Create(&settings);
 	}
 	void GameViewport::OnUpdate()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 		const auto& [cam, transform] = world->GetWorldCamera();
 

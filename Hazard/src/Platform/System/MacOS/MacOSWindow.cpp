@@ -69,8 +69,7 @@ namespace Hazard::Rendering
         
     }
     MacOSWindow::~MacOSWindow()
-{
-        HZR_PROFILE_FUNCTION();
+    {
         delete m_Context;
         glfwDestroyWindow(m_Window);
         glfwTerminate();
@@ -132,7 +131,6 @@ namespace Hazard::Rendering
     }
     void MacOSWindow::SetCallbacks()
     {
-        HZR_PROFILE_FUNCTION();
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);

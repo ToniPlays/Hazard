@@ -15,7 +15,6 @@ namespace Hazard::Rendering::OpenGL
 {
 	OpenGLShader::OpenGLShader(const std::string& filePath) : m_FilePath(filePath)
 	{
-		HZR_PROFILE_FUNCTION();
 
 		auto shaderSources = ShaderFactory::GetShaderSources(m_FilePath);
 		{
@@ -77,7 +76,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLShader::Reflect()
 	{
-		HZR_PROFILE_FUNCTION();
 		HZR_CORE_TRACE("Reflecting shader {0}", m_FilePath);
 		m_ShaderData.Stages.clear();
 
@@ -129,7 +127,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	bool OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
-		HZR_PROFILE_FUNCTION();
 		bool wasCompiled = false;
 		m_ID = glCreateProgram();
 
@@ -137,7 +134,6 @@ namespace Hazard::Rendering::OpenGL
 		shaderData.clear();
 
 		for (auto&& [stage, source] : sources) {
-			HZR_PROFILE_FUNCTION();
 
 			auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::Vulkan);
 
@@ -171,7 +167,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLShader::CompileOrGetOpenGLBinaries(bool forceCompile)
 	{
-		HZR_PROFILE_FUNCTION();
 		auto& shaderData = m_OpenGLSPIRV;
 
 		shaderData.clear();
@@ -179,7 +174,6 @@ namespace Hazard::Rendering::OpenGL
 
 		for (auto&& [stage, spirv] : m_VulkanSPIRV)
 		{
-			HZR_PROFILE_FUNCTION();
 			GLenum glStage = OpenGLUtils::ShaderTypeToGLType(stage);
 
 			if (!forceCompile) {
@@ -214,7 +208,6 @@ namespace Hazard::Rendering::OpenGL
 	}
 	void OpenGLShader::CreateProgram()
 	{
-		HZR_PROFILE_FUNCTION();
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;

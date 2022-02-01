@@ -25,11 +25,8 @@ void main()
 layout(location = 0) in vec4 f_Color;
 
 layout(location = 0) out vec4 color;
-layout(location = 1) out int OutID;
 
 void main() 
 {
 	color = f_Color;
-
-	OutID = -1;
 }

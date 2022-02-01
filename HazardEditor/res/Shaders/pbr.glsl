@@ -16,11 +16,9 @@ layout(std140, binding = 0) uniform Camera {
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 FragPos;
 layout(location = 2) out vec3 f_Normal;
-layout(location = 3) out int f_ID;
 
 layout(std140, binding = 1) uniform Model {
 	uniform mat4 u_Transform;
-	uniform int u_ID;
 } u_Model;
 
 void main() 
@@ -32,8 +30,6 @@ void main()
 	FragPos = worldPosition.xyz;
 
 	gl_Position = u_Camera.u_ViewProjection * worldPosition;
-
-	f_ID = u_Model.u_ID;
 }
 
 #type Fragment
@@ -42,7 +38,6 @@ void main()
 layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
 layout(location = 2) in vec3 f_Normal;
-layout(location = 3) in flat int f_ID;
 
 layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
@@ -53,7 +48,6 @@ layout(std140, binding = 0) uniform Camera {
 
 
 layout(location = 0) out vec4 color;
-layout(location = 1) out int OutID;
 
 const vec3 lightPos = { 100, 30, 100 };
 const vec4 lightColor = { 1.0, 1.0, 1.0, 1.0 };
@@ -88,6 +82,4 @@ void main()
 	vec3 outColor = GammaCorrection(f_Color) * diffuseColor.rgb;
 
 	color = vec4(outColor + specColor, 1.0);
-
-	OutID = f_ID;
 }

@@ -4,12 +4,12 @@
 
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "RenderContextCommand.h"
+#include "RenderLibrary.h"
 
 namespace Hazard::Rendering {
 
 	RenderContext::RenderContext(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo) : Module::Module("RenderContext")
 	{
-		HZR_PROFILE_FUNCTION();
 		m_ClearColor = info->Color;
 		m_ImagesInFlight = info->ImagesInFlight;
 		RenderContextCommand::Init(this);
@@ -26,24 +26,55 @@ namespace Hazard::Rendering {
 
 		m_Window->GetContext()->SetClearColor({ info->Color.r, info->Color.g, info->Color.b, 1.0f });
 		SetActive(true);
+
+		SetupQueues();
 	}
-	void RenderContext::PreRender()
+	RenderContext::~RenderContext()
 	{
-		m_Window->OnBeginFrame();
+		
 	}
-	void RenderContext::PostRender() {
-		m_Window->OnEndFrame();
+	void RenderContext::Render()
+	{
+		m_Window->GetContext()->BeginFrame();
+	}
+	void RenderContext::PostRender()
+	{
+		HZR_PROFILE_FUNCTION();
+
+		m_ResourceCreateCommadQueue->Excecute();
+		m_RenderCommadQueue->Excecute();
+		m_ResourceFreeCommadQueue->Excecute();
+
+		m_Window->Present();
+
+		m_ResourceCreateCommadQueue->Clear();
+		m_RenderCommadQueue->Clear();
+		m_ResourceFreeCommadQueue->Clear();
 	}
 
 	void RenderContext::Close()
 	{
-		HZR_PROFILE_FUNCTION();
+		RenderLibrary::Clear();
+		m_Window->Close();
+
+		m_ResourceFreeCommadQueue->Excecute();
+
+		m_ResourceCreateCommadQueue->Clear();
+		m_RenderCommadQueue->Clear();
+		m_ResourceFreeCommadQueue->Clear();
+
 		delete m_Window;
 	}
 
 	void RenderContext::Process(Event& e)
 	{
 		Core::HazardLoop::GetCurrent().Process(e);
+	}
+	void RenderContext::SetupQueues()
+	{
+		m_RenderCommadQueue = new CommandQueue();
+		m_ResourceCreateCommadQueue = new CommandQueue();
+		m_ResourceFreeCommadQueue = new CommandQueue();
 	}
 	const char* RenderContext::APIToString(RenderAPI api)
 	{

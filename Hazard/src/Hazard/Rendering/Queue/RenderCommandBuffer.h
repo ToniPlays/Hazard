@@ -4,6 +4,8 @@
 
 namespace Hazard::Rendering {
 
+	enum class State { Waiting, Record, Finished, Submit };
+
 	class RenderCommandBuffer : public RefCount
 	{
 		friend class Pipeline;
@@ -15,6 +17,7 @@ namespace Hazard::Rendering {
 		virtual void Submit() = 0;
 
 		virtual uint32_t GetFrameIndex() = 0;
+		virtual bool IsRecording() = 0;
 
 		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", uint32_t count = 0);
 		static Ref<RenderCommandBuffer> CreateFromSwapchain(const std::string& debugName = "");

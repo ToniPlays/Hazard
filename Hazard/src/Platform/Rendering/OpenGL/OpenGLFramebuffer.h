@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 #include "OpenGLImage2D.h"
 
 namespace Hazard::Rendering::OpenGL 

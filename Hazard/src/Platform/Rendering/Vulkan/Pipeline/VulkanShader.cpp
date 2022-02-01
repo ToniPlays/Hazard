@@ -66,15 +66,15 @@ namespace Hazard::Rendering::Vulkan
 
 	VulkanShader::VulkanShader(const std::string& file) : m_Path(file)
 	{
-		HZR_PROFILE_FUNCTION();
 		Reload();
 	}
 	VulkanShader::~VulkanShader()
 	{
-		DestroyModules();
+		HZR_CORE_WARN("Destroyed shader {0}", m_Path);
 		m_UniformBuffers.clear();
-		m_ShaderData.Stages.clear();
-		m_ShaderData.UniformsDescriptions.clear();
+		m_UnformBufferBindings.clear();
+
+		DestroyModules();
 	}
 	void VulkanShader::Reload()
 	{
@@ -118,19 +118,24 @@ namespace Hazard::Rendering::Vulkan
 			Ref<VulkanImage2D> image = value.As<VulkanTexture2D>()->GetImage();
 			if (!image) return;
 
-			VkDescriptorImageInfo imageInfo = image->GetDescriptor();
+			ShaderSampledImage samplerInstance = sampler;
+			Ref<VulkanShader> instance = this;
 
-			auto device = VulkanContext::GetDevice()->GetDevice();
-			VkWriteDescriptorSet descriptorWrite = {};
-			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = m_DescriptorSets[VulkanContext::GetSwapchain()->GetCurrentBufferIndex()];
-			descriptorWrite.dstBinding = sampler.Binding;
-			descriptorWrite.dstArrayElement = index;
-			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descriptorWrite.descriptorCount = 1;
-			descriptorWrite.pImageInfo = &imageInfo;
+			RenderContextCommand::SubmitResourceCreate([image, samplerInstance, index, sets = m_DescriptorSets]() mutable {
+				VkDescriptorImageInfo imageInfo = image->GetDescriptor();
 
-			vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+				auto device = VulkanContext::GetDevice()->GetDevice();
+				VkWriteDescriptorSet descriptorWrite = {};
+				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrite.dstSet = sets[VulkanContext::GetSwapchain()->GetCurrentBufferIndex()];
+				descriptorWrite.dstBinding = samplerInstance.Binding;
+				descriptorWrite.dstArrayElement = index;
+				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptorWrite.descriptorCount = 1;
+				descriptorWrite.pImageInfo = &imageInfo;
+
+				vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+				});
 			break;
 		}
 	}
@@ -218,17 +223,20 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::DestroyModules()
 	{
-		auto device = VulkanContext::GetDevice();
+		auto modules = m_Modules;
+		RenderContextCommand::SubmitResourceFree([modules]() mutable {
+			HZR_CORE_WARN("Deleting shader modules");
+			auto device = VulkanContext::GetDevice();
 
-		for (auto&& [stage, module] : m_Modules) {
-			vkDestroyShaderModule(device->GetDevice(), module, nullptr);
-		}
+			for (auto&& [stage, module] : modules) {
+				vkDestroyShaderModule(device->GetDevice(), module, nullptr);
+			}
 
-		m_Modules.clear();
+			modules.clear();
+			});
 	}
 	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
-		HZR_PROFILE_FUNCTION();
 		m_ShaderCode.clear();
 
 		for (auto&& [stage, source] : sources)
@@ -266,7 +274,6 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::CreateModules()
 	{
-		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
 		for (auto&& [stage, binary] : m_ShaderCode) {
@@ -280,7 +287,6 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanShader::Reflect()
 	{
-		HZR_PROFILE_FUNCTION();
 		m_ShaderData.Stages.clear();
 
 		for (auto&& [stage, binary] : m_ShaderCode) {

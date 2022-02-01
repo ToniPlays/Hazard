@@ -19,6 +19,7 @@ namespace Hazard::Rendering::Vulkan
 	VulkanImage2D::~VulkanImage2D()
 	{
 		m_Buffer.Release();
+
 		if (!m_Info.Image) return;
 
 		const auto device = VulkanContext::GetDevice()->GetDevice();
@@ -31,7 +32,6 @@ namespace Hazard::Rendering::Vulkan
 		}
 		VulkanAllocator allocator("VulkanImage2D");
 		allocator.DestroyImage(m_Info.Image, m_Info.MemoryAlloc);
-
 
 		m_PerLayerImageViews.clear();
 	}
@@ -116,6 +116,7 @@ namespace Hazard::Rendering::Vulkan
 		samplerCreateInfo.maxLod = 100.0f;
 		samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_Info.Sampler));
+		
 
 		if (m_Info.Usage == ImageUsage::Storage)
 		{

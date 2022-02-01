@@ -21,8 +21,15 @@ namespace WindowElement {
 	{
 
 	}
+
+	Viewport::~Viewport()
+	{
+		delete m_Grid;
+	}
+
 	void Viewport::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		SetActive(Application::HasModule<RenderEngine>());
 		if (!IsActive()) return;
 
@@ -36,11 +43,12 @@ namespace WindowElement {
 		settings.Flags |= WorldRenderFlags_::Enabled;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
 
-		m_Grid.Invalidate(m_WorldRenderer->GetRenderPass());
+		m_Grid = new Editor::Grid();
+		m_Grid->Invalidate(m_WorldRenderer->GetRenderPass());
 	}
 	void Viewport::OnUpdate()
 	{
-		m_Grid.Render(m_EditorCamera);
+		m_Grid->Render(m_EditorCamera);
 	}
 	void Viewport::OnWindowRender()
 	{

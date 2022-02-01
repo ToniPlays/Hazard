@@ -13,7 +13,6 @@ namespace Hazard {
 
 	void Input::Init() 
 	{
-		HZR_PROFILE_FUNCTION();
 		if (!Application::HasModule<Rendering::RenderContext>()) return;
 		Rendering::RenderContext* context = &Application::GetModule<Rendering::RenderContext>();
 		window = (GLFWwindow*)context->GetWindow().GetNativeWindow();

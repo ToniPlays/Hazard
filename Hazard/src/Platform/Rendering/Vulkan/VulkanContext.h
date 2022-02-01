@@ -23,7 +23,6 @@ namespace Hazard::Rendering::Vulkan {
 		~VulkanContext();
 
 		void Init(Window* window, ApplicationCreateInfo* appInfo) override;
-		void SwapBuffers() override;
 		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
 
@@ -40,9 +39,9 @@ namespace Hazard::Rendering::Vulkan {
 		static glm::vec4 GetClearColor() { return m_ClearColor; }
 		static VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 
-		void BeginFrame();
-		void Begin() override;
-		void End();
+		void BeginFrame() override;
+		void Present() override;
+		void Close() override;
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;

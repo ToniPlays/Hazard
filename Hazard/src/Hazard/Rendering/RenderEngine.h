@@ -4,22 +4,23 @@
 #include "Hazard/Module.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Queue/RenderCommandBuffer.h"
-#include "Queue/RenderCommandQueue.h"
-#include "Pipeline/FrameBuffer.h"
-#include "Pipeline/Buffers.h"
-#include "Pipeline/Pipeline.h"
+#include "Hazard/Core/CommandQueue.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "WorldRenderer.h"
 
 namespace Hazard::Rendering {
 
 	class DebugRenderer;
-	struct RenderPassData 
+	struct RenderPassData
 	{
 		glm::mat4 ViewProjection;
 		glm::mat4 Projection;
 		glm::mat4 View;
-		//glm::vec4 Position;
+		glm::vec4 Position;
 	};
 
 	class Renderer2D;
@@ -35,38 +36,42 @@ namespace Hazard::Rendering {
 		bool OnEvent(Event& e) override;
 		void Close() override;
 
-		template<typename Func>
-		void Submit(Func&& fn) 
+		template<typename FuncT>
+		void Submit(FuncT&& fn)
 		{
 			auto renderCmd = [](void* ptr) {
-				auto pFunc = (Func*)ptr;
+				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
+
+				pFunc->~FuncT();
 			};
 
 			auto storageBuffer = m_Queue->Allocate(renderCmd, sizeof(fn));
-			new (storageBuffer) Func(std::forward<Func>(fn));
+			new (storageBuffer) FuncT(std::forward<FuncT>(fn));
 		}
-		template<typename Func>
-		void SubmitPostPass(Func&& fn)
+		template<typename FuncT>
+		void SubmitPostPass(FuncT&& fn)
 		{
 			auto renderCmd = [](void* ptr) {
-				auto pFunc = (Func*)ptr;
+				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
+
+				pFunc->~FuncT();
 			};
 
 			auto storageBuffer = m_PostPassQueue->Allocate(renderCmd, sizeof(fn));
-			new (storageBuffer) Func(std::forward<Func>(fn));
+			new (storageBuffer) FuncT(std::forward<FuncT>(fn));
 		}
 
-		void DrawGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline);
-		void DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count);
-		void SetLineWidth(float lineWidth);
-		 
+
 		bool OnResize(WindowResizeEvent& e);
 
 		Renderer2D& Get2D() { return *m_Renderer2D; }
 		DebugRenderer& GetDebugRenderer() { return *m_DebugRenderer; }
 		Ref<RenderPass> GetCurrentRenderPass() { return m_CurrentRenderPass; }
+		Ref<RenderCommandBuffer> GetCurrentRenderCommandBuffer() { return m_RenderCommandBuffer; }
+	private:
+		void ProcessWorldRenderer(WorldRenderer* renderer);
 
 	private:
 		Renderer2D* m_Renderer2D;
@@ -75,8 +80,8 @@ namespace Hazard::Rendering {
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		Ref<RenderPass> m_CurrentRenderPass;
 		Ref<UniformBuffer> m_CameraUBO;
-		RenderCommandQueue* m_PostPassQueue;
-		RenderCommandQueue* m_Queue;
+		CommandQueue* m_PostPassQueue;
+		CommandQueue* m_Queue;
 		RenderPassData m_RenderPassData;
 	};
 }

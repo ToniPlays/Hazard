@@ -16,6 +16,7 @@ namespace WindowElement
 	}
 	bool NodeGraphTab::OnEvent(Event& e)
 	{
+
 		for (RenderableElement* element : GetElements()) {
 			if (element->OnEvent(e)) return true;
 		}

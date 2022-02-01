@@ -53,13 +53,13 @@ namespace Hazard
 	class RuntimeResource : public RefCount {
 		friend class AssetManager;
 	public:
-		virtual ~RuntimeResource() = default;
+		virtual ~RuntimeResource();
 
 		UUID GetHandle() { return m_Handle; }
 		ResourceType GetType() { return m_Type; }
 
 	protected:
-		UUID m_Handle;
+		UUID m_Handle = INVALID_ASSET_HANDLE;
 		ResourceType m_Type = ResourceType::Undefined;
 	};
 }

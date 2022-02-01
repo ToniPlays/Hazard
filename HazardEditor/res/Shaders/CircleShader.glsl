@@ -37,7 +37,6 @@ layout(location = 2) in float f_Thickness;
 layout(location = 3) in float f_Fade;
 
 layout(location = 0) out vec4 color;
-layout(location = 1) out int OutID;
 
 void main() 
 {
@@ -51,6 +50,4 @@ void main()
 	if(circle == 0.0) discard;
 	color = f_Color;
 	color.a *= circle;
-
-	OutID = -1;
 }

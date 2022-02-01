@@ -35,6 +35,7 @@ project "HazardEditor"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Optick}",
 		"src"
 	}
 
@@ -47,7 +48,8 @@ project "HazardEditor"
 		"GLFW",
 		"Glad",
 		"Box2D",
-		"yaml-cpp"
+		"yaml-cpp",
+		"Optick"
 	}
 
 	postbuildcommands {

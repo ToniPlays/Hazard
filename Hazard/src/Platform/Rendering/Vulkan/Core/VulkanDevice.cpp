@@ -89,6 +89,8 @@ namespace Hazard::Rendering::Vulkan {
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
+
+		HZR_CORE_ERROR("[VulkanDevice]: Device destroyed");
 	}
 	void VulkanDevice::WaitUntilIdle() {
 

@@ -17,9 +17,6 @@ namespace Hazard::Rendering
 	}
 	WorldRenderer::~WorldRenderer() 
 	{
-		auto it = std::find(s_Renderers.begin(), s_Renderers.end(), this);
-		if(it != s_Renderers.end())
-			s_Renderers.erase(it);
 	}
 	void WorldRenderer::SetViewport(uint32_t width, uint32_t height) 
 	{
@@ -30,28 +27,29 @@ namespace Hazard::Rendering
 	{
 		return false;
 	}
-	void WorldRenderer::Begin(Ref<RenderCommandBuffer> cmdBuffer, RenderCommandQueue* queue)
+	void WorldRenderer::Begin(Ref<RenderCommandBuffer> cmdBuffer, CommandQueue* queue)
 	{
-		RenderCommand::BeginRenderPass(cmdBuffer, m_RenderPass);
-		RenderCommand::SetLineWidth(m_Settings.LineWidth);
+		RenderContextCommand::BeginRenderPass(cmdBuffer, m_RenderPass);
+		RenderContextCommand::SetLineWidth(cmdBuffer, m_Settings.LineWidth);
 	}
 	void WorldRenderer::End(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		RenderCommand::EndRenderPass(cmdBuffer);
+		RenderContextCommand::EndRenderPass(cmdBuffer);
 		m_FrameBuffer->Unbind();
 	}
 	void WorldRenderer::Invalidate()
 	{
 		if (!m_Resize) return;
+
 		m_Resize = false;
-		m_FrameBuffer->Resize(m_Settings.ViewportSize.x, m_Settings.ViewportSize.y);
+		//m_FrameBuffer->Resize(m_Settings.ViewportSize.x, m_Settings.ViewportSize.y);
 	}
 	void WorldRenderer::CreateResources()
 	{
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.SwapChainTarget = m_Settings.SwapchainTarget;
-		frameBufferInfo.AttachmentCount = 3;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::RED32I }, { ImageFormat::Depth } };
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.ClearColor = m_Settings.ClearColor;
 		frameBufferInfo.DebugName = "WorldRenderer";
@@ -65,5 +63,6 @@ namespace Hazard::Rendering
 		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
+		m_Resize = true;
 	}
 }

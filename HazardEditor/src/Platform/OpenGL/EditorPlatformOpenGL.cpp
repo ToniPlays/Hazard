@@ -24,6 +24,7 @@ void EditorPlatformOpenGL::BeginFrame()
 
 void EditorPlatformOpenGL::EndFrame()
 {
+	HZR_PROFILE_FUNCTION();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO();
 

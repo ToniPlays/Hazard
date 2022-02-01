@@ -20,12 +20,14 @@ namespace WindowElement
 	}
 	void EditorMainTab::OnUpdate()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (RenderableElement* element : GetElements()) {
 			element->OnUpdate();
 		}
 	}
 	void EditorMainTab::Render()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (RenderableElement* element : GetElements()) {
 			element->OnRender();
 		}

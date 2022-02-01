@@ -41,4 +41,9 @@ namespace Hazard::Physics
 	{
 		s_Physics2D->End();
 	}
+	void PhysicsCommand::Step(double delta)
+	{
+		HZR_PROFILE_FUNCTION();
+		s_Physics2D->Step((float)delta);
+	}
 }

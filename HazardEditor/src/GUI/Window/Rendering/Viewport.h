@@ -15,7 +15,7 @@ namespace WindowElement {
 	class Viewport : public EditorWindow {
 	public:
 		Viewport();
-		~Viewport() = default;
+		~Viewport();
 		
 		void Init() override;
 		void OnUpdate() override;
@@ -32,7 +32,7 @@ namespace WindowElement {
 
 	private:
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
-		Editor::Grid m_Grid;
+		Editor::Grid* m_Grid;
 
 		Ref<WorldRenderer> m_WorldRenderer;
 		TransformationGizmo m_Gizmos;

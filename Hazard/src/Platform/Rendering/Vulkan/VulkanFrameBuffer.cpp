@@ -58,6 +58,12 @@ namespace Hazard::Rendering::Vulkan
 		HZR_CORE_INFO("Created VulkanFrameBuffer with {0} attachments, has depth {1}", m_AttachmentImages.size(), m_DepthAttachment);
 		Resize(m_Specs.Width, m_Specs.Height, true);
 	}
+	VulkanFrameBuffer::~VulkanFrameBuffer()
+	{
+		auto device = VulkanContext::GetDevice()->GetDevice();
+		vkDestroyRenderPass(device, m_RenderPass, nullptr);
+		vkDestroyFramebuffer(device, m_FrameBuffer, nullptr);
+	}
 	void VulkanFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
 		if (!force && (width == m_Specs.Width && height == m_Specs.Height)) 

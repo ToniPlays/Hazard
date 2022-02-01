@@ -16,6 +16,7 @@ namespace WindowElement {
 	}
 	void MaterialInspector::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		//if (!selectionContext.IsValid()) return;
 
 		//ImGui::Text("%s", selectionContext.GetTag().Tag.c_str());

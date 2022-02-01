@@ -77,17 +77,21 @@ namespace Hazard::Rendering {
 		SetCallbacks();
 		SetVSync(info->VSync);
 	}
-	void WindowsWindow::OnBeginFrame()
+	void WindowsWindow::BeginFrame()
 	{
-		m_Context->Begin();
+		m_Context->BeginFrame();
 	}
-	void WindowsWindow::OnEndFrame()
+	void WindowsWindow::Present()
 	{
-		m_Context->End();
+		m_Context->Present();
+
 		if (!m_WindowData.minimized)
-			m_Context->SwapBuffers();
+
 		Input::Update();
 		glfwPollEvents();
+	}
+	void WindowsWindow::Close() {
+		m_Context->Close();
 	}
 	void WindowsWindow::SetWindowTitle(const char* title)
 	{
@@ -135,7 +139,6 @@ namespace Hazard::Rendering {
 	}
 	void WindowsWindow::SetCallbacks()
 	{
-		HZR_PROFILE_FUNCTION();
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
@@ -224,7 +227,6 @@ namespace Hazard::Rendering {
 
 	WindowsWindow::~WindowsWindow() 
 	{
-		HZR_PROFILE_FUNCTION();
 		delete m_Context;
 		
 		glfwDestroyWindow(m_Window);

@@ -17,6 +17,7 @@ namespace WindowElement {
 	}
 	void Profiler::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (Input::Button("Load")) {
 			// std::string file = File::OpenFileDialog("");
 			// if (!file.empty()) {

@@ -1,6 +1,6 @@
 #pragma once
-#include "Hazard/Rendering/Pipeline/Shader.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Shader.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 
 namespace Hazard::Rendering::OpenGL 
 {

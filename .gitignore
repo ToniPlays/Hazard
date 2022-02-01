@@ -44,3 +44,4 @@ Makefile
 !HazardEditor/res/**/*.obj
 *.xcscheme
 *.xcbkptlist
+Hazard/vendor/Optick

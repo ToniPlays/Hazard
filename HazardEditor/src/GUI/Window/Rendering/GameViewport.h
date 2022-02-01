@@ -12,7 +12,7 @@ namespace WindowElement {
 	class GameViewport : public EditorWindow {
 	public:
 		GameViewport();
-		~GameViewport() = default;
+		~GameViewport();
 
 		void Init() override;
 		void OnUpdate() override;

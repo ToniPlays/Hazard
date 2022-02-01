@@ -15,7 +15,7 @@ namespace WindowElement {
 	}
 	void WorldEnvironmentData::OnWindowRender()
 	{
-
+		HZR_PROFILE_FUNCTION();
 		using namespace Rendering;
 		Ref<ECS::World> world = ECS::WorldCommand::GetCurrentWorld();
 		

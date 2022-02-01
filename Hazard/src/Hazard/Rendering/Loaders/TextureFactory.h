@@ -2,7 +2,7 @@
 
 #include "Hazard/Core/Core.h"
 #include "Hazard/Core/Buffer.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 #include "Hazard/Rendering/Image/Image.h"
 
 namespace Hazard::Rendering 

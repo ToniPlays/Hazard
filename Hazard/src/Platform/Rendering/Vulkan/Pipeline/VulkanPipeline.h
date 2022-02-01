@@ -1,6 +1,5 @@
-#pragma once
 
-#include "Hazard/Rendering/Pipeline/Pipeline.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
 #include "VulkanShader.h"
 #include "VulkanBuffers.h"
 
@@ -14,6 +13,7 @@ namespace Hazard::Rendering::Vulkan
 		VulkanPipeline(PipelineSpecification* specs);
 		virtual ~VulkanPipeline();
 
+
 		PipelineSpecification GetSpecifications() { return m_Specs; }
 		const PipelineSpecification GetSpecifications() const { return m_Specs; }
 		Ref<Shader> GetShader() { return m_Shader; }
@@ -25,11 +25,14 @@ namespace Hazard::Rendering::Vulkan
 		void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
 
 	private:
+		void Destroy();
+
+	private:
 		PipelineSpecification m_Specs;
 
-		VkPipeline m_Pipeline;
-		VkPipelineLayout m_PipelineLayout;
-		VkDescriptorSetLayout m_UniformDescriptorLayout;
+		VkPipeline m_Pipeline = nullptr;
+		VkPipelineLayout m_PipelineLayout = nullptr;
+		VkDescriptorSetLayout m_UniformDescriptorLayout = nullptr;
 
 		Ref<VulkanShader> m_Shader;
 	};

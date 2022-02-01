@@ -114,7 +114,8 @@ namespace Hazard::ECS::Loader
 			auto& c = entity.AddComponent<MeshComponent>();
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
-			if (fileName.empty()) return;
+
+			HZR_GUARD(!fileName.empty());
 
 			AssetHandle handle = AssetManager::ImportAsset(fileName);
 			c.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);

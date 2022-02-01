@@ -35,8 +35,11 @@ namespace Hazard::Rendering {
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
-		virtual void OnBeginFrame() = 0;
-		virtual void OnEndFrame() = 0;
+		virtual void BeginFrame() = 0;
+		virtual void Present() = 0;
+		virtual void Close() = 0;
+
+
 		virtual void SetWindowTitle(const char* title) = 0;
 		virtual void SetWindowIcon(uint32_t count, const char** images) = 0;
 		virtual void SetPosition(glm::vec2 position, glm::vec2 dragPoint) = 0;

@@ -12,7 +12,7 @@ namespace WindowElement
 {
 	AudioEngineDebug::AudioEngineDebug() : EditorWindow("Audio engine debugger")
 	{
-
+		SetActive(false);
 	}
 	void AudioEngineDebug::Init()
 	{
@@ -20,6 +20,7 @@ namespace WindowElement
 	}
 	void AudioEngineDebug::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace Hazard::Audio;
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 

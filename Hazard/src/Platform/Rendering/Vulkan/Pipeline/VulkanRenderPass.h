@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
-#include "Hazard/Rendering/Pipeline/RenderPass.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/RenderPass.h"
 #include <vulkan/vulkan.h>
 
 namespace Hazard::Rendering::Vulkan {

@@ -3,10 +3,13 @@
 
 namespace Editor
 {
-	Grid::~Grid() {}
+	Grid::~Grid() 
+	{
+
+	}
 
 	void Grid::Render(const Editor::EditorCamera& camera)
-	{
+	{	
 		struct GridData {
 			float Near;
 			float Far;
@@ -33,11 +36,13 @@ namespace Editor
 		PipelineSpecification specs = {};
 		specs.DebugName = "EditorGrid";
 		specs.TargetRenderPass = renderPass;
-		specs.DrawType = DrawType::Fill;
 		specs.ShaderPath = "Shaders/Grid.glsl";
+		specs.DrawType = DrawType::Fill;
 		specs.Usage = PipelineUsage::GraphicsBit;
-		specs.Culling = false;
+		specs.CullMode = CullMode::FrontFace;
 		specs.IsShared = false;
+		specs.DepthTest = true;
+
 		m_Pipeline = Pipeline::Create(&specs);
 	}
 }

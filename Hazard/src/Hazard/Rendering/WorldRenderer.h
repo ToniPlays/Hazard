@@ -2,10 +2,10 @@
 
 #include "Hazard/Core/Core.h"
 #include "Camera.h"
-#include "Pipeline/FrameBuffer.h"
-#include "Pipeline/RenderPass.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
+#include "Hazard/RenderContext/Pipeline/RenderPass.h"
 #include "Queue/RenderCommandBuffer.h"
-#include "Queue/RenderCommandQueue.h"
+#include "Hazard/Core/CommandQueue.h"
 
 #include <glm/glm.hpp>
 
@@ -42,7 +42,7 @@ namespace Hazard::Rendering
 		WorldRenderer(WorldRendererSettings* settings);
 		~WorldRenderer();
 
-		void Begin(Ref<RenderCommandBuffer> cmdBuffer, RenderCommandQueue* queue);
+		void Begin(Ref<RenderCommandBuffer> cmdBuffer, CommandQueue* queue);
 		void End(Ref<RenderCommandBuffer> cmdBuffer);
 		
 		void SetViewport(uint32_t width, uint32_t height);
@@ -66,6 +66,6 @@ namespace Hazard::Rendering
 		WorldRendererSettings m_Settings;
 		bool m_Resize = false;
 
-		static inline std::vector<WorldRenderer*> s_Renderers;
+		static inline std::vector<Ref<WorldRenderer>> s_Renderers;
 	};
 }

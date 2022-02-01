@@ -2,7 +2,6 @@
 #include <hzrpch.h>
 #include "Renderer2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
-#include "../RenderLibrary.h"
 
 namespace Hazard::Rendering
 {
@@ -11,7 +10,7 @@ namespace Hazard::Rendering
 		m_Data.MaxQuadCount = info->MaxQuadCount;
 		m_Data.MaxVertices = info->MaxQuadCount * (uint32_t)4;
 		m_Data.MaxIndices = info->MaxQuadCount * (uint32_t)6;
-		m_Data.Samplers = info->SamplerCount;	
+		m_Data.Samplers = info->SamplerCount;
 
 		m_Data.TextureSlots.resize(info->SamplerCount);
 		m_RenderCommandBuffer = buffer;
@@ -22,6 +21,9 @@ namespace Hazard::Rendering
 	}
 	Renderer2D::~Renderer2D()
 	{
+
+		m_Data.TextureSlots.clear();
+
 		m_VertexBuffer.Reset();
 		m_IndexBuffer.Reset();
 		m_Pipeline.Reset();
@@ -29,8 +31,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
-		if (!(m_CurrentFlags & WorldRenderFlags_::Geometry))
-			return;
+		HZR_GUARD(m_CurrentFlags & WorldRenderFlags_::Geometry);
 
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices)
 		{
@@ -47,7 +48,6 @@ namespace Hazard::Rendering
 			vertex.Color = quad.Color;
 			vertex.TextureCoords = textureCoords[i];
 			vertex.TextureIndex = textureIndex;
-			vertex.ID = quad.ID;
 
 			m_QuadBatch.Push(vertex);
 		}
@@ -76,24 +76,27 @@ namespace Hazard::Rendering
 	void Renderer2D::Flush()
 	{
 		HZ_SCOPE_PERF("Renderer2D::Flush");
-		if (!m_QuadBatch)
-			return;
-
-		m_Pipeline->Bind(m_RenderCommandBuffer);
-		Ref<Shader> shader = m_Pipeline->GetShader();
-
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-		{
-			m_Data.TextureSlots[i]->Bind(i);
-			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
-		}
+		HZR_GUARD(m_QuadBatch);
 
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
 
-		m_VertexBuffer->Bind(m_RenderCommandBuffer);
-		m_IndexBuffer->Bind(m_RenderCommandBuffer);
-		m_Pipeline->Draw(m_RenderCommandBuffer, m_QuadBatch.GetIndexCount());
-        
+		Ref<Pipeline> pipeline = m_Pipeline;
+		Ref<Shader> shader = m_Pipeline->GetShader();
+		Ref<RenderCommandBuffer> cmdBuffer = m_RenderCommandBuffer;
+
+		Renderer2DData data = m_Data;
+
+		RenderContextCommand::Submit([pipeline, shader, cmdBuffer, data]() mutable {
+
+			for (uint32_t i = 0; i < data.TextureIndex; i++)
+			{
+				data.TextureSlots[i]->Bind(i);
+				shader->Set("u_Textures", i, data.TextureSlots[i]);
+			}
+			});
+			
+		RenderContextCommand::DrawGeometry(m_RenderCommandBuffer, m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
+
 	}
 	void Renderer2D::EndWorld()
 	{
@@ -144,7 +147,7 @@ namespace Hazard::Rendering
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
-			
+
 			Ref<Shader> shader = m_Pipeline->GetShader();
 			shader->Bind(m_RenderCommandBuffer);
 			for (uint32_t i = 0; i < m_Data.Samplers; i++) {

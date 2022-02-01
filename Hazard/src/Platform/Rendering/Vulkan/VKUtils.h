@@ -1,10 +1,11 @@
 #pragma once
 
 #include <optional>
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/Shader.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
+
 #include "vulkan/vulkan.h"
-#include "Hazard/Rendering/Pipeline/Shader.h"
-#include "Hazard/Rendering/Pipeline/Pipeline.h"
 
 namespace Hazard::Rendering::Vulkan 
 {
@@ -40,6 +41,7 @@ namespace Hazard::Rendering::Vulkan
 		static VkFormat ShaderDataTypeToVkFormat(ShaderDataType type);
 		static ShaderType ShaderTypeFromVulkanStage(VkShaderStageFlagBits type);
 
+		static VkCullModeFlags CullModeToVKMode(CullMode mode);
 		static VkShaderStageFlags ShaderUsageToVulkanUsage(uint32_t usage);
 		static bool IsDepth(ImageFormat format);
 		static VkFilter GetSamplerFilter(const FilterMode& filter);

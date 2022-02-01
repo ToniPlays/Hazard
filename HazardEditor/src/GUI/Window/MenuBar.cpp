@@ -17,6 +17,7 @@ namespace WindowElement {
 
 	void MenuBar::OnMenuRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0);
 		ImGui::BeginMainMenuBar();
 

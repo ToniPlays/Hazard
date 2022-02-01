@@ -3,7 +3,7 @@
 #include "BufferBindings.h"
 #include "Hazard/Events/Input.h"
 
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 #include "Scripting/CSharp/Mono/Mono.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"

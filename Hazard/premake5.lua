@@ -48,7 +48,8 @@ project "Hazard"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.VMA}"
+		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Optick}"
 	}
 
 	links {

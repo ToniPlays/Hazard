@@ -11,6 +11,7 @@
     #include "Hazard/Core/CommandLineArgs.h"
 
     #include <stdio.h>
+    #include <crtdbg.h>
 
     extern Hazard::Application* Hazard::CreateApplication();
 
@@ -21,15 +22,18 @@
             #pragma comment( linker, "/subsystem:console" )
             int main(int argc, char* argv[])
             {
+                _CrtSetDbgFlag(_CRTDBG_CHECK_ALWAYS_DF);
                 using namespace Hazard;
+                {
+                    CommandLineArgs::Init(argc, argv);
+                    Application* app = CreateApplication();
 
-                CommandLineArgs::Init(argc, argv);
-                Application* app = CreateApplication();
+                    Core::HazardLoop loop(app);
+                    loop.Start();
 
-                Core::HazardLoop loop(app);
-                loop.Start();
-                while (!loop.ShouldClose()) {
-                    loop.Run();
+                    while (!loop.ShouldClose()) {
+                        loop.Run();
+                    }
                 }
                 return 0;
             }
@@ -44,7 +48,6 @@
                 loop.Start();
                 while (!loop.ShouldClose()) {
                     loop.Run();
-                    std::cout << allocs << std::endl;
                 }
                 return 0;
             }

@@ -23,7 +23,6 @@ namespace Hazard::Rendering::Vulkan {
 
 	VulkanContext::~VulkanContext()
 	{
-		HZR_PROFILE_FUNCTION();
 		m_Device->WaitUntilIdle();
 		s_Callback = nullptr;
 
@@ -31,15 +30,16 @@ namespace Hazard::Rendering::Vulkan {
 
 		m_SwapChain.Reset();
 		m_WindowSurface.reset();
+
 		VulkanAllocator::Shutdown();
 		m_Device.reset();
 
+		s_Callback = nullptr;
 		vkDestroyInstance(m_Instance, nullptr);
 	}
 
 	void VulkanContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 	{
-		HZR_PROFILE_FUNCTION();
 		m_Window = window;
 
 		auto extensions = VKUtils::GetRequiredExtensions(appInfo->Logging);
@@ -73,7 +73,6 @@ namespace Hazard::Rendering::Vulkan {
 
 		VulkanAllocator::Init();
 
-
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 
@@ -81,18 +80,25 @@ namespace Hazard::Rendering::Vulkan {
 		m_SwapChain->Create(w, h, window->IsVSync());
 	}
 
-	void VulkanContext::Begin()
+	void VulkanContext::BeginFrame()
 	{
 		m_SwapChain->BeginFrame();
 	}
 
-	void VulkanContext::End()
+	void VulkanContext::Present()
 	{
+		HZR_PROFILE_FUNCTION();
+		m_SwapChain->Present();
+	}
 
+	void VulkanContext::Close()
+	{
+		m_Device->WaitUntilIdle();
 	}
 
 	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
@@ -167,6 +173,7 @@ namespace Hazard::Rendering::Vulkan {
 
 	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdEndRenderPass(vkBuffer);
@@ -177,11 +184,6 @@ namespace Hazard::Rendering::Vulkan {
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
 		vkCmdSetLineWidth(vkBuffer, lineWidth);
-	}
-
-	void VulkanContext::SwapBuffers()
-	{
-		m_SwapChain->Present();
 	}
 
 	void VulkanContext::SetViewport(int x, int y, int w, int h)

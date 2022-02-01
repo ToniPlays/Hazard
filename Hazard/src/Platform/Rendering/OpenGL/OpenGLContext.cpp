@@ -27,7 +27,6 @@ namespace Hazard::Rendering {
 
 		OpenGLContext::~OpenGLContext()
 		{
-			HZR_PROFILE_FUNCTION();
 			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_DEBUG_OUTPUT);
 			glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -35,7 +34,6 @@ namespace Hazard::Rendering {
 
 		void OpenGLContext::Init(Window* window, ApplicationCreateInfo* appInfo)
 		{
-			HZR_PROFILE_FUNCTION();
 			m_Window = (GLFWwindow*)window->GetNativeWindow();
 
 			glfwMakeContextCurrent(m_Window);
@@ -58,11 +56,9 @@ namespace Hazard::Rendering {
 
 		}
 
-		void OpenGLContext::SwapBuffers()
+		void OpenGLContext::Present()
 		{
 			glfwSwapBuffers(m_Window);
-			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
@@ -86,6 +82,12 @@ namespace Hazard::Rendering {
 			for (auto& fn : m_ResizeCallback) {
 				fn(w, h);
 			}
+		}
+
+		void OpenGLContext::BeginFrame()
+		{
+			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)

@@ -3,7 +3,7 @@
 #include "ShaderFactory.h"
 #include "Hazard/Utils/StringUtil.h"
 
-#include "../Pipeline/Shader.h"
+#include "Hazard/RenderContext/Pipeline/Shader.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
@@ -100,7 +100,6 @@ namespace Hazard::Rendering
 	}
 	std::unordered_map<ShaderType, std::string> ShaderFactory::SourcePreprocess(const std::string& source)
 	{
-		HZR_PROFILE_FUNCTION();
 		std::unordered_map<ShaderType, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -177,7 +176,6 @@ namespace Hazard::Rendering
 		spirv_cross::Compiler compiler(binary);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-		HZR_PROFILE_FUNCTION();
 		ShaderStageData shaderStage;
 
 		for (auto& resource : resources.stage_inputs) {

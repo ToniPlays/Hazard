@@ -33,6 +33,7 @@ namespace WindowElement {
 	}
 	void FileView::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGuiHoveredFlags flags = ImGuiHoveredFlags_RootWindow | ImGuiHoveredFlags_ChildWindows;
 		m_Open = ImGui::IsItemHovered() || ImGui::IsWindowHovered(flags);
 

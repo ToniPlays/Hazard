@@ -22,12 +22,14 @@
 #include "Hazard/Rendering/Image/Image2D.h"
 #include "Hazard/Rendering/RenderCommand.h"
 #include "Hazard/Rendering/WorldRenderer.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
-#include "Hazard/Rendering/Pipeline/Pipeline.h"
+
 
 //Hazard render context window
 #include "Hazard/RenderContext/RenderContext.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
+
 
 #include "Platform/Rendering/OpenGL/OpenGL.h"
 #include "Platform/Rendering/Vulkan/Vulkan.h"

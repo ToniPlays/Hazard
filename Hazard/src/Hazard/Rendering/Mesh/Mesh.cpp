@@ -1,9 +1,10 @@
 
 #include <hzrpch.h>
 #include "Mesh.h"
-#include "../RenderCommand.h"
 #include "MeshFactory.h"
-#include "Hazard/Rendering/Pipeline/Pipeline.h"
+
+#include "../RenderCommand.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
 
 namespace Hazard::Rendering {
 
@@ -26,7 +27,6 @@ namespace Hazard::Rendering {
 		indexInfo.Usage = BufferUsage::StaticDraw;
 
 		m_IndexBuffer = IndexBuffer::Create(&indexInfo);
-		
 	}
 	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
@@ -46,10 +46,11 @@ namespace Hazard::Rendering {
 			spec.DebugName = "MeshPipeline";
 			spec.Usage = PipelineUsage::GraphicsBit;
 			spec.DrawType = DrawType::Fill;
+			spec.CullMode = CullMode::BackFace;
 			spec.LineWidth = 1.0f;
 			spec.ShaderPath = "Shaders/pbr.glsl";
 			spec.TargetRenderPass = renderPass;
-			spec.IsShared = false;
+			spec.IsShared = true;
 
 			m_Pipeline = Pipeline::Create(&spec);
 			return;

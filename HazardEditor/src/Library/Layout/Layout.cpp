@@ -19,7 +19,7 @@ namespace WindowLayout
             return m_ImageIDS[image.Raw()];
         }
         using namespace Hazard::Rendering;
-        switch (RenderCommand::GetAPI()) {
+        switch (RenderContextCommand::GetRenderAPI()) {
 #if HZR_INCLUDE_OPENGL
         case RenderAPI::OpenGL: {
 

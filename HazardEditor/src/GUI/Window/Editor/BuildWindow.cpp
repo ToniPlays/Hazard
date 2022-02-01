@@ -18,6 +18,7 @@ namespace WindowElement
 	}
 	void BuildWindow::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_HasBuilt)
 			ShowBuildReport();
 		else

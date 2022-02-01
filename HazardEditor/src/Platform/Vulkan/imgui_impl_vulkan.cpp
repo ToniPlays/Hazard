@@ -45,11 +45,11 @@
 //  2016-10-18: Vulkan: Add location decorators & change to use structs as in/out in glsl, update embedded spv (produced with glslangValidator -x). Null the released resources.
 //  2016-08-27: Vulkan: Fix Vulkan example for use when a depth buffer is active.
 
-#include "imgui.h"
+#include <hzrpch.h>
+#include <glm/glm.hpp>
 #include "imgui_impl_vulkan.h"
 #include <stdio.h>
-#include <glm/glm.hpp>
-#include <hzrpch.h>
+#include "Platform/Rendering/Vulkan/Vulkan.h"
 
 #include "Platform/Rendering/Vulkan/VulkanContext.h"
 
@@ -291,7 +291,7 @@ static void CreateOrResizeBuffer(VkBuffer& buffer, VkDeviceMemory& buffer_memory
 
     err = vkBindBufferMemory(v->Device, buffer, buffer_memory, 0);
     check_vk_result(err);
-    p_buffer_size = new_size;
+    p_buffer_size = req.size;
 }
 
 static void ImGui_ImplVulkan_SetupRenderState(ImDrawData* draw_data, VkCommandBuffer command_buffer, ImGui_ImplVulkanH_FrameRenderBuffers* rb, int fb_width, int fb_height)

@@ -7,29 +7,22 @@
 
 namespace Hazard::Rendering
 {
-	void RenderCommand::SetLineWidth(float lineWidth)
-	{
-		s_Engine->Submit([lineWidth]() mutable {
-			s_Engine->SetLineWidth(lineWidth);
-			});
-	}
-	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint, int id)
+	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint)
 	{
 		DrawQuad(transform, tint, s_Engine->m_WhiteTexture);
 	}
-	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture, int id)
+	void RenderCommand::DrawQuad(const glm::mat4& transform, const glm::vec4& tint, const Ref<Texture2D>& texture)
 	{
 		Quad quad;
 		quad.Transform = transform;
 		quad.Color = tint;
 		quad.Texture = texture;
-		quad.ID = id;
 
 		s_Engine->Submit([quad]() mutable {
 			s_Engine->Get2D().Submit(quad);
 			});
 	}
-	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color, int id)
+	void RenderCommand::DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color)
 	{
 		Line line = { start, end };
 		line.Color = color;
@@ -38,7 +31,7 @@ namespace Hazard::Rendering
 			s_Engine->GetDebugRenderer().SubmitLine(line);
 			});
 	}
-	void RenderCommand::DrawRectangle(const glm::mat4& transform, const glm::vec4& color, int id)
+	void RenderCommand::DrawRectangle(const glm::mat4& transform, const glm::vec4& color)
 	{
 		glm::vec3 topLeft = transform * glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f);
 		glm::vec3 topRight = transform * glm::vec4(0.5f, 0.5f, 0.0f, 1.0f);
@@ -65,27 +58,36 @@ namespace Hazard::Rendering
 			rd.SubmitLine(line4);
 			});
 	}
-	void RenderCommand::DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform, int id)
+	void RenderCommand::DrawMesh(Ref<Mesh> mesh, const glm::mat4& transform)
 	{
-		if (!mesh->IsValid()) return;
-
 		struct Model {
 			glm::mat4 transform;
-			int ID;
 		};
 
 		Ref<Mesh> instance = mesh;
 		Model data;
 		data.transform = transform;
-		data.ID = id;
 
 		s_Engine->Submit([instance, data]() mutable {
+			Ref<RenderCommandBuffer> cmdBuffer = s_Engine->GetCurrentRenderCommandBuffer();
+			Ref<Mesh> meshInstance = instance;
+
+			HZR_GUARD(instance->IsValid());
 			instance->SetRenderPass(s_Engine->GetCurrentRenderPass());
-			instance->GetPipeline()->GetShader()->SetUniformBuffer("Model", &data);
-			s_Engine->DrawGeometry(instance->GetVertexBuffer(), instance->GetIndexBuffer(), instance->GetPipeline());
+
+			HZR_GUARD(instance->GetPipeline());
+			Ref<Shader> shader = instance->GetPipeline()->GetShader();
+
+			shader->Bind(cmdBuffer);
+			shader->SetUniformBuffer("Model", &data);
+
+			RenderContextCommand::Submit([meshInstance, cmdBuffer, data]() mutable {
+				meshInstance->IncRefCount();
+				RenderContextCommand::DrawGeometry_RT(cmdBuffer, meshInstance->GetVertexBuffer(), meshInstance->GetIndexBuffer(), meshInstance->GetPipeline());
+				});
 			});
 	}
-	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const glm::vec4& tint, int id)
+	void RenderCommand::DrawCircle(const glm::mat4& transform, float radius, float thickness, const glm::vec4& tint)
 	{
 		Circle circle;
 		circle.Transform = transform;
@@ -98,22 +100,23 @@ namespace Hazard::Rendering
 			s_Engine->GetDebugRenderer().SubmitCircle(circle);
 			});
 	}
-	void RenderCommand::DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, int id) {
+	void RenderCommand::DrawCustomGeometry(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline) {
 		s_Engine->Submit([vertexBuffer, indexBuffer, pipeline]() mutable {
-			s_Engine->DrawGeometry(vertexBuffer, indexBuffer, pipeline);
+			RenderContextCommand::DrawGeometry(s_Engine->GetCurrentRenderCommandBuffer(), vertexBuffer, indexBuffer, pipeline);
 			});
 	}
 
-	void RenderCommand::DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count, int id)
+	void RenderCommand::DispatchPipeline(Ref<Pipeline> pipeline, uint32_t count)
 	{
 		s_Engine->Submit([pipeline, count]() mutable {
-			s_Engine->DispatchPipeline(pipeline, count);
+			RenderContextCommand::DispatchPipeline(s_Engine->GetCurrentRenderCommandBuffer(), pipeline, count);
 			});
 	}
-	void RenderCommand::DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count, int id)
+	void RenderCommand::DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count)
 	{
 		s_Engine->SubmitPostPass([pipeline, count]() mutable {
-			s_Engine->DispatchPipeline(pipeline, count);
+			pipeline->IncRefCount();
+			RenderContextCommand::DispatchPipeline(s_Engine->GetCurrentRenderCommandBuffer(), pipeline, count);
 			});
 	}
 

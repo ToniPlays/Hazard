@@ -14,6 +14,7 @@ namespace WindowElement {
 	}
 	void EngineAssets::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (ImGui::Button("Refresh")) {
 			AssetManager::RemoveUnreferencedResources();
 		}

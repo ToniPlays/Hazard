@@ -182,6 +182,18 @@ namespace Hazard::Rendering::Vulkan {
 		return ShaderType::None;
 	}
 
+	VkCullModeFlags VKUtils::CullModeToVKMode(CullMode mode)
+	{
+		switch (mode)
+		{
+		case CullMode::None:		return VK_CULL_MODE_NONE;
+		case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
+		case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
+		default:					return VK_CULL_MODE_NONE;
+		}
+		return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
+	}
+
 	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
 	{
 		VkShaderStageFlags flags = 0;

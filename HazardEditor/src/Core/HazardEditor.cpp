@@ -15,7 +15,6 @@ Editor::EditorCamera camera;
 
 void EditorApplication::PreInit()
 {
-	HZR_PROFILE_FUNCTION();
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;
@@ -62,9 +61,7 @@ void EditorApplication::PreInit()
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &contextInfo;
     createInfo.RendererInfo = &engineInfo;
-#ifdef HZR_PLATFORM_WINDOWS
 	createInfo.AudioEngine = &audioInfo;
-#endif
 	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;
 
@@ -74,7 +71,7 @@ void EditorApplication::Init()
 {
 
 #ifdef HZR_PLATFORM_WINDOWS
-	HZR_PROFILE_FUNCTION();
+
 	PushModule<WindowElement::EditorView>();
 #endif
     Runtime::SceneRuntimeHandler::Init();

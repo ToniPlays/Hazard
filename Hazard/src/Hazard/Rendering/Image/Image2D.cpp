@@ -10,7 +10,7 @@ namespace Hazard::Rendering
 {
     Ref<Image2D> Image2D::Create(Image2DCreateInfo* info)
     {
-		switch (RenderCommand::GetAPI())
+		switch (RenderContextCommand::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);

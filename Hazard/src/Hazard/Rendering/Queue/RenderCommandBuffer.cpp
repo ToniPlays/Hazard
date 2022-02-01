@@ -11,7 +11,7 @@ namespace Hazard::Rendering {
 
 	Ref<RenderCommandBuffer> RenderCommandBuffer::Create(const std::string& debugName, uint32_t count)
 	{
-		switch (RenderCommand::GetAPI())
+		switch (RenderContextCommand::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(count, debugName);
@@ -31,7 +31,7 @@ namespace Hazard::Rendering {
 
 	Ref<RenderCommandBuffer> RenderCommandBuffer::CreateFromSwapchain(const std::string& debugName)
 	{
-		switch (RenderCommand::GetAPI())
+		switch (RenderContextCommand::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(debugName, true);

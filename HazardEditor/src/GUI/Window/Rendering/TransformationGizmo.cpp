@@ -20,6 +20,7 @@ namespace WindowElement {
 	}
 	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, ImVec2 size)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!currentSelection.IsValid() || type == Gizmo::None) return;
 
 		ImGuizmo::SetOrthographic(camera.Is2DEnabled());

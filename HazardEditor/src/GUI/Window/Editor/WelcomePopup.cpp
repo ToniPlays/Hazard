@@ -13,6 +13,7 @@ namespace WindowElement {
 	}
 	void WelcomePopup::OnWindowRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGui::Text("Hazard engine is ready to be used");
 		WindowLayout::Layout::NextLine(10);
 		ImGui::Text("Feel free to crash this very good game engine that can't do anything");

@@ -63,15 +63,17 @@ namespace Hazard::Rendering::Vulkan
 	{
 		HZR_CORE_INFO("Deleting {0}", m_DebugName);
 		m_LocalData.Release();
-		VkBuffer buffer = m_Buffer;
-		VmaAllocation allocation = m_Allocation;
 
+		RenderContextCommand::SubmitResourceFree([buffer = m_Buffer, alloc = m_Allocation]() {
 
-		VulkanAllocator allocator("VertexBuffer");
-		allocator.DestroyBuffer(buffer, allocation);
+			VmaAllocation allocation = alloc;
+			VulkanAllocator allocator("VertexBuffer");
+			allocator.DestroyBuffer(buffer, allocation);
+			});
 	}
 	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		HZR_CORE_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
@@ -84,10 +86,11 @@ namespace Hazard::Rendering::Vulkan
 	void VulkanVertexBuffer::SetData(const void* data, uint32_t size)
 	{
 		memcpy(m_LocalData.Data, (uint8_t*)data, size);
-		RT_SetData(m_LocalData.Data, size);
+		RT_SetData(data, size);
 	}
 	void VulkanVertexBuffer::RT_SetData(const void* data, uint32_t size)
 	{
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanUniformBuffer::RT_SetData() RT");
 		VulkanAllocator allocator("VulkanVertexBuffer");
 		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
 		memcpy(pData, (uint8_t*)data, size);
@@ -101,15 +104,19 @@ namespace Hazard::Rendering::Vulkan
 	}
 	VulkanIndexBuffer::~VulkanIndexBuffer()
 	{
-		HZR_CORE_INFO("Deleting {0}", m_DebugName);
+		HZR_CORE_INFO("Deleting VulkanIndexBuffer {0}", m_DebugName);
 		VkBuffer buffer = m_Buffer;
-		VmaAllocation allocation = m_Allocation;
+		VmaAllocation alloc = m_Allocation;
 
-		VulkanAllocator allocator("IndexBuffer");
-		allocator.DestroyBuffer(buffer, allocation);
+		RenderContextCommand::SubmitResourceFree([buffer, alloc]() mutable {
+
+			VulkanAllocator allocator("IndexBuffer");
+			allocator.DestroyBuffer(buffer, alloc);
+			});
 	}
 	void VulkanIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		HZR_CORE_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
@@ -121,6 +128,7 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanIndexBuffer::SetData(uint32_t* data, uint32_t size)
 	{
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanIndexBuffer::SetData() RT");
 		m_Size = size;
 		auto device = VulkanContext::GetDevice();
 		VulkanAllocator allocator("IndexBuffer");
@@ -162,16 +170,19 @@ namespace Hazard::Rendering::Vulkan
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
-		
+
 		HZR_CORE_ASSERT(m_Size >= 256, "Need a bigger buffer");
 		m_Name = createInfo->Name;
 		m_LocalDataSize = m_Size * 8;
 		m_LocalData = new uint8_t[m_LocalDataSize];
+		memset(m_LocalData, 0, m_LocalDataSize);
+
 		RT_Invalidate();
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
 	{
-		HZR_CORE_INFO("Deleting UBO {0}", m_Name);
+		HZR_CORE_ERROR("Deleting UBO {0}", m_Name);
+
 		Release();
 	}
 	void VulkanUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
@@ -192,27 +203,39 @@ namespace Hazard::Rendering::Vulkan
 	{
 		HZR_CORE_ASSERT(m_Writes * m_Size <= m_LocalDataSize, "Dude are you even trying?");
 		memcpy(m_LocalData + m_Writes * m_Size, data, m_Size);
-		RT_SetData(m_LocalData);
-	}
-	void VulkanUniformBuffer::RT_SetData(const void* data)
-	{
-		VulkanAllocator allocator("VulkanUniformBuffer");
-		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
-		memcpy(pData, (const uint8_t*)data, m_LocalDataSize);
-		allocator.UnmapMemory(m_Allocation);
+
+		Ref<VulkanUniformBuffer> instance = this;
+
+		RenderContextCommand::SubmitResourceCreate([instance]() mutable {
+			instance->RT_SetData();
+			});
+		RenderContextCommand::Submit([instance, writes = m_Writes, size = m_Size]() mutable {
+			HZR_PROFILE_FUNCTION("VulkanUniformBuffer::SetCurrentReadPointer() RT");
+			instance->SetCurrentReadPointer(writes, size);
+			});
 
 		if (m_Writes > 0) {
 			m_Offset += m_Size;
 		}
 		m_Writes++;
+	}
+	void VulkanUniformBuffer::RT_SetData()
+	{
+		HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanUniformBuffer::RT_SetData() RT");
+		VulkanAllocator allocator("VulkanUniformBuffer");
+
+		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
+		memcpy(pData, (const uint8_t*)m_LocalData, m_LocalDataSize);
+		allocator.UnmapMemory(m_Allocation);
 
 	}
 	void VulkanUniformBuffer::Release()
 	{
-		if (!m_Allocation) return;
+		RenderContextCommand::SubmitResourceFree([buffer = m_Buffer, alloc = m_Allocation]() {
+			VulkanAllocator allocator("UniformBuffer");
+			allocator.DestroyBuffer(buffer, alloc);
+			});
 
-		VulkanAllocator allocator("UniformBuffer");
-		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 		m_Buffer = nullptr;
 		m_Allocation = nullptr;
 
@@ -221,7 +244,9 @@ namespace Hazard::Rendering::Vulkan
 	}
 	void VulkanUniformBuffer::RT_Invalidate()
 	{
-		Release();
+		if (m_Allocation)
+			Release();
+
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		uint32_t framesInFlight = RenderContextCommand::GetImagesInFlight();
 
@@ -239,6 +264,11 @@ namespace Hazard::Rendering::Vulkan
 		VulkanAllocator allocator("UniformBuffer");
 
 		m_Allocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_ONLY, m_Buffer);
-
+	}
+	void VulkanUniformBuffer::SetCurrentReadPointer(uint32_t writes, uint32_t size)
+	{
+		m_Writes = writes;
+		m_Size = size;
+		m_Offset = writes * size;
 	}
 }

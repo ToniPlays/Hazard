@@ -3,7 +3,7 @@
 #include <hzrpch.h>
 #include "Hazard/Core/Core.h"
 #include "Hazard/Rendering/Image/Image.h"
-#include "Hazard/Rendering/Pipeline/Pipeline.h"
+#include "Hazard/RenderContext/Pipeline/Pipeline.h"
 #include <glad/glad.h>
 #include <shaderc/shaderc.h>
 

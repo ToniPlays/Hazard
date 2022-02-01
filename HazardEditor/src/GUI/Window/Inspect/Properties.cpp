@@ -23,6 +23,7 @@ namespace WindowElement {
 	}
 	void Properties::OnUpdate()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_SelectionContext.IsValid()) return;
 
 		auto& tc = m_SelectionContext.GetComponent<TransformComponent>();
