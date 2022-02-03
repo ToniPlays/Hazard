@@ -57,11 +57,12 @@ namespace Hazard::Rendering {
 		RenderLibrary::Clear();
 		m_Window->Close();
 
+		m_ResourceCreateCommadQueue->Excecute();
 		m_ResourceFreeCommadQueue->Excecute();
 
-		m_ResourceCreateCommadQueue->Clear();
-		m_RenderCommadQueue->Clear();
-		m_ResourceFreeCommadQueue->Clear();
+		delete m_RenderCommadQueue;
+		delete m_ResourceCreateCommadQueue;
+		delete m_ResourceFreeCommadQueue;
 
 		delete m_Window;
 	}

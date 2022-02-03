@@ -69,7 +69,7 @@ namespace Hazard::Rendering::Vulkan
 
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
-		void SetData(const void* data) override;
+		void SetData(const void* data, uint32_t size) override;
 		void RT_SetData();
 
 		std::string& GetName() { return m_Name; }
@@ -82,6 +82,7 @@ namespace Hazard::Rendering::Vulkan
 		void Release();
 		void RT_Invalidate();
 		void SetCurrentReadPointer(uint32_t writes, uint32_t size);
+		void ResizeBuffer(uint32_t newSize);
 
 	private:
 		std::string m_Name;
@@ -97,7 +98,6 @@ namespace Hazard::Rendering::Vulkan
 		VkBuffer m_Buffer = nullptr;
 		
 		VmaAllocation m_Allocation = nullptr;
-		uint8_t* m_LocalData = nullptr;
-		uint32_t m_LocalDataSize = 0;
+		Buffer m_LocalData;
 	};
 }

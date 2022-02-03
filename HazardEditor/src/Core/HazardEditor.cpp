@@ -31,8 +31,8 @@ void EditorApplication::PreInit()
 	contextInfo.Decorated = true;
 	contextInfo.Logging = false;
 	contextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	contextInfo.Width = 2560;
-	contextInfo.Height = 1440;
+	contextInfo.Width = 1920;
+	contextInfo.Height = 1080;
 
 	RenderEngineCreateInfo engineInfo = {};
 	engineInfo.MaxQuadCount = 15000;
@@ -62,8 +62,8 @@ void EditorApplication::PreInit()
 	createInfo.RenderContextInfo = &contextInfo;
     createInfo.RendererInfo = &engineInfo;
 	createInfo.AudioEngine = &audioInfo;
-	createInfo.ScriptEngineInfo = &scriptInfo;
 	createInfo.EntityComponent = &entityInfo;
+	createInfo.ScriptEngineInfo = &scriptInfo;
 
 	CreateApplicationStack(&createInfo);
 }

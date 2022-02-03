@@ -29,8 +29,9 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Math/Random.h"
 
-#include <optick.h>
+#include "optick.h"
 #include <chrono>
+
 using namespace std::chrono_literals;
 
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
@@ -39,8 +40,6 @@ using namespace std::chrono_literals;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
-
-//#define HZR_PROFILE
 
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
 #define HZR_FUNC_SIG __PRETTY_FUNCTION__
@@ -100,7 +99,7 @@ using namespace std::chrono_literals;
 #endif
 
 
-#if defined(HZR_DEBUG) || defined(HZR_GAME_ONLY)
+#if (defined(HZR_DEBUG) || defined(HZR_GAME_ONLY))
 	//Core logging macros
 	#define HZR_CORE_INFO(...)				::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)
 	#define HZR_CORE_WARN(...)				::Hazard::Logging::Logger::GetCoreLogger()->warn(__VA_ARGS__)

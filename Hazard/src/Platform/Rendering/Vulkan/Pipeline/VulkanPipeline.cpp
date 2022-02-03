@@ -13,16 +13,16 @@ namespace Hazard::Rendering::Vulkan
 
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs)
 	{
-		HZR_CORE_WARN("Created pipeline {0}", specs->DebugName);
 		auto device = VulkanContext::GetDevice()->GetDevice();
 
 		if (m_Specs.ShaderPath != specs->ShaderPath)
 			m_Shader = Shader::Create(specs->ShaderPath).As<VulkanShader>();
-
+			
 		m_Specs = *specs;
 
 		Ref<VulkanPipeline> instance = this;
 		RenderContextCommand::SubmitResourceCreate([instance]() mutable {
+			HZR_CORE_WARN("Created pipeline");
 			instance->Invalidate();
 			});
 
@@ -34,9 +34,9 @@ namespace Hazard::Rendering::Vulkan
 			vkDestroyDescriptorSetLayout(device, uboLayout, nullptr);
 			vkDestroyPipeline(device, pipeline, nullptr);
 			vkDestroyPipelineLayout(device, layout, nullptr);
-
+			HZR_CORE_ERROR("Destroyed Vulkan pipeline");
 			});
-		HZR_CORE_ERROR("Destroyed pipeline {0}", m_Specs.DebugName);
+		
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
@@ -49,6 +49,7 @@ namespace Hazard::Rendering::Vulkan
 			});
 		RenderContextCommand::SubmitResourceFree([pipeline = m_Pipeline, layout = m_PipelineLayout]() {
 			HZR_PROFILE_FUNCTION("VulkanPipeline::SetRenderPass() Release RT");
+
 			if (!pipeline) return;
 
 			auto device = VulkanContext::GetDevice()->GetDevice();

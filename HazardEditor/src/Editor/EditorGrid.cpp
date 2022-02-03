@@ -22,7 +22,7 @@ namespace Editor
 		gridData.Far = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
-		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData);
+		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
 		RenderCommand::DispatchPipelinePostPass(m_Pipeline, 6);
 	}
 	void Grid::Invalidate(const Ref<RenderPass> renderPass)

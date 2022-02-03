@@ -31,10 +31,9 @@ namespace Hazard::Rendering::Vulkan {
 		m_SwapChain.Reset();
 		m_WindowSurface.reset();
 
-		VulkanAllocator::Shutdown();
 		m_Device.reset();
+		VulkanAllocator::Shutdown();
 
-		s_Callback = nullptr;
 		vkDestroyInstance(m_Instance, nullptr);
 	}
 

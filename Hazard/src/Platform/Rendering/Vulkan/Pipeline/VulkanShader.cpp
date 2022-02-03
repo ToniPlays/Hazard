@@ -73,13 +73,24 @@ namespace Hazard::Rendering::Vulkan
 		HZR_CORE_WARN("Destroyed shader {0}", m_Path);
 		m_UniformBuffers.clear();
 		m_UnformBufferBindings.clear();
+		m_DescriptorSets.clear();
+		m_WriteDescriptors.clear();
 
-		DestroyModules();
+		auto modules = m_Modules;
+		RenderContextCommand::SubmitResourceFree([modules, layout = m_Layout]() mutable {
+			HZR_CORE_WARN("Deleting shader modules");
+			auto device = VulkanContext::GetDevice()->GetDevice();
+
+			for (auto&& [stage, module] : modules) {
+				vkDestroyShaderModule(device, module, nullptr);
+			}
+			modules.clear();
+			//vkDestroyDescriptorSetLayout(device, layout, nullptr);
+			});
 	}
 	void VulkanShader::Reload()
 	{
 		Timer timer;
-		std::cout << "Reloading Shader " << m_Path << std::endl;
 		auto shaderSources = ShaderFactory::GetShaderSources(m_Path);
 
 		CompileOrGetVulkanBinaries(shaderSources);
@@ -89,7 +100,6 @@ namespace Hazard::Rendering::Vulkan
 		CreateDescriptorSets();
 
 		HZR_CORE_TRACE("[VulkanShader]: Creation took {0} ms", timer.ElapsedMillis());
-
 	}
 	void VulkanShader::Bind(Ref<RenderCommandBuffer> cmdBufer)
 	{
@@ -101,11 +111,11 @@ namespace Hazard::Rendering::Vulkan
 	{
 
 	}
-	void VulkanShader::SetUniformBuffer(const std::string& name, void* data)
+	void VulkanShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[m_UnformBufferBindings[name]];
 		HZR_CORE_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
-		uniformBuffer->SetData(data);
+		uniformBuffer->SetData(data, size);
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
 	{
@@ -221,20 +231,6 @@ namespace Hazard::Rendering::Vulkan
 		}
 		return m_DynamicOffsets;
 	}
-	void VulkanShader::DestroyModules()
-	{
-		auto modules = m_Modules;
-		RenderContextCommand::SubmitResourceFree([modules]() mutable {
-			HZR_CORE_WARN("Deleting shader modules");
-			auto device = VulkanContext::GetDevice();
-
-			for (auto&& [stage, module] : modules) {
-				vkDestroyShaderModule(device->GetDevice(), module, nullptr);
-			}
-
-			modules.clear();
-			});
-	}
 	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
 		m_ShaderCode.clear();
@@ -246,7 +242,7 @@ namespace Hazard::Rendering::Vulkan
 			VkShaderStageFlagBits vkStage = Utils::ShaderTypeToVkType(stage);
 			const auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
 
-			if (binaries.size() > 0) {
+			if (binaries.size() > 0 && false) {
 				m_ShaderCode[stage] = binaries;
 				continue;
 			}
@@ -340,19 +336,18 @@ namespace Hazard::Rendering::Vulkan
 	{
 		auto device = VulkanContext::GetDevice()->GetDevice();
 		uint32_t framesInFlight = RenderContextCommand::GetImagesInFlight();
-		std::vector<VkDescriptorSetLayout> layouts(framesInFlight, m_Layout);
-
 		m_DescriptorSets.resize(framesInFlight);
 
 		for (uint32_t i = 0; i < framesInFlight; i++) {
 			VkDescriptorSetAllocateInfo allocInfo = {};
 			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 			allocInfo.descriptorPool = VulkanContext::GetDevice()->GetDescriptorPool(i);
-			allocInfo.descriptorSetCount = framesInFlight;
-			allocInfo.pSetLayouts = layouts.data();
+			allocInfo.descriptorSetCount = 1;
+			allocInfo.pSetLayouts = &m_Layout;
 
 			auto result = vkAllocateDescriptorSets(device, &allocInfo, &m_DescriptorSets[i]);
 		}
+		
 		//TODO: Flip this to reduce n buffer updates
 		for (uint32_t i = 0; i < framesInFlight; i++) {
 

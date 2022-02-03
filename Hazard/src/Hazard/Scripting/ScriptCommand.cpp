@@ -47,6 +47,7 @@ namespace Hazard::Scripting {
 	}
 	bool ScriptCommand::ReloadAssemblies() 
 	{
+		if (!s_Manager) return false;
 		s_Manager->ReloadAll();
 		return true;
 	}

@@ -56,11 +56,11 @@ namespace Hazard::Rendering::OpenGL
 	{
 		glUseProgram(0);
 	}
-	void OpenGLShader::SetUniformBuffer(const std::string& name, void* data)
+	void OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[name];
 		HZR_CORE_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
-		uniformBuffer->SetData(data);
+		uniformBuffer->SetData(data, size);
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
 	{

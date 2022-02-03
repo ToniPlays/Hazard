@@ -16,7 +16,7 @@ namespace Hazard::Rendering::Vulkan
 		void Reload() override;
 		void Bind(Ref<RenderCommandBuffer> cmdBufer) override;
 		void Unbind() override;
-		void SetUniformBuffer(const std::string& name, void* data) override;
+		void SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
 
 		void Set(const std::string& name, uint32_t index, uint32_t value) override {};
 		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
@@ -33,8 +33,6 @@ namespace Hazard::Rendering::Vulkan
 		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSets[0]; }
 		std::vector<VkPipelineShaderStageCreateInfo> GetStageInfo();
 		std::vector<uint32_t> GetDynamicOffsets();
-
-		void DestroyModules();
 		
 	private:
 

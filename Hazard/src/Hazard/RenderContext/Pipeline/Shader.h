@@ -167,7 +167,7 @@ namespace Hazard::Rendering
 		virtual void Reload() = 0;
 		virtual void Bind(Ref<RenderCommandBuffer> cmdBufer) = 0;
 		virtual void Unbind() = 0;
-		virtual void SetUniformBuffer(const std::string& name, void* data) = 0;
+		virtual void SetUniformBuffer(const std::string& name, void* data, uint32_t size) = 0;
 		virtual UniformBuffer& GetUniform(const std::string& name) = 0;
 
 		virtual void Set(const std::string& name, uint32_t index, uint32_t value) = 0;

@@ -127,6 +127,7 @@ namespace Hazard::Rendering
 			pipelineSpecs.ShaderPath = "Shaders/lineShader.glsl";
 			pipelineSpecs.TargetRenderPass = renderPass;
 
+			//This line corrupts heap
 			m_LinePipeline = Pipeline::Create(&pipelineSpecs);
 
 			VertexBufferCreateInfo vertexInfo = {};
@@ -140,6 +141,7 @@ namespace Hazard::Rendering
 		{
 			uint32_t offset = 0;
 			uint32_t* indices = new uint32_t[1500 * 6];
+
 			for (size_t i = 0; i < 1500 * 6; i += 6) {
 				indices[i + 0] = offset + 0;
 				indices[i + 1] = offset + 1;
@@ -151,10 +153,9 @@ namespace Hazard::Rendering
 
 				offset += 4;
 			}
-
 			//Circles
 			PipelineSpecification pipelineSpecs = {};
-			pipelineSpecs.DebugName = "DebugCircleRenderer";	
+			pipelineSpecs.DebugName = "DebugCircleRenderer";
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.LineWidth = m_RenderData.LineWidth;
 			pipelineSpecs.DrawType = DrawType::Fill;
@@ -181,12 +182,11 @@ namespace Hazard::Rendering
 			m_CircleBatch = Batch<CircleVertex2D>(1500 * 4);
 
 			delete[] indices;
-
 		}
 
-		m_QuadPos[0] = {-0.5f, -0.5f, 0.0f, 1.0f };
+		m_QuadPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
 		m_QuadPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		m_QuadPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
-		m_QuadPos[3] = {-0.5f,  0.5f, 0.0f, 1.0f };
+		m_QuadPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 }

@@ -14,6 +14,18 @@ namespace Hazard {
 	}
 	CommandQueue::~CommandQueue()
 	{
+		HZR_PROFILE_FUNCTION();
+		byte* buffer = m_CommandBuffer;
+
+		for (uint32_t i = 0; i < m_CommandCount; i++) {
+			CommandFn func = *(CommandFn*)buffer;
+			buffer += sizeof(CommandFn);
+
+			uint32_t size = *(uint32_t*)buffer;
+			buffer += sizeof(uint32_t);
+			func.~CommandFn();
+			buffer += size;
+		}
 		delete[] m_CommandBuffer;
 	}
 	void* CommandQueue::Allocate(CommandFn func, uint32_t size)

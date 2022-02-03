@@ -24,7 +24,9 @@ namespace WindowElement {
 	}
 	EditorView::~EditorView()
 	{
-		for (auto element : m_Elements) {
+		std::vector<RenderableElement*> cache = m_Elements;
+		for (auto element : cache) {
+			m_Elements.erase(std::find(cache.begin(), cache.end(), element));
 			delete element;
 		}
 		m_Elements.clear();
@@ -125,7 +127,7 @@ namespace WindowElement {
 	bool EditorView::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(EditorView::OnWindowFocus));
+		if(dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(EditorView::OnWindowFocus))) return true;
 
 		for (RenderableElement* element : m_Elements) {
 			if (element->OnEvent(e)) {

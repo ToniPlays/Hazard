@@ -11,7 +11,7 @@ namespace Hazard::Scripting {
 	ScriptEngineManager::ScriptEngineManager(ScriptEngineCreateInfo* info) : Module("ScriptManager") 
 	{
 #ifdef HZR_INCLUDE_MONO
-		m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
+		//m_ScriptEngines[ScriptType::CSharpScript] = new CSharp::CSharpEngine(info);
 #endif
 
 		ScriptCommand::Init(*this);

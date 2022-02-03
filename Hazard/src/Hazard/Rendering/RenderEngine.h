@@ -42,8 +42,6 @@ namespace Hazard::Rendering {
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-
-				pFunc->~FuncT();
 			};
 
 			auto storageBuffer = m_Queue->Allocate(renderCmd, sizeof(fn));
@@ -55,8 +53,6 @@ namespace Hazard::Rendering {
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-
-				pFunc->~FuncT();
 			};
 
 			auto storageBuffer = m_PostPassQueue->Allocate(renderCmd, sizeof(fn));

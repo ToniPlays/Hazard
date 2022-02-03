@@ -21,6 +21,8 @@ namespace Hazard::Core {
 	HazardLoop::~HazardLoop()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
+		std::cout << std::endl;
+		HZR_CORE_WARN("Shutting down");
 		AssetManager::Shutdown();
 		m_Application->Close();
 		m_ModuleHandler->Close();

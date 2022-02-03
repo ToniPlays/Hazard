@@ -95,7 +95,7 @@ namespace Hazard::Rendering::Vulkan
 
 			// Copy data to staging buffer
 			uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAllocation);
-			memcpy(destData, m_Header.ImageData.Data, size);
+			memcpy_s(destData, size, m_Header.ImageData.Data, size);
 			allocator.UnmapMemory(stagingBufferAllocation);
 
 			VkCommandBuffer copyCmd = device->GetCommandBuffer(true);

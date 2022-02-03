@@ -53,7 +53,7 @@ namespace Hazard::Rendering::OpenGL
 
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
-		void SetData(const void* data) override;
+		void SetData(const void* data, uint32_t size) override;
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };

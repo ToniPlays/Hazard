@@ -79,10 +79,9 @@ namespace Hazard::Rendering
 			Ref<Shader> shader = instance->GetPipeline()->GetShader();
 
 			shader->Bind(cmdBuffer);
-			shader->SetUniformBuffer("Model", &data);
+ 			shader->SetUniformBuffer("Model", &data, sizeof(Model));
 
 			RenderContextCommand::Submit([meshInstance, cmdBuffer, data]() mutable {
-				meshInstance->IncRefCount();
 				RenderContextCommand::DrawGeometry_RT(cmdBuffer, meshInstance->GetVertexBuffer(), meshInstance->GetIndexBuffer(), meshInstance->GetPipeline());
 				});
 			});
@@ -115,7 +114,6 @@ namespace Hazard::Rendering
 	void RenderCommand::DispatchPipelinePostPass(Ref<Pipeline> pipeline, uint32_t count)
 	{
 		s_Engine->SubmitPostPass([pipeline, count]() mutable {
-			pipeline->IncRefCount();
 			RenderContextCommand::DispatchPipeline(s_Engine->GetCurrentRenderCommandBuffer(), pipeline, count);
 			});
 	}

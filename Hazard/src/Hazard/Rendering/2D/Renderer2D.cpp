@@ -31,6 +31,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Submit(Quad quad)
 	{
+		return;
 		HZR_GUARD(m_CurrentFlags & WorldRenderFlags_::Geometry);
 
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices)
@@ -104,6 +105,7 @@ namespace Hazard::Rendering
 	}
 	void Renderer2D::Recreate(Ref<RenderPass> renderPass)
 	{
+		return;
 		uint32_t offset = 0;
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -112,6 +114,7 @@ namespace Hazard::Rendering
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
+
 		for (size_t i = 0; i < m_Data.MaxIndices; i += 6) {
 			indices[i + 0] = offset + 0;
 			indices[i + 1] = offset + 1;

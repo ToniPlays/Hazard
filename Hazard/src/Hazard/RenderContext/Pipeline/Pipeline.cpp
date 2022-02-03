@@ -17,8 +17,7 @@ namespace Hazard::Rendering
 		{
 			return RenderLibrary::GetPipeline(specs->DebugName);
 		}
-
-		Ref<Pipeline> pipeline;
+		Ref<Pipeline> pipeline = nullptr;
 
 		switch (RenderContextCommand::GetRenderAPI())
 		{

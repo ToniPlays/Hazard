@@ -54,8 +54,8 @@ namespace Hazard::Rendering
 			fileHeader.Channels = header.Channels;
 			fileHeader.DataSize = header.DataSize;
 
-			memcpy(textureData, &fileHeader, sizeof(FileHeader));
-			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
+			memcpy_s(textureData, sizeof(FileHeader), &fileHeader, sizeof(FileHeader));
+			memcpy_s(textureData + sizeof(FileHeader), dataSize, header.ImageData.Data, header.ImageData.Size);
 			bool result = File::WriteBinaryFile(cacheDir, textureData, dataSize);
 
 			delete[] textureData;

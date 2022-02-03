@@ -336,6 +336,7 @@ namespace Hazard::Scripting::CSharp {
 	}
 	MonoAssembly* Mono::LoadAssembly(const char* path)
 	{
+		HZR_CORE_ASSERT(File::Exists(path), "Assembly does not exist");
 		Buffer data = File::ReadBinaryFile(std::filesystem::path(path));
 
 		MonoImageOpenStatus status;

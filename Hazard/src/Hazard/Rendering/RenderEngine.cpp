@@ -80,6 +80,7 @@ namespace Hazard::Rendering
 	}
 	void RenderEngine::Close()
 	{
+		HZR_CORE_INFO("Closing RenderEngine");
 		delete m_Renderer2D;
 		delete m_DebugRenderer;
 
@@ -108,15 +109,16 @@ namespace Hazard::Rendering
 			m_RenderPassData.Projection = cam->GetProjection();
 			m_RenderPassData.View = cam->GetView();
 			m_RenderPassData.Position = glm::vec4(cam->GetPosition(), 1.0);
-			m_CameraUBO->SetData(&m_RenderPassData);
-			m_CurrentRenderPass = renderer->GetRenderPass();
 
+			m_CameraUBO->SetData(&m_RenderPassData, sizeof(RenderPassData));
+			m_CurrentRenderPass = renderer->GetRenderPass();
 
 			if (renderer->m_Settings.Flags & WorldRenderFlags_::Geometry)
 			{
+				
 				m_Renderer2D->SetTargetRenderPass(m_CurrentRenderPass);
 				m_DebugRenderer->SetTargetRenderPass(m_CurrentRenderPass);
-
+				
 				m_Renderer2D->BeginWorld((WorldRenderFlags_)renderer->m_Settings.Flags);
 				m_DebugRenderer->BeginWorld((WorldRenderFlags_)renderer->m_Settings.Flags);
 
@@ -126,6 +128,7 @@ namespace Hazard::Rendering
 				m_DebugRenderer->EndWorld();
 
 				m_PostPassQueue->Excecute();
+				
 			}
 		}
 		renderer->End(m_RenderCommandBuffer);

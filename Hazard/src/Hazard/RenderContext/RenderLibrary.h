@@ -11,8 +11,8 @@ namespace Hazard::Rendering {
 	public:
 		static void Clear() 
 		{
+			HZR_CORE_INFO("Clearing render library");
 			s_RuntimeResources.clear();
-
 		};
 		static void AddVertexBuffer(Ref<VertexBuffer> buffer) {
 			std::string& name = "VBO_" + buffer->GetDebugName();

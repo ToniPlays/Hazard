@@ -14,6 +14,9 @@ namespace Hazard
 	void AssetManager::Shutdown()
 	{
 		s_LoadedAssets.clear();
+		for (auto& [handle, resource] : s_RuntimeResources) {
+			resource->IncRefCount();
+		}
 		s_RuntimeResources.clear();
 	}
 	void AssetManager::RemoveUnreferencedResources()

@@ -14,7 +14,7 @@ namespace Hazard::Rendering::OpenGL
 		void Reload() override;
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
-		void SetUniformBuffer(const std::string& name, void* data) override;
+		void SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
 		void Set(const std::string& name, uint32_t index, uint32_t value) override;
 		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
 		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };

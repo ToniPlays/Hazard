@@ -109,9 +109,9 @@ namespace Hazard::Rendering::OpenGL
 	{
 
 	}
-	void OpenGLUniformBuffer::SetData(const void* data)
+	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
-		glNamedBufferSubData(m_ID, 0, m_Size, data);
+		glNamedBufferSubData(m_ID, 0, size, data);
 	}
 }

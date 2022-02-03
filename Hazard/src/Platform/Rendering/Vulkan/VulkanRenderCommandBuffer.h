@@ -19,8 +19,6 @@ namespace Hazard::Rendering::Vulkan
 		void End();
 		void Submit();
 
-
-
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }
 		VkFence GetFence(uint32_t index) { return m_WaitFences[index]; }
 

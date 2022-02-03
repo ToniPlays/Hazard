@@ -48,6 +48,6 @@ namespace Hazard::Scripting {
 
 	private:
 		ScriptRegistry m_Registry;
-		std::unordered_map<ScriptType, ScriptEngine*> m_ScriptEngines;
+		std::unordered_map<ScriptType, ScriptEngine*> m_ScriptEngines = std::unordered_map<ScriptType, ScriptEngine*>();
 	};
 }

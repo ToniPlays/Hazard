@@ -121,7 +121,6 @@ namespace Hazard::Rendering
 
 		if (!File::Exists(cachePath))
 			return binaries;
-
 		File::ReadBinaryFileUint32(cachePath, binaries);
 		return binaries;
 	}
