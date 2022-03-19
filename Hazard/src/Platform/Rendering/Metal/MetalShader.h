@@ -1,6 +1,6 @@
 #pragma once
-#include "Hazard/Rendering/Pipeline/Shader.h"
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Shader.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 
 namespace Hazard::Rendering::Metal
 {
@@ -12,9 +12,9 @@ namespace Hazard::Rendering::Metal
         ~MetalShader();
 
         void Reload() override;
-        void Bind() override;
+        void Bind(Ref<RenderCommandBuffer> cmdBufer) override;
         void Unbind() override;
-        void SetUniformBuffer(const std::string& name, void* data) override;
+        void SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
         void Set(const std::string& name, uint32_t index, uint32_t value) override;
         void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
         UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };

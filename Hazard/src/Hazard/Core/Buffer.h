@@ -48,16 +48,16 @@ namespace Hazard
 			if (offset + size > Size) assert(false);
 			uint8_t* buffer = new uint8_t[size];
 			
-			memcpy_s(buffer, size, (uint8_t*)Data + offset, size);
+			memcpy(buffer, (uint8_t*)Data + offset, size);
 			return buffer;
 		}
 		void Write(void* data, uint32_t size, uint32_t offset = 0) {
 			if (offset + size > Size) assert(false);
-			memcpy_s(Data, Size, data, size);
+			memcpy(Data, data, size);
 		}
 		void Write(const void* data, uint32_t size, uint32_t offset = 0) {
 			if (offset + size > Size) assert(false);
-			memcpy_s(Data, Size, data, size);
+			memcpy(Data, data, size);
 		}
 		operator bool() const { return Data; }
         uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }
@@ -69,7 +69,7 @@ namespace Hazard
 		static Buffer Copy(const void* data, uint32_t size, uint32_t offset = 0) {
 			Buffer buffer;
 			buffer.Allocate(size);
-			memcpy_s(buffer.Data, buffer.Size, (uint8_t*)data + offset, size);
+			memcpy(buffer.Data, (uint8_t*)data + offset, size);
 			return buffer;
 		}
 		template<typename T>

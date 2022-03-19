@@ -48,8 +48,7 @@ project "Hazard"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.VMA}",
-		"%{IncludeDir.Optick}"
+		"%{IncludeDir.VMA}"
 	}
 
 	links {
@@ -77,6 +76,9 @@ project "Hazard"
 		}
 		removefiles {
 			"src/Platform/Rendering/Metal/**"
+		}
+		includedirs {
+			"%{IncludeDir.Optick}"
 		}
 
 	filter "system:macosx"

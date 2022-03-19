@@ -12,6 +12,7 @@ namespace Hazard::Core
 {
 	class HazardLoop {
 		friend class Application;
+        
 	public:
 		HazardLoop(Application* app);
 		~HazardLoop();
@@ -24,6 +25,7 @@ namespace Hazard::Core
 
 		static void Process(Event& e);
 		static HazardLoop& GetCurrent() { return *s_Instance; }
+        static Module::ModuleHandler* GetModuleHandler() { return s_Instance->m_ModuleHandler.get(); }
 
 	private:
 		Application* m_Application = nullptr;

@@ -55,9 +55,6 @@ namespace Hazard::Rendering
         m_Context->Init((Window*)this, appInfo);
         m_Context->SetClearColor(info->Color);
         
-        m_WindowData.deviceSpecs = m_Context->GetDeviceSpec();
-        HZR_CORE_INFO("Renderer: {0}", m_WindowData.deviceSpecs.Name);
-
         glfwSetWindowUserPointer(m_Window, &m_WindowData);
         
         if (info->Maximized)
@@ -74,14 +71,13 @@ namespace Hazard::Rendering
         glfwDestroyWindow(m_Window);
         glfwTerminate();
     }
-    void MacOSWindow::OnBeginFrame() {
-        m_Context->Begin();
+    void MacOSWindow::BeginFrame() {
+        m_Context->BeginFrame();
     }
-    void MacOSWindow::OnEndFrame()
+    void MacOSWindow::Present()
     {
-        m_Context->End();
         if (!m_WindowData.minimized)
-            m_Context->SwapBuffers();
+            m_Context->Present();
         Input::Update();
         glfwPollEvents();
     }

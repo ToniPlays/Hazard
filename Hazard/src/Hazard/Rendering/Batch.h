@@ -16,7 +16,7 @@ namespace Hazard::Rendering
 
 		void Push(const Type& data) 
 		{
-			memcpy_s(m_BufferPointer, m_BufferSize, &data, m_DataSize);
+			memcpy(m_BufferPointer, &data, m_DataSize);
 			m_Count++;
 			m_BufferPointer++;
 		};

@@ -35,7 +35,6 @@ project "HazardEditor"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
-		"%{IncludeDir.Optick}",
 		"src"
 	}
 
@@ -70,6 +69,10 @@ project "HazardEditor"
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
 			"%{Library.OpenAL_Lib}"
+		}
+		includedirs {
+			
+			"%{IncludeDir.Optick}"
 		}
 
 	filter "system:macosx"

@@ -55,7 +55,9 @@ namespace Hazard {
 	}
 	void Application::Quit()
 	{
+#ifdef HZR_PLATFORM_WINDOWS
 		Core::HazardLoop::GetCurrent().m_ShouldClose = true;
+#endif
 	}
 	void Application::UpdateData()
 	{

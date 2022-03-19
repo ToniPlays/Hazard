@@ -16,13 +16,13 @@ namespace Hazard::Rendering::Metal {
     void MetalShader::Reload() {
         
     }
-    void MetalShader::Bind() {
+    void MetalShader::Bind(Ref<RenderCommandBuffer> cmdBufer) {
         
     }
     void MetalShader::Unbind() {
         
     }
-    void MetalShader::SetUniformBuffer(const std::string &name, void *data) {
+    void MetalShader::SetUniformBuffer(const std::string &name, void *data, uint32_t size) {
         //m_UniformBuffers[name]->SetData(data);
     }
     void MetalShader::Set(const std::string& name, uint32_t index, uint32_t value) {

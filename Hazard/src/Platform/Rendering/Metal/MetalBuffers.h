@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/Buffers.h"
+#include "Hazard/RenderContext/Pipeline/Buffers.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -18,9 +18,13 @@ namespace Hazard::Rendering::Metal
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
         void SetData(const void* data, uint32_t size) override;
         uint32_t GetSize() override { return m_Size; }
+        
+        std::string& GetDebugName() override { return m_DebugName; }
+        
 
     private:
         BufferUsage m_Usage;
+        std::string m_DebugName;
         uint32_t m_Size;
         
         MTL::Buffer* m_Buffer;
@@ -36,12 +40,14 @@ namespace Hazard::Rendering::Metal
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override {};
 
         uint32_t GetCount() override { return m_Size; }
+        std::string& GetDebugName() override { return m_DebugName; }
 
     private:
         void SetData(uint32_t* data, uint32_t size) override {};
 
         BufferUsage m_Usage;
         uint32_t m_Size;
+        std::string m_DebugName;
         
         MTL::Buffer* m_Buffer;
 
@@ -49,22 +55,26 @@ namespace Hazard::Rendering::Metal
     class MetalUniformBuffer : public UniformBuffer
     {
     public:
-        MetalUniformBuffer(UniformBufferCreateInfo* createInfo) {};
+        MetalUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name) {};
         ~MetalUniformBuffer() {};
 
         void Bind(Ref<RenderCommandBuffer> cmdBuffer) override {};
         void Unbind() override {};
-        void SetData(const void* data) override {};
+        void SetData(const void* data, uint32_t size) override {};
         const uint32_t GetBinding() const override { return m_Binding; };
         const uint32_t GetSize() const override { return m_Size; };
 
         uint32_t GetUsageFlags() override { return m_Usage; };
+        
+        std::string& GetName() override { return m_Name; }
 
     private:
 
         uint32_t m_Size;
         uint32_t m_Binding;
         uint32_t m_Usage;
+        
+        std::string m_Name;
     };
 }
 

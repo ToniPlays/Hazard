@@ -15,19 +15,19 @@ namespace Hazard::Rendering {
 			s_RuntimeResources.clear();
 		};
 		static void AddVertexBuffer(Ref<VertexBuffer> buffer) {
-			std::string& name = "VBO_" + buffer->GetDebugName();
+			std::string name = "VBO_" + buffer->GetDebugName();
 			HZR_CORE_ASSERT(!HasVertexBuffer(buffer->GetDebugName()), "RenderLibrary already contains {0} VertexBuffer", name);
 			AssetManager::AddRuntimeResource(buffer);
 			s_RuntimeResources[name] = buffer;
 		};
 		static void AddIndexBuffer(Ref<IndexBuffer> buffer) {
-			std::string& name = "IBO_" + buffer->GetDebugName();
+			std::string name = "IBO_" + buffer->GetDebugName();
 			HZR_CORE_ASSERT(!HasIndexBuffer(buffer->GetDebugName()), "RenderLibrary already contains {0} IndexBuffer", name);
 			s_RuntimeResources[name] = buffer;
 			AssetManager::AddRuntimeResource(buffer);
 		};
 		static void AddUniformBuffer(Ref<UniformBuffer> buffer) {
-			std::string& name = "UBO_" + buffer->GetName();
+			std::string name = "UBO_" + buffer->GetName();
 			HZR_CORE_ASSERT(!HasUniformBuffer(buffer->GetName()), "RenderLibrary already contains {0} UniformBuffer", name);
 			s_RuntimeResources[name] = buffer;
 			AssetManager::AddRuntimeResource(buffer);

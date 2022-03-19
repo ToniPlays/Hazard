@@ -25,13 +25,7 @@ namespace Hazard
     }
     std::string PlatformUtils::SaveFileDialog(const char* filters)
     {
-        
         return "";
-    }
-    std::string PlatformUtils::SaveFolderDialog()
-    {
-        auto f = pfd::select_folder("Select folder", DEFAULT_PATH).result();
-        return f;
     }
 }
 #endif

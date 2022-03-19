@@ -11,6 +11,8 @@ namespace Hazard::Rendering::Metal
         MTL::Device* device = MetalContext::GetMetalDevice();
         m_Buffer = device->newBuffer(createInfo->Size, NULL);
         
+        m_DebugName = createInfo->DebugName;
+        
         if(createInfo->Data)
         {
             SetData(createInfo->Data, createInfo->Size);
@@ -42,6 +44,8 @@ namespace Hazard::Rendering::Metal
     {
         MTL::Device* device = MetalContext::GetMetalDevice();
         m_Buffer = device->newBuffer(createInfo->Size * sizeof(uint32_t), NULL);
+        
+        m_DebugName = createInfo->DebugName;
     }
     MetalIndexBuffer::~MetalIndexBuffer()
     {

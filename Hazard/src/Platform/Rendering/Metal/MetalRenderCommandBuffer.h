@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/RenderCommandBuffer.h"
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 
 #include <Foundation/Foundation.hpp>
@@ -14,13 +14,14 @@ namespace Hazard::Rendering::Metal {
         MetalRenderCommandBuffer(const std::string& name, bool swapchain);
         ~MetalRenderCommandBuffer() = default;
 
-        virtual uint32_t GetFrameIndex() { return 0; };
+        virtual uint32_t GetFrameIndex() override { return 0; };
+        virtual bool IsRecording() override { return m_CommandBuffer != nullptr; }
         MTL::CommandBuffer* GetMetalCommandBuffer() { return m_CommandBuffer; }
         MTL::RenderCommandEncoder* GetEncoder() { return m_Encoder; }
         
-        void Begin();
-        void End();
-        void Submit();
+        void Begin() override;
+        void End() override;
+        void Submit() override;
         
         void BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor);
         void EndRenderEncoder() { m_Encoder->endEncoding(); }

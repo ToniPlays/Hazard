@@ -33,15 +33,11 @@ namespace Hazard::Rendering::Metal
     void MetalContext::SetViewport(int x, int y, int w, int h) {
         
     }
-    void MetalContext::SwapBuffers()
+    void MetalContext::BeginFrame()
     {
         
     }
-    void MetalContext::Begin()
-    {
-        
-    }
-    void MetalContext::End()
+    void MetalContext::Present()
     {
         
     }
@@ -77,12 +73,7 @@ namespace Hazard::Rendering::Metal
     void MetalContext::SetErrorListener(const ErrorCallback &callback) {
         
     }
-    DeviceSpec MetalContext::GetDeviceSpec() const
-    {
-        DeviceSpec spec = {};
-        spec.Name = GetMetalDevice()->name()->utf8String();
-        return spec;
-    }
+    
     void MetalContext::Present(MTL::CommandBuffer* buffer) {
         s_Instance->m_MetalLayer->Present(buffer);
         

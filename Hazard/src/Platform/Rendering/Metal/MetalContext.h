@@ -17,15 +17,16 @@ namespace Hazard::Rendering::Metal
         void Init(Window* window, ApplicationCreateInfo* appInfo) override;
         void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
         void SetViewport(int x, int y, int w, int h) override;
-        void SwapBuffers() override;
-        void Begin() override;
-        void End() override;
+        void Present() override;
+        void BeginFrame() override;
+        void Close() override {}
+        
         void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
         void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
         void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) override;
 
         void SetErrorListener(const ErrorCallback& callback) override;
-        DeviceSpec GetDeviceSpec() const override;
+        PhysicalDevice& GetPhysicalDevice() const override { return *m_PhysicalDevice; };
 
         void AddResizeCallback(const ResizeCallback& callback) override { m_ResizeCallback.push_back(callback); };
         static void Present(MTL::CommandBuffer* buffer);
@@ -39,6 +40,7 @@ namespace Hazard::Rendering::Metal
         std::vector<ResizeCallback> m_ResizeCallback;
         
         inline static MetalContext* s_Instance;
+        PhysicalDevice* m_PhysicalDevice;
         
         MetalLayer* m_MetalLayer;
         MTL::CommandQueue* m_CommandQueue;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Rendering/Pipeline/FrameBuffer.h"
+#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 
 
 namespace Hazard::Rendering::Metal
@@ -18,8 +18,10 @@ namespace Hazard::Rendering::Metal
 
         virtual uint32_t GetWidth() const override { return m_Specs.Width; };
         virtual uint32_t GetHeight() const override { return m_Specs.Height; };
+        
+        virtual uint32_t GetColorAttachmentCount() override { return m_ColorAttachments.size(); }
 
-        virtual Ref<Image2D> GetImage() const override { return nullptr; /*m_ColorImages[0].As<Image2D>();*/ };
+        virtual Ref<Image2D> GetImage(uint32_t index = 0) const override { return nullptr; /*m_ColorImages[0].As<Image2D>();*/ };
         virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 
 

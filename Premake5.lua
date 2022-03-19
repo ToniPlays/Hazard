@@ -30,7 +30,10 @@ group "Dependencies"
 	include "Hazard/vendor/Glad"
 	include "Hazard/vendor/GLFW"
 	include "Hazard/vendor/Box2D"
+
+if os.host() == "windows" then
 	include "Hazard/vendor/Optick"
+end
 	include "Hazard/vendor/yaml-cpp"
 	include "HazardEditor/vendor/imgui"
 group ""

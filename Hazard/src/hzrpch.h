@@ -29,7 +29,9 @@
 #include "Hazard/Math/Math.h"
 #include "Hazard/Math/Random.h"
 
+#ifdef HZR_PLATFORM_WINDOWS
 #include "optick.h"
+#endif
 #include <chrono>
 
 using namespace std::chrono_literals;
@@ -62,10 +64,10 @@ using namespace std::chrono_literals;
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
 #define HZR_THREAD_DELAY(x) std::this_thread::sleep_for(x);
 //Return if false
-#define HZR_GUARD(x) if(!x) return
+#define HZR_GUARD(x) if(!(x)) return
 
 #define HZR_PROFILE 1
-#define HZR_OPTICK 1
+#define HZR_OPTICK 0
 
 #if HZR_PROFILE 
 	#if !HZR_OPTICK
@@ -77,7 +79,8 @@ using namespace std::chrono_literals;
 		#define HZR_PROFILE_SCOPE(name, ...)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
 		#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
 		#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
-	#else 
+	#else
+
 		#define HZR_PROFILE_SESSION_BEGIN(x, y)			
 		#define HZR_PROFILE_SESSION_END()				
 		#define HZR_PROFILE_SCOPE_LINE2(name, line)		
@@ -99,7 +102,7 @@ using namespace std::chrono_literals;
 #endif
 
 
-#if (defined(HZR_DEBUG) || defined(HZR_GAME_ONLY))
+#if (defined(HZR_DEBUG))
 	//Core logging macros
 	#define HZR_CORE_INFO(...)				::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)
 	#define HZR_CORE_WARN(...)				::Hazard::Logging::Logger::GetCoreLogger()->warn(__VA_ARGS__)
@@ -135,3 +138,11 @@ using namespace std::chrono_literals;
 #define HZR_ASSERT(status, ...)
 
 #endif // !
+
+
+#ifdef HZR_PLATFORM_MACOS
+#define OPTICK_THREAD(x)
+#define OPTICK_SHUTDOWN(x)
+
+
+#endif
