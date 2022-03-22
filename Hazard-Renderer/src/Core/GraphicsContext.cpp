@@ -15,9 +15,10 @@
 
 namespace HazardRenderer {
 
-	GraphicsContext* GraphicsContext::Create(RenderAPI API, WindowProps* props)
+	GraphicsContext* GraphicsContext::Create(WindowProps* props)
 	{
-		switch (API)
+		s_CurrentAPI = props->SelectedAPI;
+		switch (s_CurrentAPI)
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);

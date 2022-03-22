@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Platform/System/Window.h"
 #include "VulkanDevice.h"
 #include "VulkanAllocator.h"
 #include <vulkan/vulkan.h>
 
-namespace Hazard::Rendering::Vulkan
+namespace HazardRenderer::Vulkan
 {
 	class VulkanSwapChain : public RefCount {
 	public:
@@ -39,7 +38,7 @@ namespace Hazard::Rendering::Vulkan
 		VkSemaphore GetRenderCompleteSemaphore() const { return m_Semaphores.RenderComplete; }
 		void Cleanup();
 
-		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeEvent.push_back(callback); }
+		//void AddResizeCallback(const ResizeCallback& callback) { m_ResizeEvent.push_back(callback); }
 
 	private:
 		VkResult AcquireNextImage(VkSemaphore presentCompleteSemaphore, uint32_t* imageIndex);
@@ -95,7 +94,7 @@ namespace Hazard::Rendering::Vulkan
 
 		VkSurfaceKHR m_Surface;
 
-		std::vector<ResizeCallback> m_ResizeEvent;
+		//std::vector<ResizeCallback> m_ResizeEvent;
 
 		friend class VulkanContext;
 	};

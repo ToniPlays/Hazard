@@ -68,9 +68,11 @@ namespace HazardRenderer {
 		/*
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual WindowProps GetWindowInfo() = 0;
-		virtual GraphicsContext* GetContext() const = 0;
 		*/
+		virtual GraphicsContext* GetContext() const = 0;
+		
 
 		static Window* Create(HazardRendererCreateInfo* info);
+		static void SendDebugMessage(const RenderMessage& message);
 	};
 }

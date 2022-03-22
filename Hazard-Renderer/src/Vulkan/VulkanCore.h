@@ -5,6 +5,7 @@
 
 #include "VulkanContext.h"
 #include "VKUtils.h"
+#include "Pipeline/VulkanBuffers.h"
 #include "VulkanRenderCommandBuffer.h"
 #include "VulkanFrameBuffer.h"
 #include "VulkanTexture2D.h"

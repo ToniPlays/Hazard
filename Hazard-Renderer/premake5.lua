@@ -12,6 +12,8 @@ project "Hazard-Renderer"
 	{
 		"src/**.h",
 		"src/**.cpp",
+		"vendor/VulkanMemoryAllocator/**.h",
+		"vendor/VulkanMemoryAllocator/**.cpp",
 		"examples/**.cpp"
 	}
 
@@ -24,7 +26,12 @@ project "Hazard-Renderer"
 		"%{IncludeDir.VMA}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.yaml_cpp}",
-		"src"
+		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.SPIRV_Cross}",
+		"%{IncludeDir.shaderc}",
+		"%{IncludeDir.VMA}",
+		"src",
+		"examples"
 	}
 	links {
 		"GLFW",
@@ -38,6 +45,13 @@ project "Hazard-Renderer"
 			"HZR_PLATFORM_WINDOWS",
 			"GLFW_INCLUDE_NONE"
 		}
+		links {
+			"%{Library.Vulkan}",
+			"%{Library.VulkanUtils}",
+			"opengl32.lib"
+		}
+
+
 	filter "system:macos"
 		systemversion "latest"
 		defines {
@@ -45,17 +59,42 @@ project "Hazard-Renderer"
 			"GLFW_INCLUDE_NONE"
 		}
 
-	filter "configurations:Debug"
-		defines "HZR_DEBUG"
-		runtime "Debug"
-		symbols "on"
+		filter "configurations:Debug"
+			defines "HZR_DEBUG"
+			runtime "Debug"
+			symbols "on"
 
-	filter "configurations:Release"
-		defines "HZR_RELEASE"
-		runtime "Release"
-		optimize "on"
+			if os.host() == "windows" then
+				links {
+					"%{Library.ShaderC_Debug}",
+					"%{Library.SPIRV_Cross_Debug}",
+					"%{Library.SPIRV_Cross_GLSL_Debug}",
+				}
+			end
 
-	filter "configurations:Dist"
-		defines "HZR_DIST"
-		runtime "Release"
-		optimize "on"
+		filter "configurations:Release"
+			defines "HZR_RELEASE"
+			runtime "Release"
+			optimize "on"
+
+
+			if os.host() == "windows" then
+				links {
+					"%{Library.ShaderC_Release}",
+					"%{Library.SPIRV_Cross_Release}",
+					"%{Library.SPIRV_Cross_GLSL_Release}",
+				}
+			end
+
+		filter "configurations:Dist"
+			defines "HZR_DIST"
+			runtime "Release"
+			optimize "on"
+
+			if os.host() == "windows" then
+				links {
+					"%{Library.ShaderC_Release}",
+					"%{Library.SPIRV_Cross_Release}",
+					"%{Library.SPIRV_Cross_GLSL_Release}",
+				}
+			end

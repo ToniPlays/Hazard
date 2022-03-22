@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Core/GraphicsContext.h"
+#include "Core/WindowSurface.h"
+#include "Core/VulkanDevice.h"
+#include "Core/VulkanSwapChain.h"
 
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
 
-#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_CORE_ASSERT(false, "Vulkan function failed: {0}", VKUtils::ResultToString(result));}
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { ASSERT(false, "Vulkan function failed: {0}", VKUtils::ResultToString(result)); }
 
 namespace HazardRenderer::Vulkan {
 
@@ -35,13 +38,14 @@ namespace HazardRenderer::Vulkan {
 		static glm::vec4 GetClearColor() { return m_ClearColor; }
 		static VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
 
-		void Close() override;
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
 		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 		*/
 		
+		PhysicalDevice& GetDevice() { return *m_Device; }
+
 	public:
 		static void SendDebugMessage(const char* message, const char* code);
 	private:
@@ -49,17 +53,13 @@ namespace HazardRenderer::Vulkan {
 		Window* m_Window;
 		glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
 
-		/*PhysicalDevice* m_PhysicalDevice;
 		inline static VkInstance m_Instance;
-		inline static Scope<VulkanDevice> m_Device;
 		inline static Scope<WindowSurface> m_WindowSurface;
+		inline static Scope<VulkanDevice> m_Device;
 		inline static Ref<VulkanSwapChain> m_SwapChain;
-		inline static VkPipelineCache m_PipelineCache;
 
-		inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
+		//inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
 		
-		uint32_t m_CurrentBufferIndex = 0;
-		static ErrorCallback s_Callback;
-		*/
+		//uint32_t m_CurrentBufferIndex = 0;
 	};
 }

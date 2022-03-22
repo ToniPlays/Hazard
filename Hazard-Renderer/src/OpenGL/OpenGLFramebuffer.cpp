@@ -1,13 +1,10 @@
-/*#pragma once
 
-#include <hzrpch.h>
-#include "Hazard/RenderContext/RenderContextCommand.h"
 #include "OpenGLFramebuffer.h"
 #include "OpenGLUtils.h"
 
 #include <glad/glad.h>
 
-namespace Hazard::Rendering::OpenGL 
+namespace HazardRenderer::OpenGL
 {
 	OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferCreateInfo* info)
 	{
@@ -24,17 +21,18 @@ namespace Hazard::Rendering::OpenGL
 		m_Specs.Height = (uint32_t)info->Height;
 
 		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget) {
-			Window& window = RenderContextCommand::GetContext().GetWindow();
-			m_Specs.Width = window.GetWidth();
-			m_Specs.Height = window.GetHeight();
+			//Window& window = RenderContextCommand::GetContext().GetWindow();
+			//m_Specs.Width = window.GetWidth();
+			//m_Specs.Height = window.GetHeight();
 		}
 
 		for (auto& attachment : info->Attachments) 
 		{
-			if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
-				m_ColorAttachments.emplace_back(attachment);
-			}
-			else m_DepthAttachment = attachment;
+			//if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
+			//	m_ColorAttachments.emplace_back(attachment);
+			//}
+			//else 
+			m_DepthAttachment = attachment;
 		}
 
 		/*if (m_Specs.SwapChainTarget) {
@@ -43,7 +41,7 @@ namespace Hazard::Rendering::OpenGL
 				Resize(width, height, false);
 			});
 		}*/
-/*
+
 		Invalidate();
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
@@ -124,11 +122,11 @@ namespace Hazard::Rendering::OpenGL
 	
 			for (uint32_t i = 0; i < (uint32_t)m_ColorImages.size(); i++)
 			{
-				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
+				//OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
 
 				switch (m_ColorAttachments[i].Format) {
-				case ImageFormat::RGBA:
-					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA8, m_Specs.Width, m_Specs.Height, i);
+				case ImageFormat::RGBA: break;
+					//OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA8, m_Specs.Width, m_Specs.Height, i);
 				}
 			}
 		}
@@ -142,17 +140,17 @@ namespace Hazard::Rendering::OpenGL
 			imageInfo.Format = m_DepthAttachment.Format;
 
 			m_DepthImage = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
-			OpenGLUtils::BindTexture(m_DepthImage->GetID(), imageInfo.Mips > 1);
+			//OpenGLUtils::BindTexture(m_DepthImage->GetID(), imageInfo.Mips > 1);
 
 			switch (m_DepthAttachment.Format)
 			{
 			case ImageFormat::DEPTH24STENCIL8:
-				OpenGLUtils::AttachDepthTexture(m_DepthImage->GetID(), m_Specs.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specs.Width, m_Specs.Height);
+				//OpenGLUtils::AttachDepthTexture(m_DepthImage->GetID(), m_Specs.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specs.Width, m_Specs.Height);
 				break;
 			}
 		}
 		if (m_ColorImages.size() > 1) {
-			HZR_CORE_ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
+			ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
@@ -160,8 +158,7 @@ namespace Hazard::Rendering::OpenGL
 			glDrawBuffer(GL_NONE);
 		}
 
-		HZR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+		ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
-*/

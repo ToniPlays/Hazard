@@ -7,6 +7,7 @@
 namespace HazardRenderer {
 
 	class WindowsWindow : public Window {
+		friend class Window;
 	public:
 		WindowsWindow(HazardRendererCreateInfo* createInfo);
 		virtual ~WindowsWindow();
@@ -59,12 +60,13 @@ namespace HazardRenderer {
 	//	}
 	//	WindowProps GetWindowInfo() { return m_WindowData; }
 
-	//	GraphicsContext* GetContext() const { return m_Context; };
+		GraphicsContext* GetContext() const { return m_Context; };
 
 	private:
 		WindowProps m_WindowData;
 		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
+		static inline RendererMessageCallback s_DebugCallback;
 		//	void SetCallbacks();
 
 	};

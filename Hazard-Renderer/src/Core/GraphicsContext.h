@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderContextCreateInfo.h"
+#include "PhysicalDevice.h"
 #include <functional>
 
 namespace HazardRenderer {
@@ -30,7 +31,6 @@ namespace HazardRenderer {
 		virtual void BeginFrame() = 0;
 		virtual void Present() = 0;
 
-
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		/*virtual void Close() = 0;
 
@@ -44,6 +44,13 @@ namespace HazardRenderer {
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
 		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;*/
 
-		static GraphicsContext* Create(RenderAPI API, WindowProps* props);
+		virtual PhysicalDevice& GetDevice() = 0;
+
+		static GraphicsContext* Create(WindowProps* props);
+		static RenderAPI GetRenderAPI() { return s_CurrentAPI; }
+		
+
+	private:
+		static inline RenderAPI s_CurrentAPI;
 	};
 }

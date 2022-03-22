@@ -45,3 +45,4 @@ Makefile
 *.xcscheme
 *.xcbkptlist
 Hazard/vendor/Optick
+*.hzrche

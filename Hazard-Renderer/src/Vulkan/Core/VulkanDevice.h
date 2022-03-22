@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Core/Core.h"
+#include "Core/PhysicalDevice.h"
+#include <vector>
 #include <vulkan/vulkan.h>
-#include "Platform/System/Window.h"
 
-namespace Hazard::Rendering::Vulkan 
+namespace HazardRenderer::Vulkan
 {
 	struct QueueIndices {
 		VkQueue Queue;
@@ -13,12 +15,18 @@ namespace Hazard::Rendering::Vulkan
 	class SwapChain;
 	class CommandBuffer;
 
-	class VulkanDevice {
+	class VulkanDevice : public PhysicalDevice {
 	public:
+		
+		VulkanDevice() {};
 		VulkanDevice(VkInstance instance, VkSurfaceKHR surface, uint32_t imagesInFlight);
 		~VulkanDevice();
 
+		std::string GetDeviceName() override { return m_DeviceName; };
+		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
+
 		void WaitUntilIdle();
+		/*
 		inline VkDevice GetDevice() { return m_Device; }
 
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
@@ -35,17 +43,22 @@ namespace Hazard::Rendering::Vulkan
 		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
 		QueueIndices GetPresentQueue() { return m_PresentQueue; }
 		
-
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
 
+		*/
+
 	private:
-		void CreatePools(uint32_t count);
+
+		std::string m_DeviceName;
+		PhysicalDeviceLimits m_Limits;
+
+		//void CreatePools(uint32_t count);
 
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
-		VkCommandPool m_CommandPool;
-		std::vector<VkDescriptorPool> m_DescriptorPools;
+		//VkCommandPool m_CommandPool;
+		//std::vector<VkDescriptorPool> m_DescriptorPools;
 		VkPipelineCache m_PipelineCache;
 
 		QueueIndices m_GraphicsQueue;

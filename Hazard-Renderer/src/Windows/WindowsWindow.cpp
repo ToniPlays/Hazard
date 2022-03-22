@@ -18,15 +18,29 @@ namespace HazardRenderer {
 		return new WindowsWindow(info);
 	}
 
+	void Window::SendDebugMessage(const RenderMessage& message)
+	{
+		if (WindowsWindow::s_DebugCallback == nullptr) return;
+
+		RenderMessage msg;
+		msg.Severity = message.Severity;
+		msg.Message = "[Hazard-Renderer]: " + message.Message;
+
+		WindowsWindow::s_DebugCallback(msg);
+	}
+
 	WindowsWindow::WindowsWindow(HazardRendererCreateInfo* info)
 	{
 		ASSERT(info->AppInfo != nullptr, "AppInfo cannot be nullptr");
 		ASSERT(glfwInit(), "Failed to initialize GLFW");
-		
+		s_DebugCallback = info->AppInfo->MessageCallback;
+
 		if (info->Renderer == RenderAPI::Auto) 
 		{
 			info->Renderer = RenderAPI::Vulkan;
 		}
+
+		SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
 
 		m_WindowData.Title = info->AppInfo->AppName + " " + info->AppInfo->BuildVersion;
 		m_WindowData.Platform = "Windows";
@@ -36,7 +50,7 @@ namespace HazardRenderer {
 		m_WindowData.VSync = info->VSync;
 		m_WindowData.ImagesInFlight = info->ImagesInFlight;
 
-		m_Context = GraphicsContext::Create(info->Renderer, &m_WindowData);
+		m_Context = GraphicsContext::Create(&m_WindowData);
 
 		glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
 		glfwWindowHint(GLFW_DECORATED, info->Decorated);
@@ -84,7 +98,6 @@ namespace HazardRenderer {
 
 		if (!m_WindowData.minimized) {}
 
-		//Input::Update();
 		glfwPollEvents();
 	}
 	

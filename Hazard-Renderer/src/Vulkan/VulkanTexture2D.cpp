@@ -1,6 +1,6 @@
 //#pragma once
 //
-//#include <hzrpch.h>
+// #ifdef HZR_INCLUDE_VULKAN
 //#include "VulkanTexture2D.h"
 //#include "VulkanContext.h"
 //#include "VKUtils.h"

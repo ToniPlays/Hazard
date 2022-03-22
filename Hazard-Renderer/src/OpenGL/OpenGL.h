@@ -4,10 +4,10 @@
 #include "OpenGLContext.h"
 #include "OpenGLRenderCommandBuffer.h"
 #include "Textures/OpenGLTexture2D.h"
-#include "Buffers/OpenGLBuffers.h"
+#include "Pipeline/OpenGLBuffers.h"
 #include "OpenGLFrameBuffer.h"
-#include "OpenGLRenderPass.h"
-#include "OpenGLPipeline.h"
-#include "OpenGLImage2D.h"
+#include "Pipeline/OpenGLRenderPass.h"
+#include "Pipeline/OpenGLPipeline.h"
+#include "Textures/OpenGLImage2D.h"
 
 #endif

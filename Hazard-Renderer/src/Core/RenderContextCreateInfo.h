@@ -2,10 +2,19 @@
 
 #include "Core/Core.h"
 #include "glm/glm.hpp"
+#include "Severity.h"
 #include <string>
+#include <functional>
 
 namespace HazardRenderer 
 {
+	struct RenderMessage 
+	{
+		Severity Severity;
+		std::string Message;
+	};
+	using RendererMessageCallback = void(*)(RenderMessage);
+
 	enum class RenderAPI {
 		Auto = 0,
 		OpenGL,
@@ -15,6 +24,9 @@ namespace HazardRenderer
 		Metal
 	};
 
+	std::string RenderAPIToString(RenderAPI api);
+
+
 	struct HazardRendererAppInfo 
 	{
 		std::string AppName;
@@ -22,6 +34,7 @@ namespace HazardRenderer
 
 		const char** Icons;
 		uint32_t IconCount = 0;
+		RendererMessageCallback MessageCallback = nullptr;
 	};
 
 	struct HazardRendererCreateInfo

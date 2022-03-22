@@ -43,26 +43,17 @@
     <Filter Include="src\Hazard\RenderContext">
       <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\RenderContext\Pipeline">
-      <UniqueIdentifier>{CF447323-3BB3-C8A2-849C-83A2F049BE3E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Hazard\Rendering\2D">
       <UniqueIdentifier>{A80A7A05-1442-C29C-1D4C-26C08902E995}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Rendering\Image">
-      <UniqueIdentifier>{1543CAD2-0153-76A3-6A0C-DBC1563B653C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Rendering\Loaders">
       <UniqueIdentifier>{DCCDFE99-C888-EE45-7140-67905DDA38D6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Hazard\Rendering\Mesh">
       <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Queue">
-      <UniqueIdentifier>{F77C5FD3-E38C-0BA4-4C46-70C23875FA3C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
@@ -105,9 +96,6 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\VulkanMemoryAllocator">
-      <UniqueIdentifier>{CD0FE8DE-B9CA-D78A-6282-50D54E1C221B}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -183,9 +171,6 @@
     <ClInclude Include="src\Hazard\Core\CommandLineArgs.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\CommandQueue.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Core.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -201,13 +186,7 @@
     <ClInclude Include="src\Hazard\Core\PlatformUtils.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\Ref.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Timer.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Core\UUID.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Entity\Component.h">
@@ -309,24 +288,6 @@
     <ClInclude Include="src\Hazard\RenderContext\PhysicalDevice.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Buffers.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\FrameBuffer.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Pipeline.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\RenderPass.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\Shader.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Pipeline\ShaderDataType.h">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -348,19 +309,7 @@
     <ClInclude Include="src\Hazard\Rendering\DebugRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Image\Image.h">
-      <Filter>src\Hazard\Rendering\Image</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Image\Image2D.h">
-      <Filter>src\Hazard\Rendering\Image</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Loaders\Loaders.h">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Loaders\ShaderFactory.h">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Loaders\TextureFactory.h">
       <Filter>src\Hazard\Rendering\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
@@ -374,9 +323,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.h">
-      <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
       <Filter>src\Hazard\Rendering</Filter>
@@ -494,9 +440,6 @@
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\VulkanMemoryAllocator\vk_mem_alloc.h">
-      <Filter>vendor\VulkanMemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
@@ -1787,13 +1730,7 @@
     <ClCompile Include="src\Hazard\Core\CommandLineArgs.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Core\CommandQueue.cpp">
-      <Filter>src\Hazard\Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
-      <Filter>src\Hazard\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Core\UUID.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp">
@@ -1847,21 +1784,6 @@
     <ClCompile Include="src\Hazard\RenderContext\PhysicalDevice.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Buffers.cpp">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Pipeline\FrameBuffer.cpp">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Pipeline.cpp">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Pipeline\RenderPass.cpp">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Pipeline\Shader.cpp">
-      <Filter>src\Hazard\RenderContext\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
@@ -1877,16 +1799,7 @@
     <ClCompile Include="src\Hazard\Rendering\DebugRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Image\Image2D.cpp">
-      <Filter>src\Hazard\Rendering\Image</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Loaders\Loaders.cpp">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Loaders\ShaderFactory.cpp">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Loaders\TextureFactory.cpp">
       <Filter>src\Hazard\Rendering\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
@@ -1894,9 +1807,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Queue\RenderCommandBuffer.cpp">
-      <Filter>src\Hazard\Rendering\Queue</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
       <Filter>src\Hazard\Rendering</Filter>
@@ -1987,9 +1897,6 @@
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="vendor\VulkanMemoryAllocator\vk_mem_alloc.cpp">
-      <Filter>vendor\VulkanMemoryAllocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

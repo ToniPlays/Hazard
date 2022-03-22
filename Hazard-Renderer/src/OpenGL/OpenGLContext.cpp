@@ -3,22 +3,20 @@
 
 #include "OpenGLContext.h"
 #include "Core/Window.h"
+#include "OpenGLUtils.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL {
 
-//		ErrorCallback OpenGLContext::s_Callback;
-//
-//		void APIENTRY OnDebugMessage(GLenum source, GLenum type, unsigned int id, GLenum severity,
-//			GLsizei length, const char* message, const void* userParam) {
-//
-//			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) 
-//				return;
-//			HZR_CORE_ERROR("[OpenGL]: {0}", message);
-//
-//			//OpenGLContext::SendDebugMessage(message, OpenGLUtils::GluintToString(severity));
-//		}
-//
+
+		void APIENTRY OnDebugMessage(GLenum source, GLenum type, unsigned int id, GLenum severity,
+			GLsizei length, const char* message, const void* userParam) {
+
+			if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) 
+				return;
+			Window::SendDebugMessage({ OpenGLUtils::GLuintToSeverity(severity), message });
+		}
+
 		OpenGLContext::OpenGLContext(WindowProps* props)
 		{
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
@@ -39,6 +37,8 @@ namespace HazardRenderer::OpenGL {
 
 			ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLFW OpenGL context");
 
+			m_PhysicalDevice = new OpenGLPhysicalDevice();
+
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
@@ -47,6 +47,8 @@ namespace HazardRenderer::OpenGL {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+			Window::SendDebugMessage({ Severity::Info, "Debugging enabled" });
 		}
 
 		void OpenGLContext::BeginFrame()

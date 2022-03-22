@@ -1,5 +1,5 @@
 //#pragma once
-//
+//#ifdef HZR_INCLUDE_VULKAN
 //#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 //#include "Image/VulkanImage2D.h"
 //#include <vulkan/vulkan.h>

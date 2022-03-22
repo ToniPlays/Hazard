@@ -5,16 +5,6 @@
 
 namespace Hazard {
 
-	enum class Severity
-	{
-		Debug,
-		Trace,
-		Info,
-		Warning,
-		Error,
-		Critical
-	};
-
 	struct ApplicationCreateInfo 
 	{
 		std::string AppName;

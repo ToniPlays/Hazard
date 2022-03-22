@@ -21,86 +21,86 @@ namespace HazardRenderer::Vulkan {
 
 		return extensions;
 	}
-//	VkPhysicalDevice VKUtils::GetVulkanCapableDevice(VkInstance instance, VkSurfaceKHR surface)
-//	{
-//		uint32_t deviceCount = 0;
-//		vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
-//
-//		if (deviceCount == 0)
-//			return VK_NULL_HANDLE;
-//
-//		std::vector<VkPhysicalDevice> devices(deviceCount);
-//		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
-//
-//		VkPhysicalDevice resultDevice;
-//
-//		for (const auto& device : devices) {
-//			if (SuitableDevice(device, instance, surface)) {
-//				resultDevice = device;
-//				return resultDevice;
-//			}
-//		}
-//		HZR_THROW("Failed to find Vulkan capable device");
-//	}
-//
-//	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface)
-//	{
-//		QueueFamilyIndices indices = GetQueueFamilyIndices(device, surface);
-//
-//		bool extensionSupported = CheckDeviceExtensionSupport(device);
-//		bool swapchainAdequate = false;
-//
-//		if (extensionSupported) {
-//
-//			SwapChainSupportDetails details = GetSwapChainDetails(device, surface);
-//			swapchainAdequate = !details.formats.empty() && !details.presentModes.empty();
-//		}
-//
-//		return indices.isComplete() && extensionSupported && swapchainAdequate;
-//	}
-//
-//	bool VKUtils::CheckDeviceExtensionSupport(VkPhysicalDevice device)
-//	{
-//		uint32_t extensionCount = 0;
-//		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
-//
-//		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-//		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
-//
-//		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
-//
-//		for (const auto& extension : availableExtensions) {
-//			requiredExtensions.erase(extension.extensionName);
-//		}
-//
-//		return requiredExtensions.empty();
-//	}
-//
-//	SwapChainSupportDetails VKUtils::GetSwapChainDetails(VkPhysicalDevice device, VkSurfaceKHR surface)
-//	{
-//		SwapChainSupportDetails details;
-//
-//		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
-//
-//		uint32_t formatCount;
-//		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
-//
-//		if (formatCount != 0) {
-//			details.formats.resize(formatCount);
-//			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
-//		}
-//
-//		uint32_t presentModeCount;
-//		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
-//
-//		if (presentModeCount != 0) {
-//			details.presentModes.resize(presentModeCount);
-//			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
-//		}
-//
-//		return details;
-//	}
-//
+	VkPhysicalDevice VKUtils::GetVulkanCapableDevice(VkInstance instance, VkSurfaceKHR surface)
+	{
+		uint32_t deviceCount = 0;
+		vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+		if (deviceCount == 0)
+			return VK_NULL_HANDLE;
+
+		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+		VkPhysicalDevice resultDevice;
+
+		for (const auto& device : devices) {
+			if (SuitableDevice(device, instance, surface)) {
+				resultDevice = device;
+				return resultDevice;
+			}
+		}
+		ASSERT("Failed to find Vulkan capable device");
+	}
+
+	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface)
+	{
+		QueueFamilyIndices indices = GetQueueFamilyIndices(device, surface);
+
+		bool extensionSupported = CheckDeviceExtensionSupport(device);
+		bool swapchainAdequate = false;
+
+		if (extensionSupported) {
+
+			SwapChainSupportDetails details = GetSwapChainDetails(device, surface);
+			swapchainAdequate = !details.formats.empty() && !details.presentModes.empty();
+		}
+
+		return indices.isComplete() && extensionSupported && swapchainAdequate;
+	}
+
+	bool VKUtils::CheckDeviceExtensionSupport(VkPhysicalDevice device)
+	{
+		uint32_t extensionCount = 0;
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+		for (const auto& extension : availableExtensions) {
+			requiredExtensions.erase(extension.extensionName);
+		}
+
+		return requiredExtensions.empty();
+	}
+
+	SwapChainSupportDetails VKUtils::GetSwapChainDetails(VkPhysicalDevice device, VkSurfaceKHR surface)
+	{
+		SwapChainSupportDetails details;
+
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+
+		uint32_t formatCount;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+
+		if (formatCount != 0) {
+			details.formats.resize(formatCount);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
+		}
+
+		uint32_t presentModeCount;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+
+		if (presentModeCount != 0) {
+			details.presentModes.resize(presentModeCount);
+			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
+		}
+
+		return details;
+	}
+
 //	VkSurfaceFormatKHR VKUtils::ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space)
 //	{
 //		for (const auto& f : formats) {
@@ -243,15 +243,15 @@ namespace HazardRenderer::Vulkan {
 //		return VK_POLYGON_MODE_FILL;
 //	}
 //
-//	VkPrimitiveTopology VKUtils::DrawTypeToVKTopology(const DrawType& type)
-//	{
-//		switch (type) {
-//		case DrawType::Fill: return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-//		case DrawType::Line: return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-//		case DrawType::Point: return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
-//		}
-//		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
-//	}
+	VkPrimitiveTopology VKUtils::DrawTypeToVKTopology(const DrawType& type)
+	{
+		switch (type) {
+		case DrawType::Fill: return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case DrawType::Line: return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+		case DrawType::Point: return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+		}
+		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
+	}
 //
 //	void VKUtils::SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
 //		VkImageSubresourceRange subresourceRange, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
@@ -347,83 +347,83 @@ namespace HazardRenderer::Vulkan {
 //			1, &imageMemoryBarrier);
 //	}
 //
-//	std::string VKUtils::ResultToString(VkResult result)
-//	{
-//		switch (result)
-//		{
-//		case VK_SUCCESS:											return "VK_SUCCESS";
-//		case VK_NOT_READY:											return "VK_NOT_READY";
-//		case VK_TIMEOUT:											return "VK_TIMEOUT";
-//		case VK_EVENT_SET:											return "VK_EVENT_SET";
-//		case VK_EVENT_RESET:										return "VK_EVENT_RESET";
-//		case VK_INCOMPLETE:											return "VK_INCOMPLETE";
-//		case VK_ERROR_OUT_OF_HOST_MEMORY:							return "VK_ERROR_OUT_OF_HOST_MEMORY";
-//		case VK_ERROR_OUT_OF_DEVICE_MEMORY:							return "VK_ERROR_OUT_OF_DEVICE_MEMORY";
-//		case VK_ERROR_INITIALIZATION_FAILED:						return "VK_ERROR_INITIALIZATION_FAILED";
-//		case VK_ERROR_DEVICE_LOST:									return "VK_ERROR_DEVICE_LOST";
-//		case VK_ERROR_MEMORY_MAP_FAILED:							return "VK_ERROR_MEMORY_MAP_FAILED";
-//		case VK_ERROR_LAYER_NOT_PRESENT:							return "VK_ERROR_LAYER_NOT_PRESENT";
-//		case VK_ERROR_EXTENSION_NOT_PRESENT:						return "VK_ERROR_EXTENSION_NOT_PRESENT";
-//		case VK_ERROR_FEATURE_NOT_PRESENT:							return "VK_ERROR_FEATURE_NOT_PRESENT";
-//		case VK_ERROR_INCOMPATIBLE_DRIVER:							return "VK_ERROR_INCOMPATIBLE_DRIVER";
-//		case VK_ERROR_TOO_MANY_OBJECTS:								return "VK_ERROR_TOO_MANY_OBJECTS";
-//		case VK_ERROR_FORMAT_NOT_SUPPORTED:							return "VK_ERROR_FORMAT_NOT_SUPPORTED";
-//		case VK_ERROR_FRAGMENTED_POOL:								return "VK_ERROR_FRAGMENTED_POOL";
-//		case VK_ERROR_UNKNOWN:										return "VK_ERROR_UNKNOWN";
-//		case VK_ERROR_OUT_OF_POOL_MEMORY:							return "VK_ERROR_OUT_OF_POOL_MEMORY";
-//		case VK_ERROR_INVALID_EXTERNAL_HANDLE:						return "VK_ERROR_INVALID_EXTERNAL_HANDLE";
-//		case VK_ERROR_FRAGMENTATION:								return "VK_ERROR_FRAGMENTATION";
-//		case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:				return "VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS";
-//		case VK_ERROR_SURFACE_LOST_KHR:								return "VK_ERROR_SURFACE_LOST_KHR";
-//		case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:						return "VK_ERROR_NATIVE_WINDOW_IN_USE_KHR";
-//		case VK_SUBOPTIMAL_KHR:										return "VK_SUBOPTIMAL_KHR";
-//		case VK_ERROR_OUT_OF_DATE_KHR:								return "VK_ERROR_OUT_OF_DATE_KHR";
-//		case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:						return "VK_ERROR_INCOMPATIBLE_DISPLAY_KHR";
-//		case VK_ERROR_VALIDATION_FAILED_EXT:						return "VK_ERROR_VALIDATION_FAILED_EXT";
-//		case VK_ERROR_INVALID_SHADER_NV:							return "VK_ERROR_INVALID_SHADER_NV";
-//		case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:	return "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT";
-//		case VK_ERROR_NOT_PERMITTED_EXT:							return "VK_ERROR_NOT_PERMITTED_EXT";
-//		case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:			return "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT";
-//		case VK_THREAD_IDLE_KHR:									return "VK_THREAD_IDLE_KHR";
-//		case VK_THREAD_DONE_KHR:									return "VK_THREAD_DONE_KHR";
-//		case VK_OPERATION_DEFERRED_KHR:								return "VK_OPERATION_DEFERRED_KHR";
-//		case VK_OPERATION_NOT_DEFERRED_KHR:							return "VK_OPERATION_NOT_DEFERRED_KHR";
-//		case VK_PIPELINE_COMPILE_REQUIRED_EXT:						return "VK_PIPELINE_COMPILE_REQUIRED_EXT";
-//		}
-//		return "VK_UNKNONW_ERROR";
-//	}
-//
-//	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)
-//	{
-//		QueueFamilyIndices indices = {};
-//
-//		uint32_t queueFamilyCount = 0;
-//		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-//
-//		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-//		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-//
-//		int i = 0;
-//		for (const auto& queueFamily : queueFamilies) {
-//			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-//				indices.graphicsFamily = i;
-//			}
-//
-//			VkBool32 presentSupport = false;
-//			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
-//
-//			if (presentSupport) {
-//				indices.presentFamily = i;
-//			}
-//
-//			if (indices.isComplete()) {
-//				break;
-//			}
-//			i++;
-//		}
-//
-//		return indices;
-//	}
+	std::string VKUtils::ResultToString(VkResult result)
+	{
+		switch (result)
+		{
+		case VK_SUCCESS:											return "VK_SUCCESS";
+		case VK_NOT_READY:											return "VK_NOT_READY";
+		case VK_TIMEOUT:											return "VK_TIMEOUT";
+		case VK_EVENT_SET:											return "VK_EVENT_SET";
+		case VK_EVENT_RESET:										return "VK_EVENT_RESET";
+		case VK_INCOMPLETE:											return "VK_INCOMPLETE";
+		case VK_ERROR_OUT_OF_HOST_MEMORY:							return "VK_ERROR_OUT_OF_HOST_MEMORY";
+		case VK_ERROR_OUT_OF_DEVICE_MEMORY:							return "VK_ERROR_OUT_OF_DEVICE_MEMORY";
+		case VK_ERROR_INITIALIZATION_FAILED:						return "VK_ERROR_INITIALIZATION_FAILED";
+		case VK_ERROR_DEVICE_LOST:									return "VK_ERROR_DEVICE_LOST";
+		case VK_ERROR_MEMORY_MAP_FAILED:							return "VK_ERROR_MEMORY_MAP_FAILED";
+		case VK_ERROR_LAYER_NOT_PRESENT:							return "VK_ERROR_LAYER_NOT_PRESENT";
+		case VK_ERROR_EXTENSION_NOT_PRESENT:						return "VK_ERROR_EXTENSION_NOT_PRESENT";
+		case VK_ERROR_FEATURE_NOT_PRESENT:							return "VK_ERROR_FEATURE_NOT_PRESENT";
+		case VK_ERROR_INCOMPATIBLE_DRIVER:							return "VK_ERROR_INCOMPATIBLE_DRIVER";
+		case VK_ERROR_TOO_MANY_OBJECTS:								return "VK_ERROR_TOO_MANY_OBJECTS";
+		case VK_ERROR_FORMAT_NOT_SUPPORTED:							return "VK_ERROR_FORMAT_NOT_SUPPORTED";
+		case VK_ERROR_FRAGMENTED_POOL:								return "VK_ERROR_FRAGMENTED_POOL";
+		case VK_ERROR_UNKNOWN:										return "VK_ERROR_UNKNOWN";
+		case VK_ERROR_OUT_OF_POOL_MEMORY:							return "VK_ERROR_OUT_OF_POOL_MEMORY";
+		case VK_ERROR_INVALID_EXTERNAL_HANDLE:						return "VK_ERROR_INVALID_EXTERNAL_HANDLE";
+		case VK_ERROR_FRAGMENTATION:								return "VK_ERROR_FRAGMENTATION";
+		case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:				return "VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS";
+		case VK_ERROR_SURFACE_LOST_KHR:								return "VK_ERROR_SURFACE_LOST_KHR";
+		case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:						return "VK_ERROR_NATIVE_WINDOW_IN_USE_KHR";
+		case VK_SUBOPTIMAL_KHR:										return "VK_SUBOPTIMAL_KHR";
+		case VK_ERROR_OUT_OF_DATE_KHR:								return "VK_ERROR_OUT_OF_DATE_KHR";
+		case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:						return "VK_ERROR_INCOMPATIBLE_DISPLAY_KHR";
+		case VK_ERROR_VALIDATION_FAILED_EXT:						return "VK_ERROR_VALIDATION_FAILED_EXT";
+		case VK_ERROR_INVALID_SHADER_NV:							return "VK_ERROR_INVALID_SHADER_NV";
+		case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:	return "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT";
+		case VK_ERROR_NOT_PERMITTED_EXT:							return "VK_ERROR_NOT_PERMITTED_EXT";
+		case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:			return "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT";
+		case VK_THREAD_IDLE_KHR:									return "VK_THREAD_IDLE_KHR";
+		case VK_THREAD_DONE_KHR:									return "VK_THREAD_DONE_KHR";
+		case VK_OPERATION_DEFERRED_KHR:								return "VK_OPERATION_DEFERRED_KHR";
+		case VK_OPERATION_NOT_DEFERRED_KHR:							return "VK_OPERATION_NOT_DEFERRED_KHR";
+		case VK_PIPELINE_COMPILE_REQUIRED_EXT:						return "VK_PIPELINE_COMPILE_REQUIRED_EXT";
+		}
+		return "VK_UNKNONW_ERROR";
+	}
+
+	QueueFamilyIndices VKUtils::GetQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface)
+	{
+		QueueFamilyIndices indices = {};
+
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) {
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices.graphicsFamily = i;
+			}
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+
+			if (presentSupport) {
+				indices.presentFamily = i;
+			}
+
+			if (indices.isComplete()) {
+				break;
+			}
+			i++;
+		}
+
+		return indices;
+	}
 //	VkSurfaceCapabilitiesKHR VKUtils::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 //	{
 //		VkSurfaceCapabilitiesKHR surfCaps;

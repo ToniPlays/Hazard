@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
+#include "Core/Core.h"
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
 
-namespace Hazard::Rendering::Vulkan
+namespace HazardRenderer::Vulkan
 {
 	struct GPUMemoryStats
 	{

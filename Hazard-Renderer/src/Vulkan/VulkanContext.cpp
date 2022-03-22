@@ -1,31 +1,31 @@
 
 #include "VulkanContext.h"
+#include "Core/Window.h"
 #include "VKUtils.h"
+#include "Core/ValidationLayer.h"
+#include "Core/VulkanAllocator.h"
 
 namespace HazardRenderer::Vulkan {
 
 	VulkanContext::VulkanContext(WindowProps* props)
 	{
 		if (!glfwVulkanSupported()) {
-			("Vulkan not supported");
+			ASSERT(false, "Vulkan not supported");
 		}
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	}
 
 	VulkanContext::~VulkanContext()
 	{
-//		m_Device->WaitUntilIdle();
-//		s_Callback = nullptr;
-//
-//		vkDestroyPipelineCache(m_Device->GetDevice(), m_PipelineCache, nullptr);
-//
-//		m_SwapChain.Reset();
-//		m_WindowSurface.reset();
-//
-//		m_Device.reset();
-//		VulkanAllocator::Shutdown();
-//
-//		vkDestroyInstance(m_Instance, nullptr);
+		m_Device->WaitUntilIdle();
+
+		m_SwapChain.Reset();
+		m_WindowSurface.reset();
+
+		m_Device.reset();
+		VulkanAllocator::Shutdown();
+
+		vkDestroyInstance(m_Instance, nullptr);
 	}
 
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
@@ -51,21 +51,20 @@ namespace HazardRenderer::Vulkan {
 		if (ValidationLayer::IsValidationSupported()) {
 			ValidationLayer::InitValidationLayers(createInfo, debugInfo, info->Logging);
 		}
-//		vkCreateInstance(&createInfo, nullptr, &m_Instance);
+		vkCreateInstance(&createInfo, nullptr, &m_Instance);
 
 		if (info->Logging) {
 			ValidationLayer::SetupDebugger(m_Instance);
 		}
-//
-//		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
-//		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface(), RenderContextCommand::GetImagesInFlight());
-//		m_PhysicalDevice = new PhysicalDevice();
-//
-//		VulkanAllocator::Init();
-//
-//		uint32_t w = window->GetWidth();
-//		uint32_t h = window->GetHeight();
-//
+
+		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
+		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface(), info->ImagesInFlight);
+
+		VulkanAllocator::Init();
+
+		uint32_t w = window->GetWidth();
+		uint32_t h = window->GetHeight();
+
 //		m_SwapChain = Ref<VulkanSwapChain>::Create();
 //		m_SwapChain->Create(w, h, window->IsVSync());
 	}
@@ -80,11 +79,6 @@ namespace HazardRenderer::Vulkan {
 //		m_SwapChain->Present();
 	}
 
-//	void VulkanContext::Close()
-//	{
-//		m_Device->WaitUntilIdle();
-//	}
-//
 //	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
 //	{
 //		HZR_PROFILE_FUNCTION();
@@ -197,14 +191,14 @@ namespace HazardRenderer::Vulkan {
 //	{
 //		return *m_PhysicalDevice;
 //	}
-//	void VulkanContext::SendDebugMessage(const char* message, const char* code)
-//	{
-//		std::cout << message << std::endl;
-//		if (s_Callback != nullptr) {
-//			ErrorData data(message, code);
-//			s_Callback(data);
-//		}
-//	}
+	void VulkanContext::SendDebugMessage(const char* message, const char* code)
+	{
+		//std::cout << message << std::endl;
+		//if (s_Callback != nullptr) {
+		//	ErrorData data(message, code);
+		//	s_Callback(data);
+		//}
+	}
 //	VkDescriptorSet VulkanContext::RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo) 
 //	{
 //		uint32_t bufferIndex = m_SwapChain->GetCurrentBufferIndex();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/GraphicsContext.h"
+#include "OpenGLPhysicalDevice.h"
 #include <GLFW/glfw3.h>
 
 namespace HazardRenderer::OpenGL {
@@ -29,11 +30,14 @@ namespace HazardRenderer::OpenGL {
 		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeCallback.push_back(callback); };
 		*/
 
+		PhysicalDevice& GetDevice() { return *m_PhysicalDevice;  };
+
 	public:
 		//static void SendDebugMessage(const char* message, const char* code);
 
 	private:
 		GLFWwindow* m_Window;
+		OpenGLPhysicalDevice* m_PhysicalDevice;
 		//PhysicalDevice* m_PhysicalDevice;
 		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		//static ErrorCallback s_Callback;

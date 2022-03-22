@@ -47,8 +47,8 @@ project "Hazard"
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.VMA}"
+		"%{IncludeDir.VMA}",
+		"%{IncludeDir.PortableFileDialogs}"
 	}
 
 	links {
@@ -65,8 +65,6 @@ project "Hazard"
 		pchheader "hzrpch.h"
 		defines {
 			"HZR_PLATFORM_WINDOWS",
-			"HZR_INCLUDE_OPENGL",
-			"HZR_INCLUDE_VULKAN",
 			"HZR_INCLUDE_MONO"
 		}
 
