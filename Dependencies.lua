@@ -34,6 +34,8 @@ IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
 IncludeDir["stb_image"] = "%{wks.location}/Hazard/vendor/stb_image"
 
 IncludeDir["Hazard_Utility"] = "%{wks.location}/Hazard-Utility/src"
+IncludeDir["Hazard_Renderer"] = "%{wks.location}/Hazard-Renderer/src"
+IncludeDir["Hazard_UI"] = "%{wks.location}/Hazard-UI/src"
 
 
 LibraryDir = {}

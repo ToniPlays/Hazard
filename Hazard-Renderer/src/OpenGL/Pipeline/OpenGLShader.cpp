@@ -149,7 +149,7 @@ namespace HazardRenderer::OpenGL
 			ShaderFactory::Compile(&compileInfo);
 
 			if (!compileInfo.Succeeded()) {
-				//HZR_CORE_ERROR(compileInfo.Error);
+				Window::SendDebugMessage({ Severity::Error, compileInfo.Error });
 				auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 				shaderData[stage] = binaries;
 				continue;

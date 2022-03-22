@@ -81,7 +81,8 @@ namespace HazardRenderer::Vulkan {
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &props);
 		m_DeviceName = props.deviceName;
 
-		//CreatePools(imagesInFlight);	}
+		//CreatePools(imagesInFlight);	
+	}
 	VulkanDevice::~VulkanDevice()
 	{
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);

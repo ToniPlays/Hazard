@@ -39,8 +39,9 @@ end
 group ""
 
 include "Hazard"
-include "Hazard-Renderer"
 include "Hazard-Utility"
+include "Hazard-Renderer"
+include "Hazard-UI"
 include "HazardEditor"
 include "HazardLauncher"
 

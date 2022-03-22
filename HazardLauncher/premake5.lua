@@ -16,9 +16,6 @@ project "HazardLauncher"
 
 	includedirs
 	{
-		"%{wks.location}/Hazard/vendor/spdlog/include",
-		"%{wks.location}/Hazard/src",
-		"%{wks.location}/Hazard/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Entt}",
@@ -30,10 +27,15 @@ project "HazardLauncher"
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.VMA}",
 		"%{IncludeDir.PortableFileDialogs}",
-		"src",
+		"%{IncludeDir.Hazard_Utility}",
+		"%{IncludeDir.Hazard_Renderer}",
+		"%{IncludeDir.Hazard_UI}",
+		"src"
 	}
 	links {
-		"Hazard"
+		"Hazard-Utility",
+		"Hazard-Renderer",
+		"Hazard-UI"
 	}
 
 	filter "system:windows"

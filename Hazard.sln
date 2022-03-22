@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Renderer", "Hazard-Renderer\Hazard-Renderer.vcxproj", "{63990EDD-CF24-7CA1-D835-FF954440D8A1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-UI", "Hazard-UI\Hazard-UI.vcxproj", "{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Utility", "Hazard-Utility\Hazard-Utility.vcxproj", "{60D0CC1F-4C9E-C025-3532-314C219F9C8A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardLauncher", "HazardLauncher\HazardLauncher.vcxproj", "{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}"
@@ -88,6 +90,12 @@ Global
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Dist|x64.Build.0 = Dist|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Release|x64.ActiveCfg = Release|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Release|x64.Build.0 = Release|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Debug|x64.ActiveCfg = Debug|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Debug|x64.Build.0 = Debug|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Dist|x64.ActiveCfg = Dist|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Dist|x64.Build.0 = Dist|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Release|x64.ActiveCfg = Release|x64
+		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Release|x64.Build.0 = Release|x64
 		{60D0CC1F-4C9E-C025-3532-314C219F9C8A}.Debug|x64.ActiveCfg = Debug|x64
 		{60D0CC1F-4C9E-C025-3532-314C219F9C8A}.Debug|x64.Build.0 = Debug|x64
 		{60D0CC1F-4C9E-C025-3532-314C219F9C8A}.Dist|x64.ActiveCfg = Dist|x64

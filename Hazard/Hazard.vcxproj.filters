@@ -300,9 +300,6 @@
     <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
       <Filter>src\Hazard\Rendering\2D</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Batch.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Camera.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>

@@ -1,4 +1,4 @@
-project "Hazard-Renderer"
+project "Hazard-UI"
 
 	kind "StaticLib"
 	language "C++"
@@ -11,32 +11,19 @@ project "Hazard-Renderer"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp",
-		"vendor/VulkanMemoryAllocator/**.h",
-		"vendor/VulkanMemoryAllocator/**.cpp",
-		"examples/**.cpp"
+		"src/**.cpp"
 	}
 
 	includedirs
 	{
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.VulkanSDK}",
-		"%{IncludeDir.VMA}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.VulkanSDK}",
-		"%{IncludeDir.SPIRV_Cross}",
-		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.VMA}",
-		"src",
-		"examples"
+		"src"
 	}
 	links {
-		"GLFW",
-		"GLAD",
-		"Hazard-Utility"
+		"Hazard-Utility",
+		"Hazard-Renderer"
 	}
 
 	filter "system:windows"

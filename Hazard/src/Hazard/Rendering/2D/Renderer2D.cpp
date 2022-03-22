@@ -106,13 +106,13 @@ namespace Hazard::Rendering
 	void Renderer2D::Recreate(Ref<RenderPass> renderPass)
 	{
 		return;
+
+		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f }; //BottomLeft
+		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };  //BottomRight
+		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };  //TopRight
+		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f }; //TopLeft
+
 		uint32_t offset = 0;
-
-		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
-
 		uint32_t* indices = new uint32_t[m_Data.MaxIndices];
 
 		for (size_t i = 0; i < m_Data.MaxIndices; i += 6) {

@@ -1,4 +1,4 @@
-
+#if 0
 #define HZR_CUSTOM_ENTRY
 #include <iostream>
 #include <cstdint>
@@ -95,3 +95,4 @@ int main() {
 
 	return 0;
 }
+#endif

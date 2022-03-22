@@ -2,6 +2,7 @@
 
 #include "Core/Core.h"
 #include "Core/RenderContextCreateInfo.h"
+#include "Core/Window.h"
 
 #include <filesystem>
 #include <unordered_map>
