@@ -81,8 +81,7 @@ namespace Hazard::Rendering
 		if (!File::Exists(cacheFile))
 			return false;
 
-		bool newer = File::IsNewerThan(sourceFile, cacheFile);
-		return newer;
+		return File::IsNewerThan(sourceFile, cacheFile);
 	}
 	std::filesystem::path ShaderFactory::GetShaderCacheFile(const std::string& path)
 	{
@@ -121,6 +120,7 @@ namespace Hazard::Rendering
 
 		if (!File::Exists(cachePath))
 			return binaries;
+
 		File::ReadBinaryFileUint32(cachePath, binaries);
 		return binaries;
 	}

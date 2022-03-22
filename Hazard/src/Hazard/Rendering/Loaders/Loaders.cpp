@@ -21,6 +21,7 @@ namespace Hazard::Rendering
         
         Ref<Mesh> mesh = MeshFactory::LoadMesh(&meshCreateInfo);
         mesh->m_Type = ResourceType::Mesh;
+        mesh->IncRefCount();
 
         asset = new MeshAsset();
         asset.As<MeshAsset>()->m_MeshSourceHandle = mesh->GetHandle();

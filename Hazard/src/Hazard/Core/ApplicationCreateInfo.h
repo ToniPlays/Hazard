@@ -5,14 +5,6 @@
 
 namespace Hazard {
 
-	enum class RenderAPI {
-		Auto = 0,
-		OpenGL,
-		Vulkan,
-		DX11,
-		DX12,
-		Metal
-	};
 	enum class Severity
 	{
 		Debug,
@@ -41,22 +33,7 @@ namespace Hazard {
 	{
 		std::string StartupFile = "";
 	};
-	struct RenderContexCreateInfo 
-	{
-		RenderAPI Renderer = RenderAPI::Auto;
-		bool FullScreen = false;
-		bool Maximized = false;
-		bool Resizable = true;
-		bool VSync = false;
-		bool Decorated = true;
-		bool Logging = true;
-		
-		Color Color = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-		uint32_t Width = 0;
-		uint32_t Height = 0;
-		uint32_t ImagesInFlight = 2;
-	};
+	
 	struct RenderEngineCreateInfo 
 	{
 		uint32_t MaxQuadCount = 35000;

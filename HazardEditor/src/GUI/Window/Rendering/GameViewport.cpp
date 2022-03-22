@@ -11,14 +11,18 @@ namespace WindowElement {
 
 	GameViewport::GameViewport() : EditorWindow(ICON_FK_GAMEPAD " Game")
 	{
+
 	}
 
 	GameViewport::~GameViewport()
 	{
+
 	}
 
 	void GameViewport::Init()
 	{
+		SetActive(false);
+		return;
 		WorldRendererSettings settings = {};
 		settings.DebugName = "GameViewport";
 		settings.ViewportSize = { 1920, 1080 };

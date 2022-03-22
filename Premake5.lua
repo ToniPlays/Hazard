@@ -1,4 +1,3 @@
-
 include "Dependencies.lua"
 
 workspace "Hazard"
@@ -34,11 +33,14 @@ group "Dependencies"
 if os.host() == "windows" then
 	include "Hazard/vendor/Optick"
 end
+
 	include "Hazard/vendor/yaml-cpp"
 	include "HazardEditor/vendor/imgui"
 group ""
 
 include "Hazard"
+include "Hazard-Renderer"
+include "Hazard-Utility"
 include "HazardEditor"
 include "HazardLauncher"
 

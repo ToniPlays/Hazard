@@ -56,6 +56,7 @@ project "Hazard"
 		"Glad",
 		"yaml-cpp",
 		"Box2D",
+		"Hazard-Renderer",
 		"%{Library.Assimp_Lib}"
 	}
 

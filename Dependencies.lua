@@ -33,6 +33,9 @@ IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazard/vendor/SPIRV-Cross"
 IncludeDir["shaderc"] = "%{wks.location}/Hazard/vendor/shaderc/include"
 IncludeDir["stb_image"] = "%{wks.location}/Hazard/vendor/stb_image"
 
+IncludeDir["Hazard_Utility"] = "%{wks.location}/Hazard-Utility/src"
+
+
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
