@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#define THROW_EXCEPT(x) throw std::exception("[Hazard-Utility]: " x)
+#define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
 #define ASSERT(x, m) if(!(x)) THROW_EXCEPT(m)
 
 
