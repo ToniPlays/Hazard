@@ -23,8 +23,8 @@ namespace HazardRenderer::Vulkan {
 		void BeginFrame() override;
 		void Present() override;
 
-		/*void SetViewport(int x, int y, int w, int h) override;
-
+		void SetViewport(int x, int y, int w, int h) override;
+		/*
 		void AddResizeCallback(const ResizeCallback& callback) { m_SwapChain->AddResizeCallback(callback); };
 		void SetErrorListener(const ErrorCallback& callback) override;
 		PhysicalDevice& GetPhysicalDevice() const override;

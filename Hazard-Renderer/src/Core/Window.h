@@ -12,7 +12,10 @@ namespace HazardRenderer {
 
 	class GraphicsContext;
 
+	class Window;
+
 	struct WindowProps {
+		friend class Window;
 
 		std::string Title;
 		const char* Platform;
@@ -26,6 +29,8 @@ namespace HazardRenderer {
 		int Width = 0;
 		int Height = 0;
 		uint32_t ImagesInFlight = 0;
+		Window* Window;
+
 
 		//std::function<void(Event&)> EventCallback;
 		WindowProps() = default;

@@ -77,13 +77,10 @@ namespace HazardRenderer::OpenGL {
 //			glLineWidth(lineWidth);
 //		}
 //
-//		void OpenGLContext::SetViewport(int x, int y, int w, int h)
-//		{
-//			glViewport(x, y, w, h);
-//			for (auto& fn : m_ResizeCallback) {
-//				fn(w, h);
-//			}
-//		}
+		void OpenGLContext::SetViewport(int x, int y, int w, int h)
+		{
+			glViewport(x, y, w, h);
+		}
 //
 //		void OpenGLContext::SetErrorListener(const ErrorCallback& callback)
 //		{

@@ -32,9 +32,10 @@ namespace HazardRenderer {
 		virtual void Present() = 0;
 
 		virtual void SetClearColor(const glm::vec4& color) = 0;
+		virtual void SetViewport(int x, int y, int w, int h) = 0;
+
 		/*virtual void Close() = 0;
 
-		virtual void SetViewport(int x, int y, int w, int h) = 0;
 		virtual PhysicalDevice& GetPhysicalDevice() const = 0;
 
 		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;

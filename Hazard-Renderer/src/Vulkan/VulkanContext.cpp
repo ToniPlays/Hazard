@@ -169,18 +169,17 @@ namespace HazardRenderer::Vulkan {
 //		vkCmdSetLineWidth(vkBuffer, lineWidth);
 //	}
 //
-//	void VulkanContext::SetViewport(int x, int y, int w, int h)
-//	{
-//		if (w == 0 || h == 0) return;
-//
-//		auto device = m_Device->GetDevice();
-//		m_Device->WaitUntilIdle();
-//
-//		uint32_t width = w;
-//		uint32_t height = h;
-//
-//		m_SwapChain->Resize(width, height);
-//	}
+	void VulkanContext::SetViewport(int x, int y, int w, int h)
+	{
+		if (w == 0 || h == 0) return;
+
+		m_Device->WaitUntilIdle();
+
+		uint32_t width = w;
+		uint32_t height = h;
+
+		m_SwapChain->Resize(width, height);
+	}
 //
 //	void VulkanContext::SetErrorListener(const ErrorCallback& callback)
 //	{

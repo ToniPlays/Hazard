@@ -19,8 +19,8 @@ static void Run()
 	std::vector<const char*> icons = { "res/world.png", "res/world.png" };
 
 	HazardRendererAppInfo appInfo = {};
-	appInfo.AppName = "Example triangle";
-	appInfo.BuildVersion = 1;
+	appInfo.AppName = "Simple canvas";
+	appInfo.BuildVersion = "0.0.1a";
 	appInfo.Icons = icons.data();
 	appInfo.IconCount = 2;
 	appInfo.MessageCallback = OnDebugInfo;

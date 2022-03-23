@@ -17,8 +17,8 @@ namespace HazardRenderer::OpenGL {
 		void Present() override;
 
 		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
-		/*void SetViewport(int x, int y, int w, int h) override;
-		void Close() override {};
+		void SetViewport(int x, int y, int w, int h) override;
+		/*
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer);
@@ -29,7 +29,6 @@ namespace HazardRenderer::OpenGL {
 
 		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeCallback.push_back(callback); };
 		*/
-
 		PhysicalDevice& GetDevice() { return *m_PhysicalDevice;  };
 
 	public:

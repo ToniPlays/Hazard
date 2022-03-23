@@ -67,7 +67,7 @@ namespace HazardRenderer {
 		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
 		static inline RendererMessageCallback s_DebugCallback;
-		//	void SetCallbacks();
+		void SetCallbacks();
 
 	};
 }

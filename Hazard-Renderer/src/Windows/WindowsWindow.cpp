@@ -42,13 +42,14 @@ namespace HazardRenderer {
 
 		SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
 
-		m_WindowData.Title = info->AppInfo->AppName + " " + info->AppInfo->BuildVersion;
+		m_WindowData.Title = info->AppInfo->AppName + " " + info->AppInfo->BuildVersion + " " + RenderAPIToString(info->Renderer);
 		m_WindowData.Platform = "Windows";
 		m_WindowData.SelectedAPI = info->Renderer;
 		m_WindowData.Width = info->Width;
 		m_WindowData.Height = info->Height;
 		m_WindowData.VSync = info->VSync;
 		m_WindowData.ImagesInFlight = info->ImagesInFlight;
+		m_WindowData.Window = this;
 
 		m_Context = GraphicsContext::Create(&m_WindowData);
 
@@ -84,7 +85,7 @@ namespace HazardRenderer {
 		if (info->Maximized)
 			glfwMaximizeWindow(m_Window);
 
-		//SetCallbacks();
+		SetCallbacks();
 		//SetVSync(info->VSync);
 		
 	}
@@ -147,7 +148,6 @@ namespace HazardRenderer {
 		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 	}
-	/*
 	void WindowsWindow::SetCallbacks()
 	{
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
@@ -155,21 +155,21 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
 			data.Width = w;
-			Application::GetModule<RenderContext>().GetContext().SetViewport(0, 0, w, h);
+			data.Window->GetContext()->SetViewport(0, 0, w, h);
 
-			WindowResizeEvent event(w, h);
-			data.EventCallback(event);
+			//WindowResizeEvent event(w, h);
+			//data.EventCallback(event);
 
 			});
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			WindowCloseEvent event;
-			data.EventCallback(event);
+			//WindowCloseEvent event;
+			//data.EventCallback(event);
 
 			});
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -191,11 +191,11 @@ namespace HazardRenderer {
 				break;
 			}
 			}
-			Input::UpdateKey(key, action);
+			Input::UpdateKey(key, action);*/
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -210,32 +210,31 @@ namespace HazardRenderer {
 				data.EventCallback(event);
 				break;
 			}
-			}
+			}*/
 			});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent event((float)xOffset, (float)yOffset);
-			data.EventCallback(event);
+			data.EventCallback(event);*/
 
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent event((float)xPos, (float)yPos);
-			data.EventCallback(event);
+			data.EventCallback(event);*/
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
 			WindowFocusEvent event(focus);
-			data.EventCallback(event);
+			data.EventCallback(event);*/
 			});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.minimized = minimized;
-			Application::GetData().Minimized = minimized == 1;
+			Application::GetData().Minimized = minimized == 1;*/
 			});
 	}
-	*/
 	WindowsWindow::~WindowsWindow()
 	{
 		Close();
