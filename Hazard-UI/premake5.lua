@@ -19,6 +19,7 @@ project "Hazard-UI"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.Entt}",
 		"src"
 	}
 	links {

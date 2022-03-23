@@ -255,12 +255,6 @@
     <ClInclude Include="src\Hazard\Logging\Logger.h">
       <Filter>src\Hazard\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Math\Color.h">
-      <Filter>src\Hazard\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Math\Math.h">
-      <Filter>src\Hazard\Math</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Math\Random.h">
       <Filter>src\Hazard\Math</Filter>
     </ClInclude>
@@ -1756,9 +1750,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Math\Color.cpp">
-      <Filter>src\Hazard\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Math\Random.cpp">
       <Filter>src\Hazard\Math</Filter>

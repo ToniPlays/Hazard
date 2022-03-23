@@ -2,8 +2,7 @@
 
 #include "Buffer.h"
 #include "Batch.h"
-#include "Anchor.h"
-#include "Pivot.h"
+#include "Components/Components.h"
 
 #include <glm/glm.hpp>
 #include <vector>

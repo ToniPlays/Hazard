@@ -1,8 +1,7 @@
 
-#include <hzrpch.h>
 #include "Color.h"
 
-namespace Hazard
+namespace HazardUtility
 {
 	Color Color::Black	= { 0.0f, 0.0f, 0.0f, 1.0f };
 	Color Color::White	= { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -64,12 +63,12 @@ namespace Hazard
 
 		int r, g, b, a = 255;
 
-		r = Math::ToDec<int>(hex.substr(1, 2));
-		g = Math::ToDec<int>(hex.substr(3, 2));
-		b = Math::ToDec<int>(hex.substr(5, 2));
+		//r = Math::ToDec<int>(hex.substr(1, 2));
+		//g = Math::ToDec<int>(hex.substr(3, 2));
+		//b = Math::ToDec<int>(hex.substr(5, 2));
 
-		if (hex.length() == 9) 
-			a = Math::ToDec<int>(hex.substr(7, 2));
+		//if (hex.length() == 9) 
+		//	a = Math::ToDec<int>(hex.substr(7, 2));
 
 		return Color(r, g, b, a);
 	}

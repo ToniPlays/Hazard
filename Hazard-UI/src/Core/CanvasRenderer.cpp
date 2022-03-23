@@ -1,6 +1,7 @@
 
 #include "CanvasRenderer.h"
 #include "Batch.h"
+#include "UIElement.h"
 
 using namespace HazardUtility;
 
@@ -15,12 +16,21 @@ namespace HazardUI
 	{
 		m_DrawList.Clear();
 
-		GuiDrawable drawable = {};
-		drawable.Pivot = { 0.5f, 0.5f };
-		drawable.Pivot = { 0.5f, 0.5f };
-		drawable.Anchor = { 0.5f, 0.5f, 0.5f, 0.5f };
+		//Preprocess data
 
-		m_DrawList.Add(drawable);
+		auto view = m_RenderableCanvas->GetElementsWith<RectTransform>();
+		for (auto rt : view) {
+			UIElement element = { rt, m_RenderableCanvas };
+			RectTransform transform = element.GetComponent<RectTransform>();
+
+			GuiDrawable drawable;
+			drawable.Anchor = transform.Anchor;
+			drawable.Pivot = transform.Pivot;
+
+			m_DrawList.Add(drawable);
+		}
+
+		//Wat me do?
 
 		//Generate the actual thing
 
@@ -29,23 +39,22 @@ namespace HazardUI
 		for (GuiDrawable drawable : m_DrawList.Drawables) {
 
 			GUIVertex bottomLeft = {};
-			bottomLeft.Position = { -0.5f, -0.5f, 0.0f };
+			bottomLeft.Position = { drawable.Anchor.MinX * 2.0f - 1.0f, drawable.Anchor.MinY * 2.0f - 1.0f, 0.0f };
 			bottomLeft.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			bottomLeft.TextureIndex = 0.0f;
-
+			
 			GUIVertex topLeft = {};
-			topLeft.Position = {  0.5f, -0.5f, 0.0f };
+			topLeft.Position = { drawable.Anchor.MaxX * 2.0f - 1.0f, drawable.Anchor.MinY * 2.0f - 1.0f, 0.0f };
 			topLeft.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			topLeft.TextureIndex = 0.0f;
 
 			GUIVertex topRight = {};
-			topRight.Position = { 0.5f, 0.5f, 0.0f };
+			topRight.Position = { drawable.Anchor.MaxX * 2.0f - 1.0f, drawable.Anchor.MaxY * 2.0f - 1.0f, 0.0f };
 			topRight.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			topRight.TextureIndex = 0.0f;
 
-
 			GUIVertex bottomRight = {};
-			bottomRight.Position = { -0.5f, 0.5f, 0.0f };
+			bottomRight.Position = { drawable.Anchor.MinX * 2.0f - 1.0f, drawable.Anchor.MaxY * 2.0f - 1.0f, 0.0f };
 			bottomRight.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			bottomRight.TextureIndex = 0.0f;
 

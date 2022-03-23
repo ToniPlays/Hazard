@@ -1,9 +1,10 @@
 #pragma once
-#include "Hazard/Core/Core.h"
+
 #include <iostream>
+#include <string>
 #include "glm/glm.hpp"
 
-namespace Hazard {
+namespace HazardUtility {
 
 	class Color {
 	public:

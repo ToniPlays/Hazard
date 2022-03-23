@@ -1,5 +1,6 @@
 
 #include "HazardRenderer.h"
+#include "Core/UIElement.h"
 #include "HazardUI.h"
 #include "CommandQueue.h"
 
@@ -12,6 +13,13 @@ using namespace HazardUI;
 
 static void OnDebugInfo(RenderMessage message) {
 	std::cout << message.Message << std::endl;
+}
+
+static void CreateCanvas(Ref<Canvas> canvas) 
+{
+	UIElement& element = canvas->CreateElement("Panel");
+	RectTransform& rt = element.GetComponent<RectTransform>();
+	rt.Anchor = { 0.0f, 0.0f, 1.0f, 1.0f };
 }
 
 static void Run()
@@ -41,7 +49,12 @@ static void Run()
 	std::cout << "Selected device " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
 
 	Ref<Canvas> canvas = Ref<Canvas>::Create();
+	canvas->SetCanvasResolution(window->GetWidth(), window->GetHeight());
+	CreateCanvas(canvas);
+
+
 	Ref<CanvasRenderer> renderer = Ref<CanvasRenderer>::Create();
+	renderer->SetCanvas(canvas);
 
 	BufferLayout layout = { { "v_ScreenPos",	ShaderDataType::Float3	},
 							{ "v_Color",		ShaderDataType::Float4, },
