@@ -2,6 +2,7 @@
 #ifdef HZR_PLATFORM_WINDOWS
 
 #include "WindowWindow.h"
+#include "Core/Events.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -34,6 +35,11 @@ namespace HazardRenderer {
 		ASSERT(info->AppInfo != nullptr, "AppInfo cannot be nullptr");
 		ASSERT(glfwInit(), "Failed to initialize GLFW");
 		s_DebugCallback = info->AppInfo->MessageCallback;
+		m_WindowData.EventCallback = info->AppInfo->EventCallback;
+
+		if (!m_WindowData.EventCallback) {
+			m_WindowData.EventCallback = [](Event& e) {};
+		}
 
 		if (info->Renderer == RenderAPI::Auto) 
 		{
@@ -55,6 +61,7 @@ namespace HazardRenderer {
 
 		glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
 		glfwWindowHint(GLFW_DECORATED, info->Decorated);
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 		GLFWmonitor* monitor = NULL;
 
@@ -86,7 +93,7 @@ namespace HazardRenderer {
 			glfwMaximizeWindow(m_Window);
 
 		SetCallbacks();
-		//SetVSync(info->VSync);
+		SetVSync(info->VSync);
 		
 	}
 	void WindowsWindow::BeginFrame()
@@ -157,19 +164,19 @@ namespace HazardRenderer {
 			data.Width = w;
 			data.Window->GetContext()->SetViewport(0, 0, w, h);
 
-			//WindowResizeEvent event(w, h);
-			//data.EventCallback(event);
+			WindowResizeEvent event(w, h);
+			data.EventCallback(event);
 
 			});
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			//WindowCloseEvent event;
-			//data.EventCallback(event);
+			WindowCloseEvent event;
+			data.EventCallback(event);
 
 			});
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -191,11 +198,10 @@ namespace HazardRenderer {
 				break;
 			}
 			}
-			Input::UpdateKey(key, action);*/
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -210,29 +216,28 @@ namespace HazardRenderer {
 				data.EventCallback(event);
 				break;
 			}
-			}*/
+			}
 			});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent event((float)xOffset, (float)yOffset);
-			data.EventCallback(event);*/
+			data.EventCallback(event);
 
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent event((float)xPos, (float)yPos);
-			data.EventCallback(event);*/
+			data.EventCallback(event);
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
 			WindowFocusEvent event(focus);
-			data.EventCallback(event);*/
+			data.EventCallback(event);
 			});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
-			/*WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.minimized = minimized;
-			Application::GetData().Minimized = minimized == 1;*/
 			});
 	}
 	WindowsWindow::~WindowsWindow()

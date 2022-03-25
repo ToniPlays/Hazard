@@ -55,10 +55,7 @@ namespace HazardRenderer {
 		bool IsMaximized() const override { return m_WindowData.maximized; }
 		glm::vec2 GetPosition() override;
 
-		//	void SetEventCallback(const EventCallbackFn& callback) {
-	//		m_WindowData.EventCallback = callback;
-	//	}
-	//	WindowProps GetWindowInfo() { return m_WindowData; }
+		WindowProps GetWindowInfo() override { return m_WindowData; }
 
 		GraphicsContext* GetContext() const { return m_Context; };
 

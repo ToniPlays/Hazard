@@ -1,12 +1,13 @@
 #pragma once
 
+#include "RenderContextCreateInfo.h"
+#include "GraphicsContext.h"
+#include "Event.h"
+
 #include <functional>
 #include <iostream>
 #include "glm/glm.hpp"
 
-#include "RenderContextCreateInfo.h"
-
-#include "GraphicsContext.h"
 
 namespace HazardRenderer {
 
@@ -31,8 +32,7 @@ namespace HazardRenderer {
 		uint32_t ImagesInFlight = 0;
 		Window* Window;
 
-
-		//std::function<void(Event&)> EventCallback;
+		std::function<void(HazardUtility::Event&)> EventCallback;
 		WindowProps() = default;
 	};
 
@@ -70,10 +70,7 @@ namespace HazardRenderer {
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 
-		/*
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual WindowProps GetWindowInfo() = 0;
-		*/
 		virtual GraphicsContext* GetContext() const = 0;
 		
 

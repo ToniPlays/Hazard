@@ -4,6 +4,7 @@
 #include "Ref.h"
 #include "Canvas.h"
 #include "entt.hpp"
+#include "Color.h"
 
 namespace HazardUI 
 {
@@ -27,8 +28,9 @@ namespace HazardUI
 		
 		operator entt::entity() { return m_Handle; }
 
+		HazardUtility::Color Color;
+
 	private:
-		std::string m_Name;
 		entt::entity m_Handle { entt::null };
 		Ref<Canvas> m_Canvas;
 	};

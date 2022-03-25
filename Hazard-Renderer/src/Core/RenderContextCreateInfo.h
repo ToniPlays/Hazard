@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 #include "glm/glm.hpp"
 #include "Severity.h"
+#include "Event.h"
 #include <string>
 #include <functional>
 
@@ -14,6 +15,7 @@ namespace HazardRenderer
 		std::string Message;
 	};
 	using RendererMessageCallback = void(*)(RenderMessage);
+	using EventCallback = void(*)(HazardUtility::Event&);
 
 	enum class RenderAPI {
 		Auto = 0,
@@ -35,6 +37,7 @@ namespace HazardRenderer
 		const char** Icons;
 		uint32_t IconCount = 0;
 		RendererMessageCallback MessageCallback = nullptr;
+		EventCallback EventCallback = nullptr;
 	};
 
 	struct HazardRendererCreateInfo

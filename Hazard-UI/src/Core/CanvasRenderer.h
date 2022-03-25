@@ -20,6 +20,8 @@ namespace HazardUI
 		Ref<Canvas> GetCanvas() { return m_RenderableCanvas; }
 		void SetCanvas(Ref<Canvas> canvas) { m_RenderableCanvas = canvas; };
 
+		Anchor CalculateFinalBounds(RectTransform& transform, float canvasWidth, float canvasHeight);
+
 		GuiDrawList& GetDrawList() { return m_DrawList; }
 		GuiRawDrawable& GetRawDrawable() { return m_RawDrawable; }
 

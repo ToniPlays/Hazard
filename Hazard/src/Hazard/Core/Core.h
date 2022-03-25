@@ -29,13 +29,10 @@
 
 
 #define BIT(x) (uint32_t)(1 << (x))
-#define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 #define CHECK_BIT(val, bit) val & (1 << bit);
 
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-
-#include "Hazard/Events/Event.h"
 

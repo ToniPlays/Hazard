@@ -231,19 +231,10 @@
     <ClInclude Include="src\Hazard\Events\ApplicationEvent.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Events\Event.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Events\Input.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Events\KeyCode.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Events\KeyEvent.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Events\MouseCode.h">
       <Filter>src\Hazard\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Events\MouseEvent.h">

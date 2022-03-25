@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "Batch.h"
 #include "Components/Components.h"
+#include "Color.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -18,8 +19,8 @@ namespace HazardUI
 
 	struct GuiDrawable 
 	{
-		Anchor Anchor;
-		Pivot Pivot;
+		Anchor FinalBounds;
+		HazardUtility::Color Color;
 
 		GuiDrawable() {}
 	};

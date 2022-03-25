@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
 #include <string>
 #include <functional>
 
-namespace Hazard {
+#define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
+
+namespace HazardUtility {
 
 	//What type of event happened
 	enum class EventType {

@@ -1,5 +1,6 @@
 
 #include "Color.h"
+#include "MathCore.h"
 
 namespace HazardUtility
 {
@@ -63,12 +64,12 @@ namespace HazardUtility
 
 		int r, g, b, a = 255;
 
-		//r = Math::ToDec<int>(hex.substr(1, 2));
-		//g = Math::ToDec<int>(hex.substr(3, 2));
-		//b = Math::ToDec<int>(hex.substr(5, 2));
+		r = ToDec<int>(hex.substr(1, 2));
+		g = ToDec<int>(hex.substr(3, 2));
+		b = ToDec<int>(hex.substr(5, 2));
 
-		//if (hex.length() == 9) 
-		//	a = Math::ToDec<int>(hex.substr(7, 2));
+		if (hex.length() == 9) 
+			a = ToDec<int>(hex.substr(7, 2));
 
 		return Color(r, g, b, a);
 	}

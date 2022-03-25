@@ -96,6 +96,7 @@ namespace HazardRenderer
 	}
 	std::unordered_map<ShaderType, std::string> ShaderFactory::GetShaderSources(const std::string& path)
 	{
+		ASSERT(File::Exists(GetShaderSourcePath(path)), "Cannot find shader source file");
 		std::string source = File::ReadFile(GetShaderSourcePath(path));
 		return SourcePreprocess(source);
 	}

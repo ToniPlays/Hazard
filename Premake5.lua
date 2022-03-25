@@ -42,6 +42,7 @@ include "Hazard"
 include "Hazard-Utility"
 include "Hazard-Renderer"
 include "Hazard-UI"
+include "Hazard-Script"
 include "HazardEditor"
 include "HazardLauncher"
 
