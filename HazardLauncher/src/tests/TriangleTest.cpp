@@ -11,7 +11,6 @@ namespace TriangleTest {
 	{
 		static bool running = true;
 
-
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Simple canvas";
 		appInfo.BuildVersion = "0.0.1a";

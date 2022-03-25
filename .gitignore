@@ -2,7 +2,7 @@
 .vs
 bin
 bin-int
-vendor
+/vendor
 Hazard/vendor
 
 /*.vcxproj.*
