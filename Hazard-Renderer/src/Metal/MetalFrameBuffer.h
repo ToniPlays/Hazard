@@ -1,9 +1,13 @@
 #pragma once
 
+#include "Core/Core.h"
+
+#ifdef HZR_INCLUDE_METAL
+
 #include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalFrameBuffer : public FrameBuffer {
     public:
@@ -37,3 +41,4 @@ namespace Hazard::Rendering::Metal
         //Ref<MetalImage2D> m_DepthImage;
     };
 }
+#endif

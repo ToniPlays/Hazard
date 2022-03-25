@@ -1,11 +1,14 @@
 #pragma once
 
+#include "Core/Core.h"
+
+#ifdef HZR_INCLUDE_METAL
 #include "Platform/Rendering/GraphicsContext.h"
 #include <Metal/Metal.hpp>
 
 #include <GLFW/glfw3.h>
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalLayer;
 
@@ -46,3 +49,4 @@ namespace Hazard::Rendering::Metal
         MTL::CommandQueue* m_CommandQueue;
     };
 }
+#endif

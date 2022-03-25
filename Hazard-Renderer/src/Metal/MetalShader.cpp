@@ -1,7 +1,8 @@
-#ifdef HZR_PLATFORM_MACOS
-#include "MetalShader.h"
 
-namespace Hazard::Rendering::Metal {
+#include "MetalShader.h"
+#ifdef HZR_INCLUDE_METAL
+
+namespace HazardRenderer::Metal {
     MetalShader::MetalShader(const std::string& path) {
         
     }

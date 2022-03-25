@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_METAL
+
 #include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 #include "Hazard/RenderContext/Pipeline/RenderPass.h"
 
 
-namespace Hazard::Rendering::Metal {
+namespace HazardRenderer::Metal {
     class MetalRenderPass : public RenderPass {
     public:
         MetalRenderPass(RenderPassCreateInfo* info);
@@ -17,3 +20,4 @@ namespace Hazard::Rendering::Metal {
         RenderPassSpecification m_Specs;
     };
 }
+#endif

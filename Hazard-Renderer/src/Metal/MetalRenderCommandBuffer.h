@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
+#include "Core/Core.h"
+#ifdef  HZR_INCLUDE_METAL
 
+#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace Hazard::Rendering::Metal {
+namespace HazardRenderer::Metal {
     class MetalRenderCommandBuffer : public RenderCommandBuffer {
     public:
         MetalRenderCommandBuffer(uint32_t size, const std::string& name);
@@ -32,3 +34,4 @@ namespace Hazard::Rendering::Metal {
         MTL::RenderCommandEncoder* m_Encoder;
     };
 }
+#endif

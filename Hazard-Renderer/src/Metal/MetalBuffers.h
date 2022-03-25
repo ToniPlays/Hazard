@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Hazard/RenderContext/Pipeline/Buffers.h"
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_METAL
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalVertexBuffer : public VertexBuffer
     {
@@ -78,3 +79,4 @@ namespace Hazard::Rendering::Metal
     };
 }
 
+#endif

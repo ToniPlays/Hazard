@@ -1,19 +1,19 @@
-#ifdef HZR_PLATFORM_MACOS
 
+#include "MetalContext.h"
+#ifdef HZR_INCLUDE_METAL
 #include <GLFW/glfw3.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-#include "MetalContext.h"
 #include "MetalLayer.h"
 #include "Platform/System/Window.h"
 
 #include "MetalFrameBuffer.h"
 #include "MetalRenderCommandBuffer.h"
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     MetalContext::MetalContext(WindowProps* props)
     {

@@ -1,4 +1,7 @@
-#ifdef HZR_PLATFORM_MACOS
+
+#include "Core/Core.h"
+
+#ifdef HZR_INCLUDE_METAL
 
 #define NS_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION

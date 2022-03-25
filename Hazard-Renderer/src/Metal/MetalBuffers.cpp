@@ -1,9 +1,11 @@
-#ifdef HZR_PLATFORM_MACOS
+
 #include "MetalBuffers.h"
+#ifdef HZR_INCLUDE_METAL
+
 #include "MetalContext.h"
 #include "MetalRenderCommandBuffer.h"
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     MetalVertexBuffer::MetalVertexBuffer(VertexBufferCreateInfo* createInfo)
     {

@@ -1,11 +1,13 @@
-#ifdef HZR_PLATFORM_MACOS
+
 #include "MetalPipeline.h"
+#ifdef HZR_INCLUDE_METAL
+
 #include "MetalRenderCommandBuffer.h"
 #include "MetalContext.h"
 
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {

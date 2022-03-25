@@ -1,7 +1,8 @@
-#ifdef HZR_PLATFORM_MACOS
-#include "MetalRenderPass.h"
 
-namespace Hazard::Rendering::Metal
+#include "MetalRenderPass.h"
+#ifdef HZR_INCLUDE_METAL
+
+namespace HazardRenderer::Metal
 {
     MetalRenderPass::MetalRenderPass(RenderPassCreateInfo* info)
     {

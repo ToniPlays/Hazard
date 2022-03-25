@@ -1,12 +1,13 @@
-#ifdef HZR_PLATFORM_MACOS
+
 #include "MacOSWindow.h"
+#ifdef HZR_PLATFORM_MACOS
 
 #include "Hazard/Events/Input.h"
 #include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include <stb_image.h>
 
-namespace Hazard::Rendering
+namespace HazardRenderer
 {
     Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
     {

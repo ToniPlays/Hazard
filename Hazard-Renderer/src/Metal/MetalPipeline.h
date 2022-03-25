@@ -1,12 +1,16 @@
 #pragma once
 
+#include "Core/Core.h"
+
+#ifdef HZR_INCLUDE_METAL
+
 #include "Hazard/RenderContext/Pipeline/Pipeline.h"
 #include "Hazard/RenderContext/Pipeline/Shader.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalPipeline : public Pipeline
     {
@@ -33,3 +37,4 @@ namespace Hazard::Rendering::Metal
         MTL::RenderPipelineState* m_Pipeline = nullptr;
     };
 }
+#endif

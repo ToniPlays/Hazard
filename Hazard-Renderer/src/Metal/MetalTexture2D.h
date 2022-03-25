@@ -1,8 +1,12 @@
 #pragma once
 
+#include "Core/Core.h"
+
+#ifdef HZR_INCLUDE_METAL
+
 #include "Hazard/Rendering/Texture.h"
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalTexture2D : public Texture2D {
     public:
@@ -34,3 +38,4 @@ namespace Hazard::Rendering::Metal
         int m_Height;
     };
 }
+#endif

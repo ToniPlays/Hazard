@@ -1,8 +1,9 @@
-#ifdef HZR_PLATFORM_MACOS
+
 #include "MetalRenderCommandBuffer.h"
+#ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t size, const std::string& name)
     {

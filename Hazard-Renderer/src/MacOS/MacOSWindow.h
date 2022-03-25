@@ -9,7 +9,7 @@
 #include "GLFW/glfw3.h"
 #include "Hazard/Math/Color.h"
 
-namespace Hazard::Rendering
+namespace HazardRenderer
 {
     class MacOSWindow : public Window {
     public:

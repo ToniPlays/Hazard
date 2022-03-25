@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_METAL
+
 struct GLFWwindow;
 
 namespace MTL
@@ -10,7 +13,7 @@ namespace MTL
     class Texture;
 }
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalLayer {
     public:
@@ -25,3 +28,4 @@ namespace Hazard::Rendering::Metal
     
     };
 }
+#endif

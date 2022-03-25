@@ -1,8 +1,12 @@
 #pragma once
+
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_METAL
+
 #include "Hazard/RenderContext/Pipeline/Shader.h"
 #include "Hazard/RenderContext/Pipeline/Buffers.h"
 
-namespace Hazard::Rendering::Metal
+namespace HazardRenderer::Metal
 {
     class MetalShader : public Shader
     {
@@ -29,3 +33,4 @@ namespace Hazard::Rendering::Metal
         std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
     };
 }
+#endif
