@@ -1,5 +1,7 @@
 
+
 #include "OpenGLFramebuffer.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "OpenGLUtils.h"
 
 #include <glad/glad.h>
@@ -162,3 +164,4 @@ namespace HazardRenderer::OpenGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
+#endif

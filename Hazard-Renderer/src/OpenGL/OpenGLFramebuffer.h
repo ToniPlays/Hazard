@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
+
 #include "Core/FrameBuffer.h"
 #include "Textures/OpenGLImage2D.h"
 
@@ -10,17 +13,17 @@ namespace HazardRenderer::OpenGL
 		OpenGLFrameBuffer(FrameBufferCreateInfo* info);
 		~OpenGLFrameBuffer();
 
-		virtual void Bind() const;
-		virtual void Unbind() const;
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
 
-		virtual void Resize(uint32_t width, uint32_t height, bool force = false);
-		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const {};
+		virtual void Resize(uint32_t width, uint32_t height, bool force = false) override;
+		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const override {};
 
-		virtual uint32_t GetWidth() const { return m_Specs.Width; };
-		virtual uint32_t GetHeight() const { return m_Specs.Height; };
-		uint32_t GetColorAttachmentCount() { return m_ColorAttachments.size(); }
+		virtual uint32_t GetWidth() const override { return m_Specs.Width; };
+		virtual uint32_t GetHeight() const override { return m_Specs.Height; };
+		uint32_t GetColorAttachmentCount() override { return m_ColorAttachments.size(); }
 
-		virtual Ref<Image2D> GetImage(uint32_t index = 0) const { return m_ColorImages[index].As<Image2D>(); };
+		virtual Ref<Image2D> GetImage(uint32_t index = 0) const override { return m_ColorImages[index].As<Image2D>(); };
 		virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 
 		void Invalidate();
@@ -36,3 +39,4 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLImage2D> m_DepthImage;
 	};
 }
+#endif

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Core/Pipeline/Pipeline.h"
 
 #include <optional>
@@ -69,3 +72,4 @@ namespace HazardRenderer::Vulkan
 		static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	};
 }
+#endif

@@ -22,7 +22,7 @@ namespace SimpleCanvas {
 	{
 		Pivot pivot = { 0.5f, 0.5f };
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::TopLeft;
@@ -33,7 +33,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = { 0.2f, 1.0f, 0.2f, 1.0f };
@@ -44,7 +44,7 @@ namespace SimpleCanvas {
 		}
 		return;
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::TopRight;
@@ -54,7 +54,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::MiddleLeft;
@@ -63,7 +63,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::MiddleCenter;
@@ -72,7 +72,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::MiddleRight;
@@ -81,7 +81,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::BottomLeft;
@@ -90,7 +90,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::BottomCenter;
@@ -99,7 +99,7 @@ namespace SimpleCanvas {
 			rt.Height = 100;
 		}
 		{
-			UIElement& element = canvas->CreateElement("TestButton");
+			UIElement element = canvas->CreateElement("TestButton");
 			RectTransform& rt = element.GetComponent<RectTransform>();
 			rt._color = Color::White;
 			rt.Anchor = Anchor::BottomRight;

@@ -1,8 +1,10 @@
 #pragma once
 
-#ifdef HZR_PLATFORM_MACOS
+#include "Core/Core.h"
 
-#include "Hazard/Core/Core.h"
+#ifdef HZR_PLATFORM_MACOS
+#pragma error Here is MacOS
+
 #include "Platform/System/Window.h"
 #include "GLFW/glfw3.h"
 #include "Hazard/Math/Color.h"

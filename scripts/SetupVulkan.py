@@ -1,12 +1,19 @@
 import os
 import sys
 import subprocess
+import platform
 from pathlib import Path
 
 import Utils
 
 from io import BytesIO
 from urllib.request import urlopen
+
+
+
+platform = "windows" if platform.system() == "windows" else "mac";
+platformExecutable = "exe" if platform == "windows" else "dmg";
+
 
 class VulkanConfiguration:
     requiredVulkanVersion = "1.2.189.0"
@@ -49,12 +56,23 @@ class VulkanConfiguration:
                 return
             permissionGranted = (reply == 'y')
 
-        vulkanInstallURL = f"https://sdk.lunarg.com/sdk/download/{cls.requiredVulkanVersion}/windows/VulkanSDK-{cls.requiredVulkanVersion}-Installer.exe"
-        vulkanPath = f"{cls.vulkanDirectory}/VulkanSDK-{cls.requiredVulkanVersion}-Installer.exe"
+        if platform == "windows":
+            vulkanInstallURL = f"https://sdk.lunarg.com/sdk/download/{cls.requiredVulkanVersion}/{platform}/VulkanSDK-{cls.requiredVulkanVersion}-Installer.exe"
+        else:
+            vulkanInstallURL = f"https://sdk.lunarg.com/sdk/download/{cls.requiredVulkanVersion}/mac/vulkansdk-macos-{cls.requiredVulkanVersion}.dmg"
+        
+        
+        vulkanPath = f"{cls.vulkanDirectory}/VulkanSDK-{cls.requiredVulkanVersion}-Installer.{platformExecutable}";
         print("Downloading {0:s} to {1:s}".format(vulkanInstallURL, vulkanPath))
         Utils.DownloadFile(vulkanInstallURL, vulkanPath)
         print("Running Vulkan SDK installer...")
-        os.startfile(os.path.abspath(vulkanPath))
+        
+        
+        if platform == "windows":
+            os.startfile(os.path.abspath(vulkanPath))
+        else:
+            opener = "open" if sys.platform == "darwin" else "xdg-open"
+            subprocess.call([opener, os.path.abspath(vulkanPath)])
         print("Re-run this script after installation!")
         quit()
 

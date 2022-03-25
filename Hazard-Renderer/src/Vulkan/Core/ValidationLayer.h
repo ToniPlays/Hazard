@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -19,3 +22,4 @@ namespace HazardRenderer::Vulkan
 		static VkDebugUtilsMessengerEXT debugMessenger;
 	};
 }
+#endif

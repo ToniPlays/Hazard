@@ -1,5 +1,7 @@
 //#pragma once
 //
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 //#include "Hazard/Rendering/Texture.h"
 //
 //namespace Hazard::Rendering::OpenGL
@@ -43,3 +45,4 @@
 //		uint32_t m_ID = 0;
 //	};
 //}
+#endif

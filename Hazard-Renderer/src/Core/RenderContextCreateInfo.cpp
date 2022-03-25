@@ -3,7 +3,7 @@
 
 namespace HazardRenderer
 {
-	std::string HazardRenderer::RenderAPIToString(RenderAPI api)
+	std::string RenderAPIToString(RenderAPI api)
 	{
 		switch (api) {
 		case RenderAPI::Auto:		return "Auto";

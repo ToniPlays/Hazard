@@ -1,5 +1,4 @@
-#pragma once
-
+#ifdef HZR_INCLUDE_OPENGL
 
 #include "OpenGLContext.h"
 #include "Core/Window.h"
@@ -99,3 +98,4 @@ namespace HazardRenderer::OpenGL {
 //			s_Callback(data);
 //		}
 }
+#endif

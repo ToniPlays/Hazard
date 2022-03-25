@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
 
@@ -43,3 +45,4 @@ namespace HazardRenderer::Vulkan
 		std::string m_Tag;
 	};
 }
+#endif

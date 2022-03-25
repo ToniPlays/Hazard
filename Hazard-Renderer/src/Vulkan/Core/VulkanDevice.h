@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Core/PhysicalDevice.h"
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -67,3 +68,4 @@ namespace HazardRenderer::Vulkan
 		VkFormat m_DepthFormat = VK_FORMAT_UNDEFINED;
 	};
 }
+#endif

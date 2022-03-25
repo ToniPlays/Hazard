@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
@@ -20,3 +22,4 @@ namespace HazardRenderer::Vulkan
 		VkSurfaceKHR m_Surface;
 	};
 }
+#endif

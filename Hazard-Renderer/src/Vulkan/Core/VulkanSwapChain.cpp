@@ -1,6 +1,9 @@
 
-#include <vulkan/vulkan.h>
 #include "VulkanSwapChain.h"
+#ifdef HZR_INCLUDE_VULKAN
+
+#include <vulkan/vulkan.h>
+
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
 
@@ -435,3 +438,4 @@ namespace HazardRenderer::Vulkan
 		*/
 	}
 }
+#endif

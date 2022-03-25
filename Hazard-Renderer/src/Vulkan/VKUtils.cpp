@@ -1,5 +1,6 @@
 
 #include "VKUtils.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "VulkanContext.h"
 
 #define GLFW_INCLUDE_VULKAN
@@ -431,3 +432,4 @@ namespace HazardRenderer::Vulkan {
 //		return surfCaps;
 //	}
 }
+#endif

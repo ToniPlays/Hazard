@@ -1,5 +1,6 @@
 
 #include "VulkanPipeline.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "../VulkanFrameBuffer.h"
 #include "../VKUtils.h"
@@ -239,3 +240,4 @@ namespace HazardRenderer::Vulkan
 		//vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
 	}
 }
+#endif

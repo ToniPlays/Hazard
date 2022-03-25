@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/GraphicsContext.h"
 #include "OpenGLPhysicalDevice.h"
 #include <GLFW/glfw3.h>
@@ -43,3 +43,4 @@ namespace HazardRenderer::OpenGL {
 		//std::vector<ResizeCallback> m_ResizeCallback;
 	};
 }
+#endif

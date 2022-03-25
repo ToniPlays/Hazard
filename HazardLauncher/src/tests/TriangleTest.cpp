@@ -1,6 +1,7 @@
 
 #include "HazardRenderer.h"
 #include "Event.h"
+#include "Color.h"
 
 using namespace HazardUtility;
 using namespace HazardRenderer;
@@ -9,6 +10,7 @@ namespace TriangleTest {
 
 	static void Run()
 	{
+        std::cout << "YES" << std::endl;
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
@@ -23,7 +25,7 @@ namespace TriangleTest {
 				running = false;
 			}
 		};
-
+        
 		HazardRendererCreateInfo createInfo = {};
 		createInfo.Renderer = RenderAPI::OpenGL;
 		createInfo.Width = 1280;
@@ -31,10 +33,11 @@ namespace TriangleTest {
 		createInfo.VSync = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
 		createInfo.AppInfo = &appInfo;
-
+        
+        
 		Window* window = Window::Create(&createInfo);
-		window->Show();
-
+        window->Show();
+        /*
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
@@ -86,5 +89,6 @@ namespace TriangleTest {
 
 			window->Present();
 		}
+         */
 	}
 }

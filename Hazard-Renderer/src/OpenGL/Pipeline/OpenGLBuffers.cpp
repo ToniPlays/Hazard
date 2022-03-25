@@ -1,5 +1,7 @@
 
 #include "OpenGLBuffers.h"
+
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/Pipeline/ShaderDataType.h"
 #include <glad/glad.h>
 
@@ -125,3 +127,4 @@ namespace HazardRenderer::OpenGL
 		glNamedBufferSubData(m_ID, 0, size, data);
 	}
 }
+#endif

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/GraphicsContext.h"
 #include <GLFW/glfw3.h>
 
@@ -21,3 +22,4 @@ namespace HazardRenderer::OpenGL {
 		PhysicalDeviceLimits m_Limits;
 	};
 }
+#endif

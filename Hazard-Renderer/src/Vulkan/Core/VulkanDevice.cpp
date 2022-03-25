@@ -1,5 +1,6 @@
 
 #include "VulkanDevice.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 
 #include "../VKUtils.h"
@@ -212,3 +213,4 @@ namespace HazardRenderer::Vulkan {
 		}
 	}*/
 }
+#endif

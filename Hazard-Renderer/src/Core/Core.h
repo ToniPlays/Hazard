@@ -9,8 +9,4 @@
 
 #include "Ref.h"
 #include "UtilityCore.h"
-
-
-#define THROW_EXCEPT(x) throw std::runtime_error("[Hazard-Renderer]: " x)
-#define ASSERT(x, m) if(!(x)) THROW_EXCEPT(m)
 #define BIT(x) (1 << x)

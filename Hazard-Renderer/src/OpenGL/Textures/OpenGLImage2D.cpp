@@ -1,6 +1,6 @@
-#pragma once
 
 #include "OpenGLImage2D.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "OpenGL/OpenGLUtils.h"
 
 #include <glad/glad.h>
@@ -36,3 +36,4 @@ namespace HazardRenderer::OpenGL
 		m_ID = 0;
 	}
 }
+#endif

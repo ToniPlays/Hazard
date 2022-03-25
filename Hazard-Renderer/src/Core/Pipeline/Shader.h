@@ -5,6 +5,8 @@
 #include "Core/RenderCommandBuffer.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
+#include <unordered_map>
+#include <vector>
 
 namespace HazardRenderer
 {

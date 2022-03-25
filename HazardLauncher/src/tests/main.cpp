@@ -4,6 +4,7 @@
 
 int main()
 {
+    
 	TriangleTest::Run();
 	return 0;
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Core/GraphicsContext.h"
 #include "Core/WindowSurface.h"
 #include "Core/VulkanDevice.h"
@@ -63,3 +66,4 @@ namespace HazardRenderer::Vulkan {
 		//uint32_t m_CurrentBufferIndex = 0;
 	};
 }
+#endif

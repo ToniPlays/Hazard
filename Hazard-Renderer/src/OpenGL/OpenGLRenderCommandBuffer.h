@@ -1,5 +1,7 @@
 #pragma once
 
+#incldue "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/RenderCommandBuffer.h"
 
 namespace HazardRenderer::OpenGL 
@@ -18,3 +20,4 @@ namespace HazardRenderer::OpenGL
 		void Submit() {};
 	};
 }
+#endif

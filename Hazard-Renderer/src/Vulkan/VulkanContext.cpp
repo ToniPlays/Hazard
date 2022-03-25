@@ -1,5 +1,6 @@
 
 #include "VulkanContext.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Core/Window.h"
 #include "VKUtils.h"
 #include "Core/ValidationLayer.h"
@@ -208,3 +209,4 @@ namespace HazardRenderer::Vulkan {
 //		return result;
 //	}
 }
+#endif

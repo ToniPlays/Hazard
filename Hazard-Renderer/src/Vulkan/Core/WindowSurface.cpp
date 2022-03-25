@@ -1,6 +1,7 @@
-#pragma once
+
 
 #include "WindowSurface.h"
+#ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan {
 
@@ -15,3 +16,4 @@ namespace HazardRenderer::Vulkan {
 		vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
 	}
 }
+#endif

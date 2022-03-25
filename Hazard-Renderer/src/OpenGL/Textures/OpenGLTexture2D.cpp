@@ -1,8 +1,6 @@
 //
-//#pragma once
-//
-//#include <hzrpch.h>
 //#include "OpenGLTexture2D.h"
+#ifdef HZR_INCLUDE_OPENGL
 //#include "Hazard/Rendering/Loaders/TextureFactory.h"
 //
 //#include <glad/glad.h>
@@ -107,3 +105,4 @@
 //		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GLUtils::TextureWrapToGLWrapMode(wrap));
 //	}
 //}
+#endif

@@ -1,5 +1,8 @@
-#ifdef HZR_PLATFORM_WINDOWS
+
 #pragma once
+
+#include "Core/Core.h"
+#ifdef HZR_PLATFORM_WINDOWS
 
 #include "Core/Window.h"
 #include <GLFW/glfw3.h>

@@ -1,6 +1,7 @@
 
 #include "OpenGLPipeline.h"
-#include "OpenGL/OpenGLFrameBuffer.h"
+#ifdef HZR_INCLUDE_OPENGL
+#include "OpenGL/OpenGLFramebuffer.h"
 #include "OpenGL/OpenGLUtils.h"
 #include <glad/glad.h>
 
@@ -50,3 +51,4 @@ namespace HazardRenderer::OpenGL
 		glDrawArrays(m_DrawType, 0, count);
 	}
 }
+#endif

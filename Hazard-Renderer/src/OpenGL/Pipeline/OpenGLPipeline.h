@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
+
 #include "Core/Pipeline/Pipeline.h"
 #include "OpenGLShader.h"
 
@@ -27,3 +30,4 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_DrawType, m_PolygonMode;
 	};
 }
+#endif

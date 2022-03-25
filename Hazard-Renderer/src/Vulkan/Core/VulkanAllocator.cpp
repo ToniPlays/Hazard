@@ -1,5 +1,6 @@
 
 #include "VulkanAllocator.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 
 #include "Utility/StringUtil.h"
@@ -102,3 +103,4 @@ namespace HazardRenderer::Vulkan {
 		return s_Data->Allocator;
 	}
 }
+#endif

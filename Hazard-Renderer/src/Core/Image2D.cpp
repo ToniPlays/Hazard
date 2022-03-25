@@ -3,7 +3,7 @@
 #include "GraphicsContext.h"
 
 #include "OpenGL/OpenGL.h"
-#include "Vulkan/Vulkan.h"
+#include "Vulkan/VulkanCore.h"
 
 namespace HazardRenderer 
 {

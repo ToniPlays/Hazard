@@ -8,11 +8,11 @@ namespace HazardUtility {
 	
 	template<typename T>
 	inline static T MaxValue() {
-		return std::numeric_limit<T>::max();
+		return std::numeric_limits<T>::max();
 	}
 	template<typename T>
 	inline static T MinValue() {
-		return std::numeric_limit<T>::min();
+		return std::numeric_limits<T>::min();
 	}
 	template<typename T, typename U>
 	inline static T Pow(T value, U pow)

@@ -1,4 +1,7 @@
-//#pragma once
+#pragma once
+
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 //
 //#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
 //#include "Hazard/RenderContext/Pipeline/RenderPass.h"
@@ -17,3 +20,5 @@
 //		RenderPassSpecification m_Specs;
 //	};
 //}
+
+#endif

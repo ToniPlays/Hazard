@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
+
 #include "Core/Pipeline/Shader.h"
 #include "Core/Pipeline/Buffers.h"
 
@@ -40,3 +43,4 @@ namespace HazardRenderer::OpenGL
 		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};
 }
+#endif

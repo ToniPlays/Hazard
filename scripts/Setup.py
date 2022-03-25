@@ -12,10 +12,10 @@ print(platform.system())
 # Make sure everything we need for the setup is installed
 PythonRequirements.Validate()
 
-if platform.system() == "Windows":
-    from SetupVulkan import VulkanConfiguration as VulkanRequirements
+
+from SetupVulkan import VulkanConfiguration as VulkanRequirements
     
-    VulkanRequirements.Validate()
+VulkanRequirements.Validate()
 
 from SetupPremake import PremakeConfiguration as PremakeRequirements
 

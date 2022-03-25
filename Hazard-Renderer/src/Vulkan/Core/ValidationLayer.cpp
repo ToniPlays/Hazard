@@ -1,5 +1,7 @@
 
 #include "ValidationLayer.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "../VKUtils.h"
 #include "../VulkanContext.h"
 #include <vulkan/vulkan.h>
@@ -93,3 +95,4 @@ namespace HazardRenderer::Vulkan {
 		createInfo.pNext = NULL;
 	}
 }
+#endif

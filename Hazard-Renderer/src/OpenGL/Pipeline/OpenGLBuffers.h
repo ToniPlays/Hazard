@@ -1,4 +1,6 @@
 #pragma once
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 
 #include "Core/Pipeline/Buffers.h"
 #include <vulkan/vulkan.h>
@@ -71,3 +73,4 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_Usage;
 	};
 }
+#endif

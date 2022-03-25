@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Core/Pipeline/Pipeline.h"
 #include "VulkanShader.h"
 #include "VulkanBuffers.h"
@@ -37,3 +40,4 @@ namespace HazardRenderer::Vulkan
 		//Ref<VulkanShader> m_Shader;
 	};
 }
+#endif

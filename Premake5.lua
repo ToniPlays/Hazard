@@ -38,12 +38,12 @@ end
 	include "HazardEditor/vendor/imgui"
 group ""
 
-include "Hazard"
+--include "Hazard"
 include "Hazard-Utility"
 include "Hazard-Renderer"
 include "Hazard-UI"
-include "Hazard-Script"
-include "HazardEditor"
+--include "Hazard-Script"
+--include "HazardEditor"
 include "HazardLauncher"
 
 if os.host() == "windows" then

@@ -1,6 +1,7 @@
-#pragma once
 
 #include "OpenGLShader.h"
+#ifdef HZR_INCLUDE_OPENGL
+
 #include "OpenGL/OpenGLUtils.h"
 #include "Core/Pipeline/ShaderFactory.h"
 
@@ -236,3 +237,4 @@ namespace HazardRenderer::OpenGL
 		m_ID = program;
 	}
 }
+#endif

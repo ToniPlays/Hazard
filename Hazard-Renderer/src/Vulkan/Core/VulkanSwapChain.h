@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "VulkanDevice.h"
 #include "VulkanAllocator.h"
 #include <vulkan/vulkan.h>
@@ -99,3 +102,4 @@ namespace HazardRenderer::Vulkan
 		friend class VulkanContext;
 	};
 }
+#endif

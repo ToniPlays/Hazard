@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/Image.h"
 #include "Core/Pipeline/Pipeline.h"
 #include "Core/Pipeline/Shader.h"
@@ -16,8 +17,10 @@ namespace HazardRenderer::OpenGLUtils
 		case ShaderType::Fragment:	return GL_FRAGMENT_SHADER;
 		case ShaderType::Compute:	return GL_COMPUTE_SHADER;
 		case ShaderType::Geometry:	return GL_GEOMETRY_SHADER;
+            default:
+                ASSERT(false, "Unknow ShaderType");
 		}
-		ASSERT(false, "[OpenGLShader]: Unkown ShaderType {0}", Utils::ShaderTypeToString(type));
+		ASSERT(false, "Unknow ShaderType");
 		return 0;
 	}
 	static ShaderType ShaderTypeFromGLType(GLenum type) {
@@ -57,6 +60,8 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Fill: return GL_TRIANGLES;
 		case DrawType::Line: return GL_LINES;
 		case DrawType::Point: return GL_POINTS;
+        default:
+            ASSERT(false, "Unknow DrawType");
 		}
 		return GL_TRIANGLES;
 	}
@@ -66,6 +71,8 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Fill: return GL_FILL;
 		case DrawType::Line: return GL_LINE;
 		case DrawType::Point: return GL_POINT;
+        default: ASSERT(false, "Unkown DrawType");
+            
 		}
 		return GL_TRIANGLES;
 	}
@@ -136,3 +143,4 @@ namespace HazardRenderer::OpenGLUtils
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmetType, TextureTarget(multisampled), target, 0);
 	}
 }
+#endif

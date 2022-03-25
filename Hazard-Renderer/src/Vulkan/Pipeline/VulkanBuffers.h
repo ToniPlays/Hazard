@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Core/Pipeline/Buffers.h"
 
 #include "Buffer.h"
@@ -105,3 +108,4 @@ namespace HazardRenderer::Vulkan
 		HazardUtility::Buffer m_LocalData;
 	};
 }
+#endif

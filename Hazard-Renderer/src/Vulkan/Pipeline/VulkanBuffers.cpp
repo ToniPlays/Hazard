@@ -1,5 +1,6 @@
-#pragma once
+
 #include "VulkanBuffers.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 
 namespace HazardRenderer::Vulkan
@@ -280,3 +281,4 @@ namespace HazardRenderer::Vulkan
 		delete[] oldData;
 	}
 }
+#endif

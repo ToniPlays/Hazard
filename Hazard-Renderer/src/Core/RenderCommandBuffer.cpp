@@ -1,7 +1,8 @@
 
 #include "RenderCommandBuffer.h"
+#include "GraphicsContext.h"
 #include "OpenGL/OpenGL.h"
-#include "vulkan/VulkanCore.h"
+#include "Vulkan/VulkanCore.h"
 
 namespace HazardRenderer {
 

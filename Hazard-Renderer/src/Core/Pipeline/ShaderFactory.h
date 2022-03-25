@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #include <unordered_map>
+#include <vector>
 
 namespace HazardRenderer
 {
