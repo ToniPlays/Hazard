@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Core/GraphicsContext.h"
 #include "OpenGLPhysicalDevice.h"
@@ -18,29 +19,25 @@ namespace HazardRenderer::OpenGL {
 
 		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
 		void SetViewport(int x, int y, int w, int h) override;
-		/*
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer);
+		/*
 		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 
 		void SetErrorListener(const ErrorCallback& callback) override;
-		PhysicalDevice& GetPhysicalDevice() const override;
-
-		void AddResizeCallback(const ResizeCallback& callback) { m_ResizeCallback.push_back(callback); };
 		*/
 		PhysicalDevice& GetDevice() { return *m_PhysicalDevice;  };
 
 	public:
-		//static void SendDebugMessage(const char* message, const char* code);
+		static Window* GetWindow() { return s_Instance->m_Window; }
+		static glm::vec4 GetClearColor() { return s_Instance->m_ClearColor; }
 
 	private:
-		GLFWwindow* m_Window;
+		inline static OpenGLContext* s_Instance;
+		Window* m_Window;
 		OpenGLPhysicalDevice* m_PhysicalDevice;
-		//PhysicalDevice* m_PhysicalDevice;
 		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		//static ErrorCallback s_Callback;
-		//std::vector<ResizeCallback> m_ResizeCallback;
 	};
 }
 #endif

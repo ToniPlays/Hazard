@@ -23,8 +23,6 @@ namespace HazardRenderer {
 
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
-		if (WindowsWindow::s_DebugCallback == nullptr) return;
-
 		RenderMessage msg;
 		msg.Severity = message.Severity;
 		msg.Message = "[Hazard-Renderer]: " + message.Message;
@@ -40,7 +38,7 @@ namespace HazardRenderer {
 		m_WindowData.EventCallback = info->AppInfo->EventCallback;
 
 		if (!m_WindowData.EventCallback) {
-			m_WindowData.EventCallback = [](HazrdUtility::Event& e) {};
+			m_WindowData.EventCallback = [](HazardUtility::Event& e) {};
 		}
 
 		if (info->Renderer == RenderAPI::Auto) 

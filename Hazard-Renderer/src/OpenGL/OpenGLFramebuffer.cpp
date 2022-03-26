@@ -3,6 +3,8 @@
 #include "OpenGLFramebuffer.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "OpenGLUtils.h"
+#include "OpenGLContext.h"
+#include "Core/Window.h"
 
 #include <glad/glad.h>
 
@@ -22,10 +24,9 @@ namespace HazardRenderer::OpenGL
 		m_Specs.Width = (uint32_t)info->Width;
 		m_Specs.Height = (uint32_t)info->Height;
 
-		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget) {
-			//Window& window = RenderContextCommand::GetContext().GetWindow();
-			//m_Specs.Width = window.GetWidth();
-			//m_Specs.Height = window.GetHeight();
+		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget) 
+		{
+
 		}
 
 		for (auto& attachment : info->Attachments) 
@@ -36,13 +37,6 @@ namespace HazardRenderer::OpenGL
 			//else 
 			m_DepthAttachment = attachment;
 		}
-
-		/*if (m_Specs.SwapChainTarget) {
-			GraphicsContext& context = RenderContextCommand::GetContext().GetContext();
-			context.AddResizeCallback([&](uint32_t width, uint32_t height) {
-				Resize(width, height, false);
-			});
-		}*/
 
 		Invalidate();
 	}
@@ -60,9 +54,19 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Bind() const
 	{
-		glViewport(0, 0, m_Specs.Width, m_Specs.Height);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
-		glClearColor(m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a);
+
+		if(m_Specs.SwapChainTarget) {
+			glm::vec4 color = OpenGLContext::GetClearColor();
+			Window* window = OpenGLContext::GetWindow();
+			glClearColor(color.r, color.g, color.b, color.a);
+			glViewport(0, 0, window->GetWidth(), window->GetHeight());
+		}
+		else 
+		{
+			glClearColor(m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a);
+			glViewport(0, 0, m_Specs.Width, m_Specs.Height);
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	void OpenGLFrameBuffer::Unbind() const

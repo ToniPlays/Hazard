@@ -2,7 +2,7 @@
 #include "Pipeline.h"
 
 #include "Core/GraphicsContext.h"
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/OpenGLCore.h"
 #include "Vulkan/VulkanCore.h"
 #include "Metal/Metal.h"
 

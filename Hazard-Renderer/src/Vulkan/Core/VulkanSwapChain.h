@@ -9,10 +9,10 @@
 
 namespace HazardRenderer::Vulkan
 {
-	class VulkanSwapChain : public RefCount {
+	class VulkanSwapchain : public RefCount {
 	public:
-		VulkanSwapChain();
-		virtual ~VulkanSwapChain();
+		VulkanSwapchain();
+		virtual ~VulkanSwapchain();
 
 		void Create(uint32_t width, uint32_t height, bool vSync);
 		void Resize(uint32_t width, uint32_t height);
@@ -51,8 +51,8 @@ namespace HazardRenderer::Vulkan
 		void CreateDepthStencil();
 
 	private:
+
 		VkInstance m_Instance;
-		VulkanDevice* m_Device;
 		bool m_VSync = false;
 
 		VkFormat m_ColorFormat;
@@ -96,8 +96,6 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_Width = 0, m_Height = 0;
 
 		VkSurfaceKHR m_Surface;
-
-		//std::vector<ResizeCallback> m_ResizeEvent;
 
 		friend class VulkanContext;
 	};

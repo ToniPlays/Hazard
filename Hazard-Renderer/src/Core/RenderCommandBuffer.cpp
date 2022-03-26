@@ -1,7 +1,7 @@
 
 #include "RenderCommandBuffer.h"
 #include "GraphicsContext.h"
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/OpenGLCore.h"
 #include "Vulkan/VulkanCore.h"
 #include "Metal/Metal.h"
 

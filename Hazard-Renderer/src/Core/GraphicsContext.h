@@ -2,6 +2,8 @@
 
 #include "RenderContextCreateInfo.h"
 #include "PhysicalDevice.h"
+#include "RenderCommandBuffer.h"
+#include "Pipeline/RenderPass.h"
 #include <functional>
 
 namespace HazardRenderer {
@@ -34,12 +36,11 @@ namespace HazardRenderer {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
 
-		/*virtual void Close() = 0;
-
-		virtual PhysicalDevice& GetPhysicalDevice() const = 0;
-
 		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;
 		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) = 0;
+
+		/*virtual void Close() = 0;
+
 		virtual void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) = 0;
 
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;

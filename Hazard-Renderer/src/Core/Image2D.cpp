@@ -2,7 +2,7 @@
 #include "Image2D.h"
 #include "GraphicsContext.h"
 
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/OpenGLCore.h"
 #include "Vulkan/VulkanCore.h"
 
 namespace HazardRenderer 
@@ -15,7 +15,7 @@ namespace HazardRenderer
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: return new Vulkan::VulkanImage2D(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanImage2D(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return nullptr;

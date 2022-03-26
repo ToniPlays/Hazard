@@ -2,6 +2,10 @@
 #include "VulkanBuffers.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
+#include "Vulkan/VulkanRenderCommandBuffer.h"
+
+
+using namespace HazardUtility;
 
 namespace HazardRenderer::Vulkan
 {
@@ -13,7 +17,7 @@ namespace HazardRenderer::Vulkan
 		m_Usage = info->Usage;
 
 		m_Layout = std::move(*info->Layout);
-		/*auto device = VulkanContext::GetDevice();
+		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 
 		VulkanAllocator allocator("VertexBuffer");
 
@@ -51,35 +55,30 @@ namespace HazardRenderer::Vulkan
 
 			m_Allocation = allocator.AllocateBuffer(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Buffer);
 
-			VkCommandBuffer copyCmd = device->GetCommandBuffer(true);
+			VkCommandBuffer copyCmd = device.GetCommandBuffer(true);
 			VkBufferCopy copyRegion = {};
 			copyRegion.size = m_LocalData.Size;
 
 			vkCmdCopyBuffer(copyCmd, stagingBuffer, m_Buffer, 1, &copyRegion);
-			device->FlushCommandBuffer(copyCmd);
+			device.FlushCommandBuffer(copyCmd);
 			allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 
-		}*/
+		}
 	}
 	VulkanVertexBuffer::~VulkanVertexBuffer()
 	{
 		m_LocalData.Release();
 
-		/*RenderContextCommand::SubmitResourceFree([buffer = m_Buffer, alloc = m_Allocation]() {
-
-			VmaAllocation allocation = alloc;
-			VulkanAllocator allocator("VertexBuffer");
-			allocator.DestroyBuffer(buffer, allocation);
-			});
-			*/
+		VulkanAllocator allocator("VertexBuffer");
+		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 	}
 	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		/*HZR_CORE_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
+		ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(vkCmdBuffer, 0, 1, &m_Buffer, offsets);*/
+		vkCmdBindVertexBuffers(vkCmdBuffer, 0, 1, &m_Buffer, offsets);
 	}
 	void VulkanVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
@@ -92,11 +91,10 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanVertexBuffer::RT_SetData(const void* data, uint32_t size)
 	{
-		/*HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanUniformBuffer::RT_SetData() RT");
 		VulkanAllocator allocator("VulkanVertexBuffer");
 		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
 		memcpy_s(pData, m_LocalData.Size, (uint8_t*)data, size);
-		allocator.UnmapMemory(m_Allocation);*/
+		allocator.UnmapMemory(m_Allocation);
 	}
 	VulkanIndexBuffer::VulkanIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
@@ -106,21 +104,16 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanIndexBuffer::~VulkanIndexBuffer()
 	{
-		VkBuffer buffer = m_Buffer;
-		VmaAllocation alloc = m_Allocation;
 
-		/*RenderContextCommand::SubmitResourceFree([buffer, alloc]() mutable {
-
-			VulkanAllocator allocator("IndexBuffer");
-			allocator.DestroyBuffer(buffer, alloc);
-			});*/
+		VulkanAllocator allocator("IndexBuffer");
+		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 	}
 	void VulkanIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		/*uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindIndexBuffer(vkCmdBuffer, m_Buffer, 0, VK_INDEX_TYPE_UINT32);*/
+		vkCmdBindIndexBuffer(vkCmdBuffer, m_Buffer, 0, VK_INDEX_TYPE_UINT32);
 	}
 	void VulkanIndexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
@@ -128,9 +121,8 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanIndexBuffer::SetData(uint32_t* data, uint32_t size)
 	{
-		/*HZR_PROFILE_FUNCTION("Hazard::Rendering::VulkanIndexBuffer::SetData() RT");
 		m_Size = size;
-		auto device = VulkanContext::GetDevice();
+		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		VulkanAllocator allocator("IndexBuffer");
 		m_LocalData = Buffer::Copy(data, m_Size * sizeof(uint32_t));
 
@@ -142,7 +134,7 @@ namespace HazardRenderer::Vulkan
 		VkBuffer stagingBuffer;
 		VmaAllocation stagingBufferAllocation = allocator.AllocateBuffer(bufferCreateInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
 
-		 Copy data to staging buffer
+		//Copy data to staging buffer
 		uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAllocation);
 		memcpy_s(destData, m_LocalData.Size, m_LocalData.Data, m_LocalData.Size);
 		allocator.UnmapMemory(stagingBufferAllocation);
@@ -153,7 +145,7 @@ namespace HazardRenderer::Vulkan
 		indexBufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		m_Allocation = allocator.AllocateBuffer(indexBufferCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Buffer);
 
-		VkCommandBuffer copyCmd = device->GetCommandBuffer(true);
+		VkCommandBuffer copyCmd = device.GetCommandBuffer(true);
 		VkBufferCopy copyRegion = {};
 		copyRegion.size = m_LocalData.Size;
 		vkCmdCopyBuffer(
@@ -163,9 +155,9 @@ namespace HazardRenderer::Vulkan
 			1,
 			&copyRegion);
 
-		device->FlushCommandBuffer(copyCmd);
+		device.FlushCommandBuffer(copyCmd);
 
-		allocator.DestroyBuffer(stagingBuffer, stagingBufferAllocation);*/
+		allocator.DestroyBuffer(stagingBuffer, stagingBufferAllocation);
 	}
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)

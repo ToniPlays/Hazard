@@ -76,19 +76,19 @@ namespace HazardRenderer::Vulkan {
 	}
 	void VulkanAllocator::Init()
 	{
-		/*
+		
 		s_Data = new AllocatorData();
 
-		auto device = VulkanContext::GetDevice();
+		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 
 		VmaAllocatorCreateInfo createInfo = {};
 		createInfo.vulkanApiVersion = VK_API_VERSION_1_2;
-		createInfo.physicalDevice = device->GetPhysicalDevice();
-		createInfo.device = device->GetDevice();
-		createInfo.instance = VulkanContext::GetInstance();
+		createInfo.physicalDevice = device.GetVulkanPhysicalDevice();
+		createInfo.device = device.GetVulkanDevice();
+		createInfo.instance = VulkanContext::GetVulkanInstance();
 
 		VK_CHECK_RESULT(vmaCreateAllocator(&createInfo, &s_Data->Allocator));
-		*/
+		
 	}
 	void VulkanAllocator::Shutdown()
 	{

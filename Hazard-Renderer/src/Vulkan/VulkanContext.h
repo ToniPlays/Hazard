@@ -11,7 +11,7 @@
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
 
-#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { ASSERT(false, "Vulkan function failed: {0}", VKUtils::ResultToString(result)); }
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { ASSERT(false, "We failed"); }
 
 namespace HazardRenderer::Vulkan {
 
@@ -40,26 +40,33 @@ namespace HazardRenderer::Vulkan {
 
 		static glm::vec4 GetClearColor() { return m_ClearColor; }
 		static VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo);
-
+		*/
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
-		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
-		*/
+		//void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
+	
 		
 		PhysicalDevice& GetDevice() { return *m_Device; }
+		static VulkanDevice& GetPhysicalDevice() { return (VulkanDevice&)s_Instance->GetDevice(); }
 
-	public:
-		static void SendDebugMessage(const char* message, const char* code);
+		static VkInstance GetVulkanInstance() { return s_Instance->m_Instance; }
+		static Ref<VulkanSwapchain> GetSwapchain() { return s_Instance->m_SwapChain; }
+
+		static WindowSurface& GetWindowSurface() { return *s_Instance->m_WindowSurface; }
+		static glm::vec4& GetClearColor() { return s_Instance->m_ClearColor; }
+
 	private:
+
+		inline static VulkanContext* s_Instance;
 
 		Window* m_Window;
 		glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
 
-		inline static VkInstance m_Instance;
-		inline static Scope<WindowSurface> m_WindowSurface;
-		inline static Scope<VulkanDevice> m_Device;
-		inline static Ref<VulkanSwapChain> m_SwapChain;
+		VkInstance m_Instance;
+		Scope<WindowSurface> m_WindowSurface;
+		Scope<VulkanDevice> m_Device;
+		Ref<VulkanSwapchain> m_SwapChain;
 
 		//inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
 		

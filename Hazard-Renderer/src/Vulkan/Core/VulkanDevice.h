@@ -27,39 +27,40 @@ namespace HazardRenderer::Vulkan
 		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
 
 		void WaitUntilIdle();
-		/*
-		inline VkDevice GetDevice() { return m_Device; }
 
-		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
-		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
+		//Vulkan methods
+		
+		inline VkDevice GetVulkanDevice() { return m_Device; }
+		inline VkPhysicalDevice GetVulkanPhysicalDevice() { return m_PhysicalDevice; }
+
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
+		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
+		QueueIndices GetPresentQueue() { return m_PresentQueue; }
+
 		VkCommandBuffer GetCommandBuffer(bool begin);
-
-		VkCommandBuffer CreateSecondaryCommandBuffer();
-
 		void FlushCommandBuffer(VkCommandBuffer buffer);
 		void FlushGraphicsCommandBuffer(VkCommandBuffer buffer);
 
 		VkDescriptorPool GetDescriptorPool(uint32_t index) { return m_DescriptorPools[index]; }
-		QueueIndices GetGraphicsQueue() { return m_GraphicsQueue; }
-		QueueIndices GetPresentQueue() { return m_PresentQueue; }
-		
+		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
+
+		//VkCommandBuffer CreateSecondaryCommandBuffer();
+
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
 
-		*/
+	private:
+		void CreatePools(uint32_t count);
 
 	private:
 
 		std::string m_DeviceName;
 		PhysicalDeviceLimits m_Limits;
 
-		//void CreatePools(uint32_t count);
-
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
-		//VkCommandPool m_CommandPool;
-		//std::vector<VkDescriptorPool> m_DescriptorPools;
+		VkCommandPool m_CommandPool;
+		std::vector<VkDescriptorPool> m_DescriptorPools;
 		VkPipelineCache m_PipelineCache;
 
 		QueueIndices m_GraphicsQueue;

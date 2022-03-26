@@ -1,4 +1,5 @@
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include "HazardRenderer.h"
 #include "Event.h"
@@ -29,13 +30,14 @@ namespace TriangleTest {
         
 		HazardRendererCreateInfo createInfo = {};
 #ifdef HZR_PLATFORM_WINDOWS
-		createInfo.Renderer = RenderAPI::OpenGL;
+		createInfo.Renderer = RenderAPI::Vulkan;
 #elif HZR_PLATFORM_MACOS
         createInfo.Renderer = RenderAPI::Metal;
 #endif
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
 		createInfo.VSync = true;
+		createInfo.Logging = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
 		createInfo.AppInfo = &appInfo;
       
@@ -72,13 +74,26 @@ namespace TriangleTest {
 		ibo.Size = 3 * sizeof(uint32_t);
 		ibo.Data = indices;
         
-        
+
+		FrameBufferCreateInfo frameBufferInfo = {};
+		frameBufferInfo.DebugName = "ScreenFBO";
+		frameBufferInfo.SwapChainTarget = true;
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+
+		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = "ScreenTarget";
+		renderPassInfo.pTargetFrameBuffer = frameBuffer;
+
+		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
+
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
+		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
 		spec.ShaderPath = "triangleShader.glsl";
-		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.CullMode = CullMode::None;
+		spec.TargetRenderPass = renderPass;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
@@ -90,10 +105,17 @@ namespace TriangleTest {
 		{
 			window->BeginFrame();
 
-			//vertexBuffer->Bind(cmdBuffer);
-			//indexBuffer->Bind(cmdBuffer);
-			//pipeline->Bind(cmdBuffer);
-			//pipeline->Draw(cmdBuffer, 3);
+			cmdBuffer->Begin();
+			window->GetContext()->BeginRenderPass(cmdBuffer, renderPass);
+
+			vertexBuffer->Bind(cmdBuffer);
+			indexBuffer->Bind(cmdBuffer);
+			pipeline->Bind(cmdBuffer);
+			pipeline->Draw(cmdBuffer, 3);
+
+			window->GetContext()->EndRenderPass(cmdBuffer);
+			cmdBuffer->End();
+			cmdBuffer->Submit();
 
 			window->Present();
 		}

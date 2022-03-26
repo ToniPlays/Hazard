@@ -37,7 +37,7 @@ namespace HazardRenderer::Vulkan
 		VkPipelineLayout m_PipelineLayout = nullptr;
 		VkDescriptorSetLayout m_UniformDescriptorLayout = nullptr;
 
-		//Ref<VulkanShader> m_Shader;
+		Ref<VulkanShader> m_Shader;
 	};
 }
 #endif

@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "Hazard\vendor\Box2D\Box2D.vcxproj", "{A434E80C-1049-10BE-D9CA-B31D459E0CEF}"
@@ -17,11 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Optick", "Hazard\vendor\Opt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml-cpp", "Hazard\vendor\yaml-cpp\yaml-cpp.vcxproj", "{88F1A057-74BE-FB62-9DD7-E90A890331F1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcxproj", "{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Renderer", "Hazard-Renderer\Hazard-Renderer.vcxproj", "{63990EDD-CF24-7CA1-D835-FF954440D8A1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Script", "Hazard-Script\Hazard-Script.vcxproj", "{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-UI", "Hazard-UI\Hazard-UI.vcxproj", "{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}"
 EndProject
@@ -38,12 +32,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Debug|x64.ActiveCfg = Debug|x64
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Debug|x64.Build.0 = Debug|x64
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Dist|x64.ActiveCfg = Dist|x64
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Dist|x64.Build.0 = Dist|x64
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Release|x64.ActiveCfg = Release|x64
-		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}.Release|x64.Build.0 = Release|x64
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Debug|x64.ActiveCfg = Debug|x64
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Debug|x64.Build.0 = Debug|x64
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Dist|x64.ActiveCfg = Dist|x64
@@ -80,24 +68,12 @@ Global
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Dist|x64.Build.0 = Dist|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.ActiveCfg = Release|x64
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.Build.0 = Release|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Debug|x64.ActiveCfg = Debug|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Debug|x64.Build.0 = Debug|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Dist|x64.ActiveCfg = Dist|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Dist|x64.Build.0 = Dist|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.ActiveCfg = Release|x64
-		{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}.Release|x64.Build.0 = Release|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Debug|x64.ActiveCfg = Debug|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Debug|x64.Build.0 = Debug|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Dist|x64.ActiveCfg = Dist|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Dist|x64.Build.0 = Dist|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Release|x64.ActiveCfg = Release|x64
 		{63990EDD-CF24-7CA1-D835-FF954440D8A1}.Release|x64.Build.0 = Release|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Debug|x64.ActiveCfg = Debug|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Debug|x64.Build.0 = Debug|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Dist|x64.ActiveCfg = Dist|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Dist|x64.Build.0 = Dist|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Release|x64.ActiveCfg = Release|x64
-		{C1E015DC-2DA1-9112-F6DB-DA8F625BD6EE}.Release|x64.Build.0 = Release|x64
 		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Debug|x64.ActiveCfg = Debug|x64
 		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Debug|x64.Build.0 = Debug|x64
 		{2ADFD9D3-9649-8E4A-DF87-3FF04B316C9F}.Dist|x64.ActiveCfg = Dist|x64

@@ -1,6 +1,6 @@
 #pragma once
 
-#incldue "Core/Core.h"
+#include "Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Core/RenderCommandBuffer.h"
 

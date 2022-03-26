@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 #include "Core/GraphicsContext.h"
 
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/OpenGLCore.h"
 #include "Vulkan/VulkanCore.h"
 #include "Metal/Metal.h"
 
@@ -13,13 +13,13 @@ namespace HazardRenderer {
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		//case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderPass>::Create(info);
+		case RenderAPI::OpenGL: return new OpenGL::OpenGLRenderPass(info);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderPass>::Create(info);
+		case RenderAPI::Vulkan: return new Vulkan::VulkanRenderPass(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalRenderPass>::Create(info);
+        case RenderAPI::Metal: return new Metal::MetalRenderPass(info);
 #endif
 		default:
 			ASSERT(false, "Unknown RendererAPI");

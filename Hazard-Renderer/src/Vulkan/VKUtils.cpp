@@ -102,114 +102,123 @@ namespace HazardRenderer::Vulkan {
 		return details;
 	}
 
-//	VkSurfaceFormatKHR VKUtils::ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space)
-//	{
-//		for (const auto& f : formats) {
-//			if (f.format == format && f.colorSpace == space)
-//				return f;
-//		}
-//		return formats[0];
-//	}
-//
-//	VkPresentModeKHR VKUtils::ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred, VkPresentModeKHR defaultMode)
-//	{
-//		for (const auto& mode : modes) {
-//			if (mode == preferred)
-//				return mode;
-//		}
-//		return defaultMode;
-//	}
-//
-//	VkExtent2D VKUtils::ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h)
-//	{
-//		if (capabilities.currentExtent.width != UINT32_MAX)
-//			return capabilities.currentExtent;
-//		VkExtent2D actualExtent = { static_cast<uint32_t>(w),
-//									static_cast<uint32_t>(h) };
-//
-//		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-//		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
-//
-//		return actualExtent;
-//	}
-//	VkFormat VKUtils::GetFormat(ImageFormat format)
-//	{
-//		switch (format)
-//		{
-//		case ImageFormat::RED32F:			return VK_FORMAT_R32_SFLOAT;
-//		case ImageFormat::RG16F:			return VK_FORMAT_R16G16_SFLOAT;
-//		case ImageFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
-//		case ImageFormat::RGB:				return VK_FORMAT_R8G8B8_UNORM;
-//		case ImageFormat::RGBA:				return VK_FORMAT_R8G8B8A8_UNORM;
-//		case ImageFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
-//		case ImageFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
-//		case ImageFormat::DEPTH32F:			return VK_FORMAT_D32_SFLOAT;
-//		case ImageFormat::RED32I:			return VK_FORMAT_R32_SINT;
-//		case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetDevice()->GetDepthFormat();
-//		}
-//		HZR_CORE_ASSERT(false, "[VKUtils] Failed to convert format");
-//		return VK_FORMAT_UNDEFINED;
-//	}
-//
-//	VkFormat VKUtils::ShaderDataTypeToVkFormat(ShaderDataType type)
-//	{
-//		switch (type)
-//		{
-//		case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
-//		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
-//		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
-//		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
-//		case ShaderDataType::Mat3:     return VK_FORMAT_R32G32B32_SFLOAT;
-//		case ShaderDataType::Mat4:     return VK_FORMAT_UNDEFINED;
-//		case ShaderDataType::Int:      return VK_FORMAT_R32_UINT;
-//		case ShaderDataType::Int2:     return VK_FORMAT_R32G32_UINT;
-//		case ShaderDataType::Int3:     return VK_FORMAT_R32G32B32_UINT;
-//		case ShaderDataType::Int4:     return VK_FORMAT_R32G32B32A32_UINT;
-//		case ShaderDataType::Bool:     return VK_FORMAT_R8_UINT;
-//		}
-//		return VK_FORMAT_UNDEFINED;
-//	}
-//
-//	ShaderType VKUtils::ShaderTypeFromVulkanStage(VkShaderStageFlagBits type)
-//	{
-//		switch (type)
-//		{
-//		case VK_SHADER_STAGE_VERTEX_BIT:	return ShaderType::Vertex;
-//		case VK_SHADER_STAGE_FRAGMENT_BIT:	return ShaderType::Fragment;
-//		case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
-//		case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
-//		}
-//		return ShaderType::None;
-//	}
-//
-//	VkCullModeFlags VKUtils::CullModeToVKMode(CullMode mode)
-//	{
-//		switch (mode)
-//		{
-//		case CullMode::None:		return VK_CULL_MODE_NONE;
-//		case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
-//		case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
-//		default:					return VK_CULL_MODE_NONE;
-//		}
-//		return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
-//	}
-//
-//	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
-//	{
-//		VkShaderStageFlags flags = 0;
-//		if (usage & (uint32_t)ShaderType::Vertex)		flags |= VK_SHADER_STAGE_VERTEX_BIT;
-//		if (usage & (uint32_t)ShaderType::Fragment)		flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-//		if (usage & (uint32_t)ShaderType::Compute)		flags |= VK_SHADER_STAGE_COMPUTE_BIT;
-//		if (usage & (uint32_t)ShaderType::Geometry)		flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-//		return flags;
-//	}
-//
-//	bool VKUtils::IsDepth(ImageFormat format)
-//	{
-//		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
-//			return true;
-//		return false;
-//	}
+	VkSurfaceFormatKHR VKUtils::ChooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& formats, VkFormat format, VkColorSpaceKHR space)
+	{
+		for (const auto& f : formats) {
+			if (f.format == format && f.colorSpace == space)
+				return f;
+		}
+		return formats[0];
+	}
+
+	VkPresentModeKHR VKUtils::ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& modes, VkPresentModeKHR preferred, VkPresentModeKHR defaultMode)
+	{
+		for (const auto& mode : modes) {
+			if (mode == preferred)
+				return mode;
+		}
+		return defaultMode;
+	}
+
+	VkExtent2D VKUtils::ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, int w, int h)
+	{
+		if (capabilities.currentExtent.width != UINT32_MAX)
+			return capabilities.currentExtent;
+		VkExtent2D actualExtent = { static_cast<uint32_t>(w),
+									static_cast<uint32_t>(h) };
+
+		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+		return actualExtent;
+	}
+	VkFormat VKUtils::GetFormat(ImageFormat format)
+	{
+		switch (format)
+		{
+		case ImageFormat::RED32F:			return VK_FORMAT_R32_SFLOAT;
+		case ImageFormat::RG16F:			return VK_FORMAT_R16G16_SFLOAT;
+		case ImageFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
+		case ImageFormat::RGB:				return VK_FORMAT_R8G8B8_UNORM;
+		case ImageFormat::RGBA:				return VK_FORMAT_R8G8B8A8_UNORM;
+		case ImageFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case ImageFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ImageFormat::DEPTH32F:			return VK_FORMAT_D32_SFLOAT;
+		case ImageFormat::RED32I:			return VK_FORMAT_R32_SINT;
+		case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetPhysicalDevice().GetDepthFormat();
+		}
+		ASSERT(false, "[VKUtils] Failed to convert format");
+		return VK_FORMAT_UNDEFINED;
+	}
+
+	VkFormat VKUtils::ShaderDataTypeToVkFormat(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
+		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
+		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
+		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ShaderDataType::Mat3:     return VK_FORMAT_R32G32B32_SFLOAT;
+		case ShaderDataType::Mat4:     return VK_FORMAT_UNDEFINED;
+		case ShaderDataType::Int:      return VK_FORMAT_R32_UINT;
+		case ShaderDataType::Int2:     return VK_FORMAT_R32G32_UINT;
+		case ShaderDataType::Int3:     return VK_FORMAT_R32G32B32_UINT;
+		case ShaderDataType::Int4:     return VK_FORMAT_R32G32B32A32_UINT;
+		case ShaderDataType::Bool:     return VK_FORMAT_R8_UINT;
+		}
+		return VK_FORMAT_UNDEFINED;
+	}
+
+	ShaderType VKUtils::ShaderTypeFromVulkanStage(VkShaderStageFlagBits type)
+	{
+		switch (type)
+		{
+		case VK_SHADER_STAGE_VERTEX_BIT:	return ShaderType::Vertex;
+		case VK_SHADER_STAGE_FRAGMENT_BIT:	return ShaderType::Fragment;
+		case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
+		case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
+		}
+		return ShaderType::None;
+	}
+	VkShaderStageFlags VKUtils::ShaderUsageToVulkanUsage(uint32_t usage)
+	{
+		VkShaderStageFlags flags = 0;
+		if (usage & (uint32_t)ShaderType::Vertex)		flags |= VK_SHADER_STAGE_VERTEX_BIT;
+		if (usage & (uint32_t)ShaderType::Fragment)		flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+		if (usage & (uint32_t)ShaderType::Compute)		flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+		if (usage & (uint32_t)ShaderType::Geometry)		flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+		return flags;
+	}
+
+	VkCullModeFlags VKUtils::CullModeToVKMode(CullMode mode)
+	{
+		switch (mode)
+		{
+		case CullMode::None:		return VK_CULL_MODE_NONE;
+		case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
+		case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
+		default:					return VK_CULL_MODE_NONE;
+		}
+		return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
+	}
+	VkPolygonMode VKUtils::DrawTypeToVKType(const DrawType& type)
+	{
+		switch (type)
+		{
+		case DrawType::Fill: return VK_POLYGON_MODE_FILL;
+		case DrawType::Line: return VK_POLYGON_MODE_LINE;
+		case DrawType::Point: return VK_POLYGON_MODE_POINT;
+		}
+		return VK_POLYGON_MODE_FILL;
+	}
+
+	bool VKUtils::IsDepth(ImageFormat format)
+	{
+		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
+			return true;
+		return false;
+	}
 //
 //	VkFilter VKUtils::GetSamplerFilter(const FilterMode& filter)
 //	{
@@ -231,17 +240,6 @@ namespace HazardRenderer::Vulkan {
 //		case ImageWrap::RepeatMirror:	return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
 //		}
 //		return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-//	}
-//
-//	VkPolygonMode VKUtils::DrawTypeToVKType(const DrawType& type)
-//	{
-//		switch (type)
-//		{
-//		case DrawType::Fill: return VK_POLYGON_MODE_FILL;
-//		case DrawType::Line: return VK_POLYGON_MODE_LINE;
-//		case DrawType::Point: return VK_POLYGON_MODE_POINT;
-//		}
-//		return VK_POLYGON_MODE_FILL;
 //	}
 //
 	VkPrimitiveTopology VKUtils::DrawTypeToVKTopology(const DrawType& type)
@@ -324,30 +322,30 @@ namespace HazardRenderer::Vulkan {
 //
 //	}
 //
-//	void VKUtils::InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageSubresourceRange subresourceRange)
-//	{
-//		VkImageMemoryBarrier imageMemoryBarrier{};
-//		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-//		imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-//		imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-//
-//		imageMemoryBarrier.srcAccessMask = srcAccessMask;
-//		imageMemoryBarrier.dstAccessMask = dstAccessMask;
-//		imageMemoryBarrier.oldLayout = oldImageLayout;
-//		imageMemoryBarrier.newLayout = newImageLayout;
-//		imageMemoryBarrier.image = image;
-//		imageMemoryBarrier.subresourceRange = subresourceRange;
-//
-//		vkCmdPipelineBarrier(
-//			cmdbuffer,
-//			srcStageMask,
-//			dstStageMask,
-//			0,
-//			0, nullptr,
-//			0, nullptr,
-//			1, &imageMemoryBarrier);
-//	}
-//
+	void VKUtils::InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkImageSubresourceRange subresourceRange)
+	{
+		VkImageMemoryBarrier imageMemoryBarrier{};
+		imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+		imageMemoryBarrier.srcAccessMask = srcAccessMask;
+		imageMemoryBarrier.dstAccessMask = dstAccessMask;
+		imageMemoryBarrier.oldLayout = oldImageLayout;
+		imageMemoryBarrier.newLayout = newImageLayout;
+		imageMemoryBarrier.image = image;
+		imageMemoryBarrier.subresourceRange = subresourceRange;
+
+		vkCmdPipelineBarrier(
+			cmdbuffer,
+			srcStageMask,
+			dstStageMask,
+			0,
+			0, nullptr,
+			0, nullptr,
+			1, &imageMemoryBarrier);
+	}
+
 	std::string VKUtils::ResultToString(VkResult result)
 	{
 		switch (result)
@@ -425,11 +423,11 @@ namespace HazardRenderer::Vulkan {
 
 		return indices;
 	}
-//	VkSurfaceCapabilitiesKHR VKUtils::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
-//	{
-//		VkSurfaceCapabilitiesKHR surfCaps;
-//		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfCaps);
-//		return surfCaps;
-//	}
+	VkSurfaceCapabilitiesKHR VKUtils::GetSurfaceCapabilities(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+	{
+		VkSurfaceCapabilitiesKHR surfCaps;
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfCaps);
+		return surfCaps;
+	}
 }
 #endif

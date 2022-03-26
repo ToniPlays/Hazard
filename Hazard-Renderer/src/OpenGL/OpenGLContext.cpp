@@ -1,6 +1,6 @@
-#ifdef HZR_INCLUDE_OPENGL
 
 #include "OpenGLContext.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Core/Window.h"
 #include "OpenGLUtils.h"
 #include <glad/glad.h>
@@ -18,6 +18,7 @@ namespace HazardRenderer::OpenGL {
 
 		OpenGLContext::OpenGLContext(WindowProps* props)
 		{
+			s_Instance = this;
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		}
 
@@ -30,9 +31,9 @@ namespace HazardRenderer::OpenGL {
 
 		void OpenGLContext::Init(Window* window, HazardRendererCreateInfo* info)
 		{
-			m_Window = (GLFWwindow*)window->GetNativeWindow();
+			m_Window = window;
 
-			glfwMakeContextCurrent(m_Window);
+			glfwMakeContextCurrent((GLFWwindow*)m_Window->GetNativeWindow());
 
 			ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLFW OpenGL context");
 
@@ -52,24 +53,24 @@ namespace HazardRenderer::OpenGL {
 
 		void OpenGLContext::BeginFrame()
 		{
-			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 		void OpenGLContext::Present()
 		{
-			glfwSwapBuffers(m_Window);
+			glfwSwapBuffers((GLFWwindow*)m_Window->GetNativeWindow());
 		}
 
-//		void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
-//		{
-//			renderPass->GetSpecs().TargetFrameBuffer->Bind();
-//		}
-//
-//		void OpenGLContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
-//		{
-//			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//		}
+		void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+		{
+			renderPass->GetSpecs().TargetFrameBuffer->Bind();
+		}
+
+		void OpenGLContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 //
 //		void OpenGLContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
 //		{

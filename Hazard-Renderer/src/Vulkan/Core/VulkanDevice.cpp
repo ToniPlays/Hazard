@@ -82,24 +82,24 @@ namespace HazardRenderer::Vulkan {
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &props);
 		m_DeviceName = props.deviceName;
 
-		//CreatePools(imagesInFlight);	
+		CreatePools(2);	
 	}
 	VulkanDevice::~VulkanDevice()
 	{
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
-		//for(auto pool : m_DescriptorPools)
-		//	vkDestroyDescriptorPool(m_Device, pool, nullptr);
+		for(auto pool : m_DescriptorPools)
+			vkDestroyDescriptorPool(m_Device, pool, nullptr);
 
-		//vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
-		//vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
-		//vkDestroyDevice(m_Device, nullptr);
+		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
+		vkDestroyDevice(m_Device, nullptr);
 	}
 	
 	void VulkanDevice::WaitUntilIdle() {
 
 		VK_CHECK_RESULT(vkDeviceWaitIdle(m_Device));
 	}
-	/*
+	
 	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin)
 	{
 		VkCommandBuffer cmdBuffer;
@@ -120,7 +120,7 @@ namespace HazardRenderer::Vulkan {
 
 		return cmdBuffer;
 	}
-
+	/*
 	VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer()
 	{
 		VkCommandBuffer cmdBuffer;
@@ -134,6 +134,7 @@ namespace HazardRenderer::Vulkan {
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_Device, &cmdBufAllocateInfo, &cmdBuffer));
 		return cmdBuffer;
 	}
+	*/
 
 	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer buffer)
 	{
@@ -174,9 +175,10 @@ namespace HazardRenderer::Vulkan {
 		}
 		return 0;
 	}
+	
 	void VulkanDevice::CreatePools(uint32_t count)
 	{
-		/*QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VulkanContext::GetSurface());
+		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, VulkanContext::GetWindowSurface());
 
 		VkCommandPoolCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -211,6 +213,6 @@ namespace HazardRenderer::Vulkan {
 		for (size_t i = 0; i < count; i++) {
 			VK_CHECK_RESULT(vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPools[i]));
 		}
-	}*/
+	}
 }
 #endif

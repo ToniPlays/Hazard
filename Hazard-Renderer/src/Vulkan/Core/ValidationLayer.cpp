@@ -4,6 +4,8 @@
 
 #include "../VKUtils.h"
 #include "../VulkanContext.h"
+#include "Core/Window.h"
+
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan {
@@ -37,13 +39,12 @@ namespace HazardRenderer::Vulkan {
 		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) 
 			return VK_FALSE;
 
-		VulkanContext::SendDebugMessage(pCallbackData->pMessage, "Vulkan");
+		Window::SendDebugMessage({ Severity::Trace, pCallbackData->pMessage });
 		return VK_FALSE;
 	}
 
 	bool ValidationLayer::InitValidationLayers(VkInstanceCreateInfo& info, VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo, bool enabled)
 	{
-
 		if (!enabled) 
 		{
 			info.enabledLayerCount = 0;
@@ -64,7 +65,10 @@ namespace HazardRenderer::Vulkan {
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 		GetDebugCreateInfo(createInfo);
 
-		return CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) == VK_SUCCESS;
+		Window::SendDebugMessage({ Severity::Info, "Vulkan debugger enabled" });
+
+		VkResult result = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger);
+		return result == VK_SUCCESS;
 	}
 	bool ValidationLayer::IsValidationSupported()
 	{
