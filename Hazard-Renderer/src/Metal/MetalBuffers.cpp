@@ -25,9 +25,9 @@ namespace HazardRenderer::Metal
     }
     void MetalVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
     {
-    //    auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
-    //    auto encoder = mtCmdBuffer->GetEncoder();
-    //    encoder->setVertexBuffer(m_Buffer, 0, 0);
+        auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
+        auto encoder = mtCmdBuffer->GetEncoder();
+        encoder->setVertexBuffer(m_Buffer, 0, 0);
     }
     
     void MetalVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)

@@ -5,7 +5,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Core/Pipeline/Pipeline.h"
-#include "Core/Pipeline/Shader.h"
+#include "MetalShader.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -31,8 +31,9 @@ namespace HazardRenderer::Metal
 
     private:
         PipelineSpecification m_Specs;
-        Ref<Shader> m_Shader;
+        Ref<MetalShader> m_Shader;
         uint32_t m_DrawType, m_PolygonMode;
+        MTL::RenderPipelineDescriptor* m_Descriptor;
         
         MTL::RenderPipelineState* m_Pipeline = nullptr;
     };

@@ -36,6 +36,7 @@ namespace TriangleTest {
 #endif
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
+        createInfo.Resizable = true;
 		createInfo.VSync = true;
 		createInfo.Logging = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
@@ -49,9 +50,9 @@ namespace TriangleTest {
         
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.8f, 0.0f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f
+			 0.5f, -0.5f, 0.0f,  0.8f, 0.8f, 0.0f, 1.0f
 		};
 		uint32_t indices[] = {
 			0, 1, 2
@@ -92,7 +93,11 @@ namespace TriangleTest {
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
+#ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "triangleShader.glsl";
+#elif HZR_PLATFORM_MACOS
+        spec.ShaderPath = "/Users/tonisimoska/Hazard/bin/Debug-macosx-universal/HazardLauncher/res/standard.metal";
+#endif
 		spec.TargetRenderPass = renderPass;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
@@ -111,7 +116,7 @@ namespace TriangleTest {
 			vertexBuffer->Bind(cmdBuffer);
 			indexBuffer->Bind(cmdBuffer);
 			pipeline->Bind(cmdBuffer);
-			pipeline->Draw(cmdBuffer, 3);
+			pipeline->DrawArrays(cmdBuffer, 3);
 
 			window->GetContext()->EndRenderPass(cmdBuffer);
 			cmdBuffer->End();

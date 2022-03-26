@@ -1,4 +1,5 @@
 
+#include "UtilityCore.h"
 #include "File.h"
 #include "Utility/StringUtil.h"
 
@@ -74,6 +75,7 @@ namespace HazardUtility {
 	{
 		std::string result;
 		std::ifstream ifs(file, std::ios::in | std::ios::binary);
+        ASSERT(ifs.is_open(), "Cannot open file");
 
 		ifs.seekg(0, std::ios::end);
 		size_t size = ifs.tellg();

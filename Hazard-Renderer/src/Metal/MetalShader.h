@@ -6,6 +6,10 @@
 #include "Core/Pipeline/Shader.h"
 #include "Core/Pipeline/Buffers.h"
 
+namespace MTL {
+    class Function;
+}
+
 namespace HazardRenderer::Metal
 {
     class MetalShader : public Shader
@@ -24,11 +28,16 @@ namespace HazardRenderer::Metal
         UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };
 
         const ShaderData& GetShaderData() override { return m_ShaderData; };
-
+        
+        //Metal stuff
+        MTL::Function* GetFunction(ShaderType type) { return m_Functions[type]; }
+    private:
+        std::unordered_map<ShaderType, std::string> GetMetalShaderSources(const std::string& path);
     private:
 
         std::string m_FilePath;
 
+        std::unordered_map<ShaderType, MTL::Function*> m_Functions;
         ShaderData m_ShaderData;
         std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
     };

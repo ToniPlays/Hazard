@@ -39,8 +39,10 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::Present()
     {
-        m_SwapchainCommandBuffer->GetMetalCommandBuffer()->presentDrawable(m_Drawable);
+        m_SwapchainCommandBuffer->GetMetalCommandBuffer()->presentDrawableAfterMinimumDuration(m_Drawable, (CFTimeInterval)0.01667f);
         m_SwapchainCommandBuffer->GetMetalCommandBuffer()->commit();
+        m_SwapchainCommandBuffer->GetMetalCommandBuffer()->waitUntilCompleted();
+        
     }
     void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
     {
