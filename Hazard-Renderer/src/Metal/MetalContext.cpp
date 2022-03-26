@@ -29,8 +29,9 @@ namespace HazardRenderer::Metal
         m_PhysicalDevice = new MetalPhysicalDevice();
         m_MetalLayer = new MetalWindowLayer((GLFWwindow*)window->GetNativeWindow(), m_PhysicalDevice->GetMetalDevice());
     }
-    void MetalContext::SetViewport(int x, int y, int w, int h) {
-        
+    void MetalContext::SetViewport(int x, int y, int w, int h)
+    {
+        m_MetalLayer->Resize(w, h);
     }
     void MetalContext::BeginFrame()
     {

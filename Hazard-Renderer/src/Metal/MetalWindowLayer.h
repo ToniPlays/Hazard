@@ -24,6 +24,9 @@ namespace HazardRenderer::Metal
     public:
         MetalWindowLayer(GLFWwindow* window, MTL::Device* device);
         ~MetalWindowLayer() = default;
+        
+        void Resize(uint32_t width, uint32_t height);
+        
         CA::MetalDrawable* GetNextDrawable();
         MTL::Texture* GetDrawableTexture();
 

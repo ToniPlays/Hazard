@@ -34,6 +34,12 @@ namespace HazardRenderer::Metal
         m_Layer = (__bridge CA::MetalLayer*)layer;
          
     }
+    void MetalWindowLayer::Resize(uint32_t width, uint32_t height) {
+        CAMetalLayer* layer = (__bridge CAMetalLayer*)m_Layer;
+        layer.frame.size = { (CGFloat)width, (CGFloat)height} ;
+    }
+
+
     CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()
     {
         CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;
