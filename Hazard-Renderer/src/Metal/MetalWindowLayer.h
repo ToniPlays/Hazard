@@ -28,7 +28,6 @@ namespace HazardRenderer::Metal
         void Resize(uint32_t width, uint32_t height);
         
         CA::MetalDrawable* GetNextDrawable();
-        MTL::Texture* GetDrawableTexture();
 
     private:
         CA::MetalLayer* m_Layer;

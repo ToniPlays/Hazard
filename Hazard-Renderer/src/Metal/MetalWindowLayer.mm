@@ -46,7 +46,5 @@ namespace HazardRenderer::Metal
         id<CAMetalDrawable> metalDrawable      = [metalLayer nextDrawable];
         return (__bridge CA::MetalDrawable* ) metalDrawable;
     }
-    MTL::Texture* MetalWindowLayer::GetDrawableTexture() {
-        return nullptr;
-    }
+    
 }

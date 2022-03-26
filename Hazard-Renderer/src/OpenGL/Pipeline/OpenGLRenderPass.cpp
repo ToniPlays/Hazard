@@ -1,5 +1,6 @@
 
 #include "OpenGLRenderPass.h"
+#ifdef HZR_INCLUDE_OPENGL
 
 namespace HazardRenderer::OpenGL
 {
@@ -13,3 +14,4 @@ namespace HazardRenderer::OpenGL
 
 	}
 }
+#endif

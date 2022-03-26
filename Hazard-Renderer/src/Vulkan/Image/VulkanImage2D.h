@@ -1,4 +1,6 @@
 #pragma once
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Core/Image2D.h"
 #include "Buffer.h"
 #include <map>
@@ -58,3 +60,4 @@ namespace HazardRenderer::Vulkan
 		HazardUtility::Buffer m_Buffer;
 	};
 }
+#endif

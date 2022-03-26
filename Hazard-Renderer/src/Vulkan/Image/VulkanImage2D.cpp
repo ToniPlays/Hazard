@@ -1,5 +1,6 @@
 
 #include "VulkanImage2D.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
 #include <vulkan/vulkan.h>
@@ -183,3 +184,4 @@ namespace HazardRenderer::Vulkan
 		m_DescriptorImageInfo.sampler = m_Info.Sampler;
 	}
 }
+#endif

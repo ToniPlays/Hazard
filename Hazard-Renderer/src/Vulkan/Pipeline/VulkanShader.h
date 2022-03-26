@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Core/Pipeline/Shader.h"
 #include "Core/Pipeline/Buffers.h"
 #include "vulkan/vulkan.h"
@@ -56,3 +59,4 @@ namespace HazardRenderer::Vulkan
 		std::vector<uint32_t> m_DynamicOffsets;
 	};
 }
+#endif

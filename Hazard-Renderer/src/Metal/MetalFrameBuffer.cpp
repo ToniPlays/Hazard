@@ -3,6 +3,7 @@
 #include "MetalFrameBuffer.h"
 #ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
+#include "Core/Window.h"
 
 namespace HazardRenderer::Metal
 {
@@ -17,16 +18,20 @@ namespace HazardRenderer::Metal
         m_Specs.AttachmentCount = info->AttachmentCount;
         m_Specs.Attachments = info->Attachments;
         m_Specs.ClearColor = info->ClearColor;
+        m_Specs.Width = (uint32_t)info->Width;
+        m_Specs.Height = (uint32_t)info->Height;
+        
+        
+        if(info->SwapChainTarget)
+        {
+            m_Specs.ClearColor = MetalContext::GetClearColor();
+        }
         
         if (m_Specs.Width == 0) {
             m_Specs.Width = 1280;
             m_Specs.Height = 720;
         }
-        else
-        {
-            m_Specs.Width = (uint32_t)info->Width;
-            m_Specs.Height = (uint32_t)info->Height;
-        }
+       
         
         Resize(m_Specs.Width, m_Specs.Height, true);
     }

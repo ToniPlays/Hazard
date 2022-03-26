@@ -115,7 +115,6 @@ namespace TriangleTest {
 
 			window->GetContext()->EndRenderPass(cmdBuffer);
 			cmdBuffer->End();
-			cmdBuffer->Submit();
 
 			window->Present();
 		}

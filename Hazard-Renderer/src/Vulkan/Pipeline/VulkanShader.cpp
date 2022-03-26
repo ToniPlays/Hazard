@@ -1,5 +1,6 @@
 
 #include "VulkanShader.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
 #include "../VulkanTexture2D.h"
@@ -370,3 +371,4 @@ namespace HazardRenderer::Vulkan
 		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 	}
 }
+#endif

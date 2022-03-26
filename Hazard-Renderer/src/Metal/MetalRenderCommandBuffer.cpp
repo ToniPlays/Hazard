@@ -13,7 +13,7 @@ namespace HazardRenderer::Metal
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain) : m_OwnedBySwapchain((swapchain))
     {
         Window::SendDebugMessage({ Severity::Info, "Generating command buffers" });
-
+        MetalContext::SetSwpachainCommandBuffer(this);
     }
     void MetalRenderCommandBuffer::Begin()
     {
