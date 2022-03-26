@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 #ifdef  HZR_INCLUDE_METAL
 
-#include "Hazard/Rendering/Queue/RenderCommandBuffer.h"
+#include "Core/RenderCommandBuffer.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

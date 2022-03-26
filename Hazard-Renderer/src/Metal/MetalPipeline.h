@@ -4,8 +4,8 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Hazard/RenderContext/Pipeline/Pipeline.h"
-#include "Hazard/RenderContext/Pipeline/Shader.h"
+#include "Core/Pipeline/Pipeline.h"
+#include "Core/Pipeline/Shader.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

@@ -2,16 +2,18 @@
 #include "MetalRenderCommandBuffer.h"
 #ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
+#include "Core/Window.h"
 
 namespace HazardRenderer::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t size, const std::string& name)
     {
-        HZR_CORE_INFO("Creating command buffer for {0}", name);
+        Window::SendDebugMessage({ Severity::Info, "Creating command buffer for: " + name });
     }
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain) : m_OwnedBySwapchain((swapchain))
     {
-        HZR_CORE_INFO("Generating command buffers");
+        Window::SendDebugMessage({ Severity::Info, "Generating command buffers" });
+
     }
     void MetalRenderCommandBuffer::Begin()
     {
@@ -25,7 +27,6 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::Submit()
     {
         if(m_OwnedBySwapchain) {}
-        MetalContext::Present(m_CommandBuffer);
         m_CommandBuffer->commit();
     }
     void MetalRenderCommandBuffer::BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor)

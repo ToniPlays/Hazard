@@ -9,6 +9,7 @@ namespace HazardRenderer::Metal
 {
     MetalVertexBuffer::MetalVertexBuffer(VertexBufferCreateInfo* createInfo)
     {
+        return;
         MTL::Device* device = MetalContext::GetMetalDevice();
         m_Buffer = device->newBuffer(createInfo->Size, NULL);
         
@@ -18,7 +19,7 @@ namespace HazardRenderer::Metal
         {
             SetData(createInfo->Data, createInfo->Size);
         }
-        HZR_CORE_INFO(m_Buffer->allocatedSize());
+        //)HZR_CORE_INFO(m_Buffer->allocatedSize());
     }
     MetalVertexBuffer::~MetalVertexBuffer()
     {
@@ -26,9 +27,9 @@ namespace HazardRenderer::Metal
     }
     void MetalVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
     {
-        auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
-        auto encoder = mtCmdBuffer->GetEncoder();
-        encoder->setVertexBuffer(m_Buffer, 0, 0);
+    //    auto mtCmdBuffer = cmdBuffer.As<MetalRenderCommandBuffer>();
+    //    auto encoder = mtCmdBuffer->GetEncoder();
+    //    encoder->setVertexBuffer(m_Buffer, 0, 0);
     }
     
     void MetalVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
@@ -43,14 +44,14 @@ namespace HazardRenderer::Metal
     }
     MetalIndexBuffer::MetalIndexBuffer(IndexBufferCreateInfo* createInfo)
     {
-        MTL::Device* device = MetalContext::GetMetalDevice();
-        m_Buffer = device->newBuffer(createInfo->Size * sizeof(uint32_t), NULL);
+    //    MTL::Device* device = MetalContext::GetMetalDevice();
+    //    m_Buffer = device->newBuffer(createInfo->Size * sizeof(uint32_t), NULL);
         
-        m_DebugName = createInfo->DebugName;
+    //    m_DebugName = createInfo->DebugName;
     }
     MetalIndexBuffer::~MetalIndexBuffer()
     {
-        m_Buffer = nullptr;
+    //    m_Buffer = nullptr;
     }
 }
 #endif

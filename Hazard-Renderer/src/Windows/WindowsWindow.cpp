@@ -1,7 +1,7 @@
 
+#include "WindowWindow.h"
 #ifdef HZR_PLATFORM_WINDOWS
 
-#include "WindowWindow.h"
 #include "Core/Events.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -9,6 +9,8 @@
 
 #include "vendor/stb_image.h"
 #include "File/File.h"
+
+#include <vector>
 
 using namespace HazardUtility;
 
@@ -38,7 +40,7 @@ namespace HazardRenderer {
 		m_WindowData.EventCallback = info->AppInfo->EventCallback;
 
 		if (!m_WindowData.EventCallback) {
-			m_WindowData.EventCallback = [](Event& e) {};
+			m_WindowData.EventCallback = [](HazrdUtility::Event& e) {};
 		}
 
 		if (info->Renderer == RenderAPI::Auto) 

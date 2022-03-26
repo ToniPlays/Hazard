@@ -1,4 +1,5 @@
 
+
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
@@ -10,11 +11,11 @@ namespace TriangleTest {
 
 	static void Run()
 	{
-        std::cout << "YES" << std::endl;
+        std::cout << "Running triangle test" << std::endl;
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Simple canvas";
+		appInfo.AppName = "Hello Triangle";
 		appInfo.BuildVersion = "0.0.1a";
 		appInfo.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
@@ -27,17 +28,23 @@ namespace TriangleTest {
 		};
         
 		HazardRendererCreateInfo createInfo = {};
+#ifdef HZR_PLATFORM_WINDOWS
 		createInfo.Renderer = RenderAPI::OpenGL;
+#elif HZR_PLATFORM_MACOS
+        createInfo.Renderer = RenderAPI::Metal;
+#endif
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
 		createInfo.VSync = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
 		createInfo.AppInfo = &appInfo;
-        
+      
         
 		Window* window = Window::Create(&createInfo);
         window->Show();
-        /*
+        
+        std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
+        
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
@@ -51,7 +58,7 @@ namespace TriangleTest {
 		BufferLayout layout = { { "a_Position", ShaderDataType::Float3 },
 								{ "a_Color", ShaderDataType::Float4 }
 		};
-
+        
 		VertexBufferCreateInfo vbo = {};
 		vbo.DebugName = "TriangleVBO";
 		vbo.Usage = BufferUsage::StaticDraw;
@@ -64,7 +71,8 @@ namespace TriangleTest {
 		ibo.Usage = BufferUsage::StaticDraw;
 		ibo.Size = 3 * sizeof(uint32_t);
 		ibo.Data = indices;
-
+        
+        
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.DrawType = DrawType::Fill;
@@ -73,7 +81,7 @@ namespace TriangleTest {
 		spec.CullMode = CullMode::None;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+        Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::CreateFromSwapchain("Main");
@@ -82,13 +90,14 @@ namespace TriangleTest {
 		{
 			window->BeginFrame();
 
-			vertexBuffer->Bind(cmdBuffer);
-			indexBuffer->Bind(cmdBuffer);
-			pipeline->Bind(cmdBuffer);
-			pipeline->Draw(cmdBuffer, 3);
+			//vertexBuffer->Bind(cmdBuffer);
+			//indexBuffer->Bind(cmdBuffer);
+			//pipeline->Bind(cmdBuffer);
+			//pipeline->Draw(cmdBuffer, 3);
 
 			window->Present();
 		}
-         */
+         
+        std::cout << "Test closed";
 	}
 }

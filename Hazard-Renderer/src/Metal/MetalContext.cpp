@@ -7,8 +7,8 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-#include "MetalLayer.h"
-#include "Platform/System/Window.h"
+#include "MetalWindowLayer.h"
+#include "Core/Window.h"
 
 #include "MetalFrameBuffer.h"
 #include "MetalRenderCommandBuffer.h"
@@ -23,11 +23,10 @@ namespace HazardRenderer::Metal
     MetalContext::~MetalContext() {
         //m_Device->release();
     }
-    void MetalContext::Init(Window *window, ApplicationCreateInfo *appInfo)
+    void MetalContext::Init(Window* window, HazardRendererCreateInfo* info)
     {
-        //m_Device = MTL::CreateSystemDefaultDevice();
-        m_MetalLayer = new MetalLayer((GLFWwindow*)window->GetNativeWindow());
-        m_CommandQueue = GetMetalDevice()->newCommandQueue();
+        m_PhysicalDevice = new MetalPhysicalDevice();
+        m_MetalLayer = new MetalWindowLayer((GLFWwindow*)window->GetNativeWindow(), m_PhysicalDevice->GetMetalDevice());
     }
     void MetalContext::SetViewport(int x, int y, int w, int h) {
         
@@ -38,9 +37,11 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::Present()
     {
+        MTL::Drawable* drawable = m_MetalLayer->GetNextDrawable();
         
+        //MTL::RenderPassDescriptor* pass = MTL::RenderPassDescriptor->alloc
     }
-    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+    /*void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
     {
         
         auto spec = renderPass->GetSpecs().TargetFrameBuffer->GetSpecification();
@@ -60,10 +61,11 @@ namespace HazardRenderer::Metal
         colorAttachment->setTexture(m_MetalLayer->GetDrawableTexture());
         
         buffer.As<MetalRenderCommandBuffer>()->BeginRenderEncoder(renderPassDescriptor);
+         
     }
     void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
     {
-        buffer.As<MetalRenderCommandBuffer>()->EndRenderEncoder();
+        //buffer.As<MetalRenderCommandBuffer>()->EndRenderEncoder();
     }
     void MetalContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
     {
@@ -73,14 +75,10 @@ namespace HazardRenderer::Metal
         
     }
     
-    void MetalContext::Present(MTL::CommandBuffer* buffer) {
-        s_Instance->m_MetalLayer->Present(buffer);
-        
-    }
-    MTL::Device* MetalContext::GetMetalDevice()
-    {
-        return s_Instance->m_MetalLayer->GetDevice();
-    }
+    //void MetalContext::Present(MTL::CommandBuffer* buffer) {
+    //    //s_Instance->m_MetalLayer->Present(buffer);
+    //}
+     */
 }
 
 #endif

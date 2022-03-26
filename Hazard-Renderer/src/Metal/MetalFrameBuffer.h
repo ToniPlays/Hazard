@@ -4,7 +4,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
+#include "Core/FrameBuffer.h"
 
 
 namespace HazardRenderer::Metal

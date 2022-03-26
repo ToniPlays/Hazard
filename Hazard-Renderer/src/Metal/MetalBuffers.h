@@ -3,6 +3,8 @@
 #include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
+#include "Core/Pipeline/Buffers.h"  
+
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -20,6 +22,8 @@ namespace HazardRenderer::Metal
         void SetData(const void* data, uint32_t size) override;
         uint32_t GetSize() override { return m_Size; }
         
+        const BufferLayout& GetLayout() const override { return m_Layout; }
+        
         std::string& GetDebugName() override { return m_DebugName; }
         
 
@@ -27,6 +31,7 @@ namespace HazardRenderer::Metal
         BufferUsage m_Usage;
         std::string m_DebugName;
         uint32_t m_Size;
+        BufferLayout m_Layout;
         
         MTL::Buffer* m_Buffer;
     };

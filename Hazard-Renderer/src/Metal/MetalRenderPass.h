@@ -3,8 +3,8 @@
 #include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Hazard/RenderContext/Pipeline/FrameBuffer.h"
-#include "Hazard/RenderContext/Pipeline/RenderPass.h"
+#include "Core/FrameBuffer.h"
+#include "Core/Pipeline/RenderPass.h"
 
 
 namespace HazardRenderer::Metal {

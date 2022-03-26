@@ -20,6 +20,7 @@ project "HazardLauncher"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.Box2D}",
@@ -35,7 +36,12 @@ project "HazardLauncher"
 	links {
 		"Hazard-Utility",
 		"Hazard-Renderer",
-		"Hazard-UI"
+		"Hazard-UI",
+		"Glad",
+		"GLFW"
+	}
+	defines {
+		"GLFW_INCLUDE_NONE"
 	}
 
 	filter "system:windows"
@@ -43,10 +49,20 @@ project "HazardLauncher"
 		defines {
 			"HZR_PLATFORM_WINDOWS"
 		}
-	filter "system:macs"
-		systemversion "latest"
+
+	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS"
+		}
+		links { 
+			"IOKit.framework",
+			"CoreFoundation.framework",
+			"Cocoa.framework",
+			"OpenGL.framework",
+			"Metal.framework",
+			"MetalKit.framework",
+			"QuartzCore.framework",
+			"Quartz.framework"
 		}
 
 	filter "configurations:Debug"

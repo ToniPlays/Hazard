@@ -1,41 +1,71 @@
-
 #include "MacOSWindow.h"
+
 #ifdef HZR_PLATFORM_MACOS
 
-#include "Hazard/Events/Input.h"
-#include "Hazard/RenderContext/RenderContextCommand.h"
-
-#include <stb_image.h>
+#include "File/File.h"
+#include "Core/Events.h"
+#include "vendor/stb_image.h"
+#include <vector>
 
 namespace HazardRenderer
 {
-    Window* Window::Create(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
+    Window* Window::Create(HazardRendererCreateInfo* info)
     {
-        return new MacOSWindow(info, appInfo);
+        return new MacOSWindow(info);
     }
 
-    MacOSWindow::MacOSWindow(RenderContexCreateInfo* info, ApplicationCreateInfo* appInfo)
+    void Window::SendDebugMessage(const RenderMessage& message)
     {
-        if (!glfwInit()) {
-            HZR_THROW("Failed to init GLFW");
-        }
-        if (info->Renderer == RenderAPI::Auto) {
-            info->Renderer = RenderAPI::Metal;
+        if (MacOSWindow::s_DebugCallback == nullptr) return;
+
+        RenderMessage msg;
+        msg.Severity = message.Severity;
+        msg.Message = "[Hazard-Renderer]: " + message.Message;
+
+        MacOSWindow::s_DebugCallback(msg);
+    }
+
+    MacOSWindow::MacOSWindow(HazardRendererCreateInfo* info)
+    {
+        
+        ASSERT(info->AppInfo != nullptr, "AppInfo cannot be nullptr");
+        ASSERT(glfwInit(), "Failed to initialize GLFW");
+        
+        s_DebugCallback = info->AppInfo->MessageCallback;
+        m_WindowData.EventCallback = info->AppInfo->EventCallback;
+
+        if (!m_WindowData.EventCallback) {
+            m_WindowData.EventCallback = [](HazardUtility::Event& e) {};
         }
         
-        m_WindowData.Title = appInfo->AppName + " " + appInfo->BuildVersion + " " + RenderContext::APIToString(info->Renderer);
-        m_WindowData.Platform = "MacOS";
+        if (info->Renderer == RenderAPI::Auto)
+        {
+            info->Renderer = RenderAPI::Metal;
+        }
+
+        SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
+
+        m_WindowData.Title = info->AppInfo->AppName + " " + info->AppInfo->BuildVersion + " " + RenderAPIToString(info->Renderer);
+        m_WindowData.Platform = "Windows";
         m_WindowData.SelectedAPI = info->Renderer;
         m_WindowData.Width = info->Width;
         m_WindowData.Height = info->Height;
         m_WindowData.VSync = info->VSync;
         m_WindowData.ImagesInFlight = info->ImagesInFlight;
+        m_WindowData.Window = this;
         
-        m_Context = GraphicsContext::Create(info->Renderer, &m_WindowData);
+
+        m_Context = GraphicsContext::Create(&m_WindowData);
+
+        glfwWindowHint(GLFW_RESIZABLE, info->Resizable);
+        glfwWindowHint(GLFW_DECORATED, info->Decorated);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         
+
         GLFWmonitor* monitor = NULL;
 
-        if (info->FullScreen) {
+        if (info->FullScreen)
+        {
             monitor = glfwGetPrimaryMonitor();
             if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0)
             {
@@ -43,59 +73,60 @@ namespace HazardRenderer
                 m_WindowData.Height = glfwGetVideoMode(monitor)->height;
             }
         }
+        ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
+        ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
+
         
-        m_Window = glfwCreateWindow(info->Width, info->Height, appInfo->AppName.c_str(), NULL, NULL);
+        m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
+
+        ASSERT(m_Window, "Failed to create window");
+
+        if (info->AppInfo->IconCount > 0)
+            SetWindowIcon(info->AppInfo->IconCount, info->AppInfo->Icons);
+
         
-        HZR_CORE_ASSERT(m_Window, "Failed to create window");
-        
-        if (appInfo->IconCount > 0)
-            SetWindowIcon(appInfo->IconCount, appInfo->Icons);
-        
-        m_Context->Init((Window*)this, appInfo);
+        m_Context->Init(this, info);
         m_Context->SetClearColor(info->Color);
-        
+
         glfwSetWindowUserPointer(m_Window, &m_WindowData);
-        
+
         if (info->Maximized)
             glfwMaximizeWindow(m_Window);
 
-        glfwShowWindow(m_Window);
         SetCallbacks();
         SetVSync(info->VSync);
         
     }
-    MacOSWindow::~MacOSWindow()
+    void MacOSWindow::BeginFrame()
     {
-        delete m_Context;
-        glfwDestroyWindow(m_Window);
-        glfwTerminate();
-    }
-    void MacOSWindow::BeginFrame() {
         m_Context->BeginFrame();
     }
     void MacOSWindow::Present()
     {
-        if (!m_WindowData.minimized)
-            m_Context->Present();
-        Input::Update();
+        m_Context->Present();
+
+        if (!m_WindowData.minimized) {}
+
         glfwPollEvents();
     }
-    void MacOSWindow::SetWindowTitle(const char* title)
+
+    void MacOSWindow::SetWindowTitle(const std::string& title)
     {
         m_WindowData.Title = title;
-        glfwSetWindowTitle(m_Window, title);
+        glfwSetWindowTitle(m_Window, title.c_str());
     }
+
     void MacOSWindow::SetWindowIcon(uint32_t count, const char** images)
     {
         std::vector<GLFWimage> glfwImages(count);
 
         for (uint32_t i = 0; i < count; i++) {
             GLFWimage img = glfwImages[i];
-            const std::string& path = File::GetFileAbsolutePath(images[i]);
+            const std::string& path = File::GetFileAbsolutePath(std::string(images[i]));
 
-            int sx, sy, sChannels, bChannels;
+            int sx, sy, sChannels;
             img.pixels = stbi_load(path.c_str(), &sx, &sy, &sChannels, 3);
-            HZR_ASSERT(img.pixels, "Could not load Window Icon {0}", images[i]);
+            ASSERT(img.pixels != 0, "Could not load Window Icon");
             img.width = sx;
             img.height = sy;
         }
@@ -105,18 +136,19 @@ namespace HazardRenderer
             stbi_image_free(image.pixels);
         }
     }
-    void MacOSWindow::SetPosition(glm::vec2 position, glm::vec2 dragPoint)
+
+    glm::vec2 MacOSWindow::GetPosition()
     {
         int x, y;
         glfwGetWindowPos(m_Window, &x, &y);
-
-        glm::vec2 delta = position - dragPoint;
-        HZR_CORE_INFO("{0} x {1}", delta.x, delta.y);
-        position.x += (float)x;
-        position.y += (float)y;
-
-        glfwSetWindowPos(m_Window, x + delta.x, y + delta.y);
+        return { x, y };
     }
+
+    void MacOSWindow::SetPosition(glm::vec2 position)
+    {
+        glfwSetWindowPos(m_Window, position.x, position.y);
+    }
+
     void MacOSWindow::SetFullscreen(bool fullscreen)
     {
         m_WindowData.fullscreen = fullscreen;
@@ -131,7 +163,7 @@ namespace HazardRenderer
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
             data.Height = h;
             data.Width = w;
-            Application::GetModule<RenderContext>().GetContext().SetViewport(0, 0, w, h);
+            data.Window->GetContext()->SetViewport(0, 0, w, h);
 
             WindowResizeEvent event(w, h);
             data.EventCallback(event);
@@ -167,7 +199,6 @@ namespace HazardRenderer
                 break;
             }
             }
-            Input::UpdateKey(key, action);
             });
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -208,8 +239,27 @@ namespace HazardRenderer
         glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
             data.minimized = minimized;
-            Application::GetData().Minimized = minimized == 1;
             });
     }
+    MacOSWindow::~MacOSWindow()
+    {
+        Close();
+        delete m_Context;
+        glfwTerminate();
+    }
+    void MacOSWindow::Show() const
+    {
+        glfwShowWindow(m_Window);
+    }
+    void MacOSWindow::Hide() const
+    {
+        glfwHideWindow(m_Window);
+    }
+    void MacOSWindow::Close()
+    {
+        //m_Context->Close();
+        glfwDestroyWindow(m_Window);
+}
+
 }
 #endif

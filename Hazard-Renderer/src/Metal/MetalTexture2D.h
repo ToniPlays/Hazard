@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/Core.h"
-
+#if 0
 #ifdef HZR_INCLUDE_METAL
 
-#include "Hazard/Rendering/Texture.h"
+#include "Core/Texture.h"
 
 namespace HazardRenderer::Metal
 {
@@ -38,4 +38,5 @@ namespace HazardRenderer::Metal
         int m_Height;
     };
 }
+#endif
 #endif

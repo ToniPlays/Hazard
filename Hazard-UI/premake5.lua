@@ -40,8 +40,7 @@ project "Hazard-UI"
 		}
 
 
-	filter "system:macos"
-		systemversion "latest"
+	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS",
 			"GLFW_INCLUDE_NONE"

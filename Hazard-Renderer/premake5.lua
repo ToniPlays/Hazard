@@ -55,11 +55,25 @@ project "Hazard-Renderer"
 		}
 
 
-	filter "system:macos"
-		systemversion "latest"
+	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS",
 			"GLFW_INCLUDE_NONE"
+		}
+		links { 
+			"IOKit.framework",
+			"CoreFoundation.framework",
+			"Cocoa.framework",
+			"QuartzCore.framework",
+			"OpenGL.framework",
+			"Metal.framework",
+			"MetalKit.framework"
+		}
+		includedirs {
+			"%{IncludeDir.Metal}"
+		}
+		files {
+			"src/**.mm"
 		}
 
 	filter "configurations:Debug"

@@ -11,6 +11,7 @@ namespace HazardRenderer::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {
+        return;
         std::string shader = "#include <metal_stdlib>\n"
             "using namespace metal;\n"
             "\n"
@@ -34,7 +35,7 @@ namespace HazardRenderer::Metal
         options->setLibraryType(type);
         
         MTL::Library* lib = device->newLibrary(source, options, &error);
-        HZR_CORE_ASSERT(!error, "No library here {0}", error->description()->cString(NS::UTF8StringEncoding));
+        ASSERT(!error, "No library here");
 
         
         m_Shader = Shader::Create(specs->ShaderPath);

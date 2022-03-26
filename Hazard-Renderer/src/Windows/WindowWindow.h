@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "Core/Core.h"
@@ -23,7 +22,7 @@ namespace HazardRenderer {
 		virtual void Present() override;
 
 		void SetWindowTitle(const std::string& title) override;
-		void SetFullscreen(bool fullscreen);
+		void SetFullscreen(bool fullscreen) override;
 
 		void SetMaximized(bool maximized) override
 		{
@@ -48,11 +47,11 @@ namespace HazardRenderer {
 
 		void* GetNativeWindow() const override { return m_Window; }
 
-		unsigned int GetWidth() const { return m_WindowData.Width; }
-		unsigned int GetHeight() const { return m_WindowData.Height; }
+		unsigned int GetWidth() const override { return m_WindowData.Width; }
+		unsigned int GetHeight() const override { return m_WindowData.Height; }
 
 		bool IsVSync() const override { return m_WindowData.VSync; }
-		bool IsFocused() const { return m_WindowData.focus; }
+		bool IsFocused() const override { return m_WindowData.focus; }
 		bool IsMinimized() const override { return m_WindowData.minimized; }
 		bool IsFullscreen() const override { return m_WindowData.fullscreen; }
 		bool IsMaximized() const override { return m_WindowData.maximized; }
@@ -60,7 +59,7 @@ namespace HazardRenderer {
 
 		WindowProps GetWindowInfo() override { return m_WindowData; }
 
-		GraphicsContext* GetContext() const { return m_Context; };
+		GraphicsContext* GetContext() const override { return m_Context; };
 
 	private:
 		WindowProps m_WindowData;

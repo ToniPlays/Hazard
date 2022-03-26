@@ -31,8 +31,7 @@ project "Hazard-Utility"
 		defines {
 			"HZR_PLATFORM_WINDOWS"
 		}
-	filter "system:macos"
-		systemversion "latest"
+	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS"
 		}

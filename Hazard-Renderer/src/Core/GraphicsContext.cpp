@@ -4,7 +4,7 @@
 #include "Window.h"
 
 #ifdef HZR_INCLUDE_OPENGL
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/OpenGLCore.h"
 #endif
 #ifdef HZR_INCLUDE_VULKAN
 #include "Vulkan/VulkanCore.h"
