@@ -9,17 +9,15 @@ namespace HazardRenderer::Metal
 {
     MetalVertexBuffer::MetalVertexBuffer(VertexBufferCreateInfo* createInfo)
     {
-        return;
+        
         MTL::Device* device = MetalContext::GetMetalDevice();
         m_Buffer = device->newBuffer(createInfo->Size, NULL);
-        
         m_DebugName = createInfo->DebugName;
         
         if(createInfo->Data)
         {
             SetData(createInfo->Data, createInfo->Size);
         }
-        //)HZR_CORE_INFO(m_Buffer->allocatedSize());
     }
     MetalVertexBuffer::~MetalVertexBuffer()
     {
@@ -39,8 +37,8 @@ namespace HazardRenderer::Metal
     }
 
     void MetalVertexBuffer::SetData(const void *data, uint32_t size) {
-        //void* contents = m_Buffer->contents();
-        //memcpy(contents, data, size);
+        void* contents = m_Buffer->contents();
+        memcpy(contents, data, size);
     }
     MetalIndexBuffer::MetalIndexBuffer(IndexBufferCreateInfo* createInfo)
     {
@@ -51,7 +49,7 @@ namespace HazardRenderer::Metal
     }
     MetalIndexBuffer::~MetalIndexBuffer()
     {
-    //    m_Buffer = nullptr;
+        m_Buffer = nullptr;
     }
 }
 #endif

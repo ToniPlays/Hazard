@@ -25,6 +25,7 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::Init(Window* window, HazardRendererCreateInfo* info)
     {
+        m_Window = window;
         m_PhysicalDevice = new MetalPhysicalDevice();
         m_MetalLayer = new MetalWindowLayer((GLFWwindow*)window->GetNativeWindow(), m_PhysicalDevice->GetMetalDevice());
     }
@@ -37,9 +38,28 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::Present()
     {
-        MTL::Drawable* drawable = m_MetalLayer->GetNextDrawable();
+        MTL::ClearColor color = MTL::ClearColor::Make(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
         
-        //MTL::RenderPassDescriptor* pass = MTL::RenderPassDescriptor->alloc
+        CA::MetalDrawable* drawable = m_MetalLayer->GetNextDrawable();
+        
+        MTL::RenderPassDescriptor* pass = MTL::RenderPassDescriptor::renderPassDescriptor();
+        pass->setRenderTargetWidth(m_Window->GetWidth());
+        pass->setRenderTargetHeight(m_Window->GetHeight());
+        
+        MTL::RenderPassColorAttachmentDescriptorArray* colorAttahcments = pass->colorAttachments();
+        colorAttahcments->object(0)->setClearColor(color);
+        colorAttahcments->object(0)->setLoadAction(MTL::LoadActionClear);
+        colorAttahcments->object(0)->setStoreAction(MTL::StoreActionStore);
+        colorAttahcments->object(0)->setTexture(drawable->texture());
+        
+        MTL::CommandQueue* queue = m_PhysicalDevice->GetMetalCommandQueue();
+        MTL::CommandBuffer* buffer = queue->commandBuffer();
+        MTL::CommandEncoder* encoder = buffer->renderCommandEncoder(pass);
+        encoder->endEncoding();
+        
+        buffer->presentDrawable(drawable);
+        buffer->commit();
+        
     }
     /*void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
     {

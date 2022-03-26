@@ -34,7 +34,7 @@ namespace HazardRenderer::Metal
         m_Layer = (__bridge CA::MetalLayer*)layer;
          
     }
-    MTL::Drawable* MetalWindowLayer::GetNextDrawable()
+    CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()
     {
         CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;
         id<CAMetalDrawable> metalDrawable      = [metalLayer nextDrawable];

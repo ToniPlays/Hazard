@@ -37,7 +37,7 @@ namespace HazardRenderer::Metal
         static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_CommandQueue; }
         
     private:
-        GLFWwindow* m_Window;
+        Window* m_Window;
         glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
         static ErrorCallback s_Callback;
         

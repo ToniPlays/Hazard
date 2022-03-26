@@ -15,6 +15,7 @@ namespace MTL
 namespace CA
 {
     class MetalLayer;
+    class MetalDrawable;
 }
 
 namespace HazardRenderer::Metal
@@ -23,7 +24,7 @@ namespace HazardRenderer::Metal
     public:
         MetalWindowLayer(GLFWwindow* window, MTL::Device* device);
         ~MetalWindowLayer() = default;
-        MTL::Drawable* GetNextDrawable();
+        CA::MetalDrawable* GetNextDrawable();
         MTL::Texture* GetDrawableTexture();
 
     private:

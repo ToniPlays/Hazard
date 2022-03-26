@@ -7,6 +7,7 @@
 
 namespace MTL {
     class Device;
+    class CommandQueue;
 }
 
 namespace HazardRenderer::Metal {
@@ -21,6 +22,7 @@ namespace HazardRenderer::Metal {
         
         
         MTL::Device* GetMetalDevice() { return m_Device; }
+        MTL::CommandQueue* GetMetalCommandQueue() { return m_Queue; }
         static Ref<PhysicalDevice> Create();
 
     private:
@@ -28,6 +30,7 @@ namespace HazardRenderer::Metal {
         PhysicalDeviceLimits m_Limits;
         
         MTL::Device* m_Device;
+        MTL::CommandQueue* m_Queue;
     };
 }
 #endif
