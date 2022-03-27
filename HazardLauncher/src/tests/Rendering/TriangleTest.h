@@ -33,11 +33,8 @@ namespace TriangleTest {
 		};
         
 		HazardRendererCreateInfo createInfo = {};
-#ifdef HZR_PLATFORM_WINDOWS
+
 		createInfo.Renderer = api;
-#elif HZR_PLATFORM_MACOS
-        createInfo.Renderer = api;
-#endif
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
 		createInfo.VSync = true;
@@ -95,7 +92,11 @@ namespace TriangleTest {
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
+#ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "triangleShader.glsl";
+#elif HZR_PLATFORM_MACOS
+        spec.ShaderPath = "res/triangleShader.metal";
+#endif
 		spec.TargetRenderPass = renderPass;
 		spec.DepthTest = false;
 
