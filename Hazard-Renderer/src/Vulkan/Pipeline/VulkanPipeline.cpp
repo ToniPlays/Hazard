@@ -127,7 +127,7 @@ namespace HazardRenderer::Vulkan
 		rasterizer.polygonMode = VKUtils::DrawTypeToVKType(m_Specs.DrawType);
 		rasterizer.lineWidth = 1.0f;
 		rasterizer.cullMode = VKUtils::CullModeToVKMode(m_Specs.CullMode);
-		rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 
 		VkPipelineMultisampleStateCreateInfo multisampling = {};

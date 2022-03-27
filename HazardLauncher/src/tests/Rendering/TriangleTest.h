@@ -1,16 +1,20 @@
 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
+
+#include <glad/glad.h>
 
 using namespace HazardUtility;
 using namespace HazardRenderer;
 
 namespace TriangleTest {
 
-	static void Run()
+	//OpenGL: Pass
+	//Vulkan: Pass
+	//Metal: Pass with memory leak 
+
+	static void Run(RenderAPI api)
 	{
         std::cout << "Running triangle test" << std::endl;
 		static bool running = true;
@@ -30,13 +34,12 @@ namespace TriangleTest {
         
 		HazardRendererCreateInfo createInfo = {};
 #ifdef HZR_PLATFORM_WINDOWS
-		createInfo.Renderer = RenderAPI::Vulkan;
+		createInfo.Renderer = api;
 #elif HZR_PLATFORM_MACOS
-        createInfo.Renderer = RenderAPI::Metal;
+        createInfo.Renderer = api;
 #endif
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
-        createInfo.Resizable = true;
 		createInfo.VSync = true;
 		createInfo.Logging = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
@@ -50,9 +53,9 @@ namespace TriangleTest {
         
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.8f, 0.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,  0.8f, 0.8f, 0.0f, 1.0f
+			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f
 		};
 		uint32_t indices[] = {
 			0, 1, 2
@@ -72,10 +75,9 @@ namespace TriangleTest {
 		IndexBufferCreateInfo ibo = {};
 		ibo.DebugName = "TriangleIBO";
 		ibo.Usage = BufferUsage::StaticDraw;
-		ibo.Size = 3 * sizeof(uint32_t);
+		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
         
-
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "ScreenFBO";
 		frameBufferInfo.SwapChainTarget = true;
@@ -93,12 +95,9 @@ namespace TriangleTest {
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
-#ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "triangleShader.glsl";
-#elif HZR_PLATFORM_MACOS
-        spec.ShaderPath = "/Users/tonisimoska/Hazard/bin/Debug-macosx-universal/HazardLauncher/res/standard.metal";
-#endif
 		spec.TargetRenderPass = renderPass;
+		spec.DepthTest = false;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
@@ -109,18 +108,17 @@ namespace TriangleTest {
 		while (running)
 		{
 			window->BeginFrame();
-
 			cmdBuffer->Begin();
 			window->GetContext()->BeginRenderPass(cmdBuffer, renderPass);
 
 			vertexBuffer->Bind(cmdBuffer);
 			indexBuffer->Bind(cmdBuffer);
 			pipeline->Bind(cmdBuffer);
-			pipeline->DrawArrays(cmdBuffer, 3);
+			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
 
 			window->GetContext()->EndRenderPass(cmdBuffer);
 			cmdBuffer->End();
-
+			
 			window->Present();
 		}
          

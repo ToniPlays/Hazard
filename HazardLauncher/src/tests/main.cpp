@@ -1,10 +1,10 @@
 #include "tests/SimpleCanvas.cpp"
-#include "tests/TriangleTest.cpp"
+#include "tests/Rendering/TriangleTest.h"
+#include "tests/Rendering/TexturedQuad.h"
 
 
 int main()
 {
-    
-	TriangleTest::Run();
+	TriangleTest::Run(RenderAPI::Vulkan);
 	return 0;
 }

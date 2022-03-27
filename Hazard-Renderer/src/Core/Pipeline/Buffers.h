@@ -33,6 +33,7 @@ namespace HazardRenderer
 	struct IndexBufferCreateInfo 
 	{
 		std::string DebugName;
+		//Size is equal to size of uint32_t, don't multiply with "sizeof(uint32_t)"
 		uint32_t Size;
 		BufferUsage Usage;
 		uint32_t* Data = nullptr;

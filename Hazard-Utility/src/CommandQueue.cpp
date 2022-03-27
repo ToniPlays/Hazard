@@ -3,7 +3,7 @@
 
 namespace HazardUtility {
 
-	CommandQueue::CommandQueue(size_t size)
+	CommandQueue::CommandQueue(uint32_t size)
 	{
 		m_Size = size;
 		m_CommandBuffer = new uint8_t[size];

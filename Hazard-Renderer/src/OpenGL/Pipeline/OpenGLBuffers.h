@@ -37,7 +37,7 @@ namespace HazardRenderer::OpenGL
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 
-		uint32_t GetCount() override { return m_Size; }
+		uint32_t GetCount() override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
 
 	private:
