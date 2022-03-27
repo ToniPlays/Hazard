@@ -100,7 +100,7 @@ namespace HazardRenderer::OpenGL
 	{
 		m_Size = size;
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-		glBufferData(GL_ARRAY_BUFFER, size * sizeof(uint32_t), data, GL_STREAM_DRAW + m_Usage);
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size), 
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)

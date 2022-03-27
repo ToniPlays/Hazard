@@ -52,7 +52,7 @@ namespace HazardRenderer::Vulkan
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		std::string& GetDebugName() { return m_DebugName; }
 
-		uint32_t GetCount() override { return m_Size; }
+		uint32_t GetCount() override { return m_Size / sizeof(uint32_t); }
 
 		VkBuffer GetVulkanBuffer() const { return m_Buffer;	}
 

@@ -8,7 +8,7 @@ namespace HazardUtility
 	public:
 
 		typedef void(*CommandFn)(void*);
-		CommandQueue(size_t size = 10 * 1024 * 1024);
+		CommandQueue(uint32_t size = 10 * 1024 * 1024);
 		~CommandQueue();
 
 		void* Allocate(CommandFn func, uint32_t size);
