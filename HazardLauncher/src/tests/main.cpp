@@ -5,6 +5,6 @@
 
 int main()
 {
-	TriangleTest::Run(RenderAPI::Metal);
+	TexturedQuad::Run(RenderAPI::Vulkan);
 	return 0;
 }

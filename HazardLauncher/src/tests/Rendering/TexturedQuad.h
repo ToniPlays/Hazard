@@ -12,7 +12,7 @@ namespace TexturedQuad {
 	//Vulkan: White quad
 	//Metal: Not tested
 
-	static void Run()
+	static void Run(RenderAPI api)
 	{
 		std::cout << "Running textured quad test" << std::endl;
 		static bool running = true;
@@ -31,11 +31,7 @@ namespace TexturedQuad {
 		};
 
 		HazardRendererCreateInfo createInfo = {};
-#ifdef HZR_PLATFORM_WINDOWS
-		createInfo.Renderer = RenderAPI::OpenGL;
-#elif HZR_PLATFORM_MACOS
-		createInfo.Renderer = RenderAPI::Metal;
-#endif
+		createInfo.Renderer = api;
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
 		createInfo.VSync = true;
@@ -51,12 +47,14 @@ namespace TexturedQuad {
 
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
 		};
 		uint32_t indices[] = {
-			0, 1, 2
+			0, 1, 2,
+			2, 3, 0
 		};
 
 		BufferLayout layout = { { "a_Position", ShaderDataType::Float3 },
