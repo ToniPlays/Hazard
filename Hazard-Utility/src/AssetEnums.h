@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Hazard/Core/Core.h"
+#include <string>
 
-namespace Hazard 
+
+namespace HazardUtility
 {
 	enum class AssetType
 	{

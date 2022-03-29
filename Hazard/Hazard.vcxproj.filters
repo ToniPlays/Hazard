@@ -120,12 +120,6 @@
     <ClInclude Include="src\Hazard.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Assets\Asset.h">
-      <Filter>src\Hazard\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Assets\AssetEnums.h">
-      <Filter>src\Hazard\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Assets\AssetLoader.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
@@ -1670,12 +1664,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Hazard\Assets\Asset.cpp">
-      <Filter>src\Hazard\Assets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp">
-      <Filter>src\Hazard\Assets</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>

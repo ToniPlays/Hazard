@@ -15,7 +15,7 @@ namespace HazardRenderer
 		std::string Message;
 	};
 	using RendererMessageCallback = void(*)(RenderMessage);
-	using EventCallback = void(*)(HazardUtility::Event&);
+	using EventCallback = std::function<void(HazardUtility::Event&)>;
 
 	enum class RenderAPI {
 		Auto = 0,

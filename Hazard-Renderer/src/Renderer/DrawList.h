@@ -1,7 +1,8 @@
 #pragma once
 
+#include "UID.h"
 #include "Camera.h"
-#include "RawMesh.h"
+#include "Mesh/RawMesh.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include <vector>
 #include <unordered_map>
@@ -10,23 +11,32 @@ namespace HazardRenderer
 {
 	struct WorldSettings 
 	{
-		Camera RenderingCamera;
+		Camera* RenderingCamera;
+		Ref<RenderPass> TargetRenderPass;
+	};
+	struct TransformData 
+	{
+		glm::vec4 MRow[3];
 	};
 
 	struct InstancedMesh 
 	{
-		Ref<RawMesh> Mesh;
-		std::vector<glm::mat4> Transforms;
+		Ref<RawMesh> RawMesh;
+		std::vector<TransformData> Transforms;
 	};
 
 	struct PipelineRenderable
 	{
-		std::unordered_map<uint64_t, std::vector<InstancedMesh>> MeshInstances;
+		Ref<Pipeline> Pipeline;
+		std::unordered_map<HazardUtility::UID, InstancedMesh> MeshInstances;
 	};
 	struct DrawList 
 	{
 		WorldSettings Settings;
 
-		std::unordered_map<uint64_t, PipelineRenderable> Geometry;
+		std::unordered_map<HazardUtility::UID, PipelineRenderable> Geometry;
+
+		uint32_t Quads = 0;
+
 	};
 }

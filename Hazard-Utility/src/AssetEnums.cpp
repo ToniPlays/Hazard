@@ -1,8 +1,7 @@
 
-#include <hzrpch.h>
 #include "AssetEnums.h"
 
-namespace Hazard {
+namespace HazardUtility {
 	namespace Utils 
 	{
 		AssetType StringToAssetType(const std::string& type) {

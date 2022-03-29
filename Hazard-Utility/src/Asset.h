@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Hazard/Core/Ref.h"
-#include "Hazard/Core/UUID.h"
+#include "Ref.h"
+#include "UID.h"
 #include "AssetEnums.h"
 
+#include <filesystem>
+
+#define BIT(x) (1 << x)
 #define INVALID_ASSET_HANDLE 0
 
-namespace Hazard
+namespace HazardUtility
 {
 	enum class AssetFlags : uint16_t {
 		None = BIT(0),
@@ -17,7 +20,7 @@ namespace Hazard
 		RuntimeGenerated = BIT(5)
 	};
 
-	using AssetHandle = UUID;
+	using AssetHandle = UID;
 
 	struct AssetMetadata
 	{
@@ -37,29 +40,16 @@ namespace Hazard
 
 		virtual ~Asset() = default;
 		const AssetType GetType() const { return m_Type; }
-		UUID GetHandle() { return m_Handle; }
+		UID GetHandle() { return m_Handle; }
 		AssetFlags GetFlags() { return m_Flags; }
 		bool IsValid() { return m_Handle != INVALID_ASSET_HANDLE; }
-		AssetMetadata& GetMetadata();
 
 	protected:
-		UUID m_Handle = INVALID_ASSET_HANDLE;
+		UID m_Handle = INVALID_ASSET_HANDLE;
 		AssetType m_Type;
 		AssetFlags m_Flags = AssetFlags::None;
 	private:
-		void SetHandle(UUID handle) { m_Handle = handle; };
+		void SetHandle(UID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }
-	};
-	class RuntimeResource : public RefCount {
-		friend class AssetManager;
-	public:
-		virtual ~RuntimeResource();
-
-		UUID GetHandle() { return m_Handle; }
-		ResourceType GetType() { return m_Type; }
-
-	protected:
-		UUID m_Handle = INVALID_ASSET_HANDLE;
-		ResourceType m_Type = ResourceType::Undefined;
 	};
 }

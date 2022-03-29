@@ -11,6 +11,7 @@ namespace HazardRenderer
 	{
 		friend class WindowsWindow;
 	public:
+		static void BeginFrame();
 		static void BeginWorld(WorldSettings settings);
 		static void DrawQuad(Ref<Pipeline> pipeline, glm::mat4 transform, glm::vec4 color);
 		//static void DrawQuad(Ref<Pipeline> pipeline, glm::mat4 transform);
@@ -23,7 +24,9 @@ namespace HazardRenderer
 
 	private:
 		inline static GraphicsContext* s_Context = nullptr;
-
+		inline static Ref<RawMesh> m_QuadMesh;
+		inline static Ref<VertexBuffer> m_InstanceBuffer;
 		inline static DrawList s_DrawList;
+		inline static Ref<RenderCommandBuffer> m_CommandBuffer;
 	};
 }
