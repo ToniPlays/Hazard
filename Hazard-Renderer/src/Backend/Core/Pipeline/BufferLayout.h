@@ -6,6 +6,12 @@
 
 namespace HazardRenderer {
 
+
+	enum Divisor : uint32_t {
+		PerVertex = 0,
+		PerInstance = 1
+	};
+
 	struct BufferElement
 	{
 		std::string Name;
@@ -51,8 +57,8 @@ namespace HazardRenderer {
 	public:
 		BufferLayout() {}
 
-		BufferLayout(std::initializer_list<BufferElement> elements)
-			: m_Elements(elements)
+		BufferLayout(std::initializer_list<BufferElement> elements, uint32_t divisor = 0)
+			: m_Elements(elements), m_Divisor(divisor)
 		{
 			CalculateOffsetsAndStride();
 		}
@@ -60,6 +66,7 @@ namespace HazardRenderer {
 		uint32_t GetStride() const { return m_Stride; }
 		const std::vector<BufferElement>& GetElements() const { return m_Elements; }
 		size_t GetElementCount() { return m_Elements.size(); }
+		size_t GetDivisor() { return m_Divisor; }
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
@@ -80,6 +87,7 @@ namespace HazardRenderer {
 	private:
 		std::vector<BufferElement> m_Elements;
 		uint32_t m_Stride = 0;
+		uint32_t m_Divisor = 0;
 	};
 
 

@@ -2,7 +2,8 @@
 #include "WindowWindow.h"
 #ifdef HZR_PLATFORM_WINDOWS
 
-#include "Core/Events.h"
+#include "Backend/Core/Events.h"
+#include "Renderer/RenderCommand.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -94,6 +95,8 @@ namespace HazardRenderer {
 
 		SetCallbacks();
 		SetVSync(info->VSync);
+
+		RenderCommand::Init(this);
 		
 	}
 	void WindowsWindow::BeginFrame()

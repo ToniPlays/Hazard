@@ -8,6 +8,8 @@
 
 namespace HazardRenderer
 {
+	class VertexBuffer;
+
 	enum BufferUsage : int32_t
 	{
 		StreamDraw = 0,
@@ -27,6 +29,9 @@ namespace HazardRenderer
 		uint32_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
 		BufferLayout* Layout = nullptr;
+		Ref<VertexBuffer> pTargetBuffer = nullptr;
+
+
 		void* Data = nullptr;
 		bool IsShared = true;
 	};

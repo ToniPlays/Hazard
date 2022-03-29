@@ -220,13 +220,15 @@ namespace HazardRenderer::Vulkan
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
 	}
-	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
+	void VulkanPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
 	{
-		ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
-
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDraw(cmdBuffer, count, 1, 0, 0);
+		vkCmdDraw(cmdBuffer, count, instanceCount, 0, 0);
+	}
+	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
+	{
+		DrawInstanced(commandBuffer, count, 1);
 	}
 	void VulkanPipeline::Destroy()
 	{

@@ -4,13 +4,13 @@
 #include "Window.h"
 
 #ifdef HZR_INCLUDE_OPENGL
-#include "OpenGL/OpenGLCore.h"
+#include "Backend/OpenGL/OpenGLCore.h"
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-#include "Vulkan/VulkanCore.h"
+#include "Backend/Vulkan/VulkanCore.h"
 #endif
 #ifdef HZR_INCLUDE_METAL
-#include "Metal/MetalContext.h"
+#include "Backend/Metal/MetalContext.h"
 #endif
 
 namespace HazardRenderer {

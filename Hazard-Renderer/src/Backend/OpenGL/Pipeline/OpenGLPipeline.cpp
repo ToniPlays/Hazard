@@ -48,6 +48,10 @@ namespace HazardRenderer::OpenGL
 	{
 		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
 	}
+	void OpenGLPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
+	{
+		glDrawElementsInstanced(m_DrawType, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+	}
 	void OpenGLPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
 		glDrawArrays(m_DrawType, 0, count);

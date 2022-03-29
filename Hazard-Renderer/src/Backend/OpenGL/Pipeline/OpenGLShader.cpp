@@ -3,7 +3,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "../OpenGLUtils.h"
-#include "Core/Pipeline/ShaderFactory.h"
+#include "Backend/Core/Pipeline/ShaderFactory.h"
 
 #include <sstream>
 #include <glad/glad.h>

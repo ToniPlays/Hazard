@@ -1,10 +1,12 @@
 #include "tests/SimpleCanvas.cpp"
 #include "tests/Rendering/TriangleTest.h"
 #include "tests/Rendering/TexturedQuad.h"
+#include "tests/Rendering/InstancingTest.h"
 
 
 int main()
 {
-	TexturedQuad::Run(RenderAPI::Vulkan);
+	InstancingTest::Run(RenderAPI::OpenGL);
+	std::cout << "Test endeds" << std::endl;
 	return 0;
 }

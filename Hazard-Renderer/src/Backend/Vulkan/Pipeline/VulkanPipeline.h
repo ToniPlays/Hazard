@@ -25,6 +25,7 @@ namespace HazardRenderer::Vulkan
 		void Invalidate() override;
 		void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
 		void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
+		void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) override;
 		void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
 
 	private:

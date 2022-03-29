@@ -1,5 +1,5 @@
 
-#include "HazardRenderer.h"
+#include "HazardRendererCore.h"
 #include "Core/UIElement.h"
 #include "HazardUI.h"
 #include "CommandQueue.h"

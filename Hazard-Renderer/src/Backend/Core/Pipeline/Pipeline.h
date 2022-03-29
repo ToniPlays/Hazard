@@ -36,6 +36,7 @@ namespace HazardRenderer
 		virtual void Invalidate() = 0;
 		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
 		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
+		virtual void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) = 0;
 		virtual void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
 
 		static Ref<Pipeline> Create(PipelineSpecification* specs);

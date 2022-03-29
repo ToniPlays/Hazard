@@ -4,6 +4,10 @@
 #include <numeric>
 #include <string>
 
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 namespace HazardUtility {
 	
 	template<typename T>
@@ -62,5 +66,20 @@ namespace HazardUtility {
 	template<typename T>
 	static T ToDec(const std::string& value) {
 		return std::strtoul(value.c_str(), 0, 16);
+	}
+	static glm::mat4 ToTransformMatrix(glm::vec3 translation) {
+		return glm::translate(glm::mat4(1.0f), translation);
+	}
+	static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+
+		return glm::translate(glm::mat4(1.0f), translation) * rot;
+	}
+	static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale)
+	{
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+
+		return glm::translate(glm::mat4(1.0f), translation) * rot
+			* glm::scale(glm::mat4(1.0f), scale);
 	}
 }
