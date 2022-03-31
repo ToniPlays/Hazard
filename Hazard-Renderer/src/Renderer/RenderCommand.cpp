@@ -39,19 +39,22 @@ namespace HazardRenderer
     void RenderCommand::Flush()
     {
         s_Context->BeginRenderPass(m_CommandBuffer, s_DrawList.Settings.TargetRenderPass);
-        for (auto [uuid, renderable] : s_DrawList.Geometry) {
-            Ref<Pipeline> pipeline = renderable.Pipeline;
+
+        for (auto& [uuid, renderable] : s_DrawList.Geometry) {
+            Ref<Pipeline>& pipeline = renderable.Pipeline;
 
             pipeline->Bind(m_CommandBuffer);
-            for (auto [meshUUID, rawMesh] : renderable.MeshInstances) {
+            for (auto& [meshUUID, rawMesh] : renderable.MeshInstances) {
                 
-                Ref<VertexBuffer> buffer = rawMesh.RawMesh->GetVertexBuffer();
-                Ref<IndexBuffer> ibo = rawMesh.RawMesh->GetIndexBuffer();
+                auto& data = rawMesh.Transforms;
+                Ref<VertexBuffer>& buffer = rawMesh.RawMesh->GetVertexBuffer();
+                Ref<IndexBuffer>& ibo = rawMesh.RawMesh->GetIndexBuffer();
 
-                buffer->Bind(m_CommandBuffer);
+                buffer->Bind(m_CommandBuffer, 0);
+                m_InstanceBuffer->Bind(m_CommandBuffer, 1);
                 ibo->Bind(m_CommandBuffer);
 
-                m_InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * m_InstanceBuffer->GetLayout().GetStride());
+                m_InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(glm::vec4) * 3);
                 pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.Transforms.size());
             }
         }
@@ -69,34 +72,38 @@ namespace HazardRenderer
 
         float vertices[] =
         {
-            -0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-            -0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
+            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
         };
         uint32_t indices[] = {
             0, 1, 2,
             2, 3, 0
         };
 
-        BufferLayout instanceLayout = { { "a_Position", ShaderDataType::Float3 }, { "a_Color", ShaderDataType::Float4 } };
-        BufferLayout perInstanceLayout = { { { "a_MRow0", ShaderDataType::Float4 }, { "a_MRow1", ShaderDataType::Float4 }, { "a_MRow2", ShaderDataType::Float4 } }, PerInstance };
+        BufferLayout meshLayout = {
+            { "a_Position", ShaderDataType::Float3                      }, 
+            { "a_Color",    ShaderDataType::Float4                      }, 
+            { "a_MRo0",     ShaderDataType::Float4, false, PerInstance  }, 
+            { "a_MRo1",     ShaderDataType::Float4, false, PerInstance  },
+            { "a_MRo2",     ShaderDataType::Float4, false, PerInstance  }     
+        };
 
         VertexBufferCreateInfo vbo = {};
-        vbo.DebugName = "InstancedQuad";
+        vbo.DebugName = "InstancedQuadMesh";
         vbo.IsShared = false;
-        vbo.Layout = &instanceLayout;
+        vbo.Layout = &meshLayout;
         vbo.Size = sizeof(vertices);
         vbo.Data = vertices;
 
-        Ref<VertexBuffer> quadBuffer = VertexBuffer::Create(&vbo);
-
         VertexBufferCreateInfo instanceVBO = {};
-        instanceVBO.DebugName = "InstanceVBO";
-        instanceVBO.Usage = BufferUsage::DynamicDraw;
-        instanceVBO.Layout = &perInstanceLayout;
-        instanceVBO.Size = size * perInstanceLayout.GetStride();
-        instanceVBO.pTargetBuffer = quadBuffer;
+        instanceVBO.DebugName = "Transforms";
+        instanceVBO.IsShared = false;
+        instanceVBO.Size = sizeof(glm::vec4) * 3 * size * size;
+
+        Ref<VertexBuffer> quadBuffer = VertexBuffer::Create(&vbo);
+        m_InstanceBuffer = VertexBuffer::Create(&instanceVBO);
 
         IndexBufferCreateInfo ibo = {};
         ibo.DebugName = "TriangleIBO";
@@ -104,7 +111,6 @@ namespace HazardRenderer
         ibo.Size = sizeof(indices);
         ibo.Data = indices;
 
-        m_InstanceBuffer = VertexBuffer::Create(&instanceVBO);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 
         m_QuadMesh = Ref<RawMesh>::Create(quadBuffer, indexBuffer);

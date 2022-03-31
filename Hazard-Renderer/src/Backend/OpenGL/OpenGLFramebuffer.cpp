@@ -110,8 +110,7 @@ namespace HazardRenderer::OpenGL
 			}
 		}
 
-		glGenFramebuffers(1, &m_ID);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+		glCreateFramebuffers(1, &m_ID);
 
 		bool multisampled = m_Specs.Samples > 1;
 
@@ -131,7 +130,7 @@ namespace HazardRenderer::OpenGL
 	
 			for (uint32_t i = 0; i < (uint32_t)m_ColorImages.size(); i++)
 			{
-				//OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
+				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
 
 				switch (m_ColorAttachments[i].Format) {
 				case ImageFormat::RGBA: break;

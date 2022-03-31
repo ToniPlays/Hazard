@@ -47,6 +47,7 @@ namespace HazardRenderer::OpenGL {
 
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			glDebugMessageCallback(OnDebugMessage, nullptr);
 
 			Window::SendDebugMessage({ Severity::Info, "Debugging enabled" });
 		}

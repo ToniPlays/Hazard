@@ -107,6 +107,7 @@ namespace HazardRenderer::OpenGLUtils
 	}
 	static void AttachColorTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t width, uint32_t height, uint32_t iter)
 	{
+		//Change to DSA
 		bool multisampled = samples > 1;
 		if (multisampled) {
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);

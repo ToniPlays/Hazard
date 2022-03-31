@@ -72,13 +72,13 @@ namespace HazardRenderer::Vulkan
 		VulkanAllocator allocator("VertexBuffer");
 		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 	}
-	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
+	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{
 		HZR_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(vkCmdBuffer, 0, 1, &m_Buffer, offsets);
+		vkCmdBindVertexBuffers(vkCmdBuffer, binding, 1, &m_Buffer, offsets);
 	}
 	void VulkanVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{

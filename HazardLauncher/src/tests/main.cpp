@@ -8,6 +8,6 @@
 int main()
 {
 	RenderCommandTest::Run(RenderAPI::OpenGL);
-	std::cout << "Test ended" << std::endl;
+	std::cout << "Test ended " << std::endl;
 	return 0;
 }

@@ -17,13 +17,14 @@ namespace HazardRenderer {
 		std::string Name;
 		ShaderDataType Type;
 		uint32_t Size;
+		uint32_t ElementDivisor = 0;
 		size_t Offset;
 		bool Normalized;
 
 		BufferElement() = default;
 
-		BufferElement(const std::string& name, ShaderDataType type, bool normalized = false)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
+		BufferElement(const std::string& name, ShaderDataType type, bool normalized = false, Divisor divisor = PerVertex)
+			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized), ElementDivisor(divisor)
 		{
 		}
 
@@ -57,16 +58,25 @@ namespace HazardRenderer {
 	public:
 		BufferLayout() {}
 
-		BufferLayout(std::initializer_list<BufferElement> elements, uint32_t divisor = 0)
-			: m_Elements(elements), m_Divisor(divisor)
+		BufferLayout(std::initializer_list<BufferElement> elements)
+			: m_Elements(elements)
 		{
 			CalculateOffsetsAndStride();
+		}
+		uint32_t GetBufferStride(uint32_t bufferIndex = 0) {
+			uint32_t result = 0;
+			for (auto& element : m_Elements)
+			{
+				if(element.ElementDivisor == bufferIndex)
+					result += element.Size;
+			}
+			return result;
 		}
 
 		uint32_t GetStride() const { return m_Stride; }
 		const std::vector<BufferElement>& GetElements() const { return m_Elements; }
 		size_t GetElementCount() { return m_Elements.size(); }
-		size_t GetDivisor() { return m_Divisor; }
+		
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
@@ -87,7 +97,7 @@ namespace HazardRenderer {
 	private:
 		std::vector<BufferElement> m_Elements;
 		uint32_t m_Stride = 0;
-		uint32_t m_Divisor = 0;
+		
 	};
 
 

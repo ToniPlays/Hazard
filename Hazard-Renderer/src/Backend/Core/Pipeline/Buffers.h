@@ -28,9 +28,8 @@ namespace HazardRenderer
 		std::string DebugName;
 		uint32_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
+		//No layout means object cannot be used for rendering meshes, only instancing data
 		BufferLayout* Layout = nullptr;
-		Ref<VertexBuffer> pTargetBuffer = nullptr;
-
 
 		void* Data = nullptr;
 		bool IsShared = true;
@@ -57,7 +56,7 @@ namespace HazardRenderer
 	{
 	public:
 		virtual ~VertexBuffer() = default;
-		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
+		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) = 0;
 		virtual void Unbind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
 		virtual void SetData(const void* data, uint32_t size) = 0;
 		virtual uint32_t GetSize() = 0;

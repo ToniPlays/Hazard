@@ -19,6 +19,7 @@ namespace HazardRenderer
 
 		static void Flush();
 		static void RegisterPipelineDependency(Ref<Pipeline> pipeline);
+		static const DrawList GetDrawList() { return s_DrawList; }
 
 	private:
 		static void Init(Window* window);

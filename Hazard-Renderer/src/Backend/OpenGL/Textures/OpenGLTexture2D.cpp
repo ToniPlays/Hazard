@@ -33,8 +33,7 @@
 //	OpenGLTexture2D::OpenGLTexture2D(Texture2DCreateInfo* info)
 //	{
 //		m_Format = info->Format;
-//		glGenTextures(1, &m_ID);
-//		glBindTexture(GL_TEXTURE_2D, m_ID);
+//		glCreateTextures(1, &m_ID);
 //
 //		if (info->Data == nullptr)
 //			LoadFromFile(info->FilePath.string());

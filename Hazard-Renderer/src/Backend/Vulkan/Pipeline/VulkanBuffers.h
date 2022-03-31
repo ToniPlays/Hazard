@@ -18,7 +18,7 @@ namespace HazardRenderer::Vulkan
 		VulkanVertexBuffer(VertexBufferCreateInfo* info);
 		~VulkanVertexBuffer();
 
-		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void SetData(const void* data, uint32_t size) override;
 		void RT_SetData(const void* data, uint32_t size);

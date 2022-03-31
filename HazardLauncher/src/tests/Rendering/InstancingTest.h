@@ -67,7 +67,7 @@ namespace InstancingTest {
 
 		BufferLayout instanceLayout = { { "a_Position", ShaderDataType::Float3 }, { "a_Color", ShaderDataType::Float4 } };
 		//BufferLayout perInstanceLayout = { { { "a_MRow0", ShaderDataType::Float4 }, { "a_MRow1", ShaderDataType::Float4 }, { "a_MRow2", ShaderDataType::Float4 } }, PerInstance };
-		BufferLayout perInstanceLayout = { { { "a_Offset", ShaderDataType::Float2 } }, PerInstance };
+		//BufferLayout perInstanceLayout = { { { "a_Offset", ShaderDataType::Float2 } }, PerInstance };
 
 		VertexBufferCreateInfo vbo = {};
 		vbo.DebugName = "InstancedQuad";
@@ -81,9 +81,8 @@ namespace InstancingTest {
 		VertexBufferCreateInfo instanceVBO = {};
 		instanceVBO.DebugName = "InstanceVBO";
 		instanceVBO.Usage = BufferUsage::DynamicDraw;
-		instanceVBO.Layout = &perInstanceLayout;
+		//instanceVBO.Layout = &perInstanceLayout;
 		instanceVBO.Size = size * size * sizeof(glm::vec2);
-		instanceVBO.pTargetBuffer = quadBuffer;
 
 		IndexBufferCreateInfo ibo = {};
 		ibo.DebugName = "TriangleIBO";

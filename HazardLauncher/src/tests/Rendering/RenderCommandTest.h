@@ -16,7 +16,7 @@ namespace RenderCommandTest {
 
 	static void Run(RenderAPI api)
 	{
-		float scalar = 500.0f;
+		float scalar = 10.0f;
 		float aspectRatio = (float)1280 / (float)720;
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
@@ -68,7 +68,7 @@ namespace RenderCommandTest {
 		Window* window = Window::Create(&createInfo);
 		window->Show();
 
-		
+
 		//camera.View = view;
 		//camera.Projection = projection;
 		//camera.Position = { 0.0f, 0.0f, 0.0f };
@@ -96,8 +96,8 @@ namespace RenderCommandTest {
 		spec.ShaderPath = "quadInstanced.glsl";
 		spec.DrawType = DrawType::Fill;
 		spec.CullMode = CullMode::None;
-		spec.TargetRenderPass = renderPass;
 		spec.Usage = PipelineUsage::GraphicsBit;
+		spec.TargetRenderPass = renderPass;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
@@ -123,7 +123,15 @@ namespace RenderCommandTest {
 		}
 
 		glm::vec4 color = Color::White;
+		RenderCommand::BeginFrame();
+		RenderCommand::BeginWorld(settings);
+		uniformBuffer->SetData(settings.RenderingCamera, sizeof(Camera));
 
+		for (const glm::mat4& transform : transforms)
+		{
+			RenderCommand::DrawQuad(pipeline, transform, color);
+		}
+		
 		while (running)
 		{
 			double time = glfwGetTime();
@@ -133,17 +141,11 @@ namespace RenderCommandTest {
 			lastTime = time;
 
 			window->BeginFrame();
-			RenderCommand::BeginFrame();
-			RenderCommand::BeginWorld(settings);
-
-			for (const glm::mat4& transform : transforms) {
-				RenderCommand::DrawQuad(pipeline, transform, color);
-			}
-
-			uniformBuffer->SetData(settings.RenderingCamera, sizeof(Camera));
 			RenderCommand::Flush();
+
 			window->Present();
-			std::cout << frameTime << "ms, " << 1.0f / frameTime << " fps" << std::endl;
+			//std::cout << frameTime << "ms, " << 1.0f / frameTime << " fps" << std::endl;
+			//std::cout << RenderCommand::GetDrawList().Quads << " Quads" << std::endl;
 		}
 
 		std::cout << "Test closed";

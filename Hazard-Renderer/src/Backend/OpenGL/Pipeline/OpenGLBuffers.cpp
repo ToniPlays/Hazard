@@ -30,37 +30,53 @@ namespace HazardRenderer::OpenGL
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		HZR_ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
 
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
-		m_Layout = std::move(*info->Layout);
+		if (info->Layout != nullptr)
+			m_Layout = std::move(*info->Layout);
 
 		uint32_t offset = 0;
 
-		if (info->pTargetBuffer == nullptr)
+		if (m_Layout.GetStride() == 0)
 		{
-			glCreateVertexArrays(1, &m_VAO);
-		}
-		else
-		{
-			m_VAO = info->pTargetBuffer.As<OpenGLVertexBuffer>()->m_VAO;
-			offset = info->pTargetBuffer->GetLayout().GetElements().size();
+			glCreateBuffers(1, &m_ID);
+			glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
+			return;
 		}
 
-		glBindVertexArray(m_VAO);
+
+		glCreateVertexArrays(1, &m_VAO);
+
 		glCreateBuffers(1, &m_ID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 		glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
 
-		for (uint32_t i = 0; i < m_Layout.GetElementCount(); i++) 
+		uint32_t bufferedOffset = 0;
+		uint32_t currentBuffer = 0;
+
+		for (uint32_t i = 0; i < m_Layout.GetElementCount(); i++)
 		{
 			BufferElement element = m_Layout.GetElements()[i];
 
-			glVertexAttribPointer(i + offset, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), 
+			uint32_t stride = m_Layout.GetBufferStride(element.ElementDivisor);
+
+			if (element.ElementDivisor != currentBuffer) {
+				bufferedOffset += element.Offset;
+				currentBuffer = element.ElementDivisor;
+				glVertexArrayBindingDivisor(m_VAO, element.ElementDivisor, element.ElementDivisor);
+			}
+
+			glEnableVertexArrayAttrib(m_VAO, i);
+			glVertexArrayAttribFormat(m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
+			glVertexArrayAttribBinding(m_VAO, i, element.ElementDivisor);
+			
+
+			/*
+			glVertexAttribPointer(i + offset, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
 				element.Normalized ? GL_TRUE : GL_FALSE, m_Layout.GetStride(), (const void*)element.Offset);
 			glEnableVertexAttribArray(i + offset);
 			glVertexAttribDivisor(i + offset, m_Layout.GetDivisor());
+			*/
 		}
 
 		if (info->Data) {
@@ -72,10 +88,17 @@ namespace HazardRenderer::OpenGL
 		glDeleteBuffers(1, &m_ID);
 		glDeleteVertexArrays(1, &m_VAO);
 	}
-	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
+	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{
-		glBindVertexArray(m_VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+		if (m_VAO)
+		{
+			if (m_VAO != s_BoundVAO) {
+				glBindVertexArray(m_VAO);
+				s_BoundVAO = m_VAO;
+				s_CurrentLayout = m_Layout;
+			}
+		}
+		glVertexArrayVertexBuffer(s_BoundVAO, binding, m_ID, 0, s_CurrentLayout.GetBufferStride(binding));
 	}
 	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{

@@ -13,7 +13,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLVertexBuffer(VertexBufferCreateInfo* createInfo);
 		~OpenGLVertexBuffer();
 
-		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+		void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void SetData(const void* data, uint32_t size) override;
 		uint32_t GetSize() override { return m_Size; }
@@ -23,9 +23,12 @@ namespace HazardRenderer::OpenGL
 	private:
 		std::string m_DebugName;
 		BufferUsage m_Usage;
-		uint32_t m_ID, m_VAO;
+		uint32_t m_ID = 0, m_VAO = 0;
 		uint32_t m_Size;
 		BufferLayout m_Layout;
+		
+		inline static uint32_t s_BoundVAO = 0;
+		inline static BufferLayout s_CurrentLayout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
