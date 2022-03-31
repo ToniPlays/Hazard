@@ -21,7 +21,7 @@ namespace HazardRenderer {
             case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(count, debugName);
 #endif
 		default:
-			ASSERT(false, "Unknown RendererAPI");
+			HZR_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
 		return nullptr;
@@ -41,7 +41,7 @@ namespace HazardRenderer {
         case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, true);
 #endif
 		default:
-			ASSERT(false, "Unknown RendererAPI");
+			HZR_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
 		return nullptr;

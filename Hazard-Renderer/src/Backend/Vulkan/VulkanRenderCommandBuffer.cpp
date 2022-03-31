@@ -74,7 +74,7 @@ namespace HazardRenderer::Vulkan
 		beginInfo.pNext = nullptr;
 
 		VkCommandBuffer commandBuffer = GetBuffer(GetFrameIndex());
-		ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer failed");
+		HZR_ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer failed");
 		VK_CHECK_RESULT(vkBeginCommandBuffer(commandBuffer, &beginInfo));
 	}
 

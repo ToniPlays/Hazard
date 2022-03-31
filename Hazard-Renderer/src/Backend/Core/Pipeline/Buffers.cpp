@@ -10,7 +10,7 @@ namespace HazardRenderer {
 
 	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
-		ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
 
 		//if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) {
 		//	return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
@@ -42,7 +42,7 @@ namespace HazardRenderer {
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
-		ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
 
 		/*if (createInfo->IsShared && RenderLibrary::HasIndexBuffer(createInfo->DebugName)) {
 			return RenderLibrary::GetIndexBuffer(createInfo->DebugName);

@@ -92,7 +92,7 @@ namespace HazardRenderer::Vulkan {
 	}
 	void VulkanAllocator::Shutdown()
 	{
-		ASSERT(s_Data->TotalAllocated == 0, "Failed to deallocate all");
+		HZR_ASSERT(s_Data->TotalAllocated == 0, "Failed to deallocate all");
 		vmaDestroyAllocator(s_Data->Allocator);
 
 		delete s_Data;

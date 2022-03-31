@@ -9,7 +9,7 @@ namespace HazardRenderer
         s_DrawList.Geometry.clear();
         s_DrawList.Quads = 0;
     }
-    void RenderCommand::BeginWorld(WorldSettings settings)
+    void RenderCommand::BeginWorld(WorldSettings& settings)
     {
         s_DrawList.Settings = settings;
     }
@@ -21,9 +21,8 @@ namespace HazardRenderer
     //{
     //   DrawQuad(pipeline, transform, glm::vec4(1.0f), texture);
     //}
-    void RenderCommand::DrawQuad(Ref<Pipeline> pipeline, glm::mat4 transform, glm::vec4 color)
+    void RenderCommand::DrawQuad(Ref<Pipeline>& pipeline, const glm::mat4& transform, const glm::vec4& color)
     {
-        ASSERT(pipeline, "Pipeline is not valid, this should not happen");
         PipelineRenderable& renderable = s_DrawList.Geometry[pipeline->GetHandle()];
         renderable.Pipeline = pipeline;
         InstancedMesh& mesh = renderable.MeshInstances[m_QuadMesh->GetHandle()];
@@ -58,18 +57,22 @@ namespace HazardRenderer
         }
         s_Context->EndRenderPass(m_CommandBuffer);
     }
+    void RenderCommand::RegisterPipelineDependency(Ref<Pipeline> pipeline)
+    {
+
+    }
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
 
-        uint32_t size = 320 * 320;
+        uint32_t size = 1000 * 1000;
 
         float vertices[] =
         {
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
+            -0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+             0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+             0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
         };
         uint32_t indices[] = {
             0, 1, 2,

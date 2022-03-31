@@ -23,7 +23,7 @@ namespace HazardRenderer
         case RenderAPI::Metal: return Ref<Metal::MetalShader>::Create(path);
 #endif
 		default:
-			ASSERT(false, "Unknown RendererAPI");
+			HZR_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
 		return nullptr;

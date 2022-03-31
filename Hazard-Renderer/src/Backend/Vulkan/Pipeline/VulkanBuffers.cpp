@@ -11,7 +11,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
+		HZR_ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
 
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
@@ -74,7 +74,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
+		HZR_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		VkDeviceSize offsets[1] = { 0 };
@@ -163,7 +163,7 @@ namespace HazardRenderer::Vulkan
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 
-		ASSERT(m_Size >= 256, "Need a bigger buffer");
+		HZR_ASSERT(m_Size >= 256, "Need a bigger buffer");
 		m_Name = createInfo->Name;
 		m_LocalData.Allocate(m_Size * 32);
 		m_LocalData.ZeroInitialize();

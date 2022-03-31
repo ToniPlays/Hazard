@@ -68,7 +68,7 @@ namespace HazardRenderer::Vulkan
 		pipelineLayoutInfo.pSetLayouts = &m_UniformDescriptorLayout;
 
 		if (vkCreatePipelineLayout(device.GetVulkanDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
-			ASSERT(false, "Failed to create Vulkan Pipeline Layout!");
+			HZR_ASSERT(false, "Failed to create Vulkan Pipeline Layout!");
 		}
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
@@ -196,12 +196,12 @@ namespace HazardRenderer::Vulkan
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 		if (vkCreateGraphicsPipelines(device.GetVulkanDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline) != VK_SUCCESS) {
-			ASSERT(false, "Failed to create Vulkan Graphics Pipeline!");
+			HZR_ASSERT(false, "Failed to create Vulkan Graphics Pipeline!");
 		}
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
 		auto& offsets = m_Shader->GetDynamicOffsets();
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
@@ -214,7 +214,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
 		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);

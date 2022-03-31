@@ -3,6 +3,8 @@
 #include "Event.h"
 #include "Color.h"
 
+#include <GLFW/glfw3.h>
+
 using namespace HazardUtility;
 using namespace HazardRenderer;
 
@@ -14,7 +16,7 @@ namespace RenderCommandTest {
 
 	static void Run(RenderAPI api)
 	{
-		float scalar = 450.0f;
+		float scalar = 500.0f;
 		float aspectRatio = (float)1280 / (float)720;
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
@@ -58,7 +60,7 @@ namespace RenderCommandTest {
 		createInfo.Renderer = api;
 		createInfo.Width = 1280;
 		createInfo.Height = 720;
-		createInfo.VSync = true;
+		createInfo.VSync = false;
 		createInfo.Logging = true;
 		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
 		createInfo.AppInfo = &appInfo;
@@ -109,21 +111,39 @@ namespace RenderCommandTest {
 
 		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
 
+		double lastTime = 0;
+		double frameTime = 0;
+
+		std::vector<glm::mat4> transforms;
+
+		for (int32_t x = -500; x < 500; x++) {
+			for (int32_t y = -500; y < 500; y++) {
+				transforms.push_back(glm::translate(glm::mat4(1.0f), { (float)x * 1.25f, (float)y * 1.25f, 0 }));
+			}
+		}
+
+		glm::vec4 color = Color::White;
+
 		while (running)
 		{
+			double time = glfwGetTime();
+
+			//Update Time
+			frameTime = time - lastTime;
+			lastTime = time;
+
 			window->BeginFrame();
 			RenderCommand::BeginFrame();
 			RenderCommand::BeginWorld(settings);
 
-			for (int32_t x = -160; x < 160; x++) {
-				for (int32_t y = -160; y < 160; y++) {
-					RenderCommand::DrawQuad(pipeline, glm::translate(glm::mat4(1.0f), { (float)x * 1.25f, (float)y * 1.25f, 0 }), Color::White);
-				}
+			for (const glm::mat4& transform : transforms) {
+				RenderCommand::DrawQuad(pipeline, transform, color);
 			}
 
 			uniformBuffer->SetData(settings.RenderingCamera, sizeof(Camera));
 			RenderCommand::Flush();
 			window->Present();
+			std::cout << frameTime << "ms, " << 1.0f / frameTime << " fps" << std::endl;
 		}
 
 		std::cout << "Test closed";

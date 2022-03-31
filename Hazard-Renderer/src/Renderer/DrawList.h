@@ -6,6 +6,7 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include <vector>
 #include <unordered_map>
+#include <map>
 
 namespace HazardRenderer 
 {
@@ -23,19 +24,22 @@ namespace HazardRenderer
 	{
 		Ref<RawMesh> RawMesh;
 		std::vector<TransformData> Transforms;
+
+		InstancedMesh() 
+		{
+			Transforms.reserve(1000000);
+		}
 	};
 
 	struct PipelineRenderable
 	{
 		Ref<Pipeline> Pipeline;
-		std::unordered_map<HazardUtility::UID, InstancedMesh> MeshInstances;
+		std::map<HazardUtility::UID, InstancedMesh> MeshInstances;
 	};
 	struct DrawList 
 	{
 		WorldSettings Settings;
-
-		std::unordered_map<HazardUtility::UID, PipelineRenderable> Geometry;
-
+		std::map<HazardUtility::UID, PipelineRenderable> Geometry;
 		uint32_t Quads = 0;
 
 	};

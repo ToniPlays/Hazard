@@ -41,7 +41,7 @@ namespace HazardRenderer::Vulkan {
 				return resultDevice;
 			}
 		}
-		ASSERT("Failed to find Vulkan capable device");
+		HZR_ASSERT("Failed to find Vulkan capable device");
 	}
 
 	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface)
@@ -147,7 +147,7 @@ namespace HazardRenderer::Vulkan {
 		case ImageFormat::RED32I:			return VK_FORMAT_R32_SINT;
 		case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetPhysicalDevice().GetDepthFormat();
 		}
-		ASSERT(false, "[VKUtils] Failed to convert format");
+		HZR_ASSERT(false, "[VKUtils] Failed to convert format");
 		return VK_FORMAT_UNDEFINED;
 	}
 

@@ -35,7 +35,7 @@ namespace HazardRenderer::OpenGL {
 
 			glfwMakeContextCurrent((GLFWwindow*)m_Window->GetNativeWindow());
 
-			ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLFW OpenGL context");
+			HZR_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLFW OpenGL context");
 
 			m_PhysicalDevice = new OpenGLPhysicalDevice();
 

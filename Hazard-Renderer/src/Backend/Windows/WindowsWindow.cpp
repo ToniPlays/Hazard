@@ -33,8 +33,8 @@ namespace HazardRenderer {
 
 	WindowsWindow::WindowsWindow(HazardRendererCreateInfo* info)
 	{
-		ASSERT(info->AppInfo != nullptr, "AppInfo cannot be nullptr");
-		ASSERT(glfwInit(), "Failed to initialize GLFW");
+		HZR_ASSERT(info->AppInfo != nullptr, "AppInfo cannot be nullptr");
+		HZR_ASSERT(glfwInit(), "Failed to initialize GLFW");
 		s_DebugCallback = info->AppInfo->MessageCallback;
 		m_WindowData.EventCallback = info->AppInfo->EventCallback;
 
@@ -75,12 +75,12 @@ namespace HazardRenderer {
 				m_WindowData.Height = glfwGetVideoMode(monitor)->height;
 			}
 		}
-		ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
-		ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
+		HZR_ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
+		HZR_ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
 
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 
-		ASSERT(m_Window, "Failed to create window");
+		HZR_ASSERT(m_Window, "Failed to create window");
 
 		if (info->AppInfo->IconCount > 0)
 			SetWindowIcon(info->AppInfo->IconCount, info->AppInfo->Icons);
@@ -128,7 +128,7 @@ namespace HazardRenderer {
 
 			int sx, sy, sChannels;
 			img.pixels = stbi_load(path.c_str(), &sx, &sy, &sChannels, 3);
-			ASSERT(img.pixels != 0, "Could not load Window Icon");
+			HZR_ASSERT(img.pixels != 0, "Could not load Window Icon");
 			img.width = sx;
 			img.height = sy;
 		}

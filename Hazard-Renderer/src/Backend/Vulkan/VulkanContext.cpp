@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan {
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		
 		if (!glfwVulkanSupported()) {
-			ASSERT(false, "Vulkan not supported");
+			HZR_ASSERT(false, "Vulkan not supported");
 		}
 	}
 

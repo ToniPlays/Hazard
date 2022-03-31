@@ -38,7 +38,7 @@ namespace HazardUtility {
 
 		m_CommandCount++;
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_CommandBufferPtr - (uint8_t*)m_CommandBuffer);
-		ASSERT(dataSize <= m_Size, "CommandQueue overflow");
+		HZR_ASSERT(dataSize <= m_Size, "CommandQueue overflow");
 		return memory;
 	}
 

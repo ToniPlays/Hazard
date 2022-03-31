@@ -57,7 +57,8 @@ namespace HazardRenderer::OpenGL
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
-		if(m_Specs.SwapChainTarget) {
+		if(m_Specs.SwapChainTarget) 
+		{
 			glm::vec4 color = OpenGLContext::GetClearColor();
 			Window* window = OpenGLContext::GetWindow();
 			glClearColor(color.r, color.g, color.b, color.a);
@@ -158,15 +159,16 @@ namespace HazardRenderer::OpenGL
 			}
 		}
 		if (m_ColorImages.size() > 1) {
-			ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
+			HZR_ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
-		else if (m_ColorImages.empty()) {
+		else if (m_ColorImages.empty()) 
+		{
 			glDrawBuffer(GL_NONE);
 		}
 
-		ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+		HZR_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

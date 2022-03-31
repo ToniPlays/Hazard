@@ -22,7 +22,7 @@ namespace HazardRenderer {
         case RenderAPI::Metal: return new Metal::MetalRenderPass(info);
 #endif
 		default:
-			ASSERT(false, "Unknown RendererAPI");
+			HZR_ASSERT(false, "Unknown RendererAPI");
 			return nullptr;
 		}
 		return nullptr;

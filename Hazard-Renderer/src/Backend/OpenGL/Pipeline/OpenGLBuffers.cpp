@@ -24,13 +24,13 @@ namespace HazardRenderer::OpenGL
 		case ShaderDataType::Bool:     return GL_BOOL;
 		}
 
-		ASSERT(false, "Unknown ShaderDataType!");
+		HZR_ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
+		HZR_ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
 
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
@@ -42,7 +42,7 @@ namespace HazardRenderer::OpenGL
 		{
 			glCreateVertexArrays(1, &m_VAO);
 		}
-		else 
+		else
 		{
 			m_VAO = info->pTargetBuffer.As<OpenGLVertexBuffer>()->m_VAO;
 			offset = info->pTargetBuffer->GetLayout().GetElements().size();
@@ -51,7 +51,7 @@ namespace HazardRenderer::OpenGL
 		glBindVertexArray(m_VAO);
 		glCreateBuffers(1, &m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-		glBufferData(GL_ARRAY_BUFFER, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
+		glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
 
 		for (uint32_t i = 0; i < m_Layout.GetElementCount(); i++) 
 		{
@@ -84,16 +84,14 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		glNamedBufferSubData(m_ID, 0, size, data);
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 
-		glGenBuffers(1, &m_ID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+		glCreateBuffers(1, &m_ID);
 
 		if (info->Data != nullptr)
 			SetData(info->Data, info->Size);
@@ -113,8 +111,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLIndexBuffer::SetData(uint32_t* data, uint32_t size)
 	{
 		m_Size = size;
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW + m_Usage);
+		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)

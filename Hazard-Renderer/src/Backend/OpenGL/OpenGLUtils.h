@@ -18,9 +18,9 @@ namespace HazardRenderer::OpenGLUtils
 		case ShaderType::Compute:	return GL_COMPUTE_SHADER;
 		case ShaderType::Geometry:	return GL_GEOMETRY_SHADER;
             default:
-                ASSERT(false, "Unknow ShaderType");
+				HZR_ASSERT(false, "Unknow ShaderType");
 		}
-		ASSERT(false, "Unknow ShaderType");
+		HZR_ASSERT(false, "Unknow ShaderType");
 		return 0;
 	}
 	static ShaderType ShaderTypeFromGLType(GLenum type) {
@@ -31,7 +31,7 @@ namespace HazardRenderer::OpenGLUtils
 		case GL_COMPUTE_SHADER:		return ShaderType::Compute;
 		case GL_GEOMETRY_SHADER:	return ShaderType::Geometry;
 		}
-		ASSERT(false, "[OpenGLShader]: Unkown conversion from glType to ShaderType");
+		HZR_ASSERT(false, "[OpenGLShader]: Unkown conversion from glType to ShaderType");
 		return ShaderType::None;
 	}
 	static std::string GLTypeToString(GLenum type) {
@@ -42,7 +42,7 @@ namespace HazardRenderer::OpenGLUtils
 		case GL_COMPUTE_SHADER:		return "Compute";
 		case GL_GEOMETRY_SHADER:	return "Geometry";
 		}
-		ASSERT(false, "[OpenGLShader]: Unknown conversion from GLenum to string");
+		HZR_ASSERT(false, "[OpenGLShader]: Unknown conversion from GLenum to string");
 		return "";
 	}
 	static shaderc_shader_kind GLShaderStageToShaderC(GLenum stage) {
@@ -51,7 +51,7 @@ namespace HazardRenderer::OpenGLUtils
 		case GL_VERTEX_SHADER:		return shaderc_glsl_vertex_shader;
 		case GL_FRAGMENT_SHADER:	return shaderc_glsl_fragment_shader;
 		}
-		ASSERT(false, "[OpenGLShader]: Unkown OpenGL type to ShaderC type");
+		HZR_ASSERT(false, "[OpenGLShader]: Unkown OpenGL type to ShaderC type");
 		return (shaderc_shader_kind)0;
 	}
 	static GLenum DrawTypeToGLType(const DrawType& type) {
@@ -61,7 +61,7 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Line: return GL_LINES;
 		case DrawType::Point: return GL_POINTS;
         default:
-            ASSERT(false, "Unknow DrawType");
+			HZR_ASSERT(false, "Unknow DrawType");
 		}
 		return GL_TRIANGLES;
 	}
@@ -71,7 +71,7 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Fill: return GL_FILL;
 		case DrawType::Line: return GL_LINE;
 		case DrawType::Point: return GL_POINT;
-        default: ASSERT(false, "Unkown DrawType");
+        default: HZR_ASSERT(false, "Unkown DrawType");
             
 		}
 		return GL_TRIANGLES;

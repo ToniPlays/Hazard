@@ -27,7 +27,7 @@ namespace HazardRenderer::Vulkan
 			case ShaderType::Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
 			case ShaderType::Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
 			}
-			ASSERT(false, "[VulkanShader]: Undefined ShaderType");
+			HZR_ASSERT(false, "[VulkanShader]: Undefined ShaderType");
 			return (VkShaderStageFlagBits)0;
 		}
 		static std::string VkTypeToString(VkShaderStageFlagBits type) {
@@ -38,7 +38,7 @@ namespace HazardRenderer::Vulkan
 			case VK_SHADER_STAGE_COMPUTE_BIT:	return "Compute";
 			case VK_SHADER_STAGE_GEOMETRY_BIT:	return "Geometry";
 			}
-			ASSERT(false, "[VulkanShader]: Unknown conversion from ShaderStageFlag to string");
+			HZR_ASSERT(false, "[VulkanShader]: Unknown conversion from ShaderStageFlag to string");
 			return "";
 		}
 		static ShaderType ShaderTypeFromVkType(VkShaderStageFlagBits type) {
@@ -49,7 +49,7 @@ namespace HazardRenderer::Vulkan
 			case VK_SHADER_STAGE_COMPUTE_BIT:	return ShaderType::Compute;
 			case VK_SHADER_STAGE_GEOMETRY_BIT:	return ShaderType::Geometry;
 			}
-			ASSERT(false, "[VulkanShader]: Undefined Vulkan ShaderStageFlags");
+			HZR_ASSERT(false, "[VulkanShader]: Undefined Vulkan ShaderStageFlags");
 			return ShaderType::None;
 		}
 		static shaderc_shader_kind VkShaderStageToShaderC(VkShaderStageFlagBits stage) {
@@ -60,7 +60,7 @@ namespace HazardRenderer::Vulkan
 			case VK_SHADER_STAGE_COMPUTE_BIT:		return shaderc_glsl_compute_shader;
 			case VK_SHADER_STAGE_GEOMETRY_BIT:		return shaderc_glsl_geometry_shader;
 			}
-			ASSERT(false, "[VulkanShader]: Undefined conversion");
+			HZR_ASSERT(false, "[VulkanShader]: Undefined conversion");
 			return (shaderc_shader_kind)0;
 		}
 	}
@@ -107,7 +107,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[m_UnformBufferBindings[name]];
-		ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
+		HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
@@ -251,7 +251,7 @@ namespace HazardRenderer::Vulkan
 			ShaderFactory::Compile(&compileInfo);
 
 			if (!compileInfo.Succeeded()) {
-				ASSERT(false, "VulkanShader Compile Error");
+				HZR_ASSERT(false, "VulkanShader Compile Error");
 				const auto& binaries = ShaderFactory::GetShaderBinaries(m_Path, stage, RenderAPI::Vulkan);
 				m_ShaderCode[stage] = binaries;
 				continue;

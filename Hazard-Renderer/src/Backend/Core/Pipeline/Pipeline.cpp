@@ -10,7 +10,7 @@ namespace HazardRenderer
 {
 	Ref<Pipeline> Pipeline::Create(PipelineSpecification* specs)
 	{
-		ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
+		HZR_ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
 
 		/*if (specs->IsShared && RenderLibrary::HasPipeline(specs->DebugName)) 
 		{

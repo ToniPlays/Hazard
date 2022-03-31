@@ -12,7 +12,7 @@ namespace HazardRenderer::Vulkan {
 	VulkanDevice::VulkanDevice(VkInstance instance, VkSurfaceKHR surface, uint32_t imagesInFlight)
 	{
 		m_PhysicalDevice = VKUtils::GetVulkanCapableDevice(instance, surface);
-		ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to get capable device");
+		HZR_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to get capable device");
 
 		QueueFamilyIndices indices = VKUtils::GetQueueFamilyIndices(m_PhysicalDevice, surface);
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -186,7 +186,7 @@ namespace HazardRenderer::Vulkan {
 		createInfo.queueFamilyIndex = indices.graphicsFamily.value();
 		
 		auto result = vkCreateCommandPool(m_Device, &createInfo, nullptr, &m_CommandPool);
-		ASSERT(result == VK_SUCCESS, "Failed to create Vulkan CommandPool");
+		HZR_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan CommandPool");
 
 		VkDescriptorPoolSize pool_sizes[] =
 		{

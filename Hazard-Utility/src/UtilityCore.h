@@ -3,7 +3,11 @@
 #include <iostream>
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
-#define ASSERT(x, m) if(!(x)) THROW_EXCEPT(m)
+#ifdef HZR_DEBUG
+#define HZR_ASSERT(x, m) if(!(x)) THROW_EXCEPT(m)
+#else
+#define HZR_ASSERT(x, m) x
+#endif
 
 
 template<typename T>

@@ -11,7 +11,7 @@
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
 
-#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { ASSERT(false, "We failed"); }
+#define VK_CHECK_RESULT(result) if(result != VK_SUCCESS) { HZR_ASSERT(false, "We failed"); }
 
 namespace HazardRenderer::Vulkan {
 

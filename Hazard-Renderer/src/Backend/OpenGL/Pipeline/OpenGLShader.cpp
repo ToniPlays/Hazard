@@ -15,7 +15,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLShader::OpenGLShader(const std::string& filePath) : m_FilePath(filePath)
 	{
-		ASSERT(!filePath.empty(), "Shader path cannot be empty");
+		HZR_ASSERT(!filePath.empty(), "Shader path cannot be empty");
 		auto shaderSources = ShaderFactory::GetShaderSources(m_FilePath);
 		{
 			bool wasCompiled = CompileOrGetVulkanBinaries(shaderSources);
@@ -55,7 +55,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[name];
-		ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
+		HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
@@ -193,7 +193,7 @@ namespace HazardRenderer::OpenGL
 
 			ShaderFactory::Compile(&compileInfo);
 
-			ASSERT(compileInfo.Succeeded(), "Failed compilation");
+			HZR_ASSERT(compileInfo.Succeeded(), "Failed compilation");
 
 			shaderData[glStage] = compileInfo.Binary;
 		}
@@ -222,7 +222,7 @@ namespace HazardRenderer::OpenGL
 
 			std::vector<GLchar> infoLog(maxLen);
 			glGetShaderInfoLog(program, maxLen, &maxLen, infoLog.data());
-			ASSERT(false, "[OpenGLShader]: Shader linking failed {0}", infoLog.data());
+			HZR_ASSERT(false, "[OpenGLShader]: Shader linking failed {0}", infoLog.data());
 			glDeleteProgram(program);
 
 			for (auto id : shaderIDs) {
