@@ -141,11 +141,10 @@ namespace RenderCommandTest {
 			lastTime = time;
 
 			window->BeginFrame();
+
 			RenderCommand::Flush();
 
 			window->Present();
-			//std::cout << frameTime << "ms, " << 1.0f / frameTime << " fps" << std::endl;
-			//std::cout << RenderCommand::GetDrawList().Quads << " Quads" << std::endl;
 		}
 
 		std::cout << "Test closed";

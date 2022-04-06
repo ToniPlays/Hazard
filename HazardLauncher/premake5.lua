@@ -30,18 +30,22 @@ project "HazardLauncher"
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
+		"%{IncludeDir.Hazard_Script}",
 		"%{IncludeDir.Hazard_UI}",
 		"src"
 	}
 	links {
+		"%{Library.Mono_Debug_Lib}",
 		"Hazard-Utility",
 		"Hazard-Renderer",
+		"Hazard-Script",
 		"Hazard-UI",
 		"Glad",
 		"GLFW"
 	}
 	defines {
 		"GLFW_INCLUDE_NONE"
+
 	}
 
 	filter "system:windows"

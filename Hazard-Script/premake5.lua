@@ -19,11 +19,13 @@ project "Hazard-Script"
 		"src",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Mono}"
+		"%{IncludeDir.Mono}",
+		"%{IncludeDir.Hazard_Utility}"
 	}
 
-	links {
-
+	links 
+	{
+		"Hazard-Utility"
 	}
 
 	filter "system:windows"

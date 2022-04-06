@@ -14,6 +14,7 @@ namespace HazardRenderer
 		Severity Severity;
 		std::string Message;
 	};
+
 	using RendererMessageCallback = void(*)(RenderMessage);
 	using EventCallback = std::function<void(HazardUtility::Event&)>;
 

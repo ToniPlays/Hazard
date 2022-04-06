@@ -4,10 +4,12 @@
 #include "tests/Rendering/InstancingTest.h"
 #include "tests/Rendering/RenderCommandTest.h"
 
+#include "tests/Scripting/CoreTest.h"
+
 
 int main()
 {
-	RenderCommandTest::Run(RenderAPI::OpenGL);
+	ScriptCore::Run();
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }
