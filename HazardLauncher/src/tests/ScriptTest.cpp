@@ -1,4 +1,4 @@
-
+#if 0
 #include "glm/glm.hpp"
 
 #include <string>
@@ -19,7 +19,7 @@ static void CallMethod(const std::string& name, void** params) {
 	//function(params);
 
 }
-/*
+
 int main() {
 
 	glm::vec4 color(1.0f);
@@ -30,4 +30,4 @@ int main() {
 	RegisterCall("DoSomething", (void*)DoSomething);
 	CallMethod("DoSomething", params);
 }
-*/
+#endif

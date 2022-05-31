@@ -5,7 +5,7 @@
 namespace Hazard::Scripting {
 
 	enum class FieldVisibility { Private, Protected, Public };
-	enum class FieldType {  None, Float, Float2, Float3, Float4, Int, UInt, String, Custom };
+	enum class FieldType {  None, Float, Float2, Float3, Float4, Int, UInt, String, ManagedType };
 
 	static const char* FieldVisibilityToChar(const FieldVisibility& visibility)
 	{

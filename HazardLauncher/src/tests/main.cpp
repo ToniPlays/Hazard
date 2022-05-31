@@ -6,6 +6,7 @@
 
 #include "tests/Scripting/CoreTest.h"
 
+#if 1
 
 int main()
 {
@@ -13,3 +14,5 @@ int main()
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }
+
+#endif

@@ -1,8 +1,9 @@
 #pragma once
-#include "Hazard/Core/Core.h"
-#include "Mono/Mono.h"
 
-namespace Hazard::Scripting::CSharp 
+#include "Mono/Core/Mono.h"
+#include "Attribute.h"
+
+namespace HazardScript
 {
 	class AttributeBuilder 
 	{

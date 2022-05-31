@@ -67,6 +67,7 @@ namespace HazardRenderer
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
+        /*
 
         uint32_t size = 1000 * 1000;
 
@@ -115,5 +116,6 @@ namespace HazardRenderer
 
         m_QuadMesh = Ref<RawMesh>::Create(quadBuffer, indexBuffer);
         m_CommandBuffer = RenderCommandBuffer::CreateFromSwapchain();
+        */
     }
 }

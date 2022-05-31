@@ -1,15 +1,13 @@
 ﻿
-using System.Runtime.CompilerServices;
-
 namespace Hazard
 {
     public class Application
     {
-        public static void Quit() { Application_Quit_Native(); }
+        public static void Quit() { InternalCalls.Application_Quit_Native(); }
+        //public static string GetVersion() { return "";  }
+        //public static string GetPlatform() { return "" }
+        //public static string GetCompany() { }
+        //public static string GetName() { }
 
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Application_Quit_Native();
-        #endregion
     }
 }

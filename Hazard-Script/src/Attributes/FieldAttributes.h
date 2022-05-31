@@ -1,7 +1,7 @@
 #pragma once
 #include "Attribute.h"
 
-namespace Hazard::Scripting
+namespace HazardScript
 {
 	class ShowInPropertiesAttribute : public Attribute
 	{

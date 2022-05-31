@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hazard
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class VisualFunc : Attribute
     {
         private string Name;

@@ -20,6 +20,7 @@ project "HazardLauncher"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.Mono}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.yaml_cpp}",

@@ -1,10 +1,10 @@
-#include "hzrpch.h"
+
 #include "AttributeBuilder.h"
-#include "Hazard/Scripting/Attributes/AllAttributes.h"
+#include "Attributes/AllAttributes.h"
+#include "Mono/Core/Mono.h"
 
-namespace Hazard::Scripting::CSharp
+namespace HazardScript
 {
-
 
 	Attribute* AttributeBuilder::Create(const std::string className, MonoObject* obj)
 	{
@@ -73,7 +73,6 @@ namespace Hazard::Scripting::CSharp
 			return new ExposeFuncAttribute();
 		}
 
-		HZR_CORE_ASSERT(false, "Unkonw attribute {0}", className);
 		return new Attribute();
 	}
 }

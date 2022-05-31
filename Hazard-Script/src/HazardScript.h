@@ -2,3 +2,4 @@
 
 #include "Core/HazardScriptCore.h"
 #include "Core/HazardScriptEngine.h"
+#include "Core/ScriptObject.h"

@@ -1,7 +1,8 @@
 #pragma once
+
 #include "Attribute.h"
 
-namespace Hazard::Scripting 
+namespace HazardScript
 {
 	class AuthorAttribute : public Attribute
 	{

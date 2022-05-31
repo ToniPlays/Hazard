@@ -1,21 +1,7 @@
 #pragma once
 
 #include "HazardScriptCore.h"
-
-extern "C"
-{
-	typedef struct _MonoObject MonoObject;
-	typedef struct _MonoClassField MonoClassField;
-	typedef struct _MonoClass MonoClass;
-	typedef struct _MonoType MonoType;
-	typedef struct _MonoMethod MonoMethod;
-	typedef struct _MonoString MonoString;
-	typedef struct _MonoArray MonoArray;
-
-	typedef struct _MonoDomain MonoDomain;
-	typedef struct _MonoAssembly MonoAssembly;
-	typedef struct _MonoImage MonoImage;
-}
+#include "ScriptAssembly.h"
 
 namespace HazardScript 
 {
@@ -25,13 +11,10 @@ namespace HazardScript
 		std::filesystem::path MonoAssemblyDir;
 		std::filesystem::path MonoConfigDir;
 		
-		MonoAssembly* CoreAssembly;
-		MonoImage* CoreImage;
-		std::filesystem::path CoreAssemblyPath;
+		ScriptAssembly CoreAssembly;
+		ScriptAssembly AppAssembly;
 
-		MonoAssembly* AppAssembly;
-		MonoImage* AppImage;
-		std::filesystem::path AppAssemblyPath;
+		BindingCallback BindingCallback;
 	};
 
 	class HazardScriptEngine 
@@ -42,9 +25,9 @@ namespace HazardScript
 
 
 		void Reload() {};
-		
 		void RegisterInternalCall(const std::string& signature, void* function);
 
+		ScriptAssembly& GetAppAssembly() { return m_MonoData.AppAssembly; }
 	
 	public:
 		static HazardScriptEngine* Create(HazardScriptCreateInfo* info);
@@ -56,8 +39,6 @@ namespace HazardScript
 		void InitializeMono();
 		void LoadCoreAssebly();
 		void LoadRuntimeAssembly();
-		MonoAssembly* LoadAssembly(const std::filesystem::path& path);
-		MonoImage* GetAssemblyImage(MonoAssembly* assembly);
 
 	private:
 

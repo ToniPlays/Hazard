@@ -312,21 +312,6 @@
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h">
-      <Filter>src\Hazard\Scripting\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\Attribute.h">
-      <Filter>src\Hazard\Scripting\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h">
-      <Filter>src\Hazard\Scripting\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h">
-      <Filter>src\Hazard\Scripting\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h">
-      <Filter>src\Hazard\Scripting\Attributes</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\PublicField.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
@@ -344,9 +329,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h">
       <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\AttributeBuilder.h">
-      <Filter>src\Scripting\CSharp</Filter>
     </ClInclude>
     <ClInclude Include="src\Scripting\CSharp\Bindings.h">
       <Filter>src\Scripting\CSharp</Filter>
@@ -1798,9 +1780,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp">
       <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\AttributeBuilder.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripting\CSharp\CSharpEngine.cpp">
       <Filter>src\Scripting\CSharp</Filter>

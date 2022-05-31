@@ -14,6 +14,7 @@ namespace HazardScript
 	};
 
 	using ScriptDebugCallback = std::function<void(ScriptMessage)>;
+	using BindingCallback = std::function<void()>;
 
 	struct HazardScriptCreateInfo 
 	{
@@ -24,5 +25,6 @@ namespace HazardScript
 		std::filesystem::path ConfigPath;
 
 		ScriptDebugCallback DebugCallback;
+		BindingCallback BindingCallback;
 	};
 }
