@@ -48,8 +48,8 @@ namespace WindowElement {
 
 		if (Input::Button(ICON_FK_FORWARD, { 25, 25 })) 
 		{
-			if (sceneRunning && scenePaused)
-				Application::GetModule<ScriptEngineManager>().Update();
+			//if (sceneRunning && scenePaused)
+				//Application::GetModule<ScriptEngineManager>().Update();
 		}
 
 		ImGui::PopStyleVar();
@@ -88,8 +88,8 @@ namespace WindowElement {
 
 	bool MenuBar::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
+		//EventDispatcher dispatcher(e);
+		//bool returned = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MenuBar::KeyPressed));
 		return false;
 	}
 	void MenuBar::DrawMenu()
@@ -130,7 +130,7 @@ namespace WindowElement {
 			});
 		Layout::Menu("Assets", []() {
 			Layout::MenuItem("Reload script assemblies", []() {
-				Application::GetModule<ScriptEngineManager>().ReloadAll();
+				//Application::GetModule<ScriptEngineManager>().ReloadAll();
 				});
 			Layout::MenuItem("Reload asset folder", []() {
 				Application::GetModule<EditorView>().GetRenderable<FileView>()->UpdateFolderData();
@@ -193,6 +193,7 @@ namespace WindowElement {
 	}
 	bool MenuBar::KeyPressed(KeyPressedEvent& e)
 	{
+		/*
 		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
 		if (!isCtrl)
 			return false;
@@ -204,10 +205,10 @@ namespace WindowElement {
 		}
 		if (e.GetKeyCode() == Key::R)
 		{
-			Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
+			//Application::GetModule<Scripting::ScriptEngineManager>().ReloadAll();
 			return true;
 		}
-
+		*/
 		return false;
 	}
 }

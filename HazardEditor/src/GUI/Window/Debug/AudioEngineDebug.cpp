@@ -21,7 +21,6 @@ namespace WindowElement
 	void AudioEngineDebug::OnWindowRender()
 	{
 		HZR_PROFILE_FUNCTION();
-		using namespace Hazard::Audio;
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
 		Layout::Treenode("Audio files", flags, [&]() {});

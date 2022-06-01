@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
+#include "Event.h"
 
 using namespace Hazard;
 

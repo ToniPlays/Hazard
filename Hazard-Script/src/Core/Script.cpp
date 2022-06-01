@@ -15,13 +15,24 @@ namespace HazardScript
 	{
 		return mono_class_get_name(m_Class);
 	}
-	void Script::Invoke(const std::string& name, MonoObject* obj, void* params)
+	void Script::Invoke(const std::string& name, MonoObject* obj, void** params)
 	{
 		m_Methods[name].Invoke(obj, params);
 	}
 	ScriptObject* Script::CreateObject()
 	{
 		return new ScriptObject(this);
+	}
+	void Script::LoadFields() 
+	{
+		MonoClassField* field = nullptr;
+		void* ptr = 0;
+
+		while ((field = mono_class_get_fields(m_Class, &ptr))) {
+			std::string name = mono_field_get_name(field);
+			m_Fields[name] = ScriptField(field);
+		}
+
 	}
 	void Script::LoadMethods()
 	{

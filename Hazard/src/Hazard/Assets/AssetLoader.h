@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 #include "IAssetLoader.h"
 
 namespace Hazard {
@@ -23,3 +23,4 @@ namespace Hazard {
 		std::unordered_map<AssetType, Scope<IAssetLoader>> m_Loaders;
 	};
 }
+#endif

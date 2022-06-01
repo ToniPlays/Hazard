@@ -4,17 +4,15 @@
 #include "imgui_internal.h"
 #include "Platform/GLFW/FontAwesome.h"
 #include "Library/Style.h"
-#include "Hazard/Rendering/Texture.h"
-#include "Hazard/Rendering/Image/Image2D.h"
 #include "Hazard/Entity/Entity.h"
 
 namespace WindowLayout 
 {
 	class Layout {
 	public:
-		static ImTextureID GetTextureID(const Ref<Hazard::Rendering::Image2D>& image);
-		static void Image(const Ref<Hazard::Rendering::Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
-		static void Texture(const Ref<Hazard::Rendering::Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
+		//static ImTextureID GetTextureID(const Ref<Hazard::Rendering::Image2D>& image);
+		//static void Image(const Ref<Hazard::Rendering::Image2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
+		//static void Texture(const Ref<Hazard::Rendering::Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1);
 		static void Table(uint8_t columns, bool border = true, const char* id = "#aa");
 		inline static void TableNext() { ImGui::NextColumn(); }
 		static void SameLine(float offset = 0.0f, float spacing = 0.0f);
@@ -24,7 +22,7 @@ namespace WindowLayout
 		static bool Tooltip(const char* text);
 		static void Separator(float height = 1.0f);
 		static void Text(const std::string& text);
-		static void TextColored(const char* text, const Hazard::Color& color);
+		static void TextColored(const char* text, const Color& color);
 		static void NextLine(float height = 15.0f);
 		static void ItemWidth(float width);
 		static void PushWidths(uint16_t cols);

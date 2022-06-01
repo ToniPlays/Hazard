@@ -16,6 +16,7 @@ namespace WindowElement {
 	}
 	void FileView::Init()
 	{
+		/*
 		AssetHandle handle = AssetManager::ImportAsset("icons/folder.png");
 		m_Images["folder"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 
@@ -30,6 +31,7 @@ namespace WindowElement {
 
 		handle = AssetManager::ImportAsset("icons/world.png");
 		m_Images["world"] = AssetManager::GetAsset<Rendering::Texture2D>(handle);
+		*/
 	}
 	void FileView::OnWindowRender()
 	{
@@ -116,11 +118,11 @@ namespace WindowElement {
 		ImGuiTreeNodeFlags flags = Style::GetTreeNodeDefaultFlags();
 		Layout::Treenode("Assets", flags, [&]() {
 			flags = ImGuiTreeNodeFlags_OpenOnArrow;
-			for (std::filesystem::directory_entry folder : m_FolderData.Folders) {
+			/*for (std::filesystem::directory_entry folder : m_FolderData.Folders) {
 				Layout::Treenode(folder.path().filename().string().c_str(), flags, [&]() {
 
 				});
-			}
+			}*/
 			});
 	}
 	void FileView::DrawFilePath()
@@ -163,10 +165,11 @@ namespace WindowElement {
 
 		ImGui::PushStyleColor(ImGuiCol_Separator, Style::ColorAsImVec4(Style::GetStyleColor(ColorType::Text)));
 
+		/*
 		for (std::filesystem::directory_entry folder : m_FolderData.Folders)
 		{
 			std::string name = folder.path().filename().string();
-			Input::FileButton(name.c_str(), m_Images["folder"], [&]() {}, { colWidth - 5, colHeight });
+			//Input::FileButton(name.c_str(), m_Images["folder"], [&]() {}, { colWidth - 5, colHeight });
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 				m_CurrentPath = folder.path().string();
@@ -174,9 +177,12 @@ namespace WindowElement {
 			}
 			ImGui::NextColumn();
 		}
+		*/
 		ImGui::PopStyleColor();
+		/*
 		for (std::filesystem::directory_entry file : m_FolderData.Files)
 		{
+			/*
 			std::filesystem::path relative = AssetManager::ToRelative(file.path());
 			AssetHandle handle = AssetManager::GetHandleFromFile(relative.string());
 			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
@@ -186,16 +192,18 @@ namespace WindowElement {
 				DragDropUtils::DragSource(Hazard::Utils::AssetTypeToString(metadata.Type), metadata.Path.filename().string(), (AssetHandle*)&metadata.Handle);
 
 				}, { colWidth - 5, colHeight });
-
+			
 			ImGui::PopStyleColor();
 			ImGui::NextColumn();
 		}
+		*/
 		
 		ContextMenus::FileContextMenu(*this);
 		ImGui::PopStyleColor(2);
 		ImGui::PopStyleVar();
 		ImGui::EndChild();
 	}
+	/*
 	ImVec4 FileView::GetFileColor(AssetMetadata& metadata)
 	{
 		switch (metadata.Type)
@@ -225,9 +233,10 @@ namespace WindowElement {
             return m_Images["logo"];
 		}
 	}
+	*/
 	void FileView::UpdateFolderData()
 	{
-		if (!m_RootPath.empty())
-			m_FolderData = File::GetFolderFiles(m_CurrentPath);
+		//if (!m_RootPath.empty())
+		//	m_FolderData = File::GetFolderFiles(m_CurrentPath);
 	}
 }

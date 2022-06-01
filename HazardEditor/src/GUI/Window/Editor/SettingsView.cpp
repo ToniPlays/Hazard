@@ -14,9 +14,9 @@ namespace WindowElement
 	{
 		SetActive(false);
 		
-		m_Images.clear();
-		AssetHandle handle = Hazard::AssetManager::GetHandleFromFile("icons/world.png");
-		m_Images["world"] = Hazard::AssetManager::GetAsset<Hazard::Rendering::Texture2D>(handle);
+		//m_Images.clear();
+		//AssetHandle handle = Hazard::AssetManager::GetHandleFromFile("icons/world.png");
+		//m_Images["world"] = Hazard::AssetManager::GetAsset<Hazard::Rendering::Texture2D>(handle);
 
 	}
 	void SettingsView::OnWindowRender()
@@ -44,7 +44,7 @@ namespace WindowElement
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
 
 		if (Input::Button("Save", { 80, 25 })) {
-			Application::GetModule<Project::ProjectManager>().Save();
+			//Application::GetModule<Project::ProjectManager>().Save();
 		}
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
@@ -74,8 +74,8 @@ namespace WindowElement
 	}
 	void SettingsView::CreateContent()
 	{
-		using namespace Hazard::Rendering;
-		Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
+		
+		//Project::ProjectManager& manager = Application::GetModule<Project::ProjectManager>();
 		ImGui::Text("Project settings");
 
 		Layout::Table(2, false);
@@ -84,17 +84,17 @@ namespace WindowElement
 		Layout::TableNext();
 		Layout::MaxWidth();
 
-		if (Input::ImageButton(m_Images["world"])) {
+		//if (Input::ImageButton(m_Images["world"])) {
 			
-		}
+		//}
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
-			AssetHandle handle = *(AssetHandle*)payload->Data;
-			manager.Set("Editor.StartupWorld", AssetManager::GetMetadata(handle).Path.string());
+			//AssetHandle handle = *(AssetHandle*)payload->Data;
+			//manager.Set("Editor.StartupWorld", AssetManager::GetMetadata(handle).Path.string());
 			}); 
 
 		ImGui::SameLine(0, 5);
-		ImGui::Text("%s", File::GetNameNoExt(manager.GetProject().StartupWorld).c_str());
+		//ImGui::Text("%s", File::GetNameNoExt(manager.GetProject().StartupWorld).c_str());
 
 		Layout::TableNext();
 		Layout::EndTable();

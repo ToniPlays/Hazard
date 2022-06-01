@@ -3,9 +3,9 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 #include "Platform/Vulkan/imgui_impl_vulkan.h"
+#include "Backend/Vulkan/VulkanContext.h"
 
-using namespace Hazard::Rendering::Vulkan;
-
+using namespace HazardRenderer::Vulkan;
 class EditorPlatformVulkan : public EditorGuiPlatform {
 public:
 

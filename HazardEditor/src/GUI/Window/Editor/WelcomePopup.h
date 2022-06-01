@@ -11,10 +11,10 @@ namespace WindowElement {
 		~WelcomePopup() = default;
 
 		void OnWindowRender() override;
-		virtual bool OnEvent(Hazard::Event& e) override;
+		//virtual bool OnEvent(Hazard::Event& e) override;
 
 	private:
-		bool Close(Hazard::KeyPressedEvent& e);
+		//bool Close(Hazard::KeyPressedEvent& e);
 
 	private:
 		const char* m_Title = "Popup";

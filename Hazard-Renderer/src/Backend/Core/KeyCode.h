@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace HazardRenderer::Key {
+namespace Hazard::Key {
 
 	using KeyCode = uint16_t;
 

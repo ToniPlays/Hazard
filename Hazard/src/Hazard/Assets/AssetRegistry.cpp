@@ -1,5 +1,6 @@
 
 #include <hzrpch.h>
+#if 0
 #include "AssetRegistry.h"
 
 namespace Hazard {
@@ -44,3 +45,4 @@ namespace Hazard {
     }
 
 }
+#endif

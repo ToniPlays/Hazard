@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Core/SceneRuntimeHandler.h"
 
+#include "MathCore.h"
+
 using namespace Hazard::ECS;
 
 namespace WindowElement {
@@ -39,7 +41,7 @@ namespace WindowElement {
 
 		//Decompose and apply modifications
 		glm::vec3 position, rotation, scale;
-		Hazard::Math::DecomposeTransform(transform, position, rotation, scale);
+		Math::DecomposeTransform(transform, position, rotation, scale);
 
 		glm::vec3 deltaRotation = rotation - tc.Rotation;
 		tc.Translation = position;
@@ -49,18 +51,20 @@ namespace WindowElement {
 	}
 	bool TransformationGizmo::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		return dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(TransformationGizmo::SetSelectionContext));
-	
+		//EventDispatcher dispatcher(e);
+		//return dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(TransformationGizmo::SetSelectionContext));
+		return false;
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{
+		/*
 		if (Input::IsKeyDown(Key::LeftControl) || forcedSnapping) {
 
 			if (type == Gizmo::Translate) return new float[] { transformSnap, transformSnap, transformSnap };
 			if (type == Gizmo::Rotate) return new float[] { rotationSnap, rotationSnap, rotationSnap };
 			if (type == Gizmo::Scale) return new float[] { scaleSnap, scaleSnap, scaleSnap };
 		}
+		*/
 		return nullptr;
 	}
 	bool TransformationGizmo::SetSelectionContext(Events::SelectionContextChange& change)

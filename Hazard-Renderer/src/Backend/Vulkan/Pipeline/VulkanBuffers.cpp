@@ -5,8 +5,6 @@
 #include "../VulkanRenderCommandBuffer.h"
 
 
-using namespace HazardUtility;
-
 namespace HazardRenderer::Vulkan
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)

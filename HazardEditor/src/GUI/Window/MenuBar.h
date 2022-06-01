@@ -1,8 +1,10 @@
 #pragma once
 
 #include "GUI/RenderableElement.h"
+#include "Backend/Core/Events.h"
 
-using namespace Hazard;
+using namespace HazardRenderer;
+
 namespace WindowElement {
 
 	class MenuBar : public RenderableElement {

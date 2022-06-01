@@ -49,9 +49,6 @@
 #include <glm/glm.hpp>
 #include "imgui_impl_vulkan.h"
 #include <stdio.h>
-#include "Platform/Rendering/Vulkan/Vulkan.h"
-
-#include "Platform/Rendering/Vulkan/VulkanContext.h"
 
 // Reusable buffers used for rendering 1 current in-flight frame, for ImGui_ImplVulkan_RenderDrawData()
 // [Please zero-clear before use!]
@@ -1276,6 +1273,7 @@ void ImGui_ImplVulkanH_DestroyWindowRenderBuffers(VkDevice device, ImGui_ImplVul
 
 ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)
 {
+    /*
     ImGui_ImplVulkan_InitInfo* v = &g_VulkanInitInfo;
 
     VkDescriptorSetAllocateInfo alloc_info = {};
@@ -1286,6 +1284,8 @@ ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_vie
     VkDescriptorSet descriptor_set = Hazard::Rendering::Vulkan::VulkanContext::RT_AllocateDescriptorSet(alloc_info);
     ImGui_ImplVulkan_UpdateTextureInfo(descriptor_set, sampler, image_view, image_layout);
     return (ImTextureID)descriptor_set;
+    */
+    return nullptr;
 }
 
 ImTextureID ImGui_ImplVulkan_AddTexture_Internal(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)

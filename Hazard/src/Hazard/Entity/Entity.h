@@ -18,7 +18,7 @@ namespace Hazard::ECS {
 		T& AddComponent(Args&&... args) 
 		{
 			if (HasComponent<T>()) {
-				HZR_CORE_WARN("Entity already has component");
+				//HZR_CORE_WARN("Entity already has component");
 			}
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 			m_World->OnComponentAdded<T>(*this, component);
@@ -28,7 +28,7 @@ namespace Hazard::ECS {
 		T& AddComponentWithCallback(C callback, Args&&... args)
 		{
 			if (HasComponent<T>()) {
-				HZR_CORE_WARN("Entity already has component");
+				//HZR_CORE_WARN("Entity already has component");
 			}
 
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);

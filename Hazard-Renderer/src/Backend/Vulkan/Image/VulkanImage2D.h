@@ -35,8 +35,8 @@ namespace HazardRenderer::Vulkan
 		float GetAspectRatio() { return (float)m_Width / (float)m_Height; }
 		ImageFormat GetFormat() const { return m_Info.Format; };
 
-		HazardUtility::Buffer GetBuffer() const { return m_Buffer; };
-		HazardUtility::Buffer& GetBuffer() { return m_Buffer; };
+		Buffer GetBuffer() const { return m_Buffer; };
+		Buffer& GetBuffer() { return m_Buffer; };
 		
 		VulkanImageInfo GetImageInfo() { return m_Info; }
 		const VkDescriptorImageInfo& GetDescriptor() { return m_DescriptorImageInfo; }
@@ -56,7 +56,7 @@ namespace HazardRenderer::Vulkan
 		std::map<uint32_t, VkImageView> m_MipImageViews;
 		VkDescriptorImageInfo m_DescriptorImageInfo = {};
 
-		HazardUtility::Buffer m_Buffer;
+		Buffer m_Buffer;
 	};
 }
 #endif

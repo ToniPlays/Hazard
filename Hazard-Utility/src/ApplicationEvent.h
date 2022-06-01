@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Event.h"
+#include "UtilityCore.h"
+
 namespace Hazard {
 
-	//Contains all window events;
-	
-	class  AppTickEvent : public Event {
+	class AppTickEvent : public Event {
 
 	public:
 		AppTickEvent() = default;

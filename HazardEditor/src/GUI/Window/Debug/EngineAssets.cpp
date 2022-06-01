@@ -16,10 +16,10 @@ namespace WindowElement {
 	{
 		HZR_PROFILE_FUNCTION();
 		if (ImGui::Button("Refresh")) {
-			AssetManager::RemoveUnreferencedResources();
+			//AssetManager::RemoveUnreferencedResources();
 		}
 		return;
-
+		/*
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed;
 		for (auto& [path, meta] : Hazard::AssetManager::GetMetadataRegistry()) 
 		{
@@ -41,5 +41,6 @@ namespace WindowElement {
 				});
 			ImGui::PopID();
 		}
+		*/
 	}
 }

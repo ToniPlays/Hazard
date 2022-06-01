@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "hzrpch.h"
@@ -33,3 +34,4 @@ namespace Exporter
 		BuildErrorCallback m_ErrorCallback;
 	};
 }
+#endif

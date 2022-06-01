@@ -18,15 +18,12 @@
 #include "Hazard/Instrumentor.h"
 #include "Hazard/PerformanceProfiler.h"
 
-#include "Hazard/Utils/File.h"
+#include "File.h"
 
-#include "Hazard/Events/Event.h"
-#include "Hazard/Events/ApplicationEvent.h"
-#include "Hazard/Events/KeyEvent.h"
-#include "Hazard/Events/MouseEvent.h"
+#include "Event.h"
 
-#include "Hazard/Math/Time.h"
-#include "Hazard/Math/Math.h"
+#include "Time.h"
+#include "Math.h"
 #include "Hazard/Math/Random.h"
 
 #ifdef HZR_PLATFORM_WINDOWS

@@ -3,7 +3,7 @@
 #include "Core/EditorEvent.h"
 #include "GUI/EditorWindow.h"
 
-using namespace Hazard;
+using namespace HazardRenderer;
 using namespace Hazard::ECS;
 
 namespace WindowElement {

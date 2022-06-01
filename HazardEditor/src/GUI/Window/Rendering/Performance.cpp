@@ -14,7 +14,7 @@ namespace WindowElement {
 	}
 	void Performance::Init()
 	{
-		context = &Application::GetModule<Rendering::RenderContext>();
+		//context = &Application::GetModule<Rendering::RenderContext>();
 	}
 	void Performance::OnWindowRender()
 	{
@@ -25,20 +25,20 @@ namespace WindowElement {
 		Layout::TableNext();
 
 		std::stringstream ss;
-		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000, 3) << "ms";
+		//ss << Math::Round(Time::s_UnscaledDeltaTime * 1000, 3) << "ms";
 		Layout::Text(ss.str().c_str());
 		ss.str("");
 		Layout::TableNext();
 		Layout::Text("FPS");
 		Layout::TableNext();
 
-		ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3) << " fps";
+		//ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3) << " fps";
 		Layout::Text(ss.str().c_str());
 
 		Layout::TableNext();
 		Layout::Text("Platform");
 		Layout::TableNext();
-		Layout::Text(context->GetWindow().GetWindowInfo().Platform);
+		//Layout::Text(context->GetWindow().GetWindowInfo().Platform);
 		/*
 		Hazard::Rendering::DeviceSpec spec = context->GetWindow().GetWindowInfo().deviceSpecs;
 
@@ -53,11 +53,5 @@ namespace WindowElement {
 		Layout::Text(spec.Renderer);
 		*/
 		Layout::EndTable();
-
-		PerformanceProfiler* profiler = Application::GetData().Profiler;
-		for (auto [name, time] : profiler->GetPerFrameData()) {
-			ImGui::Text("%s: %.3fms", name, time);
-		}
-		profiler->Clear();
 	}
 }

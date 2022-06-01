@@ -1,6 +1,7 @@
 
 #include "hzrpch.h"
 #include "CameraProcessingComponent.h"
+#include "MathCore.h"
 
 namespace Hazard::ECS {
 

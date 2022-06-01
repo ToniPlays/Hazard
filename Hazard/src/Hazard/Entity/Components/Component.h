@@ -1,17 +1,15 @@
 #pragma once
 
-#include "Hazard/Math/Color.h"
-#include "Hazard/Math/Math.h"
-#include "Hazard/Core/UUID.h"
-#include "Hazard/Audio/AudioSource.h"
-#include "Hazard/Rendering/Mesh/MeshAsset.h"
+#include "Color.h"
+#include "MathCore.h"
+#include "UID.h"
 
 namespace Hazard::ECS {
 
 	struct TagComponent
 	{
 		std::string Tag;
-		UUID Uid;
+		UID Uid;
 		bool Visible = true;
 	};
 
@@ -45,13 +43,14 @@ namespace Hazard::ECS {
 	};
 	struct MeshComponent 
 	{
-		Ref<Rendering::MeshAsset> SourceAsset;
+		float ye;
+		//Ref<Rendering::MeshAsset> SourceAsset;
 		//Ref<Rendering::Material> m_Material;
 	};
 	struct AudioSourceComponent 
 	{
 		std::string SourceFile;
-		Audio::AudioSource Source;
+		//Audio::AudioSource Source;
 
 		float Gain = 1.0f;
 		float Pitch = 1.0f;

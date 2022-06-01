@@ -1,4 +1,6 @@
+#
 #pragma once
+#if 0
 
 #include "hzrpch.h"
 #include "Hazard/Assets/AssetEnums.h"
@@ -50,3 +52,4 @@ namespace Exporter {
 		}
 	};
 }
+#endif 

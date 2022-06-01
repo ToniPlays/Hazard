@@ -4,16 +4,15 @@
 
 #include "Backend/Core/Events.h"
 #include "Renderer/RenderCommand.h"
+#include "Backend/Core/Events.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
 #include "vendor/stb_image.h"
-#include "File/File.h"
+#include "File.h"
 
 #include <vector>
-
-using namespace HazardUtility;
 
 namespace HazardRenderer {
 
@@ -39,7 +38,7 @@ namespace HazardRenderer {
 		m_WindowData.EventCallback = info->AppInfo->EventCallback;
 
 		if (!m_WindowData.EventCallback) {
-			m_WindowData.EventCallback = [](HazardUtility::Event& e) {};
+			m_WindowData.EventCallback = [](Event& e) {};
 		}
 
 		if (info->Renderer == RenderAPI::Auto) 
@@ -78,9 +77,16 @@ namespace HazardRenderer {
 		HZR_ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
 		HZR_ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
 
+		//Create window
 		m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 
 		HZR_ASSERT(m_Window, "Failed to create window");
+
+		//Center window
+		monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		glfwSetWindowPos(m_Window, mode->width / 2 - m_WindowData.Width / 2, mode->height / 2 - m_WindowData.Height / 2);
+
 
 		if (info->AppInfo->IconCount > 0)
 			SetWindowIcon(info->AppInfo->IconCount, info->AppInfo->Icons);
@@ -184,20 +190,20 @@ namespace HazardRenderer {
 			{
 			case GLFW_PRESS:
 			{
-				KeyPressedEvent event(key, 0);
-				data.EventCallback(event);
+				//KeyPressedEvent event(key, 0);
+				//data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				KeyReleasedEvent event(key);
-				data.EventCallback(event);
+				//KeyReleasedEvent event(key);
+				//data.EventCallback(event);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				KeyPressedEvent event(key, 1);
-				data.EventCallback(event);
+				//KeyPressedEvent event(key, 1);
+				//data.EventCallback(event);
 				break;
 			}
 			}
@@ -209,32 +215,33 @@ namespace HazardRenderer {
 			{
 			case GLFW_PRESS:
 			{
-				MouseButtonPressedEvent event(button);
-				data.EventCallback(event);
+				//MouseButtonPressedEvent event(button);
+				//data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				MouseButtonReleasedEvent event(button);
-				data.EventCallback(event);
+				//MouseButtonReleasedEvent event(button);
+				//data.EventCallback(event);
 				break;
 			}
 			}
 			});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			MouseScrolledEvent event((float)xOffset, (float)yOffset);
-			data.EventCallback(event);
+			//MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			//data.EventCallback(event);
 
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			MouseMovedEvent event((float)xPos, (float)yPos);
-			data.EventCallback(event);
+			//MouseMovedEvent event((float)xPos, (float)yPos);
+			//data.EventCallback(event);
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
+
 			WindowFocusEvent event(focus);
 			data.EventCallback(event);
 			});

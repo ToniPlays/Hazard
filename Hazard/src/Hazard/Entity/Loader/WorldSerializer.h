@@ -3,69 +3,11 @@
 #include "../WorldHandler.h"
 #include "../World.h"
 #include "../Entity.h"
-#include "Hazard/RenderContext/RenderContext.h"
 #include "WorldSerializer.h"
-#include "Hazard/Utils/YamlUtils.h"
+#include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
-#include "Hazard/Rendering/Mesh/Mesh.h"
 
-#include <yaml-cpp/yaml.h>
-
-namespace YAML {
-
-	template<>
-	struct convert<glm::vec3>
-	{
-		static Node encode(const glm::vec3& rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.push_back(rhs.z);
-			node.SetStyle(EmitterStyle::Flow);
-			return node;
-		}
-
-		static bool decode(const Node& node, glm::vec3& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 3)
-				return false;
-
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			rhs.z = node[2].as<float>();
-			return true;
-		}
-	};
-
-	template<>
-	struct convert<glm::vec4>
-	{
-		static Node encode(const glm::vec4& rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.push_back(rhs.z);
-			node.push_back(rhs.w);
-			node.SetStyle(EmitterStyle::Flow);
-			return node;
-		}
-
-		static bool decode(const Node& node, glm::vec4& rhs)
-		{
-			if (!node.IsSequence() || node.size() != 4)
-				return false;
-
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			rhs.z = node[2].as<float>();
-			rhs.w = node[3].as<float>();
-			return true;
-		}
-	};
-}
 
 namespace Hazard::ECS::Loader 
 {
@@ -175,11 +117,11 @@ namespace Hazard::ECS::Loader
         void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "MeshComponent", [&]() {
-                if (component.SourceAsset) {
+                /*if (component.SourceAsset) {
                     Ref<Hazard::Rendering::Mesh> mesh = AssetManager::GetRuntimeResource<Hazard::Rendering::Mesh>(component.SourceAsset->GetSourceHandle());
                     if(mesh)
                         YamlUtils::Serialize(out, "File", mesh->GetFile());
-                }
+                }*/
                 });
         }
         template<>
@@ -187,11 +129,11 @@ namespace Hazard::ECS::Loader
         {
             YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
                 YamlUtils::Serialize(out, "Tint", component.Tint);
-                if (!component.Texture) return;
-                if (component.Texture->IsValid()) {
+                //if (!component.Texture) return;
+                /*if (component.Texture->IsValid()) {
                     AssetMetadata& meta = component.Texture->GetMetadata();
                     YamlUtils::Serialize(out, "Texture", meta.Path.string());
-                }
+                }*/
                 });
         }
         template<>

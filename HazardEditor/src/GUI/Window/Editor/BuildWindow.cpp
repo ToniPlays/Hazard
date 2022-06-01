@@ -5,7 +5,7 @@
 #include "Library/Input.h"
 #include "Library/DragDropUtils.h"
 #include "Project/ProjectManager.h"
-#include "Hazard/Utils/StringUtil.h"
+#include "Utility/StringUtil.h"
 #include "Hazard/Assets/AssetManager.h"
 
 using namespace WindowLayout;
@@ -27,14 +27,14 @@ namespace WindowElement
 	void BuildWindow::ExportProject(const std::filesystem::path& path)
 	{
 		HZR_INFO("Exporting game to {0}", path.string());
-		using namespace Exporter;
-		GameExportManager exporter;
+		//using namespace Exporter;
+		//GameExportManager exporter;
 
-		exporter.SetBuildSettings(m_BuildSettings);
-		exporter.ValidateBuildSettings();
-		exporter.ExportGame(path);
+		//exporter.SetBuildSettings(m_BuildSettings);
+		//exporter.ValidateBuildSettings();
+		//exporter.ExportGame(path);
 
-		m_Report = exporter.GetBuildReport();
+		//m_Report = exporter.GetBuildReport();
 		m_HasBuilt = true;
 	}
 	void BuildWindow::ShowBuildReport()
@@ -52,15 +52,15 @@ namespace WindowElement
 		{
 			Layout::Table(4, false, "Build stats");
 
-			ImGui::Text(m_Report.Result ? ICON_FK_CHECK_SQUARE " Build succeeded" : ICON_FK_TIMES" Build failed");
+			//ImGui::Text(m_Report.Result ? ICON_FK_CHECK_SQUARE " Build succeeded" : ICON_FK_TIMES" Build failed");
 			Layout::TableNext();
 			std::stringstream ss;
 
-			ss << "Size: " << Hazard::StringUtil::BytesToString(m_Report.TotalSize);
+			//ss << "Size: " << Hazard::StringUtil::BytesToString(m_Report.TotalSize);
 
 			ImGui::Text("%s", ss.str().c_str());
 			Layout::TableNext();
-			ImGui::Text("Time: %.2f", m_Report.BuildTime / 1000.0f);
+			//ImGui::Text("Time: %.2f", m_Report.BuildTime / 1000.0f);
 
 			Layout::TableNext();
 			ImGui::Text("Something random here");
@@ -70,6 +70,7 @@ namespace WindowElement
 		Layout::Table(2, false, "#restypes");
 		//Assets		
 		{
+			/*
 			Layout::ShiftY(25.0f);
 			for (auto [type, size] : m_Report.AssetTypeSize) {
 				float val = (float)size / (float)m_Report.TotalSize;
@@ -81,6 +82,7 @@ namespace WindowElement
 				ImGui::Text("%s", Hazard::Utils::AssetTypeToString(type));
 				Layout::ShiftY(5.0f);
 			}
+			*/
 		}
 		ImGui::NextColumn();
 		//Assets		
@@ -88,6 +90,7 @@ namespace WindowElement
 			ScopedColour color(ImGuiCol_ChildBg, Style::ColorAsImVec4(Color::FromHex("#0D0D0B")));
 			ImGui::BeginChild("resource", ImVec2(0, -50.0f), false);
 
+			/*
 			for (auto [type, resources] : m_Report.Resources)
 			{
 				for (auto& resources : resources) {
@@ -95,6 +98,7 @@ namespace WindowElement
 					ImGui::Text("%s", resources.FileName.c_str());
 				}
 			}
+			*/
 			ImGui::EndChild();
 		}
 		Layout::EndTable();
@@ -141,14 +145,15 @@ namespace WindowElement
 			ImVec2 windowSize = ImVec2(offset.x + avail.x, offset.y + avail.y);
 
 			DragDropUtils::DragTargetCustom("World", ImRect(offset, windowSize), ImGui::GetID("worldDrag"), [&](const ImGuiPayload* payload) {
-				AssetHandle handle = *(AssetHandle*)payload->Data;
-				m_BuildSettings.m_Worlds.push_back(AssetManager::GetMetadata(handle));
+				//AssetHandle handle = *(AssetHandle*)payload->Data;
+				//m_BuildSettings.m_Worlds.push_back(AssetManager::GetMetadata(handle));
 				});
-
+			/*
 			for (auto world : m_BuildSettings.m_Worlds)
 			{
 				ImGui::Text("%s", world.Path.string().c_str());
 			}
+			*/
 
 			ImGui::EndChild();
 

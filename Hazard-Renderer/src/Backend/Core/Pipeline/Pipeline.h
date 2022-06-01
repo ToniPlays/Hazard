@@ -24,7 +24,7 @@ namespace HazardRenderer
 		Ref<RenderPass> TargetRenderPass = nullptr;
 	};
 
-	class Pipeline : public HazardUtility::Asset {
+	class Pipeline : public Asset {
 	public:
 		virtual ~Pipeline() = default;
 

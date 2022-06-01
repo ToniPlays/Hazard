@@ -12,7 +12,10 @@
 #include "../Tabs/EditorMainTab.h"
 #include "Core/SceneRuntimeHandler.h"
 
+#include "Backend/Core/KeyCode.h"
+
 using namespace WindowLayout;
+using namespace HazardRenderer;
 
 namespace WindowElement {
 
@@ -27,9 +30,12 @@ namespace WindowElement {
 
 	bool Hierarchy::OnEvent(Event& e)
 	{
+		return false;
+		/*
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Hierarchy::SelectionContextChange));
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::KeyPressEvent));
+		*/
 	}
 	void Hierarchy::OnWindowRender()
 	{
@@ -94,7 +100,7 @@ namespace WindowElement {
 			}
 			ContextMenus::HierarchyEntityMenu(world, [](Entity entity) {
 				Events::SelectionContextChange e(entity);
-				EditorView::GetInstance().OnEvent(e);
+				//EditorView::GetInstance().OnEvent(e);
 				});
 			ImGui::EndTable();
 		}
@@ -112,8 +118,8 @@ namespace WindowElement {
 	{
 		TagComponent& c = entity.GetTag();
 
-		if (!Hazard::StringUtil::IsMatching(c.Tag, m_SearchValue))
-			return;
+		//if (!Hazard::StringUtil::IsMatching(c.Tag, m_SearchValue))
+		//	return;
 
 		constexpr float edgeOffset = 4.0f;
 		constexpr float rowHeight = 21.0f;
@@ -185,16 +191,16 @@ namespace WindowElement {
 
 		bool previousState = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetID(entityIDStr.c_str()));
 
-		const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, c.Tag.c_str(), nullptr);
+		//const bool opened = ImGui::TreeNodeWithIcon(nullptr, ImGui::GetID(entityIDStr.c_str()), flags, c.Tag.c_str(), nullptr);
 
 		if (isRowClicked)
 		{
 			ImGui::FocusWindow(ImGui::GetCurrentWindow());
 			Events::SelectionContextChange e(entity);
-			EditorView::GetInstance().OnEvent(e);
+			//EditorView::GetInstance().OnEvent(e);
 		}
 
-		if (opened) ImGui::TreePop();
+		if (false) ImGui::TreePop();
 
 		if (selected)
 			ImGui::PopStyleColor();
@@ -221,10 +227,10 @@ namespace WindowElement {
 			m_SelectionContext.GetWorld().DestroyEntity(m_SelectionContext);
 			return true;
 		}
-		if (e.GetKeyCode() == Key::D && m_SelectionContext && Hazard::Input::IsKeyDown(Key::LeftControl)) {
-			m_SelectionContext.GetWorld().CreateEntity(m_SelectionContext);
-			return true;
-		}
+		//if (e.GetKeyCode() == Key::D && m_SelectionContext && Hazard::Input::IsKeyDown(Key::LeftControl)) {
+		//	m_SelectionContext.GetWorld().CreateEntity(m_SelectionContext);
+		//	return true;
+		//}
 		return false;
 	}
 }

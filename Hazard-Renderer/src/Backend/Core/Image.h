@@ -50,7 +50,7 @@ namespace HazardRenderer
 		virtual uint32_t GetHeight() = 0;
 
 		virtual float GetAspectRatio() = 0;
-		virtual HazardUtility::Buffer GetBuffer() const = 0;
-		virtual const HazardUtility::Buffer& GetBuffer() = 0;
+		virtual Buffer GetBuffer() const = 0;
+		virtual const Buffer& GetBuffer() = 0;
 	};
 }

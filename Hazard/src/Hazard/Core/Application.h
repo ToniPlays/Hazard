@@ -1,10 +1,9 @@
 #pragma once
 
-#include "HazardLoop.h"
 #include "Core.h"
+#include "HazardLoop.h"
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
-#include "Hazard/PerformanceProfiler.h"
 
 namespace Hazard {
 
@@ -12,7 +11,6 @@ namespace Hazard {
 	{
 		float MemoryUsage = 0;
 		bool Minimized = false;
-		PerformanceProfiler* Profiler = new PerformanceProfiler();
 	};
 
 	class Application {
@@ -25,6 +23,7 @@ namespace Hazard {
 		/// Preinit is called before the engine is started.
 		/// This should be used for building the application stack
 		/// </summary>
+		/// 
 		virtual void PreInit() {};
 		virtual void Init() {};
 		virtual void Update() {};

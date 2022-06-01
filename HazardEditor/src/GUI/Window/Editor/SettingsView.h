@@ -1,6 +1,5 @@
 #pragma once
 #include "GUI/EditorWindow.h"
-#include "Hazard/Rendering/Texture.h"
 #include "imgui.h"
 
 namespace WindowElement {
@@ -19,6 +18,6 @@ namespace WindowElement {
 		void CreateContent();
 
 		std::string m_SearchValue;
-		std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
+		//std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
 	};
 }

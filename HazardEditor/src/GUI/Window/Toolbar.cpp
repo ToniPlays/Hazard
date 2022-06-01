@@ -76,19 +76,20 @@ namespace WindowElement
 		Layout::SameLine(0, 5);
 
 		if(Input::Button(ICON_FK_FORWARD, { 28, 28 })) {
-			if (sceneRunning && scenePaused)
+			/*if (sceneRunning && scenePaused)
 				Application::GetModule<ScriptEngineManager>().Update();
+				*/
 		}
 		Layout::SameLine(0, 5);
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33 * 3);
-		if (Input::ButtonColorChange(ICON_FK_LIGHTBULB_O, offColor, onColor, Style::GetStyleColor(ColorType::Warning), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
+		if (Input::ButtonColorChange(ICON_FK_LIGHTBULB_O, offColor, onColor, Style::GetStyleColor(ColorType::Warning), false, { 28, 28 })) {
 			EditorView::GetInstance().SetLayerActive<WorldEnvironmentData>(true);
 		}
 
 		Layout::SameLine(0, 5);
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 33 * 2);
-		if(Input::ButtonColorChange(ICON_FK_SLIDERS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), Rendering::RenderContextCommand::IsVsync(), { 28, 28 })) {
-			Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
+		if(Input::ButtonColorChange(ICON_FK_SLIDERS, offColor, onColor, Style::GetStyleColor(ColorType::Debug), false, { 28, 28 })) {
+			//Rendering::RenderContextCommand::SetVsync(!Rendering::RenderContextCommand::IsVsync());
 		}
 		Layout::Tooltip("VSync");
 
@@ -101,9 +102,11 @@ namespace WindowElement
 	}
 	bool Toolbar::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Toolbar::OnKey));
+		return false;
+		//EventDispatcher dispatcher(e);
+		//return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Toolbar::OnKey));
 	}
+	/*
 	bool Toolbar::OnKey(KeyPressedEvent& e)
 	{
 		bool isCtrl = Hazard::Input::IsKeyDown(Key::LeftControl);
@@ -120,7 +123,7 @@ namespace WindowElement
 			return true;
 		}
 		return false;
-	}
+	}*/
 	void Toolbar::SetPlaying(bool playing) {
 		Runtime::SceneRuntimeHandler::SetSceneRunning(!playing);
 

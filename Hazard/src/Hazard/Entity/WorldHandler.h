@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
 #include "World.h"
 

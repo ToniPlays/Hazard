@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "WorldSerializer.h"
-#include "Hazard/Utils/YamlUtils.h"
+#include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 

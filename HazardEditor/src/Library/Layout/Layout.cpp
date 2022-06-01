@@ -5,14 +5,12 @@
 #include "imgui_internal.h"
 
 #include "Platform/RenderPlatforms.h"
-#include "Hazard/Rendering/RenderCommand.h"
-#include "Hazard/Rendering/Texture.h"
 
 
 namespace WindowLayout
 {
-    static std::unordered_map<const Hazard::Rendering::Image2D*, ImTextureID> m_ImageIDS;
-
+    //static std::unordered_map<const Hazard::Rendering::Image2D*, ImTextureID> m_ImageIDS;
+    /*
     ImTextureID Layout::GetTextureID(const Ref<Hazard::Rendering::Image2D>& image)
     {
         if (m_ImageIDS.find(image.Raw()) != m_ImageIDS.end()) {
@@ -44,6 +42,8 @@ namespace WindowLayout
                 return (ImTextureID)0;
         }
     }
+    */
+    /*
     void Layout::Texture(const Ref<Hazard::Rendering::Texture2D>& image, ImVec2 size, ImVec2 t0, ImVec2 t1)
     {
         //ImGui::Image((ImTextureID)image.As<Hazard::Rendering::OpenGL::OpenGLTexture2D>()->GetID(), size, t0, t1);
@@ -53,6 +53,7 @@ namespace WindowLayout
         HZR_ASSERT(image, "What image?");
         ImGui::Image(GetTextureID(image), size, t0, t1);
     }
+    */
     void Layout::Table(uint8_t columns, bool border, const char* id)
     {
         ImGui::Columns(columns, id, border);

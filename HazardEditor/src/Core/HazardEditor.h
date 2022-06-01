@@ -2,6 +2,8 @@
 
 #include "Hazard.h"
 #include "Hazard/Core/EntryPoint.h"
+#include "Event.h"
+
 
 class EditorApplication : public Hazard::Application {
 
@@ -11,7 +13,7 @@ public:
 
 	void PreInit() override;
 	void Init() override;
-	bool OnEvent(Hazard::Event& e) override;
+	bool OnEvent(Event& e) override;
 };
 
 Hazard::Application* Hazard::CreateApplication() 

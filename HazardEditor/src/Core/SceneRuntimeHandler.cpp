@@ -12,11 +12,8 @@ namespace Runtime {
 	bool SceneRuntimeHandler::s_ScenePaused = false;
 	Ref<ECS::World> SceneRuntimeHandler::s_EditorWorld = nullptr;
 
-	ScriptEngineManager* SceneRuntimeHandler::s_ScriptManager;
-
 	void SceneRuntimeHandler::Init()
 	{
-		s_ScriptManager = &Application::GetModule<ScriptEngineManager>();
 	}
 
 	void SceneRuntimeHandler::SetSceneRunning(bool running)
@@ -35,11 +32,9 @@ namespace Runtime {
 
 			Hazard::Physics::PhysicsCommand::BeginSimulation(&physicsInfo);
 			WorldCommand::WorldRuntimeBegin();
-			ScriptCommand::OnBeginRuntime();
 		}
 		else 
 		{
-			ScriptCommand::OnEndRuntime();
 			WorldCommand::WorldRuntimeEnd();
 			Hazard::Physics::PhysicsCommand::StopSimulation();
 			handler.SetWorld(s_EditorWorld);
@@ -50,8 +45,6 @@ namespace Runtime {
 		}
 
 		if (s_ScenePaused && s_SceneRunning) return;
-
-		s_ScriptManager->SetActive(s_SceneRunning);
 	}
 	void SceneRuntimeHandler::SetScenePaused(bool paused)
 	{
@@ -66,6 +59,5 @@ namespace Runtime {
 		else {
 			//WindowElement::EditorView::SetWindowFocus<WindowElement::GameViewport>();
 		}
-		s_ScriptManager->SetActive(!paused);
 	}
 }

@@ -34,12 +34,12 @@ namespace HazardRenderer
 	struct PipelineRenderable
 	{
 		Ref<Pipeline> Pipeline;
-		std::map<HazardUtility::UID, InstancedMesh> MeshInstances;
+		std::map<UID, InstancedMesh> MeshInstances;
 	};
 	struct DrawList 
 	{
 		WorldSettings Settings;
-		std::map<HazardUtility::UID, PipelineRenderable> Geometry;
+		std::map<UID, PipelineRenderable> Geometry;
 		uint32_t Quads = 0;
 
 	};

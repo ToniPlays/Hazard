@@ -1,7 +1,8 @@
 
 #include "EditorCamera.h"
 #include "Library/Input.h"
-#include "Hazard/Events/Input.h"
+#include "Backend/Input.h"
+#include "MathCore.h"
 
 #include <GLFW/glfw3.h>
 
@@ -20,23 +21,26 @@ namespace Editor {
 	}
 	void EditorCamera::OnUpdate()
 	{
+		/*
 		const glm::vec2& mouse = Hazard::Input::GetMousePos();
 		glm::vec2 delta = (mouse - m_InitialMousePos) * 0.003f;
 		m_InitialMousePos = mouse;
 
-		if (Hazard::Input::IsMouseButtonDown(Mouse::ButtonLeft) && !m_Is2DEnabled) {
+		if (Input::IsMouseButtonDown(Mouse::ButtonLeft) && !m_Is2DEnabled) {
 			MouseRotate(delta);
 		}
-		else if (Hazard::Input::IsMouseButtonDown(Mouse::ButtonRight))
+		else if (Input::IsMouseButtonDown(Mouse::ButtonRight))
 			MousePan(delta);
 
 		UpdateView();
+		*/
 	}
 
 	bool EditorCamera::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
+		//EventDispatcher dispatcher(e);
+		//return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
+		return false;
 	}
 
 	void EditorCamera::UpdateProjection()
@@ -53,7 +57,7 @@ namespace Editor {
 		m_View = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		m_View = glm::inverse(m_View);
 	}
-
+	/*
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)
 	{
 		float delta = e.GetYOffset() * 0.1f;
@@ -61,6 +65,7 @@ namespace Editor {
 		UpdateView();
 		return false;
 	}
+	*/
 
 	void EditorCamera::MousePan(const glm::vec2& delta)
 	{

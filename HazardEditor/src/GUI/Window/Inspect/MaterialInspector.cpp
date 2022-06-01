@@ -89,8 +89,8 @@ namespace WindowElement {
 	}
 	bool MaterialInspector::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(MaterialInspector::SelectionContextChange));
+		//EventDispatcher dispatcher(e);
+		//dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(MaterialInspector::SelectionContextChange));
 		return false;
 	}
 	bool MaterialInspector::SelectionContextChange(Events::SelectionContextChange& e)

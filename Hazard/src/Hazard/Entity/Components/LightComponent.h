@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hazard/Math/Color.h"
+#include "Color.h"
 
 namespace Hazard::ECS 
 {

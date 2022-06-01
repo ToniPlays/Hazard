@@ -4,6 +4,7 @@
 
 namespace WindowElement 
 {
+	class Event;
 
 	class RenderableElement {
 	public:
@@ -16,6 +17,6 @@ namespace WindowElement
 		virtual void OnMenuRender() {};
 		virtual void OnUpdate() {};
 		virtual void OnRender() {};
-		virtual bool OnEvent(Hazard::Event& e) { return false; };
+		virtual bool OnEvent(Event& e) { return false; };
 	};
 }

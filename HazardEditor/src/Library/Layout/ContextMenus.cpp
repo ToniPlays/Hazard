@@ -27,7 +27,6 @@ namespace WindowElement {
 	{
 		//Hierarchy Context menu
 		using namespace Hazard::ECS;
-		using namespace Hazard::Rendering;
 
 		Layout::ContextMenu([&]() {
 

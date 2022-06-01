@@ -8,14 +8,10 @@
 
 using namespace Hazard;
 
-#if 1
-Ref<Rendering::WorldRenderer> renderer;
-Editor::EditorCamera camera;
-#endif
 
 void EditorApplication::PreInit()
 {
-	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
+	/*std::vector<const char*> icons = {"res/Icons/logo.png", "res/Icons/logo.png"};
 
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
@@ -57,19 +53,20 @@ void EditorApplication::PreInit()
 
 	EntityComponentCreateInfo entityInfo = {};
 
-	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &contextInfo;
     createInfo.RendererInfo = &engineInfo;
 	createInfo.AudioEngine = &audioInfo;
 	createInfo.EntityComponent = &entityInfo;
 	createInfo.ScriptEngineInfo = &scriptInfo;
+	*/
+	HazardCreateInfo createInfo = {};
 
 	CreateApplicationStack(&createInfo);
 }
 void EditorApplication::Init()
 {
-
+/*
 #ifdef HZR_PLATFORM_WINDOWS
 
 	PushModule<WindowElement::EditorView>();
@@ -78,10 +75,13 @@ void EditorApplication::Init()
 
     Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
 	manager.Load(CommandLineArgs::Get<std::string>("ProjectPath"));
+	*/
 }
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	if (!HasModule<WindowElement::EditorView>()) return false;
-	return GetModule<WindowElement::EditorView>().OnEvent(e);
+	
+	//if (!HasModule<WindowElement::EditorView>()) return false;
+	//return GetModule<WindowElement::EditorView>().OnEvent(e);
+	return false;
 }

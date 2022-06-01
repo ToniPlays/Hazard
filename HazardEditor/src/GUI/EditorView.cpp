@@ -33,13 +33,13 @@ namespace WindowElement {
 	}
 	void EditorView::Init()
 	{
-		if (!Hazard::Application::HasModule<Rendering::RenderContext>()) {
+		//if (!Hazard::Application::HasModule<Rendering::RenderContext>()) {
 			SetActive(false);
-			HZR_WARN("EditorView unable to start without RenderContext");
+		//	HZR_WARN("EditorView unable to start without RenderContext");
 			return;
-		}
+		//}
 
-		m_Context = &Hazard::Application::GetModule<Rendering::RenderContext>();
+		//m_Context = &Hazard::Application::GetModule<Rendering::RenderContext>();
 		SetActive(true);
 
 		IMGUI_CHECKVERSION();
@@ -74,7 +74,7 @@ namespace WindowElement {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		InitImGuiPlatform(m_Context->GetWindow());
+		//InitImGuiPlatform(m_Context->GetWindow());
 
 		Style::InitTheme(Theme::Dark);
 
@@ -126,7 +126,7 @@ namespace WindowElement {
 	}
 	bool EditorView::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
+		/*EventDispatcher dispatcher(e);
 		if(dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(EditorView::OnWindowFocus))) return true;
 
 		for (RenderableElement* element : m_Elements) {
@@ -134,6 +134,7 @@ namespace WindowElement {
 				return true;
 			}
 		}
+		*/
 		return m_Toolbar.OnEvent(e);
 	}
 	void EditorView::Close()
@@ -162,16 +163,18 @@ namespace WindowElement {
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2((float)m_Context->GetWindow().GetWidth(), (float)m_Context->GetWindow().GetHeight());
+		//io.DisplaySize = ImVec2((float)m_Context->GetWindow().GetWidth(), (float)m_Context->GetWindow().GetHeight());
 
 		// Rendering 
 		ImGui::Render();
 		m_Renderer->EndFrame();
 	}
+	/*
 	void EditorView::InitImGuiPlatform(Rendering::Window& window)
 	{
 		GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
+		
 		switch (m_Context->GetCurrentAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
@@ -181,7 +184,7 @@ namespace WindowElement {
 #endif
 #ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: {
-			Rendering::Vulkan::VulkanContext* context = static_cast<Vulkan::VulkanContext*>(window.GetContext());
+			//Rendering::Vulkan::VulkanContext* context = static_cast<Vulkan::VulkanContext*>(window.GetContext());
 			m_Renderer = new EditorPlatformVulkan(nativeWindow, context);
 			break;
 		}
@@ -191,10 +194,11 @@ namespace WindowElement {
 			break;
 		}
 	}
+	*/
 	bool EditorView::OnWindowFocus(WindowFocusEvent& e)
 	{
-		if(e.GetFocus())
-			Hazard::Scripting::ScriptCommand::ReloadAssemblies();
+		//if(e.GetFocus())
+		//	Hazard::Scripting::ScriptCommand::ReloadAssemblies();
 		return true;
 	}
 }

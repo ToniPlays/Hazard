@@ -1,8 +1,12 @@
 #pragma once
 
 #include "Core.h"
-#include "Hazard/Events/ApplicationEvent.h"
+#include "UtilityCore.h"
+#include "ApplicationEvent.h"
+#include "Backend/Core/Events.h"
 #include "Hazard/ModuleHandler.h"
+#include "Backend/Core/Events.h"
+#include "Backend/Core/Events.h"
 
 namespace Hazard {
 	class Application;
@@ -18,7 +22,7 @@ namespace Hazard::Core
 		~HazardLoop();
 
 		void Start();
-		bool Quit(WindowCloseEvent& e);
+		bool Quit(HazardRenderer::WindowCloseEvent& e);
 		void OnEvent(Event& e);
 		bool ShouldClose() { return m_ShouldClose; }
 		void Run();

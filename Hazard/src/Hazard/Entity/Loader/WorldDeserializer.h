@@ -2,7 +2,7 @@
 
 #include "../Entity.h"
 #include <yaml-cpp/yaml.h>
-#include "Hazard/Utils/YamlUtils.h"
+#include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
@@ -95,12 +95,12 @@ namespace Hazard::ECS::Loader
 			AudioSourceComponent& source = entity.AddComponent<AudioSourceComponent>();
 
 			YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
-			AssetHandle handle = AssetManager::ImportAsset(source.SourceFile);
+			//AssetHandle handle = AssetManager::ImportAsset(source.SourceFile);
 
-			if (handle != INVALID_ASSET_HANDLE) {
-				Ref<Audio::AudioBufferData> buffer = AssetManager::GetAsset<Audio::AudioBufferData>(handle);
-				source.Source.SetSourceBuffer(buffer);
-			}
+			//if (handle != INVALID_ASSET_HANDLE) {
+				//Ref<Audio::AudioBufferData> buffer = AssetManager::GetAsset<Audio::AudioBufferData>(handle);
+				//source.Source.SetSourceBuffer(buffer);
+			//}
 
 			YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
 			YamlUtils::Deserialize(comp, "Gain", source.Gain, 1.0f);
@@ -115,10 +115,10 @@ namespace Hazard::ECS::Loader
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
 
-			HZR_GUARD(!fileName.empty());
+			//HZR_GUARD(!fileName.empty());
 
-			AssetHandle handle = AssetManager::ImportAsset(fileName);
-			c.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);
+			//AssetHandle handle = AssetManager::ImportAsset(fileName);
+			//c.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -128,7 +128,7 @@ namespace Hazard::ECS::Loader
 			if (comp["Texture"]) {
 				std::string fileName;
 				YamlUtils::Deserialize(comp, "Texture", fileName, std::string(""));
-				AssetHandle handle = AssetManager::ImportAsset(fileName);
+				//AssetHandle handle = AssetManager::ImportAsset(fileName);
 
 				//if(handle != INVALID_ASSET_HANDLE)
 				//	component.Texture = AssetManager::GetAsset<TextureAsset>(handle);

@@ -32,7 +32,7 @@ namespace HazardRenderer {
 		uint32_t ImagesInFlight = 0;
 		Window* Window;
 
-		std::function<void(HazardUtility::Event&)> EventCallback;
+		std::function<void(Event&)> EventCallback;
 		WindowProps() = default;
 	};
 

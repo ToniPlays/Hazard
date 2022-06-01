@@ -1,5 +1,6 @@
-
 #include <hzrpch.h>
+
+#if 0
 #include "AssetLoader.h"
 #include "AssetManager.h"
 
@@ -27,3 +28,4 @@ namespace Hazard
 		return m_Loaders[metadata.Type]->Save(asset);
 	}
 }
+#endif

@@ -10,7 +10,6 @@
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
 using namespace WindowLayout;
-using namespace Hazard::Scripting;
 
 namespace WindowElement {
 
@@ -19,22 +18,25 @@ namespace WindowElement {
 		Console& instance = *EditorView::GetInstance().GetRenderable<EditorMainTab>()->GetRenderable<Console>();
 		instance.Print(severity, message);
 	}
+	/*
 	static void PrintDebugToConsole(Rendering::ErrorData& data)
 	{
 		Console& instance = *EditorView::GetInstance().GetRenderable<EditorMainTab>()->GetRenderable<Console>();
 		instance.Print((Severity)data.Severity, data.Info);
 	}
-
+	*/
 	Console::Console() : EditorWindow(ICON_FK_COMPASS " Console") {}
 
 	void Console::Init()
 	{
+		/*
 		void(*scriptCallback)(Severity, const std::string&) = PrintScriptToConsole;
 		ScriptCommand::SetDebugCallback(scriptCallback);
 
-		Rendering::ErrorCallback renderCallback = PrintDebugToConsole;
+		//ErrorCallback renderCallback = PrintDebugToConsole;
 
 		Rendering::RenderContextCommand::SetDebugCallback(renderCallback);
+		*/
 	}
 	void Console::OnWindowRender()
 	{

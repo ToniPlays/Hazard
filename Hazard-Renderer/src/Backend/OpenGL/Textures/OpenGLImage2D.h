@@ -4,8 +4,6 @@
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Image2D.h"
 
-using namespace HazardUtility;
-
 namespace HazardRenderer::OpenGL
 {
 	class OpenGLImage2D : public Image2D {

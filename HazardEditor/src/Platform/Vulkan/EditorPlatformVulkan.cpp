@@ -1,16 +1,14 @@
 #pragma once
 #include "Hazard.h"
 #include "EditorPlatformVulkan.h"
-#include "Hazard/RenderContext/RenderContextCommand.h"
 
 #include <Platform/GLFW/imgui_impl_glfw.h>
-
-using namespace Hazard::Rendering::Vulkan;
 
 static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* context)
 {
+	/*
 	this->m_Context = context;
 	const auto& swapchain = m_Context->GetSwapchain();
 	auto device = m_Context->GetDevice();
@@ -46,12 +44,13 @@ EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* co
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = VulkanContext::GetDevice()->CreateSecondaryCommandBuffer();
+		*/
 }
 
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
-	m_Context->GetDevice()->WaitUntilIdle();
+	//m_Context->GetDevice()->WaitUntilIdle();
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 }
@@ -66,6 +65,7 @@ void EditorPlatformVulkan::EndFrame()
 {
 	VulkanContext* context = m_Context;
 
+	/*
 	Rendering::RenderContextCommand::Submit([context]() {
 		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
 		const auto& swapchain = context->GetSwapchain();
@@ -151,6 +151,7 @@ void EditorPlatformVulkan::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 	});
+	*/
 }
 
 void EditorPlatformVulkan::Close()

@@ -45,13 +45,13 @@ namespace WindowElement {
 			};
 
 			Layout::IDGroup("Translation", [&]() {
-				Input::Vec3("Translation", component.Translation, 0, 75);
+				//Input::Vec3("Translation", component.Translation, 0, 75);
 				});
 			Layout::IDGroup("Rotation", [&]() {
-				Input::Vec3("Rotation", rot, 0, 75);
+				//Input::Vec3("Rotation", rot, 0, 75);
 				});
 			Layout::IDGroup("Scale", [&]() {
-				Input::Vec3("Scale", component.Scale, 1.0f, 75);
+				//Input::Vec3("Scale", component.Scale, 1.0f, 75);
 				});
 
 			component.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
@@ -104,10 +104,10 @@ namespace WindowElement {
 			}
 			Layout::EndTable();
 			glm::vec2 clipping = component.GetClipping();
-			if (Input::Vec2("Clipping", clipping, 0, 75)) {
-				component.SetZNear(clipping.x);
-				component.SetZFar(clipping.y);
-			}
+			//if (Input::Vec2("Clipping", clipping, 0, 75)) {
+			//	component.SetZNear(clipping.x);
+			//	component.SetZFar(clipping.y);
+			//}
 
 			}, [&]() {
 				Layout::MenuItem("Reset", [&]() {
@@ -123,15 +123,17 @@ namespace WindowElement {
 
 			static bool open = false;
 
+			/*
 			bool changed = Input::TextureSlot(component.Texture, [&]() {
 				Input::ColorPicker("Sprite tint", component.Tint, open);
 				}, [&]() {
 					DragDropUtils::DragTarget("Image", [&](const ImGuiPayload* payload) {
-						AssetHandle handle = *(AssetHandle*)payload->Data;
+						//AssetHandle handle = *(AssetHandle*)payload->Data;
 						component.Texture = AssetManager::GetAsset<Rendering::Texture2D>(handle);
 						});
 				});
-			if (changed) {
+				*/
+			if (false) {
 				// std::string file = File::OpenFileDialog("");
 				// if (!file.empty())
 				// {
@@ -235,9 +237,9 @@ namespace WindowElement {
 	template<>
 	inline void Draw(const char* name, Entity entity, ScriptComponent& component)
 	{
-		using namespace Hazard::Scripting;
-		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
 
+		Layout::ComponentTreenode<ScriptComponent>(entity, name, [&]() {
+			/*
 			std::string moduleName = component.ModuleName;
 			bool exists = ScriptCommand::ModuleExists(ScriptType::CSharpScript, moduleName.c_str());
 			bool changed = Input::ModuleField("Script", component.ModuleName, exists);
@@ -266,27 +268,26 @@ namespace WindowElement {
 				{
 					Input::ScriptField(field, runtime);
 				}
-			}
+			}*/
 			}, []() {
 				Layout::MenuItem("Reload", []() {
-					Application::GetModule<ScriptEngineManager>().ReloadAll();
+					//Application::GetModule<ScriptEngineManager>().ReloadAll();
 					});
 			});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, VisualScriptComponent& component) {
-		using namespace Hazard::Scripting;
+
 		Layout::ComponentTreenode<VisualScriptComponent>(entity, name, [&]() {
 
 			}, []() {
 				Layout::MenuItem("Reload", []() {
-					Application::GetModule<ScriptEngineManager>().ReloadAll();
+					//Application::GetModule<ScriptEngineManager>().ReloadAll();
 					});
 			});
 	}
 	template<>
 	inline void Draw(const char* name, Entity entity, AudioSourceComponent& component) {
-		using namespace Hazard::Scripting;
 
 		Layout::ComponentTreenode<AudioSourceComponent>(entity, name, [&]() {
 			Layout::Text("Source");
@@ -295,11 +296,11 @@ namespace WindowElement {
 			Input::InputField(component.SourceFile);
 
 			DragDropUtils::DragTarget("AudioClip", [&](const ImGuiPayload* payload) {
-				AssetHandle handle = *(AssetHandle*)payload->Data;
+				/*AssetHandle handle = *(AssetHandle*)payload->Data;
 				if (handle != INVALID_ASSET_HANDLE) {
 					component.SourceFile = AssetManager::GetMetadata(handle).Path.string();
 					component.Source.SetSourceBuffer(AssetManager::GetAsset<Audio::AudioBufferData>(handle));
-				}
+				}*/
 				});
 
 			Layout::NextLine(5);
@@ -307,26 +308,26 @@ namespace WindowElement {
 			Layout::Text("Gain");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			if (Input::DragFloat("##Gain", component.Gain, 0.005f, 0, 1.0f))
-				component.Source.SetGain(component.Gain);
+			//if (Input::DragFloat("##Gain", component.Gain, 0.005f, 0, 1.0f))
+			//	component.Source.SetGain(component.Gain);
 
 			Layout::Text("Pitch");
 			Layout::SameLine(75);
 			Layout::MaxWidth();
-			if (Input::DragFloat("##Pitch", component.Pitch, 0.005f, 0, 0))
-				component.Source.SetPitch(component.Pitch);
+			//if (Input::DragFloat("##Pitch", component.Pitch, 0.005f, 0, 0))
+			//	component.Source.SetPitch(component.Pitch);
 
 			Layout::Text("Looping");
 			Layout::SameLine(200);
 			Layout::MaxWidth();
-			if (Input::Checkbox("##Looping", component.Looping))
-				component.Source.SetLoop(component.Looping);
+			//if (Input::Checkbox("##Looping", component.Looping))
+			//	component.Source.SetLoop(component.Looping);
 
 			Layout::Text("Spatial");
 			Layout::SameLine(200);
 			Layout::MaxWidth();
-			if (Input::Checkbox("##spatial", component.Spatial))
-				component.Source.SetSpatial(component.Spatial);
+			//if (Input::Checkbox("##spatial", component.Spatial))
+			//	component.Source.SetSpatial(component.Spatial);
 
 			Layout::Text("Play on Create");
 			Layout::SameLine(200);
@@ -345,6 +346,7 @@ namespace WindowElement {
 			Layout::SameLine(75);
 			Layout::MaxWidth();
 			
+			/*
 			std::string file = component.SourceAsset ? std::to_string(component.SourceAsset->GetHandle()) : "Null mesh";
 			bool changed = Input::InputField(file);
 
@@ -367,7 +369,7 @@ namespace WindowElement {
 				{
 					HZR_INFO("New mesh file {0}", file);
 				}
-			}
+			}*/
 			}, []() {
 				
 			});
@@ -417,10 +419,10 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, BoxCollider2DComponent& component) {
 		Layout::ComponentTreenode<BoxCollider2DComponent>(entity, name, [&]() {
 			Layout::IDGroup("#offset", [&]() {
-				Input::Vec2("Offset", component.Offset, 1.0f, 75);
+				//Input::Vec2("Offset", component.Offset, 1.0f, 75);
 				});
 			Layout::IDGroup("#Size", [&]() {
-				Input::Vec2("Size", component.Size, 1.0f, 75);
+				//Input::Vec2("Size", component.Size, 1.0f, 75);
 				});
 			Layout::NextLine(5);
 
@@ -442,7 +444,7 @@ namespace WindowElement {
 	inline void Draw(const char* name, Entity entity, CircleCollider2DComponent& component) {
 		Layout::ComponentTreenode<CircleCollider2DComponent>(entity, name, [&]() {
 			Layout::IDGroup("#offset", [&]() {
-				Input::Vec2("Offset", component.Offset, 1.0f, 75);
+				//Input::Vec2("Offset", component.Offset, 1.0f, 75);
 				});
 
 			Input::DragFloat("Radius", component.Radius);

@@ -13,7 +13,7 @@ namespace HazardRenderer
 		uint32_t Width, Height;
 		uint32_t Channels;
 		uint32_t DataSize;
-		HazardUtility::Buffer ImageData;
+		Buffer ImageData;
 
 		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
 	};

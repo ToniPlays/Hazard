@@ -1,7 +1,9 @@
 #pragma once
 #include "Hazard/Core/Core.h"
+#include "Event.h"
 
 namespace Hazard::Module {
+
 	class Module {
 	public:
 		Module(const char* name) : m_Name(name) {}

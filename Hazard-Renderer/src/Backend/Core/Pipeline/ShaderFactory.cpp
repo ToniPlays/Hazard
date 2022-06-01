@@ -1,15 +1,13 @@
 
 #include "ShaderFactory.h"
 #include "Utility/StringUtil.h"
-#include "File/File.h"
+#include "File.h"
 
 #include "Shader.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
-
-using namespace HazardUtility;
 
 namespace HazardRenderer
 {

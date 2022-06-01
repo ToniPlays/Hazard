@@ -1,8 +1,9 @@
 #pragma once
 
-#include "KeyCode.h"
-#include "MouseCode.h"
+#include "Backend/Core/KeyCode.h"
+#include "Backend/Core/MouseCode.h"
 #include <glm/glm.hpp>
+
 
 namespace Hazard {
 

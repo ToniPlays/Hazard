@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include "Color.h"
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
 #ifdef HZR_DEBUG

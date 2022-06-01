@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "GUI/EditorWindow.h"
-
+#include "Severity.h"
 
 namespace WindowElement {
 	class Console : public EditorWindow {
@@ -13,10 +13,10 @@ namespace WindowElement {
 		void Init() override;
 		void OnWindowRender() override;
 
-		void Print(Hazard::Severity severity, const std::string& message);
+		void Print(Severity severity, const std::string& message);
 	private:
 		void ClearLog() { messages.clear(); };
-		bool LogEnabled(Hazard::Severity severity);
+		bool LogEnabled(Severity severity);
 
 	private:
 
@@ -27,6 +27,6 @@ namespace WindowElement {
 		bool errorEnable = true;
 		bool traceEnable = true;
 
-		std::vector<std::pair<Hazard::Severity, std::string>> messages;
+		std::vector<std::pair<Severity, std::string>> messages;
 	};
 }

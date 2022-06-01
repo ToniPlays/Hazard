@@ -34,7 +34,7 @@ namespace HazardRenderer::Vulkan
 		std::string m_DebugName;
 
 		uint32_t m_Size = 0;
-		HazardUtility::Buffer m_LocalData;
+		Buffer m_LocalData;
 
 		VkBuffer m_Buffer;
 		BufferUsage m_Usage;
@@ -61,7 +61,7 @@ namespace HazardRenderer::Vulkan
 
 		std::string m_DebugName;
 		uint32_t m_Size = 0;
-		HazardUtility::Buffer m_LocalData;
+		Buffer m_LocalData;
 
 		VkBuffer m_Buffer;
 		VmaAllocation m_Allocation;
@@ -105,7 +105,7 @@ namespace HazardRenderer::Vulkan
 		VkBuffer m_Buffer = nullptr;
 		
 		VmaAllocation m_Allocation = nullptr;
-		HazardUtility::Buffer m_LocalData;
+		Buffer m_LocalData;
 	};
 }
 #endif

@@ -1,5 +1,5 @@
-
 #include <hzrpch.h>
+#if 0
 #include "AssetManager.h"
 
 namespace Hazard
@@ -100,3 +100,4 @@ namespace Hazard
 		return std::filesystem::relative(path, APPLICATION_PERSISTENT_PATH);
 	}
 }
+#endif 

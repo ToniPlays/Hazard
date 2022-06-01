@@ -19,8 +19,8 @@ namespace WindowElement {
 	private:
 		void DrawFolderTree();
 		void DrawFilePath();
-		Ref<Hazard::Rendering::Texture2D> GetFileImageFromType(const Hazard::AssetMetadata& metadata);
-		ImVec4 GetFileColor(Hazard::AssetMetadata& metadata);
+		//Ref<Hazard::Rendering::Texture2D> GetFileImageFromType(const Hazard::AssetMetadata& metadata);
+		//ImVec4 GetFileColor(Hazard::AssetMetadata& metadata);
 
 		void DrawContentRows(float colWidth, float colHeight, int cols);
 		bool m_Open = true;
@@ -30,8 +30,8 @@ namespace WindowElement {
 		std::string m_CurrentPath;
 		std::string m_SearchValue;
 
-		Hazard::FolderData m_FolderData;
+		//Hazard::FolderData m_FolderData;
 
-		std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
+		//std::unordered_map<std::string, Ref<Hazard::Rendering::Texture2D>> m_Images;
 	};
 }

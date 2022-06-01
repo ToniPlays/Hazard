@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Hazard/Utils/StringUtil.h"
-#include "Hazard/RenderContext/RenderContext.h"
+#include "Utility/StringUtil.h"
 
-namespace Hazard {
+namespace Hazard 
+{
 	class CommandLineArgs {
 	public:
 		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
@@ -44,10 +44,6 @@ namespace Hazard {
 		static std::vector<std::string> Get(const std::string& key)
 		{
 			return m_Arguments[key];
-		}
-		template<>
-		static RenderAPI Get(const std::string& key) {
-			return Rendering::RenderContext::StringToApi(Get<std::string>(key));
 		}
 	};
 }

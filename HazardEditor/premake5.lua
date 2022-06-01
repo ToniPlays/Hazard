@@ -33,6 +33,10 @@ project "HazardEditor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.SPIRV_Cross}",
+		"%{IncludeDir.Hazard_Utility}",
+		"%{IncludeDir.Hazard_Renderer}",
+		"%{IncludeDir.Hazard_Script}",
+		"%{IncludeDir.Hazard_UI}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
 		"src"

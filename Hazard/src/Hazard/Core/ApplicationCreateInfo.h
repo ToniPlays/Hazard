@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Hazard/Math/Color.h"
+#include "Color.h"
 
 namespace Hazard {
 
@@ -42,7 +42,7 @@ namespace Hazard {
 	struct HazardCreateInfo 
 	{
 		ApplicationCreateInfo* AppInfo = nullptr;
-		RenderContexCreateInfo* RenderContextInfo = nullptr;
+		//RenderContexCreateInfo* RenderContextInfo = nullptr;
 		RenderEngineCreateInfo* RendererInfo = nullptr;
 		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* AudioEngine = nullptr;

@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 #include "Asset.h"
 
 namespace Hazard 
@@ -17,3 +17,4 @@ namespace Hazard
 		virtual bool Save(Ref<Asset>& asset) = 0;
 	};
 }
+#endif

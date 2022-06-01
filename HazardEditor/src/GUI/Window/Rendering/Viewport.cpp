@@ -6,16 +6,16 @@
 #include "Library/DragDropUtils.h"
 #include "Core/EditorEvent.h"
 #include "GUI/EditorView.h"
-#include "Hazard/Rendering/WorldRenderer.h"
 #include "../Inspect/Hierarchy.h"
+#include "Backend/Core/KeyCode.h"
 
 
 using namespace Hazard;
 using namespace WindowLayout;
+using namespace HazardRenderer;
 
 namespace WindowElement {
 
-	RenderEngine* engine = nullptr;
 
 	Viewport::Viewport() : EditorWindow(ICON_FK_GLOBE " Viewport")
 	{
@@ -30,8 +30,9 @@ namespace WindowElement {
 	void Viewport::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		SetActive(Application::HasModule<RenderEngine>());
 		if (!IsActive()) return;
+		/*
+		SetActive(Application::HasModule<RenderEngine>());
 
 		WorldRendererSettings settings = {};
 		settings.DebugName = "Viewport";
@@ -43,8 +44,9 @@ namespace WindowElement {
 		settings.Flags |= WorldRenderFlags_::Enabled;
 		m_WorldRenderer = WorldRenderer::Create(&settings);
 
-		m_Grid = new Editor::Grid();
-		m_Grid->Invalidate(m_WorldRenderer->GetRenderPass());
+		//m_Grid = new Editor::Grid();
+		//m_Grid->Invalidate(m_WorldRenderer->GetRenderPass());
+		*/
 	}
 	void Viewport::OnUpdate()
 	{
@@ -67,18 +69,18 @@ namespace WindowElement {
 
 			changed = true;
 			m_EditorCamera.SetViewport(size.x, size.y);
-			m_WorldRenderer->SetViewport(m_Width, m_Height);
+			//m_WorldRenderer->SetViewport(m_Width, m_Height);
 		}
 
-		Layout::Image(m_WorldRenderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+		//Layout::Image(m_WorldRenderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 
 		DragDropUtils::DragTarget("World", [&](const ImGuiPayload* payload) {
-			AssetHandle handle = *(AssetHandle*)payload->Data;
+			//AssetHandle handle = *(AssetHandle*)payload->Data;
 			Events::SelectionContextChange e({ });
 
-			EditorView::GetInstance().OnEvent(e);
-			AssetMetadata data = AssetManager::GetMetadata(handle);
-			Application::GetModule<ECS::WorldHandler>().LoadWorld(data.Path.string());
+			//EditorView::GetInstance().OnEvent(e);
+			//AssetMetadata data = AssetManager::GetMetadata(handle);
+			//Application::GetModule<ECS::WorldHandler>().LoadWorld(data.Path.string());
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, ImGui::GetWindowSize());
@@ -142,10 +144,11 @@ namespace WindowElement {
 
 		if (m_Gizmos.IsUsing()) return;
 
-		IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Hazard::Input::GetMousePos());
+		//IsFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Hazard::Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
+		/*
 		if (IsHovered())
 			m_EditorCamera.OnEvent(e);
 		m_Gizmos.OnEvent(e);
@@ -154,6 +157,8 @@ namespace WindowElement {
 
 		EventDispatcher dispacher(e);
 		return dispacher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+		*/
+		return false;
 	}
 	bool Viewport::FocusOnEntity(ECS::Entity entity)
 	{
@@ -204,14 +209,14 @@ namespace WindowElement {
 		Layout::TableNext();
 
 		std::stringstream ss;
-		ss << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 3) << "ms";
+		//ss << Math::Round(Time::s_UnscaledDeltaTime * 1000.0f, 3) << "ms";
 		Layout::Text(ss.str().c_str());
 		ss.str("");
 		Layout::TableNext();
 		Layout::Text("FPS");
 		Layout::TableNext();
 
-		ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3);
+		//ss << Math::Round(1.0f / Time::s_UnscaledDeltaTime, 3);
 		Layout::Text(ss.str().c_str());
 		Layout::TableNext();
 

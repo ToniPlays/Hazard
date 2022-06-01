@@ -51,7 +51,7 @@ ImU32 Style::ColorWithMultiplier(ImVec4 color, float multiplier)
 	ImGui::ColorConvertRGBtoHSV(colRow.x, colRow.y, colRow.z, hue, sat, val);
 	return ImColor::HSV(hue, sat, std::min(val * multiplier, 1.0f));
 }
-ImVec4 Style::AssetTypeColor(Hazard::AssetType type)
+ImVec4 Style::AssetTypeColor(AssetType type)
 {
 	switch (type)
 	{

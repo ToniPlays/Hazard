@@ -31,6 +31,7 @@ namespace WindowElement {
 			// }
 		}
 	}
+	/*
 	bool WelcomePopup::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
@@ -44,4 +45,5 @@ namespace WindowElement {
 		}
 		return false;
 	}
+	*/
 }

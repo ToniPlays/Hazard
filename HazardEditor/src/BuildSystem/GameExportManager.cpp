@@ -1,4 +1,4 @@
-
+#if 0
 #include "GameExportManager.h"
 #include "Hazard/Utils/YamlUtils.h"
 #include <yaml-cpp/yaml.h>
@@ -63,3 +63,5 @@ namespace Exporter
 		return true;
 	}
 }
+
+#endif

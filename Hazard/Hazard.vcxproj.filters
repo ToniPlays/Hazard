@@ -58,9 +58,6 @@
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Scripting\Attributes">
-      <UniqueIdentifier>{EE66C660-5A4A-D5A0-634D-03DDCFAF9BF1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Scripting">
       <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
     </Filter>
@@ -132,27 +129,6 @@
     <ClInclude Include="src\Hazard\Assets\IAssetLoader.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioCommand.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioEngine.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioFactory.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioListener.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioLoader.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\AudioSource.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Audio\alhelpers.h">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Core\Analyzer.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -222,18 +198,6 @@
     <ClInclude Include="src\Hazard\Entity\WorldHandler.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Events\ApplicationEvent.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Events\Input.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Events\KeyEvent.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Events\MouseEvent.h">
-      <Filter>src\Hazard\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
@@ -263,138 +227,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\PhysicalDevice.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\RenderContext.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\RenderContextCommand.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\RenderLibrary.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\2D\Renderer2D.h">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Camera.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\DebugRenderer.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Loaders\Loaders.h">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAsset.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\VertexData.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderCommand.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Texture.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\PublicField.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Script.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptCommand.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptEngineManager.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptRegistry.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Bindings.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\CSharpEngine.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\CSharpField.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\CSharpScript.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Mono\Mono.h">
-      <Filter>src\Scripting\CSharp\Mono</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\ApplicationBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\DisplayBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Application\InputBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Debug\ConsoleBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Debug\GizmoBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\AudioSourceBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\ECS\TransformBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Hazard\Math\MathBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.h">
-      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\ScriptBindings.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\CSharp\ScriptUtils.h">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\HazardScript\HVSEngine.h">
-      <Filter>src\Scripting\HazardScript</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scripting\ScriptEngines.h">
-      <Filter>src\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
@@ -1655,27 +1487,6 @@
     <ClCompile Include="src\Hazard\Assets\AssetRegistry.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioCommand.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioEngine.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioFactory.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioListener.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioLoader.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\AudioSource.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Audio\alhelpers.cpp">
-      <Filter>src\Hazard\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Core\Application.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
@@ -1729,117 +1540,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\PhysicalDevice.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\RenderContext.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\RenderContextCommand.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\RenderLibrary.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\2D\Renderer2D.cpp">
-      <Filter>src\Hazard\Rendering\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\DebugRenderer.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Loaders\Loaders.cpp">
-      <Filter>src\Hazard\Rendering\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderCommand.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Texture.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\PublicField.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptCommand.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptEngineManager.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptRegistry.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\CSharpEngine.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\CSharpField.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\CSharpScript.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Mono\Mono.cpp">
-      <Filter>src\Scripting\CSharp\Mono</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\ApplicationBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\DisplayBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Application\InputBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Debug\ConsoleBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Debug\GizmoBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\AudioSourceBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\EntityBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\MeshComponentBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\TagComponentBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\ECS\TransformBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Hazard\Math\MathBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Hazard\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\BufferBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\Script\Rendering\MeshBindings.cpp">
-      <Filter>src\Scripting\CSharp\Script\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\ScriptBindings.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\CSharp\ScriptUtils.cpp">
-      <Filter>src\Scripting\CSharp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting\HazardScript\HVSEngine.cpp">
-      <Filter>src\Scripting\HazardScript</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>

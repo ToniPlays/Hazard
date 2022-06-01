@@ -1,39 +1,32 @@
 
 #include <hzrpch.h>
 #include "WorldCommand.h"
-#include "Hazard/Scripting/ScriptCommand.h"
 #include "Hazard/Core/Application.h"
 #include "Component.h"
 #include "WorldHandler.h"
-#include "Hazard/Audio/AudioCommand.h"
-#include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/Physics/PhysicsCommand.h"
-#include "Hazard/Rendering/RenderCommand.h"
-#include "Hazard/Rendering/2D/Renderer2D.h"
 
-#include "Hazard/Scripting/ScriptCommand.h"
 
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard::ECS {
 
-	using namespace Hazard::Rendering;
 
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, ScriptComponent& script) {
-		Scripting::ScriptCommand::InitEntity((uint32_t)entity, script);
+		//Scripting::ScriptCommand::InitEntity((uint32_t)entity, script);
 	}
 	template<>
 	void WorldCommand::OnScriptAttached(Entity& entity, VisualScriptComponent& script) {}
 	template<>
 	void WorldCommand::OnScriptDetached(Entity& entity, ScriptComponent& script)
 	{
-		Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
+		//Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
 	}
 	template<>
 	void WorldCommand::OnScriptDetached(Entity& entity, VisualScriptComponent& script)
 	{
-		Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
+		//Scripting::ScriptCommand::ClearEntity((uint32_t)entity, script);
 	}
 
 	void WorldCommand::Init()
@@ -112,8 +105,8 @@ namespace Hazard::ECS {
 			Entity entity = { e, world.Raw() };
 			auto& as = entity.GetComponent<AudioSourceComponent>();
 
-			if (as.PlayOnCreate)
-				as.Source.Play();
+			//if (as.PlayOnCreate)
+				//as.Source.Play();
 
 		}
 	}
@@ -131,7 +124,7 @@ namespace Hazard::ECS {
 	{
 		Ref<World> world = GetCurrentWorld();
 
-		HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
+		//HZ_SCOPE_PERF("WorldCommand::ProcessWorld");
 
 		const auto& spriteRenderers = world->GetWorldRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
 
@@ -141,7 +134,7 @@ namespace Hazard::ECS {
 			if (!e.IsVisible()) continue;
 
 			const auto& [sprite, transform] = spriteRenderers.get<SpriteRendererComponent, TransformComponent>(entity);
-			RenderCommand::DrawQuad(transform.GetTransformMat4(), sprite.Tint, sprite.Texture);
+			//RenderCommand::DrawQuad(transform.GetTransformMat4(), sprite.Tint, sprite.Texture);
 		}
 
 		const auto& batches = world->GetWorldRegistry().group<BatchComponent>(entt::get<TransformComponent>);
@@ -154,7 +147,7 @@ namespace Hazard::ECS {
 
 			for (size_t x = 0; x < batch.Size; x++) {
 				for (size_t y = 0; y < batch.Size; y++) {
-					RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.Tint);
+					//RenderCommand::DrawQuad(Math::ToTransformMatrix({ x, y, 0.0f }), batch.Tint);
 				}
 			}
 		}
@@ -165,11 +158,11 @@ namespace Hazard::ECS {
 			Entity e = { entity, world.Raw() };
 			if (!e.IsVisible()) continue;
 
-			const auto& [meshAsset, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
-			if (!meshAsset.SourceAsset) continue;
+			//const auto& [meshAsset, tc] = meshes.get<MeshComponent, TransformComponent>(entity);
+			//if (!meshAsset.SourceAsset) continue;
 
-			Ref<Mesh> mesh = AssetManager::GetRuntimeResource<Mesh>(meshAsset.SourceAsset->GetSourceHandle());
-			if (mesh) RenderCommand::DrawMesh(mesh, tc.GetTransformMat4());
+			//Ref<Mesh> mesh = AssetManager::GetRuntimeResource<Mesh>(meshAsset.SourceAsset->GetSourceHandle());
+			//if (mesh) RenderCommand::DrawMesh(mesh, tc.GetTransformMat4());
 		}
 	}
 

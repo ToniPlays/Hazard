@@ -97,4 +97,24 @@ namespace HazardScript
 		mono_free(ptr);
 		return result;
 	}
+	std::string Mono::MonoObjectToString(MonoObject* obj)
+	{
+		if (obj == nullptr) {
+			return "NULL";
+		}
+		MonoString* string = mono_object_to_string(obj, nullptr);
+		std::string b = MonoStringToString(string);
+		return b;
+	}
+	FieldVisibility Mono::GetFieldVisibility(MonoClassField* field)
+	{
+		uint32_t flags = mono_field_get_flags(field);
+
+		if (flags & MONO_FIELD_ATTR_PUBLIC)
+			return FieldVisibility::Public;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)
+			return FieldVisibility::Private;
+
+		return FieldVisibility::Protected;
+	}
 }

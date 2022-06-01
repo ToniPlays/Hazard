@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WorldHandler.h"
+#include "Entity.h"
 #include "entt.hpp"
 
 namespace Hazard::ECS {

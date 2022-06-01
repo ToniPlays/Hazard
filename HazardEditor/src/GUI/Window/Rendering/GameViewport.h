@@ -1,11 +1,10 @@
 #pragma once
 #include <hzrpch.h>
 #include "GUI/EditorWindow.h"
-#include "Hazard/Rendering/WorldRenderer.h"
 #include "Editor/EditorCamera.h"
+#include "Renderer/Camera.h"
 
-using namespace Hazard;
-using namespace Hazard::Rendering;
+using namespace HazardRenderer;
 
 namespace WindowElement {
 
@@ -22,7 +21,7 @@ namespace WindowElement {
 
 		Camera m_Camera;
 		bool m_Resize = false;
-		Ref<WorldRenderer> m_Renderer;
+		//Ref<WorldRenderer> m_Renderer;
 		uint32_t m_Width = 0, m_Height = 0;
 	};
 }

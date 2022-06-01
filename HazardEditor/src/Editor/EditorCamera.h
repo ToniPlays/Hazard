@@ -1,11 +1,12 @@
 #pragma once
 
 #include <hzrpch.h>
+#include "Renderer/Camera.h"
 
 using namespace Hazard;
 
 namespace Editor {
-	class EditorCamera : public Rendering::Camera {
+	class EditorCamera : public HazardRenderer::Camera {
 	public:
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspecRatio, float nearPlane, float farPlane);
@@ -53,7 +54,7 @@ namespace Editor {
 	private:
 		void UpdateView();
 
-		bool OnMouseScroll(MouseScrolledEvent& e);
+		//bool OnMouseScroll(MouseScrolledEvent& e);
 
 		void MousePan(const glm::vec2& delta);
 		void MouseRotate(const glm::vec2& delta);

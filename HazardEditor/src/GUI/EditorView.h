@@ -4,9 +4,14 @@
 #include "EditorWindow.h"
 #include "GUI/Window/Toolbar.h"
 #include "GUI/Window/MenuBar.h"
+#include "Backend/Core/Window.h"
+#include "Backend/Core/Events.h"
 #include "Platform/EditorGuiPlatform.h"
+#include "Event.h"
 
 namespace WindowElement {
+
+	using namespace HazardRenderer;
 
 	class EditorView : public Module::Module {
 	public:
@@ -16,7 +21,7 @@ namespace WindowElement {
 		void Init() override;
 		void Update() override;
 		void Render() override;
-		bool OnEvent(Hazard::Event& e) override;
+		bool OnEvent(Event& e);
 
 		void Close() override;
 
@@ -62,7 +67,7 @@ namespace WindowElement {
 		void BeginFrame();
 		void EndFrame();
 
-		void InitImGuiPlatform(Rendering::Window& window);
+		//void InitImGuiPlatform(HazardRenderer::Window& window);
 		bool OnWindowFocus(WindowFocusEvent& e);
 
 	private:
@@ -73,6 +78,6 @@ namespace WindowElement {
 		MenuBar m_MenuBar;
 		Toolbar m_Toolbar;
 		EditorGuiPlatform* m_Renderer = nullptr;
-		Rendering::RenderContext* m_Context = nullptr;
+		//Rendering::RenderContext* m_Context = nullptr;
 	};
 }

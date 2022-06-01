@@ -1,5 +1,6 @@
 #include "Method.h"
 #include "AttributeBuilder.h"
+#include "HazardScriptEngine.h"
 
 namespace HazardScript 
 {
@@ -8,10 +9,10 @@ namespace HazardScript
 		Init();
 		LoadAttributes();
 	}
-	MonoObject* Method::Invoke(MonoObject* obj, void* params)
+	MonoObject* Method::Invoke(MonoObject* obj, void** params)
 	{
 		MonoObject* exception = nullptr;
-		MonoObject* result = mono_runtime_invoke(m_Method, obj, &params, &exception);
+		MonoObject* result = mono_runtime_invoke(m_Method, obj, params, &exception);
 
 		if (exception) {
 			MonoClass* exceptionClass = mono_object_get_class(exception);
@@ -20,14 +21,15 @@ namespace HazardScript
 			std::string message = Mono::GetStringProperty("Message", exceptionClass, result);
 			std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, result);
 
-			std::cout << message << " -> " << stacktrace << std::endl;
+			HazardScriptEngine::SendDebugMessage({ Severity::Error, message + " at " + stacktrace });
 		}
 
 		return result;
 	}
 	void Method::Init() 
 	{
-		m_Name = mono_method_get_name(m_Method);
+		m_Name = mono_method_get_reflection_name(m_Method);
+		m_Name = m_Name.substr(m_Name.find_first_of('.') + 1);
 		m_Visibility = Mono::GetMethodVisibility(m_Method);
 	}
 	void Method::LoadAttributes()

@@ -4,8 +4,6 @@
 #include "box2d/b2_contact.h"
 
 #include "Hazard/Entity/WorldCommand.h"
-#include "Scripting/ScriptEngines.h"
-#include "Hazard/Scripting/ScriptCommand.h"
 
 namespace Hazard::Physics
 {

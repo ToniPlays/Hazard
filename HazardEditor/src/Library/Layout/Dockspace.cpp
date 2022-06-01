@@ -50,6 +50,7 @@ namespace WindowLayout {
 }
 namespace ImGui 
 {
+#if 0
 	bool TreeNodeWithIcon(Ref<Hazard::Rendering::Texture2D> icon, ImGuiID id, ImGuiTreeNodeFlags flags, const char* label, const char* label_end, ImColor iconTint/* = IM_COL32_WHITE*/)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
@@ -306,6 +307,7 @@ namespace ImGui
 		IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.ItemFlags | (is_leaf ? 0 : ImGuiItemStatusFlags_Openable) | (is_open ? ImGuiItemStatusFlags_Opened : 0));
 		return is_open;
 	}
+	
 
 	bool TreeNodeWithIcon(Ref<Hazard::Rendering::Texture2D> icon, const void* ptr_id, ImGuiTreeNodeFlags flags, ImColor iconTint, const char* fmt, ...)
 	{
@@ -332,5 +334,5 @@ namespace ImGui
 
 		return TreeNodeWithIcon(icon, window->GetID(label), flags, label, NULL, iconTint);
 	}
-
+#endif
 }

@@ -5,10 +5,6 @@
 #include "Library/DragDropUtils.h"
 
 #include <hzrpch.h>
-#include "Hazard/Scripting/Attributes/AllAttributes.h"
-#include "Hazard/Rendering/RenderCommand.h"
-#include "Hazard/Rendering/Texture.h"
-#include "Platform/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -45,6 +41,7 @@ namespace WindowElement {
 	{
 		return ImGui::Button(name, size);
 	}
+	/*
 	bool Input::ResettableDragButton(const char* label, float& value, float resetValue, ImVec2 size, uint16_t buttonFont, uint16_t dragFont)
 	{
 		bool modified = false;
@@ -68,6 +65,8 @@ namespace WindowElement {
 		ImGui::PopFont();
 		return modified;
 	}
+	*/
+	/*
 	bool Input::Vec1(const char* label, float& value, float resetValue, float columnWidth)
 	{
 		bool modified = false;
@@ -139,6 +138,8 @@ namespace WindowElement {
 
 		return modified;
 	}
+	*/
+	/*
 	bool Input::Vec3(const char* label, glm::vec3& value, float resetValue, float columnWidth)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 0, 0 });
@@ -202,6 +203,7 @@ namespace WindowElement {
 		ImGui::PopStyleVar();
 		return modified;
 	}
+	
 	bool Input::ModuleField(const char* label, std::string& moduleName, bool exists)
 	{
 		bool modified = false;
@@ -227,6 +229,7 @@ namespace WindowElement {
 			});
 		return modified;
 	}
+	*/
 	bool Input::Checkbox(const char* label, bool& value)
 	{
 		return ImGui::Checkbox(label, &value);
@@ -270,7 +273,7 @@ namespace WindowElement {
 	{
 		return ImGui::DragFloat(label, &value, speed, min, max);
 	}
-
+	/*
 	void Input::DynamicToggleButton(const char* offLabel, const char* onLabel, const Hazard::Color& offColor, const Hazard::Color& onColor, bool& modify, ImVec2 size)
 	{
 		if (modify) {
@@ -343,7 +346,8 @@ namespace WindowElement {
 	bool Input::ImageButton(Ref<Rendering::Texture2D> image, ImVec2 size)
 	{
 		return false; // ImGui::ImageButton(Layout::GetTextureID(image), size, { 0, 1 }, { 1, 0 });
-	}
+	}*/
+	/*
 	template<typename T>
 	inline bool Input::ScriptFieldOfType(Scripting::ScriptField* field, T& value)
 	{
@@ -422,4 +426,5 @@ namespace WindowElement {
 		}
 		return modified;
 	}
+	*/
 }

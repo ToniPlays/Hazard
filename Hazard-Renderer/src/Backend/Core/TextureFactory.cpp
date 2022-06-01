@@ -4,11 +4,9 @@
 #include "Image.h"
 #include <string>
 
-#include "File/File.h"
+#include "File.h"
 
 #include "vendor/stb_image.h"
-
-using namespace HazardUtility;
 
 namespace HazardRenderer
 {

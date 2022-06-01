@@ -5,7 +5,7 @@
 
 namespace HazardRenderer 
 {
-	class RawMesh : public HazardUtility::Asset
+	class RawMesh : public Asset
 	{
 	public:
 		RawMesh() = default;

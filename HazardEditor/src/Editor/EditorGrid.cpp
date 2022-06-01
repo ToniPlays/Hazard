@@ -17,14 +17,15 @@ namespace Editor
 			float ScaleFade = 0.0f;
 
 		} gridData;
-
+		/*
 		gridData.Near = camera.GetNearClipping();
 		gridData.Far = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
 		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
-		RenderCommand::DispatchPipelinePostPass(m_Pipeline, 6);
+		RenderCommand::DispatchPipelinePostPass(m_Pipeline, 6);*/
 	}
+	/*
 	void Grid::Invalidate(const Ref<RenderPass> renderPass)
 	{
 		if (m_Pipeline) {
@@ -45,4 +46,5 @@ namespace Editor
 
 		m_Pipeline = Pipeline::Create(&specs);
 	}
+	*/
 }

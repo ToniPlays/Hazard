@@ -99,8 +99,8 @@ namespace Project {
 	{
 		for (auto file : files)
 		{
-			if (strcmp(File::GetFileExtension(file.path().string()).c_str(), "meta"))
-				AssetManager::ImportAsset(file.path().string());
+			//if (strcmp(File::GetFileExtension(file.path().string()).c_str(), "meta"))
+				//AssetManager::ImportAsset(file.path().string());
 		}
 	}
 	void ProjectManager::ImportFromFolder(const std::vector<std::filesystem::directory_entry>& directories)

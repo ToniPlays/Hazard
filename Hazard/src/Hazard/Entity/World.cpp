@@ -3,9 +3,6 @@
 #include "WorldCommand.h"
 #include "World.h"
 #include "Entity.h"
-#include "Hazard/Rendering/RenderCommand.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
-#include "Hazard/Audio/AudioCommand.h"
 
 #define REGISTER_COMPONENT(x)	template<>															\
 								void World::OnComponentAdded<x>(Entity& entity, x& component) {}	\
@@ -15,7 +12,7 @@
 namespace Hazard::ECS 
 {
 	template<typename T>
-	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& entityMap)
+	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
 	{
 		auto components = src.view<T>();
 		for (auto srcEntity : components)
@@ -35,7 +32,7 @@ namespace Hazard::ECS
 	{
 		m_File = std::string(world.GetWorldFile() + " (copy)");
 		m_Name = world.GetName() + " (copy)";
-		std::unordered_map<UUID, entt::entity> entityMap;
+		std::unordered_map<UID, entt::entity> entityMap;
 
 		const auto& entityID = world.m_Registry.view<TagComponent>();
 
@@ -44,7 +41,7 @@ namespace Hazard::ECS
 			auto entity = entityID[i - 1];
 
 			TagComponent& c = world.m_Registry.get<TagComponent>(entity);
-			UUID uuid = c.Uid;
+			UID uuid = c.Uid;
 
 			Entity e = CreateEntity(uuid, c.Tag.c_str());
 			entityMap[uuid] = e.GetHandle();
@@ -88,7 +85,7 @@ namespace Hazard::ECS
 		entity.AddComponent<TransformComponent>();
 		return entity;
 	}
-	Entity World::CreateEntity(UUID id, const char* name)
+	Entity World::CreateEntity(UID id, const char* name)
 	{
 		Entity e = { m_Registry.create(), this };
 		TagComponent& tag = e.AddComponent<TagComponent>();

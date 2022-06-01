@@ -23,6 +23,7 @@ namespace WindowElement {
 	{
 		SetActive(false);
 		return;
+		/*
 		WorldRendererSettings settings = {};
 		settings.DebugName = "GameViewport";
 		settings.ViewportSize = { 1920, 1080 };
@@ -31,6 +32,7 @@ namespace WindowElement {
 		settings.Flags = WorldRenderFlags_::Geometry | WorldRenderFlags_::Quads;
 		settings.Flags |= WorldRenderFlags_::Enabled;
 		m_Renderer = WorldRenderer::Create(&settings);
+		*/
 	}
 	void GameViewport::OnUpdate()
 	{
@@ -50,7 +52,7 @@ namespace WindowElement {
 	}
 	void GameViewport::OnWindowRender()
 	{
-
+		/*
 		if (!m_Renderer->IsValid()) {
 			const char* text = "No active camera";
 			ImVec2 size = ImGui::CalcTextSize(text);
@@ -59,6 +61,7 @@ namespace WindowElement {
 			WindowLayout::Layout::Text(text);
 			return;
 		}
+		*/
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImVec2 size = ImGui::GetContentRegionAvail();
@@ -68,11 +71,11 @@ namespace WindowElement {
 			m_Width = size.x;
 			m_Height = size.y;
 
-			m_Renderer->SetViewport(m_Width, m_Height);
+			//m_Renderer->SetViewport(m_Width, m_Height);
 			m_Resize = true;
 		}
 
-		Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
+		//Layout::Image(m_Renderer->GetFinalPassImage(), size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::PopStyleVar();
 	}
 }

@@ -1,12 +1,7 @@
 
 #include <hzrpch.h>
 #include "Application.h"
-#include "Hazard/RenderContext/RenderContextCommand.h"
-#include "Hazard/Rendering/RenderEngine.h"
-#include "Hazard/Scripting/ScriptEngineManager.h"
-#include "Hazard/Audio/AudioEngine.h"
 #include "HazardLoop.h"
-#include "Hazard/Entity/WorldHandler.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
@@ -23,14 +18,15 @@ namespace Hazard {
 	}
 	void Application::SetTitle(const char* title)
 	{
-		Rendering::RenderContextCommand::SetTitle(title);
+		//Rendering::RenderContextCommand::SetTitle(title);
 	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
+		
 #ifndef HZR_RELEASE
 		PushModule<Logging::Logger>();
 #endif // HZR_RELEASE
-
+		/*
 
 		if (info->AppInfo == nullptr)
 			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
@@ -51,7 +47,7 @@ namespace Hazard {
 
 		if (info->AudioEngine)
 			PushModule<Audio::AudioEngine>(info->AudioEngine);
-
+		*/
 	}
 	void Application::Quit()
 	{

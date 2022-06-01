@@ -6,8 +6,6 @@
 #include "Library/Input.h"
 #include "GUI/EditorView.h"
 #include "GUI/Window/Tabs/EditorMainTab.h"
-#include "Hazard/Scripting/ScriptRegistry.h"
-#include "Hazard/Scripting/Attributes/AllAttributes.h"
 
 namespace WindowElement
 {
@@ -19,6 +17,7 @@ namespace WindowElement
 	{
 
 	}
+	/*
 	void ScriptEngineDebug::ProcessFields(std::vector<Hazard::Scripting::ScriptFieldMetadata> fields)
 	{
 		ImGuiTreeNodeFlags scriptFlags = ImGuiTreeNodeFlags_Framed;
@@ -62,12 +61,13 @@ namespace WindowElement
 					});
 			}
 			});
-	}
+	}*/
 	void ScriptEngineDebug::OnWindowRender()
 	{
 		HZR_PROFILE_FUNCTION();
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
+		/*
 		for (auto& [type, scriptEngine] : Hazard::Scripting::ScriptCommand::GetEngines()) {
 
 			Hazard::Scripting::ScriptRegistry registry = scriptEngine->GetRegistry();
@@ -91,7 +91,9 @@ namespace WindowElement
 				}
 				});
 		}
+		*/
 	}
+	/*
 	template<typename T>
 	void ScriptEngineDebug::TryProcessAttribute(Hazard::Scripting::ScriptMetadata meta)
 	{
@@ -176,4 +178,5 @@ namespace WindowElement
 	{
 		ImGui::Text("[ExposeFunc]");
 	}
+	*/
 }

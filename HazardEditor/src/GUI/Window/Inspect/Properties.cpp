@@ -32,20 +32,20 @@ namespace WindowElement {
 		{
 			auto& comp = m_SelectionContext.GetComponent<CameraComponent>();
 
-			std::vector<glm::vec3> points = Math::GetProjectionBounds(tc.GetOrientation(), tc.GetTransformMat4(), comp.GetFov(),
-				comp.GetClipping().x, comp.GetClipping().y, comp.GetAspectRatio());
+			//std::vector<glm::vec3> points = Math::GetProjectionBounds(tc.GetOrientation(), tc.GetTransformMat4(), comp.GetFov(),
+			//	comp.GetClipping().x, comp.GetClipping().y, comp.GetAspectRatio());
 
 			for (uint32_t i = 0; i < 4; i++)
 			{
-				Hazard::Rendering::RenderCommand::DrawLine(points[i] + tc.Translation, points[(i + 1) % 4] + tc.Translation, Color::White);
+				//Hazard::Rendering::RenderCommand::DrawLine(points[i] + tc.Translation, points[(i + 1) % 4] + tc.Translation, Color::White);
 			}
 			for (uint32_t i = 0; i < 4; i++)
 			{
-				Hazard::Rendering::RenderCommand::DrawLine(points[i] + tc.Translation, points[i + 4] + tc.Translation, Color::White);
+				//Hazard::Rendering::RenderCommand::DrawLine(points[i] + tc.Translation, points[i + 4] + tc.Translation, Color::White);
 			}
 			for (uint32_t i = 0; i < 4; i++)
 			{
-				Hazard::Rendering::RenderCommand::DrawLine(points[i + 4] + tc.Translation, points[((i + 1) % 4) + 4] + tc.Translation, Color::White);
+				//Hazard::Rendering::RenderCommand::DrawLine(points[i + 4] + tc.Translation, points[((i + 1) % 4) + 4] + tc.Translation, Color::White);
 			}
 		}
 		if (m_SelectionContext.HasComponent<BoxCollider2DComponent>())
@@ -54,7 +54,7 @@ namespace WindowElement {
 			glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.005f);
 			glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
 
-			Hazard::Rendering::RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::Blue);
+			//Hazard::Rendering::RenderCommand::DrawRectangle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, tc.Rotation.z }, scale), Color::Blue);
 		}
 		if (m_SelectionContext.HasComponent<CircleCollider2DComponent>())
 		{
@@ -62,7 +62,7 @@ namespace WindowElement {
 			glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.005f);
 			glm::vec3 scale = tc.Scale.x * glm::vec3(cc2d.Radius * 2.0f, cc2d.Radius * 2.0f, 1.0f);
 
-			Hazard::Rendering::RenderCommand::DrawCircle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, 0.0f }, scale), cc2d.Radius, 0.03f, Color::Blue);
+			//Hazard::Rendering::RenderCommand::DrawCircle(Math::ToTransformMatrix(translation, { 0.0f, 0.0f, 0.0f }, scale), cc2d.Radius, 0.03f, Color::Blue);
 		}
 	}
 	void Properties::OnWindowRender()
@@ -128,8 +128,8 @@ namespace WindowElement {
 	}
 	bool Properties::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Properties::SelectionContextChange));
+		//EventDispatcher dispatcher(e);
+		//dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Properties::SelectionContextChange));
 		return false;
 	}
 	bool Properties::SelectionContextChange(Events::SelectionContextChange& e)

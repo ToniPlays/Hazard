@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 #include "Asset.h"
 #include "AssetRegistry.h"
 #include "AssetLoader.h"
@@ -90,3 +90,4 @@ namespace Hazard
 		inline static AssetLoader s_AssetLoader;
 	};
 }
+#endif

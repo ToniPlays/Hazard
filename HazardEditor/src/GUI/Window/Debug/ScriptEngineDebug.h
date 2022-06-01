@@ -1,10 +1,9 @@
 #pragma once
 #include <hzrpch.h>
 #include "GUI/EditorWindow.h"
-#include "Hazard/Scripting/ScriptRegistry.h"
-#include "Hazard/Scripting/Attributes/AllAttributes.h"
 
-namespace WindowElement {
+namespace WindowElement 
+{
 	class ScriptEngineDebug : public EditorWindow {
 	public:
 		ScriptEngineDebug();
@@ -13,6 +12,7 @@ namespace WindowElement {
 		void Init() override;
 		void OnWindowRender() override;
 
+		/*
 		void ProcessFields(std::vector<Hazard::Scripting::ScriptFieldMetadata> fields);
 		void ProcessMethods(std::vector<Hazard::Scripting::ScriptMethodMetadata> method);
 		template<typename T>
@@ -23,5 +23,6 @@ namespace WindowElement {
 		void TryProcessAttribute(Hazard::Scripting::ScriptMethodMetadata method);
 		template<typename T>
 		void ProcessAttribute(T attribute);
+		*/
 	};
 }

@@ -3,12 +3,10 @@
 #include "GUI/EditorWindow.h"
 #include "GUI/Window/Rendering/TransformationGizmo.h"
 #include "Editor/EditorGrid.h"
-
 #include "Editor/EditorCamera.h"
-#include "Hazard/Rendering/WorldRenderer.h"
+#include "Backend/Core/Events.h"
 
-using namespace Hazard;
-using namespace Hazard::Rendering;
+using namespace HazardRenderer;
 
 namespace WindowElement {
 
@@ -34,7 +32,7 @@ namespace WindowElement {
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
 		Editor::Grid* m_Grid;
 
-		Ref<WorldRenderer> m_WorldRenderer;
+		//Ref<WorldRenderer> m_WorldRenderer;
 		TransformationGizmo m_Gizmos;
 		uint32_t m_Width = 0, m_Height = 0;
 		bool m_DrawStats = false;

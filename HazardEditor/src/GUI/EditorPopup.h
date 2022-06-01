@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderableElement.h"
+#include "Event.h"
 #include "imgui.h"
 
 namespace WindowElement {
@@ -13,7 +14,7 @@ namespace WindowElement {
 
 		virtual void Init() {};
 		virtual void OnWindowRender() = 0;
-		virtual bool OnEvent(Hazard::Event& e) { return false; }
+		virtual bool OnEvent(Event& e) { return false; }
 		void OnRender();
 
 	protected:

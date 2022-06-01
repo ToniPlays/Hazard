@@ -13,6 +13,6 @@ namespace WindowElement {
 		void OnWindowRender() override;
 
 	private:
-		Hazard::Rendering::RenderContext* context = nullptr;
+		//HazardRenderer::RenderContext* context = nullptr;
 	};
 }

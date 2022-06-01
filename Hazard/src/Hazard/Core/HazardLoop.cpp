@@ -4,8 +4,9 @@
 #include "Hazard/Math/Time.h"
 #include "GLFW/glfw3.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Hazard/Events/Input.h"
+#include "Backend/Input.h"
 #include "PlatformUtils.h"
+#include "Application.h"
 #include "Analyzer.h"
 
 namespace Hazard::Core {
@@ -23,7 +24,7 @@ namespace Hazard::Core {
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 		std::cout << std::endl;
 		HZR_CORE_WARN("Shutting down");
-		AssetManager::Shutdown();
+		//AssetManager::Shutdown();
 		m_Application->Close();
 		m_ModuleHandler->Close();
 
@@ -38,7 +39,7 @@ namespace Hazard::Core {
 			HZR_PROFILE_SESSION_BEGIN("Startup", "Logs/HazardProfile-Startup.json");
 			{
 				Timer timer;
-				AssetManager::Init();
+				//AssetManager::Init();
 				m_Application->PreInit();
 				Input::Init();
 				m_Application->Init();
@@ -55,7 +56,7 @@ namespace Hazard::Core {
 			// PlatformUtils::Messagebox("Runtime error", error.what());
 		}
 	}
-	bool HazardLoop::Quit(WindowCloseEvent& e)
+	bool HazardLoop::Quit(HazardRenderer::WindowCloseEvent& e)
 	{
 		s_Instance->m_ShouldClose = true;
 		return true;
@@ -74,7 +75,7 @@ namespace Hazard::Core {
 		Time::s_Time = time;
 		m_LastTime = time;
 
-		m_Application->UpdateData();
+		//m_Application->UpdateData();
 		//Update
 		m_Application->Update();
 		m_ModuleHandler->Update();
@@ -84,11 +85,13 @@ namespace Hazard::Core {
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{
+		/*
 		EventDispatcher dispatcher(e);
 		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;
 
 		if (!m_ModuleHandler->OnEvent(e) && m_Application)
 			m_Application->OnEvent(e);
+			*/
 	}
 }

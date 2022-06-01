@@ -1,3 +1,4 @@
+#if 1
 #include "tests/SimpleCanvas.cpp"
 #include "tests/Rendering/TriangleTest.h"
 #include "tests/Rendering/TexturedQuad.h"
@@ -6,7 +7,6 @@
 
 #include "tests/Scripting/CoreTest.h"
 
-#if 1
 
 int main()
 {

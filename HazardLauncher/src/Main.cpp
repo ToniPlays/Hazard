@@ -5,18 +5,6 @@
 #include "File/File.h"
 #include "HazardRenderer.h"
 
-
-#if _WIN32
-#define PATH_PREFIX ""
-#else
-#define PATH_PREFIX "../../../HazardLauncher/"
-#endif
-
-struct CreateProjectInfo {
-	std::string ProjectName;
-	std::filesystem::path Path;
-};
-
 using namespace HazardUtility;
 using namespace HazardRenderer;
 
@@ -39,24 +27,26 @@ int main() {
 
 	HazardRendererCreateInfo createInfo = {};
 
-	createInfo.Renderer = RenderAPI::Vulkan;
+	createInfo.Renderer = RenderAPI::OpenGL;
 	createInfo.Width = 1280;
 	createInfo.Height = 720;
 	createInfo.VSync = true;
 	createInfo.Logging = true;
-	createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
+	createInfo.Decorated = true;
+	createInfo.Color = Color("#222222");
 	createInfo.AppInfo = &appInfo;
-
 
 	Window* window = Window::Create(&createInfo);
 	window->Show();
 	
-	while (running) {
+	while (running)
+	{
 		window->BeginFrame();
+		
+
 
 		window->Present();
 	}
-
 	return 0;
 }
 #endif

@@ -3,9 +3,8 @@
 #include "Event.h"
 #include <sstream>
 
-using namespace HazardUtility;
-
-namespace HazardRenderer {
+namespace HazardRenderer
+{
 	class WindowResizeEvent : public Event {
 
 	public:

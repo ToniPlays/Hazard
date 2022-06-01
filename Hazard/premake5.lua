@@ -48,6 +48,10 @@ project "Hazard"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Hazard_Utility}",
+		"%{IncludeDir.Hazard_Renderer}",
+		"%{IncludeDir.Hazard_Script}",
+		"%{IncludeDir.Hazard_UI}",
 		"%{IncludeDir.PortableFileDialogs}"
 	}
 

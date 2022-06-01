@@ -11,8 +11,8 @@ namespace WindowElement {
 
 		void Init() override;
 		void OnRender() override;
-		bool OnEvent(Hazard::Event& e) override;
-		bool OnKey(Hazard::KeyPressedEvent& e);
+		bool OnEvent(Event& e) override;
+		//bool OnKey(Hazard::KeyPressedEvent& e);
 	private:
 		void SetPlaying(bool playing);
 	};
