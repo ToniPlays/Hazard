@@ -78,111 +78,6 @@
     <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\EditorPopup.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\EditorTabWindow.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\EditorView.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\EditorWindow.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ImGuizmo.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\RenderableElement.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\AllWindows.h">
-      <Filter>GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\AudioEngineDebug.h">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\Console.h">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\EngineAssets.h">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\Profiler.h">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Debug\ScriptEngineDebug.h">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Editor\BuildWindow.h">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Editor\SettingsView.h">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Editor\WelcomePopup.h">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\FileView.h">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\Hierarchy.h">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\MaterialInspector.h">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Inspect\Properties.h">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\MenuBar.h">
-      <Filter>GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\GameViewport.h">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\Performance.h">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\TransformationGizmo.h">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\Viewport.h">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Rendering\WorldEnvironmentData.h">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Tabs\EditorMainTab.h">
-      <Filter>GUI\Window\Tabs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Tabs\NodeGraphTab.h">
-      <Filter>GUI\Window\Tabs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Window\Toolbar.h">
-      <Filter>GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\ComponentDraw.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\DragDropUtils.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Input.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\ContextMenus.h">
-      <Filter>Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\Dockspace.h">
-      <Filter>Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Layout\Layout.h">
-      <Filter>Library\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Library\Style.h">
-      <Filter>Library</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\EditorGuiPlatform.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -207,12 +102,6 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Project\HazardProject.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Project\ProjectManager.h">
-      <Filter>Project</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -233,102 +122,6 @@
     <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\EditorPopup.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\EditorTabWindow.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\EditorView.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\EditorWindow.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\ImGuizmo.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\AudioEngineDebug.cpp">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\Console.cpp">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\EngineAssets.cpp">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\Profiler.cpp">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Debug\ScriptEngineDebug.cpp">
-      <Filter>GUI\Window\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Editor\BuildWindow.cpp">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Editor\SettingsView.cpp">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Editor\WelcomePopup.cpp">
-      <Filter>GUI\Window\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\FileView.cpp">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\Hierarchy.cpp">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\MaterialInspector.cpp">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Inspect\Properties.cpp">
-      <Filter>GUI\Window\Inspect</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\MenuBar.cpp">
-      <Filter>GUI\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\GameViewport.cpp">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\Performance.cpp">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\TransformationGizmo.cpp">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\Viewport.cpp">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Rendering\WorldEnvironmentData.cpp">
-      <Filter>GUI\Window\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Tabs\EditorMainTab.cpp">
-      <Filter>GUI\Window\Tabs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Tabs\NodeGraphTab.cpp">
-      <Filter>GUI\Window\Tabs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Window\Toolbar.cpp">
-      <Filter>GUI\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\DragDropUtils.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Input.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\ContextMenus.cpp">
-      <Filter>Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\Dockspace.cpp">
-      <Filter>Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Layout\Layout.cpp">
-      <Filter>Library\Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Library\Style.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\GLFW\imgui_impl_glfw.cpp">
       <Filter>Platform\GLFW</Filter>
     </ClCompile>
@@ -343,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Project\ProjectManager.cpp">
-      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
