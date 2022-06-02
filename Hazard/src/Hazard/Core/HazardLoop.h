@@ -8,12 +8,11 @@
 #include "Backend/Core/Events.h"
 #include "Backend/Core/Events.h"
 
-namespace Hazard {
-	class Application;
-}
 
-namespace Hazard::Core 
+namespace Hazard 
 {
+	class Application;
+
 	class HazardLoop {
 		friend class Application;
         
@@ -22,18 +21,18 @@ namespace Hazard::Core
 		~HazardLoop();
 
 		void Start();
-		bool Quit(HazardRenderer::WindowCloseEvent& e);
+		bool Quit(WindowCloseEvent& e);
 		void OnEvent(Event& e);
 		bool ShouldClose() { return m_ShouldClose; }
 		void Run();
 
 		static void Process(Event& e);
 		static HazardLoop& GetCurrent() { return *s_Instance; }
-        static Module::ModuleHandler* GetModuleHandler() { return s_Instance->m_ModuleHandler.get(); }
+        static ModuleHandler* GetModuleHandler() { return s_Instance->m_ModuleHandler.get(); }
 
 	private:
 		Application* m_Application = nullptr;
-		Scope<Module::ModuleHandler> m_ModuleHandler;
+		Scope<ModuleHandler> m_ModuleHandler;
 
 		bool m_ShouldClose = false;
 		double m_LastTime = 0;

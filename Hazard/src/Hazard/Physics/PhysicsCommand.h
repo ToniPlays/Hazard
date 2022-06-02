@@ -1,7 +1,7 @@
 #pragma once
 
 #include <box2d/box2d.h>
-#include "Hazard/Entity/World.h"
+#include "Hazard/ECS/World.h"
 #include "Physics2D/Physics2D.h"
 
 namespace Hazard::Physics

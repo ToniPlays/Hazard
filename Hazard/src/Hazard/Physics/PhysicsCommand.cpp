@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "PhysicsCommand.h"
-#include "Hazard/Entity/Entity.h"
+#include "Hazard/ECS/Entity.h"
 
 #include "box2d/b2_world.h"
 #include "box2d/b2_body.h"

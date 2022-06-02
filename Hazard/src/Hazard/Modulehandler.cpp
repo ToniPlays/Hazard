@@ -3,7 +3,7 @@
 #include "ModuleHandler.h"
 #include "Hazard/Logging/Logger.h"
 
-namespace Hazard::Module {
+namespace Hazard {
 
 	ModuleHandler::ModuleHandler()
 	{
@@ -27,13 +27,6 @@ namespace Hazard::Module {
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->Render();
-	}
-	void ModuleHandler::PostRender()
-	{
-		HZR_PROFILE_FUNCTION();
-		for (Module* m : m_Modules)
-			if (m->GetActive())
-				m->PostRender();
 	}
 	void ModuleHandler::Close()
 	{

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UtilityCore.h"
+
 enum class Severity
 {
 	Debug,
@@ -9,3 +11,5 @@ enum class Severity
 	Error,
 	Critical
 };
+
+std::string SeverityToString(const Severity& severity);

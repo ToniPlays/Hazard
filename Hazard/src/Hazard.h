@@ -10,13 +10,13 @@
 #include "Hazard/Assets/AssetManager.h"
 
 //Hazard ECS includes
-#include "Hazard/Entity/WorldCommand.h"
-#include "Hazard/Entity/WorldHandler.h"
-#include "Hazard/Entity/Loader/WorldDeserializer.h"
-#include "Hazard/Entity/Loader/WorldSerializer.h"
-#include "Hazard/Entity/World.h"
-#include "Hazard/Entity/Entity.h"
-#include "Hazard/Entity/Component.h"
+#include "Hazard/ECS/WorldCommand.h"
+#include "Hazard/ECS/WorldHandler.h"
+#include "Hazard/ECS/Loader/WorldDeserializer.h"
+#include "Hazard/ECS/Loader/WorldSerializer.h"
+#include "Hazard/ECS/World.h"
+#include "Hazard/ECS/Entity.h"
+#include "Hazard/ECS/Component.h"
 
 //Hazard Physics
 #include "Hazard/Physics/PhysicsCommand.h"

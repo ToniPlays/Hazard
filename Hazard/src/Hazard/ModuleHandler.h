@@ -2,7 +2,7 @@
 #include "Hazard/Core/Core.h"
 #include "Module.h"
 
-namespace Hazard::Module {
+namespace Hazard {
 
 	class ModuleHandler {
 	public:
@@ -11,7 +11,6 @@ namespace Hazard::Module {
 
 		void Update();
 		void Render();
-		void PostRender();
 		void Close();
 
 		template<typename T, typename... Args>

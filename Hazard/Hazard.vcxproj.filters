@@ -159,43 +159,43 @@
     <ClInclude Include="src\Hazard\Core\Timer.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Component.h">
+    <ClInclude Include="src\Hazard\ECS\Component.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\CameraProcessingComponent.h">
+    <ClInclude Include="src\Hazard\ECS\Components\CameraProcessingComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\Component.h">
+    <ClInclude Include="src\Hazard\ECS\Components\Component.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\LightComponent.h">
+    <ClInclude Include="src\Hazard\ECS\Components\LightComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\PhysicsComponent.h">
+    <ClInclude Include="src\Hazard\ECS\Components\PhysicsComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Components\UIComponent.h">
+    <ClInclude Include="src\Hazard\ECS\Components\UIComponent.h">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Entity.h">
+    <ClInclude Include="src\Hazard\ECS\Entity.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\Component.h">
+    <ClInclude Include="src\Hazard\ECS\Loader\Component.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\WorldDeserializer.h">
+    <ClInclude Include="src\Hazard\ECS\Loader\WorldDeserializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\Loader\WorldSerializer.h">
+    <ClInclude Include="src\Hazard\ECS\Loader\WorldSerializer.h">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\World.h">
+    <ClInclude Include="src\Hazard\ECS\World.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\WorldCommand.h">
+    <ClInclude Include="src\Hazard\ECS\WorldCommand.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Entity\WorldHandler.h">
+    <ClInclude Include="src\Hazard\ECS\WorldHandler.h">
       <Filter>src\Hazard\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
@@ -1476,6 +1476,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1496,28 +1497,28 @@
     <ClCompile Include="src\Hazard\Core\HazardLoop.cpp">
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Components\CameraProcessingComponent.cpp">
+    <ClCompile Include="src\Hazard\ECS\Components\CameraProcessingComponent.cpp">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Components\PhysicsComponent.cpp">
+    <ClCompile Include="src\Hazard\ECS\Components\PhysicsComponent.cpp">
       <Filter>src\Hazard\Entity\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Entity.cpp">
+    <ClCompile Include="src\Hazard\ECS\Entity.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\WorldDeserializer.cpp">
+    <ClCompile Include="src\Hazard\ECS\Loader\WorldDeserializer.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\Loader\WorldSerializer.cpp">
+    <ClCompile Include="src\Hazard\ECS\Loader\WorldSerializer.cpp">
       <Filter>src\Hazard\Entity\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\World.cpp">
+    <ClCompile Include="src\Hazard\ECS\World.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\WorldCommand.cpp">
+    <ClCompile Include="src\Hazard\ECS\WorldCommand.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Entity\WorldHandler.cpp">
+    <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp">
       <Filter>src\Hazard\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
@@ -1544,5 +1545,6 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp" />
   </ItemGroup>
 </Project>

@@ -66,9 +66,6 @@
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\SceneRuntimeHandler.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -108,9 +105,6 @@
       <Filter>BuildSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\SceneRuntimeHandler.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorCamera.cpp">

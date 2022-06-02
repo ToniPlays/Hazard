@@ -7,7 +7,7 @@
 #include <string>
 #include <functional>
 
-namespace HazardRenderer 
+namespace Hazard
 {
 	struct RenderMessage 
 	{
@@ -35,28 +35,40 @@ namespace HazardRenderer
 		std::string AppName;
 		std::string BuildVersion;
 
-		const char** Icons;
+		const char** pIcons;
 		uint32_t IconCount = 0;
 		RendererMessageCallback MessageCallback = nullptr;
 		EventCallback EventCallback = nullptr;
 	};
 
-	struct HazardRendererCreateInfo
+	struct HazardWindowCreateInfo
 	{
-		RenderAPI Renderer = RenderAPI::Auto;
+		std::string Title;
+
 		bool FullScreen = false;
 		bool Maximized = false;
 		bool Resizable = true;
-		bool VSync = false;
 		bool Decorated = true;
-		bool Logging = true;
 
 		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		uint32_t Width = 0;
 		uint32_t Height = 0;
-		uint32_t ImagesInFlight = 0;
-
-		HazardRendererAppInfo* AppInfo = nullptr;
 	};
+
+	struct HazardRendererCreateInfo
+	{
+		RenderAPI Renderer = RenderAPI::Auto;
+
+		uint32_t WindowCount = 0;
+		HazardWindowCreateInfo* pWindows;
+
+		uint32_t ImagesInFlight = 0;
+		bool Logging = true;
+		bool VSync = false;
+		
+
+		HazardRendererAppInfo* pAppInfo = nullptr;
+	};
+	
 }

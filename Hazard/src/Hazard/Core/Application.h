@@ -30,9 +30,6 @@ namespace Hazard {
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
 		
-		void SetTitle(const std::string& title);
-		void SetTitle(const char* title);
-		
 		void CreateApplicationStack(HazardCreateInfo* info);
 		void UpdateData();
 
@@ -41,11 +38,11 @@ namespace Hazard {
 		static ApplicationData& GetData() { return s_Data; }
 
 		template<typename T, typename... Args>
-		static T& PushModule(Args... args) { return *Core::HazardLoop::GetModuleHandler()->AddModule<T>(std::forward<Args>(args)...); };
+		static T& PushModule(Args... args) { return *HazardLoop::GetModuleHandler()->AddModule<T>(std::forward<Args>(args)...); };
 		template<typename T>
-		static T& GetModule() { return *Core::HazardLoop::GetModuleHandler()->GetModule<T>(); }
+		static T& GetModule() { return *HazardLoop::GetModuleHandler()->GetModule<T>(); }
 		template<typename T>
-		static bool HasModule() { return Core::HazardLoop::GetModuleHandler()->HasModule<T>(); }
+		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
 
 	private:
 		static ApplicationData s_Data;

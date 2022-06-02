@@ -6,7 +6,7 @@
 
 namespace Hazard::Logging {
 
-	class Logger : public Module::Module {
+	class Logger : public Module {
 		using SPLogger = std::shared_ptr<spdlog::logger>;
 
 	public:

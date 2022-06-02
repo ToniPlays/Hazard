@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 		CommandLineArgs::Init(argc, argv);
 		Application* app = CreateApplication();
 
-		Core::HazardLoop loop(app);
+		HazardLoop loop(app);
 		loop.Start();
 
 		while (!loop.ShouldClose()) {

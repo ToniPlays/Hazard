@@ -3,7 +3,7 @@
 #include "Physics2DContactListener.h"
 #include "box2d/b2_contact.h"
 
-#include "Hazard/Entity/WorldCommand.h"
+#include "Hazard/ECS/WorldCommand.h"
 
 namespace Hazard::Physics
 {

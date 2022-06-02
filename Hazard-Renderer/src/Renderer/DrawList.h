@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Mesh/RawMesh.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+
 #include <vector>
 #include <unordered_map>
 #include <map>
@@ -27,7 +28,7 @@ namespace HazardRenderer
 
 		InstancedMesh() 
 		{
-			Transforms.reserve(1000000);
+			Transforms.reserve(1000);
 		}
 	};
 
@@ -41,6 +42,5 @@ namespace HazardRenderer
 		WorldSettings Settings;
 		std::map<UID, PipelineRenderable> Geometry;
 		uint32_t Quads = 0;
-
 	};
 }

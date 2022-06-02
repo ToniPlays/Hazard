@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "Application.h"
 #include "HazardLoop.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
@@ -12,48 +13,19 @@ namespace Hazard {
 
 	ApplicationData Application::s_Data;
 
-	void Application::SetTitle(const std::string& title)
-	{
-		SetTitle(title.c_str());
-	}
-	void Application::SetTitle(const char* title)
-	{
-		//Rendering::RenderContextCommand::SetTitle(title);
-	}
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
 		
-#ifndef HZR_RELEASE
-		PushModule<Logging::Logger>();
-#endif // HZR_RELEASE
-		/*
+		HZR_ASSERT(info->AppInfo, "[Hazard]: ApplicationCreateInfo required");
 
-		if (info->AppInfo == nullptr)
-			HZR_THROW("[Hazard]: ApplicationCreateInfo required");
-
-		if (info->EntityComponent != nullptr)
-			PushModule<ECS::WorldHandler>(info->EntityComponent);
-
-		if (info->RenderContextInfo != nullptr)
-			PushModule<Rendering::RenderContext>(info->RenderContextInfo, info->AppInfo);
-
-		if (info->RendererInfo != nullptr)
+		if (info->RendererInfo) 
 		{
-			HZR_CORE_ASSERT(info->RenderContextInfo, "[Hazard Renderer]: Using renderer requires RenderContextCreateInfo");
-			PushModule<Rendering::RenderEngine>(info->RendererInfo);
+			PushModule<RenderEngine>(info->RendererInfo);
 		}
-		if (info->ScriptEngineInfo != nullptr)
-			PushModule<Scripting::ScriptEngineManager>(info->ScriptEngineInfo);
-
-		if (info->AudioEngine)
-			PushModule<Audio::AudioEngine>(info->AudioEngine);
-		*/
 	}
 	void Application::Quit()
 	{
-#ifdef HZR_PLATFORM_WINDOWS
-		Core::HazardLoop::GetCurrent().m_ShouldClose = true;
-#endif
+		HazardLoop::GetCurrent().m_ShouldClose = true;
 	}
 	void Application::UpdateData()
 	{

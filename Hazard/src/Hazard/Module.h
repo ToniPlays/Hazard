@@ -2,7 +2,7 @@
 #include "Hazard/Core/Core.h"
 #include "Event.h"
 
-namespace Hazard::Module {
+namespace Hazard {
 
 	class Module {
 	public:
@@ -13,7 +13,6 @@ namespace Hazard::Module {
 		virtual void Init() {}
 		virtual void Update() {}
 		virtual void Render() {}
-		virtual void PostRender() {}
 		virtual void Close() {}
 		virtual bool OnEvent(Event& e) { return false; }
 		
@@ -22,6 +21,6 @@ namespace Hazard::Module {
 		void SetActive(bool active) { m_IsActive = active; }
 	private:
 		std::string m_Name;
-		bool m_IsActive = false;
+		bool m_IsActive = true;
 	};
 }

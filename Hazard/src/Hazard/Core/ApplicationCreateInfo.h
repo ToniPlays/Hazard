@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "Color.h"
+#include "HazardRendererCore.h"
 
 namespace Hazard {
 
@@ -9,10 +10,6 @@ namespace Hazard {
 	{
 		std::string AppName;
 		std::string BuildVersion;
-
-		const char** Icons = nullptr;
-		uint32_t IconCount = 0;
-
 		bool Logging = false;
 	};
 	struct AudioEngineCreateInfo
@@ -24,12 +21,6 @@ namespace Hazard {
 		std::string StartupFile = "";
 	};
 	
-	struct RenderEngineCreateInfo 
-	{
-		uint32_t MaxQuadCount = 35000;
-		uint32_t SamplerCount = 0;
-		bool Enabled = true;
-	};
 	struct ScriptEngineCreateInfo 
 	{
 		std::string AppAssemblyPath;
@@ -42,8 +33,7 @@ namespace Hazard {
 	struct HazardCreateInfo 
 	{
 		ApplicationCreateInfo* AppInfo = nullptr;
-		//RenderContexCreateInfo* RenderContextInfo = nullptr;
-		RenderEngineCreateInfo* RendererInfo = nullptr;
+		HazardRendererCreateInfo* RendererInfo = nullptr;
 		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* AudioEngine = nullptr;
 		EntityComponentCreateInfo* EntityComponent = nullptr;

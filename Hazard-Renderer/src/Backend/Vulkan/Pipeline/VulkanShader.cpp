@@ -13,7 +13,6 @@
 
 #include "MathCore.h"
 
-using namespace HazardUtility;
 
 namespace HazardRenderer::Vulkan
 {
@@ -293,7 +292,7 @@ namespace HazardRenderer::Vulkan
 				spec.Name = resource.name;
 				spec.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
 				spec.MemberCount = type.member_types.size();
-				spec.Size = size = Max<float>(256, spec.Size);
+				spec.Size = size = Math::Max<float>(256, spec.Size);
 				spec.ShaderUsage |= (uint32_t)stage;
 
 				auto it = m_ShaderData.UniformsDescriptions.find(spec.Binding);
@@ -311,7 +310,7 @@ namespace HazardRenderer::Vulkan
 			UniformBufferCreateInfo bufferInfo = {};
 			bufferInfo.Name = spec.Name;
 			bufferInfo.Binding = spec.Binding;
-			bufferInfo.Size = Max<float>(256, spec.Size);
+			bufferInfo.Size = Math::Max<float>(256, spec.Size);
 			bufferInfo.Usage = spec.ShaderUsage;
 			bufferInfo.IsShared = true;
 

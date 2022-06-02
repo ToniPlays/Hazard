@@ -8,6 +8,7 @@
 
 namespace HazardRenderer {
 
+	using namespace Hazard;
 	using ResizeCallback = std::function<void(uint32_t, uint32_t)>;
 
 	enum class Topology { Points, Line, LineLoop, LineStrip, Triangle, TriangleStrip, TriangleFan, Outline };
@@ -50,7 +51,7 @@ namespace HazardRenderer {
 
 		static GraphicsContext* Create(WindowProps* props);
 		static RenderAPI GetRenderAPI() { return s_CurrentAPI; }
-		
+
 
 	private:
 		static inline RenderAPI s_CurrentAPI;

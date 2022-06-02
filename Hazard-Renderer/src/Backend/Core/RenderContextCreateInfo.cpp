@@ -1,7 +1,7 @@
 
 #include "RenderContextCreateInfo.h"
 
-namespace HazardRenderer
+namespace Hazard
 {
 	std::string RenderAPIToString(RenderAPI api)
 	{
@@ -12,6 +12,7 @@ namespace HazardRenderer
 		case RenderAPI::DX11:		return "DX11";
 		case RenderAPI::DX12:		return "DX12";
 		case RenderAPI::Metal:		return "Metal";
+		default:					return "Auto";
 		}
 	}
 }

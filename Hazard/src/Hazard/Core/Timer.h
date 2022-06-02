@@ -2,7 +2,8 @@
 
 #include <chrono>
 
-namespace Hazard {
+namespace Hazard 
+{
 	class Timer {
 	public:
 		Timer() {
