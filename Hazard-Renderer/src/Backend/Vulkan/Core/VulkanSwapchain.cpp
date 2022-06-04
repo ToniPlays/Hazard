@@ -11,8 +11,10 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanSwapchain::VulkanSwapchain() 
+	VulkanSwapchain::VulkanSwapchain(FrameBufferCreateInfo* targetInfo) 
 	{
+		if (targetInfo != nullptr)
+			memcpy(m_FrameBufferCreateInfo, targetInfo, sizeof(FrameBufferCreateInfo));
 	}
 	VulkanSwapchain::~VulkanSwapchain()
 	{
@@ -276,8 +278,10 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_RenderPass));
+		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
 		CreateFramebuffer();
+
+		CreateResources(m_FrameBufferCreateInfo);
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)
 	{
@@ -301,9 +305,11 @@ namespace HazardRenderer::Vulkan
 				Resize(m_Width, m_Height);
 			}
 		}
+		m_RenderCommandBuffer->Begin();
 	}
 	void VulkanSwapchain::Present()
 	{
+		m_RenderCommandBuffer->Submit();
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		
 		const uint64_t DEFAULT_FENCE_TIMEOUT = 100000000000;
@@ -382,7 +388,7 @@ namespace HazardRenderer::Vulkan
 		VkFramebufferCreateInfo frameBufferCreateInfo = {};
 		frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		frameBufferCreateInfo.pNext = NULL;
-		frameBufferCreateInfo.renderPass = m_RenderPass;
+		frameBufferCreateInfo.renderPass = m_VulkanRenderPass;
 		frameBufferCreateInfo.attachmentCount = 2;
 		frameBufferCreateInfo.pAttachments = ivAttachments;
 		frameBufferCreateInfo.width = m_Width;
@@ -426,12 +432,46 @@ namespace HazardRenderer::Vulkan
 		imageViewCI.subresourceRange.baseArrayLayer = 0;
 		imageViewCI.subresourceRange.layerCount = 1;
 		imageViewCI.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+
 		//Stencil aspect should only be set on depth + stencil formats (VK_FORMAT_D16_UNORM_S8_UINT..VK_FORMAT_D32_SFLOAT_S8_UINT
 		if (depthFormat >= VK_FORMAT_D16_UNORM_S8_UINT)
 			imageViewCI.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
 		VK_CHECK_RESULT(vkCreateImageView(device.GetVulkanDevice(), &imageViewCI, nullptr, &m_DepthStencil.View));
 		
+	}
+	void VulkanSwapchain::CreateResources(FrameBufferCreateInfo* targetInfo)
+	{
+		if (!m_RenderCommandBuffer)
+			m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("VulkanSwapchain");
+
+		if (targetInfo == nullptr) {
+			//Create default target
+
+			FrameBufferCreateInfo frameBufferInfo = {};
+			frameBufferInfo.DebugName = "ScreenFBO";
+			frameBufferInfo.SwapChainTarget = true;
+			frameBufferInfo.AttachmentCount = 2;
+			frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+
+			m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+			RenderPassCreateInfo renderPassInfo = {};
+			renderPassInfo.DebugName = "ScreenTarget";
+			renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+
+			m_RenderPass = RenderPass::Create(&renderPassInfo);
+		}
+		else
+		{
+			m_FrameBuffer = FrameBuffer::Create(targetInfo);
+
+			RenderPassCreateInfo renderPassInfo = {};
+			renderPassInfo.DebugName = "ScreenTarget";
+			renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+
+			m_RenderPass = RenderPass::Create(&renderPassInfo);
+		}
 	}
 }
 #endif

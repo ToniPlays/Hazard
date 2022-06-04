@@ -14,6 +14,7 @@ namespace HazardRenderer {
 	class GraphicsContext;
 
 	class Window;
+	class Swapchain;
 
 	struct WindowProps {
 		friend class Window;
@@ -24,9 +25,9 @@ namespace HazardRenderer {
 
 		bool VSync = false;
 		bool focus = true;
-		bool maximized = false;
-		bool minimized = false;
-		bool fullscreen = false;
+		bool Maximized = false;
+		bool Minimized = false;
+		bool Fullscreen = false;
 		int Width = 0;
 		int Height = 0;
 		uint32_t ImagesInFlight = 0;
@@ -72,6 +73,7 @@ namespace HazardRenderer {
 
 		virtual WindowProps GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;
+		virtual Ref<Swapchain> GetSwapchain() = 0;
 
 		static Window* Create(HazardRendererCreateInfo* info);
 		static void SendDebugMessage(const RenderMessage& message);

@@ -1,11 +1,9 @@
 
 #include "ScriptAssembly.h"
 #include "Buffer.h"
-#include "File/File.h"
+#include "File.h"
 
 #include "Mono/Core/Mono.h"
-
-using namespace HazardUtility;
 
 namespace HazardScript 
 {

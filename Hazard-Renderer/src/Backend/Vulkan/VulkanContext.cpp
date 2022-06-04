@@ -24,7 +24,7 @@ namespace HazardRenderer::Vulkan {
 	{
 		m_Device->WaitUntilIdle();
 
-		m_SwapChain.Reset();
+		m_Swapchain.Reset();
 		m_WindowSurface.reset();
 
 		m_Device.reset();
@@ -71,24 +71,25 @@ namespace HazardRenderer::Vulkan {
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 
-		m_SwapChain = Ref<VulkanSwapchain>::Create();
-
-		m_SwapChain->Create(w, h, window->IsVSync());
+		m_Swapchain = Ref<VulkanSwapchain>::Create(info->pTargetFrameBuffer);
+		m_Swapchain->Create(w, h, window->IsVSync());
 	}
 
 	void VulkanContext::BeginFrame()
 	{
-		m_SwapChain->BeginFrame();
+		m_Swapchain->BeginFrame();
+		BeginRenderPass(m_Swapchain->GetSwapchainBuffer(), m_Swapchain->GetRenderPass());
 	}
 
 	void VulkanContext::Present()
 	{
-		m_SwapChain->Present();
+		EndRenderPass(m_Swapchain->GetSwapchainBuffer());
+		m_Swapchain->Present();
 	}
 
 	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
 	{
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
 		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
@@ -160,7 +161,7 @@ namespace HazardRenderer::Vulkan {
 
 	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
 	{
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdEndRenderPass(vkBuffer);
 	}
@@ -181,7 +182,7 @@ namespace HazardRenderer::Vulkan {
 		uint32_t width = w;
 		uint32_t height = h;
 
-		m_SwapChain->Resize(width, height);
+		m_Swapchain->Resize(width, height);
 	}
 //
 //	void VulkanContext::SetErrorListener(const ErrorCallback& callback)

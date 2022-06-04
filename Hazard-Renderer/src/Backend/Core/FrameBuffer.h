@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Image2D.h"
+#include "Texture/Image2D.h"
 #include "glm/glm.hpp"
 
 #include <vector>
 
-namespace HazardRenderer {
+namespace HazardRenderer 
+{
 	class FrameBuffer;
 
 	struct FrameBufferAttachment

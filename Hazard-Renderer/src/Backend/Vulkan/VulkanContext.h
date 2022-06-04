@@ -48,11 +48,12 @@ namespace HazardRenderer::Vulkan {
 	
 		
 		PhysicalDevice& GetDevice() { return *m_Device; }
+		Ref<Swapchain> GetSwapchain() override { return s_Instance->m_Swapchain.As<Swapchain>(); }
+
+
 		static VulkanDevice& GetPhysicalDevice() { return (VulkanDevice&)s_Instance->GetDevice(); }
-
 		static VkInstance GetVulkanInstance() { return s_Instance->m_Instance; }
-		static Ref<VulkanSwapchain> GetSwapchain() { return s_Instance->m_SwapChain; }
-
+		static Ref<VulkanSwapchain> GetVulkanSwapchain() { return s_Instance->m_Swapchain; }
 		static WindowSurface& GetWindowSurface() { return *s_Instance->m_WindowSurface; }
 		static glm::vec4& GetClearColor() { return s_Instance->m_ClearColor; }
 
@@ -66,7 +67,7 @@ namespace HazardRenderer::Vulkan {
 		VkInstance m_Instance;
 		Scope<WindowSurface> m_WindowSurface;
 		Scope<VulkanDevice> m_Device;
-		Ref<VulkanSwapchain> m_SwapChain;
+		Ref<VulkanSwapchain> m_Swapchain;
 
 		//inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
 		

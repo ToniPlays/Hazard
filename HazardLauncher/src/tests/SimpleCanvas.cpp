@@ -7,7 +7,6 @@
 #include <iostream>
 
 using namespace HazardRenderer;
-using namespace HazardUtility;
 using namespace HazardUI;
 
 namespace SimpleCanvas {
@@ -112,7 +111,7 @@ namespace SimpleCanvas {
 	static void Run()
 	{
 		std::vector<const char*> icons = { "res/world.png", "res/world.png" };
-
+		/*
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Simple canvas";
 		appInfo.BuildVersion = "0.0.1a";
@@ -211,5 +210,6 @@ namespace SimpleCanvas {
 
 			window->Present();
 		}
+		*/
 	}
 }

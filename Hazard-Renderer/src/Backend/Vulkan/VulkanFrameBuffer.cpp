@@ -19,8 +19,9 @@ namespace HazardRenderer::Vulkan
 		m_Specs.ClearColor = info->ClearColor;
 
 		if (m_Specs.Width == 0) {
-			m_Specs.Width = VulkanContext::GetSwapchain()->GetWidth();
-			m_Specs.Height = VulkanContext::GetSwapchain()->GetHeight();
+			Ref<VulkanSwapchain> sc = VulkanContext::GetVulkanSwapchain();
+			m_Specs.Width = sc->GetWidth();
+			m_Specs.Height = sc->GetHeight();
 		}
 		else
 		{
@@ -76,8 +77,8 @@ namespace HazardRenderer::Vulkan
 		}
 		else
 		{
-			Ref<VulkanSwapchain> swapChain = VulkanContext::GetSwapchain();
-			m_RenderPass = swapChain->GetRenderPass();
+			Ref<VulkanSwapchain> swapChain = VulkanContext::GetVulkanSwapchain();
+			m_RenderPass = swapChain->GetVulkanRenderPass();
 			m_ClearValues.clear();
 
 			glm::vec4 c = VulkanContext::GetClearColor();

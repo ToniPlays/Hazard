@@ -5,8 +5,6 @@
 #include "UIElement.h"
 #include "Components/Components.h"
 
-using namespace HazardUtility;
-
 namespace HazardUI
 {
 	CanvasRenderer::CanvasRenderer()

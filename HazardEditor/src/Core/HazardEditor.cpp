@@ -10,7 +10,7 @@ using namespace Hazard;
 void EditorApplication::PreInit()
 {
 	HZR_INFO("EditorApplication::PreInit()");
-	std::vector<const char*> icons = {"res/Icons/logo.png", "res/Icons/logo.png"};
+	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	
 	ApplicationCreateInfo appInfo;
@@ -44,21 +44,16 @@ void EditorApplication::PreInit()
 	windowInfo.Decorated = true;
 	windowInfo.Width = 1920;
 	windowInfo.Height = 1080;
-	windowInfo.Color = Color(48, 48, 48, 255);
+	windowInfo.Color = Color(34, 34, 34, 255);
 
 	HazardRendererCreateInfo renderInfo = {};
 	renderInfo.pAppInfo = &rendererApp;
-	renderInfo.Renderer = RenderAPI::OpenGL;
+	renderInfo.Renderer = RenderAPI::Vulkan;
 	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
 
 	/*
-	RenderEngineCreateInfo engineInfo = {};
-	engineInfo.MaxQuadCount = 15000;
-	engineInfo.SamplerCount = 32;
-	engineInfo.Enabled = true;
-
 	AudioEngineCreateInfo audioInfo = {};
 
 	ScriptEngineCreateInfo scriptInfo = {};
@@ -81,7 +76,6 @@ void EditorApplication::PreInit()
 	createInfo.AppInfo = &appInfo;
 	createInfo.RendererInfo = &renderInfo;
 	/*
-	createInfo.RenderContextInfo = &contextInfo;
     createInfo.RendererInfo = &engineInfo;
 	createInfo.AudioEngine = &audioInfo;
 	createInfo.EntityComponent = &entityInfo;

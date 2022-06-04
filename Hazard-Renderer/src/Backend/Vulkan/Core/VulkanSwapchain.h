@@ -3,29 +3,35 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_VULKAN
 
+#include "Backend/Core/Swapchain.h"
 #include "VulkanDevice.h"
 #include "VulkanAllocator.h"
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan
 {
-	class VulkanSwapchain : public RefCount {
+	class VulkanSwapchain : public Swapchain {
 	public:
-		VulkanSwapchain();
+		VulkanSwapchain(FrameBufferCreateInfo* targetInfo);
 		virtual ~VulkanSwapchain();
 
-		void Create(uint32_t width, uint32_t height, bool vSync);
-		void Resize(uint32_t width, uint32_t height);
+		void Create(uint32_t width, uint32_t height, bool vSync) override;
+		void Resize(uint32_t width, uint32_t height) override;
 
-		void BeginFrame();
-		void Present();
+		void BeginFrame() override;
+		void Present() override;
 
 		uint32_t GetImageCount() const { return m_ImageCount; }
 
-		uint32_t GetWidth() const { return m_Width; }
-		uint32_t GetHeight() const { return m_Height; }
+		uint32_t GetWidth() const override { return m_Width; }
+		uint32_t GetHeight() const override { return m_Height; }
 
-		VkRenderPass GetRenderPass() const { return m_RenderPass; }
+		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; };
+		Ref<RenderPass> GetRenderPass() override { return m_RenderPass; };
+		Ref<FrameBuffer> GetRenderTarget() override { return m_FrameBuffer; };
+
+
+		VkRenderPass GetVulkanRenderPass() const { return m_VulkanRenderPass; }
 		VkFramebuffer GetCurrentFrameBuffer() const { return GetFrameBuffer(m_CurrentImageIndex); }
 		VkCommandBuffer GetCurrentDrawCommandBuffer() const { return GetCommandBuffer(m_CurrentBufferIndex); }
 
@@ -49,11 +55,17 @@ namespace HazardRenderer::Vulkan
 
 		void CreateFramebuffer();
 		void CreateDepthStencil();
+		void CreateResources(FrameBufferCreateInfo* targetInfo);
 
 	private:
 
-		VkInstance m_Instance;
+		VkInstance m_Instance;	
 		bool m_VSync = false;
+
+		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		Ref<RenderPass> m_RenderPass;
+		Ref<FrameBuffer> m_FrameBuffer;
+		FrameBufferCreateInfo* m_FrameBufferCreateInfo = nullptr;
 
 		VkFormat m_ColorFormat;
 		VkColorSpaceKHR m_ColorSpace;
@@ -88,7 +100,7 @@ namespace HazardRenderer::Vulkan
 
 		std::vector<VkFence> m_WaitFences;
 
-		VkRenderPass m_RenderPass;
+		VkRenderPass m_VulkanRenderPass;
 		uint32_t m_CurrentBufferIndex = 0;
 		uint32_t m_CurrentImageIndex = 0;
 

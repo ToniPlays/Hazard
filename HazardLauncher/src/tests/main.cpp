@@ -10,7 +10,7 @@
 
 int main()
 {
-	ScriptCore::Run();
+	TriangleTest::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

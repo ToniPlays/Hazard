@@ -8,9 +8,7 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
-#include "File/File.h"
-
-using namespace HazardUtility;
+#include "File.h"
 
 namespace HazardScript 
 {

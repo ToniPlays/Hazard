@@ -204,7 +204,7 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
 		auto& offsets = m_Shader->GetDynamicOffsets();
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
 		m_Shader->Bind(commandBuffer);
@@ -216,13 +216,13 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
 	}
 	void VulkanPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
 	{
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdDraw(cmdBuffer, count, instanceCount, 0, 0);
 	}

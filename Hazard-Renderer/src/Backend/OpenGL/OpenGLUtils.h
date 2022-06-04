@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
+
 #ifdef HZR_INCLUDE_OPENGL
-#include "Backend/Core/Image.h"
+
+#include "Backend/Core/Texture/Image.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/Shader.h"
+
 #include <glad/glad.h>
 #include <shaderc/shaderc.h>
 

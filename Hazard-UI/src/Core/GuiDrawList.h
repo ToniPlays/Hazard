@@ -20,7 +20,7 @@ namespace HazardUI
 	struct GuiDrawable 
 	{
 		Anchor FinalBounds;
-		HazardUtility::Color Color;
+		Color Color;
 
 		GuiDrawable() {}
 	};
@@ -37,6 +37,6 @@ namespace HazardUI
 	};
 	struct GuiRawDrawable 
 	{
-		HazardUtility::Batch<GUIVertex> Batch;
+		Batch<GUIVertex> Batch;
 	};
 }

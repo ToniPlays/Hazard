@@ -5,7 +5,6 @@
 
 #include <glad/glad.h>
 
-using namespace HazardUtility;
 using namespace HazardRenderer;
 
 namespace TriangleTest {
@@ -31,24 +30,43 @@ namespace TriangleTest {
 				running = false;
 			}
 		};
-        
-		HazardRendererCreateInfo createInfo = {};
 
-		createInfo.Renderer = api;
-		createInfo.Width = 1280;
-		createInfo.Height = 720;
-		createInfo.VSync = true;
-		createInfo.Logging = true;
-		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
-		createInfo.AppInfo = &appInfo;
+		HazardRendererAppInfo rendererApp = {};
+		rendererApp.AppName = appInfo.AppName;
+		rendererApp.BuildVersion = "1.0.0!";
+		rendererApp.EventCallback = [&](Event& e) {
+			
+		};
+		rendererApp.MessageCallback = [](RenderMessage message) {
+			std::cout << message.Message << std::endl;
+		};
+
+
+		HazardWindowCreateInfo windowInfo = {};
+		windowInfo.Title = "HazardEditor";
+		windowInfo.FullScreen = false;
+		windowInfo.Maximized = false;
+		windowInfo.Decorated = true;
+		windowInfo.Width = 1920;
+		windowInfo.Height = 1080;
+		windowInfo.Color = Color(34, 34, 34, 255);
+
+		HazardRendererCreateInfo renderInfo = {};
+		renderInfo.pAppInfo = &rendererApp;
+		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.VSync = true;
+		renderInfo.WindowCount = 1;
+		renderInfo.pWindows = &windowInfo;
       
         
-		Window* window = Window::Create(&createInfo);
+		Window* window = Window::Create(&renderInfo);
         window->Show();
-        
+
+		//---------------
+
         std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
         
-		float vertices[] =
+		/*float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
@@ -75,18 +93,6 @@ namespace TriangleTest {
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
         
-		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.DebugName = "ScreenFBO";
-		frameBufferInfo.SwapChainTarget = true;
-		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-
-		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "ScreenTarget";
-		renderPassInfo.pTargetFrameBuffer = frameBuffer;
-
-		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
@@ -97,29 +103,25 @@ namespace TriangleTest {
 #elif HZR_PLATFORM_MACOS
         spec.ShaderPath = "res/triangleShader.metal";
 #endif
-		spec.TargetRenderPass = renderPass;
+		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
 		spec.DepthTest = false;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-
-		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::CreateFromSwapchain("Main");
+		*/
 
 		while (running)
 		{
 			window->BeginFrame();
-			cmdBuffer->Begin();
-			window->GetContext()->BeginRenderPass(cmdBuffer, renderPass);
+			//Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
-			vertexBuffer->Bind(cmdBuffer);
-			indexBuffer->Bind(cmdBuffer);
-			pipeline->Bind(cmdBuffer);
-			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+			//vertexBuffer->Bind(cmdBuffer);
+			//indexBuffer->Bind(cmdBuffer);
 
-			window->GetContext()->EndRenderPass(cmdBuffer);
-			cmdBuffer->End();
-			
+			//pipeline->Bind(cmdBuffer);
+			//pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+
 			window->Present();
 		}
          

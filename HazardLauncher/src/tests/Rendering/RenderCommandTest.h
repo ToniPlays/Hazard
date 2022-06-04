@@ -5,7 +5,6 @@
 
 #include <GLFW/glfw3.h>
 
-using namespace HazardUtility;
 using namespace HazardRenderer;
 
 namespace RenderCommandTest {
@@ -22,7 +21,8 @@ namespace RenderCommandTest {
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
 
 		Camera camera = {};
-		camera.ViewProjection = projection * view;
+		camera.SetProjection(projection);
+		camera.SetView(view);
 
 
 		std::cout << "Running RenderCommand test" << std::endl;
@@ -45,27 +45,47 @@ namespace RenderCommandTest {
 					scalar -= 25.0f;
 					glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 					glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-					camera.ViewProjection = projection * view;
+					camera.SetProjection(projection);
+					camera.SetView(view);
 				}
 				else if (k.GetKeyCode() == Key::S) {
 					scalar += 25.0f;
 					glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 					glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-					camera.ViewProjection = projection * view;
+					camera.SetProjection(projection);
+					camera.SetView(view);
 				}
 			}
 		};
 
-		HazardRendererCreateInfo createInfo = {};
-		createInfo.Renderer = api;
-		createInfo.Width = 1280;
-		createInfo.Height = 720;
-		createInfo.VSync = false;
-		createInfo.Logging = true;
-		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
-		createInfo.AppInfo = &appInfo;
+		HazardRendererAppInfo rendererApp = {};
+		rendererApp.AppName = appInfo.AppName;
+		rendererApp.BuildVersion = "1.0.0!";
+		rendererApp.EventCallback = [&](Event& e) {
 
-		Window* window = Window::Create(&createInfo);
+		};
+		rendererApp.MessageCallback = [](RenderMessage message) {
+			std::cout << message.Message << std::endl;
+		};
+
+
+		HazardWindowCreateInfo windowInfo = {};
+		windowInfo.Title = "HazardEditor";
+		windowInfo.FullScreen = false;
+		windowInfo.Maximized = false;
+		windowInfo.Decorated = true;
+		windowInfo.Width = 1920;
+		windowInfo.Height = 1080;
+		windowInfo.Color = Color(34, 34, 34, 255);
+
+		HazardRendererCreateInfo renderInfo = {};
+		renderInfo.pAppInfo = &rendererApp;
+		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.VSync = true;
+		renderInfo.WindowCount = 1;
+		renderInfo.pWindows = &windowInfo;
+
+		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
 

@@ -2,6 +2,8 @@
 #include "OpenGLContext.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Window.h"
+#include "OpenGLSwapchain.h"
+
 #include "OpenGLUtils.h"
 #include <glad/glad.h>
 
@@ -38,6 +40,9 @@ namespace HazardRenderer::OpenGL {
 			HZR_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Failed to initialize GLFW OpenGL context");
 
 			m_PhysicalDevice = new OpenGLPhysicalDevice();
+			m_Swapchain = Ref<OpenGLSwapchain>::Create(this, info->pTargetFrameBuffer);
+			m_Swapchain->Create(m_Window->GetWidth(), m_Window->GetHeight(), info->VSync);
+
 
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_DEPTH_TEST);
@@ -54,13 +59,14 @@ namespace HazardRenderer::OpenGL {
 
 		void OpenGLContext::BeginFrame()
 		{
-			glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			m_Swapchain->BeginFrame();
+			BeginRenderPass(m_Swapchain->GetSwapchainBuffer(), m_Swapchain->GetRenderPass());
 		}
 
 		void OpenGLContext::Present()
 		{
-			glfwSwapBuffers((GLFWwindow*)m_Window->GetNativeWindow());
+			EndRenderPass(m_Swapchain->GetSwapchainBuffer());
+			m_Swapchain->Present();
 		}
 
 		void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
@@ -91,13 +97,6 @@ namespace HazardRenderer::OpenGL {
 //		PhysicalDevice& OpenGLContext::GetPhysicalDevice() const
 //		{
 //			return *m_PhysicalDevice;
-//		}
-//		void OpenGLContext::SendDebugMessage(const char* message, const char* code)
-//		{
-//			if (!s_Callback) 
-//				return;
-//			ErrorData data(("[OpenGL]: " + std::string(message)).c_str(), code);
-//			s_Callback(data);
 //		}
 }
 #endif

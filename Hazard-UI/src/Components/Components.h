@@ -53,6 +53,6 @@ namespace HazardUI
 		float Height;
 
 		//Temp
-		HazardUtility::Color _color;
+		Color _color;
 	};
 }

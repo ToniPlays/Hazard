@@ -4,6 +4,9 @@
 #include "glm/glm.hpp"
 #include "Severity.h"
 #include "Event.h"
+
+#include "Backend/Core/FrameBuffer.h"
+
 #include <string>
 #include <functional>
 
@@ -56,6 +59,7 @@ namespace Hazard
 		uint32_t Height = 0;
 	};
 
+
 	struct HazardRendererCreateInfo
 	{
 		RenderAPI Renderer = RenderAPI::Auto;
@@ -66,9 +70,9 @@ namespace Hazard
 		uint32_t ImagesInFlight = 0;
 		bool Logging = true;
 		bool VSync = false;
-		
 
 		HazardRendererAppInfo* pAppInfo = nullptr;
+		HazardRenderer::FrameBufferCreateInfo* pTargetFrameBuffer = 0;
 	};
 	
 }

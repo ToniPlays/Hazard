@@ -1,6 +1,6 @@
 
 #include "Image2D.h"
-#include "GraphicsContext.h"
+#include "Backend/Core/GraphicsContext.h"
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"

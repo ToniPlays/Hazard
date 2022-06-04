@@ -116,7 +116,7 @@ namespace HazardRenderer {
 	{
 		m_Context->Present();
 
-		if (!m_WindowData.minimized) {}
+		if (!m_WindowData.Minimized) {}
 
 		glfwPollEvents();
 	}
@@ -162,7 +162,7 @@ namespace HazardRenderer {
 	
 	void WindowsWindow::SetFullscreen(bool fullscreen)
 	{
-		m_WindowData.fullscreen = fullscreen;
+		m_WindowData.Fullscreen = fullscreen;
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
@@ -250,7 +250,7 @@ namespace HazardRenderer {
 			});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			data.minimized = minimized;
+			data.Minimized = minimized;
 			});
 	}
 	WindowsWindow::~WindowsWindow()

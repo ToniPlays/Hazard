@@ -9,7 +9,6 @@
 
 #include <glad/glad.h>
 
-using namespace HazardUtility;
 using namespace HazardRenderer;
 
 namespace InstancingTest {
@@ -26,7 +25,7 @@ namespace InstancingTest {
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hello Triangle";
+		appInfo.AppName = "Hello Instancing";
 		appInfo.BuildVersion = "0.0.1a";
 		appInfo.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
@@ -38,17 +37,33 @@ namespace InstancingTest {
 			}
 		};
 
-		HazardRendererCreateInfo createInfo = {};
+		HazardRendererAppInfo rendererApp = {};
+		rendererApp.AppName = appInfo.AppName;
+		rendererApp.BuildVersion = "1.0.0!";
+		rendererApp.EventCallback = [&](Event& e) {
 
-		createInfo.Renderer = api;
-		createInfo.Width = 1280;
-		createInfo.Height = 720;
-		createInfo.VSync = false;
-		createInfo.Logging = true;
-		createInfo.Color = { 0.1f, 0.1f, 0.125f, 1.0f };
-		createInfo.AppInfo = &appInfo;
+		};
+		rendererApp.MessageCallback = [](RenderMessage message) {
+			std::cout << message.Message << std::endl;
+		};
 
-		Window* window = Window::Create(&createInfo);
+		HazardWindowCreateInfo windowInfo = {};
+		windowInfo.Title = "HazardEditor";
+		windowInfo.FullScreen = false;
+		windowInfo.Maximized = false;
+		windowInfo.Decorated = true;
+		windowInfo.Width = 1920;
+		windowInfo.Height = 1080;
+		windowInfo.Color = Color(34, 34, 34, 255);
+
+		HazardRendererCreateInfo renderInfo = {};
+		renderInfo.pAppInfo = &rendererApp;
+		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.VSync = true;
+		renderInfo.WindowCount = 1;
+		renderInfo.pWindows = &windowInfo;
+
+		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
 		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;

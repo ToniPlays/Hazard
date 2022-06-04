@@ -45,7 +45,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t framesInFlight = 2;
 
 		m_CommandBuffers.resize(framesInFlight);
-		Ref<VulkanSwapchain> swapChain = VulkanContext::GetSwapchain();
+		Ref<VulkanSwapchain> swapChain = VulkanContext::GetVulkanSwapchain();
 
 		for (uint32_t frame = 0; frame < framesInFlight; frame++) {
 			m_CommandBuffers[frame] = swapChain->GetCommandBuffer(frame);
@@ -66,7 +66,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::Begin()
 	{
 		SetState(State::Record);
-		m_FrameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		m_FrameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -82,7 +82,7 @@ namespace HazardRenderer::Vulkan
 	{
 		SetState(State::Finished);
 
-		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer commandBuffer = GetBuffer(frameIndex);
 		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer));
 	}

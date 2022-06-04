@@ -28,7 +28,7 @@ namespace HazardUI
 		
 		operator entt::entity() { return m_Handle; }
 
-		HazardUtility::Color Color;
+		Color Color;
 
 	private:
 		entt::entity m_Handle { entt::null };

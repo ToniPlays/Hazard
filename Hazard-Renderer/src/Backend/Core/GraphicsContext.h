@@ -4,6 +4,7 @@
 #include "PhysicalDevice.h"
 #include "RenderCommandBuffer.h"
 #include "Pipeline/RenderPass.h"
+#include "Swapchain.h"
 #include <functional>
 
 namespace HazardRenderer {
@@ -43,15 +44,16 @@ namespace HazardRenderer {
 		/*virtual void Close() = 0;
 
 		virtual void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) = 0;
-
+		 
 		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
-		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;*/
+		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;
+		*/
 
 		virtual PhysicalDevice& GetDevice() = 0;
+		virtual Ref<Swapchain> GetSwapchain() = 0;
 
 		static GraphicsContext* Create(WindowProps* props);
 		static RenderAPI GetRenderAPI() { return s_CurrentAPI; }
-
 
 	private:
 		static inline RenderAPI s_CurrentAPI;

@@ -4,9 +4,6 @@
 #include "Buffer.h"
 #include "Mono/Core/Mono.h"
 
-
-using namespace HazardUtility;
-
 namespace HazardScript 
 {
 	HazardScriptEngine* HazardScriptEngine::Create(HazardScriptCreateInfo* info)

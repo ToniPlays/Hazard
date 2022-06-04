@@ -59,8 +59,8 @@ namespace HazardRenderer::OpenGL
 
 		if(m_Specs.SwapChainTarget) 
 		{
-			glm::vec4 color = OpenGLContext::GetClearColor();
-			Window* window = OpenGLContext::GetWindow();
+			glm::vec4 color = OpenGLContext::GetInstance().GetClearColor();
+			Window* window = OpenGLContext::GetInstance().GetWindow();
 			glClearColor(color.r, color.g, color.b, color.a);
 			glViewport(0, 0, window->GetWidth(), window->GetHeight());
 		}
