@@ -26,10 +26,11 @@ namespace HazardRenderer
         PipelineRenderable& renderable = s_DrawList.Geometry[pipeline->GetHandle()];
         renderable.Pipeline = pipeline;
         InstancedMesh& mesh = renderable.MeshInstances[m_QuadMesh->GetHandle()];
+        mesh.InstanceCount++;
         mesh.RawMesh = m_QuadMesh;
 
         auto& data = mesh.Transforms.emplace_back();
-       
+        data.Color = color;
         data.MRow[0] = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
         data.MRow[1] = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
         data.MRow[2] = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
@@ -38,7 +39,7 @@ namespace HazardRenderer
     }
     void RenderCommand::Flush()
     {
-        s_Context->BeginRenderPass(m_CommandBuffer, s_DrawList.Settings.TargetRenderPass);
+        //s_Context->BeginRenderPass(m_CommandBuffer, s_DrawList.Settings.TargetRenderPass);
 
         for (auto& [uuid, renderable] : s_DrawList.Geometry) {
             Ref<Pipeline>& pipeline = renderable.Pipeline;
@@ -54,11 +55,11 @@ namespace HazardRenderer
                 m_InstanceBuffer->Bind(m_CommandBuffer, 1);
                 ibo->Bind(m_CommandBuffer);
 
-                m_InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(glm::vec4) * 3);
-                pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.Transforms.size());
+                m_InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(TransformData));
+                pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.InstanceCount);
             }
         }
-        s_Context->EndRenderPass(m_CommandBuffer);
+       //s_Context->EndRenderPass(m_CommandBuffer);
     }
     void RenderCommand::RegisterPipelineDependency(Ref<Pipeline> pipeline)
     {
@@ -67,16 +68,16 @@ namespace HazardRenderer
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
-        /*
 
-        uint32_t size = 1000 * 1000;
+        uint32_t size = 5000;
 
         float vertices[] =
         {
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
+            //Vec3 pos,        vec4 color
+            -0.5f, -0.5f, 0.0f,// 1.0f, 1.0f, 1.0f, 1.0f,
+             0.5f, -0.5f, 0.0f,// 1.0f, 1.0f, 1.0f, 1.0f,
+             0.5f,  0.5f, 0.0f,// 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f // 1.0f, 1.0f, 1.0f, 1.0f
         };
         uint32_t indices[] = {
             0, 1, 2,
@@ -85,7 +86,7 @@ namespace HazardRenderer
 
         BufferLayout meshLayout = {
             { "a_Position", ShaderDataType::Float3                      }, 
-            { "a_Color",    ShaderDataType::Float4                      }, 
+            { "a_Color",    ShaderDataType::Float4, false, PerInstance  }, 
             { "a_MRo0",     ShaderDataType::Float4, false, PerInstance  }, 
             { "a_MRo1",     ShaderDataType::Float4, false, PerInstance  },
             { "a_MRo2",     ShaderDataType::Float4, false, PerInstance  }     
@@ -101,7 +102,7 @@ namespace HazardRenderer
         VertexBufferCreateInfo instanceVBO = {};
         instanceVBO.DebugName = "Transforms";
         instanceVBO.IsShared = false;
-        instanceVBO.Size = sizeof(glm::vec4) * 3 * size * size;
+        instanceVBO.Size = sizeof(glm::vec4) * 4 * size * size;
 
         Ref<VertexBuffer> quadBuffer = VertexBuffer::Create(&vbo);
         m_InstanceBuffer = VertexBuffer::Create(&instanceVBO);
@@ -116,6 +117,5 @@ namespace HazardRenderer
 
         m_QuadMesh = Ref<RawMesh>::Create(quadBuffer, indexBuffer);
         m_CommandBuffer = RenderCommandBuffer::CreateFromSwapchain();
-        */
     }
 }

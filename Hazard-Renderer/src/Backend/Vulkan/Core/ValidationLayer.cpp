@@ -76,6 +76,7 @@ namespace HazardRenderer::Vulkan {
 
 		VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
 		std::vector<VkLayerProperties> layers(layerCount);
+		VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, layers.data()));
 
 		for (const char* name : validationLayers) {
 			bool layerFound = false;

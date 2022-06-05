@@ -12,11 +12,12 @@ namespace HazardRenderer::Vulkan
 {
 	class VulkanSwapchain : public Swapchain {
 	public:
-		VulkanSwapchain(FrameBufferCreateInfo* targetInfo);
+		VulkanSwapchain();
 		virtual ~VulkanSwapchain();
 
 		void Create(uint32_t width, uint32_t height, bool vSync) override;
 		void Resize(uint32_t width, uint32_t height) override;
+		void CreateResources(FrameBufferCreateInfo* targetInfo);
 
 		void BeginFrame() override;
 		void Present() override;
@@ -55,17 +56,13 @@ namespace HazardRenderer::Vulkan
 
 		void CreateFramebuffer();
 		void CreateDepthStencil();
-		void CreateResources(FrameBufferCreateInfo* targetInfo);
 
 	private:
-
-		VkInstance m_Instance;	
 		bool m_VSync = false;
 
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		Ref<RenderPass> m_RenderPass;
 		Ref<FrameBuffer> m_FrameBuffer;
-		FrameBufferCreateInfo* m_FrameBufferCreateInfo = nullptr;
 
 		VkFormat m_ColorFormat;
 		VkColorSpaceKHR m_ColorSpace;
@@ -104,7 +101,6 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_CurrentBufferIndex = 0;
 		uint32_t m_CurrentImageIndex = 0;
 
-		uint32_t m_QueueNodeIndex = UINT32_MAX;
 		uint32_t m_Width = 0, m_Height = 0;
 
 		VkSurfaceKHR m_Surface;

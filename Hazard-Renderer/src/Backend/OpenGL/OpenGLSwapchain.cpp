@@ -53,9 +53,6 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLSwapchain::BeginFrame()
 	{
-		glm::vec4 color = m_Context->GetClearColor();
-		glClearColor(color.r, color.g, color.b, color.a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGLSwapchain::Present()

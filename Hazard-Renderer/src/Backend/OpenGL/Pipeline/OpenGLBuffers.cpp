@@ -47,7 +47,6 @@ namespace HazardRenderer::OpenGL
 
 
 		glCreateVertexArrays(1, &m_VAO);
-
 		glCreateBuffers(1, &m_ID);
 		glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
 
@@ -69,7 +68,6 @@ namespace HazardRenderer::OpenGL
 			glEnableVertexArrayAttrib(m_VAO, i);
 			glVertexArrayAttribFormat(m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
 			glVertexArrayAttribBinding(m_VAO, i, element.ElementDivisor);
-			
 
 			/*
 			glVertexAttribPointer(i + offset, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),

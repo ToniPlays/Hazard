@@ -193,20 +193,20 @@ namespace HazardRenderer {
 			{
 			case GLFW_PRESS:
 			{
-				//KeyPressedEvent event(key, 0);
-				//data.EventCallback(event);
+				KeyPressedEvent event(key, 0);
+				data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				//KeyReleasedEvent event(key);
-				//data.EventCallback(event);
+				KeyReleasedEvent event(key);
+				data.EventCallback(event);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				//KeyPressedEvent event(key, 1);
-				//data.EventCallback(event);
+				KeyPressedEvent event(key, 1);
+				data.EventCallback(event);
 				break;
 			}
 			}
@@ -218,28 +218,28 @@ namespace HazardRenderer {
 			{
 			case GLFW_PRESS:
 			{
-				//MouseButtonPressedEvent event(button);
-				//data.EventCallback(event);
+				MouseButtonPressedEvent event(button);
+				data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				//MouseButtonReleasedEvent event(button);
-				//data.EventCallback(event);
+				MouseButtonReleasedEvent event(button);
+				data.EventCallback(event);
 				break;
 			}
 			}
 			});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			//MouseScrolledEvent event((float)xOffset, (float)yOffset);
-			//data.EventCallback(event);
+			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			data.EventCallback(event);
 
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			//MouseMovedEvent event((float)xPos, (float)yPos);
-			//data.EventCallback(event);
+			MouseMovedEvent event((float)xPos, (float)yPos);
+			data.EventCallback(event);
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);

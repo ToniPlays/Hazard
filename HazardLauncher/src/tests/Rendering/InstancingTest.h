@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include "GLFW/glfw3.h"
 #include <glad/glad.h>
 
 using namespace HazardRenderer;
@@ -19,9 +20,9 @@ namespace InstancingTest {
 
 	static void Run(RenderAPI api)
 	{
-		uint32_t size = 500;
+		uint32_t size = 50;
 
-		std::cout << "Running instancing test" << std::endl;
+		std::cout << "Running instancing test with " << size * size << " quads" << std::endl;
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
@@ -39,7 +40,7 @@ namespace InstancingTest {
 
 		HazardRendererAppInfo rendererApp = {};
 		rendererApp.AppName = appInfo.AppName;
-		rendererApp.BuildVersion = "1.0.0!";
+		rendererApp.BuildVersion = "1.0.0";
 		rendererApp.EventCallback = [&](Event& e) {
 
 		};
@@ -48,7 +49,7 @@ namespace InstancingTest {
 		};
 
 		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = "HazardEditor";
+		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Decorated = true;
@@ -58,29 +59,42 @@ namespace InstancingTest {
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = RenderAPI::Vulkan;
-		renderInfo.VSync = true;
+		renderInfo.Renderer = RenderAPI::OpenGL;
+		renderInfo.VSync = false;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
 
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
+		window->SetWindowTitle(window->GetWindowInfo().Title + " quads: " + std::to_string(size * size));
 
 		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
 
 		float vertices[] =
 		{
-			-0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			 0.05f, -0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			 0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			-0.05f,  0.05f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 		uint32_t indices[] = {
 			0, 1, 2,
 			2, 3, 0
 		};
 
-		BufferLayout instanceLayout = { { "a_Position", ShaderDataType::Float3 }, { "a_Color", ShaderDataType::Float4 } };
+		BufferLayout instanceLayout = {
+			{ "a_Position", ShaderDataType::Float3                      },
+			{ "a_Color",    ShaderDataType::Float4, false, PerInstance  },
+			{ "a_MRo0",     ShaderDataType::Float4, false, PerInstance  },
+			{ "a_MRo1",     ShaderDataType::Float4, false, PerInstance  },
+			{ "a_MRo2",     ShaderDataType::Float4, false, PerInstance  }
+		};
+
+		struct InstanceData {
+			glm::vec4 Color;
+			TransformData transform;
+		};
+
 		//BufferLayout perInstanceLayout = { { { "a_MRow0", ShaderDataType::Float4 }, { "a_MRow1", ShaderDataType::Float4 }, { "a_MRow2", ShaderDataType::Float4 } }, PerInstance };
 		//BufferLayout perInstanceLayout = { { { "a_Offset", ShaderDataType::Float2 } }, PerInstance };
 
@@ -96,8 +110,7 @@ namespace InstancingTest {
 		VertexBufferCreateInfo instanceVBO = {};
 		instanceVBO.DebugName = "InstanceVBO";
 		instanceVBO.Usage = BufferUsage::DynamicDraw;
-		//instanceVBO.Layout = &perInstanceLayout;
-		instanceVBO.Size = size * size * sizeof(glm::vec2);
+		instanceVBO.Size = size * size * sizeof(InstanceData);
 
 		IndexBufferCreateInfo ibo = {};
 		ibo.DebugName = "TriangleIBO";
@@ -108,56 +121,80 @@ namespace InstancingTest {
 		Ref<VertexBuffer> instanceBuffer = VertexBuffer::Create(&instanceVBO);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 
-		FrameBufferCreateInfo fboInfo = {};
-		fboInfo.DebugName = "Framebuffer";
-		fboInfo.AttachmentCount = 2;
-		fboInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-		fboInfo.SwapChainTarget = true;
-
-		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&fboInfo);
-
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "Main";
-		renderPassInfo.pTargetFrameBuffer = frameBuffer;
-		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
-
 		PipelineSpecification spec = {};
 		spec.DebugName = "InstancePipeline";
 		spec.ShaderPath = "QuadInstanced.glsl";
 		spec.DrawType = DrawType::Fill;
+		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.TargetRenderPass = renderPass;
+		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
-		Ref<RenderCommandBuffer> commandBuffer = RenderCommandBuffer::CreateFromSwapchain();
 
-		glm::vec2* transforms = new glm::vec2[size * size];
+		float scalar = 25.0f;
+		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
+		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
+
+		Camera camera = {};
+		camera.SetProjection(projection);
+		camera.SetView(view);
+
+		UniformBufferCreateInfo ubo = {};
+		ubo.Name = "Camera";
+		ubo.Binding = 0;
+		ubo.Usage = BufferUsage::DynamicDraw;
+		ubo.Size = sizeof(Camera);
+
+		Ref<UniformBuffer> uniformBuffer = UniformBuffer::Create(&ubo);
+
+		uniformBuffer->SetData(&camera.GetViewPprojection(), sizeof(Camera));
+
+		
+		InstanceData* instanceData = new InstanceData[size * size];
 
 		float halfSize = (float)size / 2.0f;
 
 		uint32_t index = 0;
+
 		for (uint32_t x = 0; x < size; x++) {
 			for (uint32_t y = 0; y < size; y++) {
-				transforms[index] = { (float)x / (float)size - 0.5f, (float)y / (float)size - 0.5f };
+				
+				InstanceData& data = instanceData[index];
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), { x - halfSize, y - halfSize, 0 });
+
+				data.Color = glm::vec4((float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f);
+
+				data.transform.MRow[0] = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
+				data.transform.MRow[1] = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
+				data.transform.MRow[2] = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
+
 				index++;
 			}
 		}
 
-		instanceBuffer->SetData(transforms, size * size * sizeof(glm::vec2));
+		instanceBuffer->SetData(instanceData, size * size * sizeof(InstanceData));
+
+		double startTime = 0;
+
+		std::string title = window->GetWindowInfo().Title;
 
 		while (running)
 		{
+			double time = glfwGetTime();
+			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime) * 1000.0f));
+			startTime = time;
+
 			window->BeginFrame();
-			window->GetContext()->BeginRenderPass(commandBuffer, renderPass);
+			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
-			quadBuffer->Bind(commandBuffer);
-			instanceBuffer->Bind(commandBuffer);
-			indexBuffer->Bind(commandBuffer);
-			pipeline->Bind(commandBuffer);
-			pipeline->DrawInstanced(commandBuffer, indexBuffer->GetCount(), size * size);
+			quadBuffer->Bind(cmdBuffer);
+			instanceBuffer->Bind(cmdBuffer, 1);
+			indexBuffer->Bind(cmdBuffer);
+			pipeline->Bind(cmdBuffer);
+			pipeline->DrawInstanced(cmdBuffer, indexBuffer->GetCount(), size * size);
 
-			window->GetContext()->EndRenderPass(commandBuffer);
 			window->Present();
 		}
 

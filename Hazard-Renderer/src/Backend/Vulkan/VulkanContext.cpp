@@ -71,8 +71,9 @@ namespace HazardRenderer::Vulkan {
 		uint32_t w = window->GetWidth();
 		uint32_t h = window->GetHeight();
 
-		m_Swapchain = Ref<VulkanSwapchain>::Create(info->pTargetFrameBuffer);
+		m_Swapchain = Ref<VulkanSwapchain>::Create();
 		m_Swapchain->Create(w, h, window->IsVSync());
+		m_Swapchain->CreateResources(info->pTargetFrameBuffer);
 	}
 
 	void VulkanContext::BeginFrame()

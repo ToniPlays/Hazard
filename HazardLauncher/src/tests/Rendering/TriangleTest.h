@@ -63,10 +63,10 @@ namespace TriangleTest {
         window->Show();
 
 		//---------------
-
+#pragma region Mesh
         std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
         
-		/*float vertices[] =
+		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
@@ -109,18 +109,18 @@ namespace TriangleTest {
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-		*/
-
+		
+#pragma endregion
 		while (running)
 		{
 			window->BeginFrame();
-			//Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
-			//vertexBuffer->Bind(cmdBuffer);
-			//indexBuffer->Bind(cmdBuffer);
+			vertexBuffer->Bind(cmdBuffer);
+			indexBuffer->Bind(cmdBuffer);
 
-			//pipeline->Bind(cmdBuffer);
-			//pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+			pipeline->Bind(cmdBuffer);
+			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
 
 			window->Present();
 		}

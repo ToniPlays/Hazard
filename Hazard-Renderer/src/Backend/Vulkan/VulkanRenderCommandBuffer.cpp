@@ -42,12 +42,13 @@ namespace HazardRenderer::Vulkan
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(std::move(name)), m_OwnedBySwapchain(swapchain)
 	{
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
-		uint32_t framesInFlight = 2;
+		uint32_t framesInFlight = VulkanContext::GetVulkanSwapchain()->GetImageCount();
 
 		m_CommandBuffers.resize(framesInFlight);
 		Ref<VulkanSwapchain> swapChain = VulkanContext::GetVulkanSwapchain();
 
-		for (uint32_t frame = 0; frame < framesInFlight; frame++) {
+		for (uint32_t frame = 0; frame < framesInFlight; frame++) 
+		{
 			m_CommandBuffers[frame] = swapChain->GetCommandBuffer(frame);
 		}
 	}
@@ -73,7 +74,7 @@ namespace HazardRenderer::Vulkan
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		beginInfo.pNext = nullptr;
 
-		VkCommandBuffer commandBuffer = GetBuffer(GetFrameIndex());
+		VkCommandBuffer commandBuffer = GetBuffer(m_FrameIndex);
 		HZR_ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer failed");
 		VK_CHECK_RESULT(vkBeginCommandBuffer(commandBuffer, &beginInfo));
 	}
@@ -84,6 +85,7 @@ namespace HazardRenderer::Vulkan
 
 		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		VkCommandBuffer commandBuffer = GetBuffer(frameIndex);
+
 		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer));
 	}
 

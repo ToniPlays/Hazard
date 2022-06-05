@@ -11,7 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-namespace Math {
+namespace Math 
+{
 	template<typename T>
 	inline static T MaxValue() {
 		return std::numeric_limits<T>::max();

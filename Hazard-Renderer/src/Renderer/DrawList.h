@@ -18,6 +18,7 @@ namespace HazardRenderer
 	};
 	struct TransformData 
 	{
+		glm::vec4 Color;
 		glm::vec4 MRow[3];
 	};
 
@@ -25,6 +26,7 @@ namespace HazardRenderer
 	{
 		Ref<RawMesh> RawMesh;
 		std::vector<TransformData> Transforms;
+		uint32_t InstanceCount = 0;
 
 		InstancedMesh() 
 		{

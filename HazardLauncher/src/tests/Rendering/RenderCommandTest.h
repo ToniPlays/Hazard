@@ -15,6 +15,8 @@ namespace RenderCommandTest {
 
 	static void Run(RenderAPI api)
 	{
+		uint32_t size = 250;
+
 		float scalar = 10.0f;
 		float aspectRatio = (float)1280 / (float)720;
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
@@ -35,42 +37,33 @@ namespace RenderCommandTest {
 			std::cout << message.Message << std::endl;
 		};
 		appInfo.EventCallback = [&](Event& e) {
-			EventDispatcher dispatcher(e);
+
 			if (e.GetEventType() == EventType::WindowClose) {
 				running = false;
 			}
-			if (e.GetEventType() == EventType::KeyPressed) {
-				KeyPressedEvent& k = (KeyPressedEvent&)e;
-				if (k.GetKeyCode() == Key::W) {
-					scalar -= 25.0f;
-					glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
-					glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-					camera.SetProjection(projection);
-					camera.SetView(view);
-				}
-				else if (k.GetKeyCode() == Key::S) {
-					scalar += 25.0f;
-					glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
-					glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-					camera.SetProjection(projection);
-					camera.SetView(view);
-				}
+			if (e.GetEventType() == EventType::MouseScrolled) {
+				MouseScrolledEvent& k = (MouseScrolledEvent&)e;
+				scalar -= k.GetYOffset() * 5.0f;
+				glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
+				glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
+				camera.SetProjection(projection);
+				camera.SetView(view);
 			}
+
 		};
 
 		HazardRendererAppInfo rendererApp = {};
 		rendererApp.AppName = appInfo.AppName;
 		rendererApp.BuildVersion = "1.0.0!";
-		rendererApp.EventCallback = [&](Event& e) {
+		rendererApp.EventCallback = appInfo.EventCallback;
 
-		};
 		rendererApp.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
 
 
 		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = "HazardEditor";
+		windowInfo.Title = "RenderCommandTest | Quads: " + std::to_string(size * size);
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Decorated = true;
@@ -80,7 +73,7 @@ namespace RenderCommandTest {
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.Renderer = api;
 		renderInfo.VSync = true;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
@@ -88,36 +81,16 @@ namespace RenderCommandTest {
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
-
-		//camera.View = view;
-		//camera.Projection = projection;
-		//camera.Position = { 0.0f, 0.0f, 0.0f };
-
-		FrameBufferCreateInfo fboInfo = {};
-		fboInfo.DebugName = "SwapchainTarget";
-		fboInfo.SwapChainTarget = true;
-		fboInfo.Attachments = { ImageFormat::RGBA, ImageFormat::Depth };
-		fboInfo.AttachmentCount = 2;
-
-		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&fboInfo);
-
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "RenderPass";
-		renderPassInfo.pTargetFrameBuffer = frameBuffer;
-
-		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
-
 		WorldSettings settings = {};
 		settings.RenderingCamera = &camera;
-		settings.TargetRenderPass = renderPass;
+		settings.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.ShaderPath = "quadInstanced.glsl";
 		spec.DrawType = DrawType::Fill;
-		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.TargetRenderPass = renderPass;
+		spec.TargetRenderPass = settings.TargetRenderPass;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
@@ -131,34 +104,27 @@ namespace RenderCommandTest {
 
 		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
 
-		double lastTime = 0;
-		double frameTime = 0;
+		RenderCommand::BeginFrame();
+		RenderCommand::BeginWorld(settings);
 
-		std::vector<glm::mat4> transforms;
-
-		for (int32_t x = -500; x < 500; x++) {
-			for (int32_t y = -500; y < 500; y++) {
-				transforms.push_back(glm::translate(glm::mat4(1.0f), { (float)x * 1.25f, (float)y * 1.25f, 0 }));
+		for (int32_t x = 0; x < size; x++) {
+			for (int32_t y = 0; y < size; y++) {
+				glm::vec4 color = { (float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f };
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), { (float)(x - size / 2.0f) * 1.0f, (float)(y - size / 2.0f) * 1.0f, 0 });
+			RenderCommand::DrawQuad(pipeline, transform, color);
 			}
 		}
 
-		glm::vec4 color = Color::White;
-		RenderCommand::BeginFrame();
-		RenderCommand::BeginWorld(settings);
-		uniformBuffer->SetData(settings.RenderingCamera, sizeof(Camera));
+		double startTime = 0;
+		std::string title = window->GetWindowInfo().Title;
 
-		for (const glm::mat4& transform : transforms)
-		{
-			RenderCommand::DrawQuad(pipeline, transform, color);
-		}
-		
 		while (running)
 		{
+			uniformBuffer->SetData(&settings.RenderingCamera->GetViewPprojection(), sizeof(Camera));
 			double time = glfwGetTime();
-
-			//Update Time
-			frameTime = time - lastTime;
-			lastTime = time;
+			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime)));
+			window->SetWindowTitle(window->GetWindowInfo().Title + " fps " + std::to_string((1.0f / (time - startTime))));
+			startTime = time;
 
 			window->BeginFrame();
 

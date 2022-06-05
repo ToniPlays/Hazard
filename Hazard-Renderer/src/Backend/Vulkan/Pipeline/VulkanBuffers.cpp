@@ -3,18 +3,17 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "../VulkanRenderCommandBuffer.h"
+#include "MathCore.h"
 
 
 namespace HazardRenderer::Vulkan
 {
 	VulkanVertexBuffer::VulkanVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-		HZR_ASSERT(info->Layout != nullptr, "Buffer layout cannot be nullptr");
-
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
-
-		m_Layout = std::move(*info->Layout);
+		if(info->Layout)
+			m_Layout = std::move(*info->Layout);
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 
 		VulkanAllocator allocator("VertexBuffer");
@@ -160,8 +159,8 @@ namespace HazardRenderer::Vulkan
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
-
-		HZR_ASSERT(m_Size >= 256, "Need a bigger buffer");
+		m_Size = Math::Max<uint32_t>(createInfo->Size, 256);
+		
 		m_Name = createInfo->Name;
 		m_LocalData.Allocate(m_Size * 32);
 		m_LocalData.ZeroInitialize();

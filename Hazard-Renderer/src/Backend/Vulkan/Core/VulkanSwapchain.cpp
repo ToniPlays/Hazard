@@ -11,10 +11,8 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanSwapchain::VulkanSwapchain(FrameBufferCreateInfo* targetInfo) 
+	VulkanSwapchain::VulkanSwapchain() 
 	{
-		if (targetInfo != nullptr)
-			memcpy(m_FrameBufferCreateInfo, targetInfo, sizeof(FrameBufferCreateInfo));
 	}
 	VulkanSwapchain::~VulkanSwapchain()
 	{
@@ -176,14 +174,19 @@ namespace HazardRenderer::Vulkan
 
 		//Create command buffers
 		{
-			VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
-			commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			commandBufferAllocateInfo.commandPool = device.GetCommandPool();
-			commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			uint32_t count = m_ImageCount;
-			commandBufferAllocateInfo.commandBufferCount = count;
-			m_CommandBuffers.resize(count);
-			VK_CHECK_RESULT(vkAllocateCommandBuffers(device.GetVulkanDevice(), &commandBufferAllocateInfo, m_CommandBuffers.data()));
+			if (m_CommandBuffers.size() == 0) {
+				VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
+				commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+				commandBufferAllocateInfo.commandPool = device.GetCommandPool();
+				commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+				commandBufferAllocateInfo.commandBufferCount = m_ImageCount;
+				m_CommandBuffers.resize(m_ImageCount);
+				VK_CHECK_RESULT(vkAllocateCommandBuffers(device.GetVulkanDevice(), &commandBufferAllocateInfo, m_CommandBuffers.data()));
+
+				for (auto& cmdBuffer : m_CommandBuffers) {
+					std::cout << cmdBuffer << std::endl;
+				}
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +220,7 @@ namespace HazardRenderer::Vulkan
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-		m_WaitFences.resize(2);
+		m_WaitFences.resize(m_ImageCount);
 		for (auto& fence : m_WaitFences)
 			VK_CHECK_RESULT(vkCreateFence(device.GetVulkanDevice(), &fenceCreateInfo, nullptr, &fence));
 
@@ -280,20 +283,19 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
 		CreateFramebuffer();
-
-		CreateResources(m_FrameBufferCreateInfo);
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)
 	{
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		device.WaitUntilIdle();
 
-		for (auto& framebuffer : m_FrameBuffers) {
+		for (auto& framebuffer : m_FrameBuffers) 
+		{
 			vkDestroyFramebuffer(device.GetVulkanDevice(), framebuffer, nullptr);
 		}
-		vkFreeCommandBuffers(device.GetVulkanDevice(), device.GetCommandPool(), m_CommandBuffers.size(), m_CommandBuffers.data());
 
 		Create(width, height, m_VSync);
+		m_FrameBuffer->Resize(width, height);
 
 		device.WaitUntilIdle();
 	}
@@ -309,7 +311,8 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Present()
 	{
-		m_RenderCommandBuffer->Submit();
+		m_RenderCommandBuffer->End();
+
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		
 		const uint64_t DEFAULT_FENCE_TIMEOUT = 100000000000;
@@ -329,7 +332,7 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkResetFences(device.GetVulkanDevice(), 1, &m_WaitFences[m_CurrentBufferIndex]));
 		VK_CHECK_RESULT(vkQueueSubmit(device.GetGraphicsQueue().Queue, 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]));
 
-		VkResult result = QueuePresent(device.GetGraphicsQueue().Queue, m_CurrentImageIndex, m_Semaphores.RenderComplete);
+		VkResult result = QueuePresent(device.GetGraphicsQueue().Queue, m_CurrentBufferIndex, m_Semaphores.RenderComplete);
 
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
 			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
@@ -338,7 +341,7 @@ namespace HazardRenderer::Vulkan
 			}
 		}
 
-		const uint32_t frameInFlight = 2;
+		const uint32_t frameInFlight = GetImageCount();
 		m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % frameInFlight;
 		VK_CHECK_RESULT(vkWaitForFences(device.GetVulkanDevice(), 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX));
 	}
