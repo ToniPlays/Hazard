@@ -6,10 +6,11 @@
 #include "Backend/Vulkan/VulkanContext.h"
 
 using namespace HazardRenderer::Vulkan;
+
 class EditorPlatformVulkan : public EditorGuiPlatform {
 public:
 
-	EditorPlatformVulkan(GLFWwindow* window, VulkanContext* context);
+	EditorPlatformVulkan(HazardRenderer::Window& window);
 	~EditorPlatformVulkan();
 
 	void BeginFrame() override;

@@ -11,6 +11,7 @@ namespace Hazard {
 
 		void Update();
 		void Render();
+		void PostRender();
 		void Close();
 
 		template<typename T, typename... Args>

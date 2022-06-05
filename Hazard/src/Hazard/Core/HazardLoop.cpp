@@ -25,7 +25,7 @@ namespace Hazard {
 	HazardLoop::~HazardLoop()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-		std::cout << std::endl;
+
 		HZR_CORE_WARN("Shutting down");
 		//AssetManager::Shutdown();
 		m_Application->Close();
@@ -40,6 +40,7 @@ namespace Hazard {
 		{
 			//Preinit application to get application stack
 			m_Application->PreInit();
+			m_Application->Init();
 		}
 		catch (HazardRuntimeError& error) {
 			std::cout << error.what() << std::endl;
@@ -70,10 +71,10 @@ namespace Hazard {
 		m_ModuleHandler->Update();
 		//Render
 		m_ModuleHandler->Render();
+		m_ModuleHandler->PostRender();
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{
-		
 		EventDispatcher dispatcher(e);
 		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;

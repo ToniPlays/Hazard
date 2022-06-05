@@ -3,6 +3,7 @@
 #include "HazardEditor.h"
 #include "Editor/EditorCamera.h"
 #include "HazardRenderer.h"
+#include "GUIManager.h"
 
 using namespace Hazard;
 
@@ -48,7 +49,7 @@ void EditorApplication::PreInit()
 
 	HazardRendererCreateInfo renderInfo = {};
 	renderInfo.pAppInfo = &rendererApp;
-	renderInfo.Renderer = RenderAPI::Vulkan;
+	renderInfo.Renderer = RenderAPI::OpenGL;
 	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
@@ -86,6 +87,7 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init()
 {
+	PushModule<GUIManager>();
 /*
 #ifdef HZR_PLATFORM_WINDOWS
 

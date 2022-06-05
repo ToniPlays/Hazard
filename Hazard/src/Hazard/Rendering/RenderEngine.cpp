@@ -13,6 +13,11 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		m_Window->BeginFrame();
+
+		
+	}
+	void RenderEngine::PostRender() 
+	{
 		m_Window->Present();
 	}
 }

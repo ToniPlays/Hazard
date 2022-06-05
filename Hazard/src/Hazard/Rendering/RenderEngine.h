@@ -13,6 +13,9 @@ namespace Hazard
 		~RenderEngine() = default;
 
 		void Render() override;
+		void PostRender() override;
+
+		HazardRenderer::Window& GetWindow() { return *m_Window; }
 
 	private:
 		HazardRenderer::Window* m_Window;

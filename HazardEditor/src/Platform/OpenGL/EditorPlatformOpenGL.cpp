@@ -4,9 +4,9 @@
 #include "Platform/OpenGL/imgui_impl_opengl3.h"
 #include "Platform/GLFW/imgui_impl_glfw.h"
 
-EditorPlatformOpenGL::EditorPlatformOpenGL(GLFWwindow* window)
+EditorPlatformOpenGL::EditorPlatformOpenGL(HazardRenderer::Window& window)
 {
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 }
 

@@ -15,7 +15,7 @@ namespace RenderCommandTest {
 
 	static void Run(RenderAPI api)
 	{
-		uint32_t size = 250;
+		uint32_t size = 10;
 
 		float scalar = 10.0f;
 		float aspectRatio = (float)1280 / (float)720;
@@ -111,7 +111,7 @@ namespace RenderCommandTest {
 			for (int32_t y = 0; y < size; y++) {
 				glm::vec4 color = { (float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f };
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), { (float)(x - size / 2.0f) * 1.0f, (float)(y - size / 2.0f) * 1.0f, 0 });
-			RenderCommand::DrawQuad(pipeline, transform, color);
+				RenderCommand::DrawQuad(pipeline, transform, color);
 			}
 		}
 

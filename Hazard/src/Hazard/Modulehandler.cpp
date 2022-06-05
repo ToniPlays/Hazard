@@ -28,6 +28,13 @@ namespace Hazard {
 			if (m->GetActive())
 				m->Render();
 	}
+	void ModuleHandler::PostRender()
+	{
+		HZR_PROFILE_FUNCTION();
+		for (Module* m : m_Modules)
+			if (m->GetActive())
+				m->PostRender();
+	}
 	void ModuleHandler::Close()
 	{
 		for (size_t i = m_Modules.size() - 1; i > 0; i--)

@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Hazard.h"
-using namespace Hazard;
-
 class EditorGuiPlatform {
 
 public:

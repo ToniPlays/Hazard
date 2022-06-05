@@ -6,6 +6,8 @@
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
 #include "Hazard/Core/CommandLineArgs.h"
+#include "Hazard/Module.h"
+
 
 #include "Hazard/Assets/AssetManager.h"
 

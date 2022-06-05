@@ -13,7 +13,6 @@ namespace Hazard
 			for (int i = 1; i < count; i++) {
 				ss << values[i] << " ";
 			}
-			std::cout << ss.str() << std::endl;
 			
 			std::vector<std::string> args = StringUtil::SplitString(ss.str(), '-');
 			for (auto& arg : args) {

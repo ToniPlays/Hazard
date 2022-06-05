@@ -99,6 +99,8 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\GUIManager.h" />
+    <ClInclude Include="src\Core\GUIRenderable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -131,5 +133,6 @@
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\GUIManager.cpp" />
   </ItemGroup>
 </Project>

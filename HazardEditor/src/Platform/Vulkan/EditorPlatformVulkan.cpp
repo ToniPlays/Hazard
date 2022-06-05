@@ -6,7 +6,7 @@
 
 static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
-EditorPlatformVulkan::EditorPlatformVulkan(GLFWwindow* window, VulkanContext* context)
+EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
 	/*
 	this->m_Context = context;

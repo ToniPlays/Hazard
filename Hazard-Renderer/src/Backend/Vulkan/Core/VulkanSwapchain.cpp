@@ -182,10 +182,6 @@ namespace HazardRenderer::Vulkan
 				commandBufferAllocateInfo.commandBufferCount = m_ImageCount;
 				m_CommandBuffers.resize(m_ImageCount);
 				VK_CHECK_RESULT(vkAllocateCommandBuffers(device.GetVulkanDevice(), &commandBufferAllocateInfo, m_CommandBuffers.data()));
-
-				for (auto& cmdBuffer : m_CommandBuffers) {
-					std::cout << cmdBuffer << std::endl;
-				}
 			}
 		}
 
