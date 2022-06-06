@@ -178,26 +178,41 @@ namespace HazardRenderer::Vulkan
 
 		return vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_Layout);
 	}
-	VkVertexInputBindingDescription VulkanShader::GetBindingDescriptions()
+	std::vector<VkVertexInputBindingDescription> VulkanShader::GetBindingDescriptions(BufferLayout* layout)
 	{
-		VkVertexInputBindingDescription description;
-		description.binding = 0;
-		description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-		description.stride = m_ShaderData.Stages[ShaderType::Vertex].Stride;
-		return description;
+		std::vector<VkVertexInputBindingDescription> descriptions;
+
+		for (size_t i = 0; i < 2; i++) {
+			uint32_t stride = layout->GetBufferStride(i);
+			if (stride == 0) continue;
+
+			auto& description = descriptions.emplace_back();
+
+			description.binding = i;
+			description.inputRate = i == 0 ? VK_VERTEX_INPUT_RATE_VERTEX : VK_VERTEX_INPUT_RATE_INSTANCE;
+			description.stride = stride;
+		}
+
+		return descriptions;
 	}
-	std::vector<VkVertexInputAttributeDescription> VulkanShader::GetAttriDescriptions()
+	std::vector<VkVertexInputAttributeDescription> VulkanShader::GetAttriDescriptions(BufferLayout* layout)
 	{
 		auto& data = m_ShaderData.Stages[ShaderType::Vertex].Inputs;
 		std::vector<VkVertexInputAttributeDescription> descriptions(data.size());
+		std::vector<uint32_t> offsets(2);
 
 		for (uint32_t i = 0; i < data.size(); i++) {
+
+			auto& element = layout->GetElements()[i];
+
 			auto& input = data[i];
 			descriptions[i] = {};
-			descriptions[i].binding = 0;
+			descriptions[i].binding = element.ElementDivisor;
 			descriptions[i].location = input.Location;
 			descriptions[i].format = VKUtils::ShaderDataTypeToVkFormat(input.Type);
-			descriptions[i].offset = input.Offset;
+			descriptions[i].offset = offsets[element.ElementDivisor];
+
+			offsets[element.ElementDivisor] += element.Size;
 		}
 		return descriptions;
 	}
@@ -350,17 +365,17 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::UpdateBufferDescriptor(Ref<VulkanUniformBuffer> buffer, uint32_t index)
 	{
 		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
-		Ref<VulkanUniformBuffer> buf = buffer.As<VulkanUniformBuffer>();
+		Ref<VulkanUniformBuffer> ubo = buffer.As<VulkanUniformBuffer>();
 
 		VkDescriptorBufferInfo descriptorBufferInfo = {};
-		descriptorBufferInfo.buffer = buf->GetBuffer();
+		descriptorBufferInfo.buffer = ubo->GetBuffer();
 		descriptorBufferInfo.offset = 0;
-		descriptorBufferInfo.range = buf->GetSize();
+		descriptorBufferInfo.range = ubo->GetSize();
 
 		VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrite.dstSet = m_DescriptorSets[index];
-		descriptorWrite.dstBinding = buf->GetBinding();
+		descriptorWrite.dstBinding = ubo->GetBinding();
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 		descriptorWrite.descriptorCount = 1;

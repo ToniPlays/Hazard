@@ -30,7 +30,7 @@ namespace TexturedQuad {
 		};
 
 		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = "HazardEditor";
+		windowInfo.Title = "Textured quad " + RenderAPIToString(api);
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Decorated = true;
@@ -40,7 +40,7 @@ namespace TexturedQuad {
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &appInfo;
-		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.Renderer = api;
 		renderInfo.VSync = true;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
@@ -81,46 +81,28 @@ namespace TexturedQuad {
 		ibo.Data = indices;
 
 
-		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.DebugName = "ScreenFBO";
-		frameBufferInfo.SwapChainTarget = true;
-		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-
-		Ref<FrameBuffer> frameBuffer = FrameBuffer::Create(&frameBufferInfo);
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "ScreenTarget";
-		renderPassInfo.pTargetFrameBuffer = frameBuffer;
-
-		Ref<RenderPass> renderPass = RenderPass::Create(&renderPassInfo);
-
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
 		spec.ShaderPath = "triangleShader.glsl";
-		spec.TargetRenderPass = renderPass;
+		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
+		spec.pBufferLayout = &layout;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
-		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::CreateFromSwapchain("Main");
-
 		while (running)
 		{
 			window->BeginFrame();
 
-			cmdBuffer->Begin();
-			window->GetContext()->BeginRenderPass(cmdBuffer, renderPass);
+			auto& cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			vertexBuffer->Bind(cmdBuffer);
 			indexBuffer->Bind(cmdBuffer);
 			pipeline->Bind(cmdBuffer);
 			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
-
-			window->GetContext()->EndRenderPass(cmdBuffer);
-			cmdBuffer->End();
 
 			window->Present();
 		}

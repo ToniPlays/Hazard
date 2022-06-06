@@ -7,6 +7,13 @@
 
 namespace HazardRenderer 
 {
+	struct RenderCommandResources {
+		Ref<RawMesh> QuadMesh;
+		Ref<VertexBuffer> QuadBuffer;
+		Ref<IndexBuffer> QuadIndexBuffer;
+		Ref<VertexBuffer> InstanceBuffer;
+	};
+
 	class RenderCommand 
 	{
 		friend class WindowsWindow;
@@ -20,14 +27,14 @@ namespace HazardRenderer
 		static void Flush();
 		static void RegisterPipelineDependency(Ref<Pipeline> pipeline);
 		static const DrawList GetDrawList() { return s_DrawList; }
+		static const RenderCommandResources& GetResources() { return s_Resources; };
 
 	private:
 		static void Init(Window* window);
 
 	private:
 		inline static GraphicsContext* s_Context = nullptr;
-		inline static Ref<RawMesh> m_QuadMesh;
-		inline static Ref<VertexBuffer> m_InstanceBuffer;
+		inline static RenderCommandResources s_Resources;
 		inline static DrawList s_DrawList;
 		inline static Ref<RenderCommandBuffer> m_CommandBuffer;
 	};

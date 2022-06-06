@@ -14,7 +14,7 @@ namespace HazardRenderer::Vulkan
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs)
 	{
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
-
+		HZR_ASSERT(specs->pBufferLayout, "Cannot use pipeline without input layout");
 		if (m_Specs.ShaderPath != specs->ShaderPath)
 			m_Shader = Shader::Create(specs->ShaderPath).As<VulkanShader>();
 
@@ -56,8 +56,8 @@ namespace HazardRenderer::Vulkan
 
 		auto& shaderData = m_Shader->GetShaderData();
 
-		VkVertexInputBindingDescription inputBindings = m_Shader->GetBindingDescriptions();
-		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions();
+		std::vector<VkVertexInputBindingDescription> inputBindings = m_Shader->GetBindingDescriptions(m_Specs.pBufferLayout);
+		std::vector<VkVertexInputAttributeDescription> inputAttribs = m_Shader->GetAttriDescriptions(m_Specs.pBufferLayout);
 
 		m_UniformDescriptorLayout = m_Shader->GetDescriptorLayout();
 
@@ -75,9 +75,10 @@ namespace HazardRenderer::Vulkan
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
 		//If vertex shader has no inputs
-		if (shaderData.Stages.at(ShaderType::Vertex).Inputs.size() != 0) {
-			vertexInputInfo.vertexBindingDescriptionCount = 1;
-			vertexInputInfo.pVertexBindingDescriptions = &inputBindings;
+		if (shaderData.Stages.at(ShaderType::Vertex).Inputs.size() != 0) 
+		{
+			vertexInputInfo.vertexBindingDescriptionCount = inputBindings.size();
+			vertexInputInfo.pVertexBindingDescriptions = inputBindings.data();
 			vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(inputAttribs.size());
 			vertexInputInfo.pVertexAttributeDescriptions = inputAttribs.data();
 		}
@@ -224,11 +225,13 @@ namespace HazardRenderer::Vulkan
 	{
 		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
 		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDraw(cmdBuffer, count, instanceCount, 0, 0);
+		vkCmdDrawIndexed(cmdBuffer, count, instanceCount, 0, 0, 0);
 	}
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		DrawInstanced(commandBuffer, count, 1);
+		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
+		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+		vkCmdDraw(cmdBuffer, count, 0, 0, 0);
 	}
 	void VulkanPipeline::Destroy()
 	{

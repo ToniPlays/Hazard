@@ -10,7 +10,7 @@
 
 int main()
 {
-	RenderCommandTest::Run(RenderAPI::OpenGL);
+	InstancingTest::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

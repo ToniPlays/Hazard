@@ -20,7 +20,7 @@ namespace InstancingTest {
 
 	static void Run(RenderAPI api)
 	{
-		uint32_t size = 50;
+		uint32_t size = 5;
 
 		std::cout << "Running instancing test with " << size * size << " quads" << std::endl;
 		static bool running = true;
@@ -59,7 +59,7 @@ namespace InstancingTest {
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = RenderAPI::OpenGL;
+		renderInfo.Renderer = api;
 		renderInfo.VSync = false;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
@@ -91,12 +91,8 @@ namespace InstancingTest {
 		};
 
 		struct InstanceData {
-			glm::vec4 Color;
 			TransformData transform;
 		};
-
-		//BufferLayout perInstanceLayout = { { { "a_MRow0", ShaderDataType::Float4 }, { "a_MRow1", ShaderDataType::Float4 }, { "a_MRow2", ShaderDataType::Float4 } }, PerInstance };
-		//BufferLayout perInstanceLayout = { { { "a_Offset", ShaderDataType::Float2 } }, PerInstance };
 
 		VertexBufferCreateInfo vbo = {};
 		vbo.DebugName = "InstancedQuad";
@@ -128,11 +124,12 @@ namespace InstancingTest {
 		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
+		spec.pBufferLayout = &instanceLayout;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
 
-		float scalar = 25.0f;
+		float scalar = 10.0f;
 		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
@@ -141,17 +138,7 @@ namespace InstancingTest {
 		camera.SetProjection(projection);
 		camera.SetView(view);
 
-		UniformBufferCreateInfo ubo = {};
-		ubo.Name = "Camera";
-		ubo.Binding = 0;
-		ubo.Usage = BufferUsage::DynamicDraw;
-		ubo.Size = sizeof(Camera);
 
-		Ref<UniformBuffer> uniformBuffer = UniformBuffer::Create(&ubo);
-
-		uniformBuffer->SetData(&camera.GetViewPprojection(), sizeof(Camera));
-
-		
 		InstanceData* instanceData = new InstanceData[size * size];
 
 		float halfSize = (float)size / 2.0f;
@@ -160,11 +147,11 @@ namespace InstancingTest {
 
 		for (uint32_t x = 0; x < size; x++) {
 			for (uint32_t y = 0; y < size; y++) {
-				
+
 				InstanceData& data = instanceData[index];
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), { x - halfSize, y - halfSize, 0 });
 
-				data.Color = glm::vec4((float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f);
+				data.transform.Color = glm::vec4((float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f);
 
 				data.transform.MRow[0] = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
 				data.transform.MRow[1] = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
@@ -179,15 +166,17 @@ namespace InstancingTest {
 		double startTime = 0;
 
 		std::string title = window->GetWindowInfo().Title;
+		pipeline->GetShader()->SetUniformBuffer("Camera", &camera.GetViewPprojection(), sizeof(Camera));
 
 		while (running)
 		{
+			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+
 			double time = glfwGetTime();
 			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime) * 1000.0f));
 			startTime = time;
 
 			window->BeginFrame();
-			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			quadBuffer->Bind(cmdBuffer);
 			instanceBuffer->Bind(cmdBuffer, 1);

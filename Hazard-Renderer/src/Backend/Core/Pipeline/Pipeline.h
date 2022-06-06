@@ -15,6 +15,7 @@ namespace HazardRenderer
 	{
 		std::string DebugName;
 		std::string ShaderPath;
+		BufferLayout* pBufferLayout;
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType = DrawType::Fill;
 		CullMode CullMode = CullMode::BackFace;

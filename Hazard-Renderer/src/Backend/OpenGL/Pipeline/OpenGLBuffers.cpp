@@ -33,8 +33,9 @@ namespace HazardRenderer::OpenGL
 
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
+
 		if (info->Layout != nullptr)
-			m_Layout = std::move(*info->Layout);
+			m_Layout = *info->Layout;
 
 		uint32_t offset = 0;
 

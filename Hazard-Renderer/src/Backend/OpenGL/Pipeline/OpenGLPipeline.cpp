@@ -9,6 +9,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLPipeline::OpenGLPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
+		HZR_ASSERT(specs->pBufferLayout, "Cannot use pipeline without input layout");
 		m_Shader = Shader::Create(specs->ShaderPath);
 		Invalidate();
 	}

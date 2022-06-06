@@ -26,8 +26,8 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorSetLayout GetDescriptorLayout() { return m_Layout; }
 		std::unordered_map<uint32_t, Ref<UniformBuffer>> GetUniformBuffers() { return m_UniformBuffers; }
 
-		VkVertexInputBindingDescription GetBindingDescriptions();
-		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions();
+		std::vector<VkVertexInputBindingDescription> GetBindingDescriptions(BufferLayout* layout);
+		std::vector<VkVertexInputAttributeDescription> GetAttriDescriptions(BufferLayout* layout);
 
 		const ShaderData& GetShaderData() override { return m_ShaderData; };
 		VkDescriptorSet* GetDescriptorSet() { return &m_DescriptorSets[0]; }

@@ -53,7 +53,7 @@ namespace TriangleTest {
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = RenderAPI::Vulkan;
+		renderInfo.Renderer = api;
 		renderInfo.VSync = true;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
@@ -105,6 +105,7 @@ namespace TriangleTest {
 #endif
 		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
 		spec.DepthTest = false;
+		spec.pBufferLayout = &layout;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
         Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);

@@ -25,9 +25,9 @@ namespace HazardRenderer
     {
         PipelineRenderable& renderable = s_DrawList.Geometry[pipeline->GetHandle()];
         renderable.Pipeline = pipeline;
-        InstancedMesh& mesh = renderable.MeshInstances[m_QuadMesh->GetHandle()];
+        InstancedMesh& mesh = renderable.MeshInstances[s_Resources.QuadMesh->GetHandle()];
         mesh.InstanceCount++;
-        mesh.RawMesh = m_QuadMesh;
+        mesh.RawMesh = s_Resources.QuadMesh;
 
         auto& data = mesh.Transforms.emplace_back();
         data.Color = color;
@@ -51,11 +51,11 @@ namespace HazardRenderer
                 Ref<VertexBuffer>& buffer = rawMesh.RawMesh->GetVertexBuffer();
                 Ref<IndexBuffer>& ibo = rawMesh.RawMesh->GetIndexBuffer();
 
-                buffer->Bind(m_CommandBuffer, 0);
-                m_InstanceBuffer->Bind(m_CommandBuffer, 1);
                 ibo->Bind(m_CommandBuffer);
+                buffer->Bind(m_CommandBuffer, 0);
+                s_Resources.InstanceBuffer->Bind(m_CommandBuffer, 1);
 
-                m_InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(TransformData));
+                s_Resources.InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(TransformData));
                 pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.InstanceCount);
             }
         }
@@ -68,8 +68,8 @@ namespace HazardRenderer
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
-
-        uint32_t size = 5000;
+        return;
+        uint32_t size = 500;
 
         float vertices[] =
         {
@@ -104,8 +104,8 @@ namespace HazardRenderer
         instanceVBO.IsShared = false;
         instanceVBO.Size = sizeof(glm::vec4) * 4 * size * size;
 
-        Ref<VertexBuffer> quadBuffer = VertexBuffer::Create(&vbo);
-        m_InstanceBuffer = VertexBuffer::Create(&instanceVBO);
+        s_Resources.QuadBuffer = VertexBuffer::Create(&vbo);
+        s_Resources.InstanceBuffer = VertexBuffer::Create(&instanceVBO);
 
         IndexBufferCreateInfo ibo = {};
         ibo.DebugName = "TriangleIBO";
@@ -113,9 +113,9 @@ namespace HazardRenderer
         ibo.Size = sizeof(indices);
         ibo.Data = indices;
 
-        Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+        s_Resources.QuadIndexBuffer = IndexBuffer::Create(&ibo);
 
-        m_QuadMesh = Ref<RawMesh>::Create(quadBuffer, indexBuffer);
-        m_CommandBuffer = RenderCommandBuffer::CreateFromSwapchain();
+        s_Resources.QuadMesh = Ref<RawMesh>::Create(s_Resources.QuadBuffer, s_Resources.QuadIndexBuffer);
+        m_CommandBuffer = s_Context->GetSwapchain()->GetSwapchainBuffer();
     }
 }

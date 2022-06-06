@@ -85,12 +85,15 @@ namespace RenderCommandTest {
 		settings.RenderingCamera = &camera;
 		settings.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
 
+		BufferLayout layout = RenderCommand::GetResources().QuadBuffer->GetLayout();
+
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.ShaderPath = "quadInstanced.glsl";
 		spec.DrawType = DrawType::Fill;
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.TargetRenderPass = settings.TargetRenderPass;
+		spec.pBufferLayout = &layout;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
