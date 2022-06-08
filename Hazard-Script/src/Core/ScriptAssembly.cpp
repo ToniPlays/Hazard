@@ -21,6 +21,8 @@ namespace HazardScript
 
 		if(registerScripts)
 			LoadScripts();
+
+		return true;
 	}
 	MonoImage* ScriptAssembly::GetImage()
 	{

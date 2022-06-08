@@ -70,6 +70,7 @@ namespace HazardRenderer::Vulkan
 
 		VulkanAllocator allocator("VertexBuffer");
 		allocator.DestroyBuffer(m_Buffer, m_Allocation);
+
 	}
 	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{

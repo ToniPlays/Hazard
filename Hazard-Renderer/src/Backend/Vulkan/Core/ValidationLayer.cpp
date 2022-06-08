@@ -10,7 +10,7 @@
 
 namespace HazardRenderer::Vulkan {
 
-	VkDebugUtilsMessengerEXT ValidationLayer::debugMessenger;
+	VkDebugUtilsMessengerEXT ValidationLayer::s_DebugMessenger;
 
 	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
 		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
@@ -67,7 +67,7 @@ namespace HazardRenderer::Vulkan {
 
 		Window::SendDebugMessage({ Severity::Info, "Vulkan debugger enabled" });
 
-		VkResult result = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger);
+		VkResult result = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &s_DebugMessenger);
 		return result == VK_SUCCESS;
 	}
 	bool ValidationLayer::IsValidationSupported()
@@ -90,6 +90,11 @@ namespace HazardRenderer::Vulkan {
 				return false;
 		}
 		return true;
+	}
+	void ValidationLayer::Close()
+	{
+		VkInstance instance = VulkanContext::GetVulkanInstance();
+		//vkDestroyDebugUtilsMessengerEXT(instance, s_DebugMessenger, nullptr);
 	}
 	void ValidationLayer::GetDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 	{

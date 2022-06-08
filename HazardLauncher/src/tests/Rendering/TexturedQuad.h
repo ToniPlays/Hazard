@@ -86,7 +86,7 @@ namespace TexturedQuad {
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
 		spec.ShaderPath = "triangleShader.glsl";
-		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
+		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
 		spec.pBufferLayout = &layout;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);

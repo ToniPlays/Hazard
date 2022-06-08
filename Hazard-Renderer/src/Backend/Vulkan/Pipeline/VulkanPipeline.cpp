@@ -25,10 +25,13 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanPipeline::~VulkanPipeline()
 	{
-		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
-		vkDestroyDescriptorSetLayout(device, m_UniformDescriptorLayout, nullptr);
-		vkDestroyPipeline(device, m_Pipeline, nullptr);
-		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		auto& device = VulkanContext::GetPhysicalDevice();
+		device.WaitUntilIdle();
+
+		m_Shader.Reset();
+
+		vkDestroyPipeline(device.GetVulkanDevice(), m_Pipeline, nullptr);
+		vkDestroyPipelineLayout(device.GetVulkanDevice(), m_PipelineLayout, nullptr);
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
@@ -136,9 +139,9 @@ namespace HazardRenderer::Vulkan
 		multisampling.sampleShadingEnable = VK_FALSE;
 		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
-		uint32_t attachmentCount = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer->GetColorAttachmentCount();
+		uint32_t attachmentCount = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer->GetColorAttachmentCount();
 
-		Ref<VulkanFrameBuffer> frameBuffer = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer;
+		Ref<VulkanFrameBuffer> frameBuffer = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer;
 
 		std::vector<VkPipelineColorBlendAttachmentState> attachments(attachmentCount);
 		uint32_t index = 0;
@@ -192,7 +195,7 @@ namespace HazardRenderer::Vulkan
 		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.renderPass = m_Specs.TargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
+		pipelineInfo.renderPass = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>()->GetRenderPass();
 		pipelineInfo.subpass = 0;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 

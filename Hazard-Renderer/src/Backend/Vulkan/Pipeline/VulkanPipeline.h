@@ -34,9 +34,9 @@ namespace HazardRenderer::Vulkan
 	private:
 		PipelineSpecification m_Specs;
 
-		VkPipeline m_Pipeline = nullptr;
-		VkPipelineLayout m_PipelineLayout = nullptr;
-		VkDescriptorSetLayout m_UniformDescriptorLayout = nullptr;
+		VkPipeline m_Pipeline = VK_NULL_HANDLE;
+		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+		VkDescriptorSetLayout m_UniformDescriptorLayout = VK_NULL_HANDLE;
 
 		Ref<VulkanShader> m_Shader;
 	};

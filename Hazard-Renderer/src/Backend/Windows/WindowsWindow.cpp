@@ -255,9 +255,7 @@ namespace HazardRenderer {
 	}
 	WindowsWindow::~WindowsWindow()
 	{
-		Close();
-		delete m_Context;
-		glfwTerminate();
+		
 	}
 	void WindowsWindow::Show() const
 	{
@@ -269,8 +267,9 @@ namespace HazardRenderer {
 	}
 	void WindowsWindow::Close()
 	{
-		//m_Context->Close();
+		delete m_Context;
 		glfwDestroyWindow(m_Window);
+		glfwTerminate();
 	}
 }
 #endif

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <assert.h>
 
 class RefCount {
 public:
 	RefCount() : m_RefCount(0) {};
+	virtual ~RefCount() = default;
 
 	void IncRefCount() const {
 		m_RefCount++;

@@ -25,10 +25,12 @@ namespace HazardRenderer::Vulkan {
 		m_Device->WaitUntilIdle();
 
 		m_Swapchain.Reset();
-		m_WindowSurface.reset();
+
+		ValidationLayer::Close();
 
 		m_Device.reset();
-		VulkanAllocator::Shutdown();
+		m_WindowSurface.reset();
+		//VulkanAllocator::Shutdown();
 
 		vkDestroyInstance(m_Instance, nullptr);
 	}

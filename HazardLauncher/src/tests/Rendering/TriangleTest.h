@@ -18,6 +18,7 @@ namespace TriangleTest {
         std::cout << "Running triangle test" << std::endl;
 		static bool running = true;
 
+
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hello Triangle";
 		appInfo.BuildVersion = "0.0.1a";
@@ -34,9 +35,8 @@ namespace TriangleTest {
 		HazardRendererAppInfo rendererApp = {};
 		rendererApp.AppName = appInfo.AppName;
 		rendererApp.BuildVersion = "1.0.0!";
-		rendererApp.EventCallback = [&](Event& e) {
-			
-		};
+		rendererApp.EventCallback = appInfo.EventCallback;
+
 		rendererApp.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
@@ -103,7 +103,7 @@ namespace TriangleTest {
 #elif HZR_PLATFORM_MACOS
         spec.ShaderPath = "res/triangleShader.metal";
 #endif
-		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
+		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
 		spec.DepthTest = false;
 		spec.pBufferLayout = &layout;
 
@@ -112,7 +112,7 @@ namespace TriangleTest {
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		
 #pragma endregion
-		while (running)
+		while (false)
 		{
 			window->BeginFrame();
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
@@ -125,6 +125,14 @@ namespace TriangleTest {
 
 			window->Present();
 		}
+
+		pipeline.Reset();
+		indexBuffer.Reset();
+		vertexBuffer.Reset();
+
+		window->Close();
+
+		delete window;
          
         std::cout << "Test closed";
 	}

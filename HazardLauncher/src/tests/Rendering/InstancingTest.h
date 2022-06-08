@@ -20,7 +20,7 @@ namespace InstancingTest {
 
 	static void Run(RenderAPI api)
 	{
-		uint32_t size = 5;
+		uint32_t size = 400;
 
 		std::cout << "Running instancing test with " << size * size << " quads" << std::endl;
 		static bool running = true;
@@ -41,9 +41,7 @@ namespace InstancingTest {
 		HazardRendererAppInfo rendererApp = {};
 		rendererApp.AppName = appInfo.AppName;
 		rendererApp.BuildVersion = "1.0.0";
-		rendererApp.EventCallback = [&](Event& e) {
-
-		};
+		rendererApp.EventCallback = appInfo.EventCallback;
 		rendererApp.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
@@ -53,8 +51,8 @@ namespace InstancingTest {
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Decorated = true;
-		windowInfo.Width = 1920;
-		windowInfo.Height = 1080;
+		windowInfo.Width = 1280;
+		windowInfo.Height = 720;
 		windowInfo.Color = Color(34, 34, 34, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -123,13 +121,12 @@ namespace InstancingTest {
 		spec.DrawType = DrawType::Fill;
 		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.TargetRenderPass = window->GetSwapchain()->GetRenderPass();
+		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
 		spec.pBufferLayout = &instanceLayout;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
-
-		float scalar = 10.0f;
+		float scalar = 300.0f;
 		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
@@ -177,7 +174,6 @@ namespace InstancingTest {
 			startTime = time;
 
 			window->BeginFrame();
-
 			quadBuffer->Bind(cmdBuffer);
 			instanceBuffer->Bind(cmdBuffer, 1);
 			indexBuffer->Bind(cmdBuffer);
@@ -186,7 +182,7 @@ namespace InstancingTest {
 
 			window->Present();
 		}
-
+		window->Close();
 		std::cout << "Test closed";
 	}
 }

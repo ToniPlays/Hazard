@@ -58,12 +58,16 @@ namespace HazardRenderer::Vulkan
 		}
 		Resize(m_Specs.Width, m_Specs.Height, true);
 	}
+
 	VulkanFrameBuffer::~VulkanFrameBuffer()
 	{
+		std::cout << "Destroying FBO" << std::endl;
 		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
 		vkDestroyRenderPass(device, m_RenderPass, nullptr);
 		vkDestroyFramebuffer(device, m_FrameBuffer, nullptr);
+
 	}
+
 	void VulkanFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
 		if (!force && (width == m_Specs.Width && height == m_Specs.Height)) 
@@ -277,6 +281,7 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.pDependencies = dependencies.data();
 
 		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_RenderPass));
+		std::cout << m_RenderPass << std::endl;
 
 		std::vector<VkImageView> attachments(m_AttachmentImages.size());
 

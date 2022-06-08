@@ -6,6 +6,7 @@
 
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
+#include "Backend/Vulkan/VulkanFrameBuffer.h"
 
 #include <array>
 
@@ -13,28 +14,31 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanSwapchain::VulkanSwapchain() 
 	{
+
 	}
 	VulkanSwapchain::~VulkanSwapchain()
 	{
-		/*auto device = m_Device->GetDevice();
+		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
 		Cleanup();
 
 		vkDestroyImageView(device, m_DepthStencil.View, nullptr);
-		vkDestroyRenderPass(device, m_RenderPass, nullptr);
-
-		VulkanAllocator allocator("Swapchain");
-		allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
+		m_RenderPass.Reset();
+		m_FrameBuffer.Reset();
 
 		vkDestroySemaphore(device, m_Semaphores.RenderComplete, nullptr);
+		m_Semaphores.RenderComplete = VK_NULL_HANDLE;
 		vkDestroySemaphore(device, m_Semaphores.PresentComplete, nullptr);
+		m_Semaphores.PresentComplete = VK_NULL_HANDLE;
 
-		for (auto fence : m_WaitFences) {
+
+		for (auto& fence : m_WaitFences) {
 			vkDestroyFence(device, fence, nullptr);
+			fence = VK_NULL_HANDLE;
 		}
-		for (auto fb : m_FrameBuffers) {
+		for (auto& fb : m_FrameBuffers) {
 			vkDestroyFramebuffer(device, fb, nullptr);
+			fb = VK_NULL_HANDLE;
 		}
-		*/
 	}
 	void VulkanSwapchain::Create(uint32_t width, uint32_t height, bool vSync)
 	{
@@ -171,6 +175,7 @@ namespace HazardRenderer::Vulkan
 
 			VK_CHECK_RESULT(vkCreateImageView(device.GetVulkanDevice(), &colorAttachmentView, nullptr, &m_Buffers[i].View));
 		}
+		m_Images.clear();
 
 		//Create command buffers
 		{
@@ -189,37 +194,34 @@ namespace HazardRenderer::Vulkan
 		// Synchronization Objects
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		VkSemaphoreCreateInfo semaphoreCreateInfo{};
-		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-		//Create a semaphore used to synchronize image presentation
-		//Ensures that the image is displayed before we start submitting new commands to the queu
-		VK_CHECK_RESULT(vkCreateSemaphore(device.GetVulkanDevice(), &semaphoreCreateInfo, nullptr, &m_Semaphores.PresentComplete));
-		// Create a semaphore used to synchronize command submission
-		// Ensures that the image is not presented until all commands have been sumbitted and executed
-		VK_CHECK_RESULT(vkCreateSemaphore(device.GetVulkanDevice(), &semaphoreCreateInfo, nullptr, &m_Semaphores.RenderComplete));
+		if (m_Semaphores.PresentComplete == VK_NULL_HANDLE) {
+			VkSemaphoreCreateInfo semaphoreCreateInfo{};
+			semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-		//Set up submit info structure
-		//Semaphores will stay the same during application lifetime
-		//Command buffer submission info is set by each example
-		VkPipelineStageFlags pipelineStageFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
-		m_SubmitInfo = {};
-		m_SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		m_SubmitInfo.pWaitDstStageMask = &pipelineStageFlags;
-		m_SubmitInfo.waitSemaphoreCount = 1;
-		m_SubmitInfo.pWaitSemaphores = &m_Semaphores.PresentComplete;
-		m_SubmitInfo.signalSemaphoreCount = 1;
-		m_SubmitInfo.pSignalSemaphores = &m_Semaphores.RenderComplete;
+			//Create a semaphore used to synchronize image presentation
+			//Ensures that the image is displayed before we start submitting new commands to the queu
+			VK_CHECK_RESULT(vkCreateSemaphore(device.GetVulkanDevice(), &semaphoreCreateInfo, nullptr, &m_Semaphores.PresentComplete));
+			// Create a semaphore used to synchronize command submission
+			// Ensures that the image is not presented until all commands have been sumbitted and executed
+			VK_CHECK_RESULT(vkCreateSemaphore(device.GetVulkanDevice(), &semaphoreCreateInfo, nullptr, &m_Semaphores.RenderComplete));
 
-		//Wait fences to sync command buffer access
-		VkFenceCreateInfo fenceCreateInfo{};
-		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+		}
+		if (m_WaitFences.size() == 0) {
+			//Set up submit info structure
+			//Semaphores will stay the same during application lifetime
+			//Command buffer submission info is set by each example
+			VkPipelineStageFlags pipelineStageFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
-		m_WaitFences.resize(m_ImageCount);
-		for (auto& fence : m_WaitFences)
-			VK_CHECK_RESULT(vkCreateFence(device.GetVulkanDevice(), &fenceCreateInfo, nullptr, &fence));
+			//Wait fences to sync command buffer access
+			VkFenceCreateInfo fenceCreateInfo = {};
+			fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+			fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
+			m_WaitFences.resize(m_ImageCount);
+			for (auto& fence : m_WaitFences)
+				VK_CHECK_RESULT(vkCreateFence(device.GetVulkanDevice(), &fenceCreateInfo, nullptr, &fence));
+		}
 		CreateDepthStencil();
 
 		VkFormat depthFormat = device.GetDepthFormat();
@@ -277,7 +279,7 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
+		VK_CHECK_RESULT(vkCreateRe nderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
 		CreateFramebuffer();
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)
@@ -288,8 +290,10 @@ namespace HazardRenderer::Vulkan
 		for (auto& framebuffer : m_FrameBuffers) 
 		{
 			vkDestroyFramebuffer(device.GetVulkanDevice(), framebuffer, nullptr);
+			framebuffer = VK_NULL_HANDLE;
 		}
 
+		Cleanup();
 		Create(width, height, m_VSync);
 		m_FrameBuffer->Resize(width, height);
 
@@ -343,18 +347,25 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Cleanup()
 	{
-		/*m_Device->WaitUntilIdle();
-		VkDevice device = m_Device->GetDevice();
+		auto& device = VulkanContext::GetPhysicalDevice();
+		VkDevice vkDevice = device.GetVulkanDevice();
 
 		if (m_Swapchain)
 		{
 			for (uint32_t i = 0; i < m_ImageCount; i++)
-				vkDestroyImageView(device, m_Buffers[i].View, nullptr);
-			vkDestroySwapchainKHR(device, m_Swapchain, nullptr);
+				vkDestroyImageView(vkDevice, m_Buffers[i].View, nullptr);
+			vkDestroySwapchainKHR(vkDevice, m_Swapchain, nullptr);
 		}
+
+		if (m_DepthStencil.allocation) 
+		{
+			VulkanAllocator allocator("Swapchain");
+			allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
+			m_DepthStencil.allocation = nullptr;
+		}
+
 		m_Surface = VK_NULL_HANDLE;
 		m_Swapchain = VK_NULL_HANDLE;
-		*/
 	}
 	VkResult VulkanSwapchain::AcquireNextImage(VkSemaphore presentCompleteSemaphore, uint32_t* imageIndex)
 	{
@@ -418,7 +429,7 @@ namespace HazardRenderer::Vulkan
 		imageCI.tiling = VK_IMAGE_TILING_OPTIMAL;
 		imageCI.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
-		VulkanAllocator allocator("SwapChain");
+		VulkanAllocator allocator("Swapchain");
 		m_DepthStencil.allocation = allocator.AllocateImage(imageCI, VMA_MEMORY_USAGE_GPU_ONLY, m_DepthStencil.Image);
 
 		VkImageViewCreateInfo imageViewCI{};

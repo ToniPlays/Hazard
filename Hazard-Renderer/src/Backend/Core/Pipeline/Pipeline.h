@@ -22,7 +22,7 @@ namespace HazardRenderer
 		float LineWidth = 1.0f;
 		bool IsShared = true;
 		bool DepthTest = true;
-		Ref<RenderPass> TargetRenderPass = nullptr;
+		RenderPass* pTargetRenderPass = nullptr;
 	};
 
 	class Pipeline : public Asset {

@@ -86,18 +86,19 @@ namespace HazardRenderer::Vulkan {
 	}
 	VulkanDevice::~VulkanDevice()
 	{
-		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		for(auto pool : m_DescriptorPools)
 			vkDestroyDescriptorPool(m_Device, pool, nullptr);
 
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
 		vkDestroyPipelineCache(m_Device, m_PipelineCache, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
+
 	}
 	
-	void VulkanDevice::WaitUntilIdle() {
-
-		VK_CHECK_RESULT(vkDeviceWaitIdle(m_Device));
+	void VulkanDevice::WaitUntilIdle() 
+	{
+		if(m_Device != VK_NULL_HANDLE)
+			VK_CHECK_RESULT(vkDeviceWaitIdle(m_Device));
 	}
 	
 	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin)
@@ -160,6 +161,7 @@ namespace HazardRenderer::Vulkan {
 		VK_CHECK_RESULT(vkQueueSubmit(m_GraphicsQueue.Queue, 1, &submitInfo, fence));
 
 		VK_CHECK_RESULT(vkWaitForFences(m_Device, 1, &fence, VK_TRUE, TIMEOUT));
+
 		vkDestroyFence(m_Device, fence, nullptr);
 		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &buffer);
 	}

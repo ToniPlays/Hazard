@@ -17,7 +17,7 @@ namespace HazardRenderer::OpenGL
 		PipelineSpecification GetSpecifications() { return m_Specs; }
 		const PipelineSpecification GetSpecifications() const { return m_Specs; }
 		Ref<Shader> GetShader() { return m_Shader; }
-		void SetRenderPass(Ref<RenderPass> renderPass) override { m_Specs.TargetRenderPass = renderPass; }
+		void SetRenderPass(Ref<RenderPass> renderPass) override { m_Specs.pTargetRenderPass = renderPass.Raw(); }
 
 		void Invalidate() override;
 		void Bind(Ref<RenderCommandBuffer> commandBuffer) override;

@@ -92,7 +92,7 @@ namespace RenderCommandTest {
 		spec.ShaderPath = "quadInstanced.glsl";
 		spec.DrawType = DrawType::Fill;
 		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.TargetRenderPass = settings.TargetRenderPass;
+		spec.pTargetRenderPass = settings.TargetRenderPass.Raw();
 		spec.pBufferLayout = &layout;
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);

@@ -81,6 +81,7 @@ namespace HazardRenderer::Vulkan
 			VkImage Image;
 			VkImageView View;
 			VmaAllocation allocation;
+
 		} m_DepthStencil;
 
 		std::vector<VkFramebuffer> m_FrameBuffers;
@@ -89,11 +90,10 @@ namespace HazardRenderer::Vulkan
 		struct
 		{
 			// Swap chain
-			VkSemaphore PresentComplete;
+			VkSemaphore PresentComplete = VK_NULL_HANDLE;
 			// Command buffer
-			VkSemaphore RenderComplete;
+			VkSemaphore RenderComplete = VK_NULL_HANDLE;
 		} m_Semaphores;
-		VkSubmitInfo m_SubmitInfo;
 
 		std::vector<VkFence> m_WaitFences;
 
