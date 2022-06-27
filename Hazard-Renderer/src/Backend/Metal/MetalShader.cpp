@@ -2,7 +2,8 @@
 #include "MetalShader.h"
 #ifdef HZR_INCLUDE_METAL
 
-namespace HazardRenderer::Metal {
+namespace HazardRenderer::Metal
+{
     MetalShader::MetalShader(const std::string& path) {
         
     }

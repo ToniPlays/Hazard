@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#ifdef  HZR_INCLUDE_METAL
+#ifdef HZR_INCLUDE_METAL
 
-#include "Core/RenderCommandBuffer.h"
+#include "Backend/Core/RenderCommandBuffer.h"
 
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal {
     class MetalRenderCommandBuffer : public RenderCommandBuffer {
@@ -17,7 +15,7 @@ namespace HazardRenderer::Metal {
         ~MetalRenderCommandBuffer() = default;
 
         virtual uint32_t GetFrameIndex() override { return 0; };
-        virtual bool IsRecording() override { return m_CommandBuffer != nullptr; }
+        virtual bool IsRecording() override { return false; }
         MTL::CommandBuffer* GetMetalCommandBuffer() { return m_CommandBuffer; }
         MTL::RenderCommandEncoder* GetEncoder() { return m_Encoder; }
         

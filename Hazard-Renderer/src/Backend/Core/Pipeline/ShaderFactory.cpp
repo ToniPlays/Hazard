@@ -4,6 +4,7 @@
 #include "File.h"
 
 #include "Shader.h"
+#if HZR_PLATFORM_WINDOWS
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
@@ -227,3 +228,4 @@ namespace HazardRenderer
 		return shaderStage;
 	}
 }
+#endif

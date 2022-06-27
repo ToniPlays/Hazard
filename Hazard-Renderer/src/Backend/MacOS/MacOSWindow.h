@@ -3,7 +3,7 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_PLATFORM_MACOS
 
-#include "Core/Window.h"
+#include "Backend/Core/Window.h"
 #include <GLFW/glfw3.h>
 #include "Color.h"
 
@@ -27,13 +27,13 @@ namespace HazardRenderer
 
         void SetMaximized(bool maximized) override
         {
-            m_WindowData.maximized = maximized;
+            m_WindowData.Maximized = maximized;
             maximized ? glfwMaximizeWindow(m_Window) : glfwRestoreWindow(m_Window);
         }
 
         void SetMinimized(bool minimized) override
         {
-            m_WindowData.minimized = minimized;
+            m_WindowData.Minimized = minimized;
             glfwIconifyWindow(m_Window);
         }
 
@@ -53,14 +53,15 @@ namespace HazardRenderer
 
         bool IsVSync() const override { return m_WindowData.VSync; }
         bool IsFocused() const override { return m_WindowData.focus; }
-        bool IsMinimized() const override { return m_WindowData.minimized; }
-        bool IsFullscreen() const override { return m_WindowData.fullscreen; }
-        bool IsMaximized() const override { return m_WindowData.maximized; }
+        bool IsMinimized() const override { return m_WindowData.Minimized; }
+        bool IsFullscreen() const override { return m_WindowData.Fullscreen; }
+        bool IsMaximized() const override { return m_WindowData.Maximized; }
         glm::vec2 GetPosition() override;
 
         WindowProps GetWindowInfo() override { return m_WindowData; }
 
         GraphicsContext* GetContext() const override { return m_Context; };
+        Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
 
     private:
         WindowProps m_WindowData;

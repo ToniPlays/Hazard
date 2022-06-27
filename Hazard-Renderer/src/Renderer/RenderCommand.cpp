@@ -48,14 +48,14 @@ namespace HazardRenderer
             for (auto& [meshUUID, rawMesh] : renderable.MeshInstances) {
                 
                 auto& data = rawMesh.Transforms;
-                Ref<VertexBuffer>& buffer = rawMesh.RawMesh->GetVertexBuffer();
-                Ref<IndexBuffer>& ibo = rawMesh.RawMesh->GetIndexBuffer();
+                Ref<VertexBuffer> buffer = rawMesh.RawMesh->GetVertexBuffer();
+                Ref<IndexBuffer> ibo = rawMesh.RawMesh->GetIndexBuffer();
 
                 ibo->Bind(m_CommandBuffer);
                 buffer->Bind(m_CommandBuffer, 0);
                 s_Resources.InstanceBuffer->Bind(m_CommandBuffer, 1);
 
-                s_Resources.InstanceBuffer->SetData(rawMesh.Transforms.data(), rawMesh.Transforms.size() * sizeof(TransformData));
+                s_Resources.InstanceBuffer->SetData(data.data(), (uint32_t)data.size() * sizeof(TransformData));
                 pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.InstanceCount);
             }
         }
@@ -68,7 +68,7 @@ namespace HazardRenderer
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
-        return;
+#if 0
         uint32_t size = 500;
 
         float vertices[] =
@@ -117,5 +117,6 @@ namespace HazardRenderer
 
         s_Resources.QuadMesh = Ref<RawMesh>::Create(s_Resources.QuadBuffer, s_Resources.QuadIndexBuffer);
         m_CommandBuffer = s_Context->GetSwapchain()->GetSwapchainBuffer();
+#endif
     }
 }

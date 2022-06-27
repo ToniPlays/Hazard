@@ -47,8 +47,8 @@ namespace TriangleTest {
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Decorated = true;
-		windowInfo.Width = 1920;
-		windowInfo.Height = 1080;
+		windowInfo.Width = 1280;
+		windowInfo.Height = 720;
 		windowInfo.Color = Color(34, 34, 34, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -112,7 +112,7 @@ namespace TriangleTest {
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		
 #pragma endregion
-		while (false)
+		while (running)
 		{
 			window->BeginFrame();
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();

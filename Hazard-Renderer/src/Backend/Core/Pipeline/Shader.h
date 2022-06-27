@@ -120,6 +120,7 @@ namespace HazardRenderer
 
 		static void PrintReflectResults(const std::string& filename, const ShaderData& data)
 		{
+            /*
 			//HZR_CORE_TRACE("Shader {0}");
 			for (auto& [type, stage] : data.Stages) {
 			//	HZR_CORE_TRACE("  {0} stage:", Utils::ShaderTypeToString(type));
@@ -160,7 +161,8 @@ namespace HazardRenderer
 			//	HZR_CORE_TRACE("        Size = {0}", uniform.Size);
 			//	HZR_CORE_TRACE("        Usage = {0}", UsageFlagsToString(uniform.ShaderUsage));
 			}
-		}
+             */
+        }
 	}
 
 	class Shader : public RefCount {

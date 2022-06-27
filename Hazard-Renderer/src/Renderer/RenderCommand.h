@@ -17,6 +17,7 @@ namespace HazardRenderer
 	class RenderCommand 
 	{
 		friend class WindowsWindow;
+        friend class MacOSWindow;
 	public:
 		static void BeginFrame();
 		static void BeginWorld(WorldSettings& settings);

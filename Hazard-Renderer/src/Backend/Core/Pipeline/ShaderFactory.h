@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
+#ifdef HZR_PLATFORM_WINDOWS
+
 #include "Backend/Core/RenderContextCreateInfo.h"
 #include "Backend/Core/Window.h"
 
@@ -10,36 +12,35 @@
 
 namespace HazardRenderer
 {
-	enum class Optimization { None = 0, Memory, Performance };
-	enum class ShaderType;
+    enum class Optimization { None = 0, Memory, Performance };
 
-	struct ShaderStageData;
+    struct ShaderStageData;
+    enum class ShaderType;
 
-	struct ShaderDefine {
-		std::string Name;
-		std::string Value;
+    struct ShaderDefine {
+        std::string Name;
+        std::string Value;
 
-		ShaderDefine(std::string name) : Name(name), Value("") {};
-		ShaderDefine(std::string name, std::string value) : Name(name), Value(value) {};
-	};
+        ShaderDefine(std::string name) : Name(name), Value("") {};
+        ShaderDefine(std::string name, std::string value) : Name(name), Value(value) {};
+    };
 
-	struct CompileInfo 
-	{
-		RenderAPI Environment;
-		Optimization Optimization;
-		bool CacheResult = true;
-		std::string Path = "";
-		ShaderType Stage;
-		std::string Source;
-		std::string Error;
-		//Returned by compilation if succeeded
-		std::vector<uint32_t> Binary;
-		std::vector<ShaderDefine> Defines;
+    struct CompileInfo
+    {
+        RenderAPI Environment;
+        Optimization Optimization;
+        bool CacheResult = true;
+        std::string Path = "";
+        ShaderType Stage;
+        std::string Source;
+        std::string Error;
+        //Returned by compilation if succeeded
+        std::vector<uint32_t> Binary;
+        std::vector<ShaderDefine> Defines;
 
-		bool Succeeded() { return Error.empty(); }
-	};
+        bool Succeeded() { return Error.empty(); }
+    };
 
-	enum class ShaderType;
 
 	class ShaderFactory
 	{
@@ -59,3 +60,4 @@ namespace HazardRenderer
 		static inline std::string m_CacheDir = "library/Shaders";
 	};
 }
+#endif

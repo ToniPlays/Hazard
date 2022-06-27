@@ -93,6 +93,7 @@ namespace HazardRenderer
 		case ImageFormat::SRGB:				return 2;
 		case ImageFormat::DEPTH32F:			return 1;
 		case ImageFormat::DEPTH24STENCIL8:	return 1;
+        case ImageFormat::RED32I:           return 1;
 		}
 		return 0;
 	}
@@ -125,7 +126,7 @@ namespace HazardRenderer
 	TextureHeader TextureFactory::LoadFromCacheIfExists(const std::string& path, bool reloadIfOutdated)
 	{
 		bool cacheExists = TextureCacheExists(path);
-		bool isNewer = CacheFileChanged(path) && reloadIfOutdated;
+		//bool isNewer = CacheFileChanged(path) && reloadIfOutdated;
 
 		if (!cacheExists)
 		{

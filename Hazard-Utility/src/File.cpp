@@ -114,7 +114,7 @@ Buffer File::ReadBinaryFile(const std::filesystem::path& path)
 	if (size == 0)
 		return result;
 
-	result.Allocate(size);
+	result.Allocate((uint32_t)size);
 
 	if (!stream.read((char*)result.Data, size))
 	{

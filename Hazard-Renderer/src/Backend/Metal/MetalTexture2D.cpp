@@ -1,6 +1,6 @@
 
 #include "MetalTexture2D.h"
-#ifdef  HZR_INCLUDE_METAL
+#ifdef HZR_INCLUDE_METAL
 
 namespace HazardRenderer::Metal {
 	

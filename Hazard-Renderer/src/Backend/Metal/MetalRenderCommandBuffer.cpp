@@ -2,7 +2,7 @@
 #include "MetalRenderCommandBuffer.h"
 #ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
-#include "Core/Window.h"
+#include "Backend/Core/Window.h"
 
 namespace HazardRenderer::Metal
 {
@@ -17,8 +17,7 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::Begin()
     {
-        MTL::CommandQueue* queue = MetalContext::GetMetalCommandQueue();
-        m_CommandBuffer = queue->commandBuffer();
+        m_CommandBuffer = MetalContext::GetMetalCommandQueue()->commandBuffer();
     }
     void MetalRenderCommandBuffer::End()
     {
@@ -29,6 +28,7 @@ namespace HazardRenderer::Metal
         if(m_OwnedBySwapchain) {}
         m_CommandBuffer->commit();
     }
+
     void MetalRenderCommandBuffer::BeginRenderEncoder(MTL::RenderPassDescriptor* descriptor)
     {
         m_Encoder = m_CommandBuffer->renderCommandEncoder(descriptor);

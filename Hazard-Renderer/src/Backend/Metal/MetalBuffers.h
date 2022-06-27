@@ -3,12 +3,13 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/Pipeline/Buffers.h"  
+#include "Backend/Core/Pipeline/Buffers.h"
 
+/*
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
-
+*/
 namespace HazardRenderer::Metal
 {
     class MetalVertexBuffer : public VertexBuffer
@@ -17,7 +18,7 @@ namespace HazardRenderer::Metal
         MetalVertexBuffer(VertexBufferCreateInfo* createInfo);
         ~MetalVertexBuffer();
 
-        void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+        void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) override;
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
         void SetData(const void* data, uint32_t size) override;
         uint32_t GetSize() override { return m_Size; }
@@ -33,7 +34,7 @@ namespace HazardRenderer::Metal
         uint32_t m_Size;
         BufferLayout m_Layout;
         
-        MTL::Buffer* m_Buffer;
+        //MTL::Buffer* m_Buffer;
     };
 
     class MetalIndexBuffer : public IndexBuffer
@@ -55,7 +56,7 @@ namespace HazardRenderer::Metal
         uint32_t m_Size;
         std::string m_DebugName;
         
-        MTL::Buffer* m_Buffer;
+        //MTL::Buffer* m_Buffer;
 
     };
     class MetalUniformBuffer : public UniformBuffer

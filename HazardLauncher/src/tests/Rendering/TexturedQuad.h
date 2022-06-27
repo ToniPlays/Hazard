@@ -97,7 +97,7 @@ namespace TexturedQuad {
 		{
 			window->BeginFrame();
 
-			auto& cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			vertexBuffer->Bind(cmdBuffer);
 			indexBuffer->Bind(cmdBuffer);

@@ -4,7 +4,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/FrameBuffer.h"
+#include "Backend/Core/FrameBuffer.h"
 
 
 namespace HazardRenderer::Metal
@@ -23,7 +23,7 @@ namespace HazardRenderer::Metal
         virtual uint32_t GetWidth() const override { return m_Specs.Width; };
         virtual uint32_t GetHeight() const override { return m_Specs.Height; };
         
-        virtual uint32_t GetColorAttachmentCount() override { return m_ColorAttachments.size(); }
+        virtual uint32_t GetColorAttachmentCount() override { return (uint32_t)m_ColorAttachments.size(); }
 
         virtual Ref<Image2D> GetImage(uint32_t index = 0) const override { return nullptr; /*m_ColorImages[0].As<Image2D>();*/ };
         virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }

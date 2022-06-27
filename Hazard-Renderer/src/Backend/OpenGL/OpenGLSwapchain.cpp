@@ -1,4 +1,7 @@
+
+
 #include "OpenGLSwapchain.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Window.h"
 
 #include <GLFW/glfw3.h>
@@ -62,3 +65,4 @@ namespace HazardRenderer::OpenGL
 		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());
 	}
 }
+#endif

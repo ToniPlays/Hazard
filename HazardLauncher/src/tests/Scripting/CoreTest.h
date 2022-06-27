@@ -31,8 +31,8 @@ namespace ScriptCore
 
 		info.BindingCallback = [&]() {
 			std::cout << "Reloading bindings" << std::endl;
-			Mono::Register("Hazard.InternalCalls::Application_Quit_Native", Quit);
-			Mono::Register("Hazard.Console::Console_Log_Native", Log);
+			Mono::Register("Hazard.InternalCalls::Application_Quit_Native", (void*)Quit);
+			Mono::Register("Hazard.Console::Console_Log_Native", (void*)Log);
 		};
 
 		HazardScriptEngine* engine = HazardScriptEngine::Create(&info);
@@ -47,7 +47,7 @@ namespace ScriptCore
 				std::cout << attrib.Author << std::endl;
 			}
 			if (script.HasMethod("OnUpdate(single)")) {
-				Method& method = script.GetMethod("OnUpdate(single)");
+				const Method& method = script.GetMethod("OnUpdate(single)");
 				if (method.Has<VisualFuncAttribute>()) {
 					std::cout << "Visual func" << std::endl;
 				}

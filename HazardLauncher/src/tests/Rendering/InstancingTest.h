@@ -161,9 +161,9 @@ namespace InstancingTest {
 		instanceBuffer->SetData(instanceData, size * size * sizeof(InstanceData));
 
 		double startTime = 0;
-
+        glm::mat4 viewProj = camera.GetViewProjection();
 		std::string title = window->GetWindowInfo().Title;
-		pipeline->GetShader()->SetUniformBuffer("Camera", &camera.GetViewPprojection(), sizeof(Camera));
+		pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(Camera));
 
 		while (running)
 		{

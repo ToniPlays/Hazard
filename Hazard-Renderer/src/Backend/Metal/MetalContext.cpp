@@ -3,13 +3,14 @@
 #ifdef HZR_INCLUDE_METAL
 #include <GLFW/glfw3.h>
 
-#include <Foundation/Foundation.hpp>
+
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
 #include "MetalWindowLayer.h"
-#include "Core/Window.h"
+#include "Backend/Core/Window.h"
 
+#include "MetalSwapchain.h"
 #include "MetalFrameBuffer.h"
 #include "MetalRenderCommandBuffer.h"
 
@@ -28,6 +29,8 @@ namespace HazardRenderer::Metal
         m_Window = window;
         m_PhysicalDevice = new MetalPhysicalDevice();
         m_MetalLayer = new MetalWindowLayer((GLFWwindow*)window->GetNativeWindow(), m_PhysicalDevice->GetMetalDevice());
+        m_Swapchain = Ref<MetalSwapchain>::Create(this, info->pTargetFrameBuffer);
+        m_Swapchain->Create(m_Window->GetWidth(), m_Window->GetHeight(), info->VSync);
     }
     void MetalContext::SetViewport(int x, int y, int w, int h)
     {
@@ -35,34 +38,16 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::BeginFrame()
     {
-        
+        m_Swapchain->BeginFrame();
+        BeginRenderPass(m_Swapchain->GetSwapchainBuffer(), m_Swapchain->GetRenderPass());
     }
     void MetalContext::Present()
     {
-        MTL::ClearColor color = MTL::ClearColor::Make(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
-        
-        CA::MetalDrawable* drawable = m_MetalLayer->GetNextDrawable();
-        
-        MTL::RenderPassDescriptor* pass = MTL::RenderPassDescriptor::renderPassDescriptor();
-        pass->setRenderTargetWidth(m_Window->GetWidth());
-        pass->setRenderTargetHeight(m_Window->GetHeight());
-        
-        MTL::RenderPassColorAttachmentDescriptorArray* colorAttahcments = pass->colorAttachments();
-        colorAttahcments->object(0)->setClearColor(color);
-        colorAttahcments->object(0)->setLoadAction(MTL::LoadActionClear);
-        colorAttahcments->object(0)->setStoreAction(MTL::StoreActionStore);
-        colorAttahcments->object(0)->setTexture(drawable->texture());
-        
-        MTL::CommandQueue* queue = m_PhysicalDevice->GetMetalCommandQueue();
-        MTL::CommandBuffer* buffer = queue->commandBuffer();
-        MTL::CommandEncoder* encoder = buffer->renderCommandEncoder(pass);
-        encoder->endEncoding();
-        
-        buffer->presentDrawable(drawable);
-        buffer->commit();
-        
+        EndRenderPass(m_Swapchain->GetSwapchainBuffer());
+        m_Swapchain->Present();
+
     }
-    /*void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
     {
         
         auto spec = renderPass->GetSpecs().TargetFrameBuffer->GetSpecification();
@@ -71,35 +56,35 @@ namespace HazardRenderer::Metal
         MTL::ClearColor clearColor = { spec.ClearColor.r, spec.ClearColor.g, spec.ClearColor.b, spec.ClearColor.a };
         
         MTL::RenderPassDescriptor* renderPassDescriptor = MTL::RenderPassDescriptor::alloc()->init();
-        renderPassDescriptor->setRenderTargetWidth(1280);
-        renderPassDescriptor->setRenderTargetHeight(720);
+        renderPassDescriptor->setRenderTargetWidth(fb->GetWidth());
+        renderPassDescriptor->setRenderTargetHeight(fb->GetHeight());
         renderPassDescriptor->setDefaultRasterSampleCount(1);
         
         MTL::RenderPassColorAttachmentDescriptor* colorAttachment = renderPassDescriptor->colorAttachments()->object(0);
         colorAttachment->setClearColor(clearColor);
         colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
         colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
-        colorAttachment->setTexture(m_MetalLayer->GetDrawableTexture());
+        colorAttachment->setTexture(m_Swapchain->GetDrawable()->texture());
         
         buffer.As<MetalRenderCommandBuffer>()->BeginRenderEncoder(renderPassDescriptor);
          
     }
     void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
     {
-        //buffer.As<MetalRenderCommandBuffer>()->EndRenderEncoder();
+        buffer.As<MetalRenderCommandBuffer>()->EndRenderEncoder();
     }
+     /*
     void MetalContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
     {
         
     }
     void MetalContext::SetErrorListener(const ErrorCallback &callback) {
         
-    }
+    }*/
     
     //void MetalContext::Present(MTL::CommandBuffer* buffer) {
-    //    //s_Instance->m_MetalLayer->Present(buffer);
+    //    s_Instance->m_MetalLayer->Present(buffer);
     //}
-     */
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#import <Metal/Metal.h>
+#include <Metal/Metal.hpp>
 
 namespace HazardRenderer::Metal {
 

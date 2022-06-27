@@ -5,12 +5,13 @@
 #include "MetalRenderCommandBuffer.h"
 #include "MetalContext.h"
 
-#include <QuartzCore/QuartzCore.hpp>
+//#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {
+        /*
         return;
         std::string shader = "#include <metal_stdlib>\n"
             "using namespace metal;\n"
@@ -51,6 +52,7 @@ namespace HazardRenderer::Metal
         
         NS::Error* err;
         m_Pipeline = device->newRenderPipelineState(descriptor, &err);
+         */
     }
     MetalPipeline::~MetalPipeline()
     {
@@ -61,12 +63,12 @@ namespace HazardRenderer::Metal
     }
     void MetalPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
     {
-        MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
-        encoder->setRenderPipelineState(m_Pipeline);
+        //MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        //encoder->setRenderPipelineState(m_Pipeline);
     }
     void MetalPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {
-        MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        //MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
         //encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, (NS::UInteger)0, (NS::UInteger)count);
     }
     void MetalPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)

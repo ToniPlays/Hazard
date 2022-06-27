@@ -123,7 +123,8 @@ namespace RenderCommandTest {
 
 		while (running)
 		{
-			uniformBuffer->SetData(&settings.RenderingCamera->GetViewPprojection(), sizeof(Camera));
+            glm::mat4 viewProj = settings.RenderingCamera->GetViewProjection();
+			uniformBuffer->SetData(&viewProj, sizeof(Camera));
 			double time = glfwGetTime();
 			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime)));
 			window->SetWindowTitle(window->GetWindowInfo().Title + " fps " + std::to_string((1.0f / (time - startTime))));

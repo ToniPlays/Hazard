@@ -81,7 +81,7 @@ namespace HazardUI
 			{
 
 				float paddingLeft = transform.Left / canvasWidth;
-				float paddingRight = transform.Right / canvasWidth;
+				//float paddingRight = transform.Right / canvasWidth;
 
 				float pivotLeft = transform.Pivot.PivotX * unitWidth + paddingLeft;
 				float pivotRight = (1.0f - transform.Pivot.PivotX) * unitWidth + paddingLeft;
@@ -100,7 +100,7 @@ namespace HazardUI
 			if (transform.Anchor.MinY == transform.Anchor.MaxY)
 			{
 				float paddingTop = transform.Top / canvasHeight;
-				float paddingBottom = transform.Bottom / canvasHeight;
+				//float paddingBottom = transform.Bottom / canvasHeight;
 
 				float pivotBottom = transform.Pivot.PivotY * unitHeight + paddingTop;
 				float pivotTop = (1.0f - transform.Pivot.PivotY) * unitHeight - paddingTop;

@@ -1,11 +1,13 @@
 
 #include "MetalWindowLayer.h"
+#ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
 
 #define GLFW_EXPOSE_NATIVE_COCOA
-#include <OpenGL/OpenGL.h>
+
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
+
 
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -39,7 +41,6 @@ namespace HazardRenderer::Metal
         layer.frame.size = { (CGFloat)width, (CGFloat)height} ;
     }
 
-
     CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()
     {
         CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;
@@ -50,3 +51,4 @@ namespace HazardRenderer::Metal
         return nullptr;
     }
 }
+#endif

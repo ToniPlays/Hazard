@@ -3,8 +3,6 @@
 #include "Backend/Core/Core.h"
 
 #ifdef HZR_INCLUDE_METAL
-#include "Core/GraphicsContext.h"
-#include <Metal/Metal.hpp>
 
 #include "MetalPhysicalDevice.h"
 
@@ -13,6 +11,7 @@
 namespace HazardRenderer::Metal
 {
     class MetalWindowLayer;
+    class MetalSwapchain;
 
     class MetalContext : public GraphicsContext {
     public:
@@ -24,17 +23,18 @@ namespace HazardRenderer::Metal
         void SetViewport(int x, int y, int w, int h) override;
         void Present() override;
         void BeginFrame() override;
-        //void Close() override {}
         
-        //void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
-        //void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
+        void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
+        void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
         //void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) override;
 
         //void SetErrorListener(const ErrorCallback& callback) override;
         PhysicalDevice& GetDevice() override { return *m_PhysicalDevice; };
+        Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
 
         static MTL::Device* GetMetalDevice() { return s_Instance->m_PhysicalDevice->GetMetalDevice(); };
-        static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_CommandQueue; }
+        static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_PhysicalDevice->GetMetalCommandQueue(); }
+        static MetalWindowLayer* GetWindowLayer() { return s_Instance->m_MetalLayer; }
         
     private:
         Window* m_Window;
@@ -45,7 +45,7 @@ namespace HazardRenderer::Metal
         MetalPhysicalDevice* m_PhysicalDevice;
         
         MetalWindowLayer* m_MetalLayer;
-        MTL::CommandQueue* m_CommandQueue;
+        Ref<MetalSwapchain> m_Swapchain;
     };
 }
 #endif

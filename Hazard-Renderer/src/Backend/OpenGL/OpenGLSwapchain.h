@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Swapchain.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "OpenGLContext.h"
 
 namespace HazardRenderer::OpenGL 
@@ -37,3 +38,4 @@ namespace HazardRenderer::OpenGL
 		Ref<FrameBuffer> m_FrameBuffer;
 	};
 }
+#endif

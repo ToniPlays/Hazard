@@ -2,7 +2,8 @@
 
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
-#include "Core/GraphicsContext.h"
+
+#include "Backend/Core/GraphicsContext.h"
 #include <GLFW/glfw3.h>
 
 namespace MTL {
