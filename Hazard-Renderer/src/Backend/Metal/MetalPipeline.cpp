@@ -11,20 +11,41 @@ namespace HazardRenderer::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {
-        /*
-        return;
-        std::string shader = "#include <metal_stdlib>\n"
-            "using namespace metal;\n"
-            "\n"
-            "vertex float4 basic_vertex(                           // 1\n"
-            "  const device packed_float3* vertex_array [[ buffer(0) ]], // 2 \n"
-            "  unsigned int vid [[ vertex_id ]]) {                 // 3\n"
-            "  return float4(vertex_array[vid], 1.0);              // 4\n"
-            "}\n"
-            "\n"
-            "fragment half4 basic_fragment() { // 1\n"
-            "  return half4(1.0);              // 2\n"
-            "}";
+        std::string shader = R"(
+        
+    #include <simd/simd.h>
+
+    struct VertexIn {
+        const packed_float3 a_Position;
+        const packed_float4 a_Color;
+    };
+
+    struct VertexOut {
+        float4 position [[position]];
+        float4 color;
+    };
+
+    vertex VertexOut Vertex (
+        const device VertexIn* vertices[[buffer(0)]],
+        uint vid [[vertex_id]]) {
+            
+            VertexIn input = vertices[vid];
+            
+            VertexOut out;
+            out.position = float4(input.a_Position, 1.0);
+            out.color = float4(input.a_Color);
+        
+            return out;
+    }
+
+    struct VertexIn_F {
+        float4 position;
+        float4 color;
+    };
+
+    fragment half4 Fragment(VertexIn_F in [[stage_in]]) {
+        return half4(in.color);
+    })";
         
         NS::Error* error = nullptr;
         
@@ -36,13 +57,16 @@ namespace HazardRenderer::Metal
         options->setLibraryType(type);
         
         MTL::Library* lib = device->newLibrary(source, options, &error);
-        ASSERT(!error, "No library here");
+        if(error) {
+            std::cout << error->localizedDescription()->utf8String() << std::endl;
+        }
+        HZR_ASSERT(!error, "No library here");
 
         
         m_Shader = Shader::Create(specs->ShaderPath);
 
-        NS::String* vertFunc = NS::String::alloc()->string("basic_vertex", NS::UTF8StringEncoding);
-        NS::String* fragFunc = NS::String::alloc()->string("basic_fragment", NS::UTF8StringEncoding);
+        NS::String* vertFunc = NS::String::alloc()->string("Vertex", NS::UTF8StringEncoding);
+        NS::String* fragFunc = NS::String::alloc()->string("Fragment", NS::UTF8StringEncoding);
         
         MTL::RenderPipelineDescriptor* descriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         
@@ -52,7 +76,7 @@ namespace HazardRenderer::Metal
         
         NS::Error* err;
         m_Pipeline = device->newRenderPipelineState(descriptor, &err);
-         */
+        descriptor->release();
     }
     MetalPipeline::~MetalPipeline()
     {
@@ -63,17 +87,25 @@ namespace HazardRenderer::Metal
     }
     void MetalPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
     {
-        //MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
-        //encoder->setRenderPipelineState(m_Pipeline);
+        MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        encoder->setRenderPipelineState(m_Pipeline);
     }
     void MetalPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {
-        //MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
-        //encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, (NS::UInteger)0, (NS::UInteger)count);
+        auto cmdBuffer = commandBuffer.As<MetalRenderCommandBuffer>();
+        MTL::RenderCommandEncoder* encoder = cmdBuffer->GetEncoder();
+        encoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, 1);
     }
     void MetalPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {
+        MTL::RenderCommandEncoder* encoder = commandBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        //encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, count, 1);
+    }
+    void MetalPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) {
         
+        auto cmdBuffer = commandBuffer.As<MetalRenderCommandBuffer>();
+        MTL::RenderCommandEncoder* encoder = cmdBuffer->GetEncoder();
+        encoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, instanceCount);
     }
 }
 #endif

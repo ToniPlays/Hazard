@@ -31,7 +31,8 @@ namespace HazardRenderer::Metal
         //void SetErrorListener(const ErrorCallback& callback) override;
         PhysicalDevice& GetDevice() override { return *m_PhysicalDevice; };
         Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
-
+        
+        static MetalContext* GetInstance() { return s_Instance; }
         static MTL::Device* GetMetalDevice() { return s_Instance->m_PhysicalDevice->GetMetalDevice(); };
         static MTL::CommandQueue* GetMetalCommandQueue() { return s_Instance->m_PhysicalDevice->GetMetalCommandQueue(); }
         static MetalWindowLayer* GetWindowLayer() { return s_Instance->m_MetalLayer; }

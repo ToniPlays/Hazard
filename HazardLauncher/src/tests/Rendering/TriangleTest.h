@@ -49,7 +49,7 @@ namespace TriangleTest {
 		windowInfo.Decorated = true;
 		windowInfo.Width = 1280;
 		windowInfo.Height = 720;
-		windowInfo.Color = Color(34, 34, 34, 255);
+		windowInfo.Color = Color(255, 128, 0, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
 		renderInfo.pAppInfo = &rendererApp;

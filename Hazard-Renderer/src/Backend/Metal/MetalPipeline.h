@@ -7,10 +7,7 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/Shader.h"
 
-/*
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
- */
 
 namespace HazardRenderer::Metal
 {
@@ -29,14 +26,14 @@ namespace HazardRenderer::Metal
         void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
         void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
         void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
-        void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) override {};
+        void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) override;
 
     private:
         PipelineSpecification m_Specs;
         Ref<Shader> m_Shader;
         uint32_t m_DrawType, m_PolygonMode;
         
-        //MTL::RenderPipelineState* m_Pipeline = nullptr;
+        MTL::RenderPipelineState* m_Pipeline = nullptr;
     };
 }
 #endif

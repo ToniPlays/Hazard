@@ -5,11 +5,8 @@
 
 #include "Backend/Core/Pipeline/Buffers.h"
 
-/*
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
-*/
+
 namespace HazardRenderer::Metal
 {
     class MetalVertexBuffer : public VertexBuffer
@@ -31,10 +28,10 @@ namespace HazardRenderer::Metal
     private:
         BufferUsage m_Usage;
         std::string m_DebugName;
-        uint32_t m_Size;
+        uint32_t m_Size = 0;
         BufferLayout m_Layout;
         
-        //MTL::Buffer* m_Buffer;
+        MTL::Buffer* m_Buffer;
     };
 
     class MetalIndexBuffer : public IndexBuffer
@@ -43,20 +40,20 @@ namespace HazardRenderer::Metal
         MetalIndexBuffer(IndexBufferCreateInfo* createInfo);
         ~MetalIndexBuffer();
 
-        void Bind(Ref<RenderCommandBuffer> cmdBuffer) override {};
+        void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
         void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override {};
 
         uint32_t GetCount() override { return m_Size; }
         std::string& GetDebugName() override { return m_DebugName; }
 
     private:
-        void SetData(uint32_t* data, uint32_t size) override {};
+        void SetData(uint32_t* data, uint32_t size) override;
 
         BufferUsage m_Usage;
-        uint32_t m_Size;
+        uint32_t m_Size = 0;
         std::string m_DebugName;
         
-        //MTL::Buffer* m_Buffer;
+        MTL::Buffer* m_Buffer;
 
     };
     class MetalUniformBuffer : public UniformBuffer
@@ -77,7 +74,7 @@ namespace HazardRenderer::Metal
 
     private:
 
-        uint32_t m_Size;
+        uint32_t m_Size = 0;
         uint32_t m_Binding;
         uint32_t m_Usage;
         

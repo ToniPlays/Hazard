@@ -19,7 +19,7 @@ namespace HazardRenderer::Metal {
             frameBufferInfo.SwapChainTarget = true;
             frameBufferInfo.AttachmentCount = 2;
             frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-
+            
             m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
 
             RenderPassCreateInfo renderPassInfo = {};
@@ -49,9 +49,14 @@ namespace HazardRenderer::Metal {
     void MetalSwapchain::Present()
     {
         m_RenderCommandBuffer->End();
+        
         MTL::CommandBuffer* cmdBuffer = m_RenderCommandBuffer.As<MetalRenderCommandBuffer>()->GetMetalCommandBuffer();
+        
         cmdBuffer->presentDrawable(m_Drawable);
         cmdBuffer->commit();
         cmdBuffer->waitUntilCompleted();
+        cmdBuffer->release();
+        m_Drawable->release();
+        
     }
 }

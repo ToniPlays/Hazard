@@ -26,6 +26,7 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::Submit()
     {
         if(m_OwnedBySwapchain) {}
+        
         m_CommandBuffer->commit();
     }
 
