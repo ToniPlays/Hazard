@@ -11,6 +11,3 @@
 
 #include "Ref.h"
 #include "UtilityCore.h"
-
-#define BIT(x) (1 << (x))
-

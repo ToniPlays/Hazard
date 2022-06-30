@@ -7,9 +7,9 @@ using namespace HazardRenderer;
 
 namespace TexturedQuad {
 
-	//OpenGL: Nothing
+	//OpenGL: White quad
 	//Vulkan: White quad
-	//Metal: Not tested
+	//Metal: White quad
 
 	static void Run(RenderAPI api)
 	{
@@ -79,7 +79,6 @@ namespace TexturedQuad {
 		ibo.Usage = BufferUsage::StaticDraw;
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
-
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";

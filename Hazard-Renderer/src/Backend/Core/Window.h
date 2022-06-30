@@ -76,6 +76,7 @@ namespace HazardRenderer {
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 
 		static Window* Create(HazardRendererCreateInfo* info);
+		static bool IsRenderAPISupported(const RenderAPI& api);
 		static void SendDebugMessage(const RenderMessage& message);
 	};
 }

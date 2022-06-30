@@ -1,5 +1,6 @@
 #pragma once
 
+#include "UtilityCore.h"
 #include <string>
 #include <functional>
 

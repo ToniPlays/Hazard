@@ -10,33 +10,6 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUI">
-      <UniqueIdentifier>{2AEC870B-96F5-877C-1F71-9E7C8B79937C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window">
-      <UniqueIdentifier>{D1653F55-BD1D-81A2-2625-5AFE12FC1B93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window\Debug">
-      <UniqueIdentifier>{07C96C0D-F3C1-8B5F-1CF4-70E4084C6B6B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window\Editor">
-      <UniqueIdentifier>{E7CD4CBD-53E4-4A53-9C5B-D67408B11BDB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window\Inspect">
-      <UniqueIdentifier>{96ABD5B2-828F-9608-EBEF-905BD7F2808A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window\Rendering">
-      <UniqueIdentifier>{5E6825EC-4AF7-AEB5-F315-C3B0DF83BF5B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\Window\Tabs">
-      <UniqueIdentifier>{AAE9AEF8-1675-1CBD-1F86-9FB18B9078BD}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Library">
-      <UniqueIdentifier>{1AE124DA-86C0-A375-8FD8-2E4CFB360AD7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Library\Layout">
-      <UniqueIdentifier>{8721C63E-73EF-B944-5C83-2A6B48F095A9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -49,9 +22,6 @@
     <Filter Include="Platform\Vulkan">
       <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project">
-      <UniqueIdentifier>{5C2CF323-C80B-72BF-D123-FD953D82D820}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BuildSystem\BuildReport.h">
@@ -61,6 +31,12 @@
       <Filter>BuildSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\GUIManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\GUIRenderable.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
@@ -99,12 +75,13 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\GUIManager.h" />
-    <ClInclude Include="src\Core\GUIRenderable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
       <Filter>BuildSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\GUIManager.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
       <Filter>Core</Filter>
@@ -133,6 +110,5 @@
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\GUIManager.cpp" />
   </ItemGroup>
 </Project>

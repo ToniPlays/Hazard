@@ -279,7 +279,7 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		VK_CHECK_RESULT(vkCreateRe nderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
+		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_VulkanRenderPass));
 		CreateFramebuffer();
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)

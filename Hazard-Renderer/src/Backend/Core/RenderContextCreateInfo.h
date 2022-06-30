@@ -24,6 +24,7 @@ namespace Hazard
 	enum class RenderAPI {
 		Auto = 0,
 		OpenGL,
+		WebGL,
 		Vulkan,
 		DX11,
 		DX12,

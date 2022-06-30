@@ -10,23 +10,17 @@
     <Filter Include="src\Hazard\Assets">
       <UniqueIdentifier>{38F864C4-A40E-635A-ED85-EE7B59DB33E2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Audio">
-      <UniqueIdentifier>{976C1382-8365-32D4-AC97-175998EF11E0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Core">
       <UniqueIdentifier>{2E88C349-9A13-310E-A324-B4020F2F8D0E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Entity">
-      <UniqueIdentifier>{A2BD5FCD-0ED4-5D63-574B-E984C3A02EEB}</UniqueIdentifier>
+    <Filter Include="src\Hazard\ECS">
+      <UniqueIdentifier>{60351D86-4C03-118C-3597-81B22104EDF0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Entity\Components">
-      <UniqueIdentifier>{77991D57-6354-0D03-0C0C-864DF8A55793}</UniqueIdentifier>
+    <Filter Include="src\Hazard\ECS\Components">
+      <UniqueIdentifier>{75FEC174-E1C0-F5FE-2A71-848B9672CEDC}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Entity\Loader">
-      <UniqueIdentifier>{28929A23-14B7-E9A3-3D02-CF332986E8C1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Events">
-      <UniqueIdentifier>{3A5DE8CD-A673-E663-EFEA-71855B40B7EB}</UniqueIdentifier>
+    <Filter Include="src\Hazard\ECS\Loader">
+      <UniqueIdentifier>{262888F8-9294-43F3-5B88-DB50C7B3655B}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Hazard\Logging">
       <UniqueIdentifier>{ACBC9795-98A0-58EB-0101-533EED03436D}</UniqueIdentifier>
@@ -40,56 +34,8 @@
     <Filter Include="src\Hazard\Physics\Physics2D">
       <UniqueIdentifier>{30985A61-1C53-4A0D-C50A-C357B1A4949D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\RenderContext">
-      <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\2D">
-      <UniqueIdentifier>{A80A7A05-1442-C29C-1D4C-26C08902E995}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Loaders">
-      <UniqueIdentifier>{DCCDFE99-C888-EE45-7140-67905DDA38D6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Mesh">
-      <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Scripting">
-      <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting">
-      <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp">
-      <UniqueIdentifier>{1FF8C090-0B87-4A5A-B4A5-5E55A0135B00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Mono">
-      <UniqueIdentifier>{2783EAD3-9345-1E5E-DCF5-ACEA48F7F63B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script">
-      <UniqueIdentifier>{83DDBF85-EFEA-ED6B-78D1-E956E4DDB922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Hazard">
-      <UniqueIdentifier>{AC9B5944-98D7-5CAE-01EA-74A5ED4405C9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Hazard\Application">
-      <UniqueIdentifier>{6FB93131-5B37-82CA-442F-4062304CC4F2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Hazard\Debug">
-      <UniqueIdentifier>{22B7AC10-0E34-A053-37B1-A067238D3CE7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Hazard\ECS">
-      <UniqueIdentifier>{F685F2C9-E2D7-C9B9-CBF6-06CAB7E7E2A2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Hazard\Math">
-      <UniqueIdentifier>{052C4808-71BB-09F3-7AB7-EA0AE6C544FF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\CSharp\Script\Rendering">
-      <UniqueIdentifier>{90A65C8F-FC6A-5B7F-C5D0-8B493154F7B4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scripting\HazardScript">
-      <UniqueIdentifier>{ED619A93-D971-4664-422B-AB822E5A35FD}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -150,9 +96,6 @@
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\HazardRuntimeError.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Core\PlatformUtils.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
@@ -160,43 +103,43 @@
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Component.h">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\CameraProcessingComponent.h">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\Component.h">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\LightComponent.h">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\PhysicsComponent.h">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\UIComponent.h">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Entity.h">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Loader\Component.h">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Loader\WorldDeserializer.h">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Loader\WorldSerializer.h">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\World.h">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\WorldCommand.h">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\WorldHandler.h">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
       <Filter>src\Hazard</Filter>
@@ -227,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
+      <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
@@ -1476,7 +1422,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1498,28 +1443,28 @@
       <Filter>src\Hazard\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\CameraProcessingComponent.cpp">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Components\PhysicsComponent.cpp">
-      <Filter>src\Hazard\Entity\Components</Filter>
+      <Filter>src\Hazard\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Entity.cpp">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Loader\WorldDeserializer.cpp">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Loader\WorldSerializer.cpp">
-      <Filter>src\Hazard\Entity\Loader</Filter>
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\World.cpp">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\WorldCommand.cpp">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp">
-      <Filter>src\Hazard\Entity</Filter>
+      <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
@@ -1542,9 +1487,11 @@
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 
 int main()
 {
-	TexturedQuad::Run(RenderAPI::Metal);
+	TexturedQuad::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

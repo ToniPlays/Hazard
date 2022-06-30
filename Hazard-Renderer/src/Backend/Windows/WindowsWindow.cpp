@@ -18,6 +18,9 @@ namespace HazardRenderer {
 
 	Window* Window::Create(HazardRendererCreateInfo* info)
 	{
+		if (!Window::IsRenderAPISupported(info->Renderer)) {
+			HZR_THROW("Unsupported rendering API: " + RenderAPIToString(info->Renderer));
+		}
 		return new WindowsWindow(info);
 	}
 

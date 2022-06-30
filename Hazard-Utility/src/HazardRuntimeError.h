@@ -1,5 +1,7 @@
 #pragma once
-#include "Hazard/Core/Core.h"
+
+#include <iostream>
+#include <string>
 
 class HazardRuntimeError : public std::exception
 {

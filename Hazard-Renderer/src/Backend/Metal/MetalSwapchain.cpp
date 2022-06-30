@@ -1,5 +1,8 @@
 
 #include "MetalSwapchain.h"
+
+#ifdef HZR_INCLUDE_METAL
+
 #include "MetalRenderCommandBuffer.h"
 #include "MetalWindowLayer.h"
 
@@ -60,3 +63,4 @@ namespace HazardRenderer::Metal {
         
     }
 }
+#endif

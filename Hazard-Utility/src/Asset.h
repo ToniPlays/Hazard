@@ -4,9 +4,10 @@
 #include "UID.h"
 #include "AssetEnums.h"
 
+#include "UtilityCore.h"
+
 #include <filesystem>
 
-#define BIT(x) (1 << x)
 #define INVALID_ASSET_HANDLE 0
 
 enum class AssetFlags : uint16_t {
