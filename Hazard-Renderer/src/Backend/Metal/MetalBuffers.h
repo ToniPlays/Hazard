@@ -59,12 +59,12 @@ namespace HazardRenderer::Metal
     class MetalUniformBuffer : public UniformBuffer
     {
     public:
-        MetalUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name) {};
-        ~MetalUniformBuffer() {};
+        MetalUniformBuffer(UniformBufferCreateInfo* createInfo);
+        ~MetalUniformBuffer();
 
-        void Bind(Ref<RenderCommandBuffer> cmdBuffer) override {};
-        void Unbind() override {};
-        void SetData(const void* data, uint32_t size) override {};
+        void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+        void Unbind() override;
+        void SetData(const void* data, uint32_t size) override;
         const uint32_t GetBinding() const override { return m_Binding; };
         const uint32_t GetSize() const override { return m_Size; };
 
@@ -75,10 +75,12 @@ namespace HazardRenderer::Metal
     private:
 
         uint32_t m_Size = 0;
-        uint32_t m_Binding;
+        uint32_t m_Binding = 0;
         uint32_t m_Usage;
         
         std::string m_Name;
+        
+        MTL::Buffer* m_Buffer;
     };
 }
 

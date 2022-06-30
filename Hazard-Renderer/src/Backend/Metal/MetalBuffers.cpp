@@ -25,7 +25,7 @@ namespace HazardRenderer::Metal
     }
     MetalVertexBuffer::~MetalVertexBuffer()
     {
-        m_Buffer = nullptr;
+        m_Buffer->release();
     }
     void MetalVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
     {
@@ -62,6 +62,34 @@ namespace HazardRenderer::Metal
         cmdBuffer.As<MetalRenderCommandBuffer>()->BindIndexBuffer(m_Buffer);
     }
     void MetalIndexBuffer::SetData(uint32_t *data, uint32_t size) {
+        void* contents = m_Buffer->contents();
+        memcpy(contents, data, size);
+    }
+
+    MetalUniformBuffer::MetalUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name)
+    {
+        m_Binding = createInfo->Binding;
+        m_Size = createInfo->Size;
+        
+        MTL::Device* device = MetalContext::GetMetalDevice();
+        
+        m_Buffer = device->newBuffer(m_Size, NULL);
+    }
+    MetalUniformBuffer::~MetalUniformBuffer()
+    {
+        m_Buffer->release();
+    }
+    void MetalUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
+    {
+        auto encoder = cmdBuffer.As<MetalRenderCommandBuffer>()->GetEncoder();
+        encoder->setVertexBuffer(m_Buffer, 0, m_Binding);
+    }
+    void MetalUniformBuffer::Unbind()
+    {
+        
+    }
+
+    void MetalUniformBuffer::SetData(const void *data, uint32_t size) {
         void* contents = m_Buffer->contents();
         memcpy(contents, data, size);
     }

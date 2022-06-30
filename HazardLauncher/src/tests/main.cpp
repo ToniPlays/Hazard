@@ -10,7 +10,7 @@
 
 int main()
 {
-	InstancingTest::Run(RenderAPI::Vulkan);
+	InstancingTest::Run(RenderAPI::Metal);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

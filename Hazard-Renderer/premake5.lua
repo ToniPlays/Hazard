@@ -65,7 +65,6 @@ project "Hazard-Renderer"
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"QuartzCore.framework",
-			"OpenGL.framework",
 			"Metal.framework",
 			"MetalKit.framework"
 		}

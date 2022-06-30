@@ -14,9 +14,9 @@ using namespace HazardRenderer;
 
 namespace InstancingTest {
 
-	//OpenGL: 
-	//Vulkan: Black window
-	//Metal:  
+	//OpenGL: Totally works
+	//Vulkan: Totally works
+	//Metal:  Totally works, except no Uniform Buffers
 
 	static void Run(RenderAPI api)
 	{
@@ -117,7 +117,11 @@ namespace InstancingTest {
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "InstancePipeline";
+#ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "QuadInstanced.glsl";
+#else
+        spec.ShaderPath = "QuadInstanced.metal";
+#endif
 		spec.DrawType = DrawType::Fill;
 		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
@@ -163,8 +167,17 @@ namespace InstancingTest {
 		double startTime = 0;
         glm::mat4 viewProj = camera.GetViewProjection();
 		std::string title = window->GetWindowInfo().Title;
+        
+        UniformBufferCreateInfo uboInfo = {};
+        uboInfo.Name = "Camera";
+        uboInfo.Size = sizeof(Camera);
+        uboInfo.Binding = 2;
+        
+        Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
+        cameraUBO->SetData(&viewProj, sizeof(Camera));
+        
 		pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(Camera));
-
+        
 		while (running)
 		{
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
@@ -174,6 +187,7 @@ namespace InstancingTest {
 			startTime = time;
 
 			window->BeginFrame();
+            cameraUBO->Bind(cmdBuffer); 
 			quadBuffer->Bind(cmdBuffer);
 			instanceBuffer->Bind(cmdBuffer, 1);
 			indexBuffer->Bind(cmdBuffer);

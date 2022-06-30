@@ -63,7 +63,6 @@ project "HazardLauncher"
 			"IOKit.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
-			"OpenGL.framework",
 			"Metal.framework",
 			"MetalKit.framework",
 			"QuartzCore.framework",
