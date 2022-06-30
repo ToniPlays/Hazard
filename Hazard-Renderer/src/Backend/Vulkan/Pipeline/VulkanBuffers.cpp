@@ -67,7 +67,7 @@ namespace HazardRenderer::Vulkan
 	VulkanVertexBuffer::~VulkanVertexBuffer()
 	{
 		m_LocalData.Release();
-
+		VulkanContext::GetPhysicalDevice().WaitUntilIdle();
 		VulkanAllocator allocator("VertexBuffer");
 		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 
@@ -107,6 +107,8 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanIndexBuffer::~VulkanIndexBuffer()
 	{
+		m_LocalData.Release();
+		VulkanContext::GetPhysicalDevice().WaitUntilIdle();
 		VulkanAllocator allocator("IndexBuffer");
 		allocator.DestroyBuffer(m_Buffer, m_Allocation);
 	}

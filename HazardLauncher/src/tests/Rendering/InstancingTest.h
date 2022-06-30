@@ -182,6 +182,12 @@ namespace InstancingTest {
 
 			window->Present();
 		}
+
+		quadBuffer.Release();
+		instanceBuffer.Release();
+		indexBuffer.Release();
+		pipeline.Release();
+
 		window->Close();
 		std::cout << "Test closed";
 	}

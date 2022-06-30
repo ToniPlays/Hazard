@@ -121,7 +121,7 @@ public:
 	T* Raw() { return  m_Instance; }
 	const T* Raw() const { return  m_Instance; }
 
-	void Reset(T* instance = nullptr)
+	void Release(T* instance = nullptr)
 	{
 		DecRef();
 		m_Instance = instance;

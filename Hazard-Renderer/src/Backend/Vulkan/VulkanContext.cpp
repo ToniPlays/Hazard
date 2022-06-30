@@ -24,7 +24,7 @@ namespace HazardRenderer::Vulkan {
 	{
 		m_Device->WaitUntilIdle();
 
-		m_Swapchain.Reset();
+		m_Swapchain.Release();
 
 		ValidationLayer::Close();
 

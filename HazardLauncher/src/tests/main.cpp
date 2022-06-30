@@ -10,7 +10,7 @@
 
 int main()
 {
-	TexturedQuad::Run(RenderAPI::Vulkan);
+	InstancingTest::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

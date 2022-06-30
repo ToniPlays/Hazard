@@ -126,9 +126,9 @@ namespace TriangleTest {
 			window->Present();
 		}
 
-		pipeline.Reset();
-		indexBuffer.Reset();
-		vertexBuffer.Reset();
+		pipeline.Release();
+		indexBuffer.Release();
+		vertexBuffer.Release();
 
 		window->Close();
 

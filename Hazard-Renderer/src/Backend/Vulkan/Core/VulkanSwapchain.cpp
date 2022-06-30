@@ -22,8 +22,8 @@ namespace HazardRenderer::Vulkan
 		Cleanup();
 
 		vkDestroyImageView(device, m_DepthStencil.View, nullptr);
-		m_RenderPass.Reset();
-		m_FrameBuffer.Reset();
+		m_RenderPass.Release();
+		m_FrameBuffer.Release();
 
 		vkDestroySemaphore(device, m_Semaphores.RenderComplete, nullptr);
 		m_Semaphores.RenderComplete = VK_NULL_HANDLE;

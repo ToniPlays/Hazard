@@ -28,7 +28,7 @@ namespace HazardRenderer::Vulkan
 		auto& device = VulkanContext::GetPhysicalDevice();
 		device.WaitUntilIdle();
 
-		m_Shader.Reset();
+		m_Shader.Release();
 
 		vkDestroyPipeline(device.GetVulkanDevice(), m_Pipeline, nullptr);
 		vkDestroyPipelineLayout(device.GetVulkanDevice(), m_PipelineLayout, nullptr);
