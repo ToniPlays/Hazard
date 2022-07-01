@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorPlatformOpenGL.h"
+#include "Backend/Core/Renderer.h"
 
 #include "Platform/OpenGL/imgui_impl_opengl3.h"
 #include "Platform/GLFW/imgui_impl_glfw.h"
@@ -24,17 +25,19 @@ void EditorPlatformOpenGL::BeginFrame()
 
 void EditorPlatformOpenGL::EndFrame()
 {
-	HZR_PROFILE_FUNCTION();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	ImGuiIO& io = ImGui::GetIO();
+	HazardRenderer::Renderer::Submit([]() mutable {
+		HZR_PROFILE_FUNCTION();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGuiIO& io = ImGui::GetIO();
 
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(backup_current_context);
-	}
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
+		});
 }
 
 void EditorPlatformOpenGL::Close()

@@ -1,6 +1,7 @@
 
 #include "VulkanPipeline.h"
 #ifdef HZR_INCLUDE_VULKAN
+#include "Backend/Core/Renderer.h"
 #include "../VulkanContext.h"
 #include "../VulkanFrameBuffer.h"
 #include "../VKUtils.h"
@@ -25,13 +26,16 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanPipeline::~VulkanPipeline()
 	{
-		auto& device = VulkanContext::GetPhysicalDevice();
-		device.WaitUntilIdle();
+		Ref<VulkanPipeline> instance = this;
+		Renderer::SubmitResourceFree([instance]() mutable {
+			auto& device = VulkanContext::GetPhysicalDevice();
+			device.WaitUntilIdle();
 
-		m_Shader.Release();
+			instance->m_Shader.Release();
 
-		vkDestroyPipeline(device.GetVulkanDevice(), m_Pipeline, nullptr);
-		vkDestroyPipelineLayout(device.GetVulkanDevice(), m_PipelineLayout, nullptr);
+			vkDestroyPipeline(device.GetVulkanDevice(), instance->m_Pipeline, nullptr);
+			vkDestroyPipelineLayout(device.GetVulkanDevice(), instance->m_PipelineLayout, nullptr);
+			});
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
@@ -52,7 +56,15 @@ namespace HazardRenderer::Vulkan
 			vkDestroyPipelineLayout(device, layout, nullptr);
 			});*/
 	}
-	void VulkanPipeline::Invalidate()
+
+	void VulkanPipeline::Invalidate() {
+		Ref<VulkanPipeline> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->RT_Invalidate();
+			});
+	}
+
+	void VulkanPipeline::RT_Invalidate()
 	{
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages = m_Shader->GetStageInfo();
@@ -78,7 +90,7 @@ namespace HazardRenderer::Vulkan
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
 		//If vertex shader has no inputs
-		if (shaderData.Stages.at(ShaderType::Vertex).Inputs.size() != 0) 
+		if (shaderData.Stages.at(ShaderType::Vertex).Inputs.size() != 0)
 		{
 			vertexInputInfo.vertexBindingDescriptionCount = inputBindings.size();
 			vertexInputInfo.pVertexBindingDescriptions = inputBindings.data();
@@ -205,44 +217,55 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+		Ref<VulkanPipeline> instance = this;
+		Renderer::Submit([instance, commandBuffer]() mutable {
+			HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
-		auto& offsets = m_Shader->GetDynamicOffsets();
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			auto& offsets = instance->m_Shader->GetDynamicOffsets();
+			uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 
-		m_Shader->Bind(commandBuffer);
-		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, m_Shader->GetDescriptorSet(), offsets.size(), offsets.data());
-
+			instance->m_Shader->Bind(commandBuffer);
+			vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, instance->m_Pipeline);
+			vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, instance->m_PipelineLayout, 0, 1, instance->m_Shader->GetDescriptorSet(), offsets.size(), offsets.data());
+			});
 	}
 	void VulkanPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
+		Renderer::Submit([commandBuffer, count]() mutable {
+			HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
+			uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			vkCmdDrawIndexed(cmdBuffer, count, 1, 0, 0, 0);
+			});
 	}
 	void VulkanPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
 	{
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDrawIndexed(cmdBuffer, count, instanceCount, 0, 0, 0);
+		Renderer::Submit([commandBuffer, count, instanceCount]() mutable {
+			uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			vkCmdDrawIndexed(cmdBuffer, count, instanceCount, 0, 0, 0);
+			});
 	}
 	void VulkanPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdDraw(cmdBuffer, count, 0, 0, 0);
+		Renderer::Submit([commandBuffer, count]() mutable {
+			uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
+			auto cmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			vkCmdDraw(cmdBuffer, count, 0, 0, 0);
+			});
 	}
 	void VulkanPipeline::Destroy()
 	{
 		if (!m_Pipeline) return;
 
-		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
-		vkDestroyPipeline(device, m_Pipeline, nullptr);
-		vkDestroyPipelineLayout(device, m_PipelineLayout, nullptr);
+		Ref<VulkanPipeline> instance = this;
+		Renderer::SubmitResourceFree([instance]() mutable {
+			auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
+			vkDestroyPipeline(device, instance->m_Pipeline, nullptr);
+			vkDestroyPipelineLayout(device, instance->m_PipelineLayout, nullptr);
+			});
 	}
 }
 #endif

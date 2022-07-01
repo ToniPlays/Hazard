@@ -48,6 +48,7 @@ namespace HazardRenderer::Vulkan {
 
 		m_GraphicsQueue.Index = indices.graphicsFamily.value();
 		m_PresentQueue.Index = indices.presentFamily.value();
+
 		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue.Queue);
 		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue.Queue);
 
@@ -121,7 +122,7 @@ namespace HazardRenderer::Vulkan {
 
 		return cmdBuffer;
 	}
-	/*
+	
 	VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer()
 	{
 		VkCommandBuffer cmdBuffer;
@@ -135,7 +136,6 @@ namespace HazardRenderer::Vulkan {
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_Device, &cmdBufAllocateInfo, &cmdBuffer));
 		return cmdBuffer;
 	}
-	*/
 
 	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer buffer)
 	{

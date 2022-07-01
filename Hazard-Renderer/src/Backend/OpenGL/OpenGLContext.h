@@ -2,6 +2,7 @@
 #include "Backend/Core/Core.h"
 
 #ifdef HZR_INCLUDE_OPENGL
+#include "CommandQueue.h"
 #include "Backend/Core/GraphicsContext.h"
 #include "OpenGLPhysicalDevice.h"
 #include <GLFW/glfw3.h>
@@ -43,6 +44,7 @@ namespace HazardRenderer::OpenGL {
 		OpenGLPhysicalDevice* m_PhysicalDevice;
 		Ref<OpenGLSwapchain> m_Swapchain;
 		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+
 	};
 }
 #endif

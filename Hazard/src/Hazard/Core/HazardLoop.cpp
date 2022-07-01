@@ -56,7 +56,7 @@ namespace Hazard {
 	}
 	void HazardLoop::Run()
 	{
-		//HZR_PROFILE_FRAME("MainThread");
+		HZR_PROFILE_FRAME("MainThread");
 		double time = glfwGetTime();
 
 		//Update Time

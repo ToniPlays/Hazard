@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "Color.h"
 #include "HazardRuntimeError.h"
+#include <optick.h>
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
 #ifdef HZR_DEBUG
@@ -29,6 +30,44 @@
 #else
 #define HZR_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
+
+#define HZR_PROFILE 1
+#define HZR_OPTICK 1
+
+#if HZR_PROFILE 
+#if !HZR_OPTICK
+#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
+#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
+#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+														::Hazard::InstrumentationTimer timer##line(fixedName##line.Data)
+#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
+#define HZR_PROFILE_SCOPE(name, ...)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
+#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
+#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
+#else
+
+#define HZR_PROFILE_SESSION_BEGIN(x, y)			
+#define HZR_PROFILE_SESSION_END()				
+#define HZR_PROFILE_SCOPE_LINE2(name, line)		
+
+#define HZR_PROFILE_SCOPE_LINE(name, line)		
+#define HZR_PROFILE_SCOPE(name, ...)			OPTICK_EVENT_DYNAMIC(name, __VA_ARGS__)
+#define HZR_PROFILE_FUNCTION(...)				OPTICK_EVENT(__VA_ARGS__)	
+#define HZR_PROFILE_FRAME(...)					OPTICK_FRAME(__VA_ARGS__)
+#endif
+
+#else
+#define HZR_PROFILE_SESSION_BEGIN(x, y)
+#define HZR_PROFILE_SESSION_END()
+#define HZR_PROFILE_SCOPE_LINE2(name, line)
+#define HZR_PROFILE_SCOPE_LINE(name, line)
+#define HZR_PROFILE_SCOPE(name, ...)
+#define HZR_PROFILE_FUNCTION(...)
+#define HZR_PROFILE_FRAME(...)
+#endif
+
+
+
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
 

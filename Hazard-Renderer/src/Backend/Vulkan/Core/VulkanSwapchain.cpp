@@ -4,6 +4,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "Backend/Core/Renderer.h"
+
 #include "../VulkanContext.h"
 #include "../VKUtils.h"
 #include "Backend/Vulkan/VulkanFrameBuffer.h"
@@ -12,7 +14,7 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanSwapchain::VulkanSwapchain() 
+	VulkanSwapchain::VulkanSwapchain()
 	{
 
 	}
@@ -287,7 +289,7 @@ namespace HazardRenderer::Vulkan
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		device.WaitUntilIdle();
 
-		for (auto& framebuffer : m_FrameBuffers) 
+		for (auto& framebuffer : m_FrameBuffers)
 		{
 			vkDestroyFramebuffer(device.GetVulkanDevice(), framebuffer, nullptr);
 			framebuffer = VK_NULL_HANDLE;
@@ -301,20 +303,21 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::BeginFrame()
 	{
-		VkResult result = AcquireNextImage(m_Semaphores.PresentComplete, &m_CurrentImageIndex);
+		Ref<VulkanSwapchain> instance = this;
+		VkResult result = instance->AcquireNextImage(instance->m_Semaphores.PresentComplete, &instance->m_CurrentImageIndex);
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
 			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-				Resize(m_Width, m_Height);
+				instance->Resize(instance->m_Width, instance->m_Height);
 			}
 		}
-		m_RenderCommandBuffer->Begin();
+		instance->m_RenderCommandBuffer->Begin();
 	}
 	void VulkanSwapchain::Present()
 	{
 		m_RenderCommandBuffer->End();
 
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
-		
+
 		const uint64_t DEFAULT_FENCE_TIMEOUT = 100000000000;
 
 		VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -357,7 +360,7 @@ namespace HazardRenderer::Vulkan
 			vkDestroySwapchainKHR(vkDevice, m_Swapchain, nullptr);
 		}
 
-		if (m_DepthStencil.allocation) 
+		if (m_DepthStencil.allocation)
 		{
 			VulkanAllocator allocator("Swapchain");
 			allocator.DestroyImage(m_DepthStencil.Image, m_DepthStencil.allocation);
@@ -410,11 +413,11 @@ namespace HazardRenderer::Vulkan
 			ivAttachments[0] = m_Buffers[i].View;
 			VK_CHECK_RESULT(vkCreateFramebuffer(device.GetVulkanDevice(), &frameBufferCreateInfo, nullptr, &m_FrameBuffers[i]));
 		}
-		
+
 	}
 	void VulkanSwapchain::CreateDepthStencil()
 	{
-		
+
 		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 		VkFormat depthFormat = device.GetDepthFormat();
 
@@ -448,7 +451,7 @@ namespace HazardRenderer::Vulkan
 			imageViewCI.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
 		VK_CHECK_RESULT(vkCreateImageView(device.GetVulkanDevice(), &imageViewCI, nullptr, &m_DepthStencil.View));
-		
+
 	}
 	void VulkanSwapchain::CreateResources(FrameBufferCreateInfo* targetInfo)
 	{

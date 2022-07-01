@@ -12,7 +12,7 @@
 #include <utility>
 
 #include "Hazard/Core/HazardLoop.h"
-#include "Hazard/Core/HazardRuntimeError.h"
+#include "HazardRuntimeError.h"
 #include "Hazard/Core/Timer.h"
 #include "Hazard/Logging/Logger.h"
 #include "Hazard/Instrumentor.h"
@@ -43,42 +43,6 @@ using namespace std::chrono_literals;
 #define HZR_THREAD_DELAY(x) std::this_thread::sleep_for(x);
 //Return if false
 #define HZR_GUARD(x) if(!(x)) return
-
-#define HZR_PROFILE 1
-#define HZR_OPTICK 0
-
-#if HZR_PROFILE 
-	#if !HZR_OPTICK
-		#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
-		#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
-		#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-														::Hazard::InstrumentationTimer timer##line(fixedName##line.Data)
-		#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
-		#define HZR_PROFILE_SCOPE(name, ...)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
-		#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
-		#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
-	#else
-
-		#define HZR_PROFILE_SESSION_BEGIN(x, y)			
-		#define HZR_PROFILE_SESSION_END()				
-		#define HZR_PROFILE_SCOPE_LINE2(name, line)		
-														
-		#define HZR_PROFILE_SCOPE_LINE(name, line)		
-		#define HZR_PROFILE_SCOPE(name, ...)			OPTICK_EVENT_DYNAMIC(name, __VA_ARGS__)
-		#define HZR_PROFILE_FUNCTION(...)				OPTICK_EVENT(__VA_ARGS__)	
-		#define HZR_PROFILE_FRAME(...)					OPTICK_FRAME(__VA_ARGS__)
-	#endif
-
-#else
-	#define HZR_PROFILE_SESSION_BEGIN(x, y)
-	#define HZR_PROFILE_SESSION_END()
-	#define HZR_PROFILE_SCOPE_LINE2(name, line)
-	#define HZR_PROFILE_SCOPE_LINE(name, line)
-	#define HZR_PROFILE_SCOPE(name, ...)
-	#define HZR_PROFILE_FUNCTION(...)
-	#define HZR_PROFILE_FRAME(...)
-#endif
-
 
 #if (defined(HZR_DEBUG))
 	//Core logging macros

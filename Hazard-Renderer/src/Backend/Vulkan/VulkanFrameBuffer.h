@@ -7,14 +7,15 @@
 #include "Image/VulkanImage2D.h"
 #include <vulkan/vulkan.h>
 
-namespace HazardRenderer::Vulkan {
+namespace HazardRenderer::Vulkan 
+{
 	class VulkanFrameBuffer : public FrameBuffer {
 	public:
 		VulkanFrameBuffer(FrameBufferCreateInfo* info);
 		virtual ~VulkanFrameBuffer();
 
-		void Bind() const {};
-		void Unbind() const {};
+		void Bind() {};
+		void Unbind() {};
 
 		void Resize(uint32_t width, uint32_t height, bool force = false);
 		void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const {};

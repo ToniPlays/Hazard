@@ -114,8 +114,8 @@ namespace TriangleTest {
 #pragma endregion
 		while (running)
 		{
-			window->BeginFrame();
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			window->BeginFrame();
 
 			vertexBuffer->Bind(cmdBuffer);
 			indexBuffer->Bind(cmdBuffer);
@@ -123,6 +123,7 @@ namespace TriangleTest {
 			pipeline->Bind(cmdBuffer);
 			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
 
+			Renderer::WaitAndRender();
 			window->Present();
 		}
 

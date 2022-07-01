@@ -2,6 +2,8 @@
 
 #include "OpenGLFramebuffer.h"
 #ifdef HZR_INCLUDE_OPENGL
+
+#include "Backend/Core/Renderer.h"
 #include "OpenGLUtils.h"
 #include "OpenGLContext.h"
 #include "Backend/Core/Window.h"
@@ -24,12 +26,12 @@ namespace HazardRenderer::OpenGL
 		m_Specs.Width = (uint32_t)info->Width;
 		m_Specs.Height = (uint32_t)info->Height;
 
-		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget) 
+		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget)
 		{
 
 		}
 
-		for (auto& attachment : info->Attachments) 
+		for (auto& attachment : info->Attachments)
 		{
 			//if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
 			//	m_ColorAttachments.emplace_back(attachment);
@@ -42,42 +44,50 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
-		glDeleteFramebuffers(1, &m_ID);
-		if (m_ColorImages.size() > 0) {
-			for (auto& image : m_ColorImages)
-				image->Release();
-		}
+		Ref<OpenGLFrameBuffer> instance = this;
+		Renderer::SubmitResourceFree([instance]() mutable {
+			glDeleteFramebuffers(1, &instance->m_ID);
+			if (instance->m_ColorImages.size() > 0) {
+				for (auto& image : instance->m_ColorImages)
+					image->Release();
+			}
 
-		if (m_DepthImage) {
-			m_DepthImage->Release();
-		}
+			if (instance->m_DepthImage) {
+				instance->m_DepthImage->Release();
+			}
+			});
 	}
-	void OpenGLFrameBuffer::Bind() const
+	void OpenGLFrameBuffer::Bind()
 	{
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+		Ref<OpenGLFrameBuffer> instance = this;
 
-		if(m_Specs.SwapChainTarget) 
-		{
-			glm::vec4 color = OpenGLContext::GetInstance().GetClearColor();
-			Window* window = OpenGLContext::GetInstance().GetWindow();
-			glClearColor(color.r, color.g, color.b, color.a);
-			glViewport(0, 0, window->GetWidth(), window->GetHeight());
-		}
-		else 
-		{
-			glClearColor(m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a);
-			glViewport(0, 0, m_Specs.Width, m_Specs.Height);
-		}
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer::Submit([instance]() mutable {
+			glBindFramebuffer(GL_FRAMEBUFFER, instance->m_ID);
+
+			if (instance->m_Specs.SwapChainTarget)
+			{
+				glm::vec4 color = OpenGLContext::GetInstance().GetClearColor();
+				Window* window = OpenGLContext::GetInstance().GetWindow();
+				glClearColor(color.r, color.g, color.b, color.a);
+				glViewport(0, 0, window->GetWidth(), window->GetHeight());
+			}
+			else
+			{
+				glClearColor(instance->m_Specs.ClearColor.r, instance->m_Specs.ClearColor.g, instance->m_Specs.ClearColor.b, instance->m_Specs.ClearColor.a);
+				glViewport(0, 0, instance->m_Specs.Width, instance->m_Specs.Height);
+			}
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			});
 	}
-	void OpenGLFrameBuffer::Unbind() const
+	void OpenGLFrameBuffer::Unbind()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		Renderer::Submit([]() mutable {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			});
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
-		if (m_Specs.Width == width && m_Specs.Height == height && !force) 
+		if (m_Specs.Width == width && m_Specs.Height == height && !force)
 			return;
 
 		m_Specs.Width = width;
@@ -87,7 +97,10 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Invalidate()
 	{
-		RT_Invalidate();
+		Ref<OpenGLFrameBuffer> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->RT_Invalidate();
+			});
 	}
 	void OpenGLFrameBuffer::RT_Invalidate()
 	{
@@ -126,7 +139,7 @@ namespace HazardRenderer::OpenGL
 				imageInfo.Format = m_ColorAttachments[i].Format;
 				m_ColorImages[i] = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
 			}
-	
+
 			for (uint32_t i = 0; i < (uint32_t)m_ColorImages.size(); i++)
 			{
 				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
@@ -161,7 +174,7 @@ namespace HazardRenderer::OpenGL
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
-		else if (m_ColorImages.empty()) 
+		else if (m_ColorImages.empty())
 		{
 			glDrawBuffer(GL_NONE);
 		}

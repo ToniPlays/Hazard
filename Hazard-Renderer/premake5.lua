@@ -30,6 +30,8 @@ project "Hazard-Renderer"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Assimp}",
+		"%{IncludeDir.Optick}",
 		"src",
 		"examples"
 	}

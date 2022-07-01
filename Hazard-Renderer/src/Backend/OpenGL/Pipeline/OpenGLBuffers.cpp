@@ -2,6 +2,7 @@
 #include "OpenGLBuffers.h"
 
 #ifdef HZR_INCLUDE_OPENGL
+#include "Backend/Core/Renderer.h"
 #include "Backend/Core/Pipeline/ShaderDataType.h"
 #include <glad/glad.h>
 
@@ -38,117 +39,151 @@ namespace HazardRenderer::OpenGL
 			m_Layout = *info->Layout;
 
 		uint32_t offset = 0;
+		Ref<OpenGLVertexBuffer> instance = this;
 
-		if (m_Layout.GetStride() == 0)
-		{
-			glCreateBuffers(1, &m_ID);
-			glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
-			return;
-		}
+		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
 
-
-		glCreateVertexArrays(1, &m_VAO);
-		glCreateBuffers(1, &m_ID);
-		glNamedBufferData(m_ID, m_Size, nullptr, GL_STREAM_DRAW + m_Usage);
-
-		uint32_t bufferedOffset = 0;
-		uint32_t currentBuffer = 0;
-
-		for (uint32_t i = 0; i < m_Layout.GetElementCount(); i++)
-		{
-			BufferElement element = m_Layout.GetElements()[i];
-
-			uint32_t stride = m_Layout.GetBufferStride(element.ElementDivisor);
-
-			if (element.ElementDivisor != currentBuffer) {
-				bufferedOffset += element.Offset;
-				currentBuffer = element.ElementDivisor;
-				glVertexArrayBindingDivisor(m_VAO, element.ElementDivisor, element.ElementDivisor);
+			if (instance->m_Layout.GetStride() == 0)
+			{
+				glCreateBuffers(1, &instance->m_ID);
+				glNamedBufferData(instance->m_ID, instance->m_Size * 4530043, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+				return;
 			}
 
-			glEnableVertexArrayAttrib(m_VAO, i);
-			glVertexArrayAttribFormat(m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
-			glVertexArrayAttribBinding(m_VAO, i, element.ElementDivisor);
+			glCreateVertexArrays(1, &instance->m_VAO);
+			glCreateBuffers(1, &instance->m_ID);
+			glNamedBufferData(instance->m_ID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+			
 
-			/*
-			glVertexAttribPointer(i + offset, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
-				element.Normalized ? GL_TRUE : GL_FALSE, m_Layout.GetStride(), (const void*)element.Offset);
-			glEnableVertexAttribArray(i + offset);
-			glVertexAttribDivisor(i + offset, m_Layout.GetDivisor());
-			*/
-		}
+			uint32_t bufferedOffset = 0;
+			uint32_t currentBuffer = 0;
 
-		if (info->Data) {
-			SetData(info->Data, m_Size);
-		}
+			for (uint32_t i = 0; i < instance->m_Layout.GetElementCount(); i++)
+			{
+				BufferElement element = instance->m_Layout.GetElements()[i];
+
+				uint32_t stride = instance->m_Layout.GetBufferStride(element.ElementDivisor);
+
+				if (element.ElementDivisor != currentBuffer) {
+					bufferedOffset += element.Offset;
+					currentBuffer = element.ElementDivisor;
+					glVertexArrayBindingDivisor(instance->m_VAO, element.ElementDivisor, element.ElementDivisor);
+				}
+
+				glEnableVertexArrayAttrib(instance->m_VAO, i);
+				glVertexArrayAttribFormat(instance->m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
+				glVertexArrayAttribBinding(instance->m_VAO, i, element.ElementDivisor);
+			}
+
+			if (data) {
+				instance->SetData(data, instance->m_Size);
+			}
+		});
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &m_ID);
-		glDeleteVertexArrays(1, &m_VAO);
+		Renderer::SubmitResourceFree([id = m_ID, vao = m_VAO]() mutable {
+			glDeleteBuffers(1, &id);
+			glDeleteVertexArrays(1, &vao);
+			});
 	}
 	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{
-		if (m_VAO)
-		{
-			if (m_VAO != s_BoundVAO) {
-				glBindVertexArray(m_VAO);
-				s_BoundVAO = m_VAO;
-				s_CurrentLayout = m_Layout;
+		Ref<OpenGLVertexBuffer> instance = this;
+		Renderer::Submit([instance, binding]() {
+			if (instance->m_VAO)
+			{
+				if (instance->m_VAO != s_BoundVAO) {
+					glBindVertexArray(instance->m_VAO);
+					s_BoundVAO = instance->m_VAO;
+					s_CurrentLayout = instance->m_Layout;
+				}
 			}
-		}
-		glVertexArrayVertexBuffer(s_BoundVAO, binding, m_ID, 0, s_CurrentLayout.GetBufferStride(binding));
+			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->m_ID, 0, s_CurrentLayout.GetBufferStride(binding));
+			});
 	}
 	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		Renderer::Submit([]() mutable {
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+			});
 	}
 	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
 	{
-		glNamedBufferSubData(m_ID, 0, size, data);
+		Ref<OpenGLVertexBuffer> instance = this;
+		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
+			glNamedBufferSubData(instance->m_ID, 0, size, data);
+			});
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 
-		glCreateBuffers(1, &m_ID);
+		Ref<OpenGLIndexBuffer> instance = this;
 
-		if (info->Data != nullptr)
-			SetData(info->Data, info->Size);
+		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
+
+			glCreateBuffers(1, &instance->m_ID);
+
+			if (data != nullptr)
+				instance->SetData(data, instance->m_Size);
+
+		});
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(1, &m_ID);
+		Ref<OpenGLIndexBuffer> instance = this;
+		Renderer::SubmitResourceFree([instance]() mutable {
+			glDeleteBuffers(1, &instance->m_ID);
+			});
 	}
 	void OpenGLIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
+		Ref<OpenGLIndexBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->m_ID);
+			});
 	}
 	void OpenGLIndexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		Renderer::Submit([]() mutable {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			});
 	}
 	void OpenGLIndexBuffer::SetData(uint32_t* data, uint32_t size)
 	{
-		m_Size = size;
-		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
+		Ref<OpenGLIndexBuffer> instance = this;
+		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
+			instance->m_Size = size;
+			glNamedBufferData(instance->m_ID, size, data, GL_STREAM_DRAW + instance->m_Usage);
+			});
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_Name = createInfo->Name;
-		glCreateBuffers(1, &m_ID);
-		glNamedBufferData(m_ID, m_Size, nullptr, GL_DYNAMIC_DRAW);
+
+		Ref<OpenGLUniformBuffer> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			glCreateBuffers(1, &instance->m_ID);
+			glNamedBufferData(instance->m_ID, instance->m_Size, nullptr, GL_DYNAMIC_DRAW);
+			});
 	}
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
 	{
-		glDeleteBuffers(1, &m_ID);
+		Ref<OpenGLUniformBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
+			glDeleteBuffers(1, &instance->m_ID);
+			});
 	}
 	void OpenGLUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-
+		Ref<OpenGLUniformBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
+			glBindBufferBase(GL_UNIFORM_BUFFER, instance->m_Binding, instance->m_ID);
+			});
 	}
 	void OpenGLUniformBuffer::Unbind()
 	{
@@ -156,8 +191,10 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
-		glNamedBufferSubData(m_ID, 0, size, data);
+		Ref<OpenGLUniformBuffer> instance = this;
+		Renderer::Submit([instance, data, size]() mutable {
+			glNamedBufferData(instance->m_ID, size, data, GL_DYNAMIC_DRAW);
+			});
 	}
 }
 #endif

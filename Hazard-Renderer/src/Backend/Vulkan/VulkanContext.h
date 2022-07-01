@@ -4,6 +4,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/GraphicsContext.h"
+#include "CommandQueue.h"
 #include "Core/WindowSurface.h"
 #include "Core/VulkanDevice.h"
 #include "Core/VulkanSwapChain.h"
@@ -43,7 +44,9 @@ namespace HazardRenderer::Vulkan {
 		*/
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
+		void BeginRenderPass_RT(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
+		void EndRenderPass_RT(Ref<RenderCommandBuffer> buffer);
 		//void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
 	
 		
@@ -57,6 +60,37 @@ namespace HazardRenderer::Vulkan {
 		static WindowSurface& GetWindowSurface() { return *s_Instance->m_WindowSurface; }
 		static glm::vec4& GetClearColor() { return s_Instance->m_ClearColor; }
 
+		template<typename FuncT>
+		static void Submit(FuncT func) {
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+				pFunc->~FuncT();
+			};
+			auto storageBuffer = s_Instance->m_RenderCommandQueue.Allocate(renderCmd, sizeof(func));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
+		}
+		template<typename FuncT>
+		static void SubmitResourceCreate(FuncT func) {
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+				pFunc->~FuncT();
+			};
+			auto storageBuffer = s_Instance->m_ResourceCreateCommandQueue.Allocate(renderCmd, sizeof(func));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
+		}
+		template<typename FuncT>
+		static void SubmitResourceFree(FuncT func) {
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+				pFunc->~FuncT();
+			};
+			auto storageBuffer = s_Instance->m_ResourceFreeCommandQueue.Allocate(renderCmd, sizeof(func));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
+		}
+
 	private:
 
 		inline static VulkanContext* s_Instance;
@@ -68,10 +102,6 @@ namespace HazardRenderer::Vulkan {
 		Scope<WindowSurface> m_WindowSurface;
 		Scope<VulkanDevice> m_Device;
 		Ref<VulkanSwapchain> m_Swapchain;
-
-		//inline static std::unordered_map<uint32_t, uint32_t> m_DescriptorAllocations;
-		
-		//uint32_t m_CurrentBufferIndex = 0;
 	};
 }
 #endif

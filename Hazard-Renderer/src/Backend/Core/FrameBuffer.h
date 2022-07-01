@@ -49,8 +49,8 @@ namespace HazardRenderer
 	public:
 		virtual ~FrameBuffer() = default;
 
-		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) = 0;
 		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const = 0;

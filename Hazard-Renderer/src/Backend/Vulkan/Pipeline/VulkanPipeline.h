@@ -30,6 +30,7 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		void Destroy();
+		void RT_Invalidate();
 
 	private:
 		PipelineSpecification m_Specs;

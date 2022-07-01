@@ -13,8 +13,8 @@ namespace HazardRenderer::OpenGL
 		OpenGLFrameBuffer(FrameBufferCreateInfo* info);
 		~OpenGLFrameBuffer();
 
-		virtual void Bind() const override;
-		virtual void Unbind() const override;
+		virtual void Bind() override;
+		virtual void Unbind() override;
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) override;
 		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const override {};

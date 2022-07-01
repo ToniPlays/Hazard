@@ -19,7 +19,8 @@ project "Hazard-Utility"
 	{
 		"src",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Optick}"
 	}
 
 	links {

@@ -56,6 +56,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLSwapchain::BeginFrame()
 	{
+
 	}
 
 	void OpenGLSwapchain::Present()

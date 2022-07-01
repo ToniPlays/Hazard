@@ -1,6 +1,7 @@
 
 #include "Backend/Core/GraphicsContext.h"
 #include "Buffers.h"
+#include "Backend/Core/RenderLibrary.h"
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
@@ -12,9 +13,9 @@ namespace HazardRenderer {
 	{
 		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
 
-		//if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) {
-		//	return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
-		//}
+		if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) {
+			return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
+		}
 
 		Ref<VertexBuffer> buffer = nullptr;
 		switch (GraphicsContext::GetRenderAPI())

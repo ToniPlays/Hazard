@@ -4,13 +4,14 @@
 #include "tests/Rendering/TexturedQuad.h"
 #include "tests/Rendering/InstancingTest.h"
 #include "tests/Rendering/RenderCommandTest.h"
+#include "tests/Rendering/SceneTest.h"
 
 #include "tests/Scripting/CoreTest.h"
 
 
 int main()
 {
-	InstancingTest::Run(RenderAPI::Metal);
+	TriangleTest::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

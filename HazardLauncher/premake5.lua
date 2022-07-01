@@ -28,6 +28,7 @@ project "HazardLauncher"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Optick}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
@@ -37,12 +38,14 @@ project "HazardLauncher"
 	}
 	links {
 		"%{Library.Mono_Debug_Lib}",
+		"%{Library.Assimp_Lib}",
 		"Hazard-Utility",
 		"Hazard-Renderer",
 		"Hazard-Script",
 		"Hazard-UI",
 		"Glad",
-		"GLFW"
+		"GLFW",
+		"Optick"
 	}
 	defines {
 		"GLFW_INCLUDE_NONE"

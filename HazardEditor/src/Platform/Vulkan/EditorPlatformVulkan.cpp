@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazard.h"
 #include "EditorPlatformVulkan.h"
+#include "Backend/Core/Renderer.h"
 
 #include <Platform/GLFW/imgui_impl_glfw.h>
 
@@ -8,49 +9,47 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
-	/*
-	this->m_Context = context;
-	const auto& swapchain = m_Context->GetSwapchain();
-	auto device = m_Context->GetDevice();
+	
+	m_Context = (VulkanContext*)window.GetContext();
+	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
+	auto& device = (VulkanDevice&)m_Context->GetDevice();
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForVulkan(window, true);
+	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);
 
 	ImGui_ImplVulkan_InitInfo init_info = {};
-	init_info.Instance = context->GetInstance();
-	init_info.PhysicalDevice = device->GetPhysicalDevice();
-	init_info.Device = device->GetDevice();
-	init_info.QueueFamily = VKUtils::GetQueueFamilyIndices(device->GetPhysicalDevice(),
-		context->GetSurface()).graphicsFamily.value();
-	init_info.Queue = device->GetGraphicsQueue().Queue;
+	init_info.Instance = m_Context->GetVulkanInstance();
+	init_info.PhysicalDevice = device.GetVulkanPhysicalDevice();
+	init_info.Device = device.GetVulkanDevice();
+	init_info.QueueFamily = device.GetGraphicsQueue().Index;
+	init_info.Queue = device.GetGraphicsQueue().Queue;
 	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = m_Context->GetDevice()->GetDescriptorPool(0);
+	init_info.DescriptorPool = device.GetDescriptorPool(0);
 	init_info.Allocator = nullptr;
 	init_info.MinImageCount = 2;
 	init_info.ImageCount = swapchain->GetImageCount();
 	init_info.CheckVkResultFn = nullptr;
 
-	ImGui_ImplVulkan_Init(&init_info, swapchain->GetRenderPass());
-	VkCommandBuffer cmdBuffer = device->GetCommandBuffer(true);
+	ImGui_ImplVulkan_Init(&init_info, swapchain->GetVulkanRenderPass());
+	VkCommandBuffer cmdBuffer = device.GetCommandBuffer(true);
 
 	ImGui_ImplVulkan_CreateFontsTexture(cmdBuffer);
-	device->FlushGraphicsCommandBuffer(cmdBuffer);
+	device.FlushGraphicsCommandBuffer(cmdBuffer);
 
-	device->WaitUntilIdle();
+	device.WaitUntilIdle();
 	ImGui_ImplVulkan_DestroyFontUploadObjects();
 
-	uint32_t framesInFlight = Hazard::Rendering::RenderContextCommand::GetImagesInFlight();
+	uint32_t framesInFlight = swapchain->GetImageCount();
 	s_ImGuiCommandBuffers.resize(framesInFlight);
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
-		s_ImGuiCommandBuffers[i] = VulkanContext::GetDevice()->CreateSecondaryCommandBuffer();
-		*/
+		s_ImGuiCommandBuffers[i] = device.CreateSecondaryCommandBuffer();
 }
 
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
-	//m_Context->GetDevice()->WaitUntilIdle();
+	m_Context->GetPhysicalDevice().WaitUntilIdle();
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 }
@@ -65,10 +64,11 @@ void EditorPlatformVulkan::EndFrame()
 {
 	VulkanContext* context = m_Context;
 
-	/*
-	Rendering::RenderContextCommand::Submit([context]() {
+	
+	HazardRenderer::Renderer::Submit([context]() mutable {
+
 		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
-		const auto& swapchain = context->GetSwapchain();
+		const auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 		ImGuiIO& io = ImGui::GetIO();
 
 		VkClearValue clearValues[2];
@@ -91,7 +91,7 @@ void EditorPlatformVulkan::EndFrame()
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassBeginInfo.pNext = nullptr;
-		renderPassBeginInfo.renderPass = swapchain->GetRenderPass();
+		renderPassBeginInfo.renderPass = swapchain->GetVulkanRenderPass();
 		renderPassBeginInfo.renderArea.offset.x = 0;
 		renderPassBeginInfo.renderArea.offset.y = 0;
 		renderPassBeginInfo.renderArea.extent.width = width;
@@ -104,7 +104,7 @@ void EditorPlatformVulkan::EndFrame()
 
 		VkCommandBufferInheritanceInfo inheritanceInfo = {};
 		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-		inheritanceInfo.renderPass = swapchain->GetRenderPass();
+		inheritanceInfo.renderPass = swapchain->GetVulkanRenderPass();
 		inheritanceInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
 
 		VkCommandBufferBeginInfo cmdBufInfo = {};
@@ -151,7 +151,6 @@ void EditorPlatformVulkan::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 	});
-	*/
 }
 
 void EditorPlatformVulkan::Close()

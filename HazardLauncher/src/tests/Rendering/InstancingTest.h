@@ -14,9 +14,9 @@ using namespace HazardRenderer;
 
 namespace InstancingTest {
 
-	//OpenGL: Totally works
+	//OpenGL: Totally doesn't work
 	//Vulkan: Totally works
-	//Metal:  Totally works, except no Uniform Buffers
+	//Metal:  Totally works
 
 	static void Run(RenderAPI api)
 	{
@@ -27,7 +27,7 @@ namespace InstancingTest {
 
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hello Instancing";
-		appInfo.BuildVersion = "0.0.1a";
+		appInfo.BuildVersion = "0.1.0a";
 		appInfo.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
@@ -117,11 +117,13 @@ namespace InstancingTest {
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "InstancePipeline";
+
 #ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "QuadInstanced.glsl";
 #else
         spec.ShaderPath = "QuadInstanced.metal";
 #endif
+
 		spec.DrawType = DrawType::Fill;
 		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
@@ -138,7 +140,6 @@ namespace InstancingTest {
 		Camera camera = {};
 		camera.SetProjection(projection);
 		camera.SetView(view);
-
 
 		InstanceData* instanceData = new InstanceData[size * size];
 
@@ -168,6 +169,7 @@ namespace InstancingTest {
         glm::mat4 viewProj = camera.GetViewProjection();
 		std::string title = window->GetWindowInfo().Title;
         
+#ifdef HZR_PLATFORM_MACOS
         UniformBufferCreateInfo uboInfo = {};
         uboInfo.Name = "Camera";
         uboInfo.Size = sizeof(Camera);
@@ -175,7 +177,7 @@ namespace InstancingTest {
         
         Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
         cameraUBO->SetData(&viewProj, sizeof(Camera));
-        
+#endif
 		pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(Camera));
         
 		while (running)
@@ -187,7 +189,9 @@ namespace InstancingTest {
 			startTime = time;
 
 			window->BeginFrame();
+#ifdef HZR_PLATFORM_MACOS
             cameraUBO->Bind(cmdBuffer); 
+#endif
 			quadBuffer->Bind(cmdBuffer);
 			instanceBuffer->Bind(cmdBuffer, 1);
 			indexBuffer->Bind(cmdBuffer);

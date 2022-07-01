@@ -1,6 +1,7 @@
 
 #include "OpenGLPipeline.h"
 #ifdef HZR_INCLUDE_OPENGL
+#include "Backend/Core/Renderer.h"
 #include "../OpenGLFramebuffer.h"
 #include "../OpenGLUtils.h"
 #include <glad/glad.h>
@@ -23,39 +24,47 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLPipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		m_Shader->Bind(commandBuffer);
-		glPolygonMode(GL_FRONT_AND_BACK, m_PolygonMode);
-		glLineWidth(m_Specs.LineWidth);
+		Ref<OpenGLPipeline> instance = this;
+		Renderer::Submit([instance, cmdBuffer = commandBuffer]() mutable {
+			instance->m_Shader->Bind(cmdBuffer);
+			glPolygonMode(GL_FRONT_AND_BACK, instance->m_PolygonMode);
+			glLineWidth(instance->m_Specs.LineWidth);
 
-		m_Specs.DepthTest ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			instance->m_Specs.DepthTest ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		switch (m_Specs.CullMode)
-		{
-		case CullMode::None: glDisable(GL_CULL_FACE); break;
-		case CullMode::FrontFace: 
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT); 
-			break;
-		case CullMode::BackFace: 
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK); 
-			break;
-		}
-
+			switch (instance->m_Specs.CullMode)
+			{
+			case CullMode::None: glDisable(GL_CULL_FACE); break;
+			case CullMode::FrontFace:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				break;
+			case CullMode::BackFace:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
+				break;
+			}
+			});
 	}
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		glDrawElements(m_DrawType, count, GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit([drawType = m_DrawType, count]() mutable {
+			glDrawElements(drawType, count, GL_UNSIGNED_INT, nullptr);
+			});
 	}
 	void OpenGLPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
 	{
-		glDrawElementsInstanced(m_DrawType, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+		Renderer::Submit([drawType = m_DrawType, count, instanceCount]() mutable {
+			glDrawElementsInstanced(drawType, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+			});
 	}
 	void OpenGLPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
-		glDrawArrays(m_DrawType, 0, count);
+		Renderer::Submit([drawType = m_DrawType, count]() mutable {
+			glDrawArrays(drawType, 0, count);
+			});
 	}
 }
 #endif

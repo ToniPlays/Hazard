@@ -1,7 +1,8 @@
 #include "hzrpch.h"
 #include "RenderEngine.h"
+#include "HazardRenderer.h"
 
-namespace Hazard 
+namespace Hazard
 {
 	using namespace HazardRenderer;
 
@@ -13,11 +14,10 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		m_Window->BeginFrame();
-
-		
 	}
-	void RenderEngine::PostRender() 
+	void RenderEngine::PostRender()
 	{
+		Renderer::WaitAndRender();
 		m_Window->Present();
 	}
 }

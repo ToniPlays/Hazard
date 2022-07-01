@@ -13,7 +13,6 @@ void EditorApplication::PreInit()
 	HZR_INFO("EditorApplication::PreInit()");
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
-	
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
@@ -49,61 +48,23 @@ void EditorApplication::PreInit()
 
 	HazardRendererCreateInfo renderInfo = {};
 	renderInfo.pAppInfo = &rendererApp;
-	renderInfo.Renderer = RenderAPI::OpenGL;
+	renderInfo.Renderer = RenderAPI::Vulkan;
 	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
 
-	/*
-	AudioEngineCreateInfo audioInfo = {};
-
-	ScriptEngineCreateInfo scriptInfo = {};
-#ifdef HZR_PLATFORM_WINDOWS
-	scriptInfo.AppAssemblyPath = CommandLineArgs::Get<std::string>("AppCore");
-	scriptInfo.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/debug/HazardScripting.dll";
-	scriptInfo.MonoDirectoryLib = "C:/Program Files/Mono/lib";
-	scriptInfo.MonoDirectoryEtc = "C:/Program Files/Mono/etc/";
-
-	
-#else
-	scriptInfo.MonoDirectoryLib = "/usr/local/Cellar/mono/6.12.0.122/lib/";
-	scriptInfo.MonoDirectoryEtc = "/usr/local/Cellar/mono/6.12.0.122/etc/";
-#endif
-	scriptInfo.Enable = false;
-
-	EntityComponentCreateInfo entityInfo = {};
-	*/
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RendererInfo = &renderInfo;
-	/*
-    createInfo.RendererInfo = &engineInfo;
-	createInfo.AudioEngine = &audioInfo;
-	createInfo.EntityComponent = &entityInfo;
-	createInfo.ScriptEngineInfo = &scriptInfo;
-	*/
 
 	CreateApplicationStack(&createInfo);
 }
 void EditorApplication::Init()
 {
 	PushModule<GUIManager>();
-/*
-#ifdef HZR_PLATFORM_WINDOWS
-
-	PushModule<WindowElement::EditorView>();
-#endif
-    Runtime::SceneRuntimeHandler::Init();
-
-    Project::ProjectManager& manager = PushModule<Project::ProjectManager>();
-	manager.Load(CommandLineArgs::Get<std::string>("ProjectPath"));
-	*/
 }
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	
-	//if (!HasModule<WindowElement::EditorView>()) return false;
-	//return GetModule<WindowElement::EditorView>().OnEvent(e);
 	return false;
 }

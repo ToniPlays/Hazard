@@ -45,7 +45,7 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorPool GetDescriptorPool(uint32_t index) { return m_DescriptorPools[index]; }
 		VkPipelineCache GetPipelineCache() { return m_PipelineCache; }
 
-		//VkCommandBuffer CreateSecondaryCommandBuffer();
+		VkCommandBuffer CreateSecondaryCommandBuffer();
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }

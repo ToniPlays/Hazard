@@ -39,6 +39,7 @@ project "HazardEditor"
 		"%{IncludeDir.Hazard_UI}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Optick}",
 		"src"
 	}
 

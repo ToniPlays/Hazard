@@ -51,9 +51,9 @@ namespace HazardRenderer
                 Ref<VertexBuffer> buffer = rawMesh.RawMesh->GetVertexBuffer();
                 Ref<IndexBuffer> ibo = rawMesh.RawMesh->GetIndexBuffer();
 
-                ibo->Bind(m_CommandBuffer);
                 buffer->Bind(m_CommandBuffer, 0);
                 s_Resources.InstanceBuffer->Bind(m_CommandBuffer, 1);
+                ibo->Bind(m_CommandBuffer);
 
                 s_Resources.InstanceBuffer->SetData(data.data(), (uint32_t)data.size() * sizeof(TransformData));
                 pipeline->DrawInstanced(m_CommandBuffer, ibo->GetCount(), rawMesh.InstanceCount);
@@ -68,7 +68,7 @@ namespace HazardRenderer
     void RenderCommand::Init(Window* window)
     {
         s_Context = window->GetContext();
-#if 0
+#if 1
         uint32_t size = 500;
 
         float vertices[] =
@@ -102,13 +102,13 @@ namespace HazardRenderer
         VertexBufferCreateInfo instanceVBO = {};
         instanceVBO.DebugName = "Transforms";
         instanceVBO.IsShared = false;
-        instanceVBO.Size = sizeof(glm::vec4) * 4 * size * size;
+        instanceVBO.Size = meshLayout.GetBufferStride(PerInstance) * size * size;
 
         s_Resources.QuadBuffer = VertexBuffer::Create(&vbo);
         s_Resources.InstanceBuffer = VertexBuffer::Create(&instanceVBO);
 
         IndexBufferCreateInfo ibo = {};
-        ibo.DebugName = "TriangleIBO";
+        ibo.DebugName = "InstancedQuadIBO";
         ibo.Usage = BufferUsage::StaticDraw;
         ibo.Size = sizeof(indices);
         ibo.Data = indices;

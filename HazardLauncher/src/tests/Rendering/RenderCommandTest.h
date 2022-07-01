@@ -9,9 +9,9 @@ using namespace HazardRenderer;
 
 namespace RenderCommandTest {
 
-	//OpenGL: Nothing
-	//Vulkan: White quad
-	//Metal: Not tested
+	//OpenGL: Yea now it does work
+	//Vulkan: Works
+	//Metal: Should work
 
 	static void Run(RenderAPI api)
 	{
@@ -36,6 +36,7 @@ namespace RenderCommandTest {
 		appInfo.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
+
 		appInfo.EventCallback = [&](Event& e) {
 
 			if (e.GetEventType() == EventType::WindowClose) {
@@ -49,7 +50,6 @@ namespace RenderCommandTest {
 				camera.SetProjection(projection);
 				camera.SetView(view);
 			}
-
 		};
 
 		HazardRendererAppInfo rendererApp = {};
@@ -60,7 +60,6 @@ namespace RenderCommandTest {
 		rendererApp.MessageCallback = [](RenderMessage message) {
 			std::cout << message.Message << std::endl;
 		};
-
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = "RenderCommandTest | Quads: " + std::to_string(size * size);
@@ -124,7 +123,11 @@ namespace RenderCommandTest {
 		while (running)
 		{
             glm::mat4 viewProj = settings.RenderingCamera->GetViewProjection();
+
 			uniformBuffer->SetData(&viewProj, sizeof(Camera));
+
+			pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(Camera));
+
 			double time = glfwGetTime();
 			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime)));
 			window->SetWindowTitle(window->GetWindowInfo().Title + " fps " + std::to_string((1.0f / (time - startTime))));

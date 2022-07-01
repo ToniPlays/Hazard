@@ -42,8 +42,6 @@ void GUIManager::Init()
 	InitImGuiPlatform(*m_Window);
 
 	//Initialize style
-
-
 }
 
 void GUIManager::Update()

@@ -47,6 +47,10 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		glUseProgram(m_ID);
+
+		for (auto& [name, ubo] : m_UniformBuffers) {
+			ubo->Bind(cmdBuffer);
+		}
 	}
 	void OpenGLShader::Unbind()
 	{

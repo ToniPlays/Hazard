@@ -20,7 +20,8 @@ project "Hazard-Script"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Mono}",
-		"%{IncludeDir.Hazard_Utility}"
+		"%{IncludeDir.Hazard_Utility}",
+		"%{IncludeDir.Optick}"
 	}
 
 	links 
