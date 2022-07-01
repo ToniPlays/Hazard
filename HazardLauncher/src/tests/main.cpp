@@ -8,7 +8,6 @@
 
 #include "tests/Scripting/CoreTest.h"
 
-
 int main()
 {
 	TriangleTest::Run(RenderAPI::Vulkan);

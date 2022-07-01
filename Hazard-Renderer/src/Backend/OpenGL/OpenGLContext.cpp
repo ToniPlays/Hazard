@@ -60,14 +60,21 @@ namespace HazardRenderer::OpenGL {
 
 	void OpenGLContext::BeginFrame()
 	{
-		m_Swapchain->BeginFrame();
-		m_Swapchain->GetRenderPass()->GetSpecs().TargetFrameBuffer->Bind();
+		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
+		Renderer::Submit([swapchain]() mutable {
+			swapchain->BeginFrame();
+			swapchain->GetRenderPass()->GetSpecs().TargetFrameBuffer->Bind();
+			});
 	}
 
 	void OpenGLContext::Present()
 	{
-		EndRenderPass(m_Swapchain->GetSwapchainBuffer());
-		m_Swapchain->Present();
+		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
+		OpenGLContext* instance = this;
+		Renderer::Submit([instance, swapchain]() mutable {
+			instance->EndRenderPass(swapchain->GetSwapchainBuffer());
+			swapchain->Present();
+			});
 	}
 
 	void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)

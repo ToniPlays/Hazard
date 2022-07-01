@@ -47,7 +47,7 @@ void GUIManager::Init()
 void GUIManager::Update()
 {
 	m_Platform->BeginFrame();
-	ImGui::NewFrame();
+	
 }
 void GUIManager::Render() 
 {
@@ -61,7 +61,6 @@ void GUIManager::Render()
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
-
 	switch (window.GetWindowInfo().SelectedAPI)
 	{
 #ifdef HZR_INCLUDE_OPENGL

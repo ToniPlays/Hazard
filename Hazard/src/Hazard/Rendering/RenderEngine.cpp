@@ -17,7 +17,7 @@ namespace Hazard
 	}
 	void RenderEngine::PostRender()
 	{
-		Renderer::WaitAndRender();
 		m_Window->Present();
+		Renderer::WaitAndRender();
 	}
 }

@@ -16,14 +16,15 @@ namespace HazardRenderer {
 		{
 			HZR_PROFILE_SCOPE("ResourceCreateQueue::Execute()");
 			s_ResourceCreateCommandQueue->Excecute();
-			s_ResourceCreateCommandQueue->Clear();
 
 			HZR_PROFILE_SCOPE("RenderCommandQueue::Execute()");
 			s_RenderCommandQueue->Excecute();
-			s_RenderCommandQueue->Clear();
 
 			HZR_PROFILE_SCOPE("ResourceFreeQueue::Execute()");
 			s_ResourceFreeCommandQueue->Excecute();
+
+			s_ResourceCreateCommandQueue->Clear();
+			s_RenderCommandQueue->Clear();
 			s_ResourceFreeCommandQueue->Clear();
 		}
 

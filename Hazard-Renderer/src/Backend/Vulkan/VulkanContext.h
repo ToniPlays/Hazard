@@ -23,7 +23,10 @@ namespace HazardRenderer::Vulkan {
 		~VulkanContext();
 
 		void Init(Window* window, HazardRendererCreateInfo* info) override;
-		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
+		void SetClearColor(const glm::vec4& color) override { 
+			m_ClearColor = color;
+			m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
+		}
 		void BeginFrame() override;
 		void Present() override;
 

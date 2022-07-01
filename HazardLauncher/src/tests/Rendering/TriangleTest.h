@@ -122,9 +122,10 @@ namespace TriangleTest {
 
 			pipeline->Bind(cmdBuffer);
 			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+			window->Present();
+
 
 			Renderer::WaitAndRender();
-			window->Present();
 		}
 
 		pipeline.Release();

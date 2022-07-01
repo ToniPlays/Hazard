@@ -80,10 +80,11 @@ namespace HazardRenderer::Vulkan
 	void VulkanVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{
 		Ref<VulkanVertexBuffer> instance = this;
-		Renderer::Submit([instance, cmdBuffer, binding]() mutable {
-			HZR_ASSERT(cmdBuffer->IsRecording(), "CommandBuffer not in recording state");
+		Ref<RenderCommandBuffer> commandBuffer = cmdBuffer;
+		Renderer::Submit([instance, commandBuffer, binding]() mutable {
+			HZR_ASSERT(commandBuffer->IsRecording(), "CommandBuffer not in recording state");
 			uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-			auto vkCmdBuffer = cmdBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
+			auto vkCmdBuffer = commandBuffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 			VkDeviceSize offsets[1] = { 0 };
 			vkCmdBindVertexBuffers(vkCmdBuffer, binding, 1, &instance->m_Buffer, offsets);
 			});

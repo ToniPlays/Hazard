@@ -2,6 +2,7 @@
 #include "Hazard.h"
 #include "EditorPlatformVulkan.h"
 #include "Backend/Core/Renderer.h"
+#include "Backend/Vulkan/VKUtils.h"
 
 #include <Platform/GLFW/imgui_impl_glfw.h>
 
@@ -9,7 +10,6 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
-	
 	m_Context = (VulkanContext*)window.GetContext();
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
 	auto& device = (VulkanDevice&)m_Context->GetDevice();
@@ -21,7 +21,8 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 	init_info.Instance = m_Context->GetVulkanInstance();
 	init_info.PhysicalDevice = device.GetVulkanPhysicalDevice();
 	init_info.Device = device.GetVulkanDevice();
-	init_info.QueueFamily = device.GetGraphicsQueue().Index;
+	init_info.QueueFamily = VKUtils::GetQueueFamilyIndices(device.GetVulkanPhysicalDevice(),
+		m_Context->GetWindowSurface()).graphicsFamily.value();
 	init_info.Queue = device.GetGraphicsQueue().Queue;
 	init_info.PipelineCache = VK_NULL_HANDLE;
 	init_info.DescriptorPool = device.GetDescriptorPool(0);
@@ -58,35 +59,30 @@ void EditorPlatformVulkan::BeginFrame()
 {
 	ImGui_ImplVulkan_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
 }
 
 void EditorPlatformVulkan::EndFrame()
 {
 	VulkanContext* context = m_Context;
 
-	
 	HazardRenderer::Renderer::Submit([context]() mutable {
 
 		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
-		const auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
+		auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 		ImGuiIO& io = ImGui::GetIO();
 
+		glm::vec4 color = swapchain->GetRenderTarget()->GetSpecification().ClearColor;
+
 		VkClearValue clearValues[2];
-		clearValues[0].color = { {0.1f, 0.1f,0.1f, 1.0f} };
+		clearValues[0].color = { color.r, color.g, color.b, color.a };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		uint32_t width = swapchain->GetWidth();
 		uint32_t height = swapchain->GetHeight();
 
 		uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
-
-		VkCommandBufferBeginInfo drawCmdBufInfo = {};
-		drawCmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		drawCmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		drawCmdBufInfo.pNext = nullptr;
-
 		VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
-		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCommandBuffer, &drawCmdBufInfo));
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -141,8 +137,6 @@ void EditorPlatformVulkan::EndFrame()
 		vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
 		vkCmdEndRenderPass(drawCommandBuffer);
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(drawCommandBuffer));
-
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			GLFWwindow* backup_current_context = glfwGetCurrentContext();
@@ -150,7 +144,7 @@ void EditorPlatformVulkan::EndFrame()
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
-	});
+		});
 }
 
 void EditorPlatformVulkan::Close()

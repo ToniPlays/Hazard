@@ -82,14 +82,18 @@ namespace HazardRenderer::Vulkan {
 
 	void VulkanContext::BeginFrame()
 	{
-		m_Swapchain->BeginFrame();
-		BeginRenderPass_RT(m_Swapchain->GetSwapchainBuffer(), m_Swapchain->GetRenderPass());
+		VulkanContext* instance = this;
+		Renderer::Submit([instance]() mutable {
+			instance->m_Swapchain->BeginFrame();
+			});
 	}
 
 	void VulkanContext::Present()
 	{
-		EndRenderPass_RT(m_Swapchain->GetSwapchainBuffer());
-		m_Swapchain->Present();
+		VulkanContext* instance = this;
+		Renderer::Submit([instance]() mutable {
+			instance->m_Swapchain->Present();
+			});
 	}
 
 	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) {
@@ -183,14 +187,7 @@ namespace HazardRenderer::Vulkan {
 		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
 		vkCmdEndRenderPass(vkBuffer);
 	}
-	//	void VulkanContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
-	//	{
-	//		uint32_t frameIndex = VulkanContext::GetSwapchain()->GetCurrentBufferIndex();
-	//		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-	//
-	//		vkCmdSetLineWidth(vkBuffer, lineWidth);
-	//	}
-	//
+
 	void VulkanContext::SetViewport(int x, int y, int w, int h)
 	{
 		if (w == 0 || h == 0) return;
@@ -202,24 +199,5 @@ namespace HazardRenderer::Vulkan {
 
 		m_Swapchain->Resize(width, height);
 	}
-	//
-	//	void VulkanContext::SetErrorListener(const ErrorCallback& callback)
-	//	{
-	//		s_Callback = callback;
-	//	}
-	//
-	//	PhysicalDevice& VulkanContext::GetPhysicalDevice() const
-	//	{
-	//		return *m_PhysicalDevice;
-	//	}
-	//	VkDescriptorSet VulkanContext::RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo& allocInfo) 
-	//	{
-	//		uint32_t bufferIndex = m_SwapChain->GetCurrentBufferIndex();
-	//		allocInfo.descriptorPool = m_Device->GetDescriptorPool(bufferIndex);
-	//		VkDescriptorSet result;
-	//		VK_CHECK_RESULT(vkAllocateDescriptorSets(m_Device->GetDevice(), &allocInfo, &result));
-	//		m_DescriptorAllocations[bufferIndex] += allocInfo.descriptorSetCount;
-	//		return result;
-	//	}
 }
 #endif

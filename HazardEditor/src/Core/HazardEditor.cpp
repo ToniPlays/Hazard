@@ -10,6 +10,9 @@ using namespace Hazard;
 
 void EditorApplication::PreInit()
 {
+	RenderAPI renderAPI = RenderAPI::Vulkan;
+
+
 	HZR_INFO("EditorApplication::PreInit()");
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
@@ -38,7 +41,7 @@ void EditorApplication::PreInit()
 	};
 
 	HazardWindowCreateInfo windowInfo = {};
-	windowInfo.Title = "HazardEditor";
+	windowInfo.Title = "HazardEditor | " + RenderAPIToString(renderAPI);
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
 	windowInfo.Decorated = true;
@@ -48,7 +51,7 @@ void EditorApplication::PreInit()
 
 	HazardRendererCreateInfo renderInfo = {};
 	renderInfo.pAppInfo = &rendererApp;
-	renderInfo.Renderer = RenderAPI::Vulkan;
+	renderInfo.Renderer = renderAPI;
 	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
