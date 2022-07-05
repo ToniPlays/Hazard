@@ -51,7 +51,7 @@ void GUIManager::Update()
 }
 void GUIManager::Render() 
 {
-	ImGui::ShowDemoWindow();
+	m_PanelManager.Render();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)m_Window->GetWidth(), (float)m_Window->GetHeight());

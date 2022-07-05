@@ -75,6 +75,12 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Core\PanelManager.h" />
+    <ClInclude Include="src\GUI\Core\GUIRenderable.h" />
+    <ClInclude Include="src\GUI\Core\Panel.h" />
+    <ClInclude Include="src\GUI\Core\Style.h" />
+    <ClInclude Include="src\GUI\Core\MenuBar.h" />
+    <ClInclude Include="src\GUI\MainMenuBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -110,5 +116,6 @@
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Core\PanelManager.cpp" />
   </ItemGroup>
 </Project>

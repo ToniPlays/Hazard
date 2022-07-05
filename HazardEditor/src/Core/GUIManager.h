@@ -4,6 +4,7 @@
 #include "GUIRenderable.h"
 #include "HazardRendererCore.h"
 #include "Platform/EditorGuiPlatform.h"
+#include "GUI/Core/PanelManager.h"
 
 class GUIManager : public Hazard::Module 
 {
@@ -19,7 +20,7 @@ private:
 	void InitImGuiPlatform(HazardRenderer::Window& window);
 
 private:
-	std::vector<GUIRenderable> m_Renderables;
+	UI::PanelManager m_PanelManager;
 	EditorGuiPlatform* m_Platform;
 	HazardRenderer::Window* m_Window;
 };
