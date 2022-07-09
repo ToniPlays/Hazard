@@ -7,7 +7,8 @@
 
 #include <Metal/Metal.hpp>
 
-namespace HazardRenderer::Metal {
+namespace HazardRenderer::Metal
+{
     class MetalRenderCommandBuffer : public RenderCommandBuffer {
     public:
         MetalRenderCommandBuffer(uint32_t size, const std::string& name);

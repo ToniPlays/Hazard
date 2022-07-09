@@ -4,7 +4,7 @@
 #include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
 
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 class EditorPlatformOpenGL : public EditorGuiPlatform {
 public:

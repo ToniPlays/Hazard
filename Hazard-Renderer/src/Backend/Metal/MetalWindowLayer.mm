@@ -16,29 +16,38 @@
 namespace HazardRenderer::Metal
 {
     
-    MetalWindowLayer::MetalWindowLayer(GLFWwindow* window, MTL::Device* device)
+    MetalWindowLayer::MetalWindowLayer(Window& window, MTL::Device* device)
     {
         int w, h;
-        
-        glfwGetWindowSize(window, &w, &h);
+        w = window.GetWidth();
+        h = window.GetHeight();
         
         id<MTLDevice> dev = (__bridge id<MTLDevice>)device;
         
-        NSWindow* nswin = glfwGetCocoaWindow(window);
+        NSWindow* nswin = glfwGetCocoaWindow((GLFWwindow*)window.GetNativeWindow());
         CAMetalLayer* layer = [CAMetalLayer layer];
         layer.device = dev;
+        layer.drawableSize = { (CGFloat)w, (CGFloat)h };
         layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
         layer.frame.size = { (CGFloat)w, (CGFloat)h };
         
         nswin.contentView.layer = layer;
         nswin.contentView.wantsLayer = YES;
         
+        m_Width = w;
+        m_Height = h;
+        
         m_Layer = (__bridge CA::MetalLayer*)layer;
          
     }
-    void MetalWindowLayer::Resize(uint32_t width, uint32_t height) {
+    void MetalWindowLayer::Resize(uint32_t width, uint32_t height)
+    {
         CAMetalLayer* layer = (__bridge CAMetalLayer*)m_Layer;
         layer.frame.size = { (CGFloat)width, (CGFloat)height} ;
+        layer.drawableSize = { (CGFloat)width, (CGFloat)height };
+        
+        m_Width = layer.drawableSize.width;
+        m_Height = layer.drawableSize.height;
     }
 
     CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()

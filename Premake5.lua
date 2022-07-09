@@ -42,12 +42,12 @@ group ""
 include "Hazard-Utility"
 include "Hazard-Renderer"
 include "Hazard-UI"
+include "HazardEditor"
+include "Hazard"
 
 include "HazardLauncher"
 
 if os.host() == "windows" then
 	include "HazardScripting"
 	include "Hazard-Script"
-	include "HazardEditor"
-	include "Hazard"
 end

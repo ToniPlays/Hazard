@@ -11,6 +11,8 @@ namespace HazardRenderer::Metal
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {
         std::string file = File::ReadFile("res/" + specs->ShaderPath);
+        
+        
        
         NS::Error* error = nullptr;
         

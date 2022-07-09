@@ -1,9 +1,11 @@
-#pragma once
+
 #include "Hazard.h"
+
+#ifdef HZR_INCLUDE_VULKAN
 #include "EditorPlatformVulkan.h"
 #include "Backend/Core/Renderer.h"
 #include "Backend/Vulkan/VKUtils.h"
-
+#include "imgui.h"
 #include <Platform/GLFW/imgui_impl_glfw.h>
 
 static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
@@ -151,3 +153,4 @@ void EditorPlatformVulkan::Close()
 {
 
 }
+#endif

@@ -11,7 +11,7 @@ namespace Hazard
 		RenderEngine() = default;
 		RenderEngine(HazardRenderer::HazardRendererCreateInfo* createInfo);
 		~RenderEngine() = default;
-
+        void Update() override;
 		void Render() override;
 		void PostRender() override;
 

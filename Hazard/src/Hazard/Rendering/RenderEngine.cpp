@@ -11,9 +11,13 @@ namespace Hazard
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
 	}
+    void RenderEngine::Update()
+    {
+        m_Window->BeginFrame();
+    }
 	void RenderEngine::Render()
 	{
-		m_Window->BeginFrame();
+		
 	}
 	void RenderEngine::PostRender()
 	{

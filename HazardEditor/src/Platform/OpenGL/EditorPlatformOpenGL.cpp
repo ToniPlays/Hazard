@@ -1,4 +1,4 @@
-#pragma once
+
 #include "EditorPlatformOpenGL.h"
 #include "Backend/Core/Renderer.h"
 

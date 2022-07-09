@@ -9,6 +9,7 @@
 
 #include "MetalWindowLayer.h"
 #include "Backend/Core/Window.h"
+#include "Backend/Core/Renderer.h"
 
 #include "MetalSwapchain.h"
 #include "MetalFrameBuffer.h"
@@ -28,57 +29,56 @@ namespace HazardRenderer::Metal
     {
         m_Window = window;
         m_PhysicalDevice = new MetalPhysicalDevice();
-        m_MetalLayer = new MetalWindowLayer((GLFWwindow*)window->GetNativeWindow(), m_PhysicalDevice->GetMetalDevice());
+        m_MetalLayer = new MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
         
         m_Swapchain = Ref<MetalSwapchain>::Create(this, info->pTargetFrameBuffer);
-        m_Swapchain->Create(m_Window->GetWidth(), m_Window->GetHeight(), info->VSync);
+        m_Swapchain->Create(m_MetalLayer->GetWidth(), m_MetalLayer->GetHeight(), info->VSync);
+        
     }
     void MetalContext::SetViewport(int x, int y, int w, int h)
     {
         m_MetalLayer->Resize(w, h);
+        m_Swapchain->Resize(w, h);
     }
     void MetalContext::BeginFrame()
     {
         m_Swapchain->BeginFrame();
-        BeginRenderPass(m_Swapchain->GetSwapchainBuffer(), m_Swapchain->GetRenderPass());
     }
     void MetalContext::Present()
     {
-        EndRenderPass(m_Swapchain->GetSwapchainBuffer());
-        m_Swapchain->Present();
+        MetalContext* instance = this;
+        Renderer::Submit([instance]() mutable {
+            instance->m_Swapchain->Present();
+            });
     }
-    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
+    void MetalContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) {
+        MetalContext* instance = this;
+        Renderer::Submit([instance, buffer, renderPass]() mutable {
+            instance->BeginRenderPass_RT(buffer, renderPass);
+            });
+    }
+    void MetalContext::BeginRenderPass_RT(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
     {
         
         auto spec = renderPass->GetSpecs().TargetFrameBuffer->GetSpecification();
         auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<MetalFrameBuffer>();
         
-        MTL::ClearColor clearColor;
-        
-        if(spec.SwapChainTarget) {
-            clearColor = { m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a };
-        }
-        else {
-            clearColor = { spec.ClearColor.r, spec.ClearColor.g, spec.ClearColor.b, spec.ClearColor.a };
+        MTL::RenderPassDescriptor* descriptor = fb->GetMetalRenderPassDescriptor();
+        if(spec.SwapChainTarget)
+        {
+            descriptor->colorAttachments()->object(0)->setTexture(m_Swapchain->GetDrawable()->texture());
         }
         
-        MTL::RenderPassDescriptor* renderPassDescriptor = MTL::RenderPassDescriptor::alloc()->init();
-        renderPassDescriptor->autorelease();
-        renderPassDescriptor->setRenderTargetWidth(fb->GetWidth());
-        renderPassDescriptor->setRenderTargetHeight(fb->GetHeight());
-        renderPassDescriptor->setDefaultRasterSampleCount(1);
-        
-        MTL::RenderPassColorAttachmentDescriptor* colorAttachment = renderPassDescriptor->colorAttachments()->object(0);
-        
-        colorAttachment->setClearColor(clearColor);
-        colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
-        colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
-        colorAttachment->setTexture(m_Swapchain->GetDrawable()->texture());
-        
-        buffer.As<MetalRenderCommandBuffer>()->BeginRenderEncoder(renderPassDescriptor);
-        renderPassDescriptor->release();        
+        buffer.As<MetalRenderCommandBuffer>()->BeginRenderEncoder(descriptor);
     }
-    void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
+    void MetalContext::EndRenderPass(Ref<RenderCommandBuffer> buffer) {
+        MetalContext* instance = this;
+        Renderer::Submit([instance, buffer]() mutable {
+            instance->EndRenderPass_RT(buffer);
+            });
+    }
+
+    void MetalContext::EndRenderPass_RT(Ref<RenderCommandBuffer> buffer)
     {
         buffer.As<MetalRenderCommandBuffer>()->EndRenderEncoder();
     }

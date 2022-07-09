@@ -1,6 +1,6 @@
 project "HazardEditor"
 
-	kind "WindowedApp"
+	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "off"
@@ -32,6 +32,7 @@ project "HazardEditor"
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
+        "%{IncludeDir.Metal}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
@@ -65,15 +66,11 @@ project "HazardEditor"
 		systemversion "latest"
 		defines {
 			"HZR_PLATFORM_WINDOWS",
-			"HZR_INCLUDE_OPENGL",
-			"HZR_INCLUDE_VULKAN",
-			"HZR_INCLUDE_OPENAL",
 			"HZR_INCLUDE_MONO"
 		}
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
-			"%{Library.OpenAL_Lib}"
+			"%{Library.VulkanUtils}"
 		}
 		includedirs {
 			
@@ -83,23 +80,19 @@ project "HazardEditor"
 	filter "system:macosx"
 		defines {
 			"HZR_PLATFORM_MACOS",
-			"HZR_INCLUDE_METAL"
 		}
 		links {
 			"IOKit.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
-			"OpenGL.framework",
-			"Metal.frameWork",
-			"MetalKit.framework"
+			"Metal.framework",
+			"MetalKit.framework",
+            "QuartzCore.framwork"
 		}
-		includedirs {
-			"%{IncludeDir.SPIRV_Cross}"
-		}
-		removefiles {
-			"src/Platform/OpenGL/**",
-			"src/Platform/Vulkan/**"
-		}
+        files {
+                "src/**.m",
+                "src/**.mm"
+        }
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"

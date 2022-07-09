@@ -5,6 +5,7 @@
 #include "Platform/GLFW/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
+#include "Platform/Metal/EditorPlatformMetal.h"
 
 #include "imgui.h"
 
@@ -16,7 +17,7 @@ void GUIManager::Init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	m_Window = &Application::GetModule<RenderEngine>().GetWindow();
@@ -47,17 +48,15 @@ void GUIManager::Init()
 void GUIManager::Update()
 {
 	m_Platform->BeginFrame();
-	
 }
 void GUIManager::Render() 
 {
 	m_PanelManager.Render();
+    
+    ImGui::Render();
 
-	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2((float)m_Window->GetWidth(), (float)m_Window->GetHeight());
-
-	ImGui::Render();
-	m_Platform->EndFrame();
+    
+    m_Platform->EndFrame();
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
@@ -73,6 +72,12 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 		m_Platform = new EditorPlatformVulkan(window);
 		break;
 	}
+#endif
+#ifdef HZR_INCLUDE_METAL
+        case RenderAPI::Metal: {
+            m_Platform = new EditorPlatformMetal(window);
+            break;
+        }
 #endif
 	default:
 		HZR_ASSERT(false, "No suitable rendering backend included");

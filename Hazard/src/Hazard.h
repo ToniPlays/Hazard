@@ -23,3 +23,5 @@
 //Hazard Physics
 #include "Hazard/Physics/PhysicsCommand.h"
 
+#include "Backend/Core/Core.h"
+

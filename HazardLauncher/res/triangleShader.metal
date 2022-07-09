@@ -1,5 +1,3 @@
-#type Vertex
-
 #include <simd/simd.h>
 
 struct VertexIn {
@@ -24,16 +22,10 @@ vertex VertexOut Vertex (
     
         return out;
 }
-#type Fragment
-
 #include <simd/simd.h>
 
-struct VertexIn {
-    float4 position;
-    float4 color;
-};
 
-fragment half4 Fragment(VertexIn in [[stage_in]]) {
+fragment half4 Fragment(VertexOut in [[stage_in]]) {
     return half4(in.color);
 }
 

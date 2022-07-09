@@ -5,10 +5,16 @@
 #include "MetalContext.h"
 #include "MetalSwapchain.h"
 
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace HazardRenderer::Metal
 {
     MetalFrameBuffer::MetalFrameBuffer(FrameBufferCreateInfo* info)
     {
+        
+        m_RenderPassDescriptor = MTL::RenderPassDescriptor::alloc()->init();
+        
         m_Specs.DebugName = info->DebugName;
 
         m_Specs.SwapChainTarget = info->SwapChainTarget;
@@ -32,7 +38,7 @@ namespace HazardRenderer::Metal
         Resize(m_Specs.Width, m_Specs.Height, true);
     }
     MetalFrameBuffer::~MetalFrameBuffer() {
-        
+        m_RenderPassDescriptor->release();
     }
     void MetalFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
     {
@@ -46,12 +52,13 @@ namespace HazardRenderer::Metal
             Invalidate();
             return;
         }
+        Invalidate();
         
     }
-    void MetalFrameBuffer::Bind() const {
+    void MetalFrameBuffer::Bind() {
         
     }
-    void MetalFrameBuffer::Unbind() const {
+    void MetalFrameBuffer::Unbind() {
         
     }
     void MetalFrameBuffer::BindTexture(uint32_t attachmentIndex, uint32_t slot) const
@@ -60,7 +67,20 @@ namespace HazardRenderer::Metal
     }
     void MetalFrameBuffer::Invalidate()
     {
-        //RT_Invalidate();
+        
+        auto swapchain = MetalContext::GetInstance()->GetSwapchain().As<MetalSwapchain>();
+
+        MTL::ClearColor clearColor = { m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a };
+        
+        m_RenderPassDescriptor->setRenderTargetWidth(m_Specs.Width);
+        m_RenderPassDescriptor->setRenderTargetHeight(m_Specs.Height);
+        m_RenderPassDescriptor->setDefaultRasterSampleCount(1);
+        
+        MTL::RenderPassColorAttachmentDescriptor* colorAttachment = m_RenderPassDescriptor->colorAttachments()->object(0);
+        
+        colorAttachment->setClearColor(clearColor);
+        colorAttachment->setLoadAction(MTL::LoadAction::LoadActionClear);
+        colorAttachment->setStoreAction(MTL::StoreAction::StoreActionStore);
     }
 }
 #endif

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <hzrpch.h>
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "../EditorGuiPlatform.h"
 #include "Platform/Vulkan/imgui_impl_vulkan.h"
 #include "Backend/Vulkan/VulkanContext.h"
@@ -20,3 +22,4 @@ public:
 private:
 	VulkanContext* m_Context = nullptr;
 };
+#endif

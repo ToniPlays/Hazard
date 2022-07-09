@@ -24,6 +24,7 @@ namespace HazardRenderer
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal:		return true;
 #endif
+        case RenderAPI::Auto:       return true;
 		}
 		return false;
 	}

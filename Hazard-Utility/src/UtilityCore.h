@@ -2,9 +2,17 @@
 
 #include <iostream>
 #include <filesystem>
+#include <vector>
 #include "Color.h"
 #include "HazardRuntimeError.h"
+
+#define HZR_PROFILE 0
+#define HZR_OPTICK 0
+
+
+#if HZR_OPTICK
 #include <optick.h>
+#endif
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
 #ifdef HZR_DEBUG
@@ -31,8 +39,6 @@
 #define HZR_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
 
-#define HZR_PROFILE 1
-#define HZR_OPTICK 1
 
 #if HZR_PROFILE 
 #if !HZR_OPTICK

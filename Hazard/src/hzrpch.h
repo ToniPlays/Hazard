@@ -18,12 +18,14 @@
 #include "Hazard/Instrumentor.h"
 #include "Hazard/PerformanceProfiler.h"
 
+
+#include "Backend/Core/Core.h"
 #include "File.h"
 
 #include "Event.h"
 
 #include "Time.h"
-#include "Math.h"
+#include "MathCore.h"
 #include "Hazard/Math/Random.h"
 
 #ifdef HZR_PLATFORM_WINDOWS

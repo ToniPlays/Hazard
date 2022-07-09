@@ -5,6 +5,7 @@
 #include "File.h"
 #include "Backend/Core/Events.h"
 #include "Renderer/RenderCommand.h"
+#include "Backend/Core/Renderer.h"
 
 #include "vendor/stb_image.h"
 #include <vector>
@@ -106,6 +107,7 @@ namespace HazardRenderer
             SetVSync(info->VSync);
 
             RenderCommand::Init(this);
+            Renderer::Init();
         }
     }
     void MacOSWindow::BeginFrame()
@@ -172,11 +174,13 @@ namespace HazardRenderer
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-            data.Height = h;
-            data.Width = w;
-            data.Window->GetContext()->SetViewport(0, 0, w, h);
+            float x, y;
+            glfwGetWindowContentScale((GLFWwindow*)data.Window->GetNativeWindow(), &x, &y);
+            data.Width = (float)w * x;
+            data.Height = (float)h * y;
+            data.Window->GetContext()->SetViewport(0, 0, data.Width, data.Height);
 
-            WindowResizeEvent event(w, h);
+            WindowResizeEvent event(data.Width, data.Height);
             data.EventCallback(event);
 
             });

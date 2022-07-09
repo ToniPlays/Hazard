@@ -25,7 +25,9 @@ namespace HazardRenderer::Metal
         void BeginFrame() override;
         
         void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
+        void BeginRenderPass_RT(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
         void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
+        void EndRenderPass_RT(Ref<RenderCommandBuffer> buffer);
         //void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) override;
 
         //void SetErrorListener(const ErrorCallback& callback) override;

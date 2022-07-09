@@ -2,6 +2,7 @@
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
+#include <filesystem>
 
 #include <glad/glad.h>
 
@@ -15,6 +16,9 @@ namespace TriangleTest {
 
 	static void Run(RenderAPI api)
 	{
+#ifdef HZR_PLATFORM_MACOS
+        std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
+#endif
         std::cout << "Running triangle test" << std::endl;
 		static bool running = true;
 
@@ -101,7 +105,7 @@ namespace TriangleTest {
 #ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "triangleShader.glsl";
 #elif HZR_PLATFORM_MACOS
-        spec.ShaderPath = "res/triangleShader.metal";
+        spec.ShaderPath = "triangleShader.metal";
 #endif
 		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
 		spec.DepthTest = false;

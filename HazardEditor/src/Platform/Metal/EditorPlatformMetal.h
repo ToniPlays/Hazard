@@ -1,0 +1,26 @@
+#pragma once
+
+#include <hzrpch.h>
+#include "../EditorGuiPlatform.h"
+#include "HazardRendererCore.h"
+
+#include "Backend/Metal/MetalContext.h"
+
+#include <Metal/Metal.hpp>
+
+#include <GLFW/glfw3.h>
+
+class EditorPlatformMetal : public EditorGuiPlatform {
+public:
+
+    EditorPlatformMetal(HazardRenderer::Window& window);
+    ~EditorPlatformMetal();
+
+    void BeginFrame() override;
+    void EndFrame() override;
+    void Close() override;
+private:
+    HazardRenderer::Window* m_Window;
+    HazardRenderer::Metal::MetalContext* m_Context;
+    MTL::RenderPassDescriptor* m_Descriptor;
+};

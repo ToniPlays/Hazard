@@ -3,7 +3,7 @@
 #include "UtilityCore.h"
 #include "Event.h"
 
-#include "GuiRenderable.h"
+#include "GUIRenderable.h"
 
 namespace UI 
 {
@@ -13,7 +13,7 @@ namespace UI
 		PanelManager();
 
 		void Render();
-		bool OnEvent(Event& e) {};
+        bool OnEvent(Event& e) { return false; };
 
 		template<typename T>
 		static T& AddRenderable() {
@@ -25,6 +25,5 @@ namespace UI
 	private:
 		static inline PanelManager* s_Instance;
 		std::vector<GUIRenderable*> m_Renderables;
-
 	};
 }

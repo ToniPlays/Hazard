@@ -17,8 +17,8 @@ namespace HazardRenderer::Metal {
         MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo);
         ~MetalSwapchain() = default;
         
-        void Create(uint32_t width, uint32_t height, bool vSync) override {};
-        void Resize(uint32_t width, uint32_t height) override {};
+        void Create(uint32_t width, uint32_t height, bool vSync) override;
+        void Resize(uint32_t width, uint32_t height) override;
 
         void BeginFrame() override;
         void Present() override;
