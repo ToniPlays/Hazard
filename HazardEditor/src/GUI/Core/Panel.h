@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GUIRenderable.h"
+#include "ScopedVar.h"
 #include <imgui.h>
 
 namespace UI {
@@ -20,10 +21,12 @@ namespace UI {
 		//</summary>
 
 		void Render() override {
-			if (ImGui::Begin(m_Title.c_str(), &m_Open)) {
-				OnPanelRender();
-				ImGui::End();
+			{
+				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8));
+				ImGui::Begin(m_Title.c_str(), &m_Open);
 			}
+			OnPanelRender();
+			ImGui::End();
 		};
 		//<summary>
 		// Render content for panel

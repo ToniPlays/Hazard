@@ -5,6 +5,7 @@
 #include "HazardRendererCore.h"
 #include "Platform/EditorGuiPlatform.h"
 #include "GUI/Core/PanelManager.h"
+#include "GUI/MainMenuBar.h"
 
 class GUIManager : public Hazard::Module 
 {
@@ -23,4 +24,5 @@ private:
 	UI::PanelManager m_PanelManager;
 	EditorGuiPlatform* m_Platform;
 	HazardRenderer::Window* m_Window;
+	UI::MainMenuBar m_MainMenuBar;
 };

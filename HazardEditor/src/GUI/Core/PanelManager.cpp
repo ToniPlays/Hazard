@@ -8,7 +8,6 @@ namespace UI
 	PanelManager::PanelManager()
 	{
 		s_Instance = this;
-		AddRenderable<MainMenuBar>();
 		AddRenderable<RenderCommandListPanel>();
 	}
 	void PanelManager::Render()

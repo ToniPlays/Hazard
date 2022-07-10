@@ -2,6 +2,7 @@
 #include "Hazard.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "GUI/Core/Dockspace.h"
+#include "GUI/Core/StyleManager.h"
 
 #include "Platform/GLFW/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
@@ -34,6 +35,8 @@ void GUIManager::Init()
 	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
 	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 32.0f);
 
+	UI::StyleManager::LoadStyle(UI::Style());
+
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -53,9 +56,10 @@ void GUIManager::Update()
 }
 void GUIManager::Render()
 {
+	m_MainMenuBar.Render();
 	{
 		using namespace UI;
-		ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(6.0f, 2.0f));
+		ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
 		Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
 		Dockspace::EndDockspace("MainWorkspace");
 	}
@@ -89,5 +93,5 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	default:
 		HZR_ASSERT(false, "No suitable rendering backend included");
 		break;
-	}
+}
 }
