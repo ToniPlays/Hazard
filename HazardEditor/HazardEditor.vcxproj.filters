@@ -10,11 +10,20 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{2AEC870B-96F5-877C-1F71-9E7C8B79937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Core">
+      <UniqueIdentifier>{C23ACD3E-AE07-284A-D720-16F2C34C5DD8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\GLFW">
       <UniqueIdentifier>{A98C9061-154D-0C98-DE87-55154A075174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Metal">
+      <UniqueIdentifier>{AC2F1D94-98FD-109A-8191-81C06DFEECFE}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\OpenGL">
       <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
@@ -51,6 +60,24 @@
     <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Core\GUIRenderable.h">
+      <Filter>GUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Core\MenuBar.h">
+      <Filter>GUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Core\Panel.h">
+      <Filter>GUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Core\PanelManager.h">
+      <Filter>GUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Core\Style.h">
+      <Filter>GUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\MainMenuBar.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\EditorGuiPlatform.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -59,6 +86,12 @@
     </ClInclude>
     <ClInclude Include="src\Platform\GLFW\imgui_impl_glfw.h">
       <Filter>Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Metal\EditorPlatformMetal.h">
+      <Filter>Platform\Metal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Metal\imgui_impl_metal.h">
+      <Filter>Platform\Metal</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\EditorPlatformOpenGL.h">
       <Filter>Platform\OpenGL</Filter>
@@ -75,12 +108,6 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Core\PanelManager.h" />
-    <ClInclude Include="src\GUI\Core\GUIRenderable.h" />
-    <ClInclude Include="src\GUI\Core\Panel.h" />
-    <ClInclude Include="src\GUI\Core\Style.h" />
-    <ClInclude Include="src\GUI\Core\MenuBar.h" />
-    <ClInclude Include="src\GUI\MainMenuBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -101,6 +128,9 @@
     <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Core\PanelManager.cpp">
+      <Filter>GUI\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\GLFW\imgui_impl_glfw.cpp">
       <Filter>Platform\GLFW</Filter>
     </ClCompile>
@@ -116,6 +146,5 @@
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Core\PanelManager.cpp" />
   </ItemGroup>
 </Project>

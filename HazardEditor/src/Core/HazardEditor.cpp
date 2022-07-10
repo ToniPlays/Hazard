@@ -50,8 +50,8 @@ void EditorApplication::PreInit()
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
 	windowInfo.Decorated = true;
-	windowInfo.Width = 2880;
-	windowInfo.Height = 1600;
+	windowInfo.Width = 1920;
+	windowInfo.Height = 1080;
 	windowInfo.Color = Color(34, 34, 34, 255);
 
 	HazardRendererCreateInfo renderInfo = {};

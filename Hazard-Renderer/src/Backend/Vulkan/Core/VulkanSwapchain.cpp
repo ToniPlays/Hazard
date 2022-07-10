@@ -303,11 +303,11 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::BeginFrame()
 	{
-		VkResult result = AcquireNextImage(instance->m_Semaphores.PresentComplete, &m_CurrentImageIndex);
+		VkResult result = AcquireNextImage(m_Semaphores.PresentComplete, &m_CurrentImageIndex);
         
 		if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
 			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-				Resize(instance->m_Width, instance->m_Height);
+				Resize(m_Width, m_Height);
 			}
 		}
 		m_RenderCommandBuffer->Begin();

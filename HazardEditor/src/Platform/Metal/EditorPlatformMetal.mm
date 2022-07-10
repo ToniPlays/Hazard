@@ -1,5 +1,6 @@
 
 #include "EditorPlatformMetal.h"
+#ifdef HZR_INCLUDE_METAL
 #include "Backend/Core/Renderer.h"
 #include "Backend/Metal/MetalFrameBuffer.h"
 #include "Backend/Metal/MetalRenderCommandBuffer.h"
@@ -92,3 +93,4 @@ void EditorPlatformMetal::Close()
 {
     ImGui::DestroyContext();
 }
+#endif

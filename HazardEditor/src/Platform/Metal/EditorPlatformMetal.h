@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
+#ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Metal/MetalContext.h"
 
@@ -24,3 +25,4 @@ private:
     HazardRenderer::Metal::MetalContext* m_Context;
     MTL::RenderPassDescriptor* m_Descriptor;
 };
+#endif
