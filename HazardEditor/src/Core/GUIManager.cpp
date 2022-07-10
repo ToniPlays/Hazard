@@ -1,6 +1,7 @@
 #include "GUIManager.h"
 #include "Hazard.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "GUI/Core/Dockspace.h"
 
 #include "Platform/GLFW/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
@@ -16,8 +17,9 @@ void GUIManager::Init()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	m_Window = &Application::GetModule<RenderEngine>().GetWindow();
@@ -49,14 +51,19 @@ void GUIManager::Update()
 {
 	m_Platform->BeginFrame();
 }
-void GUIManager::Render() 
+void GUIManager::Render()
 {
+	{
+		using namespace UI;
+		ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(6.0f, 2.0f));
+		Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
+		Dockspace::EndDockspace("MainWorkspace");
+	}
 	m_PanelManager.Render();
-    
-    ImGui::Render();
 
-    
-    m_Platform->EndFrame();
+	ImGui::Render();
+
+	m_Platform->EndFrame();
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
@@ -74,10 +81,10 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	}
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: {
-            m_Platform = new EditorPlatformMetal(window);
-            break;
-        }
+	case RenderAPI::Metal: {
+		m_Platform = new EditorPlatformMetal(window);
+		break;
+	}
 #endif
 	default:
 		HZR_ASSERT(false, "No suitable rendering backend included");

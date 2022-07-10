@@ -10,7 +10,7 @@ using namespace Hazard;
 
 void EditorApplication::PreInit()
 {
-	RenderAPI renderAPI = RenderAPI::Auto;
+	RenderAPI renderAPI = RenderAPI::OpenGL;
 
     
 #ifdef HZR_PLATFORM_MACOS

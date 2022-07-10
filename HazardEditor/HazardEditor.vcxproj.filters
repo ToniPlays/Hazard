@@ -108,6 +108,10 @@
     <ClInclude Include="src\Platform\Vulkan\imgui_impl_vulkan.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Debug\RenderCommandListPanel.h" />
+    <ClInclude Include="src\GUI\AllPanels.h" />
+    <ClInclude Include="src\GUI\Core\Dockspace.h" />
+    <ClInclude Include="src\GUI\Core\ScopedVar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -146,5 +150,7 @@
     <ClCompile Include="src\Platform\Vulkan\imgui_impl_vulkan.cpp">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Debug\RenderCommandListPanel.cpp" />
+    <ClCompile Include="src\GUI\Core\Dockspace.cpp" />
   </ItemGroup>
 </Project>

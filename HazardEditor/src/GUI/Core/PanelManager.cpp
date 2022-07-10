@@ -1,6 +1,7 @@
 
 #include "PanelManager.h"
 #include "GUI/MainMenuBar.h"
+#include "GUI/AllPanels.h"
 
 namespace UI 
 {
@@ -8,6 +9,7 @@ namespace UI
 	{
 		s_Instance = this;
 		AddRenderable<MainMenuBar>();
+		AddRenderable<RenderCommandListPanel>();
 	}
 	void PanelManager::Render()
 	{

@@ -21,6 +21,15 @@ namespace UI
 			s_Instance->m_Renderables.push_back(renderable);
 			return *renderable;
 		}
+		template<typename T>
+		static T* GetRenderable() {
+			for (auto renderable : s_Instance->m_Renderables) {
+				if (dynamic_cast<T*>(renderable)) {
+					return static_cast<T*>(renderable);
+				}
+			}
+			return nullptr;
+		}
 
 	private:
 		static inline PanelManager* s_Instance;
