@@ -10,7 +10,7 @@
 
 int main()
 {
-	TriangleTest::Run(RenderAPI::Metal);
+	InstancingTest::Run(RenderAPI::Metal);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

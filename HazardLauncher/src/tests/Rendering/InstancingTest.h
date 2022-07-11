@@ -20,7 +20,7 @@ namespace InstancingTest {
 
 	static void Run(RenderAPI api)
 	{
-		uint32_t size = 400;
+		uint32_t size = 20;
 
 		std::cout << "Running instancing test with " << size * size << " quads" << std::endl;
 		static bool running = true;
@@ -132,7 +132,7 @@ namespace InstancingTest {
 
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
-		float scalar = 300.0f;
+		float scalar = 10.0f;
 		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
@@ -182,23 +182,32 @@ namespace InstancingTest {
         
 		while (running)
 		{
-			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-
 			double time = glfwGetTime();
 			window->SetWindowTitle(title + " frame time " + std::to_string((time - startTime) * 1000.0f));
 			startTime = time;
 
 			window->BeginFrame();
-#ifdef HZR_PLATFORM_MACOS
-            cameraUBO->Bind(cmdBuffer); 
-#endif
-			quadBuffer->Bind(cmdBuffer);
-			instanceBuffer->Bind(cmdBuffer, 1);
-			indexBuffer->Bind(cmdBuffer);
-			pipeline->Bind(cmdBuffer);
-			pipeline->DrawInstanced(cmdBuffer, indexBuffer->GetCount(), size * size);
-
-			window->Present();
+            
+            Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+            
+            window->GetContext()->BeginRenderPass(cmdBuffer, window->GetSwapchain()->GetRenderPass());
+            
+            Renderer::Submit([&]() mutable {
+            
+                
+    #ifdef HZR_PLATFORM_MACOS
+                cameraUBO->Bind(cmdBuffer);
+    #endif
+                quadBuffer->Bind(cmdBuffer);
+                instanceBuffer->Bind(cmdBuffer, 1);
+                indexBuffer->Bind(cmdBuffer);
+                pipeline->Bind(cmdBuffer);
+                pipeline->DrawInstanced(cmdBuffer, indexBuffer->GetCount(), size * size);
+                
+            });
+            window->GetContext()->EndRenderPass(cmdBuffer);
+            window->Present();
+            Renderer::WaitAndRender();
 		}
 
 		quadBuffer.Release();

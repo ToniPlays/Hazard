@@ -15,6 +15,7 @@ void EditorApplication::PreInit()
     
 #ifdef HZR_PLATFORM_MACOS
         std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardEditor");
+    renderAPI = RenderAPI::Metal;
 #endif
     
 
@@ -50,8 +51,8 @@ void EditorApplication::PreInit()
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
 	windowInfo.Decorated = true;
-	windowInfo.Width = 1920;
-	windowInfo.Height = 1080;
+	windowInfo.Width = 2880;
+	windowInfo.Height = 1600;
 	windowInfo.Color = Color(34, 34, 34, 255);
 
 	HazardRendererCreateInfo renderInfo = {};

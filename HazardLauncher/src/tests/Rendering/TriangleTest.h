@@ -120,16 +120,22 @@ namespace TriangleTest {
 		{
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			window->BeginFrame();
+            
+            window->GetContext()->BeginRenderPass(cmdBuffer, window->GetContext()->GetSwapchain()->GetRenderPass());
+            
+            Renderer::Submit([&]() mutable {
+                
+                
+                vertexBuffer->Bind(cmdBuffer);
+                indexBuffer->Bind(cmdBuffer);
 
-			vertexBuffer->Bind(cmdBuffer);
-			indexBuffer->Bind(cmdBuffer);
-
-			pipeline->Bind(cmdBuffer);
-			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
-			window->Present();
-
-
-			Renderer::WaitAndRender();
+                pipeline->Bind(cmdBuffer);
+                pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+                
+            });
+            window->GetContext()->EndRenderPass(cmdBuffer);
+            window->Present();
+            Renderer::WaitAndRender();
 		}
 
 		pipeline.Release();

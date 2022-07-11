@@ -16,7 +16,10 @@ public:
 	void Init() override;
 	void Update() override;
 	void Render() override;
-
+    
+    UI::PanelManager& GetPanelManager() { return m_PanelManager; }
+    UI::MenuBar& GetMenuBar() { return m_MainMenuBar; }
+    
 private:
 	void InitImGuiPlatform(HazardRenderer::Window& window);
 

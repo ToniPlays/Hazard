@@ -65,6 +65,7 @@ namespace HazardRenderer::Metal {
         
         MTL::CommandBuffer* cmdBuffer = m_RenderCommandBuffer.As<MetalRenderCommandBuffer>()->GetMetalCommandBuffer();
         
+        
         cmdBuffer->presentDrawable(m_Drawable);
         cmdBuffer->commit();
         cmdBuffer->waitUntilCompleted();

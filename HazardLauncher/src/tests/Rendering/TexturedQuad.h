@@ -84,7 +84,11 @@ namespace TexturedQuad {
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.DrawType = DrawType::Fill;
+#ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "triangleShader.glsl";
+#else
+        spec.ShaderPath = "triangleShader.metal";
+#endif
 		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
 		spec.pBufferLayout = &layout;
 
@@ -94,16 +98,21 @@ namespace TexturedQuad {
 
 		while (running)
 		{
-			window->BeginFrame();
-
-			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-
-			vertexBuffer->Bind(cmdBuffer);
-			indexBuffer->Bind(cmdBuffer);
-			pipeline->Bind(cmdBuffer);
-			pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
-
-			window->Present();
+            Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+            window->BeginFrame();
+            
+            window->GetContext()->BeginRenderPass(cmdBuffer, window->GetContext()->GetSwapchain()->GetRenderPass());
+            
+            Renderer::Submit([&]() mutable {
+                vertexBuffer->Bind(cmdBuffer);
+                indexBuffer->Bind(cmdBuffer);
+                pipeline->Bind(cmdBuffer);
+                pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+                
+            });
+            window->GetContext()->EndRenderPass(cmdBuffer);
+            window->Present();
+            Renderer::WaitAndRender();
 		}
 
 		std::cout << "Test closed";

@@ -21,11 +21,12 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::End()
     {
-        
     }
     void MetalRenderCommandBuffer::Submit()
     {
-        if(m_OwnedBySwapchain) {}
+        if(m_OwnedBySwapchain) {
+            return;
+        }
         
         m_CommandBuffer->commit();
     }
