@@ -21,6 +21,7 @@ namespace UI {
 		//</summary>
 
 		void Render() override {
+			if (!m_Open) return;
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8));
 				ImGui::Begin(m_Title.c_str(), &m_Open);

@@ -13,4 +13,13 @@ namespace UI {
 			ImGui::PopStyleVar();
 		}
 	};
+	class ScopedStyleColor {
+	public:
+		ScopedStyleColor(ImGuiStyleVar var, ImVec4 value) {
+			ImGui::PushStyleColor(var, value);
+		}
+		~ScopedStyleColor() {
+			ImGui::PopStyleColor();
+		}
+	};
 }

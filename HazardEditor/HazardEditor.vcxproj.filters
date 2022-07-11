@@ -113,6 +113,11 @@
     <ClInclude Include="src\GUI\Core\Dockspace.h" />
     <ClInclude Include="src\GUI\Core\ScopedVar.h" />
     <ClInclude Include="src\GUI\Core\StyleManager.h" />
+    <ClInclude Include="src\GUI\Debug\RendererDebugPanel.h" />
+    <ClInclude Include="src\GUI\Viewport\Viewport.h" />
+    <ClInclude Include="src\GUI\Properties\Properties.h" />
+    <ClInclude Include="src\GUI\Properties\Hierarchy.h" />
+    <ClInclude Include="src\GUI\ProjectPanel\AssetPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -154,5 +159,10 @@
     <ClCompile Include="src\GUI\Debug\RenderCommandListPanel.cpp" />
     <ClCompile Include="src\GUI\Core\Dockspace.cpp" />
     <ClCompile Include="src\GUI\Core\StyleManager.cpp" />
+    <ClCompile Include="src\GUI\Debug\RendererDebugPanel.cpp" />
+    <ClCompile Include="src\GUI\Viewport\Viewport.cpp" />
+    <ClCompile Include="src\GUI\Properties\Properties.cpp" />
+    <ClCompile Include="src\GUI\Properties\Hierarchy.cpp" />
+    <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp" />
   </ItemGroup>
 </Project>

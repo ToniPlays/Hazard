@@ -9,6 +9,11 @@ namespace UI
 	{
 		s_Instance = this;
 		AddRenderable<RenderCommandListPanel>();
+		AddRenderable<RendererDebugPanel>();
+		AddRenderable<Viewport>();
+		AddRenderable<Properties>();
+		AddRenderable<Hierarchy>();
+		AddRenderable<AssetPanel>();
 	}
 	void PanelManager::Render()
 	{

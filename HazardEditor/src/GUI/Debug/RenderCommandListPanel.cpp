@@ -5,7 +5,6 @@ namespace UI
 {
 	void RenderCommandListPanel::OnPanelRender() 
 	{
-		ImGui::Text("Sup man");
-		ImGui::ShowDemoWindow();
+		
 	}
 }
