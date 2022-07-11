@@ -124,7 +124,7 @@ namespace InstancingTest {
         spec.ShaderPath = "QuadInstanced.metal";
 #endif
 
-		spec.DrawType = DrawType::Fill;
+		spec.DrawType = DrawType::Point;
 		spec.CullMode = CullMode::None;
 		spec.Usage = PipelineUsage::GraphicsBit;
 		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();

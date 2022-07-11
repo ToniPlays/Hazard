@@ -8,11 +8,20 @@
 
 namespace HazardRenderer::Metal
 {
+    static MTL::PrimitiveType DrawTypeToMTLPrimitive(const DrawType& type) {
+        
+        switch(type) {
+            case DrawType::Fill: return MTL::PrimitiveTypeTriangle;
+            case DrawType::Line: return MTL::PrimitiveTypeLine;
+            case DrawType::Point: return MTL::PrimitiveTypePoint;
+        }
+        return MTL::PrimitiveTypeTriangle;
+    }
+
     MetalPipeline::MetalPipeline(PipelineSpecification* specs)
     {
+        m_Specs = *specs;
         std::string file = File::ReadFile("res/" + specs->ShaderPath);
-        
-        
        
         NS::Error* error = nullptr;
         
@@ -62,7 +71,7 @@ namespace HazardRenderer::Metal
     {
         auto cmdBuffer = commandBuffer.As<MetalRenderCommandBuffer>();
         MTL::RenderCommandEncoder* encoder = cmdBuffer->GetEncoder();
-        encoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, 1);
+        encoder->drawIndexedPrimitives(DrawTypeToMTLPrimitive(m_Specs.DrawType), count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, 1);
     }
     void MetalPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
     {
@@ -73,7 +82,7 @@ namespace HazardRenderer::Metal
         
         auto cmdBuffer = commandBuffer.As<MetalRenderCommandBuffer>();
         MTL::RenderCommandEncoder* encoder = cmdBuffer->GetEncoder();
-        encoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, instanceCount);
+        encoder->drawIndexedPrimitives(DrawTypeToMTLPrimitive(m_Specs.DrawType), count, MTL::IndexTypeUInt32, cmdBuffer->GetBoundIndexBuffer(), 0, instanceCount);
     }
 }
 #endif

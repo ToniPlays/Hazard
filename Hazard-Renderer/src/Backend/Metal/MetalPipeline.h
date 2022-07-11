@@ -31,7 +31,6 @@ namespace HazardRenderer::Metal
     private:
         PipelineSpecification m_Specs;
         Ref<Shader> m_Shader;
-        uint32_t m_DrawType, m_PolygonMode;
         
         MTL::RenderPipelineState* m_Pipeline = nullptr;
     };

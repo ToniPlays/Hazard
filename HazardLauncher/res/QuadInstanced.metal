@@ -19,6 +19,7 @@ struct Camera
 
 struct VertexOut {
     float4 position [[position]];
+    float PointSize [[point_size]];
     float4 color;
 };
 
@@ -43,6 +44,8 @@ vertex VertexOut Vertex (
         VertexOut out;
         out.position = u_Camera.ViewProjection * transform * float4(input.a_Position, 1.0);
         out.color = data.a_Color;
+        
+        out.PointSize = 10.0;
     
         return out;
 }
