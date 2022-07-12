@@ -51,8 +51,13 @@ void EditorApplication::PreInit()
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
 	windowInfo.Decorated = true;
+#ifdef HZR_PLATFORM_MACOS
 	windowInfo.Width = 2880;
 	windowInfo.Height = 1600;
+#else
+	windowInfo.Width = 1920;
+	windowInfo.Height = 1080;
+#endif
 	windowInfo.Color = Color(34, 34, 34, 255);
 
 	HazardRendererCreateInfo renderInfo = {};

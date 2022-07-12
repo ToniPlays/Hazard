@@ -1,0 +1,257 @@
+#pragma once
+
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "ScopedVar.h"
+#include "StyleManager.h"
+#include "ImGuiUtils.h"
+
+namespace UI 
+{
+#pragma region Utility
+	inline static void ShiftX(float amount) {
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
+	}
+	inline static void ShiftY(float amount) {
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + amount);
+	}
+	inline static void Shift(float x, float y) {
+		ImGui::SetCursorPos({ ImGui::GetCursorPosX() + x, ImGui::GetCursorPosY() + y });
+	}
+	template<typename T>
+	inline static void Group(const char* id, T callback) {
+		ImGui::PushID(id);
+		callback();
+		ImGui::PopID();
+	}
+	static bool NavigatedTo()
+	{
+		ImGuiContext& g = *GImGui;
+		return g.NavJustMovedToId == g.LastItemData.ID;
+	}
+
+	inline static void Underline(bool fullWidth = false, float offsetX = 0.0f, float offsetY = -1.0f) {
+		if (fullWidth)
+		{
+			if (ImGui::GetCurrentWindow()->DC.CurrentColumns != nullptr)
+				ImGui::PushColumnsBackground();
+			else if (ImGui::GetCurrentTable() != nullptr)
+				ImGui::TablePushBackgroundChannel();
+		}
+
+		const float width = fullWidth ? ImGui::GetWindowWidth() : ImGui::GetContentRegionAvail().x;
+		const ImVec2 cursor = ImGui::GetCursorScreenPos();
+
+		ImGui::GetWindowDrawList()->AddLine(ImVec2(cursor.x + offsetX, cursor.y + offsetY),
+			ImVec2(cursor.x + width, cursor.y + offsetY),
+			ImGui::ColorConvertFloat4ToU32({ 0.2f, 0.2f, 0.2f, 1.0f }), 1.0f);
+
+		if (fullWidth)
+		{
+			if (ImGui::GetCurrentWindow()->DC.CurrentColumns != nullptr)
+				ImGui::PopColumnsBackground();
+			else if (ImGui::GetCurrentTable() != nullptr)
+				ImGui::TablePopBackgroundChannel();
+		}
+	}
+
+#pragma endregion
+#pragma region Treenodes
+
+	template<typename T>
+	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags, T callback)
+	{
+		if (ImGui::TreeNodeEx(title, flags)) {
+			callback();
+			ImGui::TreePop();
+			return true;
+		}
+		return false;
+	}
+
+	template<typename T>
+	static bool Treenode(const char* title, void* id, ImGuiTreeNodeFlags flags, T callback) {
+		if (ImGui::TreeNode(id, title, flags)) {
+
+			callback();
+			ImGui::TreePop();
+			return true;
+		}
+		return false;
+	}
+	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags)
+	{
+		if (ImGui::TreeNodeEx(title, flags)) {
+			return true;
+		}
+		return false;
+	}
+
+#pragma endregion
+#pragma region Table
+	template<typename T>
+	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback) {
+
+		float edgeOffset = 4.0f;
+
+		ScopedStyleVar cellPadding(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 0.0f));
+		ImVec4 bgColor = StyleManager::GetCurrent().BackgroundColor;
+		const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
+		ScopedStyleColor rowColor(ImGuiCol_TableRowBg, bgColor);
+		ScopedStyleColor altRowColor(ImGuiCol_TableRowBgAlt, colRowAlt);
+
+		{
+			ScopedStyleColor tableBG(ImGuiCol_ChildBg, bgColor);
+
+			ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
+				| ImGuiTableFlags_Resizable
+				| ImGuiTableFlags_Reorderable
+				| ImGuiTableFlags_ScrollY;
+
+			ImGui::BeginTable(tableName, columnCount, flags, ImGui::GetContentRegionAvail());
+
+			//Setup
+			for (uint32_t i = 0; i < columnCount; i++) {
+				ImGui::TableSetupColumn(columns[i]);
+			}
+
+			//Headers
+			{
+				const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
+				ScopedColourStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
+
+				ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
+				ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
+
+				for (uint32_t i = 0; i < columnCount; i++) {
+					ImGui::TableSetColumnIndex(i);
+					const char* columnName = ImGui::TableGetColumnName(i);
+					Group(columnName, [&]() {
+						Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
+						ImGui::TableHeader(columnName);
+						Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
+						});
+				}
+				ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
+				Underline(true, 0.0f, 5.0f);
+			}
+
+			//Draw content from callback
+			callback();
+			ImGui::EndTable();
+		}
+	}
+
+	static void TableRow(const char* idText, bool selected = false) 
+	{
+		constexpr float edgeOffset = 4.0f;
+		constexpr float rowHeight = 21.0f;
+
+		auto* window = ImGui::GetCurrentWindow();
+		window->DC.CurrLineSize.y = rowHeight;
+
+		ImGui::TableNextRow(0, rowHeight);
+		ImGui::TableNextColumn();
+
+		window->DC.CurrLineTextBaseOffset = 3.0f;
+		const ImVec2 rowAreaMin = ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), 0).Min;
+		const ImVec2 rowAreaMax = { ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), ImGui::TableGetColumnCount() - 1).Max.x,
+									rowAreaMin.y + rowHeight };
+
+		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+
+		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
+
+		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
+		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(idText),
+			&isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
+
+		ImGui::SetItemAllowOverlap();
+		ImGui::PopClipRect();
+
+		const bool isWindowFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+		// Row colouring
+		//--------------
+
+		auto fillRowWithColour = [](const ImColor& colour)
+		{
+			for (int column = 0; column < ImGui::TableGetColumnCount(); column++)
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, colour, column);
+		};
+
+		ImVec4 bgCol = StyleManager::GetCurrent().BackgroundColor;
+		ImVec4 textCol = StyleManager::GetCurrent().Window.Text;
+
+		if (selected)
+		{
+			if (isWindowFocused || NavigatedTo()) {
+				fillRowWithColour(ColorWithMultiplier(bgCol, 1.2f));
+			}
+			else
+			{
+				const ImColor col = ColorWithMultiplier(bgCol, 0.9f);
+				fillRowWithColour(col);
+			}
+		}
+
+		if (selected)
+			ImGui::PushStyleColor(ImGuiCol_Text, textCol);
+
+		ImGuiContext& g = *GImGui;
+		auto& style = ImGui::GetStyle();
+		const ImVec2 label_size = ImGui::CalcTextSize(idText, nullptr, false);
+		const ImVec2 padding = ((flags & ImGuiTreeNodeFlags_FramePadding)) ? style.FramePadding : ImVec2(style.FramePadding.x, ImMin(window->DC.CurrLineTextBaseOffset, style.FramePadding.y));
+		const float text_offset_x = g.FontSize + padding.x * 2;           // Collapser arrow width + Spacing
+		const float text_offset_y = ImMax(padding.y, window->DC.CurrLineTextBaseOffset);                    // Latch before ItemSize changes it
+		const float text_width = g.FontSize + (label_size.x > 0.0f ? label_size.x + padding.x * 2 : 0.0f);  // Include collapser
+		ImVec2 text_pos(window->DC.CursorPos.x + text_offset_x, window->DC.CursorPos.y + text_offset_y);
+		const float arrow_hit_x1 = (text_pos.x - text_offset_x) - style.TouchExtraPadding.x;
+		const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
+		const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
+
+		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(idText), flags, idText, nullptr);
+
+		if (isRowClicked)
+		{
+			ImGui::FocusWindow(ImGui::GetCurrentWindow());
+		}
+
+		if (opened) ImGui::TreePop();
+
+		if (selected)
+			ImGui::PopStyleColor();
+	}
+
+#pragma endregion
+#pragma region Menus
+
+	template<typename T>
+	static bool ContextMenu(T callback) {
+		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+			callback();
+			ImGui::EndPopup();
+			return true;
+		}
+		return false;
+	}
+	template<typename T>
+	static bool Submenu(const char* label, T callback) {
+		if (ImGui::BeginMenu(label)) {
+			callback();
+			ImGui::EndMenu();
+			return true;
+		}
+		return false;
+	}
+	template<typename T>
+	static void MenuItem(const char* label, T callback) {
+		if (ImGui::MenuItem(label)) {
+			callback();
+		}
+	}
+
+#pragma endregion
+
+}

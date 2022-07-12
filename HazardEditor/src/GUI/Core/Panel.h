@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GUIRenderable.h"
+#include "UILibrary.h"
 #include "ScopedVar.h"
 #include <imgui.h>
 

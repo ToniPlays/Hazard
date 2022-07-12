@@ -8,30 +8,30 @@
 
 namespace UI
 {
-	struct MenuItem {
+	struct MenuItemElement {
 		std::string Name;
 		std::function<void()> OnClicked;
 
-		std::vector<MenuItem> m_SubMenus;
+		std::vector<MenuItemElement> m_SubMenus;
 
-		MenuItem& GetSubMenu(const std::string& name) {
+		MenuItemElement& GetSubMenu(const std::string& name) {
 			for (auto& item : m_SubMenus) {
 				if (item.Name == name) return item;
 			}
 			//Does not exist yet
-			MenuItem& item = m_SubMenus.emplace_back();
+			MenuItemElement& item = m_SubMenus.emplace_back();
 			item.Name = name;
 			item.OnClicked = nullptr;
 			return item;
 		}
-		MenuItem& GetSubMenuFromPath(std::vector<std::string> path) {
+		MenuItemElement& GetSubMenuFromPath(std::vector<std::string> path) {
 			for (auto& item : m_SubMenus) {
 				if (item.Name == path[0]) {
 					if (path.size() <= 1) return item;
 					else return item.GetSubMenuFromPath({ path.begin() + 1, path.end() });
 				}
 			}
-			MenuItem& item = m_SubMenus.emplace_back();
+			MenuItemElement& item = m_SubMenus.emplace_back();
 			item.Name = path[0];
 
 			if (path.size() <= 1) return item;
@@ -59,36 +59,36 @@ namespace UI
 			std::vector<std::string> path = StringUtil::SplitString(name, '/');
 
 			uint32_t index = 0;
-			MenuItem& target = GetMenu(name);
+			MenuItemElement& target = GetMenu(name);
 			target.OnClicked = onClick;
 		}
 		void ClearMenuBar() {
 			m_MenuItems.clear();
 		}
-		MenuItem& GetMenu(const std::string& name) {
+		MenuItemElement& GetMenu(const std::string& name) {
 
 			std::vector<std::string> path = StringUtil::SplitString(name, '/');
 
-			MenuItem& heading = FindMenu(path[0]);
+			MenuItemElement& heading = FindMenu(path[0]);
 			if (path.size() <= 1) return heading;
 
 			return heading.GetSubMenuFromPath({ path.begin() + 1, path.end() });
 		}
 	private:
 
-		MenuItem& FindMenu(const std::string& name) {
+		MenuItemElement& FindMenu(const std::string& name) {
 			for (auto& item : m_MenuItems) {
 				if (item.Name == name) return item;
 			}
 			//Does not exist yet
-			MenuItem& item = m_MenuItems.emplace_back();
+			MenuItemElement& item = m_MenuItems.emplace_back();
 			item.Name = name;
 			item.OnClicked = nullptr;
 			return item;
 
 		}
 
-		void RenderSubMenu(const MenuItem& item) {
+		void RenderSubMenu(const MenuItemElement& item) {
 			for (auto& subItem : item.m_SubMenus) {
 
 				if (subItem.m_SubMenus.size()) {
@@ -107,6 +107,6 @@ namespace UI
 		}
 
 	private:
-		std::vector<MenuItem> m_MenuItems;
+		std::vector<MenuItemElement> m_MenuItems;
 	};
 }

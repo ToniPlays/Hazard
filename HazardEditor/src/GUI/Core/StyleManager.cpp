@@ -4,6 +4,7 @@
 namespace UI {
 	void StyleManager::LoadStyle(const Style& style) 
 	{
+		s_Current = style;
 		ImGuiStyle& imStyle = ImGui::GetStyle();
 		
 		//WindowStyle

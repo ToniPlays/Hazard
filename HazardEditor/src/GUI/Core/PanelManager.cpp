@@ -17,7 +17,8 @@ namespace UI
 	}
 	void PanelManager::Render()
 	{
-		for (GUIRenderable* renderable : m_Renderables) {
+		for (GUIRenderable* renderable : m_Renderables) 
+		{
 			renderable->Render();
 		}
 	}

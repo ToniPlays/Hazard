@@ -118,6 +118,8 @@
     <ClInclude Include="src\GUI\Properties\Properties.h" />
     <ClInclude Include="src\GUI\Properties\Hierarchy.h" />
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanel.h" />
+    <ClInclude Include="src\GUI\Core\UILibrary.h" />
+    <ClInclude Include="src\GUI\Core\ImGuiUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
