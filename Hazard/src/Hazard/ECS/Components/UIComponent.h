@@ -2,9 +2,9 @@
 
 #include "Color.h"
 
-namespace Hazard::ECS {
+namespace Hazard {
 
-	struct SpriteRendererComponent 
+	struct SpriteRendererComponent : ComponentBase
 	{
 		Color Tint = Color::White;
 		//Ref<Rendering::Texture2D> Texture;
@@ -12,7 +12,8 @@ namespace Hazard::ECS {
 		SpriteRendererComponent() = default;
 	};
 
-	struct BatchComponent {
+	struct BatchComponent : ComponentBase
+	{
 		Color Tint = Color::White;
 		uint32_t Size = 0;
 

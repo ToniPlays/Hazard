@@ -8,5 +8,6 @@ namespace UI {
 		RenderCommandListPanel() : Panel("RenderCommandList") {};
 		
 		void OnPanelRender() override;
+		bool OnEvent(Event& e) override { return false; };
 	};
 }

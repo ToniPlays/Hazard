@@ -9,7 +9,7 @@
 #include "Hazard/Physics/PhysicsCommand.h"
 
 
-namespace Hazard::ECS::Loader 
+namespace Hazard 
 {
 	class WorldSerializer {
 	public:
@@ -70,13 +70,6 @@ namespace Hazard::ECS::Loader
                 });
         }
         template<>
-        void SerializeComponentEditor(Entity& entity, VisualScriptComponent& component, YAML::Emitter& out)
-        {
-            YamlUtils::Map(out, "VisualScriptComponent", [&]() {
-                YamlUtils::Serialize(out, "FileName", component.Filename);
-                });
-        }
-        template<>
         void SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "SkyLightComponent", [&]() {
@@ -99,18 +92,6 @@ namespace Hazard::ECS::Loader
                 YamlUtils::Serialize(out, "Tint", component.Tint);
                 YamlUtils::Serialize(out, "Intensity", component.Intensity);
                 YamlUtils::Serialize(out, "Radius", component.Radius);
-                });
-        }
-        template<>
-        void SerializeComponentEditor<AudioSourceComponent>(Entity& entity, AudioSourceComponent& component, YAML::Emitter& out)
-        {
-            YamlUtils::Map(out, "AudioSourceComponent", [&]() {
-                YamlUtils::Serialize(out, "AudioFile", component.SourceFile);
-                YamlUtils::Serialize(out, "Gain", component.Gain);
-                YamlUtils::Serialize(out, "Pitch", component.Pitch);
-                YamlUtils::Serialize(out, "Looping", component.Looping);
-                YamlUtils::Serialize(out, "Spatial", component.Spatial);
-                YamlUtils::Serialize(out, "PlayOnCreate", component.PlayOnCreate);
                 });
         }
         template<>

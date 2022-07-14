@@ -33,6 +33,15 @@ namespace UI
 			ImGui::PopStyleColor();
 		}
 	};
+    class ScopedFont {
+    public:
+        ScopedFont(ImFont* font) {
+            ImGui::PushFont(font);
+        }
+        ~ScopedFont() {
+            ImGui::PopFont();
+        }
+    };
     class ScopedColourStack
     {
     public:

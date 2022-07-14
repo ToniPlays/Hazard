@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Style.h"
-#include "Platform/GLFW/FontAwesome.h"
+#include "../ImGui_Backend/FontAwesome.h"
 
 namespace UI {
 	class StyleManager {

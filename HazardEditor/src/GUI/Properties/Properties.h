@@ -5,8 +5,12 @@
 namespace UI {
 	class Properties : public Panel {
 	public:
-		Properties() : Panel("Properties") {};
+		Properties();
 
 		void OnPanelRender() override;
+		bool OnEvent(Event& e) override;
+		bool OnSelectionContextChange(Events::SelectionContextChange& e);
+	private:
+		Entity m_SelectionContext;
 	};
 }

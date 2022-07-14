@@ -3,7 +3,7 @@
 #include "CameraProcessingComponent.h"
 #include "MathCore.h"
 
-namespace Hazard::ECS {
+namespace Hazard {
 
 	void CameraComponent::SetProjection(Projection t)
 	{

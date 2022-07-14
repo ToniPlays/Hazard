@@ -8,5 +8,6 @@ namespace UI {
 		RendererDebugPanel() : Panel("RendererDebug") {};
 
 		void OnPanelRender() override;
+		bool OnEvent(Event& e) override { return false; };
 	};
 }

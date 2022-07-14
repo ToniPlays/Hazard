@@ -67,9 +67,13 @@ void EditorApplication::PreInit()
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
 
+	EntityComponentCreateInfo entity = {};
+	entity.StartupFile = "";
+
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RendererInfo = &renderInfo;
+	createInfo.EntityComponent = &entity;
 
 	CreateApplicationStack(&createInfo);
 }

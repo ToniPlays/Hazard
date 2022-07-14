@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "../EditorGuiPlatform.h"
-#include "Platform/Vulkan/imgui_impl_vulkan.h"
+#include "../ImGui_Backend/imgui_impl_vulkan.h"
 #include "Backend/Vulkan/VulkanContext.h"
 
 using namespace HazardRenderer::Vulkan;

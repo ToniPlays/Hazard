@@ -3,9 +3,9 @@
 #include "WorldHandler.h"
 #include "Loader/WorldDeserializer.h"
 #include "Loader/WorldSerializer.h"
-#include "WorldCommand.h"
 
-namespace Hazard::ECS {
+
+namespace Hazard {
 
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler") 
 	{
@@ -16,7 +16,7 @@ namespace Hazard::ECS {
 
 	void WorldHandler::Init()
 	{
-		WorldCommand::Init();
+
 	}
 
 	void WorldHandler::Close()
@@ -26,23 +26,24 @@ namespace Hazard::ECS {
 	void WorldHandler::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		WorldCommand::RenderWorld();
 	}
 
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)
 	{
 		if (File::Exists(file)) {
 			if (type == Serialization::Editor) {
-                Loader::WorldDeserializer deserializer;
+                WorldDeserializer deserializer;
 				m_World = deserializer.DeserializeEditor(file);
 				return true;
 			}
 		}
 
-		m_World = new World("");
+		m_World = Ref<World>::Create("");
 		m_World->SetName("New World");
 
 		Entity entity = m_World->CreateEntity("Camera");
+		m_World->CreateEntity("Entity 1");
+		m_World->CreateEntity("Entity 2");
 		entity.AddComponent<CameraComponent>();
 
 		return false;

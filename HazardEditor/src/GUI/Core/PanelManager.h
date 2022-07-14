@@ -13,7 +13,12 @@ namespace UI
 		PanelManager();
 
 		void Render();
-        bool OnEvent(Event& e) { return false; };
+		bool OnEvent(Event& e) {
+			for (auto& renderable : m_Renderables) {
+				if (renderable->OnEvent(e)) return true;
+			}
+			return false;
+		}
 
 		template<typename T>
 		static T& AddRenderable() {

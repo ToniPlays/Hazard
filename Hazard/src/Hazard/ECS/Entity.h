@@ -3,7 +3,7 @@
 #include "World.h"
 #include "entt.hpp"
 
-namespace Hazard::ECS {
+namespace Hazard {
 
 	class Entity {
 		friend class World;

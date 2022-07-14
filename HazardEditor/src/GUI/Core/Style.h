@@ -14,7 +14,7 @@ namespace UI
 	{
 		ImVec2 Padding = { 2, 2 };
 		float BorderSize = 0;
-		ImVec2 TitleAlign = { 0.0f, 0.5f };
+		ImVec2 TitleAlign = { 0.5f, 0.5f };
 		ImGuiDir MenuButtonPosition = ImGuiDir_None;
 		ImVec2 DisplaySafeArea = { 0, 6 };
 		float Rounding = 2;
@@ -89,6 +89,12 @@ namespace UI
 		ImVec4 SeparatorHovered = ColorToImVec("#5DC50570");
 		ImVec4 SeparatorActive = ColorToImVec("#5DC505");
 	};
+	struct StylePrimaryColors {
+		ImVec4 AxisX = ColorToImVec("#DB3721");
+		ImVec4 AxisY = ColorToImVec("#53B305");
+		ImVec4 AxisZ = ColorToImVec("#1651F3");
+
+	};
 	struct Style
 	{
 		WindowStyle Window;
@@ -98,6 +104,7 @@ namespace UI
 		ScrollbarStyle ScrollBar;
 		ButtonStyle Button;
 		SeparatorStyle Separator;
+		StylePrimaryColors Colors;
 
 		ImVec2 ItemInnerSpacing = { 6, 4 };
 

@@ -44,5 +44,7 @@ namespace UI {
 			AddMenuItem("Help/About/Something", nullptr);
 		};
 		~MainMenuBar() = default;
+
+		virtual bool OnEvent(Event& e) { return false; }
 	};
 }

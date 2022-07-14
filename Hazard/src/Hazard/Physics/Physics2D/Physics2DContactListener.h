@@ -2,7 +2,7 @@
 #include "box2d/b2_world.h"
 #include "box2d/b2_world_callbacks.h"
 
-
+#include "Physics2D.h"
 
 namespace Hazard::Physics 
 {

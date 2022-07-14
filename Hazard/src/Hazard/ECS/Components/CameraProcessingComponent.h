@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Hazard/Core/Core.h"
+#include "ComponentBase.h"
 
-namespace Hazard::ECS 
+namespace Hazard 
 {
 	enum class Projection { Perspective = 0, Orthographic };
 
-	struct CameraComponent {
+	struct CameraComponent : ComponentBase {
 
 	public:
 			

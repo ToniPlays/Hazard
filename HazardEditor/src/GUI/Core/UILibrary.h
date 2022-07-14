@@ -6,7 +6,8 @@
 #include "StyleManager.h"
 #include "ImGuiUtils.h"
 
-namespace UI 
+
+namespace UI
 {
 #pragma region Utility
 	inline static void ShiftX(float amount) {
@@ -23,6 +24,9 @@ namespace UI
 		ImGui::PushID(id);
 		callback();
 		ImGui::PopID();
+	}
+	static void FocusCurrentWindow() {
+		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 	}
 	static bool NavigatedTo()
 	{
@@ -53,6 +57,113 @@ namespace UI
 			else if (ImGui::GetCurrentTable() != nullptr)
 				ImGui::TablePopBackgroundChannel();
 		}
+	}
+
+#pragma endregion
+#pragma region Input
+
+	static bool TextField(std::string& text) {
+		char buffer[512] = { 0 };
+		strcpy(buffer, text.c_str());
+
+		if (ImGui::InputText("##InputField", buffer, sizeof(buffer))) {
+			text = buffer;
+			return true;
+		}
+		return false;
+	}
+	static bool TextField(std::string& text, const char* hint) {
+		char buffer[512] = { 0 };
+		strcpy(buffer, text.c_str());
+
+		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer))) {
+			text = buffer;
+			return true;
+		}
+		return false;
+	}
+	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)
+	{
+		bool modified = false;
+		ImVec4 hovered = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(color, 0.9f));
+		ImVec4 active = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(color, 0.8f));
+		ScopedColourStack colors(ImGuiCol_Button, color, ImGuiCol_ButtonHovered, hovered, ImGuiCol_ButtonActive, active);
+
+		ImGui::PushFont(buttonFont);
+		if (ImGui::Button(buttonText, buttonSize)) {
+			modified = true;
+			*value = clearValue;
+		}
+		ImGui::PopFont();
+		ImGui::SameLine();
+		std::stringstream ss;
+		ss << "##" << buttonText << "_";
+		if (ImGui::DragFloat(ss.str().c_str(), value)) modified = true;
+
+		return modified;
+	}
+	static bool InputFloat(float& value, float clearValue = 0.0f) { return false; }
+	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
+		bool modified = false;
+
+		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
+		Style& style = StyleManager::GetCurrent();
+
+		//X axis
+		if (InputFloatVec("X", &value.x, clearValue, buttonSize, boldFont, style.Colors.AxisX)) {
+			modified = true;
+		}
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		//Y axis
+		if (InputFloatVec("Y", &value.y, clearValue, buttonSize, boldFont, style.Colors.AxisY)) {
+			modified = true;
+		}
+		ImGui::PopItemWidth();
+
+		return modified;
+	}
+	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f) {
+
+		bool modified = false;
+
+		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
+		Style& style = StyleManager::GetCurrent();
+
+		//X axis
+		if (InputFloatVec("X", &value.x, clearValue, buttonSize, boldFont, style.Colors.AxisX)) {
+			modified = true;
+		}
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		//Y axis
+		if (InputFloatVec("Y", &value.y, clearValue, buttonSize, boldFont, style.Colors.AxisY)) {
+			modified = true;
+		}
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		//Z axis
+		if (InputFloatVec("Z", &value.z, clearValue, buttonSize, boldFont, style.Colors.AxisZ)) {
+			modified = true;
+		}
+		ImGui::PopItemWidth();
+
+		return modified;
 	}
 
 #pragma endregion
@@ -142,8 +253,10 @@ namespace UI
 		}
 	}
 
-	static void TableRow(const char* idText, bool selected = false) 
+	template<typename T>
+	static bool TableRowTreeItem(const char* idText, bool selected, T callback)
 	{
+		bool clicked = false;
 		constexpr float edgeOffset = 4.0f;
 		constexpr float rowHeight = 21.0f;
 
@@ -215,13 +328,19 @@ namespace UI
 
 		if (isRowClicked)
 		{
-			ImGui::FocusWindow(ImGui::GetCurrentWindow());
+			FocusCurrentWindow();
+			clicked = true;
 		}
 
-		if (opened) ImGui::TreePop();
+		if (opened)
+		{
+			callback();
+			ImGui::TreePop();
+		}
 
 		if (selected)
 			ImGui::PopStyleColor();
+		return clicked;
 	}
 
 #pragma endregion

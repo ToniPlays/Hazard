@@ -8,5 +8,6 @@ namespace UI {
 		Viewport() : Panel("Viewport") {};
 
 		void OnPanelRender() override;
+		bool OnEvent(Event& e) override { return false; };
 	};
 }

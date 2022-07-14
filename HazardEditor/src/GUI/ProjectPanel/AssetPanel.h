@@ -8,5 +8,6 @@ namespace UI {
 		AssetPanel() : Panel("AssetPanel") {};
 
 		void OnPanelRender() override;
+		bool OnEvent(Event& e) override { return false; };
 	};
 }

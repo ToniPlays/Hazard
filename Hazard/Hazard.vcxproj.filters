@@ -123,9 +123,6 @@
     <ClInclude Include="src\Hazard\ECS\Entity.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Loader\Component.h">
-      <Filter>src\Hazard\ECS\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Loader\WorldDeserializer.h">
       <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
@@ -133,9 +130,6 @@
       <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\World.h">
-      <Filter>src\Hazard\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\WorldCommand.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ECS\WorldHandler.h">
@@ -1422,6 +1416,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Components\ComponentBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1460,12 +1455,6 @@
     <ClCompile Include="src\Hazard\ECS\World.cpp">
       <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\ECS\WorldCommand.cpp">
-      <Filter>src\Hazard\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp">
-      <Filter>src\Hazard\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
     </ClCompile>
@@ -1493,5 +1482,6 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 #include "UID.h"
 #include "Ref.h"
 
-namespace Hazard::ECS {
+namespace Hazard {
 
 	class Entity;
 

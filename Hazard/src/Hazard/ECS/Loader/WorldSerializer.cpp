@@ -5,7 +5,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
-namespace Hazard::ECS::Loader {
+namespace Hazard {
 
 	bool WorldSerializer::SerializeEditor(const std::string& file)
 	{
@@ -41,15 +41,12 @@ namespace Hazard::ECS::Loader {
 
 		//Scripts
 		TrySerializeEditor<ScriptComponent>(entity, out);
-		TrySerializeEditor<VisualScriptComponent>(entity, out);
 
 		//Lights
 		TrySerializeEditor<SkyLightComponent>(entity, out);
 		TrySerializeEditor<DirectionalLightComponent>(entity, out);
 		TrySerializeEditor<PointLightComponent>(entity, out);
 
-		//Audio
-		TrySerializeEditor<AudioSourceComponent>(entity, out);
 
 		//Meshes
 		TrySerializeEditor<MeshComponent>(entity, out);

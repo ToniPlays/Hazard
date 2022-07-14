@@ -1,21 +1,33 @@
 
 #include "Hierarchy.h"
+#include "Hazard.h"
+#include "Core/EditorEvent.h"
 #include <sstream>
+
 namespace UI
 {
+	using namespace Hazard;
+
+	Hierarchy::Hierarchy() : Panel("Hierarchy")
+	{
+		m_WorldHandler = &Hazard::Application::GetModule<Hazard::WorldHandler>();
+	}
 	void Hierarchy::OnPanelRender()
 	{
 		//Draw hierarchy panel
+		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 
 		const char* columns[] = { "Name", "Type", "Modifiers" };
 
 		UI::Table("Hierarchy", columns, 3, [&]() {
 
-			for (uint32_t i = 0; i < 10; i++) {
-				std::stringstream ss;
-				ss << "Row" << i;
+			for (auto entity : world->GetEntitiesWith<TagComponent>()) {
+				Entity e(entity, world.Raw());
+				TagComponent& tag = e.GetComponent<TagComponent>();
 
-				UI::TableRow(ss.str().c_str(), i == 2);
+				bool clicked = UI::TableRowTreeItem(tag.Tag.c_str(), false, []() {
+					ImGui::Text("Sup bro");
+					});
 
 				//Type
 				ImGui::TableNextColumn();
@@ -30,16 +42,20 @@ namespace UI
 				ImVec4 col = StyleManager::GetCurrent().Window.Text;
 				ScopedStyleColor textColor(ImGuiCol_Text, col);
 
-				ShiftX(4.0f);
+				ShiftX(8.0f);
 				ImGui::Text(ICON_FK_EYE);
+
+				if (clicked) {
+					Events::SelectionContextChange ev (e );
+					Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+				}
 			}
-			UI::ContextMenu([]() {
-				UI::MenuItem("Some shit", []() {});
-				UI::MenuItem("Some more shit", []() {});
-				UI::MenuItem("Some more Hazard", []() {});
-				UI::Submenu("Crashes", []() {});
+
+			UI::ContextMenu([&]() {
+				UI::MenuItem("Create new", [&]() {
+					world->CreateEntity("New entity");
+					});
+				});
 			});
-		
-		});
 	}
 }

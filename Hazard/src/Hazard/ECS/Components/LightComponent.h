@@ -1,22 +1,23 @@
 #pragma once
 
 #include "Color.h"
+#include "ComponentBase.h"
 
-namespace Hazard::ECS 
+namespace Hazard 
 {
-	struct SkyLightComponent 
+	struct SkyLightComponent : ComponentBase
 	{
 		Color Tint = Color::White;
 		float Intensity = 1.0f;
 	};
 
-	struct DirectionalLightComponent 
+	struct DirectionalLightComponent : ComponentBase
 	{
 		Color Tint = Color::White;
 		float Intensity = 1.0f;
 	};
 
-	struct PointLightComponent 
+	struct PointLightComponent : ComponentBase
 	{
 		Color Tint = Color::White;
 		float Intensity = 1.0f;

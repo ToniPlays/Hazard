@@ -5,7 +5,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
-namespace Hazard::ECS::Loader
+namespace Hazard
 {
 	Ref<World> WorldDeserializer::DeserializeEditor(const std::string& file)
 	{
@@ -34,13 +34,10 @@ namespace Hazard::ECS::Loader
 				TryDeserializeComponent<CameraComponent>("CameraComponent", entity, node);
 
 				TryDeserializeComponent<ScriptComponent>("ScriptComponent", entity, node);
-				TryDeserializeComponent<VisualScriptComponent>("VisualScriptComponent", entity, node);
 
 				TryDeserializeComponent<SkyLightComponent>("SkyLightComponent", entity, node);
 				TryDeserializeComponent<DirectionalLightComponent>("DirectionalLightComponent", entity, node);
 				TryDeserializeComponent<PointLightComponent>("PointLightComponent", entity, node);
-
-				TryDeserializeComponent<AudioSourceComponent>("AudioSourceComponent", entity, node);
 
 				TryDeserializeComponent<MeshComponent>("MeshComponent", entity, node);
 				TryDeserializeComponent<SpriteRendererComponent>("SpriteRendererComponent", entity, node);

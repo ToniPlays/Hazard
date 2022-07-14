@@ -10,13 +10,13 @@ namespace Events {
 	class SelectionContextChange : public Event
 	{
 	public:
-		SelectionContextChange(ECS::Entity entity) : entity(entity) {}
+		SelectionContextChange(Entity entity) : entity(entity) {}
 
-		inline ECS::Entity GetEntity() { return entity; }
+		inline Entity GetEntity() { return entity; }
 
 		EVENT_CLASS_TYPE(AppEvent)
 			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
-		ECS::Entity entity;
+		Entity entity;
 	};
 }

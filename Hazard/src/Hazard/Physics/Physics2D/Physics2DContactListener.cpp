@@ -3,8 +3,6 @@
 #include "Physics2DContactListener.h"
 #include "box2d/b2_contact.h"
 
-#include "Hazard/ECS/WorldCommand.h"
-
 namespace Hazard::Physics
 {
 	void Physics2DContactListener::BeginContact(b2Contact* contact)

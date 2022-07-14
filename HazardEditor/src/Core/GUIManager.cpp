@@ -4,7 +4,7 @@
 #include "GUI/Core/Dockspace.h"
 #include "GUI/Core/StyleManager.h"
 
-#include "Platform/GLFW/FontAwesome.h"
+#include "../ImGui_Backend/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 #include "Platform/Metal/EditorPlatformMetal.h"
@@ -68,6 +68,12 @@ void GUIManager::Render()
 	ImGui::Render();
 
 	m_Platform->EndFrame();
+}
+bool GUIManager::OnEvent(Event& e)
+{
+	m_MainMenuBar.OnEvent(e);
+	m_PanelManager.OnEvent(e);
+	return true;
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {

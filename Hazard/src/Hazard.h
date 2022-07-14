@@ -12,7 +12,6 @@
 #include "Hazard/Assets/AssetManager.h"
 
 //Hazard ECS includes
-#include "Hazard/ECS/WorldCommand.h"
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/ECS/Loader/WorldDeserializer.h"
 #include "Hazard/ECS/Loader/WorldSerializer.h"
@@ -24,4 +23,6 @@
 #include "Hazard/Physics/PhysicsCommand.h"
 
 #include "Backend/Core/Core.h"
+
+#include <hzrpch.h>
 

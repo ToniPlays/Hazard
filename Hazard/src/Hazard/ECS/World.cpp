@@ -1,6 +1,5 @@
 
 #include <hzrpch.h>
-#include "WorldCommand.h"
 #include "World.h"
 #include "Entity.h"
 
@@ -9,7 +8,7 @@
 								template<>															\
 								void World::OnComponentRemoved<x>(Entity& entity, x& component) {}	\
 
-namespace Hazard::ECS 
+namespace Hazard 
 {
 	template<typename T>
 	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
@@ -53,13 +52,10 @@ namespace Hazard::ECS
 		CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<ScriptComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<VisualScriptComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<SkyLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<DirectionalLightComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<AudioSourceComponent>(world.m_Registry, m_Registry, entityMap);
 
 		CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
 		CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
@@ -118,13 +114,11 @@ namespace Hazard::ECS
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
 		CopyComponentIfExists<ScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<VisualScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
 		CopyComponentIfExists<SkyLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
-		CopyComponentIfExists<AudioSourceComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
 		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
@@ -175,6 +169,7 @@ namespace Hazard::ECS
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
 	REGISTER_COMPONENT(CircleCollider2DComponent);
+	REGISTER_COMPONENT(ScriptComponent);
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
@@ -183,33 +178,6 @@ namespace Hazard::ECS
 	template<>
 	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
 
-	template<>
-	void World::OnComponentAdded(Entity& entity, AudioSourceComponent& component) 
-	{
-		//component.AudioClip = Audio::AudioCommand::Create(component.SourceFile);
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, AudioSourceComponent& component) {}
-
-	template<>
-	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
-		WorldCommand::OnScriptAttached(entity, component);
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component)
-	{
-		WorldCommand::OnScriptDetached(entity, component);
-	}
-
-	template<>
-	void World::OnComponentAdded(Entity& entity, VisualScriptComponent& component) {
-		WorldCommand::OnScriptAttached(entity, component);
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, VisualScriptComponent& component)
-	{
-		WorldCommand::OnScriptDetached(entity, component);
-	}
 	template<>
 	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
 		//component.Asset = Rendering::MeshFactory::LoadCube();

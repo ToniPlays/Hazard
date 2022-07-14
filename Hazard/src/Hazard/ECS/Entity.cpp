@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "Entity.h"
 
-namespace Hazard::ECS 
+namespace Hazard 
 {
 	Entity::Entity(entt::entity handle, World* world) : m_Handle(handle), m_World(world) {}
 	bool Entity::IsValid() 

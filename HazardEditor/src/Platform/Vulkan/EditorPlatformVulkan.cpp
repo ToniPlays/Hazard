@@ -6,7 +6,7 @@
 #include "Backend/Core/Renderer.h"
 #include "Backend/Vulkan/VKUtils.h"
 #include "imgui.h"
-#include <Platform/GLFW/imgui_impl_glfw.h>
+#include <../ImGui_Backend/imgui_impl_glfw.h>
 
 static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 

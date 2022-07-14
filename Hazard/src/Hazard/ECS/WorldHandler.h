@@ -4,7 +4,8 @@
 #include "Hazard/Module.h"
 #include "World.h"
 
-namespace Hazard::ECS {
+namespace Hazard 
+{
 	enum Serialization { Runtime, Editor };
 
 	class WorldHandler : public Module {
@@ -22,5 +23,6 @@ namespace Hazard::ECS {
 
 	private:
 		Ref<World> m_World = nullptr;
+		std::vector<Ref<World>> m_LoadedWorlds;
 	};
 }

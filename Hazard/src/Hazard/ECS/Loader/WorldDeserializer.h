@@ -6,7 +6,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
-namespace Hazard::ECS::Loader 
+namespace Hazard 
 {
 	class WorldDeserializer {
 	public:
@@ -59,16 +59,6 @@ namespace Hazard::ECS::Loader
 				});
 		};
 		template<>
-		void Deserialize<VisualScriptComponent>(Entity entity, YAML::Node comp)
-		{
-			std::string filename;
-			YamlUtils::Deserialize(comp, "FileName", filename, std::string(""));
-
-			entity.AddComponentWithCallback<VisualScriptComponent>([&](VisualScriptComponent& comp) {
-				comp.Filename = filename;
-				});
-		};
-		template<>
 		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
@@ -90,25 +80,6 @@ namespace Hazard::ECS::Loader
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
-		template<>
-		void Deserialize<AudioSourceComponent>(Entity entity, YAML::Node comp) {
-			AudioSourceComponent& source = entity.AddComponent<AudioSourceComponent>();
-
-			YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
-			//AssetHandle handle = AssetManager::ImportAsset(source.SourceFile);
-
-			//if (handle != INVALID_ASSET_HANDLE) {
-				//Ref<Audio::AudioBufferData> buffer = AssetManager::GetAsset<Audio::AudioBufferData>(handle);
-				//source.Source.SetSourceBuffer(buffer);
-			//}
-
-			YamlUtils::Deserialize(comp, "AudioFile", source.SourceFile, std::string(""));
-			YamlUtils::Deserialize(comp, "Gain", source.Gain, 1.0f);
-			YamlUtils::Deserialize(comp, "Pitch", source.Pitch, 1.0f);
-			YamlUtils::Deserialize(comp, "Looping", source.Looping, false);
-			YamlUtils::Deserialize(comp, "Spatial", source.Spatial, false);
-			YamlUtils::Deserialize(comp, "PlayOnCreate", source.PlayOnCreate, false);
-		};
 		template<>
 		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();

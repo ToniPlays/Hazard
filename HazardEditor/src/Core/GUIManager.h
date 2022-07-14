@@ -16,6 +16,8 @@ public:
 	void Init() override;
 	void Update() override;
 	void Render() override;
+
+	bool OnEvent(Event& e) override;
     
     UI::PanelManager& GetPanelManager() { return m_PanelManager; }
     UI::MenuBar& GetMenuBar() { return m_MainMenuBar; }
