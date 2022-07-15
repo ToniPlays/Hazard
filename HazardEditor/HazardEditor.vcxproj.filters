@@ -121,6 +121,8 @@
     <ClInclude Include="src\GUI\Core\UILibrary.h" />
     <ClInclude Include="src\GUI\Core\ImGuiUtils.h" />
     <ClInclude Include="src\GUI\Properties\ComponentUILibrary.h" />
+    <ClInclude Include="src\GUI\Viewport\TransformationGizmo.h" />
+    <ClInclude Include="vendor\ImGui_Backend\ImGuizmo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -167,5 +169,7 @@
     <ClCompile Include="src\GUI\Properties\Properties.cpp" />
     <ClCompile Include="src\GUI\Properties\Hierarchy.cpp" />
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp" />
+    <ClCompile Include="src\GUI\Viewport\TransformationGizmo.cpp" />
+    <ClCompile Include="vendor\ImGui_Backend\ImGuizmo.cpp" />
   </ItemGroup>
 </Project>

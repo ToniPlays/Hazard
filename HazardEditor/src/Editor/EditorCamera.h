@@ -39,7 +39,7 @@ namespace Editor {
 	private:
 		float fov = 45.0f, aspectRatio = 1.778f;
 
-		bool m_Is2DEnabled;
+		bool m_Is2DEnabled = false;
 		float size2D = 10.0f;
 
 		glm::vec2 m_InitialMousePos = { 0, 0 };

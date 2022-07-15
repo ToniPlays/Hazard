@@ -3,7 +3,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Hazard {
+namespace HazardRenderer {
 
 	GLFWwindow* window = nullptr;
 

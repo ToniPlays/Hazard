@@ -24,30 +24,75 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, TransformComponent& c) {
-		return UI::Treenode(" " ICON_FK_MAP_MARKER " Transform component", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		return UI::Treenode(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
+
+
+				glm::vec3 rot = { 
+					glm::degrees(c.Rotation.x), 
+					glm::degrees(c.Rotation.y),
+					glm::degrees(c.Rotation.z)
+				};
+
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, 125.0f);
 				UI::InputFloat3("Translation", c.Translation);
-				UI::InputFloat3("Rotation", c.Rotation);
+				if (UI::InputFloat3("Rotation", rot)) {
+					c.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
+				}
 				UI::InputFloat3("Scale", c.Scale, 1.0f);
 				ImGui::Columns();
 			});
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SpriteRendererComponent& c) {
-		return UI::Treenode(" " ICON_FK_PICTURE_O " Sprite renderer component", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		return UI::Treenode(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, 125.0f);
 
+				//Texture slot here
+
+				if (UI::ColorPicker("Tint", "##Tint", c.Tint)) {
+					
+				}
+				ImGui::Columns();
 			});
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, CameraComponent& c) {
-		return UI::Treenode(" " ICON_FK_VIDEO_CAMERA " Camera component", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		return UI::Treenode(" " ICON_FK_VIDEO_CAMERA " Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
+				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, 125.0f);
+
+				const char* projectionTypes[] = { "Perspective", "Orthographic" };
+				uint32_t selected = (uint32_t)c.GetProjectionType();
 				
+				//Projection type here
+				if (UI::Combo("Projection", "##projection", projectionTypes, 2, selected)) {
+					c.SetProjection((Projection)selected);
+				}
+
+				glm::vec2 clipping = c.GetClipping();
+				if (UI::InputFloat2("Clipping", clipping, 1.0f)) {
+					c.SetClipping(clipping);
+				}
+
+				ImGui::Columns();
+			});
+	}
+	template<>
+	static bool ComponentMenu(Entity& e, ScriptComponent& c) {
+		return UI::Treenode(" " ICON_FK_GLOBE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+			{
+				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				UI::TextField(c.ModuleName, "Script class");
+				return true;
 			});
 	}
 	template<>
@@ -70,7 +115,7 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, MeshComponent& c) {
-		return UI::Treenode(ICON_FK_CUBE " Mesh component", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		return UI::Treenode(ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
 			});
 	}

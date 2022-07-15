@@ -13,7 +13,9 @@ namespace UI {
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
 	private:
-		//ECS world here
+		void DrawModifiers(Entity& e, TagComponent& tag);
+	private:
 		Hazard::WorldHandler* m_WorldHandler;
+		Entity m_SelectionContext;
 	};
 }

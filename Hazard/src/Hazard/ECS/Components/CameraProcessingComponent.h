@@ -15,6 +15,10 @@ namespace Hazard
 		void SetFov(float fov);
 		void SetZNear(float plane);
 		void SetZFar(float plane);
+		void SetClipping(const glm::vec2 clipping) {
+			m_ZNear = clipping.x;
+			SetZFar(clipping.y);
+		}
 		float GetAspectRatio() { return m_Width / m_Height; }
 		void RecalculateProjection(float w, float h);
 

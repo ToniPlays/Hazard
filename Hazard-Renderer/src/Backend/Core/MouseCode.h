@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace Hazard::Mouse {
+namespace Mouse {
 
 	using MouseCode = uint16_t;
 

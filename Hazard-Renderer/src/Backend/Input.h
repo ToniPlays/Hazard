@@ -4,8 +4,7 @@
 #include "Backend/Core/MouseCode.h"
 #include <glm/glm.hpp>
 
-
-namespace Hazard {
+namespace HazardRenderer {
 
 	class Input {
 		public:

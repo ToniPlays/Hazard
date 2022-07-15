@@ -25,7 +25,7 @@ namespace UI
 				Entity e(entity, world.Raw());
 				TagComponent& tag = e.GetComponent<TagComponent>();
 
-				bool clicked = UI::TableRowTreeItem(tag.Tag.c_str(), false, []() {
+				bool clicked = UI::TableRowTreeItem(tag.Tag.c_str(), e == m_SelectionContext, []() {
 					ImGui::Text("Sup bro");
 					});
 
@@ -42,10 +42,10 @@ namespace UI
 				ImVec4 col = StyleManager::GetCurrent().Window.Text;
 				ScopedStyleColor textColor(ImGuiCol_Text, col);
 
-				ShiftX(8.0f);
-				ImGui::Text(ICON_FK_EYE);
+				DrawModifiers(e, tag);
 
 				if (clicked) {
+					m_SelectionContext = e;
 					Events::SelectionContextChange ev (e );
 					Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 				}
@@ -57,5 +57,25 @@ namespace UI
 					});
 				});
 			});
+	}
+	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
+	{
+		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O};
+		const bool states[] = { true, e.HasComponent<ScriptComponent>() };
+
+		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;
+		const ImVec4 textColor = StyleManager::GetCurrent().Window.Text;
+		const ImVec4 warning = StyleManager::GetCurrent().Colors.Warning;
+
+		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, warning };
+
+		for (uint32_t i = 0; i < 2; i++) {
+			if (states[i]) {
+				ScopedStyleColor col(ImGuiCol_Text, colors[i]);
+				ShiftX(8.0f);
+				ImGui::Text(modifiers[i]);
+				ImGui::SameLine();
+			}
+		}
 	}
 }

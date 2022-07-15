@@ -94,6 +94,8 @@ namespace UI
 		ImVec4 AxisY = ColorToImVec("#53B305");
 		ImVec4 AxisZ = ColorToImVec("#1651F3");
 
+		ImVec4 Warning = ColorToImVec("#FFE600");
+
 	};
 	struct Style
 	{

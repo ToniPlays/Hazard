@@ -165,14 +165,90 @@ namespace UI
 
 		return modified;
 	}
-	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f) {
+	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f)
+	{
 		bool modified = false;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			InputFloat3(value, clearValue);
+			modified = InputFloat(value, clearValue);
 			});
 		ImGui::NextColumn();
+		return modified;
+	}
+	static bool InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f)
+	{
+		bool modified = false;
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			modified = InputFloat2(value, clearValue);
+			});
+		ImGui::NextColumn();
+		return modified;
+	}
+	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f)
+	{
+		bool modified = false;
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			modified = InputFloat3(value, clearValue);
+			});
+		ImGui::NextColumn();
+		return modified;
+	}
+	static bool Combo(const char* id, const char** options, uint32_t count, uint32_t& selected)
+	{
+		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
+		uint32_t currentSelection = selected;
+		bool modified = false;
+
+		if (ImGui::BeginCombo(id, options[selected]))
+		{
+			for (uint32_t i = 0; i < count; i++) {
+				bool isSelected = i == selected;
+
+				if (ImGui::Selectable(options[i], &currentSelection)) {
+					currentSelection = i;
+					modified = true;
+					selected = i;
+				}
+				if (isSelected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		return modified;
+	}
+	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected) {
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = Combo(id, options, count, selected);
+		ImGui::NextColumn();
+		return modified;
+	}
+	static bool ColorPicker(const char* name, Color& color) {
+		
+		bool modified = false;
+		ImVec4 col = { color.r, color.g, color.b, color.a };
+
+		if (ImGui::ColorEdit4(name, &color.r)) {
+			modified = true;
+		}
+		return false;
+	}
+	static bool ColorPicker(const char* name, const char* id, Color& color) 
+	{
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = ColorPicker(id, color);
+		ImGui::NextColumn();
+
 		return modified;
 	}
 

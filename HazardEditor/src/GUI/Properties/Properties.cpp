@@ -16,6 +16,8 @@ namespace UI
 		UI::ComponentMenuIfExists<SpriteRendererComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CameraComponent>(m_SelectionContext);
 
+		UI::ComponentMenuIfExists<ScriptComponent>(m_SelectionContext);
+
 		UI::ComponentMenuIfExists<SkyLightComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<DirectionalLightComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<PointLightComponent>(m_SelectionContext);
@@ -25,6 +27,7 @@ namespace UI
 		UI::ComponentMenuIfExists<Rigidbody2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<BoxCollider2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CircleCollider2DComponent>(m_SelectionContext);
+
 
 		DrawContextMenu(m_SelectionContext);
 
@@ -37,12 +40,13 @@ namespace UI
 	bool Properties::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
 		m_SelectionContext = e.GetEntity();
-		return true;
+		return false;
 	}
 	void Properties::DrawContextMenu(Entity& e)
 	{
 		UI::ContextMenu([&]() {
 			UI::Submenu("General", [&]() {
+				DrawAddComponentMenuIfNotExists<ScriptComponent>("Script", e);
 				});
 			UI::Submenu("Lighting", [&]() {
 				DrawAddComponentMenuIfNotExists<SkyLightComponent>("Skylight", e);
