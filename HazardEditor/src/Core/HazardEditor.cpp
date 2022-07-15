@@ -70,10 +70,19 @@ void EditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = "";
 
+	ScriptEngineCreateInfo scriptEngine = {};
+
+	scriptEngine.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/Debug/HazardScripting.dll";
+	scriptEngine.AppAssemblyPath = "C:/dev/HazardCraft/Assets/Scripts/Binaries/HazardCraft.dll";
+	scriptEngine.AssemblyPath = "C:/Program Files/Mono/lib";
+	scriptEngine.ConfigPath = "C:/Program Files/Mono/etc/";
+
+
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RendererInfo = &renderInfo;
 	createInfo.EntityComponent = &entity;
+	createInfo.ScriptEngineInfo = &scriptEngine;
 
 	CreateApplicationStack(&createInfo);
 }

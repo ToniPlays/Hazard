@@ -12,7 +12,6 @@ namespace HazardScript {
 
 		std::string GetName() { return m_Name; }
 		FieldVisibility GetVisibility() { return m_Visibility; }
-
 		MonoClassField* GetField() { return m_Field; }
 
 		template<typename T>

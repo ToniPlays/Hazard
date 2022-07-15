@@ -37,6 +37,9 @@
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Scripting">
+      <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -111,6 +114,9 @@
     <ClInclude Include="src\Hazard\ECS\Components\Component.h">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Components\ComponentBase.h">
+      <Filter>src\Hazard\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Components\LightComponent.h">
       <Filter>src\Hazard\ECS\Components</Filter>
     </ClInclude>
@@ -167,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
+      <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
       <Filter>src</Filter>
@@ -1416,7 +1425,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ECS\Components\ComponentBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1455,6 +1463,9 @@
     <ClCompile Include="src\Hazard\ECS\World.cpp">
       <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp">
+      <Filter>src\Hazard\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
     </ClCompile>
@@ -1479,9 +1490,11 @@
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,13 @@
 #include "MathCore.h"
 #include "UID.h"
 
+namespace HazardScript {
+	class ScriptObject;
+}
+
 namespace Hazard {
+
+	
 
 	struct TagComponent
 	{
@@ -39,6 +45,7 @@ namespace Hazard {
 	struct ScriptComponent 
 	{
 		std::string ModuleName;
+		HazardScript::ScriptObject* m_Handle;
 	};
 	struct MeshComponent 
 	{

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "HazardLoop.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/WorldHandler.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
@@ -23,6 +24,8 @@ namespace Hazard {
 		{
 			PushModule<RenderEngine>(info->RendererInfo);
 		}
+		if (info->ScriptEngineInfo)
+			PushModule<ScriptEngine>(info->ScriptEngineInfo);
 		if(info->EntityComponent)
 			PushModule<WorldHandler>(info->EntityComponent);
 	}

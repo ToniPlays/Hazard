@@ -27,6 +27,9 @@ namespace HazardScript
 		m_MonoData.MonoConfigDir = info->ConfigPath;
 		m_MonoData.BindingCallback = info->BindingCallback;
 
+		HZR_ASSERT(info->DebugCallback, "Debug callback is required");
+		HZR_ASSERT(info->BindingCallback, "Binding callback is required");
+
 		m_DebugCallback = info->DebugCallback;
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 

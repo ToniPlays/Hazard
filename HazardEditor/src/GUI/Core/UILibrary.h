@@ -253,6 +253,16 @@ namespace UI
 	}
 
 #pragma endregion
+#pragma region Buttons
+
+	static bool ColoredButton(const char* label, ImVec4 backgroundColor, ImVec4 foregroundColor, ImVec2 buttonSize = { 16, 16 }) {
+		ScopedStyleColor textColor(ImGuiCol_Text, foregroundColor);
+		ScopedStyleColor buttonColor(ImGuiCol_Button, backgroundColor);
+
+		return ImGui::Button(label, buttonSize);
+	}
+
+#pragma endregion
 #pragma region Treenodes
 
 	template<typename T>

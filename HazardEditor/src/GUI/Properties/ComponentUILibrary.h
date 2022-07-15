@@ -89,9 +89,42 @@ namespace UI
 	static bool ComponentMenu(Entity& e, ScriptComponent& c) {
 		return UI::Treenode(" " ICON_FK_GLOBE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
+				using namespace HazardScript;
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-				UI::TextField(c.ModuleName, "Script class");
+
+				std::string oldModule = c.ModuleName;
+
+				auto& scriptEngine = Application::GetModule<ScriptEngine>();
+				bool exists = scriptEngine.HasModule(c.ModuleName);
+				bool changed = UI::TextField(c.ModuleName, "Script class");
+				
+				ShiftY(4.0f);
+
+				if (changed) {
+					if (scriptEngine.HasModule(oldModule) && c.m_Handle) {
+						delete c.m_Handle;
+						c.m_Handle = nullptr;
+					}
+					if (scriptEngine.HasModule(c.ModuleName)) {
+						Script& script = scriptEngine.GetScript(c.ModuleName);
+						c.m_Handle = script.CreateObject();
+					}
+				}
+
+				if (c.m_Handle)
+				{
+					Script& script = c.m_Handle->GetScript();
+
+					ImGui::Columns(2, 0, false);
+					ImGui::SetColumnWidth(0, 125.0f);
+
+					for (auto [name, field] : script.GetFields()) {
+						
+					}
+					ImGui::Columns();
+				}
+
 				return true;
 			});
 	}

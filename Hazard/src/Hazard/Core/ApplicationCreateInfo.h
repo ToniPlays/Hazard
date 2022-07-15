@@ -25,9 +25,8 @@ namespace Hazard {
 	{
 		std::string AppAssemblyPath;
 		std::string CoreAssemblyPath;
-		std::string MonoDirectoryEtc;
-		std::string MonoDirectoryLib;
-		bool Enable = true;
+		std::string AssemblyPath;
+		std::string ConfigPath;
 	};
 
 	struct HazardCreateInfo 

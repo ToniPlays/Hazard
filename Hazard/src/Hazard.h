@@ -24,5 +24,7 @@
 
 #include "Backend/Core/Core.h"
 
+#include "Hazard/Scripting/ScriptEngine.h"
+
 #include <hzrpch.h>
 

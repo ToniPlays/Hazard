@@ -11,7 +11,9 @@ project "HazardEditor"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"vendor/ImGui_Backend/**.h",
+		"vendor/ImGui_Backend/**.cpp"
 	}
 
 	defines {
@@ -70,11 +72,13 @@ project "HazardEditor"
 		}
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}"
+			"%{Library.VulkanUtils}",
+			"Hazard-Script"
 		}
 		includedirs {
-			
-			"%{IncludeDir.Optick}"
+
+			"%{IncludeDir.Optick}",
+			"%{IncludeDir.Mono}"
 		}
 
 	filter "system:macosx"

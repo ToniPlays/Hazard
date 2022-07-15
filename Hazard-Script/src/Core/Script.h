@@ -18,8 +18,10 @@ namespace HazardScript
 		Script(MonoClass* klass);
 
 		std::string GetName();
-		uint32_t GetFieldCount() { return m_FieldCount; }
-		uint32_t GetMethodCount() { return m_MethodCount; }
+		uint32_t GetFieldCount() { return m_Fields.size(); }
+		uint32_t GetMethodCount() { return m_Methods.size(); }
+
+		std::unordered_map<std::string, ScriptField>& GetFields() { return m_Fields; }
 
 		bool HasField(const std::string& name) {
 			return m_Fields.find(name) != m_Fields.end();
@@ -74,8 +76,6 @@ namespace HazardScript
 
 	private:
 		MonoClass* m_Class;
-		
-		uint32_t m_FieldCount, m_MethodCount;
 
 		std::unordered_map<std::string, ScriptField> m_Fields;
 		std::unordered_map<std::string, Method> m_Methods;

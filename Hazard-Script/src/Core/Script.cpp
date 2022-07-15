@@ -21,6 +21,7 @@ namespace HazardScript
 	}
 	ScriptObject* Script::CreateObject()
 	{
+		std::cout << "Created script: " << GetName() << std::endl;
 		return new ScriptObject(this);
 	}
 	void Script::LoadFields() 

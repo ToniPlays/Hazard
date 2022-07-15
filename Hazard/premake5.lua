@@ -75,13 +75,15 @@ project "Hazard"
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
-			"opengl32.lib"
+			"opengl32.lib",
+			"Hazard-Script"
 		}
 		removefiles {
 			"src/Platform/Rendering/Metal/**"
 		}
 		includedirs {
-			"%{IncludeDir.Optick}"
+			"%{IncludeDir.Optick}",
+			"%{IncludeDir.Mono}"
 		}
 
 	filter "system:macosx"

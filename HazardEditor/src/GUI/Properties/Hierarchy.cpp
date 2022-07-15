@@ -60,8 +60,17 @@ namespace UI
 	}
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{
+		bool scriptState = false;
+		if (e.HasComponent<ScriptComponent>()) {
+			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
+			auto& sc = e.GetComponent<ScriptComponent>();
+			scriptState = !engine.HasModule(sc.ModuleName);
+		}
+
+
+
 		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O};
-		const bool states[] = { true, e.HasComponent<ScriptComponent>() };
+		const bool states[] = { true, scriptState };
 
 		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;
 		const ImVec4 textColor = StyleManager::GetCurrent().Window.Text;
