@@ -50,11 +50,11 @@ namespace Hazard
 		CircleCollider2DComponent() = default;
 		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
 	};
-	struct Rigidbody : ComponentBase 
+	struct RigidbodyComponent : ComponentBase 
 	{
 
 	};
-	struct BoxCollider : ComponentBase 
+	struct BoxColliderComponent : ComponentBase 
 	{
 
 	};

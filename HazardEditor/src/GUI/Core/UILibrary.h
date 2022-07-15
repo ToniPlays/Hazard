@@ -165,6 +165,16 @@ namespace UI
 
 		return modified;
 	}
+	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f) {
+		bool modified = false;
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			InputFloat3(value, clearValue);
+			});
+		ImGui::NextColumn();
+		return modified;
+	}
 
 #pragma endregion
 #pragma region Treenodes
