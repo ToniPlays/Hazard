@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include "GUI/Core/UILibrary.h"
+#include "ScriptFieldUI.h"
 
 namespace UI
 {
@@ -28,7 +29,6 @@ namespace UI
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 
-
 				glm::vec3 rot = { 
 					glm::degrees(c.Rotation.x), 
 					glm::degrees(c.Rotation.y),
@@ -38,10 +38,13 @@ namespace UI
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, 125.0f);
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				UI::InputFloat3("Translation", c.Translation);
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				if (UI::InputFloat3("Rotation", rot)) {
 					c.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 				}
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				UI::InputFloat3("Scale", c.Scale, 1.0f);
 				ImGui::Columns();
 			});
@@ -77,6 +80,7 @@ namespace UI
 					c.SetProjection((Projection)selected);
 				}
 
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				glm::vec2 clipping = c.GetClipping();
 				if (UI::InputFloat2("Clipping", clipping, 1.0f)) {
 					c.SetClipping(clipping);
@@ -90,7 +94,7 @@ namespace UI
 		return UI::Treenode(" " ICON_FK_GLOBE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
 				using namespace HazardScript;
-				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 
 				std::string oldModule = c.ModuleName;
@@ -119,8 +123,13 @@ namespace UI
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, 125.0f);
 
-					for (auto [name, field] : script.GetFields()) {
-						
+					for (auto& [name, field] : script.GetFields()) 
+					{
+						const char* label = name.c_str();
+						auto& f = field;
+						Group(name.c_str(), [&]() {
+							UI::ScriptField(label, f, *c.m_Handle);
+							});
 					}
 					ImGui::Columns();
 				}
@@ -132,6 +141,7 @@ namespace UI
 	static bool ComponentMenu(Entity& e, SkyLightComponent& c) {
 		return UI::Treenode(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
+
 			});
 	}
 	template<>

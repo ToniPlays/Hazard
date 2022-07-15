@@ -11,7 +11,8 @@ namespace HazardScript {
 		ScriptField(MonoClassField* field);
 
 		std::string GetName() { return m_Name; }
-		FieldVisibility GetVisibility() { return m_Visibility; }
+		const FieldVisibility& GetVisibility() { return m_Visibility; }
+		const FieldType& GetType() { return m_Type; }
 		MonoClassField* GetField() { return m_Field; }
 
 		template<typename T>
@@ -34,6 +35,7 @@ namespace HazardScript {
 	private:
 		MonoClassField* m_Field;
 		std::string m_Name;
+		FieldType m_Type = FieldType::None;
 		FieldVisibility m_Visibility;
 		std::vector<Attribute*> m_Attributes;
 	};

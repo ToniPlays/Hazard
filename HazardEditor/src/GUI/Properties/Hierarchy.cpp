@@ -68,7 +68,6 @@ namespace UI
 		}
 
 
-
 		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O};
 		const bool states[] = { true, scriptState };
 

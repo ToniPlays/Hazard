@@ -8,6 +8,7 @@ namespace HazardScript
 	{
 		m_Name = mono_field_get_name(field);
 		m_Visibility = Mono::GetFieldVisibility(field);
+		m_Type = Mono::GetFieldType(field);
 		LoadAttributes();
 	}
 	void ScriptField::LoadAttributes()

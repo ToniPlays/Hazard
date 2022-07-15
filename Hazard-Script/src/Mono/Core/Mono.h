@@ -55,7 +55,9 @@ namespace HazardScript
 
 		static std::string MonoStringToString(MonoString* string);
 		static std::string MonoObjectToString(MonoObject* obj);
+		static MonoString* StringToMonoString(const std::string& string);
 		static FieldVisibility GetFieldVisibility(MonoClassField* field);
+		static FieldType GetFieldType(MonoClassField* field);
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

@@ -102,7 +102,10 @@ namespace UI
 
 		return modified;
 	}
-	static bool InputFloat(float& value, float clearValue = 0.0f) { return false; }
+	static bool InputFloat(float& value, float clearValue = 0.0f) {
+		
+		return ImGui::DragFloat("##float", &value);
+	}
 	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
 		bool modified = false;
 
@@ -231,12 +234,12 @@ namespace UI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool ColorPicker(const char* name, Color& color) {
+	static bool ColorPicker(const char* id, Color& color) {
 		
 		bool modified = false;
 		ImVec4 col = { color.r, color.g, color.b, color.a };
 
-		if (ImGui::ColorEdit4(name, &color.r)) {
+		if (ImGui::ColorEdit4(id, &color.r)) {
 			modified = true;
 		}
 		return false;

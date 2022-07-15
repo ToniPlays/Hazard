@@ -90,7 +90,16 @@ namespace HazardScript
 	}
 	std::string Mono::MonoStringToString(MonoString* string)
 	{
-		char* ptr = mono_string_to_utf8(string);
+		MonoError error;
+		char* ptr = mono_string_to_utf8_checked(string, &error);
+		if (!mono_error_ok(&error)) {
+			unsigned short errorCode = mono_error_get_error_code(&error);
+			const char* errorMessage = mono_error_get_message(&error);
+			printf("Mono Error!\n");
+			printf("\tError Code: %hu\n", errorCode);
+			printf("\tError Message: %s\n", errorMessage);
+			mono_error_cleanup(&error);
+		}
 		std::string result(ptr);
 		mono_free(ptr);
 		return result;
@@ -100,9 +109,14 @@ namespace HazardScript
 		if (obj == nullptr) {
 			return "NULL";
 		}
-		MonoString* string = mono_object_to_string(obj, nullptr);
-		std::string b = MonoStringToString(string);
+		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
+	}
+	MonoString* Mono::StringToMonoString(const std::string& string) {
+		
+		const char* str = string.c_str();
+		std::cout << string << std::endl;
+		return mono_string_new(s_Domain, str);
 	}
 	FieldVisibility Mono::GetFieldVisibility(MonoClassField* field)
 	{
@@ -114,5 +128,26 @@ namespace HazardScript
 			return FieldVisibility::Private;
 
 		return FieldVisibility::Protected;
+	}
+	FieldType Mono::GetFieldType(MonoClassField* field)
+	{
+		MonoType* type = mono_field_get_type(field);
+
+		switch (mono_type_get_type(type))
+		{
+		case MONO_TYPE_R4:			return FieldType::Float;
+		case MONO_TYPE_I4:			return FieldType::Int;
+		case MONO_TYPE_U4:			return FieldType::UInt;
+		case MONO_TYPE_STRING:		return FieldType::String;
+		case MONO_TYPE_VALUETYPE:
+		{
+
+			char* name = mono_type_get_name(type);
+			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
+			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
+			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
+		}
+		}
+		return FieldType::None;
 	}
 }

@@ -27,6 +27,10 @@ namespace HazardScript
 		void SetFieldValue(const std::string& name, T value) {
 			m_Script->SetFieldValue(name, GetHandle(), &value);
 		}
+		template<>
+		void SetFieldValue(const std::string& name, std::string value) {
+			m_Script->SetFieldValue<std::string>(name, GetHandle(), value);
+		}
 
 		Script& GetScript() { return *m_Script; }
 
