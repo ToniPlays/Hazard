@@ -53,7 +53,7 @@ namespace HazardRenderer::OpenGL
 			glCreateVertexArrays(1, &instance->m_VAO);
 			glCreateBuffers(1, &instance->m_ID);
 			glNamedBufferData(instance->m_ID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
-			
+
 
 			uint32_t bufferedOffset = 0;
 			uint32_t currentBuffer = 0;
@@ -76,7 +76,7 @@ namespace HazardRenderer::OpenGL
 			}
 
 			if (data) {
-				instance->SetData(data, instance->m_Size);
+				instance->SetData_RT(data, instance->m_Size);
 			}
 		});
 	}
@@ -116,6 +116,10 @@ namespace HazardRenderer::OpenGL
 			glNamedBufferSubData(instance->m_ID, 0, size, data);
 			});
 	}
+	void OpenGLVertexBuffer::SetData_RT(const void* data, uint32_t size)
+	{
+		glNamedBufferSubData(m_ID, 0, size, data);
+	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		m_DebugName = info->DebugName;
@@ -128,7 +132,7 @@ namespace HazardRenderer::OpenGL
 			glCreateBuffers(1, &instance->m_ID);
 
 			if (data != nullptr)
-				instance->SetData(data, instance->m_Size);
+				instance->SetData_RT(data, instance->m_Size);
 
 		});
 	}
@@ -159,6 +163,11 @@ namespace HazardRenderer::OpenGL
 			instance->m_Size = size;
 			glNamedBufferData(instance->m_ID, size, data, GL_STREAM_DRAW + instance->m_Usage);
 			});
+	}
+	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, uint32_t size)
+	{
+		m_Size = size;
+		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)

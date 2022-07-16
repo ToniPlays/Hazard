@@ -20,8 +20,8 @@ namespace Editor {
 	}
 	void EditorCamera::OnUpdate()
 	{
-		/*
-		const glm::vec2& mouse = Hazard::Input::GetMousePos();
+		using namespace HazardRenderer;
+		const glm::vec2& mouse = Input::GetMousePos();
 		glm::vec2 delta = (mouse - m_InitialMousePos) * 0.003f;
 		m_InitialMousePos = mouse;
 
@@ -32,7 +32,6 @@ namespace Editor {
 			MousePan(delta);
 
 		UpdateView();
-		*/
 	}
 
 	bool EditorCamera::OnEvent(Event& e)

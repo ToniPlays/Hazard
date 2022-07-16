@@ -46,7 +46,7 @@ namespace UI
 
 				if (clicked) {
 					m_SelectionContext = e;
-					Events::SelectionContextChange ev (e );
+					Events::SelectionContextChange ev(e);
 					Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 				}
 			}
@@ -68,7 +68,8 @@ namespace UI
 		}
 
 
-		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O};
+		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O };
+		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Script is missing"};
 		const bool states[] = { true, scriptState };
 
 		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;
@@ -79,9 +80,12 @@ namespace UI
 
 		for (uint32_t i = 0; i < 2; i++) {
 			if (states[i]) {
-				ScopedStyleColor col(ImGuiCol_Text, colors[i]);
-				ShiftX(8.0f);
-				ImGui::Text(modifiers[i]);
+				{
+					ScopedStyleColor col(ImGuiCol_Text, colors[i]);
+					ShiftX(8.0f);
+					ImGui::Text(modifiers[i]);
+				}
+				UI::Tooltip(tooltips[i]);
 				ImGui::SameLine();
 			}
 		}

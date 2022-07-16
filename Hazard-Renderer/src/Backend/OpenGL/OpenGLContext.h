@@ -21,7 +21,7 @@ namespace HazardRenderer::OpenGL {
 		void BeginFrame() override;
 		void Present() override;
 
-		void SetClearColor(const glm::vec4& color) override { m_ClearColor = color; }
+		void SetClearColor(const glm::vec4& color) override;
 		void SetViewport(int x, int y, int w, int h) override;
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass);
@@ -34,7 +34,7 @@ namespace HazardRenderer::OpenGL {
 		PhysicalDevice& GetDevice() { return *m_PhysicalDevice;  };
 		Ref<Swapchain> GetSwapchain() { return m_Swapchain.As<Swapchain>(); }
 		Window* GetWindow() { return m_Window; }
-		glm::vec4 GetClearColor() { return m_ClearColor; }
+		glm::vec4 GetClearColor();
 
 		static OpenGLContext& GetInstance() { return *s_Instance; }
 
@@ -43,8 +43,6 @@ namespace HazardRenderer::OpenGL {
 		Window* m_Window;
 		OpenGLPhysicalDevice* m_PhysicalDevice;
 		Ref<OpenGLSwapchain> m_Swapchain;
-		glm::vec4 m_ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-
 	};
 }
 #endif

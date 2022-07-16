@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
+#include "Backend/OpenGL/OpenGLContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -15,4 +16,7 @@ public:
 	void BeginFrame() override;
 	void EndFrame() override;
 	void Close() override;
+private:
+	HazardRenderer::Window* m_Window;
+	HazardRenderer::OpenGL::OpenGLContext* m_Context;
 };

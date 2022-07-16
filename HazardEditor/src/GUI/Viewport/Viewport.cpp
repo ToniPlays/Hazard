@@ -1,8 +1,23 @@
 
 #include "Viewport.h"
+#include "Hazard/Math/Time.h"
 
 namespace UI
 {
+	Viewport::Viewport() : Panel("Viewport")
+	{
+		WorldRendererSpec specs = {};
+		specs.DebugName = "Viewport";
+		specs.Width = m_Width;
+		specs.Height = m_Height;
+		specs.Camera = m_EditorCamera;
+		specs.Geometry = Geometry_All;
+		m_Renderer = Ref<WorldRenderer>::Create(&specs);
+	}
+	void Viewport::Update()
+	{
+		m_Renderer->Render();
+	}
 	void Viewport::OnPanelRender()
 	{
 		ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -12,12 +27,14 @@ namespace UI
 		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		if (size.x != m_Width || size.y != m_Height) 
+		if (size.x != m_Width || size.y != m_Height)
 		{
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
+
+		UI::Image(m_Renderer->GetOutput()->GetImage(), size, { 0, 1 }, { 1, 0 });
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, ImGui::GetWindowSize());
 
@@ -90,8 +107,8 @@ namespace UI
 	void Viewport::DrawStatsWindow()
 	{
 		Style& style = StyleManager::GetCurrent();
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, style.BackgroundColor);
-		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5);
+		ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
+		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 
@@ -103,16 +120,12 @@ namespace UI
 		ImGui::Text("Frametime");
 		ImGui::NextColumn();
 
-		std::stringstream ss;
-		ss << Math::Round(16.0f * 1000.0f, 3) << "ms";
-		ImGui::Text(ss.str().c_str());
-		ss.str("");
+		ImGui::Text("%.3f ms", Time::s_DeltaTime * 1000.0f);
 		ImGui::NextColumn();
 		ImGui::Text("FPS");
 		ImGui::NextColumn();
 
-		ss << Math::Round(1.0f / 100.0f, 3);
-		ImGui::Text(ss.str().c_str());
+		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
 		ImGui::NextColumn();
 
 		ImGui::Text("Memory");
@@ -121,7 +134,5 @@ namespace UI
 
 		ImGui::Columns();
 		ImGui::EndChild();
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
 	}
 }

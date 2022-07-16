@@ -6,4 +6,6 @@
 
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/FrameBuffer.h"
 #include "Backend/Core/Events.h"

@@ -10,6 +10,7 @@ namespace UI {
 	public:
 		Hierarchy();
 
+		void Update() override {};
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
 	private:

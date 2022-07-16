@@ -52,10 +52,13 @@ void GUIManager::Init()
 
 void GUIManager::Update()
 {
-	m_Platform->BeginFrame();
+	m_PanelManager.Update();
+	
 }
 void GUIManager::Render()
 {
+	m_Platform->BeginFrame();
+	HZR_PROFILE_FUNCTION();
 	m_MainMenuBar.Render();
 	{
 		using namespace UI;

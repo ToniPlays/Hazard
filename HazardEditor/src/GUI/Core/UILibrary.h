@@ -5,7 +5,9 @@
 #include "ScopedVar.h"
 #include "StyleManager.h"
 #include "ImGuiUtils.h"
+#include "HazardRenderer.h"
 
+#include "Backend/OpenGL/Textures/OpenGLImage2D.h"
 
 namespace UI
 {
@@ -58,6 +60,16 @@ namespace UI
 				ImGui::TablePopBackgroundChannel();
 		}
 	}
+	static bool Tooltip(const char* text)
+	{
+		if (strcmp(text, "") == 0) return false;
+		if (!ImGui::IsItemHovered()) return false;
+
+		ImGui::BeginTooltip();
+		ImGui::Text(text);
+		ImGui::EndTooltip();
+		return true;
+	}
 
 #pragma endregion
 #pragma region Input
@@ -103,7 +115,7 @@ namespace UI
 		return modified;
 	}
 	static bool InputFloat(float& value, float clearValue = 0.0f) {
-		
+
 		return ImGui::DragFloat("##float", &value);
 	}
 	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
@@ -235,7 +247,7 @@ namespace UI
 		return modified;
 	}
 	static bool ColorPicker(const char* id, Color& color) {
-		
+
 		bool modified = false;
 		ImVec4 col = { color.r, color.g, color.b, color.a };
 
@@ -244,7 +256,7 @@ namespace UI
 		}
 		return false;
 	}
-	static bool ColorPicker(const char* name, const char* id, Color& color) 
+	static bool ColorPicker(const char* name, const char* id, Color& color)
 	{
 		ImGui::Text(name);
 		ImGui::NextColumn();
@@ -265,6 +277,29 @@ namespace UI
 		return ImGui::Button(label, buttonSize);
 	}
 
+#pragma endregion
+#pragma region Images
+
+	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D>& image) {
+		using namespace HazardRenderer;
+		static std::unordered_map<Image2D*, ImTextureID> textureIDS;
+
+		if (textureIDS.find(image.Raw()) != textureIDS.end()) {
+			return textureIDS[image.Raw()];
+		}
+
+		switch (GraphicsContext::GetRenderAPI()) {
+		case RenderAPI::OpenGL:
+			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
+			textureIDS[image.Raw()] = id;
+			return id;
+		}
+
+		return 0;
+	}
+	static void Image(Ref<HazardRenderer::Image2D>& image, ImVec2 size, ImVec2 t0 = { 0, 0 }, ImVec2 t1 = { 1, 1 }) {
+		ImGui::Image(GetImageID(image), size, t0, t1);
+	}
 #pragma endregion
 #pragma region Treenodes
 

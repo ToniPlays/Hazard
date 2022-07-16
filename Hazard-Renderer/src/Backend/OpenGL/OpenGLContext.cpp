@@ -4,6 +4,7 @@
 #include "Backend/Core/Renderer.h"
 #include "Backend/Core/Window.h"
 #include "OpenGLSwapchain.h"
+#include "OpenGLFramebuffer.h"
 
 #include "OpenGLUtils.h"
 #include <glad/glad.h>
@@ -63,7 +64,6 @@ namespace HazardRenderer::OpenGL {
 		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
 		Renderer::Submit([swapchain]() mutable {
 			swapchain->BeginFrame();
-			swapchain->GetRenderPass()->GetSpecs().TargetFrameBuffer->Bind();
 			});
 	}
 
@@ -72,7 +72,6 @@ namespace HazardRenderer::OpenGL {
 		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
 		OpenGLContext* instance = this;
 		Renderer::Submit([instance, swapchain]() mutable {
-			instance->EndRenderPass(swapchain->GetSwapchainBuffer());
 			swapchain->Present();
 			});
 	}
@@ -80,19 +79,30 @@ namespace HazardRenderer::OpenGL {
 	void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
 	{
 		Renderer::Submit([renderPass]() mutable {
-			renderPass->GetSpecs().TargetFrameBuffer->Bind();
+			HZR_PROFILE_FUNCTION("OpenGLContext::BeginRenderPass_RT()");
+			renderPass->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
 			});
 	}
 
 	void OpenGLContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
 	{
 		Renderer::Submit([]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLContext::EndRenderPass_RT()");
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			});
+	}
+	glm::vec4 OpenGLContext::GetClearColor()
+	{
+		return m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor;
+	}
+	void OpenGLContext::SetClearColor(const glm::vec4& color)
+	{
+		m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
 	}
 	void OpenGLContext::SetViewport(int x, int y, int w, int h)
 	{
 		Renderer::Submit([x, y, w, h]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLContext::SetViewport_RT()");
 			glViewport(x, y, w, h);
 			});
 	}

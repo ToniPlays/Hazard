@@ -132,6 +132,9 @@
     <ClInclude Include="src\GUI\Properties\Properties.h">
       <Filter>src\GUI\Properties</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Properties\ScriptFieldUI.h">
+      <Filter>src\GUI\Properties</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Viewport\TransformationGizmo.h">
       <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
@@ -171,7 +174,6 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Properties\ScriptFieldUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">

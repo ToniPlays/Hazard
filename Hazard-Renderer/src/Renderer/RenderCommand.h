@@ -22,6 +22,7 @@ namespace HazardRenderer
 		static void BeginFrame();
 		static void BeginWorld(WorldSettings& settings);
 		static void DrawQuad(Ref<Pipeline>& pipeline, const glm::mat4& transform, const glm::vec4& color);
+
 		//static void DrawQuad(Ref<Pipeline> pipeline, glm::mat4 transform);
 		//static void DrawQuad(Ref<Pipeline> pipeline, glm::mat4 transform, glm::vec4 color, Ref<Texture2D> texture);
 

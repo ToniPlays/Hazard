@@ -7,6 +7,7 @@ namespace UI {
 	public:
 		Properties();
 
+		void Update() override {};
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);

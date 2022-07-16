@@ -56,12 +56,12 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLSwapchain::BeginFrame()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		HZR_PROFILE_FUNCTION();
 	}
 
 	void OpenGLSwapchain::Present()
 	{
+		HZR_PROFILE_FUNCTION();
 		glfwSwapInterval(m_Vsync ? 1 : 0);
 		Window* window = m_Context->GetWindow();
 		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());

@@ -3,6 +3,7 @@
 #include "WorldHandler.h"
 #include "Loader/WorldDeserializer.h"
 #include "Loader/WorldSerializer.h"
+#include "Hazard/Rendering/HRenderer.h"
 
 
 namespace Hazard {
@@ -26,6 +27,20 @@ namespace Hazard {
 	void WorldHandler::Update()
 	{
 		HZR_PROFILE_FUNCTION();
+	}
+
+	void WorldHandler::Render()
+	{
+		HZR_PROFILE_FUNCTION();
+		//Submit everything for drawing
+		auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
+		for (auto& entity : view) {
+			Entity e = { entity, m_World.Raw() };
+			auto& tc = e.GetComponent<TransformComponent>();
+			auto& sc = e.GetComponent<SpriteRendererComponent>();
+
+			HRenderer::SubmitSprite(tc, sc);
+		}
 	}
 
 	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)

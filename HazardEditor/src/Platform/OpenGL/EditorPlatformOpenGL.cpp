@@ -1,14 +1,19 @@
 
 #include "EditorPlatformOpenGL.h"
 #include "Backend/Core/Renderer.h"
+#include "Backend/OpenGL/OpenGLSwapchain.h"
 
 #include "../ImGui_Backend/imgui_impl_opengl3.h"
 #include "../ImGui_Backend/imgui_impl_glfw.h"
 
-EditorPlatformOpenGL::EditorPlatformOpenGL(HazardRenderer::Window& window)
+using namespace HazardRenderer;
+
+EditorPlatformOpenGL::EditorPlatformOpenGL(Window& window)
 {
+	m_Window = &window;
 	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
+	m_Context = (OpenGL::OpenGLContext*)window.GetContext();
 }
 
 EditorPlatformOpenGL::~EditorPlatformOpenGL()
@@ -26,8 +31,17 @@ void EditorPlatformOpenGL::BeginFrame()
 
 void EditorPlatformOpenGL::EndFrame()
 {
-	HazardRenderer::Renderer::Submit([]() mutable {
-		HZR_PROFILE_FUNCTION();
+	m_Window->BeginFrame();
+
+	using namespace HazardRenderer::OpenGL;
+	Ref<OpenGLSwapchain> swapchain = m_Context->GetSwapchain();
+	Ref<RenderCommandBuffer> cmdBuffer = swapchain->GetSwapchainBuffer();
+
+	m_Context->BeginRenderPass(cmdBuffer, swapchain->GetRenderPass());
+
+	Renderer::Submit([&]() mutable {
+
+		HZR_PROFILE_FUNCTION("EditorPlatformOpenGL::EndFrame() RT");
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -39,6 +53,9 @@ void EditorPlatformOpenGL::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 		});
+	m_Context->EndRenderPass(cmdBuffer);
+	m_Window->Present();
+	Renderer::WaitAndRender();
 }
 
 void EditorPlatformOpenGL::Close()

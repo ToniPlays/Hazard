@@ -12,7 +12,9 @@ namespace UI
 
 		PanelManager();
 
+		void Update();
 		void Render();
+
 		bool OnEvent(Event& e) {
 			for (auto& renderable : m_Renderables) {
 				if (renderable->OnEvent(e)) return true;

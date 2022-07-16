@@ -45,6 +45,8 @@ namespace UI {
 		};
 		~MainMenuBar() = default;
 
+		void Update() override {};
+
 		virtual bool OnEvent(Event& e) { return false; }
 	};
 }

@@ -14,6 +14,7 @@ namespace HazardRenderer::OpenGL
 		~OpenGLFrameBuffer();
 
 		virtual void Bind() override;
+		virtual void Bind_RT();
 		virtual void Unbind() override;
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) override;

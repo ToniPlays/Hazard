@@ -12,17 +12,22 @@ namespace HazardRenderer {
 			s_ResourceFreeCommandQueue = new CommandQueue();
 		}
 
-		static void WaitAndRender() 
+		static void WaitAndRender()
 		{
-			HZR_PROFILE_SCOPE("ResourceCreateQueue::Execute()");
-			s_ResourceCreateCommandQueue->Excecute();
-
-			HZR_PROFILE_SCOPE("RenderCommandQueue::Execute()");
-			s_RenderCommandQueue->Excecute();
-
-			HZR_PROFILE_SCOPE("ResourceFreeQueue::Execute()");
-			s_ResourceFreeCommandQueue->Excecute();
-
+			s_CanSubmit = false;
+			{
+				HZR_PROFILE_SCOPE("ResourceCreateQueue::Execute()");
+				s_ResourceCreateCommandQueue->Excecute();
+			}
+			{
+				HZR_PROFILE_SCOPE("RenderCommandQueue::Execute()");
+				s_RenderCommandQueue->Excecute();
+			}
+			{
+				HZR_PROFILE_SCOPE("ResourceFreeQueue::Execute()");
+				s_ResourceFreeCommandQueue->Excecute();
+			}
+			s_CanSubmit = true;
 			s_ResourceCreateCommandQueue->Clear();
 			s_RenderCommandQueue->Clear();
 			s_ResourceFreeCommandQueue->Clear();
@@ -30,6 +35,7 @@ namespace HazardRenderer {
 
 		template<typename FuncT>
 		static void Submit(FuncT func) {
+			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -39,7 +45,8 @@ namespace HazardRenderer {
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
-		static void SubmitResourceCreate(FuncT func) {
+		static void SubmitResourceCreate(FuncT func) {			
+			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -50,6 +57,7 @@ namespace HazardRenderer {
 		}
 		template<typename FuncT>
 		static void SubmitResourceFree(FuncT func) {
+			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -63,5 +71,6 @@ namespace HazardRenderer {
 		static inline CommandQueue* s_RenderCommandQueue;
 		static inline CommandQueue* s_ResourceCreateCommandQueue;
 		static inline CommandQueue* s_ResourceFreeCommandQueue;
+		static inline bool s_CanSubmit = true;
 	};
 }

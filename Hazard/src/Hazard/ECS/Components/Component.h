@@ -10,8 +10,6 @@ namespace HazardScript {
 
 namespace Hazard {
 
-	
-
 	struct TagComponent
 	{
 		std::string Tag;

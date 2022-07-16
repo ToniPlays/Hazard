@@ -5,15 +5,13 @@
 
 namespace HazardRenderer {
 
-	GLFWwindow* window = nullptr;
+	GLFWwindow* s_Window = nullptr;
 
 	int Input::keyStates[384];
 
-	void Input::Init() 
+	void Input::Init(Window& window) 
 	{
-		//if (!Application::HasModule<Rendering::RenderContext>()) return;
-		//Rendering::RenderContext* context = &Application::GetModule<Rendering::RenderContext>();
-		//window = (GLFWwindow*)context->GetWindow().GetNativeWindow();
+		s_Window = (GLFWwindow*)window.GetNativeWindow();
 	}
 	bool Input::AnyKey()
 	{
@@ -33,17 +31,17 @@ namespace HazardRenderer {
 		return state == GLFW_RELEASE;
 	}
 	bool Input::IsMouseButtonDown(const Mouse::MouseCode code) {
-		auto state = glfwGetMouseButton(window, static_cast<int32_t>(code));
+		auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 	bool Input::IsMouseButtonPressed(const Mouse::MouseCode code) {
-		auto state = glfwGetMouseButton(window, static_cast<int32_t>(code));
+		auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
 		return state == GLFW_PRESS;
 	}
 
 	glm::vec2 Input::GetMousePos() {
 		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
+		glfwGetCursorPos(s_Window, &xpos, &ypos);
 
 		return { (float)xpos, (float)ypos };
 	}

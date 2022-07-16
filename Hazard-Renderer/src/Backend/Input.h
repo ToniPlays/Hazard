@@ -2,13 +2,14 @@
 
 #include "Backend/Core/KeyCode.h"
 #include "Backend/Core/MouseCode.h"
+#include "Backend/Core/Window.h"
 #include <glm/glm.hpp>
 
 namespace HazardRenderer {
 
 	class Input {
 		public:
-			static void Init();
+			static void Init(Window& window);
 			static void Update();
 			static bool AnyKey();
 			static bool IsKeyDown(const Key::KeyCode key);

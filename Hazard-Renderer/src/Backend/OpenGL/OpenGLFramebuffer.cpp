@@ -26,26 +26,29 @@ namespace HazardRenderer::OpenGL
 		m_Specs.Width = (uint32_t)info->Width;
 		m_Specs.Height = (uint32_t)info->Height;
 
-		if (info->Width == 0 || info->Height == 0 || m_Specs.SwapChainTarget)
+		if ((info->Width == 0 || info->Height == 0) && m_Specs.SwapChainTarget)
 		{
-
+			m_Specs.Width = 1920;
+			m_Specs.Height = 1080;
 		}
 
 		for (auto& attachment : info->Attachments)
 		{
-			//if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
-			//	m_ColorAttachments.emplace_back(attachment);
-			//}
-			//else 
-			m_DepthAttachment = attachment;
+			if (!OpenGLUtils::IsDepthFormat(attachment.Format)) {
+				m_ColorAttachments.emplace_back(attachment);
+			}
+			else m_DepthAttachment = attachment;
 		}
+		if (m_Specs.SwapChainTarget) return;
 
-		Invalidate();
+		RT_Invalidate();
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
+			if (instance->GetSpecification().SwapChainTarget) return;
+
 			glDeleteFramebuffers(1, &instance->m_ID);
 			if (instance->m_ColorImages.size() > 0) {
 				for (auto& image : instance->m_ColorImages)
@@ -60,24 +63,27 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::Bind()
 	{
 		Ref<OpenGLFrameBuffer> instance = this;
-
 		Renderer::Submit([instance]() mutable {
-			glBindFramebuffer(GL_FRAMEBUFFER, instance->m_ID);
-
-			if (instance->m_Specs.SwapChainTarget)
-			{
-				glm::vec4 color = OpenGLContext::GetInstance().GetClearColor();
-				Window* window = OpenGLContext::GetInstance().GetWindow();
-				glClearColor(color.r, color.g, color.b, color.a);
-				glViewport(0, 0, window->GetWidth(), window->GetHeight());
-			}
-			else
-			{
-				glClearColor(instance->m_Specs.ClearColor.r, instance->m_Specs.ClearColor.g, instance->m_Specs.ClearColor.b, instance->m_Specs.ClearColor.a);
-				glViewport(0, 0, instance->m_Specs.Width, instance->m_Specs.Height);
-			}
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			instance->Bind_RT();
 			});
+	}
+	void OpenGLFrameBuffer::Bind_RT()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+
+		if (m_Specs.SwapChainTarget)
+		{
+			glm::vec4 color = OpenGLContext::GetInstance().GetClearColor();
+			Window* window = OpenGLContext::GetInstance().GetWindow();
+			glClearColor(color.r, color.g, color.b, color.a);
+			glViewport(0, 0, window->GetWidth(), window->GetHeight());
+		}
+		else
+		{
+			glClearColor(m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a);
+			glViewport(0, 0, m_Specs.Width, m_Specs.Height);
+		}
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	void OpenGLFrameBuffer::Unbind()
 	{
@@ -123,6 +129,7 @@ namespace HazardRenderer::OpenGL
 		}
 
 		glCreateFramebuffers(1, &m_ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
 		bool multisampled = m_Specs.Samples > 1;
 
@@ -145,8 +152,8 @@ namespace HazardRenderer::OpenGL
 				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
 
 				switch (m_ColorAttachments[i].Format) {
-				case ImageFormat::RGBA: break;
-					//OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA8, m_Specs.Width, m_Specs.Height, i);
+				case ImageFormat::RGBA:
+					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA8, m_Specs.Width, m_Specs.Height, i);
 				}
 			}
 		}
@@ -160,12 +167,12 @@ namespace HazardRenderer::OpenGL
 			imageInfo.Format = m_DepthAttachment.Format;
 
 			m_DepthImage = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
-			//OpenGLUtils::BindTexture(m_DepthImage->GetID(), imageInfo.Mips > 1);
+			OpenGLUtils::BindTexture(m_DepthImage->GetID(), imageInfo.Mips > 1);
 
 			switch (m_DepthAttachment.Format)
 			{
 			case ImageFormat::DEPTH24STENCIL8:
-				//OpenGLUtils::AttachDepthTexture(m_DepthImage->GetID(), m_Specs.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specs.Width, m_Specs.Height);
+				OpenGLUtils::AttachDepthTexture(m_DepthImage->GetID(), m_Specs.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specs.Width, m_Specs.Height);
 				break;
 			}
 		}
@@ -174,8 +181,7 @@ namespace HazardRenderer::OpenGL
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
-		else if (m_ColorImages.empty())
-		{
+		else if (m_ColorImages.empty()) {
 			glDrawBuffer(GL_NONE);
 		}
 

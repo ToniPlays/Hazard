@@ -28,9 +28,7 @@ namespace UI
 		UI::ComponentMenuIfExists<BoxCollider2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CircleCollider2DComponent>(m_SelectionContext);
 
-
 		DrawContextMenu(m_SelectionContext);
-
 	}
 	bool Properties::OnEvent(Event& e)
 	{

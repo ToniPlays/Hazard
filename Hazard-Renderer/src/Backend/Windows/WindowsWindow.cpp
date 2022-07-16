@@ -5,6 +5,7 @@
 #include "Backend/Core/Events.h"
 #include "Renderer/RenderCommand.h"
 #include "Backend/Core/Events.h"
+#include "Backend/Input.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -108,6 +109,7 @@ namespace HazardRenderer {
 			SetCallbacks();
 			SetVSync(info->VSync);
 
+			Input::Init(*this);
 			RenderCommand::Init(this);
 		}
 	}

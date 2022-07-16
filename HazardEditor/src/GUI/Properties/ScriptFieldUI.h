@@ -59,6 +59,7 @@ namespace UI
 	template<>
 	static bool ScriptField<std::string>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		std::string value = obj.GetFieldValue<std::string>(field.GetName());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = TextField(value);
 		if (modified) {
 			obj.SetFieldValue<std::string>(field.GetName(), value);
@@ -77,6 +78,9 @@ namespace UI
 		label[0] = toupper(name[0]);
 
 		ImGui::Text(label.c_str());
+		if (field.Has<TooltipAttribute>()) {
+			UI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
+		}
 		ImGui::NextColumn();
 
 		switch (field.GetType()) {
