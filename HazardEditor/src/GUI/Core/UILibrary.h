@@ -331,6 +331,38 @@ namespace UI
 		}
 		return false;
 	}
+	template<typename T>
+	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback) {
+
+		const ImGuiTreeNodeFlags _flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
+
+		ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImGui::Separator();
+		bool open = ImGui::TreeNodeEx((void*)title, _flags, "%s", title);
+		ImGui::PopStyleVar();
+
+		ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f - 5);
+		if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
+		{
+			ImGui::OpenPopup("ComponentSettings");
+		}
+
+		if (ImGui::BeginPopup("ComponentSettings")) {
+			ImGui::Separator();
+			MenuItem("Remove component", []() {
+				});
+
+			ImGui::EndPopup();
+		}
+		if (open) {
+			callback();
+			ImGui::TreePop();
+		}
+		return false;
+	}
 
 #pragma endregion
 #pragma region Table

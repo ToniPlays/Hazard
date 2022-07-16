@@ -27,7 +27,11 @@ namespace Hazard
 		const Color& t = spriteRenderer.Tint;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
-		s_Engine->GetQuadRenderer().SubmitQuad(tMatrix, color);
+		SubmitQuad(tMatrix, color);
+	}
+	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		s_Engine->GetQuadRenderer().SubmitQuad(transform, color);
 	}
 	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
 	{

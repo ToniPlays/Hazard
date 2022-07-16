@@ -8,7 +8,7 @@
 
 namespace Hazard {
 
-	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler") 
+	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
 	{
 		LoadWorld(info->StartupFile, Serialization::Editor);
 		SetActive(true);
@@ -32,14 +32,34 @@ namespace Hazard {
 	void WorldHandler::Render()
 	{
 		HZR_PROFILE_FUNCTION();
-		//Submit everything for drawing
-		auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
-		for (auto& entity : view) {
-			Entity e = { entity, m_World.Raw() };
-			auto& tc = e.GetComponent<TransformComponent>();
-			auto& sc = e.GetComponent<SpriteRendererComponent>();
+		{
+			//Submit everything for drawing
+			auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				auto& tc = e.GetComponent<TransformComponent>();
+				auto& sc = e.GetComponent<SpriteRendererComponent>();
 
-			HRenderer::SubmitSprite(tc, sc);
+				HRenderer::SubmitSprite(tc, sc);
+			}
+		}
+		{
+			auto& view = m_World->GetEntitiesWith<BatchComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				auto& tc = e.GetComponent<TransformComponent>();
+				auto& bc = e.GetComponent<BatchComponent>();
+
+				for (uint32_t x = 0; x < bc.Size; x++)
+				{
+					for (uint32_t y = 0; y < bc.Size; y++)
+					{
+						glm::mat4 transform = Math::ToTransformMatrix({ x, y, 0.0f });
+
+						HRenderer::SubmitQuad(transform, { bc.Tint.r, bc.Tint.g, bc.Tint.b, bc.Tint.a });
+					}
+				}
+			}
 		}
 	}
 
@@ -47,7 +67,7 @@ namespace Hazard {
 	{
 		if (File::Exists(file)) {
 			if (type == Serialization::Editor) {
-                WorldDeserializer deserializer;
+				WorldDeserializer deserializer;
 				m_World = deserializer.DeserializeEditor(file);
 				return true;
 			}

@@ -25,12 +25,12 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, TransformComponent& c) {
-		return UI::Treenode(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 
-				glm::vec3 rot = { 
-					glm::degrees(c.Rotation.x), 
+				glm::vec3 rot = {
+					glm::degrees(c.Rotation.x),
 					glm::degrees(c.Rotation.y),
 					glm::degrees(c.Rotation.z)
 				};
@@ -48,10 +48,24 @@ namespace UI
 				UI::InputFloat3("Scale", c.Scale, 1.0f);
 				ImGui::Columns();
 			});
+		/*
+		if (ImGui::BeginPopup("ComponentSettings")) {
+			MenuItem("Reset", [&]() {
+				c.Translation = { 0, 0, 0 };
+				c.Rotation = { 0, 0, 0 };
+				c.Scale = { 1, 1, 1 };
+				});
+			ImGui::EndPopup();
+		}
+		*/
+
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SpriteRendererComponent& c) {
-		return UI::Treenode(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool removed = false;
+
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, 125.0f);
@@ -59,14 +73,30 @@ namespace UI
 				//Texture slot here
 
 				if (UI::ColorPicker("Tint", "##Tint", c.Tint)) {
-					
+
 				}
 				ImGui::Columns();
 			});
+		/*
+		if (ImGui::BeginPopup("ComponentSettings")) {
+			MenuItem("Remove component", [&]() {
+				removed = true;
+				});
+
+			ImGui::EndPopup();
+		}
+		*/
+
+		if (removed) {
+			e.RemoveComponent<SpriteRendererComponent>();
+		}
+
+		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, CameraComponent& c) {
-		return UI::Treenode(" " ICON_FK_VIDEO_CAMERA " Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+	static bool ComponentMenu(Entity& e, CameraComponent& c) 
+	{
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_VIDEO_CAMERA " Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 				ImGui::Columns(2);
@@ -74,7 +104,7 @@ namespace UI
 
 				const char* projectionTypes[] = { "Perspective", "Orthographic" };
 				uint32_t selected = (uint32_t)c.GetProjectionType();
-				
+
 				//Projection type here
 				if (UI::Combo("Projection", "##projection", projectionTypes, 2, selected)) {
 					c.SetProjection((Projection)selected);
@@ -88,10 +118,23 @@ namespace UI
 
 				ImGui::Columns();
 			});
+		/*
+		HZR_ASSERT(!ImGui::IsPopupOpen("Settings"), "");
+
+		if (ImGui::BeginPopup("Settings")) {
+			MenuItem("Reset", [&]() {
+				c.SetFov(60.0f);
+				c.SetClipping({ 0.03f, 100.0f });
+				c.SetProjection(Projection::Perspective);
+				});
+			ImGui::EndPopup();
+		}
+		*/
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, ScriptComponent& c) {
-		return UI::Treenode(" " ICON_FK_GLOBE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				using namespace HazardScript;
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
@@ -102,7 +145,7 @@ namespace UI
 				auto& scriptEngine = Application::GetModule<ScriptEngine>();
 				bool exists = scriptEngine.HasModule(c.ModuleName);
 				bool changed = UI::TextField(c.ModuleName, "Script class");
-				
+
 				ShiftY(4.0f);
 
 				if (changed) {
@@ -123,7 +166,7 @@ namespace UI
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, 125.0f);
 
-					for (auto& [name, field] : script.GetFields()) 
+					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
 						auto& f = field;
@@ -136,48 +179,77 @@ namespace UI
 
 				return true;
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SkyLightComponent& c) {
-		return UI::Treenode(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, DirectionalLightComponent& c) {
-		return UI::Treenode("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, PointLightComponent& c) {
-		return UI::Treenode("Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions("" ICON_FK_LIGHTBULB_O " Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, MeshComponent& c) {
-		return UI::Treenode(ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, Rigidbody2DComponent& c) {
-		return UI::Treenode("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, BoxCollider2DComponent& c) {
-		return UI::Treenode(" " ICON_FK_CODEPEN "Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CODEPEN "Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, CircleCollider2DComponent& c) {
-		return UI::Treenode(" " ICON_FK_CIRCLE_O "Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CIRCLE_O "Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
+		return false;
+	}
+	template<>
+	static bool ComponentMenu(Entity& e, BatchComponent& c)
+	{
+		bool optionsOpen = UI::TreenodeWithOptions("Batch renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+			{
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, 125.0f);
+
+				//Texture slot here
+
+				if (UI::ColorPicker("Tint", "##Tint", c.Tint)) {
+
+				}
+				float size = c.Size;
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				UI::InputFloat("Size", size, 1.0f);
+				c.Size = size;
+				ImGui::Columns();
+			});
+		return false;
 	}
 }

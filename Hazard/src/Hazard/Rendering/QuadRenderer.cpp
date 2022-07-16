@@ -13,7 +13,7 @@ namespace Hazard
 		m_Data.MaxIndices = quadCount * 6;
 
 		m_Data.Samplers = 32;
-		m_QuadBatch = Batch<QuadVertex>(quadCount);
+		m_QuadBatch = Batch<QuadVertex>(m_Data.MaxVertices);
 	}
 	void QuadRenderer::BeginScene()
 	{
@@ -43,15 +43,16 @@ namespace Hazard
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color)
 	{
+		SubmitQuad(transform, color, 0.0f);
+	}
+	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID)
+	{
 		HZR_PROFILE_FUNCTION();
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices) {
 			Flush();
 			BeginScene();
 		}
-		SubmitQuad(transform, color, 0.0f);
-	}
-	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID)
-	{
+
 		for (uint8_t i = 0; i < 4; i++)
 		{
 			QuadVertex vertex = {};

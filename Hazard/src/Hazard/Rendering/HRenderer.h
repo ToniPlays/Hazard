@@ -14,6 +14,7 @@ namespace Hazard
 	public:
 		static void SubmitWorldRenderer(WorldRenderer* renderer);
 		static void SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer);
+		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline);
 		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count);
 	private:
