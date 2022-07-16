@@ -87,6 +87,7 @@ namespace HazardRenderer
 	public:
 		virtual ~UniformBuffer() = default;
 		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
+		virtual void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer) = 0;
 		virtual void Unbind() = 0;
 		virtual void SetData(const void* data, uint32_t size) = 0;
 		

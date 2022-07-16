@@ -74,12 +74,12 @@ namespace HazardRenderer {
 		return buffer;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
-	{/*
+	{
 		if (createInfo->IsShared && RenderLibrary::HasUniformBuffer(createInfo->Name)) {
 			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
-			ASSERT(buffer->GetBinding() == createInfo->Binding, "UniformBuffer: {0} binding does not match", createInfo->Name);
+			HZR_ASSERT(buffer->GetBinding() == createInfo->Binding, "UniformBuffer: {0} binding does not match", createInfo->Name);
 			return buffer;
-		}*/
+		}
 
 		Ref<UniformBuffer> buffer = nullptr;
 
@@ -98,12 +98,10 @@ namespace HazardRenderer {
 			return nullptr;
 		}
 
-		/*if (createInfo->IsShared) {
+		if (createInfo->IsShared) {
 			RenderLibrary::AddUniformBuffer(buffer);
 		}
-		else AssetManager::AddRuntimeResource(buffer);
 
-		buffer->m_Type = ResourceType::UniformBuffer;*/
 		return buffer;
 	}
 }

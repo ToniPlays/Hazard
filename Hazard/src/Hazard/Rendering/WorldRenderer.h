@@ -2,9 +2,17 @@
 
 #include "HazardRenderer.h"
 
-namespace Hazard 
+namespace Hazard
 {
-	enum GeometryInclude 
+	struct WorldCameraData {
+		glm::mat4 ViewProjection;
+		glm::mat4 Projection;
+		glm::mat4 View;
+		glm::vec3 Position;
+
+	};
+
+	enum GeometryInclude
 	{
 		Geometry_Quad = BIT(0),
 		Geometry_Lines = BIT(1),
@@ -14,12 +22,12 @@ namespace Hazard
 		Geometry_All = Geometry_Quad | Geometry_Lines | Geometry_Mesh | Geometry_Shadow
 	};
 
-	struct WorldRendererSpec 
+	struct WorldRendererSpec
 	{
 		uint32_t Width;
 		uint32_t Height;
 		std::string DebugName;
-		HazardRenderer::Camera Camera;
+		HazardRenderer::Camera* Camera;
 		GeometryInclude Geometry = Geometry_All;
 	};
 

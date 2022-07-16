@@ -173,6 +173,8 @@ namespace HazardRenderer::OpenGL
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_Name = createInfo->Name;
+		std::cout << "Created uniform buffer: " << m_Name << std::endl;
+		std::cout << "Buffer size: " << m_Size << std::endl;
 
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
@@ -194,15 +196,20 @@ namespace HazardRenderer::OpenGL
 			glBindBufferBase(GL_UNIFORM_BUFFER, instance->m_Binding, instance->m_ID);
 			});
 	}
+	void OpenGLUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
+	}
 	void OpenGLUniformBuffer::Unbind()
 	{
 
 	}
 	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size)
 	{
+		m_LocalData = Buffer::Copy(data, size);
 		Ref<OpenGLUniformBuffer> instance = this;
-		Renderer::Submit([instance, data, size]() mutable {
-			glNamedBufferData(instance->m_ID, size, data, GL_DYNAMIC_DRAW);
+		Renderer::Submit([instance]() mutable {
+			glNamedBufferData(instance->m_ID, instance->m_LocalData.Size, instance->m_LocalData.Data, GL_DYNAMIC_DRAW);
 			});
 	}
 }

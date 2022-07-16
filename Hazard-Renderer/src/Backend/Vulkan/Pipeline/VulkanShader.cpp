@@ -101,6 +101,12 @@ namespace HazardRenderer::Vulkan
 			buffer->Bind(cmdBufer);
 		}
 	}
+	void VulkanShader::Bind_RT(Ref<RenderCommandBuffer> cmdBufer)
+	{
+		for (auto& [name, buffer] : m_UniformBuffers) {
+			buffer->Bind_RT(cmdBufer);
+		}
+	}
 	void VulkanShader::Unbind()
 	{
 

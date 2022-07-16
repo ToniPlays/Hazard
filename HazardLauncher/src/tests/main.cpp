@@ -10,7 +10,7 @@
 
 int main()
 {
-	InstancingTest::Run(RenderAPI::Metal);
+	InstancingTest::Run(RenderAPI::OpenGL);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

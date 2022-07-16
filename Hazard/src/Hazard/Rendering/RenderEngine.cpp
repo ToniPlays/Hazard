@@ -12,6 +12,15 @@ namespace Hazard
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
 		HRenderer::s_Engine = this;
+		m_QuadRenderer.CreateResources();
+
+		UniformBufferCreateInfo cameraUBO = {};
+		cameraUBO.Name = "Camera";
+		cameraUBO.Binding = 0;
+		cameraUBO.Size = sizeof(CameraData);
+		cameraUBO.Usage = BufferUsage::DynamicDraw;
+
+		m_CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
 	}
 	void RenderEngine::CullingPass()
 	{
@@ -20,6 +29,7 @@ namespace Hazard
 	void RenderEngine::GeometryPass()
 	{
 		HZR_PROFILE_FUNCTION();
+
 	}
 	void RenderEngine::ShadowPass()
 	{
@@ -28,17 +38,11 @@ namespace Hazard
 	void RenderEngine::CompositePass()
 	{
 		HZR_PROFILE_FUNCTION();
-		GraphicsContext* context = m_Window->GetContext();
-		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
 
-		for (auto& camera : m_DrawList.RenderingCameras)
-		{
-			context->BeginRenderPass(cmdBuffer, camera.RenderPass);
-			context->EndRenderPass(cmdBuffer);
-		}
 	}
 	void RenderEngine::Update()
 	{
+		m_QuadRenderer.BeginScene();
 	}
 	void RenderEngine::Render()
 	{
@@ -48,6 +52,26 @@ namespace Hazard
 		ShadowPass();
 		CompositePass();
 
+		GraphicsContext* context = m_Window->GetContext();
+		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
+
+		for (auto& camera : m_DrawList.RenderingCameras)
+		{
+			//Prepare camera data
+			CameraData cam = {};
+			cam.ViewProjection = camera.ViewProjection;
+			cam.Projection = glm::mat4(1.0f);
+			cam.View = glm::mat4(1.0f);
+			cam.Position = { camera.Position, 1.0f };
+
+			uint32_t size = sizeof(CameraData);
+
+			m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
+
+			context->BeginRenderPass(cmdBuffer, camera.RenderPass);
+			m_QuadRenderer.EndScene();
+			context->EndRenderPass(cmdBuffer);
+		}
 	}
 	void RenderEngine::PostRender()
 	{

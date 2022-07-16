@@ -9,19 +9,25 @@ namespace HazardRenderer
 	class RenderLibrary 
 	{
 	public:
-		static bool HasVertexBuffer(const std::string& name) { 
+		static bool HasVertexBuffer(const std::string& name) 
+		{ 
 			return s_VertexBuffers.find(name) != s_VertexBuffers.end(); 
 		};
-		static bool HasIndexBuffer(const std::string& name) { 
+		static bool HasIndexBuffer(const std::string& name)
+		{ 
 			return s_IndexBuffers.find(name) != s_IndexBuffers.end();
 		};
-		static bool HasUniformBuffer(const std::string& name) {
+		static bool HasUniformBuffer(const std::string& name)
+		{
 			return s_UniformBuffes.find(name) != s_UniformBuffes.end();
 		};
-		static bool HasPipeline(const std::string& name) { 
+		static bool HasPipeline(const std::string& name)
+		{ 
 			return s_Pipelines.find(name) != s_Pipelines.end();
 		};
-
+		static void AddUniformBuffer(Ref<UniformBuffer> uniformBuffer) {
+			s_UniformBuffes[uniformBuffer->GetName()] = uniformBuffer;
+		}
 
 		static Ref<VertexBuffer> GetVertexBuffer(const std::string& name) {
 			return s_VertexBuffers[name];

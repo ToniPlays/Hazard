@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include "UtilityCore.h"
 
 template<typename Type>
 class Batch {
@@ -18,9 +18,8 @@ public:
 		m_Count++;
 		m_BufferPointer++;
 	};
-	void AddIndices(uint32_t count) { m_IndexCount += count; }
-	void Reset()
-	{
+	inline void AddIndices(uint32_t count) { m_IndexCount += count; }
+	void Reset() {
 		m_BufferPointer = m_BufferBase;
 		m_IndexCount = 0;
 		m_Count = 0;
@@ -37,7 +36,7 @@ public:
 	void* GetData() { return m_BufferBase; }
 	uint32_t GetCount() { return m_Count; }
 	uint32_t GetSize() { return m_Size; }
-	uint32_t GetDataSize() { return m_Count * m_DataSize; }
+	uint32_t GetDataSize() { return (uint32_t)((uint8_t*)m_BufferPointer - (uint8_t*)m_BufferBase); }
 	uint32_t GetIndexCount() { return m_IndexCount; }
 	operator bool() const { return m_IndexCount != 0; }
 

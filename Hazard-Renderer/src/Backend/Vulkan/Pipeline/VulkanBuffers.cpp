@@ -212,6 +212,16 @@ namespace HazardRenderer::Vulkan
 		m_Offset = 0;
 
 	}
+	void VulkanUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
+	{
+		uint32_t frameIndex = cmdBuffer->GetFrameIndex();
+		if (m_FrameIndex == frameIndex) return;
+
+		m_FrameIndex = frameIndex;
+		m_Writes = 0;
+		m_Offset = 0;
+
+	}
 	void VulkanUniformBuffer::Unbind()
 	{
 

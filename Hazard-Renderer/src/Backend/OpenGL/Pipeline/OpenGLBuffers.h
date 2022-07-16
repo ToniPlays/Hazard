@@ -61,6 +61,7 @@ namespace HazardRenderer::OpenGL
 		~OpenGLUniformBuffer();
 
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
+		void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
 		void SetData(const void* data, uint32_t size) override;
 
@@ -76,6 +77,7 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
+		Buffer m_LocalData;
 	};
 }
 #endif

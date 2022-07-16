@@ -13,7 +13,7 @@ namespace Hazard
 		frameBufferInfo.DebugName = spec->DebugName;
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.ClearColor = { 1.0f, 0.0f, 1.0f, 1.0f };
+		frameBufferInfo.ClearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
 		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.Width = spec->Width;

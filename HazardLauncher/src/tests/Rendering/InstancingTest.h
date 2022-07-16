@@ -121,7 +121,7 @@ namespace InstancingTest {
 #ifdef HZR_PLATFORM_WINDOWS
 		spec.ShaderPath = "QuadInstanced.glsl";
 #else
-        spec.ShaderPath = "QuadInstanced.metal";
+		spec.ShaderPath = "QuadInstanced.metal";
 #endif
 
 		spec.DrawType = DrawType::Point;
@@ -136,10 +136,6 @@ namespace InstancingTest {
 		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-
-		Camera camera = {};
-		camera.SetProjection(projection);
-		camera.SetView(view);
 
 		InstanceData* instanceData = new InstanceData[size * size];
 
@@ -166,20 +162,21 @@ namespace InstancingTest {
 		instanceBuffer->SetData(instanceData, size * size * sizeof(InstanceData));
 
 		double startTime = 0;
-        glm::mat4 viewProj = camera.GetViewProjection();
+
+		glm::mat4 viewProj = projection * view;
 		std::string title = window->GetWindowInfo().Title;
-        
+
 #ifdef HZR_PLATFORM_MACOS
-        UniformBufferCreateInfo uboInfo = {};
-        uboInfo.Name = "Camera";
-        uboInfo.Size = sizeof(Camera);
-        uboInfo.Binding = 2;
-        
-        Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
-        cameraUBO->SetData(&viewProj, sizeof(Camera));
+		UniformBufferCreateInfo uboInfo = {};
+		uboInfo.Name = "Camera";
+		uboInfo.Size = sizeof(Camera);
+		uboInfo.Binding = 2;
+
+		Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
+		cameraUBO->SetData(&viewProj, sizeof(Camera));
 #endif
-		pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(Camera));
-        
+		pipeline->GetShader()->SetUniformBuffer("Camera", &viewProj, sizeof(glm::mat4));
+
 		while (running)
 		{
 			double time = glfwGetTime();
@@ -187,27 +184,24 @@ namespace InstancingTest {
 			startTime = time;
 
 			window->BeginFrame();
-            
-            Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-            
-            window->GetContext()->BeginRenderPass(cmdBuffer, window->GetSwapchain()->GetRenderPass());
-            
-            Renderer::Submit([&]() mutable {
-            
-                
-    #ifdef HZR_PLATFORM_MACOS
-                cameraUBO->Bind(cmdBuffer);
-    #endif
-                quadBuffer->Bind(cmdBuffer);
-                instanceBuffer->Bind(cmdBuffer, 1);
-                indexBuffer->Bind(cmdBuffer);
-                pipeline->Bind(cmdBuffer);
-                pipeline->DrawInstanced(cmdBuffer, indexBuffer->GetCount(), size * size);
-                
-            });
-            window->GetContext()->EndRenderPass(cmdBuffer);
-            window->Present();
-            Renderer::WaitAndRender();
+
+			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+
+			window->GetContext()->BeginRenderPass(cmdBuffer, window->GetSwapchain()->GetRenderPass());
+
+
+#ifdef HZR_PLATFORM_MACOS
+			cameraUBO->Bind(cmdBuffer);
+#endif
+			quadBuffer->Bind(cmdBuffer);
+			instanceBuffer->Bind(cmdBuffer, 1);
+			indexBuffer->Bind(cmdBuffer);
+			pipeline->Bind(cmdBuffer);
+			pipeline->DrawInstanced(cmdBuffer, indexBuffer->GetCount(), size * size);
+
+			window->GetContext()->EndRenderPass(cmdBuffer);
+			window->Present();
+			Renderer::WaitAndRender();
 		}
 
 		quadBuffer.Release();

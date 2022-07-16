@@ -26,7 +26,7 @@ namespace HazardRenderer::OpenGL
 	{
 		Ref<OpenGLPipeline> instance = this;
 		Renderer::Submit([instance, cmdBuffer = commandBuffer]() mutable {
-			instance->m_Shader->Bind(cmdBuffer);
+			instance->m_Shader->Bind_RT(cmdBuffer);
 			glPolygonMode(GL_FRONT_AND_BACK, instance->m_PolygonMode);
 			glLineWidth(instance->m_Specs.LineWidth);
 

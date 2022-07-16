@@ -15,16 +15,13 @@ namespace RenderCommandTest {
 
 	static void Run(RenderAPI api)
 	{
+		/*
 		uint32_t size = 10;
 
 		float scalar = 10.0f;
 		float aspectRatio = (float)1280 / (float)720;
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
-
-		Camera camera = {};
-		camera.SetProjection(projection);
-		camera.SetView(view);
 
 
 		std::cout << "Running RenderCommand test" << std::endl;
@@ -141,5 +138,6 @@ namespace RenderCommandTest {
 		}
 
 		std::cout << "Test closed";
+		*/
 	}
 }

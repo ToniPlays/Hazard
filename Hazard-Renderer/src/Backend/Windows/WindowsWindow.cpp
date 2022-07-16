@@ -110,7 +110,7 @@ namespace HazardRenderer {
 			SetVSync(info->VSync);
 
 			Input::Init(*this);
-			RenderCommand::Init(this);
+			//RenderCommand::Init(this);
 		}
 	}
 	void WindowsWindow::BeginFrame()

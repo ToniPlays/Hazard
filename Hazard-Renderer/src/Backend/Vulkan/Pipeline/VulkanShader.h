@@ -17,6 +17,7 @@ namespace HazardRenderer::Vulkan
 
 		void Reload() override;
 		void Bind(Ref<RenderCommandBuffer> cmdBufer) override;
+		void Bind_RT(Ref<RenderCommandBuffer> cmdBufer) override;
 		void Unbind() override;
 		void SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
 

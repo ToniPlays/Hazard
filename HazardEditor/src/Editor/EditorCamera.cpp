@@ -77,8 +77,8 @@ namespace Editor {
 			return;
 		}
 
-		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * distance;
-		m_FocalPoint += Math::GetUpDirection(GetOrientation()) * delta.y * ySpeed * distance;
+		m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * m_Distance;
+		m_FocalPoint += Math::GetUpDirection(GetOrientation()) * delta.y * ySpeed * m_Distance;
 	}
 
 	void EditorCamera::MouseRotate(const glm::vec2& delta)
@@ -97,11 +97,11 @@ namespace Editor {
 			return;
 		}
 		
-		distance -= delta * ZoomSpeed();
-		if (distance < 1.0f)
+		m_Distance -= delta * ZoomSpeed();
+		if (m_Distance < 1.0f)
 		{
 			m_FocalPoint += GetForwardDirection();
-			distance = 1.0f;
+			m_Distance = 1.0f;
 		}
 	}
 
@@ -123,7 +123,7 @@ namespace Editor {
 
 	float EditorCamera::ZoomSpeed() const
 	{
-		float dist = distance * 0.2f;
+		float dist = m_Distance * 0.2f;
 		dist = std::max(dist, 0.0f);
 		float speed = dist * dist;
 		speed = std::min(speed, 100.0f); // max speed = 100
@@ -132,7 +132,7 @@ namespace Editor {
 
 	glm::vec3 EditorCamera::CalculatePosition() const
 	{
-		return m_FocalPoint - GetForwardDirection() * distance;
+		return m_FocalPoint - GetForwardDirection() * m_Distance;
 	}
 
 	glm::vec3 EditorCamera::GetRightDirection() const
@@ -162,6 +162,7 @@ namespace Editor {
 		}
 		else 
 			m_Projection = glm::perspective(glm::radians(fov), aspectRatio, m_ZNear, m_ZFar);
+
 		m_Is2DEnabled = enabled2D;
 	}
 }

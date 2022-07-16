@@ -1,10 +1,9 @@
 #type Vertex
 #version 450
 
-layout(location = 0) in vec3 v_Position;
-layout(location = 1) in vec4 v_Color;
-layout(location = 2) in vec2 v_TextureCoords;
-layout(location = 3) in float v_TextureIndex;
+layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec4 a_Color;
+layout(location = 2) in float a_TextureIndex;
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec2 f_TextureCoords;
@@ -19,11 +18,11 @@ layout(std140, binding = 0) uniform Camera {
 
 void main() 
 {
-	f_Color = v_Color;
-	f_TextureCoords = v_TextureCoords;
-	f_TextureIndex = v_TextureIndex;
+	f_Color = a_Color;
+	f_TextureCoords = vec2(0.0, 0.0);
+	f_TextureIndex = a_TextureIndex;
 
-	gl_Position = u_Camera.u_ViewProjection * vec4(v_Position, 1.0);
+	gl_Position = u_Camera.u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type Fragment
@@ -43,7 +42,6 @@ void main()
 
 	int index = int(f_TextureIndex);
 	
-	vec4 textureColor = texture(u_Textures[index], f_TextureCoords);
-	
+	vec4 textureColor = vec4(1.0, 1.0, 1.0, 1.0);
 	color = textureColor * f_Color;
 }

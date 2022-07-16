@@ -17,17 +17,15 @@ namespace Hazard {
 
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
-		
+
 		HZR_ASSERT(info->AppInfo, "[Hazard]: ApplicationCreateInfo required");
 
-		if (info->RendererInfo) 
-		{
-			PushModule<RenderEngine>(info->RendererInfo);
-		}
 		if (info->ScriptEngineInfo)
 			PushModule<ScriptEngine>(info->ScriptEngineInfo);
-		if(info->EntityComponent)
+		if (info->EntityComponent)
 			PushModule<WorldHandler>(info->EntityComponent);
+		if (info->RendererInfo)
+			PushModule<RenderEngine>(info->RendererInfo);
 	}
 	void Application::Quit()
 	{

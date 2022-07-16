@@ -60,7 +60,7 @@ namespace HazardRenderer::OpenGL
 			}
 			});
 	}
-	void OpenGLFrameBuffer::Bind()
+	void OpenGLFrameBuffer::Bind() 
 	{
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -181,7 +181,8 @@ namespace HazardRenderer::OpenGL
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);
 		}
-		else if (m_ColorImages.empty()) {
+		else if (m_ColorImages.empty())
+		{
 			glDrawBuffer(GL_NONE);
 		}
 

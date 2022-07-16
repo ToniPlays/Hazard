@@ -26,15 +26,15 @@ namespace Hazard {
 
 		bool Dirty = true;
 
-		inline glm::mat4 GetTransformMat4()
+		inline glm::mat4 GetTransformMat4() const
 		{
 			return Math::ToTransformMatrix(Translation, Rotation, Scale);
 		}
-		inline glm::mat4 GetTransformNoScale()
+		inline glm::mat4 GetTransformNoScale() const
 		{
 			return Math::ToTransformMatrix(Translation, Rotation);
 		}
-		inline glm::quat GetOrientation() 
+		inline glm::quat GetOrientation() const
 		{
 			return glm::quat(Rotation);
 		}

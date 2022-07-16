@@ -10,7 +10,7 @@ namespace UI
 		specs.DebugName = "Viewport";
 		specs.Width = m_Width;
 		specs.Height = m_Height;
-		specs.Camera = m_EditorCamera;
+		specs.Camera = &m_EditorCamera;
 		specs.Geometry = Geometry_All;
 		m_Renderer = Ref<WorldRenderer>::Create(&specs);
 	}
@@ -32,6 +32,7 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
+			
 		}
 
 		UI::Image(m_Renderer->GetOutput()->GetImage(), size, { 0, 1 }, { 1, 0 });
@@ -45,7 +46,6 @@ namespace UI
 
 		}
 
-		ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
 		ImGui::SameLine(0, 15);
 		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
@@ -59,6 +59,7 @@ namespace UI
 		{
 			m_DrawStats = !m_DrawStats;
 		}
+		ImGui::PopStyleVar();
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(size.x - 100);
@@ -69,7 +70,7 @@ namespace UI
 		const ImVec4& offColor = style.Window.TextDisabled;
 
 		ImGui::BeginChild("##gizmoTools", { 92, 25 });
-		ImGui::SameLine(0, 10);
+		ImGui::SameLine(0, 6);
 		if (UI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Translate);
 		}
@@ -91,7 +92,7 @@ namespace UI
 
 		bool focused = ImGui::IsWindowFocused();
 
-		focused ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition({ 0, 0 });
+		focused ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(HazardRenderer::Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{

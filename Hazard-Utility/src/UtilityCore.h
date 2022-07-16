@@ -6,8 +6,8 @@
 #include "Color.h"
 #include "HazardRuntimeError.h"
 
-#define HZR_PROFILE 1
-#define HZR_OPTICK 1
+#define HZR_PROFILE 0
+#define HZR_OPTICK 0
 
 
 #if HZR_OPTICK
