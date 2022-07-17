@@ -2,7 +2,7 @@
 
 #include <hzrpch.h>
 #include "EditorCamera.h"
-
+#include "HazardRendererCore.h"
 
 namespace Editor {
 	class Grid 
@@ -12,9 +12,9 @@ namespace Editor {
 		~Grid();
 
 		void Render(const Editor::EditorCamera& camera);
-		//void Invalidate(const Ref<RenderPass> renderPass);
+		void Invalidate(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:
-		//Ref<Pipeline> m_Pipeline;
+		Ref<HazardRenderer::Pipeline> m_Pipeline;
 	};
 }

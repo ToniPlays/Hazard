@@ -5,7 +5,7 @@
 namespace UI {
 	class RendererDebugPanel : public Panel {
 	public:
-		RendererDebugPanel() : Panel("RendererDebug") {};
+		RendererDebugPanel() : Panel("RendererDebug") { m_Open = false; };
 
 		void Update() override {};
 		void OnPanelRender() override;

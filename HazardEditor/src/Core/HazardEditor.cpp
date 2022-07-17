@@ -4,6 +4,8 @@
 #include "Editor/EditorCamera.h"
 #include "HazardRenderer.h"
 #include "GUIManager.h"
+#include "GUI/Debug/Console.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 using namespace Hazard;
 
@@ -12,12 +14,12 @@ void EditorApplication::PreInit()
 {
 	RenderAPI renderAPI = RenderAPI::OpenGL;
 
-    
+
 #ifdef HZR_PLATFORM_MACOS
-        std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardEditor");
-    renderAPI = RenderAPI::Metal;
+	std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardEditor");
+	renderAPI = RenderAPI::Metal;
 #endif
-    
+
 
 	HZR_INFO("EditorApplication::PreInit()");
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
@@ -26,7 +28,7 @@ void EditorApplication::PreInit()
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
 	appInfo.Logging = true;
-	
+
 	HazardRendererAppInfo rendererApp = {};
 	rendererApp.AppName = appInfo.AppName;
 	rendererApp.BuildVersion = HZR_BUILD_VERSION;
@@ -35,16 +37,7 @@ void EditorApplication::PreInit()
 	rendererApp.EventCallback = [&](Event& e) {
 		HazardLoop::GetCurrent().OnEvent(e);
 	};
-	rendererApp.MessageCallback = [](RenderMessage message) {
-		switch (message.Severity) {
-		case Severity::Debug:		HZR_CORE_INFO(message.Message);		break;
-		case Severity::Trace:		HZR_CORE_TRACE(message.Message);	break;
-		case Severity::Info:		HZR_CORE_INFO(message.Message);		break;
-		case Severity::Warning:		HZR_CORE_WARN(message.Message);		break;
-		case Severity::Error:		HZR_CORE_ERROR(message.Message);	break;
-		case Severity::Critical:	HZR_CORE_FATAL(message.Message);	break;
-		}
-	};
+	rendererApp.MessageCallback;
 
 	HazardWindowCreateInfo windowInfo = {};
 	windowInfo.Title = "HazardEditor | " + RenderAPIToString(renderAPI);
@@ -88,7 +81,13 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init()
 {
-	PushModule<GUIManager>();
+	auto& manager = PushModule<GUIManager>();
+	auto& window = GetModule<RenderEngine>().GetWindow();
+	window.SetDebugCallback([](RenderMessage message) {
+		auto manager = Application::GetModule<GUIManager>();
+		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
+		if (console) console->AddMessage({ message.Description, message.StackTrace, MessageFlags_Error });
+		});
 }
 
 bool EditorApplication::OnEvent(Event& e)

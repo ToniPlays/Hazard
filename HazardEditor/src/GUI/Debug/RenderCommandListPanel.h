@@ -5,7 +5,7 @@
 namespace UI {
 	class RenderCommandListPanel : public Panel {
 	public:
-		RenderCommandListPanel() : Panel("RenderCommandList") {};
+		RenderCommandListPanel() : Panel("RenderCommandList") { m_Open = false; };
 		
 		void Update() override {};
 		void OnPanelRender() override;

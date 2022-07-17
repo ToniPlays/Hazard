@@ -27,11 +27,17 @@ namespace HazardRenderer {
 
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
-		RenderMessage msg;
-		msg.Severity = message.Severity;
-		msg.Message = "[Hazard-Renderer]: " + message.Message;
+		
+		if (!WindowsWindow::s_DebugCallback) {
+			WindowsWindow::s_QueueMessages.push_back(message);
+			return;
+		}
 
-		WindowsWindow::s_DebugCallback(msg);
+		for (auto& m : WindowsWindow::s_QueueMessages) {
+			WindowsWindow::s_DebugCallback(m);
+		}
+		WindowsWindow::s_QueueMessages.clear();
+		WindowsWindow::s_DebugCallback(message);
 	}
 
 	WindowsWindow::WindowsWindow(HazardRendererCreateInfo* info)
@@ -46,9 +52,7 @@ namespace HazardRenderer {
 		}
 
 		if (info->Renderer == RenderAPI::Auto) 
-		{
 			info->Renderer = RenderAPI::Vulkan;
-		}
 
 		SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
 
@@ -110,7 +114,6 @@ namespace HazardRenderer {
 			SetVSync(info->VSync);
 
 			Input::Init(*this);
-			//RenderCommand::Init(this);
 		}
 	}
 	void WindowsWindow::BeginFrame()

@@ -137,7 +137,6 @@ namespace HazardRenderer
 			return;
 		}
 
-
 		if (compileInfo->Binary.size() != 0 && compileInfo->Source.empty()) {
 
 			spirv_cross::CompilerGLSL glslCompiler(compileInfo->Binary);
@@ -149,7 +148,7 @@ namespace HazardRenderer
 		shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source, ShaderStageToShaderC(compileInfo->Stage), compileInfo->Path.c_str(), options);
 
 		if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
-			compileInfo->Error = result.GetErrorMessage();
+			compileInfo->Error = std::move(result.GetErrorMessage());
 			return;
 		}
 

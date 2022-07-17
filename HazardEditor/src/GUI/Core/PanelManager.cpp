@@ -14,6 +14,7 @@ namespace UI
 		AddRenderable<Properties>();
 		AddRenderable<Hierarchy>();
 		AddRenderable<AssetPanel>();
+		AddRenderable<Console>();
 	}
 	void PanelManager::Update()
 	{

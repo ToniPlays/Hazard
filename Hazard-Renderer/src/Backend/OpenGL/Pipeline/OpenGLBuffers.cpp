@@ -173,8 +173,6 @@ namespace HazardRenderer::OpenGL
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
 		m_Name = createInfo->Name;
-		std::cout << "Created uniform buffer: " << m_Name << std::endl;
-		std::cout << "Buffer size: " << m_Size << std::endl;
 
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {

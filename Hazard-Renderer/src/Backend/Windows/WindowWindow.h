@@ -60,12 +60,20 @@ namespace HazardRenderer {
 		WindowProps GetWindowInfo() override { return m_WindowData; }
 		GraphicsContext* GetContext() const override { return m_Context; };
 		Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
+		virtual void SetDebugCallback(RendererMessageCallback callback) { 
+			s_DebugCallback = callback;
+			for (auto& m : s_QueueMessages) {
+				s_DebugCallback(m);
+			}
+			s_QueueMessages.clear();
+		}
 
 	private:
 		WindowProps m_WindowData;
 		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
 		static inline RendererMessageCallback s_DebugCallback;
+		static inline std::vector<RenderMessage> s_QueueMessages;
 		void SetCallbacks();
 
 	};

@@ -13,10 +13,13 @@ namespace UI
 		specs.Camera = &m_EditorCamera;
 		specs.Geometry = Geometry_All;
 		m_Renderer = Ref<WorldRenderer>::Create(&specs);
+
+		m_EditorGrid.Invalidate(m_Renderer->GetRenderPass());
 	}
 	void Viewport::Update()
 	{
 		m_Renderer->Render();
+		m_EditorGrid.Render(m_EditorCamera);
 	}
 	void Viewport::OnPanelRender()
 	{

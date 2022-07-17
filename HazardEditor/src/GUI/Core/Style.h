@@ -113,6 +113,7 @@ namespace UI
 		float IndentSpacing = 16;
 
 		ImVec4 BackgroundColor = ColorToImVec("#202020");
+		ImVec4 ModalBackgroundColor = ColorToImVec("#0A0A0A80");
 		ImVec4 ChildBackgroundColor = ColorToImVec("#222222");
 		ImVec4 MenuBarBackground = ColorToImVec("#181816");
 		ImVec4 NavHighlight = ColorToImVec("#5DC50590");

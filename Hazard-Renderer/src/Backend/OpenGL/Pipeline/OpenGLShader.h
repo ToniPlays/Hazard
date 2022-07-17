@@ -12,7 +12,6 @@ namespace HazardRenderer::OpenGL
 	{
 	public:
 		OpenGLShader(const std::string& filePath);
-		OpenGLShader(const std::string& name, const std::string& vertexPath, const std::string& fragmenPath);
 		~OpenGLShader();
 
 		void Reload() override;
@@ -29,7 +28,7 @@ namespace HazardRenderer::OpenGL
 	private:
 
 		bool CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources);
-		void CompileOrGetOpenGLBinaries(bool forceRecompile = false);
+		bool CompileOrGetOpenGLBinaries(bool forceRecompile = false);
 		void CreateProgram();
 		void Reflect();
 

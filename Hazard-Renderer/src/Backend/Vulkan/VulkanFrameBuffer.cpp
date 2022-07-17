@@ -61,7 +61,6 @@ namespace HazardRenderer::Vulkan
 
 	VulkanFrameBuffer::~VulkanFrameBuffer()
 	{
-		std::cout << "Destroying FBO" << std::endl;
 		auto device = VulkanContext::GetPhysicalDevice().GetVulkanDevice();
 		vkDestroyRenderPass(device, m_RenderPass, nullptr);
 		vkDestroyFramebuffer(device, m_FrameBuffer, nullptr);
@@ -281,7 +280,6 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.pDependencies = dependencies.data();
 
 		VK_CHECK_RESULT(vkCreateRenderPass(device.GetVulkanDevice(), &renderPassInfo, nullptr, &m_RenderPass));
-		std::cout << m_RenderPass << std::endl;
 
 		std::vector<VkImageView> attachments(m_AttachmentImages.size());
 

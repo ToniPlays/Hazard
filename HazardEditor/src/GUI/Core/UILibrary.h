@@ -354,7 +354,7 @@ namespace UI
 			}
 			ImGui::PopStyleVar(1);
 
-			if (ImGui::BeginPopup("Settings")) 
+			if (ImGui::BeginPopup("Settings"))
 			{
 				propCallback();
 				ImGui::EndPopup();
@@ -388,7 +388,8 @@ namespace UI
 			ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
 				| ImGuiTableFlags_Resizable
 				| ImGuiTableFlags_Reorderable
-				| ImGuiTableFlags_ScrollY;
+				| ImGuiTableFlags_ScrollY
+				| ImGuiTableFlags_RowBg;
 
 			ImGui::BeginTable(tableName, columnCount, flags, ImGui::GetContentRegionAvail());
 
@@ -436,14 +437,13 @@ namespace UI
 
 		ImGui::TableNextRow(0, rowHeight);
 		ImGui::TableNextColumn();
+		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		window->DC.CurrLineTextBaseOffset = 3.0f;
 		const ImVec2 rowAreaMin = ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), 0).Min;
 		const ImVec2 rowAreaMax = { ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), ImGui::TableGetColumnCount() - 1).Max.x,
 									rowAreaMin.y + rowHeight };
-
-		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
@@ -512,6 +512,30 @@ namespace UI
 		if (selected)
 			ImGui::PopStyleColor();
 		return clicked;
+	}
+	static bool TableRowClickable(const char* id, float rowHeight)
+	{
+		ImGuiWindow* window = ImGui::GetCurrentWindow();
+		window->DC.CurrLineSize.y = rowHeight;
+
+		ImGui::TableNextRow(0, rowHeight);
+		ImGui::TableNextColumn();
+
+		window->DC.CurrLineTextBaseOffset = 3.0f;
+		const ImVec2 rowAreaMin = ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), 0).Min;
+		const ImVec2 rowAreaMax = { ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), ImGui::TableGetColumnCount() - 1).Max.x,
+									rowAreaMin.y + rowHeight };
+
+		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
+
+		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
+		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
+			&isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnDoubleClick);
+
+		ImGui::SetItemAllowOverlap();
+		ImGui::PopClipRect();
+
+		return isRowClicked;
 	}
 
 #pragma endregion

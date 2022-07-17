@@ -49,13 +49,13 @@ void main()
 #version 450
 
 layout(location = 0) in vec3 nearPoint;
-layout(location = 1) in vec3 farPoint;
+layout(location = 1) in vec3 farPoint;fsd<
 
 layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
 	uniform mat4 u_Projection;
 	uniform mat4 u_View;
-	uniform vec3 u_Position;
+	uniform vec4 u_Position;
 } u_Camera;
 
 

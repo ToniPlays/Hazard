@@ -15,7 +15,8 @@ namespace Hazard
 	struct RenderMessage 
 	{
 		Severity Severity;
-		std::string Message;
+		std::string Description;
+		std::string StackTrace;
 	};
 
 	using RendererMessageCallback = void(*)(RenderMessage);

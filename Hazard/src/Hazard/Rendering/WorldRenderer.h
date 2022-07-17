@@ -40,8 +40,8 @@ namespace Hazard
 		void Render();
 
 		const WorldRendererSpec& GetSpec() { return m_Spec; }
-		const Ref<HazardRenderer::FrameBuffer>& GetOutput() { return m_Output; }
-		const Ref<HazardRenderer::RenderPass>& GetRenderPass() { return m_RenderPass; }
+		Ref<HazardRenderer::FrameBuffer>& GetOutput() { return m_Output; }
+		Ref<HazardRenderer::RenderPass>& GetRenderPass() { return m_RenderPass; }
 
 
 	private:

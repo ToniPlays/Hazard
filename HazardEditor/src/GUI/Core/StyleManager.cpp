@@ -90,6 +90,7 @@ namespace UI {
 		imStyle.IndentSpacing = style.IndentSpacing;
 
 		imStyle.Colors[ImGuiCol_WindowBg] = style.BackgroundColor;
+		imStyle.Colors[ImGuiCol_ModalWindowDimBg] = style.ModalBackgroundColor;
 		imStyle.Colors[ImGuiCol_MenuBarBg] = style.MenuBarBackground;
 		imStyle.Colors[ImGuiCol_NavHighlight] = style.NavHighlight;
 		imStyle.Colors[ImGuiCol_ChildBg] = style.ChildBackgroundColor;

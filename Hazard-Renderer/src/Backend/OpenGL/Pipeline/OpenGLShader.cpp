@@ -3,6 +3,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "../OpenGLUtils.h"
+
 #include "Backend/Core/Pipeline/ShaderFactory.h"
 
 #include <sstream>
@@ -19,22 +20,10 @@ namespace HazardRenderer::OpenGL
 		auto shaderSources = ShaderFactory::GetShaderSources(m_FilePath);
 		{
 			bool wasCompiled = CompileOrGetVulkanBinaries(shaderSources);
-			CompileOrGetOpenGLBinaries(wasCompiled);
-			CreateProgram();
+			if (CompileOrGetOpenGLBinaries(wasCompiled))
+				CreateProgram();
 		}
 
-	}
-	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexPath, const std::string& fragmenPath)
-	{
-		std::unordered_map<ShaderType, std::string> sources;
-
-		sources[ShaderType::Vertex] = vertexPath;
-		sources[ShaderType::Fragment] = fragmenPath;
-		{
-			bool wasCompiled = CompileOrGetVulkanBinaries(sources);
-			CompileOrGetOpenGLBinaries(wasCompiled);
-			CreateProgram();
-		}
 	}
 	OpenGLShader::~OpenGLShader()
 	{
@@ -67,7 +56,8 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[name];
-		HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
+		if (!uniformBuffer) return;
+		//HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
@@ -135,7 +125,6 @@ namespace HazardRenderer::OpenGL
 	bool OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
 	{
 		bool wasCompiled = false;
-		m_ID = glCreateProgram();
 
 		auto& shaderData = m_VulkanSPIRV;
 		shaderData.clear();
@@ -162,7 +151,7 @@ namespace HazardRenderer::OpenGL
 			ShaderFactory::Compile(&compileInfo);
 
 			if (!compileInfo.Succeeded()) {
-				Window::SendDebugMessage({ Severity::Error, compileInfo.Error });
+				Window::SendDebugMessage({ Severity::Error, compileInfo.Error, source });
 				auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 				shaderData[stage] = binaries;
 				continue;
@@ -172,7 +161,7 @@ namespace HazardRenderer::OpenGL
 		}
 		return wasCompiled;
 	}
-	void OpenGLShader::CompileOrGetOpenGLBinaries(bool forceCompile)
+	bool OpenGLShader::CompileOrGetOpenGLBinaries(bool forceCompile)
 	{
 		auto& shaderData = m_OpenGLSPIRV;
 
@@ -205,12 +194,50 @@ namespace HazardRenderer::OpenGL
 
 			ShaderFactory::Compile(&compileInfo);
 
-			HZR_ASSERT(compileInfo.Succeeded(), "Failed compilation");
+			if (!compileInfo.Succeeded()) {
+				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed"});
+				return false;
+			}
 
 			shaderData[glStage] = compileInfo.Binary;
 		}
 		Reflect();
+		return true;
 	}
+	static void CheckShader(GLuint id, GLuint type)
+	{
+		GLint ret = 0;
+		//Check if something is wrong with the shader
+		switch (type) {
+		case(GL_COMPILE_STATUS):
+			glGetShaderiv(id, type, &ret);
+			if (ret == false) {
+				int infologLength = 0;
+				glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infologLength);
+				std::vector<GLchar> infoLog(infologLength);
+				GLsizei charsWritten = 0;
+
+				glGetShaderInfoLog(id, infologLength, &charsWritten, infoLog.data());
+				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed", std::string(infoLog.data())});
+			}
+			break;
+		case(GL_LINK_STATUS):
+			glGetProgramiv(id, type, &ret);
+			if (ret == false) {
+				int infologLength = 0;
+				glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infologLength);
+				std::vector<GLchar> infoLog(infologLength);
+				GLsizei charsWritten = 0;
+
+				glGetProgramInfoLog(id, infologLength, &charsWritten, infoLog.data());
+				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data())});
+			}
+			break;
+		default:
+			break;
+		};
+	}
+
 	void OpenGLShader::CreateProgram()
 	{
 		GLuint program = glCreateProgram();
@@ -222,8 +249,11 @@ namespace HazardRenderer::OpenGL
 			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
 			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
 			glAttachShader(program, shaderID);
+			CheckShader(program, shaderID);
 		}
 		glLinkProgram(program);
+
+		CheckShader(program, GL_LINK_STATUS);
 
 		GLint linked;
 		glGetProgramiv(program, GL_LINK_STATUS, &linked);
@@ -234,12 +264,13 @@ namespace HazardRenderer::OpenGL
 
 			std::vector<GLchar> infoLog(maxLen);
 			glGetShaderInfoLog(program, maxLen, &maxLen, infoLog.data());
-			HZR_ASSERT(false, "[OpenGLShader]: Shader linking failed {0}", infoLog.data());
+			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data())});
 			glDeleteProgram(program);
 
 			for (auto id : shaderIDs) {
 				glDeleteShader(id);
 			}
+			return;
 		}
 
 		for (auto id : shaderIDs) {

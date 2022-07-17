@@ -3,6 +3,7 @@
 #include "GUI/Core/Panel.h"
 #include "TransformationGizmo.h"
 #include "Editor/EditorCamera.h"
+#include "Editor/EditorGrid.h"
 #include "Hazard/Rendering/WorldRenderer.h"
 
 namespace UI 
@@ -24,6 +25,8 @@ namespace UI
 		uint32_t m_Width = 1280, m_Height = 720;
 		TransformationGizmo m_Gizmos;
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, (float)m_Width / (float)m_Height, 0.03f, 100.0f);
+
+		Editor::Grid m_EditorGrid;
 
 		Ref<WorldRenderer> m_Renderer;
 		Entity m_SelectionContext;
