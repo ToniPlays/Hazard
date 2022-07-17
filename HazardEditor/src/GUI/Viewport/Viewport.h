@@ -14,8 +14,11 @@ namespace UI
 		void Update() override;
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
+
+		bool FocusOnEntity(Entity& entity);
 	private:
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
+		bool KeyPressed(KeyPressedEvent& e);
 		void DrawStatsWindow();
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;

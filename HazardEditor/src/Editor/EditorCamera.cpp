@@ -36,8 +36,8 @@ namespace Editor {
 
 	bool EditorCamera::OnEvent(Event& e)
 	{
-		//EventDispatcher dispatcher(e);
-		//return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
 		return false;
 	}
 
@@ -55,7 +55,7 @@ namespace Editor {
 		m_View = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		m_View = glm::inverse(m_View);
 	}
-	/*
+	
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)
 	{
 		float delta = e.GetYOffset() * 0.1f;
@@ -63,7 +63,6 @@ namespace Editor {
 		UpdateView();
 		return false;
 	}
-	*/
 
 	void EditorCamera::MousePan(const glm::vec2& delta)
 	{

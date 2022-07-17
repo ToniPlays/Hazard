@@ -331,37 +331,42 @@ namespace UI
 		}
 		return false;
 	}
-	template<typename T>
-	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback) {
-
-		const ImGuiTreeNodeFlags _flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
-
-		ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
-
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-		ImGui::Separator();
-		bool open = ImGui::TreeNodeEx((void*)title, _flags, "%s", title);
-		ImGui::PopStyleVar();
-
-		ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f - 5);
-		if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
+	template<typename T, typename Prop>
+	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr) {
+		bool treeOpen = false;
+		bool optionsOpen = false;
 		{
-			ImGui::OpenPopup("ComponentSettings");
+
+			ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+			treeOpen = ImGui::TreeNodeEx((void*)title, flags, "%s", title);
+			ImGui::PopStyleVar();
+			ImGui::SameLine(contentRegion.x - lineHeight * 0.5f - 12);
+
+			Style& style = StyleManager::GetCurrent();
+			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 0, 0 });
+			if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
+			{
+				ImGui::OpenPopup("Settings");
+			}
+			ImGui::PopStyleVar(1);
+
+			if (ImGui::BeginPopup("Settings")) 
+			{
+				propCallback();
+				ImGui::EndPopup();
+			}
 		}
 
-		if (ImGui::BeginPopup("ComponentSettings")) {
-			ImGui::Separator();
-			MenuItem("Remove component", []() {
-				});
-
-			ImGui::EndPopup();
-		}
-		if (open) {
+		if (treeOpen) {
 			callback();
 			ImGui::TreePop();
 		}
-		return false;
+
+		return treeOpen;
 	}
 
 #pragma endregion

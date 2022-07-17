@@ -25,7 +25,7 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, TransformComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
+		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 
@@ -47,17 +47,14 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				UI::InputFloat3("Scale", c.Scale, 1.0f);
 				ImGui::Columns();
+
+			}, [&]() {
+				MenuItem("Reset", [&]() {
+					c.Translation = { 0, 0, 0 };
+					c.Rotation = { 0, 0, 0 };
+					c.Scale = { 1, 1, 1 };
+					});
 			});
-		/*
-		if (ImGui::BeginPopup("ComponentSettings")) {
-			MenuItem("Reset", [&]() {
-				c.Translation = { 0, 0, 0 };
-				c.Rotation = { 0, 0, 0 };
-				c.Scale = { 1, 1, 1 };
-				});
-			ImGui::EndPopup();
-		}
-		*/
 
 		return false;
 	}
@@ -76,16 +73,11 @@ namespace UI
 
 				}
 				ImGui::Columns();
+			}, [&]() {
+				MenuItem("Remove component", [&]() {
+					removed = true;
+					});
 			});
-		/*
-		if (ImGui::BeginPopup("ComponentSettings")) {
-			MenuItem("Remove component", [&]() {
-				removed = true;
-				});
-
-			ImGui::EndPopup();
-		}
-		*/
 
 		if (removed) {
 			e.RemoveComponent<SpriteRendererComponent>();
@@ -94,7 +86,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, CameraComponent& c) 
+	static bool ComponentMenu(Entity& e, CameraComponent& c)
 	{
 		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_VIDEO_CAMERA " Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
@@ -117,24 +109,20 @@ namespace UI
 				}
 
 				ImGui::Columns();
+			}, [&]() {
+				MenuItem("Reset", [&]() {
+					c.SetFov(60.0f);
+					c.SetClipping({ 0.03f, 100.0f });
+					c.SetProjection(Projection::Perspective);
+					});
 			});
-		/*
-		HZR_ASSERT(!ImGui::IsPopupOpen("Settings"), "");
 
-		if (ImGui::BeginPopup("Settings")) {
-			MenuItem("Reset", [&]() {
-				c.SetFov(60.0f);
-				c.SetClipping({ 0.03f, 100.0f });
-				c.SetProjection(Projection::Perspective);
-				});
-			ImGui::EndPopup();
-		}
-		*/
+		
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, ScriptComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				using namespace HazardScript;
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
@@ -183,7 +171,7 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SkyLightComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 
 			});
@@ -191,42 +179,42 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, DirectionalLightComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, PointLightComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions("" ICON_FK_LIGHTBULB_O " Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode("" ICON_FK_LIGHTBULB_O " Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, MeshComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, Rigidbody2DComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, BoxCollider2DComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CODEPEN "Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CODEPEN "Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, CircleCollider2DComponent& c) {
-		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_CIRCLE_O "Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CIRCLE_O "Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
@@ -234,7 +222,7 @@ namespace UI
 	template<>
 	static bool ComponentMenu(Entity& e, BatchComponent& c)
 	{
-		bool optionsOpen = UI::TreenodeWithOptions("Batch renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode("Batch renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, 125.0f);

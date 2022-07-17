@@ -98,6 +98,9 @@ namespace UI
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
+		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+		m_Gizmos.OnEvent(e);
+		m_EditorCamera.OnEvent(e);
 		return false;
 	}
 	bool Viewport::OnSelectionContextChange(Events::SelectionContextChange& e)
@@ -105,6 +108,41 @@ namespace UI
 		m_SelectionContext = e.GetEntity();
 		return false;
 	}
+
+	bool Viewport::FocusOnEntity(Entity& entity)
+	{
+		if (!entity.IsValid()) return false;
+
+		m_EditorCamera.SetFocalPoint(entity.GetTransform().Translation);
+		return true;
+	}
+
+	bool Viewport::KeyPressed(KeyPressedEvent& e)
+	{
+		switch (e.GetKeyCode()) {
+		case Key::W:
+			m_Gizmos.SetType(Gizmo::Translate);
+			return true;
+		case Key::E:
+			m_Gizmos.SetType(Gizmo::Rotate);
+			return true;
+		case Key::R:
+			m_Gizmos.SetType(Gizmo::Scale);
+			return true;
+		case Key::T:
+			m_Gizmos.SetType(Gizmo::Bounds);
+			return true;
+		case Key::G:
+			m_Gizmos.SetGlobal(!m_Gizmos.IsGlobal());
+			return true;
+		case Key::F: {
+			FocusOnEntity(m_SelectionContext);
+			return true;
+		}
+		}
+		return false;
+	}
+
 	void Viewport::DrawStatsWindow()
 	{
 		Style& style = StyleManager::GetCurrent();

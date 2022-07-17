@@ -67,7 +67,7 @@ namespace Editor {
 		void UpdateProjection();
 		void UpdateView();
 
-		//bool OnMouseScroll(MouseScrolledEvent& e);
+		bool OnMouseScroll(MouseScrolledEvent& e);
 
 		void MousePan(const glm::vec2& delta);
 		void MouseRotate(const glm::vec2& delta);
