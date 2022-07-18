@@ -21,6 +21,15 @@ public:
     
     UI::PanelManager& GetPanelManager() { return m_PanelManager; }
     UI::MenuBar& GetMenuBar() { return m_MainMenuBar; }
+
+	template<typename T>
+	void SetPanelOpen(bool open) 
+	{
+		T* renderable = m_PanelManager.GetRenderable<T>();
+		if(open)
+			renderable->Open();
+		else renderable->Close();
+	}
     
 private:
 	void InitImGuiPlatform(HazardRenderer::Window& window);

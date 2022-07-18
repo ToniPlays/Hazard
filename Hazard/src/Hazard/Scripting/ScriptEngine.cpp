@@ -34,7 +34,7 @@ namespace Hazard
 			}
 		};
 
-		AddBindingCallback(Internal::RegisterInternalCalls);
+		AddBindingCallback(InternalCalls::RegisterInternalCalls);
 		m_Engine = HazardScriptEngine::Create(&createInfo);
 
 	}

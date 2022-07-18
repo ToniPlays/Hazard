@@ -53,12 +53,13 @@ namespace HazardRenderer::OpenGL
 	{
 		glUseProgram(0);
 	}
-	void OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
+	bool OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[name];
-		if (!uniformBuffer) return;
+		if (!uniformBuffer) return false;
 		//HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
+		return true;
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
 	{
@@ -270,7 +271,6 @@ namespace HazardRenderer::OpenGL
 			for (auto id : shaderIDs) {
 				glDeleteShader(id);
 			}
-			return;
 		}
 
 		for (auto id : shaderIDs) {

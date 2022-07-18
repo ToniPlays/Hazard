@@ -2,6 +2,8 @@
 
 #include "GUIRenderable.h"
 #include "Utility/StringUtil.h"
+#include "StyleManager.h"
+#include "ScopedVar.h"
 #include <functional>
 
 #include "imgui.h"
@@ -44,11 +46,19 @@ namespace UI
 	public:
 		void Render() override {
 			ImGui::BeginMainMenuBar();
+			{
+				Style& style = StyleManager::GetCurrent();
+				ScopedStyleStack vars(ImGuiStyleVar_PopupBorderSize, 0, ImGuiStyleVar_WindowPadding, ImVec2(4, 2), ImGuiStyleVar_ChildBorderSize, 0);
 
-			for (auto& item : m_MenuItems) {
-				if (ImGui::BeginMenu(item.Name.c_str(), true)) {
-					RenderSubMenu(item);
-					ImGui::EndMenu();
+				for (auto& item : m_MenuItems) {
+
+					if (ImGui::BeginMenu(item.Name.c_str(), true)) {
+						{
+							ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(12, 8));
+							RenderSubMenu(item);
+						}
+						ImGui::EndMenu();
+					}
 				}
 			}
 

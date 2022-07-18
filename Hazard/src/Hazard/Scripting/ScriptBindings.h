@@ -3,55 +3,52 @@
 #include "ScriptEngine.h"
 #include "Hazard/Core/Application.h"
 
-#define BIND_ICALL(name, x) engine->RegisterInternalCall(name, (void*)x)
+#define BIND_ICALL(x) engine->RegisterInternalCall("Hazard.InternalCalls::"#x, (void*)x)
+#define STRINGIFY_LINE(x) #x
+#define LINE(x) STRINGIFY_LINE(x)
+#define STACK_TRACE() "StackTrace: " __FUNCTION__ ":" LINE(__LINE__) 
 
-namespace Hazard::Internal
+namespace Hazard::InternalCalls
 {
 	using namespace HazardScript;
-	static void ConsoleLog(MonoObject* obj)
+	static void Console_Log_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, message, STACK_TRACE()});
 	}
-	static void ConsoleInfo(MonoObject* obj)
+	static void Console_Info_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, message, STACK_TRACE() });
 	}
-	static void ConsoleWarn(MonoObject* obj)
+	static void Console_Warn_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, message, STACK_TRACE() });
 	}
-	static void ConsoleError(MonoObject* obj)
+	static void Console_Error_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, message, STACK_TRACE() });
 	}
-	static void ConsoleCritical(MonoObject* obj)
+	static void Console_Critical_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Critical, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Critical, message, STACK_TRACE() });
 	}
-	static void ConsoleTrace(MonoObject* obj)
+	static void Console_Trace_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
-		std::string stackTrace = "StackTrace: ";
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, message, stackTrace });
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, message, STACK_TRACE() });
 	}
 
 	static void RegisterInternalCalls(ScriptEngine* engine)
 	{
-		BIND_ICALL("Hazard.Console::Console_Log_Native", ConsoleLog);
-		BIND_ICALL("Hazard.Console::Console_Info_Native", ConsoleInfo);
-		BIND_ICALL("Hazard.Console::Console_Warn_Native", ConsoleWarn);
-		BIND_ICALL("Hazard.Console::Console_Error_Native", ConsoleError);
-		BIND_ICALL("Hazard.Console::Console_Critical_Native", ConsoleCritical);
-		BIND_ICALL("Hazard.Console::Console_Trace_Native", ConsoleTrace);
+		BIND_ICALL(Console_Log_Native);
+		BIND_ICALL(Console_Info_Native);
+		BIND_ICALL(Console_Warn_Native);
+		BIND_ICALL(Console_Error_Native);
+		BIND_ICALL(Console_Critical_Native);
+		BIND_ICALL(Console_Trace_Native);
 	}
 }

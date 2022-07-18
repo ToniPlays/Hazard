@@ -244,5 +244,6 @@
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\Console.cpp" />
+    <ClCompile Include="src\GUI\MainMenuBar.cpp" />
   </ItemGroup>
 </Project>

@@ -371,8 +371,13 @@ namespace UI
 
 #pragma endregion
 #pragma region Table
+
+
+
 	template<typename T>
-	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback) {
+	static void Table(const char* tableName, const char** columns, uint32_t columnCount, ImVec2 size, T callback) {
+
+		if (size.x <= 0.0f || size.y <= 0.0f) return;
 
 		float edgeOffset = 4.0f;
 
@@ -381,48 +386,52 @@ namespace UI
 		const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
 		ScopedStyleColor rowColor(ImGuiCol_TableRowBg, bgColor);
 		ScopedStyleColor altRowColor(ImGuiCol_TableRowBgAlt, colRowAlt);
+		ScopedStyleColor tableBG(ImGuiCol_ChildBg, bgColor);
 
-		{
-			ScopedStyleColor tableBG(ImGuiCol_ChildBg, bgColor);
+		ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
+			| ImGuiTableFlags_Resizable
+			| ImGuiTableFlags_Reorderable
+			| ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_RowBg;
 
-			ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
-				| ImGuiTableFlags_Resizable
-				| ImGuiTableFlags_Reorderable
-				| ImGuiTableFlags_ScrollY
-				| ImGuiTableFlags_RowBg;
-
-			ImGui::BeginTable(tableName, columnCount, flags, ImGui::GetContentRegionAvail());
-
-			//Setup
-			for (uint32_t i = 0; i < columnCount; i++) {
-				ImGui::TableSetupColumn(columns[i]);
-			}
-
-			//Headers
-			{
-				const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
-				ScopedColourStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
-
-				ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
-				ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
-
-				for (uint32_t i = 0; i < columnCount; i++) {
-					ImGui::TableSetColumnIndex(i);
-					const char* columnName = ImGui::TableGetColumnName(i);
-					Group(columnName, [&]() {
-						Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
-						ImGui::TableHeader(columnName);
-						Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
-						});
-				}
-				ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
-				Underline(true, 0.0f, 5.0f);
-			}
-
-			//Draw content from callback
-			callback();
-			ImGui::EndTable();
+		if (!ImGui::BeginTable(tableName, columnCount, flags, size)) {
+			return;
 		}
+
+		//Setup
+		for (uint32_t i = 0; i < columnCount; i++) {
+			ImGui::TableSetupColumn(columns[i]);
+		}
+
+		//Headers
+		{
+			const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
+			ScopedColourStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
+
+			ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
+			ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
+
+			for (uint32_t i = 0; i < columnCount; i++) {
+				ImGui::TableSetColumnIndex(i);
+				const char* columnName = ImGui::TableGetColumnName(i);
+				Group(columnName, [&]() {
+					Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
+					ImGui::TableHeader(columnName);
+					Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
+					});
+			}
+			ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
+			Underline(true, 0.0f, 5.0f);
+		}
+
+		//Draw content from callback
+		callback();
+		ImGui::EndTable();
+	}
+	template<typename T>
+
+	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback) {
+		Table(tableName, columns, columnCount, ImGui::GetContentRegionAvail(), callback);
 	}
 
 	template<typename T>

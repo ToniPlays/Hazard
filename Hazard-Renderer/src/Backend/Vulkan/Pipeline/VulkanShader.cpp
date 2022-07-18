@@ -111,11 +111,12 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
-	void VulkanShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
+	bool VulkanShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[m_UnformBufferBindings[name]];
-		HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
+		if (!uniformBuffer) return false;
 		uniformBuffer->SetData(data, size);
+		return true;
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
 	{

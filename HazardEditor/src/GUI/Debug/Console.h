@@ -34,9 +34,14 @@ namespace UI {
 			m_Messages.push_back(message);
 		}
 		void Clear(bool force = false);
+		const char* GetMessageType(const ConsoleMessage& message);
+
+	private:
+		void DrawToolbar(const ImVec2& size);
+
 	private:
 		std::vector<ConsoleMessage> m_Messages;
-		MessageFlags m_DisplayFlags;
+		uint32_t m_DisplayFlags = 0;
 		bool m_DetailedPanelOpen = false;
 	};
 }

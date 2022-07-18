@@ -16,5 +16,19 @@ namespace Hazard
 
 
         #endregion
+        #region Console
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Log_Native(object message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Info_Native(object message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Warn_Native(object message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Error_Native(object message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Critical_Native(object message);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Console_Trace_Native(object message);
+        #endregion
     }
 }
