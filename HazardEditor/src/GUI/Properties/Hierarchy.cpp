@@ -57,6 +57,12 @@ namespace UI
 					});
 				});
 			});
+		if (ImGui::IsItemClicked()) {
+			m_SelectionContext = {};
+			Events::SelectionContextChange ev({});
+			Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+		}
+
 	}
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{
@@ -66,10 +72,11 @@ namespace UI
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
+		
 
 
 		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O };
-		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Script is missing"};
+		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Script is missing" };
 		const bool states[] = { true, scriptState };
 
 		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;

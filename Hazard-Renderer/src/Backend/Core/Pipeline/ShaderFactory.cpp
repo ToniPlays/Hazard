@@ -148,7 +148,7 @@ namespace HazardRenderer
 		shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source, ShaderStageToShaderC(compileInfo->Stage), compileInfo->Path.c_str(), options);
 
 		if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
-			compileInfo->Error = std::move(result.GetErrorMessage());
+			compileInfo->Error = Utils::ShaderTypeToString(compileInfo->Stage) + ": " + result.GetErrorMessage();
 			return;
 		}
 

@@ -35,7 +35,7 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			
+
 		}
 
 		UI::Image(m_Renderer->GetOutput()->GetImage(), size, { 0, 1 }, { 1, 0 });
@@ -87,15 +87,17 @@ namespace UI
 		}
 
 		ImGui::EndChild();
+		ImRect rect = ImGui::GetCurrentWindow()->InnerRect;
+		m_MouseOverWindow = ImGui::IsMouseHoveringRect(rect.Min, rect.Max, false);
+		m_WindowFocused = ImGui::IsWindowFocused();
 
 		if (m_DrawStats)
 			DrawStatsWindow();
 
 		if (m_Gizmos.IsUsing()) return;
 
-		bool focused = ImGui::IsWindowFocused();
 
-		focused ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(HazardRenderer::Input::GetMousePos());
+		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(HazardRenderer::Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{
@@ -103,7 +105,10 @@ namespace UI
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 		m_Gizmos.OnEvent(e);
-		m_EditorCamera.OnEvent(e);
+		
+		if (m_MouseOverWindow)
+			m_EditorCamera.OnEvent(e);
+
 		return false;
 	}
 	bool Viewport::OnSelectionContextChange(Events::SelectionContextChange& e)
@@ -122,6 +127,8 @@ namespace UI
 
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
+		if (!m_WindowFocused) return false;
+
 		switch (e.GetKeyCode()) {
 		case Key::W:
 			m_Gizmos.SetType(Gizmo::Translate);

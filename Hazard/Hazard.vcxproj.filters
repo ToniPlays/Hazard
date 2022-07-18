@@ -1429,6 +1429,7 @@
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h" />
     <ClInclude Include="src\Hazard\Rendering\RendererDrawList.h" />
     <ClInclude Include="src\Hazard\Rendering\QuadRenderer.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">

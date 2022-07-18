@@ -23,7 +23,6 @@ namespace HazardScript
 		HazardScriptEngine() = delete;
 		~HazardScriptEngine() {};
 
-
 		void Reload() {};
 		void RegisterInternalCall(const std::string& signature, void* function);
 
@@ -32,6 +31,8 @@ namespace HazardScript
 	public:
 		static HazardScriptEngine* Create(HazardScriptCreateInfo* info);
 		static void SendDebugMessage(ScriptMessage message);
+		static std::vector<ScriptAssembly*> GetAssemblies();
+		static void CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method);
 
 	private:
 		HazardScriptEngine(HazardScriptCreateInfo* info);

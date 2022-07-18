@@ -6,6 +6,7 @@
 #include "GUIManager.h"
 #include "GUI/Debug/Console.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "HazardScript.h"
 
 using namespace Hazard;
 
@@ -61,7 +62,7 @@ void EditorApplication::PreInit()
 	renderInfo.pWindows = &windowInfo;
 
 	EntityComponentCreateInfo entity = {};
-	entity.StartupFile = "";
+	entity.StartupFile = "C:/dev/HazardCraft/Assets/MainWorld.hzr";
 
 	ScriptEngineCreateInfo scriptEngine = {};
 
@@ -69,7 +70,6 @@ void EditorApplication::PreInit()
 	scriptEngine.AppAssemblyPath = "C:/dev/HazardCraft/Assets/Scripts/Binaries/HazardCraft.dll";
 	scriptEngine.AssemblyPath = "C:/Program Files/Mono/lib";
 	scriptEngine.ConfigPath = "C:/Program Files/Mono/etc/";
-
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
@@ -87,6 +87,12 @@ void EditorApplication::Init()
 		auto manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (console) console->AddMessage({ message.Description, message.StackTrace, MessageFlags_Error });
+		});
+
+	Application::GetModule<ScriptEngine>().SetDebugCallback([](HazardScript::ScriptMessage message) {
+		auto manager = Application::GetModule<GUIManager>();
+		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
+		if (console) console->AddMessage({ message.Message, message.StackTrace, MessageFlags_Error });
 		});
 }
 

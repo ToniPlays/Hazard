@@ -2,6 +2,8 @@
 #include <hzrpch.h>
 #include "World.h"
 #include "Entity.h"
+#include "Hazard/Core/Application.h"
+#include "Hazard/Scripting/ScriptEngine.h"
 
 #define REGISTER_COMPONENT(x)	template<>															\
 								void World::OnComponentAdded<x>(Entity& entity, x& component) {}	\
@@ -169,7 +171,13 @@ namespace Hazard
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
 	REGISTER_COMPONENT(CircleCollider2DComponent);
-	REGISTER_COMPONENT(ScriptComponent);
+	
+	template<>
+	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
+		Application::GetModule<ScriptEngine>().InitializeComponent(entity, component);
+	}
+	template<>
+	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component) {}
 
 	template<>
 	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {

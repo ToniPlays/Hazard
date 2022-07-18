@@ -4,13 +4,13 @@
 #include "Severity.h"
 #include <functional>
 
-
 namespace HazardScript 
 {
 	struct ScriptMessage 
 	{
 		Severity Severity;
 		std::string Message;
+		std::string StackTrace;
 	};
 
 	using ScriptDebugCallback = std::function<void(ScriptMessage)>;

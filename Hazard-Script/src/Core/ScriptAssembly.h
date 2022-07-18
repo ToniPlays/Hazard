@@ -24,6 +24,7 @@ namespace HazardScript
 		Script& GetScript(const std::string& name) {
 			return m_Scripts[name];
 		}
+		MonoAssembly* GetAssembly() { return m_Assembly; }
 
 	private:
 		void LoadScripts();

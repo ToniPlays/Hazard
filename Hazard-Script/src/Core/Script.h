@@ -10,7 +10,6 @@ namespace HazardScript
 {
 	class ScriptObject;
 
-
 	class Script 
 	{
 	public:
@@ -20,8 +19,9 @@ namespace HazardScript
 		std::string GetName();
 		uint32_t GetFieldCount() { return m_Fields.size(); }
 		uint32_t GetMethodCount() { return m_Methods.size(); }
-
 		std::unordered_map<std::string, ScriptField>& GetFields() { return m_Fields; }
+
+		bool ValidateOrLoadMethod(const std::string& name);
 
 		bool HasField(const std::string& name) {
 			return m_Fields.find(name) != m_Fields.end();
@@ -38,8 +38,9 @@ namespace HazardScript
 		Method GetMethod(const std::string& name) {
 			return m_Methods[name];
 		}
-
+		void TryInvoke(const std::string& name, MonoObject* obj, void** params);
 		void Invoke(const std::string& name, MonoObject* obj, void** params);
+
 		template<typename T>
 		T GetFieldValue(const std::string& name, MonoObject* obj) {
 			T value;
@@ -79,7 +80,6 @@ namespace HazardScript
 
 		ScriptObject* CreateObject();
 		MonoClass* GetClass() { return m_Class; }
-
 
 	private:
 		void LoadFields();

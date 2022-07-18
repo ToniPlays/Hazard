@@ -207,14 +207,14 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, BoxCollider2DComponent& c) {
-		bool optionsOpen = UI::Treenode(" " ICON_FK_CODEPEN "Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CODEPEN " Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, CircleCollider2DComponent& c) {
-		bool optionsOpen = UI::Treenode(" " ICON_FK_CIRCLE_O "Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		bool optionsOpen = UI::Treenode(" " ICON_FK_CIRCLE_O " Circle collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 			});
 		return false;

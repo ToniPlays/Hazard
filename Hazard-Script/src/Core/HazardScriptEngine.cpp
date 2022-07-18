@@ -4,7 +4,7 @@
 #include "Buffer.h"
 #include "Mono/Core/Mono.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	HazardScriptEngine* HazardScriptEngine::Create(HazardScriptCreateInfo* info)
 	{
@@ -17,7 +17,7 @@ namespace HazardScript
 		s_Instance->m_DebugCallback(message);
 	}
 
-	HazardScriptEngine::HazardScriptEngine(HazardScriptCreateInfo* info) 
+	HazardScriptEngine::HazardScriptEngine(HazardScriptCreateInfo* info)
 	{
 		s_Instance = this;
 
@@ -35,16 +35,41 @@ namespace HazardScript
 
 		InitializeMono();
 	}
-	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function) 
+	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
 	{
 		Mono::Register(signature, function);
+	}
+	std::vector<ScriptAssembly*> HazardScriptEngine::GetAssemblies()
+	{
+		std::vector<ScriptAssembly*> assemblies;
+		assemblies.push_back(&s_Instance->m_MonoData.CoreAssembly);
+		assemblies.push_back(&s_Instance->m_MonoData.AppAssembly);
+		return assemblies;
+	}
+	void HazardScriptEngine::CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method)
+	{
+		MonoClass* exceptionClass = mono_object_get_class(exception);
+		MonoType* type = mono_class_get_type(exceptionClass);
+		const char* typeName = mono_type_get_name(type);
+
+		if (strcmp(typeName, "System.MissingMethodException") == 0) {
+			std::string methodName = mono_method_get_reflection_name(method);
+			std::string stackTrace = "Encountered missing method when executing " + methodName;
+			HazardScriptEngine::SendDebugMessage({ Severity::Error, "Missing method exception on " + methodName, stackTrace });
+			return;
+		}
+
+		std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, result);
+		std::string message = Mono::GetStringProperty("Message", exceptionClass, result);
+
+		HazardScriptEngine::SendDebugMessage({ Severity::Error, message, stacktrace });
 	}
 	void HazardScriptEngine::InitializeMono()
 	{
 		Mono::SetDirs(m_MonoData.MonoAssemblyDir, m_MonoData.MonoConfigDir);
 
 		Mono::Init("HazardScriptCore");
-		
+
 		LoadCoreAssebly();
 		LoadRuntimeAssembly();
 	}
@@ -53,10 +78,19 @@ namespace HazardScript
 		MonoDomain* domain = nullptr;
 		bool cleanup = false;
 
-		Mono::Init("HazardScriptCore");
+		if (!Mono::Init("HazardScriptCore")) {
+			SendDebugMessage({ Severity::Critical, "Failed to initialize Mono" });
+			return;
+		}
 
-		m_MonoData.CoreAssembly.LoadFromSource();
-		m_MonoData.AppAssembly.LoadFromSource(true);
+		if (!m_MonoData.CoreAssembly.LoadFromSource()) {
+			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
+			return;
+		}
+		if (!m_MonoData.AppAssembly.LoadFromSource(true)) {
+			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
+			return;
+		}
 		SendDebugMessage({ Severity::Info, "Assemblies loaded" });
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()

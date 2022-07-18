@@ -24,7 +24,7 @@ namespace UI
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
 		TransformationGizmo m_Gizmos;
-		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, (float)m_Width / (float)m_Height, 0.03f, 100.0f);
+		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, (float)m_Width / (float)m_Height, 0.03f, 1000.0f);
 
 		Editor::Grid m_EditorGrid;
 
@@ -32,5 +32,7 @@ namespace UI
 		Entity m_SelectionContext;
 
 		bool m_DrawStats = false;
+		bool m_MouseOverWindow = false;
+		bool m_WindowFocused = false;
 	};
 }

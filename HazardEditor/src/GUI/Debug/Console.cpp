@@ -40,22 +40,24 @@ namespace UI
 				Shift(4.0f, 4.0f);
 				ImGui::Text(message.Message.c_str());
 
-				if (clicked) {
-					ImGui::OpenPopup(message.Message.c_str());
-					ImVec2 size = ImGui::GetMainViewport()->Size;
-					ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
-					ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
-					m_DetailedPanelOpen = true;
-				}
-				{
-					ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
-					ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
-					if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
-
-						ImGui::Text(message.Description.c_str());
-						ImGui::EndPopup();
+				Group((const char*)&message, [&]() {
+					if (clicked) {
+						ImGui::OpenPopup(message.Message.c_str());
+						ImVec2 size = ImGui::GetMainViewport()->Size;
+						ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
+						ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
+						m_DetailedPanelOpen = true;
 					}
-				}
+					{
+						ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
+						ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
+						if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+
+							ImGui::Text(message.Description.c_str());
+							ImGui::EndPopup();
+						}
+					}
+					});
 			}
 			});
 

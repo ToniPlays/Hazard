@@ -15,7 +15,9 @@ namespace HazardScript
 			std::cout << "Removed script: " <<  m_Script->GetName() << std::endl;
 			mono_gchandle_free(m_Handle);
 		}
-
+		void TryInvoke(const std::string& name, void** params) {
+			m_Script->TryInvoke(name, GetHandle(), params);
+		}
 		void Invoke(const std::string& name, void** params) {
 			m_Script->Invoke(name, GetHandle(), params);
 		}

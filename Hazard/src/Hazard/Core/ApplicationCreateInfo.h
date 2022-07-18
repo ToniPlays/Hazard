@@ -4,7 +4,16 @@
 #include "Color.h"
 #include "HazardRendererCore.h"
 
+namespace HazardScript {
+	struct ScriptMessage;
+}
+
 namespace Hazard {
+
+	class ScriptEngine;
+
+	using ScriptBindCallback = std::function<void(ScriptEngine*)>;
+	using ScriptMessageCallback = std::function<void(HazardScript::ScriptMessage)>;
 
 	struct ApplicationCreateInfo 
 	{
@@ -27,6 +36,8 @@ namespace Hazard {
 		std::string CoreAssemblyPath;
 		std::string AssemblyPath;
 		std::string ConfigPath;
+
+		ScriptMessageCallback MessageCallback;
 	};
 
 	struct HazardCreateInfo 

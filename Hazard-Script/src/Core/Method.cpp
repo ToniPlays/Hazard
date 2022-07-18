@@ -15,13 +15,8 @@ namespace HazardScript
 		MonoObject* result = mono_runtime_invoke(m_Method, obj, params, &exception);
 
 		if (exception) {
-			MonoClass* exceptionClass = mono_object_get_class(exception);
-			MonoType* type = mono_class_get_type(exceptionClass);
-			const char* typeName = mono_type_get_name(type);
-			std::string message = Mono::GetStringProperty("Message", exceptionClass, result);
-			std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, result);
 
-			HazardScriptEngine::SendDebugMessage({ Severity::Error, message + " at " + stacktrace });
+			HazardScriptEngine::CheckError(exception, result, m_Method);
 		}
 
 		return result;

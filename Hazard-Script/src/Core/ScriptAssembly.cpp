@@ -9,7 +9,7 @@ namespace HazardScript
 {
 	bool ScriptAssembly::LoadFromSource(bool registerScripts)
 	{
-		HZR_ASSERT(!m_Path.empty(), "Cannot load empty file");
+		if (m_Path.empty()) return false;
 
 		Buffer data = File::ReadBinaryFile(m_Path);
 		
@@ -21,6 +21,8 @@ namespace HazardScript
 
 		if(registerScripts)
 			LoadScripts();
+
+		data.Release();
 
 		return true;
 	}
@@ -36,7 +38,8 @@ namespace HazardScript
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		uint32_t rows = mono_table_info_get_rows(tableInfo);
 
-		for (uint32_t i = 0; i < rows; i++) {
+		for (uint32_t i = 0; i < rows; i++) 
+		{
 			MonoClass* monoClass = nullptr;
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(tableInfo, i, cols, MONO_TYPEDEF_SIZE);

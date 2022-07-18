@@ -2,8 +2,10 @@
 #include "Script.h"
 #include "ScriptObject.h"
 #include "AttributeBuilder.h"
+#include "ScriptAssembly.h"
+#include "HazardScriptEngine.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	Script::Script(MonoClass* klass) : m_Class(klass)
 	{
@@ -15,16 +17,37 @@ namespace HazardScript
 	{
 		return mono_class_get_name(m_Class);
 	}
+
+	bool Script::ValidateOrLoadMethod(const std::string& name)
+	{
+
+		for (ScriptAssembly* assembly : HazardScriptEngine::GetAssemblies()) {
+			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
+			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
+
+			if (!method) continue;
+
+			Method m(method);
+			m_Methods[name] = m;
+			return true;
+		}
+		return false;
+	}
+	void Script::TryInvoke(const std::string& name, MonoObject* obj, void** params)
+	{
+		if (m_Methods.find(name) != m_Methods.end())
+			Invoke(name, obj, params);
+	}
 	void Script::Invoke(const std::string& name, MonoObject* obj, void** params)
 	{
 		m_Methods[name].Invoke(obj, params);
 	}
+
 	ScriptObject* Script::CreateObject()
 	{
-		std::cout << "Created script: " << GetName() << std::endl;
 		return new ScriptObject(this);
 	}
-	void Script::LoadFields() 
+	void Script::LoadFields()
 	{
 		MonoClassField* field = nullptr;
 		void* ptr = 0;
@@ -56,7 +79,7 @@ namespace HazardScript
 
 		m_Attributes.reserve(info->num_attrs);
 
-		for (uint32_t i = 0; i < info->num_attrs; i++) 
+		for (uint32_t i = 0; i < info->num_attrs; i++)
 		{
 			MonoCustomAttrEntry entry = info->attrs[i];
 			MonoClass* a = mono_method_get_class(entry.ctor);

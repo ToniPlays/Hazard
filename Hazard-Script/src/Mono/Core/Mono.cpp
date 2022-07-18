@@ -112,6 +112,15 @@ namespace HazardScript
 		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
 	}
+	std::string Mono::MonoObjectToChar(MonoObject* obj)
+	{
+		if (obj == nullptr) {
+			return "NULL";
+		}
+		MonoString* string = mono_object_to_string(obj, nullptr);
+		std::string b = MonoStringToString(string);
+		return b;
+	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 		
 		const char* str = string.c_str();
