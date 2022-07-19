@@ -84,7 +84,7 @@ namespace Hazard {
 		}
 	}
 
-	bool WorldHandler::LoadWorld(const std::string& file, Serialization type)
+	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
 	{
 		if (File::Exists(file)) {
 			if (type == Serialization::Editor) {

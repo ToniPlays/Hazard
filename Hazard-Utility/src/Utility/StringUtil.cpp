@@ -19,6 +19,16 @@ std::string StringUtil::RemoveAtEnd(std::string& source, char val)
 {
 	return source.substr(0, source.find_first_of(val));
 }
+uint32_t StringUtil::OffsetOf(const std::string& source, char delim, uint32_t offset) 
+{
+	std::string offsetValue = source;
+
+	for (uint32_t i = 0; i < offset; i++) {
+		offsetValue = offsetValue.substr(offsetValue.find_first_of(delim) + 1);
+		std::cout << offsetValue << std::endl;
+	}
+	return offsetValue.find_first_of(delim, offset);
+}
 std::string StringUtil::BytesToString(const size_t& bytes)
 {
 	constexpr uint64_t GB = 1024 * 1024 * 1024;

@@ -3,6 +3,7 @@
 #include "HazardEditor.h"
 #include "Editor/EditorCamera.h"
 #include "HazardRenderer.h"
+#include "Project/ProjectManager.h"
 #include "GUIManager.h"
 #include "GUI/Debug/Console.h"
 #include "Hazard/Rendering/RenderEngine.h"
@@ -37,8 +38,10 @@ void EditorApplication::PreInit()
 	renderAPI = RenderAPI::Metal;
 #endif
 
-
 	HZR_INFO("EditorApplication::PreInit()");
+
+	PushModule<ProjectManager>().LoadProjectFromFile("C:\\dev\\HazardCraft\\Project.hzrproj");
+
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;
@@ -78,7 +81,7 @@ void EditorApplication::PreInit()
 	renderInfo.pWindows = &windowInfo;
 
 	EntityComponentCreateInfo entity = {};
-	entity.StartupFile = "C:/dev/HazardCraft/Assets/MainWorld.hzr";
+	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
 
 	ScriptEngineCreateInfo scriptEngine = {};
 
@@ -97,6 +100,7 @@ void EditorApplication::PreInit()
 }
 void EditorApplication::Init()
 {
+	
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderEngine>().GetWindow();
 

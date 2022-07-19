@@ -40,6 +40,9 @@ namespace UI
 		AddMenuItem("Window/General/Properties", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Properties>(true);
 			});
+		AddMenuItem("Window/General/Asset panel", [&]() {
+			Application::GetModule<GUIManager>().SetPanelOpen<AssetPanel>(true);
+			});
 
 
 		AddMenuItem("Window/Rendering/Viewport", [&]() {

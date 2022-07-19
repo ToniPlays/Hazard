@@ -7,7 +7,7 @@ namespace Hazard
 {
 	QuadRenderer::QuadRenderer()
 	{
-		constexpr uint32_t quadCount = 10000;
+		constexpr uint32_t quadCount = 50000;
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;

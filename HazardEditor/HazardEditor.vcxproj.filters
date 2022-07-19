@@ -175,6 +175,8 @@
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Debug\Console.h" />
+    <ClInclude Include="src\Project\ProjectManager.h" />
+    <ClInclude Include="src\Project\HazardProject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -245,5 +247,7 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\Console.cpp" />
     <ClCompile Include="src\GUI\MainMenuBar.cpp" />
+    <ClCompile Include="src\Project\ProjectManager.cpp" />
+    <ClCompile Include="src\Project\HazardProject.cpp" />
   </ItemGroup>
 </Project>

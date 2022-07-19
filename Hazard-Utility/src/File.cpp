@@ -26,7 +26,7 @@ bool File::DirectoryExists(const std::filesystem::path& dir)
 {
 	return std::filesystem::exists(dir);
 }
-void File::WriteFile(const std::string& dest, const std::string& source)
+void File::WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source)
 {
 	std::ofstream out(dest);
 	out << source;
@@ -56,7 +56,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 	}
 	return false;
 }
-bool File::CopyFileTo(const std::string& source, const std::string& dest) {
+bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest) {
 
 	std::string destFolder = GetDirectoryOf(dest);
 	if (!DirectoryExists(destFolder)) {
@@ -84,7 +84,7 @@ std::string File::ReadFile(const std::filesystem::path& file)
 
 	return result;
 }
-std::vector<char> File::ReadBinaryFile(const std::string& path)
+std::vector<char> File::ReadBinaryFileChar(const std::filesystem::path& path)
 {
 	std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
@@ -147,14 +147,14 @@ bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<u
 	return true;
 }
 
-std::string File::GetFileAbsolutePath(const std::string& file)
+std::string File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
 	std::filesystem::path path(file);
 	return std::filesystem::absolute(path).string();
 }
-std::string File::GetDirectoryOf(const std::string& file)
+std::string File::GetDirectoryOf(const std::filesystem::path& file)
 {
-	std::vector<std::string> string = StringUtil::SplitString(file, '\\');
+	std::vector<std::string> string = StringUtil::SplitString(file.string(), '\\');
 	string.erase(string.end() - 1);
 
 	std::string result = "";
@@ -163,22 +163,22 @@ std::string File::GetDirectoryOf(const std::string& file)
 		result += f + "\\";
 	return result;
 }
-std::string File::GetName(const std::string& file)
+std::string File::GetName(const std::filesystem::path& file)
 {
 	std::filesystem::path path(file);
 	return path.filename().string();
 }
-std::string File::GetNameNoExt(const std::string& file)
+std::string File::GetNameNoExt(const std::filesystem::path& file)
 {
 	std::string name = GetName(file);
 	return name.substr(0, name.find_last_of('.'));
 }
-std::string File::GetPathNoExt(const std::string& file)
+std::string File::GetPathNoExt(const std::filesystem::path& file)
 {
-	return file.substr(0, file.find_last_of('.'));
+	return file.string().substr(0, file.string().find_last_of('.'));
 }
-std::string File::GetFileExtension(const std::string& file) {
-	return file.substr(file.find_last_of('.') + 1);
+std::string File::GetFileExtension(const std::filesystem::path& file) {
+	return file.string().substr(file.string().find_last_of('.') + 1);
 }
 bool File::CreateDir(const std::filesystem::path& dir)
 {
@@ -186,21 +186,6 @@ bool File::CreateDir(const std::filesystem::path& dir)
 }
 void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
-}
-FolderData File::GetFolderFiles(const std::string& folder)
-{
-	FolderData result = {};
-	result.Path = folder;
-
-	std::filesystem::directory_iterator iter(folder);
-
-	for (const auto& file : iter) {
-		if (file.is_directory())
-			result.Folders.emplace_back(file.path());
-		else
-			result.Files.emplace_back(file.path());
-	}
-	return result;
 }
 bool File::HasEnvinronmentVar(const std::string& key) {
 	return false; // PlatformUtils::HasEnvVariable(key);

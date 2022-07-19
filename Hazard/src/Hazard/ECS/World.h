@@ -13,7 +13,7 @@ namespace Hazard {
 	{
 		friend class Entity;
 	public:
-		World(const std::string& file);
+		World(const std::filesystem::path& file);
 		World(World& other);
 		~World();
 
@@ -27,8 +27,8 @@ namespace Hazard {
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
 		std::string& GetName() { return m_Name; }
-		std::string& GetWorldFile() { return m_File; }
-		void SetWorldFile(const std::string& file) { m_File = file; }
+		std::filesystem::path& GetWorldFile() { return m_File; }
+		void SetWorldFile(const std::filesystem::path& file) { m_File = file; }
 
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
@@ -41,7 +41,7 @@ namespace Hazard {
 		UID m_Uuid;
 		entt::registry m_Registry = entt::registry();
 		std::string m_Name = "";
-		std::string m_File = "";
+		std::filesystem::path m_File = "";
 
 	private:
 		template<typename T>

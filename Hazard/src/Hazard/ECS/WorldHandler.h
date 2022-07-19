@@ -17,7 +17,7 @@ namespace Hazard
 		void Close() override;
 		void Update() override;
 		void Render() override;
-		bool LoadWorld(const std::string& file, Serialization type = Serialization::Editor);
+		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
 
 		Ref<World> GetCurrentWorld() { return m_World; }
 		void SetWorld(Ref<World> world) { m_World = std::move(world); }

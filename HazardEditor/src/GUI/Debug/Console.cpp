@@ -111,7 +111,7 @@ namespace UI
 				}
 			}
 
-			ImGui::SameLine(0, ImGui::GetContentRegionAvailWidth() - 250);
+			ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 136, 0);
 			if (UI::ColoredButton(ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Debug;
 			}

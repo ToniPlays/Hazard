@@ -42,7 +42,7 @@ extern Hazard::Application* Hazard::CreateApplication();
     {
         using namespace Hazard;
         Application* app = CreateApplication();
-        Core::HazardLoop loop(app);
+        HazardLoop loop(app);
         loop.Start();
         while (!loop.ShouldClose()) {
             loop.Run();

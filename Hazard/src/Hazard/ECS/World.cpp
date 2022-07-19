@@ -24,14 +24,14 @@ namespace Hazard
 		}
 	}
 
-	World::World(const std::string& file) : m_File(file) 
+	World::World(const std::filesystem::path& file) : m_File(file)
 	{
 	
 	}
 
 	World::World(World& world)
 	{
-		m_File = std::string(world.GetWorldFile() + " (copy)");
+		m_File = std::string(world.GetWorldFile().string() + " (copy)");
 		m_Name = world.GetName() + " (copy)";
 		std::unordered_map<UID, entt::entity> entityMap;
 

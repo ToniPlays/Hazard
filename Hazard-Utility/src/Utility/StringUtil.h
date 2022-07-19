@@ -11,6 +11,7 @@ class StringUtil {
 public:
 	static std::vector<std::string> SplitString(const std::string& string, char delim);
 	static std::string RemoveAtEnd(std::string& source, char val);
+	static uint32_t OffsetOf(const std::string& source, char delim, uint32_t startOffset = 0);
 	static std::string BytesToString(const size_t& bytes);
 	static std::string Replace(const std::string& value, const std::string& find, const std::string& replaceWith);
 	static std::string& ToLower(std::string& string);

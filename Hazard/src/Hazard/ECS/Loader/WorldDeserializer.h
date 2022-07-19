@@ -13,8 +13,8 @@ namespace Hazard
 
         WorldDeserializer() = default;
         
-        Ref<World> DeserializeEditor(const std::string& file);
-        Ref<World> DeserializeRuntime(const std::string& file) { return nullptr; };
+        Ref<World> DeserializeEditor(const std::filesystem::path& file);
+        Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
 
 		template<typename T>
 		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);

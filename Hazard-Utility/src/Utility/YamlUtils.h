@@ -4,6 +4,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include <glm/glm.hpp>
+#include <filesystem>
 
 
 namespace YAML {
@@ -173,6 +174,11 @@ public:
 	}
 	template<>
 	static void Deserialize(YAML::Node node, const std::string& key, std::string& value, std::string defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<std::string>();
+	}
+	template<>
+	static void Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = node[key].as<std::string>();
 	}

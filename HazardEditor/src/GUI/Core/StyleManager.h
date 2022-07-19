@@ -7,7 +7,7 @@ namespace UI {
 	class StyleManager {
 	public:
 		static void LoadStyle(const Style& style);
-		static Style& GetCurrent() { return s_Current; }
+		inline static Style& GetCurrent() { return s_Current; }
 	private:
 		inline static Style s_Current;
 	};

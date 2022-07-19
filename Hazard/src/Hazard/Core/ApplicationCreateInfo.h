@@ -27,7 +27,7 @@ namespace Hazard {
 	};
 	struct EntityComponentCreateInfo 
 	{
-		std::string StartupFile = "";
+		std::filesystem::path StartupFile = "";
 	};
 	
 	struct ScriptEngineCreateInfo 
