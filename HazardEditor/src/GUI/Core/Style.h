@@ -57,10 +57,10 @@ namespace UI
 	{
 		float TabRounding = 2;
 
-		ImVec4 Tab = ColorToImVec("#181816");
-		ImVec4 TabActiveFocus = ColorToImVec("#222222");
-		ImVec4 TabActive = ColorToImVec("#222222");
-		ImVec4 TabUnfocus = ColorToImVec("#161616");
+		ImVec4 Tab = ColorToImVec("#202020");
+		ImVec4 TabActiveFocus = ColorToImVec("#323230");
+		ImVec4 TabActive = ColorToImVec("#242422");
+		ImVec4 TabUnfocus = ColorToImVec("#161614");
 		ImVec4 TabHovered = ColorToImVec("#5DC50594");
 	};
 

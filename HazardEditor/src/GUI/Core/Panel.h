@@ -25,7 +25,7 @@ namespace UI {
 			if (!m_Open) return;
 			{
 				const Style& style = StyleManager::GetCurrent();
-				ScopedStyleStack padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8), ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+				//ScopedStyleStack padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8), ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 				ImGui::Begin(m_Title.c_str(), &m_Open);
 				//float width = Math::Max(ImGui::GetContentRegionAvailWidth(), 150.0f);
 				//ShiftY(-5.0f);

@@ -11,6 +11,8 @@
 
 namespace UI
 {
+	constexpr int vectorItemSpacingX = 4;
+
 #pragma region Utility
 	inline static void ShiftX(float amount) {
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
@@ -123,12 +125,12 @@ namespace UI
 		bool modified = false;
 
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
-		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0));
 		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-		float itemWidth = (ImGui::GetContentRegionAvailWidth() - 0.0f) / 3.0f - buttonSize.x;
+		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 2.0f - buttonSize.x;
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
@@ -150,12 +152,12 @@ namespace UI
 	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f) {
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
-		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0));
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		float itemWidth = (ImGui::GetContentRegionAvailWidth() - 0.0f) / 3.0f - buttonSize.x;
+		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 3.0f - buttonSize.x;
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();

@@ -9,7 +9,6 @@ namespace UI
 
 	void Properties::OnPanelRender()
 	{
-		ImGui::ShowDemoWindow();
 		if (!m_SelectionContext.IsValid()) return;
 
 		UI::ComponentMenuIfExists<TagComponent>(m_SelectionContext);
