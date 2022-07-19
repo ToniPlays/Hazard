@@ -64,7 +64,7 @@ namespace UI
 	{
 		if (strcmp(text, "") == 0) return false;
 		if (!ImGui::IsItemHovered()) return false;
-
+		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_WindowRounding, 4.0f);
 		ImGui::BeginTooltip();
 		ImGui::Text(text);
 		ImGui::EndTooltip();
@@ -94,7 +94,7 @@ namespace UI
 		}
 		return false;
 	}
-	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)
+	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)
 	{
 		bool modified = false;
 		ImVec4 hovered = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(color, 0.9f));
@@ -110,6 +110,7 @@ namespace UI
 		ImGui::SameLine();
 		std::stringstream ss;
 		ss << "##" << buttonText << "_";
+		ImGui::SetNextItemWidth(width);
 		if (ImGui::DragFloat(ss.str().c_str(), value)) modified = true;
 
 		return modified;
@@ -127,18 +128,19 @@ namespace UI
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		float itemWidth = (ImGui::GetContentRegionAvailWidth() - 0.0f) / 3.0f - buttonSize.x;
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		if (InputFloatVec("X", &value.x, clearValue, buttonSize, boldFont, style.Colors.AxisX)) {
+		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
 			modified = true;
 		}
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		//Y axis
-		if (InputFloatVec("Y", &value.y, clearValue, buttonSize, boldFont, style.Colors.AxisY)) {
+		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) {
 			modified = true;
 		}
 		ImGui::PopItemWidth();
@@ -146,37 +148,33 @@ namespace UI
 		return modified;
 	}
 	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f) {
-
 		bool modified = false;
-
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
 		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-
-		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
+		float itemWidth = (ImGui::GetContentRegionAvailWidth() - 0.0f) / 3.0f - buttonSize.x;
+
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
 
+		ImGui::SetNextItemWidth(itemWidth);
 		//X axis
-		if (InputFloatVec("X", &value.x, clearValue, buttonSize, boldFont, style.Colors.AxisX)) {
+		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
 			modified = true;
 		}
-		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		//Y axis
-		if (InputFloatVec("Y", &value.y, clearValue, buttonSize, boldFont, style.Colors.AxisY)) {
+		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) {
 			modified = true;
 		}
-		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		//Z axis
-		if (InputFloatVec("Z", &value.z, clearValue, buttonSize, boldFont, style.Colors.AxisZ)) {
+		if (InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ)) {
 			modified = true;
 		}
-		ImGui::PopItemWidth();
 
 		return modified;
 	}
@@ -205,8 +203,10 @@ namespace UI
 	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f)
 	{
 		bool modified = false;
+		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
+		
 		Group(name, [&]() {
 			modified = InputFloat3(value, clearValue);
 			});
@@ -371,9 +371,6 @@ namespace UI
 
 #pragma endregion
 #pragma region Table
-
-
-
 	template<typename T>
 	static void Table(const char* tableName, const char** columns, uint32_t columnCount, ImVec2 size, T callback) {
 
@@ -552,6 +549,7 @@ namespace UI
 
 	template<typename T>
 	static bool ContextMenu(T callback) {
+		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_PopupRounding, 4.0f, ImGuiStyleVar_ItemSpacing, ImVec2(16.0f, 4.0f), ImGuiStyleVar_ChildBorderSize, 0);
 		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
 			callback();
 			ImGui::EndPopup();
@@ -573,6 +571,17 @@ namespace UI
 		if (ImGui::MenuItem(label)) {
 			callback();
 		}
+	}
+
+#pragma endregion
+#pragma region Layout
+
+	static void Separator(ImVec2 size, ImVec4 color)
+	{
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, color);
+		ImGui::BeginChild("sep", size);
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
 	}
 
 #pragma endregion

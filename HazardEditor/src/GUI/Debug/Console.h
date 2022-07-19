@@ -4,11 +4,12 @@
 
 enum MessageFlags : uint32_t {
 	MessageFlags_None = BIT(0),
-	MessageFlags_Info = BIT(1),
-	MessageFlags_Warning = BIT(2),
-	MessageFlags_Error = BIT(3),
-	MessageFlags_Fatal = BIT(4),
-	MessageFlags_Clearable = BIT(5)
+	MessageFlags_Debug = BIT(1),
+	MessageFlags_Info = BIT(2),
+	MessageFlags_Warning = BIT(3),
+	MessageFlags_Error = BIT(4),
+	MessageFlags_Fatal = BIT(5),
+	MessageFlags_Clearable = BIT(6)
 };
 
 namespace UI {
@@ -38,6 +39,7 @@ namespace UI {
 
 	private:
 		void DrawToolbar(const ImVec2& size);
+		ImVec4 GetMessageColor(const uint32_t& flag);
 
 	private:
 		std::vector<ConsoleMessage> m_Messages;

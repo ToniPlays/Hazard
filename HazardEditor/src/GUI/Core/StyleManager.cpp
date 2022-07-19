@@ -1,7 +1,8 @@
 
 #include "StyleManager.h"
 
-namespace UI {
+namespace UI 
+{
 	void StyleManager::LoadStyle(const Style& style) 
 	{
 		s_Current = style;
@@ -10,6 +11,7 @@ namespace UI {
 		//WindowStyle
 		{
 			imStyle.WindowPadding = style.Window.Padding;
+			imStyle.PopupBorderSize = style.Window.PopupBorderSize;
 			imStyle.WindowBorderSize = style.Window.BorderSize;
 			imStyle.DisplaySafeAreaPadding = style.Window.DisplaySafeArea;
 			imStyle.WindowTitleAlign = style.Window.TitleAlign;

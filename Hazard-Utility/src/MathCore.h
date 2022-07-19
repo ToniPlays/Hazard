@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-namespace Math 
+namespace Math
 {
 	template<typename T>
 	inline static T MaxValue() {
@@ -39,11 +39,11 @@ namespace Math
 	template<typename T>
 	inline static T Max(T a, T b)
 	{
-		return a >= b ? a : b;
+		return a <= b ? a : b;
 	}
 	template<typename T>
 	inline static T Min(T a, T b) {
-		return a <= b ? a : b;
+		return a >= b ? a : b;
 	}
 	template<typename T, typename U>
 	inline static T Clamp(T value, U min, U max)

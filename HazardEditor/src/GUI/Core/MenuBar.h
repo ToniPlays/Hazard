@@ -3,6 +3,7 @@
 #include "GUIRenderable.h"
 #include "Utility/StringUtil.h"
 #include "StyleManager.h"
+#include "UILibrary.h"
 #include "ScopedVar.h"
 #include <functional>
 
@@ -45,10 +46,11 @@ namespace UI
 	class MenuBar : public GUIRenderable {
 	public:
 		void Render() override {
+			ScopedStyleVar border(ImGuiStyleVar_WindowBorderSize, 1);
 			ImGui::BeginMainMenuBar();
 			{
 				Style& style = StyleManager::GetCurrent();
-				ScopedStyleStack vars(ImGuiStyleVar_PopupBorderSize, 0, ImGuiStyleVar_WindowPadding, ImVec2(4, 2), ImGuiStyleVar_ChildBorderSize, 0);
+				ScopedStyleStack vars(ImGuiStyleVar_WindowPadding, ImVec2(4, 2), ImGuiStyleVar_ChildBorderSize, 0);
 
 				for (auto& item : m_MenuItems) {
 
@@ -61,7 +63,7 @@ namespace UI
 					}
 				}
 			}
-
+			ImGui::Separator();
 			ImGui::EndMainMenuBar();
 		};
 		void AddMenuItem(const std::string& name, const std::function<void()> onClick = nullptr)

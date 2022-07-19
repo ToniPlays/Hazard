@@ -15,6 +15,7 @@ namespace UI {
 		bool OnEvent(Event& e) override { return false; };
 	private:
 		void DrawModifiers(Entity& e, TagComponent& tag);
+		void DrawContextMenu(Ref<World>& world);
 	private:
 		Hazard::WorldHandler* m_WorldHandler;
 		Entity m_SelectionContext;

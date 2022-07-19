@@ -13,7 +13,9 @@ namespace UI
 	struct WindowStyle
 	{
 		ImVec2 Padding = { 2, 2 };
-		float BorderSize = 0;
+		float BorderSize = 0.0f;
+		float PopupBorderSize = 0.0f;
+
 		ImVec2 TitleAlign = { 0.5f, 0.5f };
 		ImGuiDir MenuButtonPosition = ImGuiDir_None;
 		ImVec2 DisplaySafeArea = { 0, 6 };
@@ -44,7 +46,7 @@ namespace UI
 	struct FrameStyle
 	{
 		ImVec2 Padding = { 0, 8 };
-		float BorderSize = 1;
+		float BorderSize = 0;
 		float Rounding = 2;
 
 		ImVec4 FrameColor = ColorToImVec("#0D0D0B");

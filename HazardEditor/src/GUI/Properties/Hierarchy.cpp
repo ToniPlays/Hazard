@@ -50,12 +50,8 @@ namespace UI
 					Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 				}
 			}
+			DrawContextMenu(world);
 
-			UI::ContextMenu([&]() {
-				UI::MenuItem("Create new", [&]() {
-					world->CreateEntity("New entity");
-					});
-				});
 			});
 		if (ImGui::IsItemClicked()) {
 			m_SelectionContext = {};
@@ -96,5 +92,63 @@ namespace UI
 				ImGui::SameLine();
 			}
 		}
+	}
+	void Hierarchy::DrawContextMenu(Ref<World>& world)
+	{
+		const Style& style = StyleManager::GetCurrent();
+		UI::ContextMenu([&]() {
+			UI::MenuItem("Create empty", [&]() {
+				world->CreateEntity("New entity");
+				});
+
+			Separator({ImGui::GetContentRegionAvailWidth(), 2.0f}, style.Window.HeaderActive);
+
+			UI::Submenu("3D", [&]() {
+				UI::MenuItem("Cube", [&]() {
+					auto& entity = world->CreateEntity("New Cube");
+					entity.AddComponent<MeshComponent>();
+					});
+				UI::MenuItem("Plane", [&]() {
+					auto& entity = world->CreateEntity("New Plane");
+					entity.AddComponent<MeshComponent>();
+					});
+				UI::MenuItem("Mesh", [&]() {
+					auto& entity = world->CreateEntity("New ;esh");
+					entity.AddComponent<MeshComponent>();
+					});
+				});
+			UI::Submenu("2D", [&]() {
+				UI::MenuItem("Sprite", [&]() {
+					auto& entity = world->CreateEntity("New Sprite");
+					entity.AddComponent<SpriteRendererComponent>();
+					});
+				});
+			UI::Submenu("Lighting", [&]() {
+				UI::MenuItem("Sky light", [&]() {
+					auto& entity = world->CreateEntity("Sky light");
+					entity.AddComponent<SkyLightComponent>();
+					});
+				UI::MenuItem("Directional light", [&]() {
+					auto& entity = world->CreateEntity("New Directional light");
+					entity.AddComponent<DirectionalLightComponent>();
+					});
+				UI::MenuItem("Point light", [&]() {
+					auto& entity = world->CreateEntity("New Point light");
+					entity.AddComponent<PointLightComponent>();
+					});
+				});
+			UI::Submenu("Audio", [&]() {
+				UI::MenuItem("Speaker", [&]() {
+					auto& entity = world->CreateEntity("New Speaker");
+					});
+				UI::MenuItem("Audio listener", [&]() {
+					auto& entity = world->CreateEntity("New Audio listener");
+					});
+				});
+
+			UI::Submenu("UI", [&]() {
+
+				});
+			});
 	}
 }

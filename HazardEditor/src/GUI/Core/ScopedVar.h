@@ -58,7 +58,9 @@ namespace UI
             PushColour(firstColourID, firstColour, std::forward<OtherColours>(otherColourPairs)...);
         }
 
-        ~ScopedColourStack() { ImGui::PopStyleColor(m_Count); }
+        ~ScopedColourStack() { 
+            ImGui::PopStyleColor(m_Count); 
+        }
 
     private:
         int m_Count;
@@ -94,7 +96,9 @@ namespace UI
             PushStyle(firstStyleVar, firstValue, std::forward<OtherStylePairs>(otherStylePairs)...);
         }
 
-        ~ScopedStyleStack() { ImGui::PopStyleVar(m_Count); }
+        ~ScopedStyleStack() { 
+            ImGui::PopStyleVar(m_Count); 
+        }
 
     private:
         int m_Count;

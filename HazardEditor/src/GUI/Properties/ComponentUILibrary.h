@@ -6,10 +6,16 @@
 
 namespace UI
 {
+	constexpr float colWidth = 100.0f;
+
 	template<typename T>
 	static bool ComponentMenuIfExists(Entity& e) {
-		if (e.HasComponent<T>())
-			return ComponentMenu<T>(e, e.GetComponent<T>());
+		if (e.HasComponent<T>()) {
+			bool ret = ComponentMenu<T>(e, e.GetComponent<T>());
+			//const Style& style = StyleManager::GetCurrent();
+			//Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Frame.FrameColor);
+			return ret;
+		}
 		return false;
 	}
 	template<typename T>
@@ -35,28 +41,34 @@ namespace UI
 					glm::degrees(c.Rotation.z)
 				};
 
-
 				ImGui::Columns(2, 0, false);
-				ImGui::SetColumnWidth(0, 125.0f);
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ImGui::SetColumnWidth(0, colWidth);
 				UI::InputFloat3("Translation", c.Translation);
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ShiftY(3.0f);
+				ImGui::Separator();
+				ShiftY(2.0f);
 				if (UI::InputFloat3("Rotation", rot)) {
 					c.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
 				}
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ShiftY(3.0f);
+				ImGui::Separator();
+				ShiftY(2.0f);
 				UI::InputFloat3("Scale", c.Scale, 1.0f);
 				ImGui::Columns();
 
-			}, [&]() {
-				MenuItem("Reset", [&]() {
-					c.Translation = { 0, 0, 0 };
-					c.Rotation = { 0, 0, 0 };
-					c.Scale = { 1, 1, 1 };
-					});
-			});
+				ShiftY(3.0f);
+				ImGui::Separator();
+				ShiftY(2.0f);
 
-		return false;
+					}, [&]() {
+						MenuItem("Reset", [&]() {
+							c.Translation = { 0, 0, 0 };
+							c.Rotation = { 0, 0, 0 };
+							c.Scale = { 1, 1, 1 };
+							});
+					});
+
+				return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SpriteRendererComponent& c) {
@@ -65,7 +77,7 @@ namespace UI
 		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
-				ImGui::SetColumnWidth(0, 125.0f);
+				ImGui::SetColumnWidth(0, colWidth);
 
 				//Texture slot here
 
@@ -92,7 +104,7 @@ namespace UI
 			{
 				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 				ImGui::Columns(2);
-				ImGui::SetColumnWidth(0, 125.0f);
+				ImGui::SetColumnWidth(0, colWidth);
 
 				const char* projectionTypes[] = { "Perspective", "Orthographic" };
 				uint32_t selected = (uint32_t)c.GetProjectionType();
@@ -117,7 +129,7 @@ namespace UI
 					});
 			});
 
-		
+
 		return false;
 	}
 	template<>
@@ -152,12 +164,13 @@ namespace UI
 					Script& script = c.m_Handle->GetScript();
 
 					ImGui::Columns(2, 0, false);
-					ImGui::SetColumnWidth(0, 125.0f);
+					ImGui::SetColumnWidth(0, colWidth);
 
 					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
 						auto& f = field;
+
 						Group(name.c_str(), [&]() {
 							UI::ScriptField(label, f, *c.m_Handle);
 							});
@@ -225,7 +238,7 @@ namespace UI
 		bool optionsOpen = UI::Treenode("Batch renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
-				ImGui::SetColumnWidth(0, 125.0f);
+				ImGui::SetColumnWidth(0, colWidth);
 
 				//Texture slot here
 

@@ -14,7 +14,7 @@ namespace SimpleCanvas {
 	//OpenGL: Running
 	static void OnDebugInfo(RenderMessage message)
 	{
-		std::cout << message.Message << std::endl;
+		std::cout << message.Description << std::endl;
 	}
 
 	static void CreateCanvas(Ref<Canvas> canvas)
