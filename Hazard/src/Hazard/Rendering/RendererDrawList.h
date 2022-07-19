@@ -6,7 +6,16 @@
 
 namespace Hazard 
 {
-	
+	struct EnvironmentData 
+	{
+		float LightIntensity;
+	};
+	struct LightSource 
+	{
+		glm::mat4 Transform;
+		glm::vec3 Color;
+		float Intensity;
+	};
 
 	struct RenderingCamera 
 	{
@@ -20,6 +29,8 @@ namespace Hazard
 	struct RendererDrawList
 	{
 		std::vector<RenderingCamera> RenderingCameras;
+		std::vector<EnvironmentData> Environment;
+		std::vector<LightSource> LightSource;
 		
 	};
 }

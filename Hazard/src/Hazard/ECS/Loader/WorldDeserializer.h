@@ -62,21 +62,21 @@ namespace Hazard
 		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
+			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<DirectionalLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
+			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<PointLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.Tint, Color::White);
+			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}

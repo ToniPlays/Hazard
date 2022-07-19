@@ -63,25 +63,23 @@ namespace UI
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{
 		bool scriptState = false;
+		bool isSkyLight = e.HasComponent<SkyLightComponent>();
 		if (e.HasComponent<ScriptComponent>()) {
 			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
-		
-
-
-		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_FILE_CODE_O };
-		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Script is missing" };
-		const bool states[] = { true, scriptState };
-
 		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;
 		const ImVec4 textColor = StyleManager::GetCurrent().Window.Text;
 		const ImVec4 warning = StyleManager::GetCurrent().Colors.Warning;
+		
 
-		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, warning };
+		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O };
+		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing" };
+		const bool states[] = { true, isSkyLight, scriptState };
+		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, textColor , warning};
 
-		for (uint32_t i = 0; i < 2; i++) {
+		for (uint32_t i = 0; i < sizeof(states); i++) {
 			if (states[i]) {
 				{
 					ScopedStyleColor col(ImGuiCol_Text, colors[i]);

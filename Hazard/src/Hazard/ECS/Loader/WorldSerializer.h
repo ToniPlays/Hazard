@@ -73,7 +73,7 @@ namespace Hazard
         void SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "SkyLightComponent", [&]() {
-                YamlUtils::Serialize(out, "Tint", component.Tint);
+                YamlUtils::Serialize(out, "Tint", component.LightColor);
                 YamlUtils::Serialize(out, "Intensity", component.Intensity);
                 });
         }
@@ -81,7 +81,7 @@ namespace Hazard
         void SerializeComponentEditor(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "DirectionalLightComponent", [&]() {
-                YamlUtils::Serialize(out, "Tint", component.Tint);
+                YamlUtils::Serialize(out, "Tint", component.LightColor);
                 YamlUtils::Serialize(out, "Intensity", component.Intensity);
                 });
         }
@@ -89,7 +89,7 @@ namespace Hazard
         void SerializeComponentEditor(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
         {
             YamlUtils::Map(out, "PointLightComponent", [&]() {
-                YamlUtils::Serialize(out, "Tint", component.Tint);
+                YamlUtils::Serialize(out, "Tint", component.LightColor);
                 YamlUtils::Serialize(out, "Intensity", component.Intensity);
                 YamlUtils::Serialize(out, "Radius", component.Radius);
                 });

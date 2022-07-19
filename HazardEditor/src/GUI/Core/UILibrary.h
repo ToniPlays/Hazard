@@ -24,6 +24,12 @@ namespace UI
 		ImGui::SetCursorPos({ ImGui::GetCursorPosX() + x, ImGui::GetCursorPosY() + y });
 	}
 	template<typename T>
+	inline static void Group(void* ptr_id, T callback) {
+		ImGui::PushID(ptr_id);
+		callback();
+		ImGui::PopID();
+	}
+	template<typename T>
 	inline static void Group(const char* id, T callback) {
 		ImGui::PushID(id);
 		callback();
@@ -186,6 +192,7 @@ namespace UI
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 			modified = InputFloat(value, clearValue);
 			});
 		ImGui::NextColumn();
@@ -241,6 +248,7 @@ namespace UI
 		return modified;
 	}
 	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected) {
+		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -260,6 +268,7 @@ namespace UI
 	}
 	static bool ColorPicker(const char* name, const char* id, Color& color)
 	{
+		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());

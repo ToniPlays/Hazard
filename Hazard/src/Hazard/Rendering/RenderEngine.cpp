@@ -76,5 +76,7 @@ namespace Hazard
 	void RenderEngine::PostRender()
 	{
 		m_DrawList.RenderingCameras.clear();
+		m_DrawList.Environment.clear();
+		m_DrawList.LightSource.clear();
 	}
 }

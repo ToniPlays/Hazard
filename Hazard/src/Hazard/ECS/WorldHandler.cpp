@@ -33,14 +33,35 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FUNCTION();
 		{
+			//Submit sky lights for drawing
+			auto& view = m_World->GetEntitiesWith<SkyLightComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				HRenderer::SubmitSkyLight(e.GetComponent<SkyLightComponent>());
+			}
+		}
+		{
+			//Submit directional lights for drawing
+			auto& view = m_World->GetEntitiesWith<DirectionalLightComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), e.GetComponent<DirectionalLightComponent>());
+			}
+		}
+		{
+			//Submit point lights for drawing
+			auto& view = m_World->GetEntitiesWith<PointLightComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), e.GetComponent<PointLightComponent>());
+			}
+		}
+		{
 			//Submit everything for drawing
 			auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				auto& tc = e.GetComponent<TransformComponent>();
-				auto& sc = e.GetComponent<SpriteRendererComponent>();
-
-				HRenderer::SubmitSprite(tc, sc);
+				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), e.GetComponent<SpriteRendererComponent>());
 			}
 		}
 		{

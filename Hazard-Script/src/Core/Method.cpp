@@ -14,10 +14,8 @@ namespace HazardScript
 		MonoObject* exception = nullptr;
 		MonoObject* result = mono_runtime_invoke(m_Method, obj, params, &exception);
 
-		if (exception) {
-
+		if (exception) 
 			HazardScriptEngine::CheckError(exception, result, m_Method);
-		}
 
 		return result;
 	}

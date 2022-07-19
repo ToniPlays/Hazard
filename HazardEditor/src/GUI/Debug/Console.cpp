@@ -42,11 +42,11 @@ namespace UI
 					ImGui::SameLine();
 					ImGui::Text(GetMessageType(message));
 					ImGui::TableNextColumn();
-					Shift(4.0f, 4.0f);
+					ShiftX(4.0f);
 					ImGui::Text("Time");
 
 					ImGui::TableNextColumn();
-					Shift(4.0f, 4.0f);
+					ShiftX(4.0f);
 					ImGui::Text(message.Message.c_str());
 
 					if (clicked) {

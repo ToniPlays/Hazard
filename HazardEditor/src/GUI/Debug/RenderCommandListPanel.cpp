@@ -34,5 +34,25 @@ namespace UI
 					});
 			}
 			});
+		UI::Treenode("Lights", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]() {
+			for (auto& light : drawList.LightSource) {
+				Group(&light, [light]() {
+					UI::Treenode("Light", ImGuiTreeNodeFlags_Framed, [light]() {
+						ImGui::Columns(2, 0, false);
+						ImGui::SetColumnWidth(0, 125.0f);
+						ImGui::Text("Intensity");
+						ImGui::NextColumn();
+						ImGui::Text("%.3f", light.Intensity);
+						ImGui::NextColumn();
+						ImGui::Text("Color");
+						ImGui::NextColumn();
+						ImGui::Text("%.3f, %.3f, %.3f", light.Color.r, light.Color.g, light.Color.b);
+						ImGui::NextColumn();
+
+						ImGui::Columns();
+						});
+					});
+			}
+			});
 	}
 }

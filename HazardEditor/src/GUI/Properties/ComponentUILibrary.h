@@ -146,8 +146,6 @@ namespace UI
 				bool exists = scriptEngine.HasModule(c.ModuleName);
 				bool changed = UI::TextField(c.ModuleName, "Script class");
 
-				ShiftY(4.0f);
-
 				if (changed) {
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle) {
 						delete c.m_Handle;
@@ -173,6 +171,9 @@ namespace UI
 
 						Group(name.c_str(), [&]() {
 							UI::ScriptField(label, f, *c.m_Handle);
+							ShiftY(3.0f);
+							ImGui::Separator();
+							ShiftY(2.0f);
 							});
 					}
 					ImGui::Columns();
@@ -194,6 +195,15 @@ namespace UI
 	static bool ComponentMenu(Entity& e, DirectionalLightComponent& c) {
 		bool optionsOpen = UI::Treenode("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, colWidth);
+
+				if (UI::ColorPicker("Color", "##Color", c.LightColor)) {
+
+				}
+				InputFloat("Intensity", c.Intensity, 1.0f);
+
+				ImGui::Columns();
 			});
 		return false;
 	}
@@ -201,6 +211,16 @@ namespace UI
 	static bool ComponentMenu(Entity& e, PointLightComponent& c) {
 		bool optionsOpen = UI::Treenode("" ICON_FK_LIGHTBULB_O " Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, colWidth);
+
+				//Texture slot here
+				if (UI::ColorPicker("Color", "##Color", c.LightColor)) {
+
+				}
+
+				InputFloat("Intensity", c.Intensity, 1.0f);
+				ImGui::Columns();
 			});
 		return false;
 	}

@@ -31,7 +31,7 @@ namespace UI
 	template<>
 	static bool ScriptField<glm::vec2>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		glm::vec2 value = obj.GetFieldValue<glm::vec2>(field.GetName());
-	
+
 		bool modified = InputFloat2(value, 0.0f);
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
@@ -70,7 +70,6 @@ namespace UI
 	static void ScriptField(const std::string& name, HazardScript::ScriptField& field, HazardScript::ScriptObject& obj)
 	{
 		using namespace HazardScript;
-
 		if (!WillBeVisible(field)) return;
 
 
@@ -84,9 +83,7 @@ namespace UI
 		ImGui::NextColumn();
 
 		switch (field.GetType()) {
-		case FieldType::Float:
-			ScriptField<float>(field, obj);
-			break;
+		case FieldType::Float:  ScriptField<float>(field, obj);     break;
 		case FieldType::Float2: ScriptField<glm::vec2>(field, obj);	break;
 		case FieldType::Float3: ScriptField<glm::vec3>(field, obj);	break;
 		case FieldType::Float4: ScriptField<glm::vec4>(field, obj);	break;

@@ -49,4 +49,16 @@ namespace Hazard
 		pipeline->Bind(cmdBuffer);
 		pipeline->Draw(cmdBuffer, count);
 	}
+	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
+	{
+		s_Engine->GetDrawList().Environment.push_back({ 1.0f });
+	}
+	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
+	{
+		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), directionalLight.LightColor, directionalLight.Intensity });
+	}
+	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
+	{
+		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
+	}
 }

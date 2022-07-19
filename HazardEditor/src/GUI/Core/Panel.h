@@ -5,7 +5,8 @@
 #include "ScopedVar.h"
 #include <imgui.h>
 
-namespace UI {
+namespace UI 
+{
 	class Panel : public GUIRenderable {
 	public:
 
@@ -21,7 +22,8 @@ namespace UI {
 		// This renders the panel
 		//</summary>
 
-		void Render() override {
+		void Render() override 
+		{
 			if (!m_Open) return;
 			{
 				const Style& style = StyleManager::GetCurrent();

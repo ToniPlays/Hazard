@@ -27,6 +27,10 @@ public:
 	{
 		return { r, g, b, a };
 	}
+	operator glm::vec3()
+	{
+		return { r, g, b};
+	}
 	Color operator = (const std::string& value) {
 		return FromHex(value);
 	}

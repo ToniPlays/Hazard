@@ -33,10 +33,13 @@ namespace HazardScript
 		}
 		return false;
 	}
-	void Script::TryInvoke(const std::string& name, MonoObject* obj, void** params)
+	bool Script::TryInvoke(const std::string& name, MonoObject* obj, void** params)
 	{
-		if (m_Methods.find(name) != m_Methods.end())
-			Invoke(name, obj, params);
+		if (m_Methods.find(name) != m_Methods.end()) 
+			return false;
+
+		Invoke(name, obj, params);
+		return true;
 	}
 	void Script::Invoke(const std::string& name, MonoObject* obj, void** params)
 	{
