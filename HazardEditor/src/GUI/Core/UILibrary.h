@@ -109,6 +109,8 @@ namespace UI
 		ImVec4 active = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(color, 0.8f));
 		ScopedColourStack colors(ImGuiCol_Button, color, ImGuiCol_ButtonHovered, hovered, ImGuiCol_ButtonActive, active);
 
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
 		ImGui::PushFont(buttonFont);
 		if (ImGui::Button(buttonText, buttonSize)) {
 			modified = true;
@@ -124,19 +126,17 @@ namespace UI
 		return modified;
 	}
 	static bool InputFloat(float& value, float clearValue = 0.0f) {
-
 		return ImGui::DragFloat("##float", &value);
 	}
 	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
 		bool modified = false;
-
-		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
-		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0));
-		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
 		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 2.0f - buttonSize.x;
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0.0f));
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
@@ -145,30 +145,26 @@ namespace UI
 		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
 			modified = true;
 		}
-		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		//Y axis
 		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) {
 			modified = true;
 		}
-		ImGui::PopItemWidth();
-
 		return modified;
 	}
 	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f) {
 		bool modified = false;
-		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0);
-		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0));
+		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-
 		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 3.0f - buttonSize.x;
+
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0.0f));
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
 
-		ImGui::SetNextItemWidth(itemWidth);
 		//X axis
 		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
 			modified = true;
@@ -215,7 +211,7 @@ namespace UI
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
-		
+
 		Group(name, [&]() {
 			modified = InputFloat3(value, clearValue);
 			});

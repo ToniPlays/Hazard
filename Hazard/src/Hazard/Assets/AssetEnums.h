@@ -2,7 +2,6 @@
 
 #include <string>
 
-
 enum class AssetType
 {
 	Undefined = 0,
@@ -24,7 +23,7 @@ enum class ResourceType {
 	Mesh
 };
 
-namespace Utils
+namespace Hazard::Utils
 {
 	AssetType StringToAssetType(const std::string& type);
 	const char* AssetTypeToString(AssetType type);

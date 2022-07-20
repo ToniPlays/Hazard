@@ -3,7 +3,6 @@
 #ifdef HZR_PLATFORM_WINDOWS
 
 #include "Backend/Core/Events.h"
-#include "Renderer/RenderCommand.h"
 #include "Backend/Core/Events.h"
 #include "Backend/Input.h"
 

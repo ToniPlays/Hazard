@@ -65,6 +65,14 @@ namespace Hazard {
 			}
 		}
 		{
+			//Submit Meshes for drawing
+			auto& view = m_World->GetEntitiesWith<MeshComponent>();
+			for (auto& entity : view) {
+				Entity e = { entity, m_World.Raw() };
+				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), e.GetComponent<MeshComponent>());
+			}
+		}
+		{
 			auto& view = m_World->GetEntitiesWith<BatchComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };

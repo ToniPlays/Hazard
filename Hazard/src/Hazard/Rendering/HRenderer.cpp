@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "HRenderer.h"
 #include "WorldRenderer.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
 {
@@ -9,6 +10,7 @@ namespace Hazard
 
 	void HRenderer::SubmitWorldRenderer(WorldRenderer* renderer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& spec = renderer->GetSpec();
 
 		RenderingCamera camera = {};
@@ -33,21 +35,19 @@ namespace Hazard
 	{
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color);
 	}
+	void HRenderer::SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent)
+	{
+		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
+		if (!mesh) return;
+		SubmitMesh(mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+	}
 	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
 	{
-		auto& cmdBuffer = s_Engine->GetWindow().GetSwapchain()->GetSwapchainBuffer();
-		vertexBuffer->Bind(cmdBuffer);
-		indexBuffer->Bind(cmdBuffer);
-		pipeline->Bind(cmdBuffer);
-		pipeline->Draw(cmdBuffer, indexBuffer->GetCount());
+		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({vertexBuffer, indexBuffer, indexBuffer->GetCount()});
 	}
 	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
 	{
-		auto& cmdBuffer = s_Engine->GetWindow().GetSwapchain()->GetSwapchainBuffer();
-		vertexBuffer->Bind(cmdBuffer);
-		indexBuffer->Bind(cmdBuffer);
-		pipeline->Bind(cmdBuffer);
-		pipeline->Draw(cmdBuffer, count);
+		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ vertexBuffer, indexBuffer, count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{

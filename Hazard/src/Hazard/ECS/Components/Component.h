@@ -2,7 +2,10 @@
 
 #include "Color.h"
 #include "MathCore.h"
+#include "Hazard/Assets/Asset.h"
 #include "UID.h"
+#include "Ref.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 namespace HazardScript {
 	class ScriptObject;
@@ -47,6 +50,6 @@ namespace Hazard {
 	};
 	struct MeshComponent 
 	{
-		float ye;
+		Ref<Mesh> m_MeshHandle;
 	};
 }

@@ -2,6 +2,8 @@
 #include "RenderEngine.h"
 #include "HazardRenderer.h"
 #include "HRenderer.h"
+#include "Mesh/MeshAssetLoader.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
 {
@@ -21,6 +23,8 @@ namespace Hazard
 		cameraUBO.Usage = BufferUsage::DynamicDraw;
 
 		m_CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
+
+		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 	}
 	void RenderEngine::CullingPass()
 	{
@@ -30,6 +34,17 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
+		auto& cmdBuffer = m_Window->GetSwapchain()->GetSwapchainBuffer();
+		for (auto& [pipeline, meshList] : m_DrawList.Meshes) {
+			pipeline->Bind(cmdBuffer);
+
+			for (auto& rawMesh : meshList)
+			{
+				rawMesh.VertexBuffer->Bind(cmdBuffer);
+				rawMesh.IndexBuffer->Bind(cmdBuffer);
+				pipeline->Draw(cmdBuffer, rawMesh.Count);
+			}
+		}
 	}
 	void RenderEngine::ShadowPass()
 	{
@@ -47,10 +62,9 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
+		m_QuadRenderer.EndScene();
 		CullingPass();
-		GeometryPass();
 		ShadowPass();
-		CompositePass();
 
 		GraphicsContext* context = m_Window->GetContext();
 		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
@@ -67,9 +81,11 @@ namespace Hazard
 			uint32_t size = sizeof(CameraData);
 
 			m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
-
 			context->BeginRenderPass(cmdBuffer, camera.RenderPass);
-			m_QuadRenderer.EndScene();
+
+			GeometryPass();
+			CompositePass();
+
 			context->EndRenderPass(cmdBuffer);
 		}
 	}
@@ -78,5 +94,6 @@ namespace Hazard
 		m_DrawList.RenderingCameras.clear();
 		m_DrawList.Environment.clear();
 		m_DrawList.LightSource.clear();
+		m_DrawList.Meshes.clear();
 	}
 }

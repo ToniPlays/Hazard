@@ -29,7 +29,7 @@ namespace InstancingTest {
 		appInfo.AppName = "Hello Instancing";
 		appInfo.BuildVersion = "0.1.0a";
 		appInfo.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 		appInfo.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
@@ -43,7 +43,7 @@ namespace InstancingTest {
 		rendererApp.BuildVersion = "1.0.0";
 		rendererApp.EventCallback = appInfo.EventCallback;
 		rendererApp.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 
 		HazardWindowCreateInfo windowInfo = {};

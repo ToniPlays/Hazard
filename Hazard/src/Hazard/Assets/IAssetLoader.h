@@ -1,8 +1,7 @@
 #pragma once
-#if 0
 #include "Asset.h"
 
-namespace Hazard 
+namespace Hazard
 {
 	/// <summary>
 	/// Interface for registering asset loaders for a given asset type
@@ -17,4 +16,3 @@ namespace Hazard
 		virtual bool Save(Ref<Asset>& asset) = 0;
 	};
 }
-#endif

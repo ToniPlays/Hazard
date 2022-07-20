@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imgui.h>
+#include "Hazard.h"
 #include "GUI/Core/UILibrary.h"
 #include "ScriptFieldUI.h"
 
@@ -24,7 +25,7 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, TagComponent& c) {
-		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		UI::TextField(c.Tag);
 		return true;
@@ -33,7 +34,7 @@ namespace UI
 	static bool ComponentMenu(Entity& e, TransformComponent& c) {
 		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
-				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
+				ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
 
 				glm::vec3 rot = {
 					glm::degrees(c.Rotation.x),
@@ -114,7 +115,6 @@ namespace UI
 					c.SetProjection((Projection)selected);
 				}
 
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				glm::vec2 clipping = c.GetClipping();
 				if (UI::InputFloat2("Clipping", clipping, 1.0f)) {
 					c.SetClipping(clipping);
@@ -228,6 +228,19 @@ namespace UI
 	static bool ComponentMenu(Entity& e, MeshComponent& c) {
 		bool optionsOpen = UI::Treenode(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, colWidth);
+				ImGui::Text("Mesh");
+				ImGui::NextColumn();
+
+				if (ImGui::Button("Import Mesh")) {
+					std::string path = File::OpenFileDialog("");
+					AssetHandle handle = Hazard::AssetManager::ImportAsset(path);
+					c.m_MeshHandle = Hazard::AssetManager::GetAsset<Hazard::Mesh>(handle);
+					HZR_WARN("Loading mesh file {0}", path);
+				}
+
+				ImGui::Columns();
 			});
 		return false;
 	}

@@ -4,20 +4,26 @@
 #include "WorldRenderer.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
 
-namespace Hazard 
+namespace Hazard
 {
-	struct EnvironmentData 
+	struct RawMesh {
+		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
+		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
+		uint32_t Count;
+	};
+
+	struct EnvironmentData
 	{
 		float LightIntensity;
 	};
-	struct LightSource 
+	struct LightSource
 	{
 		glm::mat4 Transform;
 		glm::vec3 Color;
 		float Intensity;
 	};
 
-	struct RenderingCamera 
+	struct RenderingCamera
 	{
 		std::string DebugName;
 		glm::mat4 ViewProjection = glm::mat4(1.0f);
@@ -31,6 +37,7 @@ namespace Hazard
 		std::vector<RenderingCamera> RenderingCameras;
 		std::vector<EnvironmentData> Environment;
 		std::vector<LightSource> LightSource;
-		
+		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> Meshes;
+
 	};
 }

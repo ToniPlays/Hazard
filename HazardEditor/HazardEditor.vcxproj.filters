@@ -43,6 +43,9 @@
     <Filter Include="src\Platform\Vulkan">
       <UniqueIdentifier>{81084748-ED69-2456-76D7-6A08E2375B15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Project">
+      <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -111,6 +114,9 @@
     <ClInclude Include="src\GUI\Core\UILibrary.h">
       <Filter>src\GUI\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Debug\Console.h">
+      <Filter>src\GUI\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Debug\RenderCommandListPanel.h">
       <Filter>src\GUI\Debug</Filter>
     </ClInclude>
@@ -156,6 +162,12 @@
     <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
       <Filter>src\Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Project\HazardProject.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\ProjectManager.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\ImGui_Backend\FontAwesome.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
@@ -174,9 +186,6 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Debug\Console.h" />
-    <ClInclude Include="src\Project\ProjectManager.h" />
-    <ClInclude Include="src\Project\HazardProject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -206,11 +215,17 @@
     <ClCompile Include="src\GUI\Core\StyleManager.cpp">
       <Filter>src\GUI\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Debug\Console.cpp">
+      <Filter>src\GUI\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Debug\RenderCommandListPanel.cpp">
       <Filter>src\GUI\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\RendererDebugPanel.cpp">
       <Filter>src\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\MainMenuBar.cpp">
+      <Filter>src\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
@@ -233,6 +248,12 @@
     <ClCompile Include="src\Platform\Vulkan\EditorPlatformVulkan.cpp">
       <Filter>src\Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Project\HazardProject.cpp">
+      <Filter>src\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectManager.cpp">
+      <Filter>src\Project</Filter>
+    </ClCompile>
     <ClCompile Include="vendor\ImGui_Backend\ImGuizmo.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
@@ -245,9 +266,5 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Debug\Console.cpp" />
-    <ClCompile Include="src\GUI\MainMenuBar.cpp" />
-    <ClCompile Include="src\Project\ProjectManager.cpp" />
-    <ClCompile Include="src\Project\HazardProject.cpp" />
   </ItemGroup>
 </Project>

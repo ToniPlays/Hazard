@@ -8,7 +8,6 @@
 #include "Hazard/Core/CommandLineArgs.h"
 #include "Hazard/Module.h"
 
-
 #include "Hazard/Assets/AssetManager.h"
 
 //Hazard ECS includes
@@ -18,6 +17,10 @@
 #include "Hazard/ECS/World.h"
 #include "Hazard/ECS/Entity.h"
 #include "Hazard/ECS/Component.h"
+
+
+#include "Hazard/Rendering/Mesh/Mesh.h"
+
 
 //Hazard Physics
 #include "Hazard/Physics/PhysicsCommand.h"

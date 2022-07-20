@@ -35,6 +35,9 @@ namespace Hazard
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
 		RendererDrawList& GetDrawList() { return m_DrawList; }
+
+
+
 	private:
 		HazardRenderer::Window* m_Window;
 		RendererDrawList m_DrawList;

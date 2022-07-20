@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Asset.h"
 #include "Buffers.h"
 #include "RenderPass.h"
 #include "Shader.h"
@@ -25,7 +24,7 @@ namespace HazardRenderer
 		RenderPass* pTargetRenderPass = nullptr;
 	};
 
-	class Pipeline : public Asset {
+	class Pipeline : public RefCount {
 	public:
 		virtual ~Pipeline() = default;
 

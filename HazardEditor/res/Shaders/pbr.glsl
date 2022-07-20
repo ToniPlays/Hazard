@@ -1,10 +1,10 @@
 #type Vertex
 #version 450
 
-layout(location = 0) in vec3 v_Position;
-layout(location = 1) in vec4 v_Color;
-layout(location = 2) in vec3 v_Normal;
-layout(location = 3) in vec2 v_TextureCoords;
+layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec4 a_Color;
+layout(location = 2) in vec3 a_Normal;
+layout(location = 3) in vec2 a_TextureCoords;
 
 layout(std140, binding = 0) uniform Camera {
 	uniform mat4 u_ViewProjection;
@@ -23,10 +23,10 @@ layout(std140, binding = 1) uniform Model {
 
 void main() 
 {
-	f_Color = v_Color;
-	f_Normal = (u_Model.u_Transform * vec4(v_Normal, 1.0)).xyz;
+	f_Color = a_Color;
+	f_Normal = (u_Model.u_Transform * vec4(a_Normal, 1.0)).xyz;
 
-	vec4 worldPosition = u_Model.u_Transform * vec4(v_Position, 1.0);
+	vec4 worldPosition = vec4(a_Position, 1.0);
 	FragPos = worldPosition.xyz;
 
 	gl_Position = u_Camera.u_ViewProjection * worldPosition;

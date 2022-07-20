@@ -1,10 +1,10 @@
 #pragma once
-#if 0
-#include "Hazard/Assets/Asset.h"
+
+#include "Asset.h"
 
 #define APPLICATION_PERSISTENT_PATH "C:/dev/Hazard/HazardEditor"
 
-namespace std 
+namespace std
 {
 	template <>
 	struct hash<std::filesystem::path>
@@ -16,9 +16,9 @@ namespace std
 	};
 }
 
-namespace Hazard 
+namespace Hazard
 {
-	class AssetRegistry 
+	class AssetRegistry
 	{
 	public:
 		AssetRegistry() = default;
@@ -43,4 +43,3 @@ namespace Hazard
 		std::unordered_map<std::filesystem::path, AssetMetadata> m_Registry;
 	};
 }
-#endif

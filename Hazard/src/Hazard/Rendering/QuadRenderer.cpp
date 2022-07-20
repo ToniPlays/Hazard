@@ -48,6 +48,9 @@ namespace Hazard
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID)
 	{
 		HZR_PROFILE_FUNCTION();
+
+		if (!IsVisible(transform)) return;
+
 		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices) {
 			Flush();
 			BeginScene();
@@ -63,6 +66,11 @@ namespace Hazard
 			m_QuadBatch.Push(vertex);
 		}
 		m_QuadBatch.AddIndices(6);
+	}
+
+	bool QuadRenderer::IsVisible(const glm::mat4& transform)
+	{
+		return true;
 	}
 
 	void QuadRenderer::CreateResources()

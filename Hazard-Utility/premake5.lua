@@ -20,7 +20,8 @@ project "Hazard-Utility"
 		"src",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Optick}"
+		"%{IncludeDir.Optick}",
+		"%{IncludeDir.PortableFileDialogs}"
 	}
 
 	links {

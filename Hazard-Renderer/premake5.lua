@@ -32,6 +32,7 @@ project "Hazard-Renderer"
 		"%{IncludeDir.VMA}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.Optick}",
+		"%{IncludeDir.PortableFileDialogs}",
 		"src",
 		"examples"
 	}

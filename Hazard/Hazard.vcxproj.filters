@@ -171,8 +171,23 @@
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\QuadRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RendererDrawList.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h">
+      <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -1425,11 +1440,12 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\HRenderer.h" />
-    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h" />
-    <ClInclude Include="src\Hazard\Rendering\RendererDrawList.h" />
-    <ClInclude Include="src\Hazard\Rendering\QuadRenderer.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h" />
+    <ClInclude Include="src\Hazard\Assets\Asset.h" />
+    <ClInclude Include="src\Hazard\Assets\AssetEnums.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshCreateInfo.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
@@ -1492,7 +1508,16 @@
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\QuadRenderer.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
@@ -1501,8 +1526,10 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\QuadRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
+    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp" />
   </ItemGroup>
 </Project>

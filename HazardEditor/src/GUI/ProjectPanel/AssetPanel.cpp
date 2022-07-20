@@ -46,7 +46,7 @@ namespace UI
 		DrawCurrentFolderPath();
 
 
-		ImGui::SameLine(size.x - 100, 0);
+		ImGui::SameLine(size.x - 80, 0);
 		if (ImGui::Button(ICON_FK_COG " Settings", { 75.0, 28.0f })) {
 
 		}

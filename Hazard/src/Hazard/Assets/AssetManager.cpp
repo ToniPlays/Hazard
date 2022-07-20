@@ -1,11 +1,9 @@
 #include <hzrpch.h>
-#if 0
 #include "AssetManager.h"
 
 namespace Hazard
 {
 	std::unordered_map<AssetHandle, Ref<Asset>> AssetManager::s_LoadedAssets;
-	std::unordered_map<AssetHandle, Ref<RuntimeResource>> AssetManager::s_RuntimeResources;
 
 	void AssetManager::Init()
 	{
@@ -14,17 +12,6 @@ namespace Hazard
 	void AssetManager::Shutdown()
 	{
 		s_LoadedAssets.clear();
-		for (auto& [handle, resource] : s_RuntimeResources) {
-			resource->IncRefCount();
-		}
-		s_RuntimeResources.clear();
-	}
-	void AssetManager::RemoveUnreferencedResources()
-	{
-		for (auto& [handle, resource] : s_RuntimeResources) {
-			if(!resource)
-				s_RuntimeResources.erase(handle);
-		}
 	}
 	/// <summary>
 	/// Import asset, asset is not loaded until it is reguested
@@ -100,4 +87,3 @@ namespace Hazard
 		return std::filesystem::relative(path, APPLICATION_PERSISTENT_PATH);
 	}
 }
-#endif 

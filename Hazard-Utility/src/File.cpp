@@ -2,6 +2,7 @@
 #include "UtilityCore.h"
 #include "File.h"
 #include "Utility/StringUtil.h"
+#include "portable-file-dialogs.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <shlobj.h>
@@ -9,13 +10,18 @@
 
 
 std::string File::OpenFileDialog(const char* filters) {
-	return ""; // PlatformUtils::OpenFileDialog(filters);
+	auto f = pfd::open_file("Open file", "", { "" }, pfd::opt::none);
+	if (f.result().size() == 0) return "";
+	return f.result()[0];
 }
 std::string File::OpenFolderDialog(const std::string& title) {
-	return "";// PlatformUtils::OpenFolderDialog(title);
+	auto f = pfd::select_folder(title, "", pfd::opt::none);
+	if (f.result() == "") return "";
+	return f.result();
 }
 std::string File::SaveFile(const char* filters) {
-	return ""; // PlatformUtils::SaveFileDialog(filters);
+	auto f = pfd::save_file("Save file", "", {"All files", "*"}, true);
+	return f.result();
 }
 
 bool File::Exists(const std::filesystem::path& path)

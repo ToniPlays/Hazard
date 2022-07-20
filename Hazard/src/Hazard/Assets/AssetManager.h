@@ -1,10 +1,10 @@
 #pragma once
-#if 0
+
 #include "Asset.h"
 #include "AssetRegistry.h"
 #include "AssetLoader.h"
 #include "Hazard/Core/Core.h"
-#include "Hazard/Core/UUID.h"
+#include "UID.h"
 
 namespace Hazard 
 {
@@ -19,10 +19,6 @@ namespace Hazard
 
 		static std::unordered_map<std::filesystem::path, AssetMetadata> GetMetadataRegistry() { 
 			return s_Registry.GetRegistry(); 
-		}
-		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> GetRuntimeResources() 
-		{
-			return s_RuntimeResources;
 		}
 		
 		template<typename T>
@@ -39,16 +35,6 @@ namespace Hazard
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
-		static void AddRuntimeResource(Ref<RuntimeResource> resource) 
-		{
-			resource->m_Handle = UUID();
-			resource->DecRefCount();
-			s_RuntimeResources[resource->GetHandle()] = resource;
-		}
-		static void RemoveRuntimeResource(AssetHandle handle)
-		{
-			s_RuntimeResources.erase(handle);
-		}
 		template<typename T>
 		static Ref<T> GetRuntimeResource(AssetHandle handle) {
 			if (s_RuntimeResources.find(handle) == s_RuntimeResources.end()) 
@@ -84,10 +70,8 @@ namespace Hazard
 
 	private:
 		static std::unordered_map<AssetHandle, Ref<Asset>> s_LoadedAssets;
-		static std::unordered_map<AssetHandle, Ref<RuntimeResource>> s_RuntimeResources;
 		inline static AssetRegistry s_Registry;
 		inline static AssetMetadata s_NullMetadata;
 		inline static AssetLoader s_AssetLoader;
 	};
 }
-#endif

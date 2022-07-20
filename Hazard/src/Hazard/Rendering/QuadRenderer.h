@@ -42,6 +42,7 @@ namespace Hazard
 		void Flush();
 		void SubmitQuad(const glm::mat4& transform, glm::vec4 color);
 		void SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID);
+		bool IsVisible(const glm::mat4& transform);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
 			if (renderPass == m_RenderPass) return;

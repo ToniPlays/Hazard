@@ -6,6 +6,7 @@
 #include "PlatformUtils.h"
 #include "Application.h"
 #include "Hazard/Logging/Logger.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard {
 
@@ -27,7 +28,7 @@ namespace Hazard {
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 
 		HZR_CORE_WARN("Shutting down");
-		//AssetManager::Shutdown();
+		AssetManager::Shutdown();
 		m_Application->Close();
 		//m_ModuleHandler->Close();
 
@@ -38,6 +39,7 @@ namespace Hazard {
 	{
 		try 
 		{
+			AssetManager::Init();
 			//Preinit application to get application stack
 			m_Application->PreInit();
 			m_Application->Init();

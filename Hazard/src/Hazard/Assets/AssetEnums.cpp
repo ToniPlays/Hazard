@@ -1,7 +1,8 @@
 
+#include <hzrpch.h>
 #include "AssetEnums.h"
 
-namespace Utils
+namespace Hazard::Utils
 {
 	AssetType StringToAssetType(const std::string& type) {
 		if (type == "None")					return AssetType::Undefined;
