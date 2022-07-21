@@ -42,6 +42,8 @@ namespace Hazard
 		HazardRenderer::Window* m_Window;
 		RendererDrawList m_DrawList;
 		Ref<HazardRenderer::UniformBuffer> m_CameraUniformBuffer;
+		Ref<HazardRenderer::UniformBuffer> m_ModelUniformBuffer;
+
 
 		QuadRenderer m_QuadRenderer;
 	};

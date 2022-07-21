@@ -24,6 +24,15 @@ namespace Hazard
 
 		m_CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
 
+		UniformBufferCreateInfo modelUBO = {};
+		modelUBO.Name = "Model";
+		modelUBO.Binding = 1;
+		modelUBO.Size = sizeof(glm::mat4);
+		cameraUBO.Usage = BufferUsage::DynamicDraw;
+
+		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
+
+
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 	}
 	void RenderEngine::CullingPass()
@@ -33,13 +42,22 @@ namespace Hazard
 	void RenderEngine::GeometryPass()
 	{
 		HZR_PROFILE_FUNCTION();
+		m_QuadRenderer.EndScene();
 
 		auto& cmdBuffer = m_Window->GetSwapchain()->GetSwapchainBuffer();
+		m_ModelUniformBuffer->Bind(cmdBuffer);
 		for (auto& [pipeline, meshList] : m_DrawList.Meshes) {
 			pipeline->Bind(cmdBuffer);
 
 			for (auto& rawMesh : meshList)
 			{
+				struct ModelData {
+					glm::mat4 transform;
+				};
+				ModelData data;
+				data.transform = rawMesh.Transform;
+				
+				m_ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				rawMesh.VertexBuffer->Bind(cmdBuffer);
 				rawMesh.IndexBuffer->Bind(cmdBuffer);
 				pipeline->Draw(cmdBuffer, rawMesh.Count);
@@ -68,7 +86,6 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_QuadRenderer.EndScene();
 		CullingPass();
 		ShadowPass();
 
@@ -82,7 +99,7 @@ namespace Hazard
 			cam.ViewProjection = camera.ViewProjection;
 			cam.Projection = camera.Projection;
 			cam.View = camera.View;
-			cam.Position = glm::vec4(camera.Position, 1.0);
+			cam.Position = { camera.Position, 1.0f };
 
 			uint32_t size = sizeof(CameraData);
 

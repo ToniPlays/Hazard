@@ -16,6 +16,11 @@ layout(std140, binding = 0) uniform Camera {
 	uniform vec4 u_Position;
 } u_Camera;
 
+
+layout(std140, binding = 1) uniform Model {
+	uniform mat4 u_Transform;
+} u_Model;
+
 void main() 
 {
 	f_Color = a_Color;

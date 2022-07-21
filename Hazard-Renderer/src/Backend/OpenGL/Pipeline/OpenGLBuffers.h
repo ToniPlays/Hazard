@@ -77,7 +77,10 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
+
 		Buffer m_LocalData;
+		uint32_t m_CurrentBufferDataIndex = 0;
+		uint32_t m_FrameIndex = 255;
 	};
 }
 #endif

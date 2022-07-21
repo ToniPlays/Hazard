@@ -13,6 +13,8 @@ namespace Editor
 
 	void Grid::Render(const Editor::EditorCamera& camera)
 	{	
+		if (!m_ShowGrid) return;
+
 		struct GridData {
 			float Near;
 			float Far;

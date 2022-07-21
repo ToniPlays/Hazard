@@ -52,11 +52,11 @@ struct Buffer {
 	}
 	void Write(void* data, uint32_t size, uint32_t offset = 0) {
 		if (offset + size > Size) assert(false);
-		memcpy(Data, data, size);
+		memcpy((uint8_t*)Data + offset, data, size);
 	}
 	void Write(const void* data, uint32_t size, uint32_t offset = 0) {
 		if (offset + size > Size) assert(false);
-		memcpy(Data, data, size);
+		memcpy((uint8_t*)Data + offset, data, size);
 	}
 	operator bool() const { return Data; }
 	uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }

@@ -57,6 +57,8 @@ namespace HazardRenderer::OpenGL
 	void OpenGLSwapchain::BeginFrame()
 	{
 		HZR_PROFILE_FUNCTION();
+		m_FrameIndex = ++m_FrameIndex % 2;
+		m_RenderCommandBuffer->Begin();
 	}
 
 	void OpenGLSwapchain::Present()

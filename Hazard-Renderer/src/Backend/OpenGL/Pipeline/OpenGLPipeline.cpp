@@ -26,6 +26,7 @@ namespace HazardRenderer::OpenGL
 	{
 		Ref<OpenGLPipeline> instance = this;
 		Renderer::Submit([instance, cmdBuffer = commandBuffer]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLPipeline::Bind(Ref) RT");
 			instance->m_Shader->Bind_RT(cmdBuffer);
 			glPolygonMode(GL_FRONT_AND_BACK, instance->m_PolygonMode);
 			glLineWidth(instance->m_Specs.LineWidth);
@@ -51,18 +52,21 @@ namespace HazardRenderer::OpenGL
 	void OpenGLPipeline::Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
 		Renderer::Submit([drawType = m_DrawType, count]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLPipeline::Draw(Ref, uint32_t) RT");
 			glDrawElements(drawType, count, GL_UNSIGNED_INT, nullptr);
 			});
 	}
 	void OpenGLPipeline::DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount)
 	{
 		Renderer::Submit([drawType = m_DrawType, count, instanceCount]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLPipeline::DrawInstanced(Ref, uint32_t, uint32_t) RT");
 			glDrawElementsInstanced(drawType, count, GL_UNSIGNED_INT, nullptr, instanceCount);
 			});
 	}
 	void OpenGLPipeline::DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count)
 	{
 		Renderer::Submit([drawType = m_DrawType, count]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLPipeline::DrawArrays(Ref, uint32_t) RT");
 			glDrawArrays(drawType, 0, count);
 			});
 	}

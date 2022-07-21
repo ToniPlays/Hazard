@@ -8,6 +8,7 @@ namespace Hazard
 {
 	struct RawMesh
 	{
+		glm::mat4 Transform;
 		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
 		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
 		uint32_t Count;

@@ -54,5 +54,50 @@ namespace UI
 					});
 			}
 			});
+		UI::Treenode("Meshes", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]() 
+			{
+			for (auto& [pipeline, meshList] : drawList.Meshes) {
+				auto& meshes = meshList;
+				Group(pipeline, [p = pipeline, meshes]() {
+
+					UI::Treenode(p->GetSpecifications().DebugName.c_str(), ImGuiTreeNodeFlags_Framed, [&]()
+						{
+						for (auto mesh : meshes) {
+							UI::Treenode("Mesh", ImGuiTreeNodeFlags_Framed, [&]()
+								{
+									uint32_t vertexCount = mesh.VertexBuffer->GetSize();
+									uint32_t indexCount = mesh.Count;
+									const glm::mat4& t = mesh.Transform;
+
+									ImGui::Columns(2, 0, false);
+									ImGui::SetColumnWidth(0, 125.0f);
+									ImGui::Text("Vertex count");
+									ImGui::NextColumn();
+									ImGui::Text("%i", vertexCount);
+									ImGui::NextColumn();
+
+									ImGui::Text("Index count");
+									ImGui::NextColumn();
+									ImGui::Text("%i", indexCount);
+									ImGui::NextColumn();
+
+									glm::vec3 position;
+									glm::vec3 rotation;
+									glm::vec3 scale;
+
+									Math::DecomposeTransform(t, position, rotation, scale);
+
+									ImGui::Text("Position");
+									ImGui::NextColumn();
+									ImGui::Text("%.2f, %.2f, %.2f", position.x, position.y, position.z);
+									ImGui::NextColumn();
+
+									ImGui::Columns();
+								});
+						}
+						});
+					});
+			}
+			});
 	}
 }

@@ -39,7 +39,7 @@ namespace Hazard
 		uint32_t elements = size / sizeof(QuadVertex);
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), size);
 
-		HRenderer::SubmitMesh(m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color)
 	{

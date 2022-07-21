@@ -10,7 +10,7 @@ layout(std140, binding = 0) uniform Camera {
 } u_Camera;
 
 
-layout(std140, binding = 1) uniform Grid {
+layout(std140, binding = 2) uniform Grid {
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;
@@ -59,7 +59,7 @@ layout(std140, binding = 0) uniform Camera {
 } u_Camera;
 
 
-layout(std140, binding = 1) uniform Grid {
+layout(std140, binding = 2) uniform Grid {
 	uniform float u_ZNear;
 	uniform float u_ZFar;
 	uniform float u_Scale;

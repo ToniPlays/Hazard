@@ -21,7 +21,7 @@ namespace HazardRenderer {
 			}
 			{
 				HZR_PROFILE_SCOPE("RenderCommandQueue::Execute()");
-				s_RenderCommandQueue->Excecute();
+ 				s_RenderCommandQueue->Excecute();
 			}
 			{
 				HZR_PROFILE_SCOPE("ResourceFreeQueue::Execute()");

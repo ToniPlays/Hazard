@@ -20,6 +20,7 @@ namespace HazardRenderer::OpenGL
 
 		uint32_t GetWidth() const override { return m_Width; };
 		uint32_t GetHeight() const override { return m_Height; };
+		uint32_t GetFrameIndex() { return m_FrameIndex; }
 
 		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; }
 
@@ -32,6 +33,7 @@ namespace HazardRenderer::OpenGL
 
 		uint32_t m_Width = 0;
 		uint32_t m_Height = 0;
+		uint32_t m_FrameIndex;
 		bool m_Vsync = true;
 
 		Ref<RenderPass> m_RenderPass;

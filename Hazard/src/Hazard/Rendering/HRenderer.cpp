@@ -18,7 +18,7 @@ namespace Hazard
 		camera.GeometryFlags = spec.Geometry;
 		camera.ViewProjection = spec.Camera->GetViewProjection();
 		camera.Projection = spec.Camera->GetProjection();
-		camera.Projection = spec.Camera->GetView();
+		camera.View = spec.Camera->GetView();
 		camera.Position = spec.Camera->GetPosition();
 		camera.RenderPass = renderer->GetRenderPass();
 
@@ -41,15 +41,15 @@ namespace Hazard
 	{
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
-		SubmitMesh(mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
 	}
-	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
 	{
-		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({vertexBuffer, indexBuffer, indexBuffer->GetCount()});
+		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, indexBuffer->GetCount() });
 	}
-	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
 	{
-		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ vertexBuffer, indexBuffer, count });
+		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
 	}
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, uint32_t count)
 	{

@@ -148,6 +148,8 @@ namespace UI
 		case Key::F: {
 			FocusOnEntity(m_SelectionContext);
 			return true;
+		case Key::F1:
+			m_EditorGrid.SetVisible(!m_EditorGrid.IsVisible());
 		}
 		}
 		return false;

@@ -24,9 +24,9 @@ layout(std140, binding = 1) uniform Model {
 void main() 
 {
 	f_Color = a_Color;
-	f_Normal = (u_Model.u_Transform * vec4(a_Normal, 1.0)).xyz;
+	f_Normal = mat3(transpose(inverse(u_Model.u_Transform))) * a_Normal, 1.0;
 
-	vec4 worldPosition = vec4(a_Position, 1.0);
+	vec4 worldPosition = u_Model.u_Transform * vec4(a_Position, 1.0);
 	FragPos = worldPosition.xyz;
 
 	gl_Position = u_Camera.u_ViewProjection * worldPosition;
@@ -50,9 +50,9 @@ layout(std140, binding = 0) uniform Camera {
 layout(location = 0) out vec4 color;
 
 const vec3 lightPos = { 100, 30, 100 };
-const vec4 lightColor = { 1.0, 1.0, 1.0, 1.0 };
+const vec3 lightColor = { 1.0, 1.0, 1.0 };
 
-const float ambient = 0.15;
+const float ambientStrength = 0.15;
 const float gamma = 2.2;
 const float specularStrength = 0.25;
 
@@ -62,24 +62,14 @@ vec3 GammaCorrection(vec4 color) {
 
 void main() 
 {
-
 	vec3 norm = normalize(f_Normal);
-	vec3 lPos = normalize(lightPos);
 	vec3 lightDir = normalize(lightPos - FragPos);
 
-	float lightDot = dot(norm, lPos);
+	float diffuseStrength = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = diffuseStrength * lightColor;
 
-	//Diffuse
-	float diffuse = max(lightDot, ambient);
-	vec4 diffuseColor = diffuse * f_Color;
 
-	//Specular
-	vec3 viewDir = normalize(u_Camera.u_Position.xyz - FragPos);
-	vec3 reflected = reflect(-lightDir, norm);
-	float specular = pow(max(dot(viewDir, reflected), 0.0), 16);
-	vec3 specColor = specularStrength * specular * lightColor.rgb;
+	vec4 ambientColor = ambientStrength * vec4(lightColor, 1.0);
 
-	vec3 outColor = GammaCorrection(f_Color) * diffuseColor.rgb;
-
-	color = vec4(outColor + specColor, 1.0);
+	color = (ambientColor + vec4(diffuse, 1.0f)) * f_Color;
 }

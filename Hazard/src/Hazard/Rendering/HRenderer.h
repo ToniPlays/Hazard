@@ -19,8 +19,8 @@ namespace Hazard
 		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color);
 		//Mesh3D
 		static void SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent);
-		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline);
-		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count);
+		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline);
+		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count);
 
 		//Pipeline
 		static void SubmitPipeline(Ref<Pipeline>& pipeline, uint32_t count);

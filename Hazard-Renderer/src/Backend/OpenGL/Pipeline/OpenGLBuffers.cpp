@@ -4,6 +4,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Renderer.h"
 #include "Backend/Core/Pipeline/ShaderDataType.h"
+#include "../OpenGLContext.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL
@@ -169,19 +170,23 @@ namespace HazardRenderer::OpenGL
 		m_Size = size;
 		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
 	}
-	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Size(createInfo->Size),
+	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
-		m_Name = createInfo->Name;
+		std::cout << m_Name << " at binding: " << m_Binding << std::endl;
+
+		m_LocalData.Allocate(m_Size * 16);
+		m_LocalData.ZeroInitialize();
 
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			glCreateBuffers(1, &instance->m_ID);
-			glNamedBufferData(instance->m_ID, instance->m_Size, nullptr, GL_DYNAMIC_DRAW);
+			glNamedBufferData(instance->m_ID, instance->m_LocalData.Size, nullptr, GL_DYNAMIC_DRAW);
 			});
 	}
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
 	{
+		m_LocalData.Release();
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			glDeleteBuffers(1, &instance->m_ID);
@@ -189,6 +194,11 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
+			m_CurrentBufferDataIndex = 0;
+			m_FrameIndex = cmdBuffer->GetFrameIndex();
+		}
+
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			glBindBufferBase(GL_UNIFORM_BUFFER, instance->m_Binding, instance->m_ID);
@@ -196,6 +206,10 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
+			m_CurrentBufferDataIndex = 0;
+			m_FrameIndex = cmdBuffer->GetFrameIndex();
+		}
 		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
 	}
 	void OpenGLUniformBuffer::Unbind()
@@ -204,11 +218,17 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size)
 	{
-		m_LocalData = Buffer::Copy(data, size);
+		HZR_PROFILE_FUNCTION();
+		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
+
 		Ref<OpenGLUniformBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
-			glNamedBufferData(instance->m_ID, instance->m_LocalData.Size, instance->m_LocalData.Data, GL_DYNAMIC_DRAW);
+		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex]() mutable {
+
+			uint32_t size = instance->m_Size;
+			HZR_PROFILE_FUNCTION("OpenGLUniformBuffer::SetData(const void*, uint32_t)_RT");
+			glNamedBufferData(instance->m_ID, size, (byte*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
 			});
+		m_CurrentBufferDataIndex += m_Size;
 	}
 }
 #endif

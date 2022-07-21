@@ -43,6 +43,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLShader::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		glUseProgram(m_ID);
 
 		for (auto& [name, ubo] : m_UniformBuffers) {

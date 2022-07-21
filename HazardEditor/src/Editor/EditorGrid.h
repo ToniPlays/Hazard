@@ -13,8 +13,11 @@ namespace Editor {
 
 		void Render(const Editor::EditorCamera& camera);
 		void Invalidate(Ref<HazardRenderer::RenderPass> renderPass);
+		bool IsVisible() { return m_ShowGrid; }
+		void SetVisible(bool visible) { m_ShowGrid = visible; }
 
 	private:
 		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		bool m_ShowGrid = true;
 	};
 }
