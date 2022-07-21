@@ -21,6 +21,9 @@ namespace Hazard
 		static void SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent);
 		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline);
 		static void SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count);
+
+		//Pipeline
+		static void SubmitPipeline(Ref<Pipeline>& pipeline, uint32_t count);
 		//Light
 		static void SubmitSkyLight(const SkyLightComponent& skyLight);
 		static void SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight);

@@ -17,6 +17,8 @@ namespace Hazard
 		camera.DebugName = spec.DebugName;
 		camera.GeometryFlags = spec.Geometry;
 		camera.ViewProjection = spec.Camera->GetViewProjection();
+		camera.Projection = spec.Camera->GetProjection();
+		camera.Projection = spec.Camera->GetView();
 		camera.Position = spec.Camera->GetPosition();
 		camera.RenderPass = renderer->GetRenderPass();
 
@@ -48,6 +50,10 @@ namespace Hazard
 	void HRenderer::SubmitMesh(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
 	{
 		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ vertexBuffer, indexBuffer, count });
+	}
+	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, uint32_t count)
+	{
+		s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{

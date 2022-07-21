@@ -6,9 +6,13 @@
 
 namespace Hazard
 {
-	struct RawMesh {
+	struct RawMesh
+	{
 		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
 		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
+		uint32_t Count;
+	};
+	struct PipelineData {
 		uint32_t Count;
 	};
 
@@ -27,6 +31,8 @@ namespace Hazard
 	{
 		std::string DebugName;
 		glm::mat4 ViewProjection = glm::mat4(1.0f);
+		glm::mat4 Projection = glm::mat4(1.0f);
+		glm::mat4 View = glm::mat4(1.0f);
 		glm::vec3 Position = glm::vec3(0.0f);
 		Ref<HazardRenderer::RenderPass> RenderPass;
 		GeometryInclude GeometryFlags = Geometry_All;
@@ -38,6 +44,7 @@ namespace Hazard
 		std::vector<EnvironmentData> Environment;
 		std::vector<LightSource> LightSource;
 		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> Meshes;
+		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;
 
 	};
 }

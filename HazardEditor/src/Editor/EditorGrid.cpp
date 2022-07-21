@@ -1,5 +1,6 @@
 
 #include "EditorGrid.h"
+#include "Hazard/Rendering/HRenderer.h"
 
 namespace Editor
 {
@@ -25,7 +26,7 @@ namespace Editor
 		gridData.Scale = 1.0f;
 
 		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
-		//RenderCommand::DispatchPipelinePostPass(m_Pipeline, 6);
+		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
 	void Grid::Invalidate(Ref<RenderPass> renderPass)

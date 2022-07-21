@@ -45,6 +45,12 @@ namespace Hazard
 				pipeline->Draw(cmdBuffer, rawMesh.Count);
 			}
 		}
+		for (auto& [pipeline, dataList] : m_DrawList.Pipelines) {
+			pipeline->Bind(cmdBuffer);
+			for (auto& data : dataList) {
+				pipeline->DrawArrays(cmdBuffer, data.Count);
+			}
+		}
 	}
 	void RenderEngine::ShadowPass()
 	{
@@ -74,9 +80,9 @@ namespace Hazard
 			//Prepare camera data
 			CameraData cam = {};
 			cam.ViewProjection = camera.ViewProjection;
-			cam.Projection = glm::mat4(1.0f);
-			cam.View = glm::mat4(1.0f);
-			cam.Position = { camera.Position, 1.0f };
+			cam.Projection = camera.Projection;
+			cam.View = camera.View;
+			cam.Position = glm::vec4(camera.Position, 1.0);
 
 			uint32_t size = sizeof(CameraData);
 
@@ -95,5 +101,6 @@ namespace Hazard
 		m_DrawList.Environment.clear();
 		m_DrawList.LightSource.clear();
 		m_DrawList.Meshes.clear();
+		m_DrawList.Pipelines.clear();
 	}
 }
