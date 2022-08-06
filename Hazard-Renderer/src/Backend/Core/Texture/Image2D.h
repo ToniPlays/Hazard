@@ -6,8 +6,9 @@ namespace HazardRenderer
 {
 	struct Image2DCreateInfo 
 	{
-		uint32_t Width = 0;
-		uint32_t Height = 0;
+		uint32_t Width;
+		uint32_t Height;
+		Buffer Data;
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;

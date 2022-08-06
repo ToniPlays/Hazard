@@ -2,17 +2,16 @@
 
 #include "Backend/Core/Core.h"
 #include "Buffer.h"
-#include "Image.h"
+#include "HazardRendererCore.h"
 #include <filesystem>
 #include <iostream>
 
-namespace HazardRenderer
+namespace Hazard
 {
 	struct TextureHeader 
 	{
 		uint32_t Width, Height;
 		uint32_t Channels;
-		uint32_t DataSize;
 		Buffer ImageData;
 
 		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
@@ -30,7 +29,7 @@ namespace HazardRenderer
 
 		static bool SaveTextureToCache(const std::string& path, const TextureHeader& header);
 		static bool CacheFileChanged(const std::string& path);
-		static uint32_t PixelSize(const ImageFormat& format);
+		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
 
 	private:
 		static inline std::string m_CacheDirectory = "library/Textures/";

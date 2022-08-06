@@ -96,13 +96,13 @@ namespace Hazard
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 
 			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
-			if (comp["Texture"]) {
+			if (comp["Sprite"]) {
 				std::string fileName;
-				YamlUtils::Deserialize(comp, "Texture", fileName, std::string(""));
-				//AssetHandle handle = AssetManager::ImportAsset(fileName);
+				YamlUtils::Deserialize(comp, "Sprite", fileName, std::string(""));
+				AssetHandle handle = AssetManager::ImportAsset(fileName);
 
-				//if(handle != INVALID_ASSET_HANDLE)
-				//	component.Texture = AssetManager::GetAsset<TextureAsset>(handle);
+				if(handle != INVALID_ASSET_HANDLE)
+					component.Texture = AssetManager::GetAsset<Texture2D>(handle);
 			}
 		};
 		template<>

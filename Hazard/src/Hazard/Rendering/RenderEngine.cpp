@@ -3,6 +3,7 @@
 #include "HazardRenderer.h"
 #include "HRenderer.h"
 #include "Mesh/MeshAssetLoader.h"
+#include "ImageAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
@@ -33,6 +34,7 @@ namespace Hazard
 		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
 
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
+		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 	}
 	void RenderEngine::CullingPass()
 	{

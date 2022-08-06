@@ -68,9 +68,6 @@ namespace HazardScript
 	}
 	
 
-
-
-
 	MonoImage* Mono::OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status)
 	{
 		return mono_image_open_from_data_full((char*)data, (uint32_t)size, 1, &status, 0);

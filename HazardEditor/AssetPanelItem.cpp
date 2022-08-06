@@ -16,21 +16,21 @@ namespace UI
 		const float edgeOffset = 4.0f;
 
 		const float textLineHeight = ImGui::GetTextLineHeightWithSpacing() * 2.0f + edgeOffset * 2.0f;
-		const float infoPanelHeight = Math::Max(true ? thumbnailSize * 0.5f : textLineHeight, textLineHeight);
+		const float infoPanelHeight = Math::Max(false ? thumbnailSize * 0.5f : textLineHeight, textLineHeight);
 
 		const ImVec2 topLeft = ImGui::GetCursorScreenPos();
 		const ImVec2 thumbBottomRight = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize };
-		const ImVec2 infoTopLeft = { topLeft.x,				 topLeft.y + thumbnailSize };
-		const ImVec2 bottomRight = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize + infoPanelHeight };
+		const ImVec2 infoTopLeft	  = { topLeft.x,				 topLeft.y + thumbnailSize };
+		const ImVec2 bottomRight	  = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize + infoPanelHeight };
 
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 0.0f });
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 4.0f });
 
 		auto drawShadow = [&](const ImVec2& topLeft, const ImVec2& bottomRight, bool directory)
 		{
 			const Style& style = StyleManager::GetCurrent();
 			auto* drawList = ImGui::GetWindowDrawList();
 			const ImRect itemRect = UI::RectOffset(topLeft, bottomRight, 1.0f, 1.0f);
-			drawList->AddRect(itemRect.Min, itemRect.Max, ImGui::ColorConvertFloat4ToU32(style.MenuBarBackground), 4.0f, directory ? 0 : ImDrawFlags_RoundCornersBottom, 2.0f);
+			drawList->AddRect(itemRect.Min, itemRect.Max, ImGui::ColorConvertFloat4ToU32(style.MenuBarBackground), 4.0f, directory ? 0 : ImDrawFlags_RoundCornersAll, 4.0f);
 		};
 
 		const Style& style = StyleManager::GetCurrent();
@@ -40,8 +40,8 @@ namespace UI
 			drawShadow(topLeft, bottomRight, false);
 
 
-			drawList->AddRectFilled(topLeft, thumbBottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor));
-			drawList->AddRectFilled(infoTopLeft, bottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor));
+			drawList->AddRectFilled(topLeft, thumbBottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersTop);
+			drawList->AddRectFilled(infoTopLeft, bottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersBottom);
 		}
 		else if (ImGui::ItemHoverable(ImRect(topLeft, bottomRight), ImGui::GetID(&m_Handle)))
 		{
@@ -51,7 +51,15 @@ namespace UI
 		}
 
 		//Preview icon
+		float yPos = ImGui::GetCursorPosY();
 		ImGui::InvisibleButton("##thumbnailButton", ImVec2(thumbnailSize, thumbnailSize));
+
+		if (GetMetadata().Type == AssetType::Image) {
+			ImGui::SetCursorPosY(yPos + edgeOffset);
+			ShiftX(edgeOffset);
+			UI::Image(AssetManager::GetAsset<Texture2D>(m_Handle)->GetSourceImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0), { 0, 1 }, {1, 0});
+		}
+		ShiftY(edgeOffset);
 		UI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);
 		Shift(edgeOffset, edgeOffset);
 

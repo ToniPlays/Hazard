@@ -11,8 +11,10 @@
 
 #define INVALID_ASSET_HANDLE 0
 
-namespace Hazard {
-	enum class AssetFlags : uint16_t {
+namespace Hazard 
+{
+	enum class AssetFlags : uint16_t 
+	{
 		None = BIT(0),
 		Valid = BIT(1),
 		Missing = BIT(2),
@@ -37,6 +39,7 @@ namespace Hazard {
 	class Asset : public RefCount
 	{
 		friend class AssetManager;
+		friend class ImageAssetLoader;
 	public:
 
 		virtual ~Asset() = default;

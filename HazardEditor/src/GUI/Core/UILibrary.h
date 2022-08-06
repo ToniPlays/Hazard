@@ -7,6 +7,7 @@
 #include "ImGuiUtils.h"
 #include "HazardRenderer.h"
 
+#include "Hazard/Rendering/Texture2D.h"
 #include "Backend/OpenGL/Textures/OpenGLImage2D.h"
 
 namespace UI
@@ -293,8 +294,9 @@ namespace UI
 #pragma region Images
 
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D>& image) {
+		static std::unordered_map<HazardRenderer::Image2D*, ImTextureID> textureIDS;
+
 		using namespace HazardRenderer;
-		static std::unordered_map<Image2D*, ImTextureID> textureIDS;
 
 		if (textureIDS.find(image.Raw()) != textureIDS.end()) {
 			return textureIDS[image.Raw()];

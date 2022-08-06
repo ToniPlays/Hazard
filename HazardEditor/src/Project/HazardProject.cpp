@@ -25,7 +25,6 @@ void HazardProject::ProcessAssets()
 		if (File::GetFileExtension(item) == "meta") 
 		{
 			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			HZR_TRACE(assetPath.string());
 			Hazard::AssetManager::ImportAsset(assetPath.string());
 
 			if (File::IsDirectory(assetPath)) {
@@ -48,7 +47,6 @@ void HazardProject::ProcessSubFolderAssets(const std::filesystem::path& dir)
 		if (File::GetFileExtension(item) == "meta")
 		{
 			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			HZR_TRACE(assetPath.string());
 			Hazard::AssetManager::ImportAsset(assetPath.string());
 
 			if (File::IsDirectory(item)) {

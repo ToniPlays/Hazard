@@ -1,16 +1,14 @@
 
+#include <hzrpch.h>
 #include "TextureFactory.h"
-
-#include "Image.h"
-#include <string>
-
 #include "File.h"
 
 #include "vendor/stb_image.h"
 
-namespace HazardRenderer
+namespace Hazard
 {
-	struct FileHeader {
+	struct FileHeader 
+	{
 		uint32_t Width;
 		uint32_t Height;
 		uint32_t Channels;
@@ -56,7 +54,7 @@ namespace HazardRenderer
 			fileHeader.Width = header.Width;
 			fileHeader.Height = header.Height;
 			fileHeader.Channels = header.Channels;
-			fileHeader.DataSize = header.DataSize;
+			fileHeader.DataSize = header.ImageData.Size;
 
 			memcpy(textureData, &fileHeader, sizeof(FileHeader));
 			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
@@ -78,8 +76,9 @@ namespace HazardRenderer
 		return File::IsNewerThan(sourceFile, cacheFile);
 	}
 
-	uint32_t TextureFactory::PixelSize(const ImageFormat& format)
+	uint32_t TextureFactory::PixelSize(const HazardRenderer::ImageFormat& format)
 	{
+		using namespace HazardRenderer;
 		switch (format)
 		{
 		case ImageFormat::None:				return 0;
@@ -117,8 +116,7 @@ namespace HazardRenderer
 		header.Width = fileHeader.Width;
 		header.Height = fileHeader.Height;
 		header.Channels = fileHeader.Channels;
-		header.DataSize = fileHeader.DataSize;
-		header.ImageData = Buffer::Copy(data.Data, header.DataSize, sizeof(FileHeader));
+		header.ImageData = Buffer::Copy(data.Data, fileHeader.DataSize, sizeof(FileHeader));
 
 		data.Release();
 		return header;
@@ -162,7 +160,6 @@ namespace HazardRenderer
 		header.Width = w;
 		header.Height = h;
 		header.Channels = desired;
-		header.DataSize = w * h * desired;
 
 		return header;
 	}

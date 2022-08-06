@@ -46,8 +46,6 @@ namespace Hazard
 
 		s_Registry[data.Path] = data;
 
-		HZR_CORE_INFO("Importing asset {0} at {1}", Utils::AssetTypeToString(type), path.string());
-
 		return data.Handle;
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)

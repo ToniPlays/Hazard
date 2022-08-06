@@ -22,6 +22,7 @@ namespace Hazard {
 
 	void WorldHandler::Close()
 	{
+
 	}
 
 	void WorldHandler::Update()

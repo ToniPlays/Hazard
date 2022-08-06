@@ -4,12 +4,12 @@
 #include "MeshFactory.h"
 
 namespace Hazard {
-	bool MeshAssetLoader::Load(AssetMetadata& path, Ref<Asset>& asset)
+	bool MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		MeshFactory factory;
 
 		factory.SetOptimization(MeshFlags_DefaultOptimization);
-		asset = factory.LoadMesh(path.Path);
+		asset = factory.LoadMesh(metadata.Path);
 		return asset;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)

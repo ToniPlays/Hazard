@@ -23,6 +23,7 @@ namespace UI
 		{
 			renderable->Update();
 		}
+	
 	}
 	void PanelManager::Render()
 	{

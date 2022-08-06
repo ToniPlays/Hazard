@@ -35,22 +35,13 @@ namespace Hazard
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
 		template<typename T>
-		static Ref<T> GetRuntimeResource(AssetHandle handle) {
-			if (s_RuntimeResources.find(handle) == s_RuntimeResources.end()) 
-				return nullptr;
-
-			Ref<T> resource = s_RuntimeResources[handle].As<T>();
-			return resource;
-		}
-
-		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle) 
 		{
 			AssetMetadata& meta = GetMetadata(handle);
-			Ref<Asset> asset = nullptr;
 
 			if (!meta.IsLoaded)
 			{
+				Ref<Asset> asset;
 				meta.IsLoaded = s_AssetLoader.Load(meta, asset);
 				if (!meta.IsLoaded) {
 					return nullptr;
@@ -58,11 +49,16 @@ namespace Hazard
 				asset->SetHandle(meta.Handle);
 				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;
+				return asset;
 			}
 			else
-				asset = s_LoadedAssets[handle];
-
-			return asset.As<T>();
+				return s_LoadedAssets[handle].As<T>();
+		}
+		
+		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 
+		{
+			s_LoadedAssets[metadata.Handle] = asset;
+			return true;
 		}
 
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);

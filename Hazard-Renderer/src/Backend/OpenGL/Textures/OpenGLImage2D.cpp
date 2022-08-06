@@ -14,7 +14,10 @@ namespace HazardRenderer::OpenGL
 		m_Format = info->Format;
 		m_Samples = info->Mips;
 
+
 		Invalidate();
+		if(info->Data.Data != nullptr)
+			SetImageData(info->Data);
 	}
 	OpenGLImage2D::~OpenGLImage2D()
 	{
@@ -34,6 +37,11 @@ namespace HazardRenderer::OpenGL
 	{
 		glDeleteTextures(1, &m_ID);
 		m_ID = 0;
+	}
+	void OpenGLImage2D::SetImageData(const Buffer& buffer)
+	{
+		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, buffer.Data);
 	}
 }
 #endif

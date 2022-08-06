@@ -2,7 +2,6 @@
 
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
-#include "Backend/Core/Texture/TextureFactory.h"
 
 namespace HazardRenderer::OpenGL
 {

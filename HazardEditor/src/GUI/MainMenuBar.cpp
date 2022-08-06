@@ -64,9 +64,6 @@ namespace UI
 			Application::GetModule<GUIManager>().SetPanelOpen<RendererDebugPanel>(true);
 			});
 
-
-
-
 		AddMenuItem("Help/About");
 		AddMenuItem("Help/About/Something", nullptr);
 	};

@@ -1462,6 +1462,8 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Texture2D.h" />
+    <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h" />
+    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1557,5 +1559,7 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
   </ItemGroup>
 </Project>
