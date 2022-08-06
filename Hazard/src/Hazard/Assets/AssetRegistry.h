@@ -3,7 +3,7 @@
 #include "Asset.h"
 
 #define APPLICATION_PERSISTENT_PATH "C:/dev/Hazard/HazardEditor"
-
+/*
 namespace std
 {
 	template <>
@@ -14,7 +14,7 @@ namespace std
 			return hash_value(path);
 		}
 	};
-}
+}*/
 
 namespace Hazard
 {

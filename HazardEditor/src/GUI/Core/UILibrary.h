@@ -23,6 +23,11 @@ namespace UI
 	inline static void Shift(float x, float y) {
 		ImGui::SetCursorPos({ ImGui::GetCursorPosX() + x, ImGui::GetCursorPosY() + y });
 	}
+
+	static ImRect RectOffset(const ImVec2& topLeft, const ImVec2& bottomRight, float xOffset, float yOffset) {
+		return ImRect({ topLeft.x + xOffset, topLeft.y + yOffset }, { bottomRight.x + xOffset, bottomRight.y + yOffset });
+	}
+
 	template<typename T>
 	inline static void Group(void* ptr_id, T callback) {
 		ImGui::PushID(ptr_id);

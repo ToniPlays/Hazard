@@ -7,6 +7,8 @@
 #include "MathCore.h"
 #include "HazardRenderer.h"
 
+#include "imgui_internal.h"
+
 namespace UI 
 {
 	TransformationGizmo::TransformationGizmo()

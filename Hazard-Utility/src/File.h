@@ -29,6 +29,7 @@ public:
 
 	static bool Exists(const std::filesystem::path& path);
 	static bool DirectoryExists(const std::filesystem::path& dir);
+	static bool IsDirectory(const std::filesystem::path& path);
 
 	static std::vector<char> ReadBinaryFileChar(const std::filesystem::path& path);
 	static Buffer ReadBinaryFile(const std::filesystem::path& path);
@@ -47,6 +48,8 @@ public:
 	static std::string GetNameNoExt(const std::filesystem::path& file);
 	static std::string GetPathNoExt(const std::filesystem::path& file);
 	static std::string GetFileExtension(const std::filesystem::path& file);
+
+	static std::vector<std::filesystem::path> GetAllInDirectory(const std::filesystem::path& path);
 
 	static bool CreateDir(const std::filesystem::path& dir);
 	static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);

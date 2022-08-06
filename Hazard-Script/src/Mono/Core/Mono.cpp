@@ -66,6 +66,9 @@ namespace HazardScript
 	{
 		mono_field_set_value(object, field, buffer);
 	}
+	
+
+
 
 
 	MonoImage* Mono::OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status)

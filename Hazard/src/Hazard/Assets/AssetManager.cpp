@@ -27,8 +27,13 @@ namespace Hazard
 		if (s_Registry.Contains(path)) {
 			return s_Registry.Get(path).Handle;
 		}
-		std::string extension = File::GetFileExtension(path.string());
-		AssetType type = Utils::AssetTypeFromExtension(extension);
+		AssetType type = AssetType::Undefined;
+
+		if (!File::IsDirectory(filePath)) {
+			std::string extension = File::GetFileExtension(path.string());
+			type = Utils::AssetTypeFromExtension(extension);
+		}
+		else type = AssetType::Folder;
 
 		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
@@ -41,6 +46,8 @@ namespace Hazard
 
 		s_Registry[data.Path] = data;
 
+		HZR_CORE_INFO("Importing asset {0} at {1}", Utils::AssetTypeToString(type), path.string());
+
 		return data.Handle;
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
@@ -52,7 +59,7 @@ namespace Hazard
 				break;
 			}
 		}
-		HZR_GUARD(found);
+		if (!found) return;
 
 		AssetMetadata& data = GetMetadata(handle);
 		s_Registry.Remove(data.Path);

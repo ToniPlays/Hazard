@@ -32,6 +32,10 @@ bool File::DirectoryExists(const std::filesystem::path& dir)
 {
 	return std::filesystem::exists(dir);
 }
+bool File::IsDirectory(const std::filesystem::path& path)
+{
+	return std::filesystem::is_directory(path);
+}
 void File::WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source)
 {
 	std::ofstream out(dest);
@@ -186,6 +190,16 @@ std::string File::GetPathNoExt(const std::filesystem::path& file)
 std::string File::GetFileExtension(const std::filesystem::path& file) {
 	return file.string().substr(file.string().find_last_of('.') + 1);
 }
+
+std::vector<std::filesystem::path> File::GetAllInDirectory(const std::filesystem::path& path)
+{
+	std::vector<std::filesystem::path> result;
+	for (const auto& iter : std::filesystem::directory_iterator(path)) {
+		result.emplace_back(iter);
+	}
+	return result;
+}
+
 bool File::CreateDir(const std::filesystem::path& dir)
 {
 	return std::filesystem::create_directories(dir);

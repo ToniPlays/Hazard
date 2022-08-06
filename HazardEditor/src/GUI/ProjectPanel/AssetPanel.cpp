@@ -1,5 +1,6 @@
 
 #include "AssetPanel.h"
+
 namespace UI
 {
 	void AssetPanel::OnPanelRender()
@@ -57,20 +58,63 @@ namespace UI
 	void AssetPanel::DrawFolderTreeView()
 	{
 		const Style& style = StyleManager::GetCurrent();
+		ImGui::BeginChild("##FileTree");
+		{
 
-		ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-		UI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
-			ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
-				
-			});
-		UI::Treenode("ProjectNameHere", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
-				
-			});
+			ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+			UI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
+				ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
+
+				});
+			UI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed |ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+				for (const auto& folder : m_FolderData) {
+					DrawFolderTreeItem(folder);
+				}
+				});
+			UI::ContextMenu([&]() {
+				UI::MenuItem("Refresh", [&]() {
+					m_FolderData = GenerateFolderStructure();
+					});
+				});
+		}
+		ImGui::EndChild();
 	}
 	void AssetPanel::DrawContents()
 	{
+		constexpr float thumbailSize = 150.0f;
+		const float paddingForOutline = 2.0f;
+		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
+		float panelWidth = ImGui::GetContentRegionAvail().x - scrollBarrOffset;
+		float cellSize = 150.0f + 2.0f + paddingForOutline;
+		int columnCount = (int)(panelWidth / cellSize);
+		if (columnCount < 1) columnCount = 1;
 
+		ImGui::BeginChild("#contentPanel");
+		ImGui::Columns(columnCount, 0, false);
+
+		for (auto& item : m_CurrentItems) {
+			item.BeginRender();
+			item.OnRender(thumbailSize);
+			item.EndRender();
+		}
+		ImGui::Columns();
+		ImGui::EndChild();
 	}
+
+	void AssetPanel::RefreshFolderItems()
+	{
+		m_CurrentItems.clear();
+		for (auto item : File::GetAllInDirectory(m_CurrentPath))
+		{
+			if (File::GetFileExtension(item) == "meta") {
+				std::filesystem::path assetPath = File::GetPathNoExt(item);
+				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
+				AssetPanelItem assetItem = AssetPanelItem(handle);
+				m_CurrentItems.push_back(assetItem);
+			}
+		}
+	}
+
 	void AssetPanel::DrawCurrentFolderPath()
 	{
 		const Style& style = StyleManager::GetCurrent();
@@ -82,14 +126,62 @@ namespace UI
 		}
 
 		for (uint32_t i = 0; i < paths.size(); i++) {
+
 			const std::string& path = paths[i];
 			ImGui::SameLine(0.0f, 8.0f);
 			ImGui::TextColored(style.Window.HeaderActive, ICON_FK_CHEVRON_RIGHT);
 			ImGui::SameLine(0.0f, 8.0f);
+
 			if (ImGui::Button(path.c_str(), { 0, 28.0f })) {
 				GoToFolderDepth(m_CurrentPath, i + 1);
 			}
 		}
+	}
+	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
+	{
+		UI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
+			if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered()) {
+				m_CurrentPath = folder.Path;
+				RefreshFolderItems();
+			}
+
+			for (const auto& subfolder : folder.SubFolders) {
+				DrawFolderTreeItem(subfolder);
+			}
+			});
+	}
+
+	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
+	{
+		std::vector<FolderStructureData> result;
+
+		for (auto folder : File::GetAllInDirectory(m_RootPath)) {
+			AssetHandle handle = AssetManager::GetHandleFromFile(folder.string());
+			if (handle == INVALID_ASSET_HANDLE) continue;
+
+			if (!File::IsDirectory(folder)) continue;
+			auto& data = result.emplace_back();
+			data.Path = folder;
+			data.SubFolders = GenerateSubFolderData(folder);
+		}
+
+		return result;
+	}
+	std::vector<FolderStructureData> AssetPanel::GenerateSubFolderData(const std::filesystem::path& folder)
+	{
+		std::vector<FolderStructureData> result;
+
+		for (auto subfolder : File::GetAllInDirectory(folder)) {
+			AssetHandle handle = AssetManager::GetHandleFromFile(subfolder.string());
+			if (handle == INVALID_ASSET_HANDLE) continue;
+
+			if (!File::IsDirectory(subfolder)) continue;
+			auto& data = result.emplace_back();
+			data.Path = subfolder;
+			data.SubFolders = GenerateSubFolderData(subfolder);
+		}
+
+		return result;
 	}
 	void AssetPanel::GoToFolderDepth(const std::filesystem::path& path, uint32_t index)
 	{
@@ -98,5 +190,6 @@ namespace UI
 		relative = relative.substr(0, strPos);
 		m_CurrentPath = m_RootPath.string() + '\\' + relative;
 
+		RefreshFolderItems();
 	}
 }

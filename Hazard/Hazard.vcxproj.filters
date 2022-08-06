@@ -37,6 +37,9 @@
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\Mesh">
+      <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
@@ -65,6 +68,12 @@
   <ItemGroup>
     <ClInclude Include="src\Hazard.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\Asset.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetEnums.h">
+      <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Assets\AssetLoader.h">
       <Filter>src\Hazard\Assets</Filter>
@@ -173,6 +182,18 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshCreateInfo.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\QuadRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
@@ -1440,14 +1461,14 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h" />
-    <ClInclude Include="src\Hazard\Assets\Asset.h" />
-    <ClInclude Include="src\Hazard\Assets\AssetEnums.h" />
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshCreateInfo.h" />
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h" />
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazard\Assets\Asset.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Assets\AssetLoader.cpp">
       <Filter>src\Hazard\Assets</Filter>
     </ClCompile>
@@ -1511,6 +1532,15 @@
     <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\QuadRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
@@ -1526,10 +1556,5 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Assets\Asset.cpp" />
-    <ClCompile Include="src\Hazard\Assets\AssetEnums.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 enum class AssetType
 {
 	Undefined = 0,
+	Folder,
 	AudioClip,
 	World,
 	Image,

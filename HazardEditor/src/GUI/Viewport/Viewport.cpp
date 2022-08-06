@@ -40,7 +40,7 @@ namespace UI
 
 		UI::Image(m_Renderer->GetOutput()->GetImage(), size, { 0, 1 }, { 1, 0 });
 
-		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, ImGui::GetWindowSize());
+		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
 
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 

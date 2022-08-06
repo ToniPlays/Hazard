@@ -7,6 +7,7 @@
 #include "UtilityCore.h"
 
 #include <filesystem>
+#include <unordered_map>
 
 #define INVALID_ASSET_HANDLE 0
 

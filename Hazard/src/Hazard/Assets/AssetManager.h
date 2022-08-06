@@ -15,7 +15,6 @@ namespace Hazard
 
 		static void Init();
 		static void Shutdown();
-		static void RemoveUnreferencedResources();
 
 		static std::unordered_map<std::filesystem::path, AssetMetadata> GetMetadataRegistry() { 
 			return s_Registry.GetRegistry(); 

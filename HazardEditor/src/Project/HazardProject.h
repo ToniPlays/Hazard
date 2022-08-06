@@ -17,11 +17,14 @@ public:
 	HazardProject(const std::filesystem::path& path);
 
 	bool IsValid() { return !m_Data.ProjectDirectory.empty(); }
+	
+	void ProcessAssets();
 
 	const ProjectGeneralData& GetProjectData() { return m_Data; }
 
 private:
 	void DeserializeGeneral(const YAML::Node& node);
+	void ProcessSubFolderAssets(const std::filesystem::path& dir);
 
 private:
 	ProjectGeneralData m_Data;

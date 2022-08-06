@@ -24,7 +24,8 @@ project "Hazard"
 	defines
 	{
 		"GLFW_INCLUDE_NONE",
-		"IMGUI_IMPL_OPENGL_LOADER_GLAD"
+		"IMGUI_IMPL_OPENGL_LOADER_GLAD",
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs

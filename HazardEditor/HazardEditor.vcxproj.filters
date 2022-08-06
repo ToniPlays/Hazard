@@ -186,6 +186,9 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
+    <ClInclude Include="AssetPanelItem.h">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -266,5 +269,6 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="AssetPanelItem.cpp" />
   </ItemGroup>
 </Project>
