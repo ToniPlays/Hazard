@@ -82,6 +82,8 @@ namespace UI
 
 				//Texture slot here
 
+				//UI::TextureSlot("Sprite", c.Texture);
+
 				if (UI::ColorPicker("Tint", "##Tint", c.Tint)) {
 
 				}

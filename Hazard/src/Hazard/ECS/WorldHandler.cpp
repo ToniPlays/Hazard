@@ -10,14 +10,14 @@ namespace Hazard {
 
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
 	{
-		LoadWorld(info->StartupFile, Serialization::Editor);
+		m_World = Ref<World>::Create(info->StartupFile);
 		SetActive(true);
 	}
 	WorldHandler::~WorldHandler() {}
 
 	void WorldHandler::Init()
 	{
-
+		LoadWorld(m_World->GetWorldFile(), Serialization::Editor);
 	}
 
 	void WorldHandler::Close()

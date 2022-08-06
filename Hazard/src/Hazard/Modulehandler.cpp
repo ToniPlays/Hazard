@@ -11,7 +11,15 @@ namespace Hazard {
 	}
 	ModuleHandler::~ModuleHandler()
 	{
-		
+
+	}
+
+	void ModuleHandler::InitializeAll()
+	{
+		for (Module* m : m_Modules)
+			m->Init();
+
+		m_HasInitialized = true;
 	}
 
 	void ModuleHandler::Update()

@@ -20,8 +20,6 @@ namespace UI {
 		const AssetMetadata& GetMetadata() { return AssetManager::GetMetadata(m_Handle); }
 		std::string GetName() { return File::GetName(GetMetadata().Path); }
 		const AssetType& GetType() { return GetMetadata().Type; }
-		
-
 
 	private:
 		AssetHandle m_Handle;

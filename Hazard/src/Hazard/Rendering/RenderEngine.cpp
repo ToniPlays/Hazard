@@ -32,7 +32,6 @@ namespace Hazard
 
 		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
 
-
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 	}
 	void RenderEngine::CullingPass()

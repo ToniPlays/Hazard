@@ -86,10 +86,10 @@ namespace Hazard
 			std::string fileName;
 			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
 
-			//HZR_GUARD(!fileName.empty());
+			if (fileName.empty()) return;
 
-			//AssetHandle handle = AssetManager::ImportAsset(fileName);
-			//c.SourceAsset = AssetManager::GetAsset<Rendering::MeshAsset>(handle);
+			AssetHandle handle = AssetManager::ImportAsset(fileName);
+			c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {

@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Color.h"
+#include "Hazard/Rendering/Texture2D.h"
+#include "HazardRendererCore.h"
 
 namespace Hazard {
 
 	struct SpriteRendererComponent : ComponentBase
 	{
 		Color Tint = Color::White;
-		//Ref<Rendering::Texture2D> Texture;
+		Ref<Texture2D> Texture;
 
 		SpriteRendererComponent() = default;
 	};

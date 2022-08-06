@@ -269,6 +269,8 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="AssetPanelItem.cpp" />
+    <ClCompile Include="AssetPanelItem.cpp">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,7 +13,6 @@ namespace UI
 	}
 	void AssetPanelItem::OnRender(const float& thumbnailSize)
 	{
-
 		const float edgeOffset = 4.0f;
 
 		const float textLineHeight = ImGui::GetTextLineHeightWithSpacing() * 2.0f + edgeOffset * 2.0f;
@@ -53,7 +52,7 @@ namespace UI
 
 		//Preview icon
 		ImGui::InvisibleButton("##thumbnailButton", ImVec2(thumbnailSize, thumbnailSize));
-
+		UI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);
 		Shift(edgeOffset, edgeOffset);
 
 		if (GetType() == AssetType::Folder)

@@ -42,6 +42,7 @@ namespace Hazard {
 			AssetManager::Init();
 			//Preinit application to get application stack
 			m_Application->PreInit();
+			m_ModuleHandler->InitializeAll();
 			m_Application->Init();
 		}
 		catch (HazardRuntimeError& error) {

@@ -27,6 +27,7 @@ namespace UI {
 			m_CurrentPath = path;
 
 			m_FolderData = GenerateFolderStructure();
+			RefreshFolderItems();
 		};
 
 		void RefreshFolderItems();

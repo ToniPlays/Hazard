@@ -9,6 +9,8 @@ namespace Hazard {
 		ModuleHandler();
 		~ModuleHandler();
 
+		void InitializeAll();
+
 		void Update();
 		void Render();
 		void PostRender();
@@ -20,7 +22,7 @@ namespace Hazard {
 			T* m = new T(std::forward<Args>(args)...);
 			m_Modules.push_back(m);
 			m->PreInit();
-			m->Init();
+			if (m_HasInitialized) m->Init();
 			return m;
 		};
 
@@ -54,5 +56,6 @@ namespace Hazard {
 		}
 	private:
 		std::vector<Module*> m_Modules;
+		bool m_HasInitialized = false;
 	};
 }
