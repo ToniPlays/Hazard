@@ -36,7 +36,7 @@ namespace Hazard
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
 		RendererDrawList& GetDrawList() { return m_DrawList; }
 
-
+		Ref<Texture2D> GetWhiteTexture() { return m_WhiteTexture; };
 
 	private:
 		HazardRenderer::Window* m_Window;
@@ -44,6 +44,7 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> m_CameraUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> m_ModelUniformBuffer;
 
+		Ref<Texture2D> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
 	};

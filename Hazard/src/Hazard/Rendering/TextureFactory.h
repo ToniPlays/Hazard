@@ -22,8 +22,8 @@ namespace Hazard
 	public:
 		static bool TextureCacheExists(const std::string& path);
 		static TextureHeader LoadTextureFromCache(const std::string& path);
-		static TextureHeader LoadFromCacheIfExists(const std::string& path, bool reloadIfOutdated = true);
-		static TextureHeader LoadTextureFromSourceFile(const std::string& path, bool verticalFlip);
+		static TextureHeader LoadTexture(const std::string& path, bool reloadIfOutdated = true);
+		static TextureHeader LoadTextureFromSourceFile(const std::string& path, bool verticalFlip = false);
 		static std::filesystem::path GetFileCachePath(const std::string& path);
 		static std::filesystem::path GetFileSourcePath(const std::string& path);
 

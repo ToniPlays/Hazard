@@ -3,6 +3,7 @@
 
 #include "GUI/Core/UILibrary.h"
 #include "MathCore.h"
+#include "Hazard/Rendering/Texture2D.h"
 
 namespace UI
 {
@@ -11,7 +12,7 @@ namespace UI
 		ImGui::PushID(m_Handle);
 		ImGui::BeginGroup();
 	}
-	void AssetPanelItem::OnRender(const float& thumbnailSize)
+	void AssetPanelItem::OnRender(Ref<Texture2D> thumbnailIcon, const float& thumbnailSize)
 	{
 		const float edgeOffset = 4.0f;
 
@@ -20,8 +21,8 @@ namespace UI
 
 		const ImVec2 topLeft = ImGui::GetCursorScreenPos();
 		const ImVec2 thumbBottomRight = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize };
-		const ImVec2 infoTopLeft	  = { topLeft.x,				 topLeft.y + thumbnailSize };
-		const ImVec2 bottomRight	  = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize + infoPanelHeight };
+		const ImVec2 infoTopLeft = { topLeft.x,				 topLeft.y + thumbnailSize };
+		const ImVec2 bottomRight = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize + infoPanelHeight };
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 4.0f });
 
@@ -54,18 +55,17 @@ namespace UI
 		float yPos = ImGui::GetCursorPosY();
 		ImGui::InvisibleButton("##thumbnailButton", ImVec2(thumbnailSize, thumbnailSize));
 
-		if (GetMetadata().Type == AssetType::Image) {
-			ImGui::SetCursorPosY(yPos + edgeOffset);
-			ShiftX(edgeOffset);
-			UI::Image(AssetManager::GetAsset<Texture2D>(m_Handle)->GetSourceImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0), { 0, 1 }, {1, 0});
-		}
+		ImGui::SetCursorPosY(yPos + edgeOffset);
+		ShiftX(edgeOffset);
+		UI::Image(thumbnailIcon->GetSourceImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+
 		ShiftY(edgeOffset);
 		UI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);
 		Shift(edgeOffset, edgeOffset);
+		std::string name = GetName();
 
 		if (GetType() == AssetType::Folder)
 		{
-			std::string name = GetName();
 			ImGui::BeginVertical((std::string("InfoPanel") + name).c_str(), ImVec2(thumbnailSize - edgeOffset * 2.0f, infoPanelHeight - edgeOffset));
 			{
 				ImGui::BeginHorizontal(name.c_str(), ImVec2(thumbnailSize - 2.0f, 0.0f));
@@ -89,7 +89,6 @@ namespace UI
 		}
 		else
 		{
-			std::string name = GetName();
 			ImGui::BeginVertical((std::string("InfoPanel") + name).c_str(), ImVec2(thumbnailSize - edgeOffset * 2.0f, infoPanelHeight - edgeOffset));
 			{
 				ImGui::BeginHorizontal("label", ImVec2(0.0f, 0.0f));
@@ -110,6 +109,12 @@ namespace UI
 		}
 
 		ImGui::EndGroup();
+
+
+		UI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
+			ImGui::Text(name.c_str());
+			ImGui::Text(Utils::AssetTypeToString(GetMetadata().Type));
+			});
 
 		ImGui::PopStyleVar();
 	}

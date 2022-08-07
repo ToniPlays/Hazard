@@ -29,7 +29,8 @@ namespace HazardRenderer::OpenGL
 			HZR_PROFILE_FUNCTION("OpenGLPipeline::Bind(Ref) RT");
 			instance->m_Shader->Bind_RT(cmdBuffer);
 			glPolygonMode(GL_FRONT_AND_BACK, instance->m_PolygonMode);
-			glLineWidth(instance->m_Specs.LineWidth);
+			if (instance->m_Specs.LineWidth != 1.0f)
+				glLineWidth(instance->m_Specs.LineWidth);
 
 			instance->m_Specs.DepthTest ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);

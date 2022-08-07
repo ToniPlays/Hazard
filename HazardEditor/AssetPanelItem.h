@@ -3,6 +3,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "UtilityCore.h"
 #include "File.h"
+#include "Hazard/Rendering/Texture2D.h"
 
 namespace UI {
 	using namespace Hazard;
@@ -13,7 +14,7 @@ namespace UI {
 		AssetPanelItem(AssetHandle handle) : m_Handle(handle) { }
 
 		void BeginRender();
-		void OnRender(const float& thumbnailSize);
+		void OnRender(Ref<Texture2D> thumbnailIcon, const float& thumbnailSize);
 		void EndRender();
 
 		const AssetHandle& GetHandle() { return m_Handle; }

@@ -10,7 +10,7 @@ namespace Hazard
 	bool ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		using namespace HazardRenderer;
-		TextureHeader header = TextureFactory::LoadFromCacheIfExists(metadata.Path.string());
+		TextureHeader header = TextureFactory::LoadTexture(metadata.Path.string());
 		
 		Image2DCreateInfo info = {};
 		info.Width = header.Width;

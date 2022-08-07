@@ -140,10 +140,10 @@ namespace HazardRenderer {
 
 		for (uint32_t i = 0; i < count; i++) {
 			GLFWimage img = glfwImages[i];
-			const std::string& path = File::GetFileAbsolutePath(std::string(images[i]));
+			const std::filesystem::path& path = File::GetFileAbsolutePath(std::string(images[i]));
 
 			int sx, sy, sChannels;
-			img.pixels = stbi_load(path.c_str(), &sx, &sy, &sChannels, 3);
+			img.pixels = stbi_load(path.string().c_str(), &sx, &sy, &sChannels, 3);
 			HZR_ASSERT(img.pixels != 0, "Could not load Window Icon");
 			img.width = sx;
 			img.height = sy;

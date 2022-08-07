@@ -20,7 +20,7 @@ namespace HazardRenderer::OpenGL
 		void Unbind() override;
 		bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
 		void Set(const std::string& name, uint32_t index, uint32_t value) override;
-		void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) override;
+		void Set(const std::string& name, uint32_t index, Ref<Image2D> value) override;
 		UniformBuffer& GetUniform(const std::string& name) override { return *m_UniformBuffers[name]; };
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };

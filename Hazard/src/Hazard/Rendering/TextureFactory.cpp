@@ -121,7 +121,7 @@ namespace Hazard
 		data.Release();
 		return header;
 	}
-	TextureHeader TextureFactory::LoadFromCacheIfExists(const std::string& path, bool reloadIfOutdated)
+	TextureHeader TextureFactory::LoadTexture(const std::string& path, bool reloadIfOutdated)
 	{
 		bool cacheExists = TextureCacheExists(path);
 		//bool isNewer = CacheFileChanged(path) && reloadIfOutdated;
@@ -144,8 +144,7 @@ namespace Hazard
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)
 	{
-		auto sourceFile = GetFileSourcePath(path);
-
+		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
 		TextureHeader header = {};
 
 		int w, h, channels;
@@ -153,7 +152,8 @@ namespace Hazard
 		{
 			stbi_set_flip_vertically_on_load(verticalFlip);
 
-			stbi_uc* data = stbi_load(sourceFile.string().c_str(), &w, &h, &channels, desired);
+			stbi_uc* data = stbi_load(path.c_str(), &w, &h, &channels, desired);
+			HZR_CORE_ASSERT(data, "Data not loaded correctly");
 			header.ImageData = Buffer(data, w * h * desired);
 		}
 

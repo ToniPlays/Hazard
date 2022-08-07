@@ -61,15 +61,15 @@ namespace UI
 				ImGui::Separator();
 				ShiftY(2.0f);
 
-					}, [&]() {
-						MenuItem("Reset", [&]() {
-							c.Translation = { 0, 0, 0 };
-							c.Rotation = { 0, 0, 0 };
-							c.Scale = { 1, 1, 1 };
-							});
+			}, [&]() {
+				MenuItem("Reset", [&]() {
+					c.Translation = { 0, 0, 0 };
+					c.Rotation = { 0, 0, 0 };
+					c.Scale = { 1, 1, 1 };
 					});
+			});
 
-				return false;
+		return false;
 	}
 	template<>
 	static bool ComponentMenu(Entity& e, SpriteRendererComponent& c) {
@@ -77,8 +77,16 @@ namespace UI
 
 		bool optionsOpen = UI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
+				ImGui::Text("Sprite");
+				UI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
+					c.Texture = AssetManager::GetAsset<Texture2D>(handle);
+					});
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
+
+				if (c.Texture) {
+					UI::Image(c.Texture->GetSourceImage(), { 50, 50 });
+				}
 
 				//Texture slot here
 

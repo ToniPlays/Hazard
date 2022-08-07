@@ -63,21 +63,28 @@ namespace UI
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{
 		bool scriptState = false;
+		bool spriteState = false;
 		bool isSkyLight = e.HasComponent<SkyLightComponent>();
+
 		if (e.HasComponent<ScriptComponent>()) {
 			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
+
+		if (e.HasComponent<SpriteRendererComponent>()) {
+			spriteState = !e.GetComponent<SpriteRendererComponent>().Texture;
+		}
+
 		const ImVec4 visibleColor = StyleManager::GetCurrent().Colors.AxisZ;
 		const ImVec4 textColor = StyleManager::GetCurrent().Window.Text;
 		const ImVec4 warning = StyleManager::GetCurrent().Colors.Warning;
 		
 
-		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O };
-		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing" };
-		const bool states[] = { true, isSkyLight, scriptState };
-		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, textColor , warning};
+		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O };
+		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing"};
+		const bool states[] = { true, isSkyLight, scriptState, spriteState };
+		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, textColor , warning, warning };
 
 		for (uint32_t i = 0; i < sizeof(states); i++) {
 			if (states[i]) {

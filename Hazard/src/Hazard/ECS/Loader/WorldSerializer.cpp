@@ -7,8 +7,9 @@
 
 namespace Hazard {
 
-	bool WorldSerializer::SerializeEditor(const std::string& file)
+	bool WorldSerializer::SerializeEditor(const std::filesystem::path& file)
 	{
+		HZR_CORE_INFO("Serializing world");
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", !m_World->GetName().empty() ? m_World->GetName() : "Untitled world");

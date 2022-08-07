@@ -1561,5 +1561,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp" />
     <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Texture2D.cpp" />
   </ItemGroup>
 </Project>

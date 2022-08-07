@@ -3,9 +3,14 @@
 #include "QuadRenderer.h"
 #include "HRenderer.h"
 
+
 namespace Hazard
 {
 	QuadRenderer::QuadRenderer()
+	{
+
+	}
+	void QuadRenderer::Init()
 	{
 		constexpr uint32_t quadCount = 50000;
 		m_Data.MaxQuadCount = quadCount;
@@ -14,6 +19,10 @@ namespace Hazard
 
 		m_Data.Samplers = 32;
 		m_QuadBatch = Batch<QuadVertex>(m_Data.MaxVertices);
+		m_Data.TextureSlots.resize(m_Data.Samplers);
+
+		for (uint32_t i = 0; i < m_Data.Samplers; i++)
+			m_Data.TextureSlots[i] = HRenderer::s_Engine->GetWhiteTexture();
 	}
 	void QuadRenderer::BeginScene()
 	{
@@ -31,7 +40,7 @@ namespace Hazard
 		m_QuadBatch.Reset();
 	}
 	void QuadRenderer::Flush()
-	{	
+	{
 		HZR_PROFILE_FUNCTION();
 		if (!m_QuadBatch) return;
 
@@ -39,13 +48,21 @@ namespace Hazard
 		uint32_t elements = size / sizeof(QuadVertex);
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), size);
 
+		Ref<Swapchain> swapchain = HRenderer::s_Engine->GetWindow().GetSwapchain();
+		HazardRenderer::Renderer::Submit([&, swapchain]() mutable {
+
+			Ref<Shader> shader = m_Pipeline->GetShader();
+			shader->Bind_RT(swapchain->GetSwapchainBuffer());
+			for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
+				m_Data.TextureSlots[i]->GetSourceImage()->Bind(i);
+				shader->Set("u_Textures", i, m_Data.TextureSlots[i]->GetSourceImage());
+			}
+			});
+
+
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
-	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color)
-	{
-		SubmitQuad(transform, color, 0.0f);
-	}
-	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID)
+	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2D>& texture)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -56,12 +73,17 @@ namespace Hazard
 			BeginScene();
 		}
 
+		float textureIndex = GetTextureIndex(texture);
+
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
 		for (uint8_t i = 0; i < 4; i++)
 		{
 			QuadVertex vertex = {};
 			vertex.Position = transform * m_Data.QuadVertexPos[i];
 			vertex.Color = color;
-			vertex.TextureIndex = textureID;
+			vertex.TextureCoords = textureCoords[i];
+			vertex.TextureIndex = textureIndex;
 
 			m_QuadBatch.Push(vertex);
 		}
@@ -78,16 +100,17 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		BufferLayout layout = { { "a_Position",		ShaderDataType::Float3 },
 								{ "a_Color",		ShaderDataType::Float4 },
+								{ "a_TextureCoords",ShaderDataType::Float2 },
 								{ "a_TextureIndex",	ShaderDataType::Float  }
 		};
 
-		if (!m_IndexBuffer) 
+		if (!m_IndexBuffer)
 		{
 			uint32_t offset = 0;
 
@@ -133,6 +156,18 @@ namespace Hazard
 		pipelineSpecs.pBufferLayout = &layout;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+	}
+	float QuadRenderer::GetTextureIndex(const Ref<Texture2D>& texture)
+	{
+		if (!texture) return 0.0f;
+
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
+			if (m_Data.TextureSlots[i] == texture) {
+				return (float)i;
+			}
+		}
+		m_Data.TextureSlots[(size_t)m_Data.TextureIndex] = texture;
+		return m_Data.TextureIndex++;
 	}
 }
 

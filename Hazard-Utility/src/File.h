@@ -42,7 +42,7 @@ public:
 	static bool CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest);
 	static bool IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo);
 
-	static std::string GetFileAbsolutePath(const std::filesystem::path& file);
+	static std::filesystem::path GetFileAbsolutePath(const std::filesystem::path& file);
 	static std::string GetDirectoryOf(const std::filesystem::path& file);
 	static std::string GetName(const std::filesystem::path& file);
 	static std::string GetNameNoExt(const std::filesystem::path& file);

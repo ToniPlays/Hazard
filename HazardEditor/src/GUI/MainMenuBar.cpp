@@ -13,7 +13,12 @@ namespace UI
 		AddMenuItem("File/New/Project");
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);
 		AddMenuItem("File/Open/OpenNew", nullptr);
-		AddMenuItem("File/Save", nullptr);
+		AddMenuItem("File/Save", [&]() {
+			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+			WorldSerializer serializer(world);
+			serializer.SerializeEditor(world->GetWorldFile());
+
+			});
 		AddMenuItem("File/Save as", nullptr);
 		AddMenuItem("File/Project settings", nullptr);
 		AddMenuItem("File/Quit", Hazard::Application::Quit);

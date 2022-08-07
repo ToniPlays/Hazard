@@ -16,6 +16,7 @@ namespace HazardRenderer::OpenGL {
 
 		if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 			return;
+		std::cout << message << std::endl;
 		Window::SendDebugMessage({ OpenGLUtils::GLuintToSeverity(severity), message });
 	}
 

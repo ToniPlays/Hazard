@@ -84,7 +84,7 @@ namespace Hazard
 		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
 			std::string fileName;
-			YamlUtils::Deserialize(comp, "File", fileName, std::string(""));
+			YamlUtils::Deserialize(comp, "Mesh", fileName, std::string(""));
 
 			if (fileName.empty()) return;
 

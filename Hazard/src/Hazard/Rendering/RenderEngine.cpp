@@ -15,7 +15,7 @@ namespace Hazard
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
 		HRenderer::s_Engine = this;
-		m_QuadRenderer.CreateResources();
+		
 
 		UniformBufferCreateInfo cameraUBO = {};
 		cameraUBO.Name = "Camera";
@@ -35,6 +35,21 @@ namespace Hazard
 
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
+
+		uint32_t data = 0xFFFFFFFF;
+
+		Image2DCreateInfo info = {};
+		info.Width = 1;
+		info.Height = 1;
+		info.Mips = 1;
+		info.Data = Buffer::Copy(&data, sizeof(uint32_t));
+		info.Format = ImageFormat::RGBA;
+
+		Ref<Hazard::Image2D> imageAsset = HazardRenderer::Image2D::Create(&info);
+
+		m_WhiteTexture = Ref<Texture2D>::Create(imageAsset);
+		m_QuadRenderer.Init();
+		m_QuadRenderer.CreateResources();
 	}
 	void RenderEngine::CullingPass()
 	{
@@ -57,7 +72,7 @@ namespace Hazard
 				};
 				ModelData data;
 				data.transform = rawMesh.Transform;
-				
+
 				m_ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				rawMesh.VertexBuffer->Bind(cmdBuffer);
 				rawMesh.IndexBuffer->Bind(cmdBuffer);

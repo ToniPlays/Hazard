@@ -20,7 +20,6 @@ namespace Editor {
 		const float GetNearClipping() const override { return m_ZNear; };
 		const float GetFarClipping() const override { return m_ZFar; };
 
-
 		void OnUpdate();
 		bool OnEvent(Event& e);
 

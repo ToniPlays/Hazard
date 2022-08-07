@@ -14,7 +14,7 @@ namespace Hazard
 		s_LoadedAssets.clear();
 	}
 	/// <summary>
-	/// Import asset, asset is not loaded until it is reguested
+	/// Import asset, asset is not loaded until it is requested
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
@@ -22,7 +22,7 @@ namespace Hazard
 	{
 		if (filePath == "") return INVALID_ASSET_HANDLE;
 		//TODO: Proper relative path
-		std::filesystem::path path = filePath; //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
+		std::filesystem::path path = File::GetFileAbsolutePath(filePath); //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
 
 		if (s_Registry.Contains(path)) {
 			return s_Registry.Get(path).Handle;

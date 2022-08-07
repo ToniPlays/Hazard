@@ -6,11 +6,14 @@
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
 
+#include "Texture2D.h"
+
 namespace Hazard 
 {
 	struct QuadVertex {
 		glm::vec3 Position;
 		glm::vec4 Color;
+		glm::vec2 TextureCoords;
 		float TextureIndex;
 	};
 
@@ -20,7 +23,7 @@ namespace Hazard
 		size_t MaxVertices;
 		size_t MaxIndices;
 		uint32_t Samplers;
-		//std::vector<Ref<Texture2D>> TextureSlots;
+		std::vector<Ref<Texture2D>> TextureSlots;
 		float TextureIndex = 0.0f;
 		glm::vec4 QuadVertexPos[4];
 	};
@@ -34,14 +37,15 @@ namespace Hazard
 		QuadRenderer(const QuadRenderer&) = delete;
 		QuadRenderer(const QuadRenderer&&) = delete;
 
+		void Init();
+
 		void BeginScene();
 		void EndScene();
 
 		void BeginBatch();
 
 		void Flush();
-		void SubmitQuad(const glm::mat4& transform, glm::vec4 color);
-		void SubmitQuad(const glm::mat4& transform, glm::vec4 color, float textureID);
+		void SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2D>& texture);
 		bool IsVisible(const glm::mat4& transform);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
@@ -52,6 +56,8 @@ namespace Hazard
 		void CreateResources();
 
 	private:
+
+		float GetTextureIndex(const Ref<Texture2D>& texture);
 
 	private:
 		Batch<QuadVertex> m_QuadBatch;

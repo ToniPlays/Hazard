@@ -5,7 +5,6 @@
 
 namespace Hazard
 {
-
 	class Image2D : public Asset 
 	{
 	public:

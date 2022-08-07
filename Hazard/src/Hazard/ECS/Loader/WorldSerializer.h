@@ -23,7 +23,7 @@ namespace Hazard
 				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
 			}
 		}
-		bool SerializeEditor(const std::string& file);
+		bool SerializeEditor(const std::filesystem::path& file);
 		void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
@@ -98,11 +98,10 @@ namespace Hazard
 		void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
-				/*if (component.SourceAsset) {
-					Ref<Hazard::Rendering::Mesh> mesh = AssetManager::GetRuntimeResource<Hazard::Rendering::Mesh>(component.SourceAsset->GetSourceHandle());
-					if(mesh)
-						YamlUtils::Serialize(out, "File", mesh->GetFile());
-				}*/
+				if (component.m_MeshHandle) {
+					AssetMetadata& meta = AssetManager::GetMetadata(component.m_MeshHandle->GetHandle());
+					YamlUtils::Serialize(out, "Mesh", meta.Path.string());
+				}
 				});
 		}
 		template<>
@@ -113,7 +112,7 @@ namespace Hazard
 				if (!component.Texture) return;
 
 				AssetMetadata& meta = AssetManager::GetMetadata(component.Texture->GetHandle());
-				YamlUtils::Serialize(out, "Texture", meta.Path.string());
+				YamlUtils::Serialize(out, "Sprite", meta.Path.string());
 				});
 		}
 		template<>

@@ -176,7 +176,7 @@ namespace HazardRenderer
 		virtual UniformBuffer& GetUniform(const std::string& name) = 0;
 
 		virtual void Set(const std::string& name, uint32_t index, uint32_t value) = 0;
-		virtual void Set(const std::string& name, uint32_t index, Ref<Texture2D>& value) = 0;
+		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> value) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 

@@ -3,6 +3,48 @@
 
 namespace UI
 {
+	AssetPanel::AssetPanel() : Panel("Asset panel")
+	{
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
+			m_Icons[AssetType::Undefined] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/folder.png");
+			m_Icons[AssetType::Folder] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
+			m_Icons[AssetType::AudioClip] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/world.png");
+			m_Icons[AssetType::World] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
+			m_Icons[AssetType::Image] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
+			m_Icons[AssetType::Mesh] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
+			m_Icons[AssetType::Script] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
+			m_Icons[AssetType::EnvironmentMap] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+		{
+			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
+			m_Icons[AssetType::PhysicsMaterial] = AssetManager::GetAsset<Texture2D>(handle);
+		}
+
+
+		SetRootFolder(ProjectManager::GetAssetFolder());
+	}
 	void AssetPanel::OnPanelRender()
 	{
 		ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -94,7 +136,9 @@ namespace UI
 
 		for (auto& item : m_CurrentItems) {
 			item.BeginRender();
-			item.OnRender(thumbailSize);
+
+			Ref<Texture2D> itemIcon = GetItemIcon(item.GetMetadata());
+			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
 		ImGui::Columns();
@@ -103,16 +147,23 @@ namespace UI
 
 	void AssetPanel::RefreshFolderItems()
 	{
+		std::vector<AssetPanelItem> directories;
+		std::vector<AssetPanelItem> files;
+
 		m_CurrentItems.clear();
 		for (auto item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == "meta") {
+			if (File::GetFileExtension(item) == "meta") 
+			{
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
 				AssetPanelItem assetItem = AssetPanelItem(handle);
-				m_CurrentItems.push_back(assetItem);
+				File::IsDirectory(item) ? directories.push_back(assetItem) : files.push_back(assetItem);
 			}
 		}
+		m_CurrentItems.reserve(directories.size() + files.size());
+		m_CurrentItems.insert(m_CurrentItems.end(), directories.begin(), directories.end());
+		m_CurrentItems.insert(m_CurrentItems.end(), files.begin(), files.end());
 	}
 
 	void AssetPanel::DrawCurrentFolderPath()
@@ -140,7 +191,7 @@ namespace UI
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
 		UI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
-			if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered()) {
+			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered()) {
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();
 			}
@@ -149,6 +200,16 @@ namespace UI
 				DrawFolderTreeItem(subfolder);
 			}
 			});
+	}
+
+	Ref<Texture2D> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
+	{
+		switch (metadata.Type)
+		{
+		case AssetType::Image:
+			return AssetManager::GetAsset<Texture2D>(metadata.Handle);
+		}
+		return m_Icons[metadata.Type];
 	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()

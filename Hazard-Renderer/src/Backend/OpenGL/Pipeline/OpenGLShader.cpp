@@ -70,7 +70,7 @@ namespace HazardRenderer::OpenGL
 		GLuint location = glGetUniformLocation(m_ID, ss.str().c_str());
 		glUniform1i(location, value);
 	}
-	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
+	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> value)
 	{
 		Set(name, index, index);
 	}

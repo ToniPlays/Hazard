@@ -35,12 +35,16 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-
 		}
 
-		UI::Image(m_Renderer->GetOutput()->GetImage(), size, { 0, 1 }, { 1, 0 });
+		UI::Image(m_Renderer->GetOutput()->GetImage(), size);
+		UI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
+			AssetMetadata& meta = AssetManager::GetMetadata(handle);
+			Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
+			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
+
 
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 

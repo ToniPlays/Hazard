@@ -157,10 +157,10 @@ bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<u
 	return true;
 }
 
-std::string File::GetFileAbsolutePath(const std::filesystem::path& file)
+std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
 	std::filesystem::path path(file);
-	return std::filesystem::absolute(path).string();
+	return std::filesystem::absolute(path);
 }
 std::string File::GetDirectoryOf(const std::filesystem::path& file)
 {

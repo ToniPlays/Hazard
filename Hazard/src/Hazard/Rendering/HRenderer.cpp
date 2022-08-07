@@ -31,11 +31,15 @@ namespace Hazard
 		const Color& t = spriteRenderer.Tint;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
-		SubmitQuad(tMatrix, color);
+		SubmitQuad(tMatrix, color, spriteRenderer.Texture);
 	}
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color)
 	{
-		s_Engine->GetQuadRenderer().SubmitQuad(transform, color);
+		SubmitQuad(transform, color, nullptr);	
+	}
+	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture)
+	{
+		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
 	void HRenderer::SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent)
 	{

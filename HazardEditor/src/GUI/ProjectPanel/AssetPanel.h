@@ -14,9 +14,7 @@ namespace UI {
 
 	class AssetPanel : public Panel {
 	public:
-		AssetPanel() : Panel("AssetPanel") {
-			SetRootFolder(ProjectManager::GetAssetFolder());
-		};
+		AssetPanel();
 
 		void Update() override {};
 		void OnPanelRender() override;
@@ -38,6 +36,7 @@ namespace UI {
 		void DrawContents();
 		void DrawCurrentFolderPath();
 		void DrawFolderTreeItem(const FolderStructureData& folder);
+		Ref<Texture2D> GetItemIcon(const AssetMetadata& metadata);
 
 		std::vector<FolderStructureData> GenerateFolderStructure();
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
@@ -50,5 +49,6 @@ namespace UI {
 		std::vector<FolderStructureData> m_FolderData;
 
 		std::vector<AssetPanelItem> m_CurrentItems;
+		std::unordered_map<AssetType, Ref<Texture2D>> m_Icons;
 	};
 }

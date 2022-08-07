@@ -18,7 +18,6 @@ layout(std140, binding = 2) uniform Grid {
 
 } u_Grid;
 
-
 layout(location = 0) out vec3 nearPoint;
 layout(location = 1) out vec3 farPoint;
 
@@ -34,7 +33,6 @@ vec3 Unproject(vec2 pos, float z, mat4 view, mat4 projection) {
 	vec4 unprojectedPoint = invView * invProj * vec4(pos, z, 1.0);
 	return unprojectedPoint.xyz / unprojectedPoint.w;
 }
-
 
 void main() 
 {
@@ -113,5 +111,5 @@ void main()
     float fading = max(0, (0.5 - linearDepth));
 
     color = (grid(fragPos3D, u_Grid.u_Scale, true)) * float(t > 0); // adding multiple resolution for the grid
-    color.a *= fading;
+    color.a *= u_Grid.u_ScaleFading;
 }

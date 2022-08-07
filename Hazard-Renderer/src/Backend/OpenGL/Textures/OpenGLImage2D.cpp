@@ -38,6 +38,10 @@ namespace HazardRenderer::OpenGL
 		glDeleteTextures(1, &m_ID);
 		m_ID = 0;
 	}
+	void OpenGLImage2D::Bind(uint32_t slot)
+	{
+		glBindTextureUnit(slot, m_ID);
+	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)
 	{
 		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);

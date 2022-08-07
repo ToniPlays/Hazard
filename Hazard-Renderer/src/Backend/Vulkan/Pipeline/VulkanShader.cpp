@@ -118,7 +118,7 @@ namespace HazardRenderer::Vulkan
 		uniformBuffer->SetData(data, size);
 		return true;
 	}
-	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Texture2D>& value)
+	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Image2D> value)
 	{
 		if (!value) return;
 

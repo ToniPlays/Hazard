@@ -1,6 +1,7 @@
 
 #include "EditorGrid.h"
 #include "Hazard/Rendering/HRenderer.h"
+#include "Hazard/Math/Time.h"
 
 namespace Editor
 {
@@ -16,18 +17,18 @@ namespace Editor
 		if (!m_ShowGrid) return;
 
 		struct GridData {
-			float Near;
-			float Far;
+			float ZNear;
+			float ZFar;
 			float Scale;
-			float ScaleFade = 0.0f;
+			float ScaleFade = 1.0f;
 
 		} gridData;
 		
-		gridData.Near = camera.GetNearClipping();
-		gridData.Far = camera.GetFarClipping();
+		gridData.ZNear = camera.GetNearClipping();
+		gridData.ZFar = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
-		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
+		HZR_ASSERT(m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData)), "No UBO");
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
@@ -47,7 +48,7 @@ namespace Editor
 		specs.ShaderPath = "Shaders/Grid.glsl";
 		specs.DrawType = DrawType::Fill;
 		specs.Usage = PipelineUsage::GraphicsBit;
-		specs.CullMode = CullMode::FrontFace;
+		specs.CullMode = CullMode::None;
 		specs.IsShared = false;
 		specs.DepthTest = true;
 		specs.pBufferLayout = &layout;

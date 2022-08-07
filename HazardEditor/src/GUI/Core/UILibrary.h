@@ -311,7 +311,7 @@ namespace UI
 
 		return 0;
 	}
-	static void Image(Ref<HazardRenderer::Image2D>& image, ImVec2 size, ImVec2 t0 = { 0, 0 }, ImVec2 t1 = { 1, 1 }) {
+	static void Image(Ref<HazardRenderer::Image2D>& image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 }) {
 		ImGui::Image(GetImageID(image), size, t0, t1);
 	}
 #pragma endregion
@@ -599,5 +599,60 @@ namespace UI
 	}
 
 #pragma endregion
+#pragma region DragDrop
 
+	template<typename T, typename Callback>
+	static bool DragSource(const char* type, T* data, Callback callback) 
+	{
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
+			callback();
+			ImGui::EndDragDropSource();
+			return true;
+		}
+		return false;
+	}
+	template<typename T, typename Callback>
+	static bool DragSource(const AssetType& type, T* data, Callback callback)
+	{
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+			ImGui::SetDragDropPayload(Utils::AssetTypeToString(type), (void*)data, sizeof(T));
+			callback();
+			ImGui::EndDragDropSource();
+			return true;
+		}
+		return false;
+	}
+
+	template<typename T, typename Callback>
+	static bool DropTarget(const char* type, Callback callback) {
+		bool accepted = false;
+		if (ImGui::BeginDragDropTarget()) {
+			
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type);
+			if (payload) {
+				callback(*(T*)payload->Data);
+				accepted = true;
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+		return accepted;
+	}
+	template<typename T, typename Callback>
+	inline static bool DropTarget(const AssetType& type, Callback callback) {
+		bool accepted = false;
+		if (ImGui::BeginDragDropTarget()) {
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Utils::AssetTypeToString(type));
+			if (payload) {
+				callback(*(T*)payload->Data);
+				accepted = true;
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+		return accepted;
+	}
+
+#pragma endregion
 }
