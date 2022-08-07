@@ -19,4 +19,10 @@ namespace HazardScript
 
 		ATTRIBUTE_CLASS_TYPE(Todo)
 	};
+	class MenuBarItemAttribute : public Attribute {
+	public:
+		std::string Path;
+
+		ATTRIBUTE_CLASS_TYPE(MenuBarItem)
+	};
 }

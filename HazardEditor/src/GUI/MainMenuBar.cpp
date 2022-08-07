@@ -5,9 +5,11 @@
 
 namespace UI 
 {
-	MainMenuBar::MainMenuBar() 
+	MainMenuBar::MainMenuBar()
 	{
-		ClearMenuBar();
+		Init();
+	}
+	void MainMenuBar::Init() {
 
 		AddMenuItem("File/New", nullptr);
 		AddMenuItem("File/New/Project");
@@ -28,6 +30,9 @@ namespace UI
 		AddMenuItem("Edit/Cut", nullptr);
 		AddMenuItem("Edit/Copy", nullptr);
 		AddMenuItem("Edit/Paste", nullptr);
+		AddMenuItem("Edit/Reload assemblies", []() {
+			Application::GetModule<ScriptEngine>().ReloadAssemblies();
+			});
 
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);

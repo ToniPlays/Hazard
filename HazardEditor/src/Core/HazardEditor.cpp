@@ -8,6 +8,7 @@
 #include "GUI/Debug/Console.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "HazardScript.h"
+#include "EditorScripting/EditorScriptGlue.h"
 
 using namespace Hazard;
 using namespace HazardRenderer;
@@ -17,11 +18,11 @@ static uint32_t GetMessageFlagsFromSeverity(const Severity& severity)
 {
 	switch (severity)
 	{
-	case Severity::Debug:		return MessageFlags_Debug	| MessageFlags_Clearable;
-	case Severity::Info:		return MessageFlags_Info	| MessageFlags_Clearable;
-	case Severity::Trace:		return MessageFlags_Info	| MessageFlags_Clearable;
+	case Severity::Debug:		return MessageFlags_Debug | MessageFlags_Clearable;
+	case Severity::Info:		return MessageFlags_Info | MessageFlags_Clearable;
+	case Severity::Trace:		return MessageFlags_Info | MessageFlags_Clearable;
 	case Severity::Warning:		return MessageFlags_Warning | MessageFlags_Clearable;
-	case Severity::Error:		return MessageFlags_Error	| MessageFlags_Clearable;
+	case Severity::Error:		return MessageFlags_Error | MessageFlags_Clearable;
 	case Severity::Critical:	return MessageFlags_Fatal;
 	}
 	return 0;
@@ -97,12 +98,14 @@ void EditorApplication::PreInit()
 	createInfo.ScriptEngineInfo = &scriptEngine;
 
 	CreateApplicationStack(&createInfo);
+
+	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void EditorApplication::Init()
 {
-	
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderEngine>().GetWindow();
+	auto& scriptEngine = GetModule<ScriptEngine>();
 
 	window.SetDebugCallback([](RenderMessage message) {
 		auto manager = Application::GetModule<GUIManager>();
@@ -113,7 +116,7 @@ void EditorApplication::Init()
 		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
 		});
 
-	Application::GetModule<ScriptEngine>().SetDebugCallback([](ScriptMessage message) {
+	scriptEngine.SetDebugCallback([](ScriptMessage message) {
 		auto manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (!console) return;
@@ -121,6 +124,7 @@ void EditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
 		});
+	scriptEngine.ReloadAssemblies();
 }
 
 bool EditorApplication::OnEvent(Event& e)

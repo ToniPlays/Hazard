@@ -22,6 +22,12 @@ namespace HazardScript
 			attrib->Progress = (Progress)Mono::GetFieldValue<uint32_t>(obj, "Progress");
 			return attrib;
 		}
+		else if (className == "MenuBarItem")
+		{
+			MenuBarItemAttribute* attrib = new MenuBarItemAttribute();
+			attrib->Path = Mono::GetFieldValue<std::string>(obj, "Path");
+			return attrib;
+		}
 		else if (className == "HideInProperties") 
 		{
 			return new HideInPropertiesAttribute();
@@ -72,7 +78,6 @@ namespace HazardScript
 		{
 			return new ExposeFuncAttribute();
 		}
-
 		return new Attribute();
 	}
 }

@@ -77,6 +77,14 @@ namespace UI
 		void ClearMenuBar() {
 			m_MenuItems.clear();
 		}
+
+		void Reset() {
+			m_MenuItems.clear();
+			Init();
+		}
+
+		virtual void Init() = 0;
+
 		MenuItemElement& GetMenu(const std::string& name) {
 
 			std::vector<std::string> path = StringUtil::SplitString(name, '/');

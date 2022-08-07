@@ -1464,6 +1464,7 @@
     <ClInclude Include="src\Hazard\Rendering\Texture2D.h" />
     <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h" />
     <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
+    <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

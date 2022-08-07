@@ -16,7 +16,7 @@ namespace HazardScript
 		std::filesystem::path& GetSourcePath() { return m_Path; }
 
 		std::unordered_map<std::string, Script>& GetScripts() { return m_Scripts; }
-		MonoImage* GetImage();
+		MonoImage* GetImage() const;
 
 		bool HasScript(const std::string& name) {
 			return m_Scripts.find(name) != m_Scripts.end();
@@ -25,6 +25,17 @@ namespace HazardScript
 			return m_Scripts[name];
 		}
 		MonoAssembly* GetAssembly() { return m_Assembly; }
+
+		template<typename T>
+		std::vector<Script> ViewAttributes() {
+			std::vector<Script> results;
+
+			for (auto& [name, script] : m_Scripts) {
+				if (script.Has<T>()) 
+					results.push_back(script);
+			}
+			return results;
+		}
 
 	private:
 		void LoadScripts();

@@ -9,13 +9,20 @@ namespace Hazard
 {
 	ScriptEngine::ScriptEngine(ScriptEngineCreateInfo* info) : Module("ScriptEngine")
 	{
-		HazardScriptCreateInfo createInfo = {};
-		createInfo.CoreAssemblyPath = info->CoreAssemblyPath;
-		createInfo.AppAssemblyPath = info->AppAssemblyPath;
-		createInfo.AssemblyPath = info->AssemblyPath;
-		createInfo.ConfigPath = info->ConfigPath;
+		m_Info = *info;
+		RegisterScriptGlue<InternalCall>();
 
-		createInfo.DebugCallback = [&](ScriptMessage message) 
+	}
+	void ScriptEngine::Init()
+	{
+		HazardScriptCreateInfo createInfo = {};
+		createInfo.CoreAssemblyPath = m_Info.CoreAssemblyPath;
+		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
+		createInfo.AssemblyPath = m_Info.AssemblyPath;
+		createInfo.ConfigPath = m_Info.ConfigPath;
+		createInfo.LoadAssebmlies = false;
+
+		createInfo.DebugCallback = [&](ScriptMessage message)
 		{
 			if (!m_MessageCallback) {
 				m_QueuedMessages.push_back(message);
@@ -29,14 +36,19 @@ namespace Hazard
 			m_MessageCallback(message);
 		};
 		createInfo.BindingCallback = [&]() {
-			for (auto& cb : m_BindCallbacks) {
-				cb(this);
+			HZR_CORE_WARN("Binding stuff");
+			for (auto& cb : m_ScriptGlue) {
+				for (auto* assembly : m_Engine->GetAssemblies())
+					cb->OnAssemblyLoaded(assembly);
+			}
+
+
+			for (auto& cb : m_ScriptGlue) {
+				cb->Register(this);
 			}
 		};
 
-		AddBindingCallback(InternalCalls::RegisterInternalCalls);
 		m_Engine = HazardScriptEngine::Create(&createInfo);
-
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{
@@ -48,6 +60,10 @@ namespace Hazard
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
 	{
 		m_Engine->SendDebugMessage(message);
+	}
+	void ScriptEngine::ReloadAssemblies()
+	{
+		m_Engine->Reload();
 	}
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{

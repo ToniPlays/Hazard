@@ -4,6 +4,7 @@
 #include "HazardScript.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Hazard/ECS/Entity.h"
+#include "IScriptGlue.h"
 
 namespace Hazard 
 {
@@ -13,6 +14,8 @@ namespace Hazard
 		ScriptEngine(ScriptEngineCreateInfo* info);
 		~ScriptEngine() = default;
 		
+		void Init();
+
 		bool HasModule(const std::string& moduleName);
 		HazardScript::Script& GetScript(const std::string& moduleName);
 		void SendDebugMessage(const HazardScript::ScriptMessage& message);
@@ -20,17 +23,25 @@ namespace Hazard
 		void RegisterInternalCall(const std::string& signature, void* method) {
 			m_Engine->RegisterInternalCall(signature, method);
 		}
-		void AddBindingCallback(ScriptBindCallback callback) {
-			m_BindCallbacks.push_back(callback);
+		template<typename T>
+		void RegisterScriptGlue() 
+		{
+			static_assert(std::is_base_of<IScriptGlue, T>::value, "Cannot use this type");
+			T* glue = new T();
+			m_ScriptGlue.push_back((IScriptGlue*)glue);
 		}
 
+		void ReloadAssemblies();
 		void SetDebugCallback(ScriptMessageCallback callback);
 		void InitializeComponent(Entity& entity, ScriptComponent& component);
 
 	private:
+
+		ScriptEngineCreateInfo m_Info;
+
 		HazardScript::HazardScriptEngine* m_Engine;
 		std::vector<HazardScript::ScriptMessage> m_QueuedMessages;
-		std::vector<ScriptBindCallback> m_BindCallbacks;
+		std::vector<IScriptGlue*> m_ScriptGlue;
 		ScriptMessageCallback m_MessageCallback;
 	};
 }

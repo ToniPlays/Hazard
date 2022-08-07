@@ -15,6 +15,7 @@ namespace HazardScript {
 		None = 0,
 		Author, 
 		Todo,
+		MenuBarItem,
 		HideInProperties,
 		ShowInProperties,
 		SerializeField,

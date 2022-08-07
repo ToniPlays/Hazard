@@ -189,6 +189,7 @@
     <ClInclude Include="AssetPanelItem.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorScripting\EditorScriptGlue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
@@ -272,5 +273,6 @@
     <ClCompile Include="AssetPanelItem.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp" />
   </ItemGroup>
 </Project>

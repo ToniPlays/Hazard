@@ -15,6 +15,7 @@ namespace HazardScript
 		ScriptAssembly AppAssembly;
 
 		BindingCallback BindingCallback;
+		bool LoadAssembliesOnInit = true;
 	};
 
 	class HazardScriptEngine 
@@ -23,7 +24,7 @@ namespace HazardScript
 		HazardScriptEngine() = delete;
 		~HazardScriptEngine() {};
 
-		void Reload() {};
+		void Reload();
 		void RegisterInternalCall(const std::string& signature, void* function);
 
 		ScriptAssembly& GetAppAssembly() { return m_MonoData.AppAssembly; }

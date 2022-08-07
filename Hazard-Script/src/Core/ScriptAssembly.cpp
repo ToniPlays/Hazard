@@ -26,7 +26,7 @@ namespace HazardScript
 
 		return true;
 	}
-	MonoImage* ScriptAssembly::GetImage()
+	MonoImage* ScriptAssembly::GetImage() const
 	{
 		return mono_assembly_get_image(m_Assembly);
 	}

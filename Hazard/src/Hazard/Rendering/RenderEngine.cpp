@@ -70,6 +70,7 @@ namespace Hazard
 				struct ModelData {
 					glm::mat4 transform;
 				};
+
 				ModelData data;
 				data.transform = rawMesh.Transform;
 

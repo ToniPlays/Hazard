@@ -26,5 +26,7 @@ namespace HazardScript
 
 		ScriptDebugCallback DebugCallback;
 		BindingCallback BindingCallback;
+
+		bool LoadAssebmlies = true;
 	};
 }

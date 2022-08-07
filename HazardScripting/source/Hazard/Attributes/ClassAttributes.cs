@@ -4,8 +4,13 @@ using System.Text;
 
 namespace Hazard
 {
-
-    public enum Progress { Done = 0, Awaiting = 1, InProgress = 2, Bug = 3 };
+    public enum Status
+    {
+        Done = 0,
+		Awaiting = 1,
+		InProgress = 2,
+		Bug = 3
+	}
 
     [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
     public class Author : System.Attribute
@@ -24,10 +29,19 @@ namespace Hazard
         private string Detail;
         private int Progress;
 
-        public Todo(string value, Progress progress)
+        public Todo(string value, Status progress)
         {
             Detail = value;
             Progress = (int)progress;
+        }
+    }
+    [AttributeUsage(AttributeTargets.Class)]
+    //Menu items
+    public class MenuBarItem : Attribute {
+        private string Path;
+
+        public MenuBarItem(string path) {
+            Path = path;
         }
     }
 }

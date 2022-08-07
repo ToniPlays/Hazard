@@ -23,9 +23,11 @@ namespace HazardScript
 
 		m_MonoData.CoreAssembly.SetSourcePath(info->CoreAssemblyPath);
 		m_MonoData.AppAssembly.SetSourcePath(info->AppAssemblyPath);
+
 		m_MonoData.MonoAssemblyDir = info->AssemblyPath;
 		m_MonoData.MonoConfigDir = info->ConfigPath;
 		m_MonoData.BindingCallback = info->BindingCallback;
+		m_MonoData.LoadAssembliesOnInit = info->LoadAssebmlies;
 
 		HZR_ASSERT(info->DebugCallback, "Debug callback is required");
 		HZR_ASSERT(info->BindingCallback, "Binding callback is required");
@@ -34,6 +36,11 @@ namespace HazardScript
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
 		InitializeMono();
+	}
+	void HazardScriptEngine::Reload()
+	{
+		LoadCoreAssebly();
+		LoadRuntimeAssembly();
 	}
 	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
 	{
@@ -70,8 +77,9 @@ namespace HazardScript
 
 		Mono::Init("HazardScriptCore");
 
-		LoadCoreAssebly();
-		LoadRuntimeAssembly();
+		if (m_MonoData.LoadAssembliesOnInit) {
+			Reload();
+		}
 	}
 	void HazardScriptEngine::LoadCoreAssebly()
 	{
@@ -87,15 +95,15 @@ namespace HazardScript
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}
-		if (!m_MonoData.AppAssembly.LoadFromSource(true)) {
-			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
-			return;
-		}
+		
 		SendDebugMessage({ Severity::Info, "Assemblies loaded" });
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()
 	{
-		m_MonoData.AppAssembly.LoadFromSource();
+		if (!m_MonoData.AppAssembly.LoadFromSource(true)) {
+			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
+			return;
+		}
 		m_MonoData.BindingCallback();
 	}
 }
