@@ -102,10 +102,14 @@ namespace Hazard::ImUI
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+
 		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer))) {
 			text = buffer;
+			ImGui::PopStyleVar();
 			return true;
 		}
+		ImGui::PopStyleVar();
 		return false;
 	}
 	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)

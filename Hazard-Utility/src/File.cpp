@@ -9,8 +9,8 @@
 #endif
 
 
-std::string File::OpenFileDialog(const char* filters) {
-	auto f = pfd::open_file("Open file", "", { "" }, pfd::opt::none);
+std::string File::OpenFileDialog(const std::vector<std::string>& filters) {
+	auto f = pfd::open_file("Open file", "", filters, pfd::opt::none);
 	if (f.result().size() == 0) return "";
 	return f.result()[0];
 }

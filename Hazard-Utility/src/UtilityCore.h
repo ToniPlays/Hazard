@@ -11,7 +11,7 @@
 
 
 #if HZR_OPTICK
-#include <optick.h>
+	#include <optick.h>
 #endif
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))

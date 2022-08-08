@@ -3,6 +3,9 @@
 #include "Hazard.h"
 #include "HazardRendererCore.h"
 #include "Platform/EditorGuiPlatform.h"
+#include "HazardLauncherManager.h"
+
+#define CONFIG_PATH "launcherConfig.hzrcfg"
 
 class GUIManager : public Hazard::Module 
 {
@@ -15,8 +18,6 @@ public:
 	void Render() override;
 
 	bool OnEvent(Event& e) override;
-    
-    Hazard::ImUI::PanelManager& GetPanelManager() { return m_PanelManager; }
 
 	template<typename T>
 	void SetPanelOpen(bool open) 
@@ -30,8 +31,15 @@ public:
 private:
 	void InitImGuiPlatform(HazardRenderer::Window& window);
 
+	void DrawSideBar();
+	void DrawBottomBar();
+
 private:
-	Hazard::ImUI::PanelManager m_PanelManager;
 	EditorGuiPlatform* m_Platform;
 	HazardRenderer::Window* m_Window;
+
+	HazardLauncherManager m_Manager;
+
+	std::filesystem::path m_CurrentProjectPath;
+	std::string m_SearchValue;
 };

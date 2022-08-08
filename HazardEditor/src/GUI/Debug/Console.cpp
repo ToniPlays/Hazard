@@ -28,7 +28,6 @@ namespace UI
 
 		DrawToolbar({ consoleSize.x, 28.0f });
 
-
 		ImUI::Table("Console", columns, 3, consoleSize, [&]() {
 
 			float rowHeight = 24.0f;
