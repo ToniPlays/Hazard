@@ -244,7 +244,7 @@ namespace UI
 				ImGui::NextColumn();
 
 				if (ImGui::Button("Import Mesh")) {
-					std::string path = File::OpenFileDialog("");
+					std::string path = File::OpenFileDialog();
 					AssetHandle handle = Hazard::AssetManager::ImportAsset(path);
 					c.m_MeshHandle = Hazard::AssetManager::GetAsset<Hazard::Mesh>(handle);
 					HZR_WARN("Loading mesh file {0}", path);

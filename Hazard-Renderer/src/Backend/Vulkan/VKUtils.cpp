@@ -41,7 +41,7 @@ namespace HazardRenderer::Vulkan {
 				return resultDevice;
 			}
 		}
-		HZR_ASSERT("Failed to find Vulkan capable device");
+		HZR_ASSERT(false, "Failed to find Vulkan capable device");
 	}
 
 	bool VKUtils::SuitableDevice(VkPhysicalDevice device, VkInstance instance, VkSurfaceKHR surface)

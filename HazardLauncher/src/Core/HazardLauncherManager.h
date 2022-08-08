@@ -8,7 +8,7 @@ public:
 	HazardLauncherManager() = default;
 	~HazardLauncherManager() = default;
 
-	void OpenProject(const HazardProject& project);
+	bool OpenProject(const HazardProject& project);
 	bool ImportProject(const std::filesystem::path& path);
 	bool LoadFromConfigFile(const std::filesystem::path& path);
 	void SaveConfigToFile(const std::filesystem::path& path);

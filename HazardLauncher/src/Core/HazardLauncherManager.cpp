@@ -1,14 +1,20 @@
 #include "HazardLauncherManager.h"
 #include "Hazard.h"
 
-void HazardLauncherManager::OpenProject(const HazardProject& project)
+bool HazardLauncherManager::OpenProject(const HazardProject& project)
 {
+	std::cout << "Opening Hazard project" << std::endl;
 
+	std::stringstream ss;
+	ss << "-wdir C:/dev/Hazard/HazardEditor";
+	ss << " -hprj " << StringUtil::Replace(project.Path.string(), "\\", "/");
+	std::cout << ss.str() << std::endl;
+	File::CreateSubprocess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str());
+	return true;
 }
 
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 {
-	std::cout << "Importing " << path.string() << std::endl;
 	if (File::GetFileExtension(path) != "hzrproj") return false;
 
 	HazardProject project = {};

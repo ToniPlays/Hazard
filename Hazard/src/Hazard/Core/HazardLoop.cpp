@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "Hazard/Logging/Logger.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "CommandLineArgs.h"
 
 namespace Hazard {
 
@@ -16,6 +17,7 @@ namespace Hazard {
 	{
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
+
 		m_ModuleHandler = CreateScope<ModuleHandler>();
 
 #ifndef HZR_RELEASE

@@ -6,7 +6,7 @@
 struct ProjectGeneralData 
 {
 	std::string ProjectName;
-	std::filesystem::path ProjectDirectory = "";
+	std::filesystem::path ProjectDirectory;
 	std::filesystem::path StartupWorld;
 };
 

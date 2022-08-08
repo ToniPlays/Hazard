@@ -39,10 +39,15 @@ void EditorApplication::PreInit()
 	renderAPI = RenderAPI::Metal;
 #endif
 
+	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
+	if (!workingDir.empty()) {
+		std::filesystem::current_path(workingDir);
+		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
+	}
+	PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
+	HZR_ERROR("Crap");
+
 	HZR_INFO("EditorApplication::PreInit()");
-
-	PushModule<ProjectManager>().LoadProjectFromFile("C:\\dev\\HazardCraft\\Project.hzrproj");
-
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;
@@ -98,6 +103,7 @@ void EditorApplication::PreInit()
 	createInfo.EntityComponent = &entity;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 
+	HZR_WARN("Initializing");
 	CreateApplicationStack(&createInfo);
 
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();

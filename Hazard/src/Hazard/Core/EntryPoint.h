@@ -24,6 +24,7 @@ extern Hazard::Application* Hazard::CreateApplication();
         using namespace Hazard;
         {
             CommandLineArgs::Init(argc, argv);
+            
             Application* app = CreateApplication();
 
             HazardLoop loop(app);

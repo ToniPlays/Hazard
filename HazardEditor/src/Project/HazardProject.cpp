@@ -6,6 +6,7 @@
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
 	if (!File::Exists(path)) {
+		HZR_FATAL(path.string());
 		HZR_ASSERT(false, "This needs to be fixed");
 	}
 
@@ -19,7 +20,8 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 void HazardProject::ProcessAssets()
 {
-	std::filesystem::path assetPath = m_Data.ProjectDirectory.string() + "\Assets";
+	HZR_WARN("Files loaded");
+	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 	for (auto item : File::GetAllInDirectory(assetPath)) 
 	{
 		if (File::GetFileExtension(item) == "meta") 
@@ -32,6 +34,7 @@ void HazardProject::ProcessAssets()
 			}
 		}
 	}
+	
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

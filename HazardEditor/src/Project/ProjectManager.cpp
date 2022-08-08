@@ -1,5 +1,6 @@
 
 #include "ProjectManager.h"
+#include "Hazard.h"
 
 HazardProject& ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
 {

@@ -2,7 +2,7 @@
 
 #include "Utility/StringUtil.h"
 
-namespace Hazard 
+namespace Hazard
 {
 	class CommandLineArgs {
 	public:
@@ -10,22 +10,24 @@ namespace Hazard
 		static void Init(int count, char* values[])
 		{
 			std::stringstream ss;
-			for (int i = 1; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 				ss << values[i] << " ";
 			}
-			
 			std::vector<std::string> args = StringUtil::SplitString(ss.str(), '-');
+
 			for (auto& arg : args) {
+				if (arg.find_first_of(' ') == std::string::npos) continue;
 				std::string key = arg.substr(0, arg.find_first_of(' '));
 				std::string value = arg.substr(arg.find_first_of(' '));
 				m_Arguments[key] = StringUtil::SplitString(value, ' ');
+				std::cout << key << " -> " << value << std::endl;
 			}
 		}
 
 		template<typename C>
 		static C Get(const std::string& key)
 		{
-			assert(false);
+			static_assert(false);
 		}
 		template<>
 		static bool Get(const std::string& key)
@@ -35,7 +37,7 @@ namespace Hazard
 		template<>
 		static std::string Get(const std::string& key)
 		{
-			if (m_Arguments[key].size() == 0) 
+			if (m_Arguments[key].size() == 0)
 				return "";
 			return m_Arguments[key][0];
 		}

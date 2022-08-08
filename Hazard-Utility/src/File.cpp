@@ -6,8 +6,15 @@
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <shlobj.h>
+#include <cstdlib>
+#include <Windows.h>
 #endif
 
+std::string File::OpenFileDialog() {
+	auto f = pfd::open_file("Open file", "");
+	if (f.result().size() == 0) return "";
+	return f.result()[0];
+}
 
 std::string File::OpenFileDialog(const std::vector<std::string>& filters) {
 	auto f = pfd::open_file("Open file", "", filters, pfd::opt::none);
@@ -164,14 +171,7 @@ std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& fil
 }
 std::string File::GetDirectoryOf(const std::filesystem::path& file)
 {
-	std::vector<std::string> string = StringUtil::SplitString(file.string(), '\\');
-	string.erase(string.end() - 1);
-
-	std::string result = "";
-
-	for (std::string f : string)
-		result += f + "\\";
-	return result;
+	return file.parent_path().string();
 }
 std::string File::GetName(const std::filesystem::path& file)
 {
@@ -207,6 +207,37 @@ bool File::CreateDir(const std::filesystem::path& dir)
 void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
+
+int File::SystemCall(const std::string& command) 
+{
+	return system(command.c_str());
+}
+
+int File::CreateSubprocess(const std::string& path, const std::string& arguments)
+{
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+	// set the size of the structures
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	CreateProcessA(
+		path.c_str(),
+		(LPSTR)arguments.c_str(),
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NEW_CONSOLE,
+		NULL,
+		NULL,
+		&si,
+		&pi
+	);
+	return 1;
+}
+
 bool File::HasEnvinronmentVar(const std::string& key) {
 	return false; // PlatformUtils::HasEnvVariable(key);
 }

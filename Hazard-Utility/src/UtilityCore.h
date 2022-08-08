@@ -16,7 +16,7 @@
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
 #ifdef HZR_DEBUG
-#define HZR_ASSERT(x, m) if(!(x)) THROW_EXCEPT(m)
+#define HZR_ASSERT(x, m) if(!(x)) std::cout << (m) << std::endl;
 #else
 #define HZR_ASSERT(x, m) (x)
 #endif
@@ -71,8 +71,6 @@
 #define HZR_PROFILE_FUNCTION(...)
 #define HZR_PROFILE_FRAME(...)
 #endif
-
-
 
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)

@@ -23,6 +23,7 @@ enum class CopyOptions {
 
 class File {
 public:
+	static std::string OpenFileDialog();
 	static std::string OpenFileDialog(const std::vector<std::string>& filters);
 	static std::string OpenFolderDialog(const std::string& title = "Select folder");
 	static std::string SaveFile(const char* filters);
@@ -53,6 +54,9 @@ public:
 
 	static bool CreateDir(const std::filesystem::path& dir);
 	static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);
+
+	static int SystemCall(const std::string& command);
+	static int CreateSubprocess(const std::string& path, const std::string& arguments);
 
 	static bool HasEnvinronmentVar(const std::string& key);
 	static std::string GetEnvironmentVar(const std::string& key);

@@ -121,6 +121,13 @@ void GUIManager::Render()
 				ImUI::ShiftX(8.0f);
 				ImGui::Text("12.2.2022");
 				});
+
+			if (clicked) {
+				if (m_Manager.OpenProject(project)) {
+					WindowCloseEvent e;
+					HazardLoop::GetCurrent().OnEvent(e);
+				}
+			}
 		}
 
 		});
@@ -202,7 +209,8 @@ void GUIManager::DrawBottomBar()
 		ImGui::SameLine(0, 5.0f);
 		if (ImGui::Button("Browse", { 100, 24 })) {
 			std::filesystem::path newPath = File::OpenFolderDialog();
-			if (!newPath.empty()) m_CurrentProjectPath = newPath;
+			if (!newPath.empty()) 
+				m_CurrentProjectPath = newPath;
 		}
 
 		ImGui::SetCursorPos({ size.x - 108.0f, size.y - 32.0f });
