@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
 #include "Project/ProjectManager.h"
 #include "AssetPanelItem.h"
 
@@ -12,7 +12,7 @@ namespace UI {
 		std::vector<FolderStructureData> SubFolders;
 	};
 
-	class AssetPanel : public Panel {
+	class AssetPanel : public Hazard::ImUI::Panel {
 	public:
 		AssetPanel();
 
@@ -36,7 +36,7 @@ namespace UI {
 		void DrawContents();
 		void DrawCurrentFolderPath();
 		void DrawFolderTreeItem(const FolderStructureData& folder);
-		Ref<Texture2D> GetItemIcon(const AssetMetadata& metadata);
+		Ref<Hazard::Texture2D> GetItemIcon(const Hazard::AssetMetadata& metadata);
 
 		std::vector<FolderStructureData> GenerateFolderStructure();
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
@@ -49,6 +49,6 @@ namespace UI {
 		std::vector<FolderStructureData> m_FolderData;
 
 		std::vector<AssetPanelItem> m_CurrentItems;
-		std::unordered_map<AssetType, Ref<Texture2D>> m_Icons;
+		std::unordered_map<AssetType, Ref<Hazard::Texture2D>> m_Icons;
 	};
 }

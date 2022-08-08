@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
 
 namespace UI {
-	class RendererDebugPanel : public Panel {
+	class RendererDebugPanel : public Hazard::ImUI::Panel{
 	public:
-		RendererDebugPanel() : Panel("RendererDebug") { m_Open = false; };
+		RendererDebugPanel() : Hazard::ImUI::Panel("RendererDebug") { m_Open = false; };
 
 		void Update() override {};
 		void OnPanelRender() override;

@@ -31,3 +31,11 @@
 
 #include <hzrpch.h>
 
+
+//Hazard ImGui library
+#include "Hazard/ImGUI/Panel.h"
+#include "Hazard/ImGUI/PanelManager.h"
+#include "Hazard/ImGUI/StyleManager.h"
+#include "Hazard/ImGUI/UILibrary.h"
+#include "Hazard/ImGUI/MenuBar.h"
+#include "Hazard/ImGUI/Dockspace.h"

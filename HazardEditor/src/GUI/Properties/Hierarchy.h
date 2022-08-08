@@ -1,12 +1,12 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
 #include "Hazard/Core/Application.h"
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/ECS/Entity.h"
 
 namespace UI {
-	class Hierarchy : public Panel {
+	class Hierarchy : public Hazard::ImUI::Panel {
 	public:
 		Hierarchy();
 
@@ -14,10 +14,10 @@ namespace UI {
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
 	private:
-		void DrawModifiers(Entity& e, TagComponent& tag);
-		void DrawContextMenu(Ref<World>& world);
+		void DrawModifiers(Hazard::Entity& e, Hazard::TagComponent& tag);
+		void DrawContextMenu(Ref<Hazard::World>& world);
 	private:
 		Hazard::WorldHandler* m_WorldHandler;
-		Entity m_SelectionContext;
+		Hazard::Entity m_SelectionContext;
 	};
 }

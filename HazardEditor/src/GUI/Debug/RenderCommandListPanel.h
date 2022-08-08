@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
 
 namespace UI {
-	class RenderCommandListPanel : public Panel {
+	class RenderCommandListPanel : public Hazard::ImUI::Panel {
 	public:
-		RenderCommandListPanel() : Panel("RenderCommandList") { m_Open = true; };
+		RenderCommandListPanel() : Hazard::ImUI::Panel("RenderCommandList") { m_Open = true; };
 		
 		void Update() override {};
 		void OnPanelRender() override;

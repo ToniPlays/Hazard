@@ -47,7 +47,7 @@ namespace UI
 	}
 	void AssetPanel::OnPanelRender()
 	{
-		ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		DrawToolbar();
 		ImGui::Columns(2, 0, true);
 		DrawFolderTreeView();
@@ -58,12 +58,12 @@ namespace UI
 	void AssetPanel::DrawToolbar()
 	{
 		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 28.0f };
-		const Style& style = StyleManager::GetCurrent();
-		ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImUI::ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImGui::BeginChild("Toolbar", size);
 
 		{
-			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			if (ImGui::Button(ICON_FK_PLUS " ADD", { 75.0, 28.0f })) {
 
 			}
@@ -95,26 +95,26 @@ namespace UI
 		}
 
 		ImGui::EndChild();
-		Separator({ size.x, 2.0f }, style.Frame.FrameColor);
+		ImUI::Separator({ size.x, 2.0f }, style.Frame.FrameColor);
 	}
 	void AssetPanel::DrawFolderTreeView()
 	{
-		const Style& style = StyleManager::GetCurrent();
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImGui::BeginChild("##FileTree");
 		{
 
-			ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-			UI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
-				ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
+			ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+			ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
+				ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
 
 				});
-			UI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed |ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+			ImUI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed |ImGuiTreeNodeFlags_DefaultOpen, [&]() {
 				for (const auto& folder : m_FolderData) {
 					DrawFolderTreeItem(folder);
 				}
 				});
-			UI::ContextMenu([&]() {
-				UI::MenuItem("Refresh", [&]() {
+			ImUI::ContextMenu([&]() {
+				ImUI::MenuItem("Refresh", [&]() {
 					m_FolderData = GenerateFolderStructure();
 					});
 				});
@@ -168,7 +168,7 @@ namespace UI
 
 	void AssetPanel::DrawCurrentFolderPath()
 	{
-		const Style& style = StyleManager::GetCurrent();
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
 		std::vector<std::string> paths = StringUtil::SplitString(relative, '\\');
 
@@ -190,7 +190,7 @@ namespace UI
 	}
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
-		UI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
+		ImUI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
 			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered()) {
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();

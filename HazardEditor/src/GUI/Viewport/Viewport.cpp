@@ -23,8 +23,8 @@ namespace UI
 	}
 	void Viewport::OnPanelRender()
 	{
-		ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-		ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
+		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
 		bool is2D = m_EditorCamera.Is2DEnabled();
 		ImVec2 corner = ImGui::GetCursorPos();
@@ -37,8 +37,8 @@ namespace UI
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
-		UI::Image(m_Renderer->GetOutput()->GetImage(), size);
-		UI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
+		ImUI::Image(m_Renderer->GetOutput()->GetImage(), size);
+		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);
 			Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
 			});
@@ -70,23 +70,23 @@ namespace UI
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(size.x - 100);
-		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 25);
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 25);
 
-		const Style& style = StyleManager::GetCurrent();
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		const ImVec4& backgroundColor = style.BackgroundColor;
 		const ImVec4& offColor = style.Window.TextDisabled;
 
 		ImGui::BeginChild("##gizmoTools", { 92, 25 });
 		ImGui::SameLine(0, 6);
-		if (UI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 25 })) {
+		if (ImUI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Translate);
 		}
 		ImGui::SameLine(0, 0);
-		if (UI::ColoredButton(ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 25 })) {
+		if (ImUI::ColoredButton(ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Rotate);
 		}
 		ImGui::SameLine(0, 0);
-		if (UI::ColoredButton(ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 25 })) {
+		if (ImUI::ColoredButton(ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 25 })) {
 			m_Gizmos.SetType(Gizmo::Scale);
 		}
 
@@ -161,9 +161,10 @@ namespace UI
 
 	void Viewport::DrawStatsWindow()
 	{
-		Style& style = StyleManager::GetCurrent();
-		ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
-		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);
+		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);
+
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 

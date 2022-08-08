@@ -61,7 +61,6 @@ namespace Hazard
 		uint32_t Height = 0;
 	};
 
-
 	struct HazardRendererCreateInfo
 	{
 		RenderAPI Renderer = RenderAPI::Auto;

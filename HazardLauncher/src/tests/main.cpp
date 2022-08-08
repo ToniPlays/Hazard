@@ -1,4 +1,4 @@
-#if 1
+#if 0
 #include "tests/SimpleCanvas.cpp"
 #include "tests/Rendering/TriangleTest.h"
 #include "tests/Rendering/TexturedQuad.h"

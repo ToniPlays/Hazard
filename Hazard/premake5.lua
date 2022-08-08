@@ -18,7 +18,9 @@ project "Hazard"
 		"vendor/glm/glm/**.hpp",
 		"vendor/glm/glm/**.inl",
 		"vendor/VulkanMemoryAllocator/**.h",
-		"vendor/VulkanMemoryAllocator/**.cpp"
+		"vendor/VulkanMemoryAllocator/**.cpp",
+		"vendor/vendor/ImGui_Backend/**.h",
+		"Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
 	defines
@@ -49,6 +51,7 @@ project "Hazard"
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
 		"%{IncludeDir.Hazard_Script}",
@@ -59,6 +62,7 @@ project "Hazard"
 	links {
 		"GLFW",
 		"Glad",
+		"ImGui",
 		"yaml-cpp",
 		"Box2D",
 		"Hazard-Renderer",

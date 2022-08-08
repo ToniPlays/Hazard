@@ -31,9 +31,9 @@ namespace UI
 		UI::ComponentMenuIfExists<CircleCollider2DComponent>(m_SelectionContext);
 
 		{
-			const Style& style = StyleManager::GetCurrent();
-			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
-			Shift(ImGui::GetContentRegionAvailWidth() / 2.0f - 65.0f, 50.0f);
+			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ImUI::Shift(ImGui::GetContentRegionAvailWidth() / 2.0f - 65.0f, 50.0f);
 
 			if (ImGui::Button("Add component", { 130, 40 })) 
 			{
@@ -54,14 +54,14 @@ namespace UI
 	}
 	void Properties::DrawContextMenu(Entity& e)
 	{
-		UI::ContextMenu([&]() {
-			UI::Submenu("General", [&]() {
+		ImUI::ContextMenu([&]() {
+			ImUI::Submenu("General", [&]() {
 				DrawAddComponentMenuIfNotExists<ScriptComponent>("Script", e);
 				});
-			UI::Submenu("3D", [&]() {
+			ImUI::Submenu("3D", [&]() {
 				DrawAddComponentMenuIfNotExists<MeshComponent>("Mesh component", e);
 				});
-			UI::Submenu("2D", [&]() {
+			ImUI::Submenu("2D", [&]() {
 				DrawAddComponentMenuIfNotExists<SpriteRendererComponent>("Sprite renderer", e);
 				DrawAddComponentMenuIfNotExists<BatchComponent>("Batch renderer", e);
 
@@ -69,7 +69,7 @@ namespace UI
 				DrawAddComponentMenuIfNotExists<BoxCollider2DComponent>("Box collider 2D", e);
 				DrawAddComponentMenuIfNotExists<CircleCollider2DComponent>("Circle collider 2D", e);
 				});
-			UI::Submenu("Lighting", [&]() {
+			ImUI::Submenu("Lighting", [&]() {
 				DrawAddComponentMenuIfNotExists<SkyLightComponent>("Skylight", e);
 				DrawAddComponentMenuIfNotExists<DirectionalLightComponent>("Directional light", e);
 				DrawAddComponentMenuIfNotExists<PointLightComponent>("Point light", e);

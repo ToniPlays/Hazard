@@ -11,71 +11,98 @@ project "HazardLauncher"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"%{wks.location}/Hazard/vendor/vendor/ImGui_Backend/**.h",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
 	includedirs
 	{
+		"%{wks.location}/Hazard/vendor/spdlog/include",
+		"%{wks.location}/Hazard/src",
+		"%{wks.location}/Hazard/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.Mono}",
-		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
-		"%{IncludeDir.VMA}",
-		"%{IncludeDir.Optick}",
-		"%{IncludeDir.PortableFileDialogs}",
+        "%{IncludeDir.Metal}",
+		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
 		"%{IncludeDir.Hazard_Script}",
 		"%{IncludeDir.Hazard_UI}",
+		"%{IncludeDir.PortableFileDialogs}",
+		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Optick}",
 		"src"
 	}
 	links {
+		"ImGui",
+		"Hazard",
 		"%{Library.Mono_Debug_Lib}",
 		"%{Library.Assimp_Lib}",
-		"Hazard-Utility",
-		"Hazard-Renderer",
-		"Hazard-Script",
-		"Hazard-UI",
-		"Glad",
 		"GLFW",
+		"Glad",
+		"Box2D",
+		"yaml-cpp",
 		"Optick"
 	}
 	defines {
 		"GLFW_INCLUDE_NONE"
-
 	}
 
 	filter "system:windows"
 		systemversion "latest"
 		defines {
-			"HZR_PLATFORM_WINDOWS"
+			"HZR_PLATFORM_WINDOWS",
+			"HZR_INCLUDE_MONO"
+		}
+		links {
+			"%{Library.Vulkan}",
+			"%{Library.VulkanUtils}",
+			"Hazard-Script"
+		}
+		includedirs {
+
+			"%{IncludeDir.Optick}",
+			"%{IncludeDir.Mono}"
 		}
 
 	filter "system:macosx"
 		defines {
-			"HZR_PLATFORM_MACOS"
+			"HZR_PLATFORM_MACOS",
 		}
-		links { 
+		links {
 			"IOKit.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
 			"MetalKit.framework",
-			"QuartzCore.framework",
-			"Quartz.framework"
+            "QuartzCore.framwork"
 		}
+        files {
+                "src/**.m",
+                "src/**.mm"
+        }
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
+
+	if os.host() == "windows" then
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
+			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
+		}
+	end
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

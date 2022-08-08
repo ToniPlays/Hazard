@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Hazard">
+      <UniqueIdentifier>{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hazard\vendor">
+      <UniqueIdentifier>{5CD2D0C7-C892-4CFE-91CD-957BFD4C91DA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hazard\vendor\ImGui_Backend">
+      <UniqueIdentifier>{6DB30DDF-D9C0-3BC5-62A7-37B0CEB3077C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -13,11 +22,11 @@
     <Filter Include="src\Editor">
       <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\EditorScripting">
+      <UniqueIdentifier>{16AF639D-8210-41AB-0B7E-875D77DE776A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Core">
-      <UniqueIdentifier>{B93D476F-A5A0-D613-4E26-0FCA3A68A296}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\GUI\Debug">
       <UniqueIdentifier>{F74F3B58-6310-B78E-2C4B-000C98CAFB6A}</UniqueIdentifier>
@@ -46,12 +55,6 @@
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor">
-      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\ImGui_Backend">
-      <UniqueIdentifier>{04610A97-F0EF-9360-990E-A85B857CA406}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BuildSystem\BuildReport.h">
@@ -66,9 +69,6 @@
     <ClInclude Include="src\Core\GUIManager.h">
       <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\GUIRenderable.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -81,38 +81,11 @@
     <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
+      <Filter>src\EditorScripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\AllPanels.h">
       <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\Dockspace.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\GUIRenderable.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\ImGuiUtils.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\MenuBar.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\Panel.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\PanelManager.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\ScopedVar.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\Style.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\StyleManager.h">
-      <Filter>src\GUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Core\UILibrary.h">
-      <Filter>src\GUI\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Debug\Console.h">
       <Filter>src\GUI\Debug</Filter>
@@ -127,6 +100,9 @@
       <Filter>src\GUI</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanel.h">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\AssetPanelItem.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Properties\ComponentUILibrary.h">
@@ -168,30 +144,20 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\FontAwesome.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\ImGuizmo.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\imgui_impl_glfw.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\imgui_impl_metal.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\imgui_impl_opengl3.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetPanelItem.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EditorScripting\EditorScriptGlue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_glfw.cpp">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_opengl3.cpp">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClCompile>
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
       <Filter>src\BuildSystem</Filter>
     </ClCompile>
@@ -210,14 +176,8 @@
     <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Core\Dockspace.cpp">
-      <Filter>src\GUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Core\PanelManager.cpp">
-      <Filter>src\GUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Core\StyleManager.cpp">
-      <Filter>src\GUI\Core</Filter>
+    <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
+      <Filter>src\EditorScripting</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\Console.cpp">
       <Filter>src\GUI\Debug</Filter>
@@ -232,6 +192,9 @@
       <Filter>src\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\ProjectPanel\AssetPanelItem.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Properties\Hierarchy.cpp">
@@ -258,21 +221,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui_Backend\ImGuizmo.cpp">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="vendor\ImGui_Backend\imgui_impl_glfw.cpp">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="vendor\ImGui_Backend\imgui_impl_opengl3.cpp">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetPanelItem.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp" />
   </ItemGroup>
 </Project>

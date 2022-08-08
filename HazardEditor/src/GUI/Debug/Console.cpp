@@ -1,6 +1,7 @@
 
 #include "Console.h"
 
+
 namespace UI
 {
 	Console::Console() : Panel("Console")
@@ -20,7 +21,7 @@ namespace UI
 	{
 		const char* columns[] = { "Type", "Timestamp", "Message" };
 
-		Style& style = StyleManager::GetCurrent();
+		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		ImVec2 consoleSize = ImGui::GetContentRegionAvail();
 		consoleSize.y -= 32.0f;
@@ -28,25 +29,25 @@ namespace UI
 		DrawToolbar({ consoleSize.x, 28.0f });
 
 
-		UI::Table("Console", columns, 3, consoleSize, [&]() {
+		ImUI::Table("Console", columns, 3, consoleSize, [&]() {
 
 			float rowHeight = 24.0f;
 			for (auto& message : m_Messages) {
 
 				if (!(message.Flags & m_DisplayFlags) && m_DisplayFlags) continue;
 
-				bool clicked = UI::TableRowClickable(message.Message.c_str(), rowHeight);
+				bool clicked = ImUI::TableRowClickable(message.Message.c_str(), rowHeight);
 
-				Group((const char*)&message, [&]() {
-					Separator({ 4.0, rowHeight }, GetMessageColor(message.Flags));
+				ImUI::Group((const char*)&message, [&]() {
+					ImUI::Separator({ 4.0, rowHeight }, GetMessageColor(message.Flags));
 					ImGui::SameLine();
 					ImGui::Text(GetMessageType(message));
 					ImGui::TableNextColumn();
-					ShiftX(4.0f);
+					ImUI::ShiftX(4.0f);
 					ImGui::Text("Time");
 
 					ImGui::TableNextColumn();
-					ShiftX(4.0f);
+					ImUI::ShiftX(4.0f);
 					ImGui::Text(message.Message.c_str());
 
 					if (clicked) {
@@ -57,8 +58,8 @@ namespace UI
 						m_DetailedPanelOpen = true;
 					}
 					{
-						ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
-						ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
+						ImUI::ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
+						ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
 						if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 
 							ImGui::Text(message.Description.c_str());
@@ -100,6 +101,7 @@ namespace UI
 	}
 	void Console::DrawToolbar(const ImVec2& size)
 	{
+		using namespace ImUI;
 		const Style& style = StyleManager::GetCurrent();
 		{
 			ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -112,23 +114,23 @@ namespace UI
 			}
 
 			ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 136, 0);
-			if (UI::ColoredButton(ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
+			if (ColoredButton(ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Debug;
 			}
 			ImGui::SameLine();
-			if (UI::ColoredButton(ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 28, 28 })) {
+			if (ColoredButton(ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Info;
 			}
 			ImGui::SameLine();
-			if (UI::ColoredButton(ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 28, 28 })) {
+			if (ColoredButton(ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Warning;
 			}
 			ImGui::SameLine();
-			if (UI::ColoredButton(ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 28, 28 })) {
+			if (ColoredButton(ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Error;
 			}
 			ImGui::SameLine();
-			if (UI::ColoredButton(ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 28, 28 })) {
+			if (ColoredButton(ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Fatal;
 			}
 
@@ -138,7 +140,7 @@ namespace UI
 	}
 	ImVec4 Console::GetMessageColor(const uint32_t& flag)
 	{
-		const Style& style = StyleManager::GetCurrent();
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		if (flag & MessageFlags_None)		return style.Colors.AxisZ;
 		if (flag & MessageFlags_Info)		return style.Colors.AxisZ;
 		if (flag & MessageFlags_Debug)		return style.Colors.AxisY;

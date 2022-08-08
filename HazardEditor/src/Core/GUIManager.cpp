@@ -1,13 +1,13 @@
 #include "GUIManager.h"
 #include "Hazard.h"
 #include "Hazard/Rendering/RenderEngine.h"
-#include "GUI/Core/Dockspace.h"
-#include "GUI/Core/StyleManager.h"
 
 #include "../ImGui_Backend/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 #include "Platform/Metal/EditorPlatformMetal.h"
+#include "GUI/AllPanels.h"
+
 
 #include "imgui.h"
 
@@ -35,7 +35,8 @@ void GUIManager::Init()
 	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
 	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 32.0f);
 
-	UI::StyleManager::LoadStyle(UI::Style());
+	//Initialize style
+	ImUI::StyleManager::LoadStyle(ImUI::Style());
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
@@ -47,7 +48,14 @@ void GUIManager::Init()
 
 	InitImGuiPlatform(*m_Window);
 
-	//Initialize style
+	m_PanelManager.AddRenderable<UI::Viewport>();
+	m_PanelManager.AddRenderable<UI::Properties>();
+	m_PanelManager.AddRenderable<UI::Hierarchy>();
+	m_PanelManager.AddRenderable<UI::RenderCommandListPanel>();
+	m_PanelManager.AddRenderable<UI::RendererDebugPanel>();
+	m_PanelManager.AddRenderable<UI::Console>();
+	m_PanelManager.AddRenderable<UI::AssetPanel>();
+
 }
 
 void GUIManager::Update()
@@ -61,7 +69,7 @@ void GUIManager::Render()
 	HZR_PROFILE_FUNCTION();
 	m_MainMenuBar.Render();
 	{
-		using namespace UI;
+		using namespace ImUI;
 		ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
 		Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
 		Dockspace::EndDockspace("MainWorkspace");

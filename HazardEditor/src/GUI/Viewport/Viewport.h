@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
 #include "TransformationGizmo.h"
 #include "Editor/EditorCamera.h"
 #include "Editor/EditorGrid.h"
@@ -8,7 +8,7 @@
 
 namespace UI 
 {
-	class Viewport : public Panel {
+	class Viewport : public Hazard::ImUI::Panel {
 	public:
 		Viewport();
 

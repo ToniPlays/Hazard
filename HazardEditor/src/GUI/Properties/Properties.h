@@ -1,9 +1,10 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
+#include "Core/EditorEvent.h"
 
 namespace UI {
-	class Properties : public Panel {
+	class Properties : public Hazard::ImUI::Panel {
 	public:
 		Properties();
 
@@ -22,7 +23,7 @@ namespace UI {
 	inline void Properties::DrawAddComponentMenuIfNotExists(const char* title, Entity& e)
 	{
 		if (!e.HasComponent<T>()) {
-			UI::MenuItem(title, [&]() {
+			ImUI::MenuItem(title, [&]() {
 				e.AddComponent<T>();
 				});
 		}

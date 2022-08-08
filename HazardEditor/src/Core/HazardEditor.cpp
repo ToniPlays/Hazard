@@ -65,6 +65,7 @@ void EditorApplication::PreInit()
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
 	windowInfo.Decorated = true;
+
 #ifdef HZR_PLATFORM_MACOS
 	windowInfo.Width = 2880;
 	windowInfo.Height = 1600;
@@ -117,7 +118,7 @@ void EditorApplication::Init()
 		});
 
 	scriptEngine.SetDebugCallback([](ScriptMessage message) {
-		auto manager = Application::GetModule<GUIManager>();
+		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (!console) return;
 

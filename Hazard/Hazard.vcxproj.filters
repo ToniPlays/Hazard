@@ -22,6 +22,9 @@
     <Filter Include="src\Hazard\ECS\Loader">
       <UniqueIdentifier>{262888F8-9294-43F3-5B88-DB50C7B3655B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\ImGUI">
+      <UniqueIdentifier>{804F9F82-6C48-BED4-957A-A35981D29DE0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Logging">
       <UniqueIdentifier>{ACBC9795-98A0-58EB-0101-533EED03436D}</UniqueIdentifier>
     </Filter>
@@ -150,6 +153,36 @@
     <ClInclude Include="src\Hazard\ECS\WorldHandler.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\Dockspace.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\GUIRenderable.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\ImGuiUtils.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\MenuBar.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\Panel.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\PanelManager.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\ScopedVar.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\Style.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\StyleManager.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UILibrary.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Instrumentor.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
@@ -183,6 +216,9 @@
     <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
@@ -204,8 +240,17 @@
     <ClInclude Include="src\Hazard\Rendering\RendererDrawList.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Texture2D.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h">
+      <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -1461,10 +1506,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Texture2D.h" />
-    <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h" />
-    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h" />
-    <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1512,6 +1553,15 @@
     <ClCompile Include="src\Hazard\ECS\WorldHandler.cpp">
       <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\Dockspace.cpp">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\PanelManager.cpp">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\StyleManager.cpp">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
     </ClCompile>
@@ -1536,6 +1586,9 @@
     <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
@@ -1551,6 +1604,12 @@
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Texture2D.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
@@ -1560,8 +1619,5 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Texture2D.cpp" />
   </ItemGroup>
 </Project>

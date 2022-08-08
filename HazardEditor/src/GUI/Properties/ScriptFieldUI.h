@@ -22,7 +22,7 @@ namespace UI
 	static bool ScriptField<float>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		float value = obj.GetFieldValue<float>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		bool modified = InputFloat(value, 0.0f);
+		bool modified = ImUI::InputFloat(value, 0.0f);
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
 		}
@@ -32,7 +32,7 @@ namespace UI
 	static bool ScriptField<glm::vec2>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		glm::vec2 value = obj.GetFieldValue<glm::vec2>(field.GetName());
 
-		bool modified = InputFloat2(value, 0.0f);
+		bool modified = ImUI::InputFloat2(value, 0.0f);
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
 		}
@@ -41,7 +41,7 @@ namespace UI
 	template<>
 	static bool ScriptField<glm::vec3>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		glm::vec3 value = obj.GetFieldValue<glm::vec3>(field.GetName());
-		bool modified = InputFloat3(value, 0.0f);
+		bool modified = ImUI::InputFloat3(value, 0.0f);
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
 		}
@@ -50,7 +50,7 @@ namespace UI
 	template<>
 	static bool ScriptField<glm::vec4>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		Color value = Color::FromGLM(obj.GetFieldValue<glm::vec4>(field.GetName()));
-		bool modified = ColorPicker("#color", value);
+		bool modified = ImUI::ColorPicker("#color", value);
 		if (modified) {
 			obj.SetFieldValue<glm::vec4>(field.GetName(), value);
 		}
@@ -60,7 +60,7 @@ namespace UI
 	static bool ScriptField<std::string>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
 		std::string value = obj.GetFieldValue<std::string>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		bool modified = TextField(value);
+		bool modified = ImUI::TextField(value);
 		if (modified) {
 			obj.SetFieldValue<std::string>(field.GetName(), value);
 		}
@@ -78,7 +78,7 @@ namespace UI
 
 		ImGui::Text(label.c_str());
 		if (field.Has<TooltipAttribute>()) {
-			UI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
+			ImUI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
 		}
 		ImGui::NextColumn();
 

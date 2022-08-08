@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Core/MenuBar.h"
 #include "Hazard.h"
 
 namespace UI {
-	class MainMenuBar : public MenuBar {
+	class MainMenuBar : public Hazard::ImUI::MenuBar {
 	public:
 		MainMenuBar();
 		~MainMenuBar() = default;

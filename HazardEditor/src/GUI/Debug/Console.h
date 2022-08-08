@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GUI/Core/Panel.h"
+#include "Hazard.h"
+#include "Core/EditorEvent.h"
 
 enum MessageFlags : uint32_t {
 	MessageFlags_None = BIT(0),
@@ -20,7 +21,7 @@ namespace UI {
 		uint32_t Flags;
 	};
 
-	class Console : public Panel {
+	class Console : public Hazard::ImUI::Panel {
 	public:
 		Console();
 		~Console() = default;

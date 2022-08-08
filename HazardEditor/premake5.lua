@@ -12,8 +12,8 @@ project "HazardEditor"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"vendor/ImGui_Backend/**.h",
-		"vendor/ImGui_Backend/**.cpp"
+		"%{wks.location}/Hazard/vendor/vendor/ImGui_Backend/**.h",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
 	defines {

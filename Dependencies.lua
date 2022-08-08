@@ -22,7 +22,7 @@ IncludeDir["Entt"] = "%{wks.location}/Hazard/vendor/entt/include"
 IncludeDir["PortableFileDialogs"] = "%{wks.location}/Hazard/vendor/portable-file-dialogs"
 IncludeDir["Assimp"] = "%{wks.location}/Hazard/vendor/assimp/include"
 IncludeDir["VMA"] = "%{wks.location}/Hazard-Renderer/vendor/VulkanMemoryAllocator"
-IncludeDir["ImGui"] = "%{wks.location}/HazardEditor/vendor/ImGui"
+IncludeDir["ImGui"] = "%{wks.location}/Hazard/vendor/ImGui"
 
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 IncludeDir["Metal"] = "%{wks.location}/Hazard/vendor/Metal-CPP"
