@@ -127,6 +127,10 @@ void GUIManager::Render()
 					WindowCloseEvent e;
 					HazardLoop::GetCurrent().OnEvent(e);
 				}
+				else 
+				{
+					ImGui::OpenPopup("ErrorPopup");
+				}
 			}
 		}
 
@@ -139,6 +143,13 @@ void GUIManager::Render()
 	ImGui::End();
 
 	ImGui::PopStyleVar(3);
+
+	if (ImGui::BeginPopup("ErrorPopup")) 
+	{
+		__debugbreak();
+		ImGui::EndPopup();
+	}
+
 
 	ImGui::Render();
 	m_Platform->EndFrame();
@@ -220,6 +231,9 @@ void GUIManager::DrawBottomBar()
 			if (!newPath.empty()) {
 				if (m_Manager.ImportProject(newPath))
 					m_Manager.SaveConfigToFile(CONFIG_PATH);
+				else {
+					ImGui::OpenPopup("ErrorPopup");
+				}
 			}
 		}
 	}

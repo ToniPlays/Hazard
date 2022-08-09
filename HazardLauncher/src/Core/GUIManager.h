@@ -38,6 +38,7 @@ private:
 	EditorGuiPlatform* m_Platform;
 	HazardRenderer::Window* m_Window;
 
+	Hazard::ImUI::PanelManager m_PanelManager;
 	HazardLauncherManager m_Manager;
 
 	std::filesystem::path m_CurrentProjectPath;

@@ -45,9 +45,7 @@ void EditorApplication::PreInit()
 		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
 	}
 	PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
-	HZR_ERROR("Crap");
 
-	HZR_INFO("EditorApplication::PreInit()");
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	ApplicationCreateInfo appInfo;

@@ -1,6 +1,11 @@
 #include "HazardLauncherManager.h"
 #include "Hazard.h"
 
+HazardLauncherManager::HazardLauncherManager()
+{
+	m_LoadedProjects = std::vector<HazardProject>();
+}
+
 bool HazardLauncherManager::OpenProject(const HazardProject& project)
 {
 	std::cout << "Opening Hazard project" << std::endl;
@@ -16,6 +21,10 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 {
 	if (File::GetFileExtension(path) != "hzrproj") return false;
+	
+	for (auto& project : m_LoadedProjects) {
+		if (project.Path == path) return false;
+	}
 
 	HazardProject project = {};
 	YAML::Node root = YAML::LoadFile(path.string());

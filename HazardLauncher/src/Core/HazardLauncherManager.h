@@ -5,7 +5,7 @@
 
 class HazardLauncherManager {
 public:
-	HazardLauncherManager() = default;
+	HazardLauncherManager();
 	~HazardLauncherManager() = default;
 
 	bool OpenProject(const HazardProject& project);

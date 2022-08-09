@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
@@ -28,6 +30,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Utility", "Hazard-Utility\Hazard-Utility.vcxproj", "{60D0CC1F-4C9E-C025-3532-314C219F9C8A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardLauncher", "HazardLauncher\HazardLauncher.vcxproj", "{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E64DB7A4-D2B0-4649-7B36-7FFF677812CC} = {E64DB7A4-D2B0-4649-7B36-7FFF677812CC}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardScripting", "HazardScripting\HazardScripting.csproj", "{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}"
 EndProject
@@ -133,5 +138,8 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{AFAE52C8-9B50-7D9E-840B-91F2704C04EF} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1} = {53E47842-3FC8-3998-A828-34EB942B241A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {76A436CF-9C2A-46D4-A88C-4002A82B4AE6}
 	EndGlobalSection
 EndGlobal

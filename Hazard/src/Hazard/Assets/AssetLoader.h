@@ -13,7 +13,6 @@ namespace Hazard
 		template<typename T>
 		void RegisterLoader(AssetType type)
 		{
-			HZR_CORE_INFO("[AssetManager]: Added loader for {0}", Utils::AssetTypeToString(type));
 			m_Loaders[type] = CreateScope<T>();
 		};
 		bool Load(AssetMetadata& metadata, Ref<Asset>& asset);

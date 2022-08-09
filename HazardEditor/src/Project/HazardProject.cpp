@@ -20,9 +20,9 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 void HazardProject::ProcessAssets()
 {
-	HZR_WARN("Files loaded");
+	Hazard::Timer timer;
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
-	for (auto item : File::GetAllInDirectory(assetPath)) 
+	for (auto& item : File::GetAllInDirectory(assetPath)) 
 	{
 		if (File::GetFileExtension(item) == "meta") 
 		{
@@ -34,7 +34,7 @@ void HazardProject::ProcessAssets()
 			}
 		}
 	}
-	
+	HZR_INFO("Loading assets took {0} ms", timer.ElapsedMillis());
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)
@@ -45,7 +45,7 @@ void HazardProject::DeserializeGeneral(const YAML::Node& node)
 
 void HazardProject::ProcessSubFolderAssets(const std::filesystem::path& dir)
 {
-	for (auto item : File::GetAllInDirectory(dir))
+	for (auto& item : File::GetAllInDirectory(dir))
 	{
 		if (File::GetFileExtension(item) == "meta")
 		{
