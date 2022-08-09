@@ -12,6 +12,7 @@ public:
 	bool ImportProject(const std::filesystem::path& path);
 	bool LoadFromConfigFile(const std::filesystem::path& path);
 	void SaveConfigToFile(const std::filesystem::path& path);
+	bool CreateProject(const HazardProject& project);
 
 	std::vector<HazardProject> GetProjects() { return m_LoadedProjects; }
 

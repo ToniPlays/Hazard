@@ -43,4 +43,5 @@ private:
 
 	std::filesystem::path m_CurrentProjectPath;
 	std::string m_SearchValue;
+	std::string m_ProjectName;
 };

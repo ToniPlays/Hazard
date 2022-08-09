@@ -8,6 +8,7 @@
 #include <shlobj.h>
 #include <cstdlib>
 #include <Windows.h>
+#include "PlatformUtils.h"
 #endif
 
 std::string File::OpenFileDialog() {
@@ -223,7 +224,7 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 
-	CreateProcessA(
+	int id = CreateProcessA(
 		path.c_str(),
 		(LPSTR)arguments.c_str(),
 		NULL,
@@ -235,15 +236,15 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 		&si,
 		&pi
 	);
-	return 1;
+	return id;
 }
 
 bool File::HasEnvinronmentVar(const std::string& key) {
-	return false; // PlatformUtils::HasEnvVariable(key);
+	return PlatformUtils::HasEnvVariable(key);
 }
 std::string File::GetEnvironmentVar(const std::string& key) {
-	return ""; // PlatformUtils::GetEnvVariable(key);
+	return PlatformUtils::GetEnvVariable(key);
 }
 bool File::SetEnvironmentVar(const std::string& key, const std::string& value) {
-	return false; // PlatformUtils::SetEnvVariable(key, value);
+	return PlatformUtils::SetEnvVariable(key, value);
 }

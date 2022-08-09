@@ -13,15 +13,16 @@ workspace "%{ProjectName}"
     "Release"
   }
   project "%{ProjectName}"
-    location "Assets/Scripts"
+    location "./"
     kind "SharedLib"
     language "C#"
 
     targetname "%{ProjectName}"
-    targetdir "%{prj.location}/Binaries"
+    targetdir "%{prj.location}/Library/Scripts/Binaries"
+    objdir "%{prj.location}/Library/Scripts/Obj" 
 
     files {
-      "Assets/Scripts/**.cs"
+      "Assets/**.cs"
     }
     links {
       "%{HazardDirectory}/HazardScripting/bin/debug/HazardScripting.dll"

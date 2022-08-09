@@ -9,6 +9,9 @@ using namespace HazardScript;
 
 void HazardLauncher::PreInit()
 {
+
+	std::filesystem::current_path("C:/dev/Hazard/HazardLauncher");
+
 	RenderAPI renderAPI = RenderAPI::OpenGL;
 	ApplicationCreateInfo appInfo = {};
 	appInfo.AppName = "Hazard Launcher";

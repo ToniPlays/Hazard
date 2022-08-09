@@ -33,20 +33,16 @@ void EditorApplication::PreInit()
 {
 	RenderAPI renderAPI = RenderAPI::OpenGL;
 
-
-#ifdef HZR_PLATFORM_MACOS
-	std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardEditor");
-	renderAPI = RenderAPI::Metal;
-#endif
-
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
 	if (!workingDir.empty()) {
 		std::filesystem::current_path(workingDir);
 		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
 	}
-	PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
+	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
+	
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
+
 
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
@@ -90,8 +86,12 @@ void EditorApplication::PreInit()
 
 	ScriptEngineCreateInfo scriptEngine = {};
 
+	std::string dllFile = project.GetProjectData().ProjectName + ".dll";
+	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
+	std::cout << "App assembly at " << appAssemblyPath << std::endl;
+
 	scriptEngine.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/Debug/HazardScripting.dll";
-	scriptEngine.AppAssemblyPath = "C:/dev/HazardCraft/Assets/Scripts/Binaries/HazardCraft.dll";
+	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
 	scriptEngine.AssemblyPath = "C:/Program Files/Mono/lib";
 	scriptEngine.ConfigPath = "C:/Program Files/Mono/etc/";
 

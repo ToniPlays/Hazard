@@ -224,7 +224,33 @@ void GUIManager::DrawBottomBar()
 				m_CurrentProjectPath = newPath;
 		}
 
-		ImGui::SetCursorPos({ size.x - 108.0f, size.y - 32.0f });
+		ImGui::SameLine(0, 356.0f);
+		ImGui::Text("Project name");
+		ImGui::SameLine(0, 5.0f);
+
+		ImGui::SetNextItemWidth(250.0f);
+		ImGui::PushID("##name");
+		if (ImUI::TextField(m_ProjectName, "Project name")) {
+		}
+		ImGui::PopID();
+
+		ImGui::SetCursorPos({ size.x - 216.0f, size.y - 32.0f });
+		if (ImGui::Button("Create", { 100, 24 }))
+		{
+			if (!m_CurrentProjectPath.empty() && !m_ProjectName.empty()) 
+			{
+				HazardProject project = {};
+				project.Name = m_ProjectName;
+				project.Path = m_CurrentProjectPath / project.Name;
+
+				if (m_Manager.CreateProject(project)) 
+					m_Manager.SaveConfigToFile(CONFIG_PATH);
+
+			}
+			else HZR_ERROR("Path cannot be empty");
+		}
+		ImGui::SameLine(0, 8);
+
 		if (ImGui::Button("Add project", { 100, 24 }))
 		{
 			std::filesystem::path newPath = File::OpenFileDialog({ "All files", "* ", "Hazard Project (.hzrproj)", "*.hzrproj" });

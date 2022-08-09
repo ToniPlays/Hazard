@@ -12,18 +12,20 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 
 	std::stringstream ss;
 	ss << "-wdir C:/dev/Hazard/HazardEditor";
-	ss << " -hprj " << StringUtil::Replace(project.Path.string(), "\\", "/");
+	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
 	std::cout << ss.str() << std::endl;
-	File::CreateSubprocess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str());
-	return true;
+	return File::CreateSubprocess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str());
 }
 
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 {
+	if (!File::Exists(path)) return false;
 	if (File::GetFileExtension(path) != "hzrproj") return false;
 	
+	auto& parent = File::GetDirectoryOf(path);
+
 	for (auto& project : m_LoadedProjects) {
-		if (project.Path == path) return false;
+		if (project.Path == parent) return false;
 	}
 
 	HazardProject project = {};
@@ -32,7 +34,7 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 	if (root["General"]) {
 		YAML::Node node = root["General"];
 		YamlUtils::Deserialize<std::string>(node, "Project name", project.Name, "Unknown");
-		project.Path = path;
+		project.Path = parent;
 
 		m_LoadedProjects.push_back(project);
 		return true;
@@ -42,19 +44,21 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 
 bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path)
 {
+	std::cout << File::GetEnvironmentVar("HAZARD_DIR") << std::endl;
 	YAML::Node root = YAML::LoadFile(path.string());
 	YAML::Node projectNode = root["Projects"];
 
 	for (size_t i = 0; i < projectNode.size(); i++) {
 		auto node = projectNode[i]["Project"];
 		std::string projectPath = node["Path"].as<std::string>();
-		ImportProject(projectPath);
+		ImportProject(projectPath + "\\" + "Project.hzrproj");
 	}
 	return true;
 }
 
 void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 {
+
 	std::ofstream file(path);
 	YAML::Emitter out;
 
@@ -72,4 +76,68 @@ void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 		});
 	out << YAML::EndMap;
 	file << out.c_str();
+}
+
+bool HazardLauncherManager::CreateProject(const HazardProject& project)
+{
+	std::cout << "Creating project at " << project.Path.string() << std::endl;
+	File::CreateDir(project.Path);
+	File::Copy("res/TemplateProject", project.Path, CopyOptions::Recursive);
+	{
+		std::ifstream stream(project.Path / "premake5.lua");
+		std::stringstream ss;
+		ss << stream.rdbuf();
+		stream.close();
+
+		std::ofstream out(project.Path / "Premake5.lua");
+		out << StringUtil::Replace(ss.str(), "%PROJECT_NAME%", project.Name);
+	}
+	{
+		std::ifstream stream(project.Path / "Project.hzrproj");
+		std::stringstream ss;
+		ss << stream.rdbuf();
+		stream.close();
+
+		std::ofstream out(project.Path / "Project.hzrproj");
+		out << StringUtil::Replace(ss.str(), "%PROJECT_NAME%", project.Name);
+	}
+	{
+		std::ifstream stream(project.Path / "Win-CreateScriptProject.bat");
+		std::stringstream ss;
+		ss << stream.rdbuf();
+		stream.close();
+
+		std::ofstream out(project.Path / "Win-CreateScriptProject.bat");
+		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", File::GetEnvironmentVar("HAZARD_DIR"));
+	}
+	{
+		std::ifstream stream(project.Path / "Library" / "BuildSolution.bat");
+		std::stringstream ss;
+		ss << stream.rdbuf();
+		stream.close();
+
+		std::string csProj = project.Path.string() + "\\" + (project.Name + ".csproj");
+		std::ofstream out(project.Path / "Library" / "BuildSolution.bat");
+		out << StringUtil::Replace(ss.str(), "%CSPROJ%", csProj);
+	}
+
+	std::filesystem::path genProjectPath = project.Path / "Win-CreateScriptProject.bat";
+
+	int id = File::CreateSubprocess(genProjectPath.string(), "");
+
+	WaitForSingleObject((HANDLE)id, 0);
+	HZR_THREAD_DELAY(500ms);
+	{
+		File::CreateDir(project.Path / "Assets" / "Scripts");
+		File::CreateDir(project.Path / "Assets" / "Materials");
+		File::CreateDir(project.Path / "Assets" / "Sprites");
+		File::CreateDir(project.Path / "Assets" / "Models");
+	}
+	{
+		std::filesystem::path buildPath = project.Path / "Library" / "BuildSolution.bat";
+		File::SystemCall(buildPath.string());
+	}
+
+	m_LoadedProjects.push_back(project);
+	return true;
 }
