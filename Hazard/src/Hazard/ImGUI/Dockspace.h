@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include "ScopedVar.h"
+#include "HazardRendererCore.h"
 
 namespace Hazard::ImUI
 {
@@ -10,5 +11,6 @@ namespace Hazard::ImUI
 	public:
 		static void BeginDockspace(const char* title, ImGuiDockNodeFlags flags);
 		static void EndDockspace(const char* id);
+		static bool CustomTitleBar(HazardRenderer::Window& window, float height);
 	};
 }

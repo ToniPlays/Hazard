@@ -84,6 +84,7 @@ bool GUIManager::OnEvent(Event& e)
 {
 	m_MainMenuBar.OnEvent(e);
 	m_PanelManager.OnEvent(e);
+
 	return true;
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)

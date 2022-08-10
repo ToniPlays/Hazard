@@ -28,6 +28,8 @@ namespace HazardRenderer {
 		bool Maximized = false;
 		bool Minimized = false;
 		bool Fullscreen = false;
+		bool HasTitleBar = true;
+
 		int Width = 0;
 		int Height = 0;
 		uint32_t ImagesInFlight = 0;

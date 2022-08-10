@@ -118,7 +118,7 @@ namespace UI
 					entity.AddComponent<MeshComponent>();
 					});
 				ImUI::MenuItem("Mesh", [&]() {
-					auto& entity = world->CreateEntity("New ;esh");
+					auto& entity = world->CreateEntity("New mesh");
 					entity.AddComponent<MeshComponent>();
 					});
 				});

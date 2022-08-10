@@ -50,7 +50,7 @@ namespace Hazard
 
 	protected:
 		UID m_Handle = INVALID_ASSET_HANDLE;
-		AssetType m_Type;
+		AssetType m_Type = AssetType::Undefined;
 		AssetFlags m_Flags = AssetFlags::None;
 	private:
 		void SetHandle(UID handle) { m_Handle = handle; };

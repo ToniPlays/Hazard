@@ -158,12 +158,16 @@ namespace UI
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
 				AssetPanelItem assetItem = AssetPanelItem(handle);
-				File::IsDirectory(item) ? directories.push_back(assetItem) : files.push_back(assetItem);
+				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);
 			}
 		}
-		m_CurrentItems.reserve(directories.size() + files.size());
-		m_CurrentItems.insert(m_CurrentItems.end(), directories.begin(), directories.end());
-		m_CurrentItems.insert(m_CurrentItems.end(), files.begin(), files.end());
+		
+		for (auto& dir : directories) {
+			m_CurrentItems.push_back(dir);
+		}
+		for (auto& f : files) {
+			m_CurrentItems.push_back(f);
+		}
 	}
 
 	void AssetPanel::DrawCurrentFolderPath()

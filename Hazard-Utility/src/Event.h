@@ -13,7 +13,7 @@ enum class EventType {
 	AppTick, AppUpdate, AppRender, AppEvent, AppCloseEvent,
 	ModuleError, ModuleWarn,
 	KeyPressed, KeyReleased, KeyTyped,
-	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled, WindowTitleBarHitTest
 };
 
 //Events belong to a category

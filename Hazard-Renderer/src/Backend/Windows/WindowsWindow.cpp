@@ -26,7 +26,7 @@ namespace HazardRenderer {
 
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
-		
+
 		if (!WindowsWindow::s_DebugCallback) {
 			WindowsWindow::s_QueueMessages.push_back(message);
 			return;
@@ -50,17 +50,18 @@ namespace HazardRenderer {
 			m_WindowData.EventCallback = [](Event& e) {};
 		}
 
-		if (info->Renderer == RenderAPI::Auto) 
+		if (info->Renderer == RenderAPI::Auto)
 			info->Renderer = RenderAPI::Vulkan;
 
 		SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
 
-		if(info->WindowCount == 1) 
+		if (info->WindowCount == 1)
 		{
 			HazardWindowCreateInfo windowInfo = info->pWindows[0];
 			m_WindowData.Title = windowInfo.Title;
 			m_WindowData.Platform = "Windows";
 			m_WindowData.SelectedAPI = info->Renderer;
+			m_WindowData.HasTitleBar =  windowInfo.HasTitlebar;
 			m_WindowData.Width = windowInfo.Width;
 			m_WindowData.Height = windowInfo.Height;
 			m_WindowData.VSync = info->VSync;
@@ -69,9 +70,12 @@ namespace HazardRenderer {
 
 			m_Context = GraphicsContext::Create(&m_WindowData);
 
+			if (!windowInfo.HasTitlebar) {
+				glfwWindowHint(GLFW_DECORATED, false);
+				glfwWindowHint(GLFW_TITLEBAR, false);
+			}
 			glfwWindowHint(GLFW_RESIZABLE, windowInfo.Resizable);
-			glfwWindowHint(GLFW_DECORATED, windowInfo.Decorated);
-			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+			glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
 			GLFWmonitor* monitor = NULL;
 
@@ -127,13 +131,13 @@ namespace HazardRenderer {
 
 		glfwPollEvents();
 	}
-	
+
 	void WindowsWindow::SetWindowTitle(const std::string& title)
 	{
 		m_WindowData.Title = title;
 		glfwSetWindowTitle(m_Window, title.c_str());
 	}
-	
+
 	void WindowsWindow::SetWindowIcon(uint32_t count, const char** images)
 	{
 		std::vector<GLFWimage> glfwImages(count);
@@ -161,12 +165,12 @@ namespace HazardRenderer {
 		glfwGetWindowPos(m_Window, &x, &y);
 		return { x, y };
 	}
-	
+
 	void WindowsWindow::SetPosition(glm::vec2 position)
 	{
 		glfwSetWindowPos(m_Window, position.x, position.y);
 	}
-	
+
 	void WindowsWindow::SetFullscreen(bool fullscreen)
 	{
 		m_WindowData.Fullscreen = fullscreen;
@@ -259,10 +263,17 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Minimized = minimized;
 			});
+		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit)
+			{
+				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+				WindowTitleBarHitTestEvent e(x, y, *hit);
+				data.EventCallback(e);
+			});
+
 	}
 	WindowsWindow::~WindowsWindow()
 	{
-		
+
 	}
 	void WindowsWindow::Show() const
 	{

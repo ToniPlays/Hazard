@@ -98,6 +98,7 @@ namespace Hazard
 	}
 	void RenderEngine::Update()
 	{
+		Input::Update();
 		m_QuadRenderer.BeginScene();
 	}
 	void RenderEngine::Render()

@@ -43,7 +43,6 @@ void EditorApplication::PreInit()
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
-
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
@@ -63,7 +62,7 @@ void EditorApplication::PreInit()
 	windowInfo.Title = "HazardEditor | " + RenderAPIToString(renderAPI);
 	windowInfo.FullScreen = false;
 	windowInfo.Maximized = false;
-	windowInfo.Decorated = true;
+	windowInfo.HasTitlebar = true;
 
 #ifdef HZR_PLATFORM_MACOS
 	windowInfo.Width = 2880;

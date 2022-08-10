@@ -16,6 +16,9 @@ public:
 	void BeginFrame() override;
 	void EndFrame() override;
 	void Close() override;
+
+	HazardRenderer::Window& GetWindow() override { return *m_Window; }
+
 private:
 	HazardRenderer::Window* m_Window;
 	HazardRenderer::OpenGL::OpenGLContext* m_Context;

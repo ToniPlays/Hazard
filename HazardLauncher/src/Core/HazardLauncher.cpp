@@ -31,8 +31,8 @@ void HazardLauncher::PreInit()
 	window.Title = "Hazard Launcher";
 	window.FullScreen = false;
 	window.Maximized = false;
-	window.Decorated = true;
 	window.Resizable = false;
+	window.HasTitlebar = true;
 
 	window.Width = 1280;
 	window.Height = 720;

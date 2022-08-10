@@ -75,6 +75,11 @@ void GUIManager::Render()
 
 	ImGui::Begin("HazardLauncher", 0, window_flags);
 
+	/*
+	if(ImUI::Dockspace::CustomTitleBar(m_Platform->GetWindow(), 32)) {
+		HZR_INFO("Hovering");
+	}*/
+
 	ImGui::Columns(2, 0, false);
 	ImGui::SetColumnWidth(0, 250);
 	DrawSideBar();

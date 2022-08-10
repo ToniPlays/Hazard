@@ -53,9 +53,9 @@ namespace UI
 		using namespace HazardRenderer;
 		if (Input::IsKeyDown(Key::LeftControl) || m_ForcedSnapping) {
 
-			if (m_Type == Gizmo::Translate) return new float[] { m_TransformSnap, m_TransformSnap, m_TransformSnap };
-			if (m_Type == Gizmo::Rotate) return new float[] { m_RotationSnap, m_RotationSnap, m_RotationSnap };
-			if (m_Type == Gizmo::Scale) return new float[] { m_ScaleSnap, m_ScaleSnap, m_ScaleSnap };
+			if (m_Type == Gizmo::Translate) return new float[3] { m_TransformSnap, m_TransformSnap, m_TransformSnap };
+			if (m_Type == Gizmo::Rotate) return new float[3] { m_RotationSnap, m_RotationSnap, m_RotationSnap };
+			if (m_Type == Gizmo::Scale) return new float[3] { m_ScaleSnap, m_ScaleSnap, m_ScaleSnap };
 		}
 		return nullptr;
 	}

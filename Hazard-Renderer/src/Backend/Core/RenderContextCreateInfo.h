@@ -53,7 +53,7 @@ namespace Hazard
 		bool FullScreen = false;
 		bool Maximized = false;
 		bool Resizable = true;
-		bool Decorated = true;
+		bool HasTitlebar = true;
 
 		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 

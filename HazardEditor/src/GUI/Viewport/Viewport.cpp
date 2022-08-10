@@ -101,7 +101,7 @@ namespace UI
 		if (m_Gizmos.IsUsing()) return;
 
 
-		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(HazardRenderer::Input::GetMousePos());
+		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
 	{

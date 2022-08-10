@@ -76,5 +76,26 @@ namespace UI
 
 		AddMenuItem("Help/About");
 		AddMenuItem("Help/About/Something", nullptr);
-	};
+	}
+	bool MainMenuBar::OnEvent(Event& e)
+	{
+		HZR_ASSERT(!Input::AnyKey(), "Something does work");
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MainMenuBar::OnKeyPressed));
+	}
+	bool MainMenuBar::OnKeyPressed(KeyPressedEvent& e)
+	{
+		if (!Input::IsKeyDown(Key::LeftControl)) return false;
+
+		switch (e.GetKeyCode()) {
+		case Key::S:
+			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+			WorldSerializer serializer(world);
+			serializer.SerializeEditor(world->GetWorldFile());
+			HZR_INFO("Saved world file");
+			return true;
+		}
+
+		return false;
+	}
 }

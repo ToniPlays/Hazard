@@ -51,7 +51,7 @@ namespace Hazard {
 			std::cout << error.what() << std::endl;
 		}
 	}
-	bool HazardLoop::Quit(HazardRenderer::WindowCloseEvent& e)
+	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{
 		s_Instance->m_ShouldClose = true;
 		return true;

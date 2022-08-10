@@ -30,11 +30,14 @@ namespace UI {
 		void SetForcedSnapping(bool snapping) { m_ForcedSnapping = snapping; }
 
 	public:
+		
+
+	private:
+		Gizmo m_Type = Gizmo::Translate;
+
 		float m_TransformSnap = 0.5f;
 		float m_RotationSnap = 10.0f;
 		float m_ScaleSnap = 1.0f;
-	private:
-		Gizmo m_Type = Gizmo::Translate;
 
 		bool m_IsUsing = false;
 		bool m_Global = false;

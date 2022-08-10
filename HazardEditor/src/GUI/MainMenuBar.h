@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
+#include "HazardRendererCore.h"
 
 namespace UI {
 	class MainMenuBar : public Hazard::ImUI::MenuBar {
@@ -11,6 +12,7 @@ namespace UI {
 		void Init() override;
 		void Update() override {};
 
-		virtual bool OnEvent(Event& e) { return false; }
+		virtual bool OnEvent(Event& e);
+		bool OnKeyPressed(KeyPressedEvent& e);
 	};
 }
