@@ -10,7 +10,7 @@
 
 #include "File.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	bool Mono::Init(const std::string& name)
 	{
@@ -22,10 +22,10 @@ namespace HazardScript
 			mono_domain_set(domain, false);
 			cleanup = true;
 		}
-		else 
+		else
 		{
 			domain = mono_jit_init(name.c_str());
-			
+
 		}
 		s_Domain = mono_domain_create_appdomain((char*)name.c_str(), nullptr);
 
@@ -66,7 +66,7 @@ namespace HazardScript
 	{
 		mono_field_set_value(object, field, buffer);
 	}
-	
+
 
 	MonoImage* Mono::OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status)
 	{
@@ -81,7 +81,7 @@ namespace HazardScript
 	{
 		return mono_class_from_name(image, nameSpace.c_str(), name.c_str());
 	}
-	std::string Mono::GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj) 
+	std::string Mono::GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj)
 	{
 		MonoProperty* property = mono_class_get_property_from_name(monoClass, key);
 		MonoMethod* getter = mono_property_get_get_method(property);
@@ -100,6 +100,7 @@ namespace HazardScript
 			printf("\tError Message: %s\n", errorMessage);
 			mono_error_cleanup(&error);
 		}
+		if (!ptr) return "";
 		std::string result(ptr);
 		mono_free(ptr);
 		return result;
@@ -122,7 +123,7 @@ namespace HazardScript
 		return b;
 	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {
-		
+
 		const char* str = string.c_str();
 		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);

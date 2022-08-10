@@ -102,12 +102,12 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		out << StringUtil::Replace(ss.str(), "%PROJECT_NAME%", project.Name);
 	}
 	{
-		std::ifstream stream(project.Path / "Win-CreateScriptProject.bat");
+		std::ifstream stream(project.Path / "Library" / "Win-CreateScriptProject.bat");
 		std::stringstream ss;
 		ss << stream.rdbuf();
 		stream.close();
 
-		std::ofstream out(project.Path / "Win-CreateScriptProject.bat");
+		std::ofstream out(project.Path / "Library" / "Win-CreateScriptProject.bat");
 		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", File::GetEnvironmentVar("HAZARD_DIR"));
 	}
 	{
@@ -121,12 +121,12 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		out << StringUtil::Replace(ss.str(), "%CSPROJ%", csProj);
 	}
 
-	std::filesystem::path genProjectPath = project.Path / "Win-CreateScriptProject.bat";
+	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
 
 	int id = File::CreateSubprocess(genProjectPath.string(), "");
 
 	WaitForSingleObject((HANDLE)id, 0);
-	HZR_THREAD_DELAY(500ms);
+	HZR_THREAD_DELAY(1000ms);
 	{
 		File::CreateDir(project.Path / "Assets" / "Scripts");
 		File::CreateDir(project.Path / "Assets" / "Materials");

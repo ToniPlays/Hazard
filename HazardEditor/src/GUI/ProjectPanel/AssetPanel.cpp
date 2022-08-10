@@ -49,10 +49,14 @@ namespace UI
 	{
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		DrawToolbar();
-		ImGui::Columns(2, 0, true);
-		DrawFolderTreeView();
-		ImGui::NextColumn();
+		{
+			ImUI::ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+			ImGui::Columns(2, 0, true);
+			DrawFolderTreeView();
+			ImGui::NextColumn();
+		}
 		DrawContents();
+
 		ImGui::Columns();
 	}
 	void AssetPanel::DrawToolbar()
@@ -60,6 +64,7 @@ namespace UI
 		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 28.0f };
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Toolbar", size);
 
 		{
@@ -70,7 +75,13 @@ namespace UI
 		}
 		ImGui::SameLine(0, 5);
 		if (ImGui::Button(ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f })) {
-
+			std::filesystem::path file = File::OpenFileDialog();
+			if (!file.empty()) {
+				File::Copy(file, m_CurrentPath / File::GetName(file), CopyOptions::UpdateExisting);
+				File::NewFile(m_CurrentPath / (File::GetName(file) + ".meta"));
+				Hazard::AssetManager::ImportAsset(m_CurrentPath / File::GetName(file));
+				RefreshFolderItems();
+			}
 		}
 		ImGui::SameLine(0, 5);
 		if (ImGui::Button(ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f })) {
@@ -99,25 +110,29 @@ namespace UI
 	}
 	void AssetPanel::DrawFolderTreeView()
 	{
+
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-		ImGui::BeginChild("##FileTree");
 		{
+			ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
+			ImGui::BeginChild("##FileTree");
+			{
 
-			ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-			ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
-				ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
+				ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+				ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
+					ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
 
-				});
-			ImUI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed |ImGuiTreeNodeFlags_DefaultOpen, [&]() {
-				for (const auto& folder : m_FolderData) {
-					DrawFolderTreeItem(folder);
-				}
-				});
-			ImUI::ContextMenu([&]() {
-				ImUI::MenuItem("Refresh", [&]() {
-					m_FolderData = GenerateFolderStructure();
 					});
-				});
+				ImUI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+					for (const auto& folder : m_FolderData) {
+						DrawFolderTreeItem(folder);
+					}
+					});
+				ImUI::ContextMenu([&]() {
+					ImUI::MenuItem("Refresh", [&]() {
+						m_FolderData = GenerateFolderStructure();
+						});
+					});
+			}
 		}
 		ImGui::EndChild();
 	}
@@ -142,6 +157,13 @@ namespace UI
 			item.EndRender();
 		}
 		ImGui::Columns();
+
+		ImUI::ContextMenu([&]() {
+			ImUI::MenuItem("Show in Explorer", [&]() {
+				File::OpenDirectoryInExplorer(m_CurrentPath);
+				});
+			});
+
 		ImGui::EndChild();
 	}
 
@@ -153,7 +175,7 @@ namespace UI
 		m_CurrentItems.clear();
 		for (auto item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == "meta") 
+			if (File::GetFileExtension(item) == "meta")
 			{
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());

@@ -43,6 +43,9 @@ public:
 	static bool CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest);
 	static bool IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo);
 
+	static bool NewFile(const std::filesystem::path& file, const std::string& content = "");
+
+
 	static std::filesystem::path GetFileAbsolutePath(const std::filesystem::path& file);
 	static std::string GetDirectoryOf(const std::filesystem::path& file);
 	static std::string GetName(const std::filesystem::path& file);
@@ -54,6 +57,9 @@ public:
 
 	static bool CreateDir(const std::filesystem::path& dir);
 	static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);
+
+	static bool OpenInExplorer(const std::filesystem::path& file);
+	static bool OpenDirectoryInExplorer(const std::filesystem::path& path);
 
 	static int SystemCall(const std::string& command);
 	static int CreateSubprocess(const std::string& path, const std::string& arguments);

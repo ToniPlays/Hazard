@@ -77,20 +77,16 @@ namespace UI
 
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
-				ImGui::Text("Sprite");
-				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					c.Texture = AssetManager::GetAsset<Texture2D>(handle);
-					});
+
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
-
-				if (c.Texture) {
-					ImUI::Image(c.Texture->GetSourceImage(), { 50, 50 });
-				}
-
-				//Texture slot here
-
-				//UI::TextureSlot("Sprite", c.Texture);
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
+				ImUI::TextureSlot("Sprite", c.Texture, [&]() {
+					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
+						c.Texture = AssetManager::GetAsset<Texture2D>(handle);
+						});
+					});
+				ImGui::PopStyleVar();
 
 				if (ImUI::ColorPicker("Tint", "##Tint", c.Tint)) {
 
@@ -224,7 +220,6 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				//Texture slot here
 				if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
 
 				}
@@ -243,12 +238,21 @@ namespace UI
 				ImGui::Text("Mesh");
 				ImGui::NextColumn();
 
-				if (ImGui::Button("Import Mesh")) {
-					std::string path = File::OpenFileDialog();
-					AssetHandle handle = Hazard::AssetManager::ImportAsset(path);
-					c.m_MeshHandle = Hazard::AssetManager::GetAsset<Hazard::Mesh>(handle);
-					HZR_WARN("Loading mesh file {0}", path);
+				AssetMetadata data;
+				if (c.m_MeshHandle)
+					data = AssetManager::GetMetadata(c.m_MeshHandle->GetHandle());
+
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
+
+				if (ImUI::TextField(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path")) 
+				{
 				}
+				ImGui::PopStyleVar();
+
+				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
+					c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
+					});
 
 				ImGui::Columns();
 			});
