@@ -32,7 +32,6 @@ namespace HazardScript
 	}
 	void ScriptAssembly::LoadScripts()
 	{
-		m_Scripts.clear();
 		MonoImage* image = GetImage();
 
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);

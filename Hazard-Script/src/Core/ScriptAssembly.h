@@ -39,7 +39,6 @@ namespace HazardScript
 
 	private:
 		void LoadScripts();
-
 	private:
 		std::filesystem::path m_Path;
 		MonoAssembly* m_Assembly;

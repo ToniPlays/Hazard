@@ -62,7 +62,7 @@ public:
 	static bool OpenDirectoryInExplorer(const std::filesystem::path& path);
 
 	static int SystemCall(const std::string& command);
-	static int CreateSubprocess(const std::string& path, const std::string& arguments);
+	static int CreateSubprocess(const std::string& path, const std::string& arguments, bool background = false);
 	static void WaitForSubprocess(int id);
 
 

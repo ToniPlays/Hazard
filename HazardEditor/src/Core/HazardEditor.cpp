@@ -1,32 +1,22 @@
 
 #include "hzrpch.h"
 #include "HazardEditor.h"
-#include "Editor/EditorCamera.h"
+#include "Hazard/Core/EntryPoint.h"
+
 #include "HazardRenderer.h"
 #include "Project/ProjectManager.h"
 #include "GUIManager.h"
 #include "GUI/Debug/Console.h"
-#include "Hazard/Rendering/RenderEngine.h"
 #include "HazardScript.h"
+
+#include "Hazard/Rendering/RenderEngine.h"
 #include "EditorScripting/EditorScriptGlue.h"
+
+#include "MessageFlags.h"
 
 using namespace Hazard;
 using namespace HazardRenderer;
 using namespace HazardScript;
-
-static uint32_t GetMessageFlagsFromSeverity(const Severity& severity)
-{
-	switch (severity)
-	{
-	case Severity::Debug:		return MessageFlags_Debug | MessageFlags_Clearable;
-	case Severity::Info:		return MessageFlags_Info | MessageFlags_Clearable;
-	case Severity::Trace:		return MessageFlags_Info | MessageFlags_Clearable;
-	case Severity::Warning:		return MessageFlags_Warning | MessageFlags_Clearable;
-	case Severity::Error:		return MessageFlags_Error | MessageFlags_Clearable;
-	case Severity::Critical:	return MessageFlags_Fatal;
-	}
-	return 0;
-}
 
 
 void EditorApplication::PreInit()
@@ -133,5 +123,10 @@ void EditorApplication::Init()
 
 bool EditorApplication::OnEvent(Event& e)
 {
-	return false;
+	return m_ScriptManager.OnEvent(e);
+}
+
+Hazard::Application* Hazard::CreateApplication()
+{
+	return new EditorApplication();
 }

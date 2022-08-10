@@ -3,15 +3,6 @@
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
 
-enum MessageFlags : uint32_t {
-	MessageFlags_None = BIT(0),
-	MessageFlags_Debug = BIT(1),
-	MessageFlags_Info = BIT(2),
-	MessageFlags_Warning = BIT(3),
-	MessageFlags_Error = BIT(4),
-	MessageFlags_Fatal = BIT(5),
-	MessageFlags_Clearable = BIT(6)
-};
 
 namespace UI {
 

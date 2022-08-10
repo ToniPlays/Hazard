@@ -144,6 +144,8 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorScriptManager.h" />
+    <ClInclude Include="src\Core\MessageFlags.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -221,5 +223,6 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\EditorScriptManager.cpp" />
   </ItemGroup>
 </Project>

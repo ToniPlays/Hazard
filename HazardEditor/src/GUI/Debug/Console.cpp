@@ -1,5 +1,6 @@
 
 #include "Console.h"
+#include "Core/MessageFlags.h"
 
 
 namespace UI

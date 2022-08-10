@@ -1,2 +1,2 @@
 @echo off
-"%ProgramFiles%\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\MSBuild.exe" %CSPROJ% -property:Configuration=Debug
+"%ProgramFiles%\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\MSBuild.exe" %CSPROJ% -property:Configuration=Debug -o build.hlog

@@ -238,7 +238,7 @@ int File::SystemCall(const std::string& command)
 	return system(command.c_str());
 }
 
-int File::CreateSubprocess(const std::string& path, const std::string& arguments)
+int File::CreateSubprocess(const std::string& path, const std::string& arguments, bool background)
 {
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
@@ -254,7 +254,7 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 		NULL,
 		NULL,
 		FALSE,
-		CREATE_NEW_CONSOLE,
+		background ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE,
 		NULL,
 		NULL,
 		&si,

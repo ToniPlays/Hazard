@@ -36,6 +36,7 @@ namespace Hazard {
 	public:
 		static void Quit();
 		static ApplicationData& GetData() { return s_Data; }
+		static Application& Get() { return *HazardLoop::GetCurrent().m_Application; }
 
 		template<typename T, typename... Args>
 		static T& PushModule(Args... args) { return *HazardLoop::GetModuleHandler()->AddModule<T>(std::forward<Args>(args)...); };

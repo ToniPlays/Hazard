@@ -82,10 +82,10 @@ void GUIManager::Render()
 }
 bool GUIManager::OnEvent(Event& e)
 {
-	m_MainMenuBar.OnEvent(e);
-	m_PanelManager.OnEvent(e);
+	bool handled = m_MainMenuBar.OnEvent(e);
+	handled |= m_PanelManager.OnEvent(e);
 
-	return true;
+	return handled;
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
