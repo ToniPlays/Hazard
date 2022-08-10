@@ -38,6 +38,8 @@ namespace Hazard
 		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
+
+		HZR_CORE_WARN("Importing {0}", filePath.string());
 		//Create Asset metadata, don't load until requested
 		AssetMetadata data;
 		data.Handle = AssetHandle();

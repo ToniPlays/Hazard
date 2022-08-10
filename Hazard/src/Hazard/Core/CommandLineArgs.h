@@ -20,7 +20,6 @@ namespace Hazard
 				std::string key = arg.substr(0, arg.find_first_of(' '));
 				std::string value = arg.substr(arg.find_first_of(' '));
 				m_Arguments[key] = StringUtil::SplitString(value, ' ');
-				std::cout << key << " -> " << value << std::endl;
 			}
 		}
 

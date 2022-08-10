@@ -61,7 +61,7 @@ namespace HazardRenderer {
 			m_WindowData.Title = windowInfo.Title;
 			m_WindowData.Platform = "Windows";
 			m_WindowData.SelectedAPI = info->Renderer;
-			m_WindowData.HasTitleBar =  windowInfo.HasTitlebar;
+			m_WindowData.HasTitleBar = windowInfo.HasTitlebar;
 			m_WindowData.Width = windowInfo.Width;
 			m_WindowData.Height = windowInfo.Height;
 			m_WindowData.VSync = info->VSync;
@@ -221,6 +221,7 @@ namespace HazardRenderer {
 				break;
 			}
 			}
+			Input::UpdateKey(key, action);
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {

@@ -5,16 +5,12 @@ namespace Hazard
 {
 	class AssetLoader
 	{
+		friend class AssetManager;
 	public:
 	public:
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		template<typename T>
-		void RegisterLoader(AssetType type)
-		{
-			m_Loaders[type] = CreateScope<T>();
-		};
 		bool Load(AssetMetadata& metadata, Ref<Asset>& asset);
 		bool Save(Ref<Asset>& asset);
 

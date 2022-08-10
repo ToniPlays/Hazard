@@ -2,6 +2,8 @@
 #include <hzrpch.h>
 #include "ScriptEngine.h"
 #include "ScriptBindings.h"
+#include "ScriptAssetLoader.h"
+#include "Hazard/Assets/AssetManager.h"
 
 using namespace HazardScript;
 
@@ -11,6 +13,8 @@ namespace Hazard
 	{
 		m_Info = *info;
 		RegisterScriptGlue<InternalCall>();
+
+		AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
 
 	}
 	void ScriptEngine::Init()

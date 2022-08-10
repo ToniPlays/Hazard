@@ -1503,6 +1503,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\HScript.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1616,5 +1618,7 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\HScript.cpp" />
   </ItemGroup>
 </Project>

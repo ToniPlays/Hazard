@@ -20,10 +20,10 @@ namespace Hazard
 			return s_Registry.GetRegistry(); 
 		}
 		
-		template<typename T>
-		static void RegisterLoader(AssetType type) 
+		template<typename T, typename... Args>
+		static void RegisterLoader(AssetType type, Args... args) 
 		{
-			s_AssetLoader.RegisterLoader<T>(type);
+			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
 
 		static AssetHandle ImportAsset(const std::filesystem::path& filePath);

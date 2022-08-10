@@ -31,6 +31,17 @@ namespace UI
 		AddMenuItem("Edit/Copy", nullptr);
 		AddMenuItem("Edit/Paste", nullptr);
 		AddMenuItem("Edit/Reload assemblies", []() {
+			auto& project = ProjectManager::GetProject().GetProjectData();
+			std::filesystem::path genProjectPath = project.ProjectDirectory / "Library" / "Win-CreateScriptProject.bat";
+			int id = File::CreateSubprocess(genProjectPath.string(), "");
+			File::WaitForSubprocess(id);
+
+			HZR_THREAD_DELAY(1000ms);
+			{
+				std::filesystem::path buildPath = project.ProjectDirectory / "Library" / "BuildSolution.bat";
+				File::SystemCall(buildPath.string());
+			}
+
 			Application::GetModule<ScriptEngine>().ReloadAssemblies();
 			});
 
@@ -79,7 +90,6 @@ namespace UI
 	}
 	bool MainMenuBar::OnEvent(Event& e)
 	{
-		HZR_ASSERT(!Input::AnyKey(), "Something does work");
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(MainMenuBar::OnKeyPressed));
 	}

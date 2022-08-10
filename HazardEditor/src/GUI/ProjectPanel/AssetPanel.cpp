@@ -178,6 +178,8 @@ namespace UI
 			if (File::GetFileExtension(item) == "meta")
 			{
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
+				if (!File::Exists(assetPath)) continue;
+
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);

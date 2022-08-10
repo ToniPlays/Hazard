@@ -2,7 +2,7 @@
 
 #include <imgui.h>
 #include "Hazard.h"
-#include "Hazard.h"
+#include "Hazard/Scripting/HScript.h"
 #include "ScriptFieldUI.h"
 
 namespace UI
@@ -152,6 +152,16 @@ namespace UI
 				bool exists = scriptEngine.HasModule(c.ModuleName);
 				bool changed = ImUI::TextField(c.ModuleName, "Script class");
 
+				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
+					Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
+
+					if (script) {
+						c.ModuleName = script->GetModuleName();
+						changed = true;
+					}
+					});
+
+
 				if (changed) {
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle) {
 						delete c.m_Handle;
@@ -245,7 +255,7 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
-				if (ImUI::TextField(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path")) 
+				if (ImUI::TextField(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path"))
 				{
 				}
 				ImGui::PopStyleVar();

@@ -121,18 +121,18 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		out << StringUtil::Replace(ss.str(), "%CSPROJ%", csProj);
 	}
 
-	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
-
-	int id = File::CreateSubprocess(genProjectPath.string(), "");
-
-	WaitForSingleObject((HANDLE)id, 0);
-	HZR_THREAD_DELAY(1000ms);
 	{
 		File::CreateDir(project.Path / "Assets" / "Scripts");
 		File::CreateDir(project.Path / "Assets" / "Materials");
 		File::CreateDir(project.Path / "Assets" / "Sprites");
 		File::CreateDir(project.Path / "Assets" / "Models");
 	}
+
+	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
+	int id = File::CreateSubprocess(genProjectPath.string(), "");
+	File::WaitForSubprocess(id);
+	
+	HZR_THREAD_DELAY(1000ms);
 	{
 		std::filesystem::path buildPath = project.Path / "Library" / "BuildSolution.bat";
 		File::SystemCall(buildPath.string());
