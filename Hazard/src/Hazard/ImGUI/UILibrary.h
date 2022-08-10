@@ -102,14 +102,12 @@ namespace Hazard::ImUI
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 
 		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer))) {
 			text = buffer;
 			ImGui::PopStyleVar();
 			return true;
 		}
-		ImGui::PopStyleVar();
 		return false;
 	}
 	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)
@@ -317,6 +315,43 @@ namespace Hazard::ImUI
 	}
 	static void Image(Ref<HazardRenderer::Image2D>& image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 }) {
 		ImGui::Image(GetImageID(image), size, t0, t1);
+	}
+	static bool TextureSlot(Ref<Texture2D> image) {
+		std::string text = "Source image here";
+
+		constexpr float size = 32.0f;
+
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth() - size - 5.0f);
+		{
+			ImUI::TextField(text);
+		
+		}
+		ImGui::SameLine(0, 5);
+
+		if (image)
+			Image(image->GetSourceImage(), { size, size });
+		else {
+			ImVec2 pos = ImGui::GetCursorScreenPos();
+			ImGui::GetWindowDrawList()->AddRectFilled(pos, { pos.x + size, pos.y + size }, ImGui::GetColorU32({ 1.0, 1.0, 1.0, 1.0 }));
+			ImUI::ShiftY(36.0f);
+		}
+		ImUI::ShiftY(2.0f);
+		return false;
+	}
+	template<typename T>
+	static bool TextureSlot(const char* name, Ref<Texture2D> image, T callback) {
+
+		bool modified = false;
+		ImUI::ShiftY(8.0f);
+
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			modified = TextureSlot(image);
+			callback();
+			});
+		ImGui::NextColumn();
+		return modified;
 	}
 #pragma endregion
 #pragma region Treenodes
@@ -606,7 +641,7 @@ namespace Hazard::ImUI
 #pragma region DragDrop
 
 	template<typename T, typename Callback>
-	static bool DragSource(const char* type, T* data, Callback callback) 
+	static bool DragSource(const char* type, T* data, Callback callback)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
 			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
@@ -632,7 +667,7 @@ namespace Hazard::ImUI
 	static bool DropTarget(const char* type, Callback callback) {
 		bool accepted = false;
 		if (ImGui::BeginDragDropTarget()) {
-			
+
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type);
 			if (payload) {
 				callback(*(T*)payload->Data);

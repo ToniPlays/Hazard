@@ -26,7 +26,7 @@ namespace Hazard
 			s_AssetLoader.RegisterLoader<T>(type);
 		}
 
-		static AssetHandle ImportAsset(const std::string& filePath);
+		static AssetHandle ImportAsset(const std::filesystem::path& filePath);
 		static AssetHandle GetHandleFromFile(const std::string& filePath);
 
 		static void RemoveAsset(AssetHandle handle);

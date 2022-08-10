@@ -18,7 +18,7 @@ namespace Hazard
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	AssetHandle AssetManager::ImportAsset(const std::string& filePath)
+	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& filePath)
 	{
 		if (filePath == "") return INVALID_ASSET_HANDLE;
 		//TODO: Proper relative path

@@ -3,6 +3,7 @@
 #include "File.h"
 #include "Utility/StringUtil.h"
 #include "portable-file-dialogs.h"
+#include <format>
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <shlobj.h>
@@ -88,6 +89,15 @@ bool File::IsNewerThan(const std::filesystem::path& file, const std::filesystem:
 	auto sTime = std::filesystem::last_write_time(compareTo);
 	return fTime > sTime;
 }
+
+bool File::NewFile(const std::filesystem::path& file, const std::string& content)
+{
+	std::ofstream f(file);
+	f << content;
+	f.close();
+	return true;
+}
+
 std::string File::ReadFile(const std::filesystem::path& file)
 {
 	std::string result;
@@ -167,8 +177,7 @@ bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<u
 
 std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
-	std::filesystem::path path(file);
-	return std::filesystem::absolute(path);
+	return std::filesystem::absolute(file);
 }
 std::string File::GetDirectoryOf(const std::filesystem::path& file)
 {
@@ -207,6 +216,21 @@ bool File::CreateDir(const std::filesystem::path& dir)
 }
 void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
+}
+
+bool File::OpenInExplorer(const std::filesystem::path& path) {
+	auto abs = GetFileAbsolutePath(path);
+	if (!Exists(abs)) return false;
+
+	std::string cmd = "explorer.exe /select,\"" + abs.string() + "\"";
+	return SystemCall(cmd) == 0;
+}
+bool File::OpenDirectoryInExplorer(const std::filesystem::path& path) 
+{
+	auto abs = GetFileAbsolutePath(path);
+	if (!Exists(path)) return false;
+	ShellExecute(NULL, L"explore", abs.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	return true;
 }
 
 int File::SystemCall(const std::string& command) 

@@ -42,7 +42,6 @@ namespace UI
 			auto* drawList = ImGui::GetWindowDrawList();
 			drawShadow(topLeft, bottomRight, false);
 
-
 			drawList->AddRectFilled(topLeft, thumbBottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersTop);
 			drawList->AddRectFilled(infoTopLeft, bottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersBottom);
 		}
@@ -111,7 +110,6 @@ namespace UI
 		}
 
 		ImGui::EndGroup();
-
 
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
 			ImGui::Text(name.c_str());
