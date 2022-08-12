@@ -27,7 +27,7 @@ namespace Hazard
 
 	struct AssetMetadata
 	{
-		AssetHandle Handle;
+		AssetHandle Handle = INVALID_ASSET_HANDLE;
 		AssetType Type = AssetType::Undefined;
 
 		std::filesystem::path Path = "";

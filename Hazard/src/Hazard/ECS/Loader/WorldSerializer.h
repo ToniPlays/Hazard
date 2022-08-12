@@ -99,8 +99,7 @@ namespace Hazard
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
 				if (component.m_MeshHandle) {
-					AssetMetadata& meta = AssetManager::GetMetadata(component.m_MeshHandle->GetHandle());
-					YamlUtils::Serialize(out, "Mesh", meta.Path.string());
+					YamlUtils::Serialize(out, "Mesh", component.m_MeshHandle->GetHandle());
 				}
 				});
 		}
@@ -110,9 +109,7 @@ namespace Hazard
 			YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
 				YamlUtils::Serialize(out, "Tint", component.Tint);
 				if (!component.Texture) return;
-
-				AssetMetadata& meta = AssetManager::GetMetadata(component.Texture->GetHandle());
-				YamlUtils::Serialize(out, "Sprite", meta.Path.string());
+				YamlUtils::Serialize(out, "Sprite", component.Texture->GetHandle());
 				});
 		}
 		template<>

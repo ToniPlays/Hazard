@@ -58,7 +58,6 @@ bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path
 
 void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 {
-
 	std::ofstream file(path);
 	YAML::Emitter out;
 
@@ -123,9 +122,19 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 	{
 		File::CreateDir(project.Path / "Assets" / "Scripts");
+		File::NewFile(project.Path / "Assets" / "Scripts.meta");
+
 		File::CreateDir(project.Path / "Assets" / "Materials");
+		File::NewFile(project.Path / "Assets" / "Materials.meta");
+
 		File::CreateDir(project.Path / "Assets" / "Sprites");
+		File::NewFile(project.Path / "Assets" / "Sprites.meta");
+
 		File::CreateDir(project.Path / "Assets" / "Models");
+		File::NewFile(project.Path / "Assets" / "Models.meta");
+
+		File::CreateDir(project.Path / "Assets" / "Worlds");
+		File::NewFile(project.Path / "Assets" / "Worlds.meta");
 	}
 
 	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";

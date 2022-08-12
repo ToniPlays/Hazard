@@ -28,8 +28,8 @@ std::string File::OpenFolderDialog(const std::string& title) {
 	if (f.result() == "") return "";
 	return f.result();
 }
-std::string File::SaveFile(const char* filters) {
-	auto f = pfd::save_file("Save file", "", {"All files", "*"}, true);
+std::string File::SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath) {
+	auto f = pfd::save_file("Save file", defaultPath.string(), filters, true);
 	return f.result();
 }
 
@@ -225,7 +225,7 @@ bool File::OpenInExplorer(const std::filesystem::path& path) {
 	std::string cmd = "explorer.exe /select,\"" + abs.string() + "\"";
 	return SystemCall(cmd) == 0;
 }
-bool File::OpenDirectoryInExplorer(const std::filesystem::path& path) 
+bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
 {
 	auto abs = GetFileAbsolutePath(path);
 	if (!Exists(path)) return false;
@@ -233,7 +233,7 @@ bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
 	return true;
 }
 
-int File::SystemCall(const std::string& command) 
+int File::SystemCall(const std::string& command)
 {
 	return system(command.c_str());
 }

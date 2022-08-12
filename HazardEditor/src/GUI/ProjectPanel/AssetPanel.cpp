@@ -1,5 +1,6 @@
 
 #include "AssetPanel.h"
+#include "Core/EditorAssetManager.h"
 
 namespace UI
 {
@@ -51,7 +52,8 @@ namespace UI
 		DrawToolbar();
 		{
 			ImUI::ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
-			ImGui::Columns(2, 0, true);
+			ImGui::Columns(2, 0, false);
+			ImGui::SetColumnWidth(0, 275);
 			DrawFolderTreeView();
 			ImGui::NextColumn();
 		}
@@ -158,13 +160,67 @@ namespace UI
 		}
 		ImGui::Columns();
 
+		DrawContextMenu();
+
+		ImGui::EndChild();
+	}
+
+	void AssetPanel::DrawContextMenu()
+	{
 		ImUI::ContextMenu([&]() {
+
+			ImUI::MenuHeader("Folder");
+			ImUI::MenuItem("New folder", [&]() {
+				EditorAssetManager::CreateAsset(AssetType::Folder, GetOpenDirectory() / "Folder");
+				GenerateFolderStructure();
+				RefreshFolderItems();
+				});
+			ImUI::MenuHeader("Import");
+			ImUI::MenuItem("Import asset", [&]() {
+
+				});
+
+
+			ImUI::MenuHeader("Quick create");
+			ImUI::MenuItem("Script", [&]() {
+
+				});
+			ImUI::MenuItem("World", [&]() {
+
+				});
+			ImUI::MenuItem("Material", [&]() {
+
+				});
+
+			ImUI::MenuHeader("Advanced assets");
+
+			ImUI::Submenu("Animation", [&]() {
+
+				});
+			ImUI::Submenu("Scripts", [&]() {
+
+				});
+			ImUI::Submenu("Editor", [&]() {
+
+				});
+			ImUI::Submenu("Materials and textures", [&]() {
+
+				});
+			ImUI::Submenu("Physics", [&]() {
+
+				});
+			ImUI::Submenu("Sounds", [&]() {
+
+				});
+			ImUI::Submenu("User interface", [&]() {
+
+				});
+
+			ImUI::MenuHeader("Other");
 			ImUI::MenuItem("Show in Explorer", [&]() {
 				File::OpenDirectoryInExplorer(m_CurrentPath);
 				});
 			});
-
-		ImGui::EndChild();
 	}
 
 	void AssetPanel::RefreshFolderItems()
@@ -182,10 +238,11 @@ namespace UI
 
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
 				AssetPanelItem assetItem = AssetPanelItem(handle);
+
 				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);
 			}
 		}
-		
+
 		for (auto& dir : directories) {
 			m_CurrentItems.push_back(dir);
 		}

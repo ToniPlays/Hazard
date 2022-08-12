@@ -29,11 +29,15 @@ namespace UI {
 		};
 
 		void RefreshFolderItems();
+		std::filesystem::path& GetRootDirectory() { return m_RootPath; }
+		std::filesystem::path& GetOpenDirectory() { return m_CurrentPath; }
+		
 
 	private:
 		void DrawToolbar();
 		void DrawFolderTreeView();
 		void DrawContents();
+		void DrawContextMenu();
 		void DrawCurrentFolderPath();
 		void DrawFolderTreeItem(const FolderStructureData& folder);
 		Ref<Hazard::Texture2D> GetItemIcon(const Hazard::AssetMetadata& metadata);

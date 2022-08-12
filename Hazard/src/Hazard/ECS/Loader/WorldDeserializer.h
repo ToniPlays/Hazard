@@ -6,6 +6,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
+#include "UID.h"
+
 namespace Hazard 
 {
 	class WorldDeserializer {
@@ -83,12 +85,10 @@ namespace Hazard
 		template<>
 		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
-			std::string fileName;
-			YamlUtils::Deserialize(comp, "Mesh", fileName, std::string(""));
+			AssetHandle handle;
+			YamlUtils::Deserialize(comp, "Mesh", handle, (AssetHandle)INVALID_ASSET_HANDLE);
 
-			if (fileName.empty()) return;
-
-			AssetHandle handle = AssetManager::ImportAsset(fileName);
+			if (handle == INVALID_ASSET_HANDLE) return;
 			c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 		};
 		template<>

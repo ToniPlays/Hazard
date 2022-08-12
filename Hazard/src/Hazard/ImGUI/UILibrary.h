@@ -627,6 +627,20 @@ namespace Hazard::ImUI
 			callback();
 		}
 	}
+	static void Separator(ImVec2 size, ImVec4 color);
+
+	static void MenuHeader(const char* label) {
+		ImGui::PushID(label);
+		const Style& style = StyleManager::GetCurrent();
+		ImGui::TextColored(style.Window.TextDark, label);
+		ImGui::SameLine(0, 5);
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		
+		ImUI::ShiftY(ImGui::GetTextLineHeight() * 0.5f);
+		ImUI::Separator({ size.x, 2.0f }, style.Window.TextDark);
+		ImUI::ShiftY(ImGui::GetTextLineHeight() * -0.5f);
+		ImGui::PopID();
+	}
 
 #pragma endregion
 #pragma region Layout
@@ -643,7 +657,7 @@ namespace Hazard::ImUI
 #pragma region DragDrop
 
 	template<typename T, typename Callback>
-	static bool DragSource(const char* type, T* data, Callback callback) 
+	static bool DragSource(const char* type, T* data, Callback callback)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
 			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
@@ -669,7 +683,7 @@ namespace Hazard::ImUI
 	static bool DropTarget(const char* type, Callback callback) {
 		bool accepted = false;
 		if (ImGui::BeginDragDropTarget()) {
-			
+
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type);
 			if (payload) {
 				callback(*(T*)payload->Data);

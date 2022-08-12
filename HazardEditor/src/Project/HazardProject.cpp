@@ -2,6 +2,7 @@
 #include "HazardProject.h"
 #include "File.h"
 #include "Hazard.h"
+#include "Core/EditorAssetManager.h"
 
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
@@ -26,8 +27,7 @@ void HazardProject::ProcessAssets()
 	{
 		if (File::GetFileExtension(item) == "meta") 
 		{
-			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			Hazard::AssetManager::ImportAsset(assetPath.string());
+			EditorAssetManager::ImportFromMetadata(item);
 
 			if (File::IsDirectory(assetPath)) {
 				ProcessSubFolderAssets(assetPath);

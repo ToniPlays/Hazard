@@ -1,6 +1,7 @@
 
 #include <hzrpch.h>
 #include "AssetEnums.h"
+#include "Utility/YamlUtils.h"
 
 namespace Hazard::Utils
 {
@@ -63,4 +64,15 @@ namespace Hazard::Utils
 		}
 		return "Undefined";
 	}
+}
+
+template<>
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue) {
+	if (!node[key]) value = defaultValue;
+	else value = Hazard::Utils::StringToAssetType(node[key].as<std::string>());
+}
+template<>
+static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value)
+{
+	out << YAML::Key << key << YAML::Value << Hazard::Utils::AssetTypeToString(value);
 }

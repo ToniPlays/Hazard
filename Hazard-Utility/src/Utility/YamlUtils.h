@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <filesystem>
 
+#include "UID.h"
+
 
 namespace YAML {
 
@@ -126,6 +128,11 @@ public:
 	{
 		out << YAML::Key << key << YAML::Value << value;
 	}
+	template<>
+	static void Serialize(YAML::Emitter& out, const std::string& key, std::filesystem::path value)
+	{
+		out << YAML::Key << key << YAML::Value << value.string();
+	}
 
 	template<>
 	static void Serialize(YAML::Emitter& out, const std::string& key, uint32_t value)
@@ -136,6 +143,11 @@ public:
 	static void Serialize(YAML::Emitter& out, const std::string& key, size_t value)
 	{
 		out << YAML::Key << key << YAML::Value << value;
+	}
+	template<>
+	static void Serialize(YAML::Emitter& out, const std::string& key, UID value)
+	{
+		out << YAML::Key << key << YAML::Value << (uint64_t)value;
 	}
 	template<>
 	static void Serialize(YAML::Emitter& out, const std::string& key, float value)
@@ -186,6 +198,16 @@ public:
 	static void Deserialize(YAML::Node node, const std::string& key, uint32_t& value, uint32_t defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = node[key].as<uint32_t>();
+	}
+	template<>
+	static void Deserialize(YAML::Node node, const std::string& key, size_t& value, size_t defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<size_t>();
+	}
+	template<>
+	static void Deserialize(YAML::Node node, const std::string& key, UID& value, UID defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<uint64_t>();
 	}
 	template<>
 	static void Deserialize(YAML::Node node, const std::string& key, float& value, float defaultValue) {

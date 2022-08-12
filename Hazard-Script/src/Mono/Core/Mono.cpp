@@ -74,7 +74,7 @@ namespace HazardScript
 	}
 	MonoAssembly* Mono::AssemblyFromImage(MonoImage* image, const std::filesystem::path& path, MonoImageOpenStatus& status)
 	{
-		HZR_ASSERT(File::Exists(path), "File does not exist");
+		HZR_ASSERT(File::Exists(path), "Assembly file does not exist: " + path.string());
 		return mono_assembly_load_from_full(image, path.string().c_str(), &status, 0);
 	}
 	MonoClass* Mono::GetMonoClass(MonoImage* image, const std::string& nameSpace, const std::string& name)

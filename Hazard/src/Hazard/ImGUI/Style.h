@@ -32,6 +32,7 @@ namespace Hazard::ImUI
 		ImVec4 ResizeGripActive = ColorToImVec("#53B305");
 
 		ImVec4 Text = ColorToImVec("#B9B9B9");
+		ImVec4 TextDark = ColorToImVec("#505050");
 		ImVec4 TextSelectedBg = ColorToImVec("#5DC5054B");
 		ImVec4 TextDisabled = ColorToImVec("#909090");
 

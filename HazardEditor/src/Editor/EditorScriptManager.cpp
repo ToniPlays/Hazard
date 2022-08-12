@@ -8,7 +8,7 @@
 #include "Core/GUIManager.h"
 #include "GUI/Debug/Console.h"
 
-namespace Editor 
+namespace Editor
 {
 	void EditorScriptManager::GenerateProjectFiles()
 	{
@@ -25,14 +25,20 @@ namespace Editor
 		File::SystemCall(command);
 
 		auto& manager = Hazard::Application::GetModule<GUIManager>();
-			auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
-			if (!console) return;
+		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
+		if (!console) return;
 
-			console->AddMessage({ "Build result" , File::ReadFile(buildPath / "build.hlog"), MessageFlags_Info });
+		console->AddMessage({ "Build result", File::ReadFile(buildPath / "build.hlog"), MessageFlags_Info });
 	}
 	void EditorScriptManager::ReloadAssebmly()
 	{
 		Hazard::Application::GetModule<Hazard::ScriptEngine>().ReloadAssemblies();
+	}
+	void EditorScriptManager::RecompileAndLoad()
+	{
+		GenerateProjectFiles();
+		CompileSource();
+		ReloadAssebmly();
 	}
 	bool EditorScriptManager::OnEvent(Event& e)
 	{
@@ -41,9 +47,9 @@ namespace Editor
 	}
 	bool EditorScriptManager::OnWindowFocusEvent(WindowFocusEvent& e)
 	{
-		if (e.GetFocus()) 
+		if (e.GetFocus())
 		{
-			if (m_ReloadOnFocus) 
+			if (m_ReloadOnFocus)
 			{
 				RecompileAndLoad();
 			}

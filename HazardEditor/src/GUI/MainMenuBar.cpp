@@ -4,7 +4,7 @@
 #include "AllPanels.h"
 #include "Core/HazardEditor.h"
 
-namespace UI 
+namespace UI
 {
 	MainMenuBar::MainMenuBar()
 	{
@@ -88,14 +88,8 @@ namespace UI
 		if (!Input::IsKeyDown(Key::LeftControl)) return false;
 
 		switch (e.GetKeyCode()) {
-		case Key::S:
-			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
-			WorldSerializer serializer(world);
-			serializer.SerializeEditor(world->GetWorldFile());
-			HZR_INFO("Saved world file");
-			return true;
+		case Key::S: break;
 		}
-
 		return false;
 	}
 }

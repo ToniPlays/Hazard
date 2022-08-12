@@ -12,11 +12,7 @@ namespace Editor {
 		void CompileSource();
 		void ReloadAssebmly();
 
-		void RecompileAndLoad() {
-			GenerateProjectFiles();
-			CompileSource();
-			ReloadAssebmly();
-		}
+		void RecompileAndLoad();
 
 		bool ReloadOnFocus() { return m_ReloadOnFocus; }
 		void SetReloadOnFocus(bool enabled) { m_ReloadOnFocus = enabled; }

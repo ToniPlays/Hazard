@@ -26,7 +26,7 @@ namespace Hazard
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
 
-		static AssetHandle ImportAsset(const std::filesystem::path& filePath);
+		static AssetHandle ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata = AssetMetadata());
 		static AssetHandle GetHandleFromFile(const std::string& filePath);
 
 		static void RemoveAsset(AssetHandle handle);
