@@ -58,9 +58,9 @@ public:
 
 	//Dispath the event for layer
 	template<typename T, typename F>
-	bool Dispatch(const F& func) {
+	bool Dispatch(const F& eventMethod) {
 		if (m_Event.GetEventType() == T::GetStaticType()) {
-			m_Event.handled = func(static_cast<T&>(m_Event));
+			m_Event.handled = eventMethod(static_cast<T&>(m_Event));
 		}
 		return m_Event.handled;
 	}

@@ -3,6 +3,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "File.h"
 #include "Utility/YamlUtils.h"
+#include "Hazard.h"
 
 using namespace Hazard;
 AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path& path)
@@ -17,16 +18,37 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	return metadata;
 }
 
-void EditorAssetManager::CreateAsset(const AssetType& type, const std::filesystem::path& path)
+
+bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 {
-	if (!CreateSourceAsset(type, path)) {
-		return;
+	return false;
+}
+
+bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
+{
+	std::filesystem::path actualPath = path;
+	if (File::DirectoryExists(actualPath)) {
+		size_t i = 1;
+		std::filesystem::path curPath = File::AppendToName(actualPath, std::to_string(i));
+		while (File::DirectoryExists(curPath)) 
+		{
+			curPath = File::AppendToName(actualPath, std::to_string(i));
+			i++;
+		}
+		actualPath = curPath;
 	}
+	if (!File::CreateDir(actualPath)) return false;
+
 	AssetMetadata metadata = {};
 	metadata.Handle = AssetHandle();
-	metadata.Path = path;
-	metadata.Type = type;
+	metadata.Path = actualPath;
+	metadata.Type = AssetType::Folder;
 
+	return CreateMetadataFile(metadata, actualPath);
+}
+
+bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const std::filesystem::path& path)
+{
 	YAML::Emitter out;
 
 	out << YAML::BeginMap;
@@ -34,25 +56,7 @@ void EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
 	YamlUtils::Serialize(out, "Type", metadata.Type);
 	YamlUtils::Serialize(out, "Path", metadata.Path);
 	out << YAML::EndMap;
-
 	File::NewFile(path.string() + ".meta", out.c_str());
 
-	Hazard::AssetManager::ImportAsset(path, metadata);
-}
-
-bool EditorAssetManager::CreateSourceAsset(const AssetType& type, const std::filesystem::path& path)
-{
-	switch (type)
-	{
-	case AssetType::Folder:             return File::CreateDir(path);
-	case AssetType::AudioClip:          return false;
-	case AssetType::World:              return false;
-	case AssetType::Image:              return false;
-	case AssetType::Mesh:               return false;
-	case AssetType::Script:             return false;
-	case AssetType::EnvironmentMap:     return false;
-	case AssetType::PhysicsMaterial:    return false;
-	default:                            return false;
-	}
-	return false;
+	return Hazard::AssetManager::ImportAsset(path, metadata) != INVALID_ASSET_HANDLE;
 }

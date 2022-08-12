@@ -1,6 +1,8 @@
 
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
+#include "Editor/EditorScriptManager.h"
+#include "Core/GUIManager.h"
 
 namespace UI
 {
@@ -49,7 +51,10 @@ namespace UI
 	void AssetPanel::OnPanelRender()
 	{
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-		DrawToolbar();
+		{
+			ImUI::ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+			DrawToolbar();
+		}
 		{
 			ImUI::ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
 			ImGui::Columns(2, 0, false);
@@ -61,14 +66,24 @@ namespace UI
 
 		ImGui::Columns();
 	}
+	bool AssetPanel::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(AssetPanel::OnWindowFocus));
+	}
+	bool AssetPanel::OnWindowFocus(WindowFocusEvent& e)
+	{
+		GenerateFolderStructure();
+		RefreshFolderItems();
+		return false;
+	}
 	void AssetPanel::DrawToolbar()
 	{
-		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 28.0f };
+		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 32.0f };
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Toolbar", size);
-
 		{
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			if (ImGui::Button(ICON_FK_PLUS " ADD", { 75.0, 28.0f })) {
@@ -143,12 +158,15 @@ namespace UI
 		constexpr float thumbailSize = 150.0f;
 		const float paddingForOutline = 2.0f;
 		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
-		float panelWidth = ImGui::GetContentRegionAvail().x - scrollBarrOffset;
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		float panelWidth = size.x - scrollBarrOffset;
 		float cellSize = 150.0f + 2.0f + paddingForOutline;
 		int columnCount = (int)(panelWidth / cellSize);
 		if (columnCount < 1) columnCount = 1;
 
-		ImGui::BeginChild("#contentPanel");
+		size.y -= 32.0f;
+		ImGui::BeginChild("#contentPanel", size);
+		ImUI::ShiftY(8.0f);
 		ImGui::Columns(columnCount, 0, false);
 
 		for (auto& item : m_CurrentItems) {
@@ -159,21 +177,24 @@ namespace UI
 			item.EndRender();
 		}
 		ImGui::Columns();
-
 		DrawContextMenu();
+		ImGui::EndChild();
+
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
+		ImGui::BeginChild("Info", { size.x, 28.0f });
 
 		ImGui::EndChild();
 	}
 
 	void AssetPanel::DrawContextMenu()
 	{
+		bool changed = false;
 		ImUI::ContextMenu([&]() {
 
 			ImUI::MenuHeader("Folder");
 			ImUI::MenuItem("New folder", [&]() {
-				EditorAssetManager::CreateAsset(AssetType::Folder, GetOpenDirectory() / "Folder");
-				GenerateFolderStructure();
-				RefreshFolderItems();
+				EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
 				});
 			ImUI::MenuHeader("Import");
 			ImUI::MenuItem("Import asset", [&]() {
@@ -183,10 +204,11 @@ namespace UI
 
 			ImUI::MenuHeader("Quick create");
 			ImUI::MenuItem("Script", [&]() {
-
+				//EditorAssetManager::CreateAsset(AssetType::Script, GetOpenDirectory() / "script.cs");
+				//Application::GetModule<Editor::EditorScriptManager>().GenerateProjectFiles();
 				});
 			ImUI::MenuItem("World", [&]() {
-
+				//EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
 				});
 			ImUI::MenuItem("Material", [&]() {
 
@@ -198,10 +220,11 @@ namespace UI
 
 				});
 			ImUI::Submenu("Scripts", [&]() {
-
+				ImUI::MenuItem("Entity script", [&]() {
+					//Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+					});
 				});
 			ImUI::Submenu("Editor", [&]() {
-
 				});
 			ImUI::Submenu("Materials and textures", [&]() {
 
@@ -221,6 +244,9 @@ namespace UI
 				File::OpenDirectoryInExplorer(m_CurrentPath);
 				});
 			});
+		if (!changed) return;
+		GenerateFolderStructure();
+		RefreshFolderItems();
 	}
 
 	void AssetPanel::RefreshFolderItems()

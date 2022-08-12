@@ -31,6 +31,7 @@ public:
 	static bool Exists(const std::filesystem::path& path);
 	static bool DirectoryExists(const std::filesystem::path& dir);
 	static bool IsDirectory(const std::filesystem::path& path);
+	static std::filesystem::path AppendToName(const std::filesystem::path& path, const std::string& append);
 
 	static std::vector<char> ReadBinaryFileChar(const std::filesystem::path& path);
 	static Buffer ReadBinaryFile(const std::filesystem::path& path);

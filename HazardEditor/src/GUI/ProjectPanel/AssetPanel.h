@@ -18,7 +18,8 @@ namespace UI {
 
 		void Update() override {};
 		void OnPanelRender() override;
-		bool OnEvent(Event& e) override { return false; };
+		bool OnEvent(Event& e) override;
+		bool OnWindowFocus(WindowFocusEvent& e);
 
 		void SetRootFolder(const std::filesystem::path& path) { 
 			m_RootPath = path;
@@ -31,7 +32,6 @@ namespace UI {
 		void RefreshFolderItems();
 		std::filesystem::path& GetRootDirectory() { return m_RootPath; }
 		std::filesystem::path& GetOpenDirectory() { return m_CurrentPath; }
-		
 
 	private:
 		void DrawToolbar();

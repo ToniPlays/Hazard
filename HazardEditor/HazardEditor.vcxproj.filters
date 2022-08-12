@@ -147,6 +147,7 @@
     <ClInclude Include="src\Editor\EditorScriptManager.h" />
     <ClInclude Include="src\Core\MessageFlags.h" />
     <ClInclude Include="src\Core\EditorAssetManager.h" />
+    <ClInclude Include="src\GUI\AssetTools\ScriptCreatePanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -226,5 +227,9 @@
     </ClCompile>
     <ClCompile Include="src\Editor\EditorScriptManager.cpp" />
     <ClCompile Include="src\Core\EditorAssetManager.cpp" />
+    <ClCompile Include="src\GUI\AssetTools\ScriptCreatePanel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\ScriptTemplate\TemplateScript.cs" />
   </ItemGroup>
 </Project>

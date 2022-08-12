@@ -45,6 +45,14 @@ bool File::IsDirectory(const std::filesystem::path& path)
 {
 	return std::filesystem::is_directory(path);
 }
+std::filesystem::path File::AppendToName(const std::filesystem::path& path, const std::string& append) 
+{
+	auto& parentPath = GetDirectoryOf(path);
+	auto& name = GetName(path);
+
+	return parentPath / std::filesystem::path(path.string() + append);
+}
+
 void File::WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source)
 {
 	std::ofstream out(dest);
