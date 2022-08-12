@@ -24,6 +24,36 @@ bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 	return false;
 }
 
+bool EditorAssetManager::CreateWorld(const std::filesystem::path& path)
+{
+	std::filesystem::path actualPath = path;
+
+	if (File::Exists(actualPath)) {
+		size_t i = 1;
+		std::filesystem::path curPath = File::AppendToName(actualPath, std::to_string(i));
+		while (File::Exists(curPath))
+		{
+			curPath = File::AppendToName(actualPath, std::to_string(i));
+			i++;
+		}
+		actualPath = curPath;
+	}
+
+	Ref<World> world = new World(actualPath);
+	WorldSerializer serializer(world);
+	if (!serializer.SerializeEditor(world->GetWorldFile())) return false;
+
+
+	AssetMetadata metadata = {};
+	metadata.Handle = AssetHandle();
+	metadata.Path = actualPath;
+	metadata.Type = AssetType::World;
+
+	return CreateMetadataFile(metadata, actualPath);
+
+	return false;
+}
+
 bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
 {
 	std::filesystem::path actualPath = path;

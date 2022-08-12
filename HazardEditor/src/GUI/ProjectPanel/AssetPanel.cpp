@@ -3,6 +3,7 @@
 #include "Core/EditorAssetManager.h"
 #include "Editor/EditorScriptManager.h"
 #include "Core/GUIManager.h"
+#include "GUI/AllPanels.h"
 
 namespace UI
 {
@@ -195,20 +196,22 @@ namespace UI
 			ImUI::MenuHeader("Folder");
 			ImUI::MenuItem("New folder", [&]() {
 				EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
+				changed = true;
 				});
 			ImUI::MenuHeader("Import");
 			ImUI::MenuItem("Import asset", [&]() {
 
 				});
 
-
 			ImUI::MenuHeader("Quick create");
 			ImUI::MenuItem("Script", [&]() {
-				//EditorAssetManager::CreateAsset(AssetType::Script, GetOpenDirectory() / "script.cs");
-				//Application::GetModule<Editor::EditorScriptManager>().GenerateProjectFiles();
+				ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+				panel->SetDirectory(GetOpenDirectory());
+				panel->Open();
 				});
 			ImUI::MenuItem("World", [&]() {
-				//EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
+				EditorAssetManager::CreateWorld(GetOpenDirectory() / "world.hazard");
+				changed = true;
 				});
 			ImUI::MenuItem("Material", [&]() {
 
@@ -221,7 +224,9 @@ namespace UI
 				});
 			ImUI::Submenu("Scripts", [&]() {
 				ImUI::MenuItem("Entity script", [&]() {
-					//Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+					ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+					panel->SetDirectory(GetOpenDirectory());
+					panel->Open();
 					});
 				});
 			ImUI::Submenu("Editor", [&]() {

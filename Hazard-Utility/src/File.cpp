@@ -48,9 +48,10 @@ bool File::IsDirectory(const std::filesystem::path& path)
 std::filesystem::path File::AppendToName(const std::filesystem::path& path, const std::string& append) 
 {
 	auto& parentPath = GetDirectoryOf(path);
-	auto& name = GetName(path);
+	auto& name = GetNameNoExt(path);
+	auto& extension = IsDirectory(path) ? "" :"." + GetFileExtension(path);
 
-	return parentPath / std::filesystem::path(path.string() + append);
+	return parentPath / std::filesystem::path(name + append + extension);
 }
 
 void File::WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source)

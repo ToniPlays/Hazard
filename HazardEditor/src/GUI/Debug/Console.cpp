@@ -60,6 +60,7 @@ namespace UI
 					{
 						ImUI::ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
 						ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
+						ImUI::ScopedStyleColor color(ImGuiCol_PopupBg, style.ChildBackgroundColor);
 						if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 
 							ImGui::Text(message.Description.c_str());

@@ -1505,6 +1505,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\HScript.h" />
     <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Modal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
