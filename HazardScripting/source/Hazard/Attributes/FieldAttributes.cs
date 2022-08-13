@@ -28,40 +28,40 @@ namespace Hazard
     [AttributeUsage(AttributeTargets.Field)]
     public class Slider : Attribute 
     {
-        float min, max;
+        float Min, Max;
         public Slider(float min, float max) {
-            this.min = min;
-            this.max = max;
+            Min = min;
+            Max = max;
         }
     }
     [AttributeUsage(AttributeTargets.Field)]
     public class Range : Attribute
     {
-        float min, max;
+        float Min, Max;
         public Range(float min, float max) {
-            this.min = min;
-            this.max = max;
+            Min = min;
+            Max = max;
         }
     }
     [AttributeUsage(AttributeTargets.Field)]
     public class Header : Attribute
     {
-        string header;
+        string Text;
         public Header(string header) {
-            this.header = header;
+            Text = header;
         }
     }
     [AttributeUsage(AttributeTargets.Field)]
     public class Tooltip : Attribute
     {
-        string tooltip;
+        string Text;
         public Tooltip(string tooltip) {
-            this.tooltip = tooltip;
+            Text = tooltip;
         }
     }
     [AttributeUsage(AttributeTargets.Field)]
     public class TextArea : Attribute
     {
-
+        float Min, Max;
     }
 }

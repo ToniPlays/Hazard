@@ -20,9 +20,24 @@ namespace UI
 	}
 	template<>
 	static bool ScriptField<float>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+		using namespace HazardScript;
 		float value = obj.GetFieldValue<float>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		bool modified = ImUI::InputFloat(value, 0.0f);
+		bool modified = false;
+
+		if (field.Has<RangeAttribute>()) {
+			RangeAttribute attrib = field.Get<RangeAttribute>();
+			modified = ImUI::InputFloat(value, 0.0f, attrib.Min, attrib.Max);
+		}
+		else if (field.Has<SliderAttribute>()) {
+			SliderAttribute attrib = field.Get<SliderAttribute>();
+			modified = ImUI::InputSliderFloat(value, 0.0f, attrib.Min, attrib.Max);
+		}
+		else
+		{
+			modified = ImUI::InputFloat(value, 0.0f);
+		}
+
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
 		}
@@ -58,9 +73,21 @@ namespace UI
 	}
 	template<>
 	static bool ScriptField<std::string>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+		using namespace HazardScript;
 		std::string value = obj.GetFieldValue<std::string>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		bool modified = ImUI::TextField(value);
+
+
+		bool modified = false;
+
+		if (field.Has<TextAreaAttribute>()) {
+			TextAreaAttribute attrib = field.Get<TextAreaAttribute>();
+			modified = ImUI::TextArea(value, attrib.Min, attrib.Max);
+		}
+		else {
+			modified = ImUI::TextField(value);
+		}
+
 		if (modified) {
 			obj.SetFieldValue<std::string>(field.GetName(), value);
 		}
@@ -75,7 +102,6 @@ namespace UI
 
 		std::string label = name;
 		label[0] = toupper(name[0]);
-
 		ImGui::Text(label.c_str());
 		if (field.Has<TooltipAttribute>()) {
 			ImUI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
@@ -91,6 +117,7 @@ namespace UI
 		case FieldType::UInt: break;
 		case FieldType::String: ScriptField<std::string>(field, obj); break;
 		default:
+			HZR_ASSERT(false, "Wooooop");
 			break;
 		}
 		ImGui::NextColumn();

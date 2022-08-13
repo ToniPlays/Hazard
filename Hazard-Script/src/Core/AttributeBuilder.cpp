@@ -43,27 +43,34 @@ namespace HazardScript
 		else if (className == "Slider")
 		{
 			SliderAttribute* attrib = new SliderAttribute();
-			attrib->Min = Mono::GetFieldValue<float>(obj, "min");
-			attrib->Max = Mono::GetFieldValue<float>(obj, "max");
+			attrib->Min = Mono::GetFieldValue<float>(obj, "Min");
+			attrib->Max = Mono::GetFieldValue<float>(obj, "Max");
 			return attrib;
 		}
 		else if (className == "Range")
 		{
 			RangeAttribute* attrib = new RangeAttribute();
-			attrib->Min = Mono::GetFieldValue<float>(obj, "min");
-			attrib->Max = Mono::GetFieldValue<float>(obj, "max");
+			attrib->Min = Mono::GetFieldValue<float>(obj, "Min");
+			attrib->Max = Mono::GetFieldValue<float>(obj, "Max");
+			return attrib;
+		}
+		else if (className == "TextArea")
+		{
+			TextAreaAttribute* attrib = new TextAreaAttribute();
+			attrib->Min = Mono::GetFieldValue<int>(obj, "Min");
+			attrib->Max = Mono::GetFieldValue<int>(obj, "Max");
 			return attrib;
 		}
 		else if (className == "Header")
 		{
 			HeaderAttribute* attrib = new HeaderAttribute();
-			attrib->Header = Mono::GetFieldValue<std::string>(obj, "header");
+			attrib->Header = Mono::GetFieldValue<std::string>(obj, "Text");
 			return attrib;
 		}
 		else if (className == "Tooltip")
 		{
 			TooltipAttribute* attrib = new TooltipAttribute();
-			attrib->Tooltip = Mono::GetFieldValue<std::string>(obj, "tooltip");
+			attrib->Tooltip = Mono::GetFieldValue<std::string>(obj, "Text");
 			return attrib;
 		}
 		else if (className == "TextArea")

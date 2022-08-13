@@ -47,7 +47,7 @@ namespace Hazard::ImUI
 
 	protected:
 		std::string m_Title = "Undefined modal";
-		bool m_Open = true;
+		bool m_Open = false;
 		ImVec2 m_Size;
 	};
 }

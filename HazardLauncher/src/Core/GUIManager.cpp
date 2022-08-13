@@ -151,7 +151,6 @@ void GUIManager::Render()
 
 	if (ImGui::BeginPopup("ErrorPopup")) 
 	{
-		__debugbreak();
 		ImGui::EndPopup();
 	}
 

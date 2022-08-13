@@ -45,6 +45,9 @@ namespace HazardScript
 	class TextAreaAttribute : public Attribute 
 	{
 	public:
+		int Min;
+		int Max;
+	public:
 		ATTRIBUTE_CLASS_TYPE(TextArea)
 	};
 }

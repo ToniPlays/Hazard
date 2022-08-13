@@ -98,6 +98,18 @@ namespace Hazard::ImUI
 		}
 		return false;
 	}
+
+	static bool TextArea(std::string& text, int minLines, int maxLines) {
+		char buffer[512] = { 0 };
+		strcpy(buffer, text.c_str());
+
+		if (ImGui::InputTextMultiline("##InputField", buffer, sizeof(buffer), { 0, ImGui::GetTextLineHeight() * minLines })) {
+			text = buffer;
+			return true;
+		}
+		return false;
+	}
+
 	static bool TextField(std::string& text, const char* hint) {
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
@@ -135,8 +147,11 @@ namespace Hazard::ImUI
 
 		return modified;
 	}
-	static bool InputFloat(float& value, float clearValue = 0.0f) {
-		return ImGui::DragFloat("##float", &value);
+	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
+		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
+	}
+	static bool InputFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
+		return ImGui::DragFloat("##float", &value, 0.5f, min, max);
 	}
 	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
 		bool modified = false;
@@ -635,7 +650,7 @@ namespace Hazard::ImUI
 		ImGui::TextColored(style.Window.TextDark, label);
 		ImGui::SameLine(0, 5);
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		
+
 		ImUI::ShiftY(ImGui::GetTextLineHeight() * 0.5f);
 		ImUI::Separator({ size.x, 2.0f }, style.Window.TextDark);
 		ImUI::ShiftY(ImGui::GetTextLineHeight() * -0.5f);

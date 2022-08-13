@@ -3,11 +3,19 @@
 #include "UtilityCore.h"
 #include "Hazard/Assets/Asset.h"
 
-struct ScriptCreateInfo {
+struct ScriptCreateInfo 
+{
 	std::filesystem::path Path;
 	std::string ClassName;
 	std::string Derives;
 	std::vector<std::string> Methods;
+
+	void SetDefaults() {
+		Path = "";
+		ClassName = "";
+		Derives = "Entity";
+		Methods.clear();
+	}
 };
 
 class EditorAssetManager

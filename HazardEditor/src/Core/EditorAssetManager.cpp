@@ -21,7 +21,27 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 
 bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 {
-	return false;
+	HZR_ASSERT(!info.ClassName.empty(), "Class name cannot be empty");
+
+	std::string methodList = "";
+
+	for (auto method : info.Methods) {
+		methodList += method + "\n";
+	}
+
+	std::string sourceFile = File::ReadFile("res/ScriptTemplate/TemplateScript.cs");
+	sourceFile = StringUtil::Replace(sourceFile, "%ScriptName%", info.ClassName);
+	sourceFile = StringUtil::Replace(sourceFile, "%DerivesFrom%", info.Derives.empty() ? "" : ": " + info.Derives);
+	sourceFile = StringUtil::Replace(sourceFile, "%MethodList%", methodList);
+
+	if (!File::NewFile(info.Path, sourceFile)) return false;
+
+	AssetMetadata metadata = {};
+	metadata.Handle = AssetHandle();
+	metadata.Path = info.Path;
+	metadata.Type = AssetType::Script;
+
+	return CreateMetadataFile(metadata, info.Path);
 }
 
 bool EditorAssetManager::CreateWorld(const std::filesystem::path& path)
