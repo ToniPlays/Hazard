@@ -6,7 +6,6 @@
 #include "File.h"
 #include "Core/MessageFlags.h"
 #include "Core/GUIManager.h"
-#include "GUI/Debug/Console.h"
 
 namespace Editor
 {
@@ -28,7 +27,10 @@ namespace Editor
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (!console) return;
 
-		console->AddMessage({ "Build result", File::ReadFile(buildPath / "build.hlog"), MessageFlags_Info });
+		std::vector<UI::ConsoleMessage> messages = ParseBuildResult(File::ReadFile(buildPath / "build.hlog"));
+
+		for (auto& message : messages)
+			console->AddMessage(message);
 	}
 	void EditorScriptManager::ReloadAssebmly()
 	{
@@ -36,6 +38,11 @@ namespace Editor
 	}
 	void EditorScriptManager::RecompileAndLoad()
 	{
+		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+		if (console->ClearOnBuild()) {
+			console->Clear(true);
+		}
+
 		GenerateProjectFiles();
 		CompileSource();
 		ReloadAssebmly();
@@ -56,5 +63,25 @@ namespace Editor
 			return true;
 		}
 		return false;
+	}
+	std::vector<UI::ConsoleMessage> EditorScriptManager::ParseBuildResult(const std::string& source)
+	{
+		std::vector<UI::ConsoleMessage> result;
+
+		if (StringUtil::Contains(source, "Build succeeded")) {
+			result.push_back({ "Build succeeded", "", MessageFlags_Debug | MessageFlags_Clearable });
+		}
+		else if (StringUtil::Contains(source, "Build FAILED."))
+		{
+			result.push_back({ "BUILD FAILED", "", MessageFlags_Fatal });
+		}
+		if (StringUtil::Contains(source, "(CoreCompile target) ->"))
+		{
+			std::string_view message = StringUtil::Between(source, "(CoreCompile target) ->", "Time Elapsed");
+			result.push_back({ "Build report", message.data(), MessageFlags_Debug | MessageFlags_Clearable });
+		}
+
+
+		return result;
 	}
 }

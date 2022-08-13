@@ -16,7 +16,8 @@ public:
 	static std::string Replace(const std::string& value, const std::string& find, const std::string& replaceWith);
 	static std::string& ToLower(std::string& string);
 	static bool IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive = false, bool stripWhiteSpaces = true, bool stripUnderScores = true);
-	static bool Contains(std::string_view t, std::string_view s) { return t.find(s) != std::string::npos; }
+	static bool Contains(std::string_view source, std::string_view find) { return source.find(find) != std::string::npos; }
+	static std::string_view Between(const std::string_view& source, const std::string& start, const std::string& end);
 	/*
 	Split source by token, returns type and source until next type token
 	*/

@@ -95,8 +95,6 @@ namespace HazardScript
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}
-		
-		SendDebugMessage({ Severity::Info, "Assemblies loaded" });
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()
 	{

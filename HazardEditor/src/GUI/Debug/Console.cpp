@@ -81,14 +81,17 @@ namespace UI
 	}
 	void Console::Clear(bool force)
 	{
-		for (uint32_t i = 0; i < m_Messages.size(); i++)
+		std::vector<ConsoleMessage> messages;
+		uint32_t size = m_Messages.size();
+		for (uint32_t i = 0; i < size; i++)
 		{
 			ConsoleMessage& message = m_Messages[i];
-			if (message.Flags & MessageFlags_Clearable || force)
+			if (!(message.Flags & MessageFlags_Clearable || force))
 			{
-				m_Messages.erase(m_Messages.begin() + i, m_Messages.end() + i);
+				messages.push_back(message);
 			}
 		}
+		m_Messages = messages;
 	}
 	const char* Console::GetMessageType(const ConsoleMessage& message)
 	{
@@ -112,6 +115,15 @@ namespace UI
 				if (ImGui::Button("Clear", { 75.0f, 28.0f })) {
 					Clear();
 				}
+			}
+			ImGui::SameLine(0, 5);
+			if (ColoredButton("Clear on build", (m_ClearOnBuild ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 28.0f })) {
+				m_ClearOnBuild = !m_ClearOnBuild;
+			}
+
+			ImGui::SameLine(0, 5);
+			if (ColoredButton("Clear on play", (m_ClearOnPlay ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 28.0f })) {
+				m_ClearOnPlay = !m_ClearOnPlay;
 			}
 
 			ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 136, 0);

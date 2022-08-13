@@ -85,3 +85,10 @@ bool StringUtil::IsMatching(const std::string& value, const std::string& compare
 
 	return Contains(nameSanitized, searchString);
 }
+std::string_view StringUtil::Between(const std::string_view& source, const std::string& start, const std::string& end)
+{
+	size_t startPos = source.find(start);
+	size_t endPos = source.find(end);
+
+	return source.substr(startPos + start.length(), endPos - startPos);
+}

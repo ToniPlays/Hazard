@@ -1,9 +1,11 @@
 
 #include "EditorModeManager.h"
+#include "Core/GUIManager.h"
+#include "GUI/Debug/Console.h"
 
 using namespace Hazard;
 
-namespace Editor 
+namespace Editor
 {
 	void EditorModeManager::BeginPlayMode()
 	{
@@ -15,6 +17,11 @@ namespace Editor
 		handler.SetWorld(playModeWorld);
 		handler.SetFlags(WorldFlags_Render | WorldFlags_UpdateScript);
 		handler.OnBegin();
+
+		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+		if (console->ClearOnPlay()) {
+			console->Clear();
+		}
 	}
 	void EditorModeManager::EndPlayMode()
 	{
