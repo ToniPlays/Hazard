@@ -28,7 +28,7 @@ void HazardProject::ProcessAssets()
 		if (File::GetFileExtension(item) == "meta") 
 		{
 			EditorAssetManager::ImportFromMetadata(item);
-
+			std::filesystem::path assetPath = File::GetPathNoExt(item);
 			if (File::IsDirectory(assetPath)) {
 				ProcessSubFolderAssets(assetPath);
 			}
@@ -49,10 +49,10 @@ void HazardProject::ProcessSubFolderAssets(const std::filesystem::path& dir)
 	{
 		if (File::GetFileExtension(item) == "meta")
 		{
-			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			Hazard::AssetManager::ImportAsset(assetPath.string());
+			EditorAssetManager::ImportFromMetadata(item);
 
-			if (File::IsDirectory(item)) {
+			std::filesystem::path assetPath = File::GetPathNoExt(item);
+			if (File::IsDirectory(assetPath)) {
 				ProcessSubFolderAssets(assetPath);
 			}
 		}

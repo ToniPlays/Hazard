@@ -15,9 +15,9 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	YamlUtils::Deserialize<AssetHandle>(root, "UID", metadata.Handle, INVALID_ASSET_HANDLE);
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
 	YamlUtils::Deserialize<std::filesystem::path>(root, "Path", metadata.Path, "");
+	Hazard::AssetManager::ImportAsset(metadata.Path, metadata);
 	return metadata;
 }
-
 
 bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 {

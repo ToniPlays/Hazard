@@ -113,7 +113,7 @@ namespace UI
 
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
 			ImGui::Text(name.c_str());
-			ImGui::Text(Utils::AssetTypeToString(GetMetadata().Type));
+			ImGui::Text(Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
 
 		ImGui::PopStyleVar();

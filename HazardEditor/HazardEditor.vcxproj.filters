@@ -28,6 +28,9 @@
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\AssetTools">
+      <UniqueIdentifier>{0193BA94-ED76-7BEA-56D7-753D42DA656C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Debug">
       <UniqueIdentifier>{F74F3B58-6310-B78E-2C4B-000C98CAFB6A}</UniqueIdentifier>
     </Filter>
@@ -63,6 +66,9 @@
     <ClInclude Include="src\BuildSystem\GameExportManager.h">
       <Filter>src\BuildSystem</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\EditorAssetManager.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -72,10 +78,16 @@
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\MessageFlags.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\EditorCamera.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorGrid.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\EditorScriptManager.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorSettings.h">
@@ -86,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="src\GUI\AllPanels.h">
       <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\AssetTools\ScriptCreatePanel.h">
+      <Filter>src\GUI\AssetTools</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\Debug\Console.h">
       <Filter>src\GUI\Debug</Filter>
@@ -144,10 +159,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorScriptManager.h" />
-    <ClInclude Include="src\Core\MessageFlags.h" />
-    <ClInclude Include="src\Core\EditorAssetManager.h" />
-    <ClInclude Include="src\GUI\AssetTools\ScriptCreatePanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -165,6 +176,9 @@
     <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
       <Filter>src\BuildSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\EditorAssetManager.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\GUIManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
@@ -177,11 +191,17 @@
     <ClCompile Include="src\Editor\EditorGrid.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\EditorScriptManager.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\AssetTools\ScriptCreatePanel.cpp">
+      <Filter>src\GUI\AssetTools</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\Console.cpp">
       <Filter>src\GUI\Debug</Filter>
@@ -225,11 +245,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\EditorScriptManager.cpp" />
-    <ClCompile Include="src\Core\EditorAssetManager.cpp" />
-    <ClCompile Include="src\GUI\AssetTools\ScriptCreatePanel.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\ScriptTemplate\TemplateScript.cs" />
   </ItemGroup>
 </Project>

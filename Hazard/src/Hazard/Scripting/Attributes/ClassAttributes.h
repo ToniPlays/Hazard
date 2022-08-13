@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Attribute.h"
+#include "HazardScript.h"
 
-namespace HazardScript
+namespace Hazard
 {
+	using namespace HazardScript;
 	class AuthorAttribute : public Attribute
 	{
 	public:

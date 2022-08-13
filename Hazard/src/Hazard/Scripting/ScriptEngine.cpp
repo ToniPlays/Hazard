@@ -4,6 +4,7 @@
 #include "ScriptBindings.h"
 #include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Attributes/AttributeConstructor.h"
 
 using namespace HazardScript;
 
@@ -13,7 +14,6 @@ namespace Hazard
 	{
 		m_Info = *info;
 		RegisterScriptGlue<InternalCall>();
-
 		AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
 
 	}
@@ -51,7 +51,7 @@ namespace Hazard
 				cb->Register(this);
 			}
 		};
-
+		AttributeConstructor::Init();
 		m_Engine = HazardScriptEngine::Create(&createInfo);
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)

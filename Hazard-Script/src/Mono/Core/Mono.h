@@ -47,7 +47,7 @@ namespace HazardScript
 		static void SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
 
 		//Mono internal
-		static const MonoDomain* GetDomain() { return s_Domain; }
+		static MonoDomain* GetDomain() { return s_Domain; }
 		static MonoImage* OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status);
 		static MonoAssembly* AssemblyFromImage(MonoImage* image, const std::filesystem::path& path, MonoImageOpenStatus& status);
 		static MonoClass* GetMonoClass(MonoImage* image, const std::string& nameSpace, const std::string& name);

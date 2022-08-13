@@ -49,8 +49,7 @@ namespace HazardScript
 		}
 		template<>
 		std::string GetFieldValue(const std::string& name, MonoObject* obj) {
-			MonoString* value;
-			mono_field_get_value(obj, m_Fields[name].GetField(), &value);
+			MonoString* value = (MonoString*)mono_field_get_value_object(Mono::GetDomain(), m_Fields[name].GetField(), obj);
 			return Mono::MonoStringToString(value);
 		}
 		template<typename T>

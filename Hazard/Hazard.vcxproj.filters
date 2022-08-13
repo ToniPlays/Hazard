@@ -162,6 +162,9 @@
     <ClInclude Include="src\Hazard\ImGUI\MenuBar.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\Modal.h">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\Panel.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
@@ -246,7 +249,13 @@
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\HScript.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h">
@@ -1503,9 +1512,11 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\HScript.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h" />
-    <ClInclude Include="src\Hazard\ImGUI\Modal.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1613,13 +1624,17 @@
     <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\HScript.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\HScript.cpp" />
   </ItemGroup>
 </Project>
