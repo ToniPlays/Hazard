@@ -2,57 +2,120 @@
 
 #include "ScriptEngine.h"
 #include "Hazard/Core/Application.h"
+#include "HazardScript.h"
+#include "Hazard/ECS/WorldHandler.h"
 
 #define BIND_ICALL(x) engine->RegisterInternalCall("Hazard.InternalCalls::"#x, (void*)x)
 #define STRINGIFY_LINE(x) #x
 #define LINE(x) STRINGIFY_LINE(x)
 #define STACK_TRACE() "StackTrace: " __FUNCTION__ ":" LINE(__LINE__) 
 
+using namespace HazardScript;
+
 namespace Hazard
 {
+	std::unordered_map<MonoType*, std::function<bool(uint64_t)>> hasComponentFuncs;
+	std::unordered_map<MonoType*, std::function<void(uint64_t)>> createComponentFuncs;
+	WorldHandler* handler;
 
+#define RegisterComponent(Type, Image)	{																												\
+		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\
+		if (monoType)																																	\
+		{																																				\
+			hasComponentFuncs[monoType] = [](uint64_t entityID) { return handler->GetCurrentWorld()->GetEntityFromUID(entityID).HasComponent<Type>(); };												\
+			createComponentFuncs[monoType] = [](uint64_t entityID) {  };																				\
+		}																																				\
+	}
+#pragma region Debug
 	using namespace HazardScript;
-	static void Console_Log_Native(MonoObject* obj)
+	static void Debug_Log_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, message, STACK_TRACE() });
 	}
-	static void Console_Info_Native(MonoObject* obj)
+	static void Debug_Info_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, message, STACK_TRACE() });
 	}
-	static void Console_Warn_Native(MonoObject* obj)
+	static void Debug_Warn_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, message, STACK_TRACE() });
 	}
-	static void Console_Error_Native(MonoObject* obj)
+	static void Debug_Error_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, message, STACK_TRACE() });
 	}
-	static void Console_Critical_Native(MonoObject* obj)
+	static void Debug_Critical_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Critical, message, STACK_TRACE() });
 	}
-	static void Console_Trace_Native(MonoObject* obj)
+	static void Debug_Trace_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, message, STACK_TRACE() });
 	}
+#pragma endregion
 
+	static bool Entity_HasComponent_Native(uint64_t id, void* type)
+	{
+		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		return hasComponentFuncs[compType](id);
+	}
+
+	static void Transform_GetPosition_Native(uint64_t id, glm::vec3* position) 
+	{
+		*position = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Translation;
+	}
+
+	static void Transform_SetPosition_Native(uint64_t id, glm::vec3 position)
+	{
+		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Translation = position;
+	}
+
+	static void Transform_GetRotation_Native(uint64_t id, glm::vec3* rotation)
+	{
+		*rotation = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Rotation;
+	}
+	static void Transform_SetRotation_Native(uint64_t id, glm::vec3 rotation)
+	{
+		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Rotation = rotation;
+	}
+	static void Transform_GetScale_Native(uint64_t id, glm::vec3* scale)
+	{
+		*scale = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Scale;
+	}
+
+	static void Transform_SetScale_Native(uint64_t id, glm::vec3 scale)
+	{
+		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Scale = scale;
+	}
 
 	class InternalCall : public IScriptGlue {
 	public:
 		virtual void Register(ScriptEngine* engine) {
-			BIND_ICALL(Console_Log_Native);
-			BIND_ICALL(Console_Info_Native);
-			BIND_ICALL(Console_Warn_Native);
-			BIND_ICALL(Console_Error_Native);
-			BIND_ICALL(Console_Critical_Native);
-			BIND_ICALL(Console_Trace_Native);
+			handler = &Application::GetModule<WorldHandler>();
+			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
+			RegisterComponent(TransformComponent, image);
+
+			BIND_ICALL(Debug_Log_Native);
+			BIND_ICALL(Debug_Info_Native);
+			BIND_ICALL(Debug_Warn_Native);
+			BIND_ICALL(Debug_Error_Native);
+			BIND_ICALL(Debug_Critical_Native);
+			BIND_ICALL(Debug_Trace_Native);
+
+			BIND_ICALL(Entity_HasComponent_Native);
+
+			BIND_ICALL(Transform_GetPosition_Native);
+			BIND_ICALL(Transform_SetPosition_Native);
+			BIND_ICALL(Transform_GetRotation_Native);
+			BIND_ICALL(Transform_SetRotation_Native);
+			BIND_ICALL(Transform_GetScale_Native);
+			BIND_ICALL(Transform_SetScale_Native);
 		}
 		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) {};
 	};

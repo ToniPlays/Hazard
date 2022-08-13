@@ -2,6 +2,7 @@
 #include "GUI/MainMenuBar.h"
 #include "Core/GUIManager.h"
 #include "HazardScript.h"
+#include "Hazard/Scripting/Attributes/AllAttributes.h"
 
 namespace Editor 
 {

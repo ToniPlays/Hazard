@@ -60,6 +60,10 @@ namespace HazardScript
 		static FieldVisibility GetFieldVisibility(MonoClassField* field);
 		static FieldType GetFieldType(MonoClassField* field);
 
+		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
+			return mono_reflection_type_from_name((char*)name.c_str(), image);
+		}
+
 	private:
 		inline static MonoDomain* s_Domain = nullptr;
 	};

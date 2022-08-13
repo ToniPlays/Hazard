@@ -21,14 +21,12 @@ namespace Hazard
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata)
 	{
 		if (filePath == "") return INVALID_ASSET_HANDLE;
-		//TODO: Proper relative path
+
 		std::filesystem::path path = File::GetFileAbsolutePath(filePath); //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
 
-		if (s_Registry.Contains(path)) 
-		{
+		if (s_Registry.Contains(path))
 			return s_Registry.Get(path).Handle;
-		
-		}
+
 		AssetType type = AssetType::Undefined;
 
 		if (!File::IsDirectory(filePath)) {
@@ -40,10 +38,7 @@ namespace Hazard
 		if (type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
-
-		HZR_CORE_WARN("Importing {0}", filePath.string());
 		//Create Asset metadata, don't load until requested
-
 		if (!metadata.IsValid()) {
 			metadata.Handle = AssetHandle();
 			metadata.Path = path;
@@ -52,7 +47,7 @@ namespace Hazard
 		s_Registry[metadata.Path] = metadata;
 
 		return metadata.Handle;
-		}
+	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
 		bool found = false;

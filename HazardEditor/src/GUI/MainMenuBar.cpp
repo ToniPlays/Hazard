@@ -3,6 +3,7 @@
 #include "Core/GUIManager.h"
 #include "AllPanels.h"
 #include "Core/HazardEditor.h"
+#include "Editor/EditorModeManager.h"
 
 namespace UI
 {
@@ -88,7 +89,20 @@ namespace UI
 		if (!Input::IsKeyDown(Key::LeftControl)) return false;
 
 		switch (e.GetKeyCode()) {
-		case Key::S: break;
+		case Key::S:
+		{
+			using namespace Editor;
+			if (EditorModeManager::GetCurrentMode() == EditorMode::Edit) {
+				auto& handler = Application::GetModule<WorldHandler>();
+				WorldSerializer serializer(handler.GetCurrentWorld());
+				serializer.SerializeEditor(handler.GetCurrentWorld()->GetWorldFile());
+			}
+			return true;
+		}
+		case Key::P:
+			using namespace Editor;
+			EditorModeManager::GetCurrentMode() == EditorMode::Edit ? EditorModeManager::BeginPlayMode() : EditorModeManager::EndPlayMode();
+			return true;
 		}
 		return false;
 	}

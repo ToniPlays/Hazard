@@ -27,7 +27,8 @@ namespace Hazard
 			for (size_t i = entities.size(); i > 0; --i) 
 			{
 				auto node = entities[i - 1];
-				Entity entity = world->CreateEntity("");
+				UID uid = node["Entity"].as<uint64_t>();
+				Entity entity = world->CreateEntity(uid, "");
 				//Deserialize components
 				TryDeserializeComponent<TagComponent>("TagComponent", entity, node);
 				TryDeserializeComponent<TransformComponent>("TransformComponent", entity, node);

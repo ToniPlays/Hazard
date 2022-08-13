@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Hazard/Scripting/Attributes/AllAttributes.h"
 #include "HazardScript.h"
 
 namespace UI
 {
-
 	static bool WillBeVisible(HazardScript::ScriptField& field) {
 		using namespace HazardScript;
 

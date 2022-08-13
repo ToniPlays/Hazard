@@ -34,6 +34,7 @@ namespace HazardScript
 		static void SendDebugMessage(ScriptMessage message);
 		static std::vector<ScriptAssembly*> GetAssemblies();
 		static void CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method);
+		static MonoData& GetMonoData() { return s_Instance->m_MonoData; }
 
 	private:
 		HazardScriptEngine(HazardScriptCreateInfo* info);

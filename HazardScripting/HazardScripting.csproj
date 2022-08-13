@@ -21,7 +21,8 @@
     <OutputPath>bin\Debug\</OutputPath>
     <BaseIntermediateOutputPath>obj\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -33,7 +34,8 @@
     <OutputPath>bin\Release\</OutputPath>
     <BaseIntermediateOutputPath>obj\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -45,7 +47,8 @@
     <OutputPath>bin\Dist\</OutputPath>
     <BaseIntermediateOutputPath>obj\Dist\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -72,7 +75,6 @@
     <Compile Include="source\Hazard\Coroutines\WaitForNextFrame.cs" />
     <Compile Include="source\Hazard\Coroutines\WaitSeconds.cs" />
     <Compile Include="source\Hazard\Debug\Console.cs" />
-    <Compile Include="source\Hazard\Debug\Gizmo.cs" />
     <Compile Include="source\Hazard\Entity.cs" />
     <Compile Include="source\Hazard\Input\Input.cs" />
     <Compile Include="source\Hazard\Input\KeyCodes.cs" />

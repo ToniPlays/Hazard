@@ -58,6 +58,7 @@ namespace Hazard {
 		bool IsValid();
 
 		entt::entity GetHandle() { return m_Handle; }
+		UID GetUID() { return GetComponent<TagComponent>().Uid; }
 		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
 		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
 

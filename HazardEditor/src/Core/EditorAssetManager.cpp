@@ -16,6 +16,9 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
 	YamlUtils::Deserialize<std::filesystem::path>(root, "Path", metadata.Path, "");
 	Hazard::AssetManager::ImportAsset(metadata.Path, metadata);
+
+	HZR_INFO("Importing from {0}", path.string());
+
 	return metadata;
 }
 

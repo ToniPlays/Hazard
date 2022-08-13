@@ -23,6 +23,7 @@ namespace Hazard {
 		Entity CreateEntity(UID id, const char* name);
 		Entity CreateEntity(Entity other);
 		Entity GetEntity(entt::entity entity);
+		Entity GetEntityFromUID(const UID& id);
 		void DestroyEntity(const Entity& entity);
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
@@ -42,6 +43,7 @@ namespace Hazard {
 		entt::registry m_Registry = entt::registry();
 		std::string m_Name = "";
 		std::filesystem::path m_File = "";
+		std::unordered_map<UID, Entity> m_EntityUIDMap;
 
 	private:
 		template<typename T>

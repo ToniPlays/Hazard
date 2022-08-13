@@ -33,7 +33,7 @@ namespace Hazard {
 	void WorldSerializer::SerializeEntityEditor(Entity& entity, YAML::Emitter& out)
 	{
 		out << YAML::BeginMap;
-		YamlUtils::Serialize<uint32_t>(out, "Entity", entity);
+		YamlUtils::Serialize<uint64_t>(out, "Entity", entity.GetUID());
 
 		//General
 		TrySerializeEditor<TagComponent>(entity, out);

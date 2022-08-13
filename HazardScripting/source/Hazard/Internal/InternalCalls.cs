@@ -16,19 +16,46 @@ namespace Hazard
 
 
         #endregion
-        #region Console
+        #region Debug
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Log_Native(object message);
+        internal static extern void Debug_Log_Native(object message);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Info_Native(object message);
+        internal static extern void Debug_Info_Native(object message);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Warn_Native(object message);
+        internal static extern void Debug_Warn_Native(object message);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Error_Native(object message);
+        internal static extern void Debug_Error_Native(object message);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Critical_Native(object message);
+        internal static extern void Debug_Critical_Native(object message);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Console_Trace_Native(object message);
+        internal static extern void Debug_Trace_Native(object message);
+        #endregion
+        #region ECS 
+        #region Entity
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Entity_GetActive_Native(ulong id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Entity_SetActive_Native(ulong id, bool active);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
+        #endregion
+        #region TransformComponent
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_GetPosition_Native(ulong id, out Vector3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_SetPosition_Native(ulong id, ref Vector3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_GetRotation_Native(ulong id, out Vector3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_SetRotation_Native(ulong id, ref Vector3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_GetScale_Native(ulong id, out Vector3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Transform_SetScale_Native(ulong id, ref Vector3 scale);
+        #endregion
         #endregion
     }
 }

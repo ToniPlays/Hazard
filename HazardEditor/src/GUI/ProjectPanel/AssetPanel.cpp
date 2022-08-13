@@ -96,8 +96,12 @@ namespace UI
 			std::filesystem::path file = File::OpenFileDialog();
 			if (!file.empty()) {
 				File::Copy(file, m_CurrentPath / File::GetName(file), CopyOptions::UpdateExisting);
-				File::NewFile(m_CurrentPath / (File::GetName(file) + ".meta"));
-				Hazard::AssetManager::ImportAsset(m_CurrentPath / File::GetName(file));
+
+				AssetMetadata metadata = {};
+				metadata.Handle = AssetHandle();
+				metadata.Path = m_CurrentPath / File::GetName(file);
+				metadata.Type = Utils::AssetTypeFromExtension(File::GetFileExtension(file));
+				EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
 				RefreshFolderItems();
 			}
 		}

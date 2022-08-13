@@ -46,6 +46,7 @@ namespace Hazard
 
 			Entity e = CreateEntity(uuid, c.Tag.c_str());
 			entityMap[uuid] = e.GetHandle();
+			m_EntityUIDMap[uuid] = e;
 		}
 
 		CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
@@ -76,12 +77,13 @@ namespace Hazard
 
 	Entity World::CreateEntity(const std::string& name)
 	{
-		Entity entity { m_Registry.create(), this };
-		TagComponent& tag = entity.AddComponent<TagComponent>();
+		Entity e { m_Registry.create(), this };
+		TagComponent& tag = e.AddComponent<TagComponent>();
 		tag.Uid = {};
 		tag.Tag = name;
-		entity.AddComponent<TransformComponent>();
-		return entity;
+		e.AddComponent<TransformComponent>();
+		m_EntityUIDMap[tag.Uid] = e;
+		return e;
 	}
 	Entity World::CreateEntity(UID id, const char* name)
 	{
@@ -90,6 +92,7 @@ namespace Hazard
 		tag.Uid = id;
 		tag.Tag = name;
 		e.AddComponent<TransformComponent>();
+		m_EntityUIDMap[tag.Uid] = e;
 		return e;
 	}
 
@@ -106,12 +109,8 @@ namespace Hazard
 	Entity World::CreateEntity(Entity other)
 	{
 		Entity entity;
-		if (other.HasComponent<TagComponent>()) {
-			std::string tag = other.GetComponent<TagComponent>().Tag;
-			entity = CreateEntity(tag);
-		}
-		else entity = CreateEntity("Duplicate");
 
+		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 
@@ -120,7 +119,6 @@ namespace Hazard
 		CopyComponentIfExists<SkyLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-
 
 		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
 		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
@@ -136,6 +134,11 @@ namespace Hazard
 	Entity World::GetEntity(entt::entity entity)
 	{
 		return { entity, this };
+	}
+
+	Entity World::GetEntityFromUID(const UID& id)
+	{
+		return m_EntityUIDMap[id];
 	}
 
 	void World::DestroyEntity(const Entity& entity)

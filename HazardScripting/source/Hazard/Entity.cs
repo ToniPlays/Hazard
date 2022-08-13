@@ -25,8 +25,8 @@ namespace Hazard
         }
         #endregion
         #region Getters/Setters
-        public bool IsActive() { return Entity_GetActive_Native(ID); }
-        public void SetActive(bool active) { Entity_SetActive_Native(ID, active); }
+        public bool IsActive() { return InternalCalls.Entity_GetActive_Native(ID); }
+        public void SetActive(bool active) { InternalCalls.Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
         {
             if (!Has<T>()) return null;
@@ -40,11 +40,11 @@ namespace Hazard
         }
         public bool Has<T>() where T : Component, new() 
         {
-            return Entity_HasComponent_Native(ID, typeof(T));
+            return InternalCalls.Entity_HasComponent_Native(ID, typeof(T));
         }
         public T Add<T>() where T : Component, new() 
         {
-            Entity_CreateComponent_Native(ID, typeof(T));
+            InternalCalls.Entity_CreateComponent_Native(ID, typeof(T));
 
             T component = new T
             {
@@ -66,16 +66,6 @@ namespace Hazard
         { 
             
         }
-        #endregion
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Entity_GetActive_Native(ulong id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Entity_SetActive_Native(ulong id, bool active);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
         #endregion
     }
 }

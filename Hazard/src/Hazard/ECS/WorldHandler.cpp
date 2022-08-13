@@ -4,7 +4,8 @@
 #include "Loader/WorldDeserializer.h"
 #include "Loader/WorldSerializer.h"
 #include "Hazard/Rendering/HRenderer.h"
-
+#include "HazardScript.h"
+#include "Hazard/Math/Time.h"
 
 namespace Hazard {
 
@@ -28,10 +29,23 @@ namespace Hazard {
 	void WorldHandler::Update()
 	{
 		HZR_PROFILE_FUNCTION();
+		if (!(m_Flags & WorldFlags_UpdateScript)) return;
+		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+
+		float delta = Time::s_DeltaTime;
+		void* params[] = { &delta };
+
+		for (auto& entity : view) {
+			Entity e = { entity, m_World.Raw() };
+			auto& sc = e.GetComponent<ScriptComponent>();
+			if (sc.m_Handle)
+				sc.m_Handle->TryInvoke("OnUpdate(single)", params);
+		}
 	}
 
 	void WorldHandler::Render()
 	{
+		if(!(m_Flags & WorldFlags_Render)) return;
 		HZR_PROFILE_FUNCTION();
 		{
 			//Submit sky lights for drawing
@@ -91,6 +105,23 @@ namespace Hazard {
 				}
 			}
 		}
+	}
+
+	void WorldHandler::OnBegin()
+	{
+		HZR_PROFILE_FUNCTION();
+		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+
+		for (auto& entity : view) {
+			Entity e = { entity, m_World.Raw() };
+			auto& sc = e.GetComponent<ScriptComponent>();
+			if (sc.m_Handle)
+				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
+		}
+	}
+
+	void WorldHandler::OnEnd()
+	{
 	}
 
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)

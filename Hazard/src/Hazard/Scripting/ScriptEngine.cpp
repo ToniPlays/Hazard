@@ -84,11 +84,10 @@ namespace Hazard
 		Script& script = m_Engine->GetAppAssembly().GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject();
 
-		uint32_t entityID = entity;
+		uint64_t entityID = entity.GetUID();
 		component.m_Handle->GetScript().ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
 
 		void* params[] = { &entityID };
 		component.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
-		component.m_Handle->TryInvoke("OnCreate()", params);
 	}
 }

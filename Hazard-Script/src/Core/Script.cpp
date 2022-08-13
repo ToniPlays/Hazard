@@ -20,7 +20,6 @@ namespace HazardScript
 
 	bool Script::ValidateOrLoadMethod(const std::string& name)
 	{
-
 		for (ScriptAssembly* assembly : HazardScriptEngine::GetAssemblies()) {
 			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
@@ -35,7 +34,7 @@ namespace HazardScript
 	}
 	bool Script::TryInvoke(const std::string& name, MonoObject* obj, void** params)
 	{
-		if (m_Methods.find(name) != m_Methods.end()) 
+		if (m_Methods.find(name) == m_Methods.end()) 
 			return false;
 
 		Invoke(name, obj, params);
