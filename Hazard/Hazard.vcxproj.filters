@@ -1517,6 +1517,11 @@
     <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
     <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
     <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\DebugBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\AllBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\TagComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\TransformComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

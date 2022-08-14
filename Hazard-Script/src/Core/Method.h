@@ -10,7 +10,7 @@ namespace HazardScript
 		Method() = default;
 		Method(MonoMethod* method);
 
-		FieldVisibility& GetVisibility() { return m_Visibility; }
+		MonoFlags& GetFlags() { return m_Flags; }
 		std::string GetName() { return m_Name; }
 
 		MonoObject* Invoke(MonoObject* obj, void** params);
@@ -37,7 +37,7 @@ namespace HazardScript
 
 	private:
 		MonoMethod* m_Method;
-		FieldVisibility m_Visibility;
+		MonoFlags m_Flags;
 		std::string m_Name;
 
 		std::vector<Attribute*> m_Attributes;

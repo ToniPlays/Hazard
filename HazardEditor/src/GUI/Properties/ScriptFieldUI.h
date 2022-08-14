@@ -11,7 +11,7 @@ namespace UI
 		if (field.Has<HideInPropertiesAttribute>()) return false;
 		if (field.Has<ShowInPropertiesAttribute>()) return true;
 
-		return field.GetVisibility() == FieldVisibility::Public;
+		return field.GetFlags() & MonoFlags_Public;
 	}
 
 	template<typename T>

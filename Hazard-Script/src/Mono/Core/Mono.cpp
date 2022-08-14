@@ -39,17 +39,21 @@ namespace HazardScript
 	{
 		mono_add_internal_call(signature.c_str(), function);
 	}
-	FieldVisibility Mono::GetMethodVisibility(MonoMethod* method)
+	MonoFlags Mono::GetMethodFlags(MonoMethod* method)
 	{
 		uint32_t iFlags = 0;
 		uint32_t flags = mono_method_get_flags(method, &iFlags);
 
-		if (flags & MONO_FIELD_ATTR_PUBLIC)
-			return FieldVisibility::Public;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)
-			return FieldVisibility::Private;
+		uint32_t f = 0;
+		if (flags & MONO_METHOD_ATTR_PRIVATE)	f |= MonoFlags_Private;
+		if (flags & MONO_METHOD_ATTR_FAMILY)	f |= MonoFlags_Protected;
+		if (flags & MONO_METHOD_ATTR_PUBLIC)	f |= MonoFlags_Public;
+		if (flags & MONO_METHOD_ATTR_ASSEM)		f |= MonoFlags_Internal;
+		if (flags & MONO_METHOD_ATTR_STATIC)	f |= MonoFlags_Static;
+		if (flags & MONO_METHOD_ATTR_ABSTRACT)	f |= MonoFlags_Abstract;
+		if (flags & MONO_METHOD_ATTR_VIRTUAL)	f |= MonoFlags_Virtual;
 
-		return FieldVisibility::Protected;
+		return (MonoFlags)f;
 	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
@@ -127,16 +131,19 @@ namespace HazardScript
 		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);
 	}
-	FieldVisibility Mono::GetFieldVisibility(MonoClassField* field)
+	MonoFlags Mono::GetFieldFlags(MonoClassField* field)
 	{
 		uint32_t flags = mono_field_get_flags(field);
 
-		if (flags & MONO_FIELD_ATTR_PUBLIC)
-			return FieldVisibility::Public;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)
-			return FieldVisibility::Private;
+		uint32_t f = 0;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)	f |= MonoFlags_Private;
+		if (flags & MONO_FIELD_ATTR_FAMILY)		f |= MonoFlags_Protected;
+		if (flags & MONO_FIELD_ATTR_PUBLIC)		f |= MonoFlags_Public;
+		if (flags & MONO_FIELD_ATTR_ASSEMBLY)	f |= MonoFlags_Internal;
+		if (flags & MONO_FIELD_ATTR_STATIC)		f |= MonoFlags_Static;
 
-		return FieldVisibility::Protected;
+		return (MonoFlags)f;
+
 	}
 	FieldType Mono::GetFieldType(MonoClassField* field)
 	{
@@ -148,14 +155,8 @@ namespace HazardScript
 		case MONO_TYPE_I4:			return FieldType::Int;
 		case MONO_TYPE_U4:			return FieldType::UInt;
 		case MONO_TYPE_STRING:		return FieldType::String;
-		case MONO_TYPE_VALUETYPE:
-		{
-
-			char* name = mono_type_get_name(type);
-			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
-			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
-			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
-		}
+		case MONO_TYPE_VALUETYPE:	return FieldType::ValueType;
+		case MONO_TYPE_CLASS:		return FieldType::ManagedType;
 		}
 		return FieldType::None;
 	}
