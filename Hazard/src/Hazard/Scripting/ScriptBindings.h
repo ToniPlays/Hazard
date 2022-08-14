@@ -82,6 +82,9 @@ namespace Hazard
 		auto& tag = GET_ENTITY(id).GetComponent<TagComponent>();
 		return Mono::StringToMonoString(tag.Tag);
 	}
+	static void Tag_SetName_Native(uint64_t id, MonoString* tag) {
+		GET_ENTITY(id).GetTag().Tag = Mono::MonoStringToString(tag);
+	}
 
 	static void Transform_GetPosition_Native(uint64_t id, glm::vec3* position) 
 	{
@@ -131,6 +134,7 @@ namespace Hazard
 			BIND_ICALL(Entity_Destroy_Native);
 
 			BIND_ICALL(Tag_GetName_Native);
+			BIND_ICALL(Tag_SetName_Native);
 
 			BIND_ICALL(Transform_GetPosition_Native);
 			BIND_ICALL(Transform_SetPosition_Native);
