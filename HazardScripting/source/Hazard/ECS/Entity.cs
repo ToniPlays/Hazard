@@ -50,6 +50,16 @@ namespace Hazard
             return component;
         }
 
+        public Entity Instantiate(string name = "New entity") 
+        {
+            ulong id = InternalCalls.Entity_InstantiateOrigin_Native(name);
+            return new Entity() { ID = id };
+        }
+        public Entity Instantiate(string name, Vector3 position, Vector3 rotation, Vector3 scale)
+        {
+            ulong id = InternalCalls.Entity_InstantiateAt_Native(name, position, rotation, scale);
+            return new Entity() { ID = id };
+        }
         public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
 
         public Coroutine BeginCoroutine(IEnumerator enumerator) 

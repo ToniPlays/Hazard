@@ -99,7 +99,6 @@ namespace UI
 		using namespace HazardScript;
 		if (!WillBeVisible(field)) return;
 
-
 		std::string label = name;
 		label[0] = toupper(name[0]);
 		ImGui::Text(label.c_str());
@@ -116,9 +115,9 @@ namespace UI
 		case FieldType::Int: break;
 		case FieldType::UInt: break;
 		case FieldType::String: ScriptField<std::string>(field, obj); break;
-		default:
-			HZR_ASSERT(false, "Wooooop");
-			break;
+		//default:
+		//	HZR_ASSERT(false, "Wooooop");
+		//	break;
 		}
 		ImGui::NextColumn();
 	}

@@ -20,9 +20,16 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong Entity_InstantiateOrigin_Native(string id);
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong Entity_InstantiateAt_Native(string id, Vector3 position, Vector3 rotation, Vector3 scale);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_Destroy_Native(ulong id);

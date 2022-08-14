@@ -61,6 +61,24 @@ namespace Hazard
 	}
 #pragma endregion
 
+	static uint64_t Entity_InstantiateOrigin_Native(MonoString* name) 
+	{
+		std::string entityName = Mono::MonoStringToString(name);
+		return handler->GetCurrentWorld()->CreateEntity(entityName).GetUID();
+	}
+	static uint64_t Entity_InstantiateAt_Native(MonoString* name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+	{
+		std::string entityName = Mono::MonoStringToString(name);
+		Entity e = handler->GetCurrentWorld()->CreateEntity(entityName);
+
+		auto& tc = e.GetTransform();
+		tc.Translation = position;
+		tc.Rotation = rotation;
+		tc.Scale = scale;
+
+		return e.GetUID();
+	}
+
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
@@ -152,6 +170,8 @@ namespace Hazard
 			BIND_ICALL(Debug_Critical_Native);
 			BIND_ICALL(Debug_Trace_Native);
 
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateAt_Native);
 			BIND_ICALL(Entity_HasComponent_Native);
 			BIND_ICALL(Entity_CreateComponent_Native);
 			BIND_ICALL(Entity_Destroy_Native);

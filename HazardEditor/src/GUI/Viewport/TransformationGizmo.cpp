@@ -50,7 +50,6 @@ namespace UI
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{
-		using namespace HazardRenderer;
 		if (Input::IsKeyDown(Key::LeftControl) || m_ForcedSnapping) {
 
 			if (m_Type == Gizmo::Translate) return new float[3] { m_TransformSnap, m_TransformSnap, m_TransformSnap };
