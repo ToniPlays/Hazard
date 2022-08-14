@@ -15,16 +15,16 @@ namespace Hazard.Rendering
 
         ~VertexBuffer() 
         {
-            VertexBuffer_Destroy_Native(ID);
+            InternalCalls.VertexBuffer_Destroy_Native(ID);
         }
 
         public void SetData(byte[] data) { }
-        public ulong GetSize() { return VertexBuffer_GetSize_Native(ID); }
+        public ulong GetSize() { return InternalCalls.VertexBuffer_GetSize_Native(ID); }
 
         public static VertexBuffer Create(VertexBufferCreateInfo info) 
         {
             info.Size *= 12 * 4;
-            ulong resourceID = VertexBuffer_Create_Native(ref info);
+            ulong resourceID = InternalCalls.VertexBuffer_Create_Native(ref info);
 
             VertexBuffer buffer = new VertexBuffer
             {
@@ -34,15 +34,5 @@ namespace Hazard.Rendering
         }
 
         internal ulong GetID() { return ID; }
-
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong VertexBuffer_GetSize_Native(ulong id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong VertexBuffer_Create_Native(ref VertexBufferCreateInfo info);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void VertexBuffer_Destroy_Native(ulong id);
-        #endregion
     }
 }

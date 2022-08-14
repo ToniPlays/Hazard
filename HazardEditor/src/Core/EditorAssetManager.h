@@ -3,12 +3,20 @@
 #include "UtilityCore.h"
 #include "Hazard/Assets/Asset.h"
 
+enum class MethodImpl 
+{
+	OnCreate,
+	OnDestroy,
+	OnUpdate,
+	OnLateUpdate
+};
+
 struct ScriptCreateInfo 
 {
 	std::filesystem::path Path;
 	std::string ClassName;
 	std::string Derives;
-	std::vector<std::string> Methods;
+	std::unordered_map<MethodImpl, std::string> Methods;
 
 	void SetDefaults() {
 		Path = "";

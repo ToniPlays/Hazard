@@ -174,13 +174,14 @@ namespace UI
 		ImUI::ShiftY(8.0f);
 		ImGui::Columns(columnCount, 0, false);
 
-		for (auto& item : m_CurrentItems) {
+		for (auto& item : m_CurrentItems) 
+		{
 			item.BeginRender();
-
 			Ref<Texture2D> itemIcon = GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
+
 		ImGui::Columns();
 		DrawContextMenu();
 		ImGui::EndChild();
@@ -188,6 +189,8 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Info", { size.x, 28.0f });
+		ImUI::Shift(4.0f, { (28.0f - ImGui::GetTextLineHeight()) * 0.5f });
+		ImGui::Text("Items: %i", m_CurrentItems.size());
 
 		ImGui::EndChild();
 	}

@@ -15,6 +15,7 @@ namespace UI {
 		bool OnEvent(Event& e) override;
 		bool OnKeyPressed(KeyPressedEvent& e);
 		void OnPanelRender() override;
+		void DrawMethodList();
 
 		void SetDirectory(const std::filesystem::path& directory) { m_Directory = directory; }
 

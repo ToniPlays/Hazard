@@ -32,14 +32,14 @@ namespace Hazard.Rendering
         protected Mesh() { }
 
         ~Mesh() {
-            Mesh_Destroy_Native(ID);
+            InternalCalls.Mesh_Destroy_Native(ID);
         }
         public static Mesh Create(MeshCreateInfo info) { 
             MeshCreateInfoInternal internalInfo = new MeshCreateInfoInternal();
             internalInfo.VertexID = info.VertexBuffer.GetID();
             internalInfo.IndexID = info.IndexBuffer.GetID();
 
-            ulong resourceID = Mesh_Create_Native(ref internalInfo);
+            ulong resourceID = InternalCalls.Mesh_Create_Native(ref internalInfo);
 
             Mesh mesh = new Mesh()
             {
@@ -49,11 +49,5 @@ namespace Hazard.Rendering
         }
 
         internal ulong GetID() { return ID; }
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong Mesh_Create_Native(ref MeshCreateInfoInternal info);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Mesh_Destroy_Native(ulong id);
-        #endregion
     }
 }

@@ -11,6 +11,13 @@ namespace Editor
 	{
 		HZR_WARN("Begining play mode");
 		s_CurrentMode = EditorMode::Play;
+		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+
+		if (console->ClearOnPlay()) 
+		{
+			console->Clear();
+		}
+
 		auto& handler = Application::GetModule<WorldHandler>();
 		m_PreviousWorld = handler.GetCurrentWorld();
 		Ref<World> playModeWorld = new World(*m_PreviousWorld);
@@ -18,10 +25,6 @@ namespace Editor
 		handler.SetFlags(WorldFlags_Render | WorldFlags_UpdateScript);
 		handler.OnBegin();
 
-		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
-		if (console->ClearOnPlay()) {
-			console->Clear();
-		}
 	}
 	void EditorModeManager::EndPlayMode()
 	{

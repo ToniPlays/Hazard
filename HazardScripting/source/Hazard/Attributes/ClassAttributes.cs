@@ -23,7 +23,7 @@ namespace Hazard
             Version = 1.0;
         }
     }
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Method)]
     public class Todo : Attribute
     {
         private string Detail;

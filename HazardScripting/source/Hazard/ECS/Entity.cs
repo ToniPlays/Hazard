@@ -13,7 +13,6 @@ namespace Hazard
         }
         ~Entity() { }
 
-        #region Variables
         public ulong ID { get; private set; }
         public string name {
             get => Get<TagComponent>().name;
@@ -23,8 +22,6 @@ namespace Hazard
         {
             get => Get<TransformComponent>();
         }
-        #endregion
-        #region Getters/Setters
         public bool IsActive() { return InternalCalls.Entity_GetActive_Native(ID); }
         public void SetActive(bool active) { InternalCalls.Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
@@ -52,8 +49,9 @@ namespace Hazard
             };
             return component;
         }
-        #endregion
-        #region Coroutines
+
+        public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
+
         public Coroutine BeginCoroutine(IEnumerator enumerator) 
         {
             return null;
@@ -66,6 +64,5 @@ namespace Hazard
         { 
             
         }
-        #endregion
     }
 }

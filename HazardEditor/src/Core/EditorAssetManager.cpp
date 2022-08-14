@@ -28,7 +28,7 @@ bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 
 	std::string methodList = "";
 
-	for (auto method : info.Methods) {
+	for (auto& [key, method] : info.Methods) {
 		methodList += method + "\n";
 	}
 

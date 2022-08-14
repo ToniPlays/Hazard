@@ -6,6 +6,7 @@
 #include "Hazard/ECS/WorldHandler.h"
 
 #define BIND_ICALL(x) engine->RegisterInternalCall("Hazard.InternalCalls::"#x, (void*)x)
+#define GET_ENTITY(id) handler->GetCurrentWorld()->GetEntityFromUID(id)
 #define STRINGIFY_LINE(x) #x
 #define LINE(x) STRINGIFY_LINE(x)
 #define STACK_TRACE() "StackTrace: " __FUNCTION__ ":" LINE(__LINE__) 
@@ -65,33 +66,49 @@ namespace Hazard
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
 		return hasComponentFuncs[compType](id);
 	}
+	static void Entity_Destroy_Native(uint64_t id)
+	{
+		Entity e = handler->GetCurrentWorld()->GetEntityFromUID(id);
+		if (e.HasComponent<ScriptComponent>()) {
+			auto& sc = e.GetComponent<ScriptComponent>();
+			if (sc.m_Handle) {
+				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
+			}
+		}
+		handler->GetCurrentWorld()->DestroyEntity(e);
+	}
+
+	static MonoString* Tag_GetName_Native(uint64_t id) {
+		auto& tag = GET_ENTITY(id).GetComponent<TagComponent>();
+		return Mono::StringToMonoString(tag.Tag);
+	}
 
 	static void Transform_GetPosition_Native(uint64_t id, glm::vec3* position) 
 	{
-		*position = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Translation;
+		*position = GET_ENTITY(id).GetComponent<TransformComponent>().Translation;
 	}
 
 	static void Transform_SetPosition_Native(uint64_t id, glm::vec3 position)
 	{
-		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Translation = position;
+		GET_ENTITY(id).GetComponent<TransformComponent>().Translation = position;
 	}
 
 	static void Transform_GetRotation_Native(uint64_t id, glm::vec3* rotation)
 	{
-		*rotation = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Rotation;
+		*rotation = GET_ENTITY(id).GetComponent<TransformComponent>().Rotation;
 	}
 	static void Transform_SetRotation_Native(uint64_t id, glm::vec3 rotation)
 	{
-		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Rotation = rotation;
+		GET_ENTITY(id).GetComponent<TransformComponent>().Rotation = rotation;
 	}
 	static void Transform_GetScale_Native(uint64_t id, glm::vec3* scale)
 	{
-		*scale = handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Scale;
+		*scale = GET_ENTITY(id).GetComponent<TransformComponent>().Scale;
 	}
 
 	static void Transform_SetScale_Native(uint64_t id, glm::vec3 scale)
 	{
-		handler->GetCurrentWorld()->GetEntityFromUID(id).GetComponent<TransformComponent>().Scale = scale;
+		GET_ENTITY(id).GetComponent<TransformComponent>().Scale = scale;
 	}
 
 	class InternalCall : public IScriptGlue {
@@ -99,6 +116,8 @@ namespace Hazard
 		virtual void Register(ScriptEngine* engine) {
 			handler = &Application::GetModule<WorldHandler>();
 			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
+
+			RegisterComponent(TagComponent, image);
 			RegisterComponent(TransformComponent, image);
 
 			BIND_ICALL(Debug_Log_Native);
@@ -109,6 +128,9 @@ namespace Hazard
 			BIND_ICALL(Debug_Trace_Native);
 
 			BIND_ICALL(Entity_HasComponent_Native);
+			BIND_ICALL(Entity_Destroy_Native);
+
+			BIND_ICALL(Tag_GetName_Native);
 
 			BIND_ICALL(Transform_GetPosition_Native);
 			BIND_ICALL(Transform_SetPosition_Native);
