@@ -72,7 +72,7 @@ namespace Hazard
 
 	World::~World() 
 	{
-		std::cout << "Unloaded world: " << m_Name << std::endl;
+
 	}
 
 	Entity World::CreateEntity(const std::string& name)
@@ -174,6 +174,9 @@ namespace Hazard
 	REGISTER_COMPONENT(Rigidbody2DComponent);
 	REGISTER_COMPONENT(BoxCollider2DComponent);
 	REGISTER_COMPONENT(CircleCollider2DComponent);
+	REGISTER_COMPONENT(RigidbodyComponent);
+	REGISTER_COMPONENT(BoxColliderComponent);
+	REGISTER_COMPONENT(SphereColliderComponent);
 	
 	template<>
 	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {

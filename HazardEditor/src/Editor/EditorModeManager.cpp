@@ -1,7 +1,8 @@
 
 #include "EditorModeManager.h"
 #include "Core/GUIManager.h"
-#include "GUI/Debug/Console.h"
+#include "GUI/AllPanels.h"
+#include "Core/EditorEvent.h"
 
 using namespace Hazard;
 
@@ -9,11 +10,12 @@ namespace Editor
 {
 	void EditorModeManager::BeginPlayMode()
 	{
-		HZR_WARN("Begining play mode");
 		s_CurrentMode = EditorMode::Play;
-		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+		auto& manager = Application::GetModule<GUIManager>();
+		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
+		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 
-		if (console->ClearOnPlay()) 
+		if (console->ClearOnPlay())
 		{
 			console->Clear();
 		}
@@ -25,14 +27,21 @@ namespace Editor
 		handler.SetFlags(WorldFlags_Render | WorldFlags_UpdateScript);
 		handler.OnBegin();
 
+		Events::SelectionContextChange e(Entity(currentEntity, playModeWorld.Raw()));
+		manager.OnEvent(e);
 	}
 	void EditorModeManager::EndPlayMode()
 	{
-		HZR_CORE_WARN("Ending play mode");
 		s_CurrentMode = EditorMode::Edit;
 		auto& handler = Application::GetModule<WorldHandler>();
 		handler.OnEnd();
 		handler.SetFlags(WorldFlags_Render);
 		handler.SetWorld(m_PreviousWorld);
+
+
+		auto& manager = Application::GetModule<GUIManager>();
+		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
+		Events::SelectionContextChange e({ currentEntity, m_PreviousWorld.Raw() });
+		manager.OnEvent(e);
 	}
 }

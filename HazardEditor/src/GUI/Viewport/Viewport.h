@@ -17,6 +17,8 @@ namespace UI
 		bool OnEvent(Event& e) override;
 
 		bool FocusOnEntity(Entity& entity);
+		Entity GetSelectionContext() { return m_SelectionContext; }
+
 	private:
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
 		bool KeyPressed(KeyPressedEvent& e);

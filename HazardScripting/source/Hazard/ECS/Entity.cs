@@ -14,9 +14,9 @@ namespace Hazard
         ~Entity() { }
 
         public ulong ID { get; private set; }
-        public string name {
-            get => Get<TagComponent>().name;
-            set => Get<TagComponent>().name = value;
+        public string Name {
+            get => Get<TagComponent>().Name;
+            set => Get<TagComponent>().Name = value;
         }
         public TransformComponent transform
         {
@@ -30,7 +30,7 @@ namespace Hazard
 
             T component = new T
             {
-                parent = this
+                parentEntity = this
             };
 
             return component;
@@ -39,13 +39,13 @@ namespace Hazard
         {
             return InternalCalls.Entity_HasComponent_Native(ID, typeof(T));
         }
-        public T Add<T>() where T : Component, new() 
+        public T Create<T>() where T : Component, new() 
         {
             InternalCalls.Entity_CreateComponent_Native(ID, typeof(T));
 
             T component = new T
             {
-                parent = this
+                parentEntity = this
             };
             return component;
         }

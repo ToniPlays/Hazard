@@ -45,7 +45,6 @@ namespace UI
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
 
-
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 
 		if (ImGui::Button(ICON_FK_COG, { 25, 25 }))

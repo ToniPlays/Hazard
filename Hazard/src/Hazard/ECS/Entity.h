@@ -19,6 +19,7 @@ namespace Hazard {
 		{
 			if (HasComponent<T>()) {
 				//HZR_CORE_WARN("Entity already has component");
+				return GetComponent<T>();
 			}
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 			m_World->OnComponentAdded<T>(*this, component);

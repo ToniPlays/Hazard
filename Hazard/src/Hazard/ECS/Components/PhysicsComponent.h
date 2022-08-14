@@ -58,4 +58,8 @@ namespace Hazard
 	{
 
 	};
+	struct SphereColliderComponent : ComponentBase
+	{
+
+	};
 }

@@ -20,11 +20,11 @@ namespace Hazard
 	WorldHandler* handler;
 
 #define RegisterComponent(Type, Image)	{																												\
-		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\
+		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																\
 		if (monoType)																																	\
 		{																																				\
-			hasComponentFuncs[monoType] = [](uint64_t entityID) { return handler->GetCurrentWorld()->GetEntityFromUID(entityID).HasComponent<Type>(); };												\
-			createComponentFuncs[monoType] = [](uint64_t entityID) {  };																				\
+			hasComponentFuncs[monoType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<Type>(); };									\
+			createComponentFuncs[monoType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<Type>(); };																				\
 		}																																				\
 	}
 #pragma region Debug
@@ -66,9 +66,14 @@ namespace Hazard
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
 		return hasComponentFuncs[compType](id);
 	}
+	static void Entity_CreateComponent_Native(uint64_t id, void* type)
+	{
+		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		createComponentFuncs[compType](id);
+	}
 	static void Entity_Destroy_Native(uint64_t id)
 	{
-		Entity e = handler->GetCurrentWorld()->GetEntityFromUID(id);
+		Entity e = GET_ENTITY(id);
 		if (e.HasComponent<ScriptComponent>()) {
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle) {
@@ -116,12 +121,29 @@ namespace Hazard
 
 	class InternalCall : public IScriptGlue {
 	public:
-		virtual void Register(ScriptEngine* engine) {
+		virtual void Register(ScriptEngine* engine) 
+		{
 			handler = &Application::GetModule<WorldHandler>();
 			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
 
 			RegisterComponent(TagComponent, image);
 			RegisterComponent(TransformComponent, image);
+			RegisterComponent(ScriptComponent, image);
+			RegisterComponent(MeshComponent, image);
+
+			RegisterComponent(CameraComponent, image);
+
+			RegisterComponent(SkyLightComponent, image);
+			RegisterComponent(DirectionalLightComponent, image);
+			RegisterComponent(PointLightComponent, image);
+
+			RegisterComponent(Rigidbody2DComponent, image);
+			RegisterComponent(BoxCollider2DComponent, image);
+			RegisterComponent(CircleCollider2DComponent, image);
+
+			RegisterComponent(RigidbodyComponent, image);
+			RegisterComponent(BoxColliderComponent, image);
+			RegisterComponent(SphereColliderComponent, image);
 
 			BIND_ICALL(Debug_Log_Native);
 			BIND_ICALL(Debug_Info_Native);
@@ -131,6 +153,7 @@ namespace Hazard
 			BIND_ICALL(Debug_Trace_Native);
 
 			BIND_ICALL(Entity_HasComponent_Native);
+			BIND_ICALL(Entity_CreateComponent_Native);
 			BIND_ICALL(Entity_Destroy_Native);
 
 			BIND_ICALL(Tag_GetName_Native);

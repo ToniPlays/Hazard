@@ -66,6 +66,7 @@
     <Compile Include="source\Hazard\Attributes\FieldAttributes.cs" />
     <Compile Include="source\Hazard\Attributes\MethodAttributes.cs" />
     <Compile Include="source\Hazard\Audio\AudioMixer.cs" />
+    <Compile Include="source\Hazard\Components\CameraComponent.cs" />
     <Compile Include="source\Hazard\ECS\Component.cs" />
     <Compile Include="source\Hazard\Components\AudioSourceComponent.cs" />
     <Compile Include="source\Hazard\Components\MeshComponent.cs" />

@@ -289,6 +289,7 @@ namespace UI
 			});
 		return false;
 	}
+
 	template<>
 	static bool ComponentMenu(Entity& e, BatchComponent& c)
 	{

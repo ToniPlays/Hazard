@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hazard
 {
-    public abstract class Component
+    public class CameraComponent : Component
     {
-        public Entity parentEntity { get; set; }
+
     }
 }
