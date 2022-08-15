@@ -12,7 +12,7 @@ namespace UI
 		if (field.Has<HideInPropertiesAttribute>()) return false;
 		if (field.Has<ShowInPropertiesAttribute>()) return true;
 
-		return true;
+		return field.GetVisibility() == FieldVisibility::Public;
 	}
 
 	template<typename T>
@@ -20,7 +20,7 @@ namespace UI
 		static_assert(false);
 	}
 	template<>
-	static bool ScriptField<float>(HazardScript::ManagedField& field) 
+	static bool ScriptField<float>(HazardScript::ManagedField& field)
 	{
 		using namespace HazardScript;
 		float value = field.GetValue<float>();
@@ -157,12 +157,12 @@ namespace UI
 		std::string label = name;
 		label[0] = toupper(name[0]);
 		ImGui::Text(label.c_str());
-		//if (field.Field->Has<TooltipAttribute>()) 
+		//if (field.Field->Has<TooltipAttribute>())
 		//{
 		//	ImUI::Tooltip(field.Field->Get<TooltipAttribute>().Tooltip.c_str());
 		//}
 		ImGui::NextColumn();
-		
+
 		/*switch (field.Type.NativeType) {
 		case NativeType::Float:			ScriptField<float>(field);						break;
 		case NativeType::Float2:		ScriptField<glm::vec2>(field);					break;
@@ -173,7 +173,7 @@ namespace UI
 		case NativeType::String:		ScriptField<std::string>(field);				break;
 		}
 		*/
-		
+
 		ImGui::NextColumn();
 	}
 }

@@ -1,13 +1,15 @@
 
-#include "FieldMetadata.h"
-#include "Core/AttributeBuilder.h"
+#include "ScriptField.h"
+#include "AttributeBuilder.h"
 
 namespace HazardScript
 {
 	FieldMetadata::FieldMetadata(MonoClassField* field)
 	{
 		m_Name = mono_field_get_name(field);
-		LoadAttributes(field);
+		m_Visibility = Mono::GetFieldVisibility(field);
+		m_Type = Mono::GetFieldType(field);
+		LoadAttributes();
 	}
 	void FieldMetadata::LoadAttributes(MonoClassField* field)
 	{

@@ -17,11 +17,15 @@
 
 namespace HazardScript
 {
+	enum class FieldVisibility { Private, Protected, Public };
+	enum class FieldType { None, Float, Float2, Float3, Float4, Int, UInt, String, ManagedType };
+
 	class Mono {
 	public:
 		static bool Init(const std::string& name);
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
+		static FieldVisibility GetMethodVisibility(MonoMethod* method);
 		static uint32_t InstantiateHandle(MonoClass* monoClass);
 		template<typename T>
 		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
@@ -56,6 +60,8 @@ namespace HazardScript
 		static std::string MonoObjectToString(MonoObject* obj);
 		static std::string MonoObjectToChar(MonoObject* obj);
 		static MonoString* StringToMonoString(const std::string& string);
+		static FieldVisibility GetFieldVisibility(MonoClassField* field);
+		static FieldType GetFieldType(MonoClassField* field);
 
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);

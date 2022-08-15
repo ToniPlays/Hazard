@@ -1548,6 +1548,11 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

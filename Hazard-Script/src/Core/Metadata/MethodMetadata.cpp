@@ -2,7 +2,7 @@
 #include "Core/AttributeBuilder.h"
 #include "Core/HazardScriptEngine.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	MethodMetadata::MethodMetadata(MonoMethod* method) : m_Method(method)
 	{
@@ -13,6 +13,7 @@ namespace HazardScript
 	{
 		m_Name = mono_method_get_reflection_name(m_Method);
 		m_Name = m_Name.substr(m_Name.find_first_of('.') + 1);
+		m_Visibility = Mono::GetMethodVisibility(m_Method);
 	}
 	void MethodMetadata::LoadAttributes()
 	{

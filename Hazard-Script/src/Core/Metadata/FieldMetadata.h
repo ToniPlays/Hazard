@@ -4,16 +4,16 @@
 #include "Core/Attribute.h"
 #include "Mono/Core/Mono.h"
 
-namespace HazardScript 
-{
-	class FieldMetadata
-	{
+namespace HazardScript {
+	class ScriptField {
 	public:
 		FieldMetadata() = default;
 		FieldMetadata(MonoClassField* field);
 
 		std::string GetName() { return m_Name; }
-		bool HasValue() { return false; }
+		const FieldVisibility& GetVisibility() { return m_Visibility; }
+		const FieldType& GetType() { return m_Type; }
+		MonoClassField* GetField() { return m_Field; }
 
 		template<typename T>
 		bool Has() const {
@@ -34,6 +34,8 @@ namespace HazardScript
 
 	private:
 		std::string m_Name;
-		std::vector<Attribute*> m_Attributes = std::vector<Attribute*>();
+		FieldType m_Type = FieldType::None;
+		FieldVisibility m_Visibility;
+		std::vector<Attribute*> m_Attributes;
 	};
 }

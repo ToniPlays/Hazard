@@ -47,6 +47,18 @@ namespace HazardScript
 	{
 		mono_add_internal_call(signature.c_str(), function);
 	}
+	FieldVisibility Mono::GetMethodVisibility(MonoMethod* method)
+	{
+		uint32_t iFlags = 0;
+		uint32_t flags = mono_method_get_flags(method, &iFlags);
+
+		if (flags & MONO_FIELD_ATTR_PUBLIC)
+			return FieldVisibility::Public;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)
+			return FieldVisibility::Private;
+
+		return FieldVisibility::Protected;
+	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
 		MonoObject* obj = mono_object_new(s_Domain, monoClass);
@@ -122,76 +134,36 @@ namespace HazardScript
 		const char* str = string.c_str();
 		return mono_string_new(s_Domain, str);
 	}
-	std::string Mono::ResolveClassName(MonoClass* monoClass) {
-		const char* className = mono_class_get_name(monoClass);
-		std::string name = className != nullptr ? className : "";
-
-		if (name.empty()) return "Unknown";
-
-		MonoClass* nesting = mono_class_get_nesting_type(monoClass);
-		if (nesting != nullptr) {
-			name = ResolveClassName(nesting) + "/" + name;
-		}
-		else
-		{
-			const char* classNameSpace = mono_class_get_namespace(monoClass);
-			if (classNameSpace)
-				name = std::string(classNameSpace) + "." + name;
-		}
-		MonoType* classType = mono_class_get_type(monoClass);
-		if (mono_type_get_type(classType) == MONO_TYPE_SZARRAY || mono_type_get_type(classType) == MONO_TYPE_ARRAY) {
-			name = name.substr(0, StringUtil::OffsetOf(name, '['));
-		}
-		return name;
-	}
-
-	bool Mono::MarkedAsCached(MonoClass* klass) 
+	FieldVisibility Mono::GetFieldVisibility(MonoClassField* field)
 	{
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(klass);
-		if (info == nullptr) return false;
+		uint32_t flags = mono_field_get_flags(field);
 
-		for (uint32_t i = 0; i < info->num_attrs; i++)
-		{
-			MonoCustomAttrEntry e = info->attrs[i];
-			MonoClass* fieldClass = mono_method_get_class(e.ctor);
-			MonoObject* obj = mono_custom_attrs_get_attr(info, fieldClass);
-			MonoClass* attribClass = mono_object_get_class(obj);
+		if (flags & MONO_FIELD_ATTR_PUBLIC)
+			return FieldVisibility::Public;
+		if (flags & MONO_FIELD_ATTR_PRIVATE)
+			return FieldVisibility::Private;
 
-			if (mono_class_get_name(attribClass) == CACHED_CLASS_NAME) return true;
-		}
-		return false;
+		return FieldVisibility::Protected;
 	}
-
-	bool Mono::MarkedAsCached(MonoClassField* field)
+	FieldType Mono::GetFieldType(MonoClassField* field)
 	{
-		MonoClass* parent = mono_field_get_parent(field);
+		MonoType* type = mono_field_get_type(field);
 
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(parent, field);
-		if (info == nullptr) return false;
-
-		for (uint32_t i = 0; i < info->num_attrs; i++)
+		switch (mono_type_get_type(type))
 		{
-			MonoCustomAttrEntry e = info->attrs[i];
-			MonoClass* fieldClass = mono_method_get_class(e.ctor);
-			MonoObject* obj = mono_custom_attrs_get_attr(info, fieldClass);
-			MonoClass* attribClass = mono_object_get_class(obj);
+		case MONO_TYPE_R4:			return FieldType::Float;
+		case MONO_TYPE_I4:			return FieldType::Int;
+		case MONO_TYPE_U4:			return FieldType::UInt;
+		case MONO_TYPE_STRING:		return FieldType::String;
+		case MONO_TYPE_VALUETYPE:
+		{
 
-			if (mono_class_get_name(attribClass) == CACHED_CLASS_NAME) return true;
+			char* name = mono_type_get_name(type);
+			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
+			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
+			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
 		}
-		return false;
-	}
-	MonoFlags Mono::GetClassFlags(MonoClass* klass)
-	{
-		uint32_t flags = mono_class_get_flags(klass);
-		uint32_t f = 0;
-		if (flags & TYPE_ATTRIBUTE_NOT_PUBLIC)													f |= MonoFlags_Private;
-		if (flags & TYPE_ATTRIBUTE_NESTED_PUBLIC)												f |= MonoFlags_Protected;
-		if (flags & TYPE_ATTRIBUTE_PUBLIC)														f |= MonoFlags_Public;
-		if (flags & TYPE_ATTRIBUTE_NESTED_FAM_OR_ASSEM && !(f & MonoFlags_Public))				f |= MonoFlags_Internal;
-		if (flags & TYPE_ATTRIBUTE_ABSTRACT)													f |= MonoFlags_Abstract;
-		if (flags & TYPE_ATTRIBUTE_INTERFACE)													f |= MonoFlags_Interface;
-		if (flags & TYPE_ATTRIBUTE_SEALED)														f |= MonoFlags_Sealed;
-
-		return (MonoFlags)f;
+		}
+		return FieldType::None;
 	}
 }
