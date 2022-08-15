@@ -3,6 +3,7 @@
 
 #include "Buffer.h"
 #include "Mono/Core/Mono.h"
+#include "ScriptCache.h"
 
 namespace HazardScript
 {
@@ -34,6 +35,8 @@ namespace HazardScript
 
 		m_DebugCallback = info->DebugCallback;
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
+
+		ScriptCache::Init();
 
 		InitializeMono();
 	}
@@ -91,7 +94,7 @@ namespace HazardScript
 			return;
 		}
 
-		if (!m_MonoData.CoreAssembly.LoadFromSource()) {
+		if (!m_MonoData.CoreAssembly.LoadFromSource(true)) {
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}

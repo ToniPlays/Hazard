@@ -87,6 +87,9 @@
     <ClInclude Include="src\Editor\EditorGrid.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorModeManager.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\EditorScriptManager.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
@@ -159,7 +162,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorModeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -190,6 +192,9 @@
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorGrid.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorModeManager.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorScriptManager.cpp">
@@ -246,6 +251,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\EditorModeManager.cpp" />
   </ItemGroup>
 </Project>

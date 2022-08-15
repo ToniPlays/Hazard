@@ -14,25 +14,11 @@
 
 namespace HazardScript
 {
-	enum MonoFlags : uint32_t 
-	{
-		MonoFlags_Private = BIT(0),
-		MonoFlags_Protected = BIT(1),
-		MonoFlags_Public = BIT(2),
-		MonoFlags_Internal = BIT(3),
-		MonoFlags_Static = BIT(4),
-		MonoFlags_Abstract = BIT(5),
-		MonoFlags_Virtual = BIT(6)
-	};
-
-	enum class FieldType { None, Float, Float2, Float3, Float4, Int, UInt, String, ValueType, ManagedType };
-
 	class Mono {
 	public:
 		static bool Init(const std::string& name);
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
-		static MonoFlags GetMethodFlags(MonoMethod* method);
 		static uint32_t InstantiateHandle(MonoClass* monoClass);
 		template<typename T>
 		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
@@ -67,12 +53,13 @@ namespace HazardScript
 		static std::string MonoObjectToString(MonoObject* obj);
 		static std::string MonoObjectToChar(MonoObject* obj);
 		static MonoString* StringToMonoString(const std::string& string);
-		static MonoFlags GetFieldFlags(MonoClassField* field);
-		static FieldType GetFieldType(MonoClassField* field);
 
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);
 		}
+
+		static std::string ResolveClassName(MonoClass* klass);
+
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

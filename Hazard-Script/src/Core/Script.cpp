@@ -23,26 +23,17 @@ namespace HazardScript
 		for (ScriptAssembly* assembly : HazardScriptEngine::GetAssemblies()) {
 			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
+		
 
 			if (!method) continue;
 
-			Method m(method);
-			m_Methods[name] = m;
+			//std::string methodName = mono_method_get_reflection_name(method);
+			//methodName = methodName.substr(methodName.find_first_of('.') + 1);
+
+			//m_Methods.push_back(methodName);
 			return true;
 		}
 		return false;
-	}
-	bool Script::TryInvoke(const std::string& name, MonoObject* obj, void** params)
-	{
-		if (m_Methods.find(name) == m_Methods.end()) 
-			return false;
-
-		Invoke(name, obj, params);
-		return true;
-	}
-	void Script::Invoke(const std::string& name, MonoObject* obj, void** params)
-	{
-		m_Methods[name].Invoke(obj, params);
 	}
 
 	ScriptObject* Script::CreateObject()
@@ -56,7 +47,9 @@ namespace HazardScript
 
 		while ((field = mono_class_get_fields(m_Class, &ptr))) {
 			std::string name = mono_field_get_name(field);
-			m_Fields[name] = ScriptField(field);
+			ManagedType type = ManagedType::FromType(mono_field_get_type(field));
+
+			std::cout << "Field name " << name << " " << (type.IsValid() ? "Valid" : "Not valid") << std::endl;
 		}
 
 	}
@@ -67,9 +60,11 @@ namespace HazardScript
 		MonoMethod* method = nullptr;
 		void* ptr = nullptr;
 
-		while ((method = mono_class_get_methods(m_Class, &ptr))) {
-			Method m(method);
-			m_Methods[m.GetName()] = m;
+		while ((method = mono_class_get_methods(m_Class, &ptr))) 
+		{
+			std::string methodName = mono_method_get_reflection_name(method);
+			//methodName = methodName.substr(methodName.find_first_of('.') + 1);
+			//m_Methods.push_back(methodName);
 		}
 	}
 	void Script::LoadAttributes()

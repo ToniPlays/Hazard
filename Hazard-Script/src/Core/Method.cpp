@@ -23,7 +23,6 @@ namespace HazardScript
 	{
 		m_Name = mono_method_get_reflection_name(m_Method);
 		m_Name = m_Name.substr(m_Name.find_first_of('.') + 1);
-		m_Flags = Mono::GetMethodFlags(m_Method);
 	}
 	void Method::LoadAttributes()
 	{

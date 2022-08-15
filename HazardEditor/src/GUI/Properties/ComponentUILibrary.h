@@ -180,6 +180,7 @@ namespace UI
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, colWidth);
 
+					/*
 					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
@@ -192,6 +193,7 @@ namespace UI
 							ImUI::ShiftY(2.0f);
 							});
 					}
+					*/
 					ImGui::Columns();
 				}
 

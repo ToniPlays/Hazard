@@ -46,6 +46,12 @@
     <Filter Include="src\Hazard\Scripting">
       <UniqueIdentifier>{98AEB7CA-843D-4194-2D5C-558F19CA513A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Scripting\Attributes">
+      <UniqueIdentifier>{EE66C660-5A4A-D5A0-634D-03DDCFAF9BF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Scripting\Bindings">
+      <UniqueIdentifier>{F5A2DA43-61BB-C16D-2A68-5107963F5607}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -248,6 +254,36 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\AllBindings.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h">
+      <Filter>src\Hazard\Scripting\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\DebugBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\TagComponentBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\TransformComponentBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\HScript.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -1512,16 +1548,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\DebugBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\AllBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\TagComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\TransformComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

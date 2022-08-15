@@ -92,11 +92,11 @@ namespace Hazard
 	}
 }
 
-HazardScript::FieldType GetCustomType(const char* name) 
+HazardScript::NativeType GetCustomType(const char* name) 
 {
-	if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
-	if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
-	if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
+	if (strcmp(name, "Hazard.Vector2") == 0) return NativeType::Float2;
+	if (strcmp(name, "Hazard.Vector3") == 0) return NativeType::Float3;
+	if (strcmp(name, "Hazard.Color") == 0) return NativeType::Float4;
 
-	return HazardScript::FieldType::ValueType;
+	return HazardScript::NativeType::Undefined;
 }

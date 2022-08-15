@@ -13,9 +13,8 @@ namespace HazardScript
 		ScriptField(MonoClassField* field);
 
 		std::string GetName() { return m_Name; }
-		const MonoFlags& GetFlags() { return m_Flags; }
-		const FieldType& GetType() { return m_Type; }
 		MonoClassField* GetField() { return m_Field; }
+		bool HasValue() { return false; }
 
 		template<typename T>
 		bool Has() const {
@@ -37,8 +36,6 @@ namespace HazardScript
 	private:
 		MonoClassField* m_Field;
 		std::string m_Name;
-		FieldType m_Type = FieldType::None;
-		MonoFlags m_Flags;
 		std::vector<Attribute*> m_Attributes;
 	};
 }

@@ -9,6 +9,7 @@
 #include <mono/metadata/mono-gc.h>
 
 #include "File.h"
+#include "Utility/StringUtil.h"
 
 namespace HazardScript
 {
@@ -38,22 +39,6 @@ namespace HazardScript
 	void Mono::Register(const std::string& signature, void* function)
 	{
 		mono_add_internal_call(signature.c_str(), function);
-	}
-	MonoFlags Mono::GetMethodFlags(MonoMethod* method)
-	{
-		uint32_t iFlags = 0;
-		uint32_t flags = mono_method_get_flags(method, &iFlags);
-
-		uint32_t f = 0;
-		if (flags & MONO_METHOD_ATTR_PRIVATE)	f |= MonoFlags_Private;
-		if (flags & MONO_METHOD_ATTR_FAMILY)	f |= MonoFlags_Protected;
-		if (flags & MONO_METHOD_ATTR_PUBLIC)	f |= MonoFlags_Public;
-		if (flags & MONO_METHOD_ATTR_ASSEM)		f |= MonoFlags_Internal;
-		if (flags & MONO_METHOD_ATTR_STATIC)	f |= MonoFlags_Static;
-		if (flags & MONO_METHOD_ATTR_ABSTRACT)	f |= MonoFlags_Abstract;
-		if (flags & MONO_METHOD_ATTR_VIRTUAL)	f |= MonoFlags_Virtual;
-
-		return (MonoFlags)f;
 	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
@@ -131,33 +116,26 @@ namespace HazardScript
 		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);
 	}
-	MonoFlags Mono::GetFieldFlags(MonoClassField* field)
-	{
-		uint32_t flags = mono_field_get_flags(field);
+	std::string Mono::ResolveClassName(MonoClass* monoClass) {
+		const char* className = mono_class_get_name(monoClass);
+		std::string name = className != nullptr ? className : "";
 
-		uint32_t f = 0;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)	f |= MonoFlags_Private;
-		if (flags & MONO_FIELD_ATTR_FAMILY)		f |= MonoFlags_Protected;
-		if (flags & MONO_FIELD_ATTR_PUBLIC)		f |= MonoFlags_Public;
-		if (flags & MONO_FIELD_ATTR_ASSEMBLY)	f |= MonoFlags_Internal;
-		if (flags & MONO_FIELD_ATTR_STATIC)		f |= MonoFlags_Static;
+		if (name.empty()) return "Unknown";
 
-		return (MonoFlags)f;
-
-	}
-	FieldType Mono::GetFieldType(MonoClassField* field)
-	{
-		MonoType* type = mono_field_get_type(field);
-
-		switch (mono_type_get_type(type))
-		{
-		case MONO_TYPE_R4:			return FieldType::Float;
-		case MONO_TYPE_I4:			return FieldType::Int;
-		case MONO_TYPE_U4:			return FieldType::UInt;
-		case MONO_TYPE_STRING:		return FieldType::String;
-		case MONO_TYPE_VALUETYPE:	return FieldType::ValueType;
-		case MONO_TYPE_CLASS:		return FieldType::ManagedType;
+		MonoClass* nesting = mono_class_get_nesting_type(monoClass);
+		if (nesting != nullptr) {
+			name = ResolveClassName(nesting) + "/" + name;
 		}
-		return FieldType::None;
+		else 
+		{
+			const char* classNameSpace = mono_class_get_namespace(monoClass);
+			if (classNameSpace)
+				name = std::string(classNameSpace) + "." + name;
+		}
+		MonoType* classType = mono_class_get_type(monoClass);
+		if (mono_type_get_type(classType) == MONO_TYPE_SZARRAY || mono_type_get_type(classType) == MONO_TYPE_ARRAY) {
+			name = name.substr(0, StringUtil::OffsetOf(name, '['));
+		}
+		return name;
 	}
 }
