@@ -4,6 +4,11 @@ using System.Text;
 
 namespace Hazard
 {
+    [System.AttributeUsage(AttributeTargets.Class)]
+    public class Cached : Attribute 
+    {
+    }
+
     public enum Status
     {
         Done = 0,
@@ -13,7 +18,7 @@ namespace Hazard
 	}
 
     [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-    public class Author : System.Attribute
+    public class Author : Attribute
     {
         public double Version;
         private string Name;

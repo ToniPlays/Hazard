@@ -21,8 +21,10 @@ namespace HazardScript
 
 		mono_image_close(image);
 
-		if (registerScripts)
+		if (registerScripts) 
+		{
 			LoadScripts();
+		}
 
 		data.Release();
 
@@ -53,11 +55,12 @@ namespace HazardScript
 
 			std::stringstream ss;
 			ss << nameSpace << "." << name;
-
+			HZR_ASSERT(monoClass, "Class is null");
 			ScriptCache::CacheClass(ss.str(), monoClass);
 			classes.push_back(monoClass);
 		}
-		for (MonoClass* klass : classes) {
+		for (MonoClass* klass : classes) 
+		{
 			Script script(klass);
 			m_Scripts[script.GetName()] = script;
 		}

@@ -11,6 +11,9 @@
 #include "File.h"
 #include "Utility/StringUtil.h"
 
+
+#define CACHED_CLASS_NAME "Cached"
+
 namespace HazardScript
 {
 	bool Mono::Init(const std::string& name)
@@ -113,7 +116,6 @@ namespace HazardScript
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 
 		const char* str = string.c_str();
-		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);
 	}
 	std::string Mono::ResolveClassName(MonoClass* monoClass) {
@@ -126,7 +128,7 @@ namespace HazardScript
 		if (nesting != nullptr) {
 			name = ResolveClassName(nesting) + "/" + name;
 		}
-		else 
+		else
 		{
 			const char* classNameSpace = mono_class_get_namespace(monoClass);
 			if (classNameSpace)
@@ -137,5 +139,41 @@ namespace HazardScript
 			name = name.substr(0, StringUtil::OffsetOf(name, '['));
 		}
 		return name;
+	}
+
+	bool Mono::MarkedAsCached(MonoClass* klass) 
+	{
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(klass);
+		if (info == nullptr) return false;
+
+		for (uint32_t i = 0; i < info->num_attrs; i++)
+		{
+			MonoCustomAttrEntry e = info->attrs[i];
+			MonoClass* fieldClass = mono_method_get_class(e.ctor);
+			MonoObject* obj = mono_custom_attrs_get_attr(info, fieldClass);
+			MonoClass* attribClass = mono_object_get_class(obj);
+
+			if (mono_class_get_name(attribClass) == CACHED_CLASS_NAME) return true;
+		}
+		return false;
+	}
+
+	bool Mono::MarkedAsCached(MonoClassField* field)
+	{
+		MonoClass* parent = mono_field_get_parent(field);
+
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(parent, field);
+		if (info == nullptr) return false;
+
+		for (uint32_t i = 0; i < info->num_attrs; i++)
+		{
+			MonoCustomAttrEntry e = info->attrs[i];
+			MonoClass* fieldClass = mono_method_get_class(e.ctor);
+			MonoObject* obj = mono_custom_attrs_get_attr(info, fieldClass);
+			MonoClass* attribClass = mono_object_get_class(obj);
+
+			if (mono_class_get_name(attribClass) == CACHED_CLASS_NAME) return true;
+		}
+		return false;
 	}
 }

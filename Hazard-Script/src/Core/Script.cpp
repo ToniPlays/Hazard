@@ -4,6 +4,7 @@
 #include "AttributeBuilder.h"
 #include "ScriptAssembly.h"
 #include "HazardScriptEngine.h"
+#include "Attribute.h"
 
 namespace HazardScript
 {
@@ -46,10 +47,14 @@ namespace HazardScript
 		void* ptr = 0;
 
 		while ((field = mono_class_get_fields(m_Class, &ptr))) {
-			std::string name = mono_field_get_name(field);
-			ManagedType type = ManagedType::FromType(mono_field_get_type(field));
 
-			std::cout << "Field name " << name << " " << (type.IsValid() ? "Valid" : "Not valid") << std::endl;
+			//if (!Mono::MarkedAsCached(field)) return;
+
+			std::string name = mono_field_get_name(field); 
+			MonoType* monoType = mono_field_get_type(field);
+			ManagedType type = ManagedType::FromType(monoType);
+
+			std::cout << " - Field: " << Utils::NativeTypeToString(type.NativeType) << " " << name << " " << (type.IsValid() ? "Valid" : "Not valid") << std::endl;
 		}
 
 	}

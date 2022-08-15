@@ -16,12 +16,12 @@ namespace HazardScript
 	void ScriptCache::Init()
 	{
 		s_Cache = new Cache();
+		CacheCoreLibClasses();
 	}
 
 	void ScriptCache::CacheClass(const std::string& name, MonoClass* monoClass)
 	{
 		if (name == ".<Module>") return;
-		//std::cout << "Caching " << name << std::endl;
 
 		MonoType* type = mono_class_get_type(monoClass);
 
@@ -45,8 +45,30 @@ namespace HazardScript
 	{
 		if (s_Cache == nullptr) return nullptr;
 		uint32_t classID = Hash::GenerateFNVHash(name);
-		if (s_Cache->Classes.find(classID) == s_Cache->Classes.end()) return nullptr;
+		if (s_Cache->Classes.find(classID) == s_Cache->Classes.end()) 
+			return nullptr;
 		return &s_Cache->Classes[classID];
+	}
+	void ScriptCache::CacheCoreLibClasses()
+	{
+		std::cout << "Caching core lib classes" << std::endl;
+		#define CACHE_CORELIB_CLASS(name) CacheClass("System." ##name, mono_class_from_name(mono_get_corlib(), "System", name))
+		CACHE_CORELIB_CLASS("Object");
+		CACHE_CORELIB_CLASS("ValueType");
+		CACHE_CORELIB_CLASS("Boolean");
+		CACHE_CORELIB_CLASS("SByte");
+		CACHE_CORELIB_CLASS("Int16");
+		CACHE_CORELIB_CLASS("Int32");
+		CACHE_CORELIB_CLASS("Int64");
+		CACHE_CORELIB_CLASS("Byte");
+		CACHE_CORELIB_CLASS("UInt16");
+		CACHE_CORELIB_CLASS("UInt32");
+		CACHE_CORELIB_CLASS("UInt64");
+		CACHE_CORELIB_CLASS("IntPtr");
+		CACHE_CORELIB_CLASS("Single");
+		CACHE_CORELIB_CLASS("Double");
+		CACHE_CORELIB_CLASS("Char");
+		CACHE_CORELIB_CLASS("String");
 	}
 }
 

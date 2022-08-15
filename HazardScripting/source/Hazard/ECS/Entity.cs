@@ -62,6 +62,7 @@ namespace Hazard
         }
         public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
 
+        /*
         public Coroutine BeginCoroutine(IEnumerator enumerator) 
         {
             return null;
@@ -74,5 +75,6 @@ namespace Hazard
         { 
             
         }
+        */
     }
 }

@@ -59,7 +59,8 @@ namespace HazardScript
 		}
 
 		static std::string ResolveClassName(MonoClass* klass);
-
+		static bool MarkedAsCached(MonoClass* klass);
+		static bool MarkedAsCached(MonoClassField* field);
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

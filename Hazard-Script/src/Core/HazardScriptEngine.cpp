@@ -36,8 +36,6 @@ namespace HazardScript
 		m_DebugCallback = info->DebugCallback;
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
-		ScriptCache::Init();
-
 		InitializeMono();
 	}
 	void HazardScriptEngine::Reload()
@@ -79,6 +77,7 @@ namespace HazardScript
 		Mono::SetDirs(m_MonoData.MonoAssemblyDir, m_MonoData.MonoConfigDir);
 
 		Mono::Init("HazardScriptCore");
+		ScriptCache::Init();
 
 		if (m_MonoData.LoadAssembliesOnInit) {
 			Reload();
