@@ -6,10 +6,7 @@
 #include "UID.h"
 #include "Ref.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
-
-namespace HazardScript {
-	class ScriptObject;
-}
+#include "HazardScript.h"
 
 namespace Hazard {
 
@@ -46,7 +43,7 @@ namespace Hazard {
 	struct ScriptComponent 
 	{
 		std::string ModuleName;
-		HazardScript::ScriptObject* m_Handle;
+		Ref<HazardScript::ScriptObject> m_Handle;
 	};
 	struct MeshComponent 
 	{

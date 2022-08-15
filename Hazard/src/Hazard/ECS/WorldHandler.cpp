@@ -38,8 +38,8 @@ namespace Hazard {
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle)
-				sc.m_Handle->TryInvoke("OnUpdate(single)", params);
+			//if (sc.m_Handle)
+			//	sc.m_Handle->TryInvoke("OnUpdate(single)", params);
 		}
 	}
 
@@ -115,8 +115,8 @@ namespace Hazard {
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle)
-				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
+			//if (sc.m_Handle)
+			//	sc.m_Handle->TryInvoke("OnCreate()", nullptr);
 		}
 	}
 

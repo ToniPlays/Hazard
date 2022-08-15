@@ -1,18 +1,19 @@
 #pragma once
 
+#include "UtilityCore.h"
+#include "Core/Attribute.h"
 #include "Mono/Core/Mono.h"
-#include "Attribute.h"
 
 namespace HazardScript 
 {
-	class Method {
+	class FieldMetadata
+	{
 	public:
-		Method() = default;
-		Method(MonoMethod* method);
+		FieldMetadata() = default;
+		FieldMetadata(MonoClassField* field);
 
 		std::string GetName() { return m_Name; }
-
-		MonoObject* Invoke(MonoObject* obj, void** params);
+		bool HasValue() { return false; }
 
 		template<typename T>
 		bool Has() const {
@@ -28,16 +29,11 @@ namespace HazardScript
 			}
 			return T();
 		}
-
+	private:
+		void LoadAttributes(MonoClassField* field);
 
 	private:
-		void Init();
-		void LoadAttributes();
-
-	private:
-		MonoMethod* m_Method;
 		std::string m_Name;
-
-		std::vector<Attribute*> m_Attributes;
+		std::vector<Attribute*> m_Attributes = std::vector<Attribute*>();
 	};
 }

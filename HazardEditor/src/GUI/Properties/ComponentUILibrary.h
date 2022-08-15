@@ -164,36 +164,32 @@ namespace UI
 
 				if (changed) {
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle) {
-						delete c.m_Handle;
 						c.m_Handle = nullptr;
 					}
-					if (scriptEngine.HasModule(c.ModuleName)) {
-						Script& script = scriptEngine.GetScript(c.ModuleName);
+					if (scriptEngine.HasModule(c.ModuleName)) 
+					{
+						ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 						c.m_Handle = script.CreateObject();
 					}
 				}
 
 				if (c.m_Handle)
 				{
-					Script& script = c.m_Handle->GetScript();
 
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, colWidth);
-
-					/*
-					for (auto& [name, field] : script.GetFields())
+					
+					for (auto& [name, field] : c.m_Handle->GetFields())
 					{
 						const char* label = name.c_str();
-						auto& f = field;
-
+						ManagedField& f = field;
 						ImUI::Group(name.c_str(), [&]() {
-							UI::ScriptField(label, f, *c.m_Handle);
+							UI::ScriptField(label, f);
 							ImUI::ShiftY(3.0f);
 							ImGui::Separator();
 							ImUI::ShiftY(2.0f);
 							});
 					}
-					*/
 					ImGui::Columns();
 				}
 

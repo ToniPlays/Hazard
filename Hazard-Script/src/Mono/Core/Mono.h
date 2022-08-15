@@ -10,6 +10,9 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
+#include "Core/ManagedType.h"
+
+
 //#define REGISTER_INTERNAL(x) Mono::Register("Hazard.InternalCalls::#x", (void*)#x);
 
 namespace HazardScript
@@ -61,6 +64,8 @@ namespace HazardScript
 		static std::string ResolveClassName(MonoClass* klass);
 		static bool MarkedAsCached(MonoClass* klass);
 		static bool MarkedAsCached(MonoClassField* field);
+
+		static MonoFlags GetClassFlags(MonoClass* klass);
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

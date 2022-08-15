@@ -1,20 +1,16 @@
 #pragma once
 
-#include "UtilityCore.h"
-#include "Attribute.h"
 #include "Mono/Core/Mono.h"
+#include "Core/Attribute.h"
 
 namespace HazardScript 
 {
-	class ScriptField 
-	{
+	class MethodMetadata {
 	public:
-		ScriptField() = default;
-		ScriptField(MonoClassField* field);
+		MethodMetadata() = default;
+		MethodMetadata(MonoMethod* method);
 
 		std::string GetName() { return m_Name; }
-		MonoClassField* GetField() { return m_Field; }
-		bool HasValue() { return false; }
 
 		template<typename T>
 		bool Has() const {
@@ -30,12 +26,15 @@ namespace HazardScript
 			}
 			return T();
 		}
+
 	private:
+		void Init();
 		void LoadAttributes();
 
 	private:
-		MonoClassField* m_Field;
+		MonoMethod* m_Method;
 		std::string m_Name;
+
 		std::vector<Attribute*> m_Attributes;
 	};
 }

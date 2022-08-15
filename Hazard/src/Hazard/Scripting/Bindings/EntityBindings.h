@@ -59,7 +59,7 @@ namespace Hazard
 		if (e.HasComponent<ScriptComponent>()) {
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle) {
-				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
+			//	sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 			}
 		}
 		handler->GetCurrentWorld()->DestroyEntity(e);

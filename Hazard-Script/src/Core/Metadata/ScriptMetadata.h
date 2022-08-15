@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Method.h"
-#include "Attribute.h"
-#include "ScriptField.h"
-#include "ManagedType.h"
+#include "MethodMetadata.h"
+#include "Core/Attribute.h"
+#include "FieldMetadata.h"
+#include "Core/ManagedType.h"
 #include "Mono/Core/Mono.h"
 #include <unordered_map>
 
@@ -11,18 +11,17 @@ namespace HazardScript
 {
 	class ScriptObject;
 
-	class Script 
+	//This should be kind of a metadata class with no real functionality
+	class ScriptMetadata 
 	{
 	public:
-		Script() = default;
-		Script(MonoClass* klass);
+		ScriptMetadata() = default;
+		ScriptMetadata(MonoClass* klass);
 
 		std::string GetName();
 		uint32_t GetFieldCount() { return m_Fields.size(); }
 		uint32_t GetMethodCount() { return m_Methods.size(); }
-		std::unordered_map<std::string, ManagedType> GetFields() { return m_Fields; }
-
-		bool ValidateOrLoadMethod(const std::string& name);
+		std::unordered_map<std::string, FieldMetadata> GetFields() { return m_Fields; }
 
 		bool HasField(const std::string& name) 
 		{
@@ -31,15 +30,15 @@ namespace HazardScript
 
 		bool HasMethod(const std::string& name) 
 		{
-			return m_Methods.find(name) != m_Fields.end();
+			return m_Methods.find(name) != m_Methods.end();
 		}
-
 
 		//Attribute stuff
 		template<typename T>
 		bool Has() const {
 			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return true;
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return true;
 			}
 			return false;
 		}
@@ -51,8 +50,8 @@ namespace HazardScript
 			return T();
 		}
 
-		ScriptObject* CreateObject();
-		MonoClass* GetClass() { return m_Class; }
+		Ref<ScriptObject> CreateObject();
+		MonoClass* GetClass() { return m_ManagedClass->Class; }
 
 	private:
 		void LoadFields();
@@ -60,9 +59,8 @@ namespace HazardScript
 		void LoadAttributes();
 
 	private:
-		MonoClass* m_Class;
-
-		std::unordered_map<std::string, ManagedType> m_Fields;
+		ManagedClass* m_ManagedClass = nullptr;
+		std::unordered_map<std::string, FieldMetadata> m_Fields;
 		std::unordered_map<std::string, ManagedType> m_Methods;
 		std::vector<Attribute*> m_Attributes;
 	};

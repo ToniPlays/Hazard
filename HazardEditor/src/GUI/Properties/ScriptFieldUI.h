@@ -5,32 +5,34 @@
 
 namespace UI
 {
+	/*
 	static bool WillBeVisible(HazardScript::ScriptField& field) {
 		using namespace HazardScript;
 
 		if (field.Has<HideInPropertiesAttribute>()) return false;
 		if (field.Has<ShowInPropertiesAttribute>()) return true;
 
-		return false;
+		return true;
 	}
 
 	template<typename T>
-	static bool ScriptField(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField(HazardScript::ManagedField& field) {
 		static_assert(false);
 	}
 	template<>
-	static bool ScriptField<float>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<float>(HazardScript::ManagedField& field) 
+	{
 		using namespace HazardScript;
-		float value = 0.0f; // obj.GetFieldValue<float>(field.GetName());
+		float value = field.GetValue<float>();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		if (field.Has<RangeAttribute>()) {
-			RangeAttribute attrib = field.Get<RangeAttribute>();
+		if (field.Field->Has<RangeAttribute>()) {
+			RangeAttribute attrib = field.Field->Get<RangeAttribute>();
 			modified = ImUI::InputFloat(value, 0.0f, attrib.Min, attrib.Max);
 		}
-		else if (field.Has<SliderAttribute>()) {
-			SliderAttribute attrib = field.Get<SliderAttribute>();
+		else if (field.Field->Has<SliderAttribute>()) {
+			SliderAttribute attrib = field.Field->Get<SliderAttribute>();
 			modified = ImUI::InputSliderFloat(value, 0.0f, attrib.Min, attrib.Max);
 		}
 		else
@@ -45,7 +47,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<int>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<int>(HazardScript::ManagedField& field) {
 		using namespace HazardScript;
 		int value = 0; // obj.GetFieldValue<int>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -60,7 +62,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<uint64_t>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<uint64_t>(HazardScript::ManagedField& field) {
 		using namespace HazardScript;
 		uint64_t value = 0; //obj.GetFieldValue<uint64_t>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -77,7 +79,7 @@ namespace UI
 
 
 	template<>
-	static bool ScriptField<glm::vec2>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec2>(HazardScript::ManagedField& field) {
 		glm::vec2 value; //obj.GetFieldValue<glm::vec2>(field.GetName());
 
 		bool modified = ImUI::InputFloat2(value, 0.0f);
@@ -87,7 +89,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec3>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec3>(HazardScript::ManagedField& field) {
 		glm::vec3 value; // = obj.GetFieldValue<glm::vec3>(field.GetName());
 		bool modified = ImUI::InputFloat3(value, 0.0f);
 		if (modified) {
@@ -96,7 +98,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec4>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec4>(HazardScript::ManagedField& field) {
 		Color value;// = Color::FromGLM(obj.GetFieldValue<glm::vec4>(field.GetName()));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = ImUI::ColorPicker("##Tint", value);
@@ -108,7 +110,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<std::string>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<std::string>(HazardScript::ManagedField& field) {
 		using namespace HazardScript;
 		std::string value;// = obj.GetFieldValue<std::string>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -116,8 +118,8 @@ namespace UI
 
 		bool modified = false;
 
-		if (field.Has<TextAreaAttribute>()) {
-			TextAreaAttribute attrib = field.Get<TextAreaAttribute>();
+		if (field.Field->Has<TextAreaAttribute>()) {
+			TextAreaAttribute attrib = field.Field->Get<TextAreaAttribute>();
 			modified = ImUI::TextArea(value, attrib.Min, attrib.Max);
 		}
 		else
@@ -130,14 +132,14 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<HazardScript::ScriptField>(HazardScript::ScriptField& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<HazardScript::ScriptField>(HazardScript::ManagedField& field) {
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		bool hasValue = field.HasValue();
+		//bool hasValue = field.HasValue();
 
-		ImUI::TextField(field.GetName());
+		ImUI::TextField(field.Field->GetName());
 
 		if (modified)
 		{
@@ -145,33 +147,33 @@ namespace UI
 		}
 		return modified;
 	}
+	*/
 
-
-	static void ScriptField(const std::string& name, HazardScript::ScriptField& field, HazardScript::ScriptObject& obj)
+	static void ScriptField(const std::string& name, HazardScript::ManagedField& field)
 	{
 		using namespace HazardScript;
-		if (!WillBeVisible(field)) return;
+		//if (!WillBeVisible()) return;
 
 		std::string label = name;
 		label[0] = toupper(name[0]);
 		ImGui::Text(label.c_str());
-		if (field.Has<TooltipAttribute>()) 
-		{
-			ImUI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
-		}
+		//if (field.Field->Has<TooltipAttribute>()) 
+		//{
+		//	ImUI::Tooltip(field.Field->Get<TooltipAttribute>().Tooltip.c_str());
+		//}
 		ImGui::NextColumn();
-		/*
-		switch (field.GetType()) {
-		case FieldType::Float:			ScriptField<float>(field, obj);						break;
-		case FieldType::Float2:			ScriptField<glm::vec2>(field, obj);					break;
-		case FieldType::Float3:			ScriptField<glm::vec3>(field, obj);					break;
-		case FieldType::Float4:			ScriptField<glm::vec4>(field, obj);					break;
-		case FieldType::Int:			ScriptField<int>(field, obj);						break;
-		case FieldType::UInt:			ScriptField<uint64_t>(field, obj);					break;
-		case FieldType::String:			ScriptField<std::string>(field, obj);				break;
-		case FieldType::ManagedType:	ScriptField<HazardScript::ScriptField>(field, obj);	break;
+		
+		/*switch (field.Type.NativeType) {
+		case NativeType::Float:			ScriptField<float>(field);						break;
+		case NativeType::Float2:		ScriptField<glm::vec2>(field);					break;
+		case NativeType::Float3:		ScriptField<glm::vec3>(field);					break;
+		case NativeType::Float4:		ScriptField<glm::vec4>(field);					break;
+		case NativeType::Int8:			ScriptField<int>(field);						break;
+		case NativeType::UInt8:			ScriptField<uint64_t>(field);					break;
+		case NativeType::String:		ScriptField<std::string>(field);				break;
 		}
 		*/
+		
 		ImGui::NextColumn();
 	}
 }

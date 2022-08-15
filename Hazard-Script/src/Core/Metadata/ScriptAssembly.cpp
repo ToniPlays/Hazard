@@ -4,7 +4,7 @@
 #include "File.h"
 #include "Mono/Core/Mono.h"
 
-#include "ScriptCache.h"
+#include "Core/ScriptCache.h"
 #include <sstream>
 
 namespace HazardScript
@@ -20,23 +20,6 @@ namespace HazardScript
 		m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
 
 		mono_image_close(image);
-
-		if (registerScripts) 
-		{
-			LoadScripts();
-		}
-
-		data.Release();
-
-		return true;
-	}
-	MonoImage* ScriptAssembly::GetImage() const
-	{
-		return mono_assembly_get_image(m_Assembly);
-	}
-	void ScriptAssembly::LoadScripts()
-	{
-		MonoImage* image = GetImage();
 
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		uint32_t rows = mono_table_info_get_rows(tableInfo);
@@ -56,12 +39,29 @@ namespace HazardScript
 			std::stringstream ss;
 			ss << nameSpace << "." << name;
 			HZR_ASSERT(monoClass, "Class is null");
-			ScriptCache::CacheClass(ss.str(), monoClass);
-			classes.push_back(monoClass);
+
+			if (ScriptCache::CacheClass(ss.str(), monoClass))
+				classes.push_back(monoClass);
 		}
-		for (MonoClass* klass : classes) 
+
+		if (registerScripts)
 		{
-			Script script(klass);
+			LoadScripts(classes);
+		}
+
+		data.Release();
+
+		return true;
+	}
+	MonoImage* ScriptAssembly::GetImage() const
+	{
+		return mono_assembly_get_image(m_Assembly);
+	}
+	void ScriptAssembly::LoadScripts(const std::vector<MonoClass*> classes)
+	{
+		for (MonoClass* klass : classes)
+		{
+			ScriptMetadata script(klass);
 			m_Scripts[script.GetName()] = script;
 		}
 	}

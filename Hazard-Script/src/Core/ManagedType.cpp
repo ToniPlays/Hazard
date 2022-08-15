@@ -20,10 +20,12 @@ namespace HazardScript
 		case MONO_TYPE_I2:                  return NativeType::Int16;
 		case MONO_TYPE_I4:                  return NativeType::Int32;
 		case MONO_TYPE_I8:                  return NativeType::Int64;
+		case MONO_TYPE_I:					return NativeType::Int32;
 		case MONO_TYPE_U1:                  return NativeType::UInt8;
 		case MONO_TYPE_U2:                  return NativeType::UInt16;
 		case MONO_TYPE_U4:                  return NativeType::UInt32;
 		case MONO_TYPE_U8:                  return NativeType::UInt64;
+		case MONO_TYPE_U:					return NativeType::UInt32;
 		case MONO_TYPE_R4:                  return NativeType::Float;
 		case MONO_TYPE_R8:                  return NativeType::Double;
 		case MONO_TYPE_STRING:              return NativeType::String;
@@ -33,8 +35,9 @@ namespace HazardScript
 			const char* name = mono_type_get_name(classType);
 			return GetCustomType(name);
 		}
-		case MONO_TYPE_CLASS: 
+		case MONO_TYPE_CLASS:
 		{
+			return NativeType::Reference;
 		}
 		}
 		return NativeType::Undefined;
@@ -88,6 +91,31 @@ namespace HazardScript
 		return true;
 
 	}
+	uint32_t ManagedType::GetSize() const
+	{
+		switch (NativeType)
+		{
+		case NativeType::Void:			return 0;
+		case NativeType::Bool:			return sizeof(bool);
+		case NativeType::Float:			return sizeof(float);
+		case NativeType::Float2:		return sizeof(float) * 2;
+		case NativeType::Float3:		return sizeof(float) * 3;
+		case NativeType::Float4:		return sizeof(float) * 4;
+		case NativeType::Double:		return sizeof(double);
+		case NativeType::Int8:			return sizeof(int8_t);
+		case NativeType::Int16:			return sizeof(int16_t);
+		case NativeType::Int32:			return sizeof(int32_t);
+		case NativeType::Int64:			return sizeof(int64_t);
+		case NativeType::UInt8:			return sizeof(uint8_t);
+		case NativeType::UInt16:		return sizeof(uint16_t);
+		case NativeType::UInt32:		return sizeof(uint32_t);
+		case NativeType::UInt64:		return sizeof(uint64_t);
+		case NativeType::String:		return sizeof(std::string);
+		case NativeType::Value:			return sizeof(void*);
+		case NativeType::Reference:		return sizeof(void*);
+		}
+		return 0;
+	}
 	ManagedType ManagedType::GetElementType() const
 	{
 		if (!IsArray())
@@ -114,7 +142,7 @@ namespace HazardScript
 	ManagedType ManagedType::FromType(MonoType* monoType)
 	{
 		MonoClass* klass = mono_type_get_class(monoType);
-		if (klass == nullptr) 
+		if (klass == nullptr)
 		{
 			std::string name = mono_type_get_name(monoType);
 			std::string nameSpace = name.substr(0, StringUtil::OffsetOf(name, '.'));
@@ -122,7 +150,7 @@ namespace HazardScript
 
 			klass = mono_class_from_name(mono_get_corlib(), nameSpace.c_str(), name.c_str());
 		}
-		if (klass == nullptr) 
+		if (klass == nullptr)
 		{
 			HZR_ASSERT(klass, "Mono type class is null");
 		}

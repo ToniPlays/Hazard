@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mono/Core/Mono.h"
-#include "Script.h"
+#include "ScriptMetadata.h"
 
 namespace HazardScript 
 {
@@ -15,20 +15,22 @@ namespace HazardScript
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
 		std::filesystem::path& GetSourcePath() { return m_Path; }
 
-		std::unordered_map<std::string, Script>& GetScripts() { return m_Scripts; }
+		std::unordered_map<std::string, ScriptMetadata>& GetScripts() { return m_Scripts; }
 		MonoImage* GetImage() const;
 
-		bool HasScript(const std::string& name) {
+		bool HasScript(const std::string& name) 
+		{
 			return m_Scripts.find(name) != m_Scripts.end();
 		}
-		Script& GetScript(const std::string& name) {
+		ScriptMetadata& GetScript(const std::string& name) 
+		{
 			return m_Scripts[name];
 		}
 		MonoAssembly* GetAssembly() { return m_Assembly; }
 
 		template<typename T>
-		std::vector<Script> ViewAttributes() {
-			std::vector<Script> results;
+		std::vector<ScriptMetadata> ViewAttributes() {
+			std::vector<ScriptMetadata> results;
 
 			for (auto& [name, script] : m_Scripts) {
 				if (script.Has<T>()) 
@@ -38,10 +40,10 @@ namespace HazardScript
 		}
 
 	private:
-		void LoadScripts();
+		void LoadScripts(const std::vector<MonoClass*> classes);
 	private:
 		std::filesystem::path m_Path;
 		MonoAssembly* m_Assembly;
-		std::unordered_map<std::string, Script> m_Scripts;
+		std::unordered_map<std::string, ScriptMetadata> m_Scripts;
 	};
 }

@@ -1,18 +1,18 @@
 
-#include "ScriptField.h"
-#include "AttributeBuilder.h"
+#include "FieldMetadata.h"
+#include "Core/AttributeBuilder.h"
 
 namespace HazardScript
 {
-	ScriptField::ScriptField(MonoClassField* field) : m_Field(field)
+	FieldMetadata::FieldMetadata(MonoClassField* field)
 	{
 		m_Name = mono_field_get_name(field);
-		LoadAttributes();
+		LoadAttributes(field);
 	}
-	void ScriptField::LoadAttributes()
+	void FieldMetadata::LoadAttributes(MonoClassField* field)
 	{
-		MonoClass* monoClass = mono_field_get_parent(m_Field);
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);
+		MonoClass* monoClass = mono_field_get_parent(field);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, field);
 		if (info == nullptr) return;
 
 		m_Attributes.reserve(info->num_attrs);

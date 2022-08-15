@@ -4,12 +4,16 @@
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/attrdefs.h>
-#include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
+#include <mono/metadata/tabledefs.h>
+
 #include "File.h"
 #include "Utility/StringUtil.h"
+
+
+#include "Mono/Core/Mono.h"
 
 
 #define CACHED_CLASS_NAME "Cached"
@@ -175,5 +179,19 @@ namespace HazardScript
 			if (mono_class_get_name(attribClass) == CACHED_CLASS_NAME) return true;
 		}
 		return false;
+	}
+	MonoFlags Mono::GetClassFlags(MonoClass* klass)
+	{
+		uint32_t flags = mono_class_get_flags(klass);
+		uint32_t f = 0;
+		if (flags & TYPE_ATTRIBUTE_NOT_PUBLIC)													f |= MonoFlags_Private;
+		if (flags & TYPE_ATTRIBUTE_NESTED_PUBLIC)												f |= MonoFlags_Protected;
+		if (flags & TYPE_ATTRIBUTE_PUBLIC)														f |= MonoFlags_Public;
+		if (flags & TYPE_ATTRIBUTE_NESTED_FAM_OR_ASSEM && !(f & MonoFlags_Public))				f |= MonoFlags_Internal;
+		if (flags & TYPE_ATTRIBUTE_ABSTRACT)													f |= MonoFlags_Abstract;
+		if (flags & TYPE_ATTRIBUTE_INTERFACE)													f |= MonoFlags_Interface;
+		if (flags & TYPE_ATTRIBUTE_SEALED)														f |= MonoFlags_Sealed;
+
+		return (MonoFlags)f;
 	}
 }

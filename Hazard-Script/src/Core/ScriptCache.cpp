@@ -19,9 +19,9 @@ namespace HazardScript
 		CacheCoreLibClasses();
 	}
 
-	void ScriptCache::CacheClass(const std::string& name, MonoClass* monoClass)
+	bool ScriptCache::CacheClass(const std::string& name, MonoClass* monoClass)
 	{
-		if (name == ".<Module>") return;
+		if (name == ".<Module>") return false;
 
 		MonoType* type = mono_class_get_type(monoClass);
 
@@ -31,8 +31,10 @@ namespace HazardScript
 		int alignment = 0;
 		managedClass.Size = mono_type_size(type, &alignment);
 		managedClass.Class = monoClass;
+		managedClass.Flags = Mono::GetClassFlags(monoClass);
 
 		s_Cache->Classes[managedClass.ID] = managedClass;
+		return true;
 	}
 	ManagedClass* ScriptCache::GetManagedClass(MonoClass* monoClass)
 	{
