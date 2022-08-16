@@ -4,26 +4,20 @@
 #include "Mono/Core/Mono.h"
 #include "Hash.h"
 
+#include "Metadata/ScriptMetadata.h"
+
 namespace HazardScript 
 {
 
 #define CACHE_CORELIB_CLASS(name) CacheClass("System." ##name, mono_class_from_name(mono_get_corlib(), "System", name))
-
-	struct ScriptCacheData 
-	{
-		std::unordered_map<uint32_t, ManagedClass> Classes;
-	};
-
-	static ScriptCacheData* s_Cache;
 
 	void ScriptCache::Init()
 	{
 		s_Cache = new ScriptCacheData();
 		CacheCoreLibClasses();
 	}
-	void ScriptCache::CacheClass(const std::string& className, MonoClass* klass)
+	ManagedClass* ScriptCache::CacheClass(const std::string& className, MonoClass* klass)
 	{
-		std::cout << "Caching class " << className << std::endl;
 		MonoType* classType = mono_class_get_type(klass);
 
 		ManagedClass managedClass = {};
@@ -36,6 +30,7 @@ namespace HazardScript
 		managedClass.Size = mono_type_size(classType, &alignment);
 
 		s_Cache->Classes[managedClass.ID] = managedClass;
+		return &s_Cache->Classes[managedClass.ID];
 	}
 	ManagedClass* ScriptCache::GetClass(MonoClass* monoClass)
 	{
@@ -43,11 +38,34 @@ namespace HazardScript
 
 		return GetManagedClassByName(Mono::ResolveClassName(monoClass));
 	}
+	ScriptMetadata* ScriptCache::CacheOrGetScriptMetadata(ManagedClass* klass)
+	{
+		uint32_t hash = Hash::GenerateFNVHash(klass->FullName);
+		if (s_Cache->ScriptMetadata.find(hash) != s_Cache->ScriptMetadata.end())
+			return &s_Cache->ScriptMetadata[hash];
+
+		s_Cache->ScriptMetadata[hash] = ScriptMetadata(klass);
+		return &s_Cache->ScriptMetadata[hash];
+
+	}
+	FieldMetadata* ScriptCache::CacheOrGetFieldMetadata(MonoClassField* field)
+	{
+		const char* name = mono_field_full_name(field);
+		uint32_t hash = Hash::GenerateFNVHash(name);
+
+		if (s_Cache->ScriptFields.find(hash) != s_Cache->ScriptFields.end())
+			return &s_Cache->ScriptFields[hash];
+
+		FieldMetadata metadata(field);
+		s_Cache->ScriptFields[hash] = metadata;
+		return &s_Cache->ScriptFields[hash];
+	}
 	ManagedClass* ScriptCache::GetManagedClassByName(const std::string& name)
 	{
 		uint32_t classID = Hash::GenerateFNVHash(name);
 		if (s_Cache->Classes.find(classID) == s_Cache->Classes.end())
 			return nullptr;
+
 		return &s_Cache->Classes[classID];
 	}
 	void ScriptCache::CacheCoreLibClasses()

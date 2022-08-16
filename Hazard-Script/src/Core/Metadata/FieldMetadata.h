@@ -19,6 +19,9 @@ namespace HazardScript
 	public:
 		FieldMetadata() = default;
 		FieldMetadata(MonoClassField* field);
+		~FieldMetadata() {
+			
+		}
 
 		std::string GetName() { return m_Name; }
 		const MonoFlags& GetFlags() { return m_Flags; }

@@ -8,7 +8,6 @@ namespace UI
 	static bool WillBeVisible(HazardScript::FieldMetadata& field) 
 	{
 		using namespace HazardScript;
-		return true;
 		if (field.Has<HideInPropertiesAttribute>()) return false;
 		if (field.Has<ShowInPropertiesAttribute>()) return true;
 

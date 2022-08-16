@@ -194,7 +194,7 @@ namespace UI
 					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
-						HazardScript::FieldMetadata& f = field;
+						HazardScript::FieldMetadata& f = *field;
 
 						ImUI::Group(name.c_str(), [&]() {
 							UI::ScriptField(label, f, *c.m_Handle, Application::GetModule<WorldHandler>().GetCurrentWorld());

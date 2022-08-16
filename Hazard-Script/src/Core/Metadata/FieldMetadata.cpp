@@ -2,20 +2,6 @@
 #include "FieldMetadata.h"
 #include "Core/AttributeBuilder.h"
 
-
-<<<<<<<< HEAD:Hazard-Script/src/Core/Metadata/FieldMetadata.cpp
-namespace HazardScript
-{
-	FieldMetadata::FieldMetadata(MonoClassField* field)
-	{
-		m_Name = mono_field_get_name(field);
-		m_Visibility = Mono::GetFieldVisibility(field);
-		m_Type = Mono::GetFieldType(field);
-		LoadAttributes();
-	}
-	void FieldMetadata::LoadAttributes(MonoClassField* field)
-========
-
 namespace HazardScript
 {
 	FieldMetadata::FieldMetadata(MonoClassField* field) : m_Field(field)
@@ -26,10 +12,9 @@ namespace HazardScript
 		LoadAttributes();
 	}
 	void FieldMetadata::LoadAttributes()
->>>>>>>> Scripting:Hazard-Script/src/Core/Metadata/FieldMetada.cpp
 	{
-		MonoClass* monoClass = mono_field_get_parent(field);
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, field);
+		MonoClass* monoClass = mono_field_get_parent(m_Field);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);
 		if (info == nullptr) return;
 
 		m_Attributes.reserve(info->num_attrs);

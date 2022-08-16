@@ -21,7 +21,7 @@ namespace Editor
 		auto view = assembly->ViewAttributes<MenuBarItemAttribute>();
 		
 		for (auto& script : view) {
-			menubar.AddMenuItem(script.Get<MenuBarItemAttribute>().Path, nullptr);
+			menubar.AddMenuItem(script->Get<MenuBarItemAttribute>().Path, nullptr);
 		}
 	}
 }

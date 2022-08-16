@@ -13,7 +13,7 @@ namespace HazardScript
 	}
 	ScriptObject::ScriptObject(ScriptMetadata* script) : m_Script(script)
 	{
-		MonoClass* monoClass = script->GetClass();
+		MonoClass* monoClass = script->GetManagedClass()->Class;
 		m_Handle = Mono::InstantiateHandle(monoClass);
 
 		m_Script->RegisterInstance(m_Handle);

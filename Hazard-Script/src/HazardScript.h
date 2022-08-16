@@ -5,5 +5,7 @@
 #include "Core/Instance/ScriptObject.h"
 #include "Core/Metadata/FieldMetadata.h"
 #include "Core/Metadata/MethodMetadata.h"
+#include "Core/Metadata/ManagedType.h"
 #include "Core/AttributeBuilder.h"
+#include "Core/ScriptCache.h"
 #include "Mono/Core/Mono.h"

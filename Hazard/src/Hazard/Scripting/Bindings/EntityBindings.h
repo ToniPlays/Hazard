@@ -44,7 +44,6 @@ namespace Hazard
 
 		return e.GetUID();
 	}
-
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
@@ -67,7 +66,6 @@ namespace Hazard
 		}
 		handler->GetCurrentWorld()->DestroyEntity(e);
 	}
-
 	static bool Entity_IsUpdated_Native(uint64_t id)
 	{
 		return GET_ENTITY(id).ReceivesUpdate();
@@ -84,7 +82,6 @@ namespace Hazard
 	{
 		GET_ENTITY(id).SetVisible(visible);
 	}
-
 	static bool Component_IsActive_Native(uint64_t id, MonoType* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
