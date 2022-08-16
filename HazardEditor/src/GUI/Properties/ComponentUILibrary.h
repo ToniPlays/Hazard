@@ -88,7 +88,7 @@ namespace UI
 					});
 				ImGui::PopStyleVar();
 
-				if (ImUI::ColorPicker("Tint", "##Tint", c.Tint)) {
+				if (ImUI::ColorPicker("Tint", "##Tint", c.Color)) {
 
 				}
 				ImGui::Columns();

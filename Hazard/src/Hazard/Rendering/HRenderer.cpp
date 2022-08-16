@@ -28,7 +28,7 @@ namespace Hazard
 	void HRenderer::SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
 	{
 		glm::mat4& tMatrix = transform.GetTransformMat4();
-		const Color& t = spriteRenderer.Tint;
+		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
 		SubmitQuad(tMatrix, color, spriteRenderer.Texture);

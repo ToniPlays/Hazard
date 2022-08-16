@@ -1549,6 +1549,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

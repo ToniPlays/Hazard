@@ -64,21 +64,21 @@ namespace Hazard
 		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<DirectionalLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<PointLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
@@ -95,7 +95,7 @@ namespace Hazard
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 
-			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
+			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
 			if (comp["Sprite"]) {
 				std::string fileName;
 				YamlUtils::Deserialize(comp, "Sprite", fileName, std::string(""));

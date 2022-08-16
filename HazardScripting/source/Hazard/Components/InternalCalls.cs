@@ -7,6 +7,31 @@ namespace Hazard
 {
     internal partial class InternalCalls
     {
+        #region CameraComponent
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float CameraComponent_GetFOV_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float CameraComponent_SetFOV_Native(ulong id, float fov);
+        #endregion
+        #region MeshComponent
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
+
+        #endregion
+        #region SpriteRenderer
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SpriteRendererComponent_GetColor(ulong id, out Color color);
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SpriteRendererComponent_SetColor(ulong id, ref Color color);
+
+        #endregion
         #region TagComponent
         //Tag component
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -30,22 +55,6 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_SetScale_Native(ulong id, ref Vector3 scale);
 
-        #endregion
-        #region MeshComponent
-
-        [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
-
-        #endregion
-        #region CameraComponent
-        [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float CameraComponent_GetFOV_Native(ulong id);
-
-        [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float CameraComponent_SetFOV_Native(ulong id, float fov);
         #endregion
     }
 }

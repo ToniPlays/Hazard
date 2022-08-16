@@ -72,8 +72,8 @@ namespace HazardScript
 	}
 	std::string Mono::GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj)
 	{
-		MonoProperty* property = mono_class_get_property_from_name(monoClass, key);
-		MonoMethod* getter = mono_property_get_get_method(property);
+		MonoProperty* prop = mono_class_get_property_from_name(monoClass, key);
+		MonoMethod* getter = mono_property_get_get_method(prop);
 		MonoString* result = (MonoString*)mono_runtime_invoke(getter, obj, NULL, NULL);
 		return result != nullptr ? Mono::MonoStringToString(result) : "";
 	}

@@ -22,7 +22,7 @@ namespace Hazard
         {
             get => Get<TransformComponent>();
         }
-        public bool IsActive() { return InternalCalls.Entity_GetActive_Native(ID); }
+        public bool IsActive() { return InternalCalls.Entity_IsActive_Native(ID); }
         public void SetActive(bool active) { InternalCalls.Entity_SetActive_Native(ID, active); }
         public T Get<T>() where T : Component, new()
         {

@@ -8,7 +8,7 @@ namespace Hazard {
 
 	struct SpriteRendererComponent : ComponentBase
 	{
-		Color Tint = Color::White;
+		Color Color = Color::White;
 		Ref<Texture2D> Texture;
 
 		SpriteRendererComponent() = default;

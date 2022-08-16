@@ -108,7 +108,7 @@ namespace UI
 		Color value = Color::FromGLM(obj.GetFieldValue<glm::vec4>(field.GetName()));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = ImUI::ColorPicker("##color", value);
-		if (modified) {
+		if (modified) {	
 			obj.SetFieldValue<glm::vec4>(field.GetName(), value.ToGLM());
 		}
 		return modified;
