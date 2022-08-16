@@ -22,8 +22,10 @@ namespace Hazard
         {
             get => Get<TransformComponent>();
         }
-        public bool IsActive() { return InternalCalls.Entity_IsActive_Native(ID); }
-        public void SetActive(bool active) { InternalCalls.Entity_SetActive_Native(ID, active); }
+        public bool IsUpdated() { return InternalCalls.Entity_IsUpdated_Native(ID); }
+        public void SetUpdate(bool update) { InternalCalls.Entity_SetUpdate_Native(ID, update); }
+        public bool IsVisible() { return InternalCalls.Entity_IsVisible_Native(ID); }
+        public void SetVisible(bool visible) { InternalCalls.Entity_SetVisible_Native(ID, visible); }
         public T Get<T>() where T : Component, new()
         {
             if (!Has<T>()) return null;

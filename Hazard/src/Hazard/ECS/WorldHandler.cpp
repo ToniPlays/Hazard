@@ -37,11 +37,10 @@ namespace Hazard {
 
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
-			if (!e.ReceivesUpdate()) continue;
-
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle)
-				sc.m_Handle->TryInvoke("OnUpdate(single)", params);
+			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
+
+			sc.m_Handle->TryInvoke("OnUpdate(single)", params);
 		}
 	}
 
@@ -54,8 +53,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<SkyLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				if (!e.IsVisible()) continue;
-				HRenderer::SubmitSkyLight(e.GetComponent<SkyLightComponent>());
+				auto& sky = e.GetComponent<SkyLightComponent>();
+				if (!e.IsVisible() || !sky.Active) continue;
+				HRenderer::SubmitSkyLight(sky);
 			}
 		}
 		{
@@ -63,8 +63,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<DirectionalLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				if (!e.IsVisible()) continue;
-				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), e.GetComponent<DirectionalLightComponent>());
+				auto& dl = e.GetComponent<DirectionalLightComponent>();
+				if (!e.IsVisible() || dl.Active) continue;
+				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), dl);
 			}
 		}
 		{
@@ -72,8 +73,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<PointLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				if (!e.IsVisible()) continue;
-				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), e.GetComponent<PointLightComponent>());
+				auto& pl = e.GetComponent<PointLightComponent>();
+				if (!e.IsVisible() || !pl.Active) continue;
+				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), pl);
 			}
 		}
 		{
@@ -81,8 +83,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				if (!e.IsVisible()) continue;
-				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), e.GetComponent<SpriteRendererComponent>());
+				auto& sr = e.GetComponent<SpriteRendererComponent>();
+				if (!e.IsVisible() || !sr.Active) continue;
+				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), sr);
 			}
 		}
 		{
@@ -90,8 +93,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<MeshComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				if (!e.IsVisible()) continue;
-				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), e.GetComponent<MeshComponent>());
+				auto& mc = e.GetComponent<MeshComponent>();
+				if (!e.IsVisible() || !mc.Active) continue;
+				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), mc);
 			}
 		}
 		{

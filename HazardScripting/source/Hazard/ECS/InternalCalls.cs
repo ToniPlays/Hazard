@@ -10,13 +10,18 @@ namespace Hazard
     internal partial class InternalCalls
     {
         #region Entity
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Entity_IsActive_Native(ulong id);
+        internal static extern bool Entity_IsUpdated_Native(ulong id);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Entity_SetActive_Native(ulong id, bool active);
+        internal static extern void Entity_SetUpdate_Native(ulong id, bool active);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Entity_IsVisible_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Entity_SetVisible_Native(ulong id, bool active);
+
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
@@ -36,13 +41,11 @@ namespace Hazard
         #region BaseComponent
 
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Component_IsActive_Native(ulong id);
+        internal static extern bool Component_IsActive_Native(ulong id, Type type);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void  Component_SetActive_Native(ulong id, bool active);
+        internal static extern void Component_SetActive_Native(ulong id, bool active, Type type);
 
         #endregion
     }

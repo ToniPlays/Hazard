@@ -59,6 +59,17 @@ namespace Hazard
 			BIND_ICALL(SpriteRendererComponent_GetColor_Native);
 			BIND_ICALL(SpriteRendererComponent_SetColor_Native);
 
+			BIND_ICALL(Entity_IsVisible_Native);
+			BIND_ICALL(Entity_SetVisible_Native);
+			BIND_ICALL(Entity_IsUpdated_Native);
+			BIND_ICALL(Entity_SetUpdate_Native);
+
+			BIND_ICALL(Component_IsActive_Native);
+			BIND_ICALL(Component_SetActive_Native);
+
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
 			BIND_ICALL(Entity_InstantiateOrigin_Native);
 			BIND_ICALL(Entity_InstantiateAt_Native);
 			BIND_ICALL(Entity_HasComponent_Native);

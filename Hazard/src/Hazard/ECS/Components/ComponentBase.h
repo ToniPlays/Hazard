@@ -1,8 +1,9 @@
 #pragma once
 
-namespace Hazard {
+namespace Hazard 
+{
 	struct ComponentBase 
 	{
-		bool Enabled;
+		bool Active = true;
 	};
 }

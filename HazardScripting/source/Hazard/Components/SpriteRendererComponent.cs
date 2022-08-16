@@ -18,5 +18,7 @@ namespace Hazard
             }
             set => InternalCalls.SpriteRendererComponent_SetColor_Native(parentEntity.ID, ref value);
         }
+        public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(SpriteRendererComponent)); }
+        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(SpriteRendererComponent)); }
     }
 }

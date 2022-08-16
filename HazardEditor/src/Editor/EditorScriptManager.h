@@ -24,6 +24,6 @@ namespace Editor {
 	private:
 		std::vector<UI::ConsoleMessage> ParseBuildResult(const std::string& source);
 	private:
-		bool m_ReloadOnFocus = false;
+		bool m_ReloadOnFocus = true;
 	};
 }

@@ -11,9 +11,5 @@ namespace Hazard
             parentEntity = new Entity(id);
         }
         public Entity parentEntity { get; set; }
-
-        public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID); }
-        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active); }
-
     }
 }
