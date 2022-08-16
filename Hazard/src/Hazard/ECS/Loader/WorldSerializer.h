@@ -108,8 +108,9 @@ namespace Hazard
 		{
 			YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
 				YamlUtils::Serialize(out, "Color", component.Color);
-				if (!component.Texture) return;
-				YamlUtils::Serialize(out, "Sprite", component.Texture->GetHandle());
+				if (!component.Texture)
+					return;
+					YamlUtils::Serialize(out, "Sprite", component.Texture->GetHandle());
 				});
 		}
 		template<>

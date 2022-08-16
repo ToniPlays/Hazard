@@ -24,6 +24,7 @@ namespace Hazard
 			RegisterComponent(TransformComponent, image);
 			RegisterComponent(ScriptComponent, image);
 			RegisterComponent(MeshComponent, image);
+			RegisterComponent(SpriteRendererComponent, image);
 
 			RegisterComponent(CameraComponent, image);
 
@@ -39,11 +40,11 @@ namespace Hazard
 			RegisterComponent(BoxColliderComponent, image);
 			RegisterComponent(SphereColliderComponent, image);
 
-			BIND_ICALL(Entity_InstantiateOrigin_Native);
-			BIND_ICALL(Entity_InstantiateAt_Native);
-			BIND_ICALL(Entity_HasComponent_Native);
-			BIND_ICALL(Entity_CreateComponent_Native);
-			BIND_ICALL(Entity_Destroy_Native);
+			BIND_ICALL(CameraComponent_GetFOV_Native);
+			BIND_ICALL(CameraComponent_SetFOV_Native);
+
+			BIND_ICALL(SpriteRendererComponent_GetColor_Native);
+			BIND_ICALL(SpriteRendererComponent_SetColor_Native);
 
 			BIND_ICALL(TagComponent_GetName_Native);
 			BIND_ICALL(TagComponent_SetName_Native);
@@ -55,12 +56,14 @@ namespace Hazard
 			BIND_ICALL(TransformComponent_GetScale_Native);
 			BIND_ICALL(TransformComponent_SetScale_Native);
 
-			BIND_ICALL(CameraComponent_GetFOV_Native);
-			BIND_ICALL(CameraComponent_SetFOV_Native);
-
 			BIND_ICALL(SpriteRendererComponent_GetColor_Native);
 			BIND_ICALL(SpriteRendererComponent_SetColor_Native);
 
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateAt_Native);
+			BIND_ICALL(Entity_HasComponent_Native);
+			BIND_ICALL(Entity_CreateComponent_Native);
+			BIND_ICALL(Entity_Destroy_Native);
 
 			BIND_ICALL(Debug_Log_Native);
 			BIND_ICALL(Debug_Info_Native);

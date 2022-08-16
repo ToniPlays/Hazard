@@ -23,13 +23,11 @@ namespace Hazard
         #endregion
         #region SpriteRenderer
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SpriteRendererComponent_GetColor(ulong id, out Color color);
+        internal static extern void SpriteRendererComponent_GetColor_Native(ulong id, out Color color);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SpriteRendererComponent_SetColor(ulong id, ref Color color);
+        internal static extern void SpriteRendererComponent_SetColor_Native(ulong id, ref Color color);
 
         #endregion
         #region TagComponent

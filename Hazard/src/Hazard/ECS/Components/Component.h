@@ -15,6 +15,7 @@ namespace Hazard {
 		std::string Tag;
 		UID Uid;
 		bool Visible = true;
+		bool ReceiveUpdate = true;
 	};
 
 	struct TransformComponent

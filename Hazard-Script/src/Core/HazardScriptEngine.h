@@ -45,7 +45,6 @@ namespace HazardScript
 		void LoadRuntimeAssembly();
 
 	private:
-
 		ScriptDebugCallback m_DebugCallback;
 		MonoData m_MonoData;
 

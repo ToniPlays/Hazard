@@ -86,10 +86,10 @@ namespace UI
 		const ImVec4 warning = style.Colors.Warning;
 		
 
-		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O };
-		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing"};
+		const char* modifiers[] = { e.IsVisible() ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O};
+		const char* tooltips[] = { e.IsVisible() ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing"};
 		const bool states[] = { true, isSkyLight, scriptState, spriteState };
-		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, textColor , warning, warning };
+		const ImVec4 colors[] = { e.IsVisible() ? visibleColor : textColor, textColor , warning, warning};
 
 		for (uint32_t i = 0; i < sizeof(states); i++) {
 			if (states[i]) {

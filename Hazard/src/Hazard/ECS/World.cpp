@@ -85,7 +85,7 @@ namespace Hazard
 		m_EntityUIDMap[tag.Uid] = e;
 		return e;
 	}
-	Entity World::CreateEntity(UID id, const char* name)
+	Entity World::CreateEntity(UID id, const std::string& name)
 	{
 		Entity e = { m_Registry.create(), this };
 		TagComponent& tag = e.AddComponent<TagComponent>();

@@ -37,6 +37,8 @@ namespace Hazard {
 
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
+			if (!e.ReceivesUpdate()) continue;
+
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle)
 				sc.m_Handle->TryInvoke("OnUpdate(single)", params);
@@ -52,6 +54,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<SkyLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				HRenderer::SubmitSkyLight(e.GetComponent<SkyLightComponent>());
 			}
 		}
@@ -60,6 +63,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<DirectionalLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), e.GetComponent<DirectionalLightComponent>());
 			}
 		}
@@ -68,6 +72,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<PointLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), e.GetComponent<PointLightComponent>());
 			}
 		}
@@ -76,6 +81,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), e.GetComponent<SpriteRendererComponent>());
 			}
 		}
@@ -84,6 +90,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<MeshComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), e.GetComponent<MeshComponent>());
 			}
 		}
@@ -91,6 +98,7 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<BatchComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				auto& tc = e.GetComponent<TransformComponent>();
 				auto& bc = e.GetComponent<BatchComponent>();
 
@@ -139,7 +147,6 @@ namespace Hazard {
 
 		Entity entity = m_World->CreateEntity("Camera");
 		m_World->CreateEntity("Entity 1");
-		m_World->CreateEntity("Entity 2");
 		entity.AddComponent<CameraComponent>();
 
 		return false;

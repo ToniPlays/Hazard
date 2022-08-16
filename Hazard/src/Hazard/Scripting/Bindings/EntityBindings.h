@@ -46,6 +46,7 @@ namespace Hazard
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		
 		return hasComponentFuncs[compType](id);
 	}
 	static void Entity_CreateComponent_Native(uint64_t id, void* type)
@@ -63,5 +64,22 @@ namespace Hazard
 			}
 		}
 		handler->GetCurrentWorld()->DestroyEntity(e);
+	}
+
+	static bool Entity_IsUpdate(uint64_t id)
+	{
+		return GET_ENTITY(id).IsVisible();
+	}
+	static void Entity_SetUpdate(uint64_t id, bool visible)
+	{
+		GET_ENTITY(id).SetVisible(visible);
+	}
+	static bool Entity_IsVisible(uint64_t id) 
+	{
+		return GET_ENTITY(id).IsVisible();
+	}
+	static void Entity_SetVisible(uint64_t id, bool visible)
+	{
+		GET_ENTITY(id).SetVisible(visible);
 	}
 }

@@ -10,7 +10,7 @@ namespace Hazard::Utils
 		if (type == "Folder")				return AssetType::Folder;
 		if (type == "AudioClip")			return AssetType::AudioClip;
 		if (type == "World")				return AssetType::World;
-		if (type == "Texture")				return AssetType::Image;
+		if (type == "Image")				return AssetType::Image;
 		if (type == "PhysicsMaterial")		return AssetType::PhysicsMaterial;
 		if (type == "Mesh")					return AssetType::Mesh;
 		if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;

@@ -13,10 +13,10 @@ namespace Hazard
 
         public Color Color { 
             get {
-                InternalCalls.SpriteRendererComponent_GetColor(parentEntity.ID, out Color result);
+                InternalCalls.SpriteRendererComponent_GetColor_Native(parentEntity.ID, out Color result);
                 return result;
             }
-            set => InternalCalls.SpriteRendererComponent_SetColor(parentEntity.ID, ref value);
+            set => InternalCalls.SpriteRendererComponent_SetColor_Native(parentEntity.ID, ref value);
         }
     }
 }

@@ -42,13 +42,10 @@ namespace Hazard
 			m_MessageCallback(message);
 		};
 		createInfo.BindingCallback = [&]() {
-			HZR_CORE_WARN("Binding stuff");
 			for (auto& cb : m_ScriptGlue) {
 				for (auto* assembly : m_Engine->GetAssemblies())
 					cb->OnAssemblyLoaded(assembly);
 			}
-
-
 			for (auto& cb : m_ScriptGlue) {
 				cb->Register(this);
 			}

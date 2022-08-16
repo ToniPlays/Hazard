@@ -78,6 +78,20 @@ namespace UI
 		RefreshFolderItems();
 		return false;
 	}
+	void AssetPanel::OpenImport()
+	{
+		std::filesystem::path file = File::OpenFileDialog();
+		if (!file.empty()) {
+			File::Copy(file, m_CurrentPath / File::GetName(file), CopyOptions::UpdateExisting);
+
+			AssetMetadata metadata = {};
+			metadata.Handle = AssetHandle();
+			metadata.Path = m_CurrentPath / File::GetName(file);
+			metadata.Type = Utils::AssetTypeFromExtension(File::GetFileExtension(file));
+			EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
+			RefreshFolderItems();
+		}
+	}
 	void AssetPanel::DrawToolbar()
 	{
 		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 32.0f };
@@ -93,17 +107,7 @@ namespace UI
 		}
 		ImGui::SameLine(0, 5);
 		if (ImGui::Button(ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f })) {
-			std::filesystem::path file = File::OpenFileDialog();
-			if (!file.empty()) {
-				File::Copy(file, m_CurrentPath / File::GetName(file), CopyOptions::UpdateExisting);
-
-				AssetMetadata metadata = {};
-				metadata.Handle = AssetHandle();
-				metadata.Path = m_CurrentPath / File::GetName(file);
-				metadata.Type = Utils::AssetTypeFromExtension(File::GetFileExtension(file));
-				EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
-				RefreshFolderItems();
-			}
+			OpenImport();
 		}
 		ImGui::SameLine(0, 5);
 		if (ImGui::Button(ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f })) {
@@ -207,7 +211,7 @@ namespace UI
 				});
 			ImUI::MenuHeader("Import");
 			ImUI::MenuItem("Import asset", [&]() {
-
+				OpenImport();
 				});
 
 			ImUI::MenuHeader("Quick create");

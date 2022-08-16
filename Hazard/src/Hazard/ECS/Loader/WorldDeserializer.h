@@ -8,15 +8,15 @@
 
 #include "UID.h"
 
-namespace Hazard 
+namespace Hazard
 {
 	class WorldDeserializer {
 	public:
 
-        WorldDeserializer() = default;
-        
-        Ref<World> DeserializeEditor(const std::filesystem::path& file);
-        Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
+		WorldDeserializer() = default;
+
+		Ref<World> DeserializeEditor(const std::filesystem::path& file);
+		Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
 
 		template<typename T>
 		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
@@ -97,12 +97,9 @@ namespace Hazard
 
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
 			if (comp["Sprite"]) {
-				std::string fileName;
-				YamlUtils::Deserialize(comp, "Sprite", fileName, std::string(""));
-				AssetHandle handle = AssetManager::ImportAsset(fileName);
-
-				if(handle != INVALID_ASSET_HANDLE)
-					component.Texture = AssetManager::GetAsset<Texture2D>(handle);
+				AssetHandle handle = INVALID_ASSET_HANDLE;
+				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
+				component.Texture = AssetManager::GetAsset<Texture2D>(handle);
 			}
 		};
 		template<>
