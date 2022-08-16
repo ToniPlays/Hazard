@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Method.h"
-#include "Attribute.h"
-#include "ScriptField.h"
+#include "MethodMetadata.h"
+#include "Core/Attribute.h"
+#include "FieldMetadata.h"
 #include "Mono/Core/Mono.h"
 #include <unordered_map>
 
@@ -10,16 +10,16 @@ namespace HazardScript
 {
 	class ScriptObject;
 
-	class Script 
+	class ScriptMetadata
 	{
 	public:
-		Script() = default;
-		Script(MonoClass* klass);
+		ScriptMetadata() = default;
+		ScriptMetadata(MonoClass* klass);
 
 		std::string GetName();
 		uint32_t GetFieldCount() { return m_Fields.size(); }
 		uint32_t GetMethodCount() { return m_Methods.size(); }
-		std::unordered_map<std::string, ScriptField>& GetFields() { return m_Fields; }
+		std::unordered_map<std::string, FieldMetadata>& GetFields() { return m_Fields; }
 
 		bool ValidateOrLoadMethod(const std::string& name);
 
@@ -27,7 +27,7 @@ namespace HazardScript
 			return m_Fields.find(name) != m_Fields.end();
 		}
 
-		ScriptField GetField(const std::string& name) {
+		FieldMetadata& GetField(const std::string& name) {
 			return m_Fields[name];
 		}
 
@@ -35,31 +35,39 @@ namespace HazardScript
 			return m_Methods.find(name) != m_Methods.end();
 		}
 		
-		Method GetMethod(const std::string& name) {
+		MethodMetadata& GetMethod(const std::string& name) {
 			return m_Methods[name];
 		}
 		bool TryInvoke(const std::string& name, MonoObject* obj, void** params);
 		void Invoke(const std::string& name, MonoObject* obj, void** params);
 
+		void RegisterInstance(uint32_t handle)
+		{
+			m_Instances.push_back(handle);
+			for (auto& [name, field] : m_Fields) 
+				field.RegisterInstance(handle);
+		}
+
+		void RemoveInstance(uint32_t handle) 
+		{
+			auto it = std::find(m_Instances.begin(), m_Instances.end(), handle);
+			if (it != m_Instances.end()) 
+			{
+				m_Instances.erase(it);
+				for (auto& [name, field] : m_Fields)
+					field.RemoveInstance(handle);
+			}
+		}
+
 		template<typename T>
-		T GetFieldValue(const std::string& name, MonoObject* obj) {
-			T value;
-			mono_field_get_value(obj, m_Fields[name].GetField(), &value);
-			return value;
-		}
-		template<>
-		std::string GetFieldValue(const std::string& name, MonoObject* obj) {
-			MonoString* value = (MonoString*)mono_field_get_value_object(Mono::GetDomain(), m_Fields[name].GetField(), obj);
-			return Mono::MonoStringToString(value);
+		T GetFieldValue(const std::string& name, uint32_t handle) 
+		{
+			return m_Fields[name].GetValue<T>(handle);
 		}
 		template<typename T>
-		void SetFieldValue(const std::string& name, MonoObject* obj, T value) {
-			mono_field_set_value(obj, m_Fields[name].GetField(), value);
-		}
-		template<>
-		void SetFieldValue(const std::string& name, MonoObject* obj, std::string value) {
-			MonoString* string = Mono::StringToMonoString(value);
-			mono_field_set_value(obj, m_Fields[name].GetField(), string);
+		void SetFieldValue(const std::string& name, uint32_t handle, T value) 
+		{
+			m_Fields[name].SetValue(handle, value);
 		}
 
 		template<typename T>
@@ -88,8 +96,9 @@ namespace HazardScript
 	private:
 		MonoClass* m_Class;
 
-		std::unordered_map<std::string, ScriptField> m_Fields;
-		std::unordered_map<std::string, Method> m_Methods;
+		std::unordered_map<std::string, FieldMetadata> m_Fields;
+		std::unordered_map<std::string, MethodMetadata> m_Methods;
 		std::vector<Attribute*> m_Attributes;
+		std::vector<uint32_t> m_Instances;
 	};
 }

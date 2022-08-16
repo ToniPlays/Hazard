@@ -6,6 +6,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
 
+#define TYPEDEF(x, y) if (strcmp(##name, x) == 0) return y;
+
 using namespace HazardScript;
 
 namespace Hazard 
@@ -58,7 +60,7 @@ namespace Hazard
 	{
 		return m_Engine->GetAppAssembly().HasScript(moduleName);
 	}
-	Script& ScriptEngine::GetScript(const std::string& moduleName) {
+	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) {
 		return m_Engine->GetAppAssembly().GetScript(moduleName);
 	}
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
@@ -81,7 +83,7 @@ namespace Hazard
 	{
 		if (component.ModuleName == "") return;
 		if (!m_Engine->GetAppAssembly().HasScript(component.ModuleName)) return;
-		Script& script = m_Engine->GetAppAssembly().GetScript(component.ModuleName);
+		ScriptMetadata& script = m_Engine->GetAppAssembly().GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject();
 
 		uint64_t entityID = entity.GetUID();
@@ -92,11 +94,14 @@ namespace Hazard
 	}
 }
 
-HazardScript::FieldType GetCustomType(const char* name) 
+HazardScript::NativeType GetCustomType(const char* name) 
 {
-	if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
-	if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
-	if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
+	TYPEDEF("Hazard.Vector2", NativeType::Float2);
+	TYPEDEF("Hazard.Vector3", NativeType::Float3);
+	TYPEDEF("Hazard.Color", NativeType::Float4);
+	TYPEDEF("Hazard.Status", NativeType::UInt32);
+	TYPEDEF("Hazard.Key", NativeType::UInt32);
+	TYPEDEF("Hazard.Rendering.BufferUsage", NativeType::UInt32);
 
-	return HazardScript::FieldType::ValueType;
+	return HazardScript::NativeType::Value;
 }

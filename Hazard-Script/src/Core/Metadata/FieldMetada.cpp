@@ -1,26 +1,19 @@
 
-#include "ScriptField.h"
-#include "AttributeBuilder.h"
+#include "FieldMetadata.h"
+#include "Core/AttributeBuilder.h"
 
-extern HazardScript::FieldType GetCustomType(const char* name);
+
 
 namespace HazardScript
 {
-	ScriptField::ScriptField(MonoClassField* field) : m_Field(field)
+	FieldMetadata::FieldMetadata(MonoClassField* field) : m_Field(field)
 	{
 		m_Name = mono_field_get_name(field);
-		m_Flags = Mono::GetFieldFlags(field);
-		m_Type = Mono::GetFieldType(field);
-
-		if (m_Type == FieldType::ValueType) {
-			MonoType* type = mono_field_get_type(field);
-			char* name = mono_type_get_name(type);
-			m_Type = GetCustomType(name);
-		}
+		m_Type = ManagedType::FromType(mono_field_get_type(field));
 
 		LoadAttributes();
 	}
-	void ScriptField::LoadAttributes()
+	void FieldMetadata::LoadAttributes()
 	{
 		MonoClass* monoClass = mono_field_get_parent(m_Field);
 		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);

@@ -17,7 +17,7 @@ namespace Hazard
 		void Init();
 
 		bool HasModule(const std::string& moduleName);
-		HazardScript::Script& GetScript(const std::string& moduleName);
+		HazardScript::ScriptMetadata& GetScript(const std::string& moduleName);
 		void SendDebugMessage(const HazardScript::ScriptMessage& message);
 
 		void RegisterInternalCall(const std::string& signature, void* method) {

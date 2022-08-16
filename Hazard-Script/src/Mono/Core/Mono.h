@@ -25,14 +25,24 @@ namespace HazardScript
 		MonoFlags_Virtual = BIT(6)
 	};
 
-	enum class FieldType { None, Float, Float2, Float3, Float4, Int, UInt, String, ValueType, ManagedType };
+	enum class NativeType {
+		None,
+		Void,
+		Bool,
+		Float, Float2, Float3, Float4,
+		Double,
+		Int8, Int16, Int32, Int64,
+		UInt8, UInt16, UInt32, UInt64,
+		String,
+		Value,
+		Reference
+	};
 
 	class Mono {
 	public:
 		static bool Init(const std::string& name);
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
-		static MonoFlags GetMethodFlags(MonoMethod* method);
 		static uint32_t InstantiateHandle(MonoClass* monoClass);
 		template<typename T>
 		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
@@ -67,8 +77,6 @@ namespace HazardScript
 		static std::string MonoObjectToString(MonoObject* obj);
 		static std::string MonoObjectToChar(MonoObject* obj);
 		static MonoString* StringToMonoString(const std::string& string);
-		static MonoFlags GetFieldFlags(MonoClassField* field);
-		static FieldType GetFieldType(MonoClassField* field);
 
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);

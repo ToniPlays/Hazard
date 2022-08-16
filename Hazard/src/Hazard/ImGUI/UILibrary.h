@@ -285,7 +285,7 @@ namespace Hazard::ImUI
 		if (ImGui::ColorEdit4(id, &color.r)) {
 			modified = true;
 		}
-		return false;
+		return modified;
 	}
 	static bool ColorPicker(const char* name, const char* id, Color& color)
 	{

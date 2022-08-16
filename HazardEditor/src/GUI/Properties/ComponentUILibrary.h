@@ -168,14 +168,14 @@ namespace UI
 						c.m_Handle = nullptr;
 					}
 					if (scriptEngine.HasModule(c.ModuleName)) {
-						Script& script = scriptEngine.GetScript(c.ModuleName);
+						ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 						c.m_Handle = script.CreateObject();
 					}
 				}
 
 				if (c.m_Handle)
 				{
-					Script& script = c.m_Handle->GetScript();
+					ScriptMetadata& script = c.m_Handle->GetScript();
 
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, colWidth);
@@ -183,7 +183,7 @@ namespace UI
 					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
-						auto& f = field;
+						HazardScript::FieldMetadata& f = field;
 
 						ImUI::Group(name.c_str(), [&]() {
 							UI::ScriptField(label, f, *c.m_Handle);

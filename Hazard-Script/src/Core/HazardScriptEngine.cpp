@@ -91,7 +91,7 @@ namespace HazardScript
 			return;
 		}
 
-		if (!m_MonoData.CoreAssembly.LoadFromSource()) {
+		if (!m_MonoData.CoreAssembly.LoadFromSource(true)) {
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}

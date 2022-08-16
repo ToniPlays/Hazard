@@ -1,0 +1,81 @@
+#pragma once
+
+#include "UtilityCore.h"
+#include "Core/Attribute.h"
+#include "Mono/Core/Mono.h"
+
+#include "Core/ValueWrapper.h"
+
+#include "ManagedType.h"
+#include "Core/FieldValueStorage.h"
+
+#include "Buffer.h"
+#include <unordered_map>
+
+namespace HazardScript 
+{
+	class FieldMetadata 
+	{
+	public:
+		FieldMetadata() = default;
+		FieldMetadata(MonoClassField* field);
+
+		std::string GetName() { return m_Name; }
+		const MonoFlags& GetFlags() { return m_Flags; }
+		const ManagedType& GetType() { return m_Type; }
+
+		template<typename T>
+		bool Has() const {
+			for (Attribute* attrib : m_Attributes) {
+				if (attrib->GetAttributeType() == T::GetStaticType()) return true;
+			}
+			return false;
+		}
+		template<typename T>
+		const T& Get() {
+			for (Attribute* attrib : m_Attributes) {
+				if (attrib->GetAttributeType() == T::GetStaticType()) return dynamic_cast<T&>(*attrib);
+			}
+			return T();
+		}
+
+		void RegisterInstance(uint32_t handle) 
+		{
+			if (m_Type.IsArray())
+				m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create();
+			else 
+				m_InstanceData[handle] = Ref<FieldValueStorage>::Create(&m_Type);
+		}
+		void RemoveInstance(uint32_t handle) 
+		{
+			m_InstanceData.erase(handle);
+		}
+
+		template<typename T>
+		T GetValue(uint32_t handle, uint32_t index = 0) 
+		{
+			if (m_Type.IsArray()) 
+				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
+			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>();
+		}
+		template<typename T>
+		void SetValue(uint32_t handle, T value, uint32_t index = 0)
+		{
+			if (m_Type.IsArray())
+				m_InstanceData[handle].As<ArrayFieldValueStorage>()->SetValue<T>(index, value);
+			m_InstanceData[handle].As<FieldValueStorage>()->SetValue<T>(value);
+		}
+
+	private:
+		void LoadAttributes();
+
+	private:
+		MonoClassField* m_Field;
+		std::string m_Name;
+		ManagedType m_Type;
+		MonoFlags m_Flags;
+		std::vector<Attribute*> m_Attributes;
+
+		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;
+	};
+}

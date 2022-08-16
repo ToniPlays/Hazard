@@ -39,22 +39,6 @@ namespace HazardScript
 	{
 		mono_add_internal_call(signature.c_str(), function);
 	}
-	MonoFlags Mono::GetMethodFlags(MonoMethod* method)
-	{
-		uint32_t iFlags = 0;
-		uint32_t flags = mono_method_get_flags(method, &iFlags);
-
-		uint32_t f = 0;
-		if (flags & MONO_METHOD_ATTR_PRIVATE)	f |= MonoFlags_Private;
-		if (flags & MONO_METHOD_ATTR_FAMILY)	f |= MonoFlags_Protected;
-		if (flags & MONO_METHOD_ATTR_PUBLIC)	f |= MonoFlags_Public;
-		if (flags & MONO_METHOD_ATTR_ASSEM)		f |= MonoFlags_Internal;
-		if (flags & MONO_METHOD_ATTR_STATIC)	f |= MonoFlags_Static;
-		if (flags & MONO_METHOD_ATTR_ABSTRACT)	f |= MonoFlags_Abstract;
-		if (flags & MONO_METHOD_ATTR_VIRTUAL)	f |= MonoFlags_Virtual;
-
-		return (MonoFlags)f;
-	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
 		MonoObject* obj = mono_object_new(s_Domain, monoClass);
@@ -131,33 +115,5 @@ namespace HazardScript
 		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);
 	}
-	MonoFlags Mono::GetFieldFlags(MonoClassField* field)
-	{
-		uint32_t flags = mono_field_get_flags(field);
 
-		uint32_t f = 0;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)	f |= MonoFlags_Private;
-		if (flags & MONO_FIELD_ATTR_FAMILY)		f |= MonoFlags_Protected;
-		if (flags & MONO_FIELD_ATTR_PUBLIC)		f |= MonoFlags_Public;
-		if (flags & MONO_FIELD_ATTR_ASSEMBLY)	f |= MonoFlags_Internal;
-		if (flags & MONO_FIELD_ATTR_STATIC)		f |= MonoFlags_Static;
-
-		return (MonoFlags)f;
-
-	}
-	FieldType Mono::GetFieldType(MonoClassField* field)
-	{
-		MonoType* type = mono_field_get_type(field);
-
-		switch (mono_type_get_type(type))
-		{
-		case MONO_TYPE_R4:			return FieldType::Float;
-		case MONO_TYPE_I4:			return FieldType::Int;
-		case MONO_TYPE_U4:			return FieldType::UInt;
-		case MONO_TYPE_STRING:		return FieldType::String;
-		case MONO_TYPE_VALUETYPE:	return FieldType::ValueType;
-		case MONO_TYPE_CLASS:		return FieldType::ManagedType;
-		}
-		return FieldType::None;
-	}
 }

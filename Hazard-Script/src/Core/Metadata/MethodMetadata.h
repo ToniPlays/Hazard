@@ -1,21 +1,22 @@
 #pragma once
 
-#include "UtilityCore.h"
-#include "Attribute.h"
 #include "Mono/Core/Mono.h"
+#include "Core/Attribute.h"
+#include "ManagedType.h"
 
 namespace HazardScript 
 {
-	class ScriptField 
+	class MethodMetadata 
 	{
 	public:
-		ScriptField() = default;
-		ScriptField(MonoClassField* field);
+		MethodMetadata() = default;
+		MethodMetadata(MonoMethod* method);
 
+		MonoFlags& GetFlags() { return m_Flags; }
 		std::string GetName() { return m_Name; }
-		const MonoFlags& GetFlags() { return m_Flags; }
-		const FieldType& GetType() { return m_Type; }
-		MonoClassField* GetField() { return m_Field; }
+		ManagedType& GetReturnType() { return m_ManagedMethod.ReturnType; }
+
+		MonoObject* Invoke(MonoObject* obj, void** params);
 
 		template<typename T>
 		bool Has() const {
@@ -31,14 +32,17 @@ namespace HazardScript
 			}
 			return T();
 		}
+
+
 	private:
+		void Init();
 		void LoadAttributes();
 
 	private:
-		MonoClassField* m_Field;
-		std::string m_Name;
-		FieldType m_Type = FieldType::None;
+		ManagedMethod m_ManagedMethod;
 		MonoFlags m_Flags;
+		std::string m_Name;
+
 		std::vector<Attribute*> m_Attributes;
 	};
 }

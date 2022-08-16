@@ -40,26 +40,7 @@ namespace ScriptCore
 
 		if (assembly.HasScript("Spinner")) {
 			
-			Script& script = assembly.GetScript("Spinner");
-
-			if (script.Has<AuthorAttribute>()) {
-				const AuthorAttribute& attrib = script.Get<AuthorAttribute>();
-				std::cout << attrib.Author << std::endl;
-			}
-			if (script.HasMethod("OnUpdate(single)")) {
-				const Method& method = script.GetMethod("OnUpdate(single)");
-				if (method.Has<VisualFuncAttribute>()) {
-					std::cout << "Visual func" << std::endl;
-				}
-			}
-			if (script.HasField("value")) {
-				ScriptField field = script.GetField("value");
-				if (field.Has<RangeAttribute>()) {
-					RangeAttribute range = field.Get<RangeAttribute>();
-					std::cout << range.Min << " - " << range.Max << std::endl;
-				}
-			}
-
+			ScriptMetadata& script = assembly.GetScript("Spinner");
 
 			ScriptObject* obj = script.CreateObject();
 			std::cout << obj->GetFieldValue<float>("value") << std::endl;

@@ -45,8 +45,11 @@ namespace HazardScript
 			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
 
+			if (strcmp(name, "<Module>") == 0) continue;
+
 			monoClass = Mono::GetMonoClass(image, nameSpace, name);
-			Script script(monoClass);
+			
+			ScriptMetadata script(monoClass);
 
 			m_Scripts[script.GetName()] = script;
 		}

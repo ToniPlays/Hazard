@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HazardScriptCore.h"
-#include "ScriptAssembly.h"
+#include "Metadata/ScriptAssembly.h"
 
 namespace HazardScript 
 {
