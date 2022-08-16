@@ -16,11 +16,11 @@ namespace UI
 	}
 
 	template<typename T>
-	static bool ScriptField(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		static_assert(false);
 	}
 	template<>
-	static bool ScriptField<float>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<float>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		using namespace HazardScript;
 		float value = obj.GetFieldValue<float>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -46,7 +46,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<double>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<double>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		using namespace HazardScript;
 		double value = obj.GetFieldValue<double>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -60,16 +60,21 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<uint64_t>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<uint64_t>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint64_t value = obj.GetFieldValue<uint64_t>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
+
 		std::string typeName = field.GetType().GetTypeName();
-		std::string text = typeName + " (" + std::to_string(value) + ")";
+		std::string text = (value != 0 ? world->GetEntityFromUID(value).GetTag().Tag : "None") + " (" + typeName + ")";
 
 		ImGui::Text(text.c_str(), 0.0f);
 		ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
+			value = (uint64_t)uid;
+			modified = true;
+			});
+		ImUI::DropTarget<UID>("Hazard.Component", [&](UID uid) {
 			value = (uint64_t)uid;
 			modified = true;
 			});
@@ -80,7 +85,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<glm::vec2>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec2>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		glm::vec2 value = obj.GetFieldValue<glm::vec2>(field.GetName());
 
 		bool modified = ImUI::InputFloat2(value, 0.0f);
@@ -90,7 +95,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec3>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec3>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		glm::vec3 value = obj.GetFieldValue<glm::vec3>(field.GetName());
 		bool modified = ImUI::InputFloat3(value, 0.0f);
 		if (modified) {
@@ -99,7 +104,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec4>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<glm::vec4>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		Color value = Color::FromGLM(obj.GetFieldValue<glm::vec4>(field.GetName()));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = ImUI::ColorPicker("##color", value);
@@ -109,7 +114,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<std::string>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+	static bool ScriptField<std::string>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		using namespace HazardScript;
 		std::string value = obj.GetFieldValue<std::string>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -130,7 +135,7 @@ namespace UI
 		return modified;
 	}
 
-	static void ScriptField(const std::string& name, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj)
+	static void ScriptField(const std::string& name, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world)
 	{
 		using namespace HazardScript;
 		if (!WillBeVisible(field)) return;
@@ -146,13 +151,13 @@ namespace UI
 
 		switch (field.GetType().NativeType)
 		{
-		case NativeType::Float:		ScriptField<float>(field, obj);			break;
-		case NativeType::Double:	ScriptField<double>(field, obj);		break;
-		case NativeType::Float2:	ScriptField<glm::vec2>(field, obj);		break;
-		case NativeType::Float3:	ScriptField<glm::vec3>(field, obj);		break;
-		case NativeType::Float4:	ScriptField<glm::vec4>(field, obj);		break;
-		case NativeType::String:	ScriptField<std::string>(field, obj);	break;
-		case NativeType::Reference: ScriptField<uint64_t>(field, obj);	break;
+		case NativeType::Float:		ScriptField<float>(field, obj, world);			break;
+		case NativeType::Double:	ScriptField<double>(field, obj, world);			break;
+		case NativeType::Float2:	ScriptField<glm::vec2>(field, obj, world);		break;
+		case NativeType::Float3:	ScriptField<glm::vec3>(field, obj, world);		break;
+		case NativeType::Float4:	ScriptField<glm::vec4>(field, obj, world);		break;
+		case NativeType::String:	ScriptField<std::string>(field, obj, world);	break;
+		case NativeType::Reference: ScriptField<uint64_t>(field, obj, world);		break;
 			//default:
 			//	HZR_ASSERT(false, "Wooooop");
 			//	break;

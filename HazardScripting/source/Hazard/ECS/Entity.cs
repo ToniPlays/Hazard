@@ -10,11 +10,8 @@ namespace Hazard
         internal Entity(ulong ID)
         {
             this.ID = ID;
-            Debug.Log("Created entity with id: " + ID);
         }
-        ~Entity() {
-            Debug.Warn("Deleted entity: " + ID);
-        }
+        ~Entity() {}
 
         public ulong ID { get; private set; }
         public string Name {

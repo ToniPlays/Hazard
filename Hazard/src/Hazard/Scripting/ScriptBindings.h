@@ -15,7 +15,7 @@ namespace Hazard
 {
 	class InternalCall : public IScriptGlue {
 	public:
-		virtual void Register(ScriptEngine* engine) 
+		virtual void Register(ScriptEngine* engine)
 		{
 			handler = &Application::GetModule<WorldHandler>();
 			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
@@ -45,15 +45,19 @@ namespace Hazard
 			BIND_ICALL(Entity_CreateComponent_Native);
 			BIND_ICALL(Entity_Destroy_Native);
 
-			BIND_ICALL(Tag_GetName_Native);
-			BIND_ICALL(Tag_SetName_Native);
+			BIND_ICALL(TagComponent_GetName_Native);
+			BIND_ICALL(TagComponent_SetName_Native);
 
-			BIND_ICALL(Transform_GetPosition_Native);
-			BIND_ICALL(Transform_SetPosition_Native);
-			BIND_ICALL(Transform_GetRotation_Native);
-			BIND_ICALL(Transform_SetRotation_Native);
-			BIND_ICALL(Transform_GetScale_Native);
-			BIND_ICALL(Transform_SetScale_Native);
+			BIND_ICALL(TransformComponent_GetPosition_Native);
+			BIND_ICALL(TransformComponent_SetPosition_Native);
+			BIND_ICALL(TransformComponent_GetRotation_Native);
+			BIND_ICALL(TransformComponent_SetRotation_Native);
+			BIND_ICALL(TransformComponent_GetScale_Native);
+			BIND_ICALL(TransformComponent_SetScale_Native);
+
+			BIND_ICALL(CameraComponent_GetFOV_Native);
+			BIND_ICALL(CameraComponent_SetFOV_Native);
+
 
 			BIND_ICALL(Debug_Log_Native);
 			BIND_ICALL(Debug_Info_Native);

@@ -57,6 +57,7 @@ namespace UI
 		ImUI::ContextMenu([&]() {
 			ImUI::Submenu("General", [&]() {
 				DrawAddComponentMenuIfNotExists<ScriptComponent>("Script", e);
+				DrawAddComponentMenuIfNotExists<CameraComponent>("Camera", e);
 				});
 			ImUI::Submenu("3D", [&]() {
 				DrawAddComponentMenuIfNotExists<MeshComponent>("Mesh component", e);

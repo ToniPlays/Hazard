@@ -107,7 +107,8 @@ namespace HazardScript
 				storage->SetValue<ObjectReferenceData>(data);
 
 				void* params[] = { &value };
-				mono_runtime_invoke(mono_class_get_method_from_name(m_Type.TypeClass->Class, ".ctor", 1), data.obj, params, nullptr);
+				MonoMethod* ctor = mono_class_get_method_from_name(m_Type.TypeClass->Class, ".ctor", 1);
+				mono_runtime_invoke(ctor, data.obj, params, nullptr);
 			}
 			else
 			{

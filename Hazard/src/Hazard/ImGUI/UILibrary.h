@@ -404,8 +404,14 @@ namespace Hazard::ImUI
 		}
 		return false;
 	}
+
 	template<typename T, typename Prop>
 	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr) {
+		return TreenodeWithOptions(title, flags, callback, propCallback, []() {});
+	};
+
+	template<typename T, typename Prop, typename DragSource>
+	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr, DragSource dragSource = nullptr) {
 		bool treeOpen = false;
 		bool optionsOpen = false;
 		{
@@ -415,6 +421,9 @@ namespace Hazard::ImUI
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
 			treeOpen = ImGui::TreeNodeEx((void*)title, flags, "%s", title);
+
+			dragSource();
+
 			ImGui::PopStyleVar();
 			ImGui::SameLine(contentRegion.x - lineHeight * 0.5f - 12);
 

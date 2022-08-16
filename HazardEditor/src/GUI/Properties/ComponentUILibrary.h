@@ -121,6 +121,12 @@ namespace UI
 					c.SetProjection((Projection)selected);
 				}
 
+				float fov = c.GetFov();
+
+				if (ImUI::InputFloat("Fov", fov, 60.0f)) {
+					c.SetFov(fov);
+				}
+
 				glm::vec2 clipping = c.GetClipping();
 				if (ImUI::InputFloat2("Clipping", clipping, 1.0f)) {
 					c.SetClipping(clipping);
@@ -132,6 +138,11 @@ namespace UI
 					c.SetFov(60.0f);
 					c.SetClipping({ 0.03f, 100.0f });
 					c.SetProjection(Projection::Perspective);
+					});
+			}, [&]() {
+				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+					ImGui::Text("Camera component");
+					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
 
@@ -186,7 +197,7 @@ namespace UI
 						HazardScript::FieldMetadata& f = field;
 
 						ImUI::Group(name.c_str(), [&]() {
-							UI::ScriptField(label, f, *c.m_Handle);
+							UI::ScriptField(label, f, *c.m_Handle, Application::GetModule<WorldHandler>().GetCurrentWorld());
 							ImUI::ShiftY(3.0f);
 							ImGui::Separator();
 							ImUI::ShiftY(2.0f);

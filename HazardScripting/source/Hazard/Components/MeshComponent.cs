@@ -10,6 +10,7 @@ namespace Hazard
 {
     public class MeshComponent : Component
     {
+        internal MeshComponent(ulong ID) : base(ID) { }
         public void SetMesh(Mesh mesh)
         {
             InternalCalls.MeshComponent_SetMesh_Native(parentEntity.ID, mesh.GetID());
