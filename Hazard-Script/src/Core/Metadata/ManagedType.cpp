@@ -45,6 +45,11 @@ namespace HazardScript
 		return TypeEncoding == MONO_TYPE_SZARRAY || TypeEncoding == MONO_TYPE_ARRAY;
 	}
 
+	std::string ManagedType::GetTypeName() const
+	{
+		return mono_type_get_name(RawMonoType);
+	}
+
 	ManagedType ManagedType::FromClass(MonoClass* klass)
     {
         return ManagedType();

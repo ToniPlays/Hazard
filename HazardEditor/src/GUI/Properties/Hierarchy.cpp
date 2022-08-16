@@ -29,6 +29,11 @@ namespace UI
 					ImGui::Text("Sup bro");
 					});
 
+				ImUI::DragSource<UID>("Hazard.Entity", &e.GetUID(), [&]() {
+					ImGui::Text(tag.Tag.c_str());
+					ImGui::Text("Entity");
+					});
+
 				//Type
 				ImGui::TableNextColumn();
 

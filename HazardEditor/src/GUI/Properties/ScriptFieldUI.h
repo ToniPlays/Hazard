@@ -48,29 +48,38 @@ namespace UI
 	template<>
 	static bool ScriptField<double>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
 		using namespace HazardScript;
-		float value = obj.GetFieldValue<double>(field.GetName());
+		double value = obj.GetFieldValue<double>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		if (field.Has<RangeAttribute>()) {
-			RangeAttribute attrib = field.Get<RangeAttribute>();
-			modified = ImUI::InputFloat(value, 0.0f, attrib.Min, attrib.Max);
-		}
-		else if (field.Has<SliderAttribute>()) {
-			SliderAttribute attrib = field.Get<SliderAttribute>();
-			modified = ImUI::InputSliderFloat(value, 0.0f, attrib.Min, attrib.Max);
-		}
-		else
-		{
-			modified = ImUI::InputFloat(value, 0.0f);
-		}
+		modified = ImUI::InputDouble(value, 0.0f);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value);
 		}
 		return modified;
 	}
+	template<>
+	static bool ScriptField<uint64_t>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
+		using namespace HazardScript;
+		uint64_t value = obj.GetFieldValue<uint64_t>(field.GetName());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+		std::string typeName = field.GetType().GetTypeName();
+		std::string text = typeName + " (" + std::to_string(value) + ")";
 
+		ImGui::Text(text.c_str(), 0.0f);
+		ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
+			value = (uint64_t)uid;
+			modified = true;
+			});
+
+		if (modified) 
+		{
+			obj.SetFieldValue(field.GetName(), value);
+		}
+		return modified;
+	}
 
 	template<>
 	static bool ScriptField<glm::vec2>(HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj) {
@@ -140,12 +149,13 @@ namespace UI
 
 		switch (field.GetType().NativeType)
 		{
-		case NativeType::Float:  ScriptField<float>(field, obj);		break;
-		case NativeType::Double: ScriptField<double>(field, obj);		break;
-		case NativeType::Float2: ScriptField<glm::vec2>(field, obj);	break;
-		case NativeType::Float3: ScriptField<glm::vec3>(field, obj);	break;
-		case NativeType::Float4: ScriptField<glm::vec4>(field, obj);	break;
-		case NativeType::String: ScriptField<std::string>(field, obj);	break;
+		case NativeType::Float:		ScriptField<float>(field, obj);			break;
+		case NativeType::Double:	ScriptField<double>(field, obj);		break;
+		case NativeType::Float2:	ScriptField<glm::vec2>(field, obj);		break;
+		case NativeType::Float3:	ScriptField<glm::vec3>(field, obj);		break;
+		case NativeType::Float4:	ScriptField<glm::vec4>(field, obj);		break;
+		case NativeType::String:	ScriptField<std::string>(field, obj);	break;
+		case NativeType::Reference: ScriptField<uint64_t>(field, obj);	break;
 			//default:
 			//	HZR_ASSERT(false, "Wooooop");
 			//	break;

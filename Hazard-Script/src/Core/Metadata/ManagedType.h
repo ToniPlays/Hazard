@@ -18,6 +18,8 @@ namespace HazardScript
 
 		bool IsArray() const;
 
+
+		std::string GetTypeName() const;
 		static ManagedType FromClass(MonoClass* klass);
 		static ManagedType FromType(MonoType* type);
 	};

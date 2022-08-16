@@ -153,6 +153,9 @@ namespace Hazard::ImUI
 	static bool InputFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
 		return ImGui::DragFloat("##float", &value, 0.5f, min, max);
 	}
+	static bool InputDouble(double& value, double clearValue = 0.0) {
+		return ImGui::InputDouble("##double", &value, 0.5);
+	}
 	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);

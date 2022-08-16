@@ -12,9 +12,9 @@
 #include "Buffer.h"
 #include <unordered_map>
 
-namespace HazardScript 
+namespace HazardScript
 {
-	class FieldMetadata 
+	class FieldMetadata
 	{
 	public:
 		FieldMetadata() = default;
@@ -39,31 +39,34 @@ namespace HazardScript
 			return T();
 		}
 
-		void RegisterInstance(uint32_t handle) 
+		void RegisterInstance(uint32_t handle)
 		{
 			if (m_Type.IsArray())
 				m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create();
-			else 
+			else
 				m_InstanceData[handle] = Ref<FieldValueStorage>::Create(&m_Type);
 		}
-		void RemoveInstance(uint32_t handle) 
+		void RemoveInstance(uint32_t handle)
 		{
 			m_InstanceData.erase(handle);
 		}
 
 		template<typename T>
-		T GetValue(uint32_t handle, uint32_t index = 0) 
+		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
-			if (m_Type.IsArray()) 
+			if (m_Type.IsArray())
 				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
 			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>();
 		}
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
-			if (m_Type.IsArray())
+			if (m_Type.IsArray()) {
 				m_InstanceData[handle].As<ArrayFieldValueStorage>()->SetValue<T>(index, value);
+				return;
+			}
 			m_InstanceData[handle].As<FieldValueStorage>()->SetValue<T>(value);
+			mono_field_set_value(mono_gchandle_get_target(handle), m_Field, &value);
 		}
 
 	private:
