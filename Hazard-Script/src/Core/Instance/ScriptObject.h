@@ -2,26 +2,23 @@
 
 #include "Mono/Core/Mono.h"
 #include "Core/Metadata/ScriptMetadata.h"
+#include "Ref.h"
 
 namespace HazardScript 
 {
-	class ScriptObject 
+	class ScriptObject : public RefCount
 	{
 		friend class ScriptMetadata;
+
 	public:
 		ScriptObject() = delete;
+		~ScriptObject();
 		
-		~ScriptObject() 
-		{
-			m_Script->RemoveInstance(m_Handle);
-			std::cout << "Removed script: " <<  m_Script->GetName() << std::endl;
-			mono_gchandle_free(m_Handle);
-		}
-		void TryInvoke(const std::string& name, void** params) 
+		void TryInvoke(const std::string& name, void** params = nullptr) 
 		{
 			m_Script->TryInvoke(name, GetHandle(), params);
 		}
-		void Invoke(const std::string& name, void** params) 
+		void Invoke(const std::string& name, void** params = nullptr) 
 		{
 			m_Script->Invoke(name, GetHandle(), params);
 		}
@@ -45,7 +42,7 @@ namespace HazardScript
 		MonoObject* GetHandle() { return mono_gchandle_get_target(m_Handle); }
 
 	private:
-		uint32_t m_Handle;
+		uint32_t m_Handle = 0;
 		ScriptMetadata* m_Script;
 	};
 }

@@ -4,6 +4,7 @@
 #include "File.h"
 
 #include "Mono/Core/Mono.h"
+#include "Core/ScriptCache.h"
 
 namespace HazardScript 
 {
@@ -37,6 +38,9 @@ namespace HazardScript
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		uint32_t rows = mono_table_info_get_rows(tableInfo);
 
+		std::vector<MonoClass*> monoClasses;
+		monoClasses.reserve(rows);
+
 		for (uint32_t i = 0; i < rows; i++) 
 		{
 			MonoClass* monoClass = nullptr;
@@ -44,13 +48,19 @@ namespace HazardScript
 			mono_metadata_decode_row(tableInfo, i, cols, MONO_TYPEDEF_SIZE);
 			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-
 			if (strcmp(name, "<Module>") == 0) continue;
 
-			monoClass = Mono::GetMonoClass(image, nameSpace, name);
-			
-			ScriptMetadata script(monoClass);
+			std::string fullName = nameSpace;
+			if (!fullName.empty()) fullName += ".";
+			fullName += name;
 
+			monoClass = Mono::GetMonoClass(image, nameSpace, name);
+			ScriptCache::CacheClass(fullName, monoClass);
+			monoClasses.push_back(monoClass);
+		}
+
+		for (MonoClass* klass : monoClasses) {
+			ScriptMetadata script(klass);
 			m_Scripts[script.GetName()] = script;
 		}
 	}

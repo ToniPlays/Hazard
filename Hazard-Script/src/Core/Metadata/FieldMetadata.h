@@ -55,18 +55,65 @@ namespace HazardScript
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
 			if (m_Type.IsArray())
+			{
 				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
+			}
+
+			if (m_Type.IsReference())
+			{
+				struct ObjectReferenceData {
+					MonoObject* obj;
+					uint32_t handle;
+					T ID;
+				};
+				ObjectReferenceData data = m_InstanceData[handle].As<FieldValueStorage>()->GetValueOrDefault<ObjectReferenceData>();
+				return data.ID;
+			}
 			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>();
 		}
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
-			if (m_Type.IsArray()) {
+			MonoObject* target = mono_gchandle_get_target(handle);
+			if (m_Type.IsArray())
+			{
 				m_InstanceData[handle].As<ArrayFieldValueStorage>()->SetValue<T>(index, value);
 				return;
 			}
-			m_InstanceData[handle].As<FieldValueStorage>()->SetValue<T>(value);
-			mono_field_set_value(mono_gchandle_get_target(handle), m_Field, &value);
+
+			Ref<FieldValueStorage> storage = m_InstanceData[handle].As<FieldValueStorage>();
+
+			if (m_Type.IsReference())
+			{
+				struct ObjectReferenceData {
+					MonoObject* obj;
+					uint32_t handle;
+					T ID;
+				};
+
+				if (storage->HasValue())
+				{
+					ObjectReferenceData data = storage->GetValue<ObjectReferenceData>();
+					mono_gchandle_free(data.handle);
+				}
+
+				ObjectReferenceData data;
+				data.ID = value;
+
+				data.handle = Mono::InstantiateHandle(m_Type.TypeClass->Class);
+				data.obj = mono_gchandle_get_target(data.handle);
+
+				mono_field_set_value(target, m_Field, data.obj);
+				storage->SetValue<ObjectReferenceData>(data);
+
+				void* params[] = { &value };
+				mono_runtime_invoke(mono_class_get_method_from_name(m_Type.TypeClass->Class, ".ctor", 1), data.obj, params, nullptr);
+			}
+			else
+			{
+				storage->SetValue<T>(value);
+				mono_field_set_value(target, m_Field, &value);
+			}
 		}
 
 	private:

@@ -48,7 +48,7 @@ namespace HazardScript
 				field.RegisterInstance(handle);
 		}
 
-		void RemoveInstance(uint32_t handle) 
+		void RemoveInstance(uint32_t handle)
 		{
 			auto it = std::find(m_Instances.begin(), m_Instances.end(), handle);
 			if (it != m_Instances.end()) 
@@ -65,7 +65,7 @@ namespace HazardScript
 			return m_Fields[name].GetValue<T>(handle);
 		}
 		template<typename T>
-		void SetFieldValue(const std::string& name, uint32_t handle, T value) 
+		void SetFieldValue(const std::string& name, uint32_t handle, T value)
 		{
 			m_Fields[name].SetValue(handle, value);
 		}

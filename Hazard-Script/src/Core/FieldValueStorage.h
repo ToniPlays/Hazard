@@ -23,8 +23,6 @@ namespace HazardScript
 		case NativeType::UInt32:		return ValueWrapper(uint32_t(0));
 		case NativeType::UInt64:		return ValueWrapper(uint64_t(0));
 		case NativeType::String:		return ValueWrapper("");
-		case NativeType::Value:			return ValueWrapper(uint64_t(0));
-		case NativeType::Reference:		return ValueWrapper(uint64_t(0));
 		}
 		return ValueWrapper();
 	}
@@ -53,9 +51,21 @@ namespace HazardScript
 			else
 				return m_Storage.Get<T>();
 		}
+
+		template<typename T>
+		T GetValueOrDefault() {
+			if (!HasValue()) return T();
+			return GetValue<T>();
+		}
+
 		template<typename T>
 		void SetValue(T value)
 		{
+			if (!HasValue()) 
+			{
+				m_Storage = ValueWrapper(&value, sizeof(T));
+				return;
+			}
 			if constexpr (std::is_same<T, ValueWrapper>::value)
 				m_Storage = value;
 			else

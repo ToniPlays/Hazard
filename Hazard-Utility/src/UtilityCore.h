@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <vector>
+#include <unordered_map>
 #include "Color.h"
 #include "HazardRuntimeError.h"
 

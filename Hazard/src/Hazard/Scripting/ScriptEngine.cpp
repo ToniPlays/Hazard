@@ -56,6 +56,10 @@ namespace Hazard
 		AttributeConstructor::Init();
 		m_Engine = HazardScriptEngine::Create(&createInfo);
 	}
+	void ScriptEngine::Update()
+	{
+		m_Engine->RunGarbageCollector();
+	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{
 		return m_Engine->GetAppAssembly().HasScript(moduleName);

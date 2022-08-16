@@ -3,6 +3,7 @@
 
 #include "Buffer.h"
 #include "Mono/Core/Mono.h"
+#include "ScriptCache.h"
 
 namespace HazardScript
 {
@@ -46,6 +47,9 @@ namespace HazardScript
 	{
 		Mono::Register(signature, function);
 	}
+	void HazardScriptEngine::RunGarbageCollector() {
+		mono_gc_collect(mono_gc_max_generation());
+	}
 	std::vector<ScriptAssembly*> HazardScriptEngine::GetAssemblies()
 	{
 		std::vector<ScriptAssembly*> assemblies;
@@ -76,6 +80,7 @@ namespace HazardScript
 		Mono::SetDirs(m_MonoData.MonoAssemblyDir, m_MonoData.MonoConfigDir);
 
 		Mono::Init("HazardScriptCore");
+		ScriptCache::Init();
 
 		if (m_MonoData.LoadAssembliesOnInit) {
 			Reload();

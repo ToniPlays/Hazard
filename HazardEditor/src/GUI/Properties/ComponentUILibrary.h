@@ -31,7 +31,8 @@ namespace UI
 		return true;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, TransformComponent& c) {
+	static bool ComponentMenu(Entity& e, TransformComponent& c) 
+	{
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
@@ -68,7 +69,6 @@ namespace UI
 					c.Scale = { 1, 1, 1 };
 					});
 			});
-
 		return false;
 	}
 	template<>
@@ -163,8 +163,8 @@ namespace UI
 
 
 				if (changed) {
-					if (scriptEngine.HasModule(oldModule) && c.m_Handle) {
-						delete c.m_Handle;
+					if (scriptEngine.HasModule(oldModule) && c.m_Handle) 
+					{
 						c.m_Handle = nullptr;
 					}
 					if (scriptEngine.HasModule(c.ModuleName)) {

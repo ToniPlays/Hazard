@@ -7,7 +7,7 @@ namespace HazardScript
 {
 	MethodMetadata::MethodMetadata(MonoMethod* method)
 	{
-		m_ManagedMethod = ManagedMethod::FromMethod(method);
+		m_ManagedMethod = { method };
 		Init();
 		LoadAttributes();
 	}

@@ -43,7 +43,7 @@ namespace HazardScript
 		static bool Init(const std::string& name);
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
-		static uint32_t InstantiateHandle(MonoClass* monoClass);
+		static uint32_t InstantiateHandle(MonoClass * monoClass);
 		template<typename T>
 		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
 			T value;
@@ -81,6 +81,8 @@ namespace HazardScript
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);
 		}
+		static std::string ResolveClassName(MonoClass* monoClass);
+
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

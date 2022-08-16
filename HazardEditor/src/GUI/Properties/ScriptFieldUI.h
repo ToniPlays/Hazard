@@ -75,9 +75,7 @@ namespace UI
 			});
 
 		if (modified) 
-		{
 			obj.SetFieldValue(field.GetName(), value);
-		}
 		return modified;
 	}
 
@@ -115,7 +113,6 @@ namespace UI
 		using namespace HazardScript;
 		std::string value = obj.GetFieldValue<std::string>(field.GetName());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-
 
 		bool modified = false;
 

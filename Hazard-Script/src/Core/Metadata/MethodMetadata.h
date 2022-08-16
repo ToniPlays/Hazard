@@ -16,7 +16,7 @@ namespace HazardScript
 		std::string GetName() { return m_Name; }
 		ManagedType& GetReturnType() { return m_ManagedMethod.ReturnType; }
 
-		MonoObject* Invoke(MonoObject* obj, void** params);
+		MonoObject* Invoke(MonoObject* obj, void** params = nullptr);
 
 		template<typename T>
 		bool Has() const {

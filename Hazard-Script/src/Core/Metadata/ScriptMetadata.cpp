@@ -10,7 +10,6 @@ namespace HazardScript
 {
 	ScriptMetadata::ScriptMetadata(MonoClass* klass) : m_Class(klass)
 	{
-		std::cout << "Registered script class: " << GetName() << std::endl;
 		LoadFields();
 		LoadMethods();
 		LoadAttributes();
@@ -61,7 +60,7 @@ namespace HazardScript
 			std::string name = mono_field_get_name(field);
 			m_Fields[name] = FieldMetadata(field);
 
-			//std::cout << " - Field: " << name << " : "  << Utils::NativeTypeToString(m_Fields[name].GetType().NativeType) << std::endl;
+			std::cout << " - Field: " << name << " : "  << Utils::NativeTypeToString(m_Fields[name].GetType().NativeType) << std::endl;
 		}
 	}
 	void ScriptMetadata::LoadMethods()

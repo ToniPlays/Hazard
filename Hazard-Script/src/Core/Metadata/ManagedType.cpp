@@ -1,4 +1,7 @@
 #include "ManagedType.h"
+#include "Core/ScriptCache.h"
+
+#include "Utility/StringUtil.h"
 
 extern HazardScript::NativeType GetCustomType(const char* name);
 
@@ -40,9 +43,64 @@ namespace HazardScript
 		return NativeType::None;
 	}
 
+	bool ManagedType::HasInterface(const ManagedClass* interfaceClass) const
+	{
+		return mono_class_is_subclass_of(TypeClass->Class, interfaceClass->Class, true);
+	}
+
+	bool ManagedType::IsSubClassOf(const ManagedClass* subclass) const
+	{
+		return mono_class_is_subclass_of(TypeClass->Class, subclass->Class, false);
+	}
+
+	bool ManagedType::CanAssignTo(const ManagedClass* managedClass) const
+	{
+		return mono_class_is_assignable_from(TypeClass->Class, managedClass->Class);
+	}
+
+	bool ManagedType::IsVoid() const
+	{
+		return TypeEncoding == MONO_TYPE_VOID;
+	}
+
 	bool ManagedType::IsArray() const
 	{
 		return TypeEncoding == MONO_TYPE_SZARRAY || TypeEncoding == MONO_TYPE_ARRAY;
+	}
+
+	bool ManagedType::IsReference() const
+	{
+		return mono_type_is_reference(RawMonoType) || mono_type_is_byref(RawMonoType);
+	}
+
+	bool ManagedType::IsValueType() const
+	{
+		return TypeEncoding == MONO_TYPE_VALUETYPE;
+	}
+
+	bool ManagedType::IsGeneric() const
+	{
+		return TypeEncoding == MONO_TYPE_GENERICINST;
+	}
+
+	bool ManagedType::IsPrimitive() const
+	{
+		switch (TypeEncoding)
+		{
+		case MONO_TYPE_VOID:
+		case MONO_TYPE_STRING:
+		case MONO_TYPE_CLASS:
+		case MONO_TYPE_SZARRAY:
+		case MONO_TYPE_ARRAY:
+			return false;
+		}
+		return true;
+	}
+
+	ManagedType ManagedType::GetElementType() const
+	{
+		if (!IsArray()) return ManagedType();
+		return FromClass(mono_class_get_element_class(TypeClass->Class));
 	}
 
 	std::string ManagedType::GetTypeName() const
@@ -57,13 +115,21 @@ namespace HazardScript
 
     ManagedType ManagedType::FromType(MonoType* type)
     {
-		ManagedClass klass = {};
-		klass.Class = mono_type_get_class(type);
+		MonoClass* typeClass = mono_type_get_class(type);
+			std::string name = mono_type_get_name(type);
+		if (typeClass == nullptr) 
+		{
+			std::string nameSpace = name.substr(0, StringUtil::OffsetOf(name, '.'));
+			name = name.substr(StringUtil::OffsetOf(name, '.') + 1);
+
+			typeClass = mono_class_from_name(mono_get_corlib(), nameSpace.c_str(), name.c_str());
+		}
 
         ManagedType managedType = {};
         managedType.RawMonoType = type;
+		managedType.TypeClass = ScriptCache::GetClass(typeClass);
 		managedType.TypeEncoding = mono_type_get_type(type);
-		managedType.NativeType = GetNativeType(managedType.TypeEncoding, &klass);
+		managedType.NativeType = GetNativeType(managedType.TypeEncoding, managedType.TypeClass);
 
 		return managedType;
     }

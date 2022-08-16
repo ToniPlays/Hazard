@@ -26,6 +26,7 @@ namespace HazardScript
 
 		void Reload();
 		void RegisterInternalCall(const std::string& signature, void* function);
+		void RunGarbageCollector();
 
 		ScriptAssembly& GetAppAssembly() { return m_MonoData.AppAssembly; }
 	

@@ -8,6 +8,8 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
+#include "Utility/StringUtil.h"
+
 #include "File.h"
 
 namespace HazardScript
@@ -116,4 +118,27 @@ namespace HazardScript
 		return mono_string_new(s_Domain, str);
 	}
 
+	std::string Mono::ResolveClassName(MonoClass* monoClass)
+	{
+		const char* className = mono_class_get_name(monoClass);
+		std::string name = className != nullptr ? className : "";
+
+		if (name.empty()) return "Unknown";
+
+		MonoClass* nesting = mono_class_get_nesting_type(monoClass);
+		if (nesting != nullptr) {
+			name = ResolveClassName(nesting) + "/" + name;
+		}
+		else
+		{
+			const char* classNameSpace = mono_class_get_namespace(monoClass);
+			if (classNameSpace)
+				name = std::string(classNameSpace) + "." + name;
+		}
+		MonoType* classType = mono_class_get_type(monoClass);
+		if (mono_type_get_type(classType) == MONO_TYPE_SZARRAY || mono_type_get_type(classType) == MONO_TYPE_ARRAY) {
+			name = name.substr(0, StringUtil::OffsetOf(name, '['));
+		}
+		return name;
+	}
 }
