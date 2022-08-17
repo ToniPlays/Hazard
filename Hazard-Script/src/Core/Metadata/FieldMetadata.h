@@ -4,10 +4,8 @@
 #include "Core/Attribute.h"
 #include "Mono/Core/Mono.h"
 
-#include "Core/ValueWrapper.h"
-
 #include "ManagedType.h"
-#include "Core/FieldValueStorage.h"
+#include "Core/FieldValueStorageBase.h"
 
 #include "Buffer.h"
 #include <unordered_map>
@@ -39,149 +37,45 @@ namespace HazardScript
 			return T();
 		}
 
-		void RegisterInstance(uint32_t handle)
-		{
-			if (m_Type.IsArray())
-				m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(m_Type.GetElementType());
-			else
-				m_InstanceData[handle] = Ref<FieldValueStorage>::Create(m_Type);
-		}
-		void RemoveInstance(uint32_t handle)
-		{
-			m_InstanceData.erase(handle);
-		}
+		void RegisterInstance(uint32_t handle);
+
+		void RemoveInstance(uint32_t handle);
+
+		void SetLive(uint32_t handle, bool live);
 
 		template<typename T>
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
+			MonoObject* obj = mono_gchandle_get_target(handle);
 			if (m_Type.IsArray())
-			{
-				if (m_Type.GetElementType().IsReference() && m_Type.GetElementType().NativeType != NativeType::String)
-				{
-					struct ObjectReferenceData {
-						MonoObject* obj;
-						uint32_t handle;
-						T ID;
-					};
-
-					ObjectReferenceData data = m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<ObjectReferenceData>(index);
-					return data.ID;
-				}
-				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
-			}
-
-			if (m_Type.IsReference() && m_Type.NativeType != NativeType::String)
-			{
-				struct ObjectReferenceData {
-					MonoObject* obj;
-					uint32_t handle;
-					T ID;
-				};
-				ObjectReferenceData data = m_InstanceData[handle].As<FieldValueStorage>()->GetValueOrDefault<ObjectReferenceData>();
-				return data.ID;
-			}
-			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>();
+				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(obj, index);
+			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>(obj);
 		}
 
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
-			MonoObject* target = mono_gchandle_get_target(handle);
-			if (m_Type.IsArray())
-			{
-				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
-				if (m_Type.GetElementType().IsReference() && m_Type.GetElementType().NativeType != NativeType::String) {
-				
-					struct ObjectReferenceData {
-						MonoObject* obj;
-						uint32_t handle;
-						T ID;
-					};
+			MonoObject* obj = mono_gchandle_get_target(handle);
 
-					if (storage->HasValue(index))
-					{
-						ObjectReferenceData data = storage->GetValue<ObjectReferenceData>(index);
-						mono_gchandle_free(data.handle);
-					}
-
-					ObjectReferenceData data;
-					data.ID = value;
-
-					data.handle = Mono::InstantiateHandle(m_Type.TypeClass->Class);
-					data.obj = mono_gchandle_get_target(data.handle);
-
-					mono_field_set_value(target, m_Field, data.obj);
-					storage->SetValue<ObjectReferenceData>(index, data);
-
-					return;
-				}
-
-				m_InstanceData[handle].As<ArrayFieldValueStorage>()->SetValue<T>(index, value);
-				return;
-			}
-
-			Ref<FieldValueStorage> storage = m_InstanceData[handle].As<FieldValueStorage>();
-
-			if (m_Type.IsReference())
-			{
-				struct ObjectReferenceData {
-					MonoObject* obj;
-					uint32_t handle;
-					T ID;
-				};
-
-				if (storage->HasValue())
-				{
-					ObjectReferenceData data = storage->GetValue<ObjectReferenceData>();
-					mono_gchandle_free(data.handle);
-				}
-
-				ObjectReferenceData data;
-				data.ID = value;
-
-				data.handle = Mono::InstantiateHandle(m_Type.TypeClass->Class);
-				data.obj = mono_gchandle_get_target(data.handle);
-
-				mono_field_set_value(target, m_Field, data.obj);
-				storage->SetValue<ObjectReferenceData>(data);
-
-				void* params[] = { &value };
-				MonoMethod* ctor = mono_class_get_method_from_name(m_Type.TypeClass->Class, ".ctor", 1);
-				mono_runtime_invoke(ctor, data.obj, params, nullptr);
-			}
-			else
-			{
-				storage->SetValue<T>(value);
-				mono_field_set_value(target, m_Field, &value);
-			}
-		}
-		template<>
-		void SetValue(uint32_t handle, std::string value, uint32_t index) 
-		{
 			if (m_Type.IsArray()) {
-
+				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
+				if (!storage->IsLive())
+					storage->SetStoredValue<T>(index, value);
+				storage->SetLiveValue<T>(obj, index, value);
 			}
 			else
 			{
 				Ref<FieldValueStorage> storage = m_InstanceData[handle].As<FieldValueStorage>();
-				storage->SetValue<std::string>(value);
-				MonoString* string = Mono::StringToMonoString(value);
-				mono_field_set_value(mono_gchandle_get_target(handle), m_Field, string);
-
+				if (!storage->IsLive())
+					storage->SetStoredValue<T>(value);
+				storage->SetLiveValue<T>(obj, value);
 			}
 		}
 
-		uint32_t GetElementCount(uint32_t handle)
-		{
-			if (!m_Type.IsArray()) return 1;
-			return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength();
-		}
+		uint32_t GetElementCount(uint32_t handle);
 
-		void SetArraySize(uint32_t handle, uint32_t elements) 
-		{
-			HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
-			m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(elements);
-		}
+		void SetArraySize(uint32_t handle, uint32_t elements);
+		MonoClassField* GetMonoField() { return m_Field; }
 
 	private:
 		void LoadAttributes();

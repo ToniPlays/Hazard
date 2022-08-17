@@ -46,7 +46,7 @@ namespace Hazard {
 
 	void WorldHandler::Render()
 	{
-		if(!(m_Flags & WorldFlags_Render)) return;
+		if (!(m_Flags & WorldFlags_Render)) return;
 		HZR_PROFILE_FUNCTION();
 		{
 			//Submit sky lights for drawing
@@ -127,13 +127,25 @@ namespace Hazard {
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle)
+			if (sc.m_Handle) {
+				sc.m_Handle->SetLive(true);
 				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
+			}
 		}
 	}
 
 	void WorldHandler::OnEnd()
 	{
+		HZR_PROFILE_FUNCTION();
+		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+
+		for (auto& entity : view) {
+			Entity e = { entity, m_World.Raw() };
+			auto& sc = e.GetComponent<ScriptComponent>();
+			if (sc.m_Handle) {
+				sc.m_Handle->SetLive(false);
+			}
+		}
 	}
 
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)

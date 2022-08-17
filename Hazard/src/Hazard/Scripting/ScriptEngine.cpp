@@ -5,6 +5,7 @@
 #include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
+#include "MonoUtilities.h"
 
 #define TYPEDEF(x, y) if (strcmp(##name, x) == 0) return y;
 

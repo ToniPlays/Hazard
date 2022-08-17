@@ -42,6 +42,8 @@ namespace HazardScript
 		ScriptMetadata& GetScript() { return *m_Script; }
 		bool IsValid() { return m_Script; }
 
+		void SetLive(bool live) { m_Script->SetLive(m_Handle, live); }
+
 	private:
 		ScriptObject(ScriptMetadata* script);
 		MonoObject* GetHandle() { return mono_gchandle_get_target(m_Handle); }

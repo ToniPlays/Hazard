@@ -8,4 +8,5 @@
 #include "Core/Metadata/ManagedType.h"
 #include "Core/AttributeBuilder.h"
 #include "Core/ScriptCache.h"
+#include "Core/FieldValueStorage.h"
 #include "Mono/Core/Mono.h"

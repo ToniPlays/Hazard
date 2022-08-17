@@ -37,7 +37,6 @@ namespace Hazard
 		void InitializeComponent(Entity& entity, ScriptComponent& component);
 
 	private:
-
 		ScriptEngineCreateInfo m_Info;
 
 		HazardScript::HazardScriptEngine* m_Engine;

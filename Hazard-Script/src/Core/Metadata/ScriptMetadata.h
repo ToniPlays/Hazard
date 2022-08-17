@@ -60,6 +60,13 @@ namespace HazardScript
 			}
 		}
 
+		void SetLive(uint32_t handle, bool live) 
+		{
+			for (auto& [name, field] : m_Fields)
+				field->SetLive(handle, live);
+		}
+
+
 		template<typename T>
 		T GetFieldValue(uint32_t handle, const std::string& name, uint32_t index = 0)
 		{

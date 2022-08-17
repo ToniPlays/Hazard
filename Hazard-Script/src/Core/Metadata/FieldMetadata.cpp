@@ -1,6 +1,7 @@
 
 #include "FieldMetadata.h"
 #include "Core/AttributeBuilder.h"
+#include "Core/FieldValueStorage.h"
 
 namespace HazardScript
 {
@@ -10,6 +11,16 @@ namespace HazardScript
 		m_Type = ManagedType::FromType(mono_field_get_type(field));
 
 		LoadAttributes();
+	}
+	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
+	{
+		if (!m_Type.IsArray()) return 1;
+		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength();
+	}
+	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
+	{
+		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
+		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(elements);
 	}
 	void FieldMetadata::LoadAttributes()
 	{
@@ -28,5 +39,20 @@ namespace HazardScript
 
 			m_Attributes.push_back(AttributeBuilder::Create(mono_class_get_name(attribClass), obj));
 		}
+	}
+	void FieldMetadata::RegisterInstance(uint32_t handle)
+	{
+		if (m_Type.IsArray())
+			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(m_Type.GetElementType());
+		else
+			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(*this);
+	}
+	void FieldMetadata::RemoveInstance(uint32_t handle)
+	{
+		m_InstanceData.erase(handle);
+	}
+	void FieldMetadata::SetLive(uint32_t handle, bool live) 
+	{
+		m_InstanceData[handle]->SetLive(live);
 	}
 }

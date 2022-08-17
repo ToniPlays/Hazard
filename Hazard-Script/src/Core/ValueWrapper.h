@@ -129,7 +129,7 @@ namespace HazardScript
 			}
 			else
 			{
-				memcpy(m_Buffer, &value, sizeof(value));
+				memcpy(m_Buffer, &value, sizeof(TValueType));
 			}
 		}
 
@@ -142,7 +142,6 @@ namespace HazardScript
 		}
 
 		static ValueWrapper Empty() { return ValueWrapper(); }
-
 
 	private:
 		size_t m_Size = 0;

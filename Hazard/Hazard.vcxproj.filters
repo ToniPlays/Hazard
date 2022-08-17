@@ -1550,6 +1550,8 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h" />
     <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h" />
+    <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1669,5 +1671,6 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp" />
   </ItemGroup>
 </Project>

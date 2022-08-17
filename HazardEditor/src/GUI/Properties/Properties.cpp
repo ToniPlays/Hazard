@@ -2,7 +2,6 @@
 #include "Properties.h"
 #include "ComponentUILibrary.h"
 
-
 namespace UI
 {
 	Properties::Properties() : Panel("Properties") {}

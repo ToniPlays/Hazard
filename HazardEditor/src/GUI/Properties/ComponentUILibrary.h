@@ -283,6 +283,7 @@ namespace UI
 	static bool ComponentMenu(Entity& e, Rigidbody2DComponent& c) {
 		bool optionsOpen = ImUI::Treenode("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
+
 			});
 		return false;
 	}
@@ -311,7 +312,8 @@ namespace UI
 
 				//Texture slot here
 
-				if (ImUI::ColorPicker("Tint", "##Tint", c.Tint)) {
+				if (ImUI::ColorPicker("Tint", "##Tint", c.Tint)) 
+				{
 
 				}
 				float size = c.Size;
