@@ -19,9 +19,6 @@ namespace HazardScript
 	public:
 		FieldMetadata() = default;
 		FieldMetadata(MonoClassField* field);
-		~FieldMetadata() {
-			
-		}
 
 		std::string GetName() { return m_Name; }
 		const MonoFlags& GetFlags() { return m_Flags; }
@@ -62,7 +59,7 @@ namespace HazardScript
 				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
 			}
 
-			if (m_Type.IsReference())
+			if (m_Type.IsReference() && m_Type.NativeType != NativeType::String)
 			{
 				struct ObjectReferenceData {
 					MonoObject* obj;
@@ -74,6 +71,7 @@ namespace HazardScript
 			}
 			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>();
 		}
+
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
@@ -119,6 +117,23 @@ namespace HazardScript
 				mono_field_set_value(target, m_Field, &value);
 			}
 		}
+		template<>
+		void SetValue(uint32_t handle, std::string value, uint32_t index) 
+		{
+			if (m_Type.IsArray()) {
+
+			}
+			else
+			{
+				Ref<FieldValueStorage> storage = m_InstanceData[handle].As<FieldValueStorage>();
+				storage->SetValue<std::string>(value);
+				MonoString* string = Mono::StringToMonoString(value);
+				mono_field_set_value(mono_gchandle_get_target(handle), m_Field, string);
+
+			}
+		}
+
+		
 
 	private:
 		void LoadAttributes();

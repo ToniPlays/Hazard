@@ -22,7 +22,7 @@ namespace HazardScript
 		case NativeType::UInt16:		return ValueWrapper(uint16_t(0));
 		case NativeType::UInt32:		return ValueWrapper(uint32_t(0));
 		case NativeType::UInt64:		return ValueWrapper(uint64_t(0));
-		case NativeType::String:		return ValueWrapper("");
+		case NativeType::String:		return ValueWrapper(std::string(""));
 		}
 		return ValueWrapper();
 	}
