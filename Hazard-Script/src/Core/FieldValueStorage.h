@@ -140,14 +140,14 @@ namespace HazardScript
 		}
 
 		template<>
-		void SetStoredValue(std::string value)
-		{
-			m_Storage.Set<std::string>(value);
-		}
-		template<>
 		std::string GetStoredValue()
 		{
 			return m_Storage.Get<std::string>();
+		}
+		template<>
+		void SetStoredValue(std::string value)
+		{
+			m_Storage.Set<std::string>(value);
 		}
 		template<>
 		std::string GetLiveValue(MonoObject* object) {

@@ -49,6 +49,8 @@ void GUIManager::Init()
 	InitImGuiPlatform(*m_Window);
 	
 	m_Manager.LoadFromConfigFile(CONFIG_PATH);
+
+	m_EnvVarExists = File::HasEnvinronmentVar("HAZARD_DIR");
 }
 
 void GUIManager::Update()
@@ -154,6 +156,22 @@ void GUIManager::Render()
 		ImGui::EndPopup();
 	}
 
+	if (!m_EnvVarExists) 
+	{
+		ImGui::OpenPopup("Install location");
+	}
+	if (ImGui::BeginPopupModal("Install location"))
+	{
+		if (ImGui::Button("Set installation folder")) {
+			std::filesystem::path hazardDir = File::OpenFolderDialog();
+			if (!hazardDir.empty())
+				if (File::SetEnvironmentVar("HAZARD_DIR", hazardDir.string())) {
+					m_EnvVarExists = true;
+					ImGui::CloseCurrentPopup();
+				}
+		}
+		ImGui::EndPopup();
+	}
 
 	ImGui::Render();
 	m_Platform->EndFrame();

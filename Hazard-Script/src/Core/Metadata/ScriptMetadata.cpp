@@ -80,7 +80,6 @@ namespace HazardScript
 		while ((method = mono_class_get_methods(m_Class->Class, &ptr))) {
 			MethodMetadata* m = new MethodMetadata(method);
 			m_Methods[m->GetName()] = m;
-			//std::cout << " - Method: " << m.GetName() << ", return type: " << Utils::NativeTypeToString(m.GetReturnType().NativeType) << std::endl;
 		}
 	}
 	void ScriptMetadata::LoadAttributes()

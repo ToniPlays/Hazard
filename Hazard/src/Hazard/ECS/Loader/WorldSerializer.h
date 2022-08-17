@@ -57,6 +57,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, CameraComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "CameraComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Projection", component.GetProjectionType() == Projection::Orthographic ? "Orthographic" : "Perspective");
 				YamlUtils::Serialize(out, "Fov", component.GetFov());
 				YamlUtils::Serialize(out, "Clipping", component.GetClipping());
@@ -66,13 +67,22 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "ScriptComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "ModuleName", component.ModuleName);
+				if (component.m_Handle) {
+					YamlUtils::Map(out, "Fields", [&]() {
+						for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
+							YamlUtils::Serialize(out, name, "CurrentyEmpty");
+							
+						});
+				}
 				});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "SkyLightComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 				});
@@ -81,6 +91,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "DirectionalLightComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 				});
@@ -89,6 +100,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "PointLightComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 				YamlUtils::Serialize(out, "Radius", component.Radius);
@@ -98,6 +110,7 @@ namespace Hazard
 		void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				if (component.m_MeshHandle) {
 					YamlUtils::Serialize(out, "Mesh", component.m_MeshHandle->GetHandle());
 				}
@@ -107,16 +120,18 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.Color);
 				if (!component.Texture)
 					return;
-					YamlUtils::Serialize(out, "Sprite", component.Texture->GetHandle());
+				YamlUtils::Serialize(out, "Sprite", component.Texture->GetHandle());
 				});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, Rigidbody2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "Rigidbody2DComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Type", Physics::BodyTypeToString(component.Type));
 				YamlUtils::Serialize(out, "FixedRotation", component.FixedRotation);
 				YamlUtils::Serialize(out, "UseGravity", component.UseGravity);
@@ -126,6 +141,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, BoxCollider2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "BoxCollider2DComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Offset", component.Offset);
 				YamlUtils::Serialize(out, "Size", component.Size);
 				YamlUtils::Serialize(out, "Density", component.Density);
@@ -139,6 +155,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, CircleCollider2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "CircleCollider2DComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Offset", component.Offset);
 				YamlUtils::Serialize(out, "Radius", component.Radius);
 				YamlUtils::Serialize(out, "Density", component.Density);
@@ -152,6 +169,7 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, BatchComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "BatchRendererComponent", [&]() {
+				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Size", component.Size);
 				YamlUtils::Serialize(out, "Tint", component.Tint);
 				});
