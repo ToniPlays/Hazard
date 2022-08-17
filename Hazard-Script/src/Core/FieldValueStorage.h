@@ -44,8 +44,6 @@ namespace HazardScript
 
 		template<typename T>
 		T GetValue() {
-			HZR_ASSERT(HasValue(), "Oops");
-
 			if constexpr (std::is_same<T, ValueWrapper>::value)
 				return m_Storage;
 			else

@@ -114,7 +114,6 @@ namespace HazardScript
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 
 		const char* str = string.c_str();
-		std::cout << string << std::endl;
 		return mono_string_new(s_Domain, str);
 	}
 
