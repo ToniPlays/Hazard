@@ -3,6 +3,8 @@
 #include "UtilityCore.h"
 #include "HazardProject.h"
 
+#include "Hazard/Assets/AssetEnums.h"
+
 class HazardLauncherManager {
 public:
 	HazardLauncherManager();
@@ -16,6 +18,8 @@ public:
 
 	std::vector<HazardProject> GetProjects() { return m_LoadedProjects; }
 
+private:
+	std::string GenerateMetaFileContent(const std::filesystem::path& path, const AssetType& type);
 private:
 	std::vector<HazardProject> m_LoadedProjects;
 

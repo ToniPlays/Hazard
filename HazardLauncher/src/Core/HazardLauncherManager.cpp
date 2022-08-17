@@ -124,19 +124,19 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 	{
 		File::CreateDir(project.Path / "Assets" / "Scripts");
-		File::NewFile(project.Path / "Assets" / "Scripts.meta");
+		File::NewFile(project.Path / "Assets" / "Scripts.meta", GenerateMetaFileContent(project.Path / "Assets" / "Scripts", AssetType::Folder));
 
 		File::CreateDir(project.Path / "Assets" / "Materials");
-		File::NewFile(project.Path / "Assets" / "Materials.meta");
+		File::NewFile(project.Path / "Assets" / "Materials.meta", GenerateMetaFileContent(project.Path / "Assets" / "Materials", AssetType::Folder));
 
 		File::CreateDir(project.Path / "Assets" / "Sprites");
-		File::NewFile(project.Path / "Assets" / "Sprites.meta");
+		File::NewFile(project.Path / "Assets" / "Sprites.meta", GenerateMetaFileContent(project.Path / "Assets" / "Sprites", AssetType::Folder));
 
 		File::CreateDir(project.Path / "Assets" / "Models");
-		File::NewFile(project.Path / "Assets" / "Models.meta");
+		File::NewFile(project.Path / "Assets" / "Models.meta", GenerateMetaFileContent(project.Path / "Assets" / "Models", AssetType::Folder));
 
 		File::CreateDir(project.Path / "Assets" / "Worlds");
-		File::NewFile(project.Path / "Assets" / "Worlds.meta");
+		File::NewFile(project.Path / "Assets" / "Worlds.meta", GenerateMetaFileContent(project.Path / "Assets" / "Worlds", AssetType::Folder));
 	}
 
 	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
@@ -151,4 +151,17 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 	m_LoadedProjects.push_back(project);
 	return true;
+}
+
+std::string HazardLauncherManager::GenerateMetaFileContent(const std::filesystem::path& path, const AssetType& type)
+{
+	using namespace Hazard;
+	YAML::Emitter out;
+
+	out << YAML::BeginMap;
+	YamlUtils::Serialize(out, "UID", AssetHandle());
+	YamlUtils::Serialize(out, "Type", type);
+	YamlUtils::Serialize(out, "Path", path);
+	out << YAML::EndMap;
+	return out.c_str();
 }
