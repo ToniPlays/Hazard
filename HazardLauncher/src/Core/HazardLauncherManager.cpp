@@ -45,6 +45,8 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path)
 {
 	std::cout << File::GetEnvironmentVar("HAZARD_DIR") << std::endl;
+	if (!File::Exists(path)) return false;
+
 	YAML::Node root = YAML::LoadFile(path.string());
 	YAML::Node projectNode = root["Projects"];
 

@@ -66,6 +66,7 @@ project "Hazard"
 		"yaml-cpp",
 		"Box2D",
 		"Hazard-Renderer",
+		"HazardScripting",
 		"%{Library.Assimp_Lib}"
 	}
 
