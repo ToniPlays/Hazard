@@ -35,9 +35,9 @@ namespace HazardScript
 	{
 	public:
 
-		FieldValueStorage(ManagedType* type)
+		FieldValueStorage(const ManagedType& type)
 		{
-			m_Storage = GetDefaultValueForType(*type);
+			m_Storage = GetDefaultValueForType(type);
 		}
 
 		bool HasValue() { return m_Storage.HasValue(); }
@@ -76,14 +76,59 @@ namespace HazardScript
 	class ArrayFieldValueStorage : public FieldValueStorageBase
 	{
 	public:
-		uintptr_t GetLength() { return 0; }
+
+		ArrayFieldValueStorage(const ManagedType& elementType) : m_ElementType(elementType) {
+			std::cout << Utils::NativeTypeToString(elementType.NativeType) << std::endl;
+		}
+
+		uintptr_t GetLength() { return m_ArrayStorage.size(); }
+
+		void Resize(uint32_t elements) 
+		{
+			m_ArrayStorage.resize(elements);
+
+			for (auto& storage : m_ArrayStorage) 
+			{
+				if (storage.HasValue()) continue;
+				storage = GetDefaultValueForType(m_ElementType);
+			}
+		}
+
+		bool HasValue(uint32_t index) {
+			return m_ArrayStorage[index].HasValue();
+		}
 
 		template<typename T>
-		T GetValue(size_t index) { return T(); }
+		T GetValue(uint32_t index) 
+		{
+			if constexpr (std::is_same<T, ValueWrapper>::value)
+				return m_ArrayStorage[index];
+			else
+				return m_ArrayStorage[index].Get<T>();
+		}
+
+		template<typename T>
+		T GetValueOrDefault(uint32_t index) {
+			if (!HasValue(index)) return T();
+			return GetValue<T>(index);
+		}
 
 		template<typename T>
 		void SetValue(size_t index, T value) {
+			ValueWrapper& storage = m_ArrayStorage[index];
+			if (!storage.HasValue())
+			{
+				storage = ValueWrapper(&value, sizeof(T));
+				return;
+			}
+			if constexpr (std::is_same<T, ValueWrapper>::value)
+				storage = value;
+			else
+				storage.Set<T>(value);
+		}
 
-		};
+	private:
+		ManagedType m_ElementType;
+		std::vector<ValueWrapper> m_ArrayStorage;
 	};
 }

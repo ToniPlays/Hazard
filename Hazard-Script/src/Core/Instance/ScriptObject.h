@@ -24,16 +24,21 @@ namespace HazardScript
 		}
 		
 		template<typename T>
-		T GetFieldValue(const std::string& name)
+		T GetFieldValue(const std::string& name, uint32_t index = 0)
 		{
-			return m_Script->GetFieldValue<T>(name, m_Handle);
+			return m_Script->GetFieldValue<T>(m_Handle, name, index);
 		}
 		template<typename T>
-		void SetFieldValue(const std::string& name, T value) 
+		void SetFieldValue(const std::string& name, T value, uint32_t index = 0) 
 		{
-			m_Script->SetFieldValue(name, m_Handle, value);
+			m_Script->SetFieldValue(m_Handle, name, value, index);
+		}
+		
+		void SetArraySize(const std::string& name, uint32_t elements) {
+			m_Script->SetArraySize(m_Handle, name, elements);
 		}
 
+		uint32_t GetFieldValueCount(const std::string& name) { return m_Script->GetField(name).GetElementCount(m_Handle); }
 		ScriptMetadata& GetScript() { return *m_Script; }
 		bool IsValid() { return m_Script; }
 

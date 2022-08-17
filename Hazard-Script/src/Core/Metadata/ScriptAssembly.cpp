@@ -10,7 +10,6 @@ namespace HazardScript
 {
 	ScriptAssembly::~ScriptAssembly()
 	{
-		std::cout << "Desctructed script assembly" << std::endl;
 	}
 	bool ScriptAssembly::LoadFromSource(bool registerScripts)
 	{

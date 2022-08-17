@@ -29,6 +29,8 @@ namespace HazardScript
 		case MONO_TYPE_R4:                  return NativeType::Float;
 		case MONO_TYPE_R8:                  return NativeType::Double;
 		case MONO_TYPE_STRING:              return NativeType::String;
+		case MONO_TYPE_SZARRAY:             return NativeType::Reference;
+		case MONO_TYPE_ARRAY:				return NativeType::Reference;
 		case MONO_TYPE_VALUETYPE:
 		{
 			MonoType* classType = mono_class_get_type(typeClass->Class);
@@ -97,6 +99,11 @@ namespace HazardScript
 		return true;
 	}
 
+	bool ManagedType::IsFixedSize() const
+	{
+		return IsArray() ? false : false;
+	}
+
 	ManagedType ManagedType::GetElementType() const
 	{
 		if (!IsArray()) return ManagedType();
@@ -110,13 +117,16 @@ namespace HazardScript
 
 	ManagedType ManagedType::FromClass(MonoClass* klass)
     {
-        return ManagedType();
+		MonoType* type = mono_class_get_type(klass);
+		int typeEncoding = mono_type_get_type(type);
+		ManagedClass* managedClass = ScriptCache::GetClass(klass);
+		return { type, GetNativeType(typeEncoding, managedClass), managedClass, typeEncoding, };
     }
 
     ManagedType ManagedType::FromType(MonoType* type)
     {
 		MonoClass* typeClass = mono_type_get_class(type);
-			std::string name = mono_type_get_name(type);
+		std::string name = mono_type_get_name(type);
 		if (typeClass == nullptr) 
 		{
 			std::string nameSpace = name.substr(0, StringUtil::OffsetOf(name, '.'));

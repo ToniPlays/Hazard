@@ -29,6 +29,7 @@ namespace HazardScript
 		bool IsValueType() const;
 		bool IsGeneric() const;
 		bool IsPrimitive() const;
+		bool IsFixedSize() const;
 		ManagedType GetElementType() const;
 
 		bool IsValid() const { return TypeEncoding != 0 && RawMonoType != nullptr && NativeType != NativeType::None; }

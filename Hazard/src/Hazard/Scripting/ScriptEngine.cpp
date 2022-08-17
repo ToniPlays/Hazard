@@ -49,11 +49,6 @@ namespace Hazard
 			for (auto& cb : m_ScriptGlue) {
 				cb->Register(this);
 			}
-
-			for (auto& [id, managedClass] : ScriptCache::GetCache()->Classes) 
-			{
-				HZR_CORE_TRACE(managedClass.FullName);
-			}
 		};
 		AttributeConstructor::Init();
 		m_Engine = HazardScriptEngine::Create(&createInfo);

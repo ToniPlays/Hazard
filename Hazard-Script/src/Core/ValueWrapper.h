@@ -73,6 +73,7 @@ namespace HazardScript
 
 		~ValueWrapper()
 		{
+			if (!HasValue()) return;
 			m_Size = 0;
 			delete[] m_Buffer;
 			m_Buffer = nullptr;

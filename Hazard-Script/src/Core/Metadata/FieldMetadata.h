@@ -42,9 +42,9 @@ namespace HazardScript
 		void RegisterInstance(uint32_t handle)
 		{
 			if (m_Type.IsArray())
-				m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create();
+				m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(m_Type.GetElementType());
 			else
-				m_InstanceData[handle] = Ref<FieldValueStorage>::Create(&m_Type);
+				m_InstanceData[handle] = Ref<FieldValueStorage>::Create(m_Type);
 		}
 		void RemoveInstance(uint32_t handle)
 		{
@@ -56,6 +56,17 @@ namespace HazardScript
 		{
 			if (m_Type.IsArray())
 			{
+				if (m_Type.GetElementType().IsReference() && m_Type.GetElementType().NativeType != NativeType::String)
+				{
+					struct ObjectReferenceData {
+						MonoObject* obj;
+						uint32_t handle;
+						T ID;
+					};
+
+					ObjectReferenceData data = m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<ObjectReferenceData>(index);
+					return data.ID;
+				}
 				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValue<T>(index);
 			}
 
@@ -78,6 +89,33 @@ namespace HazardScript
 			MonoObject* target = mono_gchandle_get_target(handle);
 			if (m_Type.IsArray())
 			{
+				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
+				if (m_Type.GetElementType().IsReference() && m_Type.GetElementType().NativeType != NativeType::String) {
+				
+					struct ObjectReferenceData {
+						MonoObject* obj;
+						uint32_t handle;
+						T ID;
+					};
+
+					if (storage->HasValue(index))
+					{
+						ObjectReferenceData data = storage->GetValue<ObjectReferenceData>(index);
+						mono_gchandle_free(data.handle);
+					}
+
+					ObjectReferenceData data;
+					data.ID = value;
+
+					data.handle = Mono::InstantiateHandle(m_Type.TypeClass->Class);
+					data.obj = mono_gchandle_get_target(data.handle);
+
+					mono_field_set_value(target, m_Field, data.obj);
+					storage->SetValue<ObjectReferenceData>(index, data);
+
+					return;
+				}
+
 				m_InstanceData[handle].As<ArrayFieldValueStorage>()->SetValue<T>(index, value);
 				return;
 			}
@@ -133,7 +171,17 @@ namespace HazardScript
 			}
 		}
 
-		
+		uint32_t GetElementCount(uint32_t handle)
+		{
+			if (!m_Type.IsArray()) return 1;
+			return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength();
+		}
+
+		void SetArraySize(uint32_t handle, uint32_t elements) 
+		{
+			HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
+			m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(elements);
+		}
 
 	private:
 		void LoadAttributes();

@@ -61,14 +61,18 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		T GetFieldValue(const std::string& name, uint32_t handle) 
+		T GetFieldValue(uint32_t handle, const std::string& name, uint32_t index = 0)
 		{
-			return m_Fields[name]->GetValue<T>(handle);
+			return m_Fields[name]->GetValue<T>(handle, index);
 		}
 		template<typename T>
-		void SetFieldValue(const std::string& name, uint32_t handle, T value)
+		void SetFieldValue(uint32_t handle, const std::string& name, T value, uint32_t index = 0)
 		{
-			m_Fields[name]->SetValue(handle, value);
+			m_Fields[name]->SetValue(handle, value, index);
+		}
+
+		void SetArraySize(uint32_t handle, const std::string& name, uint32_t elements) {
+			m_Fields[name]->SetArraySize(handle, elements);
 		}
 
 		template<typename T>
