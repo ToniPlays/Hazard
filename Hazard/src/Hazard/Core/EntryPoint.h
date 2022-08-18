@@ -15,58 +15,61 @@
 extern Hazard::Application* Hazard::CreateApplication();
 
 #ifdef HZR_PLATFORM_WINDOWS
+#include <Windows.h>
 
-    #ifdef HZR_DEBUG
+#ifdef HZR_DEBUG
 
-    #pragma comment( linker, "/subsystem:console" )
-    int main(int argc, char* argv[])
-    {
-        using namespace Hazard;
-        {
-            CommandLineArgs::Init(argc, argv);
-            
-            Application* app = CreateApplication();
+#pragma comment( linker, "/subsystem:console" )
+int main(int argc, char* argv[])
+{
+	using namespace Hazard;
+	{
+		CommandLineArgs::Init(argc, argv);
 
-            HazardLoop loop(app);
-            loop.Start();
+		Application* app = CreateApplication();
 
-            while (!loop.ShouldClose()) {
-                loop.Run();
-            }
-        }
-        return 0;
-    }
+		HazardLoop loop(app);
+		loop.Start();
 
-    #else
-    #pragma comment( linker, "/subsystem:windows" )
-    int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-    {
-        using namespace Hazard;
-        Application* app = CreateApplication();
-        HazardLoop loop(app);
-        loop.Start();
-        while (!loop.ShouldClose()) {
-            loop.Run();
-        }
-        return 0;
-    }
-    #endif // HZR_DEBUG
+		while (!loop.ShouldClose()) {
+			loop.Run();
+		}
+	}
+	return 0;
+}
+
+#else
+#pragma comment( linker, "/subsystem:windows" )
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	using namespace Hazard;
+
+	CommandLineArgs::Init(std::string(lpCmdLine));
+	Application* app = CreateApplication();
+	HazardLoop loop(app);
+	loop.Start();
+	while (!loop.ShouldClose()) {
+		loop.Run();
+	}
+	return 0;
+}
+#endif // HZR_DEBUG
 #else
 int main(int argc, char* argv[])
 {
-    using namespace Hazard;
-    {
-        CommandLineArgs::Init(argc, argv);
-        Application* app = CreateApplication();
+	using namespace Hazard;
+	{
+		CommandLineArgs::Init(argc, argv);
+		Application* app = CreateApplication();
 
-        HazardLoop loop(app);
-        loop.Start();
+		HazardLoop loop(app);
+		loop.Start();
 
-        while (!loop.ShouldClose()) {
-            loop.Run();
-        }
-    }
-    return 0;
+		while (!loop.ShouldClose()) {
+			loop.Run();
+		}
+	}
+	return 0;
 
 	return 0;
 }

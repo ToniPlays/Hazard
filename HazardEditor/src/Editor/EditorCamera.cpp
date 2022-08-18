@@ -38,7 +38,6 @@ namespace Editor {
 	{
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
-		return false;
 	}
 
 	void EditorCamera::UpdateProjection()
@@ -153,6 +152,7 @@ namespace Editor {
 		if (enabled2D) {
 			float side = aspectRatio * size2D;
 			m_Projection = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);
+
 			if (enabled2D != m_Is2DEnabled) 
 			{
 				pitch = 0;

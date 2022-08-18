@@ -7,13 +7,10 @@ namespace Hazard
 	class CommandLineArgs {
 	public:
 		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
-		static void Init(int count, char* values[])
-		{
-			std::stringstream ss;
-			for (int i = 0; i < count; i++) {
-				ss << values[i] << " ";
-			}
-			std::vector<std::string> args = StringUtil::SplitString(ss.str(), '-');
+		static void Init(std::string& cmdLine) {
+			std::cout << cmdLine << std::endl;
+
+			std::vector<std::string> args = StringUtil::SplitString(cmdLine, '-');
 
 			for (auto& arg : args) {
 				if (arg.find_first_of(' ') == std::string::npos) continue;
@@ -21,6 +18,15 @@ namespace Hazard
 				std::string value = arg.substr(arg.find_first_of(' '));
 				m_Arguments[key] = StringUtil::SplitString(value, ' ');
 			}
+
+		}
+		static void Init(int count, char* values[])
+		{
+			std::stringstream ss;
+			for (int i = 0; i < count; i++) {
+				ss << values[i] << " ";
+			}
+			Init(ss.str());
 		}
 
 		template<typename C>

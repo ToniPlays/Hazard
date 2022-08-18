@@ -66,7 +66,7 @@ void EditorApplication::PreInit()
 	HazardRendererCreateInfo renderInfo = {};
 	renderInfo.pAppInfo = &rendererApp;
 	renderInfo.Renderer = renderAPI;
-	renderInfo.VSync = !CommandLineArgs::Get<bool>("VSync");
+	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
 	renderInfo.pWindows = &windowInfo;
 
