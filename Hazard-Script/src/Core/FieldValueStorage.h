@@ -19,7 +19,7 @@ namespace HazardScript
 							template<>																\
 							void SetLiveValue(MonoObject* object, Type value)						\
 							{																		\
-								mono_field_set_value(object, m_Field.GetMonoField(), &value);		\
+								mono_field_set_value(object, m_Field->GetMonoField(), &value);		\
 							}																		\
 
 
@@ -28,9 +28,10 @@ namespace HazardScript
 	{
 	public:
 		FieldValueStorage() {}
-		FieldValueStorage(FieldMetadata& field);
+		FieldValueStorage(FieldMetadata* field);
 
 		bool HasValue() { return m_Storage.HasValue(); }
+		bool Valid() { return m_Field != nullptr; }
 
 		template<typename T>
 		T GetValue(MonoObject* object) {
@@ -68,74 +69,82 @@ namespace HazardScript
 			static_assert(false);
 		}
 
+		DEFAULT_TYPE(bool);
+		template<>
+		bool GetLiveValue(MonoObject* object) {
+			bool value;
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
+			return value;
+		}
+
 		DEFAULT_TYPE(float);
 		template<>
 		float GetLiveValue(MonoObject* object) {
 			float value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(double);
 		template<>
 		double GetLiveValue(MonoObject* object) {
 			double value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(int8_t);
 		template<>
 		int8_t GetLiveValue(MonoObject* object) {
 			int8_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(int16_t);
 		template<>
 		int16_t GetLiveValue(MonoObject* object) {
 			int16_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(int32_t);
 		template<>
 		int32_t GetLiveValue(MonoObject* object) {
 			int32_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(int64_t);
 		template<>
 		int64_t GetLiveValue(MonoObject* object) {
 			int64_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(uint8_t);
 		template<>
 		uint8_t GetLiveValue(MonoObject* object) {
 			uint8_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(uint16_t);
 		template<>
 		uint16_t GetLiveValue(MonoObject* object) {
 			uint16_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(uint32_t);
 		template<>
 		uint32_t GetLiveValue(MonoObject* object) {
 			uint32_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 		DEFAULT_TYPE(uint64_t);
 		template<>
 		uint64_t GetLiveValue(MonoObject* object) {
 			uint64_t value;
-			mono_field_get_value(object, m_Field.GetMonoField(), &value);
+			mono_field_get_value(object, m_Field->GetMonoField(), &value);
 			return value;
 		}
 
@@ -152,29 +161,26 @@ namespace HazardScript
 		template<>
 		std::string GetLiveValue(MonoObject* object) {
 			MonoString* string;
-			mono_field_get_value(object, m_Field.GetMonoField(), &string);
+			mono_field_get_value(object, m_Field->GetMonoField(), &string);
 			return Mono::MonoStringToString(string);
 		}
 		template<>
 		void SetLiveValue(MonoObject* object, std::string value)
 		{
-			std::cout << "Setting live string " << value << std::endl;
 			MonoString* string = Mono::StringToMonoString(value);
-			mono_field_set_value(object, m_Field.GetMonoField(), string);
+			mono_field_set_value(object, m_Field->GetMonoField(), string);
 		}
 
 
 	private:
-		FieldMetadata m_Field;
+		FieldMetadata* m_Field = nullptr;
 		ValueWrapper m_Storage;
 	};
 	class ArrayFieldValueStorage : public FieldValueStorageBase
 	{
 	public:
 
-		ArrayFieldValueStorage(const ManagedType& elementType) : m_ElementType(elementType) {
-			std::cout << Utils::NativeTypeToString(elementType.NativeType) << std::endl;
-		}
+		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
 		uint32_t GetLength() { return m_ArrayStorage.size(); }
 
@@ -183,9 +189,17 @@ namespace HazardScript
 		void Resize(uint32_t elements)
 		{
 			m_ArrayStorage.resize(elements);
+			for (auto& storage : m_ArrayStorage) 
+			{
+				if (!storage.Valid()) 
+				{
+					storage = FieldValueStorage(m_Field);
+				}
+			}
 		}
 
 		bool HasValue(uint32_t index) {
+			if (index >= GetLength()) return false;
 			return m_ArrayStorage[index].HasValue();
 		}
 
@@ -216,7 +230,7 @@ namespace HazardScript
 		}
 
 	private:
-		ManagedType m_ElementType;
+		FieldMetadata* m_Field;
 		std::vector<FieldValueStorage> m_ArrayStorage;
 	};
 }

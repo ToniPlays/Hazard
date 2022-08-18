@@ -126,9 +126,16 @@ namespace HazardScript
 				}
 
 				memcpy(m_Buffer, value.data(), value.size());
+				m_Size = value.size();
 			}
 			else
 			{
+				if (!HasValue()) {
+					m_Buffer = new byte[sizeof(TValueType)];
+					m_Size = sizeof(TValueType);
+					memcpy(m_Buffer, &value, sizeof(TValueType));
+					return;
+				}
 				memcpy(m_Buffer, &value, sizeof(TValueType));
 			}
 		}

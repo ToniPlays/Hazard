@@ -19,6 +19,25 @@ namespace UI
 	static bool ScriptField(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		static_assert(false);
 	}
+
+	template<>
+	static bool ScriptField<bool>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		bool value = obj.GetFieldValue<bool>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		modified = ImGui::Checkbox("##bool", &value);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+
+		return modified;
+	}
+
+
 	template<>
 	static bool ScriptField<float>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 		using namespace HazardScript;
@@ -55,6 +74,120 @@ namespace UI
 		bool modified = false;
 
 		modified = ImUI::InputDouble(value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+
+	template<>
+	static bool ScriptField<int8_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		int8_t value = obj.GetFieldValue<int8_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<int16_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		int16_t value = obj.GetFieldValue<int16_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<int32_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		int32_t value = obj.GetFieldValue<int32_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<int64_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		uint64_t value = obj.GetFieldValue<int64_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+
+	template<>
+	static bool ScriptField<uint8_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		uint8_t value = obj.GetFieldValue<uint8_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<uint16_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		uint16_t value = obj.GetFieldValue<uint16_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<uint32_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		uint32_t value = obj.GetFieldValue<uint32_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
+
+		if (modified) {
+			obj.SetFieldValue(field.GetName(), value, index);
+		}
+		return modified;
+	}
+	template<>
+	static bool ScriptField<uint64_t>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+		using namespace HazardScript;
+		uint64_t value = obj.GetFieldValue<uint64_t>(field.GetName(), index);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		bool modified = false;
+
+		modified = ImUI::InputInt((int&)value, 0.0f);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -112,7 +245,7 @@ namespace UI
 		}
 		return modified;
 	}
-	
+
 	template<>
 	static bool ScriptField<Hazard::ObjectReference>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
 
@@ -120,7 +253,7 @@ namespace UI
 		Hazard::ObjectReference value = obj.GetFieldValue<Hazard::ObjectReference>(field.GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 
-		std::string typeName = field.GetType().GetTypeName();
+		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
 
 		std::string text = (value.ObjectUID != 0 ? world->GetEntityFromUID(value.ObjectUID).GetTag().Tag : "None") + " (" + typeName + ")";
 		ImGui::Text(text.c_str());
@@ -137,7 +270,7 @@ namespace UI
 		}
 		return modified;
 	}
-	
+
 
 	static void ScriptField(const std::string& name, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world)
 	{
@@ -148,7 +281,7 @@ namespace UI
 		label[0] = toupper(name[0]);
 		ImGui::Text(label.c_str());
 
-		if (field.Has<TooltipAttribute>()) 
+		if (field.Has<TooltipAttribute>())
 		{
 			ImUI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
 		}
@@ -168,6 +301,12 @@ namespace UI
 
 		switch (elementType.NativeType)
 		{
+		case NativeType::Bool:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<bool>(i, field, obj, world);
+					});
+			break;
 		case NativeType::Float:
 			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
@@ -199,6 +338,56 @@ namespace UI
 				ScriptField<glm::vec4>(i, field, obj, world);
 					});
 			break;
+		case NativeType::Int8:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<int8_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::Int16:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<int16_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::Int32:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<int32_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::Int64:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<int64_t>(i, field, obj, world);
+					});
+			break;
+
+		case NativeType::UInt8:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<uint8_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::UInt16:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<uint16_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::UInt32:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<uint32_t>(i, field, obj, world);
+					});
+			break;
+		case NativeType::UInt64:
+			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+				ImUI::Group(std::to_string(i).c_str(), [&]() {
+				ScriptField<uint64_t>(i, field, obj, world);
+					});
+			break;
+
 		case NativeType::String:
 			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
@@ -211,7 +400,7 @@ namespace UI
 				ScriptField<Hazard::ObjectReference>(i, field, obj, world);
 					});
 			break;
-			
+
 			//default:
 			//	HZR_ASSERT(false, "Wooooop");
 			//	break;

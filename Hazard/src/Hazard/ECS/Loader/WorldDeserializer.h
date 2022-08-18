@@ -1,12 +1,13 @@
 #pragma once
 
 #include "../Entity.h"
-#include <yaml-cpp/yaml.h>
 #include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
 #include "UID.h"
+
+#include "Hazard/Assets/AssetEnums.h"
 
 namespace Hazard
 {

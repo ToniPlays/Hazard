@@ -3,10 +3,10 @@
 
 namespace HazardScript 
 {
-	FieldValueStorage::FieldValueStorage(FieldMetadata& field)
+	FieldValueStorage::FieldValueStorage(FieldMetadata* field)
 
 	{
-		m_Storage = GetDefaultValueForType(field.GetType());
+		m_Storage = GetDefaultValueForType(field->GetType());
 		m_Field = field;
 	}
 	ValueWrapper GetDefaultValueForType(const ManagedType& type)

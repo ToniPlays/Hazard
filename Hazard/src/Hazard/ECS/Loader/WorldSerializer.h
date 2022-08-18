@@ -8,6 +8,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
+#include "Hazard/Scripting/ScriptSerializer.h"
+
 
 namespace Hazard
 {
@@ -72,7 +74,7 @@ namespace Hazard
 				if (component.m_Handle) {
 					YamlUtils::Map(out, "Fields", [&]() {
 						for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
-							YamlUtils::Serialize(out, name, "CurrentyEmpty");
+							ScriptSerializer::SerializeFieldEditor(out, field, component.m_Handle);
 							
 						});
 				}

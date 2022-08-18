@@ -113,8 +113,7 @@ namespace HazardScript
 	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 
-		const char* str = string.c_str();
-		return mono_string_new(s_Domain, str);
+		return mono_string_new(s_Domain, string.c_str());
 	}
 
 	std::string Mono::ResolveClassName(MonoClass* monoClass)

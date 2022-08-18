@@ -1553,6 +1553,7 @@
     <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h" />
     <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h" />
     <ClInclude Include="src\Hazard\Rendering\LineRenderer.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1674,5 +1675,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp" />
     <ClCompile Include="src\Hazard\Rendering\LineRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\ScriptSerializer.cpp" />
   </ItemGroup>
 </Project>

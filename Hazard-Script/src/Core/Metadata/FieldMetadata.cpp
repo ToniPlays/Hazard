@@ -43,9 +43,9 @@ namespace HazardScript
 	void FieldMetadata::RegisterInstance(uint32_t handle)
 	{
 		if (m_Type.IsArray())
-			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(m_Type.GetElementType());
+			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
 		else
-			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(*this);
+			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(this);
 	}
 	void FieldMetadata::RemoveInstance(uint32_t handle)
 	{

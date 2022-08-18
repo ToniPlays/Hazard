@@ -48,7 +48,7 @@ namespace HazardScript
 		Mono::Register(signature, function);
 	}
 	void HazardScriptEngine::RunGarbageCollector() {
-		mono_gc_collect(mono_gc_max_generation());
+		//mono_gc_collect(mono_gc_max_generation());
 	}
 	std::vector<ScriptAssembly*> HazardScriptEngine::GetAssemblies()
 	{
