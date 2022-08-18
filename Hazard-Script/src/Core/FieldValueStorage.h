@@ -179,7 +179,8 @@ namespace HazardScript
 			}
 		}
 
-		bool HasValue(MonoObject* object, uint32_t index) {
+		bool HasValue(MonoObject* object, uint32_t index) 
+		{
 			if (index >= GetLength(object)) return false;
 			return m_ArrayStorage[index].HasValue();
 		}
@@ -188,7 +189,7 @@ namespace HazardScript
 		T GetValue(MonoObject* object, uint32_t index)
 		{
 			if (IsLive()) {
-				return m_ArrayStorage[index].GetLiveValue<T>(object);
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, (size_t)index);
 			}
 
 			if constexpr (std::is_same<T, ValueWrapper>::value)
@@ -198,7 +199,11 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		T GetValueOrDefault(MonoObject* object, uint32_t index) {
+		T GetValueOrDefault(MonoObject* object, uint32_t index) 
+		{
+			if (IsLive()) {
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, (size_t)index);
+			}
 			if (!HasValue(object, index)) return T();
 			return GetValue<T>(object, index);
 		}
@@ -211,7 +216,7 @@ namespace HazardScript
 		template<typename T>
 		void SetLiveValue(MonoObject* object, size_t index, T value)
 		{
-			m_ArrayStorage[index].SetLiveValue<T>(object, value);
+			MonoArrayUtils::SetElementValue<T>((MonoArray*)object, index, value);
 		}
 
 	private:

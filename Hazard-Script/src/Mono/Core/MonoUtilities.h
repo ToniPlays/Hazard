@@ -4,7 +4,7 @@
 #include "Core/ValueWrapper.h"
 #include "Core/ScriptCache.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	class MonoUtils {
 	public:
@@ -28,7 +28,7 @@ namespace HazardScript
 			return result;
 		}
 		template<>
-		static bool GetFieldValue(MonoObject* object, MonoClassField* field) 
+		static bool GetFieldValue(MonoObject* object, MonoClassField* field)
 		{
 			MonoObject* result = mono_field_get_value_object(mono_domain_get(), field, object);
 			return (bool)MonoUtils::Unbox<MonoBoolean>(result);
@@ -43,14 +43,14 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		static T GetFieldValue(MonoObject* object, const std::string& name) 
+		static T GetFieldValue(MonoObject* object, const std::string& name)
 		{
 			MonoClass* klass = mono_object_get_class(object);
 			return GetFieldValue<T>(object, mono_class_get_field_from_name(klass, name.c_str()));
 		}
 
 		template<>
-		static std::string GetFieldValue(MonoObject* object, const std::string& name) 
+		static std::string GetFieldValue(MonoObject* object, const std::string& name)
 		{
 			MonoClass* klass = mono_object_get_class(object);
 			return GetFieldValue<std::string>(object, mono_class_get_field_from_name(klass, name.c_str()));
@@ -61,7 +61,7 @@ namespace HazardScript
 			mono_field_set_value(object, field, &value);
 		}
 		template<>
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, std::string value) 
+		static void SetFieldValue(MonoObject* object, MonoClassField* field, std::string value)
 		{
 			MonoString* string = Mono::StringToMonoString(value);
 			mono_field_set_value(object, field, string);
@@ -76,7 +76,7 @@ namespace HazardScript
 	class MonoArrayUtils {
 	public:
 		template<typename T>
-		static T GetElementValue(MonoArray* arrayObject, size_t index) 
+		static T GetElementValue(MonoArray* arrayObject, size_t index)
 		{
 			uintptr_t length = mono_array_length(arrayObject);
 			if (index >= length) __debugbreak();
@@ -90,14 +90,16 @@ namespace HazardScript
 				MonoObject* elem = mono_array_get(arrayObject, MonoObject*, index);
 				if constexpr (std::is_same<T, MonoObject*>::value)
 					return elem;
-				else
+				else {
+					if (elem == nullptr) return T();
 					return MonoUtils::Unbox<T>(elem);
+				}
 			}
 			char* src = mono_array_addr_with_size(arrayObject, size, index);
 			return ValueWrapper(src, sizeof(T)).Get<T>();
 		}
 		template<typename T>
-		static void SetElementValue(MonoArray* arrayObject, size_t index, T value) 
+		static void SetElementValue(MonoArray* arrayObject, size_t index, T value)
 		{
 			if constexpr (std::is_same<T, MonoObject*>::value)
 				SetValueInternal(arrayObject, index, value);
