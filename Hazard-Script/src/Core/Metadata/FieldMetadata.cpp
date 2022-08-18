@@ -15,12 +15,14 @@ namespace HazardScript
 	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
 	{
 		if (!m_Type.IsArray()) return 1;
-		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength();
+		MonoObject* object = mono_gchandle_get_target(handle);
+		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength(mono_field_get_value_object(Mono::GetDomain(), GetMonoField(), object));
 	}
 	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
 	{
 		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
-		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(elements);
+		MonoObject* object = mono_gchandle_get_target(handle);
+		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(object, elements);
 	}
 	void FieldMetadata::LoadAttributes()
 	{
@@ -45,7 +47,7 @@ namespace HazardScript
 		if (m_Type.IsArray())
 			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
 		else
-			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(this);
+			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(0, this);
 	}
 	void FieldMetadata::RemoveInstance(uint32_t handle)
 	{

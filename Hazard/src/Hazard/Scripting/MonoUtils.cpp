@@ -22,15 +22,14 @@ namespace HazardScript
 	template<>
 	glm::vec2 FieldValueStorage::GetLiveValue(MonoObject* object) 
 	{
-		glm::vec2 result;
-		mono_field_get_value(object, m_Field->GetMonoField(), &result);
-		return result;
+		return MonoFieldUtils::GetFieldValue<glm::vec2>(object, m_Field->GetMonoField());
 	}
 
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, glm::vec2 value)
 	{
-		mono_field_set_value(object, m_Field->GetMonoField(), &value);
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+		MonoFieldUtils::SetFieldValue(object, m_Field->GetMonoField(), value);
 	}
 
 	//glm::vec3 -----------------------------------
@@ -51,15 +50,15 @@ namespace HazardScript
 	template<>
 	glm::vec3 FieldValueStorage::GetLiveValue(MonoObject* object) 
 	{
-		glm::vec3 result;
-		mono_field_get_value(object, m_Field->GetMonoField(), &result);
-		return result;
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+		return MonoFieldUtils::GetFieldValue<glm::vec3>(object, m_Field->GetMonoField());
 	}
 
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, glm::vec3 value)
 	{
-		mono_field_set_value(object, m_Field->GetMonoField(), &value);
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+		MonoFieldUtils::SetFieldValue(object, m_Field->GetMonoField(), value);
 	}
 
 	//glm::vec4 -----------------------------------
@@ -80,15 +79,15 @@ namespace HazardScript
 	template<>
 	glm::vec4 FieldValueStorage::GetLiveValue(MonoObject* object) 
 	{
-		glm::vec4 result;
-		mono_field_get_value(object, m_Field->GetMonoField(), &result);
-		return result;
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+		return MonoFieldUtils::GetFieldValue<glm::vec4>(object, m_Field->GetMonoField());
 	}
 
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, glm::vec4 value)
 	{
-		mono_field_set_value(object, m_Field->GetMonoField(), &value);
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+		MonoFieldUtils::SetFieldValue(object, m_Field->GetMonoField(), value);
 	}
 	//Object reference -----------------------------------
 
@@ -114,24 +113,62 @@ namespace HazardScript
 	template<>
 	ObjectReference FieldValueStorage::GetLiveValue(MonoObject* object)
 	{
-		ObjectReference result;
-		return result;
+		HZR_ASSERT(!m_Field->GetType().IsArray(), "Oops");
+
+		ObjectReference stored = GetStoredValue<ObjectReference>();
+		ObjectReference ref = {};
+		ref.MonoObject = MonoFieldUtils::GetFieldValue<MonoObject*>(object, m_Field->GetMonoField());
+		ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
+
+		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Entity");
+
+		if (m_Field->GetType().IsSubClassOf(entityManaged) && ref.MonoObject != nullptr) 
+		{
+			//Get EntityManaged ID
+			MonoProperty* prop = mono_class_get_property_from_name(m_Field->GetType().TypeClass->Class, "ID");
+			MonoMethod* getter = mono_property_get_get_method(prop);
+			MonoObject* result = mono_runtime_invoke(getter, ref.MonoObject, NULL, NULL);
+			ref.ObjectUID = MonoUtils::Unbox<uint64_t>(result);
+		}
+		else 
+		{
+
+		}
+		return ref;
 	}
 
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, ObjectReference value)
 	{
-		if (value.MonoObject == nullptr) {
-			value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
-			value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
-			SetStoredValue(value);
+		if (!m_Field->GetType().IsArray()) 
+		{
+			if (value.MonoObject == nullptr) {
+				value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
+				value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
+				SetStoredValue(value);
+			}
+
+			mono_field_set_value(object, m_Field->GetMonoField(), value.MonoObject);
+			MonoMethod* method = mono_class_get_method_from_name(m_Field->GetType().TypeClass->Class, ".ctor", 1);
+			if (method != nullptr) {
+				void* params[] = { &value.ObjectUID };
+				mono_runtime_invoke(method, value.MonoObject, params, nullptr);
+			}
+			return;
 		}
 
-		mono_field_set_value(object, m_Field->GetMonoField(), value.MonoObject);
-		MonoMethod* method = mono_class_get_method_from_name(m_Field->GetType().TypeClass->Class, ".ctor", 1);
-		if (method != nullptr) {
-			void* params[] = { &value.ObjectUID };
-			mono_runtime_invoke(method, value.MonoObject, params, nullptr);
+		MonoArray* arr = (MonoArray*)object;
+		MonoClass* arrayClass = mono_object_get_class(object);
+		MonoClass* elementClass = mono_class_get_element_class(arrayClass);
+
+		if (m_Field->GetType().IsReference()) 
+		{
+			MonoObject* boxed = MonoUtils::Box(elementClass, value.MonoObject);
+			mono_array_setref(arr, m_Index, boxed);
+		}
+		else 
+		{
+			__debugbreak();
 		}
 	}
 }

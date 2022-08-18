@@ -26,7 +26,6 @@ namespace HazardScript
 		managedClass.ID = Hash::GenerateFNVHash(className);
 
 		int alignment;
-
 		managedClass.Size = mono_type_size(classType, &alignment);
 
 		s_Cache->Classes[managedClass.ID] = managedClass;

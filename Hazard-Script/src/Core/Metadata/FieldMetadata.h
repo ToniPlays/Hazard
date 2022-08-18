@@ -48,20 +48,22 @@ namespace HazardScript
 		{
 			MonoObject* obj = mono_gchandle_get_target(handle);
 			if (m_Type.IsArray())
-				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(obj, index);
+				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(mono_field_get_value_object(Mono::GetDomain(), m_Field, obj), index);
 			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>(obj);
 		}
 
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
+			//Field object
 			MonoObject* obj = mono_gchandle_get_target(handle);
 
 			if (m_Type.IsArray()) {
 				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
 				if (!storage->IsLive())
 					storage->SetStoredValue<T>(index, value);
-				storage->SetLiveValue<T>(obj, index, value);
+				//Use array object as target
+				storage->SetLiveValue<T>(mono_field_get_value_object(Mono::GetDomain(), m_Field, obj), index, value);
 			}
 			else
 			{

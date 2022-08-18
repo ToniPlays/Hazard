@@ -48,15 +48,6 @@ namespace HazardScript
 		return mono_gchandle_new(obj, false);
 	}
 
-	void Mono::GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
-	{
-		mono_field_get_value(object, field, buffer);
-	}
-	void Mono::SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
-	{
-		mono_field_set_value(object, field, buffer);
-	}
-
 	MonoImage* Mono::OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status)
 	{
 		return mono_image_open_from_data_full((char*)data, (uint32_t)size, 1, &status, 0);
@@ -90,6 +81,7 @@ namespace HazardScript
 			mono_error_cleanup(&error);
 		}
 		if (!ptr) return "";
+
 		std::string result(ptr);
 		mono_free(ptr);
 		return result;
@@ -97,7 +89,7 @@ namespace HazardScript
 	std::string Mono::MonoObjectToString(MonoObject* obj)
 	{
 		if (obj == nullptr) {
-			return "NULL";
+			return "";
 		}
 		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
@@ -105,10 +97,9 @@ namespace HazardScript
 	std::string Mono::MonoObjectToChar(MonoObject* obj)
 	{
 		if (obj == nullptr) {
-			return "NULL";
+			return "";
 		}
-		MonoString* string = mono_object_to_string(obj, nullptr);
-		std::string b = MonoStringToString(string);
+		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
 	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {

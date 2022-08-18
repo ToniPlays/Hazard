@@ -3,11 +3,9 @@
 
 namespace HazardScript 
 {
-	FieldValueStorage::FieldValueStorage(FieldMetadata* field)
-
+	FieldValueStorage::FieldValueStorage(uint32_t index, FieldMetadata* field) : m_Index(index), m_Field(field)
 	{
 		m_Storage = GetDefaultValueForType(field->GetType());
-		m_Field = field;
 	}
 	ValueWrapper GetDefaultValueForType(const ManagedType& type)
 	{

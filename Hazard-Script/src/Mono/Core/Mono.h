@@ -44,27 +44,6 @@ namespace HazardScript
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
 		static uint32_t InstantiateHandle(MonoClass * monoClass);
-		template<typename T>
-		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
-			T value;
-			GetFieldValue(object, field, &value);
-			return value;
-		}
-
-		template<typename T>
-		static T GetFieldValue(MonoObject* object, const std::string& name) {
-			MonoClass* monoClass = mono_object_get_class(object);
-			return Mono::GetFieldValue<T>(object, mono_class_get_field_from_name(monoClass, name.c_str()));
-		}
-		template<>
-		static std::string GetFieldValue(MonoObject* object, MonoClassField* field) {
-			MonoString* value;
-			GetFieldValue(object, field, &value);
-			return MonoStringToString(value);
-		}
-
-		static void GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
 
 		//Mono internal
 		static MonoDomain* GetDomain() { return s_Domain; }

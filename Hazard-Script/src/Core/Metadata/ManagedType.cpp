@@ -50,9 +50,9 @@ namespace HazardScript
 		return mono_class_is_subclass_of(TypeClass->Class, interfaceClass->Class, true);
 	}
 
-	bool ManagedType::IsSubClassOf(const ManagedClass* subclass) const
+	bool ManagedType::IsSubClassOf(const ManagedClass* baseClass) const
 	{
-		return mono_class_is_subclass_of(TypeClass->Class, subclass->Class, false);
+		return mono_class_is_subclass_of(TypeClass->Class, baseClass->Class, false);
 	}
 
 	bool ManagedType::CanAssignTo(const ManagedClass* managedClass) const

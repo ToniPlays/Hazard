@@ -10,3 +10,4 @@
 #include "Core/ScriptCache.h"
 #include "Core/FieldValueStorage.h"
 #include "Mono/Core/Mono.h"
+#include "Mono/Core/MonoUtilities.h"

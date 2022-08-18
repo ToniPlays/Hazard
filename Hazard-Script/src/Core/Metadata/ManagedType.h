@@ -21,7 +21,7 @@ namespace HazardScript
 		int TypeEncoding = 0;
 
 		bool HasInterface(const ManagedClass* interfaceClass) const;
-		bool IsSubClassOf(const ManagedClass* subclass) const;
+		bool IsSubClassOf(const ManagedClass* baseClass) const;
 		bool CanAssignTo(const ManagedClass* managedClass) const;
 		bool IsVoid() const;
 		bool IsArray() const;

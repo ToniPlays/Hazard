@@ -7,28 +7,38 @@
 #include "Metadata/ManagedType.h"
 #include "FieldValueStorageBase.h"
 #include "Metadata/FieldMetadata.h"
+#include "MathCore.h"
+#include "Mono/Core/MonoUtilities.h"
+
 
 namespace HazardScript
 {
 	static ValueWrapper GetDefaultValueForType(const ManagedType& type);
 
-#define DEFAULT_TYPE(Type)	template<>																\
-							void SetStoredValue(Type value) { m_Storage.Set<Type>(value);}			\
-							template<>																\
-							Type GetStoredValue() { return m_Storage.Get<Type>(); }					\
-							template<>																\
-							void SetLiveValue(MonoObject* object, Type value)						\
-							{																		\
-								mono_field_set_value(object, m_Field->GetMonoField(), &value);		\
-							}																		\
-
-
+#define DEFAULT_TYPE(Type)	template<>																					\
+							Type GetStoredValue() { return m_Storage.Get<Type>(); }										\
+							template<>																					\
+							void SetStoredValue(Type value) { m_Storage.Set<Type>(value);}								\
+							template<>																					\
+							Type GetLiveValue(MonoObject* object) {														\
+								if (m_Field->GetType().IsArray())														\
+									return MonoArrayUtils::GetElementValue<Type>((MonoArray*)object, m_Index);			\
+								return MonoFieldUtils::GetFieldValue<Type>(object, m_Field->GetMonoField());			\
+							}																							\
+							template<>																					\
+							void SetLiveValue(MonoObject* object, Type value)											\
+							{	if(m_Field->GetType().IsArray()) {														\
+									MonoArrayUtils::SetElementValue<Type>((MonoArray*)object, m_Index, value);			\
+									return;																				\
+								}																						\
+								MonoFieldUtils::SetFieldValue<Type>(object, m_Field->GetMonoField(), value);			\
+							}																							\
 
 	class FieldValueStorage : public FieldValueStorageBase
 	{
 	public:
 		FieldValueStorage() {}
-		FieldValueStorage(FieldMetadata* field);
+		FieldValueStorage(uint32_t index, FieldMetadata* field);
 
 		bool HasValue() { return m_Storage.HasValue(); }
 		bool Valid() { return m_Field != nullptr; }
@@ -70,83 +80,16 @@ namespace HazardScript
 		}
 
 		DEFAULT_TYPE(bool);
-		template<>
-		bool GetLiveValue(MonoObject* object) {
-			bool value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
-
 		DEFAULT_TYPE(float);
-		template<>
-		float GetLiveValue(MonoObject* object) {
-			float value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(double);
-		template<>
-		double GetLiveValue(MonoObject* object) {
-			double value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(int8_t);
-		template<>
-		int8_t GetLiveValue(MonoObject* object) {
-			int8_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(int16_t);
-		template<>
-		int16_t GetLiveValue(MonoObject* object) {
-			int16_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(int32_t);
-		template<>
-		int32_t GetLiveValue(MonoObject* object) {
-			int32_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(int64_t);
-		template<>
-		int64_t GetLiveValue(MonoObject* object) {
-			int64_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(uint8_t);
-		template<>
-		uint8_t GetLiveValue(MonoObject* object) {
-			uint8_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(uint16_t);
-		template<>
-		uint16_t GetLiveValue(MonoObject* object) {
-			uint16_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(uint32_t);
-		template<>
-		uint32_t GetLiveValue(MonoObject* object) {
-			uint32_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 		DEFAULT_TYPE(uint64_t);
-		template<>
-		uint64_t GetLiveValue(MonoObject* object) {
-			uint64_t value;
-			mono_field_get_value(object, m_Field->GetMonoField(), &value);
-			return value;
-		}
 
 		template<>
 		std::string GetStoredValue()
@@ -160,21 +103,26 @@ namespace HazardScript
 		}
 		template<>
 		std::string GetLiveValue(MonoObject* object) {
-			MonoString* string;
-			mono_field_get_value(object, m_Field->GetMonoField(), &string);
-			return Mono::MonoStringToString(string);
+			if (m_Field->GetType().IsArray())
+				return MonoArrayUtils::GetElementValue<std::string>((MonoArray*)object, m_Index);
+			return MonoFieldUtils::GetFieldValue<std::string>(object, m_Field->GetMonoField());
 		}
 		template<>
 		void SetLiveValue(MonoObject* object, std::string value)
 		{
-			MonoString* string = Mono::StringToMonoString(value);
-			mono_field_set_value(object, m_Field->GetMonoField(), string);
+			if (m_Field->GetType().IsArray()) 
+			{
+				MonoArrayUtils::SetElementValue<std::string>((MonoArray*)object, m_Index, value);
+				return;
+			}
+			MonoFieldUtils::SetFieldValue<std::string>(object, m_Field->GetMonoField(), value);
 		}
 
 
 	private:
 		FieldMetadata* m_Field = nullptr;
 		ValueWrapper m_Storage;
+		uint32_t m_Index = 0;
 	};
 	class ArrayFieldValueStorage : public FieldValueStorageBase
 	{
@@ -182,30 +130,68 @@ namespace HazardScript
 
 		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
-		uint32_t GetLength() { return m_ArrayStorage.size(); }
+		uintptr_t GetLength(MonoObject* object) { return IsLive() ? GetLiveLength(object) : m_ArrayStorage.size(); }
 
-		virtual void TransitionToLive() { };
+		uintptr_t GetLiveLength(MonoObject* object)
+		{
+			MonoArray* arr = (MonoArray*)object;
+			if (arr == nullptr) return 0;
+			uintptr_t len = mono_array_length(arr);
+			if (len >= 500) __debugbreak();
+			return len;
+		}
 
-		void Resize(uint32_t elements)
+		void Resize(MonoObject* object, uint32_t elements)
 		{
 			m_ArrayStorage.resize(elements);
-			for (auto& storage : m_ArrayStorage) 
+			for (size_t i = 0; i < elements; i++)
 			{
-				if (!storage.Valid()) 
+				if (!m_ArrayStorage[i].Valid())
 				{
-					storage = FieldValueStorage(m_Field);
+					m_ArrayStorage[i] = FieldValueStorage(i, m_Field);
 				}
+			}
+
+			MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), object);
+			if (arr == nullptr)
+			{
+				arr = mono_array_new(Mono::GetDomain(), m_Field->GetType().TypeClass->Class, elements);
+				mono_field_set_value(object, m_Field->GetMonoField(), arr);
+				return;
+			}
+			else
+			{
+				MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), object);
+				uint32_t oldLenth = mono_array_length(arr);
+
+				size_t copyLength = Math::Max<size_t>(m_ArrayStorage.size(), oldLenth);
+
+				MonoClass* arrClass = mono_object_get_class((MonoObject*)arr);
+				MonoClass* elementClass = m_Field->GetType().GetElementType().TypeClass->Class;
+				int32_t elementSize = mono_array_element_size(arrClass);
+
+				MonoArray* tmp = mono_array_new(Mono::GetDomain(), elementClass, m_ArrayStorage.size());
+
+				char* src = mono_array_addr_with_size(arr, elementSize, 0);
+				char* dst = mono_array_addr_with_size(tmp, elementSize, 0);
+
+				memcpy(dst, src, copyLength * elementSize);
+				mono_field_set_value(object, m_Field->GetMonoField(), tmp);
 			}
 		}
 
-		bool HasValue(uint32_t index) {
-			if (index >= GetLength()) return false;
+		bool HasValue(MonoObject* object, uint32_t index) {
+			if (index >= GetLength(object)) return false;
 			return m_ArrayStorage[index].HasValue();
 		}
 
 		template<typename T>
 		T GetValue(MonoObject* object, uint32_t index)
 		{
+			if (IsLive()) {
+				return m_ArrayStorage[index].GetLiveValue<T>(object);
+			}
+
 			if constexpr (std::is_same<T, ValueWrapper>::value)
 				return m_ArrayStorage[index];
 			else
@@ -214,7 +200,7 @@ namespace HazardScript
 
 		template<typename T>
 		T GetValueOrDefault(MonoObject* object, uint32_t index) {
-			if (!HasValue(index)) return T();
+			if (!HasValue(object, index)) return T();
 			return GetValue<T>(object, index);
 		}
 
