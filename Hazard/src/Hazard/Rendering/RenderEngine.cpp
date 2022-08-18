@@ -50,6 +50,9 @@ namespace Hazard
 		m_WhiteTexture = Ref<Texture2D>::Create(imageAsset);
 		m_QuadRenderer.Init();
 		m_QuadRenderer.CreateResources();
+
+		m_LineRenderer.Init();
+		m_LineRenderer.CreateResources();
 	}
 	void RenderEngine::CullingPass()
 	{
@@ -59,6 +62,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		m_QuadRenderer.EndScene();
+		m_LineRenderer.EndScene();
 
 		auto& cmdBuffer = m_Window->GetSwapchain()->GetSwapchainBuffer();
 		m_ModelUniformBuffer->Bind(cmdBuffer);
@@ -76,8 +80,14 @@ namespace Hazard
 
 				m_ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				rawMesh.VertexBuffer->Bind(cmdBuffer);
-				rawMesh.IndexBuffer->Bind(cmdBuffer);
-				pipeline->Draw(cmdBuffer, rawMesh.Count);
+				if (rawMesh.IndexBuffer) {
+					rawMesh.IndexBuffer->Bind(cmdBuffer);
+					pipeline->Draw(cmdBuffer, rawMesh.Count);
+				}
+				else 
+				{
+					pipeline->DrawArrays(cmdBuffer, rawMesh.Count);
+				}
 			}
 		}
 		for (auto& [pipeline, dataList] : m_DrawList.Pipelines) {
@@ -100,6 +110,7 @@ namespace Hazard
 	{
 		Input::Update();
 		m_QuadRenderer.BeginScene();
+		m_LineRenderer.BeginScene();
 	}
 	void RenderEngine::Render()
 	{

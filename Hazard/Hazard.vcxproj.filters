@@ -1552,6 +1552,7 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h" />
     <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h" />
     <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h" />
+    <ClInclude Include="src\Hazard\Rendering\LineRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1672,5 +1673,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\LineRenderer.cpp" />
   </ItemGroup>
 </Project>

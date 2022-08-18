@@ -28,6 +28,9 @@ namespace HazardRenderer
 		static void AddUniformBuffer(Ref<UniformBuffer> uniformBuffer) {
 			s_UniformBuffes[uniformBuffer->GetName()] = uniformBuffer;
 		}
+		static void AddPipeline(Ref<Pipeline> pipeline) {
+			s_Pipelines[pipeline->GetSpecifications().DebugName] = pipeline;
+		}
 
 		static Ref<VertexBuffer> GetVertexBuffer(const std::string& name) {
 			return s_VertexBuffers[name];

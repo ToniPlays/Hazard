@@ -11,6 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include <vector>
+
 namespace Math
 {
 	template<typename T>
@@ -167,5 +169,42 @@ namespace Math
 
 
 		return true;
+	}
+	static std::vector<glm::vec3> GetProjectionBounds(const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, float zNear, float zFar, float aspectRatio)
+	{
+		glm::vec3 up = Math::GetUpDirection(orientation);
+		glm::vec3 right = Math::GetRightDirection(orientation);
+		glm::vec3 forward = Math::GetForwardDirection(orientation);
+
+		verticalFOV = glm::radians(verticalFOV);
+		float heightNear = 2.0f * tan(verticalFOV / 2.0f) * zNear;
+		float widthNear = heightNear * aspectRatio;
+
+		float heightFar = 2.0f * tan(verticalFOV / 2.0f) * zFar;
+		float widthFar = heightFar * aspectRatio;
+
+		glm::vec3 centerNear = glm::normalize(forward) * zNear;
+		glm::vec3 centerFar = glm::normalize(forward) * zFar;
+
+		glm::vec3 upNearHalf = (up * (heightNear / 2.0f));
+		glm::vec3 upFarHalf = (up * (heightFar / 2.0f));
+
+		glm::vec3 rightWidthNear = (right * (widthNear / 2.0f));
+		glm::vec3 rightWidthFar = (right * (widthFar / 2.0f));
+
+		std::vector<glm::vec3> result;
+		result.reserve(8);
+
+		result.push_back(centerNear + upNearHalf - rightWidthNear);		//NearTopLeft
+		result.push_back(centerNear + upNearHalf + rightWidthNear);		//NearTopRight
+		result.push_back(centerNear - upNearHalf + rightWidthNear);		//NearBottomRight
+		result.push_back(centerNear - upNearHalf - rightWidthNear);		//NearBottomLeft
+
+		result.push_back(centerFar + upFarHalf - rightWidthFar);		//FarTopLeft
+		result.push_back(centerFar + upFarHalf + rightWidthFar);		//FarTopRight
+		result.push_back(centerFar - upFarHalf + rightWidthFar);		//FarBottomRight
+		result.push_back(centerFar - upFarHalf - rightWidthFar);		//FarBottomLeft
+
+		return result;
 	}
 }

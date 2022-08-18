@@ -5,6 +5,7 @@
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
 #include "Backend/Metal/Metal.h"
+#include "Backend/Core/RenderLibrary.h"
 
 namespace HazardRenderer
 {
@@ -12,10 +13,10 @@ namespace HazardRenderer
 	{
 		HZR_ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
 
-		/*if (specs->IsShared && RenderLibrary::HasPipeline(specs->DebugName)) 
+		if (specs->IsShared && RenderLibrary::HasPipeline(specs->DebugName)) 
 		{
 			return RenderLibrary::GetPipeline(specs->DebugName);
-		}*/
+		}
 		Ref<Pipeline> pipeline = nullptr;
 
 		switch (GraphicsContext::GetRenderAPI())
@@ -33,11 +34,9 @@ namespace HazardRenderer
 			return nullptr;
 		}
 
-		//if (specs->IsShared) {
-		//	RenderLibrary::AddPipeline(pipeline);
-		//}
-
-		//pipeline->m_Type = ResourceType::Pipeline;
+		if (specs->IsShared) {
+			RenderLibrary::AddPipeline(pipeline);
+		}
 		return pipeline;
 	}
 }
