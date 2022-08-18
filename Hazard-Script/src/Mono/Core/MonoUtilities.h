@@ -88,7 +88,10 @@ namespace HazardScript
 
 			if (type.IsReference()) {
 				MonoObject* elem = mono_array_get(arrayObject, MonoObject*, index);
-				return MonoUtils::Unbox<T>(elem);
+				if constexpr (std::is_same<T, MonoObject*>::value)
+					return elem;
+				else
+					return MonoUtils::Unbox<T>(elem);
 			}
 			char* src = mono_array_addr_with_size(arrayObject, size, index);
 			return ValueWrapper(src, sizeof(T)).Get<T>();

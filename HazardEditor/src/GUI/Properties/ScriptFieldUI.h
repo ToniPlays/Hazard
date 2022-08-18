@@ -254,8 +254,9 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 
 		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
+		Entity referenced = world->GetEntityFromUID(value.ObjectUID);
 
-		std::string text = (value.ObjectUID != 0 ? world->GetEntityFromUID(value.ObjectUID).GetTag().Tag : "None") + " (" + typeName + ")";
+		std::string text = (value.ObjectUID != 0 ? (referenced.IsValid() ? referenced.GetTag().Tag : "") : "None") + " (" + typeName + ")";
 		ImGui::Text(text.c_str());
 
 		bool modified = false;

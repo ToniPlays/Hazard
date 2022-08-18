@@ -137,7 +137,6 @@ namespace HazardScript
 			MonoArray* arr = (MonoArray*)object;
 			if (arr == nullptr) return 0;
 			uintptr_t len = mono_array_length(arr);
-			if (len >= 500) __debugbreak();
 			return len;
 		}
 

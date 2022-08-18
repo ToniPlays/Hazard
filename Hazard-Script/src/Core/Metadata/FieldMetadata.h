@@ -62,6 +62,7 @@ namespace HazardScript
 				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
 				if (!storage->IsLive())
 					storage->SetStoredValue<T>(index, value);
+
 				//Use array object as target
 				storage->SetLiveValue<T>(mono_field_get_value_object(Mono::GetDomain(), m_Field, obj), index, value);
 			}
