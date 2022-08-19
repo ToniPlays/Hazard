@@ -6,11 +6,11 @@
 #include "Editor/EditorScriptManager.h"
 
 
-class EditorApplication : public Hazard::Application {
+class HazardEditorApplication : public Hazard::Application {
 
 public:
-	EditorApplication() = default;
-	~EditorApplication() = default;
+	HazardEditorApplication() = default;
+	~HazardEditorApplication() = default;
 
 	void PreInit() override;
 	void Init() override;

@@ -83,6 +83,7 @@
     <Compile Include="source\Hazard\ECS\InternalCalls.cs" />
     <Compile Include="source\Hazard\Input\Input.cs" />
     <Compile Include="source\Hazard\Input\KeyCodes.cs" />
+    <Compile Include="source\Hazard\Math\BoundingBox.cs" />
     <Compile Include="source\Hazard\Math\Color.cs" />
     <Compile Include="source\Hazard\Math\Math.cs" />
     <Compile Include="source\Hazard\Math\Noise.cs" />
