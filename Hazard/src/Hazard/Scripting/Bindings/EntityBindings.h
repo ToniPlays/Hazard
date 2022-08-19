@@ -7,12 +7,13 @@
 #include "Mono/Core/Mono.h"
 
 #define GET_ENTITY(id) handler->GetCurrentWorld()->GetEntityFromUID(id)
+
 #define RegisterComponent(Type, Image)	{																												\
 		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\
 		if (monoType)																																	\
 		{																																				\
 			hasComponentFuncs[monoType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<Type>(); };									\
-			getComponentFuncs[monoType] = [](uint64_t entityID) -> ComponentBase& { return GET_ENTITY(entityID).GetComponent<Type>(); };									\
+			getComponentFuncs[monoType] = [](uint64_t entityID) -> ComponentBase& { return GET_ENTITY(entityID).GetComponent<Type>(); };				\
 			createComponentFuncs[monoType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<Type>(); };										\
 		}																																				\
 	}

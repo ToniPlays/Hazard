@@ -9,7 +9,8 @@ namespace Hazard
 {
 	using namespace HazardScript;
 
-	static MonoString* TagComponent_GetName_Native(uint64_t id) {
+	static MonoString* TagComponent_GetName_Native(uint64_t id) 
+	{
 		auto& tag = GET_ENTITY(id).GetComponent<TagComponent>();
 		return Mono::StringToMonoString(tag.Tag);
 	}

@@ -115,7 +115,8 @@ namespace HazardScript
 	{
 		ObjectReference stored = GetStoredValue<ObjectReference>();
 		ObjectReference ref = {};
-		if (!m_Field->GetType().IsArray()) {
+		if (!m_Field->GetType().IsArray()) 
+		{
 
 			ref.MonoObject = MonoFieldUtils::GetFieldValue<MonoObject*>(object, m_Field->GetMonoField());
 			ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
@@ -146,21 +147,17 @@ namespace HazardScript
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, ObjectReference value)
 	{
-		if (value.MonoObject == nullptr) {
+		if (value.MonoObject == nullptr) 
+		{
 			value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
 			value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
 			SetStoredValue(value);
 		}
 
 		if (!m_Field->GetType().IsArray())
-		{
 			MonoFieldUtils::SetFieldValue(object, m_Field->GetMonoField(), value.MonoObject);
-		}
 		else
-		{
-			MonoArray* arr = (MonoArray*)object;
-			MonoArrayUtils::SetElementValue(arr, m_Index, value.MonoObject);
-		}
+			MonoArrayUtils::SetElementValue((MonoArray*)object, m_Index, value.MonoObject);
 
 		MonoMethod* method = mono_class_get_method_from_name(m_Field->GetType().TypeClass->Class, ".ctor", 1);
 

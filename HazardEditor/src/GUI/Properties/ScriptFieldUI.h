@@ -255,8 +255,9 @@ namespace UI
 
 		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
 		Entity referenced = world->GetEntityFromUID(value.ObjectUID);
+		std::string& tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
 
-		std::string text = (value.ObjectUID != 0 ? (referenced.IsValid() ? referenced.GetTag().Tag : "") : "None") + " (" + typeName + ")";
+		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + typeName + ")";
 		ImGui::Text(text.c_str());
 
 		bool modified = false;
