@@ -64,7 +64,6 @@ namespace HazardScript
 		}
 		static std::string ResolveClassName(MonoClass* monoClass);
 
-
 	private:
 		inline static MonoDomain* s_Domain = nullptr;
 	};
