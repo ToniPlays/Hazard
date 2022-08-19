@@ -51,17 +51,18 @@ namespace HazardScript
 		static MonoAssembly* AssemblyFromImage(MonoImage* image, const std::filesystem::path& path, MonoImageOpenStatus& status);
 		static MonoClass* GetMonoClass(MonoImage* image, const std::string& nameSpace, const std::string& name);
 		static std::string GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj);
+		static MonoObject* GetPropertyObject(MonoObject* target, MonoClass* klass, const std::string& name);
 
 		static std::string MonoStringToString(MonoString* string);
 		static std::string MonoObjectToString(MonoObject* obj);
 		static std::string MonoObjectToChar(MonoObject* obj);
 		static MonoString* StringToMonoString(const std::string& string);
+		static MonoObject* RuntimeInvoke(MonoObject* target, MonoMethod* method, void** params = nullptr);
 
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);
 		}
 		static std::string ResolveClassName(MonoClass* monoClass);
-
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

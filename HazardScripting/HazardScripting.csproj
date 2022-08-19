@@ -21,8 +21,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <BaseIntermediateOutputPath>obj\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -34,8 +33,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <BaseIntermediateOutputPath>obj\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,8 +45,7 @@
     <OutputPath>bin\Dist\</OutputPath>
     <BaseIntermediateOutputPath>obj\Dist\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -70,6 +67,7 @@
     <Compile Include="source\Hazard\Components\CameraComponent.cs" />
     <Compile Include="source\Hazard\Components\InternalCalls.cs" />
     <Compile Include="source\Hazard\Components\MeshComponent.cs" />
+    <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
     <Compile Include="source\Hazard\Components\TagComponent.cs" />
     <Compile Include="source\Hazard\Components\TransformComponent.cs" />
     <Compile Include="source\Hazard\Coroutines\Coroutine.cs" />
@@ -108,7 +106,6 @@
     <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
