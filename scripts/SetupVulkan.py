@@ -11,8 +11,8 @@ from urllib.request import urlopen
 
 
 
-platform = "windows" if platform.system() == "windows" else "mac";
-platformExecutable = "exe" if platform == "windows" else "dmg";
+platform = "windows" if platform.system() == "Windows" else "mac";
+platformExecutable = "exe" if platform == "Windows" else "dmg";
 
 
 class VulkanConfiguration:

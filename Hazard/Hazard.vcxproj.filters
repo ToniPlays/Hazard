@@ -222,6 +222,9 @@
     <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\LineRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
@@ -270,10 +273,16 @@
     <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h">
       <Filter>src\Hazard\Scripting\Attributes</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\DebugBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\TagComponentBindings.h">
@@ -288,6 +297,9 @@
     <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
@@ -295,6 +307,12 @@
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptSerializer.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\hzrpch.h">
@@ -1545,12 +1563,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h" />
-    <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h" />
-    <ClInclude Include="src\Hazard\Rendering\LineRenderer.h" />
-    <ClInclude Include="src\Hazard\Scripting\ScriptSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1634,6 +1646,9 @@
     <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\LineRenderer.cpp">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
@@ -1661,17 +1676,20 @@
     <ClCompile Include="src\Hazard\Scripting\HScript.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\ScriptSerializer.cpp">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\LineRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Scripting\ScriptSerializer.cpp" />
   </ItemGroup>
 </Project>
