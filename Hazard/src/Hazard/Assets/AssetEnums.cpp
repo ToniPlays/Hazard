@@ -1,16 +1,17 @@
 
 #include <hzrpch.h>
 #include "AssetEnums.h"
-#include "Utility/YamlUtils.h"
+#include "Asset.h"
 
 namespace Hazard::Utils
 {
+
 	AssetType StringToAssetType(const std::string& type) {
 		if (type == "None")					return AssetType::Undefined;
 		if (type == "Folder")				return AssetType::Folder;
 		if (type == "AudioClip")			return AssetType::AudioClip;
 		if (type == "World")				return AssetType::World;
-		if (type == "Texture")				return AssetType::Image;
+		if (type == "Image")				return AssetType::Image;
 		if (type == "PhysicsMaterial")		return AssetType::PhysicsMaterial;
 		if (type == "Mesh")					return AssetType::Mesh;
 		if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
@@ -65,14 +66,25 @@ namespace Hazard::Utils
 		return "Undefined";
 	}
 }
+using namespace Hazard;
 
 template<>
 static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue) {
 	if (!node[key]) value = defaultValue;
-	else value = Hazard::Utils::StringToAssetType(node[key].as<std::string>());
+	else value = Utils::StringToAssetType(node[key].as<std::string>());
 }
 template<>
 static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value)
 {
-	out << YAML::Key << key << YAML::Value << Hazard::Utils::AssetTypeToString(value);
+	out << YAML::Key << key << YAML::Value << Utils::AssetTypeToString(value);
+}
+template<>
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue) {
+	if (!node[key]) value = defaultValue;
+	else value = node[key].as<uint64_t>();
+}
+template<>
+static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value)
+{
+	out << YAML::Key << key << YAML::Value << (uint64_t)value;
 }

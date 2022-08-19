@@ -47,6 +47,9 @@ namespace HazardScript
 	{
 		Mono::Register(signature, function);
 	}
+	void HazardScriptEngine::RunGarbageCollector() {
+		//mono_gc_collect(mono_gc_max_generation());
+	}
 	std::vector<ScriptAssembly*> HazardScriptEngine::GetAssemblies()
 	{
 		std::vector<ScriptAssembly*> assemblies;
@@ -67,10 +70,10 @@ namespace HazardScript
 			return;
 		}
 
-		std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, result);
-		std::string message = Mono::GetStringProperty("Message", exceptionClass, result);
+		std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, exception);
+		std::string message = Mono::GetStringProperty("Message", exceptionClass, exception);
 
-		HazardScriptEngine::SendDebugMessage({ Severity::Error, message, stacktrace });
+		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName, message + "\n\n" + stacktrace});
 	}
 	void HazardScriptEngine::InitializeMono()
 	{

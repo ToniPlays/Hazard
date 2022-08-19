@@ -91,10 +91,15 @@ namespace YAML {
 class YamlUtils {
 public:
 	template<typename T>
-	static void Serialize(YAML::Emitter& out, const std::string& key, T value);
+	static void Serialize(YAML::Emitter& out, const std::string& key, T value) {
+		out << YAML::Key << key << YAML::Value << value;
+	}
 
 	template<typename T>
-	static void Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue);
+	static void Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue) {
+		if (!node[key]) value = defaultValue;
+		else value = node[key].as<T>();
+	}
 
 	template<typename T>
 	static void Map(YAML::Emitter& out, const std::string& key, T fn)
@@ -112,47 +117,15 @@ public:
 		out << YAML::EndSeq;
 	}
 
-
 	template<>
 	static void Serialize(YAML::Emitter& out, const std::string& key, bool value)
 	{
 		out << YAML::Key << key << YAML::Value << (value ? "True" : "False");
 	}
 	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, const char* value)
-	{
-		out << YAML::Key << key << YAML::Value << value;
-	}
-	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, std::string value)
-	{
-		out << YAML::Key << key << YAML::Value << value;
-	}
-	template<>
 	static void Serialize(YAML::Emitter& out, const std::string& key, std::filesystem::path value)
 	{
 		out << YAML::Key << key << YAML::Value << value.string();
-	}
-
-	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, uint32_t value)
-	{
-		out << YAML::Key << key << YAML::Value << value;
-	}
-	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, size_t value)
-	{
-		out << YAML::Key << key << YAML::Value << value;
-	}
-	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, UID value)
-	{
-		out << YAML::Key << key << YAML::Value << (uint64_t)value;
-	}
-	template<>
-	static void Serialize(YAML::Emitter& out, const std::string& key, float value)
-	{
-		out << YAML::Key << key << YAML::Value << value;
 	}
 
 	//------------Vectors//------------
@@ -171,6 +144,13 @@ public:
 		out << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
 	}
 	template<>
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::vec4 value)
+	{
+		out << YAML::Key << key << YAML::Value;
+		out << YAML::Flow;
+		out << YAML::BeginSeq << value.x << value.y << value.z << value.w << YAML::EndSeq;
+	}
+	template<>
 	static void Serialize(YAML::Emitter& out, const std::string& key, Color value)
 	{
 		out << YAML::Key << key << YAML::Value;
@@ -185,48 +165,13 @@ public:
 		else value = node[key].as<std::string>() == "True";
 	}
 	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, std::string& value, std::string defaultValue) {
+	static void Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
 		if (!node[key]) value = defaultValue;
-		else value = node[key].as<std::string>();
+		else value = Color::FromGLM(node[key].as<glm::vec4>());
 	}
 	template<>
 	static void Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = node[key].as<std::string>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, uint32_t& value, uint32_t defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<uint32_t>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, size_t& value, size_t defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<size_t>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, UID& value, UID defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<uint64_t>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, float& value, float defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<float>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, glm::vec2& value, glm::vec2 defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<glm::vec2>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, glm::vec3& value, glm::vec3 defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<glm::vec3>();
-	}
-	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = Color::FromGLM(node[key].as<glm::vec4>());
 	}
 };

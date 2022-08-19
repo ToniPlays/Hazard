@@ -1,60 +1,74 @@
-
 #include "ScriptCache.h"
-#include <unordered_map>
 
+#include "UtilityCore.h"
+#include "Mono/Core/Mono.h"
 #include "Hash.h"
+
+#include "Metadata/ScriptMetadata.h"
 
 namespace HazardScript 
 {
-	struct Cache {
-		std::unordered_map<uint32_t, ManagedClass> Classes;
-		std::unordered_map<uint32_t, ManagedField> Fields;
-	};
 
-	static Cache* s_Cache = nullptr;
+#define CACHE_CORELIB_CLASS(name) CacheClass("System." ##name, mono_class_from_name(mono_get_corlib(), "System", name))
 
 	void ScriptCache::Init()
 	{
-		s_Cache = new Cache();
+		s_Cache = new ScriptCacheData();
 		CacheCoreLibClasses();
 	}
-
-	bool ScriptCache::CacheClass(const std::string& name, MonoClass* monoClass)
+	ManagedClass* ScriptCache::CacheClass(const std::string& className, MonoClass* klass)
 	{
-		if (name == ".<Module>") return false;
-
-		MonoType* type = mono_class_get_type(monoClass);
+		MonoType* classType = mono_class_get_type(klass);
 
 		ManagedClass managedClass = {};
-		managedClass.FullName = name;
-		managedClass.ID = Hash::GenerateFNVHash(managedClass.FullName);
-		int alignment = 0;
-		managedClass.Size = mono_type_size(type, &alignment);
-		managedClass.Class = monoClass;
-		managedClass.Flags = Mono::GetClassFlags(monoClass);
+		managedClass.Class = klass;
+		managedClass.FullName = className;
+		managedClass.ID = Hash::GenerateFNVHash(className);
+
+		int alignment;
+		managedClass.Size = mono_type_size(classType, &alignment);
 
 		s_Cache->Classes[managedClass.ID] = managedClass;
-		return true;
+		return &s_Cache->Classes[managedClass.ID];
 	}
-	ManagedClass* ScriptCache::GetManagedClass(MonoClass* monoClass)
+	ManagedClass* ScriptCache::GetClass(MonoClass* monoClass)
 	{
 		if (monoClass == nullptr) return nullptr;
-		if (s_Cache == nullptr) return nullptr;
 
 		return GetManagedClassByName(Mono::ResolveClassName(monoClass));
 	}
+	ScriptMetadata* ScriptCache::CacheOrGetScriptMetadata(ManagedClass* klass)
+	{
+		uint32_t hash = Hash::GenerateFNVHash(klass->FullName);
+		if (s_Cache->ScriptMetadata.find(hash) != s_Cache->ScriptMetadata.end())
+			return &s_Cache->ScriptMetadata[hash];
+
+		s_Cache->ScriptMetadata[hash] = ScriptMetadata(klass);
+		return &s_Cache->ScriptMetadata[hash];
+
+	}
+	FieldMetadata* ScriptCache::CacheOrGetFieldMetadata(MonoClassField* field)
+	{
+		const char* name = mono_field_full_name(field);
+		uint32_t hash = Hash::GenerateFNVHash(name);
+
+		if (s_Cache->ScriptFields.find(hash) != s_Cache->ScriptFields.end())
+			return &s_Cache->ScriptFields[hash];
+
+		FieldMetadata metadata(field);
+		s_Cache->ScriptFields[hash] = metadata;
+		return &s_Cache->ScriptFields[hash];
+	}
 	ManagedClass* ScriptCache::GetManagedClassByName(const std::string& name)
 	{
-		if (s_Cache == nullptr) return nullptr;
 		uint32_t classID = Hash::GenerateFNVHash(name);
-		if (s_Cache->Classes.find(classID) == s_Cache->Classes.end()) 
+		if (s_Cache->Classes.find(classID) == s_Cache->Classes.end())
 			return nullptr;
+
 		return &s_Cache->Classes[classID];
 	}
 	void ScriptCache::CacheCoreLibClasses()
 	{
-		std::cout << "Caching core lib classes" << std::endl;
-		#define CACHE_CORELIB_CLASS(name) CacheClass("System." ##name, mono_class_from_name(mono_get_corlib(), "System", name))
 		CACHE_CORELIB_CLASS("Object");
 		CACHE_CORELIB_CLASS("ValueType");
 		CACHE_CORELIB_CLASS("Boolean");
@@ -62,17 +76,18 @@ namespace HazardScript
 		CACHE_CORELIB_CLASS("Int16");
 		CACHE_CORELIB_CLASS("Int32");
 		CACHE_CORELIB_CLASS("Int64");
+		CACHE_CORELIB_CLASS("UInt16");
+		CACHE_CORELIB_CLASS("UInt32");
+		CACHE_CORELIB_CLASS("UInt64");
 		CACHE_CORELIB_CLASS("Byte");
 		CACHE_CORELIB_CLASS("UInt16");
 		CACHE_CORELIB_CLASS("UInt32");
 		CACHE_CORELIB_CLASS("UInt64");
-		CACHE_CORELIB_CLASS("IntPtr");
 		CACHE_CORELIB_CLASS("Single");
 		CACHE_CORELIB_CLASS("Double");
 		CACHE_CORELIB_CLASS("Char");
 		CACHE_CORELIB_CLASS("String");
+		CACHE_CORELIB_CLASS("Void");
+
 	}
 }
-
-
-

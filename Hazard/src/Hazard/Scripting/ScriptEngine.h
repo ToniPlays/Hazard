@@ -14,7 +14,8 @@ namespace Hazard
 		ScriptEngine(ScriptEngineCreateInfo* info);
 		~ScriptEngine() = default;
 		
-		void Init();
+		void Init() override;
+		void Update() override;
 
 		bool HasModule(const std::string& moduleName);
 		HazardScript::ScriptMetadata& GetScript(const std::string& moduleName);
@@ -36,7 +37,6 @@ namespace Hazard
 		void InitializeComponent(Entity& entity, ScriptComponent& component);
 
 	private:
-
 		ScriptEngineCreateInfo m_Info;
 
 		HazardScript::HazardScriptEngine* m_Engine;

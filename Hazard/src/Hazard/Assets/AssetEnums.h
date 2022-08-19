@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include "Utility/YamlUtils.h"
+
+using AssetHandle = UID;
 
 enum class AssetType
 {
@@ -32,3 +35,11 @@ namespace Hazard::Utils
 
 	const char* ResourceTypeToString(ResourceType type);
 }
+template<>
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue);
+template<>
+static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value);
+template<>
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue);
+template<>
+static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value);

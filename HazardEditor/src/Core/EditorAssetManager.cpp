@@ -6,6 +6,7 @@
 #include "Hazard.h"
 
 using namespace Hazard;
+
 AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path& path)
 {
 	AssetMetadata metadata = AssetMetadata();

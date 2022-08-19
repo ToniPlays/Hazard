@@ -1548,11 +1548,12 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AllAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\ClassAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\FieldAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\MethodAttributes.h" />
-    <ClInclude Include="src\Hazard\Scripting\Attributes\AttributeConstructor.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptUtilities.h" />
+    <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h" />
+    <ClInclude Include="src\Hazard\Rendering\LineRenderer.h" />
+    <ClInclude Include="src\Hazard\Scripting\ScriptSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1672,5 +1673,8 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\LineRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Scripting\ScriptSerializer.cpp" />
   </ItemGroup>
 </Project>

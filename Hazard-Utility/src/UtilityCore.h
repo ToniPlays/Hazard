@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <vector>
+#include <unordered_map>
 #include "Color.h"
 #include "HazardRuntimeError.h"
 
@@ -42,12 +43,12 @@
 
 #if HZR_PROFILE 
 #if !HZR_OPTICK
-#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Hazard::Instrumentor::Get().BeginSession(x, y)
-#define HZR_PROFILE_SESSION_END()				::Hazard::Instrumentor::Get().EndSession();
-#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::Hazard::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-														::Hazard::InstrumentationTimer timer##line(fixedName##line.Data)
+#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Instrumentor::Get().BeginSession(x, y)
+#define HZR_PROFILE_SESSION_END()				::Instrumentor::Get().EndSession();
+#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+														::InstrumentationTimer timer##line(fixedName##line.Data)
 #define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
-#define HZR_PROFILE_SCOPE(name, ...)					HZR_PROFILE_SCOPE_LINE(name, __LINE__)
+#define HZR_PROFILE_SCOPE(name, ...)			HZR_PROFILE_SCOPE_LINE(name, __LINE__)
 #define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
 #define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
 #else

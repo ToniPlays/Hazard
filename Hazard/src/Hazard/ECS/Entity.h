@@ -60,8 +60,12 @@ namespace Hazard {
 
 		entt::entity GetHandle() { return m_Handle; }
 		UID GetUID() { return GetComponent<TagComponent>().Uid; }
+
 		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
+		bool ReceivesUpdate() { return GetComponent<TagComponent>().ReceiveUpdate; }
+
 		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
+		void SetReceiveUpdate(bool receive) { GetComponent<TagComponent>().ReceiveUpdate = receive; }
 
 		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
 		TagComponent& GetTag() { return GetComponent<TagComponent>(); }

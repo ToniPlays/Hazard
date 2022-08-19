@@ -1,22 +1,23 @@
 #pragma once
 
 #include "../Entity.h"
-#include <yaml-cpp/yaml.h>
 #include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
 #include "UID.h"
 
-namespace Hazard 
+#include "Hazard/Assets/AssetEnums.h"
+
+namespace Hazard
 {
 	class WorldDeserializer {
 	public:
 
-        WorldDeserializer() = default;
-        
-        Ref<World> DeserializeEditor(const std::filesystem::path& file);
-        Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
+		WorldDeserializer() = default;
+
+		Ref<World> DeserializeEditor(const std::filesystem::path& file);
+		Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
 
 		template<typename T>
 		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
@@ -54,37 +55,44 @@ namespace Hazard
 		template<>
 		void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string moduleName;
+			bool active;
+			YamlUtils::Deserialize(comp, "Active", active, true);
 			YamlUtils::Deserialize(comp, "ModuleName", moduleName, std::string(""));
 
 			entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
 				c.ModuleName = moduleName;
+				c.Active = active;
 				});
 		};
 		template<>
 		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Active", c.Active, true);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<DirectionalLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Active", c.Active, true);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
 		void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<PointLightComponent>();
-			YamlUtils::Deserialize(comp, "Tint", c.LightColor, Color::White);
+			YamlUtils::Deserialize(comp, "Active", c.Active, true);
+			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
 		template<>
 		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
+			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			AssetHandle handle;
 			YamlUtils::Deserialize(comp, "Mesh", handle, (AssetHandle)INVALID_ASSET_HANDLE);
 
@@ -95,20 +103,19 @@ namespace Hazard
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 
-			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
+			YamlUtils::Deserialize(comp, "Active", component.Active, true);
+			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
 			if (comp["Sprite"]) {
-				std::string fileName;
-				YamlUtils::Deserialize(comp, "Sprite", fileName, std::string(""));
-				AssetHandle handle = AssetManager::ImportAsset(fileName);
-
-				if(handle != INVALID_ASSET_HANDLE)
-					component.Texture = AssetManager::GetAsset<Texture2D>(handle);
+				AssetHandle handle = INVALID_ASSET_HANDLE;
+				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
+				component.Texture = AssetManager::GetAsset<Texture2D>(handle);
 			}
 		};
 		template<>
 		void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<Rigidbody2DComponent>();
+			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			std::string bodyType;
 			YamlUtils::Deserialize(comp, "Type", bodyType, std::string("Static"));
 			component.Type = Physics::StringToBodyType(bodyType);
@@ -119,6 +126,7 @@ namespace Hazard
 		void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<BoxCollider2DComponent>();
+			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
 			YamlUtils::Deserialize(comp, "Size", component.Size, glm::vec2(1.0f));
 			YamlUtils::Deserialize(comp, "Density", component.Density, 1.0f);
@@ -131,6 +139,7 @@ namespace Hazard
 		void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<CircleCollider2DComponent>();
+			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Offset", component.Offset, glm::vec2(0.0f));
 			YamlUtils::Deserialize(comp, "Radius", component.Radius, 0.5f);
 			YamlUtils::Deserialize(comp, "Density", component.Density, 1.0f);
@@ -143,6 +152,7 @@ namespace Hazard
 		void Deserialize<BatchComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<BatchComponent>();
+			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Size", component.Size, (uint32_t)1);
 			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
 		}

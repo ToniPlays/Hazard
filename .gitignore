@@ -2,8 +2,10 @@
 .vs
 bin
 bin-int
+
 /vendor
 Hazard/vendor
+
 
 /*.vcxproj.*
 **/*.vcxproj
@@ -32,6 +34,9 @@ Makefile
 *.txt
 *.dll
 !scripts/res/*.dll
+!Hazard/vendor
+Hazard/vendor/Mono
+Hazard/vendor/VulkanSDK
 *.filters
 *.user
 *.cs

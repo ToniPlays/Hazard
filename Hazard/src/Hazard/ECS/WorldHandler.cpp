@@ -38,21 +38,24 @@ namespace Hazard {
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			//if (sc.m_Handle)
-			//	sc.m_Handle->TryInvoke("OnUpdate(single)", params);
+			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
+
+			sc.m_Handle->TryInvoke("OnUpdate(single)", params);
 		}
 	}
 
 	void WorldHandler::Render()
 	{
-		if(!(m_Flags & WorldFlags_Render)) return;
+		if (!(m_Flags & WorldFlags_Render)) return;
 		HZR_PROFILE_FUNCTION();
 		{
 			//Submit sky lights for drawing
 			auto& view = m_World->GetEntitiesWith<SkyLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				HRenderer::SubmitSkyLight(e.GetComponent<SkyLightComponent>());
+				auto& sky = e.GetComponent<SkyLightComponent>();
+				if (!e.IsVisible() || !sky.Active) continue;
+				HRenderer::SubmitSkyLight(sky);
 			}
 		}
 		{
@@ -60,7 +63,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<DirectionalLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), e.GetComponent<DirectionalLightComponent>());
+				auto& dl = e.GetComponent<DirectionalLightComponent>();
+				if (!e.IsVisible() || dl.Active) continue;
+				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), dl);
 			}
 		}
 		{
@@ -68,7 +73,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<PointLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), e.GetComponent<PointLightComponent>());
+				auto& pl = e.GetComponent<PointLightComponent>();
+				if (!e.IsVisible() || !pl.Active) continue;
+				HRenderer::SubmitPointLight(e.GetComponent<TransformComponent>(), pl);
 			}
 		}
 		{
@@ -76,7 +83,9 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<SpriteRendererComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), e.GetComponent<SpriteRendererComponent>());
+				auto& sr = e.GetComponent<SpriteRendererComponent>();
+				if (!e.IsVisible() || !sr.Active) continue;
+				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), sr);
 			}
 		}
 		{
@@ -84,13 +93,16 @@ namespace Hazard {
 			auto& view = m_World->GetEntitiesWith<MeshComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
-				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), e.GetComponent<MeshComponent>());
+				auto& mc = e.GetComponent<MeshComponent>();
+				if (!e.IsVisible() || !mc.Active) continue;
+				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), mc);
 			}
 		}
 		{
 			auto& view = m_World->GetEntitiesWith<BatchComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_World.Raw() };
+				if (!e.IsVisible()) continue;
 				auto& tc = e.GetComponent<TransformComponent>();
 				auto& bc = e.GetComponent<BatchComponent>();
 
@@ -115,13 +127,25 @@ namespace Hazard {
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			//if (sc.m_Handle)
-			//	sc.m_Handle->TryInvoke("OnCreate()", nullptr);
+			if (sc.m_Handle) {
+				sc.m_Handle->SetLive(true);
+				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
+			}
 		}
 	}
 
 	void WorldHandler::OnEnd()
 	{
+		HZR_PROFILE_FUNCTION();
+		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+
+		for (auto& entity : view) {
+			Entity e = { entity, m_World.Raw() };
+			auto& sc = e.GetComponent<ScriptComponent>();
+			if (sc.m_Handle) {
+				sc.m_Handle->SetLive(false);
+			}
+		}
 	}
 
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
@@ -139,7 +163,6 @@ namespace Hazard {
 
 		Entity entity = m_World->CreateEntity("Camera");
 		m_World->CreateEntity("Entity 1");
-		m_World->CreateEntity("Entity 2");
 		entity.AddComponent<CameraComponent>();
 
 		return false;

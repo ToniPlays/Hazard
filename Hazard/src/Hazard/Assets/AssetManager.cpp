@@ -39,7 +39,8 @@ namespace Hazard
 			return INVALID_ASSET_HANDLE;
 
 		//Create Asset metadata, don't load until requested
-		if (!metadata.IsValid()) {
+ 		if (!metadata.IsValid()) {
+			HZR_CORE_WARN("Importing with new metadata {0}", path.string());
 			metadata.Handle = AssetHandle();
 			metadata.Path = path;
 			metadata.Type = type;

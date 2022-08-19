@@ -1,65 +1,91 @@
 
 #include "ScriptMetadata.h"
+#include "ScriptAssembly.h"
+
 #include "Core/Instance/ScriptObject.h"
 #include "Core/AttributeBuilder.h"
-#include "ScriptAssembly.h"
 #include "Core/HazardScriptEngine.h"
-#include "Core/Attribute.h"
-#include "Core/ScriptCache.h"
 
-#include <sstream>
+#include "Core/ScriptCache.h"
 
 namespace HazardScript
 {
-	ScriptMetadata::ScriptMetadata(MonoClass* klass)
+	ScriptMetadata::ScriptMetadata(ManagedClass* klass) : m_Class(klass)
 	{
-		m_ManagedClass = ScriptCache::GetManagedClass(klass);
 
+	}
+	std::string ScriptMetadata::GetName()
+	{
+		return m_Class->FullName;
+	}
+
+	void ScriptMetadata::UpdateMetadata()
+	{
 		LoadFields();
 		LoadMethods();
 		LoadAttributes();
 	}
-	std::string ScriptMetadata::GetName()
+
+	bool ScriptMetadata::ValidateOrLoadMethod(const std::string& name)
 	{
-		return mono_class_get_name(m_ManagedClass->Class);
+		for (ScriptAssembly* assembly : HazardScriptEngine::GetAssemblies()) {
+			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
+			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
+
+			if (!method) continue;
+
+			MethodMetadata* m = new MethodMetadata(method);
+			m_Methods[name] = m;
+			return true;
+		}
+		return false;
+	}
+	bool ScriptMetadata::TryInvoke(const std::string& name, MonoObject* obj, void** params)
+	{
+		if (m_Methods.find(name) == m_Methods.end()) 
+			return false;
+
+		Invoke(name, obj, params);
+		return true;
+	}
+	void ScriptMetadata::Invoke(const std::string& name, MonoObject* obj, void** params)
+	{
+		m_Methods[name]->Invoke(obj, params);
 	}
 
-	Ref<ScriptObject> ScriptMetadata::CreateObject()
+	ScriptObject* ScriptMetadata::CreateObject()
 	{
-		return Ref<ScriptObject>::Create(this);
+		return new ScriptObject(this);
 	}
 	void ScriptMetadata::LoadFields()
 	{
+		m_Fields.clear();
 		MonoClassField* field = nullptr;
 		void* ptr = 0;
 
-		while ((field = mono_class_get_fields(m_ManagedClass->Class, &ptr))) {
-
+		while ((field = mono_class_get_fields(m_Class->Class, &ptr))) 
+		{
 			std::string name = mono_field_get_name(field);
-			MonoType* monoType = mono_field_get_type(field);
-			ManagedType type = ManagedType::FromType(monoType);
-
-			m_Fields[name] = FieldMetadata(field);
+			m_Fields[name] = ScriptCache::CacheOrGetFieldMetadata(field);
+			if (m_Fields[name]->GetType().NativeType == NativeType::None) {
+				std::cout << name << std::endl;
+			}
 		}
 	}
 	void ScriptMetadata::LoadMethods()
 	{
-		m_Methods.clear();
-
 		MonoMethod* method = nullptr;
 		void* ptr = nullptr;
 
-		while ((method = mono_class_get_methods(m_ManagedClass->Class, &ptr)))
-		{
-			std::string methodName = mono_method_get_reflection_name(method);
-			//methodName = methodName.substr(methodName.find_first_of('.') + 1);
-			//m_Methods.push_back(methodName);
+		while ((method = mono_class_get_methods(m_Class->Class, &ptr))) {
+			MethodMetadata* m = new MethodMetadata(method);
+			m_Methods[m->GetName()] = m;
 		}
 	}
 	void ScriptMetadata::LoadAttributes()
 	{
 		m_Attributes.clear();
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(m_ManagedClass->Class);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(m_Class->Class);
 
 		if (info == nullptr) return;
 

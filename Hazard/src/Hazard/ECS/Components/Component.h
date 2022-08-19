@@ -7,17 +7,19 @@
 #include "Ref.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 #include "HazardScript.h"
+#include "ComponentBase.h"
 
 namespace Hazard {
 
-	struct TagComponent
+	struct TagComponent : public ComponentBase
 	{
 		std::string Tag;
 		UID Uid;
 		bool Visible = true;
+		bool ReceiveUpdate = true;
 	};
 
-	struct TransformComponent
+	struct TransformComponent : public ComponentBase
 	{
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
@@ -40,12 +42,12 @@ namespace Hazard {
 		}
 	};
 
-	struct ScriptComponent 
+	struct ScriptComponent : public ComponentBase
 	{
 		std::string ModuleName;
 		Ref<HazardScript::ScriptObject> m_Handle;
 	};
-	struct MeshComponent 
+	struct MeshComponent : public ComponentBase
 	{
 		Ref<Mesh> m_MeshHandle;
 	};

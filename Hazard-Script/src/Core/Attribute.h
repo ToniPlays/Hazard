@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "ManagedType.h"
+#include "Mono/Core/Mono.h"
 
 namespace HazardScript {
 
@@ -14,13 +14,13 @@ namespace HazardScript {
 
 	enum class AttributeType {
 		None = 0,
-		Author,
+		Author, 
 		Todo,
 		MenuBarItem,
 		HideInProperties,
 		ShowInProperties,
 		SerializeField,
-		Slider,
+		Slider, 
 		Range,
 		Header,
 		Tooltip,
@@ -32,9 +32,9 @@ namespace HazardScript {
 	namespace Utils
 	{
 		static const char* ProgressToString(const Progress& progress);
-		static const char* NativeTypeToString(const NativeType& type)
-		{
+		static const char* NativeTypeToString(const NativeType& type) {
 			switch (type) {
+			case NativeType::None:			return "None";
 			case NativeType::Void:			return "Void";
 			case NativeType::Bool:			return "Bool";
 			case NativeType::Float:			return "Float";
@@ -55,21 +55,6 @@ namespace HazardScript {
 			case NativeType::Reference:		return "Reference";
 			}
 			return "Unknown";
-		}
-		static std::string FlagsToString(const MonoFlags& flags)
-		{
-			std::string result = "";
-			if (flags & MonoFlags_Private)		result += "Private ";
-			if (flags & MonoFlags_Protected)	result += "Protected ";
-			if (flags & MonoFlags_Public)		result += "Public ";
-			if (flags & MonoFlags_Internal)		result += "Internal ";
-			if (flags & MonoFlags_Static)		result += "Static ";
-			if (flags & MonoFlags_Abstract)		result += "Abstract ";
-			if (flags & MonoFlags_Virtual)		result += "Virtual ";
-			if (flags & MonoFlags_Interface)	result += "Interface ";
-			if (flags & MonoFlags_Sealed)		result += "Sealed ";
-
-			return result;
 		}
 	}
 

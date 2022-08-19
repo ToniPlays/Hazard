@@ -9,13 +9,19 @@ namespace Hazard
 {
     internal partial class InternalCalls
     {
-        [Todo("Binding", Status.Awaiting)]
+        #region Entity
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Entity_GetActive_Native(ulong id);
+        internal static extern bool Entity_IsUpdated_Native(ulong id);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Entity_SetActive_Native(ulong id, bool active);
+        internal static extern void Entity_SetUpdate_Native(ulong id, bool active);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Entity_IsVisible_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Entity_SetVisible_Native(ulong id, bool active);
+
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
@@ -23,15 +29,24 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
 
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Entity_InstantiateOrigin_Native(string id);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Entity_InstantiateAt_Native(string id, Vector3 position, Vector3 rotation, Vector3 scale);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_Destroy_Native(ulong id);
+        #endregion
+        #region BaseComponent
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Component_IsActive_Native(ulong id, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Component_SetActive_Native(ulong id, bool active, Type type);
+
+        #endregion
     }
 }

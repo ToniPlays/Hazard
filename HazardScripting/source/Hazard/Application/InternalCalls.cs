@@ -12,7 +12,6 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Application_Quit_Native();
 
-
         [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Display_Width_Native();

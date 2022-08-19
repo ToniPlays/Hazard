@@ -2,16 +2,21 @@
 
 #include "Mono/Core/Mono.h"
 #include "Core/Attribute.h"
+#include "ManagedType.h"
 
-namespace HazardScript
+namespace HazardScript 
 {
-	class MethodMetadata {
+	class MethodMetadata 
+	{
 	public:
 		MethodMetadata() = default;
 		MethodMetadata(MonoMethod* method);
 
-		FieldVisibility& GetVisibility() { return m_Visibility; }
+		MonoFlags& GetFlags() { return m_Flags; }
 		std::string GetName() { return m_Name; }
+		ManagedType& GetReturnType() { return m_ManagedMethod.ReturnType; }
+
+		MonoObject* Invoke(MonoObject* obj, void** params = nullptr);
 
 		template<typename T>
 		bool Has() const {
@@ -28,13 +33,14 @@ namespace HazardScript
 			return T();
 		}
 
+
 	private:
 		void Init();
 		void LoadAttributes();
 
 	private:
-		MonoMethod* m_Method;
-		FieldVisibility m_Visibility;
+		ManagedMethod m_ManagedMethod;
+		MonoFlags m_Flags;
 		std::string m_Name;
 
 		std::vector<Attribute*> m_Attributes;

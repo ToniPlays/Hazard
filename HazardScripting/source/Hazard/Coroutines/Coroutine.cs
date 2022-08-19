@@ -8,6 +8,6 @@ namespace Hazard
 {
     public class Coroutine
     {
-        internal IntPtr ptr;
+
     }
 }

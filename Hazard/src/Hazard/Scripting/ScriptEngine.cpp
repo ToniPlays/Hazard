@@ -5,12 +5,13 @@
 #include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
+#include "MonoUtilities.h"
 
 #define TYPEDEF(x, y) if (strcmp(##name, x) == 0) return y;
 
 using namespace HazardScript;
 
-namespace Hazard
+namespace Hazard 
 {
 	ScriptEngine::ScriptEngine(ScriptEngineCreateInfo* info) : Module("ScriptEngine")
 	{
@@ -42,19 +43,20 @@ namespace Hazard
 			m_MessageCallback(message);
 		};
 		createInfo.BindingCallback = [&]() {
-			HZR_CORE_WARN("Binding stuff");
 			for (auto& cb : m_ScriptGlue) {
 				for (auto* assembly : m_Engine->GetAssemblies())
 					cb->OnAssemblyLoaded(assembly);
 			}
-
-
 			for (auto& cb : m_ScriptGlue) {
 				cb->Register(this);
 			}
 		};
 		AttributeConstructor::Init();
 		m_Engine = HazardScriptEngine::Create(&createInfo);
+	}
+	void ScriptEngine::Update()
+	{
+		m_Engine->RunGarbageCollector();
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{
@@ -87,9 +89,21 @@ namespace Hazard
 		component.m_Handle = script.CreateObject();
 
 		uint64_t entityID = entity.GetUID();
-		//component.m_Handle->GetScript().ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
+		component.m_Handle->GetScript().ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
 
 		void* params[] = { &entityID };
-		//component.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
+		component.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
 	}
+}
+
+HazardScript::NativeType GetCustomType(const char* name) 
+{
+	TYPEDEF("Hazard.Vector2", NativeType::Float2);
+	TYPEDEF("Hazard.Vector3", NativeType::Float3);
+	TYPEDEF("Hazard.Color", NativeType::Float4);
+	TYPEDEF("Hazard.Status", NativeType::UInt32);
+	TYPEDEF("Hazard.Key", NativeType::UInt32);
+	TYPEDEF("Hazard.Rendering.BufferUsage", NativeType::UInt32);
+
+	return HazardScript::NativeType::Value;
 }

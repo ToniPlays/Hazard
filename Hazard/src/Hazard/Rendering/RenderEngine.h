@@ -4,6 +4,7 @@
 #include "HazardRenderer.h"
 #include "RendererDrawList.h"
 #include "QuadRenderer.h"
+#include "LineRenderer.h"
 
 namespace Hazard 
 {
@@ -32,6 +33,7 @@ namespace Hazard
 		void PostRender() override;
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
+		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
 		RendererDrawList& GetDrawList() { return m_DrawList; }
@@ -47,5 +49,6 @@ namespace Hazard
 		Ref<Texture2D> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
+		LineRenderer m_LineRenderer;
 	};
 }

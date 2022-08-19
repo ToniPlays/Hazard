@@ -1,24 +1,35 @@
+
 #include "MethodMetadata.h"
 #include "Core/AttributeBuilder.h"
 #include "Core/HazardScriptEngine.h"
 
-namespace HazardScript
+namespace HazardScript 
 {
-	MethodMetadata::MethodMetadata(MonoMethod* method) : m_Method(method)
+	MethodMetadata::MethodMetadata(MonoMethod* method)
 	{
+		m_ManagedMethod = { method };
 		Init();
 		LoadAttributes();
 	}
+	MonoObject* MethodMetadata::Invoke(MonoObject* obj, void** params)
+	{
+		MonoObject* exception = nullptr;
+		MonoObject* result = mono_runtime_invoke(m_ManagedMethod.Method, obj, params, &exception);
+
+		if (exception)
+			HazardScriptEngine::CheckError(exception, result, m_ManagedMethod.Method);
+
+		return result;
+	}
 	void MethodMetadata::Init()
 	{
-		m_Name = mono_method_get_reflection_name(m_Method);
+		m_Name = mono_method_get_reflection_name(m_ManagedMethod.Method);
 		m_Name = m_Name.substr(m_Name.find_first_of('.') + 1);
-		m_Visibility = Mono::GetMethodVisibility(m_Method);
 	}
 	void MethodMetadata::LoadAttributes()
 	{
 		m_Attributes.clear();
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_method(m_Method);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_method(m_ManagedMethod.Method);
 
 		if (info == nullptr) return;
 

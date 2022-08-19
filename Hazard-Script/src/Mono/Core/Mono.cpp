@@ -4,19 +4,13 @@
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/attrdefs.h>
+#include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
-#include <mono/metadata/tabledefs.h>
-
-#include "File.h"
 #include "Utility/StringUtil.h"
 
-
-#include "Mono/Core/Mono.h"
-
-
-#define CACHED_CLASS_NAME "Cached"
+#include "File.h"
 
 namespace HazardScript
 {
@@ -47,32 +41,11 @@ namespace HazardScript
 	{
 		mono_add_internal_call(signature.c_str(), function);
 	}
-	FieldVisibility Mono::GetMethodVisibility(MonoMethod* method)
-	{
-		uint32_t iFlags = 0;
-		uint32_t flags = mono_method_get_flags(method, &iFlags);
-
-		if (flags & MONO_FIELD_ATTR_PUBLIC)
-			return FieldVisibility::Public;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)
-			return FieldVisibility::Private;
-
-		return FieldVisibility::Protected;
-	}
 	uint32_t Mono::InstantiateHandle(MonoClass* monoClass)
 	{
 		MonoObject* obj = mono_object_new(s_Domain, monoClass);
 		mono_runtime_object_init(obj);
 		return mono_gchandle_new(obj, false);
-	}
-
-	void Mono::GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
-	{
-		mono_field_get_value(object, field, buffer);
-	}
-	void Mono::SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer)
-	{
-		mono_field_set_value(object, field, buffer);
 	}
 
 	MonoImage* Mono::OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status)
@@ -90,8 +63,8 @@ namespace HazardScript
 	}
 	std::string Mono::GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj)
 	{
-		MonoProperty* property = mono_class_get_property_from_name(monoClass, key);
-		MonoMethod* getter = mono_property_get_get_method(property);
+		MonoProperty* prop = mono_class_get_property_from_name(monoClass, key);
+		MonoMethod* getter = mono_property_get_get_method(prop);
 		MonoString* result = (MonoString*)mono_runtime_invoke(getter, obj, NULL, NULL);
 		return result != nullptr ? Mono::MonoStringToString(result) : "";
 	}
@@ -108,6 +81,7 @@ namespace HazardScript
 			mono_error_cleanup(&error);
 		}
 		if (!ptr) return "";
+
 		std::string result(ptr);
 		mono_free(ptr);
 		return result;
@@ -115,7 +89,7 @@ namespace HazardScript
 	std::string Mono::MonoObjectToString(MonoObject* obj)
 	{
 		if (obj == nullptr) {
-			return "NULL";
+			return "";
 		}
 		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
@@ -123,47 +97,37 @@ namespace HazardScript
 	std::string Mono::MonoObjectToChar(MonoObject* obj)
 	{
 		if (obj == nullptr) {
-			return "NULL";
+			return "";
 		}
-		MonoString* string = mono_object_to_string(obj, nullptr);
-		std::string b = MonoStringToString(string);
+		std::string b = MonoStringToString((MonoString*)obj);
 		return b;
 	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 
-		const char* str = string.c_str();
-		return mono_string_new(s_Domain, str);
+		return mono_string_new(s_Domain, string.c_str());
 	}
-	FieldVisibility Mono::GetFieldVisibility(MonoClassField* field)
+
+	std::string Mono::ResolveClassName(MonoClass* monoClass)
 	{
-		uint32_t flags = mono_field_get_flags(field);
+		const char* className = mono_class_get_name(monoClass);
+		std::string name = className != nullptr ? className : "";
 
-		if (flags & MONO_FIELD_ATTR_PUBLIC)
-			return FieldVisibility::Public;
-		if (flags & MONO_FIELD_ATTR_PRIVATE)
-			return FieldVisibility::Private;
+		if (name.empty()) return "Unknown";
 
-		return FieldVisibility::Protected;
-	}
-	FieldType Mono::GetFieldType(MonoClassField* field)
-	{
-		MonoType* type = mono_field_get_type(field);
-
-		switch (mono_type_get_type(type))
-		{
-		case MONO_TYPE_R4:			return FieldType::Float;
-		case MONO_TYPE_I4:			return FieldType::Int;
-		case MONO_TYPE_U4:			return FieldType::UInt;
-		case MONO_TYPE_STRING:		return FieldType::String;
-		case MONO_TYPE_VALUETYPE:
-		{
-
-			char* name = mono_type_get_name(type);
-			if (strcmp(name, "Hazard.Vector2") == 0) return FieldType::Float2;
-			if (strcmp(name, "Hazard.Vector3") == 0) return FieldType::Float3;
-			if (strcmp(name, "Hazard.Vector4") == 0) return FieldType::Float4;
+		MonoClass* nesting = mono_class_get_nesting_type(monoClass);
+		if (nesting != nullptr) {
+			name = ResolveClassName(nesting) + "/" + name;
 		}
+		else
+		{
+			const char* classNameSpace = mono_class_get_namespace(monoClass);
+			if (classNameSpace)
+				name = std::string(classNameSpace) + "." + name;
 		}
-		return FieldType::None;
+		MonoType* classType = mono_class_get_type(monoClass);
+		if (mono_type_get_type(classType) == MONO_TYPE_SZARRAY || mono_type_get_type(classType) == MONO_TYPE_ARRAY) {
+			name = name.substr(0, StringUtil::OffsetOf(name, '['));
+		}
+		return name;
 	}
 }

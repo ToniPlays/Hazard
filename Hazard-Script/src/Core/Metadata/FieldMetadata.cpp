@@ -1,20 +1,33 @@
 
-#include "ScriptField.h"
-#include "AttributeBuilder.h"
+#include "FieldMetadata.h"
+#include "Core/AttributeBuilder.h"
+#include "Core/FieldValueStorage.h"
 
 namespace HazardScript
 {
-	FieldMetadata::FieldMetadata(MonoClassField* field)
+	FieldMetadata::FieldMetadata(MonoClassField* field) : m_Field(field)
 	{
 		m_Name = mono_field_get_name(field);
-		m_Visibility = Mono::GetFieldVisibility(field);
-		m_Type = Mono::GetFieldType(field);
+		m_Type = ManagedType::FromType(mono_field_get_type(field));
+
 		LoadAttributes();
 	}
-	void FieldMetadata::LoadAttributes(MonoClassField* field)
+	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
 	{
-		MonoClass* monoClass = mono_field_get_parent(field);
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, field);
+		if (!m_Type.IsArray()) return 1;
+		MonoObject* object = mono_gchandle_get_target(handle);
+		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength(mono_field_get_value_object(Mono::GetDomain(), GetMonoField(), object));
+	}
+	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
+	{
+		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
+		MonoObject* object = mono_gchandle_get_target(handle);
+		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(object, elements);
+	}
+	void FieldMetadata::LoadAttributes()
+	{
+		MonoClass* monoClass = mono_field_get_parent(m_Field);
+		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);
 		if (info == nullptr) return;
 
 		m_Attributes.reserve(info->num_attrs);
@@ -28,5 +41,20 @@ namespace HazardScript
 
 			m_Attributes.push_back(AttributeBuilder::Create(mono_class_get_name(attribClass), obj));
 		}
+	}
+	void FieldMetadata::RegisterInstance(uint32_t handle)
+	{
+		if (m_Type.IsArray())
+			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
+		else
+			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(0, this);
+	}
+	void FieldMetadata::RemoveInstance(uint32_t handle)
+	{
+		m_InstanceData.erase(handle);
+	}
+	void FieldMetadata::SetLive(uint32_t handle, bool live) 
+	{
+		m_InstanceData[handle]->SetLive(live);
 	}
 }

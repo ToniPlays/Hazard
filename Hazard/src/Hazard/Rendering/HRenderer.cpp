@@ -28,7 +28,7 @@ namespace Hazard
 	void HRenderer::SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
 	{
 		glm::mat4& tMatrix = transform.GetTransformMat4();
-		const Color& t = spriteRenderer.Tint;
+		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
 		SubmitQuad(tMatrix, color, spriteRenderer.Texture);
@@ -46,6 +46,10 @@ namespace Hazard
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
 		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+	}
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
+	{
+		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, nullptr, count });
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
 	{
@@ -70,5 +74,24 @@ namespace Hazard
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{
 		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
+	}
+
+	void HRenderer::DrawCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, float zNear, float zFar, float aspectRatio, const Color& color) 
+	{
+		glm::vec4 c = { color.r, color.g, color.b, color.a };
+		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, zNear, zFar, aspectRatio);
+
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
+		}
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
+		}
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
+		}
 	}
 }

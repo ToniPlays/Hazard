@@ -1,14 +1,20 @@
+
 #include "ScriptObject.h"
+#include "Core/Metadata/ScriptMetadata.h"
+
 
 namespace HazardScript 
 {
-	ScriptObject::ScriptObject(ScriptMetadata* script) : m_Script(script) 
+	ScriptObject::~ScriptObject()
 	{
-		m_Handle = Mono::InstantiateHandle(script->GetClass());
-		//LoadFields(script->GetFields());
+		m_Script->RemoveInstance(m_Handle);
+		mono_gchandle_free(m_Handle);
 	}
-	void ScriptObject::LoadFields(std::unordered_map<std::string, ScriptField>& fields)
+	ScriptObject::ScriptObject(ScriptMetadata* script) : m_Script(script)
 	{
+		MonoClass* monoClass = script->GetManagedClass()->Class;
+		m_Handle = Mono::InstantiateHandle(monoClass);
 
+		m_Script->RegisterInstance(m_Handle);
 	}
 }

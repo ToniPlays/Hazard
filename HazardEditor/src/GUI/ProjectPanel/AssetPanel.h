@@ -33,6 +33,8 @@ namespace UI {
 		std::filesystem::path& GetRootDirectory() { return m_RootPath; }
 		std::filesystem::path& GetOpenDirectory() { return m_CurrentPath; }
 
+		void OpenImport();
+
 	private:
 		void DrawToolbar();
 		void DrawFolderTreeView();

@@ -10,44 +10,40 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
 
-#include "Core/ManagedType.h"
-
-
 //#define REGISTER_INTERNAL(x) Mono::Register("Hazard.InternalCalls::#x", (void*)#x);
 
 namespace HazardScript
 {
-	enum class FieldVisibility { Private, Protected, Public };
-	enum class FieldType { None, Float, Float2, Float3, Float4, Int, UInt, String, ManagedType };
+	enum MonoFlags : uint32_t 
+	{
+		MonoFlags_Private = BIT(0),
+		MonoFlags_Protected = BIT(1),
+		MonoFlags_Public = BIT(2),
+		MonoFlags_Internal = BIT(3),
+		MonoFlags_Static = BIT(4),
+		MonoFlags_Abstract = BIT(5),
+		MonoFlags_Virtual = BIT(6)
+	};
+
+	enum class NativeType {
+		None,
+		Void,
+		Bool,
+		Float, Float2, Float3, Float4,
+		Double,
+		Int8, Int16, Int32, Int64,
+		UInt8, UInt16, UInt32, UInt64,
+		String,
+		Value,
+		Reference
+	};
 
 	class Mono {
 	public:
 		static bool Init(const std::string& name);
 		static void SetDirs(const std::filesystem::path& assemblyDir, const std::filesystem::path& configDir);
 		static void Register(const std::string& signature, void* function);
-		static FieldVisibility GetMethodVisibility(MonoMethod* method);
-		static uint32_t InstantiateHandle(MonoClass* monoClass);
-		template<typename T>
-		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
-			T value;
-			GetFieldValue(object, field, &value);
-			return value;
-		}
-
-		template<typename T>
-		static T GetFieldValue(MonoObject* object, const std::string& name) {
-			MonoClass* monoClass = mono_object_get_class(object);
-			return Mono::GetFieldValue<T>(object, mono_class_get_field_from_name(monoClass, name.c_str()));
-		}
-		template<>
-		static std::string GetFieldValue(MonoObject* object, MonoClassField* field) {
-			MonoString* value;
-			GetFieldValue(object, field, &value);
-			return MonoStringToString(value);
-		}
-
-		static void GetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, void* buffer);
+		static uint32_t InstantiateHandle(MonoClass * monoClass);
 
 		//Mono internal
 		static MonoDomain* GetDomain() { return s_Domain; }
@@ -60,18 +56,12 @@ namespace HazardScript
 		static std::string MonoObjectToString(MonoObject* obj);
 		static std::string MonoObjectToChar(MonoObject* obj);
 		static MonoString* StringToMonoString(const std::string& string);
-		static FieldVisibility GetFieldVisibility(MonoClassField* field);
-		static FieldType GetFieldType(MonoClassField* field);
 
 		static MonoType* MonoTypeFromReflectionName(const std::string& name, MonoImage* image) {
 			return mono_reflection_type_from_name((char*)name.c_str(), image);
 		}
+		static std::string ResolveClassName(MonoClass* monoClass);
 
-		static std::string ResolveClassName(MonoClass* klass);
-		static bool MarkedAsCached(MonoClass* klass);
-		static bool MarkedAsCached(MonoClassField* field);
-
-		static MonoFlags GetClassFlags(MonoClass* klass);
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

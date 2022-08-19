@@ -2,6 +2,7 @@
 #include "Hierarchy.h"
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
+#include "Hazard/Rendering/HRenderer.h"
 #include <sstream>
 
 namespace UI
@@ -11,6 +12,17 @@ namespace UI
 	Hierarchy::Hierarchy() : Panel("Hierarchy")
 	{
 		m_WorldHandler = &Hazard::Application::GetModule<Hazard::WorldHandler>();
+	}
+	void Hierarchy::Update()
+	{
+		Ref<World> world = m_WorldHandler->GetCurrentWorld();
+		auto& view = world->GetEntitiesWith<CameraComponent>();
+		for (auto entity : view) {
+			Entity e = { entity, world.Raw() };
+			auto& tc = e.GetComponent<TransformComponent>();
+			auto& cc = e.GetComponent<CameraComponent>();
+			HRenderer::DrawCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping().x, cc.GetClipping().y, cc.GetAspectRatio(), Color::White);
+		}
 	}
 	void Hierarchy::OnPanelRender()
 	{
@@ -27,6 +39,11 @@ namespace UI
 
 				bool clicked = ImUI::TableRowTreeItem(tag.Tag.c_str(), e == m_SelectionContext, []() {
 					ImGui::Text("Sup bro");
+					});
+
+				ImUI::DragSource<UID>("Hazard.Entity", &e.GetUID(), [&]() {
+					ImGui::Text(tag.Tag.c_str());
+					ImGui::Text("Entity");
 					});
 
 				//Type
@@ -79,12 +96,12 @@ namespace UI
 		const ImVec4 visibleColor = style.Colors.AxisZ;
 		const ImVec4 textColor = style.Window.Text;
 		const ImVec4 warning = style.Colors.Warning;
-		
 
-		const char* modifiers[] = { tag.Visible ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O };
-		const char* tooltips[] = { tag.Visible ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing"};
+
+		const char* modifiers[] = { e.IsVisible() ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O };
+		const char* tooltips[] = { e.IsVisible() ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing" };
 		const bool states[] = { true, isSkyLight, scriptState, spriteState };
-		const ImVec4 colors[] = { tag.Visible ? visibleColor : textColor, textColor , warning, warning };
+		const ImVec4 colors[] = { e.IsVisible() ? visibleColor : textColor, textColor , warning, warning };
 
 		for (uint32_t i = 0; i < sizeof(states); i++) {
 			if (states[i]) {
@@ -106,7 +123,12 @@ namespace UI
 				world->CreateEntity("New entity");
 				});
 
-			ImUI::Separator({ImGui::GetContentRegionAvailWidth(), 2.0f}, style.Window.HeaderActive);
+			ImUI::Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Window.HeaderActive);
+
+			ImUI::MenuItem("Camera", [&]() {
+				auto& entity = world->CreateEntity("New camera");
+				entity.AddComponent<CameraComponent>();
+				});
 
 			ImUI::Submenu("3D", [&]() {
 				ImUI::MenuItem("Cube", [&]() {

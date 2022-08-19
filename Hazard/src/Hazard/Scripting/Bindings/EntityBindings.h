@@ -7,12 +7,14 @@
 #include "Mono/Core/Mono.h"
 
 #define GET_ENTITY(id) handler->GetCurrentWorld()->GetEntityFromUID(id)
+
 #define RegisterComponent(Type, Image)	{																												\
-		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																\
+		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\
 		if (monoType)																																	\
 		{																																				\
 			hasComponentFuncs[monoType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<Type>(); };									\
-			createComponentFuncs[monoType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<Type>(); };																				\
+			getComponentFuncs[monoType] = [](uint64_t entityID) -> ComponentBase& { return GET_ENTITY(entityID).GetComponent<Type>(); };				\
+			createComponentFuncs[monoType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<Type>(); };										\
 		}																																				\
 	}
 
@@ -21,6 +23,7 @@ namespace Hazard
 	WorldHandler* handler;
 
 	std::unordered_map<MonoType*, std::function<bool(uint64_t)>> hasComponentFuncs;
+	std::unordered_map<MonoType*, std::function<ComponentBase&(uint64_t)>> getComponentFuncs;
 	std::unordered_map<MonoType*, std::function<void(uint64_t)>> createComponentFuncs;
 
 	using namespace HazardScript;
@@ -42,7 +45,6 @@ namespace Hazard
 
 		return e.GetUID();
 	}
-
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
@@ -56,12 +58,41 @@ namespace Hazard
 	static void Entity_Destroy_Native(uint64_t id)
 	{
 		Entity e = GET_ENTITY(id);
-		if (e.HasComponent<ScriptComponent>()) {
+		if (e.HasComponent<ScriptComponent>()) 
+		{
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle) {
 			//	sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 			}
 		}
 		handler->GetCurrentWorld()->DestroyEntity(e);
+	}
+	static bool Entity_IsUpdated_Native(uint64_t id)
+	{
+		return GET_ENTITY(id).ReceivesUpdate();
+	}
+	static void Entity_SetUpdate_Native(uint64_t id, bool visible)
+	{
+		GET_ENTITY(id).SetReceiveUpdate(visible);
+	}
+	static bool Entity_IsVisible_Native(uint64_t id) 
+	{
+		return GET_ENTITY(id).IsVisible();
+	}
+	static void Entity_SetVisible_Native(uint64_t id, bool visible)
+	{
+		GET_ENTITY(id).SetVisible(visible);
+	}
+	static bool Component_IsActive_Native(uint64_t id, MonoType* type)
+	{
+		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		return getComponentFuncs[compType](id).Active;
+	}
+	static void Component_SetActive_Native(uint64_t id, bool active, MonoType* type)
+	{
+		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		ComponentBase& base = getComponentFuncs[compType](id);
+
+		base.Active = active;
 	}
 }

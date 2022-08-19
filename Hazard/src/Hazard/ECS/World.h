@@ -20,7 +20,7 @@ namespace Hazard {
 		void SetName(const std::string& name) { m_Name = name; }
 
 		Entity CreateEntity(const std::string& name);
-		Entity CreateEntity(UID id, const char* name);
+		Entity CreateEntity(UID id, const std::string& name);
 		Entity CreateEntity(Entity other);
 		Entity GetEntity(entt::entity entity);
 		Entity GetEntityFromUID(const UID& id);

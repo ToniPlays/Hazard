@@ -171,7 +171,7 @@ namespace UI
 
 		ImGui::Dummy({ 0, 3 });
 		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, 100);
+		ImGui::SetColumnWidth(0, 125);
 		ImGui::Text("Frametime");
 		ImGui::NextColumn();
 
@@ -186,6 +186,21 @@ namespace UI
 		ImGui::Text("Memory");
 		ImGui::NextColumn();
 		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
+		ImGui::NextColumn();
+
+		ImGui::Text("Managed classes");
+		ImGui::NextColumn();
+		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->Classes.size());
+		ImGui::NextColumn();
+
+		ImGui::Text("Script metadata");
+		ImGui::NextColumn();
+		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->ScriptMetadata.size());
+		ImGui::NextColumn();
+
+		ImGui::Text("Field metadaata");
+		ImGui::NextColumn();
+		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->ScriptFields.size());
 
 		ImGui::Columns();
 		ImGui::EndChild();

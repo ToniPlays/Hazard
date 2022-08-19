@@ -23,6 +23,9 @@ public:
 		os << color.r << ", " << color.g << ", " << color.b << ", " << color.a;
 		return os;
 	}
+	glm::vec4 ToGLM() {
+		return { r, g, b, a };
+	}
 	operator glm::vec4()
 	{
 		return { r, g, b, a };

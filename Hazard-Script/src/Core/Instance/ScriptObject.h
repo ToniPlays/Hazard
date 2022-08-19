@@ -12,26 +12,44 @@ namespace HazardScript
 
 	public:
 		ScriptObject() = delete;
-		ScriptObject(ScriptMetadata* script);
+		~ScriptObject();
 		
-		~ScriptObject() 
+		void TryInvoke(const std::string& name, void** params = nullptr) 
 		{
-			mono_gchandle_free(m_Handle);
+			m_Script->TryInvoke(name, GetHandle(), params);
+		}
+		void Invoke(const std::string& name, void** params = nullptr) 
+		{
+			m_Script->Invoke(name, GetHandle(), params);
+		}
+		
+		template<typename T>
+		T GetFieldValue(const std::string& name, uint32_t index = 0)
+		{
+			return m_Script->GetFieldValue<T>(m_Handle, name, index);
+		}
+		template<typename T>
+		void SetFieldValue(const std::string& name, T value, uint32_t index = 0) 
+		{
+			m_Script->SetFieldValue(m_Handle, name, value, index);
+		}
+		
+		void SetArraySize(const std::string& name, uint32_t elements) {
+			m_Script->SetArraySize(m_Handle, name, elements);
 		}
 
-		std::unordered_map<std::string, ManagedField> GetFields() { return m_Fields; }
-
+		uint32_t GetFieldValueCount(const std::string& name) { return m_Script->GetField(name).GetElementCount(m_Handle); }
 		ScriptMetadata& GetScript() { return *m_Script; }
+		bool IsValid() { return m_Script; }
+
+		void SetLive(bool live) { m_Script->SetLive(m_Handle, live); }
 
 	private:
+		ScriptObject(ScriptMetadata* script);
 		MonoObject* GetHandle() { return mono_gchandle_get_target(m_Handle); }
 
-		void LoadFields(std::unordered_map<std::string, ScriptField>& fields);
-
 	private:
-		uint32_t m_Handle;
+		uint32_t m_Handle = 0;
 		ScriptMetadata* m_Script;
-
-		std::unordered_map<std::string, ManagedField> m_Fields;
 	};
 }

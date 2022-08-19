@@ -108,6 +108,7 @@
     <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

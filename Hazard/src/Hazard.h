@@ -18,9 +18,7 @@
 #include "Hazard/ECS/Entity.h"
 #include "Hazard/ECS/Component.h"
 
-
 #include "Hazard/Rendering/Mesh/Mesh.h"
-
 
 //Hazard Physics
 #include "Hazard/Physics/PhysicsCommand.h"
@@ -28,6 +26,7 @@
 #include "Backend/Core/Core.h"
 
 #include "Hazard/Scripting/ScriptEngine.h"
+#include "Hazard/Scripting/ScriptUtilities.h"
 
 #include <hzrpch.h>
 
