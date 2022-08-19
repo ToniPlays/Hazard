@@ -13,8 +13,10 @@ namespace Editor
 	{
 		auto& project = ProjectManager::GetProject().GetProjectData();
 		std::filesystem::path genProjectPath = project.ProjectDirectory / "Library";
-		std::string command = (genProjectPath / "Win-CreateScriptProject.bat").string() + " > " + genProjectPath.string() + "/build.hlog";
+		std::string command = (genProjectPath / "Win-CreateScriptProject.bat").string();
+		HZR_INFO(command);
 		File::SystemCall(command);
+		HZR_INFO("Generated project files");
 	}
 	void EditorScriptManager::CompileSource()
 	{
@@ -22,6 +24,7 @@ namespace Editor
 		std::filesystem::path buildPath = project.ProjectDirectory / "Library";
 		std::string command = (buildPath / "BuildSolution.bat").string() + " > " + buildPath.string() + "/build.hlog";
 		File::SystemCall(command);
+		HZR_INFO("Compiled source files");
 
 		auto& manager = Hazard::Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();

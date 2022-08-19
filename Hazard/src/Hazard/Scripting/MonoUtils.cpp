@@ -115,26 +115,18 @@ namespace HazardScript
 	{
 		ObjectReference stored = GetStoredValue<ObjectReference>();
 		ObjectReference ref = {};
-		if (!m_Field->GetType().IsArray()) 
-		{
 
+		if (!m_Field->GetType().IsArray())
 			ref.MonoObject = MonoFieldUtils::GetFieldValue<MonoObject*>(object, m_Field->GetMonoField());
-			ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
-		}
-		else {
-
+		else
 			ref.MonoObject = MonoArrayUtils::GetElementValue<MonoObject*>((MonoArray*)object, m_Index);
-			ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
 
-		}
+		ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
 		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Entity");
 
 		if (m_Field->GetType().IsSubClassOf(entityManaged) && ref.MonoObject != nullptr)
 		{
-			//Get EntityManaged ID
-			MonoProperty* prop = mono_class_get_property_from_name(m_Field->GetType().TypeClass->Class, "ID");
-			MonoMethod* getter = mono_property_get_get_method(prop);
-			MonoObject* result = mono_runtime_invoke(getter, ref.MonoObject, NULL, NULL);
+			MonoObject* result = Mono::GetPropertyObject(ref.MonoObject, m_Field->GetType().TypeClass->Class, "ID");
 			ref.ObjectUID = MonoUtils::Unbox<uint64_t>(result);
 		}
 		else
@@ -147,7 +139,7 @@ namespace HazardScript
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* object, ObjectReference value)
 	{
-		if (value.MonoObject == nullptr) 
+		if (value.MonoObject == nullptr)
 		{
 			value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
 			value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
@@ -161,9 +153,11 @@ namespace HazardScript
 
 		MonoMethod* method = mono_class_get_method_from_name(m_Field->GetType().TypeClass->Class, ".ctor", 1);
 
-		if (method != nullptr) {
-			void* params[] = { &value.ObjectUID };
-			mono_runtime_invoke(method, value.MonoObject, params, nullptr);
-		}
+		if (method == nullptr) return;
+
+		uint64_t id = value.ObjectUID;
+		void* params[] = { &id };
+		HZR_CORE_ERROR(id);
+		Mono::RuntimeInvoke(value.MonoObject, method, params);
 	}
 }

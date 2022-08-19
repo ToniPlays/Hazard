@@ -35,7 +35,6 @@ namespace Hazard
         data.subMeshes.reserve(scene->mNumMeshes);
         ProcessNode(scene->mRootNode, scene, data);
         TraverseNode(scene->mRootNode, data);
-        HZR_CORE_INFO("[MeshFactory]: Loading mesh {0} took some ms", file.string());
 
         return Ref<Mesh>::Create(data.vertices, data.indices);
     }

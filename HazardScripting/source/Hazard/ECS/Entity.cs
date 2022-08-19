@@ -10,10 +10,12 @@ namespace Hazard
         internal Entity(ulong ID)
         {
             this.ID = ID;
+            Debug.Log("Created entity " + ID);
         }
         ~Entity() {}
 
         public ulong ID { get; private set; }
+
         public string Name {
             get => Get<TagComponent>().Name;
             set => Get<TagComponent>().Name = value;

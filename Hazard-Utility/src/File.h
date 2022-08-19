@@ -64,7 +64,7 @@ public:
 
 	static int SystemCall(const std::string& command);
 	static int CreateSubprocess(const std::string& path, const std::string& arguments, bool background = false);
-	static void WaitForSubprocess(int id);
+	static void WaitForSubprocess(void* id);
 
 
 	static bool HasEnvinronmentVar(const std::string& key);

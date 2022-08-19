@@ -15,9 +15,9 @@ namespace HazardRenderer::OpenGL
 
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
-		void SetData(const void* data, uint32_t size) override;
-		void SetData_RT(const void* data, uint32_t size);
-		uint32_t GetSize() override { return m_Size; }
+		void SetData(const void* data, size_t size) override;
+		void SetData_RT(const void* data, size_t size);
+		size_t GetSize() override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 
@@ -41,12 +41,12 @@ namespace HazardRenderer::OpenGL
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 
-		uint32_t GetCount() override { return m_Size / sizeof(uint32_t); }
+		size_t GetCount() override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
 
 	private:
-		void SetData(uint32_t* data, uint32_t size) override;
-		void SetData_RT(uint32_t* data, uint32_t size);
+		void SetData(uint32_t* data, size_t size) override;
+		void SetData_RT(uint32_t* data, size_t size);
 
 		std::string m_DebugName;
 		BufferUsage m_Usage;
@@ -63,11 +63,11 @@ namespace HazardRenderer::OpenGL
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
-		void SetData(const void* data, uint32_t size) override;
+		void SetData(const void* data, size_t size) override;
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };
-		const uint32_t GetSize() const override { return m_Size; };
+		const size_t GetSize() const override { return m_Size; };
 
 		uint32_t GetUsageFlags() { return m_Usage; };
 

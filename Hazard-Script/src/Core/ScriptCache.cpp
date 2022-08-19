@@ -89,5 +89,6 @@ namespace HazardScript
 		CACHE_CORELIB_CLASS("String");
 		CACHE_CORELIB_CLASS("Void");
 
+		CacheClass("System.Diagnostics.StackTrace", mono_class_from_name(mono_get_corlib(), "System.Diagnostics", "StackTrace"));
 	}
 }

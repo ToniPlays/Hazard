@@ -93,7 +93,7 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
-	void VulkanVertexBuffer::SetData(const void* data, uint32_t size)
+	void VulkanVertexBuffer::SetData(const void* data, size_t size)
 	{
 		m_LocalData.Write(data, size, 0);
 		Ref<VulkanVertexBuffer> instance = this;
@@ -101,7 +101,7 @@ namespace HazardRenderer::Vulkan
 			instance->RT_SetData(data, size);
 			});
 	}
-	void VulkanVertexBuffer::RT_SetData(const void* data, uint32_t size)
+	void VulkanVertexBuffer::RT_SetData(const void* data, size_t size)
 	{
 		VulkanAllocator allocator("VulkanVertexBuffer");
 		uint8_t* pData = allocator.MapMemory<uint8_t>(m_Allocation);
@@ -140,7 +140,7 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
-	void VulkanIndexBuffer::SetData(uint32_t* data, uint32_t size)
+	void VulkanIndexBuffer::SetData(uint32_t* data, size_t size)
 	{
 		Ref<VulkanIndexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
@@ -226,7 +226,7 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
-	void VulkanUniformBuffer::SetData(const void* data, uint32_t size)
+	void VulkanUniformBuffer::SetData(const void* data, size_t size)
 	{
 		if (m_Writes * m_Size > m_LocalData.Size)
 		{

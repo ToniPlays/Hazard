@@ -110,14 +110,14 @@ namespace HazardRenderer::OpenGL
 			glBindVertexArray(0);
 			});
 	}
-	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	void OpenGLVertexBuffer::SetData(const void* data, size_t size)
 	{
 		Ref<OpenGLVertexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
 			glNamedBufferSubData(instance->m_ID, 0, size, data);
 			});
 	}
-	void OpenGLVertexBuffer::SetData_RT(const void* data, uint32_t size)
+	void OpenGLVertexBuffer::SetData_RT(const void* data, size_t size)
 	{
 		glNamedBufferSubData(m_ID, 0, size, data);
 	}
@@ -157,7 +157,7 @@ namespace HazardRenderer::OpenGL
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			});
 	}
-	void OpenGLIndexBuffer::SetData(uint32_t* data, uint32_t size)
+	void OpenGLIndexBuffer::SetData(uint32_t* data, size_t size)
 	{
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
@@ -165,7 +165,7 @@ namespace HazardRenderer::OpenGL
 			glNamedBufferData(instance->m_ID, size, data, GL_STREAM_DRAW + instance->m_Usage);
 			});
 	}
-	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, uint32_t size)
+	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, size_t size)
 	{
 		m_Size = size;
 		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
@@ -214,7 +214,7 @@ namespace HazardRenderer::OpenGL
 	{
 
 	}
-	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size)
+	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
 		HZR_PROFILE_FUNCTION();
 		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
@@ -224,7 +224,7 @@ namespace HazardRenderer::OpenGL
 
 			uint32_t size = instance->m_Size;
 			HZR_PROFILE_FUNCTION("OpenGLUniformBuffer::SetData(const void*, uint32_t)_RT");
-			glNamedBufferData(instance->m_ID, size, (byte*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
+			glNamedBufferData(instance->m_ID, size, (uint8_t*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
 			});
 		m_CurrentBufferDataIndex += m_Size;
 	}

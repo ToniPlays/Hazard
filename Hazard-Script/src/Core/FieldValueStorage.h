@@ -38,7 +38,7 @@ namespace HazardScript
 	{
 	public:
 		FieldValueStorage() {}
-		FieldValueStorage(uint32_t index, FieldMetadata* field);
+		FieldValueStorage(size_t index, FieldMetadata* field);
 
 		bool HasValue() { return m_Storage.HasValue(); }
 		bool Valid() { return m_Field != nullptr; }
@@ -122,7 +122,7 @@ namespace HazardScript
 	private:
 		FieldMetadata* m_Field = nullptr;
 		ValueWrapper m_Storage;
-		uint32_t m_Index = 0;
+		size_t m_Index = 0;
 	};
 	class ArrayFieldValueStorage : public FieldValueStorageBase
 	{
@@ -140,7 +140,7 @@ namespace HazardScript
 			return len;
 		}
 
-		void Resize(MonoObject* object, uint32_t elements)
+		void Resize(MonoObject* object, size_t elements)
 		{
 			m_ArrayStorage.resize(elements);
 			for (size_t i = 0; i < elements; i++)
@@ -161,7 +161,7 @@ namespace HazardScript
 			else
 			{
 				MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), object);
-				uint32_t oldLenth = mono_array_length(arr);
+				uintptr_t oldLenth = mono_array_length(arr);
 
 				size_t copyLength = Math::Max<size_t>(m_ArrayStorage.size(), oldLenth);
 
@@ -179,17 +179,17 @@ namespace HazardScript
 			}
 		}
 
-		bool HasValue(MonoObject* object, uint32_t index) 
+		bool HasValue(MonoObject* object, size_t index)
 		{
 			if (index >= GetLength(object)) return false;
 			return m_ArrayStorage[index].HasValue();
 		}
 
 		template<typename T>
-		T GetValue(MonoObject* object, uint32_t index)
+		T GetValue(MonoObject* object, size_t index)
 		{
 			if (IsLive()) {
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, (size_t)index);
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, index);
 			}
 
 			if constexpr (std::is_same<T, ValueWrapper>::value)
@@ -199,10 +199,10 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		T GetValueOrDefault(MonoObject* object, uint32_t index) 
+		T GetValueOrDefault(MonoObject* object, size_t index)
 		{
 			if (IsLive()) {
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, (size_t)index);
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, index);
 			}
 			if (!HasValue(object, index)) return T();
 			return GetValue<T>(object, index);

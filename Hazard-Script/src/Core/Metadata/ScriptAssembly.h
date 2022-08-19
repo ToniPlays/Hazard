@@ -5,18 +5,25 @@
 
 namespace HazardScript 
 {
+	struct ReferencedAssembly 
+	{
+		std::string Name;
+	};
+
 	class ScriptAssembly {
 
 	public:
 		ScriptAssembly() = default;
 		~ScriptAssembly();
 
-		bool LoadFromSource(bool registerScripts = false);
+		bool LoadFromSource(bool registerScripts = false, bool withReferenced = false);
 
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
 		std::filesystem::path& GetSourcePath() { return m_Path; }
 
 		std::unordered_map<std::string, ScriptMetadata*>& GetScripts() { return m_Scripts; }
+		std::vector<ReferencedAssembly>& GetReferencedAssemblies() { return m_ReferencedAssemblies; }
+
 		MonoImage* GetImage() const;
 
 		bool HasScript(const std::string& name) {
@@ -39,10 +46,12 @@ namespace HazardScript
 		}
 
 	private:
+		void LoadReferencedAssemblies();
 		void LoadScripts();
 	private:
 		std::filesystem::path m_Path;
 		MonoAssembly* m_Assembly;
 		std::unordered_map<std::string, ScriptMetadata*> m_Scripts;
+		std::vector<ReferencedAssembly> m_ReferencedAssemblies;
 	};
 }

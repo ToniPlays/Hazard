@@ -3,7 +3,7 @@
 
 namespace HazardScript 
 {
-	FieldValueStorage::FieldValueStorage(uint32_t index, FieldMetadata* field) : m_Index(index), m_Field(field)
+	FieldValueStorage::FieldValueStorage(size_t index, FieldMetadata* field) : m_Index(index), m_Field(field)
 	{
 		m_Storage = GetDefaultValueForType(field->GetType());
 	}

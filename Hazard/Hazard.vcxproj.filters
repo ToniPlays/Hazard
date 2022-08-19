@@ -117,9 +117,6 @@
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\Timer.h">
-      <Filter>src\Hazard\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Component.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>

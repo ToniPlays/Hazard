@@ -28,14 +28,14 @@ namespace Hazard
 
 	using namespace HazardScript;
 
-	static uint64_t Entity_InstantiateOrigin_Native(MonoString* name)
+	static uint64_t Entity_InstantiateOrigin_Native(MonoObject* name)
 	{
-		std::string entityName = Mono::MonoStringToString(name);
+		std::string entityName = Mono::MonoObjectToString(name);
 		return handler->GetCurrentWorld()->CreateEntity(entityName).GetUID();
 	}
-	static uint64_t Entity_InstantiateAt_Native(MonoString* name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+	static uint64_t Entity_InstantiateAt_Native(MonoObject* name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 	{
-		std::string entityName = Mono::MonoStringToString(name);
+		std::string entityName = Mono::MonoObjectToString(name);
 		Entity e = handler->GetCurrentWorld()->CreateEntity(entityName);
 
 		auto& tc = e.GetTransform();

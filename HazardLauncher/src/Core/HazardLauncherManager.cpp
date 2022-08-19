@@ -9,7 +9,6 @@ HazardLauncherManager::HazardLauncherManager()
 bool HazardLauncherManager::OpenProject(const HazardProject& project)
 {
 	std::cout << "Opening Hazard project" << std::endl;
-
 	std::stringstream ss;
 	ss << "-wdir C:/dev/Hazard/HazardEditor";
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
@@ -44,7 +43,6 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 
 bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path)
 {
-	std::cout << File::GetEnvironmentVar("HAZARD_DIR") << std::endl;
 	if (!File::Exists(path)) return false;
 
 	YAML::Node root = YAML::LoadFile(path.string());
@@ -141,7 +139,7 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
 	int id = File::CreateSubprocess(genProjectPath.string(), "");
-	File::WaitForSubprocess(id);
+	File::WaitForSubprocess(&id);
 	
 	HZR_THREAD_DELAY(1000ms);
 	{
