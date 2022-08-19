@@ -13,13 +13,7 @@ namespace HazardScript
 	}
 	MonoObject* MethodMetadata::Invoke(MonoObject* obj, void** params)
 	{
-		MonoObject* exception = nullptr;
-		MonoObject* result = mono_runtime_invoke(m_ManagedMethod.Method, obj, params, &exception);
-
-		if (exception)
-			HazardScriptEngine::CheckError(exception, result, m_ManagedMethod.Method);
-
-		return result;
+		return Mono::RuntimeInvoke(obj, m_ManagedMethod.Method, params);
 	}
 	void MethodMetadata::Init()
 	{
@@ -35,7 +29,7 @@ namespace HazardScript
 
 		m_Attributes.reserve(info->num_attrs);
 
-		for (uint32_t i = 0; i < info->num_attrs; i++)
+		for (int i = 0; i < info->num_attrs; i++)
 		{
 			MonoCustomAttrEntry entry = info->attrs[i];
 			MonoClass* a = mono_method_get_class(entry.ctor);

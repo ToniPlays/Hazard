@@ -21,7 +21,7 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 void HazardProject::ProcessAssets()
 {
-	Hazard::Timer timer;
+	Timer timer;
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 	for (auto& item : File::GetAllInDirectory(assetPath)) 
 	{

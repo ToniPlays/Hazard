@@ -1,6 +1,6 @@
 #pragma once
 #include "Hazard/Core/Core.h"
-#include "Hazard/Core/Timer.h"
+#include "Timer.h"
 
 namespace Hazard
 {

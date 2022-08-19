@@ -271,8 +271,8 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 	);
 	return id;
 }
-void File::WaitForSubprocess(int id) {
-	WaitForSingleObject((HANDLE)id, 0);
+void File::WaitForSubprocess(void* id) {
+	WaitForSingleObject(id, 0);
 }
 
 bool File::HasEnvinronmentVar(const std::string& key) {

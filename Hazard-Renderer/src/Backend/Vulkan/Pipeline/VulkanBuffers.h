@@ -20,9 +20,9 @@ namespace HazardRenderer::Vulkan
 
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) override;
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
-		void SetData(const void* data, uint32_t size) override;
-		void RT_SetData(const void* data, uint32_t size);
-		uint32_t GetSize() override { return m_Size; }
+		void SetData(const void* data, size_t size) override;
+		void RT_SetData(const void* data, size_t size);
+		size_t GetSize() override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; }
 		const BufferLayout& GetLayout() const { return m_Layout; }
 
@@ -33,7 +33,7 @@ namespace HazardRenderer::Vulkan
 	private:
 		std::string m_DebugName;
 
-		uint32_t m_Size = 0;
+		size_t m_Size = 0;
 		Buffer m_LocalData;
 
 		VkBuffer m_Buffer;
@@ -52,15 +52,15 @@ namespace HazardRenderer::Vulkan
 		void Unbind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		std::string& GetDebugName() { return m_DebugName; }
 
-		uint32_t GetCount() override { return m_Size / sizeof(uint32_t); }
+		size_t GetCount() override { return m_Size / sizeof(uint32_t); }
 
 		VkBuffer GetVulkanBuffer() const { return m_Buffer;	}
 
 	private:
-		void SetData(uint32_t* data, uint32_t size);
+		void SetData(uint32_t* data, size_t size);
 
 		std::string m_DebugName;
-		uint32_t m_Size = 0;
+		size_t m_Size = 0;
 		Buffer m_LocalData;
 
 		VkBuffer m_Buffer;
@@ -77,12 +77,12 @@ namespace HazardRenderer::Vulkan
 		void Bind(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer) override;
 		void Unbind() override;
-		void SetData(const void* data, uint32_t size) override;
+		void SetData(const void* data, size_t size) override;
 		void RT_SetData();
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };
-		const uint32_t GetSize() const { return m_Size; };
+		const size_t GetSize() const { return m_Size; };
 		uint32_t GetUsageFlags() { return m_Usage; };
 		VkBuffer GetBuffer() { return m_Buffer; }
 
@@ -94,7 +94,7 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		std::string m_Name;
-		uint32_t m_Size;
+		size_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
 		

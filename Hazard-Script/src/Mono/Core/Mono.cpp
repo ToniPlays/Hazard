@@ -7,6 +7,7 @@
 #include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/mono-gc.h>
+#include "Core/HazardScriptEngine.h"
 
 #include "Utility/StringUtil.h"
 
@@ -63,11 +64,17 @@ namespace HazardScript
 	}
 	std::string Mono::GetStringProperty(const char* key, MonoClass* monoClass, MonoObject* obj)
 	{
-		MonoProperty* prop = mono_class_get_property_from_name(monoClass, key);
-		MonoMethod* getter = mono_property_get_get_method(prop);
-		MonoString* result = (MonoString*)mono_runtime_invoke(getter, obj, NULL, NULL);
+		MonoString* result = (MonoString*)GetPropertyObject(obj, monoClass, key);
 		return result != nullptr ? Mono::MonoStringToString(result) : "";
 	}
+
+	MonoObject* Mono::GetPropertyObject(MonoObject* target, MonoClass* klass, const std::string& name)
+	{
+		MonoProperty* prop = mono_class_get_property_from_name(klass, name.c_str());
+		MonoMethod* getter = mono_property_get_get_method(prop);
+		return RuntimeInvoke(target, getter);
+	}
+
 	std::string Mono::MonoStringToString(MonoString* string)
 	{
 		MonoError error;
@@ -91,20 +98,29 @@ namespace HazardScript
 		if (obj == nullptr) {
 			return "";
 		}
-		std::string b = MonoStringToString((MonoString*)obj);
-		return b;
+		return MonoStringToString(mono_object_to_string(obj, nullptr));
 	}
 	std::string Mono::MonoObjectToChar(MonoObject* obj)
 	{
 		if (obj == nullptr) {
 			return "";
 		}
-		std::string b = MonoStringToString((MonoString*)obj);
-		return b;
+		return MonoStringToString((MonoString*)obj);
 	}
 	MonoString* Mono::StringToMonoString(const std::string& string) {
 
 		return mono_string_new(s_Domain, string.c_str());
+	}
+
+	MonoObject* Mono::RuntimeInvoke(MonoObject* target, MonoMethod* method, void** params)
+	{
+		MonoObject* exception = nullptr;
+		MonoObject* result = mono_runtime_invoke(method, target, params, &exception);
+
+		if (exception)
+			HazardScriptEngine::CheckError(exception, result, method);
+
+		return result;
 	}
 
 	std::string Mono::ResolveClassName(MonoClass* monoClass)

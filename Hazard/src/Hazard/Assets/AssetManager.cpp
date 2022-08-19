@@ -40,7 +40,6 @@ namespace Hazard
 
 		//Create Asset metadata, don't load until requested
  		if (!metadata.IsValid()) {
-			HZR_CORE_WARN("Importing with new metadata {0}", path.string());
 			metadata.Handle = AssetHandle();
 			metadata.Path = path;
 			metadata.Type = type;

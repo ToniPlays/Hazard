@@ -26,48 +26,7 @@ namespace Hazard
 
 	World::World(const std::filesystem::path& file) : m_File(file)
 	{
-	
-	}
-
-	World::World(World& world)
-	{
-		m_File = std::string(world.GetWorldFile().string() + " (copy)");
-		m_Name = world.GetName() + " (copy)";
-		std::unordered_map<UID, entt::entity> entityMap;
-
-		const auto& entityID = world.m_Registry.view<TagComponent>();
-
-		entityMap.reserve(entityID.size());
-		for (size_t i = entityID.size(); i > 0; i--) {
-			auto entity = entityID[i - 1];
-
-			TagComponent& c = world.m_Registry.get<TagComponent>(entity);
-			UID uuid = c.Uid;
-
-			Entity e = CreateEntity(uuid, c.Tag.c_str());
-			entityMap[uuid] = e.GetHandle();
-			m_EntityUIDMap[uuid] = e;
-		}
-
-		CopyComponent<TagComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<TransformComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<CameraComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<ScriptComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<SkyLightComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<DirectionalLightComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<PointLightComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<MeshComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<SpriteRendererComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<Rigidbody2DComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<BoxCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
-		CopyComponent<CircleCollider2DComponent>(world.m_Registry, m_Registry, entityMap);
-
-		CopyComponent<BatchComponent>(world.m_Registry, m_Registry, entityMap);
+		
 	}
 
 	World::~World() 
@@ -97,36 +56,37 @@ namespace Hazard
 	}
 
 	template<typename T>
-	static void CopyComponentIfExists(entt::entity dst, entt::entity src, entt::registry& registry)
+	static void CopyComponentIfExists(entt::entity dst, entt::entity src, entt::registry& destRegistry, entt::registry& sourceRegistry)
 	{
-		if (registry.has<T>(src))
+		if (sourceRegistry.has<T>(src))
 		{
-			auto& srcComponent = registry.get<T>(src);
-			registry.emplace_or_replace<T>(dst, srcComponent);
+			auto& srcComponent = sourceRegistry.get<T>(src);
+			destRegistry.emplace_or_replace<T>(dst, srcComponent);
 		}
 	}
 
 	Entity World::CreateEntity(Entity other)
 	{
-		Entity entity;
+		Entity entity = { m_Registry.create(), this };
+		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
-		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<ScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<ScriptComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<SkyLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<SkyLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<DirectionalLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<PointLightComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<MeshComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<SpriteRendererComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
-		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<BatchComponent>(entity.GetHandle(), other.GetHandle(), m_Registry);
+		CopyComponentIfExists<BatchComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
 		return entity;
 	}
@@ -160,6 +120,26 @@ namespace Hazard
 		return std::tuple(nullptr, nullptr);
 	}
 
+	Ref<World> World::Copy(Ref<World> sourceWorld)
+	{
+		Ref<World> copied = Ref<World>::Create(sourceWorld->GetWorldFile());
+		copied->m_Name = sourceWorld->GetName() + "(copied)";
+		const auto& sourceEntities = sourceWorld->GetEntitiesWith<TagComponent>();
+		
+		copied->m_EntityUIDMap.reserve(sourceEntities.size());
+
+		for (size_t i = sourceEntities.size(); i > 0; i--) 
+		{
+			const auto& entityID = sourceEntities[i - 1];
+			Entity sourceEntity = { entityID, sourceWorld.Raw() };
+			const TagComponent& tc = sourceEntity.GetComponent<TagComponent>();
+
+			Entity destEntity = copied->CreateEntity(sourceEntity);
+		}
+
+		return copied;
+	}
+
 	//Scene component added and removed
 	template<typename T>
 	void World::OnComponentAdded(Entity& entity, T& component) {}
@@ -167,6 +147,7 @@ namespace Hazard
 	void World::OnComponentRemoved(Entity& entity, T& component) {}
 
 	REGISTER_COMPONENT(BatchComponent);
+	REGISTER_COMPONENT(MeshComponent);
 	REGISTER_COMPONENT(SpriteRendererComponent);
 	REGISTER_COMPONENT(SkyLightComponent);
 	REGISTER_COMPONENT(DirectionalLightComponent);
@@ -191,13 +172,4 @@ namespace Hazard
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
-
-	template<>
-	void World::OnComponentAdded(Entity& entity, MeshComponent& component) {
-		//component.Asset = Rendering::MeshFactory::LoadCube();
-	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, MeshComponent& component)
-	{
-	}
 }

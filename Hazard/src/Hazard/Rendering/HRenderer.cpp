@@ -47,7 +47,7 @@ namespace Hazard
 		if (!mesh) return;
 		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<Pipeline>& pipeline, size_t count)
 	{
 		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, nullptr, count });
 	}
@@ -55,11 +55,11 @@ namespace Hazard
 	{
 		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, indexBuffer->GetCount() });
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, uint32_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
 	{
 		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
 	}
-	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, uint32_t count)
+	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
 	{
 		s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}

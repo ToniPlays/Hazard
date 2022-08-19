@@ -17,8 +17,8 @@ namespace HazardScript
 		ScriptMetadata(ManagedClass* klass);
 
 		std::string GetName();
-		uint32_t GetFieldCount() { return m_Fields.size(); }
-		uint32_t GetMethodCount() { return m_Methods.size(); }
+		size_t GetFieldCount() { return m_Fields.size(); }
+		size_t GetMethodCount() { return m_Methods.size(); }
 		std::unordered_map<std::string, FieldMetadata*>& GetFields() { return m_Fields; }
 
 		void UpdateMetadata();

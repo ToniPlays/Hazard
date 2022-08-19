@@ -29,6 +29,9 @@ namespace UI
 		//Draw hierarchy panel
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImUI::TextField(m_SearchValue, "Search...");
+
 		const char* columns[] = { "Name", "Type", "Modifiers" };
 
 		ImUI::Table("Hierarchy", columns, 3, [&]() {

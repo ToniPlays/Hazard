@@ -44,9 +44,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (!m_QuadBatch) return;
 
-		uint32_t size = m_QuadBatch.GetDataSize();
-		uint32_t elements = size / sizeof(QuadVertex);
-		m_VertexBuffer->SetData(m_QuadBatch.GetData(), size);
+		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
 
 		Ref<Swapchain> swapchain = HRenderer::s_Engine->GetWindow().GetSwapchain();
 		HazardRenderer::Renderer::Submit([&, swapchain]() mutable {

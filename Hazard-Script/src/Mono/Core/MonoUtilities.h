@@ -13,7 +13,8 @@ namespace HazardScript
 			return *(T*)mono_object_unbox(object);
 		}
 		template<typename T>
-		static MonoObject* Box(MonoClass* type, T value) {
+		static MonoObject* Box(MonoClass* type, T value) 
+		{
 			return mono_value_box(Mono::GetDomain(), type, &value);
 		}
 	};
