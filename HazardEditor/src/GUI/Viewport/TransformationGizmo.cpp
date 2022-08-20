@@ -22,7 +22,7 @@ namespace UI
 		ImGuizmo::SetOrthographic(camera.Is2DEnabled());
 		ImGuizmo::SetDrawlist();
 
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + 17, size.x, size.y);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + 34, size.x, size.y);
 
 		auto& tc = target.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();

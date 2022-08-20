@@ -39,6 +39,7 @@ namespace UI
 			for (auto entity : world->GetEntitiesWith<TagComponent>()) {
 				Entity e(entity, world.Raw());
 				TagComponent& tag = e.GetComponent<TagComponent>();
+				if (!StringUtil::Contains(tag.Tag, m_SearchValue)) continue;
 
 				bool clicked = ImUI::TableRowTreeItem(tag.Tag.c_str(), e == m_SelectionContext, []() {
 					ImGui::Text("Sup bro");
@@ -79,6 +80,26 @@ namespace UI
 			Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 		}
 
+	}
+	bool Hierarchy::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::OnKeyPressed));
+	}
+	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
+	{
+		if (e.GetKeyCode() == Key::Delete) 
+		{
+			if (m_SelectionContext)
+			{
+				m_WorldHandler->GetCurrentWorld()->DestroyEntity(m_SelectionContext);
+				m_SelectionContext = {};
+				Events::SelectionContextChange ev({});
+				Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+				return true;
+			}
+		}
+		return false;
 	}
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{

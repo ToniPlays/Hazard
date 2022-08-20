@@ -97,5 +97,6 @@ namespace Hazard::ImUI
 		imStyle.Colors[ImGuiCol_MenuBarBg] = style.MenuBarBackground;
 		imStyle.Colors[ImGuiCol_NavHighlight] = style.NavHighlight;
 		imStyle.Colors[ImGuiCol_ChildBg] = style.ChildBackgroundColor;
+		imStyle.Colors[ImGuiCol_DragDropTarget] = style.DragDropTarget;
 	}
 }

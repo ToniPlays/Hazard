@@ -87,7 +87,7 @@ namespace Hazard
 		pipelineSpecs.DebugName = "LineBatchPipeline";
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.DrawType = DrawType::Line;
-		pipelineSpecs.LineWidth = 2.0f;
+		pipelineSpecs.LineWidth = 3.0f;
 		pipelineSpecs.ShaderPath = "Shaders/Debug/lineShader.glsl";
 		pipelineSpecs.pTargetRenderPass = m_RenderPass.Raw();
 		pipelineSpecs.pBufferLayout = &layout;

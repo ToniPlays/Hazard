@@ -34,11 +34,34 @@ namespace UI
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			ImUI::Shift(ImGui::GetContentRegionAvailWidth() / 2.0f - 65.0f, 50.0f);
 
-			if (ImGui::Button("Add component", { 130, 40 })) 
+			if (ImGui::Button("Add component", { 130, 40 }))
 			{
-				
+
+			}
+			if (!m_SelectionContext.HasComponent<ScriptComponent>()) {
+				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle assetID) {
+					Ref<HScript> script = AssetManager::GetAsset<HScript>(assetID);
+					m_SelectionContext.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
+						c.ModuleName = script->GetModuleName();
+						});
+					});
+			}
+			if (!m_SelectionContext.HasComponent<MeshComponent>()) {
+				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle assetID) {
+					Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(assetID);
+					auto& c = m_SelectionContext.AddComponent<MeshComponent>();
+					c.m_MeshHandle = mesh;
+					});
+			}
+			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>()) {
+				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle assetID) {
+					Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(assetID);
+					auto& c = m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					c.Texture = texture;
+					});
 			}
 		}
+
 		DrawContextMenu(m_SelectionContext);
 	}
 	bool Properties::OnEvent(Event& e)
