@@ -15,6 +15,11 @@ namespace Hazard {
 		m_Fov = fov;
 		RecalculateProjection(m_Width, m_Height);
 	}
+	void CameraComponent::SetSize(float size)
+	{
+		m_Size = size;
+		RecalculateProjection(m_Width, m_Height);
+	}
 	void CameraComponent::SetZNear(float plane)
 	{
 		m_ZNear = plane;
@@ -37,10 +42,10 @@ namespace Hazard {
 			return;
 		}
 
-		float orthoLeft = -m_Fov * aspectRatio * 0.5f;
-		float orthoRight = m_Fov * aspectRatio * 0.5f;
-		float orthoBottom = -m_Fov * 0.5f;
-		float orthoTop = m_Fov * 0.5f;
+		float orthoLeft = -m_Size * aspectRatio * 0.5f;
+		float orthoRight = m_Size * aspectRatio * 0.5f;
+		float orthoBottom = -m_Size * 0.5f;
+		float orthoTop = m_Size * 0.5f;
 
 		m_Projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_ZNear, m_ZFar);
 	}

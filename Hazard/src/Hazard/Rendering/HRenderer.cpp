@@ -76,10 +76,28 @@ namespace Hazard
 		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
 	}
 
-	void HRenderer::DrawCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, float zNear, float zFar, float aspectRatio, const Color& color) 
+	void HRenderer::DrawPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
-		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, zNear, zFar, aspectRatio);
+		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, clipping.x, clipping.y, aspectRatio);
+
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
+		}
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
+		}
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Engine->GetLineRenderer().SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
+		}
+	}
+	void HRenderer::DrawOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
+	{
+		glm::vec4 c = { color.r, color.g, color.b, color.a };
+		std::vector<glm::vec3> linePoints = Math::GetProjectionBoundsOrtho(orientation, transform, size, clipping.x, clipping.y, aspectRatio);
 
 		for (uint32_t i = 0; i < 4; i++)
 		{

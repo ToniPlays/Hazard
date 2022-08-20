@@ -207,4 +207,35 @@ namespace Math
 
 		return result;
 	}
+	static std::vector<glm::vec3> GetProjectionBoundsOrtho(const glm::quat& orientation, const glm::mat4& transform, float size, float zNear, float zFar, float aspectRatio)
+	{
+		glm::vec3 up = Math::GetUpDirection(orientation);
+		glm::vec3 right = Math::GetRightDirection(orientation);
+		glm::vec3 forward = Math::GetForwardDirection(orientation);
+
+		float height = 2.0f * size / 2.0f;
+		float width = height * aspectRatio;
+
+		glm::vec3 centerNear = glm::normalize(forward) * zNear;
+		glm::vec3 centerFar = glm::normalize(forward) * zFar;
+
+		glm::vec3 upHalf = (up * (height / 2.0f));
+
+		glm::vec3 rightWidth = (right * (width / 2.0f));
+
+		std::vector<glm::vec3> result;
+		result.reserve(8);
+
+		result.push_back(centerNear + upHalf - rightWidth);		//NearTopLeft
+		result.push_back(centerNear + upHalf + rightWidth);		//NearTopRight
+		result.push_back(centerNear - upHalf + rightWidth);		//NearBottomRight
+		result.push_back(centerNear - upHalf - rightWidth);		//NearBottomLeft
+
+		result.push_back(centerFar + upHalf - rightWidth);		//FarTopLeft
+		result.push_back(centerFar + upHalf + rightWidth);		//FarTopRight
+		result.push_back(centerFar - upHalf + rightWidth);		//FarBottomRight
+		result.push_back(centerFar - upHalf - rightWidth);		//FarBottomLeft
+
+		return result;
+	}
 }

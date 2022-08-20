@@ -21,7 +21,9 @@ namespace UI
 			Entity e = { entity, world.Raw() };
 			auto& tc = e.GetComponent<TransformComponent>();
 			auto& cc = e.GetComponent<CameraComponent>();
-			HRenderer::DrawCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping().x, cc.GetClipping().y, cc.GetAspectRatio(), Color::White);
+			if (cc.GetProjectionType() == Projection::Perspective)
+				HRenderer::DrawPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+			else HRenderer::DrawOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 		}
 	}
 	void Hierarchy::OnPanelRender()
@@ -88,7 +90,7 @@ namespace UI
 	}
 	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Key::Delete) 
+		if (e.GetKeyCode() == Key::Delete)
 		{
 			if (m_SelectionContext)
 			{

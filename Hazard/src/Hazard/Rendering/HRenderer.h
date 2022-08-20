@@ -35,7 +35,8 @@ namespace Hazard
 		static void SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight);
 
 		//Debug
-		static void DrawCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, float zNear, float zFar, float aspectRatio, const Color& color = Color::White);
+		static void DrawPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color = Color::White);
+		static void DrawOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color = Color::White);
 
 	private:
 		inline static RenderEngine* s_Engine;

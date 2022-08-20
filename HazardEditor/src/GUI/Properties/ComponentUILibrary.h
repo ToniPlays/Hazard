@@ -130,11 +130,19 @@ namespace UI
 				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected)) {
 					c.SetProjection((Projection)selected);
 				}
+				if (c.GetProjectionType() == Projection::Perspective) {
+					float fov = c.GetFov();
 
-				float fov = c.GetFov();
+					if (ImUI::InputFloat("Fov", fov, 60.0f)) {
+						c.SetFov(fov);
+					}
+				}
+				else {
+					float size = c.GetSize();
 
-				if (ImUI::InputFloat("Fov", fov, 60.0f)) {
-					c.SetFov(fov);
+					if (ImUI::InputFloat("Size", size, 60.0f)) {
+						c.SetSize(size);
+					}
 				}
 
 				glm::vec2 clipping = c.GetClipping();
@@ -430,7 +438,7 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-			return false;
+		return false;
 	}
 
 	template<>

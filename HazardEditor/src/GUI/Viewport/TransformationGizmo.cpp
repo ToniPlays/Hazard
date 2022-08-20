@@ -13,6 +13,7 @@ namespace UI
 {
 	TransformationGizmo::TransformationGizmo()
 	{
+
 	}
 	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size)
 	{

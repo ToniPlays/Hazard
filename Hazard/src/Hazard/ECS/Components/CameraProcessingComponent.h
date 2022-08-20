@@ -13,6 +13,7 @@ namespace Hazard
 			
 		void SetProjection(Projection t);
 		void SetFov(float fov);
+		void SetSize(float size);
 		void SetZNear(float plane);
 		void SetZFar(float plane);
 		void SetClipping(const glm::vec2 clipping) {
@@ -24,6 +25,7 @@ namespace Hazard
 
 		Projection GetProjectionType() { return m_Type; }
 		float GetFov() { return m_Fov; }
+		float GetSize() { return m_Size; }
 		glm::mat4 GetProjection() { return m_Projection; }
 		glm::vec2 GetClipping() { return { m_ZNear, m_ZFar }; }
 
@@ -31,7 +33,8 @@ namespace Hazard
 		Projection m_Type = Projection::Perspective;
 		glm::mat4 m_Projection;
 
-		float m_Fov = 10.0f;
+		float m_Fov = 60.0f;
+		float m_Size = 5.0f;
 		float m_Width = 1920, m_Height = 1080, m_ZNear = 0.03f, m_ZFar = 1000.0f;
 	};
 }
