@@ -6,16 +6,31 @@ using System.Threading.Tasks;
 
 namespace Hazard
 {
+
     public class CameraComponent : Component
     {
         public CameraComponent() : base(0) { }
         internal CameraComponent(ulong ID) : base(ID) { }
-
-        public float FOV 
+        public float FOV
         {
             get => InternalCalls.CameraComponent_GetFOV_Native(parentEntity.ID);
             set => InternalCalls.CameraComponent_SetFOV_Native(parentEntity.ID, value);
         }
+        public ClippingPlane Clipping
+        {
+            get
+            {
+                InternalCalls.CameraComponent_GetClipping_Native(parentEntity.ID, out Vector2 clip);
+                return new ClippingPlane(clip.x, clip.y);
+            }
+            set
+            {
+                Vector2 clip = new Vector2(value.ZNear, value.ZFar);
+                InternalCalls.CameraComponent_SetClipping_Native(parentEntity.ID, ref clip);
+            }
+        }
+        public void GetProjection() { InternalCalls.CameraComponent_GetProjection_Native(parentEntity.ID); }
+        public void SetProjection(Projection projection) { InternalCalls.CameraComponent_SetProjection_Native(parentEntity.ID, (int)projection); }
 
         public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(CameraComponent)); }
         public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(CameraComponent)); }

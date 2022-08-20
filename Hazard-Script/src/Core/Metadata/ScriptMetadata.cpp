@@ -55,7 +55,9 @@ namespace HazardScript
 
 	ScriptObject* ScriptMetadata::CreateObject()
 	{
-		return new ScriptObject(this);
+		ScriptObject* object = new ScriptObject(this);
+		RegisterInstance(object->GetHandle(), object);
+		return object;
 	}
 	void ScriptMetadata::LoadFields()
 	{

@@ -43,6 +43,7 @@ namespace HazardScript
 	{
 		LoadCoreAssebly();
 		LoadRuntimeAssembly();
+		ReloadAppScripts();
 	}
 	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
 	{
@@ -121,5 +122,15 @@ namespace HazardScript
 			return;
 		}
 		m_MonoData.BindingCallback();
+	}
+	void HazardScriptEngine::ReloadAppScripts()
+	{
+		for (auto& [name, script] : m_MonoData.AppAssembly.GetScripts()) 
+		{
+			for (auto& [handle, object] : script->GetAllInstances()) 
+			{
+				script->RegisterInstance(handle, object);
+			}
+		}
 	}
 }

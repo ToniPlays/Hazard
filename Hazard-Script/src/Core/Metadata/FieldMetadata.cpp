@@ -44,6 +44,7 @@ namespace HazardScript
 	}
 	void FieldMetadata::RegisterInstance(uint32_t handle)
 	{
+		if (m_InstanceData.find(handle) != m_InstanceData.end()) return;
 		if (m_Type.IsArray())
 			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
 		else

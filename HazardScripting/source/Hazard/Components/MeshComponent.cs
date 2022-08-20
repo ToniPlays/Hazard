@@ -15,7 +15,6 @@ namespace Hazard
         {
             InternalCalls.MeshComponent_SetMesh_Native(parentEntity.ID, mesh.GetID());
         }
-
         public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(MeshComponent)); }
         public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(MeshComponent)); }
     }

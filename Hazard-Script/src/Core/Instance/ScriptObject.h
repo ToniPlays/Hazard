@@ -16,11 +16,11 @@ namespace HazardScript
 		
 		void TryInvoke(const std::string& name, void** params = nullptr) 
 		{
-			m_Script->TryInvoke(name, GetHandle(), params);
+			m_Script->TryInvoke(name, GetHandleTarget(), params);
 		}
 		void Invoke(const std::string& name, void** params = nullptr) 
 		{
-			m_Script->Invoke(name, GetHandle(), params);
+			m_Script->Invoke(name, GetHandleTarget(), params);
 		}
 		
 		template<typename T>
@@ -41,12 +41,12 @@ namespace HazardScript
 		uint32_t GetFieldValueCount(const std::string& name) { return m_Script->GetField(name).GetElementCount(m_Handle); }
 		ScriptMetadata& GetScript() { return *m_Script; }
 		bool IsValid() { return m_Script; }
-
 		void SetLive(bool live) { m_Script->SetLive(m_Handle, live); }
 
 	private:
 		ScriptObject(ScriptMetadata* script);
-		MonoObject* GetHandle() { return mono_gchandle_get_target(m_Handle); }
+		MonoObject* GetHandleTarget() { return mono_gchandle_get_target(m_Handle); }
+		uint32_t GetHandle() { return m_Handle; }
 
 	private:
 		uint32_t m_Handle = 0;

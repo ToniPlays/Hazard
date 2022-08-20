@@ -68,18 +68,14 @@ namespace UI
 				DrawModifiers(e, tag);
 
 				if (clicked) {
-					m_SelectionContext = e;
-					Events::SelectionContextChange ev(e);
-					Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+					SelectEntity(e);
 				}
 			}
 			DrawContextMenu(world);
 
 			});
 		if (ImGui::IsItemClicked()) {
-			m_SelectionContext = {};
-			Events::SelectionContextChange ev({});
-			Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+			SelectEntity({});
 		}
 
 	}
@@ -95,9 +91,7 @@ namespace UI
 			if (m_SelectionContext)
 			{
 				m_WorldHandler->GetCurrentWorld()->DestroyEntity(m_SelectionContext);
-				m_SelectionContext = {};
-				Events::SelectionContextChange ev({});
-				Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+				SelectEntity({});
 				return true;
 			}
 		}
@@ -146,7 +140,8 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuItem("Create empty", [&]() {
-				world->CreateEntity("New entity");
+				Entity e = world->CreateEntity("New entity");
+				
 				});
 
 			ImUI::Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Window.HeaderActive);
@@ -154,48 +149,58 @@ namespace UI
 			ImUI::MenuItem("Camera", [&]() {
 				auto& entity = world->CreateEntity("New camera");
 				entity.AddComponent<CameraComponent>();
+				SelectEntity(entity);
 				});
 
 			ImUI::Submenu("3D", [&]() {
 				ImUI::MenuItem("Cube", [&]() {
 					auto& entity = world->CreateEntity("New Cube");
 					entity.AddComponent<MeshComponent>();
+					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Plane", [&]() {
 					auto& entity = world->CreateEntity("New Plane");
 					entity.AddComponent<MeshComponent>();
+					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Mesh", [&]() {
 					auto& entity = world->CreateEntity("New mesh");
 					entity.AddComponent<MeshComponent>();
+					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("2D", [&]() {
 				ImUI::MenuItem("Sprite", [&]() {
 					auto& entity = world->CreateEntity("New Sprite");
 					entity.AddComponent<SpriteRendererComponent>();
+					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("Lighting", [&]() {
 				ImUI::MenuItem("Sky light", [&]() {
 					auto& entity = world->CreateEntity("Sky light");
 					entity.AddComponent<SkyLightComponent>();
+					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Directional light", [&]() {
 					auto& entity = world->CreateEntity("New Directional light");
 					entity.AddComponent<DirectionalLightComponent>();
+					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Point light", [&]() {
 					auto& entity = world->CreateEntity("New Point light");
 					entity.AddComponent<PointLightComponent>();
+					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("Audio", [&]() {
 				ImUI::MenuItem("Speaker", [&]() {
 					auto& entity = world->CreateEntity("New Speaker");
+					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Audio listener", [&]() {
 					auto& entity = world->CreateEntity("New Audio listener");
+					SelectEntity(entity);
 					});
 				});
 
@@ -203,5 +208,11 @@ namespace UI
 
 				});
 			});
+	}
+	void Hierarchy::SelectEntity(const Entity& entity)
+	{
+		m_SelectionContext = entity;
+		Events::SelectionContextChange ev(entity);
+		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 	}
 }

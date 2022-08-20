@@ -6,7 +6,7 @@
 #include "Mono/Core/Mono.h"
 #include <unordered_map>
 
-namespace HazardScript 
+namespace HazardScript
 {
 	class ScriptObject;
 
@@ -20,6 +20,7 @@ namespace HazardScript
 		size_t GetFieldCount() { return m_Fields.size(); }
 		size_t GetMethodCount() { return m_Methods.size(); }
 		std::unordered_map<std::string, FieldMetadata*>& GetFields() { return m_Fields; }
+		std::unordered_map<uint32_t, ScriptObject*>& GetAllInstances() { return m_Instances; }
 
 		void UpdateMetadata();
 		bool ValidateOrLoadMethod(const std::string& name);
@@ -35,32 +36,28 @@ namespace HazardScript
 		bool HasMethod(const std::string& name) {
 			return m_Methods.find(name) != m_Methods.end();
 		}
-		
+
 		MethodMetadata& GetMethod(const std::string& name) {
 			return *m_Methods[name];
 		}
 		bool TryInvoke(const std::string& name, MonoObject* target, void** params);
 		void Invoke(const std::string& name, MonoObject* target, void** params);
 
-		void RegisterInstance(uint32_t handle)
+		void RegisterInstance(uint32_t handle, ScriptObject* object)
 		{
-			m_Instances.push_back(handle);
-			for (auto& [name, field] : m_Fields) 
+			m_Instances[handle] = object;
+			for (auto& [name, field] : m_Fields)
 				field->RegisterInstance(handle);
 		}
 
 		void RemoveInstance(uint32_t handle)
 		{
-			auto it = std::find(m_Instances.begin(), m_Instances.end(), handle);
-			if (it != m_Instances.end()) 
-			{
-				m_Instances.erase(it);
-				for (auto& [name, field] : m_Fields)
-					field->RemoveInstance(handle);
-			}
+			m_Instances.erase(handle);
+			for (auto& [name, field] : m_Fields)
+				field->RemoveInstance(handle);
 		}
 
-		void SetLive(uint32_t handle, bool live) 
+		void SetLive(uint32_t handle, bool live)
 		{
 			for (auto& [name, field] : m_Fields)
 				field->SetLive(handle, live);
@@ -110,7 +107,8 @@ namespace HazardScript
 
 		std::unordered_map<std::string, FieldMetadata*> m_Fields;
 		std::unordered_map<std::string, MethodMetadata*> m_Methods;
+
 		std::vector<Attribute*> m_Attributes;
-		std::vector<uint32_t> m_Instances;
+		std::unordered_map<uint32_t, ScriptObject*> m_Instances;
 	};
 }

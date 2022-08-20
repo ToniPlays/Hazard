@@ -20,12 +20,10 @@ namespace HazardScript
 		MonoImageOpenStatus status;
 		MonoImage* image = Mono::OpenImage((char*)data.Data, data.Size, status);
 		m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
-		
 		mono_image_close(image);
+
 		if (withRefecenced) 
-		{
 			LoadReferencedAssemblies();
-		}
 
 		if(registerScripts)
 			LoadScripts();

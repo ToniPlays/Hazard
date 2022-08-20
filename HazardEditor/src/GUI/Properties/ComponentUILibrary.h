@@ -137,7 +137,8 @@ namespace UI
 						c.SetFov(fov);
 					}
 				}
-				else {
+				else 
+				{
 					float size = c.GetSize();
 
 					if (ImUI::InputFloat("Size", size, 60.0f)) {
@@ -246,7 +247,8 @@ namespace UI
 					});
 			});
 
-		if (removed) e.RemoveComponent<ScriptComponent>();
+		if (removed) 
+			e.RemoveComponent<ScriptComponent>();
 
 		return false;
 	}
@@ -270,6 +272,8 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		e.RemoveComponent<SkyLightComponent>();
+
 		return false;
 	}
 	template<>
@@ -300,6 +304,8 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		e.RemoveComponent<DirectionalLightComponent>();
+
 		return false;
 	}
 	template<>
@@ -330,6 +336,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		if (removed) {
+			e.RemoveComponent<PointLightComponent>();
+		}
 		return false;
 	}
 	template<>
@@ -373,6 +382,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		if (removed) {
+			e.RemoveComponent<MeshComponent>();
+		}
 		return false;
 	}
 	template<>
@@ -396,6 +408,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		if (removed) {
+			e.RemoveComponent<Rigidbody2DComponent>();
+		}
 		return false;
 	}
 	template<>
@@ -417,6 +432,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		if (removed) {
+			e.RemoveComponent<BoxCollider2DComponent>();
+		}
 		return false;
 	}
 	template<>
@@ -438,6 +456,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
+		if (removed) {
+			e.RemoveComponent<CircleCollider2DComponent>();
+		}
 		return false;
 	}
 

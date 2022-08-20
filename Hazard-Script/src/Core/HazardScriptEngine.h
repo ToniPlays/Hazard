@@ -43,6 +43,7 @@ namespace HazardScript
 		void InitializeMono();
 		void LoadCoreAssebly();
 		void LoadRuntimeAssembly();
+		void ReloadAppScripts();
 
 	private:
 		ScriptDebugCallback m_DebugCallback;

@@ -17,12 +17,14 @@ namespace Hazard.Rendering
         public Vector2 TextureCoords;
     }
 
-    public struct MeshCreateInfo {
+    public struct MeshCreateInfo 
+    {
         public VertexBuffer VertexBuffer;
         public IndexBuffer IndexBuffer;
     }
 
-    internal struct MeshCreateInfoInternal {
+    internal struct MeshCreateInfoInternal 
+    {
         public ulong VertexID;
         public ulong IndexID;
     }

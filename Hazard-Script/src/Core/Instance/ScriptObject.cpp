@@ -14,7 +14,5 @@ namespace HazardScript
 	{
 		MonoClass* monoClass = script->GetManagedClass()->Class;
 		m_Handle = Mono::InstantiateHandle(monoClass);
-
-		m_Script->RegisterInstance(m_Handle);
 	}
 }

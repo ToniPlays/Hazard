@@ -38,7 +38,6 @@ namespace HazardScript
 		}
 
 		void RegisterInstance(uint32_t handle);
-
 		void RemoveInstance(uint32_t handle);
 
 		void SetLive(uint32_t handle, bool live);
