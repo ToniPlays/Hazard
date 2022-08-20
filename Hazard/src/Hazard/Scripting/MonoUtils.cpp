@@ -157,7 +157,6 @@ namespace HazardScript
 
 		uint64_t id = value.ObjectUID;
 		void* params[] = { &id };
-		HZR_CORE_ERROR(id);
 		Mono::RuntimeInvoke(value.MonoObject, method, params);
 	}
 }

@@ -47,6 +47,7 @@ namespace Hazard
 	}
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
+		HZR_ASSERT(handler, "woop");
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
 		return hasComponentFuncs[compType](id);
 	}
@@ -62,7 +63,7 @@ namespace Hazard
 		{
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle) {
-			//	sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
+				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 			}
 		}
 		handler->GetCurrentWorld()->DestroyEntity(e);

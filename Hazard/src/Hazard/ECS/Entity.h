@@ -38,7 +38,8 @@ namespace Hazard {
 			return component;
 		}
 		template<typename T>
-		void RemoveComponent() {
+		void RemoveComponent() 
+		{
 			m_World->OnComponentRemoved<T>(*this, GetComponent<T>());
 			m_World->m_Registry.remove<T>(m_Handle);
 		}
