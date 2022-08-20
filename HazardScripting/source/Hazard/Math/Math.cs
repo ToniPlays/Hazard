@@ -7,29 +7,12 @@ namespace Hazard
 {
     public class Math
     {
-        public static float Random() { return Math_Random_Native(); }
-        public static float RandomRange(float min, float max) { return Math_RandomRange_Native(min, max); }
-        public static float Pow(float value, float pow) { return Math_Pow_Native(value, pow); }
-        public static float Sqrt(float value, float pow) { return Math_Sqrt_Native(value); }
-        public static float Min(float first, float second) { return Math_Min_Native(first, second); }
-        public static float Max(float first, float second) { return Math_Max_Native(first, second); }
-        public static float Radians(float degrees) { return Math_Radians_Native(degrees); }
-
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Random_Native();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_RandomRange_Native(float min, float max);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Pow_Native(float value, float pow);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Sqrt_Native(float value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Min_Native(float fist, float second);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Max_Native(float fist, float second);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Radians_Native(float degrees);
-        #endregion
+        public static float Random() { return InternalCalls.Math_Random_Native(); }
+        public static float RandomRange(float min, float max) { return InternalCalls.Math_RandomRange_Native(min, max); }
+        public static float Pow(float value, float pow) { return InternalCalls.Math_Pow_Native(value, pow); }
+        public static float Sqrt(float value) { return InternalCalls.Math_Sqrt_Native(value); }
+        public static float Min(float first, float second) { return InternalCalls.Math_Min_Native(first, second); }
+        public static float Max(float first, float second) { return InternalCalls.Math_Max_Native(first, second); }
+        public static float Radians(float degrees) { return InternalCalls.Math_Radians_Native(degrees); }
     }
 }

@@ -8,12 +8,10 @@ namespace Hazard
 {
     public class Noise
     {
-        public static float Generate(float x, float y) { return Noise_Generate_Internal(x, y); }
-        public static float Generate(Vector2 pos) { return Noise_Generate_Internal(pos.x, pos.y); }
+        [Todo("Binding", Status.Awaiting)]
+        public static float Generate(float x, float y) { return 0.0f; }
 
-        #region InternalCalls
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Noise_Generate_Internal(float x, float y);
-        #endregion
+        [Todo("Binding", Status.Awaiting)]
+        public static float Generate(Vector2 pos) { return 0.0f; }
     }
 }

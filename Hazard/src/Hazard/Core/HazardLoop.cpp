@@ -29,7 +29,6 @@ namespace Hazard {
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 
-		HZR_CORE_WARN("Shutting down");
 		AssetManager::Shutdown();
 		m_Application->Close();
 		//m_ModuleHandler->Close();
