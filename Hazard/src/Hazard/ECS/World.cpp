@@ -98,6 +98,13 @@ namespace Hazard
 
 	Entity World::GetEntityFromUID(const UID& id)
 	{
+		HZR_ASSERT(m_EntityUIDMap.find(id) != m_EntityUIDMap.end(), "UID does not exist");
+		return m_EntityUIDMap[id];
+	}
+	Entity World::TryGetEntityFromUUID(const UID& id)
+	{
+		if (m_EntityUIDMap.find(id) == m_EntityUIDMap.end()) 
+			return Entity();
 		return m_EntityUIDMap[id];
 	}
 
@@ -107,7 +114,7 @@ namespace Hazard
 	}
 	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
-		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
+		auto group = GetEntitiesWith<CameraComponent, TransformComponent>();
 
 		for (auto entity : group) {
 
@@ -135,6 +142,7 @@ namespace Hazard
 			const TagComponent& tc = sourceEntity.GetComponent<TagComponent>();
 
 			Entity destEntity = copied->CreateEntity(sourceEntity);
+			copied->m_EntityUIDMap[tc.Uid] = destEntity;
 		}
 
 		return copied;

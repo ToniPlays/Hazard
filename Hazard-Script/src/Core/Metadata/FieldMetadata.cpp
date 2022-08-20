@@ -15,14 +15,14 @@ namespace HazardScript
 	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
 	{
 		if (!m_Type.IsArray()) return 1;
-		MonoObject* object = mono_gchandle_get_target(handle);
-		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength(mono_field_get_value_object(Mono::GetDomain(), GetMonoField(), object));
+		MonoObject* target = mono_gchandle_get_target(handle);
+		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength(mono_field_get_value_object(Mono::GetDomain(), GetMonoField(), target));
 	}
 	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
 	{
 		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
-		MonoObject* object = mono_gchandle_get_target(handle);
-		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(object, elements);
+		MonoObject* target = mono_gchandle_get_target(handle);
+		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(target, elements);
 	}
 	void FieldMetadata::LoadAttributes()
 	{

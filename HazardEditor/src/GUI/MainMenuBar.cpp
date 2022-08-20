@@ -33,7 +33,7 @@ namespace UI
 		AddMenuItem("Edit/Copy", nullptr);
 		AddMenuItem("Edit/Paste", nullptr);
 		AddMenuItem("Edit/Reload assemblies", []() {
-			((EditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
+			((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
 			});
 
 		AddMenuItem("Assets/Import", nullptr);

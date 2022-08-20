@@ -23,31 +23,31 @@ namespace HazardScript
 	class MonoFieldUtils {
 	public:
 		template<typename T>
-		static T GetFieldValue(MonoObject* object, MonoClassField* field) {
+		static T GetFieldValue(MonoObject* target, MonoClassField* field) {
 			T result;
-			mono_field_get_value(object, field, &result);
+			mono_field_get_value(target, field, &result);
 			return result;
 		}
 		template<>
-		static bool GetFieldValue(MonoObject* object, MonoClassField* field)
+		static bool GetFieldValue(MonoObject* target, MonoClassField* field)
 		{
-			MonoObject* result = mono_field_get_value_object(mono_domain_get(), field, object);
+			MonoObject* result = mono_field_get_value_object(mono_domain_get(), field, target);
 			return (bool)MonoUtils::Unbox<MonoBoolean>(result);
 		}
 		template<>
-		static std::string GetFieldValue(MonoObject* object, MonoClassField* field)
+		static std::string GetFieldValue(MonoObject* target, MonoClassField* field)
 		{
 			MonoObject* result;
-			MonoClass* klass = mono_object_get_class(object);
-			mono_field_get_value(object, field, &result);
+			MonoClass* klass = mono_object_get_class(target);
+			mono_field_get_value(target, field, &result);
 			return Mono::MonoObjectToString(result);
 		}
 
 		template<typename T>
-		static T GetFieldValue(MonoObject* object, const std::string& name)
+		static T GetFieldValue(MonoObject* target, const std::string& name)
 		{
-			MonoClass* klass = mono_object_get_class(object);
-			return GetFieldValue<T>(object, mono_class_get_field_from_name(klass, name.c_str()));
+			MonoClass* klass = mono_object_get_class(target);
+			return GetFieldValue<T>(target, mono_class_get_field_from_name(klass, name.c_str()));
 		}
 
 		template<>
@@ -58,19 +58,24 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, T value) {
-			mono_field_set_value(object, field, &value);
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, T value) {
+			mono_field_set_value(target, field, &value);
 		}
 		template<>
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, std::string value)
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, MonoObject* value) {
+			mono_field_set_value(target, field, value);
+		}
+
+		template<>
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, std::string value)
 		{
 			MonoString* string = Mono::StringToMonoString(value);
-			mono_field_set_value(object, field, string);
+			mono_field_set_value(target, field, string);
 		}
 		template<>
-		static void SetFieldValue(MonoObject* object, MonoClassField* field, bool value)
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, bool value)
 		{
-			mono_field_set_value(object, field, &value);
+			mono_field_set_value(target, field, &value);
 		}
 	};
 

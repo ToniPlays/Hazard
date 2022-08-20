@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 
 #include "HazardScript.h"
 #include <iostream>
@@ -42,7 +42,7 @@ namespace ScriptCore
 			
 			ScriptMetadata& script = assembly.GetScript("Spinner");
 
-			ScriptObject* obj = script.CreateObject();
+			Ref<ScriptObject> obj = script.CreateObject();
 			std::cout << obj->GetFieldValue<float>("value") << std::endl;
 
 			obj->SetFieldValue("value", 20.0f);
@@ -56,3 +56,4 @@ namespace ScriptCore
 		std::cin.get();
 	}
 }
+#endif

@@ -47,6 +47,7 @@ namespace Hazard
 	}
 	static bool Entity_HasComponent_Native(uint64_t id, void* type)
 	{
+		HZR_ASSERT(handler, "woop");
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
 		return hasComponentFuncs[compType](id);
 	}

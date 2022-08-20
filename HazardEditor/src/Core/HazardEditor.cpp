@@ -19,7 +19,7 @@ using namespace HazardRenderer;
 using namespace HazardScript;
 
 
-void EditorApplication::PreInit()
+void HazardEditorApplication::PreInit()
 {
 	RenderAPI renderAPI = RenderAPI::OpenGL;
 
@@ -95,7 +95,7 @@ void EditorApplication::PreInit()
 
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
-void EditorApplication::Init()
+void HazardEditorApplication::Init()
 {
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderEngine>().GetWindow();
@@ -121,12 +121,12 @@ void EditorApplication::Init()
 	scriptEngine.ReloadAssemblies();
 }
 
-bool EditorApplication::OnEvent(Event& e)
+bool HazardEditorApplication::OnEvent(Event& e)
 {
 	return m_ScriptManager.OnEvent(e);
 }
 
 Hazard::Application* Hazard::CreateApplication()
 {
-	return new EditorApplication();
+	return new HazardEditorApplication();
 }

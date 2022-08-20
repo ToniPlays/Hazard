@@ -1,6 +1,7 @@
 #include "Attribute.h"
 
-namespace HazardScript::Utils {
+namespace HazardScript::Utils 
+{
 	const char* ProgressToString(const Progress& progress) {
 		switch (progress)
 		{

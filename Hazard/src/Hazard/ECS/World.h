@@ -25,6 +25,7 @@ namespace Hazard {
 		Entity CreateEntity(Entity other);
 		Entity GetEntity(entt::entity entity);
 		Entity GetEntityFromUID(const UID& id);
+		Entity TryGetEntityFromUUID(const UID& id);
 		void DestroyEntity(const Entity& entity);
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }

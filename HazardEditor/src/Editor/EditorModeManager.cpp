@@ -11,6 +11,7 @@ namespace Editor
 	void EditorModeManager::BeginPlayMode()
 	{
 		s_CurrentMode = EditorMode::Play;
+		HZR_WARN("BeginPlayMode");
 		auto& manager = Application::GetModule<GUIManager>();
 		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
@@ -32,6 +33,7 @@ namespace Editor
 	}
 	void EditorModeManager::EndPlayMode()
 	{
+		HZR_WARN("StopPlayMode");
 		s_CurrentMode = EditorMode::Edit;
 		auto& handler = Application::GetModule<WorldHandler>();
 		handler.OnEnd();

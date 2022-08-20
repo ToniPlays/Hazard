@@ -21,11 +21,11 @@ namespace Hazard
 
 	static void TransformComponent_GetRotation_Native(uint64_t id, glm::vec3* rotation)
 	{
-		*rotation = GET_ENTITY(id).GetComponent<TransformComponent>().Rotation;
+		*rotation = glm::degrees(GET_ENTITY(id).GetComponent<TransformComponent>().Rotation);
 	}
 	static void TransformComponent_SetRotation_Native(uint64_t id, glm::vec3 rotation)
 	{
-		GET_ENTITY(id).GetComponent<TransformComponent>().Rotation = rotation;
+		GET_ENTITY(id).GetComponent<TransformComponent>().Rotation = glm::radians(rotation);
 	}
 	static void TransformComponent_GetScale_Native(uint64_t id, glm::vec3* scale)
 	{

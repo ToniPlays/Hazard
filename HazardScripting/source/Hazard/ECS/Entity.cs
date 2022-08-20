@@ -10,7 +10,6 @@ namespace Hazard
         internal Entity(ulong ID)
         {
             this.ID = ID;
-            Debug.Log("Created entity " + ID);
         }
         ~Entity() {}
 
@@ -66,6 +65,7 @@ namespace Hazard
         }
         public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
 
+        /*
         public Coroutine BeginCoroutine(IEnumerator enumerator) 
         {
             return null;
@@ -78,5 +78,6 @@ namespace Hazard
         { 
             
         }
+        */
     }
 }

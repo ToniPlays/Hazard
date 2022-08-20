@@ -147,6 +147,14 @@ namespace Hazard::ImUI
 
 		return modified;
 	}
+
+	static bool InputInt(int& value, int clearValue, int min, int max) {
+		return ImGui::DragInt("##int", &value, 1, min, max);
+	}
+	static bool InputUInt(uint64_t& value, uint64_t clearValue = 0.0f, uint64_t min = 0, uint64_t max = 0) {
+		return ImGui::DragInt("##uint", (int*)&value, 0.5f, min, max);
+	}
+
 	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
 		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
 	}

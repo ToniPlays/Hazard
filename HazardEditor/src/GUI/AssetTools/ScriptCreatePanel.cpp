@@ -4,6 +4,7 @@
 #include "Editor/EditorScriptManager.h"
 #include "Core/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
+#include "Core/HazardEditor.h"
 
 using namespace Hazard;
 namespace UI
@@ -78,6 +79,7 @@ namespace UI
 
 				auto* assetPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>();
 				assetPanel->RefreshFolderItems();
+				((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
 				Close();
 			}
 		}

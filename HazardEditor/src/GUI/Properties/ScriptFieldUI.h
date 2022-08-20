@@ -88,7 +88,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -102,7 +102,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -116,7 +116,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -130,7 +130,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -145,7 +145,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -159,7 +159,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -173,7 +173,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -187,7 +187,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0f);
+		modified = ImUI::InputInt((int&)value, 0.0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -254,7 +254,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 
 		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
-		Entity referenced = world->GetEntityFromUID(value.ObjectUID);
+		Entity referenced = world->TryGetEntityFromUUID(value.ObjectUID);
 		std::string& tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
 
 		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + typeName + ")";
