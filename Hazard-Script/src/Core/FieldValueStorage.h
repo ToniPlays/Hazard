@@ -20,18 +20,18 @@ namespace HazardScript
 							template<>																					\
 							void SetStoredValue(Type value) { m_Storage.Set<Type>(value);}								\
 							template<>																					\
-							Type GetLiveValue(MonoObject* object) {														\
+							Type GetLiveValue(MonoObject* target) {														\
 								if (m_Field->GetType().IsArray())														\
-									return MonoArrayUtils::GetElementValue<Type>((MonoArray*)object, m_Index);			\
-								return MonoFieldUtils::GetFieldValue<Type>(object, m_Field->GetMonoField());			\
+									return MonoArrayUtils::GetElementValue<Type>((MonoArray*)target, m_Index);			\
+								return MonoFieldUtils::GetFieldValue<Type>(target, m_Field->GetMonoField());			\
 							}																							\
 							template<>																					\
-							void SetLiveValue(MonoObject* object, Type value)											\
+							void SetLiveValue(MonoObject* target, Type value)											\
 							{	if(m_Field->GetType().IsArray()) {														\
-									MonoArrayUtils::SetElementValue<Type>((MonoArray*)object, m_Index, value);			\
+									MonoArrayUtils::SetElementValue<Type>((MonoArray*)target, m_Index, value);			\
 									return;																				\
 								}																						\
-								MonoFieldUtils::SetFieldValue<Type>(object, m_Field->GetMonoField(), value);			\
+								MonoFieldUtils::SetFieldValue<Type>(target, m_Field->GetMonoField(), value);			\
 							}																							\
 
 	class FieldValueStorage : public FieldValueStorageBase
@@ -44,12 +44,12 @@ namespace HazardScript
 		bool Valid() { return m_Field != nullptr; }
 
 		template<typename T>
-		T GetValue(MonoObject* object) {
-			return m_IsLiveValue ? GetLiveValue<T>(object) : GetStoredValue<T>();
+		T GetValue(MonoObject* target) {
+			return m_IsLiveValue ? GetLiveValue<T>(target) : GetStoredValue<T>();
 		}
 		template<typename T>
-		void SetValue(MonoObject* object, T value) {
-			m_IsLiveValue ? SetLiveValue<T>(object, value) : SetStoredValue<T>(value);
+		void SetValue(MonoObject* target, T value) {
+			m_IsLiveValue ? SetLiveValue<T>(target, value) : SetStoredValue<T>(value);
 		}
 
 		template<typename T>
@@ -57,7 +57,7 @@ namespace HazardScript
 			static_assert(false);
 		}
 		template<typename T>
-		T GetLiveValue(MonoObject* object) {
+		T GetLiveValue(MonoObject* target) {
 			static_assert(false);
 		}
 
@@ -73,8 +73,9 @@ namespace HazardScript
 		{
 			static_assert(false);
 		}
+		//Target is MonoClassField*, for array types it returns MonoArray*
 		template<typename T>
-		void SetLiveValue(MonoObject* object, T value)
+		void SetLiveValue(MonoObject* target, T value)
 		{
 			static_assert(false);
 		}
@@ -102,20 +103,20 @@ namespace HazardScript
 			m_Storage.Set<std::string>(value);
 		}
 		template<>
-		std::string GetLiveValue(MonoObject* object) {
+		std::string GetLiveValue(MonoObject* target) {
 			if (m_Field->GetType().IsArray())
-				return MonoArrayUtils::GetElementValue<std::string>((MonoArray*)object, m_Index);
-			return MonoFieldUtils::GetFieldValue<std::string>(object, m_Field->GetMonoField());
+				return MonoArrayUtils::GetElementValue<std::string>((MonoArray*)target, m_Index);
+			return MonoFieldUtils::GetFieldValue<std::string>(target, m_Field->GetMonoField());
 		}
 		template<>
-		void SetLiveValue(MonoObject* object, std::string value)
+		void SetLiveValue(MonoObject* target, std::string value)
 		{
 			if (m_Field->GetType().IsArray()) 
 			{
-				MonoArrayUtils::SetElementValue<std::string>((MonoArray*)object, m_Index, value);
+				MonoArrayUtils::SetElementValue<std::string>((MonoArray*)target, m_Index, value);
 				return;
 			}
-			MonoFieldUtils::SetFieldValue<std::string>(object, m_Field->GetMonoField(), value);
+			MonoFieldUtils::SetFieldValue<std::string>(target, m_Field->GetMonoField(), value);
 		}
 
 
@@ -130,17 +131,17 @@ namespace HazardScript
 
 		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
-		uintptr_t GetLength(MonoObject* object) { return IsLive() ? GetLiveLength(object) : m_ArrayStorage.size(); }
+		uintptr_t GetLength(MonoObject* target) { return IsLive() ? GetLiveLength(target) : m_ArrayStorage.size(); }
 
-		uintptr_t GetLiveLength(MonoObject* object)
+		uintptr_t GetLiveLength(MonoObject* target)
 		{
-			MonoArray* arr = (MonoArray*)object;
+			MonoArray* arr = (MonoArray*)target;
 			if (arr == nullptr) return 0;
 			uintptr_t len = mono_array_length(arr);
 			return len;
 		}
 
-		void Resize(MonoObject* object, size_t elements)
+		void Resize(MonoObject* target, size_t elements)
 		{
 			m_ArrayStorage.resize(elements);
 			for (size_t i = 0; i < elements; i++)
@@ -151,16 +152,16 @@ namespace HazardScript
 				}
 			}
 
-			MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), object);
+			MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), target);
 			if (arr == nullptr)
 			{
 				arr = mono_array_new(Mono::GetDomain(), m_Field->GetType().TypeClass->Class, elements);
-				mono_field_set_value(object, m_Field->GetMonoField(), arr);
+				mono_field_set_value(target, m_Field->GetMonoField(), arr);
 				return;
 			}
 			else
 			{
-				MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), object);
+				MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), target);
 				uintptr_t oldLenth = mono_array_length(arr);
 
 				size_t copyLength = Math::Max<size_t>(m_ArrayStorage.size(), oldLenth);
@@ -175,37 +176,37 @@ namespace HazardScript
 				char* dst = mono_array_addr_with_size(tmp, elementSize, 0);
 
 				memcpy(dst, src, copyLength * elementSize);
-				mono_field_set_value(object, m_Field->GetMonoField(), tmp);
+				mono_field_set_value(target, m_Field->GetMonoField(), tmp);
 			}
 		}
 
-		bool HasValue(MonoObject* object, size_t index)
+		bool HasValue(MonoObject* target, size_t index)
 		{
-			if (index >= GetLength(object)) return false;
+			if (index >= GetLength(target)) return false;
 			return m_ArrayStorage[index].HasValue();
 		}
 
 		template<typename T>
-		T GetValue(MonoObject* object, size_t index)
+		T GetValue(MonoObject* target, size_t index)
 		{
 			if (IsLive()) {
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, index);
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)target, index);
 			}
 
 			if constexpr (std::is_same<T, ValueWrapper>::value)
 				return m_ArrayStorage[index];
 			else
-				return m_ArrayStorage[index].GetValue<T>(object);
+				return m_ArrayStorage[index].GetValue<T>(target);
 		}
 
 		template<typename T>
-		T GetValueOrDefault(MonoObject* object, size_t index)
+		T GetValueOrDefault(MonoObject* target, size_t index)
 		{
 			if (IsLive()) {
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)object, index);
+				return MonoArrayUtils::GetElementValue<T>((MonoArray*)target, index);
 			}
-			if (!HasValue(object, index)) return T();
-			return GetValue<T>(object, index);
+			if (!HasValue(target, index)) return T();
+			return GetValue<T>(target, index);
 		}
 
 		template<typename T>
@@ -214,9 +215,9 @@ namespace HazardScript
 			m_ArrayStorage[index].SetStoredValue<T>(value);
 		}
 		template<typename T>
-		void SetLiveValue(MonoObject* object, size_t index, T value)
+		void SetLiveValue(MonoObject* target, size_t index, T value)
 		{
-			MonoArrayUtils::SetElementValue<T>((MonoArray*)object, index, value);
+			MonoArrayUtils::SetElementValue<T>((MonoArray*)target, index, value);
 		}
 
 	private:

@@ -39,8 +39,8 @@ namespace HazardScript
 		MethodMetadata& GetMethod(const std::string& name) {
 			return *m_Methods[name];
 		}
-		bool TryInvoke(const std::string& name, MonoObject* obj, void** params);
-		void Invoke(const std::string& name, MonoObject* obj, void** params);
+		bool TryInvoke(const std::string& name, MonoObject* target, void** params);
+		void Invoke(const std::string& name, MonoObject* target, void** params);
 
 		void RegisterInstance(uint32_t handle)
 		{

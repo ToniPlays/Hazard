@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "Mono/Core/Mono.h"
 #include "ScriptCache.h"
+#include <thread>
 
 namespace HazardScript
 {
@@ -47,8 +48,12 @@ namespace HazardScript
 	{
 		Mono::Register(signature, function);
 	}
-	void HazardScriptEngine::RunGarbageCollector() {
-		//mono_gc_collect(mono_gc_max_generation());
+	void HazardScriptEngine::RunGarbageCollector() 
+	{
+		mono_gc_collect(mono_gc_max_generation());
+		using namespace std::chrono_literals;
+		while (mono_gc_pending_finalizers()) 
+			std::this_thread::sleep_for(500ns);
 	}
 	std::vector<ScriptAssembly*> HazardScriptEngine::GetAssemblies()
 	{

@@ -10,11 +10,8 @@ namespace Hazard
         internal Entity(ulong ID)
         {
             this.ID = ID;
-            Console.WriteLine("C# create " + ID);
         }
-        ~Entity() {
-            Console.WriteLine("C# " + ID);
-        }
+        ~Entity() {}
 
         public ulong ID { get; private set; }
 
