@@ -27,11 +27,6 @@
 	#define HZR_BUILD_VERSION "Release"
 #endif // HZR_DEBUG
 
-
-#define BIT(x) (uint32_t)(1 << (x))
-#define CHECK_BIT(val, bit) val & (1 << bit);
-
-
 #include <iostream>
 #include <vector>
 #include <unordered_map>

@@ -61,19 +61,26 @@ namespace HazardScript
 	{
 		MonoClass* exceptionClass = mono_object_get_class(exception);
 		MonoType* type = mono_class_get_type(exceptionClass);
-		const char* typeName = mono_type_get_name(type);
+		std::string typeName = mono_type_get_name(type);
 
-		if (strcmp(typeName, "System.MissingMethodException") == 0) {
+		if (strcmp(typeName.c_str(), "System.MissingMethodException") == 0)
+		{
 			std::string methodName = mono_method_get_reflection_name(method);
 			std::string stackTrace = "Encountered missing method when executing " + methodName;
 			HazardScriptEngine::SendDebugMessage({ Severity::Error, "Missing method exception on " + methodName, stackTrace });
 			return;
 		}
 
-		std::string stacktrace = Mono::GetStringProperty("StackTrace", exceptionClass, exception);
-		std::string message = Mono::GetStringProperty("Message", exceptionClass, exception);
+		MonoObject* traceObject = mono_object_new(Mono::GetDomain(), ScriptCache::GetManagedClassByName("System.Diagnostics.StackTrace")->Class);
+		MonoObject* traceExcept = nullptr;
+		MonoString* stackTraceString = mono_object_to_string(traceObject, &traceExcept);
 
-		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName, message + "\n\n" + stacktrace});
+		std::string message = Mono::GetStringProperty("Message", exceptionClass, exception);
+		std::string stackTrace = Mono::GetStringProperty("StackTrace", exceptionClass, exception);
+
+		stackTrace = Mono::MonoStringToString(stackTraceString);
+
+		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName + ": " + message, message + "\n\n" + stackTrace });
 	}
 	void HazardScriptEngine::InitializeMono()
 	{
@@ -96,14 +103,15 @@ namespace HazardScript
 			return;
 		}
 
-		if (!m_MonoData.CoreAssembly.LoadFromSource(true)) {
+		if (!m_MonoData.CoreAssembly.LoadFromSource(true)) 
+		{
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()
 	{
-		if (!m_MonoData.AppAssembly.LoadFromSource(true)) {
+		if (!m_MonoData.AppAssembly.LoadFromSource(true, true)) {
 			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
 			return;
 		}

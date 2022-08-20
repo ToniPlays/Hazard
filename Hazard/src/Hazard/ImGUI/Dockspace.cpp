@@ -58,8 +58,8 @@ namespace Hazard::ImUI {
 		{
 			// On Windows we hook into the GLFW win32 window internals
 #ifdef HZR_PLATFORM_WINDOWS
-			glfwSetWindowPos(glfwWindow, newPosition.x, newPosition.y);
-			glfwSetWindowSize(glfwWindow, newSize.x, newSize.y);
+			glfwSetWindowPos(glfwWindow, (int)newPosition.x, (int)newPosition.y);
+			glfwSetWindowSize(glfwWindow, (int)newSize.x, (int)newSize.y);
 #endif
 		}
 

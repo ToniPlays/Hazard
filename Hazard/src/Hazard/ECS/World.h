@@ -14,8 +14,9 @@ namespace Hazard {
 		friend class Entity;
 	public:
 		World(const std::filesystem::path& file);
-		World(World& other);
+		World(World& other) = delete;
 		~World();
+
 
 		void SetName(const std::string& name) { m_Name = name; }
 
@@ -36,8 +37,11 @@ namespace Hazard {
 		template<typename... T>
 		auto GetEntitiesWith() 
 		{
-			return m_Registry.view<T...>();
+				return m_Registry.view<T...>();
 		}
+	public:
+		static Ref<World> Copy(Ref<World> sourceWorld);
+
 	private:
 		UID m_Uuid;
 		entt::registry m_Registry = entt::registry();

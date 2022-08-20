@@ -32,7 +32,7 @@ namespace Hazard {
 		if (!(m_Flags & WorldFlags_UpdateScript)) return;
 		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
 
-		float delta = Time::s_DeltaTime;
+		float delta = (float)Time::s_DeltaTime;
 		void* params[] = { &delta };
 
 		for (auto& entity : view) {

@@ -13,22 +13,22 @@ namespace Hazard
 	using namespace HazardScript;
 	static void Debug_Log_Native(MonoObject* obj)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
+		std::string message = Mono::MonoObjectToString(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, message, STACK_TRACE() });
 	}
 	static void Debug_Info_Native(MonoObject* obj)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
+		std::string message = Mono::MonoObjectToString(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, message, STACK_TRACE() });
 	}
 	static void Debug_Warn_Native(MonoObject* obj)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
+		std::string message = Mono::MonoObjectToString(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, message, STACK_TRACE() });
 	}
 	static void Debug_Error_Native(MonoObject* obj)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
+		std::string message = Mono::MonoObjectToString(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, message, STACK_TRACE() });
 	}
 	static void Debug_Critical_Native(MonoObject* obj)

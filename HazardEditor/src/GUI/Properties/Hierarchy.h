@@ -19,5 +19,7 @@ namespace UI {
 	private:
 		Hazard::WorldHandler* m_WorldHandler;
 		Hazard::Entity m_SelectionContext;
+
+		std::string m_SearchValue;
 	};
 }

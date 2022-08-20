@@ -22,7 +22,7 @@ namespace Editor
 
 		auto& handler = Application::GetModule<WorldHandler>();
 		m_PreviousWorld = handler.GetCurrentWorld();
-		Ref<World> playModeWorld = new World(*m_PreviousWorld);
+		Ref<World> playModeWorld = World::Copy(m_PreviousWorld);
 		handler.SetWorld(playModeWorld);
 		handler.SetFlags(WorldFlags_Render | WorldFlags_UpdateScript);
 		handler.OnBegin();
@@ -37,7 +37,6 @@ namespace Editor
 		handler.OnEnd();
 		handler.SetFlags(WorldFlags_Render);
 		handler.SetWorld(m_PreviousWorld);
-
 
 		auto& manager = Application::GetModule<GUIManager>();
 		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();

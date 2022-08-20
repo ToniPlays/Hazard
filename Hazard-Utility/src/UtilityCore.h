@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "Color.h"
 #include "HazardRuntimeError.h"
+#include "Timer.h"
 
 #define HZR_PROFILE 1
 #define HZR_OPTICK 1
@@ -75,11 +76,10 @@
 
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
-
-#define BIT(x) (1 << (x))
+#define BIT(x) (uint32_t)(1 << (x))
 
 template<typename T>
 using Scope = std::unique_ptr<T>;
+
 template<typename T, typename ... Args>
 constexpr Scope<T> CreateScope(Args&& ... args) { return std::make_unique<T>(std::forward<Args>(args)...); }
-using byte = uint8_t;

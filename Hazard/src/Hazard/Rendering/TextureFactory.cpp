@@ -43,12 +43,12 @@ namespace Hazard
 			File::CreateDir(cacheDir.parent_path());
 
 		size_t dataSize;
-		byte* textureData = nullptr;
+		uint8_t* textureData = nullptr;
 
 		if (header.Channels == 4) {
 
 			dataSize = sizeof(FileHeader) + header.ImageData.Size;
-			textureData = new byte[dataSize];
+			textureData = new uint8_t[dataSize];
 
 			FileHeader fileHeader = {};
 			fileHeader.Width = header.Width;

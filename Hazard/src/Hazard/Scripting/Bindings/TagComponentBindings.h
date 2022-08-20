@@ -14,7 +14,7 @@ namespace Hazard
 		auto& tag = GET_ENTITY(id).GetComponent<TagComponent>();
 		return Mono::StringToMonoString(tag.Tag);
 	}
-	static void TagComponent_SetName_Native(uint64_t id, MonoString* tag) {
-		GET_ENTITY(id).GetTag().Tag = Mono::MonoStringToString(tag);
+	static void TagComponent_SetName_Native(uint64_t id, MonoObject* tag) {
+		GET_ENTITY(id).GetTag().Tag = Mono::MonoObjectToString(tag);
 	}
 }
