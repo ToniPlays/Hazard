@@ -11,7 +11,7 @@ namespace Hazard
         {
             this.ID = ID;
         }
-        ~Entity() {}
+        ~Entity() { }
 
         public ulong ID { get; private set; }
 
@@ -23,6 +23,17 @@ namespace Hazard
         {
             get => Get<TransformComponent>();
         }
+
+        public static bool operator ==(Entity left, Entity right)
+        {
+            return left.ID == right.ID;
+        }
+
+        public static bool operator !=(Entity left, Entity right)
+        {
+            return !(left == right);
+        }
+
         public bool IsUpdated() { return InternalCalls.Entity_IsUpdated_Native(ID); }
         public void SetUpdate(bool update) { InternalCalls.Entity_SetUpdate_Native(ID, update); }
         public bool IsVisible() { return InternalCalls.Entity_IsVisible_Native(ID); }

@@ -144,7 +144,6 @@ namespace HazardScript
 			value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
 			value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
 
-			HZR_CORE_INFO("Created MonoObject for ObjectReference");
 			SetStoredValue(value);
 		}
 
@@ -154,16 +153,11 @@ namespace HazardScript
 			uint64_t id = value.ObjectUID;
 			void* params[] = { &id };
 			Mono::RuntimeInvoke(value.MonoObject, method, params);
-			HZR_CORE_INFO("Reference target ID {0}", id);
 		}
-		
+
 		if (!m_Field->GetType().IsArray())
 			MonoFieldUtils::SetFieldValue(target, m_Field->GetMonoField(), value.MonoObject);
 		else
 			MonoArrayUtils::SetElementValue((MonoArray*)target, m_Index, value.MonoObject);
-
-		MonoObject* result = Mono::GetPropertyObject(value.MonoObject, m_Field->GetType().TypeClass->Class, "ID");
-		HZR_CORE_WARN("Other entity ID {0}", MonoUtils::Unbox<uint64_t>(result));
-
 	}
 }

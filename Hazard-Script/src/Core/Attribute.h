@@ -2,6 +2,7 @@
 
 #include "UtilityCore.h"
 #include "Mono/Core/Mono.h"
+#include "Metadata/ManagedType.h"
 
 namespace HazardScript {
 

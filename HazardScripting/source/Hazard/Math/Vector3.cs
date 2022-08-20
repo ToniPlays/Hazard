@@ -41,6 +41,18 @@ namespace Hazard
             this.z = z;
         }
 
+        #region Static methods
+        static float Distance(Vector3 first, Vector3 second) 
+        {
+            float dx = first.x - second.x;
+            float dy = first.y - second.y;
+            float dz = first.z - second.z;
+
+            return Math.Sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        #endregion
+        #region Arithmetic operators
         public static Vector3 operator +(Vector3 left, Vector3 right) {
             return new Vector3(left.x + right.x, left.y + right.y, left.z + right.z);
         }
@@ -56,7 +68,16 @@ namespace Hazard
         {
             return new Vector3(left.x * right, left.y * right, left.z * right);
         }
-
+        #endregion
+        #region Logical operators
+        public static bool operator ==(Vector3 left, Vector3 right)
+        {
+            return left.x == right.x && left.y == right.y && left.z == right.z;
+        }
+        public static bool operator != (Vector3 left, Vector3 right) {
+            return !(left == right);
+        }
+        #endregion
         public override string ToString()
         {
             return "[" + x + ", " + y + ", " + z + "]";
