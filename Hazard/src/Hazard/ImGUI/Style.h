@@ -120,5 +120,6 @@ namespace Hazard::ImUI
 		ImVec4 ChildBackgroundColor = ColorToImVec("#262626");
 		ImVec4 MenuBarBackground = ColorToImVec("#181816");
 		ImVec4 NavHighlight = ColorToImVec("#5DC50590");
+		ImVec4 DragDropTarget = ColorToImVec("#418B04");
 	};
 }

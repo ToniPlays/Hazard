@@ -12,7 +12,8 @@ namespace UI {
 
 		void Update() override;
 		void OnPanelRender() override;
-		bool OnEvent(Event& e) override { return false; };
+		bool OnEvent(Event& e) override;
+		bool OnKeyPressed(KeyPressedEvent& e);
 	private:
 		void DrawModifiers(Hazard::Entity& e, Hazard::TagComponent& tag);
 		void DrawContextMenu(Ref<Hazard::World>& world);

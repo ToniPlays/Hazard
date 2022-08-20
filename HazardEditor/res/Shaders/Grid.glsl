@@ -67,7 +67,7 @@ layout(std140, binding = 2) uniform Grid {
 
 layout(location = 0) out vec4 color;
 
-const float axisWidth = 2.0;
+const float axisWidth = 1.25;
 
 vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
     vec2 coord = fragPos3D.xz * scale;

@@ -38,6 +38,7 @@ namespace UI
 		}
 
 		ImUI::Image(m_Renderer->GetOutput()->GetImage(), size);
+
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);
 			Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
