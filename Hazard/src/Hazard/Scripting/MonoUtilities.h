@@ -1,11 +1,16 @@
 
 #pragma once
 #include "ScriptUtilities.h"
+#include "Hazard/Assets/AssetEnums.h"
+
+namespace Hazard::Utils
+{
+	AssetType ScriptClassToAsset(const std::string_view& type);
+}
 
 namespace HazardScript
 {
 	using namespace Hazard;
-
 	template<>
 	glm::vec2 FieldValueStorage::GetStoredValue();
 	template<>

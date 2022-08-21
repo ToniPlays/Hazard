@@ -122,7 +122,6 @@ namespace UI
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
 			ImGui::Text(name.c_str());
 			ImGui::Text(Hazard::Utils::AssetTypeToString(GetMetadata().Type));
-			ImGui::Text(std::to_string(m_Flags).c_str());
 			});
 
 		ImGui::PopStyleVar();

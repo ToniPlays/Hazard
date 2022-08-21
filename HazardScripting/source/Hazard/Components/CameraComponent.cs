@@ -23,13 +23,9 @@ namespace Hazard
                 InternalCalls.CameraComponent_GetClipping_Native(parentEntity.ID, out Vector2 clip);
                 return new ClippingPlane(clip.x, clip.y);
             }
-            set
-            {
-                Vector2 clip = new Vector2(value.ZNear, value.ZFar);
-                InternalCalls.CameraComponent_SetClipping_Native(parentEntity.ID, ref clip);
-            }
+            set => InternalCalls.CameraComponent_SetClipping_Native(parentEntity.ID, value.ZNear, value.ZFar);
         }
-        public void GetProjection() { InternalCalls.CameraComponent_GetProjection_Native(parentEntity.ID); }
+        public Projection GetProjection() { return (Projection)InternalCalls.CameraComponent_GetProjection_Native(parentEntity.ID); }
         public void SetProjection(Projection projection) { InternalCalls.CameraComponent_SetProjection_Native(parentEntity.ID, (int)projection); }
 
         public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(CameraComponent)); }

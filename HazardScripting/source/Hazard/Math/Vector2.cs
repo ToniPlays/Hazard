@@ -50,7 +50,7 @@ namespace Hazard
         #endregion
         public override string ToString()
         {
-            return "[" + x + ", " + y + "]";
+            return string.Format("[{0}, {1}]", x, y);
         }
 
         public static Vector2 zero = new Vector2(0, 0);

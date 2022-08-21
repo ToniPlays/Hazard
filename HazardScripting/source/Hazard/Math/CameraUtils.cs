@@ -13,9 +13,14 @@ namespace Hazard
         public float ZNear;
         public float ZFar;
 
-        public ClippingPlane(float zNear, float zFar) {
+        public ClippingPlane(float zNear, float zFar)
+        {
             ZNear = zNear;
             ZFar = zFar;
+        }
+        public override string ToString()
+        {
+            return String.Format("[ZNear: {0}, ZFar: {1}]", ZNear, ZFar);
         }
     }
 }

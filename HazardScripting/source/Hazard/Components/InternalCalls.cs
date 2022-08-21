@@ -10,21 +10,17 @@ namespace Hazard
         #region CameraComponent
 
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int CameraComponent_GetProjection_Native(ulong id);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int CameraComponent_SetProjection_Native(ulong id, int projection);
+        internal static extern void CameraComponent_SetProjection_Native(ulong id, int projection);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int CameraComponent_GetClipping_Native(ulong id, out Vector2 clipping);
+        internal static extern void CameraComponent_GetClipping_Native(ulong id, out Vector2 clipping);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int CameraComponent_SetClipping_Native(ulong id, ref Vector2 clipping);
+        internal static extern void CameraComponent_SetClipping_Native(ulong id, float near, float far);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float CameraComponent_GetFOV_Native(ulong id);

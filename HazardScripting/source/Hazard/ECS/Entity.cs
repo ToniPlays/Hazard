@@ -22,7 +22,6 @@ namespace Hazard
         {
             return left.ID == right.ID;
         }
-
         public static bool operator !=(Entity left, Entity right)
         {
             return !(left == right);
@@ -74,20 +73,5 @@ namespace Hazard
             return new Entity(id);
         }
         public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
-
-        /*
-        public Coroutine BeginCoroutine(IEnumerator enumerator) 
-        {
-            return null;
-        }
-        public void StopCoroutine(Coroutine coroutine) 
-        { 
-            
-        }
-        public void StopAllCoroutines() 
-        { 
-            
-        }
-        */
     }
 }

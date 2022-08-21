@@ -22,6 +22,11 @@ namespace Hazard
             return new Color(Math.RandomRange(0, 1.0f), Math.RandomRange(0, 1.0f), Math.RandomRange(0, 1.0f));        
         }
 
+        public override string ToString()
+        {
+            return String.Format("[R: {0}, G: {1}, B: {2}, A: {3}]", r, g, b, a);
+        }
+
         public static Color White = new Color(1.0f, 1.0f, 1.0f);
         public static Color Black = new Color(0.0f, 0.0f, 0.0f);
         public static Color Gray = new Color(0.5f, 0.5f, 0.5f);

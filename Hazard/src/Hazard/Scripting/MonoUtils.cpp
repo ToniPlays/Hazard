@@ -2,9 +2,21 @@
 #include <hzrpch.h>
 #include "MonoUtilities.h"
 
+namespace Hazard::Utils {
+
+	AssetType ScriptClassToAsset(const std::string_view& type) 
+	{
+		if (type == "Hazard.World")			return AssetType::World;
+		if (type == "Hazard.AudioClip")		return AssetType::AudioClip;
+		if (type == "Hazard.Mesh")			return AssetType::Mesh;
+		if (type == "Hazard.Texture2D")		return AssetType::Image;
+
+		return AssetType::Undefined;
+	}
+}
+
 namespace HazardScript
 {
-
 	//glm::vec2 -----------------------------------
 	using namespace Hazard;
 	template<>

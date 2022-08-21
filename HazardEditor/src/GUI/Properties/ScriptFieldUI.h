@@ -252,8 +252,19 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 
 		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
-		Entity referenced = world->TryGetEntityFromUUID(value.ObjectUID);
-		std::string& tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
+		std::string tag;
+
+		if (Hazard::Utils::ScriptClassToAsset(typeName) == AssetType::Undefined) {
+			Entity referenced = world->TryGetEntityFromUUID(value.ObjectUID);
+			tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
+		}
+		else
+		{
+			if (value.ObjectUID != INVALID_ASSET_HANDLE) {
+				const AssetMetadata& metadata = AssetManager::GetMetadata(value.ObjectUID);
+				tag = File::GetNameNoExt(metadata.Path);
+			}
+		}
 
 		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + typeName + ")";
 		float rowHeight = ImGui::GetTextLineHeightWithSpacing();
@@ -266,6 +277,10 @@ namespace UI
 			modified |= true;
 			});
 		ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
+			value.ObjectUID = uid;
+			modified |= true;
+			});
+		ImUI::DropTarget<AssetHandle>(Hazard::Utils::ScriptClassToAsset(typeName), [&](UID uid) {
 			value.ObjectUID = uid;
 			modified |= true;
 			});

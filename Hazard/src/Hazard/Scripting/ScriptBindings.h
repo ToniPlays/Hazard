@@ -42,6 +42,10 @@ namespace Hazard
 
 			BIND_ICALL(CameraComponent_GetFOV_Native);
 			BIND_ICALL(CameraComponent_SetFOV_Native);
+			BIND_ICALL(CameraComponent_GetClipping_Native);
+			BIND_ICALL(CameraComponent_SetClipping_Native);
+			BIND_ICALL(CameraComponent_GetProjection_Native);
+			BIND_ICALL(CameraComponent_SetProjection_Native);
 
 			BIND_ICALL(SpriteRendererComponent_GetColor_Native);
 			BIND_ICALL(SpriteRendererComponent_SetColor_Native);
