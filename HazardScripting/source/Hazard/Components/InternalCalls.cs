@@ -9,7 +9,6 @@ namespace Hazard
     {
         #region CameraComponent
 
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int CameraComponent_GetProjection_Native(ulong id);
 
@@ -26,7 +25,14 @@ namespace Hazard
         internal static extern float CameraComponent_GetFOV_Native(ulong id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float CameraComponent_SetFOV_Native(ulong id, float fov);
+        internal static extern void CameraComponent_SetFOV_Native(ulong id, float fov);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float CameraComponent_GetOrthoSize_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void CameraComponent_SetOrthoSize_Native(ulong id, float size);
+
         #endregion
         #region MeshComponent
 
@@ -42,6 +48,14 @@ namespace Hazard
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_SetColor_Native(ulong id, ref Color color);
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong SpriteRendererComponent_GetSprite_Native(ulong id);
+
+        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SpriteRendererComponent_SetSprite_Native(ulong id, ulong handle);
 
         #endregion
         #region TagComponent

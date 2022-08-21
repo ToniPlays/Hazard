@@ -254,16 +254,18 @@ namespace UI
 		std::string typeName = field.GetType().IsArray() ? field.GetType().GetElementType().GetTypeName() : field.GetType().GetTypeName();
 		std::string tag;
 
+		bool isObjectReference = true;
+
 		if (Hazard::Utils::ScriptClassToAsset(typeName) == AssetType::Undefined) {
 			Entity referenced = world->TryGetEntityFromUUID(value.ObjectUID);
 			tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
 		}
 		else
 		{
-			if (value.ObjectUID != INVALID_ASSET_HANDLE) {
-				const AssetMetadata& metadata = AssetManager::GetMetadata(value.ObjectUID);
+			const AssetMetadata& metadata = AssetManager::GetMetadata(value.ObjectUID);
+			if (metadata.Handle != INVALID_ASSET_HANDLE)
 				tag = File::GetNameNoExt(metadata.Path);
-			}
+			isObjectReference = false;
 		}
 
 		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + typeName + ")";
@@ -271,28 +273,30 @@ namespace UI
 		ImGui::Text(text.c_str());
 
 		bool modified = false;
-
-		ImUI::DropTarget<UID>("Hazard.Entity", [&](UID uid) {
-			value.ObjectUID = uid;
-			modified |= true;
-			});
-		ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
-			value.ObjectUID = uid;
-			modified |= true;
-			});
+		if (isObjectReference) {
+			ImUI::DropTarget<UID>("Hazard.Entity", [&](UID uid) {
+				value.ObjectUID = uid;
+				modified |= true;
+				});
+			ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
+				value.ObjectUID = uid;
+				modified |= true;
+				});
+		}
 		ImUI::DropTarget<AssetHandle>(Hazard::Utils::ScriptClassToAsset(typeName), [&](UID uid) {
 			value.ObjectUID = uid;
 			modified |= true;
 			});
 
-		
+
 		ImGui::SameLine(ImGui::GetContentRegionAvailWidth(), 5);
 		if (ImGui::Button("X", { rowHeight, rowHeight })) {
 			value.ObjectUID = 0;
 			modified |= true;
 		}
 
-		if (modified) {
+		if (modified) 
+		{
 			obj.SetFieldValue<Hazard::ObjectReference>(field.GetName(), value, index);
 		}
 		return modified;

@@ -67,13 +67,6 @@ namespace Hazard
 		auto& cmdBuffer = m_Window->GetSwapchain()->GetSwapchainBuffer();
 		m_ModelUniformBuffer->Bind(cmdBuffer);
 
-		for (auto& [pipeline, dataList] : m_DrawList.Pipelines) {
-			pipeline->Bind(cmdBuffer);
-			for (auto& data : dataList) {
-				pipeline->DrawArrays(cmdBuffer, data.Count);
-			}
-		}
-
 		for (auto& [pipeline, meshList] : m_DrawList.Meshes) {
 			pipeline->Bind(cmdBuffer);
 
@@ -96,6 +89,12 @@ namespace Hazard
 				{
 					pipeline->DrawArrays(cmdBuffer, rawMesh.Count);
 				}
+			}
+		}
+		for (auto& [pipeline, dataList] : m_DrawList.Pipelines) {
+			pipeline->Bind(cmdBuffer);
+			for (auto& data : dataList) {
+				pipeline->DrawArrays(cmdBuffer, data.Count);
 			}
 		}
 	}

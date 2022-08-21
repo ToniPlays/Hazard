@@ -73,6 +73,7 @@
     <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
     <Compile Include="source\Hazard\Components\TagComponent.cs" />
     <Compile Include="source\Hazard\Components\TransformComponent.cs" />
+    <Compile Include="source\Hazard\Core\Formatter.cs" />
     <Compile Include="source\Hazard\Coroutines\Coroutine.cs" />
     <Compile Include="source\Hazard\Coroutines\WaitForInput.cs" />
     <Compile Include="source\Hazard\Coroutines\WaitForNextFrame.cs" />
@@ -102,7 +103,9 @@
     <Compile Include="source\Hazard\Core\Reference.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />
     <Compile Include="source\Hazard\Resources\AssetMetadata.cs" />
+    <Compile Include="source\Hazard\Resources\InternalCalls.cs" />
     <Compile Include="source\Hazard\Resources\Resources.cs" />
+    <Compile Include="source\Hazard\Resources\Sprite.cs" />
     <Compile Include="source\Hazard\Time.cs" />
     <Compile Include="source\Rendering\BufferEnums.cs" />
     <Compile Include="source\Rendering\IndexBuffeCreateInfo.cs" />

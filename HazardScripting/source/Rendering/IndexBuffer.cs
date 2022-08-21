@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Hazard.Rendering
 {
-    public class IndexBuffer
+    public class IndexBuffer : Reference
     {
-        private ulong ID;
         protected IndexBuffer() { }
         ~IndexBuffer() {
             InternalCalls.IndexBuffer_Destroy_Native(ID);
@@ -26,6 +25,5 @@ namespace Hazard.Rendering
 
             return buffer;
         }
-        internal ulong GetID() { return ID; }
     }
 }

@@ -11,12 +11,20 @@ namespace Hazard
         public SpriteRendererComponent() : base(0) { }
         internal SpriteRendererComponent(ulong ID) : base(ID) {}
 
-        public Color Color { 
+        public Color color { 
             get {
                 InternalCalls.SpriteRendererComponent_GetColor_Native(parentEntity.ID, out Color result);
                 return result;
             }
             set => InternalCalls.SpriteRendererComponent_SetColor_Native(parentEntity.ID, ref value);
+        }
+        public Sprite sprite
+        {
+            get
+            {
+                return new Sprite(InternalCalls.SpriteRendererComponent_GetSprite_Native(parentEntity.ID));
+            }
+            set => InternalCalls.SpriteRendererComponent_SetSprite_Native(parentEntity.ID, value.ID);
         }
         public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(SpriteRendererComponent)); }
         public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(SpriteRendererComponent)); }

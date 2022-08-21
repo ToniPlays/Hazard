@@ -16,5 +16,19 @@ namespace Hazard
         ~Reference() {}
 
         public ulong ID { get; protected set; }
+
+        public static bool operator ==(Reference left, Reference right)
+        {
+            return left.ID == right.ID;
+        }
+        public static bool operator !=(Reference left, Reference right)
+        {
+            return !(left == right);
+        }
+        public static implicit operator bool(Reference entity)
+        {
+            try { return entity.ID != 0; }
+            catch { return false; }
+        }
     }
 }

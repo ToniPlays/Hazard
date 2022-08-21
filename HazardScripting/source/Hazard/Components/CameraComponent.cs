@@ -16,6 +16,11 @@ namespace Hazard
             get => InternalCalls.CameraComponent_GetFOV_Native(parentEntity.ID);
             set => InternalCalls.CameraComponent_SetFOV_Native(parentEntity.ID, value);
         }
+        public float OrthoSize
+        {
+            get => InternalCalls.CameraComponent_GetOrthoSize_Native(parentEntity.ID);
+            set => InternalCalls.CameraComponent_SetOrthoSize_Native(parentEntity.ID, value);
+        }
         public ClippingPlane Clipping
         {
             get

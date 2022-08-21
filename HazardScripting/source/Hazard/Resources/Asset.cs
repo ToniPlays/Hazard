@@ -4,8 +4,11 @@ using System.Text;
 
 namespace Hazard
 {
-    public class Asset
+    public class Asset : Reference
     {
+        public Asset() : base(0) { }
+        internal Asset(ulong id) : base(id) { }
 
+        public string GetName() { return InternalCalls.Asset_GetName_Native(ID); }
     }
 }

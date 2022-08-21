@@ -18,20 +18,6 @@ namespace Hazard
             get => Get<TransformComponent>();
         }
 
-        public static bool operator ==(Entity left, Entity right)
-        {
-            return left.ID == right.ID;
-        }
-        public static bool operator !=(Entity left, Entity right)
-        {
-            return !(left == right);
-        }
-        public static implicit operator bool(Entity entity)
-        {
-            try { return entity.ID != 0; }
-            catch { return false; }
-        }
-
         public bool IsUpdated() { return InternalCalls.Entity_IsUpdated_Native(ID); }
         public void SetUpdate(bool update) { InternalCalls.Entity_SetUpdate_Native(ID, update); }
         public bool IsVisible() { return InternalCalls.Entity_IsVisible_Native(ID); }

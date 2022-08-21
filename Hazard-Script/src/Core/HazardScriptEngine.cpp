@@ -85,8 +85,6 @@ namespace HazardScript
 		std::string message = Mono::GetStringProperty("Message", exceptionClass, exception);
 		std::string stackTrace = Mono::GetStringProperty("StackTrace", exceptionClass, exception);
 
-		stackTrace = Mono::MonoStringToString(stackTraceString);
-
 		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName + ": " + message, message + "\n\n" + stackTrace });
 	}
 	void HazardScriptEngine::InitializeMono()

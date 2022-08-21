@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Hazard.Rendering
 {
-    public class VertexBuffer
+    public class VertexBuffer : Reference
     {
-        private ulong ID;
-
         protected VertexBuffer() { }
 
         ~VertexBuffer() 
@@ -32,7 +30,5 @@ namespace Hazard.Rendering
             };
             return buffer;
         }
-
-        internal ulong GetID() { return ID; }
     }
 }

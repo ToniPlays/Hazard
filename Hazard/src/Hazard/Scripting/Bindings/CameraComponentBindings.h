@@ -26,6 +26,16 @@ namespace Hazard
 	{
 		GET_ENTITY(id).GetComponent<CameraComponent>().SetFov(newFov);
 	}
+
+	static float CameraComponent_GetOrthoSize_Native(uint64_t id)
+	{
+		return GET_ENTITY(id).GetComponent<CameraComponent>().GetSize();
+	}
+	static void CameraComponent_SetOrthoSize_Native(uint64_t id, float size)
+	{
+		GET_ENTITY(id).GetComponent<CameraComponent>().SetSize(size);
+	}
+
 	static void CameraComponent_GetClipping_Native(uint64_t id, glm::vec2* clipping)
 	{
 		*clipping = GET_ENTITY(id).GetComponent<CameraComponent>().GetClipping();

@@ -36,7 +36,6 @@ namespace Hazard.Rendering
         internal static extern void VertexBuffer_Destroy_Native(ulong id);
 
 
-
         [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Mesh_Create_Native(ref MeshCreateInfoInternal info);

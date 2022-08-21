@@ -1564,6 +1564,8 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\MathBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\AssetBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\MeshComponentBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

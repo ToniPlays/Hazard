@@ -28,9 +28,8 @@ namespace Hazard.Rendering
         public ulong VertexID;
         public ulong IndexID;
     }
-    public class Mesh
+    public class Mesh : Asset
     {
-        private ulong ID;
         protected Mesh() { }
 
         ~Mesh() {
@@ -38,8 +37,8 @@ namespace Hazard.Rendering
         }
         public static Mesh Create(MeshCreateInfo info) { 
             MeshCreateInfoInternal internalInfo = new MeshCreateInfoInternal();
-            internalInfo.VertexID = info.VertexBuffer.GetID();
-            internalInfo.IndexID = info.IndexBuffer.GetID();
+            internalInfo.VertexID = info.VertexBuffer.ID;
+            internalInfo.IndexID = info.IndexBuffer.ID;
 
             ulong resourceID = InternalCalls.Mesh_Create_Native(ref internalInfo);
 
@@ -49,7 +48,5 @@ namespace Hazard.Rendering
             };
             return mesh;
         }
-
-        internal ulong GetID() { return ID; }
     }
 }
