@@ -180,6 +180,7 @@ namespace UI
 
 		for (auto& item : m_CurrentItems) 
 		{
+			if (item.GetMetadata().Handle == INVALID_ASSET_HANDLE) continue;
 			item.BeginRender();
 			Ref<Texture2D> itemIcon = GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);

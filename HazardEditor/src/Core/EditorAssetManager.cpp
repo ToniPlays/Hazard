@@ -36,7 +36,7 @@ bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 	sourceFile = StringUtil::Replace(sourceFile, "%DerivesFrom%", info.Derives.empty() ? "" : ": " + info.Derives);
 	sourceFile = StringUtil::Replace(sourceFile, "%MethodList%", methodList);
 
-	if (!File::NewFile(info.Path, sourceFile)) return false;
+	if (!File::WriteFile(info.Path, sourceFile)) return false;
 
 	AssetMetadata metadata = {};
 	metadata.Handle = AssetHandle();
@@ -82,7 +82,7 @@ bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
 	if (File::DirectoryExists(actualPath)) {
 		size_t i = 1;
 		std::filesystem::path curPath = File::AppendToName(actualPath, std::to_string(i));
-		while (File::DirectoryExists(curPath)) 
+		while (File::DirectoryExists(curPath))
 		{
 			curPath = File::AppendToName(actualPath, std::to_string(i));
 			i++;
@@ -108,7 +108,43 @@ bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const
 	YamlUtils::Serialize(out, "Type", metadata.Type);
 	YamlUtils::Serialize(out, "Path", metadata.Path);
 	out << YAML::EndMap;
-	File::NewFile(path.string() + ".meta", out.c_str());
+	File::WriteFile(path.string() + ".meta", out.c_str());
 
 	return Hazard::AssetManager::ImportAsset(path, metadata) != INVALID_ASSET_HANDLE;
+}
+
+bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle handle)
+{
+	AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+	std::filesystem::path oldAssetPath = metadata.Path;
+	std::string extension = File::GetFileExtension(oldAssetPath);
+	std::filesystem::path newAssetPath;
+
+	if (metadata.Type == AssetType::Folder) return false;
+	if (metadata.Type != AssetType::Folder) 
+	{
+		newAssetPath = File::GetDirectoryOf(oldAssetPath) / (newName + "." + extension);
+		File::WriteFile(newAssetPath.string());
+		File::Move(oldAssetPath.string(), newAssetPath.string());
+	}
+
+	metadata.Path = newAssetPath;
+
+	YAML::Emitter out;
+	out << YAML::BeginMap;
+	YamlUtils::Serialize(out, "UID", metadata.Handle);
+	YamlUtils::Serialize(out, "Type", metadata.Type);
+	YamlUtils::Serialize(out, "Path", newAssetPath);
+	out << YAML::EndMap;
+
+	File::WriteFile(newAssetPath.string() + ".meta");
+	HZR_ASSERT(File::Move(oldAssetPath.string() + ".meta", newAssetPath.string() + ".meta"), "Oops");
+	File::WriteFile(newAssetPath.string() + ".meta", out.c_str());
+
+
+	AssetManager::GetMetadataRegistry()[newAssetPath] = metadata;
+	AssetManager::GetMetadataRegistry().erase(oldAssetPath);
+	auto& registry = AssetManager::GetMetadataRegistry();
+
+	return false;
 }

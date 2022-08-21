@@ -16,7 +16,7 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::filesystem::path, AssetMetadata> GetMetadataRegistry() { 
+		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() { 
 			return s_Registry.GetRegistry(); 
 		}
 		

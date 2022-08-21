@@ -36,14 +36,14 @@ namespace UI
 			ImGui::Text("Class name");
 			ImGui::NextColumn();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-			ImUI::TextField(m_CreateInfo.ClassName, "Class name");
+			ImUI::TextFieldWithHint(m_CreateInfo.ClassName, "Class name");
 			ImGui::NextColumn();
 			});
 		ImUI::Group("Derive", [&]() {
 			ImGui::Text("Derives from");
 			ImGui::NextColumn();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-			ImUI::TextField(m_CreateInfo.Derives, "Derives from");
+			ImUI::TextFieldWithHint(m_CreateInfo.Derives, "Derives from");
 			});
 
 		ImUI::ShiftY(16.0f);

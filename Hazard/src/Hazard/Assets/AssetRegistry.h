@@ -29,7 +29,7 @@ namespace Hazard
 
 		AssetMetadata& Get(const std::filesystem::path& path);
 		const AssetMetadata& Get(const std::filesystem::path& path) const;
-		std::unordered_map<std::filesystem::path, AssetMetadata> GetRegistry() const { return m_Registry; }
+		std::unordered_map<std::filesystem::path, AssetMetadata>& GetRegistry() { return m_Registry; }
 
 		void Clear() { m_Registry.clear(); }
 

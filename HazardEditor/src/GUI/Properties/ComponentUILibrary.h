@@ -190,7 +190,7 @@ namespace UI
 
 				auto& scriptEngine = Application::GetModule<ScriptEngine>();
 				bool exists = scriptEngine.HasModule(c.ModuleName);
-				bool changed = ImUI::TextField(c.ModuleName, "Script class");
+				bool changed = ImUI::TextFieldWithHint(c.ModuleName, "Script class");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
 					Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
@@ -360,8 +360,9 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
-				if (ImUI::TextField(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path"))
+				if (ImUI::TextFieldWithHint(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path"))
 				{
+
 				}
 				ImGui::PopStyleVar();
 

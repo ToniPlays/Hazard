@@ -38,17 +38,17 @@ public:
 	static bool ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer);
 	static std::string ReadFile(const std::filesystem::path& file);
 
-	static void WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source);
 	static bool WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32_t> data);
 	static bool WriteBinaryFile(const std::filesystem::path& path, void* data, size_t size);
 	static bool CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest);
 	static bool IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo);
 
-	static bool NewFile(const std::filesystem::path& file, const std::string& content = "");
+	static bool WriteFile(const std::filesystem::path& file, const std::string& content = "");
+	static bool Move(const std::filesystem::path& src, const std::filesystem::path& dst);
 
 
 	static std::filesystem::path GetFileAbsolutePath(const std::filesystem::path& file);
-	static std::string GetDirectoryOf(const std::filesystem::path& file);
+	static std::filesystem::path GetDirectoryOf(const std::filesystem::path& file);
 	static std::string GetName(const std::filesystem::path& file);
 	static std::string GetNameNoExt(const std::filesystem::path& file);
 	static std::string GetPathNoExt(const std::filesystem::path& file);

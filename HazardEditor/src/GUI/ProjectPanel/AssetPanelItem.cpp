@@ -4,6 +4,7 @@
 #include "Hazard.h"
 #include "MathCore.h"
 #include "Hazard/Rendering/Texture2D.h"
+#include "Core/EditorAssetManager.h"
 
 using namespace Hazard;
 
@@ -13,6 +14,13 @@ namespace UI
 	{
 		ImGui::PushID(m_Handle);
 		ImGui::BeginGroup();
+
+		if (m_Flags & m_Flags)
+		{
+			m_RenameValue = GetName();
+			m_Flags &= ~AssetPanelItemFlags_StartRename;
+			m_Flags |= AssetPanelItemFlags_Renaming;
+		}
 	}
 	void AssetPanelItem::OnRender(Ref<Texture2D> thumbnailIcon, const float& thumbnailSize)
 	{
@@ -74,10 +82,9 @@ namespace UI
 				//Center text
 				{
 					ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + (thumbnailSize - edgeOffset * 3.0f));
-
 					const float textWidth = Math::Min(ImGui::CalcTextSize(name.c_str()).x, thumbnailSize);
 					ImGui::SetNextItemWidth(textWidth);
-					ImGui::Text(name.c_str());
+					DrawItemName(name.c_str(), edgeOffset);
 
 					ImGui::PopTextWrapPos();
 				}
@@ -96,8 +103,9 @@ namespace UI
 				ImGui::SuspendLayout();
 
 				ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + (thumbnailSize - edgeOffset * 2.0f));
+
 				//Asset name
-				ImGui::Text(name.c_str());
+				DrawItemName(name.c_str(), edgeOffset);
 				ImGui::PopTextWrapPos();
 
 				ImGui::ResumeLayout();
@@ -114,6 +122,7 @@ namespace UI
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
 			ImGui::Text(name.c_str());
 			ImGui::Text(Hazard::Utils::AssetTypeToString(GetMetadata().Type));
+			ImGui::Text(std::to_string(m_Flags).c_str());
 			});
 
 		ImGui::PopStyleVar();
@@ -122,5 +131,46 @@ namespace UI
 	{
 		ImGui::PopID();
 		ImGui::NextColumn();
+
+		if (m_Flags & AssetPanelItemFlags_EndRename) {
+			RenameTo(m_RenameValue);
+			m_Flags &= ~AssetPanelItemFlags_EndRename;
+		}
+	}
+	std::string AssetPanelItem::GetName()
+	{
+		const AssetMetadata& metadata = GetMetadata();
+		if (metadata.Type == AssetType::Folder)
+			return File::GetName(metadata.Path);
+		return File::GetNameNoExt(GetMetadata().Path);
+	}
+	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
+	{
+		if (m_Flags & AssetPanelItemFlags_Renaming)
+		{
+			ImGui::SetKeyboardFocusHere();
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth() - edgeOffset * 4.0f);
+			ImUI::TextField(m_RenameValue);
+			if (ImGui::IsItemDeactivated())
+			{
+				m_Flags &= ~AssetPanelItemFlags_Renaming;
+				m_Flags |= AssetPanelItemFlags_EndRename;
+			}
+		}
+		else
+		{
+			ImGui::Text(name);
+
+			if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
+				m_Flags |= AssetPanelItemFlags_StartRename;
+		}
+	}
+	void AssetPanelItem::RenameTo(const std::string& newName)
+	{
+		if (newName == GetName())
+			return;
+		HZR_INFO("Renaming to {0}", newName);
+
+		bool succeeded = EditorAssetManager::RenameAsset(newName, m_Handle);
 	}
 }

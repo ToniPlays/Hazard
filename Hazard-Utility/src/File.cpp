@@ -54,12 +54,6 @@ std::filesystem::path File::AppendToName(const std::filesystem::path& path, cons
 	return parentPath / std::filesystem::path(name + append + extension);
 }
 
-void File::WriteFile(const std::filesystem::path& dest, const std::filesystem::path& source)
-{
-	std::ofstream out(dest);
-	out << source;
-	out.close();
-}
 bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32_t> data)
 {
 	std::ofstream out(path, std::ios::out | std::ios::binary);
@@ -86,7 +80,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 }
 bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest) {
 
-	std::string destFolder = GetDirectoryOf(dest);
+	std::filesystem::path destFolder = GetDirectoryOf(dest);
 	if (!DirectoryExists(destFolder)) {
 		File::CreateDir(destFolder);
 	}
@@ -99,11 +93,19 @@ bool File::IsNewerThan(const std::filesystem::path& file, const std::filesystem:
 	return fTime > sTime;
 }
 
-bool File::NewFile(const std::filesystem::path& file, const std::string& content)
+bool File::WriteFile(const std::filesystem::path& file, const std::string& content)
 {
 	std::ofstream f(file);
 	f << content;
 	f.close();
+	return true;
+}
+
+bool File::Move(const std::filesystem::path& src, const std::filesystem::path& dst) {
+	if (!File::Exists(dst)) 
+		return false;
+
+	std::filesystem::rename(std::filesystem::canonical(src), std::filesystem::canonical(dst));
 	return true;
 }
 
@@ -188,9 +190,9 @@ std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& fil
 {
 	return std::filesystem::absolute(file);
 }
-std::string File::GetDirectoryOf(const std::filesystem::path& file)
+std::filesystem::path File::GetDirectoryOf(const std::filesystem::path& file)
 {
-	return file.parent_path().string();
+	return file.parent_path();
 }
 std::string File::GetName(const std::filesystem::path& file)
 {
@@ -199,6 +201,7 @@ std::string File::GetName(const std::filesystem::path& file)
 }
 std::string File::GetNameNoExt(const std::filesystem::path& file)
 {
+	assert(File::Exists(file));
 	std::string name = GetName(file);
 	return name.substr(0, name.find_last_of('.'));
 }

@@ -32,7 +32,7 @@ namespace UI
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImUI::TextField(m_SearchValue, "Search...");
+		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
 		const char* columns[] = { "Name", "Type", "Modifiers" };
 
@@ -77,7 +77,6 @@ namespace UI
 		if (ImGui::IsItemClicked()) {
 			SelectEntity({});
 		}
-
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{

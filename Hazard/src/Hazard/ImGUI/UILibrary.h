@@ -88,11 +88,11 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Input
 
-	static bool TextField(std::string& text) {
+	static bool TextField(std::string& text, const char* id = "##InputField") {
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
-		if (ImGui::InputText("##InputField", buffer, sizeof(buffer))) {
+		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
 			text = buffer;
 			return true;
 		}
@@ -110,7 +110,7 @@ namespace Hazard::ImUI
 		return false;
 	}
 
-	static bool TextField(std::string& text, const char* hint) {
+	static bool TextFieldWithHint(std::string& text, const char* hint) {
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 

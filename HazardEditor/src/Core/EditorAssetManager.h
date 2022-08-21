@@ -37,6 +37,5 @@ public:
 	static bool CreateScriptAsset(const ScriptCreateInfo& info);
 	static bool CreateWorld(const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
-
-private:
+	static bool RenameAsset(const std::string& newName, AssetHandle handle);
 };
