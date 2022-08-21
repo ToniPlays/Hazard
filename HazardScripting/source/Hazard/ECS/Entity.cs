@@ -4,16 +4,10 @@ using System.Runtime.CompilerServices;
 
 namespace Hazard
 {
-    public class Entity
+    public class Entity : Reference
     {
-        protected Entity() { ID = 0; }
-        internal Entity(ulong ID)
-        {
-            this.ID = ID;
-        }
-        ~Entity() { }
-
-        public ulong ID { get; private set; }
+        public Entity() : base(0) { }
+        internal Entity(ulong ID) : base(ID) {}
 
         public string Name {
             get => Get<TagComponent>().Name;
@@ -72,12 +66,12 @@ namespace Hazard
         public Entity Instantiate(string name = "New entity") 
         {
             ulong id = InternalCalls.Entity_InstantiateOrigin_Native(name);
-            return new Entity() { ID = id };
+            return new Entity(id);
         }
         public Entity Instantiate(string name, Vector3 position, Vector3 rotation, Vector3 scale)
         {
             ulong id = InternalCalls.Entity_InstantiateAt_Native(name, position, rotation, scale);
-            return new Entity() { ID = id };
+            return new Entity(id);
         }
         public void Destroy() { InternalCalls.Entity_Destroy_Native(ID); }
 

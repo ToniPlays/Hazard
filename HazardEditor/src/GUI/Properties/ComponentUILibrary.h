@@ -99,7 +99,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.SpriteRendererComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Sprite renderer");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -162,7 +162,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.CameraComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Camera component");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -241,7 +241,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.ScriptComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Script component");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -267,7 +267,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.SkyLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Sky light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -299,7 +299,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.DirectionalLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Directional light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -331,7 +331,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.PointLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Point light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -378,7 +378,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.MeshComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Mesh");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -404,7 +404,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.Rigidbody2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Rigidbody 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -428,7 +428,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.BoxCollider2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Box collider 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
@@ -452,7 +452,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Component", &e.GetUID(), [&]() {
+				ImUI::DragSource("Hazard.CircleCollider2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Circle collider 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});

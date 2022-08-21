@@ -122,7 +122,7 @@ namespace HazardScript
 			ref.MonoObject = MonoArrayUtils::GetElementValue<MonoObject*>((MonoArray*)target, m_Index);
 
 		ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
-		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Entity");
+		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Reference");
 
 		if (m_Field->GetType().IsSubClassOf(entityManaged) && ref.MonoObject != nullptr)
 		{
@@ -146,8 +146,16 @@ namespace HazardScript
 
 			SetStoredValue(value);
 		}
+		else if (value.ObjectUID == 0) 
+		{
+			value.MonoObject = nullptr;
+			mono_gchandle_free(value.MonoObjectHandle);
+			SetStoredValue(value);
+			return;
+		}
 
-		MonoMethod* method = mono_class_get_method_from_name(m_Field->GetType().TypeClass->Class, ".ctor", 1);
+		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Reference");
+		MonoMethod* method = mono_class_get_method_from_name(entityManaged->Class, ".ctor", 1);
 		if (method != nullptr) {
 
 			uint64_t id = value.ObjectUID;

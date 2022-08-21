@@ -256,14 +256,26 @@ namespace UI
 		std::string& tag = referenced.IsValid() ? referenced.GetTag().Tag : "";
 
 		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + typeName + ")";
+		float rowHeight = ImGui::GetTextLineHeightWithSpacing();
 		ImGui::Text(text.c_str());
 
 		bool modified = false;
 
+		ImUI::DropTarget<UID>("Hazard.Entity", [&](UID uid) {
+			value.ObjectUID = uid;
+			modified |= true;
+			});
 		ImUI::DropTarget<UID>(typeName.c_str(), [&](UID uid) {
 			value.ObjectUID = uid;
-			modified = true;
+			modified |= true;
 			});
+
+		
+		ImGui::SameLine(ImGui::GetContentRegionAvailWidth(), 5);
+		if (ImGui::Button("X", { rowHeight, rowHeight })) {
+			value.ObjectUID = 0;
+			modified |= true;
+		}
 
 		if (modified) {
 			obj.SetFieldValue<Hazard::ObjectReference>(field.GetName(), value, index);

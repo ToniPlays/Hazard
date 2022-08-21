@@ -82,6 +82,7 @@
     <Compile Include="source\Hazard\ECS\Component.cs" />
     <Compile Include="source\Hazard\ECS\Entity.cs" />
     <Compile Include="source\Hazard\ECS\InternalCalls.cs" />
+    <Compile Include="source\Hazard\ECS\World.cs" />
     <Compile Include="source\Hazard\Input\Input.cs" />
     <Compile Include="source\Hazard\Input\KeyCodes.cs" />
     <Compile Include="source\Hazard\Math\BoundingBox.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="source\Hazard\Mesh\Texture.cs" />
     <Compile Include="source\Hazard\Physics\Collider2D.cs" />
     <Compile Include="source\Hazard\Physics\Rigidbody2D.cs" />
+    <Compile Include="source\Hazard\Core\Reference.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />
     <Compile Include="source\Hazard\Resources\AssetMetadata.cs" />
     <Compile Include="source\Hazard\Resources\Resources.cs" />

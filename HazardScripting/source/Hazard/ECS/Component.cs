@@ -4,12 +4,13 @@ using System.Text;
 
 namespace Hazard
 {
-    public abstract class Component
+    public abstract class Component : Reference
     {
-        internal Component(ulong id) 
+        internal Component(ulong id) : base(id) { }
+        public Entity parentEntity
         {
-            parentEntity = new Entity(id);
+            get { return new Entity(ID); }
+            set { ID = value.ID; }
         }
-        public Entity parentEntity { get; set; }
     }
 }
