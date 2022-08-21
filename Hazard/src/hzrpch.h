@@ -34,8 +34,7 @@
 
 using namespace std::chrono_literals;
 
-#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
-#define GLM_FORCE_SIMD_AVX2
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>

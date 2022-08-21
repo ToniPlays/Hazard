@@ -62,6 +62,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Projection", component.GetProjectionType() == Projection::Orthographic ? "Orthographic" : "Perspective");
 				YamlUtils::Serialize(out, "Fov", component.GetFov());
+				YamlUtils::Serialize(out, "Size", component.GetSize());
 				YamlUtils::Serialize(out, "Clipping", component.GetClipping());
 				});
 		}

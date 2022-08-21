@@ -28,13 +28,14 @@ namespace Editor
 		gridData.ZFar = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
-		HZR_ASSERT(m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData)), "No UBO");
+		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
 	void Grid::Invalidate(Ref<RenderPass> renderPass)
 	{
-		if (m_Pipeline) {
+		if (m_Pipeline) 
+		{
 			PipelineSpecification spec = m_Pipeline->GetSpecifications();
 			m_Pipeline->SetRenderPass(renderPass);
 			return;
@@ -50,7 +51,6 @@ namespace Editor
 		specs.Usage = PipelineUsage::GraphicsBit;
 		specs.CullMode = CullMode::None;
 		specs.IsShared = false;
-		specs.DepthTest = true;
 		specs.pBufferLayout = &layout;
 
 		m_Pipeline = Pipeline::Create(&specs);

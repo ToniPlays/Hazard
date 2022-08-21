@@ -3,6 +3,7 @@
 #include "Buffers.h"
 #include "RenderPass.h"
 #include "Shader.h"
+#include <glad/glad.h>
 
 namespace HazardRenderer
 {
@@ -21,6 +22,7 @@ namespace HazardRenderer
 		float LineWidth = 1.0f;
 		bool IsShared = true;
 		bool DepthTest = true;
+		uint32_t DepthFunc = GL_LESS;
 		RenderPass* pTargetRenderPass = nullptr;
 	};
 

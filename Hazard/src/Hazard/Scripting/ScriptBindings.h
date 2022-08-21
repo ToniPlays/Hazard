@@ -68,6 +68,11 @@ namespace Hazard
 			BIND_ICALL(Entity_IsUpdated_Native);
 			BIND_ICALL(Entity_SetUpdate_Native);
 
+			BIND_ICALL(Math_RandomRange_Native);
+			BIND_ICALL(Math_Pow_Native);
+			BIND_ICALL(Math_Sqrt_Native);
+			BIND_ICALL(Math_Radians_Native);
+
 			BIND_ICALL(Component_IsActive_Native);
 			BIND_ICALL(Component_SetActive_Native);
 

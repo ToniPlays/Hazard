@@ -91,7 +91,7 @@ namespace Hazard
 		pipelineSpecs.ShaderPath = "Shaders/Debug/lineShader.glsl";
 		pipelineSpecs.pTargetRenderPass = m_RenderPass.Raw();
 		pipelineSpecs.pBufferLayout = &layout;
-		pipelineSpecs.DepthTest = false;
+		pipelineSpecs.DepthTest = true;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
 	}

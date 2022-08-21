@@ -46,11 +46,6 @@ namespace HazardRenderer::OpenGL {
 		m_Swapchain = Ref<OpenGLSwapchain>::Create(this, info->pTargetFrameBuffer);
 		m_Swapchain->Create(m_Window->GetWidth(), m_Window->GetHeight(), info->VSync);
 
-
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-
 		if (!info->Logging) return;
 
 		glEnable(GL_DEBUG_OUTPUT);

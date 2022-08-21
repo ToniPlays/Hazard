@@ -9,15 +9,16 @@ namespace Hazard {
 
 	bool WorldSerializer::SerializeEditor(const std::filesystem::path& file)
 	{
+		HZR_CORE_INFO("Saving editor world {0}", file.string());
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", !m_World->GetName().empty() ? m_World->GetName() : "Untitled world");
 
 		YamlUtils::Sequence(out, "Entities", [&]() {
-            m_World->GetWorldRegistry().each([&](auto entityID) {
+			m_World->GetWorldRegistry().each([&](auto entityID) {
 				Entity entity{ entityID, m_World.Raw() };
-				if(!entity)
-				SerializeEntityEditor(entity, out);
+				if (entity)
+					SerializeEntityEditor(entity, out);
 				});
 			});
 		out << YAML::EndMap;

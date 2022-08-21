@@ -103,6 +103,8 @@ float computeLinearDepth(vec3 pos)
 void main() 
 {
     float t = -nearPoint.y / (farPoint.y - nearPoint.y);
+    if(t <= 0) discard;
+
     vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
 
     gl_FragDepth = computeDepth(fragPos3D);
@@ -111,5 +113,7 @@ void main()
     float fading = max(0, (0.5 - linearDepth));
 
     color = (grid(fragPos3D, u_Grid.u_Scale, true)) * float(t > 0); // adding multiple resolution for the grid
+    if(color.a <= 0.0) discard;
+
     color.a *= u_Grid.u_ScaleFading;
 }

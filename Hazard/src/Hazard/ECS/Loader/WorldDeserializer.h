@@ -46,6 +46,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Projection", projection, std::string("Perspective"));
 			c.SetProjection(projection == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.SetFov(comp["Fov"].as<float>());
+			c.SetSize(comp["Size"].as<float>());
 
 			glm::vec2 clipping;
 			YamlUtils::Deserialize(comp, "Clipping", clipping, glm::vec2(0.03f, 1.0f));

@@ -152,7 +152,9 @@ namespace HazardRenderer::OpenGL
 
 			ShaderFactory::Compile(&compileInfo);
 
-			if (!compileInfo.Succeeded()) {
+			if (!compileInfo.Succeeded()) 
+			{
+				std::cout << compileInfo.Error << std::endl;
 				Window::SendDebugMessage({ Severity::Error, compileInfo.Error, source });
 				auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
 				shaderData[stage] = binaries;
