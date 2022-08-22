@@ -43,7 +43,6 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLVertexBuffer> instance = this;
 
 		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
-
 			if (instance->m_Layout.GetStride() == 0)
 			{
 				glCreateBuffers(1, &instance->m_ID);

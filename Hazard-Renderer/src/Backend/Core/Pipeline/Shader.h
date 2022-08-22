@@ -165,7 +165,7 @@ namespace HazardRenderer
         }
 	}
 
-	class Shader : public RefCount {
+	class Shader : public HZR_RESOURCE_HANDLER {
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;

@@ -10,7 +10,6 @@
 
 namespace Hazard
 {
-	using namespace HazardScript;
 	static void Debug_Log_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToString(obj);

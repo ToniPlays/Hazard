@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Module.h"
+#include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 #include "RendererDrawList.h"
 #include "QuadRenderer.h"

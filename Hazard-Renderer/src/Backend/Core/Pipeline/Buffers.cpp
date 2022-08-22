@@ -13,7 +13,8 @@ namespace HazardRenderer {
 	{
 		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
 
-		if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) {
+		if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) 
+		{
 			return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
 		}
 

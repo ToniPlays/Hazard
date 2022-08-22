@@ -5,6 +5,7 @@
 #include "ScopedVar.h"
 #include "StyleManager.h"
 #include "ImGuiUtils.h"
+#include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 
 #include "Hazard/Rendering/Texture2D.h"

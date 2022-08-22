@@ -26,7 +26,6 @@ workspace "%{ProjectName}"
     targetdir "%{prj.location}/Library/Scripts/Binaries"
     objdir "%{prj.location}/Library/Scripts/Obj" 
 
-
     files {
       "Assets/**.cs"
     }

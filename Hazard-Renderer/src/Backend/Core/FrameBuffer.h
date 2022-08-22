@@ -2,8 +2,8 @@
 
 #include "Texture/Image2D.h"
 #include "glm/glm.hpp"
-
 #include <vector>
+#include "Core.h"
 
 namespace HazardRenderer 
 {
@@ -45,7 +45,7 @@ namespace HazardRenderer
 		std::string DebugName;
 	};
 
-	class FrameBuffer : public RefCount {
+	class FrameBuffer : public HZR_RESOURCE_HANDLER {
 	public:
 		virtual ~FrameBuffer() = default;
 

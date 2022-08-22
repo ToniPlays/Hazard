@@ -4,12 +4,13 @@
 
 namespace Hazard::Utils {
 
-	AssetType ScriptClassToAsset(const std::string_view& type) 
+	AssetType ScriptClassToAsset(const std::string_view& type)
 	{
 		if (type == "Hazard.World")					return AssetType::World;
 		if (type == "Hazard.AudioClip")				return AssetType::AudioClip;
 		if (type == "Hazard.Rendering.Mesh")		return AssetType::Mesh;
 		if (type == "Hazard.Texture2D")				return AssetType::Image;
+		if (type == "Hazard.Sprite")				return AssetType::Image;
 
 		return AssetType::Undefined;
 	}
@@ -151,19 +152,24 @@ namespace HazardScript
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* target, ObjectReference value)
 	{
+		if (value.MonoObject != nullptr)
+		{
+			value.MonoObject = nullptr;
+			mono_gchandle_free(value.MonoObjectHandle);
+		}
+
+		if (value.ObjectUID == 0)
+		{
+			SetStoredValue(value);
+			return;
+		}
+
 		if (value.MonoObject == nullptr)
 		{
 			value.MonoObjectHandle = Mono::InstantiateHandle(m_Field->GetType().TypeClass->Class);
 			value.MonoObject = mono_gchandle_get_target(value.MonoObjectHandle);
 
 			SetStoredValue(value);
-		}
-		else if (value.ObjectUID == 0) 
-		{
-			value.MonoObject = nullptr;
-			mono_gchandle_free(value.MonoObjectHandle);
-			SetStoredValue(value);
-			return;
 		}
 
 		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Reference");

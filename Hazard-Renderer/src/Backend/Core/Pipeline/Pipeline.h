@@ -26,7 +26,7 @@ namespace HazardRenderer
 		RenderPass* pTargetRenderPass = nullptr;
 	};
 
-	class Pipeline : public RefCount {
+	class Pipeline : public HZR_RESOURCE_HANDLER {
 	public:
 		virtual ~Pipeline() = default;
 

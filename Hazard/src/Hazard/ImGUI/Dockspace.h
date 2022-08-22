@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include "ScopedVar.h"
+#include "Hazard/Core/Core.h"
 #include "HazardRendererCore.h"
 
 namespace Hazard::ImUI

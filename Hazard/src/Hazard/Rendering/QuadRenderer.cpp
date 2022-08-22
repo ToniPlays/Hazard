@@ -102,11 +102,7 @@ namespace Hazard
 		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
-		BufferLayout layout = { { "a_Position",		ShaderDataType::Float3 },
-								{ "a_Color",		ShaderDataType::Float4 },
-								{ "a_TextureCoords",ShaderDataType::Float2 },
-								{ "a_TextureIndex",	ShaderDataType::Float  }
-		};
+		BufferLayout layout = QuadVertex::Layout();
 
 		if (!m_IndexBuffer)
 		{
@@ -138,11 +134,11 @@ namespace Hazard
 			IndexBufferCreateInfo indexBuffer = {};
 			indexBuffer.DebugName = "2DQuadIndexBuffer";
 			indexBuffer.Data = indices;
-			indexBuffer.Size = m_Data.MaxIndices;
+			indexBuffer.Size = m_Data.MaxIndices * sizeof(uint32_t);
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
-			//delete[] indices;
+			uint32_t elements = m_IndexBuffer->GetCount();
 		}
 
 		PipelineSpecification pipelineSpecs = {};

@@ -5,7 +5,6 @@
 #include "Backend/Core/Core.h"
 #include "Backend/Core/RenderCommandBuffer.h"
 
-
 namespace HazardRenderer
 {
 	class VertexBuffer;
@@ -38,7 +37,6 @@ namespace HazardRenderer
 	{
 		std::string DebugName;
 
-		//Size is equal to size of uint32_t, don't multiply with "sizeof(uint32_t)"
 		size_t Size;
 		BufferUsage Usage;
 		uint32_t* Data = nullptr;
@@ -53,7 +51,7 @@ namespace HazardRenderer
 		bool IsShared = true;
 	};
 
-	class VertexBuffer : public RefCount
+	class VertexBuffer : public HZR_RESOURCE_HANDLER
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -69,7 +67,7 @@ namespace HazardRenderer
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 
-	class IndexBuffer : public RefCount
+	class IndexBuffer : public HZR_RESOURCE_HANDLER
 	{
 	public:
 		virtual ~IndexBuffer() = default;
@@ -83,7 +81,7 @@ namespace HazardRenderer
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
-	class UniformBuffer : public RefCount
+	class UniformBuffer : public HZR_RESOURCE_HANDLER
 	{
 	public:
 		virtual ~UniformBuffer() = default;

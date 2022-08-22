@@ -19,13 +19,15 @@ namespace Hazard
 		info.Format = info.Format;
 		info.ClearLocalBuffer = true;
 
+
 		Ref<Hazard::Image2D> imageAsset = HazardRenderer::Image2D::Create(&info);
 		imageAsset->m_Flags = AssetFlags::RuntimeGenerated;
 
-		AssetMetadata medatata = {};
-		metadata.Type = AssetType::Image;
-		AssetManager::AddRuntimeAsset(metadata, imageAsset);
+		AssetMetadata imageData = {};
+		imageData.Type = AssetType::Image;
+		imageData.Handle = imageAsset->GetHandle();
 
+		AssetManager::AddRuntimeAsset(imageData, imageAsset);
 		asset = Ref<Texture2D>::Create(imageAsset);
 
 		return asset;

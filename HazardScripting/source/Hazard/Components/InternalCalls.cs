@@ -36,7 +36,9 @@ namespace Hazard
         #endregion
         #region MeshComponent
 
-        [Todo("Binding", Status.Awaiting)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong MeshComponent_GetMesh_Native(ulong id);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
 
@@ -49,11 +51,9 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_SetColor_Native(ulong id, ref Color color);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong SpriteRendererComponent_GetSprite_Native(ulong id);
 
-        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_SetSprite_Native(ulong id, ulong handle);
 

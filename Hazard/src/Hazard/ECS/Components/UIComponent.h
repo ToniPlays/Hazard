@@ -2,6 +2,7 @@
 
 #include "Color.h"
 #include "Hazard/Rendering/Texture2D.h"
+#include "Hazard/Core/Core.h"
 #include "HazardRendererCore.h"
 
 namespace Hazard {

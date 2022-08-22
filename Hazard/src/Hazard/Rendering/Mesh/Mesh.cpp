@@ -5,6 +5,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Core/Application.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "HazardRendererCore.h"
 
 namespace Hazard
 {
@@ -12,14 +13,10 @@ namespace Hazard
 
 	Mesh::Mesh(std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices)
 	{
-		BufferLayout layout = { { "v_Position",			ShaderDataType::Float3 },
-								{ "v_Color",			ShaderDataType::Float4 },
-								{ "v_Normal",			ShaderDataType::Float3 },
-								{ "v_TextureCoords",	ShaderDataType::Float2 }
-		};
-
 		m_LocalVertexData = Buffer::Copy(vertices.data(), vertices.size() * sizeof(Vertex3D));
 		m_LocalIndexData = Buffer::Copy(indices.data(), indices.size() * sizeof(uint32_t));
+
+		BufferLayout layout = Vertex3D::Layout();
 
 		VertexBufferCreateInfo vboInfo = {};
 		vboInfo.DebugName = "SomeMesh";
@@ -47,11 +44,29 @@ namespace Hazard
 		pipelineSpecs.pBufferLayout = &layout;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+
+		Renderer::SubmitResourceFree([&]() mutable {
+			m_LocalVertexData.Release();
+			m_LocalIndexData.Release();
+			});
 	}
 
-	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(m_IndexBuffer), m_Pipeline(pipeline)
+	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
 	{
+		if (pipeline == nullptr) {
 
+			BufferLayout layout = Vertex3D::Layout();
+
+			PipelineSpecification pipelineSpecs = {};
+			pipelineSpecs.DebugName = "PBRShader";
+			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
+			pipelineSpecs.DrawType = DrawType::Fill;
+			pipelineSpecs.ShaderPath = "Shaders/pbr.glsl";
+			pipelineSpecs.pTargetRenderPass = Application::GetModule<RenderEngine>().GetWindow().GetSwapchain()->GetRenderPass().Raw();
+			pipelineSpecs.pBufferLayout = &layout;
+
+			m_Pipeline = Pipeline::Create(&pipelineSpecs);
+		}
 	}
 }
 

@@ -113,6 +113,12 @@ namespace HazardScript
 				SetValueInternal(arrayObject, index, value);
 			else SetElementValue(arrayObject, index, ValueWrapper(&value, sizeof(T)));
 		}
+
+		static void* GetArrayValuePtr(MonoArray* monoArray) {
+			uint32_t size = mono_array_length(monoArray);
+			return mono_array_addr_with_size(monoArray, size, 0);
+		}
+
 	private:
 		static void SetValueInternal(MonoArray* arrayObject, size_t index, const ValueWrapper& value);
 		static void SetValueInternal(MonoArray* arrayObject, size_t index, MonoObject* value);

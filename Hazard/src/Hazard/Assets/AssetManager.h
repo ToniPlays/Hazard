@@ -57,10 +57,16 @@ namespace Hazard
 		
 		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 
 		{
+			assert(asset->m_Handle == metadata.Handle, "Handles don't match, stuff will break");
+			asset->m_Type = metadata.Type;
 			s_LoadedAssets[metadata.Handle] = asset;
 			return true;
 		}
-
+		template<typename T>
+		static Ref<T> GetRuntimeAsset(const AssetHandle& handle)
+		{
+			return s_LoadedAssets[handle].As<T>();
+		}
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);
 
 	private:

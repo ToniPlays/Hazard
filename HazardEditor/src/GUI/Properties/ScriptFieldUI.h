@@ -296,12 +296,10 @@ namespace UI
 		}
 
 		if (modified) 
-		{
 			obj.SetFieldValue<Hazard::ObjectReference>(field.GetName(), value, index);
-		}
+
 		return modified;
 	}
-
 
 	static void ScriptField(const std::string& name, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world)
 	{

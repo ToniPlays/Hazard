@@ -6,17 +6,20 @@
 namespace HazardRenderer {
 	class FrameBuffer;
 	
-	struct RenderPassCreateInfo {
+	struct RenderPassCreateInfo 
+	{
 		Ref<FrameBuffer> pTargetFrameBuffer = nullptr;
 		std::string DebugName = "";
 	};
 
-	struct RenderPassSpecification {
+	struct RenderPassSpecification 
+	{
 		Ref<FrameBuffer> TargetFrameBuffer;
 		std::string DebugName;
 	};
 
-	class RenderPass : public RefCount {
+	class RenderPass : public HZR_RESOURCE_HANDLER 
+	{
 	public:
 		virtual ~RenderPass() = default;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/ECS/Component.h"
+#include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 #include "RenderEngine.h"
 #include "WorldRenderer.h"

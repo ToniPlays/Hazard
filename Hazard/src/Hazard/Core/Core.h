@@ -27,6 +27,9 @@
 	#define HZR_BUILD_VERSION "Release"
 #endif // HZR_DEBUG
 
+#include "Hazard/Assets/Asset.h"
+#define HZR_RESOURCE_HANDLER Hazard::Asset
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>

@@ -15,6 +15,8 @@ namespace Hazard.Rendering
         public Color Color;
         public Vector3 Normal;
         public Vector2 TextureCoords;
+
+        public static uint Size() { return 48; }
     }
 
     public struct MeshCreateInfo 

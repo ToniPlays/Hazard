@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include "Color.h"
+#include "Core.h"
+#include "Hazard/Assets/Asset.h"
 #include "HazardRendererCore.h"
 
 namespace HazardScript {

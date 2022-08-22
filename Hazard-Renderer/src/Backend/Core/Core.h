@@ -9,5 +9,9 @@
 #pragma error Unsupported platform apparently
 #endif
 
+#ifndef HZR_RESOURCE_HANDLER
+#define HZR_RESOURCE_HANDLER RefCount
+#endif
+
 #include "Ref.h"
 #include "UtilityCore.h"

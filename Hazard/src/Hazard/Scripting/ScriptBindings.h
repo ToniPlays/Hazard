@@ -87,6 +87,7 @@ namespace Hazard
 			BIND_ICALL(SpriteRendererComponent_SetSprite_Native);
 
 			//Mesh renderer component --------------------------
+			BIND_ICALL(MeshComponent_GetMesh_Native);
 			BIND_ICALL(MeshComponent_SetMesh_Native);
 
 			//Asset	--------------------------------------------
@@ -107,6 +108,16 @@ namespace Hazard
 			BIND_ICALL(Math_Pow_Native);
 			BIND_ICALL(Math_Sqrt_Native);
 			BIND_ICALL(Math_Radians_Native);
+
+			//Rendering
+
+			BIND_ICALL(VertexBuffer_Create_Native);
+			BIND_ICALL(VertexBuffer_Destroy_Native);
+			BIND_ICALL(IndexBuffer_Create_Native);
+			BIND_ICALL(IndexBuffer_Destroy_Native);
+
+			BIND_ICALL(Mesh_Create_Native);
+			BIND_ICALL(Mesh_Destroy_Native);
 		}
 		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) {};
 	};

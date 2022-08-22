@@ -9,6 +9,7 @@
 #include "Bindings/MathBindings.h"
 #include "Bindings/AssetBindings.h"
 #include "Bindings/MeshComponentBindings.h"
+#include "Bindings/BufferBindings.h"
 
 //Debug
 #include "Bindings/DebugBindings.h"
