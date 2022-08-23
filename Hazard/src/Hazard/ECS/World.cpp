@@ -86,8 +86,6 @@ namespace Hazard
 		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-		CopyComponentIfExists<BatchComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
-
 		return entity;
 	}
 
@@ -114,7 +112,7 @@ namespace Hazard
 	}
 	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
-		auto group = GetEntitiesWith<CameraComponent, TransformComponent>();
+		auto& group = GetEntitiesWith<CameraComponent, TransformComponent>();
 
 		for (auto entity : group) {
 
@@ -154,7 +152,6 @@ namespace Hazard
 	template<typename T>
 	void World::OnComponentRemoved(Entity& entity, T& component) {}
 
-	REGISTER_COMPONENT(BatchComponent);
 	REGISTER_COMPONENT(MeshComponent);
 	REGISTER_COMPONENT(SpriteRendererComponent);
 	REGISTER_COMPONENT(SkyLightComponent);

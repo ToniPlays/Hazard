@@ -20,15 +20,12 @@ namespace Hazard
 		void Init() override;
 		void Close() override;
 		void Update() override;
-		void Render() override;
 
 		void OnBegin();
 		void OnEnd();
 
 		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
-
 		void SetFlags(uint32_t flags) { m_Flags = (WorldFlags)flags; }
-
 		Ref<World> GetCurrentWorld() { return m_World; }
 		void SetWorld(Ref<World> world) { m_World = std::move(world); }
 

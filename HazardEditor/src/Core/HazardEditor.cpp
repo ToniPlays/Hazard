@@ -8,6 +8,7 @@
 #include "GUIManager.h"
 #include "GUI/Debug/Console.h"
 #include "HazardScript.h"
+#include "Editor/EditorWorldManager.h"
 
 #include "Hazard/Rendering/RenderEngine.h"
 #include "EditorScripting/EditorScriptGlue.h"
@@ -29,7 +30,6 @@ void HazardEditorApplication::PreInit()
 		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
 	}
 	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
-	
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
@@ -97,6 +97,7 @@ void HazardEditorApplication::PreInit()
 }
 void HazardEditorApplication::Init()
 {
+	Editor::EditorWorldManager::Init();
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderEngine>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
@@ -119,6 +120,11 @@ void HazardEditorApplication::Init()
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
 		});
 	scriptEngine.ReloadAssemblies();
+}
+
+void HazardEditorApplication::Update()
+{
+	Editor::EditorWorldManager::Update();
 }
 
 bool HazardEditorApplication::OnEvent(Event& e)

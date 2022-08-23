@@ -18,12 +18,12 @@ namespace HazardRenderer::Vulkan
 		void Unbind() {};
 
 		void Resize(uint32_t width, uint32_t height, bool force = false);
-		void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const {};
+		void BindTexture(uint32_t attachmentIndex = 0, size_t slot = 0) const {};
 
 		uint32_t GetWidth() const { return m_Specs.Width; };
 		uint32_t GetHeight() const { return m_Specs.Height; };
 
-		uint32_t GetColorAttachmentCount() { return m_AttachmentImages.size(); }
+		size_t GetColorAttachmentCount() { return m_AttachmentImages.size(); }
 
 		FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 		VkRenderPass GetRenderPass() { return m_RenderPass; };

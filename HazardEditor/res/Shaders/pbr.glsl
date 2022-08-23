@@ -72,5 +72,4 @@ void main()
 	vec4 ambientColor = ambientStrength * vec4(lightColor, 1.0);
 
 	color = (ambientColor + vec4(diffuse, 1.0f)) * f_Color;
-	color = f_Color;
 }

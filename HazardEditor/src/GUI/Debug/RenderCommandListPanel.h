@@ -10,5 +10,7 @@ namespace UI {
 		void Update() override {};
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
+
+		void DrawDetailedInfo(Hazard::RendererDrawList& drawList);
 	};
 }

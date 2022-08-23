@@ -23,15 +23,17 @@ namespace UI
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
 		bool KeyPressed(KeyPressedEvent& e);
 		void DrawStatsWindow();
+
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
 		TransformationGizmo m_Gizmos;
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, (float)m_Width / (float)m_Height, 0.03f, 100.0f);
 
 		Editor::Grid m_EditorGrid;
-
-		Ref<WorldRenderer> m_Renderer;
 		Entity m_SelectionContext;
+
+		Ref<HazardRenderer::RenderPass> m_RenderPass;
+		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 
 		bool m_DrawStats = false;
 		bool m_MouseOverWindow = false;

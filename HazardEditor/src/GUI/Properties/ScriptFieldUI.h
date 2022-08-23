@@ -88,7 +88,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -102,7 +102,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -116,7 +116,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -130,7 +130,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -145,7 +145,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -159,7 +159,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -173,7 +173,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -187,7 +187,7 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		bool modified = false;
 
-		modified = ImUI::InputInt((int&)value, 0.0);
+		modified = ImUI::InputInt((int&)value, 0);
 
 		if (modified) {
 			obj.SetFieldValue(field.GetName(), value, index);
@@ -331,100 +331,99 @@ namespace UI
 		switch (elementType.NativeType)
 		{
 		case NativeType::Bool:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<bool>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Float:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<float>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Double:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<double>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Float2:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<glm::vec2>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Float3:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<glm::vec3>(i, field, obj, world);
 					});
 			break;
-
 		case NativeType::Float4:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<glm::vec4>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Int8:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<int8_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Int16:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<int16_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Int32:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<int32_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Int64:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<int64_t>(i, field, obj, world);
 					});
 			break;
 
 		case NativeType::UInt8:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<uint8_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::UInt16:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<uint16_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::UInt32:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<uint32_t>(i, field, obj, world);
 					});
 			break;
 		case NativeType::UInt64:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<uint64_t>(i, field, obj, world);
 					});
 			break;
 
 		case NativeType::String:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<std::string>(i, field, obj, world);
 					});
 			break;
 		case NativeType::Reference:
-			for (size_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
+			for (uint32_t i = 0; i < obj.GetFieldValueCount(field.GetName()); i++)
 				ImUI::Group(std::to_string(i).c_str(), [&]() {
 				ScriptField<Hazard::ObjectReference>(i, field, obj, world);
 					});

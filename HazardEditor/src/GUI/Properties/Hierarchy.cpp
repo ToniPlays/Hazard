@@ -3,6 +3,7 @@
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
 #include "Hazard/Rendering/HRenderer.h"
+#include "Editor/EditorWorldManager.h"
 #include <sstream>
 
 namespace UI
@@ -16,7 +17,10 @@ namespace UI
 	void Hierarchy::Update()
 	{
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
-		auto& view = world->GetEntitiesWith<CameraComponent>();
+		
+		Editor::EditorWorldManager::GetWorldRender()->SetTargetWorld(world);
+
+		/*auto& view = world->GetEntitiesWith<CameraComponent>();
 		for (auto entity : view) {
 			Entity e = { entity, world.Raw() };
 			auto& tc = e.GetComponent<TransformComponent>();
@@ -24,7 +28,7 @@ namespace UI
 			if (cc.GetProjectionType() == Projection::Perspective)
 				HRenderer::DrawPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 			else HRenderer::DrawOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-		}
+		}*/
 	}
 	void Hierarchy::OnPanelRender()
 	{

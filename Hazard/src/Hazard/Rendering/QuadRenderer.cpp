@@ -57,7 +57,6 @@ namespace Hazard
 			}
 			});
 
-
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2D>& texture)
@@ -138,7 +137,6 @@ namespace Hazard
 			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
-			uint32_t elements = m_IndexBuffer->GetCount();
 		}
 
 		PipelineSpecification pipelineSpecs = {};

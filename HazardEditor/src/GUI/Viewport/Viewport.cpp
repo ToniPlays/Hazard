@@ -1,25 +1,42 @@
 
 #include "Viewport.h"
 #include "Hazard/Math/Time.h"
+#include "Editor/EditorWorldManager.h"
 
+using namespace HazardRenderer;
 namespace UI
 {
 	Viewport::Viewport() : Panel("Viewport")
 	{
-		WorldRendererSpec specs = {};
-		specs.DebugName = "Viewport";
-		specs.Width = m_Width;
-		specs.Height = m_Height;
-		specs.Camera = &m_EditorCamera;
-		specs.Geometry = Geometry_All;
-		m_Renderer = Ref<WorldRenderer>::Create(&specs);
+		FrameBufferCreateInfo frameBufferInfo = {};
+		frameBufferInfo.DebugName = "ViewportCamera";
+		frameBufferInfo.SwapChainTarget = false;
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.ClearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Width = m_Width;
+		frameBufferInfo.Height = m_Height;
 
-		m_EditorGrid.Invalidate(m_Renderer->GetRenderPass());
+		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = frameBufferInfo.DebugName;
+		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+
+		m_RenderPass = RenderPass::Create(&renderPassInfo);
+
+		m_EditorGrid.Invalidate(m_RenderPass);
 	}
 	void Viewport::Update()
 	{
-		m_Renderer->Render();
-		m_EditorGrid.Render(m_EditorCamera);
+		WorldCameraData cameraData = {};
+		cameraData.ViewProjection = m_EditorCamera.GetViewProjection();
+		cameraData.Projection = m_EditorCamera.GetProjection();
+		cameraData.View = m_EditorCamera.GetView();
+		cameraData.OutputFrameBuffer = m_FrameBuffer;
+		cameraData.RenderPass = m_RenderPass;
+
+		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
 	}
 	void Viewport::OnPanelRender()
 	{
@@ -35,9 +52,10 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
+			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 
-		ImUI::Image(m_Renderer->GetOutput()->GetImage(), size);
+		ImUI::Image(m_FrameBuffer->GetImage(), size);
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);

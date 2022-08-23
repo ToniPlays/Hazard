@@ -93,7 +93,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
-		if (m_Specs.Width == width && m_Specs.Height == height && !force)
+		if (m_Specs.Width == width && m_Specs.Height == height && !force || (width < 0 || height < 0))
 			return;
 
 		m_Specs.Width = width;
@@ -111,6 +111,8 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::RT_Invalidate()
 	{
 		if (m_Specs.SwapChainTarget) return;
+
+		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
 
 		if (m_ID) {
 			glDeleteFramebuffers(1, &m_ID);

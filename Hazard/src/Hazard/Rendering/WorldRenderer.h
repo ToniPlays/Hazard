@@ -1,15 +1,21 @@
 #pragma once
 
 #include "HazardRenderer.h"
+#include "Hazard/ECS/World.h"
 
 namespace Hazard
 {
-	struct WorldCameraData {
+	struct WorldCameraData 
+	{
 		glm::mat4 ViewProjection;
 		glm::mat4 Projection;
 		glm::mat4 View;
 		glm::vec3 Position;
 
+		Ref<HazardRenderer::RenderPass> RenderPass;
+		Ref<HazardRenderer::FrameBuffer> OutputFrameBuffer;
+
+		bool IsValid() { return RenderPass && OutputFrameBuffer; }
 	};
 
 	enum GeometryInclude
@@ -24,29 +30,43 @@ namespace Hazard
 
 	struct WorldRendererSpec
 	{
-		uint32_t Width;
-		uint32_t Height;
 		std::string DebugName;
-		HazardRenderer::Camera* Camera;
 		GeometryInclude Geometry = Geometry_All;
+
 	};
 
-	class WorldRenderer : public RefCount {
+	class WorldRenderer : public RefCount 
+	{
+		friend class RenderEngine;
 	public:
 		WorldRenderer() = default;
 		WorldRenderer(WorldRendererSpec* spec);
 		~WorldRenderer() = default;
 
+		void SetTargetWorld(Ref<World> world) 
+		{
+			m_TargetWorld = world;
+		}
+
+		void SubmitCamera(WorldCameraData camera)
+		{
+			m_CameraData.push_back(camera);
+		}
+		/// <summary>
+		/// Submit to rendering
+		/// </summary>
+		void Submit();
 		void Render();
 
-		const WorldRendererSpec& GetSpec() { return m_Spec; }
-		Ref<HazardRenderer::FrameBuffer>& GetOutput() { return m_Output; }
-		Ref<HazardRenderer::RenderPass>& GetRenderPass() { return m_RenderPass; }
+		const WorldRendererSpec& GetSpec() const { return m_Spec; }
+		Ref<World> GetTargetWorld() const { return m_TargetWorld; }
+		std::vector<WorldCameraData> GetCameraData() const { return m_CameraData; }
 
+		bool IsValid() const { return m_TargetWorld; }
 
 	private:
 		WorldRendererSpec m_Spec;
-		Ref<HazardRenderer::FrameBuffer> m_Output;
-		Ref<HazardRenderer::RenderPass> m_RenderPass;
+		Ref<World> m_TargetWorld;
+		std::vector<WorldCameraData> m_CameraData;
 	};
 }

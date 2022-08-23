@@ -3,7 +3,9 @@
 #include "UtilityCore.h"
 
 template<typename Type>
-class Batch {
+
+class Batch 
+{
 public:
 	Batch() : m_DataSize(sizeof(Type)) {}
 	Batch(size_t size) : m_DataSize(sizeof(Type)) {

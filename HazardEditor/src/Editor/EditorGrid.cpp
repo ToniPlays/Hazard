@@ -21,14 +21,13 @@ namespace Editor
 			float ZFar;
 			float Scale;
 			float ScaleFade = 1.0f;
-
 		} gridData;
 		
 		gridData.ZNear = camera.GetNearClipping();
 		gridData.ZFar = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
-		m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
+		//m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	

@@ -6,6 +6,15 @@
 
 namespace Hazard
 {
+	struct DrawListStat 
+	{
+		uint64_t QuadCount;
+		uint64_t MeshCount;
+		uint64_t Vertices;
+		uint64_t Indices;
+		uint64_t DrawCalls;
+	};
+
 	struct RawMesh
 	{
 		glm::mat4 Transform;
@@ -13,7 +22,8 @@ namespace Hazard
 		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
 		size_t Count;
 	};
-	struct PipelineData {
+	struct PipelineData 
+	{
 		size_t Count;
 	};
 
@@ -41,11 +51,9 @@ namespace Hazard
 
 	struct RendererDrawList
 	{
-		std::vector<RenderingCamera> RenderingCameras;
-		std::vector<EnvironmentData> Environment;
-		std::vector<LightSource> LightSource;
-		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> Meshes;
-		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;
+		Ref<WorldRenderer> WorldRenderer;
+		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> MeshList;
 
+		DrawListStat Stats;
 	};
 }

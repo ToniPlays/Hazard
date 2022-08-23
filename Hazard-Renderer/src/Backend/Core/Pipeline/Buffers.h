@@ -62,8 +62,6 @@ namespace HazardRenderer
 		virtual std::string& GetDebugName() = 0;
 
 		virtual const BufferLayout& GetLayout() const = 0;
-
-
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 

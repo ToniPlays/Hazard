@@ -12,3 +12,4 @@
 #include "Properties/Hierarchy.h"
 
 #include "Viewport/Viewport.h"
+#include "Viewport/GameViewport.h"

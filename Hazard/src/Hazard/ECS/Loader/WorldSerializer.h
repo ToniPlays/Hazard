@@ -168,15 +168,5 @@ namespace Hazard
 				YamlUtils::Serialize(out, "IsSensor", component.IsSensor);
 				});
 		}
-		template<>
-		void SerializeComponentEditor(Entity& entity, BatchComponent& component, YAML::Emitter& out)
-		{
-			YamlUtils::Map(out, "BatchRendererComponent", [&]() {
-				YamlUtils::Serialize(out, "Active", component.Active);
-				YamlUtils::Serialize(out, "Size", component.Size);
-				YamlUtils::Serialize(out, "Tint", component.Tint);
-				});
-		}
-
 	};
 }

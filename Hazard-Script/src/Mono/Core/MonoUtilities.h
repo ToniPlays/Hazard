@@ -115,8 +115,8 @@ namespace HazardScript
 		}
 
 		static void* GetArrayValuePtr(MonoArray* monoArray) {
-			uint32_t size = mono_array_length(monoArray);
-			return mono_array_addr_with_size(monoArray, size, 0);
+			uintptr_t size = mono_array_length(monoArray);
+			return mono_array_addr_with_size(monoArray, (int)size, 0);
 		}
 
 	private:

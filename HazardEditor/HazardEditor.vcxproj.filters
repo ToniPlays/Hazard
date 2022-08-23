@@ -162,6 +162,8 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Viewport\GameViewport.h" />
+    <ClInclude Include="src\Editor\EditorWorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -251,5 +253,7 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Viewport\GameViewport.cpp" />
+    <ClCompile Include="src\Editor\EditorWorldManager.cpp" />
   </ItemGroup>
 </Project>

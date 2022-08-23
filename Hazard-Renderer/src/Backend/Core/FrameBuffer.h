@@ -36,7 +36,7 @@ namespace HazardRenderer
 	struct FrameBufferSpecification {
 		uint32_t Width, Height;
 		uint32_t Samples;
-		uint32_t AttachmentCount;
+		size_t AttachmentCount;
 		glm::vec4 ClearColor;
 		std::vector<FrameBufferAttachment> Attachments;
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
@@ -53,12 +53,12 @@ namespace HazardRenderer
 		virtual void Unbind() = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) = 0;
-		virtual void BindTexture(uint32_t attachmentIndex = 0, uint32_t slot = 0) const = 0;
+		virtual void BindTexture(uint32_t attachmentIndex = 0, size_t slot = 0) const = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual uint32_t GetColorAttachmentCount() = 0;
+		virtual size_t GetColorAttachmentCount() = 0;
 
 		virtual Ref<Image2D> GetImage(uint32_t index = 0) const = 0;
 		virtual FrameBufferSpecification& GetSpecification() = 0;

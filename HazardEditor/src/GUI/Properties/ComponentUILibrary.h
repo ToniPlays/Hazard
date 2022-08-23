@@ -462,36 +462,4 @@ namespace UI
 		}
 		return false;
 	}
-
-	template<>
-	static bool ComponentMenu(Entity& e, BatchComponent& c)
-	{
-		bool removed = false;
-
-		bool optionsOpen = ImUI::TreenodeWithOptions("Batch renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-			ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
-			{
-				ImGui::Columns(2, 0, false);
-				ImGui::SetColumnWidth(0, colWidth);
-
-				//Texture slot here
-
-				if (ImUI::ColorPicker("Tint", "##Tint", c.Tint))
-				{
-
-				}
-				float size = c.Size;
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-				ImUI::InputFloat("Size", size, 1.0f);
-				c.Size = size;
-				ImGui::Columns();
-			}, [&]() {
-				ImUI::MenuItem("Reset", [&]() {
-					});
-				ImUI::MenuItem("Remove component", [&]() {
-					removed = true;
-					});
-			}, [&]() {});
-		return false;
-	}
 }

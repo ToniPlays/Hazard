@@ -149,13 +149,5 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "RestitutionThreshold", component.RestitutionThreshold, 0.1f);
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
-		template<>
-		void Deserialize<BatchComponent>(Entity entity, YAML::Node comp)
-		{
-			auto& component = entity.AddComponent<BatchComponent>();
-			YamlUtils::Deserialize(comp, "Active", component.Active, true);
-			YamlUtils::Deserialize(comp, "Size", component.Size, (uint32_t)1);
-			YamlUtils::Deserialize(comp, "Tint", component.Tint, Color::White);
-		}
 	};
 }

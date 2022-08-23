@@ -34,6 +34,7 @@ namespace HazardScript
 			for (Attribute* attrib : m_Attributes) {
 				if (attrib->GetAttributeType() == T::GetStaticType()) return dynamic_cast<T&>(*attrib);
 			}
+
 			return T();
 		}
 

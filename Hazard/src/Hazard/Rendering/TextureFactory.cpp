@@ -12,7 +12,7 @@ namespace Hazard
 		uint32_t Width;
 		uint32_t Height;
 		uint32_t Channels;
-		uint32_t DataSize;
+		uint64_t DataSize;
 	};
 
 	bool TextureFactory::TextureCacheExists(const std::string& path)

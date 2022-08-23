@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 		
-		uint32_t GetID() const { return m_ID; }
+		size_t GetID() const { return m_ID; }
 		
 	private:
 		void SetImageData(const Buffer& buffer);

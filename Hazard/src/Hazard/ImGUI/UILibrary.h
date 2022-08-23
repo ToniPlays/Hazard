@@ -521,8 +521,8 @@ namespace Hazard::ImUI
 		callback();
 		ImGui::EndTable();
 	}
-	template<typename T>
 
+	template<typename T>
 	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback) {
 		Table(tableName, columns, columnCount, ImGui::GetContentRegionAvail(), callback);
 	}

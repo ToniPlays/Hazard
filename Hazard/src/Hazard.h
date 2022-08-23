@@ -19,6 +19,8 @@
 #include "Hazard/ECS/Component.h"
 
 #include "Hazard/Rendering/Mesh/Mesh.h"
+#include "Hazard/Rendering/WorldRenderer.h"
+#include "Hazard/Rendering/RendererDrawList.h"
 
 //Hazard Physics
 #include "Hazard/Physics/PhysicsCommand.h"

@@ -14,12 +14,4 @@ namespace Hazard {
 
 		SpriteRendererComponent() = default;
 	};
-
-	struct BatchComponent : ComponentBase
-	{
-		Color Tint = Color::White;
-		uint32_t Size = 0;
-
-		BatchComponent() = default;
-	};
 }

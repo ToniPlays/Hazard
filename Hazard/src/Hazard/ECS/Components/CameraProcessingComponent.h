@@ -31,7 +31,7 @@ namespace Hazard
 
 	private:
 		Projection m_Type = Projection::Perspective;
-		glm::mat4 m_Projection;
+		glm::mat4 m_Projection = glm::mat4(1.0f);
 
 		float m_Fov = 60.0f;
 		float m_Size = 5.0f;

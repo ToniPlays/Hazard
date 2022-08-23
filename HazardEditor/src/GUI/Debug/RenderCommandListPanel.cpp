@@ -1,104 +1,87 @@
 
 #include "RenderCommandListPanel.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
+using namespace Hazard;
 
 namespace UI
 {
 	void RenderCommandListPanel::OnPanelRender()
 	{
-		using namespace Hazard;
-
 		RenderEngine& engine = Application::GetModule<RenderEngine>();
-		RendererDrawList& drawList = engine.GetDrawList();
+		auto& drawList = engine.GetDrawLists();
 
-		ImUI::Treenode("Rendering cameras", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]() {
-			for (auto& camera : drawList.RenderingCameras) {
-				ImUI::Treenode(camera.DebugName.c_str(), ImGuiTreeNodeFlags_Framed, [camera]() {
+		for (auto& list : drawList)
+		{
+			Ref<WorldRenderer> renderer = list.WorldRenderer;
+			if (!renderer->IsValid()) continue;
+
+			ImUI::Treenode(renderer->GetTargetWorld()->GetName().c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+				const char* elements[] = { "Type", "Value" };
+
+				ImVec2 size = ImGui::GetContentRegionAvail();
+				size.y = 126.0f;
+
+				ImUI::Table("WorldRenderer", elements, 2, size, [&]() {
+
+					ImGui::TableNextRow(0);
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Camera count");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(renderer->GetCameraData().size()).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Quad count");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Stats.QuadCount).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Mesh count");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Stats.MeshCount).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Vertices");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Stats.Vertices).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Indices");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Stats.Indices).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Draw calls");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Stats.DrawCalls).c_str());
+
+					});
+				DrawDetailedInfo(list);
+				});
+		}
+	}
+
+	void RenderCommandListPanel::DrawDetailedInfo(RendererDrawList& drawList)
+	{
+		ImUI::Treenode("Shadow pass", ImGuiTreeNodeFlags_Framed, [&]() {});
+		ImUI::Treenode("Geometry pass", ImGuiTreeNodeFlags_Framed, [&]() {
+			for (auto& [pipeline, list] : drawList.MeshList) {
+				auto& meshDrawList = list;
+				ImUI::Treenode(pipeline->GetSpecifications().DebugName.c_str(), 0, [&]() {
 					ImGui::Columns(2, 0, false);
-					ImGui::SetColumnWidth(0, 125.0f);
 
-					ImGui::Text("Position");
-					ImGui::NextColumn();
-					ImGui::Text("%.3f, %.3f, %.3f", camera.Position.x, camera.Position.y, camera.Position.z);
-					ImGui::NextColumn();
+					for (auto& mesh : meshDrawList) {
+						ImGui::Text("Index count");
+						ImGui::NextColumn();
+						ImGui::Text(std::to_string(mesh.Count).c_str());
 
-					ImGui::Text("ViewProjection");
-					ImGui::NextColumn();
-					ImGui::NextColumn();
-
-					ImGui::Text("Geometry flags");
-					ImGui::NextColumn();
-					ImGui::NextColumn();
-
+					}
 					ImGui::Columns();
 					});
 			}
 			});
-		ImUI::Treenode("Lights", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]() {
-			for (auto& light : drawList.LightSource) {
-				ImUI::Group(&light, [light]() {
-					ImUI::Treenode("Light", ImGuiTreeNodeFlags_Framed, [light]() {
-						ImGui::Columns(2, 0, false);
-						ImGui::SetColumnWidth(0, 125.0f);
-						ImGui::Text("Intensity");
-						ImGui::NextColumn();
-						ImGui::Text("%.3f", light.Intensity);
-						ImGui::NextColumn();
-						ImGui::Text("Color");
-						ImGui::NextColumn();
-						ImGui::Text("%.3f, %.3f, %.3f", light.Color.r, light.Color.g, light.Color.b);
-						ImGui::NextColumn();
-
-						ImGui::Columns();
-						});
-					});
-			}
-			});
-		ImUI::Treenode("Meshes", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, [&]()
-			{
-				for (auto& [pipeline, meshList] : drawList.Meshes) {
-					auto& meshes = meshList;
-					ImUI::Group(pipeline, [p = pipeline, meshes]() {
-
-						ImUI::Treenode(p->GetSpecifications().DebugName.c_str(), ImGuiTreeNodeFlags_Framed, [&]()
-							{
-								for (auto mesh : meshes) {
-									ImUI::Treenode("Mesh", ImGuiTreeNodeFlags_Framed, [&]()
-										{
-											uint32_t vertexCount = mesh.VertexBuffer->GetSize();
-											uint32_t indexCount = mesh.Count;
-											const glm::mat4& t = mesh.Transform;
-
-											ImGui::Columns(2, 0, false);
-											ImGui::SetColumnWidth(0, 125.0f);
-											ImGui::Text("Vertex count");
-											ImGui::NextColumn();
-											ImGui::Text("%i", vertexCount);
-											ImGui::NextColumn();
-
-											ImGui::Text("Index count");
-											ImGui::NextColumn();
-											ImGui::Text("%i", indexCount);
-											ImGui::NextColumn();
-
-											glm::vec3 position;
-											glm::vec3 rotation;
-											glm::vec3 scale;
-
-											Math::DecomposeTransform(t, position, rotation, scale);
-
-											ImGui::Text("Position");
-											ImGui::NextColumn();
-											ImGui::Text("%.2f, %.2f, %.2f", position.x, position.y, position.z);
-											ImGui::NextColumn();
-
-											ImGui::Columns();
-										});
-								}
-							});
-						});
-				}
-			});
+		ImUI::Treenode("Composite pass", ImGuiTreeNodeFlags_Framed, [&]() {});
 	}
 }

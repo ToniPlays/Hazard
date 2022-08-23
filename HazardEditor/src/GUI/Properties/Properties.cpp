@@ -14,8 +14,6 @@ namespace UI
 		UI::ComponentMenuIfExists<TransformComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CameraComponent>(m_SelectionContext);
 
-		UI::ComponentMenuIfExists<SpriteRendererComponent>(m_SelectionContext);
-		UI::ComponentMenuIfExists<BatchComponent>(m_SelectionContext);
 
 		UI::ComponentMenuIfExists<ScriptComponent>(m_SelectionContext);
 
@@ -86,7 +84,6 @@ namespace UI
 				});
 			ImUI::Submenu("2D", [&]() {
 				DrawAddComponentMenuIfNotExists<SpriteRendererComponent>("Sprite renderer", e);
-				DrawAddComponentMenuIfNotExists<BatchComponent>("Batch renderer", e);
 
 				DrawAddComponentMenuIfNotExists<Rigidbody2DComponent>("Rigidbody 2D", e);
 				DrawAddComponentMenuIfNotExists<BoxCollider2DComponent>("Box collider 2D", e);

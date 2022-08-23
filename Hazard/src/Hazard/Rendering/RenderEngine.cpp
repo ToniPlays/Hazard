@@ -11,10 +11,12 @@ namespace Hazard
 
 	RenderEngine::RenderEngine(HazardRenderer::HazardRendererCreateInfo* createInfo) : Module("RenderEngine")
 	{
+		HRenderer::s_Engine = this;
+		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
+		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
+
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
-		HRenderer::s_Engine = this;
-		
 
 		UniformBufferCreateInfo cameraUBO = {};
 		cameraUBO.Name = "Camera";
@@ -31,9 +33,6 @@ namespace Hazard
 		cameraUBO.Usage = BufferUsage::DynamicDraw;
 
 		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
-
-		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
-		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 
 		uint32_t data = 0xFFFFFFFF;
 
@@ -53,47 +52,52 @@ namespace Hazard
 		m_LineRenderer.Init();
 		m_LineRenderer.CreateResources();
 	}
+	void RenderEngine::PreRender(Ref<WorldRenderer> renderer)
+	{
+		m_LineRenderer.BeginScene();
+		m_QuadRenderer.BeginScene();
+
+		renderer->Render();
+
+		m_LineRenderer.EndScene();
+		m_QuadRenderer.EndScene();
+	}
 	void RenderEngine::CullingPass()
 	{
 		HZR_PROFILE_FUNCTION();
 	}
-	void RenderEngine::GeometryPass()
+	void RenderEngine::GeometryPass(const Ref<RenderCommandBuffer>& cmdBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_QuadRenderer.EndScene();
-		m_LineRenderer.EndScene();
 
-		auto& cmdBuffer = m_Window->GetSwapchain()->GetSwapchainBuffer();
-		m_ModelUniformBuffer->Bind(cmdBuffer);
-
-		for (auto& [pipeline, meshList] : m_DrawList.Meshes) {
+		auto& drawList = GetDrawList();
+		for (auto& [pipeline, list] : drawList.MeshList) 
+		{
 			pipeline->Bind(cmdBuffer);
-
-			for (auto& rawMesh : meshList)
+			for (auto& mesh : list) 
 			{
+				if (mesh.Count == 0) continue;
 				struct ModelData {
 					glm::mat4 transform;
 				};
 
 				ModelData data;
-				data.transform = rawMesh.Transform;
+				data.transform = mesh.Transform;
 
 				m_ModelUniformBuffer->SetData(&data, sizeof(ModelData));
-				rawMesh.VertexBuffer->Bind(cmdBuffer);
-				if (rawMesh.IndexBuffer) {
-					rawMesh.IndexBuffer->Bind(cmdBuffer);
-					pipeline->Draw(cmdBuffer, rawMesh.Count);
-				}
-				else 
+				mesh.VertexBuffer->Bind(cmdBuffer);
+
+				if (mesh.IndexBuffer) 
 				{
-					pipeline->DrawArrays(cmdBuffer, rawMesh.Count);
+					mesh.IndexBuffer->Bind(cmdBuffer);
+					pipeline->Draw(cmdBuffer, mesh.Count);
+					drawList.Stats.DrawCalls++;
 				}
-			}
-		}
-		for (auto& [pipeline, dataList] : m_DrawList.Pipelines) {
-			pipeline->Bind(cmdBuffer);
-			for (auto& data : dataList) {
-				pipeline->DrawArrays(cmdBuffer, data.Count);
+				else
+				{
+					pipeline->DrawArrays(cmdBuffer, mesh.Count);
+					drawList.Stats.DrawCalls++;
+				}
 			}
 		}
 	}
@@ -104,49 +108,53 @@ namespace Hazard
 	void RenderEngine::CompositePass()
 	{
 		HZR_PROFILE_FUNCTION();
-
 	}
 	void RenderEngine::Update()
 	{
 		Input::Update();
-		m_QuadRenderer.BeginScene();
-		m_LineRenderer.BeginScene();
 	}
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
-		CullingPass();
-		ShadowPass();
 
 		GraphicsContext* context = m_Window->GetContext();
 		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
 
-		for (auto& camera : m_DrawList.RenderingCameras)
+		m_CurrentDrawContext = 0;
+		for (auto& renderer : m_DrawList)
 		{
-			//Prepare camera data
-			CameraData cam = {};
-			cam.ViewProjection = camera.ViewProjection;
-			cam.Projection = camera.Projection;
-			cam.View = camera.View;
-			cam.Position = { camera.Position, 1.0f };
+			//Prerender will submit all meshes to rendering for a given world
+			PreRender(renderer.WorldRenderer);
 
-			uint32_t size = sizeof(CameraData);
+			for (auto& cameraData : renderer.WorldRenderer->GetCameraData())
+			{
+				if (!cameraData.IsValid()) continue;
 
-			m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
-			context->BeginRenderPass(cmdBuffer, camera.RenderPass);
+				CameraData cam = {};
+				cam.ViewProjection = cameraData.ViewProjection;
+				cam.Projection = cameraData.Projection;
+				cam.View = cameraData.View;
+				cam.Position = { cameraData.Position, 1.0f };
 
-			GeometryPass();
-			CompositePass();
+				m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
 
-			context->EndRenderPass(cmdBuffer);
+				//Actual rendering
+				context->BeginRenderPass(cmdBuffer, cameraData.RenderPass);
+
+				GeometryPass(cmdBuffer);
+
+				context->EndRenderPass(cmdBuffer);
+			}
+
+			m_CurrentDrawContext++;
 		}
 	}
 	void RenderEngine::PostRender()
 	{
-		m_DrawList.RenderingCameras.clear();
-		m_DrawList.Environment.clear();
-		m_DrawList.LightSource.clear();
-		m_DrawList.Meshes.clear();
-		m_DrawList.Pipelines.clear();
+		//Clear cameras
+		for (auto& renderer : m_DrawList) {
+			renderer.WorldRenderer->m_CameraData.clear();
+		}
+		m_DrawList.clear();
 	}
 }

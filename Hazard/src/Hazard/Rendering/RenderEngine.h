@@ -24,8 +24,14 @@ namespace Hazard
 		RenderEngine(HazardRenderer::HazardRendererCreateInfo* createInfo);
 		~RenderEngine() = default;
 
+
+		/// <summary>
+		/// Get all the geometry for rendering
+		/// </summary>
+		/// <param name="renderer"></param>
+		void PreRender(Ref<WorldRenderer> renderer);
 		void CullingPass();
-		void GeometryPass();
+		void GeometryPass(const Ref<HazardRenderer::RenderCommandBuffer>& cmdBuffer);
 		void ShadowPass();
 		void CompositePass();
 
@@ -37,13 +43,15 @@ namespace Hazard
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
-		RendererDrawList& GetDrawList() { return m_DrawList; }
+		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
+		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 
 		Ref<Texture2D> GetWhiteTexture() { return m_WhiteTexture; };
 
 	private:
 		HazardRenderer::Window* m_Window;
-		RendererDrawList m_DrawList;
+		std::vector<RendererDrawList> m_DrawList;
+
 		Ref<HazardRenderer::UniformBuffer> m_CameraUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> m_ModelUniformBuffer;
 
@@ -51,5 +59,7 @@ namespace Hazard
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
+
+		uint32_t m_CurrentDrawContext = 0;
 	};
 }

@@ -57,8 +57,6 @@ namespace Hazard {
 		TrySerializeEditor<BoxCollider2DComponent>(entity, out);
 		TrySerializeEditor<CircleCollider2DComponent>(entity, out);
 
-		TrySerializeEditor<BatchComponent>(entity, out);
-
 		out << YAML::EndMap;
 	}
 

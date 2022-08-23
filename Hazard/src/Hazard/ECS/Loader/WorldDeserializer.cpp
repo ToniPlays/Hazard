@@ -45,8 +45,6 @@ namespace Hazard
 				TryDeserializeComponent<Rigidbody2DComponent>("Rigidbody2DComponent", entity, node);
 				TryDeserializeComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, node);
 				TryDeserializeComponent<CircleCollider2DComponent>("CircleCollider2DComponent", entity, node);
-
-				TryDeserializeComponent<BatchComponent>("BatchComponent", entity, node);
 			}
 		}
 		return world;

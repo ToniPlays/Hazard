@@ -57,7 +57,7 @@ namespace Hazard
 		
 		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 
 		{
-			assert(asset->m_Handle == metadata.Handle, "Handles don't match, stuff will break");
+			assert(asset->m_Handle == metadata.Handle);
 			asset->m_Type = metadata.Type;
 			s_LoadedAssets[metadata.Handle] = asset;
 			return true;

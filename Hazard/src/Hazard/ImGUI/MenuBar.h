@@ -45,11 +45,12 @@ namespace Hazard::ImUI
 
 	class MenuBar : public GUIRenderable {
 	public:
-		void Render() override {
-			ScopedStyleVar border(ImGuiStyleVar_WindowBorderSize, 1);
+		void Render() override 
+		{
+			//ScopedStyleVar border(ImGuiStyleVar_WindowBorderSize, 1);
 			ImGui::BeginMainMenuBar();
 			{
-				Style& style = StyleManager::GetCurrent();
+				const Style& style = StyleManager::GetCurrent();
 				ScopedStyleStack vars(ImGuiStyleVar_WindowPadding, ImVec2(4, 2), ImGuiStyleVar_ChildBorderSize, 0);
 
 				for (auto& item : m_MenuItems) {

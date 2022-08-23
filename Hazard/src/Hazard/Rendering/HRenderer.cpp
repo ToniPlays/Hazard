@@ -11,18 +11,9 @@ namespace Hazard
 	void HRenderer::SubmitWorldRenderer(WorldRenderer* renderer)
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& spec = renderer->GetSpec();
-
-		RenderingCamera camera = {};
-		camera.DebugName = spec.DebugName;
-		camera.GeometryFlags = spec.Geometry;
-		camera.ViewProjection = spec.Camera->GetViewProjection();
-		camera.Projection = spec.Camera->GetProjection();
-		camera.View = spec.Camera->GetView();
-		camera.Position = spec.Camera->GetPosition();
-		camera.RenderPass = renderer->GetRenderPass();
-
-		s_Engine->GetDrawList().RenderingCameras.push_back(camera);
+		RendererDrawList list = {};
+		list.WorldRenderer = renderer;
+		s_Engine->GetDrawLists().push_back(list);
 	}
 
 	void HRenderer::SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
@@ -37,43 +28,62 @@ namespace Hazard
 	{
 		SubmitQuad(transform, color, nullptr);	
 	}
-	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture)
+	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D> texture)
 	{
+		DrawListStat& stat = s_Engine->GetDrawList().Stats;
+		stat.QuadCount++;
+		s_Engine->GetDrawList().Stats.Vertices++;
+
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
 	void HRenderer::SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent)
 	{
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
-		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+
+		glm::mat4 t = transform.GetTransformMat4();
+
+		SubmitMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+		if (!meshComponent.CastShadows) return;
+
+		SubmitShadowMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline(), mesh->GetIndexCount());
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<Pipeline>& pipeline, size_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
-		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, nullptr, count });
+		SubmitMesh(transform, vertexBuffer, nullptr, pipeline, count);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
-		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, indexBuffer->GetCount() });
+		SubmitMesh(transform, vertexBuffer, indexBuffer, pipeline, indexBuffer->GetCount());
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
-		s_Engine->GetDrawList().Meshes[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
+		DrawListStat& stat = s_Engine->GetDrawList().Stats;
+		stat.MeshCount++;
+		stat.Vertices += (vertexBuffer->GetSize() / vertexBuffer->GetLayout().GetStride());
+		stat.Indices += count;
+
+		s_Engine->GetDrawList().MeshList[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
+	}
+	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
+	{
+
 	}
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
 	{
-		s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
+		//s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
-		s_Engine->GetDrawList().Environment.push_back({ 1.0f });
+		//s_Engine->GetDrawList().Environment.push_back({ 1.0f });
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
-		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), directionalLight.LightColor, directionalLight.Intensity });
+		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), directionalLight.LightColor, directionalLight.Intensity });
 	}
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{
-		s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
+		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
 	}
 
 	void HRenderer::DrawPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)

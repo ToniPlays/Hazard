@@ -35,11 +35,11 @@ namespace HazardRenderer {
 		virtual void BeginFrame() = 0;
 		virtual void Present() = 0;
 
+		virtual void BeginRenderPass(Ref<RenderCommandBuffer> commandBuffer, Ref<RenderPass> renderPass) = 0;
+		virtual void EndRenderPass(Ref<RenderCommandBuffer> commandBuffer) = 0;
+
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
-
-		virtual void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) = 0;
-		virtual void EndRenderPass(Ref<RenderCommandBuffer> buffer) = 0;
 
 		/*virtual void Close() = 0;
 
