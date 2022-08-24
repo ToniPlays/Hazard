@@ -17,18 +17,21 @@ namespace UI
 	void Hierarchy::Update()
 	{
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
-		
-		Editor::EditorWorldManager::GetWorldRender()->SetTargetWorld(world);
 
-		/*auto& view = world->GetEntitiesWith<CameraComponent>();
-		for (auto entity : view) {
-			Entity e = { entity, world.Raw() };
-			auto& tc = e.GetComponent<TransformComponent>();
-			auto& cc = e.GetComponent<CameraComponent>();
-			if (cc.GetProjectionType() == Projection::Perspective)
-				HRenderer::DrawPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-			else HRenderer::DrawOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-		}*/
+		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
+		renderer->SetTargetWorld(world);
+
+		renderer->SubmitExtra([=]() mutable {
+			auto& view = world->GetEntitiesWith<CameraComponent>();
+			for (auto entity : view) {
+				Entity e = { entity, world.Raw() };
+				auto& tc = e.GetComponent<TransformComponent>();
+				auto& cc = e.GetComponent<CameraComponent>();
+				if (cc.GetProjectionType() == Projection::Perspective)
+					HRenderer::DrawPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+				else HRenderer::DrawOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+			}
+			});
 	}
 	void Hierarchy::OnPanelRender()
 	{
@@ -144,7 +147,7 @@ namespace UI
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuItem("Create empty", [&]() {
 				Entity e = world->CreateEntity("New entity");
-				
+
 				});
 
 			ImUI::Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Window.HeaderActive);

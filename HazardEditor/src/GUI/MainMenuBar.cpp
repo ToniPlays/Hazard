@@ -61,7 +61,7 @@ namespace UI
 			Application::GetModule<GUIManager>().SetPanelOpen<Viewport>(true);
 			});
 		AddMenuItem("Window/Rendering/Game viewport", [&]() {
-			//Application::GetModule<GUIManager>().SetPanelOpen<GameViewport>(true);
+			Application::GetModule<GUIManager>().SetPanelOpen<GameViewport>(true);
 			});
 
 

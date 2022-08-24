@@ -5,6 +5,8 @@
 
 namespace Hazard
 {
+	using RenderExtraCallback = std::function<void()>;
+
 	struct WorldCameraData 
 	{
 		glm::mat4 ViewProjection;
@@ -57,6 +59,14 @@ namespace Hazard
 		/// </summary>
 		void Submit();
 		void Render();
+		void SubmitExtra(const RenderExtraCallback& callback) 
+		{
+			m_RendererExtraCalls.push_back(callback);
+		}
+		void OnRenderExtra() 
+		{
+			for (auto& cb : m_RendererExtraCalls) { cb(); }
+		}
 
 		const WorldRendererSpec& GetSpec() const { return m_Spec; }
 		Ref<World> GetTargetWorld() const { return m_TargetWorld; }
@@ -68,5 +78,7 @@ namespace Hazard
 		WorldRendererSpec m_Spec;
 		Ref<World> m_TargetWorld;
 		std::vector<WorldCameraData> m_CameraData;
+
+		std::vector<RenderExtraCallback> m_RendererExtraCalls;
 	};
 }

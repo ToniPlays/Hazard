@@ -58,6 +58,7 @@ namespace Hazard
 		m_QuadRenderer.BeginScene();
 
 		renderer->Render();
+		renderer->OnRenderExtra();
 
 		m_LineRenderer.EndScene();
 		m_QuadRenderer.EndScene();
@@ -154,6 +155,7 @@ namespace Hazard
 		//Clear cameras
 		for (auto& renderer : m_DrawList) {
 			renderer.WorldRenderer->m_CameraData.clear();
+			renderer.WorldRenderer->m_RendererExtraCalls.clear();
 		}
 		m_DrawList.clear();
 	}

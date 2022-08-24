@@ -44,7 +44,8 @@ namespace UI
 		cameraData.OutputFrameBuffer = m_FrameBuffer;
 		cameraData.RenderPass = m_RenderPass;
 
-		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
+		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
+		renderer->SubmitCamera(cameraData);
 	}
 	void GameViewport::OnPanelRender()
 	{
