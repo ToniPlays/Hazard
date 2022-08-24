@@ -30,8 +30,11 @@ namespace UI
 	{
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		auto& [cc, tc] = world->GetWorldCamera();
-		if (cc == nullptr) return;
-
+		if (cc == nullptr) { 
+			m_HasCamera = false;
+			return; 
+		};
+		m_HasCamera = true;
 		glm::mat4 view = tc->GetTransformNoScale();
 
 		cc->RecalculateProjection(m_Width, m_Height);
@@ -57,6 +60,7 @@ namespace UI
 			m_Height = size.y;
 			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
+		if (!m_HasCamera) return;
 
 		ImUI::Image(m_FrameBuffer->GetImage(), size);
 	}

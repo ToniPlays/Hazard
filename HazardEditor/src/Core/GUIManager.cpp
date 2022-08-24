@@ -49,8 +49,8 @@ void GUIManager::Init()
 
 	m_PanelManager.AddRenderable<UI::Properties>();
 	m_PanelManager.AddRenderable<UI::Hierarchy>();
-	m_PanelManager.AddRenderable<UI::Viewport>();
 	m_PanelManager.AddRenderable<UI::GameViewport>();	
+	m_PanelManager.AddRenderable<UI::Viewport>();
 	m_PanelManager.AddRenderable<UI::RenderCommandListPanel>();
 	m_PanelManager.AddRenderable<UI::RendererDebugPanel>();
 	m_PanelManager.AddRenderable<UI::Console>();

@@ -528,7 +528,7 @@ namespace Hazard::ImUI
 	}
 
 	template<typename T>
-	static bool TableRowTreeItem(const char* idText, bool selected, T callback)
+	static bool TableRowTreeItem(const char* id, const char* text, bool selected, T callback)
 	{
 		bool clicked = false;
 		constexpr float edgeOffset = 4.0f;
@@ -550,7 +550,7 @@ namespace Hazard::ImUI
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
-		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(idText),
+		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
 			&isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
 
 		ImGui::SetItemAllowOverlap();
@@ -587,7 +587,7 @@ namespace Hazard::ImUI
 
 		ImGuiContext& g = *GImGui;
 		auto& style = ImGui::GetStyle();
-		const ImVec2 label_size = ImGui::CalcTextSize(idText, nullptr, false);
+		const ImVec2 label_size = ImGui::CalcTextSize(text, nullptr, false);
 		const ImVec2 padding = ((flags & ImGuiTreeNodeFlags_FramePadding)) ? style.FramePadding : ImVec2(style.FramePadding.x, ImMin(window->DC.CurrLineTextBaseOffset, style.FramePadding.y));
 		const float text_offset_x = g.FontSize + padding.x * 2;           // Collapser arrow width + Spacing
 		const float text_offset_y = ImMax(padding.y, window->DC.CurrLineTextBaseOffset);                    // Latch before ItemSize changes it
@@ -597,7 +597,7 @@ namespace Hazard::ImUI
 		const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
 		const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
 
-		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(idText), flags, idText, nullptr);
+		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(id), flags, text, nullptr);
 
 		if (isRowClicked)
 		{

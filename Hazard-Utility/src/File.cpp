@@ -112,8 +112,8 @@ bool File::Move(const std::filesystem::path& src, const std::filesystem::path& d
 std::string File::ReadFile(const std::filesystem::path& file)
 {
 	std::string result;
-	std::ifstream ifs(file, std::ios::in | std::ios::binary);
-	HZR_ASSERT(ifs.is_open(), "Cannot open file");
+	std::ifstream ifs(File::GetFileAbsolutePath(file), std::ios::in | std::ios::binary);
+	HZR_ASSERT(ifs.is_open(), "Cannot open file: " + GetFileAbsolutePath(file).string());
 
 	ifs.seekg(0, std::ios::end);
 	size_t size = ifs.tellg();

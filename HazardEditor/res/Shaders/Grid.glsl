@@ -1,22 +1,7 @@
 #type Vertex
 #version 450
 
-
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-	uniform mat4 u_Projection;
-	uniform mat4 u_View;
-	uniform vec4 u_Position;
-} u_Camera;
-
-layout(std140, binding = 2) uniform Grid {
-	uniform float u_ZNear;
-	uniform float u_ZFar;
-	uniform float u_Scale;
-	uniform float u_ScaleFading;
-
-} u_Grid;
-
+#include "Uniforms/CameraUniform.glsl"
 
 layout(location = 0) out vec3 nearPoint;
 layout(location = 1) out vec3 farPoint;
@@ -34,7 +19,6 @@ vec3 Unproject(float x, float y, float z, mat4 view, mat4 projection) {
 	return unprojectedPoint.xyz / unprojectedPoint.w;
 }
 
-
 void main() 
 {
 	vec3 pos = gridPlane[gl_VertexIndex];
@@ -50,21 +34,9 @@ void main()
 layout(location = 0) in vec3 nearPoint;
 layout(location = 1) in vec3 farPoint;
 
+#include "Uniforms/CameraUniform.glsl"
+#include "Uniforms/GridUniform.glsl"
 
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-	uniform mat4 u_Projection;
-	uniform mat4 u_View;
-	uniform vec4 u_Position;
-} u_Camera;
-
-layout(std140, binding = 2) uniform Grid {
-	uniform float u_ZNear;
-	uniform float u_ZFar;
-	uniform float u_Scale;
-	uniform float u_ScaleFading;
-
-} u_Grid;
 
 layout(location = 0) out vec4 color;
 

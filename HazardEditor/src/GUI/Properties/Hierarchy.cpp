@@ -50,7 +50,7 @@ namespace UI
 				TagComponent& tag = e.GetComponent<TagComponent>();
 				if (!StringUtil::Contains(tag.Tag, m_SearchValue)) continue;
 
-				bool clicked = ImUI::TableRowTreeItem(tag.Tag.c_str(), e == m_SelectionContext, []() {
+				bool clicked = ImUI::TableRowTreeItem(std::to_string(e).c_str(), tag.Tag.c_str(), e == m_SelectionContext, []() {
 					ImGui::Text("Sup bro");
 					});
 
@@ -92,14 +92,24 @@ namespace UI
 	}
 	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Key::Delete)
+		switch (e.GetKeyCode())
 		{
+		case Key::Delete: {
 			if (m_SelectionContext)
 			{
 				m_WorldHandler->GetCurrentWorld()->DestroyEntity(m_SelectionContext);
 				SelectEntity({});
 				return true;
 			}
+		}
+		case Key::D:
+		{
+			if (m_SelectionContext) {
+				Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(m_SelectionContext);
+				SelectEntity(e);
+				return true;
+			}
+		}
 		}
 		return false;
 	}

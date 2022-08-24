@@ -256,4 +256,12 @@
     <ClCompile Include="src\GUI\Viewport\GameViewport.cpp" />
     <ClCompile Include="src\Editor\EditorWorldManager.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Shaders\Uniforms\CameraUniform.glsl" />
+    <None Include="res\Shaders\Uniforms\ModelUniform.glsl" />
+    <None Include="res\Shaders\Uniforms\GridUniform.glsl" />
+    <None Include="res\Shaders\Inputs\InputQuad.glsl" />
+    <None Include="res\Shaders\Inputs\InputPBR.glsl" />
+    <None Include="res\Shaders\Inputs\InputCircle.glsl" />
+  </ItemGroup>
 </Project>

@@ -118,7 +118,6 @@ namespace UI
 
 		if (m_Gizmos.IsUsing()) return;
 
-
 		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
 	}
 	bool Viewport::OnEvent(Event& e)
@@ -149,7 +148,7 @@ namespace UI
 
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
-		if (!m_WindowFocused) return false;
+		if (!m_MouseOverWindow) return false;
 
 		switch (e.GetKeyCode()) {
 		case Key::W:

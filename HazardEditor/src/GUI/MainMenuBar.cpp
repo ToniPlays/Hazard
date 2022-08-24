@@ -56,15 +56,12 @@ namespace UI
 			Application::GetModule<GUIManager>().SetPanelOpen<AssetPanel>(true);
 			});
 
-
 		AddMenuItem("Window/Rendering/Viewport", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Viewport>(true);
 			});
 		AddMenuItem("Window/Rendering/Game viewport", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<GameViewport>(true);
 			});
-
-
 
 		AddMenuItem("Window/Debug/Console", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Console>(true);

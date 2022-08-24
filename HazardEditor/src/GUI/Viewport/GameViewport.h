@@ -16,7 +16,7 @@ namespace UI
 
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
-		HazardRenderer::Camera* m_CurrentCamera = nullptr;
+		bool m_HasCamera = false;
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;

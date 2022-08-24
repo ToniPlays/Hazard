@@ -177,14 +177,14 @@ namespace Math
 		glm::vec3 forward = Math::GetForwardDirection(orientation);
 
 		verticalFOV = glm::radians(verticalFOV);
-		float heightNear = 2.0f * tan(verticalFOV / 2.0f) * zNear;
+		float heightNear = 2.0f * tan(verticalFOV / 2.0f) * -zNear;
 		float widthNear = heightNear * aspectRatio;
 
-		float heightFar = 2.0f * tan(verticalFOV / 2.0f) * zFar;
+		float heightFar = 2.0f * tan(verticalFOV / 2.0f) * -zFar;
 		float widthFar = heightFar * aspectRatio;
 
-		glm::vec3 centerNear = glm::normalize(forward) * zNear;
-		glm::vec3 centerFar = glm::normalize(forward) * zFar;
+		glm::vec3 centerNear = glm::normalize(forward) * -zNear;
+		glm::vec3 centerFar = glm::normalize(forward) * -zFar;
 
 		glm::vec3 upNearHalf = (up * (heightNear / 2.0f));
 		glm::vec3 upFarHalf = (up * (heightFar / 2.0f));
@@ -216,8 +216,8 @@ namespace Math
 		float height = 2.0f * size / 2.0f;
 		float width = height * aspectRatio;
 
-		glm::vec3 centerNear = glm::normalize(forward) * zNear;
-		glm::vec3 centerFar = glm::normalize(forward) * zFar;
+		glm::vec3 centerNear = glm::normalize(forward) * -zNear;
+		glm::vec3 centerFar = glm::normalize(forward) * -zFar;
 
 		glm::vec3 upHalf = (up * (height / 2.0f));
 

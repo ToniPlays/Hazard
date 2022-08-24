@@ -1,25 +1,13 @@
 #type Vertex
 #version 450
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec3 a_Normal;
-layout(location = 3) in vec2 a_TextureCoords;
-
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-	uniform mat4 u_Projection;
-	uniform mat4 u_View;
-	uniform vec4 u_Position;
-} u_Camera;
+#include "Uniforms/CameraUniform.glsl"
+#include "Uniforms/ModelUniform.glsl"
+#include "Inputs/InputPBR.glsl"
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 FragPos;
 layout(location = 2) out vec3 f_Normal;
-
-layout(std140, binding = 1) uniform Model {
-	uniform mat4 u_Transform;
-} u_Model;
 
 void main() 
 {
@@ -35,17 +23,11 @@ void main()
 #type Fragment
 #version 450
 
+#include "Uniforms/CameraUniform.glsl"
+
 layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
 layout(location = 2) in vec3 f_Normal;
-
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-	uniform mat4 u_Projection;
-	uniform mat4 u_View;
-	uniform vec4 u_Position;
-} u_Camera;
-
 
 layout(location = 0) out vec4 color;
 

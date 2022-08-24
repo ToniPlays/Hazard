@@ -1,31 +1,21 @@
 #type Vertex
 #version 450
 
-layout(location = 0) in vec3 v_Position;
-layout(location = 1) in vec3 v_LocalPosition;
-layout(location = 2) in vec4 v_Color;
-layout(location = 3) in float v_Thickness;
-layout(location = 4) in float v_Fade;
+#include "Uniforms/CameraUniform.glsl"
+#include "Input/InputCircle.glsl"
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 f_LocalPosition;
 layout(location = 2) out float f_Thickness;
 layout(location = 3) out float f_Fade;
 
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-	uniform mat4 u_Projection;
-	uniform mat4 u_View;
-	uniform vec4 u_Position;
-} u_Camera;
-
 void main() 
 {
-	f_Color = v_Color;
-	f_LocalPosition = v_LocalPosition;
-	f_Thickness = v_Thickness;
-	f_Fade = v_Fade;
-	gl_Position = u_Camera.u_ViewProjection * vec4(v_Position, 1.0);
+	f_Color = a_Color;
+	f_LocalPosition = a_LocalPosition;
+	f_Thickness = a_Thickness;
+	f_Fade = a_Fade;
+	gl_Position = u_Camera.u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type Fragment

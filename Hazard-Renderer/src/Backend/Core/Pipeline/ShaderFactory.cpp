@@ -20,7 +20,7 @@ namespace HazardRenderer
 		switch (info.Environment) {
 		case RenderAPI::OpenGL:	options.SetTargetEnvironment(shaderc_target_env_opengl, 450); break;
 		case RenderAPI::Vulkan:	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
-        default: break;
+		default: break;
 		}
 
 		options.SetOptimizationLevel((shaderc_optimization_level)info.Optimization);
@@ -40,7 +40,7 @@ namespace HazardRenderer
 		case ShaderType::Fragment:	return shaderc_glsl_fragment_shader;
 		case ShaderType::Compute:	return shaderc_glsl_compute_shader;
 		case ShaderType::Geometry:	return shaderc_glsl_geometry_shader;
-        case ShaderType::None:      return (shaderc_shader_kind)0;
+		case ShaderType::None:      return (shaderc_shader_kind)0;
 		}
 		return (shaderc_shader_kind)0;
 	}
@@ -52,7 +52,7 @@ namespace HazardRenderer
 		case ShaderType::Fragment:	return "frag";
 		case ShaderType::Compute:	return "comp";
 		case ShaderType::Geometry:	return "geom";
-        case ShaderType::None:      return "non";
+		case ShaderType::None:      return "non";
 		}
 		return "";
 	}
@@ -64,7 +64,7 @@ namespace HazardRenderer
 		case RenderAPI::DX11:		return "dx11";
 		case RenderAPI::DX12:		return "dx12";
 		case RenderAPI::Metal:		return "met";
-        case RenderAPI::Auto:       return "";
+		case RenderAPI::Auto:       return "";
 		}
 		return "";
 	}
@@ -93,20 +93,30 @@ namespace HazardRenderer
 	{
 		return "res/" + path;
 	}
-	std::unordered_map<ShaderType, std::string> ShaderFactory::GetShaderSources(const std::string& path)
+	std::unordered_map<ShaderType, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
 	{
-		HZR_ASSERT(File::Exists(GetShaderSourcePath(path)), "Cannot find shader source file at: " + path);
-		std::string source = File::ReadFile(GetShaderSourcePath(path));
-		return SourcePreprocess(source);
+		auto resPath = GetShaderSourcePath(path.string());
+		HZR_ASSERT(File::Exists(resPath), "Cannot find shader source file at: " + path.string());
+		std::string source = File::ReadFile(resPath);
+		return SourcePreprocess(resPath, source);
 	}
-	std::unordered_map<ShaderType, std::string> ShaderFactory::SourcePreprocess(const std::string& source)
+	std::unordered_map<ShaderType, std::string> ShaderFactory::SourcePreprocess(const std::filesystem::path& relativePath, const std::string& source)
 	{
 		std::unordered_map<ShaderType, std::string> shaderSources;
 
 		const char* typeToken = "#type";
-		StringUtil::PreprocessTypeSource(source, typeToken, [&](std::string type, std::string source) {
-			shaderSources[Utils::ShaderTypeFromString(type)] = source;
-			});
+		size_t endPosition = 0;
+
+		while (endPosition != std::string::npos) {
+
+			std::string type = StringUtil::GetPreprocessor(typeToken, source, endPosition, &endPosition);
+			if (endPosition == std::string::npos) continue;
+
+			size_t nextTokenPos = source.find(typeToken, endPosition);
+			std::string src = nextTokenPos == std::string::npos ? source.substr(endPosition) : source.substr(endPosition, nextTokenPos - endPosition);
+
+			shaderSources[Utils::ShaderTypeFromString(type)] = PreprocessIncludes(relativePath, src);
+		}
 
 		return shaderSources;
 	}
@@ -168,6 +178,21 @@ namespace HazardRenderer
 			File::CreateDir(path.parent_path());
 
 		return File::WriteBinaryFile(path, binary);
+	}
+	std::string ShaderFactory::PreprocessIncludes(const std::filesystem::path& relativePath, std::string& source)
+	{
+		std::string include = "#include";
+		size_t offset = 0;
+
+		while (offset != std::string::npos) {
+
+			std::string includePath = StringUtil::GetPreprocessor(include.c_str(), source, offset, &offset);
+			if (offset == std::string::npos) continue;
+			std::string_view path = StringUtil::Between(includePath, "\"", "\"");
+			std::string line = include + " " + includePath;
+			source = StringUtil::Replace(source, line, File::ReadFile(relativePath.parent_path() / path));
+		}
+		return source;
 	}
 	ShaderStageData ShaderFactory::GetShaderResources(const std::vector<uint32_t>& binary)
 	{

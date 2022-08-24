@@ -71,6 +71,8 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
+		m_ModelUniformBuffer->Bind(cmdBuffer);
+
 		auto& drawList = GetDrawList();
 		for (auto& [pipeline, list] : drawList.MeshList) 
 		{
@@ -120,12 +122,14 @@ namespace Hazard
 
 		GraphicsContext* context = m_Window->GetContext();
 		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
+		m_CameraUniformBuffer->Bind(cmdBuffer);
 
 		m_CurrentDrawContext = 0;
 		for (auto& renderer : m_DrawList)
 		{
 			//Prerender will submit all meshes to rendering for a given world
 			PreRender(renderer.WorldRenderer);
+			ShadowPass();
 
 			for (auto& cameraData : renderer.WorldRenderer->GetCameraData())
 			{
@@ -141,9 +145,7 @@ namespace Hazard
 
 				//Actual rendering
 				context->BeginRenderPass(cmdBuffer, cameraData.RenderPass);
-
 				GeometryPass(cmdBuffer);
-
 				context->EndRenderPass(cmdBuffer);
 			}
 

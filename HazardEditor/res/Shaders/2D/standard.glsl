@@ -1,18 +1,12 @@
 #type Vertex
 #version 450
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec2 a_TextureCoords;
-layout(location = 3) in float a_TextureIndex;
+#include "../Uniforms/CameraUniform.glsl"
+#include "../Inputs/InputQuad.glsl"
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec2 f_TextureCoords;
 layout(location = 2) out float f_TextureIndex;
-
-layout(std140, binding = 0) uniform Camera {
-	uniform mat4 u_ViewProjection;
-} u_Camera;
 
 void main() 
 {
