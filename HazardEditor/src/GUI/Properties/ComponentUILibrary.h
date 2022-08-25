@@ -105,9 +105,8 @@ namespace UI
 					});
 			});
 
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<SpriteRendererComponent>();
-		}
 
 		return false;
 	}
@@ -137,7 +136,7 @@ namespace UI
 						c.SetFov(fov);
 					}
 				}
-				else 
+				else
 				{
 					float size = c.GetSize();
 
@@ -169,9 +168,7 @@ namespace UI
 			});
 
 		if (removed)
-		{
 			e.RemoveComponent<CameraComponent>();
-		}
 
 		return false;
 	}
@@ -247,7 +244,7 @@ namespace UI
 					});
 			});
 
-		if (removed) 
+		if (removed)
 			e.RemoveComponent<ScriptComponent>();
 
 		return false;
@@ -260,6 +257,32 @@ namespace UI
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
+				std::string name = "Empty";
+				if (c.EnvironmentMap) {
+					AssetHandle handle = c.EnvironmentMap->GetHandle();
+					AssetMetadata& data = AssetManager::GetMetadata(handle);
+					name = File::GetName(data.Path);
+				}
+
+				ImGui::Columns(2, 0, false);
+				ImGui::SetColumnWidth(0, colWidth);
+				ImGui::Text("Map");
+				ImGui::NextColumn();
+
+				ImGui::BeginDisabled();
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ImUI::TextField(name, "##environmentMap");
+
+				ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
+					c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+					});
+
+				ImGui::EndDisabled();
+
+				ImGui::NextColumn();
+				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
+				ImGui::Columns();
+				
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
 					});
@@ -272,7 +295,8 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		e.RemoveComponent<SkyLightComponent>();
+		if (removed)
+			e.RemoveComponent<SkyLightComponent>();
 
 		return false;
 	}
@@ -289,7 +313,7 @@ namespace UI
 				if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
 
 				}
-				ImUI::InputFloat("Intensity", c.Intensity, 1.0f);
+				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.025f);
 
 				ImGui::Columns();
 			}, [&]() {
@@ -304,7 +328,8 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		e.RemoveComponent<DirectionalLightComponent>();
+		if (removed)
+			e.RemoveComponent<DirectionalLightComponent>();
 
 		return false;
 	}
@@ -336,9 +361,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<PointLightComponent>();
-		}
+
 		return false;
 	}
 	template<>
@@ -383,9 +408,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<MeshComponent>();
-		}
+
 		return false;
 	}
 	template<>
@@ -409,9 +434,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<Rigidbody2DComponent>();
-		}
+
 		return false;
 	}
 	template<>
@@ -433,9 +458,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<BoxCollider2DComponent>();
-		}
+
 		return false;
 	}
 	template<>
@@ -457,9 +482,9 @@ namespace UI
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 			});
-		if (removed) {
+		if (removed)
 			e.RemoveComponent<CircleCollider2DComponent>();
-		}
+
 		return false;
 	}
 }

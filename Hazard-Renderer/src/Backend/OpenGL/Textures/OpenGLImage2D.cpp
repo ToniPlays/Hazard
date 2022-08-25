@@ -14,7 +14,6 @@ namespace HazardRenderer::OpenGL
 		m_Format = info->Format;
 		m_Samples = info->Mips;
 
-
 		Invalidate();
 		if(info->Data.Data != nullptr)
 			SetImageData(info->Data);
@@ -46,6 +45,7 @@ namespace HazardRenderer::OpenGL
 	{
 		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, buffer.Data);
+		HZR_ASSERT(m_Width && m_Height, "This broke");
 	}
 }
 #endif

@@ -2,6 +2,7 @@
 #include "Viewport.h"
 #include "Hazard/Math/Time.h"
 #include "Editor/EditorWorldManager.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 using namespace HazardRenderer;
 namespace UI
@@ -12,8 +13,8 @@ namespace UI
 		frameBufferInfo.DebugName = "ViewportCamera";
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.ClearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA } };
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.Width = m_Width;
 		frameBufferInfo.Height = m_Height;
@@ -40,6 +41,8 @@ namespace UI
 	}
 	void Viewport::OnPanelRender()
 	{
+
+		RenderEngine& engine = Application::GetModule<RenderEngine>();
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
@@ -55,7 +58,9 @@ namespace UI
 			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 
-		ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (m_CurrentImage == 0)
+			ImUI::Image(m_FrameBuffer->GetImage(), size);
+		else ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);
@@ -126,7 +131,7 @@ namespace UI
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 		m_Gizmos.OnEvent(e);
-		
+
 		if (m_MouseOverWindow)
 			m_EditorCamera.OnEvent(e);
 
@@ -189,7 +194,7 @@ namespace UI
 
 		ImGui::Dummy({ 0, 3 });
 		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, 125);
+		ImGui::SetColumnWidth(0, 80);
 		ImGui::Text("Frametime");
 		ImGui::NextColumn();
 
@@ -206,19 +211,10 @@ namespace UI
 		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
 		ImGui::NextColumn();
 
-		ImGui::Text("Managed classes");
-		ImGui::NextColumn();
-		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->Classes.size());
-		ImGui::NextColumn();
+		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular" };
 
-		ImGui::Text("Script metadata");
-		ImGui::NextColumn();
-		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->ScriptMetadata.size());
-		ImGui::NextColumn();
+		ImUI::Combo("Shading", "##shading", attachments, 4, m_CurrentImage);
 
-		ImGui::Text("Field metadaata");
-		ImGui::NextColumn();
-		ImGui::Text("%i", HazardScript::ScriptCache::GetCache()->ScriptFields.size());
 
 		ImGui::Columns();
 		ImGui::EndChild();

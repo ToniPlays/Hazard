@@ -5,11 +5,18 @@
 
 namespace HazardRenderer 
 {
+	enum class TextureType {
+		Texture2D,
+		CubemapTexture
+	};
+
 	enum class ImageFormat
 	{
 		None = 0,
 		RED32F,
 		RGB,
+		RGB16F,
+		RGB32F,
 		RGBA,
 		RGBA16F,
 		RGBA32F,

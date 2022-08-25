@@ -3,11 +3,8 @@
 #include "Core.h"
 #include "UtilityCore.h"
 #include "ApplicationEvent.h"
-#include "Backend/Core/Events.h"
+#include "Backend/Core/Events/Events.h"
 #include "Hazard/ModuleHandler.h"
-#include "Backend/Core/Events.h"
-#include "Backend/Core/Events.h"
-
 
 namespace Hazard 
 {

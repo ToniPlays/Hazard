@@ -14,7 +14,7 @@ namespace UI
 		UI::ComponentMenuIfExists<TransformComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CameraComponent>(m_SelectionContext);
 
-
+		UI::ComponentMenuIfExists<SpriteRendererComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<ScriptComponent>(m_SelectionContext);
 
 		UI::ComponentMenuIfExists<SkyLightComponent>(m_SelectionContext);

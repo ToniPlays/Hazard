@@ -172,7 +172,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
-		m_LocalData.Allocate(m_Size * 16);
+		m_LocalData.Allocate(m_Size * 32);
 		m_LocalData.ZeroInitialize();
 
 		Ref<OpenGLUniformBuffer> instance = this;

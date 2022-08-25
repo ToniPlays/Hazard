@@ -89,7 +89,13 @@ namespace HazardRenderer::OpenGLUtils
 		}
 		return Severity::Info;
 	}
-	
+	static GLuint GetFormatType(uint32_t format) {
+		switch (format) {
+		case GL_RGB16F:		return GL_FLOAT;
+		case GL_RGBA16F:	return GL_FLOAT;
+		default:			return GL_UNSIGNED_BYTE;
+		}
+	}
 
 
 	static bool IsDepthFormat(const ImageFormat& format) {
@@ -108,16 +114,16 @@ namespace HazardRenderer::OpenGLUtils
 	static void BindTexture(uint32_t id, bool multisampled) {
 		glBindTexture(TextureTarget(multisampled), id);
 	}
-	static void AttachColorTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t width, uint32_t height, uint32_t iter)
+	static void AttachColorTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t internalFormat, uint32_t width, uint32_t height, uint32_t iter)
 	{
 		//Change to DSA
 		bool multisampled = samples > 1;
 		if (multisampled) {
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 		}
 		else
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GetFormatType(internalFormat), nullptr);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -146,5 +152,6 @@ namespace HazardRenderer::OpenGLUtils
 		}
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmetType, TextureTarget(multisampled), target, 0);
 	}
+	
 }
 #endif

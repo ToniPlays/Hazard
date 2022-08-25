@@ -2,8 +2,7 @@
 #include "WindowWindow.h"
 #ifdef HZR_PLATFORM_WINDOWS
 
-#include "Backend/Core/Events.h"
-#include "Backend/Core/Events.h"
+#include "Backend/Core/Events/Events.h"
 #include "Backend/Input.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32

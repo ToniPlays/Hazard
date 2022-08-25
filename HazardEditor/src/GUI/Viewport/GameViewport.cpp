@@ -9,12 +9,12 @@ namespace UI
 {
 	GameViewport::GameViewport() : Panel("Game Viewport")
 	{
-		FrameBufferCreateInfo frameBufferInfo = {};
+		/*FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "ViewportCamera";
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.ClearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA } };
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.Width = m_Width;
 		frameBufferInfo.Height = m_Height;
@@ -25,9 +25,11 @@ namespace UI
 		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
+		*/
 	}
 	void GameViewport::Update()
 	{
+		return;
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		auto& [cc, tc] = world->GetWorldCamera();
 		if (cc == nullptr) { 
@@ -58,7 +60,7 @@ namespace UI
 		{
 			m_Width = size.x;
 			m_Height = size.y;
-			m_FrameBuffer->Resize(m_Width, m_Height);
+			//m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 		if (!m_HasCamera) return;
 

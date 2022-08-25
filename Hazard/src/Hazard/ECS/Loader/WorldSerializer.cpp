@@ -47,7 +47,6 @@ namespace Hazard {
 		TrySerializeEditor<DirectionalLightComponent>(entity, out);
 		TrySerializeEditor<PointLightComponent>(entity, out);
 
-
 		//Meshes
 		TrySerializeEditor<MeshComponent>(entity, out);
 		TrySerializeEditor<SpriteRendererComponent>(entity, out);

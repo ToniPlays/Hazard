@@ -3,6 +3,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "../OpenGLUtils.h"
+#include "Backend/Core/Renderer.h"
 
 #include "Backend/Core/Pipeline/ShaderFactory.h"
 
@@ -27,6 +28,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLShader::~OpenGLShader()
 	{
+		std::cout << "Deleted shader " << m_FilePath << std::endl;
 		glDeleteProgram(m_ID);
 	}
 	void OpenGLShader::Reload()
@@ -35,8 +37,9 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLShader::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
-		glUseProgram(m_ID);
-
+		Renderer::Submit([id = m_ID]() mutable {
+			glUseProgram(id);
+			});
 		for (auto& [name, ubo] : m_UniformBuffers) {
 			ubo->Bind(cmdBuffer);
 		}
@@ -152,7 +155,7 @@ namespace HazardRenderer::OpenGL
 
 			ShaderFactory::Compile(&compileInfo);
 
-			if (!compileInfo.Succeeded()) 
+			if (!compileInfo.Succeeded())
 			{
 				std::cout << compileInfo.Error << std::endl;
 				Window::SendDebugMessage({ Severity::Error, compileInfo.Error, source });
@@ -199,7 +202,7 @@ namespace HazardRenderer::OpenGL
 			ShaderFactory::Compile(&compileInfo);
 
 			if (!compileInfo.Succeeded()) {
-				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed"});
+				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed" });
 				return false;
 			}
 
@@ -222,7 +225,7 @@ namespace HazardRenderer::OpenGL
 				GLsizei charsWritten = 0;
 
 				glGetShaderInfoLog(id, infologLength, &charsWritten, infoLog.data());
-				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed", std::string(infoLog.data())});
+				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed", std::string(infoLog.data()) });
 			}
 			break;
 		case(GL_LINK_STATUS):
@@ -234,7 +237,7 @@ namespace HazardRenderer::OpenGL
 				GLsizei charsWritten = 0;
 
 				glGetProgramInfoLog(id, infologLength, &charsWritten, infoLog.data());
-				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data())});
+				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data()) });
 			}
 			break;
 		default:
@@ -268,7 +271,7 @@ namespace HazardRenderer::OpenGL
 
 			std::vector<GLchar> infoLog(maxLen);
 			glGetShaderInfoLog(program, maxLen, &maxLen, infoLog.data());
-			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data())});
+			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data()) });
 			glDeleteProgram(program);
 
 			for (auto id : shaderIDs) {

@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "QuadRenderer.h"
-#include "HRenderer.h"
+#include "../HRenderer.h"
 
 
 namespace Hazard

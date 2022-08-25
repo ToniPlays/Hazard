@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Backend/Core/KeyCode.h"
-#include "Backend/Core/MouseCode.h"
+#include "Backend/Core/Events/KeyCode.h"
+#include "Backend/Core/Events/MouseCode.h"
 #include "Backend/Core/Window.h"
 #include <glm/glm.hpp>
 

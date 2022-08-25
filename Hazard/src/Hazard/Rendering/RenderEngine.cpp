@@ -2,6 +2,7 @@
 #include "RenderEngine.h"
 #include "HRenderer.h"
 #include "Mesh/MeshAssetLoader.h"
+#include "Environment/EnvironmentAssetLoader.h"
 #include "ImageAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 
@@ -14,6 +15,7 @@ namespace Hazard
 		HRenderer::s_Engine = this;
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
+		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
@@ -26,11 +28,19 @@ namespace Hazard
 
 		m_CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
 
+		UniformBufferCreateInfo lightUBO = {};
+		lightUBO.Name = "Lights";
+		lightUBO.Binding = 1;
+		lightUBO.Size = sizeof(LightingData);
+		lightUBO.Usage = BufferUsage::DynamicDraw;
+
+		m_LightUniformBuffer = UniformBuffer::Create(&lightUBO);
+
 		UniformBufferCreateInfo modelUBO = {};
 		modelUBO.Name = "Model";
-		modelUBO.Binding = 1;
+		modelUBO.Binding = 2;
 		modelUBO.Size = sizeof(glm::mat4);
-		cameraUBO.Usage = BufferUsage::DynamicDraw;
+		modelUBO.Usage = BufferUsage::DynamicDraw;
 
 		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
 
@@ -44,6 +54,38 @@ namespace Hazard
 		info.Format = ImageFormat::RGBA;
 
 		Ref<Hazard::Image2D> imageAsset = HazardRenderer::Image2D::Create(&info);
+
+		FrameBufferCreateInfo deferredFbo = {};
+		deferredFbo.DebugName = "DeferredFBO";
+		deferredFbo.SwapChainTarget = false;
+		deferredFbo.Width = 1280;
+		deferredFbo.Height = 720;
+		deferredFbo.ClearColor = { 0.0,0.0,0.0,1.0 };
+		deferredFbo.AttachmentCount = 4;
+		deferredFbo.Attachments = { { ImageFormat::RGBA16F, ImageFormat::RGBA16F, ImageFormat::RGBA, ImageFormat::Depth } };
+
+		m_DeferredFrameBuffer = FrameBuffer::Create(&deferredFbo);
+
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = deferredFbo.DebugName;
+		renderPassInfo.pTargetFrameBuffer = m_DeferredFrameBuffer;
+
+		m_DeferredRenderPass = RenderPass::Create(&renderPassInfo);
+
+
+		BufferLayout layout = { {} };
+
+		PipelineSpecification compositeInfo = {};
+		compositeInfo.DebugName = "CompositePipeline";
+		compositeInfo.pTargetRenderPass = m_DeferredRenderPass.Raw();
+		compositeInfo.ShaderPath = "Shaders/Composite/SceneComposite.glsl";
+		compositeInfo.DrawType = DrawType::Fill;
+		compositeInfo.Usage = PipelineUsage::GraphicsBit;
+		compositeInfo.CullMode = CullMode::None;
+		compositeInfo.IsShared = false;
+		compositeInfo.pBufferLayout = &layout;
+
+		m_CompositePipeline = Pipeline::Create(&compositeInfo);
 
 		m_WhiteTexture = Ref<Texture2D>::Create(imageAsset);
 		m_QuadRenderer.Init();
@@ -63,10 +105,6 @@ namespace Hazard
 		m_LineRenderer.EndScene();
 		m_QuadRenderer.EndScene();
 	}
-	void RenderEngine::CullingPass()
-	{
-		HZR_PROFILE_FUNCTION();
-	}
 	void RenderEngine::GeometryPass(const Ref<RenderCommandBuffer>& cmdBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -80,7 +118,8 @@ namespace Hazard
 			for (auto& mesh : list) 
 			{
 				if (mesh.Count == 0) continue;
-				struct ModelData {
+				struct ModelData 
+				{
 					glm::mat4 transform;
 				};
 
@@ -108,9 +147,32 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 	}
-	void RenderEngine::CompositePass()
+	void RenderEngine::CompositePass(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
+
+		for (uint32_t i = 0; i < m_DeferredFrameBuffer->GetColorAttachmentCount(); i++) 
+		{
+			auto& image = m_DeferredFrameBuffer->GetImage(i);
+			image->Bind(i);
+		}
+		m_CompositePipeline->Bind(commandBuffer);
+		m_CompositePipeline->DrawArrays(commandBuffer, 6);
+	}
+	void RenderEngine::PrepareLights()
+	{
+		auto& drawList = GetDrawList();
+		LightingData data = {};
+		data.DirectionLightCount = Math::Max<uint32_t>(drawList.DirectionalLights.size(), 16);
+		
+		for (size_t i = 0; i < data.DirectionLightCount; i++)
+		{
+			const DirectionalLightSource& light = drawList.DirectionalLights[i];
+			DirectionalLight& l = data.Lights[i];
+			l.Direction = glm::vec4(light.Direction, 1.0);
+			l.Color = { light.Color, light.Intensity };
+		}
+		m_LightUniformBuffer->SetData(&data, sizeof(LightingData));
 	}
 	void RenderEngine::Update()
 	{
@@ -123,13 +185,19 @@ namespace Hazard
 		GraphicsContext* context = m_Window->GetContext();
 		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
 		m_CameraUniformBuffer->Bind(cmdBuffer);
+		m_LightUniformBuffer->Bind(cmdBuffer);
 
 		m_CurrentDrawContext = 0;
+
 		for (auto& renderer : m_DrawList)
 		{
 			//Prerender will submit all meshes to rendering for a given world
 			PreRender(renderer.WorldRenderer);
 			ShadowPass();
+			PrepareLights();
+
+			//Bind G buffer attachments
+			m_DeferredFrameBuffer->Bind();
 
 			for (auto& cameraData : renderer.WorldRenderer->GetCameraData())
 			{
@@ -144,9 +212,17 @@ namespace Hazard
 				m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
 
 				//Actual rendering
-				context->BeginRenderPass(cmdBuffer, cameraData.RenderPass);
+				context->BeginRenderPass(cmdBuffer, m_DeferredRenderPass);
 				GeometryPass(cmdBuffer);
 				context->EndRenderPass(cmdBuffer);
+
+				context->BeginRenderPass(cmdBuffer, cameraData.RenderPass);
+
+				m_CompositePipeline->SetRenderPass(cameraData.RenderPass);
+				CompositePass(cmdBuffer);
+				context->EndRenderPass(cmdBuffer);
+
+				break;
 			}
 
 			m_CurrentDrawContext++;

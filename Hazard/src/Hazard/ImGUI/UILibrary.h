@@ -159,8 +159,8 @@ namespace Hazard::ImUI
 	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
 		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
 	}
-	static bool InputFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
-		return ImGui::DragFloat("##float", &value, 0.5f, min, max);
+	static bool InputFloat(float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0) {
+		return ImGui::DragFloat("##float", &value, speed, min, max);
 	}
 	static bool InputDouble(double& value, double clearValue = 0.0) {
 		return ImGui::InputDouble("##double", &value, 0.5);
@@ -224,14 +224,14 @@ namespace Hazard::ImUI
 
 		return modified;
 	}
-	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f)
+	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0)
 	{
 		bool modified = false;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-			modified = InputFloat(value, clearValue);
+			modified = InputFloat(value, clearValue, speed, min, max);
 			});
 		ImGui::NextColumn();
 		return modified;

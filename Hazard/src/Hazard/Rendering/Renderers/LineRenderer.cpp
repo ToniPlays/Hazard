@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "LineRenderer.h"
-#include "HRenderer.h"
+#include "../HRenderer.h"
 
 
 namespace Hazard

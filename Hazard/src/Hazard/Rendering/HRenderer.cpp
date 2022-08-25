@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "HRenderer.h"
-#include "WorldRenderer.h"
+#include "Renderers/WorldRenderer.h"
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
@@ -75,11 +75,23 @@ namespace Hazard
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
-		//s_Engine->GetDrawList().Environment.push_back({ 1.0f });
+		if (skyLight.EnvironmentMap == nullptr) return;
+
+		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
+		EnvironmentData data = {};
+		data.Color = skyLight.LightColor.ToGLM();
+		data.IBLContribution = skyLight.Intensity;
+
+		s_Engine->GetDrawList().Environment[map.Raw()] = data;
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
-		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), directionalLight.LightColor, directionalLight.Intensity });
+		const glm::vec3 color = { directionalLight.LightColor.r, directionalLight.LightColor.g, directionalLight.LightColor.b };
+		DirectionalLightSource source = {};
+		source.Direction = Math::GetForwardDirection(transform.GetOrientation());
+		source.Color = color;
+		source.Intensity = directionalLight.Intensity;
+		s_Engine->GetDrawList().DirectionalLights.push_back(source);
 	}
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{

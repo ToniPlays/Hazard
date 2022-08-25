@@ -88,6 +88,9 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
+
+				if (!component.EnvironmentMap) return;
+				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->GetHandle());
 				});
 		}
 		template<>

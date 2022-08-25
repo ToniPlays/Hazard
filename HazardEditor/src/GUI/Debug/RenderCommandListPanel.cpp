@@ -1,7 +1,7 @@
 
 #include "RenderCommandListPanel.h"
 #include "Hazard/Rendering/RenderEngine.h"
-#include "Hazard/Rendering/WorldRenderer.h"
+#include "Hazard/Rendering/Renderers/WorldRenderer.h"
 
 using namespace Hazard;
 
@@ -31,6 +31,11 @@ namespace UI
 					ImGui::Text("Camera count");
 					ImGui::TableNextColumn();
 					ImGui::Text(std::to_string(renderer->GetCameraData().size()).c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text("Environment count");
+					ImGui::TableNextColumn();
+					ImGui::Text(std::to_string(list.Environment.size()).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Quad count");

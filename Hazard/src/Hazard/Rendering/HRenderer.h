@@ -4,7 +4,7 @@
 #include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 #include "RenderEngine.h"
-#include "WorldRenderer.h"
+#include "Renderers/WorldRenderer.h"
 #include "Color.h"
 
 namespace Hazard
@@ -32,6 +32,7 @@ namespace Hazard
 
 		//Pipeline
 		static void SubmitPipeline(Ref<Pipeline>& pipeline, size_t count);
+
 		//Light
 		static void SubmitSkyLight(const SkyLightComponent& skyLight);
 		static void SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight);

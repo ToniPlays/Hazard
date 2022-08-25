@@ -72,6 +72,13 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
+
+			AssetHandle handle;
+			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
+
+			if (handle == INVALID_ASSET_HANDLE) return;
+			c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+
 		}
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
@@ -95,7 +102,7 @@ namespace Hazard
 			auto& c = entity.AddComponent<MeshComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			AssetHandle handle;
-			YamlUtils::Deserialize(comp, "Mesh", handle, (AssetHandle)INVALID_ASSET_HANDLE);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);
 
 			if (handle == INVALID_ASSET_HANDLE) return;
 			c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);

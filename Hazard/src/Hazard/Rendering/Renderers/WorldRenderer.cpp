@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "WorldRenderer.h"
-#include "HRenderer.h"
+#include "Hazard/Rendering/HRenderer.h"
 #include "Hazard/ECS/Entity.h"
 
 using namespace HazardRenderer;
@@ -35,7 +35,7 @@ namespace Hazard
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& dl = e.GetComponent<DirectionalLightComponent>();
-				if (!e.IsVisible() || dl.Active) continue;
+				if (!e.IsVisible() || !dl.Active) continue;
 				HRenderer::SubmitDirectionalLight(e.GetComponent<TransformComponent>(), dl);
 			}
 		}

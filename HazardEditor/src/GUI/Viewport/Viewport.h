@@ -4,7 +4,7 @@
 #include "TransformationGizmo.h"
 #include "Editor/EditorCamera.h"
 #include "Editor/EditorGrid.h"
-#include "Hazard/Rendering/WorldRenderer.h"
+#include "Hazard/Rendering/Renderers/WorldRenderer.h"
 
 namespace UI 
 {
@@ -38,5 +38,7 @@ namespace UI
 		bool m_DrawStats = false;
 		bool m_MouseOverWindow = false;
 		bool m_WindowFocused = false;
+
+		uint32_t m_CurrentImage = 0;
 	};
 }

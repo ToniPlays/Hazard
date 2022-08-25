@@ -1,8 +1,9 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "WorldRenderer.h"
+#include "Renderers/WorldRenderer.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
+#include "Environment/EnvironmentMap.h"
 
 namespace Hazard
 {
@@ -29,11 +30,12 @@ namespace Hazard
 
 	struct EnvironmentData
 	{
-		float LightIntensity;
+		glm::vec4 Color;
+		float IBLContribution;
 	};
-	struct LightSource
+	struct DirectionalLightSource
 	{
-		glm::mat4 Transform;
+		glm::vec3 Direction;
 		glm::vec3 Color;
 		float Intensity;
 	};
@@ -53,6 +55,8 @@ namespace Hazard
 	{
 		Ref<WorldRenderer> WorldRenderer;
 		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> MeshList;
+		std::unordered_map<EnvironmentMap*, EnvironmentData> Environment;
+		std::vector<DirectionalLightSource> DirectionalLights;
 
 		DrawListStat Stats;
 	};
