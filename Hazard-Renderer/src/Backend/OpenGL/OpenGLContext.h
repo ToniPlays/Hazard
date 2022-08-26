@@ -41,7 +41,7 @@ namespace HazardRenderer::OpenGL {
 	private:
 		inline static OpenGLContext* s_Instance;
 		Window* m_Window;
-		OpenGLPhysicalDevice* m_PhysicalDevice;
+		Ref<OpenGLPhysicalDevice> m_PhysicalDevice;
 		Ref<OpenGLSwapchain> m_Swapchain;
 	};
 }

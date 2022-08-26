@@ -11,7 +11,8 @@
 
 #define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
 
-namespace HazardRenderer::Vulkan {
+namespace HazardRenderer::Vulkan 
+{
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
@@ -72,8 +73,8 @@ namespace HazardRenderer::Vulkan {
 
 	VulkanContext::~VulkanContext()
 	{
-		delete m_VulkanDevice;
-		vkDestroyInstance(m_Instance, nullptr);
+		m_VulkanDevice = nullptr;
+		vkDestroyInstance(m_VulkanInstance, nullptr);
 	}
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
@@ -130,12 +131,14 @@ namespace HazardRenderer::Vulkan {
 				instanceInfo.enabledLayerCount = 1;
 			}
 		}
-		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_Instance);
+		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_VulkanInstance);
 		VK_CHECK_RESULT(result, "Failed to create VkInstance");
 		//Instance and surface
 		
 		if (info->Logging) 
 		{
+			auto vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(m_VulkanInstance, "vkCreateDebugUtilsMessengerEXT");
+
 			VkDebugUtilsMessengerCreateInfoEXT debugUtilsInfo = {};
 			debugUtilsInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 			debugUtilsInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT;
@@ -146,8 +149,10 @@ namespace HazardRenderer::Vulkan {
 			debugUtilsInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
 			debugUtilsInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 
-			VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(m_Instance, &debugUtilsInfo, nullptr, &m_DebugMessenger), "Failed to create VkDebutUtilsMessengerEXT");
+			VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(m_VulkanInstance, &debugUtilsInfo, nullptr, &m_DebugMessenger), "Failed to create VkDebutUtilsMessengerEXT");
 		}
+
+		m_VulkanDevice = VulkanPhysicalDevice::Create(-1); // Auto select: -1, others indexed
 	}
 }
 #endif

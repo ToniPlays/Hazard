@@ -38,19 +38,22 @@ namespace HazardRenderer::Vulkan {
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override {};
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override {};
 
+
+		//Vulkan specific
 		static VulkanContext* GetInstance() { return s_Instance; }
+		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }
 
 	private:
 		inline static VulkanContext* s_Instance;
 
 		Window* m_Window;
 		glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
-		VkInstance m_Instance = nullptr;
+		VkInstance m_VulkanInstance = nullptr;
 		VkDebugUtilsMessengerEXT m_DebugMessenger = nullptr;
 
 		VkSurfaceKHR m_WindowSurface = nullptr;
 		//Device
-		VulkanDevice* m_VulkanDevice;
+		Ref<VulkanPhysicalDevice> m_VulkanDevice;
 	};
 }
 #endif

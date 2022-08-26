@@ -9,28 +9,43 @@
 
 namespace HazardRenderer::Vulkan
 {
-	struct QueueIndices {
-		VkQueue Queue;
-		uint32_t Index;
+	struct QueueFamilyIndices {
+		int32_t Graphics = -1;
+		int32_t Compute = -1;
+		int32_t Transfer = -1;
 	};
 
-	class SwapChain;
-	class CommandBuffer;
 
-	class VulkanDevice : public PhysicalDevice {
+	class VulkanPhysicalDevice : public PhysicalDevice {
 	public:
 		
-		VulkanDevice() = default;
-		VulkanDevice(VkInstance instance, VkSurfaceKHR surface, uint32_t imagesInFlight);
-		~VulkanDevice();
+		VulkanPhysicalDevice();
+		~VulkanPhysicalDevice();
 
-		std::string GetDeviceName() override { return m_DeviceName; };
+		std::string GetDeviceName() override { return m_Properties.deviceName; };
 		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
+
+		static Ref<VulkanPhysicalDevice> Create(int device = -1);
 
 	private:
 
-		std::string m_DeviceName;
+		QueueFamilyIndices GetQueueFamilyIndices(int flags);
+		VkFormat FindDepthFormat();
+
+	private:
+
 		PhysicalDeviceLimits m_Limits;
+
+		VkPhysicalDevice m_PhysicalDevice;
+		VkPhysicalDeviceProperties m_Properties;
+		VkPhysicalDeviceFeatures m_Features;
+		VkPhysicalDeviceMemoryProperties m_MemoryProperties;
+
+		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties;
+		QueueFamilyIndices m_QueueFamilyIndices;
+		std::vector<VkDeviceQueueCreateInfo> m_QueueCreateInfos;
+		
+		VkFormat m_DepthFormat;
 	};
 }
 #endif

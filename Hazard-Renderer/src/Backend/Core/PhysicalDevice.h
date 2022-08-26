@@ -12,7 +12,7 @@ namespace HazardRenderer
 	};
 
 
-	class PhysicalDevice 
+	class PhysicalDevice : public RefCount
 	{
 	public:
 		virtual ~PhysicalDevice() {};
