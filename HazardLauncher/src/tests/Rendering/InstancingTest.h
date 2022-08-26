@@ -50,7 +50,6 @@ namespace InstancingTest {
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Decorated = true;
 		windowInfo.Width = 1280;
 		windowInfo.Height = 720;
 		windowInfo.Color = Color(34, 34, 34, 255);
@@ -89,7 +88,7 @@ namespace InstancingTest {
 		};
 
 		struct InstanceData {
-			TransformData transform;
+			//TransformData transform;
 		};
 
 		VertexBufferCreateInfo vbo = {};
@@ -149,12 +148,13 @@ namespace InstancingTest {
 				InstanceData& data = instanceData[index];
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), { x - halfSize, y - halfSize, 0 });
 
+				/*
 				data.transform.Color = glm::vec4((float)x / (float)size, (float)y / (float)size, 0.0f, 1.0f);
 
 				data.transform.MRow[0] = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
 				data.transform.MRow[1] = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
 				data.transform.MRow[2] = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
-
+				*/
 				index++;
 			}
 		}

@@ -1,3 +1,4 @@
+#if 0
 #include "HazardLauncher.h"
 #include "HazardRendererCore.h"
 
@@ -56,3 +57,4 @@ void HazardLauncher::Init()
 {
 	PushModule<GUIManager>();
 }
+#endif

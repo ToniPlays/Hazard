@@ -42,7 +42,7 @@ namespace TriangleTest {
 		rendererApp.EventCallback = appInfo.EventCallback;
 
 		rendererApp.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 
 
@@ -50,7 +50,6 @@ namespace TriangleTest {
 		windowInfo.Title = "HazardEditor";
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Decorated = true;
 		windowInfo.Width = 1280;
 		windowInfo.Height = 720;
 		windowInfo.Color = Color(255, 128, 0, 255);
@@ -69,7 +68,7 @@ namespace TriangleTest {
 		//---------------
 #pragma region Mesh
         std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
-        
+        /*
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
@@ -116,8 +115,10 @@ namespace TriangleTest {
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		
 #pragma endregion
+*/
 		while (running)
 		{
+			/*
 			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			window->BeginFrame();
             
@@ -136,12 +137,13 @@ namespace TriangleTest {
             window->GetContext()->EndRenderPass(cmdBuffer);
             window->Present();
             Renderer::WaitAndRender();
+			*/
 		}
-
+		/*
 		pipeline.Release();
 		indexBuffer.Release();
 		vertexBuffer.Release();
-
+		*/
 		window->Close();
 
 		delete window;

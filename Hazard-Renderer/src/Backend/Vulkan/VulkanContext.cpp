@@ -3,14 +3,61 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "Backend/Core/Renderer.h"
 #include "Backend/Core/Window.h"
-#include "VKUtils.h"
-#include "Core/ValidationLayer.h"
 #include "Core/VulkanAllocator.h"
+#include "VkUtils.h"
 
 #include "VulkanRenderCommandBuffer.h"
-#include "VulkanFrameBuffer.h"
+#include "spdlog/fmt/fmt.h"
+
+#define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
 
 namespace HazardRenderer::Vulkan {
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
+	{
+		const bool performanceWarn = false;
+		if (!performanceWarn) {
+			if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT) return VK_FALSE;
+		}
+
+		std::string labels, objects;
+		if (pCallbackData->cmdBufLabelCount) 
+		{
+			labels = fmt::format("\tLables({}): \n", pCallbackData->cmdBufLabelCount);
+			for (uint32_t i = 0; i < pCallbackData->cmdBufLabelCount; i++) 
+			{
+				const auto& label = pCallbackData->pCmdBufLabels[i];
+				const std::string colorStr = fmt::format("[ {}, {}, {}, {}]", label.color[0], label.color[1], label.color[2], label.color[3]);
+
+				labels.append(fmt::format("\t\t- Command Buffer Label[{0}]: name {1}, color {2}\n", i, label.pLabelName ? label.pLabelName : "NULL", colorStr));
+			}
+		}
+		if (pCallbackData->objectCount) {
+			objects = fmt::format("\tObjects({}): \n", pCallbackData->objectCount);
+			for (uint32_t i = 0; i < pCallbackData->objectCount; i++)
+			{
+				const auto& obj = pCallbackData->pObjects[i];
+				labels.append(fmt::format("\t\t- Object[{0}]: name {1}, type {2}, handle: {3:#x}\n", i, obj.pObjectName ? obj.pObjectName : "NULL", VkUtils::VkObjectTypeToString(obj.objectType), obj.objectHandle));
+			}
+		}
+
+		RenderMessage message = {};
+		message.Severity = Severity::Debug;
+		message.Description = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
+
+		Window::SendDebugMessage(message);
+
+		return VK_FALSE;
+	}
+
+
+	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion) {
+		uint32_t instanceVersion;
+		vkEnumerateInstanceVersion(&instanceVersion);
+
+		return instanceVersion >= minimumAPIVersion;
+	}
+
 
 	VulkanContext::VulkanContext(WindowProps* props)
 	{
@@ -20,184 +67,87 @@ namespace HazardRenderer::Vulkan {
 			HZR_ASSERT(false, "Vulkan not supported");
 		}
 		Renderer::Init();
+		s_Instance = this;
 	}
 
 	VulkanContext::~VulkanContext()
 	{
-		m_Device->WaitUntilIdle();
-
-		m_Swapchain.Release();
-
-		ValidationLayer::Close();
-
-		m_Device.reset();
-		m_WindowSurface.reset();
-		//VulkanAllocator::Shutdown();
-
+		delete m_VulkanDevice;
 		vkDestroyInstance(m_Instance, nullptr);
 	}
-
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
-		s_Instance = this;
-		m_Window = window;
-
-		auto extensions = VKUtils::GetRequiredExtensions(info->Logging);
-
-		VkApplicationInfo vkApp = {};
-		vkApp.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		vkApp.pApplicationName = "Hazard";
-		vkApp.pEngineName = "Hazard";
-		vkApp.apiVersion = VK_API_VERSION_1_2;
-
-		VkInstanceCreateInfo createInfo = {};
-		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		createInfo.enabledExtensionCount = (uint32_t)extensions.size();
-		createInfo.ppEnabledExtensionNames = extensions.data();
-		createInfo.pApplicationInfo = &vkApp;
-
-		VkDebugUtilsMessengerCreateInfoEXT debugInfo = {};
-
-		if (ValidationLayer::IsValidationSupported()) {
-			ValidationLayer::InitValidationLayers(createInfo, debugInfo, info->Logging);
-		}
-		vkCreateInstance(&createInfo, nullptr, &m_Instance);
-
-		if (info->Logging) {
-			ValidationLayer::SetupDebugger(m_Instance);
+		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
+			HZR_ASSERT(false, "API version not supported");
 		}
 
-		m_WindowSurface = CreateScope<WindowSurface>(m_Instance, (GLFWwindow*)m_Window->GetNativeWindow());
-		m_Device = CreateScope<VulkanDevice>(m_Instance, m_WindowSurface->GetVkSurface(), info->ImagesInFlight);
-
-		VulkanAllocator::Init();
-
-		uint32_t w = window->GetWidth();
-		uint32_t h = window->GetHeight();
-
-		m_Swapchain = Ref<VulkanSwapchain>::Create();
-		m_Swapchain->Create(w, h, window->IsVSync());
-		m_Swapchain->CreateResources(info->pTargetFrameBuffer);
-	}
-
-	void VulkanContext::BeginFrame()
-	{
-		VulkanContext* instance = this;
-		Renderer::Submit([instance]() mutable {
-			instance->m_Swapchain->BeginFrame();
-			});
-	}
-
-	void VulkanContext::Present()
-	{
-		VulkanContext* instance = this;
-		Renderer::Submit([instance]() mutable {
-			instance->m_Swapchain->Present();
-			});
-	}
-
-	void VulkanContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) {
-
-		VulkanContext* instance = this;
-		Renderer::Submit([instance, buffer, renderPass]() mutable {
-			instance->BeginRenderPass_RT(buffer, renderPass);
-			});
-	}
-	void VulkanContext::BeginRenderPass_RT(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
-	{
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-
-		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
-
-		uint32_t width = fb->GetWidth();
-		uint32_t height = fb->GetHeight();
-
-		VkViewport viewport = {};
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-
-		VkRenderPassBeginInfo renderPassBeginInfo = {};
-		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = fb->GetRenderPass();
-		renderPassBeginInfo.renderArea.offset.x = 0;
-		renderPassBeginInfo.renderArea.offset.y = 0;
-		renderPassBeginInfo.renderArea.extent.width = width;
-		renderPassBeginInfo.renderArea.extent.height = height;
-
-		if (fb->GetSpecification().SwapChainTarget) {
-
-			width = m_Swapchain->GetWidth();
-			height = m_Swapchain->GetHeight();
-			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = fb->GetRenderPass();
-			renderPassBeginInfo.renderArea.offset.x = 0;
-			renderPassBeginInfo.renderArea.offset.y = 0;
-			renderPassBeginInfo.renderArea.extent.width = width;
-			renderPassBeginInfo.renderArea.extent.height = height;
-			renderPassBeginInfo.framebuffer = m_Swapchain->GetCurrentFrameBuffer();
-
-			viewport.x = 0.0f;
-			viewport.y = (float)height;
-			viewport.width = (float)width;
-			viewport.height = -(float)height;
-		}
-		else
+		std::vector<const char*> instanceExtensions = { VK_KHR_SURFACE_EXTENSION_NAME, VK_KHR_WIN32_SURFACE_EXTENSION_NAME };
+		instanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		if (info->Logging)
 		{
-			width = fb->GetWidth();
-			height = fb->GetHeight();
-			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.renderPass = fb->GetRenderPass();
-			renderPassBeginInfo.renderArea.offset.x = 0;
-			renderPassBeginInfo.renderArea.offset.y = 0;
-			renderPassBeginInfo.renderArea.extent.width = width;
-			renderPassBeginInfo.renderArea.extent.height = height;
-			renderPassBeginInfo.framebuffer = fb->GetFrameBuffer();
-
-			viewport.x = 0.0f;
-			viewport.y = 0.0f;
-			viewport.width = (float)width;
-			viewport.height = (float)height;
+			instanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+			instanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 		}
 
-		const auto& clearValues = fb->GetVulkanClearValues();
-		renderPassBeginInfo.clearValueCount = (uint32_t)clearValues.size();
-		renderPassBeginInfo.pClearValues = clearValues.data();
+		VkValidationFeatureEnableEXT enables[] = { VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT };
+		VkValidationFeaturesEXT features = {};
+		features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+		features.enabledValidationFeatureCount = 1;
+		features.pEnabledValidationFeatures = enables;
 
-		VkRect2D scissors = {};
-		scissors.extent.width = width;
-		scissors.extent.height = height;
-		scissors.offset = { 0, 0 };
 
-		vkCmdBeginRenderPass(vkBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdSetViewport(vkBuffer, 0, 1, &viewport);
-		vkCmdSetScissor(vkBuffer, 0, 1, &scissors);
-	}
+		VkApplicationInfo appInfo = {};
+		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		appInfo.pApplicationName = info->pAppInfo->AppName.c_str();
+		appInfo.pEngineName = "Hazard";
+		appInfo.apiVersion = VK_API_VERSION_1_2;
 
-	void VulkanContext::EndRenderPass(Ref<RenderCommandBuffer> buffer) {
-		VulkanContext* instance = this;
-		Renderer::Submit([instance, buffer]() mutable {
-			instance->EndRenderPass_RT(buffer);
-			});
-	}
+		VkInstanceCreateInfo instanceInfo = {};
+		instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		instanceInfo.pApplicationInfo = &appInfo;
+		instanceInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
+		instanceInfo.ppEnabledExtensionNames = instanceExtensions.data();
 
-	void VulkanContext::EndRenderPass_RT(Ref<RenderCommandBuffer> buffer)
-	{
-		uint32_t frameIndex = VulkanContext::GetVulkanSwapchain()->GetCurrentBufferIndex();
-		VkCommandBuffer vkBuffer = buffer.As<VulkanRenderCommandBuffer>()->GetBuffer(frameIndex);
-		vkCmdEndRenderPass(vkBuffer);
-	}
+		const char* validationName = "VK_LAYER_KHRONOS_validation";
 
-	void VulkanContext::SetViewport(int x, int y, int w, int h)
-	{
-		if (w == 0 || h == 0) return;
+		if (info->Logging)
+		{
+			uint32_t instanceLayerCount;
+			vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr);
+			std::vector<VkLayerProperties> instanceProperties(instanceLayerCount);
+			vkEnumerateInstanceLayerProperties(&instanceLayerCount, instanceProperties.data());
+			bool validationPresent = false;
 
-		m_Device->WaitUntilIdle();
+			for (const VkLayerProperties& prop : instanceProperties)
+			{
+				if (strcmp(prop.layerName, validationName) == 0) {
+					validationPresent = true;
+					break;
+				}
+			}
+			if (validationPresent) {
+				instanceInfo.ppEnabledLayerNames = &validationName;
+				instanceInfo.enabledLayerCount = 1;
+			}
+		}
+		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_Instance);
+		VK_CHECK_RESULT(result, "Failed to create VkInstance");
+		//Instance and surface
+		
+		if (info->Logging) 
+		{
+			VkDebugUtilsMessengerCreateInfoEXT debugUtilsInfo = {};
+			debugUtilsInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+			debugUtilsInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT;
+			debugUtilsInfo.messageType |= VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
+			debugUtilsInfo.messageType |= VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 
-		uint32_t width = w;
-		uint32_t height = h;
+			debugUtilsInfo.pfnUserCallback = VulkanDebugCallback;
+			debugUtilsInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+			debugUtilsInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 
-		m_Swapchain->Resize(width, height);
+			VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(m_Instance, &debugUtilsInfo, nullptr, &m_DebugMessenger), "Failed to create VkDebutUtilsMessengerEXT");
+		}
 	}
 }
 #endif

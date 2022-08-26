@@ -14,9 +14,6 @@ namespace HazardRenderer::OpenGL {
 		virtual ~OpenGLPhysicalDevice() {};
 		virtual std::string GetDeviceName() { return m_DeviceName; }
 		virtual const PhysicalDeviceLimits& GetDeviceLimits() const { return m_Limits; };
-
-		static Ref<PhysicalDevice> Create();
-
 	private:
 		std::string m_DeviceName;
 		PhysicalDeviceLimits m_Limits;

@@ -20,7 +20,7 @@ namespace TexturedQuad {
 		appInfo.AppName = "Hello Textured quad";
 		appInfo.BuildVersion = "0.0.1a";
 		appInfo.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 		appInfo.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
@@ -33,7 +33,6 @@ namespace TexturedQuad {
 		windowInfo.Title = "Textured quad " + RenderAPIToString(api);
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Decorated = true;
 		windowInfo.Width = 1920;
 		windowInfo.Height = 1080;
 		windowInfo.Color = Color(34, 34, 34, 255);

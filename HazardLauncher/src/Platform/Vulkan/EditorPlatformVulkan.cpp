@@ -4,7 +4,6 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "EditorPlatformVulkan.h"
 #include "Backend/Core/Renderer.h"
-#include "Backend/Vulkan/VKUtils.h"
 #include "imgui.h"
 #include <../ImGui_Backend/imgui_impl_glfw.h>
 
@@ -12,6 +11,7 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
+	/*
 	m_Window = &window;
 
 	m_Context = (VulkanContext*)window.GetContext();
@@ -49,14 +49,17 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = device.CreateSecondaryCommandBuffer();
+		*/
 }
 
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
+	/*
 	m_Context->GetPhysicalDevice().WaitUntilIdle();
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
+	*/
 }
 
 void EditorPlatformVulkan::BeginFrame()
@@ -68,6 +71,7 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
+	/*
 	VulkanContext* context = m_Context;
 
 	HazardRenderer::Renderer::Submit([context]() mutable {
@@ -149,6 +153,7 @@ void EditorPlatformVulkan::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 		});
+		*/
 }
 
 void EditorPlatformVulkan::Close()

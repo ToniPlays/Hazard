@@ -21,7 +21,8 @@ project "Hazard-Utility"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Optick}",
-		"%{IncludeDir.PortableFileDialogs}"
+		"%{IncludeDir.PortableFileDialogs}",
+		"%{wks.location}/Hazard/vendor/spdlog/include",
 	}
 
 	links {

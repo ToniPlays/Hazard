@@ -16,7 +16,7 @@ namespace HazardRenderer {
 		case RenderAPI::OpenGL: return new OpenGL::OpenGLRenderPass(info);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return new Vulkan::VulkanRenderPass(info);
+		//case RenderAPI::Vulkan: return new Vulkan::VulkanRenderPass(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
         case RenderAPI::Metal: return new Metal::MetalRenderPass(info);

@@ -33,6 +33,7 @@ project "Hazard-Renderer"
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.Optick}",
 		"%{IncludeDir.PortableFileDialogs}",
+		"%{wks.location}/Hazard/vendor/spdlog/include",
 		"src",
 		"examples"
 	}

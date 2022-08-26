@@ -26,7 +26,7 @@ namespace SceneTest {
 		appInfo.AppName = "Hello 3D world";
 		appInfo.BuildVersion = "0.1.0a";
 		appInfo.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 		appInfo.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
@@ -40,14 +40,13 @@ namespace SceneTest {
 		rendererApp.BuildVersion = "1.0.0";
 		rendererApp.EventCallback = appInfo.EventCallback;
 		rendererApp.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Message << std::endl;
+			std::cout << message.Description << std::endl;
 		};
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Decorated = true;
 		windowInfo.Width = 1280;
 		windowInfo.Height = 720;
 		windowInfo.Color = Color(34, 34, 34, 255);
@@ -61,7 +60,6 @@ namespace SceneTest {
 
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
-
 
 			
 		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;

@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "tests/SimpleCanvas.cpp"
 #include "tests/Rendering/TriangleTest.h"
 #include "tests/Rendering/TexturedQuad.h"
@@ -10,7 +10,7 @@
 
 int main()
 {
-	InstancingTest::Run(RenderAPI::OpenGL);
+	TriangleTest::Run(RenderAPI::Vulkan);
 	std::cout << "Test ended " << std::endl;
 	return 0;
 }

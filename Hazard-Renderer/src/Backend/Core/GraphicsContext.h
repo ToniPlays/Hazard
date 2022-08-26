@@ -41,14 +41,6 @@ namespace HazardRenderer {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
 
-		/*virtual void Close() = 0;
-
-		virtual void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth) = 0;
-		 
-		virtual void SetErrorListener(const ErrorCallback& listener) = 0;
-		virtual void AddResizeCallback(const ResizeCallback& callback) = 0;
-		*/
-
 		virtual PhysicalDevice& GetDevice() = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 

@@ -4,7 +4,6 @@
 #include "../VulkanContext.h"
 
 #include "Utility/StringUtil.h"
-#include "../VKUtils.h"
 
 namespace HazardRenderer::Vulkan {
 
@@ -22,7 +21,7 @@ namespace HazardRenderer::Vulkan {
 		createInfo.usage = usage;
 
 		VmaAllocation alloc;
-		VK_CHECK_RESULT(vmaCreateBuffer(s_Data->Allocator, &bufferCreateInfo, &createInfo, &outBuffer, &alloc, nullptr));
+		VK_CHECK_RESULT(vmaCreateBuffer(s_Data->Allocator, &bufferCreateInfo, &createInfo, &outBuffer, &alloc, nullptr), "");
 
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, alloc, &info);
@@ -37,7 +36,7 @@ namespace HazardRenderer::Vulkan {
 		createInfo.usage = usage;
 
 		VmaAllocation alloc;
-		VK_CHECK_RESULT(vmaCreateImage(s_Data->Allocator, &imageCreateInfo, &createInfo, &outImage, &alloc, nullptr));
+		VK_CHECK_RESULT(vmaCreateImage(s_Data->Allocator, &imageCreateInfo, &createInfo, &outImage, &alloc, nullptr), "");
 
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, alloc, &info);
@@ -76,10 +75,9 @@ namespace HazardRenderer::Vulkan {
 	}
 	void VulkanAllocator::Init()
 	{
-		
 		s_Data = new AllocatorData();
 
-		VulkanDevice& device = VulkanContext::GetPhysicalDevice();
+		/*VulkanDevice& device = VulkanContext::GetPhysicalDevice();
 
 		VmaAllocatorCreateInfo createInfo = {};
 		createInfo.vulkanApiVersion = VK_API_VERSION_1_2;
@@ -88,7 +86,7 @@ namespace HazardRenderer::Vulkan {
 		createInfo.instance = VulkanContext::GetVulkanInstance();
 
 		VK_CHECK_RESULT(vmaCreateAllocator(&createInfo, &s_Data->Allocator));
-		
+		*/
 	}
 	void VulkanAllocator::Shutdown()
 	{

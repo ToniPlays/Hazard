@@ -96,6 +96,9 @@
     <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorWorldManager.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
     </ClInclude>
@@ -135,6 +138,9 @@
     <ClInclude Include="src\GUI\Properties\ScriptFieldUI.h">
       <Filter>src\GUI\Properties</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Viewport\GameViewport.h">
+      <Filter>src\GUI\Viewport</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Viewport\TransformationGizmo.h">
       <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
@@ -162,8 +168,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Viewport\GameViewport.h" />
-    <ClInclude Include="src\Editor\EditorWorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -205,6 +209,9 @@
     <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\EditorWorldManager.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
     </ClCompile>
@@ -235,6 +242,9 @@
     <ClCompile Include="src\GUI\Properties\Properties.cpp">
       <Filter>src\GUI\Properties</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Viewport\GameViewport.cpp">
+      <Filter>src\GUI\Viewport</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\Viewport\TransformationGizmo.cpp">
       <Filter>src\GUI\Viewport</Filter>
     </ClCompile>
@@ -253,23 +263,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Viewport\GameViewport.cpp" />
-    <ClCompile Include="src\Editor\EditorWorldManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Shaders\Uniforms\CameraUniform.glsl" />
-    <None Include="res\Shaders\Uniforms\ModelUniform.glsl" />
-    <None Include="res\Shaders\Uniforms\GridUniform.glsl" />
-    <None Include="res\Shaders\Inputs\InputQuad.glsl" />
-    <None Include="res\Shaders\Inputs\InputPBR.glsl" />
-    <None Include="res\Shaders\Inputs\InputCircle.glsl" />
-    <None Include="res\Shaders\Uniforms\LightSources.glsl" />
-    <None Include="res\Shaders\Compute\EquirectangularToCubeMap.glsl" />
-    <None Include="res\Shaders\Utils\EnvironmentMapping.glsl" />
-    <None Include="res\Shaders\Utils\Common.glsl" />
-    <None Include="res\Shaders\Composite\SceneComposite.glsl" />
-    <None Include="res\Shaders\Utils\Lighting.glsl" />
-    <None Include="res\Shaders\Compute\EnvironmentIrradiance.glsl" />
-    <None Include="res\Shaders\Uniforms\EnvironmentUniform.glsl" />
   </ItemGroup>
 </Project>

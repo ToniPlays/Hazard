@@ -22,7 +22,7 @@ using namespace HazardScript;
 
 void HazardEditorApplication::PreInit()
 {
-	RenderAPI renderAPI = RenderAPI::OpenGL;
+	RenderAPI renderAPI = RenderAPI::Vulkan;
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
 	if (!workingDir.empty()) {
