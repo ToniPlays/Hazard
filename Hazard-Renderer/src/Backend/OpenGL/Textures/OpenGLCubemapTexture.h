@@ -13,13 +13,16 @@ namespace HazardRenderer::OpenGL
 
 		ImageFormat GetFormat() const {	return m_Format; };
 		uint32_t GetWidth() const { return m_Width; };
-		uint32_t GetHegith() const { return m_Height; }
+		uint32_t GetHeight() const { return m_Height; }
 		glm::uvec2 GetSize() const { return { m_Width, m_Height }; };
 		const std::string& GetPath() const { return m_FilePath;	};
+
+		const uint32_t& GetID() const { return m_ID;	};
 
 	private:
 		Buffer GenerateFromFile(int& width, int& height);
 		void GenerateFromData(Buffer& imageData, int width, int height);
+		void GenerateFromCubemap(Ref<CubemapTexture> cubemap);
 
 	private:
 		ImageFormat m_Format = ImageFormat::None;

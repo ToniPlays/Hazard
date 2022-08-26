@@ -14,8 +14,17 @@ namespace HazardRenderer::OpenGL
 	{
 		m_FilePath = createInfo->FilePath;
 		m_Format = createInfo->Format;
-		m_Width = createInfo->Width;
-		m_Height = createInfo->Height;
+
+		if (createInfo->pCubemap)
+		{
+			m_Width = createInfo->pCubemap->GetWidth();
+			m_Height = createInfo->pCubemap->GetWidth();
+		}
+		else
+		{
+			m_Width = createInfo->Width;
+			m_Height = createInfo->Height;
+		}
 
 		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_ID);
 
@@ -32,18 +41,23 @@ namespace HazardRenderer::OpenGL
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		int w, h;
 
 		if (createInfo->Data.Data == nullptr && !createInfo->FilePath.empty())
 		{
+			int w, h;
 			Buffer buffer = GenerateFromFile(w, h);
 			GenerateFromData(buffer, w, h);
 		}
-		else GenerateFromData(createInfo->Data, 0, 0);
+		else if (createInfo->pCubemap)
+			GenerateFromCubemap(createInfo->pCubemap);
+
+		else __debugbreak();
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
-		glBindTexture(slot, m_ID);
+		Renderer::Submit([s = slot, id = m_ID]() mutable {
+			glBindTextureUnit(s, id);
+			});
 	}
 	Buffer OpenGLCubemapTexture::GenerateFromFile(int& width, int& height)
 	{
@@ -53,7 +67,7 @@ namespace HazardRenderer::OpenGL
 
 		int channels;
 
-		stbi_set_flip_vertically_on_load(false);
+		stbi_set_flip_vertically_on_load(true);
 
 		stbi_uc* data = stbi_load(m_FilePath.c_str(), &width, &height, &channels, desired);
 		HZR_ASSERT(data, "Data not loaded correctly");
@@ -82,16 +96,34 @@ namespace HazardRenderer::OpenGL
 		m_SourceImage->Bind(cmdBuffer);
 		pipeline->Bind(cmdBuffer);
 
-		//glBindImageTexture(unit, texture, level, layered, layer, access, format);
-		glBindImageTexture(0, m_ID, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-
-		Renderer::Submit([image = m_SourceImage, pipeline]() mutable {
-			pipeline->GetShader()->Set("u_EquirectangularTexture", 0, image);
+		Renderer::Submit([id = m_ID]() mutable {
+			//glBindImageTexture(unit, texture, level, layered, layer, access, format);
+			glBindImageTexture(0, id, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 			});
-		pipeline->Execute(cmdBuffer);
+		pipeline->Execute(cmdBuffer, { m_Width / 32, m_Height / 32, 6 });
 
 		Renderer::SubmitResourceFree([pipeline, data = imageData]() mutable {
 			data.Release();
 			});
+	}
+	void OpenGLCubemapTexture::GenerateFromCubemap(Ref<CubemapTexture> cubemap)
+	{
+		ComputePipelineCreateInfo computeInfo = {};
+		computeInfo.DebugName = "EnvironmentIrradiance";
+		computeInfo.ShaderPath = "Shaders/Compute/EnvironmentIrradiance.glsl";
+		computeInfo.Usage = PipelineUsage::ComputeBit;
+
+		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
+
+		cubemap->Bind(1);
+		Ref<ComputePipeline> pipeline = ComputePipeline::Create(&computeInfo);
+		pipeline->Bind(cmdBuffer);
+
+		Renderer::Submit([id = m_ID]() mutable {
+			//glBindImageTexture(unit, texture, level, layered, layer, access, format);
+			glBindImageTexture(0, id, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+			});
+
+		pipeline->Execute(cmdBuffer, { m_Width / 32, m_Height / 32, 6 });
 	}
 }

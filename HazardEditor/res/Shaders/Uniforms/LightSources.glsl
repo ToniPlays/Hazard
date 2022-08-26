@@ -4,7 +4,7 @@ struct DirectionalLight
 	vec4 Color;
 };
 
-layout(std140, binding = 1) uniform Lights 
+layout(std140, binding = 2) uniform Lights 
 {
 	uniform int DirectionalLightCount;
 	uniform int PointLightCount;

@@ -5,7 +5,8 @@
 
 using namespace Hazard;
 
-namespace Editor {
+namespace Editor 
+{
 	class EditorCamera : public HazardRenderer::Camera {
 	public:
 		EditorCamera() = default;
@@ -14,7 +15,6 @@ namespace Editor {
 
 		glm::mat4 GetProjection() const override { return m_Projection; };
 		glm::mat4 GetView() const override { return m_View; };
-		glm::mat4 GetViewProjection() const override { return m_Projection * m_View; };
 		glm::vec3 GetPosition() const override { return m_Position; };
 
 		const float GetNearClipping() const override { return m_ZNear; };

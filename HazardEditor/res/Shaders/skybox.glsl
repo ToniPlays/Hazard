@@ -1,35 +1,40 @@
 #type Vertex
-#version 330 core
-
-layout(location = 0) in vec3 v_position;
+#version 450
 
 #include "Uniforms/CameraUniform.glsl"
 
-void main() {
-	
-	texCoords = v_position;
-	vec4 pos = u_Camera.u_ViewProjection * vec4(v_position, 1.0);
-	gl_Position = pos.xyww;
+layout(location = 0) out vec3 v_Position;
+
+vec3 quadPos[6] = vec3[](
+	vec3( 1,  1, 0), vec3(-1, -1, 0), vec3(-1,  1, 0),
+	vec3(-1, -1, 0), vec3( 1,  1, 0), vec3( 1, -1, 0)
+);
+
+void main() 
+{
+	vec4 position = vec4(quadPos[gl_VertexIndex].xy, 1.0, 1.0);
+	gl_Position = position;
+
+	v_Position = (u_Camera.u_InverseViewProjection * position).xyz;
 }
 
 #type Fragment
-#version 330 core
+#version 450
 
-in vec3 texCoords;
+#include "Uniforms/CameraUniform.glsl"
 
-uniform samplerCube SkyboxCubemap;
-uniform float gamma;
+layout(location = 0) in vec3 v_Position;
 
-out vec4 color;
+layout(binding = 0) uniform samplerCube u_RadianceMap;
 
-vec4 mapHDR(vec3 color) {
+layout(location = 0) out vec4 gPosition;
+layout(location = 1) out vec4 gNormal;
+layout(location = 2) out vec4 gAlbedoSpec;
 
-	vec3 mapped = color / (color + vec3(1.0));
-	mapped = pow(mapped, vec3(1.0 / gamma));
-
-	return vec4(mapped, 1.0);
-}
-
-void main() {
-	color = mapHDR(texture(SkyboxCubemap, texCoords).rgb);
+void main() 
+{
+	gPosition = vec4(0.0);
+	gNormal = vec4(0.0);
+	gAlbedoSpec = texture(u_RadianceMap, v_Position);
+	gAlbedoSpec = vec4(0.8, 0.8, 0.4, 1.0);
 }

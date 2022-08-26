@@ -5,6 +5,7 @@
 #include "Hazard/Rendering/RenderEngine.h"
 
 using namespace HazardRenderer;
+
 namespace UI
 {
 	Viewport::Viewport() : Panel("Viewport")
@@ -14,7 +15,7 @@ namespace UI
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.Width = m_Width;
 		frameBufferInfo.Height = m_Height;
@@ -31,18 +32,17 @@ namespace UI
 	void Viewport::Update()
 	{
 		WorldCameraData cameraData = {};
-		cameraData.ViewProjection = m_EditorCamera.GetViewProjection();
 		cameraData.Projection = m_EditorCamera.GetProjection();
 		cameraData.View = m_EditorCamera.GetView();
 		cameraData.OutputFrameBuffer = m_FrameBuffer;
 		cameraData.RenderPass = m_RenderPass;
+		cameraData.Width = m_Width;
+		cameraData.Height = m_Height;
 
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
 	}
 	void Viewport::OnPanelRender()
 	{
-
-		RenderEngine& engine = Application::GetModule<RenderEngine>();
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
@@ -60,7 +60,13 @@ namespace UI
 
 		if (m_CurrentImage == 0)
 			ImUI::Image(m_FrameBuffer->GetImage(), size);
-		else ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
+		else
+		{
+			RenderEngine& engine = Application::GetModule<RenderEngine>();
+			if (m_CurrentImage < 4)
+				ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
+			else ImUI::Image(engine.GetDeferredFramebuffer()->GetDepthImage(), size);
+		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);
@@ -211,9 +217,9 @@ namespace UI
 		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
 		ImGui::NextColumn();
 
-		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular" };
+		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular", "Depth"};
 
-		ImUI::Combo("Shading", "##shading", attachments, 4, m_CurrentImage);
+		ImUI::Combo("Shading", "##shading", attachments, 5, m_CurrentImage);
 
 
 		ImGui::Columns();

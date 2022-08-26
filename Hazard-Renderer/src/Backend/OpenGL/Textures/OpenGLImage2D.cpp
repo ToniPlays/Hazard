@@ -2,20 +2,21 @@
 #include "OpenGLImage2D.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/OpenGL/OpenGLUtils.h"
+#include "Backend/Core/Renderer.h"
 
 #include <glad/glad.h>
 
-namespace HazardRenderer::OpenGL 
+namespace HazardRenderer::OpenGL
 {
 	OpenGLImage2D::OpenGLImage2D(Image2DCreateInfo* info)
- 	{
+	{
 		m_Width = info->Width;
 		m_Height = info->Height;
 		m_Format = info->Format;
 		m_Samples = info->Mips;
 
 		Invalidate();
-		if(info->Data.Data != nullptr)
+		if (info->Data.Data != nullptr)
 			SetImageData(info->Data);
 	}
 	OpenGLImage2D::~OpenGLImage2D()
@@ -39,7 +40,9 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLImage2D::Bind(uint32_t slot)
 	{
-		glBindTextureUnit(slot, m_ID);
+		Renderer::Submit([s = slot, id = m_ID]() mutable {
+			glBindTextureUnit(s, id);
+			});
 	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)
 	{

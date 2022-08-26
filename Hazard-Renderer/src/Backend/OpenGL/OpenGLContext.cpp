@@ -26,7 +26,6 @@ namespace HazardRenderer::OpenGL {
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 		Renderer::Init();
 	}
-
 	OpenGLContext::~OpenGLContext()
 	{
 		glDisable(GL_DEPTH_TEST);

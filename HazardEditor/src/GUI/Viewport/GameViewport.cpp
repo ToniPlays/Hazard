@@ -9,7 +9,7 @@ namespace UI
 {
 	GameViewport::GameViewport() : Panel("Game Viewport")
 	{
-		/*FrameBufferCreateInfo frameBufferInfo = {};
+		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "ViewportCamera";
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
@@ -25,7 +25,6 @@ namespace UI
 		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
-		*/
 	}
 	void GameViewport::Update()
 	{
@@ -36,18 +35,20 @@ namespace UI
 			m_HasCamera = false;
 			return; 
 		};
+
 		m_HasCamera = true;
 		glm::mat4 view = tc->GetTransformNoScale();
 
 		cc->RecalculateProjection(m_Width, m_Height);
 
 		WorldCameraData cameraData = {};
-		cameraData.ViewProjection = cc->GetProjection() * glm::inverse(view);
 		cameraData.Projection = cc->GetProjection();
 		cameraData.View = view;
 		cameraData.Position = tc->Translation;
 		cameraData.OutputFrameBuffer = m_FrameBuffer;
 		cameraData.RenderPass = m_RenderPass;
+		cameraData.Width = m_Width;
+		cameraData.Height = m_Height;
 
 		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
 		renderer->SubmitCamera(cameraData);
@@ -60,7 +61,7 @@ namespace UI
 		{
 			m_Width = size.x;
 			m_Height = size.y;
-			//m_FrameBuffer->Resize(m_Width, m_Height);
+			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 		if (!m_HasCamera) return;
 

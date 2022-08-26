@@ -16,9 +16,10 @@ namespace HazardRenderer
 		virtual ~ComputePipeline() = default;
 
 		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
-		virtual void Execute(Ref<RenderCommandBuffer> commandBuffer) = 0;
+		virtual void Execute(Ref<RenderCommandBuffer> commandBuffer, const glm::vec3& size) = 0;
 
 		virtual Ref<Shader> GetShader() = 0;
+		virtual const ComputePipelineCreateInfo& GetSpec() = 0;
 
 		static Ref<ComputePipeline> Create(ComputePipelineCreateInfo* createInfo);
 	};

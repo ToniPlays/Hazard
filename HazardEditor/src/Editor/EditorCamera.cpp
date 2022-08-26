@@ -52,7 +52,6 @@ namespace Editor {
 
 		glm::quat orientation = GetOrientation();
 		m_View = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
-		m_View = glm::inverse(m_View);
 	}
 	
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)

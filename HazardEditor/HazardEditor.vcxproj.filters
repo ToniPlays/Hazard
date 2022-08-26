@@ -269,5 +269,7 @@
     <None Include="res\Shaders\Utils\Common.glsl" />
     <None Include="res\Shaders\Composite\SceneComposite.glsl" />
     <None Include="res\Shaders\Utils\Lighting.glsl" />
+    <None Include="res\Shaders\Compute\EnvironmentIrradiance.glsl" />
+    <None Include="res\Shaders\Uniforms\EnvironmentUniform.glsl" />
   </ItemGroup>
 </Project>

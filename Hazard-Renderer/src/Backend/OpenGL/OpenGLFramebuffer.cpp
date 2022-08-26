@@ -182,6 +182,8 @@ namespace HazardRenderer::OpenGL
 			case ImageFormat::DEPTH24STENCIL8:
 				OpenGLUtils::AttachDepthTexture(m_DepthImage->GetID(), m_Specs.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specs.Width, m_Specs.Height);
 				break;
+			default:
+				assert(false);
 			}
 		}
 		if (m_ColorImages.size() > 1) {

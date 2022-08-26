@@ -28,7 +28,6 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLShader::~OpenGLShader()
 	{
-		std::cout << "Deleted shader " << m_FilePath << std::endl;
 		glDeleteProgram(m_ID);
 	}
 	void OpenGLShader::Reload()

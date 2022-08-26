@@ -27,7 +27,6 @@ layout (binding = 1) uniform sampler2D u_Textures[32];
 
 layout(location = 0) out vec4 color;
 
-
 void main() 
 {
 	int index = int(f_TextureIndex);

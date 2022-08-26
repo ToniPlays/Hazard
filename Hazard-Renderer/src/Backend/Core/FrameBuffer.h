@@ -61,6 +61,7 @@ namespace HazardRenderer
 		virtual size_t GetColorAttachmentCount() = 0;
 
 		virtual Ref<Image2D> GetImage(uint32_t index = 0) const = 0;
+		virtual Ref<Image2D> GetDepthImage() const = 0;
 		virtual FrameBufferSpecification& GetSpecification() = 0;
 
 		static Ref<FrameBuffer> Create(FrameBufferCreateInfo* info);

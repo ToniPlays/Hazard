@@ -11,7 +11,6 @@ namespace HazardRenderer
 
 		virtual glm::mat4 GetProjection() const = 0;
 		virtual glm::mat4 GetView() const = 0;
-		virtual glm::mat4 GetViewProjection() const = 0;
 		virtual glm::vec3 GetPosition() const = 0;
 
 		virtual const float GetNearClipping() const = 0;

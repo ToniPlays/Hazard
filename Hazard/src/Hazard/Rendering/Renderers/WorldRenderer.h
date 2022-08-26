@@ -9,10 +9,11 @@ namespace Hazard
 
 	struct WorldCameraData 
 	{
-		glm::mat4 ViewProjection;
 		glm::mat4 Projection;
 		glm::mat4 View;
 		glm::vec3 Position;
+		uint32_t Width;
+		uint32_t Height;
 
 		Ref<HazardRenderer::RenderPass> RenderPass;
 		Ref<HazardRenderer::FrameBuffer> OutputFrameBuffer;

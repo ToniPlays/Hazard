@@ -32,9 +32,9 @@ layout(location = 0) in vec2 v_TexCoords;
 
 layout(location = 0) out vec4 color;
 
-const float ambientStrength = 0.15;
+const float ambientStrength = 0.2;
 const float gamma = 1.1;
-const float specularStrength = 0.25;
+const float specularStrength = 0.5;
 
 vec3 GammaCorrection(vec4 color) {
 	return pow(color.rgb, vec3(1.0 / gamma));
@@ -42,7 +42,6 @@ vec3 GammaCorrection(vec4 color) {
 
 void main() 
 {
-	
 	vec3 fragPos = texture(gPosition, v_TexCoords).rgb;
 	vec3 Normal = texture(gNormal, v_TexCoords).rgb;
 	vec4 Albedo = texture(gAlbedoSpec, v_TexCoords);

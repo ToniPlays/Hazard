@@ -4,6 +4,8 @@
 
 namespace HazardRenderer 
 {
+	class CubemapTexture;
+
 	struct CubemapTextureCreateInfo
 	{
 		std::string FilePath;
@@ -13,6 +15,7 @@ namespace HazardRenderer
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
+		Ref<CubemapTexture> pCubemap = nullptr;
 	};
 
 
@@ -24,7 +27,7 @@ namespace HazardRenderer
 		
 		virtual ImageFormat GetFormat() const = 0;
 		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GetHegith() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 		virtual glm::uvec2 GetSize() const = 0;
 
 		virtual TextureType GetType() const = 0;

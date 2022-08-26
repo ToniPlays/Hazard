@@ -25,6 +25,7 @@ namespace HazardRenderer::OpenGL
 		size_t GetColorAttachmentCount() override { return m_ColorAttachments.size(); }
 
 		virtual Ref<Image2D> GetImage(uint32_t index = 0) const override { return m_ColorImages[index].As<Image2D>(); };
+		virtual Ref<Image2D> GetDepthImage() const override { return m_DepthImage; }
 		virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 
 		void Invalidate();

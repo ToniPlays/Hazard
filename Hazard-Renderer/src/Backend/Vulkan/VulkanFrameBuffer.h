@@ -30,6 +30,7 @@ namespace HazardRenderer::Vulkan
 		VkFramebuffer GetFrameBuffer() { return m_FrameBuffer; };
 		Ref<VulkanImage2D> GetDepthImage() { return m_DepthAttachment; }
 		Ref<Image2D> GetImage(uint32_t index = 0) const override { return m_AttachmentImages[index].As<Image2D>(); };
+		Ref<Image2D> GetDepthImage() const override { return m_DepthAttachment.As<Image2D>(); };
 
 		const std::vector<VkClearValue>& GetVulkanClearValues() const { return m_ClearValues; }
 

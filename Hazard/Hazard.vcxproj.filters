@@ -1569,6 +1569,7 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\BufferBindings.h" />
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentMap.h" />
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h" />
+    <ClInclude Include="src\Hazard\Rendering\RenderResources.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

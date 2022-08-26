@@ -20,30 +20,6 @@ namespace Hazard
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
 
-		UniformBufferCreateInfo cameraUBO = {};
-		cameraUBO.Name = "Camera";
-		cameraUBO.Binding = 0;
-		cameraUBO.Size = sizeof(CameraData);
-		cameraUBO.Usage = BufferUsage::DynamicDraw;
-
-		m_CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
-
-		UniformBufferCreateInfo lightUBO = {};
-		lightUBO.Name = "Lights";
-		lightUBO.Binding = 1;
-		lightUBO.Size = sizeof(LightingData);
-		lightUBO.Usage = BufferUsage::DynamicDraw;
-
-		m_LightUniformBuffer = UniformBuffer::Create(&lightUBO);
-
-		UniformBufferCreateInfo modelUBO = {};
-		modelUBO.Name = "Model";
-		modelUBO.Binding = 2;
-		modelUBO.Size = sizeof(glm::mat4);
-		modelUBO.Usage = BufferUsage::DynamicDraw;
-
-		m_ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
-
 		uint32_t data = 0xFFFFFFFF;
 
 		Image2DCreateInfo info = {};
@@ -72,27 +48,16 @@ namespace Hazard
 
 		m_DeferredRenderPass = RenderPass::Create(&renderPassInfo);
 
-
-		BufferLayout layout = { {} };
-
-		PipelineSpecification compositeInfo = {};
-		compositeInfo.DebugName = "CompositePipeline";
-		compositeInfo.pTargetRenderPass = m_DeferredRenderPass.Raw();
-		compositeInfo.ShaderPath = "Shaders/Composite/SceneComposite.glsl";
-		compositeInfo.DrawType = DrawType::Fill;
-		compositeInfo.Usage = PipelineUsage::GraphicsBit;
-		compositeInfo.CullMode = CullMode::None;
-		compositeInfo.IsShared = false;
-		compositeInfo.pBufferLayout = &layout;
-
-		m_CompositePipeline = Pipeline::Create(&compositeInfo);
-
 		m_WhiteTexture = Ref<Texture2D>::Create(imageAsset);
 		m_QuadRenderer.Init();
 		m_QuadRenderer.CreateResources();
 
 		m_LineRenderer.Init();
 		m_LineRenderer.CreateResources();
+
+		m_Resources = new RenderResources();
+		m_Resources->Initialize(m_DeferredRenderPass);
+
 	}
 	void RenderEngine::PreRender(Ref<WorldRenderer> renderer)
 	{
@@ -108,10 +73,9 @@ namespace Hazard
 	void RenderEngine::GeometryPass(const Ref<RenderCommandBuffer>& cmdBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
-
-		m_ModelUniformBuffer->Bind(cmdBuffer);
-
 		auto& drawList = GetDrawList();
+		m_Resources->ModelUniformBuffer->Bind(cmdBuffer);
+
 		for (auto& [pipeline, list] : drawList.MeshList) 
 		{
 			pipeline->Bind(cmdBuffer);
@@ -126,7 +90,7 @@ namespace Hazard
 				ModelData data;
 				data.transform = mesh.Transform;
 
-				m_ModelUniformBuffer->SetData(&data, sizeof(ModelData));
+				m_Resources->ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				mesh.VertexBuffer->Bind(cmdBuffer);
 
 				if (mesh.IndexBuffer) 
@@ -142,22 +106,36 @@ namespace Hazard
 				}
 			}
 		}
+		
 	}
-	void RenderEngine::ShadowPass()
+	void RenderEngine::ShadowPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
 	void RenderEngine::CompositePass(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
+		const auto& drawList = GetDrawList();
+
+		//Skybox
+		if (drawList.Environment.size() > 0)
+		{
+			for (auto& [map, data] : drawList.Environment)
+			{
+				map->RadianceMap->Bind(0);
+				m_Resources->SkyboxPipeline->Bind(commandBuffer);
+				m_Resources->SkyboxPipeline->DrawArrays(commandBuffer, 6);
+				break;
+			}
+		}
 
 		for (uint32_t i = 0; i < m_DeferredFrameBuffer->GetColorAttachmentCount(); i++) 
 		{
 			auto& image = m_DeferredFrameBuffer->GetImage(i);
 			image->Bind(i);
 		}
-		m_CompositePipeline->Bind(commandBuffer);
-		m_CompositePipeline->DrawArrays(commandBuffer, 6);
+		m_Resources->CompositePipeline->Bind(commandBuffer);
+		m_Resources->CompositePipeline->DrawArrays(commandBuffer, 6);
 	}
 	void RenderEngine::PrepareLights()
 	{
@@ -172,7 +150,7 @@ namespace Hazard
 			l.Direction = glm::vec4(light.Direction, 1.0);
 			l.Color = { light.Color, light.Intensity };
 		}
-		m_LightUniformBuffer->SetData(&data, sizeof(LightingData));
+		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
 	}
 	void RenderEngine::Update()
 	{
@@ -184,8 +162,8 @@ namespace Hazard
 
 		GraphicsContext* context = m_Window->GetContext();
 		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
-		m_CameraUniformBuffer->Bind(cmdBuffer);
-		m_LightUniformBuffer->Bind(cmdBuffer);
+		m_Resources->CameraUniformBuffer->Bind(cmdBuffer);
+		m_Resources->LightUniformBuffer->Bind(cmdBuffer);
 
 		m_CurrentDrawContext = 0;
 
@@ -193,7 +171,7 @@ namespace Hazard
 		{
 			//Prerender will submit all meshes to rendering for a given world
 			PreRender(renderer.WorldRenderer);
-			ShadowPass();
+			ShadowPass(cmdBuffer);
 			PrepareLights();
 
 			//Bind G buffer attachments
@@ -203,25 +181,28 @@ namespace Hazard
 			{
 				if (!cameraData.IsValid()) continue;
 
+				m_DeferredFrameBuffer->Resize(cameraData.Width, cameraData.Height);
+				const glm::mat4 inverseView = glm::inverse(cameraData.View);
+
 				CameraData cam = {};
-				cam.ViewProjection = cameraData.ViewProjection;
+				cam.ViewProjection = cameraData.Projection * inverseView;
 				cam.Projection = cameraData.Projection;
-				cam.View = cameraData.View;
+				cam.View = inverseView;
+				cam.InverseViewProjection = cameraData.View * glm::inverse(cameraData.Projection);
 				cam.Position = { cameraData.Position, 1.0f };
 
-				m_CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
+				m_Resources->CameraUniformBuffer->SetData(&cam, sizeof(CameraData));
 
 				//Actual rendering
 				context->BeginRenderPass(cmdBuffer, m_DeferredRenderPass);
 				GeometryPass(cmdBuffer);
 				context->EndRenderPass(cmdBuffer);
 
+				m_Resources->CompositePipeline->SetRenderPass(cameraData.RenderPass);
 				context->BeginRenderPass(cmdBuffer, cameraData.RenderPass);
 
-				m_CompositePipeline->SetRenderPass(cameraData.RenderPass);
 				CompositePass(cmdBuffer);
 				context->EndRenderPass(cmdBuffer);
-
 				break;
 			}
 

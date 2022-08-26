@@ -11,11 +11,13 @@ namespace HazardRenderer::OpenGL
 		~OpenGLComputePipeline();
 
 		void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
-		void Execute(Ref<RenderCommandBuffer> commandBuffer) override;
+		void Execute(Ref<RenderCommandBuffer> commandBuffer, const glm::vec3& size) override;
 
 		Ref<Shader> GetShader() override { return m_Shader; }
+		const ComputePipelineCreateInfo& GetSpec() override { return m_Spec; };
 
 	private:
 		Ref<Shader> m_Shader;
+		ComputePipelineCreateInfo m_Spec;
 	};
 }
