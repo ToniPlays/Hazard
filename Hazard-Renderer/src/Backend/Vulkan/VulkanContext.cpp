@@ -46,6 +46,8 @@ namespace HazardRenderer::Vulkan
 		message.Severity = Severity::Debug;
 		message.Description = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
 
+		std::cout << message.Description << std::endl;
+
 		Window::SendDebugMessage(message);
 
 		return VK_FALSE;
@@ -83,7 +85,6 @@ namespace HazardRenderer::Vulkan
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
 		m_Window = window;
-		m_ImagesInFlight = info->ImagesInFlight;
 
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
 			HZR_ASSERT(false, "API version not supported");
@@ -173,6 +174,8 @@ namespace HazardRenderer::Vulkan
 
 		m_VulkanDevice = Ref<VulkanDevice>::Create(m_VulkanPhysicalDevice, enabledFeatures);
 
+		VulkanAllocator::Init();
+
 		VkPipelineCacheCreateInfo cacheInfo = {};
 		cacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
@@ -191,17 +194,66 @@ namespace HazardRenderer::Vulkan
 		window->GetWindowInfo().Width = w;
 		window->GetWindowInfo().Height = w;
 
+		CreateDescriptorPools();
+
+		Renderer::WaitAndRender();
 	}
 	void VulkanContext::BeginFrame()
 	{
-		Renderer::Submit([&]() mutable {
-			m_Swapchain->BeginFrame();
-			});
+		m_Swapchain->BeginFrame();
 	}
 	void VulkanContext::Present()
 	{
-		Renderer::Submit([&]() mutable {
-			m_Swapchain->Present();
+		m_Swapchain->Present();
+	}
+
+	VkDescriptorSet VulkanContext::RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo)
+	{
+		uint32_t bufferIndex = m_Swapchain->GetCurrentBufferIndex();
+		allocInfo.descriptorPool = s_Data->DescriptorPools[bufferIndex];
+		VkDevice device = m_VulkanDevice->GetVulkanDevice();
+
+		VkDescriptorSet set;
+		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &set), "Failed to allocate descriptor set");
+		s_Data->DescriptorPoolAllocationCount[bufferIndex] += allocInfo.descriptorSetCount;
+		return set;
+	}
+	void VulkanContext::CreateDescriptorPools()
+	{
+		s_Data = new VulkanData();
+
+		s_Data->DescriptorPools.resize(GetImagesInFlight());
+		s_Data->DescriptorPoolAllocationCount.resize(GetImagesInFlight());
+
+		VulkanContext* context = this;
+		Renderer::Submit([context]() mutable {
+
+			VkDescriptorPoolSize poolSizes[] = {
+				{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 },
+			};
+
+			VkDescriptorPoolCreateInfo poolInfo = {};
+			poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+			poolInfo.maxSets = 100000;
+			poolInfo.poolSizeCount = (uint32_t)sizeof(poolSizes) / sizeof(*poolSizes);
+			poolInfo.pPoolSizes = poolSizes;
+
+			for (uint32_t i = 0; i < context->GetImagesInFlight(); i++) 
+			{
+				VK_CHECK_RESULT(vkCreateDescriptorPool(context->GetLogicalDevice()->GetVulkanDevice(), &poolInfo, nullptr, &s_Data->DescriptorPools[i]), "Failed to create descriptor pool");
+				s_Data->DescriptorPoolAllocationCount[i] = 0;
+			}
 			});
 	}
 }

@@ -77,6 +77,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)
 	{
 		Image2DCreateInfo sourceImage = {};
+		sourceImage.DebugName = "CubeMap Equirectangular";
 		sourceImage.Data = imageData;
 		sourceImage.Format = ImageFormat::RGBA16F;
 		sourceImage.ClearLocalBuffer = true;

@@ -120,14 +120,15 @@ namespace HazardRenderer {
 	}
 	void WindowsWindow::BeginFrame()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Context->BeginFrame();
 	}
 	void WindowsWindow::Present()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Context->Present();
 
 		if (!m_WindowData.Minimized) {}
-
 		glfwPollEvents();
 	}
 

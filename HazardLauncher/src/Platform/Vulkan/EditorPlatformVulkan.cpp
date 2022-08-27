@@ -13,6 +13,7 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
+	m_Window = &window;
 	//Renderer::Submit([&]() mutable {
 
 	m_Context = (VulkanContext*)window.GetContext();
@@ -45,6 +46,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 
 	VK_CHECK_RESULT(vkCreateDescriptorPool(device->GetVulkanDevice(), &poolInfo, nullptr, &descriptorPool), "Failed to create descriptor pool");
 
+
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);
 
@@ -54,7 +56,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 	init_info.Device = device->GetVulkanDevice();
 	init_info.QueueFamily = physicalDevice->GetQueueFamilyIndices().Graphics;
 	init_info.Queue = device->GetGraphicsQueue();
-	init_info.PipelineCache = nullptr;
+	init_info.PipelineCache = m_Context->GetPipelineCache();;
 	init_info.DescriptorPool = descriptorPool;
 	init_info.Allocator = nullptr;
 	init_info.MinImageCount = 2;
@@ -76,8 +78,6 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = device->CreateSecondaryCommandBuffer("EditorPlatformVulkan secondary CommandBuffer");
 	//});
-
-	HZR_INFO("Platform init");
 }
 
 
@@ -96,10 +96,12 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
-	VulkanContext* context = m_Context;
+	m_Window->BeginFrame();
+	VulkanContext* context = m_Context;	
 	Renderer::Submit([context]() mutable {
 
 		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
+		
 		auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -112,7 +114,7 @@ void EditorPlatformVulkan::EndFrame()
 		uint32_t width = swapchain->GetWidth();
 		uint32_t height = swapchain->GetHeight();
 
-		uint32_t commandBufferIndex = swapchain->GetSwapchainBuffer();
+		uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
 		VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
@@ -175,8 +177,8 @@ void EditorPlatformVulkan::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 		});
-
-	m_Context->GetSwapchain()->Present();
+	
+	m_Window->Present();
 	Renderer::WaitAndRender();
 }
 

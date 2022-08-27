@@ -17,7 +17,7 @@ namespace HazardRenderer
 		FrameBufferAttachment(ImageFormat format) : Format(format) {}
 
 		bool IsDepth() {
-			return Format > ImageFormat::SRGB;
+			return Format >= ImageFormat::DEPTH32F;
 		}
 	};
 

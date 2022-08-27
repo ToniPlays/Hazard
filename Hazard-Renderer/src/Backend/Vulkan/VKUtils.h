@@ -84,6 +84,13 @@ namespace HazardRenderer::Vulkan::VkUtils
 		default:												return "unknown";
 		}
 	}
+
+	VkFormat VulkanImageFormat(const ImageFormat& format);
+	bool IsIntegratedBase(const ImageFormat& format);
+
+	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer, VkImage image, VkAccessFlags srcAccess, VkAccessFlags dstAccess, VkImageLayout oldLayout, VkImageLayout newLayout, VkPipelineStageFlags srcFlags, VkPipelineStageFlags dstFlags, VkImageSubresourceRange subresourceRange);
+
+
 	inline static void SetDebugUtilsObjectName(const VkDevice device, const VkObjectType type, const std::string& name, const void* handle) {
 		VkDebugUtilsObjectNameInfoEXT nameInfo = {};
 		nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;

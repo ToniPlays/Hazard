@@ -9,10 +9,6 @@ namespace UI
 	{
 
 	}
-	void Console::Update()
-	{
-
-	}
 	bool Console::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);

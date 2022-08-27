@@ -20,6 +20,7 @@ namespace Hazard
 	}
 	void LineRenderer::BeginScene()
 	{
+		HZR_PROFILE_FUNCTION();
 		BeginBatch();
 	}
 	void LineRenderer::EndScene()

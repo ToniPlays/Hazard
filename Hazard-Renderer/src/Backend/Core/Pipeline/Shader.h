@@ -11,7 +11,6 @@
 namespace HazardRenderer
 {
 	class UniformBuffer;
-	class Texture2D;
 
 	enum class ShaderType {
 		None = BIT(0),

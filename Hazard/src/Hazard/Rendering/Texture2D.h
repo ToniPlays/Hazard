@@ -5,25 +5,27 @@
 
 namespace Hazard
 {
-	class Image2D : public Asset 
+	class Image2DAsset : public Asset 
 	{
 	public:
-		Image2D(HazardRenderer::Image2DCreateInfo* info) {
-			m_Image = HazardRenderer::Image2D::Create(info);
+		Image2DAsset(HazardRenderer::Image2DCreateInfo* info) 
+		{
+			m_CoreImage = HazardRenderer::Image2D::Create(info);
 		}
-		~Image2D() {}
-		Ref<HazardRenderer::Image2D> GetSourceImage() { return m_Image; }
+		~Image2DAsset() { __debugbreak(); }
+		Ref<HazardRenderer::Image2D> GetCoreImage() { return m_CoreImage; }
 
 	private:
-		Ref<HazardRenderer::Image2D> m_Image;
+		Ref<HazardRenderer::Image2D> m_CoreImage;
 	};
-	
-	class Texture2D : public Asset {
+
+
+	class Texture2DAsset : public Asset {
 	public:
-		Texture2D(Ref<Image2D> sourceImage) : m_SourceImage(sourceImage) {};
-		Ref<HazardRenderer::Image2D> GetSourceImage() { return m_SourceImage; }
+		Texture2DAsset(Ref<Image2DAsset> sourceImage) : m_SourceImage2D(sourceImage) {};
+		Ref<Image2DAsset> GetSourceImageAsset() { return m_SourceImage2D; }
 
 	private:
-		Ref<Image2D> m_SourceImage;
+		Ref<Image2DAsset> m_SourceImage2D;
 	};
 }

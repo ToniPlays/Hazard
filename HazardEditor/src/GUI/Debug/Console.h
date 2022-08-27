@@ -17,7 +17,6 @@ namespace UI {
 		Console();
 		~Console() = default;
 
-		void Update() override;
 		bool OnEvent(Event& e) override;
 		void OnPanelRender();
 

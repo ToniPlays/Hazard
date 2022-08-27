@@ -18,6 +18,7 @@ namespace Hazard
 
 	void HRenderer::SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
 	{
+		HZR_PROFILE_FUNCTION();
 		glm::mat4& tMatrix = transform.GetTransformMat4();
 		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
@@ -26,10 +27,12 @@ namespace Hazard
 	}
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color)
 	{
+		HZR_PROFILE_FUNCTION();
 		SubmitQuad(transform, color, nullptr);	
 	}
-	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D> texture)
+	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture)
 	{
+		HZR_PROFILE_FUNCTION();
 		DrawListStat& stat = s_Engine->GetDrawList().Stats;
 		stat.QuadCount++;
 		s_Engine->GetDrawList().Stats.Vertices++;
@@ -38,6 +41,7 @@ namespace Hazard
 	}
 	void HRenderer::SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
 
@@ -50,14 +54,17 @@ namespace Hazard
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
+		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, nullptr, pipeline, count);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
 	{
+		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, indexBuffer, pipeline, indexBuffer->GetCount());
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
+		HZR_PROFILE_FUNCTION();
 		DrawListStat& stat = s_Engine->GetDrawList().Stats;
 		stat.MeshCount++;
 		stat.Vertices += (vertexBuffer->GetSize() / vertexBuffer->GetLayout().GetStride());
@@ -67,14 +74,16 @@ namespace Hazard
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
 	{
+		HZR_PROFILE_FUNCTION();
 		//s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (skyLight.EnvironmentMap == nullptr) return;
 
 		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
@@ -87,6 +96,7 @@ namespace Hazard
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
+		HZR_PROFILE_FUNCTION();
 		const glm::vec3 color = { directionalLight.LightColor.r, directionalLight.LightColor.g, directionalLight.LightColor.b };
 		DirectionalLightSource source = {};
 		source.Direction = Math::GetForwardDirection(transform.GetOrientation());
@@ -96,11 +106,13 @@ namespace Hazard
 	}
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{
+		HZR_PROFILE_FUNCTION();
 		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
 	}
 
 	void HRenderer::DrawPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
+		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, clipping.x, clipping.y, aspectRatio);
 
@@ -119,6 +131,7 @@ namespace Hazard
 	}
 	void HRenderer::DrawOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
+		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBoundsOrtho(orientation, transform, size, clipping.x, clipping.y, aspectRatio);
 

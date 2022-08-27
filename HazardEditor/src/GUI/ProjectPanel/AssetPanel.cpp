@@ -11,39 +11,39 @@ namespace UI
 	{
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::Undefined] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::Undefined] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/folder.png");
-			m_Icons[AssetType::Folder] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::Folder] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::AudioClip] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::AudioClip] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/world.png");
-			m_Icons[AssetType::World] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::World] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::Image] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::Image] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::Mesh] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::Mesh] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
-			m_Icons[AssetType::Script] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::Script] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
-			m_Icons[AssetType::EnvironmentMap] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::EnvironmentMap] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
 			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
-			m_Icons[AssetType::PhysicsMaterial] = AssetManager::GetAsset<Texture2D>(handle);
+			m_Icons[AssetType::PhysicsMaterial] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 
 
@@ -182,7 +182,7 @@ namespace UI
 		{
 			if (item.GetMetadata().Handle == INVALID_ASSET_HANDLE) continue;
 			item.BeginRender();
-			Ref<Texture2D> itemIcon = GetItemIcon(item.GetMetadata());
+			Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
@@ -330,12 +330,12 @@ namespace UI
 			});
 	}
 
-	Ref<Texture2D> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
+	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
 	{
 		switch (metadata.Type)
 		{
 		case AssetType::Image:
-			return AssetManager::GetAsset<Texture2D>(metadata.Handle);
+			return AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
 		}
 		return m_Icons[metadata.Type];
 	}

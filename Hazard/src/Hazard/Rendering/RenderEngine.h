@@ -40,7 +40,7 @@ namespace Hazard
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 
-		Ref<Texture2D> GetWhiteTexture() { return m_WhiteTexture; };
+		Ref<Texture2DAsset> GetWhiteTexture() { return m_WhiteTexture; };
 
 	private:
 		HazardRenderer::Window* m_Window;
@@ -51,7 +51,7 @@ namespace Hazard
 		Ref<HazardRenderer::FrameBuffer> m_DeferredFrameBuffer;
 		Ref<HazardRenderer::RenderPass> m_DeferredRenderPass;
 
-		Ref<Texture2D> m_WhiteTexture;
+		Ref<Texture2DAsset> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;

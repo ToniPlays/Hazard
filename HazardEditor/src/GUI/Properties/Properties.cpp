@@ -53,7 +53,7 @@ namespace UI
 			}
 			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>()) {
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle assetID) {
-					Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(assetID);
+					Ref<Texture2DAsset> texture = AssetManager::GetAsset<Texture2DAsset>(assetID);
 					auto& c = m_SelectionContext.AddComponent<SpriteRendererComponent>();
 					c.Texture = texture;
 					});

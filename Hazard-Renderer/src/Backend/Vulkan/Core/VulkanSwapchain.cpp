@@ -96,7 +96,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t queueCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueCount, nullptr);
 		HZR_ASSERT(queueCount > 0, "Unable to get Physical Device Queue Family Properties");
-		
+
 		std::vector<VkQueueFamilyProperties> properties(queueCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueCount, properties.data());
 
@@ -107,13 +107,13 @@ namespace HazardRenderer::Vulkan
 		uint32_t graphicQueueIndex = UINT32_MAX;
 		uint32_t presentQueueIndex = UINT32_MAX;
 
-		for (uint32_t i = 0; i < queueCount; i++) 
+		for (uint32_t i = 0; i < queueCount; i++)
 		{
-			if ((properties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0) 
+			if ((properties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0)
 			{
 				graphicQueueIndex = i;
 			}
-			if (supportsPresent[i] == VK_TRUE) 
+			if (supportsPresent[i] == VK_TRUE)
 			{
 				graphicQueueIndex = i;
 				presentQueueIndex = i;
@@ -121,9 +121,9 @@ namespace HazardRenderer::Vulkan
 			}
 		}
 
-		if (presentQueueIndex == UINT32_MAX) 
+		if (presentQueueIndex == UINT32_MAX)
 		{
-			for (uint32_t i = 0; i < queueCount; i++) 
+			for (uint32_t i = 0; i < queueCount; i++)
 			{
 				if (supportsPresent[i] == VK_TRUE) {
 					presentQueueIndex = i;
@@ -174,16 +174,16 @@ namespace HazardRenderer::Vulkan
 		VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
 		//Select present mode
-		if (!enableVSync) 
+		if (!enableVSync)
 		{
-			for (size_t i = 0; i < presentModeCount; i++) 
+			for (size_t i = 0; i < presentModeCount; i++)
 			{
-				if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR) 
+				if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR)
 				{
 					presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
 					break;
 				}
-				if ((presentMode != VK_PRESENT_MODE_MAILBOX_KHR) && (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)) 
+				if ((presentMode != VK_PRESENT_MODE_MAILBOX_KHR) && (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR))
 				{
 					presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
 					break;
@@ -193,7 +193,7 @@ namespace HazardRenderer::Vulkan
 
 		//Get image count for swapchain
 		uint32_t desiredImageCount = capabilities.minImageCount + 1;
-		if ((capabilities.maxImageCount > 0) && (desiredImageCount > capabilities.maxImageCount)) 
+		if ((capabilities.maxImageCount > 0) && (desiredImageCount > capabilities.maxImageCount))
 		{
 			desiredImageCount = capabilities.maxImageCount;
 		}
@@ -213,9 +213,9 @@ namespace HazardRenderer::Vulkan
 			VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR
 		};
 
-		for (auto& flag : compositeAlphaFlags) 
+		for (auto& flag : compositeAlphaFlags)
 		{
-			if (capabilities.supportedCompositeAlpha & flag) 
+			if (capabilities.supportedCompositeAlpha & flag)
 			{
 				compositeAlpha = flag;
 				break;
@@ -259,7 +259,7 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, m_Swapchain, &m_ImageCount, m_VulkanImages.data()), "");
 
-		for (uint32_t i = 0; i < m_ImageCount; i++) 
+		for (uint32_t i = 0; i < m_ImageCount; i++)
 		{
 			VkImageViewCreateInfo colorAttachmentView = {};
 			colorAttachmentView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -300,14 +300,14 @@ namespace HazardRenderer::Vulkan
 		allocInfo.commandBufferCount = 1;
 
 		m_CommandBuffers.resize(m_ImageCount);
-		for (auto& buffer : m_CommandBuffers) 
+		for (auto& buffer : m_CommandBuffers)
 		{
 			VK_CHECK_RESULT(vkCreateCommandPool(device, &poolInfo, nullptr, &buffer.CommandPool), "Failed to create command pool");
 			allocInfo.commandPool = buffer.CommandPool;
 			VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &allocInfo, &buffer.CommandBuffer), "Failed to allocate command buffer");
 		}
 
-		if (!m_Semaphores.RenderComplete || !m_Semaphores.PresentComplete) 
+		if (!m_Semaphores.RenderComplete || !m_Semaphores.PresentComplete)
 		{
 			VkSemaphoreCreateInfo semaphoreInfo = {};
 			semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -319,25 +319,22 @@ namespace HazardRenderer::Vulkan
 			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SEMAPHORE, "Swapchain PresentComplete Semaphore", m_Semaphores.PresentComplete);
 		}
 
-		if (m_WaitFences.size() != m_ImageCount) 
+		if (m_WaitFences.size() != m_ImageCount)
 		{
 			VkFenceCreateInfo fenceInfo = {};
 			fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 			fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 			m_WaitFences.resize(m_ImageCount);
-			for (auto& fence : m_WaitFences) 
+			for (auto& fence : m_WaitFences)
 			{
 				VK_CHECK_RESULT(vkCreateFence(device, &fenceInfo, nullptr, &fence), "Failed to create VkFence");
 				VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FENCE, "Swapchain Fence", fence);
 			}
 		}
 
-		VkPipelineStageFlags pipelineFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-
 		m_SubmitInfo = {};
 		m_SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		m_SubmitInfo.pWaitDstStageMask = &pipelineFlags;
 		m_SubmitInfo.waitSemaphoreCount = 1;
 		m_SubmitInfo.pWaitSemaphores = &m_Semaphores.PresentComplete;
 		m_SubmitInfo.signalSemaphoreCount = 1;
@@ -404,7 +401,7 @@ namespace HazardRenderer::Vulkan
 		frameBufferInfo.layers = 1;
 
 		m_FrameBuffers.resize(m_ImageCount);
-		for (uint32_t i = 0; i < m_ImageCount; i++) 
+		for (uint32_t i = 0; i < m_ImageCount; i++)
 		{
 			frameBufferInfo.pAttachments = &m_Images[i].ImageView;
 
@@ -412,6 +409,7 @@ namespace HazardRenderer::Vulkan
 			VkUtils::SetDebugUtilsObjectName(m_Device->GetVulkanDevice(), VK_OBJECT_TYPE_FRAMEBUFFER, "Swapchain Framebuffer", m_FrameBuffers[i]);
 		}
 
+		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("SwapchainCommandBuffer");
 	}
 	void VulkanSwapchain::Destroy()
 	{
@@ -445,49 +443,71 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)
 	{
-
+		vkDeviceWaitIdle(m_Device->GetVulkanDevice());
+		Create(&width, &height, m_VSync);
+		vkDeviceWaitIdle(m_Device->GetVulkanDevice());
 	}
 	void VulkanSwapchain::BeginFrame()
 	{
-		m_CurrentImageIndex = AcquireSwapchainImage();
-		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
+		Ref<VulkanSwapchain> instance = this;
+		Renderer::Submit([instance]() mutable {
+			instance->m_CurrentImageIndex = instance->AcquireSwapchainImage();
+			VK_CHECK_RESULT(vkResetCommandPool(instance->m_Device->GetVulkanDevice(), instance->m_CommandBuffers[instance->m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
+			});
+		m_RenderCommandBuffer->Begin();
 	}
 	void VulkanSwapchain::Present()
 	{
-		const uint64_t DEFAULT_TIMEOUT = 100000000;
+		m_RenderCommandBuffer->End();
 
-		auto vkDevice = m_Device->GetVulkanDevice();
+		Ref<VulkanSwapchain> instance = this;
+		Renderer::Submit([instance]() mutable {
 
-		m_SubmitInfo.commandBufferCount = 1;
-		m_SubmitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentBufferIndex].CommandBuffer;
+			const uint64_t DEFAULT_TIMEOUT = 100000000000;
 
-		VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
-		VK_CHECK_RESULT(vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &m_SubmitInfo, m_WaitFences[m_CurrentBufferIndex]), "Failed to submit");
+			auto vkDevice = instance->m_Device->GetVulkanDevice();
 
-		VkResult result;
-		{
-			VkPresentInfoKHR presentInfo = {};
-			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-			presentInfo.swapchainCount = 1;
-			presentInfo.pSwapchains = &m_Swapchain;
-			presentInfo.pImageIndices = &m_CurrentImageIndex;
-			presentInfo.waitSemaphoreCount = 1;
-			presentInfo.pWaitSemaphores = &m_Semaphores.RenderComplete;
+			VkPipelineStageFlags pipelineFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			
+			VkSubmitInfo submitInfo = {};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.pWaitDstStageMask = &pipelineFlags;
+			submitInfo.waitSemaphoreCount = 1;
+			submitInfo.pWaitSemaphores = &instance->m_Semaphores.PresentComplete;
+			submitInfo.signalSemaphoreCount = 1;
+			submitInfo.pSignalSemaphores = &instance->m_Semaphores.RenderComplete;
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &instance->m_CommandBuffers[instance->m_CurrentBufferIndex].CommandBuffer;
 
-			result = fpQueuePresentKHR(m_Device->GetGraphicsQueue(), &presentInfo);
-		}
+			VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &instance->m_WaitFences[instance->m_CurrentBufferIndex]), "Failed to reset fence");
+			VK_CHECK_RESULT(vkQueueSubmit(instance->m_Device->GetGraphicsQueue(), 1, &submitInfo, instance->m_WaitFences[instance->m_CurrentBufferIndex]), "Failed to submit");
 
-		if (result != VK_SUCCESS)
-		{
-			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
-				Resize(m_Width, m_Height);
-		}
-		//Wait for fence
-		{
-			const auto& imageCount = VulkanContext::GetImagesInFlight();
-			m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) & imageCount;
-			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
-		}
+			VkResult result;
+			{
+				VkPresentInfoKHR presentInfo = {};
+				presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+				presentInfo.swapchainCount = 1;
+				presentInfo.pSwapchains = &instance->m_Swapchain;
+				presentInfo.pImageIndices = &instance->m_CurrentImageIndex;
+				presentInfo.waitSemaphoreCount = 1;
+				presentInfo.pWaitSemaphores = &instance->m_Semaphores.RenderComplete;
+
+				result = fpQueuePresentKHR(instance->m_Device->GetGraphicsQueue(), &presentInfo);
+			}
+
+			if (result != VK_SUCCESS)
+			{
+				if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+					instance->Resize(instance->m_Width, instance->m_Height);
+			}
+			//Wait for fence
+			{
+				const auto& imageCount = VulkanContext::GetImagesInFlight();
+				instance->m_CurrentBufferIndex = (instance->m_CurrentBufferIndex + 1) % imageCount;
+
+				VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &instance->m_WaitFences[instance->m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
+			}
+			});
 	}
 	void VulkanSwapchain::FindImageFormatAndColorSpace()
 	{
@@ -500,17 +520,17 @@ namespace HazardRenderer::Vulkan
 		std::vector<VkSurfaceFormatKHR> surfaceFormats(formatCount);
 		VK_CHECK_RESULT(fpGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &formatCount, surfaceFormats.data()), "Failed to get formats");
 
-		if ((formatCount == 1) && (surfaceFormats[0].format == VK_FORMAT_UNDEFINED)) 
+		if ((formatCount == 1) && (surfaceFormats[0].format == VK_FORMAT_UNDEFINED))
 		{
 			m_ColorFormat = VK_FORMAT_B8G8R8A8_UNORM;
 			m_ColorSpace = surfaceFormats[0].colorSpace;
 		}
-		else 
+		else
 		{
 			bool found_BGRA8_UNORM = false;
-			for (auto&& surfaceFormat : surfaceFormats) 
+			for (auto&& surfaceFormat : surfaceFormats)
 			{
-				if (surfaceFormat.format == VK_FORMAT_B8G8R8A8_UNORM) 
+				if (surfaceFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
 				{
 					m_ColorFormat = surfaceFormat.format;
 					m_ColorSpace = surfaceFormat.colorSpace;
@@ -518,7 +538,7 @@ namespace HazardRenderer::Vulkan
 					break;
 				}
 			}
-			if (!found_BGRA8_UNORM) 
+			if (!found_BGRA8_UNORM)
 			{
 				m_ColorFormat = surfaceFormats[0].format;
 				m_ColorSpace = surfaceFormats[0].colorSpace;

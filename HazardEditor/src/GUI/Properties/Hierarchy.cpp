@@ -16,12 +16,14 @@ namespace UI
 	}
 	void Hierarchy::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 
 		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
 		renderer->SetTargetWorld(world);
 
 		renderer->SubmitExtra([=]() mutable {
+			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
 			auto& view = world->GetEntitiesWith<CameraComponent>();
 			for (auto entity : view) {
 				Entity e = { entity, world.Raw() };

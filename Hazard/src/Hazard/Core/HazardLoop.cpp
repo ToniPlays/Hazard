@@ -69,7 +69,6 @@ namespace Hazard {
 		Time::s_Time = time;
 		m_LastTime = time;
 
-		m_Application->UpdateData();
 		//Update
 		m_Application->Update();
 		m_ModuleHandler->Update();

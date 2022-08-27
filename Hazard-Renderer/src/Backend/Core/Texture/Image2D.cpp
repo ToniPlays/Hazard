@@ -12,10 +12,10 @@ namespace HazardRenderer
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return new OpenGL::OpenGLImage2D(info);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLImage2D>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: return new Vulkan::VulkanImage2D(info);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanImage2D>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return nullptr;

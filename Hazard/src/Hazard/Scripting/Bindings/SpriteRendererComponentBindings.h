@@ -27,6 +27,6 @@ namespace Hazard
 	static void SpriteRendererComponent_SetSprite_Native(uint64_t id, uint64_t handle)
 	{
 		auto& src = GET_ENTITY(id).GetComponent<SpriteRendererComponent>();
-		src.Texture = AssetManager::GetAsset<Texture2D>(handle);
+		src.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 }

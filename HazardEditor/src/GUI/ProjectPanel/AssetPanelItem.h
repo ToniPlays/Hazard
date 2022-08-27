@@ -19,7 +19,7 @@ namespace UI
 		AssetPanelItem(Hazard::AssetHandle handle) : m_Handle(handle) { }
 
 		void BeginRender();
-		void OnRender(Ref<Hazard::Texture2D> thumbnailIcon, const float& thumbnailSize);
+		void OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, const float& thumbnailSize);
 		void EndRender();
 
 		const Hazard::AssetHandle& GetHandle() { return m_Handle; }

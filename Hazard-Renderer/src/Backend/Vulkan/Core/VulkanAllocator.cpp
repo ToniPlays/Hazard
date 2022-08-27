@@ -7,7 +7,8 @@
 
 namespace HazardRenderer::Vulkan {
 
-	struct AllocatorData {
+	struct AllocatorData 
+	{
 		VmaAllocator Allocator;
 		size_t TotalAllocated;
 	};
@@ -32,11 +33,11 @@ namespace HazardRenderer::Vulkan {
 	}
 	VmaAllocation VulkanAllocator::AllocateImage(VkImageCreateInfo imageCreateInfo, VmaMemoryUsage usage, VkImage& outImage)
 	{
-		VmaAllocationCreateInfo createInfo = {};
-		createInfo.usage = usage;
+		VmaAllocationCreateInfo allocCreateInfo = {};
+		allocCreateInfo.usage = usage;
 
 		VmaAllocation alloc;
-		VK_CHECK_RESULT(vmaCreateImage(s_Data->Allocator, &imageCreateInfo, &createInfo, &outImage, &alloc, nullptr), "");
+		vmaCreateImage(s_Data->Allocator, &imageCreateInfo, &allocCreateInfo, &outImage, &alloc, nullptr);
 
 		VmaAllocationInfo info = {};
 		vmaGetAllocationInfo(s_Data->Allocator, alloc, &info);
@@ -77,16 +78,16 @@ namespace HazardRenderer::Vulkan {
 	{
 		s_Data = new AllocatorData();
 
-		/*VulkanDevice& device = VulkanContext::GetPhysicalDevice();
+		Ref<VulkanDevice> device = VulkanContext::GetLogicalDevice();
 
 		VmaAllocatorCreateInfo createInfo = {};
 		createInfo.vulkanApiVersion = VK_API_VERSION_1_2;
-		createInfo.physicalDevice = device.GetVulkanPhysicalDevice();
-		createInfo.device = device.GetVulkanDevice();
+		createInfo.physicalDevice = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetVulkanPhysicalDevice();
+		createInfo.device = device->GetVulkanDevice();
 		createInfo.instance = VulkanContext::GetVulkanInstance();
 
-		VK_CHECK_RESULT(vmaCreateAllocator(&createInfo, &s_Data->Allocator));
-		*/
+		VK_CHECK_RESULT(vmaCreateAllocator(&createInfo, &s_Data->Allocator), "Failed to init VulkanAllocator");
+		
 	}
 	void VulkanAllocator::Shutdown()
 	{

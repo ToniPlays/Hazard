@@ -25,16 +25,18 @@ namespace HazardRenderer::OpenGL
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 		
 		size_t GetID() const { return m_ID; }
+		const std::string& GetDebugName() const { return m_DebugName; }
 		
 	private:
 		void SetImageData(const Buffer& buffer);
 
 	private:
-		uint32_t m_ID;
-		uint32_t m_Width;
-		uint32_t m_Height;
-		uint32_t m_Samples;
-		ImageFormat m_Format;
+		std::string m_DebugName;
+		uint32_t m_ID = 0;
+		uint32_t m_Width = 0;
+		uint32_t m_Height = 0;
+		uint32_t m_Samples = 0;
+		ImageFormat m_Format = ImageFormat::None;
         Buffer m_LocalBuffer;
 	};
 }

@@ -22,7 +22,7 @@ namespace UI
 			m_Flags |= AssetPanelItemFlags_Renaming;
 		}
 	}
-	void AssetPanelItem::OnRender(Ref<Texture2D> thumbnailIcon, const float& thumbnailSize)
+	void AssetPanelItem::OnRender(Ref<Texture2DAsset> thumbnailIcon, const float& thumbnailSize)
 	{
 		const float edgeOffset = 4.0f;
 
@@ -66,7 +66,7 @@ namespace UI
 
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
-		ImUI::Image(thumbnailIcon->GetSourceImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->GetCoreImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		ImUI::ShiftY(edgeOffset);
 		ImUI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);

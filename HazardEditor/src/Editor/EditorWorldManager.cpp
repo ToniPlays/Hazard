@@ -14,6 +14,7 @@ namespace Editor
 	}
 	void EditorWorldManager::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_WorldRenderer->IsValid()) return;
 		m_WorldRenderer->Submit();
 	}

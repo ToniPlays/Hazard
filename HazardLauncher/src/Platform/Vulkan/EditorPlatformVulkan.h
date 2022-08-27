@@ -20,6 +20,7 @@ public:
 	void Close() override;
 
 private:
+	HazardRenderer::Window* m_Window;
 	VulkanContext* m_Context = nullptr;
 };
 #endif

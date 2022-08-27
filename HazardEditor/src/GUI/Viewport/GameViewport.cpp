@@ -28,6 +28,7 @@ namespace UI
 	}
 	void GameViewport::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		return;
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		auto& [cc, tc] = world->GetWorldCamera();
@@ -55,17 +56,18 @@ namespace UI
 	}
 	void GameViewport::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		if (size.x != m_Width || size.y != m_Height)
 		{
 			m_Width = size.x;
 			m_Height = size.y;
-			//m_FrameBuffer->Resize(m_Width, m_Height);
+			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 		if (!m_HasCamera) return;
 
-		//ImUI::Image(m_FrameBuffer->GetImage(), size);
+		ImUI::Image(m_FrameBuffer->GetImage(), size);
 	}
 	bool GameViewport::OnEvent(Event& e)
 	{

@@ -12,6 +12,7 @@ namespace HazardRenderer::Vulkan {
 		virtual const RenderPassSpecification GetSpecs() const { return m_Spec; };
 
 		static Ref<RenderPass> Create(RenderPassCreateInfo* info);
+
 	private:
 		RenderPassSpecification m_Spec;
 	};

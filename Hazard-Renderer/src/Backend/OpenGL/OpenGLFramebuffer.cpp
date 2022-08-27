@@ -8,6 +8,8 @@
 #include "OpenGLContext.h"
 #include "Backend/Core/Window.h"
 
+#include "spdlog/fmt/fmt.h"
+
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL
@@ -47,6 +49,7 @@ namespace HazardRenderer::OpenGL
 	{
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLFrameBuffer::~OpenGLFrameBuffer_RT()");
 			if (instance->GetSpecification().SwapChainTarget) return;
 
 			glDeleteFramebuffers(1, &instance->m_ID);
@@ -62,6 +65,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Bind() 
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->Bind_RT();
@@ -69,6 +73,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Bind_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
 		if (m_Specs.SwapChainTarget)
@@ -87,12 +92,14 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Unbind()
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::Submit([]() mutable {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			});
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_Specs.Width == width && m_Specs.Height == height && !force || (width < 0 || height < 0))
 			return;
 
@@ -103,6 +110,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Invalidate()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->RT_Invalidate();
@@ -110,22 +118,28 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::RT_Invalidate()
 	{
+		HZR_PROFILE_FUNCTION();
+		std::cout << "Invalidate OpenGLFramebuffer: " << m_Specs.DebugName << std::endl;
 		if (m_Specs.SwapChainTarget) return;
 
 		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
 
-		if (m_ID) {
+		if (m_ID) 
+		{
 			glDeleteFramebuffers(1, &m_ID);
 
-			if (m_ColorImages.size() > 0) {
-				if (m_ColorImages.size() > 0) {
+			if (m_ColorImages.size() > 0) 
+			{
+				if (m_ColorImages.size() > 0) 
+				{
 					for (auto& image : m_ColorImages)
 						image->Release();
 				}
 			}
 			m_ColorImages.clear();
 
-			if (m_DepthImage) {
+			if (m_DepthImage) 
+			{
 				m_DepthImage->Release();
 			}
 		}
@@ -135,7 +149,8 @@ namespace HazardRenderer::OpenGL
 
 		bool multisampled = m_Specs.Samples > 1;
 
-		if (m_ColorAttachments.size() > 0) {
+		if (m_ColorAttachments.size() > 0) 
+		{
 			m_ColorImages.resize(m_ColorAttachments.size());
 
 			Image2DCreateInfo imageInfo = {};
@@ -144,7 +159,9 @@ namespace HazardRenderer::OpenGL
 			imageInfo.Height = m_Specs.Height;
 			imageInfo.Mips = m_Specs.Samples;
 
-			for (uint32_t i = 0; i < m_ColorImages.size(); i++) {
+			for (uint32_t i = 0; i < m_ColorImages.size(); i++) 
+			{
+				imageInfo.DebugName = fmt::format("FBO ({0}) color {1}", m_Specs.DebugName, i);
 				imageInfo.Format = m_ColorAttachments[i].Format;
 				m_ColorImages[i] = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
 			}
@@ -165,9 +182,11 @@ namespace HazardRenderer::OpenGL
 				}
 			}
 		}
-		if (m_DepthAttachment.Format != ImageFormat::None) {
+		if (m_DepthAttachment.Format != ImageFormat::None) 
+		{
 
 			Image2DCreateInfo imageInfo = {};
+			imageInfo.DebugName = fmt::format("FBO ({}) depth", m_Specs.DebugName);
 			imageInfo.Usage = ImageUsage::Attachment;
 			imageInfo.Width = m_Specs.Width;
 			imageInfo.Height = m_Specs.Height;

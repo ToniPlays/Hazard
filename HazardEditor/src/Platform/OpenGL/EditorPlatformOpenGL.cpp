@@ -24,6 +24,7 @@ EditorPlatformOpenGL::~EditorPlatformOpenGL()
 
 void EditorPlatformOpenGL::BeginFrame()
 {
+	HZR_PROFILE_FUNCTION();
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -31,6 +32,7 @@ void EditorPlatformOpenGL::BeginFrame()
 
 void EditorPlatformOpenGL::EndFrame()
 {
+	HZR_PROFILE_FUNCTION();
 	m_Window->BeginFrame();
 
 	using namespace HazardRenderer::OpenGL;

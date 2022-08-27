@@ -8,6 +8,16 @@
 
 namespace HazardRenderer::Vulkan
 {
+	struct PipelineStatistic 
+	{
+		uint64_t InputAssemblyVertices = 0;
+		uint64_t InputAssemblyPrimitives = 0;
+		uint64_t VertexShaderInvocations = 0;
+		uint64_t ClippingInvocations = 0;
+		uint64_t ClippingPrimitives = 0;
+		uint64_t FragmentShaderInvocations = 0;
+		uint64_t ComputeShaderInvocations = 0;
+	};
 
 	class VulkanRenderCommandBuffer : public RenderCommandBuffer {
 	public:
@@ -27,13 +37,23 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		void SetState(State state) { m_State = state; }
+
 	private:
 		std::string m_DebugName;
 		VkCommandPool m_CommandPool = nullptr;
+		VkCommandBuffer m_ActiveCommandBuffer = VK_NULL_HANDLE;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 		std::vector<VkFence> m_WaitFences;
+		std::vector<VkQueryPool> m_TimestampQueryPools;
+		std::vector<VkQueryPool> m_PipelineQueryPools;
+		std::vector<std::vector<uint64_t>> m_TimestampQueryResults;
+		std::vector<std::vector<float>> m_GPUExecutionTimes;
+		std::vector<std::vector<PipelineStatistic>> m_PipelineStatisticQueryResults;
 
 		uint32_t m_FrameIndex = 0;
+		uint32_t m_TimestampQueryCount = 0;
+		uint32_t m_PipelineQueryCount = 0;
+		uint32_t m_TimestampNextAvailQuery = 2;
 
 		bool m_OwnedBySwapchain = false;
 

@@ -49,7 +49,7 @@ void GUIManager::Init()
 
 	m_PanelManager.AddRenderable<UI::Properties>();
 	m_PanelManager.AddRenderable<UI::Hierarchy>();
-	m_PanelManager.AddRenderable<UI::GameViewport>();	
+	m_PanelManager.AddRenderable<UI::GameViewport>();
 	m_PanelManager.AddRenderable<UI::Viewport>();
 	m_PanelManager.AddRenderable<UI::RenderCommandListPanel>();
 	m_PanelManager.AddRenderable<UI::RendererDebugPanel>();
@@ -60,13 +60,15 @@ void GUIManager::Init()
 
 void GUIManager::Update()
 {
+	HZR_PROFILE_FUNCTION();
 	m_PanelManager.Update();
-	
 }
 void GUIManager::Render()
 {
-	m_Platform->BeginFrame();
 	HZR_PROFILE_FUNCTION();
+	m_Platform->BeginFrame();
+
+	HZR_PROFILE_FUNCTION("GUIManager::Render() RT");
 	m_MainMenuBar.Render();
 	{
 		using namespace ImUI;
@@ -77,7 +79,6 @@ void GUIManager::Render()
 	m_PanelManager.Render();
 
 	ImGui::Render();
-
 	m_Platform->EndFrame();
 }
 bool GUIManager::OnEvent(Event& e)
@@ -111,5 +112,5 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	default:
 		HZR_ASSERT(false, "No suitable rendering backend included");
 		break;
-}
+	}
 }

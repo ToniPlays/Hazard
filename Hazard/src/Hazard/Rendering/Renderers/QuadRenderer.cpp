@@ -26,6 +26,7 @@ namespace Hazard
 	}
 	void QuadRenderer::BeginScene()
 	{
+		HZR_PROFILE_FUNCTION();
 		BeginBatch();
 	}
 	void QuadRenderer::EndScene()
@@ -52,14 +53,14 @@ namespace Hazard
 			Ref<Shader> shader = m_Pipeline->GetShader();
 			shader->Bind_RT(swapchain->GetSwapchainBuffer());
 			for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
-				m_Data.TextureSlots[i]->GetSourceImage()->Bind(i);
-				shader->Set("u_Textures", i, m_Data.TextureSlots[i]->GetSourceImage());
+				m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage()->Bind(i);
+				shader->Set("u_Textures", i, m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage());
 			}
 			});
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
-	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2D>& texture)
+	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2DAsset>& texture)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -94,6 +95,7 @@ namespace Hazard
 
 	void QuadRenderer::CreateResources()
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -149,7 +151,7 @@ namespace Hazard
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
 	}
-	float QuadRenderer::GetTextureIndex(const Ref<Texture2D>& texture)
+	float QuadRenderer::GetTextureIndex(const Ref<Texture2DAsset>& texture)
 	{
 		if (!texture) return 0.0f;
 

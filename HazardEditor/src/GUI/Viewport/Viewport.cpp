@@ -31,6 +31,7 @@ namespace UI
 	}
 	void Viewport::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		WorldCameraData cameraData = {};
 		cameraData.Projection = m_EditorCamera.GetProjection();
 		cameraData.View = m_EditorCamera.GetView();
@@ -43,6 +44,7 @@ namespace UI
 	}
 	void Viewport::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
@@ -55,19 +57,18 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			//m_FrameBuffer->Resize(m_Width, m_Height);
+			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 
-		if (m_CurrentImage == 0) {}
-			//ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (m_CurrentImage == 0)
+			ImUI::Image(m_FrameBuffer->GetImage(), size);
 		else
 		{
-			/*
 			RenderEngine& engine = Application::GetModule<RenderEngine>();
 			if (m_CurrentImage < 4)
 				ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
 			else ImUI::Image(engine.GetDeferredFramebuffer()->GetDepthImage(), size);
-			*/
+			
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
@@ -191,6 +192,7 @@ namespace UI
 
 	void Viewport::DrawStatsWindow()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);

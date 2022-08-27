@@ -14,6 +14,7 @@ namespace Hazard
 	}
 	void WorldRenderer::Submit()
 	{
+		HZR_PROFILE_FUNCTION();
 		HRenderer::SubmitWorldRenderer(this);
 	}
 	void WorldRenderer::Render()

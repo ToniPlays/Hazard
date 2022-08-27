@@ -116,7 +116,7 @@ namespace Hazard
 			if (comp["Sprite"]) {
 				AssetHandle handle = INVALID_ASSET_HANDLE;
 				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
-				component.Texture = AssetManager::GetAsset<Texture2D>(handle);
+				component.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
 			}
 		};
 		template<>

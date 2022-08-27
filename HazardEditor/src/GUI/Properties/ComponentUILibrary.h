@@ -83,7 +83,7 @@ namespace UI
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 				ImUI::TextureSlot("Sprite", c.Texture, [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-						c.Texture = AssetManager::GetAsset<Texture2D>(handle);
+						c.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
 						});
 					});
 				ImGui::PopStyleVar();

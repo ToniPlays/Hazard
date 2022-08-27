@@ -42,7 +42,7 @@ namespace UI {
 		void DrawContextMenu();
 		void DrawCurrentFolderPath();
 		void DrawFolderTreeItem(const FolderStructureData& folder);
-		Ref<Hazard::Texture2D> GetItemIcon(const Hazard::AssetMetadata& metadata);
+		Ref<Hazard::Texture2DAsset> GetItemIcon(const Hazard::AssetMetadata& metadata);
 
 		std::vector<FolderStructureData> GenerateFolderStructure();
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
@@ -55,6 +55,6 @@ namespace UI {
 		std::vector<FolderStructureData> m_FolderData;
 
 		std::vector<AssetPanelItem> m_CurrentItems;
-		std::unordered_map<AssetType, Ref<Hazard::Texture2D>> m_Icons;
+		std::unordered_map<AssetType, Ref<Hazard::Texture2DAsset>> m_Icons;
 	};
 }

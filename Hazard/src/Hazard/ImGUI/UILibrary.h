@@ -7,37 +7,46 @@
 #include "ImGuiUtils.h"
 #include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
-
 #include "Hazard/Rendering/Texture2D.h"
-#include "Backend/OpenGL/Textures/OpenGLImage2D.h"
+
+#include "Backend/OpenGL/OpenGLCore.h"
+#include "Backend/Vulkan/VulkanCore.h"
+
+#include "../ImGui_Backend/imgui_impl_vulkan.h"
 
 namespace Hazard::ImUI
 {
 	constexpr int vectorItemSpacingX = 4;
 
 #pragma region Utility
-	inline static void ShiftX(float amount) {
+	inline static void ShiftX(float amount) 
+	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
 	}
-	inline static void ShiftY(float amount) {
+	inline static void ShiftY(float amount)
+	{
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + amount);
 	}
-	inline static void Shift(float x, float y) {
+	inline static void Shift(float x, float y) 
+	{
 		ImGui::SetCursorPos({ ImGui::GetCursorPosX() + x, ImGui::GetCursorPosY() + y });
 	}
 
-	static ImRect RectOffset(const ImVec2& topLeft, const ImVec2& bottomRight, float xOffset, float yOffset) {
+	static ImRect RectOffset(const ImVec2& topLeft, const ImVec2& bottomRight, float xOffset, float yOffset) 
+	{
 		return ImRect({ topLeft.x + xOffset, topLeft.y + yOffset }, { bottomRight.x + xOffset, bottomRight.y + yOffset });
 	}
 
 	template<typename T>
-	inline static void Group(void* ptr_id, T callback) {
+	inline static void Group(void* ptr_id, T callback) 
+	{
 		ImGui::PushID(ptr_id);
 		callback();
 		ImGui::PopID();
 	}
 	template<typename T>
-	inline static void Group(const char* id, T callback) {
+	inline static void Group(const char* id, T callback) 
+	{
 		ImGui::PushID(id);
 		callback();
 		ImGui::PopID();
@@ -51,7 +60,8 @@ namespace Hazard::ImUI
 		return g.NavJustMovedToId == g.LastItemData.ID;
 	}
 
-	inline static void Underline(bool fullWidth = false, float offsetX = 0.0f, float offsetY = -1.0f) {
+	inline static void Underline(bool fullWidth = false, float offsetX = 0.0f, float offsetY = -1.0f) 
+	{
 		if (fullWidth)
 		{
 			if (ImGui::GetCurrentWindow()->DC.CurrentColumns != nullptr)
@@ -89,35 +99,41 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Input
 
-	static bool TextField(std::string& text, const char* id = "##InputField") {
+	static bool TextField(std::string& text, const char* id = "##InputField") 
+	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
-		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
+		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) 
+		{
 			text = buffer;
 			return true;
 		}
 		return false;
 	}
 
-	static bool TextArea(std::string& text, int minLines, int maxLines) {
+	static bool TextArea(std::string& text, int minLines, int maxLines) 
+	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
-		if (ImGui::InputTextMultiline("##InputField", buffer, sizeof(buffer), { 0, ImGui::GetTextLineHeight() * minLines })) {
+		if (ImGui::InputTextMultiline("##InputField", buffer, sizeof(buffer), { 0, ImGui::GetTextLineHeight() * minLines })) 
+		{
 			text = buffer;
 			return true;
 		}
 		return false;
 	}
 
-	static bool TextFieldWithHint(std::string& text, const char* hint) {
+	static bool TextFieldWithHint(std::string& text, const char* hint) 
+	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 
-		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer))) {
+		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer)))
+		{
 			text = buffer;
 			ImGui::PopStyleVar();
 			return true;
@@ -149,28 +165,35 @@ namespace Hazard::ImUI
 		return modified;
 	}
 
-	static bool InputInt(int& value, int clearValue, int min, int max) {
+	static bool InputInt(int& value, int clearValue, int min, int max) 
+	{
 		return ImGui::DragInt("##int", &value, 1, min, max);
 	}
-	static bool InputUInt(uint64_t& value, uint64_t clearValue = 0.0f, uint64_t min = 0, uint64_t max = 0) {
+	static bool InputUInt(uint64_t& value, uint64_t clearValue = 0.0f, uint64_t min = 0, uint64_t max = 0) 
+	{
 		return ImGui::DragInt("##uint", (int*)&value, 0.5f, min, max);
 	}
 
-	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) {
+	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f) 
+	{
 		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
 	}
-	static bool InputFloat(float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0) {
+	static bool InputFloat(float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0) 
+	{
 		return ImGui::DragFloat("##float", &value, speed, min, max);
 	}
-	static bool InputDouble(double& value, double clearValue = 0.0) {
+	static bool InputDouble(double& value, double clearValue = 0.0) 
+	{
 		return ImGui::InputDouble("##double", &value, 0.5);
 	}
 
-	static bool InputInt(int& value, int clearValue = 0.0) {
+	static bool InputInt(int& value, int clearValue = 0.0) 
+	{
 		return ImGui::InputInt("##int", &value, 1);
 	}
 
-	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) {
+	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f) 
+	{
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
@@ -194,7 +217,8 @@ namespace Hazard::ImUI
 		}
 		return modified;
 	}
-	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f) {
+	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f)
+	{
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
@@ -208,19 +232,16 @@ namespace Hazard::ImUI
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
+		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) 
 			modified = true;
-		}
 		ImGui::SameLine();
 		//Y axis
-		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) {
+		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) 
 			modified = true;
-		}
 		ImGui::SameLine();
 		//Z axis
-		if (InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ)) {
+		if (InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ)) 
 			modified = true;
-		}
 
 		return modified;
 	}
@@ -285,7 +306,8 @@ namespace Hazard::ImUI
 
 		return modified;
 	}
-	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected) {
+	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected)
+	{
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
@@ -329,28 +351,36 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Images
 
-	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D>& image) {
-		static std::unordered_map<HazardRenderer::Image2D*, ImTextureID> textureIDS;
-
+	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image)
+	{
 		using namespace HazardRenderer;
-
-		if (textureIDS.find(image.Raw()) != textureIDS.end()) {
-			return textureIDS[image.Raw()];
-		}
 
 		switch (GraphicsContext::GetRenderAPI()) {
 		case RenderAPI::OpenGL:
+		{
 			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
-			textureIDS[image.Raw()] = id;
 			return id;
 		}
+		case RenderAPI::Vulkan:
+		{
+			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Image2DAsset>()->GetCoreImage().As<Vulkan::VulkanImage2D>();
+			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
+			if (!imageInfo.imageView) return nullptr;
 
+			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
+			return id;
+		}
+		}
+
+		HZR_CORE_ASSERT(false, "Undefined ImageID");
 		return 0;
 	}
-	static void Image(Ref<HazardRenderer::Image2D>& image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 }) {
+	static void Image(Ref<HazardRenderer::Image2D> image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
+	{
 		ImGui::Image(GetImageID(image), size, t0, t1);
 	}
-	static bool TextureSlot(Ref<Texture2D> image) {
+	static bool TextureSlot(Ref<Hazard::Image2DAsset> image)
+	{
 		std::string text = "Source image here";
 
 		constexpr float size = 32.0f;
@@ -363,8 +393,9 @@ namespace Hazard::ImUI
 		ImGui::SameLine(0, 5);
 
 		if (image)
-			Image(image->GetSourceImage(), { size, size });
-		else {
+			Image(image->GetCoreImage(), { size, size });
+		else 
+		{
 			ImVec2 pos = ImGui::GetCursorScreenPos();
 			ImGui::GetWindowDrawList()->AddRectFilled(pos, { pos.x + size, pos.y + size }, ImGui::GetColorU32({ 1.0, 1.0, 1.0, 1.0 }));
 			ImUI::ShiftY(36.0f);
@@ -373,7 +404,8 @@ namespace Hazard::ImUI
 		return false;
 	}
 	template<typename T>
-	static bool TextureSlot(const char* name, Ref<Texture2D> image, T callback) {
+	static bool TextureSlot(const char* name, Ref<Image2DAsset> image, T callback)
+	{
 
 		bool modified = false;
 		ImUI::ShiftY(8.0f);
@@ -402,7 +434,8 @@ namespace Hazard::ImUI
 	}
 
 	template<typename T>
-	static bool Treenode(const char* title, void* id, ImGuiTreeNodeFlags flags, T callback) {
+	static bool Treenode(const char* title, void* id, ImGuiTreeNodeFlags flags, T callback)
+	{
 		if (ImGui::TreeNode(id, title, flags)) {
 
 			callback();
@@ -420,12 +453,14 @@ namespace Hazard::ImUI
 	}
 
 	template<typename T, typename Prop>
-	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr) {
+	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr)
+	{
 		return TreenodeWithOptions(title, flags, callback, propCallback, []() {});
 	};
 
 	template<typename T, typename Prop, typename DragSource>
-	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr, DragSource dragSource = nullptr) {
+	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr, DragSource dragSource = nullptr)
+	{
 		bool treeOpen = false;
 		bool optionsOpen = false;
 		{
@@ -468,7 +503,8 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Table
 	template<typename T>
-	static void Table(const char* tableName, const char** columns, uint32_t columnCount, ImVec2 size, T callback) {
+	static void Table(const char* tableName, const char** columns, uint32_t columnCount, ImVec2 size, T callback)
+	{
 
 		if (size.x <= 0.0f || size.y <= 0.0f) return;
 
@@ -701,6 +737,7 @@ namespace Hazard::ImUI
 	static bool DragSource(const char* type, T* data, Callback callback)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+
 			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
 			callback();
 			ImGui::EndDragDropSource();
@@ -721,7 +758,8 @@ namespace Hazard::ImUI
 	}
 
 	template<typename T, typename Callback>
-	static bool DropTarget(const char* type, Callback callback) {
+	static bool DropTarget(const char* type, Callback callback)
+	{
 		bool accepted = false;
 		if (ImGui::BeginDragDropTarget()) {
 
@@ -736,9 +774,11 @@ namespace Hazard::ImUI
 		return accepted;
 	}
 	template<typename T, typename Callback>
-	inline static bool DropTarget(const AssetType& type, Callback callback) {
+	inline static bool DropTarget(const AssetType& type, Callback callback)
+	{
 		bool accepted = false;
-		if (ImGui::BeginDragDropTarget()) {
+		if (ImGui::BeginDragDropTarget())
+		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Utils::AssetTypeToString(type));
 			if (payload) {
 				callback(*(T*)payload->Data);

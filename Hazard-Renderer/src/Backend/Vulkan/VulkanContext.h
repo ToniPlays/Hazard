@@ -19,8 +19,15 @@
 
 namespace HazardRenderer::Vulkan {
 
-	class VulkanContext : public GraphicsContext {
+	struct VulkanData 
+	{
+		std::vector<VkDescriptorPool> DescriptorPools;
+		std::vector<uint32_t> DescriptorPoolAllocationCount;
+	};
 
+
+	class VulkanContext : public GraphicsContext {
+		
 	public:
 		VulkanContext(WindowProps* props);
 		~VulkanContext();
@@ -41,18 +48,23 @@ namespace HazardRenderer::Vulkan {
 
 
 		//Vulkan specific
+		VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo);
+
 		static VulkanContext* GetInstance() { return s_Instance; }
 		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }
-		static uint32_t GetImagesInFlight() { return  s_Instance->m_ImagesInFlight; }
+		static uint32_t GetImagesInFlight() { return  s_Instance->m_Swapchain->GetImageCount(); }
 		static Ref<VulkanDevice> GetLogicalDevice() { return  s_Instance->m_VulkanDevice; }
 		static VkPipelineCache GetPipelineCache() { return s_Instance->m_PipelineCache; }
 
 	private:
+		void CreateDescriptorPools();
+
+	private:
 		inline static VulkanContext* s_Instance;
+		inline static VulkanData* s_Data;
 
 		Window* m_Window;
 		glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
-		uint32_t m_ImagesInFlight;
 		VkInstance m_VulkanInstance = nullptr;
 		VkDebugUtilsMessengerEXT m_DebugMessenger = nullptr;
 

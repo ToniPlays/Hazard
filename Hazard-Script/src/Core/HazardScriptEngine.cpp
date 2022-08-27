@@ -41,6 +41,7 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::Reload()
 	{
+		HZR_PROFILE_FUNCTION();
 		LoadCoreAssebly();
 		LoadRuntimeAssembly();
 		ReloadAppScripts();
@@ -51,6 +52,7 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::RunGarbageCollector() 
 	{
+		HZR_PROFILE_FUNCTION();
 		mono_gc_collect(mono_gc_max_generation());
 		using namespace std::chrono_literals;
 
@@ -124,6 +126,7 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::ReloadAppScripts()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (auto& [name, script] : m_MonoData.AppAssembly.GetScripts()) 
 		{
 			for (auto& [handle, object] : script->GetAllInstances()) 

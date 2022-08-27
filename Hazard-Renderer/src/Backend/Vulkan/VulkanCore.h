@@ -7,5 +7,6 @@
 #include "VulkanRenderCommandBuffer.h"
 
 #include "Pipeline/VulkanRenderPass.h"
+#include "Textures/VulkanImage2D.h"
 
 #endif

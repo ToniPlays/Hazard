@@ -121,6 +121,6 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkWaitForFences(m_LogicalDevice, 1, &fence, VK_TRUE, DEFAULT_TIMEOUT), "VkWaitForFences failed");
 
 		vkDestroyFence(m_LogicalDevice, fence, nullptr);
-		vkFreeCommandBuffers(m_LogicalDevice, m_ComputePool, 1, &commandBuffer);
+		vkFreeCommandBuffers(m_LogicalDevice, m_GraphicsPool, 1, &commandBuffer);
 	}
 }

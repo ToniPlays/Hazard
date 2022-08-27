@@ -31,13 +31,14 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetWidth() const override { return m_Width; }
 		uint32_t GetHeight() const override { return m_Height; }
 
-		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return nullptr; }
+		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; }
 
 		Ref<RenderPass> GetRenderPass() override { return nullptr; };
 		Ref<FrameBuffer> GetRenderTarget() override { return nullptr; };
 
 		//Vulkan specific
 
+		uint32_t GetImageCount() const { return m_ImageCount; }
 		VkFramebuffer GetCurrentFramebuffer() { return GetFrameBuffer(m_CurrentBufferIndex); }
 		VkCommandBuffer GetCurrentDrawCommandBuffer() { return GetDrawCommandBuffer(m_CurrentBufferIndex); }
 		VkRenderPass GetVulkanRenderPass() const { return m_RenderPass; }
@@ -64,6 +65,7 @@ namespace HazardRenderer::Vulkan
 
 		VkInstance m_Instance;
 		Ref<VulkanDevice> m_Device;
+		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
 		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
 

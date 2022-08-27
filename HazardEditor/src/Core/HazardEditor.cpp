@@ -22,7 +22,7 @@ using namespace HazardScript;
 
 void HazardEditorApplication::PreInit()
 {
-	RenderAPI renderAPI = RenderAPI::Vulkan;
+	RenderAPI renderAPI = RenderAPI::OpenGL;
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
 	if (!workingDir.empty()) {
@@ -70,6 +70,7 @@ void HazardEditorApplication::PreInit()
 	renderInfo.WindowCount = 1;
 	renderInfo.ImagesInFlight = 2;
 	renderInfo.pWindows = &windowInfo;
+	renderInfo.UseResources = true;
 
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
@@ -91,7 +92,6 @@ void HazardEditorApplication::PreInit()
 	createInfo.EntityComponent = &entity;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 
-	HZR_WARN("Initializing");
 	CreateApplicationStack(&createInfo);
 
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
@@ -125,6 +125,7 @@ void HazardEditorApplication::Init()
 
 void HazardEditorApplication::Update()
 {
+	HZR_PROFILE_FUNCTION();
 	Editor::EditorWorldManager::Update();
 }
 

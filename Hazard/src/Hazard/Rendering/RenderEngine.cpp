@@ -28,13 +28,14 @@ namespace Hazard
 		uint32_t data = 0xFFFFFFFF;
 
 		Image2DCreateInfo info = {};
+		info.DebugName = "WhiteTexture";
 		info.Width = 1;
 		info.Height = 1;
 		info.Mips = 1;
 		info.Data = Buffer::Copy(&data, sizeof(uint32_t));
 		info.Format = ImageFormat::RGBA;
 
-		Ref<Hazard::Image2D> imageAsset = HazardRenderer::Image2D::Create(&info);
+		Ref<Hazard::Image2DAsset> imageAsset = Ref<Hazard::Image2DAsset>::Create(&info);
 
 		FrameBufferCreateInfo deferredFbo = {};
 		deferredFbo.DebugName = "DeferredFBO";
@@ -53,7 +54,7 @@ namespace Hazard
 
 		m_DeferredRenderPass = RenderPass::Create(&renderPassInfo);
 
-		m_WhiteTexture = Ref<Texture2D>::Create(imageAsset);
+		m_WhiteTexture = Ref<Texture2DAsset>::Create(imageAsset);
 		m_QuadRenderer.Init();
 		m_QuadRenderer.CreateResources();
 
@@ -66,6 +67,7 @@ namespace Hazard
 	}
 	void RenderEngine::PreRender(Ref<WorldRenderer> renderer)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_LineRenderer.BeginScene();
 		m_QuadRenderer.BeginScene();
 
@@ -144,6 +146,7 @@ namespace Hazard
 	}
 	void RenderEngine::PrepareLights()
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 		LightingData data = {};
 		data.DirectionLightCount = Math::Max<uint32_t>(drawList.DirectionalLights.size(), 16);
@@ -159,11 +162,11 @@ namespace Hazard
 	}
 	void RenderEngine::Update()
 	{
+		HZR_PROFILE_FUNCTION();
 		Input::Update();
 	}
 	void RenderEngine::Render()
 	{
-		return;
 		HZR_PROFILE_FUNCTION();
 
 		GraphicsContext* context = m_Window->GetContext();
@@ -217,6 +220,7 @@ namespace Hazard
 	}
 	void RenderEngine::PostRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		//Clear cameras
 		for (auto& renderer : m_DrawList) {
 			renderer.WorldRenderer->m_CameraData.clear();

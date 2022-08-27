@@ -6,6 +6,7 @@ namespace HazardRenderer
 {
 	struct Image2DCreateInfo 
 	{
+		std::string DebugName;
 		uint32_t Width;
 		uint32_t Height;
 		Buffer Data;
