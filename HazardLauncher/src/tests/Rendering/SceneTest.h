@@ -62,12 +62,11 @@ namespace SceneTest {
 		window->Show();
 
 			
-		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
+		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 
 		while (running)
 		{
 			window->BeginFrame();
-
 
 
 			window->Present();

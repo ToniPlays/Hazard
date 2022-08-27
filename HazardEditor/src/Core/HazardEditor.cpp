@@ -68,6 +68,7 @@ void HazardEditorApplication::PreInit()
 	renderInfo.Renderer = renderAPI;
 	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderInfo.WindowCount = 1;
+	renderInfo.ImagesInFlight = 2;
 	renderInfo.pWindows = &windowInfo;
 
 	EntityComponentCreateInfo entity = {};

@@ -33,8 +33,8 @@ namespace HazardRenderer::Vulkan {
 
 		void SetViewport(int x, int y, int w, int h) override {};
 
-		PhysicalDevice& GetDevice() override { return *m_VulkanPhysicalDevice; };
-		Ref<Swapchain> GetSwapchain() override { return nullptr; };
+		Ref<PhysicalDevice> GetDevice() override { return m_VulkanPhysicalDevice; };
+		Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override {};
 		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override {};
@@ -44,6 +44,8 @@ namespace HazardRenderer::Vulkan {
 		static VulkanContext* GetInstance() { return s_Instance; }
 		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }
 		static uint32_t GetImagesInFlight() { return  s_Instance->m_ImagesInFlight; }
+		static Ref<VulkanDevice> GetLogicalDevice() { return  s_Instance->m_VulkanDevice; }
+		static VkPipelineCache GetPipelineCache() { return s_Instance->m_PipelineCache; }
 
 	private:
 		inline static VulkanContext* s_Instance;

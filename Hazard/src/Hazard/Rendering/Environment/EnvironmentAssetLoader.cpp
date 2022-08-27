@@ -21,27 +21,29 @@ namespace Hazard
 		radianceInfo.Height = 512;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
-		AssetMetadata radianceMetadata = {};
-		radianceMetadata.Handle = radianceMap->GetHandle();
-		radianceMetadata.Type = AssetType::EnvironmentMap;
+		if (radianceMap) {
+			AssetMetadata radianceMetadata = {};
+			radianceMetadata.Handle = radianceMap->GetHandle();
+			radianceMetadata.Type = AssetType::EnvironmentMap;
 
-		
-		AssetManager::AddRuntimeAsset(radianceMetadata, radianceMap);
 
-		CubemapTextureCreateInfo irradianceInfo= {};
-		irradianceInfo.Usage = ImageUsage::Texture;
-		irradianceInfo.pCubemap = radianceMap;
+			AssetManager::AddRuntimeAsset(radianceMetadata, radianceMap);
 
-		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
+			CubemapTextureCreateInfo irradianceInfo = {};
+			irradianceInfo.Usage = ImageUsage::Texture;
+			irradianceInfo.pCubemap = radianceMap;
 
-		AssetMetadata irradianceMetadata = {};
-		irradianceMetadata.Handle = radianceMap->GetHandle();
-		irradianceMetadata.Type = AssetType::EnvironmentMap;
-		AssetManager::AddRuntimeAsset(irradianceMetadata, radianceMap);
+			Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
-		asset = Ref<EnvironmentMap>::Create();
-		asset.As<EnvironmentMap>()->RadianceMap = radianceMap;
-		asset.As<EnvironmentMap>()->IrradianceMap = irradianceMap;
+			AssetMetadata irradianceMetadata = {};
+			irradianceMetadata.Handle = radianceMap->GetHandle();
+			irradianceMetadata.Type = AssetType::EnvironmentMap;
+			AssetManager::AddRuntimeAsset(irradianceMetadata, radianceMap);
+
+			asset = Ref<EnvironmentMap>::Create();
+			asset.As<EnvironmentMap>()->RadianceMap = radianceMap;
+			asset.As<EnvironmentMap>()->IrradianceMap = irradianceMap;
+		}
 
 		HZR_CORE_WARN("Environment map took {0} ms to load", timer.ElapsedMillis());
 

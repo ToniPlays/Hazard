@@ -13,6 +13,11 @@ namespace HazardRenderer::Vulkan
 
 		void Destroy();
 
+		VkCommandBuffer GetCommandBuffer(bool begin, bool compute = false);
+		VkCommandBuffer CreateSecondaryCommandBuffer(const std::string& name);
+		void FlushCommandBuffer(VkCommandBuffer commandBuffer);
+		void FlushCommandBuffer(VkCommandBuffer commandBuffer, VkQueue queue);
+
 		Ref<PhysicalDevice> GetPhysicalDevice() { return m_PhysicalDevice; }
 
 		VkDevice GetVulkanDevice() const { return m_LogicalDevice; }

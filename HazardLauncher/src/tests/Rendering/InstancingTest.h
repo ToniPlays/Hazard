@@ -65,7 +65,7 @@ namespace InstancingTest {
 		window->Show();
 		window->SetWindowTitle(window->GetWindowInfo().Title + " quads: " + std::to_string(size * size));
 
-		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
+		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 
 		float vertices[] =
 		{

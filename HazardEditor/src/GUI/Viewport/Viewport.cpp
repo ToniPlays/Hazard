@@ -55,17 +55,19 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			m_FrameBuffer->Resize(m_Width, m_Height);
+			//m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 
-		if (m_CurrentImage == 0)
-			ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (m_CurrentImage == 0) {}
+			//ImUI::Image(m_FrameBuffer->GetImage(), size);
 		else
 		{
+			/*
 			RenderEngine& engine = Application::GetModule<RenderEngine>();
 			if (m_CurrentImage < 4)
 				ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
 			else ImUI::Image(engine.GetDeferredFramebuffer()->GetDepthImage(), size);
+			*/
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {

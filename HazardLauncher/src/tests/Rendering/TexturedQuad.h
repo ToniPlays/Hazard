@@ -48,7 +48,7 @@ namespace TexturedQuad {
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
-		std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
+		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 
 		float vertices[] =
 		{

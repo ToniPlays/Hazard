@@ -67,7 +67,7 @@ namespace TriangleTest {
 
 		//---------------
 #pragma region Mesh
-        std::cout << "Selected device: " << window->GetContext()->GetDevice().GetDeviceName() << std::endl;
+        std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
         /*
 		float vertices[] =
 		{

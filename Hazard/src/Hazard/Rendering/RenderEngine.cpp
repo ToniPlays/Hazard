@@ -20,6 +20,11 @@ namespace Hazard
 		m_Window = Window::Create(createInfo);
 		m_Window->Show();
 
+		if (!createInfo->UseResources) {
+			SetActive(false);
+			return;
+		}
+
 		uint32_t data = 0xFFFFFFFF;
 
 		Image2DCreateInfo info = {};
@@ -158,6 +163,7 @@ namespace Hazard
 	}
 	void RenderEngine::Render()
 	{
+		return;
 		HZR_PROFILE_FUNCTION();
 
 		GraphicsContext* context = m_Window->GetContext();

@@ -4,7 +4,7 @@
 #include "Backend/Core/GraphicsContext.h"
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
-#include "Backend/Metal/Metal.h"
+#include "Backend/Metal/MetalCore.h"
 #include "Backend/Core/RenderLibrary.h"
 
 namespace HazardRenderer

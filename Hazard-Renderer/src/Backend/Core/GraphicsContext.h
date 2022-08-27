@@ -41,7 +41,7 @@ namespace HazardRenderer {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void SetViewport(int x, int y, int w, int h) = 0;
 
-		virtual PhysicalDevice& GetDevice() = 0;
+		virtual Ref<PhysicalDevice> GetDevice() = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 
 		static GraphicsContext* Create(WindowProps* props);

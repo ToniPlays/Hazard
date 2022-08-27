@@ -60,7 +60,7 @@ namespace HazardRenderer::Vulkan {
 		static const float defaultPriority = 0.0f;
 		
 		int requestedQueueTypes = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT;
-		m_QueueFamilyIndices = GetQueueFamilyIndices(requestedQueueTypes);
+		m_QueueFamilyIndices = FindQueueFamilyIndices(requestedQueueTypes);
 
 
 		if (requestedQueueTypes & VK_QUEUE_GRAPHICS_BIT) 
@@ -108,7 +108,7 @@ namespace HazardRenderer::Vulkan {
 		return Ref<VulkanPhysicalDevice>::Create();
 	}
 
-	QueueFamilyIndices VulkanPhysicalDevice::GetQueueFamilyIndices(int flags)
+	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilyIndices(int flags)
 	{
 		QueueFamilyIndices result;
 

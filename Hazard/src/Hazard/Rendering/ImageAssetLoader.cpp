@@ -21,13 +21,16 @@ namespace Hazard
 
 
 		Ref<Hazard::Image2D> imageAsset = HazardRenderer::Image2D::Create(&info);
-		imageAsset->m_Flags = AssetFlags::RuntimeGenerated;
+		if (imageAsset) 
+		{
+			imageAsset->m_Flags = AssetFlags::RuntimeGenerated;
 
-		AssetMetadata imageData = {};
-		imageData.Type = AssetType::Image;
-		imageData.Handle = imageAsset->GetHandle();
+			AssetMetadata imageData = {};
+			imageData.Type = AssetType::Image;
+			imageData.Handle = imageAsset->GetHandle();
 
-		AssetManager::AddRuntimeAsset(imageData, imageAsset);
+			AssetManager::AddRuntimeAsset(imageData, imageAsset);
+		}
 		asset = Ref<Texture2D>::Create(imageAsset);
 
 		return asset;

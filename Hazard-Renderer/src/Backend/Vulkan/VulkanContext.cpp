@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
-		const bool performanceWarn = false;
+		const bool performanceWarn = true;
 		if (!performanceWarn) {
 			if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT) return VK_FALSE;
 		}
@@ -83,6 +83,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
 		m_Window = window;
+		m_ImagesInFlight = info->ImagesInFlight;
 
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
 			HZR_ASSERT(false, "API version not supported");

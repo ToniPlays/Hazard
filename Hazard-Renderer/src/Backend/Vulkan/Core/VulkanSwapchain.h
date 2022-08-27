@@ -31,9 +31,27 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetWidth() const override { return m_Width; }
 		uint32_t GetHeight() const override { return m_Height; }
 
-		Ref<RenderCommandBuffer> GetSwapchainBuffer() { return nullptr; };
-		Ref<RenderPass> GetRenderPass() { return nullptr; };
-		Ref<FrameBuffer> GetRenderTarget() { return nullptr; };
+		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return nullptr; }
+
+		Ref<RenderPass> GetRenderPass() override { return nullptr; };
+		Ref<FrameBuffer> GetRenderTarget() override { return nullptr; };
+
+		//Vulkan specific
+
+		VkFramebuffer GetCurrentFramebuffer() { return GetFrameBuffer(m_CurrentBufferIndex); }
+		VkCommandBuffer GetCurrentDrawCommandBuffer() { return GetDrawCommandBuffer(m_CurrentBufferIndex); }
+		VkRenderPass GetVulkanRenderPass() const { return m_RenderPass; }
+		uint32_t GetCurrentBufferIndex() const { return m_CurrentBufferIndex; }
+
+		VkFramebuffer GetFrameBuffer(uint32_t index) 
+		{
+			return m_FrameBuffers[index];
+		}
+
+		VkCommandBuffer GetDrawCommandBuffer(uint32_t index) 
+		{
+			return m_CommandBuffers[index].CommandBuffer;
+		}
 
 	private:
 		void FindImageFormatAndColorSpace();

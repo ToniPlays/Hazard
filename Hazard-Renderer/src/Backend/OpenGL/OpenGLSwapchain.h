@@ -29,13 +29,13 @@ namespace HazardRenderer::OpenGL
 
 	private:
 		OpenGLContext* m_Context;
-		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 
 		uint32_t m_Width = 0;
 		uint32_t m_Height = 0;
 		uint32_t m_FrameIndex;
 		bool m_Vsync = true;
 
+		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
 		Ref<RenderPass> m_RenderPass;
 		Ref<FrameBuffer> m_FrameBuffer;
 	};

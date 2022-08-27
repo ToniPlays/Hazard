@@ -1,5 +1,6 @@
 #include "VulkanDevice.h"
 #include "../VulkanContext.h"
+#include "../VkUtils.h"
 
 namespace HazardRenderer::Vulkan
 {
@@ -57,5 +58,69 @@ namespace HazardRenderer::Vulkan
 
 		vkDeviceWaitIdle(m_LogicalDevice);
 		vkDestroyDevice(m_LogicalDevice, nullptr);
+	}
+
+	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin, bool compute) 
+	{
+		VkCommandBuffer buffer;
+
+		VkCommandBufferAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.commandPool = compute ? m_ComputePool : m_GraphicsPool;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandBufferCount = 1;
+
+		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_LogicalDevice, &allocInfo, &buffer), "Failed to allocate command buffer");
+
+		if (begin) {
+			VkCommandBufferBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin");
+		}
+
+		return buffer;
+	}
+	VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer(const std::string& name)
+	{
+		VkCommandBuffer buffer;
+
+		VkCommandBufferAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.commandPool = m_GraphicsPool;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+		allocInfo.commandBufferCount = 1;
+
+		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_LogicalDevice, &allocInfo, &buffer), "Failed to allocate command buffer");
+		VkUtils::SetDebugUtilsObjectName(m_LogicalDevice, VK_OBJECT_TYPE_COMMAND_BUFFER, name, buffer);
+
+		return buffer;
+	}
+	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer commandBuffer)
+	{
+		FlushCommandBuffer(commandBuffer, m_GraphicsQueue);
+	}
+
+	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer commandBuffer, VkQueue queue)
+	{
+		const uint64_t DEFAULT_TIMEOUT = 1000000000;
+		HZR_ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer cannot be VK_NULL_HANDLE");
+		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end VkCommandBuffer");
+
+		VkSubmitInfo submitInfo = {};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &commandBuffer;
+
+		VkFenceCreateInfo fenceInfo = {};
+		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fenceInfo.flags = 0;
+		
+		VkFence fence;
+		VK_CHECK_RESULT(vkCreateFence(m_LogicalDevice, &fenceInfo, nullptr, &fence), "Failed to create VkFence");
+		VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, fence), "Failed to submit command buffer");
+		VK_CHECK_RESULT(vkWaitForFences(m_LogicalDevice, 1, &fence, VK_TRUE, DEFAULT_TIMEOUT), "VkWaitForFences failed");
+
+		vkDestroyFence(m_LogicalDevice, fence, nullptr);
+		vkFreeCommandBuffers(m_LogicalDevice, m_ComputePool, 1, &commandBuffer);
 	}
 }

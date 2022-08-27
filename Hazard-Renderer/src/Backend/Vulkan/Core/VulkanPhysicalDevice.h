@@ -33,12 +33,13 @@ namespace HazardRenderer::Vulkan
 
 		VkPhysicalDevice GetVulkanPhysicalDevice() const { return m_PhysicalDevice; }
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
+		QueueFamilyIndices GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }
 
 		static Ref<VulkanPhysicalDevice> Create(int device = -1);
 
 	private:
 
-		QueueFamilyIndices GetQueueFamilyIndices(int flags);
+		QueueFamilyIndices FindQueueFamilyIndices(int flags);
 		VkFormat FindDepthFormat();
 
 	private:

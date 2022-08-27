@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "HazardLauncher.h"
 #include "HazardRendererCore.h"
 
@@ -13,7 +13,7 @@ void HazardLauncher::PreInit()
 
 	std::filesystem::current_path("C:/dev/Hazard/HazardLauncher");
 
-	RenderAPI renderAPI = RenderAPI::OpenGL;
+	RenderAPI renderAPI = RenderAPI::Vulkan;
 	ApplicationCreateInfo appInfo = {};
 	appInfo.AppName = "Hazard Launcher";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
@@ -29,7 +29,7 @@ void HazardLauncher::PreInit()
 		HazardLoop::GetCurrent().OnEvent(e);
 	};
 	HazardWindowCreateInfo window = {};
-	window.Title = "Hazard Launcher";
+	window.Title = "Hazard Launcher | " + RenderAPIToString(renderAPI);
 	window.FullScreen = false;
 	window.Maximized = false;
 	window.Resizable = false;
@@ -43,8 +43,10 @@ void HazardLauncher::PreInit()
 	rendererInfo.pAppInfo = &rendererApp;
 	rendererInfo.Renderer = renderAPI;
 	rendererInfo.VSync = true;
+	rendererInfo.ImagesInFlight = 2;
 	rendererInfo.WindowCount = 1;
 	rendererInfo.pWindows = &window;
+	rendererInfo.UseResources = false;
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;

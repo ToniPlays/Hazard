@@ -4,62 +4,87 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "EditorPlatformVulkan.h"
 #include "Backend/Core/Renderer.h"
+#include "Backend/Vulkan/VKUtils.h"
 #include "imgui.h"
 #include <../ImGui_Backend/imgui_impl_glfw.h>
 
+using namespace HazardRenderer;
 static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
-	/*
-	m_Window = &window;
+	//Renderer::Submit([&]() mutable {
 
 	m_Context = (VulkanContext*)window.GetContext();
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
-	auto& device = (VulkanDevice&)m_Context->GetDevice();
+	auto& physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
+	auto& device = m_Context->GetLogicalDevice();
+	//Create descriptor pools
+
+	VkDescriptorPool descriptorPool;
+
+	VkDescriptorPoolSize poolSizes[] = {
+		{ VK_DESCRIPTOR_TYPE_SAMPLER, 100 },
+		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 100 },
+		{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 100 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 100 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 100 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 100 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 100 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 100 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 100 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 100 },
+		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 100 },
+	};
+	VkDescriptorPoolCreateInfo poolInfo = {};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	poolInfo.maxSets = 100 * IM_ARRAYSIZE(poolSizes);
+	poolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(poolSizes);
+	poolInfo.pPoolSizes = poolSizes;
+
+	VK_CHECK_RESULT(vkCreateDescriptorPool(device->GetVulkanDevice(), &poolInfo, nullptr, &descriptorPool), "Failed to create descriptor pool");
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);
 
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	init_info.Instance = m_Context->GetVulkanInstance();
-	init_info.PhysicalDevice = device.GetVulkanPhysicalDevice();
-	init_info.Device = device.GetVulkanDevice();
-	init_info.QueueFamily = VKUtils::GetQueueFamilyIndices(device.GetVulkanPhysicalDevice(),
-		m_Context->GetWindowSurface()).graphicsFamily.value();
-	init_info.Queue = device.GetGraphicsQueue().Queue;
-	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = device.GetDescriptorPool(0);
+	init_info.PhysicalDevice = physicalDevice->GetVulkanPhysicalDevice();
+	init_info.Device = device->GetVulkanDevice();
+	init_info.QueueFamily = physicalDevice->GetQueueFamilyIndices().Graphics;
+	init_info.Queue = device->GetGraphicsQueue();
+	init_info.PipelineCache = nullptr;
+	init_info.DescriptorPool = descriptorPool;
 	init_info.Allocator = nullptr;
 	init_info.MinImageCount = 2;
-	init_info.ImageCount = swapchain->GetImageCount();
+	init_info.ImageCount = m_Context->GetImagesInFlight();
 	init_info.CheckVkResultFn = nullptr;
 
 	ImGui_ImplVulkan_Init(&init_info, swapchain->GetVulkanRenderPass());
-	VkCommandBuffer cmdBuffer = device.GetCommandBuffer(true);
+	VkCommandBuffer cmdBuffer = device->GetCommandBuffer(true);
 
 	ImGui_ImplVulkan_CreateFontsTexture(cmdBuffer);
-	device.FlushGraphicsCommandBuffer(cmdBuffer);
+	device->FlushCommandBuffer(cmdBuffer);
 
-	device.WaitUntilIdle();
+	vkDeviceWaitIdle(device->GetVulkanDevice());
 	ImGui_ImplVulkan_DestroyFontUploadObjects();
 
-	uint32_t framesInFlight = swapchain->GetImageCount();
+	uint32_t framesInFlight = m_Context->GetImagesInFlight();
 	s_ImGuiCommandBuffers.resize(framesInFlight);
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
-		s_ImGuiCommandBuffers[i] = device.CreateSecondaryCommandBuffer();
-		*/
+		s_ImGuiCommandBuffers[i] = device->CreateSecondaryCommandBuffer("EditorPlatformVulkan secondary CommandBuffer");
+	//});
+
+	HZR_INFO("Platform init");
 }
 
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
-	/*
-	m_Context->GetPhysicalDevice().WaitUntilIdle();
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
-	*/
 }
 
 void EditorPlatformVulkan::BeginFrame()
@@ -71,16 +96,14 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
-	/*
 	VulkanContext* context = m_Context;
-
-	HazardRenderer::Renderer::Submit([context]() mutable {
+	Renderer::Submit([context]() mutable {
 
 		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
 		auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 		ImGuiIO& io = ImGui::GetIO();
 
-		glm::vec4 color = swapchain->GetRenderTarget()->GetSpecification().ClearColor;
+		glm::vec4 color = { 0.0, 0.0, 0.0, 1.0 }; //swapchain->GetRenderTarget()->GetSpecification().ClearColor;
 
 		VkClearValue clearValues[2];
 		clearValues[0].color = { color.r, color.g, color.b, color.a };
@@ -89,12 +112,11 @@ void EditorPlatformVulkan::EndFrame()
 		uint32_t width = swapchain->GetWidth();
 		uint32_t height = swapchain->GetHeight();
 
-		uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
+		uint32_t commandBufferIndex = swapchain->GetSwapchainBuffer();
 		VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
 
 		VkRenderPassBeginInfo renderPassBeginInfo = {};
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.pNext = nullptr;
 		renderPassBeginInfo.renderPass = swapchain->GetVulkanRenderPass();
 		renderPassBeginInfo.renderArea.offset.x = 0;
 		renderPassBeginInfo.renderArea.offset.y = 0;
@@ -102,21 +124,21 @@ void EditorPlatformVulkan::EndFrame()
 		renderPassBeginInfo.renderArea.extent.height = height;
 		renderPassBeginInfo.clearValueCount = 2; // Color + depth
 		renderPassBeginInfo.pClearValues = clearValues;
-		renderPassBeginInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
+		renderPassBeginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
 
 		vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
 		VkCommandBufferInheritanceInfo inheritanceInfo = {};
 		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 		inheritanceInfo.renderPass = swapchain->GetVulkanRenderPass();
-		inheritanceInfo.framebuffer = swapchain->GetCurrentFrameBuffer();
+		inheritanceInfo.framebuffer = swapchain->GetCurrentFramebuffer();
 
 		VkCommandBufferBeginInfo cmdBufInfo = {};
 		cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
 		cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
 
-		VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo));
+		VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo), "");
 
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
@@ -137,7 +159,7 @@ void EditorPlatformVulkan::EndFrame()
 		ImDrawData* main_draw_data = ImGui::GetDrawData();
 		ImGui_ImplVulkan_RenderDrawData(main_draw_data, s_ImGuiCommandBuffers[commandBufferIndex]);
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]));
+		VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]), "");
 
 		std::vector<VkCommandBuffer> commandBuffers;
 		commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
@@ -153,7 +175,9 @@ void EditorPlatformVulkan::EndFrame()
 			glfwMakeContextCurrent(backup_current_context);
 		}
 		});
-		*/
+
+	m_Context->GetSwapchain()->Present();
+	Renderer::WaitAndRender();
 }
 
 void EditorPlatformVulkan::Close()

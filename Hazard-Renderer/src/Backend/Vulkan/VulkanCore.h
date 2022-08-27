@@ -6,4 +6,6 @@
 #include "VulkanContext.h"
 #include "VulkanRenderCommandBuffer.h"
 
+#include "Pipeline/VulkanRenderPass.h"
+
 #endif

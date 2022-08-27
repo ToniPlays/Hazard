@@ -19,10 +19,7 @@ public:
 	void EndFrame() override;
 	void Close() override;
 
-	HazardRenderer::Window& GetWindow() override { return *m_Window; }
-
 private:
-	HazardRenderer::Window* m_Window;
 	VulkanContext* m_Context = nullptr;
 };
 #endif

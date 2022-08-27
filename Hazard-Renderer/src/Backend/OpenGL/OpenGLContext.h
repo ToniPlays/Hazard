@@ -31,7 +31,7 @@ namespace HazardRenderer::OpenGL {
 
 		void SetErrorListener(const ErrorCallback& callback) override;
 		*/
-		PhysicalDevice& GetDevice() { return *m_PhysicalDevice;  };
+		Ref<PhysicalDevice> GetDevice() { return m_PhysicalDevice;  };
 		Ref<Swapchain> GetSwapchain() { return m_Swapchain.As<Swapchain>(); }
 		Window* GetWindow() { return m_Window; }
 		glm::vec4 GetClearColor();
