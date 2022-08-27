@@ -45,7 +45,8 @@ namespace HazardRenderer::OpenGL
 		m_Height = height;
 		m_Vsync = vSync;
 
-		if (!m_RenderCommandBuffer) {
+		if (!m_RenderCommandBuffer) 
+		{
 			m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("OpenGLSwapchain");
 		}
 	}

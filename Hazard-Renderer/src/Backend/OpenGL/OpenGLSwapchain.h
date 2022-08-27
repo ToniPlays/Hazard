@@ -12,7 +12,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLSwapchain() = default;
 		OpenGLSwapchain(OpenGLContext* context, FrameBufferCreateInfo* targetInfo);
 
-		void Create(uint32_t width, uint32_t height, bool vSync) override;
+		void Create(uint32_t width, uint32_t height, bool vSync);
 		void Resize(uint32_t width, uint32_t height) override;
 
 		void BeginFrame() override;

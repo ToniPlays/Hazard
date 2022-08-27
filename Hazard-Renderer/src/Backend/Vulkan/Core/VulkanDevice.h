@@ -1,51 +1,38 @@
 #pragma once
 
-#include "Backend/Core/Core.h"
-#ifdef HZR_INCLUDE_VULKAN
+#include "Ref.h"
 
-#include "Backend/Core/PhysicalDevice.h"
-#include <vector>
-#include <vulkan/vulkan.h>
+#include "VulkanPhysicalDevice.h"
 
-namespace HazardRenderer::Vulkan
+namespace HazardRenderer::Vulkan 
 {
-	struct QueueFamilyIndices {
-		int32_t Graphics = -1;
-		int32_t Compute = -1;
-		int32_t Transfer = -1;
-	};
-
-
-	class VulkanPhysicalDevice : public PhysicalDevice {
+	class VulkanDevice : public RefCount {
 	public:
-		
-		VulkanPhysicalDevice();
-		~VulkanPhysicalDevice();
+		VulkanDevice(Ref<VulkanPhysicalDevice> physicalDevice, VkPhysicalDeviceFeatures features);
+		~VulkanDevice() = default;
 
-		std::string GetDeviceName() override { return m_Properties.deviceName; };
-		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
+		void Destroy();
 
-		static Ref<VulkanPhysicalDevice> Create(int device = -1);
+		Ref<PhysicalDevice> GetPhysicalDevice() { return m_PhysicalDevice; }
+
+		VkDevice GetVulkanDevice() const { return m_LogicalDevice; }
+		VkCommandPool GetGraphicsPool() const { return m_GraphicsPool; }
+		VkCommandPool GetComputePool() const { return m_ComputePool; }
+
+		VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
+		VkQueue GetComputesQueue() const { return m_ComputeQueue; }
 
 	private:
+		Ref<VulkanPhysicalDevice> m_PhysicalDevice;
+		VkPhysicalDeviceFeatures m_EnabledFeatures;
 
-		QueueFamilyIndices GetQueueFamilyIndices(int flags);
-		VkFormat FindDepthFormat();
+		VkDevice m_LogicalDevice;
+		VkCommandPool m_GraphicsPool;
+		VkCommandPool m_ComputePool;
 
-	private:
+		VkQueue m_GraphicsQueue;
+		VkQueue m_ComputeQueue;
 
-		PhysicalDeviceLimits m_Limits;
-
-		VkPhysicalDevice m_PhysicalDevice;
-		VkPhysicalDeviceProperties m_Properties;
-		VkPhysicalDeviceFeatures m_Features;
-		VkPhysicalDeviceMemoryProperties m_MemoryProperties;
-
-		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties;
-		QueueFamilyIndices m_QueueFamilyIndices;
-		std::vector<VkDeviceQueueCreateInfo> m_QueueCreateInfos;
-		
-		VkFormat m_DepthFormat;
+		bool m_EnableDebugMarkers = false;
 	};
 }
-#endif

@@ -11,7 +11,7 @@
 
 #define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
 
-namespace HazardRenderer::Vulkan 
+namespace HazardRenderer::Vulkan
 {
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
@@ -22,10 +22,10 @@ namespace HazardRenderer::Vulkan
 		}
 
 		std::string labels, objects;
-		if (pCallbackData->cmdBufLabelCount) 
+		if (pCallbackData->cmdBufLabelCount)
 		{
 			labels = fmt::format("\tLables({}): \n", pCallbackData->cmdBufLabelCount);
-			for (uint32_t i = 0; i < pCallbackData->cmdBufLabelCount; i++) 
+			for (uint32_t i = 0; i < pCallbackData->cmdBufLabelCount; i++)
 			{
 				const auto& label = pCallbackData->pCmdBufLabels[i];
 				const std::string colorStr = fmt::format("[ {}, {}, {}, {}]", label.color[0], label.color[1], label.color[2], label.color[3]);
@@ -73,11 +73,17 @@ namespace HazardRenderer::Vulkan
 
 	VulkanContext::~VulkanContext()
 	{
-		m_VulkanDevice = nullptr;
+		m_Swapchain->Destroy();
+		vkDestroyPipelineCache(m_VulkanDevice->GetVulkanDevice(), m_PipelineCache, nullptr);
+		m_VulkanDevice->Destroy();
+		//if (m_DebugMessenger)
+		//	vkDestroyDebugUtilsMessengerEXT(m_VulkanInstance, m_DebugMessenger, nullptr);
 		vkDestroyInstance(m_VulkanInstance, nullptr);
 	}
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
+		m_Window = window;
+
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
 			HZR_ASSERT(false, "API version not supported");
 		}
@@ -134,8 +140,8 @@ namespace HazardRenderer::Vulkan
 		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_VulkanInstance);
 		VK_CHECK_RESULT(result, "Failed to create VkInstance");
 		//Instance and surface
-		
-		if (info->Logging) 
+
+		if (info->Logging)
 		{
 			auto vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(m_VulkanInstance, "vkCreateDebugUtilsMessengerEXT");
 
@@ -152,7 +158,50 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(m_VulkanInstance, &debugUtilsInfo, nullptr, &m_DebugMessenger), "Failed to create VkDebutUtilsMessengerEXT");
 		}
 
-		m_VulkanDevice = VulkanPhysicalDevice::Create(-1); // Auto select: -1, others indexed
+		VkUtils::LoadDebugUtilsExtensions(m_VulkanInstance);
+
+		m_VulkanPhysicalDevice = VulkanPhysicalDevice::Create(-1); // Auto select: -1, others indexed
+
+		VkPhysicalDeviceFeatures enabledFeatures = {};
+		memset(&enabledFeatures, 0, sizeof(VkPhysicalDeviceFeatures));
+		enabledFeatures.samplerAnisotropy = true;
+		enabledFeatures.wideLines = true;
+		enabledFeatures.fillModeNonSolid = true;
+		enabledFeatures.independentBlend = true;
+		enabledFeatures.pipelineStatisticsQuery = true;
+
+		m_VulkanDevice = Ref<VulkanDevice>::Create(m_VulkanPhysicalDevice, enabledFeatures);
+
+		VkPipelineCacheCreateInfo cacheInfo = {};
+		cacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+
+		VK_CHECK_RESULT(vkCreatePipelineCache(m_VulkanDevice->GetVulkanDevice(), &cacheInfo, nullptr, &m_PipelineCache), "Failed to create Vulkan Pipeline Cache");
+
+		m_Swapchain = Ref<VulkanSwapchain>::Create();
+		m_Swapchain->Init(m_VulkanInstance, m_VulkanDevice);
+
+		m_Swapchain->InitSurface((GLFWwindow*)m_Window->GetNativeWindow());
+
+		uint32_t w = window->GetWidth();
+		uint32_t h = window->GetHeight();
+
+		m_Swapchain->Create(&w, &h, m_Window->IsVSync());
+
+		window->GetWindowInfo().Width = w;
+		window->GetWindowInfo().Height = w;
+
+	}
+	void VulkanContext::BeginFrame()
+	{
+		Renderer::Submit([&]() mutable {
+			m_Swapchain->BeginFrame();
+			});
+	}
+	void VulkanContext::Present()
+	{
+		Renderer::Submit([&]() mutable {
+			m_Swapchain->Present();
+			});
 	}
 }
 #endif

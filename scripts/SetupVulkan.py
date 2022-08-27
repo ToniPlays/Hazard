@@ -16,8 +16,8 @@ platformExecutable = "exe" if platform == "Windows" else "dmg";
 
 
 class VulkanConfiguration:
-    requiredVulkanVersion = "1.2.189.0"
-    requiredDebugLibVersion = "1.2.189.0";
+    requiredVulkanVersion = "1.3.204.1"
+    requiredDebugLibVersion = "1.3.204.1";
     vulkanDirectory = "../Hazard/vendor/VulkanSDK"
 
     @classmethod

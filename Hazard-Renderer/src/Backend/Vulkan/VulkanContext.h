@@ -5,6 +5,7 @@
 
 #include "Backend/Core/GraphicsContext.h"
 #include "CommandQueue.h"
+#include "Core/VulkanPhysicalDevice.h"
 #include "Core/VulkanDevice.h"
 #include "Core/VulkanSwapChain.h"
 
@@ -27,12 +28,12 @@ namespace HazardRenderer::Vulkan {
 		void Init(Window* window, HazardRendererCreateInfo* info) override;
 
 		void SetClearColor(const glm::vec4& color) override {};
-		void BeginFrame() override {};
-		void Present() override {};
+		void BeginFrame() override;
+		void Present() override;
 
 		void SetViewport(int x, int y, int w, int h) override {};
 
-		PhysicalDevice& GetDevice() override { return *m_VulkanDevice; };
+		PhysicalDevice& GetDevice() override { return *m_VulkanPhysicalDevice; };
 		Ref<Swapchain> GetSwapchain() override { return nullptr; };
 
 		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override {};
@@ -42,18 +43,23 @@ namespace HazardRenderer::Vulkan {
 		//Vulkan specific
 		static VulkanContext* GetInstance() { return s_Instance; }
 		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }
+		static uint32_t GetImagesInFlight() { return  s_Instance->m_ImagesInFlight; }
 
 	private:
 		inline static VulkanContext* s_Instance;
 
 		Window* m_Window;
 		glm::vec4 m_ClearColor = { 0, 0, 0, 1 };
+		uint32_t m_ImagesInFlight;
 		VkInstance m_VulkanInstance = nullptr;
 		VkDebugUtilsMessengerEXT m_DebugMessenger = nullptr;
 
 		VkSurfaceKHR m_WindowSurface = nullptr;
+		VkPipelineCache m_PipelineCache = nullptr;
 		//Device
-		Ref<VulkanPhysicalDevice> m_VulkanDevice;
+		Ref<VulkanPhysicalDevice> m_VulkanPhysicalDevice;
+		Ref<VulkanDevice> m_VulkanDevice;
+		Ref<VulkanSwapchain> m_Swapchain;
 	};
 }
 #endif

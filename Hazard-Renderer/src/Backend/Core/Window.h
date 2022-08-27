@@ -73,7 +73,7 @@ namespace HazardRenderer {
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 
-		virtual WindowProps GetWindowInfo() = 0;
+		virtual WindowProps& GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 		virtual void SetDebugCallback(RendererMessageCallback callback) = 0;

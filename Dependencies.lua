@@ -42,8 +42,8 @@ IncludeDir["Hazard_UI"] = "%{wks.location}/Hazard-UI/src"
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
-LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Lib"
-LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Hazard/vendor/VulkanSDK/Bin"
+LibraryDir["VulkanSDK_Debug"] = "%{VULKAN_SDK}/Lib"
+LibraryDir["VulkanSDK_DebugDLL"] = "%{VULKAN_SDK}/Bin"
 
 Library = {}
 

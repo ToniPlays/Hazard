@@ -12,7 +12,6 @@ namespace HazardRenderer
 	class Swapchain : public RefCount {
 	public:
 		
-		virtual void Create(uint32_t width, uint32_t height, bool vSync) = 0;
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		virtual void BeginFrame() = 0;

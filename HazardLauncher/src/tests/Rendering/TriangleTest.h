@@ -116,12 +116,11 @@ namespace TriangleTest {
 		
 #pragma endregion
 */
-		while (running)
+		while (true)
 		{
-			/*
-			Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			//Ref<RenderCommandBuffer> cmdBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			window->BeginFrame();
-            
+/*
             window->GetContext()->BeginRenderPass(cmdBuffer, window->GetContext()->GetSwapchain()->GetRenderPass());
             
             Renderer::Submit([&]() mutable {
@@ -135,9 +134,9 @@ namespace TriangleTest {
                 
             });
             window->GetContext()->EndRenderPass(cmdBuffer);
+			*/
             window->Present();
             Renderer::WaitAndRender();
-			*/
 		}
 		/*
 		pipeline.Release();
