@@ -55,12 +55,15 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::Submit([s = slot, id = m_ID]() mutable {
+			HZR_PROFILE_FUNCTION("OpenGLCubemapTexture::Bind(uint32_t) RT");
 			glBindTextureUnit(s, id);
 			});
 	}
 	Buffer OpenGLCubemapTexture::GenerateFromFile(int& width, int& height)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(File::Exists(m_FilePath), "File does not exist");
 
 		constexpr int desired = 4;
@@ -76,6 +79,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)
 	{
+		HZR_PROFILE_FUNCTION();
 		Image2DCreateInfo sourceImage = {};
 		sourceImage.DebugName = "CubeMap Equirectangular";
 		sourceImage.Data = imageData;

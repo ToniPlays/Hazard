@@ -60,8 +60,8 @@ namespace UI
 			m_FrameBuffer->Resize(m_Width, m_Height);
 		}
 
-		if (m_CurrentImage == 0)
-			ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (m_CurrentImage == 0 && true) {}
+			//ImUI::Image(m_FrameBuffer->GetImage(), size);
 		else
 		{
 			RenderEngine& engine = Application::GetModule<RenderEngine>();
@@ -200,8 +200,6 @@ namespace UI
 		ImGui::SetCursorPosX(165);
 		ImGui::BeginChild("##gameStats", { 225, 160 }, false);
 
-		ApplicationData& data = Application::GetData();
-
 		ImGui::Dummy({ 0, 3 });
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, 80);
@@ -214,11 +212,6 @@ namespace UI
 		ImGui::NextColumn();
 
 		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
-		ImGui::NextColumn();
-
-		ImGui::Text("Memory");
-		ImGui::NextColumn();
-		ImGui::Text("%.2fmb", Application::GetData().MemoryUsage);
 		ImGui::NextColumn();
 
 		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular", "Depth"};

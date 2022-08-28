@@ -38,8 +38,10 @@ namespace HazardRenderer::Vulkan
 
 		VulkanImageInfo& GetImageInfo() { return m_Info; }
 		const VulkanImageInfo& GetImageInfo() const { return m_Info; }
+		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }
+		uint32_t GetLayerCount() { return 1; }
 
-		const VkDescriptorImageInfo& GetImageDescriptor() { return m_ImageDescriptor; }
+		VkImageView GetLayerImageView(uint32_t layer) { return m_LayerImageViews[layer]; }
 
 		void Invalidate_RT();
 		

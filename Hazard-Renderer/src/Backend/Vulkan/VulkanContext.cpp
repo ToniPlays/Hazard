@@ -13,14 +13,18 @@
 
 namespace HazardRenderer::Vulkan
 {
+	static bool breakOnValidation = false;
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
 		const bool performanceWarn = true;
+
+
 		if (!performanceWarn) {
 			if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT) return VK_FALSE;
 		}
 
+		
 		std::string labels, objects;
 		if (pCallbackData->cmdBufLabelCount)
 		{
@@ -48,6 +52,8 @@ namespace HazardRenderer::Vulkan
 
 		std::cout << message.Description << std::endl;
 
+		if (breakOnValidation) __debugbreak();
+
 		Window::SendDebugMessage(message);
 
 		return VK_FALSE;
@@ -69,7 +75,7 @@ namespace HazardRenderer::Vulkan
 		if (!glfwVulkanSupported()) {
 			HZR_ASSERT(false, "Vulkan not supported");
 		}
-		Renderer::Init();
+		Renderer::Init(this);
 		s_Instance = this;
 	}
 
@@ -85,6 +91,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
 		m_Window = window;
+		m_ClearColor = info->pWindows[0].Color;
 
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
 			HZR_ASSERT(false, "API version not supported");
@@ -195,20 +202,21 @@ namespace HazardRenderer::Vulkan
 		window->GetWindowInfo().Height = w;
 
 		CreateDescriptorPools();
-
-		Renderer::WaitAndRender();
 	}
 	void VulkanContext::BeginFrame()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Swapchain->BeginFrame();
 	}
 	void VulkanContext::Present()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Swapchain->Present();
 	}
 
 	VkDescriptorSet VulkanContext::RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t bufferIndex = m_Swapchain->GetCurrentBufferIndex();
 		allocInfo.descriptorPool = s_Data->DescriptorPools[bufferIndex];
 		VkDevice device = m_VulkanDevice->GetVulkanDevice();

@@ -16,6 +16,7 @@ namespace UI
 	}
 	void Console::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		const char* columns[] = { "Type", "Timestamp", "Message" };
 
 		ImUI::Style& style = ImUI::StyleManager::GetCurrent();

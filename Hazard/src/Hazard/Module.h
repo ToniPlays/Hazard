@@ -11,7 +11,10 @@ namespace Hazard {
 
 		virtual void PreInit() {}
 		virtual void Init() {}
+		virtual void PreUpdate() {}
 		virtual void Update() {}
+		virtual void PostUpdate() {}
+		virtual void PreRender() {}
 		virtual void Render() {}
 		virtual void PostRender() {}
 		virtual void Close() {}

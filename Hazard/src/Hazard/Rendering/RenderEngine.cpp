@@ -17,10 +17,8 @@ namespace Hazard
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
-		m_Window = Window::Create(createInfo);
-		m_Window->Show();
-
-		if (!createInfo->UseResources) {
+		if (!createInfo->UseResources || true) 
+		{
 			SetActive(false);
 			return;
 		}
@@ -79,6 +77,7 @@ namespace Hazard
 	}
 	void RenderEngine::GeometryPass(const Ref<RenderCommandBuffer>& cmdBuffer)
 	{
+		/*
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 		m_Resources->ModelUniformBuffer->Bind(cmdBuffer);
@@ -112,8 +111,7 @@ namespace Hazard
 					drawList.Stats.DrawCalls++;
 				}
 			}
-		}
-		
+		}*/
 	}
 	void RenderEngine::ShadowPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
@@ -122,6 +120,7 @@ namespace Hazard
 	void RenderEngine::CompositePass(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		const auto& drawList = GetDrawList();
 
 		//Skybox
@@ -143,9 +142,11 @@ namespace Hazard
 		}
 		m_Resources->CompositePipeline->Bind(commandBuffer);
 		m_Resources->CompositePipeline->DrawArrays(commandBuffer, 6);
+		*/
 	}
 	void RenderEngine::PrepareLights()
 	{
+		/*
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 		LightingData data = {};
@@ -159,18 +160,28 @@ namespace Hazard
 			l.Color = { light.Color, light.Intensity };
 		}
 		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
+		*/
+	}
+	void RenderEngine::ClearDrawLists()
+	{
+		HZR_PROFILE_FUNCTION();
+		//Clear cameras
+		for (auto& renderer : m_DrawList) {
+			renderer.WorldRenderer->m_CameraData.clear();
+			renderer.WorldRenderer->m_RendererExtraCalls.clear();
+		}
+		m_DrawList.clear();
 	}
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
 		Input::Update();
+		ClearDrawLists();
 	}
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
-
-		GraphicsContext* context = m_Window->GetContext();
-		Ref<RenderCommandBuffer> cmdBuffer = context->GetSwapchain()->GetSwapchainBuffer();
+		/*
 		m_Resources->CameraUniformBuffer->Bind(cmdBuffer);
 		m_Resources->LightUniformBuffer->Bind(cmdBuffer);
 
@@ -214,18 +225,8 @@ namespace Hazard
 				context->EndRenderPass(cmdBuffer);
 				break;
 			}
-
 			m_CurrentDrawContext++;
 		}
-	}
-	void RenderEngine::PostRender()
-	{
-		HZR_PROFILE_FUNCTION();
-		//Clear cameras
-		for (auto& renderer : m_DrawList) {
-			renderer.WorldRenderer->m_CameraData.clear();
-			renderer.WorldRenderer->m_RendererExtraCalls.clear();
-		}
-		m_DrawList.clear();
+		*/
 	}
 }

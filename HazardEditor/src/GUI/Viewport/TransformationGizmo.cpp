@@ -17,6 +17,7 @@ namespace UI
 	}
 	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size)
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGuizmo::BeginFrame();
 		if (!target.IsValid() || m_Type == Gizmo::None) return;
 

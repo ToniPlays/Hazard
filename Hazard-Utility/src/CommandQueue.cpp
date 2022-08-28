@@ -40,7 +40,6 @@ void* CommandQueue::Allocate(CommandFn func, uint32_t size)
 	return memory;
 }
 
-
 void CommandQueue::Excecute()
 {
 	uint8_t* buffer = m_CommandBuffer;

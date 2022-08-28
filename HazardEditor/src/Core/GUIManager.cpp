@@ -22,7 +22,7 @@ void GUIManager::Init()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	m_Window = &Application::GetModule<RenderEngine>().GetWindow();
+	//m_Window = &Application::GetModule<RenderEngine>().GetWindow();
 
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 	io.DisplaySize = { (float)m_Window->GetWidth(), (float)m_Window->GetHeight() };
@@ -60,15 +60,17 @@ void GUIManager::Init()
 
 void GUIManager::Update()
 {
+	return;
 	HZR_PROFILE_FUNCTION();
 	m_PanelManager.Update();
 }
 void GUIManager::Render()
 {
+	return;
 	HZR_PROFILE_FUNCTION();
 	m_Platform->BeginFrame();
 
-	HZR_PROFILE_FUNCTION("GUIManager::Render() RT");
+	HZR_PROFILE_FUNCTION("GUIManager::Render()");
 	m_MainMenuBar.Render();
 	{
 		using namespace ImUI;

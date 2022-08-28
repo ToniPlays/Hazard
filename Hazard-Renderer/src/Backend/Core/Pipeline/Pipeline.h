@@ -1,7 +1,7 @@
 #pragma once
 
+#include "BufferLayout.h"
 #include "Buffers.h"
-#include "RenderPass.h"
 #include "Shader.h"
 #include <glad/glad.h>
 
@@ -10,6 +10,8 @@ namespace HazardRenderer
 	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit };
 	enum class DrawType { None = 0, Fill, Line, Point };
 	enum class CullMode { None = 0, FrontFace, BackFace };
+
+	class RenderPass;
 
 	struct PipelineSpecification
 	{
@@ -37,10 +39,10 @@ namespace HazardRenderer
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
 
 		virtual void Invalidate() = 0;
-		virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
-		virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
-		virtual void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) = 0;
-		virtual void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
+		//virtual void Bind(Ref<RenderCommandBuffer> commandBuffer) = 0;
+		//virtual void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
+		//virtual void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) = 0;
+		//virtual void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) = 0;
 
 		static Ref<Pipeline> Create(PipelineSpecification* specs);
 	};

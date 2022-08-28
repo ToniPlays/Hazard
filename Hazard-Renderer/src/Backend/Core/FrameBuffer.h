@@ -9,14 +9,26 @@ namespace HazardRenderer
 {
 	class FrameBuffer;
 
+	enum class FramebufferBlendMode
+	{
+		None = 0,
+		OneZero,
+		SrcAlphaMinusSrcAlpha,
+		Additive,
+		ZeroSrcColor
+	};
+
 	struct FrameBufferAttachment
 	{
 		ImageFormat Format = ImageFormat::None;
+		bool Blend = true;
+		FramebufferBlendMode BlendMode = FramebufferBlendMode::SrcAlphaMinusSrcAlpha;
 
 		FrameBufferAttachment() = default;
 		FrameBufferAttachment(ImageFormat format) : Format(format) {}
 
-		bool IsDepth() {
+		bool IsDepth() 
+		{
 			return Format >= ImageFormat::DEPTH32F;
 		}
 	};
@@ -33,7 +45,8 @@ namespace HazardRenderer
 		bool ClearOnLoad = false;
 		std::string DebugName = "";
 	};
-	struct FrameBufferSpecification {
+	struct FrameBufferSpecification 
+	{
 		uint32_t Width, Height;
 		uint32_t Samples;
 		size_t AttachmentCount;
@@ -49,11 +62,10 @@ namespace HazardRenderer
 	public:
 		virtual ~FrameBuffer() = default;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+		//virtual void Bind() = 0;
+		//virtual void Unbind() = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) = 0;
-		virtual void BindTexture(uint32_t attachmentIndex = 0, size_t slot = 0) const = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;

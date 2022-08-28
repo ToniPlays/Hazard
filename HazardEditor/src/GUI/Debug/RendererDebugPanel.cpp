@@ -4,6 +4,6 @@ namespace UI
 {
 	void RendererDebugPanel::OnPanelRender() 
 	{
-		
+		HZR_PROFILE_FUNCTION();
 	}
 }

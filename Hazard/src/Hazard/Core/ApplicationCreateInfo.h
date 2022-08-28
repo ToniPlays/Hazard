@@ -23,17 +23,30 @@ namespace Hazard {
 		std::string BuildVersion;
 		bool Logging = false;
 	};
+
+	struct RenderContextCreateInfo 
+	{
+		RenderAPI Renderer = RenderAPI::Auto;
+		bool VSync = true;
+		//std::thread* Thread;
+	};
+
 	struct AudioEngineCreateInfo
 	{
-
+		//std::thread* Thread;
 	};
 	struct EntityComponentCreateInfo 
 	{
+		//std::thread* Thread;
+
 		std::filesystem::path StartupFile = "";
 	};
 	
 	struct ScriptEngineCreateInfo 
 	{
+		uint32_t UpdateOrder = 0;
+		//std::thread* Thread;
+
 		std::string AppAssemblyPath;
 		std::string CoreAssemblyPath;
 		std::string AssemblyPath;
@@ -45,7 +58,7 @@ namespace Hazard {
 	struct HazardCreateInfo 
 	{
 		ApplicationCreateInfo* AppInfo = nullptr;
-		HazardRendererCreateInfo* RendererInfo = nullptr;
+		RenderContextCreateInfo* RenderContextInfo = nullptr;
 		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* AudioEngine = nullptr;
 		EntityComponentCreateInfo* EntityComponent = nullptr;

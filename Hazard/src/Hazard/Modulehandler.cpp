@@ -21,24 +21,38 @@ namespace Hazard {
 
 		m_HasInitialized = true;
 	}
-
+	void ModuleHandler::PreUpdate()
+	{
+		for (Module* m : m_Modules)
+			if (m->GetActive())
+				m->PreUpdate();
+	}
 	void ModuleHandler::Update()
 	{
-		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->Update();
 	}
+	void ModuleHandler::PostUpdate()
+	{
+		for (Module* m : m_Modules)
+			if (m->GetActive())
+				m->PostUpdate();
+	}
+	void ModuleHandler::PreRender()
+	{
+		for (Module* m : m_Modules)
+			if (m->GetActive())
+				m->PreInit();
+	}
 	void ModuleHandler::Render()
 	{
-		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->Render();
 	}
 	void ModuleHandler::PostRender()
 	{
-		HZR_PROFILE_FUNCTION();
 		for (Module* m : m_Modules)
 			if (m->GetActive())
 				m->PostRender();

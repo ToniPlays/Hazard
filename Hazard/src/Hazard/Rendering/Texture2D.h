@@ -12,7 +12,7 @@ namespace Hazard
 		{
 			m_CoreImage = HazardRenderer::Image2D::Create(info);
 		}
-		~Image2DAsset() { __debugbreak(); }
+		~Image2DAsset() {}
 		Ref<HazardRenderer::Image2D> GetCoreImage() { return m_CoreImage; }
 
 	private:

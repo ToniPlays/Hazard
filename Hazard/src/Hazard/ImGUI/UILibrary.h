@@ -363,7 +363,7 @@ namespace Hazard::ImUI
 		}
 		case RenderAPI::Vulkan:
 		{
-			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Image2DAsset>()->GetCoreImage().As<Vulkan::VulkanImage2D>();
+			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 			if (!imageInfo.imageView) return nullptr;
 

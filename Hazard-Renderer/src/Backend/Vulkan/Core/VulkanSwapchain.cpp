@@ -408,8 +408,42 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkCreateFramebuffer(m_Device->GetVulkanDevice(), &frameBufferInfo, nullptr, &m_FrameBuffers[i]), "Failed to create Framebuffer");
 			VkUtils::SetDebugUtilsObjectName(m_Device->GetVulkanDevice(), VK_OBJECT_TYPE_FRAMEBUFFER, "Swapchain Framebuffer", m_FrameBuffers[i]);
 		}
-
+		
 		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("SwapchainCommandBuffer");
+
+		if (m_DefaultFramebuffer) return;
+
+		if (nullptr == nullptr) //TODO: Fix this
+		{
+			//Create default target
+
+			FrameBufferCreateInfo frameBufferInfo = {};
+			frameBufferInfo.DebugName = "ScreenFBO";
+			frameBufferInfo.SwapChainTarget = true;
+			frameBufferInfo.AttachmentCount = 2;
+			frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+
+			m_DefaultFramebuffer = FrameBuffer::Create(&frameBufferInfo);
+
+			RenderPassCreateInfo renderPassInfo = {};
+			renderPassInfo.DebugName = "ScreenTarget";
+			renderPassInfo.pTargetFrameBuffer = m_DefaultFramebuffer;
+
+			m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
+		}
+		else
+		{
+			m_DefaultFramebuffer = FrameBuffer::Create(nullptr);
+
+			RenderPassCreateInfo renderPassInfo = {};
+			renderPassInfo.DebugName = "ScreenTarget";
+			renderPassInfo.pTargetFrameBuffer = m_DefaultFramebuffer;
+
+			m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
+		}
+
+
+
 	}
 	void VulkanSwapchain::Destroy()
 	{
@@ -449,65 +483,59 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::BeginFrame()
 	{
-		Ref<VulkanSwapchain> instance = this;
-		Renderer::Submit([instance]() mutable {
-			instance->m_CurrentImageIndex = instance->AcquireSwapchainImage();
-			VK_CHECK_RESULT(vkResetCommandPool(instance->m_Device->GetVulkanDevice(), instance->m_CommandBuffers[instance->m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
-			});
+		HZR_PROFILE_FUNCTION();
+		m_CurrentImageIndex = AcquireSwapchainImage();
+		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
 		m_RenderCommandBuffer->Begin();
 	}
 	void VulkanSwapchain::Present()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_RenderCommandBuffer->End();
+		const uint64_t DEFAULT_TIMEOUT = 100000000000;
 
-		Ref<VulkanSwapchain> instance = this;
-		Renderer::Submit([instance]() mutable {
+		auto vkDevice = m_Device->GetVulkanDevice();
 
-			const uint64_t DEFAULT_TIMEOUT = 100000000000;
+		VkPipelineStageFlags pipelineFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
-			auto vkDevice = instance->m_Device->GetVulkanDevice();
+		VkSubmitInfo submitInfo = {};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.pWaitDstStageMask = &pipelineFlags;
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = &m_Semaphores.PresentComplete;
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = &m_Semaphores.RenderComplete;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentBufferIndex].CommandBuffer;
 
-			VkPipelineStageFlags pipelineFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-			
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.pWaitDstStageMask = &pipelineFlags;
-			submitInfo.waitSemaphoreCount = 1;
-			submitInfo.pWaitSemaphores = &instance->m_Semaphores.PresentComplete;
-			submitInfo.signalSemaphoreCount = 1;
-			submitInfo.pSignalSemaphores = &instance->m_Semaphores.RenderComplete;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &instance->m_CommandBuffers[instance->m_CurrentBufferIndex].CommandBuffer;
+		VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
+		VK_CHECK_RESULT(vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]), "Failed to submit");
 
-			VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &instance->m_WaitFences[instance->m_CurrentBufferIndex]), "Failed to reset fence");
-			VK_CHECK_RESULT(vkQueueSubmit(instance->m_Device->GetGraphicsQueue(), 1, &submitInfo, instance->m_WaitFences[instance->m_CurrentBufferIndex]), "Failed to submit");
+		VkResult result;
+		{
+			VkPresentInfoKHR presentInfo = {};
+			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+			presentInfo.swapchainCount = 1;
+			presentInfo.pSwapchains = &m_Swapchain;
+			presentInfo.pImageIndices = &m_CurrentImageIndex;
+			presentInfo.waitSemaphoreCount = 1;
+			presentInfo.pWaitSemaphores = &m_Semaphores.RenderComplete;
 
-			VkResult result;
-			{
-				VkPresentInfoKHR presentInfo = {};
-				presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-				presentInfo.swapchainCount = 1;
-				presentInfo.pSwapchains = &instance->m_Swapchain;
-				presentInfo.pImageIndices = &instance->m_CurrentImageIndex;
-				presentInfo.waitSemaphoreCount = 1;
-				presentInfo.pWaitSemaphores = &instance->m_Semaphores.RenderComplete;
+			result = fpQueuePresentKHR(m_Device->GetGraphicsQueue(), &presentInfo);
+		}
 
-				result = fpQueuePresentKHR(instance->m_Device->GetGraphicsQueue(), &presentInfo);
-			}
-
-			if (result != VK_SUCCESS)
-			{
-				if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
-					instance->Resize(instance->m_Width, instance->m_Height);
-			}
-			//Wait for fence
-			{
-				const auto& imageCount = VulkanContext::GetImagesInFlight();
-				instance->m_CurrentBufferIndex = (instance->m_CurrentBufferIndex + 1) % imageCount;
-
-				VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &instance->m_WaitFences[instance->m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
-			}
-			});
+		if (result != VK_SUCCESS)
+		{
+			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+				Resize(m_Width, m_Height);
+		}
+		//Wait for fence
+		{
+			HZR_PROFILE_SCOPE("VulkanSwapchain::Present() WaitForFences");
+			const auto& imageCount = VulkanContext::GetImagesInFlight();
+			m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % imageCount;
+			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
+		}
 	}
 	void VulkanSwapchain::FindImageFormatAndColorSpace()
 	{

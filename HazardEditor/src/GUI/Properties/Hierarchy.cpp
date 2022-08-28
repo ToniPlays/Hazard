@@ -37,6 +37,7 @@ namespace UI
 	}
 	void Hierarchy::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		//Draw hierarchy panel
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 

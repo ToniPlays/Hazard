@@ -33,8 +33,8 @@ namespace HazardRenderer::Vulkan
 
 		Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; }
 
-		Ref<RenderPass> GetRenderPass() override { return nullptr; };
-		Ref<FrameBuffer> GetRenderTarget() override { return nullptr; };
+		Ref<RenderPass> GetRenderPass() override { return m_DefaultRenderPass; };
+		Ref<FrameBuffer> GetRenderTarget() override { return m_DefaultFramebuffer; };
 
 		//Vulkan specific
 
@@ -66,6 +66,10 @@ namespace HazardRenderer::Vulkan
 		VkInstance m_Instance;
 		Ref<VulkanDevice> m_Device;
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;
+		Ref<RenderPass> m_DefaultRenderPass;
+		Ref<FrameBuffer> m_DefaultFramebuffer;
+
+
 		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
 		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
 

@@ -9,10 +9,11 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLComputePipeline::~OpenGLComputePipeline()
 	{
+
 	}
 	void OpenGLComputePipeline::Bind(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		m_Shader->Bind(commandBuffer);
+		//m_Shader->Bind(commandBuffer);
 	}
 	void OpenGLComputePipeline::Execute(Ref<RenderCommandBuffer> commandBuffer, const glm::vec3& size)
 	{

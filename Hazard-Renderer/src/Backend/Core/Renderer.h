@@ -1,19 +1,33 @@
 #pragma once
 
 #include "CommandQueue.h"
+#include "GraphicsContext.h"
 
-namespace HazardRenderer {
-	class Renderer {
+#define HZR_RENDER_THREAD_ONLY() { assert(!Renderer::s_CanSubmit); }
+
+namespace HazardRenderer 
+{
+	class Renderer 
+	{
 	public:
 
-		static void Init() {
+		static void Init(GraphicsContext* context)
+		{
 			s_RenderCommandQueue = new CommandQueue();
 			s_ResourceCreateCommandQueue = new CommandQueue();
 			s_ResourceFreeCommandQueue = new CommandQueue();
+
+			m_GraphicsContext = context;
+		}
+
+		static void BeginFrame() 
+		{
+			//m_GraphicsContext->PrepareFrame();
 		}
 
 		static void WaitAndRender()
 		{
+			HZR_PROFILE_FUNCTION();
 			s_CanSubmit = false;
 			{
 				HZR_PROFILE_FUNCTION("ResourceCreateQueue::Execute()");
@@ -27,14 +41,15 @@ namespace HazardRenderer {
 				HZR_PROFILE_FUNCTION("ResourceFreeQueue::Execute()");
 				s_ResourceFreeCommandQueue->Excecute();
 			}
-			s_CanSubmit = true;
 			s_ResourceCreateCommandQueue->Clear();
 			s_RenderCommandQueue->Clear();
 			s_ResourceFreeCommandQueue->Clear();
+			s_CanSubmit = true;
 		}
 
 		template<typename FuncT>
-		static void Submit(FuncT func) {
+		static void Submit(FuncT func) 
+		{
 			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
@@ -45,8 +60,9 @@ namespace HazardRenderer {
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
-		static void SubmitResourceCreate(FuncT func) {			
-			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
+		static void SubmitResourceCreate(FuncT func) 
+		{			
+			HZR_ASSERT(s_CanSubmit, "Cannot submit create while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -56,8 +72,9 @@ namespace HazardRenderer {
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
-		static void SubmitResourceFree(FuncT func) {
-			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
+		static void SubmitResourceFree(FuncT func) 
+		{
+			HZR_ASSERT(s_CanSubmit, "Cannot submit free while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -67,10 +84,12 @@ namespace HazardRenderer {
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 	private:
-
+		static inline GraphicsContext* m_GraphicsContext = nullptr;
 		static inline CommandQueue* s_RenderCommandQueue;
 		static inline CommandQueue* s_ResourceCreateCommandQueue;
 		static inline CommandQueue* s_ResourceFreeCommandQueue;
+
+	public:
 		static inline bool s_CanSubmit = true;
 	};
 }

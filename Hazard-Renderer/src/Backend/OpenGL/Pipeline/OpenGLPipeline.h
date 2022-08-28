@@ -20,10 +20,10 @@ namespace HazardRenderer::OpenGL
 		void SetRenderPass(Ref<RenderPass> renderPass) override { m_Specs.pTargetRenderPass = renderPass.Raw(); }
 
 		void Invalidate() override;
-		void Bind(Ref<RenderCommandBuffer> commandBuffer) override;
-		void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
-		void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount) override;
-		void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count) override;
+		//void Bind(Ref<RenderCommandBuffer> commandBuffer);
+		//void Draw(Ref<RenderCommandBuffer> commandBuffer, uint32_t count);
+		//void DrawInstanced(Ref<RenderCommandBuffer> commandBuffer, uint32_t count, uint32_t instanceCount);
+		//void DrawArrays(Ref<RenderCommandBuffer> commandBuffer, uint32_t count);
 
 	private:
 		PipelineSpecification m_Specs;

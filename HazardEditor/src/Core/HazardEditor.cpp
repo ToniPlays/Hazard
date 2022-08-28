@@ -22,10 +22,18 @@ using namespace HazardScript;
 
 void HazardEditorApplication::PreInit()
 {
-	RenderAPI renderAPI = RenderAPI::OpenGL;
+
+	std::cout << "Select api" << std::endl;
+	std::cout << " 0 - Auto" << std::endl;
+	std::cout << " 1 - OpenGL" << std::endl;
+	std::cout << " 2 - Vulkan" << std::endl;
+	uint32_t api;
+	std::cin >> api;
+	RenderAPI renderAPI = (RenderAPI)api;
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
-	if (!workingDir.empty()) {
+	if (!workingDir.empty()) 
+	{
 		std::filesystem::current_path(workingDir);
 		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
 	}
@@ -38,39 +46,10 @@ void HazardEditorApplication::PreInit()
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
 	appInfo.Logging = true;
 
-	HazardRendererAppInfo rendererApp = {};
-	rendererApp.AppName = appInfo.AppName;
-	rendererApp.BuildVersion = HZR_BUILD_VERSION;
-	rendererApp.IconCount = 2;
-	rendererApp.pIcons = icons.data();
-	rendererApp.EventCallback = [&](Event& e) {
-		HazardLoop::GetCurrent().OnEvent(e);
-	};
-	rendererApp.MessageCallback;
+	RenderContextCreateInfo renderContextInfo = {};
+	renderContextInfo.Renderer = renderAPI;
+	renderContextInfo.VSync = false;
 
-	HazardWindowCreateInfo windowInfo = {};
-	windowInfo.Title = "HazardEditor | " + RenderAPIToString(renderAPI);
-	windowInfo.FullScreen = false;
-	windowInfo.Maximized = false;
-	windowInfo.HasTitlebar = true;
-
-#ifdef HZR_PLATFORM_MACOS
-	windowInfo.Width = 2880;
-	windowInfo.Height = 1600;
-#else
-	windowInfo.Width = 1920;
-	windowInfo.Height = 1080;
-#endif
-	windowInfo.Color = Color(34, 34, 34, 255);
-
-	HazardRendererCreateInfo renderInfo = {};
-	renderInfo.pAppInfo = &rendererApp;
-	renderInfo.Renderer = renderAPI;
-	renderInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderInfo.WindowCount = 1;
-	renderInfo.ImagesInFlight = 2;
-	renderInfo.pWindows = &windowInfo;
-	renderInfo.UseResources = true;
 
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
@@ -88,21 +67,20 @@ void HazardEditorApplication::PreInit()
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
-	createInfo.RendererInfo = &renderInfo;
-	createInfo.EntityComponent = &entity;
-	createInfo.ScriptEngineInfo = &scriptEngine;
+	createInfo.RenderContextInfo = &renderContextInfo;
 
 	CreateApplicationStack(&createInfo);
 
-	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
+	//GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {
 	Editor::EditorWorldManager::Init();
+	return;
 	auto& manager = PushModule<GUIManager>();
-	auto& window = GetModule<RenderEngine>().GetWindow();
+	//auto& window = GetModule<RenderEngine>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
-
+	/*
 	window.SetDebugCallback([](RenderMessage message) {
 		auto manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
@@ -111,7 +89,7 @@ void HazardEditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
 		});
-
+		*/
 	scriptEngine.SetDebugCallback([](ScriptMessage message) {
 		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();

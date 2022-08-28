@@ -35,29 +35,18 @@ void EditorPlatformOpenGL::EndFrame()
 	HZR_PROFILE_FUNCTION();
 	m_Window->BeginFrame();
 
-	using namespace HazardRenderer::OpenGL;
-	Ref<OpenGLSwapchain> swapchain = m_Context->GetSwapchain();
-	Ref<RenderCommandBuffer> cmdBuffer = swapchain->GetSwapchainBuffer();
 
-	m_Context->BeginRenderPass(cmdBuffer, swapchain->GetRenderPass());
+	HZR_PROFILE_FUNCTION("EditorPlatformOpenGL::EndFrame() RT");
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGuiIO& io = ImGui::GetIO();
 
-	Renderer::Submit([&]() mutable {
-
-		HZR_PROFILE_FUNCTION("EditorPlatformOpenGL::EndFrame() RT");
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		ImGuiIO& io = ImGui::GetIO();
-
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
-		});
-	m_Context->EndRenderPass(cmdBuffer);
-	m_Window->Present();
-	Renderer::WaitAndRender();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
 }
 
 void EditorPlatformOpenGL::Close()

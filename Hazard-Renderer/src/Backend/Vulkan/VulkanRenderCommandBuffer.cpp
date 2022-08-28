@@ -4,6 +4,8 @@
 #include "VulkanContext.h"
 #include "Backend/Core/Renderer.h"
 
+#include "VulkanFramebuffer.h"
+
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
 
@@ -141,53 +143,107 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::Begin()
 	{
 		m_TimestampNextAvailQuery = 2;
-		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 
-		Renderer::Submit([instance]() mutable {
-			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+		uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
 
-			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
+		VkCommandBufferBeginInfo beginInfo = {};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-			VkCommandBufferBeginInfo beginInfo = {};
-			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+		VkCommandBuffer buffer;
+		if (m_OwnedBySwapchain)
+			buffer = swapchain->GetCurrentDrawCommandBuffer();
+		else
+			buffer = m_CommandBuffers[frameIndex];
 
-			VkCommandBuffer buffer;
-			if (instance->m_OwnedBySwapchain)
-				buffer = swapchain->GetCurrentDrawCommandBuffer();
-			else
-				buffer = instance->m_CommandBuffers[frameIndex];
+		m_ActiveCommandBuffer = buffer;
 
-			instance->m_ActiveCommandBuffer = buffer;
+		VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
 
-			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
+		vkCmdResetQueryPool(buffer, m_TimestampQueryPools[frameIndex], 0, m_TimestampQueryCount);
+		vkCmdWriteTimestamp(buffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 0);
 
-			//vkCmdResetQueryPool(buffer, instance->m_TimestampQueryPools[frameIndex], 0, instance->m_TimestampQueryCount);
-			//vkCmdWriteTimestamp(buffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, instance->m_TimestampQueryPools[frameIndex], 0);
-
-			//vkCmdResetQueryPool(buffer, instance->m_PipelineQueryPools[frameIndex], 0, instance->m_PipelineQueryCount);
-			//vkCmdBeginQuery(buffer, instance->m_PipelineQueryPools[frameIndex], 0, 0);
-
-			});
+		vkCmdResetQueryPool(buffer, m_PipelineQueryPools[frameIndex], 0, m_PipelineQueryCount);
+		vkCmdBeginQuery(buffer, m_PipelineQueryPools[frameIndex], 0, 0);
 	}
 	void VulkanRenderCommandBuffer::End()
 	{
-		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
-			uint32_t frameIndex = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentBufferIndex();
 
-			VkCommandBuffer commandBuffer = instance->m_ActiveCommandBuffer;
-			//vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, instance->m_TimestampQueryPools[frameIndex], 1);
-			//vkCmdEndQuery(commandBuffer, instance->m_PipelineQueryPools[frameIndex], 0);
-			VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end command buffer");
+		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
+		vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 1);
+		vkCmdEndQuery(commandBuffer, m_PipelineQueryPools[frameIndex], 0);
+		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end command buffer");
 
-			instance->m_ActiveCommandBuffer = nullptr;
-
-			});
+		m_ActiveCommandBuffer = nullptr;
 	}
 	void VulkanRenderCommandBuffer::Submit()
 	{
 		if (m_OwnedBySwapchain) return;
+	}
+	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, renderPass, explicitClear]() {
+			auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+			auto& fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+
+			uint32_t w = fb->GetWidth();
+			uint32_t h = fb->GetHeight();
+
+			VkViewport viewport = {};
+			viewport.minDepth = 0.0f;
+			viewport.maxDepth = 1.0f;
+
+			VkRenderPassBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			beginInfo.renderArea.offset.x = 0;
+			beginInfo.renderArea.offset.y = 0;
+			beginInfo.renderArea.extent.width = w;
+			beginInfo.renderArea.extent.height = h;
+			beginInfo.renderPass = fb->GetRenderPass();
+
+			if (fb->GetSpecification().SwapChainTarget)
+			{
+				w = swapchain->GetWidth();
+				h = swapchain->GetHeight();
+				beginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+
+				viewport.x = 0.0f;
+				viewport.y = (float)h;
+				viewport.width = (float)w;
+				viewport.height = -(float)h;
+			}
+			else
+			{
+				beginInfo.framebuffer = fb->GetVulkanFramebuffer();
+
+				viewport.x = 0.0f;
+				viewport.y = 0.0f;
+				viewport.width = (float)w;
+				viewport.height = (float)h;
+			}
+
+			const auto& clearValues = fb->GetClearValues();
+			beginInfo.clearValueCount = (uint32_t)clearValues.size();
+			beginInfo.pClearValues = clearValues.data();
+
+			vkCmdBeginRenderPass(instance->m_ActiveCommandBuffer, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+			if (explicitClear)
+			{
+				const uint32_t colorAttachmentCount = fb->GetColorAttachmentCount();
+				const uint32_t totalAttachmentCount = colorAttachmentCount + fb->HasDepthAttachment();
+			}
+			});
+	}
+	void VulkanRenderCommandBuffer::EndRenderPass()
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance]() {
+			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
+			});
 	}
 }
 #endif

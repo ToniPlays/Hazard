@@ -20,6 +20,14 @@ namespace HazardRenderer::OpenGL
 		void Begin();
 		void End() {};
 		void Submit() {};
+
+		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false);
+		virtual void EndRenderPass();
+
+		virtual void BindPipeline(Ref<Pipeline> pipeline) {};
+		virtual void SetViewport(float x, float y, float width, float height) {};
+		virtual void SetLineSize(float size) {};
+
 	private:
 		uint32_t m_FrameIndex = 0;
 		Ref<Swapchain> m_Swapchain;

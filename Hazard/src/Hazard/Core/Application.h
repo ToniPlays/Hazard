@@ -7,12 +7,6 @@
 
 namespace Hazard {
 
-	struct ApplicationData 
-	{
-		float MemoryUsage = 0;
-		bool Minimized = false;
-	};
-
 	class Application {
 		
 	public:
@@ -23,7 +17,6 @@ namespace Hazard {
 		/// Preinit is called before the engine is started.
 		/// This should be used for building the application stack
 		/// </summary>
-		/// 
 		virtual void PreInit() {};
 		virtual void Init() {};
 		virtual void Update() {};
@@ -31,11 +24,9 @@ namespace Hazard {
 		virtual bool OnEvent(Event& e) { return false; };
 		
 		void CreateApplicationStack(HazardCreateInfo* info);
-		void UpdateData();
 
 	public:
 		static void Quit();
-		static ApplicationData& GetData() { return s_Data; }
 		static Application& Get() { return *HazardLoop::GetCurrent().m_Application; }
 
 		template<typename T, typename... Args>
@@ -44,9 +35,6 @@ namespace Hazard {
 		static T& GetModule() { return *HazardLoop::GetModuleHandler()->GetModule<T>(); }
 		template<typename T>
 		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
-
-	private:
-		static ApplicationData s_Data;
 	};
 	Hazard::Application* CreateApplication();
 }

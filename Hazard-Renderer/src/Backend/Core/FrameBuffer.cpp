@@ -16,7 +16,7 @@ namespace HazardRenderer
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLFrameBuffer>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return nullptr; // Ref<Vulkan::VulkanFrameBuffer>::Create(info);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanFrameBuffer>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
         case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);

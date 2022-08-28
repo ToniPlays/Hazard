@@ -42,6 +42,7 @@ namespace HazardRenderer {
 	{
 		HZR_ASSERT(info->pAppInfo != nullptr, "AppInfo cannot be nullptr");
 		HZR_ASSERT(glfwInit(), "Failed to initialize GLFW");
+
 		s_DebugCallback = info->pAppInfo->MessageCallback;
 		m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
@@ -185,7 +186,7 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
 			data.Width = w;
-			data.Window->GetContext()->SetViewport(0, 0, w, h);
+			//data.Window->GetContext()->SetViewport(0, 0, w, h);
 
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);

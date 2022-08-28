@@ -50,6 +50,6 @@ namespace Hazard {
 	struct MeshComponent : public ComponentBase
 	{
 		Ref<Mesh> m_MeshHandle;
-		bool CastShadows = true;
+		bool CastShadows = false;
 	};
 }

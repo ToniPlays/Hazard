@@ -19,7 +19,7 @@
 
 namespace HazardRenderer::Vulkan {
 
-	struct VulkanData 
+	struct VulkanData
 	{
 		std::vector<VkDescriptorPool> DescriptorPools;
 		std::vector<uint32_t> DescriptorPoolAllocationCount;
@@ -27,7 +27,7 @@ namespace HazardRenderer::Vulkan {
 
 
 	class VulkanContext : public GraphicsContext {
-		
+
 	public:
 		VulkanContext(WindowProps* props);
 		~VulkanContext();
@@ -38,14 +38,9 @@ namespace HazardRenderer::Vulkan {
 		void BeginFrame() override;
 		void Present() override;
 
-		void SetViewport(int x, int y, int w, int h) override {};
 
 		Ref<PhysicalDevice> GetDevice() override { return m_VulkanPhysicalDevice; };
 		Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
-
-		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override {};
-		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override {};
-
 
 		//Vulkan specific
 		VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo);
@@ -55,6 +50,8 @@ namespace HazardRenderer::Vulkan {
 		static uint32_t GetImagesInFlight() { return  s_Instance->m_Swapchain->GetImageCount(); }
 		static Ref<VulkanDevice> GetLogicalDevice() { return  s_Instance->m_VulkanDevice; }
 		static VkPipelineCache GetPipelineCache() { return s_Instance->m_PipelineCache; }
+
+		VkClearColorValue GetClearColorValue() const { return { m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a }; }
 
 	private:
 		void CreateDescriptorPools();

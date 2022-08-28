@@ -32,7 +32,6 @@ namespace Hazard
 		Scope<ModuleHandler> m_ModuleHandler;
 
 		bool m_ShouldClose = false;
-		double m_LastTime = 0;
 		static HazardLoop* s_Instance;
 	};
 }

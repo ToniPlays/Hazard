@@ -47,6 +47,7 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
 
+		/*
 		Ref<Swapchain> swapchain = HRenderer::s_Engine->GetWindow().GetSwapchain();
 		HazardRenderer::Renderer::Submit([&, swapchain]() mutable {
 
@@ -57,7 +58,7 @@ namespace Hazard
 				shader->Set("u_Textures", i, m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage());
 			}
 			});
-
+			*/
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2DAsset>& texture)

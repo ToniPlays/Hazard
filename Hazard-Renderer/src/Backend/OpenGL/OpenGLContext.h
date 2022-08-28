@@ -22,15 +22,6 @@ namespace HazardRenderer::OpenGL {
 		void Present() override;
 
 		void SetClearColor(const glm::vec4& color) override;
-		void SetViewport(int x, int y, int w, int h) override;
-
-		void BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass) override;
-		void EndRenderPass(Ref<RenderCommandBuffer> buffer) override;
-		/*
-		void SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth);
-
-		void SetErrorListener(const ErrorCallback& callback) override;
-		*/
 		Ref<PhysicalDevice> GetDevice() { return m_PhysicalDevice;  };
 		Ref<Swapchain> GetSwapchain() { return m_Swapchain.As<Swapchain>(); }
 		Window* GetWindow() { return m_Window; }

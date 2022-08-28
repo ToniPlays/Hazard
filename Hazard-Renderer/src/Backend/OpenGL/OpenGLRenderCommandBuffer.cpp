@@ -1,6 +1,9 @@
 
 #include "OpenGLRenderCommandBuffer.h"
 #include "OpenGLSwapchain.h"
+#include "OpenGLCore.h"
+
+#include "Backend/Core/Renderer.h"
 
 namespace HazardRenderer::OpenGL 
 {
@@ -15,5 +18,16 @@ namespace HazardRenderer::OpenGL
 	void OpenGLRenderCommandBuffer::Begin()
 	{
 		m_FrameIndex = m_Swapchain.As<OpenGLSwapchain>()->GetFrameIndex();
+	}
+	void OpenGLRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
+	{
+		Ref<OpenGLRenderPass> instance = renderPass.As<OpenGLRenderPass>();
+		Renderer::Submit([instance, explicitClear]() mutable {
+			instance->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
+			});
+	}
+	void OpenGLRenderCommandBuffer::EndRenderPass()
+	{
+
 	}
 }

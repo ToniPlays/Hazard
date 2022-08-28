@@ -15,7 +15,7 @@ namespace HazardRenderer
     enum class Optimization { None = 0, Memory, Performance };
 
     struct ShaderStageData;
-    enum class ShaderType;
+    enum class ShaderType : uint32_t;
 
     struct ShaderDefine {
         std::string Name;

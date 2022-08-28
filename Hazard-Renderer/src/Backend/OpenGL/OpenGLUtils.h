@@ -8,6 +8,8 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/Shader.h"
 
+#include "Severity.h"
+
 #include <glad/glad.h>
 #include <shaderc/shaderc.h>
 

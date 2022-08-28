@@ -51,6 +51,7 @@ namespace UI
 	}
 	void AssetPanel::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		{
 			ImUI::ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
@@ -94,6 +95,7 @@ namespace UI
 	}
 	void AssetPanel::DrawToolbar()
 	{
+		HZR_PROFILE_FUNCTION();
 		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 32.0f };
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -136,7 +138,7 @@ namespace UI
 	}
 	void AssetPanel::DrawFolderTreeView()
 	{
-
+		HZR_PROFILE_FUNCTION();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		{
 			ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
@@ -164,6 +166,7 @@ namespace UI
 	}
 	void AssetPanel::DrawContents()
 	{
+		HZR_PROFILE_FUNCTION();
 		constexpr float thumbailSize = 150.0f;
 		const float paddingForOutline = 2.0f;
 		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
@@ -296,6 +299,7 @@ namespace UI
 
 	void AssetPanel::DrawCurrentFolderPath()
 	{
+		HZR_PROFILE_FUNCTION();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
 		std::vector<std::string> paths = StringUtil::SplitString(relative, '\\');

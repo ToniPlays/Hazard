@@ -28,6 +28,7 @@ namespace UI
 	}
 	void ScriptCreatePanel::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		ImGui::Columns(2, 0, false);

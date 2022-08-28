@@ -25,11 +25,11 @@ namespace Hazard
 	enum class RenderAPI {
 		Auto = 0,
 		OpenGL,
-		WebGL,
 		Vulkan,
-		DX11,
+		Metal,
 		DX12,
-		Metal
+		DX11,
+		WebGL
 	};
 
 	std::string RenderAPIToString(RenderAPI api);

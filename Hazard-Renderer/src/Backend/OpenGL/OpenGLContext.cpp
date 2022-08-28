@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL {
 	{
 		s_Instance = this;
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-		Renderer::Init();
+		Renderer::Init(this);
 	}
 	OpenGLContext::~OpenGLContext()
 	{
@@ -56,41 +56,12 @@ namespace HazardRenderer::OpenGL {
 
 	void OpenGLContext::BeginFrame()
 	{
-		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
-		Renderer::Submit([swapchain]() mutable {
-			HZR_PROFILE_FUNCTION("OpenGLContext::BeginFrame()");
-			swapchain->BeginFrame();
-			});
+		m_Swapchain->BeginFrame();
 	}
-
 	void OpenGLContext::Present()
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLSwapchain> swapchain = m_Swapchain;
-		OpenGLContext* instance = this;
-		Renderer::Submit([instance, swapchain]() mutable {
-			HZR_PROFILE_FUNCTION("OpenGLContext::Present()");
-			swapchain->Present();
-			});
-	}
-
-	void OpenGLContext::BeginRenderPass(Ref<RenderCommandBuffer> buffer, Ref<RenderPass> renderPass)
-	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([renderPass]() mutable {
-			HZR_PROFILE_FUNCTION("OpenGLContext::BeginRenderPass_RT()");
-			renderPass->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
-			});
-	}
-
-	void OpenGLContext::EndRenderPass(Ref<RenderCommandBuffer> buffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([]() mutable {
-			HZR_PROFILE_FUNCTION("OpenGLContext::EndRenderPass_RT()");
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			});
+		m_Swapchain->Present();
 	}
 	glm::vec4 OpenGLContext::GetClearColor()
 	{
@@ -99,14 +70,6 @@ namespace HazardRenderer::OpenGL {
 	void OpenGLContext::SetClearColor(const glm::vec4& color)
 	{
 		m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
-	}
-	void OpenGLContext::SetViewport(int x, int y, int w, int h)
-	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([x, y, w, h]() mutable {
-			HZR_PROFILE_FUNCTION("OpenGLContext::SetViewport_RT()");
-			glViewport(x, y, w, h);
-			});
 	}
 }
 #endif

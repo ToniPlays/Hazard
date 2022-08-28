@@ -63,17 +63,11 @@ namespace HazardRenderer::OpenGL
 			}
 			});
 	}
-	void OpenGLFrameBuffer::Bind() 
-	{
-		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLFrameBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
-			instance->Bind_RT();
-			});
-	}
 	void OpenGLFrameBuffer::Bind_RT()
 	{
+		HZR_RENDER_THREAD_ONLY();
 		HZR_PROFILE_FUNCTION();
+
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
 		if (m_Specs.SwapChainTarget)
@@ -89,13 +83,6 @@ namespace HazardRenderer::OpenGL
 			glViewport(0, 0, m_Specs.Width, m_Specs.Height);
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-	void OpenGLFrameBuffer::Unbind()
-	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([]() mutable {
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			});
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
@@ -119,6 +106,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::RT_Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_RENDER_THREAD_ONLY();
 		std::cout << "Invalidate OpenGLFramebuffer: " << m_Specs.DebugName << std::endl;
 		if (m_Specs.SwapChainTarget) return;
 

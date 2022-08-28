@@ -17,6 +17,8 @@ namespace Hazard
 		RenderEngine(HazardRenderer::HazardRendererCreateInfo* createInfo);
 		~RenderEngine() = default;
 
+        void Update() override;
+		void Render() override;
 		/// <summary>
 		/// Get all the geometry for rendering
 		/// </summary>
@@ -25,25 +27,21 @@ namespace Hazard
 		void ShadowPass(Ref<RenderCommandBuffer> commandBuffer);
 		void GeometryPass(const Ref<HazardRenderer::RenderCommandBuffer>& cmdBuffer);
 		void CompositePass(Ref<HazardRenderer::RenderCommandBuffer> commandBuffer);
-
 		void PrepareLights();
 
-        void Update() override;
-		void Render() override;
-		void PostRender() override;
+
+		void ClearDrawLists();
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
 		Ref<HazardRenderer::FrameBuffer>& GetDeferredFramebuffer() { return m_DeferredFrameBuffer; }
 
-		HazardRenderer::Window& GetWindow() { return *m_Window; }
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 
 		Ref<Texture2DAsset> GetWhiteTexture() { return m_WhiteTexture; };
 
 	private:
-		HazardRenderer::Window* m_Window;
 		std::vector<RendererDrawList> m_DrawList;
 
 		RenderResources* m_Resources = nullptr;

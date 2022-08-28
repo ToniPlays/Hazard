@@ -9,6 +9,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "CommandLineArgs.h"
 
+#include "HazardRenderer.h"
+
 namespace Hazard {
 
 	HazardLoop* HazardLoop::s_Instance = nullptr;
@@ -60,19 +62,21 @@ namespace Hazard {
 	}
 	void HazardLoop::Run()
 	{
+		using namespace HazardRenderer;
 		HZR_PROFILE_FRAME("MainThread");
 		double time = glfwGetTime();
 
+		Time::Update(glfwGetTime());
 		//Update Time
-		Time::s_UnscaledDeltaTime = time - m_LastTime;
-		Time::s_DeltaTime = Time::s_UnscaledDeltaTime * Time::s_TimeScale;
-		Time::s_Time = time;
-		m_LastTime = time;
 
 		//Update
-		m_Application->Update();
+		m_ModuleHandler->PreUpdate();
 		m_ModuleHandler->Update();
+		m_Application->Update();
+		m_ModuleHandler->PostUpdate();
 		//Render
+
+		m_ModuleHandler->PreRender();
 		m_ModuleHandler->Render();
 		m_ModuleHandler->PostRender();
 	}

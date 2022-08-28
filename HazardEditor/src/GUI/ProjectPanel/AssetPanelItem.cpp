@@ -24,6 +24,7 @@ namespace UI
 	}
 	void AssetPanelItem::OnRender(Ref<Texture2DAsset> thumbnailIcon, const float& thumbnailSize)
 	{
+		HZR_PROFILE_FUNCTION();
 		const float edgeOffset = 4.0f;
 
 		const float textLineHeight = ImGui::GetTextLineHeightWithSpacing() * 2.0f + edgeOffset * 2.0f;

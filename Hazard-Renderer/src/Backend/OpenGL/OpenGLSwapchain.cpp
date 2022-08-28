@@ -3,6 +3,7 @@
 #include "OpenGLSwapchain.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Window.h"
+#include "Backend/Core/RenderCommandBuffer.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -11,7 +12,8 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLSwapchain::OpenGLSwapchain(OpenGLContext* context, FrameBufferCreateInfo* targetInfo) : m_Context(context)
 	{
-		if (targetInfo == nullptr) {
+		if (targetInfo == nullptr) 
+		{
 			//Create default target
 
 			FrameBufferCreateInfo frameBufferInfo = {};
@@ -46,9 +48,7 @@ namespace HazardRenderer::OpenGL
 		m_Vsync = vSync;
 
 		if (!m_RenderCommandBuffer) 
-		{
 			m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("OpenGLSwapchain");
-		}
 	}
 	void OpenGLSwapchain::Resize(uint32_t width, uint32_t height)
 	{
@@ -59,7 +59,6 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		m_FrameIndex = ++m_FrameIndex % 2;
-		m_RenderCommandBuffer->Begin();
 	}
 
 	void OpenGLSwapchain::Present()

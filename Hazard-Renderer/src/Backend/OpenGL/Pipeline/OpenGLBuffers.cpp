@@ -87,6 +87,7 @@ namespace HazardRenderer::OpenGL
 			glDeleteVertexArrays(1, &vao);
 			});
 	}
+	/*
 	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
 	{
 		Ref<OpenGLVertexBuffer> instance = this;
@@ -109,6 +110,7 @@ namespace HazardRenderer::OpenGL
 			glBindVertexArray(0);
 			});
 	}
+	*/
 	void OpenGLVertexBuffer::SetData(const void* data, size_t size)
 	{
 		Ref<OpenGLVertexBuffer> instance = this;
@@ -143,6 +145,7 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_ID);
 			});
 	}
+	/*
 	void OpenGLIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		Ref<OpenGLIndexBuffer> instance = this;
@@ -156,6 +159,7 @@ namespace HazardRenderer::OpenGL
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			});
 	}
+	*/
 	void OpenGLIndexBuffer::SetData(uint32_t* data, size_t size)
 	{
 		Ref<OpenGLIndexBuffer> instance = this;
@@ -189,6 +193,7 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_ID);
 			});
 	}
+	/*
 	void OpenGLUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
@@ -203,6 +208,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
 	{
+		HZR_RENDER_THREAD_ONLY();
 		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
 			m_CurrentBufferDataIndex = 0;
 			m_FrameIndex = cmdBuffer->GetFrameIndex();
@@ -213,6 +219,7 @@ namespace HazardRenderer::OpenGL
 	{
 
 	}
+	*/
 	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
 		HZR_PROFILE_FUNCTION();

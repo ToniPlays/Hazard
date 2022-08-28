@@ -11,7 +11,10 @@ namespace Hazard {
 
 		void InitializeAll();
 
+		void PreUpdate();
 		void Update();
+		void PostUpdate();
+		void PreRender();
 		void Render();
 		void PostRender();
 		void Close();
@@ -47,9 +50,9 @@ namespace Hazard {
 		}
 		bool OnEvent(Event& e)
 		{
-			for (Module* m : m_Modules) 
+			for (Module* m : m_Modules)
 			{
-				if(m->OnEvent(e))
+				if (m->OnEvent(e))
 					return true;
 			}
 			return false;

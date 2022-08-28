@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#include "Shader.h"
 #include "ShaderDataType.h"
 
 namespace HazardRenderer {

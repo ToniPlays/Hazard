@@ -8,6 +8,7 @@ namespace UI
 
 	void Properties::OnPanelRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_SelectionContext.IsValid()) return;
 
 		UI::ComponentMenuIfExists<TagComponent>(m_SelectionContext);

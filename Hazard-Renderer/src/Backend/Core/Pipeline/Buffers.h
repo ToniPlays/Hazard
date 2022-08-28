@@ -3,7 +3,6 @@
 #include "BufferLayout.h"
 #include "Buffer.h"
 #include "Backend/Core/Core.h"
-#include "Backend/Core/RenderCommandBuffer.h"
 
 namespace HazardRenderer
 {
@@ -55,8 +54,6 @@ namespace HazardRenderer
 	{
 	public:
 		virtual ~VertexBuffer() = default;
-		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0) = 0;
-		virtual void Unbind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
 		virtual void SetData(const void* data, size_t size) = 0;
 		virtual size_t GetSize() = 0;
 		virtual std::string& GetDebugName() = 0;
@@ -70,9 +67,6 @@ namespace HazardRenderer
 	public:
 		virtual ~IndexBuffer() = default;
 
-		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
-		virtual void Unbind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
-
 		virtual void SetData(uint32_t* data, size_t size) = 0;
 		virtual size_t GetCount() = 0;
 		virtual std::string& GetDebugName() = 0;
@@ -83,9 +77,7 @@ namespace HazardRenderer
 	{
 	public:
 		virtual ~UniformBuffer() = default;
-		virtual void Bind(Ref<RenderCommandBuffer> cmdBuffer) = 0;
-		virtual void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer) = 0;
-		virtual void Unbind() = 0;
+		//virtual void Unbind() = 0;
 		virtual void SetData(const void* data, size_t size) = 0;
 		
 		virtual std::string& GetName() = 0;
