@@ -6,6 +6,9 @@
 #include "RendererDrawList.h"
 #include "Renderers/QuadRenderer.h"
 #include "Renderers/LineRenderer.h"
+#include "Hazard/RenderContext/RenderContextManager.h"
+
+#include "Hazard/Core/ApplicationCreateInfo.h"
 
 namespace Hazard 
 {
@@ -14,7 +17,7 @@ namespace Hazard
 	{
 	public:
 		RenderEngine() = default;
-		RenderEngine(HazardRenderer::HazardRendererCreateInfo* createInfo);
+		RenderEngine(RendererCreateInfo* createInfo);
 		~RenderEngine() = default;
 
         void Update() override;
@@ -23,18 +26,20 @@ namespace Hazard
 		/// Get all the geometry for rendering
 		/// </summary>
 		/// <param name="renderer"></param>
-		void PreRender(Ref<WorldRenderer> renderer);
-		void ShadowPass(Ref<RenderCommandBuffer> commandBuffer);
-		void GeometryPass(const Ref<HazardRenderer::RenderCommandBuffer>& cmdBuffer);
-		void CompositePass(Ref<HazardRenderer::RenderCommandBuffer> commandBuffer);
-		void PrepareLights();
-
 
 		void ClearDrawLists();
 
+		void PreRender();
+		void ShadowPass();
+		void PreDepthPass();
+		void GeometryPass();
+		void CompositePass();
+
+		//Not yet implemented
+		void LightCullingPass() {};
+
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
-		Ref<HazardRenderer::FrameBuffer>& GetDeferredFramebuffer() { return m_DeferredFrameBuffer; }
 
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
@@ -43,13 +48,10 @@ namespace Hazard
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;
+		RenderContextManager* m_RenderContextManager;
 
 		RenderResources* m_Resources = nullptr;
-
-		Ref<HazardRenderer::FrameBuffer> m_DeferredFrameBuffer;
-		Ref<HazardRenderer::RenderPass> m_DeferredRenderPass;
-
-		Ref<Texture2DAsset> m_WhiteTexture;
+		Ref<Image2DAsset> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;

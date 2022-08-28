@@ -10,7 +10,7 @@ namespace UI
 	GameViewport::GameViewport() : Panel("Game Viewport")
 	{
 		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.DebugName = "ViewportCamera";
+		frameBufferInfo.DebugName = "GameViewport";
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 2;
 		frameBufferInfo.ClearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
@@ -29,10 +29,10 @@ namespace UI
 	void GameViewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		return;
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		auto& [cc, tc] = world->GetWorldCamera();
-		if (cc == nullptr) { 
+		if (cc == nullptr) 
+		{ 
 			m_HasCamera = false;
 			return; 
 		};
@@ -51,6 +51,8 @@ namespace UI
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
 
+		m_FrameBuffer->Resize(m_Width, m_Height);
+
 		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
 		renderer->SubmitCamera(cameraData);
 	}
@@ -63,11 +65,12 @@ namespace UI
 		{
 			m_Width = size.x;
 			m_Height = size.y;
-			m_FrameBuffer->Resize_RT(m_Width, m_Height);
 		}
-		if (!m_HasCamera) return;
-
-		ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (!m_HasCamera)
+		{
+			return;
+		}
+		else ImUI::Image(m_FrameBuffer->GetImage(), size);
 	}
 	bool GameViewport::OnEvent(Event& e)
 	{

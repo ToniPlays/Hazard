@@ -27,8 +27,15 @@ namespace Hazard {
 	struct RenderContextCreateInfo 
 	{
 		RenderAPI Renderer = RenderAPI::Auto;
+		std::string Title;
+		uint32_t Width;
+		uint32_t Height;
 		bool VSync = true;
 		//std::thread* Thread;
+	};
+	struct RendererCreateInfo 
+	{
+		bool some = true;
 	};
 
 	struct AudioEngineCreateInfo
@@ -59,6 +66,7 @@ namespace Hazard {
 	{
 		ApplicationCreateInfo* AppInfo = nullptr;
 		RenderContextCreateInfo* RenderContextInfo = nullptr;
+		RendererCreateInfo* RendererInfo = nullptr;
 		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* AudioEngine = nullptr;
 		EntityComponentCreateInfo* EntityComponent = nullptr;

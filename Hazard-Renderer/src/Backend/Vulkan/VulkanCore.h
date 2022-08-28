@@ -8,6 +8,9 @@
 #include "VulkanFramebuffer.h"
 
 #include "Pipeline/VulkanRenderPass.h"
+#include "Pipeline/VulkanVertexBuffer.h"
+#include "Pipeline/VulkanIndexBuffer.h"
+
 #include "Textures/VulkanImage2D.h"
 
 #endif

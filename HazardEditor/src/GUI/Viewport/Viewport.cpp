@@ -40,6 +40,8 @@ namespace UI
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
 
+		m_FrameBuffer->Resize(m_Width, m_Height);
+
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
 	}
 	void Viewport::OnPanelRender()
@@ -57,19 +59,10 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			m_FrameBuffer->Resize_RT(m_Width, m_Height);
 		}
 
-		if (m_CurrentImage == 0 && true) {}
-			//ImUI::Image(m_FrameBuffer->GetImage(), size);
-		else
-		{
-			RenderEngine& engine = Application::GetModule<RenderEngine>();
-			if (m_CurrentImage < 4)
-				ImUI::Image(engine.GetDeferredFramebuffer()->GetImage(m_CurrentImage - 1), size);
-			else ImUI::Image(engine.GetDeferredFramebuffer()->GetDepthImage(), size);
-			
-		}
+		if (m_CurrentImage == 0 || true)
+			ImUI::Image(m_FrameBuffer->GetImage(), size);
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
 			AssetMetadata& meta = AssetManager::GetMetadata(handle);

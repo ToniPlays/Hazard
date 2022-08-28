@@ -47,7 +47,8 @@ namespace UI
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		if (GetType() != AssetType::Folder) {
+		if (GetType() != AssetType::Folder) 
+		{
 			auto* drawList = ImGui::GetWindowDrawList();
 			drawShadow(topLeft, bottomRight, false);
 
@@ -129,6 +130,7 @@ namespace UI
 	}
 	void AssetPanelItem::EndRender()
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGui::PopID();
 		ImGui::NextColumn();
 

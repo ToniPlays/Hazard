@@ -25,7 +25,7 @@ namespace HazardRenderer {
 		case RenderAPI::OpenGL: buffer = new OpenGL::OpenGLVertexBuffer(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: buffer = new Vulkan::VulkanVertexBuffer(createInfo); break;
+		case RenderAPI::Vulkan: buffer = new Vulkan::VulkanVertexBuffer(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: buffer = Ref<Metal::MetalVertexBuffer>::Create(createInfo); break;
@@ -57,7 +57,7 @@ namespace HazardRenderer {
 		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo); break;
+		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return Ref<Metal::MetalIndexBuffer>::Create(createInfo); break;

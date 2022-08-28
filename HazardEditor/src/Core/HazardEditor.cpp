@@ -50,11 +50,16 @@ void HazardEditorApplication::PreInit()
 	RenderContextCreateInfo renderContextInfo = {};
 	renderContextInfo.Renderer = renderAPI;
 	renderContextInfo.VSync = false;
+	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
+	renderContextInfo.Width = 1920;
+	renderContextInfo.Height = 1080;
 
+
+	RendererCreateInfo rendererInfo = {};
+	
 
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
-
 
 	std::string dllFile = project.GetProjectData().ProjectName + ".dll";
 	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
@@ -68,6 +73,7 @@ void HazardEditorApplication::PreInit()
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &renderContextInfo;
+	createInfo.RendererInfo = &rendererInfo;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
 

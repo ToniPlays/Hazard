@@ -113,6 +113,12 @@ namespace HazardRenderer::Vulkan
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
 	}
+	void VulkanImage2D::Resize_RT(uint32_t width, uint32_t height)
+	{
+		m_Width = width;
+		m_Height = height;
+		Invalidate_RT();
+	}
 	void VulkanImage2D::Invalidate_RT()
 	{
 		HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
@@ -268,7 +274,7 @@ namespace HazardRenderer::Vulkan
 		VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
 
 		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Info.Image, 
-			0, VK_ACCESS_TRANSFER_WRITE_BIT, 
+			VK_ACCESS_NONE, VK_ACCESS_TRANSFER_WRITE_BIT,
 			VK_IMAGE_LAYOUT_UNDEFINED,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			VK_ACCESS_HOST_READ_BIT, VK_ACCESS_TRANSFER_WRITE_BIT, range);
 

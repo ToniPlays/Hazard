@@ -20,9 +20,9 @@ namespace Hazard
 		appInfo.MessageCallback = [](RenderMessage message) { std::cout << message.Description << std::endl; };
 
 		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = "Hazard engine";
-		windowInfo.Width = 1920;
-		windowInfo.Height = 1080;
+		windowInfo.Title = createInfo->Title;
+		windowInfo.Width = createInfo->Width;
+		windowInfo.Height = createInfo->Height;
 		windowInfo.Color = { 0, 1, 0.5, 1.0 };
 
 		HazardRendererCreateInfo rendererInfo = {};

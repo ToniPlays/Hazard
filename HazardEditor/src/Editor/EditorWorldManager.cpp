@@ -16,6 +16,6 @@ namespace Editor
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!m_WorldRenderer->IsValid()) return;
-		//m_WorldRenderer->Submit();
+		m_WorldRenderer->Submit();
 	}
 }

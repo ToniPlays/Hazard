@@ -42,8 +42,6 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> EnvironmentBuffer;
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
-		Ref<HazardRenderer::Pipeline> CompositePipeline;
-		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
@@ -79,34 +77,6 @@ namespace Hazard
 				modelUBO.Usage = BufferUsage::DynamicDraw;
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
-			}
-			{
-				BufferLayout layout = { {} };
-
-				PipelineSpecification compositeInfo = {};
-				compositeInfo.DebugName = "CompositePipeline";
-				compositeInfo.pTargetRenderPass = renderPass.Raw();
-				compositeInfo.ShaderPath = "Shaders/Composite/SceneComposite.glsl";
-				compositeInfo.DrawType = DrawType::Fill;
-				compositeInfo.Usage = PipelineUsage::GraphicsBit;
-				compositeInfo.CullMode = CullMode::None;
-				compositeInfo.IsShared = true;
-				compositeInfo.DepthTest = true;
-				compositeInfo.pBufferLayout = &layout;
-
-				CompositePipeline = Pipeline::Create(&compositeInfo);
-
-				PipelineSpecification skyboxInfo = {};
-				skyboxInfo.DebugName = "Skybox";
-				skyboxInfo.pTargetRenderPass = renderPass.Raw();
-				skyboxInfo.ShaderPath = "Shaders/Skybox.glsl";
-				skyboxInfo.DrawType = DrawType::Fill;
-				skyboxInfo.Usage = PipelineUsage::GraphicsBit;
-				skyboxInfo.CullMode = CullMode::None;
-				skyboxInfo.IsShared = true;
-				skyboxInfo.pBufferLayout = &layout;
-
-				SkyboxPipeline = Pipeline::Create(&skyboxInfo);
 			}
 		}
 	};

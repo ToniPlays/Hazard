@@ -34,7 +34,6 @@ namespace Hazard
 
 	std::string RenderAPIToString(RenderAPI api);
 
-
 	struct HazardRendererAppInfo 
 	{
 		std::string AppName;

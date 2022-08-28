@@ -3,7 +3,6 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "Backend/Core/Pipeline/Buffers.h"
-#include <vulkan/vulkan.h>
 
 namespace HazardRenderer::OpenGL
 {
