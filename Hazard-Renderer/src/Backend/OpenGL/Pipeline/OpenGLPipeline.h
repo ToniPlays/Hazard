@@ -21,6 +21,8 @@ namespace HazardRenderer::OpenGL
 
 		void Invalidate() override;
 
+		//OpenGL specific;
+
 	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;

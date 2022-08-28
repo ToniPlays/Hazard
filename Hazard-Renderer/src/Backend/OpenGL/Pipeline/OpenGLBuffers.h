@@ -12,23 +12,22 @@ namespace HazardRenderer::OpenGL
 		OpenGLVertexBuffer(VertexBufferCreateInfo* createInfo);
 		~OpenGLVertexBuffer();
 
-		//void Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding = 0);
-		//void Unbind(Ref<RenderCommandBuffer> cmdBuffer);
 		void SetData(const void* data, size_t size) override;
 		void SetData_RT(const void* data, size_t size);
 		size_t GetSize() override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 
+		//OpenGL specific
+		uint32_t GetVAOID() const { return m_VAO; }
+		uint32_t GetBufferID() const { return m_BufferID; }
+
 	private:
 		std::string m_DebugName;
 		BufferUsage m_Usage;
-		uint32_t m_ID = 0, m_VAO = 0;
+		uint32_t m_BufferID = 0, m_VAO = 0;
 		uint32_t m_Size;
 		BufferLayout m_Layout;
-		
-		inline static uint32_t s_BoundVAO = 0;
-		inline static BufferLayout s_CurrentLayout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -37,11 +36,10 @@ namespace HazardRenderer::OpenGL
 		OpenGLIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~OpenGLIndexBuffer();
 
-		//void Bind(Ref<RenderCommandBuffer> cmdBuffer);
-		//void Unbind(Ref<RenderCommandBuffer> cmdBuffer);
-
 		size_t GetCount() override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
+		//OpenGL specific
+		uint32_t GetBufferID() { return m_BufferID; }
 
 	private:
 		void SetData(uint32_t* data, size_t size) override;
@@ -49,7 +47,7 @@ namespace HazardRenderer::OpenGL
 
 		std::string m_DebugName;
 		BufferUsage m_Usage;
-		uint32_t m_ID;
+		uint32_t m_BufferID;
 		uint32_t m_Size;
 
 	};
@@ -59,9 +57,6 @@ namespace HazardRenderer::OpenGL
 		OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~OpenGLUniformBuffer();
 
-		//void Bind(Ref<RenderCommandBuffer> cmdBuffer);
-		//void Bind_RT(Ref<RenderCommandBuffer> cmdBuffer);
-		//void Unbind() override;
 		void SetData(const void* data, size_t size) override;
 
 		std::string& GetName() { return m_Name; }
@@ -70,9 +65,12 @@ namespace HazardRenderer::OpenGL
 
 		uint32_t GetUsageFlags() { return m_Usage; };
 
+		//OpenGL specific
+		uint32_t GetBufferID() const { return m_BufferID; }
+
 	private:
 		std::string m_Name;
-		uint32_t m_ID;
+		uint32_t m_BufferID;
 		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;

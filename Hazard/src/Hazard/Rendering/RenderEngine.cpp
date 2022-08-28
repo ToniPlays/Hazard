@@ -36,6 +36,7 @@ namespace Hazard
 		m_LineRenderer.CreateResources();
 
 		m_Resources = new RenderResources();
+		m_Resources->Initialize(nullptr);
 
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
 	}
@@ -86,8 +87,11 @@ namespace Hazard
 			commandBuffer->BindPipeline(pipeline);
 			for (auto& mesh : meshList)
 			{
+
+				commandBuffer->BindUniformBuffer(m_Resources->ModelUniformBuffer, 3);
+				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
 				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-				commandBuffer->BindIndexBuffer(mesh.VertexBuffer);
+				commandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 			}
 		}
 	}
@@ -117,6 +121,19 @@ namespace Hazard
 
 			for (auto& camera : worldDrawList.WorldRenderer->m_CameraData)
 			{
+				glm::mat4 inverseProjection = glm::inverse(camera.Projection);
+				glm::mat4 inverseView = glm::inverse(camera.View);
+
+				CameraData data = {};
+				data.ViewProjection = camera.Projection * inverseView;
+				data.Projection = camera.Projection;
+				data.View = inverseView;
+				data.InverseViewProjection = camera.View * inverseProjection;
+				data.Position = glm::vec4(camera.Position, 1.0);
+
+				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
+				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
+
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				GeometryPass(commandBuffer);
 				CompositePass(commandBuffer);

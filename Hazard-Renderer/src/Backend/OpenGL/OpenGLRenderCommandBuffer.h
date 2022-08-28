@@ -25,9 +25,12 @@ namespace HazardRenderer::OpenGL
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		void EndRenderPass() override;
 
-		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) override {};
-		void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) override {};
-		void BindPipeline(Ref<Pipeline> pipeline) override {};
+		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) override;
+		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding) override;
+		void BindPipeline(Ref<Pipeline> pipeline) override;
+
+		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
+		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
 
 		void SetViewport(float x, float y, float width, float height) override {};
 		void SetLineSize(float size) override {};
@@ -35,6 +38,9 @@ namespace HazardRenderer::OpenGL
 	private:
 		uint32_t m_FrameIndex = 0;
 		Ref<Swapchain> m_Swapchain;
+
+		inline static uint32_t s_BoundVAO = 0;
+		inline static BufferLayout s_CurrentLayout;
 	};
 }
 #endif

@@ -22,6 +22,9 @@ namespace HazardRenderer::OpenGL
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 
+		//OpenGL specific
+		uint32_t GetProgramID() const { return m_ID; }
+
 	private:
 
 		bool CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources);

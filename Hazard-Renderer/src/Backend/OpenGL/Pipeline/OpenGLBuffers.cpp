@@ -5,6 +5,7 @@
 #include "Backend/Core/Renderer.h"
 #include "Backend/Core/Pipeline/ShaderDataType.h"
 #include "../OpenGLContext.h"
+#include "../OpenGLSwapchain.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL
@@ -45,14 +46,14 @@ namespace HazardRenderer::OpenGL
 		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
 			if (instance->m_Layout.GetStride() == 0)
 			{
-				glCreateBuffers(1, &instance->m_ID);
-				glNamedBufferData(instance->m_ID, instance->m_Size * 4530043, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+				glCreateBuffers(1, &instance->m_BufferID);
+				glNamedBufferData(instance->m_BufferID, instance->m_Size * 4530043, nullptr, GL_STREAM_DRAW + instance->m_Usage);
 				return;
 			}
 
 			glCreateVertexArrays(1, &instance->m_VAO);
-			glCreateBuffers(1, &instance->m_ID);
-			glNamedBufferData(instance->m_ID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+			glCreateBuffers(1, &instance->m_BufferID);
+			glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
 
 
 			uint32_t bufferedOffset = 0;
@@ -82,27 +83,12 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		Renderer::SubmitResourceFree([id = m_ID, vao = m_VAO]() mutable {
+		Renderer::SubmitResourceFree([id = m_BufferID, vao = m_VAO]() mutable {
 			glDeleteBuffers(1, &id);
 			glDeleteVertexArrays(1, &vao);
 			});
 	}
 	/*
-	void OpenGLVertexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer, uint32_t binding)
-	{
-		Ref<OpenGLVertexBuffer> instance = this;
-		Renderer::Submit([instance, binding]() {
-			if (instance->m_VAO)
-			{
-				if (instance->m_VAO != s_BoundVAO) {
-					glBindVertexArray(instance->m_VAO);
-					s_BoundVAO = instance->m_VAO;
-					s_CurrentLayout = instance->m_Layout;
-				}
-			}
-			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->m_ID, 0, s_CurrentLayout.GetBufferStride(binding));
-			});
-	}
 	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		Renderer::Submit([]() mutable {
@@ -115,12 +101,12 @@ namespace HazardRenderer::OpenGL
 	{
 		Ref<OpenGLVertexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
-			glNamedBufferSubData(instance->m_ID, 0, size, data);
+			glNamedBufferSubData(instance->m_BufferID, 0, size, data);
 			});
 	}
 	void OpenGLVertexBuffer::SetData_RT(const void* data, size_t size)
 	{
-		glNamedBufferSubData(m_ID, 0, size, data);
+		glNamedBufferSubData(m_BufferID, 0, size, data);
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
@@ -131,7 +117,7 @@ namespace HazardRenderer::OpenGL
 
 		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
 
-			glCreateBuffers(1, &instance->m_ID);
+			glCreateBuffers(1, &instance->m_BufferID);
 
 			if (data != nullptr)
 				instance->SetData_RT(data, instance->m_Size);
@@ -142,7 +128,7 @@ namespace HazardRenderer::OpenGL
 	{
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
-			glDeleteBuffers(1, &instance->m_ID);
+			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
 	/*
@@ -165,13 +151,13 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
 			instance->m_Size = size;
-			glNamedBufferData(instance->m_ID, size, data, GL_STREAM_DRAW + instance->m_Usage);
+			glNamedBufferData(instance->m_BufferID, size, data, GL_STREAM_DRAW + instance->m_Usage);
 			});
 	}
 	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, size_t size)
 	{
 		m_Size = size;
-		glNamedBufferData(m_ID, size, data, GL_STREAM_DRAW + m_Usage);
+		glNamedBufferData(m_BufferID, size, data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
@@ -181,8 +167,8 @@ namespace HazardRenderer::OpenGL
 
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
-			glCreateBuffers(1, &instance->m_ID);
-			glNamedBufferData(instance->m_ID, instance->m_LocalData.Size, nullptr, GL_DYNAMIC_DRAW);
+			glCreateBuffers(1, &instance->m_BufferID);
+			glNamedBufferData(instance->m_BufferID, instance->m_LocalData.Size, nullptr, GL_DYNAMIC_DRAW);
 			});
 	}
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
@@ -190,7 +176,7 @@ namespace HazardRenderer::OpenGL
 		m_LocalData.Release();
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
-			glDeleteBuffers(1, &instance->m_ID);
+			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
 	/*
@@ -209,10 +195,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
 	{
 		HZR_RENDER_THREAD_ONLY();
-		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
-			m_CurrentBufferDataIndex = 0;
-			m_FrameIndex = cmdBuffer->GetFrameIndex();
-		}
 		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
 	}
 	void OpenGLUniformBuffer::Unbind()
@@ -223,14 +205,22 @@ namespace HazardRenderer::OpenGL
 	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
 
+		uint32_t frameIndex = OpenGLContext::GetInstance().GetSwapchain().As<OpenGLSwapchain>()->GetFrameIndex();
+
+		if (m_FrameIndex != frameIndex)
+		{
+			m_CurrentBufferDataIndex = 0;
+			m_FrameIndex = frameIndex;
+		}
+
+		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex]() mutable {
 
 			uint32_t size = instance->m_Size;
 			HZR_PROFILE_FUNCTION("OpenGLUniformBuffer::SetData(const void*, uint32_t)_RT");
-			glNamedBufferData(instance->m_ID, size, (uint8_t*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
+			glNamedBufferData(instance->m_BufferID, size, (uint8_t*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
 			});
 		m_CurrentBufferDataIndex += m_Size;
 	}
