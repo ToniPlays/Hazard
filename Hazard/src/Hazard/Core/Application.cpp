@@ -18,11 +18,10 @@ namespace Hazard
 	{
 		HZR_ASSERT(info->AppInfo, "[Hazard]: ApplicationCreateInfo required");
 
-		/*if (info->ScriptEngineInfo)
+		if (info->ScriptEngineInfo)
 			PushModule<ScriptEngine>(info->ScriptEngineInfo);
 		if (info->EntityComponent)
-			PushModule<WorldHandler>(info->EntityComponent)
-			*/
+			PushModule<WorldHandler>(info->EntityComponent);
 		if (info->RenderContextInfo)
 			PushModule<RenderContextManager>(info->RenderContextInfo);
 	}

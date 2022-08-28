@@ -2,6 +2,8 @@
 #include <hzrpch.h>
 #include "RenderContextManager.h"
 #include "Hazard/Core/HazardLoop.h"
+#include "Hazard/Assets/AssetManager.h"
+#include "ImageAssetLoader.h"
 
 namespace Hazard 
 {
@@ -19,8 +21,8 @@ namespace Hazard
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = "Hazard engine";
-		windowInfo.Width = 1280;
-		windowInfo.Height = 720;
+		windowInfo.Width = 1920;
+		windowInfo.Height = 1080;
 		windowInfo.Color = { 0, 1, 0.5, 1.0 };
 
 		HazardRendererCreateInfo rendererInfo = {};
@@ -34,6 +36,8 @@ namespace Hazard
 		m_Window = Window::Create(&rendererInfo);
 		m_Window->Show();
 
+		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
+
 	}
 	void RenderContextManager::PreRender()
 	{
@@ -46,12 +50,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		//Renderer from queue
 		m_Window->BeginFrame();
-
-		auto& swapchain = m_Window->GetSwapchain();
-		auto& commandBuffer = swapchain->GetSwapchainBuffer();
-		commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-		commandBuffer->EndRenderPass();
-
 		Renderer::WaitAndRender();
 		m_Window->Present();
 	}

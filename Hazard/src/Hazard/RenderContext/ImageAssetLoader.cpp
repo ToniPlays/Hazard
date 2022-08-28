@@ -18,6 +18,7 @@ namespace Hazard
 		info.Height = header.Height;
 		info.Data = header.ImageData;
 		info.Format = ImageFormat::RGBA;
+		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
 
 		Ref<Hazard::Image2DAsset> imageAsset = Ref<Hazard::Image2DAsset>::Create(&info);

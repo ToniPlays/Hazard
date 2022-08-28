@@ -21,7 +21,9 @@ namespace HazardRenderer
 		virtual void Submit() = 0;
 
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
+		virtual void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
 		virtual void EndRenderPass() = 0;
+		virtual void EndRenderPass_RT() = 0;
 
 		virtual void BindPipeline(Ref<Pipeline> pipeline) = 0;
 		virtual void SetViewport(float x, float y, float width, float height) = 0;

@@ -8,15 +8,29 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanImage2D::VulkanImage2D(Image2DCreateInfo* info)
 	{
+		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
+		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
+
 		m_Width = info->Width;
 		m_Height = info->Height;
 		m_Format = info->Format;
 		m_Mips = info->Mips;
 		m_Usage = info->Usage;
 
-		HZR_ASSERT(m_Format != ImageFormat::None, "Image format cannot be none");
-
+		
 		Invalidate();
+
+		if (info->Data) 
+		{
+			m_LocalBuffer = Buffer::Copy(info->Data.Data, info->Data.Size);
+			info->Data.Release();
+
+			Ref<VulkanImage2D> instance = this;
+			Renderer::SubmitResourceCreate([instance]() mutable {
+				instance->UploadImageData_RT(instance->m_LocalBuffer);
+				});
+		}
+
 	}
 	VulkanImage2D::~VulkanImage2D()
 	{
@@ -75,13 +89,37 @@ namespace HazardRenderer::Vulkan
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
 	}
+	void VulkanImage2D::Release_RT()
+	{
+		if (m_Info.Image == nullptr) return;
+
+		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		vkDestroyImageView(device, m_Info.ImageView, nullptr);
+		vkDestroySampler(device, m_Info.Sampler, nullptr);
+
+		for (auto& [index, view] : m_PerMipImageView)
+		{
+			if (view) vkDestroyImageView(device, view, nullptr);
+		}
+		for (auto& view : m_LayerImageViews)
+			if (view) vkDestroyImageView(device, view, nullptr);
+
+		VulkanAllocator allocator("VulkanImage2D");
+		allocator.DestroyImage(m_Info.Image, m_Info.Allocation);
+
+		m_Info.Image = VK_NULL_HANDLE;
+		m_Info.ImageView = VK_NULL_HANDLE;
+		m_Info.Sampler = VK_NULL_HANDLE;
+		m_LayerImageViews.clear();
+		m_PerMipImageView.clear();
+	}
 	void VulkanImage2D::Invalidate_RT()
 	{
 		HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		Release();
+		Release_RT();
 
 		VulkanAllocator allocator("VulkanImage2D");
 
@@ -199,5 +237,59 @@ namespace HazardRenderer::Vulkan
 
 		m_ImageDescriptor.imageView = m_Info.ImageView;
 		m_ImageDescriptor.sampler = m_Info.Sampler;
+	}
+	void VulkanImage2D::UploadImageData_RT(Buffer data)
+	{
+		auto& device = VulkanContext::GetLogicalDevice();
+
+		VulkanAllocator allocator("VulkanImage2D");
+
+		VkBufferCreateInfo stagingInfo = {};
+		stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		stagingInfo.size = data.Size;
+		stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		stagingInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		VkBuffer stagingBuffer;
+		VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+
+		//Copy image data
+		uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
+		memcpy(destData, data.Data, data.Size);
+		allocator.UnmapMemory(stagingBufferAlloc);
+		data.Release();
+
+		VkImageSubresourceRange range = {};
+		range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		range.baseMipLevel = 0;
+		range.levelCount = 1;
+		range.layerCount = 1;
+
+		VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
+
+		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Info.Image, 
+			0, VK_ACCESS_TRANSFER_WRITE_BIT, 
+			VK_IMAGE_LAYOUT_UNDEFINED,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_ACCESS_HOST_READ_BIT, VK_ACCESS_TRANSFER_WRITE_BIT, range);
+
+		VkBufferImageCopy imageCopyRegion = {};
+		imageCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageCopyRegion.imageSubresource.mipLevel = 0;
+		imageCopyRegion.imageSubresource.baseArrayLayer = 0;
+		imageCopyRegion.imageSubresource.layerCount = 1;
+		imageCopyRegion.imageExtent = { m_Width, m_Height };
+		imageCopyRegion.imageExtent.depth = 1;
+		imageCopyRegion.bufferOffset = 0;
+
+		vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_Info.Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+
+		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Info.Image,
+			VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_ImageDescriptor.imageLayout,
+			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
+
+		device->FlushCommandBuffer(commandBuffer);
+
+		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 	}
 }

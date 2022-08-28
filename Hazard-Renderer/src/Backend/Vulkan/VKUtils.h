@@ -88,7 +88,15 @@ namespace HazardRenderer::Vulkan::VkUtils
 	VkFormat VulkanImageFormat(const ImageFormat& format);
 	bool IsIntegratedBase(const ImageFormat& format);
 
-	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer, VkImage image, VkAccessFlags srcAccess, VkAccessFlags dstAccess, VkImageLayout oldLayout, VkImageLayout newLayout, VkPipelineStageFlags srcFlags, VkPipelineStageFlags dstFlags, VkImageSubresourceRange subresourceRange);
+	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
+		VkImage image,
+		VkAccessFlags srcAccessMask,
+		VkAccessFlags dstAccessMask,
+		VkImageLayout oldLayout,
+		VkImageLayout newLayout,
+		VkPipelineStageFlags srcStageMask,
+		VkPipelineStageFlags dstStageMask,
+		VkImageSubresourceRange subresourceRange);
 
 
 	inline static void SetDebugUtilsObjectName(const VkDevice device, const VkObjectType type, const std::string& name, const void* handle) {

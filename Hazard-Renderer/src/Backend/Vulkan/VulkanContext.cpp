@@ -13,10 +13,10 @@
 
 namespace HazardRenderer::Vulkan
 {
-	static bool breakOnValidation = false;
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
+		bool breakOnValidation = true;
 		const bool performanceWarn = true;
 
 

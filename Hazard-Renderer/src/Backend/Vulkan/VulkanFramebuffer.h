@@ -16,8 +16,10 @@ namespace HazardRenderer::Vulkan
 		~VulkanFrameBuffer();
 
 		void Resize(uint32_t width, uint32_t height, bool force = false) override;
+		void Resize_RT(uint32_t width, uint32_t height, bool force = false) override;
 
 		void Release();
+		void Release_RT();
 		void Invalidate();
 		void Invalidate_RT();
 
@@ -53,8 +55,8 @@ namespace HazardRenderer::Vulkan
 		std::map<uint32_t, Ref<VulkanImage2D>> m_ExistingImages;
 		std::vector<VkClearValue> m_ClearValues;
 
-		VkFramebuffer m_Framebuffer;
-		VkRenderPass m_RenderPass;
+		VkFramebuffer m_Framebuffer = VK_NULL_HANDLE;
+		VkRenderPass m_RenderPass = VK_NULL_HANDLE;
 
 		std::vector<std::function<void(Ref<VulkanFrameBuffer>)>> m_ResizeCallbacks;
 	};

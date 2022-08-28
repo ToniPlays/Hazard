@@ -23,6 +23,7 @@ namespace HazardRenderer::Vulkan
 
 		void Invalidate() override;
 		void Release() override;
+		void Release_RT();
 
 		virtual void Bind(uint32_t slot = 0) override {};
 
@@ -44,8 +45,9 @@ namespace HazardRenderer::Vulkan
 		VkImageView GetLayerImageView(uint32_t layer) { return m_LayerImageViews[layer]; }
 
 		void Invalidate_RT();
-		
 		void UpdateDescriptor();
+
+		void UploadImageData_RT(Buffer data);
 
 	private:
 

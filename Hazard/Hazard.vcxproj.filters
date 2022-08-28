@@ -231,7 +231,7 @@
     <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\ImageAssetLoader.h">
+    <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
@@ -264,10 +264,10 @@
     <ClInclude Include="src\Hazard\Rendering\Renderers\WorldRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Texture2D.h">
+    <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\TextureFactory.h">
+    <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\AllBindings.h">
@@ -1674,7 +1674,7 @@
     <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\ImageAssetLoader.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\ImageAssetLoader.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
@@ -1698,10 +1698,10 @@
     <ClCompile Include="src\Hazard\Rendering\Renderers\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Texture2D.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\TextureFactory.cpp">
+    <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\HScript.cpp">

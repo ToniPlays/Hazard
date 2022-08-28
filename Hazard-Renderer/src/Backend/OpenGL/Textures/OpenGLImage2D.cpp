@@ -17,8 +17,6 @@ namespace HazardRenderer::OpenGL
 		m_Format = info->Format;
 		m_Samples = info->Mips;
 
-		std::cout << "Created OpenGLImage2D: " << m_DebugName << std::endl;
-
 		Invalidate();
 		if (info->Data.Data != nullptr)
 			SetImageData(info->Data);
@@ -42,8 +40,6 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		if (m_ID == 0) return;
 	
-		std::cout << "Released OpenGLImage2D: " << m_DebugName << std::endl;
-
 		glDeleteTextures(1, &m_ID);
 		m_ID = 0;
 	}

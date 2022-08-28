@@ -14,6 +14,9 @@ namespace Hazard
 
 		void PreRender();
 		void PostRender();
+
+		HazardRenderer::Window& GetWindow() { return *m_Window; }
+
 	private:
 		HazardRenderer::Window* m_Window;
 

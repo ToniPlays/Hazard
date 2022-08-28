@@ -3,7 +3,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "UtilityCore.h"
 #include "File.h"
-#include "Hazard/Rendering/Texture2D.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 namespace UI 
 {

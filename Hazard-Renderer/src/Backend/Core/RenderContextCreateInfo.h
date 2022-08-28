@@ -71,7 +71,6 @@ namespace Hazard
 		uint32_t ImagesInFlight = 0;
 		bool Logging = true;
 		bool VSync = false;
-		bool UseResources = true;
 
 		HazardRendererAppInfo* pAppInfo = nullptr;
 		HazardRenderer::FrameBufferCreateInfo* pTargetFrameBuffer = 0;

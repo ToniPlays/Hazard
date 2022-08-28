@@ -7,7 +7,7 @@
 #include "ImGuiUtils.h"
 #include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
-#include "Hazard/Rendering/Texture2D.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"

@@ -1,6 +1,6 @@
 #include "GUIManager.h"
 #include "Hazard.h"
-#include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/RenderContext/RenderContextManager.h"
 
 #include "../ImGui_Backend/FontAwesome.h"
 #include "Platform/OpenGL/EditorPlatformOpenGL.h"
@@ -22,7 +22,7 @@ void GUIManager::Init()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	//m_Window = &Application::GetModule<RenderEngine>().GetWindow();
+	m_Window = &Application::GetModule<RenderContextManager>().GetWindow();
 
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 	io.DisplaySize = { (float)m_Window->GetWidth(), (float)m_Window->GetHeight() };
@@ -60,28 +60,26 @@ void GUIManager::Init()
 
 void GUIManager::Update()
 {
-	return;
 	HZR_PROFILE_FUNCTION();
 	m_PanelManager.Update();
 }
 void GUIManager::Render()
 {
-	return;
-	HZR_PROFILE_FUNCTION();
-	m_Platform->BeginFrame();
+	Renderer::Submit([platform = m_Platform, menuBar = m_MainMenuBar, panelManager = m_PanelManager]() mutable {
+		platform->BeginFrame();
 
-	HZR_PROFILE_FUNCTION("GUIManager::Render()");
-	m_MainMenuBar.Render();
-	{
-		using namespace ImUI;
-		ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
-		Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
-		Dockspace::EndDockspace("MainWorkspace");
-	}
-	m_PanelManager.Render();
+		menuBar.Render();
+		{
+			using namespace ImUI;
+			ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
+			Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
+			Dockspace::EndDockspace("MainWorkspace");
+		}
+		panelManager.Render();
 
-	ImGui::Render();
-	m_Platform->EndFrame();
+		ImGui::Render();
+		platform->EndFrame();
+		});
 }
 bool GUIManager::OnEvent(Event& e)
 {

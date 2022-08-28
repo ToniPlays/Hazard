@@ -3,7 +3,7 @@
 
 #include "Hazard.h"
 #include "MathCore.h"
-#include "Hazard/Rendering/Texture2D.h"
+#include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
 
 using namespace Hazard;

@@ -33,7 +33,9 @@ namespace HazardRenderer::Vulkan
 		void Submit();
 
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false);
+		virtual void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		virtual void EndRenderPass();
+		virtual void EndRenderPass_RT();
 
 		virtual void BindPipeline(Ref<Pipeline> pipeline) {};
 		virtual void SetViewport(float x, float y, float width, float height) {};

@@ -33,12 +33,14 @@ void EditorPlatformOpenGL::BeginFrame()
 void EditorPlatformOpenGL::EndFrame()
 {
 	HZR_PROFILE_FUNCTION();
-	m_Window->BeginFrame();
 
+	auto& cmdBuffer = m_Context->GetSwapchain()->GetSwapchainBuffer();
+	cmdBuffer->BeginRenderPass_RT(m_Context->GetSwapchain()->GetRenderPass());
 
-	HZR_PROFILE_FUNCTION("EditorPlatformOpenGL::EndFrame() RT");
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO();
+
+	cmdBuffer->EndRenderPass();
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{

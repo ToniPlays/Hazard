@@ -2,8 +2,10 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
 
-namespace Hazard {
-	class ImageAssetLoader : public IAssetLoader {
+namespace Hazard 
+{
+	class ImageAssetLoader : public IAssetLoader 
+	{
 	public:
 		ImageAssetLoader() = default;
 		~ImageAssetLoader() = default;

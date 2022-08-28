@@ -11,6 +11,7 @@
 #include "Editor/EditorWorldManager.h"
 
 #include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
 
 #include "MessageFlags.h"
@@ -54,12 +55,11 @@ void HazardEditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
 
-	ScriptEngineCreateInfo scriptEngine = {};
 
 	std::string dllFile = project.GetProjectData().ProjectName + ".dll";
 	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
-	std::cout << "App assembly at " << appAssemblyPath << std::endl;
 
+	ScriptEngineCreateInfo scriptEngine = {};
 	scriptEngine.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/Debug/HazardScripting.dll";
 	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
 	scriptEngine.AssemblyPath = "C:/Program Files/Mono/lib";
@@ -68,19 +68,20 @@ void HazardEditorApplication::PreInit()
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
 	createInfo.RenderContextInfo = &renderContextInfo;
+	createInfo.ScriptEngineInfo = &scriptEngine;
+	createInfo.EntityComponent = &entity;
 
 	CreateApplicationStack(&createInfo);
 
-	//GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
+	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {
 	Editor::EditorWorldManager::Init();
-	return;
 	auto& manager = PushModule<GUIManager>();
-	//auto& window = GetModule<RenderEngine>().GetWindow();
+	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
-	/*
+	
 	window.SetDebugCallback([](RenderMessage message) {
 		auto manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
@@ -89,7 +90,7 @@ void HazardEditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
 		});
-		*/
+		
 	scriptEngine.SetDebugCallback([](ScriptMessage message) {
 		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();

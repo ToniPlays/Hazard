@@ -65,22 +65,28 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		HZR_ASSERT(false, "IsIntegratedBase undefined");
 		return false;
 	}
-	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer, VkImage image, VkAccessFlags srcAccess, VkAccessFlags dstAccess, VkImageLayout oldLayout, VkImageLayout newLayout, VkPipelineStageFlags srcFlags, VkPipelineStageFlags dstFlags, VkImageSubresourceRange subresourceRange)
+	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
+		VkImage image,
+		VkAccessFlags srcAccessMask,
+		VkAccessFlags dstAccessMask,
+		VkImageLayout oldLayout,
+		VkImageLayout newLayout,
+		VkPipelineStageFlags srcStageMask,
+		VkPipelineStageFlags dstStageMask,
+		VkImageSubresourceRange subresourceRange)
 	{
 		VkImageMemoryBarrier barrier = {};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
-		barrier.srcAccessMask = srcAccess;
-		barrier.dstAccessMask = dstAccess;
+		barrier.srcAccessMask = srcAccessMask;
+		barrier.dstAccessMask = dstAccessMask;
 		barrier.oldLayout = oldLayout;
 		barrier.newLayout = newLayout;
 		barrier.image = image;
 		barrier.subresourceRange = subresourceRange;
 
-		vkCmdPipelineBarrier(commandBuffer, srcAccess, dstAccess, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-
-
+		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 }

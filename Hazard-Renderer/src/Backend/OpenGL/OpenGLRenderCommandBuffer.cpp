@@ -26,7 +26,15 @@ namespace HazardRenderer::OpenGL
 			instance->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
 			});
 	}
+	void OpenGLRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
+	{
+		renderPass->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
+	}
 	void OpenGLRenderCommandBuffer::EndRenderPass()
+	{
+
+	}
+	void OpenGLRenderCommandBuffer::EndRenderPass_RT()
 	{
 
 	}

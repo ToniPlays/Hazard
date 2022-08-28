@@ -6,7 +6,7 @@
 #include "spdlog/fmt/fmt.h"
 
 
-namespace HazardRenderer::Vulkan 
+namespace HazardRenderer::Vulkan
 {
 	VulkanFrameBuffer::VulkanFrameBuffer(FrameBufferCreateInfo* info)
 	{
@@ -18,7 +18,7 @@ namespace HazardRenderer::Vulkan
 		m_Specs.SwapChainTarget = info->SwapChainTarget;
 		m_Specs.ClearColor = info->ClearColor;
 
-		if (info->Width == 0) 
+		if (info->Width == 0)
 		{
 			auto swapchain = VulkanContext::GetInstance()->GetSwapchain();
 			m_Specs.Width = swapchain->GetWidth();
@@ -32,11 +32,11 @@ namespace HazardRenderer::Vulkan
 
 		//Create images immediate
 		uint32_t attachmentIndex = 0;
-		if (!info->pFrameBuffer) 
+		if (!info->pFrameBuffer)
 		{
-			for (auto& attachmentSpec : m_Specs.Attachments) 
+			for (auto& attachmentSpec : m_Specs.Attachments)
 			{
-				if (m_ExistingImage && m_ExistingImage->GetLayerCount() > 1) 
+				if (m_ExistingImage && m_ExistingImage->GetLayerCount() > 1)
 				{
 					if (attachmentSpec.IsDepth())
 						m_DepthAttachmentImage = m_ExistingImage;
@@ -78,14 +78,21 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
+		Ref<VulkanFrameBuffer> instance = this;
+		Renderer::Submit([instance, width, height, force]() mutable {
+			instance->Resize_RT(width, height, force);
+			});
+	}
+	void VulkanFrameBuffer::Resize_RT(uint32_t width, uint32_t height, bool force)
+	{
 		if (!force && (m_Specs.Width == width && m_Specs.Height == height)) return;
 
 		m_Specs.Width = width;
 		m_Specs.Height = height;
 
-		if (!m_Specs.SwapChainTarget) 
+		if (!m_Specs.SwapChainTarget)
 		{
-			Invalidate();
+			Invalidate_RT();
 		}
 		else
 		{
@@ -96,7 +103,7 @@ namespace HazardRenderer::Vulkan
 			m_ClearValues.emplace_back().color = VulkanContext::GetInstance()->GetClearColorValue();
 		}
 
-		for (auto& cb : m_ResizeCallbacks) 
+		for (auto& cb : m_ResizeCallbacks)
 		{
 			cb(this);
 		}
@@ -128,6 +135,30 @@ namespace HazardRenderer::Vulkan
 				m_DepthAttachmentImage->Release();
 		}
 	}
+	void VulkanFrameBuffer::Release_RT()
+	{
+		if (!m_Framebuffer) return;
+
+		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		vkDestroyFramebuffer(device, m_Framebuffer, nullptr);
+
+		if (m_Specs.pFrameBuffer) return;
+
+		uint32_t attachmentIndex = 0;
+		for (auto& image : m_ColorAttachments)
+		{
+			if (m_ExistingImages.find(attachmentIndex) != m_ExistingImages.end()) continue;
+
+			if (image->GetLayerCount() == 1 || attachmentIndex == 0 && !image->GetLayerImageView(0))
+				image->Release_RT();
+			attachmentIndex++;
+		}
+		if (m_DepthAttachmentImage)
+		{
+			if (m_ExistingImages.find((uint32_t)m_Specs.Attachments.size() - 1) == m_ExistingImages.end())
+				m_DepthAttachmentImage->Release_RT();
+		}
+	}
 	void VulkanFrameBuffer::Invalidate()
 	{
 		Ref<VulkanFrameBuffer> instance = this;
@@ -139,7 +170,7 @@ namespace HazardRenderer::Vulkan
 	{
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		Release();
+		Release_RT();
 
 		VulkanAllocator allocator("VulkanFramebuffer");
 
@@ -148,6 +179,6 @@ namespace HazardRenderer::Vulkan
 		VkAttachmentReference depthReference;
 
 		m_ClearValues.resize(m_Specs.AttachmentCount);
-		
+
 	}
 }

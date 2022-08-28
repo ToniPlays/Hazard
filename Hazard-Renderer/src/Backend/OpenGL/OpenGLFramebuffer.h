@@ -16,6 +16,7 @@ namespace HazardRenderer::OpenGL
 		virtual void Bind_RT();
 
 		virtual void Resize(uint32_t width, uint32_t height, bool force = false) override;
+		virtual void Resize_RT(uint32_t width, uint32_t height, bool force = false) override;
 
 		virtual uint32_t GetWidth() const override { return m_Specs.Width; };
 		virtual uint32_t GetHeight() const override { return m_Specs.Height; };
@@ -26,7 +27,7 @@ namespace HazardRenderer::OpenGL
 		virtual FrameBufferSpecification& GetSpecification() override { return m_Specs; }
 
 		void Invalidate();
-		void RT_Invalidate();
+		void Invalidate_RT();
 
 	private:
 		FrameBufferSpecification m_Specs;

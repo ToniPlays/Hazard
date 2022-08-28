@@ -43,7 +43,7 @@ namespace HazardRenderer::OpenGL
 		}
 		if (m_Specs.SwapChainTarget) return;
 
-		RT_Invalidate();
+		Invalidate();
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
@@ -86,6 +86,13 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
+		Ref<OpenGLFrameBuffer> instance = this;
+		Renderer::Submit([instance, width, height, force]() mutable {
+			instance->Resize_RT(width, height, force);
+			});
+	}
+	void OpenGLFrameBuffer::Resize_RT(uint32_t width, uint32_t height, bool force)
+	{
 		HZR_PROFILE_FUNCTION();
 		if (m_Specs.Width == width && m_Specs.Height == height && !force || (width < 0 || height < 0))
 			return;
@@ -93,21 +100,20 @@ namespace HazardRenderer::OpenGL
 		m_Specs.Width = width;
 		m_Specs.Height = height;
 
-		Invalidate();
+		Invalidate_RT();
 	}
 	void OpenGLFrameBuffer::Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
-			instance->RT_Invalidate();
+			instance->Invalidate_RT();
 			});
 	}
-	void OpenGLFrameBuffer::RT_Invalidate()
+	void OpenGLFrameBuffer::Invalidate_RT()
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_RENDER_THREAD_ONLY();
-		std::cout << "Invalidate OpenGLFramebuffer: " << m_Specs.DebugName << std::endl;
 		if (m_Specs.SwapChainTarget) return;
 
 		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;

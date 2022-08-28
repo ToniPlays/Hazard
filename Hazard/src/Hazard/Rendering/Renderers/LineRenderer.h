@@ -6,8 +6,6 @@
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
 
-#include "../Texture2D.h"
-
 namespace Hazard
 {
 	struct LineVertex 

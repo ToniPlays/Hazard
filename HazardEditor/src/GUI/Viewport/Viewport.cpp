@@ -57,7 +57,7 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			m_FrameBuffer->Resize(m_Width, m_Height);
+			m_FrameBuffer->Resize_RT(m_Width, m_Height);
 		}
 
 		if (m_CurrentImage == 0 && true) {}

@@ -6,7 +6,7 @@
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
 
-#include "../Texture2D.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 namespace Hazard 
 {
@@ -65,7 +65,6 @@ namespace Hazard
 		void CreateResources();
 
 	private:
-
 		float GetTextureIndex(const Ref<Texture2DAsset>& texture);
 
 	private:

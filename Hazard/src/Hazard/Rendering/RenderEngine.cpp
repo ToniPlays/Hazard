@@ -3,8 +3,8 @@
 #include "HRenderer.h"
 #include "Mesh/MeshAssetLoader.h"
 #include "Environment/EnvironmentAssetLoader.h"
-#include "ImageAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 namespace Hazard
 {
@@ -14,14 +14,7 @@ namespace Hazard
 	{
 		HRenderer::s_Engine = this;
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
-		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
-
-		if (!createInfo->UseResources || true) 
-		{
-			SetActive(false);
-			return;
-		}
 
 		uint32_t data = 0xFFFFFFFF;
 
@@ -82,13 +75,13 @@ namespace Hazard
 		auto& drawList = GetDrawList();
 		m_Resources->ModelUniformBuffer->Bind(cmdBuffer);
 
-		for (auto& [pipeline, list] : drawList.MeshList) 
+		for (auto& [pipeline, list] : drawList.MeshList)
 		{
 			pipeline->Bind(cmdBuffer);
-			for (auto& mesh : list) 
+			for (auto& mesh : list)
 			{
 				if (mesh.Count == 0) continue;
-				struct ModelData 
+				struct ModelData
 				{
 					glm::mat4 transform;
 				};
@@ -99,7 +92,7 @@ namespace Hazard
 				m_Resources->ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				mesh.VertexBuffer->Bind(cmdBuffer);
 
-				if (mesh.IndexBuffer) 
+				if (mesh.IndexBuffer)
 				{
 					mesh.IndexBuffer->Bind(cmdBuffer);
 					pipeline->Draw(cmdBuffer, mesh.Count);
@@ -135,7 +128,7 @@ namespace Hazard
 			}
 		}
 
-		for (uint32_t i = 0; i < m_DeferredFrameBuffer->GetColorAttachmentCount(); i++) 
+		for (uint32_t i = 0; i < m_DeferredFrameBuffer->GetColorAttachmentCount(); i++)
 		{
 			auto& image = m_DeferredFrameBuffer->GetImage(i);
 			image->Bind(i);
@@ -151,7 +144,7 @@ namespace Hazard
 		auto& drawList = GetDrawList();
 		LightingData data = {};
 		data.DirectionLightCount = Math::Max<uint32_t>(drawList.DirectionalLights.size(), 16);
-		
+
 		for (size_t i = 0; i < data.DirectionLightCount; i++)
 		{
 			const DirectionalLightSource& light = drawList.DirectionalLights[i];
