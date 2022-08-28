@@ -1,4 +1,5 @@
 #include "VkUtils.h"
+#ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan::VkUtils {
 
@@ -90,3 +91,4 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 }
+#endif

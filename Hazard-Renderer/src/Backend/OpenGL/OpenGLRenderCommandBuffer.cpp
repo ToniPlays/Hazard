@@ -1,5 +1,6 @@
 
 #include "OpenGLRenderCommandBuffer.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "OpenGLSwapchain.h"
 #include "OpenGLCore.h"
 
@@ -34,8 +35,5 @@ namespace HazardRenderer::OpenGL
 	{
 
 	}
-	void OpenGLRenderCommandBuffer::EndRenderPass_RT()
-	{
-
-	}
 }
+#endif

@@ -1,7 +1,7 @@
 
 #include "EditorPlatformOpenGL.h"
 #include "Backend/Core/Renderer.h"
-#include "Backend/OpenGL/OpenGLSwapchain.h"
+#include "Backend/OpenGL/OpenGLCore.h"
 
 #include "../ImGui_Backend/imgui_impl_opengl3.h"
 #include "../ImGui_Backend/imgui_impl_glfw.h"
@@ -34,7 +34,7 @@ void EditorPlatformOpenGL::EndFrame()
 {
 	HZR_PROFILE_FUNCTION();
 
-	auto& cmdBuffer = m_Context->GetSwapchain()->GetSwapchainBuffer();
+	auto& cmdBuffer = m_Context->GetSwapchain()->GetSwapchainBuffer().As<OpenGL::OpenGLRenderCommandBuffer>();
 	cmdBuffer->BeginRenderPass_RT(m_Context->GetSwapchain()->GetRenderPass());
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

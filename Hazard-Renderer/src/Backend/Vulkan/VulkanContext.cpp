@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
-		bool breakOnValidation = true;
+		bool breakOnValidation = false;
 		const bool performanceWarn = true;
 
 
@@ -60,7 +60,8 @@ namespace HazardRenderer::Vulkan
 	}
 
 
-	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion) {
+	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion) 
+	{
 		uint32_t instanceVersion;
 		vkEnumerateInstanceVersion(&instanceVersion);
 
@@ -93,7 +94,8 @@ namespace HazardRenderer::Vulkan
 		m_Window = window;
 		m_ClearColor = info->pWindows[0].Color;
 
-		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) {
+		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) 
+		{
 			HZR_ASSERT(false, "API version not supported");
 		}
 
@@ -136,12 +138,14 @@ namespace HazardRenderer::Vulkan
 
 			for (const VkLayerProperties& prop : instanceProperties)
 			{
-				if (strcmp(prop.layerName, validationName) == 0) {
+				if (strcmp(prop.layerName, validationName) == 0) 
+				{
 					validationPresent = true;
 					break;
 				}
 			}
-			if (validationPresent) {
+			if (validationPresent) 
+			{
 				instanceInfo.ppEnabledLayerNames = &validationName;
 				instanceInfo.enabledLayerCount = 1;
 			}
@@ -254,7 +258,7 @@ namespace HazardRenderer::Vulkan
 			poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 			poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 			poolInfo.maxSets = 100000;
-			poolInfo.poolSizeCount = (uint32_t)sizeof(poolSizes) / sizeof(*poolSizes);
+			poolInfo.poolSizeCount = (uint32_t)(sizeof(poolSizes) / sizeof(*poolSizes));
 			poolInfo.pPoolSizes = poolSizes;
 
 			for (uint32_t i = 0; i < context->GetImagesInFlight(); i++) 

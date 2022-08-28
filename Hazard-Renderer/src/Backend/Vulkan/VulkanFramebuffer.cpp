@@ -1,5 +1,6 @@
 
 #include "VulkanFramebuffer.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "VulkanContext.h"
 #include "Backend/Core/Renderer.h"
 #include "VkUtils.h"
@@ -410,3 +411,4 @@ namespace HazardRenderer::Vulkan
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FRAMEBUFFER, m_Specs.DebugName, m_Framebuffer);
 	}
 }
+#endif

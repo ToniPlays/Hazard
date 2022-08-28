@@ -48,7 +48,8 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		if (m_LineBatch.GetCount() >= m_Data.MaxVertices) {
+		if (m_LineBatch.GetCount() >= m_Data.MaxVertices)
+		{
 			Flush();
 			BeginScene();
 		}
@@ -73,7 +74,8 @@ namespace Hazard
 								{ "a_Color",		ShaderDataType::Float4 }
 		};
 
-		if (!m_VertexBuffer) {
+		if (!m_VertexBuffer) 
+		{
 			VertexBufferCreateInfo vertexInfo = {};
 			vertexInfo.DebugName = "RendererLineBatch";
 			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(LineVertex);

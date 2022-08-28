@@ -24,13 +24,13 @@ namespace HazardRenderer
 		case RenderAPI::OpenGL: pipeline = Ref<OpenGL::OpenGLPipeline>::Create(specs); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: pipeline = Ref<Vulkan::VulkanPipeline>::Create(specs); break;
+		case RenderAPI::Vulkan: pipeline = Ref<Vulkan::VulkanPipeline>::Create(specs); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
             case RenderAPI::Metal: pipeline = Ref<Metal::MetalPipeline>::Create(specs); break;
 #endif
 		default:
-			return nullptr;
+			HZR_ASSERT(false, "Unknown RenderAPI");
 		}
 
 		if (specs->IsShared)

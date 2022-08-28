@@ -1,30 +1,30 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#ifdef HZR_INCLUDE_OPENGL
+#ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/Pipeline/Pipeline.h"
-#include "OpenGLShader.h"
+#include "Backend/Core/Pipeline/RenderPass.h"
 
-namespace HazardRenderer::OpenGL
+namespace HazardRenderer::Vulkan
 {
-	class OpenGLPipeline : public Pipeline 
+	class VulkanPipeline : public Pipeline
 	{
 	public:
-		OpenGLPipeline(PipelineSpecification* specs);
-		virtual ~OpenGLPipeline();
+		VulkanPipeline(PipelineSpecification* specs);
+		virtual ~VulkanPipeline();
 
 		PipelineSpecification GetSpecifications() { return m_Specs; }
 		const PipelineSpecification GetSpecifications() const { return m_Specs; }
 		Ref<Shader> GetShader() { return m_Shader; }
-		void SetRenderPass(Ref<RenderPass> renderPass) override { m_Specs.pTargetRenderPass = renderPass.Raw(); }
+		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
 		void Invalidate() override;
 
 	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;
-		uint32_t m_DrawType, m_PolygonMode;
+
 	};
 }
 #endif

@@ -11,10 +11,6 @@
 
 namespace UI 
 {
-	TransformationGizmo::TransformationGizmo()
-	{
-
-	}
 	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -29,7 +25,7 @@ namespace UI
 		auto& tc = target.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();
 
-		ImGuizmo::Manipulate(glm::value_ptr(camera.GetView()), glm::value_ptr(camera.GetProjection()),
+		ImGuizmo::Manipulate(glm::value_ptr(glm::inverse(camera.GetView())), glm::value_ptr(camera.GetProjection()),
 			(ImGuizmo::OPERATION)m_Type, m_Global ? ImGuizmo::WORLD : ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
 
 		m_IsUsing = ImGuizmo::IsUsing();
@@ -52,11 +48,11 @@ namespace UI
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{
-		if (Input::IsKeyDown(Key::LeftControl) || m_ForcedSnapping) {
-
+		if (Input::IsKeyDown(Key::LeftControl) || m_ForcedSnapping) 
+		{
 			if (m_Type == Gizmo::Translate) return new float[3] { m_TransformSnap, m_TransformSnap, m_TransformSnap };
-			if (m_Type == Gizmo::Rotate) return new float[3] { m_RotationSnap, m_RotationSnap, m_RotationSnap };
-			if (m_Type == Gizmo::Scale) return new float[3] { m_ScaleSnap, m_ScaleSnap, m_ScaleSnap };
+			if (m_Type == Gizmo::Rotate)	return new float[3] { m_RotationSnap, m_RotationSnap, m_RotationSnap };
+			if (m_Type == Gizmo::Scale)		return new float[3] { m_ScaleSnap, m_ScaleSnap, m_ScaleSnap };
 		}
 		return nullptr;
 	}

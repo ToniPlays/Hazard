@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
-#include "UtilityCore.h"
 #include "VulkanContext.h"
+#ifdef HZR_INCLUDE_VULKAN
+#include "UtilityCore.h"
+#include <vulkan/vulkan.h>
 
 inline PFN_vkSetDebugUtilsObjectNameEXT fpSetDebugUtilsObjectNameEXT;
 inline PFN_vkCmdBeginDebugUtilsLabelEXT fpCmdBeginDebugUtilsLabelEXT;
@@ -110,3 +111,4 @@ namespace HazardRenderer::Vulkan::VkUtils
 		VK_CHECK_RESULT(fpSetDebugUtilsObjectNameEXT(device, &nameInfo), "");
 	}
 }
+#endif

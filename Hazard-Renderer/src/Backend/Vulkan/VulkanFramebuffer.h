@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#ifdef HZR_INCLUDE_OPENGL
+#ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/FrameBuffer.h"
 #include "Textures/VulkanImage2D.h"

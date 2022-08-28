@@ -1,5 +1,6 @@
 
 #include "VulkanVertexBuffer.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "Backend/Core/Renderer.h"
 
@@ -107,3 +108,4 @@ namespace HazardRenderer::Vulkan
 
 	}
 }
+#endif

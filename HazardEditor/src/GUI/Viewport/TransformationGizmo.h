@@ -13,7 +13,7 @@ namespace UI {
 	class TransformationGizmo {
 
 	public:
-		TransformationGizmo();
+		TransformationGizmo() = default;
 		~TransformationGizmo() = default;
 
 		void RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size);
@@ -28,9 +28,6 @@ namespace UI {
 		void SetGlobal(bool global) { m_Global = global; }
 		bool ForcedSnapping() { return m_ForcedSnapping; }
 		void SetForcedSnapping(bool snapping) { m_ForcedSnapping = snapping; }
-
-	public:
-		
 
 	private:
 		Gizmo m_Type = Gizmo::Translate;

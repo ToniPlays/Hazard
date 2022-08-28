@@ -30,13 +30,13 @@ namespace Hazard
 		void ClearDrawLists();
 
 		void PreRender();
-		void ShadowPass();
-		void PreDepthPass();
-		void GeometryPass();
-		void CompositePass();
+		void ShadowPass(Ref<RenderCommandBuffer> commandBuffer);
+		void PreDepthPass(Ref<RenderCommandBuffer> commandBuffer);
+		void GeometryPass(Ref<RenderCommandBuffer> commandBuffer);
+		void CompositePass(Ref<RenderCommandBuffer> commandBuffer);
 
 		//Not yet implemented
-		void LightCullingPass() {};
+		void LightCullingPass(Ref<RenderCommandBuffer> commandBuffer) {};
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }

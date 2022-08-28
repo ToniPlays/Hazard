@@ -10,6 +10,7 @@
 #include "Pipeline/VulkanRenderPass.h"
 #include "Pipeline/VulkanVertexBuffer.h"
 #include "Pipeline/VulkanIndexBuffer.h"
+#include "Pipeline/VulkanPipeline.h"
 
 #include "Textures/VulkanImage2D.h"
 

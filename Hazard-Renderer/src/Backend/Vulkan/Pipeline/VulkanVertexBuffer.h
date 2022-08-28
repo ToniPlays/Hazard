@@ -1,6 +1,6 @@
 #pragma once
 #include "Backend/Core/Core.h"
-#ifdef HZR_INCLUDE_OPENGL
+#ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/Pipeline/Buffers.h"
 #include <vulkan/vulkan.h>

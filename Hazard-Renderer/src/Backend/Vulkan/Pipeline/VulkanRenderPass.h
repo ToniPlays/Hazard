@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Pipeline/RenderPass.h"
+#ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan {
 	class VulkanRenderPass : public RenderPass {
@@ -17,3 +18,4 @@ namespace HazardRenderer::Vulkan {
 		RenderPassSpecification m_Spec;
 	};
 }
+#endif

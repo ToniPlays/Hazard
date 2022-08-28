@@ -7,7 +7,6 @@
 #include "OpenGLFrameBuffer.h"
 #include "Pipeline/OpenGLRenderPass.h"
 #include "Pipeline/OpenGLPipeline.h"
-#include "Pipeline/OpenGLComputePipeline.h"
 #include "Textures/OpenGLImage2D.h"
 #include "Textures/OpenGLCubemapTexture.h"
 

@@ -123,9 +123,6 @@ namespace HazardRenderer
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
-		//virtual void Bind(Ref<RenderCommandBuffer> cmdBufer) = 0;
-		//virtual void Bind_RT(Ref<RenderCommandBuffer> cmdBufer) = 0;
-		//virtual void Unbind() = 0;
 		virtual bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) = 0;
 		virtual UniformBuffer& GetUniform(const std::string& name) = 0;
 

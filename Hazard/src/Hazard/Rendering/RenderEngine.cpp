@@ -66,21 +66,34 @@ namespace Hazard
 		m_QuadRenderer.EndScene();
 	}
 
-	void RenderEngine::ShadowPass()
+	void RenderEngine::ShadowPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 	}
-	void RenderEngine::PreDepthPass()
+	void RenderEngine::PreDepthPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 	}
-	void RenderEngine::GeometryPass()
+	void RenderEngine::GeometryPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 
+		for (auto& [pipeline, meshList] : drawList.MeshList)
+		{
+			commandBuffer->BindPipeline(pipeline);
+			for (auto& mesh : meshList)
+			{
+				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+				commandBuffer->BindIndexBuffer(mesh.VertexBuffer);
+			}
+		}
 	}
-	void RenderEngine::CompositePass()
+	void RenderEngine::CompositePass(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 	}
 	void RenderEngine::Update()
@@ -97,15 +110,16 @@ namespace Hazard
 
 		for (auto& worldDrawList : m_DrawList)
 		{
+			//Not camera dependant
 			PreRender();
-			ShadowPass();
-			PreDepthPass();
+			ShadowPass(commandBuffer);
+			PreDepthPass(commandBuffer);
 
 			for (auto& camera : worldDrawList.WorldRenderer->m_CameraData)
 			{
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				GeometryPass();
-				CompositePass();
+				GeometryPass(commandBuffer);
+				CompositePass(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

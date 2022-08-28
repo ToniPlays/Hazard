@@ -13,7 +13,7 @@
 #include <vulkan/vulkan.h>
 #if HZR_DEBUG
 #define VK_CHECK_RESULT(result, x) if(result != VK_SUCCESS) { HZR_ASSERT(false, x); }
-#elif
+#else
 #define VK_CHECK_RESULT(result, x) result
 #endif
 

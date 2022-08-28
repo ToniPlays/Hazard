@@ -1,4 +1,6 @@
+
 #include "VulkanDevice.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
 
@@ -124,3 +126,4 @@ namespace HazardRenderer::Vulkan
 		vkFreeCommandBuffers(m_LogicalDevice, m_GraphicsPool, 1, &commandBuffer);
 	}
 }
+#endif

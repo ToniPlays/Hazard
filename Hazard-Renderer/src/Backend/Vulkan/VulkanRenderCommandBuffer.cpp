@@ -256,9 +256,5 @@ namespace HazardRenderer::Vulkan
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 			});
 	}
-	void VulkanRenderCommandBuffer::EndRenderPass_RT()
-	{
-		vkCmdEndRenderPass(m_ActiveCommandBuffer);
-	}
 }
 #endif

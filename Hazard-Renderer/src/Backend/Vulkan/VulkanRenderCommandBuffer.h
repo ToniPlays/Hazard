@@ -32,14 +32,16 @@ namespace HazardRenderer::Vulkan
 		void End();
 		void Submit();
 
-		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false);
-		virtual void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
-		virtual void EndRenderPass();
-		virtual void EndRenderPass_RT();
+		void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
+		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
+		void EndRenderPass() override;
 
-		virtual void BindPipeline(Ref<Pipeline> pipeline) {};
-		virtual void SetViewport(float x, float y, float width, float height) {};
-		virtual void SetLineSize(float size) {};
+		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer) override {};
+		void BindIndexBuffer(Ref<IndexBuffer> indexBuffer) override {};
+		void BindPipeline(Ref<Pipeline> pipeline) override {};
+
+		void SetViewport(float x, float y, float width, float height) override {};
+		void SetLineSize(float size) override {};
 
 
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }

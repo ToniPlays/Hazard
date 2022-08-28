@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Texture/Texture.h"
+#ifdef HZR_INCLUDE_OPENGL
 
 namespace HazardRenderer::OpenGL 
 {
@@ -35,3 +36,4 @@ namespace HazardRenderer::OpenGL
 		Ref<Image2D> m_SourceImage;
 	};
 }
+#endif

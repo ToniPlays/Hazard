@@ -45,12 +45,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	using namespace Hazard;
 
 	CommandLineArgs::Init(std::string(lpCmdLine));
+
 	Application* app = CreateApplication();
+
 	HazardLoop loop(app);
 	loop.Start();
-	while (!loop.ShouldClose()) {
+
+	while (!loop.ShouldClose()) 
 		loop.Run();
-	}
 	return 0;
 }
 #endif // HZR_DEBUG

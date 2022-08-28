@@ -1,4 +1,6 @@
+
 #include "VulkanImage2D.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Backend/Core/Renderer.h"
 #include "Backend/Vulkan/VulkanContext.h"
 
@@ -299,3 +301,4 @@ namespace HazardRenderer::Vulkan
 		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 	}
 }
+#endif

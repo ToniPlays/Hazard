@@ -1,5 +1,6 @@
 
 #include "VulkanIndexBuffer.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Backend/Core/Renderer.h"
 #include "../VulkanContext.h"
 
@@ -76,3 +77,4 @@ namespace HazardRenderer::Vulkan
 		__debugbreak();
 	}
 }
+#endif

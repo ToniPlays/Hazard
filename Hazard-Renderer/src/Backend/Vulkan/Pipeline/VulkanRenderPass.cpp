@@ -1,6 +1,6 @@
 
 #include "VulkanRenderPass.h"
-
+#ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan 
 {
@@ -14,3 +14,4 @@ namespace HazardRenderer::Vulkan
 		return new VulkanRenderPass(info);
 	}
 }
+#endif

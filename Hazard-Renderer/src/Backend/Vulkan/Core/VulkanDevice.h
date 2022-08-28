@@ -3,6 +3,7 @@
 #include "Ref.h"
 
 #include "VulkanPhysicalDevice.h"
+#ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan 
 {
@@ -41,3 +42,4 @@ namespace HazardRenderer::Vulkan
 		bool m_EnableDebugMarkers = false;
 	};
 }
+#endif

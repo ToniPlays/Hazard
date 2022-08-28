@@ -1,8 +1,8 @@
 
 #include "OpenGLCubemapTexture.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "File.h"
 
-#include "../Pipeline/OpenGLComputePipeline.h"
 #include "../OpenGLContext.h"
 #include "Backend/Core/Renderer.h"
 
@@ -79,56 +79,11 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)
 	{
-		HZR_PROFILE_FUNCTION();
-		Image2DCreateInfo sourceImage = {};
-		sourceImage.DebugName = "CubeMap Equirectangular";
-		sourceImage.Data = imageData;
-		sourceImage.Format = ImageFormat::RGBA16F;
-		sourceImage.ClearLocalBuffer = true;
-		sourceImage.Width = width;
-		sourceImage.Height = height;
-		//Generate cubemap texture
-
-		ComputePipelineCreateInfo computeInfo = {};
-		computeInfo.DebugName = "EquirectangularToCube";
-		computeInfo.ShaderPath = "Shaders/Compute/EquirectangularToCubeMap.glsl";
-		computeInfo.Usage = PipelineUsage::ComputeBit;
-
-		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
-
-		Ref<ComputePipeline> pipeline = ComputePipeline::Create(&computeInfo);
-		m_SourceImage = Image2D::Create(&sourceImage);
-		m_SourceImage->Bind(cmdBuffer);
-		pipeline->Bind(cmdBuffer);
-
-		Renderer::Submit([id = m_ID]() mutable {
-			//glBindImageTexture(unit, texture, level, layered, layer, access, format);
-			glBindImageTexture(0, id, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-			});
-		pipeline->Execute(cmdBuffer, { m_Width / 32, m_Height / 32, 6 });
-
-		Renderer::SubmitResourceFree([pipeline, data = imageData]() mutable {
-			data.Release();
-			});
+		
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(Ref<CubemapTexture> cubemap)
 	{
-		ComputePipelineCreateInfo computeInfo = {};
-		computeInfo.DebugName = "EnvironmentIrradiance";
-		computeInfo.ShaderPath = "Shaders/Compute/EnvironmentIrradiance.glsl";
-		computeInfo.Usage = PipelineUsage::ComputeBit;
-
-		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
-
-		cubemap->Bind(1);
-		Ref<ComputePipeline> pipeline = ComputePipeline::Create(&computeInfo);
-		pipeline->Bind(cmdBuffer);
-
-		Renderer::Submit([id = m_ID]() mutable {
-			//glBindImageTexture(unit, texture, level, layered, layer, access, format);
-			glBindImageTexture(0, id, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-			});
-
-		pipeline->Execute(cmdBuffer, { m_Width / 32, m_Height / 32, 6 });
+		
 	}
 }
+#endif

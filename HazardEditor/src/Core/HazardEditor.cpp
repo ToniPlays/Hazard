@@ -24,6 +24,7 @@ using namespace HazardScript;
 void HazardEditorApplication::PreInit()
 {
 
+#if HZR_DEBUG
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
@@ -31,6 +32,9 @@ void HazardEditorApplication::PreInit()
 	uint32_t api;
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
+#else
+	RenderAPI renderAPI = RenderAPI::Auto;
+#endif
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
 	if (!workingDir.empty()) 
@@ -53,7 +57,6 @@ void HazardEditorApplication::PreInit()
 	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
 	renderContextInfo.Width = 1920;
 	renderContextInfo.Height = 1080;
-
 
 	RendererCreateInfo rendererInfo = {};
 	
