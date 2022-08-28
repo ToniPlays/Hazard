@@ -10,6 +10,17 @@ namespace HazardRenderer
 	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit };
 	enum class DrawType { None = 0, Fill, Line, Point };
 	enum class CullMode { None = 0, FrontFace, BackFace };
+	enum class DepthOp {
+		None = 0,
+		Never,
+		NotEqual,
+		Less,
+		LessOrEqual,
+		Greater,
+		GreaterOrEqual,
+		Equal,
+		Always
+	};
 
 	class RenderPass;
 
@@ -24,8 +35,9 @@ namespace HazardRenderer
 		float LineWidth = 1.0f;
 		bool IsShared = true;
 		bool DepthTest = true;
-		uint32_t DepthFunc = GL_LESS;
-		RenderPass* pTargetRenderPass = nullptr;
+		bool DepthWrite = true;
+		DepthOp DepthOperator = DepthOp::LessOrEqual;
+		Ref<RenderPass> pTargetRenderPass = nullptr;
 	};
 
 	class Pipeline : public HZR_RESOURCE_HANDLER {

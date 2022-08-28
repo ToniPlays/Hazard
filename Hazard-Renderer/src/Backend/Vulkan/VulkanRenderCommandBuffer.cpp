@@ -4,7 +4,12 @@
 #include "VulkanContext.h"
 #include "Backend/Core/Renderer.h"
 
+
 #include "VulkanFramebuffer.h"
+#include "Pipeline/VulkanVertexBuffer.h"
+#include "Pipeline/VulkanIndexBuffer.h"
+#include "Pipeline/VulkanUniformBuffer.h"
+#include "Pipeline/VulkanPipeline.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
@@ -254,6 +259,62 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() {
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
+			});
+	}
+	void VulkanRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+	{
+		Ref<VulkanVertexBuffer> buffer = vertexBuffer.As<VulkanVertexBuffer>();
+		Ref<VulkanRenderCommandBuffer> instance = this;
+
+		Renderer::Submit([instance, buffer, binding]() mutable {
+			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
+			VkDeviceSize offsets = { 0 };
+			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
+			});
+	}
+	void VulkanRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding)
+	{
+
+	}
+	void VulkanRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
+	{
+		Ref<VulkanPipeline> vkPipeline = pipeline.As<VulkanPipeline>();
+		Ref<VulkanRenderCommandBuffer> instance = this;
+
+		Renderer::Submit([instance, pipeline = vkPipeline]() mutable {
+			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, pipeline->GetBindingPoint(), pipeline->GetVulkanPipeline());
+			});
+	}
+	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
+	{
+		Ref<VulkanIndexBuffer> buffer = indexBuffer.As<VulkanIndexBuffer>();
+		Ref<VulkanRenderCommandBuffer> instance = this;
+
+		Renderer::Submit([instance, buffer, count]() mutable {
+
+			if (buffer)
+			{
+				VkDeviceSize offsets = { 0 };
+				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), offsets, VK_INDEX_TYPE_UINT32);
+				vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, 1, 0, 0, 0);
+				return;
+			}
+			vkCmdDraw(instance->m_ActiveCommandBuffer, count, 1, 0, 0);
+			});
+	}
+	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	{
+
+	}
+	void VulkanRenderCommandBuffer::SetViewport(float x, float y, float width, float height)
+	{
+
+	}
+	void VulkanRenderCommandBuffer::SetLineSize(float size)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, size]() mutable {
+			vkCmdSetLineWidth(instance->m_ActiveCommandBuffer, size);
 			});
 	}
 }

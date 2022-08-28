@@ -90,6 +90,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanFrameBuffer::Resize_RT(uint32_t width, uint32_t height, bool force)
 	{
 		HZR_PROFILE_FUNCTION();
+		std::cout << "VulkanFrameBuffer: " << m_Specs.DebugName << std::endl;
 		if (!force && (m_Specs.Width == width && m_Specs.Height == height)) return;
 
 		m_Specs.Width = width;

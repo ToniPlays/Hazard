@@ -82,7 +82,16 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
+		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
 
+		Renderer::Submit([instance, count, instanceCount]() mutable {
+			if (instance)
+			{
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->GetBufferID());
+				glDrawElementsInstanced(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+			}
+			else glDrawArraysInstanced(GL_TRIANGLES, 0, count, instanceCount);
+			});
 	}
 }
 #endif

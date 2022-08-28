@@ -11,7 +11,7 @@ namespace HazardRenderer::Vulkan
 	}
 	Ref<RenderPass> VulkanRenderPass::Create(RenderPassCreateInfo* info)
 	{
-		return new VulkanRenderPass(info);
+		return Ref<VulkanRenderPass>::Create(info);
 	}
 }
 #endif

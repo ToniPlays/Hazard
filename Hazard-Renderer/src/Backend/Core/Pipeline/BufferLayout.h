@@ -62,7 +62,8 @@ namespace HazardRenderer {
 		{
 			CalculateOffsetsAndStride();
 		}
-		uint32_t GetBufferStride(uint32_t bufferIndex = 0) {
+		uint32_t GetBufferStride(uint32_t bufferIndex = 0) 
+		{
 			uint32_t result = 0;
 			for (auto& element : m_Elements)
 			{

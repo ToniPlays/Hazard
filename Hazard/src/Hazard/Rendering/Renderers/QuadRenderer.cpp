@@ -94,7 +94,7 @@ namespace Hazard
 		return true;
 	}
 
-	void QuadRenderer::CreateResources()
+	void QuadRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
@@ -147,7 +147,7 @@ namespace Hazard
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.DrawType = DrawType::Fill;
 		pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
-		pipelineSpecs.pTargetRenderPass = m_RenderPass.Raw();
+		pipelineSpecs.pTargetRenderPass = renderPass;
 		pipelineSpecs.pBufferLayout = &layout;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);

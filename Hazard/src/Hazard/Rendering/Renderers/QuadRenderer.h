@@ -57,12 +57,13 @@ namespace Hazard
 		void SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2DAsset>& texture);
 		bool IsVisible(const glm::mat4& transform);
 
-		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
+		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) 
+		{
 			if (renderPass == m_RenderPass) return;
 			m_RenderPass = renderPass;
-			CreateResources();
+			CreateResources(renderPass);
 		};
-		void CreateResources();
+		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:
 		float GetTextureIndex(const Ref<Texture2DAsset>& texture);

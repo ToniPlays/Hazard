@@ -30,13 +30,30 @@ namespace Hazard
 
 		m_WhiteTexture = Ref<Hazard::Image2DAsset>::Create(&info);
 
+		FrameBufferCreateInfo frameBufferInfo = {};
+		frameBufferInfo.DebugName = "RenderEngine";
+		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
+		frameBufferInfo.ClearOnLoad = true;
+		frameBufferInfo.Width = 1920;
+		frameBufferInfo.Height = 1080;
+		frameBufferInfo.SwapChainTarget = false;
+		
+		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+		RenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.DebugName = "RenderEngine";
+		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+
+		m_RenderPass = RenderPass::Create(&renderPassInfo);
+
 		m_QuadRenderer.Init();
-		m_QuadRenderer.CreateResources();
+		m_QuadRenderer.CreateResources(m_RenderPass);
 		m_LineRenderer.Init();
-		m_LineRenderer.CreateResources();
+		m_LineRenderer.CreateResources(m_RenderPass);
 
 		m_Resources = new RenderResources();
-		m_Resources->Initialize(nullptr);
+		m_Resources->Initialize(m_RenderPass);
 
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
 	}

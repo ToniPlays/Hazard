@@ -66,6 +66,51 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		HZR_ASSERT(false, "IsIntegratedBase undefined");
 		return false;
 	}
+	VkPrimitiveTopology GetVulkanTopology(const DrawType& type)
+	{
+		switch (type)
+		{
+		case DrawType::Fill:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+		case DrawType::Line:	return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		case DrawType::Point:	return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+		}
+		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
+	}
+	VkPolygonMode GetVulkanPolygonMode(const DrawType& type)
+	{
+		switch (type)
+		{
+		case DrawType::Fill:	return VK_POLYGON_MODE_FILL;
+		case DrawType::Line:	return VK_POLYGON_MODE_LINE;
+		case DrawType::Point:	return VK_POLYGON_MODE_POINT;
+		}
+		return VK_POLYGON_MODE_MAX_ENUM;
+	}
+	VkCullModeFlags GetVulkanCullMode(const CullMode& type)
+	{
+		switch (type)
+		{
+		case CullMode::None:		return VK_CULL_MODE_NONE;
+		case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
+		case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
+		}
+		return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
+	}
+	VkCompareOp GetVulkanCompareOp(const DepthOp& op)
+	{
+		switch (op)
+		{
+		case DepthOp::None:					return VK_COMPARE_OP_MAX_ENUM;
+		case DepthOp::Never:				return VK_COMPARE_OP_NEVER;
+		case DepthOp::NotEqual:				return VK_COMPARE_OP_NOT_EQUAL;
+		case DepthOp::Less:					return VK_COMPARE_OP_LESS;
+		case DepthOp::LessOrEqual:			return VK_COMPARE_OP_LESS_OR_EQUAL;
+		case DepthOp::Greater:				return VK_COMPARE_OP_GREATER;
+		case DepthOp::GreaterOrEqual:		return VK_COMPARE_OP_GREATER_OR_EQUAL;
+		case DepthOp::Always:				return VK_COMPARE_OP_ALWAYS;
+		}
+	}
+
 	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkAccessFlags srcAccessMask,
@@ -89,6 +134,17 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		barrier.subresourceRange = subresourceRange;
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+	}
+	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
+		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
+		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
+		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
+		}
+		return VK_FORMAT_MAX_ENUM;
 	}
 }
 #endif

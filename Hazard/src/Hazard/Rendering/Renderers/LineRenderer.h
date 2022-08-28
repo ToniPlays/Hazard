@@ -42,9 +42,9 @@ namespace Hazard
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
 			if (renderPass == m_RenderPass) return;
 			m_RenderPass = renderPass;
-			CreateResources();
+			CreateResources(renderPass);
 		};
-		void CreateResources();
+		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:
 

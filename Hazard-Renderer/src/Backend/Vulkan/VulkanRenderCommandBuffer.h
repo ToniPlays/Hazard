@@ -36,16 +36,16 @@ namespace HazardRenderer::Vulkan
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		void EndRenderPass() override;
 
-		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override {};
-		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding) {};
-		void BindPipeline(Ref<Pipeline> pipeline) override {};
+		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
+		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding);
+		void BindPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) {};
-		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) {};
+		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
+		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
 
 
-		void SetViewport(float x, float y, float width, float height) override {};
-		void SetLineSize(float size) override {};
+		void SetViewport(float x, float y, float width, float height) override;
+		void SetLineSize(float size) override;
 
 
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }

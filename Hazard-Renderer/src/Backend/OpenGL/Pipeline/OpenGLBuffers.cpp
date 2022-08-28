@@ -55,7 +55,6 @@ namespace HazardRenderer::OpenGL
 			glCreateBuffers(1, &instance->m_BufferID);
 			glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
 
-
 			uint32_t bufferedOffset = 0;
 			uint32_t currentBuffer = 0;
 
@@ -65,7 +64,8 @@ namespace HazardRenderer::OpenGL
 
 				uint32_t stride = instance->m_Layout.GetBufferStride(element.ElementDivisor);
 
-				if (element.ElementDivisor != currentBuffer) {
+				if (element.ElementDivisor != currentBuffer) 
+				{
 					bufferedOffset += element.Offset;
 					currentBuffer = element.ElementDivisor;
 					glVertexArrayBindingDivisor(instance->m_VAO, element.ElementDivisor, element.ElementDivisor);
@@ -75,10 +75,8 @@ namespace HazardRenderer::OpenGL
 				glVertexArrayAttribFormat(instance->m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
 				glVertexArrayAttribBinding(instance->m_VAO, i, element.ElementDivisor);
 			}
-
-			if (data) {
+			if (data)
 				instance->SetData_RT(data, instance->m_Size);
-			}
 		});
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -88,15 +86,6 @@ namespace HazardRenderer::OpenGL
 			glDeleteVertexArrays(1, &vao);
 			});
 	}
-	/*
-	void OpenGLVertexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		Renderer::Submit([]() mutable {
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
-			});
-	}
-	*/
 	void OpenGLVertexBuffer::SetData(const void* data, size_t size)
 	{
 		Ref<OpenGLVertexBuffer> instance = this;
@@ -131,21 +120,6 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
-	/*
-	void OpenGLIndexBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		Ref<OpenGLIndexBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->m_ID);
-			});
-	}
-	void OpenGLIndexBuffer::Unbind(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		Renderer::Submit([]() mutable {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			});
-	}
-	*/
 	void OpenGLIndexBuffer::SetData(uint32_t* data, size_t size)
 	{
 		Ref<OpenGLIndexBuffer> instance = this;
@@ -179,29 +153,6 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
-	/*
-	void OpenGLUniformBuffer::Bind(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		if (m_FrameIndex != cmdBuffer->GetFrameIndex()) {
-			m_CurrentBufferDataIndex = 0;
-			m_FrameIndex = cmdBuffer->GetFrameIndex();
-		}
-
-		Ref<OpenGLUniformBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
-			glBindBufferBase(GL_UNIFORM_BUFFER, instance->m_Binding, instance->m_ID);
-			});
-	}
-	void OpenGLUniformBuffer::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		HZR_RENDER_THREAD_ONLY();
-		glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
-	}
-	void OpenGLUniformBuffer::Unbind()
-	{
-
-	}
-	*/
 	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
 		HZR_PROFILE_FUNCTION();

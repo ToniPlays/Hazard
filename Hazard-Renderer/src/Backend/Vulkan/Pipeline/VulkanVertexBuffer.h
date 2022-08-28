@@ -22,6 +22,8 @@ namespace HazardRenderer::Vulkan
 
 		//Vulkan specific
 
+		VkBuffer GetVulkanBuffer() const { return m_VertexBuffer; }
+
 	private:
 		std::string m_DebugName;
 		BufferUsage m_Usage;

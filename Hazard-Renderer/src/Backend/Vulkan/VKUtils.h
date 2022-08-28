@@ -88,6 +88,11 @@ namespace HazardRenderer::Vulkan::VkUtils
 
 	VkFormat VulkanImageFormat(const ImageFormat& format);
 	bool IsIntegratedBase(const ImageFormat& format);
+	VkPrimitiveTopology GetVulkanTopology(const DrawType& type);
+	VkPolygonMode GetVulkanPolygonMode(const DrawType& type);
+	VkCullModeFlags GetVulkanCullMode(const CullMode& type);
+	VkCompareOp GetVulkanCompareOp(const DepthOp& op);
+	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type);
 
 	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
 		VkImage image,

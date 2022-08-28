@@ -34,30 +34,6 @@ namespace HazardRenderer::OpenGL
 	{
 
 	}
-	/*
-	void OpenGLShader::Bind(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		Renderer::Submit([id = m_ID]() mutable {
-			glUseProgram(id);
-			});
-		//for (auto& [name, ubo] : m_UniformBuffers) 
-			//ubo->Bind(cmdBuffer);
-	}
-	void OpenGLShader::Bind_RT(Ref<RenderCommandBuffer> cmdBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		glUseProgram(m_ID);
-
-		for (auto& [name, ubo] : m_UniformBuffers) 
-		{
-			//ubo->Bind_RT(cmdBuffer);
-		}
-	}
-	void OpenGLShader::Unbind()
-	{
-		glUseProgram(0);
-	}
-	*/
 	bool OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
 		auto& uniformBuffer = m_UniformBuffers[name];

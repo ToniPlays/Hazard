@@ -6,13 +6,15 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
 
+#include <vulkan/vulkan.h>
+
 namespace HazardRenderer::Vulkan
 {
 	class VulkanPipeline : public Pipeline
 	{
 	public:
 		VulkanPipeline(PipelineSpecification* specs);
-		virtual ~VulkanPipeline();
+		~VulkanPipeline();
 
 		PipelineSpecification GetSpecifications() { return m_Specs; }
 		const PipelineSpecification GetSpecifications() const { return m_Specs; }
@@ -20,11 +22,21 @@ namespace HazardRenderer::Vulkan
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
 		void Invalidate() override;
+		void Invalidate_RT();
+
+		//Vulkan specific
+		VkPipelineBindPoint GetBindingPoint() const;
+		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
 
 	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;
 
+		BufferLayout m_Layout;
+
+		VkPipeline m_Pipeline = VK_NULL_HANDLE;
+		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+		VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
 	};
 }
 #endif

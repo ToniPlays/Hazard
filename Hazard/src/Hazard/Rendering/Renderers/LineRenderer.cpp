@@ -66,7 +66,7 @@ namespace Hazard
 		m_LineBatch.Push(endVertex);
 	}
 
-	void LineRenderer::CreateResources()
+	void LineRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		using namespace HazardRenderer;
 
@@ -92,7 +92,7 @@ namespace Hazard
 		pipelineSpecs.DrawType = DrawType::Line;
 		pipelineSpecs.LineWidth = 3.0f;
 		pipelineSpecs.ShaderPath = "Shaders/Debug/lineShader.glsl";
-		pipelineSpecs.pTargetRenderPass = m_RenderPass.Raw();
+		pipelineSpecs.pTargetRenderPass = renderPass;
 		pipelineSpecs.pBufferLayout = &layout;
 		pipelineSpecs.DepthTest = true;
 
