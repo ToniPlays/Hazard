@@ -14,242 +14,86 @@ namespace HazardRenderer
 {
 	shaderc::Compiler compiler;
 
-	static shaderc::CompileOptions GetCompileOptions(const CompileInfo& info) {
-		shaderc::CompileOptions options;
-
-		switch (info.Environment) {
-		case RenderAPI::OpenGL:	options.SetTargetEnvironment(shaderc_target_env_opengl, 450); break;
-		case RenderAPI::Vulkan:	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
-		default: break;
-		}
-
-		options.SetOptimizationLevel((shaderc_optimization_level)info.Optimization);
-
-		for (auto& [Name, value] : info.Defines) {
-			if (!value.empty())
-				options.AddMacroDefinition(Name, value);
-			else options.AddMacroDefinition(Name);
-		}
-
-		return options;
-	}
-	static shaderc_shader_kind ShaderStageToShaderC(ShaderType type) {
+	static std::string GetShaderStageCache(ShaderStage type) {
 		switch (type)
 		{
-		case ShaderType::Vertex:	return shaderc_glsl_vertex_shader;
-		case ShaderType::Fragment:	return shaderc_glsl_fragment_shader;
-		case ShaderType::Compute:	return shaderc_glsl_compute_shader;
-		case ShaderType::Geometry:	return shaderc_glsl_geometry_shader;
-		case ShaderType::None:      return (shaderc_shader_kind)0;
+		case ShaderStage::Vertex:	return "vert";
+		case ShaderStage::Fragment:	return "frag";
+		case ShaderStage::Compute:	return "comp";
+		case ShaderStage::Geometry:	return "geom";
 		}
-		return (shaderc_shader_kind)0;
-	}
-
-	static std::string GetShaderTypeCache(ShaderType type) {
-		switch (type)
-		{
-		case ShaderType::Vertex:	return "vert";
-		case ShaderType::Fragment:	return "frag";
-		case ShaderType::Compute:	return "comp";
-		case ShaderType::Geometry:	return "geom";
-		case ShaderType::None:      return "non";
-		}
+		HZR_ASSERT(false, "");
 		return "";
 	}
 	static std::string GetRendererCache(RenderAPI api) {
 		switch (api)
 		{
 		case RenderAPI::OpenGL:		return "gl";
-		case RenderAPI::Vulkan:		return "vulkan";
+		case RenderAPI::Vulkan:		return "vk";
 		case RenderAPI::DX11:		return "dx11";
 		case RenderAPI::DX12:		return "dx12";
 		case RenderAPI::Metal:		return "met";
-		case RenderAPI::Auto:       return "";
 		}
+		HZR_ASSERT(false, "");
 		return "";
 	}
-
-	bool ShaderFactory::CacheExists(const std::string& path, ShaderType type, RenderAPI renderer)
+	bool ShaderFactory::HasCachedShader(const ShaderStage& stage, const std::filesystem::path& path)
 	{
-		auto cacheDir = GetShaderCacheFile(GetShaderBinaryCache(path, type, renderer).string());
-		return File::Exists(cacheDir);
+		if (stage == ShaderStage::None) return false;
+		auto cacheFilePath = GetCachedFilePath(stage, path);
+		return File::Exists(cacheFilePath);
 	}
-	bool ShaderFactory::SourceFileChanged(const std::string& path, ShaderType type, RenderAPI renderer)
+	std::unordered_map<ShaderStage, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
 	{
-		auto sourceFile = GetShaderSourcePath(path);
-		auto cacheFile = GetShaderCacheFile(GetShaderBinaryCache(path, type, renderer).string());
-
-		if (!File::Exists(cacheFile))
-			return false;
-
-		return File::IsNewerThan(sourceFile, cacheFile);
-	}
-	std::filesystem::path ShaderFactory::GetShaderCacheFile(const std::string& path)
-	{
-		std::string fileName = File::GetName(path);
-		return m_CacheDir + "/" + fileName;
-	}
-	std::filesystem::path ShaderFactory::GetShaderSourcePath(const std::string& path)
-	{
-		return "res/" + path;
-	}
-	std::unordered_map<ShaderType, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
-	{
-		auto resPath = GetShaderSourcePath(path.string());
-		HZR_ASSERT(File::Exists(resPath), "Cannot find shader source file at: " + path.string());
-		std::string source = File::ReadFile(resPath);
-		return SourcePreprocess(resPath, source);
-	}
-	std::unordered_map<ShaderType, std::string> ShaderFactory::SourcePreprocess(const std::filesystem::path& relativePath, const std::string& source)
-	{
-		std::unordered_map<ShaderType, std::string> shaderSources;
+		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
+		std::string sourceFile = File::ReadFile(path);
+		std::unordered_map<ShaderStage, std::string> result;
 
 		const char* typeToken = "#type";
-		size_t endPosition = 0;
+		size_t endPos = 0;
 
-		while (endPosition != std::string::npos) {
-
-			std::string type = StringUtil::GetPreprocessor(typeToken, source, endPosition, &endPosition);
-			if (endPosition == std::string::npos) continue;
-
-			size_t nextTokenPos = source.find(typeToken, endPosition);
-			std::string src = nextTokenPos == std::string::npos ? source.substr(endPosition) : source.substr(endPosition, nextTokenPos - endPosition);
-
-			shaderSources[Utils::ShaderTypeFromString(type)] = PreprocessIncludes(relativePath, src);
-		}
-
-		return shaderSources;
-	}
-	std::vector<uint32_t> ShaderFactory::GetShaderBinaries(const std::string& path, ShaderType type, RenderAPI renderer)
-	{
-		std::vector<uint32_t> binaries;
-		std::filesystem::path cachePath = GetShaderBinaryCache(GetShaderCacheFile(path).string(), type, renderer);
-
-		if (SourceFileChanged(path, type, renderer)) {
-			return binaries;
-		}
-
-		if (!File::Exists(cachePath))
-			return binaries;
-
-		File::ReadBinaryFileUint32(cachePath, binaries);
-		return binaries;
-	}
-	std::filesystem::path ShaderFactory::GetShaderBinaryCache(const std::string& path, ShaderType type, RenderAPI renderer)
-	{
-		std::string fileName = File::GetPathNoExt(path);
-		return fileName + "." + GetShaderTypeCache(type) + "." + GetRendererCache(renderer) + ".hzrche";
-	}
-	void ShaderFactory::Compile(CompileInfo* compileInfo)
-	{
-		if (compileInfo->Source.empty() && compileInfo->Binary.size() == 0) {
-			compileInfo->Error = "Compilation failed: No source or binary provided";
-			return;
-		}
-
-		if (compileInfo->Binary.size() != 0 && compileInfo->Source.empty()) {
-
-			spirv_cross::CompilerGLSL glslCompiler(compileInfo->Binary);
-			compileInfo->Source = glslCompiler.compile();
-		}
-
-		shaderc::CompileOptions options = GetCompileOptions(*compileInfo);
-		options.SetGenerateDebugInfo();
-		shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source, ShaderStageToShaderC(compileInfo->Stage), compileInfo->Path.c_str(), options);
-
-		if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
-			compileInfo->Error = Utils::ShaderTypeToString(compileInfo->Stage) + ": " + result.GetErrorMessage();
-			return;
-		}
-
-		compileInfo->Binary = std::vector<uint32_t>(result.begin(), result.end());
-
-		if (compileInfo->CacheResult)
+		while (endPos != std::string::npos)
 		{
-			std::string cachePath = GetShaderBinaryCache(GetShaderCacheFile(compileInfo->Path).string(), compileInfo->Stage, compileInfo->Environment).string();
-			SaveShaderBinary(cachePath, compileInfo->Binary);
+			std::string type = StringUtil::GetPreprocessor(typeToken, sourceFile, endPos, &endPos);
+			if (endPos == std::string::npos) continue;
+
+			size_t nextTokenPos = sourceFile.find(typeToken, endPos);
+			std::string src = nextTokenPos == std::string::npos ? sourceFile.substr(endPos) : sourceFile.substr(endPos, nextTokenPos - endPos);
+
+			if (!PreprocessSource(path, src)) continue;
+			result[Utils::ShaderStageFromString(type)] = src;
 		}
-	}
-	bool ShaderFactory::SaveShaderBinary(const std::filesystem::path& path, const std::vector<uint32_t>& binary)
-	{
-		if (binary.size() == 0) return false;
 
-		if (!File::DirectoryExists(path.parent_path()))
-			File::CreateDir(path.parent_path());
-
-		return File::WriteBinaryFile(path, binary);
+		return result;
 	}
-	std::string ShaderFactory::PreprocessIncludes(const std::filesystem::path& relativePath, std::string& source)
+	std::filesystem::path ShaderFactory::GetCachedFilePath(const ShaderStage& stage, const std::filesystem::path& path)
 	{
-		std::string include = "#include";
+		std::string name = File::GetNameNoExt(path);
+		name += "." + GetShaderStageCache(stage);
+		std::string extension = GetRendererCache(GraphicsContext::GetRenderAPI());
+		return s_CacheDir / (name + "." + extension);
+
+	}
+	bool ShaderFactory::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)
+	{
+		return PreprocessIncludes(path, shaderSource);
+	}
+	bool ShaderFactory::PreprocessIncludes(const std::filesystem::path& path, std::string& source)
+	{
+		std::string token = "#include";
 		size_t offset = 0;
-
-		while (offset != std::string::npos) {
-
-			std::string includePath = StringUtil::GetPreprocessor(include.c_str(), source, offset, &offset);
-			if (offset == std::string::npos) continue;
-			std::string_view path = StringUtil::Between(includePath, "\"", "\"");
-			std::string line = include + " " + includePath;
-			source = StringUtil::Replace(source, line, File::ReadFile(relativePath.parent_path() / path));
-		}
-		return source;
-	}
-	ShaderStageData ShaderFactory::GetShaderResources(const std::vector<uint32_t>& binary)
-	{
-		spirv_cross::Compiler compiler(binary);
-		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-		ShaderStageData shaderStage;
-
-		for (auto& resource : resources.stage_inputs) {
-
-			auto spvType = compiler.get_type(resource.base_type_id);
-			ShaderStageInput input;
-			input.Name = resource.name;
-			input.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-			input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-			input.Type = Utils::ShaderTypeFromSPV(spvType);
-			input.Size = ShaderDataTypeSize(input.Type);
-
-			shaderStage.Inputs[input.Location] = input;
-			shaderStage.Stride += input.Size;
-		}
-		uint32_t offset = 0;
-
-		for (uint32_t i = 0; i < shaderStage.Inputs.size(); i++)
+		
+		while (offset != std::string::npos)
 		{
-			shaderStage.Inputs[i].Offset = offset;
-			offset += shaderStage.Inputs[i].Size;
+			std::string value = StringUtil::GetPreprocessor(token.c_str(), source, offset, &offset);
+			if (offset == std::string::npos) continue;
+			std::string_view includePath = StringUtil::Between(value, "\"", "\"");
+			std::string line = token + " " + value;
+			if (!File::Exists(path.parent_path() / includePath)) return false;
+			
+			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
 		}
-
-		for (auto& resource : resources.stage_outputs) {
-
-			auto spvType = compiler.get_type(resource.base_type_id);
-			ShaderStageOutput output;
-			output.Name = resource.name;
-			output.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-			output.Type = Utils::ShaderTypeFromSPV(spvType);
-			output.Size = ShaderDataTypeSize(output.Type);
-
-			shaderStage.Outputs[output.Location] = output;
-		}
-		for (auto& resource : resources.sampled_images) {
-
-			auto spvType = compiler.get_type(resource.base_type_id);
-			auto& type = compiler.get_type(resource.type_id);
-			uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-			uint32_t arraySize = type.array[0] == 0 ? 1 : type.array[0];
-
-
-			ShaderSampledImage output;
-			output.Name = resource.name;
-			output.Binding = binding;
-			output.Dimension = spvType.image.dim;
-			output.ArraySize = arraySize;
-
-			shaderStage.SampledImages[binding] = output;
-		}
-		return shaderStage;
+		return true;
 	}
 }
 #endif

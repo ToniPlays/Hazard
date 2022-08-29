@@ -39,7 +39,7 @@ namespace Hazard
 		pipelineSpecs.DebugName = "PBRShader";
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.DrawType = DrawType::Fill;
-		pipelineSpecs.ShaderPath = "Shaders/pbr.glsl";
+		pipelineSpecs.ShaderPath = "res/Shaders/pbr.glsl";
 		pipelineSpecs.pTargetRenderPass = Application::GetModule<RenderEngine>().GetRenderPass();
 		pipelineSpecs.pBufferLayout = &layout;
 		pipelineSpecs.DepthTest = true;

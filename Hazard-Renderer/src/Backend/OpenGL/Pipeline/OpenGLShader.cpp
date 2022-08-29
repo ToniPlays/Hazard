@@ -6,6 +6,7 @@
 #include "Backend/Core/Renderer.h"
 
 #include "Backend/Core/Pipeline/ShaderFactory.h"
+#include "Backend/OpenGL/OpenGLShaderCompiler.h"
 
 #include <sstream>
 #include <glad/glad.h>
@@ -18,13 +19,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLShader::OpenGLShader(const std::string& filePath) : m_FilePath(filePath)
 	{
 		HZR_ASSERT(!filePath.empty(), "Shader path cannot be empty");
-		auto shaderSources = ShaderFactory::GetShaderSources(m_FilePath);
-		{
-			bool wasCompiled = CompileOrGetVulkanBinaries(shaderSources);
-			if (CompileOrGetOpenGLBinaries(wasCompiled))
-				CreateProgram();
-		}
-
+		Reload();
 	}
 	OpenGLShader::~OpenGLShader()
 	{
@@ -32,7 +27,65 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLShader::Reload()
 	{
+		if (ShaderFactory::HasCachedShader(ShaderStage::Vertex, m_FilePath))
+		{
+			__debugbreak();
+			return;
+		}
 
+		std::cout << m_FilePath << std::endl;
+		std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(m_FilePath);
+
+		//Compile OpenGL shader
+		OpenGLShaderCompiler compiler;
+		std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries;
+		for (auto& [stage, source] : sources)
+		{
+			double compilationTime = 0.0;
+			std::vector<ShaderDefine> defines = { { "Vulkan" } };
+
+			//Compile to Vulkan SPV
+			CompileInfo compileInfoVulkan = {};
+			compileInfoVulkan.Renderer = RenderAPI::Vulkan;
+			compileInfoVulkan.Name = m_FilePath;
+			compileInfoVulkan.Stage = stage;
+			compileInfoVulkan.Source = source;
+			compileInfoVulkan.Defines = defines;
+
+			if (!compiler.Compile(&compileInfoVulkan))
+			{
+				std::cout << compiler.GetErrorMessage() << std::endl;
+				continue;
+			}
+			compilationTime += compiler.GetCompileTime();
+			//Get OpenGL shader source
+
+			std::string glSource;
+			if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
+			{
+				std::cout << "Decompilation failed" << std::endl;
+				continue;
+			}
+
+			std::vector<ShaderDefine> glDefines = { { "OpenGL" } };
+			//Compile to OpenGL SPV
+			CompileInfo compileInfoOpenGL = {};
+			compileInfoOpenGL.Renderer = RenderAPI::OpenGL;
+			compileInfoOpenGL.Name = m_FilePath;
+			compileInfoOpenGL.Stage = stage;
+			compileInfoOpenGL.Source = glSource;
+			compileInfoOpenGL.Defines = glDefines;
+
+			compilationTime += compiler.GetCompileTime();
+			binaries[stage] = compiler.GetCompiledBinary();
+			std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
+		}
+		Reflect(binaries);
+
+		Ref<OpenGLShader> instance = this;
+		Renderer::Submit([instance, binaries]() mutable {
+			instance->CreateProgram(binaries);
+			});
 	}
 	bool OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
@@ -54,20 +107,23 @@ namespace HazardRenderer::OpenGL
 	{
 		Set(name, index, index);
 	}
-	void OpenGLShader::Reflect()
+	void OpenGLShader::Reflect(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
+		Timer timer;
 		m_ShaderData.Stages.clear();
 
 		uint32_t uniformCount = 0;
 
-		for (auto&& [stage, binary] : m_OpenGLSPIRV) {
+		OpenGLShaderCompiler compiler;
+		for (auto&& [stage, binary] : binaries) {
 
-			ShaderStageData shaderStage = ShaderFactory::GetShaderResources(binary);
+
+			ShaderStageData shaderStage = compiler.GetResources(binary);
 
 			spirv_cross::Compiler compiler(binary);
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-			m_ShaderData.Stages[OpenGLUtils::ShaderTypeFromGLType(stage)] = shaderStage;
+			m_ShaderData.Stages[stage] = shaderStage;
 
 			for (auto resource : resources.uniform_buffers)
 			{
@@ -92,7 +148,8 @@ namespace HazardRenderer::OpenGL
 			}
 		}
 
-		for (auto& [binding, spec] : m_ShaderData.UniformsDescriptions) {
+		for (auto& [binding, spec] : m_ShaderData.UniformsDescriptions)
+		{
 			UniformBufferCreateInfo bufferInfo = {};
 			bufferInfo.Name = spec.Name;
 			bufferInfo.Binding = spec.Binding;
@@ -101,90 +158,11 @@ namespace HazardRenderer::OpenGL
 
 			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
 		}
+		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
-	bool OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& sources)
+	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
-		bool wasCompiled = false;
-
-		auto& shaderData = m_VulkanSPIRV;
-		shaderData.clear();
-
-		for (auto&& [stage, source] : sources) {
-
-			auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::Vulkan);
-
-			if (binaries.size() > 0) {
-				shaderData[stage] = binaries;
-				continue;
-			}
-
-			std::vector<ShaderDefine> defines = { { "RENDERER_VULKAN" } };
-
-			CompileInfo compileInfo = {};
-			compileInfo.Path = m_FilePath;
-			compileInfo.Environment = RenderAPI::Vulkan;
-			compileInfo.Optimization = Optimization::None;
-			compileInfo.Source = source;
-			compileInfo.Stage = stage;
-			compileInfo.Defines = defines;
-
-			ShaderFactory::Compile(&compileInfo);
-
-			if (!compileInfo.Succeeded())
-			{
-				std::cout << compileInfo.Error << std::endl;
-				Window::SendDebugMessage({ Severity::Error, compileInfo.Error, source });
-				auto binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
-				shaderData[stage] = binaries;
-				continue;
-			}
-			wasCompiled = true;
-			shaderData[stage] = compileInfo.Binary;
-		}
-		return wasCompiled;
-	}
-	bool OpenGLShader::CompileOrGetOpenGLBinaries(bool forceCompile)
-	{
-		auto& shaderData = m_OpenGLSPIRV;
-
-		shaderData.clear();
-		m_OpenGLSourceCode.clear();
-
-		for (auto&& [stage, spirv] : m_VulkanSPIRV)
-		{
-			GLenum glStage = OpenGLUtils::ShaderTypeToGLType(stage);
-
-			if (!forceCompile) {
-
-				const auto& binaries = ShaderFactory::GetShaderBinaries(m_FilePath, stage, RenderAPI::OpenGL);
-
-				if (binaries.size() > 0) {
-					shaderData[glStage] = binaries;
-					continue;
-				}
-			}
-
-			std::vector<ShaderDefine> defines = { { "RENDERER_OPENGL" } };
-
-			CompileInfo compileInfo = {};
-			compileInfo.Environment = RenderAPI::OpenGL;
-			compileInfo.Optimization = Optimization::None;
-			compileInfo.Path = m_FilePath;
-			compileInfo.Stage = stage;
-			compileInfo.Binary = spirv;
-			compileInfo.Defines = defines;
-
-			ShaderFactory::Compile(&compileInfo);
-
-			if (!compileInfo.Succeeded()) {
-				Window::SendDebugMessage({ Severity::Error, "Shader compilation failed" });
-				return false;
-			}
-
-			shaderData[glStage] = compileInfo.Binary;
-		}
-		Reflect();
-		return true;
+		CreateProgram(binaries);
 	}
 	static void CheckShader(GLuint id, GLuint type)
 	{
@@ -220,14 +198,14 @@ namespace HazardRenderer::OpenGL
 		};
 	}
 
-	void OpenGLShader::CreateProgram()
+	void OpenGLShader::CreateProgram(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary)
 	{
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;
-		for (auto& [stage, spirv] : m_OpenGLSPIRV)
+		for (auto& [stage, spirv] : binary)
 		{
-			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(stage));
+			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(OpenGLUtils::ShaderStageToGLType(stage)));
 			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
 			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
 			glAttachShader(program, shaderID);
@@ -240,7 +218,8 @@ namespace HazardRenderer::OpenGL
 		GLint linked;
 		glGetProgramiv(program, GL_LINK_STATUS, &linked);
 
-		if (linked == GL_FALSE) {
+		if (linked == GL_FALSE)
+		{
 			GLint maxLen;
 			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLen);
 
@@ -249,12 +228,12 @@ namespace HazardRenderer::OpenGL
 			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data()) });
 			glDeleteProgram(program);
 
-			for (auto id : shaderIDs) {
+			for (auto id : shaderIDs)
 				glDeleteShader(id);
-			}
 		}
 
-		for (auto id : shaderIDs) {
+		for (auto id : shaderIDs)
+		{
 			glDetachShader(program, id);
 			glDeleteShader(id);
 		}

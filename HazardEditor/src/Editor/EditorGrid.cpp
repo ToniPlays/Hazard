@@ -45,7 +45,7 @@ namespace Editor
 		PipelineSpecification specs = {};
 		specs.DebugName = "EditorGrid";
 		specs.pTargetRenderPass = renderPass.Raw();
-		specs.ShaderPath = "Shaders/Grid.glsl";
+		specs.ShaderPath = "res/Shaders/Grid.glsl";
 		specs.DrawType = DrawType::Fill;
 		specs.Usage = PipelineUsage::GraphicsBit;
 		specs.CullMode = CullMode::None;

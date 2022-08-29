@@ -93,6 +93,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 	VkCullModeFlags GetVulkanCullMode(const CullMode& type);
 	VkCompareOp GetVulkanCompareOp(const DepthOp& op);
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type);
+	VkShaderStageFlags GetVulkanShaderStage(const ShaderStage& stage);
 
 	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
 		VkImage image,

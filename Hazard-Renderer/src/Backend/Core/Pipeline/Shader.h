@@ -12,7 +12,7 @@ namespace HazardRenderer
 {
 	class UniformBuffer;
 
-	enum class ShaderType : uint32_t 
+	enum class ShaderStage : uint32_t 
 	{
 		None = BIT(0),
 		Vertex = BIT(1),
@@ -45,7 +45,8 @@ namespace HazardRenderer
 		uint32_t MemberCount;
 		uint32_t ShaderUsage = 0;
 	};
-	struct ShaderSampledImage {
+	struct ShaderSampledImage 
+	{
 		std::string Name;
 		uint32_t Binding;
 		uint32_t Dimension;
@@ -60,26 +61,27 @@ namespace HazardRenderer
 		uint32_t Stride = 0;
 	};
 
-	struct ShaderData {
-		std::unordered_map<ShaderType, ShaderStageData> Stages;
+	struct ShaderData 
+	{
+		std::unordered_map<ShaderStage, ShaderStageData> Stages;
 		std::unordered_map<uint32_t, ShaderUniformBufferDescription> UniformsDescriptions;
 	};
 	namespace Utils
 	{
-		static ShaderType ShaderTypeFromString(const std::string& type) {
-			if (type == "Vertex")		return ShaderType::Vertex;
-			if (type == "Fragment")		return ShaderType::Fragment;
-			if (type == "Pixel")		return ShaderType::Fragment;
-			if (type == "Compute")		return ShaderType::Compute;
-			return ShaderType::None;
+		static ShaderStage ShaderStageFromString(const std::string& type) {
+			if (type == "Vertex")		return ShaderStage::Vertex;
+			if (type == "Fragment")		return ShaderStage::Fragment;
+			if (type == "Pixel")		return ShaderStage::Fragment;
+			if (type == "Compute")		return ShaderStage::Compute;
+			return ShaderStage::None;
 		}
-		static std::string ShaderTypeToString(const ShaderType& type) {
-			if ((uint32_t)type & (uint32_t)ShaderType::Vertex)			return "Vertex";
-			if ((uint32_t)type & (uint32_t)ShaderType::Fragment)		return "Fragment";
-			if ((uint32_t)type & (uint32_t)ShaderType::Compute)		return "Compute";
+		static std::string ShaderStageToString(const ShaderStage& type) {
+			if ((uint32_t)type & (uint32_t)ShaderStage::Vertex)			return "Vertex";
+			if ((uint32_t)type & (uint32_t)ShaderStage::Fragment)		return "Fragment";
+			if ((uint32_t)type & (uint32_t)ShaderStage::Compute)		return "Compute";
 			return "Unknown";
 		}
-		static ShaderDataType ShaderTypeFromSPV(const spirv_cross::SPIRType& type) {
+		static ShaderDataType ShaderStageFromSPV(const spirv_cross::SPIRType& type) {
 			using namespace spirv_cross;
 			switch (type.basetype)
 			{
@@ -110,10 +112,10 @@ namespace HazardRenderer
 		{
 			std::string result;
 
-			if (flags & (uint32_t)ShaderType::Vertex)	result += "Vertex";
-			if (flags & (uint32_t)ShaderType::Fragment) result += " Fragment";
-			if (flags & (uint32_t)ShaderType::Compute)	result += " Compute";
-			if (flags & (uint32_t)ShaderType::Geometry) result += " Geometry";
+			if (flags & (uint32_t)ShaderStage::Vertex)	result += "Vertex";
+			if (flags & (uint32_t)ShaderStage::Fragment) result += " Fragment";
+			if (flags & (uint32_t)ShaderStage::Compute)	result += " Compute";
+			if (flags & (uint32_t)ShaderStage::Geometry) result += " Geometry";
 			return result;
 
 		}
@@ -124,7 +126,7 @@ namespace HazardRenderer
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
 		virtual bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) = 0;
-		virtual UniformBuffer& GetUniform(const std::string& name) = 0;
+		virtual Ref<UniformBuffer> GetUniform(const std::string& name) = 0;
 
 		virtual void Set(const std::string& name, uint32_t index, uint32_t value) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> value) = 0;

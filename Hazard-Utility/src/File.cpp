@@ -201,7 +201,6 @@ std::string File::GetName(const std::filesystem::path& file)
 }
 std::string File::GetNameNoExt(const std::filesystem::path& file)
 {
-	if (!File::Exists(file)) return "";
 	std::string name = GetName(file);
 	return name.substr(0, name.find_last_of('.'));
 }

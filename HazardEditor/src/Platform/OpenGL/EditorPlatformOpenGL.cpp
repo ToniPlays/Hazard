@@ -1,5 +1,6 @@
 
 #include "EditorPlatformOpenGL.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Renderer.h"
 #include "Backend/OpenGL/OpenGLCore.h"
 
@@ -55,3 +56,4 @@ void EditorPlatformOpenGL::Close()
 {
 	ImGui::DestroyContext();
 }
+#endif

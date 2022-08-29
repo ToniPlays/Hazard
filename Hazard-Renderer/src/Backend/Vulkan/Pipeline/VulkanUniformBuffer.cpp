@@ -1,4 +1,6 @@
 #include "VulkanUniformBuffer.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Backend/Core/Renderer.h"
 #include "../VulkanContext.h"
 #include "MathCore.h"
@@ -97,3 +99,4 @@ namespace HazardRenderer::Vulkan
 		allocator.UnmapMemory(m_BufferAllocation);
 	}
 }
+#endif

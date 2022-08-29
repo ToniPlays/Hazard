@@ -21,6 +21,8 @@ namespace HazardRenderer::Vulkan
 		Ref<Shader> GetShader() { return m_Shader; }
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
+		bool IsValid() const { return true; }
+
 		void Invalidate() override;
 		void Invalidate_RT();
 

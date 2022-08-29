@@ -1257,6 +1257,7 @@ static std::unordered_map<void*, VkDetails> s_VulkanCache;
 
 ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)
 {
+#ifdef HZR_INCLUDE_VULKAN
     ImGui_ImplVulkan_InitInfo* v = &g_VulkanInitInfo;
 
     VkDescriptorSetAllocateInfo alloc_info = {};
@@ -1267,6 +1268,9 @@ ImTextureID ImGui_ImplVulkan_AddTexture(VkSampler sampler, VkImageView image_vie
     VkDescriptorSet descriptor_set = HazardRenderer::Vulkan::VulkanContext::GetInstance()->RT_AllocateDescriptorSet(alloc_info);
     ImGui_ImplVulkan_UpdateTextureInfo(descriptor_set, sampler, image_view, image_layout);
     return (ImTextureID)descriptor_set;
+#else
+    return 0;
+#endif
 }
 
 ImTextureID ImGui_ImplVulkan_AddTexture_Internal(VkSampler sampler, VkImageView image_view, VkImageLayout image_layout)

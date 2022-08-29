@@ -1,8 +1,8 @@
 
 #include "Hazard.h"
 
-#ifdef HZR_INCLUDE_VULKAN
 #include "EditorPlatformVulkan.h"
+#ifdef HZR_INCLUDE_VULKAN
 #include "Backend/Core/Renderer.h"
 #include "Backend/Vulkan/VKUtils.h"
 #include "imgui.h"

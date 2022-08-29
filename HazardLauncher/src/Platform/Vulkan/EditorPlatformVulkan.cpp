@@ -96,90 +96,86 @@ void EditorPlatformVulkan::BeginFrame()
 
 void EditorPlatformVulkan::EndFrame()
 {
-	m_Window->BeginFrame();
-	VulkanContext* context = m_Context;	
-	Renderer::Submit([context]() mutable {
+	VulkanContext* context = m_Context;
 
-		HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
-		
-		auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
-		ImGuiIO& io = ImGui::GetIO();
+	HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
 
-		glm::vec4 color = { 0.0, 0.0, 0.0, 1.0 }; //swapchain->GetRenderTarget()->GetSpecification().ClearColor;
+	auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
+	ImGuiIO& io = ImGui::GetIO();
 
-		VkClearValue clearValues[2];
-		clearValues[0].color = { color.r, color.g, color.b, color.a };
-		clearValues[1].depthStencil = { 1.0f, 0 };
 
-		uint32_t width = swapchain->GetWidth();
-		uint32_t height = swapchain->GetHeight();
 
-		uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
-		VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
+	glm::vec4 color = swapchain->GetRenderTarget()->GetSpecification().ClearColor;
 
-		VkRenderPassBeginInfo renderPassBeginInfo = {};
-		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.renderPass = swapchain->GetVulkanRenderPass();
-		renderPassBeginInfo.renderArea.offset.x = 0;
-		renderPassBeginInfo.renderArea.offset.y = 0;
-		renderPassBeginInfo.renderArea.extent.width = width;
-		renderPassBeginInfo.renderArea.extent.height = height;
-		renderPassBeginInfo.clearValueCount = 2; // Color + depth
-		renderPassBeginInfo.pClearValues = clearValues;
-		renderPassBeginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+	VkClearValue clearValues[2];
+	clearValues[0].color = { color.r, color.g, color.b, color.a };
+	clearValues[1].depthStencil = { 1.0f, 0 };
 
-		vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+	uint32_t width = swapchain->GetWidth();
+	uint32_t height = swapchain->GetHeight();
 
-		VkCommandBufferInheritanceInfo inheritanceInfo = {};
-		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-		inheritanceInfo.renderPass = swapchain->GetVulkanRenderPass();
-		inheritanceInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+	uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
+	VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
 
-		VkCommandBufferBeginInfo cmdBufInfo = {};
-		cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
-		cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
+	VkRenderPassBeginInfo renderPassBeginInfo = {};
+	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassBeginInfo.renderPass = swapchain->GetVulkanRenderPass();
+	renderPassBeginInfo.renderArea.offset.x = 0;
+	renderPassBeginInfo.renderArea.offset.y = 0;
+	renderPassBeginInfo.renderArea.extent.width = width;
+	renderPassBeginInfo.renderArea.extent.height = height;
+	renderPassBeginInfo.clearValueCount = 2; // Color + depth
+	renderPassBeginInfo.pClearValues = clearValues;
+	renderPassBeginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
 
-		VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo), "");
+	vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
-		VkViewport viewport = {};
-		viewport.x = 0.0f;
-		viewport.y = (float)height;
-		viewport.height = -(float)height;
-		viewport.width = (float)width;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
+	VkCommandBufferInheritanceInfo inheritanceInfo = {};
+	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+	inheritanceInfo.renderPass = swapchain->GetVulkanRenderPass();
+	inheritanceInfo.framebuffer = swapchain->GetCurrentFramebuffer();
 
-		VkRect2D scissor = {};
-		scissor.extent.width = width;
-		scissor.extent.height = height;
-		scissor.offset.x = 0;
-		scissor.offset.y = 0;
-		vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
+	VkCommandBufferBeginInfo cmdBufInfo = {};
+	cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+	cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
 
-		ImDrawData* main_draw_data = ImGui::GetDrawData();
-		ImGui_ImplVulkan_RenderDrawData(main_draw_data, s_ImGuiCommandBuffers[commandBufferIndex]);
+	VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo), "");
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]), "");
+	VkViewport viewport = {};
+	viewport.x = 0.0f;
+	viewport.y = (float)height;
+	viewport.height = -(float)height;
+	viewport.width = (float)width;
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
 
-		std::vector<VkCommandBuffer> commandBuffers;
-		commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
+	VkRect2D scissor = {};
+	scissor.extent.width = width;
+	scissor.extent.height = height;
+	scissor.offset.x = 0;
+	scissor.offset.y = 0;
+	vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
 
-		vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
-		vkCmdEndRenderPass(drawCommandBuffer);
+	ImDrawData* main_draw_data = ImGui::GetDrawData();
+	ImGui_ImplVulkan_RenderDrawData(main_draw_data, s_ImGuiCommandBuffers[commandBufferIndex]);
 
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
-		});
-	
-	m_Window->Present();
-	Renderer::WaitAndRender();
+	VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]), "");
+
+	std::vector<VkCommandBuffer> commandBuffers;
+	commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
+
+	vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
+	vkCmdEndRenderPass(drawCommandBuffer);
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
 }
 
 void EditorPlatformVulkan::Close()

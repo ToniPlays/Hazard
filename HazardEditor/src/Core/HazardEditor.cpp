@@ -29,6 +29,7 @@ void HazardEditorApplication::PreInit()
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
 	std::cout << " 2 - Vulkan" << std::endl;
+	std::cout << " 3 - Metal" << std::endl;
 	uint32_t api;
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;

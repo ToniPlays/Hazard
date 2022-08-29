@@ -146,7 +146,7 @@ namespace Hazard
 		pipelineSpecs.DebugName = "2DQuadBatchPipeline";
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.DrawType = DrawType::Fill;
-		pipelineSpecs.ShaderPath = "Shaders/2D/standard.glsl";
+		pipelineSpecs.ShaderPath = "res/Shaders/2D/standard.glsl";
 		pipelineSpecs.pTargetRenderPass = renderPass;
 		pipelineSpecs.pBufferLayout = &layout;
 

@@ -356,11 +356,14 @@ namespace Hazard::ImUI
 		using namespace HazardRenderer;
 
 		switch (GraphicsContext::GetRenderAPI()) {
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{
 			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
 			return id;
 		}
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan:
 		{
 			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
@@ -370,6 +373,7 @@ namespace Hazard::ImUI
 			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
 			return id;
 		}
+#endif
 		}
 
 		HZR_CORE_ASSERT(false, "Undefined ImageID");

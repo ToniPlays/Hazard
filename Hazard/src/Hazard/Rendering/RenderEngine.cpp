@@ -101,10 +101,10 @@ namespace Hazard
 
 		for (auto& [pipeline, meshList] : drawList.MeshList)
 		{
+			if (!pipeline->IsValid()) continue;
 			commandBuffer->BindPipeline(pipeline);
 			for (auto& mesh : meshList)
 			{
-
 				commandBuffer->BindUniformBuffer(m_Resources->ModelUniformBuffer, 3);
 				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
 				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);

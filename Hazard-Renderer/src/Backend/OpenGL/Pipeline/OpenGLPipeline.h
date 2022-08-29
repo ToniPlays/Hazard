@@ -20,6 +20,7 @@ namespace HazardRenderer::OpenGL
 		void SetRenderPass(Ref<RenderPass> renderPass) override { m_Specs.pTargetRenderPass = renderPass.Raw(); }
 
 		void Invalidate() override;
+		bool IsValid() const override { return m_Shader.As<OpenGLShader>()->GetProgramID(); }
 
 		//OpenGL specific;
 

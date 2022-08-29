@@ -51,6 +51,7 @@ namespace HazardRenderer
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
 
 		virtual void Invalidate() = 0;
+		virtual bool IsValid() const = 0;
 
 		static Ref<Pipeline> Create(PipelineSpecification* specs);
 	};

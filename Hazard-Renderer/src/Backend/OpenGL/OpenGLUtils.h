@@ -15,29 +15,29 @@
 
 namespace HazardRenderer::OpenGLUtils
 {
-	static GLenum ShaderTypeToGLType(ShaderType type) {
+	static GLenum ShaderStageToGLType(ShaderStage type) {
 		switch (type)
 		{
-		case ShaderType::Vertex:	return GL_VERTEX_SHADER;
-		case ShaderType::Fragment:	return GL_FRAGMENT_SHADER;
-		case ShaderType::Compute:	return GL_COMPUTE_SHADER;
-		case ShaderType::Geometry:	return GL_GEOMETRY_SHADER;
+		case ShaderStage::Vertex:	return GL_VERTEX_SHADER;
+		case ShaderStage::Fragment:	return GL_FRAGMENT_SHADER;
+		case ShaderStage::Compute:	return GL_COMPUTE_SHADER;
+		case ShaderStage::Geometry:	return GL_GEOMETRY_SHADER;
             default:
 				HZR_ASSERT(false, "Unknow ShaderType");
 		}
 		HZR_ASSERT(false, "Unknow ShaderType");
 		return 0;
 	}
-	static ShaderType ShaderTypeFromGLType(GLenum type) {
+	static ShaderStage ShaderStageFromGLType(GLenum type) {
 		switch (type)
 		{
-		case GL_VERTEX_SHADER:		return ShaderType::Vertex;
-		case GL_FRAGMENT_SHADER:	return ShaderType::Fragment;
-		case GL_COMPUTE_SHADER:		return ShaderType::Compute;
-		case GL_GEOMETRY_SHADER:	return ShaderType::Geometry;
+		case GL_VERTEX_SHADER:		return ShaderStage::Vertex;
+		case GL_FRAGMENT_SHADER:	return ShaderStage::Fragment;
+		case GL_COMPUTE_SHADER:		return ShaderStage::Compute;
+		case GL_GEOMETRY_SHADER:	return ShaderStage::Geometry;
 		}
 		HZR_ASSERT(false, "[OpenGLShader]: Unkown conversion from glType to ShaderType");
-		return ShaderType::None;
+		return ShaderStage::None;
 	}
 	static std::string GLTypeToString(GLenum type) {
 		switch (type)

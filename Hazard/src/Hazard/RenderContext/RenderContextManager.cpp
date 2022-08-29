@@ -12,7 +12,7 @@ namespace Hazard
 	RenderContextManager::RenderContextManager(RenderContextCreateInfo* createInfo) : Module("RenderContextManager")
 	{
 		//Create window and initialize
-
+		HZR_CORE_ASSERT(Window::IsRenderAPISupported(createInfo->Renderer), "Selected RenderAPI not supported");
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hazard";
 		appInfo.BuildVersion = HZR_BUILD_VERSION;

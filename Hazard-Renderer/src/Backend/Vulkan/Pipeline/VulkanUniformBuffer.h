@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Pipeline/Buffers.h"
+#ifdef HZR_INCLUDE_VULKAN
 
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
@@ -42,3 +43,4 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorBufferInfo m_DescriptorInfo;
 	};
 }
+#endif

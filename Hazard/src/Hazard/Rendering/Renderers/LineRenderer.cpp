@@ -91,7 +91,7 @@ namespace Hazard
 		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 		pipelineSpecs.DrawType = DrawType::Line;
 		pipelineSpecs.LineWidth = 3.0f;
-		pipelineSpecs.ShaderPath = "Shaders/Debug/lineShader.glsl";
+		pipelineSpecs.ShaderPath = "res/Shaders/Debug/lineShader.glsl";
 		pipelineSpecs.pTargetRenderPass = renderPass;
 		pipelineSpecs.pBufferLayout = &layout;
 		pipelineSpecs.DepthTest = true;

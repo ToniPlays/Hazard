@@ -135,6 +135,18 @@ namespace HazardRenderer::Vulkan::VkUtils {
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
+	VkShaderStageFlags GetVulkanShaderStage(const ShaderStage& stage)
+	{
+		switch (stage)
+		{
+		case ShaderStage::Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
+		case ShaderStage::Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
+		case ShaderStage::Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
+		case ShaderStage::Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
+		}
+		HZR_ASSERT(false, "Unknown ShaderType");
+		return VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+	}
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type)
 	{
 		switch (type)
