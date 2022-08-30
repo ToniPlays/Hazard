@@ -3,6 +3,7 @@
 
 #include "Backend/Core/Renderer.h"
 #include "../VulkanContext.h"
+#include "../VkUtils.h"
 #include "MathCore.h"
 
 namespace HazardRenderer::Vulkan
@@ -13,7 +14,7 @@ namespace HazardRenderer::Vulkan
 		m_Binding = createInfo->Binding;
 		m_Size = Math::Min<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
-		m_LocalData.Allocate(m_Size);
+		m_LocalData.Allocate(m_Size * 64);
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -33,6 +34,7 @@ namespace HazardRenderer::Vulkan
 			m_FrameIndex = frameIndex;
 		}
 		m_LocalData.Write(data, size, m_CurrentBufferDataIndex * m_Size);
+		m_CurrentBufferDataIndex++;
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::Submit([instance, size]() mutable {
@@ -82,13 +84,15 @@ namespace HazardRenderer::Vulkan
 		VkBufferCreateInfo bufferInfo = {};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-		bufferInfo.size = m_Size;
+		bufferInfo.size = m_LocalData.Size;
 
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		m_BufferAllocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_UniformBuffer);
+		VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_BUFFER, m_Name, m_UniformBuffer);
+
 
 		m_DescriptorInfo.offset = 0;
-		m_DescriptorInfo.range = m_Size;
+		m_DescriptorInfo.range = m_LocalData.Size;
 		m_DescriptorInfo.buffer = m_UniformBuffer;
 	}
 	void VulkanUniformBuffer::SetData_RT(void* data, uint32_t size)

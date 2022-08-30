@@ -151,6 +151,8 @@ namespace Hazard
 		pipelineSpecs.pBufferLayout = &layout;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+
+		m_RenderPass = renderPass;
 	}
 	float QuadRenderer::GetTextureIndex(const Ref<Texture2DAsset>& texture)
 	{

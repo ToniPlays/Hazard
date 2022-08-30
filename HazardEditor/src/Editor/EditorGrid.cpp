@@ -40,7 +40,7 @@ namespace Editor
 			return;
 		}
 
-		BufferLayout layout = { {} };
+		BufferLayout layout = {};
 
 		PipelineSpecification specs = {};
 		specs.DebugName = "EditorGrid";

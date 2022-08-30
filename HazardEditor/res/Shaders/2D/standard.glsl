@@ -13,7 +13,7 @@ void main()
 	f_Color = a_Color;
 	f_TextureCoords = a_TextureCoords;
 	f_TextureIndex = a_TextureIndex;
-	gl_Position = u_Camera.u_ViewProjection * vec4(a_Position, 1.0);
+	gl_Position = u_Camera.ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type Fragment

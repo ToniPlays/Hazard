@@ -22,8 +22,8 @@ vec3 Unproject(float x, float y, float z, mat4 view, mat4 projection) {
 void main() 
 {
 	vec3 pos = gridPlane[gl_VertexIndex];
-	nearPoint = Unproject(pos.x, pos.y, 0.0, u_Camera.u_View, u_Camera.u_Projection).xyz;
-	farPoint = Unproject(pos.x, pos.y, 1.0, u_Camera.u_View, u_Camera.u_Projection).xyz;
+	nearPoint = Unproject(pos.x, pos.y, 0.0, u_Camera.View, u_Camera.Projection).xyz;
+	farPoint = Unproject(pos.x, pos.y, 1.0, u_Camera.View, u_Camera.Projection).xyz;
 
 	gl_Position = vec4(pos, 1.0);
 }
@@ -63,12 +63,12 @@ vec4 grid(vec3 fragPos3D, float scale) {
 }
 float computeDepth(vec3 pos) 
 {
-    vec4 clip_space_pos = u_Camera.u_ViewProjection * vec4(pos.xyz, 1.0);
+    vec4 clip_space_pos = u_Camera.ViewProjection * vec4(pos.xyz, 1.0);
     return (clip_space_pos.z / clip_space_pos.w);
 }
 float computeLinearDepth(vec3 pos) 
 {
-    vec4 clip_space_pos = u_Camera.u_ViewProjection * vec4(pos.xyz, 1.0);
+    vec4 clip_space_pos = u_Camera.ViewProjection * vec4(pos.xyz, 1.0);
     float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
     float linearDepth = (2.0 * u_Grid.u_ZNear * u_Grid.u_ZFar) / (u_Grid.u_ZFar + u_Grid.u_ZNear - clip_space_depth * (u_Grid.u_ZFar - u_Grid.u_ZNear)); // get linear value between 0.01 and 100
     return linearDepth / u_Grid.u_ZFar - 0.002; // normalize
@@ -77,7 +77,7 @@ void main()
 {
     float t = -nearPoint.y / (farPoint.y - nearPoint.y);
     vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
-    vec4 clip_space_pos = u_Camera.u_ViewProjection * vec4(fragPos3D.xyz, 1.0);
+    vec4 clip_space_pos = u_Camera.ViewProjection * vec4(fragPos3D.xyz, 1.0);
 
     float depth = computeDepth(fragPos3D);
     gl_FragDepth = depth;

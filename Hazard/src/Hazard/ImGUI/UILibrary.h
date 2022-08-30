@@ -354,8 +354,8 @@ namespace Hazard::ImUI
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image)
 	{
 		using namespace HazardRenderer;
-
-		switch (GraphicsContext::GetRenderAPI()) {
+		RenderAPI api = GraphicsContext::GetRenderAPI();
+		switch (api) {
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{
@@ -370,8 +370,7 @@ namespace Hazard::ImUI
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 			if (!imageInfo.imageView) return nullptr;
 
-			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
-			return id;
+			return ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
 		}
 #endif
 		}

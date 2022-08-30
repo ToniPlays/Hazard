@@ -29,6 +29,7 @@ namespace HazardRenderer::Vulkan
 		//Vulkan specific
 		VkPipelineBindPoint GetBindingPoint() const;
 		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
+		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
 
 	private:
 		PipelineSpecification m_Specs;

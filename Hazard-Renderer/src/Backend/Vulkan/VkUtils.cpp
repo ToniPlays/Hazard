@@ -135,17 +135,20 @@ namespace HazardRenderer::Vulkan::VkUtils {
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
-	VkShaderStageFlags GetVulkanShaderStage(const ShaderStage& stage)
+	VkShaderStageFlags GetVulkanShaderStage(uint32_t stage)
 	{
-		switch (stage)
-		{
-		case ShaderStage::Vertex:	return VK_SHADER_STAGE_VERTEX_BIT;
-		case ShaderStage::Fragment:	return VK_SHADER_STAGE_FRAGMENT_BIT;
-		case ShaderStage::Geometry:	return VK_SHADER_STAGE_GEOMETRY_BIT;
-		case ShaderStage::Compute:	return VK_SHADER_STAGE_COMPUTE_BIT;
-		}
-		HZR_ASSERT(false, "Unknown ShaderType");
-		return VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+		VkShaderStageFlags flags = 0;
+
+		if ((uint32_t)stage & (uint32_t)ShaderStage::Vertex)
+			flags |= VK_SHADER_STAGE_VERTEX_BIT;
+		if ((uint32_t)stage & (uint32_t)ShaderStage::Fragment)	
+			flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+		if ((uint32_t)stage & (uint32_t)ShaderStage::Geometry)	
+			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+		if ((uint32_t)stage & (uint32_t)ShaderStage::Compute)	
+			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+
+		return flags;
 	}
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type)
 	{
@@ -156,6 +159,7 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
 		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
 		}
+		HZR_ASSERT(false, "Woop");
 		return VK_FORMAT_MAX_ENUM;
 	}
 }

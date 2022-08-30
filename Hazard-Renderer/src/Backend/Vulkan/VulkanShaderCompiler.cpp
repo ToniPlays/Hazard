@@ -100,6 +100,7 @@ namespace HazardRenderer::Vulkan
             auto spvType = compiler.get_type(resource.base_type_id);
             auto& type = compiler.get_type(resource.type_id);
             uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+            uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
             uint32_t arraySize = type.array[0] == 0 ? 1 : type.array[0];
 
             ShaderSampledImage output;
@@ -107,6 +108,7 @@ namespace HazardRenderer::Vulkan
             output.Binding = binding;
             output.Dimension = spvType.image.dim;
             output.ArraySize = arraySize;
+            output.DescritorSet = set;
 
             shaderStage.SampledImages[binding] = output;
         }

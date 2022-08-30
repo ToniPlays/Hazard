@@ -17,7 +17,7 @@ void main()
 	vec4 worldPosition = u_Model.u_Transform * vec4(a_Position, 1.0);
 
 	FragPos = worldPosition.xyz;
-	gl_Position = u_Camera.u_ViewProjection * worldPosition;
+	gl_Position = u_Camera.ViewProjection * worldPosition;
 }
 
 #type Fragment

@@ -12,6 +12,9 @@ namespace Hazard
 		glm::mat4 View;
 		glm::mat4 InverseViewProjection;
 		glm::vec4 Position;
+		glm::vec4 Unused1;
+		glm::vec4 Unused2;
+		glm::vec4 Unused3;
 	};
 
 	struct DirectionalLight {

@@ -44,6 +44,7 @@ namespace HazardRenderer
 		uint32_t Size;
 		uint32_t MemberCount;
 		uint32_t ShaderUsage = 0;
+		uint32_t DescritorSet = UINT32_MAX;
 	};
 	struct ShaderSampledImage 
 	{
@@ -51,6 +52,7 @@ namespace HazardRenderer
 		uint32_t Binding;
 		uint32_t Dimension;
 		uint32_t ArraySize;
+		uint32_t DescritorSet = UINT32_MAX;
 	};
 
 	struct ShaderStageData

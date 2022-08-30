@@ -5,9 +5,8 @@
 
 #include <set>
 
-namespace HazardRenderer::Vulkan {
-
-	
+namespace HazardRenderer::Vulkan 
+{
 	VulkanPhysicalDevice::VulkanPhysicalDevice()
 	{
 		VkInstance instance = VulkanContext::GetVulkanInstance();
@@ -94,6 +93,8 @@ namespace HazardRenderer::Vulkan {
 		}
 		
 		m_DepthFormat = FindDepthFormat();
+
+		std::cout << m_Properties.limits.minUniformBufferOffsetAlignment << std::endl;
 	}
 	VulkanPhysicalDevice::~VulkanPhysicalDevice()
 	{

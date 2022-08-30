@@ -97,6 +97,8 @@ namespace Hazard
 		pipelineSpecs.DepthTest = true;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+
+		m_RenderPass = renderPass;
 	}
 }
 

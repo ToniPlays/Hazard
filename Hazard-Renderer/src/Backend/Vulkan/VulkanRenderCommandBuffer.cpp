@@ -10,6 +10,7 @@
 #include "Pipeline/VulkanIndexBuffer.h"
 #include "Pipeline/VulkanUniformBuffer.h"
 #include "Pipeline/VulkanPipeline.h"
+#include "Pipeline/VulkanShader.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
@@ -279,10 +280,21 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
 		Ref<VulkanPipeline> vkPipeline = pipeline.As<VulkanPipeline>();
+		auto& shader = pipeline->GetShader().As<VulkanShader>();
+
+		auto offsets = shader->GetDynamicOffsets();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, pipeline = vkPipeline]() mutable {
-			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, pipeline->GetBindingPoint(), pipeline->GetVulkanPipeline());
+		Renderer::Submit([instance, pipeline = vkPipeline, offsets, shader]() mutable {
+
+			auto bindPoint = pipeline->GetBindingPoint();
+			auto layout = pipeline->GetPipelineLayout();
+			auto vkPipeline = pipeline->GetVulkanPipeline();
+			
+			auto& descriptorSets = shader->GetDescriptorSets();
+
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
+			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, bindPoint, vkPipeline);
 			});
 	}
 	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)

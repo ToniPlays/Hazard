@@ -15,7 +15,7 @@ void main()
 	f_LocalPosition = a_LocalPosition;
 	f_Thickness = a_Thickness;
 	f_Fade = a_Fade;
-	gl_Position = u_Camera.u_ViewProjection * vec4(a_Position, 1.0);
+	gl_Position = u_Camera.ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type Fragment

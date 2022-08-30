@@ -11,7 +11,7 @@ layout(location = 0) out vec4 f_Color;
 void main() 
 {
 	f_Color = v_Color;
-	gl_Position = u_Camera.u_ViewProjection * vec4(v_Position, 1.0);
+	gl_Position = u_Camera.ViewProjection * vec4(v_Position, 1.0);
 }
 
 #type Fragment
