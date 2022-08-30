@@ -6,6 +6,8 @@
 #include "Backend/Core/Pipeline/Shader.h"
 #include "Backend/Core/Pipeline/Buffers.h"
 
+#include "OpenGLDescriptorSet.h"
+
 namespace HazardRenderer::OpenGL
 {
 	class OpenGLShader : public Shader
@@ -16,9 +18,9 @@ namespace HazardRenderer::OpenGL
 
 		void Reload() override;
 		bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
-		void Set(const std::string& name, uint32_t index, uint32_t value) override;
-		void Set(const std::string& name, uint32_t index, Ref<Image2D> value) override;
-		Ref<UniformBuffer> GetUniform(const std::string& name) override { return m_UniformBuffers[name]; };
+		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) {};
+		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) {};
+		Ref<UniformBuffer> GetUniform(const std::string& name) override { return nullptr; };
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 
@@ -28,13 +30,14 @@ namespace HazardRenderer::OpenGL
 
 	private:
 		void CreateProgram(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary);
-		void Reflect(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries);
+		void ReflectVulkan(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
+		void Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
+
+		std::unordered_map<uint32_t, OpenGLDescriptorSet> m_DescriptorSet;
 
 		std::string m_FilePath;
 		uint32_t m_ID = 0;
-
 		ShaderData m_ShaderData;
-		std::unordered_map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
 	};
 }
 #endif

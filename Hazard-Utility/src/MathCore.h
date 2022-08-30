@@ -39,12 +39,12 @@ namespace Math
 		return glm::floor(value);
 	}
 	template<typename T>
-	inline static T Max(T a, T b)
+	inline static T Min(T a, T b)
 	{
 		return a <= b ? a : b;
 	}
 	template<typename T>
-	inline static T Min(T a, T b) {
+	inline static T Max(T a, T b) {
 		return a >= b ? a : b;
 	}
 	template<typename T, typename U>

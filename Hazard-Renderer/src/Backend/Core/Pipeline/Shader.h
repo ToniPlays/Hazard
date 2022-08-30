@@ -24,34 +24,33 @@ namespace HazardRenderer
 	struct ShaderStageInput
 	{
 		std::string Name;
-		uint32_t Binding;
-		uint32_t Location;
-		ShaderDataType Type;
-		uint32_t Size;
-		uint32_t Offset;
+		uint32_t Location = 0;
+		ShaderDataType Type = ShaderDataType::None;
+		uint32_t Size = 0;
+		uint32_t Offset = 0;
 	};
 	struct ShaderStageOutput
 	{
 		std::string Name;
-		uint32_t Location;
-		ShaderDataType Type;
-		uint32_t Size;
+		uint32_t Location = 0;
+		ShaderDataType Type = ShaderDataType::None;
+		uint32_t Size = 0;
 	};
 	struct ShaderUniformBufferDescription
 	{
 		std::string Name;
-		uint32_t Binding;
-		uint32_t Size;
-		uint32_t MemberCount;
-		uint32_t ShaderUsage = 0;
+		uint32_t Binding = 0;
+		uint32_t Size = 0;
+		uint32_t MemberCount = 0;
+		uint32_t UsageFlags = 0;
 		uint32_t DescritorSet = UINT32_MAX;
 	};
-	struct ShaderSampledImage 
+	struct ShaderImageSampler 
 	{
 		std::string Name;
-		uint32_t Binding;
-		uint32_t Dimension;
-		uint32_t ArraySize;
+		uint32_t Binding = 0;
+		uint32_t Dimension = 0;
+		uint32_t ArraySize = 0;
 		uint32_t DescritorSet = UINT32_MAX;
 	};
 
@@ -59,31 +58,35 @@ namespace HazardRenderer
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
-		std::unordered_map<uint32_t, ShaderSampledImage> SampledImages;
 		uint32_t Stride = 0;
 	};
 
 	struct ShaderData 
 	{
 		std::unordered_map<ShaderStage, ShaderStageData> Stages;
-		std::unordered_map<uint32_t, ShaderUniformBufferDescription> UniformsDescriptions;
+		//Set Binding, buffer
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderUniformBufferDescription>> UniformsDescriptions;
+		//Set binding sampler
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderImageSampler>> ImageSamplers;
 	};
 	namespace Utils
 	{
-		static ShaderStage ShaderStageFromString(const std::string& type) {
+		static ShaderStage ShaderStageFromString(const std::string& type) 
+		{
 			if (type == "Vertex")		return ShaderStage::Vertex;
 			if (type == "Fragment")		return ShaderStage::Fragment;
 			if (type == "Pixel")		return ShaderStage::Fragment;
 			if (type == "Compute")		return ShaderStage::Compute;
 			return ShaderStage::None;
 		}
-		static std::string ShaderStageToString(const ShaderStage& type) {
-			if ((uint32_t)type & (uint32_t)ShaderStage::Vertex)			return "Vertex";
-			if ((uint32_t)type & (uint32_t)ShaderStage::Fragment)		return "Fragment";
-			if ((uint32_t)type & (uint32_t)ShaderStage::Compute)		return "Compute";
+		static std::string ShaderStageToString(const uint32_t& type) {
+			if (type & (uint32_t)ShaderStage::Vertex)		return "Vertex";
+			if (type & (uint32_t)ShaderStage::Fragment)		return "Fragment";
+			if (type & (uint32_t)ShaderStage::Compute)		return "Compute";
 			return "Unknown";
 		}
-		static ShaderDataType ShaderStageFromSPV(const spirv_cross::SPIRType& type) {
+		static ShaderDataType ShaderDataTypeFromSPV(const spirv_cross::SPIRType& type) 
+		{
 			using namespace spirv_cross;
 			switch (type.basetype)
 			{
@@ -113,13 +116,11 @@ namespace HazardRenderer
 		static std::string UsageFlagsToString(const uint32_t& flags) 
 		{
 			std::string result;
-
-			if (flags & (uint32_t)ShaderStage::Vertex)	result += "Vertex";
-			if (flags & (uint32_t)ShaderStage::Fragment) result += " Fragment";
-			if (flags & (uint32_t)ShaderStage::Compute)	result += " Compute";
-			if (flags & (uint32_t)ShaderStage::Geometry) result += " Geometry";
+			if (flags & (uint32_t)ShaderStage::Vertex)		result += "Vertex";
+			if (flags & (uint32_t)ShaderStage::Fragment)	result += " Fragment";
+			if (flags & (uint32_t)ShaderStage::Compute)		result += " Compute";
+			if (flags & (uint32_t)ShaderStage::Geometry)	result += " Geometry";
 			return result;
-
 		}
 	}
 
@@ -130,8 +131,8 @@ namespace HazardRenderer
 		virtual bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) = 0;
 		virtual Ref<UniformBuffer> GetUniform(const std::string& name) = 0;
 
-		virtual void Set(const std::string& name, uint32_t index, uint32_t value) = 0;
-		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> value) = 0;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) = 0;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 

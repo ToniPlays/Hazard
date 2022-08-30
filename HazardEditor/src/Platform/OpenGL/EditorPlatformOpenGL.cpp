@@ -35,13 +35,10 @@ void EditorPlatformOpenGL::EndFrame()
 {
 	HZR_PROFILE_FUNCTION();
 
-	auto& cmdBuffer = m_Context->GetSwapchain()->GetSwapchainBuffer().As<OpenGL::OpenGLRenderCommandBuffer>();
-	cmdBuffer->BeginRenderPass_RT(m_Context->GetSwapchain()->GetRenderPass());
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO();
-
-	cmdBuffer->EndRenderPass();
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{

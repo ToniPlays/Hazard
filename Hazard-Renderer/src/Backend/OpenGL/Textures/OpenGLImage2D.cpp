@@ -43,13 +43,6 @@ namespace HazardRenderer::OpenGL
 		glDeleteTextures(1, &m_ID);
 		m_ID = 0;
 	}
-	void OpenGLImage2D::Bind(uint32_t slot)
-	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([s = slot, id = m_ID]() mutable {
-			glBindTextureUnit(s, id);
-			});
-	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)
 	{
 		HZR_PROFILE_FUNCTION();

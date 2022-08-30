@@ -21,8 +21,6 @@ namespace HazardRenderer
 	public:
 		virtual ~Image2D() = default;
 
-		virtual void Bind(uint32_t slot = 0) = 0;
-
 		virtual ImageFormat GetFormat() const = 0;
 		static Ref<Image2D> Create(Image2DCreateInfo* info);
 	};

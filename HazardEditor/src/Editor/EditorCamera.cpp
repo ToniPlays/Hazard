@@ -89,7 +89,7 @@ namespace Editor {
 	{
 		if (m_Is2DEnabled) {
 			size2D -= delta * size2D * 0.25f;
-			size2D = Math::Max(0.01f, size2D);
+			size2D = Math::Min(0.01f, size2D);
 			SetIs2D(true);
 			return;
 		}

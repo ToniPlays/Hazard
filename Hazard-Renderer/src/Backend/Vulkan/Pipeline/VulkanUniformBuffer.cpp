@@ -12,7 +12,7 @@ namespace HazardRenderer::Vulkan
 	{
 		m_Name = createInfo->Name;
 		m_Binding = createInfo->Binding;
-		m_Size = Math::Min<uint32_t>(256, createInfo->Size);
+		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
 		m_LocalData.Allocate(m_Size * 64);
 

@@ -23,7 +23,7 @@ namespace HazardRenderer::Vulkan
     bool VulkanShaderCompiler::Compile(CompileInfo* compileInfo)
     {
         Timer timer;
-        std::cout << "Compiling: " << Utils::ShaderStageToString(compileInfo->Stage) << std::endl;
+        std::cout << "Compiling: " << Utils::ShaderStageToString((uint32_t)compileInfo->Stage) << std::endl;
 
         m_ResultBinary.clear();
 
@@ -68,9 +68,8 @@ namespace HazardRenderer::Vulkan
             auto spvType = compiler.get_type(resource.base_type_id);
             ShaderStageInput input;
             input.Name = resource.name;
-            input.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
             input.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-            input.Type = Utils::ShaderStageFromSPV(spvType);
+            input.Type = Utils::ShaderDataTypeFromSPV(spvType);
             input.Size = ShaderDataTypeSize(input.Type);
 
             shaderStage.Inputs[input.Location] = input;
@@ -90,7 +89,7 @@ namespace HazardRenderer::Vulkan
             ShaderStageOutput output;
             output.Name = resource.name;
             output.Location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-            output.Type = Utils::ShaderStageFromSPV(spvType);
+            output.Type = Utils::ShaderDataTypeFromSPV(spvType);
             output.Size = ShaderDataTypeSize(output.Type);
 
             shaderStage.Outputs[output.Location] = output;
@@ -103,14 +102,13 @@ namespace HazardRenderer::Vulkan
             uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
             uint32_t arraySize = type.array[0] == 0 ? 1 : type.array[0];
 
-            ShaderSampledImage output;
-            output.Name = resource.name;
-            output.Binding = binding;
-            output.Dimension = spvType.image.dim;
-            output.ArraySize = arraySize;
-            output.DescritorSet = set;
+            ShaderImageSampler sampler;
+            sampler.Name = resource.name;
+            sampler.Binding = binding;
+            sampler.Dimension = spvType.image.dim;
+            sampler.ArraySize = arraySize;
+            sampler.DescritorSet = set;
 
-            shaderStage.SampledImages[binding] = output;
         }
         return shaderStage;
     }

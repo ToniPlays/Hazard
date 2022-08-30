@@ -49,7 +49,7 @@ namespace HazardRenderer::Vulkan
 		for (auto& [stage, source] : sources)
 		{
 			double compilationTime = 0.0;
-			std::vector<ShaderDefine> defines = { { "Vulkan" } };
+			std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
 
 			//Compile to Vulkan SPV
 			CompileInfo compileInfoVulkan = {};
@@ -62,6 +62,7 @@ namespace HazardRenderer::Vulkan
 			if (!compiler.Compile(&compileInfoVulkan))
 			{
 				std::cout << compiler.GetErrorMessage() << std::endl;
+				__debugbreak();
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();
@@ -81,14 +82,6 @@ namespace HazardRenderer::Vulkan
 		//HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
 		return true;
-	}
-	void VulkanShader::Set(const std::string& name, uint32_t index, uint32_t value)
-	{
-
-	}
-	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Image2D> value)
-	{
-
 	}
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
@@ -111,57 +104,7 @@ namespace HazardRenderer::Vulkan
 
 		VulkanShaderCompiler compiler;
 		uint32_t uniformCount = 0;
-
-		for (auto&& [stage, binary] : binaries) 
-		{
-			ShaderStageData shaderStage = compiler.GetResources(binary);
-
-			spirv_cross::Compiler compiler(binary);
-			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-			m_ShaderData.Stages[stage] = shaderStage;
-
-			for (auto resource : resources.uniform_buffers)
-			{
-				auto& type = compiler.get_type(resource.base_type_id);
-
-				ShaderUniformBufferDescription spec = {};
-				spec.Name = resource.name;
-				spec.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-				spec.DescritorSet = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
-				spec.MemberCount = type.member_types.size();
-				spec.Size = compiler.get_declared_struct_size(type);
-				spec.ShaderUsage |= (uint32_t)stage;
-
-				auto it = m_ShaderData.UniformsDescriptions.find(spec.Binding);
-				if (it != m_ShaderData.UniformsDescriptions.end())
-				{
-					auto& buffer = m_ShaderData.UniformsDescriptions[spec.Binding];
-					buffer.ShaderUsage |= (uint32_t)stage;
-					continue;
-				}
-
-				if (m_DescriptorSets.size() <= spec.DescritorSet)
-					m_DescriptorSets.resize(spec.DescritorSet + 1);
-
-
-				m_ShaderData.UniformsDescriptions[spec.Binding] = spec;
-			}
-		}
-
-		for (auto& [binding, spec] : m_ShaderData.UniformsDescriptions)
-		{
-			UniformBufferCreateInfo bufferInfo = {};
-			bufferInfo.Name = spec.Name;
-			bufferInfo.Binding = spec.Binding;
-			bufferInfo.Size = spec.Size;
-			bufferInfo.Usage = spec.ShaderUsage;
-
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
-		}
-		m_DynamicOffsets.resize(m_UniformBuffers.size());
 		m_ShaderCode = binaries;
-
 		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void VulkanShader::CreateShaderModules()
@@ -196,7 +139,7 @@ namespace HazardRenderer::Vulkan
 
 		m_TypeCounts.clear();
 
-		for (uint32_t set = 0; set < m_DescriptorSets.size(); set++) 
+		for (uint32_t set = 0; set < m_DescriptorSets.size(); set++)
 		{
 			auto& descritorSet = m_DescriptorSets[set];
 			if (m_ShaderData.UniformsDescriptions.size() > 0)
@@ -205,18 +148,15 @@ namespace HazardRenderer::Vulkan
 				typeCount.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 				typeCount.descriptorCount = (uint32_t)m_ShaderData.UniformsDescriptions.size();
 			}
-			if (m_ShaderData.Stages.find(ShaderStage::Fragment) != m_ShaderData.Stages.end())
+			if (m_ShaderData.ImageSamplers.size() > 0)
 			{
-				if (m_ShaderData.Stages[ShaderStage::Fragment].SampledImages.size() > 0)
-				{
-					VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
-					typeCount.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					typeCount.descriptorCount = (uint32_t)m_ShaderData.Stages[ShaderStage::Fragment].SampledImages.size();
-				}
+				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
+				typeCount.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				typeCount.descriptorCount = (uint32_t)m_ShaderData.ImageSamplers.size();
 			}
 
 			std::vector<VkDescriptorSetLayoutBinding> bindings;
-			
+
 
 			for (auto& [binding, uniformBuffer] : m_ShaderData.UniformsDescriptions)
 			{
@@ -225,23 +165,24 @@ namespace HazardRenderer::Vulkan
 				layout.binding = binding;
 				layout.descriptorCount = 1;
 				layout.pImmutableSamplers = nullptr;
-				layout.stageFlags = VkUtils::GetVulkanShaderStage(uniformBuffer.ShaderUsage);
+				//layout.stageFlags = VkUtils::GetVulkanShaderStage(uniformBuffer);
 
-				VkWriteDescriptorSet& writeSet = m_WriteDescriptorSets[uniformBuffer.Name];
-				writeSet = {};
-				writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				writeSet.descriptorType = layout.descriptorType;
-				writeSet.descriptorCount = 1;
-				writeSet.dstBinding = binding;
+				//VkWriteDescriptorSet& writeSet = m_WriteDescriptorSets[uniformBuffer.Name];
+				//writeSet = {};
+				//writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				//writeSet.descriptorType = layout.descriptorType;
+				//writeSet.descriptorCount = 1;
+				//writeSet.dstBinding = binding;
 			}
 
 			if (m_ShaderData.Stages.find(ShaderStage::Fragment) != m_ShaderData.Stages.end())
 			{
-				for (auto& [binding, sampler] : m_ShaderData.Stages[ShaderStage::Fragment].SampledImages)
+				for (auto& [binding, sampler] : m_ShaderData.ImageSamplers)
 				{
+					/*
 					VkDescriptorSetLayoutBinding& layout = bindings.emplace_back();
 					layout.binding = binding;
-					layout.descriptorCount = sampler.ArraySize;
+					layout.descriptorCount = sampler;
 					layout.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 					layout.pImmutableSamplers = nullptr;
 					layout.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -252,6 +193,7 @@ namespace HazardRenderer::Vulkan
 					writeSet.descriptorType = layout.descriptorType;
 					writeSet.descriptorCount = sampler.ArraySize;
 					writeSet.dstBinding = binding;
+					*/
 				}
 			}
 
@@ -260,7 +202,7 @@ namespace HazardRenderer::Vulkan
 			layoutInfo.bindingCount = (uint32_t)bindings.size();
 			layoutInfo.pBindings = bindings.data();
 
-			if(set >= m_DescriptorSetLayouts.size())
+			if (set >= m_DescriptorSetLayouts.size())
 				m_DescriptorSetLayouts.resize((uint32_t)set + 1);
 
 			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[set]), "Failed to create DescriptorSetLayout");
@@ -291,7 +233,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::CreatePushConstantRanges()
 	{
-		
+
 	}
 }
 #endif

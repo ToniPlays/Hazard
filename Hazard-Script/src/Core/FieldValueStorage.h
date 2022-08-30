@@ -164,7 +164,7 @@ namespace HazardScript
 				MonoArray* arr = (MonoArray*)mono_field_get_value_object(Mono::GetDomain(), m_Field->GetMonoField(), target);
 				uintptr_t oldLenth = mono_array_length(arr);
 
-				size_t copyLength = Math::Max<size_t>(m_ArrayStorage.size(), oldLenth);
+				size_t copyLength = Math::Min<size_t>(m_ArrayStorage.size(), oldLenth);
 
 				MonoClass* arrClass = mono_object_get_class((MonoObject*)arr);
 				MonoClass* elementClass = m_Field->GetType().GetElementType().TypeClass->Class;

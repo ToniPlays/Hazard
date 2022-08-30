@@ -26,8 +26,8 @@ namespace HazardRenderer::Vulkan
 
 		void Reload() override;
 		bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
-		void Set(const std::string& name, uint32_t index, uint32_t value) override;
-		void Set(const std::string& name, uint32_t index, Ref<Image2D> value) override;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) override {};
+		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override {};
 		Ref<UniformBuffer> GetUniform(const std::string& name) override { return m_UniformBuffers[name]; };
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };

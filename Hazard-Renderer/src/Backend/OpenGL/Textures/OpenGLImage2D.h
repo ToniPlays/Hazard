@@ -14,8 +14,6 @@ namespace HazardRenderer::OpenGL
 		void Invalidate() override;
 		void Release() override;
 
-		virtual void Bind(uint32_t slot = 0) override;
-
 		uint32_t GetWidth() override { return m_Width; };
 		uint32_t GetHeight() override { return m_Height; };
 		ImageFormat GetFormat() const override { return m_Format; }
@@ -24,6 +22,8 @@ namespace HazardRenderer::OpenGL
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 		
+
+		//OpenGL specific
 		size_t GetID() const { return m_ID; }
 		const std::string& GetDebugName() const { return m_DebugName; }
 		

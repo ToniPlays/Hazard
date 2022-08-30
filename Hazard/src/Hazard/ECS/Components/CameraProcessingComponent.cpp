@@ -37,8 +37,9 @@ namespace Hazard {
 
 		float aspectRatio = w / h;
 
-		if (m_Type == Projection::Perspective) {
-			m_Projection = glm::perspective(glm::radians(m_Fov), aspectRatio, Math::Max(0.003f, m_ZNear), m_ZFar);
+		if (m_Type == Projection::Perspective) 
+		{
+			m_Projection = glm::perspective(glm::radians(m_Fov), aspectRatio, Math::Min(0.003f, m_ZNear), m_ZFar);
 			return;
 		}
 

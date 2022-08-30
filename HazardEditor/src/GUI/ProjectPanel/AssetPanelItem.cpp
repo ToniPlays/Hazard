@@ -28,7 +28,7 @@ namespace UI
 		const float edgeOffset = 4.0f;
 
 		const float textLineHeight = ImGui::GetTextLineHeightWithSpacing() * 2.0f + edgeOffset * 2.0f;
-		const float infoPanelHeight = Math::Max(false ? thumbnailSize * 0.5f : textLineHeight, textLineHeight);
+		const float infoPanelHeight = Math::Min(false ? thumbnailSize * 0.5f : textLineHeight, textLineHeight);
 
 		const ImVec2 topLeft = ImGui::GetCursorScreenPos();
 		const ImVec2 thumbBottomRight = { topLeft.x + thumbnailSize, topLeft.y + thumbnailSize };

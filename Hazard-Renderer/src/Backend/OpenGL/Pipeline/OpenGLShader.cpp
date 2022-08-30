@@ -27,6 +27,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLShader::Reload()
 	{
+		Timer timer;
 		if (ShaderFactory::HasCachedShader(ShaderStage::Vertex, m_FilePath))
 		{
 			__debugbreak();
@@ -38,13 +39,15 @@ namespace HazardRenderer::OpenGL
 
 		//Compile OpenGL shader
 		OpenGLShaderCompiler compiler;
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries;
+		std::unordered_map<ShaderStage, std::vector<uint32_t>> vulkanBinaries;
+		std::unordered_map<ShaderStage, std::vector<uint32_t>> openGLbinaries;
+
 		for (auto& [stage, source] : sources)
 		{
 			double compilationTime = 0.0;
-			std::vector<ShaderDefine> defines = { { "Vulkan" } };
+			std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
 
-			//Compile to Vulkan SPV
+			//Compile to Vulkan SPV for reflection
 			CompileInfo compileInfoVulkan = {};
 			compileInfoVulkan.Renderer = RenderAPI::Vulkan;
 			compileInfoVulkan.Name = m_FilePath;
@@ -55,19 +58,41 @@ namespace HazardRenderer::OpenGL
 			if (!compiler.Compile(&compileInfoVulkan))
 			{
 				std::cout << compiler.GetErrorMessage() << std::endl;
+				__debugbreak();
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();
-			//Get OpenGL shader source
+			vulkanBinaries[stage] = compiler.GetCompiledBinary();
 
+			std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
+
+			//Compile to Vulkan SPV for OpenGL source
+			CompileInfo compileInfoVkToGL = {};
+			compileInfoVkToGL.Renderer = RenderAPI::Vulkan;
+			compileInfoVkToGL.Name = m_FilePath;
+			compileInfoVkToGL.Stage = stage;
+			compileInfoVkToGL.Source = source;
+			compileInfoVkToGL.Defines = glDefines;
+
+			if (!compiler.Compile(&compileInfoVkToGL))
+			{
+				std::cout << compiler.GetErrorMessage() << std::endl;
+				__debugbreak();
+				continue;
+			}
+			compilationTime += compiler.GetCompileTime();
+
+			//Get OpenGL shader source from Vulkan binaries
 			std::string glSource;
 			if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
 			{
 				std::cout << "Decompilation failed" << std::endl;
+				__debugbreak();
 				continue;
 			}
 
-			std::vector<ShaderDefine> glDefines = { { "OpenGL" } };
+			//std::cout << glSource << std::endl;
+
 			//Compile to OpenGL SPV
 			CompileInfo compileInfoOpenGL = {};
 			compileInfoOpenGL.Renderer = RenderAPI::OpenGL;
@@ -76,89 +101,72 @@ namespace HazardRenderer::OpenGL
 			compileInfoOpenGL.Source = glSource;
 			compileInfoOpenGL.Defines = glDefines;
 
+			//Get OpenGL compiled binary
+			if (!compiler.Compile(&compileInfoOpenGL))
+			{
+				std::cout << "Decompilation failed" << std::endl;
+				__debugbreak();
+				continue;
+			}
+
 			compilationTime += compiler.GetCompileTime();
-			binaries[stage] = compiler.GetCompiledBinary();
-			std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
+			openGLbinaries[stage] = compiler.GetCompiledBinary();
+			//std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
 		}
-		Reflect(binaries);
+
+		m_ShaderData.Stages.clear();
+		ReflectVulkan(vulkanBinaries);
+		Reflect(openGLbinaries);
 
 		Ref<OpenGLShader> instance = this;
-		Renderer::Submit([instance, binaries]() mutable {
-			instance->CreateProgram(binaries);
+		Renderer::Submit([instance, openGLbinaries]() mutable {
+			instance->CreateProgram(openGLbinaries);
 			});
+
+		std::cout << "Shader reload took " << timer.ElapsedMillis() << "ms\n" << std::endl;
 	}
 	bool OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
 	{
+		/*
 		auto& uniformBuffer = m_UniformBuffers[name];
 		if (!uniformBuffer) return false;
 		//HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
+		*/
 		return true;
 	}
-	void OpenGLShader::Set(const std::string& name, uint32_t index, uint32_t value)
-	{
-		std::stringstream ss;
-		ss << name << "[" << index << "]";
-
-		GLuint location = glGetUniformLocation(m_ID, ss.str().c_str());
-		glUniform1i(location, value);
-	}
-	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> value)
-	{
-		Set(name, index, index);
-	}
-	void OpenGLShader::Reflect(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
+	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
 	{
 		Timer timer;
-		m_ShaderData.Stages.clear();
-
-		uint32_t uniformCount = 0;
-
 		OpenGLShaderCompiler compiler;
-		for (auto&& [stage, binary] : binaries) {
+		ShaderData data = compiler.GetShaderResources(binaries);
 
-
-			ShaderStageData shaderStage = compiler.GetResources(binary);
-
-			spirv_cross::Compiler compiler(binary);
-			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-			m_ShaderData.Stages[stage] = shaderStage;
-
-			for (auto resource : resources.uniform_buffers)
+		for (auto& [set, descriptor] : m_DescriptorSet)
+		{
+			//Check single descriptor set
+			for (auto& [binding, writeDescriptor] : descriptor.GetDescriptorSets())
 			{
-				auto& type = compiler.get_type(resource.base_type_id);
-
-				ShaderUniformBufferDescription spec = {};
-				spec.Name = resource.name;
-				spec.Binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
-				spec.MemberCount = type.member_types.size();
-				spec.Size = compiler.get_declared_struct_size(type);
-				spec.ShaderUsage |= (uint32_t)stage;
-
-				auto it = m_ShaderData.UniformsDescriptions.find(spec.Binding);
-				if (it != m_ShaderData.UniformsDescriptions.end())
+				for (auto& [uboSet, uniformBuffers] : data.UniformsDescriptions)
 				{
-					auto& buffer = m_ShaderData.UniformsDescriptions[spec.Binding];
-					buffer.ShaderUsage |= (uint32_t)stage;
-					continue;
+					for (auto& [bufferBinding, buffer] : uniformBuffers)
+					{
+						if (writeDescriptor.DebugName == buffer.Name)
+							writeDescriptor.ActualBinding = bufferBinding;
+					}
 				}
-
-				m_ShaderData.UniformsDescriptions[spec.Binding] = spec;
+				for (auto& [samplerSet, samplers] : data.ImageSamplers)
+				{
+					for (auto& [samplerBinding, sampler] : samplers)
+					{
+						if (writeDescriptor.DebugName == sampler.Name)
+							writeDescriptor.ActualBinding = samplerBinding;
+					}
+				}
 			}
 		}
 
-		for (auto& [binding, spec] : m_ShaderData.UniformsDescriptions)
-		{
-			UniformBufferCreateInfo bufferInfo = {};
-			bufferInfo.Name = spec.Name;
-			bufferInfo.Binding = spec.Binding;
-			bufferInfo.Size = spec.Size;
-			bufferInfo.Usage = spec.ShaderUsage;
-
-			m_UniformBuffers[bufferInfo.Name] = UniformBuffer::Create(&bufferInfo);
-		}
-		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
+		//OpenGLShaderCompiler::PrintReflectionData(data);
+		//std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
@@ -238,6 +246,42 @@ namespace HazardRenderer::OpenGL
 			glDeleteShader(id);
 		}
 		m_ID = program;
+	}
+	void OpenGLShader::ReflectVulkan(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
+	{
+		Timer timer;
+		OpenGLShaderCompiler compiler;
+		m_ShaderData = compiler.GetShaderResources(binaries);
+
+		for (auto& [set, buffers] : m_ShaderData.UniformsDescriptions)
+		{
+			OpenGLDescriptorSet& descriptorSet = m_DescriptorSet[set];
+			for (auto& [binding, buffer] : buffers)
+			{
+				OpenGLWriteDescriptor writeDescriptor = {};
+				writeDescriptor.Type = GL_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				writeDescriptor.DebugName = buffer.Name;
+				writeDescriptor.Binding = binding;
+				writeDescriptor.ArraySize = 0;
+
+				descriptorSet.AddWriteDescriptor(writeDescriptor);
+			}
+		}
+		for (auto& [set, samplers] : m_ShaderData.ImageSamplers)
+		{
+			OpenGLDescriptorSet& descriptorSet = m_DescriptorSet[set];
+			for (auto& [binding, sampler] : samplers)
+			{
+				OpenGLWriteDescriptor writeDescriptor = {};
+				writeDescriptor.Type = GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				writeDescriptor.DebugName = sampler.Name;
+				writeDescriptor.Binding = binding;
+				writeDescriptor.ArraySize = sampler.ArraySize;
+
+				descriptorSet.AddWriteDescriptor(writeDescriptor);
+			}
+		}
+		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 }
 #endif
