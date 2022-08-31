@@ -5,6 +5,7 @@
 
 #include "Backend/Core/Pipeline/Shader.h"
 #include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Texture/Image2D.h"
 
 #include "OpenGLDescriptorSet.h"
 
@@ -17,9 +18,9 @@ namespace HazardRenderer::OpenGL
 		~OpenGLShader();
 
 		void Reload() override;
-		bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
-		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) {};
-		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) {};
+		bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) override;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) override;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override;
 		Ref<UniformBuffer> GetUniform(const std::string& name) override { return nullptr; };
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
@@ -27,6 +28,9 @@ namespace HazardRenderer::OpenGL
 		//OpenGL specific
 		void Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries);
 		uint32_t GetProgramID() const { return m_ID; }
+
+		std::unordered_map<uint32_t, OpenGLDescriptorSet> GetDescriptorSets() { return m_DescriptorSet; };
+		const OpenGLDescriptorSet& GetDescriptorSet(uint32_t index) { return m_DescriptorSet[index]; };
 
 	private:
 		void CreateProgram(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary);

@@ -154,7 +154,6 @@ namespace HazardRenderer::OpenGL
 		std::cout << "Reflection data" << std::endl;
 		for (auto& [stage, data] : data.Stages)
 		{
-			break;
 			std::cout << "- Shader stage: " << Utils::ShaderStageToString((uint32_t)stage) << std::endl;
 			std::cout << "  - Inputs:" << std::endl;
 			for (auto& [location, input] : data.Inputs)

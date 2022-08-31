@@ -7,6 +7,8 @@
 
 #include "Backend/Core/Pipeline/ShaderFactory.h"
 #include "Backend/OpenGL/OpenGLShaderCompiler.h"
+#include "../Textures/OpenGLImage2D.h"
+#include "OpenGLBuffers.h"
 
 #include <sstream>
 #include <glad/glad.h>
@@ -125,15 +127,18 @@ namespace HazardRenderer::OpenGL
 
 		std::cout << "Shader reload took " << timer.ElapsedMillis() << "ms\n" << std::endl;
 	}
-	bool OpenGLShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
+	bool OpenGLShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
-		/*
-		auto& uniformBuffer = m_UniformBuffers[name];
-		if (!uniformBuffer) return false;
-		//HZR_ASSERT(uniformBuffer, "[OpenGLShader]: UniformBuffer '{0}' does not exist", name);
-		uniformBuffer->SetData(data, size);
-		*/
+		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue.As<UniformBuffer>()->SetData(data, size);
 		return true;
+	}
+	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<Image2D> image)
+	{
+		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue = image.As<OpenGLImage2D>();
+	}
+	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
+	{
+		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue = uniformBuffer.As<OpenGLUniformBuffer>();
 	}
 	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
 	{
@@ -265,6 +270,16 @@ namespace HazardRenderer::OpenGL
 				writeDescriptor.ArraySize = 0;
 
 				descriptorSet.AddWriteDescriptor(writeDescriptor);
+
+				UniformBufferCreateInfo bufferInfo = {};
+				bufferInfo.Name = buffer.Name;
+				bufferInfo.Set = set;
+				bufferInfo.Binding = binding;
+				bufferInfo.Size = buffer.Size;
+				bufferInfo.IsShared = true;
+				bufferInfo.Usage = BufferUsage::DynamicDraw;
+
+				Set(set, binding, UniformBuffer::Create(&bufferInfo));
 			}
 		}
 		for (auto& [set, samplers] : m_ShaderData.ImageSamplers)

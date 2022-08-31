@@ -78,7 +78,6 @@ namespace HazardRenderer {
 	{
 		if (createInfo->IsShared && RenderLibrary::HasUniformBuffer(createInfo->Name)) {
 			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
-			HZR_ASSERT(buffer->GetBinding() == createInfo->Binding, "UniformBuffer: {0} binding does not match", createInfo->Name);
 			return buffer;
 		}
 

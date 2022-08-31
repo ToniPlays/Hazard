@@ -45,6 +45,7 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		size_t Size;
+		uint32_t Set;
 		uint32_t Binding;
 		uint32_t Usage;
 		bool IsShared = true;

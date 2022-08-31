@@ -33,7 +33,7 @@ namespace Hazard
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
 		frameBufferInfo.AttachmentCount = 4;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RGBA16F, ImageFormat::RGBA16F, ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.Width = 1920;
 		frameBufferInfo.Height = 1080;
@@ -104,7 +104,6 @@ namespace Hazard
 		{
 			if (!pipeline->IsValid()) continue;
 			commandBuffer->BindPipeline(pipeline);
-			commandBuffer->BindUniformBuffer(m_Resources->ModelUniformBuffer, 3);
 			for (auto& mesh : meshList)
 			{
 				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
@@ -151,11 +150,9 @@ namespace Hazard
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
-				commandBuffer->BeginRenderPass(m_RenderPass);
-				GeometryPass(commandBuffer);
-				commandBuffer->EndRenderPass();
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
+				GeometryPass(commandBuffer);
 				CompositePass(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}

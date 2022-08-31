@@ -75,12 +75,14 @@ namespace HazardRenderer::Vulkan
 			instance->CreateDescriptorSetLayouts();
 			});
 	}
-	bool VulkanShader::SetUniformBuffer(const std::string& name, void* data, uint32_t size)
+	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
+		/*
 		auto& uniformBuffer = m_UniformBuffers[name];
 		if (!uniformBuffer) return false;
 		//HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
+		*/
 		return true;
 	}
 	void VulkanShader::Reload_RT(bool forceCompile)
@@ -97,14 +99,16 @@ namespace HazardRenderer::Vulkan
 		}
 		return m_DynamicOffsets;
 	}
-	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
+	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
 	{
 		Timer timer;
 		m_ShaderData.Stages.clear();
 
 		VulkanShaderCompiler compiler;
-		uint32_t uniformCount = 0;
 		m_ShaderCode = binaries;
+
+		m_ShaderData = compiler.GetShaderResources(binaries);
+		VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
 		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void VulkanShader::CreateShaderModules()
@@ -230,6 +234,7 @@ namespace HazardRenderer::Vulkan
 				vkUpdateDescriptorSets(device, 1, &writeDescriptorSet, 0, nullptr);
 			}
 		}
+		__debugbreak();
 	}
 	void VulkanShader::CreatePushConstantRanges()
 	{

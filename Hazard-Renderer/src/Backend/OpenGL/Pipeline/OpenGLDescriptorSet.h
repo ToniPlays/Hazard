@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
+#include "Backend/Core/Core.h"
 
 namespace HazardRenderer::OpenGL
 {
@@ -18,6 +19,7 @@ namespace HazardRenderer::OpenGL
 		uint32_t Binding = UINT32_MAX;
 		uint32_t ArraySize = 0;
 		uint32_t ActualBinding = UINT32_MAX;
+		Ref<HZR_RESOURCE_HANDLER> BoundValue = nullptr;
 	};
 
 	class OpenGLDescriptorSet 
@@ -28,6 +30,9 @@ namespace HazardRenderer::OpenGL
 
 		void AddWriteDescriptor(OpenGLWriteDescriptor writeDescriptor);
 		std::unordered_map<uint32_t, OpenGLWriteDescriptor>& GetDescriptorSets() { return m_WriteDescriptors; }
+		OpenGLWriteDescriptor& GetWriteDescriptor(uint32_t index) { return m_WriteDescriptors[index]; }
+
+		void BindResources();
 
 	private:
 		std::unordered_map<uint32_t, OpenGLWriteDescriptor> m_WriteDescriptors;

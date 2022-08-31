@@ -25,7 +25,7 @@ namespace HazardRenderer::Vulkan
 		~VulkanShader();
 
 		void Reload() override;
-		bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) override;
+		bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) override;
 		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) override {};
 		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override {};
 		Ref<UniformBuffer> GetUniform(const std::string& name) override { return m_UniformBuffers[name]; };
@@ -43,7 +43,7 @@ namespace HazardRenderer::Vulkan
 		const std::vector<uint32_t>& GetDynamicOffsets();
 
 	private:
-		void Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries);
+		void Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
 		void CreateShaderModules();
 		void CreateDescriptorSetLayouts();
 		void CreatePushConstantRanges();

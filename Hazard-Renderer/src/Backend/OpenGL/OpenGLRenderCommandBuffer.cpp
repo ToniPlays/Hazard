@@ -62,6 +62,9 @@ namespace HazardRenderer::OpenGL
 		Renderer::Submit([instance]() mutable {
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
 
+			for (auto& [set, descriptor] : shader->GetDescriptorSets())
+				descriptor.BindResources();
+
 			glEnable(GL_DEPTH_TEST);
 
 			glUseProgram(shader->GetProgramID());

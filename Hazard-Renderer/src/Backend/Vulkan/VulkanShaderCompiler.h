@@ -14,12 +14,14 @@ namespace HazardRenderer::Vulkan
 		~VulkanShaderCompiler() = default;
 
 		bool Compile(CompileInfo* compileInfo);
-		ShaderStageData GetResources(std::vector<uint32_t> binary);
 
 		double GetCompileTime() { return m_CompilationTime; }
 		std::string GetErrorMessage() { return m_ErrorMessage; }
 		std::vector<uint32_t> GetCompiledBinary() { return m_ResultBinary; }
+		ShaderData GetShaderResources(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary);
 
+	public:
+		static void PrintReflectionData(const ShaderData& data);
 	private:
 		std::vector<uint32_t> m_ResultBinary;
 		std::string m_ErrorMessage;

@@ -51,6 +51,7 @@ namespace Hazard
 			{
 				UniformBufferCreateInfo cameraUBO = {};
 				cameraUBO.Name = "Camera";
+				cameraUBO.Set = 0;
 				cameraUBO.Binding = 0;
 				cameraUBO.Size = sizeof(CameraData);
 				cameraUBO.Usage = BufferUsage::DynamicDraw;
@@ -59,6 +60,7 @@ namespace Hazard
 
 				UniformBufferCreateInfo environmentUbo = {};
 				environmentUbo.Name = "Environment";
+				environmentUbo.Set = 0;
 				environmentUbo.Binding = 1;
 				environmentUbo.Size = sizeof(EnvironmentUBO);
 				environmentUbo.Usage = BufferUsage::DynamicDraw;
@@ -67,6 +69,7 @@ namespace Hazard
 
 				UniformBufferCreateInfo lightUBO = {};
 				lightUBO.Name = "Lights";
+				lightUBO.Set = 0;
 				lightUBO.Binding = 2;
 				lightUBO.Size = sizeof(LightingData);
 				lightUBO.Usage = BufferUsage::DynamicDraw;
@@ -75,6 +78,7 @@ namespace Hazard
 
 				UniformBufferCreateInfo modelUBO = {};
 				modelUBO.Name = "Model";
+				modelUBO.Set = 1;
 				modelUBO.Binding = 3;
 				modelUBO.Size = sizeof(glm::mat4);
 				modelUBO.Usage = BufferUsage::DynamicDraw;

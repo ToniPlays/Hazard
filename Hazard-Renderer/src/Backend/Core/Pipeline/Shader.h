@@ -128,7 +128,7 @@ namespace HazardRenderer
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
-		virtual bool SetUniformBuffer(const std::string& name, void* data, uint32_t size) = 0;
+		virtual bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) = 0;
 		virtual Ref<UniformBuffer> GetUniform(const std::string& name) = 0;
 
 		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) = 0;

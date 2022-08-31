@@ -136,6 +136,8 @@ namespace HazardRenderer::OpenGL
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
+		std::cout << "Created " << createInfo->Name << " buffer" << std::endl;
+
 		m_LocalData.Allocate(m_Size * 32);
 		m_LocalData.ZeroInitialize();
 
@@ -147,6 +149,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
 	{
+		std::cout << "Released UniformBuffer: " << m_Name << std::endl;
 		m_LocalData.Release();
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
