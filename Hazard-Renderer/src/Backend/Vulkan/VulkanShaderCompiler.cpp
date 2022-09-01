@@ -67,7 +67,6 @@ namespace HazardRenderer::Vulkan
         {
             spirv_cross::Compiler compiler(binary);
             spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
             //Check stage inputs
             ShaderStageData& data = result.Stages[stage];
             for (auto& resource : resources.stage_inputs)
@@ -103,7 +102,6 @@ namespace HazardRenderer::Vulkan
                 input.Offset = offset;
                 offset += input.Size;
             }
-
             for (auto& resource : resources.uniform_buffers)
             {
                 auto& spvType = compiler.get_type(resource.base_type_id);

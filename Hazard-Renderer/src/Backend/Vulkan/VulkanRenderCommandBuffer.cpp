@@ -191,8 +191,9 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance, renderPass, explicitClear]() mutable {
-			instance->BeginRenderPass_RT(renderPass, explicitClear);
+		Ref<RenderPass> pass = renderPass;
+		Renderer::Submit([instance, pass, explicitClear]() mutable {
+			instance->BeginRenderPass_RT(pass, explicitClear);
 			});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)

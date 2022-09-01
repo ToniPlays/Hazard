@@ -1,4 +1,4 @@
-#include "VulkanPipeline.h"
+ #include "VulkanPipeline.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/Renderer.h"
@@ -93,7 +93,7 @@ namespace HazardRenderer::Vulkan
 		std::vector<VkPipelineColorBlendAttachmentState> blendStates(colorAttachmentCount);
 		if (fb->GetSpecification().SwapChainTarget)
 		{
-			blendStates[0].colorWriteMask = 0xF;
+			blendStates[0].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 			blendStates[0].blendEnable = VK_TRUE;
 			blendStates[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 			blendStates[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
@@ -106,14 +106,12 @@ namespace HazardRenderer::Vulkan
 		{
 			for (size_t i = 0; i < colorAttachmentCount; i++)
 			{
-				if (!fb->GetSpecification().SwapChainTarget || false)
-					break;
-
-				blendStates[i].colorWriteMask = 0xF;
+				blendStates[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
 				const auto& spec = fb->GetSpecification().Attachments[i];
 				blendStates[i].blendEnable = VK_TRUE;
-
+				blendStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+				blendStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 				blendStates[i].colorBlendOp = VK_BLEND_OP_ADD;
 				blendStates[i].alphaBlendOp = VK_BLEND_OP_ADD;
 				blendStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;

@@ -54,8 +54,7 @@ namespace HazardRenderer::Vulkan
 		ShaderData m_ShaderData;
 		std::vector<VkDescriptorSet> m_DescriptorSets;
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, VkWriteDescriptorSet>> m_WriteDescriptorSets;
-		std::unordered_map<uint32_t, std::vector<VkDescriptorPoolSize>> m_TypeCounts;
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, Ref<UniformBuffer>>> m_UniformBuffers;
+		std::map<uint32_t, std::unordered_map<uint32_t, Ref<UniformBuffer>>> m_UniformBuffers;
 
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
 		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;

@@ -70,8 +70,8 @@ namespace HazardRenderer::Vulkan::VkUtils {
 	{
 		switch (type)
 		{
-		case DrawType::Fill:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-		case DrawType::Line:	return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		case DrawType::Fill:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case DrawType::Line:	return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
 		case DrawType::Point:	return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
 		}
 		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;

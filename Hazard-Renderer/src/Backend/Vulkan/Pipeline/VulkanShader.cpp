@@ -98,7 +98,8 @@ namespace HazardRenderer::Vulkan
 	const std::vector<uint32_t>& VulkanShader::GetDynamicOffsets()
 	{
 		uint32_t i = 0;
-		for (auto& [set, buffers] : m_UniformBuffers) {
+		for (auto& [set, buffers] : m_UniformBuffers) 
+		{
 			for (auto& [binding, uniformBuffer] : buffers)
 			{
 				m_DynamicOffsets[i] = uniformBuffer.As<VulkanUniformBuffer>()->GetOffset();
@@ -111,11 +112,10 @@ namespace HazardRenderer::Vulkan
 	{
 		Timer timer;
 		m_ShaderData.Stages.clear();
-
+			
 		VulkanShaderCompiler compiler;
 		m_ShaderCode = binaries;
 		m_ShaderData = compiler.GetShaderResources(binaries);
-
 
 		uint32_t descriptorSets = 0;
 		uint32_t size = 0;

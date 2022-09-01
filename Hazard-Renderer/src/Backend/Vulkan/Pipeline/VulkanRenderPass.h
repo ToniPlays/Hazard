@@ -3,8 +3,10 @@
 #include "Backend/Core/Pipeline/RenderPass.h"
 #ifdef HZR_INCLUDE_VULKAN
 
-namespace HazardRenderer::Vulkan {
-	class VulkanRenderPass : public RenderPass {
+namespace HazardRenderer::Vulkan 
+{
+	class VulkanRenderPass : public RenderPass 
+	{
 	public:
 		VulkanRenderPass(RenderPassCreateInfo* createInfo);
 		~VulkanRenderPass() = default;

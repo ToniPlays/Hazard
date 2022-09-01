@@ -36,11 +36,12 @@ namespace HazardRenderer::Vulkan
 			m_CurrentBufferDataIndex = 0;
 			m_FrameIndex = frameIndex;
 		}
-		m_LocalData.Write(data, size, m_CurrentBufferDataIndex * m_Size);
+		uint32_t offset = m_CurrentBufferDataIndex * m_Size;
+		m_LocalData.Write(data, size, offset);
 		m_CurrentBufferDataIndex++;
 
 		Ref<VulkanUniformBuffer> instance = this;
-		Renderer::Submit([instance, size, offset = m_CurrentBufferDataIndex * m_Size]() mutable {
+		Renderer::Submit([instance, size, offset]() mutable {
 			instance->SetData_RT(instance->m_LocalData.Data, size, offset);
 			});
 	}
@@ -101,7 +102,7 @@ namespace HazardRenderer::Vulkan
 	{
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		uint8_t* dstData = allocator.MapMemory<uint8_t>(m_BufferAllocation);
-		memcpy(dstData, (uint8_t*)m_LocalData.Data + offset, m_LocalData.Size);
+		memcpy(dstData + offset, (uint8_t*)m_LocalData.Data + offset, size);
 		allocator.UnmapMemory(m_BufferAllocation);
 	}
 }

@@ -19,7 +19,7 @@ namespace Hazard
 		BufferLayout layout = Vertex3D::Layout();
 
 		VertexBufferCreateInfo vboInfo = {};
-		vboInfo.DebugName = "SomeMesh";
+		vboInfo.DebugName = "SomeMeshVertexBuffer";
 		vboInfo.Layout = &layout;
 		vboInfo.Size = m_LocalVertexData.Size;
 		vboInfo.Data = m_LocalVertexData.Data;

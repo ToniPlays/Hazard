@@ -36,6 +36,7 @@ namespace HazardRenderer
 	{
 		std::string DebugName;
 
+		//Size is size in bytes
 		size_t Size;
 		BufferUsage Usage;
 		uint32_t* Data = nullptr;
