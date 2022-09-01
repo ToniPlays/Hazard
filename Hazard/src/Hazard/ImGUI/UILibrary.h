@@ -353,6 +353,14 @@ namespace Hazard::ImUI
 
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image)
 	{
+		static std::unordered_map<HazardRenderer::Image2D*, ImTextureID> cache;
+
+		if (cache.find(image.Raw()) != cache.end()) 
+		{
+			HZR_ASSERT(cache[image.Raw()] != nullptr, "Woop");
+			return cache[image.Raw()];
+		}
+
 		using namespace HazardRenderer;
 		RenderAPI api = GraphicsContext::GetRenderAPI();
 		switch (api) {
@@ -360,6 +368,7 @@ namespace Hazard::ImUI
 		case RenderAPI::OpenGL:
 		{
 			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
+			cache[image.Raw()] = id;
 			return id;
 		}
 #endif
@@ -370,7 +379,9 @@ namespace Hazard::ImUI
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 			if (!imageInfo.imageView) return nullptr;
 
-			return ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
+			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
+			cache[image.Raw()] = id;
+			return id;
 		}
 #endif
 		}

@@ -3,6 +3,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "Backend/Core/Renderer.h"
 #include "Backend/Vulkan/VulkanContext.h"
+#include "spdlog/fmt/fmt.h"
 
 #include "../VkUtils.h"
 
@@ -13,6 +14,7 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
 		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
 
+		m_DebugName = info->DebugName;
 		m_Width = info->Width;
 		m_Height = info->Height;
 		m_Format = info->Format;
@@ -169,7 +171,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.usage = flags;
 
 		m_Info.Allocation = allocator.AllocateImage(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Info.Image);
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, "VulkanImage2D", m_Info.Image);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_DebugName), m_Info.Image);
 
 		VkImageViewCreateInfo viewInfo = {};
 		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -185,7 +187,7 @@ namespace HazardRenderer::Vulkan
 
 		viewInfo.image = m_Info.Image;
 		VK_CHECK_RESULT(vkCreateImageView(device, &viewInfo, nullptr, &m_Info.ImageView), "Failed to create VkImageView");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, "VulkanImage2D ImageView", m_Info.ImageView);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_DebugName), m_Info.ImageView);
 
 		VkSamplerCreateInfo samplerCreateInfo = {};
 		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -214,7 +216,7 @@ namespace HazardRenderer::Vulkan
 		samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_Info.Sampler), "Failed to create VulkanImage2D sampler");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, "VulkanImage2D sampler", m_Info.Sampler);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_DebugName), m_Info.Sampler);
 
 		if (m_Usage == ImageUsage::Storage)
 		{

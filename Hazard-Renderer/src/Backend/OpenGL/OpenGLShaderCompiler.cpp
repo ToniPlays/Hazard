@@ -25,6 +25,7 @@ namespace HazardRenderer::OpenGL
 		Timer timer;
 
 		m_ResultBinary.clear();
+		m_ErrorMessage.clear();
 
 		shaderc::CompileOptions options;
 
@@ -57,6 +58,7 @@ namespace HazardRenderer::OpenGL
 	}
 	bool OpenGLShaderCompiler::Decompile(const std::vector<uint32_t> binary, std::string& result)
 	{
+		m_ErrorMessage.clear();
 		spirv_cross::CompilerGLSL compiler(binary);
 		result = compiler.compile();
 		return !result.empty();

@@ -74,12 +74,12 @@ namespace Hazard
 				lightUBO.Size = sizeof(LightingData);
 				lightUBO.Usage = BufferUsage::DynamicDraw;
 
-				LightUniformBuffer = UniformBuffer::Create(&lightUBO);
+				//LightUniformBuffer = UniformBuffer::Create(&lightUBO);
 
 				UniformBufferCreateInfo modelUBO = {};
 				modelUBO.Name = "Model";
 				modelUBO.Set = 1;
-				modelUBO.Binding = 3;
+				modelUBO.Binding = 0;
 				modelUBO.Size = sizeof(glm::mat4);
 				modelUBO.Usage = BufferUsage::DynamicDraw;
 

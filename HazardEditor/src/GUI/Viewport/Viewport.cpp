@@ -40,7 +40,7 @@ namespace UI
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
 
-		m_FrameBuffer->Resize(m_Width, m_Height);
+		//m_FrameBuffer->Resize(m_Width, m_Height);
 
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
 	}

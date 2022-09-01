@@ -1,6 +1,8 @@
 #include "VulkanUniformBuffer.h"
 #ifdef HZR_INCLUDE_VULKAN
 
+#include "spdlog/fmt/fmt.h"
+
 #include "Backend/Core/Renderer.h"
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
@@ -15,6 +17,7 @@ namespace HazardRenderer::Vulkan
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
 		m_LocalData.Allocate(m_Size * 64);
+		std::cout << fmt::format("Create UniformBuffer: {0}, at {1}, {2}", m_Name, createInfo->Set, createInfo->Binding) << std::endl;
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -37,8 +40,8 @@ namespace HazardRenderer::Vulkan
 		m_CurrentBufferDataIndex++;
 
 		Ref<VulkanUniformBuffer> instance = this;
-		Renderer::Submit([instance, size]() mutable {
-			instance->SetData_RT(instance->m_LocalData.Data, size);
+		Renderer::Submit([instance, size, offset = m_CurrentBufferDataIndex * m_Size]() mutable {
+			instance->SetData_RT(instance->m_LocalData.Data, size, offset);
 			});
 	}
 	void VulkanUniformBuffer::Release()
@@ -90,16 +93,15 @@ namespace HazardRenderer::Vulkan
 		m_BufferAllocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_UniformBuffer);
 		VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_BUFFER, m_Name, m_UniformBuffer);
 
-
 		m_DescriptorInfo.offset = 0;
 		m_DescriptorInfo.range = m_LocalData.Size;
 		m_DescriptorInfo.buffer = m_UniformBuffer;
 	}
-	void VulkanUniformBuffer::SetData_RT(void* data, uint32_t size)
+	void VulkanUniformBuffer::SetData_RT(void* data, uint32_t size, uint32_t offset)
 	{
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		uint8_t* dstData = allocator.MapMemory<uint8_t>(m_BufferAllocation);
-		memcpy(dstData, m_LocalData.Data, m_LocalData.Size);
+		memcpy(dstData, (uint8_t*)m_LocalData.Data + offset, m_LocalData.Size);
 		allocator.UnmapMemory(m_BufferAllocation);
 	}
 }

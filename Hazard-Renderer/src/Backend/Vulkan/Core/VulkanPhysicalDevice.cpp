@@ -50,7 +50,7 @@ namespace HazardRenderer::Vulkan
 				std::cout << "Device extensions: " << std::endl;
 				for (const auto& ext : extensions) {
 					m_SupportedExtensions.emplace(ext.extensionName);
-					std::cout << " -" << ext.extensionName << std::endl;
+					//std::cout << " -" << ext.extensionName << std::endl;
 				}
 			}
 		}

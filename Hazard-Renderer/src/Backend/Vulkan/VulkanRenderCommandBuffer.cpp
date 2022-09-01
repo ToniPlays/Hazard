@@ -282,7 +282,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanPipeline> vkPipeline = pipeline.As<VulkanPipeline>();
 		auto& shader = pipeline->GetShader().As<VulkanShader>();
 
-		auto offsets = shader->GetDynamicOffsets();
+		auto& offsets = shader->GetDynamicOffsets();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, pipeline = vkPipeline, offsets, shader]() mutable {

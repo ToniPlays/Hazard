@@ -77,13 +77,19 @@ namespace HazardRenderer::Vulkan
 	}
 	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
-		/*
-		auto& uniformBuffer = m_UniformBuffers[name];
-		if (!uniformBuffer) return false;
+		auto& uniformBuffer = m_UniformBuffers[set][binding];
+		if (!uniformBuffer) HZR_ASSERT(false, "");
 		//HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
 		uniformBuffer->SetData(data, size);
-		*/
 		return true;
+	}
+	void VulkanShader::Set(uint32_t set, uint32_t binding, Ref<Image2D> image)
+	{
+
+	}
+	void VulkanShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
+	{
+
 	}
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
@@ -92,10 +98,12 @@ namespace HazardRenderer::Vulkan
 	const std::vector<uint32_t>& VulkanShader::GetDynamicOffsets()
 	{
 		uint32_t i = 0;
-		for (auto& [binding, uniformBuffer] : m_UniformBuffers)
-		{
-			m_DynamicOffsets[i] = 0; // uniformBuffer.As<VulkanUniformBuffer>()->GetOffset();
-			i++;
+		for (auto& [set, buffers] : m_UniformBuffers) {
+			for (auto& [binding, uniformBuffer] : buffers)
+			{
+				m_DynamicOffsets[i] = uniformBuffer.As<VulkanUniformBuffer>()->GetOffset();
+				i++;
+			}
 		}
 		return m_DynamicOffsets;
 	}
@@ -106,8 +114,36 @@ namespace HazardRenderer::Vulkan
 
 		VulkanShaderCompiler compiler;
 		m_ShaderCode = binaries;
-
 		m_ShaderData = compiler.GetShaderResources(binaries);
+
+
+		uint32_t descriptorSets = 0;
+		uint32_t size = 0;
+		for (auto& [set, buffers] : m_ShaderData.UniformsDescriptions)
+		{
+			for (auto& [binding, buffer] : buffers)
+			{
+				UniformBufferCreateInfo info = {};
+				info.Name = buffer.Name;
+				info.Set = set;
+				info.Binding = binding;
+				info.Size = buffer.Size;
+				info.Usage = buffer.UsageFlags;
+
+				m_UniformBuffers[set][binding] = UniformBuffer::Create(&info);
+				size++;
+			}
+			if (set > descriptorSets)
+				descriptorSets = set;
+		}
+		for (auto& [set, buffer] : m_ShaderData.ImageSamplers)
+		{
+			if (set > descriptorSets)
+				descriptorSets = set;
+		}
+		m_DynamicOffsets.resize(size);
+		m_DescriptorSets.resize(descriptorSets + 1);
+
 		VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
 		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
@@ -141,64 +177,41 @@ namespace HazardRenderer::Vulkan
 	{
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		m_TypeCounts.clear();
+		std::cout << m_FilePath << std::endl;
 
+		m_DescriptorSetLayouts.resize(m_DescriptorSets.size());
 		for (uint32_t set = 0; set < m_DescriptorSets.size(); set++)
 		{
-			auto& descritorSet = m_DescriptorSets[set];
-			if (m_ShaderData.UniformsDescriptions.size() > 0)
-			{
-				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
-				typeCount.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-				typeCount.descriptorCount = (uint32_t)m_ShaderData.UniformsDescriptions.size();
-			}
-			if (m_ShaderData.ImageSamplers.size() > 0)
-			{
-				VkDescriptorPoolSize& typeCount = m_TypeCounts[set].emplace_back();
-				typeCount.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-				typeCount.descriptorCount = (uint32_t)m_ShaderData.ImageSamplers.size();
-			}
-
 			std::vector<VkDescriptorSetLayoutBinding> bindings;
+			auto& descriptorSet = m_DescriptorSets[set];
 
-
-			for (auto& [binding, uniformBuffer] : m_ShaderData.UniformsDescriptions)
+			for (auto& [binding, buffer] : m_ShaderData.UniformsDescriptions[set])
 			{
-				VkDescriptorSetLayoutBinding& layout = bindings.emplace_back();
-				layout.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-				layout.binding = binding;
-				layout.descriptorCount = 1;
-				layout.pImmutableSamplers = nullptr;
-				//layout.stageFlags = VkUtils::GetVulkanShaderStage(uniformBuffer);
+				auto& descriptorBinding = bindings.emplace_back();
+				descriptorBinding = {};
+				descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+				descriptorBinding.binding = buffer.Binding;
+				descriptorBinding.descriptorCount = 1;
+				descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage(buffer.UsageFlags);
 
-				//VkWriteDescriptorSet& writeSet = m_WriteDescriptorSets[uniformBuffer.Name];
-				//writeSet = {};
-				//writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				//writeSet.descriptorType = layout.descriptorType;
-				//writeSet.descriptorCount = 1;
-				//writeSet.dstBinding = binding;
+				VkWriteDescriptorSet writeDescriptor = {};
+				writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				writeDescriptor.dstBinding = descriptorBinding.binding;
+				writeDescriptor.descriptorType = descriptorBinding.descriptorType;
+				writeDescriptor.dstArrayElement = 0;
+				writeDescriptor.descriptorCount = 1;
+
+				m_WriteDescriptorSets[set][buffer.Binding] = writeDescriptor;
 			}
 
-			if (m_ShaderData.Stages.find(ShaderStage::Fragment) != m_ShaderData.Stages.end())
+			for (auto& [binding, sampler] : m_ShaderData.ImageSamplers[set])
 			{
-				for (auto& [binding, sampler] : m_ShaderData.ImageSamplers)
-				{
-					/*
-					VkDescriptorSetLayoutBinding& layout = bindings.emplace_back();
-					layout.binding = binding;
-					layout.descriptorCount = sampler;
-					layout.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					layout.pImmutableSamplers = nullptr;
-					layout.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-					VkWriteDescriptorSet& writeSet = m_WriteDescriptorSets[sampler.Name];
-					writeSet = {};
-					writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-					writeSet.descriptorType = layout.descriptorType;
-					writeSet.descriptorCount = sampler.ArraySize;
-					writeSet.dstBinding = binding;
-					*/
-				}
+				auto& descriptorBinding = bindings.emplace_back();
+				descriptorBinding = {};
+				descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				descriptorBinding.binding = binding;
+				descriptorBinding.descriptorCount = sampler.ArraySize;
+				descriptorBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 			}
 
 			VkDescriptorSetLayoutCreateInfo layoutInfo = {};
@@ -206,35 +219,32 @@ namespace HazardRenderer::Vulkan
 			layoutInfo.bindingCount = (uint32_t)bindings.size();
 			layoutInfo.pBindings = bindings.data();
 
-			if (set >= m_DescriptorSetLayouts.size())
-				m_DescriptorSetLayouts.resize((uint32_t)set + 1);
-
-			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[set]), "Failed to create DescriptorSetLayout");
+			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[set]), "Failed to create descriptor layout");
 
 			VkDescriptorSetAllocateInfo allocInfo = {};
 			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = &m_DescriptorSetLayouts[set];
-
 			m_DescriptorSets[set] = VulkanContext::GetInstance()->RT_AllocateDescriptorSet(allocInfo);
 
-			for (auto& [binding, uniformBuffer] : m_UniformBuffers)
+			auto& dstSet = m_WriteDescriptorSets[set];
+
+			for (auto& [binding, writeDescriptor] : dstSet)
 			{
-				auto& vulkanUniformBuffer = uniformBuffer.As<VulkanUniformBuffer>();
+				auto& uniformBuffer = m_UniformBuffers[set][binding].As<VulkanUniformBuffer>();
+
 				VkDescriptorBufferInfo bufferInfo = {};
-				bufferInfo.buffer = vulkanUniformBuffer->GetVulkanBuffer();
+				bufferInfo.buffer = uniformBuffer->GetVulkanBuffer();
 				bufferInfo.offset = 0;
-				bufferInfo.range = vulkanUniformBuffer->GetWriteBuffer().Size;
+				bufferInfo.range = uniformBuffer->GetSize();
 
-				auto& writeDescriptorSet = m_WriteDescriptorSets[uniformBuffer->GetName()];
-				writeDescriptorSet.dstSet = m_DescriptorSets[set];
-				writeDescriptorSet.dstArrayElement = 0;
-				writeDescriptorSet.pBufferInfo = &bufferInfo;
-
-				vkUpdateDescriptorSets(device, 1, &writeDescriptorSet, 0, nullptr);
+				auto& writeSet = writeDescriptor;
+				writeSet.dstSet = m_DescriptorSets[set];
+				writeSet.pBufferInfo = &bufferInfo;
+				std::cout << "Binding: Set: " << set << " -> " << binding << ", buffer " << writeDescriptor.pBufferInfo->buffer << std::endl;
+				vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
 			}
 		}
-		__debugbreak();
 	}
 	void VulkanShader::CreatePushConstantRanges()
 	{

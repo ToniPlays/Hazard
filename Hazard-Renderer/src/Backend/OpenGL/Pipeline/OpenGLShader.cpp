@@ -93,8 +93,6 @@ namespace HazardRenderer::OpenGL
 				continue;
 			}
 
-			//std::cout << glSource << std::endl;
-
 			//Compile to OpenGL SPV
 			CompileInfo compileInfoOpenGL = {};
 			compileInfoOpenGL.Renderer = RenderAPI::OpenGL;
@@ -106,7 +104,7 @@ namespace HazardRenderer::OpenGL
 			//Get OpenGL compiled binary
 			if (!compiler.Compile(&compileInfoOpenGL))
 			{
-				std::cout << "Decompilation failed" << std::endl;
+				std::cout << "Decompilation failed: " << compiler.GetErrorMessage() << std::endl;
 				__debugbreak();
 				continue;
 			}

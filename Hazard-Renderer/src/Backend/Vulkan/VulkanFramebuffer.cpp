@@ -245,7 +245,7 @@ namespace HazardRenderer::Vulkan
 					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
 					depthReference = { attachmentImageIndex, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL };
 				}
-				m_ClearValues[attachmentImageIndex].depthStencil = { 0.0f, 0 };
+				m_ClearValues[attachmentImageIndex].depthStencil = { 1.0f, 0 };
 			}
 			else
 			{
@@ -378,22 +378,18 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreateRenderPass(device, &renderPassInfo, nullptr, &m_RenderPass), "Failed to create VkRenderPass");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_RENDER_PASS, m_Specs.DebugName, m_RenderPass);
 
-		std::vector<VkImageView> attachmentViews(m_ColorAttachments.size());
+		std::vector<VkImageView> attachmentViews(m_ColorAttachments.size(), VK_NULL_HANDLE);
 		for (uint32_t i = 0; i < m_ColorAttachments.size(); i++)
 		{
 			Ref<VulkanImage2D> image = m_ColorAttachments[i];
 			if (image->GetLayerCount() > 1)
-			{
 				__debugbreak();
-			}
 			else attachmentViews[i] = image->GetImageInfo().ImageView;
 		}
 		if (m_DepthAttachmentImage)
 		{
 			if (m_ExistingImage)
-			{
 				__debugbreak();
-			}
 			else
 				attachmentViews.emplace_back(m_DepthAttachmentImage->GetImageInfo().ImageView);
 		}

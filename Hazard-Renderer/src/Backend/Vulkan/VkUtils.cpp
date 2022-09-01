@@ -139,13 +139,13 @@ namespace HazardRenderer::Vulkan::VkUtils {
 	{
 		VkShaderStageFlags flags = 0;
 
-		if ((uint32_t)stage & (uint32_t)ShaderStage::Vertex)
+		if (stage & (uint32_t)ShaderStage::Vertex)
 			flags |= VK_SHADER_STAGE_VERTEX_BIT;
-		if ((uint32_t)stage & (uint32_t)ShaderStage::Fragment)	
+		if (stage & (uint32_t)ShaderStage::Fragment)	
 			flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-		if ((uint32_t)stage & (uint32_t)ShaderStage::Geometry)	
+		if (stage & (uint32_t)ShaderStage::Geometry)	
 			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-		if ((uint32_t)stage & (uint32_t)ShaderStage::Compute)	
+		if (stage & (uint32_t)ShaderStage::Compute)	
 			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
 		return flags;

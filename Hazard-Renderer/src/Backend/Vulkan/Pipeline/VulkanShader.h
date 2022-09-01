@@ -26,9 +26,8 @@ namespace HazardRenderer::Vulkan
 
 		void Reload() override;
 		bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) override;
-		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) override {};
-		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override {};
-		Ref<UniformBuffer> GetUniform(const std::string& name) override { return m_UniformBuffers[name]; };
+		virtual void Set(uint32_t set, uint32_t binding, Ref<Image2D> image) override;
+		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override;
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 		
@@ -54,9 +53,9 @@ namespace HazardRenderer::Vulkan
 
 		ShaderData m_ShaderData;
 		std::vector<VkDescriptorSet> m_DescriptorSets;
-		std::unordered_map<std::string, VkWriteDescriptorSet> m_WriteDescriptorSets;
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, VkWriteDescriptorSet>> m_WriteDescriptorSets;
 		std::unordered_map<uint32_t, std::vector<VkDescriptorPoolSize>> m_TypeCounts;
-		std::map<std::string, Ref<UniformBuffer>> m_UniformBuffers;
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, Ref<UniformBuffer>>> m_UniformBuffers;
 
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
 		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;

@@ -53,6 +53,7 @@ namespace HazardRenderer::Vulkan
 	private:
 
 	private:
+		std::string m_DebugName;
 		uint32_t m_Width;
 		uint32_t m_Height;
 		uint32_t m_Mips;
