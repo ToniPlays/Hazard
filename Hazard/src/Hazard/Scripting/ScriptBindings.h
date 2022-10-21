@@ -93,6 +93,10 @@ namespace Hazard
 			//Asset	--------------------------------------------
 			BIND_ICALL(Asset_GetName_Native);
 
+			//WorldManager--------------------------------------
+			BIND_ICALL(WorldManager_LoadWorld_Native);
+			BIND_ICALL(WorldManager_LoadWorldFromString_Native);
+
 
 			//Debug --------------------------------------------
 			BIND_ICALL(Debug_Log_Native);
@@ -109,8 +113,13 @@ namespace Hazard
 			BIND_ICALL(Math_Sqrt_Native);
 			BIND_ICALL(Math_Radians_Native);
 
-			//Rendering
+			//Time ---------------------------------------------
+			BIND_ICALL(Time_GetDelta_Native);
+			BIND_ICALL(Time_GetUnscaledDelta_Native);
+			BIND_ICALL(Time_GetSinceStart_Native);
+			BIND_ICALL(Time_GetDeltaScale_Native);
 
+			//Rendering
 			BIND_ICALL(VertexBuffer_Create_Native);
 			BIND_ICALL(VertexBuffer_Destroy_Native);
 			BIND_ICALL(IndexBuffer_Create_Native);

@@ -102,10 +102,10 @@ namespace Hazard
 		for (auto& [pipeline, meshList] : drawList.MeshList)
 		{
 			if (!pipeline->IsValid()) continue;
+			commandBuffer->BindPipeline(pipeline);
 			for (auto& mesh : meshList)
 			{
 				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
-				commandBuffer->BindPipeline(pipeline);
 				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
 				commandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 			}
@@ -130,6 +130,17 @@ namespace Hazard
 			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
 			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
 		}
+
+		if (drawList.Environment.size() > 0)
+		{
+			for (auto& [map, environmentData] : drawList.Environment)
+			{
+				data.SkyLightIntensity = environmentData.IBLContribution;
+				break;
+			}
+		}
+
+		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer, 2);
 		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
 

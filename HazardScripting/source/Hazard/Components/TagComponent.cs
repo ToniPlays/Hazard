@@ -11,8 +11,8 @@ namespace Hazard
         internal TagComponent(ulong ID) : base(ID) {}
         public string Name
         {
-            get => InternalCalls.TagComponent_GetName_Native(parentEntity.ID);
-            set => InternalCalls.TagComponent_SetName_Native(parentEntity.ID, value);
+            get => InternalCalls.TagComponent_GetName_Native(ParentEntity.ID);
+            set => InternalCalls.TagComponent_SetName_Native(ParentEntity.ID, value);
         }
     }
 }

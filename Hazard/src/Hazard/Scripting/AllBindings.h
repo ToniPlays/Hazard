@@ -11,5 +11,6 @@
 #include "Bindings/MeshComponentBindings.h"
 #include "Bindings/BufferBindings.h"
 
+#include "Bindings/WorldManagerBindings.h"
 //Debug
 #include "Bindings/DebugBindings.h"

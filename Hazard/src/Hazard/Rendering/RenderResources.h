@@ -29,9 +29,9 @@ namespace Hazard
 	{
 		int DirectionLightCount;
 		int PointLightCount;
-		int Padding;
+		float SkyLightIntensity;
 		int Padding2;
-		DirectionalLight Lights[16];
+		DirectionalLight Lights[8];
 	};
 	struct EnvironmentUBO 
 	{
@@ -53,7 +53,7 @@ namespace Hazard
 				UniformBufferCreateInfo cameraUBO = {};
 				cameraUBO.Name = "Camera";
 				cameraUBO.Set = 0;
-				cameraUBO.Binding = 0;
+				cameraUBO.Binding = 2;
 				cameraUBO.Size = sizeof(CameraData);
 				cameraUBO.Usage = BufferUsage::DynamicDraw;
 
@@ -62,7 +62,7 @@ namespace Hazard
 				UniformBufferCreateInfo environmentUbo = {};
 				environmentUbo.Name = "Environment";
 				environmentUbo.Set = 0;
-				environmentUbo.Binding = 1;
+				environmentUbo.Binding = 0;
 				environmentUbo.Size = sizeof(EnvironmentUBO);
 				environmentUbo.Usage = BufferUsage::DynamicDraw;
 
@@ -71,7 +71,7 @@ namespace Hazard
 				UniformBufferCreateInfo lightUBO = {};
 				lightUBO.Name = "Lights";
 				lightUBO.Set = 0;
-				lightUBO.Binding = 2;
+				lightUBO.Binding = 1;
 				lightUBO.Size = sizeof(LightingData);
 				lightUBO.Usage = BufferUsage::DynamicDraw;
 

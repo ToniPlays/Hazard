@@ -14,9 +14,9 @@ namespace Hazard
         internal MeshComponent(ulong ID) : base(ID) { }
         public void SetMesh(Mesh mesh)
         {
-            InternalCalls.MeshComponent_SetMesh_Native(parentEntity.ID, mesh.ID);
+            InternalCalls.MeshComponent_SetMesh_Native(ParentEntity.ID, mesh.ID);
         }
-        public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(MeshComponent)); }
-        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(MeshComponent)); }
+        public bool IsActive() { return InternalCalls.Component_IsActive_Native(ParentEntity.ID, typeof(MeshComponent)); }
+        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(ParentEntity.ID, active, typeof(MeshComponent)); }
     }
 }

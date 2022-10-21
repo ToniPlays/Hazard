@@ -17,7 +17,6 @@ namespace Hazard {
 		World(World& other) = delete;
 		~World();
 
-
 		void SetName(const std::string& name) { m_Name = name; }
 
 		Entity CreateEntity(const std::string& name);

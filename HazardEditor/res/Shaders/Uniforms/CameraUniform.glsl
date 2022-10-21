@@ -1,7 +1,7 @@
 #ifdef VULKAN_API
-layout(std140, set = 0, binding = 0) uniform Camera {
+layout(std140, set = 0, binding = 2) uniform Camera {
 #else
-layout(std140, binding = 0) uniform Camera {
+layout(std140, binding = 2) uniform Camera {
 #endif
 	uniform mat4 ViewProjection;
 	uniform mat4 Projection;

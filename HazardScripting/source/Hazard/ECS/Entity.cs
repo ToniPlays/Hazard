@@ -13,7 +13,7 @@ namespace Hazard
             get => Get<TagComponent>().Name;
             set => Get<TagComponent>().Name = value;
         }
-        public TransformComponent transform
+        public TransformComponent Transform
         {
             get => Get<TransformComponent>();
         }
@@ -28,7 +28,7 @@ namespace Hazard
 
             T component = new T
             {
-                parentEntity = this
+                ParentEntity = this
             };
 
             return component;
@@ -43,7 +43,7 @@ namespace Hazard
 
             T component = new T
             {
-                parentEntity = this
+                ParentEntity = this
             };
             return component;
         }

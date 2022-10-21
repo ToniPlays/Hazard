@@ -4,6 +4,7 @@
 #include "Loader/WorldDeserializer.h"
 #include "Loader/WorldSerializer.h"
 #include "Hazard/Rendering/HRenderer.h"
+#include "Hazard/ECS/Loader/WorldAssetLoader.h"
 #include "HazardScript.h"
 #include "Hazard/Math/Time.h"
 
@@ -12,6 +13,7 @@ namespace Hazard {
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
 	{
 		m_World = Ref<World>::Create(info->StartupFile);
+		AssetManager::RegisterLoader<WorldAssetLoader>(AssetType::World);
 		SetActive(true);
 	}
 	WorldHandler::~WorldHandler() {}
@@ -30,13 +32,15 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!(m_Flags & WorldFlags_UpdateScript)) return;
-		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+		Ref<World> world = m_World;
+		auto& view = world->GetEntitiesWith<ScriptComponent>();
 
 		float delta = (float)Time::s_DeltaTime;
 		void* params[] = { &delta };
 
-		for (auto& entity : view) {
-			Entity e = { entity, m_World.Raw() };
+		for (auto& entity : view) 
+		{
+			Entity e = { entity, world.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
 
@@ -47,12 +51,15 @@ namespace Hazard {
 	void WorldHandler::OnBegin()
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+		Ref<World> world = m_World;
+		auto& view = world->GetEntitiesWith<ScriptComponent>();
 
-		for (auto& entity : view) {
-			Entity e = { entity, m_World.Raw() };
+		for (auto& entity : view) 
+		{
+			Entity e = { entity, world.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle) {
+			if (sc.m_Handle) 
+			{
 				sc.m_Handle->SetLive(true);
 				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
 			}
@@ -69,18 +76,18 @@ namespace Hazard {
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (sc.m_Handle) {
 				sc.m_Handle->SetLive(false);
+				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 			}
 		}
 	}
 
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
 	{
-		if (File::Exists(file)) {
-			if (type == Serialization::Editor) {
-				WorldDeserializer deserializer;
-				m_World = deserializer.DeserializeEditor(file);
-				return true;
-			}
+		if (File::Exists(file)) 
+		{
+			AssetHandle handle = AssetManager::ImportAsset(file);
+			m_World = AssetManager::GetAsset<World>(handle);
+			return true;
 		}
 
 		m_World = Ref<World>::Create("");

@@ -11,22 +11,22 @@ namespace Hazard
         public SpriteRendererComponent() : base(0) { }
         internal SpriteRendererComponent(ulong ID) : base(ID) {}
 
-        public Color color { 
+        public Color Color { 
             get {
-                InternalCalls.SpriteRendererComponent_GetColor_Native(parentEntity.ID, out Color result);
+                InternalCalls.SpriteRendererComponent_GetColor_Native(ParentEntity.ID, out Color result);
                 return result;
             }
-            set => InternalCalls.SpriteRendererComponent_SetColor_Native(parentEntity.ID, ref value);
+            set => InternalCalls.SpriteRendererComponent_SetColor_Native(ParentEntity.ID, ref value);
         }
-        public Sprite sprite
+        public Sprite Sprite
         {
             get
             {
-                return new Sprite(InternalCalls.SpriteRendererComponent_GetSprite_Native(parentEntity.ID));
+                return new Sprite(InternalCalls.SpriteRendererComponent_GetSprite_Native(ParentEntity.ID));
             }
-            set => InternalCalls.SpriteRendererComponent_SetSprite_Native(parentEntity.ID, value.ID);
+            set => InternalCalls.SpriteRendererComponent_SetSprite_Native(ParentEntity.ID, value.ID);
         }
-        public bool IsActive() { return InternalCalls.Component_IsActive_Native(parentEntity.ID, typeof(SpriteRendererComponent)); }
-        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(parentEntity.ID, active, typeof(SpriteRendererComponent)); }
+        public bool IsActive() { return InternalCalls.Component_IsActive_Native(ParentEntity.ID, typeof(SpriteRendererComponent)); }
+        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(ParentEntity.ID, active, typeof(SpriteRendererComponent)); }
     }
 }

@@ -23,5 +23,16 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Math_Radians_Native(float degrees);
         #endregion
+
+        #region Time
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Time_GetDelta_Native();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Time_GetUnscaledDelta_Native();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Time_GetSinceStart_Native();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Time_GetDeltaScale_Native();
+        #endregion
     }
 }

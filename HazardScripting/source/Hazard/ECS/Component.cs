@@ -7,10 +7,10 @@ namespace Hazard
     public abstract class Component : Reference
     {
         internal Component(ulong id) : base(id) { }
-        public Entity parentEntity
+        public Entity ParentEntity
         {
             get { return new Entity(ID); }
-            set { ID = value.ID; }
+            internal set { ID = value.ID; }
         }
     }
 }

@@ -46,7 +46,17 @@ namespace Hazard
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Component_SetActive_Native(ulong id, bool active, Type type);
+        #endregion
 
+        #region WorldManager
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool WorldManager_LoadWorld_Native(ulong id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool WorldManager_LoadWorldFromString_Native(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong WorldManager_GetCurrentWorld_Native();
         #endregion
     }
 }

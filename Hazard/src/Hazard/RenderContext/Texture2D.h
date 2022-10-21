@@ -16,7 +16,7 @@ namespace Hazard
 		Ref<HazardRenderer::Image2D> GetCoreImage() { return m_CoreImage; }
 
 	private:
-		Ref<HazardRenderer::Image2D> m_CoreImage;
+		Ref<HazardRenderer::Image2D> m_CoreImage = nullptr;
 	};
 
 	class Texture2DAsset : public Asset {
@@ -25,6 +25,6 @@ namespace Hazard
 		Ref<Image2DAsset> GetSourceImageAsset() { return m_SourceImage2D; }
 
 	private:
-		Ref<Image2DAsset> m_SourceImage2D;
+		Ref<Image2DAsset> m_SourceImage2D = nullptr;
 	};
 }

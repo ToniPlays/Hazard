@@ -3,6 +3,7 @@
 #include "HazardScript.h"
 #include "Hazard/Math/Random.h"
 #include "MathCore.h"
+#include "Hazard/Math/Time.h"
 
 namespace Hazard
 {
@@ -23,5 +24,22 @@ namespace Hazard
 	static float Math_Radians_Native(float degrees)
 	{
 		return glm::radians(degrees);
+	}
+	//Time internal calls
+	static float Time_GetDelta_Native()
+	{
+		return Time::s_DeltaTime;
+	}
+	static float Time_GetUnscaledDelta_Native()
+	{
+		return Time::s_UnscaledDeltaTime;
+	}
+	static float Time_GetSinceStart_Native()
+	{
+		return Time::s_Time;
+	}
+	static float Time_GetDeltaScale_Native()
+	{
+		return Time::s_TimeScale;
 	}
 }

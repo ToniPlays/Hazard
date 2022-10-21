@@ -1591,6 +1591,8 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\WorldManagerBindings.h" />
+    <ClInclude Include="src\Hazard\ECS\Loader\WorldAssetLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1723,5 +1725,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp" />
+    <ClCompile Include="src\Hazard\ECS\Loader\WorldAssetLoader.cpp" />
   </ItemGroup>
 </Project>

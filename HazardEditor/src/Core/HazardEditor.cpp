@@ -60,7 +60,6 @@ void HazardEditorApplication::PreInit()
 	renderContextInfo.Height = 1080;
 
 	RendererCreateInfo rendererInfo = {};
-	
 
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;

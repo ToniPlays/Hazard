@@ -13,28 +13,28 @@ namespace Hazard
         {
             get
             {
-                InternalCalls.TransformComponent_GetPosition_Native(parentEntity.ID, out Vector3 result);
+                InternalCalls.TransformComponent_GetPosition_Native(ParentEntity.ID, out Vector3 result);
                 return result;
             }
-            set => InternalCalls.TransformComponent_SetPosition_Native(parentEntity.ID, ref value);
+            set => InternalCalls.TransformComponent_SetPosition_Native(ParentEntity.ID, ref value);
         }
         public Vector3 Rotation
         {
             get
             {
-                InternalCalls.TransformComponent_GetRotation_Native(parentEntity.ID, out Vector3 result);
+                InternalCalls.TransformComponent_GetRotation_Native(ParentEntity.ID, out Vector3 result);
                 return result;
             }
-            set => InternalCalls.TransformComponent_SetRotation_Native(parentEntity.ID, ref value);
+            set => InternalCalls.TransformComponent_SetRotation_Native(ParentEntity.ID, ref value);
         }
         public Vector3 Scale
         {
             get
             {
-                InternalCalls.TransformComponent_GetScale_Native(parentEntity.ID, out Vector3 result);
+                InternalCalls.TransformComponent_GetScale_Native(ParentEntity.ID, out Vector3 result);
                 return result;
             }
-            set => InternalCalls.TransformComponent_SetScale_Native(parentEntity.ID, ref value);
+            set => InternalCalls.TransformComponent_SetScale_Native(ParentEntity.ID, ref value);
         }
     }
 }

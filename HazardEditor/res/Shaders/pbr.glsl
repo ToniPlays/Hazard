@@ -33,7 +33,6 @@ layout(location = 2) in vec3 f_Normal;
 layout(location = 0) out vec4 color;
 
 
-const float ambientStrength = 0.2;
 const float gamma = 1.1;
 const float specularStrength = 0.3;
 
@@ -48,7 +47,7 @@ void main()
 
 	float diffuseStrength = max(dot(normalize(f_Normal), light.Direction.xyz), 0.0);
 	vec3 diffuse = diffuseStrength * light.Color.rgb;
-	vec4 ambientColor = ambientStrength * light.Color;
+	vec4 ambientColor = u_Lights.SkyLightIntensity * light.Color;
 
 	color = (ambientColor + vec4(diffuse, 1.0)) * vec4(f_Color.rgb, 1.0);
 	color *= light.Color.a;
