@@ -72,6 +72,7 @@ namespace Hazard {
 		//Update
 		m_ModuleHandler->PreUpdate();
 		m_ModuleHandler->Update();
+		m_Application->ExecuteMainThreadQueue();
 		m_Application->Update();
 		m_ModuleHandler->PostUpdate();
 		//Render

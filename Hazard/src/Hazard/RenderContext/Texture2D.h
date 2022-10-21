@@ -19,6 +19,7 @@ namespace Hazard
 		Ref<HazardRenderer::Image2D> m_CoreImage = nullptr;
 	};
 
+	//Texture contains texture atlas coords, selected from a source image
 	class Texture2DAsset : public Asset {
 	public:
 		Texture2DAsset(Ref<Image2DAsset> sourceImage) : m_SourceImage2D(sourceImage) {};

@@ -61,12 +61,12 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLPipeline> instance = pipeline.As<OpenGLPipeline>();
 		Renderer::Submit([instance]() mutable {
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
+			glUseProgram(shader->GetProgramID());
+			glEnable(GL_DEPTH_TEST);
 
 			for (auto& [set, descriptor] : shader->GetDescriptorSets())
-				descriptor.BindResources();
+				descriptor.BindResources(shader->GetProgramID());
 
-			glEnable(GL_DEPTH_TEST);
-			glUseProgram(shader->GetProgramID());
 			});
 		m_CurrentPipeline = instance;
 	}

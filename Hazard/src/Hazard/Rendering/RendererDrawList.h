@@ -3,6 +3,7 @@
 #include "UtilityCore.h"
 #include "Renderers/WorldRenderer.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/Pipeline/Pipeline.h"
 #include "Environment/EnvironmentMap.h"
 
 namespace Hazard
@@ -58,6 +59,7 @@ namespace Hazard
 		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> MeshList;
 		std::unordered_map<EnvironmentMap*, EnvironmentData> Environment;
 		std::vector<DirectionalLightSource> DirectionalLights;
+		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;
 
 		DrawListStat Stats;
 	};

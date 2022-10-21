@@ -35,7 +35,7 @@ enum EventCategory {
 
 //Actual event class
 
-class  Event {
+class Event {
 	friend class EventDispathcer;
 public:
 	bool handled = false;
@@ -50,16 +50,19 @@ public:
 	}
 };
 
-//Event dispatcher handles events
-class EventDispatcher {
 
+//Event dispatcher handles events
+class EventDispatcher 
+{
 public:
 	EventDispatcher(Event& event) : m_Event(event) {}
 
 	//Dispath the event for layer
 	template<typename T, typename F>
-	bool Dispatch(const F& eventMethod) {
-		if (m_Event.GetEventType() == T::GetStaticType()) {
+	bool Dispatch(const F& eventMethod) 
+	{
+		if (m_Event.GetEventType() == T::GetStaticType()) 
+		{
 			m_Event.handled = eventMethod(static_cast<T&>(m_Event));
 		}
 		return m_Event.handled;
@@ -67,6 +70,8 @@ public:
 private:
 	Event& m_Event;
 };
-inline std::ostream& operator<<(std::ostream& os, const Event& e) {
+
+inline std::ostream& operator<<(std::ostream& os, const Event& e) 
+{
 	return os << e.ToString();
 }

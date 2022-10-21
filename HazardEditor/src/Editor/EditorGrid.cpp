@@ -5,6 +5,13 @@
 
 namespace Editor
 {
+	struct GridData
+	{
+		float ZNear;
+		float ZFar;
+		float Scale;
+		float ScaleFade = 1.0f;
+	};
 
 	using namespace HazardRenderer;
 	Grid::~Grid() 
@@ -16,18 +23,13 @@ namespace Editor
 	{	
 		if (!m_ShowGrid) return;
 
-		struct GridData {
-			float ZNear;
-			float ZFar;
-			float Scale;
-			float ScaleFade = 1.0f;
-		} gridData;
-		
+		GridData gridData;
+
 		gridData.ZNear = camera.GetNearClipping();
 		gridData.ZFar = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
 
-		//m_Pipeline->GetShader()->SetUniformBuffer("Grid", &gridData, sizeof(GridData));
+		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
@@ -51,8 +53,19 @@ namespace Editor
 		specs.CullMode = CullMode::None;
 		specs.IsShared = false;
 		specs.pBufferLayout = &layout;
+		specs.DepthTest = false;
 
 		m_Pipeline = Pipeline::Create(&specs);
+
+		UniformBufferCreateInfo uboInfo = {};
+		uboInfo.Name = "Grid";
+		uboInfo.Set = 1;
+		uboInfo.Binding = 1;
+		uboInfo.Size = sizeof(GridData);
+		uboInfo.Usage = BufferUsage::DynamicDraw;
+
+		m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
+
 	}
 	
 }

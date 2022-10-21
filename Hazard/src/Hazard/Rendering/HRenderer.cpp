@@ -80,7 +80,7 @@ namespace Hazard
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
-		//s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
+		s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{

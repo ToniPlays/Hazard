@@ -125,7 +125,8 @@ namespace Hazard
 
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
-			if (comp["Sprite"]) {
+			if (comp["Sprite"]) 
+			{
 				AssetHandle handle = INVALID_ASSET_HANDLE;
 				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
 				component.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);

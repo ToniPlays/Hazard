@@ -27,6 +27,14 @@ namespace Hazard
 		if (info->RendererInfo)
 			PushModule<RenderEngine>(info->RendererInfo);
 	}
+	void Application::ExecuteMainThreadQueue()
+	{
+		for (auto& fn : m_MainThreadJobs)
+		{
+			fn();
+		}
+		m_MainThreadJobs.clear();
+	}
 	void Application::Quit()
 	{
 		HazardLoop::GetCurrent().m_ShouldClose = true;

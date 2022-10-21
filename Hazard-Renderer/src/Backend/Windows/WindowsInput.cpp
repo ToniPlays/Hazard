@@ -14,7 +14,6 @@ void Input::Init(HazardRenderer::Window& window)
 }
 bool Input::AnyKey()
 {
-	//TODO: Make work
 	return anyKey;
 }
 bool Input::IsKeyDown(const Key::KeyCode key) {

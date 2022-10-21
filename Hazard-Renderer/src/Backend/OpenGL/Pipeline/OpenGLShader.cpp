@@ -91,6 +91,7 @@ namespace HazardRenderer::OpenGL
 				__debugbreak();
 				continue;
 			}
+			std::cout << glSource << std::endl;
 
 			//Compile to OpenGL SPV
 			CompileInfo compileInfoOpenGL = {};
@@ -126,16 +127,17 @@ namespace HazardRenderer::OpenGL
 	}
 	bool OpenGLShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
-		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue.As<UniformBuffer>()->SetData(data, size);
+		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue[0].As<UniformBuffer>()->SetData(data, size);
 		return true;
 	}
-	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<Image2D> image)
+	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
-		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue = image.As<OpenGLImage2D>();
+		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
+		descriptor.BoundValue[index] = image.As<OpenGLImage2D>();
 	}
 	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
 	{
-		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue = uniformBuffer.As<OpenGLUniformBuffer>();
+		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue[0] = uniformBuffer.As<OpenGLUniformBuffer>();
 	}
 	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
 	{

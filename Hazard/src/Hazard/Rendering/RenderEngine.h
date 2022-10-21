@@ -56,7 +56,7 @@ namespace Hazard
 		RenderContextManager* m_RenderContextManager;
 
 		RenderResources* m_Resources = nullptr;
-		Ref<Image2DAsset> m_WhiteTexture;
+		Ref<Texture2DAsset> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;

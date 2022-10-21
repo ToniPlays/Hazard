@@ -22,8 +22,13 @@ namespace Hazard {
 		virtual void Update() {};
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
-		
 		void CreateApplicationStack(HazardCreateInfo* info);
+
+		void SubmitMainThread(std::function<void()> callback)
+		{
+			m_MainThreadJobs.push_back(callback);
+		}
+		void ExecuteMainThreadQueue();
 
 	public:
 		static void Quit();
@@ -35,6 +40,9 @@ namespace Hazard {
 		static T& GetModule() { return *HazardLoop::GetModuleHandler()->GetModule<T>(); }
 		template<typename T>
 		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
+
+	private:
+		std::vector<std::function<void()>> m_MainThreadJobs;
 	};
 	Hazard::Application* CreateApplication();
 }

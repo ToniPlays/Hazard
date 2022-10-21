@@ -42,8 +42,10 @@ namespace UI
 		cameraData.Height = m_Height;
 
 		m_FrameBuffer->Resize(m_Width, m_Height);
-
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
+		Editor::EditorWorldManager::GetWorldRender()->SubmitExtra([&]() {
+			m_EditorGrid.Render(m_EditorCamera);
+			});
 	}
 	void Viewport::OnPanelRender()
 	{
@@ -65,9 +67,11 @@ namespace UI
 		if (m_CurrentImage == 0 || true)
 			ImUI::Image(m_FrameBuffer->GetImage(), size);
 
-		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
-			AssetMetadata& meta = AssetManager::GetMetadata(handle);
-			Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
+		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
+			Application::Get().SubmitMainThread([handle = assetHandle]() {
+				AssetMetadata& meta = AssetManager::GetMetadata(handle);
+				Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
+				});
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
@@ -208,7 +212,7 @@ namespace UI
 		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
 		ImGui::NextColumn();
 
-		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular", "Depth"};
+		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular", "Depth" };
 
 		ImUI::Combo("Shading", "##shading", attachments, 5, m_CurrentImage);
 

@@ -23,6 +23,7 @@ namespace Hazard
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			m_Data.TextureSlots[i] = HRenderer::s_Engine->GetWhiteTexture();
+
 	}
 	void QuadRenderer::BeginScene()
 	{
@@ -51,7 +52,7 @@ namespace Hazard
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 		{
 			auto& image = m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage();
-			//shader->Set("u_Textures", i, m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage());
+			shader->Set("u_Textures", i, image);
 		}
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());

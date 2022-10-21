@@ -27,7 +27,7 @@ namespace Hazard
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 
-		m_WhiteTexture = Ref<Hazard::Image2DAsset>::Create(&info);
+		m_WhiteTexture = Ref<Texture2DAsset>::Create(Ref<Hazard::Image2DAsset>::Create(&info));
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
@@ -65,6 +65,7 @@ namespace Hazard
 		{
 			renderer.WorldRenderer->m_CameraData.clear();
 			renderer.WorldRenderer->m_RendererExtraCalls.clear();
+			renderer.Pipelines.clear();
 		}
 		m_DrawList.clear();
 		m_CurrentDrawContext = 0;
@@ -115,6 +116,15 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
+
+		for (auto& [pipeline, usages] : drawList.Pipelines)
+		{
+			commandBuffer->BindPipeline(pipeline);
+			for (auto& data : usages)
+			{
+				commandBuffer->Draw(data.Count);
+			}
+		}
 	}
 	void RenderEngine::LightPass(Ref<RenderCommandBuffer> commandBuffer)
 	{
@@ -185,8 +195,8 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				GeometryPass(commandBuffer);
 				CompositePass(commandBuffer);
+				GeometryPass(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

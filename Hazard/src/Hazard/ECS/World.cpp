@@ -31,7 +31,7 @@ namespace Hazard
 
 	World::~World() 
 	{
-
+		m_Registry.clear();
 	}
 
 	Entity World::CreateEntity(const std::string& name)
