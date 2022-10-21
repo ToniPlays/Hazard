@@ -13,7 +13,8 @@ namespace Hazard
         Ref<World> world = Ref<World>::Create(file);
 
 		//Set scene name
-		if (!root["World"]) {
+		if (!root["World"]) 
+		{
 			return world;
 		}
 

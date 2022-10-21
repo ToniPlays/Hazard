@@ -8,6 +8,7 @@
 #include "UID.h"
 
 #include "Hazard/Assets/AssetEnums.h"
+#include "Hazard/Scripting/ScriptSerializer.h"
 
 namespace Hazard
 {
@@ -57,13 +58,23 @@ namespace Hazard
 		void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string moduleName;
 			bool active;
+
 			YamlUtils::Deserialize(comp, "Active", active, true);
 			YamlUtils::Deserialize(comp, "ModuleName", moduleName, std::string(""));
 
-			entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
+			auto& c = entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
 				c.ModuleName = moduleName;
 				c.Active = active;
 				});
+
+			if (!comp["Fields"] || !c.m_Handle)
+				return;
+
+			for (auto& node : comp["Fields"])
+			{
+				std::string name = node.first.as<std::string>();
+				ScriptSerializer::DeserializeFieldEditor(c.m_Handle, name, node.second);
+			}
 		};
 		template<>
 		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
@@ -80,6 +91,7 @@ namespace Hazard
 			c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
 
 		}
+
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{

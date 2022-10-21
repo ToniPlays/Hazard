@@ -34,8 +34,9 @@ namespace Hazard
 		void PreDepthPass(Ref<RenderCommandBuffer> commandBuffer);
 		void GeometryPass(Ref<RenderCommandBuffer> commandBuffer);
 		void CompositePass(Ref<RenderCommandBuffer> commandBuffer);
+		void LightPass(Ref<RenderCommandBuffer> commandBuffer);
 
-		//Not yet implemented
+		//Not yet implemented, NOT TODO
 		void LightCullingPass(Ref<RenderCommandBuffer> commandBuffer) {};
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
@@ -46,6 +47,9 @@ namespace Hazard
 
 		Ref<Texture2DAsset> GetWhiteTexture() { return m_WhiteTexture; };
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
+
+	private:
+		void DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer);
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;

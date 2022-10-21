@@ -21,7 +21,8 @@ namespace Hazard
 		template<typename T>
 		void TrySerializeEditor(Entity& entity, YAML::Emitter& out)
 		{
-			if (entity.HasComponent<T>()) {
+			if (entity.HasComponent<T>()) 
+			{
 				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
 			}
 		}
@@ -29,7 +30,6 @@ namespace Hazard
 		void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
-
 
 		bool SerializeRuntime(const std::string& file);
 
@@ -72,11 +72,12 @@ namespace Hazard
 			YamlUtils::Map(out, "ScriptComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "ModuleName", component.ModuleName);
-				if (component.m_Handle) {
+
+				if (component.m_Handle) 
+				{
 					YamlUtils::Map(out, "Fields", [&]() {
 						for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
-							ScriptSerializer::SerializeFieldEditor(out, field, component.m_Handle);
-							
+							ScriptSerializer::SerializeFieldEditor(component.m_Handle, out, field);
 						});
 				}
 				});

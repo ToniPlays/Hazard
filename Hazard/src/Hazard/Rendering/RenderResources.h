@@ -17,7 +17,8 @@ namespace Hazard
 		glm::vec4 Unused3;
 	};
 
-	struct DirectionalLight {
+	struct DirectionalLight 
+	{
 		//W component not used
 		glm::vec4 Direction;
 		//Alpha is intensity
@@ -74,7 +75,7 @@ namespace Hazard
 				lightUBO.Size = sizeof(LightingData);
 				lightUBO.Usage = BufferUsage::DynamicDraw;
 
-				//LightUniformBuffer = UniformBuffer::Create(&lightUBO);
+				LightUniformBuffer = UniformBuffer::Create(&lightUBO);
 
 				UniformBufferCreateInfo modelUBO = {};
 				modelUBO.Name = "Model";

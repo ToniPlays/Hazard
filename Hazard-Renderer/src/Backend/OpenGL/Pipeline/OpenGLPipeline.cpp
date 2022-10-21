@@ -16,7 +16,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLPipeline::~OpenGLPipeline()
 	{
-		__debugbreak();
+
 	}
 	void OpenGLPipeline::Invalidate()
 	{

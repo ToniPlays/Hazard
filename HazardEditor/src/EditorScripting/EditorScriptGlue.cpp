@@ -15,13 +15,17 @@ namespace Editor
 	void EditorScriptGlue::OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) 
 	{
 		using namespace HazardScript;
-		auto& menubar = Application::GetModule<GUIManager>().GetMenuBar();
-		menubar.Reset();
 
-		auto view = assembly->ViewAttributes<MenuBarItemAttribute>();
-		
-		for (auto& script : view) {
-			menubar.AddMenuItem(script->Get<MenuBarItemAttribute>().Path, nullptr);
+		if (Application::HasModule<GUIManager>()) 
+		{
+			auto& menubar = Application::GetModule<GUIManager>().GetMenuBar();
+			menubar.Reset();
+
+			auto view = assembly->ViewAttributes<MenuBarItemAttribute>();
+
+			for (auto& script : view) {
+				menubar.AddMenuItem(script->Get<MenuBarItemAttribute>().Path, nullptr);
+			}
 		}
 	}
 }

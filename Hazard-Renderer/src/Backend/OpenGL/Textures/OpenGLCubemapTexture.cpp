@@ -69,9 +69,7 @@ namespace HazardRenderer::OpenGL
 		constexpr int desired = 4;
 
 		int channels;
-
 		stbi_set_flip_vertically_on_load(true);
-
 		stbi_uc* data = stbi_load(m_FilePath.c_str(), &width, &height, &channels, desired);
 		HZR_ASSERT(data, "Data not loaded correctly");
 
@@ -79,11 +77,11 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)
 	{
-		
+		//__debugbreak();
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(Ref<CubemapTexture> cubemap)
 	{
-		
+		//__debugbreak();
 	}
 }
 #endif

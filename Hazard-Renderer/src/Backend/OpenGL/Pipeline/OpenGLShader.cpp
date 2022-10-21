@@ -60,7 +60,6 @@ namespace HazardRenderer::OpenGL
 			if (!compiler.Compile(&compileInfoVulkan))
 			{
 				std::cout << compiler.GetErrorMessage() << std::endl;
-				__debugbreak();
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();

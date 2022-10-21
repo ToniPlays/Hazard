@@ -35,6 +35,7 @@ namespace Hazard
 	static uint64_t VertexBuffer_Create_Native(ManagedVertexBufferInfo* info)
 	{
 		void* data = nullptr;
+
 		if (info->Data) 
 		{
 			data = new uint8_t[info->Size];
@@ -55,10 +56,10 @@ namespace Hazard
 		metadata.Type = AssetType::Undefined;
 		metadata.Handle = buffer->GetHandle();
 
-		Renderer::SubmitResourceFree([&]() mutable {
+		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
-			if (data) 
-				delete data;
+			if (!dataPtr) return;
+			delete dataPtr;
 			});
 		
 		AssetManager::AddRuntimeAsset(metadata, buffer);
@@ -90,9 +91,10 @@ namespace Hazard
 		metadata.Type = AssetType::Undefined;
 		metadata.Handle = buffer->GetHandle();
 
-		Renderer::SubmitResourceFree([&]() mutable {
+		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
-			if (data) delete data;
+			if (!dataPtr) return;
+			delete dataPtr;
 			});
 
 

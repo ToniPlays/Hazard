@@ -9,7 +9,6 @@
 
 namespace Hazard
 {
-
 	RenderEngine::RenderEngine(RendererCreateInfo* createInfo) : Module("RenderEngine")
 	{
 		using namespace HazardRenderer;
@@ -117,6 +116,28 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 	}
+	void RenderEngine::LightPass(Ref<RenderCommandBuffer> commandBuffer)
+	{
+		HZR_PROFILE_FUNCTION();
+		auto& drawList = GetDrawList();
+
+		LightingData data;
+		data.DirectionLightCount = drawList.DirectionalLights.size();
+
+		for (uint32_t i = 0; i < data.DirectionLightCount; i++)
+		{
+			auto& light = drawList.DirectionalLights[i];
+			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
+			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
+		}
+		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer, 2);
+		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
+
+	}
+	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
+	{
+		//Skybox
+	}
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -133,6 +154,7 @@ namespace Hazard
 		{
 			//Not camera dependant
 			PreRender();
+			LightPass(commandBuffer);
 			ShadowPass(commandBuffer);
 			PreDepthPass(commandBuffer);
 

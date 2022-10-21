@@ -2,8 +2,10 @@
 
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
+
 #include "Backend/Core/RenderCommandBuffer.h"
 #include "Backend/Core/Swapchain.h"
+#include "Backend/OpenGL/Pipeline/OpenGLPipeline.h"
 
 
 namespace HazardRenderer::OpenGL 
@@ -38,6 +40,8 @@ namespace HazardRenderer::OpenGL
 	private:
 		uint32_t m_FrameIndex = 0;
 		Ref<Swapchain> m_Swapchain;
+		Ref<OpenGLPipeline> m_CurrentPipeline = nullptr;
+
 
 		inline static uint32_t s_BoundVAO = 0;
 		inline static BufferLayout s_CurrentLayout;

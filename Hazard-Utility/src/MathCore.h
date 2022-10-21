@@ -72,30 +72,31 @@ namespace Math
 	static T ToDec(const std::string& value) {
 		return std::strtoul(value.c_str(), 0, 16);
 	}
-	static glm::mat4 ToTransformMatrix(glm::vec3 translation) {
+	static glm::mat4 ToTransformMatrix(const glm::vec3& translation) {
 		return glm::translate(glm::mat4(1.0f), translation);
 	}
-	static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation) {
+	static glm::mat4 ToTransformMatrix(const glm::vec3& translation, const glm::vec3& rotation) {
 		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
 		return glm::translate(glm::mat4(1.0f), translation) * rot;
 	}
-	static glm::mat4 ToTransformMatrix(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale)
+	static glm::mat4 ToTransformMatrix(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale)
 	{
-		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		glm::mat4 t = glm::translate(glm::mat4(1.0f), translation);
+		glm::mat4 r = glm::toMat4(glm::quat(rotation));
+		glm::mat4 s = glm::scale(glm::mat4(1.0f), scale);
 
-		return glm::translate(glm::mat4(1.0f), translation) * rot
-			* glm::scale(glm::mat4(1.0f), scale);
+		return t * r * s;
 	}
-	static glm::vec3 GetUpDirection(glm::quat orientation)
+	static glm::vec3 GetUpDirection(const glm::quat& orientation)
 	{
 		return glm::rotate(orientation, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
-	static glm::vec3 GetRightDirection(glm::quat orientation)
+	static glm::vec3 GetRightDirection(const glm::quat& orientation)
 	{
 		return glm::rotate(orientation, glm::vec3(1.0f, 0.0f, 0.0f));
 	}
-	static glm::vec3 GetForwardDirection(glm::quat orientation)
+	static glm::vec3 GetForwardDirection(const glm::quat& orientation)
 	{
 		return glm::rotate(orientation, glm::vec3(0.0f, 0.0f, 1.0f));
 	}

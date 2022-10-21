@@ -34,7 +34,7 @@ void HazardEditorApplication::PreInit()
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 #else
-	RenderAPI renderAPI = RenderAPI::Auto;
+	RenderAPI renderAPI = RenderAPI::OpenGL;
 #endif
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");

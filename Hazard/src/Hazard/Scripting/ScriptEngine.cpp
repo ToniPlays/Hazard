@@ -27,7 +27,7 @@ namespace Hazard
 		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
 		createInfo.AssemblyPath = m_Info.AssemblyPath;
 		createInfo.ConfigPath = m_Info.ConfigPath;
-		createInfo.LoadAssebmlies = false;
+		createInfo.LoadAssebmlies = true;
 
 		createInfo.DebugCallback = [&](ScriptMessage message)
 		{
@@ -86,6 +86,7 @@ namespace Hazard
 	{
 		if (component.ModuleName == "") return;
 		if (!m_Engine->GetAppAssembly().HasScript(component.ModuleName)) return;
+
 		ScriptMetadata& script = m_Engine->GetAppAssembly().GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject();
 

@@ -19,7 +19,7 @@ namespace HazardScript
 		FieldMetadata(MonoClassField* field);
 
 		std::string GetName() { return m_Name; }
-		const MonoFlags& GetFlags() { return m_Flags; }
+		const uint32_t& GetFlags() { return m_Flags; }
 		const ManagedType& GetType() { return m_Type; }
 
 		template<typename T>
@@ -87,7 +87,7 @@ namespace HazardScript
 		MonoClassField* m_Field;
 		std::string m_Name;
 		ManagedType m_Type;
-		MonoFlags m_Flags;
+		uint32_t m_Flags = MonoFlags_Public;
 		std::vector<Attribute*> m_Attributes;
 
 		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;

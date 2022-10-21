@@ -66,34 +66,36 @@ namespace HazardRenderer::OpenGL
 				descriptor.BindResources();
 
 			glEnable(GL_DEPTH_TEST);
-
 			glUseProgram(shader->GetProgramID());
 			});
+		m_CurrentPipeline = instance;
 	}
 	void OpenGLRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
 	{
 		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
+		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
-		Renderer::Submit([instance, count]() mutable {
+		Renderer::Submit([instance, count, pipeline]() mutable {
 			if (instance)
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->GetBufferID());
-				glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+				glDrawElements(pipeline->GetDrawType(), count, GL_UNSIGNED_INT, nullptr);
 			}
-			else glDrawArrays(GL_TRIANGLES, 0, count);
+			else glDrawArrays(pipeline->GetDrawType(), 0, count);
 			});
 	}
 	void OpenGLRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
 		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
+		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
-		Renderer::Submit([instance, count, instanceCount]() mutable {
+		Renderer::Submit([instance, count, instanceCount, pipeline]() mutable {
 			if (instance)
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->GetBufferID());
-				glDrawElementsInstanced(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr, instanceCount);
+				glDrawElementsInstanced(pipeline->GetDrawType(), count, GL_UNSIGNED_INT, nullptr, instanceCount);
 			}
-			else glDrawArraysInstanced(GL_TRIANGLES, 0, count, instanceCount);
+			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, count, instanceCount);
 			});
 	}
 }

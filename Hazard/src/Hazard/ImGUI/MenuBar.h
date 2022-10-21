@@ -45,6 +45,12 @@ namespace Hazard::ImUI
 
 	class MenuBar : public GUIRenderable {
 	public:
+
+		MenuBar()
+		{
+			m_MenuItems = std::vector<MenuItemElement>();
+		}
+
 		void Render() override 
 		{
 			//ScopedStyleVar border(ImGuiStyleVar_WindowBorderSize, 1);
@@ -75,12 +81,14 @@ namespace Hazard::ImUI
 			MenuItemElement& target = GetMenu(name);
 			target.OnClicked = onClick;
 		}
-		void ClearMenuBar() {
+		void ClearMenuBar() 
+		{
 			m_MenuItems.clear();
 		}
 
-		void Reset() {
-			m_MenuItems.clear();
+		void Reset() 
+		{
+			ClearMenuBar();
 			Init();
 		}
 

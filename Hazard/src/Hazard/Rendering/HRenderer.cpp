@@ -44,6 +44,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
+		if (!mesh->IsValid()) return;
 
 		glm::mat4 t = transform.GetTransformMat4();
 

@@ -61,7 +61,7 @@ namespace HazardRenderer
 		}
 		template<typename FuncT>
 		static void SubmitResourceCreate(FuncT func) 
-		{			
+		{
 			HZR_ASSERT(s_CanSubmit, "Cannot submit create while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;

@@ -54,15 +54,15 @@ namespace Hazard
 
 	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
 	{
-		if (pipeline == nullptr) {
-
+		if (pipeline == nullptr) 
+		{
 			BufferLayout layout = Vertex3D::Layout();
 
 			PipelineSpecification pipelineSpecs = {};
 			pipelineSpecs.DebugName = "PBRShader";
 			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
 			pipelineSpecs.DrawType = DrawType::Fill;
-			pipelineSpecs.ShaderPath = "Shaders/pbr.glsl";
+			pipelineSpecs.ShaderPath = "res/Shaders/pbr.glsl";
 			//pipelineSpecs.pTargetRenderPass = Application::GetModule<RenderEngine>().GetWindow().GetSwapchain()->GetRenderPass().Raw();
 			pipelineSpecs.pBufferLayout = &layout;
 

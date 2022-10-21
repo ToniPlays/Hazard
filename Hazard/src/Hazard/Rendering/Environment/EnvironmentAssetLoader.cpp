@@ -17,15 +17,15 @@ namespace Hazard
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.FilePath = metadata.Path.string();
 		radianceInfo.Usage = ImageUsage::Texture;
-		radianceInfo.Width = 512;
-		radianceInfo.Height = 512;
+		radianceInfo.Width = 2048;
+		radianceInfo.Height = 2048;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
-		if (radianceMap) {
+		if (radianceMap) 
+		{
 			AssetMetadata radianceMetadata = {};
 			radianceMetadata.Handle = radianceMap->GetHandle();
 			radianceMetadata.Type = AssetType::EnvironmentMap;
-
 
 			AssetManager::AddRuntimeAsset(radianceMetadata, radianceMap);
 

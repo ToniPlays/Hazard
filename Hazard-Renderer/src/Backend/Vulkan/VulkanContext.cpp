@@ -48,9 +48,10 @@ namespace HazardRenderer::Vulkan
 
 		RenderMessage message = {};
 		message.Severity = Severity::Debug;
-		message.Description = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
+		message.Description = "Validation error";
+		message.StackTrace = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
 
-		std::cout << message.Description << std::endl;
+		std::cout << message.StackTrace << std::endl;
 
 		if (breakOnValidation) __debugbreak();
 

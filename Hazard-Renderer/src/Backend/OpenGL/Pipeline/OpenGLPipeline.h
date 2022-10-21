@@ -24,6 +24,9 @@ namespace HazardRenderer::OpenGL
 
 		//OpenGL specific;
 
+		uint32_t GetDrawType() { return m_DrawType; }
+		uint32_t GetPolygonMode() { return m_PolygonMode; }
+
 	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;

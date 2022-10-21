@@ -96,7 +96,8 @@ namespace HazardScript
 		Mono::Init("HazardScriptCore");
 		ScriptCache::Init();
 
-		if (m_MonoData.LoadAssembliesOnInit) {
+		if (m_MonoData.LoadAssembliesOnInit) 
+		{
 			Reload();
 		}
 	}

@@ -28,7 +28,8 @@ namespace Hazard {
 		template<typename T, typename C, typename... Args>
 		T& AddComponentWithCallback(C callback, Args&&... args)
 		{
-			if (HasComponent<T>()) {
+			if (HasComponent<T>()) 
+			{
 				//HZR_CORE_WARN("Entity already has component");
 			}
 

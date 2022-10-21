@@ -33,7 +33,6 @@ namespace HazardRenderer::OpenGL
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
-
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 
@@ -47,7 +46,7 @@ namespace HazardRenderer::OpenGL
 			if (instance->m_Layout.GetStride() == 0)
 			{
 				glCreateBuffers(1, &instance->m_BufferID);
-				glNamedBufferData(instance->m_BufferID, instance->m_Size * 4530043, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+				glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
 				return;
 			}
 
