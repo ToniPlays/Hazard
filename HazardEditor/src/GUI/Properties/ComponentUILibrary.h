@@ -274,7 +274,9 @@ namespace UI
 				ImUI::TextField(name, "##environmentMap");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
-					c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+					Application::Get().SubmitMainThread([&, handle]() {
+						c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+						});
 					});
 
 				ImGui::EndDisabled();
@@ -282,7 +284,7 @@ namespace UI
 				ImGui::NextColumn();
 				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
 				ImGui::Columns();
-				
+
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
 					});

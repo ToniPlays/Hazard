@@ -40,6 +40,9 @@ namespace UI
 		cameraData.RenderPass = m_RenderPass;
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
+		cameraData.Position = m_EditorCamera.GetPosition();
+		cameraData.ZNear = m_EditorCamera.GetNearClipping();
+		cameraData.ZFar = m_EditorCamera.GetFarClipping();
 
 		m_FrameBuffer->Resize(m_Width, m_Height);
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);

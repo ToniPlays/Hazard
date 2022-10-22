@@ -45,6 +45,10 @@ namespace HazardRenderer::OpenGL {
 		m_Swapchain = Ref<OpenGLSwapchain>::Create(this, info->pTargetFrameBuffer);
 		m_Swapchain->Create(m_Window->GetWidth(), m_Window->GetHeight(), info->VSync);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 		if (!info->Logging) return;
 
 		glEnable(GL_DEBUG_OUTPUT);

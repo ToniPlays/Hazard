@@ -68,6 +68,7 @@ namespace HazardRenderer::OpenGL
 		HZR_RENDER_THREAD_ONLY();
 		HZR_PROFILE_FUNCTION();
 
+		glDepthMask(GL_TRUE);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
 		if (m_Specs.SwapChainTarget)
@@ -118,13 +119,13 @@ namespace HazardRenderer::OpenGL
 
 		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
 
-		if (m_ID) 
+		if (m_ID)
 		{
 			glDeleteFramebuffers(1, &m_ID);
 
-			if (m_ColorImages.size() > 0) 
+			if (m_ColorImages.size() > 0)
 			{
-				if (m_ColorImages.size() > 0) 
+				if (m_ColorImages.size() > 0)
 				{
 					for (auto& image : m_ColorImages)
 						image->Release();
@@ -132,7 +133,7 @@ namespace HazardRenderer::OpenGL
 			}
 			m_ColorImages.clear();
 
-			if (m_DepthImage) 
+			if (m_DepthImage)
 			{
 				m_DepthImage->Release();
 			}
@@ -143,7 +144,7 @@ namespace HazardRenderer::OpenGL
 
 		bool multisampled = m_Specs.Samples > 1;
 
-		if (m_ColorAttachments.size() > 0) 
+		if (m_ColorAttachments.size() > 0)
 		{
 			m_ColorImages.resize(m_ColorAttachments.size());
 
@@ -153,7 +154,7 @@ namespace HazardRenderer::OpenGL
 			imageInfo.Height = m_Specs.Height;
 			imageInfo.Mips = m_Specs.Samples;
 
-			for (uint32_t i = 0; i < m_ColorImages.size(); i++) 
+			for (uint32_t i = 0; i < m_ColorImages.size(); i++)
 			{
 				imageInfo.DebugName = fmt::format("FBO ({0}) color {1}", m_Specs.DebugName, i);
 				imageInfo.Format = m_ColorAttachments[i].Format;
@@ -176,7 +177,7 @@ namespace HazardRenderer::OpenGL
 				}
 			}
 		}
-		if (m_DepthAttachment.Format != ImageFormat::None) 
+		if (m_DepthAttachment.Format != ImageFormat::None)
 		{
 
 			Image2DCreateInfo imageInfo = {};

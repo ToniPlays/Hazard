@@ -9,7 +9,6 @@ namespace UI
 {
 	void RenderCommandListPanel::OnPanelRender()
 	{
-		return;
 		HZR_PROFILE_FUNCTION();
 		RenderEngine& engine = Application::GetModule<RenderEngine>();
 		auto& drawList = engine.GetDrawLists();
@@ -72,6 +71,17 @@ namespace UI
 
 	void RenderCommandListPanel::DrawDetailedInfo(RendererDrawList& drawList)
 	{
+		ImUI::Treenode("Cameras", ImGuiTreeNodeFlags_Framed, [&]() {
+
+			for (auto& data : drawList.WorldRenderer->GetCameraData()) {
+
+				const glm::vec3& pos = data.Position;
+				ImGui::TableNextColumn();
+				ImGui::Text("Position");
+				ImGui::TableNextColumn();
+				ImGui::Text("[%.2f, %.2f, %.2f]", pos.x, pos.y, pos.z);
+			}
+			});
 		ImUI::Treenode("Shadow pass", ImGuiTreeNodeFlags_Framed, [&]() {});
 		ImUI::Treenode("Geometry pass", ImGuiTreeNodeFlags_Framed, [&]() {
 			for (auto& [pipeline, list] : drawList.MeshList) {
@@ -83,7 +93,6 @@ namespace UI
 						ImGui::Text("Index count");
 						ImGui::NextColumn();
 						ImGui::Text(std::to_string(mesh.Count).c_str());
-
 					}
 					ImGui::Columns();
 					});

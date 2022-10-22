@@ -7,8 +7,6 @@ namespace Editor
 {
 	struct GridData
 	{
-		float ZNear;
-		float ZFar;
 		float Scale;
 		float ScaleFade = 1.0f;
 	};
@@ -24,10 +22,8 @@ namespace Editor
 		if (!m_ShowGrid) return;
 
 		GridData gridData;
-
-		gridData.ZNear = camera.GetNearClipping();
-		gridData.ZFar = camera.GetFarClipping();
 		gridData.Scale = 1.0f;
+		gridData.ScaleFade = 1.0f;
 
 		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
@@ -53,7 +49,9 @@ namespace Editor
 		specs.CullMode = CullMode::None;
 		specs.IsShared = false;
 		specs.pBufferLayout = &layout;
-		specs.DepthTest = false;
+		specs.DepthTest = true;
+		specs.DepthWrite = false;
+		specs.DepthOperator = DepthOp::Less;
 
 		m_Pipeline = Pipeline::Create(&specs);
 

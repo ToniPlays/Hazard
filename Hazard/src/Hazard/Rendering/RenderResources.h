@@ -4,7 +4,6 @@
 
 namespace Hazard
 {
-
 	struct CameraData
 	{
 		glm::mat4 ViewProjection;
@@ -12,7 +11,9 @@ namespace Hazard
 		glm::mat4 View;
 		glm::mat4 InverseViewProjection;
 		glm::vec4 Position;
-		glm::vec4 Unused1;
+		float ZNear;
+		float ZFar;
+		glm::vec2 UnUsed1;
 		glm::vec4 Unused2;
 		glm::vec4 Unused3;
 	};
@@ -35,7 +36,7 @@ namespace Hazard
 	};
 	struct EnvironmentUBO 
 	{
-
+		Ref<HazardRenderer::CubemapTexture> RadianceMap;
 	};
 
 

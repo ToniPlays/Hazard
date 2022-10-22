@@ -143,10 +143,36 @@ namespace HazardRenderer::OpenGL
 
 				auto& sampler = descriptorSet[binding];
 				sampler.Name = resource.name;
-				sampler.Binding = binding;
 				sampler.DescritorSet = set;
+				sampler.Binding = binding;
 				sampler.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
 				sampler.Dimension = spvType.image.dim;
+
+				std::cout << sampler.Name << std::endl;
+			}
+			for (auto& resource : resources.storage_images)
+			{
+				auto& spvType = compiler.get_type(resource.base_type_id);
+				auto& type = compiler.get_type(resource.type_id);
+				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
+				uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+
+				auto& descriptorSet = result.StorageImages[set];
+				auto& storageImage = descriptorSet[binding];
+
+				storageImage.Name = resource.name;
+				storageImage.DescritorSet = set;
+				storageImage.Binding = binding;
+				storageImage.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
+				storageImage.Dimension = spvType.image.dim;
+
+				switch (spvType.image.access)
+				{
+				case spv::AccessQualifier::AccessQualifierReadOnly: storageImage.Flags = ShaderResourceFlags_ReadOnly; break;
+				case spv::AccessQualifier::AccessQualifierWriteOnly: storageImage.Flags = ShaderResourceFlags_WriteOnly; break;
+				case spv::AccessQualifier::AccessQualifierReadWrite: storageImage.Flags = ShaderResourceFlags_ReadAndWrite; break;
+				}
+				storageImage.Flags |= ShaderResourceFlags_WriteOnly;
 			}
 		}
 		return result;

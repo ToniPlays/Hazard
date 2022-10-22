@@ -91,7 +91,7 @@ namespace HazardRenderer::OpenGL
 				__debugbreak();
 				continue;
 			}
-			std::cout << glSource << std::endl;
+			//std::cout << glSource << std::endl;
 
 			//Compile to OpenGL SPV
 			CompileInfo compileInfoOpenGL = {};
@@ -133,7 +133,13 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
 		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
-		descriptor.BoundValue[index] = image.As<OpenGLImage2D>();
+		descriptor.BoundValue[index] = image;
+	}
+	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
+	{
+		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
+		if (descriptor.ActualBinding == UINT32_MAX) return;
+		descriptor.BoundValue[index] = cubemap;
 	}
 	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
 	{
@@ -170,7 +176,7 @@ namespace HazardRenderer::OpenGL
 		}
 
 		//OpenGLShaderCompiler::PrintReflectionData(data);
-		//std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
+		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
@@ -291,6 +297,23 @@ namespace HazardRenderer::OpenGL
 				writeDescriptor.DebugName = sampler.Name;
 				writeDescriptor.Binding = binding;
 				writeDescriptor.ArraySize = sampler.ArraySize;
+				writeDescriptor.Dimension = sampler.Dimension;
+
+				descriptorSet.AddWriteDescriptor(writeDescriptor);
+			}
+		}
+		for (auto& [set, storageImage] : m_ShaderData.StorageImages)
+		{
+			OpenGLDescriptorSet& descriptorSet = m_DescriptorSet[set];
+			for (auto& [binding, image] : storageImage)
+			{
+				OpenGLWriteDescriptor writeDescriptor = {};
+				writeDescriptor.Type = GL_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+				writeDescriptor.DebugName = image.Name;
+				writeDescriptor.Binding = binding;
+				writeDescriptor.ArraySize = image.ArraySize;
+				writeDescriptor.ActualBinding = binding;
+				writeDescriptor.Dimension = image.Dimension;
 
 				descriptorSet.AddWriteDescriptor(writeDescriptor);
 			}

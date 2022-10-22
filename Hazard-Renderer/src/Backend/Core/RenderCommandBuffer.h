@@ -8,7 +8,13 @@
 
 namespace HazardRenderer 
 {
+	using LocalGroupSize = glm::vec3;
 	enum class State { Waiting, Record, Finished, Submit };
+
+	enum MemoryBarrierFlags : uint32_t
+	{
+		MemoryBarrierBit_All = BIT(0)
+	};
 
 	class RenderCommandBuffer : public RefCount
 	{
@@ -29,6 +35,9 @@ namespace HazardRenderer
 
 		virtual void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
+		virtual void DispatchCompute(const LocalGroupSize& localGroupSize) = 0;
+
+		virtual void InsertMemoryBarrier(MemoryBarrierFlags flags) = 0;
 
 		virtual void SetViewport(float x, float y, float width, float height) = 0;
 		virtual void SetLineSize(float size) = 0;

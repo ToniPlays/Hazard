@@ -77,11 +77,38 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)
 	{
-		//__debugbreak();
+		Ref<CubemapTexture> instance = this;
+
+		Image2DCreateInfo sourceImageInfo = {};
+		sourceImageInfo.DebugName = "OpenGLCubemapSource";
+		sourceImageInfo.Width = width;
+		sourceImageInfo.Height = height;
+		sourceImageInfo.Data = imageData;
+		sourceImageInfo.Format = ImageFormat::RGBA16F;
+		sourceImageInfo.ClearLocalBuffer = true;
+
+		m_SourceImage = Image2D::Create(&sourceImageInfo);
+
+		PipelineSpecification pipelineSpec = {};
+		pipelineSpec.DebugName = "EquirectangularToCubemap";
+		pipelineSpec.ShaderPath = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
+		pipelineSpec.Usage = PipelineUsage::ComputeBit;
+
+		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
+
+		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
+		auto& shader = computePipeline->GetShader();
+
+		shader->Set("u_EquirectangularTexture", 0, m_SourceImage);
+		shader->Set("o_CubeMap", 0, instance);
+
+		commandBuffer->BindPipeline(computePipeline);
+		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
+		commandBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(Ref<CubemapTexture> cubemap)
 	{
-		//__debugbreak();
+
 	}
 }
 #endif

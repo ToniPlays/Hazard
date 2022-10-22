@@ -87,6 +87,10 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
+	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
+	{
+	
+	}
 	void VulkanShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
 	{
 

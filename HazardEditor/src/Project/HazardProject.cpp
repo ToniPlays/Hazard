@@ -34,7 +34,7 @@ void HazardProject::ProcessAssets()
 			}
 		}
 	}
-	HZR_INFO("Loading assets took {0} ms", timer.ElapsedMillis());
+	HZR_INFO("Loading ediitor assets took {0} ms", timer.ElapsedMillis());
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

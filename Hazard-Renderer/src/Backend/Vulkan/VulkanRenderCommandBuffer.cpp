@@ -300,22 +300,34 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
 	{
+		DrawInstanced(count, 1, indexBuffer);
+	}
+	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	{
 		Ref<VulkanIndexBuffer> buffer = indexBuffer.As<VulkanIndexBuffer>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, buffer, count]() mutable {
+		Renderer::Submit([instance, buffer, count, instanceCount]() mutable {
 
 			if (buffer)
 			{
 				VkDeviceSize offsets = { 0 };
 				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), offsets, VK_INDEX_TYPE_UINT32);
-				vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, 1, 0, 0, 0);
+				vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0, 0);
 				return;
 			}
-			vkCmdDraw(instance->m_ActiveCommandBuffer, count, 1, 0, 0);
+			vkCmdDraw(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0);
 			});
 	}
-	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+
+		Renderer::Submit([instance, size = localGroupSize]() mutable {
+				vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+			});
+	}
+	void VulkanRenderCommandBuffer::InsertMemoryBarrier(MemoryBarrierFlags flags)
 	{
 
 	}

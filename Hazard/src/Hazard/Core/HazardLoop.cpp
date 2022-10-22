@@ -42,13 +42,16 @@ namespace Hazard {
 	{
 		try 
 		{
+			Timer timer;
 			AssetManager::Init();
 			//Preinit application to get application stack
 			m_Application->PreInit();
 			m_ModuleHandler->InitializeAll();
 			m_Application->Init();
+			HZR_CORE_WARN("Startup took: {0} ms", timer.ElapsedMillis());
 		}
-		catch (HazardRuntimeError& error) {
+		catch (HazardRuntimeError& error) 
+		{
 			std::cout << error.what() << std::endl;
 		}
 	}

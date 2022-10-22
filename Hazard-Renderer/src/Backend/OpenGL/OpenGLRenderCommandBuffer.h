@@ -31,8 +31,10 @@ namespace HazardRenderer::OpenGL
 		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding) override;
 		void BindPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
-		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
+		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
+		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
+		void DispatchCompute(const LocalGroupSize& localGroupSize) override;
+		void InsertMemoryBarrier(MemoryBarrierFlags flags) override;
 
 		void SetViewport(float x, float y, float width, float height) override {};
 		void SetLineSize(float size) override {};

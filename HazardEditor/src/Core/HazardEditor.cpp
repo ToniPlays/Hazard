@@ -24,7 +24,7 @@ using namespace HazardScript;
 void HazardEditorApplication::PreInit()
 {
 
-#if HZR_DEBUG
+#if HZR_DEBUG && false
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
@@ -91,8 +91,9 @@ void HazardEditorApplication::Init()
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
 	
-	window.SetDebugCallback([](RenderMessage message) {
-		auto manager = Application::GetModule<GUIManager>();
+	window.SetDebugCallback([](RenderMessage message) 
+		{
+		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (!console) return;
 

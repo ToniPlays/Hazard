@@ -7,6 +7,7 @@
 
 #include "Backend/Core/Pipeline/Shader.h"
 #include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Texture/Texture.h"
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan
@@ -27,6 +28,7 @@ namespace HazardRenderer::Vulkan
 		void Reload() override;
 		bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) override;
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) override;
+		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
 		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override;
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };

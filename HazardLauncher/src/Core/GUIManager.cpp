@@ -77,7 +77,6 @@ void GUIManager::Render()
 
 	/*
 	if(ImUI::Dockspace::CustomTitleBar(m_Platform->GetWindow(), 32)) {
-		HZR_INFO("Hovering");
 	}*/
 
 	ImGui::Columns(2, 0, false);

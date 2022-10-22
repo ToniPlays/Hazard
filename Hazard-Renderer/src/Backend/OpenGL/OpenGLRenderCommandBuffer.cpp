@@ -3,6 +3,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 #include "OpenGLSwapchain.h"
 #include "OpenGLCore.h"
+#include "OpenGLUtils.h"
 
 #include "Backend/Core/Renderer.h"
 
@@ -54,18 +55,27 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLUniformBuffer> instance = uniformBuffer.As<OpenGLUniformBuffer>();
 		Renderer::Submit([binding, instance]() {
 			glBindBufferBase(GL_UNIFORM_BUFFER, binding, instance->GetBufferID());
-		});
+			});
 	}
 	void OpenGLRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
 		Ref<OpenGLPipeline> instance = pipeline.As<OpenGLPipeline>();
 		Renderer::Submit([instance]() mutable {
+
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
-			glEnable(GL_DEPTH_TEST);
+			auto& spec = instance->GetSpecifications();
+			if (spec.DepthTest)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(OpenGLUtils::GetGLDepthFunc(spec.DepthOperator));
+			}
+			else glDisable(GL_DEPTH_TEST);
+
+			glDepthMask(instance->DepthMaskEnable());
 
 			for (auto& [set, descriptor] : shader->GetDescriptorSets())
-				descriptor.BindResources(shader->GetProgramID());
+				descriptor.BindResources(shader->GetProgramID(), spec.Usage == PipelineUsage::ComputeBit);
 
 			});
 		m_CurrentPipeline = instance;
@@ -86,16 +96,31 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
-		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
+		Ref<OpenGLIndexBuffer> indexBufferInstance = indexBuffer.As<OpenGLIndexBuffer>();
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
-		Renderer::Submit([instance, count, instanceCount, pipeline]() mutable {
-			if (instance)
+		Renderer::Submit([indexBufferInstance, count, instanceCount, pipeline]() mutable {
+			if (indexBufferInstance)
 			{
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->GetBufferID());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferInstance->GetBufferID());
 				glDrawElementsInstanced(pipeline->GetDrawType(), count, GL_UNSIGNED_INT, nullptr, instanceCount);
 			}
 			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, count, instanceCount);
+			});
+	}
+	void OpenGLRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
+	{
+		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
+		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
+		Renderer::Submit([pipeline, size = localGroupSize]() mutable {
+
+			glDispatchCompute(size.x, size.y, size.z);
+			});
+	}
+	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(MemoryBarrierFlags flags)
+	{
+		Renderer::Submit([flags]() mutable {
+			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});
 	}
 }

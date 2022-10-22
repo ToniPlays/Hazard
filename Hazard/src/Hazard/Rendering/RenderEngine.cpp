@@ -104,6 +104,7 @@ namespace Hazard
 		{
 			if (!pipeline->IsValid()) continue;
 			commandBuffer->BindPipeline(pipeline);
+
 			for (auto& mesh : meshList)
 			{
 				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
@@ -151,13 +152,12 @@ namespace Hazard
 		}
 
 		//Update buffers
-		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer, 2);
+		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer, m_Resources->LightUniformBuffer->GetBinding());
 		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
-
 	}
 	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
 	{
-		//Skybox
+
 	}
 	void RenderEngine::Update()
 	{
@@ -190,6 +190,8 @@ namespace Hazard
 				data.View = inverseView;
 				data.InverseViewProjection = camera.View * inverseProjection;
 				data.Position = glm::vec4(camera.Position, 1.0);
+				data.ZNear = camera.ZNear;
+				data.ZFar = camera.ZFar;
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
@@ -197,6 +199,7 @@ namespace Hazard
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				CompositePass(commandBuffer);
 				GeometryPass(commandBuffer);
+				DrawEnvironmentMap(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

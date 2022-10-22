@@ -25,32 +25,84 @@ void main()
 
 #include "Uniforms/CameraUniform.glsl"
 #include "Uniforms/LightSources.glsl"
+#include "Utils/Common.glsl"
+#include "Utils/Lighting.glsl"
 
 layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
 layout(location = 2) in vec3 f_Normal;
 
-layout(location = 0) out vec4 color;
+layout(binding = 0) uniform samplerCube u_EnvironmentMap;
+layout(binding = 1) uniform samplerCube u_Irradiance;
+
+layout(location = 0) out vec4 OutputColor;
 
 
-const float gamma = 1.1;
-const float specularStrength = 0.3;
+const float gamma = 2.2;
 
-vec3 GammaCorrection(vec4 color) 
-{
-	return pow(color.rgb, vec3(1.0 / gamma));
-}
+const float metallic = 0.5;
+const float roughness = 0.3;
+
 
 void main() 
 {
-	DirectionalLight light = u_Lights.u_DirectionalLights[0];
+	vec3 albedo = f_Color.rgb;
+	float ao = u_Lights.SkyLightIntensity;
 
-	float diffuseStrength = max(dot(normalize(f_Normal), light.Direction.xyz), 0.0);
-	vec3 diffuse = diffuseStrength * light.Color.rgb;
-	vec4 ambientColor = u_Lights.SkyLightIntensity * light.Color;
+	vec3 N = normalize(f_Normal);
+	vec3 V = normalize(u_Camera.Position.xyz - FragPos);
+	vec3 R = reflect(V, N);
 
-	color = (ambientColor + vec4(diffuse, 1.0)) * vec4(f_Color.rgb, 1.0);
-	color *= light.Color.a;
-	color = vec4(GammaCorrection(color), 1.0);
+	vec3 F0 = vec3(0.04);
+	F0 = mix(F0, albedo, metallic);
+	vec3 Lo = vec3(0.0);
 
+	//Calculate lights
+	for(int i = 0; i < 1; ++i)
+	{
+		//Lighting
+		DirectionalLight light = u_Lights.DirectionalLights[i];
+
+		vec3 L = light.Direction.xyz;
+		vec3 H = normalize(V + L);
+
+		vec3 radiance = light.Color.rgb * light.Color.a;
+		//-------
+
+		float NDF	= DistributionGGX(N, H, roughness);
+		float G		= GeometrySmith(N, V, L, roughness);
+		vec3 F		= FreshnelSchlick(max(dot(H, V), 0.0), F0);
+		
+		vec3 numerator		= NDF * G * F;
+		float denominator	= 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+
+		vec3 specular = numerator / denominator;
+
+		vec3 kS = F;
+		vec3 kD = vec3(1.0) - kS;
+		
+		kD *= 1.0 - metallic;
+
+		float NdotL = max(dot(N, L), 0.0);
+
+		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+	}
+	
+	vec3 kS = FreshnelSchlick(max(dot(N, V), 0.0), F0);
+	vec3 kD = 1.0 - kS;
+	kD *= metallic;
+	
+	vec3 irradiance = texture(u_EnvironmentMap, R).rgb;
+	vec3 diffuse = irradiance * albedo;
+	vec3 ambient = (kD * diffuse) * ao;
+
+	vec3 color = ambient + Lo;
+	
+	//Tonemapping
+	color = color / (color + vec3(1.0));
+
+	//Gamma correct
+	color = pow(color, vec3(1.0 / gamma));
+
+	OutputColor = vec4(color, 1.0);
 }

@@ -9,6 +9,7 @@ namespace HazardRenderer::OpenGL
 	{
 		GL_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 		GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		GL_DESCRIPTOR_TYPE_STORAGE_IMAGE,
 		GL_DESCRIPTOR_TYPE_MAX_ENUM
 	};
 
@@ -18,6 +19,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLDescriptorTypeFlags Type;
 		uint32_t Binding = UINT32_MAX;
 		uint32_t ArraySize = 0;
+		uint32_t Dimension = 1;
 		uint32_t ActualBinding = UINT32_MAX;
 		std::unordered_map<uint32_t, Ref<HZR_RESOURCE_HANDLER>> BoundValue;
 	};
@@ -33,7 +35,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLWriteDescriptor& GetWriteDescriptor(uint32_t index) { return m_WriteDescriptors[index]; }
 		OpenGLWriteDescriptor& GetWriteDescriptor(const std::string& name);
 
-		void BindResources(uint32_t programID);
+		void BindResources(uint32_t programID, bool isCompute = false);
 
 	private:
 		std::unordered_map<uint32_t, OpenGLWriteDescriptor> m_WriteDescriptors;

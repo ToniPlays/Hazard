@@ -28,7 +28,7 @@ namespace Hazard
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color)
 	{
 		HZR_PROFILE_FUNCTION();
-		SubmitQuad(transform, color, nullptr);	
+		SubmitQuad(transform, color, nullptr);
 	}
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture)
 	{
@@ -49,6 +49,7 @@ namespace Hazard
 		glm::mat4 t = transform.GetTransformMat4();
 
 		SubmitMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+
 		if (!meshComponent.CastShadows) return;
 
 		SubmitShadowMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline(), mesh->GetIndexCount());
@@ -71,7 +72,21 @@ namespace Hazard
 		stat.Vertices += (vertexBuffer->GetSize() / vertexBuffer->GetLayout().GetStride());
 		stat.Indices += count;
 
-		s_Engine->GetDrawList().MeshList[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
+		auto& drawList = s_Engine->GetDrawList();
+		if (drawList.Environment.size() > 0)
+		{
+			for (auto& [env, data] : drawList.Environment) 
+			{
+				Ref<EnvironmentMap> map = data.Map;
+				if (map->RadianceMap) 
+				{	
+					pipeline->GetShader()->Set("u_EnvironmentMap", 0, map->RadianceMap);
+					break;
+				}
+			}
+		}
+
+		drawList.MeshList[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
 	{

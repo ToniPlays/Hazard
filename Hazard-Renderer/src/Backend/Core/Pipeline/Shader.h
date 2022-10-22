@@ -2,7 +2,6 @@
 
 #include "Backend/Core/Core.h"
 #include "ShaderDataType.h"
-#include "../Texture/Image2D.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 #include <unordered_map>
@@ -19,6 +18,12 @@ namespace HazardRenderer
 		Fragment = BIT(2),
 		Compute = BIT(3),
 		Geometry = BIT(4)
+	};
+	enum ShaderResourceFlags
+	{
+		ShaderResourceFlags_ReadOnly = BIT(0),
+		ShaderResourceFlags_WriteOnly = BIT(1),
+		ShaderResourceFlags_ReadAndWrite = BIT(2)
 	};
 
 	struct ShaderStageInput
@@ -53,6 +58,15 @@ namespace HazardRenderer
 		uint32_t ArraySize = 0;
 		uint32_t DescritorSet = UINT32_MAX;
 	};
+	struct ShaderStorageImage
+	{
+		std::string Name;
+		uint32_t Binding = 0;
+		uint32_t Dimension = 0;
+		uint32_t ArraySize = 0;
+		uint32_t DescritorSet = UINT32_MAX;
+		uint32_t Flags = 0;
+	};
 
 	struct ShaderStageData
 	{
@@ -68,6 +82,7 @@ namespace HazardRenderer
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderUniformBufferDescription>> UniformsDescriptions;
 		//Set binding sampler
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderImageSampler>> ImageSamplers;
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageImage>> StorageImages;
 	};
 	namespace Utils
 	{
@@ -124,6 +139,9 @@ namespace HazardRenderer
 		}
 	}
 
+	class CubemapTexture;
+	class Image2D;
+
 	class Shader : public RefCount {
 	public:
 		virtual ~Shader() = default;
@@ -131,6 +149,7 @@ namespace HazardRenderer
 		virtual bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) = 0;
 
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) = 0;
+		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
 		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;

@@ -8,7 +8,9 @@ layout(std140, binding = 2) uniform Camera {
 	uniform mat4 View;
 	uniform mat4 InverseViewProjection;
 	uniform vec4 Position;
-	uniform vec4 Unused1;
+	uniform float ZNear;
+	uniform float ZFar;
+	uniform vec2 Unused1;
 	uniform vec4 Unused2;
 	uniform vec4 Unused3;
 } u_Camera;

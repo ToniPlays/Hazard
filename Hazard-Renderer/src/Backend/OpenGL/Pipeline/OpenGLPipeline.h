@@ -26,6 +26,7 @@ namespace HazardRenderer::OpenGL
 
 		uint32_t GetDrawType() { return m_DrawType; }
 		uint32_t GetPolygonMode() { return m_PolygonMode; }
+		bool DepthMaskEnable() { return m_Specs.DepthWrite; }
 
 	private:
 		PipelineSpecification m_Specs;

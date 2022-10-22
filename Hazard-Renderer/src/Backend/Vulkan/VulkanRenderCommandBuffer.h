@@ -42,7 +42,9 @@ namespace HazardRenderer::Vulkan
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
+		void DispatchCompute(const LocalGroupSize& localGroupSize) override;
 
+		void InsertMemoryBarrier(MemoryBarrierFlags flags) override;
 
 		void SetViewport(float x, float y, float width, float height) override;
 		void SetLineSize(float size) override;

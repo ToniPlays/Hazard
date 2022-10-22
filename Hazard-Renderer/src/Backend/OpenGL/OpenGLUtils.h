@@ -98,6 +98,43 @@ namespace HazardRenderer::OpenGLUtils
 		default:			return GL_UNSIGNED_BYTE;
 		}
 	}
+	static GLuint GetGLFormat(const ImageFormat& format)
+	{
+		switch (format)
+		{
+		case ImageFormat::RED32F:			return GL_R32F;
+		case ImageFormat::RGB:				return GL_RGB8;
+		case ImageFormat::RGB16F:			return GL_RGB16F;
+		case ImageFormat::RGB32F:			return GL_RGB32F;
+		case ImageFormat::RGBA:				return GL_RGBA8;
+		case ImageFormat::RGBA16F:			return GL_RGBA16F;
+		case ImageFormat::RGBA32F:			return GL_RGBA32F;
+		case ImageFormat::RG16F:			return GL_RG16F;
+		case ImageFormat::RG32F:			return GL_RG32F;
+		case ImageFormat::SRGB:				return GL_RGBA32F;
+		case ImageFormat::RED32I:			return GL_R32I;
+		case ImageFormat::DEPTH32F:			return GL_DEPTH32F_STENCIL8;
+		case ImageFormat::DEPTH24STENCIL8:	return GL_DEPTH24_STENCIL8;
+		}
+		return GL_RGBA8;
+	}
+
+	static GLuint GetGLDepthFunc(const DepthOp& op)
+	{
+		switch(op)
+		{
+		case DepthOp::Never:			return GL_NEVER;
+		case DepthOp::NotEqual:			return GL_NOTEQUAL;
+		case DepthOp::Less:				return GL_LESS;
+		case DepthOp::LessOrEqual:		return GL_LEQUAL;
+		case DepthOp::Greater:			return GL_GREATER;
+		case DepthOp::GreaterOrEqual:	return GL_GEQUAL;
+		case DepthOp::Equal:			return GL_EQUAL;
+		case DepthOp::Always:			return GL_ALWAYS;
+		}
+		return GL_LESS;
+	}
+
 
 
 	static bool IsDepthFormat(const ImageFormat& format) {
