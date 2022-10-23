@@ -65,6 +65,7 @@ namespace HazardRenderer::OpenGL
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
 			auto& spec = instance->GetSpecifications();
+
 			if (spec.DepthTest)
 			{
 				glEnable(GL_DEPTH_TEST);
@@ -73,8 +74,7 @@ namespace HazardRenderer::OpenGL
 			else glDisable(GL_DEPTH_TEST);
 
 			glDepthMask(instance->DepthMaskEnable());
-
-			for (auto& [set, descriptor] : shader->GetDescriptorSets())
+			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), spec.Usage == PipelineUsage::ComputeBit);
 
 			});

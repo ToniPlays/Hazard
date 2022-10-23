@@ -6,6 +6,13 @@ namespace HazardRenderer
 {
 	class CubemapTexture;
 
+	struct CubemapGen
+	{
+		std::string OutputImageName;
+		Ref<CubemapTexture> pCubemap = nullptr;
+		Ref<Pipeline> Pipeline = nullptr;
+	};
+
 	struct CubemapTextureCreateInfo
 	{
 		std::string FilePath;
@@ -15,7 +22,7 @@ namespace HazardRenderer
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
-		Ref<CubemapTexture> pCubemap = nullptr;
+		CubemapGen* pCubemapSrc = nullptr;
 	};
 
 

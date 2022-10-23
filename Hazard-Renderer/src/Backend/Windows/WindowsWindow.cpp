@@ -26,12 +26,14 @@ namespace HazardRenderer {
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
 
-		if (!WindowsWindow::s_DebugCallback) {
+		if (!WindowsWindow::s_DebugCallback) 
+		{
 			WindowsWindow::s_QueueMessages.push_back(message);
 			return;
 		}
 
-		for (auto& m : WindowsWindow::s_QueueMessages) {
+		for (auto& m : WindowsWindow::s_QueueMessages) 
+		{
 			WindowsWindow::s_DebugCallback(m);
 		}
 		WindowsWindow::s_QueueMessages.clear();

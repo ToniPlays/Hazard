@@ -17,7 +17,6 @@ namespace Hazard
 		appInfo.AppName = "Hazard";
 		appInfo.BuildVersion = HZR_BUILD_VERSION;
 		appInfo.EventCallback = [](Event& e) { HazardLoop::GetCurrent().OnEvent(e); };
-		appInfo.MessageCallback = [](RenderMessage message) { std::cout << message.Description << std::endl; };
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = createInfo->Title;

@@ -72,7 +72,7 @@ namespace HazardRenderer {
 		WindowProps m_WindowData;
 		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
-		static inline RendererMessageCallback s_DebugCallback;
+		static inline RendererMessageCallback s_DebugCallback = nullptr;
 		static inline std::vector<RenderMessage> s_QueueMessages;
 		void SetCallbacks();
 

@@ -38,10 +38,10 @@ void HazardEditorApplication::PreInit()
 #endif
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
-	if (!workingDir.empty()) 
+	if (!workingDir.empty())
 	{
 		std::filesystem::current_path(workingDir);
-		std::cout << "Working directory: " << std::filesystem::current_path().string() << std::endl;
+		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
 	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
 
@@ -90,9 +90,18 @@ void HazardEditorApplication::Init()
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
-	
-	window.SetDebugCallback([](RenderMessage message) 
+
+	window.SetDebugCallback([](RenderMessage message) {
+		switch (message.Severity)
 		{
+		case Severity::Debug:		HZR_INFO("Debug: {0} -> {1}",		message.Description, message.StackTrace); break;
+		case Severity::Trace:		HZR_TRACE("Trace: {0} -> {1}",		message.Description, message.StackTrace); break;
+		case Severity::Info:		HZR_INFO("Info: {0} -> {1}",		message.Description, message.StackTrace); break;
+		case Severity::Warning:		HZR_WARN("Warning: {0} -> {1}",		message.Description, message.StackTrace); break;
+		case Severity::Error:		HZR_ERROR("Error: {0} -> {1}",		message.Description, message.StackTrace); break;
+		case Severity::Critical:	HZR_ERROR("Critical: {0} -> {1}",	message.Description, message.StackTrace); break;
+		}
+
 		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 		if (!console) return;
@@ -100,7 +109,7 @@ void HazardEditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
 		});
-		
+
 	scriptEngine.SetDebugCallback([](ScriptMessage message) {
 		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();

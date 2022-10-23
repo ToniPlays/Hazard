@@ -15,6 +15,7 @@
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
+#include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::OpenGL
 {
@@ -36,7 +37,6 @@ namespace HazardRenderer::OpenGL
 			return;
 		}
 
-		std::cout << m_FilePath << std::endl;
 		std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(m_FilePath);
 
 		//Compile OpenGL shader
@@ -59,7 +59,11 @@ namespace HazardRenderer::OpenGL
 
 			if (!compiler.Compile(&compileInfoVulkan))
 			{
-				std::cout << compiler.GetErrorMessage() << std::endl;
+				Window::SendDebugMessage({
+					Severity::Warning,
+					fmt::format("{0} failed to compile:\n - {0}", compiler.GetErrorMessage()),
+					source
+					});
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();
@@ -77,8 +81,12 @@ namespace HazardRenderer::OpenGL
 
 			if (!compiler.Compile(&compileInfoVkToGL))
 			{
-				std::cout << compiler.GetErrorMessage() << std::endl;
-				__debugbreak();
+				Window::SendDebugMessage({
+					Severity::Warning,
+					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					source
+					});
+				continue;
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();
@@ -87,8 +95,11 @@ namespace HazardRenderer::OpenGL
 			std::string glSource;
 			if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
 			{
-				std::cout << "Decompilation failed" << std::endl;
-				__debugbreak();
+				Window::SendDebugMessage({
+					Severity::Warning,
+					fmt::format("{0} failed to decompile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					source
+					});
 				continue;
 			}
 			//std::cout << glSource << std::endl;
@@ -104,14 +115,17 @@ namespace HazardRenderer::OpenGL
 			//Get OpenGL compiled binary
 			if (!compiler.Compile(&compileInfoOpenGL))
 			{
-				std::cout << "Decompilation failed: " << compiler.GetErrorMessage() << std::endl;
-				__debugbreak();
+				Window::SendDebugMessage({
+					Severity::Warning,
+					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					source
+					});
 				continue;
 			}
 
 			compilationTime += compiler.GetCompileTime();
 			openGLbinaries[stage] = compiler.GetCompiledBinary();
-			//std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
+			std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
 		}
 
 		m_ShaderData.Stages.clear();
@@ -133,6 +147,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
 		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
+		if (descriptor.ActualBinding == UINT32_MAX) return;
 		descriptor.BoundValue[index] = image;
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
@@ -208,7 +223,13 @@ namespace HazardRenderer::OpenGL
 				GLsizei charsWritten = 0;
 
 				glGetProgramInfoLog(id, infologLength, &charsWritten, infoLog.data());
-				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data()) });
+				std::string message;
+
+				if (charsWritten)
+				{
+					message = std::string(infoLog.data());
+				}
+				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", message });
 			}
 			break;
 		default:
@@ -243,7 +264,15 @@ namespace HazardRenderer::OpenGL
 
 			std::vector<GLchar> infoLog(maxLen);
 			glGetShaderInfoLog(program, maxLen, &maxLen, infoLog.data());
-			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", std::string(infoLog.data()) });
+
+			std::string message;
+
+			if (maxLen > 0)
+			{
+				message = std::string(infoLog.data());
+			}
+
+			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", message });
 			glDeleteProgram(program);
 
 			for (auto id : shaderIDs)

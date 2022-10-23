@@ -1,20 +1,30 @@
 
+/*
+float RadicalInverse_VdC(uint bits)
+{
+	bits = (bit( << 16u) | (bits >> 16u);
+	bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+	bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+	bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+	bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
 
+	return float(bits) * 2.3283064365386963e-10;
+}
+*/
 vec3 GetCubeMapTextureCoord(vec2 imageSize) 
 {
 	vec2 st = gl_GlobalInvocationID.xy / imageSize;
 	vec2 uv = 2.0 * vec2(st.x, 1.0 - st.y) - vec2(1.0);
 
-	switch(gl_GlobalInvocationID.z) 
-	{
-		case 0: return vec3( 1.0, uv.y, -uv.x);
-		case 1: return vec3(-1.0, uv.y,  uv.x);
-		case 2: return vec3( uv.x,  1.0,-uv.y);
-		case 3: return vec3( uv.x, -1.0, uv.y);
-		case 4: return vec3( uv.x, uv.y, 1.0);
-		case 5: return vec3(-uv.x, uv.y,-1.0);
-	}
-	return vec3(1.0);
+	vec3 ret;
+    if (gl_GlobalInvocationID.z == 0)      ret = vec3(  1.0, uv.y, -uv.x);
+    else if (gl_GlobalInvocationID.z == 1) ret = vec3( -1.0, uv.y,  uv.x);
+    else if (gl_GlobalInvocationID.z == 2) ret = vec3( uv.x,  1.0, -uv.y);
+    else if (gl_GlobalInvocationID.z == 3) ret = vec3( uv.x, -1.0,  uv.y);
+    else if (gl_GlobalInvocationID.z == 4) ret = vec3( uv.x, uv.y,   1.0);
+    else if (gl_GlobalInvocationID.z == 5) ret = vec3(-uv.x, uv.y,  -1.0);
+    return normalize(ret);
+
 }
 
 float RadicalInverse_VdC(uint bits)
@@ -50,4 +60,24 @@ vec3 SampleHemisphere(float u1, float u2)
 {
 	const float u1p = sqrt(max(0.0, 1.0 - u1 * u1));
 	return vec3(cos(TwoPI * u2) * u1p, sin(TwoPI * u2) * u1p, u1);
+}
+
+vec3 SampleGGX(float u1, float u2, float roughness)
+{
+	float alpha = roughness * roughness;
+
+	float cosTheta = sqrt((1.0 - u2) / (1.0 + (alpha * alpha - 1.0) * u2));
+	float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+	float phi = TwoPI * u1;
+
+	//Convert to Cartesian upon return
+	return vec3(sinTheta * cos(phi), sinTheta * sin(phi), cosTheta);
+}
+float NdfGGX(float cosLh, float roughness)
+{
+	float alpha = roughness * roughness;
+	float alpha2 = alpha * alpha;
+
+	float denom = (cosLh * cosLh) * (alpha2 - 1.0) + 1.0;
+	return alpha2 / (PI * denom * denom);
 }

@@ -8,7 +8,6 @@ HazardLauncherManager::HazardLauncherManager()
 
 bool HazardLauncherManager::OpenProject(const HazardProject& project)
 {
-	std::cout << "Opening Hazard project" << std::endl;
 	std::stringstream ss;
 	ss << "-wdir C:/dev/Hazard/HazardEditor";
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
@@ -79,7 +78,6 @@ void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 
 bool HazardLauncherManager::CreateProject(const HazardProject& project)
 {
-	std::cout << "Creating project at " << project.Path.string() << std::endl;
 	File::CreateDir(project.Path);
 	File::Copy("res/TemplateProject", project.Path, CopyOptions::Recursive);
 	{

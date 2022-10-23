@@ -16,6 +16,8 @@
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
 
+#include "spdlog/fmt/fmt.h"
+
 namespace HazardRenderer::Vulkan
 {
 	VulkanShader::VulkanShader(const std::string& filePath) : m_FilePath(filePath)
@@ -61,8 +63,11 @@ namespace HazardRenderer::Vulkan
 
 			if (!compiler.Compile(&compileInfoVulkan))
 			{
-				std::cout << compiler.GetErrorMessage() << std::endl;
-				__debugbreak();
+				Window::SendDebugMessage({
+					Severity::Warning,
+					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					source
+					});
 				continue;
 			}
 			compilationTime += compiler.GetCompileTime();
@@ -89,7 +94,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
 	{
-	
+
 	}
 	void VulkanShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
 	{
@@ -102,7 +107,7 @@ namespace HazardRenderer::Vulkan
 	const std::vector<uint32_t>& VulkanShader::GetDynamicOffsets()
 	{
 		uint32_t i = 0;
-		for (auto& [set, buffers] : m_UniformBuffers) 
+		for (auto& [set, buffers] : m_UniformBuffers)
 		{
 			for (auto& [binding, uniformBuffer] : buffers)
 			{
@@ -116,7 +121,7 @@ namespace HazardRenderer::Vulkan
 	{
 		Timer timer;
 		m_ShaderData.Stages.clear();
-			
+
 		VulkanShaderCompiler compiler;
 		m_ShaderCode = binaries;
 		m_ShaderData = compiler.GetShaderResources(binaries);
@@ -245,7 +250,6 @@ namespace HazardRenderer::Vulkan
 				auto& writeSet = writeDescriptor;
 				writeSet.dstSet = m_DescriptorSets[set];
 				writeSet.pBufferInfo = &bufferInfo;
-				std::cout << "Binding: Set: " << set << " -> " << binding << ", buffer " << writeDescriptor.pBufferInfo->buffer << std::endl;
 				vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
 			}
 		}

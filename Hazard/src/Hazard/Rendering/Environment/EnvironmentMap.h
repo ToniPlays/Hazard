@@ -11,5 +11,7 @@ namespace Hazard
 
 		Ref< HazardRenderer::CubemapTexture> RadianceMap;
 		Ref< HazardRenderer::CubemapTexture> IrradianceMap;
+		Ref< HazardRenderer::CubemapTexture> PreFilterMap;
+		Ref< HazardRenderer::Image2D> BRDFLut;
 	};
 }

@@ -32,24 +32,26 @@ namespace HazardRenderer::OpenGL
 				switch (descriptor.Type)
 				{
 				case GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-					for (auto& [binding, value] : descriptor.BoundValue)
-						glBindTextureUnit(descriptor.ActualBinding, value.As<OpenGLImage2D>()->GetID());
-						//glBindImageTexture(descriptor.ActualBinding, image->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
+					for (auto& [index, value] : descriptor.BoundValue)
+					{
+						uint32_t id = descriptor.Dimension == 3 ? value.As<OpenGLCubemapTexture>()->GetID() : value.As<OpenGLImage2D>()->GetID();
+						glBindTextureUnit(descriptor.ActualBinding + index, id);
+					}
 					break;
 				case GL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
-					for (auto& [binding, value] : descriptor.BoundValue)
+					for (auto& [index, value] : descriptor.BoundValue)
 					{
 						if (descriptor.Dimension == 3)
 						{
-							auto& image = value.As<OpenGLCubemapTexture>();
-							uint32_t glFormat = OpenGLUtils::GetGLFormat(image->GetFormat());
-							glBindImageTexture(descriptor.ActualBinding, image->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
+							auto& cubemap = value.As<OpenGLCubemapTexture>();
+							uint32_t glFormat = OpenGLUtils::GetGLFormat(cubemap->GetFormat());
+							glBindImageTexture(index, cubemap->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
 						}
 						else
 						{
 							auto& image = value.As<OpenGLImage2D>();
 							uint32_t glFormat = OpenGLUtils::GetGLFormat(image->GetFormat());
-							glBindImageTexture(descriptor.ActualBinding, image->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
+							glBindImageTexture(descriptor.ActualBinding + index, image->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
 						}
 					}
 					break;
@@ -67,13 +69,14 @@ namespace HazardRenderer::OpenGL
 			case GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
 				if (descriptor.Dimension == 3)
 				{
-					for (auto& [binding, value] : descriptor.BoundValue)
-						glBindTextureUnit(binding, value.As<OpenGLCubemapTexture>()->GetID());
-					break;
+					for (auto& [index, value] : descriptor.BoundValue)
+						glBindTextureUnit(descriptor.ActualBinding + index, value.As<OpenGLCubemapTexture>()->GetID());
 				}
-				for(auto& [binding, value] : descriptor.BoundValue)
-					glBindTextureUnit(binding, value.As<OpenGLImage2D>()->GetID());
-
+				else
+				{
+					for (auto& [index, value] : descriptor.BoundValue)
+						glBindTextureUnit(descriptor.ActualBinding + index, value.As<OpenGLImage2D>()->GetID());
+				}
 				break;
 			}
 		}

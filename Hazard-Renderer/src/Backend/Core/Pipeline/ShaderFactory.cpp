@@ -10,6 +10,8 @@
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
 
+#include "spdlog/fmt/fmt.h"
+
 namespace HazardRenderer
 {
 	shaderc::Compiler compiler;
@@ -89,7 +91,16 @@ namespace HazardRenderer
 			if (offset == std::string::npos) continue;
 			std::string_view includePath = StringUtil::Between(value, "\"", "\"");
 			std::string line = token + " " + value;
-			if (!File::Exists(path.parent_path() / includePath)) return false;
+			std::filesystem::path inclPath = path.parent_path() / includePath;
+			if (!File::Exists(inclPath))
+			{
+				Window::SendDebugMessage({ 
+					Severity::Warning, 
+					fmt::format("Preprocessor {0} failed", token), 
+					fmt::format("Include: {0}\nIn shader: {1}", value, path.string())});
+
+				return false;
+			}
 			
 			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
 		}

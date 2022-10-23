@@ -147,8 +147,6 @@ namespace HazardRenderer::OpenGL
 				sampler.Binding = binding;
 				sampler.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
 				sampler.Dimension = spvType.image.dim;
-
-				std::cout << sampler.Name << std::endl;
 			}
 			for (auto& resource : resources.storage_images)
 			{

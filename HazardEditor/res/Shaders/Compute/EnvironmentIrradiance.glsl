@@ -1,10 +1,10 @@
 #type Compute
-#version 450
+#version 450 core
 
 #include "../Utils/Common.glsl"
 #include "../Utils/EnvironmentMapping.glsl"
 
-layout(binding = 0) restrict writeonly uniform imageCube o_IrradianceMap;
+layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
 layout(binding = 1) uniform samplerCube u_RadianceMap;
 
 const uint u_Samples = 512;
@@ -19,14 +19,14 @@ void main()
 
 	uint samples = 64 * u_Samples;
 
-	vec3 irradiance = vec3(0);
+	vec3 irradiance = vec3(0.0);
 	for(uint i = 0; i < samples; i++) 
 	{
 		vec2 u = SampleHammersley(i, samples);
 		vec3 Li = TangentToWorld(SampleHemisphere(u.x, u.y), N, S, T);
 		float cosTheta = max(0.0, dot(Li, N));
 
-		irradiance += 2.0 * texture(u_RadianceMap, Li).rgb * cosTheta;
+		irradiance += 2.0 * textureLod(u_RadianceMap, Li, 0).rgb * cosTheta;
 	}
 
 	irradiance /= vec3(samples);

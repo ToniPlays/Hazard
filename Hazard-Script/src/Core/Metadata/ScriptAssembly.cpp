@@ -49,7 +49,6 @@ namespace HazardScript
 
 			auto& data = m_ReferencedAssemblies.emplace_back();
 			data.Name = mono_metadata_string_heap(GetImage(), cols[MONO_ASSEMBLYREF_NAME]);
-			std::cout << data.Name << std::endl;
 		}
 	}
 	void ScriptAssembly::LoadScripts()

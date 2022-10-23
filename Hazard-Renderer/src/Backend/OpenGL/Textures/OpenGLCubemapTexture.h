@@ -23,7 +23,7 @@ namespace HazardRenderer::OpenGL
 	private:
 		Buffer GenerateFromFile(int& width, int& height);
 		void GenerateFromData(Buffer& imageData, int width, int height);
-		void GenerateFromCubemap(Ref<CubemapTexture> cubemap);
+		void GenerateFromCubemap(CubemapGen& generationData);
 
 	private:
 		ImageFormat m_Format = ImageFormat::None;

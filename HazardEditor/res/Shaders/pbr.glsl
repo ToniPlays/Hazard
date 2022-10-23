@@ -11,12 +11,12 @@ layout(location = 2) out vec3 f_Normal;
 
 void main() 
 {
-	f_Color = a_Color;
-	f_Normal = mat3(transpose(inverse(u_Model.u_Transform))) * a_Normal, 1.0;
+	f_Normal = mat3(u_Model.u_Transform) * a_Normal;
 
 	vec4 worldPosition = u_Model.u_Transform * vec4(a_Position, 1.0);
 
 	FragPos = worldPosition.xyz;
+	f_Color = a_Color;
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 }
 
@@ -32,32 +32,33 @@ layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
 layout(location = 2) in vec3 f_Normal;
 
-layout(binding = 0) uniform samplerCube u_EnvironmentMap;
-layout(binding = 1) uniform samplerCube u_Irradiance;
+layout(binding = 0) uniform samplerCube u_IrradianceMap;
+layout(binding = 1) uniform samplerCube u_PrefilterMap;
+layout(binding = 2) uniform sampler2D u_BRDFLut;
 
 layout(location = 0) out vec4 OutputColor;
 
 
 const float gamma = 2.2;
 
-const float metallic = 0.5;
-const float roughness = 0.3;
+const float metallic = 1.0;
+const float roughness = 0.0;
 
 
 void main() 
 {
-	vec3 albedo = f_Color.rgb;
 	float ao = u_Lights.SkyLightIntensity;
+	vec3 albedo = f_Color.rgb;
 
 	vec3 N = normalize(f_Normal);
 	vec3 V = normalize(u_Camera.Position.xyz - FragPos);
 	vec3 R = reflect(V, N);
 
-	vec3 F0 = vec3(0.04);
-	F0 = mix(F0, albedo, metallic);
-	vec3 Lo = vec3(0.0);
+	vec3 F0 = mix(vec3(0.04), albedo, metallic);
 
-	//Calculate lights
+
+	vec3 Lo = vec3(0.0);
+	//Reflectance
 	for(int i = 0; i < 1; ++i)
 	{
 		//Lighting
@@ -71,13 +72,13 @@ void main()
 
 		float NDF	= DistributionGGX(N, H, roughness);
 		float G		= GeometrySmith(N, V, L, roughness);
-		vec3 F		= FreshnelSchlick(max(dot(H, V), 0.0), F0);
+		vec3 F		= FresnelSchlick(max(dot(H, V), 0.0), F0);
 		
 		vec3 numerator		= NDF * G * F;
 		float denominator	= 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-
 		vec3 specular = numerator / denominator;
 
+		//kS is equal to Fresnel
 		vec3 kS = F;
 		vec3 kD = vec3(1.0) - kS;
 		
@@ -88,15 +89,27 @@ void main()
 		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 	}
 	
-	vec3 kS = FreshnelSchlick(max(dot(N, V), 0.0), F0);
-	vec3 kD = 1.0 - kS;
-	kD *= metallic;
-	
-	vec3 irradiance = texture(u_EnvironmentMap, R).rgb;
-	vec3 diffuse = irradiance * albedo;
-	vec3 ambient = (kD * diffuse) * ao;
+	//Ambient lighting
 
-	vec3 color = ambient + Lo;
+	vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+
+	vec3 kS = F;
+	vec3 kD = 1.0 - kS;
+	kD *= 1.0 - metallic;
+	
+	vec3 irradiance = texture(u_IrradianceMap, N).rgb;
+	vec3 diffuse = irradiance * albedo;
+
+	//Sample both the pre-filter map and the BRDF lut
+	const float MAX_REFLECTION_LOD = 1.0;
+
+	vec3 prefilteredColor	= textureLod(u_PrefilterMap, R, roughness * MAX_REFLECTION_LOD).rgb;
+	vec2 brdf				= texture(u_BRDFLut, vec2(max(dot(N, V), 0.0), roughness)).rg;
+	vec3 specular			= prefilteredColor * (F * brdf.x + brdf.y);
+
+	vec3 ambient			= (kD * diffuse + specular) * ao;
+
+	vec3 color				= ambient + Lo;
 	
 	//Tonemapping
 	color = color / (color + vec3(1.0));

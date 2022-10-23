@@ -5,6 +5,7 @@
 
 #include "../OpenGLContext.h"
 #include "Backend/Core/Renderer.h"
+#include "Backend/Core/Pipeline/Pipeline.h"
 
 #include "vendor/stb_image.h"
 
@@ -15,10 +16,10 @@ namespace HazardRenderer::OpenGL
 		m_FilePath = createInfo->FilePath;
 		m_Format = createInfo->Format;
 
-		if (createInfo->pCubemap)
+		if (createInfo->pCubemapSrc)
 		{
-			m_Width = createInfo->pCubemap->GetWidth();
-			m_Height = createInfo->pCubemap->GetWidth();
+			m_Width = createInfo->pCubemapSrc->pCubemap->GetWidth();
+			m_Height = createInfo->pCubemapSrc->pCubemap->GetWidth();
 		}
 		else
 		{
@@ -48,8 +49,8 @@ namespace HazardRenderer::OpenGL
 			Buffer buffer = GenerateFromFile(w, h);
 			GenerateFromData(buffer, w, h);
 		}
-		else if (createInfo->pCubemap)
-			GenerateFromCubemap(createInfo->pCubemap);
+		else if (createInfo->pCubemapSrc)
+			GenerateFromCubemap(*createInfo->pCubemapSrc);
 
 		else __debugbreak();
 	}
@@ -106,9 +107,17 @@ namespace HazardRenderer::OpenGL
 		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
 		commandBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
 	}
-	void OpenGLCubemapTexture::GenerateFromCubemap(Ref<CubemapTexture> cubemap)
+	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
+		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
+		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
 
+		Ref<CubemapTexture> instance = this;
+		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, instance);
+
+		cmdBuffer->BindPipeline(generationData.Pipeline);
+		cmdBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
+		cmdBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
 	}
 }
 #endif
