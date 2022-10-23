@@ -22,6 +22,7 @@ namespace HazardRenderer
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
+		bool FlipOnLoad = false;
 		CubemapGen* pCubemapSrc = nullptr;
 	};
 

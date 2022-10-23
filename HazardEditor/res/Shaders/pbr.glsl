@@ -54,7 +54,7 @@ void main()
 
 	vec3 N = normalize(f_Normal);
 	vec3 V = normalize(u_Camera.Position.xyz - FragPos);
-	vec3 R = reflect(V, N);
+	vec3 R = reflect(-V, N);
 
 	vec3 F0 = mix(vec3(0.04), albedo, metallic);
 

@@ -21,7 +21,7 @@ namespace HazardRenderer::OpenGL
 		const uint32_t& GetID() const { return m_ID;	};
 
 	private:
-		Buffer GenerateFromFile(int& width, int& height);
+		Buffer GenerateFromFile(int& width, int& height, bool flipOnLoad);
 		void GenerateFromData(Buffer& imageData, int width, int height);
 		void GenerateFromCubemap(CubemapGen& generationData);
 

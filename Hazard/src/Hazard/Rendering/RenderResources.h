@@ -48,6 +48,8 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
 
+		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
+
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
 			{
@@ -86,6 +88,20 @@ namespace Hazard
 				modelUBO.Usage = BufferUsage::DynamicDraw;
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
+
+				BufferLayout layout = {};
+
+				PipelineSpecification skyboxSpec = {};
+				skyboxSpec.DebugName = "SkyboxPipeline";
+				skyboxSpec.ShaderPath = "res/Shaders/Skybox.glsl";
+				skyboxSpec.pBufferLayout = &layout;
+				skyboxSpec.pTargetRenderPass = renderPass;
+				skyboxSpec.DepthTest = false;
+				skyboxSpec.DepthWrite = false;
+				skyboxSpec.Usage = PipelineUsage::GraphicsBit;
+
+				SkyboxPipeline = Pipeline::Create(&skyboxSpec);
+
 			}
 		}
 	};

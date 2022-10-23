@@ -157,7 +157,18 @@ namespace Hazard
 	}
 	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		auto& drawList = GetDrawList();
 
+		if (drawList.Environment.size() > 0)
+		{
+			for (auto& [map, environmentData] : drawList.Environment)
+			{
+				m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, environmentData.Map->RadianceMap);
+				commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
+				commandBuffer->Draw(6);
+				break;
+			}
+		}
 	}
 	void RenderEngine::Update()
 	{
@@ -197,9 +208,9 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
+				DrawEnvironmentMap(commandBuffer);
 				CompositePass(commandBuffer);
 				GeometryPass(commandBuffer);
-				DrawEnvironmentMap(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

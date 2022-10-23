@@ -46,7 +46,7 @@ namespace HazardRenderer::OpenGL
 		if (createInfo->Data.Data == nullptr && !createInfo->FilePath.empty())
 		{
 			int w, h;
-			Buffer buffer = GenerateFromFile(w, h);
+			Buffer buffer = GenerateFromFile(w, h, createInfo->FlipOnLoad);
 			GenerateFromData(buffer, w, h);
 		}
 		else if (createInfo->pCubemapSrc)
@@ -62,7 +62,7 @@ namespace HazardRenderer::OpenGL
 			glBindTextureUnit(s, id);
 			});
 	}
-	Buffer OpenGLCubemapTexture::GenerateFromFile(int& width, int& height)
+	Buffer OpenGLCubemapTexture::GenerateFromFile(int& width, int& height, bool flipOnLoad)
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(File::Exists(m_FilePath), "File does not exist");
@@ -70,7 +70,7 @@ namespace HazardRenderer::OpenGL
 		constexpr int desired = 4;
 
 		int channels;
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(flipOnLoad);
 		stbi_uc* data = stbi_load(m_FilePath.c_str(), &width, &height, &channels, desired);
 		HZR_ASSERT(data, "Data not loaded correctly");
 

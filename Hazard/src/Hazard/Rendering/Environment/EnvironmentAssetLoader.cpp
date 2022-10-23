@@ -21,6 +21,7 @@ namespace Hazard
 		radianceInfo.Width = 2048;
 		radianceInfo.Height = 2048;
 		radianceInfo.Format = ImageFormat::RGBA16F;
+		radianceInfo.FlipOnLoad = false;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		if (radianceMap)

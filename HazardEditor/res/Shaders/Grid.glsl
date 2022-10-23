@@ -54,7 +54,7 @@ vec4 EditorGrid(vec3 fragPos3D, float scale)
 
     float minimumz = min(derivative.y, 1) * axisWidth;
     float minimumx = min(derivative.x, 1) * axisWidth;
-    vec4 color = vec4(0.3, 0.3, 0.3, 1.0 - min(line, 1.0));
+    vec4 color = vec4(0.25, 0.25, 0.25, 1.0 - min(line, 1.0));
     // z axis
     if(fragPos3D.x > -minimumx && fragPos3D.x < minimumx)
         color.z = 1.0;
@@ -88,7 +88,7 @@ void main()
     gl_FragDepth = ComputeDepth(fragPos3D);
 
     float linearDepth = ComputeLinearDepth(fragPos3D);
-    float fading = max(0, (0.75 - linearDepth));
+    float fading = max(0, (0.5 - linearDepth));
 
 	OutputColor = EditorGrid(fragPos3D, 1.0) * float(t > 0.0 && t < 1.0);
     OutputColor.a *= fading;
