@@ -81,7 +81,7 @@ namespace Hazard
 				Ref<EnvironmentMap> map = data.Map;
 				if (map->RadianceMap) 
 				{	
-					pipeline->GetShader()->Set("u_IrradianceMap", 0, map->RadianceMap);
+					pipeline->GetShader()->Set("u_IrradianceMap", 0, map->IrradianceMap);
 					pipeline->GetShader()->Set("u_PrefilterMap", 0, map->PreFilterMap);
 					pipeline->GetShader()->Set("u_BRDFLut", 0, map->BRDFLut);
 					break;

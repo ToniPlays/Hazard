@@ -266,5 +266,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Compute\EnvironmentMipFilter.glsl" />
+    <None Include="res\Shaders\Utils\PostProcessing.glsl" />
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@ void main()
 #include "Uniforms/LightSources.glsl"
 #include "Utils/Common.glsl"
 #include "Utils/Lighting.glsl"
+#include "Utils/PostProcessing.glsl"
 
 layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
@@ -42,13 +43,14 @@ layout(location = 0) out vec4 OutputColor;
 const float gamma = 2.2;
 
 const float metallic = 1.0;
-const float roughness = 0.0;
+const float roughness = 0.1;
 
 
 void main() 
 {
 	float ao = u_Lights.SkyLightIntensity;
 	vec3 albedo = f_Color.rgb;
+
 
 	vec3 N = normalize(f_Normal);
 	vec3 V = normalize(u_Camera.Position.xyz - FragPos);
@@ -59,7 +61,7 @@ void main()
 
 	vec3 Lo = vec3(0.0);
 	//Reflectance
-	for(int i = 0; i < 1; ++i)
+	for(int i = 0; i < 1; i++)
 	{
 		//Lighting
 		DirectionalLight light = u_Lights.DirectionalLights[i];
@@ -104,18 +106,17 @@ void main()
 	const float MAX_REFLECTION_LOD = 1.0;
 
 	vec3 prefilteredColor	= textureLod(u_PrefilterMap, R, roughness * MAX_REFLECTION_LOD).rgb;
-	vec2 brdf				= texture(u_BRDFLut, vec2(max(dot(N, V), 0.0), roughness)).rg;
+	vec2 brdf				= texture(u_BRDFLut, vec2(max(dot(-N, V), 0.0), roughness)).rg;
 	vec3 specular			= prefilteredColor * (F * brdf.x + brdf.y);
 
 	vec3 ambient			= (kD * diffuse + specular) * ao;
 
 	vec3 color				= ambient + Lo;
 	
-	//Tonemapping
-	color = color / (color + vec3(1.0));
 
-	//Gamma correct
-	color = pow(color, vec3(1.0 / gamma));
+	//Tonemapping
+	color = ACESTonemap(color);
+	color = GammaCorrect(color, gamma);
 
 	OutputColor = vec4(color, 1.0);
 }
