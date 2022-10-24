@@ -30,13 +30,13 @@ namespace Hazard
 	{
 		int DirectionLightCount;
 		int PointLightCount;
+		float IBLContribution;
 		float SkyLightIntensity;
-		int Padding2;
 		DirectionalLight Lights[8];
 	};
-	struct EnvironmentUBO 
+	struct UtilityUniformData 
 	{
-		Ref<HazardRenderer::CubemapTexture> RadianceMap;
+		float Time;
 	};
 
 
@@ -44,7 +44,7 @@ namespace Hazard
 	struct RenderResources
 	{
 		Ref<HazardRenderer::UniformBuffer> CameraUniformBuffer;
-		Ref<HazardRenderer::UniformBuffer> EnvironmentBuffer;
+		Ref<HazardRenderer::UniformBuffer> UtilityUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
 
@@ -52,6 +52,7 @@ namespace Hazard
 		Ref<HazardRenderer::Pipeline> PbrPipeline;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
+		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
@@ -66,13 +67,13 @@ namespace Hazard
 				CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
 
 				UniformBufferCreateInfo environmentUbo = {};
-				environmentUbo.Name = "Environment";
+				environmentUbo.Name = "UtilityUniform";
 				environmentUbo.Set = 0;
 				environmentUbo.Binding = 0;
-				environmentUbo.Size = sizeof(EnvironmentUBO);
+				environmentUbo.Size = sizeof(UtilityUniformData);
 				environmentUbo.Usage = BufferUsage::DynamicDraw;
 
-				EnvironmentBuffer = UniformBuffer::Create(&environmentUbo);
+				UtilityUniformBuffer = UniformBuffer::Create(&environmentUbo);
 
 				UniformBufferCreateInfo lightUBO = {};
 				lightUBO.Name = "Lights";
@@ -118,12 +119,26 @@ namespace Hazard
 				PbrPipeline = Pipeline::Create(&pbrPipeline);
 
 				CubemapTextureCreateInfo blackCubemap = {};
+				blackCubemap.DebugName = "BlackCubemap";
 				blackCubemap.Usage = ImageUsage::Texture;
 				blackCubemap.Width = 1;
 				blackCubemap.Height = 1;
 				blackCubemap.Format = ImageFormat::RGBA16F;
 
 				BlackCubemap = CubemapTexture::Create(&blackCubemap);
+
+				uint32_t whiteData = 0xFFFFFF;
+				Buffer data = Buffer(&whiteData, sizeof(uint32_t));
+
+				CubemapTextureCreateInfo whiteCubemap = {};
+				whiteCubemap.DebugName = "WhiteCubemap";
+				whiteCubemap.Usage = ImageUsage::Texture;
+				whiteCubemap.Width = 1;
+				whiteCubemap.Height = 1;
+				whiteCubemap.Data = data;
+				whiteCubemap.Format = ImageFormat::RGBA16F;
+
+				WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 			}
 		}
 	};

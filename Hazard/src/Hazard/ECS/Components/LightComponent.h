@@ -10,6 +10,7 @@ namespace Hazard
 	{
 		Ref<EnvironmentMap> EnvironmentMap = nullptr;
 		Color LightColor = Color::White;
+		float IBLContribution = 1.0f;
 		float Intensity = 1.0f;
 	};
 

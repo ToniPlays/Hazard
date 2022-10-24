@@ -30,7 +30,7 @@ namespace HazardRenderer
 		virtual void EndRenderPass() = 0;
 
 		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) = 0;
-		virtual void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding) = 0;
+		virtual void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) = 0;
 		virtual void BindPipeline(Ref<Pipeline> pipeline) = 0;
 
 		virtual void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;

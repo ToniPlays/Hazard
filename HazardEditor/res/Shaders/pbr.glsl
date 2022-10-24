@@ -25,6 +25,7 @@ void main()
 
 #include "Uniforms/CameraUniform.glsl"
 #include "Uniforms/LightSources.glsl"
+#include "Uniforms/UtilityUniform.glsl"
 #include "Utils/Common.glsl"
 #include "Utils/Lighting.glsl"
 #include "Utils/PostProcessing.glsl"
@@ -33,33 +34,57 @@ layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
 layout(location = 2) in vec3 f_Normal;
 
-layout(binding = 0) uniform samplerCube u_IrradianceMap;
-layout(binding = 1) uniform samplerCube u_PrefilterMap;
-layout(binding = 2) uniform sampler2D u_BRDFLut;
+layout(binding = 0) uniform samplerCube u_RadianceMap;
+layout(binding = 1) uniform samplerCube u_IrradianceMap;
+layout(binding = 2) uniform samplerCube u_PrefilterMap;
+layout(binding = 3) uniform sampler2D u_BRDFLut;
 
 layout(location = 0) out vec4 OutputColor;
 
 
 const float gamma = 2.2;
 
-const float metallic = 1.0;
-const float roughness = 0.1;
+const float roughness = 0.0;
 
+vec3 IBL(vec3 F0, vec3 Lr)
+{
+	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
+	vec3 F = FresnelSchlickRoughness(m_Params.NdotV, F0, m_Params.Roughness);
+	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
+	vec3 diffuseIBL = m_Params.Albedo * irradiance;
+
+
+	float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
+	vec3 R = 2.0f * dot(m_Params.View, m_Params.Normal) * m_Params.Normal - m_Params.View;
+	vec3 specularIrradiance	= textureLod(u_RadianceMap, Lr, m_Params.Roughness).rgb;
+
+	//Sample BRDF
+	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, m_Params.Roughness)).rg;
+	vec3 specularIBL				= specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
+
+	return kd * diffuseIBL + specularIBL;
+}
 
 void main() 
 {
-	float ao = u_Lights.SkyLightIntensity;
 	vec3 albedo = f_Color.rgb;
-
 
 	vec3 N = normalize(f_Normal);
 	vec3 V = normalize(u_Camera.Position.xyz - FragPos);
 	vec3 R = reflect(-V, N);
 
-	vec3 F0 = mix(vec3(0.04), albedo, metallic);
+	
+	m_Params.Albedo = albedo;
+	m_Params.Normal = N;
+	m_Params.Metalness = (sin(u_Util.Time) + 1.0) / 2.0;
+	m_Params.Roughness = roughness;
+	m_Params.View = V;
+	m_Params.NdotV = max(dot(N, V), 0.0);
 
 
+	vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
 	vec3 Lo = vec3(0.0);
+
 	//Reflectance
 	for(int i = 0; i < 1; i++)
 	{
@@ -71,6 +96,7 @@ void main()
 
 		vec3 radiance = light.Color.rgb * light.Color.a;
 		//-------
+		float NdotL = max(dot(N, L), 0.0);
 
 		float NDF	= DistributionGGX(N, H, roughness);
 		float G		= GeometrySmith(N, V, L, roughness);
@@ -84,38 +110,16 @@ void main()
 		vec3 kS = F;
 		vec3 kD = vec3(1.0) - kS;
 		
-		kD *= 1.0 - metallic;
-
-		float NdotL = max(dot(N, L), 0.0);
+		kD *= 1.0 - m_Params.Metalness;
 
 		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 	}
+
+	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
+	vec3 ibl = IBL(F0, Lr);
 	
-	//Ambient lighting
-
-	vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
-
-	vec3 kS = F;
-	vec3 kD = 1.0 - kS;
-	kD *= 1.0 - metallic;
-	
-	vec3 irradiance = texture(u_IrradianceMap, N).rgb;
-	vec3 diffuse = irradiance * albedo;
-
-	//Sample both the pre-filter map and the BRDF lut
-	const float MAX_REFLECTION_LOD = 1.0;
-
-	vec3 prefilteredColor	= textureLod(u_PrefilterMap, R, roughness * MAX_REFLECTION_LOD).rgb;
-	vec2 brdf				= texture(u_BRDFLut, vec2(max(dot(-N, V), 0.0), roughness)).rg;
-	vec3 specular			= prefilteredColor * (F * brdf.x + brdf.y);
-
-	vec3 ambient			= (kD * diffuse + specular) * ao;
-
-	vec3 color				= ambient + Lo;
-	
-
 	//Tonemapping
-	color = ACESTonemap(color);
+	vec3 color = ACESTonemap(ibl + Lo);
 	color = GammaCorrect(color, gamma);
 
 	OutputColor = vec4(color, 1.0);

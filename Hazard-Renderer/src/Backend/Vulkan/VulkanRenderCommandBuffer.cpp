@@ -274,7 +274,7 @@ namespace HazardRenderer::Vulkan
 			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
 			});
 	}
-	void VulkanRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding)
+	void VulkanRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
 	{
 
 	}

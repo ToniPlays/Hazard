@@ -10,7 +10,8 @@
 #endif
 
 #ifndef HZR_RESOURCE_HANDLER
-#define HZR_RESOURCE_HANDLER RefCount
+	#define HZR_RESOURCE_HANDLER RefCount
+	#pragma error "HZR_RESOURCE_HANDLER Got defined"
 #endif
 
 #include "Ref.h"

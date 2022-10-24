@@ -6,15 +6,15 @@
 #include "../OpenGLContext.h"
 #include "Backend/Core/Renderer.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+#include "../OpenGLUtils.h"
 
 #include "vendor/stb_image.h"
 
 namespace HazardRenderer::OpenGL
 {
-	OpenGLCubemapTexture::OpenGLCubemapTexture(CubemapTextureCreateInfo* createInfo)
+	OpenGLCubemapTexture::OpenGLCubemapTexture(CubemapTextureCreateInfo* createInfo) : m_FilePath(createInfo->FilePath), m_Format(createInfo->Format)
 	{
-		m_FilePath = createInfo->FilePath;
-		m_Format = createInfo->Format;
+		m_DebugName = createInfo->DebugName;
 
 		if (createInfo->pCubemapSrc)
 		{
@@ -28,29 +28,43 @@ namespace HazardRenderer::OpenGL
 		}
 
 		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_ID);
-
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
+
 		for (uint8_t i = 0; i < 6; i++)
 		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,
-				m_Width, m_Height, 0, GL_RGB, GL_FLOAT, nullptr);
+			uint32_t format = OpenGLUtils::GetGLFormat(m_Format);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format,
+				m_Width, m_Height, 0, GL_RGB, OpenGLUtils::GetFormatType(format), nullptr);
 		}
 
-		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
+		//glGenerateTextureMipmap(m_ID);
 
 		if (createInfo->Data.Data == nullptr && !createInfo->FilePath.empty())
 		{
+			//Load from file
 			int w, h;
 			Buffer buffer = GenerateFromFile(w, h, createInfo->FlipOnLoad);
 			GenerateFromData(buffer, w, h);
 		}
 		else if (createInfo->pCubemapSrc)
+		{
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
+		}
+		else if (createInfo->Data.Data)
+		{
+			/*
+			for (uint8_t i = 0; i < 6; i++)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,
+					m_Width, m_Height, 0, GL_RGB, GL_FLOAT, nullptr);
+			}
+			*/
+		}
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
@@ -69,9 +83,13 @@ namespace HazardRenderer::OpenGL
 
 		int channels;
 		stbi_set_flip_vertically_on_load(flipOnLoad);
+		if (m_Format == ImageFormat::RGBA16F)
+		{
+			stbi_ldr_to_hdr_gamma(1.0f);
+			float* data = stbi_loadf(m_FilePath.c_str(), &width, &height, &channels, desired);
+			return Buffer(data, width * height * desired);
+		}
 		stbi_uc* data = stbi_load(m_FilePath.c_str(), &width, &height, &channels, desired);
-		HZR_ASSERT(data, "Data not loaded correctly");
-
 		return Buffer(data, width * height * desired);
 	}
 	void OpenGLCubemapTexture::GenerateFromData(Buffer& imageData, int width, int height)

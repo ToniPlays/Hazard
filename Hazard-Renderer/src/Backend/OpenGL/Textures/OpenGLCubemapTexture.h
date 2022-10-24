@@ -33,9 +33,10 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_Height = 0;
 		uint32_t m_ID = 0;
 
-		std::string m_FilePath;
+		std::string m_FilePath = "";
+		std::string m_DebugName = "";
 
-		Ref<Image2D> m_SourceImage;
+		Ref<Image2D> m_SourceImage = nullptr;
 	};
 }
 #endif

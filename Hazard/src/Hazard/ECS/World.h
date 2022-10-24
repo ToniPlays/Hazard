@@ -5,11 +5,11 @@
 #include "UID.h"
 #include "Ref.h"
 
-namespace Hazard {
-
+namespace Hazard 
+{
 	class Entity;
 
-	class World : public RefCount 
+	class World : public Asset 
 	{
 		friend class Entity;
 	public:

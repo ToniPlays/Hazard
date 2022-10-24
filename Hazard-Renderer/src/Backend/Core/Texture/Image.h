@@ -45,7 +45,8 @@ namespace HazardRenderer
 		TextureFilter(FilterMode minFilter, FilterMode magFilter) : MinFilter(minFilter), MagFilter(magFilter) {}
 	};
 
-	class Image : public RefCount {
+	class Image : public RefCount
+	{
 	public:
 		virtual ~Image() = default;
 

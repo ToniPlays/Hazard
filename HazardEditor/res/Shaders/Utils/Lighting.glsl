@@ -1,3 +1,17 @@
+
+// Used in PBR shader
+struct PBRParameters
+{
+	vec3 Albedo;
+	float Roughness;
+	float Metalness;
+
+	vec3 Normal;
+	vec3 View;
+	float NdotV;
+} m_Params;
+
+
 //PBR calculations
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {

@@ -92,7 +92,8 @@ namespace Hazard
 		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
 		EnvironmentData data = {};
 		data.Color = skyLight.LightColor.ToGLM();
-		data.IBLContribution = skyLight.Intensity;
+		data.IBLContribution = skyLight.IBLContribution;
+		data.Intensity = skyLight.Intensity;
 		data.Map = map;
 
 		s_Engine->GetDrawList().Environment[map.Raw()] = data;

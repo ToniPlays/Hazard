@@ -12,7 +12,7 @@ layout(std140, binding = 1) uniform Lights
 {
 	uniform int DirectionalLightCount;
 	uniform int PointLightCount;
+	uniform float IBLContribution;
 	uniform float SkyLightIntensity;
-	uniform int Padding2;
 	uniform DirectionalLight[8] DirectionalLights;
 } u_Lights;

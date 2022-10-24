@@ -58,7 +58,7 @@ namespace HazardRenderer
 		std::string DebugName;
 	};
 
-	class FrameBuffer : public HZR_RESOURCE_HANDLER {
+	class FrameBuffer : public RefCount {
 	public:
 		virtual ~FrameBuffer() = default;
 

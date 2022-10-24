@@ -50,11 +50,11 @@ namespace HazardRenderer::OpenGL
 			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->GetBufferID(), 0, s_CurrentLayout.GetBufferStride(binding));
 			});
 	}
-	void OpenGLRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding)
+	void OpenGLRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
 	{
 		Ref<OpenGLUniformBuffer> instance = uniformBuffer.As<OpenGLUniformBuffer>();
-		Renderer::Submit([binding, instance]() {
-			glBindBufferBase(GL_UNIFORM_BUFFER, binding, instance->GetBufferID());
+		Renderer::Submit([instance]() {
+			glBindBufferBase(GL_UNIFORM_BUFFER, instance->GetBinding(), instance->GetBufferID());
 			});
 	}
 	void OpenGLRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)

@@ -34,6 +34,7 @@ namespace Hazard
 		Ref<EnvironmentMap> Map;
 		glm::vec4 Color;
 		float IBLContribution;
+		float Intensity;
 	};
 	struct DirectionalLightSource
 	{

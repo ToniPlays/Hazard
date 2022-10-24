@@ -16,11 +16,12 @@ namespace Hazard
 		HZR_CORE_INFO("Somehow generate the cubemap for environment map");
 
 		CubemapTextureCreateInfo radianceInfo = {};
+		radianceInfo.DebugName = metadata.Path.string();
 		radianceInfo.FilePath = metadata.Path.string();
 		radianceInfo.Usage = ImageUsage::Texture;
 		radianceInfo.Width = 2048;
 		radianceInfo.Height = 2048;
-		radianceInfo.Format = ImageFormat::RGBA16F;
+		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.FlipOnLoad = false;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
@@ -49,7 +50,7 @@ namespace Hazard
 			CubemapTextureCreateInfo irradianceInfo = {};
 			irradianceInfo.Usage = ImageUsage::Texture;
 			irradianceInfo.pCubemapSrc = &irradianceSource;
-			irradianceInfo.Format = ImageFormat::RGBA16F;
+			irradianceInfo.Format = ImageFormat::RGBA;
 
 			Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
@@ -75,7 +76,7 @@ namespace Hazard
 			CubemapTextureCreateInfo prefilterMapInfo = {};
 			prefilterMapInfo.Usage = ImageUsage::Texture;
 			prefilterMapInfo.pCubemapSrc = &preFilterSource;
-			prefilterMapInfo.Format = ImageFormat::RGBA16F;
+			prefilterMapInfo.Format = ImageFormat::RGBA;
 			Ref<CubemapTexture> preFilterMap = CubemapTexture::Create(&prefilterMapInfo);
 
 			AssetMetadata prefilterMetadata = {};

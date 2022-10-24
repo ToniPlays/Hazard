@@ -21,7 +21,7 @@ namespace HazardRenderer::OpenGL
 		uint32_t ArraySize = 0;
 		uint32_t Dimension = 1;
 		uint32_t ActualBinding = UINT32_MAX;
-		std::unordered_map<uint32_t, Ref<HZR_RESOURCE_HANDLER>> BoundValue;
+		std::unordered_map<uint32_t, Ref<RefCount>> BoundValue;
 	};
 
 	class OpenGLDescriptorSet 

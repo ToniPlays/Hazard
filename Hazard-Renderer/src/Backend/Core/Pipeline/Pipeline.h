@@ -40,7 +40,7 @@ namespace HazardRenderer
 		Ref<RenderPass> pTargetRenderPass = nullptr;
 	};
 
-	class Pipeline : public HZR_RESOURCE_HANDLER {
+	class Pipeline : public RefCount {
 	public:
 
 		virtual ~Pipeline() = default;

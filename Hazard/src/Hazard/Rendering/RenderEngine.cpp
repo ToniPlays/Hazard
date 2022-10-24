@@ -6,6 +6,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Core/Application.h"
+#include "Hazard/Math/Time.h"
 
 namespace Hazard
 {
@@ -32,7 +33,7 @@ namespace Hazard
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
 		frameBufferInfo.AttachmentCount = 4;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA16F, ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.Width = 1920;
 		frameBufferInfo.Height = 1080;
@@ -146,33 +147,52 @@ namespace Hazard
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
 			{
-				data.SkyLightIntensity = environmentData.IBLContribution;
+				data.IBLContribution = environmentData.IBLContribution;
+				data.SkyLightIntensity = environmentData.Intensity;
+
+				auto& radiance = environmentData.Map->RadianceMap;
+				auto& irradiance = environmentData.Map->IrradianceMap;
+				auto& prefilter = environmentData.Map->PreFilterMap;
+				auto& lut = environmentData.Map->BRDFLut;
+
+				auto& shader = m_Resources->PbrPipeline->GetShader();
+				shader->Set("u_RadianceMap", 0, irradiance);
+				shader->Set("u_IrradianceMap", 0, irradiance);
+				shader->Set("u_PrefilterMap", 0, prefilter);
+				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);
+
 				break;
 			}
 		}
+		else
+		{
+			data.IBLContribution = 0.0f;
+			data.SkyLightIntensity = 1.0f;
+
+			auto& shader = m_Resources->PbrPipeline->GetShader();
+			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->GetCoreImage());
+		}
 
 		//Update buffers
-		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer, m_Resources->LightUniformBuffer->GetBinding());
+		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
 		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
 	}
 	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
 	{
 		auto& drawList = GetDrawList();
 
-		if (drawList.Environment.size() > 0)
+		if (drawList.Environment.size() == 0) return;
+		for (auto& [map, environmentData] : drawList.Environment)
 		{
-			for (auto& [map, environmentData] : drawList.Environment)
-			{
-				auto& shader = m_Resources->PbrPipeline->GetShader();
-				shader->Set("u_IrradianceMap", 0, environmentData.Map->IrradianceMap);
-				shader->Set("u_PrefilterMap", 0, environmentData.Map->PreFilterMap);
-				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);
+			auto& radiance = environmentData.Map->RadianceMap;
 
-				m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, environmentData.Map->RadianceMap);
-				commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
-				commandBuffer->Draw(6);
-				break;
-			}
+			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance);
+			commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
+			commandBuffer->Draw(6);
+			return;
 		}
 	}
 	void RenderEngine::Update()
@@ -186,6 +206,12 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
+
+		UtilityUniformData data;
+		data.Time = Time::s_Time;
+
+		m_Resources->UtilityUniformBuffer->SetData(&data, sizeof(UtilityUniformData));
+		commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 
 		for (auto& worldDrawList : m_DrawList)
 		{
@@ -210,7 +236,7 @@ namespace Hazard
 				data.ZFar = camera.ZFar;
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
-				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
+				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				CompositePass(commandBuffer);

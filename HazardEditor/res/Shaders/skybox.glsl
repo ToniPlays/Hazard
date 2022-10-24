@@ -17,7 +17,7 @@ void main()
 
 
 	vec4 inversedPos = position;
-	v_Position = (u_Camera.InverseViewProjection * inversedPos).xyz;
+	v_Position = (mat4(mat3(inverse(u_Camera.View))) * inverse(u_Camera.Projection) * inversedPos).xyz;
 }
 
 #type Fragment
@@ -37,5 +37,5 @@ void main()
 	float ao = u_Lights.SkyLightIntensity;
 
 	vec3 color = texture(u_CubeMap, v_Position).rgb;
-	OutputColor = vec4(color, 1.0);
+	OutputColor = vec4(color * ao, 1.0);
 }

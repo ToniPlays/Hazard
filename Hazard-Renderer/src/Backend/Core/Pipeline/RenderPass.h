@@ -18,7 +18,7 @@ namespace HazardRenderer {
 		std::string DebugName;
 	};
 
-	class RenderPass : public HZR_RESOURCE_HANDLER 
+	class RenderPass : public RefCount 
 	{
 	public:
 		virtual ~RenderPass() = default;

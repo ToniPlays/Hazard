@@ -37,7 +37,7 @@ namespace HazardRenderer::Vulkan
 		void EndRenderPass() override;
 
 		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
-		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding);
+		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer);
 		void BindPipeline(Ref<Pipeline> pipeline) override;
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);

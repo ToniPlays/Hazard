@@ -28,7 +28,7 @@ namespace HazardRenderer::OpenGL
 		void EndRenderPass() override;
 
 		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) override;
-		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer, uint32_t binding) override;
+		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override;
 		void BindPipeline(Ref<Pipeline> pipeline) override;
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;

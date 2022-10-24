@@ -11,6 +11,7 @@
 #include <stdio.h> 
 #include <utility>
 
+#include "Hazard/Core/Core.h"
 #include "Hazard/Core/HazardLoop.h"
 #include "HazardRuntimeError.h"
 #include "Hazard/Logging/Logger.h"

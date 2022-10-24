@@ -37,6 +37,8 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle) 
 		{
+			static_assert(std::is_base_of<Asset, T>::value);
+
 			AssetMetadata& meta = GetMetadata(handle);
 			if (meta.Handle != handle)
 				assert(false);

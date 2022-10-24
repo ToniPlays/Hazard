@@ -61,7 +61,7 @@ namespace HazardRenderer::OpenGL
 			{
 				Window::SendDebugMessage({
 					Severity::Warning,
-					fmt::format("{0} failed to compile:\n - {0}", compiler.GetErrorMessage()),
+					fmt::format("{0} failed to compile (Vulkan):\n - {0}", compiler.GetErrorMessage()),
 					source
 					});
 				continue;
@@ -83,7 +83,7 @@ namespace HazardRenderer::OpenGL
 			{
 				Window::SendDebugMessage({
 					Severity::Warning,
-					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					fmt::format("{0} failed to compile (Vk to OpenGL):\n - {1}", m_FilePath, compiler.GetErrorMessage()),
 					source
 					});
 				continue;
@@ -116,8 +116,8 @@ namespace HazardRenderer::OpenGL
 			{
 				Window::SendDebugMessage({
 					Severity::Warning,
-					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
-					source
+					fmt::format("{0} failed to compile (OpenGL):\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+					glSource
 					});
 				continue;
 			}
