@@ -156,7 +156,7 @@ namespace Hazard
 				auto& lut = environmentData.Map->BRDFLut;
 
 				auto& shader = m_Resources->PbrPipeline->GetShader();
-				shader->Set("u_RadianceMap", 0, irradiance);
+				shader->Set("u_RadianceMap", 0, radiance);
 				shader->Set("u_IrradianceMap", 0, irradiance);
 				shader->Set("u_PrefilterMap", 0, prefilter);
 				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);

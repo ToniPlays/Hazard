@@ -54,3 +54,27 @@ vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
 	return F0 + (max(vec3(1.0 - roughness), F0), F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
+vec3 CalculateDirectionalLight(vec3 F0, DirectionalLight light) 
+{
+	vec3 L = light.Direction.xyz;
+	vec3 H = normalize(m_Params.View + L);
+
+	vec3 radiance = light.Color.rgb * light.Color.a;
+	//-------
+	float NdotL = max(dot(m_Params.Normal, L), 0.0);
+
+	float NDF	= DistributionGGX(m_Params.Normal, H, m_Params.Roughness);
+	float G		= GeometrySmith(m_Params.Normal, m_Params.View, L, m_Params.Roughness);
+	vec3 F		= FresnelSchlick(max(dot(H, m_Params.View), 0.0), F0);
+		
+	vec3 numerator		= NDF * G * F;
+	float denominator	= 4.0 * m_Params.NdotV * NdotL + Epsilon;
+	vec3 specular = numerator / denominator;
+
+	vec3 kS = F;
+	vec3 kD = vec3(1.0) - kS;
+		
+	kD *= 1.0 - m_Params.Metalness;
+
+	return (kD * m_Params.Albedo / PI + specular) * radiance * NdotL;
+}

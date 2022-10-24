@@ -282,6 +282,7 @@ namespace UI
 				ImGui::EndDisabled();
 
 				ImGui::NextColumn();
+				ImUI::InputFloat("Contribution", c.IBLContribution, 1.0f, 0.05f, 0.0f, 1.0f);
 				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
 				ImGui::Columns();
 
