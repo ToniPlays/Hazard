@@ -1,6 +1,5 @@
 #pragma once
 
-#include "HazardRendererCore.h"
 #include "GUI/Debug/Console.h"
 
 namespace Editor {

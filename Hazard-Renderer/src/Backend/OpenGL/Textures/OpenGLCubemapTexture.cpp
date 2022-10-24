@@ -51,8 +51,6 @@ namespace HazardRenderer::OpenGL
 		}
 		else if (createInfo->pCubemapSrc)
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
-
-		else __debugbreak();
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
 	{
@@ -98,14 +96,17 @@ namespace HazardRenderer::OpenGL
 		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
 
 		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
-		auto& shader = computePipeline->GetShader();
 
+		auto& shader = computePipeline->GetShader();
 		shader->Set("u_EquirectangularTexture", 0, m_SourceImage);
 		shader->Set("o_CubeMap", 0, instance);
 
 		commandBuffer->BindPipeline(computePipeline);
 		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
 		commandBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
+
+		m_SourceImage->Release();
+		imageData.Release();
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{

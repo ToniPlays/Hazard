@@ -38,6 +38,8 @@ namespace Hazard
 		static Ref<T> GetAsset(AssetHandle handle) 
 		{
 			AssetMetadata& meta = GetMetadata(handle);
+			if (meta.Handle != handle)
+				assert(false);
 
 			if (!meta.IsLoaded)
 			{
@@ -65,6 +67,7 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> GetRuntimeAsset(const AssetHandle& handle)
 		{
+			if (handle == INVALID_ASSET_HANDLE) return nullptr;
 			return s_LoadedAssets[handle].As<T>();
 		}
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);

@@ -22,8 +22,8 @@ namespace HazardRenderer::OpenGLUtils
 		case ShaderStage::Fragment:	return GL_FRAGMENT_SHADER;
 		case ShaderStage::Compute:	return GL_COMPUTE_SHADER;
 		case ShaderStage::Geometry:	return GL_GEOMETRY_SHADER;
-            default:
-				HZR_ASSERT(false, "Unknow ShaderType");
+		default:
+			HZR_ASSERT(false, "Unknow ShaderType");
 		}
 		HZR_ASSERT(false, "Unknow ShaderType");
 		return 0;
@@ -65,7 +65,7 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Fill: return GL_TRIANGLES;
 		case DrawType::Line: return GL_LINES;
 		case DrawType::Point: return GL_POINTS;
-        default:
+		default:
 			HZR_ASSERT(false, "Unknow DrawType");
 		}
 		return GL_TRIANGLES;
@@ -76,8 +76,8 @@ namespace HazardRenderer::OpenGLUtils
 		case DrawType::Fill: return GL_FILL;
 		case DrawType::Line: return GL_LINE;
 		case DrawType::Point: return GL_POINT;
-        default: HZR_ASSERT(false, "Unkown DrawType");
-            
+		default: HZR_ASSERT(false, "Unkown DrawType");
+
 		}
 		return GL_TRIANGLES;
 	}
@@ -91,7 +91,8 @@ namespace HazardRenderer::OpenGLUtils
 		}
 		return Severity::Info;
 	}
-	static GLuint GetFormatType(uint32_t format) {
+	static GLuint GetFormatType(uint32_t format)
+	{
 		switch (format) {
 		case GL_RGB16F:		return GL_FLOAT;
 		case GL_RGBA16F:	return GL_FLOAT;
@@ -121,7 +122,7 @@ namespace HazardRenderer::OpenGLUtils
 
 	static GLuint GetGLDepthFunc(const DepthOp& op)
 	{
-		switch(op)
+		switch (op)
 		{
 		case DepthOp::Never:			return GL_NEVER;
 		case DepthOp::NotEqual:			return GL_NOTEQUAL;
@@ -146,30 +147,37 @@ namespace HazardRenderer::OpenGLUtils
 	{
 		return multisample ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	}
-	static void CreateTextures(bool multisample, uint32_t* outID, uint32_t count)
+	static uint32_t CreateTextures(bool multisample, uint32_t count)
 	{
-		glCreateTextures(TextureTarget(multisample), count, outID);
+		uint32_t id;
+		glCreateTextures(TextureTarget(multisample), count, &id);
+		std::cout << "Created texture " << id << std::endl;
+		return id;
 	}
-	static void BindTexture(uint32_t id, bool multisampled) {
+	static void BindTexture(uint32_t id, bool multisampled) 
+	{
 		glBindTexture(TextureTarget(multisampled), id);
 	}
 	static void AttachColorTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t internalFormat, uint32_t width, uint32_t height, uint32_t iter)
 	{
 		//Change to DSA
 		bool multisampled = samples > 1;
-		if (multisampled) {
+		if (multisampled)
+		{
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 		}
 		else
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GetFormatType(internalFormat), nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTextureStorage2D(target, 1, internalFormat, width, height);
 		}
+
+		glTextureParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTextureParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + iter, TextureTarget(multisampled), target, 0);
 	}
 	static void AttachDepthTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t attachmetType, uint32_t width, uint32_t height)
@@ -181,16 +189,13 @@ namespace HazardRenderer::OpenGLUtils
 		}
 		else
 		{
-			glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTextureStorage2D(target, 1, format, width, height);
 		}
+		glTextureParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmetType, TextureTarget(multisampled), target, 0);
 	}
-	
+
 }
 #endif

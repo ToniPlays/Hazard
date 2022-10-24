@@ -76,7 +76,6 @@ namespace HazardRenderer::OpenGL
 			glDepthMask(instance->DepthMaskEnable());
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), spec.Usage == PipelineUsage::ComputeBit);
-
 			});
 		m_CurrentPipeline = instance;
 	}

@@ -44,12 +44,12 @@ namespace Hazard
 
 		virtual ~Asset() = default;
 		const AssetType GetType() const { return m_Type; }
-		UID GetHandle() { return m_Handle; }
+		AssetHandle GetHandle() { return m_Handle; }
 		AssetFlags GetFlags() { return m_Flags; }
 		bool IsValid() { return m_Handle != INVALID_ASSET_HANDLE; }
 
 	protected:
-		UID m_Handle = INVALID_ASSET_HANDLE;
+		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
 		AssetType m_Type = AssetType::Undefined;
 		AssetFlags m_Flags = AssetFlags::None;
 	private:

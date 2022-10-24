@@ -89,8 +89,7 @@ namespace Hazard
 
 			if (handle == INVALID_ASSET_HANDLE) return;
 			c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
-
-		}
+ 		}
 
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)

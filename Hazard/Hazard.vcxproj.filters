@@ -1593,6 +1593,8 @@
     <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h" />
     <ClInclude Include="src\Hazard\Scripting\Bindings\WorldManagerBindings.h" />
     <ClInclude Include="src\Hazard\ECS\Loader\WorldAssetLoader.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\SkyLightComponentBindings.h" />
+    <ClInclude Include="src\Hazard\Scripting\Bindings\EnvironmentMapBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

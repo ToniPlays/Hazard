@@ -1,5 +1,4 @@
 #pragma once
-#include "Backend/Core/Core.h"
 #include "Image.h"
 
 namespace HazardRenderer 

@@ -24,7 +24,8 @@ namespace Hazard
         public void SetVisible(bool visible) { InternalCalls.Entity_SetVisible_Native(ID, visible); }
         public T Get<T>() where T : Component, new()
         {
-            if (!Has<T>()) return null;
+            if (!Has<T>()) 
+                return null;
 
             T component = new T
             {

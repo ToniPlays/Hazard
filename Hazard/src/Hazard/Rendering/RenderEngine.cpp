@@ -163,6 +163,11 @@ namespace Hazard
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
 			{
+				auto& shader = m_Resources->PbrPipeline->GetShader();
+				shader->Set("u_IrradianceMap", 0, environmentData.Map->IrradianceMap);
+				shader->Set("u_PrefilterMap", 0, environmentData.Map->PreFilterMap);
+				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);
+
 				m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, environmentData.Map->RadianceMap);
 				commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
 				commandBuffer->Draw(6);
@@ -208,9 +213,9 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer, 0);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				DrawEnvironmentMap(commandBuffer);
 				CompositePass(commandBuffer);
 				GeometryPass(commandBuffer);
+				DrawEnvironmentMap(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

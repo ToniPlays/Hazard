@@ -55,11 +55,11 @@ namespace HazardRenderer::OpenGL
 			glDeleteFramebuffers(1, &instance->m_ID);
 			if (instance->m_ColorImages.size() > 0) {
 				for (auto& image : instance->m_ColorImages)
-					image->Release();
+					image->Release_RT();
 			}
 
 			if (instance->m_DepthImage) {
-				instance->m_DepthImage->Release();
+				instance->m_DepthImage->Release_RT();
 			}
 			});
 	}
@@ -115,9 +115,10 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_RENDER_THREAD_ONLY();
+		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
+
 		if (m_Specs.SwapChainTarget) return;
 
-		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
 
 		if (m_ID)
 		{
@@ -128,14 +129,14 @@ namespace HazardRenderer::OpenGL
 				if (m_ColorImages.size() > 0)
 				{
 					for (auto& image : m_ColorImages)
-						image->Release();
+						image->Release_RT();
 				}
 			}
 			m_ColorImages.clear();
 
 			if (m_DepthImage)
 			{
-				m_DepthImage->Release();
+				m_DepthImage->Release_RT();
 			}
 		}
 

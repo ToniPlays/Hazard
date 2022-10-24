@@ -24,6 +24,7 @@ void main()
 #version 450
 
 #include "Uniforms/CameraUniform.glsl"
+#include "Uniforms/LightSources.glsl"
 
 layout(location = 0) in vec3 v_Position;
 
@@ -33,6 +34,8 @@ layout(location = 0) out vec4 OutputColor;
 
 void main() 
 {
+	float ao = u_Lights.SkyLightIntensity;
+
 	vec3 color = texture(u_CubeMap, v_Position).rgb;
 	OutputColor = vec4(color, 1.0);
 }

@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLImage2D::~OpenGLImage2D()
 	{
 		HZR_PROFILE_FUNCTION();
-		Release();
+		Release_RT();
 	}
 	void OpenGLImage2D::Invalidate()
 	{
@@ -32,15 +32,22 @@ namespace HazardRenderer::OpenGL
 		if (m_ID)
 			Release();
 
-		bool multisampled = m_Samples > 1;
-		OpenGLUtils::CreateTextures(multisampled, &m_ID, 1);
+		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1, 1);
 	}
 	void OpenGLImage2D::Release()
 	{
+		Ref<OpenGLImage2D> instance = this;
+		Renderer::Submit([instance]() mutable {
+			instance->Release_RT();
+			});
+	}
+	void OpenGLImage2D::Release_RT()
+	{
 		HZR_PROFILE_FUNCTION();
 		if (m_ID == 0) return;
-	
+
 		glDeleteTextures(1, &m_ID);
+		m_LocalBuffer.Release();
 		m_ID = 0;
 	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)

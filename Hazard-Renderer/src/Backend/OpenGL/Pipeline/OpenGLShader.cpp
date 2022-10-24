@@ -102,7 +102,6 @@ namespace HazardRenderer::OpenGL
 					});
 				continue;
 			}
-			//std::cout << glSource << std::endl;
 
 			//Compile to OpenGL SPV
 			CompileInfo compileInfoOpenGL = {};
@@ -125,7 +124,6 @@ namespace HazardRenderer::OpenGL
 
 			compilationTime += compiler.GetCompileTime();
 			openGLbinaries[stage] = compiler.GetCompiledBinary();
-			std::cout << "Compilation took: " << compilationTime << "ms" << std::endl;
 		}
 
 		m_ShaderData.Stages.clear();
@@ -137,7 +135,7 @@ namespace HazardRenderer::OpenGL
 			instance->CreateProgram(openGLbinaries);
 			});
 
-		std::cout << "Shader reload took " << timer.ElapsedMillis() << "ms\n" << std::endl;
+		Window::SendDebugMessage({ Severity::Info, fmt::format("Shader {0} loaded", m_FilePath), fmt::format("Shader reload took {0} ms", timer.ElapsedMillis()) });
 	}
 	bool OpenGLShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
@@ -189,9 +187,7 @@ namespace HazardRenderer::OpenGL
 				}
 			}
 		}
-
 		//OpenGLShaderCompiler::PrintReflectionData(data);
-		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
@@ -347,7 +343,6 @@ namespace HazardRenderer::OpenGL
 				descriptorSet.AddWriteDescriptor(writeDescriptor);
 			}
 		}
-		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 }
 #endif

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Hazard.Rendering
 {
-    public class VertexBuffer : Reference
+    public class VertexBuffer : Buffer
     {
         protected VertexBuffer() { }
 

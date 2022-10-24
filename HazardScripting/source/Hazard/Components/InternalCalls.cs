@@ -82,5 +82,15 @@ namespace Hazard
         internal static extern void TransformComponent_SetScale_Native(ulong id, ref Vector3 scale);
 
         #endregion
+        #region SkyLightComponent
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float SkyLightComponent_GetIntensity_Native(ulong id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SkyLightComponent_SetIntensity_Native(ulong id, float value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong SkyLightComponent_GetEnvironmentMap_Native(ulong id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SkyLightComponent_SetEnvironmentMap_Native(ulong id, ulong value);
+        #endregion
     }
 }

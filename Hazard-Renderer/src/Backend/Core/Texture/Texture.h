@@ -46,6 +46,7 @@ namespace HazardRenderer
 
 		static Ref<CubemapTexture> Create(CubemapTextureCreateInfo* createInfo);
 		virtual const std::string& GetPath() const = 0;
+		virtual Ref<Image2D> GetSourceImage() = 0;
 		virtual TextureType GetType() const override { return TextureType::CubemapTexture; }
 
 	};

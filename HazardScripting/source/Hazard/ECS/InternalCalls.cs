@@ -47,7 +47,10 @@ namespace Hazard
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Component_SetActive_Native(ulong id, bool active, Type type);
         #endregion
-
+        #region World
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong[] World_GetEntitiesWith_Native(ulong id, Type type);
+        #endregion
         #region WorldManager
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool WorldManager_LoadWorld_Native(ulong id);

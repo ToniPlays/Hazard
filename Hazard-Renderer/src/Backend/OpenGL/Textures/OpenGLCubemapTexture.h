@@ -18,6 +18,8 @@ namespace HazardRenderer::OpenGL
 		glm::uvec2 GetSize() const { return { m_Width, m_Height }; };
 		const std::string& GetPath() const { return m_FilePath;	};
 
+		Ref<Image2D> GetSourceImage() { return m_SourceImage; }
+
 		const uint32_t& GetID() const { return m_ID;	};
 
 	private:

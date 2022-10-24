@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HazardScripting</RootNamespace>
     <AssemblyName>HazardScripting</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -72,6 +72,7 @@
     <Compile Include="source\Hazard\Components\CameraComponent.cs" />
     <Compile Include="source\Hazard\Components\InternalCalls.cs" />
     <Compile Include="source\Hazard\Components\MeshComponent.cs" />
+    <Compile Include="source\Hazard\Components\SkyLightCompnent.cs" />
     <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
     <Compile Include="source\Hazard\Components\TagComponent.cs" />
     <Compile Include="source\Hazard\Components\TransformComponent.cs" />
@@ -99,9 +100,11 @@
     <Compile Include="source\Hazard\Math\Quaternion.cs" />
     <Compile Include="source\Hazard\Math\Vector2.cs" />
     <Compile Include="source\Hazard\Math\Vector3.cs" />
-    <Compile Include="source\Hazard\Mesh\Material.cs" />
-    <Compile Include="source\Hazard\Mesh\Shader.cs" />
-    <Compile Include="source\Hazard\Mesh\Texture.cs" />
+    <Compile Include="source\Rendering\EnvironmentMap.cs" />
+    <Compile Include="source\Rendering\Material.cs" />
+    <Compile Include="source\Rendering\Pipeline.cs" />
+    <Compile Include="source\Rendering\Shader.cs" />
+    <Compile Include="source\Rendering\Texture.cs" />
     <Compile Include="source\Hazard\Physics\Collider2D.cs" />
     <Compile Include="source\Hazard\Physics\Rigidbody2D.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />
@@ -110,7 +113,10 @@
     <Compile Include="source\Hazard\Resources\Resources.cs" />
     <Compile Include="source\Hazard\Resources\Sprite.cs" />
     <Compile Include="source\Hazard\Math\Time.cs" />
+    <Compile Include="source\Rendering\Buffer.cs" />
     <Compile Include="source\Rendering\BufferEnums.cs" />
+    <Compile Include="source\Rendering\CubemapTexture.cs" />
+    <Compile Include="source\Rendering\Image2D.cs" />
     <Compile Include="source\Rendering\IndexBuffeCreateInfo.cs" />
     <Compile Include="source\Rendering\IndexBuffer.cs" />
     <Compile Include="source\Rendering\InternalCalls.cs" />
@@ -119,6 +125,7 @@
     <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="source\Hazard\Mesh\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

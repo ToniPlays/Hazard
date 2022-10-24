@@ -35,6 +35,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Reload()
 	{
+		Timer timer;
 		if (ShaderFactory::HasCachedShader(ShaderStage::Vertex, m_FilePath))
 		{
 			__debugbreak();
@@ -79,6 +80,7 @@ namespace HazardRenderer::Vulkan
 			instance->CreateShaderModules();
 			instance->CreateDescriptorSetLayouts();
 			});
+		Window::SendDebugMessage({ Severity::Info, fmt::format("Shader {0} loaded", m_FilePath), fmt::format("Shader reload took {0} ms", timer.ElapsedMillis()) });
 	}
 	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
@@ -154,7 +156,6 @@ namespace HazardRenderer::Vulkan
 		m_DescriptorSets.resize(descriptorSets + 1);
 
 		VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
-		std::cout << "Reflection took: " << timer.ElapsedMillis() << "ms" << std::endl;
 	}
 	void VulkanShader::CreateShaderModules()
 	{

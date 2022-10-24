@@ -11,8 +11,10 @@ namespace Hazard
         public SpriteRendererComponent() : base(0) { }
         internal SpriteRendererComponent(ulong ID) : base(ID) {}
 
-        public Color Color { 
-            get {
+        public Color Color 
+        { 
+            get 
+            {
                 InternalCalls.SpriteRendererComponent_GetColor_Native(ParentEntity.ID, out Color result);
                 return result;
             }

@@ -49,6 +49,9 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
 
 		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
+		Ref<HazardRenderer::Pipeline> PbrPipeline;
+
+		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
@@ -96,12 +99,31 @@ namespace Hazard
 				skyboxSpec.ShaderPath = "res/Shaders/Skybox.glsl";
 				skyboxSpec.pBufferLayout = &layout;
 				skyboxSpec.pTargetRenderPass = renderPass;
-				skyboxSpec.DepthTest = false;
+				skyboxSpec.DepthTest = true;
 				skyboxSpec.DepthWrite = false;
+				skyboxSpec.DepthOperator = DepthOp::LessOrEqual;
 				skyboxSpec.Usage = PipelineUsage::GraphicsBit;
 
 				SkyboxPipeline = Pipeline::Create(&skyboxSpec);
 
+				PipelineSpecification pbrPipeline = {};
+				pbrPipeline.DebugName = "PBRShader";
+				pbrPipeline.Usage = PipelineUsage::GraphicsBit;
+				pbrPipeline.DrawType = DrawType::Fill;
+				pbrPipeline.ShaderPath = "res/Shaders/pbr.glsl";
+				pbrPipeline.pTargetRenderPass = renderPass;
+				pbrPipeline.pBufferLayout = &layout;
+				pbrPipeline.DepthTest = true;
+
+				PbrPipeline = Pipeline::Create(&pbrPipeline);
+
+				CubemapTextureCreateInfo blackCubemap = {};
+				blackCubemap.Usage = ImageUsage::Texture;
+				blackCubemap.Width = 1;
+				blackCubemap.Height = 1;
+				blackCubemap.Format = ImageFormat::RGBA16F;
+
+				BlackCubemap = CubemapTexture::Create(&blackCubemap);
 			}
 		}
 	};

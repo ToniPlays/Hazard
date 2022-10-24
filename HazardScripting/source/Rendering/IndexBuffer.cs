@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Hazard.Rendering
 {
-    public class IndexBuffer : Reference
+    public class IndexBuffer : Buffer
     {
         protected IndexBuffer() { }
-        ~IndexBuffer() {
+        ~IndexBuffer() 
+        {
             InternalCalls.IndexBuffer_Destroy_Native(ID);
         }
         public void SetData(uint[] data) { }

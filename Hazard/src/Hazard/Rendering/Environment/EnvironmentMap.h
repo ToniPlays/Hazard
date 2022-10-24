@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Assets/Asset.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 namespace Hazard
 {
@@ -9,9 +10,9 @@ namespace Hazard
 	public:
 		EnvironmentMap() = default;
 
-		Ref< HazardRenderer::CubemapTexture> RadianceMap;
-		Ref< HazardRenderer::CubemapTexture> IrradianceMap;
-		Ref< HazardRenderer::CubemapTexture> PreFilterMap;
-		Ref< HazardRenderer::Image2D> BRDFLut;
+		Ref<HazardRenderer::CubemapTexture> RadianceMap;
+		Ref<HazardRenderer::CubemapTexture> IrradianceMap;
+		Ref<HazardRenderer::CubemapTexture> PreFilterMap;
+		Ref<HazardRenderer::Image2D> BRDFLut;
 	};
 }

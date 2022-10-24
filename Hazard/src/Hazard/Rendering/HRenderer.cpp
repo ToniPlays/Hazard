@@ -73,22 +73,6 @@ namespace Hazard
 		stat.Indices += count;
 
 		auto& drawList = s_Engine->GetDrawList();
-
-		if (drawList.Environment.size() > 0)
-		{
-			for (auto& [env, data] : drawList.Environment) 
-			{
-				Ref<EnvironmentMap> map = data.Map;
-				if (map->RadianceMap) 
-				{	
-					pipeline->GetShader()->Set("u_IrradianceMap", 0, map->IrradianceMap);
-					pipeline->GetShader()->Set("u_PrefilterMap", 0, map->PreFilterMap);
-					pipeline->GetShader()->Set("u_BRDFLut", 0, map->BRDFLut);
-					break;
-				}
-			}
-		}
-
 		drawList.MeshList[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)

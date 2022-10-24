@@ -90,6 +90,12 @@ namespace Hazard
 			BIND_ICALL(MeshComponent_GetMesh_Native);
 			BIND_ICALL(MeshComponent_SetMesh_Native);
 
+			//SkyLightComponent component ----------------------
+			BIND_ICALL(SkyLightComponent_GetIntensity_Native);
+			BIND_ICALL(SkyLightComponent_SetIntensity_Native);
+			BIND_ICALL(SkyLightComponent_GetEnvironmentMap_Native);
+			BIND_ICALL(SkyLightComponent_SetEnvironmentMap_Native);
+
 			//Asset	--------------------------------------------
 			BIND_ICALL(Asset_GetName_Native);
 
@@ -127,6 +133,9 @@ namespace Hazard
 
 			BIND_ICALL(Mesh_Create_Native);
 			BIND_ICALL(Mesh_Destroy_Native);
+
+			BIND_ICALL(EnvironmentMap_GetCubemapTexture_Native);
+			BIND_ICALL(EnvironmentMap_SetCubemapTexture_Native);
 		}
 		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) {};
 	};

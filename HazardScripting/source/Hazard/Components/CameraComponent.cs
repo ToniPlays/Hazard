@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Hazard
 {
-
     public class CameraComponent : Component
     {
         public CameraComponent() : base(0) { }
@@ -32,7 +31,6 @@ namespace Hazard
         }
         public Projection GetProjection() { return (Projection)InternalCalls.CameraComponent_GetProjection_Native(ParentEntity.ID); }
         public void SetProjection(Projection projection) { InternalCalls.CameraComponent_SetProjection_Native(ParentEntity.ID, (int)projection); }
-
         public bool IsActive() { return InternalCalls.Component_IsActive_Native(ParentEntity.ID, typeof(CameraComponent)); }
         public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(ParentEntity.ID, active, typeof(CameraComponent)); }
     }

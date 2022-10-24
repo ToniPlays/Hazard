@@ -1,12 +1,12 @@
 #pragma once
 
+#define GET_ENTITY(id) handler->GetCurrentWorld()->GetEntityFromUID(id)
+
 #include "UtilityCore.h"
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/Entity.h"
 #include "Mono/Core/Mono.h"
-
-#define GET_ENTITY(id) handler->GetCurrentWorld()->GetEntityFromUID(id)
 
 #define RegisterComponent(Type, Image)	{																												\
 		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\

@@ -54,9 +54,9 @@ namespace Hazard
 			Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
 			AssetMetadata irradianceMetadata = {};
-			irradianceMetadata.Handle = radianceMap->GetHandle();
+			irradianceMetadata.Handle = irradianceMap->GetHandle();
 			irradianceMetadata.Type = AssetType::EnvironmentMap;
-			AssetManager::AddRuntimeAsset(irradianceMetadata, radianceMap);
+			AssetManager::AddRuntimeAsset(irradianceMetadata, irradianceMap);
 
 			//Generate prefilter map
 			PipelineSpecification preFilterPipelineInfo = {};
@@ -83,7 +83,6 @@ namespace Hazard
 			prefilterMetadata.Type = AssetType::EnvironmentMap;
 			AssetManager::AddRuntimeAsset(prefilterMetadata, preFilterMap);
 
-
 			TextureHeader header = TextureFactory::LoadTexture("res/Textures/BRDF_LUT.tga");
 
 			Image2DCreateInfo brdfLutInfo = {};
@@ -101,7 +100,6 @@ namespace Hazard
 			asset.As<EnvironmentMap>()->PreFilterMap = preFilterMap;
 			asset.As<EnvironmentMap>()->BRDFLut = BRDFLut;
 		}
-
 		HZR_CORE_WARN("Environment map took {0} ms to load", timer.ElapsedMillis());
 
 		return asset;
