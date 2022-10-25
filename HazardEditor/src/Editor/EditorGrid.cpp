@@ -8,7 +8,7 @@ namespace Editor
 	struct GridData
 	{
 		float Scale;
-		float ScaleFade = 1.0f;
+		float Zoom = 1.0f;
 	};
 
 	using namespace HazardRenderer;
@@ -21,9 +21,10 @@ namespace Editor
 	{	
 		if (!m_ShowGrid) return;
 
+		constexpr double log = 10.0;
 		GridData gridData;
-		gridData.Scale = 1.0f;
-		gridData.ScaleFade = 1.0f;
+		gridData.Zoom = std::abs(camera.GetPosition().y);
+		gridData.Scale = std::pow(log, std::floor(std::log(gridData.Zoom) / std::log(log)));
 
 		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
 		HRenderer::SubmitPipeline(m_Pipeline, 6);

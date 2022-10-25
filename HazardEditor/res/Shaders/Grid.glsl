@@ -43,11 +43,13 @@ layout(location = 1) in vec3 farPoint;
 layout(location = 0) out vec4 OutputColor;
 
 const float axisWidth = 1.25;
+    
+const float nextZoom = 10.0;
+const float lastZoom = 1.0;
 
-
-vec4 EditorGrid(vec3 fragPos3D, float scale) 
+vec4 EditorGrid(vec3 fragPos3D, float scale)
 {
-    vec2 coord = fragPos3D.xz * scale; // use the scale variable to set the distance between the lines
+    vec2 coord = fragPos3D.xz * (1.0 / scale); // use the scale variable to set the distance between the lines
     vec2 derivative = fwidth(coord);
     vec2 grid = abs(fract(coord - 0.5) - 0.5) / derivative;
     float line = min(grid.x, grid.y);
@@ -86,10 +88,15 @@ void main()
 
     vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
     gl_FragDepth = ComputeDepth(fragPos3D);
-
+    
     float linearDepth = ComputeLinearDepth(fragPos3D);
     float fading = max(0, (0.5 - linearDepth));
+	float gridFading = pow((u_Grid.Zoom - u_Grid.Scale * lastZoom) / (u_Grid.Scale * nextZoom - u_Grid.Scale * lastZoom), 2.5);
 
-	OutputColor = EditorGrid(fragPos3D, 1.0) * float(t > 0.0 && t < 1.0);
+
+    vec4 g1 = EditorGrid(fragPos3D, u_Grid.Scale * lastZoom);
+    vec4 g2 = EditorGrid(fragPos3D, u_Grid.Scale * nextZoom);
+
+	OutputColor = mix(g1, g2, clamp(gridFading, 0.0, 1.0)) * float(t > 0.0 && t < 1.0);
     OutputColor.a *= fading;
 }

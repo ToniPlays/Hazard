@@ -47,7 +47,8 @@ namespace Hazard
 			{
 				Ref<Asset> asset;
 				meta.IsLoaded = s_AssetLoader.Load(meta, asset);
-				if (!meta.IsLoaded) {
+				if (!meta.IsLoaded) 
+				{
 					return nullptr;
 				}
 				asset->SetHandle(meta.Handle);
@@ -56,7 +57,10 @@ namespace Hazard
 				return asset;
 			}
 			else
+			{
+				if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) return nullptr;
 				return s_LoadedAssets[handle].As<T>();
+			}
 		}
 		
 		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 

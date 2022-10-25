@@ -12,6 +12,11 @@ namespace HazardRenderer
 		Ref<CubemapTexture> pCubemap = nullptr;
 		Ref<Pipeline> Pipeline = nullptr;
 	};
+	struct CubemapImageGen
+	{
+		Ref<Image2D> pSourceImage;
+		bool FlipImage = false;
+	};
 
 	struct CubemapTextureCreateInfo
 	{
@@ -25,6 +30,7 @@ namespace HazardRenderer
 		ImageFormat Format = ImageFormat::None;
 		bool FlipOnLoad = false;
 		CubemapGen* pCubemapSrc = nullptr;
+		CubemapImageGen* pImageSrc = nullptr;
 	};
 
 

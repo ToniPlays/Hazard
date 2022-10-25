@@ -12,7 +12,6 @@ layout(location = 2) out vec3 f_Normal;
 void main() 
 {
 	f_Normal = mat3(u_Model.u_Transform) * a_Normal;
-
 	vec4 worldPosition = u_Model.u_Transform * vec4(a_Position, 1.0);
 
 	FragPos = worldPosition.xyz;
@@ -66,8 +65,8 @@ void main()
 {
 	m_Params.Albedo = f_Color.rgb;
 	m_Params.Normal = normalize(f_Normal);
-	m_Params.Metalness = (sin(u_Util.Time) + 1.0) / 2.0;
-	m_Params.Roughness = 1.0 - m_Params.Metalness;
+	m_Params.Metalness = clamp(u_Util.Time, 0.002, 0.998);
+	m_Params.Roughness = clamp(1.0 - m_Params.Metalness, 0.002, 0.998);
 	m_Params.View = normalize(u_Camera.Position.xyz - FragPos);
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 

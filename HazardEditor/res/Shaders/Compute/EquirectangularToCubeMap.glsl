@@ -18,6 +18,9 @@ void main()
 	float theta = acos(cubeTexCoord.y);
 	vec2 uv = vec2(phi / (2.0 * PI) + 0.5, theta / PI);
 	
+	//Flip source image
+	uv.y *= -1.0;
+
 	vec4 color = texture(u_EquirectangularTexture, uv);
 	imageStore(o_CubeMap, ivec3(gl_GlobalInvocationID), color);
 }

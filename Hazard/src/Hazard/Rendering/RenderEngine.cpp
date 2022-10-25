@@ -160,7 +160,6 @@ namespace Hazard
 				shader->Set("u_IrradianceMap", 0, irradiance);
 				shader->Set("u_PrefilterMap", 0, prefilter);
 				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);
-
 				break;
 			}
 		}
@@ -175,6 +174,11 @@ namespace Hazard
 			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->GetCoreImage());
 		}
+		UtilityUniformData utilData = {};
+		utilData.Time = data.IBLContribution;
+
+		m_Resources->UtilityUniformBuffer->SetData(&utilData, sizeof(UtilityUniformData));
+		commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 
 		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
@@ -204,14 +208,7 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
-
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
-
-		UtilityUniformData data;
-		data.Time = Time::s_Time;
-
-		m_Resources->UtilityUniformBuffer->SetData(&data, sizeof(UtilityUniformData));
-		commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 
 		for (auto& worldDrawList : m_DrawList)
 		{
@@ -239,9 +236,9 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				CompositePass(commandBuffer);
 				GeometryPass(commandBuffer);
 				DrawEnvironmentMap(commandBuffer);
+				CompositePass(commandBuffer);
 				commandBuffer->EndRenderPass();
 			}
 

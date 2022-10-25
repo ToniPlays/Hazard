@@ -61,6 +61,7 @@ namespace HazardRenderer::OpenGL
 		m_ErrorMessage.clear();
 		spirv_cross::CompilerGLSL compiler(binary);
 		result = compiler.compile();
+		std::cout << "Ya yeet" << result << std::endl;
 		return !result.empty();
 	}
 	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)

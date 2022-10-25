@@ -368,6 +368,7 @@ namespace Hazard::ImUI
 		case RenderAPI::OpenGL:
 		{
 			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
+			HZR_ASSERT(id != nullptr, "What is this crap");
 			cache[image.Raw()] = id;
 			return id;
 		}

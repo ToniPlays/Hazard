@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL
 
 	private:
 		Buffer GenerateFromFile(int& width, int& height, bool flipOnLoad);
-		void GenerateFromData(Buffer& imageData, int width, int height);
+		void GenerateFromEquirectangular(Ref<Image2D> sourceImage);
 		void GenerateFromCubemap(CubemapGen& generationData);
 
 	private:

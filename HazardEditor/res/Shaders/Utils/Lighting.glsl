@@ -48,33 +48,58 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 }
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
-	return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
 vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
-	return F0 + (max(vec3(1.0 - roughness), F0), F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+	return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
+
+// GGX/Towbridge-Reitz normal distribution function.
+// Uses Disney's reparametrization of alpha = roughness^2
+float NdfGGX(float cosLh, float roughness)
+{
+	float alpha = roughness * roughness;
+	float alphaSq = alpha * alpha;
+
+	float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
+	return alphaSq / (PI * denom * denom);
+}
+
+// Single term for separable Schlick-GGX below.
+float GaSchlickG1(float cosTheta, float k)
+{
+	return cosTheta / (cosTheta * (1.0 - k) + k);
+}
+
+// Schlick-GGX approximation of geometric attenuation function using Smith's method.
+float GaSchlickGGX(float cosLi, float NdotV, float roughness)
+{
+	float r = roughness + 1.0;
+	float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
+	return GaSchlickG1(cosLi, k) * GaSchlickG1(NdotV, k);
+}
+
+
 vec3 CalculateDirectionalLight(vec3 F0, DirectionalLight light) 
 {
-	vec3 L = light.Direction.xyz;
-	vec3 H = normalize(m_Params.View + L);
+	
+	vec3 Li = light.Direction.xyz;
+	vec3 Lradiance = light.Color.rgb * light.Color.a;
+	vec3 Lh = normalize(Li + m_Params.View);
 
-	vec3 radiance = light.Color.rgb * light.Color.a;
-	//-------
-	float NdotL = max(dot(m_Params.Normal, L), 0.0);
+	float cosLi = max(0.0, dot(m_Params.Normal, Li));
+	float cosLh = max(0.0, dot(m_Params.Normal, Lh));
 
-	float NDF	= DistributionGGX(m_Params.Normal, H, m_Params.Roughness);
-	float G		= GeometrySmith(m_Params.Normal, m_Params.View, L, m_Params.Roughness);
-	vec3 F		= FresnelSchlick(max(dot(H, m_Params.View), 0.0), F0);
-		
-	vec3 numerator		= NDF * G * F;
-	float denominator	= 4.0 * m_Params.NdotV * NdotL + Epsilon;
-	vec3 specular = numerator / denominator;
+	vec3 F = FresnelSchlickRoughness(max(0.0, dot(Lh, m_Params.View)), F0, m_Params.Roughness);
+	float D = NdfGGX(cosLh, m_Params.Roughness);
+	float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
 
-	vec3 kS = F;
-	vec3 kD = vec3(1.0) - kS;
-		
-	kD *= 1.0 - m_Params.Metalness;
+	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);
+	vec3 diffuseBRDF = kD * m_Params.Albedo;
 
-	return (kD * m_Params.Albedo / PI + specular) * radiance * NdotL;
+	vec3 specularBRDF = (F * D * G) / max(0.0000001, 4.0 * cosLi * m_Params.NdotV);
+	specularBRDF = clamp(specularBRDF, vec3(0.0), vec3(10.0));
+	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 }

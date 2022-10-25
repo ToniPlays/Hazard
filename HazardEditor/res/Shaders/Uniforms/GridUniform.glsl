@@ -5,6 +5,6 @@ layout(std140, binding = 4) uniform Grid
 #endif
 {
 	uniform float Scale;
-	uniform float ScaleFading;
+	uniform float Zoom;
 
 } u_Grid;

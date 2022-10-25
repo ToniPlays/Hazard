@@ -348,7 +348,8 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto folder : File::GetAllInDirectory(m_RootPath)) {
+		for (auto& folder : File::GetAllInDirectory(m_RootPath)) 
+		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(folder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
@@ -364,7 +365,8 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto subfolder : File::GetAllInDirectory(folder)) {
+		for (auto& subfolder : File::GetAllInDirectory(folder)) 
+		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(subfolder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
 

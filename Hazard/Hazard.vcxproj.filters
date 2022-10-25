@@ -1728,5 +1728,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp" />
     <ClCompile Include="src\Hazard\ECS\Loader\WorldAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentMap.cpp" />
   </ItemGroup>
 </Project>

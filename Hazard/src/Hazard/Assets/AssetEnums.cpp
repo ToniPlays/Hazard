@@ -46,7 +46,7 @@ namespace Hazard::Utils
 		if (ext == "obj")		return AssetType::Mesh;
 		if (ext == "fbx")		return AssetType::Mesh;
 		if (ext == "dae")		return AssetType::Mesh;
-		if (ext == "hdr")		return AssetType::EnvironmentMap;
+		if (ext == "hdr")		return AssetType::Image;
 		if (ext == "cs")		return AssetType::Script;
 
 		return AssetType::Undefined;

@@ -14,5 +14,7 @@ namespace Hazard
 		Ref<HazardRenderer::CubemapTexture> IrradianceMap = nullptr;
 		Ref<HazardRenderer::CubemapTexture> PreFilterMap = nullptr;
 		Ref<HazardRenderer::Image2D> BRDFLut = nullptr;
+
+		static Ref<EnvironmentMap> Create(Ref<Image2DAsset> sourceImage);
 	};
 }

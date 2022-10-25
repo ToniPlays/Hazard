@@ -199,12 +199,14 @@ namespace UI
 					});
 
 
-				if (changed) {
+				if (changed) 
+				{
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle)
 					{
 						c.m_Handle = nullptr;
 					}
-					if (scriptEngine.HasModule(c.ModuleName)) {
+					if (scriptEngine.HasModule(c.ModuleName)) 
+					{
 						ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 						c.m_Handle = script.CreateObject();
 					}
@@ -273,9 +275,10 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				ImUI::TextField(name, "##environmentMap");
 
-				ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
+				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
 					Application::Get().SubmitMainThread([&, handle]() {
-						c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+						Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
+						c.EnvironmentMap = EnvironmentMap::Create(sourceImage->GetSourceImageAsset());
 						});
 					});
 
