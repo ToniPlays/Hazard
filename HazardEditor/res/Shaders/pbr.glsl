@@ -11,8 +11,8 @@ layout(location = 2) out vec3 f_Normal;
 
 void main() 
 {
-	f_Normal = mat3(u_Model.u_Transform) * a_Normal;
-	vec4 worldPosition = u_Model.u_Transform * vec4(a_Position, 1.0);
+	f_Normal = mat3(u_Model.Transform) * a_Normal;
+	vec4 worldPosition = u_Model.Transform * vec4(a_Position, 1.0);
 
 	FragPos = worldPosition.xyz;
 	f_Color = a_Color;
@@ -24,10 +24,8 @@ void main()
 
 #include "Uniforms/CameraUniform.glsl"
 #include "Uniforms/LightSources.glsl"
+#include "Uniforms/ModelUniform.glsl"
 #include "Uniforms/UtilityUniform.glsl"
-#include "Utils/Common.glsl"
-#include "Utils/Lighting.glsl"
-#include "Utils/PostProcessing.glsl"
 
 layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec3 FragPos;
@@ -38,39 +36,27 @@ layout(binding = 1) uniform samplerCube u_IrradianceMap;
 layout(binding = 2) uniform samplerCube u_PrefilterMap;
 layout(binding = 3) uniform sampler2D u_BRDFLut;
 
+
+#include "Utils/Common.glsl"
+#include "Utils/Lighting.glsl"
+#include "Utils/PostProcessing.glsl"
+
 layout(location = 0) out vec4 OutputColor;
 
 
 const float gamma = 2.2;
 
-vec3 IBL(vec3 F0, vec3 Lr)
-{
-	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
-	vec3 F = FresnelSchlickRoughness(m_Params.NdotV, F0, m_Params.Roughness);
-	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);
-	vec3 diffuseIBL = m_Params.Albedo * irradiance;
-
-	float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
-	vec3 R = 2.0 * dot(m_Params.View, m_Params.Normal) * m_Params.Normal - m_Params.View;
-	vec3 specularIrradiance	= texture(u_RadianceMap, Lr).rgb;
-
-	//Sample BRDF
-	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, m_Params.Roughness)).rg;
-	vec3 specularIBL				= specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
-
-	return kD * diffuseIBL + specularIBL;
-}
-
 void main() 
 {
+	//Initialize Params
 	m_Params.Albedo = f_Color.rgb;
 	m_Params.Normal = normalize(f_Normal);
-	m_Params.Metalness = clamp(u_Util.Time, 0.002, 0.998);
-	m_Params.Roughness = clamp(1.0 - m_Params.Metalness, 0.002, 0.998);
+	m_Params.Metalness = u_Model.Metalness;
+	m_Params.Roughness = u_Model.Roughness;
 	m_Params.View = normalize(u_Camera.Position.xyz - FragPos);
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 
-
+	//Calculate
 	vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
 
 	vec3 Lo = vec3(0.0);
@@ -86,7 +72,7 @@ void main()
 	}
 
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
-	vec3 ibl = IBL(F0, Lr) * u_Lights.IBLContribution * u_Lights.SkyLightIntensity;
+	vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity * u_Lights.IBLContribution;
 	
 	//Tonemapping
 	vec3 color = ACESTonemap(ibl + Lo);

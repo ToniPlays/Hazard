@@ -46,13 +46,19 @@ namespace Hazard
 		if (!mesh) return;
 		if (!mesh->IsValid()) return;
 
-		glm::mat4 t = transform.GetTransformMat4();
+		RawMesh data = {};
+		data.Transform = transform.GetTransformMat4();
+		data.VertexBuffer = mesh->GetVertexBuffer();
+		data.IndexBuffer = mesh->GetIndexBuffer();
+		data.Count = mesh->GetIndexCount();
+		data.Metalness = meshComponent.Metalness;
+		data.Roughness = meshComponent.Roughness;
 
-		SubmitMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline());
+		SubmitMesh(data, mesh->GetPipeline());
 
 		if (!meshComponent.CastShadows) return;
 
-		SubmitShadowMesh(t, mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetPipeline(), mesh->GetIndexCount());
+		SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, mesh->GetPipeline(), data.Count);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
@@ -72,8 +78,18 @@ namespace Hazard
 		stat.Vertices += (vertexBuffer->GetSize() / vertexBuffer->GetLayout().GetStride());
 		stat.Indices += count;
 
+		RawMesh data = {};
+		data.Transform = transform;
+		data.VertexBuffer = vertexBuffer;
+		data.IndexBuffer = indexBuffer;
+		data.Count = count;
+
+		SubmitMesh(data, pipeline);
+	}
+	void HRenderer::SubmitMesh(const RawMesh& rawMesh, Ref<Pipeline> pipeline)
+	{
 		auto& drawList = s_Engine->GetDrawList();
-		drawList.MeshList[pipeline.Raw()].push_back({ transform, vertexBuffer, indexBuffer, count });
+		drawList.MeshList[pipeline.Raw()].push_back(rawMesh);
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
 	{

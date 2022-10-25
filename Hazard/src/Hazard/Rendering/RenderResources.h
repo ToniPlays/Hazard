@@ -18,6 +18,14 @@ namespace Hazard
 		glm::vec4 Unused3;
 	};
 
+	struct ModelData
+	{
+		glm::mat4 Transform;
+		float Metalness;
+		float Roughness;
+		int Flags;
+	};
+
 	struct DirectionalLight 
 	{
 		//W component not used
@@ -88,7 +96,7 @@ namespace Hazard
 				modelUBO.Name = "Model";
 				modelUBO.Set = 1;
 				modelUBO.Binding = 0;
-				modelUBO.Size = sizeof(glm::mat4);
+				modelUBO.Size = sizeof(ModelData);
 				modelUBO.Usage = BufferUsage::DynamicDraw;
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);

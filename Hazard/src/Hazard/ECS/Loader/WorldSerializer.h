@@ -119,6 +119,8 @@ namespace Hazard
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
+				YamlUtils::Serialize(out, "Metalness", component.Metalness);
+				YamlUtils::Serialize(out, "Roughness", component.Roughness);
 				if (component.m_MeshHandle) {
 					YamlUtils::Serialize(out, "Mesh", component.m_MeshHandle->GetHandle());
 				}

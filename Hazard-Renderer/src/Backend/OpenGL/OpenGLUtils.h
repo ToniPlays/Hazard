@@ -151,7 +151,6 @@ namespace HazardRenderer::OpenGLUtils
 	{
 		uint32_t id;
 		glCreateTextures(TextureTarget(multisample), count, &id);
-		std::cout << "Created texture " << id << std::endl;
 		return id;
 	}
 	static void BindTexture(uint32_t id, bool multisampled) 

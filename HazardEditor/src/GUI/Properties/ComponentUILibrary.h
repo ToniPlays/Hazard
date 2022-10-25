@@ -400,6 +400,9 @@ namespace UI
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
 					c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 					});
+				ImGui::NextColumn();
+				ImUI::InputFloat("Metalness", c.Metalness, 0.0f, 0.025f, 0.0f, 1.0f);
+				ImUI::InputFloat("Roughness", c.Roughness, 1.0f, 0.025f, 0.0f, 1.0f);
 
 				ImGui::Columns();
 			}, [&]() {

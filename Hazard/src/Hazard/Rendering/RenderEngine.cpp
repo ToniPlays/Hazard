@@ -108,7 +108,14 @@ namespace Hazard
 
 			for (auto& mesh : meshList)
 			{
-				m_Resources->ModelUniformBuffer->SetData(glm::value_ptr(mesh.Transform), sizeof(glm::mat4));
+				
+				ModelData data = {};
+				data.Transform = mesh.Transform;
+				data.Metalness = mesh.Metalness;
+				data.Roughness = mesh.Roughness;
+				data.Flags = 0;
+
+				m_Resources->ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
 				commandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 			}
@@ -175,7 +182,7 @@ namespace Hazard
 			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->GetCoreImage());
 		}
 		UtilityUniformData utilData = {};
-		utilData.Time = data.IBLContribution;
+		utilData.Time = Time::s_Time;
 
 		m_Resources->UtilityUniformBuffer->SetData(&utilData, sizeof(UtilityUniformData));
 		commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);

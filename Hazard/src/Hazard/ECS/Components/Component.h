@@ -50,6 +50,8 @@ namespace Hazard {
 	struct MeshComponent : public ComponentBase
 	{
 		Ref<Mesh> m_MeshHandle;
+		float Metalness = 0.0f;
+		float Roughness = 1.0f;
 		bool CastShadows = false;
 	};
 }

@@ -9,6 +9,7 @@ struct PBRParameters
 	vec3 Normal;
 	vec3 View;
 	float NdotV;
+	int Flags;
 } m_Params;
 
 
@@ -79,6 +80,26 @@ float GaSchlickGGX(float cosLi, float NdotV, float roughness)
 	float r = roughness + 1.0;
 	float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
 	return GaSchlickG1(cosLi, k) * GaSchlickG1(NdotV, k);
+}
+
+vec3 IBL(vec3 F0, vec3 Lr)
+{
+	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
+	vec3 F = FresnelSchlickRoughness(m_Params.NdotV, F0, m_Params.Roughness);
+	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);
+	vec3 diffuseIBL = m_Params.Albedo * irradiance;
+
+	int radianceTexelLeves = textureQueryLevels(u_RadianceMap);
+
+	float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
+	vec3 R = 2.0 * dot(m_Params.View, m_Params.Normal) * m_Params.Normal - m_Params.View;
+	vec3 specularIrradiance	= textureLod(u_RadianceMap, Lr, m_Params.Roughness * radianceTexelLeves).rgb;
+
+	//Sample BRDF
+	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, 1.0 - m_Params.Roughness)).rg;
+	vec3 specularIBL				= specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
+
+	return (kD * diffuseIBL) + specularIBL;
 }
 
 
