@@ -88,6 +88,7 @@ namespace Hazard
 			YamlUtils::Map(out, "SkyLightComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
+				YamlUtils::Serialize(out, "Contrribution", component.IBLContribution);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 
 				if (!component.EnvironmentMap) return;

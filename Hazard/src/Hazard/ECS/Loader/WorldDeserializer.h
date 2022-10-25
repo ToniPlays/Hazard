@@ -83,6 +83,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
+			YamlUtils::Deserialize(comp, "Contrribution", c.IBLContribution, 1.0f);
 
 			AssetHandle handle;
 			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
