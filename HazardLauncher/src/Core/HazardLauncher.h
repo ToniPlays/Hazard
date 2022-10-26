@@ -14,6 +14,6 @@ public:
 
 Hazard::Application* Hazard::CreateApplication()
 {
-	return new HazardLauncher();
+	return hnew HazardLauncher();
 }
 #endif

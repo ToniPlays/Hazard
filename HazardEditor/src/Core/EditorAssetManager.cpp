@@ -61,7 +61,7 @@ bool EditorAssetManager::CreateWorld(const std::filesystem::path& path)
 		actualPath = curPath;
 	}
 
-	Ref<World> world = new World(actualPath);
+	Ref<World> world = Ref<World>::Create(actualPath);
 	WorldSerializer serializer(world);
 	if (!serializer.SerializeEditor(world->GetWorldFile())) return false;
 

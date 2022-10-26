@@ -35,7 +35,7 @@ namespace HazardScript
 
 		ValueWrapper(const void* data, size_t size) : m_Size(size) 
 		{
-			m_Buffer = new uint8_t[size];
+			m_Buffer = hnew uint8_t[size];
 			memcpy(m_Buffer, data, size);
 		}
 
@@ -44,7 +44,7 @@ namespace HazardScript
 			m_Size = other.m_Size;
 
 			if (m_Size) {
-				m_Buffer = new uint8_t[m_Size];
+				m_Buffer = hnew uint8_t[m_Size];
 				memcpy(m_Buffer, other.m_Buffer, m_Size);
 			}
 		}
@@ -58,7 +58,7 @@ namespace HazardScript
 				m_Size = other.m_Size;
 				if (m_Size)
 				{
-					m_Buffer = new uint8_t[m_Size];
+					m_Buffer = hnew uint8_t[m_Size];
 					memcpy(m_Buffer, other.m_Buffer, m_Size);
 				}
 				else
@@ -75,7 +75,7 @@ namespace HazardScript
 		{
 			if (!HasValue()) return;
 			m_Size = 0;
-			delete[] m_Buffer;
+			hdelete[] m_Buffer;
 			m_Buffer = nullptr;
 		}
 
@@ -83,7 +83,7 @@ namespace HazardScript
 		{
 			if (m_Size == 0) return;
 			m_Size = 0;
-			delete[] m_Buffer;
+			hdelete[] m_Buffer;
 			m_Buffer = nullptr;
 		}
 
@@ -120,8 +120,8 @@ namespace HazardScript
 			{
 				if (value.size() > m_Size)
 				{
-					delete[] m_Buffer;
-					m_Buffer = new uint8_t[value.size()];
+					hdelete[] m_Buffer;
+					m_Buffer = hnew uint8_t[value.size()];
 					m_Size = value.size();
 				}
 
@@ -131,7 +131,7 @@ namespace HazardScript
 			else
 			{
 				if (!HasValue()) {
-					m_Buffer = new uint8_t[sizeof(TValueType)];
+					m_Buffer = hnew uint8_t[sizeof(TValueType)];
 					m_Size = sizeof(TValueType);
 					memcpy(m_Buffer, &value, sizeof(TValueType));
 					return;
@@ -143,7 +143,7 @@ namespace HazardScript
 		static ValueWrapper OfSize(size_t size)
 		{
 			ValueWrapper value;
-			value.m_Buffer = new uint8_t[size];
+			value.m_Buffer = hnew uint8_t[size];
 			value.m_Size = size;
 			return value;
 		}

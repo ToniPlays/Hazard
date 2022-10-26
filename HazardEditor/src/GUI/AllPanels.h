@@ -4,6 +4,7 @@
 
 #include "Debug/RenderCommandListPanel.h"
 #include "Debug/RendererDebugPanel.h"
+#include "Debug/PerformanceDebugPanel.h"
 #include "Debug/Console.h"
 
 #include "ProjectPanel/AssetPanel.h"

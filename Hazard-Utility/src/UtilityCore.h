@@ -4,18 +4,17 @@
 #include <filesystem>
 #include <vector>
 #include <unordered_map>
-#include "Color.h"
+#include <string>
 #include "HazardRuntimeError.h"
 #include "Timer.h"
 #include "Instrumentor.h"
 
-#define HZR_PROFILE 1
-#define HZR_OPTICK 0
-#define HZR_MEM_DIAG 1
+#define HZR_PROFILE
+#define HZR_OPTICK
 
 
-#if HZR_OPTICK
-	#include <optick.h>
+#ifdef HZR_OPTICK
+#include <optick.h>
 #endif
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
@@ -44,36 +43,36 @@
 #endif
 
 
-#if HZR_PROFILE 
-#if !HZR_OPTICK
-#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Instrumentor::Get().BeginSession(x, y)
-#define HZR_PROFILE_SESSION_END()				::Instrumentor::Get().EndSession();
-#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-														::InstrumentationTimer timer##line(fixedName##line.Data)
-#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
-#define HZR_PROFILE_SCOPE(name, ...)			HZR_PROFILE_SCOPE_LINE(name, __LINE__)
-#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
-#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
+#ifdef HZR_PROFILE 
+#ifdef HZR_OPTICK
+	#define HZR_PROFILE_SESSION_BEGIN(x, y)			
+	#define HZR_PROFILE_SESSION_END()				
+	#define HZR_PROFILE_SCOPE_LINE2(name, line)		
+
+	#define HZR_PROFILE_SCOPE_LINE(name, line)		
+	#define HZR_PROFILE_SCOPE(name, ...)			OPTICK_EVENT_DYNAMIC(name, __VA_ARGS__)
+	#define HZR_PROFILE_FUNCTION(...)				OPTICK_EVENT(__VA_ARGS__)	
+	#define HZR_PROFILE_FRAME(...)					OPTICK_FRAME(__VA_ARGS__)
+
 #else
-
-#define HZR_PROFILE_SESSION_BEGIN(x, y)			
-#define HZR_PROFILE_SESSION_END()				
-#define HZR_PROFILE_SCOPE_LINE2(name, line)		
-
-#define HZR_PROFILE_SCOPE_LINE(name, line)		
-#define HZR_PROFILE_SCOPE(name, ...)			OPTICK_EVENT_DYNAMIC(name, __VA_ARGS__)
-#define HZR_PROFILE_FUNCTION(...)				OPTICK_EVENT(__VA_ARGS__)	
-#define HZR_PROFILE_FRAME(...)					OPTICK_FRAME(__VA_ARGS__)
+	#define HZR_PROFILE_SESSION_BEGIN(x, y)			::Instrumentor::Get().BeginSession(x, y)
+	#define HZR_PROFILE_SESSION_END()				::Instrumentor::Get().EndSession();
+	#define HZR_PROFILE_SCOPE_LINE2(name, line)		constexpr auto fixedName##line = ::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+															::InstrumentationTimer timer##line(fixedName##line.Data)
+	#define HZR_PROFILE_SCOPE_LINE(name, line)		HZR_PROFILE_SCOPE_LINE2(name, line)
+	#define HZR_PROFILE_SCOPE(name, ...)			HZR_PROFILE_SCOPE_LINE(name, __LINE__)
+	#define HZR_PROFILE_FUNCTION(...)				HZR_PROFILE_SCOPE(HZR_FUNC_SIG)
+	#define HZR_PROFILE_FRAME(...)					HZR_PROFILE_FUNCTION("Frame")
 #endif
 
 #else
-#define HZR_PROFILE_SESSION_BEGIN(x, y)
-#define HZR_PROFILE_SESSION_END()
-#define HZR_PROFILE_SCOPE_LINE2(name, line)
-#define HZR_PROFILE_SCOPE_LINE(name, line)
-#define HZR_PROFILE_SCOPE(name, ...)
-#define HZR_PROFILE_FUNCTION(...)
-#define HZR_PROFILE_FRAME(...)
+	#define HZR_PROFILE_SESSION_BEGIN(x, y)
+	#define HZR_PROFILE_SESSION_END()
+	#define HZR_PROFILE_SCOPE_LINE2(name, line)
+	#define HZR_PROFILE_SCOPE_LINE(name, line)
+	#define HZR_PROFILE_SCOPE(name, ...)
+	#define HZR_PROFILE_FUNCTION(...)
+	#define HZR_PROFILE_FRAME(...)
 #endif
 
 

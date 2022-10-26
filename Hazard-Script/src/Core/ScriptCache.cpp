@@ -13,7 +13,7 @@ namespace HazardScript
 
 	void ScriptCache::Init()
 	{
-		s_Cache = new ScriptCacheData();
+		s_Cache = hnew ScriptCacheData();
 		CacheCoreLibClasses();
 	}
 	ManagedClass* ScriptCache::CacheClass(const std::string& className, MonoClass* klass)

@@ -107,7 +107,7 @@ namespace Hazard
 		{
 			uint32_t offset = 0;
 
-			uint32_t* indices = new uint32_t[m_Data.MaxIndices];
+			uint32_t* indices = hnew uint32_t[m_Data.MaxIndices];
 
 			for (size_t i = 0; i < m_Data.MaxIndices; i += 6) 
 			{
@@ -139,7 +139,7 @@ namespace Hazard
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 
-			delete indices;
+			hdelete indices;
 		}
 
 		PipelineSpecification pipelineSpecs = {};

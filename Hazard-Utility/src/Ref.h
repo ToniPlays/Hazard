@@ -3,6 +3,8 @@
 #include <iostream>
 #include <assert.h>
 
+#include "UtilityCore.h"
+
 class RefCount {
 public:
 	RefCount() : m_RefCount(0) {};
@@ -130,7 +132,7 @@ public:
 	template<typename... Args>
 	static Ref<T> Create(Args&&... args)
 	{
-		return Ref<T>(new T(std::forward<Args>(args)...));
+		return Ref<T>(hnew T(std::forward<Args>(args)...));
 	}
 private:
 	void IncRef() const
@@ -145,7 +147,7 @@ private:
 		{
 			m_Instance->DecRefCount();
 			if (m_Instance->GetRefCount() == 0)
-				delete m_Instance;
+				hdelete m_Instance;
 		}
 	}
 

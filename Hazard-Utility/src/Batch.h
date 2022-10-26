@@ -11,7 +11,9 @@ public:
 	Batch(size_t size) : m_DataSize(sizeof(Type)) {
 		Resize(size);
 	};
-	~Batch() {
+	~Batch()
+	{
+		hdelete[] m_BufferBase;
 	};
 
 	void Push(const Type& data)
@@ -31,7 +33,7 @@ public:
 		m_Size = size;
 		m_BufferSize = m_Size * m_DataSize;
 
-		m_BufferBase = new Type[m_Size];
+		m_BufferBase = hnew Type[m_Size];
 		Reset();
 	}
 

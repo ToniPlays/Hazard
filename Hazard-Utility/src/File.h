@@ -1,16 +1,10 @@
 #pragma once
 
-#include "Buffer.h"
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <filesystem>
-
-#include <string>
-#include <cstdlib>
-
+#include "UtilityCore.h"
 #include "CachedBuffer.h"
+
+#include <fstream>
+#include <cstdlib>
 
 using std::filesystem::directory_iterator;
 

@@ -11,6 +11,6 @@ namespace HazardScript
 				return cb(obj);
 			}
 		}
-		return new Attribute();
+		return hnew Attribute();
 	}
 }

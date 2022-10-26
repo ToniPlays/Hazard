@@ -21,13 +21,13 @@ namespace HazardRenderer {
 		switch (s_CurrentAPI)
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL:		return new OpenGL::OpenGLContext(props);
+		case RenderAPI::OpenGL:		return hnew OpenGL::OpenGLContext(props);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan:		return new Vulkan::VulkanContext(props);
+		case RenderAPI::Vulkan:		return hnew Vulkan::VulkanContext(props);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal:      return new Metal::MetalContext(props);
+        case RenderAPI::Metal:      return hnew Metal::MetalContext(props);
 #endif
         default:
             return nullptr;

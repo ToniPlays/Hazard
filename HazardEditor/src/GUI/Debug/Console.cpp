@@ -29,8 +29,8 @@ namespace UI
 		ImUI::Table("Console", columns, 3, consoleSize, [&]() {
 
 			float rowHeight = 24.0f;
-			for (auto& message : m_Messages) {
-
+			for (auto& message : m_Messages) 
+			{
 				if (!(message.Flags & m_DisplayFlags) && m_DisplayFlags) continue;
 
 				bool clicked = ImUI::TableRowClickable(message.Message.c_str(), rowHeight);

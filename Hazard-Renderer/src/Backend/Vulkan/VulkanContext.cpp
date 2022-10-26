@@ -233,7 +233,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanContext::CreateDescriptorPools()
 	{
-		s_Data = new VulkanData();
+		s_Data = hnew VulkanData();
 
 		s_Data->DescriptorPools.resize(GetImagesInFlight());
 		s_Data->DescriptorPoolAllocationCount.resize(GetImagesInFlight());

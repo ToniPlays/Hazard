@@ -71,7 +71,7 @@ namespace Hazard {
 			if (it != m_Modules.end())
 			{
 				m_Modules.erase(it);
-				delete mod;
+				hdelete mod;
 			}
 		}
 		m_Modules.clear();

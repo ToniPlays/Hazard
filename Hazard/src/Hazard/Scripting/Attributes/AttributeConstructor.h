@@ -15,64 +15,64 @@ namespace Hazard
 
 			AttributeBuilder::Clear();
 			AttributeBuilder::AddAttribute("Author", [&](MonoObject* obj) {
-				AuthorAttribute* attrib = new AuthorAttribute();
+				AuthorAttribute* attrib = hnew AuthorAttribute();
 				attrib->Author = MonoFieldUtils::GetFieldValue<std::string>(obj, "Name");
 				attrib->Version = MonoFieldUtils::GetFieldValue<double>(obj, "Version");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("Todo", [&](MonoObject* obj) {
-				TodoAttribute* attrib = new TodoAttribute();
+				TodoAttribute* attrib = hnew TodoAttribute();
 				attrib->Detail = MonoFieldUtils::GetFieldValue<std::string>(obj, "Detail");
 				attrib->Progress = (Progress)MonoFieldUtils::GetFieldValue<uint32_t>(obj, "Progress");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("MenuBarItem", [&](MonoObject* obj) {
-				MenuBarItemAttribute* attrib = new MenuBarItemAttribute();
+				MenuBarItemAttribute* attrib = hnew MenuBarItemAttribute();
 				attrib->Path = MonoFieldUtils::GetFieldValue<std::string>(obj, "Path");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("HideInProperties", [&](MonoObject* obj) {
-				return new HideInPropertiesAttribute();
+				return hnew HideInPropertiesAttribute();
 				});
 			AttributeBuilder::AddAttribute("ShowInProperties", [&](MonoObject* obj) {
-				return new ShowInPropertiesAttribute();
+				return hnew ShowInPropertiesAttribute();
 				});
 			AttributeBuilder::AddAttribute("SerializeField", [&](MonoObject* obj) {
-				return new SerializeFieldAttribute();
+				return hnew SerializeFieldAttribute();
 				});
 			AttributeBuilder::AddAttribute("Slider", [&](MonoObject* obj) {
-				SliderAttribute* attrib = new SliderAttribute();
+				SliderAttribute* attrib = hnew SliderAttribute();
 				attrib->Min = MonoFieldUtils::GetFieldValue<float>(obj, "Min");
 				attrib->Max = MonoFieldUtils::GetFieldValue<float>(obj, "Max");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("Range", [&](MonoObject* obj) {
-				RangeAttribute* attrib = new RangeAttribute();
+				RangeAttribute* attrib = hnew RangeAttribute();
 				attrib->Min = MonoFieldUtils::GetFieldValue<float>(obj, "Min");
 				attrib->Max = MonoFieldUtils::GetFieldValue<float>(obj, "Max");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("TextArea", [&](MonoObject* obj) {
-				TextAreaAttribute* attrib = new TextAreaAttribute();
+				TextAreaAttribute* attrib = hnew TextAreaAttribute();
 				attrib->Min = MonoFieldUtils::GetFieldValue<int>(obj, "Min");
 				attrib->Max = MonoFieldUtils::GetFieldValue<int>(obj, "Max");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("Header", [&](MonoObject* obj) {
-				HeaderAttribute* attrib = new HeaderAttribute();
+				HeaderAttribute* attrib = hnew HeaderAttribute();
 				attrib->Header = MonoFieldUtils::GetFieldValue<std::string>(obj, "Text");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("Tooltip", [&](MonoObject* obj) {
-				TooltipAttribute* attrib = new TooltipAttribute();
+				TooltipAttribute* attrib = hnew TooltipAttribute();
 				attrib->Tooltip = MonoFieldUtils::GetFieldValue<std::string>(obj, "Text");
 				return attrib;
 				});
 			AttributeBuilder::AddAttribute("VisualFunc", [&](MonoObject* obj) {
-				return new VisualFuncAttribute();
+				return hnew VisualFuncAttribute();
 				});
 			AttributeBuilder::AddAttribute("ExposeFunc", [&](MonoObject* obj) {
-				return new ExposeFuncAttribute();
+				return hnew ExposeFuncAttribute();
 				});
 
 		}

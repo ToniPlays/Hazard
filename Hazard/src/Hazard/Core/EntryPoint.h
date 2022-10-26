@@ -9,7 +9,7 @@
 #endif
 
 #include "MemoryDiagnostic.h"
-#include "UtilityCore.h"
+
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/CommandLineArgs.h"
 
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 {
 	using namespace Hazard;
 	{
-#if HZR_MEM_DIAG
+#ifdef HZR_MEM_DIAG
 		Memory::Allocator::Init();
 #endif
 		CommandLineArgs::Init(argc, argv);

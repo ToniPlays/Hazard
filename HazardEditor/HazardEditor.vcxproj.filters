@@ -168,6 +168,7 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Debug\PerformanceDebugPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -263,5 +264,6 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Debug\PerformanceDebugPanel.cpp" />
   </ItemGroup>
 </Project>

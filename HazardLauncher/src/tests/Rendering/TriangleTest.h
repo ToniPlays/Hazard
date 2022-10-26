@@ -145,7 +145,7 @@ namespace TriangleTest {
 		*/
 		window->Close();
 
-		delete window;
+		hdelete window;
          
         std::cout << "Test closed";
 	}

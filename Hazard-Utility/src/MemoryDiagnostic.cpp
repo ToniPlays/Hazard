@@ -10,10 +10,16 @@ namespace Memory
 
 	static bool s_InInit = false;
 
+	const MemoryStats& GetAllocationStats()
+	{
+		return s_GlobalStats;
+	}
+
 	void Allocator::Init()
 	{
 		if (s_Data)
 			return;
+
 		s_InInit = true;
 
 		AllocatorData* data = (AllocatorData*)Allocator::AllocateRaw(sizeof(AllocatorData));
@@ -101,3 +107,69 @@ namespace Memory
 		free(memory);
 	}
 }
+
+#ifdef HZR_MEM_DIAG
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new(size_t size)
+{
+	return Memory::Allocator::Allocate(size);
+}
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new[](size_t size)
+{
+	return Memory::Allocator::Allocate(size);
+}
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new(size_t size, const char* desc)
+{
+	return Memory::Allocator::Allocate(size, desc);
+}
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new[](size_t size, const char* desc)
+{
+	return Memory::Allocator::Allocate(size, desc);
+}
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new(size_t size, const char* file, int line)
+{
+	return Memory::Allocator::Allocate(size, file, line);
+}
+
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new[](size_t size, const char* file, int line)
+{
+	return Memory::Allocator::Allocate(size, file, line);
+}
+
+void __CRTDECL operator delete(void* memory)
+{
+	return Memory::Allocator::Free(memory);
+}
+void __CRTDECL operator delete(void* memory, const char* desc)
+{
+	return Memory::Allocator::Free(memory);
+}
+void __CRTDECL operator delete(void* memory, const char* file, int line)
+{
+	return Memory::Allocator::Free(memory);
+}
+
+void __CRTDECL operator delete[](void* memory)
+{
+	return Memory::Allocator::Free(memory);
+}
+void __CRTDECL operator delete[](void* memory, const char* desc)
+{
+	return Memory::Allocator::Free(memory);
+}
+void __CRTDECL operator delete[](void* memory, const char* file, int line)
+{
+	return Memory::Allocator::Free(memory);
+}
+
+#endif

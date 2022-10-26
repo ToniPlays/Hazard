@@ -1,15 +1,15 @@
 #pragma once
 
+#include "File.h"
+#include "MemoryDiagnostic.h"
+
 #include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iomanip>
-#include <string>
 #include <thread>
 #include <mutex>
 #include <sstream>
-
-#include "File.h"
 
 using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
@@ -25,7 +25,9 @@ struct InstrumentationSession
 {
 	std::string sessionName;
 };
-class Instrumentor {
+
+class Instrumentor 
+{
 public:
 	Instrumentor(const Instrumentor&) = delete;
 	Instrumentor(Instrumentor&&) = delete;
@@ -33,6 +35,7 @@ public:
 	void BeginSession(const std::string& name, const std::filesystem::path& filePath) {
 		std::lock_guard lock(m_Mutex);
 
+		/*
 		if (m_CurrentSession) {
 
 			EndSessionInternal();
@@ -42,10 +45,12 @@ public:
 		if (!File::DirectoryExists(filePath.string()))
 			File::CreateDir(filePath.parent_path().string());
 
-		if (m_OutputStream.is_open()) {
-			m_CurrentSession = new InstrumentationSession({ name });
+		if (m_OutputStream.is_open()) 
+		{
+			m_CurrentSession = hnew InstrumentationSession({ name });
 			WriteHeader();
 		}
+		*/
 	}
 	void EndSession() {
 		std::lock_guard lock(m_Mutex);
@@ -101,7 +106,7 @@ private:
 		WriteFooter();
 		m_OutputStream.close();
 
-		delete m_CurrentSession;
+		hdelete m_CurrentSession;
 		m_CurrentSession = nullptr;
 	}
 

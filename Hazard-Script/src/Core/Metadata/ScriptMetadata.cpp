@@ -34,7 +34,7 @@ namespace HazardScript
 
 			if (!method) continue;
 
-			MethodMetadata* m = new MethodMetadata(method);
+			MethodMetadata* m = hnew MethodMetadata(method);
 			m_Methods[name] = m;
 			return true;
 		}
@@ -55,7 +55,7 @@ namespace HazardScript
 
 	ScriptObject* ScriptMetadata::CreateObject()
 	{
-		ScriptObject* object = new ScriptObject(this);
+		ScriptObject* object = hnew ScriptObject(this);
 		RegisterInstance(object->GetHandle(), object);
 		return object;
 	}
@@ -81,7 +81,7 @@ namespace HazardScript
 		void* ptr = nullptr;
 
 		while ((method = mono_class_get_methods(m_Class->Class, &ptr))) {
-			MethodMetadata* m = new MethodMetadata(method);
+			MethodMetadata* m = hnew MethodMetadata(method);
 			m_Methods[m->GetName()] = m;
 		}
 	}

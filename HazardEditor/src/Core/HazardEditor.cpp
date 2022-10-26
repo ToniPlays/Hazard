@@ -134,5 +134,5 @@ bool HazardEditorApplication::OnEvent(Event& e)
 
 Hazard::Application* Hazard::CreateApplication()
 {
-	return new HazardEditorApplication();
+	return hnew HazardEditorApplication();
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Buffer.h"
+#include "UtilityCore.h"
+#include "MemoryDiagnostic.h"
 
 class CachedBuffer
 {

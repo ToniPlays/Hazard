@@ -1,5 +1,8 @@
+
 #ifdef HZR_PLATFORM_WINDOWS
+
 #include "PlatformUtils.h"
+#include "UtilityCore.h"
 #include <Windows.h>
 #include <commdlg.h>
 #include <Psapi.h>
@@ -11,12 +14,12 @@ void PlatformUtils::Messagebox(const char* title, const char* description)
 	// required size
 	int size = MultiByteToWideChar(CP_ACP, 0, description, -1, NULL, 0);
 	// allocate it
-	pwcsName = new WCHAR[256];
+	pwcsName = hnew WCHAR[256];
 	MultiByteToWideChar(CP_ACP, 0, description, -1, (LPWSTR)pwcsName, size);
 	// use it....
 
 	MessageBox(NULL, pwcsName, (LPCTSTR)L"Error", MB_OK);
-	delete[] pwcsName;
+	hdelete[] pwcsName;
 }
 
 uint64_t PlatformUtils::GetMemoryUsage()
@@ -48,7 +51,7 @@ std::string PlatformUtils::GetEnvVariable(const std::string& key) {
 	if (lOpenStatus == ERROR_SUCCESS)
 	{
 		DWORD valueType;
-		char* data = new char[512];
+		char* data = hnew char[512];
 		DWORD dataSize = 512;
 		LSTATUS status = RegGetValueA(hKey, NULL, key.c_str(), RRF_RT_ANY, &valueType, (PVOID)data, &dataSize);
 
@@ -57,7 +60,7 @@ std::string PlatformUtils::GetEnvVariable(const std::string& key) {
 		if (status == ERROR_SUCCESS)
 		{
 			std::string result(data);
-			delete[] data;
+			hdelete[] data;
 			return result;
 		}
 	}

@@ -32,7 +32,7 @@ namespace Hazard::Physics
 	void PhysicsCommand::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		s_Physics2D = new Physics2D();
+		s_Physics2D = hnew Physics2D();
 	}
 	void PhysicsCommand::BeginSimulation(PhysicsBeginInfo* info)
 	{

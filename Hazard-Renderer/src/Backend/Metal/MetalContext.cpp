@@ -28,8 +28,8 @@ namespace HazardRenderer::Metal
     void MetalContext::Init(Window* window, HazardRendererCreateInfo* info)
     {
         m_Window = window;
-        m_PhysicalDevice = new MetalPhysicalDevice();
-        m_MetalLayer = new MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
+        m_PhysicalDevice = hnew MetalPhysicalDevice();
+        m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
         
         m_Swapchain = Ref<MetalSwapchain>::Create(this, info->pTargetFrameBuffer);
         m_Swapchain->Create(m_MetalLayer->GetWidth(), m_MetalLayer->GetHeight(), info->VSync);

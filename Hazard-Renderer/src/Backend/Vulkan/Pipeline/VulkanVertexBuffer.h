@@ -34,9 +34,6 @@ namespace HazardRenderer::Vulkan
 
 		VkBuffer m_VertexBuffer;
 		VmaAllocation m_BufferAllocation;
-
-		inline static uint32_t s_BoundVAO = 0;
-		inline static BufferLayout s_CurrentLayout;
 	};
 }
 #endif

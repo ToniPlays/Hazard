@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UtilityCore.h"
+#include <string>
 
 enum class Severity
 {

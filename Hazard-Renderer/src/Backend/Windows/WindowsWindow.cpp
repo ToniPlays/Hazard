@@ -20,7 +20,7 @@ namespace HazardRenderer {
 		if (!Window::IsRenderAPISupported(info->Renderer)) {
 			HZR_THROW("Unsupported rendering API: " + RenderAPIToString(info->Renderer));
 		}
-		return new WindowsWindow(info);
+		return hnew WindowsWindow(info);
 	}
 
 	void Window::SendDebugMessage(const RenderMessage& message)
@@ -289,7 +289,7 @@ namespace HazardRenderer {
 	}
 	void WindowsWindow::Close()
 	{
-		delete m_Context;
+		hdelete m_Context;
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
 	}

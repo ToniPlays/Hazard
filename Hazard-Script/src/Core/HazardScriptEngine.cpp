@@ -10,7 +10,7 @@ namespace HazardScript
 {
 	HazardScriptEngine* HazardScriptEngine::Create(HazardScriptCreateInfo* info)
 	{
-		return new HazardScriptEngine(info);
+		return hnew HazardScriptEngine(info);
 	}
 
 	void HazardScriptEngine::SendDebugMessage(ScriptMessage message)

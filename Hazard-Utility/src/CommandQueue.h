@@ -21,7 +21,7 @@ public:
 		};
 
 		auto storageBuffer = Allocate(renderCmd, sizeof(fn));
-		new (storageBuffer) FuncT(std::forward<FuncT>(fn));
+		hnew (storageBuffer) FuncT(std::forward<FuncT>(fn));
 	}
 	void Excecute();
 	void Clear()

@@ -17,7 +17,7 @@ namespace HazardRenderer
         if (!Window::IsRenderAPISupported(info->Renderer)) {
             HZR_THROW("Unsupported rendering API: " + RenderAPIToString(info->Renderer));
         }
-        return new MacOSWindow(info);
+        return hnew MacOSWindow(info);
     }
 
     void Window::SendDebugMessage(const RenderMessage& message)
@@ -259,7 +259,7 @@ namespace HazardRenderer
     MacOSWindow::~MacOSWindow()
     {
         Close();
-        delete m_Context;
+        hdelete m_Context;
         glfwTerminate();
     }
     void MacOSWindow::Show() const

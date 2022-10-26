@@ -38,7 +38,7 @@ namespace Hazard
 
 		if (info->Data) 
 		{
-			data = new uint8_t[info->Size];
+			data = hnew uint8_t[info->Size];
 			void* dataPtr = MonoArrayUtils::GetArrayValuePtr(info->Data);
 			memcpy(data, dataPtr, info->Size);
 		}
@@ -61,7 +61,7 @@ namespace Hazard
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
 			if (!dataPtr) return;
-			delete dataPtr;
+			hdelete dataPtr;
 			});
 		
 		AssetManager::AddRuntimeAsset(metadata, buffer);
@@ -77,7 +77,7 @@ namespace Hazard
 	{
 		uint32_t* data = nullptr;
 		if (info->Data) {
-			data = new uint32_t[info->Size * sizeof(uint32_t)];
+			data = hnew uint32_t[info->Size * sizeof(uint32_t)];
 			uint32_t* dataPtr = (uint32_t*)MonoArrayUtils::GetArrayValuePtr(info->Data);
 			memcpy(data, dataPtr, info->Size * sizeof(uint32_t));
 		}
@@ -98,7 +98,7 @@ namespace Hazard
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
 			if (!dataPtr) return;
-			delete dataPtr;
+			hdelete dataPtr;
 			});
 
 

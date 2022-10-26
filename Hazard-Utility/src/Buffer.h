@@ -1,7 +1,8 @@
 #pragma once
 
 #include <assert.h>
-#include <iostream>
+#include "UtilityCore.h"
+#include "MemoryDiagnostic.h"
 
 struct Buffer 
 {
@@ -13,18 +14,17 @@ struct Buffer
 
 	void Allocate(size_t size)
 	{
-		delete Data;
+		hdelete Data;
 		Data = nullptr;
 
 		if (size == 0)
 			return;
-
-		Data = new uint8_t[size];
+		Data = hnew uint8_t[size];
 		Size = size;
 	}
 	void Release()
 	{
-		delete Data;
+		hdelete Data;
 		Data = nullptr;
 		Size = 0;
 	}
@@ -47,7 +47,7 @@ struct Buffer
 	uint8_t* ReadBytes(size_t size, size_t offset) 
 	{
 		if (offset + size > Size) assert(false);
-		uint8_t* buffer = new uint8_t[size];
+		uint8_t* buffer = hnew uint8_t[size];
 
 		memcpy(buffer, (uint8_t*)Data + offset, size);
 		return buffer;

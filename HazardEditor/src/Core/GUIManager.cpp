@@ -53,6 +53,7 @@ void GUIManager::Init()
 	m_PanelManager.AddRenderable<UI::Viewport>();
 	m_PanelManager.AddRenderable<UI::RenderCommandListPanel>();
 	m_PanelManager.AddRenderable<UI::RendererDebugPanel>();
+	m_PanelManager.AddRenderable<UI::PerformanceDebugPanel>();
 	m_PanelManager.AddRenderable<UI::Console>();
 	m_PanelManager.AddRenderable<UI::AssetPanel>();
 	m_PanelManager.AddRenderable<UI::ScriptCreatePanel>();
@@ -94,18 +95,18 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	{
 #ifdef HZR_INCLUDE_OPENGL
 	case RenderAPI::OpenGL:
-		m_Platform = new EditorPlatformOpenGL(window);
+		m_Platform = hnew EditorPlatformOpenGL(window);
 		break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
 	case RenderAPI::Vulkan: {
-		m_Platform = new EditorPlatformVulkan(window);
+		m_Platform = hnew EditorPlatformVulkan(window);
 		break;
 	}
 #endif
 #ifdef HZR_INCLUDE_METAL
 	case RenderAPI::Metal: {
-		m_Platform = new EditorPlatformMetal(window);
+		m_Platform = hnew EditorPlatformMetal(window);
 		break;
 	}
 #endif

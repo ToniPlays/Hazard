@@ -1,9 +1,11 @@
 #pragma once
 
-#include "UtilityCore.h"
-
 #include <map>
 #include <mutex>
+
+#ifdef HZR_DEBUG
+//#define HZR_MEM_DIAG
+#endif
 
 namespace Memory
 {
@@ -20,7 +22,7 @@ namespace Memory
 		const char* Category = nullptr;
 	};
 
-	const MemoryAllocation& GetAllocationStats();
+	const MemoryStats& GetAllocationStats();
 
 	template <class T>
 	struct Mallocator
@@ -82,7 +84,7 @@ namespace Memory
 }
 
 
-#if HZR_MEM_DIAG
+#ifdef HZR_MEM_DIAG
 
 _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
 void* __CRTDECL operator new(size_t size);

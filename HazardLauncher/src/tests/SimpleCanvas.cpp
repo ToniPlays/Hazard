@@ -148,7 +148,7 @@ namespace SimpleCanvas {
 								{ "a_TexCoord",		ShaderDataType::Float	}
 		};
 
-		uint32_t* indices = new uint32_t[1500];
+		uint32_t* indices = hnew uint32_t[1500];
 		uint32_t offset = 0;
 
 		for (size_t i = 0; i < 1500; i += 6) {
@@ -187,7 +187,7 @@ namespace SimpleCanvas {
 		Ref<Pipeline> guiPipeline = Pipeline::Create(&spec);
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::CreateFromSwapchain("Main");
 
-		delete[] indices;
+		hdelete[] indices;
 
 		while (true)
 		{

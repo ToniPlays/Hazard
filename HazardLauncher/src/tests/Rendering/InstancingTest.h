@@ -136,7 +136,7 @@ namespace InstancingTest {
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), { 0, 0, -20 });
 		glm::mat4 projection = glm::ortho(-aspectRatio * scalar, aspectRatio * scalar, -scalar, scalar, -100.0f, 100.0f);
 
-		InstanceData* instanceData = new InstanceData[size * size];
+		InstanceData* instanceData = hnew InstanceData[size * size];
 
 		float halfSize = (float)size / 2.0f;
 

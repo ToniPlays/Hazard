@@ -55,7 +55,7 @@ namespace Hazard
 		m_LineRenderer.Init();
 		m_LineRenderer.CreateResources(m_RenderPass);
 
-		m_Resources = new RenderResources();
+		m_Resources = hnew RenderResources();
 		m_Resources->Initialize(m_RenderPass);
 
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();

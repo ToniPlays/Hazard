@@ -22,10 +22,10 @@ namespace HazardRenderer {
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: buffer = new OpenGL::OpenGLVertexBuffer(createInfo); break;
+		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: buffer = new Vulkan::VulkanVertexBuffer(createInfo); break;
+		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: buffer = Ref<Metal::MetalVertexBuffer>::Create(createInfo); break;

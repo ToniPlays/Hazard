@@ -28,7 +28,7 @@ namespace Hazard
 		void RegisterScriptGlue() 
 		{
 			static_assert(std::is_base_of<IScriptGlue, T>::value, "Cannot use this type");
-			T* glue = new T();
+			T* glue = hnew T();
 			m_ScriptGlue.push_back((IScriptGlue*)glue);
 		}
 

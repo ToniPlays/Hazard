@@ -22,7 +22,7 @@ namespace Hazard {
 		template<typename T, typename... Args>
 		T* AddModule(Args... args)
 		{
-			T* m = new T(std::forward<Args>(args)...);
+			T* m = hnew T(std::forward<Args>(args)...);
 			m_Modules.push_back(m);
 			m->PreInit();
 			if (m_HasInitialized) m->Init();

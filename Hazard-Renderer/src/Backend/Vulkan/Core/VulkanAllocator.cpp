@@ -76,7 +76,7 @@ namespace HazardRenderer::Vulkan {
 	}
 	void VulkanAllocator::Init()
 	{
-		s_Data = new AllocatorData();
+		s_Data = hnew AllocatorData();
 
 		Ref<VulkanDevice> device = VulkanContext::GetLogicalDevice();
 
@@ -94,7 +94,7 @@ namespace HazardRenderer::Vulkan {
 		HZR_ASSERT(s_Data->TotalAllocated == 0, "Failed to deallocate all");
 		vmaDestroyAllocator(s_Data->Allocator);
 
-		delete s_Data;
+		hdelete s_Data;
 		s_Data = nullptr;
 	}
 	VmaAllocator VulkanAllocator::GetAllocator()

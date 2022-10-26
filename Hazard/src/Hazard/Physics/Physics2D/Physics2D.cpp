@@ -13,8 +13,8 @@ namespace Hazard::Physics
 {
 	void Physics2D::Begin(float gravity)
 	{
-		m_World2D = new b2World({ 0.0f, gravity });
-		Physics2DContactListener* listener = new Physics2DContactListener(this);
+		m_World2D = hnew b2World({ 0.0f, gravity });
+		Physics2DContactListener* listener = hnew Physics2DContactListener(this);
 		m_World2D->SetContactListener(listener);
 
 	}
@@ -24,7 +24,7 @@ namespace Hazard::Physics
 	}
 	void Physics2D::End()
 	{
-		delete m_World2D;
+		hdelete m_World2D;
 		m_World2D = nullptr;
 	}
 	void* Physics2D::CreatePhysicsObject(Physics2DObjectCreateInfo* createInfo)

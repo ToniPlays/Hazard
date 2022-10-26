@@ -183,18 +183,18 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	{
 #ifdef HZR_INCLUDE_OPENGL
 	case RenderAPI::OpenGL:
-		m_Platform = new EditorPlatformOpenGL(window);
+		m_Platform = hnew EditorPlatformOpenGL(window);
 		break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
 	case RenderAPI::Vulkan: {
-		m_Platform = new EditorPlatformVulkan(window);
+		m_Platform = hnew EditorPlatformVulkan(window);
 		break;
 	}
 #endif
 #ifdef HZR_INCLUDE_METAL
 	case RenderAPI::Metal: {
-		m_Platform = new EditorPlatformMetal(window);
+		m_Platform = hnew EditorPlatformMetal(window);
 		break;
 	}
 #endif
