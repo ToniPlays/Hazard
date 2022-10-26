@@ -11,6 +11,7 @@
 
 #define HZR_PROFILE 1
 #define HZR_OPTICK 0
+#define HZR_MEM_DIAG 1
 
 
 #if HZR_OPTICK

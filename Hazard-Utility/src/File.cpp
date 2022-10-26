@@ -12,13 +12,15 @@
 #include "PlatformUtils.h"
 #endif
 
-std::string File::OpenFileDialog() {
+std::string File::OpenFileDialog() 
+{
 	auto f = pfd::open_file("Open file", "");
 	if (f.result().size() == 0) return "";
 	return f.result()[0];
 }
 
-std::string File::OpenFileDialog(const std::vector<std::string>& filters) {
+std::string File::OpenFileDialog(const std::vector<std::string>& filters) 
+{
 	auto f = pfd::open_file("Open file", "", filters, pfd::opt::none);
 	if (f.result().size() == 0) return "";
 	return f.result()[0];
@@ -28,7 +30,8 @@ std::string File::OpenFolderDialog(const std::string& title) {
 	if (f.result() == "") return "";
 	return f.result();
 }
-std::string File::SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath) {
+std::string File::SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath) 
+{
 	auto f = pfd::save_file("Save file", defaultPath.string(), filters, true);
 	return f.result();
 }
@@ -58,7 +61,8 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32
 {
 	std::ofstream out(path, std::ios::out | std::ios::binary);
 
-	if (out.is_open()) {
+	if (out.is_open()) 
+	{
 		out.write((char*)data.data(), data.size() * sizeof(uint32_t));
 		out.flush();
 		out.close();
@@ -79,7 +83,8 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 	}
 	return false;
 }
-bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest) {
+bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest) 
+{
 
 	std::filesystem::path destFolder = GetDirectoryOf(dest);
 	if (!DirectoryExists(destFolder)) {
@@ -138,29 +143,22 @@ std::vector<char> File::ReadBinaryFileChar(const std::filesystem::path& path)
 	if (!stream.read((char*)buffer.data(), buffer.size())) {}
 	return buffer;
 }
-Buffer File::ReadBinaryFile(const std::filesystem::path& path)
+CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 {
 	std::ifstream stream(path, std::ios::binary | std::ios::ate);
-	Buffer result;
 
 	if (!stream.is_open())
-		return result;
+		return CachedBuffer(0);
 
 	stream.seekg(0, std::ios::end);
 	auto size = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
+	CachedBuffer result((uint32_t)size);
 
-	if (size == 0)
-		return result;
+	if (size == 0) return result;
 
-	result.Allocate((uint32_t)size);
-
-	if (!stream.read((char*)result.Data, size))
-	{
-
-	}
-
+	stream.read((char*)result.GetData(), size);
 	stream.close();
 	return result;
 }

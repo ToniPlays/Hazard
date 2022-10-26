@@ -37,6 +37,9 @@
     <Filter Include="src\Hazard\Physics\Physics2D">
       <UniqueIdentifier>{30985A61-1C53-4A0D-C50A-C357B1A4949D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\RenderContext">
+      <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
@@ -147,6 +150,9 @@
     <ClInclude Include="src\Hazard\ECS\Entity.h">
       <Filter>src\Hazard\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ECS\Loader\WorldAssetLoader.h">
+      <Filter>src\Hazard\ECS\Loader</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\ECS\Loader\WorldDeserializer.h">
       <Filter>src\Hazard\ECS\Loader</Filter>
     </ClInclude>
@@ -219,6 +225,18 @@
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
@@ -226,9 +244,6 @@
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
@@ -260,12 +275,6 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Renderers\WorldRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
-      <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\AllBindings.h">
       <Filter>src\Hazard\Scripting</Filter>
@@ -300,10 +309,16 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\EnvironmentMapBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\MathBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\MeshComponentBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\SkyLightComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h">
@@ -313,6 +328,9 @@
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\TransformComponentBindings.h">
+      <Filter>src\Hazard\Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\WorldManagerBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\HScript.h">
@@ -1587,11 +1605,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\WorldManagerBindings.h" />
-    <ClInclude Include="src\Hazard\ECS\Loader\WorldAssetLoader.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\SkyLightComponentBindings.h" />
-    <ClInclude Include="src\Hazard\Scripting\Bindings\EnvironmentMapBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1626,6 +1639,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Entity.cpp">
       <Filter>src\Hazard\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ECS\Loader\WorldAssetLoader.cpp">
+      <Filter>src\Hazard\ECS\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ECS\Loader\WorldDeserializer.cpp">
       <Filter>src\Hazard\ECS\Loader</Filter>
@@ -1669,13 +1685,25 @@
     <ClCompile Include="src\Hazard\Physics\PhysicsCommand.cpp">
       <Filter>src\Hazard\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ImageAssetLoader.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.cpp">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
+    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentMap.cpp">
+      <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\ImageAssetLoader.cpp">
+    <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
@@ -1699,12 +1727,6 @@
     <ClCompile Include="src\Hazard\Rendering\Renderers\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\HScript.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
@@ -1723,8 +1745,5 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp" />
-    <ClCompile Include="src\Hazard\ECS\Loader\WorldAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentMap.cpp" />
   </ItemGroup>
 </Project>

@@ -50,9 +50,9 @@ namespace HazardRenderer
 	public:
         static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDir = path; };
         static CacheStatus HasCachedShader(const std::filesystem::path& path, RenderAPI api);
-        static bool CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries, RenderAPI api);
+        static bool CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api);
         static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
-        static std::unordered_map<ShaderStage, std::vector<uint32_t>> GetShaderBinaries(const std::filesystem::path& path, RenderAPI api);
+        static std::unordered_map<ShaderStage, Buffer> GetShaderBinaries(const std::filesystem::path& path, RenderAPI api);
 
     private:
         static std::filesystem::path GetCachedFilePath(const std::filesystem::path& path, RenderAPI api);

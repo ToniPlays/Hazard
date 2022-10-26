@@ -25,7 +25,7 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
 
-		m_ResultBinary.clear();
+		m_ResultBinary.Release();
 		m_ErrorMessage.clear();
 
 		shaderc::CompileOptions options;
@@ -50,29 +50,29 @@ namespace HazardRenderer::OpenGL
 
 		bool succeeded = result.GetCompilationStatus() == shaderc_compilation_status_success;
 		if (succeeded)
-			m_ResultBinary = { result.begin(), result.end() };
+			m_ResultBinary = Buffer::Copy(result.begin(), (result.end() - result.begin()) * sizeof(uint32_t));
 		else
 			m_ErrorMessage = result.GetErrorMessage();
 
 		m_CompilationTime = timer.ElapsedMillis();
 		return succeeded;
 	}
-	bool OpenGLShaderCompiler::Decompile(const std::vector<uint32_t> binary, std::string& result)
+	bool OpenGLShaderCompiler::Decompile(Buffer binary, std::string& result)
 	{
 		HZR_PROFILE_FUNCTION();
 		m_ErrorMessage.clear();
-		spirv_cross::CompilerGLSL compiler(binary);
+		spirv_cross::CompilerGLSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
 		result = compiler.compile();
 		return !result.empty();
 	}
-	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
+	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, Buffer> binaries)
 	{
 		HZR_PROFILE_FUNCTION();
 		ShaderData result;
 
 		for (auto& [stage, binary] : binaries)
 		{
-			spirv_cross::Compiler compiler(binary);
+			spirv_cross::Compiler compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			//Check stage inputs

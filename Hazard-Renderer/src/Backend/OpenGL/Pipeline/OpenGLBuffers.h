@@ -43,12 +43,13 @@ namespace HazardRenderer::OpenGL
 
 	private:
 		void SetData(uint32_t* data, size_t size) override;
-		void SetData_RT(uint32_t* data, size_t size);
+		void SetData_RT();
 
 		std::string m_DebugName;
 		BufferUsage m_Usage;
 		uint32_t m_BufferID;
 		uint32_t m_Size;
+		Buffer m_LocalBuffer;
 
 	};
 	class OpenGLUniformBuffer : public UniformBuffer

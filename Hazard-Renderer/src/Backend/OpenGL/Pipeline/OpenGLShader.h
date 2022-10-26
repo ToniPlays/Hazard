@@ -27,16 +27,16 @@ namespace HazardRenderer::OpenGL
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 
 		//OpenGL specific
-		void Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries);
+		void Reload_RT(std::unordered_map<ShaderStage, Buffer> binaries);
 		uint32_t GetProgramID() const { return m_ID; }
 
 		std::unordered_map<uint32_t, OpenGLDescriptorSet> GetDescriptorSets() { return m_DescriptorSet; };
 		const OpenGLDescriptorSet& GetDescriptorSet(uint32_t index) { return m_DescriptorSet[index]; };
 
 	private:
-		void CreateProgram(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary);
-		void ReflectVulkan(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
-		void Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
+		void CreateProgram(const std::unordered_map<ShaderStage, Buffer>& binary);
+		void ReflectVulkan(const std::unordered_map<ShaderStage, Buffer>& binaries);
+		void Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries);
 
 		std::unordered_map<uint32_t, OpenGLDescriptorSet> m_DescriptorSet;
 

@@ -10,15 +10,17 @@ namespace HazardScript
 {
 	ScriptAssembly::~ScriptAssembly()
 	{
+
 	}
 	bool ScriptAssembly::LoadFromSource(bool registerScripts, bool withRefecenced)
 	{
 		if (m_Path.empty()) return false;
 
-		Buffer data = File::ReadBinaryFile(m_Path);
+		CachedBuffer data = File::ReadBinaryFile(m_Path);
 		
 		MonoImageOpenStatus status;
-		MonoImage* image = Mono::OpenImage((char*)data.Data, data.Size, status);
+		MonoImage* image = Mono::OpenImage((char*)data.GetData(), data.GetSize(), status);
+		HZR_ASSERT(image, "Image fail");
 		m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
 		mono_image_close(image);
 
@@ -27,8 +29,6 @@ namespace HazardScript
 
 		if(registerScripts)
 			LoadScripts();
-
-		data.Release();
 
 		return true;
 	}
@@ -43,7 +43,8 @@ namespace HazardScript
 		
 		m_ReferencedAssemblies.clear();
 		m_ReferencedAssemblies.reserve(rows);
-		for (int i = 0; i < rows; i++) {
+		for (int i = 0; i < rows; i++) 
+		{
 			uint32_t cols[MONO_ASSEMBLYREF_SIZE];
 			mono_metadata_decode_row(t, i, cols, MONO_ASSEMBLYREF_SIZE);
 

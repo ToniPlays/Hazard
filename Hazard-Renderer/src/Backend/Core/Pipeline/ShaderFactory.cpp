@@ -11,6 +11,8 @@
 
 #include "spdlog/fmt/fmt.h"
 
+#include "CachedBuffer.h"
+
 namespace HazardRenderer
 {
 	shaderc::Compiler compiler;
@@ -44,32 +46,25 @@ namespace HazardRenderer
 		return File::Exists(cachePath) ? CacheStatus::Exists : CacheStatus::None;
 	}
 
-	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries, RenderAPI api)
+	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)
 	{
 		//Determine cache size
 		size_t size = 0;
 		for (auto& [stage, shaderCode] : binaries)
 		{
 			size += sizeof(ShaderCacheData);
-			size += shaderCode.size() * sizeof(uint32_t);
+			size += shaderCode.Size;
 		}
 
-		Buffer buffer;
-		buffer.Allocate(size);
-		buffer.ZeroInitialize();
-
-		size_t offset = 0;
+		CachedBuffer buffer(size);
 		for (auto& [stage, shaderCode] : binaries)
 		{
 			ShaderCacheData data = {};
 			data.ShaderStage = stage;
-			data.Length = shaderCode.size();
+			data.Length = shaderCode.Size;
 
-			buffer.Write(&data, sizeof(ShaderCacheData), offset);
-			offset += sizeof(ShaderCacheData);
-
-			buffer.Write(shaderCode.data(), shaderCode.size() * sizeof(uint32_t), offset);
-			offset += shaderCode.size() * sizeof(uint32_t);
+			buffer.Write(data);
+			buffer.Write(shaderCode.Data, shaderCode.Size);
 		}
 
 		auto cachePath = GetCachedFilePath(path, api);
@@ -77,7 +72,7 @@ namespace HazardRenderer
 		if (!File::DirectoryExists(cachePath.parent_path()))
 			File::CreateDir(cachePath.parent_path());
 
-		return File::WriteBinaryFile(cachePath, buffer.Data, buffer.Size);
+		return File::WriteBinaryFile(cachePath, buffer.GetData(), buffer.GetSize());
 	}
 
 	std::unordered_map<ShaderStage, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
@@ -103,29 +98,16 @@ namespace HazardRenderer
 
 		return result;
 	}
-	std::unordered_map<ShaderStage, std::vector<uint32_t>> ShaderFactory::GetShaderBinaries(const std::filesystem::path& path, RenderAPI api)
+	std::unordered_map<ShaderStage, Buffer> ShaderFactory::GetShaderBinaries(const std::filesystem::path& path, RenderAPI api)
 	{
-		Buffer buffer = File::ReadBinaryFile(GetCachedFilePath(path, api));
+		CachedBuffer buffer = File::ReadBinaryFile(GetCachedFilePath(path, api));
+		std::unordered_map<ShaderStage, Buffer> result;
 
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> result;
-
-		size_t offset = 0;
-		while (offset < buffer.Size)
+		while (buffer.Available())
 		{
-			ShaderCacheData data = Buffer::Get<ShaderCacheData>(buffer.Data, offset);
-			offset += sizeof(ShaderCacheData);
-
-			std::vector<uint32_t> shaderCode(data.Length);
-
-			for (size_t i = 0; i < data.Length; i++)
-			{
-				uint32_t val = Buffer::Get<uint32_t>(buffer.Data, offset);
-				shaderCode[i] = val;
-				offset += sizeof(uint32_t);
-			}
-			result[data.ShaderStage] = shaderCode;
+			ShaderCacheData data = buffer.Read<ShaderCacheData>();
+			result[data.ShaderStage] = Buffer::Copy(buffer.Read<Buffer>(data.Length));
 		}
-
 		return result;
 	}
 	bool ShaderFactory::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)

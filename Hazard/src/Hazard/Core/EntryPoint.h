@@ -7,10 +7,14 @@
 #include <fcntl.h>
 #include <windows.h>
 #endif
+
+#include "MemoryDiagnostic.h"
+#include "UtilityCore.h"
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/CommandLineArgs.h"
 
 #include <stdio.h>
+#include "Utility/StringUtil.h"
 
 extern Hazard::Application* Hazard::CreateApplication();
 
@@ -24,6 +28,9 @@ int main(int argc, char* argv[])
 {
 	using namespace Hazard;
 	{
+#if HZR_MEM_DIAG
+		Memory::Allocator::Init();
+#endif
 		CommandLineArgs::Init(argc, argv);
 
 		Application* app = CreateApplication();
@@ -32,9 +39,7 @@ int main(int argc, char* argv[])
 		loop.Start();
 
 		while (!loop.ShouldClose()) 
-		{
 			loop.Run();
-		}
 	}
 	return 0;
 }

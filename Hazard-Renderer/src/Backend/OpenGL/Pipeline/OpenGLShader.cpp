@@ -33,8 +33,8 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
 
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> vulkanBinaries;
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> openGLbinaries;
+		std::unordered_map<ShaderStage, Buffer> vulkanBinaries;
+		std::unordered_map<ShaderStage, Buffer> openGLbinaries;
 
 		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) != CacheStatus::None)
 		{
@@ -90,7 +90,6 @@ namespace HazardRenderer::OpenGL
 						fmt::format("{0} failed to compile (Vk to OpenGL):\n - {1}", m_FilePath, compiler.GetErrorMessage()),
 						source
 						});
-					continue;
 					continue;
 				}
 				compilationTime += compiler.GetCompileTime();
@@ -166,7 +165,7 @@ namespace HazardRenderer::OpenGL
 	{
 		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue[0] = uniformBuffer.As<OpenGLUniformBuffer>();
 	}
-	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
+	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
@@ -198,7 +197,7 @@ namespace HazardRenderer::OpenGL
 		}
 		//OpenGLShaderCompiler::PrintReflectionData(data);
 	}
-	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
+	void OpenGLShader::Reload_RT(std::unordered_map<ShaderStage, Buffer> binaries)
 	{
 		if (m_ID)
 			glDeleteProgram(m_ID);
@@ -245,7 +244,7 @@ namespace HazardRenderer::OpenGL
 		};
 	}
 
-	void OpenGLShader::CreateProgram(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary)
+	void OpenGLShader::CreateProgram(const std::unordered_map<ShaderStage, Buffer>& binary)
 	{
 		HZR_PROFILE_FUNCTION();
 		GLuint program = glCreateProgram();
@@ -254,7 +253,7 @@ namespace HazardRenderer::OpenGL
 		for (auto& [stage, spirv] : binary)
 		{
 			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(OpenGLUtils::ShaderStageToGLType(stage)));
-			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
+			glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.Data, spirv.Size);
 			glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
 			glAttachShader(program, shaderID);
 			CheckShader(program, shaderID);
@@ -295,7 +294,7 @@ namespace HazardRenderer::OpenGL
 		}
 		m_ID = program;
 	}
-	void OpenGLShader::ReflectVulkan(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
+	void OpenGLShader::ReflectVulkan(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		Timer timer;
 		OpenGLShaderCompiler compiler;

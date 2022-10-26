@@ -3,8 +3,8 @@
 #include <assert.h>
 #include <iostream>
 
-struct Buffer {
-
+struct Buffer 
+{
 	size_t Size = 0;
 	void* Data = nullptr;
 
@@ -21,40 +21,44 @@ struct Buffer {
 
 		Data = new uint8_t[size];
 		Size = size;
-
 	}
 	void Release()
 	{
 		delete Data;
 		Data = nullptr;
 		Size = 0;
-
 	}
-	void ZeroInitialize() {
+	void ZeroInitialize() 
+	{
 		if (Data)
 			memset(Data, 0, Size);
 	}
 	template<typename T>
-	void Initialize(T value) {
+	void Initialize(T value) 
+	{
 		if (Data)
 			memset(Data, value, Size);
 	}
 	template<typename T>
-	T& Read(size_t offset = 0) {
+	T& Read(size_t offset = 0) 
+	{
 		return *(T*)((uint8_t*)Data + offset);
 	}
-	uint8_t* ReadBytes(size_t size, size_t offset) {
+	uint8_t* ReadBytes(size_t size, size_t offset) 
+	{
 		if (offset + size > Size) assert(false);
 		uint8_t* buffer = new uint8_t[size];
 
 		memcpy(buffer, (uint8_t*)Data + offset, size);
 		return buffer;
 	}
-	void Write(void* data, size_t size, size_t offset = 0) {
+	void Write(void* data, size_t size, size_t offset = 0) 
+	{
 		if (offset + size > Size) assert(false);
 		memcpy((uint8_t*)Data + offset, data, size);
 	}
-	void Write(const void* data, size_t size, size_t offset = 0) {
+	void Write(const void* data, size_t size, size_t offset = 0) 
+	{
 		if (offset + size > Size) assert(false);
 		memcpy((uint8_t*)Data + offset, data, size);
 	}
@@ -65,12 +69,18 @@ struct Buffer {
 	T* As() { return (T*)Data; }
 	inline size_t GetSize() { return Size; }
 
-	static Buffer Copy(const void* data, size_t size, size_t offset = 0) {
+	static Buffer Copy(const void* data, size_t size, size_t offset = 0) 
+	{
 		Buffer buffer;
 		buffer.Allocate(size);
 		memcpy(buffer.Data, (uint8_t*)data + offset, size);
 		return buffer;
 	}
+	static Buffer Copy(const Buffer& source)
+	{
+		return Copy(source.Data, source.Size);
+	}
+
 	template<typename T>
 	static T Get(void* data, size_t startIndex = 0) {
 		T value;

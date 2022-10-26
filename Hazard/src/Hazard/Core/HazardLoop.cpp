@@ -45,6 +45,7 @@ namespace Hazard {
 		{
 			Timer timer;
 			AssetManager::Init();
+
 			//Preinit application to get application stack
 			m_Application->PreInit();
 			m_ModuleHandler->InitializeAll();

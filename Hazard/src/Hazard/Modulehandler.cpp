@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "ModuleHandler.h"
 #include "Hazard/Logging/Logger.h"
+#include "PlatformUtils.h"
 
 namespace Hazard {
 
@@ -17,7 +18,9 @@ namespace Hazard {
 	void ModuleHandler::InitializeAll()
 	{
 		for (Module* m : m_Modules)
+		{
 			m->Init();
+		}
 
 		m_HasInitialized = true;
 	}

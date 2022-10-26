@@ -4,6 +4,7 @@
 #include "File.h"
 
 #include "vendor/stb_image.h"
+#include "CachedBuffer.h"
 
 namespace Hazard
 {
@@ -20,16 +21,11 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		std::filesystem::path cacheDir = GetCacheFile(handle);
 
-		if (!File::DirectoryExists(cacheDir.parent_path()))
-			File::CreateDir(cacheDir.parent_path());
-
-		size_t dataSize;
-		uint8_t* textureData = nullptr;
+		HZR_ASSERT(header.Channels == 4 && header.Dimensions == 2, "Can't handle this thing");
 
 		if (header.Channels == 4)
 		{
-			dataSize = sizeof(FileHeader) + header.ImageData.Size;
-			textureData = new uint8_t[dataSize];
+			CachedBuffer buffer(sizeof(FileHeader) + header.ImageData.Size);
 
 			FileHeader fileHeader = {};
 			fileHeader.Width = header.Width;
@@ -37,13 +33,13 @@ namespace Hazard
 			fileHeader.Channels = header.Channels;
 			fileHeader.DataSize = header.ImageData.Size;
 
-			memcpy(textureData, &fileHeader, sizeof(FileHeader));
-			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
+			buffer.Write(fileHeader);
+			buffer.Write(header.ImageData);
 
-			bool result = File::WriteBinaryFile(cacheDir, textureData, dataSize);
+			if (!File::DirectoryExists(cacheDir.parent_path()))
+				File::CreateDir(cacheDir.parent_path());
 
-			delete[] textureData;
-			return result;
+			return File::WriteBinaryFile(cacheDir, buffer.GetData(), buffer.GetSize());
 		}
 		return false;
 	}
@@ -90,24 +86,22 @@ namespace Hazard
 		Timer timer;
 		auto cacheFile = GetCacheFile(handle);
 
-		Buffer data = File::ReadBinaryFile(cacheFile);
+		CachedBuffer data = File::ReadBinaryFile(cacheFile);
 
 		TextureHeader header = {};
 
-		if (!data)
+		if (!data.Available())
 		{
-			data.Release();
 			return header;
 		}
 
-		FileHeader fileHeader = Buffer::Get<FileHeader>(data.Data);
+		FileHeader fileHeader = data.Read<FileHeader>();
 
 		header.Width = fileHeader.Width;
 		header.Height = fileHeader.Height;
 		header.Channels = fileHeader.Channels;
-		header.ImageData = Buffer::Copy(data.Data, fileHeader.DataSize, sizeof(FileHeader));
+		header.ImageData = Buffer::Copy(data.Read<Buffer>(fileHeader.DataSize));
 
-		data.Release();
 		std::cout << "Image load from cache " << cacheFile << " took " << timer.ElapsedMillis() << " ms" << std::endl;
 		return header;
 	}

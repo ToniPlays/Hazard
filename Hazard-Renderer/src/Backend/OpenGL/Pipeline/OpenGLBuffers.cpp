@@ -64,7 +64,7 @@ namespace HazardRenderer::OpenGL
 
 				uint32_t stride = instance->m_Layout.GetBufferStride(element.ElementDivisor);
 
-				if (element.ElementDivisor != currentBuffer) 
+				if (element.ElementDivisor != currentBuffer)
 				{
 					bufferedOffset += element.Offset;
 					currentBuffer = element.ElementDivisor;
@@ -108,14 +108,17 @@ namespace HazardRenderer::OpenGL
 
 		Ref<OpenGLIndexBuffer> instance = this;
 
-		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
+		if (info->Data)
+			m_LocalBuffer = Buffer::Copy(info->Data, m_Size);
+
+		Renderer::SubmitResourceCreate([instance]() mutable {
 
 			glCreateBuffers(1, &instance->m_BufferID);
 
-			if (data != nullptr)
-				instance->SetData_RT(data, instance->m_Size);
+			if (instance->m_LocalBuffer.Data != nullptr)
+				instance->SetData_RT();
 
-		});
+			});
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
@@ -129,16 +132,16 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> instance = this;
-		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
-			instance->m_Size = size;
-			glNamedBufferData(instance->m_BufferID, size, data, GL_STREAM_DRAW + instance->m_Usage);
+		m_Size = size;
+		m_LocalBuffer = Buffer::Copy(data, size);
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->SetData_RT();
 			});
 	}
-	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, size_t size)
+	void OpenGLIndexBuffer::SetData_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_Size = size;
-		glNamedBufferData(m_BufferID, size, data, GL_STREAM_DRAW + m_Usage);
+		glNamedBufferData(m_BufferID, m_Size, m_LocalBuffer.Data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
@@ -164,7 +167,6 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
-		HZR_PROFILE_FUNCTION();
 		HZR_PROFILE_FUNCTION();
 
 		uint32_t frameIndex = OpenGLContext::GetInstance().GetSwapchain().As<OpenGLSwapchain>()->GetFrameIndex();

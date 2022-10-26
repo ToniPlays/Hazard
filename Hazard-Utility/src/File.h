@@ -10,6 +10,8 @@
 #include <string>
 #include <cstdlib>
 
+#include "CachedBuffer.h"
+
 using std::filesystem::directory_iterator;
 
 enum class CacheStatus
@@ -29,7 +31,8 @@ enum class CopyOptions
 	DirectoriesOnly = (int)std::filesystem::copy_options::directories_only
 };
 
-class File {
+class File 
+{
 public:
 	static std::string OpenFileDialog();
 	static std::string OpenFileDialog(const std::vector<std::string>& filters);
@@ -42,7 +45,7 @@ public:
 	static std::filesystem::path AppendToName(const std::filesystem::path& path, const std::string& append);
 
 	static std::vector<char> ReadBinaryFileChar(const std::filesystem::path& path);
-	static Buffer ReadBinaryFile(const std::filesystem::path& path);
+	static CachedBuffer ReadBinaryFile(const std::filesystem::path& path);
 	static bool ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<uint32_t>& buffer);
 	static std::string ReadFile(const std::filesystem::path& file);
 

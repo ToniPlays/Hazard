@@ -2,6 +2,7 @@
 #include "PlatformUtils.h"
 #include <Windows.h>
 #include <commdlg.h>
+#include <Psapi.h>
 
 void PlatformUtils::Messagebox(const char* title, const char* description)
 {
@@ -17,6 +18,14 @@ void PlatformUtils::Messagebox(const char* title, const char* description)
 	MessageBox(NULL, pwcsName, (LPCTSTR)L"Error", MB_OK);
 	delete[] pwcsName;
 }
+
+uint64_t PlatformUtils::GetMemoryUsage()
+{
+	PROCESS_MEMORY_COUNTERS_EX pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+	return pmc.PrivateUsage;
+}
+
 bool PlatformUtils::HasEnvVariable(const std::string& key) {
 	HKEY hKey;
 	LPCSTR keyPath = "Environment";
