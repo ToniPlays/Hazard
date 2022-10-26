@@ -7,14 +7,15 @@
 #include "Swapchain.h"
 #include <functional>
 
-namespace HazardRenderer {
+namespace HazardRenderer 
+{
 
-	using namespace Hazard;
 	using ResizeCallback = std::function<void(uint32_t, uint32_t)>;
 
 	enum class Topology { Points, Line, LineLoop, LineStrip, Triangle, TriangleStrip, TriangleFan, Outline };
 
-	struct ErrorData {
+	struct ErrorData 
+	{
 		std::string Info;
 		std::string ErrorCode;
 		int Severity;

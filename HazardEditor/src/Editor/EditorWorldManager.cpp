@@ -2,7 +2,7 @@
 
 namespace Editor 
 {
-	using namespace HazardRenderer;
+	using namespace Hazard;
 
 	void EditorWorldManager::Init()
 	{

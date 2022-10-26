@@ -34,7 +34,8 @@ namespace HazardRenderer
 	};
 
 
-	class Texture : public HZR_RESOURCE_HANDLER {
+	class Texture : public RefCount 
+	{
 	public:
 
 		virtual ~Texture() = default;

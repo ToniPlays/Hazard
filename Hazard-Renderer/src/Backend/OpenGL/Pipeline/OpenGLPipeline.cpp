@@ -10,6 +10,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLPipeline::OpenGLPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
+		HZR_PROFILE_FUNCTION();
 		if(specs->Usage == PipelineUsage::GraphicsBit)
 			HZR_ASSERT(specs->pBufferLayout, "Cannot use pipeline without input layout");
 		m_Shader = Shader::Create(specs->ShaderPath);
@@ -21,6 +22,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLPipeline::Invalidate()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DrawType = OpenGLUtils::DrawTypeToGLType(m_Specs.DrawType);
 		m_PolygonMode = OpenGLUtils::DrawTypeToGLPolygon(m_Specs.DrawType);
 	}

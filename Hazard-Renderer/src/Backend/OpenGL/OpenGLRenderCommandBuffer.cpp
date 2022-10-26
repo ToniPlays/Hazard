@@ -19,10 +19,12 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::Begin()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_FrameIndex = m_Swapchain.As<OpenGLSwapchain>()->GetFrameIndex();
 	}
 	void OpenGLRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLRenderPass> instance = renderPass.As<OpenGLRenderPass>();
 		Renderer::Submit([instance, explicitClear]() mutable {
 			instance->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
@@ -30,14 +32,17 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
 	{
+		HZR_PROFILE_FUNCTION();
 		renderPass->GetSpecs().TargetFrameBuffer.As<OpenGLFrameBuffer>()->Bind_RT();
 	}
 	void OpenGLRenderCommandBuffer::EndRenderPass()
 	{
+		HZR_PROFILE_FUNCTION();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	void OpenGLRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLVertexBuffer> instance = vertexBuffer.As<OpenGLVertexBuffer>();
 		Renderer::Submit([instance, binding]() {
 			uint32_t vao = instance->GetVAOID();
@@ -52,6 +57,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLUniformBuffer> instance = uniformBuffer.As<OpenGLUniformBuffer>();
 		Renderer::Submit([instance]() {
 			glBindBufferBase(GL_UNIFORM_BUFFER, instance->GetBinding(), instance->GetBufferID());
@@ -59,6 +65,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLPipeline> instance = pipeline.As<OpenGLPipeline>();
 		Renderer::Submit([instance]() mutable {
 
@@ -81,6 +88,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
@@ -95,6 +103,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> indexBufferInstance = indexBuffer.As<OpenGLIndexBuffer>();
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
@@ -109,6 +118,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 		Renderer::Submit([pipeline, size = localGroupSize]() mutable {
@@ -118,6 +128,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(MemoryBarrierFlags flags)
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::Submit([flags]() mutable {
 			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});

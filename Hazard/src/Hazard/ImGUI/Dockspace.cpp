@@ -9,6 +9,7 @@ namespace Hazard::ImUI {
 
 	void Dockspace::BeginDockspace(const char* title, ImGuiDockNodeFlags flags)
 	{
+		HZR_PROFILE_FUNCTION();
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
 		bool opt_fullscreen = opt_fullscreen_persistant;
@@ -40,6 +41,7 @@ namespace Hazard::ImUI {
 	}
 	void Dockspace::EndDockspace(const char* id)
 	{
+		HZR_PROFILE_FUNCTION();
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -50,6 +52,7 @@ namespace Hazard::ImUI {
 	}
 	bool Dockspace::CustomTitleBar(HazardRenderer::Window& window, float height)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto* glfwWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 		const bool maximized = (bool)glfwGetWindowAttrib(glfwWindow, GLFW_MAXIMIZED);
 

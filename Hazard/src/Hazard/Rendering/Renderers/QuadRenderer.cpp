@@ -12,6 +12,7 @@ namespace Hazard
 	}
 	void QuadRenderer::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		constexpr uint32_t quadCount = 50000;
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
@@ -51,7 +52,7 @@ namespace Hazard
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 		{
-			auto& image = m_Data.TextureSlots[i]->GetSourceImageAsset()->GetCoreImage();
+			auto& image = m_Data.TextureSlots[i]->GetSourceImageAsset()->Value.As<Image2D>();
 			shader->Set("u_Textures", i, image);
 		}
 

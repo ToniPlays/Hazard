@@ -24,7 +24,7 @@ namespace HazardRenderer::Vulkan
 			if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT) return VK_FALSE;
 		}
 
-		
+
 		std::string labels, objects;
 		if (pCallbackData->cmdBufLabelCount)
 		{
@@ -61,7 +61,7 @@ namespace HazardRenderer::Vulkan
 	}
 
 
-	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion) 
+	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion)
 	{
 		uint32_t instanceVersion;
 		vkEnumerateInstanceVersion(&instanceVersion);
@@ -95,7 +95,7 @@ namespace HazardRenderer::Vulkan
 		m_Window = window;
 		m_ClearColor = info->pWindows[0].Color;
 
-		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2)) 
+		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2))
 		{
 			HZR_ASSERT(false, "API version not supported");
 		}
@@ -139,13 +139,13 @@ namespace HazardRenderer::Vulkan
 
 			for (const VkLayerProperties& prop : instanceProperties)
 			{
-				if (strcmp(prop.layerName, validationName) == 0) 
+				if (strcmp(prop.layerName, validationName) == 0)
 				{
 					validationPresent = true;
 					break;
 				}
 			}
-			if (validationPresent) 
+			if (validationPresent)
 			{
 				instanceInfo.ppEnabledLayerNames = &validationName;
 				instanceInfo.enabledLayerCount = 1;
@@ -262,7 +262,7 @@ namespace HazardRenderer::Vulkan
 			poolInfo.poolSizeCount = (uint32_t)(sizeof(poolSizes) / sizeof(*poolSizes));
 			poolInfo.pPoolSizes = poolSizes;
 
-			for (uint32_t i = 0; i < context->GetImagesInFlight(); i++) 
+			for (uint32_t i = 0; i < context->GetImagesInFlight(); i++)
 			{
 				VK_CHECK_RESULT(vkCreateDescriptorPool(context->GetLogicalDevice()->GetVulkanDevice(), &poolInfo, nullptr, &s_Data->DescriptorPools[i]), "Failed to create descriptor pool");
 				s_Data->DescriptorPoolAllocationCount[i] = 0;

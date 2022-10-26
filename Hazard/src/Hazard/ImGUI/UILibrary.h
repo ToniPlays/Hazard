@@ -407,7 +407,7 @@ namespace Hazard::ImUI
 		ImGui::SameLine(0, 5);
 
 		if (texture)
-			Image(texture->GetSourceImageAsset()->GetCoreImage(), { size, size });
+			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), { size, size });
 		else
 		{
 			ImVec2 pos = ImGui::GetCursorScreenPos();

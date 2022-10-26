@@ -10,11 +10,12 @@ namespace Hazard
 	public:
 		EnvironmentMap() = default;
 
-		Ref<HazardRenderer::CubemapTexture> RadianceMap = nullptr;
-		Ref<HazardRenderer::CubemapTexture> IrradianceMap = nullptr;
-		Ref<HazardRenderer::CubemapTexture> PreFilterMap = nullptr;
-		Ref<HazardRenderer::Image2D> BRDFLut = nullptr;
+		Ref<Texture2DAsset> SourceImage = nullptr;
+		Ref<AssetPointer> RadianceMap = nullptr;
+		Ref<AssetPointer> IrradianceMap = nullptr;
+		Ref<AssetPointer> PreFilterMap = nullptr;
+		Ref<AssetPointer> BRDFLut = nullptr;
 
-		static Ref<EnvironmentMap> Create(Ref<Image2DAsset> sourceImage);
+		static Ref<EnvironmentMap> Create(Ref<Texture2DAsset> sourceImage);
 	};
 }

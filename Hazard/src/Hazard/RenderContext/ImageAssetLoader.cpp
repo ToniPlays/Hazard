@@ -9,8 +9,10 @@ namespace Hazard
 {
 	bool ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
-		TextureHeader header = TextureFactory::LoadTexture(metadata.Path.string());
+
+		TextureHeader header = TextureFactory::GetFromCacheOrReload(metadata.Handle, metadata.Path);
 
 		Image2DCreateInfo info = {};
 		info.DebugName = File::GetName(metadata.Path);
@@ -21,22 +23,17 @@ namespace Hazard
 		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
 
-		Ref<Hazard::Image2DAsset> imageAsset = Ref<Hazard::Image2DAsset>::Create(&info);
-		imageAsset->m_Flags = AssetFlags::RuntimeGenerated;
+		Ref<Image2D> image = Image2D::Create(&info);
+		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
 
-		AssetMetadata imageData = {};
-		imageData.Type = AssetType::Image;
-		imageData.Handle = imageAsset->GetHandle();
-
-		AssetManager::AddRuntimeAsset(imageData, imageAsset);
-		asset = Ref<Texture2DAsset>::Create(imageAsset);
+		asset = Ref<Texture2DAsset>::Create(pointer);
 		asset->m_Type = AssetType::Image;
-
 
 		return asset;
 	}
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)
 	{
+		HZR_PROFILE_FUNCTION();
 		return false;
 	}
 }

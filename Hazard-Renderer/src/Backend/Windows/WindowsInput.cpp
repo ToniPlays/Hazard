@@ -16,15 +16,18 @@ bool Input::AnyKey()
 {
 	return anyKey;
 }
-bool Input::IsKeyDown(const Key::KeyCode key) {
+bool Input::IsKeyDown(const Key::KeyCode key)
+{
 	auto state = keyStates[key];
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
-bool Input::IsKeyPressed(const Key::KeyCode key) {
+bool Input::IsKeyPressed(const Key::KeyCode key) 
+{
 	auto state = keyStates[key];
 	return state == GLFW_PRESS;
 }
-bool Input::IsKeyReleased(const Key::KeyCode key) {
+bool Input::IsKeyReleased(const Key::KeyCode key) 
+{
 	auto state = keyStates[key];
 	return state == GLFW_RELEASE;
 }
@@ -49,7 +52,8 @@ void Input::Update()
 	HZR_PROFILE_FUNCTION();
 	anyKey = false;
 	for (uint32_t i = 0; i < 384; i++) {
-		if (keyStates[i] == GLFW_PRESS) {
+		if (keyStates[i] == GLFW_PRESS) 
+		{
 			anyKey = true;
 			UpdateKey(i, GLFW_REPEAT);
 		}

@@ -17,6 +17,7 @@ namespace Hazard
 	public:
 		virtual void Register(ScriptEngine* engine)
 		{
+			HZR_PROFILE_FUNCTION();
 			handler = &Application::GetModule<WorldHandler>();
 			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
 

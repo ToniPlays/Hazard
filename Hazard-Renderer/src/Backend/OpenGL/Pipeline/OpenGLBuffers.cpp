@@ -33,6 +33,7 @@ namespace HazardRenderer::OpenGL
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 
@@ -80,6 +81,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::SubmitResourceFree([id = m_BufferID, vao = m_VAO]() mutable {
 			glDeleteBuffers(1, &id);
 			glDeleteVertexArrays(1, &vao);
@@ -87,6 +89,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLVertexBuffer::SetData(const void* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLVertexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
 			glNamedBufferSubData(instance->m_BufferID, 0, size, data);
@@ -94,10 +97,12 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLVertexBuffer::SetData_RT(const void* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		glNamedBufferSubData(m_BufferID, 0, size, data);
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DebugName = info->DebugName;
 		m_Usage = info->Usage;
 
@@ -114,6 +119,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
 			glDeleteBuffers(1, &instance->m_BufferID);
@@ -121,6 +127,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLIndexBuffer::SetData(uint32_t* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
 			instance->m_Size = size;
@@ -129,12 +136,14 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLIndexBuffer::SetData_RT(uint32_t* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Size = size;
 		glNamedBufferData(m_BufferID, size, data, GL_STREAM_DRAW + m_Usage);
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_LocalData.Allocate(m_Size * 32);
 		m_LocalData.ZeroInitialize();
 
@@ -146,6 +155,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_LocalData.Release();
 		Ref<OpenGLUniformBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -154,6 +164,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_PROFILE_FUNCTION();
 
 		uint32_t frameIndex = OpenGLContext::GetInstance().GetSwapchain().As<OpenGLSwapchain>()->GetFrameIndex();

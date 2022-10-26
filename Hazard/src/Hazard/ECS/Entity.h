@@ -5,7 +5,8 @@
 
 namespace Hazard {
 
-	class Entity {
+	class Entity 
+	{
 		friend class World;
 	public:
 		Entity() = default;

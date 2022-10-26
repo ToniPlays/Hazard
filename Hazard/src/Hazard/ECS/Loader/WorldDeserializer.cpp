@@ -8,6 +8,7 @@ namespace Hazard
 {
 	Ref<World> WorldDeserializer::DeserializeEditor(const std::filesystem::path& file)
 	{
+		HZR_PROFILE_FUNCTION();
 		YAML::Node root = YAML::LoadFile(file.string());
 
         Ref<World> world = Ref<World>::Create(file);

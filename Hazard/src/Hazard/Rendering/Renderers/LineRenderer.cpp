@@ -12,6 +12,7 @@ namespace Hazard
 	}
 	void LineRenderer::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		constexpr uint32_t lineCount = 5000;
 		m_Data.MaxLineCount = lineCount;
 		m_Data.MaxVertices = lineCount * 2;
@@ -68,6 +69,7 @@ namespace Hazard
 
 	void LineRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
 		BufferLayout layout = { { "a_Position",		ShaderDataType::Float3 },

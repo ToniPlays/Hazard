@@ -36,7 +36,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reload()
 	{
 		Timer timer;
-		if (ShaderFactory::HasCachedShader(ShaderStage::Vertex, m_FilePath))
+		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) == CacheStatus::None)
 		{
 			__debugbreak();
 			return;

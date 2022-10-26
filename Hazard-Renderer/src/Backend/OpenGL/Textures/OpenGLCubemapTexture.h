@@ -23,7 +23,6 @@ namespace HazardRenderer::OpenGL
 		const uint32_t& GetID() const { return m_ID;	};
 
 	private:
-		Buffer GenerateFromFile(int& width, int& height, bool flipOnLoad);
 		void GenerateFromEquirectangular(Ref<Image2D> sourceImage);
 		void GenerateFromCubemap(CubemapGen& generationData);
 

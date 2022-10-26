@@ -25,7 +25,7 @@ namespace UI
 		auto& tc = target.GetComponent<TransformComponent>();
 		auto transform = tc.GetTransformMat4();
 
-		ImGuizmo::Manipulate(glm::value_ptr(glm::inverse(camera.GetView())), glm::value_ptr(camera.GetProjection()),
+		ImGuizmo::Manipulate(glm::value_ptr(camera.GetView()), glm::value_ptr(camera.GetProjection()),
 			(ImGuizmo::OPERATION)m_Type, m_Global ? ImGuizmo::WORLD : ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
 
 		m_IsUsing = ImGuizmo::IsUsing();

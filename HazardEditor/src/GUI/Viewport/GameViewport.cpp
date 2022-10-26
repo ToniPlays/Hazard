@@ -45,7 +45,6 @@ namespace UI
 		WorldCameraData cameraData = {};
 		cameraData.Projection = cc->GetProjection();
 		cameraData.View = view;
-		cameraData.Position = tc->Translation;
 		cameraData.OutputFrameBuffer = m_FrameBuffer;
 		cameraData.RenderPass = m_RenderPass;
 		cameraData.Width = m_Width;

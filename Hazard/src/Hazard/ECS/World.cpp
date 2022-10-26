@@ -127,6 +127,7 @@ namespace Hazard
 
 	Ref<World> World::Copy(Ref<World> sourceWorld)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<World> copied = Ref<World>::Create(sourceWorld->GetWorldFile());
 		copied->m_Name = sourceWorld->GetName() + "(copied)";
 		const auto& sourceEntities = sourceWorld->GetEntitiesWith<TagComponent>();

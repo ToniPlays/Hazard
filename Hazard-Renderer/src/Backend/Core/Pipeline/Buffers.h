@@ -52,7 +52,7 @@ namespace HazardRenderer
 		bool IsShared = true;
 	};
 
-	class VertexBuffer : public HZR_RESOURCE_HANDLER
+	class VertexBuffer : public RefCount
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -64,7 +64,7 @@ namespace HazardRenderer
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 
-	class IndexBuffer : public HZR_RESOURCE_HANDLER
+	class IndexBuffer : public RefCount
 	{
 	public:
 		virtual ~IndexBuffer() = default;
@@ -75,7 +75,7 @@ namespace HazardRenderer
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
-	class UniformBuffer : public HZR_RESOURCE_HANDLER
+	class UniformBuffer : public RefCount
 	{
 	public:
 		virtual ~UniformBuffer() = default;

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "Hazard/Core/Core.h"
 #include "../WorldHandler.h"
-#include "../World.h"
 #include "../Entity.h"
 #include "WorldSerializer.h"
 #include "Utility/YamlUtils.h"
@@ -92,7 +92,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 
 				if (!component.EnvironmentMap) return;
-				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->GetHandle());
+				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->SourceImage->GetHandle());
 				});
 		}
 		template<>

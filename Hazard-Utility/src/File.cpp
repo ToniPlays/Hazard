@@ -70,7 +70,8 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 {
 	std::ofstream out(path, std::ios::out | std::ios::binary);
 
-	if (out.is_open()) {
+	if (out.is_open()) 
+	{
 		out.write((char*)data, size);
 		out.flush();
 		out.close();

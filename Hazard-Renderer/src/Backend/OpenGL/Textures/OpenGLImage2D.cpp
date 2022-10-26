@@ -10,6 +10,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLImage2D::OpenGLImage2D(Image2DCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(!info->DebugName.empty(), "Debug name required");
 		m_DebugName = info->DebugName;
 		m_Width = info->Width;
@@ -42,6 +43,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLImage2D::Release()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLImage2D> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->Release_RT();

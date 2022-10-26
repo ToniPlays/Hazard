@@ -26,7 +26,7 @@ namespace Hazard {
 
 	struct RenderContextCreateInfo 
 	{
-		RenderAPI Renderer = RenderAPI::Auto;
+		HazardRenderer::RenderAPI Renderer = HazardRenderer::RenderAPI::Auto;
 		std::string Title;
 		uint32_t Width;
 		uint32_t Height;

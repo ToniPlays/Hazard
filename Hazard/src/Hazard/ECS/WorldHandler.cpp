@@ -83,6 +83,7 @@ namespace Hazard {
 
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (File::Exists(file)) 
 		{
 			AssetHandle handle = AssetManager::ImportAsset(file);

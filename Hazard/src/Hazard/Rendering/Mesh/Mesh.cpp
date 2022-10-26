@@ -13,6 +13,7 @@ namespace Hazard
 
 	Mesh::Mesh(std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_LocalVertexData = Buffer::Copy(vertices.data(), vertices.size() * sizeof(Vertex3D));
 		m_LocalIndexData = Buffer::Copy(indices.data(), indices.size() * sizeof(uint32_t));
 
@@ -54,6 +55,7 @@ namespace Hazard
 
 	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (pipeline == nullptr) 
 		{
 			BufferLayout layout = Vertex3D::Layout();

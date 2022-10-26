@@ -192,9 +192,6 @@
     <ClInclude Include="src\Hazard\ImGUI\UILibrary.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Instrumentor.h">
-      <Filter>src\Hazard</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Logging\Logger.h">
       <Filter>src\Hazard\Logging</Filter>
     </ClInclude>

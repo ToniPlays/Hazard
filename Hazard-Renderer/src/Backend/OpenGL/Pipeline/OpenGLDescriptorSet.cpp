@@ -25,6 +25,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLDescriptorSet::BindResources(uint32_t programID, bool isCompute)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (isCompute)
 		{
 			for (auto& [binding, descriptor] : m_WriteDescriptors)

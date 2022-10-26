@@ -2,6 +2,7 @@
 
 #include "UtilityCore.h"
 #include "Utility/YamlUtils.h"
+#include "Hazard/Assets/Asset.h"
 
 struct ProjectGeneralData 
 {
@@ -19,6 +20,7 @@ public:
 	bool IsValid() { return !m_Data.ProjectDirectory.empty(); }
 	
 	void ProcessAssets();
+	Hazard::AssetMetadata ProcessAsset(const std::filesystem::path& path);
 
 	const ProjectGeneralData& GetProjectData() { return m_Data; }
 

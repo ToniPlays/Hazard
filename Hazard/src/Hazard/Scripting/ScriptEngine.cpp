@@ -22,6 +22,7 @@ namespace Hazard
 	}
 	void ScriptEngine::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		HazardScriptCreateInfo createInfo = {};
 		createInfo.CoreAssemblyPath = m_Info.CoreAssemblyPath;
 		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
@@ -84,6 +85,7 @@ namespace Hazard
 	}
 	void ScriptEngine::InitializeComponent(Entity& entity, ScriptComponent& component)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (component.ModuleName == "") return;
 		if (!m_Engine->GetAppAssembly().HasScript(component.ModuleName)) return;
 

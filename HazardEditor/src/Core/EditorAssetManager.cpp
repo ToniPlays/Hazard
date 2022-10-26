@@ -101,6 +101,8 @@ bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
 
 bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const std::filesystem::path& path)
 {
+	std::filesystem::path metaPath = path.string() + ".meta";
+	if (File::Exists(metaPath)) return false;
 	YAML::Emitter out;
 
 	out << YAML::BeginMap;
@@ -108,7 +110,7 @@ bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const
 	YamlUtils::Serialize(out, "Type", metadata.Type);
 	YamlUtils::Serialize(out, "Path", metadata.Path);
 	out << YAML::EndMap;
-	File::WriteFile(path.string() + ".meta", out.c_str());
+	File::WriteFile(metaPath, out.c_str());
 
 	return Hazard::AssetManager::ImportAsset(path, metadata) != INVALID_ASSET_HANDLE;
 }

@@ -10,43 +10,36 @@ namespace UI
 	AssetPanel::AssetPanel() : Panel("Asset panel")
 	{
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
+			AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/textureBG.png");
 			m_Icons[AssetType::Undefined] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/folder.png");
+			AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/folder.png");
 			m_Icons[AssetType::Folder] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::AudioClip] = AssetManager::GetAsset<Texture2DAsset>(handle);
+			m_Icons[AssetType::AudioClip] = m_Icons[AssetType::Undefined];
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/world.png");
+			AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/world.png");
 			m_Icons[AssetType::World] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::Image] = AssetManager::GetAsset<Texture2DAsset>(handle);
+			m_Icons[AssetType::Image] = m_Icons[AssetType::Undefined];
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/textureBG.png");
-			m_Icons[AssetType::Mesh] = AssetManager::GetAsset<Texture2DAsset>(handle);
+			m_Icons[AssetType::Mesh] = m_Icons[AssetType::Undefined];
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
+			AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/csharp.png");
 			m_Icons[AssetType::Script] = AssetManager::GetAsset<Texture2DAsset>(handle);
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
-			m_Icons[AssetType::EnvironmentMap] = AssetManager::GetAsset<Texture2DAsset>(handle);
+			m_Icons[AssetType::EnvironmentMap] = m_Icons[AssetType::Script];
 		}
 		{
-			AssetHandle handle = AssetManager::ImportAsset("res/Icons/csharp.png");
-			m_Icons[AssetType::PhysicsMaterial] = AssetManager::GetAsset<Texture2DAsset>(handle);
+			m_Icons[AssetType::PhysicsMaterial] = m_Icons[AssetType::Script];
 		}
-
-
 		SetRootFolder(ProjectManager::GetAssetFolder());
 	}
 	void AssetPanel::OnPanelRender()

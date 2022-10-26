@@ -31,14 +31,17 @@ namespace Hazard::Physics
 
 	void PhysicsCommand::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		s_Physics2D = new Physics2D();
 	}
 	void PhysicsCommand::BeginSimulation(PhysicsBeginInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		s_Physics2D->Begin(info->Gravity);
 	}
 	void PhysicsCommand::StopSimulation()
 	{
+		HZR_PROFILE_FUNCTION();
 		s_Physics2D->End();
 	}
 	void PhysicsCommand::Step(double delta)

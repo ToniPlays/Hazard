@@ -68,7 +68,7 @@ namespace UI
 
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
-		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->GetCoreImage(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		ImUI::ShiftY(edgeOffset);
 		ImUI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);

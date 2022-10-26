@@ -40,7 +40,6 @@ namespace UI
 		cameraData.RenderPass = m_RenderPass;
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
-		cameraData.Position = m_EditorCamera.GetPosition();
 		cameraData.ZNear = m_EditorCamera.GetNearClipping();
 		cameraData.ZFar = m_EditorCamera.GetFarClipping();
 
@@ -78,7 +77,6 @@ namespace UI
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
-
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 
 		if (ImGui::Button(ICON_FK_COG, { 25, 25 }))
@@ -166,16 +164,16 @@ namespace UI
 		if (!m_MouseOverWindow) return false;
 
 		switch (e.GetKeyCode()) {
-		case Key::W:
+		case Key::D1:
 			m_Gizmos.SetType(Gizmo::Translate);
 			return true;
-		case Key::E:
+		case Key::D2:
 			m_Gizmos.SetType(Gizmo::Rotate);
 			return true;
-		case Key::R:
+		case Key::D3:
 			m_Gizmos.SetType(Gizmo::Scale);
 			return true;
-		case Key::T:
+		case Key::D4:
 			m_Gizmos.SetType(Gizmo::Bounds);
 			return true;
 		case Key::G:

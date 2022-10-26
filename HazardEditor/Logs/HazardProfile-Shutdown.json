@@ -1,1 +1,1 @@
-{"otherData": {}, "traceEvents": [{}]}
+{"otherData": {}, "traceEvents": [{},{"cat":"function","dur":938,"name":"void HazardRenderer::OpenGL::OpenGLImage2D::Release_RT(void)","ph":"X","pid":0,"tid":8864,"ts":2681429633.800},{"cat":"function","dur":998,"name":"HazardRenderer::OpenGL::OpenGLImage2D::~OpenGLImage2D(void)","ph":"X","pid":0,"tid":8864,"ts":2681429633.500},{"cat":"function","dur":1056,"name":"void Hazard::AssetManager::Shutdown(void)","ph":"X","pid":0,"tid":8864,"ts":2681429618.400}]}

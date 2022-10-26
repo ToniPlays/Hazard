@@ -40,7 +40,8 @@ namespace Hazard {
 	}
 	void HazardLoop::Start()
 	{
-		try 
+		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Start.json");
+		try
 		{
 			Timer timer;
 			AssetManager::Init();
@@ -48,12 +49,14 @@ namespace Hazard {
 			m_Application->PreInit();
 			m_ModuleHandler->InitializeAll();
 			m_Application->Init();
+
 			HZR_CORE_WARN("Startup took: {0} ms", timer.ElapsedMillis());
 		}
-		catch (HazardRuntimeError& error) 
+		catch (HazardRuntimeError& error)
 		{
 			std::cout << error.what() << std::endl;
 		}
+		HZR_PROFILE_SESSION_END();
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{

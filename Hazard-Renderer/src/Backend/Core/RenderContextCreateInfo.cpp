@@ -1,7 +1,7 @@
 
 #include "RenderContextCreateInfo.h"
 
-namespace Hazard
+namespace HazardRenderer
 {
 	std::string RenderAPIToString(RenderAPI api)
 	{

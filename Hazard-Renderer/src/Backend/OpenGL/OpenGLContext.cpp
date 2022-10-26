@@ -34,6 +34,7 @@ namespace HazardRenderer::OpenGL {
 
 	void OpenGLContext::Init(Window* window, HazardRendererCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Window = window;
 
 		glfwMakeContextCurrent((GLFWwindow*)m_Window->GetNativeWindow());
@@ -59,6 +60,7 @@ namespace HazardRenderer::OpenGL {
 
 	void OpenGLContext::BeginFrame()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Swapchain->BeginFrame();
 	}
 	void OpenGLContext::Present()

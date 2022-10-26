@@ -16,6 +16,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Specs.DebugName = info->DebugName;
 
 		m_Specs.SwapChainTarget = info->SwapChainTarget;
@@ -47,6 +48,7 @@ namespace HazardRenderer::OpenGL
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
 			HZR_PROFILE_FUNCTION("OpenGLFrameBuffer::~OpenGLFrameBuffer_RT()");
@@ -65,8 +67,8 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Bind_RT()
 	{
-		HZR_RENDER_THREAD_ONLY();
 		HZR_PROFILE_FUNCTION();
+		HZR_RENDER_THREAD_ONLY();
 
 		glDepthMask(GL_TRUE);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
@@ -87,6 +89,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::Submit([instance, width, height, force]() mutable {
 			instance->Resize_RT(width, height, force);

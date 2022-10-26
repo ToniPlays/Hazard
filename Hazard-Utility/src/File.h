@@ -12,7 +12,15 @@
 
 using std::filesystem::directory_iterator;
 
-enum class CopyOptions {
+enum class CacheStatus
+{
+	None,
+	Exists,
+	Outdated
+};
+
+enum class CopyOptions 
+{
 	None = (int)std::filesystem::copy_options::none,
 	OverwriteExisting = (int)std::filesystem::copy_options::overwrite_existing,
 	SkipExisting = (int)std::filesystem::copy_options::skip_existing,

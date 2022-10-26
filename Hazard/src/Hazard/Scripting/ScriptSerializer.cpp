@@ -10,6 +10,7 @@ namespace Hazard
 {
 	void ScriptSerializer::SerializeFieldEditor(Ref<HazardScript::ScriptObject> object, YAML::Emitter& out, FieldMetadata* field)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!(field->GetFlags() & MonoFlags_Public || field->Has<ShowInPropertiesAttribute>())) 
 		{
 			__debugbreak();
@@ -90,6 +91,7 @@ namespace Hazard
 	}
 	void ScriptSerializer::DeserializeFieldEditor(Ref<HazardScript::ScriptObject> object, const std::string& name, YAML::Node& valueNode)
 	{
+		HZR_PROFILE_FUNCTION();
 		ScriptMetadata& script = object->GetScript();
 		if (!script.HasField(name)) return;
 

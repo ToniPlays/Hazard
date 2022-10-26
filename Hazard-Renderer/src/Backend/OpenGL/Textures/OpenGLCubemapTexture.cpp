@@ -14,6 +14,7 @@ namespace HazardRenderer::OpenGL
 {
 	OpenGLCubemapTexture::OpenGLCubemapTexture(CubemapTextureCreateInfo* createInfo) : m_FilePath(createInfo->FilePath), m_Format(createInfo->Format)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DebugName = createInfo->DebugName;
 
 		if (createInfo->pCubemapSrc)
@@ -44,25 +45,7 @@ namespace HazardRenderer::OpenGL
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glGenerateTextureMipmap(m_ID);
 
-		if (createInfo->Data.Data == nullptr && !createInfo->FilePath.empty())
-		{
-			//Load from file
-			int w, h;
-			Buffer buffer = GenerateFromFile(w, h, createInfo->FlipOnLoad);
-
-			Image2DCreateInfo sourceImageInfo = {};
-			sourceImageInfo.DebugName = "OpenGLCubemapSource";
-			sourceImageInfo.Width = w;
-			sourceImageInfo.Height = h;
-			sourceImageInfo.Data = buffer;
-			sourceImageInfo.Format = ImageFormat::RGBA16F;
-			sourceImageInfo.ClearLocalBuffer = true;
-
-			m_SourceImage = Image2D::Create(&sourceImageInfo);
-
-			GenerateFromEquirectangular(m_SourceImage);
-		}
-		else if (createInfo->pCubemapSrc)
+		if (createInfo->pCubemapSrc)
 		{
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
 		}
@@ -73,13 +56,11 @@ namespace HazardRenderer::OpenGL
 		}
 		else if (createInfo->Data.Data)
 		{
-			/*
 			for (uint8_t i = 0; i < 6; i++)
 			{
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,
-					m_Width, m_Height, 0, GL_RGB, GL_FLOAT, nullptr);
+					m_Width, m_Height, 0, GL_RGB, GL_FLOAT, createInfo->Data.Data);
 			}
-			*/
 		}
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
@@ -90,26 +71,9 @@ namespace HazardRenderer::OpenGL
 			glBindTextureUnit(s, id);
 			});
 	}
-	Buffer OpenGLCubemapTexture::GenerateFromFile(int& width, int& height, bool flipOnLoad)
-	{
-		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(File::Exists(m_FilePath), "File does not exist");
-
-		constexpr int desired = 4;
-
-		int channels;
-		stbi_set_flip_vertically_on_load(flipOnLoad);
-		if (m_Format == ImageFormat::RGBA16F)
-		{
-			stbi_ldr_to_hdr_gamma(1.0f);
-			float* data = stbi_loadf(m_FilePath.c_str(), &width, &height, &channels, desired);
-			return Buffer(data, width * height * desired);
-		}
-		stbi_uc* data = stbi_load(m_FilePath.c_str(), &width, &height, &channels, desired);
-		return Buffer(data, width * height * desired);
-	}
 	void OpenGLCubemapTexture::GenerateFromEquirectangular(Ref<Image2D> sourceImage)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<CubemapTexture> instance = this;
 
 		PipelineSpecification pipelineSpec = {};
@@ -128,9 +92,12 @@ namespace HazardRenderer::OpenGL
 		commandBuffer->BindPipeline(computePipeline);
 		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
 		commandBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
+
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
+		HZR_PROFILE_FUNCTION();
+		Timer timer;
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
 		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
 

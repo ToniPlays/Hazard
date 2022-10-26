@@ -44,6 +44,7 @@ namespace Hazard
 	}
 	static void EnvironmentMap_SetCubemapTexture_Native(uint64_t handle, int type, uint64_t assetHandle)
 	{
+		/*
 		Ref<EnvironmentMap> env = AssetManager::GetAsset<EnvironmentMap>(handle);
 		Ref<HazardRenderer::CubemapTexture> cubeMap = AssetManager::GetRuntimeAsset<HazardRenderer::CubemapTexture>(assetHandle);
 		return;
@@ -66,5 +67,6 @@ namespace Hazard
 			break;
 		}
 		}
+		*/
 	}
 }

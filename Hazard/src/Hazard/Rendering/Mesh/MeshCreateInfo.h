@@ -10,7 +10,8 @@
 
 namespace Hazard {
 
-	enum MeshFlags {
+	enum MeshFlags : uint32_t 
+	{
 		MeshFlags_CalculateTangentSpace = BIT(0),
 		MeshFlags_JoinIdenticalVertices = BIT(1),
 		MeshFlags_MakeLeftHanded = BIT(2),
@@ -44,7 +45,10 @@ namespace Hazard {
 		MeshFlags_DropNormals = BIT(30),
 		MeshFlags_GenerateBoundingBoxes = BIT(31),
 
-		MeshFlags_DefaultOptimization = MeshFlags_JoinIdenticalVertices | MeshFlags_GenerateSmoothNormals | MeshFlags_Triangulate | MeshFlags_GenerateUVCoords | MeshFlags_OptimizeMeshes | MeshFlags_GenerateBoundingBoxes
+		MeshFlags_DefaultOptimization = MeshFlags_JoinIdenticalVertices | 
+		MeshFlags_GenerateSmoothNormals | MeshFlags_Triangulate | 
+		MeshFlags_GenerateUVCoords | MeshFlags_OptimizeMeshes | 
+		MeshFlags_GenerateBoundingBoxes
 	};
 
 	struct MeshData {

@@ -7,7 +7,7 @@
 
 namespace Hazard
 {
-	struct FileHeader 
+	struct FileHeader
 	{
 		uint32_t Width;
 		uint32_t Height;
@@ -15,29 +15,10 @@ namespace Hazard
 		uint64_t DataSize;
 	};
 
-	bool TextureFactory::TextureCacheExists(const std::string& path)
+	bool TextureFactory::SaveTextureToCache(const AssetHandle& handle, const TextureHeader& header)
 	{
-		auto cacheDir = GetFileCachePath(path);
-		return File::Exists(cacheDir);
-	}
-
-	std::filesystem::path TextureFactory::GetFileCachePath(const std::string& path)
-	{
-		std::string fileName = File::GetName(path);
-		std::string dir = m_CacheDirectory + "/" + fileName + ".hzrche";
-		return std::filesystem::path(dir);
-	}
-
-	std::filesystem::path TextureFactory::GetFileSourcePath(const std::string& path)
-	{
-		if (std::filesystem::path(path).is_absolute()) 
-			return path;
-		return std::filesystem::path("res/" + path);
-	}
-
-	bool TextureFactory::SaveTextureToCache(const std::string& path, const TextureHeader& header)
-	{
-		std::filesystem::path cacheDir = GetFileCachePath(path);
+		HZR_PROFILE_FUNCTION();
+		std::filesystem::path cacheDir = GetCacheFile(handle);
 
 		if (!File::DirectoryExists(cacheDir.parent_path()))
 			File::CreateDir(cacheDir.parent_path());
@@ -45,8 +26,8 @@ namespace Hazard
 		size_t dataSize;
 		uint8_t* textureData = nullptr;
 
-		if (header.Channels == 4) {
-
+		if (header.Channels == 4)
+		{
 			dataSize = sizeof(FileHeader) + header.ImageData.Size;
 			textureData = new uint8_t[dataSize];
 
@@ -58,6 +39,7 @@ namespace Hazard
 
 			memcpy(textureData, &fileHeader, sizeof(FileHeader));
 			memcpy(textureData + sizeof(FileHeader), header.ImageData.Data, header.ImageData.Size);
+
 			bool result = File::WriteBinaryFile(cacheDir, textureData, dataSize);
 
 			delete[] textureData;
@@ -68,12 +50,7 @@ namespace Hazard
 
 	bool TextureFactory::CacheFileChanged(const std::string& path)
 	{
-		auto sourceFile = GetFileSourcePath(path);
-		auto cacheFile = GetFileCachePath(path);
-
-		if (!File::Exists(cacheFile)) return false;
-
-		return File::IsNewerThan(sourceFile, cacheFile);
+		return false;
 	}
 
 	uint32_t TextureFactory::PixelSize(const HazardRenderer::ImageFormat& format)
@@ -92,20 +69,32 @@ namespace Hazard
 		case ImageFormat::SRGB:				return 2;
 		case ImageFormat::DEPTH32F:			return 1;
 		case ImageFormat::DEPTH24STENCIL8:	return 1;
-        case ImageFormat::RED32I:           return 1;
+		case ImageFormat::RED32I:           return 1;
 		}
 		return 0;
 	}
 
-	TextureHeader TextureFactory::LoadTextureFromCache(const std::string& path)
+	std::filesystem::path TextureFactory::GetCacheFile(const AssetHandle& handle)
 	{
-		auto cacheFile = GetFileCachePath(path);
+		return s_CacheDirectory / (std::to_string(handle) + ".hzrche");
+	}
+
+	CacheStatus TextureFactory::CacheStatus(const AssetHandle& handle)
+	{
+		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;
+	}
+
+	TextureHeader TextureFactory::LoadTextureFromCache(const AssetHandle& handle)
+	{
+		HZR_PROFILE_FUNCTION();
+		Timer timer;
+		auto cacheFile = GetCacheFile(handle);
 
 		Buffer data = File::ReadBinaryFile(cacheFile);
 
 		TextureHeader header = {};
 
-		if (!data) 
+		if (!data)
 		{
 			data.Release();
 			return header;
@@ -119,31 +108,13 @@ namespace Hazard
 		header.ImageData = Buffer::Copy(data.Data, fileHeader.DataSize, sizeof(FileHeader));
 
 		data.Release();
-		return header;
-	}
-	TextureHeader TextureFactory::LoadTexture(const std::string& path, bool reloadIfOutdated)
-	{
-		bool cacheExists = TextureCacheExists(path);
-		//bool isNewer = CacheFileChanged(path) && reloadIfOutdated;
-
-		if (!cacheExists)
-		{
-			TextureHeader header = LoadTextureFromSourceFile(path, true);
-			SaveTextureToCache(path, header);
-			return header;
-		}
-
-		TextureHeader header = LoadTextureFromCache(path);
-
-		if (!header.IsValid()) {
-			header = LoadTextureFromSourceFile(path, true);
-			SaveTextureToCache(path, header);
-		}
-			
+		std::cout << "Image load from cache " << cacheFile << " took " << timer.ElapsedMillis() << " ms" << std::endl;
 		return header;
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)
 	{
+		Timer timer;
+		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
 		TextureHeader header = {};
 
@@ -160,6 +131,20 @@ namespace Hazard
 		header.Width = w;
 		header.Height = h;
 		header.Channels = desired;
+
+		std::cout << "Image load from source " << path << " took " << timer.ElapsedMillis() << " ms" << std::endl;
+
+		return header;
+	}
+	TextureHeader TextureFactory::GetFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path)
+	{
+		HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "Handle cannot be INVALID");
+
+		if (TextureFactory::CacheStatus(handle) == CacheStatus::Exists)
+			return TextureFactory::LoadTextureFromCache(handle);
+
+		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path.string(), true);
+		TextureFactory::SaveTextureToCache(handle, header);
 
 		return header;
 	}

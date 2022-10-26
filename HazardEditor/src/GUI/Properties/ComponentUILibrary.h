@@ -278,7 +278,7 @@ namespace UI
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
 					Application::Get().SubmitMainThread([&, handle]() {
 						Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-						c.EnvironmentMap = EnvironmentMap::Create(sourceImage->GetSourceImageAsset());
+						c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
 						});
 					});
 

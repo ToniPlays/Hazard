@@ -43,6 +43,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLSwapchain::Create(uint32_t width, uint32_t height, bool vSync)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Width = width;
 		m_Height = height;
 		m_Vsync = vSync;
@@ -52,6 +53,7 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLSwapchain::Resize(uint32_t width, uint32_t height)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Width = width;
 		m_Height = height;
 	}

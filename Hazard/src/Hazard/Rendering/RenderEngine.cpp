@@ -12,6 +12,7 @@ namespace Hazard
 {
 	RenderEngine::RenderEngine(RendererCreateInfo* createInfo) : Module("RenderEngine")
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 		HRenderer::s_Engine = this;
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
@@ -28,7 +29,9 @@ namespace Hazard
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 
-		m_WhiteTexture = Ref<Texture2DAsset>::Create(Ref<Hazard::Image2DAsset>::Create(&info));
+		Ref<AssetPointer> whiteTextureCore = AssetPointer::Create(Image2D::Create(&info), AssetType::Image);
+
+		m_WhiteTexture = Ref<Texture2DAsset>::Create(whiteTextureCore);
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
@@ -108,7 +111,6 @@ namespace Hazard
 
 			for (auto& mesh : meshList)
 			{
-				
 				ModelData data = {};
 				data.Transform = mesh.Transform;
 				data.Metalness = mesh.Metalness;
@@ -140,7 +142,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 
-		LightingData data;
+		LightingData data = {};
 		data.DirectionLightCount = drawList.DirectionalLights.size();
 
 		for (uint32_t i = 0; i < data.DirectionLightCount; i++)
@@ -163,10 +165,10 @@ namespace Hazard
 				auto& lut = environmentData.Map->BRDFLut;
 
 				auto& shader = m_Resources->PbrPipeline->GetShader();
-				shader->Set("u_RadianceMap", 0, radiance);
-				shader->Set("u_IrradianceMap", 0, irradiance);
-				shader->Set("u_PrefilterMap", 0, prefilter);
-				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut);
+				shader->Set("u_RadianceMap", 0, radiance->Value.As<CubemapTexture>());
+				shader->Set("u_IrradianceMap", 0, irradiance->Value.As<CubemapTexture>());
+				shader->Set("u_PrefilterMap", 0, prefilter->Value.As<CubemapTexture>());
+				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut->Value.As<Image2D>());
 				break;
 			}
 		}
@@ -179,7 +181,7 @@ namespace Hazard
 			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->GetCoreImage());
+			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
 		}
 		UtilityUniformData utilData = {};
 		utilData.Time = Time::s_Time;
@@ -193,6 +195,7 @@ namespace Hazard
 	}
 	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 
 		if (drawList.Environment.size() == 0) return;
@@ -200,7 +203,7 @@ namespace Hazard
 		{
 			auto& radiance = environmentData.Map->RadianceMap;
 
-			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance);
+			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
 			commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
 			commandBuffer->Draw(6);
 			return;
@@ -231,11 +234,11 @@ namespace Hazard
 				glm::mat4 inverseView = glm::inverse(camera.View);
 
 				CameraData data = {};
-				data.ViewProjection = camera.Projection * inverseView;
+				data.ViewProjection = camera.Projection * camera.View;
 				data.Projection = camera.Projection;
-				data.View = inverseView;
-				data.InverseViewProjection = camera.View * inverseProjection;
-				data.Position = glm::vec4(camera.Position, 1.0);
+				data.View = camera.View;
+				data.InverseViewProjection = inverseView * inverseProjection;
+				data.Position = inverseView[3];
 				data.ZNear = camera.ZNear;
 				data.ZFar = camera.ZFar;
 

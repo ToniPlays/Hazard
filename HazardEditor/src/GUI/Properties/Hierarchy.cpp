@@ -90,14 +90,18 @@ namespace UI
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{
+		if (!m_Hovered) return false;
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::OnKeyPressed));
 	}
 	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
 	{
+		if (!Input::IsKeyDown(Key::LeftControl)) return false;
+
 		switch (e.GetKeyCode())
 		{
-		case Key::Delete: {
+		case Key::Delete: 
+		{
 			if (m_SelectionContext)
 			{
 				m_WorldHandler->GetCurrentWorld()->DestroyEntity(m_SelectionContext);

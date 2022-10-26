@@ -7,14 +7,21 @@ using namespace Hazard;
 
 namespace Editor 
 {
+	enum class CameraMode
+	{
+		None, FlyCam, Arcball
+	};
+
 	class EditorCamera : public HazardRenderer::Camera {
 	public:
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspecRatio, float nearPlane, float farPlane);
 		~EditorCamera() = default;
 
+		void Init();
+
 		glm::mat4 GetProjection() const override { return m_Projection; };
-		glm::mat4 GetView() const override { return m_View; };
+		glm::mat4 GetView() const override { return m_ViewMatrix; };
 		glm::vec3 GetPosition() const override { return m_Position; };
 
 		const float GetNearClipping() const override { return m_ZNear; };
@@ -23,6 +30,7 @@ namespace Editor
 		void OnUpdate();
 		bool OnEvent(Event& e);
 
+		float GetCameraSpeed() const;
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
 
@@ -37,30 +45,42 @@ namespace Editor
 			m_FocalPoint = point;
 			UpdateView();
 		};
-		float GetPitch() const { return pitch; }
-		float GetYaw() const { return yaw; }
+		float GetPitch() const { return m_Pitch; }
+		float GetYaw() const { return m_Yaw; }
 
+		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
+
 		const bool Is2DEnabled() const { return m_Is2DEnabled; }
 
 	private:
-		float viewport_w = 1280, viewport_h = 720;
-		float fov = 45.0f, aspectRatio = 1.778f;
-		float pitch = 0, yaw = 0;
-		float m_ZNear, m_ZFar;
+		glm::mat4 m_ViewMatrix;
+		glm::vec3 m_Position = glm::vec3(0.0f), m_Direction = glm::vec3(0.0f), m_FocalPoint = glm::vec3(0.0f);
 
-		float m_Distance = 10.0f;
+		float viewport_w = 1280, viewport_h = 720;
+
+		float fov, aspectRatio, m_ZNear, m_ZFar;
+
+		glm::vec2 m_InitialMousePos = {};
+		glm::vec3 m_InitialFocalPoint = {}, m_InitialRotation = {};
+
+		float m_Distance = 1.0f;
+		float m_NormalSpeed = 2.5f;
+		float m_Pitch = 0, m_Yaw = 0;
+		float m_PitchDelta = 0.0f, m_YawDelta = 0.0f;
+
+		glm::vec3 m_PositionDelta = glm::vec3(0.0f), m_RightDirection = glm::vec3(0.0f);
+
+		float m_MinFocusDistance = 100.0f;
+		CameraMode m_CameraMode = CameraMode::Arcball;
+
+		constexpr static float MIN_SPEED = 0.5f, MAX_SPEED = 50.0f;
+
 		float size2D = 10.0f;
 		bool m_Is2DEnabled = false;
 
-		glm::vec2 m_InitialMousePos = { 0, 0 };
-		glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
-
-		glm::vec3 m_Position = { 0, 0, 0 };
-
 		glm::mat4 m_Projection = glm::mat4(1.0f);
-		glm::mat4 m_View = glm::mat4(1.0f);
 
 	private:
 		void UpdateProjection();

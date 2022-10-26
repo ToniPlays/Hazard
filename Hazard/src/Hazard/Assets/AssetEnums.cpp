@@ -6,7 +6,8 @@
 namespace Hazard::Utils
 {
 
-	AssetType StringToAssetType(const std::string& type) {
+	AssetType StringToAssetType(const std::string& type) 
+	{
 		if (type == "None")					return AssetType::Undefined;
 		if (type == "Folder")				return AssetType::Folder;
 		if (type == "AudioClip")			return AssetType::AudioClip;
@@ -19,7 +20,8 @@ namespace Hazard::Utils
 
 		return AssetType::Undefined;
 	}
-	const char* AssetTypeToString(AssetType type) {
+	const char* AssetTypeToString(AssetType type) 
+	{
 		switch (type)
 		{
 		case AssetType::Undefined:			return "None";
@@ -40,13 +42,15 @@ namespace Hazard::Utils
 		if (ext == "jpeg")		return AssetType::Image;
 		if (ext == "jpg")		return AssetType::Image;
 		if (ext == "png")		return AssetType::Image;
+		if (ext == "hdr")		return AssetType::Image;
+		if (ext == "tga")		return AssetType::Image;
 		if (ext == "mp3")		return AssetType::AudioClip;
 		if (ext == "ogg")		return AssetType::AudioClip;
 		if (ext == "hazard")	return AssetType::World;
 		if (ext == "obj")		return AssetType::Mesh;
 		if (ext == "fbx")		return AssetType::Mesh;
 		if (ext == "dae")		return AssetType::Mesh;
-		if (ext == "hdr")		return AssetType::Image;
+		if (ext == "gltf")		return AssetType::Mesh;
 		if (ext == "cs")		return AssetType::Script;
 
 		return AssetType::Undefined;
@@ -69,7 +73,8 @@ namespace Hazard::Utils
 using namespace Hazard;
 
 template<>
-static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue) {
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue) 
+{
 	if (!node[key]) value = defaultValue;
 	else value = Utils::StringToAssetType(node[key].as<std::string>());
 }
@@ -79,7 +84,8 @@ static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, Ass
 	out << YAML::Key << key << YAML::Value << Utils::AssetTypeToString(value);
 }
 template<>
-static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue) {
+static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue) 
+{
 	if (!node[key]) value = defaultValue;
 	else value = node[key].as<uint64_t>();
 }

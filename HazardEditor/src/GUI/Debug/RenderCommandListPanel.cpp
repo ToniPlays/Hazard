@@ -75,7 +75,7 @@ namespace UI
 
 			for (auto& data : drawList.WorldRenderer->GetCameraData()) {
 
-				const glm::vec3& pos = data.Position;
+				const glm::vec3& pos = glm::inverse(data.View)[3];
 				ImGui::TableNextColumn();
 				ImGui::Text("Position");
 				ImGui::TableNextColumn();

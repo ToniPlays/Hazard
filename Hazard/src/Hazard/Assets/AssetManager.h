@@ -16,7 +16,8 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() { 
+		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() 
+		{ 
 			return s_Registry.GetRegistry(); 
 		}
 		
@@ -37,6 +38,7 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle) 
 		{
+			HZR_PROFILE_FUNCTION();
 			static_assert(std::is_base_of<Asset, T>::value);
 
 			AssetMetadata& meta = GetMetadata(handle);
@@ -65,7 +67,8 @@ namespace Hazard
 		
 		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 
 		{
-			assert(asset->m_Handle == metadata.Handle);
+			HZR_PROFILE_FUNCTION();
+			HZR_ASSERT(asset->m_Handle == metadata.Handle, "Stuff no match");
 			asset->m_Type = metadata.Type;
 			s_LoadedAssets[metadata.Handle] = asset;
 			return true;
@@ -73,6 +76,7 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> GetRuntimeAsset(const AssetHandle& handle)
 		{
+			HZR_PROFILE_FUNCTION();
 			if (handle == INVALID_ASSET_HANDLE) return nullptr;
 			return s_LoadedAssets[handle].As<T>();
 		}

@@ -5,6 +5,7 @@
 
 #include "Backend/Core/RenderContextCreateInfo.h"
 #include "Backend/Core/Window.h"
+#include "File.h"
 
 #include <filesystem>
 #include <unordered_map>
@@ -16,6 +17,12 @@ namespace HazardRenderer
 
     struct ShaderStageData;
     enum class ShaderStage : uint32_t;
+
+    struct ShaderCacheData
+    {
+        ShaderStage ShaderStage;
+        uint32_t Length;
+    };
 
     struct ShaderDefine 
     {
@@ -41,13 +48,14 @@ namespace HazardRenderer
 	class ShaderFactory
 	{
 	public:
-        static void SetCacheLocation(const std::filesystem::path& path) {};
-        static bool HasCachedShader(const ShaderStage& stage, const std::filesystem::path& path);
+        static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDir = path; };
+        static CacheStatus HasCachedShader(const std::filesystem::path& path, RenderAPI api);
+        static bool CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries, RenderAPI api);
         static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
+        static std::unordered_map<ShaderStage, std::vector<uint32_t>> GetShaderBinaries(const std::filesystem::path& path, RenderAPI api);
 
     private:
-        static std::filesystem::path GetCachedFilePath(const ShaderStage& stage, const std::filesystem::path& path);
-
+        static std::filesystem::path GetCachedFilePath(const std::filesystem::path& path, RenderAPI api);
         static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
         static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
 

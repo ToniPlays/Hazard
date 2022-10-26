@@ -7,9 +7,10 @@
 #include "Color.h"
 #include "HazardRuntimeError.h"
 #include "Timer.h"
+#include "Instrumentor.h"
 
 #define HZR_PROFILE 1
-#define HZR_OPTICK 1
+#define HZR_OPTICK 0
 
 
 #if HZR_OPTICK

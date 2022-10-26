@@ -16,6 +16,7 @@ namespace Hazard
 {
 	void Application::CreateApplicationStack(HazardCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(info->AppInfo, "[Hazard]: ApplicationCreateInfo required");
 
 		if (info->ScriptEngineInfo)
@@ -29,6 +30,7 @@ namespace Hazard
 	}
 	void Application::ExecuteMainThreadQueue()
 	{
+		HZR_PROFILE_FUNCTION();
 		for (auto& fn : m_MainThreadJobs)
 		{
 			fn();

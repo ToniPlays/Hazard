@@ -22,6 +22,7 @@ namespace HazardRenderer::OpenGL
 
 	bool OpenGLShaderCompiler::Compile(CompileInfo* compileInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		Timer timer;
 
 		m_ResultBinary.clear();
@@ -58,6 +59,7 @@ namespace HazardRenderer::OpenGL
 	}
 	bool OpenGLShaderCompiler::Decompile(const std::vector<uint32_t> binary, std::string& result)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_ErrorMessage.clear();
 		spirv_cross::CompilerGLSL compiler(binary);
 		result = compiler.compile();
@@ -65,6 +67,7 @@ namespace HazardRenderer::OpenGL
 	}
 	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries)
 	{
+		HZR_PROFILE_FUNCTION();
 		ShaderData result;
 
 		for (auto& [stage, binary] : binaries)

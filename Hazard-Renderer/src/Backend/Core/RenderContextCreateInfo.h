@@ -10,7 +10,7 @@
 #include <string>
 #include <functional>
 
-namespace Hazard
+namespace HazardRenderer
 {
 	struct RenderMessage 
 	{
@@ -22,7 +22,8 @@ namespace Hazard
 	using RendererMessageCallback = void(*)(RenderMessage);
 	using EventCallback = std::function<void(Event&)>;
 
-	enum class RenderAPI {
+	enum class RenderAPI 
+	{
 		Auto = 0,
 		OpenGL,
 		Vulkan,

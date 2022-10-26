@@ -6,17 +6,18 @@
 #include "Inputs/InputPBR.glsl"
 
 layout(location = 0) out vec4 f_Color;
-layout(location = 1) out vec3 FragPos;
-layout(location = 2) out vec3 f_Normal;
+layout(location = 1) out vec3 f_Normal;
+layout(location = 2) out vec3 WorldPosition;
 
 void main() 
 {
-	f_Normal = mat3(u_Model.Transform) * a_Normal;
 	vec4 worldPosition = u_Model.Transform * vec4(a_Position, 1.0);
-
-	FragPos = worldPosition.xyz;
-	f_Color = a_Color;
 	gl_Position = u_Camera.ViewProjection * worldPosition;
+
+	f_Color = a_Color;
+	f_Normal = mat3(u_Model.Transform) * a_Normal;
+	WorldPosition = worldPosition.xyz;
+
 }
 
 #type Fragment
@@ -28,8 +29,8 @@ void main()
 #include "Uniforms/UtilityUniform.glsl"
 
 layout(location = 0) in vec4 f_Color;
-layout(location = 1) in vec3 FragPos;
-layout(location = 2) in vec3 f_Normal;
+layout(location = 1) in vec3 f_Normal;
+layout(location = 2) in vec3 WorldPosition;
 
 layout(binding = 0) uniform samplerCube u_RadianceMap;
 layout(binding = 1) uniform samplerCube u_IrradianceMap;
@@ -43,7 +44,6 @@ layout(binding = 3) uniform sampler2D u_BRDFLut;
 
 layout(location = 0) out vec4 OutputColor;
 
-
 const float gamma = 2.2;
 
 void main() 
@@ -53,7 +53,7 @@ void main()
 	m_Params.Normal = normalize(f_Normal);
 	m_Params.Metalness = u_Model.Metalness;
 	m_Params.Roughness = u_Model.Roughness;
-	m_Params.View = normalize(u_Camera.Position.xyz - FragPos);
+	m_Params.View = normalize(u_Camera.Position.xyz - WorldPosition);
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 
 	//Calculate
@@ -65,9 +65,8 @@ void main()
 	{
 		//Lighting
 		DirectionalLight light = u_Lights.DirectionalLights[i];
-		if(light.Color.a == 0.0) 
+		if(light.Color.a <= 0.0) 
 			continue;
-
 		Lo += CalculateDirectionalLight(F0, light);
 	}
 

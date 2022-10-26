@@ -25,16 +25,29 @@ void HazardProject::ProcessAssets()
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 	for (auto& item : File::GetAllInDirectory(assetPath)) 
 	{
-		if (File::GetFileExtension(item) == "meta") 
-		{
-			EditorAssetManager::ImportFromMetadata(item);
-			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			if (File::IsDirectory(assetPath)) {
-				ProcessSubFolderAssets(assetPath);
-			}
-		}
+		ProcessAsset(item);
 	}
-	HZR_INFO("Loading ediitor assets took {0} ms", timer.ElapsedMillis());
+	std::filesystem::path resPath = "res";
+	for (auto& item : File::GetAllInDirectory(resPath))
+	{
+		ProcessAsset(item);
+	}
+	HZR_INFO("Loading editor assets took {0} ms", timer.ElapsedMillis());
+}
+
+Hazard::AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)
+{
+	if (File::GetFileExtension(path) == "meta")
+	{
+		Hazard::AssetMetadata metadata = EditorAssetManager::ImportFromMetadata(path);
+		std::filesystem::path assetPath = File::GetPathNoExt(path);
+		if (File::IsDirectory(assetPath))
+		{
+			ProcessSubFolderAssets(assetPath);
+		}
+		return metadata;
+	}
+	return Hazard::AssetMetadata();
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

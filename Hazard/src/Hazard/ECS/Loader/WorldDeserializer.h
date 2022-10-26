@@ -89,7 +89,10 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
 
 			if (handle == INVALID_ASSET_HANDLE) return;
-			//c.EnvironmentMap = AssetManager::GetAsset<EnvironmentMap>(handle);
+
+			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
+			HZR_ASSERT(sourceImage, "Woop");
+			c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
  		}
 
 		template<>

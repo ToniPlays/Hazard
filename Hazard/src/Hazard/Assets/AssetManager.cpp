@@ -7,10 +7,12 @@ namespace Hazard
 
 	void AssetManager::Init()
 	{
+		HZR_PROFILE_FUNCTION();
 		s_Registry.Clear();
 	}
 	void AssetManager::Shutdown()
 	{
+		HZR_PROFILE_FUNCTION();
 		s_LoadedAssets.clear();
 	}
 	/// <summary>
@@ -20,6 +22,8 @@ namespace Hazard
 	/// <returns></returns>
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata)
 	{
+		HZR_PROFILE_FUNCTION();
+		HZR_CORE_WARN("Importing asset {0}", filePath.string());
 		if (filePath == "") return INVALID_ASSET_HANDLE;
 
 		std::filesystem::path path = File::GetFileAbsolutePath(filePath); //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
@@ -29,7 +33,8 @@ namespace Hazard
 
 		AssetType type = AssetType::Undefined;
 
-		if (!File::IsDirectory(filePath)) {
+		if (!File::IsDirectory(filePath)) 
+		{
 			std::string extension = File::GetFileExtension(path.string());
 			type = Utils::AssetTypeFromExtension(extension);
 		}
@@ -39,7 +44,8 @@ namespace Hazard
 			return INVALID_ASSET_HANDLE;
 
 		//Create Asset metadata, don't load until requested
- 		if (!metadata.IsValid()) {
+ 		if (!metadata.IsValid()) 
+		{
 			metadata.Handle = AssetHandle();
 			metadata.Path = path;
 			metadata.Type = type;
@@ -50,6 +56,7 @@ namespace Hazard
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
+		HZR_PROFILE_FUNCTION();
 		bool found = false;
 		for (const auto& item : s_Registry) {
 			if (item.second.Handle == handle) {
@@ -67,6 +74,7 @@ namespace Hazard
 	}
 	AssetHandle AssetManager::GetHandleFromFile(const std::string& filePath)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::filesystem::path path = filePath;
 
 		if (s_Registry.Contains(path)) {
@@ -80,6 +88,7 @@ namespace Hazard
 	}
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
 	{
+		HZR_PROFILE_FUNCTION();
 		for (auto& [path, metadata] : s_Registry) {
 			if (metadata.Handle == handle)
 				return metadata;

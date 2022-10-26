@@ -52,9 +52,11 @@ namespace Hazard
 		vboInfo.Data = data;
 		Ref<VertexBuffer> buffer = VertexBuffer::Create(&vboInfo);
 
+		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Undefined);
+
 		AssetMetadata metadata = {};
 		metadata.Type = AssetType::Undefined;
-		metadata.Handle = buffer->GetHandle();
+		metadata.Handle = asset->GetHandle();
 
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
@@ -63,7 +65,7 @@ namespace Hazard
 			});
 		
 		AssetManager::AddRuntimeAsset(metadata, buffer);
-		return buffer->GetHandle();
+		return asset->GetHandle();
 	}
 	static void VertexBuffer_Destroy_Native(uint64_t handle) 
 	{
@@ -87,9 +89,11 @@ namespace Hazard
 		iboInfo.Data = data;
 		Ref<IndexBuffer> buffer = IndexBuffer::Create(&iboInfo);
 
+		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Undefined);
+
 		AssetMetadata metadata = {};
 		metadata.Type = AssetType::Undefined;
-		metadata.Handle = buffer->GetHandle();
+		metadata.Handle = asset->GetHandle();
 
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
@@ -99,7 +103,7 @@ namespace Hazard
 
 
 		AssetManager::AddRuntimeAsset(metadata, buffer);
-		return buffer->GetHandle();
+		return asset->GetHandle();
 	}
 	static void IndexBuffer_Destroy_Native(uint64_t handle)
 	{

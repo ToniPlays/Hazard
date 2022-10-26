@@ -56,4 +56,19 @@ namespace Hazard
 		void SetHandle(UID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }
 	};
+
+	class AssetPointer : public Asset
+	{
+	public:
+		Ref<RefCount> Value;
+
+		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type)
+		{
+			Ref<AssetPointer> pointer = Ref<AssetPointer>::Create();
+			pointer->Value = value;
+			pointer->m_Type = type;
+			pointer->m_Handle = AssetHandle();
+			return pointer;
+		}
+	};
 }

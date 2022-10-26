@@ -18,12 +18,14 @@ namespace Hazard
 		return result;
 	}
 
-    void MeshFactory::SetOptimization(uint32_t flags)
+    void MeshFactory::SetOptimization(MeshFlags flags)
     {
         m_MeshFlags = flags;
     }
     Ref<Mesh> MeshFactory::LoadMesh(const std::filesystem::path& file)
     {
+		HZR_PROFILE_FUNCTION();
+		Timer timer;
         HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 
         Assimp::Importer importer;
@@ -36,15 +38,19 @@ namespace Hazard
         ProcessNode(scene->mRootNode, scene, data);
         TraverseNode(scene->mRootNode, data);
 
+		HZR_CORE_INFO("Loading mesh {0} took {1} ms", file.string(), timer.ElapsedMillis());
+
         return Ref<Mesh>::Create(data.vertices, data.indices);
     }
 	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)
 	{
-		for (uint32_t i = 0; i < node->mNumMeshes; i++) {
+		for (uint32_t i = 0; i < node->mNumMeshes; i++) 
+		{
 			aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
 			ProcessMesh(aiMesh, scene, data);
 		}
-		for (uint32_t i = 0; i < node->mNumChildren; i++) {
+		for (uint32_t i = 0; i < node->mNumChildren; i++) 
+		{
 			ProcessNode(node->mChildren[i], scene, data);
 		}
 	}
@@ -68,8 +74,10 @@ namespace Hazard
 
 		uint32_t colors = 0;
 
-		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++) {
-			if (mesh->HasVertexColors(i)) {
+		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++) 
+		{
+			if (mesh->HasVertexColors(i)) 
+			{
 				colors = i;
 				break;
 			}
@@ -81,26 +89,30 @@ namespace Hazard
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
 
-			if (mesh->HasVertexColors(colors)) {
+			if (mesh->HasVertexColors(colors)) 
+			{
 				aiColor4D color = mesh->mColors[colors][i];
 				vertex.Color.r = color.r;
 				vertex.Color.g = color.g;
 				vertex.Color.b = color.b;
 				vertex.Color.a = color.a;
 			}
-			if (mesh->HasNormals()) {
+			HZR_ASSERT(mesh->HasNormals(), "We need normals");
+			{
 				vertex.Normals.x = mesh->mNormals[i].x;
 				vertex.Normals.y = mesh->mNormals[i].y;
 				vertex.Normals.z = mesh->mNormals[i].z;
 			}
-			if (mesh->HasTextureCoords(0)) {
+			if (mesh->HasTextureCoords(0)) 
+			{
 				vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
 				vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
 			}
 			data.vertices.push_back(vertex);
 		}
 
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) 
+		{
 			aiFace face = mesh->mFaces[i];
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 				data.indices.push_back(face.mIndices[j] + subMesh.baseVertex);
@@ -122,7 +134,8 @@ namespace Hazard
 			submesh.localTransform = local;
 		}
 
-		for (uint32_t i = 0; i < node->mNumChildren; i++) {
+		for (uint32_t i = 0; i < node->mNumChildren; i++) 
+		{
 			TraverseNode(node->mChildren[i], data, transform, ++level);
 		}
 	}
