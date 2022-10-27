@@ -118,10 +118,9 @@ bool File::Move(const std::filesystem::path& src, const std::filesystem::path& d
 std::string File::ReadFile(const std::filesystem::path& file)
 {
 	std::string result;
-	std::ifstream ifs(File::GetFileAbsolutePath(file), std::ios::in | std::ios::binary);
+	std::ifstream ifs(File::GetFileAbsolutePath(file), std::ios::in | std::ios::binary | std::ios::ate);
 	HZR_ASSERT(ifs.is_open(), "Cannot open file: " + GetFileAbsolutePath(file).string());
 
-	ifs.seekg(0, std::ios::end);
 	size_t size = ifs.tellg();
 	result.resize(size);
 	ifs.seekg(0, std::ios::beg);
@@ -150,7 +149,6 @@ CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 	if (!stream.is_open())
 		return CachedBuffer(0);
 
-	stream.seekg(0, std::ios::end);
 	auto size = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
@@ -169,7 +167,6 @@ bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<u
 	if (!stream.is_open())
 		return false;
 
-	stream.seekg(0, std::ios::end);
 	auto size = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 

@@ -91,9 +91,7 @@ namespace Hazard
 		TextureHeader header = {};
 
 		if (!data.Available())
-		{
 			return header;
-		}
 
 		FileHeader fileHeader = data.Read<FileHeader>();
 

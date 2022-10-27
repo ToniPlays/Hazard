@@ -36,7 +36,6 @@ namespace UI
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 
 		bool m_DrawStats = false;
-		bool m_MouseOverWindow = false;
 		bool m_WindowFocused = false;
 
 		uint32_t m_CurrentImage = 0;

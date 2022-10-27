@@ -13,18 +13,47 @@ public:
 		m_DataBuffer.ZeroInitialize();
 	}
 
+	CachedBuffer(const CachedBuffer& other)
+		: m_DataBuffer(other.m_DataBuffer), m_CurrentBufferOffset(other.m_CurrentBufferOffset)
+	{
+	}
+
 	CachedBuffer(CachedBuffer&& other)
 	{
-		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
 		m_DataBuffer = other.m_DataBuffer;
+		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
 
+		other.m_DataBuffer = Buffer();
 		other.m_CurrentBufferOffset = 0;
-		other.m_DataBuffer = {};
 	}
 
 	~CachedBuffer()
 	{
 		m_DataBuffer.Release();
+	}
+
+	CachedBuffer& operator=(std::nullptr_t)
+	{
+		m_DataBuffer = Buffer();
+		m_CurrentBufferOffset = 0;
+		return *this;
+	}
+
+	CachedBuffer& operator=(const CachedBuffer& other)
+	{
+		m_DataBuffer = other.m_DataBuffer;
+		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
+		return *this;
+	}
+	CachedBuffer& operator=(CachedBuffer&& other)
+	{
+		m_DataBuffer = other.m_DataBuffer;
+		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
+
+		other.m_DataBuffer = Buffer();
+		other.m_CurrentBufferOffset = 0;
+
+		return *this;
 	}
 
 	template<typename T>
@@ -81,6 +110,10 @@ public:
 	void SetBufferOffsfet(size_t offset) { m_CurrentBufferOffset = offset; }
 
 private:
+
+private:
 	Buffer m_DataBuffer;
 	size_t m_CurrentBufferOffset = 0;
+	uint32_t m_RefCount = 0;
+
 };

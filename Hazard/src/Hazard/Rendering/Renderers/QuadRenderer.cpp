@@ -47,7 +47,12 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (!m_QuadBatch) return;
 
-		m_VertexBuffer->SetData(m_QuadBatch.GetData(), m_QuadBatch.GetDataSize());
+		BufferCopyRegion region = {};
+		region.Data = m_QuadBatch.GetData();
+		region.Size = m_QuadBatch.GetDataSize();
+		region.Offset = 0;
+
+		m_VertexBuffer->SetData(region);
 		Ref<Shader> shader = m_Pipeline->GetShader();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 

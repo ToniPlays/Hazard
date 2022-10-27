@@ -22,8 +22,8 @@ namespace HazardScript
 		static ManagedClass* CacheClass(const std::string& className, MonoClass* klass);
 		static ManagedClass* GetClass(MonoClass* monoClass);
 
-		static ScriptMetadata* CacheOrGetScriptMetadata(ManagedClass* klass);
-		static FieldMetadata* CacheOrGetFieldMetadata(MonoClassField* field);
+		static Ref<ScriptMetadata> CacheOrGetScriptMetadata(ManagedClass* klass);
+		static Ref<FieldMetadata> CacheOrGetFieldMetadata(MonoClassField* field);
 		static ManagedClass* GetManagedClassByName(const std::string& name);
 
 		static ScriptCacheData* GetCache() { return s_Cache; }

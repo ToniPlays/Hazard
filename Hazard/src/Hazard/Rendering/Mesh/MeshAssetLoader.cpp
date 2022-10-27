@@ -3,7 +3,8 @@
 #include "MeshAssetLoader.h"
 #include "MeshFactory.h"
 
-namespace Hazard {
+namespace Hazard 
+{
 	bool MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();

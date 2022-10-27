@@ -260,8 +260,9 @@ namespace UI
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				std::string name = "Empty";
-				if (c.EnvironmentMap) {
-					AssetHandle handle = c.EnvironmentMap->GetHandle();
+				if (c.EnvironmentMap) 
+				{
+					AssetHandle handle = c.EnvironmentMap->SourceImage->GetHandle();
 					AssetMetadata& data = AssetManager::GetMetadata(handle);
 					name = File::GetName(data.Path);
 				}

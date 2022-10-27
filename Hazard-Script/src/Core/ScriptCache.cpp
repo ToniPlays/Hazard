@@ -37,7 +37,7 @@ namespace HazardScript
 
 		return GetManagedClassByName(Mono::ResolveClassName(monoClass));
 	}
-	ScriptMetadata* ScriptCache::CacheOrGetScriptMetadata(ManagedClass* klass)
+	Ref<ScriptMetadata> ScriptCache::CacheOrGetScriptMetadata(ManagedClass* klass)
 	{
 		uint32_t hash = Hash::GenerateFNVHash(klass->FullName);
 		if (s_Cache->ScriptMetadata.find(hash) != s_Cache->ScriptMetadata.end())
@@ -47,7 +47,7 @@ namespace HazardScript
 		return &s_Cache->ScriptMetadata[hash];
 
 	}
-	FieldMetadata* ScriptCache::CacheOrGetFieldMetadata(MonoClassField* field)
+	Ref<FieldMetadata> ScriptCache::CacheOrGetFieldMetadata(MonoClassField* field)
 	{
 		const char* name = mono_field_full_name(field);
 		uint32_t hash = Hash::GenerateFNVHash(name);

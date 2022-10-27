@@ -64,7 +64,8 @@ namespace Hazard
 	{
 		return m_Engine->GetAppAssembly().HasScript(moduleName);
 	}
-	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) {
+	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) 
+	{
 		return m_Engine->GetAppAssembly().GetScript(moduleName);
 	}
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)

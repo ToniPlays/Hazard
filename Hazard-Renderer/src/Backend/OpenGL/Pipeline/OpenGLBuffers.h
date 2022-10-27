@@ -12,8 +12,8 @@ namespace HazardRenderer::OpenGL
 		OpenGLVertexBuffer(VertexBufferCreateInfo* createInfo);
 		~OpenGLVertexBuffer();
 
-		void SetData(const void* data, size_t size) override;
-		void SetData_RT(const void* data, size_t size);
+		void SetData(const BufferCopyRegion& copyRegion) override;
+		void SetData_RT(const BufferCopyRegion& copyRegion);
 		size_t GetSize() override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
@@ -43,8 +43,8 @@ namespace HazardRenderer::OpenGL
 		uint32_t GetBufferID() { return m_BufferID; }
 
 	private:
-		void SetData(uint32_t* data, size_t size) override;
-		void SetData_RT();
+		void SetData(const BufferCopyRegion& copyRegion) override;
+		void SetData_RT(const BufferCopyRegion& copyRegion);
 
 		std::string m_DebugName;
 		BufferUsage m_Usage;

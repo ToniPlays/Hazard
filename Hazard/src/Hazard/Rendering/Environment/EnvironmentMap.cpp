@@ -23,7 +23,9 @@ namespace Hazard
 		brdfLutInfo.Data = header.ImageData;
 		brdfLutInfo.Usage = ImageUsage::Attachment;
 
+
 		Ref<Image2D> lut = Image2D::Create(&brdfLutInfo);
+		header.ImageData.Release();
 
 		BRDFLut = AssetPointer::Create(lut, AssetType::Image);
 

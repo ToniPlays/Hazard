@@ -20,6 +20,11 @@ namespace HazardRenderer::OpenGL
 		return (shaderc_shader_kind)0;
 	}
 
+	OpenGLShaderCompiler::~OpenGLShaderCompiler()
+	{
+		m_ResultBinary.Release();
+	}
+
 	bool OpenGLShaderCompiler::Compile(CompileInfo* compileInfo)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -65,7 +70,7 @@ namespace HazardRenderer::OpenGL
 		result = compiler.compile();
 		return !result.empty();
 	}
-	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, Buffer> binaries)
+	ShaderData OpenGLShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
 		ShaderData result;

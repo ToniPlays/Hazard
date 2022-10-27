@@ -25,7 +25,7 @@ namespace Hazard
 		info.Width = 1;
 		info.Height = 1;
 		info.Mips = 1;
-		info.Data = Buffer::Copy(&data, sizeof(uint32_t));
+		info.Data = Buffer(&data, sizeof(uint32_t));
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 

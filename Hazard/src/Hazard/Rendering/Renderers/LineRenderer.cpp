@@ -39,9 +39,12 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (!m_LineBatch.GetCount()) return;
 
-		uint64_t size = m_LineBatch.GetDataSize();
-		uint64_t elements = size / sizeof(LineVertex);
-		m_VertexBuffer->SetData(m_LineBatch.GetData(), size);
+		BufferCopyRegion region = {};
+		region.Data = m_LineBatch.GetData();
+		region.Size = m_LineBatch.GetDataSize();
+		region.Offset = 0;
+
+		m_VertexBuffer->SetData(region);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch.GetCount());
 	}

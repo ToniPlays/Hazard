@@ -52,11 +52,18 @@ namespace HazardRenderer
 		bool IsShared = true;
 	};
 
+	struct BufferCopyRegion
+	{
+		const void* Data = nullptr;
+		size_t Size;
+		size_t Offset = 0;
+	};
+
 	class VertexBuffer : public RefCount
 	{
 	public:
 		virtual ~VertexBuffer() = default;
-		virtual void SetData(const void* data, size_t size) = 0;
+		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual size_t GetSize() = 0;
 		virtual std::string& GetDebugName() = 0;
 
@@ -69,7 +76,7 @@ namespace HazardRenderer
 	public:
 		virtual ~IndexBuffer() = default;
 
-		virtual void SetData(uint32_t* data, size_t size) = 0;
+		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual size_t GetCount() = 0;
 		virtual std::string& GetDebugName() = 0;
 

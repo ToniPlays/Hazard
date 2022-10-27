@@ -16,12 +16,14 @@ namespace UI
 	}
 
 	template<typename T>
-	static bool ScriptField(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+	static bool ScriptField(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) 
+	{
 		static_assert(false);
 	}
 
 	template<>
-	static bool ScriptField<bool>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+	static bool ScriptField<bool>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) 
+	{
 		using namespace HazardScript;
 		bool value = obj.GetFieldValue<bool>(field.GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -39,7 +41,8 @@ namespace UI
 
 
 	template<>
-	static bool ScriptField<float>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) {
+	static bool ScriptField<float>(uint32_t index, HazardScript::FieldMetadata& field, HazardScript::ScriptObject& obj, Ref<World> world) 
+	{
 		using namespace HazardScript;
 		float value = obj.GetFieldValue<float>(field.GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -47,12 +50,12 @@ namespace UI
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		if (field.Has<RangeAttribute>()) {
-			RangeAttribute attrib = field.Get<RangeAttribute>();
-			modified = ImUI::InputFloat(value, 0.0f, attrib.Min, attrib.Max);
+			Ref<RangeAttribute> attrib = field.Get<RangeAttribute>();
+			modified = ImUI::InputFloat(value, 0.0f, attrib->Min, attrib->Max);
 		}
 		else if (field.Has<SliderAttribute>()) {
-			SliderAttribute attrib = field.Get<SliderAttribute>();
-			modified = ImUI::InputSliderFloat(value, 0.0f, attrib.Min, attrib.Max);
+			Ref<SliderAttribute> attrib = field.Get<SliderAttribute>();
+			modified = ImUI::InputSliderFloat(value, 0.0f, attrib->Min, attrib->Max);
 		}
 		else
 		{
@@ -233,8 +236,8 @@ namespace UI
 		bool modified = false;
 
 		if (field.Has<TextAreaAttribute>()) {
-			TextAreaAttribute attrib = field.Get<TextAreaAttribute>();
-			modified = ImUI::TextArea(value, attrib.Min, attrib.Max);
+			Ref<TextAreaAttribute> attrib = field.Get<TextAreaAttribute>();
+			modified = ImUI::TextArea(value, attrib->Min, attrib->Max);
 		}
 		else modified = ImUI::TextField(value);
 
@@ -312,7 +315,7 @@ namespace UI
 
 		if (field.Has<TooltipAttribute>())
 		{
-			ImUI::Tooltip(field.Get<TooltipAttribute>().Tooltip.c_str());
+			ImUI::Tooltip(field.Get<TooltipAttribute>()->Tooltip.c_str());
 		}
 		ImGui::NextColumn();
 

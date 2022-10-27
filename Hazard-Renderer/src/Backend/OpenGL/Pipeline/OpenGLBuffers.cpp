@@ -47,6 +47,7 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLVertexBuffer> instance = this;
 
 		Renderer::SubmitResourceCreate([instance]() mutable {
+
 			if (instance->m_Layout.GetStride() == 0)
 			{
 				glCreateBuffers(1, &instance->m_BufferID);
@@ -79,7 +80,14 @@ namespace HazardRenderer::OpenGL
 				glVertexArrayAttribBinding(instance->m_VAO, i, element.ElementDivisor);
 			}
 			if (instance->m_LocalBuffer)
-				instance->SetData_RT(instance->m_LocalBuffer.Data, instance->m_LocalBuffer.Size);
+			{
+				BufferCopyRegion region = {};
+				region.Data = instance->m_LocalBuffer.Data;
+				region.Size = instance->m_LocalBuffer.Size;
+				region.Offset = 0;
+
+				instance->SetData_RT(region);
+			}
 		});
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -90,18 +98,21 @@ namespace HazardRenderer::OpenGL
 			glDeleteVertexArrays(1, &vao);
 			});
 	}
-	void OpenGLVertexBuffer::SetData(const void* data, size_t size)
+	void OpenGLVertexBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
+		m_LocalBuffer.Release();
+		m_LocalBuffer = Buffer::Copy(copyRegion.Data, copyRegion.Size);
+
 		Ref<OpenGLVertexBuffer> instance = this;
-		Renderer::SubmitResourceCreate([instance, data, size]() mutable {
-			glNamedBufferSubData(instance->m_BufferID, 0, size, data);
+		Renderer::SubmitResourceCreate([instance, copyRegion]() mutable {
+			instance->SetData_RT(copyRegion);
 			});
 	}
-	void OpenGLVertexBuffer::SetData_RT(const void* data, size_t size)
+	void OpenGLVertexBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
-		glNamedBufferSubData(m_BufferID, 0, size, data);
+		glNamedBufferSubData(m_BufferID, copyRegion.Offset, copyRegion.Size, m_LocalBuffer.Data);
 		m_LocalBuffer.Release();
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
@@ -118,10 +129,17 @@ namespace HazardRenderer::OpenGL
 		Renderer::SubmitResourceCreate([instance]() mutable {
 
 			glCreateBuffers(1, &instance->m_BufferID);
+			glNamedBufferData(instance->GetBufferID(), instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
 
 			if (instance->m_LocalBuffer.Data != nullptr)
-				instance->SetData_RT();
+			{
+				BufferCopyRegion copyRegion = {};
+				copyRegion.Data = instance->m_LocalBuffer.Data;
+				copyRegion.Size = instance->m_LocalBuffer.Size;
+				copyRegion.Offset = 0;
 
+				instance->SetData_RT(copyRegion);
+			}
 			});
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -132,20 +150,23 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
-	void OpenGLIndexBuffer::SetData(uint32_t* data, size_t size)
+	void OpenGLIndexBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
+
+		m_LocalBuffer.Release();
+		m_LocalBuffer = Buffer::Copy(copyRegion.Data, copyRegion.Size);
+
+
 		Ref<OpenGLIndexBuffer> instance = this;
-		m_Size = size;
-		m_LocalBuffer = Buffer::Copy(data, size);
-		Renderer::SubmitResourceCreate([instance]() mutable {
-			instance->SetData_RT();
+		Renderer::SubmitResourceCreate([instance, copyRegion]() mutable {
+			instance->SetData_RT(copyRegion);
 			});
 	}
-	void OpenGLIndexBuffer::SetData_RT()
+	void OpenGLIndexBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
-		glNamedBufferData(m_BufferID, m_Size, m_LocalBuffer.Data, GL_STREAM_DRAW + m_Usage);
+		glNamedBufferSubData(m_BufferID, copyRegion.Offset, copyRegion.Size, m_LocalBuffer.Data);
 		m_LocalBuffer.Release();
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),

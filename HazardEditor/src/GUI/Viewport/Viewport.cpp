@@ -123,7 +123,6 @@ namespace UI
 
 		ImGui::EndChild();
 		ImRect rect = ImGui::GetCurrentWindow()->InnerRect;
-		m_MouseOverWindow = ImGui::IsMouseHoveringRect(rect.Min, rect.Max, false);
 		m_WindowFocused = ImGui::IsWindowFocused();
 
 		if (m_DrawStats)
@@ -140,7 +139,7 @@ namespace UI
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
 		m_Gizmos.OnEvent(e);
 
-		if (m_MouseOverWindow)
+		if (m_Hovered)
 			m_EditorCamera.OnEvent(e);
 
 		return false;
@@ -161,7 +160,7 @@ namespace UI
 
 	bool Viewport::KeyPressed(KeyPressedEvent& e)
 	{
-		if (!m_MouseOverWindow) return false;
+		if (!m_Hovered) return false;
 
 		switch (e.GetKeyCode()) {
 		case Key::D1:

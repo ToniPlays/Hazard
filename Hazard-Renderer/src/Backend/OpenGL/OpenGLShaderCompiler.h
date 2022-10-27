@@ -12,16 +12,16 @@ namespace HazardRenderer::OpenGL
 	{
 	public:
 		OpenGLShaderCompiler() = default;
-		~OpenGLShaderCompiler() = default;
+		~OpenGLShaderCompiler();
 
 		bool Compile(CompileInfo* compileInfo);
 		bool Decompile(Buffer binary, std::string& result);
 
-		ShaderData GetShaderResources(const std::unordered_map<ShaderStage, Buffer> binaries);
+		ShaderData GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries);
 
 		double GetCompileTime() { return m_CompilationTime; }
 		std::string GetErrorMessage() { return m_ErrorMessage; }
-		Buffer GetCompiledBinary() { return Buffer::Copy(m_ResultBinary.Data, m_ResultBinary.Size); }
+		Buffer GetCompiledBinary() { return m_ResultBinary; }
 	public:
 
 		static void PrintReflectionData(const ShaderData& data);

@@ -24,46 +24,70 @@ namespace UI
 	{
 #ifdef HZR_MEM_DIAG
 		const auto& allocStats = Memory::GetAllocationStats();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
 
 		ImGui::Text("Memory usage: %s", StringUtil::BytesToString(allocStats.TotalAllocated - allocStats.TotalFreed).c_str());
 		ImGui::Text("Allocated: %s", StringUtil::BytesToString(allocStats.TotalAllocated).c_str());
 		ImGui::Text("Freed: %s", StringUtil::BytesToString(allocStats.TotalFreed).c_str());
 
+
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		const char* columns[] = { "Category", "Allocated" };
+
 
 		ImUI::Table("Memory usage", columns, 2, size, [&]() {
 
 			float rowHeight = 24.0f;
 
-			
 			const auto& allocStatsMap = Memory::Allocator::GetAllocationStats();
-
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
+			struct MemoryItem
+			{
+				const char* Category;
+				size_t Size;
+			};
+
+			std::vector<MemoryItem> sortedItems;
+			sortedItems.reserve(allocStatsMap.size());
 			for (auto& [category, stat] : allocStatsMap)
 			{
-				bool clicked = ImUI::TableRowClickable((const char*)category, rowHeight);
+				if (StringUtil::Contains(category, m_MemorySearchVal))
+					sortedItems.push_back({ category, stat.TotalAllocated - stat.TotalFreed });
+			}
 
-				const auto& c = category;
+			std::sort(sortedItems.begin(), sortedItems.end(), [](auto& a, auto& b) { return a.Size > b.Size; });
 
-				size_t TotalUsed = stat.TotalAllocated - stat.TotalFreed;
+			for (auto& item : sortedItems)
+			{
+				bool clicked = ImUI::TableRowClickable((const char*)item.Category, rowHeight);
 
-				ImUI::Group((const char*)&category, [c, rowHeight, style, TotalUsed]() {
+				ImUI::Group((const char*)&item.Category, [&]() {
 
-					std::string title = std::string(c);
+					std::string title = std::string(item.Category);
 
-					ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisY);
+					ImUI::Separator({ 4.0, rowHeight }, GetMemoryColor(item.Size));
 					ImGui::SameLine();
 					ImGui::Text(title.substr(title.find_last_of('\\') + 1).c_str());
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
-					ImGui::Text(StringUtil::BytesToString(TotalUsed).c_str());
+					ImGui::Text(StringUtil::BytesToString(item.Size).c_str());
 					});
 			}
 			});
 #else
 		ImGui::Text("Memory debug not enabled");
 #endif
+	}
+	ImVec4 PerformanceDebugPanel::GetMemoryColor(size_t bytes)
+	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+
+		if (bytes < 1024 * 512)		return style.Colors.AxisY;
+		if (bytes < 1048576 * 10)	return style.Colors.Warning;
+		if (bytes < 1048576 * 50)	return style.Colors.AxisX;
+
+		return style.Colors.AxisX;
 	}
 }

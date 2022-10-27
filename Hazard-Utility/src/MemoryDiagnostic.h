@@ -4,7 +4,7 @@
 #include <mutex>
 
 #ifdef HZR_DEBUG
-//#define HZR_MEM_DIAG
+#define HZR_MEM_DIAG
 #endif
 
 namespace Memory

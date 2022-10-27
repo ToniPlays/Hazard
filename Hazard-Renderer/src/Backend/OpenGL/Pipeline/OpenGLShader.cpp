@@ -70,8 +70,9 @@ namespace HazardRenderer::OpenGL
 						});
 					continue;
 				}
+
 				compilationTime += compiler.GetCompileTime();
-				vulkanBinaries[stage] = compiler.GetCompiledBinary();
+				vulkanBinaries[stage] = Buffer::Copy(compiler.GetCompiledBinary());
 
 				std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
 
@@ -126,7 +127,7 @@ namespace HazardRenderer::OpenGL
 				}
 
 				compilationTime += compiler.GetCompileTime();
-				openGLbinaries[stage] = compiler.GetCompiledBinary();
+				openGLbinaries[stage] = Buffer::Copy(compiler.GetCompiledBinary());
 			}
 
 			ShaderFactory::CacheShader(m_FilePath, vulkanBinaries, RenderAPI::Vulkan);
@@ -145,7 +146,6 @@ namespace HazardRenderer::OpenGL
 				buffer.Release();
 			for (auto& [stage, buffer] : openGLbinaries)
 				buffer.Release();
-
 			});
 
 		Window::SendDebugMessage({ Severity::Info, fmt::format("Shader {0} loaded", m_FilePath), fmt::format("Shader reload took {0} ms", timer.ElapsedMillis()) });

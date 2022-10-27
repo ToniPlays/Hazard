@@ -10,7 +10,7 @@ namespace Hazard
 {
 	glm::mat4 AssimpMat4ToGlmMat4(const aiMatrix4x4& matrix)
 	{
-		glm::mat4 result;
+		glm::mat4 result = {};
 		result[0][0] = matrix.a1; result[1][0] = matrix.a2; result[2][0] = matrix.a3; result[3][0] = matrix.a4;
 		result[0][1] = matrix.b1; result[1][1] = matrix.b2; result[2][1] = matrix.b3; result[3][1] = matrix.b4;
 		result[0][2] = matrix.c1; result[1][2] = matrix.c2; result[2][2] = matrix.c3; result[3][2] = matrix.c4;
@@ -25,9 +25,9 @@ namespace Hazard
 
 	MeshData MeshFactory::LoadMeshFromCache(const AssetHandle& handle)
 	{
+		MeshData result;
 		CachedBuffer buffer = File::ReadBinaryFile(GetCacheFile(handle));
 
-		MeshData result;
 		MeshCacheData data = buffer.Read<MeshCacheData>();
 
 		result.Vertices.resize(data.VertexCount);
@@ -105,7 +105,7 @@ namespace Hazard
 
 		HZR_CORE_INFO("Loading mesh {0} took {1} ms", file.string(), timer.ElapsedMillis());
 
-		return data; //::Create(data.Vertices, data.Indices);
+		return data;
 	}
 	MeshData MeshFactory::LoadMeshFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path)
 	{
@@ -224,6 +224,16 @@ namespace Hazard
 				vertex.Normals.x = mesh->mNormals[i].x;
 				vertex.Normals.y = mesh->mNormals[i].y;
 				vertex.Normals.z = mesh->mNormals[i].z;
+			}
+			if (mesh->HasTangentsAndBitangents())
+			{
+				vertex.Tangent.x = mesh->mTangents[i].x;
+				vertex.Tangent.y = mesh->mTangents[i].y;
+				vertex.Tangent.z = mesh->mTangents[i].z;
+
+				vertex.Binormal.x = mesh->mBitangents[i].x;
+				vertex.Binormal.y = mesh->mBitangents[i].y;
+				vertex.Binormal.z = mesh->mBitangents[i].z;
 			}
 			if (mesh->HasTextureCoords(0))
 			{

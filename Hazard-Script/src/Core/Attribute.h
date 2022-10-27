@@ -3,6 +3,7 @@
 #include "UtilityCore.h"
 #include "Mono/Core/Mono.h"
 #include "Metadata/ManagedType.h"
+#include "Ref.h"
 
 namespace HazardScript {
 
@@ -63,7 +64,8 @@ namespace HazardScript {
 									virtual AttributeType GetAttributeType() const override { return GetStaticType(); } \
 									virtual const char* GetName() const override { return #type; }
 
-	class Attribute {
+	class Attribute : public RefCount
+	{
 	public:
 		Attribute() = default;
 

@@ -72,6 +72,9 @@ namespace UI
 		AddMenuItem("Window/Debug/World debugger", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<RendererDebugPanel>(true);
 			});
+		AddMenuItem("Window/Debug/Performance debugger", [&]() {
+			Application::GetModule<GUIManager>().SetPanelOpen<PerformanceDebugPanel>(true);
+			});
 
 		AddMenuItem("Help/About");
 		AddMenuItem("Help/About/Something", nullptr);

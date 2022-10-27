@@ -30,7 +30,7 @@ namespace Hazard::ImUI
 				//ScopedStyleStack padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8), ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 				ImGui::Begin(m_Title.c_str(), &m_Open);
 
-				m_Hovered = ImGui::IsWindowHovered();
+				m_Hovered = MouseOverWindow();
 				//float width = Math::Max(ImGui::GetContentRegionAvailWidth(), 150.0f);
 				//ShiftY(-5.0f);
 				//Separator({ width, 1.0f }, style.Frame.FrameHovered);
@@ -38,6 +38,23 @@ namespace Hazard::ImUI
 			OnPanelRender();
 			ImGui::End();
 		};
+
+		bool MouseOverWindow()
+		{
+			if(GImGui->CurrentWindow == nullptr)
+				return false;
+			
+			ImVec2 cursorPos = ImGui::GetCursorPos();
+			ImVec2 windowPos = ImGui::GetWindowPos();
+			ImVec2 windowSize = ImGui::GetWindowSize();
+
+			windowPos.x -= cursorPos.x;
+			windowPos.y -= cursorPos.y;
+
+			ImVec2 bounds = { windowPos.x + windowSize.x, windowPos.y + windowSize.y };
+			return ImGui::IsMouseHoveringRect(windowPos, bounds);
+		}
+
 		//<summary>
 		// Render content for panel
 		//</summary>

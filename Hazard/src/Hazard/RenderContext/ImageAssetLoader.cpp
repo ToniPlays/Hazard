@@ -29,6 +29,8 @@ namespace Hazard
 		asset = Ref<Texture2DAsset>::Create(pointer);
 		asset->m_Type = AssetType::Image;
 
+		header.ImageData.Release();
+
 		return asset;
 	}
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)

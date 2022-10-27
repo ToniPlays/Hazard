@@ -45,17 +45,18 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLImage2D> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Renderer::SubmitResourceFree([instance]() mutable {
 			instance->Release_RT();
 			});
 	}
 	void OpenGLImage2D::Release_RT()
 	{
 		HZR_PROFILE_FUNCTION();
+		m_LocalBuffer.Release();
+
 		if (m_ID == 0) return;
 
 		glDeleteTextures(1, &m_ID);
-		m_LocalBuffer.Release();
 		m_ID = 0;
 	}
 	void OpenGLImage2D::SetData_RT()

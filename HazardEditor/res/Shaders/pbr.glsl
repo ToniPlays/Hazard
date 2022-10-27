@@ -5,8 +5,8 @@
 #include "Uniforms/ModelUniform.glsl"
 #include "Inputs/InputPBR.glsl"
 
-layout(location = 0) out vec4 f_Color;
-layout(location = 1) out vec3 f_Normal;
+layout(location = 0) out vec4 Color;
+layout(location = 1) out vec3 Normal;
 layout(location = 2) out vec3 WorldPosition;
 
 void main() 
@@ -14,8 +14,8 @@ void main()
 	vec4 worldPosition = u_Model.Transform * vec4(a_Position, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
-	f_Color = a_Color;
-	f_Normal = mat3(u_Model.Transform) * a_Normal;
+	Color = a_Color;
+	Normal = mat3(u_Model.Transform) * a_Normal;
 	WorldPosition = worldPosition.xyz;
 
 }
@@ -28,8 +28,8 @@ void main()
 #include "Uniforms/ModelUniform.glsl"
 #include "Uniforms/UtilityUniform.glsl"
 
-layout(location = 0) in vec4 f_Color;
-layout(location = 1) in vec3 f_Normal;
+layout(location = 0) in vec4 Color;
+layout(location = 1) in vec3 Normal;
 layout(location = 2) in vec3 WorldPosition;
 
 layout(binding = 0) uniform samplerCube u_RadianceMap;
@@ -49,8 +49,8 @@ const float gamma = 2.2;
 void main() 
 {
 	//Initialize Params
-	m_Params.Albedo = f_Color.rgb;
-	m_Params.Normal = normalize(f_Normal);
+	m_Params.Albedo = Color.rgb;
+	m_Params.Normal = normalize(Normal);
 	m_Params.Metalness = u_Model.Metalness;
 	m_Params.Roughness = u_Model.Roughness;
 	m_Params.View = normalize(u_Camera.Position.xyz - WorldPosition);
