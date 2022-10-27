@@ -38,9 +38,12 @@ namespace HazardScript
 
 	struct ManagedType 
 	{
-		MonoType* RawMonoType;
+		MonoType* RawMonoType = nullptr;
 		NativeType NativeType;
-		ManagedClass* TypeClass;
+		ManagedClass* TypeClass = nullptr;
+
+		std::string FullName;
+		std::string DisplayName;
 
 		int TypeEncoding = 0;
 
@@ -58,7 +61,6 @@ namespace HazardScript
 
 		bool IsValid() const { return TypeEncoding != 0 && RawMonoType != nullptr && NativeType != NativeType::None; }
 
-		std::string GetTypeName() const;
 		static ManagedType FromClass(MonoClass* klass);
 		static ManagedType FromType(MonoType* type);
 	};
@@ -70,6 +72,5 @@ namespace HazardScript
 		ManagedType ReturnType;
 
 		static ManagedMethod FromMethod(MonoMethod* method);
-
 	};
 }

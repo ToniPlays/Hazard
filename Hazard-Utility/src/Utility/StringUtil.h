@@ -6,8 +6,8 @@
 #include <istream>
 #include <string>
 
-class StringUtil {
-
+class StringUtil 
+{
 public:
 	static std::vector<std::string> SplitString(const std::string& string, char delim);
 	static std::string RemoveAtEnd(std::string& source, char val);

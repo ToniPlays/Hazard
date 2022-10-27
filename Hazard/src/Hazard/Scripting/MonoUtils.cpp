@@ -129,10 +129,10 @@ namespace HazardScript
 		ObjectReference stored = GetStoredValue<ObjectReference>();
 		ObjectReference ref = {};
 
-		if (!m_Field->GetType().IsArray())
-			ref.MonoObject = MonoFieldUtils::GetFieldValue<MonoObject*>(target, m_Field->GetMonoField());
-		else
+		if (m_Field->GetType().IsArray())
 			ref.MonoObject = MonoArrayUtils::GetElementValue<MonoObject*>((MonoArray*)target, m_Index);
+		else
+			ref.MonoObject = MonoFieldUtils::GetFieldValue<MonoObject*>(target, m_Field->GetMonoField());
 
 		ref.MonoObjectHandle = stored.MonoObject == ref.MonoObject ? stored.MonoObjectHandle : 0;
 		ManagedClass* entityManaged = ScriptCache::GetManagedClassByName("Hazard.Reference");
@@ -144,7 +144,7 @@ namespace HazardScript
 		}
 		else
 		{
-
+			__debugbreak();
 		}
 		return ref;
 	}

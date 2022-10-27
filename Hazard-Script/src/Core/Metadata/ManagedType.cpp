@@ -5,7 +5,7 @@
 
 extern HazardScript::NativeType GetCustomType(const char* name);
 
-namespace HazardScript 
+namespace HazardScript
 {
 	static NativeType GetNativeType(int typeEncoding, ManagedClass* typeClass)
 	{
@@ -110,24 +110,24 @@ namespace HazardScript
 		return FromClass(mono_class_get_element_class(TypeClass->Class));
 	}
 
-	std::string ManagedType::GetTypeName() const
-	{
-		return mono_type_get_name(RawMonoType);
-	}
-
 	ManagedType ManagedType::FromClass(MonoClass* klass)
-    {
+	{
 		MonoType* type = mono_class_get_type(klass);
 		int typeEncoding = mono_type_get_type(type);
 		ManagedClass* managedClass = ScriptCache::GetClass(klass);
-		return { type, GetNativeType(typeEncoding, managedClass), managedClass, typeEncoding, };
-    }
 
-    ManagedType ManagedType::FromType(MonoType* type)
-    {
+		std::string name = mono_type_get_name(type);
+		name = name.substr(name.find_last_of('.') + 1);
+
+		return { type, GetNativeType(typeEncoding, managedClass), managedClass, managedClass->FullName, name, typeEncoding};
+	}
+
+	ManagedType ManagedType::FromType(MonoType* type)
+	{
 		MonoClass* typeClass = mono_type_get_class(type);
 		std::string name = mono_type_get_name(type);
-		if (typeClass == nullptr) 
+
+		if (typeClass == nullptr)
 		{
 			std::string nameSpace = name.substr(0, StringUtil::OffsetOf(name, '.'));
 			name = name.substr(StringUtil::OffsetOf(name, '.') + 1);
@@ -135,14 +135,16 @@ namespace HazardScript
 			typeClass = mono_class_from_name(mono_get_corlib(), nameSpace.c_str(), name.c_str());
 		}
 
-        ManagedType managedType = {};
-        managedType.RawMonoType = type;
+		ManagedType managedType = {};
+		managedType.RawMonoType = type;
 		managedType.TypeClass = ScriptCache::GetClass(typeClass);
 		managedType.TypeEncoding = mono_type_get_type(type);
 		managedType.NativeType = GetNativeType(managedType.TypeEncoding, managedType.TypeClass);
+		managedType.FullName = managedType.TypeClass->FullName;
+		managedType.DisplayName = name.substr(name.find_last_of('.') + 1);
 
 		return managedType;
-    }
+	}
 	ManagedMethod ManagedMethod::FromMethod(MonoMethod* method)
 	{
 		MonoMethodSignature* sig = mono_method_signature(method);
@@ -150,7 +152,8 @@ namespace HazardScript
 
 		ManagedMethod managedMethod = {};
 		managedMethod.Method = method;
-		managedMethod.ReturnType = ManagedType::FromType(type);
+		if (!mono_type_is_generic_parameter(type))
+			managedMethod.ReturnType = ManagedType::FromType(type);
 
 		return managedMethod;
 	}

@@ -154,10 +154,10 @@ namespace Hazard
 			ObjectReference ref;
 			ref.ObjectUID = valueNode.as<uint64_t>();
 			object->SetFieldValue<ObjectReference>(name, ref, 0);
-		}
 			break;
+		}
 		default:
-			std::cout << std::endl;
+			HZR_CORE_ASSERT(false, name);
 			break;
 		}
 	}

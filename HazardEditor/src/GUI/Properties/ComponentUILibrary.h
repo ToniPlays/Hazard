@@ -219,13 +219,15 @@ namespace UI
 					ImGui::Columns(2, 0, false);
 					ImGui::SetColumnWidth(0, colWidth);
 
+					auto& world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+
 					for (auto& [name, field] : script.GetFields())
 					{
 						const char* label = name.c_str();
-						HazardScript::FieldMetadata& f = *field;
+						Ref<FieldMetadata> f = field;
 
 						ImUI::Group(name.c_str(), [&]() {
-							UI::ScriptField(label, f, *c.m_Handle, Application::GetModule<WorldHandler>().GetCurrentWorld());
+							UI::ScriptField(label, f, c.m_Handle, world);
 							ImUI::ShiftY(3.0f);
 							ImGui::Separator();
 							ImUI::ShiftY(2.0f);

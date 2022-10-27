@@ -93,7 +93,6 @@ namespace HazardScript
 	}
 	void ScriptAssembly::Release()
 	{
-		if (m_Assembly)
-			mono_assembly_close(m_Assembly);
+
 	}
 }

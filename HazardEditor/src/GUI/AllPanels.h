@@ -8,6 +8,7 @@
 #include "Debug/Console.h"
 
 #include "ProjectPanel/AssetPanel.h"
+#include "ProjectPanel/ProjectTodoPanel.h"
 
 #include "Properties/Properties.h"
 #include "Properties/Hierarchy.h"

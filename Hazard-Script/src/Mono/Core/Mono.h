@@ -23,7 +23,6 @@ namespace HazardScript
 		static uint32_t InstantiateHandle(MonoClass * monoClass);
 
 		//Mono internal
-		static MonoDomain* GetDomain() { return s_Domain; }
 		static MonoImage* OpenImage(char* data, uint32_t size, MonoImageOpenStatus& status);
 		static MonoAssembly* AssemblyFromImage(MonoImage* image, const std::filesystem::path& path, MonoImageOpenStatus& status);
 		static MonoClass* GetMonoClass(MonoImage* image, const std::string& nameSpace, const std::string& name);
@@ -40,6 +39,7 @@ namespace HazardScript
 			return mono_reflection_type_from_name((char*)name.c_str(), image);
 		}
 		static std::string ResolveClassName(MonoClass* monoClass);
+		static MonoDomain* GetDomain() { return s_Domain; }
 
 	private:
 		inline static MonoDomain* s_Domain = nullptr;

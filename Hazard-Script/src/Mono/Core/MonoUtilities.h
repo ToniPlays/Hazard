@@ -17,14 +17,19 @@ namespace HazardScript
 		{
 			return mono_value_box(Mono::GetDomain(), type, &value);
 		}
+		static MonoClass* GetTargetClass(MonoObject* object)
+		{
+			return mono_object_get_class(object);
+		}
 	};
 
 
 	class MonoFieldUtils {
 	public:
 		template<typename T>
-		static T GetFieldValue(MonoObject* target, MonoClassField* field) {
-			T result;
+		static T GetFieldValue(MonoObject* target, MonoClassField* field) 
+		{
+			T result = {};
 			mono_field_get_value(target, field, &result);
 			return result;
 		}
@@ -34,6 +39,12 @@ namespace HazardScript
 			MonoObject* result = mono_field_get_value_object(mono_domain_get(), field, target);
 			return (bool)MonoUtils::Unbox<MonoBoolean>(result);
 		}
+		template<>
+		static MonoObject* GetFieldValue(MonoObject* target, MonoClassField* field)
+		{
+			return mono_field_get_value_object(mono_domain_get(), field, target);
+		}
+
 		template<>
 		static std::string GetFieldValue(MonoObject* target, MonoClassField* field)
 		{
@@ -58,11 +69,13 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		static void SetFieldValue(MonoObject* target, MonoClassField* field, T value) {
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, T value) 
+		{
 			mono_field_set_value(target, field, &value);
 		}
 		template<>
-		static void SetFieldValue(MonoObject* target, MonoClassField* field, MonoObject* value) {
+		static void SetFieldValue(MonoObject* target, MonoClassField* field, MonoObject* value) 
+		{
 			mono_field_set_value(target, field, value);
 		}
 

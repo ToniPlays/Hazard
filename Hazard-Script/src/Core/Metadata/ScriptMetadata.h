@@ -64,7 +64,9 @@ namespace HazardScript
 		void SetLive(uint32_t handle, bool live)
 		{
 			for (auto& [name, field] : m_Fields)
+			{
 				field->SetLive(handle, live);
+			}
 		}
 
 
@@ -84,7 +86,8 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		bool Has() const {
+		bool Has() const 
+		{
 			for (Ref<Attribute> attrib : m_Attributes) 
 			{
 				if (attrib->GetAttributeType() == T::GetStaticType()) 
@@ -93,7 +96,8 @@ namespace HazardScript
 			return false;
 		}
 		template<typename T>
-		const Ref<T> Get() {
+		const Ref<T> Get() 
+		{
 			for (Ref<Attribute> attrib : m_Attributes) 
 			{
 				if (attrib->GetAttributeType() == T::GetStaticType()) 

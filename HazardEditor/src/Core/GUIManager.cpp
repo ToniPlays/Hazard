@@ -54,6 +54,7 @@ void GUIManager::Init()
 	m_PanelManager.AddRenderable<UI::RenderCommandListPanel>();
 	m_PanelManager.AddRenderable<UI::RendererDebugPanel>();
 	m_PanelManager.AddRenderable<UI::PerformanceDebugPanel>();
+	m_PanelManager.AddRenderable<UI::ProjectTodoPanel>();
 	m_PanelManager.AddRenderable<UI::Console>();
 	m_PanelManager.AddRenderable<UI::AssetPanel>();
 	m_PanelManager.AddRenderable<UI::ScriptCreatePanel>();

@@ -18,9 +18,9 @@ namespace HazardScript
 		FieldMetadata() = default;
 		FieldMetadata(MonoClassField* field);
 
-		std::string GetName() { return m_Name; }
-		const uint32_t& GetFlags() { return m_Flags; }
-		const ManagedType& GetType() { return m_Type; }
+		std::string GetName() const { return m_Name; }
+		const uint32_t& GetFlags() const { return m_Flags; }
+		const ManagedType& GetType() const { return m_Type; }
 
 		template<typename T>
 		bool Has() const 
@@ -52,18 +52,22 @@ namespace HazardScript
 		template<typename T>
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
+			std::cout << mono_field_get_name(m_Field) << std::endl;
 			MonoObject* obj = mono_gchandle_get_target(handle);
 			if (m_Type.IsArray())
-				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(mono_field_get_value_object(Mono::GetDomain(), m_Field, obj), index);
+			{
+				MonoObject* valueObject = mono_field_get_value_object(Mono::GetDomain(), m_Field, obj);
+				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(valueObject, index);
+			}
 			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>(obj);
 		}
 
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
+			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
 			//Field object
 			MonoObject* obj = mono_gchandle_get_target(handle);
-			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
 			if (m_Type.IsArray()) 
 			{
 				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();

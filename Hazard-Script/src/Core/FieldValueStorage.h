@@ -44,11 +44,13 @@ namespace HazardScript
 		bool Valid() { return m_Field != nullptr; }
 
 		template<typename T>
-		T GetValue(MonoObject* target) {
+		T GetValue(MonoObject* target) 
+		{
 			return m_IsLiveValue ? GetLiveValue<T>(target) : GetStoredValue<T>();
 		}
 		template<typename T>
-		void SetValue(MonoObject* target, T value) {
+		void SetValue(MonoObject* target, T value) 
+		{
 			m_IsLiveValue ? SetLiveValue<T>(target, value) : SetStoredValue<T>(value);
 		}
 
@@ -57,7 +59,8 @@ namespace HazardScript
 			static_assert(false);
 		}
 		template<typename T>
-		T GetLiveValue(MonoObject* target) {
+		T GetLiveValue(MonoObject* target) 
+		{
 			static_assert(false);
 		}
 
@@ -202,7 +205,8 @@ namespace HazardScript
 		template<typename T>
 		T GetValueOrDefault(MonoObject* target, size_t index)
 		{
-			if (IsLive()) {
+			if (IsLive()) 
+			{
 				return MonoArrayUtils::GetElementValue<T>((MonoArray*)target, index);
 			}
 			if (!HasValue(target, index)) return T();
