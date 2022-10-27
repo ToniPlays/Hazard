@@ -9,17 +9,18 @@ namespace Hazard {
 		HZR_PROFILE_FUNCTION();
 		MeshFactory factory = {};
 
-		uint32_t flags = MeshFlags_CalculateTangentSpace;
-		flags |= MeshFlags_Triangulate;
-		flags |= MeshFlags_SortByType;
-		flags |= MeshFlags_GenerateNormals;
-		flags |= MeshFlags_GenerateUVCoords;
-		flags |= MeshFlags_OptimizeMeshes;
-		flags |= MeshFlags_JoinIdenticalVertices;
-		flags |= MeshFlags_ValidateDataStructure;
+		uint32_t flags = MeshLoaderFlags_CalculateTangentSpace;
+		flags |= MeshLoaderFlags_Triangulate;
+		flags |= MeshLoaderFlags_SortByType;
+		flags |= MeshLoaderFlags_GenerateNormals;
+		flags |= MeshLoaderFlags_GenerateUVCoords;
+		flags |= MeshLoaderFlags_OptimizeMeshes;
+		flags |= MeshLoaderFlags_JoinIdenticalVertices;
+		flags |= MeshLoaderFlags_ValidateDataStructure;
 
-		factory.SetOptimization((MeshFlags)flags);
-		asset = factory.LoadMesh(metadata.Path);
+		factory.SetOptimization((MeshLoaderFlags)flags);
+		MeshData meshData = factory.LoadMeshFromCacheOrReload(metadata.Handle, metadata.Path);
+		asset = Ref<Mesh>::Create(meshData.Vertices, meshData.Indices);
 		return asset;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)

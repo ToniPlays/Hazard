@@ -11,27 +11,25 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Mesh::Mesh(std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices)
+	Mesh::Mesh(const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_LocalVertexData = Buffer::Copy(vertices.data(), vertices.size() * sizeof(Vertex3D));
-		m_LocalIndexData = Buffer::Copy(indices.data(), indices.size() * sizeof(uint32_t));
 
 		BufferLayout layout = Vertex3D::Layout();
 
 		VertexBufferCreateInfo vboInfo = {};
 		vboInfo.DebugName = "SomeMeshVertexBuffer";
 		vboInfo.Layout = &layout;
-		vboInfo.Size = m_LocalVertexData.Size;
-		vboInfo.Data = m_LocalVertexData.Data;
+		vboInfo.Size = vertices.size() * sizeof(Vertex3D);
+		vboInfo.Data = (void*)vertices.data();
 		vboInfo.Usage = BufferUsage::StaticDraw;
 
 		m_VertexBuffer = VertexBuffer::Create(&vboInfo);
 
 		IndexBufferCreateInfo iboInfo = {};
 		iboInfo.DebugName = "SomeMeshIndices";
-		iboInfo.Size = m_LocalIndexData.Size;
-		iboInfo.Data = (uint32_t*)m_LocalIndexData.Data;
+		iboInfo.Size = indices.size() * sizeof(uint32_t);
+		iboInfo.Data = (uint32_t*)indices.data();
 		iboInfo.Usage = BufferUsage::StaticDraw;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
@@ -46,11 +44,6 @@ namespace Hazard
 		pipelineSpecs.DepthTest = true;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
-
-		Renderer::SubmitResourceFree([&]() mutable {
-			m_LocalVertexData.Release();
-			m_LocalIndexData.Release();
-			});
 	}
 
 	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)

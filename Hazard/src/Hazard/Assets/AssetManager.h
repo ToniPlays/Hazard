@@ -49,10 +49,10 @@ namespace Hazard
 			{
 				Ref<Asset> asset;
 				meta.IsLoaded = s_AssetLoader.Load(meta, asset);
+
 				if (!meta.IsLoaded) 
-				{
 					return nullptr;
-				}
+
 				asset->SetHandle(meta.Handle);
 				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;

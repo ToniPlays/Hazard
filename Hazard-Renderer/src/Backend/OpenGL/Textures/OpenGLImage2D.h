@@ -23,6 +23,7 @@ namespace HazardRenderer::OpenGL
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 		
 		void Release_RT();
+		void SetData_RT();
 
 		//OpenGL specific
 		size_t GetID() const { return m_ID; }

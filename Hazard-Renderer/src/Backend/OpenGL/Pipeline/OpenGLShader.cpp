@@ -138,8 +138,14 @@ namespace HazardRenderer::OpenGL
 		Reflect(openGLbinaries);
 
 		Ref<OpenGLShader> instance = this;
-		Renderer::Submit([instance, openGLbinaries]() mutable {
+		Renderer::SubmitResourceCreate([instance, vulkanBinaries, openGLbinaries]() mutable {
 			instance->CreateProgram(openGLbinaries);
+			
+			for (auto& [stage, buffer] : vulkanBinaries)
+				buffer.Release();
+			for (auto& [stage, buffer] : openGLbinaries)
+				buffer.Release();
+
 			});
 
 		Window::SendDebugMessage({ Severity::Info, fmt::format("Shader {0} loaded", m_FilePath), fmt::format("Shader reload took {0} ms", timer.ElapsedMillis()) });

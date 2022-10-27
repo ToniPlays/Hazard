@@ -174,7 +174,7 @@ namespace UI
 		ImUI::ShiftY(8.0f);
 		ImGui::Columns(columnCount, 0, false);
 
-		for (auto& item : m_CurrentItems) 
+		for (auto& item : m_CurrentItems)
 		{
 			if (item.GetMetadata().Handle == INVALID_ASSET_HANDLE) continue;
 			item.BeginRender();
@@ -332,6 +332,13 @@ namespace UI
 		switch (metadata.Type)
 		{
 		case AssetType::Image:
+			if (!metadata.IsLoaded)
+			{
+				Application::Get().SubmitMainThread([handle = metadata.Handle]() {
+					AssetManager::GetAsset<Texture2DAsset>(handle);
+					});
+				return m_Icons[AssetType::Undefined];
+			}
 			return AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
 		}
 		return m_Icons[metadata.Type];
@@ -341,7 +348,7 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto& folder : File::GetAllInDirectory(m_RootPath)) 
+		for (auto& folder : File::GetAllInDirectory(m_RootPath))
 		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(folder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
@@ -358,7 +365,7 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto& subfolder : File::GetAllInDirectory(folder)) 
+		for (auto& subfolder : File::GetAllInDirectory(folder))
 		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(subfolder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;

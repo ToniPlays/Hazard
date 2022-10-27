@@ -10,53 +10,55 @@
 
 namespace Hazard {
 
-	enum MeshFlags : uint32_t 
+	enum MeshLoaderFlags : uint32_t 
 	{
-		MeshFlags_CalculateTangentSpace = BIT(0),
-		MeshFlags_JoinIdenticalVertices = BIT(1),
-		MeshFlags_MakeLeftHanded = BIT(2),
-		MeshFlags_Triangulate = BIT(3),
-		MeshFlags_RemoveComponent = BIT(4),
-		MeshFlags_GenerateNormals = BIT(5),
-		MeshFlags_GenerateSmoothNormals = BIT(6),
-		MeshFlags_SplitLargeMeshes = BIT(7),
-		MeshFlags_PreTransformVertices = BIT(8),
-		MeshFlags_LimitBoneWeights = BIT(9),
-		MeshFlags_ValidateDataStructure = BIT(10),
-		MeshFlags_ImproveCacheLocality = BIT(11),
-		MeshFlags_RemoveReduntantMaterials = BIT(12),
-		MeshFlags_FixInFacingNormals = BIT(13),
-		MeshFlags_PopulateArmatureData = BIT(14),
-		MeshFlags_SortByType = BIT(15),
-		MeshFlags_FindDegenerates = BIT(16),
-		MeshFlags_FindInvalidData = BIT(17),
-		MeshFlags_GenerateUVCoords = BIT(18),
-		MeshFlags_TransformUVCoords = BIT(19),
-		MeshFlags_FindInstances = BIT(20),
-		MeshFlags_OptimizeMeshes = BIT(21),
-		MeshFlags_OptimizeGraph = BIT(22),
-		MeshFlags_FlipUVs = BIT(23),
-		MeshFlags_FlipWindingOrderToCW = BIT(24),
-		MeshFlags_SplitByBoneCount = BIT(25),
-		MeshFlags_Debone = BIT(26),
-		MeshFlags_GlobalScale = BIT(27),
-		MeshFlags_EmbedTextures = BIT(28),
-		MeshFlags_ForceGenerateNormals = BIT(29),
-		MeshFlags_DropNormals = BIT(30),
-		MeshFlags_GenerateBoundingBoxes = BIT(31),
+		MeshLoaderFlags_CalculateTangentSpace = BIT(0),
+		MeshLoaderFlags_JoinIdenticalVertices = BIT(1),
+		MeshLoaderFlags_MakeLeftHanded = BIT(2),
+		MeshLoaderFlags_Triangulate = BIT(3),
+		MeshLoaderFlags_RemoveComponent = BIT(4),
+		MeshLoaderFlags_GenerateNormals = BIT(5),
+		MeshLoaderFlags_GenerateSmoothNormals = BIT(6),
+		MeshLoaderFlags_SplitLargeMeshes = BIT(7),
+		MeshLoaderFlags_PreTransformVertices = BIT(8),
+		MeshLoaderFlags_LimitBoneWeights = BIT(9),
+		MeshLoaderFlags_ValidateDataStructure = BIT(10),
+		MeshLoaderFlags_ImproveCacheLocality = BIT(11),
+		MeshLoaderFlags_RemoveReduntantMaterials = BIT(12),
+		MeshLoaderFlags_FixInFacingNormals = BIT(13),
+		MeshLoaderFlags_PopulateArmatureData = BIT(14),
+		MeshLoaderFlags_SortByType = BIT(15),
+		MeshLoaderFlags_FindDegenerates = BIT(16),
+		MeshLoaderFlags_FindInvalidData = BIT(17),
+		MeshLoaderFlags_GenerateUVCoords = BIT(18),
+		MeshLoaderFlags_TransformUVCoords = BIT(19),
+		MeshLoaderFlags_FindInstances = BIT(20),
+		MeshLoaderFlags_OptimizeMeshes = BIT(21),
+		MeshLoaderFlags_OptimizeGraph = BIT(22),
+		MeshLoaderFlags_FlipUVs = BIT(23),
+		MeshLoaderFlags_FlipWindingOrderToCW = BIT(24),
+		MeshLoaderFlags_SplitByBoneCount = BIT(25),
+		MeshLoaderFlags_Debone = BIT(26),
+		MeshLoaderFlags_GlobalScale = BIT(27),
+		MeshLoaderFlags_EmbedTextures = BIT(28),
+		MeshLoaderFlags_ForceGenerateNormals = BIT(29),
+		MeshLoaderFlags_DropNormals = BIT(30),
+		MeshLoaderFlags_GenerateBoundingBoxes = BIT(31),
 
-		MeshFlags_DefaultOptimization = MeshFlags_JoinIdenticalVertices | 
-		MeshFlags_GenerateSmoothNormals | MeshFlags_Triangulate | 
-		MeshFlags_GenerateUVCoords | MeshFlags_OptimizeMeshes | 
-		MeshFlags_GenerateBoundingBoxes
+		MeshLoaderFlags_DefaultOptimization = MeshLoaderFlags_JoinIdenticalVertices |
+		MeshLoaderFlags_GenerateSmoothNormals | MeshLoaderFlags_Triangulate |
+		MeshLoaderFlags_GenerateUVCoords | MeshLoaderFlags_OptimizeMeshes |
+		MeshLoaderFlags_GenerateBoundingBoxes
 	};
 
-	struct MeshData {
+	struct MeshData 
+	{
+		uint32_t Flags;
 		uint32_t vertexIndex = 0, baseIndex = 0;
-		std::vector<SubMesh> subMeshes;
+		std::vector<SubMesh> SubMeshes;
 
-		std::vector<Vertex3D> vertices;
-		std::vector<uint32_t> indices;
+		std::vector<Vertex3D> Vertices;
+		std::vector<uint32_t> Indices;
 	};
 
 

@@ -58,13 +58,25 @@ namespace HazardRenderer::OpenGL
 		m_LocalBuffer.Release();
 		m_ID = 0;
 	}
+	void OpenGLImage2D::SetData_RT()
+	{
+		HZR_PROFILE_FUNCTION();
+		HZR_RENDER_THREAD_ONLY();
+		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);
+		m_LocalBuffer.Release();
+	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)
 	{
 		HZR_PROFILE_FUNCTION();
-		uint32_t format = OpenGLUtils::GetGLFormat(m_Format);
-		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, buffer.Data);
-		HZR_ASSERT(m_Width && m_Height, "This broke");
+		
+		m_LocalBuffer.Release();
+		m_LocalBuffer = Buffer::Copy(buffer);
+
+		Ref<OpenGLImage2D> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->SetData_RT();
+		});
 	}
 }
 #endif

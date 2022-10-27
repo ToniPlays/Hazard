@@ -23,10 +23,11 @@ namespace UI
 	void PerformanceDebugPanel::DrawMemoryView()
 	{
 #ifdef HZR_MEM_DIAG
-
 		const auto& allocStats = Memory::GetAllocationStats();
 
 		ImGui::Text("Memory usage: %s", StringUtil::BytesToString(allocStats.TotalAllocated - allocStats.TotalFreed).c_str());
+		ImGui::Text("Allocated: %s", StringUtil::BytesToString(allocStats.TotalAllocated).c_str());
+		ImGui::Text("Freed: %s", StringUtil::BytesToString(allocStats.TotalFreed).c_str());
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		const char* columns[] = { "Category", "Allocated" };

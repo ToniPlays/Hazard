@@ -12,37 +12,42 @@ namespace Hazard {
 		glm::vec3 Position = { 0, 0, 0 };
 		glm::vec4 Color = Color::White;
 		glm::vec3 Normals = { 0, 0, 0 };
+		glm::vec3 Tangent = { 0, 0, 0 };
+		glm::vec3 Binormal = { 0, 0, 0 };
 		glm::vec2 TexCoords = { 0, 0 };
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
 			return { 
-				{ "v_Position",			ShaderDataType::Float3 },
-				{ "v_Color",			ShaderDataType::Float4 },
-				{ "v_Normal",			ShaderDataType::Float3 },
-				{ "v_TextureCoords",	ShaderDataType::Float2 }
+				{ "a_Position",			ShaderDataType::Float3 },
+				{ "a_Color",			ShaderDataType::Float4 },
+				{ "a_Normal",			ShaderDataType::Float3 },
+				{ "a_Tangent",			ShaderDataType::Float3 },
+				{ "a_Binormal",			ShaderDataType::Float3 },
+				{ "a_TextureCoords",	ShaderDataType::Float2 }
 			};
 		}
 	};
 
 	struct SubMesh {
 
-		uint32_t baseVertex;
-		uint32_t baseIndex;
-		uint32_t materialIndex;
-		uint32_t indexCount;
-		uint32_t vertexCount;
+		uint32_t BaseVertex;
+		uint32_t BaseIndex;
+		uint32_t MaterialIndex;
+		uint32_t IndexCount;
+		uint32_t VertexCount;
 
-		glm::mat4 transform;
-		glm::mat4 localTransform;
+		glm::mat4 Transform;
+		glm::mat4 LocalTransform;
 
-		std::string nodeName, meshName;
+		std::string NodeName, MeshName;
 	};
 
-	class Mesh : public Asset {
+	class Mesh : public Asset 
+	{
 	public:
 		Mesh() = default;
-		Mesh(std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices);
+		Mesh(const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices);
 		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline);
 		~Mesh() = default;
 

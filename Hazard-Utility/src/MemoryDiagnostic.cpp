@@ -35,8 +35,10 @@ namespace Memory
 	{
 		if (s_InInit) 
 			return AllocateRaw(size);
+
 		if (!s_Data)
 			Init();
+
 		void* memory = malloc(size);
 
 		{
@@ -44,6 +46,7 @@ namespace Memory
 			MemoryAllocation& alloc = s_Data->m_AllocationMap[memory];
 			alloc.Memory = memory;
 			alloc.Size = size;
+
 			s_GlobalStats.TotalAllocated += size;
 		}
 		return memory;
@@ -88,23 +91,27 @@ namespace Memory
 	}
 	void Allocator::Free(void* memory)
 	{
-		if (memory == nullptr) return;
+		if (memory == nullptr)
+			return;
+
 		{
 			std::scoped_lock<std::mutex> lock(s_Data->m_Mutex);
 			if (s_Data->m_AllocationMap.find(memory) != s_Data->m_AllocationMap.end())
 			{
 				const MemoryAllocation& alloc = s_Data->m_AllocationMap.at(memory);
 				s_GlobalStats.TotalFreed += alloc.Size;
+
 				if (alloc.Category)
 					s_Data->m_AllocationStatsMap[alloc.Category].TotalFreed += alloc.Size;
+
 				s_Data->m_AllocationMap.erase(memory);
 			}
 			else
 			{
-				__debugbreak();
+
 			}
 		}
-		free(memory);
+		std::free(memory);
 	}
 }
 

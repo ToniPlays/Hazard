@@ -66,7 +66,7 @@ namespace Editor
 		glm::vec3 m_InitialFocalPoint = {}, m_InitialRotation = {};
 
 		float m_Distance = 1.0f;
-		float m_NormalSpeed = 2.5f;
+		float m_NormalSpeed = 1.5f;
 		float m_Pitch = 0, m_Yaw = 0;
 		float m_PitchDelta = 0.0f, m_YawDelta = 0.0f;
 
@@ -75,7 +75,7 @@ namespace Editor
 		float m_MinFocusDistance = 100.0f;
 		CameraMode m_CameraMode = CameraMode::Arcball;
 
-		constexpr static float MIN_SPEED = 0.5f, MAX_SPEED = 50.0f;
+		constexpr static float MIN_SPEED = 0.5f, MAX_SPEED = 20.0f;
 
 		float size2D = 10.0f;
 		bool m_Is2DEnabled = false;

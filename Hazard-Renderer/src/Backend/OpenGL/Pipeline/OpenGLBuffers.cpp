@@ -39,11 +39,14 @@ namespace HazardRenderer::OpenGL
 
 		if (info->Layout != nullptr)
 			m_Layout = *info->Layout;
+		
+		if (info->Data)
+			m_LocalBuffer = Buffer::Copy(info->Data, info->Size);
 
 		uint32_t offset = 0;
 		Ref<OpenGLVertexBuffer> instance = this;
 
-		Renderer::SubmitResourceCreate([instance, data = info->Data]() mutable {
+		Renderer::SubmitResourceCreate([instance]() mutable {
 			if (instance->m_Layout.GetStride() == 0)
 			{
 				glCreateBuffers(1, &instance->m_BufferID);
@@ -75,8 +78,8 @@ namespace HazardRenderer::OpenGL
 				glVertexArrayAttribFormat(instance->m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
 				glVertexArrayAttribBinding(instance->m_VAO, i, element.ElementDivisor);
 			}
-			if (data)
-				instance->SetData_RT(data, instance->m_Size);
+			if (instance->m_LocalBuffer)
+				instance->SetData_RT(instance->m_LocalBuffer.Data, instance->m_LocalBuffer.Size);
 		});
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -99,6 +102,7 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		glNamedBufferSubData(m_BufferID, 0, size, data);
+		m_LocalBuffer.Release();
 	}
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
@@ -142,6 +146,7 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		glNamedBufferData(m_BufferID, m_Size, m_LocalBuffer.Data, GL_STREAM_DRAW + m_Usage);
+		m_LocalBuffer.Release();
 	}
 	OpenGLUniformBuffer::OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo) : m_Name(createInfo->Name), m_Size(createInfo->Size),
 		m_Binding(createInfo->Binding), m_Usage(createInfo->Usage)

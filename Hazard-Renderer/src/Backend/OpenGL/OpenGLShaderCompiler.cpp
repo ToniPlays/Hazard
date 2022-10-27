@@ -79,7 +79,7 @@ namespace HazardRenderer::OpenGL
 			ShaderStageData& data = result.Stages[stage];
 			for (auto& resource : resources.stage_inputs)
 			{
-				auto spvType = compiler.get_type(resource.base_type_id);
+				auto& spvType = compiler.get_type(resource.base_type_id);
 				uint32_t location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
 
 				ShaderStageInput& input = data.Inputs[location];
