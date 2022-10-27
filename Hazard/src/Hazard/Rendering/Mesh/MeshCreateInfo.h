@@ -53,7 +53,7 @@ namespace Hazard {
 
 	struct MeshData 
 	{
-		uint32_t Flags;
+		uint32_t Flags = 0;
 		uint32_t vertexIndex = 0, baseIndex = 0;
 		std::vector<SubMesh> SubMeshes;
 

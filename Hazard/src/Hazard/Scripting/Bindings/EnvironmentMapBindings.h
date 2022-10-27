@@ -17,9 +17,28 @@ namespace Hazard
 
 	using namespace HazardScript;
 
+	static uint64_t EnvironmentMap_Create_Native()
+	{
+		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
+
+		AssetMetadata metadata = {};
+		metadata.Handle = map->GetHandle();
+		metadata.Type = AssetType::Undefined;
+
+		AssetManager::AddRuntimeAsset(metadata, map);
+
+		return map->GetHandle();
+	}
+	static void EnvironmentMap_Destroy_Native(uint64_t handle)
+	{
+		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
+		if (map->GetRefCount() <= 2)
+			AssetManager::RemoveRuntimeAsset(map->GetHandle());
+	}
+
 	static uint64_t EnvironmentMap_GetCubemapTexture_Native(uint64_t handle, int type)
 	{
-		Ref<EnvironmentMap> env = AssetManager::GetAsset<EnvironmentMap>(handle);
+		Ref<EnvironmentMap> env = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
 		if (!env) return 0;
 
 		switch ((EnvironmentResource)type)
@@ -44,10 +63,9 @@ namespace Hazard
 	}
 	static void EnvironmentMap_SetCubemapTexture_Native(uint64_t handle, int type, uint64_t assetHandle)
 	{
-		/*
+
 		Ref<EnvironmentMap> env = AssetManager::GetAsset<EnvironmentMap>(handle);
-		Ref<HazardRenderer::CubemapTexture> cubeMap = AssetManager::GetRuntimeAsset<HazardRenderer::CubemapTexture>(assetHandle);
-		return;
+		Ref<AssetPointer> cubeMap = AssetManager::GetRuntimeAsset<AssetPointer>(assetHandle);
 
 		switch ((EnvironmentResource)type)
 		{
@@ -67,6 +85,23 @@ namespace Hazard
 			break;
 		}
 		}
-		*/
+	}
+	static void EnvironmentMap_GenerateRadiance_Native(uint64_t handle, uint64_t sourceImage)
+	{
+		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
+		Ref<Texture2DAsset> source = AssetManager::GetAsset<Texture2DAsset>(sourceImage);
+		map->GenerateRadiance(source);
+	}
+	static void EnvironmentMap_GenerateIrradiance_Native(uint64_t handle, uint64_t sourceCube)
+	{
+		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
+		Ref<AssetPointer> source = AssetManager::GetRuntimeAsset<AssetPointer>(sourceCube);
+		map->GenerateIrradiance(source);
+	}
+	static void EnvironmentMap_GeneratePrefilter_Native(uint64_t handle, uint64_t sourceCube)
+	{
+		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
+		Ref<AssetPointer> source = AssetManager::GetRuntimeAsset<AssetPointer>(sourceCube);
+		map->GeneratePreFilter(source);
 	}
 }

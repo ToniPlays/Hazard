@@ -61,16 +61,12 @@ namespace Hazard
 
 	uint32_t MeshFactory::GetColorChannel(const aiMesh* mesh)
 	{
-		uint32_t color = UINT32_MAX;
 		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++)
 		{
 			if (mesh->HasVertexColors(i))
-			{
-				color = i;
-				break;
-			}
+				return i;
 		}
-		return color;
+		return UINT32_MAX;
 	}
 
 	size_t MeshFactory::GetMeshDataSize(const MeshData& data)
@@ -195,7 +191,6 @@ namespace Hazard
 
 		uint32_t color = GetColorChannel(mesh);
 
-		data.Flags = 0;
 		if (mesh->HasPositions())
 			data.Flags |= MeshFlags_Positions;
 		if (color != UINT32_MAX)
@@ -216,7 +211,7 @@ namespace Hazard
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
 
-			if (data.Flags & MeshFlags_VertexColors)
+			if (color != UINT32_MAX)
 			{
 				aiColor4D c = mesh->mColors[color][i];
 				vertex.Color.r = c.r;

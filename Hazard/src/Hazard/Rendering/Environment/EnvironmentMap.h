@@ -8,7 +8,14 @@ namespace Hazard
 	class EnvironmentMap : public Asset 
 	{
 	public:
-		EnvironmentMap() = default;
+		EnvironmentMap();
+		~EnvironmentMap()
+		{
+		}
+
+		void GenerateRadiance(Ref<Texture2DAsset> sourceImage);
+		void GenerateIrradiance(Ref<AssetPointer> radianceMap);
+		void GeneratePreFilter(Ref<AssetPointer> radianceMap);
 
 		Ref<Texture2DAsset> SourceImage = nullptr;
 		Ref<AssetPointer> RadianceMap = nullptr;

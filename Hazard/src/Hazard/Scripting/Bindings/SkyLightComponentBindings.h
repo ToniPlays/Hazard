@@ -29,6 +29,8 @@ namespace Hazard
 	}
 	static void SkyLightComponent_SetEnvironmentMap_Native(uint64_t handle, uint64_t assetHandle)
 	{
-		
+		auto& slc = GET_ENTITY(handle).GetComponent<SkyLightComponent>();
+		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(assetHandle);
+		slc.EnvironmentMap = map;
 	}
 }

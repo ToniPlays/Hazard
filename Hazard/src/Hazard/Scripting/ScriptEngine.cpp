@@ -58,7 +58,7 @@ namespace Hazard
 	void ScriptEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		//m_Engine->RunGarbageCollector();
+		m_Engine->RunGarbageCollector();
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{

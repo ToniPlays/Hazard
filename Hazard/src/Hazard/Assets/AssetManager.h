@@ -80,6 +80,12 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE) return nullptr;
 			return s_LoadedAssets[handle].As<T>();
 		}
+		static void RemoveRuntimeAsset(const AssetHandle& handle)
+		{
+			HZR_PROFILE_FUNCTION();
+			if (handle == INVALID_ASSET_HANDLE) return;
+			s_LoadedAssets.erase(handle);
+		}
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);
 
 	private:

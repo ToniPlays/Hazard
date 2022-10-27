@@ -5,14 +5,36 @@
 
 namespace Hazard
 {
-	Ref<EnvironmentMap> EnvironmentMap::Create(Ref<Texture2DAsset> sourceImage)
+	EnvironmentMap::EnvironmentMap()
 	{
-		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		using namespace HazardRenderer;
 
-		HZR_CORE_INFO("Somehow generate the cubemap for environment map");
+		m_Handle = UID();
+		m_Flags = AssetFlags::RuntimeGenerated;
+		m_Type = AssetType::EnvironmentMap;
 
+		AssetHandle brdfHandle = AssetManager::GetHandleFromFile("res/Textures/BRDF_LUT.tga");
+		TextureHeader header = TextureFactory::GetFromCacheOrReload(brdfHandle, "res/Textures/BRDF_LUT.tga");
+
+		Image2DCreateInfo brdfLutInfo = {};
+		brdfLutInfo.DebugName = "BRDFLutTexture";
+		brdfLutInfo.Width = header.Width;
+		brdfLutInfo.Height = header.Height;
+		brdfLutInfo.Data = header.ImageData;
+		brdfLutInfo.Usage = ImageUsage::Attachment;
+
+		Ref<Image2D> lut = Image2D::Create(&brdfLutInfo);
+
+		BRDFLut = AssetPointer::Create(lut, AssetType::Image);
+
+		AssetMetadata BRDLutMetadata = {};
+		BRDLutMetadata.Handle = BRDFLut->GetHandle();
+		BRDLutMetadata.Type = AssetType::Image;
+		AssetManager::AddRuntimeAsset(BRDLutMetadata, BRDFLut);
+	}
+	void EnvironmentMap::GenerateRadiance(Ref<Texture2DAsset> sourceImage)
+	{
+		using namespace HazardRenderer;
 		CubemapImageGen imageSrc = {};
 		imageSrc.pSourceImage = sourceImage->GetSourceImageAsset()->Value.As<Image2D>();
 
@@ -26,25 +48,29 @@ namespace Hazard
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 
-		Ref<AssetPointer> radianceAsset = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
+		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetMetadata radianceMetadata = {};
-		radianceMetadata.Handle = radianceAsset->GetHandle();
+		radianceMetadata.Handle = RadianceMap->GetHandle();
 		radianceMetadata.Type = AssetType::EnvironmentMap;
 
-		AssetManager::AddRuntimeAsset(radianceMetadata, radianceAsset);
+		AssetManager::AddRuntimeAsset(radianceMetadata, RadianceMap);
+		SourceImage = sourceImage;
+	}
+	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
+	{
+		using namespace HazardRenderer;
 
-		//Irradiance map generation
 		PipelineSpecification irradiancePipelineInfo = {};
 		irradiancePipelineInfo.DebugName = "EnvironmentIrradiance";
 		irradiancePipelineInfo.ShaderPath = "res/Shaders/Compute/EnvironmentIrradiance.glsl";
 		irradiancePipelineInfo.Usage = PipelineUsage::ComputeBit;
 
 		Ref<Pipeline> irradiancePipeline = Pipeline::Create(&irradiancePipelineInfo);
-		irradiancePipeline->GetShader()->Set("u_RadianceMap", 0, radianceMap);
+		irradiancePipeline->GetShader()->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
 
 		CubemapGen irradianceSource = {};
 		irradianceSource.OutputImageName = "o_IrradianceMap";
-		irradianceSource.pCubemap = radianceMap;
+		irradianceSource.pCubemap = radianceMap->Value.As<CubemapTexture>();
 		irradianceSource.Pipeline = irradiancePipeline;
 
 		CubemapTextureCreateInfo irradianceInfo = {};
@@ -54,12 +80,16 @@ namespace Hazard
 
 		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
-		Ref<AssetPointer> irradianceAsset = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
+		IrradianceMap = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
 
 		AssetMetadata irradianceMetadata = {};
-		irradianceMetadata.Handle = irradianceAsset->GetHandle();
+		irradianceMetadata.Handle = IrradianceMap->GetHandle();
 		irradianceMetadata.Type = AssetType::EnvironmentMap;
-		AssetManager::AddRuntimeAsset(irradianceMetadata, irradianceAsset);
+		AssetManager::AddRuntimeAsset(irradianceMetadata, IrradianceMap);
+	}
+	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
+	{
+		using namespace HazardRenderer;
 
 		//Generate prefilter map
 		PipelineSpecification preFilterPipelineInfo = {};
@@ -68,11 +98,11 @@ namespace Hazard
 		preFilterPipelineInfo.Usage = PipelineUsage::ComputeBit;
 
 		Ref<Pipeline> preFilterPipeline = Pipeline::Create(&preFilterPipelineInfo);
-		preFilterPipeline->GetShader()->Set("u_InputCube", 0, radianceMap);
+		preFilterPipeline->GetShader()->Set("u_InputCube", 0, radiance->Value.As<CubemapTexture>());
 
 		CubemapGen preFilterSource = {};
 		preFilterSource.OutputImageName = "o_Texture";
-		preFilterSource.pCubemap = radianceMap;
+		preFilterSource.pCubemap = radiance->Value.As<CubemapTexture>();
 		preFilterSource.Pipeline = preFilterPipeline;
 
 		CubemapTextureCreateInfo prefilterMapInfo = {};
@@ -81,38 +111,23 @@ namespace Hazard
 		prefilterMapInfo.Format = ImageFormat::RGBA;
 		Ref<CubemapTexture> preFilterMap = CubemapTexture::Create(&prefilterMapInfo);
 
-		Ref<AssetPointer> preFilterMapAsset = AssetPointer::Create(preFilterMap, AssetType::EnvironmentMap);
+		PreFilterMap = AssetPointer::Create(preFilterMap, AssetType::EnvironmentMap);
 
 		AssetMetadata prefilterMetadata = {};
-		prefilterMetadata.Handle = preFilterMapAsset->GetHandle();
+		prefilterMetadata.Handle = PreFilterMap->GetHandle();
 		prefilterMetadata.Type = AssetType::EnvironmentMap;
-		AssetManager::AddRuntimeAsset(prefilterMetadata, preFilterMapAsset);
-
-		AssetHandle brdfHandle = AssetManager::GetHandleFromFile("res/Textures/BRDF_LUT.tga");
-		TextureHeader header = TextureFactory::GetFromCacheOrReload(brdfHandle, "res/Textures/BRDF_LUT.tga");
-
-		Image2DCreateInfo brdfLutInfo = {};
-		brdfLutInfo.DebugName = "BRDFLutTexture";
-		brdfLutInfo.Width = header.Width;
-		brdfLutInfo.Height = header.Height;
-		brdfLutInfo.Data = header.ImageData;
-		brdfLutInfo.Usage = ImageUsage::Attachment;
-
-		Ref<Image2D> BRDFLut = Image2D::Create(&brdfLutInfo);
-
-		Ref<AssetPointer> BRDFLutAsset = AssetPointer::Create(BRDFLut, AssetType::Image);
-
-		AssetMetadata BRDLutMetadata = {};
-		BRDLutMetadata.Handle = BRDFLutAsset->GetHandle();
-		BRDLutMetadata.Type = AssetType::Image;
-		AssetManager::AddRuntimeAsset(BRDLutMetadata, BRDFLutAsset);
+		AssetManager::AddRuntimeAsset(prefilterMetadata, PreFilterMap);
+	}
+	Ref<EnvironmentMap> EnvironmentMap::Create(Ref<Texture2DAsset> sourceImage)
+	{
+		HZR_PROFILE_FUNCTION();
+		using namespace HazardRenderer;
+		Timer timer;
 
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
-		map->SourceImage = sourceImage;
-		map->RadianceMap = radianceAsset;
-		map->IrradianceMap = irradianceAsset;
-		map->PreFilterMap = preFilterMapAsset;
-		map->BRDFLut = BRDFLutAsset;
+		map->GenerateRadiance(sourceImage);
+		map->GenerateIrradiance(map->RadianceMap);
+		map->GeneratePreFilter(map->IrradianceMap);
 
 		HZR_CORE_WARN("Environment map took {0} ms to load", timer.ElapsedMillis());
 		return map;

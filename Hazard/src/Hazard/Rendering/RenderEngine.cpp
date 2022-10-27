@@ -165,10 +165,14 @@ namespace Hazard
 				auto& lut = environmentData.Map->BRDFLut;
 
 				auto& shader = m_Resources->PbrPipeline->GetShader();
-				shader->Set("u_RadianceMap", 0, radiance->Value.As<CubemapTexture>());
-				shader->Set("u_IrradianceMap", 0, irradiance->Value.As<CubemapTexture>());
-				shader->Set("u_PrefilterMap", 0, prefilter->Value.As<CubemapTexture>());
-				shader->Set("u_BRDFLut", 0, environmentData.Map->BRDFLut->Value.As<Image2D>());
+				if (radiance)
+					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
+				if (irradiance)
+					shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
+				if (prefilter)
+					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
+				if (lut)
+					shader->Set("u_BRDFLut", 0, lut->Value ? lut->Value.As<Image2D>() : m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
 				break;
 			}
 		}

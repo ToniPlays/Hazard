@@ -135,8 +135,15 @@ namespace Hazard
 			BIND_ICALL(Mesh_Create_Native);
 			BIND_ICALL(Mesh_Destroy_Native);
 
+			BIND_ICALL(EnvironmentMap_Create_Native);
+			BIND_ICALL(EnvironmentMap_Destroy_Native);
+
 			BIND_ICALL(EnvironmentMap_GetCubemapTexture_Native);
 			BIND_ICALL(EnvironmentMap_SetCubemapTexture_Native);
+
+			BIND_ICALL(EnvironmentMap_GenerateRadiance_Native);
+			BIND_ICALL(EnvironmentMap_GenerateIrradiance_Native);
+			BIND_ICALL(EnvironmentMap_GeneratePrefilter_Native);
 		}
 		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) {};
 	};

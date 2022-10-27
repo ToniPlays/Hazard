@@ -8,6 +8,7 @@ namespace Hazard.Rendering
 {
     public class Image2D : Asset
     {
-
+        public Image2D() : base(0) { }
+        internal Image2D(ulong ID) : base(ID) { }
     }
 }
