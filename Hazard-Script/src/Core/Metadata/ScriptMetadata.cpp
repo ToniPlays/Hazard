@@ -28,21 +28,21 @@ namespace HazardScript
 
 	bool ScriptMetadata::ValidateOrLoadMethod(const std::string& name)
 	{
-		for (ScriptAssembly* assembly : HazardScriptEngine::GetAssemblies()) {
+		for (Ref<ScriptAssembly> assembly : HazardScriptEngine::GetAssemblies())
+		{
 			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
 			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
 
 			if (!method) continue;
 
-			MethodMetadata* m = hnew MethodMetadata(method);
-			m_Methods[name] = m;
+			m_Methods[name] = Ref<MethodMetadata>::Create(method);
 			return true;
 		}
 		return false;
 	}
 	bool ScriptMetadata::TryInvoke(const std::string& name, MonoObject* target, void** params)
 	{
-		if (m_Methods.find(name) == m_Methods.end()) 
+		if (m_Methods.find(name) == m_Methods.end())
 			return false;
 
 		Invoke(name, target, params);
@@ -65,11 +65,11 @@ namespace HazardScript
 		MonoClassField* field = nullptr;
 		void* ptr = 0;
 
-		while ((field = mono_class_get_fields(m_Class->Class, &ptr))) 
+		while ((field = mono_class_get_fields(m_Class->Class, &ptr)))
 		{
 			std::string name = mono_field_get_name(field);
 			m_Fields[name] = ScriptCache::CacheOrGetFieldMetadata(field);
-			if (m_Fields[name]->GetType().NativeType == NativeType::None) 
+			if (m_Fields[name]->GetType().NativeType == NativeType::None)
 			{
 				std::cout << name << std::endl;
 			}
@@ -80,8 +80,9 @@ namespace HazardScript
 		MonoMethod* method = nullptr;
 		void* ptr = nullptr;
 
-		while ((method = mono_class_get_methods(m_Class->Class, &ptr))) {
-			MethodMetadata* m = hnew MethodMetadata(method);
+		while ((method = mono_class_get_methods(m_Class->Class, &ptr)))
+		{
+			auto& m = Ref<MethodMetadata>::Create(method);
 			m_Methods[m->GetName()] = m;
 		}
 	}
@@ -101,7 +102,9 @@ namespace HazardScript
 			MonoObject* obj = mono_custom_attrs_get_attr(info, a);
 			MonoClass* attribClass = mono_object_get_class(obj);
 
-			m_Attributes.push_back(AttributeBuilder::Create(mono_class_get_name(attribClass), obj));
+			auto& attrib = AttributeBuilder::Create(mono_class_get_name(attribClass), obj);
+			if (attrib)
+				m_Attributes.push_back(attrib);
 		}
 	}
 }

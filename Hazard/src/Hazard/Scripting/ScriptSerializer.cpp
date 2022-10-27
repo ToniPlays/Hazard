@@ -8,7 +8,7 @@ using namespace HazardScript;
 
 namespace Hazard
 {
-	void ScriptSerializer::SerializeFieldEditor(Ref<HazardScript::ScriptObject> object, YAML::Emitter& out, FieldMetadata* field)
+	void ScriptSerializer::SerializeFieldEditor(Ref<HazardScript::ScriptObject> object, YAML::Emitter& out, Ref<FieldMetadata> field)
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!(field->GetFlags() & MonoFlags_Public || field->Has<ShowInPropertiesAttribute>())) 
@@ -25,14 +25,14 @@ namespace Hazard
 			YamlUtils::Map(out, field->GetName(), [&]() {
 				for (size_t i = 0; i < object->GetFieldValueCount(field->GetName()); i++) {
 					std::string key = std::to_string(i);
-					SerializeFieldValue(out, field->GetName(), key, elementType.NativeType, object);
+					SerializeFieldValue(out, field->GetName(), key, elementType.NativeType, object.Raw());
 				}
 				});
 			return;
 		}
-		SerializeFieldValue(out, field->GetName(), field->GetName(), elementType.NativeType, object);
+		SerializeFieldValue(out, field->GetName(), field->GetName(), elementType.NativeType, object.Raw());
 	}
-	void ScriptSerializer::SerializeFieldValue(YAML::Emitter& out, const std::string& name, const std::string& key, const NativeType& type, Ref<HazardScript::ScriptObject> object)
+	void ScriptSerializer::SerializeFieldValue(YAML::Emitter& out, const std::string& name, const std::string& key, const NativeType& type,HazardScript::ScriptObject* object)
 	{
 		switch (type)
 		{

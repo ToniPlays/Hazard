@@ -4,13 +4,13 @@
 
 namespace HazardScript
 {
-	Attribute* AttributeBuilder::Create(const std::string className, MonoObject* obj)
+	Ref<Attribute> AttributeBuilder::Create(const std::string className, MonoObject* obj)
 	{
-		for (auto& [name, cb] : s_Attribs) {
-			if (name == className) {
+		for (auto& [name, cb] : s_Attribs) 
+		{
+			if (name == className) 
 				return cb(obj);
-			}
 		}
-		return hnew Attribute();
+		return Ref<Attribute>();
 	}
 }

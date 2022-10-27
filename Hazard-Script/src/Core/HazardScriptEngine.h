@@ -11,8 +11,8 @@ namespace HazardScript
 		std::filesystem::path MonoAssemblyDir;
 		std::filesystem::path MonoConfigDir;
 		
-		ScriptAssembly CoreAssembly;
-		ScriptAssembly AppAssembly;
+		Ref<ScriptAssembly> CoreAssembly;
+		Ref<ScriptAssembly> AppAssembly;
 
 		BindingCallback BindingCallback;
 		bool LoadAssembliesOnInit = true;
@@ -28,12 +28,12 @@ namespace HazardScript
 		void RegisterInternalCall(const std::string& signature, void* function);
 		void RunGarbageCollector();
 
-		ScriptAssembly& GetAppAssembly() { return m_MonoData.AppAssembly; }
+		Ref<ScriptAssembly> GetAppAssembly() { return m_MonoData.AppAssembly; }
 	
 	public:
 		static HazardScriptEngine* Create(HazardScriptCreateInfo* info);
 		static void SendDebugMessage(ScriptMessage message);
-		static std::vector<ScriptAssembly*> GetAssemblies();
+		static std::vector<Ref<ScriptAssembly>> GetAssemblies();
 		static void CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method);
 		static MonoData& GetMonoData() { return s_Instance->m_MonoData; }
 

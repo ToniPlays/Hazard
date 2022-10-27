@@ -3,7 +3,7 @@
 #include "Core/AttributeBuilder.h"
 #include "Core/HazardScriptEngine.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	MethodMetadata::MethodMetadata(MonoMethod* method)
 	{
@@ -36,7 +36,9 @@ namespace HazardScript
 			MonoObject* obj = mono_custom_attrs_get_attr(info, a);
 			MonoClass* attribClass = mono_object_get_class(obj);
 
-			m_Attributes.push_back(AttributeBuilder::Create(mono_class_get_name(attribClass), obj));
+			auto& attrib = AttributeBuilder::Create(mono_class_get_name(attribClass), obj);
+			if (attrib)
+				m_Attributes.push_back(attrib);
 		}
 	}
 }

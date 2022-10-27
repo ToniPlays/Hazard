@@ -8,6 +8,6 @@ namespace Hazard {
 		virtual ~IScriptGlue() = default;
 
 		virtual void Register(ScriptEngine* engine) = 0;
-		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) = 0;
+		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) = 0;
 	};
 }

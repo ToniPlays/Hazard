@@ -12,7 +12,7 @@
 
 namespace HazardScript
 {
-	class FieldMetadata
+	class FieldMetadata : public RefCount
 	{
 	public:
 		FieldMetadata() = default;
@@ -23,19 +23,25 @@ namespace HazardScript
 		const ManagedType& GetType() { return m_Type; }
 
 		template<typename T>
-		bool Has() const {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return true;
+		bool Has() const 
+		{
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return true;
 			}
 			return false;
 		}
 		template<typename T>
-		const T& Get() {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return dynamic_cast<T&>(*attrib);
+		const Ref<T> Get() 
+		{
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return attrib.As<T>();
 			}
 
-			return T();
+			return Ref<T>();
 		}
 
 		void RegisterInstance(uint32_t handle);
@@ -57,8 +63,9 @@ namespace HazardScript
 		{
 			//Field object
 			MonoObject* obj = mono_gchandle_get_target(handle);
-
-			if (m_Type.IsArray()) {
+			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
+			if (m_Type.IsArray()) 
+			{
 				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
 				if (!storage->IsLive())
 					storage->SetStoredValue<T>(index, value);
@@ -88,7 +95,7 @@ namespace HazardScript
 		std::string m_Name;
 		ManagedType m_Type;
 		uint32_t m_Flags = MonoFlags_Public;
-		std::vector<Attribute*> m_Attributes;
+		std::vector<Ref<Attribute>> m_Attributes;
 
 		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;
 	};

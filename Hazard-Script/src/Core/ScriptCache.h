@@ -5,16 +5,16 @@
 #include "Metadata/FieldMetadata.h"
 #include "Metadata/ScriptMetadata.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	struct ScriptCacheData
 	{
 		std::unordered_map<uint32_t, ManagedClass> Classes;
-		std::unordered_map<uint32_t, ScriptMetadata> ScriptMetadata;
-		std::unordered_map<uint32_t, FieldMetadata> ScriptFields;
+		std::unordered_map<uint32_t, Ref<ScriptMetadata>> ScriptMetadata;
+		std::unordered_map<uint32_t, Ref<FieldMetadata>> ScriptFields;
 	};
 
-	class ScriptCache 
+	class ScriptCache
 	{
 	public:
 		static void Init();
@@ -31,7 +31,6 @@ namespace HazardScript
 	private:
 
 		static void CacheCoreLibClasses();
-
 		inline static ScriptCacheData* s_Cache;
 	};
 }

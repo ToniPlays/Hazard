@@ -67,6 +67,7 @@ project "HazardEditor"
 	filter "system:windows"
 		systemversion "latest"
 		defines {
+			"_CRT_SECURE_NO_WARNINGS",
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_MONO"
 		}

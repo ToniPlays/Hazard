@@ -41,10 +41,10 @@ namespace HazardScript
 	{
 		uint32_t hash = Hash::GenerateFNVHash(klass->FullName);
 		if (s_Cache->ScriptMetadata.find(hash) != s_Cache->ScriptMetadata.end())
-			return &s_Cache->ScriptMetadata[hash];
+			return s_Cache->ScriptMetadata[hash];
 
-		s_Cache->ScriptMetadata[hash] = ScriptMetadata(klass);
-		return &s_Cache->ScriptMetadata[hash];
+		s_Cache->ScriptMetadata[hash] = Ref<ScriptMetadata>::Create(klass);
+		return s_Cache->ScriptMetadata[hash];
 
 	}
 	Ref<FieldMetadata> ScriptCache::CacheOrGetFieldMetadata(MonoClassField* field)
@@ -53,11 +53,11 @@ namespace HazardScript
 		uint32_t hash = Hash::GenerateFNVHash(name);
 
 		if (s_Cache->ScriptFields.find(hash) != s_Cache->ScriptFields.end())
-			return &s_Cache->ScriptFields[hash];
+			return s_Cache->ScriptFields[hash];
 
-		FieldMetadata metadata(field);
+		Ref<FieldMetadata> metadata = Ref<FieldMetadata>::Create(field);
 		s_Cache->ScriptFields[hash] = metadata;
-		return &s_Cache->ScriptFields[hash];
+		return s_Cache->ScriptFields[hash];
 	}
 	ManagedClass* ScriptCache::GetManagedClassByName(const std::string& name)
 	{

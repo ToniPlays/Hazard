@@ -10,10 +10,12 @@ namespace HazardScript
 {
 	ScriptAssembly::~ScriptAssembly()
 	{
-
+		Release();
+		__debugbreak();
 	}
 	bool ScriptAssembly::LoadFromSource(bool registerScripts, bool withRefecenced)
 	{
+		Release();
 		if (m_Path.empty()) return false;
 
 		CachedBuffer data = File::ReadBinaryFile(m_Path);
@@ -80,12 +82,18 @@ namespace HazardScript
 			monoClasses.push_back(managedClass);
 		}
 
-		for (ManagedClass* klass : monoClasses) {
-			ScriptMetadata* script = ScriptCache::CacheOrGetScriptMetadata(klass);
+		for (ManagedClass* klass : monoClasses) 
+		{
+			Ref<ScriptMetadata> script = ScriptCache::CacheOrGetScriptMetadata(klass);
 			script->UpdateMetadata();
 			m_Scripts[script->GetName()] = script;
 
 			//std::cout << script->GetName() << std::endl;
 		}
+	}
+	void ScriptAssembly::Release()
+	{
+		if (m_Assembly)
+			mono_assembly_close(m_Assembly);
 	}
 }

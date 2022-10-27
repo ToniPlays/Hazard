@@ -45,7 +45,7 @@ namespace Hazard
 		};
 		createInfo.BindingCallback = [&]() {
 			for (auto& cb : m_ScriptGlue) {
-				for (auto* assembly : m_Engine->GetAssemblies())
+				for (Ref<ScriptAssembly> assembly : m_Engine->GetAssemblies())
 					cb->OnAssemblyLoaded(assembly);
 			}
 			for (auto& cb : m_ScriptGlue) {
@@ -58,15 +58,15 @@ namespace Hazard
 	void ScriptEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_Engine->RunGarbageCollector();
+		//m_Engine->RunGarbageCollector();
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{
-		return m_Engine->GetAppAssembly().HasScript(moduleName);
+		return m_Engine->GetAppAssembly()->HasScript(moduleName);
 	}
 	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) 
 	{
-		return m_Engine->GetAppAssembly().GetScript(moduleName);
+		return m_Engine->GetAppAssembly()->GetScript(moduleName);
 	}
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
 	{
@@ -88,9 +88,9 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		if (component.ModuleName == "") return;
-		if (!m_Engine->GetAppAssembly().HasScript(component.ModuleName)) return;
+		if (!m_Engine->GetAppAssembly()->HasScript(component.ModuleName)) return;
 
-		ScriptMetadata& script = m_Engine->GetAppAssembly().GetScript(component.ModuleName);
+		ScriptMetadata& script = m_Engine->GetAppAssembly()->GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject();
 
 		uint64_t entityID = entity.GetUID();

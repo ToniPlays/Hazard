@@ -12,7 +12,7 @@ namespace Editor
 	{
 		
 	}
-	void EditorScriptGlue::OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) 
+	void EditorScriptGlue::OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) 
 	{
 		using namespace HazardScript;
 
@@ -23,9 +23,8 @@ namespace Editor
 
 			auto view = assembly->ViewAttributes<MenuBarItemAttribute>();
 
-			for (auto& script : view) {
-				menubar.AddMenuItem(script->Get<MenuBarItemAttribute>().Path, nullptr);
-			}
+			for (auto& script : view)
+				menubar.AddMenuItem(script->Get<MenuBarItemAttribute>()->Path, nullptr);
 		}
 	}
 }

@@ -12,11 +12,13 @@ namespace HazardScript
 	class AttributeBuilder 
 	{
 	public:
-		static Attribute* Create(const std::string className, MonoObject* obj);
-		static void AddAttribute(const std::string& name, AttributeConstruct callback) {
+		static Ref<Attribute> Create(const std::string className, MonoObject* obj);
+		static void AddAttribute(const std::string& name, AttributeConstruct callback) 
+		{
 			s_Attribs[name] = callback;
 		}
-		static void Clear() {
+		static void Clear() 
+		{
 			s_Attribs.clear();
 		}
 	private:

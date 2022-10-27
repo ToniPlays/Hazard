@@ -7,6 +7,11 @@
 #define HZR_MEM_DIAG
 #endif
 
+#define KB	* 1024
+#define MB	* 131072
+#define GB	* 1073741824
+
+
 namespace Memory
 {
 	struct MemoryStats

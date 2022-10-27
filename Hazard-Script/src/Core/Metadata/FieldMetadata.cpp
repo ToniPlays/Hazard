@@ -39,12 +39,16 @@ namespace HazardScript
 			MonoObject* obj = mono_custom_attrs_get_attr(info, a);
 			MonoClass* attribClass = mono_object_get_class(obj);
 
-			m_Attributes.push_back(AttributeBuilder::Create(mono_class_get_name(attribClass), obj));
+			auto& attrib = AttributeBuilder::Create(mono_class_get_name(attribClass), obj);
+			if (attrib)
+				m_Attributes.push_back(attrib);
 		}
 	}
 	void FieldMetadata::RegisterInstance(uint32_t handle)
 	{
-		if (m_InstanceData.find(handle) != m_InstanceData.end()) return;
+		if (m_InstanceData.find(handle) != m_InstanceData.end()) 
+			return;
+
 		if (m_Type.IsArray())
 			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
 		else

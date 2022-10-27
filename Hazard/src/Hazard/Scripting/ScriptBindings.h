@@ -19,7 +19,7 @@ namespace Hazard
 		{
 			HZR_PROFILE_FUNCTION();
 			handler = &Application::GetModule<WorldHandler>();
-			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly.GetImage();
+			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
 
 			RegisterComponent(TagComponent, image);
 			RegisterComponent(TransformComponent, image);
@@ -145,7 +145,7 @@ namespace Hazard
 			BIND_ICALL(EnvironmentMap_GenerateIrradiance_Native);
 			BIND_ICALL(EnvironmentMap_GeneratePrefilter_Native);
 		}
-		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly) {};
+		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) {};
 	};
 
 }

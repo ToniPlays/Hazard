@@ -9,6 +9,6 @@ namespace Editor
 	{
 	public:
 		virtual void Register(Hazard::ScriptEngine* engine);
-		virtual void OnAssemblyLoaded(HazardScript::ScriptAssembly* assembly);
+		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly);
 	};
 }

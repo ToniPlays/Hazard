@@ -6,7 +6,7 @@
 
 namespace HazardScript 
 {
-	class MethodMetadata 
+	class MethodMetadata : public RefCount
 	{
 	public:
 		MethodMetadata() = default;
@@ -19,18 +19,24 @@ namespace HazardScript
 		MonoObject* Invoke(MonoObject* obj, void** params = nullptr);
 
 		template<typename T>
-		bool Has() const {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return true;
+		bool Has() const 
+		{
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return true;
 			}
 			return false;
 		}
 		template<typename T>
-		const T& Get() {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return dynamic_cast<T&>(*attrib);
+		const Ref<T> Get() 
+		{
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return attrib.As<T>();
 			}
-			return T();
+			return Ref<T>();
 		}
 
 
@@ -43,6 +49,6 @@ namespace HazardScript
 		MonoFlags m_Flags;
 		std::string m_Name;
 
-		std::vector<Attribute*> m_Attributes;
+		std::vector<Ref<Attribute>> m_Attributes;
 	};
 }

@@ -10,16 +10,20 @@ namespace HazardScript
 {
 	class ScriptObject;
 
-	class ScriptMetadata
+	class ScriptMetadata : public RefCount
 	{
 	public:
 		ScriptMetadata() = default;
 		ScriptMetadata(ManagedClass* klass);
+		~ScriptMetadata()
+		{
+			__debugbreak();
+		}
 
 		std::string GetName();
 		size_t GetFieldCount() { return m_Fields.size(); }
 		size_t GetMethodCount() { return m_Methods.size(); }
-		std::unordered_map<std::string, FieldMetadata*>& GetFields() { return m_Fields; }
+		std::unordered_map<std::string, Ref<FieldMetadata>>& GetFields() { return m_Fields; }
 		std::unordered_map<uint32_t, ScriptObject*>& GetAllInstances() { return m_Instances; }
 
 		void UpdateMetadata();
@@ -81,17 +85,21 @@ namespace HazardScript
 
 		template<typename T>
 		bool Has() const {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return true;
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return true;
 			}
 			return false;
 		}
 		template<typename T>
-		const T& Get() {
-			for (Attribute* attrib : m_Attributes) {
-				if (attrib->GetAttributeType() == T::GetStaticType()) return dynamic_cast<T&>(*attrib);
+		const Ref<T> Get() {
+			for (Ref<Attribute> attrib : m_Attributes) 
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType()) 
+					return attrib.As<T>();
 			}
-			return T();
+			return Ref<T>();
 		}
 
 		ScriptObject* CreateObject();
@@ -103,12 +111,12 @@ namespace HazardScript
 		void LoadAttributes();
 
 	private:
-		ManagedClass* m_Class;
+		ManagedClass* m_Class = nullptr;
 
-		std::unordered_map<std::string, FieldMetadata*> m_Fields;
-		std::unordered_map<std::string, MethodMetadata*> m_Methods;
+		std::unordered_map<std::string, Ref<FieldMetadata>> m_Fields;
+		std::unordered_map<std::string, Ref<MethodMetadata>> m_Methods;
 
-		std::vector<Attribute*> m_Attributes;
+		std::vector<Ref<Attribute>> m_Attributes;
 		std::unordered_map<uint32_t, ScriptObject*> m_Instances;
 	};
 }
