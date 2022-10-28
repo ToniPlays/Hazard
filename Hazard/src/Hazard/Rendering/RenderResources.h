@@ -7,15 +7,15 @@ namespace Hazard
 	struct CameraData
 	{
 		glm::mat4 ViewProjection;
-		glm::mat4 Projection;
-		glm::mat4 View;
 		glm::mat4 InverseViewProjection;
-		glm::vec4 Position;
-		float ZNear;
-		float ZFar;
-		glm::vec2 UnUsed1;
-		glm::vec4 Unused2;
-		glm::vec4 Unused3;
+		glm::mat4 Projection;
+		glm::mat4 InverseProjection;
+		glm::mat4 View;
+		glm::mat4 InverseView;
+		glm::vec2 NDCToViewMul;
+		glm::vec2 NDCToViewAdd;
+		glm::vec2 DepthUnpack;
+		glm::vec2 CameraTanHalfFOV;
 	};
 
 	struct ModelData
@@ -44,9 +44,8 @@ namespace Hazard
 	};
 	struct UtilityUniformData 
 	{
-		float Time;
+		glm::vec4 CameraPos;
 	};
-
 
 	using namespace HazardRenderer;
 	struct RenderResources
@@ -64,6 +63,9 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
+			std::cout << sizeof(CameraData) << std::endl;
+
+
 			{
 				UniformBufferCreateInfo cameraUBO = {};
 				cameraUBO.Name = "Camera";
@@ -110,6 +112,7 @@ namespace Hazard
 				skyboxSpec.pTargetRenderPass = renderPass;
 				skyboxSpec.DepthTest = true;
 				skyboxSpec.DepthWrite = false;
+				skyboxSpec.CullMode = CullMode::None;
 				skyboxSpec.DepthOperator = DepthOp::LessOrEqual;
 				skyboxSpec.Usage = PipelineUsage::GraphicsBit;
 

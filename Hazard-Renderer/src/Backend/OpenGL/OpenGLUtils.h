@@ -13,6 +13,8 @@
 #include <glad/glad.h>
 #include <shaderc/shaderc.h>
 
+#include <glm/glm.hpp>
+
 namespace HazardRenderer::OpenGLUtils
 {
 	static GLenum ShaderStageToGLType(ShaderStage type) {
@@ -136,7 +138,7 @@ namespace HazardRenderer::OpenGLUtils
 		return GL_LESS;
 	}
 
-
+	uint32_t GetMipLevelCount(uint32_t width, uint32_t height);
 
 	static bool IsDepthFormat(const ImageFormat& format) {
 		if (format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F)
@@ -147,7 +149,7 @@ namespace HazardRenderer::OpenGLUtils
 	{
 		return multisample ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	}
-	static uint32_t CreateTextures(bool multisample, uint32_t count)
+	static uint32_t CreateTextures(bool multisample, uint32_t count = 1)
 	{
 		uint32_t id;
 		glCreateTextures(TextureTarget(multisample), count, &id);
@@ -161,14 +163,11 @@ namespace HazardRenderer::OpenGLUtils
 	{
 		//Change to DSA
 		bool multisampled = samples > 1;
+		glBindTexture(TextureTarget(multisampled), target);
 		if (multisampled)
-		{
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
-		}
 		else
-		{
 			glTextureStorage2D(target, 1, internalFormat, width, height);
-		}
 
 		glTextureParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -182,6 +181,7 @@ namespace HazardRenderer::OpenGLUtils
 	static void AttachDepthTexture(uint32_t target, uint32_t samples, uint32_t format, uint32_t attachmetType, uint32_t width, uint32_t height)
 	{
 		bool multisampled = samples > 1;
+		glBindTexture(TextureTarget(multisampled), target);
 		if (multisampled)
 		{
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);

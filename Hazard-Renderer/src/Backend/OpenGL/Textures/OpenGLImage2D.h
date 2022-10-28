@@ -22,6 +22,7 @@ namespace HazardRenderer::OpenGL
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 		
+		void Invalidate_RT();
 		void Release_RT();
 		void SetData_RT();
 
@@ -38,6 +39,8 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_Width = 0;
 		uint32_t m_Height = 0;
 		uint32_t m_Samples = 0;
+		uint32_t m_MipLevels = 0;
+		ImageUsage m_ImageUsage;
 		ImageFormat m_Format = ImageFormat::None;
         Buffer m_LocalBuffer;
 	};

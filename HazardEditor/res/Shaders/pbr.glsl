@@ -50,17 +50,21 @@ void main()
 {
 	//Initialize Params
 	m_Params.Albedo = Color.rgb;
-	m_Params.Normal = normalize(Normal);
 	m_Params.Metalness = u_Model.Metalness;
-	m_Params.Roughness = u_Model.Roughness;
-	m_Params.View = normalize(u_Camera.Position.xyz - WorldPosition);
+	m_Params.Roughness = max(u_Model.Roughness, 0.05);
+	m_Params.Normal = normalize(Normal);
+	m_Params.View = normalize(u_Util.CameraPos - WorldPosition);
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 
-	//Calculate
+	float alpha = Color.a;
+
+	//Specular reflect direction
+	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
+	//Dielectric
 	vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
 
 	vec3 Lo = vec3(0.0);
-	//Reflectance
+	/*//Reflectance
 	for(int i = 0; i < 1; i++)
 	{
 		//Lighting
@@ -68,14 +72,13 @@ void main()
 		if(light.Color.a <= 0.0) 
 			continue;
 		Lo += CalculateDirectionalLight(F0, light);
-	}
+	}*/
 
-	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
 	vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity * u_Lights.IBLContribution;
 	
 	//Tonemapping
 	vec3 color = ACESTonemap(ibl + Lo);
 	color = GammaCorrect(color, gamma);
 
-	OutputColor = vec4(color, 1.0);
+	OutputColor = vec4(ibl, 1.0);
 }

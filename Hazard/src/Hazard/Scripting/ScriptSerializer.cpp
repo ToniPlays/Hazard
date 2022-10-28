@@ -85,7 +85,6 @@ namespace Hazard
 			YamlUtils::Serialize(out, key, (uint64_t)object->GetFieldValue<ObjectReference>(name).ObjectUID);
 			break;
 		default:
-			std::cout << std::endl;
 			break;
 		}
 	}

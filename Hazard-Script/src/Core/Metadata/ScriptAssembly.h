@@ -51,6 +51,7 @@ namespace HazardScript
 		void LoadReferencedAssemblies();
 		void LoadScripts();
 		void Release();
+
 	private:
 		std::filesystem::path m_Path;
 		MonoAssembly* m_Assembly = nullptr;

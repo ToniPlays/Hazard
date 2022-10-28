@@ -43,6 +43,8 @@ layout(location = 1) in vec3 farPoint;
 layout(location = 0) out vec4 OutputColor;
 
 const float axisWidth = 1.25;
+const float ZNear = 0.03f;
+const float ZFar = 1000.0f;
     
 const float nextZoom = 10.0;
 const float lastZoom = 1.0;
@@ -81,8 +83,8 @@ float ComputeDepth(vec3 pos)
 }
 float ComputeLinearDepth(vec3 pos)
 {
-    float near = u_Camera.ZNear;
-    float far = u_Camera.ZFar;
+    float near = ZNear;
+    float far = ZFar;
 
     vec4 clipSpacePos = u_Camera.ViewProjection * vec4(pos.xyz, 1.0);
     float clipSpaceDepth = (clipSpacePos.z / clipSpacePos.w) * 2.0 - 1.0;

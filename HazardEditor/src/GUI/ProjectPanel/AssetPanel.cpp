@@ -81,7 +81,7 @@ namespace UI
 			AssetMetadata metadata = {};
 			metadata.Handle = AssetHandle();
 			metadata.Path = m_CurrentPath / File::GetName(file);
-			metadata.Type = Utils::AssetTypeFromExtension(File::GetFileExtension(file));
+			metadata.Type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(file));
 			EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
 			RefreshFolderItems();
 		}

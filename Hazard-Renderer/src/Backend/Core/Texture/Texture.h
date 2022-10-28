@@ -29,6 +29,7 @@ namespace HazardRenderer
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
 		bool FlipOnLoad = false;
+		bool GenerateMips = true;
 		CubemapGen* pCubemapSrc = nullptr;
 		CubemapImageGen* pImageSrc = nullptr;
 	};

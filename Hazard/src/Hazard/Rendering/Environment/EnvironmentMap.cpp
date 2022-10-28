@@ -22,7 +22,7 @@ namespace Hazard
 		brdfLutInfo.Height = header.Height;
 		brdfLutInfo.Data = header.ImageData;
 		brdfLutInfo.Usage = ImageUsage::Attachment;
-
+		brdfLutInfo.GenerateMips = true;
 
 		Ref<Image2D> lut = Image2D::Create(&brdfLutInfo);
 		header.ImageData.Release();
@@ -79,6 +79,7 @@ namespace Hazard
 		irradianceInfo.Usage = ImageUsage::Texture;
 		irradianceInfo.pCubemapSrc = &irradianceSource;
 		irradianceInfo.Format = ImageFormat::RGBA;
+		irradianceInfo.GenerateMips = true;
 
 		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
@@ -111,6 +112,7 @@ namespace Hazard
 		prefilterMapInfo.Usage = ImageUsage::Texture;
 		prefilterMapInfo.pCubemapSrc = &preFilterSource;
 		prefilterMapInfo.Format = ImageFormat::RGBA;
+		prefilterMapInfo.GenerateMips = true;
 		Ref<CubemapTexture> preFilterMap = CubemapTexture::Create(&prefilterMapInfo);
 
 		PreFilterMap = AssetPointer::Create(preFilterMap, AssetType::EnvironmentMap);

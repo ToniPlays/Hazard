@@ -39,6 +39,10 @@ namespace UI
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);
 
+		AddMenuItem("Tools/Project", [&]() {
+			Application::GetModule<GUIManager>().SetPanelOpen<ProjectTodoPanel>(true);
+			});
+
 		AddMenuItem("Tools/World", nullptr);
 		AddMenuItem("Tools/Audio", nullptr);
 		AddMenuItem("Tools/Rendering", nullptr);

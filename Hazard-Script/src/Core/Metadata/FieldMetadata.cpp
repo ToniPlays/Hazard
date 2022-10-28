@@ -11,7 +11,6 @@ namespace HazardScript
 		m_Name = mono_field_get_name(field);
 		m_Type = ManagedType::FromType(mono_field_get_type(field));
 
-		std::cout << m_Name << " -> " << field << std::endl;
 		LoadAttributes();
 	}
 	uint32_t FieldMetadata::GetElementCount(uint32_t handle)

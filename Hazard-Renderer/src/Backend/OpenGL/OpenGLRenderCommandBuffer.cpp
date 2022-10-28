@@ -72,7 +72,15 @@ namespace HazardRenderer::OpenGL
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
 			auto& spec = instance->GetSpecifications();
-
+			if (spec.CullMode == CullMode::None)
+			{
+				glDisable(GL_CULL_FACE);
+			}
+			else
+			{
+				glEnable(GL_CULL_FACE);
+				glCullFace(spec.CullMode == CullMode::FrontFace ? GL_FRONT : GL_BACK);
+			}
 			if (spec.DepthTest)
 			{
 				glEnable(GL_DEPTH_TEST);

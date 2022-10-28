@@ -64,6 +64,7 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
+			HZR_INFO("Image ID {}", m_FrameBuffer->GetImage().As<OpenGL::OpenGLImage2D>()->GetID());
 		}
 
 		if (m_CurrentImage == 0 || true)

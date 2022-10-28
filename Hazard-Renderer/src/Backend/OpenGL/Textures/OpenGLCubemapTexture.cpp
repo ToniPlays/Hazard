@@ -38,12 +38,24 @@ namespace HazardRenderer::OpenGL
 				m_Width, m_Height, 0, GL_RGB, OpenGLUtils::GetFormatType(format), nullptr);
 		}
 
-		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glGenerateTextureMipmap(m_ID);
+		if (createInfo->GenerateMips)
+		{
+			//glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			//glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			for (uint32_t i = 0; i < 6; i++)
+			{
+				//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,
+				//	m_Width, m_Height, 0, GL_RGB, GL_FLOAT, nullptr);
+			}
+			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		
 
 		if (createInfo->pCubemapSrc)
 		{

@@ -8,6 +8,8 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Math/Time.h"
 
+#include <glm/glm.hpp>
+
 namespace Hazard
 {
 	RenderEngine::RenderEngine(RendererCreateInfo* createInfo) : Module("RenderEngine")
@@ -187,12 +189,6 @@ namespace Hazard
 			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
 		}
-		UtilityUniformData utilData = {};
-		utilData.Time = Time::s_Time;
-
-		m_Resources->UtilityUniformBuffer->SetData(&utilData, sizeof(UtilityUniformData));
-		commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
-
 		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
 		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
@@ -240,14 +236,18 @@ namespace Hazard
 				CameraData data = {};
 				data.ViewProjection = camera.Projection * camera.View;
 				data.Projection = camera.Projection;
+				data.InverseProjection = inverseProjection;
 				data.View = camera.View;
+				data.InverseView = inverseView;
 				data.InverseViewProjection = inverseView * inverseProjection;
-				data.Position = inverseView[3];
-				data.ZNear = camera.ZNear;
-				data.ZFar = camera.ZFar;
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
+				
+				glm::vec3 view = data.InverseView[3];
+				m_Resources->UtilityUniformBuffer->SetData(&view, sizeof(glm::vec3));
+				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
+
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				GeometryPass(commandBuffer);

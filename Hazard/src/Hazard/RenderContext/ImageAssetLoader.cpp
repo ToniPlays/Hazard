@@ -22,6 +22,7 @@ namespace Hazard
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
+		info.GenerateMips = false;
 
 		Ref<Image2D> image = Image2D::Create(&info);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);

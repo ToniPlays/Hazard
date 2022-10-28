@@ -52,7 +52,7 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
-vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+vec3 FresnelSchlickRoughness(vec3 F0, float cosTheta, float roughness)
 {
 	return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
@@ -85,14 +85,14 @@ float GaSchlickGGX(float cosLi, float NdotV, float roughness)
 vec3 IBL(vec3 F0, vec3 Lr)
 {
 	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
-	vec3 F = FresnelSchlickRoughness(m_Params.NdotV, F0, m_Params.Roughness);
+	vec3 F = FresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
 	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);
 	vec3 diffuseIBL = m_Params.Albedo * irradiance;
 
 	int radianceTexelLeves = textureQueryLevels(u_RadianceMap);
-
 	float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
-	vec3 specularIrradiance	= textureLod(u_RadianceMap, RotateVectorAboutY(0.0, Lr), m_Params.Roughness * radianceTexelLeves).rgb;
+	//vec3 specularIrradiance	= textureLod(u_RadianceMap, RotateVectorAboutY(0.0, Lr), (m_Params.Roughness * radianceTexelLeves)).rgb;
+	vec3 specularIrradiance	= texture(u_RadianceMap, RotateVectorAboutY(0.0, Lr)).rgb;
 
 	//Sample BRDF
 	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, 1.0 - m_Params.Roughness)).rg;
@@ -112,7 +112,7 @@ vec3 CalculateDirectionalLight(vec3 F0, DirectionalLight light)
 	float cosLi = max(dot(m_Params.Normal, Li), 0.0);
 	float cosLh = max(dot(m_Params.Normal, Lh), 0.0);
 
-	vec3  F = FresnelSchlickRoughness(max(dot(Lh, m_Params.View), 0.0), F0, m_Params.Roughness);
+	vec3  F = FresnelSchlickRoughness(F0, max(dot(Lh, m_Params.View), 0.0), m_Params.Roughness);
 	float D = NdfGGX(cosLh, m_Params.Roughness);
 	float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
 

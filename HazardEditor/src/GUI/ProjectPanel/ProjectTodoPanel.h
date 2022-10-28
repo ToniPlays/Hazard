@@ -1,5 +1,6 @@
 
 #include "Hazard.h"
+#include "Hazard/Scripting/Attributes/ClassAttributes.h"
 
 namespace UI 
 {
@@ -13,5 +14,9 @@ namespace UI
 		bool OnEvent(Event& e) override { return false; };
 
 	private:
+		void DrawElement(const std::string& className, const std::string& name, const Ref<Hazard::TodoAttribute> attrib);
+
+	private:
+		std::string m_SearchVal;
 	};
 }

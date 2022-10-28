@@ -43,7 +43,7 @@ namespace HazardRenderer
 	CacheStatus ShaderFactory::HasCachedShader(const std::filesystem::path& path, RenderAPI api)
 	{
 		auto cachePath = GetCachedFilePath(path, api);
-		return File::Exists(cachePath) ? CacheStatus::Exists : CacheStatus::None;
+		return CacheStatus::None;// File::Exists(cachePath) ? CacheStatus::Exists : CacheStatus::None;
 	}
 
 	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)

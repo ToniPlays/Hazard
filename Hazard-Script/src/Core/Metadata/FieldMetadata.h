@@ -52,7 +52,6 @@ namespace HazardScript
 		template<typename T>
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
-			std::cout << mono_field_get_name(m_Field) << std::endl;
 			MonoObject* obj = mono_gchandle_get_target(handle);
 			if (m_Type.IsArray())
 			{

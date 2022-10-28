@@ -16,7 +16,9 @@ namespace HazardRenderer::OpenGL
 		m_Width = info->Width;
 		m_Height = info->Height;
 		m_Format = info->Format;
-		m_Samples = info->Mips;
+		m_Samples = 1;
+		m_ImageUsage = info->Usage;
+		m_MipLevels = info->GenerateMips ? OpenGLUtils::GetMipLevelCount(m_Width, m_Height) : 1;
 
 		Invalidate();
 		if (info->Data.Data != nullptr)
@@ -33,11 +35,15 @@ namespace HazardRenderer::OpenGL
 		if (m_ID)
 			Release();
 
-		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1, 1);
+		Ref<OpenGLImage2D> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->Invalidate_RT();
+			});
+
 		/*
 		Ref<OpenGLImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
-			
+
 			});
 			*/
 	}
@@ -48,6 +54,28 @@ namespace HazardRenderer::OpenGL
 		Renderer::SubmitResourceFree([instance]() mutable {
 			instance->Release_RT();
 			});
+	}
+	void OpenGLImage2D::Invalidate_RT()
+	{
+		HZR_PROFILE_FUNCTION();
+		HZR_RENDER_THREAD_ONLY();
+
+
+		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1);
+		std::cout << m_DebugName << ", id " << m_ID << std::endl;
+		if (m_ImageUsage == ImageUsage::Attachment) return;
+
+		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, m_MipLevels > 1 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR);
+		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (m_MipLevels > 1)
+			glGenerateTextureMipmap(m_ID);
+		/*
+		/*
+
+		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		*/
 	}
 	void OpenGLImage2D::Release_RT()
 	{
@@ -63,21 +91,33 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_RENDER_THREAD_ONLY();
+
 		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);
+		if (m_MipLevels > 1) {}
+		//glGenerateTextureMipmap(m_ID);
+	/*
+	glBindTexture(GL_TEXTURE_2D, m_ID);
+
+	for (uint32_t i = 1; i < m_MipLevels; i++)
+	{
+		glTextureStorage2D(m_ID, i, GL_RGBA8, (m_Width >> (i - 1)), (m_Height >> (i -1)));
+	}
+	*/
+
 		m_LocalBuffer.Release();
 	}
 	void OpenGLImage2D::SetImageData(const Buffer& buffer)
 	{
 		HZR_PROFILE_FUNCTION();
-		
+
 		m_LocalBuffer.Release();
 		m_LocalBuffer = Buffer::Copy(buffer);
 
 		Ref<OpenGLImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->SetData_RT();
-		});
+			});
 	}
 }
 #endif

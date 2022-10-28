@@ -355,15 +355,15 @@ namespace Hazard::ImUI
 	{
 		static std::unordered_map<HazardRenderer::Image2D*, ImTextureID> cache;
 
-		if (cache.find(image.Raw()) != cache.end())
+		/*if (cache.find(image.Raw()) != cache.end())
 		{
 			HZR_ASSERT(cache[image.Raw()] != nullptr, "Woop");
 			return cache[image.Raw()];
-		}
+		}*/
 
 		using namespace HazardRenderer;
-		RenderAPI api = GraphicsContext::GetRenderAPI();
-		switch (api) {
+		switch (GraphicsContext::GetRenderAPI()) 
+		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{

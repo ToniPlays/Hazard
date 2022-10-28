@@ -8,8 +8,6 @@ namespace Hazard
 	public:
 		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
 		static void Init(std::string& cmdLine) {
-			std::cout << cmdLine << std::endl;
-
 			std::vector<std::string> args = StringUtil::SplitString(cmdLine, '-');
 
 			for (auto& arg : args) {

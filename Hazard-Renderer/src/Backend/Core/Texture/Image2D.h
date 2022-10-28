@@ -13,6 +13,7 @@ namespace HazardRenderer
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
 		bool ClearLocalBuffer = true;
+		bool GenerateMips = false;
 	};
 
 	class Image2D : public Image

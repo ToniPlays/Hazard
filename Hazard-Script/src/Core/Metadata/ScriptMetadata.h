@@ -24,6 +24,7 @@ namespace HazardScript
 		size_t GetFieldCount() { return m_Fields.size(); }
 		size_t GetMethodCount() { return m_Methods.size(); }
 		std::unordered_map<std::string, Ref<FieldMetadata>>& GetFields() { return m_Fields; }
+		std::unordered_map<std::string, Ref<MethodMetadata>>& GetMethods() { return m_Methods; }
 		std::unordered_map<uint32_t, ScriptObject*>& GetAllInstances() { return m_Instances; }
 
 		void UpdateMetadata();
@@ -95,6 +96,26 @@ namespace HazardScript
 			}
 			return false;
 		}
+
+		template<typename T>
+		bool Contains() const
+		{
+			for (Ref<Attribute> attrib : m_Attributes)
+			{
+				if (attrib->GetAttributeType() == T::GetStaticType())
+					return true;
+			}
+			for (auto& [name, field] : m_Fields)
+			{
+				if (field->Has<T>()) return true;
+			}
+			for (auto& [name, method] : m_Methods)
+			{
+				if (method->Has<T>()) return true;
+			}
+			return false;
+		}
+
 		template<typename T>
 		const Ref<T> Get() 
 		{

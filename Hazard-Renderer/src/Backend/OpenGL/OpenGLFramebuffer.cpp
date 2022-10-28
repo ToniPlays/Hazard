@@ -49,10 +49,11 @@ namespace HazardRenderer::OpenGL
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		HZR_PROFILE_FUNCTION();
+		if (m_Specs.SwapChainTarget) return;
+
 		Ref<OpenGLFrameBuffer> instance = this;
 		Renderer::SubmitResourceFree([instance]() mutable {
 			HZR_PROFILE_FUNCTION("OpenGLFrameBuffer::~OpenGLFrameBuffer_RT()");
-			if (instance->GetSpecification().SwapChainTarget) return;
 
 			glDeleteFramebuffers(1, &instance->m_ID);
 			if (instance->m_ColorImages.size() > 0) {
@@ -90,14 +91,18 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLFrameBuffer> instance = this;
-		Renderer::Submit([instance, width, height, force]() mutable {
-			instance->Resize_RT(width, height, force);
-			});
+		if (m_Specs.Width == width && m_Specs.Height == height && !force || (width < 0 || height < 0))
+			return;
+
+		m_Specs.Width = width;
+		m_Specs.Height = height;
+
+		Invalidate();
 	}
 	void OpenGLFrameBuffer::Resize_RT(uint32_t width, uint32_t height, bool force)
 	{
 		HZR_PROFILE_FUNCTION();
+
 		if (m_Specs.Width == width && m_Specs.Height == height && !force || (width < 0 || height < 0))
 			return;
 
@@ -109,44 +114,27 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLFrameBuffer> instance = this;
-		Renderer::SubmitResourceCreate([instance]() mutable {
-			instance->Invalidate_RT();
-			});
-	}
-	void OpenGLFrameBuffer::Invalidate_RT()
-	{
-		HZR_PROFILE_FUNCTION();
-		HZR_RENDER_THREAD_ONLY();
+
 		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
-
 		if (m_Specs.SwapChainTarget) return;
-
 
 		if (m_ID)
 		{
-			glDeleteFramebuffers(1, &m_ID);
-
 			if (m_ColorImages.size() > 0)
 			{
 				if (m_ColorImages.size() > 0)
 				{
 					for (auto& image : m_ColorImages)
-						image->Release_RT();
+						image->Release();
 				}
 			}
 			m_ColorImages.clear();
 
 			if (m_DepthImage)
 			{
-				m_DepthImage->Release_RT();
+				m_DepthImage->Release();
 			}
 		}
-
-		glCreateFramebuffers(1, &m_ID);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
-
-		bool multisampled = m_Specs.Samples > 1;
 
 		if (m_ColorAttachments.size() > 0)
 		{
@@ -156,7 +144,6 @@ namespace HazardRenderer::OpenGL
 			imageInfo.Usage = ImageUsage::Attachment;
 			imageInfo.Width = m_Specs.Width;
 			imageInfo.Height = m_Specs.Height;
-			imageInfo.Mips = m_Specs.Samples;
 
 			for (uint32_t i = 0; i < m_ColorImages.size(); i++)
 			{
@@ -164,12 +151,49 @@ namespace HazardRenderer::OpenGL
 				imageInfo.Format = m_ColorAttachments[i].Format;
 				m_ColorImages[i] = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
 			}
+		}
 
+		if (m_DepthAttachment.Format != ImageFormat::None)
+		{
+			Image2DCreateInfo imageInfo = {};
+			imageInfo.DebugName = fmt::format("FBO ({}) depth", m_Specs.DebugName);
+			imageInfo.Usage = ImageUsage::Attachment;
+			imageInfo.Width = m_Specs.Width;
+			imageInfo.Height = m_Specs.Height;
+			imageInfo.Mips = m_Specs.Samples;
+			imageInfo.Format = m_DepthAttachment.Format;
+
+			m_DepthImage = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
+		}
+
+		Ref<OpenGLFrameBuffer> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->Invalidate_RT();
+			});
+	}
+	void OpenGLFrameBuffer::Invalidate_RT()
+	{
+		HZR_PROFILE_FUNCTION();
+		HZR_RENDER_THREAD_ONLY();
+
+		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
+		if (m_Specs.SwapChainTarget) return;
+
+
+		if (m_ID)
+			glDeleteFramebuffers(1, &m_ID);
+
+		glCreateFramebuffers(1, &m_ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+
+		bool multisampled = m_Specs.Samples > 1;
+
+		if (m_ColorAttachments.size() > 0)
+		{
 			for (uint32_t i = 0; i < (uint32_t)m_ColorImages.size(); i++)
 			{
-				OpenGLUtils::BindTexture(m_ColorImages[i]->GetID(), multisampled);
-
-				switch (m_ColorAttachments[i].Format) {
+				switch (m_ColorAttachments[i].Format) 
+				{
 				case ImageFormat::RGBA:
 					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA, GL_RGBA8, m_Specs.Width, m_Specs.Height, i); break;
 				case ImageFormat::RGBA16F:
@@ -183,18 +207,6 @@ namespace HazardRenderer::OpenGL
 		}
 		if (m_DepthAttachment.Format != ImageFormat::None)
 		{
-
-			Image2DCreateInfo imageInfo = {};
-			imageInfo.DebugName = fmt::format("FBO ({}) depth", m_Specs.DebugName);
-			imageInfo.Usage = ImageUsage::Attachment;
-			imageInfo.Width = m_Specs.Width;
-			imageInfo.Height = m_Specs.Height;
-			imageInfo.Mips = m_Specs.Samples;
-			imageInfo.Format = m_DepthAttachment.Format;
-
-			m_DepthImage = Image2D::Create(&imageInfo).As<OpenGLImage2D>();
-			OpenGLUtils::BindTexture(m_DepthImage->GetID(), imageInfo.Mips > 1);
-
 			switch (m_DepthAttachment.Format)
 			{
 			case ImageFormat::DEPTH24STENCIL8:
@@ -204,7 +216,8 @@ namespace HazardRenderer::OpenGL
 				assert(false);
 			}
 		}
-		if (m_ColorImages.size() > 1) {
+		if (m_ColorImages.size() > 1) 
+		{
 			HZR_ASSERT(m_ColorImages.size() <= 4, "Too many color attachments");
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((uint32_t)m_ColorImages.size(), buffers);

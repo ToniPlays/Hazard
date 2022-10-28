@@ -87,8 +87,6 @@ namespace HazardScript
 			Ref<ScriptMetadata> script = ScriptCache::CacheOrGetScriptMetadata(klass);
 			script->UpdateMetadata();
 			m_Scripts[script->GetName()] = script;
-
-			//std::cout << script->GetName() << std::endl;
 		}
 	}
 	void ScriptAssembly::Release()
