@@ -21,7 +21,6 @@ namespace HazardRenderer::Vulkan
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 
 		//Vulkan specific
-
 		VkBuffer GetVulkanBuffer() const { return m_VertexBuffer; }
 
 	private:

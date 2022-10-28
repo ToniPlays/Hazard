@@ -87,7 +87,13 @@ float ComputeLinearDepth(vec3 pos)
     float far = ZFar;
 
     vec4 clipSpacePos = u_Camera.ViewProjection * vec4(pos.xyz, 1.0);
-    float clipSpaceDepth = (clipSpacePos.z / clipSpacePos.w) * 2.0 - 1.0;
+
+    #ifdef VULKAN_API
+        float clipSpaceDepth = (clipSpacePos.z / clipSpacePos.w);
+    #else
+        float clipSpaceDepth = (clipSpacePos.z / clipSpacePos.w) * 2.0 - 1.0;
+    #endif
+
     float linearDepth = (2.0 * near * far) / (far + near - clipSpaceDepth * (far - near));
     return linearDepth / far;
 }

@@ -29,7 +29,10 @@ namespace HazardRenderer::Vulkan
 		void Invalidate_RT();
 		void SetData_RT(void* data, uint32_t size, uint32_t offset = 0);
 
-		uint32_t GetOffset() { return (uint32_t)Math::Max<int>(((int)m_CurrentBufferDataIndex - 1) * m_Size, 0); }
+		uint32_t GetOffset() 
+		{ 
+			return (uint32_t)Math::Max<int>(((int)m_CurrentBufferDataIndex - (int)m_Size), 0); 
+		}
 		VkBuffer GetVulkanBuffer() const { return m_UniformBuffer; }
 		Buffer& GetWriteBuffer() { return m_LocalData; }
 

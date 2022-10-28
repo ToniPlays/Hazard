@@ -25,7 +25,6 @@ namespace HazardRenderer::Vulkan {
 		std::vector<uint32_t> DescriptorPoolAllocationCount;
 	};
 
-
 	class VulkanContext : public GraphicsContext {
 
 	public:
@@ -44,12 +43,14 @@ namespace HazardRenderer::Vulkan {
 
 		//Vulkan specific
 		VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo);
+		DefaultResources& GetDefaultResources() override { return m_DefaultResources; };
 
 		static VulkanContext* GetInstance() { return s_Instance; }
 		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }
 		static uint32_t GetImagesInFlight() { return  s_Instance->m_Swapchain->GetImageCount(); }
 		static Ref<VulkanDevice> GetLogicalDevice() { return  s_Instance->m_VulkanDevice; }
 		static VkPipelineCache GetPipelineCache() { return s_Instance->m_PipelineCache; }
+		static uint32_t GetFrameIndex() { return s_Instance->m_Swapchain->GetCurrentBufferIndex(); }
 
 		VkClearColorValue GetClearColorValue() const { return { m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a }; }
 
@@ -71,6 +72,8 @@ namespace HazardRenderer::Vulkan {
 		Ref<VulkanPhysicalDevice> m_VulkanPhysicalDevice;
 		Ref<VulkanDevice> m_VulkanDevice;
 		Ref<VulkanSwapchain> m_Swapchain;
+
+		DefaultResources m_DefaultResources;
 	};
 }
 #endif

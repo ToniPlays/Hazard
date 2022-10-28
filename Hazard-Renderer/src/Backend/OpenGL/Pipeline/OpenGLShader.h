@@ -22,7 +22,6 @@ namespace HazardRenderer::OpenGL
 		bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) override;
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) override;
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
-		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) override;
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 

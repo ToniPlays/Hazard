@@ -8,7 +8,8 @@ class Batch
 {
 public:
 	Batch() : m_DataSize(sizeof(Type)) {}
-	Batch(size_t size) : m_DataSize(sizeof(Type)) {
+	Batch(size_t size) : m_DataSize(sizeof(Type)) 
+	{
 		Resize(size);
 	};
 	~Batch()
@@ -23,7 +24,8 @@ public:
 		m_BufferPointer++;
 	};
 	inline void AddIndices(size_t count) { m_IndexCount += count; }
-	void Reset() {
+	void Reset() 
+	{
 		m_BufferPointer = m_BufferBase;
 		m_IndexCount = 0;
 		m_Count = 0;

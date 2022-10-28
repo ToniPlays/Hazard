@@ -150,7 +150,6 @@ namespace HazardRenderer
 
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
-		virtual void Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 

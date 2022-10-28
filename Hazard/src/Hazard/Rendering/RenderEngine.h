@@ -45,7 +45,6 @@ namespace Hazard
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 
-		Ref<Texture2DAsset> GetWhiteTexture() { return m_WhiteTexture; };
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
 
 	private:
@@ -56,7 +55,6 @@ namespace Hazard
 		RenderContextManager* m_RenderContextManager;
 
 		RenderResources* m_Resources = nullptr;
-		Ref<Texture2DAsset> m_WhiteTexture;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;

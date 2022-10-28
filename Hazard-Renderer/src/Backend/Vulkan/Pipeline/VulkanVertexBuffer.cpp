@@ -19,7 +19,7 @@ namespace HazardRenderer::Vulkan
 			m_LocalData = Buffer::Copy(createInfo->Data, createInfo->Size);
 
 			Ref<VulkanVertexBuffer> instance = this;
-			Renderer::Submit([instance]() mutable {
+			Renderer::SubmitResourceCreate([instance]() mutable {
 				auto device = VulkanContext::GetLogicalDevice();
 				VulkanAllocator allocator("VulkanVertexBuffer");
 
@@ -59,9 +59,8 @@ namespace HazardRenderer::Vulkan
 		}
 		else
 		{
-
 			Ref<VulkanVertexBuffer> instance = this;
-			Renderer::Submit([instance]() mutable {
+			Renderer::SubmitResourceCreate([instance]() mutable {
 				auto device = VulkanContext::GetLogicalDevice();
 				VulkanAllocator allocator("VulkanVertexBuffer");
 
@@ -71,7 +70,6 @@ namespace HazardRenderer::Vulkan
 				bufferCreateInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 				instance->m_BufferAllocation = allocator.AllocateBuffer(bufferCreateInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, instance->m_VertexBuffer);
-
 				});
 		}
 	}

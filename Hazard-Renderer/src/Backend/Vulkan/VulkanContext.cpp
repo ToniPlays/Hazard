@@ -50,7 +50,7 @@ namespace HazardRenderer::Vulkan
 			message.Description = "Validation error";
 			message.StackTrace = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
 
-			std::cout << message.StackTrace << std::endl;
+			//sstd::cout << message.StackTrace << std::endl;
 
 			if (breakOnValidation) __debugbreak();
 
@@ -95,9 +95,7 @@ namespace HazardRenderer::Vulkan
 			m_ClearColor = info->pWindows[0].Color;
 
 			if (!CheckDriverAPIVersion(VK_API_VERSION_1_2))
-			{
 				HZR_ASSERT(false, "API version not supported");
-			}
 
 			std::vector<const char*> instanceExtensions = { VK_KHR_SURFACE_EXTENSION_NAME, VK_KHR_WIN32_SURFACE_EXTENSION_NAME };
 			instanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -206,6 +204,19 @@ namespace HazardRenderer::Vulkan
 			window->GetWindowInfo().Height = w;
 
 			CreateDescriptorPools();
+
+			uint32_t data = 0xFFFFFFFF;
+			Image2DCreateInfo whiteTexture = {};
+			whiteTexture.DebugName = "DefaultWhiteTexture";
+			whiteTexture.Width = 1;
+			whiteTexture.Height = 1;
+			whiteTexture.Mips = 1;
+			whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
+			whiteTexture.Format = ImageFormat::RGBA;
+			whiteTexture.Usage = ImageUsage::Texture;
+
+			m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
+
 		}
 		void VulkanContext::BeginFrame()
 		{

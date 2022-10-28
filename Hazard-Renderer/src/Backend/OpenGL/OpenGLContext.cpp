@@ -48,6 +48,17 @@ namespace HazardRenderer::OpenGL {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		uint32_t data = 0xFFFFFFFF;
+		Image2DCreateInfo whiteTexture = {};
+		whiteTexture.DebugName = "DefaultWhiteTexture";
+		whiteTexture.Width = 1;
+		whiteTexture.Height = 1;
+		whiteTexture.Mips = 1;
+		whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
+		whiteTexture.Format = ImageFormat::RGBA;
+		whiteTexture.Usage = ImageUsage::Texture;
+
+		m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
 
 		if (!info->Logging) return;
 

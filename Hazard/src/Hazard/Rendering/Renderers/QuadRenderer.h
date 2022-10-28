@@ -33,7 +33,7 @@ namespace Hazard
 		size_t MaxVertices;
 		size_t MaxIndices;
 		uint32_t Samplers;
-		std::vector<Ref<Texture2DAsset>> TextureSlots;
+		std::vector<Ref<HazardRenderer::Image2D>> TextureSlots;
 		float TextureIndex = 0.0f;
 		glm::vec4 QuadVertexPos[4];
 	};
@@ -54,7 +54,7 @@ namespace Hazard
 		void BeginBatch();
 
 		void Flush();
-		void SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2DAsset>& texture);
+		void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		bool IsVisible(const glm::mat4& transform);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) 
@@ -66,7 +66,7 @@ namespace Hazard
 		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:
-		float GetTextureIndex(const Ref<Texture2DAsset>& texture);
+		float GetImageIndex(const Ref<HazardRenderer::Image2D>& image);
 
 	private:
 		Batch<QuadVertex> m_QuadBatch;

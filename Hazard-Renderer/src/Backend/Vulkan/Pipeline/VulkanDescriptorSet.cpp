@@ -14,9 +14,15 @@ namespace HazardRenderer::Vulkan
 
         vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
     }
-    void VulkanDescriptorSet::SetSampler(VkDescriptorType type, VkSampler sampler)
+    void VulkanDescriptorSet::SetSampler(uint32_t binding, uint32_t index, VkDescriptorImageInfo info)
     {
+        const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+        auto& writeSet = m_WriteDescriptors[binding];
+        writeSet.dstSet = m_VkDescriptorSet;
+        writeSet.dstArrayElement = index;
+        writeSet.pImageInfo = &info;
 
+        vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
     }
     void VulkanDescriptorSet::Invalidate()
     {

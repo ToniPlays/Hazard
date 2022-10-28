@@ -2,7 +2,7 @@
 #include <hzrpch.h>
 #include "QuadRenderer.h"
 #include "../HRenderer.h"
-
+#include "Hazard/Core/Application.h"
 
 namespace Hazard
 {
@@ -13,7 +13,7 @@ namespace Hazard
 	void QuadRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr uint32_t quadCount = 50000;
+		constexpr size_t quadCount = 50000;
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;
@@ -22,8 +22,10 @@ namespace Hazard
 		m_QuadBatch = Batch<QuadVertex>(m_Data.MaxVertices);
 		m_Data.TextureSlots.resize(m_Data.Samplers);
 
+		Ref<Image2D> whiteTexture = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
+
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
-			m_Data.TextureSlots[i] = HRenderer::s_Engine->GetWhiteTexture();
+			m_Data.TextureSlots[i] = whiteTexture;
 
 	}
 	void QuadRenderer::BeginScene()
@@ -56,14 +58,11 @@ namespace Hazard
 		Ref<Shader> shader = m_Pipeline->GetShader();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
-		{
-			auto& image = m_Data.TextureSlots[i]->GetSourceImageAsset()->Value.As<Image2D>();
-			shader->Set("u_Textures", i, image);
-		}
+			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
 	}
-	void QuadRenderer::SubmitQuad(const glm::mat4& transform, glm::vec4 color, const Ref<Texture2DAsset>& texture)
+	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -74,7 +73,7 @@ namespace Hazard
 			BeginScene();
 		}
 
-		float textureIndex = GetTextureIndex(texture);
+		float textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
@@ -159,7 +158,7 @@ namespace Hazard
 
 		m_RenderPass = renderPass;
 	}
-	float QuadRenderer::GetTextureIndex(const Ref<Texture2DAsset>& texture)
+	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)
 	{
 		if (!texture) return 0.0f;
 

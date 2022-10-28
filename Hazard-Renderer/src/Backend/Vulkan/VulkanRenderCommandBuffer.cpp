@@ -175,7 +175,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::End()
 	{
-		uint32_t frameIndex = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 
 		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
 		//vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 1);
@@ -280,21 +280,13 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
-		Ref<VulkanPipeline> vkPipeline = pipeline.As<VulkanPipeline>();
-		auto& shader = pipeline->GetShader().As<VulkanShader>();
-
-		auto& offsets = shader->GetDynamicOffsets();
+		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, pipeline = vkPipeline, offsets, shader]() mutable {
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 
-			auto bindPoint = pipeline->GetBindingPoint();
-			auto layout = pipeline->GetPipelineLayout();
 			auto vkPipeline = pipeline->GetVulkanPipeline();
-			
-			auto& descriptorSets = shader->GetVulkanDescriptorSets();
-
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
+			auto bindPoint = pipeline->GetBindingPoint();
 			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, bindPoint, vkPipeline);
 			});
 	}
@@ -307,8 +299,18 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanIndexBuffer> buffer = indexBuffer.As<VulkanIndexBuffer>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, buffer, count, instanceCount]() mutable {
+		auto& offsets = m_CurrentPipeline->GetShader().As<VulkanShader>()->GetDynamicOffsets();
+
+		Renderer::Submit([instance, buffer, count, instanceCount, offsets, pipeline = m_CurrentPipeline]() mutable {
 			
+			auto vkPipeline = pipeline->GetVulkanPipeline();
+			auto bindPoint = pipeline->GetBindingPoint();
+			auto& shader = pipeline->GetShader().As<VulkanShader>();
+			auto layout = pipeline->GetPipelineLayout();
+			auto& descriptorSets = shader->GetVulkanDescriptorSets();
+
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
+
 			if (buffer)
 			{
 				VkDeviceSize offsets = { 0 };

@@ -8,6 +8,8 @@
 
 namespace HazardRenderer::Vulkan
 {
+	class VulkanPipeline;
+
 	struct PipelineStatistic 
 	{
 		uint64_t InputAssemblyVertices = 0;
@@ -74,6 +76,8 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_TimestampNextAvailQuery = 2;
 
 		bool m_OwnedBySwapchain = false;
+
+		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
 
 		State m_State = State::Waiting;
 	};

@@ -22,6 +22,9 @@ namespace HazardRenderer::OpenGL {
 		void Present() override;
 
 		void SetClearColor(const glm::vec4& color) override;
+
+		DefaultResources& GetDefaultResources() override { return m_DefaultResources; };
+
 		Ref<PhysicalDevice> GetDevice() { return m_PhysicalDevice;  };
 		Ref<Swapchain> GetSwapchain() { return m_Swapchain.As<Swapchain>(); }
 		Window* GetWindow() { return m_Window; }
@@ -34,6 +37,7 @@ namespace HazardRenderer::OpenGL {
 		Window* m_Window;
 		Ref<OpenGLPhysicalDevice> m_PhysicalDevice;
 		Ref<OpenGLSwapchain> m_Swapchain;
+		DefaultResources m_DefaultResources;
 	};
 }
 #endif

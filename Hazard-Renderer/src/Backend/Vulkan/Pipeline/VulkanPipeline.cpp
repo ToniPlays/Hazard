@@ -97,7 +97,7 @@ namespace HazardRenderer::Vulkan
 		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizationState.polygonMode = VkUtils::GetVulkanPolygonMode(m_Specs.DrawType);
 		rasterizationState.cullMode = VkUtils::GetVulkanCullMode(m_Specs.CullMode);
-		rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizationState.depthClampEnable = VK_FALSE;
 		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 		rasterizationState.depthBiasEnable = VK_FALSE;
@@ -113,8 +113,8 @@ namespace HazardRenderer::Vulkan
 			blendStates[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			blendStates[0].colorBlendOp = VK_BLEND_OP_ADD;
 			blendStates[0].alphaBlendOp = VK_BLEND_OP_ADD;
-			blendStates[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-			blendStates[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+			blendStates[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+			blendStates[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 		}
 		else
 		{
@@ -123,13 +123,14 @@ namespace HazardRenderer::Vulkan
 				blendStates[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
 				const auto& spec = fb->GetSpecification().Attachments[i];
-				blendStates[i].blendEnable = VK_TRUE;
+				
+				blendStates[i].blendEnable = spec.Blend ? VK_TRUE : VK_FALSE;
 				blendStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 				blendStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 				blendStates[i].colorBlendOp = VK_BLEND_OP_ADD;
 				blendStates[i].alphaBlendOp = VK_BLEND_OP_ADD;
-				blendStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-				blendStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+				blendStates[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+				blendStates[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 			}
 		}
 		VkPipelineColorBlendStateCreateInfo blendStateInfo = {};

@@ -74,7 +74,8 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_LogicalDevice, &allocInfo, &buffer), "Failed to allocate command buffer");
 
-		if (begin) {
+		if (begin) 
+		{
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin");

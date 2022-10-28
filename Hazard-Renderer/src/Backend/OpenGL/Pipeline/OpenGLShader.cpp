@@ -8,6 +8,7 @@
 #include "Backend/Core/Pipeline/ShaderFactory.h"
 #include "Backend/OpenGL/OpenGLShaderCompiler.h"
 #include "../Textures/OpenGLImage2D.h"
+#include "../OpenGLContext.h"
 #include "OpenGLBuffers.h"
 
 #include <sstream>
@@ -179,10 +180,6 @@ namespace HazardRenderer::OpenGL
 			return;
 		}
 	}
-	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
-	{
-		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue[0] = uniformBuffer.As<OpenGLUniformBuffer>();
-	}
 	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -339,7 +336,7 @@ namespace HazardRenderer::OpenGL
 				bufferInfo.IsShared = true;
 				bufferInfo.Usage = BufferUsage::DynamicDraw;
 
-				Set(set, binding, UniformBuffer::Create(&bufferInfo));
+				descriptorSet.GetWriteDescriptor(binding).BoundValue[0] = UniformBuffer::Create(&bufferInfo);
 			}
 		}
 		for (auto& [set, samplers] : m_ShaderData.ImageSamplers)
@@ -355,6 +352,9 @@ namespace HazardRenderer::OpenGL
 				writeDescriptor.Dimension = sampler.Dimension;
 
 				descriptorSet.AddWriteDescriptor(writeDescriptor);
+
+				for (uint32_t i = 0; i < sampler.ArraySize; i++)
+					Set(sampler.Name, i, OpenGLContext::GetInstance().GetDefaultResources().WhiteTexture);
 			}
 		}
 		for (auto& [set, storageImage] : m_ShaderData.StorageImages)

@@ -36,8 +36,9 @@ layout(location = 2) in vec3 WorldPosition;
 layout(set = 1, binding = 1) uniform samplerCube u_RadianceMap;
 layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
 layout(set = 1, binding = 3) uniform samplerCube u_PrefilterMap;
-layout(set = 1, binding = 4) uniform sampler2D u_BRDFLut;
 */
+layout(set = 1, binding = 1) uniform sampler2D u_BRDFLut;
+
 
 #include "Utils/Common.glsl"
 #include "Utils/Lighting.glsl"

@@ -20,21 +20,6 @@ namespace Hazard
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
-		uint32_t data = 0xFFFFFFFF;
-
-		Image2DCreateInfo info = {};
-		info.DebugName = "WhiteTexture";
-		info.Width = 1;
-		info.Height = 1;
-		info.Mips = 1;
-		info.Data = Buffer(&data, sizeof(uint32_t));
-		info.Format = ImageFormat::RGBA;
-		info.Usage = ImageUsage::Texture;
-
-		Ref<AssetPointer> whiteTextureCore = AssetPointer::Create(Image2D::Create(&info), AssetType::Image);
-
-		m_WhiteTexture = Ref<Texture2DAsset>::Create(whiteTextureCore);
-
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
 		frameBufferInfo.AttachmentCount = 4;
@@ -170,11 +155,11 @@ namespace Hazard
 				if (radiance)
 					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (irradiance)
-					shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
+					shader->Set("u_IrradiancqeMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (prefilter)
 					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (lut)
-					shader->Set("u_BRDFLut", 0, lut->Value ? lut->Value.As<Image2D>() : m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
+					shader->Set("u_BRDFLut", 0, lut->Value.As<Image2D>());
 				break;
 			}
 		}
@@ -187,7 +172,7 @@ namespace Hazard
 			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
+			//shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
 		}
 		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
@@ -199,6 +184,7 @@ namespace Hazard
 		auto& drawList = GetDrawList();
 
 		if (drawList.Environment.size() == 0) return;
+
 		for (auto& [map, environmentData] : drawList.Environment)
 		{
 			auto& radiance = environmentData.Map->RadianceMap;

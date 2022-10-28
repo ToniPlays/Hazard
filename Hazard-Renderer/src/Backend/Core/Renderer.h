@@ -13,9 +13,9 @@ namespace HazardRenderer
 
 		static void Init(GraphicsContext* context)
 		{
-			s_RenderCommandQueue = hnew CommandQueue(1 MB);
-			s_ResourceCreateCommandQueue = hnew CommandQueue(10 MB);
-			s_ResourceFreeCommandQueue = hnew CommandQueue(1 MB);
+			s_RenderCommandQueue = hnew CommandQueue(5 MB);
+			s_ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
+			s_ResourceFreeCommandQueue = hnew CommandQueue(5 MB);
 
 			m_GraphicsContext = context;
 		}

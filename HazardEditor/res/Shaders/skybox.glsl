@@ -34,8 +34,6 @@ layout(location = 0) out vec4 OutputColor;
 
 void main() 
 {
-	float ao = u_Lights.SkyLightIntensity;
-
-	vec3 color = vec3(1.0);//texture(u_CubeMap, v_Position).rgb;
-	OutputColor = vec4(color * ao, 1.0);
+	vec3 color = vec3(0.5);//texture(u_CubeMap, v_Position).rgb;
+	OutputColor = vec4(color * u_Lights.SkyLightIntensity, 1.0);
 }

@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan
 		m_Binding = createInfo->Binding;
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
-		m_LocalData.Allocate(m_Size * 64);
+		m_LocalData.Allocate(m_Size * 32);
 		std::cout << fmt::format("Create UniformBuffer {0}, set {1}, binding {2}", m_Name, createInfo->Set, createInfo->Binding) << std::endl;
 
 		Ref<VulkanUniformBuffer> instance = this;
@@ -30,20 +30,22 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::SetData(const void* data, size_t size)
 	{
-		uint32_t frameIndex = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentBufferIndex();
+		uint32_t frameIndex = VulkanContext::GetFrameIndex();
+
 		if (m_FrameIndex != frameIndex)
 		{
 			m_CurrentBufferDataIndex = 0;
 			m_FrameIndex = frameIndex;
 		}
-		uint32_t offset = m_CurrentBufferDataIndex * m_Size;
-		m_LocalData.Write(data, size, offset);
-		m_CurrentBufferDataIndex++;
 
+		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
 		Ref<VulkanUniformBuffer> instance = this;
-		Renderer::Submit([instance, size, offset]() mutable {
-			instance->SetData_RT(instance->m_LocalData.Data, size, offset);
+
+		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex, size]() mutable {
+			instance->SetData_RT(instance->m_LocalData.Data, instance->m_LocalData.Size);
 			});
+
+		m_CurrentBufferDataIndex += m_Size;
 	}
 	void VulkanUniformBuffer::Release()
 	{
@@ -64,7 +66,6 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::Release_RT()
 	{
-
 		if (!m_BufferAllocation) return;
 
 		VulkanAllocator allocator("VulkanUniformBuffer");
