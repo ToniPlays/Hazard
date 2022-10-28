@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HazardRendererCore.h"
+#include "Mesh/Mesh.h"
 
 namespace Hazard
 {
@@ -63,10 +64,16 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
-			std::cout << sizeof(CameraData) << std::endl;
-
-
 			{
+				UniformBufferCreateInfo utilityUbo = {};
+				utilityUbo.Name = "Utility";
+				utilityUbo.Set = 0;
+				utilityUbo.Binding = 0;
+				utilityUbo.Size = sizeof(UtilityUniformData);
+				utilityUbo.Usage = BufferUsage::DynamicDraw;
+
+				UtilityUniformBuffer = UniformBuffer::Create(&utilityUbo);
+
 				UniformBufferCreateInfo cameraUBO = {};
 				cameraUBO.Name = "Camera";
 				cameraUBO.Set = 0;
@@ -75,15 +82,6 @@ namespace Hazard
 				cameraUBO.Usage = BufferUsage::DynamicDraw;
 
 				CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
-
-				UniformBufferCreateInfo environmentUbo = {};
-				environmentUbo.Name = "UtilityUniform";
-				environmentUbo.Set = 0;
-				environmentUbo.Binding = 0;
-				environmentUbo.Size = sizeof(UtilityUniformData);
-				environmentUbo.Usage = BufferUsage::DynamicDraw;
-
-				UtilityUniformBuffer = UniformBuffer::Create(&environmentUbo);
 
 				UniformBufferCreateInfo lightUBO = {};
 				lightUBO.Name = "Lights";
@@ -118,13 +116,15 @@ namespace Hazard
 
 				SkyboxPipeline = Pipeline::Create(&skyboxSpec);
 
+				BufferLayout pbrLayout = Vertex3D::Layout();
+
 				PipelineSpecification pbrPipeline = {};
 				pbrPipeline.DebugName = "PBRShader";
 				pbrPipeline.Usage = PipelineUsage::GraphicsBit;
 				pbrPipeline.DrawType = DrawType::Fill;
 				pbrPipeline.ShaderPath = "res/Shaders/pbr.glsl";
 				pbrPipeline.pTargetRenderPass = renderPass;
-				pbrPipeline.pBufferLayout = &layout;
+				pbrPipeline.pBufferLayout = &pbrLayout;
 				pbrPipeline.DepthTest = true;
 
 				PbrPipeline = Pipeline::Create(&pbrPipeline);

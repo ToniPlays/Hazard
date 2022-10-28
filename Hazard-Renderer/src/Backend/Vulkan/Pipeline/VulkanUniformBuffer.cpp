@@ -17,10 +17,10 @@ namespace HazardRenderer::Vulkan
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
 		m_LocalData.Allocate(m_Size * 64);
-		std::cout << fmt::format("Create UniformBuffer: {0}, at {1}, {2}", m_Name, createInfo->Set, createInfo->Binding) << std::endl;
+		std::cout << fmt::format("Create UniformBuffer {0}, set {1}, binding {2}", m_Name, createInfo->Set, createInfo->Binding) << std::endl;
 
 		Ref<VulkanUniformBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
 			});
 	}

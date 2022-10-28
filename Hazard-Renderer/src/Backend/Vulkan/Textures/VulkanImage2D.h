@@ -9,7 +9,8 @@
 
 namespace HazardRenderer::Vulkan
 {
-	struct VulkanImageInfo {
+	struct VulkanImageInfo 
+	{
 		VkImage Image = VK_NULL_HANDLE;
 		VkImageView ImageView = VK_NULL_HANDLE;
 		VkSampler Sampler = VK_NULL_HANDLE;
@@ -37,7 +38,6 @@ namespace HazardRenderer::Vulkan
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 
 		//Vulkan specific
-
 		VulkanImageInfo& GetImageInfo() { return m_Info; }
 		const VulkanImageInfo& GetImageInfo() const { return m_Info; }
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }

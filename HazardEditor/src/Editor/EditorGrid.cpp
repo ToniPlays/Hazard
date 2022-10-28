@@ -58,7 +58,7 @@ namespace Editor
 
 		UniformBufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Grid";
-		uboInfo.Set = 1;
+		uboInfo.Set = 2;
 		uboInfo.Binding = 1;
 		uboInfo.Size = sizeof(GridData);
 		uboInfo.Usage = BufferUsage::DynamicDraw;

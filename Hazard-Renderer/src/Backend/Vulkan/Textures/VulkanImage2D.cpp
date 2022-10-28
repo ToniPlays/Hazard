@@ -11,6 +11,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanImage2D::VulkanImage2D(Image2DCreateInfo* info)
 	{
+		HZR_ASSERT(!info->DebugName.empty(), "Debug name required");
 		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
 		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
 
@@ -27,7 +28,6 @@ namespace HazardRenderer::Vulkan
 		if (info->Data) 
 		{
 			m_LocalBuffer = Buffer::Copy(info->Data.Data, info->Data.Size);
-			info->Data.Release();
 
 			Ref<VulkanImage2D> instance = this;
 			Renderer::SubmitResourceCreate([instance]() mutable {
@@ -299,7 +299,6 @@ namespace HazardRenderer::Vulkan
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
 
 		device->FlushCommandBuffer(commandBuffer);
-
 		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 	}
 }

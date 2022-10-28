@@ -20,8 +20,8 @@ namespace HazardRenderer::Vulkan
 		VkBuffer GetVulkanBuffer() const { return m_IndexBuffer; }
 
 	private:
-		void SetData(uint32_t* data, size_t size) override;
-		void SetData_RT(uint32_t* data, size_t size);
+		void SetData(const BufferCopyRegion& copyRegion) override;
+		void SetData_RT(const BufferCopyRegion& copyRegion);
 
 		std::string m_DebugName;
 		BufferUsage m_Usage;

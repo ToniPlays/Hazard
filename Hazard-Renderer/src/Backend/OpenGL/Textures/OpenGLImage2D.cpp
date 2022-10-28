@@ -12,6 +12,9 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(!info->DebugName.empty(), "Debug name required");
+		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
+		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
+
 		m_DebugName = info->DebugName;
 		m_Width = info->Width;
 		m_Height = info->Height;
@@ -62,7 +65,6 @@ namespace HazardRenderer::OpenGL
 
 
 		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1);
-		std::cout << m_DebugName << ", id " << m_ID << std::endl;
 		if (m_ImageUsage == ImageUsage::Attachment) return;
 
 		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, m_MipLevels > 1 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR);

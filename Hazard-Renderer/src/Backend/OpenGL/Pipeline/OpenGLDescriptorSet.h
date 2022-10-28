@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL
 		std::unordered_map<uint32_t, Ref<RefCount>> BoundValue;
 	};
 
-	class OpenGLDescriptorSet 
+	class OpenGLDescriptorSet
 	{
 	public:
 		OpenGLDescriptorSet() = default;

@@ -8,6 +8,7 @@
 #include "Backend/Core/Pipeline/Shader.h"
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Texture/Texture.h"
+#include "VulkanDescriptorSet.h"
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan
@@ -36,30 +37,29 @@ namespace HazardRenderer::Vulkan
 		//Vulkan specific
 		void Reload_RT(bool forceCompile = false);
 
-		std::vector<VkDescriptorSetLayout>& GetAllDescriptorSetLayouts() { return m_DescriptorSetLayouts; }
-		VkDescriptorSetLayout& GetDescriptorSetLayout(uint32_t index) { return m_DescriptorSetLayouts[index]; }
-		std::vector<VkDescriptorSet>& GetDescriptorSets() { return m_DescriptorSets; }
+		std::vector<VkDescriptorSetLayout> GetAllDescriptorSetLayouts();
+		VkDescriptorSetLayout& GetDescriptorSetLayout(uint32_t index) { return m_DescriptorSets[index].GetLayout(); }
+		std::vector<VulkanDescriptorSet>& GetDescriptorSets() { return m_DescriptorSets; }
+		std::vector<VkDescriptorSet> GetVulkanDescriptorSets();
 		std::vector<PushConstantRange>& GetPushConstantRanges() { return m_PushConstantRanges; }
 		std::vector<VkPipelineShaderStageCreateInfo> GetPipelineShaderStageCreateInfos() { return m_ShaderStageCreateInfos; }
 		const std::vector<uint32_t>& GetDynamicOffsets();
 
 	private:
-		void Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries);
+		void Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries);
 		void CreateShaderModules();
 		void CreateDescriptorSetLayouts();
 		void CreatePushConstantRanges();
 
 		std::string m_FilePath;
 
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> m_ShaderCode;
+		std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
 
 		ShaderData m_ShaderData;
-		std::vector<VkDescriptorSet> m_DescriptorSets;
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, VkWriteDescriptorSet>> m_WriteDescriptorSets;
+		std::vector<VulkanDescriptorSet> m_DescriptorSets;
 		std::map<uint32_t, std::unordered_map<uint32_t, Ref<UniformBuffer>>> m_UniformBuffers;
 
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
-		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
 		std::vector<PushConstantRange> m_PushConstantRanges;
 
 		std::vector<VkShaderModule> m_ShaderModules;

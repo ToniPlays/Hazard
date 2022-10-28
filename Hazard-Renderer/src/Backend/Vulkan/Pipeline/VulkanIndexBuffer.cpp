@@ -42,7 +42,6 @@ namespace HazardRenderer::Vulkan
 			vertexBufferCreateInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
 			instance->m_BufferAllocation = allocator.AllocateBuffer(vertexBufferCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_IndexBuffer);
-
 			VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
 
 			VkBufferCopy copyRegion = {};
@@ -68,11 +67,11 @@ namespace HazardRenderer::Vulkan
 
 		m_LocalData.Release();
 	}
-	void VulkanIndexBuffer::SetData(uint32_t* data, size_t size)
+	void VulkanIndexBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		__debugbreak();
 	}
-	void VulkanIndexBuffer::SetData_RT(uint32_t* data, size_t size)
+	void VulkanIndexBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
 	{
 		__debugbreak();
 	}

@@ -205,9 +205,8 @@ namespace HazardRenderer::OpenGL
 
 		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
 		Ref<OpenGLUniformBuffer> instance = this;
-		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex]() mutable {
+		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex, size]() mutable {
 
-			uint32_t size = instance->m_Size;
 			HZR_PROFILE_FUNCTION("OpenGLUniformBuffer::SetData(const void*, uint32_t)_RT");
 			glNamedBufferData(instance->m_BufferID, size, (uint8_t*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);
 			});

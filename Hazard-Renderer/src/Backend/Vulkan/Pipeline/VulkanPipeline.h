@@ -32,6 +32,9 @@ namespace HazardRenderer::Vulkan
 		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
 
 	private:
+		void InvalidateGraphicsPipeline();
+		void InvalidateComputePipeline();
+	private:
 		PipelineSpecification m_Specs;
 		Ref<Shader> m_Shader;
 

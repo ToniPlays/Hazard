@@ -14,8 +14,8 @@ namespace HazardRenderer::Vulkan
 		VulkanVertexBuffer(VertexBufferCreateInfo* createInfo);
 		~VulkanVertexBuffer();
 
-		void SetData(const void* data, size_t size) override;
-		void SetData_RT(const void* data, size_t size);
+		void SetData(const BufferCopyRegion& copyRegion) override;
+		void SetData_RT(const BufferCopyRegion& copyRegion);
 		size_t GetSize() override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
@@ -29,7 +29,6 @@ namespace HazardRenderer::Vulkan
 		BufferUsage m_Usage;
 		uint32_t m_Size;
 		BufferLayout m_Layout;
-
 		Buffer m_LocalData;
 
 		VkBuffer m_VertexBuffer;

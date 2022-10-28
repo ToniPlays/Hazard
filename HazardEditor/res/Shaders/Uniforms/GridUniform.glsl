@@ -1,5 +1,5 @@
 #ifdef VULKAN_API
-layout(std140, set = 1, binding = 1) uniform Grid 
+layout(std140, set = 2, binding = 1) uniform Grid 
 #else
 layout(std140, binding = 4) uniform Grid 
 #endif

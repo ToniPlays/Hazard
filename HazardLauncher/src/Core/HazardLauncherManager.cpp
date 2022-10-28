@@ -11,7 +11,6 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 	std::stringstream ss;
 	ss << "-wdir C:/dev/Hazard/HazardEditor";
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
-	std::cout << ss.str() << std::endl;
 	return File::CreateSubprocess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str());
 }
 

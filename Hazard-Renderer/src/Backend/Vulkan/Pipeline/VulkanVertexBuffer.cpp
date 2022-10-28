@@ -86,24 +86,24 @@ namespace HazardRenderer::Vulkan
 			});
 		m_LocalData.Release();
 	}
-	void VulkanVertexBuffer::SetData(const void* data, size_t size)
+	void VulkanVertexBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		m_LocalData = Buffer::Copy(data, size);
+		m_LocalData = Buffer::Copy(copyRegion.Data, copyRegion.Size);
 		Ref<VulkanVertexBuffer> instance = this;
 
-		Renderer::Submit([instance, size]() mutable {
-			instance->SetData_RT(instance->m_LocalData.Data, size);
+		Renderer::Submit([instance, copyRegion]() mutable {
+			instance->SetData_RT(copyRegion);
 			});
 	}
-	void VulkanVertexBuffer::SetData_RT(const void* data, size_t size)
+	void VulkanVertexBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
 
 		VulkanAllocator allocator("VulkanVertexBuffer");
 		uint8_t* dst = allocator.MapMemory<uint8_t>(m_BufferAllocation);
-		memcpy(dst, data, size);
+		memcpy(dst + copyRegion.Offset, m_LocalData.Data, copyRegion.Size);
 		allocator.UnmapMemory(m_BufferAllocation);
 
 	}

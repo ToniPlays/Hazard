@@ -1,4 +1,4 @@
- #include "VulkanPipeline.h"
+#include "VulkanPipeline.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/Renderer.h"
@@ -11,8 +11,12 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
-		HZR_ASSERT(m_Specs.pTargetRenderPass, "");
-		m_Layout = *specs->pBufferLayout;
+		if (specs->Usage == PipelineUsage::GraphicsBit)
+		{
+			HZR_ASSERT(m_Specs.pTargetRenderPass, "Renderpass cannot be null");
+			m_Layout = *specs->pBufferLayout;
+		}
+
 		m_Shader = Shader::Create(m_Specs.ShaderPath);
 		Invalidate();
 	}
@@ -41,8 +45,18 @@ namespace HazardRenderer::Vulkan
 	{
 		return m_Specs.Usage == PipelineUsage::GraphicsBit ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
 	}
+
 	void VulkanPipeline::Invalidate_RT()
 	{
+		if (m_Specs.Usage == PipelineUsage::GraphicsBit)
+			InvalidateGraphicsPipeline();
+		else
+			InvalidateComputePipeline();
+	}
+
+	void VulkanPipeline::InvalidateGraphicsPipeline()
+	{
+		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto& fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 		auto& shader = m_Shader.As<VulkanShader>();
@@ -158,7 +172,6 @@ namespace HazardRenderer::Vulkan
 		multisample.pSampleMask = nullptr;
 
 		std::vector<VkVertexInputBindingDescription> vertexInputBinding;
-		
 		VkVertexInputBindingDescription& vertexDesc = vertexInputBinding.emplace_back();
 		vertexDesc.binding = 0;
 		vertexDesc.stride = m_Layout.GetBufferStride(PerVertex);
@@ -221,6 +234,10 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, m_Specs.DebugName, m_Pipeline);
+	}
+	void VulkanPipeline::InvalidateComputePipeline()
+	{
+		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 	}
 }
 

@@ -292,7 +292,7 @@ namespace HazardRenderer::Vulkan
 			auto layout = pipeline->GetPipelineLayout();
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			
-			auto& descriptorSets = shader->GetDescriptorSets();
+			auto& descriptorSets = shader->GetVulkanDescriptorSets();
 
 			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
 			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, bindPoint, vkPipeline);
@@ -308,7 +308,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, buffer, count, instanceCount]() mutable {
-
+			
 			if (buffer)
 			{
 				VkDeviceSize offsets = { 0 };

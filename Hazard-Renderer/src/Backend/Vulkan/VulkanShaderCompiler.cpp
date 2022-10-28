@@ -22,12 +22,17 @@ namespace HazardRenderer::Vulkan
         return (shaderc_shader_kind)0;
     }
 
+    VulkanShaderCompiler::~VulkanShaderCompiler()
+    {
+        m_ResultBinary.Release();
+    }
+
     bool VulkanShaderCompiler::Compile(CompileInfo* compileInfo)
     {
         Timer timer;
         std::cout << "Compiling: " << Utils::ShaderStageToString((uint32_t)compileInfo->Stage) << std::endl;
 
-        m_ResultBinary.clear();
+        m_ResultBinary.Release();
 
         shaderc::CompileOptions options;
 
@@ -51,7 +56,7 @@ namespace HazardRenderer::Vulkan
 
         bool succeeded = result.GetCompilationStatus() == shaderc_compilation_status_success;
         if (succeeded)
-            m_ResultBinary = { result.begin(), result.end()};
+            m_ResultBinary = Buffer::Copy(result.begin(), (result.end() - result.begin()) * sizeof(uint32_t));
         else
             m_ErrorMessage = result.GetErrorMessage();
 
@@ -59,19 +64,21 @@ namespace HazardRenderer::Vulkan
         return succeeded;
     }
     
-    ShaderData VulkanShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binary)
+    ShaderData VulkanShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries)
     {
+        HZR_PROFILE_FUNCTION();
         ShaderData result;
 
-        for (auto& [stage, binary] : binary)
+        for (auto& [stage, binary] : binaries)
         {
-            spirv_cross::Compiler compiler(binary);
+            spirv_cross::Compiler compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
             spirv_cross::ShaderResources resources = compiler.get_shader_resources();
+
             //Check stage inputs
             ShaderStageData& data = result.Stages[stage];
             for (auto& resource : resources.stage_inputs)
             {
-                auto spvType = compiler.get_type(resource.base_type_id);
+                auto& spvType = compiler.get_type(resource.base_type_id);
                 uint32_t location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
 
                 ShaderStageInput& input = data.Inputs[location];
@@ -102,6 +109,7 @@ namespace HazardRenderer::Vulkan
                 input.Offset = offset;
                 offset += input.Size;
             }
+
             for (auto& resource : resources.uniform_buffers)
             {
                 auto& spvType = compiler.get_type(resource.base_type_id);
@@ -137,10 +145,34 @@ namespace HazardRenderer::Vulkan
 
                 auto& sampler = descriptorSet[binding];
                 sampler.Name = resource.name;
-                sampler.Binding = binding;
                 sampler.DescritorSet = set;
+                sampler.Binding = binding;
                 sampler.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
                 sampler.Dimension = spvType.image.dim;
+            }
+            for (auto& resource : resources.storage_images)
+            {
+                auto& spvType = compiler.get_type(resource.base_type_id);
+                auto& type = compiler.get_type(resource.type_id);
+                uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
+                uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+
+                auto& descriptorSet = result.StorageImages[set];
+                auto& storageImage = descriptorSet[binding];
+
+                storageImage.Name = resource.name;
+                storageImage.DescritorSet = set;
+                storageImage.Binding = binding;
+                storageImage.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
+                storageImage.Dimension = spvType.image.dim;
+
+                switch (spvType.image.access)
+                {
+                case spv::AccessQualifier::AccessQualifierReadOnly: storageImage.Flags = ShaderResourceFlags_ReadOnly; break;
+                case spv::AccessQualifier::AccessQualifierWriteOnly: storageImage.Flags = ShaderResourceFlags_WriteOnly; break;
+                case spv::AccessQualifier::AccessQualifierReadWrite: storageImage.Flags = ShaderResourceFlags_ReadAndWrite; break;
+                }
+                storageImage.Flags |= ShaderResourceFlags_WriteOnly;
             }
         }
         return result;

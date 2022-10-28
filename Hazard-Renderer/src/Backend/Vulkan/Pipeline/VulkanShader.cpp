@@ -9,6 +9,7 @@
 #include "../VkUtils.h"
 #include "../VulkanShaderCompiler.h"
 #include "VulkanUniformBuffer.h"
+#include "../Textures/VulkanImage2D.h"
 
 #include <sstream>
 #include <glad/glad.h>
@@ -36,47 +37,51 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reload()
 	{
 		Timer timer;
-		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) == CacheStatus::None)
+
+		std::unordered_map<ShaderStage, Buffer> binaries;
+		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) != CacheStatus::None)
+			binaries = ShaderFactory::GetShaderBinaries(m_FilePath, RenderAPI::Vulkan);
+
+		else
 		{
-			__debugbreak();
-			return;
-		}
+			std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(m_FilePath);
 
-		std::cout << m_FilePath << std::endl;
-		std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(m_FilePath);
+			//Compile Vulkan shader
+			VulkanShaderCompiler compiler;
 
-		//Compile Vulkan shader
-		VulkanShaderCompiler compiler;
-		std::unordered_map<ShaderStage, std::vector<uint32_t>> binaries;
-
-		for (auto& [stage, source] : sources)
-		{
-			double compilationTime = 0.0;
-			std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
-
-			//Compile to Vulkan SPV
-			CompileInfo compileInfoVulkan = {};
-			compileInfoVulkan.Renderer = RenderAPI::Vulkan;
-			compileInfoVulkan.Name = m_FilePath;
-			compileInfoVulkan.Stage = stage;
-			compileInfoVulkan.Source = source;
-			compileInfoVulkan.Defines = defines;
-
-			if (!compiler.Compile(&compileInfoVulkan))
+			for (auto& [stage, source] : sources)
 			{
-				Window::SendDebugMessage({
-					Severity::Warning,
-					fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
-					source
-					});
-				continue;
+				double compilationTime = 0.0;
+				std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
+
+				//Compile to Vulkan SPV
+				CompileInfo compileInfoVulkan = {};
+				compileInfoVulkan.Renderer = RenderAPI::Vulkan;
+				compileInfoVulkan.Name = m_FilePath;
+				compileInfoVulkan.Stage = stage;
+				compileInfoVulkan.Source = source;
+				compileInfoVulkan.Defines = defines;
+
+				if (!compiler.Compile(&compileInfoVulkan))
+				{
+					Window::SendDebugMessage({
+						Severity::Warning,
+						fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
+						source
+						});
+					continue;
+				}
+				compilationTime += compiler.GetCompileTime();
+				binaries[stage] = Buffer::Copy(compiler.GetCompiledBinary());
 			}
-			compilationTime += compiler.GetCompileTime();
-			binaries[stage] = compiler.GetCompiledBinary();
+			ShaderFactory::CacheShader(m_FilePath, binaries, RenderAPI::Vulkan);
 		}
+
+		m_ShaderCode = binaries;
 		Reflect(binaries);
+
 		Ref<VulkanShader> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->CreateShaderModules();
 			instance->CreateDescriptorSetLayouts();
 			});
@@ -92,7 +97,14 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
+		Ref<VulkanShader> instance = this;
+		Renderer::Submit([instance, image, index]() mutable {
 
+			const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+			Ref<VulkanImage2D> vulkanImage = image.As<VulkanImage2D>();
+
+			//instance->m_DescriptorSets[0].SetSampler();
+			});
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
 	{
@@ -105,6 +117,24 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
 
+	}
+	std::vector<VkDescriptorSetLayout> VulkanShader::GetAllDescriptorSetLayouts()
+	{
+		std::vector<VkDescriptorSetLayout> result(m_DescriptorSets.size());
+
+		for (uint32_t i = 0; i < result.size(); i++)
+			result[i] = m_DescriptorSets[i].GetLayout();
+
+		return result;
+	}
+	std::vector<VkDescriptorSet> VulkanShader::GetVulkanDescriptorSets()
+	{
+		std::vector<VkDescriptorSet> result(m_DescriptorSets.size());
+
+		for (uint32_t i = 0; i < result.size(); i++)
+			result[i] = m_DescriptorSets[i].GetVulkanDescriptorSet();
+
+		return result;
 	}
 	const std::vector<uint32_t>& VulkanShader::GetDynamicOffsets()
 	{
@@ -119,13 +149,12 @@ namespace HazardRenderer::Vulkan
 		}
 		return m_DynamicOffsets;
 	}
-	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, std::vector<uint32_t>>& binaries)
+	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		Timer timer;
 		m_ShaderData.Stages.clear();
 
 		VulkanShaderCompiler compiler;
-		m_ShaderCode = binaries;
 		m_ShaderData = compiler.GetShaderResources(binaries);
 
 		uint32_t descriptorSets = 0;
@@ -155,11 +184,11 @@ namespace HazardRenderer::Vulkan
 		m_DynamicOffsets.resize(size);
 		m_DescriptorSets.resize(descriptorSets + 1);
 
-		VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
+		//VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
 	}
 	void VulkanShader::CreateShaderModules()
 	{
-		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		uint32_t index = 0;
 
 		m_ShaderModules.resize(m_ShaderCode.size());
@@ -168,8 +197,8 @@ namespace HazardRenderer::Vulkan
 
 			VkShaderModuleCreateInfo createInfo = {};
 			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			createInfo.codeSize = code.size() * sizeof(uint32_t);
-			createInfo.pCode = code.data();
+			createInfo.codeSize = code.Size;
+			createInfo.pCode = (uint32_t*)code.Data;
 
 			VK_CHECK_RESULT(vkCreateShaderModule(device, &createInfo, nullptr, &m_ShaderModules[index]), "Failed to create VkShaderModule");
 
@@ -187,71 +216,68 @@ namespace HazardRenderer::Vulkan
 	{
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		std::cout << m_FilePath << std::endl;
-
-		m_DescriptorSetLayouts.resize(m_DescriptorSets.size());
 		for (uint32_t set = 0; set < m_DescriptorSets.size(); set++)
 		{
-			std::vector<VkDescriptorSetLayoutBinding> bindings;
 			auto& descriptorSet = m_DescriptorSets[set];
+			descriptorSet.ReserveBindings(m_ShaderData.UniformsDescriptions[set].size() + m_ShaderData.ImageSamplers[set].size());
 
 			for (auto& [binding, buffer] : m_ShaderData.UniformsDescriptions[set])
 			{
-				auto& descriptorBinding = bindings.emplace_back();
+				VkDescriptorSetLayoutBinding descriptorBinding = {};
 				descriptorBinding = {};
 				descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-				descriptorBinding.binding = buffer.Binding;
+				descriptorBinding.binding = binding;
 				descriptorBinding.descriptorCount = 1;
 				descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage(buffer.UsageFlags);
 
 				VkWriteDescriptorSet writeDescriptor = {};
 				writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				writeDescriptor.dstBinding = descriptorBinding.binding;
+				writeDescriptor.dstBinding = binding;
 				writeDescriptor.descriptorType = descriptorBinding.descriptorType;
 				writeDescriptor.dstArrayElement = 0;
 				writeDescriptor.descriptorCount = 1;
 
-				m_WriteDescriptorSets[set][buffer.Binding] = writeDescriptor;
+				descriptorSet.AddBinding(descriptorBinding);
+				descriptorSet.AddWriteDescriptor(binding, writeDescriptor);
 			}
 
 			for (auto& [binding, sampler] : m_ShaderData.ImageSamplers[set])
 			{
-				auto& descriptorBinding = bindings.emplace_back();
+				VkDescriptorSetLayoutBinding descriptorBinding = {};
 				descriptorBinding = {};
 				descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 				descriptorBinding.binding = binding;
 				descriptorBinding.descriptorCount = sampler.ArraySize;
 				descriptorBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+				descriptorSet.AddBinding(descriptorBinding);
 			}
+			descriptorSet.Invalidate();
 
-			VkDescriptorSetLayoutCreateInfo layoutInfo = {};
-			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-			layoutInfo.bindingCount = (uint32_t)bindings.size();
-			layoutInfo.pBindings = bindings.data();
+			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_DESCRIPTOR_SET, fmt::format(" {0} set {1} ", m_FilePath, set), descriptorSet.GetVulkanDescriptorSet());
 
-			VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[set]), "Failed to create descriptor layout");
-
-			VkDescriptorSetAllocateInfo allocInfo = {};
-			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			allocInfo.descriptorSetCount = 1;
-			allocInfo.pSetLayouts = &m_DescriptorSetLayouts[set];
-			m_DescriptorSets[set] = VulkanContext::GetInstance()->RT_AllocateDescriptorSet(allocInfo);
-
-			auto& dstSet = m_WriteDescriptorSets[set];
-
-			for (auto& [binding, writeDescriptor] : dstSet)
+			for (auto& [binding, buffer] : m_UniformBuffers[set])
 			{
-				auto& uniformBuffer = m_UniformBuffers[set][binding].As<VulkanUniformBuffer>();
+				auto& vulkanBuffer = buffer.As<VulkanUniformBuffer>();
 
 				VkDescriptorBufferInfo bufferInfo = {};
-				bufferInfo.buffer = uniformBuffer->GetVulkanBuffer();
+				bufferInfo.buffer = vulkanBuffer->GetVulkanBuffer();
 				bufferInfo.offset = 0;
-				bufferInfo.range = uniformBuffer->GetSize();
+				bufferInfo.range = vulkanBuffer->GetSize();
 
-				auto& writeSet = writeDescriptor;
-				writeSet.dstSet = m_DescriptorSets[set];
-				writeSet.pBufferInfo = &bufferInfo;
-				vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
+				descriptorSet.SetBuffer(vulkanBuffer->GetBinding(), bufferInfo);
+				//auto& uniformBuffer = m_UniformBuffers[set][binding].As<VulkanUniformBuffer>();
+
+				//auto& writeSet = writeDescriptor;
+				//descriptorSet.SetBuffer(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, uniformBuffer->GetVulkanBuffer());
+
+				//VkDescriptorBufferInfo bufferInfo = {};
+				//bufferInfo.buffer = uniformBuffer->GetVulkanBuffer();
+				//bufferInfo.offset = 0;
+				//bufferInfo.range = uniformBuffer->GetSize();
+				//writeSet.dstSet = m_DescriptorSets[set];
+				//writeSet.pBufferInfo = &bufferInfo;
+				//vkUpdateDescriptorSets(device, 1, &writeSet, 0, nullptr);
 			}
 		}
 	}

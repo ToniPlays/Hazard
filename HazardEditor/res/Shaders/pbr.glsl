@@ -32,11 +32,12 @@ layout(location = 0) in vec4 Color;
 layout(location = 1) in vec3 Normal;
 layout(location = 2) in vec3 WorldPosition;
 
-layout(binding = 0) uniform samplerCube u_RadianceMap;
-layout(binding = 1) uniform samplerCube u_IrradianceMap;
-layout(binding = 2) uniform samplerCube u_PrefilterMap;
-layout(binding = 3) uniform sampler2D u_BRDFLut;
-
+/*
+layout(set = 1, binding = 1) uniform samplerCube u_RadianceMap;
+layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
+layout(set = 1, binding = 3) uniform samplerCube u_PrefilterMap;
+layout(set = 1, binding = 4) uniform sampler2D u_BRDFLut;
+*/
 
 #include "Utils/Common.glsl"
 #include "Utils/Lighting.glsl"

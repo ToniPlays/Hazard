@@ -47,7 +47,7 @@ namespace HazardRenderer::OpenGL
 
 			//Compile OpenGL shader
 			OpenGLShaderCompiler compiler;
-		
+
 			for (auto& [stage, source] : sources)
 			{
 				double compilationTime = 0.0;
@@ -141,7 +141,7 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLShader> instance = this;
 		Renderer::SubmitResourceCreate([instance, vulkanBinaries, openGLbinaries]() mutable {
 			instance->CreateProgram(openGLbinaries);
-			
+
 			for (auto& [stage, buffer] : vulkanBinaries)
 				buffer.Release();
 			for (auto& [stage, buffer] : openGLbinaries)
@@ -157,15 +157,27 @@ namespace HazardRenderer::OpenGL
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
-		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
-		if (descriptor.ActualBinding == UINT32_MAX) return;
-		descriptor.BoundValue[index] = image;
+		for (auto& [set, descriptor] : m_DescriptorSet)
+		{
+			auto& write = descriptor.GetWriteDescriptor(name);
+			if (write.ActualBinding == UINT32_MAX) 
+				continue;
+
+			write.BoundValue[index] = image;
+			return;
+		}
 	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
 	{
-		auto& descriptor = m_DescriptorSet[0].GetWriteDescriptor(name);
-		if (descriptor.ActualBinding == UINT32_MAX) return;
-		descriptor.BoundValue[index] = cubemap;
+		for (auto& [set, descriptor] : m_DescriptorSet)
+		{
+			auto& write = descriptor.GetWriteDescriptor(name);
+			if (write.ActualBinding == UINT32_MAX)
+				continue;
+
+			write.BoundValue[index] = cubemap;
+			return;
+		}
 	}
 	void OpenGLShader::Set(uint32_t set, uint32_t binding, Ref<UniformBuffer> uniformBuffer)
 	{

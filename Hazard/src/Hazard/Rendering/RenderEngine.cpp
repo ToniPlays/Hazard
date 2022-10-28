@@ -38,7 +38,7 @@ namespace Hazard
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
 		frameBufferInfo.AttachmentCount = 4;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA16F, ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.Width = 1920;
 		frameBufferInfo.Height = 1080;
@@ -241,14 +241,16 @@ namespace Hazard
 				data.InverseView = inverseView;
 				data.InverseViewProjection = inverseView * inverseProjection;
 
-				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
-				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
+				UtilityUniformData utils = {};
+				utils.CameraPos = data.InverseView[3];
 				
-				glm::vec3 view = data.InverseView[3];
-				m_Resources->UtilityUniformBuffer->SetData(&view, sizeof(glm::vec3));
+
+				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
+				m_Resources->UtilityUniformBuffer->SetData(&utils, sizeof(UtilityUniformData));
+
+
 				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
-
-
+				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				GeometryPass(commandBuffer);
 				DrawEnvironmentMap(commandBuffer);

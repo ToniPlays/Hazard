@@ -36,15 +36,6 @@ namespace HazardRenderer
 	enum class ImageDataType { Auto = 0, RGB, RGBA, HRD, HDRA };
 	enum class ImageUsage { None = 0, Texture, Attachment, Storage };
 
-	struct TextureFilter
-	{
-		FilterMode MinFilter = FilterMode::Linear;
-		FilterMode MagFilter = FilterMode::Linear;
-
-		TextureFilter() = default;
-		TextureFilter(FilterMode minFilter, FilterMode magFilter) : MinFilter(minFilter), MagFilter(magFilter) {}
-	};
-
 	class Image : public RefCount
 	{
 	public:

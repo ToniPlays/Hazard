@@ -24,7 +24,7 @@ using namespace HazardScript;
 void HazardEditorApplication::PreInit()
 {
 
-#if HZR_DEBUG && false
+#if HZR_DEBUG
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
@@ -34,7 +34,7 @@ void HazardEditorApplication::PreInit()
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 #else
-	RenderAPI renderAPI = RenderAPI::OpenGL;
+	RenderAPI renderAPI = RenderAPI::Vulkan;
 #endif
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");

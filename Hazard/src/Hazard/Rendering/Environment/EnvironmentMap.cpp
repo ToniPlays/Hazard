@@ -21,7 +21,8 @@ namespace Hazard
 		brdfLutInfo.Width = header.Width;
 		brdfLutInfo.Height = header.Height;
 		brdfLutInfo.Data = header.ImageData;
-		brdfLutInfo.Usage = ImageUsage::Attachment;
+		brdfLutInfo.Usage = ImageUsage::Texture;
+		brdfLutInfo.Format = ImageFormat::RGBA;
 		brdfLutInfo.GenerateMips = true;
 
 		Ref<Image2D> lut = Image2D::Create(&brdfLutInfo);
