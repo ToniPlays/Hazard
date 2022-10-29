@@ -148,7 +148,8 @@ namespace HazardRenderer::Vulkan
                 sampler.DescritorSet = set;
                 sampler.Binding = binding;
                 sampler.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
-                sampler.Dimension = spvType.image.dim;
+                sampler.Dimension = type.image.dim == spv::DimCube ? 3 : 2;
+                sampler.Flags |= (uint32_t)stage;
             }
             for (auto& resource : resources.storage_images)
             {
@@ -164,7 +165,8 @@ namespace HazardRenderer::Vulkan
                 storageImage.DescritorSet = set;
                 storageImage.Binding = binding;
                 storageImage.ArraySize = Math::Max<uint32_t>(type.array[0], 1);
-                storageImage.Dimension = spvType.image.dim;
+                storageImage.Dimension = type.image.dim == spv::DimCube ? 3 : 2;
+                storageImage.Flags |= (uint32_t)stage;
 
                 switch (spvType.image.access)
                 {

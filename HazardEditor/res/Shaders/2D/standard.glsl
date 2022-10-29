@@ -23,7 +23,7 @@ layout(location = 0) in vec4 f_Color;
 layout(location = 1) in vec2 f_TextureCoords;
 layout(location = 2) in flat float f_TextureIndex;
 
-layout (binding = 0) uniform sampler2D u_Textures[32];
+layout (set = 1, binding = 1) uniform sampler2D u_Textures[32];
 
 layout(location = 0) out vec4 color;
 

@@ -94,6 +94,8 @@ bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem
 }
 bool File::IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo)
 {
+	if (!Exists(file)) return false;
+	if (!Exists(compareTo)) return true;
 	auto fTime = std::filesystem::last_write_time(file);
 	auto sTime = std::filesystem::last_write_time(compareTo);
 	return fTime > sTime;

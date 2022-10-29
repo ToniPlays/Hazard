@@ -6,6 +6,7 @@
 #include "VulkanShader.h"
 #include "../VulkanFramebuffer.h"
 #include "../VkUtils.h"
+#include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::Vulkan
 {
@@ -17,7 +18,7 @@ namespace HazardRenderer::Vulkan
 			m_Layout = *specs->pBufferLayout;
 		}
 
-		m_Shader = Shader::Create(m_Specs.ShaderPath);
+		m_Shader = Shader::Create(m_Specs.ShaderPath).As<VulkanShader>();
 		Invalidate();
 	}
 	VulkanPipeline::~VulkanPipeline()
@@ -59,11 +60,10 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto& fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
-		auto& shader = m_Shader.As<VulkanShader>();
 		HZR_ASSERT(m_Shader, "No shader");
 
-		auto& setLayouts = shader->GetAllDescriptorSetLayouts();
-		const auto& pushConstantRanges = shader->GetPushConstantRanges();
+		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
 		for (uint32_t i = 0; i < pushConstantRanges.size(); i++)
@@ -97,7 +97,7 @@ namespace HazardRenderer::Vulkan
 		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizationState.polygonMode = VkUtils::GetVulkanPolygonMode(m_Specs.DrawType);
 		rasterizationState.cullMode = VkUtils::GetVulkanCullMode(m_Specs.CullMode);
-		rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		rasterizationState.depthClampEnable = VK_FALSE;
 		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 		rasterizationState.depthBiasEnable = VK_FALSE;
@@ -214,7 +214,7 @@ namespace HazardRenderer::Vulkan
 		inputStateInfo.vertexAttributeDescriptionCount = (uint32_t)inputAttrib.size();
 		inputStateInfo.pVertexAttributeDescriptions = inputAttrib.data();
 
-		const auto& shaderStages = shader->GetPipelineShaderStageCreateInfos();
+		const auto& shaderStages = m_Shader->GetPipelineShaderStageCreateInfos();
 
 		pipelineInfo.stageCount = (uint32_t)shaderStages.size();
 		pipelineInfo.pStages = shaderStages.data();
@@ -234,11 +234,36 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheInfo, nullptr, &m_PipelineCache), "Failed to create VK");
 
 		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, m_Specs.DebugName, m_Pipeline);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
 	}
 	void VulkanPipeline::InvalidateComputePipeline()
 	{
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
+
+		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
+		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+
+		VkPipelineLayoutCreateInfo pipelineLayout = {};
+		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayout.setLayoutCount = setLayouts.size();
+		pipelineLayout.pSetLayouts = setLayouts.data();
+
+		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
+
+		VkPipelineShaderStageCreateInfo computeShaderInfo = m_Shader->GetPipelineShaderStageCreateInfos()[0];
+
+		VkComputePipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+		pipelineInfo.layout = m_PipelineLayout;
+		pipelineInfo.stage = computeShaderInfo;
+
+		VkPipelineCacheCreateInfo pipelineCacheInfo = {};
+		pipelineCacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheInfo, nullptr, &m_PipelineCache), "Failed to create VK");
+
+		VK_CHECK_RESULT(vkCreateComputePipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
 	}
 }
 

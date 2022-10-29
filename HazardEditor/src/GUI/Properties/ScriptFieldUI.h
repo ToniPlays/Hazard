@@ -56,7 +56,7 @@ namespace UI
 		else if (field->Has<SliderAttribute>()) 
 		{
 			Ref<SliderAttribute> attrib = field->Get<SliderAttribute>();
-			modified = ImUI::InputSliderFloat(value, 0.0f, attrib->Min, attrib->Max);
+			modified = ImUI::SliderFloat(value, 0.0f, attrib->Min, attrib->Max);
 		}
 		else
 		{

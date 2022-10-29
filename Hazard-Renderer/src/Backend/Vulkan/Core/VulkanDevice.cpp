@@ -105,7 +105,7 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanDevice::FlushCommandBuffer(VkCommandBuffer commandBuffer, VkQueue queue)
 	{
-		const uint64_t DEFAULT_TIMEOUT = 1000000000;
+		constexpr uint64_t DEFAULT_TIMEOUT = UINT64_MAX;
 		HZR_ASSERT(commandBuffer != VK_NULL_HANDLE, "VkCommandBuffer cannot be VK_NULL_HANDLE");
 		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end VkCommandBuffer");
 

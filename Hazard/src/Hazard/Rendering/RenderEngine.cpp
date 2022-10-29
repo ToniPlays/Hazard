@@ -143,8 +143,8 @@ namespace Hazard
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
 			{
-				data.IBLContribution = environmentData.IBLContribution;
-				data.SkyLightIntensity = environmentData.Intensity;
+				data.SkyLightIntensity = environmentData.SkylightIntensity;
+				data.EnvironmentLod = environmentData.EnvironmentLod;
 
 				auto& radiance = environmentData.Map->RadianceMap;
 				auto& irradiance = environmentData.Map->IrradianceMap;
@@ -155,7 +155,7 @@ namespace Hazard
 				if (radiance)
 					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (irradiance)
-					shader->Set("u_IrradiancqeMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
+					shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (prefilter)
 					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (lut)
@@ -165,8 +165,8 @@ namespace Hazard
 		}
 		else
 		{
-			data.IBLContribution = 0.0f;
-			data.SkyLightIntensity = 1.0f;
+			data.SkyLightIntensity = 0.0f;
+			data.EnvironmentLod = 0.0f;
 
 			auto& shader = m_Resources->PbrPipeline->GetShader();
 			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);

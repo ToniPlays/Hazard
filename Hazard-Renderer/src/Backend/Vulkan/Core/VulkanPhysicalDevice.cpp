@@ -47,7 +47,6 @@ namespace HazardRenderer::Vulkan
 		{
 			std::vector<VkExtensionProperties> extensions(extCount);
 			if (vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, &extensions.front()) == VK_SUCCESS) {
-				std::cout << "Device extensions: " << std::endl;
 				for (const auto& ext : extensions) {
 					m_SupportedExtensions.emplace(ext.extensionName);
 					//std::cout << " -" << ext.extensionName << std::endl;

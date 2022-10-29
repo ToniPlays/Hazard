@@ -24,7 +24,7 @@ using namespace HazardScript;
 void HazardEditorApplication::PreInit()
 {
 
-#if HZR_DEBUG
+#if HZR_DEBUG && true
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
@@ -43,7 +43,7 @@ void HazardEditorApplication::PreInit()
 		std::filesystem::current_path(workingDir);
 		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
-	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
+	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hproj"));
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 

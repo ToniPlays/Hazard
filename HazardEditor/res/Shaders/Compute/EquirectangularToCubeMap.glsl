@@ -19,8 +19,8 @@ void main()
 	vec2 uv = vec2(phi / (2.0 * PI) + 0.5, theta / PI);
 	
 	//Flip source image
-	uv.y *= -1.0;
+	uv.y = 1.0 - uv.y;
 
-	vec4 color = texture(u_EquirectangularTexture, uv);
+	vec4 color = textureLod(u_EquirectangularTexture, uv, 0.0);
 	imageStore(o_CubeMap, ivec3(gl_GlobalInvocationID), color);
 }

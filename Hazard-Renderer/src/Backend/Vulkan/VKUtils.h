@@ -95,6 +95,8 @@ namespace HazardRenderer::Vulkan::VkUtils
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type);
 	VkShaderStageFlags GetVulkanShaderStage(uint32_t stage);
 
+	uint32_t GetMipLevelCount(uint32_t width, uint32_t height);
+
 	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkAccessFlags srcAccessMask,
@@ -104,6 +106,14 @@ namespace HazardRenderer::Vulkan::VkUtils
 		VkPipelineStageFlags srcStageMask,
 		VkPipelineStageFlags dstStageMask,
 		VkImageSubresourceRange subresourceRange);
+	void SetImageLayout(VkCommandBuffer commandBuffer,
+		VkImage image,
+		VkImageLayout oldLayout,
+		VkImageLayout newLayout,
+		VkImageSubresourceRange subresourceRange,
+		VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+		VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+		);
 
 
 	inline static void SetDebugUtilsObjectName(const VkDevice device, const VkObjectType type, const std::string& name, const void* handle) {
@@ -115,6 +125,38 @@ namespace HazardRenderer::Vulkan::VkUtils
 		nameInfo.pNext = VK_NULL_HANDLE;
 
 		VK_CHECK_RESULT(fpSetDebugUtilsObjectNameEXT(device, &nameInfo), "");
+	}
+	static std::string ImageLayoutToString(VkImageLayout layout)
+	{
+		switch (layout)
+		{
+		case VK_IMAGE_LAYOUT_UNDEFINED:										return "VK_IMAGE_LAYOUT_UNDEFINED";
+		case VK_IMAGE_LAYOUT_GENERAL:										return "VK_IMAGE_LAYOUT_GENERAL";
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:						return "VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:				return "VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:				return "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:						return "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:							return "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL";
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:							return "VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL";
+		case VK_IMAGE_LAYOUT_PREINITIALIZED:								return "VK_IMAGE_LAYOUT_PREINITIALIZED";
+		case VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL:	return "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL:	return "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL:						return "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL:						return "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL:					return "VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL:						return "VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL:								return "VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL";
+		case VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL:							return "VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL";
+		case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:								return "VK_IMAGE_LAYOUT_PRESENT_SRC_KHR";
+		case VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR:							return "VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR";
+		case VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT:				return "VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT";
+		case VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR:	return "VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR";
+		case VK_IMAGE_LAYOUT_MAX_ENUM:										return "VK_IMAGE_LAYOUT_MAX_ENUM";
+		default:
+			break;
+		}
+		HZR_ASSERT(false, "What is this");
+		return "";
 	}
 }
 #endif

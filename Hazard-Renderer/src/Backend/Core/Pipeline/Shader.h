@@ -57,6 +57,7 @@ namespace HazardRenderer
 		uint32_t Dimension = 0;
 		uint32_t ArraySize = 0;
 		uint32_t DescritorSet = UINT32_MAX;
+		uint32_t Flags = 0;
 	};
 	struct ShaderStorageImage
 	{

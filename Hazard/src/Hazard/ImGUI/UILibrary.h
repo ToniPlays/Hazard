@@ -174,7 +174,7 @@ namespace Hazard::ImUI
 		return ImGui::DragInt("##uint", (int*)&value, 0.5f, min, max);
 	}
 
-	static bool InputSliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f)
+	static bool SliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f)
 	{
 		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
 	}
@@ -253,6 +253,18 @@ namespace Hazard::ImUI
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 			modified = InputFloat(value, clearValue, speed, min, max);
+			});
+		ImGui::NextColumn();
+		return modified;
+	}
+	static bool SliderFloat(const char* name, float& value, float clearValue = 0.0f, float min = 0.0, float max = 0.0)
+	{
+		bool modified = false;
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			modified = SliderFloat(value, clearValue, min, max);
 			});
 		ImGui::NextColumn();
 		return modified;
@@ -353,24 +365,18 @@ namespace Hazard::ImUI
 
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image)
 	{
-		static std::unordered_map<HazardRenderer::Image2D*, ImTextureID> cache;
-
-		/*if (cache.find(image.Raw()) != cache.end())
-		{
-			HZR_ASSERT(cache[image.Raw()] != nullptr, "Woop");
-			return cache[image.Raw()];
-		}*/
-
 		using namespace HazardRenderer;
+		static std::unordered_map<Image2D*, ImTextureID> cache;
+
+		if (cache.find(image.Raw()) != cache.end())
+			return cache[image.Raw()];
+
 		switch (GraphicsContext::GetRenderAPI()) 
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{
-			ImTextureID id = (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
-			HZR_ASSERT(id != nullptr, "What is this crap");
-			cache[image.Raw()] = id;
-			return id;
+			return (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
 		}
 #endif
 #ifdef HZR_INCLUDE_VULKAN
@@ -738,7 +744,7 @@ namespace Hazard::ImUI
 	static void Separator(ImVec2 size, ImVec4 color)
 	{
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, color);
-		ImGui::BeginChild("sep", size);
+		ImGui::BeginChild("#sep", size);
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
 	}

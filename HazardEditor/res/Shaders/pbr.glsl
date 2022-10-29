@@ -32,12 +32,12 @@ layout(location = 0) in vec4 Color;
 layout(location = 1) in vec3 Normal;
 layout(location = 2) in vec3 WorldPosition;
 
-/*
 layout(set = 1, binding = 1) uniform samplerCube u_RadianceMap;
-layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
-layout(set = 1, binding = 3) uniform samplerCube u_PrefilterMap;
-*/
-layout(set = 1, binding = 1) uniform sampler2D u_BRDFLut;
+
+//layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
+//layout(set = 1, binding = 3) uniform samplerCube u_PrefilterMap;
+
+layout(set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
 
 #include "Utils/Common.glsl"
@@ -66,7 +66,7 @@ void main()
 	vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
 
 	vec3 Lo = vec3(0.0);
-	/*//Reflectance
+	//Reflectance
 	for(int i = 0; i < 1; i++)
 	{
 		//Lighting
@@ -74,9 +74,9 @@ void main()
 		if(light.Color.a <= 0.0) 
 			continue;
 		Lo += CalculateDirectionalLight(F0, light);
-	}*/
+	}
 
-	vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity * u_Lights.IBLContribution;
+	vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity;
 	
 	//Tonemapping
 	vec3 color = ACESTonemap(ibl + Lo);

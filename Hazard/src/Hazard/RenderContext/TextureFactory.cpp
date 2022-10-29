@@ -100,7 +100,7 @@ namespace Hazard
 		header.Channels = fileHeader.Channels;
 		header.ImageData = Buffer::Copy(data.Read<Buffer>(fileHeader.DataSize));
 
-		std::cout << "Image load from cache " << cacheFile << " took " << timer.ElapsedMillis() << " ms" << std::endl;
+		//std::cout << "Image load from cache " << cacheFile << " took " << timer.ElapsedMillis() << " ms" << std::endl;
 		return header;
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)
@@ -124,7 +124,7 @@ namespace Hazard
 		header.Height = h;
 		header.Channels = desired;
 
-		std::cout << "Image load from source " << path << " took " << timer.ElapsedMillis() << " ms" << std::endl;
+		//std::cout << "Image load from source " << path << " took " << timer.ElapsedMillis() << " ms" << std::endl;
 
 		return header;
 	}

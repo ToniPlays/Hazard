@@ -4,14 +4,24 @@
 
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 namespace HazardRenderer::Vulkan
 {
+	struct WriteDescriptorData
+	{
+		std::string name;
+		VkWriteDescriptorSet Set;
+		VkDescriptorType Type;
+	};
+
+
 	class VulkanDescriptorSet
 	{
 	public:
 		VulkanDescriptorSet() = default;
 
+		void SetDebugName(const std::string& name) { m_DebugName = name; }
 		VkDescriptorSet& GetVulkanDescriptorSet() { return m_VkDescriptorSet; }
 		VkDescriptorSetLayout& GetLayout() { return m_DescriptorSetLayout; }
 
@@ -28,14 +38,14 @@ namespace HazardRenderer::Vulkan
 		}
 		void AddWriteDescriptor(uint32_t binding, const std::string& name, VkWriteDescriptorSet descriptor)
 		{
-			m_WriteDescriptors[binding] = descriptor;
+			m_WriteDescriptors[binding] = { name, descriptor };
 			m_WriteDescriptorNames[name] = binding;
 		}
 		bool Contains(const std::string& name)
 		{
 			return m_WriteDescriptorNames.find(name) != m_WriteDescriptorNames.end();
 		}
-		bool GetIndex(const std::string& name)
+		uint32_t GetIndex(const std::string& name)
 		{
 			return m_WriteDescriptorNames[name];
 		}
@@ -44,9 +54,10 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		VkDescriptorSet m_VkDescriptorSet;
-		std::unordered_map<uint32_t, VkWriteDescriptorSet> m_WriteDescriptors;
+		std::unordered_map<uint32_t, WriteDescriptorData> m_WriteDescriptors;
 		std::unordered_map<std::string, uint32_t> m_WriteDescriptorNames;
 		std::vector<VkDescriptorSetLayoutBinding> m_Bindings;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
+		std::string m_DebugName;
 	};
 }

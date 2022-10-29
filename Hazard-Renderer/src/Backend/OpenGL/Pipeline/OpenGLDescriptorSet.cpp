@@ -35,6 +35,7 @@ namespace HazardRenderer::OpenGL
 				case GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
 					for (auto& [index, value] : descriptor.BoundValue)
 					{
+						if (!value) continue;
 						uint32_t id = descriptor.Dimension == 3 ? value.As<OpenGLCubemapTexture>()->GetID() : value.As<OpenGLImage2D>()->GetID();
 						glBindTextureUnit(descriptor.ActualBinding + index, id);
 					}

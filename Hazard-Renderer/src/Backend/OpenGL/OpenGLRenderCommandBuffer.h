@@ -34,7 +34,8 @@ namespace HazardRenderer::OpenGL
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DispatchCompute(const LocalGroupSize& localGroupSize) override;
-		void InsertMemoryBarrier(MemoryBarrierFlags flags) override;
+		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
+		void TransitionImageLayout(const ImageTransitionInfo& info) override {};
 
 		void SetViewport(float x, float y, float width, float height) override {};
 		void SetLineSize(float size) override {};

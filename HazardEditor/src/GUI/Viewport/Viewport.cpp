@@ -43,7 +43,6 @@ namespace UI
 		cameraData.ZNear = m_EditorCamera.GetNearClipping();
 		cameraData.ZFar = m_EditorCamera.GetFarClipping();
 
-		m_FrameBuffer->Resize(m_Width, m_Height);
 		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
 		Editor::EditorWorldManager::GetWorldRender()->SubmitExtra([&]() {
 			m_EditorGrid.Render(m_EditorCamera);
@@ -64,7 +63,6 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 			m_EditorCamera.SetViewport(m_Width, m_Height);
-			HZR_INFO("Image ID {}", m_FrameBuffer->GetImage().As<OpenGL::OpenGLImage2D>()->GetID());
 		}
 
 		if (m_CurrentImage == 0 || true)

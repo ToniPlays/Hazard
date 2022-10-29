@@ -39,8 +39,8 @@ namespace Hazard
 	{
 		int DirectionLightCount;
 		int PointLightCount;
-		float IBLContribution;
 		float SkyLightIntensity;
+		float EnvironmentLod;
 		DirectionalLight Lights[8];
 	};
 	struct UtilityUniformData 
@@ -135,6 +135,7 @@ namespace Hazard
 				blackCubemap.Width = 1;
 				blackCubemap.Height = 1;
 				blackCubemap.Format = ImageFormat::RGBA16F;
+				blackCubemap.GenerateMips = false;
 
 				BlackCubemap = CubemapTexture::Create(&blackCubemap);
 

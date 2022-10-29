@@ -7,7 +7,7 @@
 const uint Samples = 1024;
 const int MipLevels = 1;
 
-layout(binding = 0) restrict writeonly uniform imageCube o_Texture[MipLevels];
+layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_Texture[MipLevels];
 layout(binding = 1) uniform samplerCube u_InputCube;
 
 #define PARAM_LEVEL 0
@@ -16,7 +16,6 @@ layout(binding = 1) uniform samplerCube u_InputCube;
 layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 void main(void)
 {
-
 	ivec2 outputSize = imageSize(o_Texture[PARAM_LEVEL]);
 	if(gl_GlobalInvocationID.x >= outputSize.x || gl_GlobalInvocationID.y >= outputSize.y) return;
 

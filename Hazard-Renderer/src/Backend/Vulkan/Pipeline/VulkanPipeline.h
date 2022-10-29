@@ -10,6 +10,8 @@
 
 namespace HazardRenderer::Vulkan
 {
+	class VulkanShader;
+
 	class VulkanPipeline : public Pipeline
 	{
 	public:
@@ -36,7 +38,7 @@ namespace HazardRenderer::Vulkan
 		void InvalidateComputePipeline();
 	private:
 		PipelineSpecification m_Specs;
-		Ref<Shader> m_Shader;
+		Ref<VulkanShader> m_Shader;
 
 		BufferLayout m_Layout;
 

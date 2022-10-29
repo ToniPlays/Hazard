@@ -83,7 +83,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanFrameBuffer> instance = this;
-		Renderer::Submit([instance, width, height, force]() mutable {
+		Renderer::SubmitResourceCreate([instance, width, height, force]() mutable {
 			instance->Resize_RT(width, height, force);
 			});
 	}
@@ -109,9 +109,7 @@ namespace HazardRenderer::Vulkan
 		}
 
 		for (auto& cb : m_ResizeCallbacks)
-		{
 			cb(this);
-		}
 	}
 	void VulkanFrameBuffer::Release()
 	{
@@ -376,7 +374,7 @@ namespace HazardRenderer::Vulkan
 		renderPassInfo.pDependencies = dependencies.data();
 
 		VK_CHECK_RESULT(vkCreateRenderPass(device, &renderPassInfo, nullptr, &m_RenderPass), "Failed to create VkRenderPass");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_RENDER_PASS, m_Specs.DebugName, m_RenderPass);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_RENDER_PASS, fmt::format("VkRenderPass {}", m_Specs.DebugName), m_RenderPass);
 
 		std::vector<VkImageView> attachmentViews(m_ColorAttachments.size(), VK_NULL_HANDLE);
 		for (uint32_t i = 0; i < m_ColorAttachments.size(); i++)
@@ -384,14 +382,14 @@ namespace HazardRenderer::Vulkan
 			Ref<VulkanImage2D> image = m_ColorAttachments[i];
 			if (image->GetLayerCount() > 1)
 				__debugbreak();
-			else attachmentViews[i] = image->GetImageInfo().ImageView;
+			else attachmentViews[i] = image->GetImageDescriptor().imageView;
 		}
 		if (m_DepthAttachmentImage)
 		{
 			if (m_ExistingImage)
 				__debugbreak();
 			else
-				attachmentViews.emplace_back(m_DepthAttachmentImage->GetImageInfo().ImageView);
+				attachmentViews.emplace_back(m_DepthAttachmentImage->GetImageDescriptor().imageView);
 		}
 
 		VkFramebufferCreateInfo frameBufferInfo = {};
@@ -404,7 +402,7 @@ namespace HazardRenderer::Vulkan
 		frameBufferInfo.layers = 1;
 
 		VK_CHECK_RESULT(vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &m_Framebuffer), "Failed to create Vulkan Framebuffer");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FRAMEBUFFER, m_Specs.DebugName, m_Framebuffer);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FRAMEBUFFER, fmt::format("VkFramebuffer {}", m_Specs.DebugName), m_Framebuffer);
 	}
 }
 #endif

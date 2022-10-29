@@ -40,7 +40,7 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(device->GetVulkanDevice(), &allocInfo, m_CommandBuffers.data()), "Failed to allocate Command Buffers");
 
 		for (size_t i = 0; i < m_CommandBuffers.size(); i++)
-			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_COMMAND_BUFFER, fmt::format("{} (Frame In Flight: {})", m_DebugName), m_CommandBuffers[i]);
+			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_COMMAND_BUFFER, fmt::format("CommandBuffer {}", m_DebugName), m_CommandBuffers[i]);
 
 		VkFenceCreateInfo fenceInfo = {};
 		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -50,7 +50,7 @@ namespace HazardRenderer::Vulkan
 		for (size_t i = 0; i < m_WaitFences.size(); i++)
 		{
 			VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceInfo, nullptr, &m_WaitFences[i]), "Failed to create VkFence");
-			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_FENCE, fmt::format("{} (Frame In Flight: {}) VkFence", m_DebugName), m_WaitFences[i]);
+			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_FENCE, fmt::format("{} (Frame In Flight: {}) VkFence", m_DebugName, i), m_WaitFences[i]);
 		}
 
 		VkQueryPoolCreateInfo queryPoolCreateInfo = {};
@@ -302,7 +302,7 @@ namespace HazardRenderer::Vulkan
 		auto& offsets = m_CurrentPipeline->GetShader().As<VulkanShader>()->GetDynamicOffsets();
 
 		Renderer::Submit([instance, buffer, count, instanceCount, offsets, pipeline = m_CurrentPipeline]() mutable {
-			
+
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			auto bindPoint = pipeline->GetBindingPoint();
 			auto& shader = pipeline->GetShader().As<VulkanShader>();
@@ -324,14 +324,33 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline, size = localGroupSize]() mutable {
 
-		Renderer::Submit([instance, size = localGroupSize]() mutable {
-				vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+			auto vkPipeline = pipeline->GetVulkanPipeline();
+			auto bindPoint = pipeline->GetBindingPoint();
+			auto& shader = pipeline->GetShader().As<VulkanShader>();
+			auto layout = pipeline->GetPipelineLayout();
+			auto& descriptorSets = shader->GetVulkanDescriptorSets();
+
+			std::cout << "Dispatch compute " << pipeline->GetSpecifications().DebugName << std::endl;
+
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), 0, nullptr);
+			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
 			});
 	}
-	void VulkanRenderCommandBuffer::InsertMemoryBarrier(MemoryBarrierFlags flags)
+	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
 
+			});
+	}
+	void VulkanRenderCommandBuffer::TransitionImageLayout(const ImageTransitionInfo& info)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
+
+			});
 	}
 	void VulkanRenderCommandBuffer::SetViewport(float x, float y, float width, float height)
 	{

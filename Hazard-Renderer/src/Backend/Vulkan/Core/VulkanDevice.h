@@ -16,6 +16,7 @@ namespace HazardRenderer::Vulkan
 
 		VkCommandBuffer GetCommandBuffer(bool begin, bool compute = false);
 		VkCommandBuffer CreateSecondaryCommandBuffer(const std::string& name);
+
 		void FlushCommandBuffer(VkCommandBuffer commandBuffer);
 		void FlushCommandBuffer(VkCommandBuffer commandBuffer, VkQueue queue);
 

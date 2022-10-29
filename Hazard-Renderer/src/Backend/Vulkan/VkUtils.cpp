@@ -135,20 +135,68 @@ namespace HazardRenderer::Vulkan::VkUtils {
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
+	void SetImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange, 
+		VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
+	{
+		VkImageMemoryBarrier barrier = {};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.oldLayout = oldLayout;
+		barrier.newLayout = newLayout;
+		barrier.image = image;
+		barrier.subresourceRange = subresourceRange;
+
+		switch (oldLayout)
+		{
+		case VK_IMAGE_LAYOUT_UNDEFINED:							barrier.srcAccessMask = 0; break;
+		case VK_IMAGE_LAYOUT_PREINITIALIZED:					barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:	barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT; break;
+		default: break;
+		}
+
+		switch (newLayout)
+		{
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:				barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+		{
+			if (barrier.srcAccessMask == 0)
+			{
+				barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+
+			}
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		}
+		}
+
+		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 
+			0, nullptr, 0, nullptr, 1, &barrier);
+	}
 	VkShaderStageFlags GetVulkanShaderStage(uint32_t stage)
 	{
 		VkShaderStageFlags flags = 0;
 
 		if (stage & (uint32_t)ShaderStage::Vertex)
 			flags |= VK_SHADER_STAGE_VERTEX_BIT;
-		if (stage & (uint32_t)ShaderStage::Fragment)	
+		if (stage & (uint32_t)ShaderStage::Fragment)
 			flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-		if (stage & (uint32_t)ShaderStage::Geometry)	
+		if (stage & (uint32_t)ShaderStage::Geometry)
 			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-		if (stage & (uint32_t)ShaderStage::Compute)	
+		if (stage & (uint32_t)ShaderStage::Compute)
 			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
 		return flags;
+	}
+	uint32_t GetMipLevelCount(uint32_t width, uint32_t height)
+	{
+		return (uint32_t)std::floor(std::log2(glm::min(width, height))) + 1;
 	}
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type)
 	{

@@ -103,7 +103,11 @@ namespace HazardRenderer::OpenGL
 
 		commandBuffer->BindPipeline(computePipeline);
 		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
-		commandBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
+
+		MemoryBarrierInfo barrier = {};
+		barrier.Flags = MemoryBarrierBit_All;
+
+		commandBuffer->InsertMemoryBarrier(barrier);
 
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
@@ -118,7 +122,11 @@ namespace HazardRenderer::OpenGL
 
 		cmdBuffer->BindPipeline(generationData.Pipeline);
 		cmdBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
-		cmdBuffer->InsertMemoryBarrier(MemoryBarrierBit_All);
+
+		MemoryBarrierInfo barrier = {};
+		barrier.Flags = MemoryBarrierBit_All;
+
+		cmdBuffer->InsertMemoryBarrier(barrier);
 	}
 }
 #endif

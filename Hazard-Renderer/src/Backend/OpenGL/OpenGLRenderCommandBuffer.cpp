@@ -130,14 +130,13 @@ namespace HazardRenderer::OpenGL
 		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 		Renderer::Submit([pipeline, size = localGroupSize]() mutable {
-
 			glDispatchCompute(size.x, size.y, size.z);
 			});
 	}
-	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(MemoryBarrierFlags flags)
+	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{
 		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([flags]() mutable {
+		Renderer::Submit([info]() mutable {
 			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});
 	}

@@ -51,8 +51,6 @@ namespace HazardRenderer::Vulkan
 		void CreateDescriptorSetLayouts();
 		void CreatePushConstantRanges();
 
-		void SetImage2D_RT(const std::string& name, uint32_t index, Ref<VulkanImage2D> image);
-
 		std::string m_FilePath;
 
 		std::unordered_map<ShaderStage, Buffer> m_ShaderCode;

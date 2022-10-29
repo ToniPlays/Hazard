@@ -10,7 +10,8 @@ namespace UI
 	constexpr float colWidth = 100.0f;
 
 	template<typename T>
-	static bool ComponentMenuIfExists(Entity& e) {
+	static bool ComponentMenuIfExists(Entity& e) 
+	{
 		if (e.HasComponent<T>()) {
 			bool ret = ComponentMenu<T>(e, e.GetComponent<T>());
 			//const Style& style = StyleManager::GetCurrent();
@@ -24,7 +25,8 @@ namespace UI
 		static_assert(false);
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, TagComponent& c) {
+	static bool ComponentMenu(Entity& e, TagComponent& c)
+	{
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		ImUI::TextField(c.Tag);
@@ -126,7 +128,8 @@ namespace UI
 				uint32_t selected = (uint32_t)c.GetProjectionType();
 
 				//Projection type here
-				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected)) {
+				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected)) 
+				{
 					c.SetProjection((Projection)selected);
 				}
 				if (c.GetProjectionType() == Projection::Perspective) {
@@ -288,7 +291,7 @@ namespace UI
 				ImGui::EndDisabled();
 
 				ImGui::NextColumn();
-				ImUI::InputFloat("Contribution", c.IBLContribution, 1.0f, 0.05f, 0.0f, 1.0f);
+				ImUI::SliderFloat("LodLevel", c.LodLevel, 1.0f, 0.0f, 1.0f);
 				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
 				ImGui::Columns();
 

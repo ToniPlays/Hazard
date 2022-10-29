@@ -17,7 +17,6 @@ namespace HazardRenderer::Vulkan
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
 		m_LocalData.Allocate(m_Size * 32);
-		std::cout << fmt::format("Create UniformBuffer {0}, set {1}, binding {2}", m_Name, createInfo->Set, createInfo->Binding) << std::endl;
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
@@ -93,7 +92,7 @@ namespace HazardRenderer::Vulkan
 
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		m_BufferAllocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_UniformBuffer);
-		VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_BUFFER, m_Name, m_UniformBuffer);
+		VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_BUFFER, fmt::format("VkBuffer {0}", m_Name), m_UniformBuffer);
 
 		m_DescriptorInfo.offset = 0;
 		m_DescriptorInfo.range = m_LocalData.Size;

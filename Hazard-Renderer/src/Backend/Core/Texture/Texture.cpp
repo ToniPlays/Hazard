@@ -1,6 +1,7 @@
 #include "Texture.h"
 
 #include "Backend/OpenGL/OpenGLCore.h"
+#include "Backend/Vulkan/VulkanCore.h"
 
 namespace HazardRenderer {
 	Ref<CubemapTexture> CubemapTexture::Create(CubemapTextureCreateInfo* createInfo)
@@ -11,7 +12,7 @@ namespace HazardRenderer {
 		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLCubemapTexture>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		//case RenderAPI::Vulkan: return Ref<Vulkan::VulkanImage2D>::Create(info);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanCubemapTexture>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return nullptr;

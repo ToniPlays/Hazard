@@ -69,6 +69,7 @@ namespace HazardRenderer::OpenGL
 
 		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, m_MipLevels > 1 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR);
 		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		if (m_MipLevels > 1)
 			glGenerateTextureMipmap(m_ID);
 		/*

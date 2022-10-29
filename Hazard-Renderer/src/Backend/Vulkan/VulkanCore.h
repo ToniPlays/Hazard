@@ -15,5 +15,6 @@
 #include "Pipeline/VulkanShader.h"
 
 #include "Textures/VulkanImage2D.h"
+#include "Textures/VulkanCubemapTexture.h"
 
 #endif

@@ -37,7 +37,7 @@ namespace HazardRenderer::OpenGL
 		std::unordered_map<ShaderStage, Buffer> vulkanBinaries;
 		std::unordered_map<ShaderStage, Buffer> openGLbinaries;
 
-		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) != CacheStatus::None)
+		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) == CacheStatus::Exists)
 		{
 			vulkanBinaries = ShaderFactory::GetShaderBinaries(m_FilePath, RenderAPI::Vulkan);
 			openGLbinaries = ShaderFactory::GetShaderBinaries(m_FilePath, RenderAPI::OpenGL);
@@ -161,7 +161,7 @@ namespace HazardRenderer::OpenGL
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
 			auto& write = descriptor.GetWriteDescriptor(name);
-			if (write.ActualBinding == UINT32_MAX) 
+			if (write.ActualBinding == UINT32_MAX)
 				continue;
 
 			write.BoundValue[index] = image;
@@ -354,7 +354,8 @@ namespace HazardRenderer::OpenGL
 				descriptorSet.AddWriteDescriptor(writeDescriptor);
 
 				for (uint32_t i = 0; i < sampler.ArraySize; i++)
-					Set(sampler.Name, i, OpenGLContext::GetInstance().GetDefaultResources().WhiteTexture);
+					if (sampler.Dimension == 2)
+						Set(sampler.Name, i, OpenGLContext::GetInstance().GetDefaultResources().WhiteTexture);
 			}
 		}
 		for (auto& [set, storageImage] : m_ShaderData.StorageImages)

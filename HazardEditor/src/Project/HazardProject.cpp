@@ -6,7 +6,8 @@
 
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
-	if (!File::Exists(path)) {
+	if (!File::Exists(path)) 
+	{
 		HZR_FATAL(path.string());
 		HZR_ASSERT(false, "This needs to be fixed");
 	}
@@ -24,9 +25,8 @@ void HazardProject::ProcessAssets()
 	Timer timer;
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 	for (auto& item : File::GetAllInDirectory(assetPath)) 
-	{
 		ProcessAsset(item);
-	}
+
 	std::filesystem::path resPath = "res";
 	for (auto& item : File::GetAllInDirectory(resPath))
 	{

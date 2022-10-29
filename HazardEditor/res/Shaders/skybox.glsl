@@ -28,12 +28,13 @@ void main()
 
 layout(location = 0) in vec3 v_Position;
 
-//layout(set = 1, binding = 1) uniform samplerCube u_CubeMap;
+layout(set = 1, binding = 1) uniform samplerCube u_CubeMap;
 
 layout(location = 0) out vec4 OutputColor;
 
 void main() 
 {
-	vec3 color = vec3(0.5);//texture(u_CubeMap, v_Position).rgb;
+	int levelTexels = textureQueryLevels(u_CubeMap);
+	vec3 color = textureLod(u_CubeMap, v_Position, (u_Lights.EnvironmentLod * levelTexels)).rgb;
 	OutputColor = vec4(color * u_Lights.SkyLightIntensity, 1.0);
 }

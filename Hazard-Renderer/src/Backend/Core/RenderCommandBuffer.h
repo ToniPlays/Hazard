@@ -13,8 +13,21 @@ namespace HazardRenderer
 
 	enum MemoryBarrierFlags : uint32_t
 	{
-		MemoryBarrierBit_All = BIT(0)
+		MemoryBarrierBit_All = BIT(0),
+		MemoryBarrierBit_Image = BIT(1),
+		MemoryBarrierBit_Buffer = BIT(2)
 	};
+
+	struct MemoryBarrierInfo
+	{
+		MemoryBarrierFlags Flags;
+		Ref<Image2D> Image = nullptr;
+	};
+	struct ImageTransitionInfo
+	{
+		Ref<Image2D> Image = nullptr;
+	};
+
 
 	class RenderCommandBuffer : public RefCount
 	{
@@ -37,7 +50,8 @@ namespace HazardRenderer
 		virtual void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DispatchCompute(const LocalGroupSize& localGroupSize) = 0;
 
-		virtual void InsertMemoryBarrier(MemoryBarrierFlags flags) = 0;
+		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
+		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;
 
 		virtual void SetViewport(float x, float y, float width, float height) = 0;
 		virtual void SetLineSize(float size) = 0;

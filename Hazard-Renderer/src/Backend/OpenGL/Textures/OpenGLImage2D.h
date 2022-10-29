@@ -13,6 +13,7 @@ namespace HazardRenderer::OpenGL
 
 		void Invalidate() override;
 		void Release() override;
+		const std::string& GetDebugName() const override { return m_DebugName; };
 
 		uint32_t GetWidth() override { return m_Width; };
 		uint32_t GetHeight() override { return m_Height; };
@@ -28,7 +29,6 @@ namespace HazardRenderer::OpenGL
 
 		//OpenGL specific
 		size_t GetID() const { return m_ID; }
-		const std::string& GetDebugName() const { return m_DebugName; }
 		
 	private:
 		void SetImageData(const Buffer& buffer);
