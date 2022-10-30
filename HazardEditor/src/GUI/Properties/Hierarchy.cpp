@@ -24,15 +24,27 @@ namespace UI
 
 		renderer->SubmitExtra([=]() mutable {
 			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
-			auto& view = world->GetEntitiesWith<CameraComponent>();
-			for (auto entity : view) {
+			auto& cameraView = world->GetEntitiesWith<CameraComponent>();
+			for (auto entity : cameraView) {
 				Entity e = { entity, world.Raw() };
 				auto& tc = e.GetComponent<TransformComponent>();
 				auto& cc = e.GetComponent<CameraComponent>();
 				if (cc.GetProjectionType() == Projection::Perspective)
-					HRenderer::DrawPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-				else HRenderer::DrawOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+					HRenderer::SubmitPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+				else HRenderer::SubmitOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 			}
+
+			auto& meshView = world->GetEntitiesWith<MeshComponent>();
+			for (auto entity : meshView) {
+				Entity e = { entity, world.Raw() };
+				auto& tc = e.GetComponent<TransformComponent>();
+				auto& mc = e.GetComponent<MeshComponent>();
+
+				if (!mc.m_MeshHandle) continue;
+
+				HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
+			}
+
 			});
 	}
 	void Hierarchy::OnPanelRender()

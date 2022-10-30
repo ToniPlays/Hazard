@@ -13,4 +13,6 @@ layout(std140, binding = 2) uniform Camera {
 	uniform vec2 NDCToViewAdd;
 	uniform vec2 DepthUnpack;
 	uniform vec2 CameraTanHalfFOV;
+	uniform vec4 Unused;
+	uniform vec4 Unused2;
 } u_Camera;

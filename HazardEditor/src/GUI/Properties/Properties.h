@@ -22,9 +22,13 @@ namespace UI {
 	template<typename T>
 	inline void Properties::DrawAddComponentMenuIfNotExists(const char* title, Entity& e)
 	{
-		if (!e.HasComponent<T>()) {
+		if (!e.HasComponent<T>()) 
+		{
 			ImUI::MenuItem(title, [&]() {
-				e.AddComponent<T>();
+				Entity entity = e;
+				Application::Get().SubmitMainThread([entity]() mutable {
+					entity.AddComponent<T>();
+					});
 				});
 		}
 	}

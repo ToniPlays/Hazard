@@ -61,18 +61,10 @@ namespace HazardRenderer::OpenGL
 		{
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
 		}
-		else if (createInfo->pImageSrc)
-		{
-			Ref<Image2D> image = createInfo->pImageSrc->pSourceImage;
-			GenerateFromEquirectangular(image);
-		}
 		else if (createInfo->Data.Data)
 		{
 			for (uint8_t i = 0; i < 6; i++)
-			{
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,
-					m_Width, m_Height, 0, GL_RGB, GL_FLOAT, createInfo->Data.Data);
-			}
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F,	m_Width, m_Height, 0, GL_RGB, GL_FLOAT, createInfo->Data.Data);
 		}
 	}
 	void OpenGLCubemapTexture::Bind(uint32_t slot) const
@@ -82,29 +74,6 @@ namespace HazardRenderer::OpenGL
 			HZR_PROFILE_FUNCTION("OpenGLCubemapTexture::Bind(uint32_t) RT");
 			glBindTextureUnit(s, id);
 			});
-	}
-	void OpenGLCubemapTexture::GenerateFromEquirectangular(Ref<Image2D> sourceImage)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
-
-		PipelineSpecification pipelineSpec = {};
-		pipelineSpec.DebugName = "EquirectangularToCubemap";
-		pipelineSpec.ShaderPath = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
-		pipelineSpec.Usage = PipelineUsage::ComputeBit;
-
-		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
-
-		auto& shader = computePipeline->GetShader();
-		shader->Set("u_EquirectangularTexture", 0, sourceImage);
-		shader->Set("o_CubeMap", 0, this);
-
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
-		computeInfo.Pipeline = computePipeline;
-		computeInfo.WaitForCompletion = true;
-
-		commandBuffer->DispatchCompute(computeInfo);
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{

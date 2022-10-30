@@ -5,7 +5,11 @@
 #include "HazardRendererCore.h"
 #include <glm/glm.hpp>
 
+#include "BoundingBox.h"
+
 namespace Hazard {
+
+	struct MeshData;
 
 	struct Vertex3D
 	{
@@ -18,7 +22,7 @@ namespace Hazard {
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
-			return { 
+			return {
 				{ "a_Position",			ShaderDataType::Float3 },
 				{ "a_Color",			ShaderDataType::Float4 },
 				{ "a_Normal",			ShaderDataType::Float3 },
@@ -43,11 +47,11 @@ namespace Hazard {
 		std::string NodeName, MeshName;
 	};
 
-	class Mesh : public Asset 
+	class Mesh : public Asset
 	{
 	public:
 		Mesh() = default;
-		Mesh(const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices);
+		Mesh(const MeshData& data, const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices);
 		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline);
 		~Mesh() = default;
 
@@ -58,6 +62,7 @@ namespace Hazard {
 		Ref<HazardRenderer::VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<HazardRenderer::IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		Ref<HazardRenderer::Pipeline> GetPipeline() { return m_Pipeline; }
+		const BoundingBox& GetBoundingBox() { return m_BoundingBox; }
 
 	private:
 		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer = nullptr;
@@ -66,5 +71,7 @@ namespace Hazard {
 
 		Buffer m_LocalVertexData;
 		Buffer m_LocalIndexData;
+
+		BoundingBox m_BoundingBox;
 	};
 }

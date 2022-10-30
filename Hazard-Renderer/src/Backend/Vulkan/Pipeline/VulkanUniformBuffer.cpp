@@ -42,7 +42,6 @@ namespace HazardRenderer::Vulkan
 
 		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
 		Ref<VulkanUniformBuffer> instance = this;
-
 		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex, size]() mutable {
 			instance->SetData_RT(instance->m_LocalData.Data, instance->m_LocalData.Size);
 			});

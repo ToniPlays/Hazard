@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "BoundingBox.h"
 
 #include "Mesh.h"
 
@@ -54,7 +55,8 @@ namespace Hazard {
 	struct MeshData 
 	{
 		uint32_t Flags = 0;
-		uint32_t vertexIndex = 0, baseIndex = 0;
+		uint32_t VertexIndex = 0, BaseIndex = 0;
+		BoundingBox BoundingBox;
 		std::vector<SubMesh> SubMeshes;
 
 		std::vector<Vertex3D> Vertices;

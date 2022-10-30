@@ -6,12 +6,13 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "HazardRendererCore.h"
+#include "MeshCreateInfo.h"
 
 namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Mesh::Mesh(const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices)
+	Mesh::Mesh(const MeshData& data, const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -44,6 +45,7 @@ namespace Hazard
 		pipelineSpecs.DepthTest = true;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+		m_BoundingBox = data.BoundingBox;
 	}
 
 	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)

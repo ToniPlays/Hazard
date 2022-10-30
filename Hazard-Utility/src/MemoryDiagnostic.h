@@ -51,7 +51,7 @@ namespace Memory
 		}
 		void deallocate(T* p, std::size_t size) noexcept
 		{
-			std::free(p);
+			free(p);
 		}
 	};
 

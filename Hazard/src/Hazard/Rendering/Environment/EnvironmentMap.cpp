@@ -2,6 +2,7 @@
 #include "EnvironmentMap.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
+#include "Backend/Core/Texture/Texture.h"
 
 namespace Hazard
 {
@@ -40,18 +41,56 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
-		CubemapImageGen imageSrc = {};
-		imageSrc.pSourceImage = sourceImage->GetSourceImageAsset()->Value.As<Image2D>();
+		Ref<Image2D> image = sourceImage->GetSourceImageAsset()->Value.As<Image2D>();
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", 1, true);
+		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
 
 		CubemapTextureCreateInfo radianceInfo = {};
-		radianceInfo.DebugName = "RadianceMap " + imageSrc.pSourceImage->GetDebugName();
+		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
 		radianceInfo.Usage = ImageUsage::Texture;
 		radianceInfo.Width = 2048;
 		radianceInfo.Height = 2048;
 		radianceInfo.Format = ImageFormat::RGBA;
-		radianceInfo.pImageSrc = &imageSrc;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
+		ImageTransitionInfo generalTransition = {};
+		generalTransition.Cubemap = radianceMap;
+		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
+		generalTransition.DestLayout = ImageLayout_General;
+
+		PipelineSpecification pipelineSpec = {};
+		pipelineSpec.DebugName = "EquirectangularToCubemap";
+		pipelineSpec.ShaderPath = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
+		pipelineSpec.Usage = PipelineUsage::ComputeBit;
+
+		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
+
+		auto& shader = computePipeline->GetShader();
+		shader->Set("o_CubeMap", 0, radianceMap);
+		shader->Set("u_EquirectangularTexture", 0, image);
+
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { image->GetWidth() / 32, image->GetHeight() / 32, 6};
+		computeInfo.Pipeline = computePipeline;
+		computeInfo.WaitForCompletion = true;
+
+		ImageTransitionInfo shaderLayout = {};
+		shaderLayout.Cubemap = radianceMap;
+		shaderLayout.SourceLayout = ImageLayout_General;
+		shaderLayout.DestLayout = ImageLayout_ShaderReadOnly;
+
+		GenMipmapsInfo mipmapsInfo = {};
+		mipmapsInfo.Cubemap = radianceMap;
+
+		computeBuffer->Begin();
+		computeBuffer->DispatchCompute(computeInfo);
+		computeBuffer->End();
+		computeBuffer->Submit();
+
+		graphicsBuffer->Begin();
+		graphicsBuffer->GenerateMipmaps(mipmapsInfo);
+		graphicsBuffer->End();
+		graphicsBuffer->Submit();
 
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetMetadata radianceMetadata = {};
@@ -66,29 +105,46 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
+		CubemapTextureCreateInfo irradianceInfo = {};
+		irradianceInfo.DebugName = "IrradianceMap";
+		irradianceInfo.Width = 32;
+		irradianceInfo.Height = 32;
+		irradianceInfo.Usage = ImageUsage::Texture;
+		irradianceInfo.Format = ImageFormat::RGBA;
+		irradianceInfo.GenerateMips = true;
+
+		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
+
 		PipelineSpecification irradiancePipelineInfo = {};
 		irradiancePipelineInfo.DebugName = "EnvironmentIrradiance";
 		irradiancePipelineInfo.ShaderPath = "res/Shaders/Compute/EnvironmentIrradiance.glsl";
 		irradiancePipelineInfo.Usage = PipelineUsage::ComputeBit;
 
 		Ref<Pipeline> irradiancePipeline = Pipeline::Create(&irradiancePipelineInfo);
+		irradiancePipeline->GetShader()->Set("o_IrradianceMap", 0, irradianceMap);
 		irradiancePipeline->GetShader()->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
 
-		CubemapGen irradianceSource = {};
-		irradianceSource.OutputImageName = "o_IrradianceMap";
-		irradianceSource.pCubemap = radianceMap->Value.As<CubemapTexture>();
-		irradianceSource.Pipeline = irradiancePipeline;
 
-		CubemapTextureCreateInfo irradianceInfo = {};
-		irradianceInfo.DebugName = "IrradianceMap";
-		irradianceInfo.Width = 32;
-		irradianceInfo.Height = 32;
-		irradianceInfo.Usage = ImageUsage::Texture;
-		irradianceInfo.pCubemapSrc = &irradianceSource;
-		irradianceInfo.Format = ImageFormat::RGBA;
-		irradianceInfo.GenerateMips = true;
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
+		computeInfo.Pipeline = irradiancePipeline;
+		computeInfo.WaitForCompletion = true;
 
-		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
+		GenMipmapsInfo mipmapInfo = {};
+		mipmapInfo.Cubemap = irradianceMap;
+
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", 1, true);
+		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
+
+		computeBuffer->Begin();
+		computeBuffer->DispatchCompute(computeInfo);
+		computeBuffer->End();
+		computeBuffer->Submit();
+
+		graphicsBuffer->Begin();
+		graphicsBuffer->GenerateMipmaps(mipmapInfo);
+		graphicsBuffer->End();
+		graphicsBuffer->Submit();
 
 		IrradianceMap = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
 
@@ -99,6 +155,7 @@ namespace Hazard
 	}
 	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
 	{
+		/*
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
@@ -130,6 +187,7 @@ namespace Hazard
 		prefilterMetadata.Handle = PreFilterMap->GetHandle();
 		prefilterMetadata.Type = AssetType::EnvironmentMap;
 		AssetManager::AddRuntimeAsset(prefilterMetadata, PreFilterMap);
+		*/
 	}
 	Ref<EnvironmentMap> EnvironmentMap::Create(Ref<Texture2DAsset> sourceImage)
 	{

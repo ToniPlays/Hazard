@@ -238,6 +238,7 @@ namespace HazardRenderer::OpenGL
 			break;
 		case(GL_LINK_STATUS):
 			glGetProgramiv(id, type, &ret);
+
 			if (ret == false) {
 				int infologLength = 0;
 				glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infologLength);
@@ -248,9 +249,7 @@ namespace HazardRenderer::OpenGL
 				std::string message;
 
 				if (charsWritten)
-				{
 					message = std::string(infoLog.data());
-				}
 				Window::SendDebugMessage({ Severity::Error, "Shader linking failed", message });
 			}
 			break;
@@ -282,19 +281,16 @@ namespace HazardRenderer::OpenGL
 
 		if (linked == GL_FALSE)
 		{
-			GLint maxLen;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLen);
+			int infologLength = 0;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
+			std::vector<GLchar> infoLog(infologLength);
+			GLsizei charsWritten = 0;
 
-			std::vector<GLchar> infoLog(maxLen);
-			glGetShaderInfoLog(program, maxLen, &maxLen, infoLog.data());
-
+			glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog.data());
 			std::string message;
 
-			if (maxLen > 0)
-			{
+			if (charsWritten)
 				message = std::string(infoLog.data());
-			}
-
 			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", message });
 			glDeleteProgram(program);
 

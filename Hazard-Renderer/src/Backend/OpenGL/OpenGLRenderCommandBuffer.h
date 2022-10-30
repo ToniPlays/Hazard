@@ -12,7 +12,7 @@ namespace HazardRenderer::OpenGL
 {
 	class OpenGLRenderCommandBuffer : public RenderCommandBuffer {
 	public:
-		OpenGLRenderCommandBuffer(uint32_t size, const std::string& name);
+		OpenGLRenderCommandBuffer(uint32_t size, const std::string& name, bool compute = false);
 		OpenGLRenderCommandBuffer(const std::string& name, bool swapchain);
 		~OpenGLRenderCommandBuffer() = default;
 
@@ -34,8 +34,10 @@ namespace HazardRenderer::OpenGL
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
+
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override {};
+		void GenerateMipmaps(const GenMipmapsInfo& info) override {};
 
 		void SetViewport(float x, float y, float width, float height) override {};
 		void SetLineSize(float size) override {};

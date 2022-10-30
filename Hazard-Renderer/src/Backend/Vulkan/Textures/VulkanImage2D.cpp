@@ -228,8 +228,7 @@ namespace HazardRenderer::Vulkan
 		imageCopyRegion.imageSubresource.mipLevel = 0;
 		imageCopyRegion.imageSubresource.baseArrayLayer = 0;
 		imageCopyRegion.imageSubresource.layerCount = 1;
-		imageCopyRegion.imageExtent = { m_Width, m_Height };
-		imageCopyRegion.imageExtent.depth = 1;
+		imageCopyRegion.imageExtent = { m_Width, m_Height, 1 };
 		imageCopyRegion.bufferOffset = 0;
 
 		vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);

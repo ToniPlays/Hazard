@@ -45,6 +45,12 @@ namespace HazardRenderer
 		Ref<CubemapTexture> Cubemap = nullptr;
 	};
 
+	struct GenMipmapsInfo
+	{
+		Ref<Image2D> Image = nullptr;
+		Ref<CubemapTexture> Cubemap = nullptr;
+	};
+
 
 	class RenderCommandBuffer : public RefCount
 	{
@@ -69,6 +75,7 @@ namespace HazardRenderer
 
 		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
 		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;
+		virtual void GenerateMipmaps(const GenMipmapsInfo& info) = 0;
 
 		virtual void SetViewport(float x, float y, float width, float height) = 0;
 		virtual void SetLineSize(float size) = 0;
@@ -76,7 +83,7 @@ namespace HazardRenderer
 		virtual uint32_t GetFrameIndex() = 0;
 		virtual bool IsRecording() = 0;
 
-		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", uint32_t count = 0);
+		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", uint32_t count = 0, bool compute = false);
 		static Ref<RenderCommandBuffer> CreateFromSwapchain(const std::string& debugName = "");
 	};
 }

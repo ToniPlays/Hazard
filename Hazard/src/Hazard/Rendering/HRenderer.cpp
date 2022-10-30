@@ -130,42 +130,82 @@ namespace Hazard
 		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
 	}
 
-	void HRenderer::DrawPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
+	void HRenderer::SubmitBoundingBox(const glm::mat4& transform, const BoundingBox& boundingBox, const Color& color)
+	{
+		glm::vec4 c = { color.r, color.g, color.b, color.a };
+		auto& lineRenderer = s_Engine->GetLineRenderer();
+
+		glm::vec3 frontBottomLeft = transform * glm::vec4(boundingBox.MinX, boundingBox.MinY, boundingBox.MinZ, 1.0f);
+		glm::vec3 frontBottomRight = transform * glm::vec4(boundingBox.MaxX, boundingBox.MinY, boundingBox.MinZ, 1.0f);
+
+		glm::vec3 frontTopLeft = transform * glm::vec4(boundingBox.MinX, boundingBox.MaxY, boundingBox.MinZ, 1.0f);
+		glm::vec3 frontTopRight = transform * glm::vec4(boundingBox.MaxX, boundingBox.MaxY, boundingBox.MinZ, 1.0f);
+
+		glm::vec3 backBottomLeft = transform * glm::vec4(boundingBox.MinX, boundingBox.MinY, boundingBox.MaxZ, 1.0f);
+		glm::vec3 backBottomRight = transform * glm::vec4(boundingBox.MaxX, boundingBox.MinY, boundingBox.MaxZ, 1.0f);
+
+		glm::vec3 backTopLeft = transform * glm::vec4(boundingBox.MinX, boundingBox.MaxY, boundingBox.MaxZ, 1.0f);
+		glm::vec3 backTopRight = transform * glm::vec4(boundingBox.MaxX, boundingBox.MaxY, boundingBox.MaxZ, 1.0f);
+
+		//Draw bottom quad
+		lineRenderer.SubmitLine(frontBottomLeft, frontBottomRight, c);
+		lineRenderer.SubmitLine(frontBottomLeft, backBottomLeft, c);
+		lineRenderer.SubmitLine(frontBottomRight, backBottomRight, c);
+		lineRenderer.SubmitLine(backBottomLeft, backBottomRight, c);
+
+		//Draw top quad
+		lineRenderer.SubmitLine(frontTopLeft, frontTopRight, c);
+		lineRenderer.SubmitLine(frontTopLeft, backTopLeft, c);
+		lineRenderer.SubmitLine(frontTopRight, backTopRight, c);
+		lineRenderer.SubmitLine(backTopLeft, backTopRight, c);
+
+		//Draw the rest of it
+		lineRenderer.SubmitLine(frontTopLeft, frontBottomLeft, c);
+		lineRenderer.SubmitLine(frontTopRight, frontBottomRight, c);
+		lineRenderer.SubmitLine(backTopLeft, backBottomLeft, c);
+		lineRenderer.SubmitLine(backTopRight, backBottomRight, c);
+	}
+
+	void HRenderer::SubmitPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, clipping.x, clipping.y, aspectRatio);
 
+		auto& lineRenderer = s_Engine->GetLineRenderer();
+
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
 		}
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
 		}
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
 		}
 	}
-	void HRenderer::DrawOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
+	void HRenderer::SubmitOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBoundsOrtho(orientation, transform, size, clipping.x, clipping.y, aspectRatio);
 
+		auto& lineRenderer = s_Engine->GetLineRenderer();
+
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
 		}
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
 		}
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			s_Engine->GetLineRenderer().SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
+			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
 		}
 	}
 }

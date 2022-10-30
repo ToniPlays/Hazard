@@ -37,7 +37,10 @@ namespace Hazard
 		{
 			Vertex3D& v = result.Vertices[i];
 			if (data.Flags & MeshFlags_Positions)
+			{
 				v.Position = buffer.Read<glm::vec3>();
+				result.BoundingBox.Encapsulate(v.Position);
+			}
 			if (data.Flags & MeshFlags_VertexColors)
 				v.Color = buffer.Read<glm::vec4>();
 			if (data.Flags & MeshFlags_Normals)
@@ -177,15 +180,15 @@ namespace Hazard
 	{
 		SubMesh subMesh = data.SubMeshes.emplace_back();
 
-		subMesh.BaseVertex = data.vertexIndex;
-		subMesh.BaseIndex = data.baseIndex;
+		subMesh.BaseVertex = data.VertexIndex;
+		subMesh.BaseIndex = data.BaseIndex;
 		subMesh.MaterialIndex = mesh->mMaterialIndex;
 
 		subMesh.VertexCount = mesh->mNumVertices;
 		subMesh.IndexCount = mesh->mNumFaces * 3;
 
-		data.vertexIndex += subMesh.VertexCount;
-		data.baseIndex += subMesh.IndexCount;
+		data.VertexIndex += subMesh.VertexCount;
+		data.BaseIndex += subMesh.IndexCount;
 
 		subMesh.MeshName = mesh->mName.C_Str();
 
@@ -211,6 +214,8 @@ namespace Hazard
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
 
+			data.BoundingBox.Encapsulate(vertex.Position);
+
 			if (color != UINT32_MAX)
 			{
 				aiColor4D c = mesh->mColors[color][i];
@@ -218,6 +223,7 @@ namespace Hazard
 				vertex.Color.g = c.g;
 				vertex.Color.b = c.b;
 				vertex.Color.a = c.a;
+
 			}
 			HZR_ASSERT(mesh->HasNormals(), "We need normals");
 			{

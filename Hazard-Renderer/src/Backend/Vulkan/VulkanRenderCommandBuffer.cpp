@@ -18,15 +18,19 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t size, const std::string& name) : m_DebugName(std::move(name))
+	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t size, const std::string& name, bool compute) : m_DebugName(std::move(name))
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& device = VulkanContext::GetLogicalDevice();
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
+		auto& queueIndices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
+
+		m_SubmitQueue = compute ? device->GetComputeQueue() : device->GetGraphicsQueue();
+
 		VkCommandPoolCreateInfo cmdPoolInfo = {};
 		cmdPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		cmdPoolInfo.queueFamilyIndex = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices().Graphics;
+		cmdPoolInfo.queueFamilyIndex = compute ? queueIndices.Compute : queueIndices.Graphics;
 		cmdPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 		VK_CHECK_RESULT(vkCreateCommandPool(device->GetVulkanDevice(), &cmdPoolInfo, nullptr, &m_CommandPool), "Failed to create Command Pool");
@@ -138,6 +142,10 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkCreateQueryPool(device->GetVulkanDevice(), &queryPoolCreateInfo, nullptr, &queryPool), "Failed to create QueryPool");
 
 		m_PipelineStatisticQueryResults.resize(framesInFlight);
+
+		m_ActiveCommandBuffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
+
+		m_SubmitQueue = device->GetGraphicsQueue();
 	}
 	VulkanRenderCommandBuffer::~VulkanRenderCommandBuffer()
 	{
@@ -145,61 +153,122 @@ namespace HazardRenderer::Vulkan
 		if (m_OwnedBySwapchain) return;
 
 		VkCommandPool commandPool = m_CommandPool;
-		Renderer::SubmitResourceFree([commandPool]() mutable {
-			auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-			vkDestroyCommandPool(device, commandPool, nullptr);
-			});
+		auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		vkDestroyCommandPool(device, commandPool, nullptr);
 	}
 	void VulkanRenderCommandBuffer::Begin()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_TimestampNextAvailQuery = 2;
-		Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
-
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		VkCommandBuffer buffer;
 		if (m_OwnedBySwapchain)
-			buffer = swapchain->GetCurrentDrawCommandBuffer();
-		else
-			buffer = m_CommandBuffers[frameIndex];
+		{
+			instance->m_State = State::Record;
+			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
+			VkCommandBuffer buffer = swapchain->GetCurrentDrawCommandBuffer();
 
-		m_ActiveCommandBuffer = buffer;
+			VkCommandBufferBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-		VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
+			instance->m_ActiveCommandBuffer = buffer;
 
-		//vkCmdResetQueryPool(buffer, m_TimestampQueryPools[frameIndex], 0, m_TimestampQueryCount);
-		//vkCmdWriteTimestamp(buffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 0);
+			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
 
-		//vkCmdResetQueryPool(buffer, m_PipelineQueryPools[frameIndex], 0, m_PipelineQueryCount);
-		//vkCmdBeginQuery(buffer, m_PipelineQueryPools[frameIndex], 0, 0);
+			return;
+		}
+
+		Renderer::Submit([instance]() mutable {
+			instance->m_TimestampNextAvailQuery = 2;
+			instance->m_State = State::Record;
+
+			VkCommandBuffer buffer = instance->m_CommandBuffers[0];
+
+			VkCommandBufferBeginInfo beginInfo = {};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+			instance->m_ActiveCommandBuffer = buffer;
+
+			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
+
+			//vkCmdResetQueryPool(buffer, m_TimestampQueryPools[frameIndex], 0, m_TimestampQueryCount);
+			//vkCmdWriteTimestamp(buffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 0);
+
+			//vkCmdResetQueryPool(buffer, m_PipelineQueryPools[frameIndex], 0, m_PipelineQueryCount);
+			//vkCmdBeginQuery(buffer, m_PipelineQueryPools[frameIndex], 0, 0);
+			});
 	}
 	void VulkanRenderCommandBuffer::End()
 	{
 		HZR_PROFILE_FUNCTION();
-		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 
-		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
-		//vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 1);
-		//vkCmdEndQuery(commandBuffer, m_PipelineQueryPools[frameIndex], 0);
-		VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end command buffer");
+		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		m_ActiveCommandBuffer = nullptr;
+		if (m_OwnedBySwapchain)
+		{
+			vkEndCommandBuffer(m_ActiveCommandBuffer);
+			m_State = State::Finished;
+			return;
+		}
+
+
+		Renderer::Submit([instance]() mutable {
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			instance->m_State = State::Finished;
+			VkCommandBuffer commandBuffer = instance->m_ActiveCommandBuffer;
+			//vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[frameIndex], 1);
+			//vkCmdEndQuery(commandBuffer, m_PipelineQueryPools[frameIndex], 0);
+			VK_CHECK_RESULT(vkEndCommandBuffer(commandBuffer), "Failed to end command buffer");
+
+			instance->m_ActiveCommandBuffer = nullptr;
+			});
 	}
 	void VulkanRenderCommandBuffer::Submit()
 	{
 		HZR_PROFILE_FUNCTION();
 		if (m_OwnedBySwapchain) return;
+
+
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance]() mutable {
+
+			HZR_ASSERT(instance->m_State == State::Finished, "Command buffer not in recording state");
+			instance->m_State = State::Submit;
+			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+
+			if (!s_ComputeFence)
+			{
+				VkFenceCreateInfo fenceCreateInfo = {};
+				fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+				fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+				VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceCreateInfo, nullptr, &s_ComputeFence), "");
+			}
+
+			VkSubmitInfo submitInfo = {};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.commandBufferCount = instance->m_CommandBuffers.size();
+			submitInfo.pCommandBuffers = instance->m_CommandBuffers.data();
+
+			vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX);
+			vkResetFences(device->GetVulkanDevice(), 1, &s_ComputeFence);
+
+			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, s_ComputeFence), "");
+			{
+				Timer timer;
+				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
+				std::cout << "Compute took " << timer.ElapsedMillis() << std::endl;
+			}
+			});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Ref<RenderPass> pass = renderPass;
+
 		Renderer::Submit([instance, pass, explicitClear]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BeginRenderPass");
 			instance->BeginRenderPass_RT(pass, explicitClear);
@@ -208,6 +277,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_ASSERT(m_State == State::Record, "Command buffer not in recording state");
 		auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 		auto& fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
@@ -272,6 +342,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::EndRenderPass");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 			});
 	}
@@ -283,6 +354,7 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, binding]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindVertexBuffer");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
 			VkDeviceSize offsets = { 0 };
 			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
@@ -298,8 +370,15 @@ namespace HazardRenderer::Vulkan
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
+		float lineWidth = pipeline->GetSpecifications().LineWidth;
+		if (lineWidth > 1.0f)
+		{
+			SetLineSize(lineWidth);
+		}
+
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindPipeline");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipeline);
 			});
@@ -311,13 +390,14 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<VulkanIndexBuffer> buffer = indexBuffer.As<VulkanIndexBuffer>();
+		Ref<VulkanIndexBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanIndexBuffer>() : nullptr;
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		auto& offsets = m_CurrentPipeline->GetShader().As<VulkanShader>()->GetDynamicOffsets();
 
 		Renderer::Submit([instance, buffer, count, instanceCount, offsets, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			auto& shader = pipeline->GetShader().As<VulkanShader>();
 			auto layout = pipeline->GetPipelineLayout();
@@ -342,6 +422,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, info = computeInfo]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			auto& pipeline = info.Pipeline.As<VulkanPipeline>();
 			auto vkPipeline = pipeline->GetVulkanPipeline();
@@ -349,46 +430,13 @@ namespace HazardRenderer::Vulkan
 			auto layout = pipeline->GetPipelineLayout();
 			auto& descriptorSets = shader->GetVulkanDescriptorSets();
 
-			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
-			VkQueue computeQueue = device->GetComputeQueue();
-
-			//VkCommandBuffer commandBuffer = device->GetCommandBuffer(true, true);
-			VkCommandBuffer commandBuffer = device->GetCommandBuffer(true, true);
-
 			LocalGroupSize size = info.GroupSize;
 
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
-			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
+			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
 				descriptorSets.size(), descriptorSets.data(), 0, nullptr);
 
-			vkCmdDispatch(commandBuffer, size.x, size.y, size.z);
-
-			vkEndCommandBuffer(commandBuffer);
-
-			if (!s_ComputeFence)
-			{
-				VkFenceCreateInfo fenceCreateInfo = {};
-				fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-				fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-				VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceCreateInfo, nullptr, &s_ComputeFence), "");
-			}
-
-			vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX);
-			vkResetFences(device->GetVulkanDevice(), 1, &s_ComputeFence);
-
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &commandBuffer;
-
-			VK_CHECK_RESULT(vkQueueSubmit(computeQueue, 1, &submitInfo, s_ComputeFence), "");
-			{
-				Timer timer;
-				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
-				std::cout << fmt::format("Dispatch compute {0}, [{1}, {2}, {3}] took {4} ms", 
-					pipeline->GetSpecifications().DebugName, size.x, size.y, size.z, timer.ElapsedMillis()) << std::endl;
-			}
+			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
 			});
 	}
 	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
@@ -400,6 +448,7 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline, barrierInfo = info, image, cubemap]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::InsertMemoryBarrier");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			auto device = VulkanContext::GetLogicalDevice();
 			std::vector<VkImageMemoryBarrier> barriers;
 
@@ -460,7 +509,9 @@ namespace HazardRenderer::Vulkan
 		VkImageLayout layout = cubemap->GetImageDescriptor().imageLayout;
 
 		Renderer::Submit([instance, transitionInfo = info, cubemap, layout]() mutable {
+
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TransitionImageLayout");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			HZR_ASSERT(transitionInfo.Image || transitionInfo.Cubemap, "What are you doing");
 
 			if (transitionInfo.Image)
@@ -491,6 +542,15 @@ namespace HazardRenderer::Vulkan
 				);
 				cubemap->SetImageLayout(VkUtils::GetVulkanImageLayout(transitionInfo.DestLayout));
 			}
+			});
+	}
+	void VulkanRenderCommandBuffer::GenerateMipmaps(const GenMipmapsInfo& info)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, mips = info]() mutable {
+
+			if (mips.Cubemap) 
+				mips.Cubemap.As<VulkanCubemapTexture>()->GenerateMipmaps_RT(instance->m_ActiveCommandBuffer);
 			});
 	}
 	void VulkanRenderCommandBuffer::SetViewport(float x, float y, float width, float height)

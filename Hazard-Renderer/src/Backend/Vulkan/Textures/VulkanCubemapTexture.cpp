@@ -87,15 +87,10 @@ namespace HazardRenderer::Vulkan
 		{
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
 		}
-		else if (createInfo->pImageSrc)
-		{
-			Ref<Image2D> image = createInfo->pImageSrc->pSourceImage;
-			GenerateFromEquirectangular(image);
-		}
 
 		if (m_MipLevels > 1 && createInfo->Data)
 			Renderer::SubmitResourceCreate([instance]() mutable {
-			instance->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_GENERAL);
+			//instance->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_GENERAL);
 				});
 	}
 	void VulkanCubemapTexture::Bind(uint32_t slot) const
@@ -104,55 +99,6 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([s = slot]() mutable {
 			HZR_PROFILE_FUNCTION("VulkanCubemapTexture::Bind(uint32_t) RT");
 			});
-	}
-	void VulkanCubemapTexture::GenerateFromEquirectangular(Ref<Image2D> sourceImage)
-	{
-		HZR_PROFILE_FUNCTION();
-		ImageTransitionInfo generalTransition = {};
-		generalTransition.Cubemap = this;
-		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
-		generalTransition.DestLayout = ImageLayout_General;
-
-		Ref<CubemapTexture> instance = this;
-
-		auto& commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
-		commandBuffer->TransitionImageLayout(generalTransition);
-
-		PipelineSpecification pipelineSpec = {};
-		pipelineSpec.DebugName = "EquirectangularToCubemap";
-		pipelineSpec.ShaderPath = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
-		pipelineSpec.Usage = PipelineUsage::ComputeBit;
-
-		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
-
-		auto& shader = computePipeline->GetShader();
-		shader->Set("o_CubeMap", 0, this);
-		shader->Set("u_EquirectangularTexture", 0, sourceImage);
-
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
-		computeInfo.Pipeline = computePipeline;
-		computeInfo.WaitForCompletion = true;
-
-		commandBuffer->DispatchCompute(computeInfo);
-
-		MemoryBarrierInfo barrier = {};
-		barrier.Flags = MemoryBarrierBit_All;
-		barrier.Cubemap = this;
-		commandBuffer->InsertMemoryBarrier(barrier);
-
-		ImageTransitionInfo shaderLayout = {};
-		shaderLayout.Cubemap = this;
-		shaderLayout.SourceLayout = ImageLayout_General;
-		shaderLayout.DestLayout = ImageLayout_ShaderReadOnly;
-
-		commandBuffer->TransitionImageLayout(shaderLayout);
-
-		Renderer::Submit([inst = instance.As<VulkanCubemapTexture>()]() mutable {
-			if (inst->m_MipLevels <= 1)
-				return;
-			inst->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		});
 	}
 	void VulkanCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
@@ -172,7 +118,7 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanCubemapTexture> instance = this;
 		Renderer::Submit([instance]() mutable {
-			instance->GenerateMipmaps_RT();
+			//instance->GenerateMipmaps_RT();
 			});
 	}
 	void VulkanCubemapTexture::CreateImageView_RT()
@@ -243,12 +189,10 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_ImageDescriptor.sampler), "Failed to create VulkanCubemap sampler");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_DebugName), m_ImageDescriptor.sampler);
 	}
-	void VulkanCubemapTexture::GenerateMipmaps_RT(VkImageLayout imageLayout)
+	void VulkanCubemapTexture::GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout)
 	{
 		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
-
-		const VkCommandBuffer blitCmd = VulkanContext::GetInstance()->GetLogicalDevice()->GetCommandBuffer(true);
 
 		for (uint32_t face = 0; face < 6; face++)
 		{
@@ -259,7 +203,7 @@ namespace HazardRenderer::Vulkan
 			range.levelCount = m_MipLevels;
 			range.layerCount = 1;
 
-			VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
+			VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
 				0, VK_ACCESS_TRANSFER_WRITE_BIT,
 				VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -296,7 +240,7 @@ namespace HazardRenderer::Vulkan
 				mipSubRange.layerCount = 1;
 
 				// Prepare current mip level as image blit destination
-				VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
+				VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
 					0, VK_ACCESS_TRANSFER_WRITE_BIT,
 					VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 					VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -304,7 +248,7 @@ namespace HazardRenderer::Vulkan
 
 				// Blit from previous level
 				vkCmdBlitImage(
-					blitCmd,
+					commandBuffer,
 					m_Image,
 					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 					m_Image,
@@ -314,7 +258,7 @@ namespace HazardRenderer::Vulkan
 					VK_FILTER_LINEAR);
 
 				// Prepare current mip level as image blit source for next level
-				VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
+				VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
 					VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
 					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 					VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -329,14 +273,13 @@ namespace HazardRenderer::Vulkan
 
 		m_ImageDescriptor.imageLayout = imageLayout;
 
-		VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
+		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
 			VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_ImageDescriptor.imageLayout,
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 			subRange);
 
 		std::cout << "Mipmap Transition of " << m_DebugName << " to " << VkUtils::ImageLayoutToString(m_ImageDescriptor.imageLayout) << std::endl;
-		VulkanContext::GetInstance()->GetLogicalDevice()->FlushCommandBuffer(blitCmd);
 	}
 }
 #endif

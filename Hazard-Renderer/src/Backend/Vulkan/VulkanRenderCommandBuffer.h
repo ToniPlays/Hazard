@@ -23,7 +23,7 @@ namespace HazardRenderer::Vulkan
 
 	class VulkanRenderCommandBuffer : public RenderCommandBuffer {
 	public:
-		VulkanRenderCommandBuffer(uint32_t size = 0, const std::string& name = "");
+		VulkanRenderCommandBuffer(uint32_t size = 0, const std::string& name = "", bool compute = false);
 		VulkanRenderCommandBuffer(const std::string& name, bool swapchain);
 		~VulkanRenderCommandBuffer();
 
@@ -48,6 +48,7 @@ namespace HazardRenderer::Vulkan
 
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override;
+		void GenerateMipmaps(const GenMipmapsInfo& info) override;
 
 		void SetViewport(float x, float y, float width, float height) override;
 		void SetLineSize(float size) override;
@@ -80,6 +81,8 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
 
 		State m_State = State::Waiting;
+		VkQueue m_SubmitQueue = VK_NULL_HANDLE;
+
 		inline static VkFence s_ComputeFence = VK_NULL_HANDLE;
 	};
 }

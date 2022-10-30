@@ -30,14 +30,12 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }
 		VkImage GetVulkanImage() { return m_Image; }
 
-
+		void GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	private:
-		void GenerateFromEquirectangular(Ref<Image2D> sourceImage);
 		void GenerateFromCubemap(CubemapGen& generationData);
 
 		void CreateImageView_RT();
 		void CreateSampler_RT();
-		void GenerateMipmaps_RT(VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		void SetImageLayout(VkImageLayout layout) { m_ImageDescriptor.imageLayout = layout; };
 	private:

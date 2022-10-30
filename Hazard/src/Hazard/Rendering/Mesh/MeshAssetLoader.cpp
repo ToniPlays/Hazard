@@ -21,7 +21,7 @@ namespace Hazard
 
 		factory.SetOptimization((MeshLoaderFlags)flags);
 		MeshData meshData = factory.LoadMeshFromCacheOrReload(metadata.Handle, metadata.Path);
-		asset = Ref<Mesh>::Create(meshData.Vertices, meshData.Indices);
+		asset = Ref<Mesh>::Create(meshData, meshData.Vertices, meshData.Indices);
 		return asset;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)

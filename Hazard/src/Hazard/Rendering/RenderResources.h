@@ -17,6 +17,8 @@ namespace Hazard
 		glm::vec2 NDCToViewAdd;
 		glm::vec2 DepthUnpack;
 		glm::vec2 CameraTanHalfFOV;
+		glm::vec4 Unused;
+		glm::vec4 Unused2;
 	};
 
 	struct ModelData

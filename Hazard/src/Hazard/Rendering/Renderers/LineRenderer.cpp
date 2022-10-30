@@ -13,7 +13,7 @@ namespace Hazard
 	void LineRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr uint32_t lineCount = 5000;
+		constexpr size_t lineCount = 5000;
 		m_Data.MaxLineCount = lineCount;
 		m_Data.MaxVertices = lineCount * 2;
 
@@ -45,7 +45,6 @@ namespace Hazard
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch.GetCount());
 	}
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3 endPos, const glm::vec4& color)
@@ -57,6 +56,7 @@ namespace Hazard
 			Flush();
 			BeginScene();
 		}
+
 		LineVertex startVertex = {};
 		startVertex.Position = startPos;
 		startVertex.Color = color;

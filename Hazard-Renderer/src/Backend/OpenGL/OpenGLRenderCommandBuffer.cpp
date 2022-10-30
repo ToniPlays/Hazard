@@ -9,7 +9,7 @@
 
 namespace HazardRenderer::OpenGL
 {
-	OpenGLRenderCommandBuffer::OpenGLRenderCommandBuffer(uint32_t size, const std::string& name)
+	OpenGLRenderCommandBuffer::OpenGLRenderCommandBuffer(uint32_t size, const std::string& name, bool compute)
 	{
 		m_Swapchain = OpenGLContext::GetInstance().GetSwapchain();
 	}
