@@ -13,6 +13,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanFrameBuffer::VulkanFrameBuffer(FrameBufferCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Specs.DebugName = info->DebugName;
 		m_Specs.AttachmentCount = info->AttachmentCount;
 		m_Specs.ClearColor = info->ClearColor;
@@ -77,6 +78,7 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanFrameBuffer::~VulkanFrameBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		Release();
 	}
 	void VulkanFrameBuffer::Resize(uint32_t width, uint32_t height, bool force)
@@ -198,7 +200,7 @@ namespace HazardRenderer::Vulkan
 			m_ColorAttachments.clear();
 
 		uint32_t attachmentImageIndex = 0;
-		for (auto spec : m_Specs.Attachments)
+		for (auto& spec : m_Specs.Attachments)
 		{
 			if (spec.IsDepth())
 			{
@@ -280,11 +282,11 @@ namespace HazardRenderer::Vulkan
 						else if (colorAttachment->GetLayerCount() == 0 && m_ExistingImageLayers[0] == 0)
 						{
 							colorAttachment->Invalidate_RT();
-							__debugbreak();
+							HZR_ASSERT(false, "TODO");
 						}
 						else if (attachmentImageIndex == 0)
 						{
-							__debugbreak();
+							HZR_ASSERT(false, "TODO");
 						}
 					}
 
@@ -380,14 +382,15 @@ namespace HazardRenderer::Vulkan
 		for (uint32_t i = 0; i < m_ColorAttachments.size(); i++)
 		{
 			Ref<VulkanImage2D> image = m_ColorAttachments[i];
-			if (image->GetLayerCount() > 1)
-				__debugbreak();
-			else attachmentViews[i] = image->GetImageDescriptor().imageView;
+			HZR_ASSERT(image->GetLayerCount() <= 1, "TODO");
+			attachmentViews[i] = image->GetImageDescriptor().imageView;
 		}
 		if (m_DepthAttachmentImage)
 		{
-			if (m_ExistingImage)
-				__debugbreak();
+			if (m_ExistingImage) 
+			{
+				HZR_ASSERT(false, "TODO");
+			}
 			else
 				attachmentViews.emplace_back(m_DepthAttachmentImage->GetImageDescriptor().imageView);
 		}

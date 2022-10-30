@@ -24,11 +24,13 @@ namespace HazardRenderer::Vulkan
 
     VulkanShaderCompiler::~VulkanShaderCompiler()
     {
+        HZR_PROFILE_FUNCTION();
         m_ResultBinary.Release();
     }
 
     bool VulkanShaderCompiler::Compile(CompileInfo* compileInfo)
     {
+        HZR_PROFILE_FUNCTION();
         Timer timer;
         std::cout << "Compiling: " << Utils::ShaderStageToString((uint32_t)compileInfo->Stage) << std::endl;
 

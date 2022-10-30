@@ -24,11 +24,13 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanShader::VulkanShader(const std::string& filePath) : m_FilePath(filePath)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(!filePath.empty(), "Shader path cannot be empty");
 		Reload();
 	}
 	VulkanShader::~VulkanShader()
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::SubmitResourceFree([modules = m_ShaderModules]() mutable {
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 			for (auto& shader : modules)
@@ -37,6 +39,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Reload()
 	{
+		HZR_PROFILE_FUNCTION();
 		Timer timer;
 
 		std::unordered_map<ShaderStage, Buffer> binaries;
@@ -90,6 +93,7 @@ namespace HazardRenderer::Vulkan
 	}
 	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& uniformBuffer = m_UniformBuffers[set][binding];
 		if (!uniformBuffer) HZR_ASSERT(false, "");
 		//HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
@@ -98,6 +102,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanShader> instance = this;
 		Ref<VulkanImage2D> vulkanImage = image.As<VulkanImage2D>();
 
@@ -118,6 +123,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanShader> instance = this;
 		Ref<VulkanCubemapTexture> vulkanCubemap = cubemap.As<VulkanCubemapTexture>();
 		Renderer::Submit([instance, vulkanCubemap, index, name]() mutable {
@@ -129,6 +135,7 @@ namespace HazardRenderer::Vulkan
 				if (set.Contains(name))
 				{
 					uint32_t binding = set.GetIndex(name);
+					//std::cout << " " << VkUtils::ImageLayoutToString(vulkanCubemap->GetImageDescriptor().imageLayout) << " " << name << std::endl;
 					set.SetSampler(set.GetIndex(name), index, vulkanCubemap->GetImageDescriptor());
 					return;
 				}
@@ -137,10 +144,11 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	std::vector<VkDescriptorSetLayout> VulkanShader::GetAllDescriptorSetLayouts()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 		std::vector<VkDescriptorSetLayout> result(m_DescriptorSets[frameIndex].size());
 
@@ -151,16 +159,19 @@ namespace HazardRenderer::Vulkan
 	}
 	VkDescriptorSetLayout& VulkanShader::GetDescriptorSetLayout(uint32_t index)
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 		return m_DescriptorSets[frameIndex][index].GetLayout();
 	}
 	std::vector<VulkanDescriptorSet>& VulkanShader::GetDescriptorSets()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 		return m_DescriptorSets[frameIndex];
 	}
 	std::vector<VkDescriptorSet> VulkanShader::GetVulkanDescriptorSets()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 		std::vector<VkDescriptorSet> result(m_DescriptorSets[frameIndex].size());
 
@@ -171,6 +182,7 @@ namespace HazardRenderer::Vulkan
 	}
 	const std::vector<uint32_t>& VulkanShader::GetDynamicOffsets()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t i = 0;
 		for (auto& [set, buffers] : m_UniformBuffers)
 		{
@@ -184,6 +196,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
+		HZR_PROFILE_FUNCTION();
 		Timer timer;
 		m_ShaderData.Stages.clear();
 
@@ -224,6 +237,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::CreateShaderModules()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		uint32_t index = 0;
 
@@ -250,6 +264,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::CreateDescriptorSetLayouts()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
 		uint32_t imagesInFlight = VulkanContext::GetImagesInFlight();
@@ -259,7 +274,7 @@ namespace HazardRenderer::Vulkan
 			for (uint32_t set = 0; set < m_DescriptorSets[frame].size(); set++)
 			{
 				auto& descriptorSet = m_DescriptorSets[frame][set];
-				descriptorSet.SetDebugName(m_FilePath + " set " + std::to_string(set));
+				descriptorSet.SetDebugName(File::GetName(m_FilePath) + " set " + std::to_string(set));
 				descriptorSet.ReserveBindings(m_ShaderData.UniformsDescriptions[set].size() + m_ShaderData.ImageSamplers[set].size());
 
 
@@ -350,7 +365,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanShader::CreatePushConstantRanges()
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 }
 #endif

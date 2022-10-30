@@ -42,6 +42,7 @@ namespace HazardRenderer
 	}
 	CacheStatus ShaderFactory::HasCachedShader(const std::filesystem::path& path, RenderAPI api)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto cachePath = GetCachedFilePath(path, api);
 		if (File::IsNewerThan(path, cachePath)) 
 			return CacheStatus::Outdated;
@@ -51,6 +52,7 @@ namespace HazardRenderer
 
 	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)
 	{
+		HZR_PROFILE_FUNCTION();
 		//Determine cache size
 		size_t size = 0;
 		for (auto& [stage, shaderCode] : binaries)
@@ -80,6 +82,7 @@ namespace HazardRenderer
 
 	std::unordered_map<ShaderStage, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
 		std::string sourceFile = File::ReadFile(path);
 		std::unordered_map<ShaderStage, std::string> result;
@@ -103,6 +106,7 @@ namespace HazardRenderer
 	}
 	std::unordered_map<ShaderStage, Buffer> ShaderFactory::GetShaderBinaries(const std::filesystem::path& path, RenderAPI api)
 	{
+		HZR_PROFILE_FUNCTION();
 		CachedBuffer buffer = File::ReadBinaryFile(GetCachedFilePath(path, api));
 		std::unordered_map<ShaderStage, Buffer> result;
 
@@ -119,6 +123,7 @@ namespace HazardRenderer
 	}
 	bool ShaderFactory::PreprocessIncludes(const std::filesystem::path& path, std::string& source)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::string token = "#include";
 		size_t offset = 0;
 		
@@ -145,6 +150,7 @@ namespace HazardRenderer
 	}
 	std::filesystem::path ShaderFactory::GetCachedFilePath(const std::filesystem::path& path, RenderAPI api)
 	{
+		HZR_PROFILE_FUNCTION();
 		std::string name = File::GetNameNoExt(path);
 		std::string extension = GetRendererCache(api);
 		return s_CacheDir / (name + "." + extension + ".hzrche");

@@ -22,7 +22,7 @@ namespace HazardRenderer::Vulkan
 		writeSet.Set.dstArrayElement = index;
 		writeSet.Set.pImageInfo = &info;
 
-		//std::cout << fmt::format("{3} Sampler {0} binding {1} index {2}", writeSet.name, binding, index, m_DebugName) << std::endl;
+		//std::cout << fmt::format("{3} Sampler {0} [{1}, {2}]", writeSet.name, binding, index, m_DebugName) << std::endl;
 
 		vkUpdateDescriptorSets(device, 1, &writeSet.Set, 0, nullptr);
 	}

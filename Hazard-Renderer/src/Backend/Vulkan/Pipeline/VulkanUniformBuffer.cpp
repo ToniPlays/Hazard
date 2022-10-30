@@ -12,6 +12,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanUniformBuffer::VulkanUniformBuffer(UniformBufferCreateInfo* createInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Name = createInfo->Name;
 		m_Binding = createInfo->Binding;
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
@@ -25,10 +26,12 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanUniformBuffer::~VulkanUniformBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		Release();
 	}
 	void VulkanUniformBuffer::SetData(const void* data, size_t size)
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 
 		if (m_FrameIndex != frameIndex)
@@ -48,6 +51,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::Release()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_BufferAllocation) return;
 
 		VkBuffer buffer = m_UniformBuffer;
@@ -65,6 +69,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::Release_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_BufferAllocation) return;
 
 		VulkanAllocator allocator("VulkanUniformBuffer");
@@ -76,6 +81,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::Invalidate_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		Release_RT();
 
 		auto device = VulkanContext::GetLogicalDevice();
@@ -100,6 +106,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanUniformBuffer::SetData_RT(void* data, uint32_t size, uint32_t offset)
 	{
+		HZR_PROFILE_FUNCTION();
 		VulkanAllocator allocator("VulkanUniformBuffer");
 		uint8_t* dstData = allocator.MapMemory<uint8_t>(m_BufferAllocation);
 		memcpy(dstData + offset, (uint8_t*)m_LocalData.Data + offset, size);

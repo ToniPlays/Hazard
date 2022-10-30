@@ -24,70 +24,64 @@ namespace HazardRenderer::Vulkan
 		m_DebugName = createInfo->DebugName;
 		m_Usage = createInfo->Usage;
 
-		if (createInfo->pCubemapSrc)
-		{
-			m_Width = createInfo->pCubemapSrc->pCubemap->GetWidth();
-			m_Height = createInfo->pCubemapSrc->pCubemap->GetWidth();
-		}
-		else
-		{
-			m_Width = createInfo->Width;
-			m_Height = createInfo->Height;
-		}
+		m_Width = createInfo->Width;
+		m_Height = createInfo->Height;
 
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 
 		m_MipLevels = createInfo->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
 
-		const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
+		Ref<VulkanCubemapTexture> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
 
-		VulkanAllocator allocator("VulkanCubemap");
+			const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
-		VkImageUsageFlags usage = VK_IMAGE_USAGE_SAMPLED_BIT;
-		usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-		usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-		usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+			VulkanAllocator allocator("VulkanCubemap");
 
-		VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			VkImageUsageFlags usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+			usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+			usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+			usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+
+			VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 
 
-		VkImageCreateInfo imageCreateInfo = {};
-		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageCreateInfo.format = VkUtils::VulkanImageFormat(m_Format);
-		imageCreateInfo.extent.width = m_Width;
-		imageCreateInfo.extent.height = m_Height;
-		imageCreateInfo.extent.depth = 1;
-		imageCreateInfo.mipLevels = m_MipLevels;
-		imageCreateInfo.arrayLayers = 6;
-		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageCreateInfo.usage = usage;
-		imageCreateInfo.flags |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+			VkImageCreateInfo imageCreateInfo = {};
+			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+			imageCreateInfo.format = VkUtils::VulkanImageFormat(instance->m_Format);
+			imageCreateInfo.extent.width = instance->m_Width;
+			imageCreateInfo.extent.height = instance->m_Height;
+			imageCreateInfo.extent.depth = 1;
+			imageCreateInfo.mipLevels = instance->m_MipLevels;
+			imageCreateInfo.arrayLayers = 6;
+			imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+			imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+			imageCreateInfo.usage = usage;
+			imageCreateInfo.flags |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
-		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+			instance->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
 
-		m_Allocation = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Image);
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanCubemap {0}", m_DebugName), m_Image);
+			instance->m_Allocation = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_Image);
+			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanCubemap {0}", instance->m_DebugName), instance->m_Image);
 
-		VkCommandBuffer layoutCmd = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
+			VkCommandBuffer layoutCmd = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
 
-		VkImageSubresourceRange subRange = {};
-		subRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		subRange.baseMipLevel = 0;
-		subRange.levelCount = m_MipLevels;
-		subRange.layerCount = 6;
+			VkImageSubresourceRange subRange = {};
+			subRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			subRange.baseMipLevel = 0;
+			subRange.levelCount = instance->m_MipLevels;
+			subRange.layerCount = 6;
 
-		VkUtils::SetImageLayout(layoutCmd, m_Image, VK_IMAGE_LAYOUT_UNDEFINED, m_ImageDescriptor.imageLayout, subRange);
+			VkUtils::SetImageLayout(layoutCmd, instance->m_Image, VK_IMAGE_LAYOUT_UNDEFINED, instance->m_ImageDescriptor.imageLayout, subRange);
 
-		VulkanContext::GetLogicalDevice()->FlushCommandBuffer(layoutCmd);
+			VulkanContext::GetLogicalDevice()->FlushCommandBuffer(layoutCmd);
 
-		CreateImageView_RT();
-		CreateSampler_RT();
+			instance->CreateImageView_RT();
+			instance->CreateSampler_RT();
 
-		if (m_MipLevels > 1 && createInfo->Data)
-			GenerateMipmaps_RT();
+			});
 
 		if (createInfo->pCubemapSrc)
 		{
@@ -98,6 +92,11 @@ namespace HazardRenderer::Vulkan
 			Ref<Image2D> image = createInfo->pImageSrc->pSourceImage;
 			GenerateFromEquirectangular(image);
 		}
+
+		if (m_MipLevels > 1 && createInfo->Data)
+			Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_GENERAL);
+				});
 	}
 	void VulkanCubemapTexture::Bind(uint32_t slot) const
 	{
@@ -109,7 +108,15 @@ namespace HazardRenderer::Vulkan
 	void VulkanCubemapTexture::GenerateFromEquirectangular(Ref<Image2D> sourceImage)
 	{
 		HZR_PROFILE_FUNCTION();
+		ImageTransitionInfo generalTransition = {};
+		generalTransition.Cubemap = this;
+		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
+		generalTransition.DestLayout = ImageLayout_General;
+
 		Ref<CubemapTexture> instance = this;
+
+		auto& commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
+		commandBuffer->TransitionImageLayout(generalTransition);
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "EquirectangularToCubemap";
@@ -117,171 +124,60 @@ namespace HazardRenderer::Vulkan
 		pipelineSpec.Usage = PipelineUsage::ComputeBit;
 
 		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
-		Renderer::Submit([inst = instance.As<VulkanCubemapTexture>()]() mutable {
-			auto buffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
-			VkImageSubresourceRange range = {};
-			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			range.baseMipLevel = 0;
-			range.levelCount = inst->m_MipLevels;
-			range.baseArrayLayer = 0;
-			range.layerCount = 6;
-
-			VkUtils::InsertImageMemoryBarrier(
-				buffer,
-				inst->m_Image,
-				VK_ACCESS_SHADER_READ_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				VK_IMAGE_LAYOUT_GENERAL,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT,
-				range
-			);
-			inst->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
-			std::cout << "Transition of " << inst->m_DebugName << " to " << VkUtils::ImageLayoutToString(inst->m_ImageDescriptor.imageLayout) << std::endl;
-
-		});
-
-		auto& commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
 
 		auto& shader = computePipeline->GetShader();
-		shader->Set("o_CubeMap", 0, instance);
+		shader->Set("o_CubeMap", 0, this);
 		shader->Set("u_EquirectangularTexture", 0, sourceImage);
 
-		commandBuffer->BindPipeline(computePipeline);
-		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
+		computeInfo.Pipeline = computePipeline;
+		computeInfo.WaitForCompletion = true;
+
+		commandBuffer->DispatchCompute(computeInfo);
 
 		MemoryBarrierInfo barrier = {};
 		barrier.Flags = MemoryBarrierBit_All;
-
+		barrier.Cubemap = this;
 		commandBuffer->InsertMemoryBarrier(barrier);
 
+		ImageTransitionInfo shaderLayout = {};
+		shaderLayout.Cubemap = this;
+		shaderLayout.SourceLayout = ImageLayout_General;
+		shaderLayout.DestLayout = ImageLayout_ShaderReadOnly;
+
+		commandBuffer->TransitionImageLayout(shaderLayout);
+
 		Renderer::Submit([inst = instance.As<VulkanCubemapTexture>()]() mutable {
-			auto buffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
-
-			VkImageSubresourceRange range = {};
-			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			range.baseMipLevel = 0;
-			range.levelCount = inst->m_MipLevels;
-			range.baseArrayLayer = 0;
-			range.layerCount = 6;
-			Timer timer;
-			VkUtils::InsertImageMemoryBarrier(
-				buffer,
-				inst->m_Image,
-				VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-				VK_IMAGE_LAYOUT_GENERAL,
-				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT,
-				range
-			);
-
-			std::cout << timer.ElapsedMillis() << std::endl;
-			inst->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-			if (inst->m_MipLevels > 1) 
-{
-				std::cout << "Transition of " << inst->m_DebugName << " to " << VkUtils::ImageLayoutToString(inst->m_ImageDescriptor.imageLayout) << std::endl;
-				inst->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-			}
+			if (inst->m_MipLevels <= 1)
+				return;
+			inst->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		});
 	}
 	void VulkanCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
+		Timer timer;
 		auto& commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
 
-		Renderer::Submit([inst = generationData.pCubemap.As<VulkanCubemapTexture>()]() mutable {
-			auto buffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
+		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, this);
 
-			VkImageSubresourceRange range = {};
-			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			range.baseMipLevel = 0;
-			range.levelCount = inst->m_MipLevels;
-			range.baseArrayLayer = 0;
-			range.layerCount = 6;
-			Timer timer;
-			VkUtils::InsertImageMemoryBarrier(
-				buffer,
-				inst->m_Image,
-				VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
-				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				VK_IMAGE_LAYOUT_GENERAL,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT,
-				range
-			);
-		});
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
+		computeInfo.Pipeline = generationData.Pipeline;
+		computeInfo.WaitForCompletion = true;
 
-		Ref<CubemapTexture> instance = this;
-		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, instance);
+		commandBuffer->DispatchCompute(computeInfo);
 
-		commandBuffer->BindPipeline(generationData.Pipeline);
-		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
-
-		MemoryBarrierInfo barrier = {};
-		barrier.Flags = MemoryBarrierBit_All;
-
-		commandBuffer->InsertMemoryBarrier(barrier);
-
-		Renderer::Submit([inst = instance.As<VulkanCubemapTexture>()]() mutable {
-			auto buffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
-
-			VkImageSubresourceRange range = {};
-			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			range.baseMipLevel = 0;
-			range.levelCount = inst->m_MipLevels;
-			range.baseArrayLayer = 0;
-			range.layerCount = 6;
-			Timer timer;
-			VkUtils::InsertImageMemoryBarrier(
-				buffer,
-				inst->m_Image,
-				VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-				VK_IMAGE_LAYOUT_GENERAL,
-				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT,
-				range
-			);
-
-			std::cout << timer.ElapsedMillis() << std::endl;
-			inst->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-			if (inst->m_MipLevels > 1)
-			{
-				std::cout << "Transition of " << inst->m_DebugName << " to " << VkUtils::ImageLayoutToString(inst->m_ImageDescriptor.imageLayout) << std::endl;
-				inst->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-			}
-		});
-
-		Renderer::Submit([inst = generationData.pCubemap.As<VulkanCubemapTexture>()]() mutable {
-			auto buffer = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>()->GetCurrentDrawCommandBuffer();
-
-			VkImageSubresourceRange range = {};
-			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			range.baseMipLevel = 0;
-			range.levelCount = inst->m_MipLevels;
-			range.baseArrayLayer = 0;
-			range.layerCount = 6;
-			Timer timer;
-			VkUtils::InsertImageMemoryBarrier(
-				buffer,
-				inst->m_Image,
-				VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
-				VK_IMAGE_LAYOUT_GENERAL,
-				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT,
-				range
-			);
-		});
-
+		Ref<VulkanCubemapTexture> instance = this;
+		Renderer::Submit([instance]() mutable {
+			instance->GenerateMipmaps_RT();
+			});
 	}
 	void VulkanCubemapTexture::CreateImageView_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
 		if (m_ImageDescriptor.imageView)
@@ -312,6 +208,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanCubemapTexture::CreateSampler_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
 		if (m_ImageDescriptor.sampler)
@@ -348,6 +245,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanCubemapTexture::GenerateMipmaps_RT(VkImageLayout imageLayout)
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
 		const VkCommandBuffer blitCmd = VulkanContext::GetInstance()->GetLogicalDevice()->GetCommandBuffer(true);

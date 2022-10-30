@@ -24,7 +24,7 @@ using namespace HazardScript;
 void HazardEditorApplication::PreInit()
 {
 
-#if HZR_DEBUG && true
+#if HZR_DEBUG && false
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
 	std::cout << " 1 - OpenGL" << std::endl;
@@ -54,7 +54,7 @@ void HazardEditorApplication::PreInit()
 
 	RenderContextCreateInfo renderContextInfo = {};
 	renderContextInfo.Renderer = renderAPI;
-	renderContextInfo.VSync = false;
+	renderContextInfo.VSync = true;
 	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
 	renderContextInfo.Width = 1920;
 	renderContextInfo.Height = 1080;

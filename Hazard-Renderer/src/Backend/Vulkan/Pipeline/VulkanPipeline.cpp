@@ -12,6 +12,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
+		HZR_PROFILE_FUNCTION();
 		if (specs->Usage == PipelineUsage::GraphicsBit)
 		{
 			HZR_ASSERT(m_Specs.pTargetRenderPass, "Renderpass cannot be null");
@@ -23,6 +24,7 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanPipeline::~VulkanPipeline()
 	{
+		HZR_PROFILE_FUNCTION();
 		Renderer::SubmitResourceFree([pipeline = m_Pipeline, cache = m_PipelineCache, layout = m_PipelineLayout]() mutable {
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
@@ -33,10 +35,11 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void VulkanPipeline::Invalidate()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanPipeline> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->Invalidate_RT();
@@ -57,6 +60,7 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanPipeline::InvalidateGraphicsPipeline()
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto& fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
@@ -238,6 +242,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::InvalidateComputePipeline()
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();

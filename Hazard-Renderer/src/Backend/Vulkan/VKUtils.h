@@ -158,5 +158,33 @@ namespace HazardRenderer::Vulkan::VkUtils
 		HZR_ASSERT(false, "What is this");
 		return "";
 	}
+
+	static VkImageLayout GetVulkanImageLayout(const ImageLayout& layout)
+	{
+		switch (layout)
+		{
+		case ImageLayout::ImageLayout_General:			return VK_IMAGE_LAYOUT_GENERAL;
+		case ImageLayout::ImageLayout_ShaderReadOnly:	return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		}
+		return VK_IMAGE_LAYOUT_MAX_ENUM;
+	}
+	static VkAccessFlags GetVulkanAccess(const ImageLayout& layout)
+	{
+		switch (layout)
+		{
+		case ImageLayout::ImageLayout_General:			return VK_ACCESS_TRANSFER_READ_BIT;
+		case ImageLayout::ImageLayout_ShaderReadOnly:	return VK_ACCESS_SHADER_READ_BIT;
+		}
+		return VK_ACCESS_FLAG_BITS_MAX_ENUM;
+	}
+	static VkAccessFlags GetVulkanStage(const ImageLayout& layout)
+	{
+		switch (layout)
+		{
+		case ImageLayout::ImageLayout_General:			return VK_PIPELINE_STAGE_TRANSFER_BIT;
+		case ImageLayout::ImageLayout_ShaderReadOnly:	return VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		}
+		return VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM;
+	}
 }
 #endif

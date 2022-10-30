@@ -8,6 +8,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanIndexBuffer::VulkanIndexBuffer(IndexBufferCreateInfo* createInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_DebugName = createInfo->DebugName;
 		m_Usage = createInfo->Usage;
 		m_Size = createInfo->Size;
@@ -18,7 +19,7 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanIndexBuffer> instance = this;
 
-		Renderer::Submit([instance]() mutable {
+		Renderer::SubmitResourceCreate([instance]() mutable {
 			auto device = VulkanContext::GetLogicalDevice();
 			VulkanAllocator allocator("VulkanVertexBuffer");
 
@@ -56,7 +57,7 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanIndexBuffer::~VulkanIndexBuffer()
 	{
-
+		HZR_PROFILE_FUNCTION();
 		VkBuffer buffer = m_IndexBuffer;
 		VmaAllocation alloc = m_BufferAllocation;
 
@@ -69,11 +70,13 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanIndexBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
-		__debugbreak();
+		HZR_PROFILE_FUNCTION();
+		HZR_ASSERT(false, "TODO");
 	}
 	void VulkanIndexBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
 	{
-		__debugbreak();
+		HZR_PROFILE_FUNCTION();
+		HZR_ASSERT(false, "TODO");
 	}
 }
 #endif

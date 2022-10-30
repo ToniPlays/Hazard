@@ -77,7 +77,7 @@
 
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
-#define BIT(x) (uint32_t)(1 << (x))
+#define BIT(x) (size_t)(1 << (x))
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

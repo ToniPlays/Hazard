@@ -13,7 +13,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (!(field->GetFlags() & MonoFlags_Public || field->Has<ShowInPropertiesAttribute>())) 
 		{
-			__debugbreak();
+			HZR_ASSERT(false, "");
 			return;
 		}
 

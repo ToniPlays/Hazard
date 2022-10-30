@@ -86,7 +86,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLCubemapTexture::GenerateFromEquirectangular(Ref<Image2D> sourceImage)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<CubemapTexture> instance = this;
+		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "EquirectangularToCubemap";
@@ -95,38 +95,33 @@ namespace HazardRenderer::OpenGL
 
 		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
 
-		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
-
 		auto& shader = computePipeline->GetShader();
 		shader->Set("u_EquirectangularTexture", 0, sourceImage);
-		shader->Set("o_CubeMap", 0, instance);
+		shader->Set("o_CubeMap", 0, this);
 
-		commandBuffer->BindPipeline(computePipeline);
-		commandBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
+		computeInfo.Pipeline = computePipeline;
+		computeInfo.WaitForCompletion = true;
 
-		MemoryBarrierInfo barrier = {};
-		barrier.Flags = MemoryBarrierBit_All;
-
-		commandBuffer->InsertMemoryBarrier(barrier);
-
+		commandBuffer->DispatchCompute(computeInfo);
 	}
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
-		auto& cmdBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
+		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
 
 		Ref<CubemapTexture> instance = this;
 		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, instance);
 
-		cmdBuffer->BindPipeline(generationData.Pipeline);
-		cmdBuffer->DispatchCompute({ m_Width / 32, m_Height / 32, 6 });
+		DispatchComputeInfo computeInfo = {};
+		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
+		computeInfo.Pipeline = generationData.Pipeline;
+		computeInfo.WaitForCompletion = true;
 
-		MemoryBarrierInfo barrier = {};
-		barrier.Flags = MemoryBarrierBit_All;
-
-		cmdBuffer->InsertMemoryBarrier(barrier);
+		commandBuffer->DispatchCompute(computeInfo);
 	}
 }
 #endif

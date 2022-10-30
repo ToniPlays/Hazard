@@ -33,7 +33,7 @@ namespace HazardRenderer::OpenGL
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DispatchCompute(const LocalGroupSize& localGroupSize) override;
+		void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override {};
 
@@ -43,8 +43,7 @@ namespace HazardRenderer::OpenGL
 	private:
 		uint32_t m_FrameIndex = 0;
 		Ref<Swapchain> m_Swapchain;
-		Ref<OpenGLPipeline> m_CurrentPipeline = nullptr;
-
+		Ref<OpenGLPipeline> m_CurrentPipeline;
 
 		inline static uint32_t s_BoundVAO = 0;
 		inline static BufferLayout s_CurrentLayout;

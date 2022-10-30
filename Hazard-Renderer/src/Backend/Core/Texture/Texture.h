@@ -46,6 +46,7 @@ namespace HazardRenderer
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 		virtual glm::uvec2 GetSize() const = 0;
+		virtual uint32_t GetMipLevels() const = 0;
 
 		virtual TextureType GetType() const = 0;
 	};
@@ -56,7 +57,6 @@ namespace HazardRenderer
 		virtual const std::string& GetPath() const = 0;
 		virtual Ref<Image2D> GetSourceImage() = 0;
 		virtual TextureType GetType() const override { return TextureType::CubemapTexture; }
-
 
 		static Ref<CubemapTexture> Create(CubemapTextureCreateInfo* createInfo);
 

@@ -18,14 +18,31 @@ namespace HazardRenderer
 		MemoryBarrierBit_Buffer = BIT(2)
 	};
 
+	enum ImageLayout : uint32_t
+	{
+		ImageLayout_ShaderReadOnly = BIT(0),
+		ImageLayout_General = BIT(1)
+	};
+
+	struct DispatchComputeInfo
+	{
+		Ref<Pipeline> Pipeline;
+		LocalGroupSize GroupSize;
+		bool WaitForCompletion = false;
+	};
+
 	struct MemoryBarrierInfo
 	{
 		MemoryBarrierFlags Flags;
 		Ref<Image2D> Image = nullptr;
+		Ref<CubemapTexture> Cubemap = nullptr;
 	};
 	struct ImageTransitionInfo
 	{
+		ImageLayout SourceLayout;
+		ImageLayout DestLayout;
 		Ref<Image2D> Image = nullptr;
+		Ref<CubemapTexture> Cubemap = nullptr;
 	};
 
 
@@ -48,7 +65,7 @@ namespace HazardRenderer
 
 		virtual void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-		virtual void DispatchCompute(const LocalGroupSize& localGroupSize) = 0;
+		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;
 
 		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
 		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;

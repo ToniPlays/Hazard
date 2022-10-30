@@ -90,7 +90,7 @@ namespace HazardRenderer::OpenGL
 
 			glDepthMask(instance->DepthMaskEnable());
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
-				descriptor.BindResources(shader->GetProgramID(), spec.Usage == PipelineUsage::ComputeBit);
+				descriptor.BindResources(shader->GetProgramID(), false);
 			});
 		m_CurrentPipeline = instance;
 	}
@@ -124,13 +124,23 @@ namespace HazardRenderer::OpenGL
 			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, count, instanceCount);
 			});
 	}
-	void OpenGLRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
+	void OpenGLRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
-		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
-		Renderer::Submit([pipeline, size = localGroupSize]() mutable {
+		HZR_ASSERT(computeInfo.Pipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
+		Ref<OpenGLPipeline> pipeline = computeInfo.Pipeline;
+		Renderer::Submit([pipeline, info = computeInfo]() mutable {
+
+			auto& shader = pipeline->GetShader().As<OpenGLShader>();
+			glUseProgram(shader->GetProgramID());
+			for (auto& [index, descriptor] : shader->GetDescriptorSets())
+				descriptor.BindResources(shader->GetProgramID(), true);
+
+			LocalGroupSize size = info.GroupSize;
 			glDispatchCompute(size.x, size.y, size.z);
+
+			if (info.WaitForCompletion)
+				glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});
 	}
 	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)

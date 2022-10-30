@@ -59,14 +59,15 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanSwapchain::VulkanSwapchain()
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	VulkanSwapchain::~VulkanSwapchain()
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void VulkanSwapchain::Init(VkInstance instance, Ref<VulkanDevice> device)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Instance = instance;
 		m_Device = device;
 
@@ -89,6 +90,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::InitSurface(GLFWwindow* nativeWindow)
 	{
+		HZR_PROFILE_FUNCTION();
 		VkPhysicalDevice physicalDevice = m_Device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetVulkanPhysicalDevice();
 
 		glfwCreateWindowSurface(m_Instance, nativeWindow, nullptr, &m_Surface);
@@ -140,6 +142,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Create(uint32_t* width, uint32_t* height, bool enableVSync)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_VSync = enableVSync;
 
 		VkDevice device = m_Device->GetVulkanDevice();
@@ -447,6 +450,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Destroy()
 	{
+		HZR_PROFILE_FUNCTION();
 		auto device = m_Device->GetVulkanDevice();
 		vkDeviceWaitIdle(device);
 
@@ -477,6 +481,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::Resize(uint32_t width, uint32_t height)
 	{
+		HZR_PROFILE_FUNCTION();
 		vkDeviceWaitIdle(m_Device->GetVulkanDevice());
 		Create(&width, &height, m_VSync);
 		vkDeviceWaitIdle(m_Device->GetVulkanDevice());
@@ -539,6 +544,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanSwapchain::FindImageFormatAndColorSpace()
 	{
+		HZR_PROFILE_FUNCTION();
 		VkPhysicalDevice physicalDevice = m_Device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetVulkanPhysicalDevice();
 
 		uint32_t formatCount = 0;
@@ -575,6 +581,7 @@ namespace HazardRenderer::Vulkan
 	}
 	uint32_t VulkanSwapchain::AcquireSwapchainImage()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t index;
 		VK_CHECK_RESULT(fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores.PresentComplete, (VkFence)nullptr, &index), "Failed to Acquire next image");
 		return index;

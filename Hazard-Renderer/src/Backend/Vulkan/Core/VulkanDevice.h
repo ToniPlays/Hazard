@@ -27,7 +27,7 @@ namespace HazardRenderer::Vulkan
 		VkCommandPool GetComputePool() const { return m_ComputePool; }
 
 		VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
-		VkQueue GetComputesQueue() const { return m_ComputeQueue; }
+		VkQueue GetComputeQueue() const { return m_ComputeQueue; }
 
 	private:
 		Ref<VulkanPhysicalDevice> m_PhysicalDevice;

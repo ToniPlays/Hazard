@@ -18,6 +18,7 @@ namespace HazardRenderer::OpenGL
 		uint32_t GetWidth() override { return m_Width; };
 		uint32_t GetHeight() override { return m_Height; };
 		ImageFormat GetFormat() const override { return m_Format; }
+		virtual uint32_t GetMipLevels() const override { return 0; };
 
 		virtual float GetAspectRatio() override { return (float)m_Width / (float)m_Height; };
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };

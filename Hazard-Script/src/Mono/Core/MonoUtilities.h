@@ -98,14 +98,15 @@ namespace HazardScript
 		static T GetElementValue(MonoArray* arrayObject, size_t index)
 		{
 			uintptr_t length = mono_array_length(arrayObject);
-			if (index >= length) __debugbreak();
+			HZR_ASSERT(index < length, "");
 
 			MonoClass* arrayClass = mono_object_get_class((MonoObject*)arrayObject);
 			MonoClass* elementClass = mono_class_get_element_class(arrayClass);
 			int32_t size = mono_array_element_size(arrayClass);
 			ManagedType type = ManagedType::FromClass(elementClass);
 
-			if (type.IsReference()) {
+			if (type.IsReference()) 
+			{
 				MonoObject* elem = mono_array_get(arrayObject, MonoObject*, index);
 				if constexpr (std::is_same<T, MonoObject*>::value)
 					return elem;

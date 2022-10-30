@@ -5,9 +5,10 @@ namespace HazardScript
 {
 	void MonoArrayUtils::SetValueInternal(MonoArray* arrayObject, size_t index, const ValueWrapper& value)
 	{
+		HZR_PROFILE_FUNCTION();
 		uintptr_t length = mono_array_length(arrayObject);
 
-		if (index >= length) __debugbreak();
+		HZR_ASSERT(index < length, "");
 
 		MonoClass* arrayClass = mono_object_get_class((MonoObject*)arrayObject);
 		MonoClass* elementClass = mono_class_get_element_class(arrayClass);
@@ -27,11 +28,10 @@ namespace HazardScript
 	}
 	void MonoArrayUtils::SetValueInternal(MonoArray* arrayObject, size_t index, MonoObject* value) 
 	{
+		HZR_PROFILE_FUNCTION();
 		uintptr_t length = mono_array_length(arrayObject);
 
-		if (index >= length) {
-			__debugbreak();
-		}
+		HZR_ASSERT(index < length, "");
 
 		MonoClass* arrayClass = mono_object_get_class((MonoObject*)arrayObject);
 		MonoClass* elementClass = mono_class_get_element_class(arrayClass);

@@ -92,8 +92,6 @@ namespace HazardRenderer::Vulkan
 		}
 		
 		m_DepthFormat = FindDepthFormat();
-
-		std::cout << m_Properties.limits.minUniformBufferOffsetAlignment << std::endl;
 	}
 	VulkanPhysicalDevice::~VulkanPhysicalDevice()
 	{

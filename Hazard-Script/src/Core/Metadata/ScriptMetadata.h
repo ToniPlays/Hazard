@@ -17,7 +17,6 @@ namespace HazardScript
 		ScriptMetadata(ManagedClass* klass);
 		~ScriptMetadata()
 		{
-			__debugbreak();
 		}
 
 		std::string GetName();

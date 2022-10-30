@@ -19,7 +19,6 @@ namespace HazardRenderer::Vulkan
 		bool breakOnValidation = false;
 		const bool performanceWarn = true;
 
-
 		if (!performanceWarn && messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
 			return VK_FALSE;
 
@@ -36,7 +35,8 @@ namespace HazardRenderer::Vulkan
 				labels.append(fmt::format("\t\t- Command Buffer Label[{0}]: name {1}, color {2}\n", i, label.pLabelName ? label.pLabelName : "NULL", colorStr));
 			}
 		}
-		if (pCallbackData->objectCount) {
+		if (pCallbackData->objectCount) 
+		{
 			objects = fmt::format("\tObjects({}): \n", pCallbackData->objectCount);
 			for (uint32_t i = 0; i < pCallbackData->objectCount; i++)
 			{
@@ -50,9 +50,9 @@ namespace HazardRenderer::Vulkan
 		message.Description = "Validation error";
 		message.StackTrace = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
 
-		if (breakOnValidation) __debugbreak();
 
 		Window::SendDebugMessage(message);
+		if (breakOnValidation) __debugbreak();
 		return VK_FALSE;
 	}
 

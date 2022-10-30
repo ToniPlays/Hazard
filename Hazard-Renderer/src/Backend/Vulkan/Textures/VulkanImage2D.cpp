@@ -11,6 +11,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanImage2D::VulkanImage2D(Image2DCreateInfo* info)
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(!info->DebugName.empty(), "Debug name required");
 		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
 		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
@@ -19,7 +20,7 @@ namespace HazardRenderer::Vulkan
 		m_Width = info->Width;
 		m_Height = info->Height;
 		m_Format = info->Format;
-		m_Mips = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
+		m_MipLevels = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
 		m_Usage = info->Usage;
 
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
@@ -34,15 +35,16 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->UploadImageData_RT(instance->m_LocalBuffer, 
-				instance->m_Mips > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
+				instance->m_MipLevels > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
 
-			if (instance->m_Mips > 1)
+			if (instance->m_MipLevels > 1)
 				instance->GenerateMips_RT();
 			});
 
 	}
 	VulkanImage2D::~VulkanImage2D()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (!m_Image) return;
 
 		Ref<VulkanImage2D> instance = this;
@@ -54,6 +56,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::Invalidate()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
@@ -61,6 +64,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::Release()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_Image == nullptr) return;
 
 		Ref<VulkanImage2D> instance = this;
@@ -76,6 +80,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::Release_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_Image == nullptr) return;
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
@@ -107,12 +112,14 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::Resize_RT(uint32_t width, uint32_t height)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_Width = width;
 		m_Height = height;
 		Invalidate_RT();
 	}
 	void VulkanImage2D::Invalidate_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
@@ -151,7 +158,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.extent.width = m_Width;
 		createInfo.extent.height = m_Height;
 		createInfo.extent.depth = 1;
-		createInfo.mipLevels = m_Mips;
+		createInfo.mipLevels = m_MipLevels;
 		createInfo.arrayLayers = 1;
 		createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -172,7 +179,7 @@ namespace HazardRenderer::Vulkan
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			range.baseMipLevel = 0;
-			range.levelCount = m_Mips;
+			range.levelCount = m_MipLevels;
 			range.layerCount = 1;
 
 			VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
@@ -183,6 +190,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::UploadImageData_RT(Buffer data, VkImageLayout imageLayout)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& device = VulkanContext::GetLogicalDevice();
 
 		VulkanAllocator allocator("VulkanImage2D");
@@ -236,6 +244,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::CreateImageView_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
 		if (m_ImageDescriptor.imageView)
@@ -254,7 +263,7 @@ namespace HazardRenderer::Vulkan
 		viewInfo.subresourceRange = {};
 		viewInfo.subresourceRange.aspectMask = aspectMask;
 		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = m_Mips;
+		viewInfo.subresourceRange.levelCount = m_MipLevels;
 		viewInfo.subresourceRange.baseArrayLayer = 0;
 		viewInfo.subresourceRange.layerCount = 1;
 		viewInfo.image = m_Image;
@@ -264,6 +273,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::CreateSampler_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
 		if (m_ImageDescriptor.sampler)
@@ -300,6 +310,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanImage2D::GenerateMips_RT()
 	{
+		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
 		const VkCommandBuffer blitCmd = VulkanContext::GetInstance()->GetLogicalDevice()->GetCommandBuffer(true);
@@ -310,7 +321,7 @@ namespace HazardRenderer::Vulkan
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
-		for (uint32_t mip = 1; mip < m_Mips; mip++)
+		for (uint32_t mip = 1; mip < m_MipLevels; mip++)
 		{
 			VkImageBlit blit = {};
 			blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -354,7 +365,7 @@ namespace HazardRenderer::Vulkan
 		VkImageSubresourceRange subRange = {};
 		subRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		subRange.layerCount = 1;
-		subRange.levelCount = m_Mips;
+		subRange.levelCount = m_MipLevels;
 
 		VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
 			VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,

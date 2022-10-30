@@ -84,7 +84,7 @@ float GaSchlickGGX(float cosLi, float NdotV, float roughness)
 
 vec3 IBL(vec3 F0, vec3 Lr)
 {
-	/*
+/*
 	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
 	vec3 F = FresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
 	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);

@@ -12,10 +12,11 @@ namespace HazardRenderer::OpenGL
 
 		void Bind(uint32_t slot = 0) const;
 
-		ImageFormat GetFormat() const {	return m_Format; };
-		uint32_t GetWidth() const { return m_Width; };
-		uint32_t GetHeight() const { return m_Height; }
-		glm::uvec2 GetSize() const { return { m_Width, m_Height }; };
+		ImageFormat GetFormat() const override {	return m_Format; };
+		uint32_t GetWidth() const override { return m_Width; };
+		uint32_t GetHeight() const override { return m_Height; }
+		glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
+		uint32_t GetMipLevels() const override { return 1; }
 		const std::string& GetPath() const { return m_FilePath;	};
 
 		Ref<Image2D> GetSourceImage() { return m_SourceImage; }

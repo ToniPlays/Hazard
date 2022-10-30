@@ -44,7 +44,7 @@ namespace HazardRenderer::Vulkan
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
-		void DispatchCompute(const LocalGroupSize& localGroupSize) override;
+		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
 
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override;
@@ -80,6 +80,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
 
 		State m_State = State::Waiting;
+		inline static VkFence s_ComputeFence = VK_NULL_HANDLE;
 	};
 }
 #endif

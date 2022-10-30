@@ -7,6 +7,7 @@ namespace Hazard
 {
 	EnvironmentMap::EnvironmentMap()
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
 		m_Handle = UID();
@@ -37,6 +38,7 @@ namespace Hazard
 	}
 	void EnvironmentMap::GenerateRadiance(Ref<Texture2DAsset> sourceImage)
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 		CubemapImageGen imageSrc = {};
 		imageSrc.pSourceImage = sourceImage->GetSourceImageAsset()->Value.As<Image2D>();
@@ -44,8 +46,8 @@ namespace Hazard
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + imageSrc.pSourceImage->GetDebugName();
 		radianceInfo.Usage = ImageUsage::Texture;
-		radianceInfo.Width = 2048;
-		radianceInfo.Height = 2048;
+		radianceInfo.Width = 512 * 4;
+		radianceInfo.Height = 512 * 4;
 		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.pImageSrc = &imageSrc;
 
@@ -61,6 +63,7 @@ namespace Hazard
 	}
 	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
 		PipelineSpecification irradiancePipelineInfo = {};
@@ -78,6 +81,8 @@ namespace Hazard
 
 		CubemapTextureCreateInfo irradianceInfo = {};
 		irradianceInfo.DebugName = "IrradianceMap";
+		irradianceInfo.Width = 32;
+		irradianceInfo.Height = 32;
 		irradianceInfo.Usage = ImageUsage::Texture;
 		irradianceInfo.pCubemapSrc = &irradianceSource;
 		irradianceInfo.Format = ImageFormat::RGBA;
@@ -94,6 +99,7 @@ namespace Hazard
 	}
 	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
 	{
+		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
 		//Generate prefilter map
@@ -133,7 +139,7 @@ namespace Hazard
 
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
 		map->GenerateRadiance(sourceImage);
-		map->GenerateIrradiance(map->RadianceMap);
+		//map->GenerateIrradiance(map->RadianceMap);
 		//map->GeneratePreFilter(map->IrradianceMap);
 
 		HZR_CORE_WARN("Environment map took {0} ms to load", timer.ElapsedMillis());

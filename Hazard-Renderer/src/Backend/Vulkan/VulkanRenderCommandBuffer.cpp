@@ -11,6 +11,7 @@
 #include "Pipeline/VulkanUniformBuffer.h"
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
+#include "Textures/VulkanCubemapTexture.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
@@ -19,6 +20,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t size, const std::string& name) : m_DebugName(std::move(name))
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& device = VulkanContext::GetLogicalDevice();
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
@@ -94,6 +96,7 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(std::move(name)), m_OwnedBySwapchain(swapchain)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& device = VulkanContext::GetLogicalDevice();
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
@@ -138,6 +141,7 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanRenderCommandBuffer::~VulkanRenderCommandBuffer()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_OwnedBySwapchain) return;
 
 		VkCommandPool commandPool = m_CommandPool;
@@ -148,6 +152,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::Begin()
 	{
+		HZR_PROFILE_FUNCTION();
 		m_TimestampNextAvailQuery = 2;
 		Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 
@@ -175,6 +180,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::End()
 	{
+		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
 
 		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
@@ -186,18 +192,22 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::Submit()
 	{
+		HZR_PROFILE_FUNCTION();
 		if (m_OwnedBySwapchain) return;
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Ref<RenderPass> pass = renderPass;
 		Renderer::Submit([instance, pass, explicitClear]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BeginRenderPass");
 			instance->BeginRenderPass_RT(pass, explicitClear);
 			});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 		auto& fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
@@ -258,17 +268,21 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::EndRenderPass()
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::EndRenderPass");
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 			});
 	}
 	void VulkanRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanVertexBuffer> buffer = vertexBuffer.As<VulkanVertexBuffer>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, buffer, binding]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindVertexBuffer");
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
 			VkDeviceSize offsets = { 0 };
 			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
@@ -276,18 +290,18 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void VulkanRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
+		HZR_PROFILE_FUNCTION();
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
-
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindPipeline");
 			auto vkPipeline = pipeline->GetVulkanPipeline();
-			auto bindPoint = pipeline->GetBindingPoint();
-			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, bindPoint, vkPipeline);
+			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipeline);
 			});
 	}
 	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
@@ -296,20 +310,21 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanIndexBuffer> buffer = indexBuffer.As<VulkanIndexBuffer>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		auto& offsets = m_CurrentPipeline->GetShader().As<VulkanShader>()->GetDynamicOffsets();
 
 		Renderer::Submit([instance, buffer, count, instanceCount, offsets, pipeline = m_CurrentPipeline]() mutable {
-
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
 			auto vkPipeline = pipeline->GetVulkanPipeline();
-			auto bindPoint = pipeline->GetBindingPoint();
 			auto& shader = pipeline->GetShader().As<VulkanShader>();
 			auto layout = pipeline->GetPipelineLayout();
 			auto& descriptorSets = shader->GetVulkanDescriptorSets();
 
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0,
+				descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
 
 			if (buffer)
 			{
@@ -321,45 +336,172 @@ namespace HazardRenderer::Vulkan
 			vkCmdDraw(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0);
 			});
 	}
-	void VulkanRenderCommandBuffer::DispatchCompute(const LocalGroupSize& localGroupSize)
+	void VulkanRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance, pipeline = m_CurrentPipeline, size = localGroupSize]() mutable {
+		Renderer::Submit([instance, info = computeInfo]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
 
+			auto& pipeline = info.Pipeline.As<VulkanPipeline>();
 			auto vkPipeline = pipeline->GetVulkanPipeline();
-			auto bindPoint = pipeline->GetBindingPoint();
 			auto& shader = pipeline->GetShader().As<VulkanShader>();
 			auto layout = pipeline->GetPipelineLayout();
 			auto& descriptorSets = shader->GetVulkanDescriptorSets();
 
-			std::cout << "Dispatch compute " << pipeline->GetSpecifications().DebugName << std::endl;
+			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+			VkQueue computeQueue = device->GetComputeQueue();
 
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindPoint, layout, 0, descriptorSets.size(), descriptorSets.data(), 0, nullptr);
+			VkCommandBuffer commandBuffer = device->GetCommandBuffer(true, true);
+
+			LocalGroupSize size = info.GroupSize;
+
+			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
+				descriptorSets.size(), descriptorSets.data(), 0, nullptr);
+
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+
+			vkEndCommandBuffer(commandBuffer);
+
+			if (!s_ComputeFence)
+			{
+				VkFenceCreateInfo fenceCreateInfo = {};
+				fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+				fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+				VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceCreateInfo, nullptr, &s_ComputeFence), "");
+			}
+
+			vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX);
+			vkResetFences(device->GetVulkanDevice(), 1, &s_ComputeFence);
+
+			VkSubmitInfo submitInfo = {};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &commandBuffer;
+
+			VK_CHECK_RESULT(vkQueueSubmit(computeQueue, 1, &submitInfo, s_ComputeFence), "");
+			{
+				Timer timer;
+				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
+				std::cout << fmt::format("Dispatch compute {0}, [{1}, {2}, {3}] took {4} ms", 
+					pipeline->GetSpecifications().DebugName, size.x, size.y, size.z, timer.ElapsedMillis()) << std::endl;
+			}
 			});
 	}
 	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Ref<VulkanImage2D> image = info.Image.As<VulkanImage2D>();
+		Ref<VulkanCubemapTexture> cubemap = info.Cubemap.As<VulkanCubemapTexture>();
 
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline, barrierInfo = info, image, cubemap]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::InsertMemoryBarrier");
+			auto device = VulkanContext::GetLogicalDevice();
+			std::vector<VkImageMemoryBarrier> barriers;
+
+			VkMemoryBarrier memoryBarrier = {};
+
+			QueueFamilyIndices indices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
+
+			if (barrierInfo.Image)
+			{
+				VkImageMemoryBarrier& barrier = barriers.emplace_back();
+				barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+				barrier.oldLayout = image->GetImageDescriptor().imageLayout;
+				barrier.newLayout = image->GetImageDescriptor().imageLayout;
+				barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				barrier.subresourceRange.baseArrayLayer = 0;
+				barrier.subresourceRange.baseMipLevel = 0;
+				barrier.subresourceRange.levelCount = image->GetMipLevels();
+				barrier.subresourceRange.layerCount = image->GetLayerCount();
+				barrier.image = image->GetVulkanImage();
+
+				barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+				barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+				barrier.srcQueueFamilyIndex = indices.Graphics;
+				barrier.dstQueueFamilyIndex = indices.Compute;
+			}
+			if (barrierInfo.Cubemap)
+			{
+				VkImageMemoryBarrier& barrier = barriers.emplace_back();
+				barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+				barrier.oldLayout = cubemap->GetImageDescriptor().imageLayout;
+				barrier.newLayout = cubemap->GetImageDescriptor().imageLayout;
+				barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				barrier.subresourceRange.baseArrayLayer = 0;
+				barrier.subresourceRange.baseMipLevel = 0;
+				barrier.subresourceRange.levelCount = cubemap->GetMipLevels();
+				barrier.subresourceRange.layerCount = 6;
+				barrier.image = cubemap->GetVulkanImage();
+
+				barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+				barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+				barrier.srcQueueFamilyIndex = indices.Graphics;
+				barrier.dstQueueFamilyIndex = indices.Compute;
+			}
+
+
+			vkCmdPipelineBarrier(instance->m_ActiveCommandBuffer,
+				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+				0, nullptr,
+				0, nullptr,
+				barriers.size(), barriers.data());
 			});
 	}
 	void VulkanRenderCommandBuffer::TransitionImageLayout(const ImageTransitionInfo& info)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Ref<VulkanCubemapTexture> cubemap = info.Cubemap.As<VulkanCubemapTexture>();
+		VkImageLayout layout = cubemap->GetImageDescriptor().imageLayout;
 
+		Renderer::Submit([instance, transitionInfo = info, cubemap, layout]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TransitionImageLayout");
+			HZR_ASSERT(transitionInfo.Image || transitionInfo.Cubemap, "What are you doing");
+
+			if (transitionInfo.Image)
+			{
+				HZR_ASSERT(false, "Not implemented");
+			}
+
+			if (transitionInfo.Cubemap)
+			{
+				VkImageSubresourceRange range = {};
+
+				range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				range.baseMipLevel = 0;
+				range.levelCount = cubemap->GetMipLevels();
+				range.baseArrayLayer = 0;
+				range.layerCount = 6;
+
+				VkUtils::InsertImageMemoryBarrier(
+					instance->m_ActiveCommandBuffer,
+					cubemap->GetVulkanImage(),
+					VkUtils::GetVulkanAccess(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanAccess(transitionInfo.DestLayout),
+					VkUtils::GetVulkanImageLayout(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanImageLayout(transitionInfo.DestLayout),
+					VkUtils::GetVulkanStage(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanStage(transitionInfo.DestLayout),
+					range
+				);
+				cubemap->SetImageLayout(VkUtils::GetVulkanImageLayout(transitionInfo.DestLayout));
+			}
 			});
 	}
 	void VulkanRenderCommandBuffer::SetViewport(float x, float y, float width, float height)
 	{
-
+		HZR_PROFILE_FUNCTION();
 	}
 	void VulkanRenderCommandBuffer::SetLineSize(float size)
 	{
+		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, size]() mutable {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetLineSize");
 			vkCmdSetLineWidth(instance->m_ActiveCommandBuffer, size);
 			});
 	}

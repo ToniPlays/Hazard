@@ -11,7 +11,6 @@ namespace HazardScript
 	ScriptAssembly::~ScriptAssembly()
 	{
 		Release();
-		__debugbreak();
 	}
 	bool ScriptAssembly::LoadFromSource(bool registerScripts, bool withRefecenced)
 	{
