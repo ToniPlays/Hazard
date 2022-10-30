@@ -34,8 +34,8 @@ layout(location = 2) in vec3 WorldPosition;
 
 layout(set = 1, binding = 1) uniform samplerCube u_RadianceMap;
 
-//layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
-layout(set = 1, binding = 2) uniform sampler2D u_BRDFLut;
+layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
+layout(set = 1, binding = 3) uniform sampler2D u_BRDFLut;
 
 
 #include "Utils/Common.glsl"
@@ -80,5 +80,5 @@ void main()
 	vec3 color = ACESTonemap(ibl + Lo);
 	color = GammaCorrect(color, gamma);
 
-	OutputColor = vec4(ibl, 1.0);
+	OutputColor = vec4(color, 1.0);
 }

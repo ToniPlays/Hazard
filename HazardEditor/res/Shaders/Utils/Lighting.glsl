@@ -84,18 +84,17 @@ float GaSchlickGGX(float cosLi, float NdotV, float roughness)
 
 vec3 IBL(vec3 F0, vec3 Lr)
 {
-/*
 	vec3 irradiance = texture(u_IrradianceMap, m_Params.Normal).rgb;
 	vec3 F = FresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
 	vec3 kD = (1.0 - F) * (1.0 - m_Params.Metalness);
 	vec3 diffuseIBL = m_Params.Albedo * irradiance;
-	*/
+
 	int radianceTexelLeves = textureQueryLevels(u_RadianceMap);
 	vec3 specularIrradiance	= textureLod(u_RadianceMap, RotateVectorAboutY(0.0, Lr), (m_Params.Roughness * radianceTexelLeves)).rgb;
 	//Sample BRDF
-	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, 1.0 - m_Params.Roughness)).rg;
+	vec2 specularBRDF				= texture(u_BRDFLut, vec2(m_Params.NdotV, (1.0 - m_Params.Roughness)).rg;
 	vec3 specularIBL				= specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
-	return specularIBL;
+	return (kD * diffuseIBL) + specularIBL;
 }
 
 

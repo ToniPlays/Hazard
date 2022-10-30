@@ -352,15 +352,16 @@ namespace HazardRenderer::Vulkan
 			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
 			VkQueue computeQueue = device->GetComputeQueue();
 
+			//VkCommandBuffer commandBuffer = device->GetCommandBuffer(true, true);
 			VkCommandBuffer commandBuffer = device->GetCommandBuffer(true, true);
 
 			LocalGroupSize size = info.GroupSize;
 
-			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
 				descriptorSets.size(), descriptorSets.data(), 0, nullptr);
 
-			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+			vkCmdDispatch(commandBuffer, size.x, size.y, size.z);
 
 			vkEndCommandBuffer(commandBuffer);
 
@@ -445,7 +446,7 @@ namespace HazardRenderer::Vulkan
 
 
 			vkCmdPipelineBarrier(instance->m_ActiveCommandBuffer,
-				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
 				0, nullptr,
 				0, nullptr,
 				barriers.size(), barriers.data());

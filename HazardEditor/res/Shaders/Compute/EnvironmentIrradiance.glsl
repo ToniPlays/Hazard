@@ -7,7 +7,7 @@
 layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
 layout(binding = 1) uniform samplerCube u_RadianceMap;
 
-const uint u_Samples = 512;
+const uint u_Samples = 1024;
 
 layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 void main() 
