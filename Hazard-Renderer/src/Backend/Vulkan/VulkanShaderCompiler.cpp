@@ -2,6 +2,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "MathCore.h"
+#include "Profiling/Timer.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
@@ -13,11 +14,11 @@ namespace HazardRenderer::Vulkan
     {
         switch (type)
         {
-        case ShaderStage::Vertex:	return shaderc_glsl_vertex_shader;
-        case ShaderStage::Fragment:	return shaderc_glsl_fragment_shader;
-        case ShaderStage::Compute:	return shaderc_glsl_compute_shader;
-        case ShaderStage::Geometry:	return shaderc_glsl_geometry_shader;
-        case ShaderStage::None:      return (shaderc_shader_kind)0;
+        case ShaderStage::Vertex:	    return shaderc_glsl_vertex_shader;
+        case ShaderStage::Fragment:	    return shaderc_glsl_fragment_shader;
+        case ShaderStage::Compute:	    return shaderc_glsl_compute_shader;
+        case ShaderStage::Geometry:	    return shaderc_glsl_geometry_shader;
+        case ShaderStage::None:         return (shaderc_shader_kind)0;
         }
         return (shaderc_shader_kind)0;
     }
@@ -32,7 +33,6 @@ namespace HazardRenderer::Vulkan
     {
         HZR_PROFILE_FUNCTION();
         Timer timer;
-        std::cout << "Compiling: " << Utils::ShaderStageToString((uint32_t)compileInfo->Stage) << std::endl;
 
         m_ResultBinary.Release();
 

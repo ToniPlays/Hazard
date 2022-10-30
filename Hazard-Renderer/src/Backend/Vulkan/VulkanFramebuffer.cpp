@@ -235,7 +235,7 @@ namespace HazardRenderer::Vulkan
 
 				attachmentDescription.initialLayout = m_Specs.ClearOnLoad ? VK_IMAGE_LAYOUT_UNDEFINED : VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL_KHR;
 
-				if (spec.Format == ImageFormat::DEPTH24STENCIL8 || true)
+				if (spec.Format == ImageFormat::DEPTH24STENCIL8)
 				{
 					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 					depthReference = { attachmentImageIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };

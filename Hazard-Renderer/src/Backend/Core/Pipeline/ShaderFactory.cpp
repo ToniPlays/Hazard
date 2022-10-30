@@ -1,17 +1,17 @@
 
+
 #include "ShaderFactory.h"
-#include "Utility/StringUtil.h"
+#if HZR_PLATFORM_WINDOWS
 
 #include "Shader.h"
-#if HZR_PLATFORM_WINDOWS
+#include "Utility/StringUtil.h"
+#include "Buffer/CachedBuffer.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
 
 #include "spdlog/fmt/fmt.h"
-
-#include "CachedBuffer.h"
 
 namespace HazardRenderer
 {

@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#include "Buffer.h"
+#include "Buffer/Buffer.h"
 
 namespace HazardRenderer 
 {
-	enum class TextureType {
+	enum class TextureType 
+	{
+		Image2D,
 		Texture2D,
 		CubemapTexture
 	};
@@ -29,7 +31,7 @@ namespace HazardRenderer
 		DEPTH24STENCIL8,
 
 		// Defaults
-		Depth = DEPTH24STENCIL8,
+		Depth = DEPTH24STENCIL8
 	};
 	enum class ImageWrap { Repeat = 0, RepeatMirror, ClampBorder, ClampEdge };
 	enum class FilterMode { Linear = 0, Nearest, LinearMip, NearestMip };

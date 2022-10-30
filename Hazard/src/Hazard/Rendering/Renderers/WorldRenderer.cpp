@@ -20,6 +20,7 @@ namespace Hazard
 	void WorldRenderer::Render()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		{
 			//Submit sky lights for drawing
 			auto& view = m_TargetWorld->GetEntitiesWith<SkyLightComponent>();

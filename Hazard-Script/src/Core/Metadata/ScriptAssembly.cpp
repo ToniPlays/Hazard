@@ -1,6 +1,5 @@
 
 #include "ScriptAssembly.h"
-#include "Buffer.h"
 #include "File.h"
 
 #include "Mono/Core/Mono.h"

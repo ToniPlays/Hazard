@@ -22,7 +22,6 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 void HazardProject::ProcessAssets()
 {
-	Timer timer;
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 	for (auto& item : File::GetAllInDirectory(assetPath)) 
 		ProcessAsset(item);
@@ -32,7 +31,6 @@ void HazardProject::ProcessAssets()
 	{
 		ProcessAsset(item);
 	}
-	HZR_INFO("Loading editor assets took {0} ms", timer.ElapsedMillis());
 }
 
 Hazard::AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)

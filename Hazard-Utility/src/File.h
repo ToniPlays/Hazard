@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "CachedBuffer.h"
+#include "Buffer/CachedBuffer.h"
 
 #include <fstream>
 #include <cstdlib>

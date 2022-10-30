@@ -1,7 +1,7 @@
 #pragma once
 
 #include "File.h"
-#include "MemoryDiagnostic.h"
+#include "Profiling/MemoryDiagnostic.h"
 
 #include <algorithm>
 #include <chrono>

@@ -78,7 +78,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
 		auto& commandBuffer = OpenGLContext::GetInstance().GetSwapchain()->GetSwapchainBuffer();
 

@@ -1,7 +1,6 @@
 
 #include "HazardScriptEngine.h"
 
-#include "Buffer.h"
 #include "Mono/Core/Mono.h"
 #include "ScriptCache.h"
 #include <thread>

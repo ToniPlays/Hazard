@@ -4,7 +4,7 @@
 #include "File.h"
 
 #include "vendor/stb_image.h"
-#include "CachedBuffer.h"
+#include "Buffer/CachedBuffer.h"
 
 namespace Hazard
 {
@@ -83,7 +83,6 @@ namespace Hazard
 	TextureHeader TextureFactory::LoadTextureFromCache(const AssetHandle& handle)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		auto cacheFile = GetCacheFile(handle);
 
 		CachedBuffer data = File::ReadBinaryFile(cacheFile);
@@ -105,7 +104,6 @@ namespace Hazard
 	}
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::string& path, bool verticalFlip)
 	{
-		Timer timer;
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
 		TextureHeader header = {};

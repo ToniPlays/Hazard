@@ -2,7 +2,7 @@
 
 #include "Buffer.h"
 #include "UtilityCore.h"
-#include "MemoryDiagnostic.h"
+#include "Profiling/MemoryDiagnostic.h"
 
 class CachedBuffer
 {

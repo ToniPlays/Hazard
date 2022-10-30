@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BufferLayout.h"
-#include "Buffer.h"
+#include "Buffer/Buffer.h"
 #include "Backend/Core/Core.h"
 
 namespace HazardRenderer

@@ -4,6 +4,7 @@
 #include <numeric>
 #include <string>
 
+
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
@@ -12,6 +13,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include <vector>
+#include "Profiling/PerformanceProfiler.h"
 
 namespace Math
 {
@@ -82,6 +84,7 @@ namespace Math
 	}
 	static glm::mat4 ToTransformMatrix(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale)
 	{
+		HZR_TIMED_FUNCTION();
 		glm::mat4 t = glm::translate(glm::mat4(1.0f), translation);
 		glm::mat4 r = glm::toMat4(glm::quat(rotation));
 		glm::mat4 s = glm::scale(glm::mat4(1.0f), scale);
@@ -102,6 +105,7 @@ namespace Math
 	}
 	static bool DecomposeTransform(const glm::mat4& transform, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
 	{
+		HZR_TIMED_FUNCTION();
 		// From glm::decompose in matrix_decompose.inl
 
 		using namespace glm;

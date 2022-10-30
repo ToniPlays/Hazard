@@ -4,6 +4,7 @@
 #include "../VulkanContext.h"
 
 #include "Utility/StringUtil.h"
+#include <MathCore.h>
 
 namespace HazardRenderer::Vulkan {
 
@@ -68,6 +69,7 @@ namespace HazardRenderer::Vulkan {
 	}
 	void VulkanAllocator::UnmapMemory(VmaAllocation allocation)
 	{
+		HZR_TIMED_FUNCTION();
 		vmaUnmapMemory(s_Data->Allocator, allocation);
 	}
 	GPUMemoryStats VulkanAllocator::GetGPUStats()

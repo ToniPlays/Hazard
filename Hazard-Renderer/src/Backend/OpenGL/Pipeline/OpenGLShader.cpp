@@ -10,6 +10,7 @@
 #include "../Textures/OpenGLImage2D.h"
 #include "../OpenGLContext.h"
 #include "OpenGLBuffers.h"
+#include "Profiling/Timer.h"
 
 #include <sstream>
 #include <glad/glad.h>
@@ -183,7 +184,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		OpenGLShaderCompiler compiler;
 		ShaderData data = compiler.GetShaderResources(binaries);
 

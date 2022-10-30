@@ -19,6 +19,7 @@ namespace Hazard::ImUI
 	void PanelManager::Render()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		for (GUIRenderable* renderable : m_Renderables) 
 		{
 			renderable->Render();

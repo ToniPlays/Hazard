@@ -54,7 +54,7 @@ void HazardEditorApplication::PreInit()
 
 	RenderContextCreateInfo renderContextInfo = {};
 	renderContextInfo.Renderer = renderAPI;
-	renderContextInfo.VSync = true;
+	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
 	renderContextInfo.Width = 1920;
 	renderContextInfo.Height = 1080;

@@ -5,6 +5,7 @@
 
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
+#include "Profiling/PerformanceProfiler.h"
 
 namespace HazardRenderer::Vulkan
 {
@@ -28,8 +29,10 @@ namespace HazardRenderer::Vulkan
 		void DestroyImage(VkImage image, VmaAllocation allocation);
 		
 		template<typename T>
-		T* MapMemory(VmaAllocation allocation) {
-			T* mappedMemory;
+		T* MapMemory(VmaAllocation allocation) 
+		{
+			HZR_TIMED_FUNCTION();
+			T* mappedMemory = nullptr;
 			vmaMapMemory(GetAllocator(), allocation, (void**)&mappedMemory);
 			return mappedMemory;
 		}

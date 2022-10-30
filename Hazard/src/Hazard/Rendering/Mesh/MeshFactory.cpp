@@ -93,7 +93,6 @@ namespace Hazard
 	MeshData MeshFactory::LoadMeshFromSource(const std::filesystem::path& file)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 
 		Assimp::Importer importer;
@@ -106,17 +105,13 @@ namespace Hazard
 		ProcessNode(scene->mRootNode, scene, data);
 		TraverseNode(scene->mRootNode, data);
 
-		//HZR_CORE_INFO("Loading mesh {0} took {1} ms", file.string(), timer.ElapsedMillis());
-
 		return data;
 	}
 	MeshData MeshFactory::LoadMeshFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path)
 	{
 		if (MeshFactory::CacheStatus(handle) == CacheStatus::Exists)
 		{
-			Timer timer;
 			MeshData result = MeshFactory::LoadMeshFromCache(handle);
-			//HZR_CORE_INFO("Loading mesh {0} took {1} ms", path.string(), timer.ElapsedMillis());
 			return result;
 		}
 

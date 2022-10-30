@@ -9,7 +9,7 @@
 #include <shlobj.h>
 #include <cstdlib>
 #include <Windows.h>
-#include "PlatformUtils.h"
+#include "Platform/PlatformUtils.h"
 #endif
 
 std::string File::OpenFileDialog() 

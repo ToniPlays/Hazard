@@ -52,6 +52,7 @@ namespace Hazard
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3 endPos, const glm::vec4& color)
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		if (m_LineBatch->GetCount() >= m_Data.MaxVertices)
 		{
 			Flush();

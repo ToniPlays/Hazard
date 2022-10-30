@@ -213,9 +213,6 @@
     <ClInclude Include="src\Hazard\ModuleHandler.h">
       <Filter>src\Hazard</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\PerformanceProfiler.h">
-      <Filter>src\Hazard</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Physics\Physics2D\Physics2D.h">
       <Filter>src\Hazard\Physics\Physics2D</Filter>
     </ClInclude>

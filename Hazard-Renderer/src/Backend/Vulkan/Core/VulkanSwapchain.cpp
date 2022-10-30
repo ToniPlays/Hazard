@@ -11,6 +11,7 @@
 #include "spdlog/fmt/fmt.h"
 
 #include <array>
+#include <Profiling/PerformanceProfiler.h>
 
 // Macro to get a procedure address based on a vulkan instance
 #define GET_INSTANCE_PROC_ADDR(inst, entrypoint)                        \
@@ -489,6 +490,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanSwapchain::BeginFrame()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		m_CurrentImageIndex = AcquireSwapchainImage();
 		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
 		m_RenderCommandBuffer->Begin();
@@ -496,6 +498,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanSwapchain::Present()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		m_RenderCommandBuffer->End();
 		const uint64_t DEFAULT_TIMEOUT = 100000000000;
 

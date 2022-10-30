@@ -234,7 +234,7 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
-
+			HZR_TIMED_FUNCTION();
 			HZR_ASSERT(instance->m_State == State::Finished, "Command buffer not in recording state");
 			instance->m_State = State::Submit;
 			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
@@ -258,9 +258,7 @@ namespace HazardRenderer::Vulkan
 
 			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, s_ComputeFence), "");
 			{
-				Timer timer;
 				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
-				std::cout << "Compute took " << timer.ElapsedMillis() << std::endl;
 			}
 			});
 	}

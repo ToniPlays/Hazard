@@ -1,6 +1,7 @@
 
 #include "PerformanceDebugPanel.h"
 #include "Core/MessageFlags.h"
+#include "Profiling/PerformanceProfiler.h"
 
 namespace UI
 {
@@ -11,6 +12,11 @@ namespace UI
 
 		if (ImGui::BeginTabBar("##perf"))
 		{
+			if (ImGui::BeginTabItem("Function timers"))
+			{
+				DrawPerformanceTimers();
+				ImGui::EndTabItem();
+			}
 			if (ImGui::BeginTabItem("Memory"))
 			{
 				DrawMemoryView();
@@ -19,6 +25,42 @@ namespace UI
 
 			ImGui::EndTabBar();
 		}
+	}
+	void PerformanceDebugPanel::DrawPerformanceTimers()
+	{
+		const auto& allocStats = Memory::GetAllocationStats();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
+
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		const char* columns[] = { "Category", "Time" };
+
+		ImUI::Table("MemoryUsage", columns, 2, size, [&]() {
+
+			float rowHeight = 24.0f;
+
+			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+			const auto timerMap = PerformanceProfiler::GetPerFrameData();
+			PerformanceProfiler::Clear();
+
+			for (auto& [name, time] : timerMap)
+			{
+				bool clicked = ImUI::TableRowClickable((const char*)name, rowHeight);
+
+				auto& n = name;
+				auto& t = time;
+
+				ImUI::Group((const char*)&name, [&]() {
+					ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisY);
+					ImGui::SameLine();
+					ImGui::Text(n);
+					ImGui::TableNextColumn();
+					ImUI::ShiftX(4.0f);
+					ImGui::Text("%.6f ms", t);
+					});
+			}
+			});
+
 	}
 	void PerformanceDebugPanel::DrawMemoryView()
 	{
@@ -31,12 +73,10 @@ namespace UI
 		ImGui::Text("Allocated: %s", StringUtil::BytesToString(allocStats.TotalAllocated).c_str());
 		ImGui::Text("Freed: %s", StringUtil::BytesToString(allocStats.TotalFreed).c_str());
 
-
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Category", "Allocated" };
+		const char* columns[] = { "Time", "Function" };
 
-
-		ImUI::Table("Memory usage", columns, 2, size, [&]() {
+		ImUI::Table("MemoryAlloc", columns, 2, size, [&]() {
 
 			float rowHeight = 24.0f;
 

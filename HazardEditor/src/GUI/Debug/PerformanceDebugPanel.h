@@ -12,6 +12,7 @@ namespace UI
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
 	private:
+		void DrawPerformanceTimers();
 		void DrawMemoryView();
 		ImVec4 GetMemoryColor(size_t bytes);
 

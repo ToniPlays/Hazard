@@ -11,6 +11,7 @@
 #include "VulkanUniformBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
+#include "Profiling/Timer.h"
 
 #include <sstream>
 #include <glad/glad.h>
@@ -197,7 +198,6 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
-		Timer timer;
 		m_ShaderData.Stages.clear();
 
 		VulkanShaderCompiler compiler;

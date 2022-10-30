@@ -2,6 +2,8 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "MathCore.h"
+#include "Profiling/Timer.h"
+
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>

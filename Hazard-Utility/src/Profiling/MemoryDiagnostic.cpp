@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <Profiling/PerformanceProfiler.h>
 
 namespace Memory
 {

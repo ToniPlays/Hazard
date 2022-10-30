@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <string>
 #include "HazardRuntimeError.h"
-#include "Timer.h"
 #include "Instrumentor.h"
 
 #define HZR_PROFILE

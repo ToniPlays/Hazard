@@ -1,8 +1,7 @@
 #pragma once
 
+#include "Profiling/MemoryDiagnostic.h"
 #include <assert.h>
-#include "UtilityCore.h"
-#include "MemoryDiagnostic.h"
 
 struct Buffer 
 {
@@ -83,13 +82,13 @@ struct Buffer
 
 	template<typename T>
 	static T Get(void* data, size_t startIndex = 0) {
-		T value;
+		T value = {};
 		memcpy(&value, (uint8_t*)data + startIndex, sizeof(T));
 		return value;
 	}
 	template<typename T>
 	static T GetRaw(void* data, size_t len, size_t startIndex = 0) {
-		T value;
+		T value = {};
 		memcpy(&value, data, len);
 		return value;
 	}

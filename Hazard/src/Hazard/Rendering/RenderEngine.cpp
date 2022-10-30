@@ -204,6 +204,7 @@ namespace Hazard
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
 
 		for (auto& worldDrawList : m_DrawList)

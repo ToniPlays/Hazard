@@ -41,10 +41,10 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_Size;
 		uint32_t m_Binding;
 		uint32_t m_Usage;
+		uint32_t m_FrameIndex;
 
 		Buffer m_LocalData;
 		uint32_t m_CurrentBufferDataIndex = 0;
-		uint32_t m_FrameIndex = 255;
 
 		VkBuffer m_UniformBuffer = VK_NULL_HANDLE;
 		VmaAllocation m_BufferAllocation = nullptr;

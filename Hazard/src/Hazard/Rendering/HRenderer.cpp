@@ -132,6 +132,7 @@ namespace Hazard
 
 	void HRenderer::SubmitBoundingBox(const glm::mat4& transform, const BoundingBox& boundingBox, const Color& color)
 	{
+		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		auto& lineRenderer = s_Engine->GetLineRenderer();
 

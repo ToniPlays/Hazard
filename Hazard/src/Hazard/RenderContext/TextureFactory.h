@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#include "Buffer.h"
+#include "Buffer/Buffer.h"
 #include "HazardRendererCore.h"
 #include <filesystem>
 #include <iostream>

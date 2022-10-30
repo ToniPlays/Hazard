@@ -1,27 +1,24 @@
 #pragma once
 
-#ifndef HZR_CUSTOM_ENTRY
-
 #ifdef HZR_PLATFORM_WINDOWS
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
 #endif
 
-#include "MemoryDiagnostic.h"
+#include "Profiling/MemoryDiagnostic.h"
 
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Core/CommandLineArgs.h"
 
 #include <stdio.h>
-#include "Utility/StringUtil.h"
 
 extern Hazard::Application* Hazard::CreateApplication();
 
 #ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
 
-#ifdef HZR_DEBUG
+#if defined(HZR_DEBUG) || defined(HZR_RELEASE)
 
 #pragma comment( linker, "/subsystem:console" )
 int main(int argc, char* argv[])
@@ -38,7 +35,7 @@ int main(int argc, char* argv[])
 		HazardLoop loop(app);
 		loop.Start();
 
-		while (!loop.ShouldClose()) 
+		while (!loop.ShouldClose())
 			loop.Run();
 	}
 	return 0;
@@ -57,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HazardLoop loop(app);
 	loop.Start();
 
-	while (!loop.ShouldClose()) 
+	while (!loop.ShouldClose())
 		loop.Run();
 	return 0;
 }
@@ -78,8 +75,5 @@ int main(int argc, char* argv[])
 		}
 	}
 	return 0;
-
-	return 0;
 }
 #endif // HZR_PLATFORM_WINDOWS
-#endif

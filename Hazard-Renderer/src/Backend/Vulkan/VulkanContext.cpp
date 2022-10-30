@@ -49,12 +49,9 @@ namespace HazardRenderer::Vulkan
 		message.Description = "Validation error";
 		message.StackTrace = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
 
-		std::cout << message.StackTrace << std::endl;
-
 		Window::SendDebugMessage(message);
 		return VK_FALSE;
 	}
-
 
 	static bool CheckDriverAPIVersion(uint32_t minimumAPIVersion)
 	{

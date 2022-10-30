@@ -15,8 +15,6 @@
 #include "Hazard/Core/HazardLoop.h"
 #include "HazardRuntimeError.h"
 #include "Hazard/Logging/Logger.h"
-#include "Hazard/PerformanceProfiler.h"
-
 
 #include "Backend/Core/Core.h"
 #include "File.h"

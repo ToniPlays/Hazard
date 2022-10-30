@@ -7,7 +7,6 @@
 #include "ManagedType.h"
 #include "Core/FieldValueStorageBase.h"
 
-#include "Buffer.h"
 #include <unordered_map>
 
 namespace HazardScript

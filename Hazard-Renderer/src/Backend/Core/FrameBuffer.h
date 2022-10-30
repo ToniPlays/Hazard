@@ -53,8 +53,8 @@ namespace HazardRenderer
 		glm::vec4 ClearColor;
 		std::vector<FrameBufferAttachment> Attachments;
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
-		bool SwapChainTarget;
-		bool ClearOnLoad;
+		bool SwapChainTarget = false;
+		bool ClearOnLoad = true;
 		std::string DebugName;
 	};
 
