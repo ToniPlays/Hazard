@@ -55,7 +55,7 @@ namespace HazardRenderer
 	struct BufferCopyRegion
 	{
 		const void* Data = nullptr;
-		size_t Size;
+		size_t Size = 0;
 		size_t Offset = 0;
 	};
 

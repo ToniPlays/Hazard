@@ -23,6 +23,7 @@ namespace UI
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
 		bool KeyPressed(KeyPressedEvent& e);
 		void DrawStatsWindow();
+		void DrawSettingsWindow();
 
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
@@ -36,6 +37,7 @@ namespace UI
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 
 		bool m_DrawStats = false;
+		bool m_DrawSettings = false;
 		bool m_WindowFocused = false;
 
 		uint32_t m_CurrentImage = 0;

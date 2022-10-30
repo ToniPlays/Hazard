@@ -19,7 +19,10 @@ namespace Hazard
 		m_Data.MaxIndices = quadCount * 6;
 
 		m_Data.Samplers = 32;
-		m_QuadBatch = Batch<QuadVertex>(m_Data.MaxVertices);
+		if(m_QuadBatch)
+			hdelete m_QuadBatch;
+
+		m_QuadBatch = hnew Batch<QuadVertex>(m_Data.MaxVertices);
 		m_Data.TextureSlots.resize(m_Data.Samplers);
 
 		Ref<Image2D> whiteTexture = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
@@ -40,7 +43,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		m_Data.TextureIndex = 1.0f;
-		m_QuadBatch.Reset();
+		m_QuadBatch->Reset();
 	}
 	void QuadRenderer::Flush()
 	{
@@ -48,8 +51,8 @@ namespace Hazard
 		if (!m_QuadBatch) return;
 
 		BufferCopyRegion region = {};
-		region.Data = m_QuadBatch.GetData();
-		region.Size = m_QuadBatch.GetDataSize();
+		region.Data = m_QuadBatch->GetData();
+		region.Size = m_QuadBatch->GetDataSize();
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
@@ -58,7 +61,7 @@ namespace Hazard
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch.GetIndexCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch->GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -66,12 +69,14 @@ namespace Hazard
 
 		if (!IsVisible(transform)) return;
 
-		if (m_QuadBatch.GetIndexCount() >= m_Data.MaxIndices) {
+		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices) {
 			Flush();
 			BeginScene();
 		}
 
-		float textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
+		float textureIndex = 0.0f;
+		if(texture)
+			textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
@@ -83,9 +88,9 @@ namespace Hazard
 			vertex.TextureCoords = textureCoords[i];
 			vertex.TextureIndex = textureIndex;
 
-			m_QuadBatch.Push(vertex);
+			m_QuadBatch->Push(vertex);
 		}
-		m_QuadBatch.AddIndices(6);
+		m_QuadBatch->AddIndices(6);
 	}
 
 	bool QuadRenderer::IsVisible(const glm::mat4& transform)

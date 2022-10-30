@@ -25,7 +25,7 @@ namespace Hazard
 	{
 	public:
 		LineRenderer();
-		~LineRenderer() = default;
+		~LineRenderer() { __debugbreak(); }
 		LineRenderer(const LineRenderer&) = delete;
 		LineRenderer(const LineRenderer&&) = delete;
 
@@ -47,9 +47,7 @@ namespace Hazard
 		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:
-
-	private:
-		Batch<LineVertex> m_LineBatch;
+		Batch<LineVertex>* m_LineBatch = nullptr;
 		LineRendererData m_Data;
 
 		Ref<HazardRenderer::Pipeline> m_Pipeline;

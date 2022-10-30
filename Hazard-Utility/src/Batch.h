@@ -7,52 +7,43 @@ template<typename Type>
 class Batch 
 {
 public:
-	Batch() : m_DataSize(sizeof(Type)) {}
-	Batch(size_t size) : m_DataSize(sizeof(Type)) 
+	Batch() = default;
+	Batch(size_t size)
 	{
 		Resize(size);
 	};
 	~Batch()
 	{
-		hdelete[] m_BufferBase;
+		m_DataBuffer.Release();
 	};
 
 	void Push(const Type& data)
 	{
-		memcpy(m_BufferPointer, &data, m_DataSize);
-		m_Count++;
-		m_BufferPointer++;
+		m_DataBuffer.Write(&data, sizeof(Type), m_WriteBufferOffset);
+		m_WriteBufferOffset += sizeof(Type);
 	};
 	inline void AddIndices(size_t count) { m_IndexCount += count; }
 	void Reset() 
 	{
-		m_BufferPointer = m_BufferBase;
+		m_WriteBufferOffset = 0;
 		m_IndexCount = 0;
-		m_Count = 0;
 	};
 	void Resize(size_t size)
 	{
-		m_Size = size;
-		m_BufferSize = m_Size * m_DataSize;
-
-		m_BufferBase = hnew Type[m_Size];
+		m_DataBuffer.Release();
+		m_DataBuffer.Allocate(size * sizeof(Type));
+		m_DataBuffer.ZeroInitialize();
 		Reset();
 	}
 
-	void* GetData() { return m_BufferBase; }
-	size_t GetCount() { return m_Count; }
-	size_t GetSize() { return m_Size; }
-	size_t GetDataSize() { return (size_t)((uint8_t*)m_BufferPointer - (uint8_t*)m_BufferBase); }
+	const void* GetData() const { return m_DataBuffer.Data; }
+	size_t GetCount() { return m_WriteBufferOffset / sizeof(Type); }
+	size_t GetSize() { return m_DataBuffer.Size; }
+	size_t GetDataSize() { return m_WriteBufferOffset; }
 	size_t GetIndexCount() { return m_IndexCount; }
 	operator bool() const { return m_IndexCount != 0; }
-
 private:
-	size_t m_DataSize = 0;
-	size_t m_Size = 0;
-	size_t m_BufferSize = 0;
 	size_t m_IndexCount = 0;
-	size_t m_Count = 0;
-
-	Type* m_BufferBase;
-	Type* m_BufferPointer;
+	size_t m_WriteBufferOffset = 0;
+	Buffer m_DataBuffer;
 };

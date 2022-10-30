@@ -79,9 +79,7 @@ namespace UI
 		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
 
 		if (ImGui::Button(ICON_FK_COG, { 25, 25 }))
-		{
-
-		}
+			m_DrawSettings = !m_DrawSettings;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
 		ImGui::SameLine(0, 15);
@@ -93,9 +91,8 @@ namespace UI
 
 		ImGui::SameLine(0, 15);
 		if (ImGui::Button(ICON_FK_EYE " Show", { 0, 25 }))
-		{
 			m_DrawStats = !m_DrawStats;
-		}
+
 		ImGui::PopStyleVar();
 
 		ImGui::SameLine();
@@ -126,6 +123,8 @@ namespace UI
 
 		if (m_DrawStats)
 			DrawStatsWindow();
+		if (m_DrawSettings)
+			DrawSettingsWindow();
 
 		if (m_Gizmos.IsUsing()) return;
 
@@ -215,6 +214,32 @@ namespace UI
 
 		ImUI::Combo("Shading", "##shading", attachments, 5, m_CurrentImage);
 
+
+		ImGui::Columns();
+		ImGui::EndChild();
+	}
+	void Viewport::DrawSettingsWindow()
+	{
+		HZR_PROFILE_FUNCTION();
+		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);
+		
+		ImGui::SetCursorPosX(165);
+		ImGui::BeginChild("##settingsView", { 225, 160 }, false);
+
+		ImGui::Dummy({ 0, 3 });
+
+		ImGui::Columns(2, 0, true);
+
+		ImGui::Text("Bounding boxes");
+		ImGui::NextColumn();
+		ImGui::Checkbox("#bounding", nullptr);
+		ImGui::NextColumn();
+
+		ImGui::Text("Camera frustum");
+		ImGui::NextColumn();
+		ImGui::Checkbox("#frustum", nullptr);
 
 		ImGui::Columns();
 		ImGui::EndChild();

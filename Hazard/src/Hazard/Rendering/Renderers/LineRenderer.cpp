@@ -17,7 +17,9 @@ namespace Hazard
 		m_Data.MaxLineCount = lineCount;
 		m_Data.MaxVertices = lineCount * 2;
 
-		m_LineBatch = Batch<LineVertex>(m_Data.MaxVertices);
+		if (m_LineBatch)
+			hdelete m_LineBatch;
+		m_LineBatch = hnew Batch<LineVertex>(m_Data.MaxVertices);
 	}
 	void LineRenderer::BeginScene()
 	{
@@ -32,42 +34,41 @@ namespace Hazard
 	void LineRenderer::BeginBatch()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_LineBatch.Reset();
+		m_LineBatch->Reset();
 	}
 	void LineRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!m_LineBatch.GetCount()) return;
+		if (!m_LineBatch->GetCount()) return;
 
 		BufferCopyRegion region = {};
-		region.Data = m_LineBatch.GetData();
-		region.Size = m_LineBatch.GetDataSize();
+		region.Data = m_LineBatch->GetData();
+		region.Size = m_LineBatch->GetDataSize();
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch.GetCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch->GetCount());
 	}
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3 endPos, const glm::vec4& color)
 	{
 		HZR_PROFILE_FUNCTION();
-
-		if (m_LineBatch.GetCount() >= m_Data.MaxVertices)
+		if (m_LineBatch->GetCount() >= m_Data.MaxVertices)
 		{
 			Flush();
-			BeginScene();
+			BeginBatch();
 		}
 
 		LineVertex startVertex = {};
 		startVertex.Position = startPos;
 		startVertex.Color = color;
 
-		m_LineBatch.Push(startVertex);
+		m_LineBatch->Push(startVertex);
 
 		LineVertex endVertex = {};
 		endVertex.Position = endPos;
 		endVertex.Color = color;
 
-		m_LineBatch.Push(endVertex);
+		m_LineBatch->Push(endVertex);
 	}
 
 	void LineRenderer::CreateResources(Ref<RenderPass> renderPass)
@@ -100,6 +101,8 @@ namespace Hazard
 		pipelineSpecs.pTargetRenderPass = renderPass;
 		pipelineSpecs.pBufferLayout = &layout;
 		pipelineSpecs.DepthTest = true;
+		pipelineSpecs.DepthWrite = true;
+		pipelineSpecs.DepthOperator = DepthOp::Less;
 
 		m_Pipeline = Pipeline::Create(&pipelineSpecs);
 		m_RenderPass = renderPass;

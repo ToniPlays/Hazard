@@ -69,7 +69,7 @@ namespace Hazard
 		float GetImageIndex(const Ref<HazardRenderer::Image2D>& image);
 
 	private:
-		Batch<QuadVertex> m_QuadBatch;
+		Batch<QuadVertex>* m_QuadBatch = nullptr;
 		QuadRendererData m_Data;
 
 		Ref<HazardRenderer::Pipeline> m_Pipeline;

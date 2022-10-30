@@ -16,7 +16,6 @@ namespace HazardRenderer::Vulkan
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 	{
-		bool breakOnValidation = false;
 		const bool performanceWarn = true;
 
 		if (!performanceWarn && messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
@@ -52,9 +51,7 @@ namespace HazardRenderer::Vulkan
 
 		std::cout << message.StackTrace << std::endl;
 
-		if (breakOnValidation) __debugbreak();
-
-		//Window::SendDebugMessage(message);
+		Window::SendDebugMessage(message);
 		return VK_FALSE;
 	}
 
@@ -110,7 +107,6 @@ namespace HazardRenderer::Vulkan
 		features.enabledValidationFeatureCount = 1;
 		features.pEnabledValidationFeatures = enables;
 
-
 		VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = info->pAppInfo->AppName.c_str();
@@ -146,6 +142,7 @@ namespace HazardRenderer::Vulkan
 				instanceInfo.ppEnabledLayerNames = &validationName;
 				instanceInfo.enabledLayerCount = 1;
 			}
+			HZR_ASSERT(validationPresent, "Could not find validation layers");
 		}
 		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_VulkanInstance);
 		VK_CHECK_RESULT(result, "Failed to create VkInstance");

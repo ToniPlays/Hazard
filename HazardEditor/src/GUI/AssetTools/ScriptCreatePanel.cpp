@@ -92,7 +92,9 @@ namespace UI
 		ImGui::NextColumn();
 
 		static bool onCreate = false;
-		if (ImGui::Checkbox("OnCreate", &onCreate)) {
+
+		if (ImGui::Checkbox("OnCreate", &onCreate)) 
+		{
 			if (onCreate)
 				m_CreateInfo.Methods[MethodImpl::OnCreate] = "\tpublic void OnCreate()\n\t{\n\t\n\t}";
 			else m_CreateInfo.Methods.erase(MethodImpl::OnCreate);

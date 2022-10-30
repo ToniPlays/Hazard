@@ -154,6 +154,7 @@ namespace HazardRenderer::Vulkan
 
 		VkCommandPool commandPool = m_CommandPool;
 		auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
 		vkDestroyCommandPool(device, commandPool, nullptr);
 	}
 	void VulkanRenderCommandBuffer::Begin()
