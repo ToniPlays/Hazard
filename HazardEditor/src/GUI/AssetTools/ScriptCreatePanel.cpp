@@ -7,6 +7,7 @@
 #include "Core/HazardEditor.h"
 
 using namespace Hazard;
+
 namespace UI
 {
 	ScriptCreatePanel::ScriptCreatePanel() : Hazard::ImUI::Modal("Create script", { 600, 700 })
@@ -36,14 +37,14 @@ namespace UI
 		ImUI::Group("Name", [&]() {
 			ImGui::Text("Class name");
 			ImGui::NextColumn();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			ImUI::TextFieldWithHint(m_CreateInfo.ClassName, "Class name");
 			ImGui::NextColumn();
 			});
 		ImUI::Group("Derive", [&]() {
 			ImGui::Text("Derives from");
 			ImGui::NextColumn();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			ImUI::TextFieldWithHint(m_CreateInfo.Derives, "Derives from");
 			});
 

@@ -26,10 +26,10 @@ namespace UI
 	{
 		using namespace HazardScript;
 		bool value = obj->GetFieldValue<bool>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		modified = ImGui::Checkbox("##bool", &value);
 
 		if (modified) 
@@ -44,10 +44,10 @@ namespace UI
 	{
 		using namespace HazardScript;
 		float value = obj->GetFieldValue<float>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		if (field->Has<RangeAttribute>()) 
 		{
 			Ref<RangeAttribute> attrib = field->Get<RangeAttribute>();
@@ -73,7 +73,7 @@ namespace UI
 	static bool ScriptField<double>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		double value = obj->GetFieldValue<double>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputDouble(value, 0.0f);
@@ -87,7 +87,7 @@ namespace UI
 	static bool ScriptField<int8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int8_t value = obj->GetFieldValue<int8_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -101,7 +101,7 @@ namespace UI
 	static bool ScriptField<int16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int16_t value = obj->GetFieldValue<int16_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -114,7 +114,7 @@ namespace UI
 	static bool ScriptField<int32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int32_t value = obj->GetFieldValue<int32_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -127,7 +127,7 @@ namespace UI
 	static bool ScriptField<int64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint64_t value = obj->GetFieldValue<int64_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -141,7 +141,7 @@ namespace UI
 	static bool ScriptField<uint8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint8_t value = obj->GetFieldValue<uint8_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -154,7 +154,7 @@ namespace UI
 	static bool ScriptField<uint16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint16_t value = obj->GetFieldValue<uint16_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -167,7 +167,7 @@ namespace UI
 	static bool ScriptField<uint32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint32_t value = obj->GetFieldValue<uint32_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -180,7 +180,7 @@ namespace UI
 	static bool ScriptField<uint64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint64_t value = obj->GetFieldValue<uint64_t>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = false;
 
 		modified = ImUI::InputInt((int&)value, 0);
@@ -211,7 +211,7 @@ namespace UI
 	template<>
 	static bool ScriptField<glm::vec4>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		Color value = Color::FromGLM(obj->GetFieldValue<glm::vec4>(field->GetName(), index));
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = ImUI::ColorPicker("##color", value);
 		if (modified) {
 			obj->SetFieldValue<glm::vec4>(field->GetName(), value.ToGLM(), index);
@@ -222,7 +222,7 @@ namespace UI
 	static bool ScriptField<std::string>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		std::string value = obj->GetFieldValue<std::string>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
 		bool modified = false;
 
@@ -243,7 +243,7 @@ namespace UI
 
 		using namespace HazardScript;
 		Hazard::ObjectReference value = obj->GetFieldValue<Hazard::ObjectReference>(field->GetName(), index);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
 		std::string typeName;
 		std::string displayName;
@@ -297,7 +297,7 @@ namespace UI
 			});
 
 
-		ImGui::SameLine(ImGui::GetContentRegionAvailWidth(), 5);
+		ImGui::SameLine(ImGui::GetContentRegionAvail().x, 5);
 		if (ImGui::Button("X", { rowHeight, rowHeight })) {
 			value.ObjectUID = 0;
 			modified |= true;
@@ -329,7 +329,7 @@ namespace UI
 		if (field->GetType().IsArray()) 
 		{
 			uint32_t size = obj->GetFieldValueCount(field->GetName());
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			bool resized = ImUI::InputInt((int&)size, 0);
 
 			if (resized) 

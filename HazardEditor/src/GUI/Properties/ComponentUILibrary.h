@@ -5,62 +5,92 @@
 #include "Hazard/Scripting/HScript.h"
 #include "ScriptFieldUI.h"
 
+#include "Editor/EditorUtils.h"
+
+#include <vector>
+
 namespace UI
 {
 	constexpr float colWidth = 100.0f;
 
+	using namespace Hazard;
+
 	template<typename T>
-	static bool ComponentMenuIfExists(Entity& e)
+	static bool ComponentMenuIfExists(std::vector<Entity>& entities)
 	{
-		if (e.HasComponent<T>()) {
-			bool ret = ComponentMenu<T>(e, e.GetComponent<T>());
-			//const Style& style = StyleManager::GetCurrent();
-			//Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Frame.FrameColor);
-			return ret;
-		}
+		if (AllEntitiesContain<T>(entities))
+			return ComponentMenu<T>(entities);
 		return false;
 	}
 	template<typename T>
-	static bool ComponentMenu(Entity& e, T& c) {
+	static bool ComponentMenu(std::vector<Entity>& entities) 
+	{
 		static_assert(false);
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, TagComponent& c)
+	static bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
 	{
-		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImUI::TextField(c.Tag);
-		return true;
+		//ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+		//ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		//ImUI::TextField(c.Tag);
+		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, TransformComponent& c)
+	static bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
 	{
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
-				glm::vec3 translation = c.GetTranslation();
-				glm::vec3 scale = c.GetScale();
-				glm::vec3 rot = {
-					glm::degrees(c.GetRotation().x),
-					glm::degrees(c.GetRotation().y),
-					glm::degrees(c.GetRotation().z)
-				};
 
+				auto& firstTc = entities[0].GetComponent<TransformComponent>();
+
+				uint32_t flags = 0;
+				glm::vec3 translation = firstTc.GetTranslation();
+				glm::vec3 rotation = glm::eulerAngles(firstTc.GetRotation());
+				glm::vec3 scale = firstTc.GetScale();
+
+				for (uint32_t i = 1; i < entities.size(); i++)
+				{
+					auto& tc = entities[i].GetComponent<TransformComponent>();
+					auto& t = tc.GetTranslation();
+					auto& r = glm::eulerAngles(tc.GetRotation());
+					auto& s = tc.GetScale();
+
+					flags |= (t.x != translation.x	? BIT(0) : 0);
+					flags |= (t.y != translation.y	? BIT(1) : 0);
+					flags |= (t.z != translation.z	? BIT(2) : 0);
+
+					flags |= (r.x != rotation.x		? BIT(3) : 0);
+					flags |= (r.y != rotation.y		? BIT(4) : 0);
+					flags |= (r.z != rotation.z		? BIT(5) : 0);
+
+					flags |= (s.x != scale.x		? BIT(0) : 0);
+					flags |= (s.y != scale.y		? BIT(1) : 0);
+					flags |= (s.z != scale.z		? BIT(2) : 0);
+				}
+
+				rotation = { glm::degrees(rotation.x), glm::degrees(rotation.y), glm::degrees(rotation.z) };
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
-				if (ImUI::InputFloat3("Translation", translation))
-					c.SetTranslation(translation);
-				ImUI::ShiftY(3.0f);
-				ImGui::Separator();
-				ImUI::ShiftY(2.0f);
-				if (ImUI::InputFloat3("Rotation", rot)) {
-					c.SetRotation({ glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) });
+				if (ImUI::InputFloat3("Translation", translation, 0.0f, flags))
+				{
+					//c.SetTranslation(translation);
 				}
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				if (ImUI::InputFloat3("Scale", scale, 1.0f)) c.SetScale(scale);
+				if (ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3))
+				{
+					//c.SetRotation({ glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) });
+				}
+				ImUI::ShiftY(3.0f);
+				ImGui::Separator();
+				ImUI::ShiftY(2.0f);
+				if (ImUI::InputFloat3("Scale", scale, 1.0f, flags >> 6))
+				{
+					//c.SetScale(scale);
+				}
 				ImGui::Columns();
 
 				ImUI::ShiftY(3.0f);
@@ -69,15 +99,15 @@ namespace UI
 
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
-					c.SetTranslation({ 0, 0, 0 });
-					c.SetRotation({ 0, 0, 0 });
-					c.SetScale({ 1, 1, 1 });
+					//c.SetTranslation({ 0, 0, 0 });
+					//c.SetRotation({ 0, 0, 0 });
+					//c.SetScale({ 1, 1, 1 });
 					});
 			});
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, SpriteRendererComponent& c) {
+	static bool ComponentMenu<SpriteRendererComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
@@ -86,16 +116,18 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
+				/*
 				ImUI::TextureSlot("Sprite", c.Texture, [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
 						c.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
 						});
 					});
+					*/
 				ImGui::PopStyleVar();
 
-				if (ImUI::ColorPicker("Tint", "##Tint", c.Color)) {
+				/*if (ImUI::ColorPicker("Tint", "##Tint", c.Color)) {
 
-				}
+				}*/
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
@@ -104,19 +136,21 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
+				/*
 				ImUI::DragSource("Hazard.SpriteRendererComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Sprite renderer");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 
 		if (removed)
-			e.RemoveComponent<SpriteRendererComponent>();
+			RemoveComponentFromAll<SpriteRendererComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, CameraComponent& c)
+	static bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
 	{
 
 		bool removed = false;
@@ -128,13 +162,14 @@ namespace UI
 				ImGui::SetColumnWidth(0, colWidth);
 
 				const char* projectionTypes[] = { "Perspective", "Orthographic" };
-				uint32_t selected = (uint32_t)c.GetProjectionType();
+				uint32_t selected = 0; //(uint32_t)c.GetProjectionType();
 
 				//Projection type here
 				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected))
 				{
-					c.SetProjection((Projection)selected);
+					//c.SetProjection((Projection)selected);
 				}
+				/*
 				if (c.GetProjectionType() == Projection::Perspective) {
 					float fov = c.GetFov();
 
@@ -150,36 +185,38 @@ namespace UI
 						c.SetSize(size);
 					}
 				}
+				*/
 
-				glm::vec2 clipping = c.GetClipping();
+				glm::vec2 clipping;
 				if (ImUI::InputFloat2("Clipping", clipping, 1.0f)) {
-					c.SetClipping(clipping);
+					//c.SetClipping(clipping);
 				}
 
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
-					c.SetFov(60.0f);
-					c.SetClipping({ 0.03f, 100.0f });
-					c.SetProjection(Projection::Perspective);
+					//c.SetFov(60.0f);
+					//c.SetClipping({ 0.03f, 100.0f });
+					//c.SetProjection(Projection::Perspective);
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.CameraComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.CameraComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Camera component");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 
 		if (removed)
-			e.RemoveComponent<CameraComponent>();
+			RemoveComponentFromAll<CameraComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, ScriptComponent& c) {
+	static bool ComponentMenu<ScriptComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -187,19 +224,19 @@ namespace UI
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 				using namespace HazardScript;
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
-				std::string oldModule = c.ModuleName;
+				std::string oldModule = "";
 
 				auto& scriptEngine = Application::GetModule<ScriptEngine>();
-				bool exists = scriptEngine.HasModule(c.ModuleName);
-				bool changed = ImUI::TextFieldWithHint(c.ModuleName, "Script class");
+				bool exists = scriptEngine.HasModule("");
+				bool changed = ImUI::TextFieldWithHint(std::string(""), "Script class");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
 					Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
 
 					if (script) {
-						c.ModuleName = script->GetModuleName();
+						//c.ModuleName = script->GetModuleName();
 						changed = true;
 					}
 					});
@@ -207,6 +244,7 @@ namespace UI
 
 				if (changed)
 				{
+					/*
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle)
 					{
 						c.m_Handle = nullptr;
@@ -216,8 +254,9 @@ namespace UI
 						ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 						c.m_Handle = script.CreateObject();
 					}
+					*/
 				}
-
+				/*
 				if (c.m_Handle)
 				{
 					ScriptMetadata& script = c.m_Handle->GetScript();
@@ -241,6 +280,7 @@ namespace UI
 					}
 					ImGui::Columns();
 				}
+				*/
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
 					});
@@ -248,19 +288,20 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.ScriptComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.ScriptComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Script component");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 
 		if (removed)
-			e.RemoveComponent<ScriptComponent>();
+			RemoveComponentFromAll<ScriptComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, SkyLightComponent& c) {
+	static bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -268,12 +309,14 @@ namespace UI
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				std::string name = "Empty";
+				/*
 				if (c.EnvironmentMap)
 				{
 					AssetHandle handle = c.EnvironmentMap->SourceImage->GetHandle();
 					AssetMetadata& data = AssetManager::GetMetadata(handle);
 					name = File::GetName(data.Path);
 				}
+				*/
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
@@ -281,21 +324,21 @@ namespace UI
 				ImGui::NextColumn();
 
 				ImGui::BeginDisabled();
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 				ImUI::TextField(name, "##environmentMap");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
 					Application::Get().SubmitMainThread([&, handle]() {
 						Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-						c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
+						//c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
 						});
 					});
 
 				ImGui::EndDisabled();
 
 				ImGui::NextColumn();
-				ImUI::SliderFloat("LodLevel", c.LodLevel, 1.0f, 0.0f, 1.0f);
-				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
+				//ImUI::SliderFloat("LodLevel", c.LodLevel, 1.0f, 0.0f, 1.0f);
+				//ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
 				ImGui::Columns();
 
 			}, [&]() {
@@ -305,18 +348,19 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.SkyLightComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.SkyLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Sky light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<SkyLightComponent>();
+			RemoveComponentFromAll<SkyLightComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, DirectionalLightComponent& c) {
+	static bool ComponentMenu<DirectionalLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -325,10 +369,10 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
+				//if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
 
-				}
-				ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.025f);
+				//}
+				//ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.025f);
 
 				ImGui::Columns();
 			}, [&]() {
@@ -338,18 +382,19 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.DirectionalLightComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.DirectionalLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Directional light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<DirectionalLightComponent>();
+			RemoveComponentFromAll<DirectionalLightComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, PointLightComponent& c) {
+	static bool ComponentMenu<PointLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -358,11 +403,11 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
+				/*if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
 
-				}
 
 				ImUI::InputFloat("Intensity", c.Intensity, 1.0f);
+				}*/
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
@@ -371,18 +416,19 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.PointLightComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.PointLightComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Point light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<PointLightComponent>();
+			RemoveComponentFromAll<PointLightComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, MeshComponent& c) {
+	static bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -394,9 +440,8 @@ namespace UI
 				ImGui::NextColumn();
 
 				AssetMetadata data;
-				if (c.m_MeshHandle)
+				/*if (c.m_MeshHandle)
 					data = AssetManager::GetMetadata(c.m_MeshHandle->GetHandle());
-
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
@@ -405,13 +450,14 @@ namespace UI
 
 				}
 				ImGui::PopStyleVar();
+					*/
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-					c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
+					//c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 					});
 				ImGui::NextColumn();
-				ImUI::InputFloat("Metalness", c.Metalness, 0.0f, 0.025f, 0.0f, 1.0f);
-				ImUI::InputFloat("Roughness", c.Roughness, 1.0f, 0.025f, 0.0f, 1.0f);
+				//ImUI::InputFloat("Metalness", c.Metalness, 0.0f, 0.025f, 0.0f, 1.0f);
+				//ImUI::InputFloat("Roughness", c.Roughness, 1.0f, 0.025f, 0.0f, 1.0f);
 
 				ImGui::Columns();
 			}, [&]() {
@@ -421,19 +467,19 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.MeshComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.MeshComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Mesh");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<MeshComponent>();
+			RemoveComponentFromAll<MeshComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, Rigidbody2DComponent& c) {
-
+	static bool ComponentMenu<Rigidbody2DComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
@@ -447,23 +493,26 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.Rigidbody2DComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.Rigidbody2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Rigidbody 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<Rigidbody2DComponent>();
+			RemoveComponentFromAll<Rigidbody2DComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, BoxCollider2DComponent& c) {
+	static bool ComponentMenu<BoxCollider2DComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_CODEPEN " Box collider 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+
+
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
 					});
@@ -471,18 +520,19 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.BoxCollider2DComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.BoxCollider2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Box collider 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<BoxCollider2DComponent>();
+			RemoveComponentFromAll<BoxCollider2DComponent>(entities);
 
 		return false;
 	}
 	template<>
-	static bool ComponentMenu(Entity& e, CircleCollider2DComponent& c) {
+	static bool ComponentMenu<CircleCollider2DComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -495,13 +545,14 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				ImUI::DragSource("Hazard.CircleCollider2DComponent", &e.GetUID(), [&]() {
+				/*ImUI::DragSource("Hazard.CircleCollider2DComponent", &e.GetUID(), [&]() {
 					ImGui::Text("Circle collider 2D");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
+					*/
 			});
 		if (removed)
-			e.RemoveComponent<CircleCollider2DComponent>();
+			RemoveComponentFromAll<CircleCollider2DComponent>(entities);
 
 		return false;
 	}

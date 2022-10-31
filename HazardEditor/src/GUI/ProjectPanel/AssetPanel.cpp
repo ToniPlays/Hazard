@@ -89,7 +89,7 @@ namespace UI
 	void AssetPanel::DrawToolbar()
 	{
 		HZR_PROFILE_FUNCTION();
-		const ImVec2 size = { ImGui::GetContentRegionAvailWidth(), 32.0f };
+		const ImVec2 size = { ImGui::GetContentRegionAvail().x, 32.0f };
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);

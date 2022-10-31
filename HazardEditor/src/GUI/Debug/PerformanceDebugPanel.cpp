@@ -29,7 +29,7 @@ namespace UI
 	void PerformanceDebugPanel::DrawPerformanceTimers()
 	{
 		const auto& allocStats = Memory::GetAllocationStats();
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
@@ -66,7 +66,7 @@ namespace UI
 	{
 #ifdef HZR_MEM_DIAG
 		const auto& allocStats = Memory::GetAllocationStats();
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
 
 		ImGui::Text("Memory usage: %s", StringUtil::BytesToString(allocStats.TotalAllocated - allocStats.TotalFreed).c_str());

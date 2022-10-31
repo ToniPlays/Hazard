@@ -4,6 +4,8 @@
 #include "Editor/EditorWorldManager.h"
 #include "Hazard/Rendering/HRenderer.h"
 
+#include "MedianPoint.h"
+
 using namespace HazardRenderer;
 
 namespace UI
@@ -166,9 +168,16 @@ namespace UI
 
 		if (m_SelectionContext.size() > 0)
 		{
-			Entity& e = m_SelectionContext[0];
-			auto& tc = e.GetComponent<TransformComponent>();
-			glm::mat4 target = tc.GetTransformMat4();
+			MedianPoint point = {};
+			point.Reset();
+
+			for (auto & entity : m_SelectionContext)
+			{
+				auto& c = entity.GetComponent<TransformComponent>();
+				point.Encapsulate(c.GetTranslation());
+			}
+
+			glm::mat4 target = glm::translate(glm::mat4(1.0f), point.GetMedianPoint());
 			glm::mat4 deltaMatrix = m_Gizmos.RenderGizmo(m_EditorCamera, target, size);
 
 			if (m_Gizmos.IsUsing())

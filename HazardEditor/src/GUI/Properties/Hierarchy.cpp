@@ -28,7 +28,7 @@ namespace UI
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
 		const char* columns[] = { "Name", "Type", "Modifiers" };
@@ -163,7 +163,7 @@ namespace UI
 				Entity e = world->CreateEntity("New entity");
 				});
 
-			ImUI::Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Window.HeaderActive);
+			ImUI::Separator({ ImGui::GetContentRegionAvail().x, 2.0f }, style.Window.HeaderActive);
 
 			ImUI::MenuItem("Camera", [&]() {
 				auto& entity = world->CreateEntity("New camera");

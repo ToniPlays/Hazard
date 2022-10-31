@@ -13,7 +13,7 @@ namespace UI
 	glm::mat4 TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, glm::mat4& target, ImVec2 size)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (m_Type == Gizmo::None)
+		if (m_Type == Gizmo::None || m_Type == Gizmo::Scale)
 		{
 			m_IsUsing = false;
 			return target;

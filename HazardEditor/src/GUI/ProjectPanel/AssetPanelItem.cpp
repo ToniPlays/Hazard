@@ -151,7 +151,7 @@ namespace UI
 		if (m_Flags & AssetPanelItemFlags_Renaming)
 		{
 			ImGui::SetKeyboardFocusHere();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth() - edgeOffset * 4.0f);
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - edgeOffset * 4.0f);
 			ImUI::TextField(m_RenameValue);
 			if (ImGui::IsItemDeactivated())
 			{

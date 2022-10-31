@@ -9,7 +9,7 @@ namespace UI
 	void Properties::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!m_SelectionContext.IsValid()) return;
+		if (m_SelectionContext.size() == 0) return;
 
 		UI::ComponentMenuIfExists<TagComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<TransformComponent>(m_SelectionContext);
@@ -27,6 +27,7 @@ namespace UI
 		UI::ComponentMenuIfExists<Rigidbody2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<BoxCollider2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CircleCollider2DComponent>(m_SelectionContext);
+		/*
 		{
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
@@ -60,7 +61,7 @@ namespace UI
 					});
 			}
 		}
-
+		*/
 		DrawContextMenu(m_SelectionContext);
 	}
 	bool Properties::OnEvent(Event& e)
@@ -70,10 +71,10 @@ namespace UI
 	}
 	bool Properties::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
-		m_SelectionContext = e.GetEntityCount() ? e.GetEntity() : Entity();
+		m_SelectionContext = e.GetEntitites();
 		return false;
 	}
-	void Properties::DrawContextMenu(Entity& e)
+	void Properties::DrawContextMenu(std::vector<Entity>& e)
 	{
 		ImUI::ContextMenu([&]() {
 			ImUI::Submenu("General", [&]() {

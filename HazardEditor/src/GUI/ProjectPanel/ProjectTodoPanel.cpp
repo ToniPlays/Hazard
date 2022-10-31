@@ -10,7 +10,7 @@ namespace UI
 		HZR_PROFILE_FUNCTION();
 
 		using namespace HazardScript;
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_SearchVal, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();

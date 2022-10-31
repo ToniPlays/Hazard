@@ -828,7 +828,7 @@ static void ImGui_ImplGlfw_InitPlatformInterface()
 #if GLFW_HAS_VULKAN
     platform_io.Platform_CreateVkSurface = ImGui_ImplGlfw_CreateVkSurface;
 #endif
-#if HAS_WIN32_IME
+#if HAS_WIN32_IME2
     platform_io.Platform_SetImeInputPos = ImGui_ImplWin32_SetImeInputPos;
 #endif
 

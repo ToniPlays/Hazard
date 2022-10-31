@@ -99,49 +99,59 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Input
 
-	static bool TextField(std::string& text, const char* id = "##InputField")
+	static bool TextField(std::string& text, const char* id = "##InputField", bool isMixed = false)
 	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
+		bool changed = false;
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
 
 		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			text = buffer;
-			return true;
+			changed |= true;
 		}
-		return false;
+		ImGui::PopItemFlag();
+		return changed;
 	}
 
-	static bool TextArea(std::string& text, int minLines, int maxLines)
+	static bool TextArea(std::string& text, int minLines, int maxLines, bool isMixed = false)
 	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
+
+		bool changed = false;
+
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
 
 		if (ImGui::InputTextMultiline("##InputField", buffer, sizeof(buffer), { 0, ImGui::GetTextLineHeight() * minLines }))
 		{
 			text = buffer;
-			return true;
+			changed |= true;
 		}
-		return false;
+		ImGui::PopItemFlag();
+		return changed;
 	}
 
-	static bool TextFieldWithHint(std::string& text, const char* hint)
+	static bool TextFieldWithHint(std::string& text, const char* hint, bool isMixed = false)
 	{
 		char buffer[512] = { 0 };
 		strcpy(buffer, text.c_str());
 
+		bool changed = false;
+
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 
 		if (ImGui::InputTextWithHint("##InputField", hint, buffer, sizeof(buffer)))
 		{
 			text = buffer;
-			ImGui::PopStyleVar();
-			return true;
+			changed |= true;
 		}
 		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
 		return false;
 	}
-	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color)
+	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color, bool mixed = false)
 	{
 		bool modified = false;
 		ImVec4 hovered = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(color, 0.9f));
@@ -151,8 +161,9 @@ namespace Hazard::ImUI
 		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 		ImGui::PushFont(buttonFont);
-		if (ImGui::Button(buttonText, buttonSize)) {
-			modified = true;
+		if (ImGui::Button(buttonText, buttonSize)) 
+		{
+			modified |= true;
 			*value = clearValue;
 		}
 		ImGui::PopFont();
@@ -160,39 +171,59 @@ namespace Hazard::ImUI
 		std::stringstream ss;
 		ss << "##" << buttonText << "_";
 		ImGui::SetNextItemWidth(width);
-		if (ImGui::DragFloat(ss.str().c_str(), value)) modified = true;
 
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, true);
+		modified |= ImGui::DragFloat(ss.str().c_str(), value);
+		ImGui::PopItemFlag();
 		return modified;
 	}
 
-	static bool InputInt(int& value, int clearValue, int min, int max)
+	static bool InputInt(int& value, int clearValue, int min, int max, bool isMixed = false)
 	{
-		return ImGui::DragInt("##int", &value, 1, min, max);
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::DragInt("##int", &value, 1, min, max);
+		ImGui::PopItemFlag();
+		return changed;
 	}
-	static bool InputUInt(uint64_t& value, uint64_t clearValue = 0.0f, uint64_t min = 0, uint64_t max = 0)
+	static bool InputUInt(uint64_t& value, uint64_t clearValue = 0.0f, uint64_t min = 0, uint64_t max = 0, bool isMixed = false)
 	{
-		return ImGui::DragInt("##uint", (int*)&value, 0.5f, min, max);
-	}
-
-	static bool SliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f)
-	{
-		return ImGui::SliderFloat("#sliderFloat", &value, min, max);
-	}
-	static bool InputFloat(float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0)
-	{
-		return ImGui::DragFloat("##float", &value, speed, min, max);
-	}
-	static bool InputDouble(double& value, double clearValue = 0.0)
-	{
-		return ImGui::InputDouble("##double", &value, 0.5);
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::DragInt("##uint", (int*)&value, 0.5f, min, max);
+		ImGui::PopItemFlag();
+		return changed;
 	}
 
-	static bool InputInt(int& value, int clearValue = 0.0)
+	static bool SliderFloat(float& value, float clearValue = 0.0f, float min = 0.0f, float max = 0.0f, bool isMixed = false)
 	{
-		return ImGui::InputInt("##int", &value, 1);
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::SliderFloat("#sliderFloat", &value, min, max);
+		ImGui::PopItemFlag();
+		return changed;
+	}
+	static bool InputFloat(float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
+	{
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::DragFloat("##float", &value, speed, min, max);
+		ImGui::PopItemFlag();
+		return changed;
+	}
+	static bool InputDouble(double& value, double clearValue = 0.0, bool isMixed = false)
+	{
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::InputDouble("##double", &value, 0.5);
+		ImGui::PopItemFlag();
+		return changed;
 	}
 
-	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f)
+	static bool InputInt(int& value, int clearValue = 0.0, bool isMixed = false)
+	{
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		bool changed = ImGui::InputInt("##int", &value, 1);
+		ImGui::PopItemFlag();
+		return changed;
+	}
+
+	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
 	{
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
@@ -200,31 +231,27 @@ namespace Hazard::ImUI
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 2.0f - buttonSize.x;
+		float itemWidth = (ImGui::GetContentRegionAvail().x - vectorItemSpacingX) / 2.0f - buttonSize.x;
 		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0.0f));
 
 		ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[1];
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX)) {
-			modified = true;
-		}
+		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX);
 		ImGui::SameLine();
 		//Y axis
-		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY)) {
-			modified = true;
-		}
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY);
 		return modified;
 	}
-	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f)
+	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
 		bool modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-		float itemWidth = (ImGui::GetContentRegionAvailWidth() - vectorItemSpacingX) / 3.0f - buttonSize.x;
+		float itemWidth = (ImGui::GetContentRegionAvail().x - vectorItemSpacingX) / 3.0f - buttonSize.x;
 
 		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(vectorItemSpacingX, 0.0f));
 
@@ -232,44 +259,43 @@ namespace Hazard::ImUI
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		if (InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX))
-			modified = true;
+		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, flags & BIT(0));
 		ImGui::SameLine();
+
 		//Y axis
-		if (InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY))
-			modified = true;
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1));
 		ImGui::SameLine();
+
 		//Z axis
-		if (InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ))
-			modified = true;
+		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, flags & BIT(2));
 
 		return modified;
 	}
-	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0)
+	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
 	{
 		bool modified = false;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = InputFloat(value, clearValue, speed, min, max);
 			});
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool SliderFloat(const char* name, float& value, float clearValue = 0.0f, float min = 0.0, float max = 0.0)
+	static bool SliderFloat(const char* name, float& value, float clearValue = 0.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
 	{
 		bool modified = false;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = SliderFloat(value, clearValue, min, max);
 			});
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f)
+	static bool InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
 	{
 		bool modified = false;
 		ImGui::Text(name);
@@ -280,30 +306,30 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f)
+	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
 		bool modified = false;
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 
-		Group(name, [&]() {
-			modified = InputFloat3(value, clearValue);
+		Group(name, [&, f = flags]() {
+			modified = InputFloat3(value, clearValue, f);
 			});
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool Checkbox(bool& value)
+	static bool Checkbox(bool& value, bool isMixed = false)
 	{
 		return ImGui::Checkbox("##val", &value);
 	}
-	static bool Checkbox(const char* name, bool& value)
+	static bool Checkbox(const char* name, bool& value, bool isMixed = false)
 	{
 		bool modified = false;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = Checkbox(value);
 			});
 		ImGui::NextColumn();
@@ -340,7 +366,7 @@ namespace Hazard::ImUI
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = Combo(id, options, count, selected);
 		ImGui::NextColumn();
 		return modified;
@@ -360,7 +386,7 @@ namespace Hazard::ImUI
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = ColorPicker(id, color);
 		ImGui::NextColumn();
 
@@ -423,7 +449,7 @@ namespace Hazard::ImUI
 
 		constexpr float size = 32.0f;
 
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth() - size - 5.0f);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - size - 5.0f);
 		{
 			ImUI::TextField(text);
 		}

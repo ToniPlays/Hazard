@@ -2,8 +2,10 @@
 
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
+#include "Editor/EditorUtils.h"
 
-namespace UI {
+namespace UI 
+{
 	class Properties : public Hazard::ImUI::Panel {
 	public:
 		Properties();
@@ -13,21 +15,22 @@ namespace UI {
 		bool OnEvent(Event& e) override;
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
 	private:
-		void DrawContextMenu(Entity& e);
+		void DrawContextMenu(std::vector<Entity>& e);
 		template<typename T>
-		void DrawAddComponentMenuIfNotExists(const char* title, Entity& e);
+		void DrawAddComponentMenuIfNotExists(const char* title, std::vector<Entity>& entities);
+
 	private:
-		Entity m_SelectionContext;
+		std::vector<Entity> m_SelectionContext;
 	};
 	template<typename T>
-	inline void Properties::DrawAddComponentMenuIfNotExists(const char* title, Entity& e)
+	inline void Properties::DrawAddComponentMenuIfNotExists(const char* title, std::vector<Entity>& entities)
 	{
-		if (!e.HasComponent<T>()) 
+		if (!AllEntitiesContain<T>(entities))
 		{
 			ImUI::MenuItem(title, [&]() {
-				Entity entity = e;
-				Application::Get().SubmitMainThread([entity]() mutable {
-					entity.AddComponent<T>();
+				std::vector<Entity> entities = m_SelectionContext;
+				Application::Get().SubmitMainThread([entities]() mutable {
+					AddComponentToAll<T>(entities);
 					});
 				});
 		}
