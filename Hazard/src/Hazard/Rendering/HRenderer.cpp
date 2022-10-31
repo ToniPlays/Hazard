@@ -39,6 +39,10 @@ namespace Hazard
 
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
+	void HRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset> texture)
+	{
+		s_Engine->GetQuadRenderer().SubmitBillboard(transform, view, color, texture);
+	}
 	void HRenderer::SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent)
 	{
 		HZR_PROFILE_FUNCTION();

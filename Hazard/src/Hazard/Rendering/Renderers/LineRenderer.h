@@ -5,14 +5,10 @@
 
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+#include "Hazard/Rendering/Vertices.h"
 
 namespace Hazard
 {
-	struct LineVertex 
-	{
-		glm::vec3 Position;
-		glm::vec4 Color;
-	};
 
 	struct LineRendererData
 	{
@@ -25,7 +21,7 @@ namespace Hazard
 	{
 	public:
 		LineRenderer();
-		~LineRenderer() { __debugbreak(); }
+		~LineRenderer() = default;
 		LineRenderer(const LineRenderer&) = delete;
 		LineRenderer(const LineRenderer&&) = delete;
 
@@ -37,7 +33,7 @@ namespace Hazard
 		void BeginBatch();
 
 		void Flush();
-		void SubmitLine(const glm::vec3& startPos, const glm::vec3 endPos, const glm::vec4& color);
+		void SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
 			if (renderPass == m_RenderPass) return;

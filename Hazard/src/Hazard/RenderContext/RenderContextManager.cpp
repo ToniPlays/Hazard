@@ -43,6 +43,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		//Prepare to render frame
+		Input::Update();
 		Renderer::BeginFrame();
 	}
 	void RenderContextManager::PostRender()

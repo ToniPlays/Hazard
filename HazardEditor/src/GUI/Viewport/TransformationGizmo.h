@@ -5,10 +5,20 @@
 #include "Editor/EditorCamera.h"
 
 #include "imgui.h"
+#include "glm/glm.hpp"
 
-namespace UI {
+#include "imgui/ImGuizmo.h"
 
-	enum class Gizmo { Translate, Rotate, Scale, Bounds, None };
+namespace UI 
+{
+	enum class Gizmo 
+	{ 
+		Translate	= ImGuizmo::TRANSLATE,
+		Rotate		= ImGuizmo::ROTATE, 
+		Scale		= ImGuizmo::SCALE,
+		Bounds		= ImGuizmo::BOUNDS,
+		None		= ImGuizmo::NONE
+	};
 
 	class TransformationGizmo {
 
@@ -16,7 +26,7 @@ namespace UI {
 		TransformationGizmo() = default;
 		~TransformationGizmo() = default;
 
-		void RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size);
+		glm::mat4 RenderGizmo(const Editor::EditorCamera& camera, glm::mat4& target, ImVec2 size);
 
 		bool IsUsing() { return m_IsUsing; }
 

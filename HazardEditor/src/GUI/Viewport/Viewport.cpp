@@ -64,6 +64,8 @@ namespace UI
 					if (cc.GetProjectionType() == Projection::Perspective)
 						HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 					else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+
+					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::Red, nullptr);
 				}
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
@@ -98,14 +100,11 @@ namespace UI
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
-		if (m_CurrentImage == 0 || true)
+		ImUI::Image(m_FrameBuffer->GetImage(), size);
+		if (ImGui::IsItemClicked())
 		{
-			ImUI::Image(m_FrameBuffer->GetImage(), size);
-			if (ImGui::IsItemClicked())
-			{
-				m_DrawSettings = false;
-				m_DrawStats = false;
-			}
+			m_DrawSettings = false;
+			m_DrawStats = false;
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
@@ -115,7 +114,6 @@ namespace UI
 				});
 			});
 
-		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
 		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
 
 		if (ImGui::Button(ICON_FK_COG, { 28, 28 }))
@@ -166,7 +164,23 @@ namespace UI
 		if (m_DrawSettings)
 			DrawSettingsWindow();
 
-		if (m_Gizmos.IsUsing()) return;
+		if (m_SelectionContext.size() > 0)
+		{
+			Entity& e = m_SelectionContext[0];
+			auto& tc = e.GetComponent<TransformComponent>();
+			glm::mat4 target = tc.GetTransformMat4();
+			glm::mat4 deltaMatrix = m_Gizmos.RenderGizmo(m_EditorCamera, target, size);
+
+			if (m_Gizmos.IsUsing())
+			{
+				for (auto& entity : m_SelectionContext)
+				{
+					auto& c = entity.GetComponent<TransformComponent>();
+					c.SetTransform(deltaMatrix * c.GetTransformMat4());
+				}
+				return;
+			}
+		}
 
 		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
 	}
@@ -175,7 +189,7 @@ namespace UI
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
-		m_Gizmos.OnEvent(e);
+		if(m_Gizmos.OnEvent(e)) return true;
 
 		if (m_Hovered)
 			m_EditorCamera.OnEvent(e);
@@ -184,8 +198,7 @@ namespace UI
 	}
 	bool Viewport::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
-
-		m_SelectionContext = e.GetEntityCount() ? e.GetEntity() : Entity();
+		m_SelectionContext = e.GetEntitites();
 		return false;
 	}
 
@@ -218,7 +231,8 @@ namespace UI
 			m_Gizmos.SetGlobal(!m_Gizmos.IsGlobal());
 			return true;
 		case Key::F: {
-			FocusOnEntity(m_SelectionContext);
+			if (m_SelectionContext.size() > 0)
+				FocusOnEntity(m_SelectionContext[0]);
 			return true;
 		case Key::F1:
 			m_EditorGrid.SetVisible(!m_EditorGrid.IsVisible());
@@ -251,9 +265,25 @@ namespace UI
 		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
 		ImGui::NextColumn();
 
-		const char* attachments[] = { "World", "Positions", "Normals", "Color/Specular", "Depth" };
+		const char* shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };
 
-		ImUI::Combo("Shading", "##shading", attachments, 5, m_CurrentImage);
+		auto& renderEngine = Application::GetModule<RenderEngine>();
+		uint32_t flags = renderEngine.GetFlags();
+		uint32_t selected = 0;
+
+		if (flags & RendererFlags_Overdraw)
+			selected = 3;
+
+		if (ImUI::Combo("Shading", "##shading", shading, 4, selected))
+		{
+			switch (selected)
+			{
+			case 0: flags = 0; break;
+			case 3: flags |= RendererFlags_Overdraw; break;
+			default: flags = 0; break;
+			}
+			renderEngine.SetFlags(flags);
+		}
 
 		ImGui::Columns();
 		ImGui::EndChild();
@@ -280,7 +310,6 @@ namespace UI
 
 		if (ImUI::Checkbox("Camera frustum", cameraFrustum))
 			m_ViewportSettings ^= ViewportSettingsFlags_CameraFrustum;
-
 
 		ImGui::Columns();
 		ImGui::EndChild();

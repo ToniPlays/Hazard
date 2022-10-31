@@ -5,28 +5,12 @@
 
 #include "Backend/Core/Pipeline/Buffers.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
-
 #include "Hazard/RenderContext/Texture2D.h"
+
+#include "Hazard/Rendering/Vertices.h"
 
 namespace Hazard 
 {
-	struct QuadVertex {
-		glm::vec3 Position;
-		glm::vec4 Color;
-		glm::vec2 TextureCoords;
-		float TextureIndex;
-
-		static HazardRenderer::BufferLayout Layout() {
-			using namespace HazardRenderer;
-			return { 
-				{ "a_Position",		ShaderDataType::Float3 },
-				{ "a_Color",		ShaderDataType::Float4 },
-				{ "a_TextureCoords",ShaderDataType::Float2 },
-				{ "a_TextureIndex",	ShaderDataType::Float  }
-			};
-		}
-	};
-
 	struct QuadRendererData
 	{
 		size_t MaxQuadCount;
@@ -55,6 +39,7 @@ namespace Hazard
 
 		void Flush();
 		void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture);
+		void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		bool IsVisible(const glm::mat4& transform);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) 

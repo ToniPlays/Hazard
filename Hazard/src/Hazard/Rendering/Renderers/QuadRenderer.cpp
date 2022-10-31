@@ -69,7 +69,8 @@ namespace Hazard
 
 		if (!IsVisible(transform)) return;
 
-		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices) {
+		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices) 
+		{
 			Flush();
 			BeginScene();
 		}
@@ -93,11 +94,48 @@ namespace Hazard
 		m_QuadBatch->AddIndices(6);
 	}
 
+	void QuadRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, Ref<Texture2DAsset> texture)
+	{
+		HZR_PROFILE_FUNCTION();
+
+		if (!IsVisible(transform)) return;
+
+		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices)
+		{
+			Flush();
+			BeginScene();
+		}
+
+		float textureIndex = 0.0f;
+		if (texture)
+			textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
+
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		constexpr float size = 1.0f;
+
+		const glm::vec4 cameraRightVector	= { view[0][0], view[1][0], view[2][0], 0.0f };
+		const glm::vec4 cameraUpVector		= { view[0][1], view[1][1], view[2][1], 0.0f };
+
+		for (uint8_t i = 0; i < 4; i++)
+		{
+			const glm::vec3& pos = m_Data.QuadVertexPos[i];
+
+			QuadVertex vertex = {};
+			vertex.Position = transform[3] + size * pos.x * cameraRightVector +
+											 size * pos.y * cameraUpVector;
+
+			vertex.Color = color;
+			vertex.TextureCoords = textureCoords[i];
+			vertex.TextureIndex = textureIndex;
+
+			m_QuadBatch->Push(vertex);
+		}
+		m_QuadBatch->AddIndices(6);
+	}
 	bool QuadRenderer::IsVisible(const glm::mat4& transform)
 	{
 		return true;
 	}
-
 	void QuadRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();

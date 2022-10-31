@@ -12,6 +12,11 @@
 
 namespace Hazard 
 {
+	enum RendererFlags : uint32_t
+	{
+		RendererFlags_None = 0,
+		RendererFlags_Overdraw = BIT(0)
+	};
 
 	class RenderEngine : public Module 
 	{
@@ -22,13 +27,13 @@ namespace Hazard
 
         void Update() override;
 		void Render() override;
+
+		void ClearDrawLists();
+
 		/// <summary>
 		/// Get all the geometry for rendering
 		/// </summary>
 		/// <param name="renderer"></param>
-
-		void ClearDrawLists();
-
 		void PreRender();
 		void ShadowPass(Ref<RenderCommandBuffer> commandBuffer);
 		void PreDepthPass(Ref<RenderCommandBuffer> commandBuffer);
@@ -38,13 +43,14 @@ namespace Hazard
 
 		//Not yet implemented, NOT TODO
 		void LightCullingPass(Ref<RenderCommandBuffer> commandBuffer) {};
+		uint32_t GetFlags() { return m_Flags; }
+		void SetFlags(uint32_t flags) { m_Flags = flags; }
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
 
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
-
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
 
 	private:
@@ -63,6 +69,7 @@ namespace Hazard
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 
 		uint32_t m_CurrentDrawContext = 0;
+		uint32_t m_Flags = RendererFlags_None;
 		
 	};
 }

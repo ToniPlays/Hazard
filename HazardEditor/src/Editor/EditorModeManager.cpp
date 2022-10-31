@@ -13,7 +13,7 @@ namespace Editor
 		s_CurrentMode = EditorMode::Play;
 		HZR_WARN("BeginPlayMode");
 		auto& manager = Application::GetModule<GUIManager>();
-		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
+		//entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
 
 		if (console->ClearOnPlay())
@@ -41,7 +41,7 @@ namespace Editor
 		handler.SetWorld(m_PreviousWorld);
 
 		auto& manager = Application::GetModule<GUIManager>();
-		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
+		//entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
 		Events::SelectionContextChange e({});
 		manager.OnEvent(e);
 	}

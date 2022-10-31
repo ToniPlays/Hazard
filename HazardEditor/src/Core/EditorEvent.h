@@ -12,6 +12,7 @@ namespace Events {
 	public:
 		SelectionContextChange(std::vector<Entity> entities) : m_Entities(entities) {}
 
+		inline std::vector<Entity> GetEntitites() { return m_Entities; }
 		inline Entity GetEntity(uint32_t index = 0) { return m_Entities[index]; }
 		inline uint32_t GetEntityCount() { return m_Entities.size(); }
 

@@ -8,6 +8,7 @@
 
 #include "UID.h"
 
+#include <glm/gtx/quaternion.hpp>
 
 namespace YAML {
 
@@ -156,6 +157,14 @@ public:
 		out << YAML::Key << key << YAML::Value;
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.r << value.g << value.b << value.a << YAML::EndSeq;
+	}
+	template<>
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::quat value)
+	{
+		glm::vec3 val = glm::eulerAngles(value);
+		out << YAML::Key << key << YAML::Value;
+		out << YAML::Flow;
+		out << YAML::BeginSeq << glm::degrees(val.x) << glm::degrees(val.y) << glm::degrees(val.z) << YAML::EndSeq;
 	}
 
 

@@ -23,7 +23,7 @@ namespace UI
 		bool OnEvent(Event& e) override;
 
 		bool FocusOnEntity(Entity& entity);
-		Entity GetSelectionContext() { return m_SelectionContext; }
+		std::vector<Entity> GetSelectionContext() { return m_SelectionContext; }
 
 	private:
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
@@ -37,7 +37,7 @@ namespace UI
 		Editor::EditorCamera m_EditorCamera = Editor::EditorCamera(60.0f, (float)m_Width / (float)m_Height, 0.01f, 1000.0f);
 
 		Editor::Grid m_EditorGrid;
-		Entity m_SelectionContext;
+		std::vector<Entity> m_SelectionContext;
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
@@ -46,7 +46,5 @@ namespace UI
 		bool m_DrawSettings = false;
 		bool m_WindowFocused = false;
 		uint32_t m_ViewportSettings = 0;
-
-		uint32_t m_CurrentImage = 0;
 	};
 }

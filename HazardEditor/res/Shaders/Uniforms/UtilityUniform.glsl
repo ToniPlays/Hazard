@@ -6,4 +6,5 @@ layout(std140, binding = 0) uniform Utility
 {
 	uniform vec4 CameraPos;
 	uniform uint Flags;
+	uniform float Time;
 } u_Util;

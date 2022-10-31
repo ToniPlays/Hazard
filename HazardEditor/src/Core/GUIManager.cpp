@@ -69,6 +69,7 @@ void GUIManager::Render()
 {
 	Renderer::Submit([platform = m_Platform, menuBar = m_MainMenuBar, panelManager = m_PanelManager]() mutable {
 		platform->BeginFrame();
+		ImGuizmo::BeginFrame();
 
 		menuBar.Render();
 		{

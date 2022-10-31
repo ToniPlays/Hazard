@@ -1,7 +1,6 @@
 
 #include "TransformationGizmo.h"
 #include "imgui.h"
-#include "../ImGui_Backend/ImGuizmo.h"
 #include <glm/gtc/type_ptr.hpp>
 
 #include "MathCore.h"
@@ -11,40 +10,39 @@
 
 namespace UI 
 {
-	void TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, Entity& target, ImVec2 size)
+	glm::mat4 TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, glm::mat4& target, ImVec2 size)
 	{
 		HZR_PROFILE_FUNCTION();
+		if (m_Type == Gizmo::None)
+		{
+			m_IsUsing = false;
+			return target;
+		}
+
 		ImGuizmo::BeginFrame();
-		if (!target.IsValid() || m_Type == Gizmo::None) return;
 
 		ImGuizmo::SetOrthographic(camera.Is2DEnabled());
 		ImGuizmo::SetDrawlist();
 
+		auto deltaMatrix = glm::mat4(0.0f);
+
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + 34, size.x, size.y);
+		ImGuizmo::AllowAxisFlip(true);
 
-		auto& tc = target.GetComponent<TransformComponent>();
-		auto transform = tc.GetTransformMat4();
+		m_IsUsing = ImGuizmo::Manipulate(
+			glm::value_ptr(camera.GetView()),
+			glm::value_ptr(camera.GetProjection()),
+			(ImGuizmo::OPERATION)m_Type, 
+			m_Global ? ImGuizmo::WORLD : ImGuizmo::LOCAL, 
+			glm::value_ptr(target), 
+			glm::value_ptr(deltaMatrix), 
+			GetSnapValues());
 
-		ImGuizmo::Manipulate(glm::value_ptr(camera.GetView()), glm::value_ptr(camera.GetProjection()),
-			(ImGuizmo::OPERATION)m_Type, m_Global ? ImGuizmo::WORLD : ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, GetSnapValues());
-
-		m_IsUsing = ImGuizmo::IsUsing();
-
-		if (!m_IsUsing) return;
-
-		//Decompose and apply modifications
-		glm::vec3 position, rotation, scale;
-		Math::DecomposeTransform(transform, position, rotation, scale);
-
-		glm::vec3 deltaRotation = rotation - tc.GetRotation();
-		tc.SetTranslation(position);
-		tc.SetRotation(tc.GetRotation() + deltaRotation);
-		tc.SetScale(scale);
-
+		return m_IsUsing ? deltaMatrix : target;
 	}
 	bool TransformationGizmo::OnEvent(Event& e)
 	{
-		return false;
+		return m_IsUsing;
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{

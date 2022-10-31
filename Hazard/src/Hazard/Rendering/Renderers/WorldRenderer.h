@@ -67,7 +67,8 @@ namespace Hazard
 		}
 		void OnRenderExtra() 
 		{
-			for (auto& cb : m_RendererExtraCalls) { cb(); }
+			for (auto& cb : m_RendererExtraCalls) 
+				cb();
 		}
 
 		const WorldRendererSpec& GetSpec() const { return m_Spec; }

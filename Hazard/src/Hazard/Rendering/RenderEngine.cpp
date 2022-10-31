@@ -66,6 +66,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
+
 		m_QuadRenderer.BeginScene();
 		m_LineRenderer.BeginScene();
 
@@ -199,7 +200,6 @@ namespace Hazard
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		Input::Update();
 		ClearDrawLists();
 	}
 	void RenderEngine::Render()
@@ -231,6 +231,7 @@ namespace Hazard
 
 				UtilityUniformData utils = {};
 				utils.CameraPos = data.InverseView[3];
+				utils.Flags = m_Flags;
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
 				m_Resources->UtilityUniformBuffer->SetData(&utils, sizeof(UtilityUniformData));

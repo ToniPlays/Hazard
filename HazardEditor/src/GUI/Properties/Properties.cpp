@@ -27,7 +27,6 @@ namespace UI
 		UI::ComponentMenuIfExists<Rigidbody2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<BoxCollider2DComponent>(m_SelectionContext);
 		UI::ComponentMenuIfExists<CircleCollider2DComponent>(m_SelectionContext);
-
 		{
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
@@ -37,7 +36,8 @@ namespace UI
 			{
 
 			}
-			if (!m_SelectionContext.HasComponent<ScriptComponent>()) {
+			if (!m_SelectionContext.HasComponent<ScriptComponent>()) 
+			{
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle assetID) {
 					Ref<HScript> script = AssetManager::GetAsset<HScript>(assetID);
 					m_SelectionContext.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
