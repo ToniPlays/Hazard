@@ -64,7 +64,7 @@ namespace HazardRenderer
 	public:
 		virtual ~VertexBuffer() = default;
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
-		virtual size_t GetSize() = 0;
+		virtual size_t GetSize() const = 0;
 		virtual std::string& GetDebugName() = 0;
 
 		virtual const BufferLayout& GetLayout() const = 0;
@@ -77,7 +77,7 @@ namespace HazardRenderer
 		virtual ~IndexBuffer() = default;
 
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
-		virtual size_t GetCount() = 0;
+		virtual size_t GetCount() const = 0;
 		virtual std::string& GetDebugName() = 0;
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);

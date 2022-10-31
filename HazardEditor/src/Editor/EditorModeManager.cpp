@@ -28,7 +28,7 @@ namespace Editor
 		handler.SetFlags(WorldFlags_Render | WorldFlags_UpdateScript);
 		handler.OnBegin();
 
-		Events::SelectionContextChange e(Entity(currentEntity, playModeWorld.Raw()));
+		Events::SelectionContextChange e({});
 		manager.OnEvent(e);
 	}
 	void EditorModeManager::EndPlayMode()
@@ -42,7 +42,7 @@ namespace Editor
 
 		auto& manager = Application::GetModule<GUIManager>();
 		entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
-		Events::SelectionContextChange e({ currentEntity, m_PreviousWorld.Raw() });
+		Events::SelectionContextChange e({});
 		manager.OnEvent(e);
 	}
 }

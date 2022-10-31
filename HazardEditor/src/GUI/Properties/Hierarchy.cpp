@@ -2,7 +2,6 @@
 #include "Hierarchy.h"
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
-#include "Hazard/Rendering/HRenderer.h"
 #include "Editor/EditorWorldManager.h"
 #include <sstream>
 
@@ -21,37 +20,13 @@ namespace UI
 
 		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
 		renderer->SetTargetWorld(world);
-
-		renderer->SubmitExtra([=]() mutable {
-			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
-			auto& cameraView = world->GetEntitiesWith<CameraComponent>();
-			for (auto entity : cameraView) {
-				Entity e = { entity, world.Raw() };
-				auto& tc = e.GetComponent<TransformComponent>();
-				auto& cc = e.GetComponent<CameraComponent>();
-				if (cc.GetProjectionType() == Projection::Perspective)
-					HRenderer::SubmitPerspectiveCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-				else HRenderer::SubmitOrthoCameraFrustum(tc.Translation, tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-			}
-
-			auto& meshView = world->GetEntitiesWith<MeshComponent>();
-			for (auto entity : meshView) {
-				Entity e = { entity, world.Raw() };
-				auto& tc = e.GetComponent<TransformComponent>();
-				auto& mc = e.GetComponent<MeshComponent>();
-
-				if (!mc.m_MeshHandle) continue;
-
-				HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
-			}
-
-			});
 	}
 	void Hierarchy::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
 		//Draw hierarchy panel
 		Ref<World> world = m_WorldHandler->GetCurrentWorld();
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
@@ -60,13 +35,18 @@ namespace UI
 
 		ImUI::Table("Hierarchy", columns, 3, [&]() {
 
-			for (auto entity : world->GetEntitiesWith<TagComponent>()) {
+			for (auto& entity : world->GetEntitiesWith<TagComponent>())
+			{
 				Entity e(entity, world.Raw());
 				TagComponent& tag = e.GetComponent<TagComponent>();
 				if (!StringUtil::Contains(tag.Tag, m_SearchValue)) continue;
 
-				bool clicked = ImUI::TableRowTreeItem(std::to_string(e).c_str(), tag.Tag.c_str(), e == m_SelectionContext, []() {
-					ImGui::Text("Sup bro");
+				bool isSelected = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), e) != m_SelectionContext.end();
+
+				ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
+
+				bool clicked = ImUI::TableRowTreeItem(std::to_string(e).c_str(), tag.Tag.c_str(), isSelected, []() {
+
 					});
 
 				ImUI::DragSource<UID>("Hazard.Entity", &e.GetUID(), [&]() {
@@ -84,21 +64,20 @@ namespace UI
 				ImGui::TableNextColumn();
 
 				ImUI::ScopedStyleVar frame(ImGuiStyleVar_FrameBorderSize, 0);
-				ImVec4 col = ImUI::StyleManager::GetCurrent().Window.Text;
+				ImVec4 col = style.Window.Text;
 				ImUI::ScopedStyleColor textColor(ImGuiCol_Text, col);
 
 				DrawModifiers(e, tag);
 
-				if (clicked) {
+				if (clicked)
 					SelectEntity(e);
-				}
 			}
 			DrawContextMenu(world);
 
 			});
-		if (ImGui::IsItemClicked()) {
-			SelectEntity({});
-		}
+
+		if (ImGui::IsItemClicked())
+			ClearSelected();
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{
@@ -108,26 +87,28 @@ namespace UI
 	}
 	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
 	{
-		if (!Input::IsKeyDown(Key::LeftControl)) return false;
-
 		switch (e.GetKeyCode())
 		{
-		case Key::Delete: 
+		case Key::Delete:
 		{
-			if (m_SelectionContext)
+			std::vector<Entity> selections = m_SelectionContext;
+			for (auto& entity : selections)
 			{
-				m_WorldHandler->GetCurrentWorld()->DestroyEntity(m_SelectionContext);
-				SelectEntity({});
-				return true;
+				m_WorldHandler->GetCurrentWorld()->DestroyEntity(entity);
 			}
+			ClearSelected();
+			return true;
 		}
 		case Key::D:
 		{
-			if (m_SelectionContext) {
-				Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(m_SelectionContext);
+			std::vector<Entity> selections = m_SelectionContext;
+			ClearSelected();
+			for (auto& entity : selections)
+			{
+				Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(entity);
 				SelectEntity(e);
-				return true;
 			}
+			return true;
 		}
 		}
 		return false;
@@ -138,15 +119,18 @@ namespace UI
 		bool spriteState = false;
 		bool isSkyLight = e.HasComponent<SkyLightComponent>();
 
-		if (e.HasComponent<ScriptComponent>()) {
+		if (e.HasComponent<ScriptComponent>()) 
+		{
 			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
 
-		if (e.HasComponent<SpriteRendererComponent>()) {
+		if (e.HasComponent<SpriteRendererComponent>()) 
+		{
 			spriteState = !e.GetComponent<SpriteRendererComponent>().Texture;
 		}
+
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		const ImVec4 visibleColor = style.Colors.AxisZ;
 		const ImVec4 textColor = style.Window.Text;
@@ -176,7 +160,6 @@ namespace UI
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuItem("Create empty", [&]() {
 				Entity e = world->CreateEntity("New entity");
-
 				});
 
 			ImUI::Separator({ ImGui::GetContentRegionAvailWidth(), 2.0f }, style.Window.HeaderActive);
@@ -246,8 +229,26 @@ namespace UI
 	}
 	void Hierarchy::SelectEntity(const Entity& entity)
 	{
-		m_SelectionContext = entity;
-		Events::SelectionContextChange ev(entity);
+		if (!Input::IsKeyDown(Key::LeftControl))
+			m_SelectionContext.clear();
+
+		m_SelectionContext.push_back(entity);
+		Events::SelectionContextChange ev(m_SelectionContext);
+		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+	}
+	void Hierarchy::DeselectEntity(const Entity& entity)
+	{
+		auto it = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity);
+		if (it != m_SelectionContext.end())
+			m_SelectionContext.erase(it);
+
+		Events::SelectionContextChange ev(m_SelectionContext);
+		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+	}
+	void Hierarchy::ClearSelected()
+	{
+		m_SelectionContext.clear();
+		Events::SelectionContextChange ev(m_SelectionContext);
 		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 	}
 }

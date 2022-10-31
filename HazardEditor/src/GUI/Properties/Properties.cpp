@@ -70,7 +70,7 @@ namespace UI
 	}
 	bool Properties::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
-		m_SelectionContext = e.GetEntity();
+		m_SelectionContext = e.GetEntityCount() ? e.GetEntity() : Entity();
 		return false;
 	}
 	void Properties::DrawContextMenu(Entity& e)

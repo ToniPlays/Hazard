@@ -16,10 +16,11 @@ namespace UI
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
 		frameBufferInfo.AttachmentCount = 2;
-		frameBufferInfo.Width = m_Width;
-		frameBufferInfo.Height = m_Height;
+		frameBufferInfo.Width = 1280;
+		frameBufferInfo.Height = 720;
 
 		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
 		RenderPassCreateInfo renderPassInfo = {};
 		renderPassInfo.DebugName = frameBufferInfo.DebugName;
 		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
@@ -50,10 +51,8 @@ namespace UI
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
 
-		m_FrameBuffer->Resize(m_Width, m_Height);
-
 		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
-		renderer->SubmitCamera(cameraData);
+		//renderer->SubmitCamera(cameraData);
 	}
 	void GameViewport::OnPanelRender()
 	{
@@ -65,10 +64,9 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 		}
-		if (!m_HasCamera)
-		{
+		if (!m_HasCamera || true)
 			return;
-		}
+
 		else ImUI::Image(m_FrameBuffer->GetImage(), size);
 	}
 	bool GameViewport::OnEvent(Event& e)

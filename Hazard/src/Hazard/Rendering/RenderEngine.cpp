@@ -66,14 +66,14 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
-		m_LineRenderer.BeginScene();
 		m_QuadRenderer.BeginScene();
+		m_LineRenderer.BeginScene();
 
 		drawList.WorldRenderer->Render();
 		drawList.WorldRenderer->OnRenderExtra();
 
-		m_LineRenderer.EndScene();
 		m_QuadRenderer.EndScene();
+		m_LineRenderer.EndScene();
 	}
 
 	void RenderEngine::ShadowPass(Ref<RenderCommandBuffer> commandBuffer)
@@ -107,6 +107,7 @@ namespace Hazard
 				m_Resources->ModelUniformBuffer->SetData(&data, sizeof(ModelData));
 				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
 				commandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
+				drawList.Stats.DrawCalls++;
 			}
 		}
 	}
@@ -230,11 +231,9 @@ namespace Hazard
 
 				UtilityUniformData utils = {};
 				utils.CameraPos = data.InverseView[3];
-				
 
 				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
 				m_Resources->UtilityUniformBuffer->SetData(&utils, sizeof(UtilityUniformData));
-
 
 				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);

@@ -10,7 +10,7 @@ namespace UI
 	constexpr float colWidth = 100.0f;
 
 	template<typename T>
-	static bool ComponentMenuIfExists(Entity& e) 
+	static bool ComponentMenuIfExists(Entity& e)
 	{
 		if (e.HasComponent<T>()) {
 			bool ret = ComponentMenu<T>(e, e.GetComponent<T>());
@@ -38,26 +38,29 @@ namespace UI
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_MAP_MARKER " Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
-
+				glm::vec3 translation = c.GetTranslation();
+				glm::vec3 scale = c.GetScale();
 				glm::vec3 rot = {
-					glm::degrees(c.Rotation.x),
-					glm::degrees(c.Rotation.y),
-					glm::degrees(c.Rotation.z)
+					glm::degrees(c.GetRotation().x),
+					glm::degrees(c.GetRotation().y),
+					glm::degrees(c.GetRotation().z)
 				};
+
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
-				ImUI::InputFloat3("Translation", c.Translation);
+				if (ImUI::InputFloat3("Translation", translation))
+					c.SetTranslation(translation);
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
 				if (ImUI::InputFloat3("Rotation", rot)) {
-					c.Rotation = { glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) };
+					c.SetRotation({ glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) });
 				}
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				ImUI::InputFloat3("Scale", c.Scale, 1.0f);
+				if (ImUI::InputFloat3("Scale", scale, 1.0f)) c.SetScale(scale);
 				ImGui::Columns();
 
 				ImUI::ShiftY(3.0f);
@@ -66,9 +69,9 @@ namespace UI
 
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
-					c.Translation = { 0, 0, 0 };
-					c.Rotation = { 0, 0, 0 };
-					c.Scale = { 1, 1, 1 };
+					c.SetTranslation({ 0, 0, 0 });
+					c.SetRotation({ 0, 0, 0 });
+					c.SetScale({ 1, 1, 1 });
 					});
 			});
 		return false;
@@ -128,7 +131,7 @@ namespace UI
 				uint32_t selected = (uint32_t)c.GetProjectionType();
 
 				//Projection type here
-				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected)) 
+				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected))
 				{
 					c.SetProjection((Projection)selected);
 				}
@@ -202,13 +205,13 @@ namespace UI
 					});
 
 
-				if (changed) 
+				if (changed)
 				{
 					if (scriptEngine.HasModule(oldModule) && c.m_Handle)
 					{
 						c.m_Handle = nullptr;
 					}
-					if (scriptEngine.HasModule(c.ModuleName)) 
+					if (scriptEngine.HasModule(c.ModuleName))
 					{
 						ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 						c.m_Handle = script.CreateObject();
@@ -265,7 +268,7 @@ namespace UI
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				std::string name = "Empty";
-				if (c.EnvironmentMap) 
+				if (c.EnvironmentMap)
 				{
 					AssetHandle handle = c.EnvironmentMap->SourceImage->GetHandle();
 					AssetMetadata& data = AssetManager::GetMetadata(handle);

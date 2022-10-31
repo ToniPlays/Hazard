@@ -18,9 +18,11 @@ namespace UI {
 		void DrawModifiers(Hazard::Entity& e, Hazard::TagComponent& tag);
 		void DrawContextMenu(Ref<Hazard::World>& world);
 		void SelectEntity(const Hazard::Entity& entity);
+		void DeselectEntity(const Hazard::Entity& entity);
+		void ClearSelected();
 	private:
 		Hazard::WorldHandler* m_WorldHandler;
-		Hazard::Entity m_SelectionContext;
+		std::vector<Hazard::Entity> m_SelectionContext;
 
 		std::string m_SearchValue;
 	};

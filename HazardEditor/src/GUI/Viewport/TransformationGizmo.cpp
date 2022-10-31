@@ -36,10 +36,10 @@ namespace UI
 		glm::vec3 position, rotation, scale;
 		Math::DecomposeTransform(transform, position, rotation, scale);
 
-		glm::vec3 deltaRotation = rotation - tc.Rotation;
-		tc.Translation = position;
-		tc.Rotation += deltaRotation;
-		tc.Scale = scale;
+		glm::vec3 deltaRotation = rotation - tc.GetRotation();
+		tc.SetTranslation(position);
+		tc.SetRotation(tc.GetRotation() + deltaRotation);
+		tc.SetScale(scale);
 
 	}
 	bool TransformationGizmo::OnEvent(Event& e)

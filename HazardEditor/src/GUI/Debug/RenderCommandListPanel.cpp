@@ -22,7 +22,7 @@ namespace UI
 				const char* elements[] = { "Type", "Value" };
 
 				ImVec2 size = ImGui::GetContentRegionAvail();
-				size.y = 126.0f;
+				size.y = 150.0f;
 
 				ImUI::Table("WorldRenderer", elements, 2, size, [&]() {
 

@@ -24,6 +24,7 @@ namespace Hazard::ImUI
 		ImVec4 TitleBgColor = ColorToImVec("#181816");
 		ImVec4 TitleBgActive = ColorToImVec("#181816");
 		ImVec4 Header = ColorToImVec("#323234");
+		ImVec4 HeaderHighlighted = ColorToImVec("#404042");
 		ImVec4 HeaderHovered = ColorToImVec("#2E2E30");
 		ImVec4 HeaderActive = ColorToImVec("#2E6303");
 

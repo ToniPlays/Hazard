@@ -88,6 +88,7 @@ namespace UI
 	}
 	void ScriptCreatePanel::DrawMethodList()
 	{
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_FrameRounding, 4);
 		ImGui::Text("Include OnCreate()");
 		ImGui::NextColumn();
 

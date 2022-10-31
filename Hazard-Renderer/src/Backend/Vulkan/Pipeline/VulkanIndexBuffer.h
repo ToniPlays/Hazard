@@ -12,7 +12,7 @@ namespace HazardRenderer::Vulkan
 		VulkanIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~VulkanIndexBuffer();
 
-		size_t GetCount() override { return m_Size / sizeof(uint32_t); }
+		size_t GetCount() const override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
 
 		//Vulkan specific

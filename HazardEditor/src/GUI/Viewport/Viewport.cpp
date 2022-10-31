@@ -2,7 +2,7 @@
 #include "Viewport.h"
 #include "Hazard/Math/Time.h"
 #include "Editor/EditorWorldManager.h"
-#include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/Rendering/HRenderer.h"
 
 using namespace HazardRenderer;
 
@@ -43,9 +43,42 @@ namespace UI
 		cameraData.ZNear = m_EditorCamera.GetNearClipping();
 		cameraData.ZFar = m_EditorCamera.GetFarClipping();
 
-		Editor::EditorWorldManager::GetWorldRender()->SubmitCamera(cameraData);
-		Editor::EditorWorldManager::GetWorldRender()->SubmitExtra([&]() {
+		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
+		renderer->SubmitCamera(cameraData);
+
+		Ref<World> world = renderer->GetTargetWorld();
+
+		renderer->SubmitExtra([=]() mutable {
+			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
 			m_EditorGrid.Render(m_EditorCamera);
+
+			if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
+			{
+				auto& cameraView = world->GetEntitiesWith<CameraComponent>();
+
+				for (auto entity : cameraView) {
+					Entity e = { entity, world.Raw() };
+					auto& tc = e.GetComponent<TransformComponent>();
+					auto& cc = e.GetComponent<CameraComponent>();
+
+					if (cc.GetProjectionType() == Projection::Perspective)
+						HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+					else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+				}
+			}
+			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
+			{
+				auto& meshView = world->GetEntitiesWith<MeshComponent>();
+				for (auto entity : meshView) {
+					Entity e = { entity, world.Raw() };
+					auto& tc = e.GetComponent<TransformComponent>();
+					auto& mc = e.GetComponent<MeshComponent>();
+
+					if (!mc.m_MeshHandle) continue;
+
+					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
+				}
+			}
 			});
 	}
 	void Viewport::OnPanelRender()
@@ -66,7 +99,14 @@ namespace UI
 		}
 
 		if (m_CurrentImage == 0 || true)
+		{
 			ImUI::Image(m_FrameBuffer->GetImage(), size);
+			if (ImGui::IsItemClicked())
+			{
+				m_DrawSettings = false;
+				m_DrawStats = false;
+			}
+		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
 			Application::Get().SubmitMainThread([handle = assetHandle]() {
@@ -76,44 +116,44 @@ namespace UI
 			});
 
 		m_Gizmos.RenderGizmo(m_EditorCamera, m_SelectionContext, size);
-		ImGui::SetCursorPos({ corner.x + 10, corner.y + 5 });
+		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
 
-		if (ImGui::Button(ICON_FK_COG, { 25, 25 }))
+		if (ImGui::Button(ICON_FK_COG, { 28, 28 }))
 			m_DrawSettings = !m_DrawSettings;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
-		ImGui::SameLine(0, 15);
+		ImGui::SameLine(0, 8);
 		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
 
-		if (ImGui::Button(text.c_str(), { 0, 25 })) {
+		if (ImGui::Button(text.c_str(), { 0, 28 })) {
 			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
 		}
 
-		ImGui::SameLine(0, 15);
-		if (ImGui::Button(ICON_FK_EYE " Show", { 0, 25 }))
+		ImGui::SameLine(0, 8);
+		if (ImGui::Button(ICON_FK_EYE " Show", { 0, 28 }))
 			m_DrawStats = !m_DrawStats;
 
 		ImGui::PopStyleVar();
 
 		ImGui::SameLine();
-		ImGui::SetCursorPosX(size.x - 100);
-		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 25);
+		ImGui::SetCursorPosX(size.x - (84 + 8));
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 28);
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-		const ImVec4& backgroundColor = style.BackgroundColor;
+		const ImVec4& backgroundColor = style.ChildBackgroundColor;
 		const ImVec4& offColor = style.Window.TextDisabled;
 
-		ImGui::BeginChild("##gizmoTools", { 92, 25 });
-		ImGui::SameLine(0, 6);
-		if (ImUI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 25 })) {
+		ImGui::BeginChild("##gizmoTools", { 84, 28 });
+		ImGui::SameLine(0, 0);
+		if (ImUI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Translate);
 		}
 		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton(ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 25 })) {
+		if (ImUI::ColoredButton(ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Rotate);
 		}
 		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton(ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 25 })) {
+		if (ImUI::ColoredButton(ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Scale);
 		}
 
@@ -144,7 +184,8 @@ namespace UI
 	}
 	bool Viewport::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
-		m_SelectionContext = e.GetEntity();
+
+		m_SelectionContext = e.GetEntityCount() ? e.GetEntity() : Entity();
 		return false;
 	}
 
@@ -152,7 +193,7 @@ namespace UI
 	{
 		if (!entity.IsValid()) return false;
 
-		m_EditorCamera.SetFocalPoint(entity.GetTransform().Translation);
+		m_EditorCamera.SetFocalPoint(entity.GetTransform().GetTranslation());
 		return true;
 	}
 
@@ -214,7 +255,6 @@ namespace UI
 
 		ImUI::Combo("Shading", "##shading", attachments, 5, m_CurrentImage);
 
-
 		ImGui::Columns();
 		ImGui::EndChild();
 	}
@@ -223,23 +263,24 @@ namespace UI
 		HZR_PROFILE_FUNCTION();
 		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.BackgroundColor);
-		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 5);
-		
-		ImGui::SetCursorPosX(165);
-		ImGui::BeginChild("##settingsView", { 225, 160 }, false);
+		ImUI::ScopedStyleStack rounding(ImGuiStyleVar_ChildRounding, 5, ImGuiStyleVar_FrameRounding, 4);
+
+		ImGui::SetCursorPosX(12);
+		ImGui::BeginChild("##settingsView", { 200, 160 }, false);
 
 		ImGui::Dummy({ 0, 3 });
 
-		ImGui::Columns(2, 0, true);
+		bool boundingBox = m_ViewportSettings & ViewportSettingsFlags_BoundingBox;
+		bool cameraFrustum = m_ViewportSettings & ViewportSettingsFlags_CameraFrustum;
 
-		ImGui::Text("Bounding boxes");
-		ImGui::NextColumn();
-		ImGui::Checkbox("#bounding", nullptr);
-		ImGui::NextColumn();
+		ImGui::Columns(2, 0, false);
+		ImGui::SetColumnWidth(0, 160);
+		if (ImUI::Checkbox("Bounding boxes", boundingBox))
+			m_ViewportSettings ^= ViewportSettingsFlags_BoundingBox;
 
-		ImGui::Text("Camera frustum");
-		ImGui::NextColumn();
-		ImGui::Checkbox("#frustum", nullptr);
+		if (ImUI::Checkbox("Camera frustum", cameraFrustum))
+			m_ViewportSettings ^= ViewportSettingsFlags_CameraFrustum;
+
 
 		ImGui::Columns();
 		ImGui::EndChild();

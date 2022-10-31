@@ -8,6 +8,12 @@
 
 namespace UI 
 {
+	enum ViewportSettingsFlags
+	{
+		ViewportSettingsFlags_BoundingBox = BIT(0),
+		ViewportSettingsFlags_CameraFrustum = BIT(1)
+	};
+
 	class Viewport : public Hazard::ImUI::Panel {
 	public:
 		Viewport();
@@ -39,6 +45,7 @@ namespace UI
 		bool m_DrawStats = false;
 		bool m_DrawSettings = false;
 		bool m_WindowFocused = false;
+		uint32_t m_ViewportSettings = 0;
 
 		uint32_t m_CurrentImage = 0;
 	};

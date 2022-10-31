@@ -176,7 +176,6 @@ namespace UI
 
 		for (auto& item : m_CurrentItems)
 		{
-			if (item.GetMetadata().Handle == INVALID_ASSET_HANDLE) continue;
 			item.BeginRender();
 			Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
@@ -258,6 +257,7 @@ namespace UI
 				});
 			});
 		if (!changed) return;
+
 		GenerateFolderStructure();
 		RefreshFolderItems();
 	}
@@ -268,7 +268,7 @@ namespace UI
 		std::vector<AssetPanelItem> files;
 
 		m_CurrentItems.clear();
-		for (auto item : File::GetAllInDirectory(m_CurrentPath))
+		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
 		{
 			if (File::GetFileExtension(item) == "meta")
 			{
@@ -276,16 +276,19 @@ namespace UI
 				if (!File::Exists(assetPath)) continue;
 
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
+				if (handle == INVALID_ASSET_HANDLE) continue;
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 
 				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);
 			}
 		}
 
-		for (auto& dir : directories) {
+		for (auto& dir : directories) 
+		{
 			m_CurrentItems.push_back(dir);
 		}
-		for (auto& f : files) {
+		for (auto& f : files) 
+		{
 			m_CurrentItems.push_back(f);
 		}
 	}
@@ -297,7 +300,8 @@ namespace UI
 		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
 		std::vector<std::string> paths = StringUtil::SplitString(relative, '\\');
 
-		if (ImGui::Button(ICON_FK_FOLDER " Content", { 0, 28.0f })) {
+		if (ImGui::Button(ICON_FK_FOLDER " Content", { 0, 28.0f })) 
+		{
 			GoToFolderDepth(m_CurrentPath, 0);
 		}
 

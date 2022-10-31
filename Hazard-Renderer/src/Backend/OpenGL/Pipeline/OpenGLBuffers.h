@@ -14,7 +14,7 @@ namespace HazardRenderer::OpenGL
 
 		void SetData(const BufferCopyRegion& copyRegion) override;
 		void SetData_RT(const BufferCopyRegion& copyRegion);
-		size_t GetSize() override { return m_Size; }
+		size_t GetSize() const override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 
@@ -37,7 +37,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~OpenGLIndexBuffer();
 
-		size_t GetCount() override { return m_Size / sizeof(uint32_t); }
+		size_t GetCount() const override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
 		//OpenGL specific
 		uint32_t GetBufferID() { return m_BufferID; }

@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan
 
 		void SetData(const BufferCopyRegion& copyRegion) override;
 		void SetData_RT(const BufferCopyRegion& copyRegion);
-		size_t GetSize() override { return m_Size; }
+		size_t GetSize() const override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 

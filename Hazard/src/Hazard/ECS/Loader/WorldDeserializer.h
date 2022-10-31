@@ -35,9 +35,17 @@ namespace Hazard
 		void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.GetComponent<TransformComponent>();
 
-			YamlUtils::Deserialize(comp, "Translation", c.Translation, glm::vec3(0.0f));
-			YamlUtils::Deserialize(comp, "Rotation", c.Rotation, glm::vec3(0.0f));
-			YamlUtils::Deserialize(comp, "Scale", c.Scale, glm::vec3(1.0f));
+			glm::vec3 translation;
+			glm::vec3 rotation;
+			glm::vec3 scale;
+
+			YamlUtils::Deserialize(comp, "Translation", translation, glm::vec3(0.0f));
+			YamlUtils::Deserialize(comp, "Rotation", rotation, glm::vec3(0.0f));
+			YamlUtils::Deserialize(comp, "Scale", scale, glm::vec3(1.0f));
+
+			c.SetTranslation(translation);
+			c.SetRotation(rotation);
+			c.SetScale(scale);
 		};
 		template<>
 		void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
@@ -93,7 +101,7 @@ namespace Hazard
 			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
 			HZR_ASSERT(sourceImage, "Woop");
 			c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
- 		}
+		}
 
 		template<>
 		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
@@ -131,7 +139,7 @@ namespace Hazard
 
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
-			if (comp["Sprite"]) 
+			if (comp["Sprite"])
 			{
 				AssetHandle handle = INVALID_ASSET_HANDLE;
 				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);

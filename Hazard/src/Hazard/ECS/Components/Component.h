@@ -21,19 +21,36 @@ namespace Hazard {
 
 	struct TransformComponent : public ComponentBase
 	{
+	private:
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
-
-
+		glm::mat4 TransformMatrix;
 		bool Dirty = true;
 
-		inline glm::mat4 GetTransformMat4() const
+	public:
+
+		const glm::vec3& GetTranslation() const { return Translation; }
+		const glm::vec3& GetRotation() const { return Rotation; }
+		const glm::vec3& GetScale() const { return Scale; }
+
+		void SetTranslation(const glm::vec3& translation) { Translation = translation; Dirty = true; }
+		void SetRotation(const glm::vec3& rotation) { Rotation = rotation; Dirty = true; }
+		void SetScale(const glm::vec3& scale) { Scale = scale; Dirty = true; }
+
+		const glm::mat4& GetTransformMat4()
 		{
-			return Math::ToTransformMatrix(Translation, Rotation, Scale);
+			HZR_TIMED_FUNCTION();
+			if (Dirty)
+			{
+				TransformMatrix = Math::ToTransformMatrix(Translation, Rotation, Scale);
+				Dirty = false;
+			}
+			return TransformMatrix;
 		}
 		inline glm::mat4 GetTransformNoScale() const
 		{
+			HZR_TIMED_FUNCTION();
 			return Math::ToTransformMatrix(Translation, Rotation);
 		}
 		inline glm::quat GetOrientation() const

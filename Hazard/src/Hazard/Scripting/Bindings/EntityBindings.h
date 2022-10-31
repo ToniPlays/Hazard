@@ -39,9 +39,9 @@ namespace Hazard
 		Entity e = handler->GetCurrentWorld()->CreateEntity(entityName);
 
 		auto& tc = e.GetTransform();
-		tc.Translation = position;
-		tc.Rotation = rotation;
-		tc.Scale = scale;
+		tc.SetTranslation(position);
+		tc.SetRotation(rotation);
+		tc.SetScale(scale);
 
 		return e.GetUID();
 	}

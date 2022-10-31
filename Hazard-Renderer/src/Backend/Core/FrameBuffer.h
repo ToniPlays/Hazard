@@ -42,7 +42,7 @@ namespace HazardRenderer
 		std::vector<FrameBufferAttachment> Attachments;
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
 		bool SwapChainTarget = false;
-		bool ClearOnLoad = false;
+		bool ClearOnLoad = true;
 		std::string DebugName = "";
 	};
 	struct FrameBufferSpecification 

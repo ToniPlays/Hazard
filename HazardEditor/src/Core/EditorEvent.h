@@ -10,13 +10,14 @@ namespace Events {
 	class SelectionContextChange : public Event
 	{
 	public:
-		SelectionContextChange(Entity entity) : entity(entity) {}
+		SelectionContextChange(std::vector<Entity> entities) : m_Entities(entities) {}
 
-		inline Entity GetEntity() { return entity; }
+		inline Entity GetEntity(uint32_t index = 0) { return m_Entities[index]; }
+		inline uint32_t GetEntityCount() { return m_Entities.size(); }
 
 		EVENT_CLASS_TYPE(AppEvent)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
-		Entity entity;
+		std::vector<Entity> m_Entities;
 	};
 }

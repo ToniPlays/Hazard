@@ -17,8 +17,19 @@
 #include "MessageFlags.h"
 
 using namespace Hazard;
-using namespace HazardRenderer;
 using namespace HazardScript;
+
+static std::string GetBuildType()
+{
+#ifdef HZR_DEBUG
+	return "Debug";
+#elif HZR_DIST
+	return "Distribution";
+#elif HZR_RELEASE
+	return "Release";
+#endif
+	return "Unknown";
+}
 
 
 void HazardEditorApplication::PreInit()
@@ -55,7 +66,7 @@ void HazardEditorApplication::PreInit()
 	RenderContextCreateInfo renderContextInfo = {};
 	renderContextInfo.Renderer = renderAPI;
 	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
+	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI) + " | " + GetBuildType();
 	renderContextInfo.Width = 1920;
 	renderContextInfo.Height = 1080;
 

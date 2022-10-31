@@ -17,7 +17,7 @@ namespace HazardRenderer::Vulkan
 		m_Binding = createInfo->Binding;
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
-		m_LocalData.Allocate(m_Size * 32);
+		m_LocalData.Allocate(m_Size * 1024);
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
@@ -40,7 +40,7 @@ namespace HazardRenderer::Vulkan
 			m_FrameIndex = frameIndex;
 		}
 
-		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
+		m_LocalData.TryWrite(data, size, m_CurrentBufferDataIndex);
 
 		if (m_CurrentBufferDataIndex != 0)
 		{

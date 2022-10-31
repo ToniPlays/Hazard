@@ -56,7 +56,7 @@ namespace UI
 					ImGui::Text(n);
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
-					ImGui::Text("%.6f ms", t);
+					ImGui::Text("%.4f ms", t);
 					});
 			}
 			});

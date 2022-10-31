@@ -50,9 +50,9 @@ namespace Hazard
 		void SerializeComponentEditor(Entity& entity, TransformComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "TransformComponent", [&]() {
-				YamlUtils::Serialize(out, "Translation", component.Translation);
-				YamlUtils::Serialize(out, "Rotation", component.Rotation);
-				YamlUtils::Serialize(out, "Scale", component.Scale);
+				YamlUtils::Serialize(out, "Translation", component.GetTranslation());
+				YamlUtils::Serialize(out, "Rotation", component.GetRotation());
+				YamlUtils::Serialize(out, "Scale", component.GetScale());
 				});
 		}
 		template<>

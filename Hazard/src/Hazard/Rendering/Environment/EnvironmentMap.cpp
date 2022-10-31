@@ -48,9 +48,9 @@ namespace Hazard
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
 		radianceInfo.Usage = ImageUsage::Texture;
+		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.Width = 2048;
 		radianceInfo.Height = 2048;
-		radianceInfo.Format = ImageFormat::RGBA;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		ImageTransitionInfo generalTransition = {};

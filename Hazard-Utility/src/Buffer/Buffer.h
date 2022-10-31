@@ -61,6 +61,12 @@ struct Buffer
 		if (offset + size > Size) assert(false);
 		memcpy((uint8_t*)Data + offset, data, size);
 	}
+	bool TryWrite(const void* data, size_t size, size_t offset = 0)
+	{
+		if (offset + size > Size) return false;
+		memcpy((uint8_t*)Data + offset, data, size);
+		return true;
+	}
 	operator bool() const { return Data; }
 	uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }
 	uint8_t operator[](int index) const { return ((uint8_t*)Data)[index]; }

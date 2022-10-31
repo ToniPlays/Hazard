@@ -293,6 +293,23 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
+	static bool Checkbox(bool& value)
+	{
+		return ImGui::Checkbox("##val", &value);
+	}
+	static bool Checkbox(const char* name, bool& value)
+	{
+		bool modified = false;
+		ImGui::Text(name);
+		ImGui::NextColumn();
+		Group(name, [&]() {
+			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+			modified = Checkbox(value);
+			});
+		ImGui::NextColumn();
+		return modified;
+	}
+
 	static bool Combo(const char* id, const char** options, uint32_t count, uint32_t& selected)
 	{
 		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));

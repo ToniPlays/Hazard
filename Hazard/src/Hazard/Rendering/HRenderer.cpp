@@ -16,10 +16,10 @@ namespace Hazard
 		s_Engine->GetDrawLists().push_back(list);
 	}
 
-	void HRenderer::SubmitSprite(const TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
+	void HRenderer::SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer)
 	{
 		HZR_PROFILE_FUNCTION();
-		glm::mat4& tMatrix = transform.GetTransformMat4();
+		const glm::mat4& tMatrix = transform.GetTransformMat4();
 		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
@@ -35,11 +35,11 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		DrawListStat& stat = s_Engine->GetDrawList().Stats;
 		stat.QuadCount++;
-		s_Engine->GetDrawList().Stats.Vertices++;
+		stat.Vertices++;
 
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
-	void HRenderer::SubmitMesh(const TransformComponent& transform, const MeshComponent& meshComponent)
+	void HRenderer::SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
@@ -73,11 +73,6 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
-		DrawListStat& stat = s_Engine->GetDrawList().Stats;
-		stat.MeshCount++;
-		stat.Vertices += (vertexBuffer->GetSize() / vertexBuffer->GetLayout().GetStride());
-		stat.Indices += count;
-
 		RawMesh data = {};
 		data.Transform = transform;
 		data.VertexBuffer = vertexBuffer;
@@ -89,6 +84,12 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const RawMesh& rawMesh, Ref<Pipeline> pipeline)
 	{
 		auto& drawList = s_Engine->GetDrawList();
+
+		DrawListStat& stat = s_Engine->GetDrawList().Stats;
+		stat.Vertices += (rawMesh.VertexBuffer->GetSize() / rawMesh.VertexBuffer->GetLayout().GetStride());
+		stat.Indices += rawMesh.Count;
+		stat.MeshCount++;
+
 		drawList.MeshList[pipeline.Raw()].push_back(rawMesh);
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
@@ -167,11 +168,13 @@ namespace Hazard
 		lineRenderer.SubmitLine(backTopRight, backBottomRight, c);
 	}
 
-	void HRenderer::SubmitPerspectiveCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
+	void HRenderer::SubmitPerspectiveCameraFrustum(const glm::vec3 position1, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, clipping.x, clipping.y, aspectRatio);
+
+		const glm::vec3& position = transform[3];
 
 		auto& lineRenderer = s_Engine->GetLineRenderer();
 
@@ -188,11 +191,13 @@ namespace Hazard
 			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
 		}
 	}
-	void HRenderer::SubmitOrthoCameraFrustum(const glm::vec3 position, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
+	void HRenderer::SubmitOrthoCameraFrustum(const glm::vec3 position1, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();
 		glm::vec4 c = { color.r, color.g, color.b, color.a };
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBoundsOrtho(orientation, transform, size, clipping.x, clipping.y, aspectRatio);
+
+		const glm::vec3& position = transform[3];
 
 		auto& lineRenderer = s_Engine->GetLineRenderer();
 
