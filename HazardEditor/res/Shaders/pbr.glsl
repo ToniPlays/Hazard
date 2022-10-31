@@ -48,37 +48,44 @@ const float gamma = 2.2;
 
 void main() 
 {
-	//Initialize Params
-	m_Params.Albedo = Color.rgb;
-	m_Params.Metalness = u_Model.Metalness;
-	m_Params.Roughness = max(u_Model.Roughness, 0.05);
-	m_Params.Normal = normalize(Normal);
-	m_Params.View = normalize(u_Util.CameraPos - WorldPosition);
-	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
-
-	float alpha = Color.a;
-
-	//Specular reflect direction
-	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
-	//Dielectric
-	vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
-
-	vec3 Lo = vec3(0.0);
-	//Reflectance
-	for(int i = 0; i < 1; i++)
+	if((u_Util.Flags & (1 << 0)) > 0) 
 	{
-		//Lighting
-		DirectionalLight light = u_Lights.DirectionalLights[i];
-		if(light.Color.a <= 0.0) 
-			continue;
-		Lo += CalculateDirectionalLight(F0, light);
+		OutputColor = vec4(1.0, 0.0, 0.0, 0.2);
 	}
-
-	vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity;
+	else
+	{
+		//Initialize Params
+		m_Params.Albedo = Color.rgb;
+		m_Params.Metalness = u_Model.Metalness;
+		m_Params.Roughness = max(u_Model.Roughness, 0.05);
+		m_Params.Normal = normalize(Normal);
+		m_Params.View = normalize(u_Util.CameraPos.xyz - WorldPosition);
+		m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	
-	//Tonemapping
-	vec3 color = ACESTonemap(ibl + Lo);
-	color = GammaCorrect(color, gamma);
+		float alpha = Color.a;
 
-	OutputColor = vec4(color, 1.0);
+		//Specular reflect direction
+		vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
+		//Dielectric
+		vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
+
+		vec3 Lo = vec3(0.0);
+		//Reflectance
+		for(int i = 0; i < 1; i++)
+		{
+			//Lighting
+			DirectionalLight light = u_Lights.DirectionalLights[i];
+			if(light.Color.a <= 0.0) 
+				continue;
+			Lo += CalculateDirectionalLight(F0, light);
+		}
+
+		vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity;
+	
+		//Tonemapping
+		vec3 color = ACESTonemap(ibl + Lo);
+		color = GammaCorrect(color, gamma);
+	
+		OutputColor = vec4(color, 1.0);
+	}
 }

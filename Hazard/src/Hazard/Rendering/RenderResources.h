@@ -47,7 +47,9 @@ namespace Hazard
 	};
 	struct UtilityUniformData 
 	{
-		glm::vec4 CameraPos;
+		glm::vec3 CameraPos;
+		float randomShit;
+		uint32_t Flags = 0;
 	};
 
 	using namespace HazardRenderer;

@@ -92,10 +92,12 @@ namespace UI
 		case Key::Delete:
 		{
 			std::vector<Entity> selections = m_SelectionContext;
-			for (auto& entity : selections)
-			{
-				m_WorldHandler->GetCurrentWorld()->DestroyEntity(entity);
-			}
+			Application::Get().SubmitMainThread([&, selections]() {
+				for (auto& entity : selections)
+				{
+					m_WorldHandler->GetCurrentWorld()->DestroyEntity(entity);
+				}
+				});
 			ClearSelected();
 			return true;
 		}
@@ -103,11 +105,13 @@ namespace UI
 		{
 			std::vector<Entity> selections = m_SelectionContext;
 			ClearSelected();
-			for (auto& entity : selections)
-			{
-				Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(entity);
-				SelectEntity(e);
-			}
+			Application::Get().SubmitMainThread([&, selections]() {
+				for (auto& entity : selections)
+				{
+					Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(entity);
+					SelectEntity(e);
+				}
+				});
 			return true;
 		}
 		}
@@ -119,18 +123,15 @@ namespace UI
 		bool spriteState = false;
 		bool isSkyLight = e.HasComponent<SkyLightComponent>();
 
-		if (e.HasComponent<ScriptComponent>()) 
-		{
+		if (e.HasComponent<ScriptComponent>()) {
 			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
 
-		if (e.HasComponent<SpriteRendererComponent>()) 
-		{
+		if (e.HasComponent<SpriteRendererComponent>()) {
 			spriteState = !e.GetComponent<SpriteRendererComponent>().Texture;
 		}
-
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		const ImVec4 visibleColor = style.Colors.AxisZ;
 		const ImVec4 textColor = style.Window.Text;

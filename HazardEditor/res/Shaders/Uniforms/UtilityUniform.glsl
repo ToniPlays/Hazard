@@ -4,5 +4,6 @@ layout(std140, set = 0, binding = 0) uniform Utility
 layout(std140, binding = 0) uniform Utility
 #endif
 {
-	uniform vec3 CameraPos;
+	uniform vec4 CameraPos;
+	uniform uint Flags;
 } u_Util;
