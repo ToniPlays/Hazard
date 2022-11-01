@@ -150,7 +150,7 @@ namespace Hazard::ImUI
 		}
 		ImGui::PopStyleVar();
 		ImGui::PopItemFlag();
-		return false;
+		return changed;
 	}
 	static bool InputFloatVec(const char* buttonText, float* value, float clearValue, float width, ImVec2 buttonSize, ImFont* buttonFont, ImVec4 color, bool mixed = false)
 	{

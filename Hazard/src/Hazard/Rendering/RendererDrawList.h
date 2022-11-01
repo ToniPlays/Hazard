@@ -35,7 +35,6 @@ namespace Hazard
 	struct EnvironmentData
 	{
 		Ref<EnvironmentMap> Map;
-		glm::vec4 Color;
 		float SkylightIntensity;
 		float EnvironmentLod;
 	};

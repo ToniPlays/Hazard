@@ -9,7 +9,6 @@ namespace Hazard
 	struct SkyLightComponent : ComponentBase
 	{
 		Ref<EnvironmentMap> EnvironmentMap = nullptr;
-		Color LightColor = Color::White;
 		float Intensity = 1.0f;
 		float LodLevel = 0.0f;
 	};

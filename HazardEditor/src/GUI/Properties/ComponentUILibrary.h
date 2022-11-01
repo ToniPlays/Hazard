@@ -451,41 +451,70 @@ namespace UI
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_GLOBE " Sky light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
-				std::string name = "Empty";
-				/*
-				if (c.EnvironmentMap)
+				auto& firstDir = entities[0].GetComponent<SkyLightComponent>();
+				Ref<EnvironmentMap> map = firstDir.EnvironmentMap;
+				float intensity = firstDir.Intensity;
+				float lodLevel = firstDir.LodLevel;
+				uint32_t flags = 0;
+
+				for (auto& entity : entities)
 				{
-					AssetHandle handle = c.EnvironmentMap->SourceImage->GetHandle();
-					AssetMetadata& data = AssetManager::GetMetadata(handle);
-					name = File::GetName(data.Path);
+					auto& sc = entity.GetComponent<SkyLightComponent>();
+					flags |= (sc.EnvironmentMap.Raw() != map.Raw()) ? BIT(0) : 0;
+					flags |= (sc.Intensity != intensity) ? BIT(1) : 0;
+					flags |= (sc.LodLevel != lodLevel) ? BIT(2) : 0;
 				}
-				*/
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
-				ImGui::Text("Map");
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
+
+				ImGui::Text("Mesh");
 				ImGui::NextColumn();
 
-				ImGui::BeginDisabled();
+				std::string path = "None";
+				if (map)
+					path = File::GetNameNoExt(AssetManager::GetMetadata(map->GetHandle()).Path);
+				else if (flags & BIT(0))
+					path = "---";
+
+
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-				ImUI::TextField(name, "##environmentMap");
+				if (ImUI::TextFieldWithHint(path, "Source image"))
+				{
+				}
+				ImGui::PopStyleVar();
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					Application::Get().SubmitMainThread([&, handle]() {
-						Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-						//c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
+					Application::Get().SubmitMainThread([handle, entities]() mutable {
+						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
+						auto& envMap = EnvironmentMap::Create(asset);
+
+						for (auto& entity : entities)
+							entity.GetComponent<SkyLightComponent>().EnvironmentMap = envMap;
 						});
 					});
-
-				ImGui::EndDisabled();
-
 				ImGui::NextColumn();
-				//ImUI::SliderFloat("LodLevel", c.LodLevel, 1.0f, 0.0f, 1.0f);
-				//ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.05f);
-				ImGui::Columns();
-
+				if (ImUI::InputFloat("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<SkyLightComponent>().LodLevel = lodLevel;
+				}
+				if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, (flags & BIT(2)) != 0))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<SkyLightComponent>().Intensity = intensity;
+				}
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
+					for (auto& entity : entities)
+					{
+						auto& slc = entity.GetComponent<SkyLightComponent>();
+						slc.Intensity = 1.0f;
+						slc.EnvironmentMap = nullptr;
+						slc.LodLevel = 0.0f;
+					}
+
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;

@@ -2,6 +2,7 @@
 
 #include "UtilityCore.h"
 #include "Hazard/Assets/Asset.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 enum class MethodImpl 
 {
@@ -32,10 +33,17 @@ public:
 	EditorAssetManager() = default;
 	~EditorAssetManager() = default;
 
+	static void Init();
+
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
 	static bool CreateFolder(const std::filesystem::path& path);
 	static bool CreateScriptAsset(const ScriptCreateInfo& info);
 	static bool CreateWorld(const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
+
+	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
+
+private:
+	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> m_Icons;
 };

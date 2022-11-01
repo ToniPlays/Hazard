@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Buffer.h"
+#include "Buffer/Buffer.h"
 #include "Batch.h"
 #include "Components/Components.h"
 #include "Color.h"

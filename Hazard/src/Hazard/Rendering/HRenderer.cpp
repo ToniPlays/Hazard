@@ -39,7 +39,7 @@ namespace Hazard
 
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
-	void HRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset> texture)
+	void HRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset>& texture)
 	{
 		s_Engine->GetQuadRenderer().SubmitBillboard(transform, view, color, texture);
 	}
@@ -112,7 +112,6 @@ namespace Hazard
 
 		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
 		EnvironmentData data = {};
-		data.Color = skyLight.LightColor.ToGLM();
 		data.SkylightIntensity = skyLight.Intensity;
 		data.EnvironmentLod = skyLight.LodLevel;
 		data.Map = map;

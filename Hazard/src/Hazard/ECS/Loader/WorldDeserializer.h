@@ -89,7 +89,6 @@ namespace Hazard
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
-			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "SkyboxLod", c.LodLevel, 0.0f);
 

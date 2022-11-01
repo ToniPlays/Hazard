@@ -5,6 +5,7 @@
 #include "Hazard/Rendering/HRenderer.h"
 
 #include "MedianPoint.h"
+#include "Core/EditorAssetManager.h"
 
 using namespace HazardRenderer;
 
@@ -57,6 +58,7 @@ namespace UI
 			if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
 			{
 				auto& cameraView = world->GetEntitiesWith<CameraComponent>();
+				auto& icon = EditorAssetManager::GetIcon("Camera");
 
 				for (auto entity : cameraView) {
 					Entity e = { entity, world.Raw() };
@@ -67,7 +69,7 @@ namespace UI
 						HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 					else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 
-					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::Red, nullptr);
+					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 				}
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
@@ -81,6 +83,21 @@ namespace UI
 					if (!mc.m_MeshHandle) continue;
 
 					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
+				}
+			}
+
+			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
+			{
+				auto& cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
+				auto& icon = EditorAssetManager::GetIcon("DirectionalLight");
+
+				for (auto& entity : cameraView) 
+				{
+					Entity e = { entity, world.Raw() };
+					auto& tc = e.GetComponent<TransformComponent>();
+					auto& cc = e.GetComponent<DirectionalLightComponent>();
+
+					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 				}
 			}
 			});
@@ -311,6 +328,7 @@ namespace UI
 
 		bool boundingBox = m_ViewportSettings & ViewportSettingsFlags_BoundingBox;
 		bool cameraFrustum = m_ViewportSettings & ViewportSettingsFlags_CameraFrustum;
+		bool lightIcons = m_ViewportSettings & ViewportSettingsFlags_LightIcons;
 
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 160);
@@ -319,6 +337,8 @@ namespace UI
 
 		if (ImUI::Checkbox("Camera frustum", cameraFrustum))
 			m_ViewportSettings ^= ViewportSettingsFlags_CameraFrustum;
+		if (ImUI::Checkbox("Light icons", lightIcons))
+			m_ViewportSettings ^= ViewportSettingsFlags_LightIcons;
 
 		ImGui::Columns();
 		ImGui::EndChild();

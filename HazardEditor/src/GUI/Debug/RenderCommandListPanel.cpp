@@ -93,6 +93,7 @@ namespace UI
 						ImGui::Text("Index count");
 						ImGui::NextColumn();
 						ImGui::Text(std::to_string(mesh.Count).c_str());
+						ImGui::NextColumn();
 					}
 					ImGui::Columns();
 					});

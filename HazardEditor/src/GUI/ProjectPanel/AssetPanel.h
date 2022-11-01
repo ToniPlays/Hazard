@@ -52,9 +52,8 @@ namespace UI {
 	private:
 		std::filesystem::path m_RootPath;
 		std::filesystem::path m_CurrentPath;
-		std::vector<FolderStructureData> m_FolderData;
 
+		std::vector<FolderStructureData> m_FolderData;
 		std::vector<AssetPanelItem> m_CurrentItems;
-		std::unordered_map<AssetType, Ref<Hazard::Texture2DAsset>> m_Icons;
 	};
 }

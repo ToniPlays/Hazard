@@ -107,8 +107,7 @@ namespace Hazard
 		}
 
 		float textureIndex = 0.0f;
-		if (texture)
-			textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
+		if (texture) textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 		constexpr float size = 1.0f;

@@ -7,15 +7,45 @@
 
 using namespace Hazard;
 
+void EditorAssetManager::Init()
+{
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/textureBG.png");
+		m_Icons["Default"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/folder.png");
+		m_Icons["Folder"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/world.png");
+		m_Icons["World"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/csharp.png");
+		m_Icons["Script"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/camera.png");
+		m_Icons["Camera"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+	{
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/directionalLight.png");
+		m_Icons["DirectionalLight"] = AssetManager::GetAsset<Texture2DAsset>(handle);
+	}
+}
+
 AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path& path)
 {
 	AssetMetadata metadata = AssetMetadata();
-	if (!File::Exists(path)) return metadata;
+	if (!File::Exists(path)) 
+		return metadata;
 
 	YAML::Node root = YAML::LoadFile(path.string());
 	YamlUtils::Deserialize<AssetHandle>(root, "UID", metadata.Handle, INVALID_ASSET_HANDLE);
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
 	YamlUtils::Deserialize<std::filesystem::path>(root, "Path", metadata.Path, "");
+
 	Hazard::AssetManager::ImportAsset(metadata.Path, metadata);
 
 	return metadata;
@@ -149,4 +179,11 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	auto& registry = AssetManager::GetMetadataRegistry();
 
 	return false;
+}
+
+Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
+{
+	if (m_Icons.find(name) != m_Icons.end()) 
+		return m_Icons[name];
+	return m_Icons["Default"];
 }

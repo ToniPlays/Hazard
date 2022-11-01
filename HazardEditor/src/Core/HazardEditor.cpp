@@ -14,6 +14,8 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
 
+#include "EditorAssetManager.h"
+
 #include "MessageFlags.h"
 
 using namespace Hazard;
@@ -97,6 +99,8 @@ void HazardEditorApplication::PreInit()
 }
 void HazardEditorApplication::Init()
 {
+	EditorAssetManager::Init();
+
 	Editor::EditorWorldManager::Init();
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderContextManager>().GetWindow();

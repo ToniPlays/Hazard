@@ -18,7 +18,8 @@ namespace Hazard {
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) 
 		{
-			if (HasComponent<T>()) {
+			if (HasComponent<T>()) 
+			{
 				//HZR_CORE_WARN("Entity already has component");
 				return GetComponent<T>();
 			}
@@ -53,6 +54,7 @@ namespace Hazard {
 		template<typename T>
 		T& GetComponent() 
 		{
+			HZR_TIMED_FUNCTION();
 			return m_World->m_Registry.get<T>(m_Handle);
 		}
 
