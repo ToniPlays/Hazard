@@ -46,7 +46,7 @@ namespace Hazard
 		const AssetType GetType() const { return m_Type; }
 		AssetHandle GetHandle() { return m_Handle; }
 		AssetFlags GetFlags() { return m_Flags; }
-		bool IsValid() { return m_Handle != INVALID_ASSET_HANDLE; }
+		bool IsValid() { return m_Handle != INVALID_ASSET_HANDLE && m_Type != AssetType::Undefined; }
 
 	protected:
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
@@ -68,6 +68,7 @@ namespace Hazard
 			pointer->Value = value;
 			pointer->m_Type = type;
 			pointer->m_Handle = AssetHandle();
+
 			return pointer;
 		}
 	};

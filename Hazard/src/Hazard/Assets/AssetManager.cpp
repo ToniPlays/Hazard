@@ -88,7 +88,8 @@ namespace Hazard
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
-		for (auto& [path, metadata] : s_Registry) {
+		for (auto& [path, metadata] : s_Registry) 
+		{
 			if (metadata.Handle == handle)
 				return metadata;
 		}
@@ -97,6 +98,5 @@ namespace Hazard
 	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)
 	{
 		return path;
-		return std::filesystem::relative(path, APPLICATION_PERSISTENT_PATH);
 	}
 }

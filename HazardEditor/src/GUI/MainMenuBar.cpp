@@ -70,6 +70,9 @@ namespace UI
 		AddMenuItem("Window/Debug/Console", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Console>(true);
 			});
+		AddMenuItem("Window/Debug/Asset managed debugger", [&]() {
+			Application::GetModule<GUIManager>().SetPanelOpen<AssetManagerDebugPanel>(true);
+			});
 		AddMenuItem("Window/Debug/Render command list", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<RenderCommandListPanel>(true);
 			});
