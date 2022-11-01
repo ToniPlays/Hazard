@@ -750,11 +750,11 @@ namespace ImGuizmo
 	static Context gContext;
 
 	static const vec_t directionUnary[3] = { makeVect(1.f, 0.f, 0.f), makeVect(0.f, 1.f, 0.f), makeVect(0.f, 0.f, 1.f) };
-	static const ImU32 directionColor[3] = { 0xFF715ED8, 0xFF25AA25, 0xFFCC532C };
+	static ImU32 directionColor[3] = { 0xFF715ED8, 0xFF25AA25, 0xFFCC532C };
 
 	// Alpha: 100%: FF, 87%: DE, 70%: B3, 54%: 8A, 50%: 80, 38%: 61, 12%: 1F
 	//static const ImU32 planeColor[3] = { IM_COL32(0xAA, 0, 0, 0x61), IM_COL32(0, 0xAA, 0, 0x61), IM_COL32(0, 0, 0xAA, 0x61) };
-	static const ImU32 planeColor[3] = { 0xFF7A68D8, 0xFF55AB55, 0xFFD96742 };
+	static ImU32 planeColor[3] = { 0xFF7A68D8, 0xFF55AB55, 0xFFD96742 };
 	static const ImU32 selectionColor = 0xFF20AACC;
 	static const ImU32 inactiveColor = IM_COL32(0x99, 0x99, 0x99, 0x99);
 	static const ImU32 translationLineColor = IM_COL32(0xAA, 0xAA, 0xAA, 0xAA);
@@ -2751,5 +2751,35 @@ namespace ImGuizmo
 
 		// restore view/projection because it was used to compute ray
 		ComputeContext(svgView.m16, svgProjection.m16, gContext.mModelSource.m16, gContext.mMode);
+	}
+
+	IMGUI_API void SetColor(OPERATION op, ImU32 color)
+	{
+		switch (op)
+		{
+		case OPERATION::TRANSLATE_X:	directionColor[0] = color;		break;
+		case OPERATION::TRANSLATE_Y:	directionColor[1] = color;		break;
+		case OPERATION::TRANSLATE_Z:	directionColor[2] = color;		break;
+		case OPERATION::ROTATE_X:		directionColor[2] = color;		break;
+		case OPERATION::ROTATE_Y:		directionColor[1] = color;		break;
+		case OPERATION::ROTATE_Z:		directionColor[2] = color;		break;
+		case OPERATION::ROTATE_SCREEN:	directionColor[2] = color;		break;
+		case OPERATION::SCALE_X:		directionColor[1] = color;		break;
+		case OPERATION::SCALE_Y:		directionColor[2] = color;		break;
+		case OPERATION::SCALE_Z:		directionColor[3] = color;		break;
+		case OPERATION::BOUNDS:			directionColor[0] = color;		break;
+		case OPERATION::TRANSLATE:				break;
+		case OPERATION::ROTATE:					break;
+		case OPERATION::SCALE:					break;
+		}
+	}
+	IMGUI_API void SetPlaneColor(OPERATION op, ImU32 color)
+	{
+		switch (op)
+		{
+		case OPERATION::TRANSLATE_X:	planeColor[0] = color;		break;
+		case OPERATION::TRANSLATE_Y:	planeColor[1] = color;		break;
+		case OPERATION::TRANSLATE_Z:	planeColor[2] = color;		break;
+		}
 	}
 };

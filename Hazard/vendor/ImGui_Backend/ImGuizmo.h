@@ -213,4 +213,7 @@ namespace ImGuizmo
    // When true (default), the guizmo axis flip for better visibility
    // When false, they always stay along the positive world/local axis
    IMGUI_API void AllowAxisFlip(bool value);
+
+   IMGUI_API void SetColor(OPERATION op, ImU32 color);
+   IMGUI_API void SetPlaneColor(OPERATION op, ImU32 color);
 }

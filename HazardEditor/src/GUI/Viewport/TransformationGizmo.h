@@ -23,7 +23,7 @@ namespace UI
 	class TransformationGizmo {
 
 	public:
-		TransformationGizmo() = default;
+		TransformationGizmo();
 		~TransformationGizmo() = default;
 
 		glm::mat4 RenderGizmo(const Editor::EditorCamera& camera, glm::mat4& target, ImVec2 size);

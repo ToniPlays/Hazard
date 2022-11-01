@@ -30,9 +30,26 @@ namespace UI
 	template<>
 	static bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
 	{
-		//ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-		//ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-		//ImUI::TextField(c.Tag);
+
+		std::string& tag = entities[0].GetTag().Tag;
+		bool mixed = false;
+
+		for (auto& entity : entities)
+		{
+			if (entity.GetTag().Tag != tag)
+			{
+				mixed = true;
+				break;
+			}
+		}
+
+		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		if (ImUI::TextField(tag, "##tag", mixed))
+		{
+			for (auto& entity : entities)
+				entity.GetTag().Tag = tag;
+		}
 		return false;
 	}
 	template<>
@@ -175,7 +192,7 @@ namespace UI
 				std::string path = "None";
 				if (texture)
 					path = File::GetNameNoExt(AssetManager::GetMetadata(texture->GetHandle()).Path);
-				else if (flags & BIT(0)) 
+				else if (flags & BIT(0))
 					path = "---";
 
 
@@ -196,8 +213,8 @@ namespace UI
 				ImGui::PopStyleVar();
 
 				Color c = flags & BIT(1) ? Color::White : color;
-				
-				if (ImUI::ColorPicker("Tint", "##Tint", c, flags & BIT(1))) 
+
+				if (ImUI::ColorPicker("Tint", "##Tint", c, flags & BIT(1)))
 				{
 					for (auto& entity : entities)
 					{
@@ -245,13 +262,29 @@ namespace UI
 				ImGui::Columns(2);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				const char* projectionTypes[] = { "Perspective", "Orthographic" };
-				uint32_t selected = 0; //(uint32_t)c.GetProjectionType();
+				auto& firstCamera = entities[0].GetComponent<CameraComponent>();
 
-				//Projection type here
-				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected))
+				uint32_t selected = (uint32_t)firstCamera.GetProjectionType();
+				glm::vec2 clipping = firstCamera.GetClipping();
+				uint32_t flags = 0;
+
+				for (auto& entity : entities)
 				{
-					//c.SetProjection((Projection)selected);
+					auto& c = entity.GetComponent<CameraComponent>();
+					flags |= ((uint32_t)c.GetProjectionType() != selected) ? BIT(0) : 0;
+					flags |= (c.GetClipping().x != clipping.x) ? BIT(1) : 0;
+					flags |= (c.GetClipping().y != clipping.y) ? BIT(2) : 0;
+				}
+
+				const char* projectionTypes[] = { "Perspective", "Orthographic" };
+				//Projection type here
+				if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected, flags & BIT(0)))
+				{
+					for (auto& entity : entities)
+					{
+						auto& c = entity.GetComponent<CameraComponent>();
+						c.SetProjection((Projection)selected);
+					}
 				}
 				/*
 				if (c.GetProjectionType() == Projection::Perspective) {
@@ -271,9 +304,18 @@ namespace UI
 				}
 				*/
 
-				glm::vec2 clipping;
-				if (ImUI::InputFloat2("Clipping", clipping, 1.0f)) {
-					//c.SetClipping(clipping);
+
+				uint32_t result = ImUI::InputFloat2("Clipping", clipping, 1.0f, flags >> 1);
+				if (result != 0) 
+				{
+					for (auto& entity : entities)
+					{
+						auto& cc = entity.GetComponent<CameraComponent>();
+						glm::vec2 c = cc.GetClipping();
+						c.x = (result & BIT(0)) ? c.x : clipping.x;
+						c.y = (result & BIT(0)) ? c.y : clipping.y;
+						cc.SetClipping(clipping);
+					}
 				}
 
 				ImGui::Columns();

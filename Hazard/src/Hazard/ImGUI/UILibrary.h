@@ -87,8 +87,8 @@ namespace Hazard::ImUI
 	}
 	static bool Tooltip(const char* text)
 	{
-		if (strcmp(text, "") == 0) return false;
-		if (!ImGui::IsItemHovered()) return false;
+		if (strcmp(text, "") == 0 || !ImGui::IsItemHovered()) return false;
+
 		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_WindowRounding, 4.0f);
 		ImGui::BeginTooltip();
 		ImGui::Text(text);
@@ -108,6 +108,7 @@ namespace Hazard::ImUI
 
 		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
+			text = buffer;
 			changed |= true;
 		}
 		ImGui::PopItemFlag();
@@ -223,7 +224,7 @@ namespace Hazard::ImUI
 		return changed;
 	}
 
-	static uint32_t InputFloat2(glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
+	static uint32_t InputFloat2(glm::vec2& value, float clearValue = 0.0f, uint32_t flags = false)
 	{
 		uint32_t modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
@@ -238,10 +239,10 @@ namespace Hazard::ImUI
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX);
+		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, flags & BIT(0));
 		ImGui::SameLine();
 		//Y axis
-		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY) << 1;
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1)) << 1;
 		return modified;
 	}
 	static uint32_t InputFloat3(glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
@@ -295,13 +296,13 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static uint32_t InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
+	static uint32_t InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
 		uint32_t modified = 0;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			modified = InputFloat2(value, clearValue);
+			modified |= InputFloat2(value, clearValue, flags);
 			});
 		ImGui::NextColumn();
 		return modified;
@@ -336,18 +337,20 @@ namespace Hazard::ImUI
 		return modified;
 	}
 
-	static bool Combo(const char* id, const char** options, uint32_t count, uint32_t& selected)
+	static bool Combo(const char* id, const char** options, uint32_t count, uint32_t& selected, bool isMixed = false)
 	{
 		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 		uint32_t currentSelection = selected;
 		bool modified = false;
 
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
 		if (ImGui::BeginCombo(id, options[selected]))
 		{
 			for (uint32_t i = 0; i < count; i++) {
 				bool isSelected = i == selected;
 
-				if (ImGui::Selectable(options[i], &currentSelection)) {
+				if (ImGui::Selectable(options[i], &currentSelection)) 
+				{
 					currentSelection = i;
 					modified = true;
 					selected = i;
@@ -358,16 +361,16 @@ namespace Hazard::ImUI
 			}
 			ImGui::EndCombo();
 		}
-
+		ImGui::PopItemFlag();
 		return modified;
 	}
-	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected)
+	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected, bool isMixed = false)
 	{
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		bool modified = Combo(id, options, count, selected);
+		bool modified = Combo(id, options, count, selected, isMixed);
 		ImGui::NextColumn();
 		return modified;
 	}

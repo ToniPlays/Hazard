@@ -10,6 +10,17 @@
 
 namespace UI 
 {
+	TransformationGizmo::TransformationGizmo()
+	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImGuizmo::SetColor(ImGuizmo::OPERATION::TRANSLATE_X, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisX));
+		ImGuizmo::SetColor(ImGuizmo::OPERATION::TRANSLATE_Y, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisY));
+		ImGuizmo::SetColor(ImGuizmo::OPERATION::TRANSLATE_Z, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisZ));
+
+		ImGuizmo::SetPlaneColor(ImGuizmo::OPERATION::TRANSLATE_X, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisX));
+		ImGuizmo::SetPlaneColor(ImGuizmo::OPERATION::TRANSLATE_Y, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisY));
+		ImGuizmo::SetPlaneColor(ImGuizmo::OPERATION::TRANSLATE_Z, ImGui::ColorConvertFloat4ToU32(style.Colors.AxisZ));
+	}
 	glm::mat4 TransformationGizmo::RenderGizmo(const Editor::EditorCamera& camera, glm::mat4& target, ImVec2 size)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -18,8 +29,6 @@ namespace UI
 			m_IsUsing = false;
 			return target;
 		}
-
-		ImGuizmo::BeginFrame();
 
 		ImGuizmo::SetOrthographic(camera.Is2DEnabled());
 		ImGuizmo::SetDrawlist();

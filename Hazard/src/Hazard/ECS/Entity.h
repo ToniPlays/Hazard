@@ -61,8 +61,8 @@ namespace Hazard {
 
 		bool IsValid();
 
-		entt::entity GetHandle() { return m_Handle; }
-		UID GetUID() { return GetComponent<TagComponent>().Uid; }
+		const entt::entity& GetHandle() const { return m_Handle; }
+		const UID& GetUID() { return GetComponent<TagComponent>().Uid; }
 
 		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
 		bool ReceivesUpdate() { return GetComponent<TagComponent>().ReceiveUpdate; }
