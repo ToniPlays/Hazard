@@ -279,7 +279,7 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			modified = InputFloat(value, clearValue, speed, min, max);
+			modified = InputFloat(value, clearValue, speed, min, max, isMixed);
 			});
 		ImGui::NextColumn();
 		return modified;

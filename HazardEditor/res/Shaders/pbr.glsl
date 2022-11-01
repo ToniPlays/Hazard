@@ -71,7 +71,7 @@ void main()
 
 		vec3 Lo = vec3(0.0);
 		//Reflectance
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < u_Lights.DirectionalLightCount; i++)
 		{
 			//Lighting
 			DirectionalLight light = u_Lights.DirectionalLights[i];

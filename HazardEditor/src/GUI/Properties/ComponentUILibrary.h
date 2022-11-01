@@ -202,10 +202,11 @@ namespace UI
 
 				ImUI::TextureSlot("Sprite", path, texture, [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
+						auto& asset = AssetManager::GetAsset<Texture2DAsset>(handle);
 						for (auto& entity : entities)
 						{
 							auto& c = entity.GetComponent<SpriteRendererComponent>();
-							c.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
+							c.Texture = asset;
 						}
 						});
 					});
@@ -253,7 +254,6 @@ namespace UI
 	template<>
 	static bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
 	{
-
 		bool removed = false;
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_VIDEO_CAMERA " Camera", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
@@ -266,6 +266,8 @@ namespace UI
 
 				uint32_t selected = (uint32_t)firstCamera.GetProjectionType();
 				glm::vec2 clipping = firstCamera.GetClipping();
+				float fov = firstCamera.GetFov();
+				float size = firstCamera.GetSize();
 				uint32_t flags = 0;
 
 				for (auto& entity : entities)
@@ -274,6 +276,9 @@ namespace UI
 					flags |= ((uint32_t)c.GetProjectionType() != selected) ? BIT(0) : 0;
 					flags |= (c.GetClipping().x != clipping.x) ? BIT(1) : 0;
 					flags |= (c.GetClipping().y != clipping.y) ? BIT(2) : 0;
+
+					flags |= (c.GetFov() != fov) ? BIT(3) : 0;
+					flags |= (c.GetSize() != size) ? BIT(4) : 0;
 				}
 
 				const char* projectionTypes[] = { "Perspective", "Orthographic" };
@@ -286,27 +291,35 @@ namespace UI
 						c.SetProjection((Projection)selected);
 					}
 				}
-				/*
-				if (c.GetProjectionType() == Projection::Perspective) {
-					float fov = c.GetFov();
-
-					if (ImUI::InputFloat("Fov", fov, 60.0f)) {
-						c.SetFov(fov);
-					}
-				}
-				else
+				if (!(flags & BIT(0)))
 				{
-					float size = c.GetSize();
-
-					if (ImUI::InputFloat("Size", size, 60.0f)) {
-						c.SetSize(size);
+					if ((Projection)selected == Projection::Perspective)
+					{
+						if (ImUI::InputFloat("Fov", fov, 60.0f, 0.03f, 0.001f, 0.0f, (flags & BIT(3)) != 0))
+						{
+							for (auto& entity : entities)
+							{
+								auto& cc = entity.GetComponent<CameraComponent>();
+								cc.SetFov(fov);
+							}
+						}
+					}
+					else
+					{
+						if (ImUI::InputFloat("Size", size, 5.0f, 0.0001f, 0.0f, 0.0f, (flags & BIT(4)) != 0))
+						{
+							for (auto& entity : entities)
+							{
+								auto& cc = entity.GetComponent<CameraComponent>();
+								cc.SetSize(size);
+							}
+						}
 					}
 				}
-				*/
 
 
 				uint32_t result = ImUI::InputFloat2("Clipping", clipping, 1.0f, flags >> 1);
-				if (result != 0) 
+				if (result != 0)
 				{
 					for (auto& entity : entities)
 					{
@@ -321,9 +334,13 @@ namespace UI
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
-					//c.SetFov(60.0f);
-					//c.SetClipping({ 0.03f, 100.0f });
-					//c.SetProjection(Projection::Perspective);
+					for (auto& entity : entities)
+					{
+						auto& cc = entity.GetComponent<CameraComponent>();
+						cc.SetProjection(Projection::Perspective);
+						cc.SetFov(60.0f);
+						cc.SetClipping({ 0.03, 100.0f });
+					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;
@@ -495,14 +512,43 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				//if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
+				auto& firstDir = entities[0].GetComponent<DirectionalLightComponent>();
+				Color color = firstDir.LightColor;
+				float intensity = firstDir.Intensity;
+				uint32_t flags = 0;
 
-				//}
-				//ImUI::InputFloat("Intensity", c.Intensity, 1.0f, 0.025f);
+				for (auto& entity : entities)
+				{
+					auto& dir = entity.GetComponent<DirectionalLightComponent>();
+					flags |= (dir.LightColor.r != color.r) ? BIT(0) : 0;
+					flags |= (dir.LightColor.g != color.g) ? BIT(0) : 0;
+					flags |= (dir.LightColor.b != color.b) ? BIT(0) : 0;
+					flags |= (dir.LightColor.a != color.a) ? BIT(0) : 0;
 
+					flags |= (dir.Intensity != intensity) ? BIT(1) : 0;
+				}
+
+				color = flags & BIT(0) ? Color::White : color;
+
+				if (ImUI::ColorPicker("Color", "##Color", color, flags & BIT(0)))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<DirectionalLightComponent>().LightColor = color;
+				}
+				if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<DirectionalLightComponent>().Intensity = intensity;
+				}
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
+					for (auto& entity : entities)
+					{
+						auto& dir = entity.GetComponent<DirectionalLightComponent>();
+						dir.Intensity = 1.0f;
+						dir.LightColor = Color::White;
+					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;
@@ -524,26 +570,55 @@ namespace UI
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions("" ICON_FK_LIGHTBULB_O " Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		bool optionsOpen = ImUI::TreenodeWithOptions("Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+			{
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				/*if (ImUI::ColorPicker("Color", "##Color", c.LightColor)) {
+				auto& firstDir = entities[0].GetComponent<PointLightComponent>();
+				Color color = firstDir.LightColor;
+				float intensity = firstDir.Intensity;
+				uint32_t flags = 0;
 
+				for (auto& entity : entities)
+				{
+					auto& dir = entity.GetComponent<PointLightComponent>();
+					flags |= (dir.LightColor.r != color.r) ? BIT(0) : 0;
+					flags |= (dir.LightColor.g != color.g) ? BIT(0) : 0;
+					flags |= (dir.LightColor.b != color.b) ? BIT(0) : 0;
+					flags |= (dir.LightColor.a != color.a) ? BIT(0) : 0;
 
-				ImUI::InputFloat("Intensity", c.Intensity, 1.0f);
-				}*/
+					flags |= (dir.Intensity != intensity) ? BIT(1) : 0;
+				}
+
+				color = flags & BIT(0) ? Color::White : color;
+
+				if (ImUI::ColorPicker("Color", "##Color", color, flags & BIT(0)))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<PointLightComponent>().LightColor = color;
+				}
+				if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
+				{
+					for (auto& entity : entities)
+						entity.GetComponent<PointLightComponent>().Intensity = intensity;
+				}
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
+					for (auto& entity : entities)
+					{
+						auto& dir = entity.GetComponent<PointLightComponent>();
+						dir.Intensity = 1.0f;
+						dir.LightColor = Color::White;
+					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;
 					});
 			}, [&]() {
 				/*ImUI::DragSource("Hazard.PointLightComponent", &e.GetUID(), [&]() {
-					ImGui::Text("Point light");
+					ImGui::Text("Directional light");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 					*/
@@ -555,50 +630,103 @@ namespace UI
 	}
 	template<>
 	static bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities) {
-
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
-			{
+		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_CUBE " Mesh", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+
+				auto& firstMc = entities[0].GetComponent<MeshComponent>();
+
+				uint32_t flags = 0;
+				Ref<Mesh> mesh = firstMc.m_MeshHandle;
+
+				float metallic = firstMc.Metalness;
+				float roughness = firstMc.Roughness;
+
+				for (auto& entity : entities)
+				{
+					auto& mc = entity.GetComponent<MeshComponent>();
+					if (mc.m_MeshHandle.Raw() != mesh.Raw())
+					{
+						mesh = nullptr;
+						flags |= BIT(0);
+					}
+
+					flags |= (mc.Metalness != metallic) ? BIT(1) : 0;
+					flags |= (mc.Roughness != roughness) ? BIT(2) : 0;
+				}
+
+				std::string path = "None";
+				if (mesh)
+					path = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Path);
+				else if (flags & BIT(0))
+					path = "---";
+
+
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
+
 				ImGui::Text("Mesh");
 				ImGui::NextColumn();
 
-				AssetMetadata data;
-				/*if (c.m_MeshHandle)
-					data = AssetManager::GetMetadata(c.m_MeshHandle->GetHandle());
-				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
-				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
-				if (ImUI::TextFieldWithHint(c.m_MeshHandle ? File::GetNameNoExt(data.Path) : "", "Mesh path"))
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+				if (ImUI::TextFieldWithHint(path, "Mesh file"))
 				{
-
+					ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
+						Ref<Mesh> asset = AssetManager::GetAsset<Mesh>(handle);
+						for (auto& entity : entities)
+						{
+							auto& c = entity.GetComponent<MeshComponent>();
+							c.m_MeshHandle = asset;
+						}
+						});
 				}
-				ImGui::PopStyleVar();
-					*/
-
-				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-					//c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
-					});
 				ImGui::NextColumn();
-				//ImUI::InputFloat("Metalness", c.Metalness, 0.0f, 0.025f, 0.0f, 1.0f);
-				//ImUI::InputFloat("Roughness", c.Roughness, 1.0f, 0.025f, 0.0f, 1.0f);
+				if (ImUI::InputFloat("Metalness", metallic, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
+				{
+					for (auto& entity : entities)
+					{
+						auto& mc = entity.GetComponent<MeshComponent>();
+						mc.Metalness = metallic;
+					}
+				}
+				if (ImUI::InputFloat("Roughness", roughness, 1.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(2)) != 0))
+				{
+					for (auto& entity : entities)
+					{
+						auto& mc = entity.GetComponent<MeshComponent>();
+						mc.Roughness = roughness;
+					}
+				}
+
+				ImGui::PopStyleVar();
 
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
+					for (auto& entity : entities)
+					{
+						auto& c = entity.GetComponent<MeshComponent>();
+						c.m_MeshHandle = nullptr;
+						c.Metalness = 0.0f;
+						c.Roughness = 1.0f;
+						c.CastShadows = false;
+					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;
 					});
 			}, [&]() {
-				/*ImUI::DragSource("Hazard.MeshComponent", &e.GetUID(), [&]() {
-					ImGui::Text("Mesh");
+				/*
+				ImUI::DragSource("Hazard.SpriteRendererComponent", &e.GetUID(), [&]() {
+					ImGui::Text("Sprite renderer");
 					ImGui::Text(std::to_string(e.GetUID()).c_str());
 					});
 					*/
 			});
+
 		if (removed)
 			RemoveComponentFromAll<MeshComponent>(entities);
 
