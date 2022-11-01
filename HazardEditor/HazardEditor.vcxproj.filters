@@ -179,6 +179,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClCompile>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_glfw.cpp">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClCompile>

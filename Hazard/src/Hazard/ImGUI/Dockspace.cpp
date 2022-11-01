@@ -2,7 +2,6 @@
 
 #include "Dockspace.h"
 #include <GLFW/glfw3.h>
-#include "imgui.h
 #include "Hazard/ImGUI/UILibrary.h"
 
 namespace Hazard::ImUI {
@@ -52,6 +51,7 @@ namespace Hazard::ImUI {
 	}
 	bool Dockspace::CustomTitleBar(HazardRenderer::Window& window, float height)
 	{
+		/*
 		HZR_PROFILE_FUNCTION();
 		auto* glfwWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 		const bool maximized = (bool)glfwGetWindowAttrib(glfwWindow, GLFW_MAXIMIZED);
@@ -140,5 +140,7 @@ namespace Hazard::ImUI {
 }
 		}
 #endif
+*/
+		return false;
 	}
 }

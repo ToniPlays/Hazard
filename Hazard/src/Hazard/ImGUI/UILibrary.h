@@ -172,7 +172,7 @@ namespace Hazard::ImUI
 		ss << "##" << buttonText << "_";
 		ImGui::SetNextItemWidth(width);
 
-		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, true);
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, mixed);
 		modified |= ImGui::DragFloat(ss.str().c_str(), value);
 		ImGui::PopItemFlag();
 		return modified;
@@ -223,9 +223,9 @@ namespace Hazard::ImUI
 		return changed;
 	}
 
-	static bool InputFloat2(glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
+	static uint32_t InputFloat2(glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
 	{
-		bool modified = false;
+		uint32_t modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -241,12 +241,12 @@ namespace Hazard::ImUI
 		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX);
 		ImGui::SameLine();
 		//Y axis
-		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY);
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY) << 1;
 		return modified;
 	}
-	static bool InputFloat3(glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
+	static uint32_t InputFloat3(glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
-		bool modified = false;
+		uint32_t modified = false;
 		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -263,11 +263,11 @@ namespace Hazard::ImUI
 		ImGui::SameLine();
 
 		//Y axis
-		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1));
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1)) << 1;
 		ImGui::SameLine();
 
 		//Z axis
-		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, flags & BIT(2));
+		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, flags & BIT(2)) << 2;
 
 		return modified;
 	}
@@ -295,9 +295,9 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
+	static uint32_t InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, bool isMixed = false)
 	{
-		bool modified = false;
+		uint32_t modified = 0;
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
@@ -306,15 +306,15 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
+	static uint32_t InputFloat3(const char* name, glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
-		bool modified = false;
+		uint32_t modified = 0;
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 
-		Group(name, [&, f = flags]() {
-			modified = InputFloat3(value, clearValue, f);
+		Group(name, [&]() {
+			modified = InputFloat3(value, clearValue, flags);
 			});
 		ImGui::NextColumn();
 		return modified;
@@ -371,23 +371,23 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool ColorPicker(const char* id, Color& color) {
+	static bool ColorPicker(const char* id, Color& color, bool isMixed = false) {
 
 		bool modified = false;
 		ImVec4 col = { color.r, color.g, color.b, color.a };
+		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
+		modified |= ImGui::ColorEdit4(id, &color.r);
+		ImGui::PopItemFlag();
 
-		if (ImGui::ColorEdit4(id, &color.r)) {
-			modified = true;
-		}
 		return modified;
 	}
-	static bool ColorPicker(const char* name, const char* id, Color& color)
+	static bool ColorPicker(const char* name, const char* id, Color& color, bool isMixed = false)
 	{
 		ShiftY(4.0f);
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		bool modified = ColorPicker(id, color);
+		bool modified = ColorPicker(id, color, isMixed);
 		ImGui::NextColumn();
 
 		return modified;
@@ -443,10 +443,8 @@ namespace Hazard::ImUI
 	{
 		ImGui::Image(GetImageID(image), size, t0, t1);
 	}
-	static bool TextureSlot(Ref<Hazard::Texture2DAsset> texture)
+	static bool TextureSlot(std::string& text, Ref<Hazard::Texture2DAsset> texture)
 	{
-		std::string text = "Source image here";
-
 		constexpr float size = 32.0f;
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - size - 5.0f);
@@ -456,7 +454,9 @@ namespace Hazard::ImUI
 		ImGui::SameLine(0, 5);
 
 		if (texture)
+		{
 			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), { size, size });
+		}
 		else
 		{
 			ImVec2 pos = ImGui::GetCursorScreenPos();
@@ -467,7 +467,7 @@ namespace Hazard::ImUI
 		return false;
 	}
 	template<typename T>
-	static bool TextureSlot(const char* name, Ref<Texture2DAsset> texture, T callback)
+	static bool TextureSlot(const char* name, std::string& text, Ref<Texture2DAsset> texture, T callback)
 	{
 		bool modified = false;
 		ImUI::ShiftY(8.0f);
@@ -475,7 +475,7 @@ namespace Hazard::ImUI
 		ImGui::Text(name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
-			modified = TextureSlot(texture);
+			modified = TextureSlot(text, texture);
 			callback();
 			});
 		ImGui::NextColumn();
@@ -744,7 +744,8 @@ namespace Hazard::ImUI
 	template<typename T>
 	static bool ContextMenu(T callback) {
 		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_PopupRounding, 4.0f, ImGuiStyleVar_ItemSpacing, ImVec2(16.0f, 4.0f), ImGuiStyleVar_ChildBorderSize, 0);
-		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+		if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight)) 
+		{
 			callback();
 			ImGui::EndPopup();
 			return true;
@@ -857,7 +858,7 @@ namespace Hazard::ImUI
 	// Exposed resize behavior for native OS windows
 	static bool UpdateWindowManualResize(ImGuiWindow* window, ImVec2& newSize, ImVec2& newPosition)
 	{
-
+		/*
 		auto CalcWindowSizeAfterConstraint = [](ImGuiWindow* window, const ImVec2& size_desired)
 		{
 			ImGuiContext& g = *GImGui;
@@ -1021,7 +1022,8 @@ namespace Hazard::ImUI
 		auto& style = g.Style;
 		ImGuiWindowFlags flags = window->Flags;
 
-		if (/*(flags & ImGuiWindowFlags_NoResize) || */(flags & ImGuiWindowFlags_AlwaysAutoResize) || window->AutoFitFramesX > 0 || window->AutoFitFramesY > 0)
+		if (/*(flags & ImGuiWindowFlags_NoResize) || (flags & ImGuiWindowFlags_AlwaysAutoResize) || window->AutoFitFramesX > 0 || window->AutoFitFramesY > 0)
+		}
 			return false;
 		if (window->WasActive == false) // Early out to avoid running this code for e.g. an hidden implicit/fallback Debug window.
 			return false;
@@ -1129,7 +1131,6 @@ namespace Hazard::ImUI
 				border_target = ImClamp(border_target, clamp_min, clamp_max);
 				CalcResizePosSizeFromAnyCorner(window, border_target, ImMin(def.SegmentN1, def.SegmentN2), &pos_target, &size_target);
 			}
-		}
 		ImGui::PopID();
 
 		bool changed = false;
@@ -1154,6 +1155,7 @@ namespace Hazard::ImUI
 
 		//window->Size = window->SizeFull;
 		return changed;
+		*/
 	}
 
 }

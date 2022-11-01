@@ -93,7 +93,7 @@ bool GUIManager::OnEvent(Event& e)
 }
 void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
-	switch (window.GetWindowInfo().SelectedAPI)
+	switch (GraphicsContext::GetRenderAPI())
 	{
 #ifdef HZR_INCLUDE_OPENGL
 	case RenderAPI::OpenGL:

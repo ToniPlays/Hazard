@@ -6,6 +6,8 @@
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
 
+#include "imgui_internal.h"
+
 using namespace Hazard;
 
 namespace UI

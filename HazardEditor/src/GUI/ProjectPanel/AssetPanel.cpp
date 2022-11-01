@@ -5,6 +5,8 @@
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
 
+#include "ImGui.h"
+
 namespace UI
 {
 	AssetPanel::AssetPanel() : Panel("Asset panel")

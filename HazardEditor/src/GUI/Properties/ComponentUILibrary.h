@@ -23,7 +23,7 @@ namespace UI
 		return false;
 	}
 	template<typename T>
-	static bool ComponentMenu(std::vector<Entity>& entities) 
+	static bool ComponentMenu(std::vector<Entity>& entities)
 	{
 		static_assert(false);
 	}
@@ -56,40 +56,77 @@ namespace UI
 					auto& r = glm::eulerAngles(tc.GetRotation());
 					auto& s = tc.GetScale();
 
-					flags |= (t.x != translation.x	? BIT(0) : 0);
-					flags |= (t.y != translation.y	? BIT(1) : 0);
-					flags |= (t.z != translation.z	? BIT(2) : 0);
+					flags |= (t.x != translation.x) ? BIT(0) : 0;
+					flags |= (t.y != translation.y) ? BIT(1) : 0;
+					flags |= (t.z != translation.z) ? BIT(2) : 0;
 
-					flags |= (r.x != rotation.x		? BIT(3) : 0);
-					flags |= (r.y != rotation.y		? BIT(4) : 0);
-					flags |= (r.z != rotation.z		? BIT(5) : 0);
+					flags |= (r.x != rotation.x) ? BIT(3) : 0;
+					flags |= (r.y != rotation.y) ? BIT(4) : 0;
+					flags |= (r.z != rotation.z) ? BIT(5) : 0;
 
-					flags |= (s.x != scale.x		? BIT(0) : 0);
-					flags |= (s.y != scale.y		? BIT(1) : 0);
-					flags |= (s.z != scale.z		? BIT(2) : 0);
+					flags |= (s.x != scale.x) ? BIT(6) : 0;
+					flags |= (s.y != scale.y) ? BIT(7) : 0;
+					flags |= (s.z != scale.z) ? BIT(8) : 0;
 				}
 
 				rotation = { glm::degrees(rotation.x), glm::degrees(rotation.y), glm::degrees(rotation.z) };
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
-				if (ImUI::InputFloat3("Translation", translation, 0.0f, flags))
+				uint32_t result = ImUI::InputFloat3("Translation", translation, 0.0f, flags);
+
+				if (result != 0)
 				{
-					//c.SetTranslation(translation);
+					for (auto& entity : entities)
+					{
+						auto& tc = entity.GetComponent<TransformComponent>();
+						glm::vec3 position = tc.GetTranslation();
+
+						position.x = (result & BIT(0)) ? translation.x : position.x;
+						position.y = (result & BIT(1)) ? translation.y : position.y;
+						position.z = (result & BIT(2)) ? translation.z : position.z;
+
+						tc.SetTranslation(position);
+					}
 				}
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				if (ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3))
+				result = 0;
+				result = ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3);
+				if (result != 0)
 				{
-					//c.SetRotation({ glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z) });
+					for (auto& entity : entities)
+					{
+						auto& tc = entity.GetComponent<TransformComponent>();
+						glm::vec3 rot = glm::eulerAngles(tc.GetRotation());
+
+						rot.x = (result & BIT(0)) ? glm::radians(rotation.x) : rot.x;
+						rot.y = (result & BIT(1)) ? glm::radians(rotation.y) : rot.y;
+						rot.z = (result & BIT(2)) ? glm::radians(rotation.z) : rot.z;
+
+						glm::quat rotQuat = glm::quat({ rot.x, rot.y, rot.z });
+						tc.SetRotation(rotQuat);
+					}
 				}
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				if (ImUI::InputFloat3("Scale", scale, 1.0f, flags >> 6))
+				result = 0;
+				result = ImUI::InputFloat3("Scale", scale, 1.0f, flags >> 6);
+				if (result != 0)
 				{
-					//c.SetScale(scale);
+					for (auto& entity : entities)
+					{
+						auto& tc = entity.GetComponent<TransformComponent>();
+						glm::vec3 sc = tc.GetScale();
+
+						sc.x = (result & BIT(0)) ? scale.x : sc.x;
+						sc.y = (result & BIT(1)) ? scale.y : sc.y;
+						sc.z = (result & BIT(2)) ? scale.z : sc.z;
+
+						tc.SetScale(sc);
+					}
 				}
 				ImGui::Columns();
 
@@ -99,9 +136,13 @@ namespace UI
 
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
-					//c.SetTranslation({ 0, 0, 0 });
-					//c.SetRotation({ 0, 0, 0 });
-					//c.SetScale({ 1, 1, 1 });
+					for (auto& entity : entities)
+					{
+						auto& c = entity.GetComponent<TransformComponent>();
+						c.SetTranslation({ 0, 0, 0 });
+						c.SetRotation({ 0, 0, 0 });
+						c.SetScale({ 1, 1, 1 });
+					}
 					});
 			});
 		return false;
@@ -113,24 +154,67 @@ namespace UI
 		bool optionsOpen = ImUI::TreenodeWithOptions(" " ICON_FK_PICTURE_O " Sprite renderer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
+				auto& firstSr = entities[0].GetComponent<SpriteRendererComponent>();
+
+				uint32_t flags = 0;
+				Ref<Texture2DAsset> texture = firstSr.Texture;
+				const Color& color = firstSr.Color;
+
+				for (auto& entity : entities)
+				{
+					auto& sr = entity.GetComponent<SpriteRendererComponent>();
+					if (sr.Texture != texture)
+					{
+						texture = nullptr;
+						flags |= BIT(0);
+					}
+
+					flags |= (sr.Color.r != color.r) ? BIT(1) : 0;
+				}
+
+				std::string path = "None";
+				if (texture)
+					path = File::GetNameNoExt(AssetManager::GetMetadata(texture->GetHandle()).Path);
+				else if (flags & BIT(0)) 
+					path = "---";
+
+
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
-				/*
-				ImUI::TextureSlot("Sprite", c.Texture, [&]() {
+
+				ImUI::TextureSlot("Sprite", path, texture, [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-						c.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
+						for (auto& entity : entities)
+						{
+							auto& c = entity.GetComponent<SpriteRendererComponent>();
+							c.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
+						}
 						});
 					});
-					*/
+
 				ImGui::PopStyleVar();
 
-				/*if (ImUI::ColorPicker("Tint", "##Tint", c.Color)) {
-
-				}*/
+				Color c = flags & BIT(1) ? Color::White : color;
+				
+				if (ImUI::ColorPicker("Tint", "##Tint", c, flags & BIT(1))) 
+				{
+					for (auto& entity : entities)
+					{
+						auto& sr = entity.GetComponent<SpriteRendererComponent>();
+						sr.Color = c;
+					}
+				}
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
+
+					for (auto& entity : entities)
+					{
+						auto& c = entity.GetComponent<SpriteRendererComponent>();
+						c.Texture = nullptr;
+						c.Color = Color::White;
+					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {
 					removed = true;

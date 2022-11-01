@@ -4,10 +4,10 @@
 #include "Core/EditorEvent.h"
 #include "Editor/EditorCamera.h"
 
-#include "imgui.h"
 #include "glm/glm.hpp"
 
-#include "imgui/ImGuizmo.h"
+#include "imgui.h"
+#include "ImGui_Backend/ImGuizmo.h"
 
 namespace UI 
 {

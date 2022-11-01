@@ -62,7 +62,6 @@ namespace Math
 		T pow = Pow(10, digits);
 		return glm::round(value * pow) / pow;
 	}
-
 	template<typename T>
 	inline static T ToRange(T value, T min, T max)
 	{

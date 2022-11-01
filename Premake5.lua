@@ -33,7 +33,7 @@ group "Dependencies"
 	include "Hazard/vendor/Optick"
 
 	include "Hazard/vendor/yaml-cpp"
-	include "HazardEditor/vendor/imgui"
+	include "Hazard/vendor/imgui"
 group ""
 
 include "Hazard-Utility"

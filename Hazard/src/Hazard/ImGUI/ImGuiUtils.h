@@ -124,12 +124,12 @@ namespace ImGui
                     toggled = true;
             }
 
-            if (g.NavId == id && g.NavMoveRequest && g.NavMoveDir == ImGuiDir_Left && is_open)
+            if (g.NavId == id && g.NavInitRequestFromMove && g.NavMoveDir == ImGuiDir_Left && is_open)
             {
                 toggled = true;
                 NavMoveRequestCancel();
             }
-            if (g.NavId == id && g.NavMoveRequest && g.NavMoveDir == ImGuiDir_Right && !is_open) // If there's something upcoming on the line we may want to give it the priority?
+            if (g.NavId == id && g.NavInitRequestFromMove && g.NavMoveDir == ImGuiDir_Right && !is_open) // If there's something upcoming on the line we may want to give it the priority?
             {
                 toggled = true;
                 NavMoveRequestCancel();
@@ -267,7 +267,7 @@ namespace ImGui
         IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.ItemFlags | (is_leaf ? 0 : ImGuiItemStatusFlags_Openable) | (is_open ? ImGuiItemStatusFlags_Opened : 0));
         return is_open;
     }
-
+    /*
     static bool TreeNodeWithIcon(const void* ptr_id, ImGuiTreeNodeFlags flags, ImColor iconTint, const char* fmt, ...)
     {
         va_list args;
@@ -284,7 +284,7 @@ namespace ImGui
         va_end(args);
         return is_open;
     }
-
+    */
     static bool TreeNodeWithIcon(const char* label, ImGuiTreeNodeFlags flags, ImColor iconTint /*= IM_COL32_WHITE*/)
     {
         ImGuiWindow* window = GetCurrentWindow();

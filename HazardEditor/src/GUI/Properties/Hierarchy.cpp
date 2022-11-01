@@ -230,8 +230,17 @@ namespace UI
 	}
 	void Hierarchy::SelectEntity(const Entity& entity)
 	{
+
+
 		if (!Input::IsKeyDown(Key::LeftControl))
+		{
 			m_SelectionContext.clear();
+		}
+		else
+		{
+			auto it = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity);
+			if (it != m_SelectionContext.end()) return;
+		}
 
 		m_SelectionContext.push_back(entity);
 		Events::SelectionContextChange ev(m_SelectionContext);
