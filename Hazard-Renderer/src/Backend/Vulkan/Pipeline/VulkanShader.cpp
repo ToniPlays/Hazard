@@ -4,21 +4,14 @@
 
 #include "Backend/Core/Renderer.h"
 
-#include "Backend/Core/Pipeline/ShaderFactory.h"
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
-#include "../VulkanShaderCompiler.h"
 #include "VulkanUniformBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
 #include "Profiling/Timer.h"
 
-#include <sstream>
-#include <glad/glad.h>
-#include <shaderc/shaderc.hpp>
-#include <spirv_cross/spirv_cross.hpp>
-#include <spirv_cross/spirv_glsl.hpp>
-
+#include "Backend/Core/ShaderCompiler.h"
 #include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::Vulkan
@@ -160,10 +153,11 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_ShaderData.Stages.clear();
-		VulkanShaderCompiler compiler;
+		
+		Timer timer;
 
-		m_ShaderData = compiler.GetShaderResources(m_ShaderCode);
+		m_ShaderData.Stages.clear();
+		m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);
 
 		uint32_t descriptorSets = 0;
 		uint32_t size = 0;
@@ -194,6 +188,8 @@ namespace HazardRenderer::Vulkan
 
 		for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			m_DescriptorSets[i].resize(descriptorSets + 1);
+
+		std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
 	}
 	void VulkanShader::CreateShaderModules()
 	{

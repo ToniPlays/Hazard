@@ -1,6 +1,5 @@
 
 
-#include "ShaderFactory.h"
 #if HZR_PLATFORM_WINDOWS
 
 #include "Shader.h"
@@ -15,31 +14,7 @@
 
 namespace HazardRenderer
 {
-	shaderc::Compiler compiler;
-
-	static std::string GetShaderStageCache(ShaderStage type) {
-		switch (type)
-		{
-		case ShaderStage::Vertex:	return "vert";
-		case ShaderStage::Fragment:	return "frag";
-		case ShaderStage::Compute:	return "comp";
-		case ShaderStage::Geometry:	return "geom";
-		}
-		HZR_ASSERT(false, "");
-		return "";
-	}
-	static std::string GetRendererCache(RenderAPI api) {
-		switch (api)
-		{
-		case RenderAPI::OpenGL:		return "gl";
-		case RenderAPI::Vulkan:		return "vk";
-		case RenderAPI::DX11:		return "dx11";
-		case RenderAPI::DX12:		return "dx12";
-		case RenderAPI::Metal:		return "met";
-		}
-		HZR_ASSERT(false, "");
-		return "";
-	}
+	/*
 	CacheStatus ShaderFactory::HasCachedShader(const std::filesystem::path& path, RenderAPI api)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -50,21 +25,8 @@ namespace HazardRenderer
 		return File::Exists(cachePath) ? CacheStatus::Exists : CacheStatus::None;
 	}
 
-	size_t ShaderFactory::GetBinaryLength(const std::unordered_map<ShaderStage, Buffer>& binaries)
-	{
-		size_t size = 0;
-		for (auto& [stage, shaderCode] : binaries)
-		{
-			size += sizeof(ShaderCode);
-			size += shaderCode.Size;
-		}
-		return size;
-	}
-
 	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)
 	{
-		return false;
-		/*
 		HZR_PROFILE_FUNCTION();
 		//Determine cache size
 		s
@@ -86,85 +48,8 @@ namespace HazardRenderer
 			File::CreateDir(cachePath.parent_path());
 
 		return File::WriteBinaryFile(cachePath, buffer.GetData(), buffer.GetSize());
-		*/
-	}
-
-	std::unordered_map<ShaderStage, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
-	{
-		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
-		std::string sourceFile = File::ReadFile(path);
-		std::unordered_map<ShaderStage, std::string> result;
-
-		const char* typeToken = "#type";
-		size_t endPos = 0;
-
-		while (endPos != std::string::npos)
-		{
-			std::string type = StringUtil::GetPreprocessor(typeToken, sourceFile, endPos, &endPos);
-			if (endPos == std::string::npos) continue;
-
-			size_t nextTokenPos = sourceFile.find(typeToken, endPos);
-			std::string src = nextTokenPos == std::string::npos ? sourceFile.substr(endPos) : sourceFile.substr(endPos, nextTokenPos - endPos);
-
-			if (!PreprocessSource(path, src)) continue;
-			result[Utils::ShaderStageFromString(type)] = src;
-		}
-
-		return result;
-	}
-	std::unordered_map<ShaderStage, Buffer> ShaderFactory::GetShaderBinaries(const std::filesystem::path& path, RenderAPI api)
-	{
-		HZR_PROFILE_FUNCTION();
 		
-		CachedBuffer buffer = File::ReadBinaryFile(GetCachedFilePath(path, api));
-		std::unordered_map<ShaderStage, Buffer> result;
-
-		while (buffer.Available())
-		{
-			ShaderCode data = buffer.Read<ShaderCode>();
-			result[data.Stage] = Buffer::Copy(buffer.Read<Buffer>(data.Length));
-		}
-		return result;
 	}
-	bool ShaderFactory::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)
-	{
-		return PreprocessIncludes(path, shaderSource);
-	}
-	bool ShaderFactory::PreprocessIncludes(const std::filesystem::path& path, std::string& source)
-	{
-		HZR_PROFILE_FUNCTION();
-		std::string token = "#include";
-		size_t offset = 0;
-		
-		while (offset != std::string::npos)
-		{
-			std::string value = StringUtil::GetPreprocessor(token.c_str(), source, offset, &offset);
-			if (offset == std::string::npos) continue;
-			std::string_view includePath = StringUtil::Between(value, "\"", "\"");
-			std::string line = token + " " + value;
-			std::filesystem::path inclPath = path.parent_path() / includePath;
-			if (!File::Exists(inclPath))
-			{
-				Window::SendDebugMessage({ 
-					Severity::Warning, 
-					fmt::format("Preprocessor {0} failed", token), 
-					fmt::format("Include: {0}\nIn shader: {1}", value, path.string())});
-
-				return false;
-			}
-			
-			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
-		}
-		return true;
-	}
-	std::filesystem::path ShaderFactory::GetCachedFilePath(const std::filesystem::path& path, RenderAPI api)
-	{
-		HZR_PROFILE_FUNCTION();
-		std::string name = File::GetNameNoExt(path);
-		std::string extension = GetRendererCache(api);
-		return std::filesystem::path("Library/Shaders/") / (name + "." + extension + ".hzrche");
-
-	}
+	*/
 }
 #endif

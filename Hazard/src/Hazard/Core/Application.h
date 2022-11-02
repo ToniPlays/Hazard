@@ -5,6 +5,8 @@
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
 
+#include "Thread.h"
+
 namespace Hazard {
 
 	class Application {
@@ -29,6 +31,7 @@ namespace Hazard {
 			m_MainThreadJobs.push_back(callback);
 		}
 		void ExecuteMainThreadQueue();
+		ThreadPool& GetThreadPool() { return m_ThreadPool; }
 
 	public:
 		static void Quit();
@@ -43,6 +46,7 @@ namespace Hazard {
 
 	private:
 		std::vector<std::function<void()>> m_MainThreadJobs;
+		ThreadPool m_ThreadPool;
 	};
 	Hazard::Application* CreateApplication();
 }

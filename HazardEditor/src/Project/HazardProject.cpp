@@ -27,6 +27,8 @@ void HazardProject::ProcessAssets()
 	std::filesystem::path libraryPath = m_Data.ProjectDirectory / "Library";
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 
+	return;
+
 	for (auto& item : File::GetAllInDirectory(assetPath))
 		ProcessAsset(item);
 }

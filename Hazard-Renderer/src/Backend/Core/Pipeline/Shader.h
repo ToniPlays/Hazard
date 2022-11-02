@@ -11,7 +11,6 @@ namespace HazardRenderer
 {
 	class UniformBuffer;
 
-
 	enum class ShaderStage : uint32_t 
 	{
 		None = BIT(0),

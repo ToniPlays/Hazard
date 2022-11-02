@@ -1,11 +1,12 @@
 
 #include <hzrpch.h>
+#include "Hazard/Core/Application.h"
 #include "PipelineAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
-#include "Backend/Core/Pipeline/ShaderFactory.h"
 
-#include "Backend/Vulkan/VulkanShaderCompiler.h"
+#include "Backend/Core/GraphicsContext.h"
+#include "Backend/Core/ShaderCompiler.h"
 
 namespace Hazard
 {
@@ -15,9 +16,10 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		if (ShaderFactory::HasCachedShader(metadata.Path, RenderAPI::Vulkan) == CacheStatus::Exists)
+		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
+		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
 		{
-			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderFactory::GetCachedFilePath(metadata.Path, RenderAPI::Vulkan));
+			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI));
 
 			PipelineAssetHeader header = dataBuffer.Read<PipelineAssetHeader>();
 			std::vector<ShaderStageCode> shaderCode(header.StageCount);
@@ -25,7 +27,6 @@ namespace Hazard
 			for (uint32_t i = 0; i < header.StageCount; i++)
 			{
 				ShaderCode code = dataBuffer.Read<ShaderCode>();
-
 				shaderCode[i].Stage = code.Stage;
 				shaderCode[i].ShaderCode = Buffer::Copy(dataBuffer.Read<Buffer>(code.Length));
 			}
@@ -49,36 +50,10 @@ namespace Hazard
 			return LoadType::Cache;
 		}
 
-		Vulkan::VulkanShaderCompiler compiler;
-		std::vector<ShaderStageCode> binaries;
-		std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(metadata.Path);
-
-		//Compile Vulkan shader
-		for (auto& [stage, source] : sources)
-		{
-			double compilationTime = 0.0;
-			std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
-			//Compile to Vulkan SPV
-			CompileInfo compileInfoVulkan = {};
-			compileInfoVulkan.Renderer = RenderAPI::Vulkan;
-			compileInfoVulkan.Name = metadata.Path.string();
-			compileInfoVulkan.Stage = stage;
-			compileInfoVulkan.Source = source;
-			compileInfoVulkan.Defines = defines;
-
-			if (!compiler.Compile(&compileInfoVulkan))
-				continue;
-
-			compilationTime += compiler.GetCompileTime();
-			auto& bin = binaries.emplace_back();
-
-			bin.Stage = stage;
-			bin.ShaderCode = Buffer::Copy(compiler.GetCompiledBinary());
-		}
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, currentAPI);
 
 		PipelineSpecification specs = {};
 		specs.DebugName = metadata.Path.string();
-		specs.pTargetRenderPass = nullptr;
 		specs.ShaderPath = metadata.Path.string();
 		specs.DrawType = DrawType::Fill;
 		specs.Usage = PipelineUsage::GraphicsBit;
@@ -87,10 +62,14 @@ namespace Hazard
 		specs.DepthTest = true;
 		specs.DepthWrite = true;
 		specs.UseShaderLayout = true;
-		specs.ShaderCodeCount = binaries.size();
-		specs.pShaderCode = binaries.data();
+		specs.pTargetRenderPass = nullptr;
+		specs.ShaderCodeCount = shaderCode.size();
+		specs.pShaderCode = shaderCode.data();
 
 		asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+
+		for (auto& code : shaderCode)
+			code.ShaderCode.Release();
 
 		return LoadType::Source;
 	}
@@ -99,6 +78,9 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
+
+		HZR_CORE_INFO("Saving asset {0}", metadata.Path.string());
+
 		auto& pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
 		PipelineSpecification specs = pipeline->GetSpecifications();
 
@@ -132,26 +114,41 @@ namespace Hazard
 			}
 		}
 
-		for (uint32_t api = (uint32_t)RenderAPI::First; api < (uint32_t)RenderAPI::Last; api++)
+		ThreadPool& threadPool = Application::Get().GetThreadPool();
+
+		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
 		{
-			auto& binaries = pipeline->GetShader()->GetShaderCode();
-			CachedBuffer dataBuffer(sizeof(PipelineAssetHeader) + ShaderFactory::GetBinaryLength(binaries));
+			Thread& thread = threadPool.GetThread();
 
-			dataBuffer.Write(header);
+			thread.OnCompletionHandler([](const Thread& thread) {
+				HZR_CORE_WARN("Thread finished in {0} ms", thread.GetExecutionTime());
+			});
 
-			for (auto& [shaderStage, binary] : binaries)
-			{
-				ShaderCode code = { shaderStage, binary.Size };
+			thread.Dispatch([header, path = metadata.Path, api]() {
+				auto& binaries = ShaderCompiler::GetShaderBinariesFromSource(path, (RenderAPI)api);
+				CachedBuffer dataBuffer(sizeof(PipelineAssetHeader) + ShaderCompiler::GetBinaryLength(binaries));
 
-				dataBuffer.Write(code);
-				dataBuffer.Write(binary.Data, binary.Size);
-			}
+				dataBuffer.Write(header);
 
-			auto& path = ShaderFactory::GetCachedFilePath(metadata.Path, (RenderAPI)api);
-			if (!File::DirectoryExists(path.parent_path()))
-				File::CreateDir(path.parent_path());
+				for (auto& [shaderStage, binary] : binaries)
+				{
+					ShaderCode code = { shaderStage, binary.Size };
 
-			File::WriteBinaryFile(path, dataBuffer.GetData(), dataBuffer.GetSize());
+					dataBuffer.Write(code);
+					dataBuffer.Write(binary.Data, binary.Size);
+				}
+
+				auto& cachePath = ShaderCompiler::GetCachedFilePath(path, (RenderAPI)api);
+
+				if (!File::DirectoryExists(cachePath.parent_path()))
+					File::CreateDir(cachePath.parent_path());
+
+				File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
+
+				for (auto& code : binaries)
+					code.ShaderCode.Release();
+
+				});
 		}
 
 		return true;

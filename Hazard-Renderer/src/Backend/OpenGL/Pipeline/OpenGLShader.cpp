@@ -5,18 +5,15 @@
 #include "../OpenGLUtils.h"
 #include "Backend/Core/Renderer.h"
 
-#include "Backend/Core/Pipeline/ShaderFactory.h"
-#include "Backend/OpenGL/OpenGLShaderCompiler.h"
 #include "../Textures/OpenGLImage2D.h"
 #include "../OpenGLContext.h"
 #include "OpenGLBuffers.h"
 #include "Profiling/Timer.h"
 
-#include <sstream>
+#include "Backend/Core/ShaderCompiler.h"
+#include "Backend/Core/Window.h"
+
 #include <glad/glad.h>
-#include <shaderc/shaderc.hpp>
-#include <spirv_cross/spirv_cross.hpp>
-#include <spirv_cross/spirv_glsl.hpp>
 #include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::OpenGL
@@ -24,9 +21,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLShader::OpenGLShader(const std::vector<ShaderStageCode>& shaderCode)
 	{
 		for (auto& code : shaderCode)
-		{
 			m_ShaderCode[code.Stage] = Buffer::Copy(code.ShaderCode);
-		}
 
 		Reload();
 	}
@@ -79,8 +74,8 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
-		OpenGLShaderCompiler compiler;
-		ShaderData data = compiler.GetShaderResources(binaries);
+		Timer timer;
+		ShaderData data = ShaderCompiler::GetShaderResources(binaries);
 
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
@@ -105,6 +100,7 @@ namespace HazardRenderer::OpenGL
 				}
 			}
 		}
+		std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
 		//OpenGLShaderCompiler::PrintReflectionData(data);
 	}
 	void OpenGLShader::Reload_RT()
@@ -203,8 +199,7 @@ namespace HazardRenderer::OpenGL
 	void OpenGLShader::ReflectVulkan(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
 		Timer timer;
-		OpenGLShaderCompiler compiler;
-		m_ShaderData = compiler.GetShaderResources(binaries);
+		m_ShaderData = ShaderCompiler::GetShaderResources(binaries);
 
 		for (auto& [set, buffers] : m_ShaderData.UniformsDescriptions)
 		{

@@ -4,7 +4,7 @@
 
 #ifdef HZR_INCLUDE_OPENGL
 #include "File.h"
-#include "Backend/Core/Pipeline/ShaderFactory.h"
+#include "Backend/Core/ShaderCompiler.h"
 
 namespace HazardRenderer::OpenGL
 {
@@ -17,15 +17,9 @@ namespace HazardRenderer::OpenGL
 		bool Compile(CompileInfo* compileInfo);
 		bool Decompile(Buffer binary, std::string& result);
 
-		ShaderData GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries);
-
 		double GetCompileTime() { return m_CompilationTime; }
 		std::string GetErrorMessage() { return m_ErrorMessage; }
 		Buffer GetCompiledBinary() { return m_ResultBinary; }
-	public:
-
-		static void PrintReflectionData(const ShaderData& data);
-
 	private:
 		Buffer m_ResultBinary;
 		std::string m_ErrorMessage;
