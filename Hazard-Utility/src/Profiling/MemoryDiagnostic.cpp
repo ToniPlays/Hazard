@@ -94,7 +94,6 @@ namespace Memory
 	{
 		if (memory == nullptr)
 			return;
-
 		{
 			std::scoped_lock<std::mutex> lock(s_Data->m_Mutex);
 			if (s_Data->m_AllocationMap.find(memory) != s_Data->m_AllocationMap.end())

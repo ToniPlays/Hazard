@@ -4,6 +4,8 @@
 #include "Hazard/Math/Time.h"
 #include "Hazard/Assets/AssetManager.h"
 
+#include "Hazard/RenderContext/ShaderAsset.h"
+
 namespace Editor
 {
 	using namespace HazardRenderer;
@@ -29,21 +31,31 @@ namespace Editor
 		gridData.Scale = std::pow(log, std::floor(std::log(gridData.Zoom) / std::log(log)));
 
 		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
-		HRenderer::SubmitPipeline(m_Pipeline->Value.As<Pipeline>(), 6);
+		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
 	void Grid::Invalidate(Ref<RenderPass> renderPass)
 	{
 		if (m_Pipeline) 
 		{
-			auto& pipeline = m_Pipeline->Value.As<Pipeline>();
-			PipelineSpecification spec = pipeline->GetSpecifications();
-			pipeline->SetRenderPass(renderPass);
+			PipelineSpecification spec = m_Pipeline->GetSpecifications();
+			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
 
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/Grid.glsl");
-		m_Pipeline = AssetManager::GetAsset<AssetPointer>(handle);
+		Ref<ShaderAsset> shader = AssetManager::GetAsset<AssetPointer>("res/Shaders/Grid.glsl");
+
+		PipelineSpecification specs = {};
+		specs.DebugName = "Grid";
+		specs.DrawType = DrawType::Fill;
+		specs.Usage = PipelineUsage::GraphicsBit;
+		specs.CullMode = CullMode::None;
+		specs.DepthOperator = DepthOp::Less;
+		specs.pTargetRenderPass = nullptr;
+		specs.ShaderCodeCount = shader->ShaderCode.size();
+		specs.pShaderCode = shader->ShaderCode.data();
+
+		m_Pipeline = Pipeline::Create(&specs);
 
 		UniformBufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Grid";

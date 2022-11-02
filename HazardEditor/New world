@@ -1,3 +1,26 @@
 World: Unnamed
 Entities:
-  []
+  - Entity: 6348405585623865900
+    TagComponent:
+      Tag: New camera
+    TransformComponent:
+      Translation: [0, 0, 9.61077499]
+      Rotation: [2.70752692, -0, 0]
+      Scale: [1, 1.00000012, 1.00000012]
+    CameraComponent:
+      Active: True
+      Projection: Perspective
+      Fov: 60
+      Size: 5
+      Clipping: [0.0299999993, 100]
+  - Entity: 18084175198213587313
+    TagComponent:
+      Tag: New Sprite
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [16, 9, 1]
+    SpriteRendererComponent:
+      Active: True
+      Color: [1, 1, 1, 1]
+      Sprite: 12401874030344166160

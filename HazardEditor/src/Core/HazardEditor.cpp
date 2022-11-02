@@ -13,6 +13,7 @@
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
+#include "Backend/Core/ShaderCompiler.h"
 
 #include "EditorAssetManager.h"
 
@@ -95,6 +96,7 @@ void HazardEditorApplication::PreInit()
 
 
 	EditorAssetManager::ImportAssets();
+	ShaderCompiler::SetCacheLocation("Library/Shaders");
 
 	CreateApplicationStack(&createInfo);
 	EditorAssetManager::Init();

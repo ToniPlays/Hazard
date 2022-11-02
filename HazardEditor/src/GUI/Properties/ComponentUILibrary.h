@@ -685,7 +685,7 @@ namespace UI
 					flags |= (mc.Roughness != roughness) ? BIT(2) : 0;
 				}
 
-				std::string path = "None";
+				std::string path = "";
 				if (mesh)
 					path = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Path);
 				else if (flags & BIT(0))
@@ -703,15 +703,16 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 				if (ImUI::TextFieldWithHint(path, "Mesh file"))
 				{
-					ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-						Ref<Mesh> asset = AssetManager::GetAsset<Mesh>(handle);
-						for (auto& entity : entities)
-						{
-							auto& c = entity.GetComponent<MeshComponent>();
-							c.m_MeshHandle = asset;
-						}
-						});
+
 				}
+				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
+					Application::Get().SubmitMainThread([entityList = entities, handle]() mutable {
+						auto& asset = AssetManager::GetAsset<Mesh>(handle);
+						for (auto& entity : entityList)
+							auto& c = entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
+						});
+					});
+
 				ImGui::NextColumn();
 				if (ImUI::InputFloat("Metalness", metallic, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
 				{
@@ -748,12 +749,7 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				/*
-				ImUI::DragSource("Hazard.SpriteRendererComponent", &e.GetUID(), [&]() {
-					ImGui::Text("Sprite renderer");
-					ImGui::Text(std::to_string(e.GetUID()).c_str());
-					});
-					*/
+
 			});
 
 		if (removed)

@@ -1604,6 +1604,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\PipelineAssetLoader.h" />
     <ClInclude Include="src\Hazard\Assets\AssetPack.h" />
+    <ClInclude Include="src\Hazard\RenderContext\ShaderLibrary.h" />
+    <ClInclude Include="src\Hazard\RenderContext\ShaderAssetLoader.h" />
+    <ClInclude Include="src\Hazard\RenderContext\ShaderAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1742,5 +1745,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\PipelineAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp" />
+    <ClCompile Include="src\Hazard\RenderContext\ShaderAssetLoader.cpp" />
   </ItemGroup>
 </Project>

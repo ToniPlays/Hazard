@@ -27,7 +27,6 @@ namespace HazardRenderer
 	struct PipelineSpecification
 	{
 		std::string DebugName;
-		std::string ShaderPath;
 		BufferLayout* pBufferLayout;
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType = DrawType::Fill;

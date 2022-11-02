@@ -4,6 +4,7 @@
 #include "Mesh/Mesh.h"
 
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/RenderContext/ShaderLibrary.h"
 
 namespace Hazard
 {
@@ -62,8 +63,8 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
 
-		Ref<AssetPointer> SkyboxPipeline;
-		Ref<AssetPointer> PbrPipeline;
+		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
+		Ref<HazardRenderer::Pipeline> PbrPipeline;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
@@ -107,15 +108,10 @@ namespace Hazard
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
 
-				AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/pbr.glsl");
-				PbrPipeline = AssetManager::GetAsset<AssetPointer>(handle);
-				PbrPipeline->Value.As<Pipeline>()->SetLayout(Vertex3D::Layout());
-				PbrPipeline->Value.As<Pipeline>()->Invalidate();
-
-				handle = AssetManager::GetHandleFromFile("res/Shaders/skybox.glsl");
-				SkyboxPipeline = AssetManager::GetAsset<AssetPointer>(handle);
-				SkyboxPipeline->Value.As<Pipeline>()->SetLayout(Vertex3D::Layout());
-				SkyboxPipeline->Value.As<Pipeline>()->Invalidate();
+				PbrPipeline = ShaderLibrary::GetPipeline("pbr_static");
+				PbrPipeline->SetRenderPass(renderPass);
+				SkyboxPipeline = ShaderLibrary::GetPipeline("skybox");
+				SkyboxPipeline->SetRenderPass(renderPass);
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

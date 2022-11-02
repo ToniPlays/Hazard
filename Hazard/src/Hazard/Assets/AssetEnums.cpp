@@ -57,7 +57,7 @@ namespace Hazard::Utils
 		if (ext == "dae")		return AssetType::Mesh;
 		if (ext == "gltf")		return AssetType::Mesh;
 		if (ext == "cs")		return AssetType::Script;
-		if (ext == "glsl")		return AssetType::Pipeline;
+		if (ext == "glsl")		return AssetType::Shader;
 
 		return AssetType::Undefined;
 	}

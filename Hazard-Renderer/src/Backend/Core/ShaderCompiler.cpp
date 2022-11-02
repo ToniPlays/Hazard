@@ -62,6 +62,7 @@ namespace HazardRenderer
 				input.Type = Utils::ShaderDataTypeFromSPV(spvType);
 				input.Size = ShaderDataTypeSize(input.Type);
 				input.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
+				data.Stride += input.Size;
 			}
 
 			for (auto& resource : resources.stage_outputs)
@@ -269,7 +270,7 @@ namespace HazardRenderer
 		HZR_PROFILE_FUNCTION();
 		std::string name = File::GetNameNoExt(path);
 		std::string extension = GetRendererCache(api);
-		return std::filesystem::path("Library/Shaders/") / (name + "." + extension + ".hzrche");
+		return s_CacheDir / (name + "." + extension + ".hzrche");
 	}
 
 	std::unordered_map<ShaderStage, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)

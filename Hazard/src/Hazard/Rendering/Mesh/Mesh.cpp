@@ -35,35 +35,16 @@ namespace Hazard
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
 
-		PipelineSpecification pipelineSpecs = {};
-		pipelineSpecs.DebugName = "PBRShader";
-		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.DrawType = DrawType::Fill;
-		pipelineSpecs.ShaderPath = "res/Shaders/pbr.glsl";
-		pipelineSpecs.pTargetRenderPass = Application::GetModule<RenderEngine>().GetRenderPass();
-		pipelineSpecs.pBufferLayout = &layout;
-		pipelineSpecs.DepthTest = true;
-
-		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+		m_Pipeline = ShaderLibrary::GetPipelinePtr("pbr_static");
 		m_BoundingBox = data.BoundingBox;
 	}
 
-	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
+	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (pipeline == nullptr) 
-		{
-			BufferLayout layout = Vertex3D::Layout();
+		if (pipeline->Value) return;
 
-			PipelineSpecification pipelineSpecs = {};
-			pipelineSpecs.DebugName = "PBRShader";
-			pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-			pipelineSpecs.DrawType = DrawType::Fill;
-			pipelineSpecs.ShaderPath = "res/Shaders/pbr.glsl";
-			pipelineSpecs.pBufferLayout = &layout;
-
-			m_Pipeline = Pipeline::Create(&pipelineSpecs);
-		}
+		m_Pipeline = ShaderLibrary::GetPipelinePtr("pbr_static");
 	}
 }
 

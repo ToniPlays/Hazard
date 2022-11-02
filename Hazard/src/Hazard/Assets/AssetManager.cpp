@@ -60,8 +60,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		AssetMetadata& data = GetMetadata(handle);
 
-		HZR_CORE_INFO("Removing asset {0}", data.Path.string());
-
 		data.IsLoaded = false;
 		s_Registry.Remove(data.Path);
 

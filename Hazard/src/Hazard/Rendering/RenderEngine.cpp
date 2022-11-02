@@ -156,7 +156,7 @@ namespace Hazard
 				auto& prefilter = environmentData.Map->PreFilterMap;
 				auto& lut = environmentData.Map->BRDFLut;
 
-				auto& shader = m_Resources->PbrPipeline->Value.As<Pipeline>()->GetShader();
+				auto& shader = m_Resources->PbrPipeline->GetShader();
 				if (radiance)
 					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (irradiance)
@@ -170,14 +170,16 @@ namespace Hazard
 		}
 		else
 		{
+			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
+
 			data.SkyLightIntensity = 0.0f;
 			data.EnvironmentLod = 0.0f;
 
-			//auto& shader = m_Resources->PbrPipeline->GetShader();
-			//shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
-			//shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
-			//shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
-			//shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
+			auto& shader = m_Resources->PbrPipeline->GetShader();
+			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
+			shader->Set("u_BRDFLut", 0, resources.WhiteTexture);
 		}
 		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
@@ -193,7 +195,7 @@ namespace Hazard
 			auto& radiance = environmentData.Map->RadianceMap;
 			if (!radiance) return;
 
-			m_Resources->SkyboxPipeline->Value.As<Pipeline>()->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
+			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
 			commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
 			commandBuffer->Draw(6);
 			return;

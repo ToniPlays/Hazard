@@ -18,24 +18,21 @@ namespace Hazard {
 	{
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
-
 		m_ModuleHandler = CreateScope<ModuleHandler>();
-
 #ifndef HZR_RELEASE
 		m_ModuleHandler->AddModule<Logging::Logger>();
 #endif // HZR_RELEASE
-
 	}
 	HazardLoop::~HazardLoop()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 
-		AssetManager::Shutdown();
 		m_Application->Close();
 		//m_ModuleHandler->Close();
 
 		HZR_PROFILE_SESSION_END();
 		OPTICK_SHUTDOWN();
+		AssetManager::Shutdown();
 	}
 	void HazardLoop::Start()
 	{

@@ -3,6 +3,7 @@
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/Core/Core.h"
 #include "HazardRendererCore.h"
+#include "../Vertices.h"
 #include <glm/glm.hpp>
 
 #include "BoundingBox.h"
@@ -11,30 +12,8 @@ namespace Hazard {
 
 	struct MeshData;
 
-	struct Vertex3D
+	struct SubMesh 
 	{
-		glm::vec3 Position = { 0, 0, 0 };
-		glm::vec4 Color = Color::White;
-		glm::vec3 Normals = { 0, 0, 0 };
-		glm::vec3 Tangent = { 0, 0, 0 };
-		glm::vec3 Binormal = { 0, 0, 0 };
-		glm::vec2 TexCoords = { 0, 0 };
-
-		static HazardRenderer::BufferLayout Layout() {
-			using namespace HazardRenderer;
-			return {
-				{ "a_Position",			ShaderDataType::Float3 },
-				{ "a_Color",			ShaderDataType::Float4 },
-				{ "a_Normal",			ShaderDataType::Float3 },
-				{ "a_Tangent",			ShaderDataType::Float3 },
-				{ "a_Binormal",			ShaderDataType::Float3 },
-				{ "a_TextureCoords",	ShaderDataType::Float2 }
-			};
-		}
-	};
-
-	struct SubMesh {
-
 		uint32_t BaseVertex;
 		uint32_t BaseIndex;
 		uint32_t MaterialIndex;
@@ -52,7 +31,7 @@ namespace Hazard {
 	public:
 		Mesh() = default;
 		Mesh(const MeshData& data, const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices);
-		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<HazardRenderer::Pipeline> pipeline);
+		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline);
 		~Mesh() = default;
 
 		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; }
@@ -61,13 +40,13 @@ namespace Hazard {
 
 		Ref<HazardRenderer::VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<HazardRenderer::IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
-		Ref<HazardRenderer::Pipeline> GetPipeline() { return m_Pipeline; }
+		Ref<HazardRenderer::Pipeline> GetPipeline() { return m_Pipeline->Value.As<HazardRenderer::Pipeline>(); }
 		const BoundingBox& GetBoundingBox() { return m_BoundingBox; }
 
 	private:
 		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<HazardRenderer::IndexBuffer> m_IndexBuffer = nullptr;
-		Ref<HazardRenderer::Pipeline> m_Pipeline = nullptr;
+		Ref<AssetPointer> m_Pipeline = nullptr;
 
 		Buffer m_LocalVertexData;
 		Buffer m_LocalIndexData;

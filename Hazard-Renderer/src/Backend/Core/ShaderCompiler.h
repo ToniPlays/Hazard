@@ -39,6 +39,7 @@ namespace HazardRenderer
 	class ShaderCompiler
 	{
 	public:
+		static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDir = path; }
 		static ShaderData GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries);
 		static std::vector<ShaderStageCode> GetShaderBinariesFromSource(const std::filesystem::path& sourceFile, const RenderAPI& api);
 		static size_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
@@ -48,5 +49,8 @@ namespace HazardRenderer
 		static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
 		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
+
+	private:
+		inline static std::filesystem::path s_CacheDir;
 	};
 }

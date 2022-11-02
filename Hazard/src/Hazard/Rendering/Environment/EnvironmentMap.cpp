@@ -4,6 +4,8 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 #include "Backend/Core/Texture/Texture.h"
 
+#include "Hazard/RenderContext/ShaderLibrary.h"
+
 namespace Hazard
 {
 	EnvironmentMap::EnvironmentMap()
@@ -15,29 +17,7 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
-		return;
-
-		AssetHandle brdfHandle = AssetManager::GetHandleFromFile("res/Textures/BRDF_LUT.tga");
-		TextureHeader header = TextureFactory::GetFromCacheOrReload(brdfHandle, "res/Textures/BRDF_LUT.tga");
-
-		Image2DCreateInfo brdfLutInfo = {};
-		brdfLutInfo.DebugName = "BRDFLutTexture";
-		brdfLutInfo.Width = header.Width;
-		brdfLutInfo.Height = header.Height;
-		brdfLutInfo.Data = header.ImageData;
-		brdfLutInfo.Usage = ImageUsage::Texture;
-		brdfLutInfo.Format = ImageFormat::RGBA;
-		brdfLutInfo.GenerateMips = true;
-
-		Ref<Image2D> lut = Image2D::Create(&brdfLutInfo);
-		header.ImageData.Release();
-
-		BRDFLut = AssetPointer::Create(lut, AssetType::Image);
-
-		AssetMetadata BRDLutMetadata = {};
-		BRDLutMetadata.Handle = BRDFLut->GetHandle();
-		BRDLutMetadata.Type = AssetType::Image;
-		AssetManager::AddRuntimeAsset(BRDLutMetadata, BRDFLut);
+		auto& lut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
 	void EnvironmentMap::GenerateRadiance(Ref<Texture2DAsset> sourceImage)
 	{
@@ -60,12 +40,7 @@ namespace Hazard
 		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
 		generalTransition.DestLayout = ImageLayout_General;
 
-		PipelineSpecification pipelineSpec = {};
-		pipelineSpec.DebugName = "EquirectangularToCubemap";
-		pipelineSpec.ShaderPath = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
-		pipelineSpec.Usage = PipelineUsage::ComputeBit;
-
-		Ref<Pipeline> computePipeline = Pipeline::Create(&pipelineSpec);
+		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubeMap");
 
 		auto& shader = computePipeline->GetShader();
 		shader->Set("o_CubeMap", 0, radianceMap);
@@ -116,16 +91,10 @@ namespace Hazard
 		irradianceInfo.GenerateMips = true;
 
 		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
+		Ref<Pipeline> irradiancePipeline = ShaderLibrary::GetPipeline("EnvironmentIrradiance");
 
-		PipelineSpecification irradiancePipelineInfo = {};
-		irradiancePipelineInfo.DebugName = "EnvironmentIrradiance";
-		irradiancePipelineInfo.ShaderPath = "res/Shaders/Compute/EnvironmentIrradiance.glsl";
-		irradiancePipelineInfo.Usage = PipelineUsage::ComputeBit;
-
-		Ref<Pipeline> irradiancePipeline = Pipeline::Create(&irradiancePipelineInfo);
 		irradiancePipeline->GetShader()->Set("o_IrradianceMap", 0, irradianceMap);
 		irradiancePipeline->GetShader()->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
-
 
 		DispatchComputeInfo computeInfo = {};
 		computeInfo.GroupSize = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };

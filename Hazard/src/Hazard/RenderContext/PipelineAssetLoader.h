@@ -24,6 +24,7 @@ namespace Hazard
 		HazardRenderer::DepthOp DepthOperator;
 		uint32_t ElementCount;
 		uint32_t StageCount;
+		uint64_t ShaderHandle;
 	};
 
 	class PipelineAssetLoader : public IAssetLoader

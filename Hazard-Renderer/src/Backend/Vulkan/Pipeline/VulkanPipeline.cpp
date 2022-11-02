@@ -19,6 +19,7 @@ namespace HazardRenderer::Vulkan
 			code[i] = specs->pShaderCode[i];
 
 		m_Shader = Shader::Create(code).As<VulkanShader>();
+
 		if(specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
 
@@ -53,7 +54,10 @@ namespace HazardRenderer::Vulkan
 	{
 		auto& data = shader->GetShaderData().Stages;
 		uint32_t stride = m_Layout.GetStride();
-		if (data.find(ShaderStage::Vertex) == data.end() && stride == 0)
+		if (data.size() == 0 && stride == 0) return true;
+		if (data.size() == 0 && stride > 0) return false;
+
+		if ((data.find(ShaderStage::Vertex) == data.end()) && stride == 0 )
 			return true;
 
 		return data.at(ShaderStage::Vertex).Stride == stride;
@@ -61,7 +65,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (m_Specs.pTargetRenderPass == nullptr) return;
+		if (m_Specs.pTargetRenderPass == nullptr && m_Specs.Usage == PipelineUsage::GraphicsBit) return;
 
 		Ref<VulkanPipeline> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
@@ -75,6 +79,7 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanPipeline::Invalidate_RT()
 	{
+		std::cout << "Validated shader " << m_Specs.DebugName << std::endl;
 		if (m_Specs.Usage == PipelineUsage::GraphicsBit)
 			InvalidateGraphicsPipeline();
 		else
@@ -85,9 +90,10 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
+		HZR_ASSERT(m_Shader, "No shader");
+
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto& fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
-		HZR_ASSERT(m_Shader, "No shader");
 
 		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
@@ -200,11 +206,14 @@ namespace HazardRenderer::Vulkan
 		multisample.pSampleMask = nullptr;
 
 		std::vector<VkVertexInputBindingDescription> vertexInputBinding;
-		VkVertexInputBindingDescription& vertexDesc = vertexInputBinding.emplace_back();
-		vertexDesc.binding = 0;
-		vertexDesc.stride = m_Layout.GetBufferStride(PerVertex);
-		vertexDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
+		if (m_Layout.GetBufferStride(PerVertex))
+		{
+			VkVertexInputBindingDescription& vertexDesc = vertexInputBinding.emplace_back();
+			vertexDesc.binding = 0;
+			vertexDesc.stride = m_Layout.GetBufferStride(PerVertex);
+			vertexDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		}
 		if (m_Layout.GetBufferStride(PerInstance))
 		{
 			VkVertexInputBindingDescription& instanceDesc = vertexInputBinding.emplace_back();

@@ -61,6 +61,8 @@ namespace Hazard
 				if (!meta.IsLoaded) 
 					return nullptr;
 
+				HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
+
 				asset->SetHandle(meta.Handle);
 				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;

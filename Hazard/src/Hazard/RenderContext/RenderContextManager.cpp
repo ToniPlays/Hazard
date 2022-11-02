@@ -5,6 +5,9 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "ImageAssetLoader.h"
 #include "PipelineAssetLoader.h"
+#include "ShaderAssetLoader.h"
+
+#include "ShaderLibrary.h"
 
 namespace Hazard 
 {
@@ -38,9 +41,12 @@ namespace Hazard
 		m_Window = Window::Create(&rendererInfo);
 		m_Window->Show();
 
+
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
+		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
 
+		ShaderLibrary::Init();
 	}
 	void RenderContextManager::PreRender()
 	{

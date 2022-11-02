@@ -7,6 +7,7 @@
 
 #include "Backend/Core/GraphicsContext.h"
 #include "Backend/Core/ShaderCompiler.h"
+#include "ShaderAsset.h"
 
 namespace Hazard
 {
@@ -16,25 +17,20 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
+		__debugbreak();
+
 		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
 		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
 		{
+
 			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI));
-
 			PipelineAssetHeader header = dataBuffer.Read<PipelineAssetHeader>();
-			std::vector<ShaderStageCode> shaderCode(header.StageCount);
 
-			for (uint32_t i = 0; i < header.StageCount; i++)
-			{
-				ShaderCode code = dataBuffer.Read<ShaderCode>();
-				shaderCode[i].Stage = code.Stage;
-				shaderCode[i].ShaderCode = Buffer::Copy(dataBuffer.Read<Buffer>(code.Length));
-			}
+			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(header.ShaderHandle);
 
 			PipelineSpecification specs = {};
 			specs.DebugName = metadata.Path.string();
 			specs.pTargetRenderPass = nullptr;
-			specs.ShaderPath = metadata.Path.string();
 			specs.DrawType = header.DrawType;
 			specs.Usage = header.Usage;
 			specs.CullMode = header.CullMode;
@@ -42,8 +38,8 @@ namespace Hazard
 			specs.DepthWrite = header.DepthWrite;
 			specs.UseShaderLayout = header.UseShaderLayout;
 			specs.DepthOperator = header.DepthOperator;
-			specs.ShaderCodeCount = shaderCode.size();
-			specs.pShaderCode = shaderCode.data();
+			specs.ShaderCodeCount = shader->ShaderCode.size();
+			specs.pShaderCode = shader->ShaderCode.data();
 
 			asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 
@@ -54,7 +50,6 @@ namespace Hazard
 
 		PipelineSpecification specs = {};
 		specs.DebugName = metadata.Path.string();
-		specs.ShaderPath = metadata.Path.string();
 		specs.DrawType = DrawType::Fill;
 		specs.Usage = PipelineUsage::GraphicsBit;
 		specs.CullMode = CullMode::None;
@@ -76,6 +71,7 @@ namespace Hazard
 	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
+		return false;
 
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
@@ -95,61 +91,8 @@ namespace Hazard
 		header.UseShaderLayout = specs.UseShaderLayout;
 		header.ElementCount = 0;
 		header.StageCount = pipeline->GetShader()->GetShaderCode().size();
+		header.ShaderHandle = 0;
 
-		std::vector<PipelineLayoutElement> layoutElements;
-
-		if (!header.UseShaderLayout)
-		{
-			HZR_CORE_ASSERT(false, "Not implemented");
-
-			header.ElementCount = specs.pBufferLayout->GetElementCount();
-			layoutElements.reserve(header.ElementCount);
-
-			for (auto& element : specs.pBufferLayout->GetElements())
-			{
-				auto& e = layoutElements.emplace_back();
-				e.Type = element.Type;
-				e.NameLength = element.Name.length();
-				e.Name = element.Name.c_str();
-			}
-		}
-
-		ThreadPool& threadPool = Application::Get().GetThreadPool();
-
-		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
-		{
-			Thread& thread = threadPool.GetThread();
-
-			thread.OnCompletionHandler([](const Thread& thread) {
-				HZR_CORE_WARN("Thread finished in {0} ms", thread.GetExecutionTime());
-			});
-
-			thread.Dispatch([header, path = metadata.Path, api]() {
-				auto& binaries = ShaderCompiler::GetShaderBinariesFromSource(path, (RenderAPI)api);
-				CachedBuffer dataBuffer(sizeof(PipelineAssetHeader) + ShaderCompiler::GetBinaryLength(binaries));
-
-				dataBuffer.Write(header);
-
-				for (auto& [shaderStage, binary] : binaries)
-				{
-					ShaderCode code = { shaderStage, binary.Size };
-
-					dataBuffer.Write(code);
-					dataBuffer.Write(binary.Data, binary.Size);
-				}
-
-				auto& cachePath = ShaderCompiler::GetCachedFilePath(path, (RenderAPI)api);
-
-				if (!File::DirectoryExists(cachePath.parent_path()))
-					File::CreateDir(cachePath.parent_path());
-
-				File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
-
-				for (auto& code : binaries)
-					code.ShaderCode.Release();
-
-				});
-		}
 
 		return true;
 	}

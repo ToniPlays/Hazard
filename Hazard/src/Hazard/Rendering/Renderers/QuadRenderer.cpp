@@ -5,6 +5,8 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Assets/AssetManager.h"
 
+#include "Hazard/RenderContext/ShaderLibrary.h"
+
 namespace Hazard
 {
 	QuadRenderer::QuadRenderer()
@@ -52,7 +54,7 @@ namespace Hazard
 	void QuadRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!m_QuadBatch) return;
+		if (m_QuadBatch->GetIndexCount() == 0) return;
 
 		BufferCopyRegion region = {};
 		region.Data = m_QuadBatch->GetData();
@@ -60,12 +62,12 @@ namespace Hazard
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-		Ref<Shader> shader = m_Pipeline->Value.As<Pipeline>()->GetShader();
+		Ref<Shader> shader = m_Pipeline->GetShader();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline->Value.As<Pipeline>(), m_QuadBatch->GetIndexCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch->GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -190,12 +192,7 @@ namespace Hazard
 			hdelete[] indices;
 		}
 
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/2D/standard.glsl");
-		m_Pipeline = AssetManager::GetAsset<AssetPointer>(handle);
-
-		m_Pipeline->Value.As<Pipeline>()->SetLayout(QuadVertex::Layout());
-		m_Pipeline->Value.As<Pipeline>()->Invalidate();
-
+		m_Pipeline = ShaderLibrary::GetPipeline("standard");
 		m_RenderPass = renderPass;
 	}
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)
