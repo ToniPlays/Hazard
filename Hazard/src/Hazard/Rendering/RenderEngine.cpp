@@ -2,7 +2,6 @@
 #include "RenderEngine.h"
 #include "HRenderer.h"
 #include "Mesh/MeshAssetLoader.h"
-#include "Environment/EnvironmentAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Core/Application.h"
@@ -18,7 +17,6 @@ namespace Hazard
 		using namespace HazardRenderer;
 		HRenderer::s_Engine = this;
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
-		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
@@ -94,7 +92,10 @@ namespace Hazard
 
 		for (auto& [pipeline, meshList] : drawList.MeshList)
 		{
+			pipeline->SetRenderPass(m_RenderPass);
+
 			if (!pipeline->IsValid()) continue;
+
 			commandBuffer->BindPipeline(pipeline);
 
 			for (auto& mesh : meshList)
@@ -119,11 +120,13 @@ namespace Hazard
 
 		for (auto& [pipeline, usages] : drawList.Pipelines)
 		{
+			pipeline->SetRenderPass(m_RenderPass);
+
+			if (!pipeline->IsValid()) continue;
 			commandBuffer->BindPipeline(pipeline);
+
 			for (auto& data : usages)
-			{
 				commandBuffer->Draw(data.Count);
-			}
 		}
 	}
 	void RenderEngine::LightPass(Ref<RenderCommandBuffer> commandBuffer)
@@ -153,7 +156,7 @@ namespace Hazard
 				auto& prefilter = environmentData.Map->PreFilterMap;
 				auto& lut = environmentData.Map->BRDFLut;
 
-				auto& shader = m_Resources->PbrPipeline->GetShader();
+				auto& shader = m_Resources->PbrPipeline->Value.As<Pipeline>()->GetShader();
 				if (radiance)
 					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
 				if (irradiance)
@@ -170,10 +173,10 @@ namespace Hazard
 			data.SkyLightIntensity = 0.0f;
 			data.EnvironmentLod = 0.0f;
 
-			auto& shader = m_Resources->PbrPipeline->GetShader();
-			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
+			//auto& shader = m_Resources->PbrPipeline->GetShader();
+			//shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
+			//shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
+			//shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
 			//shader->Set("u_BRDFLut", 0, m_WhiteTexture->GetSourceImageAsset()->Value.As<Image2D>());
 		}
 		//Update buffers
@@ -185,13 +188,12 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
 
-		if (drawList.Environment.size() == 0) return;
-
 		for (auto& [map, environmentData] : drawList.Environment)
 		{
 			auto& radiance = environmentData.Map->RadianceMap;
+			if (!radiance) return;
 
-			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
+			m_Resources->SkyboxPipeline->Value.As<Pipeline>()->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
 			commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
 			commandBuffer->Draw(6);
 			return;

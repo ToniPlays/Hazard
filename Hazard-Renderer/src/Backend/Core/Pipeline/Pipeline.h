@@ -32,15 +32,18 @@ namespace HazardRenderer
 		PipelineUsage Usage = PipelineUsage::None;
 		DrawType DrawType = DrawType::Fill;
 		CullMode CullMode = CullMode::BackFace;
-		float LineWidth = 1.0f;
-		bool IsShared = true;
-		bool DepthTest = true;
-		bool DepthWrite = true;
 		DepthOp DepthOperator = DepthOp::LessOrEqual;
 		Ref<RenderPass> pTargetRenderPass = nullptr;
+		uint32_t ShaderCodeCount = 0;
+		ShaderStageCode* pShaderCode = nullptr;
+		bool UseShaderLayout = false;
+		float LineWidth = 1.0f;
+		bool DepthTest = true;
+		bool DepthWrite = true;
 	};
 
-	class Pipeline : public RefCount {
+	class Pipeline : public RefCount 
+	{
 	public:
 
 		virtual ~Pipeline() = default;
@@ -49,6 +52,8 @@ namespace HazardRenderer
 
 		virtual Ref<Shader> GetShader() = 0;
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
+		virtual bool IsCompatibleWith(Ref<Shader> shader) const = 0;
+		virtual void SetLayout(const BufferLayout& layout) = 0;
 
 		virtual void Invalidate() = 0;
 		virtual bool IsValid() const = 0;

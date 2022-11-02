@@ -22,7 +22,7 @@ namespace HazardRenderer
 	using RendererMessageCallback = void(*)(RenderMessage);
 	using EventCallback = std::function<void(Event&)>;
 
-	enum class RenderAPI 
+	enum class RenderAPI : uint32_t
 	{
 		Auto = 0,
 		OpenGL,
@@ -30,7 +30,10 @@ namespace HazardRenderer
 		Metal,
 		DX12,
 		DX11,
-		WebGL
+		WebGL,
+
+		First = OpenGL,
+		Last = WebGL
 	};
 
 	std::string RenderAPIToString(RenderAPI api);

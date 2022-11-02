@@ -44,7 +44,7 @@ namespace Hazard
 
 	private:
 		UID m_Uuid;
-		entt::registry m_Registry = entt::registry();
+		entt::registry m_Registry;
 		std::string m_Name = "";
 		std::filesystem::path m_File = "";
 		std::unordered_map<UID, Entity> m_EntityUIDMap;

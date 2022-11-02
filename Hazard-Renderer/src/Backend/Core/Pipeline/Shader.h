@@ -11,6 +11,7 @@ namespace HazardRenderer
 {
 	class UniformBuffer;
 
+
 	enum class ShaderStage : uint32_t 
 	{
 		None = BIT(0),
@@ -24,6 +25,12 @@ namespace HazardRenderer
 		ShaderResourceFlags_ReadOnly = BIT(0),
 		ShaderResourceFlags_WriteOnly = BIT(1),
 		ShaderResourceFlags_ReadAndWrite = BIT(2)
+	};
+
+	struct ShaderStageCode
+	{
+		ShaderStage Stage;
+		Buffer ShaderCode;
 	};
 
 	struct ShaderStageInput
@@ -143,7 +150,8 @@ namespace HazardRenderer
 	class CubemapTexture;
 	class Image2D;
 
-	class Shader : public RefCount {
+	class Shader : public RefCount
+	{
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
@@ -153,7 +161,8 @@ namespace HazardRenderer
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
+		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;
 
-		static Ref<Shader> Create(const std::string& path);
+		static Ref<Shader> Create(const std::vector<ShaderStageCode>& shaderCode);
 	};
 }

@@ -13,7 +13,14 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		if(specs->Usage == PipelineUsage::GraphicsBit)
 			HZR_ASSERT(specs->pBufferLayout, "Cannot use pipeline without input layout");
-		m_Shader = Shader::Create(specs->ShaderPath);
+
+		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
+		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
+		{
+			code.push_back(specs->pShaderCode[i]);
+		}
+
+		m_Shader = Shader::Create(code);
 		Invalidate();
 	}
 	OpenGLPipeline::~OpenGLPipeline()
@@ -25,6 +32,13 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		m_DrawType = OpenGLUtils::DrawTypeToGLType(m_Specs.DrawType);
 		m_PolygonMode = OpenGLUtils::DrawTypeToGLPolygon(m_Specs.DrawType);
+	}
+	bool OpenGLPipeline::IsCompatibleWith(Ref<Shader> shader) const
+	{
+		auto& data = shader->GetShaderData().Stages;
+		uint32_t stride = m_Specs.pBufferLayout->GetStride();
+		if (data.find(ShaderStage::Vertex) == data.end() && stride == 0) return true;
+		return data.at(ShaderStage::Vertex).Stride == stride;
 	}
 }
 #endif

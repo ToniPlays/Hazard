@@ -2441,7 +2441,7 @@ bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* p_data,
 
     // Display value using user-provided display format so user can add prefix/suffix/decorations to the value.
     char value_buf[64];
-    const char* value_buf_end = value_buf + (mixed_value ? FormatString(value_buf, IM_ARRAYSIZE(value_buf, "---"), "---") : DataTypeFormatString(value_buf, IM_ARRAYSIZE(value_buf), data_type, p_data, format));
+    const char* value_buf_end = value_buf + (mixed_value ? FormatString(value_buf, IM_ARRAYSIZE(value_buf), "---") : DataTypeFormatString(value_buf, IM_ARRAYSIZE(value_buf), data_type, p_data, format));
 
     if (g.LogEnabled)
         LogSetNextTextDecoration("{", "}");

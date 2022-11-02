@@ -93,13 +93,15 @@ void HazardEditorApplication::PreInit()
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
 
-	CreateApplicationStack(&createInfo);
 
+	EditorAssetManager::ImportAssets();
+
+	CreateApplicationStack(&createInfo);
+	EditorAssetManager::Init();
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {
-	EditorAssetManager::Init();
 
 	Editor::EditorWorldManager::Init();
 	auto& manager = PushModule<GUIManager>();

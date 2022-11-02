@@ -4,6 +4,8 @@
 #include "Hazard.h"
 #include "Core/EditorAssetManager.h"
 
+using namespace Hazard;
+
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
 	if (!File::Exists(path)) 
@@ -22,22 +24,18 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 void HazardProject::ProcessAssets()
 {
+	std::filesystem::path libraryPath = m_Data.ProjectDirectory / "Library";
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
-	for (auto& item : File::GetAllInDirectory(assetPath)) 
-		ProcessAsset(item);
 
-	std::filesystem::path resPath = "res";
-	for (auto& item : File::GetAllInDirectory(resPath))
-	{
+	for (auto& item : File::GetAllInDirectory(assetPath))
 		ProcessAsset(item);
-	}
 }
 
-Hazard::AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)
+AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
 	if (File::GetFileExtension(path) == "meta")
 	{
-		Hazard::AssetMetadata metadata = EditorAssetManager::ImportFromMetadata(path);
+		AssetMetadata metadata = EditorAssetManager::ImportFromMetadata(path);
 		std::filesystem::path assetPath = File::GetPathNoExt(path);
 		if (File::IsDirectory(assetPath))
 		{

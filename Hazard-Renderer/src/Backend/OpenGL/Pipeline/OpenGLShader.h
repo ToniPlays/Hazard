@@ -15,7 +15,7 @@ namespace HazardRenderer::OpenGL
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& filePath);
+		OpenGLShader(const std::vector<ShaderStageCode>& shaderCode);
 		~OpenGLShader();
 
 		void Reload() override;
@@ -24,22 +24,23 @@ namespace HazardRenderer::OpenGL
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
+		std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; }
 
 		//OpenGL specific
-		void Reload_RT(std::unordered_map<ShaderStage, Buffer> binaries);
+		void Reload_RT();
 		uint32_t GetProgramID() const { return m_ID; }
 
 		std::unordered_map<uint32_t, OpenGLDescriptorSet> GetDescriptorSets() { return m_DescriptorSet; };
 		const OpenGLDescriptorSet& GetDescriptorSet(uint32_t index) { return m_DescriptorSet[index]; };
 
 	private:
-		void CreateProgram(const std::unordered_map<ShaderStage, Buffer>& binary);
+		void CreateProgram();
 		void ReflectVulkan(const std::unordered_map<ShaderStage, Buffer>& binaries);
 		void Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries);
 
 		std::unordered_map<uint32_t, OpenGLDescriptorSet> m_DescriptorSet;
+		std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
 
-		std::string m_FilePath;
 		uint32_t m_ID = 0;
 		ShaderData m_ShaderData;
 	};

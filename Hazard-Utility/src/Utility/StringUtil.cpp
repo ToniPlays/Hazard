@@ -19,7 +19,7 @@ std::string StringUtil::RemoveAtEnd(std::string& source, char val)
 {
 	return source.substr(0, source.find_first_of(val));
 }
-size_t StringUtil::OffsetOf(const std::string& source, char delim, uint32_t offset) 
+size_t StringUtil::OffsetOf(const std::string& source, char delim, size_t offset)
 {
 	std::string offsetValue = source;
 
@@ -29,7 +29,7 @@ size_t StringUtil::OffsetOf(const std::string& source, char delim, uint32_t offs
 	return offsetValue.find_first_of(delim, offset);
 }
 
-size_t StringUtil::OffsetOf(const std::string& source, const std::string& value, uint32_t startOffset) 
+size_t StringUtil::OffsetOf(const std::string& source, const std::string& value, size_t startOffset) 
 {
 	return source.find(value, startOffset);
 }
@@ -41,10 +41,10 @@ std::string StringUtil::BytesToString(const size_t& bytes)
 	constexpr uint64_t KB = 1024;
 
 	char buffer[32];
-	if (bytes > GB) sprintf(buffer, "%.02f GB", (float)bytes / (float)GB);
-	else if (bytes > MB) sprintf(buffer, "%.02f MB", (float)bytes / (float)MB);
-	else if (bytes > KB) sprintf(buffer, "%.02f KB", (float)bytes / (float)KB);
-	else sprintf(buffer, "%.02f bytes", (float)bytes);
+	if (bytes > GB) sprintf(buffer, "%.0f GB", (float)bytes / (float)GB);
+	else if (bytes > MB) sprintf(buffer, "%.2f MB", (float)bytes / (float)MB);
+	else if (bytes > KB) sprintf(buffer, "%.2f KB", (float)bytes / (float)KB);
+	else sprintf(buffer, "%.2f bytes", (float)bytes);
 	return std::string(buffer);
 }
 std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replaceWith)

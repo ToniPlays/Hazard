@@ -18,7 +18,7 @@ namespace Editor {
 
 	private:
 		Ref<HazardRenderer::UniformBuffer> m_GridUniformBuffer;
-		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		Ref<AssetPointer> m_Pipeline;
 		bool m_ShowGrid = true;
 	};
 }

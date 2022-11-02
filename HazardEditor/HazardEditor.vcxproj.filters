@@ -281,4 +281,7 @@
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\AssetManagerDebugPanel.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
 </Project>

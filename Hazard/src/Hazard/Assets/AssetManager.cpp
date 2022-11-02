@@ -25,7 +25,9 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (filePath == "") return INVALID_ASSET_HANDLE;
 
-		std::filesystem::path path = File::GetFileAbsolutePath(filePath); //std::filesystem::relative(filePath, std::filesystem::absolute(APPLICATION_PERSISTENT_PATH));
+		std::filesystem::path path = File::GetFileAbsolutePath(filePath); 
+
+		HZR_CORE_INFO("Importing asset from {0}", path.string());
 
 		if (s_Registry.Contains(path))
 			return s_Registry.Get(path).Handle;
@@ -56,30 +58,21 @@ namespace Hazard
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
-		bool found = false;
-		for (const auto& item : s_Registry) {
-			if (item.second.Handle == handle) {
-				found = true;
-				break;
-			}
-		}
-		if (!found) return;
-
 		AssetMetadata& data = GetMetadata(handle);
+
+		HZR_CORE_INFO("Removing asset {0}", data.Path.string());
+
+		data.IsLoaded = false;
 		s_Registry.Remove(data.Path);
 
-		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end())
+		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end() && s_LoadedAssets.size() > 0)
 			s_LoadedAssets.erase(handle);
 	}
-	AssetHandle AssetManager::GetHandleFromFile(const std::string& filePath)
+	AssetHandle AssetManager::GetHandleFromFile(const std::filesystem::path& filePath)
 	{
 		HZR_PROFILE_FUNCTION();
-		std::filesystem::path path = filePath;
-
-		if (s_Registry.Contains(path)) {
-			return s_Registry.Get(path).Handle;
-		}
-		return INVALID_ASSET_HANDLE;
+		auto& path = File::GetFileAbsolutePath(filePath);
+		return s_Registry.Contains(path) ? s_Registry.Get(path).Handle : INVALID_ASSET_HANDLE;
 	}
 	bool AssetManager::IsLoaded(const AssetHandle& handle)
 	{

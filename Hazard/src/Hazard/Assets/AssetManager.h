@@ -5,6 +5,7 @@
 #include "AssetLoader.h"
 #include "Hazard/Core/Core.h"
 #include "UID.h"
+#include "Profiling/PerformanceProfiler.h"
 
 namespace Hazard 
 {
@@ -28,7 +29,7 @@ namespace Hazard
 		}
 
 		static AssetHandle ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata = AssetMetadata());
-		static AssetHandle GetHandleFromFile(const std::string& filePath);
+		static AssetHandle GetHandleFromFile(const std::filesystem::path& filePath);
 
 		static void RemoveAsset(AssetHandle handle);
 		static bool IsLoaded(const AssetHandle& handle);
@@ -36,19 +37,26 @@ namespace Hazard
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
 		template<typename T>
+		static Ref<T> GetAsset(const std::filesystem::path& path)
+		{
+			return GetAsset<T>(GetHandleFromFile(path));
+		}
+
+		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle) 
 		{
-			HZR_PROFILE_FUNCTION();
 			static_assert(std::is_base_of<Asset, T>::value);
 
-			AssetMetadata& meta = GetMetadata(handle);
-			if (meta.Handle != handle)
-				assert(false);
+			HZR_PROFILE_FUNCTION();
+			HZR_TIMED_FUNCTION();
 
+			AssetMetadata& meta = GetMetadata(handle);
+			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
 			if (!meta.IsLoaded)
 			{
 				Ref<Asset> asset;
-				meta.IsLoaded = s_AssetLoader.Load(meta, asset);
+				LoadType loadType = s_AssetLoader.Load(meta, asset);
+				meta.IsLoaded = loadType != LoadType::Failed;
 
 				if (!meta.IsLoaded) 
 					return nullptr;
@@ -56,11 +64,16 @@ namespace Hazard
 				asset->SetHandle(meta.Handle);
 				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;
+
+				if (loadType == LoadType::Source)
+					s_AssetLoader.Save(asset);
+
 				return asset;
 			}
 			else
 			{
-				if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) return nullptr;
+				if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) 
+					return nullptr;
 				return s_LoadedAssets[handle].As<T>();
 			}
 		}
@@ -69,8 +82,10 @@ namespace Hazard
 		{
 			HZR_PROFILE_FUNCTION();
 			HZR_ASSERT(asset->m_Handle == metadata.Handle, "Stuff no match");
+
 			asset->m_Type = metadata.Type;
 			s_LoadedAssets[metadata.Handle] = asset;
+
 			return true;
 		}
 		template<typename T>

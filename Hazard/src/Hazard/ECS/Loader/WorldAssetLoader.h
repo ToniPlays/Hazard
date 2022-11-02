@@ -9,7 +9,7 @@ namespace Hazard {
 		WorldAssetLoader() = default;
 		~WorldAssetLoader() = default;
 
-		bool Load(AssetMetadata& metadata, Ref<Asset>& asset);
+		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset);
 		bool Save(Ref<Asset>& asset);
 	};
 }

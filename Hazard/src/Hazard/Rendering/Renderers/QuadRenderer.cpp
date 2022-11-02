@@ -3,6 +3,7 @@
 #include "QuadRenderer.h"
 #include "../HRenderer.h"
 #include "Hazard/Core/Application.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
 {
@@ -38,6 +39,9 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		Flush();
+
+		for (uint32_t i = m_Data.TextureIndex - 1; i < m_Data.TextureSlots.size(); i++)
+			m_Data.TextureSlots[i] = m_Data.TextureSlots[0];
 	}
 	void QuadRenderer::BeginBatch()
 	{
@@ -56,12 +60,12 @@ namespace Hazard
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-		Ref<Shader> shader = m_Pipeline->GetShader();
+		Ref<Shader> shader = m_Pipeline->Value.As<Pipeline>()->GetShader();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline, m_QuadBatch->GetIndexCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Pipeline->Value.As<Pipeline>(), m_QuadBatch->GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -183,18 +187,14 @@ namespace Hazard
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 
-			hdelete indices;
+			hdelete[] indices;
 		}
 
-		PipelineSpecification pipelineSpecs = {};
-		pipelineSpecs.DebugName = "2DQuadBatchPipeline";
-		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.DrawType = DrawType::Fill;
-		pipelineSpecs.ShaderPath = "res/Shaders/2D/standard.glsl";
-		pipelineSpecs.pTargetRenderPass = renderPass;
-		pipelineSpecs.pBufferLayout = &layout;
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/2D/standard.glsl");
+		m_Pipeline = AssetManager::GetAsset<AssetPointer>(handle);
 
-		m_Pipeline = Pipeline::Create(&pipelineSpecs);
+		m_Pipeline->Value.As<Pipeline>()->SetLayout(QuadVertex::Layout());
+		m_Pipeline->Value.As<Pipeline>()->Invalidate();
 
 		m_RenderPass = renderPass;
 	}
@@ -211,5 +211,3 @@ namespace Hazard
 		return m_Data.TextureIndex++;
 	}
 }
-
-

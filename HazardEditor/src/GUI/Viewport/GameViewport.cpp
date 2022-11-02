@@ -31,6 +31,8 @@ namespace UI
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+		if (!world) return;
+
 		auto& [cc, tc] = world->GetWorldCamera();
 		if (cc == nullptr) 
 		{ 
@@ -64,10 +66,9 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 		}
-		if (!m_HasCamera || true)
-			return;
+		if (!m_HasCamera || true) return;
 
-		else ImUI::Image(m_FrameBuffer->GetImage(), size);
+		//else ImUI::Image(m_FrameBuffer->GetImage(), size);
 	}
 	bool GameViewport::OnEvent(Event& e)
 	{

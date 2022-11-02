@@ -2,16 +2,18 @@
 #include "EditorGrid.h"
 #include "Hazard/Rendering/HRenderer.h"
 #include "Hazard/Math/Time.h"
+#include "Hazard/Assets/AssetManager.h"
 
 namespace Editor
 {
+	using namespace HazardRenderer;
+
 	struct GridData
 	{
 		float Scale;
 		float Zoom = 1.0f;
 	};
 
-	using namespace HazardRenderer;
 	Grid::~Grid() 
 	{
 
@@ -19,7 +21,7 @@ namespace Editor
 
 	void Grid::Render(const Editor::EditorCamera& camera)
 	{	
-		if (!m_ShowGrid) return;
+		if (!m_ShowGrid || !m_Pipeline) return;
 
 		constexpr double log = 10.0;
 		GridData gridData;
@@ -27,34 +29,21 @@ namespace Editor
 		gridData.Scale = std::pow(log, std::floor(std::log(gridData.Zoom) / std::log(log)));
 
 		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
-		HRenderer::SubmitPipeline(m_Pipeline, 6);
+		HRenderer::SubmitPipeline(m_Pipeline->Value.As<Pipeline>(), 6);
 	}
 	
 	void Grid::Invalidate(Ref<RenderPass> renderPass)
 	{
 		if (m_Pipeline) 
 		{
-			PipelineSpecification spec = m_Pipeline->GetSpecifications();
-			m_Pipeline->SetRenderPass(renderPass);
+			auto& pipeline = m_Pipeline->Value.As<Pipeline>();
+			PipelineSpecification spec = pipeline->GetSpecifications();
+			pipeline->SetRenderPass(renderPass);
 			return;
 		}
 
-		BufferLayout layout = {};
-
-		PipelineSpecification specs = {};
-		specs.DebugName = "EditorGrid";
-		specs.pTargetRenderPass = renderPass.Raw();
-		specs.ShaderPath = "res/Shaders/Grid.glsl";
-		specs.DrawType = DrawType::Fill;
-		specs.Usage = PipelineUsage::GraphicsBit;
-		specs.CullMode = CullMode::None;
-		specs.IsShared = false;
-		specs.pBufferLayout = &layout;
-		specs.DepthTest = true;
-		specs.DepthWrite = false;
-		specs.DepthOperator = DepthOp::Less;
-
-		m_Pipeline = Pipeline::Create(&specs);
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/Grid.glsl");
+		m_Pipeline = AssetManager::GetAsset<AssetPointer>(handle);
 
 		UniformBufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Grid";
@@ -64,7 +53,5 @@ namespace Editor
 		uboInfo.Usage = BufferUsage::DynamicDraw;
 
 		m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
-
 	}
-	
 }

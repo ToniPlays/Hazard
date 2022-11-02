@@ -24,9 +24,9 @@ namespace Hazard
 		}
 	}
 
-	World::World(const std::filesystem::path& file) : m_File(file)
+	World::World(const std::filesystem::path& file) : m_File(file), m_Name("Unnamed")
 	{
-		
+		m_Registry = entt::registry();
 	}
 
 	World::~World() 

@@ -24,7 +24,7 @@ namespace HazardRenderer::Vulkan
 	class VulkanShader : public Shader
 	{
 	public:
-		VulkanShader(const std::string& filePath);
+		VulkanShader(const std::vector<ShaderStageCode>& shaderCode);
 		~VulkanShader();
 
 		void Reload() override;
@@ -33,6 +33,7 @@ namespace HazardRenderer::Vulkan
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
+		std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; };
 		
 		//Vulkan specific
 		void Reload_RT(bool forceCompile = false);
@@ -46,12 +47,10 @@ namespace HazardRenderer::Vulkan
 		const std::vector<uint32_t>& GetDynamicOffsets();
 
 	private:
-		void Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries);
+		void Reflect();
 		void CreateShaderModules();
 		void CreateDescriptorSetLayouts();
 		void CreatePushConstantRanges();
-
-		std::string m_FilePath;
 
 		std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
 

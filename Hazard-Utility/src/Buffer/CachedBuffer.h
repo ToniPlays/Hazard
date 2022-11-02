@@ -96,7 +96,7 @@ public:
 	}
 
 	template<typename T>
-	size_t Write(T* data, uint32_t dataLength)
+	size_t Write(T* data, size_t dataLength)
 	{
 		m_DataBuffer.Write((const void*)data, dataLength, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += dataLength;

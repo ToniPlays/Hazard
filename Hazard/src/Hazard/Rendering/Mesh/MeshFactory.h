@@ -20,8 +20,8 @@ namespace Hazard
 		//Bounding box
 		//Metadata
 		uint32_t Flags;
-		uint32_t VertexCount;
-		uint32_t IndexCount;
+		size_t VertexCount;
+		size_t IndexCount;
 	};
 
 	class MeshFactory 
@@ -33,7 +33,6 @@ namespace Hazard
 		void SetOptimization(MeshLoaderFlags flags);
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
 		MeshData LoadMeshFromCache(const AssetHandle& handle);
-		MeshData LoadMeshFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path);
 		CacheStatus CacheStatus(const AssetHandle& handle);
 		void SaveMeshToCache(const AssetHandle& handle, const MeshData& data);
 

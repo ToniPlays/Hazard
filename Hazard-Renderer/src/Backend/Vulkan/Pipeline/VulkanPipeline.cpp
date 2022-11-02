@@ -13,13 +13,21 @@ namespace HazardRenderer::Vulkan
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (specs->Usage == PipelineUsage::GraphicsBit)
+
+		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
+		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
+			code[i] = specs->pShaderCode[i];
+
+		m_Shader = Shader::Create(code).As<VulkanShader>();
+		if(specs->pBufferLayout)
+			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
+
+		if (!IsCompatibleWith(m_Shader))
 		{
-			HZR_ASSERT(m_Specs.pTargetRenderPass, "Renderpass cannot be null");
-			m_Layout = *specs->pBufferLayout;
+			std::cout << m_Specs.DebugName << " is not compatible with shader" << std::endl;
+			return;
 		}
 
-		m_Shader = Shader::Create(m_Specs.ShaderPath).As<VulkanShader>();
 		Invalidate();
 	}
 	VulkanPipeline::~VulkanPipeline()
@@ -36,12 +44,27 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
+		if (m_Specs.pTargetRenderPass == renderPass) return;
+
+		m_Specs.pTargetRenderPass = renderPass;
+		Invalidate();
+	}
+	bool VulkanPipeline::IsCompatibleWith(Ref<Shader> shader) const
+	{
+		auto& data = shader->GetShaderData().Stages;
+		uint32_t stride = m_Layout.GetStride();
+		if (data.find(ShaderStage::Vertex) == data.end() && stride == 0)
+			return true;
+
+		return data.at(ShaderStage::Vertex).Stride == stride;
 	}
 	void VulkanPipeline::Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
+		if (m_Specs.pTargetRenderPass == nullptr) return;
+
 		Ref<VulkanPipeline> instance = this;
-		Renderer::Submit([instance]() mutable {
+		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
 			});
 	}
@@ -127,7 +150,7 @@ namespace HazardRenderer::Vulkan
 				blendStates[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
 				const auto& spec = fb->GetSpecification().Attachments[i];
-				
+
 				blendStates[i].blendEnable = spec.Blend ? VK_TRUE : VK_FALSE;
 				blendStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 				blendStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;

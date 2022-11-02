@@ -9,18 +9,18 @@
 namespace HazardRenderer 
 {
 
-    Ref<Shader> Shader::Create(const std::string& path)
+    Ref<Shader> Shader::Create(const std::vector<ShaderStageCode>& shaderCode)
     {
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLShader>::Create(path);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLShader>::Create(shaderCode);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanShader>::Create(path);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanShader>::Create(shaderCode);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalShader>::Create(path);
+        case RenderAPI::Metal: return Ref<Metal::MetalShader>::Create(shaderCode);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RendererAPI");

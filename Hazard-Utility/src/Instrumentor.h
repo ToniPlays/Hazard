@@ -58,6 +58,8 @@ public:
 	}
 	void WriteProfile(const ProfileResult& result)
 	{
+		std::lock_guard lock(m_Mutex);
+
 		std::stringstream json;
 
 		json << std::setprecision(3) << std::fixed;
@@ -71,7 +73,6 @@ public:
 		json << "\"ts\":" << result.Start.count();
 		json << "}";
 
-		std::lock_guard lock(m_Mutex);
 		if (m_CurrentSession)
 		{
 			m_OutputStream << json.str();

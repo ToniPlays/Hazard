@@ -107,18 +107,6 @@ namespace Hazard
 
 		return data;
 	}
-	MeshData MeshFactory::LoadMeshFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path)
-	{
-		if (MeshFactory::CacheStatus(handle) == CacheStatus::Exists)
-		{
-			MeshData result = MeshFactory::LoadMeshFromCache(handle);
-			return result;
-		}
-
-		MeshData meshData = MeshFactory::LoadMeshFromSource(path.string());
-		SaveMeshToCache(handle, meshData);
-		return meshData;
-	}
 	CacheStatus MeshFactory::CacheStatus(const AssetHandle& handle)
 	{
 		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;
@@ -268,8 +256,6 @@ namespace Hazard
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
-		{
 			TraverseNode(node->mChildren[i], data, transform, ++level);
-		}
 	}
 }

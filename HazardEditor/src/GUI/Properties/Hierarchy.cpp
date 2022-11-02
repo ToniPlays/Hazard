@@ -16,10 +16,6 @@ namespace UI
 	void Hierarchy::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<World> world = m_WorldHandler->GetCurrentWorld();
-
-		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
-		renderer->SetTargetWorld(world);
 	}
 	void Hierarchy::OnPanelRender()
 	{
@@ -34,6 +30,7 @@ namespace UI
 		const char* columns[] = { "Name", "Type", "Modifiers" };
 
 		ImUI::Table("Hierarchy", columns, 3, [&]() {
+
 
 			for (auto& entity : world->GetEntitiesWith<TagComponent>())
 			{
@@ -55,7 +52,7 @@ namespace UI
 					});
 					*/
 
-				//Type
+					//Type
 				ImGui::TableNextColumn();
 
 				ImUI::ShiftX(4.0f);
@@ -74,7 +71,6 @@ namespace UI
 					SelectEntity(e);
 			}
 			DrawContextMenu(world);
-
 			});
 
 		if (ImGui::IsItemClicked())
@@ -83,6 +79,7 @@ namespace UI
 	bool Hierarchy::OnEvent(Event& e)
 	{
 		if (!m_Hovered) return false;
+
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::OnKeyPressed));
 	}

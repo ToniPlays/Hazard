@@ -5,20 +5,23 @@
 
 using AssetHandle = UID;
 
-enum class AssetType
+enum class AssetType : uint32_t
 {
 	Undefined = 0,
 	Folder,
+	Image,
 	AudioClip,
 	World,
-	Image,
+	EnvironmentMap,
+	PhysicsMaterial,
 	Mesh,
 	Script,
-	EnvironmentMap,
-	PhysicsMaterial
+	Pipeline,
+	Shader
 };
 
-enum class ResourceType {
+enum class ResourceType 
+{
 	Undefined = 0,
 	VertexBuffer,
 	IndexBuffer,

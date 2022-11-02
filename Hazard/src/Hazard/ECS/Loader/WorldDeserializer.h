@@ -98,7 +98,6 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE) return;
 
 			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-			HZR_ASSERT(sourceImage, "Woop");
 			c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
 		}
 

@@ -11,7 +11,7 @@ namespace Hazard
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		bool Load(AssetMetadata& metadata, Ref<Asset>& asset);
+		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset);
 		bool Save(Ref<Asset>& asset);
 
 	private:

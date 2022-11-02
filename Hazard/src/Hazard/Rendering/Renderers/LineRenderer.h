@@ -46,7 +46,7 @@ namespace Hazard
 		Batch<LineVertex>* m_LineBatch = nullptr;
 		LineRendererData m_Data;
 
-		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		Ref<AssetPointer> m_Pipeline;
 		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 	};

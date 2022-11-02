@@ -234,9 +234,6 @@
     <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h">
-      <Filter>src\Hazard\Rendering\Environment</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentMap.h">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
@@ -1605,6 +1602,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\PipelineAssetLoader.h" />
+    <ClInclude Include="src\Hazard\Assets\AssetPack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1697,9 +1696,6 @@
     <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.cpp">
-      <Filter>src\Hazard\Rendering\Environment</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentMap.cpp">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClCompile>
@@ -1745,5 +1741,6 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\PipelineAssetLoader.cpp" />
   </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ namespace Hazard {
 
 	void WorldHandler::Init()
 	{
-		LoadWorld(m_World->GetWorldFile(), Serialization::Editor);
+
 	}
 
 	void WorldHandler::Close()
@@ -86,7 +86,8 @@ namespace Hazard {
 		HZR_PROFILE_FUNCTION();
 		if (File::Exists(file)) 
 		{
-			AssetHandle handle = AssetManager::ImportAsset(file);
+			AssetHandle handle = AssetManager::GetHandleFromFile(file);
+			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
 			m_World = AssetManager::GetAsset<World>(handle);
 			return true;
 		}

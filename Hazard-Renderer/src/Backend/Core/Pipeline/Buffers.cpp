@@ -13,34 +13,22 @@ namespace HazardRenderer {
 	{
 		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
 
-		if (createInfo->IsShared && RenderLibrary::HasVertexBuffer(createInfo->DebugName)) 
-		{
-			return RenderLibrary::GetVertexBuffer(createInfo->DebugName);
-		}
-
-		Ref<VertexBuffer> buffer = nullptr;
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo); break;
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo); break;
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanVertexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: buffer = Ref<Metal::MetalVertexBuffer>::Create(createInfo); break;
+		case RenderAPI::Metal: return Ref<Metal::MetalVertexBuffer>::Create(createInfo); break;
 #endif
 		default:
 			return nullptr;
 		}
 
-		//if (createInfo->IsShared) {
-		//	RenderLibrary::AddVertexBuffer(buffer);
-		//}
-		//else AssetManager::AddRuntimeResource(buffer);
-
-		//buffer->m_Type = ResourceType::VertexBuffer;
-		return buffer;
+		return nullptr;
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
@@ -54,10 +42,10 @@ namespace HazardRenderer {
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: buffer = Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo); break;
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: buffer = Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo); break;
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanIndexBuffer>::Create(createInfo); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return Ref<Metal::MetalIndexBuffer>::Create(createInfo); break;
@@ -66,17 +54,11 @@ namespace HazardRenderer {
 			return nullptr;
 		}
 
-		//if (createInfo->IsShared) {
-		//	RenderLibrary::AddIndexBuffer(buffer);
-		//}
-		//else AssetManager::AddRuntimeResource(buffer);
-
-		//buffer->m_Type = ResourceType::IndexBuffer;
-		return buffer;
+		return nullptr;
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
 	{
-		if (createInfo->IsShared && RenderLibrary::HasUniformBuffer(createInfo->Name)) 
+		if (createInfo->IsShared && RenderLibrary::HasUniformBuffer(createInfo->Name))
 		{
 			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
 			return buffer;
@@ -99,9 +81,7 @@ namespace HazardRenderer {
 			return nullptr;
 		}
 
-		if (createInfo->IsShared) {
-			RenderLibrary::AddUniformBuffer(buffer);
-		}
+		RenderLibrary::AddUniformBuffer(buffer);
 
 		return buffer;
 	}

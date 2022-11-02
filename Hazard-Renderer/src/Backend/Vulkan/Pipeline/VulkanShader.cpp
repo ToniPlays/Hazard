@@ -23,10 +23,13 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanShader::VulkanShader(const std::string& filePath) : m_FilePath(filePath)
+	VulkanShader::VulkanShader(const std::vector<ShaderStageCode>& shaderCode)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(!filePath.empty(), "Shader path cannot be empty");
+
+		for (auto& code : shaderCode)
+			m_ShaderCode[code.Stage] = Buffer::Copy(code.ShaderCode);
+
 		Reload();
 	}
 	VulkanShader::~VulkanShader()
@@ -43,54 +46,13 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
 
-		std::unordered_map<ShaderStage, Buffer> binaries;
-		if (ShaderFactory::HasCachedShader(m_FilePath, RenderAPI::Vulkan) == CacheStatus::Exists)
-			binaries = ShaderFactory::GetShaderBinaries(m_FilePath, RenderAPI::Vulkan);
-
-		else
-		{
-			std::unordered_map<ShaderStage, std::string> sources = ShaderFactory::GetShaderSources(m_FilePath);
-
-			//Compile Vulkan shader
-			VulkanShaderCompiler compiler;
-
-			for (auto& [stage, source] : sources)
-			{
-				double compilationTime = 0.0;
-				std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
-
-				//Compile to Vulkan SPV
-				CompileInfo compileInfoVulkan = {};
-				compileInfoVulkan.Renderer = RenderAPI::Vulkan;
-				compileInfoVulkan.Name = m_FilePath;
-				compileInfoVulkan.Stage = stage;
-				compileInfoVulkan.Source = source;
-				compileInfoVulkan.Defines = defines;
-
-				if (!compiler.Compile(&compileInfoVulkan))
-				{
-					Window::SendDebugMessage({
-						Severity::Warning,
-						fmt::format("{0} failed to compile:\n - {1}", m_FilePath, compiler.GetErrorMessage()),
-						source
-						});
-					continue;
-				}
-				compilationTime += compiler.GetCompileTime();
-				binaries[stage] = Buffer::Copy(compiler.GetCompiledBinary());
-			}
-			ShaderFactory::CacheShader(m_FilePath, binaries, RenderAPI::Vulkan);
-		}
-
-		m_ShaderCode = binaries;
-		Reflect(binaries);
+		Reflect();
 
 		Ref<VulkanShader> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->CreateShaderModules();
 			instance->CreateDescriptorSetLayouts();
 			});
-		Window::SendDebugMessage({ Severity::Info, fmt::format("Shader {0} loaded", m_FilePath), fmt::format("Shader reload took {0} ms", timer.ElapsedMillis()) });
 	}
 	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
 	{
@@ -195,13 +157,13 @@ namespace HazardRenderer::Vulkan
 		}
 		return m_DynamicOffsets;
 	}
-	void VulkanShader::Reflect(const std::unordered_map<ShaderStage, Buffer>& binaries)
+	void VulkanShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();
 		m_ShaderData.Stages.clear();
-
 		VulkanShaderCompiler compiler;
-		m_ShaderData = compiler.GetShaderResources(binaries);
+
+		m_ShaderData = compiler.GetShaderResources(m_ShaderCode);
 
 		uint32_t descriptorSets = 0;
 		uint32_t size = 0;
@@ -232,8 +194,6 @@ namespace HazardRenderer::Vulkan
 
 		for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			m_DescriptorSets[i].resize(descriptorSets + 1);
-
-		//VulkanShaderCompiler::PrintReflectionData(m_ShaderData);
 	}
 	void VulkanShader::CreateShaderModules()
 	{
@@ -274,9 +234,7 @@ namespace HazardRenderer::Vulkan
 			for (uint32_t set = 0; set < m_DescriptorSets[frame].size(); set++)
 			{
 				auto& descriptorSet = m_DescriptorSets[frame][set];
-				descriptorSet.SetDebugName(File::GetName(m_FilePath) + " set " + std::to_string(set));
 				descriptorSet.ReserveBindings(m_ShaderData.UniformsDescriptions[set].size() + m_ShaderData.ImageSamplers[set].size());
-
 
 				for (auto& [binding, buffer] : m_ShaderData.UniformsDescriptions[set])
 				{
@@ -337,8 +295,6 @@ namespace HazardRenderer::Vulkan
 
 				descriptorSet.Invalidate();
 				
-				VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_DESCRIPTOR_SET, fmt::format(" {0} set {1}", m_FilePath, set), descriptorSet.GetVulkanDescriptorSet());
-
 				for (auto& [binding, buffer] : m_UniformBuffers[set])
 				{
 					auto& vulkanBuffer = buffer.As<VulkanUniformBuffer>();

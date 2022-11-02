@@ -3,6 +3,8 @@
 #include "HazardRendererCore.h"
 #include "Mesh/Mesh.h"
 
+#include "Hazard/Assets/AssetManager.h"
+
 namespace Hazard
 {
 	struct CameraData
@@ -60,8 +62,8 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
 
-		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
-		Ref<HazardRenderer::Pipeline> PbrPipeline;
+		Ref<AssetPointer> SkyboxPipeline;
+		Ref<AssetPointer> PbrPipeline;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
@@ -105,33 +107,15 @@ namespace Hazard
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
 
-				BufferLayout layout = {};
+				AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/pbr.glsl");
+				PbrPipeline = AssetManager::GetAsset<AssetPointer>(handle);
+				PbrPipeline->Value.As<Pipeline>()->SetLayout(Vertex3D::Layout());
+				PbrPipeline->Value.As<Pipeline>()->Invalidate();
 
-				PipelineSpecification skyboxSpec = {};
-				skyboxSpec.DebugName = "SkyboxPipeline";
-				skyboxSpec.ShaderPath = "res/Shaders/Skybox.glsl";
-				skyboxSpec.pBufferLayout = &layout;
-				skyboxSpec.pTargetRenderPass = renderPass;
-				skyboxSpec.DepthTest = true;
-				skyboxSpec.DepthWrite = false;
-				skyboxSpec.CullMode = CullMode::None;
-				skyboxSpec.DepthOperator = DepthOp::LessOrEqual;
-				skyboxSpec.Usage = PipelineUsage::GraphicsBit;
-
-				SkyboxPipeline = Pipeline::Create(&skyboxSpec);
-
-				BufferLayout pbrLayout = Vertex3D::Layout();
-
-				PipelineSpecification pbrPipeline = {};
-				pbrPipeline.DebugName = "PBRShader";
-				pbrPipeline.Usage = PipelineUsage::GraphicsBit;
-				pbrPipeline.DrawType = DrawType::Fill;
-				pbrPipeline.ShaderPath = "res/Shaders/pbr.glsl";
-				pbrPipeline.pTargetRenderPass = renderPass;
-				pbrPipeline.pBufferLayout = &pbrLayout;
-				pbrPipeline.DepthTest = true;
-
-				PbrPipeline = Pipeline::Create(&pbrPipeline);
+				handle = AssetManager::GetHandleFromFile("res/Shaders/skybox.glsl");
+				SkyboxPipeline = AssetManager::GetAsset<AssetPointer>(handle);
+				SkyboxPipeline->Value.As<Pipeline>()->SetLayout(Vertex3D::Layout());
+				SkyboxPipeline->Value.As<Pipeline>()->Invalidate();
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

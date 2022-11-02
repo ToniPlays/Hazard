@@ -11,15 +11,16 @@ struct ProjectGeneralData
 	std::filesystem::path StartupWorld;
 };
 
-class HazardProject {
+class HazardProject 
+{
 public:
 
 	HazardProject() = default;
 	HazardProject(const std::filesystem::path& path);
-
 	bool IsValid() { return !m_Data.ProjectDirectory.empty(); }
-	
+
 	void ProcessAssets();
+
 	Hazard::AssetMetadata ProcessAsset(const std::filesystem::path& path);
 
 	const ProjectGeneralData& GetProjectData() { return m_Data; }

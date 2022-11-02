@@ -1,6 +1,10 @@
 #pragma once
 
-#include "HazardRendererCore.h"
+#include "Backend/Core/Pipeline/Pipeline.h"
+#include "Image.h"
+#include "Buffer/Buffer.h"
+
+#include "glm/glm.hpp"
 
 namespace HazardRenderer 
 {

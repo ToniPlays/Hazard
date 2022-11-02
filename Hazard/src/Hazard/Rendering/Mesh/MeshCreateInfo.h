@@ -11,7 +11,7 @@
 
 namespace Hazard {
 
-	enum MeshLoaderFlags : uint32_t 
+	enum MeshLoaderFlags : size_t 
 	{
 		MeshLoaderFlags_CalculateTangentSpace = BIT(0),
 		MeshLoaderFlags_JoinIdenticalVertices = BIT(1),

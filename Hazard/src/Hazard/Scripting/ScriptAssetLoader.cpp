@@ -6,11 +6,11 @@
 
 namespace Hazard 
 {
-	bool ScriptAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType ScriptAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		asset = Ref<HScript>::Create(File::GetNameNoExt(metadata.Path));
-		return asset;
+		return LoadType::Source;
 	}
 	bool ScriptAssetLoader::Save(Ref<Asset>& asset)
 	{

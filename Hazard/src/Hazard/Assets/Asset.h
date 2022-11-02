@@ -42,7 +42,8 @@ namespace Hazard
 		friend class ImageAssetLoader;
 	public:
 
-		virtual ~Asset() = default;
+		virtual ~Asset();
+
 		const AssetType GetType() const { return m_Type; }
 		AssetHandle GetHandle() { return m_Handle; }
 		AssetFlags GetFlags() { return m_Flags; }
@@ -52,6 +53,7 @@ namespace Hazard
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
 		AssetType m_Type = AssetType::Undefined;
 		AssetFlags m_Flags = AssetFlags::None;
+
 	private:
 		void SetHandle(UID handle) { m_Handle = handle; };
 		void SetFlags(AssetFlags flags) { m_Flags = flags; }

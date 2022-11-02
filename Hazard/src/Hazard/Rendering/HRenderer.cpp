@@ -8,7 +8,7 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	void HRenderer::SubmitWorldRenderer(WorldRenderer* renderer)
+	void HRenderer::SubmitWorldRenderer(const Ref<WorldRenderer>& renderer)
 	{
 		HZR_PROFILE_FUNCTION();
 		RendererDrawList list = {};

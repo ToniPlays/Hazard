@@ -23,7 +23,10 @@ namespace HazardRenderer::Vulkan
 		Ref<Shader> GetShader() { return m_Shader; }
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
-		bool IsValid() const { return true; }
+		bool IsCompatibleWith(Ref<Shader> shader) const;
+		bool IsValid() const { return m_Pipeline != VK_NULL_HANDLE; }
+
+		void SetLayout(const BufferLayout& layout) { m_Layout = layout; };
 
 		void Invalidate() override;
 		void Invalidate_RT();

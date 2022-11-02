@@ -32,7 +32,8 @@ project "Hazard-Utility"
 	filter "system:windows"
 		systemversion "latest"
 		defines {
-			"HZR_PLATFORM_WINDOWS"
+			"HZR_PLATFORM_WINDOWS",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 	filter "system:macosx"
 		defines {

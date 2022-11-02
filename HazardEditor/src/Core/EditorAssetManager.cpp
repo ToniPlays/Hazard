@@ -7,38 +7,42 @@
 
 using namespace Hazard;
 
+
+void EditorAssetManager::ImportAssets()
+{
+	std::function<void(const std::filesystem::path)> importFunc = [&](const std::filesystem::path& root)
+	{
+		AssetManager::ImportAsset(root);
+		if (File::IsDirectory(root))
+		{
+			for (auto& file : File::GetAllInDirectory(root))
+				importFunc(file);
+		}
+	};
+
+	for (auto& file : File::GetAllInDirectory("res/Icons"))
+		importFunc(file);
+	for (auto& file : File::GetAllInDirectory("res/Mesh"))
+		importFunc(file);
+	for (auto& file : File::GetAllInDirectory("res/Shaders"))
+		importFunc(file);
+	for (auto& file : File::GetAllInDirectory("res/Textures"))
+		importFunc(file);
+}
 void EditorAssetManager::Init()
 {
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/textureBG.png");
-		m_Icons["Default"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/folder.png");
-		m_Icons["Folder"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/world.png");
-		m_Icons["World"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/csharp.png");
-		m_Icons["Script"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/camera.png");
-		m_Icons["Camera"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
-	{
-		AssetHandle handle = AssetManager::GetHandleFromFile("res/Icons/directionalLight.png");
-		m_Icons["DirectionalLight"] = AssetManager::GetAsset<Texture2DAsset>(handle);
-	}
+	m_Icons["Default"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/textureBG.png");
+	m_Icons["Folder"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/folder.png");
+	m_Icons["World"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/world.png");
+	m_Icons["Script"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/csharp.png");
+	m_Icons["Camera"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/camera.png");
+	m_Icons["DirectionalLight"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/directionalLight.png");
 }
 
 AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path& path)
 {
 	AssetMetadata metadata = AssetMetadata();
-	if (!File::Exists(path)) 
+	if (!File::Exists(path))
 		return metadata;
 
 	YAML::Node root = YAML::LoadFile(path.string());
@@ -102,8 +106,6 @@ bool EditorAssetManager::CreateWorld(const std::filesystem::path& path)
 	metadata.Type = AssetType::World;
 
 	return CreateMetadataFile(metadata, actualPath);
-
-	return false;
 }
 
 bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
@@ -152,8 +154,11 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	std::string extension = File::GetFileExtension(oldAssetPath);
 	std::filesystem::path newAssetPath;
 
-	if (metadata.Type == AssetType::Folder) return false;
-	if (metadata.Type != AssetType::Folder) 
+	if (metadata.Type == AssetType::Folder)
+	{
+		return false;
+	}
+	else
 	{
 		newAssetPath = File::GetDirectoryOf(oldAssetPath) / (newName + "." + extension);
 		File::WriteFile(newAssetPath.string());
@@ -183,7 +188,7 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 
 Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 {
-	if (m_Icons.find(name) != m_Icons.end()) 
+	if (m_Icons.find(name) != m_Icons.end())
 		return m_Icons[name];
 	return m_Icons["Default"];
 }

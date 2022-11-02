@@ -10,6 +10,8 @@ namespace Hazard
 	{
 	public:
 		Texture2DAsset(Ref<AssetPointer> sourceImage) : m_SourceImage2D(sourceImage) {};
+		~Texture2DAsset() = default;
+
 		Ref<AssetPointer> GetSourceImageAsset() { return m_SourceImage2D; }
 
 	private:

@@ -4,6 +4,7 @@
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "ImageAssetLoader.h"
+#include "PipelineAssetLoader.h"
 
 namespace Hazard 
 {
@@ -14,6 +15,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		//Create window and initialize
 		HZR_CORE_ASSERT(Window::IsRenderAPISupported(createInfo->Renderer), "Selected RenderAPI not supported");
+
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hazard";
 		appInfo.BuildVersion = HZR_BUILD_VERSION;
@@ -37,6 +39,7 @@ namespace Hazard
 		m_Window->Show();
 
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
+		AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 
 	}
 	void RenderContextManager::PreRender()

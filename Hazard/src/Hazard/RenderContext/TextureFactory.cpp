@@ -133,9 +133,6 @@ namespace Hazard
 		if (TextureFactory::CacheStatus(handle) == CacheStatus::Exists)
 			return TextureFactory::LoadTextureFromCache(handle);
 
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path.string(), true);
-		TextureFactory::SaveTextureToCache(handle, header);
-
-		return header;
+		return TextureFactory::LoadTextureFromSourceFile(path.string(), true);
 	}
 }

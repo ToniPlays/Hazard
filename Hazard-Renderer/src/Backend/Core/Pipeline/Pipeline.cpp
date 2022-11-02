@@ -5,7 +5,6 @@
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
 #include "Backend/Metal/MetalCore.h"
-#include "Backend/Core/RenderLibrary.h"
 
 namespace HazardRenderer
 {
@@ -13,29 +12,21 @@ namespace HazardRenderer
 	{
 		HZR_ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
 
-		if (specs->IsShared && RenderLibrary::HasPipeline(specs->DebugName)) 
-			return RenderLibrary::GetPipeline(specs->DebugName);
-
-		Ref<Pipeline> pipeline = nullptr;
-
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: pipeline = Ref<OpenGL::OpenGLPipeline>::Create(specs); break;
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLPipeline>::Create(specs); break;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: pipeline = Ref<Vulkan::VulkanPipeline>::Create(specs); break;
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanPipeline>::Create(specs); break;
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: pipeline = Ref<Metal::MetalPipeline>::Create(specs); break;
+            case RenderAPI::Metal: return Ref<Metal::MetalPipeline>::Create(specs); break;
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RenderAPI");
 		}
 
-		if (specs->IsShared)
-			RenderLibrary::AddPipeline(pipeline);
-
-		return pipeline;
+		return nullptr;
 	}
 }

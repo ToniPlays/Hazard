@@ -89,6 +89,8 @@ namespace HazardRenderer::Vulkan
                 input.Type = Utils::ShaderDataTypeFromSPV(spvType);
                 input.Size = ShaderDataTypeSize(input.Type);
                 input.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
+
+                data.Stride += input.Size;
             }
 
             for (auto& resource : resources.stage_outputs)

@@ -239,10 +239,10 @@ namespace Hazard::ImUI
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, flags & BIT(0));
+		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, (flags & BIT(0)) != 0);
 		ImGui::SameLine();
 		//Y axis
-		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1)) << 1;
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, (flags & BIT(1)) != 0) << 1;
 		return modified;
 	}
 	static uint32_t InputFloat3(glm::vec3& value, float clearValue = 0.0f, uint32_t flags = 0)
@@ -260,15 +260,15 @@ namespace Hazard::ImUI
 		Style& style = StyleManager::GetCurrent();
 
 		//X axis
-		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, flags & BIT(0));
+		modified |= InputFloatVec("X", &value.x, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisX, (flags & BIT(0)) != 0);
 		ImGui::SameLine();
 
 		//Y axis
-		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, flags & BIT(1)) << 1;
+		modified |= InputFloatVec("Y", &value.y, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisY, (flags & BIT(1)) != 0) << 1;
 		ImGui::SameLine();
 
 		//Z axis
-		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, flags & BIT(2)) << 2;
+		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, (flags & BIT(2))) != 0 << 2;
 
 		return modified;
 	}

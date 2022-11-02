@@ -18,9 +18,9 @@ namespace HazardRenderer
     struct ShaderStageData;
     enum class ShaderStage : uint32_t;
 
-    struct ShaderCacheData
+    struct ShaderCode
     {
-        ShaderStage ShaderStage;
+        ShaderStage Stage;
         uint32_t Length;
     };
 
@@ -48,19 +48,16 @@ namespace HazardRenderer
 	class ShaderFactory
 	{
 	public:
-        static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDir = path; };
         static CacheStatus HasCachedShader(const std::filesystem::path& path, RenderAPI api);
         static bool CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api);
         static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
         static std::unordered_map<ShaderStage, Buffer> GetShaderBinaries(const std::filesystem::path& path, RenderAPI api);
+        static std::filesystem::path GetCachedFilePath(const std::filesystem::path& path, RenderAPI api);
+        static size_t GetBinaryLength(const std::unordered_map<ShaderStage, Buffer>& binaries);
 
     private:
-        static std::filesystem::path GetCachedFilePath(const std::filesystem::path& path, RenderAPI api);
         static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
         static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
-
-	private:
-		static inline std::filesystem::path s_CacheDir = "Library/Shaders";
 	};
 }
 #endif

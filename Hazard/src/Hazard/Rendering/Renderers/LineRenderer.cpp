@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "LineRenderer.h"
 #include "../HRenderer.h"
+#include "Hazard/Assets/AssetManager.h"
 
 
 namespace Hazard
@@ -47,7 +48,7 @@ namespace Hazard
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch->GetCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline->Value.As<Pipeline>(), m_LineBatch->GetCount());
 	}
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
 	{
@@ -93,19 +94,9 @@ namespace Hazard
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 		}
 
-		PipelineSpecification pipelineSpecs = {};
-		pipelineSpecs.DebugName = "LineBatchPipeline";
-		pipelineSpecs.Usage = PipelineUsage::GraphicsBit;
-		pipelineSpecs.DrawType = DrawType::Line;
-		pipelineSpecs.LineWidth = 3.0f;
-		pipelineSpecs.ShaderPath = "res/Shaders/Debug/lineShader.glsl";
-		pipelineSpecs.pTargetRenderPass = renderPass;
-		pipelineSpecs.pBufferLayout = &layout;
-		pipelineSpecs.DepthTest = true;
-		pipelineSpecs.DepthWrite = true;
-		pipelineSpecs.DepthOperator = DepthOp::Less;
+		AssetHandle handle = AssetManager::GetHandleFromFile("res/Shaders/Debug/lineShader.glsl");
+		m_Pipeline = AssetManager::GetAsset<AssetPointer>(handle);
 
-		m_Pipeline = Pipeline::Create(&pipelineSpecs);
 		m_RenderPass = renderPass;
 	}
 }

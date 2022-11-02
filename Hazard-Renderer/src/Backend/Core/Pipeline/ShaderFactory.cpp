@@ -50,16 +50,24 @@ namespace HazardRenderer
 		return File::Exists(cachePath) ? CacheStatus::Exists : CacheStatus::None;
 	}
 
-	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)
+	size_t ShaderFactory::GetBinaryLength(const std::unordered_map<ShaderStage, Buffer>& binaries)
 	{
-		HZR_PROFILE_FUNCTION();
-		//Determine cache size
 		size_t size = 0;
 		for (auto& [stage, shaderCode] : binaries)
 		{
-			size += sizeof(ShaderCacheData);
+			size += sizeof(ShaderCode);
 			size += shaderCode.Size;
 		}
+		return size;
+	}
+
+	bool ShaderFactory::CacheShader(const std::filesystem::path& path, const std::unordered_map<ShaderStage, Buffer> binaries, RenderAPI api)
+	{
+		return false;
+		/*
+		HZR_PROFILE_FUNCTION();
+		//Determine cache size
+		s
 
 		CachedBuffer buffer(size);
 		for (auto& [stage, shaderCode] : binaries)
@@ -78,6 +86,7 @@ namespace HazardRenderer
 			File::CreateDir(cachePath.parent_path());
 
 		return File::WriteBinaryFile(cachePath, buffer.GetData(), buffer.GetSize());
+		*/
 	}
 
 	std::unordered_map<ShaderStage, std::string> ShaderFactory::GetShaderSources(const std::filesystem::path& path)
@@ -107,13 +116,14 @@ namespace HazardRenderer
 	std::unordered_map<ShaderStage, Buffer> ShaderFactory::GetShaderBinaries(const std::filesystem::path& path, RenderAPI api)
 	{
 		HZR_PROFILE_FUNCTION();
+		
 		CachedBuffer buffer = File::ReadBinaryFile(GetCachedFilePath(path, api));
 		std::unordered_map<ShaderStage, Buffer> result;
 
 		while (buffer.Available())
 		{
-			ShaderCacheData data = buffer.Read<ShaderCacheData>();
-			result[data.ShaderStage] = Buffer::Copy(buffer.Read<Buffer>(data.Length));
+			ShaderCode data = buffer.Read<ShaderCode>();
+			result[data.Stage] = Buffer::Copy(buffer.Read<Buffer>(data.Length));
 		}
 		return result;
 	}
@@ -153,7 +163,7 @@ namespace HazardRenderer
 		HZR_PROFILE_FUNCTION();
 		std::string name = File::GetNameNoExt(path);
 		std::string extension = GetRendererCache(api);
-		return s_CacheDir / (name + "." + extension + ".hzrche");
+		return std::filesystem::path("Library/Shaders/") / (name + "." + extension + ".hzrche");
 
 	}
 }

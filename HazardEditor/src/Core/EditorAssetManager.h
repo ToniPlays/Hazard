@@ -33,6 +33,7 @@ public:
 	EditorAssetManager() = default;
 	~EditorAssetManager() = default;
 
+	static void ImportAssets();
 	static void Init();
 
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);

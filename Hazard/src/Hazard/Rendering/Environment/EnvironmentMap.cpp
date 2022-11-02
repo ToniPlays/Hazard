@@ -15,6 +15,8 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
+		return;
+
 		AssetHandle brdfHandle = AssetManager::GetHandleFromFile("res/Textures/BRDF_LUT.tga");
 		TextureHeader header = TextureFactory::GetFromCacheOrReload(brdfHandle, "res/Textures/BRDF_LUT.tga");
 
@@ -195,6 +197,8 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
+		if (!sourceImage) return map;
+
 		map->GenerateRadiance(sourceImage);
 		map->GenerateIrradiance(map->RadianceMap);
 		//map->GeneratePreFilter(map->IrradianceMap);

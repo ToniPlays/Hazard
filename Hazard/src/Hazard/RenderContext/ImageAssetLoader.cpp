@@ -7,7 +7,7 @@
 
 namespace Hazard
 {
-	bool ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
@@ -32,7 +32,7 @@ namespace Hazard
 
 		header.ImageData.Release();
 
-		return asset;
+		return LoadType::Source;
 	}
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)
 	{

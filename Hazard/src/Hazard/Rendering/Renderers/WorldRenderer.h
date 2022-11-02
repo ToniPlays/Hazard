@@ -45,7 +45,7 @@ namespace Hazard
 	public:
 		WorldRenderer() = default;
 		WorldRenderer(WorldRendererSpec* spec);
-		~WorldRenderer() = default;
+		~WorldRenderer();
 
 		void SetTargetWorld(Ref<World> world) 
 		{

@@ -17,6 +17,8 @@ namespace Hazard::Utils
 		if (type == "Mesh")					return AssetType::Mesh;
 		if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
 		if (type == "Script")				return AssetType::Script;
+		if (type == "Pipeline")				return AssetType::Pipeline;
+		if (type == "Shader")				return AssetType::Shader;
 
 		return AssetType::Undefined;
 	}
@@ -24,7 +26,7 @@ namespace Hazard::Utils
 	{
 		switch (type)
 		{
-		case AssetType::Undefined:			return "None";
+		case AssetType::Undefined:			return "Undefined";
 		case AssetType::Folder:				return "Folder";
 		case AssetType::AudioClip:			return "AudioClip";
 		case AssetType::World:				return "World";
@@ -33,11 +35,14 @@ namespace Hazard::Utils
 		case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 		case AssetType::EnvironmentMap:		return "EnvironmentMap";
 		case AssetType::Script:				return "Script";
+		case AssetType::Pipeline:			return "Pipeline";
+		case AssetType::Shader:				return "Shader";
 		default:							return "Unknown";
 		}
 		return "";
 	}
-	AssetType AssetTypeFromExtension(const std::string& ext) {
+	AssetType AssetTypeFromExtension(const std::string& ext) 
+	{
 		if (ext == "")			return AssetType::Folder;
 		if (ext == "jpeg")		return AssetType::Image;
 		if (ext == "jpg")		return AssetType::Image;
@@ -52,6 +57,7 @@ namespace Hazard::Utils
 		if (ext == "dae")		return AssetType::Mesh;
 		if (ext == "gltf")		return AssetType::Mesh;
 		if (ext == "cs")		return AssetType::Script;
+		if (ext == "glsl")		return AssetType::Pipeline;
 
 		return AssetType::Undefined;
 	}

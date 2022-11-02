@@ -36,6 +36,7 @@ namespace UI
 	void Viewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
+
 		WorldCameraData cameraData = {};
 		cameraData.Projection = m_EditorCamera.GetProjection();
 		cameraData.View = m_EditorCamera.GetView();
@@ -55,21 +56,26 @@ namespace UI
 			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
 			m_EditorGrid.Render(m_EditorCamera);
 
+			if (!world) return;
+
 			if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
 			{
 				auto& cameraView = world->GetEntitiesWith<CameraComponent>();
-				auto& icon = EditorAssetManager::GetIcon("Camera");
+				if (cameraView.size() > 0)
+				{
+					auto& icon = EditorAssetManager::GetIcon("Camera");
 
-				for (auto entity : cameraView) {
-					Entity e = { entity, world.Raw() };
-					auto& tc = e.GetComponent<TransformComponent>();
-					auto& cc = e.GetComponent<CameraComponent>();
+					for (auto entity : cameraView) {
+						Entity e = { entity, world.Raw() };
+						auto& tc = e.GetComponent<TransformComponent>();
+						auto& cc = e.GetComponent<CameraComponent>();
 
-					if (cc.GetProjectionType() == Projection::Perspective)
-						HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-					else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+						if (cc.GetProjectionType() == Projection::Perspective)
+							HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+						else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 
-					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
+						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
+					}
 				}
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
@@ -85,19 +91,21 @@ namespace UI
 					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
 				}
 			}
-
 			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
 			{
 				auto& cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
-				auto& icon = EditorAssetManager::GetIcon("DirectionalLight");
-
-				for (auto& entity : cameraView) 
+				if (cameraView.size() > 0)
 				{
-					Entity e = { entity, world.Raw() };
-					auto& tc = e.GetComponent<TransformComponent>();
-					auto& cc = e.GetComponent<DirectionalLightComponent>();
+					auto& icon = EditorAssetManager::GetIcon("DirectionalLight");
 
-					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
+					for (auto& entity : cameraView)
+					{
+						Entity e = { entity, world.Raw() };
+						auto& tc = e.GetComponent<TransformComponent>();
+						auto& cc = e.GetComponent<DirectionalLightComponent>();
+
+						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
+					}
 				}
 			}
 			});
@@ -188,7 +196,7 @@ namespace UI
 			MedianPoint point = {};
 			point.Reset();
 
-			for (auto & entity : m_SelectionContext)
+			for (auto& entity : m_SelectionContext)
 			{
 				auto& c = entity.GetComponent<TransformComponent>();
 				point.Encapsulate(c.GetTranslation());
@@ -215,7 +223,7 @@ namespace UI
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
-		if(m_Gizmos.OnEvent(e)) return true;
+		if (m_Gizmos.OnEvent(e)) return true;
 
 		if (m_Hovered)
 			m_EditorCamera.OnEvent(e);

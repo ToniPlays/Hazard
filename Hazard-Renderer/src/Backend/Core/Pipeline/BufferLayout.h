@@ -81,6 +81,15 @@ namespace HazardRenderer {
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
 		std::vector<BufferElement>::const_iterator begin() const { return m_Elements.begin(); }
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
+
+		static BufferLayout Copy(const BufferLayout& other)
+		{
+			BufferLayout layout = {};
+			layout.m_Elements = other.m_Elements;
+			layout.m_Stride = other.m_Stride;
+			return layout;
+		}
+
 	private:
 		void CalculateOffsetsAndStride()
 		{

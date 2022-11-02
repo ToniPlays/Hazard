@@ -3,9 +3,9 @@
 #include "MeshAssetLoader.h"
 #include "MeshFactory.h"
 
-namespace Hazard 
+namespace Hazard
 {
-	bool MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		MeshFactory factory = {};
@@ -20,9 +20,19 @@ namespace Hazard
 		flags |= MeshLoaderFlags_ValidateDataStructure;
 
 		factory.SetOptimization((MeshLoaderFlags)flags);
-		MeshData meshData = factory.LoadMeshFromCacheOrReload(metadata.Handle, metadata.Path);
+		CacheStatus status = factory.CacheStatus(metadata.Handle);
+		if (status == CacheStatus::Exists)
+		{
+			MeshData meshData = factory.LoadMeshFromCache(metadata.Handle);
+			asset = Ref<Mesh>::Create(meshData, meshData.Vertices, meshData.Indices);
+			return LoadType::Cache;
+		}
+		if (!File::Exists(metadata.Path))
+			return LoadType::Failed;
+
+		MeshData meshData = factory.LoadMeshFromSource(metadata.Path);
 		asset = Ref<Mesh>::Create(meshData, meshData.Vertices, meshData.Indices);
-		return asset;
+		return LoadType::Source;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)
 	{

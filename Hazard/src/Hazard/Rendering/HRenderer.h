@@ -16,7 +16,7 @@ namespace Hazard
 		friend class QuadRenderer;
 		friend class LineRenderer;
 	public:
-		static void SubmitWorldRenderer(WorldRenderer* renderer);
+		static void SubmitWorldRenderer(const Ref<WorldRenderer>& renderer);
 
 		//Mesh 2D
 		static void SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer);
