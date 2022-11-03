@@ -137,7 +137,8 @@ namespace UI
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
 			Application::Get().SubmitMainThread([handle = assetHandle]() {
 				AssetMetadata& meta = AssetManager::GetMetadata(handle);
-				Application::GetModule<WorldHandler>().LoadWorld(meta.Path);
+				Editor::EditorWorldManager::LoadWorld(meta.Path);
+				
 				});
 			});
 

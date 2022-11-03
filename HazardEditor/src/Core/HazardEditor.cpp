@@ -1,9 +1,8 @@
 
-#include "hzrpch.h"
 #include "HazardEditor.h"
 #include "Hazard/Core/EntryPoint.h"
 
-#include "HazardRenderer.h"
+#include "HazardRendererCore.h"
 #include "Project/ProjectManager.h"
 #include "GUIManager.h"
 #include "GUI/Debug/Console.h"
@@ -14,6 +13,7 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
 #include "Backend/Core/ShaderCompiler.h"
+#include "Hazard/RenderContext/TextureFactory.h"
 
 #include "EditorAssetManager.h"
 
@@ -30,8 +30,9 @@ static std::string GetBuildType()
 	return "Distribution";
 #elif HZR_RELEASE
 	return "Release";
-#endif
+#else
 	return "Unknown";
+#endif
 }
 
 
@@ -97,6 +98,7 @@ void HazardEditorApplication::PreInit()
 
 	EditorAssetManager::ImportAssets();
 	ShaderCompiler::SetCacheLocation("Library/Shaders");
+	TextureFactory::SetCacheLocation("Library/Textures");
 
 	CreateApplicationStack(&createInfo);
 	EditorAssetManager::Init();

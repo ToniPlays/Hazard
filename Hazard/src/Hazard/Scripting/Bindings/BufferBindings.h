@@ -47,7 +47,6 @@ namespace Hazard
 		VertexBufferCreateInfo vboInfo = {};
 		vboInfo.DebugName = "C#_Created";
 		vboInfo.Layout = &layout;
-		vboInfo.IsShared = false;
 		vboInfo.Size = info->Size;
 		vboInfo.Data = data;
 		Ref<VertexBuffer> buffer = VertexBuffer::Create(&vboInfo);
@@ -76,7 +75,8 @@ namespace Hazard
 	static uint64_t IndexBuffer_Create_Native(ManagedIndexBufferInfo* info)
 	{
 		uint32_t* data = nullptr;
-		if (info->Data) {
+		if (info->Data) 
+		{
 			data = hnew uint32_t[info->Size * sizeof(uint32_t)];
 			uint32_t* dataPtr = (uint32_t*)MonoArrayUtils::GetArrayValuePtr(info->Data);
 			memcpy(data, dataPtr, info->Size * sizeof(uint32_t));
@@ -84,7 +84,6 @@ namespace Hazard
 
 		IndexBufferCreateInfo iboInfo = {};
 		iboInfo.DebugName = "C#_Created";
-		iboInfo.IsShared = false;
 		iboInfo.Size = info->Size * sizeof(uint32_t);
 		iboInfo.Data = data;
 		Ref<IndexBuffer> buffer = IndexBuffer::Create(&iboInfo);

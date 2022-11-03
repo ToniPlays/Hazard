@@ -30,7 +30,7 @@ namespace UI
 	void GameViewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+		Ref<World> world = nullptr; // Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		if (!world) return;
 
 		auto& [cc, tc] = world->GetWorldCamera();

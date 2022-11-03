@@ -6,6 +6,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/ShaderLibrary.h"
 
+#include "Hazard/RenderContext/Texture2D.h"
+
 namespace Hazard
 {
 	struct CameraData
@@ -66,6 +68,8 @@ namespace Hazard
 		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
 		Ref<HazardRenderer::Pipeline> PbrPipeline;
 
+		Ref<Texture2DAsset> BRDFLut;
+
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
 
@@ -112,6 +116,8 @@ namespace Hazard
 				PbrPipeline->SetRenderPass(renderPass);
 				SkyboxPipeline = ShaderLibrary::GetPipeline("skybox");
 				SkyboxPipeline->SetRenderPass(renderPass);
+
+				BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

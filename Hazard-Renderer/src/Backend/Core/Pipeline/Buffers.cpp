@@ -58,7 +58,7 @@ namespace HazardRenderer {
 	}
 	Ref<UniformBuffer> UniformBuffer::Create(UniformBufferCreateInfo* createInfo)
 	{
-		if (createInfo->IsShared && RenderLibrary::HasUniformBuffer(createInfo->Name))
+		if (RenderLibrary::HasUniformBuffer(createInfo->Name))
 		{
 			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
 			return buffer;

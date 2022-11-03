@@ -78,7 +78,7 @@ namespace Hazard
 		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices) 
 		{
 			Flush();
-			BeginScene();
+			BeginBatch();
 		}
 
 		float textureIndex = 0.0f;

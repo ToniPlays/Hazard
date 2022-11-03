@@ -219,7 +219,6 @@ namespace HazardRenderer::OpenGL
 				bufferInfo.Set = set;
 				bufferInfo.Binding = binding;
 				bufferInfo.Size = buffer.Size;
-				bufferInfo.IsShared = true;
 				bufferInfo.Usage = BufferUsage::DynamicDraw;
 
 				descriptorSet.GetWriteDescriptor(binding).BoundValue[0] = UniformBuffer::Create(&bufferInfo);

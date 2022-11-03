@@ -69,7 +69,6 @@ namespace Hazard
 			Ref<AssetPointer> pointer = Ref<AssetPointer>::Create();
 			pointer->Value = value;
 			pointer->m_Type = type;
-			pointer->m_Handle = AssetHandle();
 
 			return pointer;
 		}

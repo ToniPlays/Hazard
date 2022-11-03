@@ -371,9 +371,7 @@ namespace HazardRenderer::Vulkan
 
 		float lineWidth = pipeline->GetSpecifications().LineWidth;
 		if (lineWidth > 1.0f)
-		{
 			SetLineSize(lineWidth);
-		}
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindPipeline");

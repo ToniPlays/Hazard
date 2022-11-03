@@ -3,7 +3,6 @@
 #include "UtilityCore.h"
 
 template<typename Type>
-
 class Batch 
 {
 public:

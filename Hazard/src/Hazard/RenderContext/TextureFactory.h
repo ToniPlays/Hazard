@@ -22,20 +22,13 @@ namespace Hazard
 	class TextureFactory 
 	{
 	public:
+		static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDirectory = path; }
 		static CacheStatus CacheStatus(const AssetHandle& handle);
-		static TextureHeader LoadTextureFromCache(const AssetHandle& handle);
-		static TextureHeader LoadTextureFromSourceFile(const std::string& path, bool verticalFlip = false);
-
-		static TextureHeader GetFromCacheOrReload(const AssetHandle& handle, const std::filesystem::path& path);
-
-		static bool SaveTextureToCache(const AssetHandle& handle, const TextureHeader& header);
-		static bool CacheFileChanged(const std::string& path);
-
-		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
-	private:
-
+		static TextureHeader LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip = false);
 		static std::filesystem::path GetCacheFile(const AssetHandle& handle);
+		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
 
+	private:
 		static inline std::filesystem::path s_CacheDirectory = "Library/Image/";
 	};
 }

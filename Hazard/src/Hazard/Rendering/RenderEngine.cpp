@@ -179,7 +179,7 @@ namespace Hazard
 			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
 			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_BRDFLut", 0, resources.WhiteTexture);
+			shader->Set("u_BRDFLut", 0, m_Resources->BRDFLut->GetSourceImageAsset()->Value.As<Image2D>());
 		}
 		//Update buffers
 		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);

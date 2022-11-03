@@ -74,7 +74,8 @@ namespace Hazard
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::None;
-			specs.DepthOperator = DepthOp::GreaterOrEqual;
+			specs.DepthOperator = DepthOp::LessOrEqual;
+			specs.DepthWrite = false;
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 

@@ -10,14 +10,17 @@ namespace Editor
 		WorldRendererSpec spec = {};
 		spec.Geometry = Geometry_All;
 		spec.DebugName = "MainWorld";
-
-		m_WorldRenderer = Ref<WorldRenderer>::Create(&spec);
-
-		Application::GetModule<WorldHandler>().SetWorld(m_WorldRenderer->GetTargetWorld());
+		s_WorldRenderer = Ref<WorldRenderer>::Create(&spec);
 	}
 	void EditorWorldManager::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		m_WorldRenderer->Submit();
+		s_WorldRenderer->Submit();
+	}
+	void EditorWorldManager::LoadWorld(const std::filesystem::path& path)
+	{
+		auto& handler = Application::GetModule<WorldHandler>();
+		handler.LoadWorld(path);
+		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
 	}
 }

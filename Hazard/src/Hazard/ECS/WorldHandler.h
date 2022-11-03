@@ -27,7 +27,7 @@ namespace Hazard
 		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
 		void SetFlags(uint32_t flags) { m_Flags = (WorldFlags)flags; }
 		Ref<World> GetCurrentWorld() { return m_World; }
-		void SetWorld(Ref<World> world) { m_World = std::move(world); }
+		void SetWorld(Ref<World> world) { m_World = world; }
 
 	private:
 		Ref<World> m_World = nullptr;

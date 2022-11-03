@@ -26,11 +26,11 @@ namespace HazardRenderer
 		std::string DebugName;
 		size_t Size = 0;
 		BufferUsage Usage = BufferUsage::StaticDraw;
+
 		//No layout means object cannot be used for rendering meshes, only instancing data
 		BufferLayout* Layout = nullptr;
 
 		void* Data = nullptr;
-		bool IsShared = true;
 	};
 	struct IndexBufferCreateInfo 
 	{
@@ -40,7 +40,6 @@ namespace HazardRenderer
 		size_t Size;
 		BufferUsage Usage;
 		uint32_t* Data = nullptr;
-		bool IsShared = true;
 	};
 	struct UniformBufferCreateInfo 
 	{
@@ -49,7 +48,6 @@ namespace HazardRenderer
 		uint32_t Set;
 		uint32_t Binding;
 		uint32_t Usage;
-		bool IsShared = true;
 	};
 
 	struct BufferCopyRegion

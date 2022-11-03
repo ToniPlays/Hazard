@@ -26,7 +26,6 @@ namespace Hazard
 			CachedBuffer buffer = File::ReadBinaryFile(cachePath);
 			AssetPackElement element = buffer.Read<AssetPackElement>();
 
-
 			while (buffer.Available())
 			{
 				ShaderCode code = buffer.Read<ShaderCode>();

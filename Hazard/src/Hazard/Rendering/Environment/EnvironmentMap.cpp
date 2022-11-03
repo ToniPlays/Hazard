@@ -31,8 +31,8 @@ namespace Hazard
 		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
 		radianceInfo.Usage = ImageUsage::Texture;
 		radianceInfo.Format = ImageFormat::RGBA;
-		radianceInfo.Width = 2048;
-		radianceInfo.Height = 2048;
+		radianceInfo.Width = 4096;
+		radianceInfo.Height = 4096;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		ImageTransitionInfo generalTransition = {};
@@ -47,7 +47,7 @@ namespace Hazard
 		shader->Set("u_EquirectangularTexture", 0, image);
 
 		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { image->GetWidth() / 32, image->GetHeight() / 32, 6};
+		computeInfo.GroupSize = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6};
 		computeInfo.Pipeline = computePipeline;
 		computeInfo.WaitForCompletion = true;
 
