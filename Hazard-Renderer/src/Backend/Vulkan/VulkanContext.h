@@ -8,11 +8,17 @@
 #include "Core/VulkanPhysicalDevice.h"
 #include "Core/VulkanDevice.h"
 #include "Core/VulkanSwapChain.h"
+#include "VkUtils.h"
 
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>
+
+
 #if HZR_DEBUG
-#define VK_CHECK_RESULT(result, x) if(result != VK_SUCCESS) { HZR_ASSERT(false, x); }
+#define VK_CHECK_RESULT(result, x) if(result != VK_SUCCESS) {	\
+	std::cout << VkUtils::ResultToString(result) << std::endl;	\
+	HZR_ASSERT(false, x);										\
+}									
 #else
 #define VK_CHECK_RESULT(result, x) result
 #endif

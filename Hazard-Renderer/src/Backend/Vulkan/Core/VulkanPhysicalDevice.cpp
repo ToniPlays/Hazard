@@ -2,6 +2,7 @@
 #include "VulkanPhysicalDevice.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
+#include "../VkUtils.h"
 
 #include <set>
 

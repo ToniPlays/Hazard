@@ -13,6 +13,12 @@ namespace HazardRenderer::Vulkan
 		VmaAllocation Allocation = VK_NULL_HANDLE;
 		VkDeviceAddress Address;
 	};
+	struct VulkanAccelStruct
+	{
+		VkAccelerationStructureKHR AccelerationStructure = VK_NULL_HANDLE;
+		uint64_t Address = 0;
+
+	};
 
 	class VulkanAccelerationStructure : public AccelerationStructure
 	{
@@ -23,18 +29,24 @@ namespace HazardRenderer::Vulkan
 		void Invalidate_RT();
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
 
+		VulkanAccelStruct GetVulkanAccelerationStructure() { return m_StructureInfo; }
+
 	private:
+		void CreateTopLevel();
+		void CreateBottomLevel();
 		VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer);
 
 	private:
+		std::string m_DebugName;
 		AccelerationStructureLevel m_Level;
 		Ref<VulkanVertexBuffer> m_VertexBuffer;
 		Ref<VulkanIndexBuffer> m_IndexBuffer;
 
+		Ref<VulkanAccelerationStructure> m_BottomLevelAccelStruct;
+
 		AccelerationStructureBufferInfo m_StructureBuffer;
 		AccelerationStructureBufferInfo m_ScratchBuffer;
-
-		VkAccelerationStructureKHR m_AccelerationStructure = VK_NULL_HANDLE;
-		VkAccelerationStructureDeviceAddressInfoKHR m_StructureInfo;
+		
+		VulkanAccelStruct m_StructureInfo;
 	};
 }

@@ -506,9 +506,9 @@ namespace HazardRenderer::Vulkan
 		submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentBufferIndex].CommandBuffer;
 
 		VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
-		VK_CHECK_RESULT(vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]), "Failed to submit");
+		VkResult result = vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]);
+		VK_CHECK_RESULT(result, "Wat");
 
-		VkResult result;
 		{
 			VkPresentInfoKHR presentInfo = {};
 			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;

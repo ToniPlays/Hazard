@@ -12,12 +12,17 @@ namespace HazardRenderer
 		Top,
 		Bottom
 	};
+	class AccelerationStructure;
+
 	struct AccelerationStructureCreateInfo
 	{
+		std::string DebugName;
 		AccelerationStructureLevel Level;
 		Ref<VertexBuffer> VertexBuffer;
 		Ref<IndexBuffer> IndexBuffer;
 		BoundingBox BoundingBox;
+
+		Ref<AccelerationStructure> pAccelerationStructure;
 	};
 
 	class AccelerationStructure : public RefCount

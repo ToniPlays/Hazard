@@ -117,19 +117,21 @@ namespace AccelerationStructureTest
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 
-		AccelerationStructureCreateInfo topAccelInfo = {};
-		topAccelInfo.Level = AccelerationStructureLevel::Top;
 
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
+		bottomAccelInfo.DebugName = "BottomLevelAccelerationStructure";
 		bottomAccelInfo.Level = AccelerationStructureLevel::Bottom;
 		bottomAccelInfo.VertexBuffer = vertexBuffer;
 		bottomAccelInfo.IndexBuffer = indexBuffer;
 		bottomAccelInfo.BoundingBox = boundingBox;
+		Ref<AccelerationStructure> bottomLevelAccelerationStructure = AccelerationStructure::Create(&bottomAccelInfo);
 
-
+		AccelerationStructureCreateInfo topAccelInfo = {};
+		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
+		topAccelInfo.Level = AccelerationStructureLevel::Top;
+		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
 
 		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
-		Ref<AccelerationStructure> bottomLevelAccelerationStructure = AccelerationStructure::Create(&bottomAccelInfo);
 
 		while (running)
 		{
