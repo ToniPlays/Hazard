@@ -482,6 +482,7 @@ namespace UI
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 				if (ImUI::TextFieldWithHint(path, "Source image"))
 				{
+
 				}
 				ImGui::PopStyleVar();
 

@@ -7,6 +7,8 @@
 #include "MedianPoint.h"
 #include "Core/EditorAssetManager.h"
 
+#include "Hazard/Rendering/RenderEngine.h"
+
 using namespace HazardRenderer;
 
 namespace UI
@@ -32,6 +34,8 @@ namespace UI
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
 		m_EditorGrid.Invalidate(m_RenderPass);
+
+		m_RaytracingSettings = Application::GetModule<RenderContextManager>().GetWindow().GetContext()->GetDevice()->SupportsRaytracing();
 	}
 	void Viewport::Update()
 	{
@@ -138,7 +142,6 @@ namespace UI
 			Application::Get().SubmitMainThread([handle = assetHandle]() {
 				AssetMetadata& meta = AssetManager::GetMetadata(handle);
 				Editor::EditorWorldManager::LoadWorld(meta.Path);
-				
 				});
 			});
 
@@ -318,6 +321,17 @@ namespace UI
 			default: flags = 0; break;
 			}
 			renderEngine.SetFlags(flags);
+		}
+
+		if (m_RaytracingSettings)
+		{
+			RendererSettings settings = renderEngine.GetSettings();
+			if (ImUI::Checkbox("RTX", settings.Raytraced))
+			{
+				Application::Get().SubmitMainThread([settings]() mutable {
+					Application::GetModule<RenderEngine>().GetSettings() = settings;
+					});
+			}
 		}
 
 		ImGui::Columns();

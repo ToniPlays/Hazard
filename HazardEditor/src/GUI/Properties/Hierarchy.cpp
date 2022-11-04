@@ -11,7 +11,6 @@ namespace UI
 
 	Hierarchy::Hierarchy() : Panel("Hierarchy")
 	{
-		m_WorldHandler = &Hazard::Application::GetModule<Hazard::WorldHandler>();
 	}
 	void Hierarchy::Update()
 	{
@@ -21,7 +20,7 @@ namespace UI
 	{
 		HZR_PROFILE_FUNCTION();
 		//Draw hierarchy panel
-		Ref<World> world = m_WorldHandler->GetCurrentWorld();
+		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -91,10 +90,9 @@ namespace UI
 		{
 			std::vector<Entity> selections = m_SelectionContext;
 			Application::Get().SubmitMainThread([&, selections]() {
+				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 				for (auto& entity : selections)
-				{
-					m_WorldHandler->GetCurrentWorld()->DestroyEntity(entity);
-				}
+					world->DestroyEntity(entity);
 				});
 			ClearSelected();
 			return true;
@@ -104,9 +102,10 @@ namespace UI
 			std::vector<Entity> selections = m_SelectionContext;
 			ClearSelected();
 			Application::Get().SubmitMainThread([&, selections]() {
+				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 				for (auto& entity : selections)
 				{
-					Entity e = m_WorldHandler->GetCurrentWorld()->CreateEntity(entity);
+					Entity e = world->CreateEntity(entity);
 					SelectEntity(e);
 				}
 				});
@@ -127,9 +126,9 @@ namespace UI
 			scriptState = !engine.HasModule(sc.ModuleName);
 		}
 
-		if (e.HasComponent<SpriteRendererComponent>()) {
+		if (e.HasComponent<SpriteRendererComponent>())
 			spriteState = !e.GetComponent<SpriteRendererComponent>().Texture;
-		}
+
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		const ImVec4 visibleColor = style.Colors.AxisZ;
 		const ImVec4 textColor = style.Window.Text;

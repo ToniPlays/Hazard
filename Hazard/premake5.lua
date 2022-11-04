@@ -40,7 +40,6 @@ project "Hazard"
 		"%{IncludeDir.Vorbis}",
 		"%{IncludeDir.Minimp3}",
 		"%{IncludeDir.Libogg}",
-		"%{IncludeDir.OpenAL}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.stb_image}",

@@ -9,11 +9,11 @@ namespace Hazard
 	LoadType WorldAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!File::Exists(metadata.Path)) return LoadType::Failed;
+		if (!File::Exists(metadata.Path))
+			return LoadType::Failed;
 
 		WorldDeserializer deserializer;
-		Ref<World> world = deserializer.DeserializeEditor(metadata.Path);
-		asset = world.As<Asset>();
+		asset = deserializer.DeserializeEditor(metadata.Path);
 
 		return LoadType::Source;
 	}

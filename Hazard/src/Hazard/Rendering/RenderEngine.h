@@ -8,6 +8,9 @@
 #include "Renderers/LineRenderer.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 
+#include "Rasterized/RasterizedRenderer.h"
+#include "Raytraced/RaytracedRenderer.h"
+
 #include "Hazard/Core/ApplicationCreateInfo.h"
 
 namespace Hazard 
@@ -15,7 +18,12 @@ namespace Hazard
 	enum RendererFlags : uint32_t
 	{
 		RendererFlags_None = 0,
-		RendererFlags_Overdraw = BIT(0)
+		RendererFlags_Overdraw = BIT(0),
+	};
+
+	struct RendererSettings
+	{
+		bool Raytraced = false;
 	};
 
 	class RenderEngine : public Module 
@@ -35,14 +43,9 @@ namespace Hazard
 		/// </summary>
 		/// <param name="renderer"></param>
 		void PreRender();
-		void ShadowPass(Ref<RenderCommandBuffer> commandBuffer);
-		void PreDepthPass(Ref<RenderCommandBuffer> commandBuffer);
-		void GeometryPass(Ref<RenderCommandBuffer> commandBuffer);
-		void CompositePass(Ref<RenderCommandBuffer> commandBuffer);
-		void LightPass(Ref<RenderCommandBuffer> commandBuffer);
 
 		//Not yet implemented, NOT TODO
-		void LightCullingPass(Ref<RenderCommandBuffer> commandBuffer) {};
+
 		uint32_t GetFlags() { return m_Flags; }
 		void SetFlags(uint32_t flags) { m_Flags = flags; }
 
@@ -52,15 +55,19 @@ namespace Hazard
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
-
-	private:
-		void DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer);
+		
+		RenderResources& GetResources() { return *m_Resources; }
+		RendererSettings& GetSettings() { return m_Settings; }
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;
 		RenderContextManager* m_RenderContextManager;
 
 		RenderResources* m_Resources = nullptr;
+		RasterizedRenderer* m_RasterizedRenderer;
+		RaytracedRenderer* m_RaytracedRenderer;
+
+		BaseRenderer* m_CurrentRenderer;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
@@ -70,6 +77,6 @@ namespace Hazard
 
 		uint32_t m_CurrentDrawContext = 0;
 		uint32_t m_Flags = RendererFlags_None;
-		
+		RendererSettings m_Settings;
 	};
 }

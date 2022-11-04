@@ -277,7 +277,6 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_State == State::Record, "Command buffer not in recording state");
-		auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 		auto& fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
 		uint32_t w = fb->GetWidth();
@@ -297,9 +296,12 @@ namespace HazardRenderer::Vulkan
 
 		if (fb->GetSpecification().SwapChainTarget)
 		{
+			auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			w = swapchain->GetWidth();
 			h = swapchain->GetHeight();
 			beginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+
+			HZR_ASSERT(w <= 8192 && h <= 8192, "Too big image");
 
 			viewport.x = 0.0f;
 			viewport.y = (float)h;
@@ -546,7 +548,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, mips = info]() mutable {
 
-			if (mips.Cubemap) 
+			if (mips.Cubemap)
 				mips.Cubemap.As<VulkanCubemapTexture>()->GenerateMipmaps_RT(instance->m_ActiveCommandBuffer);
 			});
 	}

@@ -25,14 +25,7 @@ namespace Hazard {
 	}
 	HazardLoop::~HazardLoop()
 	{
-		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-
-		m_Application->Close();
-		//m_ModuleHandler->Close();
-
-		HZR_PROFILE_SESSION_END();
-		OPTICK_SHUTDOWN();
-		AssetManager::Shutdown();
+		
 	}
 	void HazardLoop::Start()
 	{
@@ -55,6 +48,17 @@ namespace Hazard {
 			std::cout << error.what() << std::endl;
 		}
 		HZR_PROFILE_SESSION_END();
+	}
+	void HazardLoop::Close()
+	{
+		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
+
+		m_Application->Close();
+		//m_ModuleHandler->Close();
+
+		HZR_PROFILE_SESSION_END();
+		OPTICK_SHUTDOWN();
+		AssetManager::Shutdown();
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{

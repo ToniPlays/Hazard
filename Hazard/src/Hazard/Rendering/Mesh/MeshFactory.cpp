@@ -22,41 +22,12 @@ namespace Hazard
 	{
 		m_MeshFlags = flags;
 	}
-
+	/*
 	MeshData MeshFactory::LoadMeshFromCache(const AssetHandle& handle)
 	{
-		MeshData result;
-		CachedBuffer buffer = File::ReadBinaryFile(GetCacheFile(handle));
-
-		MeshCacheData data = buffer.Read<MeshCacheData>();
-
-		result.Vertices.resize(data.VertexCount);
-		result.Indices.resize(data.IndexCount);
-
-		for (size_t i = 0; i < data.VertexCount; i++)
-		{
-			Vertex3D& v = result.Vertices[i];
-			if (data.Flags & MeshFlags_Positions)
-			{
-				v.Position = buffer.Read<glm::vec3>();
-				result.BoundingBox.Encapsulate(v.Position);
-			}
-			if (data.Flags & MeshFlags_VertexColors)
-				v.Color = buffer.Read<glm::vec4>();
-			if (data.Flags & MeshFlags_Normals)
-				v.Normals = buffer.Read<glm::vec3>();
-			if (data.Flags & MeshFlags_Tangent)
-				v.Tangent = buffer.Read<glm::vec3>();
-			if (data.Flags & MeshFlags_Binormal)
-				v.Binormal = buffer.Read<glm::vec3>();
-			if (data.Flags & MeshFlags_TextCoord)
-				v.TexCoords = buffer.Read<glm::vec2>();
-		}
-		for (size_t i = 0; i < data.IndexCount; i++)
-			result.Indices[i] = buffer.Read<uint32_t>();
-
 		return result;
 	}
+	*/
 	std::filesystem::path MeshFactory::GetCacheFile(const AssetHandle& handle)
 	{
 		return s_CacheDirectory / (std::to_string(handle) + ".hzrche");
@@ -83,7 +54,6 @@ namespace Hazard
 		vertexSize += data.Flags & MeshFlags_TextCoord ? sizeof(glm::vec2) : 0;
 
 		size_t size = 0;
-		size += sizeof(MeshCacheData);
 		size += data.Vertices.size() * vertexSize;
 		size += data.Indices.size() * sizeof(uint32_t);
 
@@ -110,41 +80,6 @@ namespace Hazard
 	CacheStatus MeshFactory::CacheStatus(const AssetHandle& handle)
 	{
 		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;
-	}
-	void MeshFactory::SaveMeshToCache(const AssetHandle& handle, const MeshData& data)
-	{
-		CachedBuffer buffer(GetMeshDataSize(data));
-
-		MeshCacheData cache = {};
-		cache.Flags = data.Flags;
-		cache.VertexCount = data.Vertices.size();
-		cache.IndexCount = data.Indices.size();
-
-		buffer.Write(cache);
-
-		for (auto& v : data.Vertices)
-		{
-			if (cache.Flags & MeshFlags_Positions)
-				buffer.Write(v.Position);
-			if (cache.Flags & MeshFlags_VertexColors)
-				buffer.Write(v.Color);
-			if (cache.Flags & MeshFlags_Normals)
-				buffer.Write(v.Normals);
-			if (cache.Flags & MeshFlags_Tangent)
-				buffer.Write(v.Tangent);
-			if (cache.Flags & MeshFlags_Binormal)
-				buffer.Write(v.Binormal);
-			if (cache.Flags & MeshFlags_TextCoord)
-				buffer.Write(v.TexCoords);
-		}
-		buffer.Write(data.Indices.data(), data.Indices.size() * sizeof(uint32_t));
-
-		auto path = GetCacheFile(handle);
-
-		if (!File::DirectoryExists(path.parent_path()))
-			File::CreateDir(path.parent_path());
-
-		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 	}
 	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)
 	{

@@ -17,7 +17,7 @@ namespace HazardRenderer::OpenGL
 		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
 		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
 		{
-			code.push_back(specs->pShaderCode[i]);
+			code[i] = specs->pShaderCode[i];
 		}
 
 		m_Shader = Shader::Create(code);

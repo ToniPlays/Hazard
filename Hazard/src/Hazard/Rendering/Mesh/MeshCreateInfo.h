@@ -2,11 +2,7 @@
 
 #include "UtilityCore.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include "BoundingBox.h"
-
 #include "Mesh.h"
 
 namespace Hazard {
@@ -57,12 +53,11 @@ namespace Hazard {
 		uint32_t Flags = 0;
 		uint32_t VertexIndex = 0, BaseIndex = 0;
 		BoundingBox BoundingBox;
-		std::vector<SubMesh> SubMeshes;
 
+		std::vector<SubMesh> SubMeshes;
 		std::vector<Vertex3D> Vertices;
 		std::vector<uint32_t> Indices;
 	};
-
 
 	struct MeshCreateInfo
 	{

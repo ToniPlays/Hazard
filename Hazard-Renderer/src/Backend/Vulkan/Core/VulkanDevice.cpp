@@ -11,12 +11,14 @@ namespace HazardRenderer::Vulkan
 		const bool enableAftermath = false;
 		
 		std::vector<const char*> additionalExtensions;
-		HZR_ASSERT(m_PhysicalDevice->IsExtensionSupported(VK_KHR_SWAPCHAIN_EXTENSION_NAME), "Swapchain extension not supported");
+		PhysicalDeviceCapabilities capabilities = m_PhysicalDevice->GetDeviceCababilities();
+
+		HZR_ASSERT(capabilities.Swapchain, "Swapchain extension not supported");
 		additionalExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
-		if (m_PhysicalDevice->IsExtensionSupported(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME))
+		if (capabilities.DiagnosticCheckpoint)
 			additionalExtensions.push_back(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME);
-		if (m_PhysicalDevice->IsExtensionSupported(VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME))
+		if (capabilities.DiagnosticConfig)
 			additionalExtensions.push_back(VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME);
 
 		VkDeviceCreateInfo deviceInfo = {};
@@ -26,7 +28,7 @@ namespace HazardRenderer::Vulkan
 		deviceInfo.pEnabledFeatures = &features;
 
 		VkPhysicalDeviceFeatures2 physicalFeatures2 = {};
-		if (m_PhysicalDevice->IsExtensionSupported(VK_EXT_DEBUG_MARKER_EXTENSION_NAME)) 
+		if (capabilities.DebugMarker) 
 		{
 			additionalExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
 			m_EnableDebugMarkers = true;

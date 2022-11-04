@@ -21,7 +21,6 @@ namespace UI {
 		void DeselectEntity(const Hazard::Entity& entity);
 		void ClearSelected();
 	private:
-		Hazard::WorldHandler* m_WorldHandler;
 		std::vector<Hazard::Entity> m_SelectionContext;
 
 		std::string m_SearchValue;

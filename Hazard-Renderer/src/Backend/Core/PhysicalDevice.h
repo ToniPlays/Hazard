@@ -9,6 +9,24 @@ namespace HazardRenderer
 	{
 		uint32_t MaxTextureUnits;
 		glm::vec2 MaxFrameBufferSize;
+
+		uint32_t MaxRecursionDepth = 0;
+	};
+
+	struct PhysicalDeviceCapabilities
+	{
+		bool Discrete = false;
+		bool Swapchain = false;
+		
+		//Diagnostic
+		bool DiagnosticCheckpoint = false;
+		bool DiagnosticConfig = false;
+		bool DebugMarker = false;
+
+		//RT
+		bool AccelerationStructures = false;
+		bool RayTracingPipeline = false;
+		bool RayQuery = false;
 	};
 
 
@@ -18,5 +36,8 @@ namespace HazardRenderer
 		virtual ~PhysicalDevice() {};
 		virtual std::string GetDeviceName() = 0;
 		virtual const PhysicalDeviceLimits& GetDeviceLimits() const = 0;
+		virtual const PhysicalDeviceCapabilities& GetDeviceCababilities() const = 0;
+
+		virtual bool SupportsRaytracing() const = 0;
 	};
 }

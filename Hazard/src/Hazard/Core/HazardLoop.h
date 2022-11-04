@@ -18,6 +18,7 @@ namespace Hazard
 		~HazardLoop();
 
 		void Start();
+		void Close();
 		bool Quit(WindowCloseEvent& e);
 		void OnEvent(Event& e);
 		bool ShouldClose() { return m_ShouldClose; }

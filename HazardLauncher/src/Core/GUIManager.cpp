@@ -92,7 +92,7 @@ void GUIManager::Render()
 	ImGui::Text(ICON_FK_SEARCH);
 	ImGui::SameLine(0, 5.0f);
 	ImUI::ShiftY(-6.0f);
-	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth() - 4.0f);
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 4.0f);
 	ImUI::TextField(m_SearchValue, "Search...");
 	ImUI::Shift(-4.0, 4.0f);
 

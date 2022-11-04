@@ -32,7 +32,7 @@ namespace HazardRenderer::OpenGL
 
 		uint32_t m_Width = 0;
 		uint32_t m_Height = 0;
-		uint32_t m_FrameIndex;
+		uint32_t m_FrameIndex = 0;
 		bool m_Vsync = true;
 
 		Ref<RenderCommandBuffer> m_RenderCommandBuffer;

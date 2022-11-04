@@ -22,14 +22,18 @@ namespace HazardRenderer::Vulkan
 		{
 			vkGetPhysicalDeviceProperties(device, &m_Properties);
 			//TODO: select others probably?
-			if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+			if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) 
+			{
+				m_Capabilities.Discrete = true;
 				selectedDevice = device;
 				break;
 			}
 		}
-		
+
 		HZR_ASSERT(selectedDevice, "Failed to get discrete Vulkan GPU");
 		m_PhysicalDevice = selectedDevice;
+
+		FindCababilities();
 
 		vkGetPhysicalDeviceFeatures(m_PhysicalDevice, &m_Features);
 		vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &m_MemoryProperties);
@@ -39,20 +43,6 @@ namespace HazardRenderer::Vulkan
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		m_QueueFamilyProperties.resize(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, m_QueueFamilyProperties.data());
-
-		//Device extension properties
-		uint32_t extCount = 0;
-		vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, nullptr);
-		if (extCount > 0) 
-		{
-			std::vector<VkExtensionProperties> extensions(extCount);
-			if (vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, &extensions.front()) == VK_SUCCESS) {
-				for (const auto& ext : extensions) {
-					m_SupportedExtensions.emplace(ext.extensionName);
-					//std::cout << " -" << ext.extensionName << std::endl;
-				}
-			}
-		}
 
 		//Queue families
 		static const float defaultPriority = 0.0f;
@@ -97,13 +87,52 @@ namespace HazardRenderer::Vulkan
 	{
 
 	}
-	bool VulkanPhysicalDevice::IsExtensionSupported(const std::string& extension) const
-	{
-		return m_SupportedExtensions.find(extension) != m_SupportedExtensions.end();
-	}
 	Ref<VulkanPhysicalDevice> VulkanPhysicalDevice::Create(int device)
 	{
 		return Ref<VulkanPhysicalDevice>::Create();
+	}
+
+	void VulkanPhysicalDevice::FindCababilities()
+	{
+		uint32_t extCount = 0;
+		vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, nullptr);
+		if (extCount > 0)
+		{
+			std::vector<VkExtensionProperties> extensions(extCount);
+			if (vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, &extensions.front()) == VK_SUCCESS)
+			{
+				for (const auto& ext : extensions) 
+				{
+					std::cout << " -" << ext.extensionName << std::endl;
+					m_Capabilities.Swapchain				|= strcmp(ext.extensionName, VK_KHR_SWAPCHAIN_EXTENSION_NAME) == 0;
+					m_Capabilities.DiagnosticCheckpoint		|= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME) == 0;
+					m_Capabilities.DiagnosticConfig			|= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME) == 0;
+					m_Capabilities.DebugMarker				|= strcmp(ext.extensionName, VK_EXT_DEBUG_MARKER_EXTENSION_NAME) == 0;
+
+					m_Capabilities.AccelerationStructures	|= strcmp(ext.extensionName, "VK_KHR_acceleration_structure") == 0;
+					m_Capabilities.RayTracingPipeline		|= strcmp(ext.extensionName, "VK_KHR_ray_tracing_pipeline") == 0;
+					m_Capabilities.RayQuery					|= strcmp(ext.extensionName, "VK_KHR_ray_query") == 0;
+				}
+			}
+		}
+
+		m_Limits.MaxTextureUnits = m_Properties.limits.maxPerStageDescriptorSampledImages;
+		m_Limits.MaxFrameBufferSize.x = m_Properties.limits.maxFramebufferWidth;
+		m_Limits.MaxFrameBufferSize.y = m_Properties.limits.maxFramebufferHeight;
+
+		if (SupportsRaytracing())
+		{
+			VkPhysicalDeviceRayTracingPropertiesNV rtProperties = {};
+			rtProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV;
+
+			VkPhysicalDeviceProperties2 properties = {};
+			properties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+			properties.pNext = &rtProperties;
+
+			vkGetPhysicalDeviceProperties2(m_PhysicalDevice, &properties);
+
+			m_Limits.MaxRecursionDepth = rtProperties.maxRecursionDepth;
+		}
 	}
 
 	QueueFamilyIndices VulkanPhysicalDevice::FindQueueFamilyIndices(int flags)

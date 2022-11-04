@@ -54,7 +54,7 @@ namespace Hazard
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
-		info.GenerateMips = false;
+		info.GenerateMips = true;
 
 		Ref<Image2D> image = Image2D::Create(&info);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
@@ -70,16 +70,20 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
+		return false;
+
 		Thread& thread = Application::Get().GetThreadPool().GetThread();
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
-		auto& cachePath = TextureFactory::GetCacheFile(asset->GetHandle());
+		AssetHandle handle = asset.As<Texture2DAsset>()->GetSourceImageAsset()->GetHandle();
+
+		auto& cachePath = TextureFactory::GetCacheFile(handle);
 
 		thread.OnCompletionHandler([cachePath](const Thread& thisThread) {
 			HZR_CORE_INFO("Image saved {0}, took {1} ms", cachePath.string(), thisThread.GetExecutionTime());
 			});
 
-		thread.Dispatch([handle = asset->GetHandle(), type = asset->GetType(), path = cachePath, sourcePath = metadata.Path]() {
+		thread.Dispatch([assetHandle = handle, type = asset->GetType(), path = cachePath, sourcePath = metadata.Path]() {
 
 			TextureHeader header = TextureFactory::LoadTextureFromSourceFile(sourcePath, true);
 			CachedBuffer buffer(sizeof(AssetPackElement) + sizeof(TextureHeader) + header.ImageData.Size);
@@ -87,7 +91,7 @@ namespace Hazard
 			AssetPackElement element = {};
 
 			element.Type = (uint32_t)type;
-			element.Handle = handle;
+			element.Handle = assetHandle;
 			element.AssetDataSize = sizeof(TextureHeader) + header.ImageData.Size;
 
 			TextureAssetHeader assetHeader = {};

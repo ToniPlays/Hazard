@@ -32,6 +32,7 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!(m_Flags & WorldFlags_UpdateScript)) return;
+
 		Ref<World> world = m_World;
 		auto& view = world->GetEntitiesWith<ScriptComponent>();
 

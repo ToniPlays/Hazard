@@ -147,8 +147,8 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		BufferLayout layout = QuadVertex::Layout();

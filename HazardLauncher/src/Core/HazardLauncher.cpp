@@ -1,4 +1,4 @@
-#if 1
+#if 0
 #include "HazardLauncher.h"
 #include "HazardRendererCore.h"
 
@@ -10,7 +10,6 @@ using namespace HazardScript;
 
 void HazardLauncher::PreInit()
 {
-
 	std::filesystem::current_path("C:/dev/Hazard/HazardLauncher");
 
 	RenderAPI renderAPI = RenderAPI::Vulkan;

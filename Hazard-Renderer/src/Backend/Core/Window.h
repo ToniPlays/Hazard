@@ -70,8 +70,8 @@ namespace HazardRenderer {
 		virtual bool IsFocused() const = 0;
 		virtual glm::vec2 GetPosition() = 0;
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		virtual WindowProps& GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;

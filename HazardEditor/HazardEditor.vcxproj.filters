@@ -111,6 +111,9 @@
     <ClInclude Include="src\GUI\AssetTools\ScriptCreatePanel.h">
       <Filter>src\GUI\AssetTools</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Debug\AssetManagerDebugPanel.h">
+      <Filter>src\GUI\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\Debug\Console.h">
       <Filter>src\GUI\Debug</Filter>
     </ClInclude>
@@ -177,7 +180,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Debug\AssetManagerDebugPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -227,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\ScriptCreatePanel.cpp">
       <Filter>src\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Debug\AssetManagerDebugPanel.cpp">
+      <Filter>src\GUI\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\Debug\Console.cpp">
       <Filter>src\GUI\Debug</Filter>
@@ -279,9 +284,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Debug\AssetManagerDebugPanel.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

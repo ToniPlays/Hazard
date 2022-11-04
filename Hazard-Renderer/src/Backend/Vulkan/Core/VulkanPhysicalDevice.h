@@ -10,14 +10,16 @@
 
 namespace HazardRenderer::Vulkan
 {
-	struct QueueFamilyIndices {
+	struct QueueFamilyIndices 
+	{
 		int32_t Graphics = -1;
 		int32_t Compute = -1;
 		int32_t Transfer = -1;
 	};
 
 
-	class VulkanPhysicalDevice : public PhysicalDevice {
+	class VulkanPhysicalDevice : public PhysicalDevice 
+	{
 		friend class VulkanDevice;
 	public:
 		
@@ -26,10 +28,13 @@ namespace HazardRenderer::Vulkan
 
 		std::string GetDeviceName() override { return m_Properties.deviceName; };
 		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
+		const PhysicalDeviceCapabilities& GetDeviceCababilities() const { return m_Capabilities; };
+		bool SupportsRaytracing() const 
+		{ 
+			return m_Capabilities.AccelerationStructures && m_Capabilities.RayQuery && m_Capabilities.RayTracingPipeline; 
+		};
 
-		//Vulkan specifig
-		bool IsExtensionSupported(const std::string& extension) const;
-
+		//Vulkan specific
 
 		VkPhysicalDevice GetVulkanPhysicalDevice() const { return m_PhysicalDevice; }
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
@@ -38,20 +43,18 @@ namespace HazardRenderer::Vulkan
 		static Ref<VulkanPhysicalDevice> Create(int device = -1);
 
 	private:
-
+		void FindCababilities();
 		QueueFamilyIndices FindQueueFamilyIndices(int flags);
 		VkFormat FindDepthFormat();
 
 	private:
-
 		PhysicalDeviceLimits m_Limits;
+		PhysicalDeviceCapabilities m_Capabilities;
 
-		VkPhysicalDevice m_PhysicalDevice;
+		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 		VkPhysicalDeviceProperties m_Properties;
 		VkPhysicalDeviceFeatures m_Features;
 		VkPhysicalDeviceMemoryProperties m_MemoryProperties;
-
-		std::unordered_set<std::string> m_SupportedExtensions;
 
 		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties;
 		QueueFamilyIndices m_QueueFamilyIndices;

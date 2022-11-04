@@ -14,6 +14,7 @@
 #include "EditorScripting/EditorScriptGlue.h"
 #include "Backend/Core/ShaderCompiler.h"
 #include "Hazard/RenderContext/TextureFactory.h"
+#include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 #include "EditorAssetManager.h"
 
@@ -99,6 +100,7 @@ void HazardEditorApplication::PreInit()
 	EditorAssetManager::ImportAssets();
 	ShaderCompiler::SetCacheLocation("Library/Shaders");
 	TextureFactory::SetCacheLocation("Library/Textures");
+	MeshFactory::SetCacheLocation("Library/Meshes/");
 
 	CreateApplicationStack(&createInfo);
 	EditorAssetManager::Init();

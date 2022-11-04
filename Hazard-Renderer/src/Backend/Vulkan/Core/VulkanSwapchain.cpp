@@ -415,7 +415,11 @@ namespace HazardRenderer::Vulkan
 		
 		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("SwapchainCommandBuffer");
 
-		if (m_DefaultFramebuffer) return;
+		if (m_DefaultFramebuffer)
+		{
+			m_DefaultFramebuffer->Resize_RT(m_Width, m_Height);
+			return;
+		}
 
 		if (nullptr == nullptr) //TODO: Fix this
 		{
@@ -445,9 +449,6 @@ namespace HazardRenderer::Vulkan
 
 			m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
 		}
-
-
-
 	}
 	void VulkanSwapchain::Destroy()
 	{
@@ -493,6 +494,7 @@ namespace HazardRenderer::Vulkan
 		HZR_TIMED_FUNCTION();
 		m_CurrentImageIndex = AcquireSwapchainImage();
 		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
+
 		m_RenderCommandBuffer->Begin();
 	}
 	void VulkanSwapchain::Present()

@@ -81,10 +81,11 @@ namespace HazardRenderer::Vulkan {
 		s_Data = hnew AllocatorData();
 
 		Ref<VulkanDevice> device = VulkanContext::GetLogicalDevice();
+		VkPhysicalDevice physicalDevice = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetVulkanPhysicalDevice();
 
 		VmaAllocatorCreateInfo createInfo = {};
 		createInfo.vulkanApiVersion = VK_API_VERSION_1_2;
-		createInfo.physicalDevice = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetVulkanPhysicalDevice();
+		createInfo.physicalDevice = physicalDevice;
 		createInfo.device = device->GetVulkanDevice();
 		createInfo.instance = VulkanContext::GetVulkanInstance();
 

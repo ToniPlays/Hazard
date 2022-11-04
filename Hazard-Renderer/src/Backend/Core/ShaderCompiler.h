@@ -32,7 +32,7 @@ namespace HazardRenderer
 		ShaderStage Stage;
 		std::string Source;
 		std::string Name;
-		uint32_t DefineCount = 0;
+		size_t DefineCount = 0;
 		ShaderDefine* pDefines = nullptr;
 	};
 

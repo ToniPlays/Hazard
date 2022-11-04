@@ -14,9 +14,13 @@ namespace HazardRenderer::OpenGL {
 		virtual ~OpenGLPhysicalDevice() {};
 		virtual std::string GetDeviceName() { return m_DeviceName; }
 		virtual const PhysicalDeviceLimits& GetDeviceLimits() const { return m_Limits; };
+		virtual const PhysicalDeviceCapabilities& GetDeviceCababilities() const { return m_Capabilities; };
+
+		virtual bool SupportsRaytracing() const { return false; };
 	private:
 		std::string m_DeviceName;
 		PhysicalDeviceLimits m_Limits;
+		PhysicalDeviceCapabilities m_Capabilities;
 	};
 }
 #endif

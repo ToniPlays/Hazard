@@ -17,4 +17,6 @@
 #include "Textures/VulkanImage2D.h"
 #include "Textures/VulkanCubemapTexture.h"
 
+#include "AccelerationStructure/VulkanTopLevelAccelerationStructure.h"
+
 #endif

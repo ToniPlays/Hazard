@@ -43,6 +43,9 @@ namespace Hazard
 		m_Resources = hnew RenderResources();
 		m_Resources->Initialize(m_RenderPass);
 
+		m_RasterizedRenderer = hnew RasterizedRenderer();
+		m_RaytracedRenderer = hnew RaytracedRenderer();
+
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
 	}
 
@@ -74,133 +77,6 @@ namespace Hazard
 		m_QuadRenderer.EndScene();
 		m_LineRenderer.EndScene();
 	}
-
-	void RenderEngine::ShadowPass(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-	}
-	void RenderEngine::PreDepthPass(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-	}
-	void RenderEngine::GeometryPass(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-
-		for (auto& [pipeline, meshList] : drawList.MeshList)
-		{
-			pipeline->SetRenderPass(m_RenderPass);
-
-			if (!pipeline->IsValid()) continue;
-
-			commandBuffer->BindPipeline(pipeline);
-
-			for (auto& mesh : meshList)
-			{
-				ModelData data = {};
-				data.Transform = mesh.Transform;
-				data.Metalness = mesh.Metalness;
-				data.Roughness = mesh.Roughness;
-				data.Flags = 0;
-
-				m_Resources->ModelUniformBuffer->SetData(&data, sizeof(ModelData));
-				commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-				commandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
-				drawList.Stats.DrawCalls++;
-			}
-		}
-	}
-	void RenderEngine::CompositePass(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-
-		for (auto& [pipeline, usages] : drawList.Pipelines)
-		{
-			pipeline->SetRenderPass(m_RenderPass);
-
-			if (!pipeline->IsValid()) continue;
-			commandBuffer->BindPipeline(pipeline);
-
-			for (auto& data : usages)
-				commandBuffer->Draw(data.Count);
-		}
-	}
-	void RenderEngine::LightPass(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-
-		LightingData data = {};
-		data.DirectionLightCount = drawList.DirectionalLights.size();
-
-		for (uint32_t i = 0; i < data.DirectionLightCount; i++)
-		{
-			auto& light = drawList.DirectionalLights[i];
-			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
-			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
-		}
-
-		if (drawList.Environment.size() > 0)
-		{
-			for (auto& [map, environmentData] : drawList.Environment)
-			{
-				data.SkyLightIntensity = environmentData.SkylightIntensity;
-				data.EnvironmentLod = environmentData.EnvironmentLod;
-
-				auto& radiance = environmentData.Map->RadianceMap;
-				auto& irradiance = environmentData.Map->IrradianceMap;
-				auto& prefilter = environmentData.Map->PreFilterMap;
-				auto& lut = environmentData.Map->BRDFLut;
-
-				auto& shader = m_Resources->PbrPipeline->GetShader();
-				if (radiance)
-					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
-				if (irradiance)
-					shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
-				if (prefilter)
-					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : m_Resources->WhiteCubemap);
-				if (lut)
-					shader->Set("u_BRDFLut", 0, lut->Value.As<Image2D>());
-				break;
-			}
-		}
-		else
-		{
-			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
-
-			data.SkyLightIntensity = 0.0f;
-			data.EnvironmentLod = 0.0f;
-
-			auto& shader = m_Resources->PbrPipeline->GetShader();
-			shader->Set("u_RadianceMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_IrradianceMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_PrefilterMap", 0, m_Resources->WhiteCubemap);
-			shader->Set("u_BRDFLut", 0, m_Resources->BRDFLut->GetSourceImageAsset()->Value.As<Image2D>());
-		}
-		//Update buffers
-		commandBuffer->BindUniformBuffer(m_Resources->LightUniformBuffer);
-		m_Resources->LightUniformBuffer->SetData(&data, sizeof(LightingData));
-	}
-	void RenderEngine::DrawEnvironmentMap(Ref<RenderCommandBuffer> commandBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& drawList = GetDrawList();
-
-		for (auto& [map, environmentData] : drawList.Environment)
-		{
-			auto& radiance = environmentData.Map->RadianceMap;
-			if (!radiance) return;
-
-			m_Resources->SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
-			commandBuffer->BindPipeline(m_Resources->SkyboxPipeline);
-			commandBuffer->Draw(6);
-			return;
-		}
-	}
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -210,15 +86,17 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
+
+		m_CurrentRenderer = m_Settings.Raytraced ? static_cast<BaseRenderer*>(m_RaytracedRenderer) : static_cast<BaseRenderer*>(m_RasterizedRenderer);
+
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
+		m_CurrentRenderer->SetCommandBuffer(commandBuffer);
 
 		for (auto& worldDrawList : m_DrawList)
 		{
 			//Not camera dependant
 			PreRender();
-			LightPass(commandBuffer);
-			ShadowPass(commandBuffer);
-			PreDepthPass(commandBuffer);
+			m_CurrentRenderer->Prepare(m_RenderPass, worldDrawList);
 
 			for (auto& camera : worldDrawList.WorldRenderer->m_CameraData)
 			{
@@ -243,9 +121,10 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				GeometryPass(commandBuffer);
-				DrawEnvironmentMap(commandBuffer);
-				CompositePass(commandBuffer);
+
+				m_CurrentRenderer->GeometryPass(worldDrawList.MeshList);
+				m_CurrentRenderer->EnvironmentPass(worldDrawList.Environment);
+				m_CurrentRenderer->CompositePass(worldDrawList.Pipelines);
 				commandBuffer->EndRenderPass();
 			}
 

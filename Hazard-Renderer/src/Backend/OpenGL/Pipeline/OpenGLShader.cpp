@@ -35,6 +35,7 @@ namespace HazardRenderer::OpenGL
 		Timer timer;
 
 		m_ShaderData.Stages.clear();
+		ReflectVulkan(m_ShaderCode);
 		Reflect(m_ShaderCode);
 
 		Ref<OpenGLShader> instance = this;

@@ -176,13 +176,13 @@ namespace HazardRenderer::Vulkan
 
 		m_VulkanDevice = Ref<VulkanDevice>::Create(m_VulkanPhysicalDevice, enabledFeatures);
 
-		VulkanAllocator::Init();
 
 		VkPipelineCacheCreateInfo cacheInfo = {};
 		cacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
 		VK_CHECK_RESULT(vkCreatePipelineCache(m_VulkanDevice->GetVulkanDevice(), &cacheInfo, nullptr, &m_PipelineCache), "Failed to create Vulkan Pipeline Cache");
 
+		VulkanAllocator::Init();
 		m_Swapchain = Ref<VulkanSwapchain>::Create();
 		m_Swapchain->Init(m_VulkanInstance, m_VulkanDevice);
 

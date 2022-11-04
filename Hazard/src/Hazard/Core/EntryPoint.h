@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
 
 		while (!loop.ShouldClose())
 			loop.Run();
+		loop.Close();
 	}
 	return 0;
 }

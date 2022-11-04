@@ -99,6 +99,9 @@
     <ClInclude Include="src\Hazard\Assets\AssetManager.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Assets\AssetPack.h">
+      <Filter>src\Hazard\Assets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Assets\AssetRegistry.h">
       <Filter>src\Hazard\Assets</Filter>
     </ClInclude>
@@ -225,7 +228,19 @@
     <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\PipelineAssetLoader.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderAsset.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderAssetLoader.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderLibrary.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
@@ -1602,11 +1617,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\PipelineAssetLoader.h" />
-    <ClInclude Include="src\Hazard\Assets\AssetPack.h" />
-    <ClInclude Include="src\Hazard\RenderContext\ShaderLibrary.h" />
-    <ClInclude Include="src\Hazard\RenderContext\ShaderAssetLoader.h" />
-    <ClInclude Include="src\Hazard\RenderContext\ShaderAsset.h" />
+    <ClInclude Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.h" />
+    <ClInclude Include="src\Hazard\Rendering\BaseRenderer.h" />
+    <ClInclude Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1690,7 +1703,16 @@
     <ClCompile Include="src\Hazard\RenderContext\ImageAssetLoader.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\PipelineAssetLoader.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderAssetLoader.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
@@ -1744,8 +1766,7 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\PipelineAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp" />
-    <ClCompile Include="src\Hazard\RenderContext\ShaderAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.cpp" />
   </ItemGroup>
 </Project>

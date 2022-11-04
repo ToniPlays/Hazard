@@ -10,7 +10,6 @@ IncludeDir["glm"] = "%{wks.location}/Hazard/vendor/glm"
 IncludeDir["Mono"] = "%{wks.location}/Hazard/vendor/mono/include"
 IncludeDir["Optick"] = "%{wks.location}/Hazard/vendor/Optick/src"
 
-IncludeDir["OpenAL"] = "%{wks.location}/Hazard/vendor/OpenAL/include"
 IncludeDir["Vorbis"] = "%{wks.location}/Hazard/vendor/Vorbis/include"
 IncludeDir["AudioFile"] = "%{wks.location}/Hazard/vendor/AudioFile"
 IncludeDir["Libogg"] = "%{wks.location}/Hazard/vendor/libogg/include"
@@ -62,7 +61,6 @@ Library = {}
     Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-core.lib"
     Library["SPIRV_Cross_GLSL_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-glsl.lib"
 
-    Library["OpenAL_Lib"] = "%{wks.location}/Hazard/vendor/OpenAl/lib/openal32.lib"
     Library["Mono_Debug_Lib"] = "%{wks.location}/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib"
     Library["Assimp_Lib"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"
 
