@@ -2,6 +2,7 @@
 #include "Tests/TriangleTest.h"
 #include "Tests/TexturedQuad.h"
 #include "Tests/UniformBufferTest.h"
+#include "Tests/AccelerationStructureTest.h"
 
 void main(int argc, char* argv)
 {
@@ -15,5 +16,5 @@ void main(int argc, char* argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	UniformBufferTest::Run(renderAPI);
+	AccelerationStructureTest::Run(renderAPI);
 }

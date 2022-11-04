@@ -21,7 +21,8 @@ namespace HazardRenderer::Vulkan
 		uint64_t ComputeShaderInvocations = 0;
 	};
 
-	class VulkanRenderCommandBuffer : public RenderCommandBuffer {
+	class VulkanRenderCommandBuffer : public RenderCommandBuffer 
+	{
 	public:
 		VulkanRenderCommandBuffer(uint32_t size = 0, const std::string& name = "", bool compute = false);
 		VulkanRenderCommandBuffer(const std::string& name, bool swapchain);
@@ -39,12 +40,13 @@ namespace HazardRenderer::Vulkan
 		void EndRenderPass() override;
 
 		void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
-		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer);
+		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override;
 		void BindPipeline(Ref<Pipeline> pipeline) override;
 
 		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
+		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override;
@@ -53,6 +55,7 @@ namespace HazardRenderer::Vulkan
 		void SetViewport(float x, float y, float width, float height) override;
 		void SetLineSize(float size) override;
 
+		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }
 		VkFence GetFence(uint32_t index) { return m_WaitFences[index]; }
 

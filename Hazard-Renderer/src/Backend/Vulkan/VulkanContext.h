@@ -17,6 +17,21 @@
 #define VK_CHECK_RESULT(result, x) result
 #endif
 
+// Macro to get a procedure address based on a vulkan instance
+#define GET_INSTANCE_PROC_ADDR(inst, entrypoint)															\
+{																											\
+	fp##entrypoint = reinterpret_cast<PFN_vk##entrypoint>(vkGetInstanceProcAddr(inst, "vk"#entrypoint));	\
+	HZR_ASSERT(fp##entrypoint, "Instance Proc adress not found vk"#entrypoint);								\
+}
+
+// Macro to get a procedure address based on a vulkan device
+#define GET_DEVICE_PROC_ADDR(dev, entrypoint)																\
+{																											\
+	fp##entrypoint = reinterpret_cast<PFN_vk##entrypoint>(vkGetDeviceProcAddr(dev, "vk"#entrypoint));		\
+	HZR_ASSERT(fp##entrypoint, "Device Proc adress not found vk"#entrypoint);								\
+}
+
+
 namespace HazardRenderer::Vulkan {
 
 	struct VulkanData
@@ -37,7 +52,6 @@ namespace HazardRenderer::Vulkan {
 		void BeginFrame() override;
 		void Present() override;
 
-
 		Ref<PhysicalDevice> GetDevice() override { return m_VulkanPhysicalDevice; };
 		Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
 
@@ -56,6 +70,7 @@ namespace HazardRenderer::Vulkan {
 
 	private:
 		void CreateDescriptorPools();
+		std::vector<const char*> GetSupportedExtensions();
 
 	private:
 		inline static VulkanContext* s_Instance;

@@ -72,6 +72,14 @@ namespace HazardRenderer::Vulkan
 			instance->Invalidate_RT();
 			});
 	}
+	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
+	{
+		auto& descriptorSets = m_Shader->GetVulkanDescriptorSets();
+
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_Pipeline);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_PipelineLayout, 0,
+			descriptorSets.size(), descriptorSets.data(), 0, nullptr);
+	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
 	{
 		return m_Specs.Usage == PipelineUsage::GraphicsBit ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;

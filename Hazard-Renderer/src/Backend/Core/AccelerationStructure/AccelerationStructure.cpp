@@ -1,12 +1,12 @@
 
-#include "TopLevelAccelerationStructure.h"
+#include "AccelerationStructure.h"
 #include "Backend/Core/GraphicsContext.h"
 
-#include "Backend/Vulkan/AccelerationStructure/VulkanTopLevelAccelerationStructure.h"
+#include "Backend/Vulkan/AccelerationStructure/VulkanAccelerationStructure.h"
 
 namespace HazardRenderer
 {
-	Ref<TopLevelAccelerationStructure> TopLevelAccelerationStructure::Create(TopLevelAccelerationStructureCreateInfo* info)
+	Ref<AccelerationStructure> AccelerationStructure::Create(AccelerationStructureCreateInfo* info)
 	{
 		switch (GraphicsContext::GetRenderAPI())
 		{
@@ -14,7 +14,7 @@ namespace HazardRenderer
 		case RenderAPI::OpenGL: return nullptr;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanTopLevelAccelerationStructure>::Create(info);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanAccelerationStructure>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);

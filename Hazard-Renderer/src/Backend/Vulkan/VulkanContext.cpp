@@ -34,7 +34,7 @@ namespace HazardRenderer::Vulkan
 				labels.append(fmt::format("\t\t- Command Buffer Label[{0}]: name {1}, color {2}\n", i, label.pLabelName ? label.pLabelName : "NULL", colorStr));
 			}
 		}
-		if (pCallbackData->objectCount) 
+		if (pCallbackData->objectCount)
 		{
 			objects = fmt::format("\tObjects({}): \n", pCallbackData->objectCount);
 			for (uint32_t i = 0; i < pCallbackData->objectCount; i++)
@@ -90,16 +90,22 @@ namespace HazardRenderer::Vulkan
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2))
 			HZR_ASSERT(false, "API version not supported");
 
-		std::vector<const char*> instanceExtensions = { VK_KHR_SURFACE_EXTENSION_NAME, VK_KHR_WIN32_SURFACE_EXTENSION_NAME };
+		std::vector<const char*> instanceExtensions =
+		{
+			VK_KHR_SURFACE_EXTENSION_NAME,
+			VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
+		};
+
+		instanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 		instanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 		if (info->Logging)
 		{
 			instanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-			instanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 		}
 
 		VkValidationFeatureEnableEXT enables[] = { VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT };
 		VkValidationFeaturesEXT features = {};
+
 		features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
 		features.enabledValidationFeatureCount = 1;
 		features.pEnabledValidationFeatures = enables;
@@ -167,7 +173,6 @@ namespace HazardRenderer::Vulkan
 		m_VulkanPhysicalDevice = VulkanPhysicalDevice::Create(-1); // Auto select: -1, others indexed
 
 		VkPhysicalDeviceFeatures enabledFeatures = {};
-		memset(&enabledFeatures, 0, sizeof(VkPhysicalDeviceFeatures));
 		enabledFeatures.samplerAnisotropy = true;
 		enabledFeatures.wideLines = true;
 		enabledFeatures.fillModeNonSolid = true;
@@ -209,7 +214,6 @@ namespace HazardRenderer::Vulkan
 		whiteTexture.Usage = ImageUsage::Texture;
 
 		m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
-
 	}
 	void VulkanContext::BeginFrame()
 	{
@@ -271,6 +275,27 @@ namespace HazardRenderer::Vulkan
 				s_Data->DescriptorPoolAllocationCount[i] = 0;
 			}
 			});
+	}
+	std::vector<const char*> VulkanContext::GetSupportedExtensions()
+	{
+		std::vector<const char*> result;
+
+		uint32_t count = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
+		if (count == 0) return result;
+
+		std::vector<VkExtensionProperties> extensions(count);
+
+		if (vkEnumerateInstanceExtensionProperties(nullptr, &count, &extensions.front()) == VK_SUCCESS)
+		{
+			result.reserve(count);
+
+			for (auto& extension : extensions)
+			{
+				std::cout << extension.extensionName << std::endl;
+				result.push_back(extension.extensionName);
+			}
+		}
 	}
 }
 #endif

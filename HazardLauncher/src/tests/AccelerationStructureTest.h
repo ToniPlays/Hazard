@@ -3,17 +3,19 @@
 #include "Event.h"
 #include "Color.h"
 
+#include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
+
 #include "vendor/stb_image.h"
 #include <glm/glm/ext/matrix_clip_space.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>
 
 using namespace HazardRenderer;
 
-namespace UniformBufferTest
+namespace AccelerationStructureTest
 {
 
-	//OpenGL : Working
-	//Vulkan : Working
+	//OpenGL : Test
+	//Vulkan : Test
 	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
@@ -26,14 +28,16 @@ namespace UniformBufferTest
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hello Uniform buffer";
+		appInfo.AppName = "Hello Acceleration structures";
 		appInfo.BuildVersion = "0.0.1a";
-		appInfo.MessageCallback = [](RenderMessage message) {
+		appInfo.MessageCallback = [](RenderMessage message) 
+		{
 			std::cout << message.Description << std::endl;
 		};
 		appInfo.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
-			if (e.GetEventType() == EventType::WindowClose) {
+			if (e.GetEventType() == EventType::WindowClose) 
+			{
 				running = false;
 			}
 		};
@@ -68,8 +72,12 @@ namespace UniformBufferTest
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
+		auto& device = window->GetContext()->GetDevice();
+
+		std::cout << "Selected device: " << device->GetDeviceName() << std::endl;
+		HZR_ASSERT(device->SupportsRaytracing(), "Device does not support Raytracing");
+
 		//---------------
-		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
@@ -89,21 +97,16 @@ namespace UniformBufferTest
 
 		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/UboTest.glsl", api);
 
-		stbi_set_flip_vertically_on_load(true);
-
-		int w, h, channels;
-		stbi_uc* data = stbi_load("src/tests/Textures/csharp.png", &w, &h, &channels, 4);
-
 		VertexBufferCreateInfo vbo = {};
 		vbo.DebugName = "QuadVBO";
-		vbo.Usage = BufferUsage::StaticDraw;
+		vbo.Usage = BufferUsage::BLAS;
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
 
 		IndexBufferCreateInfo ibo = {};
 		ibo.DebugName = "QuadIBO";
-		ibo.Usage = BufferUsage::StaticDraw;
+		ibo.Usage = BufferUsage::BLAS;
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
 
@@ -118,43 +121,36 @@ namespace UniformBufferTest
 		spec.ShaderCodeCount = code.size();
 		spec.pShaderCode = code.data();
 
-		Image2DCreateInfo imageInfo = {};
-		imageInfo.DebugName = "Image2D";
-		imageInfo.Width = w;
-		imageInfo.Height = h;
-		imageInfo.Format = ImageFormat::RGBA;
-		imageInfo.Data = Buffer(data, w * h * 4);
-		imageInfo.Usage = ImageUsage::Texture;
 
-		UniformBufferCreateInfo uboInfo = {};
-		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 0;
-		uboInfo.Size = sizeof(glm::mat4);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
+		BoundingBox boundingBox = {};
+		boundingBox.Encapsulate({-0.5f, -0.5f, 0.0f });
+		boundingBox.Encapsulate({ 0.5f, -0.5f, 0.0f });
+		boundingBox.Encapsulate({ 0.5f,  0.5f, 0.0f });
+		boundingBox.Encapsulate({-0.5f,  0.5f, 0.0f });
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-		Ref<Image2D> image = Image2D::Create(&imageInfo);
-		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+
+		AccelerationStructureCreateInfo accelInfo = {};
+		accelInfo.Level = AccelerationStructureLevel::Bottom;
+		accelInfo.VertexBuffer = vertexBuffer;
+		accelInfo.IndexBuffer = indexBuffer;
+		accelInfo.BoundingBox = boundingBox;
+
+		Ref<AccelerationStructure> accelerationStructure = AccelerationStructure::Create(&accelInfo);
 
 		while (running)
 		{
 			Input::Update();
 			window->BeginFrame();
 
-			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
-			glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -10.0f, 10.0f);
-			camera->SetData(&projection, sizeof(glm::mat4));
-
 			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			commandBuffer->BindVertexBuffer(vertexBuffer);
-			pipeline->GetShader()->Set("u_Texture", 0, image);
+			//commandBuffer->BindVertexBuffer(vertexBuffer);
 
-			commandBuffer->BindPipeline(pipeline);
-			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
+			//commandBuffer->BindPipeline(pipeline);
+			//commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
 
 			commandBuffer->EndRenderPass();
 			Renderer::WaitAndRender();

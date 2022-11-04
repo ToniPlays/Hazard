@@ -9,7 +9,7 @@ namespace HazardRenderer::Vulkan
 	VulkanDevice::VulkanDevice(Ref<VulkanPhysicalDevice> physicalDevice, VkPhysicalDeviceFeatures features) : m_PhysicalDevice(physicalDevice), m_EnabledFeatures(features)
 	{
 		const bool enableAftermath = false;
-		
+
 		std::vector<const char*> additionalExtensions;
 		PhysicalDeviceCapabilities capabilities = m_PhysicalDevice->GetDeviceCababilities();
 
@@ -20,25 +20,52 @@ namespace HazardRenderer::Vulkan
 			additionalExtensions.push_back(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME);
 		if (capabilities.DiagnosticConfig)
 			additionalExtensions.push_back(VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME);
+		if (capabilities.DebugMarker)
+		{
+			additionalExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
+			m_EnableDebugMarkers = true;
+		}
 
 		VkDeviceCreateInfo deviceInfo = {};
 		deviceInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 		deviceInfo.queueCreateInfoCount = (uint32_t)m_PhysicalDevice->m_QueueCreateInfos.size();
 		deviceInfo.pQueueCreateInfos = m_PhysicalDevice->m_QueueCreateInfos.data();
-		deviceInfo.pEnabledFeatures = &features;
 
-		VkPhysicalDeviceFeatures2 physicalFeatures2 = {};
-		if (capabilities.DebugMarker) 
+		VkPhysicalDeviceBufferAddressFeaturesEXT bufferAddress = {};
+		VkPhysicalDeviceVulkan12Features features12 = {};
+		VkPhysicalDeviceRayTracingPipelineFeaturesKHR rtInfo = {};
+
+		if (physicalDevice->SupportsRaytracing())
 		{
-			additionalExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
-			m_EnableDebugMarkers = true;
+			additionalExtensions.push_back(VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_KHR_SPIRV_1_4_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME);
+			additionalExtensions.push_back(VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME);
+
+			rtInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
+			rtInfo.rayTracingPipeline = VK_TRUE;
+			rtInfo.rayTraversalPrimitiveCulling = VK_TRUE;
+
+			features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+			features12.bufferDeviceAddress = VK_TRUE;
+			features12.descriptorIndexing = VK_TRUE;
+
+			features12.pNext = &rtInfo;
+			deviceInfo.pNext = &features12;
 		}
+
+		deviceInfo.pEnabledFeatures = &features;
 
 		if (additionalExtensions.size() > 0)
 		{
 			deviceInfo.enabledExtensionCount = (uint32_t)additionalExtensions.size();
 			deviceInfo.ppEnabledExtensionNames = additionalExtensions.data();
 		}
+
+
 
 		VkResult result = vkCreateDevice(m_PhysicalDevice->GetVulkanPhysicalDevice(), &deviceInfo, nullptr, &m_LogicalDevice);
 		HZR_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan Logical device");
@@ -64,7 +91,7 @@ namespace HazardRenderer::Vulkan
 		vkDestroyDevice(m_LogicalDevice, nullptr);
 	}
 
-	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin, bool compute) 
+	VkCommandBuffer VulkanDevice::GetCommandBuffer(bool begin, bool compute)
 	{
 		VkCommandBuffer buffer;
 
@@ -76,7 +103,7 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(m_LogicalDevice, &allocInfo, &buffer), "Failed to allocate command buffer");
 
-		if (begin) 
+		if (begin)
 		{
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -119,7 +146,7 @@ namespace HazardRenderer::Vulkan
 		VkFenceCreateInfo fenceInfo = {};
 		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceInfo.flags = 0;
-		
+
 		VkFence fence;
 		VK_CHECK_RESULT(vkCreateFence(m_LogicalDevice, &fenceInfo, nullptr, &fence), "Failed to create VkFence");
 		VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, fence), "Failed to submit command buffer");

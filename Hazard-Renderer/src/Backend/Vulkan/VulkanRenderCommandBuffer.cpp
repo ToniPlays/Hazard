@@ -214,7 +214,6 @@ namespace HazardRenderer::Vulkan
 			return;
 		}
 
-
 		Renderer::Submit([instance]() mutable {
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			instance->m_State = State::Finished;
@@ -230,7 +229,6 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		if (m_OwnedBySwapchain) return;
-
 
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -422,21 +420,16 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, info = computeInfo]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-
 			auto& pipeline = info.Pipeline.As<VulkanPipeline>();
-			auto vkPipeline = pipeline->GetVulkanPipeline();
-			auto& shader = pipeline->GetShader().As<VulkanShader>();
-			auto layout = pipeline->GetPipelineLayout();
-			auto& descriptorSets = shader->GetVulkanDescriptorSets();
+			pipeline->Bind(instance->m_ActiveCommandBuffer);
 
 			LocalGroupSize size = info.GroupSize;
-
-			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, vkPipeline);
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, layout, 0,
-				descriptorSets.size(), descriptorSets.data(), 0, nullptr);
-
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
 			});
+	}
+	void VulkanRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
+	{
+
 	}
 	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{

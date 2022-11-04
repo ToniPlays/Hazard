@@ -35,7 +35,10 @@ namespace HazardRenderer::Vulkan
 
 		FindCababilities();
 
-		vkGetPhysicalDeviceFeatures(m_PhysicalDevice, &m_Features);
+		m_Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		m_Features.pNext = nullptr;
+
+		vkGetPhysicalDeviceFeatures2(m_PhysicalDevice, &m_Features);
 		vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &m_MemoryProperties);
 
 		//Queue family properties
@@ -109,9 +112,9 @@ namespace HazardRenderer::Vulkan
 					m_Capabilities.DiagnosticConfig			|= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME) == 0;
 					m_Capabilities.DebugMarker				|= strcmp(ext.extensionName, VK_EXT_DEBUG_MARKER_EXTENSION_NAME) == 0;
 
-					m_Capabilities.AccelerationStructures	|= strcmp(ext.extensionName, "VK_KHR_acceleration_structure") == 0;
-					m_Capabilities.RayTracingPipeline		|= strcmp(ext.extensionName, "VK_KHR_ray_tracing_pipeline") == 0;
-					m_Capabilities.RayQuery					|= strcmp(ext.extensionName, "VK_KHR_ray_query") == 0;
+					m_Capabilities.AccelerationStructures	|= strcmp(ext.extensionName, VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME) == 0;
+					m_Capabilities.RayTracingPipeline		|= strcmp(ext.extensionName, VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME) == 0;
+					m_Capabilities.RayQuery					|= strcmp(ext.extensionName, VK_KHR_RAY_QUERY_EXTENSION_NAME) == 0;
 				}
 			}
 		}

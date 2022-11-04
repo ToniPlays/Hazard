@@ -5,6 +5,7 @@
 
 #include "Pipeline/RenderPass.h"
 #include "Pipeline/Pipeline.h"
+#include "AccelerationStructure/ShaderBindingTable.h"
 
 namespace HazardRenderer 
 {
@@ -51,6 +52,14 @@ namespace HazardRenderer
 		Ref<CubemapTexture> Cubemap = nullptr;
 	};
 
+	struct TraceRaysInfo
+	{
+		uint32_t Width;
+		uint32_t Height;
+		uint32_t Depth;
+		ShaderBindingTable* pBindingTable;
+	};
+
 
 	class RenderCommandBuffer : public RefCount
 	{
@@ -72,6 +81,7 @@ namespace HazardRenderer
 		virtual void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;
+		virtual void TraceRays(const TraceRaysInfo& traceRaysInfo) = 0;
 
 		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
 		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;

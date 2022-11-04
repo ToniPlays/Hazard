@@ -18,7 +18,9 @@ namespace HazardRenderer
 		StaticCopy = 6,
 		DynamicDraw = 8,
 		DynamicRead = 9,
-		DynamicCopy = 10
+		DynamicCopy = 10,
+		TLAS = 11,
+		BLAS = 12
 	};
 
 	struct VertexBufferCreateInfo 

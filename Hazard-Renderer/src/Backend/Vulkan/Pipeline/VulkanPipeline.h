@@ -32,6 +32,8 @@ namespace HazardRenderer::Vulkan
 		void Invalidate_RT();
 
 		//Vulkan specific
+		void Bind(VkCommandBuffer commandBuffer);
+
 		VkPipelineBindPoint GetBindingPoint() const;
 		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
 		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }

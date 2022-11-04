@@ -53,7 +53,7 @@ namespace HazardRenderer::Vulkan
 
 		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 		VkPhysicalDeviceProperties m_Properties;
-		VkPhysicalDeviceFeatures m_Features;
+		VkPhysicalDeviceFeatures2 m_Features;
 		VkPhysicalDeviceMemoryProperties m_MemoryProperties;
 
 		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties;
