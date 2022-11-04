@@ -95,8 +95,6 @@ namespace AccelerationStructureTest
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/UboTest.glsl", api);
-
 		VertexBufferCreateInfo vbo = {};
 		vbo.DebugName = "QuadVBO";
 		vbo.Usage = BufferUsage::BLAS;
@@ -110,18 +108,6 @@ namespace AccelerationStructureTest
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
 
-		PipelineSpecification spec = {};
-		spec.DebugName = "Pipeline";
-		spec.Usage = PipelineUsage::GraphicsBit;
-		spec.DrawType = DrawType::Fill;
-		spec.CullMode = CullMode::None;
-		spec.pTargetRenderPass = window->GetSwapchain()->GetRenderPass().Raw();
-		spec.DepthTest = false;
-		spec.pBufferLayout = &layout;
-		spec.ShaderCodeCount = code.size();
-		spec.pShaderCode = code.data();
-
-
 		BoundingBox boundingBox = {};
 		boundingBox.Encapsulate({-0.5f, -0.5f, 0.0f });
 		boundingBox.Encapsulate({ 0.5f, -0.5f, 0.0f });
@@ -130,15 +116,20 @@ namespace AccelerationStructureTest
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
-		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
-		AccelerationStructureCreateInfo accelInfo = {};
-		accelInfo.Level = AccelerationStructureLevel::Bottom;
-		accelInfo.VertexBuffer = vertexBuffer;
-		accelInfo.IndexBuffer = indexBuffer;
-		accelInfo.BoundingBox = boundingBox;
+		AccelerationStructureCreateInfo topAccelInfo = {};
+		topAccelInfo.Level = AccelerationStructureLevel::Top;
 
-		Ref<AccelerationStructure> accelerationStructure = AccelerationStructure::Create(&accelInfo);
+		AccelerationStructureCreateInfo bottomAccelInfo = {};
+		bottomAccelInfo.Level = AccelerationStructureLevel::Bottom;
+		bottomAccelInfo.VertexBuffer = vertexBuffer;
+		bottomAccelInfo.IndexBuffer = indexBuffer;
+		bottomAccelInfo.BoundingBox = boundingBox;
+
+
+
+		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
+		Ref<AccelerationStructure> bottomLevelAccelerationStructure = AccelerationStructure::Create(&bottomAccelInfo);
 
 		while (running)
 		{
@@ -147,10 +138,6 @@ namespace AccelerationStructureTest
 
 			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			//commandBuffer->BindVertexBuffer(vertexBuffer);
-
-			//commandBuffer->BindPipeline(pipeline);
-			//commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
 
 			commandBuffer->EndRenderPass();
 			Renderer::WaitAndRender();

@@ -37,13 +37,23 @@ namespace HazardRenderer::Vulkan
 			memcpy(dstData, instance->m_LocalData.Data, instance->m_Size);
 			allocator.UnmapMemory(stagingBufferAlloc);
 
-			VkBufferCreateInfo vertexBufferCreateInfo = {};
-			vertexBufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			vertexBufferCreateInfo.size = instance->m_Size;
-			vertexBufferCreateInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+			VkBufferCreateInfo indexBufferCreateInfo = {};
+			indexBufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			indexBufferCreateInfo.size = instance->m_Size;
 
+			if (instance->m_Usage != BufferUsage::TLAS && instance->m_Usage != BufferUsage::BLAS)
+			{
+				indexBufferCreateInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+				indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+			}
+			else
+			{
+				indexBufferCreateInfo.usage = VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+				indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+			}
+			indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-			instance->m_BufferAllocation = allocator.AllocateBuffer(vertexBufferCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_IndexBuffer);
+			instance->m_BufferAllocation = allocator.AllocateBuffer(indexBufferCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_IndexBuffer);
 			VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
 
 			VkBufferCopy copyRegion = {};

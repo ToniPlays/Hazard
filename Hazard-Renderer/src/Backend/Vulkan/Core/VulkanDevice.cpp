@@ -34,6 +34,7 @@ namespace HazardRenderer::Vulkan
 		VkPhysicalDeviceBufferAddressFeaturesEXT bufferAddress = {};
 		VkPhysicalDeviceVulkan12Features features12 = {};
 		VkPhysicalDeviceRayTracingPipelineFeaturesKHR rtInfo = {};
+		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelInfo = {};
 
 		if (physicalDevice->SupportsRaytracing())
 		{
@@ -45,9 +46,13 @@ namespace HazardRenderer::Vulkan
 			additionalExtensions.push_back(VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME);
 			additionalExtensions.push_back(VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME);
 
+			accelInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+			accelInfo.accelerationStructure = VK_TRUE;
+
 			rtInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
 			rtInfo.rayTracingPipeline = VK_TRUE;
 			rtInfo.rayTraversalPrimitiveCulling = VK_TRUE;
+			rtInfo.pNext = &accelInfo;
 
 			features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 			features12.bufferDeviceAddress = VK_TRUE;
@@ -64,8 +69,6 @@ namespace HazardRenderer::Vulkan
 			deviceInfo.enabledExtensionCount = (uint32_t)additionalExtensions.size();
 			deviceInfo.ppEnabledExtensionNames = additionalExtensions.data();
 		}
-
-
 
 		VkResult result = vkCreateDevice(m_PhysicalDevice->GetVulkanPhysicalDevice(), &deviceInfo, nullptr, &m_LogicalDevice);
 		HZR_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan Logical device");
