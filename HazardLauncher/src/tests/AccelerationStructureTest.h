@@ -117,7 +117,6 @@ namespace AccelerationStructureTest
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 
-
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
 		bottomAccelInfo.DebugName = "BottomLevelAccelerationStructure";
 		bottomAccelInfo.Level = AccelerationStructureLevel::Bottom;
@@ -132,6 +131,17 @@ namespace AccelerationStructureTest
 		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
 
 		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
+
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
+
+		PipelineSpecification pipelineSpec = {};
+		pipelineSpec.DebugName = "RaygenPipeline";
+		pipelineSpec.Usage = PipelineUsage::Raygen;
+		pipelineSpec.ShaderCodeCount = shaderCode.size();
+		pipelineSpec.pShaderCode = shaderCode.data();
+
+		Ref<Pipeline> raygenPipeline = Pipeline::Create(&pipelineSpec);
+
 
 		while (running)
 		{

@@ -7,7 +7,7 @@
 
 namespace HazardRenderer
 {
-	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit };
+	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit, Raygen };
 	enum class DrawType { None = 0, Fill, Line, Point };
 	enum class CullMode { None = 0, FrontFace, BackFace };
 	enum class DepthOp 

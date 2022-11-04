@@ -223,6 +223,14 @@ namespace HazardRenderer::Vulkan::VkUtils {
 			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 		if (stage & (uint32_t)ShaderStage::Compute)
 			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+		if(stage & (uint32_t)ShaderStage::Raygen)
+			flags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+		if (stage & (uint32_t)ShaderStage::Miss)
+			flags |= VK_SHADER_STAGE_MISS_BIT_KHR;
+		if (stage & (uint32_t)ShaderStage::ClosestHit)
+			flags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
+		if (stage & (uint32_t)ShaderStage::AnyHit)
+			flags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
 
 		return flags;
 	}

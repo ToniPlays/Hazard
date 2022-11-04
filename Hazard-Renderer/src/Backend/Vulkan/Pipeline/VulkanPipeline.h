@@ -41,6 +41,7 @@ namespace HazardRenderer::Vulkan
 	private:
 		void InvalidateGraphicsPipeline();
 		void InvalidateComputePipeline();
+		void InvalidateRaygenPipeline();
 	private:
 		PipelineSpecification m_Specs;
 		Ref<VulkanShader> m_Shader;
@@ -50,6 +51,9 @@ namespace HazardRenderer::Vulkan
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 		VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
+
+		//TODO: Remove
+		VkDescriptorSetLayout m_SetLayout;
 	};
 }
 #endif

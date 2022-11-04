@@ -10,9 +10,16 @@
 
 namespace HazardRenderer::Vulkan
 {
+	static PFN_vkCreateRayTracingPipelinesKHR fpCreateRayTracingPipelinesKHR;
+
+
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
 		HZR_PROFILE_FUNCTION();
+
+		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
+
 
 		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
 		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
@@ -88,10 +95,12 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::Invalidate_RT()
 	{
 		std::cout << "Validated shader " << m_Specs.DebugName << std::endl;
-		if (m_Specs.Usage == PipelineUsage::GraphicsBit)
-			InvalidateGraphicsPipeline();
-		else
-			InvalidateComputePipeline();
+		switch (m_Specs.Usage)
+		{
+		case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;
+		case PipelineUsage::ComputeBit:		InvalidateComputePipeline(); break;
+		case PipelineUsage::Raygen:			InvalidateRaygenPipeline(); break;
+		}
 	}
 
 	void VulkanPipeline::InvalidateGraphicsPipeline()
@@ -286,7 +295,6 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-
 		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
@@ -309,6 +317,94 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateComputePipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
+	}
+	void VulkanPipeline::InvalidateRaygenPipeline()
+	{
+		std::vector<VkRayTracingShaderGroupCreateInfoKHR> shaderGroups;
+
+		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
+		VkDescriptorSetLayoutBinding accelLayoutBinding = {};
+		accelLayoutBinding.binding = 0;
+		accelLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+		accelLayoutBinding.descriptorCount = 1;
+		accelLayoutBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+
+		VkDescriptorSetLayoutBinding outputImageBinding = {};
+		outputImageBinding.binding = 1;
+		outputImageBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+		outputImageBinding.descriptorCount = 1;
+		outputImageBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+
+		VkDescriptorSetLayoutBinding uniformBufferBinding = {};
+		uniformBufferBinding.binding = 2;
+		uniformBufferBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		uniformBufferBinding.descriptorCount = 1;
+		uniformBufferBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+
+		std::vector<VkDescriptorSetLayoutBinding> bindings(3);
+		bindings[0] = accelLayoutBinding;
+		bindings[1] = outputImageBinding;
+		bindings[2] = uniformBufferBinding;
+
+		VkDescriptorSetLayoutCreateInfo setLayout = {};
+		setLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		setLayout.bindingCount = bindings.size();
+		setLayout.pBindings = bindings.data();
+
+		VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &setLayout, nullptr, &m_SetLayout), "Oops");
+
+		VkPipelineLayoutCreateInfo pipelineLayout = {};
+		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayout.setLayoutCount = 1;
+		pipelineLayout.pSetLayouts = &m_SetLayout;
+
+		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
+
+		auto& stages = m_Shader->GetPipelineShaderStageCreateInfos();
+
+		//Raygen group
+		{
+			auto& group = shaderGroups.emplace_back();
+			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
+			group.generalShader = 0;
+			group.closestHitShader = VK_SHADER_UNUSED_KHR;
+			group.anyHitShader = VK_SHADER_UNUSED_KHR;
+			group.intersectionShader = VK_SHADER_UNUSED_KHR;
+		}
+		//Miss group
+		{
+			auto& group = shaderGroups.emplace_back();
+			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
+			group.generalShader = 0;
+			group.closestHitShader = VK_SHADER_UNUSED_KHR;
+			group.anyHitShader = VK_SHADER_UNUSED_KHR;
+			group.intersectionShader = VK_SHADER_UNUSED_KHR;
+		}
+		//Closest hit group
+		{
+			auto& group = shaderGroups.emplace_back();
+			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR;
+			group.generalShader = VK_SHADER_UNUSED_KHR;
+			group.closestHitShader = 2;
+			group.anyHitShader = VK_SHADER_UNUSED_KHR;
+			group.intersectionShader = VK_SHADER_UNUSED_KHR;
+		}
+		
+
+		VkRayTracingPipelineCreateInfoKHR createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
+		createInfo.stageCount = stages.size();
+		createInfo.pStages = stages.data();
+		createInfo.groupCount = shaderGroups.size();
+		createInfo.pGroups = shaderGroups.data();
+		createInfo.maxPipelineRayRecursionDepth = 8;
+		createInfo.layout = m_PipelineLayout;
+
+		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipeline), "Failed to create RayTracingPipeline");
 	}
 }
 

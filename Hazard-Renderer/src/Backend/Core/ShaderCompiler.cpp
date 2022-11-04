@@ -245,6 +245,8 @@ namespace HazardRenderer
 
 				if (!compiler.Compile(&compileInfoVulkan))
 				{
+					std::cout << compiler.GetErrorMessage() << std::endl;
+					__debugbreak();
 					continue;
 				}
 				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });

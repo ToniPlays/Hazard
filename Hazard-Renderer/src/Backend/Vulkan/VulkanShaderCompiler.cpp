@@ -18,6 +18,10 @@ namespace HazardRenderer::Vulkan
         case ShaderStage::Fragment:	    return shaderc_glsl_fragment_shader;
         case ShaderStage::Compute:	    return shaderc_glsl_compute_shader;
         case ShaderStage::Geometry:	    return shaderc_glsl_geometry_shader;
+        case ShaderStage::Raygen:	    return shaderc_raygen_shader;
+        case ShaderStage::Miss:	        return shaderc_miss_shader;
+        case ShaderStage::ClosestHit:   return shaderc_closesthit_shader;
+        case ShaderStage::AnyHit:       return shaderc_anyhit_shader;
         case ShaderStage::None:         return (shaderc_shader_kind)0;
         }
         return (shaderc_shader_kind)0;
@@ -43,6 +47,7 @@ namespace HazardRenderer::Vulkan
         case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
         }
         
+        options.SetTargetSpirv(shaderc_spirv_version_1_4);
         options.SetOptimizationLevel((shaderc_optimization_level)compileInfo->Optimization);
         options.SetGenerateDebugInfo();
 

@@ -11,13 +11,17 @@ namespace HazardRenderer
 {
 	class UniformBuffer;
 
-	enum class ShaderStage : uint32_t 
+	enum class ShaderStage : uint32_t
 	{
 		None = BIT(0),
 		Vertex = BIT(1),
 		Fragment = BIT(2),
 		Compute = BIT(3),
-		Geometry = BIT(4)
+		Geometry = BIT(4),
+		Raygen = BIT(5),
+		Miss = BIT(6),
+		ClosestHit = BIT(7),
+		AnyHit = BIT(8)
 	};
 	enum ShaderResourceFlags
 	{
@@ -99,6 +103,10 @@ namespace HazardRenderer
 			if (type == "Fragment")		return ShaderStage::Fragment;
 			if (type == "Pixel")		return ShaderStage::Fragment;
 			if (type == "Compute")		return ShaderStage::Compute;
+			if (type == "Raygen")		return ShaderStage::Raygen;
+			if (type == "Miss")			return ShaderStage::Miss;
+			if (type == "ClosestHit")	return ShaderStage::ClosestHit;
+			if (type == "AnyHit")		return ShaderStage::AnyHit;
 			return ShaderStage::None;
 		}
 		static std::string ShaderStageToString(const uint32_t& type) {
