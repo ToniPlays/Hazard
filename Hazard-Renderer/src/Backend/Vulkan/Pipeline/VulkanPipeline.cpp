@@ -323,44 +323,14 @@ namespace HazardRenderer::Vulkan
 		std::vector<VkRayTracingShaderGroupCreateInfoKHR> shaderGroups;
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-
-		VkDescriptorSetLayoutBinding accelLayoutBinding = {};
-		accelLayoutBinding.binding = 0;
-		accelLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-		accelLayoutBinding.descriptorCount = 1;
-		accelLayoutBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-
-		VkDescriptorSetLayoutBinding outputImageBinding = {};
-		outputImageBinding.binding = 1;
-		outputImageBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-		outputImageBinding.descriptorCount = 1;
-		outputImageBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-
-		VkDescriptorSetLayoutBinding uniformBufferBinding = {};
-		uniformBufferBinding.binding = 2;
-		uniformBufferBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-		uniformBufferBinding.descriptorCount = 1;
-		uniformBufferBinding.stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-
-		std::vector<VkDescriptorSetLayoutBinding> bindings(3);
-		bindings[0] = accelLayoutBinding;
-		bindings[1] = outputImageBinding;
-		bindings[2] = uniformBufferBinding;
-
-		VkDescriptorSetLayoutCreateInfo setLayout = {};
-		setLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		setLayout.bindingCount = bindings.size();
-		setLayout.pBindings = bindings.data();
-
-		VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &setLayout, nullptr, &m_SetLayout), "Oops");
+		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayout.setLayoutCount = 1;
-		pipelineLayout.pSetLayouts = &m_SetLayout;
+		pipelineLayout.setLayoutCount = setLayouts.size();
+		pipelineLayout.pSetLayouts = setLayouts.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
-
 		auto& stages = m_Shader->GetPipelineShaderStageCreateInfos();
 
 		//Raygen group
@@ -393,7 +363,6 @@ namespace HazardRenderer::Vulkan
 			group.anyHitShader = VK_SHADER_UNUSED_KHR;
 			group.intersectionShader = VK_SHADER_UNUSED_KHR;
 		}
-		
 
 		VkRayTracingPipelineCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;

@@ -53,7 +53,7 @@ namespace HazardRenderer::Vulkan
 		VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
 
 		//TODO: Remove
-		VkDescriptorSetLayout m_SetLayout;
+		VkDescriptorSetLayout setLayouts;
 	};
 }
 #endif

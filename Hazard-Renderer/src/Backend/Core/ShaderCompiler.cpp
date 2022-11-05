@@ -64,6 +64,15 @@ namespace HazardRenderer
 				input.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
 				data.Stride += input.Size;
 			}
+			for (auto& resource : resources.acceleration_structures)
+			{
+				auto& spvType = compiler.get_type(resource.base_type_id);
+				uint32_t location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
+
+				ShaderStageAccelerationStructure& structure = data.AccelerationStructures[location];
+				structure.Name = resource.name;
+				structure.Location = location;
+			}
 
 			for (auto& resource : resources.stage_outputs)
 			{

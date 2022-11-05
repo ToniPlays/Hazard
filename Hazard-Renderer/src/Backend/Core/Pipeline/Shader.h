@@ -44,6 +44,11 @@ namespace HazardRenderer
 		uint32_t Size = 0;
 		uint32_t Offset = 0;
 	};
+	struct ShaderStageAccelerationStructure
+	{
+		std::string Name;
+		uint32_t Location = 0;
+	};
 	struct ShaderStageOutput
 	{
 		std::string Name;
@@ -82,6 +87,7 @@ namespace HazardRenderer
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
+		std::unordered_map<uint32_t, ShaderStageAccelerationStructure> AccelerationStructures;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
 		uint32_t Stride = 0;
 	};

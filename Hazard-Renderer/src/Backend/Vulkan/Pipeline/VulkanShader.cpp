@@ -232,6 +232,29 @@ namespace HazardRenderer::Vulkan
 				auto& descriptorSet = m_DescriptorSets[frame][set];
 				descriptorSet.ReserveBindings(m_ShaderData.UniformsDescriptions[set].size() + m_ShaderData.ImageSamplers[set].size());
 
+				for (auto& [stage, data] : m_ShaderData.Stages)
+				{
+					for (auto& [location, accel] : data.AccelerationStructures)
+					{
+						VkDescriptorSetLayoutBinding descriptorBinding = {};
+						descriptorBinding = {};
+						descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+						descriptorBinding.binding = location;
+						descriptorBinding.descriptorCount = 1;
+						descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage((uint32_t)stage);
+
+						VkWriteDescriptorSet writeDescriptor = {};
+						writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						writeDescriptor.dstBinding = location;
+						writeDescriptor.descriptorType = descriptorBinding.descriptorType;
+						writeDescriptor.dstArrayElement = 0;
+						writeDescriptor.descriptorCount = 1;
+
+						descriptorSet.AddBinding(descriptorBinding);
+						descriptorSet.AddWriteDescriptor(location, accel.Name, writeDescriptor);
+					}
+				}
+
 				for (auto& [binding, buffer] : m_ShaderData.UniformsDescriptions[set])
 				{
 					VkDescriptorSetLayoutBinding descriptorBinding = {};
