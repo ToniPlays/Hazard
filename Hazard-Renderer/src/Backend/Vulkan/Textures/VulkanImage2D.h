@@ -37,9 +37,9 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetLayerCount() { return 1; }
 
 		VkImageView GetLayerImageView(uint32_t layer) { return m_LayerImageViews[layer]; }
+		void SetImageLayout(VkImageLayout layout) { m_ImageDescriptor.imageLayout = layout; };
 
 		void Invalidate_RT();
-
 		void UploadImageData_RT(Buffer data, VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 	private:

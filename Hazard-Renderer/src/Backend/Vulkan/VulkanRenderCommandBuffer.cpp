@@ -409,7 +409,7 @@ namespace HazardRenderer::Vulkan
 			auto layout = pipeline->GetPipelineLayout();
 			auto& descriptorSets = shader->GetVulkanDescriptorSets();
 
-			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0,
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, pipeline->GetBindingPoint(), layout, 0,
 				descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
 
 			if (buffer)
@@ -519,18 +519,38 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanImage2D> image = info.Image.As<VulkanImage2D>();
 		Ref<VulkanCubemapTexture> cubemap = info.Cubemap.As<VulkanCubemapTexture>();
-		VkImageLayout layout = cubemap->GetImageDescriptor().imageLayout;
 
-		Renderer::Submit([instance, transitionInfo = info, cubemap, layout]() mutable {
+		Renderer::Submit([instance, transitionInfo = info, cubemap, image]() mutable {
 
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TransitionImageLayout");
+
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			HZR_ASSERT(transitionInfo.Image || transitionInfo.Cubemap, "What are you doing");
 
 			if (transitionInfo.Image)
 			{
-				HZR_ASSERT(false, "Not implemented");
+				VkImageSubresourceRange range = {};
+
+				range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				range.baseMipLevel = 0;
+				range.levelCount = image->GetMipLevels();
+				range.baseArrayLayer = 0;
+				range.layerCount = 1;
+
+				VkUtils::InsertImageMemoryBarrier(
+					instance->m_ActiveCommandBuffer,
+					image->GetVulkanImage(),
+					VkUtils::GetVulkanAccess(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanAccess(transitionInfo.DestLayout),
+					VkUtils::GetVulkanImageLayout(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanImageLayout(transitionInfo.DestLayout),
+					VkUtils::GetVulkanStage(transitionInfo.SourceLayout),
+					VkUtils::GetVulkanStage(transitionInfo.DestLayout),
+					range
+				);
+				image->SetImageLayout(VkUtils::GetVulkanImageLayout(transitionInfo.DestLayout));
 			}
 
 			if (transitionInfo.Cubemap)

@@ -1,10 +1,3 @@
-//
-//  test.metal
-//  HazardEditor
-//
-//  Created by Toni Simoska on 5.1.2022.
-//
-
 #include <metal_stdlib>
 using namespace metal;
 
