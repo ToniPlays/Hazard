@@ -16,7 +16,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanShaderBindingTable>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);
+		case RenderAPI::Metal: return Ref<Metal::MetalShaderBindingTable>::Create(info);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RenderAPI");

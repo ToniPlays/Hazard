@@ -30,13 +30,13 @@ namespace AccelerationStructureTest
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hello Acceleration structures";
 		appInfo.BuildVersion = "0.0.1a";
-		appInfo.MessageCallback = [](RenderMessage message) 
+		appInfo.MessageCallback = [](RenderMessage message)
 		{
 			std::cout << message.Description << std::endl;
 		};
 		appInfo.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
-			if (e.GetEventType() == EventType::WindowClose) 
+			if (e.GetEventType() == EventType::WindowClose)
 			{
 				running = false;
 			}
@@ -80,10 +80,10 @@ namespace AccelerationStructureTest
 		//---------------
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
+			-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 		uint32_t indices[] = {
 			0, 1, 2,
@@ -109,13 +109,22 @@ namespace AccelerationStructureTest
 		ibo.Data = indices;
 
 		BoundingBox boundingBox = {};
-		boundingBox.Encapsulate({-0.5f, -0.5f, 0.0f });
-		boundingBox.Encapsulate({ 0.5f, -0.5f, 0.0f });
-		boundingBox.Encapsulate({ 0.5f,  0.5f, 0.0f });
-		boundingBox.Encapsulate({-0.5f,  0.5f, 0.0f });
+		boundingBox.Encapsulate({ -0.5f, -0.5f,  0.0f });
+		boundingBox.Encapsulate({  0.5f, -0.5f,  0.0f });
+		boundingBox.Encapsulate({  0.5f,  0.5f, -0.5f });
+		boundingBox.Encapsulate({ -0.5f,  0.5f, -0.5f });
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+
+		Image2DCreateInfo outputImage = {};
+		outputImage.DebugName = "OutputImage";
+		outputImage.Width = window->GetWidth();
+		outputImage.Height = window->GetHeight();
+		outputImage.Format = ImageFormat::RGBA;
+		outputImage.Usage = ImageUsage::Storage;
+
+		Ref<Image2D> image = Image2D::Create(&outputImage);
 
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
 		bottomAccelInfo.DebugName = "BottomLevelAccelerationStructure";
@@ -131,7 +140,6 @@ namespace AccelerationStructureTest
 		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
 
 		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
-
 		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
@@ -142,6 +150,29 @@ namespace AccelerationStructureTest
 
 		Ref<Pipeline> raygenPipeline = Pipeline::Create(&pipelineSpec);
 
+		ShaderBindingTableCreateInfo bindingSpec = {};
+		bindingSpec.pPipeline = raygenPipeline;
+
+		Ref<ShaderBindingTable> bindingTable = ShaderBindingTable::Create(&bindingSpec);
+
+		struct CameraData
+		{
+			glm::mat4 InvView;
+			glm::mat4 InvProjection;
+		} cameraData;
+
+		float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
+		cameraData.InvProjection = glm::inverse(glm::perspective(glm::radians(45.0f), aspectRatio, 0.03f, 100.0f));
+		cameraData.InvView = glm::inverse(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, -2.0f }));
+
+		UniformBufferCreateInfo uboInfo = {};
+		uboInfo.Name = "Camera";
+		uboInfo.Set = 0;
+		uboInfo.Binding = 2;
+		uboInfo.Size = sizeof(CameraData);
+		uboInfo.Usage = BufferUsage::DynamicDraw;
+
+		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
 
 		while (running)
 		{
@@ -149,8 +180,23 @@ namespace AccelerationStructureTest
 			window->BeginFrame();
 
 			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 
+			camera->SetData(&cameraData, sizeof(CameraData));
+
+			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure);
+			raygenPipeline->GetShader()->Set("image", 0, image);
+
+
+			TraceRaysInfo info = {};
+			info.Width = window->GetWidth();
+			info.Height = window->GetHeight();
+			info.Depth = 1;
+			info.pBindingTable = bindingTable;
+
+			commandBuffer->BindPipeline(raygenPipeline);
+			commandBuffer->TraceRays(info);
+
+			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 			commandBuffer->EndRenderPass();
 			Renderer::WaitAndRender();
 			window->Present();

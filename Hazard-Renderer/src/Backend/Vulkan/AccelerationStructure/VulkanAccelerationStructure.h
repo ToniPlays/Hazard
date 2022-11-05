@@ -28,13 +28,11 @@ namespace HazardRenderer::Vulkan
 
 		void Invalidate_RT();
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
-
 		VulkanAccelStruct GetVulkanAccelerationStructure() { return m_StructureInfo; }
 
 	private:
 		void CreateTopLevel();
 		void CreateBottomLevel();
-		VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer);
 
 	private:
 		std::string m_DebugName;

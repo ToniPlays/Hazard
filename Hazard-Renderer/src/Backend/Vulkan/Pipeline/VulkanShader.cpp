@@ -9,6 +9,7 @@
 #include "VulkanUniformBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
+#include "../AccelerationStructure/VulkanAccelerationStructure.h"
 #include "Profiling/Timer.h"
 
 #include "Backend/Core/ShaderCompiler.h"
@@ -97,6 +98,34 @@ namespace HazardRenderer::Vulkan
 				}
 			}
 			});
+	}
+
+	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> cubemap)
+	{
+		HZR_PROFILE_FUNCTION();
+		Ref<VulkanShader> instance = this;
+		Ref<VulkanAccelerationStructure> structure = cubemap.As<VulkanAccelerationStructure>();
+		Renderer::Submit([instance, structure, index, name]() mutable {
+			uint32_t frameIndex = VulkanContext::GetFrameIndex();
+			uint32_t i = 0;
+
+			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			{
+				if (set.Contains(name))
+				{
+					VkAccelerationStructureKHR s = structure->GetVulkanAccelerationStructure().AccelerationStructure;
+					VkWriteDescriptorSetAccelerationStructureKHR info = {};
+					info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+					info.accelerationStructureCount = 1;
+					info.pAccelerationStructures = &s;
+
+					uint32_t binding = set.GetIndex(name);
+					set.SetAccelerationStructure(set.GetIndex(name), index, info);
+					return;
+				}
+			}
+			});
+
 	}
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
@@ -239,19 +268,19 @@ namespace HazardRenderer::Vulkan
 						VkDescriptorSetLayoutBinding descriptorBinding = {};
 						descriptorBinding = {};
 						descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-						descriptorBinding.binding = location;
+						descriptorBinding.binding = accel.Location;
 						descriptorBinding.descriptorCount = 1;
 						descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage((uint32_t)stage);
 
 						VkWriteDescriptorSet writeDescriptor = {};
 						writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-						writeDescriptor.dstBinding = location;
+						writeDescriptor.dstBinding = accel.Location;
 						writeDescriptor.descriptorType = descriptorBinding.descriptorType;
 						writeDescriptor.dstArrayElement = 0;
 						writeDescriptor.descriptorCount = 1;
 
 						descriptorSet.AddBinding(descriptorBinding);
-						descriptorSet.AddWriteDescriptor(location, accel.Name, writeDescriptor);
+						descriptorSet.AddWriteDescriptor(accel.Location, accel.Name, writeDescriptor);
 					}
 				}
 

@@ -12,16 +12,21 @@
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
 #include "Textures/VulkanCubemapTexture.h"
+#include "AccelerationStructure/VulkanShaderBindingTable.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::Vulkan
 {
+	static PFN_vkCmdTraceRaysKHR fpCmdTraceRaysKHR;
+
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t size, const std::string& name, bool compute) : m_DebugName(std::move(name))
 	{
 		HZR_PROFILE_FUNCTION();
+
 		auto& device = VulkanContext::GetLogicalDevice();
+
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
 		auto& queueIndices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
@@ -102,6 +107,9 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& device = VulkanContext::GetLogicalDevice();
+
+		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdTraceRaysKHR);
+
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
 		VkQueryPoolCreateInfo queryPoolCreateInfo = {};
@@ -376,8 +384,9 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindPipeline");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-			auto vkPipeline = pipeline->GetVulkanPipeline();
-			vkCmdBindPipeline(instance->m_ActiveCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipeline);
+
+			pipeline->Bind(instance->m_ActiveCommandBuffer);
+
 			});
 	}
 	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
@@ -429,7 +438,20 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
 	{
+		HZR_PROFILE_FUNCTION();
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, info = traceRaysInfo]() {
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TraceRays");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
+			auto& bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
+			auto& raygenTable = bindingTable->GetRaygenTableAddress();
+			auto& missTable = bindingTable->GetMissTableAddress();
+			auto& closestHitTable = bindingTable->GetClosestHitTableAddress();
+			auto& callableTable = bindingTable->GetCallableTableAddress();
+
+			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Width, info.Height, info.Depth);
+			});
 	}
 	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{

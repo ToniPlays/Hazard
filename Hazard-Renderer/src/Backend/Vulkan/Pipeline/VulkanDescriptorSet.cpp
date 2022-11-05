@@ -26,6 +26,17 @@ namespace HazardRenderer::Vulkan
 
 		vkUpdateDescriptorSets(device, 1, &writeSet.Set, 0, nullptr);
 	}
+	void VulkanDescriptorSet::SetAccelerationStructure(uint32_t binding, uint32_t index, VkWriteDescriptorSetAccelerationStructureKHR info)
+	{
+		const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		auto& writeSet = m_WriteDescriptors[binding];
+		writeSet.Set.dstSet = m_VkDescriptorSet;
+		writeSet.Set.dstArrayElement = index;
+		writeSet.Set.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+		writeSet.Set.pNext = &info;
+
+		vkUpdateDescriptorSets(device, 1, &writeSet.Set, 0, nullptr);
+	}
 	void VulkanDescriptorSet::Invalidate()
 	{
 		std::sort(m_Bindings.begin(), m_Bindings.end(), [](VkDescriptorSetLayoutBinding& a, VkDescriptorSetLayoutBinding& b) { return a.binding < b.binding; });

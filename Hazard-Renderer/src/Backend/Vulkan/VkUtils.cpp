@@ -1,7 +1,12 @@
 #include "VkUtils.h"
 #ifdef HZR_INCLUDE_VULKAN
 
+#include "VulkanContext.h"
+
 namespace HazardRenderer::Vulkan::VkUtils {
+
+
+	static PFN_vkGetBufferDeviceAddressKHR fpGetBufferDeviceAddressKHR;
 
 	void LoadDebugUtilsExtensions(VkInstance instance)
 	{
@@ -167,7 +172,7 @@ namespace HazardRenderer::Vulkan::VkUtils {
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
-	void SetImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange, 
+	void SetImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange,
 		VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
 	{
 		VkImageMemoryBarrier barrier = {};
@@ -208,8 +213,23 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		}
 		}
 
-		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 
+		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0,
 			0, nullptr, 0, nullptr, 1, &barrier);
+	}
+	VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer)
+	{
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
+		// YEET THIS
+		GET_DEVICE_PROC_ADDR(device, GetBufferDeviceAddressKHR);
+
+		VkBufferDeviceAddressInfo bufferDeviceAddressInfo = {};
+		bufferDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+		bufferDeviceAddressInfo.buffer = buffer;
+
+		VkDeviceOrHostAddressConstKHR address = {};
+		address.deviceAddress = fpGetBufferDeviceAddressKHR(device, &bufferDeviceAddressInfo);
+
+		return address;
 	}
 	VkShaderStageFlags GetVulkanShaderStage(uint32_t stage)
 	{
@@ -223,7 +243,7 @@ namespace HazardRenderer::Vulkan::VkUtils {
 			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
 		if (stage & (uint32_t)ShaderStage::Compute)
 			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
-		if(stage & (uint32_t)ShaderStage::Raygen)
+		if (stage & (uint32_t)ShaderStage::Raygen)
 			flags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
 		if (stage & (uint32_t)ShaderStage::Miss)
 			flags |= VK_SHADER_STAGE_MISS_BIT_KHR;

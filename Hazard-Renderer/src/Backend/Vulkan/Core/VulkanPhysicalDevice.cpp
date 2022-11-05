@@ -6,7 +6,7 @@
 
 #include <set>
 
-namespace HazardRenderer::Vulkan 
+namespace HazardRenderer::Vulkan
 {
 	VulkanPhysicalDevice::VulkanPhysicalDevice()
 	{
@@ -23,7 +23,7 @@ namespace HazardRenderer::Vulkan
 		{
 			vkGetPhysicalDeviceProperties(device, &m_Properties);
 			//TODO: select others probably?
-			if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) 
+			if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 			{
 				m_Capabilities.Discrete = true;
 				selectedDevice = device;
@@ -50,12 +50,12 @@ namespace HazardRenderer::Vulkan
 
 		//Queue families
 		static const float defaultPriority = 0.0f;
-		
+
 		int requestedQueueTypes = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT;
 		m_QueueFamilyIndices = FindQueueFamilyIndices(requestedQueueTypes);
 
 
-		if (requestedQueueTypes & VK_QUEUE_GRAPHICS_BIT) 
+		if (requestedQueueTypes & VK_QUEUE_GRAPHICS_BIT)
 		{
 			VkDeviceQueueCreateInfo queueInfo = {};
 			queueInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -84,7 +84,7 @@ namespace HazardRenderer::Vulkan
 				m_QueueCreateInfos.push_back(queueInfo);
 			}
 		}
-		
+
 		m_DepthFormat = FindDepthFormat();
 	}
 	VulkanPhysicalDevice::~VulkanPhysicalDevice()
@@ -105,17 +105,17 @@ namespace HazardRenderer::Vulkan
 			std::vector<VkExtensionProperties> extensions(extCount);
 			if (vkEnumerateDeviceExtensionProperties(m_PhysicalDevice, nullptr, &extCount, &extensions.front()) == VK_SUCCESS)
 			{
-				for (const auto& ext : extensions) 
+				for (const auto& ext : extensions)
 				{
 					std::cout << " -" << ext.extensionName << std::endl;
-					m_Capabilities.Swapchain				|= strcmp(ext.extensionName, VK_KHR_SWAPCHAIN_EXTENSION_NAME) == 0;
-					m_Capabilities.DiagnosticCheckpoint		|= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME) == 0;
-					m_Capabilities.DiagnosticConfig			|= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME) == 0;
-					m_Capabilities.DebugMarker				|= strcmp(ext.extensionName, VK_EXT_DEBUG_MARKER_EXTENSION_NAME) == 0;
+					m_Capabilities.Swapchain |= strcmp(ext.extensionName, VK_KHR_SWAPCHAIN_EXTENSION_NAME) == 0;
+					m_Capabilities.DiagnosticCheckpoint |= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME) == 0;
+					m_Capabilities.DiagnosticConfig |= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME) == 0;
+					m_Capabilities.DebugMarker |= strcmp(ext.extensionName, VK_EXT_DEBUG_MARKER_EXTENSION_NAME) == 0;
 
-					m_Capabilities.AccelerationStructures	|= strcmp(ext.extensionName, VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME) == 0;
-					m_Capabilities.RayTracingPipeline		|= strcmp(ext.extensionName, VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME) == 0;
-					m_Capabilities.RayQuery					|= strcmp(ext.extensionName, VK_KHR_RAY_QUERY_EXTENSION_NAME) == 0;
+					m_Capabilities.AccelerationStructures |= strcmp(ext.extensionName, VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME) == 0;
+					m_Capabilities.RayTracingPipeline |= strcmp(ext.extensionName, VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME) == 0;
+					m_Capabilities.RayQuery |= strcmp(ext.extensionName, VK_KHR_RAY_QUERY_EXTENSION_NAME) == 0;
 				}
 			}
 		}
@@ -136,6 +136,7 @@ namespace HazardRenderer::Vulkan
 			vkGetPhysicalDeviceProperties2(m_PhysicalDevice, &properties);
 
 			m_Limits.MaxRecursionDepth = rtProperties.maxRecursionDepth;
+			m_Limits.ShaderGroupHandleSize = rtProperties.shaderGroupHandleSize;
 		}
 	}
 
@@ -143,7 +144,7 @@ namespace HazardRenderer::Vulkan
 	{
 		QueueFamilyIndices result;
 
-		if (flags & VK_QUEUE_COMPUTE_BIT) 
+		if (flags & VK_QUEUE_COMPUTE_BIT)
 		{
 			for (uint32_t i = 0; i < m_QueueFamilyProperties.size(); i++) {
 				const auto& prop = m_QueueFamilyProperties[i];

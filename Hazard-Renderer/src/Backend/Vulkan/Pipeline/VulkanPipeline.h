@@ -38,6 +38,8 @@ namespace HazardRenderer::Vulkan
 		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
 		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
 
+		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetShaderGroups() { return m_ShaderGroups; }
+
 	private:
 		void InvalidateGraphicsPipeline();
 		void InvalidateComputePipeline();
@@ -52,8 +54,7 @@ namespace HazardRenderer::Vulkan
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 		VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
 
-		//TODO: Remove
-		VkDescriptorSetLayout setLayouts;
+		std::vector<VkRayTracingShaderGroupCreateInfoKHR> m_ShaderGroups;
 	};
 }
 #endif

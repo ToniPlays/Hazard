@@ -164,7 +164,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		createInfo.usage = flags;
 
-		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_ImageDescriptor.imageLayout = m_Usage == ImageUsage::Storage ? VK_IMAGE_LAYOUT_GENERAL :  VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 		m_Allocation = allocator.AllocateImage(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Image);
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_DebugName), m_Image);

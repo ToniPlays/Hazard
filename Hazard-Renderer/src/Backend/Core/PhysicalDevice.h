@@ -11,6 +11,7 @@ namespace HazardRenderer
 		glm::vec2 MaxFrameBufferSize;
 
 		uint32_t MaxRecursionDepth = 0;
+		uint32_t ShaderGroupHandleSize = 0;
 	};
 
 	struct PhysicalDeviceCapabilities

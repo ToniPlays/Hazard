@@ -83,13 +83,22 @@ namespace HazardRenderer::Vulkan
 	{
 		auto& descriptorSets = m_Shader->GetVulkanDescriptorSets();
 
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_Pipeline);
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_PipelineLayout, 0,
-			descriptorSets.size(), descriptorSets.data(), 0, nullptr);
+		auto bindingPoint = GetBindingPoint();
+		auto& offsets = m_Shader->GetDynamicOffsets();
+
+		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
+		vkCmdBindDescriptorSets(commandBuffer, bindingPoint, m_PipelineLayout, 0,
+			descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
 	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
 	{
-		return m_Specs.Usage == PipelineUsage::GraphicsBit ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
+		switch (m_Specs.Usage)
+		{
+		case PipelineUsage::GraphicsBit: return VK_PIPELINE_BIND_POINT_GRAPHICS;
+		case PipelineUsage::ComputeBit: return VK_PIPELINE_BIND_POINT_COMPUTE;
+		case PipelineUsage::Raygen: return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
+		}
+		return VK_PIPELINE_BIND_POINT_MAX_ENUM;
 	}
 
 	void VulkanPipeline::Invalidate_RT()
@@ -320,8 +329,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::InvalidateRaygenPipeline()
 	{
-		std::vector<VkRayTracingShaderGroupCreateInfoKHR> shaderGroups;
-
+		m_ShaderGroups.clear();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
@@ -335,7 +343,7 @@ namespace HazardRenderer::Vulkan
 
 		//Raygen group
 		{
-			auto& group = shaderGroups.emplace_back();
+			auto& group = m_ShaderGroups.emplace_back();
 			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
 			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
 			group.generalShader = 0;
@@ -345,17 +353,17 @@ namespace HazardRenderer::Vulkan
 		}
 		//Miss group
 		{
-			auto& group = shaderGroups.emplace_back();
+			auto& group = m_ShaderGroups.emplace_back();
 			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
 			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
-			group.generalShader = 0;
+			group.generalShader = 1;
 			group.closestHitShader = VK_SHADER_UNUSED_KHR;
 			group.anyHitShader = VK_SHADER_UNUSED_KHR;
 			group.intersectionShader = VK_SHADER_UNUSED_KHR;
 		}
 		//Closest hit group
 		{
-			auto& group = shaderGroups.emplace_back();
+			auto& group = m_ShaderGroups.emplace_back();
 			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
 			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR;
 			group.generalShader = VK_SHADER_UNUSED_KHR;
@@ -368,9 +376,9 @@ namespace HazardRenderer::Vulkan
 		createInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
 		createInfo.stageCount = stages.size();
 		createInfo.pStages = stages.data();
-		createInfo.groupCount = shaderGroups.size();
-		createInfo.pGroups = shaderGroups.data();
-		createInfo.maxPipelineRayRecursionDepth = 8;
+		createInfo.groupCount = m_ShaderGroups.size();
+		createInfo.pGroups = m_ShaderGroups.data();
+		createInfo.maxPipelineRayRecursionDepth = 1;
 		createInfo.layout = m_PipelineLayout;
 
 		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipeline), "Failed to create RayTracingPipeline");

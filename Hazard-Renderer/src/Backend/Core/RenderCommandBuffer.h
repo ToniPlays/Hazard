@@ -57,7 +57,7 @@ namespace HazardRenderer
 		uint32_t Width;
 		uint32_t Height;
 		uint32_t Depth;
-		ShaderBindingTable* pBindingTable;
+		Ref<ShaderBindingTable> pBindingTable;
 	};
 
 

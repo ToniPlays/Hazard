@@ -2,6 +2,7 @@
 
 #include "Backend/Core/Core.h"
 #include "ShaderDataType.h"
+#include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 #include <unordered_map>
@@ -172,6 +173,7 @@ namespace HazardRenderer
 
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
+		virtual void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;

@@ -10,7 +10,7 @@ namespace HazardRenderer::Vulkan
 {
 	struct WriteDescriptorData
 	{
-		std::string name;
+		std::string Name;
 		VkWriteDescriptorSet Set;
 		VkDescriptorType Type;
 	};
@@ -27,6 +27,7 @@ namespace HazardRenderer::Vulkan
 
 		void SetBuffer(uint32_t binding, VkDescriptorBufferInfo info);
 		void SetSampler(uint32_t binding, uint32_t index, VkDescriptorImageInfo info);
+		void SetAccelerationStructure(uint32_t binding, uint32_t index, VkWriteDescriptorSetAccelerationStructureKHR info);
 
 		void ReserveBindings(size_t size)
 		{
