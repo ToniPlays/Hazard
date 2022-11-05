@@ -42,10 +42,14 @@ namespace Hazard {
 		MeshLoaderFlags_DropNormals = BIT(30),
 		MeshLoaderFlags_GenerateBoundingBoxes = BIT(31),
 
-		MeshLoaderFlags_DefaultOptimization = MeshLoaderFlags_JoinIdenticalVertices |
-		MeshLoaderFlags_GenerateSmoothNormals | MeshLoaderFlags_Triangulate |
-		MeshLoaderFlags_GenerateUVCoords | MeshLoaderFlags_OptimizeMeshes |
-		MeshLoaderFlags_GenerateBoundingBoxes
+		MeshLoaderFlags_DefaultFlags = MeshLoaderFlags_CalculateTangentSpace
+		| MeshLoaderFlags_Triangulate 
+		| MeshLoaderFlags_SortByType
+		| MeshLoaderFlags_GenerateNormals
+		| MeshLoaderFlags_GenerateUVCoords
+		| MeshLoaderFlags_OptimizeMeshes
+		| MeshLoaderFlags_JoinIdenticalVertices
+		| MeshLoaderFlags_ValidateDataStructure
 	};
 
 	struct MeshData 
@@ -57,10 +61,5 @@ namespace Hazard {
 		std::vector<SubMesh> SubMeshes;
 		std::vector<Vertex3D> Vertices;
 		std::vector<uint32_t> Indices;
-	};
-
-	struct MeshCreateInfo
-	{
-		std::string FilePath;
 	};
 }

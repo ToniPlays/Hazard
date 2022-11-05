@@ -12,7 +12,7 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Mesh::Mesh(const MeshData& data, const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices)
+	Mesh::Mesh(MeshCreateInfo* createInfo)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -21,22 +21,22 @@ namespace Hazard
 		VertexBufferCreateInfo vboInfo = {};
 		vboInfo.DebugName = "SomeMeshVertexBuffer";
 		vboInfo.Layout = &layout;
-		vboInfo.Size = vertices.size() * sizeof(Vertex3D);
-		vboInfo.Data = (void*)vertices.data();
-		vboInfo.Usage = BufferUsage::StaticDraw;
+		vboInfo.Size = createInfo->VertexCount;
+		vboInfo.Data = (void*)createInfo->pVertices;
+		vboInfo.Usage = createInfo->Usage;
 
 		m_VertexBuffer = VertexBuffer::Create(&vboInfo);
 
 		IndexBufferCreateInfo iboInfo = {};
 		iboInfo.DebugName = "SomeMeshIndices";
-		iboInfo.Size = indices.size() * sizeof(uint32_t);
-		iboInfo.Data = (uint32_t*)indices.data();
-		iboInfo.Usage = BufferUsage::StaticDraw;
+		iboInfo.Size = createInfo->IndexCount;
+		iboInfo.Data = createInfo->pIndices;
+		iboInfo.Usage = createInfo->Usage;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
 
 		m_Pipeline = ShaderLibrary::GetPipelinePtr("pbr_static");
-		m_BoundingBox = data.BoundingBox;
+		m_BoundingBox = createInfo->BoundingBox;
 	}
 
 	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)

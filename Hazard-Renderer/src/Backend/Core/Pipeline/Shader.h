@@ -49,6 +49,13 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		uint32_t Location = 0;
+		uint32_t UsageFlags = 0;
+	};
+	struct ShaderStorageBuffer
+	{
+		std::string Name;
+		uint32_t Location;
+		uint32_t UsageFlags;
 	};
 	struct ShaderStageOutput
 	{
@@ -88,7 +95,6 @@ namespace HazardRenderer
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
-		std::unordered_map<uint32_t, ShaderStageAccelerationStructure> AccelerationStructures;
 		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
 		uint32_t Stride = 0;
 	};
@@ -98,6 +104,8 @@ namespace HazardRenderer
 		std::unordered_map<ShaderStage, ShaderStageData> Stages;
 		//Set Binding, buffer
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderUniformBufferDescription>> UniformsDescriptions;
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStageAccelerationStructure>> AccelerationStructures;
+		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageBuffer>> StorageBuffers;
 		//Set binding sampler
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderImageSampler>> ImageSamplers;
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageImage>> StorageImages;
@@ -116,10 +124,15 @@ namespace HazardRenderer
 			if (type == "AnyHit")		return ShaderStage::AnyHit;
 			return ShaderStage::None;
 		}
-		static std::string ShaderStageToString(const uint32_t& type) {
+		static std::string ShaderStageToString(const uint32_t& type) 
+		{
 			if (type & (uint32_t)ShaderStage::Vertex)		return "Vertex";
 			if (type & (uint32_t)ShaderStage::Fragment)		return "Fragment";
 			if (type & (uint32_t)ShaderStage::Compute)		return "Compute";
+			if (type & (uint32_t)ShaderStage::Raygen)		return "Raygen";
+			if (type & (uint32_t)ShaderStage::Miss)			return "Miss";
+			if (type & (uint32_t)ShaderStage::ClosestHit)	return "ClosestHit";
+			if (type & (uint32_t)ShaderStage::AnyHit)		return "AnyHit";
 			return "Unknown";
 		}
 		static ShaderDataType ShaderDataTypeFromSPV(const spirv_cross::SPIRType& type) 
@@ -169,11 +182,11 @@ namespace HazardRenderer
 	public:
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
-		virtual bool SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size) = 0;
 
 		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) = 0;
+		virtual void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;

@@ -36,8 +36,10 @@ namespace HazardRenderer
 		Ref<RenderPass> pTargetRenderPass = nullptr;
 		uint32_t ShaderCodeCount = 0;
 		ShaderStageCode* pShaderCode = nullptr;
-		bool UseShaderLayout = false;
+
 		float LineWidth = 1.0f;
+		uint32_t MaxRayDepth = 0;
+		bool UseShaderLayout = false;
 		bool DepthTest = true;
 		bool DepthWrite = true;
 	};

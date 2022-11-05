@@ -115,8 +115,18 @@ namespace Hazard
 				utils.CameraPos = data.InverseView[3];
 				utils.Flags = m_Flags;
 
-				m_Resources->CameraUniformBuffer->SetData(&data, sizeof(CameraData));
-				m_Resources->UtilityUniformBuffer->SetData(&utils, sizeof(UtilityUniformData));
+				{
+					BufferCopyRegion region = {};
+					region.Data = &data;
+					region.Size = sizeof(CameraData);
+					m_Resources->CameraUniformBuffer->SetData(region);
+				}
+				{
+					BufferCopyRegion region = {};
+					region.Data = &utils;
+					region.Size = sizeof(UtilityUniformData);
+					m_Resources->UtilityUniformBuffer->SetData(region);
+				}
 
 				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);

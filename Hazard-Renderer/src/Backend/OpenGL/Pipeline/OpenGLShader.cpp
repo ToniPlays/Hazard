@@ -43,11 +43,6 @@ namespace HazardRenderer::OpenGL
 			instance->CreateProgram();
 			});
 	}
-	bool OpenGLShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
-	{
-		m_DescriptorSet[set].GetWriteDescriptor(binding).BoundValue[0].As<UniformBuffer>()->SetData(data, size);
-		return true;
-	}
 	void OpenGLShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
 		for (auto& [set, descriptor] : m_DescriptorSet)

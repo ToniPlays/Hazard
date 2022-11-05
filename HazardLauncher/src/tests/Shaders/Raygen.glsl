@@ -11,7 +11,18 @@ layout(set = 0, binding = 2) uniform Camera
 	uniform mat4 ProjInverse;
 } u_Camera;
 
-layout(location = 0) rayPayloadEXT vec3 hitValue;
+
+layout(constant_id = 0) const int MAX_RECURSION = 0;
+
+struct RayPayload
+{
+	vec3 Color;
+	float Distance;
+	vec3 Normal;
+	float Reflector;
+};
+
+layout(location = 0) rayPayloadEXT RayPayload rayPayload;
 
 void main() 
 {
@@ -26,11 +37,31 @@ void main()
 	float tmin = 0.001;
 	float tmax = 10000.0;
 
-    hitValue = vec3(0.0);
+    vec3 color = vec3(0.0);
 
-    traceRayEXT(topLevelAS, gl_RayFlagsOpaqueEXT, 0xff, 0, 0, 0, origin.xyz, tmin, direction.xyz, tmax, 0);
+	for(int i = 0; i < MAX_RECURSION; i++)
+	{
+		traceRayEXT(topLevelAS, gl_RayFlagsOpaqueEXT, 0xff, 0, 0, 0, origin.xyz, tmin, direction.xyz, tmax, 0);
 
-	imageStore(image, ivec2(gl_LaunchIDEXT.xy), vec4(hitValue, 0.0));
+		if(rayPayload.Distance < 0.0f)
+		{
+			color += rayPayload.Color;
+			break;
+		}
+		else if(rayPayload.Reflector == 1.0f)
+		{
+			const vec4 hitPos = origin + direction * rayPayload.Distance;
+			origin.xyz = hitPos.xyz + rayPayload.Normal * 0.001f;
+			direction.xyz = reflect(direction.xyz, rayPayload.Normal);
+		}
+		else
+		{
+			color += rayPayload.Color;
+			break;
+		}
+	}
+
+	imageStore(image, ivec2(gl_LaunchIDEXT.xy), vec4(color, 0.0));
 }
 
 #type Miss
@@ -38,11 +69,29 @@ void main()
 #version 460
 #extension GL_EXT_ray_tracing : enable
 
-layout(location = 0) rayPayloadInEXT vec3 hitValue;
+struct RayPayload
+{
+	vec3 Color;
+	float Distance;
+	vec3 Normal;
+	float Reflector;
+};
+
+
+layout(location = 0) rayPayloadInEXT RayPayload rayPayload;
 
 void main() 
 {
-	hitValue = vec3(0.2, 0.2, 0.0);
+	const vec3 gradientStart = vec3(0.5, 0.6, 1.0);
+	const vec3 gradientEnd = vec3(1.0);
+
+	vec3 unitDir = normalize(gl_WorldRayDirectionEXT);
+	float t = 0.5 * (unitDir.y + 1.0);
+
+	rayPayload.Color = (1.0 - t) * gradientStart + t * gradientEnd;
+	rayPayload.Distance = -1.0;
+	rayPayload.Normal = vec3(0.0);
+	rayPayload.Reflector = 0.0;
 }
 
 #type ClosestHit
@@ -51,11 +100,55 @@ void main()
 #extension GL_EXT_ray_tracing : enable
 #extension GL_EXT_nonuniform_qualifier : enable
 
-layout(location = 0) rayPayloadInEXT vec3 hitValue;
+struct Vertex
+{
+	vec4 Position;
+	vec4 Color;
+	vec4 Normal;
+	vec4 Tangent;
+	vec4 Binormal;
+	vec2 TextureCoords;
+	vec2 Padding;
+};
+
+struct RayPayload
+{
+	vec3 Color;
+	float Distance;
+	vec3 Normal;
+	float Reflector;
+};
+
+
+layout(location = 0) rayPayloadInEXT RayPayload rayPayload;
+
+layout(set = 0, binding = 0) uniform accelerationStructureEXT topLevelAS;
+
 hitAttributeEXT vec2 hitAttribs;
+
+layout(set = 0, binding = 3) buffer Vertices { Vertex v[]; } vertices;
+layout(set = 0, binding = 4) buffer Indices { uint i[]; } indices;
+
 
 void main()
 {
+	ivec3 index = ivec3(indices.i[3 * gl_PrimitiveID], indices.i[3 * gl_PrimitiveID + 1], indices.i[3 * gl_PrimitiveID + 2]);
 	const vec3 barycentricCoords = vec3(1.0 - hitAttribs.x - hitAttribs.y, hitAttribs.x, hitAttribs.y);
-	hitValue = barycentricCoords;
+	
+	//Vertices
+	Vertex v0 = vertices.v[index.x];
+	Vertex v1 = vertices.v[index.y];
+	Vertex v2 = vertices.v[index.z];
+
+	//Interpolate
+	vec4 position = normalize(v0.Position * barycentricCoords.x + v1.Position * barycentricCoords.y + v2.Position * barycentricCoords.z);
+	vec4 color = normalize(v0.Color * barycentricCoords.x + v1.Color * barycentricCoords.y + v2.Color * barycentricCoords.z);
+	vec3 normal = normalize(v0.Normal.xyz * barycentricCoords.x + v1.Normal.xyz * barycentricCoords.y + v2.Normal.xyz * barycentricCoords.z);
+	vec4 tangent = normalize(v0.Tangent * barycentricCoords.x + v1.Tangent * barycentricCoords.y + v2.Tangent * barycentricCoords.z);
+
+
+	rayPayload.Color = color.rgb;
+	rayPayload.Normal = normal;
+	rayPayload.Reflector = 1.0;
+	rayPayload.Distance = gl_RayTmaxEXT;
 }

@@ -23,6 +23,14 @@ namespace HazardRenderer
 		BLAS = 12
 	};
 
+	enum class BufferType
+	{
+		Vertex,
+		Index,
+		Uniform,
+		Storage
+	};
+
 	struct VertexBufferCreateInfo 
 	{
 		std::string DebugName;
@@ -31,7 +39,6 @@ namespace HazardRenderer
 
 		//No layout means object cannot be used for rendering meshes, only instancing data
 		BufferLayout* Layout = nullptr;
-
 		void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo 
@@ -59,40 +66,51 @@ namespace HazardRenderer
 		size_t Offset = 0;
 	};
 
-	class VertexBuffer : public RefCount
+	class BufferBase : public RefCount
+	{
+	public:
+		virtual ~BufferBase() = default;
+
+		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
+		virtual BufferType GetType() const = 0;
+	};
+
+	class VertexBuffer : public BufferBase
 	{
 	public:
 		virtual ~VertexBuffer() = default;
-		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual size_t GetSize() const = 0;
 		virtual std::string& GetDebugName() = 0;
-
 		virtual const BufferLayout& GetLayout() const = 0;
+
+		BufferType GetType() const override { return BufferType::Vertex; };
+
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
 
-	class IndexBuffer : public RefCount
+	class IndexBuffer : public BufferBase
 	{
 	public:
 		virtual ~IndexBuffer() = default;
 
-		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual size_t GetCount() const = 0;
 		virtual std::string& GetDebugName() = 0;
+		BufferType GetType() const override { return BufferType::Index; };
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
-	class UniformBuffer : public RefCount
+	class UniformBuffer : public BufferBase
 	{
 	public:
 		virtual ~UniformBuffer() = default;
 		//virtual void Unbind() = 0;
-		virtual void SetData(const void* data, size_t size) = 0;
 		
 		virtual std::string& GetName() = 0;
 		virtual uint32_t GetUsageFlags() = 0;
 		virtual const uint32_t GetBinding() const = 0;
 		virtual const size_t GetSize() const = 0;
+
+		BufferType GetType() const override { return BufferType::Uniform; };
 
 		static Ref<UniformBuffer> Create(UniformBufferCreateInfo* createInfo);
 	};

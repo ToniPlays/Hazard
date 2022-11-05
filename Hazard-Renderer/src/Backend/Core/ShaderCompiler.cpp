@@ -64,16 +64,6 @@ namespace HazardRenderer
 				input.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
 				data.Stride += input.Size;
 			}
-			for (auto& resource : resources.acceleration_structures)
-			{
-				auto& spvType = compiler.get_type(resource.base_type_id);
-				uint32_t location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
-
-				ShaderStageAccelerationStructure& structure = data.AccelerationStructures[location];
-				structure.Name = resource.name;
-				structure.Location = location;
-			}
-
 			for (auto& resource : resources.stage_outputs)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);
@@ -85,16 +75,48 @@ namespace HazardRenderer
 				output.Type = Utils::ShaderDataTypeFromSPV(spvType);
 				output.Size = ShaderDataTypeSize(output.Type);
 			}
-
-			//Sort input offsets
-			uint32_t offset = 0;
-			for (uint32_t i = 0; i < data.Inputs.size(); i++)
+			for (auto& resource : resources.acceleration_structures)
 			{
-				auto& input = data.Inputs[i];
-				input.Offset = offset;
-				offset += input.Size;
-			}
+				auto& spvType = compiler.get_type(resource.base_type_id);
+				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
+				auto& descriptorSet = result.AccelerationStructures[set];
 
+				uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+
+				if (descriptorSet.find(binding) != descriptorSet.end())
+				{
+					auto& buffer = descriptorSet[binding];
+					buffer.UsageFlags |= (uint32_t)stage;
+				}
+				else
+				{
+					auto& buffer = descriptorSet[binding];
+					buffer.Name = resource.name;
+					buffer.Location = binding;
+					buffer.UsageFlags |= (uint32_t)stage;
+				}
+			}
+			for (auto& resource : resources.storage_buffers)
+			{
+				auto& spvType = compiler.get_type(resource.base_type_id);
+				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
+				auto& descriptorSet = result.StorageBuffers[set];
+
+				uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+
+				if (descriptorSet.find(binding) != descriptorSet.end())
+				{
+					auto& buffer = descriptorSet[binding];
+					buffer.UsageFlags |= (uint32_t)stage;
+				}
+				else
+				{
+					auto& buffer = descriptorSet[binding];
+					buffer.Name = resource.name;
+					buffer.Location = binding;
+					buffer.UsageFlags |= (uint32_t)stage;
+				}
+			}
 			for (auto& resource : resources.uniform_buffers)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);
@@ -160,6 +182,15 @@ namespace HazardRenderer
 				case spv::AccessQualifier::AccessQualifierReadWrite: storageImage.Flags = ShaderResourceFlags_ReadAndWrite; break;
 				}
 				storageImage.Flags |= ShaderResourceFlags_WriteOnly;
+			}
+			
+			//Sort input offsets
+			uint32_t offset = 0;
+			for (uint32_t i = 0; i < data.Inputs.size(); i++)
+			{
+				auto& input = data.Inputs[i];
+				input.Offset = offset;
+				offset += input.Size;
 			}
 		}
 		return result;
@@ -254,8 +285,7 @@ namespace HazardRenderer
 
 				if (!compiler.Compile(&compileInfoVulkan))
 				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					__debugbreak();
+					std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString((uint32_t)stage), compiler.GetErrorMessage()) << std::endl;
 					continue;
 				}
 				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });

@@ -59,7 +59,7 @@ namespace HazardRenderer::OpenGL
 		OpenGLUniformBuffer(UniformBufferCreateInfo* createInfo);
 		~OpenGLUniformBuffer();
 
-		void SetData(const void* data, size_t size) override;
+		void SetData(const BufferCopyRegion& copyRegion) override;
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };

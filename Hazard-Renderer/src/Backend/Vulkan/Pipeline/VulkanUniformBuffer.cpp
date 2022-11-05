@@ -29,7 +29,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		Release();
 	}
-	void VulkanUniformBuffer::SetData(const void* data, size_t size)
+	void VulkanUniformBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
 		uint32_t frameIndex = VulkanContext::GetFrameIndex();
@@ -40,7 +40,7 @@ namespace HazardRenderer::Vulkan
 			m_FrameIndex = frameIndex;
 		}
 
-		m_LocalData.TryWrite(data, size, m_CurrentBufferDataIndex);
+		m_LocalData.TryWrite(copyRegion.Data, copyRegion.Size, m_CurrentBufferDataIndex);
 
 		if (m_CurrentBufferDataIndex != 0)
 		{

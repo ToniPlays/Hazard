@@ -61,7 +61,12 @@ namespace Hazard
 
 		//Update buffers
 		m_CommandBuffer->BindUniformBuffer(resources.LightUniformBuffer);
-		resources.LightUniformBuffer->SetData(&data, sizeof(LightingData));
+
+		BufferCopyRegion region = {};
+		region.Data = &data;
+		region.Size = sizeof(LightingData);
+
+		resources.LightUniformBuffer->SetData(region);
 	}
 
 	void RasterizedRenderer::GeometryPass(const std::unordered_map<Pipeline*, std::vector<RawMesh>>& meshList)
@@ -83,7 +88,11 @@ namespace Hazard
 				data.Roughness = mesh.Roughness;
 				data.Flags = 0;
 
-				modelUniformBuffer->SetData(&data, sizeof(ModelData));
+				BufferCopyRegion region = {};
+				region.Data = &data;
+				region.Size = sizeof(ModelData);
+
+				modelUniformBuffer->SetData(region);
 				m_CommandBuffer->BindVertexBuffer(mesh.VertexBuffer);
 				m_CommandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 			}

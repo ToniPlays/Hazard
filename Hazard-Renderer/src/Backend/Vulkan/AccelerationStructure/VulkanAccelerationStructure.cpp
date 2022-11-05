@@ -194,7 +194,7 @@ namespace HazardRenderer::Vulkan
 
 		VkAccelerationStructureGeometryTrianglesDataKHR data = {};
 		data.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
-		data.vertexFormat = VK_FORMAT_R32G32B32_SFLOAT;
+		data.vertexFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
 		data.vertexData = VkUtils::GetBufferAddress(m_VertexBuffer->GetVulkanBuffer());
 		data.maxVertex = m_VertexBuffer->GetSize() / stride;
 		data.vertexStride = stride;

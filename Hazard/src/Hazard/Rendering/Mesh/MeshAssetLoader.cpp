@@ -12,16 +12,8 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		MeshFactory factory = {};
 
-		uint32_t flags = MeshLoaderFlags_CalculateTangentSpace;
-		flags |= MeshLoaderFlags_Triangulate;
-		flags |= MeshLoaderFlags_SortByType;
-		flags |= MeshLoaderFlags_GenerateNormals;
-		flags |= MeshLoaderFlags_GenerateUVCoords;
-		flags |= MeshLoaderFlags_OptimizeMeshes;
-		flags |= MeshLoaderFlags_JoinIdenticalVertices;
-		flags |= MeshLoaderFlags_ValidateDataStructure;
 
-		factory.SetOptimization((MeshLoaderFlags)flags);
+		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
 		CacheStatus status = factory.CacheStatus(metadata.Handle);
 
 		if (status == CacheStatus::Exists)
@@ -41,30 +33,48 @@ namespace Hazard
 				Vertex3D& v = result.Vertices[i];
 				if (data.Flags & MeshFlags_Positions)
 				{
-					v.Position = buffer.Read<glm::vec3>();
+					v.Position = { buffer.Read<glm::vec3>(), 1.0 };
 				}
 				if (data.Flags & MeshFlags_VertexColors)
 					v.Color = buffer.Read<glm::vec4>();
 				if (data.Flags & MeshFlags_Normals)
-					v.Normals = buffer.Read<glm::vec3>();
+					v.Normals = { buffer.Read<glm::vec3>(), 1.0 };
 				if (data.Flags & MeshFlags_Tangent)
-					v.Tangent = buffer.Read<glm::vec3>();
+					v.Tangent = { buffer.Read<glm::vec3>(), 1.0 };
 				if (data.Flags & MeshFlags_Binormal)
-					v.Binormal = buffer.Read<glm::vec3>();
+					v.Binormal = { buffer.Read<glm::vec3>(), 1.0 };
 				if (data.Flags & MeshFlags_TextCoord)
 					v.TexCoords = buffer.Read<glm::vec2>();
 			}
 			for (size_t i = 0; i < data.IndexCount; i++)
 				result.Indices[i] = buffer.Read<uint32_t>();
 
-			asset = Ref<Mesh>::Create(result, result.Vertices, result.Indices);
+			MeshCreateInfo meshInfo = {};
+			meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
+			meshInfo.BoundingBox = result.BoundingBox;
+			meshInfo.VertexCount = result.Vertices.size() * sizeof(Vertex3D);
+			meshInfo.pVertices = result.Vertices.data();
+			meshInfo.IndexCount = result.Indices.size() * sizeof(uint32_t);
+			meshInfo.pIndices = result.Indices.data();
+
+			asset = Ref<Mesh>::Create(&meshInfo);
 			return LoadType::Cache;
 		}
 		if (!File::Exists(metadata.Path))
 			return LoadType::Failed;
 
 		MeshData meshData = factory.LoadMeshFromSource(metadata.Path);
-		asset = Ref<Mesh>::Create(meshData, meshData.Vertices, meshData.Indices);
+
+		MeshCreateInfo meshInfo = {};
+		meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
+		meshInfo.BoundingBox = meshData.BoundingBox;
+		meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
+		meshInfo.pVertices = meshData.Vertices.data();
+		meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
+		meshInfo.pIndices = meshData.Indices.data();
+
+
+		asset = Ref<Mesh>::Create(&meshInfo);
 		return LoadType::Source;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)

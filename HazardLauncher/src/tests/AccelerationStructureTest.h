@@ -14,8 +14,8 @@ using namespace HazardRenderer;
 namespace AccelerationStructureTest
 {
 
-	//OpenGL : Test
-	//Vulkan : Test
+	//OpenGL : Definitely a big nono
+	//Vulkan : Working
 	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
@@ -140,7 +140,7 @@ namespace AccelerationStructureTest
 		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
 
 		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygenBasic.glsl", api);
 		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
@@ -194,7 +194,11 @@ namespace AccelerationStructureTest
 			cameraData.InvProjection = glm::inverse(glm::perspective(glm::radians(45.0f), aspectRatio, 0.03f, 100.0f));
 			cameraData.InvView = glm::inverse(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, -2.0f }));
 
-			camera->SetData(&cameraData, sizeof(CameraData));
+			BufferCopyRegion region = {};
+			region.Data = &cameraData;
+			region.Size = sizeof(CameraData);
+
+			camera->SetData(region);
 			commandBuffer->BindUniformBuffer(camera);
 
 			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure);

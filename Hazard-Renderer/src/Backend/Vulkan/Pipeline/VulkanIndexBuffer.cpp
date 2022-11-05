@@ -50,6 +50,7 @@ namespace HazardRenderer::Vulkan
 			{
 				indexBufferCreateInfo.usage = VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 				indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+				indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 			}
 			indexBufferCreateInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 

@@ -49,6 +49,12 @@
     <Filter Include="src\Hazard\Rendering\Mesh">
       <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Rendering\Rasterized">
+      <UniqueIdentifier>{8FE5D2D7-FBC8-E117-04CC-0F54702EA868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Hazard\Rendering\Raytraced">
+      <UniqueIdentifier>{31A8E441-1DCE-AEA8-0614-3474F2D8D374}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering\Renderers">
       <UniqueIdentifier>{7CF3F67D-6819-C1E4-515F-46B03D24E6B0}</UniqueIdentifier>
     </Filter>
@@ -249,6 +255,9 @@
     <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\BaseRenderer.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentMap.h">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
@@ -266,6 +275,12 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.h">
+      <Filter>src\Hazard\Rendering\Rasterized</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.h">
+      <Filter>src\Hazard\Rendering\Raytraced</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
@@ -1617,9 +1632,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.h" />
-    <ClInclude Include="src\Hazard\Rendering\BaseRenderer.h" />
-    <ClInclude Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1736,6 +1748,12 @@
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Rasterized</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Raytraced</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
@@ -1766,7 +1784,5 @@
     <ClCompile Include="src\hzrpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.cpp" />
   </ItemGroup>
 </Project>

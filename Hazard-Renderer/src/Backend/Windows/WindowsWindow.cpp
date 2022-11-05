@@ -17,7 +17,7 @@ namespace HazardRenderer {
 
 	Window* Window::Create(HazardRendererCreateInfo* info)
 	{
-		if (!Window::IsRenderAPISupported(info->Renderer)) 
+		if (!Window::IsRenderAPISupported(info->Renderer))
 		{
 			HZR_THROW("Unsupported rendering API: " + RenderAPIToString(info->Renderer));
 		}
@@ -27,13 +27,13 @@ namespace HazardRenderer {
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
 
-		if (!WindowsWindow::s_DebugCallback) 
+		if (!WindowsWindow::s_DebugCallback)
 		{
 			WindowsWindow::s_QueueMessages.push_back(message);
 			return;
 		}
 
-		for (auto& m : WindowsWindow::s_QueueMessages) 
+		for (auto& m : WindowsWindow::s_QueueMessages)
 		{
 			WindowsWindow::s_DebugCallback(m);
 		}
@@ -73,12 +73,11 @@ namespace HazardRenderer {
 
 			m_Context = GraphicsContext::Create(&m_WindowData);
 
-			if (!windowInfo.HasTitlebar) {
-				glfwWindowHint(GLFW_DECORATED, false);
-				glfwWindowHint(GLFW_TITLEBAR, false);
-			}
+			glfwWindowHint(GLFW_DECORATED, windowInfo.HasTitlebar);
+			glfwWindowHint(GLFW_TITLEBAR, windowInfo.HasTitlebar);
 			glfwWindowHint(GLFW_RESIZABLE, windowInfo.Resizable);
-			glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+			glfwWindowHint(GLFW_MAXIMIZED, windowInfo.Maximized);
+			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 			GLFWmonitor* monitor = NULL;
 
@@ -99,22 +98,21 @@ namespace HazardRenderer {
 
 			HZR_ASSERT(m_Window, "Failed to create window");
 
-			//Center window
-			monitor = glfwGetPrimaryMonitor();
-			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-			glfwSetWindowPos(m_Window, mode->width / 2 - m_WindowData.Width / 2, mode->height / 2 - m_WindowData.Height / 2);
-
-
 			if (info->pAppInfo->IconCount > 0)
 				SetWindowIcon(info->pAppInfo->IconCount, info->pAppInfo->pIcons);
 
 			m_Context->Init(this, info);
 			m_Context->SetClearColor(windowInfo.Color);
+			m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
+			m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
+
+			//Center window
+			monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			glfwSetWindowPos(m_Window, mode->width / 2.0f - m_WindowData.Width / 2.0f, mode->height / 2.0f - m_WindowData.Height / 2.0f);
+
 
 			glfwSetWindowUserPointer(m_Window, &m_WindowData);
-
-			if (windowInfo.Maximized)
-				glfwMaximizeWindow(m_Window);
 
 			SetCallbacks();
 			SetVSync(info->VSync);
@@ -189,7 +187,6 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Height = h;
 			data.Width = w;
-			//data.Window->GetContext()->SetViewport(0, 0, w, h);
 
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
@@ -250,7 +247,6 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent event((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
-
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
@@ -268,11 +264,10 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Minimized = minimized;
 			});
-		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit)
-			{
-				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-				WindowTitleBarHitTestEvent e(x, y, *hit);
-				data.EventCallback(e);
+		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit) {
+			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
+			WindowTitleBarHitTestEvent e(x, y, *hit);
+			data.EventCallback(e);
 			});
 
 	}

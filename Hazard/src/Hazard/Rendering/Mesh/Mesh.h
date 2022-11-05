@@ -12,6 +12,16 @@ namespace Hazard {
 
 	struct MeshData;
 
+	struct MeshCreateInfo
+	{
+		BoundingBox BoundingBox;
+		HazardRenderer::BufferUsage Usage;
+		uint32_t VertexCount;
+		Vertex3D* pVertices;
+		uint32_t IndexCount;
+		uint32_t* pIndices;
+	};
+
 	struct SubMesh 
 	{
 		uint32_t BaseVertex;
@@ -30,7 +40,7 @@ namespace Hazard {
 	{
 	public:
 		Mesh() = default;
-		Mesh(const MeshData& data, const std::vector<Vertex3D>& vertices, const std::vector<uint32_t>& indices);
+		Mesh(MeshCreateInfo* createInfo);
 		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline);
 		~Mesh() = default;
 

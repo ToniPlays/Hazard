@@ -7,22 +7,24 @@ namespace Hazard
 {
 	struct Vertex3D
 	{
-		glm::vec3 Position = { 0, 0, 0 };
+		glm::vec4 Position = { 0, 0, 0, 1.0 };
 		glm::vec4 Color = Color::White;
-		glm::vec3 Normals = { 0, 0, 0 };
-		glm::vec3 Tangent = { 0, 0, 0 };
-		glm::vec3 Binormal = { 0, 0, 0 };
+		glm::vec4 Normals = { 0, 0, 0, 1.0 };
+		glm::vec4 Tangent = { 0, 0, 0, 1.0 };
+		glm::vec4 Binormal = { 0, 0, 0, 0 };
 		glm::vec2 TexCoords = { 0, 0 };
+		glm::vec2 Padding = { 0, 0 };
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
 			return {
-				{ "a_Position",			ShaderDataType::Float3 },
+				{ "a_Position",			ShaderDataType::Float4 },
 				{ "a_Color",			ShaderDataType::Float4 },
-				{ "a_Normal",			ShaderDataType::Float3 },
-				{ "a_Tangent",			ShaderDataType::Float3 },
-				{ "a_Binormal",			ShaderDataType::Float3 },
-				{ "a_TextureCoords",	ShaderDataType::Float2 }
+				{ "a_Normal",			ShaderDataType::Float4 },
+				{ "a_Tangent",			ShaderDataType::Float4 },
+				{ "a_Binormal",			ShaderDataType::Float4 },
+				{ "a_TextureCoords",	ShaderDataType::Float2 },
+				{ "a_Padding",			ShaderDataType::Float2 }
 			};
 		}
 	};

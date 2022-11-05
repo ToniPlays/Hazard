@@ -191,7 +191,7 @@ namespace HazardRenderer::OpenGL
 			glDeleteBuffers(1, &instance->m_BufferID);
 			});
 	}
-	void OpenGLUniformBuffer::SetData(const void* data, size_t size)
+	void OpenGLUniformBuffer::SetData(const BufferCopyRegion& copyRegion)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -203,9 +203,9 @@ namespace HazardRenderer::OpenGL
 			m_FrameIndex = frameIndex;
 		}
 
-		m_LocalData.Write(data, size, m_CurrentBufferDataIndex);
+		m_LocalData.Write(copyRegion.Data, copyRegion.Size, m_CurrentBufferDataIndex);
 		Ref<OpenGLUniformBuffer> instance = this;
-		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex, size]() mutable {
+		Renderer::Submit([instance, startIndex = m_CurrentBufferDataIndex, size = copyRegion.Size]() mutable {
 
 			HZR_PROFILE_FUNCTION("OpenGLUniformBuffer::SetData(const void*, uint32_t)_RT");
 			glNamedBufferData(instance->m_BufferID, size, (uint8_t*)instance->m_LocalData.Data + startIndex, GL_DYNAMIC_DRAW);

@@ -29,6 +29,7 @@ project "HazardLauncher"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.VulkanSDK}",
         "%{IncludeDir.Metal}",
 		"%{IncludeDir.SPIRV_Cross}",

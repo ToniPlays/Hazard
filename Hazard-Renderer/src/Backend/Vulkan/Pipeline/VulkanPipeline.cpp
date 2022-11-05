@@ -343,6 +343,18 @@ namespace HazardRenderer::Vulkan
 
 		//Raygen group
 		{
+			VkSpecializationMapEntry entry = {};
+			entry.constantID = 0;
+			entry.offset = 0;
+			entry.size = sizeof(uint32_t);
+
+			VkSpecializationInfo specialization = {};
+			specialization.mapEntryCount = 1;
+			specialization.pMapEntries = &entry;
+			specialization.dataSize = sizeof(uint32_t);
+			specialization.pData = &m_Specs.MaxRayDepth;
+
+			stages[0].pSpecializationInfo = &specialization;
 			auto& group = m_ShaderGroups.emplace_back();
 			group.sType = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
 			group.type = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
@@ -378,7 +390,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.pStages = stages.data();
 		createInfo.groupCount = m_ShaderGroups.size();
 		createInfo.pGroups = m_ShaderGroups.data();
-		createInfo.maxPipelineRayRecursionDepth = 1;
+		createInfo.maxPipelineRayRecursionDepth = m_Specs.MaxRayDepth;
 		createInfo.layout = m_PipelineLayout;
 
 		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipeline), "Failed to create RayTracingPipeline");

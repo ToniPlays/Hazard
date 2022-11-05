@@ -114,6 +114,7 @@ namespace Hazard
 	}
 	Ref<AssetPointer> ShaderLibrary::GetPipelinePtr(const std::string& name)
 	{
+		if (m_LoadedShaders.find(name) == m_LoadedShaders.end()) return nullptr;
 		return m_LoadedShaders[name];
 	}
 }

@@ -146,7 +146,12 @@ namespace UniformBufferTest
 
 			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 			glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -10.0f, 10.0f);
-			camera->SetData(&projection, sizeof(glm::mat4));
+
+			BufferCopyRegion region = {};
+			region.Data = &projection;
+			region.Size = sizeof(glm::mat4);
+
+			camera->SetData(region);
 
 			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());

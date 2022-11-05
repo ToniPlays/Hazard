@@ -3,6 +3,7 @@
 #include "Tests/TexturedQuad.h"
 #include "Tests/UniformBufferTest.h"
 #include "Tests/AccelerationStructureTest.h"
+#include "Tests/RayTracingSphere.h"
 
 void main(int argc, char* argv)
 {
@@ -16,5 +17,5 @@ void main(int argc, char* argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	AccelerationStructureTest::Run(renderAPI);
+	RayTracingSphere::Run(renderAPI);
 }

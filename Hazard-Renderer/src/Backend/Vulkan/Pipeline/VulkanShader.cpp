@@ -48,15 +48,6 @@ namespace HazardRenderer::Vulkan
 			instance->CreateDescriptorSetLayouts();
 			});
 	}
-	bool VulkanShader::SetUniformBuffer(uint32_t set, uint32_t binding, void* data, uint32_t size)
-	{
-		HZR_PROFILE_FUNCTION();
-		auto& uniformBuffer = m_UniformBuffers[set][binding];
-		if (!uniformBuffer) HZR_ASSERT(false, "");
-		//HZR_ASSERT(uniformBuffer, "[VulkanShader]: UniformBuffer '{0}' does not exist", name);
-		uniformBuffer->SetData(data, size);
-		return true;
-	}
 	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<Image2D> image)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -65,16 +56,12 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, vulkanImage, index, name]() mutable {
 			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-			uint32_t i = 0;
 			for (auto& set : instance->m_DescriptorSets[frameIndex])
 			{
-				if (set.Contains(name))
-				{
-					uint32_t binding = set.GetIndex(name);
-					set.SetSampler(binding, index, vulkanImage->GetImageDescriptor());
-					return;
-				}
-				i++;
+				if (!set.Contains(name)) continue;
+				uint32_t binding = set.GetIndex(name);
+				set.SetSampler(binding, index, vulkanImage->GetImageDescriptor());
+				return;
 			}
 			});
 	}
@@ -85,17 +72,14 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanCubemapTexture> vulkanCubemap = cubemap.As<VulkanCubemapTexture>();
 		Renderer::Submit([instance, vulkanCubemap, index, name]() mutable {
 			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-			uint32_t i = 0;
 
 			for (auto& set : instance->m_DescriptorSets[frameIndex])
 			{
-				if (set.Contains(name))
-				{
-					uint32_t binding = set.GetIndex(name);
-					//std::cout << " " << VkUtils::ImageLayoutToString(vulkanCubemap->GetImageDescriptor().imageLayout) << " " << name << std::endl;
-					set.SetSampler(set.GetIndex(name), index, vulkanCubemap->GetImageDescriptor());
-					return;
-				}
+				if (!set.Contains(name)) continue;
+
+				uint32_t binding = set.GetIndex(name);
+				set.SetSampler(set.GetIndex(name), index, vulkanCubemap->GetImageDescriptor());
+				return;
 			}
 			});
 	}
@@ -107,26 +91,70 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanAccelerationStructure> structure = cubemap.As<VulkanAccelerationStructure>();
 		Renderer::Submit([instance, structure, index, name]() mutable {
 			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-			uint32_t i = 0;
 
 			for (auto& set : instance->m_DescriptorSets[frameIndex])
 			{
-				if (set.Contains(name))
-				{
-					VkAccelerationStructureKHR s = structure->GetVulkanAccelerationStructure().AccelerationStructure;
-					VkWriteDescriptorSetAccelerationStructureKHR info = {};
-					info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
-					info.accelerationStructureCount = 1;
-					info.pAccelerationStructures = &s;
+				if (!set.Contains(name)) continue;
+				VkAccelerationStructureKHR s = structure->GetVulkanAccelerationStructure().AccelerationStructure;
+				VkWriteDescriptorSetAccelerationStructureKHR info = {};
+				info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+				info.accelerationStructureCount = 1;
+				info.pAccelerationStructures = &s;
 
-					uint32_t binding = set.GetIndex(name);
-					set.SetAccelerationStructure(set.GetIndex(name), index, info);
-					return;
-				}
+				uint32_t binding = set.GetIndex(name);
+				set.SetAccelerationStructure(set.GetIndex(name), index, info);
+				return;
 			}
 			});
-
 	}
+
+	void VulkanShader::Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer)
+	{
+		HZR_PROFILE_FUNCTION();
+		Ref<VulkanShader> instance = this;
+		Ref<BufferBase> b = buffer.As<BufferBase>();
+		Renderer::Submit([instance, b, index, name]() mutable {
+			uint32_t frameIndex = VulkanContext::GetFrameIndex();
+
+			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			{
+				if (!set.Contains(name)) continue;
+				uint32_t binding = set.GetIndex(name);
+				
+				switch (b->GetType())
+				{
+				case BufferType::Vertex:
+				{
+					auto& buf = b.As<VulkanVertexBuffer>();
+
+					VkDescriptorBufferInfo bufferInfo = {};
+					bufferInfo.buffer = buf->GetVulkanBuffer();
+					bufferInfo.offset = 0;
+					bufferInfo.range = VK_WHOLE_SIZE;
+
+					set.SetBuffer(binding, bufferInfo);
+					break;
+				}
+				case BufferType::Index:
+				{
+					auto& buf = b.As<VulkanIndexBuffer>();
+
+					VkDescriptorBufferInfo bufferInfo = {};
+					bufferInfo.buffer = buf->GetVulkanBuffer();
+					bufferInfo.offset = 0;
+					bufferInfo.range = VK_WHOLE_SIZE;
+
+					set.SetBuffer(binding, bufferInfo);
+					break;
+				}
+					default: HZR_ASSERT(false, "TODO");
+				}
+
+				return;
+			}
+			});
+	}
+
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -182,7 +210,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::Reflect()
 	{
 		HZR_PROFILE_FUNCTION();
-		
+
 		Timer timer;
 
 		m_ShaderData.Stages.clear();
@@ -261,29 +289,44 @@ namespace HazardRenderer::Vulkan
 				auto& descriptorSet = m_DescriptorSets[frame][set];
 				descriptorSet.ReserveBindings(m_ShaderData.UniformsDescriptions[set].size() + m_ShaderData.ImageSamplers[set].size());
 
-				for (auto& [stage, data] : m_ShaderData.Stages)
+				for (auto& [binding, accel] : m_ShaderData.AccelerationStructures[set])
 				{
-					for (auto& [location, accel] : data.AccelerationStructures)
-					{
-						VkDescriptorSetLayoutBinding descriptorBinding = {};
-						descriptorBinding = {};
-						descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-						descriptorBinding.binding = accel.Location;
-						descriptorBinding.descriptorCount = 1;
-						descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage((uint32_t)stage);
+					VkDescriptorSetLayoutBinding descriptorBinding = {};
+					descriptorBinding = {};
+					descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+					descriptorBinding.binding = accel.Location;
+					descriptorBinding.descriptorCount = 1;
+					descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage((uint32_t)accel.UsageFlags);
 
-						VkWriteDescriptorSet writeDescriptor = {};
-						writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-						writeDescriptor.dstBinding = accel.Location;
-						writeDescriptor.descriptorType = descriptorBinding.descriptorType;
-						writeDescriptor.dstArrayElement = 0;
-						writeDescriptor.descriptorCount = 1;
+					VkWriteDescriptorSet writeDescriptor = {};
+					writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+					writeDescriptor.dstBinding = accel.Location;
+					writeDescriptor.descriptorType = descriptorBinding.descriptorType;
+					writeDescriptor.dstArrayElement = 0;
+					writeDescriptor.descriptorCount = 1;
 
-						descriptorSet.AddBinding(descriptorBinding);
-						descriptorSet.AddWriteDescriptor(accel.Location, accel.Name, writeDescriptor);
-					}
+					descriptorSet.AddBinding(descriptorBinding);
+					descriptorSet.AddWriteDescriptor(accel.Location, accel.Name, writeDescriptor);
 				}
+				for (auto& [binding, buffer] : m_ShaderData.StorageBuffers[set])
+				{
+					VkDescriptorSetLayoutBinding descriptorBinding = {};
+					descriptorBinding = {};
+					descriptorBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+					descriptorBinding.binding = buffer.Location;
+					descriptorBinding.descriptorCount = 1;
+					descriptorBinding.stageFlags = VkUtils::GetVulkanShaderStage((uint32_t)buffer.UsageFlags);
 
+					VkWriteDescriptorSet writeDescriptor = {};
+					writeDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+					writeDescriptor.dstBinding = buffer.Location;
+					writeDescriptor.descriptorType = descriptorBinding.descriptorType;
+					writeDescriptor.dstArrayElement = 0;
+					writeDescriptor.descriptorCount = 1;
+
+					descriptorSet.AddBinding(descriptorBinding);
+					descriptorSet.AddWriteDescriptor(buffer.Location, buffer.Name, writeDescriptor);
+				}
 				for (auto& [binding, buffer] : m_ShaderData.UniformsDescriptions[set])
 				{
 					VkDescriptorSetLayoutBinding descriptorBinding = {};
@@ -303,7 +346,6 @@ namespace HazardRenderer::Vulkan
 					descriptorSet.AddBinding(descriptorBinding);
 					descriptorSet.AddWriteDescriptor(binding, buffer.Name, writeDescriptor);
 				}
-
 				for (auto& [binding, sampler] : m_ShaderData.ImageSamplers[set])
 				{
 					VkDescriptorSetLayoutBinding descriptorBinding = {};
@@ -342,7 +384,7 @@ namespace HazardRenderer::Vulkan
 				}
 
 				descriptorSet.Invalidate();
-				
+
 				for (auto& [binding, buffer] : m_UniformBuffers[set])
 				{
 					auto& vulkanBuffer = buffer.As<VulkanUniformBuffer>();

@@ -30,7 +30,11 @@ namespace Editor
 		gridData.Zoom = std::abs(camera.GetPosition().y);
 		gridData.Scale = std::pow(log, std::floor(std::log(gridData.Zoom) / std::log(log)));
 
-		m_GridUniformBuffer->SetData(&gridData, sizeof(GridData));
+		BufferCopyRegion region = {};
+		region.Data = &gridData;
+		region.Size = sizeof(GridData);
+
+		m_GridUniformBuffer->SetData(region);
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
 	
