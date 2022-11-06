@@ -12,7 +12,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		MeshFactory factory = {};
 
-
 		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
 		CacheStatus status = factory.CacheStatus(metadata.Handle);
 
@@ -32,9 +31,7 @@ namespace Hazard
 			{
 				Vertex3D& v = result.Vertices[i];
 				if (data.Flags & MeshFlags_Positions)
-				{
 					v.Position = { buffer.Read<glm::vec3>(), 1.0 };
-				}
 				if (data.Flags & MeshFlags_VertexColors)
 					v.Color = buffer.Read<glm::vec4>();
 				if (data.Flags & MeshFlags_Normals)
@@ -72,7 +69,6 @@ namespace Hazard
 		meshInfo.pVertices = meshData.Vertices.data();
 		meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
 		meshInfo.pIndices = meshData.Indices.data();
-
 
 		asset = Ref<Mesh>::Create(&meshInfo);
 		return LoadType::Source;
@@ -116,15 +112,15 @@ namespace Hazard
 		for (auto& v : data.Vertices)
 		{
 			if (data.Flags & MeshFlags_Positions)
-				buffer.Write(v.Position);
+				buffer.Write<glm::vec3>({ v.Position.x, v.Position.y, v.Position.z });
 			if (data.Flags & MeshFlags_VertexColors)
 				buffer.Write(v.Color);
 			if (data.Flags & MeshFlags_Normals)
-				buffer.Write(v.Normals);
+				buffer.Write<glm::vec3>({ v.Normals.x, v.Normals.y, v.Normals.z });
 			if (data.Flags & MeshFlags_Tangent)
-				buffer.Write(v.Tangent);
+				buffer.Write<glm::vec3>({ v.Tangent.x, v.Tangent.y, v.Tangent.z });
 			if (data.Flags & MeshFlags_Binormal)
-				buffer.Write(v.Binormal);
+				buffer.Write<glm::vec3>({ v.Binormal.x, v.Binormal.y, v.Binormal.z });
 			if (data.Flags & MeshFlags_TextCoord)
 				buffer.Write(v.TexCoords);
 		}

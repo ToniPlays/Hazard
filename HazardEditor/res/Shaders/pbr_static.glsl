@@ -9,13 +9,13 @@ layout(location = 0) out vec4 Color;
 layout(location = 1) out vec3 Normal;
 layout(location = 2) out vec3 WorldPosition;
 
-void main() 
+void main()
 {
-	vec4 worldPosition = u_Model.Transform * vec4(a_Position, 1.0);
+	vec4 worldPosition = u_Model.Transform * vec4(a_Position.xyz, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Color = a_Color;
-	Normal = mat3(u_Model.Transform) * a_Normal;
+	Normal = mat3(u_Model.Transform) * a_Normal.xyz;
 	WorldPosition = worldPosition.xyz;
 	
 }

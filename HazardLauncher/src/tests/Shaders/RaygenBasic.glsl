@@ -57,47 +57,10 @@ layout(set = 0, binding = 0) uniform accelerationStructureEXT topLevelAS;
 
 hitAttributeEXT vec2 hitAttribs;
 
-layout(set = 0, binding = 3) buffer Vertices { vec4 v[]; } vertices;
-layout(set = 0, binding = 4) buffer Indices { uint i[]; } indices;
-
-struct Vertex
-{
-	vec3 Position;
-	vec4 Color;
-	vec3 Normal;
-	vec3 Tangent;
-	vec3 Binormal;
-	vec2 TextureCoords;
-	vec2 Padding;
-};
-
-
-Vertex Unpack(uint index)
-{
-	int m = 80 / 16;
-
-	vec4 d0 = vertices.v[m * index + 0];
-	vec4 d1 = vertices.v[m * index + 1];
-	vec4 d2 = vertices.v[m * index + 2];
-
-	Vertex v;
-	v.Position = d0.xyz;
-	v.Color = d2;
-	v.Normal = vec3(d0.w, d1.x, d1.y);
-
-	return v;
-}
 void main()
 {
-	ivec3 index = ivec3(indices.i[3 * gl_PrimitiveID], indices.i[3 * gl_PrimitiveID + 1], indices.i[3 * gl_PrimitiveID + 2]);
-	
-	Vertex v0 = Unpack(index.x);
-	Vertex v1 = Unpack(index.y);
-	Vertex v2 = Unpack(index.z);
-
 	//Interpolate
 	const vec3 barycentricCoords = vec3(1.0 - hitAttribs.x - hitAttribs.y, hitAttribs.x, hitAttribs.y);
-	vec3 normal = normalize(v0.Normal * barycentricCoords.x + v1.Normal * barycentricCoords.y + v2.Normal * barycentricCoords.z);
 
-	hitValue = vec3(normal);
+	hitValue = barycentricCoords;
 }

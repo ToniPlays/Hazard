@@ -3,48 +3,43 @@
 #include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
 #include "Backend/Vulkan/Pipeline/VulkanVertexBuffer.h"
 #include "Backend/Vulkan/Pipeline/VulkanIndexBuffer.h"
-#include <vulkan/vulkan.h>
+
+#include "Helpers.h"
 
 namespace HazardRenderer::Vulkan
 {
-	struct AccelerationStructureBufferInfo
-	{
-		VkBuffer Buffer = VK_NULL_HANDLE;
-		VmaAllocation Allocation = VK_NULL_HANDLE;
-		VkDeviceAddress Address;
-	};
-	struct VulkanAccelStruct
-	{
-		VkAccelerationStructureKHR AccelerationStructure = VK_NULL_HANDLE;
-		uint64_t Address = 0;
 
-	};
-
-	class VulkanAccelerationStructure : public AccelerationStructure
+	class VulkanBottomLevelAS : public BottomLevelAS
 	{
 	public:
-		VulkanAccelerationStructure(AccelerationStructureCreateInfo* info);
-		~VulkanAccelerationStructure() = default;
+		VulkanBottomLevelAS(AccelerationStructureCreateInfo* info);
+		~VulkanBottomLevelAS() = default;
+
+		size_t GetCount() const { return 0; };
+		void PushTransforms(const BufferCopyRegion& copyRegion) override;
 
 		void Invalidate_RT();
+
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
 		VulkanAccelStruct GetVulkanAccelerationStructure() { return m_StructureInfo; }
 
 	private:
-		void CreateTopLevel();
-		void CreateBottomLevel();
+		void CreateAccelerationStructure();
+		void CreateTransformBuffer();
 
 	private:
 		std::string m_DebugName;
 		AccelerationStructureLevel m_Level;
 		Ref<VulkanVertexBuffer> m_VertexBuffer;
 		Ref<VulkanIndexBuffer> m_IndexBuffer;
+		size_t m_BufferSize;
 
-		Ref<VulkanAccelerationStructure> m_BottomLevelAccelStruct;
+		Buffer m_LocalBuffer;
 
 		AccelerationStructureBufferInfo m_StructureBuffer;
 		AccelerationStructureBufferInfo m_ScratchBuffer;
-		
+		AccelerationStructureBufferInfo m_TransformBuffer;
+
 		VulkanAccelStruct m_StructureInfo;
 	};
 }

@@ -2,19 +2,40 @@
 #include "AccelerationStructure.h"
 #include "Backend/Core/GraphicsContext.h"
 
-#include "Backend/Vulkan/AccelerationStructure/VulkanAccelerationStructure.h"
+#include "Backend/Vulkan/AccelerationStructure/VulkanTopLevelAS.h"
+#include "Backend/Vulkan/AccelerationStructure/VulkanBottomLevelAS.h"
 
 namespace HazardRenderer
 {
-	Ref<AccelerationStructure> AccelerationStructure::Create(AccelerationStructureCreateInfo* info)
+	Ref<TopLevelAS> TopLevelAS::Create(AccelerationStructureCreateInfo* info)
 	{
+		HZR_ASSERT(info->Level == AccelerationStructureLevel::Top, "Wrong structure level");
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL: return nullptr;
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanAccelerationStructure>::Create(info);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanTopLevelAS>::Create(info);
+#endif
+#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);
+#endif
+		default:
+			HZR_ASSERT(false, "Unknown RenderAPI");
+		}
+		return nullptr;
+	}
+	Ref<BottomLevelAS> BottomLevelAS::Create(AccelerationStructureCreateInfo* info)
+	{
+		HZR_ASSERT(info->Level == AccelerationStructureLevel::Bottom, "Wrong structure level");
+		switch (GraphicsContext::GetRenderAPI())
+		{
+#ifdef HZR_INCLUDE_OPENGL
+		case RenderAPI::OpenGL: return nullptr;
+#endif
+#ifdef HZR_INCLUDE_VULKAN
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanBottomLevelAS>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: return Ref<Metal::MetalFrameBuffer>::Create(info);

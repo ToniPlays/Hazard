@@ -9,8 +9,8 @@ namespace Hazard
 	{
 		glm::vec4 Position = { 0, 0, 0, 1.0 };
 		glm::vec4 Color = Color::White;
-		glm::vec4 Normals = { 0, 0, 0, 1.0 };
-		glm::vec4 Tangent = { 0, 0, 0, 1.0 };
+		glm::vec4 Normals = { 0, 0, 0, 0 };
+		glm::vec4 Tangent = { 0, 0, 0, 0 };
 		glm::vec4 Binormal = { 0, 0, 0, 0 };
 		glm::vec2 TexCoords = { 0, 0 };
 		glm::vec2 Padding = { 0, 0 };

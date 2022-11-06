@@ -86,8 +86,7 @@ namespace AccelerationStructureTest
 			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 		uint32_t indices[] = {
-			0, 1, 2,
-			2, 3, 0
+			0, 1, 2, 2, 3, 0
 		};
 
 		BufferLayout layout = { { "a_Position",			ShaderDataType::Float3 },
@@ -132,14 +131,32 @@ namespace AccelerationStructureTest
 		bottomAccelInfo.VertexBuffer = vertexBuffer;
 		bottomAccelInfo.IndexBuffer = indexBuffer;
 		bottomAccelInfo.BoundingBox = boundingBox;
-		Ref<AccelerationStructure> bottomLevelAccelerationStructure = AccelerationStructure::Create(&bottomAccelInfo);
+
+		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
+
+		TransformMatrixAS transform
+		{
+			{ 1.0, 0.0, 0.0, 0.0 },
+			{ 0.0, 1.0, 0.0, 0.0 },
+			{ 0.0, 0.0, 1.0, 0.0 }
+		};
+
+		BufferCopyRegion region = {};
+		region.Data = &transform;
+		region.Size = sizeof(TransformMatrixAS);
+
+		bottomLevelAccelerationStructure->PushTransforms(region);
 
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
-		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
+		topAccelInfo.pBottomLevel = bottomLevelAccelerationStructure.Raw();
 
-		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
+		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
+		topLevelAccelerationStructure->PushInstances(glm::mat4(1.0f), bottomLevelAccelerationStructure);
+
+
+
 		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygenBasic.glsl", api);
 		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
 
@@ -201,7 +218,7 @@ namespace AccelerationStructureTest
 			camera->SetData(region);
 			commandBuffer->BindUniformBuffer(camera);
 
-			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure);
+			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("image", 0, image);
 
 			TraceRaysInfo info = {};

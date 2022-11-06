@@ -34,6 +34,9 @@ void main()
 	vec4 target = u_Camera.ProjInverse * vec4(d.x, d.y, 1, 1) ;
 	vec4 direction = u_Camera.ViewInverse * vec4(normalize(target.xyz), 0) ;
 
+	uint flags = gl_RayFlagsOpaqueEXT;
+	uint mask = 0xFF;
+
 	float tmin = 0.001;
 	float tmax = 10000.0;
 
@@ -41,22 +44,23 @@ void main()
 
 	for(int i = 0; i < MAX_RECURSION; i++)
 	{
-		traceRayEXT(topLevelAS, gl_RayFlagsOpaqueEXT, 0xff, 0, 0, 0, origin.xyz, tmin, direction.xyz, tmax, 0);
+		traceRayEXT(topLevelAS, flags, mask, 0, 0, 0, origin.xyz, tmin, direction.xyz, tmax, 0);
 
-		if(rayPayload.Distance < 0.0f)
+		if(rayPayload.Distance < 0.0)
 		{
-			color += rayPayload.Color;
+			color += rayPayload.Color * (1.5 - rayPayload.Reflector);
 			break;
 		}
-		else if(rayPayload.Reflector == 1.0f)
+		else if(rayPayload.Reflector <= 1.0f)
 		{
 			const vec4 hitPos = origin + direction * rayPayload.Distance;
 			origin.xyz = hitPos.xyz + rayPayload.Normal * 0.001f;
 			direction.xyz = reflect(direction.xyz, rayPayload.Normal);
+			color += rayPayload.Color * rayPayload.Reflector;
 		}
 		else
 		{
-			color += rayPayload.Color;
+			color += rayPayload.Color * rayPayload.Reflector;
 			break;
 		}
 	}
@@ -82,16 +86,16 @@ layout(location = 0) rayPayloadInEXT RayPayload rayPayload;
 
 void main() 
 {
-	const vec3 gradientStart = vec3(0.5, 0.6, 1.0);
+	const vec3 gradientStart = vec3(0.3, 0.4, 1.0);
 	const vec3 gradientEnd = vec3(1.0);
 
 	vec3 unitDir = normalize(gl_WorldRayDirectionEXT);
 	float t = 0.5 * (unitDir.y + 1.0);
 
 	rayPayload.Color = (1.0 - t) * gradientStart + t * gradientEnd;
-	rayPayload.Distance = -1.0;
+	rayPayload.Distance = -1.0f;
 	rayPayload.Normal = vec3(0.0);
-	rayPayload.Reflector = 0.0;
+	rayPayload.Reflector = 1.0f;
 }
 
 #type ClosestHit
@@ -146,9 +150,8 @@ void main()
 	vec3 normal = normalize(v0.Normal.xyz * barycentricCoords.x + v1.Normal.xyz * barycentricCoords.y + v2.Normal.xyz * barycentricCoords.z);
 	vec4 tangent = normalize(v0.Tangent * barycentricCoords.x + v1.Tangent * barycentricCoords.y + v2.Tangent * barycentricCoords.z);
 
-
 	rayPayload.Color = color.rgb;
 	rayPayload.Normal = normal;
-	rayPayload.Reflector = 1.0;
+	rayPayload.Reflector = max(dot(-gl_WorldRayDirectionEXT, normal), 0.0f);
 	rayPayload.Distance = gl_RayTmaxEXT;
 }

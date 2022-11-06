@@ -60,9 +60,9 @@ namespace RayTracingSphere
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.Maximized = false;
-		windowInfo.FullScreen = false;
-		windowInfo.Width = 1600;
-		windowInfo.Height = 900;
+		windowInfo.FullScreen = true;
+		windowInfo.Width = 2560;
+		windowInfo.Height = 1440;
 		windowInfo.Color = Color(32, 32, 32, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -111,14 +111,15 @@ namespace RayTracingSphere
 		bottomAccelInfo.VertexBuffer = mesh->GetVertexBuffer();
 		bottomAccelInfo.IndexBuffer = mesh->GetIndexBuffer();
 		bottomAccelInfo.BoundingBox = mesh->GetBoundingBox();
-		Ref<AccelerationStructure> bottomLevelAccelerationStructure = AccelerationStructure::Create(&bottomAccelInfo);
+
+		Ref<TopLevelAS> bottomLevelAccelerationStructure = TopLevelAS::Create(&bottomAccelInfo);
 
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
-		topAccelInfo.pAccelerationStructure = bottomLevelAccelerationStructure;
 
-		Ref<AccelerationStructure> topLevelAccelerationStructure = AccelerationStructure::Create(&topAccelInfo);
+		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
+
 		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
 		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
 
@@ -127,7 +128,7 @@ namespace RayTracingSphere
 		pipelineSpec.Usage = PipelineUsage::Raygen;
 		pipelineSpec.ShaderCodeCount = shaderCode.size();
 		pipelineSpec.pShaderCode = shaderCode.data();
-		pipelineSpec.MaxRayDepth = 1;
+		pipelineSpec.MaxRayDepth = 2;
 
 		Ref<Pipeline> raygenPipeline = Pipeline::Create(&pipelineSpec);
 
@@ -188,7 +189,7 @@ namespace RayTracingSphere
 			camera->SetData(region);
 			commandBuffer->BindUniformBuffer(camera);
 
-			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure);
+			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("image", 0, image);
 			raygenPipeline->GetShader()->Set("Vertices", 0, mesh->GetVertexBuffer().As<BufferBase>());
 			raygenPipeline->GetShader()->Set("Indices", 0, mesh->GetIndexBuffer().As<BufferBase>());
