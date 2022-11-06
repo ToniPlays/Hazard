@@ -12,6 +12,12 @@ namespace HazardRenderer
 		Top,
 		Bottom
 	};
+	enum class BuildType
+	{
+		Build,
+		Update
+	};
+
 	class BottomLevelAS;
 
 	struct AccelerationStructureCreateInfo
@@ -23,7 +29,9 @@ namespace HazardRenderer
 		Ref<IndexBuffer> IndexBuffer;
 		BoundingBox BoundingBox;
 
-		BottomLevelAS* pBottomLevel;
+		BufferCopyRegion DataRegion;
+		uint32_t BottomLevelASCount;
+		BottomLevelAS* pBottomLevelAS;
 	};
 
 	struct TransformMatrixAS
@@ -40,6 +48,8 @@ namespace HazardRenderer
 		~AccelerationStructure() = default;
 
 		virtual AccelerationStructureLevel GetLevel() const = 0;
+		virtual void Build(const BuildType& type) = 0;
+		virtual void Invalidate() = 0;
 	};
 
 	class TopLevelAS : public AccelerationStructure

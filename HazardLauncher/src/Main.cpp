@@ -17,5 +17,5 @@ void main(int argc, char* argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	AccelerationStructureTest::Run(renderAPI);
+	RayTracingSphere::Run(renderAPI);
 }

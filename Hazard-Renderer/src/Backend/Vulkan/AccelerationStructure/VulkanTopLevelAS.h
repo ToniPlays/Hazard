@@ -19,6 +19,10 @@ namespace HazardRenderer::Vulkan
 		size_t GetCount() const { return 0; };
 		void PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure) override;
 
+		void Build(const BuildType& type);
+		void Build(VkCommandBuffer commandBuffer, const BuildType& type);
+
+		void Invalidate() override;
 		void Invalidate_RT();
 
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
@@ -38,7 +42,8 @@ namespace HazardRenderer::Vulkan
 		AccelerationStructureBufferInfo m_InstanceBuffer;
 		
 		VulkanAccelStruct m_StructureInfo;
+		VkAccelerationStructureGeometryKHR m_Geometry;
 
-		VulkanBottomLevelAS* pBottomLevel;
+		BottomLevelAS* pBottomLevel;
 	};
 }

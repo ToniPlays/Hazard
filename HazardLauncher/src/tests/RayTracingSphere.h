@@ -112,11 +112,15 @@ namespace RayTracingSphere
 		bottomAccelInfo.IndexBuffer = mesh->GetIndexBuffer();
 		bottomAccelInfo.BoundingBox = mesh->GetBoundingBox();
 
-		Ref<TopLevelAS> bottomLevelAccelerationStructure = TopLevelAS::Create(&bottomAccelInfo);
+		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
+
+		glm::mat4 transform = Math::ToTransformMatrix({ 0, 0, -5.0f }, glm::quat({ 0.0f, glm::radians(45.0f), 0.0f }));
 
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
+		topAccelInfo.BottomLevelASCount = 1;
+		topAccelInfo.pBottomLevelAS = bottomLevelAccelerationStructure.Raw();
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 
@@ -171,22 +175,22 @@ namespace RayTracingSphere
 			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			CameraData cameraData = {};
-			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
+			float aspectRatio = Math::Max((float)window->GetWidth() / (float)window->GetHeight(), 0.001f);
 
-			glm::vec3 Translation = { 0.0f, -1.0f, -5.0f };
-			glm::quat Rotation = glm::quat({ glm::radians(0.0f), glm::radians(70.0f), glm::radians(0.0f) });
+			glm::vec3 Translation = { -3.0f, 1.0f, 3.0f };
+			glm::quat Rotation = glm::quat({ glm::radians(0.0f), glm::radians(-50.0f), glm::radians(0.0f) });
 			glm::vec3 Scale = glm::vec3(1.0f);
 
 			glm::mat4 cameraView = Math::ToTransformMatrix(Translation, Rotation, Scale);
 
 			cameraData.InvProjection = glm::inverse(glm::perspective(glm::radians(45.0f), aspectRatio, 0.03f, 100.0f));
-			cameraData.InvView = glm::inverse(cameraView);
+			cameraData.InvView = cameraView;
 
-			BufferCopyRegion region = {};
-			region.Data = &cameraData;
-			region.Size = sizeof(CameraData);
+			BufferCopyRegion copyRegion = {};
+			copyRegion.Data = &cameraData;
+			copyRegion.Size = sizeof(CameraData);
 
-			camera->SetData(region);
+			camera->SetData(copyRegion);
 			commandBuffer->BindUniformBuffer(camera);
 
 			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());

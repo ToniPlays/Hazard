@@ -13,6 +13,8 @@
 #include "Pipeline/VulkanShader.h"
 #include "Textures/VulkanCubemapTexture.h"
 #include "AccelerationStructure/VulkanShaderBindingTable.h"
+#include "AccelerationStructure/VulkanTopLevelAS.h"
+#include "AccelerationStructure/VulkanBottomLevelAS.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
@@ -451,6 +453,22 @@ namespace HazardRenderer::Vulkan
 			auto& callableTable = bindingTable->GetCallableTableAddress();
 
 			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Width, info.Height, info.Depth);
+			});
+	}
+	void VulkanRenderCommandBuffer::BuildAccelerationStructure(const AccelerationStructureBuildInfo& info)
+	{
+		Ref<AccelerationStructure> structure = info.AccelerationStructure;
+		structure->Invalidate();
+
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, buildInfo = info]() mutable {
+
+			auto level = buildInfo.AccelerationStructure->GetLevel();
+
+			if (level == AccelerationStructureLevel::Top)
+				buildInfo.AccelerationStructure.As<VulkanTopLevelAS>()->Build(instance->m_ActiveCommandBuffer, buildInfo.Type);
+			else if (level == AccelerationStructureLevel::Bottom)
+				buildInfo.AccelerationStructure.As<VulkanBottomLevelAS>()->Build(instance->m_ActiveCommandBuffer, buildInfo.Type);
 			});
 	}
 	void VulkanRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)

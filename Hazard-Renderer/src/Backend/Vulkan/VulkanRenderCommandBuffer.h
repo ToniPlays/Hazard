@@ -47,6 +47,7 @@ namespace HazardRenderer::Vulkan
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
+		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
 
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override;

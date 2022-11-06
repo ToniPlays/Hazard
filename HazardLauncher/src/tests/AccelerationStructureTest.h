@@ -80,10 +80,10 @@ namespace AccelerationStructureTest
 		//---------------
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
+			-0.5f, -0.5f,-0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f,-0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 		uint32_t indices[] = {
 			0, 1, 2, 2, 3, 0
@@ -108,10 +108,10 @@ namespace AccelerationStructureTest
 		ibo.Data = indices;
 
 		BoundingBox boundingBox = {};
-		boundingBox.Encapsulate({ -0.5f, -0.5f, 0.0f });
-		boundingBox.Encapsulate({  0.5f, -0.5f, 0.0f });
-		boundingBox.Encapsulate({  0.5f,  0.5f, 0.0f });
-		boundingBox.Encapsulate({ -0.5f,  0.5f, 0.0f });
+		boundingBox.Encapsulate({ -0.5f, -0.5f, -0.5f });
+		boundingBox.Encapsulate({  0.5f, -0.5f,  0.5f });
+		boundingBox.Encapsulate({  0.5f,  0.5f,  0.5f });
+		boundingBox.Encapsulate({ -0.5f,  0.5f, -0.5f });
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
@@ -134,28 +134,27 @@ namespace AccelerationStructureTest
 
 		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
 
-		TransformMatrixAS transform
-		{
-			{ 1.0, 0.0, 0.0, 0.0 },
-			{ 0.0, 1.0, 0.0, 0.0 },
-			{ 0.0, 0.0, 1.0, 0.0 }
-		};
+		glm::mat4x3 transform = glm::mat4x3(glm::mat4(1.0));
+		glm::mat4x3 transform1 = glm::mat4x3(glm::translate(glm::mat4(1.0f), { 0.0f, -1.0f, 1.0f }));
+
+
+		std::vector<TransformMatrixAS> transforms(2);
+		transforms[0] = *(TransformMatrixAS*)&transform;
+		transforms[1] = *(TransformMatrixAS*)&transform1;
 
 		BufferCopyRegion region = {};
-		region.Data = &transform;
-		region.Size = sizeof(TransformMatrixAS);
+		region.Data = transforms.data();
+		region.Size = sizeof(TransformMatrixAS) * transforms.size();
 
 		bottomLevelAccelerationStructure->PushTransforms(region);
 
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
-		topAccelInfo.pBottomLevel = bottomLevelAccelerationStructure.Raw();
+		topAccelInfo.pBottomLevelAS = bottomLevelAccelerationStructure.Raw();
+		topAccelInfo.BottomLevelASCount = 1;
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
-		topLevelAccelerationStructure->PushInstances(glm::mat4(1.0f), bottomLevelAccelerationStructure);
-
-
 
 		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygenBasic.glsl", api);
 		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
@@ -208,8 +207,8 @@ namespace AccelerationStructureTest
 
 			CameraData cameraData = {};
 			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
-			cameraData.InvProjection = glm::inverse(glm::perspective(glm::radians(45.0f), aspectRatio, 0.03f, 100.0f));
-			cameraData.InvView = glm::inverse(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, -2.0f }));
+			cameraData.InvProjection = glm::inverse(glm::perspective(glm::radians(60.0f), aspectRatio, 0.03f, 100.0f));
+			cameraData.InvView = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 5.0f });
 
 			BufferCopyRegion region = {};
 			region.Data = &cameraData;
@@ -221,18 +220,18 @@ namespace AccelerationStructureTest
 			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("image", 0, image);
 
-			TraceRaysInfo info = {};
-			info.Width = outputImage.Width;
-			info.Height = outputImage.Height;
-			info.Depth = 1;
-			info.pBindingTable = bindingTable;
+			TraceRaysInfo rayInfo = {};
+			rayInfo.Width = outputImage.Width;
+			rayInfo.Height = outputImage.Height;
+			rayInfo.Depth = 1;
+			rayInfo.pBindingTable = bindingTable;
 
 			commandBuffer->BindPipeline(raygenPipeline);
-			commandBuffer->TraceRays(info);
+			commandBuffer->TraceRays(rayInfo);
 
 			ImageTransitionInfo imageInfo = {};
 			imageInfo.Image = image;
-			imageInfo.SourceLayout = ImageLayout_General; 
+			imageInfo.SourceLayout = ImageLayout_General;
 			imageInfo.DestLayout = ImageLayout_ShaderReadOnly;
 
 			commandBuffer->TransitionImageLayout(imageInfo);

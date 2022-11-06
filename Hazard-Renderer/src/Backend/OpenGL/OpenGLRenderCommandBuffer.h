@@ -35,6 +35,7 @@ namespace HazardRenderer::OpenGL
 		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
 		void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override {};
+		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) {};
 
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override {};

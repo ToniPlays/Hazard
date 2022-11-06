@@ -113,7 +113,8 @@ namespace HazardRenderer::OpenGL
 		switch (type) {
 		case(GL_COMPILE_STATUS):
 			glGetShaderiv(id, type, &ret);
-			if (ret == false) {
+			if (ret == false) 
+			{
 				int infologLength = 0;
 				glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infologLength);
 				std::vector<GLchar> infoLog(infologLength);
@@ -165,25 +166,6 @@ namespace HazardRenderer::OpenGL
 
 		GLint linked;
 		glGetProgramiv(program, GL_LINK_STATUS, &linked);
-
-		if (linked == GL_FALSE)
-		{
-			int infologLength = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
-			std::vector<GLchar> infoLog(infologLength);
-			GLsizei charsWritten = 0;
-
-			glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog.data());
-			std::string message;
-
-			if (charsWritten)
-				message = std::string(infoLog.data());
-			Window::SendDebugMessage({ Severity::Error, "Shader linking failed", message });
-			glDeleteProgram(program);
-
-			for (auto id : shaderIDs)
-				glDeleteShader(id);
-		}
 
 		for (auto id : shaderIDs)
 		{

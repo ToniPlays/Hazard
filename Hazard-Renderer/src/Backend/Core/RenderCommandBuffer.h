@@ -59,6 +59,11 @@ namespace HazardRenderer
 		uint32_t Depth;
 		Ref<ShaderBindingTable> pBindingTable;
 	};
+	struct AccelerationStructureBuildInfo 
+	{
+		BuildType Type;
+		Ref<AccelerationStructure> AccelerationStructure;
+	};
 
 
 	class RenderCommandBuffer : public RefCount
@@ -86,6 +91,7 @@ namespace HazardRenderer
 		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
 		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;
 		virtual void GenerateMipmaps(const GenMipmapsInfo& info) = 0;
+		virtual void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) = 0;
 
 		virtual void SetViewport(float x, float y, float width, float height) = 0;
 		virtual void SetLineSize(float size) = 0;

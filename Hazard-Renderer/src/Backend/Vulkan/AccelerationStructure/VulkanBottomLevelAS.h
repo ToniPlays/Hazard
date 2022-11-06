@@ -18,6 +18,10 @@ namespace HazardRenderer::Vulkan
 		size_t GetCount() const { return 0; };
 		void PushTransforms(const BufferCopyRegion& copyRegion) override;
 
+		void Invalidate() override;
+		void Build(const BuildType& type);
+		//Vulkan specific
+		void Build(VkCommandBuffer commandBuffer, const BuildType& type);
 		void Invalidate_RT();
 
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
@@ -32,6 +36,7 @@ namespace HazardRenderer::Vulkan
 		AccelerationStructureLevel m_Level;
 		Ref<VulkanVertexBuffer> m_VertexBuffer;
 		Ref<VulkanIndexBuffer> m_IndexBuffer;
+
 		size_t m_BufferSize;
 
 		Buffer m_LocalBuffer;
@@ -41,5 +46,7 @@ namespace HazardRenderer::Vulkan
 		AccelerationStructureBufferInfo m_TransformBuffer;
 
 		VulkanAccelStruct m_StructureInfo;
+
+		VkAccelerationStructureGeometryTrianglesDataKHR m_GeometryData = {};
 	};
 }
