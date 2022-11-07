@@ -72,8 +72,6 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FRAME("MainThread");
 		HZR_TIMED_FUNCTION();
-		double time = glfwGetTime();
-
 		Time::Update(glfwGetTime());
 		//Update Time
 

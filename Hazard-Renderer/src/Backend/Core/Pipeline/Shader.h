@@ -122,6 +122,7 @@ namespace HazardRenderer
 			if (type == "Miss")			return ShaderStage::Miss;
 			if (type == "ClosestHit")	return ShaderStage::ClosestHit;
 			if (type == "AnyHit")		return ShaderStage::AnyHit;
+			HZR_ASSERT(false, "Undefined shader stage");
 			return ShaderStage::None;
 		}
 		static std::string ShaderStageToString(const uint32_t& type) 
@@ -133,6 +134,7 @@ namespace HazardRenderer
 			if (type & (uint32_t)ShaderStage::Miss)			return "Miss";
 			if (type & (uint32_t)ShaderStage::ClosestHit)	return "ClosestHit";
 			if (type & (uint32_t)ShaderStage::AnyHit)		return "AnyHit";
+			HZR_ASSERT(false, "Undefined shader stage");
 			return "Unknown";
 		}
 		static ShaderDataType ShaderDataTypeFromSPV(const spirv_cross::SPIRType& type) 

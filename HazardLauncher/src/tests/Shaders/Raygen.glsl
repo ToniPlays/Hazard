@@ -3,12 +3,12 @@
 #version 460
 #extension GL_EXT_ray_tracing : enable
 
-layout(set = 0, binding = 0) uniform accelerationStructureEXT topLevelAS;
-layout(set = 0, binding = 1, rgba8) uniform writeonly image2D image;
+layout(set = 0, binding = 0) uniform accelerationStructureEXT TLAS;
+layout(set = 0, binding = 1, rgba8) uniform writeonly image2D outputImage;
 layout(set = 0, binding = 2) uniform Camera
 {
-	uniform mat4 ViewInverse;
 	uniform mat4 ProjInverse;
+	uniform mat4 ViewInverse;
 } u_Camera;
 
 
@@ -27,12 +27,12 @@ layout(location = 0) rayPayloadEXT RayPayload rayPayload;
 void main() 
 {
 	const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);
-	const vec2 inUV = pixelCenter/vec2(gl_LaunchSizeEXT.xy);
+	const vec2 inUV = pixelCenter / vec2(gl_LaunchSizeEXT.xy);
 	vec2 d = inUV * 2.0 - 1.0;
 
-	vec4 origin = u_Camera.ViewInverse * vec4(0,0,0,1);
-	vec4 target = u_Camera.ProjInverse * vec4(d.x, d.y, 1, 1) ;
-	vec4 direction = u_Camera.ViewInverse * vec4(normalize(target.xyz), 0) ;
+	vec4 origin = u_Camera.ViewInverse * vec4(0, 0, 0, 1);
+	vec4 target = u_Camera.ProjInverse * vec4(d.x, d.y, 1, 1);
+	vec4 direction = u_Camera.ViewInverse * vec4(normalize(target.xyz), 0);
 
 	uint flags = gl_RayFlagsOpaqueEXT;
 	uint mask = 0xFF;
@@ -44,14 +44,25 @@ void main()
 
 	for(int i = 0; i < MAX_RECURSION; i++)
 	{
-		traceRayEXT(topLevelAS, flags, mask, 0, 0, 0, origin.xyz, tmin, direction.xyz, tmax, 0);
+		traceRayEXT(TLAS,			//TLAS
+					flags,			//Flags
+					mask,			//Mask
+					0,				//STB record offset
+					0,				//STB record stride
+					0,				//Miss index
+					origin.xyz,		//Origin
+					tmin,			//Min range
+					direction.xyz,	//Direction
+					tmax,			//Max range
+					0				//Payload location
+					);
 
 		if(rayPayload.Distance < 0.0)
 		{
-			color += rayPayload.Color * (1.5 - rayPayload.Reflector);
+			color += rayPayload.Color;
 			break;
 		}
-		else if(rayPayload.Reflector <= 1.0f)
+		else if(rayPayload.Reflector <= 0.9f)
 		{
 			const vec4 hitPos = origin + direction * rayPayload.Distance;
 			origin.xyz = hitPos.xyz + rayPayload.Normal * 0.001f;
@@ -65,7 +76,7 @@ void main()
 		}
 	}
 
-	imageStore(image, ivec2(gl_LaunchIDEXT.xy), vec4(color, 0.0));
+	imageStore(outputImage, ivec2(gl_LaunchIDEXT.xy), vec4(color, 1.0));
 }
 
 #type Miss
@@ -81,18 +92,16 @@ struct RayPayload
 	float Reflector;
 };
 
-
 layout(location = 0) rayPayloadInEXT RayPayload rayPayload;
+
+layout(set = 1, binding = 0) uniform samplerCube u_EnvironmentMap;
 
 void main() 
 {
-	const vec3 gradientStart = vec3(0.3, 0.4, 1.0);
-	const vec3 gradientEnd = vec3(1.0);
-
 	vec3 unitDir = normalize(gl_WorldRayDirectionEXT);
 	float t = 0.5 * (unitDir.y + 1.0);
 
-	rayPayload.Color = (1.0 - t) * gradientStart + t * gradientEnd;
+	rayPayload.Color = texture(u_EnvironmentMap, unitDir).rgb;
 	rayPayload.Distance = -1.0f;
 	rayPayload.Normal = vec3(0.0);
 	rayPayload.Reflector = 1.0f;
@@ -152,6 +161,6 @@ void main()
 
 	rayPayload.Color = color.rgb;
 	rayPayload.Normal = normal;
-	rayPayload.Reflector = max(dot(-gl_WorldRayDirectionEXT, normal), 0.0f);
+	rayPayload.Reflector = max(dot(-gl_WorldRayDirectionEXT, normal), 0.0);
 	rayPayload.Distance = gl_RayTmaxEXT;
 }

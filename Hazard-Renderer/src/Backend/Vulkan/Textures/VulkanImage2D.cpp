@@ -14,7 +14,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(!info->DebugName.empty(), "Debug name required");
 		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
-		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
+		HZR_ASSERT(info->Usage != ImageUsage::None, "Image usage cannot be none");
 
 		m_DebugName = info->DebugName;
 		m_Width = info->Width;

@@ -17,7 +17,7 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
-		auto& lut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
+		//auto& lut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
 	void EnvironmentMap::GenerateRadiance(Ref<Texture2DAsset> sourceImage)
 	{
@@ -35,10 +35,6 @@ namespace Hazard
 		radianceInfo.Height = 4096;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
-		ImageTransitionInfo generalTransition = {};
-		generalTransition.Cubemap = radianceMap;
-		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
-		generalTransition.DestLayout = ImageLayout_General;
 
 		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubeMap");
 

@@ -3,9 +3,8 @@
 
 #include "VulkanContext.h"
 
-namespace HazardRenderer::Vulkan::VkUtils {
-
-
+namespace HazardRenderer::Vulkan::VkUtils 
+{
 	static PFN_vkGetBufferDeviceAddressKHR fpGetBufferDeviceAddressKHR;
 
 	void LoadDebugUtilsExtensions(VkInstance instance)
@@ -230,6 +229,15 @@ namespace HazardRenderer::Vulkan::VkUtils {
 		address.deviceAddress = fpGetBufferDeviceAddressKHR(device, &bufferDeviceAddressInfo);
 
 		return address;
+	}
+	VkTransformMatrixKHR MatrixToKHR(const glm::mat4& matrix)
+	{
+		return VkTransformMatrixKHR 
+		{
+			matrix[0][0],matrix[1][0],matrix[2][0],matrix[3][0],
+			matrix[0][1],matrix[1][1],matrix[2][1],matrix[3][1],
+			matrix[0][2],matrix[1][2],matrix[2][2],matrix[3][2]
+		};
 	}
 	VkShaderStageFlags GetVulkanShaderStage(uint32_t stage)
 	{

@@ -27,25 +27,16 @@ namespace AccelerationStructureTest
 #endif
 		static bool running = true;
 
-		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hello Acceleration structures";
-		appInfo.BuildVersion = "0.0.1a";
-		appInfo.MessageCallback = [](RenderMessage message)
-		{
-			std::cout << message.Description << std::endl;
-		};
-		appInfo.EventCallback = [](Event& e) {
+		HazardRendererAppInfo rendererApp = {};
+		rendererApp.AppName = "Hello Acceleration structures";
+		rendererApp.BuildVersion = "0.0.1a";
+		rendererApp.EventCallback = [](Event& e) {
 			EventDispatcher dispatcher(e);
 			if (e.GetEventType() == EventType::WindowClose)
 			{
 				running = false;
 			}
-		};
-
-		HazardRendererAppInfo rendererApp = {};
-		rendererApp.AppName = appInfo.AppName;
-		rendererApp.BuildVersion = "1.0.0!";
-		rendererApp.EventCallback = appInfo.EventCallback;
+		};;
 
 		rendererApp.MessageCallback = [](RenderMessage message)
 		{
@@ -54,7 +45,7 @@ namespace AccelerationStructureTest
 		};
 
 		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = appInfo.AppName;
+		windowInfo.Title = rendererApp.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
 		windowInfo.Width = 1280;

@@ -394,6 +394,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.layout = m_PipelineLayout;
 
 		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipeline), "Failed to create RayTracingPipeline");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
 	}
 }
 

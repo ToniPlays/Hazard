@@ -188,5 +188,6 @@ namespace HazardRenderer::Vulkan::VkUtils
 		return VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM;
 	}
 	VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer);
+	VkTransformMatrixKHR MatrixToKHR(const glm::mat4& matrix);
 }
 #endif

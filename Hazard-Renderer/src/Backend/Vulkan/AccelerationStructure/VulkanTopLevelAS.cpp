@@ -6,6 +6,7 @@
 #include "spdlog/fmt/fmt.h"
 
 #include "VulkanBottomLevelAS.h"
+#include <MathCore.h>
 
 static PFN_vkCmdBuildAccelerationStructuresKHR fpCmdBuildAccelerationStructuresKHR;
 static PFN_vkBuildAccelerationStructuresKHR fpBuildAccelerationStructuresKHR;
@@ -48,7 +49,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(accelerationStructure->GetLevel() == AccelerationStructureLevel::Bottom, "Acceleration structure must be BLAS");
 
-		
+
 		Ref<VulkanTopLevelAS> instance = this;
 		Ref<VulkanBottomLevelAS> structure = accelerationStructure.As<VulkanBottomLevelAS>();
 	}
@@ -65,25 +66,26 @@ namespace HazardRenderer::Vulkan
 	{
 		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
 
-		VkTransformMatrixKHR transformMatrix =
-		{
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f
-		};
+		glm::mat4 transform = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, glm::quat({ glm::radians(0.0f), glm::radians(0.0f), 0.0f }));
 
 		VulkanAllocator allocator("VulkanAccelerationStructure");
 
 		VkAccelerationStructureInstanceKHR instanceInfo = {};
-		instanceInfo.transform = transformMatrix;
+		instanceInfo.transform = VkUtils::MatrixToKHR(transform);
 		instanceInfo.instanceCustomIndex = 0;
 		instanceInfo.mask = 0xFF;
 		instanceInfo.instanceShaderBindingTableRecordOffset = 0;
-		instanceInfo.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
+		instanceInfo.flags = VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR;
 		instanceInfo.accelerationStructureReference = ((VulkanBottomLevelAS*)pBottomLevel)->GetVulkanAccelerationStructure().Address;
 
+		std::vector<VkAccelerationStructureInstanceKHR> instances(2);
+		instances[0] = instanceInfo;
+		transform = Math::ToTransformMatrix({ -2.0f, -0.25f, 0.0f }, glm::quat({ glm::radians(0.0f), glm::radians(25.0f), 0.0f }));
+		instances[1] = instanceInfo;
+		instances[1].transform = VkUtils::MatrixToKHR(transform);
+
 		uint8_t* dest = allocator.MapMemory<uint8_t>(m_InstanceBuffer.Allocation);
-		memcpy(dest, &instanceInfo, sizeof(VkAccelerationStructureInstanceKHR));
+		memcpy(dest, instances.data(), instances.size() * sizeof(VkAccelerationStructureInstanceKHR));
 		allocator.UnmapMemory(m_InstanceBuffer.Allocation);
 
 		VkAccelerationStructureBuildGeometryInfoKHR buildInfo = {};
@@ -95,9 +97,9 @@ namespace HazardRenderer::Vulkan
 		buildInfo.geometryCount = 1;
 		buildInfo.pGeometries = &m_Geometry;
 
-		uint32_t primitiveCount = 1;
+		uint32_t primitiveCount = 2; // Instance count
 
-		if(type == BuildType::Build)
+		if (type == BuildType::Build)
 		{
 			VulkanAllocator allocator("VulkanAccelerationStructure");
 			if (m_StructureBuffer.Buffer)
@@ -213,7 +215,7 @@ namespace HazardRenderer::Vulkan
 
 		VkBufferCreateInfo instanceInfo = {};
 		instanceInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		instanceInfo.size = sizeof(VkAccelerationStructureInstanceKHR);
+		instanceInfo.size = sizeof(VkAccelerationStructureInstanceKHR) * 2;
 		instanceInfo.usage = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
 		m_InstanceBuffer.Allocation = allocator.AllocateBuffer(instanceInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_InstanceBuffer.Buffer);
