@@ -35,15 +35,14 @@ namespace HazardRenderer::Vulkan
 	private:
 		std::string m_DebugName;
 		AccelerationStructureLevel m_Level;
-		size_t m_BufferSize;
+
+		std::vector<AccelerationStructureInstance> m_Instances;
+		std::vector<VkAccelerationStructureGeometryKHR> m_Geometry;
 
 		AccelerationStructureBufferInfo m_StructureBuffer;
 		AccelerationStructureBufferInfo m_ScratchBuffer;
 		AccelerationStructureBufferInfo m_InstanceBuffer;
 		
 		VulkanAccelStruct m_StructureInfo;
-		VkAccelerationStructureGeometryKHR m_Geometry;
-
-		BottomLevelAS* pBottomLevel;
 	};
 }

@@ -116,34 +116,29 @@ namespace AccelerationStructureTest
 
 		Ref<Image2D> image = Image2D::Create(&outputImage);
 
+		AccelerationStructureGeometry geometry = {};
+		geometry.VertexBuffer = vertexBuffer;
+		geometry.IndexBuffer = indexBuffer;
+		geometry.BoundingBox = boundingBox;
+
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
 		bottomAccelInfo.DebugName = "BottomLevelAccelerationStructure";
 		bottomAccelInfo.Level = AccelerationStructureLevel::Bottom;
-		bottomAccelInfo.VertexBuffer = vertexBuffer;
-		bottomAccelInfo.IndexBuffer = indexBuffer;
-		bottomAccelInfo.BoundingBox = boundingBox;
+		bottomAccelInfo.GeometryCount = 1;
+		bottomAccelInfo.pGeometries = &geometry;
 
 		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
 
-		glm::mat4x3 transform = glm::mat4x3(glm::mat4(1.0));
-		glm::mat4x3 transform1 = glm::mat4x3(glm::translate(glm::mat4(1.0f), { 0.0f, -1.0f, 1.0f }));
 
-
-		std::vector<TransformMatrixAS> transforms(2);
-		transforms[0] = *(TransformMatrixAS*)&transform;
-		transforms[1] = *(TransformMatrixAS*)&transform1;
-
-		BufferCopyRegion region = {};
-		region.Data = transforms.data();
-		region.Size = sizeof(TransformMatrixAS) * transforms.size();
-
-		bottomLevelAccelerationStructure->PushTransforms(region);
+		AccelerationStructureInstance instance = {};
+		instance.CustomIndex = 0;
+		instance.pBottomLevelAS = bottomLevelAccelerationStructure;
 
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
-		topAccelInfo.pBottomLevelAS = bottomLevelAccelerationStructure.Raw();
-		topAccelInfo.BottomLevelASCount = 1;
+		topAccelInfo.InstanceCount = 1;
+		topAccelInfo.pInstances = &instance;
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 

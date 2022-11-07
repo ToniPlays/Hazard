@@ -17,28 +17,34 @@ namespace HazardRenderer
 		Build,
 		Update
 	};
-
 	class BottomLevelAS;
+	
+	struct AccelerationStructureGeometry
+	{
+		glm::mat4 Transform = glm::mat4(1.0f);
+		Ref<VertexBuffer> VertexBuffer;
+		Ref<IndexBuffer> IndexBuffer;
+		BoundingBox BoundingBox;
+	};
+	struct AccelerationStructureInstance
+	{
+		glm::mat4 Transform = glm::mat4(1.0f);
+		Ref<BottomLevelAS> pBottomLevelAS;
+		uint32_t CustomIndex = 0;
+	};
 
 	struct AccelerationStructureCreateInfo
 	{
 		std::string DebugName;
 		AccelerationStructureLevel Level;
-		size_t Size = 0;
-		Ref<VertexBuffer> VertexBuffer;
-		Ref<IndexBuffer> IndexBuffer;
-		BoundingBox BoundingBox;
 
-		BufferCopyRegion DataRegion;
-		uint32_t BottomLevelASCount;
-		BottomLevelAS* pBottomLevelAS;
-	};
+		//BLAS info
+		uint32_t GeometryCount = 0;
+		AccelerationStructureGeometry* pGeometries;
 
-	struct TransformMatrixAS
-	{
-		glm::vec4 MRow0;
-		glm::vec4 MRow1;
-		glm::vec4 MRow2;
+		//TLAS info
+		uint32_t InstanceCount = 0;
+		AccelerationStructureInstance* pInstances;
 	};
 
 	class AccelerationStructure : public RefCount

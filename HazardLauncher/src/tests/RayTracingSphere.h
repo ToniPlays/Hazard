@@ -88,19 +88,34 @@ namespace RayTracingSphere
 #pragma region Mesh
 		MeshFactory factory = {};
 		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
-		MeshData meshData = factory.LoadMeshFromSource("src/tests/Meshes/c8_corvette_colored.fbx");
 
-		MeshCreateInfo meshInfo = {};
-		meshInfo.Usage = BufferUsage::BLAS;
-		meshInfo.BoundingBox = meshData.BoundingBox;
-		meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
-		meshInfo.pVertices = meshData.Vertices.data();
-		meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
-		meshInfo.pIndices = meshData.Indices.data();
+		MeshData corvetteData = factory.LoadMeshFromSource("src/tests/Meshes/c8_corvette_colored.fbx");
 
-		Ref<Mesh> mesh = Ref<Mesh>::Create(&meshInfo);
+		MeshCreateInfo corvetteInfo = {};
+		corvetteInfo.Usage = BufferUsage::BLAS;
+		corvetteInfo.BoundingBox = corvetteData.BoundingBox;
+		corvetteInfo.VertexCount = corvetteData.Vertices.size() * sizeof(Vertex3D);
+		corvetteInfo.pVertices = corvetteData.Vertices.data();
+		corvetteInfo.IndexCount = corvetteData.Indices.size() * sizeof(uint32_t);
+		corvetteInfo.pIndices = corvetteData.Indices.data();
+
+		Ref<Mesh> corvette = Ref<Mesh>::Create(&corvetteInfo);
+
+		MeshData cubeData = factory.LoadMeshFromSource("src/tests/Meshes/cube.fbx");
+
+		MeshCreateInfo cubeInfo = {};
+		cubeInfo.Usage = BufferUsage::BLAS;
+		cubeInfo.BoundingBox = cubeData.BoundingBox;
+		cubeInfo.VertexCount = cubeData.Vertices.size() * sizeof(Vertex3D);
+		cubeInfo.pVertices = cubeData.Vertices.data();
+		cubeInfo.IndexCount = cubeData.Indices.size() * sizeof(uint32_t);
+		cubeInfo.pIndices = cubeData.Indices.data();
+
+		Ref<Mesh> cube = Ref<Mesh>::Create(&cubeInfo);
+
+
 #pragma endregion
-#pragma region RayTracing
+#pragma region OutputImage
 		Image2DCreateInfo outputImageSpec = {};
 		outputImageSpec.DebugName = "OutputImage";
 		outputImageSpec.Width = window->GetWidth();
@@ -109,26 +124,63 @@ namespace RayTracingSphere
 		outputImageSpec.Usage = ImageUsage::Storage;
 
 		Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
+#pragma endregion
+#pragma region RayTracing
+#pragma region BLAS
+
+		AccelerationStructureGeometry carGeometry = {};
+		carGeometry.VertexBuffer = corvette->GetVertexBuffer();
+		carGeometry.IndexBuffer = corvette->GetIndexBuffer();
+		carGeometry.BoundingBox = corvette->GetBoundingBox();
+		carGeometry.Transform = glm::mat4(1.0f);
+
+		AccelerationStructureGeometry cubeGeometry = {};
+		cubeGeometry.VertexBuffer = cube->GetVertexBuffer();
+		cubeGeometry.IndexBuffer = cube->GetIndexBuffer();
+		cubeGeometry.BoundingBox = cube->GetBoundingBox();
+		cubeGeometry.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 6.0f, 6.0f });
+
+		std::vector<AccelerationStructureGeometry> geometries
+		{
+			carGeometry, cubeGeometry
+		};
 
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
 		bottomAccelInfo.DebugName = "BottomLevelAccelerationStructure";
 		bottomAccelInfo.Level = AccelerationStructureLevel::Bottom;
-		bottomAccelInfo.VertexBuffer = mesh->GetVertexBuffer();
-		bottomAccelInfo.IndexBuffer = mesh->GetIndexBuffer();
-		bottomAccelInfo.BoundingBox = mesh->GetBoundingBox();
+		bottomAccelInfo.GeometryCount = geometries.size();
+		bottomAccelInfo.pGeometries = geometries.data();
 
 		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
 
-		glm::mat4 transform = Math::ToTransformMatrix({ 0, 0, -5.0f }, glm::quat({ 0.0f, glm::radians(60.0f), 0.0f }));
+		AccelerationStructureInstance instance1 = {};
+		instance1.CustomIndex = 0;
+		instance1.pBottomLevelAS = bottomLevelAccelerationStructure;
+		instance1.Transform = glm::translate(glm::mat4(1.0f), { -4.0f, 0.0f, 0.0f });
 
+		AccelerationStructureInstance instance2 = {};
+		instance2.CustomIndex = 1;
+		instance2.pBottomLevelAS = bottomLevelAccelerationStructure;
+		instance2.Transform = glm::translate(glm::mat4(1.0f), { 4.0f, 0.0f, 0.0f });
+
+		AccelerationStructureInstance instance3 = {};
+		instance3.CustomIndex = 2;
+		instance3.pBottomLevelAS = bottomLevelAccelerationStructure;
+
+		std::vector<AccelerationStructureInstance> instances = {
+			instance1, instance2, instance3
+		};
+#pragma endregion
+#pragma region TLAS
 		AccelerationStructureCreateInfo topAccelInfo = {};
 		topAccelInfo.DebugName = "TopLevelAccelerationStructure";
 		topAccelInfo.Level = AccelerationStructureLevel::Top;
-		topAccelInfo.BottomLevelASCount = 1;
-		topAccelInfo.pBottomLevelAS = bottomLevelAccelerationStructure.Raw();
+		topAccelInfo.InstanceCount = instances.size();
+		topAccelInfo.pInstances = instances.data();
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
-
+#pragma endregion
+#pragma region Raygen
 		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
 		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
 
@@ -146,6 +198,7 @@ namespace RayTracingSphere
 
 		Ref<ShaderBindingTable> bindingTable = ShaderBindingTable::Create(&bindingSpec);
 #pragma endregion
+#pragma endregion
 #pragma region ScreenPass
 		PipelineSpecification screenPassSpec = {};
 		screenPassSpec.DebugName = "ScreenPass";
@@ -158,21 +211,6 @@ namespace RayTracingSphere
 
 		Ref<Pipeline> screenPass = Pipeline::Create(&screenPassSpec);
 #pragma endregion
-
-		struct CameraData
-		{
-			glm::mat4 InvProjection;
-			glm::mat4 InvView;
-		};
-
-		UniformBufferCreateInfo uboInfo = {};
-		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 2;
-		uboInfo.Size = sizeof(CameraData);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
-
-		Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
 #pragma region EnvironmentMap
 
 		TextureHeader& header = TextureFactory::LoadTextureFromSourceFile("src/tests/Textures/pink_sunrise_4k.hdr", true);
@@ -230,6 +268,21 @@ namespace RayTracingSphere
 
 #pragma endregion
 
+		struct CameraData
+		{
+			glm::mat4 InvProjection;
+			glm::mat4 InvView;
+		};
+
+		UniformBufferCreateInfo uboInfo = {};
+		uboInfo.Name = "Camera";
+		uboInfo.Set = 0;
+		uboInfo.Binding = 2;
+		uboInfo.Size = sizeof(CameraData);
+		uboInfo.Usage = BufferUsage::DynamicDraw;
+
+		Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
+
 		while (running)
 		{
 			Time::Update(glfwGetTime());
@@ -254,8 +307,8 @@ namespace RayTracingSphere
 
 			raygenPipeline->GetShader()->Set("TLAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("outputImage", 0, outputImage);
-			raygenPipeline->GetShader()->Set("Vertices", 0, mesh->GetVertexBuffer().As<BufferBase>());
-			raygenPipeline->GetShader()->Set("Indices", 0, mesh->GetIndexBuffer().As<BufferBase>());
+			raygenPipeline->GetShader()->Set("Vertices", 0, corvette->GetVertexBuffer().As<BufferBase>());
+			raygenPipeline->GetShader()->Set("Indices", 0, corvette->GetIndexBuffer().As<BufferBase>());
 			raygenPipeline->GetShader()->Set("u_EnvironmentMap", 0, radianceMap);
 
 			TraceRaysInfo info = {};

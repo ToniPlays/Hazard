@@ -13,6 +13,6 @@ namespace HazardRenderer::Vulkan
 	struct VulkanAccelStruct
 	{
 		VkAccelerationStructureKHR AccelerationStructure = VK_NULL_HANDLE;
-		uint64_t Address = 0;
+		VkDeviceAddress Address = 0;
 	};
 }

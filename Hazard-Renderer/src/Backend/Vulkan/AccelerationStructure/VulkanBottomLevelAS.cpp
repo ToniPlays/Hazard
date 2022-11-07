@@ -32,11 +32,13 @@ namespace HazardRenderer::Vulkan
 
 		m_DebugName = info->DebugName;
 		m_Level = info->Level;
-		m_VertexBuffer = info->VertexBuffer.As<VulkanVertexBuffer>();
-		m_IndexBuffer = info->IndexBuffer.As<VulkanIndexBuffer>();
 
-		m_LocalBuffer.Release();
-		m_LocalBuffer.Allocate(sizeof(VkTransformMatrixKHR) * 1024);
+
+		m_Geometries.clear();
+		m_Geometries.resize(info->GeometryCount);
+
+		for (uint32_t i = 0; i < info->GeometryCount; i++)
+			m_Geometries[i] = info->pGeometries[i];
 
 		Invalidate();
 
@@ -47,20 +49,11 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanBottomLevelAS::PushTransforms(const BufferCopyRegion& copyRegion)
 	{
-		m_LocalBuffer.Write(copyRegion.Data, copyRegion.Size);
-		Ref<VulkanBottomLevelAS> instance = this;
-
-		Renderer::Submit([instance]() mutable {
-			VulkanAllocator allocator("VulkanAccelerationStructure");
-
-			uint8_t* dest = allocator.MapMemory<uint8_t>(instance->m_TransformBuffer.Allocation);
-			memcpy(dest, instance->m_LocalBuffer.Data, instance->m_LocalBuffer.Size);
-			allocator.UnmapMemory(instance->m_TransformBuffer.Allocation);
-			});
+		//Redundant get rid of this
 	}
 	void VulkanBottomLevelAS::Invalidate()
 	{
-		
+
 	}
 	void VulkanBottomLevelAS::Build(const BuildType& type)
 	{
@@ -72,25 +65,41 @@ namespace HazardRenderer::Vulkan
 	void VulkanBottomLevelAS::Build(VkCommandBuffer commandBuffer, const BuildType& type)
 	{
 		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
-		const uint32_t numTriangles = m_IndexBuffer->GetCount() / 3;
 
-		VkAccelerationStructureGeometryKHR geometry = {};
-		geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
-		geometry.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
-		geometry.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR; //Todo
-		geometry.geometry.triangles = m_GeometryData;
+		std::vector<uint32_t> primitiveSizes(m_GeometryData.size());
+		std::vector<VkAccelerationStructureGeometryKHR> geometries(m_GeometryData.size());
+		std::vector<VkAccelerationStructureBuildRangeInfoKHR> buildRanges(m_GeometryData.size());
+
+		for (size_t i = 0; i < geometries.size(); i++)
+		{
+			uint32_t primitives = m_Geometries[i].IndexBuffer->GetCount() / 3;
+
+			auto& geometry = geometries[i];
+			geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+			geometry.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
+			geometry.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR; //Todo
+			geometry.geometry.triangles = m_GeometryData[i];
+
+			auto& buildRange = buildRanges[i];
+			buildRange.primitiveCount = primitives;
+			buildRange.primitiveOffset = 0;
+			buildRange.firstVertex = 0;
+			buildRange.transformOffset = i * sizeof(VkTransformMatrixKHR);
+
+			primitiveSizes[i] = primitives;
+		}
 
 		VkAccelerationStructureBuildGeometryInfoKHR buildInfo = {};
 		buildInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
 		buildInfo.type = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
 		buildInfo.flags = VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR | VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR;
 		buildInfo.mode = type == BuildType::Build ? VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR : VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR;
-		buildInfo.geometryCount = 1;
-		buildInfo.pGeometries = &geometry;
+		buildInfo.geometryCount = geometries.size();
+		buildInfo.pGeometries = geometries.data();
 
 		VkAccelerationStructureBuildSizesInfoKHR buildSizeInfo = {};
 		buildSizeInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
-		fpGetAccelerationStructureBuildSizesKHR(device->GetVulkanDevice(), VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR, &buildInfo, &numTriangles, &buildSizeInfo);
+		fpGetAccelerationStructureBuildSizesKHR(device->GetVulkanDevice(), VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR, &buildInfo, primitiveSizes.data(), &buildSizeInfo);
 
 		m_StructureBuffer = CreateAccelerationStructureBuffer(VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR, buildSizeInfo.accelerationStructureSize);
 		m_ScratchBuffer = CreateAccelerationStructureBuffer(VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, buildSizeInfo.buildScratchSize);
@@ -110,15 +119,11 @@ namespace HazardRenderer::Vulkan
 		buildInfo.dstAccelerationStructure = m_StructureInfo.AccelerationStructure;
 		buildInfo.scratchData.deviceAddress = m_ScratchBuffer.Address;
 
-		VkAccelerationStructureBuildRangeInfoKHR buildRange = {};
-		buildRange.primitiveCount = numTriangles;
-		buildRange.primitiveOffset = 0;
-		buildRange.firstVertex = 0;
-		buildRange.transformOffset = 0;
+		std::vector<VkAccelerationStructureBuildRangeInfoKHR*> pRanges(buildRanges.size());
+		for (uint32_t i = 0; i < pRanges.size(); i++)
+			pRanges[i] = &buildRanges[i];
 
-		std::vector<VkAccelerationStructureBuildRangeInfoKHR*> buildRanges = { &buildRange };
-
-		fpCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildInfo, buildRanges.data());
+		fpCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildInfo, pRanges.data());
 
 		VkAccelerationStructureDeviceAddressInfoKHR addressInfo = {};
 		addressInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
@@ -157,18 +162,36 @@ namespace HazardRenderer::Vulkan
 	{
 		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
 
-		uint32_t stride = m_VertexBuffer->GetLayout().GetStride();
+		std::vector<VkTransformMatrixKHR> transforms;
+		transforms.reserve(m_Geometries.size());
+		m_GeometryData.reserve(m_Geometries.size());
 
-		m_GeometryData = {};
-		m_GeometryData.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
-		m_GeometryData.vertexFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
-		m_GeometryData.vertexData = VkUtils::GetBufferAddress(m_VertexBuffer->GetVulkanBuffer());
-		m_GeometryData.maxVertex = m_VertexBuffer->GetSize() / stride;
-		m_GeometryData.vertexStride = stride;
-		m_GeometryData.indexType = VK_INDEX_TYPE_UINT32;
-		m_GeometryData.indexData = VkUtils::GetBufferAddress(m_IndexBuffer->GetVulkanBuffer());
-		m_GeometryData.transformData.deviceAddress = m_TransformBuffer.Address;
-		m_GeometryData.transformData.hostAddress = nullptr;
+		for (auto& geometry : m_Geometries) 
+		{
+			Ref<VulkanVertexBuffer> vertexBuffer = geometry.VertexBuffer.As<VulkanVertexBuffer>();
+			Ref<VulkanIndexBuffer> indexBuffer = geometry.IndexBuffer.As<VulkanIndexBuffer>();
+
+			uint32_t stride = geometry.VertexBuffer->GetLayout().GetStride();
+			VkAccelerationStructureGeometryTrianglesDataKHR& data = m_GeometryData.emplace_back();
+
+			data = {};
+			data.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
+			data.vertexFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
+			data.vertexData = VkUtils::GetBufferAddress(vertexBuffer->GetVulkanBuffer());
+			data.maxVertex = vertexBuffer->GetSize() / stride;
+			data.vertexStride = stride;
+			data.indexType = VK_INDEX_TYPE_UINT32;
+			data.indexData = VkUtils::GetBufferAddress(indexBuffer->GetVulkanBuffer());
+			data.transformData.deviceAddress = m_TransformBuffer.Address;
+
+			transforms.emplace_back(VkUtils::MatrixToKHR(geometry.Transform));
+		}
+
+		VulkanAllocator allocator("VulkanAccelerationStructure");
+
+		uint8_t* dest = allocator.MapMemory<uint8_t>(m_TransformBuffer.Allocation);
+		memcpy(dest, transforms.data(), transforms.size() * sizeof(VkTransformMatrixKHR));
+		allocator.UnmapMemory(m_TransformBuffer.Allocation);
 
 		Build(BuildType::Build);
 	}
@@ -178,7 +201,7 @@ namespace HazardRenderer::Vulkan
 
 		VkBufferCreateInfo instanceInfo = {};
 		instanceInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		instanceInfo.size = sizeof(VkTransformMatrixKHR) * 1024;
+		instanceInfo.size = sizeof(VkTransformMatrixKHR) * m_Geometries.size();
 		instanceInfo.usage = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
 		m_TransformBuffer.Allocation = allocator.AllocateBuffer(instanceInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_TransformBuffer.Buffer);

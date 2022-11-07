@@ -36,7 +36,12 @@ namespace HazardRenderer::Vulkan
 		m_DebugName = info->DebugName;
 		m_Level = info->Level;
 
-		pBottomLevel = info->pBottomLevelAS;
+		m_Instances.clear();
+		m_Instances.resize(info->InstanceCount);
+
+		for (uint32_t i = 0; i < info->InstanceCount; i++)
+			m_Instances[i] = info->pInstances[i];
+
 		Ref<VulkanTopLevelAS> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
@@ -66,23 +71,23 @@ namespace HazardRenderer::Vulkan
 	{
 		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
 
-		glm::mat4 transform = Math::ToTransformMatrix({ 2.0f, 0.0f, 0.0f }, glm::quat({ glm::radians(0.0f), glm::radians(0.0f), 0.0f }));
+		uint32_t primitiveCount = m_Instances.size();
 
 		VulkanAllocator allocator("VulkanAccelerationStructure");
+		std::vector<VkAccelerationStructureInstanceKHR> instances(primitiveCount);
 
-		VkAccelerationStructureInstanceKHR instanceInfo = {};
-		instanceInfo.transform = VkUtils::MatrixToKHR(transform);
-		instanceInfo.instanceCustomIndex = 0;
-		instanceInfo.mask = 0xFF;
-		instanceInfo.instanceShaderBindingTableRecordOffset = 0;
-		instanceInfo.flags = VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR;
-		instanceInfo.accelerationStructureReference = ((VulkanBottomLevelAS*)pBottomLevel)->GetVulkanAccelerationStructure().Address;
-
-		std::vector<VkAccelerationStructureInstanceKHR> instances(2);
-		instances[0] = instanceInfo;
-		transform = Math::ToTransformMatrix({ -2.0f, -0.25f, 0.0f }, glm::quat({ glm::radians(0.0f), glm::radians(25.0f), 0.0f }));
-		instances[1] = instanceInfo;
-		instances[1].transform = VkUtils::MatrixToKHR(transform);
+		for (uint32_t i = 0; i < primitiveCount; i++)
+		{
+			auto& instance = m_Instances[i];
+			auto& instanceKHR = instances[i];
+			instanceKHR = {};
+			instanceKHR.transform = VkUtils::MatrixToKHR(instance.Transform);
+			instanceKHR.instanceCustomIndex = instance.CustomIndex;
+			instanceKHR.mask = 0xFF;
+			instanceKHR.instanceShaderBindingTableRecordOffset = 0;
+			instanceKHR.flags = VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR;
+			instanceKHR.accelerationStructureReference = instance.pBottomLevelAS.As<VulkanBottomLevelAS>()->GetVulkanAccelerationStructure().Address;
+		}
 
 		uint8_t* dest = allocator.MapMemory<uint8_t>(m_InstanceBuffer.Allocation);
 		memcpy(dest, instances.data(), instances.size() * sizeof(VkAccelerationStructureInstanceKHR));
@@ -95,9 +100,7 @@ namespace HazardRenderer::Vulkan
 		buildInfo.mode = type == BuildType::Build ? VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR : VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR;
 		buildInfo.srcAccelerationStructure = m_StructureInfo.AccelerationStructure;
 		buildInfo.geometryCount = 1;
-		buildInfo.pGeometries = &m_Geometry;
-
-		uint32_t primitiveCount = 2; // Instance count
+		buildInfo.pGeometries = m_Geometry.data();
 
 		if (type == BuildType::Build)
 		{
@@ -196,13 +199,20 @@ namespace HazardRenderer::Vulkan
 		VkDeviceOrHostAddressConstKHR instanceDataAddress = {};
 		instanceDataAddress.deviceAddress = m_InstanceBuffer.Address;
 
-		m_Geometry = {};
-		m_Geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
-		m_Geometry.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
-		m_Geometry.geometryType = VK_GEOMETRY_TYPE_INSTANCES_KHR; //Todo
-		m_Geometry.geometry.instances.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
-		m_Geometry.geometry.instances.arrayOfPointers = VK_FALSE;
-		m_Geometry.geometry.instances.data = instanceDataAddress;
+		m_Geometry.clear();
+		m_Geometry.resize(m_Instances.size());
+
+		for (uint32_t i = 0; i < m_Instances.size(); i++)
+		{
+			auto& geometry = m_Geometry[i];
+			geometry = {};
+			geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+			geometry.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
+			geometry.geometryType = VK_GEOMETRY_TYPE_INSTANCES_KHR; //Todo
+			geometry.geometry.instances.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
+			geometry.geometry.instances.arrayOfPointers = VK_FALSE;
+			geometry.geometry.instances.data = instanceDataAddress;
+		}
 
 		Build(BuildType::Build);
 
