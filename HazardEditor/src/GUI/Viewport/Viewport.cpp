@@ -362,6 +362,10 @@ namespace UI
 			m_ViewportSettings ^= ViewportSettingsFlags_CameraFrustum;
 		if (ImUI::Checkbox("Light icons", lightIcons))
 			m_ViewportSettings ^= ViewportSettingsFlags_LightIcons;
+		ImGui::SetColumnWidth(0, 100);
+		float cameraSpeed = m_EditorCamera.GetSpeedMultiplier();
+		if (ImUI::SliderFloat("Camera speed", cameraSpeed, 1.0f, 0.01f, 5.0f))
+			m_EditorCamera.SetSpeedMultiplier(cameraSpeed);
 
 		ImGui::Columns();
 		ImGui::EndChild();

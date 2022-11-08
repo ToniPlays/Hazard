@@ -112,11 +112,11 @@ namespace Editor {
 	{
 		float speed = m_NormalSpeed;
 
-		if (Input::IsKeyDown(Key::LeftControl))
-			speed /= 2 - glm::log(m_NormalSpeed);
 		if (Input::IsKeyDown(Key::LeftShift))
+			speed /= 2 - glm::log(m_NormalSpeed);
+		if (Input::IsKeyDown(Key::LeftControl))
 			speed *= 2 - glm::log(m_NormalSpeed);
-		return glm::clamp(speed, MIN_SPEED, MAX_SPEED);
+		return glm::clamp(speed, MIN_SPEED, MAX_SPEED) * m_SpeedMultiplier;
 	}
 
 	void EditorCamera::UpdateProjection()

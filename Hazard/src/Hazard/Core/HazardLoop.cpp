@@ -93,9 +93,6 @@ namespace Hazard {
 		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;
 
-		if ((e.GetCategoryFlags() & EventCategory::EventCategoryGamepadAxis) || (e.GetCategoryFlags() & EventCategory::EventCategoryGamepadButton))
-			HZR_CORE_INFO(e.ToString());
-
 		if (!m_ModuleHandler->OnEvent(e) && m_Application)
 			m_Application->OnEvent(e);
 	}

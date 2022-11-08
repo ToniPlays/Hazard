@@ -4,9 +4,9 @@
 
 namespace Gamepad {
 
-	using Gamepad = uint16_t;
+	using GamepadCode = uint16_t;
 
-	enum : Gamepad
+	enum : GamepadCode
 	{
 		A = 0,
 		B = 1,

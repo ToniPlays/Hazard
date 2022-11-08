@@ -33,6 +33,8 @@ namespace Editor
 		float GetCameraSpeed() const;
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
+		inline float GetSpeedMultiplier() const { return m_SpeedMultiplier; }
+		inline void SetSpeedMultiplier(float multiplier) { m_SpeedMultiplier = multiplier; }
 
 		inline void SetViewport(float width, float height) { viewport_w = width; viewport_h = height; UpdateProjection(); }
 		
@@ -67,6 +69,7 @@ namespace Editor
 
 		float m_Distance = 1.0f;
 		float m_NormalSpeed = 1.5f;
+		float m_SpeedMultiplier = 1.0f;
 		float m_Pitch = 0, m_Yaw = 0;
 		float m_PitchDelta = 0.0f, m_YawDelta = 0.0f;
 

@@ -33,35 +33,44 @@ namespace Editor {
 	}
 	void EditorCamera::OnUpdate()
 	{
-		const glm::vec2& mouse = Input::GetMousePos();
-		const glm::vec2 delta = (mouse - m_InitialMousePos) * 0.002f;
+		Axis2D axis = Input::GetAxis(0, Gamepad::AxisRight);
 
-		if (Input::IsMouseButtonDown(Mouse::ButtonRight) && !Input::IsKeyDown(Key::LeftAlt))
+		const glm::vec2& mouse = Input::GetMousePos();
+		const glm::vec2 delta = (mouse - m_InitialMousePos) * 0.002f + glm::vec2(axis.X, axis.Y) * 0.04f;
+
+		bool useController = Input::IsAxis(0, Gamepad::AxisLeft) || Input::IsButtonDown(0, Gamepad::RightBumber) || Input::IsButtonDown(0, Gamepad::LeftBumber);
+		useController |= Input::IsAxis(0, Gamepad::AxisRight);
+
+		if ((Input::IsMouseButtonDown(Mouse::ButtonRight) && !Input::IsKeyDown(Key::LeftAlt)) || useController)
 		{
 			m_CameraMode = CameraMode::FlyCam;
 
 			const float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
 			const float speed = GetCameraSpeed();
 
-			if (Input::IsKeyDown(Key::Q))
-				m_PositionDelta -= (float)Time::s_UnscaledDeltaTime * speed * glm::vec3(0.0f, yawSign, 0.0f);
-			if (Input::IsKeyDown(Key::E))
-				m_PositionDelta += (float)Time::s_UnscaledDeltaTime * speed * glm::vec3(0.0f, yawSign, 0.0f);
-			if (Input::IsKeyDown(Key::S))
-				m_PositionDelta -= (float)Time::s_UnscaledDeltaTime * speed * m_Direction;
-			if (Input::IsKeyDown(Key::W))
-				m_PositionDelta += (float)Time::s_UnscaledDeltaTime * speed * m_Direction;
-			if (Input::IsKeyDown(Key::A))
-				m_PositionDelta -= (float)Time::s_UnscaledDeltaTime * speed * m_RightDirection;
-			if (Input::IsKeyDown(Key::D))
-				m_PositionDelta += (float)Time::s_UnscaledDeltaTime * speed * m_RightDirection;
+			Axis2D moveAxis = Input::GetAxis(0, Gamepad::AxisLeft);
+
+			float Q = Input::IsKeyDown(Key::Q) + Input::IsButtonDown(0, Gamepad::LeftBumber);
+			float E = Input::IsKeyDown(Key::E) + Input::IsButtonDown(0, Gamepad::RightBumber);
+			float forwardDir = Input::IsKeyDown(Key::W) * -1.0f + Input::IsKeyDown(Key::S) * 1.0f + moveAxis.Y;
+			float sideDir = Input::IsKeyDown(Key::A) * -1.0f + Input::IsKeyDown(Key::D) * 1.0f + moveAxis.X;
+
+			if (Q)
+				m_PositionDelta -= (float)Time::s_UnscaledDeltaTime * speed * Q * glm::vec3(0.0f, yawSign, 0.0f);
+			if (E)
+				m_PositionDelta += (float)Time::s_UnscaledDeltaTime * speed * E * glm::vec3(0.0f, yawSign, 0.0f);
+			if (forwardDir != 0.0f)
+				m_PositionDelta -= (float)Time::s_UnscaledDeltaTime * speed * forwardDir * m_Direction;
+			//Combine
+			if (sideDir != 0.0f)
+				m_PositionDelta += (float)Time::s_UnscaledDeltaTime * speed * sideDir * m_RightDirection;
 
 			constexpr float maxRate = 0.12f;
 			m_YawDelta += glm::clamp(yawSign * delta.x * RotationSpeed(), -maxRate, maxRate);
 			m_PitchDelta += glm::clamp(delta.y * RotationSpeed(), -maxRate, maxRate);
 
 			m_RightDirection = glm::cross(m_Direction, glm::vec3(0.0f, yawSign, 0.0f));
-			
+
 			m_Direction = glm::rotate(glm::normalize(glm::cross(glm::angleAxis(-m_PitchDelta, m_RightDirection),
 				glm::angleAxis(-m_YawDelta, glm::vec3(0.0f, yawSign, 0.0f)))), m_Direction);
 
@@ -69,7 +78,7 @@ namespace Editor {
 			m_FocalPoint = m_Position + GetForwardDirection() * distance;
 			m_Distance = distance;
 		}
-		else if (Input::IsKeyDown(Key::LeftAlt))
+		else if (Input::IsKeyDown(Key::LeftAlt) || Input::IsAxis(0, Gamepad::AxisRight))
 		{
 			m_CameraMode = CameraMode::Arcball;
 			if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
@@ -155,7 +164,7 @@ namespace Editor {
 	{
 		auto [xSpeed, ySpeed] = PanSpeed();
 
-		if (m_Is2DEnabled) 
+		if (m_Is2DEnabled)
 		{
 			xSpeed *= size2D * 2.0f;
 			ySpeed *= size2D * 2.0f;
@@ -247,7 +256,7 @@ namespace Editor {
 	}
 	void EditorCamera::SetIs2D(bool enabled2D)
 	{
-		if (enabled2D) 
+		if (enabled2D)
 		{
 			float side = aspectRatio * size2D;
 			m_Projection = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);

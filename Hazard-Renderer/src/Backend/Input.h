@@ -27,18 +27,21 @@ public:
 	static void Init(HazardRenderer::Window& window);
 	static void Update();
 	static bool AnyKey();
-	static bool IsKeyDown(const Key::KeyCode key);
-	static bool IsKeyPressed(const Key::KeyCode key);
-	static bool IsKeyReleased(const Key::KeyCode key);
+	static bool IsKeyDown(const Key::KeyCode& key);
+	static bool IsKeyPressed(const Key::KeyCode& key);
+	static bool IsKeyReleased(const Key::KeyCode& key);
 
-	static bool IsMouseButtonDown(const Mouse::MouseCode code);
-	static bool IsMouseButtonPressed(const Mouse::MouseCode code);
+	static bool IsMouseButtonDown(const Mouse::MouseCode& code);
+	static bool IsMouseButtonPressed(const Mouse::MouseCode& code);
 
 	static glm::vec2 GetMousePos();
 	static void UpdateKey(uint32_t code, int state);
 
 	static void ConnectGamepad(int device);
 	static void DisconnectGamepad(int device);
+	static bool IsButtonDown(int device, const Gamepad::GamepadCode& code);
+	static Axis2D GetAxis(int device, const Gamepad::GamepadCode& code);
+	static bool IsAxis(int device, const Gamepad::GamepadCode& code);
 
 	static const std::vector<Joystick>& GetGamepads() { return s_Gamepads; }
 
