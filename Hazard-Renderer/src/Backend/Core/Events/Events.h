@@ -226,6 +226,7 @@ public:
 		ss << "GamepadEvent: " << m_GamepadIndex;
 		return ss.str();
 	}
+	int GetGamepadIndex() { return m_GamepadIndex; }
 
 protected:
 	int m_GamepadIndex = -1;
@@ -237,8 +238,13 @@ class GamepadConnectedEvent : public GamepadEvent
 public:
 	GamepadConnectedEvent(int gamepad)
 		: GamepadEvent(gamepad) {}
-	
-	int GetGamepadIndex() { return m_GamepadIndex; }
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadConnectedEvent: " << m_GamepadIndex;
+		return ss.str();
+	}
 
 	EVENT_CLASS_TYPE(GamepadConnected)
 };
@@ -249,7 +255,80 @@ public:
 	GamepadDisconnectedEvent(int gamepad)
 		: GamepadEvent(gamepad) {}
 
-	int GetGamepadIndex() { return m_GamepadIndex; }
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadDisconnectedEvent: " << m_GamepadIndex;
+		return ss.str();
+	}
 
+	EVENT_CLASS_TYPE(GamepadConnected)
+};
+
+
+class GamepadAxisMovedEvent : public GamepadEvent
+{
+public:
+	GamepadAxisMovedEvent(int gamepad, float x, float y)
+		: GamepadEvent(gamepad), m_X(x), m_Y(y) {}
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadAxisMovedEvent: " << m_X << ", " << m_Y;
+		return ss.str();
+	}
+private:
+	float m_X;
+	float m_Y;
+	EVENT_CLASS_TYPE(GamepadConnected)
+};
+
+class GamepadButtonEvent : public GamepadEvent
+{
+public:
+	GamepadButtonEvent(int gamepad, int button)
+		: GamepadEvent(gamepad), m_Button(button) {}
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadButtonEvent: " << m_Button;
+		return ss.str();
+	}
+
+protected:
+	int m_Button;
+	EVENT_CLASS_TYPE(GamepadConnected)
+};
+class GamepadButtonPressedEvent : public GamepadButtonEvent
+{
+public:
+	GamepadButtonPressedEvent(int gamepad, int button)
+		: GamepadButtonEvent(gamepad, button) {}
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadButtonPressedEvent: " << m_Button;
+		return ss.str();
+	}
+private:
+	EVENT_CLASS_TYPE(GamepadConnected)
+};
+
+class GamepadButtonReleasedEvent : public GamepadButtonEvent
+{
+public:
+	GamepadButtonReleasedEvent(int gamepad, int button)
+		: GamepadButtonEvent(gamepad, button) {}
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadButtonReleasedEvent: " << m_Button;
+		return ss.str();
+	}
+private:
 	EVENT_CLASS_TYPE(GamepadConnected)
 };

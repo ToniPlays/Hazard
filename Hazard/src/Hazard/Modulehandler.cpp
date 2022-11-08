@@ -44,7 +44,7 @@ namespace Hazard {
 	{
 		for (Module* m : m_Modules)
 			if (m->GetActive())
-				m->PreInit();
+				m->PreRender();
 	}
 	void ModuleHandler::Render()
 	{

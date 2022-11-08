@@ -3,7 +3,6 @@
 #ifdef HZR_PLATFORM_WINDOWS
 
 #include "Backend/Core/Events/Events.h"
-#include "Backend/Input.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -13,8 +12,8 @@
 
 #include <vector>
 
-namespace HazardRenderer {
-
+namespace HazardRenderer 
+{
 	Window* Window::Create(HazardRendererCreateInfo* info)
 	{
 		if (!Window::IsRenderAPISupported(info->Renderer))
@@ -262,12 +261,15 @@ namespace HazardRenderer {
 				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer((GLFWwindow*)s_CurrentWindow->GetNativeWindow());
 				GamepadConnectedEvent event(device);
 				data.EventCallback(event);
+
+				Input::ConnectGamepad(device);
 			}
 			else if (status == GLFW_DISCONNECTED)
 			{
 				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer((GLFWwindow*)s_CurrentWindow->GetNativeWindow());
 				GamepadDisconnectedEvent event(device);
 				data.EventCallback(event);
+				Input::DisconnectGamepad(device);
 			}
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {

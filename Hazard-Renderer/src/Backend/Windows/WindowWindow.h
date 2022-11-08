@@ -4,13 +4,15 @@
 #ifdef HZR_PLATFORM_WINDOWS
 
 #include "Backend/Core/Window.h"
+#include "Backend/Input.h"
 #include <GLFW/glfw3.h>
 
 namespace HazardRenderer {
 
-	class WindowsWindow : public Window 
+	class WindowsWindow : public Window
 	{
 		friend class Window;
+		friend class Input;
 	public:
 		WindowsWindow(HazardRendererCreateInfo* createInfo);
 		virtual ~WindowsWindow();
@@ -61,11 +63,12 @@ namespace HazardRenderer {
 		WindowProps& GetWindowInfo() override { return m_WindowData; }
 		GraphicsContext* GetContext() const override { return m_Context; };
 		Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
-		virtual void SetDebugCallback(RendererMessageCallback callback) { 
+		virtual void SetDebugCallback(RendererMessageCallback callback) 
+		{
 			s_DebugCallback = callback;
-			for (auto& m : s_QueueMessages) {
+			for (auto& m : s_QueueMessages)
 				s_DebugCallback(m);
-			}
+
 			s_QueueMessages.clear();
 		}
 

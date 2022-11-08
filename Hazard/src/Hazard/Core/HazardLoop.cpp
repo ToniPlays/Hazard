@@ -93,10 +93,8 @@ namespace Hazard {
 		if (dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT(HazardLoop::Quit)))
 			return;
 
-		if (e.GetEventType() == EventType::GamepadConnected || e.GetEventType() == EventType::GamepadDisconnected)
-		{
-			HZR_CORE_INFO("Joystick event");
-		}
+		if ((e.GetCategoryFlags() & EventCategory::EventCategoryGamepadAxis) || (e.GetCategoryFlags() & EventCategory::EventCategoryGamepadButton))
+			HZR_CORE_INFO(e.ToString());
 
 		if (!m_ModuleHandler->OnEvent(e) && m_Application)
 			m_Application->OnEvent(e);
