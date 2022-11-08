@@ -143,6 +143,7 @@ namespace HazardRenderer::Vulkan
 		buildRange.primitiveOffset = 0;
 		buildRange.firstVertex = 0;
 		buildRange.transformOffset = 0;
+
 		buildInfo.dstAccelerationStructure = m_StructureInfo.AccelerationStructure;
 		buildInfo.scratchData.deviceAddress = m_ScratchBuffer.Address;
 

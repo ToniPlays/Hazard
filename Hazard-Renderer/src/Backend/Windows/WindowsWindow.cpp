@@ -46,6 +46,8 @@ namespace HazardRenderer {
 		HZR_ASSERT(info->pAppInfo != nullptr, "AppInfo cannot be nullptr");
 		HZR_ASSERT(glfwInit(), "Failed to initialize GLFW");
 
+		s_CurrentWindow = this;
+
 		s_DebugCallback = info->pAppInfo->MessageCallback;
 		m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
@@ -113,6 +115,8 @@ namespace HazardRenderer {
 
 
 			glfwSetWindowUserPointer(m_Window, &m_WindowData);
+			for (uint32_t i = 0; i < GLFW_JOYSTICK_LAST; i++)
+				glfwSetJoystickUserPointer(i, &m_WindowData);
 
 			SetCallbacks();
 			SetVSync(info->VSync);
@@ -156,9 +160,8 @@ namespace HazardRenderer {
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
 
-		for (auto image : glfwImages) {
+		for (auto& image : glfwImages) 
 			stbi_image_free(image.pixels);
-		}
 	}
 
 	glm::vec2 WindowsWindow::GetPosition()
@@ -252,6 +255,20 @@ namespace HazardRenderer {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
+			});
+		glfwSetJoystickCallback([](int device, int status) {
+			if (status == GLFW_CONNECTED)
+			{
+				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer((GLFWwindow*)s_CurrentWindow->GetNativeWindow());
+				GamepadConnectedEvent event(device);
+				data.EventCallback(event);
+			}
+			else if (status == GLFW_DISCONNECTED)
+			{
+				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer((GLFWwindow*)s_CurrentWindow->GetNativeWindow());
+				GamepadDisconnectedEvent event(device);
+				data.EventCallback(event);
+			}
 			});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);

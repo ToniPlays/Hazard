@@ -9,11 +9,12 @@
 //What type of event happened
 enum class EventType {
 	None = 0,
-	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved, WindowTitleBarHitTest,
 	AppTick, AppUpdate, AppRender, AppEvent, AppCloseEvent,
 	ModuleError, ModuleWarn,
 	KeyPressed, KeyReleased, KeyTyped,
-	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled, WindowTitleBarHitTest
+	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
+	GamepadButtonPressed, GamepadButtonReleased, GamepadConnected, GamepadDisconnected
 };
 
 //Events belong to a category
@@ -23,7 +24,9 @@ enum EventCategory {
 	EventCategoryInput = BIT(1),
 	EventCategoryKeyboard = BIT(2),
 	EventCategoryMouse = BIT(3),
-	EventCategoryMouseButton = BIT(4)
+	EventCategoryMouseButton = BIT(4),
+	EventCategoryGamepadAxis = BIT(5),
+	EventCategoryGamepadButton = BIT(6)
 
 };
 

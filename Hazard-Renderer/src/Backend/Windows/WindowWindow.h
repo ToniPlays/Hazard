@@ -8,7 +8,8 @@
 
 namespace HazardRenderer {
 
-	class WindowsWindow : public Window {
+	class WindowsWindow : public Window 
+	{
 		friend class Window;
 	public:
 		WindowsWindow(HazardRendererCreateInfo* createInfo);
@@ -75,6 +76,7 @@ namespace HazardRenderer {
 		static inline RendererMessageCallback s_DebugCallback = nullptr;
 		static inline std::vector<RenderMessage> s_QueueMessages;
 		void SetCallbacks();
+		inline static Window* s_CurrentWindow = nullptr;
 
 	};
 }

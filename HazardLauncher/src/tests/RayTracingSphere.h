@@ -73,7 +73,7 @@ namespace RayTracingSphere
 		renderInfo.pAppInfo = &rendererApp;
 		renderInfo.Renderer = api;
 		renderInfo.Logging = true;
-		renderInfo.VSync = false;
+		renderInfo.VSync = true;
 		renderInfo.WindowCount = 1;
 		renderInfo.pWindows = &windowInfo;
 #pragma endregion
@@ -138,7 +138,7 @@ namespace RayTracingSphere
 		cubeGeometry.VertexBuffer = cube->GetVertexBuffer();
 		cubeGeometry.IndexBuffer = cube->GetIndexBuffer();
 		cubeGeometry.BoundingBox = cube->GetBoundingBox();
-		cubeGeometry.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 6.0f, 6.0f });
+		cubeGeometry.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 1.0f, 6.0f });
 
 		std::vector<AccelerationStructureGeometry> geometries
 		{

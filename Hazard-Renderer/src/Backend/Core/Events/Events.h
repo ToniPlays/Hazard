@@ -17,8 +17,8 @@ public:
 		ss << "Window resized: " << m_Width << "x" << m_Height;
 		return ss.str();
 	}
-	EVENT_CLASS_TYPE(WindowResize)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	EVENT_CLASS_TYPE(WindowResize);
+	EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 private:
 	unsigned int m_Width, m_Height;
@@ -29,19 +29,37 @@ class WindowCloseEvent : public Event {
 public:
 	WindowCloseEvent() = default;
 
-	EVENT_CLASS_TYPE(WindowClose)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	EVENT_CLASS_TYPE(WindowClose);
+	EVENT_CLASS_CATEGORY(EventCategoryApplication)
 };
 class WindowFocusEvent : public Event {
 public:
 	WindowFocusEvent(bool _focus) : m_Focus(_focus) {};
 	inline bool GetFocus() { return m_Focus; };
 
-	EVENT_CLASS_TYPE(WindowFocus)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	EVENT_CLASS_TYPE(WindowFocus);
+	EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 private:
 	bool m_Focus;
+};
+
+class WindowTitleBarHitTestEvent : public Event
+{
+public:
+	WindowTitleBarHitTestEvent(int x, int y, int& hit)
+		: m_X(x), m_Y(y), m_Hit(hit) {}
+
+	inline int GetX() const { return m_X; }
+	inline int GetY() const { return m_Y; }
+	inline void SetHit(bool hit) { m_Hit = (int)hit; }
+
+	EVENT_CLASS_TYPE(WindowTitleBarHitTest);
+	EVENT_CLASS_CATEGORY(EventCategoryApplication)
+private:
+	int m_X;
+	int m_Y;
+	int& m_Hit;
 };
 
 class KeyEvent : public Event
@@ -124,8 +142,8 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(MouseMoved)
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+	EVENT_CLASS_TYPE(MouseMoved);
+	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 private:
 	float m_MouseX, m_MouseY;
 };
@@ -146,8 +164,8 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(MouseScrolled)
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+	EVENT_CLASS_TYPE(MouseScrolled);
+	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 private:
 	float m_XOffset, m_YOffset;
 };
@@ -196,20 +214,42 @@ public:
 
 	EVENT_CLASS_TYPE(MouseButtonReleased)
 };
-class WindowTitleBarHitTestEvent : public Event
+
+class GamepadEvent : public Event
 {
 public:
-	WindowTitleBarHitTestEvent(int x, int y, int& hit)
-		: m_X(x), m_Y(y), m_Hit(hit) {}
+	GamepadEvent(int gamepad) : m_GamepadIndex(gamepad) {};
 
-	inline int GetX() const { return m_X; }
-	inline int GetY() const { return m_Y; }
-	inline void SetHit(bool hit) { m_Hit = (int)hit; }
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "GamepadEvent: " << m_GamepadIndex;
+		return ss.str();
+	}
 
-	EVENT_CLASS_TYPE(WindowTitleBarHitTest)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
-private:
-	int m_X;
-	int m_Y;
-	int& m_Hit;
+protected:
+	int m_GamepadIndex = -1;
+	EVENT_CLASS_CATEGORY(EventCategoryGamepadAxis | EventCategoryGamepadButton)
+};
+
+class GamepadConnectedEvent : public GamepadEvent
+{
+public:
+	GamepadConnectedEvent(int gamepad)
+		: GamepadEvent(gamepad) {}
+	
+	int GetGamepadIndex() { return m_GamepadIndex; }
+
+	EVENT_CLASS_TYPE(GamepadConnected)
+};
+
+class GamepadDisconnectedEvent : public GamepadEvent
+{
+public:
+	GamepadDisconnectedEvent(int gamepad)
+		: GamepadEvent(gamepad) {}
+
+	int GetGamepadIndex() { return m_GamepadIndex; }
+
+	EVENT_CLASS_TYPE(GamepadConnected)
 };
