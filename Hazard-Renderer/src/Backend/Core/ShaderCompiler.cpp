@@ -198,7 +198,7 @@ namespace HazardRenderer
 	std::vector<ShaderStageCode> ShaderCompiler::GetShaderBinariesFromSource(const std::filesystem::path& sourceFile, const RenderAPI& api)
 	{
 		Timer timer;
-		auto& sourceCode = GetShaderSources(sourceFile);
+		auto sourceCode = GetShaderSources(sourceFile);
 
 		std::vector<ShaderStageCode> result;
 

@@ -112,7 +112,7 @@ namespace Hazard
 	}
 	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
-		auto& group = GetEntitiesWith<CameraComponent, TransformComponent>();
+		auto group = GetEntitiesWith<CameraComponent, TransformComponent>();
 
 		for (auto entity : group) {
 

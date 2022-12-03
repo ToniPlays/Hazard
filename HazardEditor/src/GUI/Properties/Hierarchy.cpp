@@ -41,7 +41,9 @@ namespace UI
 
 				ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
 
-				bool clicked = ImUI::TableRowTreeItem(std::to_string(e).c_str(), tag.Tag.c_str(), isSelected, []() {
+
+
+				bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, []() {
 
 					});
 
@@ -89,11 +91,9 @@ namespace UI
 		case Key::Delete:
 		{
 			std::vector<Entity> selections = m_SelectionContext;
-			Application::Get().SubmitMainThread([&, selections]() {
-				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
-				for (auto& entity : selections)
-					world->DestroyEntity(entity);
-				});
+			Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+			for (auto& entity : selections)
+				world->DestroyEntity(entity);
 			ClearSelected();
 			return true;
 		}
@@ -101,14 +101,12 @@ namespace UI
 		{
 			std::vector<Entity> selections = m_SelectionContext;
 			ClearSelected();
-			Application::Get().SubmitMainThread([&, selections]() {
-				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
-				for (auto& entity : selections)
-				{
-					Entity e = world->CreateEntity(entity);
-					SelectEntity(e);
-				}
-				});
+			Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+			for (auto& entity : selections)
+			{
+				Entity e = world->CreateEntity(entity);
+				SelectEntity(e);
+			}
 			return true;
 		}
 		}
@@ -135,7 +133,7 @@ namespace UI
 		const ImVec4 warning = style.Colors.Warning;
 
 
-		const char* modifiers[] = { e.IsVisible() ? ICON_FK_EYE : ICON_FK_EYE_SLASH, ICON_FK_GLOBE, ICON_FK_FILE_CODE_O, ICON_FK_PICTURE_O };
+		const char* modifiers[] = { e.IsVisible() ? (const char*)ICON_FK_EYE : (const char*)ICON_FK_EYE_SLASH, (const char*)ICON_FK_GLOBE, (const char*)ICON_FK_FILE_CODE_O, (const char*)ICON_FK_PICTURE_O };
 		const char* tooltips[] = { e.IsVisible() ? "Visible" : "Hidden", "Skylight is included in this entity", "Script is missing", "Texture missing" };
 		const bool states[] = { true, isSkyLight, scriptState, spriteState };
 		const ImVec4 colors[] = { e.IsVisible() ? visibleColor : textColor, textColor , warning, warning };
@@ -163,59 +161,59 @@ namespace UI
 			ImUI::Separator({ ImGui::GetContentRegionAvail().x, 2.0f }, style.Window.HeaderActive);
 
 			ImUI::MenuItem("Camera", [&]() {
-				auto& entity = world->CreateEntity("New camera");
+				auto entity = world->CreateEntity("New camera");
 				entity.AddComponent<CameraComponent>();
 				SelectEntity(entity);
 				});
 
 			ImUI::Submenu("3D", [&]() {
 				ImUI::MenuItem("Cube", [&]() {
-					auto& entity = world->CreateEntity("New Cube");
+					auto entity = world->CreateEntity("New Cube");
 					entity.AddComponent<MeshComponent>();
 					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Plane", [&]() {
-					auto& entity = world->CreateEntity("New Plane");
+					auto entity = world->CreateEntity("New Plane");
 					entity.AddComponent<MeshComponent>();
 					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Mesh", [&]() {
-					auto& entity = world->CreateEntity("New mesh");
+					auto entity = world->CreateEntity("New mesh");
 					entity.AddComponent<MeshComponent>();
 					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("2D", [&]() {
 				ImUI::MenuItem("Sprite", [&]() {
-					auto& entity = world->CreateEntity("New Sprite");
+					auto entity = world->CreateEntity("New Sprite");
 					entity.AddComponent<SpriteRendererComponent>();
 					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("Lighting", [&]() {
 				ImUI::MenuItem("Sky light", [&]() {
-					auto& entity = world->CreateEntity("Sky light");
+					auto entity = world->CreateEntity("Sky light");
 					entity.AddComponent<SkyLightComponent>();
 					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Directional light", [&]() {
-					auto& entity = world->CreateEntity("New Directional light");
+					auto entity = world->CreateEntity("New Directional light");
 					entity.AddComponent<DirectionalLightComponent>();
 					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Point light", [&]() {
-					auto& entity = world->CreateEntity("New Point light");
+					auto entity = world->CreateEntity("New Point light");
 					entity.AddComponent<PointLightComponent>();
 					SelectEntity(entity);
 					});
 				});
 			ImUI::Submenu("Audio", [&]() {
 				ImUI::MenuItem("Speaker", [&]() {
-					auto& entity = world->CreateEntity("New Speaker");
+					auto entity = world->CreateEntity("New Speaker");
 					SelectEntity(entity);
 					});
 				ImUI::MenuItem("Audio listener", [&]() {
-					auto& entity = world->CreateEntity("New Audio listener");
+					auto entity = world->CreateEntity("New Audio listener");
 					SelectEntity(entity);
 					});
 				});

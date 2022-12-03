@@ -42,7 +42,7 @@ namespace Hazard
 		/// Get all the geometry for rendering
 		/// </summary>
 		/// <param name="renderer"></param>
-		void PreRender();
+		void CollectGeometry();
 
 		//Not yet implemented, NOT TODO
 

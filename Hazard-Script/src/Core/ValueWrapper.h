@@ -87,7 +87,7 @@ namespace HazardScript
 			m_Buffer = nullptr;
 		}
 
-		bool HasValue() { return m_Size > 0 && m_Buffer != nullptr; }
+		bool HasValue() const { return m_Size > 0 && m_Buffer != nullptr; }
 
 		template<typename TValueType>
 		TValueType Get() const

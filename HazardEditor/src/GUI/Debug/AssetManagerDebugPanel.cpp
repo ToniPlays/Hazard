@@ -4,6 +4,7 @@
 namespace UI
 {
 	using namespace Hazard;
+
 	void AssetManagerDebugPanel::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();

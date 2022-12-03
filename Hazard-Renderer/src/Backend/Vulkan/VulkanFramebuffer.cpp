@@ -103,7 +103,7 @@ namespace HazardRenderer::Vulkan
 		}
 		else
 		{
-			auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+			auto swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			m_RenderPass = swapchain->GetVulkanRenderPass();
 
 			m_ClearValues.clear();

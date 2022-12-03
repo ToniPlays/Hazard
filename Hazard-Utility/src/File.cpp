@@ -50,9 +50,9 @@ bool File::IsDirectory(const std::filesystem::path& path)
 }
 std::filesystem::path File::AppendToName(const std::filesystem::path& path, const std::string& append) 
 {
-	auto& parentPath = GetDirectoryOf(path);
-	auto& name = GetNameNoExt(path);
-	auto& extension = IsDirectory(path) ? "" :"." + GetFileExtension(path);
+	auto parentPath = GetDirectoryOf(path);
+	auto name = GetNameNoExt(path);
+	auto extension = IsDirectory(path) ? "" :"." + GetFileExtension(path);
 
 	return parentPath / std::filesystem::path(name + append + extension);
 }
@@ -223,7 +223,8 @@ bool File::CreateDir(const std::filesystem::path& dir)
 {
 	return std::filesystem::create_directories(dir);
 }
-void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) {
+void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) 
+{
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
 
@@ -271,16 +272,20 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 	);
 	return id;
 }
-void File::WaitForSubprocess(void* id) {
+void File::WaitForSubprocess(void* id) 
+{
 	WaitForSingleObject(id, 0);
 }
 
-bool File::HasEnvinronmentVar(const std::string& key) {
+bool File::HasEnvinronmentVar(const std::string& key) 
+{
 	return PlatformUtils::HasEnvVariable(key);
 }
-std::string File::GetEnvironmentVar(const std::string& key) {
+std::string File::GetEnvironmentVar(const std::string& key) 
+{
 	return PlatformUtils::GetEnvVariable(key);
 }
-bool File::SetEnvironmentVar(const std::string& key, const std::string& value) {
+bool File::SetEnvironmentVar(const std::string& key, const std::string& value) 
+{
 	return PlatformUtils::SetEnvVariable(key, value);
 }

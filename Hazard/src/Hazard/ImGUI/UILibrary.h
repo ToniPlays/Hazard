@@ -545,7 +545,7 @@ namespace Hazard::ImUI
 			Style& style = StyleManager::GetCurrent();
 			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 0, 0 });
-			if (ImGui::Button(ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
+			if (ImGui::Button((const char*)ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("Settings");
 			}
@@ -558,7 +558,8 @@ namespace Hazard::ImUI
 			}
 		}
 
-		if (treeOpen) {
+		if (treeOpen) 
+		{
 			callback();
 			ImGui::TreePop();
 		}

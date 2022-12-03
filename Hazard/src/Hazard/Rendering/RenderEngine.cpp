@@ -63,7 +63,7 @@ namespace Hazard
 		m_CurrentDrawContext = 0;
 	}
 
-	void RenderEngine::PreRender()
+	void RenderEngine::CollectGeometry()
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& drawList = GetDrawList();
@@ -95,7 +95,7 @@ namespace Hazard
 		for (auto& worldDrawList : m_DrawList)
 		{
 			//Not camera dependant
-			PreRender();
+			CollectGeometry();
 			m_CurrentRenderer->Prepare(m_RenderPass, worldDrawList);
 
 			for (auto& camera : worldDrawList.WorldRenderer->m_CameraData)

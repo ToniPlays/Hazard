@@ -17,7 +17,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
 
 
@@ -81,7 +81,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
-		auto& descriptorSets = m_Shader->GetVulkanDescriptorSets();
+		auto descriptorSets = m_Shader->GetVulkanDescriptorSets();
 
 		auto bindingPoint = GetBindingPoint();
 		auto& offsets = m_Shader->GetDynamicOffsets();
@@ -119,9 +119,9 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Shader, "No shader");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto& fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
-		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
@@ -304,7 +304,7 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -331,7 +331,7 @@ namespace HazardRenderer::Vulkan
 	{
 		m_ShaderGroups.clear();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto& setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -339,7 +339,7 @@ namespace HazardRenderer::Vulkan
 		pipelineLayout.pSetLayouts = setLayouts.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
-		auto& stages = m_Shader->GetPipelineShaderStageCreateInfos();
+		auto stages = m_Shader->GetPipelineShaderStageCreateInfos();
 
 		//Raygen group
 		{

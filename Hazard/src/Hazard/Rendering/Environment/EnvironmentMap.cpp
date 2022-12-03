@@ -38,7 +38,7 @@ namespace Hazard
 
 		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubeMap");
 
-		auto& shader = computePipeline->GetShader();
+		auto shader = computePipeline->GetShader();
 		shader->Set("o_CubeMap", 0, radianceMap);
 		shader->Set("u_EquirectangularTexture", 0, image);
 

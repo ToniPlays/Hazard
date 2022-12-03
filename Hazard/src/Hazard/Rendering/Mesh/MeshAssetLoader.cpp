@@ -126,7 +126,7 @@ namespace Hazard
 		}
 		buffer.Write(data.Indices.data(), data.Indices.size() * sizeof(uint32_t));
 
-		auto& path = factory.GetCacheFile(metadata.Handle);
+		auto path = factory.GetCacheFile(metadata.Handle);
 
 		if (!File::DirectoryExists(path.parent_path()))
 			File::CreateDir(path.parent_path());

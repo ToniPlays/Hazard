@@ -18,7 +18,7 @@ namespace Hazard
 
 		if (TextureFactory::CacheStatus(metadata.Handle) == CacheStatus::Exists)
 		{
-			auto& cachedPath = TextureFactory::GetCacheFile(metadata.Handle);
+			auto cachedPath = TextureFactory::GetCacheFile(metadata.Handle);
 			CachedBuffer buffer = File::ReadBinaryFile(cachedPath);
 			AssetPackElement element = buffer.Read<AssetPackElement>();
 
@@ -71,13 +71,13 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		return false;
-
+		/*
 		Thread& thread = Application::Get().GetThreadPool().GetThread();
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
 		AssetHandle handle = asset.As<Texture2DAsset>()->GetSourceImageAsset()->GetHandle();
 
-		auto& cachePath = TextureFactory::GetCacheFile(handle);
+		auto cachePath = TextureFactory::GetCacheFile(handle);
 
 		thread.OnCompletionHandler([cachePath](const Thread& thisThread) {
 			HZR_CORE_INFO("Image saved {0}, took {1} ms", cachePath.string(), thisThread.GetExecutionTime());
@@ -111,6 +111,7 @@ namespace Hazard
 			File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 
 		});
+		*/
 
 		return false;
 	}

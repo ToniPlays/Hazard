@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MethodMetadata.h"
-#include "Core/Attribute.h"
 #include "FieldMetadata.h"
 #include "Mono/Core/Mono.h"
 #include <unordered_map>
@@ -9,15 +8,13 @@
 namespace HazardScript
 {
 	class ScriptObject;
+	class Attribute;
 
 	class ScriptMetadata : public RefCount
 	{
 	public:
 		ScriptMetadata() = default;
 		ScriptMetadata(ManagedClass* klass);
-		~ScriptMetadata()
-		{
-		}
 
 		std::string GetName();
 		size_t GetFieldCount() { return m_Fields.size(); }

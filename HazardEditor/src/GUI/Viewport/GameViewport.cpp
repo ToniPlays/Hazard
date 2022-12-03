@@ -33,7 +33,7 @@ namespace UI
 		Ref<World> world = nullptr; // Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		if (!world) return;
 
-		auto& [cc, tc] = world->GetWorldCamera();
+		auto [cc, tc] = world->GetWorldCamera();
 		if (cc == nullptr) 
 		{ 
 			m_HasCamera = false;
@@ -53,7 +53,7 @@ namespace UI
 		cameraData.Width = m_Width;
 		cameraData.Height = m_Height;
 
-		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
+		auto renderer = Editor::EditorWorldManager::GetWorldRender();
 		//renderer->SubmitCamera(cameraData);
 	}
 	void GameViewport::OnPanelRender()

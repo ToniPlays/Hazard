@@ -22,7 +22,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanTopLevelAS::VulkanTopLevelAS(AccelerationStructureCreateInfo* info)
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdBuildAccelerationStructuresKHR);
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), BuildAccelerationStructuresKHR);
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateAccelerationStructureKHR);
@@ -61,7 +61,7 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanTopLevelAS::Build(const BuildType& type)
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 		VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
 		Build(commandBuffer, type);
 		device->FlushCommandBuffer(commandBuffer);
@@ -69,7 +69,7 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanTopLevelAS::Build(VkCommandBuffer commandBuffer, const BuildType& type)
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
 		uint32_t primitiveCount = m_Instances.size();
 
@@ -193,7 +193,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanTopLevelAS::CreateTopLevel()
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
 		VulkanAllocator allocator("VulkanAccelerationStructure");
 

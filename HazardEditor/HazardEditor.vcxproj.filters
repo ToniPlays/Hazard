@@ -135,6 +135,9 @@
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanelItem.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettingsPanel.h">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\ProjectTodoPanel.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
@@ -180,6 +183,7 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Overlays\ProgressOverlay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -254,6 +258,9 @@
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanelItem.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\ProjectPanel\ProjectSettingsPanel.cpp">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\ProjectTodoPanel.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
@@ -284,5 +291,6 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Overlays\ProgressOverlay.cpp" />
   </ItemGroup>
 </Project>

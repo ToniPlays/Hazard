@@ -27,11 +27,11 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 
-		auto& device = VulkanContext::GetLogicalDevice();
+		auto device = VulkanContext::GetLogicalDevice();
 
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
-		auto& queueIndices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
+		auto queueIndices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
 
 		m_SubmitQueue = compute ? device->GetComputeQueue() : device->GetGraphicsQueue();
 
@@ -108,7 +108,7 @@ namespace HazardRenderer::Vulkan
 	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(std::move(name)), m_OwnedBySwapchain(swapchain)
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& device = VulkanContext::GetLogicalDevice();
+		auto device = VulkanContext::GetLogicalDevice();
 
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdTraceRaysKHR);
 
@@ -245,7 +245,7 @@ namespace HazardRenderer::Vulkan
 			HZR_TIMED_FUNCTION();
 			HZR_ASSERT(instance->m_State == State::Finished, "Command buffer not in recording state");
 			instance->m_State = State::Submit;
-			auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+			auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
 			if (!s_ComputeFence)
 			{
@@ -285,7 +285,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_State == State::Record, "Command buffer not in recording state");
-		auto& fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
 		uint32_t w = fb->GetWidth();
 		uint32_t h = fb->GetHeight();
@@ -304,7 +304,7 @@ namespace HazardRenderer::Vulkan
 
 		if (fb->GetSpecification().SwapChainTarget)
 		{
-			auto& swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
+			auto swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			w = swapchain->GetWidth();
 			h = swapchain->GetHeight();
 			beginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
@@ -407,9 +407,9 @@ namespace HazardRenderer::Vulkan
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			auto vkPipeline = pipeline->GetVulkanPipeline();
-			auto& shader = pipeline->GetShader().As<VulkanShader>();
+			auto shader = pipeline->GetShader().As<VulkanShader>();
 			auto layout = pipeline->GetPipelineLayout();
-			auto& descriptorSets = shader->GetVulkanDescriptorSets();
+			auto descriptorSets = shader->GetVulkanDescriptorSets();
 
 			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, pipeline->GetBindingPoint(), layout, 0,
 				descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
@@ -431,7 +431,7 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, info = computeInfo]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-			auto& pipeline = info.Pipeline.As<VulkanPipeline>();
+			auto pipeline = info.Pipeline.As<VulkanPipeline>();
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
 
 			LocalGroupSize size = info.GroupSize;
@@ -446,11 +446,11 @@ namespace HazardRenderer::Vulkan
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TraceRays");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
-			auto& bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
-			auto& raygenTable = bindingTable->GetRaygenTableAddress();
-			auto& missTable = bindingTable->GetMissTableAddress();
-			auto& closestHitTable = bindingTable->GetClosestHitTableAddress();
-			auto& callableTable = bindingTable->GetCallableTableAddress();
+			auto bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
+			auto raygenTable = bindingTable->GetRaygenTableAddress();
+			auto missTable = bindingTable->GetMissTableAddress();
+			auto closestHitTable = bindingTable->GetClosestHitTableAddress();
+			auto callableTable = bindingTable->GetCallableTableAddress();
 
 			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Width, info.Height, info.Depth);
 			});

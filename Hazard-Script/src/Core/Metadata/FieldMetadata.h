@@ -6,6 +6,7 @@
 
 #include "ManagedType.h"
 #include "Core/FieldValueStorageBase.h"
+#include "Core/ValueWrapper.h"
 
 #include <unordered_map>
 
@@ -52,20 +53,19 @@ namespace HazardScript
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
 			MonoObject* obj = mono_gchandle_get_target(handle);
-			if (m_Type.IsArray())
-			{
-				MonoObject* valueObject = mono_field_get_value_object(Mono::GetDomain(), m_Field, obj);
-				return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetValueOrDefault<T>(valueObject, index);
-			}
-			return m_InstanceData[handle].As<FieldValueStorage>()->GetValue<T>(obj);
+			Buffer value = m_InstanceData[handle]->GetValueOrDefault(obj);
+			return ValueWrapper(value.Data, value.Size).Get<T>();
 		}
 
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
 			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
-			//Field object
+			Buffer val = { &value, sizeof(T) };
 			MonoObject* obj = mono_gchandle_get_target(handle);
+			m_InstanceData[handle]->SetData(obj, index, val);
+
+			/*//Field object
 			if (m_Type.IsArray()) 
 			{
 				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
@@ -81,7 +81,7 @@ namespace HazardScript
 				if (!storage->IsLive())
 					storage->SetStoredValue<T>(value);
 				storage->SetLiveValue<T>(obj, value);
-			}
+			}*/
 		}
 
 		uint32_t GetElementCount(uint32_t handle);
@@ -98,7 +98,6 @@ namespace HazardScript
 		ManagedType m_Type;
 		uint32_t m_Flags = MonoFlags_Public;
 		std::vector<Ref<Attribute>> m_Attributes;
-
 		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;
 	};
 }

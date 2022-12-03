@@ -69,7 +69,7 @@ namespace Hazard
 	AssetHandle AssetManager::GetHandleFromFile(const std::filesystem::path& filePath)
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& path = File::GetFileAbsolutePath(filePath);
+		auto path = File::GetFileAbsolutePath(filePath);
 		return s_Registry.Contains(path) ? s_Registry.Get(path).Handle : INVALID_ASSET_HANDLE;
 	}
 	bool AssetManager::IsLoaded(const AssetHandle& handle)
@@ -86,6 +86,14 @@ namespace Hazard
 		}
 		return s_NullMetadata;
 	}
+
+	bool AssetManager::SaveAsset(Ref<Asset> asset)
+	{
+		HZR_ASSERT(asset, "Asset cannot be nullptr");
+		bool succeeded = s_AssetLoader.Save(asset);
+		return succeeded;
+	}
+
 	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)
 	{
 		return path;

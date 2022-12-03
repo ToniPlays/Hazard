@@ -12,8 +12,9 @@ namespace Hazard
 		RenderContextManager(RenderContextCreateInfo* createInfo);
 		~RenderContextManager() = default;
 
-		void PreRender();
-		void PostRender();
+		void PreRender() override;
+		void PostRender() override;
+		void Close() override;
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
 		HazardRenderer::DefaultResources& GetDefaultResources() { return m_Window->GetContext()->GetDefaultResources(); }

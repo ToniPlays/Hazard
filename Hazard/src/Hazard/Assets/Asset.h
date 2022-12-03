@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <unordered_map>
 
-#define INVALID_ASSET_HANDLE 0
+#define INVALID_ASSET_HANDLE (AssetHandle)0
 
 namespace Hazard 
 {

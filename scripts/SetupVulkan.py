@@ -9,8 +9,6 @@ import Utils
 from io import BytesIO
 from urllib.request import urlopen
 
-
-
 platform = "windows" if platform.system() == "Windows" else "mac";
 platformExecutable = "exe" if platform == "Windows" else "dmg";
 

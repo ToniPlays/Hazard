@@ -103,12 +103,10 @@ void HazardEditorApplication::PreInit()
 	MeshFactory::SetCacheLocation("Library/Meshes/");
 
 	CreateApplicationStack(&createInfo);
-	EditorAssetManager::Init();
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {
-
 	Editor::EditorWorldManager::Init();
 	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderContextManager>().GetWindow();
@@ -142,6 +140,8 @@ void HazardEditorApplication::Init()
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
 		});
 	scriptEngine.ReloadAssemblies();
+
+	EditorAssetManager::Init();
 }
 
 void HazardEditorApplication::Update()

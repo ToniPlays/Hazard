@@ -32,7 +32,7 @@ namespace Hazard
 		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count);
 		static void SubmitMesh(const RawMesh& rawMesh, Ref<Pipeline> pipeline);
 
-		static void SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count);
+		static void SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count);
 
 		//Pipeline
 		static void SubmitPipeline(Ref<Pipeline>& pipeline, size_t count);

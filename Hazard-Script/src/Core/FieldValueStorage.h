@@ -6,10 +6,9 @@
 #include "Attribute.h"
 #include "Metadata/ManagedType.h"
 #include "FieldValueStorageBase.h"
-#include "Metadata/FieldMetadata.h"
 #include "MathCore.h"
 #include "Mono/Core/MonoUtilities.h"
-
+#include "Core/Metadata/FieldMetadata.h"
 
 namespace HazardScript
 {
@@ -18,21 +17,21 @@ namespace HazardScript
 #define DEFAULT_TYPE(Type)	template<>																					\
 							Type GetStoredValue() { return m_Storage.Get<Type>(); }										\
 							template<>																					\
-							void SetStoredValue(Type value) { m_Storage.Set<Type>(value);}								\
+							void SetStoredValue(Type value) { m_Storage.Set<Type>(value); }								\
 							template<>																					\
 							Type GetLiveValue(MonoObject* target) {														\
 								if (m_Field->GetType().IsArray())														\
-									return MonoArrayUtils::GetElementValue<Type>((MonoArray*)target, m_Index);			\
-								return MonoFieldUtils::GetFieldValue<Type>(target, m_Field->GetMonoField());			\
+									return MonoArrayUtils::template GetElementValue<Type>((MonoArray*)target, m_Index);			\
+								return MonoFieldUtils::template GetFieldValue<Type>(target, m_Field->GetMonoField());			\
 							}																							\
 							template<>																					\
 							void SetLiveValue(MonoObject* target, Type value)											\
 							{	if(m_Field->GetType().IsArray()) {														\
-									MonoArrayUtils::SetElementValue<Type>((MonoArray*)target, m_Index, value);			\
+									MonoArrayUtils::template SetElementValue<Type>((MonoArray*)target, m_Index, value);			\
 									return;																				\
 								}																						\
-								MonoFieldUtils::SetFieldValue<Type>(target, m_Field->GetMonoField(), value);			\
-							}																							\
+								MonoFieldUtils::template SetFieldValue<Type>(target, m_Field->GetMonoField(), value);			\
+							}																							
 
 	class FieldValueStorage : public FieldValueStorageBase
 	{
@@ -44,24 +43,25 @@ namespace HazardScript
 		bool Valid() { return m_Field != nullptr; }
 
 		template<typename T>
-		T GetValue(MonoObject* target) 
+		T GetValue(MonoObject* target)
 		{
 			return m_IsLiveValue ? GetLiveValue<T>(target) : GetStoredValue<T>();
 		}
 		template<typename T>
-		void SetValue(MonoObject* target, T value) 
+		void SetValue(MonoObject* target, T value)
 		{
 			m_IsLiveValue ? SetLiveValue<T>(target, value) : SetStoredValue<T>(value);
 		}
 
 		template<typename T>
-		T GetStoredValue() {
-			static_assert(false);
+		T GetStoredValue() 
+		{
+			STATIC_ASSERT(false, T);
 		}
 		template<typename T>
-		T GetLiveValue(MonoObject* target) 
+		T GetLiveValue(MonoObject* target)
 		{
-			static_assert(false);
+			STATIC_ASSERT(false, T);
 		}
 
 		template<typename T>
@@ -74,13 +74,13 @@ namespace HazardScript
 		template<typename T>
 		void SetStoredValue(T value)
 		{
-			static_assert(false);
+			STATIC_ASSERT(false, T);
 		}
 		//Target is MonoClassField*, for array types it returns MonoArray*
 		template<typename T>
 		void SetLiveValue(MonoObject* target, T value)
 		{
-			static_assert(false);
+			STATIC_ASSERT(false, T);
 		}
 
 		DEFAULT_TYPE(bool);
@@ -108,30 +108,36 @@ namespace HazardScript
 		template<>
 		std::string GetLiveValue(MonoObject* target) {
 			if (m_Field->GetType().IsArray())
-				return MonoArrayUtils::GetElementValue<std::string>((MonoArray*)target, m_Index);
-			return MonoFieldUtils::GetFieldValue<std::string>(target, m_Field->GetMonoField());
+				return MonoArrayUtils::template GetElementValue<std::string>((MonoArray*)target, m_Index);
+			return MonoFieldUtils::template GetFieldValue<std::string>(target, m_Field->GetMonoField());
 		}
 		template<>
 		void SetLiveValue(MonoObject* target, std::string value)
 		{
-			if (m_Field->GetType().IsArray()) 
+			if (m_Field->GetType().IsArray())
 			{
-				MonoArrayUtils::SetElementValue<std::string>((MonoArray*)target, m_Index, value);
+				MonoArrayUtils::template SetElementValue<std::string>((MonoArray*)target, m_Index, value);
 				return;
 			}
-			MonoFieldUtils::SetFieldValue<std::string>(target, m_Field->GetMonoField(), value);
+			MonoFieldUtils::template SetFieldValue<std::string>(target, m_Field->GetMonoField(), value);
 		}
 
+		Buffer GetValueOrDefault(MonoObject* object) override 
+		{
+			return { m_Storage.GetRawData(), m_Storage.GetDataSize() };
+		}
 
 	private:
 		FieldMetadata* m_Field = nullptr;
 		ValueWrapper m_Storage;
 		size_t m_Index = 0;
 	};
+
+
+
 	class ArrayFieldValueStorage : public FieldValueStorageBase
 	{
 	public:
-
 		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
 		uintptr_t GetLength(MonoObject* target) { return IsLive() ? GetLiveLength(target) : m_ArrayStorage.size(); }
@@ -193,7 +199,7 @@ namespace HazardScript
 		T GetValue(MonoObject* target, size_t index)
 		{
 			if (IsLive()) {
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)target, index);
+				return MonoArrayUtils::template GetElementValue<T>((MonoArray*)target, index);
 			}
 
 			if constexpr (std::is_same<T, ValueWrapper>::value)
@@ -205,9 +211,9 @@ namespace HazardScript
 		template<typename T>
 		T GetValueOrDefault(MonoObject* target, size_t index)
 		{
-			if (IsLive()) 
+			if (IsLive())
 			{
-				return MonoArrayUtils::GetElementValue<T>((MonoArray*)target, index);
+				return MonoArrayUtils::template GetElementValue<T>((MonoArray*)target, index);
 			}
 			if (!HasValue(target, index)) return T();
 			return GetValue<T>(target, index);
@@ -221,7 +227,12 @@ namespace HazardScript
 		template<typename T>
 		void SetLiveValue(MonoObject* target, size_t index, T value)
 		{
-			MonoArrayUtils::SetElementValue<T>((MonoArray*)target, index, value);
+			MonoArrayUtils::template SetElementValue<T>((MonoArray*)target, index, value);
+		}
+
+		Buffer GetValueOrDefault(MonoObject* object) override
+		{
+			return Buffer();
 		}
 
 	private:

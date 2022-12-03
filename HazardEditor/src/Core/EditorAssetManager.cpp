@@ -4,6 +4,9 @@
 #include "File.h"
 #include "Utility/YamlUtils.h"
 #include "Hazard.h"
+#include <Hazard/RenderContext/ShaderAsset.h>
+#include <src/Core/GUIManager.h>
+#include <src/GUI/Overlays/ProgressOverlay.h>
 
 using namespace Hazard;
 
@@ -37,6 +40,8 @@ void EditorAssetManager::Init()
 	m_Icons["Script"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/csharp.png");
 	m_Icons["Camera"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/camera.png");
 	m_Icons["DirectionalLight"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/directionalLight.png");
+
+	RefreshEditorAssets();
 }
 
 AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path& path)
@@ -191,4 +196,48 @@ Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 	if (m_Icons.find(name) != m_Icons.end())
 		return m_Icons[name];
 	return m_Icons["Default"];
+}
+
+void EditorAssetManager::RefreshEditorAssets()
+{
+	//Compile non cached shaders
+	std::unordered_map<AssetType, std::vector<Ref<Asset>>> assetsToUpdate;
+	{
+
+		for (auto& file : File::GetAllInDirectory("res/Shaders"))
+		{
+			switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
+			{
+			case AssetType::Shader:
+			{
+				using namespace HazardRenderer;
+				Ref<Asset> asset = AssetManager::GetAsset<ShaderAsset>(file);
+				auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
+
+				if (File::IsNewerThan(file, cacheDir))
+					assetsToUpdate[AssetType::Shader].push_back(asset);
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
+	auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
+
+	for (auto& [type, assets] : assetsToUpdate)
+	{
+		std::string tag = Utils::AssetTypeToString(type);
+
+		std::vector<JobPromise> promises;
+		promises.reserve(assets.size());
+
+		for (auto& asset : assets)
+		{
+			promises.push_back(Application::Get().SubmitMainThread(tag.c_str(), [asset]() -> size_t {
+				return AssetManager::SaveAsset(asset) == false;
+				}));
+		}
+		progressPanel->AddProcesses(type, promises);
+	}
 }

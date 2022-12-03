@@ -4,13 +4,12 @@
 #include "HazardLoop.h"
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
+#include <Jobs.h>
 
-#include "Thread.h"
-
-namespace Hazard {
-
-	class Application {
-		
+namespace Hazard 
+{
+	class Application 
+	{
 	public:
 		Application() = default;
 		virtual ~Application() = default;
@@ -26,12 +25,8 @@ namespace Hazard {
 		virtual bool OnEvent(Event& e) { return false; };
 		void CreateApplicationStack(HazardCreateInfo* info);
 
-		void SubmitMainThread(std::function<void()> callback)
-		{
-			m_MainThreadJobs.push_back(callback);
-		}
-		void ExecuteMainThreadQueue();
-		ThreadPool& GetThreadPool() { return m_ThreadPool; }
+		JobPromise SubmitMainThread(const std::string& tag, JobCallback callback);
+		JobSystem& GetThreadPool() { return m_JobSystem; }
 
 	public:
 		static void Quit();
@@ -45,8 +40,7 @@ namespace Hazard {
 		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
 
 	private:
-		std::vector<std::function<void()>> m_MainThreadJobs;
-		ThreadPool m_ThreadPool;
+		JobSystem m_JobSystem;
 	};
 	Hazard::Application* CreateApplication();
 }

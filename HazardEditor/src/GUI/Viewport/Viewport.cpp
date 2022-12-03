@@ -51,7 +51,7 @@ namespace UI
 		cameraData.ZNear = m_EditorCamera.GetNearClipping();
 		cameraData.ZFar = m_EditorCamera.GetFarClipping();
 
-		auto& renderer = Editor::EditorWorldManager::GetWorldRender();
+		auto renderer = Editor::EditorWorldManager::GetWorldRender();
 		renderer->SubmitCamera(cameraData);
 
 		Ref<World> world = renderer->GetTargetWorld();
@@ -64,10 +64,10 @@ namespace UI
 
 			if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
 			{
-				auto& cameraView = world->GetEntitiesWith<CameraComponent>();
+				auto cameraView = world->GetEntitiesWith<CameraComponent>();
 				if (cameraView.size() > 0)
 				{
-					auto& icon = EditorAssetManager::GetIcon("Camera");
+					auto icon = EditorAssetManager::GetIcon("Camera");
 
 					for (auto entity : cameraView) {
 						Entity e = { entity, world.Raw() };
@@ -84,7 +84,7 @@ namespace UI
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
 			{
-				auto& meshView = world->GetEntitiesWith<MeshComponent>();
+				auto meshView = world->GetEntitiesWith<MeshComponent>();
 				for (auto entity : meshView) {
 					Entity e = { entity, world.Raw() };
 					auto& tc = e.GetComponent<TransformComponent>();
@@ -97,10 +97,10 @@ namespace UI
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
 			{
-				auto& cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
+				auto cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
 				if (cameraView.size() > 0)
 				{
-					auto& icon = EditorAssetManager::GetIcon("DirectionalLight");
+					auto icon = EditorAssetManager::GetIcon("DirectionalLight");
 
 					for (auto& entity : cameraView)
 					{
@@ -139,15 +139,13 @@ namespace UI
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
-			Application::Get().SubmitMainThread([handle = assetHandle]() {
-				AssetMetadata& meta = AssetManager::GetMetadata(handle);
-				Editor::EditorWorldManager::LoadWorld(meta.Path);
-				});
+			AssetMetadata& meta = AssetManager::GetMetadata(assetHandle);
+			Editor::EditorWorldManager::LoadWorld(meta.Path);
 			});
 
 		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
 
-		if (ImGui::Button(ICON_FK_COG, { 28, 28 }))
+		if (ImGui::Button((const char*)ICON_FK_COG, { 28, 28 }))
 			m_DrawSettings = !m_DrawSettings;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
@@ -159,7 +157,7 @@ namespace UI
 		}
 
 		ImGui::SameLine(0, 8);
-		if (ImGui::Button(ICON_FK_EYE " Show", { 0, 28 }))
+		if (ImGui::Button((const char*)ICON_FK_EYE " Show", { 0, 28 }))
 			m_DrawStats = !m_DrawStats;
 
 		ImGui::PopStyleVar();
@@ -174,15 +172,15 @@ namespace UI
 
 		ImGui::BeginChild("##gizmoTools", { 84, 28 });
 		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton(ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 28 })) {
+		if (ImUI::ColoredButton((const char*)ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Translate);
 		}
 		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton(ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 28 })) {
+		if (ImUI::ColoredButton((const char*)ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Rotate);
 		}
 		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton(ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 28 })) {
+		if (ImUI::ColoredButton((const char*)ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 28 })) {
 			m_Gizmos.SetType(Gizmo::Scale);
 		}
 
@@ -328,9 +326,7 @@ namespace UI
 			RendererSettings settings = renderEngine.GetSettings();
 			if (ImUI::Checkbox("RTX", settings.Raytraced))
 			{
-				Application::Get().SubmitMainThread([settings]() mutable {
-					Application::GetModule<RenderEngine>().GetSettings() = settings;
-					});
+				Application::GetModule<RenderEngine>().GetSettings() = settings;
 			}
 		}
 
@@ -360,8 +356,10 @@ namespace UI
 
 		if (ImUI::Checkbox("Camera frustum", cameraFrustum))
 			m_ViewportSettings ^= ViewportSettingsFlags_CameraFrustum;
+
 		if (ImUI::Checkbox("Light icons", lightIcons))
 			m_ViewportSettings ^= ViewportSettingsFlags_LightIcons;
+
 		ImGui::SetColumnWidth(0, 100);
 		float cameraSpeed = m_EditorCamera.GetSpeedMultiplier();
 		if (ImUI::SliderFloat("Camera speed", cameraSpeed, 1.0f, 0.01f, 5.0f))

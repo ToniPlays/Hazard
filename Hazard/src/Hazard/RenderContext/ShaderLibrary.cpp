@@ -14,7 +14,6 @@ namespace Hazard
 	void ShaderLibrary::Init()
 	{
 		using namespace HazardRenderer;
-		RenderAPI api = GraphicsContext::GetRenderAPI();
 
 		//Line shader
 		{
@@ -31,7 +30,7 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			m_LoadedShaders["lineShader"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["lineShader"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 		//Quad shader
 		{
@@ -47,7 +46,7 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			m_LoadedShaders["standard"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["standard"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 		//PBR shader
 		{
@@ -63,7 +62,7 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			m_LoadedShaders["pbr_static"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["pbr_static"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 		//Skybox
 		{
@@ -79,7 +78,7 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			m_LoadedShaders["skybox"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["skybox"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 
 		//Compute shaders
@@ -93,7 +92,7 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			m_LoadedShaders["EquirectangularToCubeMap"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["EquirectangularToCubeMap"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 		//Environment irradiance
 		{
@@ -105,7 +104,7 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			m_LoadedShaders["EnvironmentIrradiance"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedShaders["EnvironmentIrradiance"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 		}
 	}
 	Ref<HazardRenderer::Pipeline> ShaderLibrary::GetPipeline(const std::string& name)
@@ -114,7 +113,7 @@ namespace Hazard
 	}
 	Ref<AssetPointer> ShaderLibrary::GetPipelinePtr(const std::string& name)
 	{
-		if (m_LoadedShaders.find(name) == m_LoadedShaders.end()) return nullptr;
-		return m_LoadedShaders[name];
+		if (s_LoadedShaders.find(name) == s_LoadedShaders.end()) return nullptr;
+		return s_LoadedShaders[name];
 	}
 }

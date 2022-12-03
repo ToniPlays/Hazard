@@ -19,7 +19,7 @@ namespace HazardRenderer::Vulkan
 {
 	VulkanBottomLevelAS::VulkanBottomLevelAS(AccelerationStructureCreateInfo* info)
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdBuildAccelerationStructuresKHR);
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), BuildAccelerationStructuresKHR);
 		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateAccelerationStructureKHR);
@@ -160,7 +160,7 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanBottomLevelAS::CreateAccelerationStructure()
 	{
-		auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
 		std::vector<VkTransformMatrixKHR> transforms;
 		transforms.reserve(m_Geometries.size());

@@ -96,7 +96,7 @@ namespace Hazard
 
 		drawList.MeshList[pipeline.Raw()].push_back(rawMesh);
 	}
-	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer, Ref<Pipeline>& pipeline, size_t count)
+	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}

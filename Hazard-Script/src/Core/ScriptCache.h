@@ -5,6 +5,8 @@
 #include "Metadata/FieldMetadata.h"
 #include "Metadata/ScriptMetadata.h"
 
+#include <unordered_map>
+
 namespace HazardScript
 {
 	struct ScriptCacheData

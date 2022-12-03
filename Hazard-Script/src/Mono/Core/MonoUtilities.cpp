@@ -1,5 +1,6 @@
 
 #include "MonoUtilities.h"
+#include "Core/Metadata/ManagedType.h"
 
 namespace HazardScript 
 {

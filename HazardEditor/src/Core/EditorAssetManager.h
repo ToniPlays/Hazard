@@ -19,13 +19,15 @@ struct ScriptCreateInfo
 	std::string Derives;
 	std::unordered_map<MethodImpl, std::string> Methods;
 
-	void SetDefaults() {
+	void SetDefaults() 
+	{
 		Path = "";
 		ClassName = "";
 		Derives = "Entity";
 		Methods.clear();
 	}
 };
+
 
 class EditorAssetManager
 {
@@ -35,15 +37,17 @@ public:
 
 	static void ImportAssets();
 	static void Init();
-
+	//TODO: Deprecate these
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
 	static bool CreateFolder(const std::filesystem::path& path);
 	static bool CreateScriptAsset(const ScriptCreateInfo& info);
 	static bool CreateWorld(const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
-
+	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
+
+	static void RefreshEditorAssets();
 
 private:
 	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> m_Icons;

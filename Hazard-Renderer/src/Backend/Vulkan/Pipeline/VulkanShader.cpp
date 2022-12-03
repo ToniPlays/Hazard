@@ -128,7 +128,7 @@ namespace HazardRenderer::Vulkan
 				{
 				case BufferType::Vertex:
 				{
-					auto& buf = b.As<VulkanVertexBuffer>();
+					auto buf = b.As<VulkanVertexBuffer>();
 
 					VkDescriptorBufferInfo bufferInfo = {};
 					bufferInfo.buffer = buf->GetVulkanBuffer();
@@ -140,7 +140,7 @@ namespace HazardRenderer::Vulkan
 				}
 				case BufferType::Index:
 				{
-					auto& buf = b.As<VulkanIndexBuffer>();
+					auto buf = b.As<VulkanIndexBuffer>();
 
 					VkDescriptorBufferInfo bufferInfo = {};
 					bufferInfo.buffer = buf->GetVulkanBuffer();
@@ -390,7 +390,7 @@ namespace HazardRenderer::Vulkan
 
 				for (auto& [binding, buffer] : m_UniformBuffers[set])
 				{
-					auto& vulkanBuffer = buffer.As<VulkanUniformBuffer>();
+					auto vulkanBuffer = buffer.As<VulkanUniformBuffer>();
 
 					VkDescriptorBufferInfo bufferInfo = {};
 					bufferInfo.buffer = vulkanBuffer->GetVulkanBuffer();

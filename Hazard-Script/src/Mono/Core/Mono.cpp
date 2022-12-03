@@ -20,15 +20,15 @@ namespace HazardScript
 		MonoDomain* domain = nullptr;
 		bool cleanup = false;
 
-		if (s_Domain) {
-			domain = mono_domain_create_appdomain("HazardScriptCore", nullptr);
+		if (s_Domain) 
+		{
+			domain = mono_domain_create_appdomain((char*)"HazardScriptCore", nullptr);
 			mono_domain_set(domain, false);
 			cleanup = true;
 		}
 		else
 		{
 			domain = mono_jit_init(name.c_str());
-
 		}
 		s_Domain = mono_domain_create_appdomain((char*)name.c_str(), nullptr);
 

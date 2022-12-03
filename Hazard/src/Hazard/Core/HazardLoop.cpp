@@ -54,7 +54,7 @@ namespace Hazard {
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
 
 		m_Application->Close();
-		//m_ModuleHandler->Close();
+		m_ModuleHandler->Close();
 
 		HZR_PROFILE_SESSION_END();
 		OPTICK_SHUTDOWN();
@@ -65,7 +65,8 @@ namespace Hazard {
 		s_Instance->m_ShouldClose = true;
 		return true;
 	}
-	void HazardLoop::Process(Event& e) {
+	void HazardLoop::Process(Event& e) 
+	{
 		s_Instance->OnEvent(e);
 	}
 	void HazardLoop::Run()
@@ -78,7 +79,6 @@ namespace Hazard {
 		//Update
 		m_ModuleHandler->PreUpdate();
 		m_ModuleHandler->Update();
-		m_Application->ExecuteMainThreadQueue();
 		m_Application->Update();
 		m_ModuleHandler->PostUpdate();
 		//Render

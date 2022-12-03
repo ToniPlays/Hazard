@@ -9,7 +9,6 @@ namespace HazardScript
 	}
 	ValueWrapper GetDefaultValueForType(const ManagedType& type)
 	{
-
 		switch (type.NativeType)
 		{
 		case NativeType::Bool:			return ValueWrapper(false);

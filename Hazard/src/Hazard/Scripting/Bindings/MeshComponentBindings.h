@@ -18,7 +18,7 @@ namespace Hazard
 
 	static void MeshComponent_SetMesh_Native(uint64_t id, uint64_t handle)
 	{
-		Ref<Mesh>& asset = AssetManager::GetAsset<Mesh>(handle);
+		Ref<Mesh> asset = AssetManager::GetAsset<Mesh>(handle);
 		if (asset == nullptr) {
 			asset = AssetManager::GetRuntimeAsset<Mesh>(handle);
 		}

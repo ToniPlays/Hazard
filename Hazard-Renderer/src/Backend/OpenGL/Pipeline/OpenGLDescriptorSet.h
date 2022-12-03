@@ -32,8 +32,8 @@ namespace HazardRenderer::OpenGL
 
 		void AddWriteDescriptor(OpenGLWriteDescriptor writeDescriptor);
 		std::unordered_map<uint32_t, OpenGLWriteDescriptor>& GetDescriptorSets() { return m_WriteDescriptors; }
-		OpenGLWriteDescriptor& GetWriteDescriptor(uint32_t index) { return m_WriteDescriptors[index]; }
-		OpenGLWriteDescriptor& GetWriteDescriptor(const std::string& name);
+		OpenGLWriteDescriptor* GetWriteDescriptor(uint32_t index) { return &m_WriteDescriptors[index]; }
+		OpenGLWriteDescriptor* GetWriteDescriptor(const std::string& name);
 
 		void BindResources(uint32_t programID, bool isCompute = false);
 

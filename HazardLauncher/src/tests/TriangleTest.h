@@ -109,7 +109,7 @@ namespace TriangleTest {
 			Input::Update();
 			window->BeginFrame();
 
-			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 			commandBuffer->BindPipeline(pipeline);
 			commandBuffer->BindVertexBuffer(vertexBuffer);

@@ -4,7 +4,7 @@
 #include "Core/EditorEvent.h"
 #include "Editor/EditorUtils.h"
 
-namespace UI 
+namespace UI
 {
 	class Properties : public Hazard::ImUI::Panel {
 	public:
@@ -29,9 +29,7 @@ namespace UI
 		{
 			ImUI::MenuItem(title, [&]() {
 				std::vector<Entity> entities = m_SelectionContext;
-				Application::Get().SubmitMainThread([entities]() mutable {
-					AddComponentToAll<T>(entities);
-					});
+				AddComponentToAll<T>(entities);
 				});
 		}
 	}

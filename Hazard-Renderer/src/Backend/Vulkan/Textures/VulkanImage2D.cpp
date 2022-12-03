@@ -191,7 +191,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanImage2D::UploadImageData_RT(Buffer data, VkImageLayout imageLayout)
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& device = VulkanContext::GetLogicalDevice();
+		auto device = VulkanContext::GetLogicalDevice();
 
 		VulkanAllocator allocator("VulkanImage2D");
 

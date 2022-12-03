@@ -18,7 +18,7 @@ namespace UI
 	template<typename T>
 	static bool ScriptField(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) 
 	{
-		static_assert(false);
+		STATIC_ASSERT(false, T);
 	}
 
 	template<>

@@ -28,18 +28,14 @@ namespace Hazard
 		if (info->RendererInfo)
 			PushModule<RenderEngine>(info->RendererInfo);
 	}
-	void Application::ExecuteMainThreadQueue()
-	{
-		HZR_PROFILE_FUNCTION();
-		for (auto& fn : m_MainThreadJobs)
-		{
-			fn();
-		}
-		m_MainThreadJobs.clear();
-	}
 	void Application::Quit()
 	{
 		HazardLoop::GetCurrent().m_ShouldClose = true;
+	}
+	JobPromise Application::SubmitMainThread(const std::string& tag, JobCallback callback)
+	{
+		HZR_CORE_INFO("Received job with tag {0}", tag);
+		return m_JobSystem.SubmitJob(callback, tag);
 	}
 }
 

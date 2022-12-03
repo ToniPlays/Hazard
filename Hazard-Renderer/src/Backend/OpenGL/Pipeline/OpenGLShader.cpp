@@ -47,11 +47,11 @@ namespace HazardRenderer::OpenGL
 	{
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
-			auto& write = descriptor.GetWriteDescriptor(name);
-			if (write.ActualBinding == UINT32_MAX)
+			auto write = descriptor.GetWriteDescriptor(name);
+			if (write->ActualBinding == UINT32_MAX)
 				continue;
 
-			write.BoundValue[index] = image;
+			write->BoundValue[index] = image;
 			return;
 		}
 	}
@@ -59,11 +59,11 @@ namespace HazardRenderer::OpenGL
 	{
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
-			auto& write = descriptor.GetWriteDescriptor(name);
-			if (write.ActualBinding == UINT32_MAX)
+			auto* write = descriptor.GetWriteDescriptor(name);
+			if (write->ActualBinding == UINT32_MAX)
 				continue;
 
-			write.BoundValue[index] = cubemap;
+			write->BoundValue[index] = cubemap;
 			return;
 		}
 	}
@@ -199,7 +199,7 @@ namespace HazardRenderer::OpenGL
 				bufferInfo.Size = buffer.Size;
 				bufferInfo.Usage = BufferUsage::DynamicDraw;
 
-				descriptorSet.GetWriteDescriptor(binding).BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+				descriptorSet.GetWriteDescriptor(binding)->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
 			}
 		}
 		for (auto& [set, samplers] : m_ShaderData.ImageSamplers)

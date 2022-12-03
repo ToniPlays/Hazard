@@ -23,7 +23,8 @@ namespace Hazard::ImUI
 		}
 
 		template<typename T>
-		static T& AddRenderable() {
+		static T& AddRenderable() 
+		{
 			T* renderable = hnew T();
 			s_Instance->m_Renderables.push_back(renderable);
 			return *renderable;

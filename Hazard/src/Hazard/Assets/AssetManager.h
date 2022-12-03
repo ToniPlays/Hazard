@@ -36,6 +36,8 @@ namespace Hazard
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
+		static bool SaveAsset(Ref<Asset> asset);
+
 		template<typename T>
 		static Ref<T> GetAsset(const std::filesystem::path& path)
 		{
@@ -66,10 +68,6 @@ namespace Hazard
 				asset->SetHandle(meta.Handle);
 				asset->SetFlags(AssetFlags::Valid);
 				s_LoadedAssets[handle] = asset;
-
-				if (loadType == LoadType::Source)
-					s_AssetLoader.Save(asset);
-
 				return asset;
 			}
 			else

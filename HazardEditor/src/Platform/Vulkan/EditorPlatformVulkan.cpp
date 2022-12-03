@@ -18,8 +18,8 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 
 	m_Context = (VulkanContext*)window.GetContext();
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
-	auto& physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
-	auto& device = m_Context->GetLogicalDevice();
+	auto physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
+	auto device = m_Context->GetLogicalDevice();
 	//Create descriptor pools
 
 	VkDescriptorPool descriptorPool;
@@ -100,7 +100,7 @@ void EditorPlatformVulkan::EndFrame()
 
 	HZR_PROFILE_FUNCTION("EditorPlatformVulkan::EndFrame() RT");
 
-	auto& swapchain = context->GetSwapchain().As<VulkanSwapchain>();
+	auto swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 	ImGuiIO& io = ImGui::GetIO();
 
 

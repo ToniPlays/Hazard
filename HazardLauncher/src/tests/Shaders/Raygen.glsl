@@ -38,7 +38,7 @@ void main()
 	uint mask = 0xFF;
 
 	float tmin = 0.001;
-	float tmax = 10000.0;
+	float tmax = 1000.0;
 
     vec3 color = vec3(0.0);
 

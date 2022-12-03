@@ -80,7 +80,7 @@ namespace RayTracingSphere
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
-		auto& device = window->GetContext()->GetDevice();
+		auto device = window->GetContext()->GetDevice();
 
 		std::cout << "Selected device: " << device->GetDeviceName() << std::endl;
 		HZR_ASSERT(device->SupportsRaytracing(), "Device does not support Raytracing");
@@ -213,7 +213,7 @@ namespace RayTracingSphere
 #pragma endregion
 #pragma region EnvironmentMap
 
-		TextureHeader& header = TextureFactory::LoadTextureFromSourceFile("src/tests/Textures/pink_sunrise_4k.hdr", true);
+		TextureHeader header = TextureFactory::LoadTextureFromSourceFile("src/tests/Textures/pink_sunrise_4k.hdr", true);
 
 		Image2DCreateInfo envInfo = {};
 		envInfo.DebugName = "EnvMap";
@@ -252,7 +252,7 @@ namespace RayTracingSphere
 
 		Ref<Pipeline> computePipeline = Pipeline::Create(&computeSpec);
 
-		auto& shader = computePipeline->GetShader();
+		auto shader = computePipeline->GetShader();
 		shader->Set("o_CubeMap", 0, radianceMap);
 		shader->Set("u_EquirectangularTexture", 0, environmentMapImage);
 
@@ -292,7 +292,7 @@ namespace RayTracingSphere
 
 			window->BeginFrame();
 
-			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			CameraData cameraData = {};
 			cameraData.InvProjection = glm::inverse(camera.GetProjection());

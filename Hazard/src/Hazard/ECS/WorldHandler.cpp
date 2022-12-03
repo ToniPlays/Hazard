@@ -34,7 +34,7 @@ namespace Hazard {
 		if (!(m_Flags & WorldFlags_UpdateScript)) return;
 
 		Ref<World> world = m_World;
-		auto& view = world->GetEntitiesWith<ScriptComponent>();
+		auto view = world->GetEntitiesWith<ScriptComponent>();
 
 		float delta = (float)Time::s_DeltaTime;
 		void* params[] = { &delta };
@@ -53,7 +53,7 @@ namespace Hazard {
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<World> world = m_World;
-		auto& view = world->GetEntitiesWith<ScriptComponent>();
+		auto view = world->GetEntitiesWith<ScriptComponent>();
 
 		for (auto& entity : view) 
 		{
@@ -70,7 +70,7 @@ namespace Hazard {
 	void WorldHandler::OnEnd()
 	{
 		HZR_PROFILE_FUNCTION();
-		auto& view = m_World->GetEntitiesWith<ScriptComponent>();
+		auto view = m_World->GetEntitiesWith<ScriptComponent>();
 
 		for (auto& entity : view) {
 			Entity e = { entity, m_World.Raw() };

@@ -3,7 +3,8 @@
 #include <ios>
 #include <random>
 
-class UID {
+class UID 
+{
 public:
 	UID();
 	UID(uint64_t id);
@@ -16,11 +17,13 @@ private:
 	uint64_t m_Uid;
 };
 
-namespace std {
+namespace std 
+{
 	template<>
-	struct hash<UID> {
-
-		std::size_t operator() (const UID& id) const {
+	struct hash<UID> 
+	{
+		std::size_t operator() (const UID& id) const 
+		{
 			return hash<uint64_t>()((uint64_t)id);
 		}
 	};

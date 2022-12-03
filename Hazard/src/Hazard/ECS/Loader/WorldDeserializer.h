@@ -78,7 +78,7 @@ namespace Hazard
 			if (!comp["Fields"] || !c.m_Handle)
 				return;
 
-			for (auto& node : comp["Fields"])
+			for (auto node : comp["Fields"])
 			{
 				std::string name = node.first.as<std::string>();
 				ScriptSerializer::DeserializeFieldEditor(c.m_Handle, name, node.second);

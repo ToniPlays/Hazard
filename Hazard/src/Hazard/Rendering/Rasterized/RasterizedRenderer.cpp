@@ -35,7 +35,7 @@ namespace Hazard
 				auto& prefilter = environmentData.Map->PreFilterMap;
 				auto& lut = environmentData.Map->BRDFLut;
 
-				auto& shader = resources.PbrPipeline->GetShader();
+				auto shader = resources.PbrPipeline->GetShader();
 				if (radiance)
 					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);
 				if (irradiance)
@@ -52,7 +52,7 @@ namespace Hazard
 			data.SkyLightIntensity = 0.0f;
 			data.EnvironmentLod = 0.0f;
 
-			auto& shader = resources.PbrPipeline->GetShader();
+			auto shader = resources.PbrPipeline->GetShader();
 			shader->Set("u_RadianceMap", 0, resources.WhiteCubemap);
 			shader->Set("u_IrradianceMap", 0, resources.WhiteCubemap);
 			shader->Set("u_PrefilterMap", 0, resources.WhiteCubemap);

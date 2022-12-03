@@ -77,7 +77,7 @@ namespace Hazard
 
 		HZR_CORE_INFO("Saving asset {0}", metadata.Path.string());
 
-		auto& pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
+		auto pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
 		PipelineSpecification specs = pipeline->GetSpecifications();
 
 		PipelineAssetHeader header = {};

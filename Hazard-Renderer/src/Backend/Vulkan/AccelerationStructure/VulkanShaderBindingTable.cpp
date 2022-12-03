@@ -12,7 +12,7 @@ namespace HazardRenderer::Vulkan
 
     VulkanShaderBindingTable::VulkanShaderBindingTable(ShaderBindingTableCreateInfo* createInfo)
     {
-        auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+        auto device = VulkanContext::GetInstance()->GetLogicalDevice();
         GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), GetRayTracingShaderGroupHandlesKHR);
 
         m_Pipeline = createInfo->pPipeline.As<VulkanPipeline>();
@@ -28,7 +28,7 @@ namespace HazardRenderer::Vulkan
     }
     void VulkanShaderBindingTable::CreateBindingTableBuffers()
     {
-        auto& device = VulkanContext::GetInstance()->GetLogicalDevice();
+        auto device = VulkanContext::GetInstance()->GetLogicalDevice();
         const auto& limits = device->GetPhysicalDevice()->GetDeviceLimits();
 
         const uint32_t groupCount = m_Pipeline->GetShaderGroups().size();

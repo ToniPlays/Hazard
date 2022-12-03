@@ -14,14 +14,14 @@ namespace HazardRenderer::OpenGL
 	{
 		m_WriteDescriptors[writeDescriptor.Binding] = writeDescriptor;
 	}
-	OpenGLWriteDescriptor& OpenGLDescriptorSet::GetWriteDescriptor(const std::string& name)
+	OpenGLWriteDescriptor* OpenGLDescriptorSet::GetWriteDescriptor(const std::string& name)
 	{
 		for (auto& [binding, descriptor] : m_WriteDescriptors)
 		{
 			if (descriptor.DebugName == name) 
-				return descriptor;
+				return &descriptor;
 		}
-		return OpenGLWriteDescriptor();
+		return nullptr;
 	}
 	void OpenGLDescriptorSet::BindResources(uint32_t programID, bool isCompute)
 	{
@@ -45,13 +45,13 @@ namespace HazardRenderer::OpenGL
 					{
 						if (descriptor.Dimension == 3)
 						{
-							auto& cubemap = value.As<OpenGLCubemapTexture>();
+							auto cubemap = value.As<OpenGLCubemapTexture>();
 							uint32_t glFormat = OpenGLUtils::GetGLFormat(cubemap->GetFormat());
 							glBindImageTexture(index, cubemap->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
 						}
 						else
 						{
-							auto& image = value.As<OpenGLImage2D>();
+							auto image = value.As<OpenGLImage2D>();
 							uint32_t glFormat = OpenGLUtils::GetGLFormat(image->GetFormat());
 							glBindImageTexture(descriptor.ActualBinding + index, image->GetID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, glFormat);
 						}

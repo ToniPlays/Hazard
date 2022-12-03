@@ -107,7 +107,6 @@ namespace Editor {
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
 	}
-
 	float EditorCamera::GetCameraSpeed() const
 	{
 		float speed = m_NormalSpeed;

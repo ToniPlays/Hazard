@@ -71,7 +71,7 @@ namespace HazardRenderer::OpenGL
 
 			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
-			auto& spec = instance->GetSpecifications();
+			auto spec = instance->GetSpecifications();
 			if (spec.CullMode == CullMode::None)
 			{
 				glDisable(GL_CULL_FACE);
@@ -131,7 +131,7 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLPipeline> pipeline = computeInfo.Pipeline;
 		Renderer::Submit([pipeline, info = computeInfo]() mutable {
 
-			auto& shader = pipeline->GetShader().As<OpenGLShader>();
+			auto shader = pipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), true);

@@ -2,7 +2,7 @@
 
 #include "Mono/Core/Mono.h"
 #include "Core/ValueWrapper.h"
-#include "Core/ScriptCache.h"
+#include "Core/Metadata/ManagedType.h"
 
 namespace HazardScript
 {
@@ -24,7 +24,8 @@ namespace HazardScript
 	};
 
 
-	class MonoFieldUtils {
+	class MonoFieldUtils 
+	{
 	public:
 		template<typename T>
 		static T GetFieldValue(MonoObject* target, MonoClassField* field) 
@@ -92,7 +93,8 @@ namespace HazardScript
 		}
 	};
 
-	class MonoArrayUtils {
+	class MonoArrayUtils 
+	{
 	public:
 		template<typename T>
 		static T GetElementValue(MonoArray* arrayObject, size_t index)
@@ -103,9 +105,9 @@ namespace HazardScript
 			MonoClass* arrayClass = mono_object_get_class((MonoObject*)arrayObject);
 			MonoClass* elementClass = mono_class_get_element_class(arrayClass);
 			int32_t size = mono_array_element_size(arrayClass);
-			ManagedType type = ManagedType::FromClass(elementClass);
+			ManagedType managedType = ManagedType::FromClass(elementClass);
 
-			if (type.IsReference()) 
+			if (managedType.IsReference())
 			{
 				MonoObject* elem = mono_array_get(arrayObject, MonoObject*, index);
 				if constexpr (std::is_same<T, MonoObject*>::value)

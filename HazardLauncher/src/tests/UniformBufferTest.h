@@ -153,7 +153,7 @@ namespace UniformBufferTest
 
 			camera->SetData(region);
 
-			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 			commandBuffer->BindVertexBuffer(vertexBuffer);
 			pipeline->GetShader()->Set("u_Texture", 0, image);

@@ -67,24 +67,24 @@ namespace UI
 		ImGui::BeginChild("Toolbar", size);
 		{
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
-			if (ImGui::Button(ICON_FK_PLUS " ADD", { 75.0, 28.0f })) {
+			if (ImGui::Button((const char*)ICON_FK_PLUS " ADD", { 75.0, 28.0f })) {
 
 			}
 		}
 		ImGui::SameLine(0, 5);
-		if (ImGui::Button(ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f })) {
 			OpenImport();
 		}
 		ImGui::SameLine(0, 5);
-		if (ImGui::Button(ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f })) {
 
 		}
 		ImGui::SameLine(0, 15);
-		if (ImGui::Button(ICON_FK_ARROW_CIRCLE_O_LEFT, { 28.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_LEFT, { 28.0, 28.0f })) {
 
 		}
 		ImGui::SameLine(0, 0);
-		if (ImGui::Button(ICON_FK_ARROW_CIRCLE_O_RIGHT, { 28.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_RIGHT, { 28.0, 28.0f })) {
 
 		}
 
@@ -93,7 +93,7 @@ namespace UI
 
 
 		ImGui::SameLine(size.x - 80, 0);
-		if (ImGui::Button(ICON_FK_COG " Settings", { 75.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_COG " Settings", { 75.0, 28.0f })) {
 
 		}
 
@@ -272,7 +272,7 @@ namespace UI
 		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
 		std::vector<std::string> paths = StringUtil::SplitString(relative, '\\');
 
-		if (ImGui::Button(ICON_FK_FOLDER " Content", { 0, 28.0f })) 
+		if (ImGui::Button((const char*)ICON_FK_FOLDER " Content", { 0, 28.0f }))
 		{
 			GoToFolderDepth(m_CurrentPath, 0);
 		}
@@ -281,7 +281,7 @@ namespace UI
 
 			const std::string& path = paths[i];
 			ImGui::SameLine(0.0f, 8.0f);
-			ImGui::TextColored(style.Window.HeaderActive, ICON_FK_CHEVRON_RIGHT);
+			ImGui::TextColored(style.Window.HeaderActive, (const char*)ICON_FK_CHEVRON_RIGHT);
 			ImGui::SameLine(0.0f, 8.0f);
 
 			if (ImGui::Button(path.c_str(), { 0, 28.0f })) {
@@ -310,9 +310,6 @@ namespace UI
 		case AssetType::Image:
 			if (!metadata.IsLoaded)
 			{
-				Application::Get().SubmitMainThread([handle = metadata.Handle]() {
-					AssetManager::GetAsset<Texture2DAsset>(handle);
-					});
 				return EditorAssetManager::GetIcon("Default");
 			}
 			return AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);

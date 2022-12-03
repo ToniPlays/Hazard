@@ -89,7 +89,7 @@ void GUIManager::Render()
 	ImGui::BeginChild("Content", contentSize);
 
 	ImUI::Shift(12.0, 16.0f);
-	ImGui::Text(ICON_FK_SEARCH);
+	ImGui::Text((const char*)ICON_FK_SEARCH);
 	ImGui::SameLine(0, 5.0f);
 	ImUI::ShiftY(-6.0f);
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 4.0f);

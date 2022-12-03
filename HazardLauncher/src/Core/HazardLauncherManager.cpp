@@ -19,16 +19,16 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 	if (!File::Exists(path)) return false;
 	if (File::GetFileExtension(path) != "hzrproj") return false;
 	
-	auto& parent = File::GetDirectoryOf(path);
+	auto parent = File::GetDirectoryOf(path);
 
-	for (auto& project : m_LoadedProjects) {
+	for (auto& project : m_LoadedProjects) 
 		if (project.Path == parent) return false;
-	}
 
 	HazardProject project = {};
 	YAML::Node root = YAML::LoadFile(path.string());
 
-	if (root["General"]) {
+	if (root["General"]) 
+	{
 		YAML::Node node = root["General"];
 		YamlUtils::Deserialize<std::string>(node, "Project name", project.Name, "Unknown");
 		project.Path = parent;

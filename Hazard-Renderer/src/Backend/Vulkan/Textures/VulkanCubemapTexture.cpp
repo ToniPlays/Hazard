@@ -104,7 +104,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
-		auto& commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
+		auto commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
 
 		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, this);
 

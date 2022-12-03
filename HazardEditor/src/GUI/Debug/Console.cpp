@@ -124,23 +124,23 @@ namespace UI
 			}
 
 			ImGui::SameLine(ImGui::GetContentRegionAvail().x - 136, 0);
-			if (ColoredButton(ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Debug;
 			}
 			ImGui::SameLine();
-			if (ColoredButton(ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Info;
 			}
 			ImGui::SameLine();
-			if (ColoredButton(ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Warning;
 			}
 			ImGui::SameLine();
-			if (ColoredButton(ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Error;
 			}
 			ImGui::SameLine();
-			if (ColoredButton(ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 28, 28 })) {
 				m_DisplayFlags ^= MessageFlags_Fatal;
 			}
 

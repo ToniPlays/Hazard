@@ -41,7 +41,6 @@ namespace Hazard
 		m_Window = Window::Create(&rendererInfo);
 		m_Window->Show();
 
-
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
@@ -61,5 +60,9 @@ namespace Hazard
 		m_Window->BeginFrame();
 		Renderer::WaitAndRender();
 		m_Window->Present();
+	}
+	void RenderContextManager::Close()
+	{
+		ShaderLibrary::Clear();
 	}
 }

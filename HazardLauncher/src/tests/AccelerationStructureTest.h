@@ -63,7 +63,7 @@ namespace AccelerationStructureTest
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
 
-		auto& device = window->GetContext()->GetDevice();
+		auto device = window->GetContext()->GetDevice();
 
 		std::cout << "Selected device: " << device->GetDeviceName() << std::endl;
 		HZR_ASSERT(device->SupportsRaytracing(), "Device does not support Raytracing");
@@ -189,7 +189,7 @@ namespace AccelerationStructureTest
 			Input::Update();
 			window->BeginFrame();
 
-			auto& commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
+			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 
 			CameraData cameraData = {};
 			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();

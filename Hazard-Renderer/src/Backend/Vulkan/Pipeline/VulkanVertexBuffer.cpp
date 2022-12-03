@@ -61,9 +61,7 @@ namespace HazardRenderer::Vulkan
 				copyRegion.size = instance->m_Size;
 
 				vkCmdCopyBuffer(commandBuffer, stagingBuffer, instance->m_VertexBuffer, 1, &copyRegion);
-
 				device->FlushCommandBuffer(commandBuffer);
-
 				allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 
 				});
@@ -100,8 +98,8 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		m_LocalData.Release();
 		m_LocalData = Buffer::Copy(copyRegion.Data, copyRegion.Size);
-		Ref<VulkanVertexBuffer> instance = this;
 
+		Ref<VulkanVertexBuffer> instance = this;
 		Renderer::Submit([instance, region = copyRegion]() mutable {
 			instance->SetData_RT(region);
 			});

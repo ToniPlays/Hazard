@@ -27,7 +27,7 @@ namespace Hazard
 		HZR_TIMED_FUNCTION();
 		{
 			//Submit sky lights for drawing
-			auto& view = m_TargetWorld->GetEntitiesWith<SkyLightComponent>();
+			auto view = m_TargetWorld->GetEntitiesWith<SkyLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& sky = e.GetComponent<SkyLightComponent>();
@@ -37,7 +37,7 @@ namespace Hazard
 		}
 		{
 			//Submit directional lights for drawing
-			auto& view = m_TargetWorld->GetEntitiesWith<DirectionalLightComponent>();
+			auto view = m_TargetWorld->GetEntitiesWith<DirectionalLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& dl = e.GetComponent<DirectionalLightComponent>();
@@ -47,7 +47,7 @@ namespace Hazard
 		}
 		{
 			//Submit point lights for drawing
-			auto& view = m_TargetWorld->GetEntitiesWith<PointLightComponent>();
+			auto view = m_TargetWorld->GetEntitiesWith<PointLightComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& pl = e.GetComponent<PointLightComponent>();
@@ -57,7 +57,7 @@ namespace Hazard
 		}
 		{
 			//Submit Sprites for drawing
-			auto& view = m_TargetWorld->GetEntitiesWith<SpriteRendererComponent>();
+			auto view = m_TargetWorld->GetEntitiesWith<SpriteRendererComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& sr = e.GetComponent<SpriteRendererComponent>();
@@ -67,7 +67,7 @@ namespace Hazard
 		}
 		{
 			//Submit Meshes for drawing
-			auto& view = m_TargetWorld->GetEntitiesWith<MeshComponent>();
+			auto view = m_TargetWorld->GetEntitiesWith<MeshComponent>();
 			for (auto& entity : view) {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& mc = e.GetComponent<MeshComponent>();

@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <utility>
 #include "HazardRuntimeError.h"
 #include "Instrumentor.h"
 
@@ -17,6 +18,8 @@
 #endif
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
+#define STATIC_ASSERT(x, Type) HZR_THROW("This no use"); 
+//static_assert(x, __FUNCSIG__)
 #ifdef HZR_DEBUG
 #define HZR_ASSERT(x, m) if(!(x)) { std::cout << (m) << std::endl; assert(false); }
 #else
