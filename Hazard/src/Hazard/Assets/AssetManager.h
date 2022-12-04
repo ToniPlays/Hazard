@@ -46,14 +46,6 @@ namespace Hazard
 		template<typename T>
 		static TypedJobPromise<Ref<T>> GetAssetAsync(AssetHandle handle)
 		{
-			/*return Application::Get().SubmitJob<Ref<T>>(Utils::AssetTypeToString(metadata.Type), [handle](JobSystem* system, Job* job) -> size_t {
-				Ref<T> loadedAsset = AssetManager::GetAsset<T>(handle);
-				bool loaded = loadedAsset;
-				*job->Value<Ref<T>>() = std::move(loadedAsset);
-				return loaded ? 0 : 1;
-				});
-				*/
-
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
 			if (meta.LoadState != LoadState::Loaded)

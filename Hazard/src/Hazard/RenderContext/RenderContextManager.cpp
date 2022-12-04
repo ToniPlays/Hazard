@@ -13,16 +13,16 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	RenderContextManager::RenderContextManager(RenderContextCreateInfo* createInfo) : Module("RenderContextManager")
+	RenderContextManager::RenderContextManager(ApplicationCreateInfo* appInfo, RenderContextCreateInfo* createInfo) : Module("RenderContextManager")
 	{
 		HZR_PROFILE_FUNCTION();
 		//Create window and initialize
 		HZR_CORE_ASSERT(Window::IsRenderAPISupported(createInfo->Renderer), "Selected RenderAPI not supported");
 
-		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hazard";
-		appInfo.BuildVersion = HZR_BUILD_VERSION;
-		appInfo.EventCallback = [](Event& e) { HazardLoop::GetCurrent().OnEvent(e); };
+		HazardRendererAppInfo hzrAppInfo = {};
+		hzrAppInfo.AppName = "Hazard";
+		hzrAppInfo.BuildVersion = HZR_BUILD_VERSION;
+		hzrAppInfo.EventCallback = [](Event& e) { HazardLoop::GetCurrent().OnEvent(e); };
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = createInfo->Title;
@@ -31,8 +31,8 @@ namespace Hazard
 		windowInfo.Color = { 0, 1, 0.5, 1.0 };
 
 		HazardRendererCreateInfo rendererInfo = {};
-		rendererInfo.pAppInfo = &appInfo;
-		rendererInfo.Logging = true;
+		rendererInfo.pAppInfo = &hzrAppInfo;
+		rendererInfo.Logging = appInfo->Logging;
 		rendererInfo.Renderer = createInfo->Renderer;
 		rendererInfo.VSync = createInfo->VSync;
 		rendererInfo.WindowCount = 1;

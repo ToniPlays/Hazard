@@ -435,8 +435,7 @@ namespace Hazard::ImUI
 			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 
-			if (imageInfo.imageView == VK_NULL_HANDLE || imageInfo.sampler == VK_NULL_HANDLE ||
-				!(imageInfo.imageLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL))
+			if (!vkImage->IsValid())
 			{
 				auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
 				const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();

@@ -110,8 +110,6 @@ namespace Hazard
 			}
 			return 0;
 			});
-
-		HZR_CORE_INFO("Shader saved in {0} ms", timer.ElapsedMillis());
 		return promise;
 	}
 }

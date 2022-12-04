@@ -35,6 +35,13 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }
 		VkImage GetVulkanImage() { return m_Image; }
 		uint32_t GetLayerCount() { return 1; }
+		bool IsValid() 
+		{ 
+			return m_ImageDescriptor.sampler != VK_NULL_HANDLE
+				&& m_ImageDescriptor.imageView != VK_NULL_HANDLE
+				&& m_ImageDescriptor.imageLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+				&& m_IsValid;
+		}
 
 		VkImageView GetLayerImageView(uint32_t layer) { return m_LayerImageViews[layer]; }
 		void SetImageLayout(VkImageLayout layout) { m_ImageDescriptor.imageLayout = layout; };
@@ -66,6 +73,7 @@ namespace HazardRenderer::Vulkan
 		VkImage m_Image = VK_NULL_HANDLE;
 		VmaAllocation m_Allocation = nullptr;
 
+		bool m_IsValid = false;
 	};
 }
 #endif

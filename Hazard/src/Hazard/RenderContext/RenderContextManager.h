@@ -9,7 +9,7 @@ namespace Hazard
 	class RenderContextManager : public Module 
 	{
 	public:
-		RenderContextManager(RenderContextCreateInfo* createInfo);
+		RenderContextManager(ApplicationCreateInfo* appInfo, RenderContextCreateInfo* createInfo);
 		~RenderContextManager() = default;
 
 		void PreRender() override;

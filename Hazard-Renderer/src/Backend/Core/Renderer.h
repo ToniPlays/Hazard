@@ -17,38 +17,34 @@ namespace HazardRenderer
 		static void Init(GraphicsContext* context)
 		{
 			uint32_t framesInFlight = 3;
-			s_CommandQueues.resize(framesInFlight);
 
-			for (auto& queue : s_CommandQueues)
-			{
-				queue.RenderCommandQueue = hnew CommandQueue(5 MB);
-				queue.ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
-				queue.ResourceFreeCommandQueue = hnew CommandQueue(5 MB);
-			}
+			s_CommandQueue.RenderCommandQueue = hnew CommandQueue(5 MB);
+			s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
+			s_CommandQueue.ResourceFreeCommandQueue = hnew CommandQueue(5 MB);
 
-			s_CurrentQueue = 0;
-			m_GraphicsContext = context;
+			s_GraphicsContext = context;
 		}
 		static void WaitAndRender()
 		{
+			s_IsExecuting = true;
 			HZR_PROFILE_FUNCTION();
-			auto& queue = s_CommandQueues[s_CurrentQueue];
-			s_CurrentQueue = (s_CurrentQueue + 1) % s_CommandQueues.size();
 			{
 				HZR_PROFILE_FUNCTION("ResourceCreateQueue::Execute()");
-				queue.ResourceCreateCommandQueue->Excecute();
-				queue.ResourceCreateCommandQueue->Clear();
+				s_CommandQueue.ResourceCreateCommandQueue->Excecute();
+				s_CommandQueue.ResourceCreateCommandQueue->Clear();
 			}
 			{
 				HZR_PROFILE_FUNCTION("RenderCommandQueue::Execute()");
-				queue.RenderCommandQueue->Excecute();
-				queue.RenderCommandQueue->Clear();
+				s_CommandQueue.RenderCommandQueue->Excecute();
+				s_CommandQueue.RenderCommandQueue->Clear();
 			}
 			{
 				HZR_PROFILE_FUNCTION("ResourceFreeQueue::Execute()");
-				queue.ResourceFreeCommandQueue->Excecute();
-				queue.ResourceFreeCommandQueue->Clear();
+				s_CommandQueue.ResourceFreeCommandQueue->Excecute();
+				s_CommandQueue.ResourceFreeCommandQueue->Clear();
 			}
+			s_IsExecuting = false;
+			s_IsExecuting.notify_all();
 		}
 
 		template<typename FuncT>
@@ -59,8 +55,11 @@ namespace HazardRenderer
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
+
+			s_IsExecuting.wait(true);
+
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
-			auto storageBuffer = s_CommandQueues[s_CurrentQueue].RenderCommandQueue->Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = s_CommandQueue.RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
@@ -71,8 +70,10 @@ namespace HazardRenderer
 				(*pFunc)();
 				//pFunc->~FuncT();
 			};
+			s_IsExecuting.wait(true);
+
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
-			auto storageBuffer = s_CommandQueues[s_CurrentQueue].ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = s_CommandQueue.ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
@@ -83,14 +84,15 @@ namespace HazardRenderer
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
+			s_IsExecuting.wait(true);
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
-			auto storageBuffer = s_CommandQueues[s_CurrentQueue].ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = s_CommandQueue.ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 	private:
-		static inline GraphicsContext* m_GraphicsContext = nullptr;
-		static inline std::vector<CommandQueues> s_CommandQueues;
-		static inline uint32_t s_CurrentQueue = 0;
+		static inline GraphicsContext* s_GraphicsContext = nullptr;
+		static inline CommandQueues s_CommandQueue;
 		static inline std::mutex s_ResourceMutex;
+		static inline std::atomic_bool s_IsExecuting = false;
 	};
 }

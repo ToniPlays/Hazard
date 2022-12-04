@@ -213,9 +213,11 @@ Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 
 void EditorAssetManager::RefreshEditorAssets()
 {
+	
 	//Compile non cached shaders
 	std::unordered_map<AssetType, std::vector<Ref<Asset>>> assetsToUpdate;
 	{
+		Timer timer;
 		for (auto& file : File::GetAllInDirectory("res/Shaders", true))
 		{
 			switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
@@ -234,6 +236,7 @@ void EditorAssetManager::RefreshEditorAssets()
 				break;
 			}
 		}
+		HZR_INFO("Refresh editor assets in {0} ms", timer.ElapsedMillis());
 	}
 	auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
 

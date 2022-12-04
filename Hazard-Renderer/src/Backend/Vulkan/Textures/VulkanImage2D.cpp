@@ -35,11 +35,15 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
+
 			instance->UploadImageData_RT(instance->m_LocalBuffer,
 				instance->m_MipLevels > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
 
 			if (instance->m_MipLevels > 1)
+			{
+				instance->m_IsValid = false;
 				instance->GenerateMips_RT();
+			}
 			});
 
 	}
@@ -207,6 +211,7 @@ namespace HazardRenderer::Vulkan
 
 			VulkanContext::GetLogicalDevice()->FlushCommandBuffer(commandBuffer);
 		}
+		m_IsValid = true;
 	}
 	void VulkanImage2D::UploadImageData_RT(Buffer data, VkImageLayout imageLayout)
 	{
@@ -289,6 +294,8 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateImageView(device, &viewInfo, nullptr, &m_ImageDescriptor.imageView), "Failed to create VkImageView");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_DebugName), m_ImageDescriptor.imageView);
+
+		m_IsValid = true;
 	}
 	void VulkanImage2D::CreateSampler_RT()
 	{
@@ -394,7 +401,6 @@ namespace HazardRenderer::Vulkan
 
 
 		VulkanContext::GetInstance()->GetLogicalDevice()->FlushCommandBuffer(blitCmd);
-
 		CreateImageView_RT();
 	}
 }

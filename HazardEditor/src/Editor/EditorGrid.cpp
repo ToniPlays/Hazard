@@ -16,13 +16,13 @@ namespace Editor
 		float Zoom = 1.0f;
 	};
 
-	Grid::~Grid() 
+	Grid::~Grid()
 	{
 
 	}
 
 	void Grid::Render(const Editor::EditorCamera& camera)
-	{	
+	{
 		if (!m_ShowGrid || !m_Pipeline) return;
 
 		constexpr double log = 10.0;
@@ -37,37 +37,45 @@ namespace Editor
 		m_GridUniformBuffer->SetData(region);
 		HRenderer::SubmitPipeline(m_Pipeline, 6);
 	}
-	
+
 	void Grid::Invalidate(Ref<RenderPass> renderPass)
 	{
-		if (m_Pipeline) 
+		if (m_Pipeline)
 		{
 			PipelineSpecification spec = m_Pipeline->GetSpecifications();
 			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
 
-		Ref<ShaderAsset> shader = AssetManager::GetAsset<AssetPointer>("res/Shaders/Grid.glsl");
+		TypedJobPromise<Ref<AssetPointer>> promise = AssetManager::GetAssetAsync<AssetPointer>("res/Shaders/Grid.glsl");
 
-		PipelineSpecification specs = {};
-		specs.DebugName = "Grid";
-		specs.DrawType = DrawType::Fill;
-		specs.Usage = PipelineUsage::GraphicsBit;
-		specs.CullMode = CullMode::None;
-		specs.DepthOperator = DepthOp::Less;
-		specs.pTargetRenderPass = nullptr;
-		specs.ShaderCodeCount = shader->ShaderCode.size();
-		specs.pShaderCode = shader->ShaderCode.data();
+		promise.Then([this](JobSystem* system, Job* job) -> size_t {
 
-		m_Pipeline = Pipeline::Create(&specs);
+			Job* dependency = system->GetJob(job->Dependency);
+			auto shader = *dependency->Value<Ref<ShaderAsset>>();
 
-		UniformBufferCreateInfo uboInfo = {};
-		uboInfo.Name = "Grid";
-		uboInfo.Set = 2;
-		uboInfo.Binding = 1;
-		uboInfo.Size = sizeof(GridData);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
+			PipelineSpecification specs = {};
+			specs.DebugName = "Grid";
+			specs.DrawType = DrawType::Fill;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::None;
+			specs.DepthOperator = DepthOp::Less;
+			specs.pTargetRenderPass = nullptr;
+			specs.ShaderCodeCount = shader->ShaderCode.size();
+			specs.pShaderCode = shader->ShaderCode.data();
 
-		m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
+			m_Pipeline = Pipeline::Create(&specs);
+
+			UniformBufferCreateInfo uboInfo = {};
+			uboInfo.Name = "Grid";
+			uboInfo.Set = 2;
+			uboInfo.Binding = 1;
+			uboInfo.Size = sizeof(GridData);
+			uboInfo.Usage = BufferUsage::DynamicDraw;
+
+			m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
+			return 0;
+
+			});
 	}
 }

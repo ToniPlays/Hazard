@@ -66,7 +66,11 @@ void HazardEditorApplication::PreInit()
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
-	appInfo.Logging = true;
+#ifdef HZR_RELEASE
+	appInfo.Logging = false;
+#else
+	appInfo.Logging = false;
+#endif
 
 	RenderContextCreateInfo renderContextInfo = {};
 	renderContextInfo.Renderer = renderAPI;
@@ -95,7 +99,6 @@ void HazardEditorApplication::PreInit()
 	createInfo.RendererInfo = &rendererInfo;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
-
 
 	EditorAssetManager::ImportAssets();
 	ShaderCompiler::SetCacheLocation("Library/Shaders");

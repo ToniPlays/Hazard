@@ -142,8 +142,11 @@ namespace Hazard
 			promises.push_back(waitPromise);
 		}
 
+		Timer timer;
 		for (auto& promise : promises)
 			promise.Wait();
+
+		HZR_CORE_INFO("Shader library initialized in {0} ms", timer.ElapsedMillis());
 	}
 	Ref<HazardRenderer::Pipeline> ShaderLibrary::GetPipeline(const std::string& name)
 	{
