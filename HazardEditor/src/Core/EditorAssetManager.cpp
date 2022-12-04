@@ -13,33 +13,46 @@ using namespace Hazard;
 
 void EditorAssetManager::ImportAssets()
 {
-	std::function<void(const std::filesystem::path)> importFunc = [&](const std::filesystem::path& root)
-	{
-		AssetManager::ImportAsset(root);
-		if (File::IsDirectory(root))
-		{
-			for (auto& file : File::GetAllInDirectory(root))
-				importFunc(file);
-		}
-	};
-
-	for (auto& file : File::GetAllInDirectory("res/Icons"))
-		importFunc(file);
-	for (auto& file : File::GetAllInDirectory("res/Mesh"))
-		importFunc(file);
-	for (auto& file : File::GetAllInDirectory("res/Shaders"))
-		importFunc(file);
-	for (auto& file : File::GetAllInDirectory("res/Textures"))
-		importFunc(file);
+	for (auto& file : File::GetAllInDirectory("res/Icons", true))
+		AssetManager::ImportAsset(file);
+	for (auto& file : File::GetAllInDirectory("res/Mesh", true))
+		AssetManager::ImportAsset(file);
+	for (auto& file : File::GetAllInDirectory("res/Shaders", true))
+		AssetManager::ImportAsset(file);
+	for (auto& file : File::GetAllInDirectory("res/Textures", true))
+		AssetManager::ImportAsset(file);
 }
 void EditorAssetManager::Init()
 {
-	m_Icons["Default"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/textureBG.png");
-	m_Icons["Folder"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/folder.png");
-	m_Icons["World"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/world.png");
-	m_Icons["Script"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/csharp.png");
-	m_Icons["Camera"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/camera.png");
-	m_Icons["DirectionalLight"] = AssetManager::GetAsset<Texture2DAsset>("res/Icons/directionalLight.png");
+	struct EditorTexture
+	{
+		const char* Key;
+		const char* Path;
+	};
+
+	std::vector<EditorTexture> texturesToLoad = {
+		{ "Default", "res/Icons/textureBG.png"},
+		{ "Folder", "res/Icons/folder.png"},
+		{ "World", "res/Icons/world.png"},
+		{ "Script", "res/Icons/csharp.png"},
+		{ "Camera", "res/Icons/camera.png"},
+		{ "DirectionalLight", "res/Icons/directionalLight.png"}
+	};
+	std::vector<JobPromise> promises;
+	promises.reserve(texturesToLoad.size());
+	for (auto& texture : texturesToLoad)
+	{
+		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
+		auto waitPromise = promise.Then([texture](JobSystem* system, Job* job) -> size_t {
+			Job* dependency = system->GetJob(job->Dependency);
+			s_Icons[texture.Key] = std::move(*dependency->Value<Ref<Texture2DAsset>>());
+			return 0;
+			});
+
+		promises.push_back(waitPromise);
+	}
+	for (auto& promise : promises)
+		promise.Wait();
 
 	RefreshEditorAssets();
 }
@@ -193,9 +206,9 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 
 Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 {
-	if (m_Icons.find(name) != m_Icons.end())
-		return m_Icons[name];
-	return m_Icons["Default"];
+	if (s_Icons.find(name) != s_Icons.end())
+		return s_Icons[name];
+	return s_Icons["Default"];
 }
 
 void EditorAssetManager::RefreshEditorAssets()
@@ -203,8 +216,7 @@ void EditorAssetManager::RefreshEditorAssets()
 	//Compile non cached shaders
 	std::unordered_map<AssetType, std::vector<Ref<Asset>>> assetsToUpdate;
 	{
-
-		for (auto& file : File::GetAllInDirectory("res/Shaders"))
+		for (auto& file : File::GetAllInDirectory("res/Shaders", true))
 		{
 			switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
 			{
@@ -233,11 +245,8 @@ void EditorAssetManager::RefreshEditorAssets()
 		promises.reserve(assets.size());
 
 		for (auto& asset : assets)
-		{
-			promises.push_back(Application::Get().SubmitMainThread(tag.c_str(), [asset]() -> size_t {
-				return AssetManager::SaveAsset(asset) == false;
-				}));
-		}
+			promises.push_back(AssetManager::SaveAssetAsync(asset));
+
 		progressPanel->AddProcesses(type, promises);
 	}
 }

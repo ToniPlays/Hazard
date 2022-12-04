@@ -3,93 +3,94 @@
 #include "CommandQueue.h"
 #include "GraphicsContext.h"
 
-#define HZR_RENDER_THREAD_ONLY() { assert(!Renderer::s_CanSubmit); }
-
-namespace HazardRenderer 
+namespace HazardRenderer
 {
-	class Renderer 
+	struct CommandQueues
+	{
+		CommandQueue* RenderCommandQueue;
+		CommandQueue* ResourceCreateCommandQueue;
+		CommandQueue* ResourceFreeCommandQueue;
+	};
+	class Renderer
 	{
 	public:
-
 		static void Init(GraphicsContext* context)
 		{
-			s_RenderCommandQueue = hnew CommandQueue(5 MB);
-			s_ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
-			s_ResourceFreeCommandQueue = hnew CommandQueue(5 MB);
+			uint32_t framesInFlight = 3;
+			s_CommandQueues.resize(framesInFlight);
 
+			for (auto& queue : s_CommandQueues)
+			{
+				queue.RenderCommandQueue = hnew CommandQueue(5 MB);
+				queue.ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
+				queue.ResourceFreeCommandQueue = hnew CommandQueue(5 MB);
+			}
+
+			s_CurrentQueue = 0;
 			m_GraphicsContext = context;
 		}
-
-		static void BeginFrame() 
-		{
-			//m_GraphicsContext->PrepareFrame();
-		}
-
 		static void WaitAndRender()
 		{
 			HZR_PROFILE_FUNCTION();
-			s_CanSubmit = false;
+			auto& queue = s_CommandQueues[s_CurrentQueue];
+			s_CurrentQueue = (s_CurrentQueue + 1) % s_CommandQueues.size();
 			{
 				HZR_PROFILE_FUNCTION("ResourceCreateQueue::Execute()");
-				s_ResourceCreateCommandQueue->Excecute();
+				queue.ResourceCreateCommandQueue->Excecute();
+				queue.ResourceCreateCommandQueue->Clear();
 			}
 			{
 				HZR_PROFILE_FUNCTION("RenderCommandQueue::Execute()");
- 				s_RenderCommandQueue->Excecute();
+				queue.RenderCommandQueue->Excecute();
+				queue.RenderCommandQueue->Clear();
 			}
 			{
 				HZR_PROFILE_FUNCTION("ResourceFreeQueue::Execute()");
-				s_ResourceFreeCommandQueue->Excecute();
+				queue.ResourceFreeCommandQueue->Excecute();
+				queue.ResourceFreeCommandQueue->Clear();
 			}
-			s_ResourceCreateCommandQueue->Clear();
-			s_RenderCommandQueue->Clear();
-			s_ResourceFreeCommandQueue->Clear();
-			s_CanSubmit = true;
 		}
 
 		template<typename FuncT>
-		static void Submit(FuncT func) 
+		static void Submit(FuncT func)
 		{
-			HZR_ASSERT(s_CanSubmit, "Cannot submit while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
-			auto storageBuffer = s_RenderCommandQueue->Allocate(renderCmd, sizeof(func));
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			auto storageBuffer = s_CommandQueues[s_CurrentQueue].RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
-		static void SubmitResourceCreate(FuncT func) 
+		static void SubmitResourceCreate(FuncT func)
 		{
-			HZR_ASSERT(s_CanSubmit, "Cannot submit create while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-				pFunc->~FuncT();
+				//pFunc->~FuncT();
 			};
-			auto storageBuffer = s_ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			auto storageBuffer = s_CommandQueues[s_CurrentQueue].ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 		template<typename FuncT>
-		static void SubmitResourceFree(FuncT func) 
+		static void SubmitResourceFree(FuncT func)
 		{
-			HZR_ASSERT(s_CanSubmit, "Cannot submit free while rendering");
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
-			auto storageBuffer = s_ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			auto storageBuffer = s_CommandQueues[s_CurrentQueue].ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 	private:
 		static inline GraphicsContext* m_GraphicsContext = nullptr;
-		static inline CommandQueue* s_RenderCommandQueue;
-		static inline CommandQueue* s_ResourceCreateCommandQueue;
-		static inline CommandQueue* s_ResourceFreeCommandQueue;
-
-	public:
-		static inline bool s_CanSubmit = true;
+		static inline std::vector<CommandQueues> s_CommandQueues;
+		static inline uint32_t s_CurrentQueue = 0;
+		static inline std::mutex s_ResourceMutex;
 	};
 }

@@ -155,9 +155,9 @@ namespace HazardScript
 			m_ArrayStorage.resize(elements);
 			for (size_t i = 0; i < elements; i++)
 			{
-				if (!m_ArrayStorage[i].Valid())
+				if (!m_ArrayStorage[i]->Valid())
 				{
-					m_ArrayStorage[i] = FieldValueStorage(i, m_Field);
+					m_ArrayStorage[i] = Ref<FieldValueStorage>::Create(i, m_Field);
 				}
 			}
 
@@ -192,7 +192,7 @@ namespace HazardScript
 		bool HasValue(MonoObject* target, size_t index)
 		{
 			if (index >= GetLength(target)) return false;
-			return m_ArrayStorage[index].HasValue();
+			return m_ArrayStorage[index]->HasValue();
 		}
 
 		template<typename T>
@@ -205,7 +205,7 @@ namespace HazardScript
 			if constexpr (std::is_same<T, ValueWrapper>::value)
 				return m_ArrayStorage[index];
 			else
-				return m_ArrayStorage[index].GetValue<T>(target);
+				return m_ArrayStorage[index]->GetValue<T>(target);
 		}
 
 		template<typename T>
@@ -222,7 +222,7 @@ namespace HazardScript
 		template<typename T>
 		void SetStoredValue(size_t index, T value)
 		{
-			m_ArrayStorage[index].SetStoredValue<T>(value);
+			m_ArrayStorage[index]->SetStoredValue<T>(value);
 		}
 		template<typename T>
 		void SetLiveValue(MonoObject* target, size_t index, T value)
@@ -237,6 +237,6 @@ namespace HazardScript
 
 	private:
 		FieldMetadata* m_Field;
-		std::vector<FieldValueStorage> m_ArrayStorage;
+		std::vector<Ref<FieldValueStorage>> m_ArrayStorage;
 	};
 }

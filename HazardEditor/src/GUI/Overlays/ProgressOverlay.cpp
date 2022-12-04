@@ -19,8 +19,6 @@ namespace UI
 	}
 	void ProgressOverlay::OnPanelRender()
 	{
-		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-
 		for (auto& [type, jobs] : m_CurrentProcesses)
 		{
 			if (jobs.size() == 0) continue;
@@ -28,15 +26,20 @@ namespace UI
 			if (DrawProgressCard(Hazard::Utils::AssetTypeToString(type), jobs))
 				m_CurrentProcesses[type].clear();
 		}
-		ImGui::PopFont();
+		
 	}
 	bool ProgressOverlay::DrawProgressCard(const char* title, std::vector<JobPromise>& promises)
 	{
 		uint32_t completedJobs = 0;
+		float totalProgress = 0;
 		for (JobPromise& promise : promises)
-			completedJobs += promise.Status() == JobStatus::Done;
+		{
+			completedJobs += promise.Status() >= JobStatus::Done;
+			totalProgress += promise.Progress();
+		}
 
 		std::string progress = fmt::format("{0}/{1}", completedJobs, promises.size());
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 
 		float width = ImGui::CalcTextSize(progress.c_str()).x;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -44,8 +47,10 @@ namespace UI
 		ImGui::Text(title);
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(panelWidth - width);
-		ImGui::Text("%s", progress.c_str());
-		ImGui::ProgressBar((float)completedJobs / (float)promises.size(), { panelWidth, 32 });
+		ImGui::Text(progress.c_str());
+		ImGui::PopFont();
+
+		ImGui::ProgressBar(totalProgress / (float)promises.size(), { panelWidth, 24 });
 
 		return completedJobs == promises.size();
 	}
@@ -53,5 +58,10 @@ namespace UI
 	{
 		auto& a = m_CurrentProcesses[type];
 		a.insert(a.end(), promises.begin(), promises.end());
+	}
+	void ProgressOverlay::AddProcess(AssetType type, const JobPromise& promise)
+	{
+		auto& a = m_CurrentProcesses[type];
+		a.push_back(promise);
 	}
 }

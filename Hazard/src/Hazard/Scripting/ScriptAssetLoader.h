@@ -12,7 +12,9 @@ namespace Hazard
 		~ScriptAssetLoader() = default;
 
 		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset);
-		bool Save(Ref<Asset>& asset);
+		JobPromise LoadAsync(AssetMetadata& metadata);
+		bool Save(Ref<Asset>& asset) override;
+		JobPromise SaveAsync(Ref<Asset>& asset) override;
 
 	private:
 		ScriptEngine* m_Engine;

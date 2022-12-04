@@ -73,6 +73,11 @@ namespace Hazard
 		asset = Ref<Mesh>::Create(&meshInfo);
 		return LoadType::Source;
 	}
+	JobPromise MeshAssetLoader::LoadAsync(AssetMetadata& metadata)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
+	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
@@ -133,5 +138,10 @@ namespace Hazard
 
 		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 		return false;
+	}
+	JobPromise MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
 	}
 }

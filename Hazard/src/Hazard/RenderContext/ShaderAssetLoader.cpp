@@ -15,38 +15,55 @@ namespace Hazard
 	LoadType ShaderAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
-		using namespace HazardRenderer;
+		JobPromise promise = LoadAsync(metadata);
+		promise.Wait();
 
-		RenderAPI api = GraphicsContext::GetRenderAPI();
-		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
+		return (LoadType)promise.Status();
+	}
+	JobPromise ShaderAssetLoader::LoadAsync(AssetMetadata& metadata)
+	{
+		return Application::Get().SubmitJob<Ref<ShaderAsset>>("Shader", [path = metadata.Path, handle = metadata.Handle](JobSystem* system, Job* job)->size_t {
+			job->Progress = 0;
 
-		auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, api);
-		if (File::Exists(cachePath))
-		{
-			CachedBuffer buffer = File::ReadBinaryFile(cachePath);
-			AssetPackElement element = buffer.Read<AssetPackElement>();
+			using namespace HazardRenderer;
 
-			while (buffer.Available())
+			RenderAPI api = GraphicsContext::GetRenderAPI();
+			Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
+
+			auto cachePath = ShaderCompiler::GetCachedFilePath(path, api);
+			if (File::Exists(cachePath))
 			{
-				ShaderCode code = buffer.Read<ShaderCode>();
-				Buffer shaderCode = buffer.Read<Buffer>(code.Length);
+				CachedBuffer buffer = File::ReadBinaryFile(cachePath);
+				AssetPackElement element = buffer.Read<AssetPackElement>();
 
-				shaderAsset->ShaderCode.push_back({ code.Stage, Buffer::Copy(shaderCode) });
+				while (buffer.Available())
+				{
+					ShaderCode code = buffer.Read<ShaderCode>();
+					Buffer shaderCode = buffer.Read<Buffer>(code.Length);
+
+					shaderAsset->ShaderCode.push_back({ code.Stage, Buffer::Copy(shaderCode) });
+				}
+
+				shaderAsset->m_Handle = element.Handle;
+				shaderAsset->m_Type = (AssetType)element.Type;
+				*job->Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
+				return (size_t)LoadType::Cache;
 			}
 
-			shaderAsset->m_Handle = element.Handle;
-			shaderAsset->m_Type = (AssetType)element.Type;
-			asset = shaderAsset;
-			return LoadType::Cache;
-		}
+			shaderAsset->ShaderCode = ShaderCompiler::GetShaderBinariesFromSource(path, api);
+			shaderAsset->m_Type = AssetType::Shader;
 
-		shaderAsset->ShaderCode = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, api);
-		shaderAsset->m_Type = AssetType::Shader;
-
-		asset = shaderAsset;
-		return LoadType::Source;
+			*job->Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
+			return (size_t)LoadType::Source;
+		});
 	}
 	bool ShaderAssetLoader::Save(Ref<Asset>& asset)
+	{
+		auto promise = SaveAsync(asset);
+		promise.Wait();
+		return promise.ReturnCode() == 0;
+	}
+	JobPromise ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
@@ -54,39 +71,47 @@ namespace Hazard
 
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
-		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
-		{
-			auto binaries = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, (RenderAPI)api);
-			size_t assetSize = ShaderCompiler::GetBinaryLength(binaries);
-			CachedBuffer dataBuffer(sizeof(AssetPackElement) + assetSize);
+		std::vector<JobPromise> promises;
 
-			AssetPackElement element = {};
-			element.Type = (uint32_t)AssetType::Shader;
-			element.Handle = metadata.Handle;
-			element.AssetDataSize = assetSize;
+		auto promise = Application::Get().SubmitJob("Shader", [metadata](JobSystem* system, Job* job) -> size_t {
 
-			dataBuffer.Write(element);
-
-			for (auto& [shaderStage, binary] : binaries)
+			for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
 			{
-				ShaderCode code = { shaderStage, binary.Size };
+				JOB_PROGRESS(job, api, RenderAPI::Last);
 
-				dataBuffer.Write(code);
-				dataBuffer.Write(binary.Data, binary.Size);
+				auto binaries = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, (RenderAPI)api);
+				size_t assetSize = ShaderCompiler::GetBinaryLength(binaries);
+				CachedBuffer dataBuffer(sizeof(AssetPackElement) + assetSize);
+
+				AssetPackElement element = {};
+				element.Type = (uint32_t)AssetType::Shader;
+				element.Handle = metadata.Handle;
+				element.AssetDataSize = assetSize;
+
+				dataBuffer.Write(element);
+
+				for (auto& [shaderStage, binary] : binaries)
+				{
+					ShaderCode code = { shaderStage, binary.Size };
+					dataBuffer.Write(code);
+					dataBuffer.Write(binary.Data, binary.Size);
+				}
+
+				auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, (RenderAPI)api);
+
+				if (!File::DirectoryExists(cachePath.parent_path()))
+					File::CreateDir(cachePath.parent_path());
+
+				File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
+
+				for (auto& code : binaries)
+					code.ShaderCode.Release();
+
 			}
+			return 0;
+			});
 
-			auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, (RenderAPI)api);
-
-			if (!File::DirectoryExists(cachePath.parent_path()))
-				File::CreateDir(cachePath.parent_path());
-
-			File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
-
-			for (auto& code : binaries)
-				code.ShaderCode.Release();
-
-		}
 		HZR_CORE_INFO("Shader saved in {0} ms", timer.ElapsedMillis());
-		return true;
+		return promise;
 	}
 }

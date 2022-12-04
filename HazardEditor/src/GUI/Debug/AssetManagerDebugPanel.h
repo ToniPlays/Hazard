@@ -1,5 +1,8 @@
 
 #include "Hazard.h"
+#include "Hazard/Assets/Asset.h"
+
+struct ImColor;
 
 namespace UI 
 {
@@ -11,6 +14,10 @@ namespace UI
 		void Update() override {};
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override { return false; };
+
+	private:
+		ImColor GetLoadStateColor(const Hazard::LoadState& state);
+
 	private:
 		std::string m_SearchValue;
 	};

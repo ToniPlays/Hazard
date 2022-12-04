@@ -12,14 +12,14 @@
 #include "Platform/PlatformUtils.h"
 #endif
 
-std::string File::OpenFileDialog() 
+std::string File::OpenFileDialog()
 {
 	auto f = pfd::open_file("Open file", "");
 	if (f.result().size() == 0) return "";
 	return f.result()[0];
 }
 
-std::string File::OpenFileDialog(const std::vector<std::string>& filters) 
+std::string File::OpenFileDialog(const std::vector<std::string>& filters)
 {
 	auto f = pfd::open_file("Open file", "", filters, pfd::opt::none);
 	if (f.result().size() == 0) return "";
@@ -30,7 +30,7 @@ std::string File::OpenFolderDialog(const std::string& title) {
 	if (f.result() == "") return "";
 	return f.result();
 }
-std::string File::SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath) 
+std::string File::SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath)
 {
 	auto f = pfd::save_file("Save file", defaultPath.string(), filters, true);
 	return f.result();
@@ -48,11 +48,11 @@ bool File::IsDirectory(const std::filesystem::path& path)
 {
 	return std::filesystem::is_directory(path);
 }
-std::filesystem::path File::AppendToName(const std::filesystem::path& path, const std::string& append) 
+std::filesystem::path File::AppendToName(const std::filesystem::path& path, const std::string& append)
 {
 	auto parentPath = GetDirectoryOf(path);
 	auto name = GetNameNoExt(path);
-	auto extension = IsDirectory(path) ? "" :"." + GetFileExtension(path);
+	auto extension = IsDirectory(path) ? "" : "." + GetFileExtension(path);
 
 	return parentPath / std::filesystem::path(name + append + extension);
 }
@@ -61,7 +61,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32
 {
 	std::ofstream out(path, std::ios::out | std::ios::binary);
 
-	if (out.is_open()) 
+	if (out.is_open())
 	{
 		out.write((char*)data.data(), data.size() * sizeof(uint32_t));
 		out.flush();
@@ -74,7 +74,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 {
 	std::ofstream out(path, std::ios::out | std::ios::binary);
 
-	if (out.is_open()) 
+	if (out.is_open())
 	{
 		out.write((char*)data, size);
 		out.flush();
@@ -83,7 +83,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t
 	}
 	return false;
 }
-bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest) 
+bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest)
 {
 
 	std::filesystem::path destFolder = GetDirectoryOf(dest);
@@ -110,7 +110,7 @@ bool File::WriteFile(const std::filesystem::path& file, const std::string& conte
 }
 
 bool File::Move(const std::filesystem::path& src, const std::filesystem::path& dst) {
-	if (!File::Exists(dst)) 
+	if (!File::Exists(dst))
 		return false;
 
 	std::filesystem::rename(std::filesystem::canonical(src), std::filesystem::canonical(dst));
@@ -210,12 +210,18 @@ std::string File::GetFileExtension(const std::filesystem::path& file) {
 	return file.string().substr(file.string().find_last_of('.') + 1);
 }
 
-std::vector<std::filesystem::path> File::GetAllInDirectory(const std::filesystem::path& path)
+std::vector<std::filesystem::path> File::GetAllInDirectory(const std::filesystem::path& path, bool recursive)
 {
 	std::vector<std::filesystem::path> result;
-	for (const auto& iter : std::filesystem::directory_iterator(path)) {
-		result.emplace_back(iter);
+	if (recursive)
+	{
+		for (const auto& iter : std::filesystem::recursive_directory_iterator(path))
+			result.emplace_back(iter);
+		return result;
 	}
+
+	for (const auto& iter : std::filesystem::directory_iterator(path))
+		result.emplace_back(iter);
 	return result;
 }
 
@@ -223,7 +229,7 @@ bool File::CreateDir(const std::filesystem::path& dir)
 {
 	return std::filesystem::create_directories(dir);
 }
-void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options) 
+void File::Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options)
 {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
@@ -272,20 +278,20 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 	);
 	return id;
 }
-void File::WaitForSubprocess(void* id) 
+void File::WaitForSubprocess(void* id)
 {
 	WaitForSingleObject(id, 0);
 }
 
-bool File::HasEnvinronmentVar(const std::string& key) 
+bool File::HasEnvinronmentVar(const std::string& key)
 {
 	return PlatformUtils::HasEnvVariable(key);
 }
-std::string File::GetEnvironmentVar(const std::string& key) 
+std::string File::GetEnvironmentVar(const std::string& key)
 {
 	return PlatformUtils::GetEnvVariable(key);
 }
-bool File::SetEnvironmentVar(const std::string& key, const std::string& value) 
+bool File::SetEnvironmentVar(const std::string& key, const std::string& value)
 {
 	return PlatformUtils::SetEnvVariable(key, value);
 }

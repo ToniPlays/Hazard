@@ -277,8 +277,6 @@ namespace HazardRenderer::Vulkan
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_ImageDescriptor.imageLayout,
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 			subRange);
-
-		std::cout << "Mipmap Transition of " << m_DebugName << " to " << VkUtils::ImageLayoutToString(m_ImageDescriptor.imageLayout) << std::endl;
 	}
 }
 #endif

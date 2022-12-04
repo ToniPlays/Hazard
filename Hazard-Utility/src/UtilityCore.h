@@ -10,7 +10,7 @@
 #include "Instrumentor.h"
 
 #define HZR_PROFILE
-#define HZR_OPTICK
+#define HZR_OPTICK 
 
 
 #ifdef HZR_OPTICK

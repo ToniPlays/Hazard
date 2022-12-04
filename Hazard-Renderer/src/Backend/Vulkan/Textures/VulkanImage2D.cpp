@@ -23,6 +23,7 @@ namespace HazardRenderer::Vulkan
 		m_MipLevels = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
 		m_Usage = info->Usage;
 
+		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 
@@ -34,7 +35,7 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanImage2D> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
-			instance->UploadImageData_RT(instance->m_LocalBuffer, 
+			instance->UploadImageData_RT(instance->m_LocalBuffer,
 				instance->m_MipLevels > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
 
 			if (instance->m_MipLevels > 1)
@@ -47,12 +48,33 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		if (!m_Image) return;
 
-		Ref<VulkanImage2D> instance = this;
-		Renderer::SubmitResourceFree([instance]() mutable {
-			instance->Release_RT();
+		Renderer::SubmitResourceFree([descriptor = m_ImageDescriptor, mips = m_PerMipImageView, layers = m_LayerImageViews, image = m_Image, alloc = m_Allocation]() mutable {
+			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
+			vkDestroyImageView(device, descriptor.imageView, nullptr);
+			vkDestroySampler(device, descriptor.sampler, nullptr);
+
+			for (auto& [index, view] : mips)
+			{
+				if (!view) continue;
+				vkDestroyImageView(device, view, nullptr);
+			}
+			for (auto& view : layers)
+			{
+				if (!view) continue;
+				vkDestroyImageView(device, view, nullptr);
+			}
+
+			VulkanAllocator allocator("VulkanImage2D");
+			allocator.DestroyImage(image, alloc);
+
 			});
 
+		m_Image = VK_NULL_HANDLE;
+		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
+		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 		m_LayerImageViews.clear();
+		m_PerMipImageView.clear();
 	}
 	void VulkanImage2D::Invalidate()
 	{
@@ -107,8 +129,6 @@ namespace HazardRenderer::Vulkan
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
-
-
 	}
 	void VulkanImage2D::Resize_RT(uint32_t width, uint32_t height)
 	{
@@ -164,7 +184,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		createInfo.usage = flags;
 
-		m_ImageDescriptor.imageLayout = m_Usage == ImageUsage::Storage ? VK_IMAGE_LAYOUT_GENERAL :  VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_ImageDescriptor.imageLayout = m_Usage == ImageUsage::Storage ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 		m_Allocation = allocator.AllocateImage(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Image);
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_DebugName), m_Image);

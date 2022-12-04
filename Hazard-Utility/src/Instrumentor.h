@@ -1,7 +1,7 @@
 #pragma once
 
-#include "File.h"
 #include "Profiling/MemoryDiagnostic.h"
+#include "File.h"
 
 #include <algorithm>
 #include <chrono>
@@ -32,14 +32,14 @@ public:
 	Instrumentor(const Instrumentor&) = delete;
 	Instrumentor(Instrumentor&&) = delete;
 
-	void BeginSession(const std::string& name, const std::filesystem::path& filePath) {
+	void BeginSession(const std::string& name, const std::filesystem::path& filePath) 
+	{
+		/*
 		std::lock_guard lock(m_Mutex);
 
-		/*
-		if (m_CurrentSession) {
-
+		if (m_CurrentSession) 
 			EndSessionInternal();
-		}
+
 		m_OutputStream.open(filePath);
 
 		if (!File::DirectoryExists(filePath.string()))
@@ -52,7 +52,8 @@ public:
 		}
 		*/
 	}
-	void EndSession() {
+	void EndSession() 
+	{
 		std::lock_guard lock(m_Mutex);
 		EndSessionInternal();
 	}
@@ -93,15 +94,18 @@ private:
 	{
 		EndSession();
 	}
-	void WriteHeader() {
+	void WriteHeader() 
+	{
 		m_OutputStream << "{\"otherData\": {}, \"traceEvents\": [{}";
 		m_OutputStream.flush();
 	}
-	void WriteFooter() {
+	void WriteFooter() 
+	{
 		m_OutputStream << "]}";
 		m_OutputStream.flush();
 	}
-	void EndSessionInternal() {
+	void EndSessionInternal() 
+	{
 		if (!m_CurrentSession) return;
 
 		WriteFooter();
@@ -117,19 +121,20 @@ private:
 	std::ofstream m_OutputStream;
 };
 
-class InstrumentationTimer {
+class InstrumentationTimer 
+{
 public:
 	InstrumentationTimer(const char* name) : m_Name(name), m_Stopped(false)
 	{
 		m_StartTimepoint = std::chrono::steady_clock::now();
 	}
-	~InstrumentationTimer() {
-		if (!m_Stopped) {
+	~InstrumentationTimer() 
+	{
+		if (!m_Stopped)
 			Stop();
-		}
 	}
-	void Stop() {
-
+	void Stop() 
+	{
 		auto endTimepoint = std::chrono::steady_clock::now();
 		auto highResStart = FloatingPointMicroseconds{ m_StartTimepoint.time_since_epoch() };
 		auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();

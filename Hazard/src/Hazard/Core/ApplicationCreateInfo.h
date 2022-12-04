@@ -22,6 +22,7 @@ namespace Hazard {
 		std::string AppName;
 		std::string BuildVersion;
 		bool Logging = false;
+		uint32_t ThreadCount = std::thread::hardware_concurrency();
 	};
 
 	struct RenderContextCreateInfo 
@@ -31,7 +32,6 @@ namespace Hazard {
 		uint32_t Width;
 		uint32_t Height;
 		bool VSync = true;
-		//std::thread* Thread;
 	};
 	struct RendererCreateInfo 
 	{
@@ -40,19 +40,15 @@ namespace Hazard {
 
 	struct AudioEngineCreateInfo
 	{
-		//std::thread* Thread;
 	};
 	struct EntityComponentCreateInfo 
 	{
-		//std::thread* Thread;
-
 		std::filesystem::path StartupFile = "";
 	};
 	
 	struct ScriptEngineCreateInfo 
 	{
 		uint32_t UpdateOrder = 0;
-		//std::thread* Thread;
 
 		std::string AppAssemblyPath;
 		std::string CoreAssemblyPath;

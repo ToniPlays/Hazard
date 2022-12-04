@@ -292,13 +292,17 @@ namespace UI
 		ImGui::SetColumnWidth(0, 80);
 		ImGui::Text("Frametime");
 		ImGui::NextColumn();
-
 		ImGui::Text("%.3f ms", Time::s_DeltaTime * 1000.0f);
 		ImGui::NextColumn();
+
 		ImGui::Text("FPS");
 		ImGui::NextColumn();
-
 		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
+		ImGui::NextColumn();
+
+		ImGui::Text("Active jobs");
+		ImGui::NextColumn();
+		ImGui::Text("%i", Application::Get().GetJobSystem().GetJobCount());
 		ImGui::NextColumn();
 
 		const char* shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };

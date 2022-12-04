@@ -69,7 +69,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::Bind_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_RENDER_THREAD_ONLY();
 
 		glDepthMask(GL_TRUE);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
@@ -174,7 +173,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLFrameBuffer::Invalidate_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_RENDER_THREAD_ONLY();
 
 		if (m_Specs.Height > 8192 || m_Specs.Width > 8192) return;
 		if (m_Specs.SwapChainTarget) return;

@@ -488,7 +488,7 @@ namespace UI
 				ImGui::PopStyleVar();
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					Application::Get().SubmitMainThread("Image", [handle, entities]() mutable -> size_t {
+					Application::Get().SubmitJob("Image", [handle, entities](JobSystem* system, Job* job) mutable -> size_t {
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
 						auto envMap = EnvironmentMap::Create(asset);
 
@@ -709,7 +709,7 @@ namespace UI
 
 				}
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-					Application::Get().SubmitMainThread("Mesh", [entityList = entities, handle]() mutable -> size_t {
+					Application::Get().SubmitJob("Mesh", [entityList = entities, handle](JobSystem* system, Job* job) mutable -> size_t {
 						auto asset = AssetManager::GetAsset<Mesh>(handle);
 						for (auto& entity : entityList)
 							auto& c = entity.GetComponent<MeshComponent>().m_MeshHandle = asset;

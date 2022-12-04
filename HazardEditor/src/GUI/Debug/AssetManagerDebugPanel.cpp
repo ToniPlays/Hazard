@@ -30,7 +30,8 @@ namespace UI
 				auto& meta = metadata;
 
 				ImUI::Group((const char*)&path, [&]() {
-					ImUI::Separator({ 4.0, rowHeight }, meta.IsLoaded ? style.Colors.AxisY : style.Colors.AxisX);
+
+					ImUI::Separator({ 4.0, rowHeight }, GetLoadStateColor(meta.LoadState));
 					ImGui::SameLine();
 					ImGui::Text(n.string().c_str());
 					ImGui::TableNextColumn();
@@ -40,5 +41,16 @@ namespace UI
 			}
 			});
 
+	}
+	ImColor AssetManagerDebugPanel::GetLoadStateColor(const LoadState& state)
+	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		switch (state)
+		{
+		case LoadState::None: return style.Colors.AxisX;
+		case LoadState::Loading: return style.Colors.Warning;
+		case LoadState::Loaded: return style.Colors.AxisY;
+		}
+		return style.Colors.AxisY;
 	}
 }

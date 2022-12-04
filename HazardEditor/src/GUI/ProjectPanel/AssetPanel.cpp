@@ -255,11 +255,11 @@ namespace UI
 			}
 		}
 
-		for (auto& dir : directories) 
+		for (auto& dir : directories)
 		{
 			m_CurrentItems.push_back(dir);
 		}
-		for (auto& f : files) 
+		for (auto& f : files)
 		{
 			m_CurrentItems.push_back(f);
 		}
@@ -297,7 +297,8 @@ namespace UI
 				RefreshFolderItems();
 			}
 
-			for (const auto& subfolder : folder.SubFolders) {
+			for (const auto& subfolder : folder.SubFolders)
+			{
 				DrawFolderTreeItem(subfolder);
 			}
 			});
@@ -308,11 +309,25 @@ namespace UI
 		switch (metadata.Type)
 		{
 		case AssetType::Image:
-			if (!metadata.IsLoaded)
+		{
+			if (metadata.LoadState != LoadState::Loaded)
 			{
+				if (metadata.LoadState == LoadState::None)
+				{
+					auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ProgressOverlay>();
+					auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(metadata.Handle);
+					promise.Then([this](JobSystem* system, Job* job) -> size_t {
+						Job* dependency = system->GetJob(job->Dependency);
+						m_Textures.push_back(*dependency->Value<Ref<Texture2DAsset>>());
+						return 0;
+						});
+					progressPanel->AddProcess(AssetType::Image, promise);
+				}
 				return EditorAssetManager::GetIcon("Default");
 			}
-			return AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
+			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
+			return asset->GetSourceImageAsset()->Value ? asset : EditorAssetManager::GetIcon("Default");
+		}
 		case AssetType::Script:
 			return EditorAssetManager::GetIcon("Script");
 		case AssetType::World:

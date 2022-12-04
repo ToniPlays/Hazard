@@ -60,7 +60,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		AssetMetadata& data = GetMetadata(handle);
 
-		data.IsLoaded = false;
+		data.LoadState = LoadState::None;
 		s_Registry.Remove(data.Path);
 
 		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end() && s_LoadedAssets.size() > 0)
@@ -92,6 +92,11 @@ namespace Hazard
 		HZR_ASSERT(asset, "Asset cannot be nullptr");
 		bool succeeded = s_AssetLoader.Save(asset);
 		return succeeded;
+	}
+	JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
+	{
+		HZR_ASSERT(asset, "Asset cannot be nullptr");
+		return s_AssetLoader.SaveAsync(asset);
 	}
 
 	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)

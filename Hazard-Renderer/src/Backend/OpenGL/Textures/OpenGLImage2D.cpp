@@ -61,8 +61,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLImage2D::Invalidate_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_RENDER_THREAD_ONLY();
-
 
 		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1);
 		if (m_ImageUsage == ImageUsage::Attachment) return;
@@ -93,7 +91,6 @@ namespace HazardRenderer::OpenGL
 	void OpenGLImage2D::SetData_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_RENDER_THREAD_ONLY();
 
 		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);

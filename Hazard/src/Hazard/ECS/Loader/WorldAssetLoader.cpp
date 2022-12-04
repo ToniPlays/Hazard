@@ -17,8 +17,18 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
+	JobPromise WorldAssetLoader::LoadAsync(AssetMetadata& metadata)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
+	}
 	bool WorldAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return false;
+	}
+	JobPromise WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
 	}
 }

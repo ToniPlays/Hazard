@@ -5,21 +5,27 @@
 
 #include "UtilityCore.h"
 
-class RefCount {
+class RefCount 
+{
 public:
-	RefCount() : m_RefCount(0) {};
+	RefCount() { m_RefCount = 0; };
 	virtual ~RefCount() = default;
 
-	void IncRefCount() const {
+	void IncRefCount() const 
+	{
 		m_RefCount++;
 	}
-	void DecRefCount() const {
+	void DecRefCount() const 
+	{
 		m_RefCount--;
 	}
-	uint32_t GetRefCount() const { return m_RefCount; }
+	uint32_t GetRefCount() const 
+	{ 
+		return m_RefCount.load();
+	}
 
 private:
-	mutable uint32_t m_RefCount;
+	mutable std::atomic_uint32_t m_RefCount;
 };
 
 template<typename T>

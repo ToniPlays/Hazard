@@ -36,9 +36,8 @@ namespace HazardRenderer::Vulkan
 		Ref<RenderPass> GetRenderPass() override { return m_DefaultRenderPass; };
 		Ref<FrameBuffer> GetRenderTarget() override { return m_DefaultFramebuffer; };
 
-		//Vulkan specific
-
 		uint32_t GetImageCount() const { return m_ImageCount; }
+		//Vulkan specific
 		VkFramebuffer GetCurrentFramebuffer() { return GetFrameBuffer(m_CurrentBufferIndex); }
 		VkCommandBuffer GetCurrentDrawCommandBuffer() { return GetDrawCommandBuffer(m_CurrentBufferIndex); }
 		VkRenderPass GetVulkanRenderPass() const { return m_RenderPass; }

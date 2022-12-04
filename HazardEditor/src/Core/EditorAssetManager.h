@@ -46,9 +46,8 @@ public:
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
-
 	static void RefreshEditorAssets();
 
 private:
-	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> m_Icons;
+	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> s_Icons;
 };

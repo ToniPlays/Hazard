@@ -103,7 +103,6 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanPipeline::Invalidate_RT()
 	{
-		std::cout << "Validated shader " << m_Specs.DebugName << std::endl;
 		switch (m_Specs.Usage)
 		{
 		case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;

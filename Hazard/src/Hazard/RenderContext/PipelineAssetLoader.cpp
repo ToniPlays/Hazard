@@ -68,6 +68,11 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
+	JobPromise PipelineAssetLoader::LoadAsync(AssetMetadata& metadata)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
+	}
 	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -95,5 +100,10 @@ namespace Hazard
 
 
 		return true;
+	}
+	JobPromise PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
+	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return JobPromise();
 	}
 }

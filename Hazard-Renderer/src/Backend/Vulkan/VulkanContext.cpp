@@ -21,7 +21,6 @@ namespace HazardRenderer::Vulkan
 		if (!performanceWarn && messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
 			return VK_FALSE;
 
-
 		std::string labels, objects;
 		if (pCallbackData->cmdBufLabelCount)
 		{

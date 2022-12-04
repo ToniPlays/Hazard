@@ -59,7 +59,7 @@ public:
 	static std::string GetPathNoExt(const std::filesystem::path& file);
 	static std::string GetFileExtension(const std::filesystem::path& file);
 
-	static std::vector<std::filesystem::path> GetAllInDirectory(const std::filesystem::path& path);
+	static std::vector<std::filesystem::path> GetAllInDirectory(const std::filesystem::path& path, bool recursive = false);
 
 	static bool CreateDir(const std::filesystem::path& dir);
 	static void Copy(const std::filesystem::path& source, const std::filesystem::path& dest, CopyOptions options);

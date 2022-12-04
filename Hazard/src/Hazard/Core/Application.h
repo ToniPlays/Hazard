@@ -24,9 +24,17 @@ namespace Hazard
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
 		void CreateApplicationStack(HazardCreateInfo* info);
-
-		JobPromise SubmitMainThread(const std::string& tag, JobCallback callback);
-		JobSystem& GetThreadPool() { return m_JobSystem; }
+		
+		JobPromise SubmitJob(const std::string& tag, JobCallback callback)
+		{
+			return m_JobSystem.SubmitJob(tag, callback);
+		}
+		template<typename T, typename... Args>
+		TypedJobPromise<T> SubmitJob(const std::string& tag, JobCallback callback, Args... args)
+		{
+			return m_JobSystem.SubmitTypedJob<T>(tag, callback, args...);
+		}
+		JobSystem& GetJobSystem() { return m_JobSystem; }
 
 	public:
 		static void Quit();

@@ -8,11 +8,13 @@
 #include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 #include "Hazard/RenderContext/Texture2D.h"
+#include "Hazard/Core/Application.h"
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
 
 #include "../ImGui_Backend/imgui_impl_vulkan.h"
+#include <Hazard/RenderContext/RenderContextManager.h>
 
 namespace Hazard::ImUI
 {
@@ -163,7 +165,7 @@ namespace Hazard::ImUI
 		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 		ImGui::PushFont(buttonFont);
-		if (ImGui::Button(buttonText, buttonSize)) 
+		if (ImGui::Button(buttonText, buttonSize))
 		{
 			modified |= true;
 			*value = clearValue;
@@ -350,7 +352,7 @@ namespace Hazard::ImUI
 			for (uint32_t i = 0; i < count; i++) {
 				bool isSelected = i == selected;
 
-				if (ImGui::Selectable(options[i], &currentSelection)) 
+				if (ImGui::Selectable(options[i], &currentSelection))
 				{
 					currentSelection = i;
 					modified = true;
@@ -416,22 +418,31 @@ namespace Hazard::ImUI
 		static std::unordered_map<Image2D*, ImTextureID> cache;
 
 		if (cache.find(image.Raw()) != cache.end())
-			return cache[image.Raw()];
+		{
+			if (cache[image.Raw()] != nullptr)
+				return cache[image.Raw()];
+		}
 
-		switch (GraphicsContext::GetRenderAPI()) 
+		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
-		{
 			return (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
-		}
 #endif
 #ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan:
 		{
 			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
-			if (!imageInfo.imageView) return nullptr;
+
+			if (imageInfo.imageView == VK_NULL_HANDLE || imageInfo.sampler == VK_NULL_HANDLE ||
+				!(imageInfo.imageLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL))
+			{
+				auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
+				const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
+				cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(whiteImageDesc.sampler, whiteImageDesc.imageView, whiteImageDesc.imageLayout);
+				return cache[white.Raw()];
+			}
 
 			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
 			cache[image.Raw()] = id;
@@ -439,7 +450,6 @@ namespace Hazard::ImUI
 		}
 #endif
 		}
-
 		HZR_CORE_ASSERT(false, "Undefined ImageID");
 		return 0;
 	}
@@ -558,7 +568,7 @@ namespace Hazard::ImUI
 			}
 		}
 
-		if (treeOpen) 
+		if (treeOpen)
 		{
 			callback();
 			ImGui::TreePop();
@@ -749,7 +759,7 @@ namespace Hazard::ImUI
 	template<typename T>
 	static bool ContextMenu(T callback) {
 		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_PopupRounding, 4.0f, ImGuiStyleVar_ItemSpacing, ImVec2(16.0f, 4.0f), ImGuiStyleVar_ChildBorderSize, 0);
-		if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight)) 
+		if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight))
 		{
 			callback();
 			ImGui::EndPopup();

@@ -19,6 +19,7 @@ namespace HazardRenderer::Vulkan {
 
 	VmaAllocation VulkanAllocator::AllocateBuffer(VkBufferCreateInfo bufferCreateInfo, VmaMemoryUsage usage, VkBuffer& outBuffer)
 	{
+		HZR_ASSERT(bufferCreateInfo.size > 0, "Buffer size cannot be 0");
 		VmaAllocationCreateInfo createInfo = {};
 		createInfo.usage = usage;
 

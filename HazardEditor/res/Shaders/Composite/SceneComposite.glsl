@@ -20,10 +20,6 @@ void main()
 #type Fragment
 #version 450 core
 
-#include "../Uniforms/CameraUniform.glsl"
-#include "../Uniforms/LightSources.glsl"
-#include "../Utils/Lighting.glsl"
-
 layout (binding = 0) uniform sampler2D gPosition;
 layout (binding = 1) uniform sampler2D gNormal;
 layout (binding = 2) uniform sampler2D gAlbedoSpec;
@@ -32,16 +28,9 @@ layout(location = 0) in vec2 v_TexCoords;
 
 layout(location = 0) out vec4 color;
 
-const float ambientStrength = 0.2;
-const float gamma = 1.1;
-const float specularStrength = 0.5;
-
-vec3 GammaCorrection(vec4 color) {
-	return pow(color.rgb, vec3(1.0 / gamma));
-}
-
 void main() 
 {
+/*
 	vec3 fragPos = texture(gPosition, v_TexCoords).rgb;
 	vec3 Normal = texture(gNormal, v_TexCoords).rgb;
 	vec4 Albedo = texture(gAlbedoSpec, v_TexCoords);
@@ -55,4 +44,5 @@ void main()
 	color = (ambientColor + vec4(diffuse, 1.0)) * vec4(Albedo.rgb, 1.0);
 
 	//color = vec4(GammaCorrection(color), 1.0);
+	*/
 }

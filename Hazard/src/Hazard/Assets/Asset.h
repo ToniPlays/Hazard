@@ -11,9 +11,11 @@
 
 #define INVALID_ASSET_HANDLE (AssetHandle)0
 
-namespace Hazard 
+namespace Hazard
 {
-	enum class AssetFlags : uint16_t 
+	enum class LoadState { None, Loading, Loaded };
+
+	enum class AssetFlags : uint16_t
 	{
 		None = BIT(0),
 		Valid = BIT(1),
@@ -31,7 +33,7 @@ namespace Hazard
 		AssetType Type = AssetType::Undefined;
 
 		std::filesystem::path Path = "";
-		bool IsLoaded = false;
+		LoadState LoadState = LoadState::None;
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
 	};
@@ -62,7 +64,7 @@ namespace Hazard
 	class AssetPointer : public Asset
 	{
 	public:
-		Ref<RefCount> Value;
+		Ref<RefCount> Value = nullptr;
 
 		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type)
 		{

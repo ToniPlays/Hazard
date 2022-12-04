@@ -32,10 +32,5 @@ namespace Hazard
 	{
 		HazardLoop::GetCurrent().m_ShouldClose = true;
 	}
-	JobPromise Application::SubmitMainThread(const std::string& tag, JobCallback callback)
-	{
-		HZR_CORE_INFO("Received job with tag {0}", tag);
-		return m_JobSystem.SubmitJob(callback, tag);
-	}
 }
 

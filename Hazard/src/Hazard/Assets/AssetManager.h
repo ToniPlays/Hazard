@@ -6,8 +6,12 @@
 #include "Hazard/Core/Core.h"
 #include "UID.h"
 #include "Profiling/PerformanceProfiler.h"
+#include "Jobs.h"
+#include "Hazard/Core/Application.h"
 
-namespace Hazard 
+#include "spdlog/fmt//fmt.h"
+
+namespace Hazard
 {
 	class AssetManager {
 	public:
@@ -17,13 +21,13 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() 
-		{ 
-			return s_Registry.GetRegistry(); 
+		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry()
+		{
+			return s_Registry.GetRegistry();
 		}
-		
+
 		template<typename T, typename... Args>
-		static void RegisterLoader(AssetType type, Args... args) 
+		static void RegisterLoader(AssetType type, Args... args)
 		{
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
@@ -37,6 +41,60 @@ namespace Hazard
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
 		static bool SaveAsset(Ref<Asset> asset);
+		static JobPromise SaveAssetAsync(Ref<Asset> asset);
+
+		template<typename T>
+		static TypedJobPromise<Ref<T>> GetAssetAsync(AssetHandle handle)
+		{
+			/*return Application::Get().SubmitJob<Ref<T>>(Utils::AssetTypeToString(metadata.Type), [handle](JobSystem* system, Job* job) -> size_t {
+				Ref<T> loadedAsset = AssetManager::GetAsset<T>(handle);
+				bool loaded = loadedAsset;
+				*job->Value<Ref<T>>() = std::move(loadedAsset);
+				return loaded ? 0 : 1;
+				});
+				*/
+
+			AssetMetadata& meta = GetMetadata(handle);
+			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
+			if (meta.LoadState != LoadState::Loaded)
+			{
+				meta.LoadState = LoadState::Loading;
+				JobPromise promise = s_AssetLoader.LoadAsync(meta);
+
+				auto waitPromise = promise.TypedThen<Ref<T>>([handle](JobSystem* system, Job* job) -> size_t {
+
+					AssetMetadata& meta = GetMetadata(handle);
+
+					Job* dependency = system->GetJob(job->Dependency);
+					Ref<T> asset = *dependency->Value<Ref<T>>();
+					meta.LoadState = dependency->ReturnCode ? LoadState::Loaded : LoadState::None;
+
+					if (meta.LoadState != LoadState::Loaded)
+						return -1;
+
+					HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
+
+					asset->SetHandle(meta.Handle);
+					asset->SetFlags(AssetFlags::Valid);
+					s_LoadedAssets[meta.Handle] = asset;
+					
+					*job->Value<Ref<T>>() = asset;
+					return 0;
+					});
+
+				return waitPromise;
+			}
+			else
+			{
+				HZR_ASSERT(false, "This should not happen");
+			}
+			return TypedJobPromise<Ref<T>>();
+		}
+		template<typename T>
+		static TypedJobPromise<Ref<T>> GetAssetAsync(const std::filesystem::path& path)
+		{
+			return GetAssetAsync<T>(GetHandleFromFile(path));
+		}
 
 		template<typename T>
 		static Ref<T> GetAsset(const std::filesystem::path& path)
@@ -45,40 +103,28 @@ namespace Hazard
 		}
 
 		template<typename T>
-		static Ref<T> GetAsset(AssetHandle handle) 
+		static Ref<T> GetAsset(AssetHandle handle)
 		{
 			static_assert(std::is_base_of<Asset, T>::value);
 
 			HZR_PROFILE_FUNCTION();
 			HZR_TIMED_FUNCTION();
-
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-			if (!meta.IsLoaded)
+
+			if (meta.LoadState != LoadState::Loaded)
 			{
-				Ref<Asset> asset;
-				LoadType loadType = s_AssetLoader.Load(meta, asset);
-				meta.IsLoaded = loadType != LoadType::Failed;
-
-				if (!meta.IsLoaded) 
-					return nullptr;
-
-				HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-
-				asset->SetHandle(meta.Handle);
-				asset->SetFlags(AssetFlags::Valid);
-				s_LoadedAssets[handle] = asset;
-				return asset;
+				TypedJobPromise<Ref<T>> promise = GetAssetAsync<T>(handle);
+				promise.Wait();
+				return *promise.Value();
 			}
-			else
-			{
-				if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) 
-					return nullptr;
-				return s_LoadedAssets[handle].As<T>();
-			}
+			if (s_LoadedAssets.find(handle) == s_LoadedAssets.end())
+				return nullptr;
+
+			return s_LoadedAssets[handle].As<T>();
 		}
-		
-		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset) 
+
+		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset)
 		{
 			HZR_PROFILE_FUNCTION();
 			HZR_ASSERT(asset->m_Handle == metadata.Handle, "Stuff no match");
