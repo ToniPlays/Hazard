@@ -6,15 +6,15 @@
 
 namespace Hazard 
 {
-	LoadType ScriptAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType ScriptAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
 	{
 		HZR_PROFILE_FUNCTION();
 		asset = Ref<HScript>::Create(File::GetNameNoExt(metadata.Path));
 		return LoadType::Source;
 	}
-	JobPromise ScriptAssetLoader::LoadAsync(AssetMetadata& metadata)
+	TypedJobPromise<Ref<Asset>> ScriptAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		return JobPromise();
+		return TypedJobPromise<Ref<Asset>>();
 	}
 	bool ScriptAssetLoader::Save(Ref<Asset>& asset)
 	{

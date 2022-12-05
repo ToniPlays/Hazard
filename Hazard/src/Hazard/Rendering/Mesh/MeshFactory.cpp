@@ -66,7 +66,9 @@ namespace Hazard
 		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 
 		Assimp::Importer importer;
+		Timer timer;
 		const aiScene* scene = importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
+		HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
 		if (!scene || !scene->HasMeshes()) return MeshData();
 
 		MeshData data;

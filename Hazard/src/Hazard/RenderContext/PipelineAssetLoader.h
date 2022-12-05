@@ -33,8 +33,8 @@ namespace Hazard
 		PipelineAssetLoader() = default;
 		~PipelineAssetLoader() = default;
 
-		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset) override;
-		JobPromise LoadAsync(AssetMetadata& metadata) override;
+		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags = 0) override;
+		TypedJobPromise<Ref<Asset>> LoadAsync(AssetMetadata& metadata, uint32_t flags = 0) override;
 		bool Save(Ref<Asset>& asset) override;
 		JobPromise SaveAsync(Ref<Asset>& asset) override;
 	};

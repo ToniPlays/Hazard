@@ -1,9 +1,9 @@
 #type Vertex
 #version 450
 
-#include "Uniforms/CameraUniform.glsl"
-#include "Uniforms/ModelUniform.glsl"
-#include "Inputs/InputPBR.glsl"
+#include "Uniforms/CameraUniform.glslh"
+#include "Uniforms/ModelUniform.glslh"
+#include "Inputs/InputPBR.glslh"
 
 layout(location = 0) out vec4 Color;
 layout(location = 1) out vec3 Normal;
@@ -23,10 +23,10 @@ void main()
 #type Fragment
 #version 450
 
-#include "Uniforms/CameraUniform.glsl"
-#include "Uniforms/LightSources.glsl"
-#include "Uniforms/ModelUniform.glsl"
-#include "Uniforms/UtilityUniform.glsl"
+#include "Uniforms/CameraUniform.glslh"
+#include "Uniforms/LightSources.glslh"
+#include "Uniforms/ModelUniform.glslh"
+#include "Uniforms/UtilityUniform.glslh"
 
 layout(location = 0) in vec4 Color;
 layout(location = 1) in vec3 Normal;
@@ -38,9 +38,9 @@ layout(set = 1, binding = 2) uniform samplerCube u_IrradianceMap;
 layout(set = 1, binding = 3) uniform sampler2D u_BRDFLut;
 
 
-#include "Utils/Common.glsl"
-#include "Utils/Lighting.glsl"
-#include "Utils/PostProcessing.glsl"
+#include "Utils/Common.glslh"
+#include "Utils/Lighting.glslh"
+#include "Utils/PostProcessing.glslh"
 
 layout(location = 0) out vec4 OutputColor;
 

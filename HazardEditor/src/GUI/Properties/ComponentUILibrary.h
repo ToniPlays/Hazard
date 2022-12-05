@@ -63,15 +63,15 @@ namespace UI
 
 				uint32_t flags = 0;
 				glm::vec3 translation = firstTc.GetTranslation();
-				glm::vec3 rotation = glm::eulerAngles(firstTc.GetRotation());
+				glm::vec3 rotation = firstTc.GetRotationEuler();
 				glm::vec3 scale = firstTc.GetScale();
 
 				for (uint32_t i = 1; i < entities.size(); i++)
 				{
-					auto tc = entities[i].GetComponent<TransformComponent>();
-					auto t = tc.GetTranslation();
+					auto& tc = entities[i].GetComponent<TransformComponent>();
+					auto& t = tc.GetTranslation();
 					auto r = glm::eulerAngles(tc.GetRotation());
-					auto s = tc.GetScale();
+					auto& s = tc.GetScale();
 
 					flags |= (t.x != translation.x) ? BIT(0) : 0;
 					flags |= (t.y != translation.y) ? BIT(1) : 0;
@@ -86,7 +86,7 @@ namespace UI
 					flags |= (s.z != scale.z) ? BIT(8) : 0;
 				}
 
-				rotation = { glm::degrees(rotation.x), glm::degrees(rotation.y), glm::degrees(rotation.z) };
+				rotation = glm::degrees(rotation);
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
@@ -109,27 +109,28 @@ namespace UI
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				result = 0;
-				result = ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3);
+
+				glm::vec3 newRotation = rotation;
+
+				result = ImUI::InputFloat3("Rotation", newRotation, 0.0f, flags >> 3);
 				if (result != 0)
 				{
 					for (auto& entity : entities)
 					{
 						auto& tc = entity.GetComponent<TransformComponent>();
-						glm::vec3 rot = glm::eulerAngles(tc.GetRotation());
+						glm::vec3 rot = tc.GetRotationEuler();
 
-						rot.x = (result & BIT(0)) ? glm::radians(rotation.x) : rot.x;
-						rot.y = (result & BIT(1)) ? glm::radians(rotation.y) : rot.y;
-						rot.z = (result & BIT(2)) ? glm::radians(rotation.z) : rot.z;
+						rot.x = (result & BIT(0)) ? glm::radians(newRotation.x) : rot.x;
+						rot.y = (result & BIT(1)) ? glm::radians(newRotation.y) : rot.y;
+						rot.z = (result & BIT(2)) ? glm::radians(newRotation.z) : rot.z;
 
-						glm::quat rotQuat = glm::quat({ rot.x, rot.y, rot.z });
-						tc.SetRotation(rotQuat);
+						tc.SetRotation(rot);
 					}
 				}
 				ImUI::ShiftY(3.0f);
 				ImGui::Separator();
 				ImUI::ShiftY(2.0f);
-				result = 0;
+
 				result = ImUI::InputFloat3("Scale", scale, 1.0f, flags >> 6);
 				if (result != 0)
 				{

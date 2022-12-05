@@ -20,7 +20,10 @@ namespace Editor
 	void EditorWorldManager::LoadWorld(const std::filesystem::path& path)
 	{
 		auto& handler = Application::GetModule<WorldHandler>();
-		handler.LoadWorld(path);
-		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
+		auto promise = handler.LoadWorldAsync(path).Then([](JobSystem* system, Job* job) -> size_t {
+			auto& handler = Application::GetModule<WorldHandler>();
+			s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
+			return 0;
+			});
 	}
 }

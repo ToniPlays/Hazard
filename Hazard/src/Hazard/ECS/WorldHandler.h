@@ -4,10 +4,13 @@
 #include "Hazard/Module.h"
 #include "World.h"
 
+#include "Jobs.h"
+
 namespace Hazard 
 {
 	enum Serialization { Runtime, Editor };
-	enum WorldFlags : uint32_t {
+	enum WorldFlags : uint32_t 
+	{
 		WorldFlags_Render = BIT(0),
 		WorldFlags_UpdateScript = BIT(1)
 	};
@@ -25,6 +28,8 @@ namespace Hazard
 		void OnEnd();
 
 		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
+		JobPromise LoadWorldAsync(const std::filesystem::path& file, Serialization type = Serialization::Editor);
+
 		void SetFlags(uint32_t flags) { m_Flags = (WorldFlags)flags; }
 		Ref<World> GetCurrentWorld() { return m_World; }
 		void SetWorld(Ref<World> world) { m_World = world; }

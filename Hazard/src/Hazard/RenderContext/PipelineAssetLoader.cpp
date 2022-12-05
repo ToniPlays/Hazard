@@ -13,11 +13,9 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	LoadType PipelineAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType PipelineAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
 	{
 		HZR_PROFILE_FUNCTION();
-
-		__debugbreak();
 
 		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
 		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
@@ -68,10 +66,10 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	JobPromise PipelineAssetLoader::LoadAsync(AssetMetadata& metadata)
+	TypedJobPromise<Ref<Asset>> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return TypedJobPromise<Ref<Asset>>();
 	}
 	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{

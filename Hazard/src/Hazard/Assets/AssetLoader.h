@@ -1,5 +1,6 @@
 #pragma once
 #include "IAssetLoader.h"
+#include "Jobs.h"
 
 namespace Hazard 
 {
@@ -11,8 +12,8 @@ namespace Hazard
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset);
-		JobPromise LoadAsync(AssetMetadata& metadata);
+		LoadType Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags = 0);
+		JobPromise LoadAsync(AssetMetadata& metadata, uint32_t flags = 0);
 		bool Save(Ref<Asset>& asset);
 		JobPromise SaveAsync(Ref<Asset>& asset);
 

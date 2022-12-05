@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"
+
 #include "ScopedVar.h"
 #include "StyleManager.h"
 #include "ImGuiUtils.h"
@@ -271,7 +272,7 @@ namespace Hazard::ImUI
 		ImGui::SameLine();
 
 		//Z axis
-		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, (flags & BIT(2))) != 0 << 2;
+		modified |= InputFloatVec("Z", &value.z, clearValue, itemWidth, buttonSize, boldFont, style.Colors.AxisZ, (flags & BIT(2)) != 0) << 2;
 
 		return modified;
 	}

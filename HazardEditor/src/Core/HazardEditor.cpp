@@ -82,7 +82,6 @@ void HazardEditorApplication::PreInit()
 	RendererCreateInfo rendererInfo = {};
 
 	EntityComponentCreateInfo entity = {};
-	entity.StartupFile = ProjectManager::GetProject().GetProjectData().StartupWorld;
 
 	std::string dllFile = project.GetProjectData().ProjectName + ".dll";
 	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
@@ -145,6 +144,9 @@ void HazardEditorApplication::Init()
 	scriptEngine.ReloadAssemblies();
 
 	EditorAssetManager::Init();
+
+	auto& world = ProjectManager::GetProject().GetProjectData().StartupWorld;
+	Editor::EditorWorldManager::LoadWorld(world);
 }
 
 void HazardEditorApplication::Update()

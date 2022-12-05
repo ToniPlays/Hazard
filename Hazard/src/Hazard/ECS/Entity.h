@@ -13,7 +13,7 @@ namespace Hazard {
 		Entity(entt::entity handle, World* world);
 		Entity(const Entity& other) = default;
 
-		World& GetWorld() { return *m_World; }
+		World& GetWorld() const { return *m_World; }
 
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) 

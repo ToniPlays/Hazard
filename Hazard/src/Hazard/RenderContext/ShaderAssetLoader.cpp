@@ -12,19 +12,43 @@
 
 namespace Hazard
 {
-	LoadType ShaderAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType ShaderAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
 	{
-		HZR_PROFILE_FUNCTION();
-		JobPromise promise = LoadAsync(metadata);
-		promise.Wait();
+		using namespace HazardRenderer;
+		RenderAPI api = GraphicsContext::GetRenderAPI();
+		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
 
-		return (LoadType)promise.Status();
+		auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, api);
+		if (File::Exists(cachePath))
+		{
+			CachedBuffer buffer = File::ReadBinaryFile(cachePath);
+			AssetPackElement element = buffer.Read<AssetPackElement>();
+
+			while (buffer.Available())
+			{
+				ShaderCode code = buffer.Read<ShaderCode>();
+				Buffer shaderCode = buffer.Read<Buffer>(code.Length);
+
+				shaderAsset->ShaderCode.push_back({ code.Stage, Buffer::Copy(shaderCode) });
+			}
+
+			shaderAsset->m_Handle = element.Handle;
+			shaderAsset->m_Type = (AssetType)element.Type;
+			asset = shaderAsset;
+			return LoadType::Cache;
+		}
+
+		shaderAsset->ShaderCode = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, api);
+		shaderAsset->m_Type = AssetType::Shader;
+
+		asset = shaderAsset;
+
+		return LoadType::Source;
 	}
-	JobPromise ShaderAssetLoader::LoadAsync(AssetMetadata& metadata)
+	TypedJobPromise<Ref<Asset>> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		return Application::Get().SubmitJob<Ref<ShaderAsset>>("Shader", [path = metadata.Path, handle = metadata.Handle](JobSystem* system, Job* job)->size_t {
+		return Application::Get().SubmitJob<Ref<Asset>>("Shader", [path = metadata.Path, handle = metadata.Handle](JobSystem* system, Job* job)->size_t {
 			job->Progress = 0;
-
 			using namespace HazardRenderer;
 
 			RenderAPI api = GraphicsContext::GetRenderAPI();

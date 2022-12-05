@@ -24,6 +24,7 @@ namespace Hazard {
 	private:
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::quat Rotation;
+		glm::vec3 EulerRotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 		glm::mat4 TransformMatrix = glm::mat4(1.0f);
 		bool Dirty = true;
@@ -32,16 +33,22 @@ namespace Hazard {
 
 		const glm::vec3& GetTranslation() const { return Translation; }
 		const glm::quat& GetRotation() const { return Rotation; }
+		const glm::vec3& GetRotationEuler() const { return EulerRotation; }
 		const glm::vec3& GetScale() const { return Scale; }
 
 		void SetTranslation(const glm::vec3& translation) { Translation = translation; Dirty = true; }
 		void SetRotation(const glm::quat& rotation) { Rotation = rotation; Dirty = true; }
-		void SetRotation(const glm::vec3& rotation) { Rotation = glm::quat(rotation); Dirty = true; }
+		void SetRotation(const glm::vec3& rotation) 
+		{ 
+			EulerRotation = rotation;
+			Rotation = glm::quat(EulerRotation);
+			Dirty = true; 
+		}
 		void SetScale(const glm::vec3& scale) { Scale = scale; Dirty = true; }
-		void SetTransform(const glm::mat4& transform) 
+		void SetTransform(const glm::mat4& transform)
 		{
 			Math::DecomposeTransform(transform, Translation, Rotation, Scale);
-			TransformMatrix = transform; 
+			TransformMatrix = transform;
 		}
 
 		void AddTranslation(const glm::vec3& translation) { Translation += translation; Dirty = true; }

@@ -1,8 +1,8 @@
 #type Vertex
 #version 450
 
-#include "../Uniforms/CameraUniform.glsl"
-#include "../Inputs/InputQuad.glsl"
+#include "../Uniforms/CameraUniform.glslh"
+#include "../Inputs/InputQuad.glslh"
 
 layout(location = 0) out vec4 Color;
 layout(location = 1) out vec2 TextureCoords;

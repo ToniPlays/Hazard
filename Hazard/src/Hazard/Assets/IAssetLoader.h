@@ -21,8 +21,8 @@ namespace Hazard
 		IAssetLoader() = default;
 		virtual ~IAssetLoader() = default;
 
-		virtual LoadType Load(AssetMetadata& path, Ref<Asset>& asset) = 0;
-		virtual JobPromise LoadAsync(AssetMetadata& path) = 0;
+		virtual LoadType Load(AssetMetadata& path, Ref<Asset>& asset, uint32_t flags = 0) = 0;
+		virtual TypedJobPromise<Ref<Asset>> LoadAsync(AssetMetadata& path, uint32_t flags = 0) = 0;
 		//TODO: Maybe a Revert option
 		virtual bool Save(Ref<Asset>& asset) = 0;
 		virtual JobPromise SaveAsync(Ref<Asset>& asset) = 0;

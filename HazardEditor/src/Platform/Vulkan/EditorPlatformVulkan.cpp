@@ -14,8 +14,6 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
 	m_Window = &window;
-	//Renderer::Submit([&]() mutable {
-
 	m_Context = (VulkanContext*)window.GetContext();
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
 	auto physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
@@ -45,7 +43,6 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 	poolInfo.pPoolSizes = poolSizes;
 
 	VK_CHECK_RESULT(vkCreateDescriptorPool(device->GetVulkanDevice(), &poolInfo, nullptr, &descriptorPool), "Failed to create descriptor pool");
-
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);

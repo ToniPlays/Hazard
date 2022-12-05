@@ -2,8 +2,8 @@
 
 #version 450 core
 
-#include "../Utils/Common.glsl"
-#include "../Utils/EnvironmentMapping.glsl"
+#include "../Utils/Common.glslh"
+#include "../Utils/EnvironmentMapping.glslh"
 
 layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_CubeMap;
 layout(binding = 1) uniform sampler2D u_EquirectangularTexture;

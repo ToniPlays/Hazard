@@ -4,23 +4,39 @@
 #include "WorldDeserializer.h"
 #include "WorldSerializer.h"
 
+#include "Hazard/Core/Application.h"
+
 namespace Hazard
 {
-	LoadType WorldAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	LoadType WorldAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
 	{
 		HZR_PROFILE_FUNCTION();
 		if (!File::Exists(metadata.Path))
 			return LoadType::Failed;
 
 		WorldDeserializer deserializer;
-		asset = deserializer.DeserializeEditor(metadata.Path);
+		asset = deserializer.DeserializeEditor(metadata.Path, flags);
+		for (auto& promise : deserializer.GetPromises())
+			promise.Wait();
 
 		return LoadType::Source;
 	}
-	JobPromise WorldAssetLoader::LoadAsync(AssetMetadata& metadata)
+	TypedJobPromise<Ref<Asset>> WorldAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return Application::Get().SubmitJob<Ref<Asset>>("World", [meta = metadata, flags](JobSystem* system, Job* job) -> size_t {
+			if (!File::Exists(meta.Path))
+				return (size_t)LoadType::Failed;
+
+			WorldDeserializer deserializer;
+
+			deserializer.SetProgressHandler([job](Entity& entity, size_t index, size_t total) {
+				JOB_PROGRESS(job, index, total);
+				});
+
+			*job->Value<Ref<World>>() = deserializer.DeserializeEditor(meta.Path, flags);
+
+			return (size_t)LoadType::Source;
+			});
 	}
 	bool WorldAssetLoader::Save(Ref<Asset>& asset)
 	{

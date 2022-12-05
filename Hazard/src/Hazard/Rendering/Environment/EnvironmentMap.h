@@ -9,9 +9,6 @@ namespace Hazard
 	{
 	public:
 		EnvironmentMap();
-		~EnvironmentMap()
-		{
-		}
 
 		void GenerateRadiance(Ref<Texture2DAsset> sourceImage);
 		void GenerateIrradiance(Ref<AssetPointer> radianceMap);
@@ -21,7 +18,7 @@ namespace Hazard
 		Ref<AssetPointer> RadianceMap = nullptr;
 		Ref<AssetPointer> IrradianceMap = nullptr;
 		Ref<AssetPointer> PreFilterMap = nullptr;
-		Ref<AssetPointer> BRDFLut = nullptr;
+		Ref<Texture2DAsset> BRDFLut = nullptr;
 
 		static Ref<EnvironmentMap> Create(Ref<Texture2DAsset> sourceImage);
 	};

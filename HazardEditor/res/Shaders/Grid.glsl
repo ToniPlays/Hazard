@@ -1,8 +1,8 @@
 #type Vertex
 #version 450
 
-#include "Uniforms/CameraUniform.glsl"
-#include "Uniforms/GridUniform.glsl"
+#include "Uniforms/CameraUniform.glslh"
+#include "Uniforms/GridUniform.glslh"
 
 layout(location = 0) out vec3 nearPoint;
 layout(location = 1) out vec3 farPoint;
@@ -37,8 +37,8 @@ void main()
 layout(location = 0) in vec3 nearPoint;
 layout(location = 1) in vec3 farPoint;
 
-#include "Uniforms/CameraUniform.glsl"
-#include "Uniforms/GridUniform.glsl"
+#include "Uniforms/CameraUniform.glslh"
+#include "Uniforms/GridUniform.glslh"
 
 layout(location = 0) out vec4 OutputColor;
 

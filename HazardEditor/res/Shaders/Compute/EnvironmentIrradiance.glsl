@@ -1,8 +1,8 @@
 #type Compute
 #version 450 core
 
-#include "../Utils/Common.glsl"
-#include "../Utils/EnvironmentMapping.glsl"
+#include "../Utils/Common.glslh"
+#include "../Utils/EnvironmentMapping.glslh"
 
 layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
 layout(binding = 1) uniform samplerCube u_RadianceMap;

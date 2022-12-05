@@ -8,6 +8,8 @@
 #include "HazardScript.h"
 #include "Hazard/Math/Time.h"
 
+#include "Hazard/Core/Application.h"
+
 namespace Hazard {
 
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
@@ -39,7 +41,7 @@ namespace Hazard {
 		float delta = (float)Time::s_DeltaTime;
 		void* params[] = { &delta };
 
-		for (auto& entity : view) 
+		for (auto& entity : view)
 		{
 			Entity e = { entity, world.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
@@ -55,11 +57,11 @@ namespace Hazard {
 		Ref<World> world = m_World;
 		auto view = world->GetEntitiesWith<ScriptComponent>();
 
-		for (auto& entity : view) 
+		for (auto& entity : view)
 		{
 			Entity e = { entity, world.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle) 
+			if (sc.m_Handle)
 			{
 				sc.m_Handle->SetLive(true);
 				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
@@ -85,7 +87,7 @@ namespace Hazard {
 	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (File::Exists(file)) 
+		if (File::Exists(file))
 		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(file);
 			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
@@ -101,5 +103,31 @@ namespace Hazard {
 		entity.AddComponent<CameraComponent>();
 
 		return false;
+	}
+	JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type)
+	{
+		HZR_PROFILE_FUNCTION();
+		if (File::Exists(file))
+		{
+			AssetHandle handle = AssetManager::GetHandleFromFile(file);
+			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
+
+			auto promise = AssetManager::GetAssetAsync<World>(handle);
+			auto waitPromise = promise.Then([handle, type](JobSystem* system, Job* job) -> size_t {
+				Job* dependency = system->GetJob(job->Dependency);
+				Application::GetModule<WorldHandler>().SetWorld(*dependency->Value<Ref<World>>());
+				return 0;
+				});
+
+			return waitPromise;
+		}
+		m_World = Ref<World>::Create("");
+		m_World->SetName("New World");
+
+		Entity entity = m_World->CreateEntity("Camera");
+		m_World->CreateEntity("Entity 1");
+		entity.AddComponent<CameraComponent>();
+
+		return TypedJobPromise<Ref<World>>();
 	}
 }

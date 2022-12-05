@@ -63,7 +63,9 @@ namespace Hazard
 		data.LoadState = LoadState::None;
 		s_Registry.Remove(data.Path);
 
-		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end() && s_LoadedAssets.size() > 0)
+		if (s_LoadedAssets.size() == 0) return;
+
+		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end())
 			s_LoadedAssets.erase(handle);
 	}
 	AssetHandle AssetManager::GetHandleFromFile(const std::filesystem::path& filePath)

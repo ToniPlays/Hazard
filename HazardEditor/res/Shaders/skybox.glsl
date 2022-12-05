@@ -1,7 +1,7 @@
 #type Vertex
 #version 450
 
-#include "Uniforms/CameraUniform.glsl"
+#include "Uniforms/CameraUniform.glslh"
 
 layout(location = 0) out vec3 v_Position;
 
@@ -23,8 +23,8 @@ void main()
 #type Fragment
 #version 450
 
-#include "Uniforms/CameraUniform.glsl"
-#include "Uniforms/LightSources.glsl"
+#include "Uniforms/CameraUniform.glslh"
+#include "Uniforms/LightSources.glslh"
 
 layout(location = 0) in vec3 v_Position;
 

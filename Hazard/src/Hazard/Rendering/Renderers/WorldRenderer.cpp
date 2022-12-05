@@ -12,10 +12,6 @@ namespace Hazard
 	{
 		m_TargetWorld = Ref<World>::Create("New world");
 	}
-	WorldRenderer::~WorldRenderer()
-	{
-		__debugbreak();
-	}
 	void WorldRenderer::Submit()
 	{
 		HZR_PROFILE_FUNCTION();

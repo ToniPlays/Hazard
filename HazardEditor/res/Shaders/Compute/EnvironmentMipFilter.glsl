@@ -1,8 +1,8 @@
 #type Compute
 #version 450 core
 
-#include "../Utils/Common.glsl"
-#include "../Utils/EnvironmentMapping.glsl"
+#include "../Utils/Common.glslh"
+#include "../Utils/EnvironmentMapping.glslh"
 
 const uint Samples = 1024;
 const int MipLevels = 1;

@@ -207,20 +207,20 @@ namespace HazardRenderer
 			{
 			case GLFW_PRESS:
 			{
-				KeyPressedEvent event(key, 0);
-				data.EventCallback(event);
+				KeyPressedEvent e(key, 0);
+				data.EventCallback(e);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				KeyReleasedEvent event(key);
-				data.EventCallback(event);
+				KeyReleasedEvent e(key);
+				data.EventCallback(e);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				KeyPressedEvent event(key, 1);
-				data.EventCallback(event);
+				KeyPressedEvent e(key, 1);
+				data.EventCallback(e);
 				break;
 			}
 			}
@@ -233,34 +233,34 @@ namespace HazardRenderer
 			{
 			case GLFW_PRESS:
 			{
-				MouseButtonPressedEvent event(button);
-				data.EventCallback(event);
+				MouseButtonPressedEvent e(button);
+				data.EventCallback(e);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				MouseButtonReleasedEvent event(button);
-				data.EventCallback(event);
+				MouseButtonReleasedEvent e(button);
+				data.EventCallback(e);
 				break;
 			}
 			}
 			});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			MouseScrolledEvent event((float)xOffset, (float)yOffset);
-			data.EventCallback(event);
+			MouseScrolledEvent e((float)xOffset, (float)yOffset);
+			data.EventCallback(e);
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			MouseMovedEvent event((float)xPos, (float)yPos);
-			data.EventCallback(event);
+			MouseMovedEvent e((float)xPos, (float)yPos);
+			data.EventCallback(e);
 			});
 		glfwSetJoystickCallback([](int device, int status) {
 			if (status == GLFW_CONNECTED)
 			{
 				WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer((GLFWwindow*)s_CurrentWindow->GetNativeWindow());
-				GamepadConnectedEvent event(device);
-				data.EventCallback(event);
+				GamepadConnectedEvent e(device);
+				data.EventCallback(e);
 
 				Input::ConnectGamepad(device);
 			}
@@ -276,8 +276,8 @@ namespace HazardRenderer
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
 
-			WindowFocusEvent event(focus);
-			data.EventCallback(event);
+			WindowFocusEvent e(focus);
+			data.EventCallback(e);
 			});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);

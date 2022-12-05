@@ -1,7 +1,7 @@
 #type Vertex
 #version 450
 
-#include "../Uniforms/CameraUniform.glsl"
+#include "../Uniforms/CameraUniform.glslh"
 
 layout(location = 0) in vec3 v_Position;
 layout(location = 1) in vec4 v_Color;

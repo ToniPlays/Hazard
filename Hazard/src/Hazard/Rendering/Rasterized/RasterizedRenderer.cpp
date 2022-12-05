@@ -22,7 +22,6 @@ namespace Hazard
 			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
 			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
 		}
-
 		if (drawList.Environment.size() > 0)
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
@@ -30,10 +29,10 @@ namespace Hazard
 				data.SkyLightIntensity = environmentData.SkylightIntensity;
 				data.EnvironmentLod = environmentData.EnvironmentLod;
 
-				auto& radiance = environmentData.Map->RadianceMap;
-				auto& irradiance = environmentData.Map->IrradianceMap;
-				auto& prefilter = environmentData.Map->PreFilterMap;
-				auto& lut = environmentData.Map->BRDFLut;
+				auto radiance = environmentData.Map->RadianceMap;
+				auto irradiance = environmentData.Map->IrradianceMap;
+				auto prefilter = environmentData.Map->PreFilterMap;
+				auto lut = environmentData.Map->BRDFLut;
 
 				auto shader = resources.PbrPipeline->GetShader();
 				if (radiance)
@@ -43,7 +42,7 @@ namespace Hazard
 				if (prefilter)
 					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : resources.WhiteCubemap);
 				if (lut)
-					shader->Set("u_BRDFLut", 0, lut->Value.As<Image2D>());
+					shader->Set("u_BRDFLut", 0, lut->GetSourceImageAsset()->Value.As<Image2D>());
 				break;
 			}
 		}

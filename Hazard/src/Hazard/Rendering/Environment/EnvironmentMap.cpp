@@ -17,7 +17,7 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
-		//auto& lut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
+		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
 	void EnvironmentMap::GenerateRadiance(Ref<Texture2DAsset> sourceImage)
 	{

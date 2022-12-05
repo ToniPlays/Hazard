@@ -183,7 +183,7 @@ namespace HazardRenderer
 				}
 				storageImage.Flags |= ShaderResourceFlags_WriteOnly;
 			}
-			
+
 			//Sort input offsets
 			uint32_t offset = 0;
 			for (uint32_t i = 0; i < data.Inputs.size(); i++)
@@ -224,7 +224,10 @@ namespace HazardRenderer
 				compileInfoVulkan.pDefines = defines.data();
 
 				if (!compiler.Compile(&compileInfoVulkan))
+				{
+					std::cout << compiler.GetErrorMessage() << std::endl;
 					continue;
+				}
 
 				compilationTime += compiler.GetCompileTime();
 				vulkanBinaries[stage] = Buffer::Copy(compiler.GetCompiledBinary());
@@ -241,14 +244,20 @@ namespace HazardRenderer
 				compileInfoVkToGL.pDefines = glDefines.data();
 
 				if (!compiler.Compile(&compileInfoVkToGL))
+				{
+					std::cout << compiler.GetErrorMessage() << std::endl;
 					continue;
+				}
 
 				compilationTime += compiler.GetCompileTime();
 
 				//Get OpenGL shader source from Vulkan binaries
 				std::string glSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
+				{
+					std::cout << compiler.GetErrorMessage() << std::endl;
 					continue;
+				}
 
 				//Compile to OpenGL SPV
 				CompileInfo compileInfoOpenGL = {};
@@ -261,7 +270,10 @@ namespace HazardRenderer
 
 				//Get OpenGL compiled binary
 				if (!compiler.Compile(&compileInfoOpenGL))
+				{
+					std::cout << compiler.GetErrorMessage() << std::endl;
 					continue;
+				}
 
 				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
 			}
@@ -290,8 +302,8 @@ namespace HazardRenderer
 				}
 				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
 			}
+			break;
 		}
-		break;
 		}
 		return result;
 	}
@@ -332,7 +344,9 @@ namespace HazardRenderer
 			size_t nextTokenPos = sourceFile.find(typeToken, endPos);
 			std::string src = nextTokenPos == std::string::npos ? sourceFile.substr(endPos) : sourceFile.substr(endPos, nextTokenPos - endPos);
 
-			if (!PreprocessSource(path, src)) continue;
+			if (!PreprocessSource(path, src)) 
+				continue;
+
 			result[Utils::ShaderStageFromString(type)] = src;
 		}
 
@@ -348,6 +362,8 @@ namespace HazardRenderer
 		std::string token = "#include";
 		size_t offset = 0;
 
+		bool success = true;
+
 		while (offset != std::string::npos)
 		{
 			std::string value = StringUtil::GetPreprocessor(token.c_str(), source, offset, &offset);
@@ -358,11 +374,13 @@ namespace HazardRenderer
 
 			if (!File::Exists(inclPath))
 			{
-				return false;
+				std::cout << fmt::format("{2}: {0} could not open file {1}", token, inclPath.string(), path.string()) << std::endl;
+				success = false;
+				continue;
 			}
 
 			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
 		}
-		return true;
+		return success;
 	}
 }

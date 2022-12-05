@@ -12,13 +12,23 @@
 
 namespace Hazard
 {
+	using DeserializerProgressHandler = std::function<void(Entity&, size_t, size_t)>;
+
 	class WorldDeserializer {
 	public:
 
 		WorldDeserializer() = default;
 
-		Ref<World> DeserializeEditor(const std::filesystem::path& file);
-		Ref<World> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
+		Ref<World> DeserializeEditor(const std::filesystem::path& file, uint32_t flags = 0);
+		Ref<World> DeserializeRuntime(const std::filesystem::path& file, uint32_t flags = 0) { return nullptr; };
+
+		std::vector<JobPromise>& GetPromises() { return m_Promises; }
+
+
+		void SetProgressHandler(DeserializerProgressHandler handler)
+		{
+			m_Handler = handler;
+		}
 
 		template<typename T>
 		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
@@ -44,7 +54,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Scale", scale, glm::vec3(1.0f));
 
 			c.SetTranslation(translation);
-			c.SetRotation(rotation);
+			c.SetRotation(glm::radians(rotation));
 			c.SetScale(scale);
 		};
 		template<>
@@ -97,8 +107,24 @@ namespace Hazard
 
 			if (handle == INVALID_ASSET_HANDLE) return;
 
-			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-			c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
+			if (m_CanAsync)
+			{
+				TypedJobPromise<Ref<Texture2DAsset>> promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
+				promise.Then([e = entity](JobSystem* system, Job* job) -> size_t {
+
+					Entity entity = { e };
+					Ref<Texture2DAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<Texture2DAsset>>();
+					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
+
+					return 0;
+					});
+				m_Promises.push_back(promise);
+			}
+			else
+			{
+				Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
+				c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
+			}
 		}
 
 		template<>
@@ -128,8 +154,24 @@ namespace Hazard
 			AssetHandle handle;
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);
 
-			if (handle == INVALID_ASSET_HANDLE) return;
-			c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
+			if (handle == INVALID_ASSET_HANDLE)
+				return;
+
+			if (m_CanAsync)
+			{
+				TypedJobPromise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(handle);
+				promise.Then([e = entity](JobSystem* system, Job* job) -> size_t {
+					Entity entity = { e };
+					Ref<Mesh> asset = *system->GetJob(job->Dependency)->Value<Ref<Mesh>>();
+					entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
+					return 0;
+					});
+				m_Promises.push_back(promise);
+			}
+			else
+			{
+				c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
+			}
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -137,12 +179,12 @@ namespace Hazard
 
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
-			if (comp["Sprite"])
-			{
-				AssetHandle handle = INVALID_ASSET_HANDLE;
-				YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
-				component.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
-			}
+
+			if (!comp["Sprite"]) return;
+
+			AssetHandle handle = INVALID_ASSET_HANDLE;
+			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
+			component.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
 		};
 		template<>
 		void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
@@ -181,5 +223,10 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "RestitutionThreshold", component.RestitutionThreshold, 0.1f);
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
+	private:
+		bool m_CanAsync = false;
+		std::vector<JobPromise> m_Promises;
+
+		DeserializerProgressHandler m_Handler;
 	};
 }
