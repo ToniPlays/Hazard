@@ -16,8 +16,9 @@ namespace Hazard
 
 		WorldDeserializer deserializer;
 		asset = deserializer.DeserializeEditor(metadata.Path, flags);
+		//Wait for assets to be loaded
 		for (auto& promise : deserializer.GetPromises())
-			promise.Wait();
+			promise.Promise.Wait();
 
 		return LoadType::Source;
 	}
@@ -31,13 +32,15 @@ namespace Hazard
 			WorldDeserializer deserializer;
 			deserializer.SetProgressHandler([job](Entity& entity, size_t index, size_t total) {
 				JOB_PROGRESS(job, index, total);
-				std::cout << fmt::format("{}", job->Progress) << std::endl;
 #ifdef HZR_DEBUG
 				std::this_thread::sleep_for(100ms);
 #endif
 				});
 
-			*job->Value<Ref<World>>() = deserializer.DeserializeEditor(meta.Path, flags);
+			Ref<World> world = deserializer.DeserializeEditor(meta.Path, flags);
+			world->m_Promises = deserializer.GetPromises();
+
+			*job->Value<Ref<World>>() = std::move(world);
 			return (size_t)LoadType::Source;
 			});
 	}

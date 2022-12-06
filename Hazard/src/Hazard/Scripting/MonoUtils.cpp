@@ -144,7 +144,7 @@ namespace HazardScript
 		}
 		else
 		{
-			//__debugbreak();
+			__debugbreak();
 		}
 		return ref;
 	}

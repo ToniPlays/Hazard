@@ -21,9 +21,10 @@ namespace Editor
 	}
 	void EditorWorldManager::LoadWorld(const std::filesystem::path& path)
 	{
+		WorldAsyncPromises promises;
+
 		auto& handler = Application::GetModule<WorldHandler>();
-		JobPromise progressPromise = {};
-		auto promise = handler.LoadWorldAsync(path, Serialization::Editor, &progressPromise);
+		auto promise = handler.LoadWorldAsync(path, Serialization::Editor, &promises);
 
 		auto thenPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
 			auto& handler = Application::GetModule<WorldHandler>();
@@ -31,6 +32,10 @@ namespace Editor
 			return 0;
 			});
 
-		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>()->AddProcess(AssetType::World, progressPromise);
+		auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
+		panel->AddProcess(AssetType::World, promises.WorldPromise);
+
+		for (auto& promise : promises.AssetPromises)
+			panel->AddProcess(promise.Type, promise.Promise);
 	}
 }

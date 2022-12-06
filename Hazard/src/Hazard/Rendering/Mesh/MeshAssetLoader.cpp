@@ -141,6 +141,11 @@ namespace Hazard
 				return (size_t)LoadType::Failed;
 			}
 
+			factory.SetProgressHandler([job](float progress) {
+				job->Progress = progress;
+				HZR_CORE_INFO(progress);
+				});
+
 			MeshData meshData = factory.LoadMeshFromSource(meta.Path);
 
 			MeshCreateInfo meshInfo = {};

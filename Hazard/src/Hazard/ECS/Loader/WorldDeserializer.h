@@ -22,7 +22,7 @@ namespace Hazard
 		Ref<World> DeserializeEditor(const std::filesystem::path& file, uint32_t flags = 0);
 		Ref<World> DeserializeRuntime(const std::filesystem::path& file, uint32_t flags = 0) { return nullptr; };
 
-		std::vector<JobPromise>& GetPromises() { return m_Promises; }
+		std::vector<WorldAsyncAssetPromise>& GetPromises() { return m_Promises; }
 
 
 		void SetProgressHandler(DeserializerProgressHandler handler)
@@ -118,7 +118,7 @@ namespace Hazard
 					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
 					return 0;
 					});
-				m_Promises.push_back(promise);
+				m_Promises.push_back({ AssetType::Image, promise });
 			}
 			else
 			{
@@ -166,7 +166,7 @@ namespace Hazard
 					entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
 					return 0;
 					});
-				m_Promises.push_back(promise);
+				m_Promises.push_back({ AssetType::Mesh , promise });
 			}
 			else
 			{
@@ -225,8 +225,7 @@ namespace Hazard
 		}
 	private:
 		bool m_CanAsync = false;
-		std::vector<JobPromise> m_Promises;
-
+		std::vector<WorldAsyncAssetPromise> m_Promises;
 		DeserializerProgressHandler m_Handler;
 	};
 }

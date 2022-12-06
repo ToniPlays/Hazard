@@ -5,13 +5,28 @@
 #include "UID.h"
 #include "Ref.h"
 
-namespace Hazard 
+#include "Jobs.h"
+
+namespace Hazard
 {
+	struct WorldAsyncAssetPromise
+	{
+		AssetType Type;
+		JobPromise Promise;
+	};
+	struct WorldAsyncPromises
+	{
+		JobPromise WorldPromise;
+		std::vector<WorldAsyncAssetPromise> AssetPromises;
+	};
+
 	class Entity;
 
-	class World : public Asset 
+	class World : public Asset
 	{
 		friend class Entity;
+		friend class WorldAssetLoader;
+
 	public:
 		World(const std::filesystem::path& file);
 		World(World& other) = delete;
@@ -32,12 +47,14 @@ namespace Hazard
 		std::filesystem::path& GetWorldFile() { return m_File; }
 		void SetWorldFile(const std::filesystem::path& file) { m_File = file; }
 
+		std::vector<WorldAsyncAssetPromise> GetPromises() const { return m_Promises; }
+
 		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
 		template<typename... T>
-		auto GetEntitiesWith() 
+		auto GetEntitiesWith()
 		{
-				return m_Registry.view<T...>();
+			return m_Registry.view<T...>();
 		}
 	public:
 		static Ref<World> Copy(Ref<World> sourceWorld);
@@ -48,6 +65,9 @@ namespace Hazard
 		std::string m_Name = "";
 		std::filesystem::path m_File = "";
 		std::unordered_map<UID, Entity> m_EntityUIDMap;
+
+		//TODO: Remove
+		std::vector<WorldAsyncAssetPromise> m_Promises;
 
 	private:
 		template<typename T>

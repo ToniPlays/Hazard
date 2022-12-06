@@ -6,9 +6,12 @@
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/ProgressHandler.hpp>
 
 namespace Hazard
 {
+	using MeshProgressCallback = std::function<void(float)>;
+
 	enum MeshFlags : uint32_t
 	{
 		MeshFlags_Positions = BIT(0),
@@ -21,6 +24,7 @@ namespace Hazard
 
 	class MeshFactory 
 	{
+		friend class MeshFactoryProgressHandler;
 	public:
 		MeshFactory()
 		{
@@ -34,6 +38,11 @@ namespace Hazard
 		void SetScalar(float scalar)
 		{
 			m_ScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scalar));
+		}
+
+		void SetProgressHandler(MeshProgressCallback handler)
+		{
+			m_Handler = handler;
 		}
 
 
@@ -52,7 +61,26 @@ namespace Hazard
 	private:
 		MeshLoaderFlags m_MeshFlags;
 		glm::mat4 m_ScaleMatrix = glm::mat4(1.0f);
+		MeshProgressCallback m_Handler;
+
+		uint32_t m_SceneMeshes = 0;
+		uint32_t m_ProcessedNodes = 0;
 
 		inline static std::filesystem::path s_CacheDirectory = "Library/Mesh/";
+	};
+
+	class MeshFactoryProgressHandler : public Assimp::ProgressHandler
+	{
+	public:
+		MeshFactoryProgressHandler(MeshFactory* factory) : m_Factory(factory) {}
+
+		bool Update(float progress) override
+		{
+			if(m_Factory->m_Handler)
+				m_Factory->m_Handler(progress * 0.5f);
+			return true;
+		}
+	private:
+		MeshFactory* m_Factory;
 	};
 }

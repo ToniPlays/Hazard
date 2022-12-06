@@ -28,7 +28,7 @@ namespace Hazard
 		void OnEnd();
 
 		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
-		JobPromise LoadWorldAsync(const std::filesystem::path& file, Serialization type = Serialization::Editor, JobPromise* progressPromise = nullptr);
+		JobPromise LoadWorldAsync(const std::filesystem::path& file, Serialization type = Serialization::Editor, WorldAsyncPromises* promises = nullptr);
 
 		void SetFlags(uint32_t flags) { m_Flags = (WorldFlags)flags; }
 		Ref<World> GetCurrentWorld() { return m_World; }

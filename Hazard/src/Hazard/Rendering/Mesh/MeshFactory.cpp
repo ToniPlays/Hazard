@@ -2,9 +2,11 @@
 #include <hzrpch.h>
 #include "MeshFactory.h"
 
+#define ASSIMP_LOG_INFO(x) HZR_CORE_INFO(x);
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
 
 namespace Hazard
 {
@@ -59,12 +61,17 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 
-		Assimp::Importer importer;
 		Timer timer;
-		const aiScene* scene = importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
-		HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
-		if (!scene || !scene->HasMeshes()) return MeshData();
+		Assimp::Importer importer;
+		MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler(this);
+		importer.SetProgressHandler(handler);
 
+		const aiScene* scene = importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
+		if (!scene || !scene->HasMeshes())
+			return MeshData();
+
+		HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
+		m_SceneMeshes = scene->mNumMeshes;
 		MeshData data;
 
 		data.SubMeshes.reserve(scene->mNumMeshes);
@@ -173,6 +180,11 @@ namespace Hazard
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 				data.Indices.push_back(face.mIndices[j] + subMesh.BaseVertex);
 		}
+
+		m_ProcessedNodes++;
+
+		if (m_Handler)
+			m_Handler(0.5f + ((float)m_ProcessedNodes / (float)m_SceneMeshes) * 0.5f);
 	}
 	void MeshFactory::TraverseNode(aiNode* node, MeshData& data, const glm::mat4 parentTransform, uint32_t level)
 	{

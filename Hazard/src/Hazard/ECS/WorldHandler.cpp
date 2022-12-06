@@ -104,22 +104,32 @@ namespace Hazard {
 
 		return false;
 	}
-	JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type, JobPromise* progressPromise)
+	JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type, WorldAsyncPromises* promises)
 	{
 		HZR_PROFILE_FUNCTION();
 		if (File::Exists(file))
 		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(file);
 			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
+
 			auto promise = AssetManager::GetAssetAsync<World>(handle);
+			promise.Wait();
+
 			auto waitPromise = promise.Then([handle, type](JobSystem* system, Job* job) -> size_t {
 				Job* dependency = system->GetJob(job->Dependency);
 				Application::GetModule<WorldHandler>().SetWorld(*dependency->Value<Ref<World>>());
 				return 0;
 				});
 
-			if (progressPromise)
-				*progressPromise = std::move(promise);
+			if (promises)
+			{
+				Ref<World> loaded = *promise.Value();
+				promises->WorldPromise = std::move(promise);
+				promises->AssetPromises.reserve(loaded->GetPromises().size());
+
+				for (auto& [type, p] : loaded->GetPromises())
+					promises->AssetPromises.emplace_back(WorldAsyncAssetPromise(type, p));
+			}
 
 			return waitPromise;
 
