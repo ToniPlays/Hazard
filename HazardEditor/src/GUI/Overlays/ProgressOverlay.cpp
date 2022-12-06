@@ -32,6 +32,7 @@ namespace UI
 	{
 		uint32_t completedJobs = 0;
 		float totalProgress = 0;
+		
 		for (JobPromise& promise : promises)
 		{
 			completedJobs += promise.Status() >= JobStatus::Done;

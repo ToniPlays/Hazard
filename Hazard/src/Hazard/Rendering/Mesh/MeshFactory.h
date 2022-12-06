@@ -22,12 +22,21 @@ namespace Hazard
 	class MeshFactory 
 	{
 	public:
-		MeshFactory() = default;
+		MeshFactory()
+		{
+			m_ScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+		}
 		~MeshFactory() = default;
 
 		static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDirectory = path; }
 
 		void SetOptimization(MeshLoaderFlags flags);
+		void SetScalar(float scalar)
+		{
+			m_ScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scalar));
+		}
+
+
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
 		CacheStatus CacheStatus(const AssetHandle& handle);
 		std::filesystem::path GetCacheFile(const AssetHandle& handle);
@@ -42,6 +51,7 @@ namespace Hazard
 
 	private:
 		MeshLoaderFlags m_MeshFlags;
+		glm::mat4 m_ScaleMatrix = glm::mat4(1.0f);
 
 		inline static std::filesystem::path s_CacheDirectory = "Library/Mesh/";
 	};

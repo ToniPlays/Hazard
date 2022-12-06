@@ -23,18 +23,21 @@ namespace Hazard
 	}
 	TypedJobPromise<Ref<Asset>> WorldAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		return Application::Get().SubmitJob<Ref<Asset>>("World", [meta = metadata, flags](JobSystem* system, Job* job) -> size_t {
+		return Application::Get().SubmitJob<Ref<Asset>>("WorldAsync", [meta = metadata, flags](JobSystem* system, Job* job) -> size_t {
+
 			if (!File::Exists(meta.Path))
 				return (size_t)LoadType::Failed;
 
 			WorldDeserializer deserializer;
-
 			deserializer.SetProgressHandler([job](Entity& entity, size_t index, size_t total) {
 				JOB_PROGRESS(job, index, total);
+				std::cout << fmt::format("{}", job->Progress) << std::endl;
+#ifdef HZR_DEBUG
+				std::this_thread::sleep_for(100ms);
+#endif
 				});
 
 			*job->Value<Ref<World>>() = deserializer.DeserializeEditor(meta.Path, flags);
-
 			return (size_t)LoadType::Source;
 			});
 	}

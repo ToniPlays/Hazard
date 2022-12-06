@@ -28,6 +28,7 @@ namespace Hazard
 		void SetProgressHandler(DeserializerProgressHandler handler)
 		{
 			m_Handler = handler;
+			HZR_CORE_INFO("Progress handler set");
 		}
 
 		template<typename T>
@@ -107,7 +108,7 @@ namespace Hazard
 
 			if (handle == INVALID_ASSET_HANDLE) return;
 
-			if (m_CanAsync)
+			if (m_CanAsync && false)
 			{
 				TypedJobPromise<Ref<Texture2DAsset>> promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
 				promise.Then([e = entity](JobSystem* system, Job* job) -> size_t {
@@ -115,7 +116,6 @@ namespace Hazard
 					Entity entity = { e };
 					Ref<Texture2DAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<Texture2DAsset>>();
 					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
-
 					return 0;
 					});
 				m_Promises.push_back(promise);

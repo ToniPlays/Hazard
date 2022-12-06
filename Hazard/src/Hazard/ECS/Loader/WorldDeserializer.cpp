@@ -14,20 +14,20 @@ namespace Hazard
 		m_CanAsync = flags & AssetManagerFlags_CanAsync;
 		YAML::Node root = YAML::LoadFile(file.string());
 
-        Ref<World> world = Ref<World>::Create(file);
+		Ref<World> world = Ref<World>::Create(file);
 
 		//Set scene name
-		if (!root["World"]) 
+		if (!root["World"])
 			return world;
 
 		world->SetName(root["World"].as<std::string>());
 
 		//Loop entities
 		auto entities = root["Entities"];
-		if (entities) {
-
+		if (entities)
+		{
 			size_t index = 0;
-			for (size_t i = entities.size(); i > 0; --i) 
+			for (size_t i = entities.size(); i > 0; --i)
 			{
 				auto node = entities[i - 1];
 				UID uid = node["Entity"].as<uint64_t>();
@@ -52,16 +52,14 @@ namespace Hazard
 				TryDeserializeComponent<CircleCollider2DComponent>("CircleCollider2DComponent", entity, node);
 
 				index++;
-
-				if (m_Handler) 
-					m_Handler(entity, index, entities.size());
+				m_Handler(entity, index, entities.size());
 			}
 		}
 		HZR_CORE_INFO("World loaded in {} ms", timer.ElapsedMillis());
 		return world;
 	}
 	template<typename T>
-	void WorldDeserializer::TryDeserializeComponent(const char* key, Entity entity, YAML::Node node) 
+	void WorldDeserializer::TryDeserializeComponent(const char* key, Entity entity, YAML::Node node)
 	{
 		if (!node[key]) return;
 

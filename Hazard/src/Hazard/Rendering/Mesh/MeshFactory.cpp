@@ -22,12 +22,6 @@ namespace Hazard
 	{
 		m_MeshFlags = flags;
 	}
-	/*
-	MeshData MeshFactory::LoadMeshFromCache(const AssetHandle& handle)
-	{
-		return result;
-	}
-	*/
 	std::filesystem::path MeshFactory::GetCacheFile(const AssetHandle& handle)
 	{
 		return s_CacheDirectory / (std::to_string(handle) + ".hzrche");
@@ -130,9 +124,12 @@ namespace Hazard
 		for (size_t i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex3D vertex;
+
 			vertex.Position.x = mesh->mVertices[i].x;
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
+
+			vertex.Position = m_ScaleMatrix * vertex.Position;
 
 			data.BoundingBox.Encapsulate(vertex.Position);
 
@@ -180,7 +177,7 @@ namespace Hazard
 	void MeshFactory::TraverseNode(aiNode* node, MeshData& data, const glm::mat4 parentTransform, uint32_t level)
 	{
 		glm::mat4 local = AssimpMat4ToGlmMat4(node->mTransformation);
-		glm::mat4 transform = parentTransform * local;
+		glm::mat4 transform = parentTransform * local * m_ScaleMatrix;
 
 		for (uint32_t i = 0; i < node->mNumMeshes; i++) {
 

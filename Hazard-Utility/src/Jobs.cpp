@@ -19,9 +19,16 @@ JobStatus JobPromise::Status() const
 };
 float JobPromise::Progress() const
 {
-	if (!System) return JobStatus::Invalid;
+	if (!System) return -1.0f;
 	Job* job = System->GetJob(Uid);
-	if (!job) return JobStatus::Invalid;
+	if (!job) return -1.0f;
+
+	Job* dependecy = System->GetJob(job->Dependency);
+	if (!dependecy) job->Progress;
+	
+	if (dependecy->Status < JobStatus::Done) 
+		return dependecy->Progress;
+
 	return job->Progress;
 };
 
