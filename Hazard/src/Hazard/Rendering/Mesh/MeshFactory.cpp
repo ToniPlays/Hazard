@@ -63,8 +63,12 @@ namespace Hazard
 
 		Timer timer;
 		Assimp::Importer importer;
-		MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler(this);
-		importer.SetProgressHandler(handler);
+
+		if (m_Handler)
+		{
+			MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler(this);
+			importer.SetProgressHandler(handler);
+		}
 
 		const aiScene* scene = importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
 		if (!scene || !scene->HasMeshes())

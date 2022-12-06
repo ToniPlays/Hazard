@@ -6,21 +6,26 @@ import Utils
 from os import path
 
 from SetupPython import PythonConfiguration as PythonRequirements
-
-print(platform.system())
     
 # Make sure everything we need for the setup is installed
 PythonRequirements.Validate()
 
 from SetupVulkan import VulkanConfiguration as VulkanRequirements
-    
+
+print("\n---- Vulkan ----")
 VulkanRequirements.Validate()
 
 from SetupPremake import PremakeConfiguration as PremakeRequirements
 
 os.chdir('./../') # Change from devtools/scripts directory to root
-    
+print("\n---- Premake ----")
+
 premakeInstalled = PremakeRequirements.Validate()
+
+print("\n---- Setup ----")
+
+print("Setting up Hazard from git branch:")
+subprocess.call(["git", "branch"])
 print("\nUpdating submodules...")
 subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 

@@ -34,6 +34,9 @@
     <Filter Include="src\GUI\Debug">
       <UniqueIdentifier>{F74F3B58-6310-B78E-2C4B-000C98CAFB6A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\Overlays">
+      <UniqueIdentifier>{052A7428-F122-937A-1A55-78FF06AD7286}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\ProjectPanel">
       <UniqueIdentifier>{D7E415F1-C373-9FBA-6C92-B3B55800B060}</UniqueIdentifier>
     </Filter>
@@ -129,6 +132,9 @@
     <ClInclude Include="src\GUI\MainMenuBar.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\Overlays\ProgressOverlay.h">
+      <Filter>src\GUI\Overlays</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanel.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
@@ -183,7 +189,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Overlays\ProgressOverlay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -252,6 +257,9 @@
     <ClCompile Include="src\GUI\MainMenuBar.cpp">
       <Filter>src\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\Overlays\ProgressOverlay.cpp">
+      <Filter>src\GUI\Overlays</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
@@ -291,6 +299,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Overlays\ProgressOverlay.cpp" />
   </ItemGroup>
 </Project>

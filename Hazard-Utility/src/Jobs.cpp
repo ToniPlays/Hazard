@@ -24,7 +24,7 @@ float JobPromise::Progress() const
 	if (!job) return -1.0f;
 
 	Job* dependecy = System->GetJob(job->Dependency);
-	if (!dependecy) job->Progress;
+	if (!dependecy) return job->Progress;
 	
 	if (dependecy->Status < JobStatus::Done) 
 		return dependecy->Progress;

@@ -34,8 +34,6 @@ class VulkanConfiguration:
             print("\nYou don't have the Vulkan SDK installed!")
             cls.__InstallVulkanSDK()
             return False
-        else:
-            print(f"\nLocated Vulkan SDK at {vulkanSDK}")
 
         if (cls.requiredVulkanVersion not in vulkanSDK):
             print(f"You don't have the correct Vulkan SDK version! (Engine requires {cls.requiredVulkanVersion})")
@@ -91,7 +89,7 @@ class VulkanConfiguration:
             Utils.UnzipFile(vulkanPath, deleteZipFile=False)
             print(f"Vulkan SDK debug libs installed at {os.path.abspath(cls.vulkanDirectory)}")
         else:
-            print(f"\nVulkan SDK debug libs located at {os.path.abspath(cls.vulkanDirectory)}")
+            print(f"Vulkan SDK debug libs located at {os.path.abspath(cls.vulkanDirectory)}")
         return True
 
 if __name__ == "__main__":
