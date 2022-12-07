@@ -43,9 +43,8 @@ void EditorAssetManager::Init()
 	for (auto& texture : texturesToLoad)
 	{
 		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
-		auto waitPromise = promise.Then([texture](JobSystem* system, Job* job) -> size_t {
-			Job* dependency = system->GetJob(job->Dependency);
-			s_Icons[texture.Key] = std::move(*dependency->Value<Ref<Texture2DAsset>>());
+		auto waitPromise = promise.Then([texture](JobNode& node) -> size_t {
+			s_Icons[texture.Key] = std::move(*node.Value<Ref<Texture2DAsset>>());
 			return 0;
 			});
 

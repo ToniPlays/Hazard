@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+#include <chrono>
 #include "HazardRuntimeError.h"
 #include "Instrumentor.h"
 
@@ -80,6 +81,8 @@
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
 #define BIT(x) (size_t)(1 << (x))
+
+using namespace std::chrono_literals;
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

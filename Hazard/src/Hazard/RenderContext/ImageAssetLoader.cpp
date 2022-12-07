@@ -64,10 +64,12 @@ namespace Hazard
 		header.ImageData.Release();
 		return LoadType::Source;
 	}
-	TypedJobPromise<Ref<Asset>> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		using namespace HazardRenderer;
-		return Application::Get().SubmitJob<Ref<Asset>>("Image", [path = metadata.Path, handle = metadata.Handle](JobSystem* system, Job* job) -> size_t {
+		Ref<JobNode> job = Ref<JobNode>::Create();
+		job->DebugName = metadata.Path.filename().string();
+		job->Callback = [path = metadata.Path, handle = metadata.Handle](JobNode& node) -> size_t {
 
 			if (TextureFactory::CacheStatus(handle) == CacheStatus::Exists)
 			{
@@ -94,7 +96,8 @@ namespace Hazard
 				Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
 				asset->m_Type = AssetType::Image;
 
-				*job->Value<Ref<Texture2DAsset>>() = std::move(asset);
+				node.CreateBuffer<Ref<Texture2DAsset>>();
+				*node.Value<Ref<Texture2DAsset>>() = std::move(asset);
 
 				return (size_t)LoadType::Cache;
 			}
@@ -119,9 +122,14 @@ namespace Hazard
 
 			header.ImageData.Release();
 
-			*job->Value<Ref<Texture2DAsset>>() = std::move(asset);
+			node.CreateBuffer<Ref<Texture2DAsset>>();
+			*node.Value<Ref<Texture2DAsset>>() = std::move(asset);
 			return (size_t)LoadType::Source;
-			});
+			};
+		
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("Image");
+		graph->AsyncJob(job);
+		return graph;
 	}
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -172,9 +180,9 @@ namespace Hazard
 
 		return false;
 	}
-	JobPromise ImageAssetLoader::SaveAsync(Ref<Asset>& asset)
+	Ref<JobGraph> ImageAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return nullptr;
 	}
 }

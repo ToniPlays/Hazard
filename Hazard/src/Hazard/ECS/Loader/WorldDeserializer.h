@@ -110,12 +110,13 @@ namespace Hazard
 
 			if (m_CanAsync && false)
 			{
-				TypedJobPromise<Ref<Texture2DAsset>> promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
-				promise.Then([e = entity](JobSystem* system, Job* job) -> size_t {
-
+				JobPromise promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
+				promise.Then([e = entity](JobNode& node) -> size_t {
+					HZR_CORE_ASSERT(false, "TODO");
 					Entity entity = { e };
-					Ref<Texture2DAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<Texture2DAsset>>();
-					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
+					//Ref<Texture2DAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<Texture2DAsset>>();
+					//entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
+
 					return 0;
 					});
 				m_Promises.push_back({ AssetType::Image, promise });
@@ -159,11 +160,11 @@ namespace Hazard
 
 			if (m_CanAsync)
 			{
-				TypedJobPromise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(handle);
-				promise.Then([e = entity](JobSystem* system, Job* job) -> size_t {
+				JobPromise promise = AssetManager::GetAssetAsync<Mesh>(handle);
+				promise.Then([e = entity](JobNode& node) -> size_t {
 					Entity entity = { e };
-					Ref<Mesh> asset = *system->GetJob(job->Dependency)->Value<Ref<Mesh>>();
-					entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
+					//Ref<Mesh> asset = *system->GetJob(job->Dependency)->Value<Ref<Mesh>>();
+					//entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
 					return 0;
 					});
 				m_Promises.push_back({ AssetType::Mesh , promise });

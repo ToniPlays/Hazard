@@ -91,7 +91,7 @@ namespace Hazard {
 		{
 			AssetHandle handle = AssetManager::GetHandleFromFile(file);
 			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
-			m_World = AssetManager::GetAsset<World>(handle);
+			m_World = AssetManager::GetAsset<World>(handle); //TODO: Add flag AssetManagerFlags_CanAsync
 			return true;
 		}
 
@@ -115,20 +115,22 @@ namespace Hazard {
 			auto promise = AssetManager::GetAssetAsync<World>(handle);
 			promise.Wait();
 
-			auto waitPromise = promise.Then([handle, type](JobSystem* system, Job* job) -> size_t {
-				Job* dependency = system->GetJob(job->Dependency);
-				Application::GetModule<WorldHandler>().SetWorld(*dependency->Value<Ref<World>>());
+			auto waitPromise = promise.Then([handle, type](JobNode& node) -> size_t {
+				//Job* dependency = system->GetJob(job->Dependency);
+				//Application::GetModule<WorldHandler>().SetWorld(*dependency->Value<Ref<World>>());
 				return 0;
 				});
 
 			if (promises)
 			{
-				Ref<World> loaded = *promise.Value();
+				/*
+				//Ref<World> loaded = *promise.Value();
 				promises->WorldPromise = std::move(promise);
-				promises->AssetPromises.reserve(loaded->GetPromises().size());
+				//promises->AssetPromises.reserve(loaded->GetPromises().size());
 
 				for (auto& [type, p] : loaded->GetPromises())
 					promises->AssetPromises.emplace_back(WorldAsyncAssetPromise(type, p));
+				*/
 			}
 
 			return waitPromise;
@@ -141,6 +143,6 @@ namespace Hazard {
 		m_World->CreateEntity("Entity 1");
 		entity.AddComponent<CameraComponent>();
 
-		return TypedJobPromise<Ref<World>>();
+		return JobPromise();
 	}
 }

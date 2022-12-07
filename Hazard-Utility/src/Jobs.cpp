@@ -1,56 +1,51 @@
+#include "UtilityCore.h"
 #include "Jobs.h"
 
 #include "spdlog/fmt/fmt.h"
 
 size_t JobPromise::ReturnCode() const
 {
-	if (!System) return JobStatus::Invalid;
-	Job* job = System->GetJob(Uid);
-	if (!job) return 0;
-	return job->ReturnCode;
+	return 0;
 };
 
 JobStatus JobPromise::Status() const
 {
-	if (!System) return JobStatus::Invalid;
-	Job* job = System->GetJob(Uid);
-	if (!job) return JobStatus::Invalid;
-	return job->Status;
+	return JobStatus::Invalid;
 };
 float JobPromise::Progress() const
 {
-	if (!System) return -1.0f;
-	Job* job = System->GetJob(Uid);
-	if (!job) return -1.0f;
-
-	Job* dependecy = System->GetJob(job->Dependency);
-	if (!dependecy) return job->Progress;
-	
-	if (dependecy->Status < JobStatus::Done) 
-		return dependecy->Progress;
-
-	return job->Progress;
+	return 0;
 };
 
 JobPromise JobPromise::Wait()
 {
-	if (!System) return *this;
-	Job* job = System->GetJob(Uid);
-	if (!job) return *this;
+	if (!m_Node) return *this;
 
-	//Wait until status is Done or Error
-	job->Status.wait(JobStatus::Waiting);
-	job->Status.wait(JobStatus::Executing);
+	m_Node->m_Status.wait(JobStatus::Waiting);
+	m_Node->m_Status.wait(JobStatus::Executing);
+
 	return *this;
 }
 
 JobPromise JobPromise::Then(JobCallback&& callback)
 {
-	if (!System)
-		return JobPromise(nullptr, 0);
+	if (!m_System)
+		return JobPromise();
 
-	Job* dependency = System->GetJob(Uid);
-	return System->SubmitJob(dependency->Tag, callback, dependency->Uid);
+	Ref<JobNode> node = Ref<JobNode>::Create();
+	node->m_Status = JobStatus::Waiting;
+	node->DebugName = m_Node->DebugName;
+	node->m_RemainingDependencies = 1;
+	node->m_Uid = UID();
+	node->Callback = callback;
+
+	m_Node->m_Dependant = node;
+
+	JobPromise promise = {};
+	promise.m_System = m_System;
+	promise.m_Node = node;
+
+	return promise;
 }
 
 JobSystem::JobSystem(uint32_t threadCount) : m_ThreadCount(threadCount)
@@ -67,24 +62,35 @@ JobSystem::~JobSystem()
 		thread.join();
 }
 
-JobPromise JobSystem::SubmitJob(const std::string& tag, JobCallback callback, UID dependency)
+JobPromise JobSystem::SubmitGraph(Ref<JobGraph> graph)
 {
-	UID id = UID();
-	Job job = {};
-	job.Tag = tag;
-	job.Uid = id;
-	job.Dependency = dependency;
-	job.Status = JobStatus::Waiting;
-	job.Callback = callback;
-	job.ReturnCode = 0;
+	if (graph->Jobs().size() == 0)
+		return JobPromise();
+
+	Ref<JobNode> rootNode = Ref<JobNode>::Create();
+	rootNode->m_Status = JobStatus::Waiting;
+	rootNode->DebugName = fmt::format("{} (Root)", graph->Name());
+	rootNode->m_RemainingDependencies = graph->Jobs().size();
+	rootNode->m_Uid = UID();
 
 	m_JobMutex.lock();
-	m_Jobs.emplace_back(std::move(job));
-	m_JobMutex.unlock();
+	for (auto& job : graph->Jobs())
+	{
+		job->m_Dependant = rootNode;
+		m_AvailableJobNodes.push_back(job);
+	}
 
-	++m_JobCount;
-	m_JobCount.notify_one();
-	return JobPromise(this, id);
+
+	m_JobMutex.unlock();
+	m_JobCount = m_AvailableJobNodes.size();
+	m_JobCount.notify_all();
+
+	std::cout << fmt::format("Submitted job for graph {} (Jobs: {})", rootNode->DebugName, m_JobCount) << std::endl;
+
+	JobPromise promise = {};
+	promise.m_System = this;
+	promise.m_Node = rootNode;
+	return promise;
 }
 
 void JobSystem::WaitForJobs()
@@ -97,127 +103,96 @@ void JobSystem::GetJobs()
 
 }
 
-Job* JobSystem::GetJob(UID uid)
-{
-	try
-	{
-		m_JobMutex.lock();
-		Job* job = FindJob(uid);
-		m_JobMutex.unlock();
-		return job;
-	}
-	catch (const std::exception& e)
-	{
-		m_JobMutex.unlock();
-		HZR_ASSERT(false, e.what());
-	}
-	return nullptr;
-}
-
-Job* JobSystem::FindJob(UID uid)
-{
-	for (auto& job : m_Jobs)
-		if (job.Uid == uid)
-			return &job;
-
-	return nullptr;
-}
-
 void JobSystem::ThreadFunc(uint32_t index)
 {
 	while (m_Running)
 	{
-		m_JobCount.wait(m_JobCount);
+		m_JobCount.wait(0);
 		if (!m_Running)
 			break;
 
 		m_JobMutex.lock();
-		Job* job = GetNextAvailableJob();
-
-		if (!job)
+		if (m_AvailableJobNodes.size() == 0)
 		{
 			m_JobMutex.unlock();
 			continue;
 		}
 
-		job->Status = JobStatus::Executing;
-		job->Status.notify_all();
+		Ref<JobNode> job = GetNextAvailableJob();
 		m_JobMutex.unlock();
 
-		job->ReturnCode = job->Callback(this, job);
-		job->Progress = 1.0f;
+		job->m_System = this;
+		job->m_Status = JobStatus::Executing;
+		job->m_Status.notify_all();
 
-		if (job->ReturnCode >= 0)
-			job->Status = JobStatus::Done;
+		std::cout << fmt::format("Started job {0}", job->DebugName) << std::endl;
+		if (job->Callback)
+			job->Callback(*job.Raw());
+
+		std::cout << fmt::format("Finished job {0}", job->DebugName) << std::endl;
+		job->m_Progress = 1.0f;
+
+		if (job->m_ReturnCode >= 0)
+			job->m_Status = JobStatus::Done;
 		else
-			job->Status = JobStatus::Error;
-		job->Status.notify_all();
+			job->m_Status = JobStatus::Error;
+		job->m_Status.notify_all();
 
-		m_JobCount--;
+
+		if (--job->m_RemainingDependencies == 0 && job->m_Dependant)
+		{
+			m_JobMutex.lock();
+			m_AvailableJobNodes.push_back(job->m_Dependant);
+			job->m_Dependant->m_Buffer = job->m_Buffer;
+			job->m_BufferDestructor = job->m_BufferDestructor;
+			std::cout << fmt::format("Submitted dependant {} for job {}", job->m_Dependant->DebugName, job->DebugName) << std::endl;
+			m_JobMutex.unlock();
+		}
+
+		m_JobCount = m_AvailableJobNodes.size();
 		m_JobCount.notify_all();
 	}
 }
 
-Job* JobSystem::GetNextAvailableJob()
+Ref<JobNode> JobSystem::GetNextAvailableJob()
 {
-	for (auto& job : m_Jobs)
-	{
-		if (job.Status == JobStatus::Waiting)
-		{
-			if (job.Dependency == 0)
-				return &job;
-
-			Job* dependency = FindJob(job.Dependency);
-			if (!dependency) return &job;
-
-			if (dependency->Status >= JobStatus::Done)
-				return &job;
-		}
-	}
-	return nullptr;
+	Ref<JobNode> node = m_AvailableJobNodes.front();
+	m_AvailableJobNodes.pop_front();
+	return node;
 }
 
-JobPromise::JobPromise(JobSystem* jobSystem, UID uid)
-	: System(jobSystem), Uid(uid)
+JobPromise::JobPromise(JobSystem* jobSystem, Ref<JobNode> node)
+	: m_System(jobSystem), m_Node(node)
 {
-	if (System)
-		System->IncJobRef(uid);
 }
 
 JobPromise::~JobPromise()
 {
-	if (System)
-		System->DecJobRef(Uid);
+
 }
 
-JobPromise::JobPromise(const JobPromise& copy) : System(copy.System), Uid(copy.Uid)
+JobPromise::JobPromise(const JobPromise& copy) : m_System(copy.m_System), m_Node(copy.m_Node)
 {
-	if (System)
-		System->IncJobRef(Uid);
 }
 
 JobPromise::JobPromise(JobPromise&& move)
-	: System(move.System), Uid(move.Uid)
+	: m_System(move.m_System), m_Node(move.m_Node)
 {
-	move.System = nullptr;
-	move.Uid = 0;
 }
 
 JobPromise& JobPromise::operator=(const JobPromise& copy)
 {
-	System = copy.System;
-	Uid = copy.Uid;
-	if (System)
-		System->IncJobRef(Uid);
+	m_System = copy.m_System;
+	m_Node = copy.m_Node;
 	return *this;
 }
 
 JobPromise& JobPromise::operator=(JobPromise&& move)
 {
-	System = move.System;
-	Uid = move.Uid;
-	move.System = nullptr;
-	move.Uid = 0;
+	m_System = move.m_System;
+	m_Node = move.m_Node;
+	move.m_System = nullptr;
+	move.m_Node = nullptr;
 
 	return *this;
 }

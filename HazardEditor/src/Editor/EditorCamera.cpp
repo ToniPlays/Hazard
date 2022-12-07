@@ -246,7 +246,7 @@ namespace Editor {
 	}
 	void EditorCamera::SetIs2D(bool enabled2D)
 	{
-		if (enabled2D) 
+		if (enabled2D)
 		{
 			float side = aspectRatio * size2D;
 			m_Projection = glm::ortho(-side, side, -size2D, size2D, -1000.0f, 1000.0f);

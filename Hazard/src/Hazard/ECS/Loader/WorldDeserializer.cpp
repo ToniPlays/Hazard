@@ -52,7 +52,8 @@ namespace Hazard
 				TryDeserializeComponent<CircleCollider2DComponent>("CircleCollider2DComponent", entity, node);
 
 				index++;
-				m_Handler(entity, index, entities.size());
+				if (m_Handler)
+					m_Handler(entity, index, entities.size());
 			}
 		}
 		HZR_CORE_INFO("World loaded in {} ms", timer.ElapsedMillis());

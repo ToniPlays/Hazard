@@ -489,7 +489,7 @@ namespace UI
 				ImGui::PopStyleVar();
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					Application::Get().SubmitJob("Image", [handle, entities](JobSystem* system, Job* job) mutable -> size_t {
+					/*Application::Get().SubmitJob("Image", [handle, entities](JobSystem* system, Job* job) mutable -> size_t {
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
 						auto envMap = EnvironmentMap::Create(asset);
 
@@ -497,6 +497,7 @@ namespace UI
 							entity.GetComponent<SkyLightComponent>().EnvironmentMap = envMap;
 						return 0;
 						});
+						*/
 					});
 				ImGui::NextColumn();
 				if (ImUI::InputFloat("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
@@ -710,12 +711,13 @@ namespace UI
 
 				}
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-					Application::Get().SubmitJob("Mesh", [entityList = entities, handle](JobSystem* system, Job* job) mutable -> size_t {
+					/*Application::Get().SubmitJob("Mesh", [entityList = entities, handle](JobSystem* system, Job* job) mutable -> size_t {
 						auto asset = AssetManager::GetAsset<Mesh>(handle);
 						for (auto& entity : entityList)
 							auto& c = entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
 						return 0;
 						});
+					*/
 					});
 
 				ImGui::NextColumn();

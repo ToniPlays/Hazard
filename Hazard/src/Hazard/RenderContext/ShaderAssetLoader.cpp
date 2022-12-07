@@ -45,10 +45,11 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	TypedJobPromise<Ref<Asset>> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		return Application::Get().SubmitJob<Ref<Asset>>("Shader", [path = metadata.Path, handle = metadata.Handle](JobSystem* system, Job* job)->size_t {
-			job->Progress = 0;
+		Ref<JobNode> loadingJob = Ref<JobNode>::Create();
+		loadingJob->DebugName = metadata.Path.filename().string();
+		loadingJob->Callback = ([path = metadata.Path, handle = metadata.Handle](JobNode& node)->size_t {
 			using namespace HazardRenderer;
 
 			RenderAPI api = GraphicsContext::GetRenderAPI();
@@ -70,26 +71,31 @@ namespace Hazard
 
 				shaderAsset->m_Handle = element.Handle;
 				shaderAsset->m_Type = (AssetType)element.Type;
-				*job->Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
+				node.CreateBuffer<Ref<ShaderAsset>>();
+				*node.Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
 				return (size_t)LoadType::Cache;
 			}
 
 			shaderAsset->ShaderCode = ShaderCompiler::GetShaderBinariesFromSource(path, api);
 			shaderAsset->m_Type = AssetType::Shader;
 
-			*job->Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
+			*node.Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
 			return (size_t)LoadType::Source;
 		});
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("ShaderLoad");
+		graph->AsyncJob(loadingJob);
+		return graph;
 	}
 	bool ShaderAssetLoader::Save(Ref<Asset>& asset)
 	{
-		auto promise = SaveAsync(asset);
-		promise.Wait();
-		return promise.ReturnCode() == 0;
+		return false;
 	}
-	JobPromise ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
+	Ref<JobGraph> ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
+		return nullptr;
+		/*
 		Timer timer;
 		using namespace HazardRenderer;
 
@@ -134,6 +140,6 @@ namespace Hazard
 			}
 			return 0;
 			});
-		return promise;
+			*/
 	}
 }

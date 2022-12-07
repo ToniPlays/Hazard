@@ -22,8 +22,10 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	TypedJobPromise<Ref<Asset>> WorldAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> WorldAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
+		return nullptr;
+		/*
 		return Application::Get().SubmitJob<Ref<Asset>>("WorldAsync", [meta = metadata, flags](JobSystem* system, Job* job) -> size_t {
 
 			if (!File::Exists(meta.Path))
@@ -43,14 +45,15 @@ namespace Hazard
 			*job->Value<Ref<World>>() = std::move(world);
 			return (size_t)LoadType::Source;
 			});
+			*/
 	}
 	bool WorldAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return false;
 	}
-	JobPromise WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
+	Ref<JobGraph> WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return nullptr;
 	}
 }

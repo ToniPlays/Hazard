@@ -310,6 +310,7 @@ namespace UI
 		{
 		case AssetType::Image:
 		{
+#if 0
 			if (metadata.LoadState != LoadState::Loaded)
 			{
 				if (metadata.LoadState == LoadState::None)
@@ -324,7 +325,8 @@ namespace UI
 					progressPanel->AddProcess(AssetType::Image, promise);
 				}
 				return EditorAssetManager::GetIcon("Default");
-			}
+		}
+#endif
 			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
 			return asset->GetSourceImageAsset()->Value ? asset : EditorAssetManager::GetIcon("Default");
 		}
@@ -334,9 +336,9 @@ namespace UI
 			return EditorAssetManager::GetIcon("World");
 		case AssetType::Folder:
 			return EditorAssetManager::GetIcon("Folder");
-		}
-		return EditorAssetManager::GetIcon("Default");
 	}
+		return EditorAssetManager::GetIcon("Default");
+}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
 	{

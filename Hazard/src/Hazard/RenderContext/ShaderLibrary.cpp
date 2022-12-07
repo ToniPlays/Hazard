@@ -13,18 +13,17 @@ namespace Hazard
 {
 	void ShaderLibrary::Init()
 	{
+		Timer timer;
+
 		using namespace HazardRenderer;
-
-
 		std::vector<JobPromise> promises;
 		//Line shader
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Debug/lineShader.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
 
 				BufferLayout layout = LineVertex::Layout();
-				Job* dependency = system->GetJob(job->Dependency);
-				Ref<ShaderAsset> asset = *dependency->Value<Ref<ShaderAsset>>();
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "LineShader";
@@ -44,10 +43,9 @@ namespace Hazard
 		//Quad shader
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/2D/standard.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
-
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
 				BufferLayout layout = QuadVertex::Layout();
-				Ref<ShaderAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<ShaderAsset>>();
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "QuadPipeline";
@@ -57,6 +55,7 @@ namespace Hazard
 				specs.ShaderCodeCount = asset->ShaderCode.size();
 				specs.pShaderCode = asset->ShaderCode.data();
 				specs.pBufferLayout = &layout;
+
 				s_LoadedShaders["standard"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 				return 0;
 				});
@@ -65,10 +64,10 @@ namespace Hazard
 		//PBR shader
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/pbr_static.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
 
 				BufferLayout layout = Vertex3D::Layout();
-				Ref<ShaderAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<ShaderAsset>>();
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "PBR_Static";
@@ -87,8 +86,8 @@ namespace Hazard
 		//Skybox
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/skybox.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
-				Ref<ShaderAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<ShaderAsset>>();
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "Skybox";
@@ -105,13 +104,12 @@ namespace Hazard
 				});
 			promises.push_back(waitPromise);
 		}
-
 		//Compute shaders
 		//EquirectangularToCubemap
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubeMap.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
-				Ref<ShaderAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<ShaderAsset>>();
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "EquirectangularToCubemap";
@@ -123,12 +121,13 @@ namespace Hazard
 				return 0;
 				});
 			promises.push_back(waitPromise);
+
 		}
 		//Environment irradiance
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl");
-			auto waitPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
-				Ref<ShaderAsset> asset = *system->GetJob(job->Dependency)->Value<Ref<ShaderAsset>>();
+			auto waitPromise = promise.Then([](JobNode& node) -> size_t {
+				Ref<ShaderAsset> asset = *node.Value<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};
 				specs.DebugName = "EnvironmentIrradiance";
@@ -142,7 +141,6 @@ namespace Hazard
 			promises.push_back(waitPromise);
 		}
 
-		Timer timer;
 		for (auto& promise : promises)
 			promise.Wait();
 

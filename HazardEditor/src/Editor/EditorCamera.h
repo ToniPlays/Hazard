@@ -54,7 +54,7 @@ namespace Editor
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
 
-		const bool Is2DEnabled() const { return false; }
+		const bool Is2DEnabled() const { return m_Is2DEnabled; }
 
 	private:
 		glm::mat4 m_ViewMatrix;

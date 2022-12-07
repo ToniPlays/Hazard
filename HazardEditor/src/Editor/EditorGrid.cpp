@@ -46,13 +46,15 @@ namespace Editor
 			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
+		return;
 
-		TypedJobPromise<Ref<AssetPointer>> promise = AssetManager::GetAssetAsync<AssetPointer>("res/Shaders/Grid.glsl");
+		JobPromise promise = AssetManager::GetAssetAsync<AssetPointer>("res/Shaders/Grid.glsl");
 
-		promise.Then([this](JobSystem* system, Job* job) -> size_t {
+		promise.Then([this](JobNode& node) -> size_t {
 
+			/*
 			Job* dependency = system->GetJob(job->Dependency);
-			auto shader = *dependency->Value<Ref<ShaderAsset>>();
+			auto& shader = *dependency->Value<Ref<ShaderAsset>>();
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Grid";
@@ -74,6 +76,7 @@ namespace Editor
 			uboInfo.Usage = BufferUsage::DynamicDraw;
 
 			m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
+			*/
 			return 0;
 
 			});

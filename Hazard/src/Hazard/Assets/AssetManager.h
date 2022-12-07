@@ -9,6 +9,7 @@
 #include "Jobs.h"
 
 #include "Hazard/Rendering/Mesh/Mesh.h"
+#include "Hazard/Core/Application.h"
 
 #include <hzrpch.h>
 
@@ -52,7 +53,7 @@ namespace Hazard
 		static JobPromise SaveAssetAsync(Ref<Asset> asset);
 
 		template<typename T>
-		static TypedJobPromise<Ref<T>> GetAssetAsync(AssetHandle handle, uint32_t flags = 0)
+		static JobPromise GetAssetAsync(AssetHandle handle, uint32_t flags = 0)
 		{
 			static_assert(std::is_base_of<Asset, T>::value);
 
@@ -61,19 +62,17 @@ namespace Hazard
 			if (meta.LoadState != LoadState::Loaded)
 			{
 				meta.LoadState = LoadState::Loading;
-				JobPromise promise = s_AssetLoader.LoadAsync(meta, flags | AssetManagerFlags_CanAsync);
-
-				auto waitPromise = promise.TypedThen<Ref<T>>([handle](JobSystem* system, Job* job) -> size_t {
+				Ref<JobGraph> jobGraph = s_AssetLoader.LoadAsync(meta, flags);
+				jobGraph->Then([handle](JobNode& node) -> size_t {
 
 					AssetMetadata& meta = GetMetadata(handle);
 
-					Job* dependency = system->GetJob(job->Dependency);
-					Ref<T> asset = *dependency->Value<Ref<T>>();
-					meta.LoadState = dependency->ReturnCode ? LoadState::Loaded : LoadState::None;
+					Ref<T> asset = *node.Value<Ref<T>>();
+					meta.LoadState = asset ? LoadState::Loaded : LoadState::None;
 
 					if (meta.LoadState != LoadState::Loaded)
 					{
-						HZR_CORE_ERROR("{0} Failed to load with {1} ({2})", meta.Path.string(), dependency->ReturnCode, meta.Handle);
+						HZR_CORE_ERROR("{0} Failed to load with {1} ({2})", meta.Path.string(), 0, meta.Handle);
 						return -1;
 					}
 
@@ -83,20 +82,20 @@ namespace Hazard
 					asset->SetFlags(AssetFlags::Valid);
 					s_LoadedAssets[meta.Handle] = asset;
 
-					*job->Value<Ref<T>>() = asset;
+					HZR_CORE_WARN("Asset {0} loaded", meta.Path.string());
+					
 					return 0;
 					});
-
-				return waitPromise;
+				return Application::Get().GetJobSystem().SubmitGraph(jobGraph);
 			}
 			else
 			{
 				HZR_ASSERT(false, "This should not happen");
 			}
-			return TypedJobPromise<Ref<T>>();
+			return JobPromise();
 		}
 		template<typename T>
-		static TypedJobPromise<Ref<T>> GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)
+		static JobPromise GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)
 		{
 			return GetAssetAsync<T>(GetHandleFromFile(path), flags);
 		}

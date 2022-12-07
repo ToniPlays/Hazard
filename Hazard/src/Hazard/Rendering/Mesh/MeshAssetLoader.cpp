@@ -1,5 +1,6 @@
 
 #include <hzrpch.h>
+
 #include "MeshAssetLoader.h"
 #include "MeshFactory.h"
 #include "Hazard/Assets/AssetPack.h"
@@ -82,8 +83,12 @@ namespace Hazard
 		HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
 		return LoadType::Source;
 	}
-	TypedJobPromise<Ref<Asset>> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
+		HZR_CORE_ASSERT(false, "TODO");
+		return nullptr;
+
+		/*
 		return Application::Get().SubmitJob<Ref<Asset>>("Mesh", [meta = metadata](JobSystem* system, Job* job) -> size_t {
 
 			Timer timer;
@@ -143,7 +148,6 @@ namespace Hazard
 
 			factory.SetProgressHandler([job](float progress) {
 				job->Progress = progress;
-				HZR_CORE_INFO(progress);
 				});
 
 			MeshData meshData = factory.LoadMeshFromSource(meta.Path);
@@ -160,6 +164,7 @@ namespace Hazard
 			HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
 			return (size_t)LoadType::Source;
 			});
+			*/
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -222,9 +227,9 @@ namespace Hazard
 		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 		return false;
 	}
-	JobPromise MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
+	Ref<JobGraph> MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return nullptr;
 	}
 }

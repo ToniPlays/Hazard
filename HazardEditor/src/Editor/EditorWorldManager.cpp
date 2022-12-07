@@ -22,7 +22,11 @@ namespace Editor
 	void EditorWorldManager::LoadWorld(const std::filesystem::path& path)
 	{
 		WorldAsyncPromises promises;
+		auto& handler = Application::GetModule<WorldHandler>();
+		handler.LoadWorld(path, Serialization::Editor);
+		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
 
+		/*
 		auto& handler = Application::GetModule<WorldHandler>();
 		auto promise = handler.LoadWorldAsync(path, Serialization::Editor, &promises);
 
@@ -37,5 +41,6 @@ namespace Editor
 
 		for (auto& promise : promises.AssetPromises)
 			panel->AddProcess(promise.Type, promise.Promise);
+		*/
 	}
 }

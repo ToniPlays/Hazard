@@ -20,7 +20,6 @@ namespace Hazard
 		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
 		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
 		{
-
 			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI));
 			PipelineAssetHeader header = dataBuffer.Read<PipelineAssetHeader>();
 
@@ -40,7 +39,6 @@ namespace Hazard
 			specs.pShaderCode = shader->ShaderCode.data();
 
 			asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-
 			return LoadType::Cache;
 		}
 
@@ -66,10 +64,10 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	TypedJobPromise<Ref<Asset>> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return TypedJobPromise<Ref<Asset>>();
+		return nullptr;
 	}
 	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -96,12 +94,11 @@ namespace Hazard
 		header.StageCount = pipeline->GetShader()->GetShaderCode().size();
 		header.ShaderHandle = 0;
 
-
 		return true;
 	}
-	JobPromise PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
+	Ref<JobGraph> PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
-		return JobPromise();
+		return nullptr;
 	}
 }
