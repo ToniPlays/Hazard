@@ -107,7 +107,7 @@ namespace HazardRenderer::Vulkan
 			{
 				for (const auto& ext : extensions)
 				{
-					std::cout << " -" << ext.extensionName << std::endl;
+					//std::cout << " -" << ext.extensionName << std::endl;
 					m_Capabilities.Swapchain |= strcmp(ext.extensionName, VK_KHR_SWAPCHAIN_EXTENSION_NAME) == 0;
 					m_Capabilities.DiagnosticCheckpoint |= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME) == 0;
 					m_Capabilities.DiagnosticConfig |= strcmp(ext.extensionName, VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME) == 0;

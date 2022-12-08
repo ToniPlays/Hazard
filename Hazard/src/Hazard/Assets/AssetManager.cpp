@@ -29,8 +29,6 @@ namespace Hazard
 
 		std::filesystem::path path = File::GetFileAbsolutePath(filePath); 
 
-		//HZR_CORE_INFO("Importing asset from {0}", path.string());
-
 		if (s_Registry.Contains(path))
 			return s_Registry.Get(path).Handle;
 

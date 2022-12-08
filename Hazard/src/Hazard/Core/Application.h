@@ -38,7 +38,7 @@ namespace Hazard
 		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
 
 	private:
-		JobSystem m_JobSystem;
+		JobSystem m_JobSystem;// = JobSystem(1);
 	};
 	Hazard::Application* CreateApplication();
 }

@@ -50,7 +50,7 @@ namespace Editor
 
 		JobPromise promise = AssetManager::GetAssetAsync<AssetPointer>("res/Shaders/Grid.glsl");
 
-		promise.Then([this](JobNode& node) -> size_t {
+		promise.Then([this](JobGraph& graph) -> size_t {
 
 			/*
 			Job* dependency = system->GetJob(job->Dependency);

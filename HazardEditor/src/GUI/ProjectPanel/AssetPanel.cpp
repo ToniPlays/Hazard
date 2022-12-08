@@ -310,23 +310,18 @@ namespace UI
 		{
 		case AssetType::Image:
 		{
-#if 0
 			if (metadata.LoadState != LoadState::Loaded)
 			{
 				if (metadata.LoadState == LoadState::None)
 				{
-					auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ProgressOverlay>();
 					auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(metadata.Handle);
-					promise.Then([this](JobSystem* system, Job* job) -> size_t {
-						Job* dependency = system->GetJob(job->Dependency);
-						m_Textures.push_back(*dependency->Value<Ref<Texture2DAsset>>());
+					promise.Then([this](JobGraph& graph) -> size_t {
+						m_Textures.push_back(*graph.DependencyResult<Ref<Texture2DAsset>>());
 						return 0;
 						});
-					progressPanel->AddProcess(AssetType::Image, promise);
 				}
 				return EditorAssetManager::GetIcon("Default");
-		}
-#endif
+			}
 			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
 			return asset->GetSourceImageAsset()->Value ? asset : EditorAssetManager::GetIcon("Default");
 		}

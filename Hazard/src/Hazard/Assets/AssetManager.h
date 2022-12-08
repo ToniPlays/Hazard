@@ -59,15 +59,15 @@ namespace Hazard
 
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-			if (meta.LoadState != LoadState::Loaded)
+			if (meta.LoadState == LoadState::None)
 			{
 				meta.LoadState = LoadState::Loading;
 				Ref<JobGraph> jobGraph = s_AssetLoader.LoadAsync(meta, flags);
-				jobGraph->Then([handle](JobNode& node) -> size_t {
+				jobGraph->OnFinished([handle](JobGraph& graph) -> size_t {
 
 					AssetMetadata& meta = GetMetadata(handle);
 
-					Ref<T> asset = *node.Value<Ref<T>>();
+					Ref<T> asset = *graph.Result<Ref<T>>();
 					meta.LoadState = asset ? LoadState::Loaded : LoadState::None;
 
 					if (meta.LoadState != LoadState::Loaded)
@@ -81,18 +81,26 @@ namespace Hazard
 					asset->SetHandle(meta.Handle);
 					asset->SetFlags(AssetFlags::Valid);
 					s_LoadedAssets[meta.Handle] = asset;
-
-					HZR_CORE_WARN("Asset {0} loaded", meta.Path.string());
 					
 					return 0;
 					});
 				return Application::Get().GetJobSystem().SubmitGraph(jobGraph);
 			}
-			else
-			{
-				HZR_ASSERT(false, "This should not happen");
-			}
-			return JobPromise();
+
+			Ref<T> asset;
+			if (s_LoadedAssets.find(handle) == s_LoadedAssets.end())
+				asset = nullptr;
+			else 
+				asset = s_LoadedAssets[handle].As<T>();
+
+			Ref<JobNode> valueNode = Ref<JobNode>::Create();
+			valueNode->CreateBuffer<Ref<T>>();
+			*valueNode->Value<Ref<T>>() = asset;
+
+			Ref<JobGraph> jobGraph = Ref<JobGraph>::Create();
+			jobGraph->AsyncJob(valueNode);
+
+			return Application::Get().GetJobSystem().SubmitGraph(jobGraph);
 		}
 		template<typename T>
 		static JobPromise GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)

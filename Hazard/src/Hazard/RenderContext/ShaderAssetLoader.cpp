@@ -55,6 +55,8 @@ namespace Hazard
 			RenderAPI api = GraphicsContext::GetRenderAPI();
 			Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
 
+			node.CreateBuffer<Ref<ShaderAsset>>();
+
 			auto cachePath = ShaderCompiler::GetCachedFilePath(path, api);
 			if (File::Exists(cachePath))
 			{
@@ -71,7 +73,7 @@ namespace Hazard
 
 				shaderAsset->m_Handle = element.Handle;
 				shaderAsset->m_Type = (AssetType)element.Type;
-				node.CreateBuffer<Ref<ShaderAsset>>();
+				
 				*node.Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
 				return (size_t)LoadType::Cache;
 			}

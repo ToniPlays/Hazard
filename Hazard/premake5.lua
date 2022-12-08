@@ -112,6 +112,7 @@ project "Hazard"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		optimize "on"
 
 		if os.host() == "windows" then
 			links {

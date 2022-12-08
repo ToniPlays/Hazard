@@ -43,10 +43,10 @@ void EditorAssetManager::Init()
 	for (auto& texture : texturesToLoad)
 	{
 		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
-		auto waitPromise = promise.Then([texture](JobNode& node) -> size_t {
-			s_Icons[texture.Key] = std::move(*node.Value<Ref<Texture2DAsset>>());
+		auto waitPromise = promise.Then([texture](JobGraph& graph) -> size_t {
+			s_Icons[texture.Key] = *graph.DependencyResult<Ref<Texture2DAsset>>();
 			return 0;
-			});
+			}, texture.Key);
 
 		promises.push_back(waitPromise);
 	}
@@ -212,11 +212,11 @@ Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 
 void EditorAssetManager::RefreshEditorAssets()
 {
-	
+	Timer timer;
+
 	//Compile non cached shaders
-	std::unordered_map<AssetType, std::vector<Ref<Asset>>> assetsToUpdate;
+	std::unordered_map<AssetType, std::vector<AssetHandle>> assetsToUpdate;
 	{
-		Timer timer;
 		for (auto& file : File::GetAllInDirectory("res/Shaders", true))
 		{
 			switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
@@ -224,31 +224,38 @@ void EditorAssetManager::RefreshEditorAssets()
 			case AssetType::Shader:
 			{
 				using namespace HazardRenderer;
-				Ref<Asset> asset = AssetManager::GetAsset<ShaderAsset>(file);
+				AssetMetadata& metadata = AssetManager::GetMetadata(AssetManager::GetHandleFromFile(file));
 				auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
 
 				if (File::IsNewerThan(file, cacheDir))
-					assetsToUpdate[AssetType::Shader].push_back(asset);
+					assetsToUpdate[AssetType::Shader].push_back(metadata.Handle);
+
 				break;
 			}
 			default:
 				break;
 			}
 		}
-		HZR_INFO("Refresh editor assets in {0} ms", timer.ElapsedMillis());
 	}
+
 	auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
 
-	for (auto& [type, assets] : assetsToUpdate)
+	for (auto& [type, handles] : assetsToUpdate)
 	{
 		std::string tag = Utils::AssetTypeToString(type);
-
 		std::vector<JobPromise> promises;
-		promises.reserve(assets.size());
+		promises.reserve(handles.size());
 
-		for (auto& asset : assets)
-			promises.push_back(AssetManager::SaveAssetAsync(asset));
-
-		progressPanel->AddProcesses(type, promises);
+		for (auto& handle : handles)
+		{
+			JobPromise promise = AssetManager::GetAssetAsync<Asset>(handle);
+			JobPromise savePromise = promise.Then([](JobGraph& graph) -> size_t {
+				Ref<Asset> asset = *graph.DependencyResult<Ref<Asset>>();
+				AssetManager::SaveAssetAsync(asset);
+				return 0;
+				});
+		}
 	}
+
+	HZR_INFO("Refresh editor assets in {0} ms", timer.ElapsedMillis());
 }

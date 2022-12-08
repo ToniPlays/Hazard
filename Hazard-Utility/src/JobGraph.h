@@ -21,8 +21,11 @@ enum JobStatus
 	Error
 };
 
+struct JobGraph;
+
 struct JobNode : public RefCount
 {
+	friend struct JobGraph;
 	friend class JobSystem;
 	friend struct JobPromise;
 
@@ -33,8 +36,12 @@ struct JobNode : public RefCount
 	std::function<int(JobNode&)> Callback;
 	float Weight = 1;
 
-	UID GetUID() { return m_Uid; }
-	JobSystem* GetJobSystem() { return m_System; };
+	size_t GetDependencyCount() { return m_Dependencies.size(); }
+	Ref<JobNode> GetDependency(size_t index = 0)
+	{
+		return m_Dependencies[index];
+	}
+
 
 	template<typename T, typename... Args>
 	void CreateBuffer(Args... args)
@@ -50,9 +57,6 @@ struct JobNode : public RefCount
 	}
 
 private:
-
-	UID m_Uid = 0;
-	JobSystem* m_System = nullptr;
 	std::atomic_size_t m_RemainingDependencies = 1;
 
 	std::atomic<JobStatus> m_Status;
@@ -62,27 +66,57 @@ private:
 
 	void* m_Buffer;
 	JobDataDestructor m_BufferDestructor;
-	Ref<JobNode> m_Dependant = nullptr;
+	std::vector<Ref<JobNode>> m_Dependant;
+	std::vector<Ref<JobNode>> m_Dependencies;
+	Ref<JobGraph> m_JobGraph = nullptr;
 };
 
-using JobCallback = std::function<int(JobNode&)>;
+using JobNodeCallback = std::function<int(JobNode&)>;
+using JobGraphCallback = std::function<int(JobGraph&)>;
 
 struct JobGraph : public RefCount
 {
+	friend class JobPromise;
+	friend class JobSystem;
+
 	JobGraph() = default;
-	JobGraph(const std::string& debugName) : m_DebugName(debugName), m_Uid(UID()) {}
+	JobGraph(const std::string& debugName) : m_DebugName(debugName) {}
 
 	void AsyncJob(Ref<JobNode> node)
 	{
+		node->m_JobGraph = this;
 		m_Jobs.push_back(node);
+		m_JobsRunning++;
 	}
-	void Then(JobCallback callback) {}
+	void OnFinished(JobGraphCallback callback)
+	{
+		m_FinishCallback = callback;
+	}
+
+	template<typename T> 
+	T* Result(size_t index = 0)
+	{
+		return m_Jobs[index]->Value<T>();
+	}
+	template<typename T>
+	T* DependencyResult(size_t graph = 0, size_t index = 0)
+	{
+		return m_DependencyGraphs[graph]->m_Jobs[index]->Value<T>();
+	}
+
 	const std::string& Name() { return m_DebugName; }
-	UID GetUID() { return m_Uid; }
 	std::vector<Ref<JobNode>> Jobs() { return m_Jobs; }
+
+	void AsyncJobFinished();
 
 private:
 	std::string m_DebugName;
+	JobGraphCallback m_FinishCallback;
+
 	std::vector<Ref<JobNode>> m_Jobs;
-	UID m_Uid;
+	std::atomic<JobStatus> m_Status;
+	std::atomic_size_t m_JobsRunning;
+	std::vector<Ref<JobGraph>> m_DependantGraph;
+	std::vector<Ref<JobGraph>> m_DependencyGraphs;
+	JobSystem* m_JobSystem = nullptr;
 };

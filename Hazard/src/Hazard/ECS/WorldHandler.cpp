@@ -114,24 +114,10 @@ namespace Hazard {
 
 			auto promise = AssetManager::GetAssetAsync<World>(handle);
 			promise.Wait();
-
-			auto waitPromise = promise.Then([handle, type](JobNode& node) -> size_t {
-				//Job* dependency = system->GetJob(job->Dependency);
-				//Application::GetModule<WorldHandler>().SetWorld(*dependency->Value<Ref<World>>());
+			auto waitPromise = promise.Then([handle, type](JobGraph& graph) -> size_t {
+				Application::GetModule<WorldHandler>().SetWorld(*graph.Result<Ref<World>>());
 				return 0;
 				});
-
-			if (promises)
-			{
-				/*
-				//Ref<World> loaded = *promise.Value();
-				promises->WorldPromise = std::move(promise);
-				//promises->AssetPromises.reserve(loaded->GetPromises().size());
-
-				for (auto& [type, p] : loaded->GetPromises())
-					promises->AssetPromises.emplace_back(WorldAsyncAssetPromise(type, p));
-				*/
-			}
 
 			return waitPromise;
 

@@ -10,13 +10,14 @@ namespace HazardRenderer::OpenGL
 		GL_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 		GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 		GL_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-		GL_DESCRIPTOR_TYPE_MAX_ENUM
+		GL_DESCRIPTOR_TYPE_MAX_ENUM,
+		GL_DESCRIPTOR_TYPE_MAX_FLAGS
 	};
 
 	struct OpenGLWriteDescriptor 
 	{
 		std::string DebugName;
-		OpenGLDescriptorTypeFlags Type;
+		OpenGLDescriptorTypeFlags Type = GL_DESCRIPTOR_TYPE_MAX_FLAGS;
 		uint32_t Binding = UINT32_MAX;
 		uint32_t ArraySize = 0;
 		uint32_t Dimension = 1;

@@ -9,17 +9,18 @@
 
 
 struct JobPromise;
-struct Job;
+class Job;
 class JobSystem;
 
+
+//Promise handles a single graph
 
 struct JobPromise
 {
 	friend class JobSystem;
 public:
 	JobPromise() = default;
-	JobPromise(JobSystem* jobSystem, Ref<JobNode> node);
-	~JobPromise();
+	JobPromise(JobSystem* jobSystem, Ref<JobGraph> node);
 
 	JobPromise(const JobPromise& copy);
 	JobPromise(JobPromise&& move);
@@ -34,13 +35,16 @@ public:
 	template<typename T>
 	T* Value() const;
 	JobPromise Wait();
-
-	JobPromise Then(JobCallback&& callback);
+	JobPromise Then(JobGraphCallback&& callback, const std::string& name = "");
+	JobPromise Then(Ref<JobGraph> graph)
+	{
+		HZR_ASSERT(false, "");
+		return JobPromise();
+	}
 
 protected:
 	JobSystem* m_System = nullptr;
-	Ref<JobNode> m_Node;
-
+	Ref<JobGraph> m_Graph;
 };
 
 class JobSystem
@@ -54,15 +58,6 @@ public:
 	void GetJobs();
 
 	size_t GetJobCount() { return m_JobCount; }
-
-	void IncJobRef(UID uid)
-	{
-
-	}
-	void DecJobRef(UID uid)
-	{
-
-	}
 
 private:
 	void ThreadFunc(uint32_t index);
