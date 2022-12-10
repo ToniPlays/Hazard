@@ -1,30 +1,19 @@
+﻿import requests
+
 import sys
 import os
-
-import platform;
-if platform.system() == "Windows":
-    import winreg
-
-import requests
 import time
 import urllib
 
+from fake_useragent import UserAgent
 from zipfile import ZipFile
 import tarfile
 
-def GetSystemEnvironmentVariable(name):
-    key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, r"System\CurrentControlSet\Control\Session Manager\Environment")
-    try:
-        return winreg.QueryValueEx(key, name)[0]
-    except:
-        return None
+import colorama
+from colorama import Fore
+from colorama import Back
+from colorama import Style
 
-def GetUserEnvironmentVariable(name):
-    key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, r"Environment")
-    try:
-        return winreg.QueryValueEx(key, name)[0]
-    except:
-        return None
 
 def DownloadFile(url, filepath):
     path = filepath
@@ -84,16 +73,19 @@ def DownloadFile(url, filepath):
                 if (avgKBPerSecond > 1024):
                     avgMBPerSecond = avgKBPerSecond / 1024
                     avgSpeedString = '{:.2f} MB/s'.format(avgMBPerSecond)
-                sys.stdout.write('\r[{}{}] {:.2f}% ({})     '.format('█' * done, '.' * (50-done), percentage, avgSpeedString))
+                sys.stdout.write('\r[{}{}] {:.2f}% ({})     '.format('█' * done, '.' * (50 - done), percentage, avgSpeedString))
                 sys.stdout.flush()
     sys.stdout.write('\n')
 
-def UnzipFile(filepath, deleteZipFile=True):
+
+def UnzipFile(filepath, deleteZipFile = True):
+
     zipFilePath = os.path.abspath(filepath) # get full path of files
     zipFileLocation = os.path.dirname(zipFilePath)
 
     zipFileContent = dict()
     zipFileContentSize = 0
+
     with ZipFile(zipFilePath, 'r') as zipFileFolder:
         for name in zipFileFolder.namelist():
             zipFileContent[name] = zipFileFolder.getinfo(name).file_size
@@ -109,7 +101,7 @@ def UnzipFile(filepath, deleteZipFile=True):
                 zipFileFolder.extract(zippedFileName, path=zipFileLocation, pwd=None)
                 extractedContentSize += zippedFileSize
             try:
-                done = int(50*extractedContentSize/zipFileContentSize)
+                done = int(50 * extractedContentSize / zipFileContentSize)
                 percentage = (extractedContentSize / zipFileContentSize) * 100
             except ZeroDivisionError:
                 done = 50
@@ -123,14 +115,14 @@ def UnzipFile(filepath, deleteZipFile=True):
             if (avgKBPerSecond > 1024):
                 avgMBPerSecond = avgKBPerSecond / 1024
                 avgSpeedString = '{:.2f} MB/s'.format(avgMBPerSecond)
-            sys.stdout.write('\r[{}{}] {:.2f}% ({})     '.format('█' * done, '.' * (50-done), percentage, avgSpeedString))
+            sys.stdout.write('\r[{}{}] {:.2f}% ({})     '.format('█' * done, '.' * (50 - done), percentage, avgSpeedString))
             sys.stdout.flush()
     sys.stdout.write('\n')
 
     if deleteZipFile:
         os.remove(zipFilePath) # delete zip file
 
-def UnzipTar(filepath, deleteZipFile=True):
+def UnzipTar(filepath, deleteZipFile = True):
     zipFilePath = os.path.abspath(filepath) # get full path of files
     zipFileLocation = os.path.dirname(zipFilePath)
     
