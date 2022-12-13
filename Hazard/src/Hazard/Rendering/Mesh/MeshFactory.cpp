@@ -62,27 +62,102 @@ namespace Hazard
 		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 
 		Timer timer;
-		Assimp::Importer importer;
 
 		if (m_Handler)
 		{
 			MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler(this);
-			importer.SetProgressHandler(handler);
+			m_Importer.SetProgressHandler(handler);
 		}
 
-		const aiScene* scene = importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
+		const aiScene* scene = m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
 		if (!scene || !scene->HasMeshes())
 			return MeshData();
-
-		HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
+		
 		m_SceneMeshes = scene->mNumMeshes;
 		MeshData data;
 
 		data.SubMeshes.reserve(scene->mNumMeshes);
 		ProcessNode(scene->mRootNode, scene, data);
-		TraverseNode(scene->mRootNode, data);
 
 		return data;
+	}
+	Ref<JobGraph> MeshFactory::LoadMeshFromSourceAsync(const std::filesystem::path& file)
+	{
+		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
+		Ref<MeshFactory> instance = this;
+
+		Ref<JobNode> loadingJob = Ref<JobNode>::Create();
+
+		loadingJob->DebugName = file.filename().string();
+		loadingJob->Weight = 0.1f;
+		loadingJob->Callback = ([instance, file](JobNode& node) mutable -> size_t {
+
+			Timer timer;
+			node.GetGraph()->CreateBuffer<MeshData>();
+
+			if (instance->m_Handler)
+			{
+				MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler((MeshFactory*)instance.Raw());
+				instance->m_Importer.SetProgressHandler(handler);
+			}
+
+			const aiScene* scene = instance->m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), instance->m_MeshFlags);
+			if (!scene || !scene->HasMeshes())
+				return -1;
+
+			HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
+			
+			auto graph = node.GetGraph();
+			float jobWeight = 1.0f / (float)scene->mNumMeshes;
+
+			for (size_t submesh = 0; submesh < scene->mNumMeshes; submesh++)
+			{
+				const aiMesh* mesh = scene->mMeshes[submesh];
+
+				Ref<JobNode> processingNode = Ref<JobNode>::Create();
+				processingNode->DebugName = mesh->mName.C_Str();
+				processingNode->Weight = jobWeight;
+				processingNode->Callback = ([submesh, scene, instance](JobNode& node) mutable -> size_t {
+
+					Timer timer;
+					MeshData& data = *node.GetGraph()->Result<MeshData>();
+
+					aiMesh* aiMesh = scene->mMeshes[submesh];
+					instance->ProcessMesh(aiMesh, scene, data);
+					return 0;
+					});
+				graph->PushNode(processingNode);
+			}
+
+			Ref<JobNode> conversionNode = Ref<JobNode>::Create();
+			conversionNode->DebugName = file.string() + " conversion";
+			conversionNode->Callback = ([](JobNode& node) -> size_t {
+				auto graph = node.GetGraph();
+				MeshData meshData = std::move(*graph->Result<MeshData>());
+
+				MeshCreateInfo meshInfo = {};
+				meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
+				meshInfo.BoundingBox = meshData.BoundingBox;
+				meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
+				meshInfo.pVertices = meshData.Vertices.data();
+				meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
+				meshInfo.pIndices = meshData.Indices.data();
+
+				hdelete graph->Result<MeshData>();
+				graph->CreateBuffer<Ref<Mesh>>();
+				*graph->Result<Ref<Mesh>>() = Ref<Mesh>::Create(&meshInfo);
+				return 0;
+				});
+
+			graph->Then(conversionNode);
+
+			return 0;
+			});
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(file.filename().string());
+		graph->PushNode(loadingJob);
+
+		return graph;
 	}
 	CacheStatus MeshFactory::CacheStatus(const AssetHandle& handle)
 	{
@@ -96,14 +171,13 @@ namespace Hazard
 			ProcessMesh(aiMesh, scene, data);
 		}
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
-		{
 			ProcessNode(node->mChildren[i], scene, data);
-		}
 	}
 
 	void MeshFactory::ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data)
 	{
-		SubMesh subMesh = data.SubMeshes.emplace_back();
+		std::scoped_lock<std::mutex> lock(m_Mutex);
+		SubMesh& subMesh = data.SubMeshes.emplace_back();
 
 		subMesh.BaseVertex = data.VertexIndex;
 		subMesh.BaseIndex = data.BaseIndex;
@@ -179,7 +253,7 @@ namespace Hazard
 
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
-			aiFace face = mesh->mFaces[i];
+			const aiFace& face = mesh->mFaces[i];
 			data.Indices.reserve(face.mNumIndices);
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 				data.Indices.push_back(face.mIndices[j] + subMesh.BaseVertex);

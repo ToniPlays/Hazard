@@ -42,13 +42,17 @@ void EditorAssetManager::Init()
 	promises.reserve(texturesToLoad.size());
 	for (auto& texture : texturesToLoad)
 	{
+#if 1
 		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
-		auto waitPromise = promise.Then([texture](JobGraph& graph) -> size_t {
+		auto waitPromise = promise.Then(texture.Key, [texture](JobGraph& graph) -> size_t {
 			s_Icons[texture.Key] = *graph.DependencyResult<Ref<Texture2DAsset>>();
 			return 0;
-			}, texture.Key);
+			});
 
 		promises.push_back(waitPromise);
+#else
+		s_Icons[texture.Key] = AssetManager::GetAsset<Texture2DAsset>(texture.Path);
+#endif
 	}
 	for (auto& promise : promises)
 		promise.Wait();
@@ -66,7 +70,6 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	YamlUtils::Deserialize<AssetHandle>(root, "UID", metadata.Handle, INVALID_ASSET_HANDLE);
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
 	YamlUtils::Deserialize<std::filesystem::path>(root, "Path", metadata.Path, "");
-
 	Hazard::AssetManager::ImportAsset(metadata.Path, metadata);
 
 	return metadata;
@@ -210,50 +213,37 @@ Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 	return s_Icons["Default"];
 }
 
-void EditorAssetManager::RefreshEditorAssets()
+void EditorAssetManager::RefreshEditorAssets(bool force)
 {
 	Timer timer;
-
-	//Compile non cached shaders
-	std::unordered_map<AssetType, std::vector<AssetHandle>> assetsToUpdate;
-	{
-		for (auto& file : File::GetAllInDirectory("res/Shaders", true))
-		{
-			switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
-			{
-			case AssetType::Shader:
-			{
-				using namespace HazardRenderer;
-				AssetMetadata& metadata = AssetManager::GetMetadata(AssetManager::GetHandleFromFile(file));
-				auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
-
-				if (File::IsNewerThan(file, cacheDir))
-					assetsToUpdate[AssetType::Shader].push_back(metadata.Handle);
-
-				break;
-			}
-			default:
-				break;
-			}
-		}
-	}
-
 	auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
 
-	for (auto& [type, handles] : assetsToUpdate)
+	//Compile non cached shaders
+	for (auto& file : File::GetAllInDirectory("res/Shaders", true))
 	{
-		std::string tag = Utils::AssetTypeToString(type);
-		std::vector<JobPromise> promises;
-		promises.reserve(handles.size());
-
-		for (auto& handle : handles)
+		switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
 		{
-			JobPromise promise = AssetManager::GetAssetAsync<Asset>(handle);
-			JobPromise savePromise = promise.Then([](JobGraph& graph) -> size_t {
-				Ref<Asset> asset = *graph.DependencyResult<Ref<Asset>>();
-				AssetManager::SaveAssetAsync(asset);
-				return 0;
-				});
+		case AssetType::Shader:
+		{
+			using namespace HazardRenderer;
+			AssetMetadata& metadata = AssetManager::GetMetadata(AssetManager::GetHandleFromFile(file));
+			auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
+
+			if (File::IsNewerThan(file, cacheDir) || force)
+			{
+				JobPromise promise = AssetManager::GetAssetAsync<Asset>(file, force ? AssetManagerFlags_ForceSource | AssetManagerFlags_ForceReload : 0);
+				promise.Then([progressPanel](JobGraph& graph) -> size_t {
+					Ref<Asset> asset = *graph.DependencyResult<Ref<Asset>>();
+					JobPromise savePromise = AssetManager::SaveAssetAsync(asset);
+					progressPanel->AddProcess("Caching shader", savePromise);
+					return 0;
+					});
+				progressPanel->AddProcess("Loading shader", promise);
+			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
 

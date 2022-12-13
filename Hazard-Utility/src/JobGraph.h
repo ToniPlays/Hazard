@@ -15,10 +15,10 @@ using JobDataDestructor = void(*)(void*);
 enum JobStatus
 {
 	Invalid = 0,
-	Waiting,
-	Executing,
-	Done,
-	Error
+	Waiting = 1,
+	Executing = 2,
+	Done = 3,
+	Error = 4
 };
 
 struct JobGraph;
@@ -31,17 +31,6 @@ struct JobNode : public RefCount
 
 	JobNode() = default;
 	JobNode(const JobNode& other);
-
-	std::string DebugName;
-	std::function<int(JobNode&)> Callback;
-	float Weight = 1;
-
-	size_t GetDependencyCount() { return m_Dependencies.size(); }
-	Ref<JobNode> GetDependency(size_t index = 0)
-	{
-		return m_Dependencies[index];
-	}
-
 
 	template<typename T, typename... Args>
 	void CreateBuffer(Args... args)
@@ -56,13 +45,28 @@ struct JobNode : public RefCount
 		return reinterpret_cast<T*>(m_Buffer);
 	}
 
+	Ref<JobGraph> GetGraph() { return m_JobGraph; }
+	void JobStarted()
+	{
+		m_RemainingDependencies = m_Dependencies.size();
+		m_Status = JobStatus::Executing;
+		m_Status.notify_all();
+	}
+	void JobFinished();
+	void SetProgress(float progress);
+
+public:
+	std::string DebugName;
+	std::function<int(JobNode&)> Callback;
+	float Weight = 1.0f;
+
 private:
-	std::atomic_size_t m_RemainingDependencies = 1;
+	std::atomic_size_t m_RemainingDependencies = 0;
 
 	std::atomic<JobStatus> m_Status;
 	std::atomic_size_t m_ReturnCode;
 	std::atomic_size_t m_RefCount;
-	std::atomic<float> m_Progress;
+	std::atomic<float> m_Progress = 0;
 
 	void* m_Buffer;
 	JobDataDestructor m_BufferDestructor;
@@ -76,47 +80,57 @@ using JobGraphCallback = std::function<int(JobGraph&)>;
 
 struct JobGraph : public RefCount
 {
-	friend class JobPromise;
 	friend class JobSystem;
+	friend struct JobPromise;
 
 	JobGraph() = default;
 	JobGraph(const std::string& debugName) : m_DebugName(debugName) {}
 
-	void AsyncJob(Ref<JobNode> node)
-	{
-		node->m_JobGraph = this;
-		m_Jobs.push_back(node);
-		m_JobsRunning++;
-	}
+	void PushNode(Ref<JobNode> node);	
+	void Then(Ref<JobNode> node);
 	void OnFinished(JobGraphCallback callback)
 	{
 		m_FinishCallback = callback;
 	}
 
-	template<typename T> 
-	T* Result(size_t index = 0)
+	template<typename T, typename... Args>
+	void CreateBuffer(Args... args)
 	{
-		return m_Jobs[index]->Value<T>();
+		m_Buffer = new T(std::forward<Args>(args)...);
+		m_BufferDestructor = [](void* ptr) { delete reinterpret_cast<T*>(ptr); };
+	}
+
+	template<typename T>
+	T* Result() const
+	{
+		return reinterpret_cast<T*>(m_Buffer);
 	}
 	template<typename T>
-	T* DependencyResult(size_t graph = 0, size_t index = 0)
+	T* DependencyResult(size_t graph = 0)
 	{
-		return m_DependencyGraphs[graph]->m_Jobs[index]->Value<T>();
+		return reinterpret_cast<T*>(m_DependencyGraphs[graph]->m_Buffer);
 	}
 
 	const std::string& Name() { return m_DebugName; }
-	std::vector<Ref<JobNode>> Jobs() { return m_Jobs; }
+	std::vector<Ref<JobNode>> Jobs() { return m_AllJobs; }
+	JobSystem& GetSystem() { return *m_JobSystem; }
 
-	void AsyncJobFinished();
+	void AsyncJobFinished(Ref<JobNode> node);
+	void UpdateProgress();
 
 private:
 	std::string m_DebugName;
 	JobGraphCallback m_FinishCallback;
 
-	std::vector<Ref<JobNode>> m_Jobs;
 	std::atomic<JobStatus> m_Status;
-	std::atomic_size_t m_JobsRunning;
+	std::atomic_size_t m_JobsRunning = 0;
+	std::atomic<float> m_Progress;
+
+	std::vector<Ref<JobNode>> m_AllJobs;
 	std::vector<Ref<JobGraph>> m_DependantGraph;
 	std::vector<Ref<JobGraph>> m_DependencyGraphs;
 	JobSystem* m_JobSystem = nullptr;
+
+	void* m_Buffer = nullptr;
+	JobDataDestructor m_BufferDestructor = nullptr;
 };

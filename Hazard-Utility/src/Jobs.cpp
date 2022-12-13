@@ -10,11 +10,13 @@ size_t JobPromise::ReturnCode() const
 
 JobStatus JobPromise::Status() const
 {
-	return JobStatus::Invalid;
+	if (!m_Graph) return Invalid;
+	return m_Graph->m_Status;
 };
 float JobPromise::Progress() const
 {
-	return 0;
+	if (!m_Graph) return 1.0f;
+	return m_Graph->m_Progress;
 };
 
 JobPromise JobPromise::Wait()
@@ -26,23 +28,23 @@ JobPromise JobPromise::Wait()
 
 	return *this;
 }
-JobPromise JobPromise::Then(JobGraphCallback&& callback, const std::string& name)
+JobPromise JobPromise::Then(JobGraphCallback&& callback)
+{
+	std::string name = m_Graph->Name() + " Then()";
+	return Then(name, std::move(callback));
+}
+
+JobPromise JobPromise::Then(const std::string& name, JobGraphCallback&& callback)
 {
 	if (!m_System)
 		return JobPromise();
 
-	Ref<JobNode> node = Ref<JobNode>::Create();
-	node->m_Status = JobStatus::Waiting;
-	node->m_Buffer = m_Graph->Result<void*>();
-	node->m_RemainingDependencies = 1;
-
-	Ref<JobGraph> graph = Ref<JobGraph>::Create();
+	Ref<JobGraph> graph = Ref<JobGraph>::Create(name);
 
 	graph->m_DependencyGraphs.push_back(m_Graph);
-	graph->m_DebugName = name.empty() ? m_Graph->Name() + " Dependant" : name;
+	graph->m_DebugName = name;
 	graph->m_Status = JobStatus::Waiting;
 	graph->OnFinished(callback);
-	graph->AsyncJob(node);
 
 	m_Graph->m_DependantGraph.push_back(graph);
 
@@ -70,34 +72,34 @@ JobSystem::~JobSystem()
 
 JobPromise JobSystem::SubmitGraph(Ref<JobGraph> graph)
 {
-	if (!graph) 
-		return JobPromise();
-	if (graph->Jobs().size() == 0)
+	if (!graph)
 		return JobPromise();
 
 	graph->m_JobSystem = this;
-
-	Ref<JobNode> rootNode = Ref<JobNode>::Create();
-	rootNode->m_Status = JobStatus::Waiting;
-	rootNode->DebugName = fmt::format("{} (Root)", graph->Name());
-	rootNode->m_RemainingDependencies = graph->Jobs().size();
-	rootNode->m_Dependencies.reserve(graph->Jobs().size());
-
 	m_JobMutex.lock();
+
 	for (auto& job : graph->Jobs())
-	{
-		rootNode->m_Dependencies.push_back(job);
-		job->m_Dependant.push_back(rootNode);
 		m_AvailableJobNodes.push_back(job);
-	}
 
 	m_JobMutex.unlock();
+#if HZR_DEBUG && false
+	if (!graph->Name().empty())
+		PrintGraphDebugInfo(graph);
+#endif
 	m_JobCount = m_AvailableJobNodes.size();
 	m_JobCount.notify_all();
 
 	JobPromise promise = {};
 	promise.m_System = this;
 	promise.m_Graph = graph;
+
+	if (graph->Jobs().size() == 0)
+	{
+		graph->m_Status = JobStatus::Executing;
+		graph->m_Status.notify_all();
+		graph->AsyncJobFinished(nullptr);
+	}
+
 	return promise;
 }
 
@@ -111,11 +113,18 @@ void JobSystem::GetJobs()
 
 }
 
+void JobSystem::SubmitJob(Ref<JobNode> node)
+{
+	m_JobMutex.lock();
+	m_AvailableJobNodes.push_back(node);
+	m_JobMutex.unlock();
+}
+
 void JobSystem::ThreadFunc(uint32_t index)
 {
 	while (m_Running)
 	{
-		m_JobCount.wait(m_JobCount);
+		m_JobCount.wait(0);
 		if (!m_Running)
 			break;
 
@@ -135,29 +144,20 @@ void JobSystem::ThreadFunc(uint32_t index)
 			job->m_JobGraph->m_Status.notify_all();
 		}
 
-		job->m_Status = JobStatus::Executing;
-		job->m_Status.notify_all();
+		job->JobStarted();
 
 		if (job->Callback)
-			job->Callback(*job.Raw());
+			job->m_ReturnCode = job->Callback(*job.Raw());
 
-		job->m_Progress = 1.0f;
-
-		job->m_Status = JobStatus::Done;
-		job->m_Status.notify_all();
-
-		if (--job->m_RemainingDependencies == 0 && job->m_Dependant.size() > 0)
-		{
-			m_JobMutex.lock();
-			m_AvailableJobNodes.insert(m_AvailableJobNodes.begin(), job->m_Dependant.begin(), job->m_Dependant.end());
-			m_JobMutex.unlock();
-
-			if (job->m_JobGraph)
-				job->m_JobGraph->AsyncJobFinished();
-		}
-
+		job->JobFinished();
+		
 		m_JobMutex.lock();
-		m_JobCount = m_AvailableJobNodes.size();
+		{
+			if (--job->m_RemainingDependencies == 0 && job->m_Dependant.size() > 0)
+				m_AvailableJobNodes.insert(m_AvailableJobNodes.begin(), job->m_Dependant.begin(), job->m_Dependant.end());
+
+			m_JobCount = m_AvailableJobNodes.size();
+		}
 		m_JobMutex.unlock();
 		m_JobCount.notify_all();
 	}
@@ -170,20 +170,33 @@ Ref<JobNode> JobSystem::GetNextAvailableJob()
 	return node;
 }
 
+void JobSystem::PrintGraphDebugInfo(Ref<JobGraph> graph)
+{
+	std::cout << fmt::format("\nSubmit: Job Graph: \"{0}\", ({1})\n - Jobs: ({2})", graph->m_DebugName, graph->m_Status, graph->Jobs().size()) << std::endl;
+
+	for (auto& job : graph->Jobs())
+		std::cout << fmt::format("   - Job: \"{0}\"", job->DebugName) << std::endl;
+
+	std::cout << " - Dependency graphs:" << std::endl;
+
+	for (auto& dependency : graph->m_DependencyGraphs)
+		std::cout << fmt::format("   - Dependency: \"{0}\" ({1})", dependency->m_DebugName, dependency->m_Status) << std::endl;
+
+	std::cout << " - Dependant graphs:" << std::endl;
+	for (auto& dependant : graph->m_DependantGraph)
+		std::cout << fmt::format("   - Dependant: \"{0}\"", dependant->m_DebugName) << std::endl;
+}
+
 JobPromise::JobPromise(JobSystem* jobSystem, Ref<JobGraph> node)
 	: m_System(jobSystem), m_Graph(node) {}
 
-JobPromise::~JobPromise()
+JobPromise::JobPromise(const JobPromise& copy)
+	: m_System(copy.m_System), m_Graph(copy.m_Graph)
 {
 
 }
 
-JobPromise::JobPromise(const JobPromise& copy) : m_System(copy.m_System), m_Graph(copy.m_Graph)
-{
-
-}
-
-JobPromise::JobPromise(JobPromise&& move)
+JobPromise::JobPromise(JobPromise&& move) noexcept
 	: m_System(move.m_System), m_Graph(move.m_Graph)
 {
 
@@ -196,7 +209,7 @@ JobPromise& JobPromise::operator=(const JobPromise& copy)
 	return *this;
 }
 
-JobPromise& JobPromise::operator=(JobPromise&& move)
+JobPromise& JobPromise::operator=(JobPromise&& move) noexcept
 {
 	m_System = move.m_System;
 	m_Graph = move.m_Graph;

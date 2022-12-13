@@ -16,19 +16,19 @@ namespace Hazard {
 	{
 		BoundingBox BoundingBox;
 		HazardRenderer::BufferUsage Usage;
-		uint32_t VertexCount;
+		size_t VertexCount;
 		Vertex3D* pVertices;
-		uint32_t IndexCount;
+		size_t IndexCount;
 		uint32_t* pIndices;
 	};
 
 	struct SubMesh 
 	{
-		uint32_t BaseVertex;
-		uint32_t BaseIndex;
-		uint32_t MaterialIndex;
-		uint32_t IndexCount;
-		uint32_t VertexCount;
+		size_t BaseVertex;
+		size_t BaseIndex;
+		size_t MaterialIndex;
+		size_t IndexCount;
+		size_t VertexCount;
 
 		glm::mat4 Transform;
 		glm::mat4 LocalTransform;

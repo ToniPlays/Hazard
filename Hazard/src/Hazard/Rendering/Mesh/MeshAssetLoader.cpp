@@ -85,86 +85,10 @@ namespace Hazard
 	}
 	Ref<JobGraph> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		HZR_CORE_ASSERT(false, "TODO");
-		return nullptr;
-
-		/*
-		return Application::Get().SubmitJob<Ref<Asset>>("Mesh", [meta = metadata](JobSystem* system, Job* job) -> size_t {
-
-			Timer timer;
-			MeshFactory factory = {};
-
-			factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
-			CacheStatus status = factory.CacheStatus(meta.Handle);
-
-			if (status == CacheStatus::Exists)
-			{
-				MeshData result;
-				CachedBuffer buffer = File::ReadBinaryFile(factory.GetCacheFile(meta.Handle));
-
-				AssetPackElement element = buffer.Read<AssetPackElement>();
-				MeshCacheData data = buffer.Read<MeshCacheData>();
-				result.BoundingBox = data.BoundingBox;
-
-				result.Vertices.resize(data.VertexCount);
-				result.Indices.resize(data.IndexCount);
-
-				for (size_t i = 0; i < data.VertexCount; i++)
-				{
-					Vertex3D& v = result.Vertices[i];
-					if (data.Flags & MeshFlags_Positions)
-						v.Position = { buffer.Read<glm::vec3>(), 1.0 };
-					if (data.Flags & MeshFlags_VertexColors)
-						v.Color = buffer.Read<glm::vec4>();
-					if (data.Flags & MeshFlags_Normals)
-						v.Normals = { buffer.Read<glm::vec3>(), 1.0 };
-					if (data.Flags & MeshFlags_Tangent)
-						v.Tangent = { buffer.Read<glm::vec3>(), 1.0 };
-					if (data.Flags & MeshFlags_Binormal)
-						v.Binormal = { buffer.Read<glm::vec3>(), 1.0 };
-					if (data.Flags & MeshFlags_TextCoord)
-						v.TexCoords = buffer.Read<glm::vec2>();
-				}
-				for (size_t i = 0; i < data.IndexCount; i++)
-					result.Indices[i] = buffer.Read<uint32_t>();
-
-				MeshCreateInfo meshInfo = {};
-				meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
-				meshInfo.BoundingBox = result.BoundingBox;
-				meshInfo.VertexCount = result.Vertices.size() * sizeof(Vertex3D);
-				meshInfo.pVertices = result.Vertices.data();
-				meshInfo.IndexCount = result.Indices.size() * sizeof(uint32_t);
-				meshInfo.pIndices = result.Indices.data();
-
-				*job->Value<Ref<Mesh>>() = Ref<Mesh>::Create(&meshInfo);
-				HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
-				return (size_t)LoadType::Cache;
-			}
-			if (!File::Exists(meta.Path))
-			{
-				HZR_CORE_INFO("Mesh asset failed to load in {0}", timer.ElapsedMillis());
-				return (size_t)LoadType::Failed;
-			}
-
-			factory.SetProgressHandler([job](float progress) {
-				job->Progress = progress;
-				});
-
-			MeshData meshData = factory.LoadMeshFromSource(meta.Path);
-
-			MeshCreateInfo meshInfo = {};
-			meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
-			meshInfo.BoundingBox = meshData.BoundingBox;
-			meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
-			meshInfo.pVertices = meshData.Vertices.data();
-			meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
-			meshInfo.pIndices = meshData.Indices.data();
-
-			*job->Value<Ref<Mesh>>() = Ref<Mesh>::Create(&meshInfo);
-			HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
-			return (size_t)LoadType::Source;
-			});
-			*/
+		Ref<MeshFactory> factory = Ref<MeshFactory>::Create();
+		factory->SetOptimization(MeshLoaderFlags_DefaultFlags);
+		Ref<JobGraph> graph = factory->LoadMeshFromSourceAsync(metadata.Path);
+		return graph;
 	}
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -185,7 +109,7 @@ namespace Hazard
 
 		MeshData data = factory.LoadMeshFromSource(metadata.Path);
 
-		uint32_t dataSize = factory.GetMeshDataSize(data);
+		size_t dataSize = factory.GetMeshDataSize(data);
 		CachedBuffer buffer(sizeof(AssetPackElement) + sizeof(MeshCacheData) + dataSize);
 
 		AssetPackElement element = {};

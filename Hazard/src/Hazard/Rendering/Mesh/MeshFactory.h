@@ -7,6 +7,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/ProgressHandler.hpp>
+#include <JobGraph.h>
 
 namespace Hazard
 {
@@ -22,7 +23,7 @@ namespace Hazard
 		MeshFlags_TextCoord = BIT(5)
 	};
 
-	class MeshFactory 
+	class MeshFactory : public RefCount
 	{
 		friend class MeshFactoryProgressHandler;
 	public:
@@ -40,19 +41,16 @@ namespace Hazard
 			m_ScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scalar));
 		}
 
-		void SetProgressHandler(MeshProgressCallback handler)
-		{
-			m_Handler = handler;
-		}
-
+		void SetProgressHandler(MeshProgressCallback handler) { m_Handler = handler; }
 
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
+		Ref<JobGraph> LoadMeshFromSourceAsync(const std::filesystem::path& file);
 		CacheStatus CacheStatus(const AssetHandle& handle);
 		std::filesystem::path GetCacheFile(const AssetHandle& handle);
 		size_t GetMeshDataSize(const MeshData& data);
 
 	private:
-		uint32_t GetColorChannel(const aiMesh* mesh);
+		static uint32_t GetColorChannel(const aiMesh* mesh);
 
 		void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);
 		void ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data);
@@ -63,8 +61,11 @@ namespace Hazard
 		glm::mat4 m_ScaleMatrix = glm::mat4(1.0f);
 		MeshProgressCallback m_Handler;
 
-		uint32_t m_SceneMeshes = 0;
-		uint32_t m_ProcessedNodes = 0;
+		std::atomic_size_t m_SceneMeshes = 0;
+		std::atomic_size_t m_ProcessedNodes = 0;
+
+		Assimp::Importer m_Importer;
+		std::mutex m_Mutex;
 
 		inline static std::filesystem::path s_CacheDirectory = "Library/Mesh/";
 	};

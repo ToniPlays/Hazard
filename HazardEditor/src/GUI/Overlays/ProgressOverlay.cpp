@@ -23,7 +23,7 @@ namespace UI
 		{
 			if (jobs.size() == 0) continue;
 
-			if (DrawProgressCard(Hazard::Utils::AssetTypeToString(type), jobs))
+			if (DrawProgressCard(type.c_str(), jobs))
 				m_CurrentProcesses[type].clear();
 		}
 		
@@ -39,6 +39,8 @@ namespace UI
 			totalProgress += promise.Progress();
 		}
 
+		totalProgress /= (float)promises.size();
+
 		std::string progress = fmt::format("{0}/{1}", completedJobs, promises.size());
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 
@@ -51,16 +53,16 @@ namespace UI
 		ImGui::Text(progress.c_str());
 		ImGui::PopFont();
 
-		ImGui::ProgressBar(totalProgress / (float)promises.size(), { panelWidth, 24 });
+		ImGui::ProgressBar(totalProgress, { panelWidth, 24 });
 
 		return completedJobs == promises.size();
 	}
-	void ProgressOverlay::AddProcesses(AssetType type, const std::vector<JobPromise>& promises)
+	void ProgressOverlay::AddProcesses(const std::string& type, const std::vector<JobPromise>& promises)
 	{
 		auto& a = m_CurrentProcesses[type];
 		a.insert(a.end(), promises.begin(), promises.end());
 	}
-	void ProgressOverlay::AddProcess(AssetType type, const JobPromise& promise)
+	void ProgressOverlay::AddProcess(const std::string& type, const JobPromise& promise)
 	{
 		auto& a = m_CurrentProcesses[type];
 		a.push_back(promise);

@@ -15,7 +15,7 @@ namespace Hazard
 			return LoadType::Failed;
 
 		WorldDeserializer deserializer;
-		asset = deserializer.DeserializeEditor(metadata.Path, flags);
+		asset = deserializer.DeserializeEditor(metadata.Path, flags | AssetManagerFlags_CanAsync);
 		//Wait for assets to be loaded
 		for (auto& promise : deserializer.GetPromises())
 			promise.Promise.Wait();

@@ -19,7 +19,7 @@ namespace Hazard
 		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
 
 		auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, api);
-		if (File::Exists(cachePath))
+		if (File::Exists(cachePath) && !(flags & AssetManagerFlags_ForceSource))
 		{
 			CachedBuffer buffer = File::ReadBinaryFile(cachePath);
 			AssetPackElement element = buffer.Read<AssetPackElement>();
@@ -47,18 +47,14 @@ namespace Hazard
 	}
 	Ref<JobGraph> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		Ref<JobNode> loadingJob = Ref<JobNode>::Create();
-		loadingJob->DebugName = metadata.Path.filename().string();
-		loadingJob->Callback = ([path = metadata.Path, handle = metadata.Handle](JobNode& node)->size_t {
+		auto loadFunc = ([path = metadata.Path, handle = metadata.Handle, flags](JobNode& node) -> size_t {
 			using namespace HazardRenderer;
 
 			RenderAPI api = GraphicsContext::GetRenderAPI();
 			Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
 
-			node.CreateBuffer<Ref<ShaderAsset>>();
-
 			auto cachePath = ShaderCompiler::GetCachedFilePath(path, api);
-			if (File::Exists(cachePath))
+			if (File::Exists(cachePath) && !(flags & AssetManagerFlags_ForceSource))
 			{
 				CachedBuffer buffer = File::ReadBinaryFile(cachePath);
 				AssetPackElement element = buffer.Read<AssetPackElement>();
@@ -73,20 +69,30 @@ namespace Hazard
 
 				shaderAsset->m_Handle = element.Handle;
 				shaderAsset->m_Type = (AssetType)element.Type;
-				
-				*node.Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
+
+				auto graph = node.GetGraph();
+				graph->CreateBuffer<Ref<ShaderAsset>>();
+				*graph->Result<Ref<ShaderAsset>>() = std::move(shaderAsset);
 				return (size_t)LoadType::Cache;
 			}
 
 			shaderAsset->ShaderCode = ShaderCompiler::GetShaderBinariesFromSource(path, api);
 			shaderAsset->m_Type = AssetType::Shader;
 
-			*node.Value<Ref<ShaderAsset>>() = std::move(shaderAsset);
-			return (size_t)LoadType::Source;
-		});
+			auto graph = node.GetGraph();
+			graph->CreateBuffer<Ref<ShaderAsset>>();
+			*graph->Result<Ref<ShaderAsset>>() = std::move(shaderAsset);
 
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("ShaderLoad");
-		graph->AsyncJob(loadingJob);
+			return (size_t)LoadType::Source;
+			});
+
+		//Create graph
+		Ref<JobNode> loadingJob = Ref<JobNode>::Create();
+		loadingJob->DebugName = "ShaderLoad: " + metadata.Path.filename().string();
+		loadingJob->Callback = loadFunc;
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(loadingJob->DebugName);
+		graph->PushNode(loadingJob);
 		return graph;
 	}
 	bool ShaderAssetLoader::Save(Ref<Asset>& asset)
@@ -96,20 +102,15 @@ namespace Hazard
 	Ref<JobGraph> ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
-		return nullptr;
-		/*
+
 		Timer timer;
 		using namespace HazardRenderer;
-
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
-		std::vector<JobPromise> promises;
-
-		auto promise = Application::Get().SubmitJob("Shader", [metadata](JobSystem* system, Job* job) -> size_t {
-
-			for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
-			{
-				JOB_PROGRESS(job, api, RenderAPI::Last);
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(metadata.Path.filename().string());
+		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
+		{
+			auto saveFunc = ([api, metadata](JobNode& node) -> size_t {
 
 				auto binaries = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, (RenderAPI)api);
 				size_t assetSize = ShaderCompiler::GetBinaryLength(binaries);
@@ -134,14 +135,24 @@ namespace Hazard
 				if (!File::DirectoryExists(cachePath.parent_path()))
 					File::CreateDir(cachePath.parent_path());
 
-				File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
+				bool succeeded = File::WriteBinaryFile(cachePath, dataBuffer.GetData(), dataBuffer.GetSize());
 
 				for (auto& code : binaries)
 					code.ShaderCode.Release();
 
-			}
-			return 0;
-			});
-			*/
+				node.SetProgress(1.0f);
+				return succeeded ? 0 : -1;
+				});
+
+			float jobWeight = 1.0f / (float)RenderAPI::Last;
+
+			Ref<JobNode> node = Ref<JobNode>::Create();
+			node->DebugName = fmt::format("ShaderCache: {0} ({1})", metadata.Path.filename().string(), RenderAPIToString((RenderAPI)api));
+			node->Callback = saveFunc;
+			node->Weight = jobWeight;
+
+			graph->PushNode(node);
+		}
+		return graph;
 	}
 }

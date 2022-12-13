@@ -33,7 +33,7 @@ namespace HazardRenderer
 		WebGL,
 
 		First = OpenGL,
-		Last = WebGL
+		Last = Vulkan
 	};
 
 	std::string RenderAPIToString(RenderAPI api);

@@ -6,17 +6,20 @@ namespace Hazard
 {
 	class CommandLineArgs {
 	public:
-		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
+
 		static void Init(std::string cmdLine) 
 		{
-			std::vector<std::string> args = StringUtil::SplitString(cmdLine, '-');
+			ProcessArgs(cmdLine);
 
-			for (auto& arg : args) 
+			//Check if config exists
+			std::string configFile = Get<std::string>("config");
+			if (!configFile.empty())
 			{
-				if (arg.find_first_of(' ') == std::string::npos) continue;
-				std::string key = arg.substr(0, arg.find_first_of(' '));
-				std::string value = arg.substr(arg.find_first_of(' '));
-				m_Arguments[key] = StringUtil::SplitString(value, ' ');
+				if (!File::Exists(configFile))
+					return;
+
+				std::string config = File::ReadFile(configFile);
+				ProcessArgs(config);
 			}
 		}
 		static void Init(int count, char* values[])
@@ -50,5 +53,21 @@ namespace Hazard
 		{
 			return m_Arguments[key];
 		}
+
+	private:
+		static void ProcessArgs(const std::string& arg)
+		{
+			std::vector<std::string> args = StringUtil::SplitString(arg, '-');
+
+			for (auto& arg : args)
+			{
+				if (arg.find_first_of(' ') == std::string::npos) continue;
+				std::string key = arg.substr(0, arg.find_first_of(' '));
+				std::string value = arg.substr(arg.find_first_of(' '));
+				m_Arguments[key] = StringUtil::SplitString(value, ' ');
+			}
+		}
+	private:
+		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
 	};
 }

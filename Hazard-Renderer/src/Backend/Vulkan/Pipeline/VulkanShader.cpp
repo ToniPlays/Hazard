@@ -249,7 +249,7 @@ namespace HazardRenderer::Vulkan
 		for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			m_DescriptorSets[i].resize(descriptorSets + 1);
 
-		std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
+		//std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
 	}
 	void VulkanShader::CreateShaderModules()
 	{

@@ -17,10 +17,10 @@ namespace UI
 
 		bool DrawProgressCard(const char* title, std::vector<JobPromise>& promises);
 
-		void AddProcesses(AssetType type, const std::vector<JobPromise>& promises);
-		void AddProcess(AssetType type, const JobPromise& promise);
+		void AddProcesses(const std::string& type, const std::vector<JobPromise>& promises);
+		void AddProcess(const std::string& type, const JobPromise& promise);
 
 	private:
-		std::unordered_map<AssetType, std::vector<JobPromise>> m_CurrentProcesses;
+		std::unordered_map<std::string, std::vector<JobPromise>> m_CurrentProcesses;
 	};
 }

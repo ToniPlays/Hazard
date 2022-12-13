@@ -12,9 +12,7 @@ struct JobPromise;
 class Job;
 class JobSystem;
 
-
 //Promise handles a single graph
-
 struct JobPromise
 {
 	friend class JobSystem;
@@ -23,10 +21,10 @@ public:
 	JobPromise(JobSystem* jobSystem, Ref<JobGraph> node);
 
 	JobPromise(const JobPromise& copy);
-	JobPromise(JobPromise&& move);
+	JobPromise(JobPromise&& move) noexcept;
 
 	JobPromise& operator=(const JobPromise& copy);
-	JobPromise& operator=(JobPromise&& move);
+	JobPromise& operator=(JobPromise&& move) noexcept;
 
 	size_t ReturnCode() const;
 	JobStatus Status() const;
@@ -35,7 +33,8 @@ public:
 	template<typename T>
 	T* Value() const;
 	JobPromise Wait();
-	JobPromise Then(JobGraphCallback&& callback, const std::string& name = "");
+	JobPromise Then(JobGraphCallback&& callback);
+	JobPromise Then(const std::string& name, JobGraphCallback&& callback);
 	JobPromise Then(Ref<JobGraph> graph)
 	{
 		HZR_ASSERT(false, "");
@@ -54,14 +53,17 @@ public:
 	~JobSystem();
 
 	JobPromise SubmitGraph(Ref<JobGraph> graph);
+
 	void WaitForJobs();
 	void GetJobs();
-
+	void SubmitJob(Ref<JobNode> node);
 	size_t GetJobCount() { return m_JobCount; }
 
 private:
 	void ThreadFunc(uint32_t index);
 	Ref<JobNode> GetNextAvailableJob();
+
+	void PrintGraphDebugInfo(Ref<JobGraph> graph);
 
 private:
 	uint32_t m_ThreadCount = 0;
@@ -76,8 +78,7 @@ private:
 template<typename T>
 inline T* JobPromise::Value() const
 {
-	return nullptr;
-	if (!m_System) return nullptr;
-	return reinterpret_cast<T*>(nullptr);
+	if (!m_Graph) return nullptr;
+	return m_Graph->Result<T>();
 }
 

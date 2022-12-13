@@ -66,10 +66,8 @@ namespace Hazard
 	}
 	Ref<JobGraph> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
-		using namespace HazardRenderer;
-		Ref<JobNode> job = Ref<JobNode>::Create();
-		job->DebugName = metadata.Path.filename().string();
-		job->Callback = [path = metadata.Path, handle = metadata.Handle](JobNode& node) -> size_t {
+		auto loadFunc = ([path = metadata.Path, handle = metadata.Handle](JobNode& node) -> size_t {
+			using namespace HazardRenderer;
 
 			if (TextureFactory::CacheStatus(handle) == CacheStatus::Exists)
 			{
@@ -96,8 +94,8 @@ namespace Hazard
 				Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
 				asset->m_Type = AssetType::Image;
 
-				node.CreateBuffer<Ref<Texture2DAsset>>();
-				*node.Value<Ref<Texture2DAsset>>() = std::move(asset);
+				node.GetGraph()->CreateBuffer<Ref<Texture2DAsset>>();
+				*node.GetGraph()->Result<Ref<Texture2DAsset>>() = std::move(asset);
 
 				return (size_t)LoadType::Cache;
 			}
@@ -122,13 +120,17 @@ namespace Hazard
 
 			header.ImageData.Release();
 
-			node.CreateBuffer<Ref<Texture2DAsset>>();
-			*node.Value<Ref<Texture2DAsset>>() = std::move(asset);
+			node.GetGraph()->CreateBuffer<Ref<Texture2DAsset>>();
+			*node.GetGraph()->Result<Ref<Texture2DAsset>>() = std::move(asset);
 			return (size_t)LoadType::Source;
-			};
+		});
 		
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("Image");
-		graph->AsyncJob(job);
+		Ref<JobNode> job = Ref<JobNode>::Create();
+		job->DebugName = "ImageLoad " + metadata.Path.filename().string();
+		job->Callback = loadFunc;
+		
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(metadata.Path.filename().string());
+		graph->PushNode(job);
 		return graph;
 	}
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)

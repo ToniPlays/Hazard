@@ -96,7 +96,7 @@ namespace HazardRenderer::OpenGL
 				}
 			}
 		}
-		std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
+		//std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
 		//OpenGLShaderCompiler::PrintReflectionData(data);
 	}
 	void OpenGLShader::Reload_RT()

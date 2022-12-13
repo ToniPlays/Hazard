@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Hazard/Assets/IAssetLoader.h"
 

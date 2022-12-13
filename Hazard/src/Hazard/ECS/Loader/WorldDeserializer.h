@@ -116,7 +116,6 @@ namespace Hazard
 					Entity entity = { e };
 					Ref<Texture2DAsset> asset = *graph.Result<Ref<Texture2DAsset>>();
 					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
-
 					return 0;
 					});
 				m_Promises.push_back({ AssetType::Image, promise });
@@ -161,9 +160,11 @@ namespace Hazard
 			if (m_CanAsync)
 			{
 				JobPromise promise = AssetManager::GetAssetAsync<Mesh>(handle);
-				promise.Then([e = entity](JobGraph& graph) -> size_t {
+				promise.Then([e = entity, promise](JobGraph&) -> size_t {
+
+					Ref<Mesh> asset = *promise.Value<Ref<Mesh>>();
+
 					Entity entity = { e };
-					Ref<Mesh> asset = *graph.Result<Ref<Mesh>>();
 					entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
 					return 0;
 					});

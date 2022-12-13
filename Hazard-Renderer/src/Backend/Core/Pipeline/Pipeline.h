@@ -34,7 +34,7 @@ namespace HazardRenderer
 		CullMode CullMode = CullMode::BackFace;
 		DepthOp DepthOperator = DepthOp::LessOrEqual;
 		Ref<RenderPass> pTargetRenderPass = nullptr;
-		uint32_t ShaderCodeCount = 0;
+		size_t ShaderCodeCount = 0;
 		ShaderStageCode* pShaderCode = nullptr;
 
 		float LineWidth = 1.0f;

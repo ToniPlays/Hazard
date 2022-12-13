@@ -18,7 +18,7 @@ public:
 	{
 	}
 
-	CachedBuffer(CachedBuffer&& other)
+	CachedBuffer(CachedBuffer&& other) noexcept
 	{
 		m_DataBuffer = other.m_DataBuffer;
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
@@ -45,7 +45,7 @@ public:
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
 		return *this;
 	}
-	CachedBuffer& operator=(CachedBuffer&& other)
+	CachedBuffer& operator=(CachedBuffer&& other) noexcept
 	{
 		m_DataBuffer = other.m_DataBuffer;
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;

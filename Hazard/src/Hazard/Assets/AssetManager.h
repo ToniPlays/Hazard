@@ -17,8 +17,10 @@ namespace Hazard
 {
 	enum AssetManagerFlags : uint32_t
 	{
-		AssetManagerFlags_NoLoad = BIT(0),
-		AssetManagerFlags_CanAsync = BIT(1)
+		AssetManagerFlags_MustBeLoaded = BIT(0),
+		AssetManagerFlags_ForceReload = BIT(1),
+		AssetManagerFlags_CanAsync = BIT(2),
+		AssetManagerFlags_ForceSource = BIT(3)
 	};
 
 
@@ -59,7 +61,7 @@ namespace Hazard
 
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-			if (meta.LoadState == LoadState::None)
+			if ((meta.LoadState == LoadState::None && !(flags & AssetManagerFlags_MustBeLoaded)) || flags & AssetManagerFlags_ForceReload)
 			{
 				meta.LoadState = LoadState::Loading;
 				Ref<JobGraph> jobGraph = s_AssetLoader.LoadAsync(meta, flags);
@@ -81,7 +83,6 @@ namespace Hazard
 					asset->SetHandle(meta.Handle);
 					asset->SetFlags(AssetFlags::Valid);
 					s_LoadedAssets[meta.Handle] = asset;
-					
 					return 0;
 					});
 				return Application::Get().GetJobSystem().SubmitGraph(jobGraph);
@@ -93,14 +94,11 @@ namespace Hazard
 			else 
 				asset = s_LoadedAssets[handle].As<T>();
 
-			Ref<JobNode> valueNode = Ref<JobNode>::Create();
-			valueNode->CreateBuffer<Ref<T>>();
-			*valueNode->Value<Ref<T>>() = asset;
+			Ref<JobGraph> graph = Ref<JobGraph>::Create();
+			graph->CreateBuffer<Ref<T>>();
+			*graph->Result<Ref<T>>() = asset;
 
-			Ref<JobGraph> jobGraph = Ref<JobGraph>::Create();
-			jobGraph->AsyncJob(valueNode);
-
-			return Application::Get().GetJobSystem().SubmitGraph(jobGraph);
+			return Application::Get().GetJobSystem().SubmitGraph(graph);
 		}
 		template<typename T>
 		static JobPromise GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)
@@ -124,7 +122,7 @@ namespace Hazard
 
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-			if (meta.LoadState != LoadState::Loaded && !(flags & AssetManagerFlags_NoLoad))
+			if ((meta.LoadState == LoadState::None && !(flags & AssetManagerFlags_MustBeLoaded)) || flags & AssetManagerFlags_ForceReload)
 			{
 				Ref<Asset> asset;
 				LoadType loadType = s_AssetLoader.Load(meta, asset, flags);

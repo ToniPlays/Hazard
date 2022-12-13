@@ -8,7 +8,7 @@ namespace HazardRenderer
 	struct PhysicalDeviceLimits 
 	{
 		uint32_t MaxTextureUnits;
-		glm::vec2 MaxFrameBufferSize;
+		glm::vec<2, uint32_t> MaxFrameBufferSize;
 
 		uint32_t MaxRecursionDepth = 0;
 		uint32_t ShaderGroupHandleSize = 0;
