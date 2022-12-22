@@ -79,24 +79,24 @@ namespace Hazard::Utils
 using namespace Hazard;
 
 template<>
-static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue) 
+void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue)
 {
 	if (!node[key]) value = defaultValue;
 	else value = Utils::StringToAssetType(node[key].as<std::string>());
 }
 template<>
-static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value)
+void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value)
 {
 	out << YAML::Key << key << YAML::Value << Utils::AssetTypeToString(value);
 }
 template<>
-static void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue) 
+void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue)
 {
 	if (!node[key]) value = defaultValue;
 	else value = node[key].as<uint64_t>();
 }
 template<>
-static void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value)
+void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value)
 {
 	out << YAML::Key << key << YAML::Value << (uint64_t)value;
 }

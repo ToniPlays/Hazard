@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "vulkan/vulkan.h"
 
 #include <unordered_map>
@@ -62,3 +64,4 @@ namespace HazardRenderer::Vulkan
 		std::string m_DebugName;
 	};
 }
+#endif

@@ -3,13 +3,12 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
+
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Metal/MetalContext.h"
-
-#include <Metal/Metal.hpp>
-
 #include <GLFW/glfw3.h>
+#include <Metal/Metal.hpp>
 
 class EditorPlatformMetal : public EditorGuiPlatform {
 public:

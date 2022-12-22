@@ -17,6 +17,7 @@ namespace Hazard
 	public:
 		virtual void Register(ScriptEngine* engine)
 		{
+#ifdef HZR_INCLUDE_VULKAN
 			HZR_PROFILE_FUNCTION();
 			handler = &Application::GetModule<WorldHandler>();
 			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
@@ -144,6 +145,7 @@ namespace Hazard
 			BIND_ICALL(EnvironmentMap_GenerateRadiance_Native);
 			BIND_ICALL(EnvironmentMap_GenerateIrradiance_Native);
 			BIND_ICALL(EnvironmentMap_GeneratePrefilter_Native);
+#endif
 		}
 		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) {};
 	};

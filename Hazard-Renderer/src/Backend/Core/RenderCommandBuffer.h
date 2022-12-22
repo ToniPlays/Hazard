@@ -5,6 +5,7 @@
 
 #include "Pipeline/RenderPass.h"
 #include "Pipeline/Pipeline.h"
+#include "Texture/Texture.h"
 #include "AccelerationStructure/ShaderBindingTable.h"
 
 namespace HazardRenderer 

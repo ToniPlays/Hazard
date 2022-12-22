@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_MONO
+
 #include "Mono/Core/Mono.h"
 #include "Core/ValueWrapper.h"
 #include "Core/Metadata/ManagedType.h"
@@ -140,3 +142,4 @@ namespace HazardScript
 		static void SetValueInternal(MonoArray* arrayObject, size_t index, MonoObject* value);
 	};
 }
+#endif

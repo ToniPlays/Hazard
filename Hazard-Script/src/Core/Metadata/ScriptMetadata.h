@@ -41,8 +41,10 @@ namespace HazardScript
 		MethodMetadata& GetMethod(const std::string& name) {
 			return *m_Methods[name];
 		}
+#ifdef HZR_INCLUDE_MONO
 		bool TryInvoke(const std::string& name, MonoObject* target, void** params);
 		void Invoke(const std::string& name, MonoObject* target, void** params);
+#endif
 
 		void RegisterInstance(uint32_t handle, ScriptObject* object)
 		{

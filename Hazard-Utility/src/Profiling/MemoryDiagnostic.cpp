@@ -112,67 +112,68 @@ namespace Memory
 }
 
 #ifdef HZR_MEM_DIAG
+    #ifdef HZR_PLATFORM_WINDOWS
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new(size_t size)
-{
-	return Memory::Allocator::Allocate(size);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new(size_t size)
+    {
+        return Memory::Allocator::Allocate(size);
+    }
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new[](size_t size)
-{
-	return Memory::Allocator::Allocate(size);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new[](size_t size)
+    {
+        return Memory::Allocator::Allocate(size);
+    }
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new(size_t size, const char* desc)
-{
-	return Memory::Allocator::Allocate(size, desc);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new(size_t size, const char* desc)
+    {
+        return Memory::Allocator::Allocate(size, desc);
+    }
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new[](size_t size, const char* desc)
-{
-	return Memory::Allocator::Allocate(size, desc);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new[](size_t size, const char* desc)
+    {
+        return Memory::Allocator::Allocate(size, desc);
+    }
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new(size_t size, const char* file, int line)
-{
-	return Memory::Allocator::Allocate(size, file, line);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new(size_t size, const char* file, int line)
+    {
+        return Memory::Allocator::Allocate(size, file, line);
+    }
 
-_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-void* __CRTDECL operator new[](size_t size, const char* file, int line)
-{
-	return Memory::Allocator::Allocate(size, file, line);
-}
+    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+    void* __CRTDECL operator new[](size_t size, const char* file, int line)
+    {
+        return Memory::Allocator::Allocate(size, file, line);
+    }
 
-void __CRTDECL operator delete(void* memory)
-{
-	return Memory::Allocator::Free(memory);
-}
-void __CRTDECL operator delete(void* memory, const char* desc)
-{
-	return Memory::Allocator::Free(memory);
-}
-void __CRTDECL operator delete(void* memory, const char* file, int line)
-{
-	return Memory::Allocator::Free(memory);
-}
+    void __CRTDECL operator delete(void* memory)
+    {
+        return Memory::Allocator::Free(memory);
+    }
+    void __CRTDECL operator delete(void* memory, const char* desc)
+    {
+        return Memory::Allocator::Free(memory);
+    }
+    void __CRTDECL operator delete(void* memory, const char* file, int line)
+    {
+        return Memory::Allocator::Free(memory);
+    }
 
-void __CRTDECL operator delete[](void* memory)
-{
-	return Memory::Allocator::Free(memory);
-}
-void __CRTDECL operator delete[](void* memory, const char* desc)
-{
-	return Memory::Allocator::Free(memory);
-}
-void __CRTDECL operator delete[](void* memory, const char* file, int line)
-{
-	return Memory::Allocator::Free(memory);
-}
-
+    void __CRTDECL operator delete[](void* memory)
+    {
+        return Memory::Allocator::Free(memory);
+    }
+    void __CRTDECL operator delete[](void* memory, const char* desc)
+    {
+        return Memory::Allocator::Free(memory);
+    }
+    void __CRTDECL operator delete[](void* memory, const char* file, int line)
+    {
+        return Memory::Allocator::Free(memory);
+    }
+    #endif
 #endif

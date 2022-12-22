@@ -43,6 +43,7 @@ namespace Hazard
 			m_QueuedMessages.clear();
 			m_MessageCallback(message);
 		};
+#ifdef HZR_INCLUDE_MONO
 		createInfo.BindingCallback = [&]() {
 			for (auto& cb : m_ScriptGlue) {
 				for (Ref<ScriptAssembly> assembly : m_Engine->GetAssemblies())
@@ -53,7 +54,9 @@ namespace Hazard
 			}
 		};
 		AttributeConstructor::Init();
+
 		m_Engine = HazardScriptEngine::Create(&createInfo);
+#endif
 	}
 	void ScriptEngine::Update()
 	{
@@ -62,19 +65,30 @@ namespace Hazard
 	}
 	bool ScriptEngine::HasModule(const std::string& moduleName)
 	{
+#ifdef HZR_INCLUDE_MONO
 		return m_Engine->GetAppAssembly()->HasScript(moduleName);
+#endif
 	}
 	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) 
 	{
+#ifdef HZR_INCLUDE_MONO
 		return m_Engine->GetAppAssembly()->GetScript(moduleName);
+#else
+        static ScriptMetadata data = {};
+        return data;
+#endif
 	}
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
 	{
+#ifdef HZR_INCLUDE_MONO
 		m_Engine->SendDebugMessage(message);
+#endif
 	}
 	void ScriptEngine::ReloadAssemblies()
 	{
+#ifdef HZR_INCLUDE_MONO
 		m_Engine->Reload();
+#endif
 	}
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{
@@ -88,6 +102,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		if (component.ModuleName == "") return;
+#ifdef HZR_INCLUDE_MONO
 		if (!m_Engine->GetAppAssembly()->HasScript(component.ModuleName)) return;
 
 		ScriptMetadata& script = m_Engine->GetAppAssembly()->GetScript(component.ModuleName);
@@ -98,17 +113,19 @@ namespace Hazard
 
 		void* params[] = { &entityID };
 		component.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
+#endif
 	}
 }
 
 HazardScript::NativeType GetCustomType(const char* name) 
 {
+#ifdef HZR_INCLUDE_MONO
 	TYPEDEF("Hazard.Vector2", NativeType::Float2);
 	TYPEDEF("Hazard.Vector3", NativeType::Float3);
 	TYPEDEF("Hazard.Color", NativeType::Float4);
 	TYPEDEF("Hazard.Status", NativeType::UInt32);
 	TYPEDEF("Hazard.Key", NativeType::UInt32);
 	TYPEDEF("Hazard.Rendering.BufferUsage", NativeType::UInt32);
-
+#endif
 	return HazardScript::NativeType::Value;
 }

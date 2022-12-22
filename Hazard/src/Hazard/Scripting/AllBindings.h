@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_MONO
 //ECS
 #include "Bindings/EntityBindings.h"
 #include "Bindings/TagComponentBindings.h"
@@ -17,3 +18,5 @@
 #include "Bindings/WorldManagerBindings.h"
 //Debug
 #include "Bindings/DebugBindings.h"
+
+#endif

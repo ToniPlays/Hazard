@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BufferLayout.h"
+#include "RenderPass.h"
 #include "Buffers.h"
 #include "Shader.h"
 #include <glad/glad.h>

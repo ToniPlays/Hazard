@@ -1,12 +1,14 @@
 
 #include "VulkanTopLevelAS.h"
-#include <vulkan/vulkan.h>
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "../VulkanContext.h"
 #include "Backend/Core/Renderer.h"
 #include "spdlog/fmt/fmt.h"
 
 #include "VulkanBottomLevelAS.h"
 #include <MathCore.h>
+#include <vulkan/vulkan.h>
 
 static PFN_vkCmdBuildAccelerationStructuresKHR fpCmdBuildAccelerationStructuresKHR;
 static PFN_vkBuildAccelerationStructuresKHR fpBuildAccelerationStructuresKHR;
@@ -233,3 +235,4 @@ namespace HazardRenderer::Vulkan
 		m_InstanceBuffer.Address = VkUtils::GetBufferAddress(m_InstanceBuffer.Buffer).deviceAddress;
 	}
 }
+#endif

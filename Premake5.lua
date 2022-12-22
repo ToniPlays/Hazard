@@ -30,7 +30,9 @@ group "Dependencies"
 	include "Hazard/vendor/GLFW"
 	include "Hazard/vendor/Box2D"
 
-	include "Hazard/vendor/Optick"
+	if os.platform == "Windows" then
+		include "Hazard/vendor/Optick"
+	end
 
 	include "Hazard/vendor/yaml-cpp"
 	include "Hazard/vendor/imgui"

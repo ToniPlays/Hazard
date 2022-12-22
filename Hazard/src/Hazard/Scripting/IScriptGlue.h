@@ -1,7 +1,9 @@
 
 #pragma once
+#include "Core/Metadata/ScriptAssembly.h"
 
-namespace Hazard {
+namespace Hazard
+{
 	class IScriptGlue {
 	public:
 		IScriptGlue() = default;

@@ -4,11 +4,12 @@
 #include "Backend/Vulkan/Pipeline/VulkanVertexBuffer.h"
 #include "Backend/Vulkan/Pipeline/VulkanIndexBuffer.h"
 
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Helpers.h"
 
 namespace HazardRenderer::Vulkan
 {
-
 	class VulkanBottomLevelAS : public BottomLevelAS
 	{
 	public:
@@ -44,3 +45,4 @@ namespace HazardRenderer::Vulkan
 		VulkanAccelStruct m_StructureInfo;
 	};
 }
+#endif

@@ -21,7 +21,7 @@
 
 #include "Event.h"
 
-#include "Time.h"
+#include "Hazard/Math/Time.h"
 #include "MathCore.h"
 #include "Hazard/Math/Random.h"
 

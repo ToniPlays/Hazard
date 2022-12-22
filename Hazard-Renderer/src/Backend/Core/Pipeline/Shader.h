@@ -68,8 +68,8 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		uint32_t Binding = 0;
-		uint32_t Size = 0;
-		uint32_t MemberCount = 0;
+		size_t Size = 0;
+		size_t MemberCount = 0;
 		uint32_t UsageFlags = 0;
 		uint32_t DescritorSet = UINT32_MAX;
 	};

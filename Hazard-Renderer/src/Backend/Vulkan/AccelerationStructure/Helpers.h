@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan
@@ -16,3 +17,4 @@ namespace HazardRenderer::Vulkan
 		VkDeviceAddress Address = 0;
 	};
 }
+#endif

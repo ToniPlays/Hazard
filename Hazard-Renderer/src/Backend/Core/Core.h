@@ -4,7 +4,7 @@
 	#define HZR_INCLUDE_OPENGL
 	#define HZR_INCLUDE_VULKAN
 #elif defined HZR_PLATFORM_MACOS
-	#define HZR_INCLUDE_METAL
+	//#define HZR_INCLUDE_METAL
 #else
 #pragma error Unsupported platform apparently
 #endif

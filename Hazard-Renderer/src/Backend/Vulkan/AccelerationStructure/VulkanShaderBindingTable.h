@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Backend/Core/AccelerationStructure/ShaderBindingTable.h"
+#ifdef HZR_PLATFORM_WINDOWS
 
+#include "Backend/Core/AccelerationStructure/ShaderBindingTable.h"
 #include "Backend/Vulkan/Pipeline/VulkanPipeline.h"
 #include "vulkan/vulkan.h"
 #include "vk_mem_alloc.h"
@@ -39,3 +40,4 @@ namespace HazardRenderer::Vulkan
 
 	};
 }
+#endif

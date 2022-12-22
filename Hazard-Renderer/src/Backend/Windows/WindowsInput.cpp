@@ -5,7 +5,8 @@
 #include "Backend/Core/Events/Events.h"
 
 #include "spdlog/fmt/fmt.h"
-#include <Backend/Windows/WindowWindow.h>
+#include <Backend/Windows/WindowsWindow.h>
+#ifdef HZR_PLATFORM_WINDOWS
 
 GLFWwindow* s_Window = nullptr;
 
@@ -188,3 +189,4 @@ bool Input::IsAxis(int device, const Gamepad::GamepadCode& code)
 
 	return x != 0.0 || y != 0.0f;
 }
+#endif

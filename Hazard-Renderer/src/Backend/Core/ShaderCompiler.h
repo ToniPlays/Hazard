@@ -13,7 +13,7 @@ namespace HazardRenderer
 	struct ShaderCode
 	{
 		ShaderStage Stage;
-		uint32_t Length;
+		size_t Length;
 	};
 
 	struct ShaderDefine

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_MONO
+
 #include "Mono/Core/Mono.h"
 #include "Metadata/ManagedType.h"
 #include "Metadata/FieldMetadata.h"
@@ -36,3 +38,4 @@ namespace HazardScript
 		inline static ScriptCacheData* s_Cache;
 	};
 }
+#endif

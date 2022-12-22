@@ -10,13 +10,16 @@ namespace HazardScript
 	{
 	public:
 		MethodMetadata() = default;
+#ifdef HZR_INCLUDE_MONO
 		MethodMetadata(MonoMethod* method);
+#endif
 
 		MonoFlags& GetFlags() { return m_Flags; }
 		std::string GetName() { return m_Name; }
 		ManagedType& GetReturnType() { return m_ManagedMethod.ReturnType; }
-
+#ifdef HZR_INCLUDE_MONO
 		MonoObject* Invoke(MonoObject* obj, void** params = nullptr);
+#endif
 
 		template<typename T>
 		bool Has() const 

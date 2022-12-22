@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
+#ifdef HZR_INCLUDE_MONO
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -45,3 +46,4 @@ namespace HazardScript
 		inline static MonoDomain* s_Domain = nullptr;
 	};
 }
+#endif

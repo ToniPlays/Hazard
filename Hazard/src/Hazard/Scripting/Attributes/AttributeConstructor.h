@@ -10,9 +10,10 @@ namespace Hazard
 		AttributeConstructor() = default;
 		~AttributeConstructor() = default;
 
-		static void Init() {
+		static void Init()
+        {
 			using namespace HazardScript;
-
+#ifdef HZR_INCLUDE_MONO
 			AttributeBuilder::Clear();
 			AttributeBuilder::AddAttribute("Author", [&](MonoObject* obj) {
 				AuthorAttribute* attrib = hnew AuthorAttribute();
@@ -74,7 +75,7 @@ namespace Hazard
 			AttributeBuilder::AddAttribute("ExposeFunc", [&](MonoObject* obj) {
 				return hnew ExposeFuncAttribute();
 				});
-
+#endif
 		}
 	};
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef HZR_INCLUDE_MONO
+
 #include "Ref.h"
 #include "UtilityCore.h"
 #include "ValueWrapper.h"
@@ -240,3 +242,4 @@ namespace HazardScript
 		std::vector<Ref<FieldValueStorage>> m_ArrayStorage;
 	};
 }
+#endif

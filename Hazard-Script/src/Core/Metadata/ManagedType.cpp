@@ -9,8 +9,10 @@ namespace HazardScript
 {
 	static NativeType GetNativeType(int typeEncoding, ManagedClass* typeClass)
 	{
+#ifdef HZR_INCLUDE_MONO
 		if (typeClass == nullptr)
 			return NativeType::None;
+        
 		switch (typeEncoding)
 		{
 		case MONO_TYPE_VOID:                return NativeType::Void;
@@ -42,51 +44,86 @@ namespace HazardScript
 			return NativeType::Reference;
 		}
 		}
+#endif
 		return NativeType::None;
 	}
 
 	bool ManagedType::HasInterface(const ManagedClass* interfaceClass) const
 	{
-		return mono_class_is_subclass_of(TypeClass->Class, interfaceClass->Class, true);
+#ifdef HZR_INCLUDE_MONO
+        return mono_class_is_subclass_of(TypeClass->Class, interfaceClass->Class, true);
+#else
+        return false;
+#endif
 	}
 
 	bool ManagedType::IsSubClassOf(const ManagedClass* baseClass) const
 	{
-		return mono_class_is_subclass_of(TypeClass->Class, baseClass->Class, false);
+#ifdef HZR_INCLUDE_MONO
+        return mono_class_is_subclass_of(TypeClass->Class, baseClass->Class, false);
+#else
+        return false;
+#endif
 	}
 
 	bool ManagedType::CanAssignTo(const ManagedClass* managedClass) const
 	{
-		return mono_class_is_assignable_from(TypeClass->Class, managedClass->Class);
+#ifdef HZR_INCLUDE_MONO
+        return mono_class_is_assignable_from(TypeClass->Class, managedClass->Class);
+#else
+        return false;
+#endif
+		
 	}
 
 	bool ManagedType::IsVoid() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		return TypeEncoding == MONO_TYPE_VOID;
+#else
+        return true;
+#endif
 	}
 
 	bool ManagedType::IsArray() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		return TypeEncoding == MONO_TYPE_SZARRAY || TypeEncoding == MONO_TYPE_ARRAY;
+#else
+        return false;
+#endif
 	}
 
 	bool ManagedType::IsReference() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		return mono_type_is_reference(RawMonoType) || mono_type_is_byref(RawMonoType);
+#else
+        return false;
+#endif
 	}
 
 	bool ManagedType::IsValueType() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		return TypeEncoding == MONO_TYPE_VALUETYPE;
+#else
+        return true;
+#endif
 	}
 
 	bool ManagedType::IsGeneric() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		return TypeEncoding == MONO_TYPE_GENERICINST;
+#else
+        return false;
+#endif
 	}
 
 	bool ManagedType::IsPrimitive() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		switch (TypeEncoding)
 		{
 		case MONO_TYPE_VOID:
@@ -96,6 +133,7 @@ namespace HazardScript
 		case MONO_TYPE_ARRAY:
 			return false;
 		}
+#endif
 		return true;
 	}
 
@@ -106,10 +144,14 @@ namespace HazardScript
 
 	ManagedType ManagedType::GetElementType() const
 	{
+#ifdef HZR_INCLUDE_MONO
 		if (!IsArray()) return ManagedType();
 		return FromClass(mono_class_get_element_class(TypeClass->Class));
+#else
+        return ManagedType();
+#endif
 	}
-
+#ifdef HZR_INCLUDE_MONO
 	ManagedType ManagedType::FromClass(MonoClass* klass)
 	{
 		MonoType* type = mono_class_get_type(klass);
@@ -157,4 +199,5 @@ namespace HazardScript
 
 		return managedMethod;
 	}
+#endif
 }

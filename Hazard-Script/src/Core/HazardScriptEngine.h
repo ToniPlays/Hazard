@@ -1,12 +1,17 @@
 #pragma once
 
+
 #include "HazardScriptCore.h"
 #include "Metadata/ScriptAssembly.h"
 
 namespace HazardScript 
 {
-	struct MonoData {
+
+	struct MonoData
+    {
+#ifdef HZR_INCLUDE_MONO
 		MonoDomain* Domain;
+#endif
 
 		std::filesystem::path MonoAssemblyDir;
 		std::filesystem::path MonoConfigDir;
@@ -34,7 +39,10 @@ namespace HazardScript
 		static HazardScriptEngine* Create(HazardScriptCreateInfo* info);
 		static void SendDebugMessage(ScriptMessage message);
 		static std::vector<Ref<ScriptAssembly>> GetAssemblies();
+        
+#ifdef HZR_INCLUDE_MONO
 		static void CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method);
+#endif
 		static MonoData& GetMonoData() { return s_Instance->m_MonoData; }
 
 	private:

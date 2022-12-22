@@ -1,5 +1,8 @@
 
 #include "VulkanBottomLevelAS.h"
+
+#ifdef HZR_INCLUDE_VULKAN
+
 #include <vulkan/vulkan.h>
 #include "../VulkanContext.h"
 #include "Backend/Core/Renderer.h"
@@ -208,3 +211,4 @@ namespace HazardRenderer::Vulkan
 		m_TransformBuffer.Address = VkUtils::GetBufferAddress(m_TransformBuffer.Buffer).deviceAddress;
 	}
 }
+#endif

@@ -16,7 +16,9 @@ namespace HazardScript
 	{
 	public:
 		FieldMetadata() = default;
+#ifdef HZR_INCLUDE_MONO
 		FieldMetadata(MonoClassField* field);
+#endif
 
 		std::string GetName() const { return m_Name; }
 		const uint32_t& GetFlags() const { return m_Flags; }
@@ -52,48 +54,40 @@ namespace HazardScript
 		template<typename T>
 		T GetValue(uint32_t handle, uint32_t index = 0)
 		{
+#ifdef HZR_INCLUDE_MONO
 			MonoObject* obj = mono_gchandle_get_target(handle);
 			Buffer value = m_InstanceData[handle]->GetValueOrDefault(obj);
 			return ValueWrapper(value.Data, value.Size).Get<T>();
+#else
+            return T();
+#endif
 		}
 
 		template<typename T>
 		void SetValue(uint32_t handle, T value, uint32_t index = 0)
 		{
+#ifdef HZR_INCLUDE_MONO
 			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
 			Buffer val = { &value, sizeof(T) };
 			MonoObject* obj = mono_gchandle_get_target(handle);
 			m_InstanceData[handle]->SetData(obj, index, val);
-
-			/*//Field object
-			if (m_Type.IsArray()) 
-			{
-				Ref<ArrayFieldValueStorage> storage = m_InstanceData[handle].As<ArrayFieldValueStorage>();
-				if (!storage->IsLive())
-					storage->SetStoredValue<T>(index, value);
-
-				//Use array object as target
-				storage->SetLiveValue<T>(mono_field_get_value_object(Mono::GetDomain(), m_Field, obj), index, value);
-			}
-			else
-			{
-				Ref<FieldValueStorage> storage = m_InstanceData[handle].As<FieldValueStorage>();
-				if (!storage->IsLive())
-					storage->SetStoredValue<T>(value);
-				storage->SetLiveValue<T>(obj, value);
-			}*/
+#endif
 		}
 
 		uint32_t GetElementCount(uint32_t handle);
 
 		void SetArraySize(uint32_t handle, uint32_t elements);
+#ifdef HZR_INCLUDE_MONO
 		MonoClassField* GetMonoField() { return m_Field; }
+#endif
 
 	private:
 		void LoadAttributes();
 
 	private:
+#ifdef HZR_INCLUDE_MONO
 		MonoClassField* m_Field;
+#endif
 		std::string m_Name;
 		ManagedType m_Type;
 		uint32_t m_Flags = MonoFlags_Public;

@@ -6,7 +6,7 @@
 #include "UID.h"
 #include "Ref.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
-#include "HazardScript.h"
+#include "Core/Instance/ScriptObject.h"
 #include "ComponentBase.h"
 
 namespace Hazard {

@@ -30,7 +30,9 @@ namespace HazardScript
 
 	struct ManagedClass 
 	{
+#ifdef HZR_INCLUDE_MONO
 		MonoClass* Class;
+#endif
 		std::string FullName;
 		uint32_t ID = 0;
 		uint32_t Size;
@@ -38,7 +40,11 @@ namespace HazardScript
 
 	struct ManagedType 
 	{
+#ifdef HZR_INCLUDE_MONO
 		MonoType* RawMonoType = nullptr;
+#else
+        void* RawMonoType = nullptr;
+#endif
 		NativeType NativeType;
 		ManagedClass* TypeClass = nullptr;
 
@@ -61,16 +67,21 @@ namespace HazardScript
 
 		bool IsValid() const { return TypeEncoding != 0 && RawMonoType != nullptr && NativeType != NativeType::None; }
 
+#ifdef HZR_INCLUDE_MONO
 		static ManagedType FromClass(MonoClass* klass);
 		static ManagedType FromType(MonoType* type);
+#endif
 	};
 
 
 	struct ManagedMethod 
 	{
+        ManagedType ReturnType;
+#ifdef HZR_INCLUDE_MONO
 		MonoMethod* Method = nullptr;
-		ManagedType ReturnType;
-
-		static ManagedMethod FromMethod(MonoMethod* method);
+        static ManagedMethod FromMethod(MonoMethod* method);
+#endif
+	
 	};
 }
+

@@ -14,21 +14,22 @@ namespace UI
 	constexpr float colWidth = 100.0f;
 
 	using namespace Hazard;
+    template<typename T>
+    bool ComponentMenu(std::vector<Entity>& entities)
+    {
+        STATIC_ASSERT(false, T);
+    }
 
 	template<typename T>
-	static bool ComponentMenuIfExists(std::vector<Entity>& entities)
+	bool ComponentMenuIfExists(std::vector<Entity>& entities)
 	{
 		if (AllEntitiesContain<T>(entities))
 			return ComponentMenu<T>(entities);
 		return false;
 	}
-	template<typename T>
-	static bool ComponentMenu(std::vector<Entity>& entities)
-	{
-		STATIC_ASSERT(false, T);
-	}
+	
 	template<>
-	static bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
+    bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
 	{
 
 		std::string& tag = entities[0].GetTag().Tag;
@@ -53,7 +54,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
 	{
 		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_MAP_MARKER " Transform"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
@@ -166,7 +167,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<SpriteRendererComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<SpriteRendererComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_PICTURE_O " Sprite renderer"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
@@ -253,7 +254,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
 	{
 		bool removed = false;
 		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
@@ -360,7 +361,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<ScriptComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<ScriptComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -374,7 +375,6 @@ namespace UI
 				std::string field = "";
 
 				auto& scriptEngine = Application::GetModule<ScriptEngine>();
-				bool exists = scriptEngine.HasModule("");
 				bool changed = ImUI::TextFieldWithHint(field, "Script class");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
@@ -446,7 +446,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
+bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -537,7 +537,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<DirectionalLightComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<DirectionalLightComponent>(std::vector<Entity>& entities)
 	{
 		bool removed = false;
 
@@ -600,7 +600,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<PointLightComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<PointLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -663,7 +663,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CUBE " Mesh"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
@@ -765,7 +765,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<Rigidbody2DComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<Rigidbody2DComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
 		bool optionsOpen = ImUI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
@@ -791,7 +791,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<BoxCollider2DComponent>(std::vector<Entity>& entities) {
+	bool ComponentMenu<BoxCollider2DComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
@@ -818,7 +818,7 @@ namespace UI
 		return false;
 	}
 	template<>
-	static bool ComponentMenu<CircleCollider2DComponent>(std::vector<Entity>& entities) {
+bool ComponentMenu<CircleCollider2DComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 

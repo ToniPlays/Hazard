@@ -1,5 +1,7 @@
 
 #include "ProjectTodoPanel.h"
+#include "Core/HazardScriptEngine.h"
+#include "Hazard/Scripting/Attributes/AllAttributes.h"
 
 namespace UI
 {
@@ -17,7 +19,6 @@ namespace UI
 		const char* columns[] = { "Status", "Message" };
 
 		ImUI::Table("TodoStatus", columns, 2, size, [&]() {
-
 			for (auto& assembly : HazardScriptEngine::GetAssemblies())
 			{
 				for (auto& [name, metadata] : assembly->GetScripts())

@@ -5,11 +5,12 @@
 #include "portable-file-dialogs.h"
 #include <format>
 
+#include "Platform/PlatformUtils.h"
+
 #ifdef HZR_PLATFORM_WINDOWS
 #include <shlobj.h>
 #include <cstdlib>
 #include <Windows.h>
-#include "Platform/PlatformUtils.h"
 #endif
 
 std::string File::OpenFileDialog()
@@ -243,10 +244,14 @@ bool File::OpenInExplorer(const std::filesystem::path& path) {
 }
 bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
 {
+#ifdef HZR_PLATFORM_WINDOWS
 	auto abs = GetFileAbsolutePath(path);
 	if (!Exists(path)) return false;
 	ShellExecute(NULL, L"explore", abs.c_str(), NULL, NULL, SW_SHOWNORMAL);
 	return true;
+#else
+    return false;
+#endif
 }
 
 int File::SystemCall(const std::string& command)
@@ -256,6 +261,7 @@ int File::SystemCall(const std::string& command)
 
 int File::CreateSubprocess(const std::string& path, const std::string& arguments, bool background)
 {
+#ifdef HZR_PLATFORM_WINDOWS
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
 
@@ -276,11 +282,19 @@ int File::CreateSubprocess(const std::string& path, const std::string& arguments
 		&si,
 		&pi
 	);
+
 	return id;
+#else
+    return 0;
+#endif
 }
 void File::WaitForSubprocess(void* id)
 {
+#ifdef HZR_PLATFORM_WINDOWS
 	WaitForSingleObject(id, 0);
+#else
+    
+#endif
 }
 
 bool File::HasEnvinronmentVar(const std::string& key)

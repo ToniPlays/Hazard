@@ -18,6 +18,7 @@ namespace Hazard::Utils {
 
 namespace HazardScript
 {
+#ifdef HZR_INCLUDE_MONO
 	//glm::vec2 -----------------------------------
 	using namespace Hazard;
 	template<>
@@ -186,4 +187,5 @@ namespace HazardScript
 		else
 			MonoArrayUtils::SetElementValue((MonoArray*)target, m_Index, value.MonoObject);
 	}
+#endif
 }

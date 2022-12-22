@@ -3,6 +3,8 @@
 #include "../VulkanContext.h"
 #include "spdlog/fmt/fmt.h"
 
+#ifdef HZR_INCLUDE_VULKAN
+
 namespace HazardRenderer::Vulkan
 {
 	void VulkanDescriptorSet::SetBuffer(uint32_t binding, VkDescriptorBufferInfo info)
@@ -57,3 +59,4 @@ namespace HazardRenderer::Vulkan
 		m_VkDescriptorSet = VulkanContext::GetInstance()->RT_AllocateDescriptorSet(allocInfo);
 	}
 }
+#endif

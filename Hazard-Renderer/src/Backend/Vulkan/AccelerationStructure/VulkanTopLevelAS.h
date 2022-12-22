@@ -4,7 +4,10 @@
 #include "Backend/Vulkan/Pipeline/VulkanVertexBuffer.h"
 #include "Backend/Vulkan/Pipeline/VulkanIndexBuffer.h"
 
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "Helpers.h"
+
 
 namespace HazardRenderer::Vulkan
 {
@@ -46,3 +49,4 @@ namespace HazardRenderer::Vulkan
 		VulkanAccelStruct m_StructureInfo;
 	};
 }
+#endif

@@ -22,7 +22,9 @@ namespace Hazard
 		void SendDebugMessage(const HazardScript::ScriptMessage& message);
 
 		void RegisterInternalCall(const std::string& signature, void* method) {
+#ifdef HZR_INCLUDE_MONO
 			m_Engine->RegisterInternalCall(signature, method);
+#endif
 		}
 		template<typename T>
 		void RegisterScriptGlue() 
@@ -38,8 +40,9 @@ namespace Hazard
 
 	private:
 		ScriptEngineCreateInfo m_Info;
-
+#ifdef HZR_INCLUDE_MONO
 		HazardScript::HazardScriptEngine* m_Engine;
+#endif
 		std::vector<HazardScript::ScriptMessage> m_QueuedMessages;
 		std::vector<IScriptGlue*> m_ScriptGlue;
 		ScriptMessageCallback m_MessageCallback;

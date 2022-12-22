@@ -50,16 +50,20 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
 	{
+#ifdef HZR_INCLUDE_MONO
 		Mono::Register(signature, function);
+#endif
 	}
 	void HazardScriptEngine::RunGarbageCollector() 
 	{
+#ifdef HZR_INCLUDE_MONO
 		HZR_PROFILE_FUNCTION();
 		mono_gc_collect(mono_gc_max_generation());
 		using namespace std::chrono_literals;
 
 		while (mono_gc_pending_finalizers()) 
 			std::this_thread::sleep_for(500ns);
+#endif
 	}
 	std::vector<Ref<ScriptAssembly>> HazardScriptEngine::GetAssemblies()
 	{
@@ -68,8 +72,10 @@ namespace HazardScript
 		assemblies.push_back(s_Instance->m_MonoData.AppAssembly);
 		return assemblies;
 	}
+#ifdef HZR_INCLUDE_MONO
 	void HazardScriptEngine::CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method)
 	{
+
 		MonoClass* exceptionClass = mono_object_get_class(exception);
 		MonoType* type = mono_class_get_type(exceptionClass);
 		std::string typeName = mono_type_get_name(type);
@@ -91,20 +97,22 @@ namespace HazardScript
 
 		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName + ": " + message, message + "\n\n" + stackTrace });
 	}
+#endif
 	void HazardScriptEngine::InitializeMono()
 	{
+#ifdef HZR_INCLUDE_MONO
 		Mono::SetDirs(m_MonoData.MonoAssemblyDir, m_MonoData.MonoConfigDir);
 
 		Mono::Init("HazardScriptCore");
 		ScriptCache::Init();
 
-		if (m_MonoData.LoadAssembliesOnInit) 
-		{
+		if (m_MonoData.LoadAssembliesOnInit)
 			Reload();
-		}
+#endif
 	}
 	void HazardScriptEngine::LoadCoreAssebly()
 	{
+#ifdef HZR_INCLUDE_MONO
 		MonoDomain* domain = nullptr;
 		bool cleanup = false;
 
@@ -118,6 +126,7 @@ namespace HazardScript
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}
+#endif
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()
 	{

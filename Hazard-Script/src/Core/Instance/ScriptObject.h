@@ -16,11 +16,15 @@ namespace HazardScript
 		
 		void TryInvoke(const std::string& name, void** params = nullptr) 
 		{
+#ifdef HZR_INCLUDE_MONO
 			m_Script->TryInvoke(name, GetHandleTarget(), params);
+#endif
 		}
 		void Invoke(const std::string& name, void** params = nullptr) 
 		{
+#ifdef HZR_INCLUDE_MONO
 			m_Script->Invoke(name, GetHandleTarget(), params);
+#endif
 		}
 		
 		template<typename T>
@@ -45,7 +49,9 @@ namespace HazardScript
 
 	private:
 		ScriptObject(ScriptMetadata* script);
+#ifdef HZR_INCLUDE_MONO
 		MonoObject* GetHandleTarget() { return mono_gchandle_get_target(m_Handle); }
+#endif
 		uint32_t GetHandle() { return m_Handle; }
 
 	private:

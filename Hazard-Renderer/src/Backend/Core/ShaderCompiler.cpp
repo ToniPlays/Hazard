@@ -204,6 +204,7 @@ namespace HazardRenderer
 
 		switch (api)
 		{
+#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{
 			OpenGL::OpenGLShaderCompiler compiler;
@@ -278,7 +279,10 @@ namespace HazardRenderer
 				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
 			}
 			break;
+            
 		}
+#endif
+#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan:
 		{
 			Vulkan::VulkanShaderCompiler compiler;
@@ -304,6 +308,7 @@ namespace HazardRenderer
 			}
 			break;
 		}
+#endif
 		}
 		return result;
 	}

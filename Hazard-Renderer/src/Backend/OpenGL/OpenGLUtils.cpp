@@ -1,5 +1,7 @@
 #include "OpenGLUtils.h"
 
+#include <glm/glm.hpp>
+
 namespace HazardRenderer::OpenGLUtils 
 {
 	uint32_t GetMipLevelCount(uint32_t width, uint32_t height)

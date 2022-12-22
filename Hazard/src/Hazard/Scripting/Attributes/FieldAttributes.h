@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HazardScript.h"
+#include "Core/Attribute.h"
 
 namespace Hazard
 {

@@ -2,7 +2,7 @@
 
 #include "Asset.h"
 
-/*
+
 namespace std
 {
 	template <>
@@ -13,7 +13,7 @@ namespace std
 			return hash_value(path);
 		}
 	};
-}*/
+}
 
 namespace Hazard
 {

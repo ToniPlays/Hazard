@@ -6,6 +6,8 @@
 #include "Backend/Vulkan/Core/VulkanAllocator.h"
 #include "Backend/Vulkan/VulkanContext.h"
 
+#ifdef HZR_INCLUDE_VULKAN
+
 namespace HazardRenderer::Vulkan
 {
     static PFN_vkGetRayTracingShaderGroupHandlesKHR fpGetRayTracingShaderGroupHandlesKHR;
@@ -103,3 +105,4 @@ namespace HazardRenderer::Vulkan
         }
     }
 }
+#endif

@@ -20,6 +20,9 @@
 // Read comments in imgui_impl_vulkan.h.
 
 #pragma once
+
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "imgui.h"      // IMGUI_IMPL_API
 #include <vulkan/vulkan.h>
 
@@ -125,3 +128,4 @@ struct ImGui_ImplVulkanH_Window
         ClearEnable = true;
     }
 };
+#endif

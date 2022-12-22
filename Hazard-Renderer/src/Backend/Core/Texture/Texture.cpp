@@ -1,7 +1,10 @@
 #include "Texture.h"
 
+#include "Backend/Core/GraphicsContext.h"
+
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
+#include "Backend/Metal/MetalCore.h"
 
 namespace HazardRenderer {
 	Ref<CubemapTexture> CubemapTexture::Create(CubemapTextureCreateInfo* createInfo)
