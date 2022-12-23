@@ -198,11 +198,9 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	HZR_ASSERT(File::Move(oldAssetPath.string() + ".meta", newAssetPath.string() + ".meta"), "Oops");
 	File::WriteFile(newAssetPath.string() + ".meta", out.c_str());
 
-
 	AssetManager::GetMetadataRegistry()[newAssetPath] = metadata;
 	AssetManager::GetMetadataRegistry().erase(oldAssetPath);
-	auto& registry = AssetManager::GetMetadataRegistry();
-
+    
 	return false;
 }
 
@@ -226,7 +224,7 @@ void EditorAssetManager::RefreshEditorAssets(bool force)
 		case AssetType::Shader:
 		{
 			using namespace HazardRenderer;
-			AssetMetadata& metadata = AssetManager::GetMetadata(AssetManager::GetHandleFromFile(file));
+			
 			auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
 
 			if (File::IsNewerThan(file, cacheDir) || force)

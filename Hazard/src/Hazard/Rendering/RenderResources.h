@@ -44,7 +44,7 @@ namespace Hazard
 
 	struct LightingData
 	{
-		int DirectionLightCount;
+		size_t DirectionLightCount;
 		int PointLightCount;
 		float SkyLightIntensity;
 		float EnvironmentLod;

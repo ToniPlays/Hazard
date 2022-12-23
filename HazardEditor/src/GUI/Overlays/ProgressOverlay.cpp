@@ -47,10 +47,10 @@ namespace UI
 		float width = ImGui::CalcTextSize(progress.c_str()).x;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 
-		ImGui::Text(title);
+		ImGui::Text("%s", title);
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(panelWidth - width);
-		ImGui::Text(progress.c_str());
+		ImGui::Text("%s", progress.c_str());
 		ImGui::PopFont();
 
 		ImGui::ProgressBar(totalProgress, { panelWidth, 24 });

@@ -5,8 +5,8 @@
 #include "MetalContext.h"
 #include "MetalSwapchain.h"
 
-#include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
+//#include <Metal/Metal.hpp>
+//#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal
 {

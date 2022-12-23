@@ -31,37 +31,37 @@ namespace UI
 					ImGui::TableNextColumn();
 					ImGui::Text("Camera count");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(renderer->GetCameraData().size()).c_str());
+					ImGui::Text("%s", std::to_string(renderer->GetCameraData().size()).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Environment count");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Environment.size()).c_str());
+					ImGui::Text("%s", std::to_string(list.Environment.size()).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Quad count");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Stats.QuadCount).c_str());
+					ImGui::Text("%s", std::to_string(list.Stats.QuadCount).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Mesh count");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Stats.MeshCount).c_str());
+					ImGui::Text("%s", std::to_string(list.Stats.MeshCount).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Vertices");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Stats.Vertices).c_str());
+					ImGui::Text("%s", std::to_string(list.Stats.Vertices).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Indices");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Stats.Indices).c_str());
+					ImGui::Text("%s", std::to_string(list.Stats.Indices).c_str());
 
 					ImGui::TableNextColumn();
 					ImGui::Text("Draw calls");
 					ImGui::TableNextColumn();
-					ImGui::Text(std::to_string(list.Stats.DrawCalls).c_str());
+					ImGui::Text("%s", std::to_string(list.Stats.DrawCalls).c_str());
 
 					});
 				DrawDetailedInfo(list);
@@ -92,7 +92,7 @@ namespace UI
 					for (auto& mesh : meshDrawList) {
 						ImGui::Text("Index count");
 						ImGui::NextColumn();
-						ImGui::Text(std::to_string(mesh.Count).c_str());
+						ImGui::Text("%s", std::to_string(mesh.Count).c_str());
 						ImGui::NextColumn();
 					}
 					ImGui::Columns();

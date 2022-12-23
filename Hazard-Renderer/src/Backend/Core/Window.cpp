@@ -25,6 +25,7 @@ namespace HazardRenderer
 		case RenderAPI::Metal:		return true;
 #endif
         case RenderAPI::Auto:       return true;
+        default:                    return false;
 		}
 		return false;
 	}

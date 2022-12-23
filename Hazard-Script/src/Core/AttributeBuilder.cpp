@@ -4,6 +4,7 @@
 
 namespace HazardScript
 {
+#ifdef HZR_INCLUDE_MONO
 	Ref<Attribute> AttributeBuilder::Create(const std::string className, MonoObject* obj)
 	{
 		for (auto& [name, cb] : s_Attribs) 
@@ -13,4 +14,5 @@ namespace HazardScript
 		}
 		return Ref<Attribute>();
 	}
+#endif
 }

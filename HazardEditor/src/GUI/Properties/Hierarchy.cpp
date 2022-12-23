@@ -143,7 +143,7 @@ namespace UI
 				{
 					ImUI::ScopedStyleColor col(ImGuiCol_Text, colors[i]);
 					ImUI::ShiftX(8.0f);
-					ImGui::Text(modifiers[i]);
+					ImGui::Text("%s", modifiers[i]);
 				}
 				ImUI::Tooltip(tooltips[i]);
 				ImGui::SameLine();
@@ -155,7 +155,7 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuItem("Create empty", [&]() {
-				Entity e = world->CreateEntity("New entity");
+                world->CreateEntity("New entity");
 				});
 
 			ImUI::Separator({ ImGui::GetContentRegionAvail().x, 2.0f }, style.Window.HeaderActive);

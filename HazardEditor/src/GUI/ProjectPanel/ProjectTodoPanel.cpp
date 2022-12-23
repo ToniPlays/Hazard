@@ -48,16 +48,16 @@ namespace UI
 		if (!name.empty())
 			title += "." + name;
 
-		bool clicked = ImUI::TableRowClickable((const char*)name.c_str(), rowHeight);
+		ImUI::TableRowClickable((const char*)name.c_str(), rowHeight);
 
 		ImUI::Group((const char*)name.c_str(), [&]() {
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 			ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisX);
 			ImGui::SameLine();
-			ImGui::Text(title.c_str());
+			ImGui::Text("%s", title.c_str());
 			ImGui::TableNextColumn();
 			ImUI::ShiftX(4.0f);
-			ImGui::Text(attrib->Detail.c_str());
+			ImGui::Text("%s", attrib->Detail.c_str());
 			});
 	}
 }

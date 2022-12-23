@@ -5,8 +5,9 @@
 
 #include "MetalContext.h"
 
-namespace CA {
-class MetalDrawable;
+namespace CA
+{
+    class MetalDrawable;
 }
 
 namespace HazardRenderer::Metal {
@@ -17,7 +18,6 @@ namespace HazardRenderer::Metal {
         MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo);
         ~MetalSwapchain() = default;
         
-        void Create(uint32_t width, uint32_t height, bool vSync) override;
         void Resize(uint32_t width, uint32_t height) override;
 
         void BeginFrame() override;
@@ -31,7 +31,8 @@ namespace HazardRenderer::Metal {
         Ref<RenderPass> GetRenderPass() override { return m_RenderPass; };
         Ref<FrameBuffer> GetRenderTarget() override { return m_FrameBuffer; };
         
-        CA::MetalDrawable* GetDrawable() { return m_Drawable; }
+        //Metal specific
+        //CA::MetalDrawable* GetDrawable() { return m_Drawable; }
         
     private:
         uint32_t m_Width;
@@ -41,7 +42,7 @@ namespace HazardRenderer::Metal {
         Ref<RenderCommandBuffer> m_RenderCommandBuffer;
         Ref<FrameBuffer> m_FrameBuffer;
         
-        CA::MetalDrawable* m_Drawable;
+        //CA::MetalDrawable* m_Drawable;
     };
 }
 #endif

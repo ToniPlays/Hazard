@@ -38,14 +38,14 @@ namespace UI
 				ImUI::Group((const char*)&message, [&]() {
 					ImUI::Separator({ 4.0, rowHeight }, GetMessageColor(message.Flags));
 					ImGui::SameLine();
-					ImGui::Text(GetMessageType(message));
+					ImGui::Text("%s", GetMessageType(message));
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("Time");
 
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
-					ImGui::Text(message.Message.c_str());
+					ImGui::Text("%s", message.Message.c_str());
 
 					if (clicked) {
 						ImGui::OpenPopup(message.Message.c_str());
@@ -60,7 +60,7 @@ namespace UI
 						ImUI::ScopedStyleColor color(ImGuiCol_PopupBg, style.ChildBackgroundColor);
 						if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 
-							ImGui::Text(message.Description.c_str());
+							ImGui::Text("%s", message.Description.c_str());
 							ImGui::EndPopup();
 						}
 					}
@@ -79,8 +79,8 @@ namespace UI
 	void Console::Clear(bool force)
 	{
 		std::vector<ConsoleMessage> messages;
-		uint32_t size = m_Messages.size();
-		for (uint32_t i = 0; i < size; i++)
+		size_t size = m_Messages.size();
+		for (size_t i = 0; i < size; i++)
 		{
 			ConsoleMessage& message = m_Messages[i];
 			if (!(message.Flags & MessageFlags_Clearable || force))

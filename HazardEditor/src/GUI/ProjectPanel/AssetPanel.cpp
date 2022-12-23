@@ -5,7 +5,7 @@
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
 
-#include "ImGui.h"
+#include "imgui.h"
 
 namespace UI
 {
@@ -160,8 +160,8 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Info", { size.x, 28.0f });
-		ImUI::Shift(4.0f, { (28.0f - ImGui::GetTextLineHeight()) * 0.5f });
-		ImGui::Text("Items: %i", m_CurrentItems.size());
+        ImUI::Shift(4.0f,  (28.0f - ImGui::GetTextLineHeight()) * 0.5f );
+		ImGui::Text("Items: %zu", m_CurrentItems.size());
 
 		ImGui::EndChild();
 	}
@@ -334,6 +334,8 @@ namespace UI
 			return EditorAssetManager::GetIcon("World");
 		case AssetType::Folder:
 			return EditorAssetManager::GetIcon("Folder");
+            default:
+                return EditorAssetManager::GetIcon("Default");
 	}
 		return EditorAssetManager::GetIcon("Default");
 }
@@ -375,7 +377,7 @@ namespace UI
 	void AssetPanel::GoToFolderDepth(const std::filesystem::path& path, uint32_t index)
 	{
 		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
-		uint32_t strPos = StringUtil::OffsetOf(relative, '\\', index);
+		size_t strPos = StringUtil::OffsetOf(relative, '\\', index);
 		relative = relative.substr(0, strPos);
 		m_CurrentPath = m_RootPath.string() + '\\' + relative;
 

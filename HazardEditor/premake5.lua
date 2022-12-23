@@ -51,13 +51,11 @@ project "HazardEditor"
 	{
 		"ImGui",
 		"Hazard",
-		"%{Library.Mono_Debug_Lib}",
-		"%{Library.Assimp_Lib}",
+		"Hazard-Script",
 		"GLFW",
 		"Glad",
 		"Box2D",
-		"yaml-cpp",
-		"Optick"
+		"yaml-cpp"
 	}
 
 	postbuildcommands {
@@ -75,15 +73,25 @@ project "HazardEditor"
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
-			"Hazard-Script"
+			"Hazard-Script",
+			"Optick",
+			"%{Library.Mono_Debug_Lib}",
+			"%{Library.Assimp_Lib}",
 		}
 		includedirs {
 
 			"%{IncludeDir.Optick}",
 			"%{IncludeDir.Mono}"
 		}
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
+			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
+		}
 
 	filter "system:macosx"
+		systemversion "latest"
 		defines {
 			"HZR_PLATFORM_MACOS",
 		}
@@ -92,27 +100,18 @@ project "HazardEditor"
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
-			"MetalKit.framework",
-            "QuartzCore.framwork"
+			"MetalKit.framework"
 		}
-        files {
-                "src/**.m",
-                "src/**.mm"
-        }
+        	files {
+                	"src/**.m",
+                	"src/**.mm"
+        	}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
-	if os.host() == "windows" then
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
-			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
-		}
-	end
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

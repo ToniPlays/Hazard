@@ -17,6 +17,9 @@ namespace HazardRenderer::Metal {
     class MetalPhysicalDevice : public PhysicalDevice {
     public:
         MetalPhysicalDevice();
+        
+    private:
+        
     };
 }
 #endif

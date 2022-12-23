@@ -106,7 +106,6 @@ namespace UI
 					{
 						Entity e = { entity, world.Raw() };
 						auto& tc = e.GetComponent<TransformComponent>();
-						auto& cc = e.GetComponent<DirectionalLightComponent>();
 
 						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 					}
@@ -120,7 +119,6 @@ namespace UI
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
-		bool is2D = m_EditorCamera.Is2DEnabled();
 		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -185,7 +183,6 @@ namespace UI
 		}
 
 		ImGui::EndChild();
-		ImRect rect = ImGui::GetCurrentWindow()->InnerRect;
 		m_WindowFocused = ImGui::IsWindowFocused();
 
 		if (m_DrawStats)
@@ -302,7 +299,7 @@ namespace UI
 
 		ImGui::Text("Active jobs");
 		ImGui::NextColumn();
-		ImGui::Text("%i", Application::Get().GetJobSystem().GetJobCount());
+		ImGui::Text("%zu", Application::Get().GetJobSystem().GetJobCount());
 		ImGui::NextColumn();
 
 		const char* shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };

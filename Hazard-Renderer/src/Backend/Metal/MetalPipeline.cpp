@@ -8,6 +8,7 @@
 
 namespace HazardRenderer::Metal
 {
+/*
     static MTL::PrimitiveType DrawTypeToMTLPrimitive(const DrawType& type) {
         
         switch(type)
@@ -19,14 +20,7 @@ namespace HazardRenderer::Metal
         }
         return MTL::PrimitiveTypeTriangle;
     }
+ */
 
-    MetalPipeline::MetalPipeline(PipelineSpecification* specs)
-    {
-        
-    }
-    MetalPipeline::~MetalPipeline()
-    {
-        
-    }
 }
 #endif

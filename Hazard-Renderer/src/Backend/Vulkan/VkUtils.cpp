@@ -1,4 +1,4 @@
-#include "VkUtils.h"
+#include "VKUtils.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "VulkanContext.h"

@@ -32,6 +32,8 @@ namespace Hazard
 		case ImageFormat::DEPTH32F:			return 1;
 		case ImageFormat::DEPTH24STENCIL8:	return 1;
 		case ImageFormat::RED32I:           return 1;
+        case ImageFormat::RGB16F:           return 4;
+        case ImageFormat::RGB32F:           return 4;
 		}
 		return 0;
 	}

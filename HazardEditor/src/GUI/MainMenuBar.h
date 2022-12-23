@@ -12,7 +12,7 @@ namespace UI {
 		void Init() override;
 		void Update() override {};
 
-		virtual bool OnEvent(Event& e);
+		virtual bool OnEvent(Event& e) override;
 		bool OnKeyPressed(KeyPressedEvent& e);
 	};
 }

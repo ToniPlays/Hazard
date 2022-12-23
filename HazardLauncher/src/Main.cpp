@@ -1,11 +1,11 @@
 
-#include "Tests/TriangleTest.h"
-#include "Tests/TexturedQuad.h"
-#include "Tests/UniformBufferTest.h"
-#include "Tests/AccelerationStructureTest.h"
-#include "Tests/RayTracingSphere.h"
+#include "tests/TriangleTest.h"
+#include "tests/TexturedQuad.h"
+#include "tests/UniformBufferTest.h"
+#include "tests/AccelerationStructureTest.h"
+#include "tests/RayTracingSphere.h"
 
-void main(int argc, char* argv)
+int main(int argc, char** argv)
 {
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
@@ -17,5 +17,6 @@ void main(int argc, char* argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	RayTracingSphere::Run(renderAPI);
+	TriangleTest::Run(renderAPI);
+    return 0;
 }

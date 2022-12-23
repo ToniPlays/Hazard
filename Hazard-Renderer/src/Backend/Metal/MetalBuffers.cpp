@@ -7,31 +7,6 @@
 
 namespace HazardRenderer::Metal
 {
-    MetalVertexBuffer::MetalVertexBuffer(VertexBufferCreateInfo* createInfo)
-    {
-        
-    }
-    MetalVertexBuffer::~MetalVertexBuffer()
-    {
-        
-    }
-
-    MetalIndexBuffer::MetalIndexBuffer(IndexBufferCreateInfo* createInfo)
-    {
-        
-    }
-    MetalIndexBuffer::~MetalIndexBuffer()
-    {
-        
-    }
-
-    MetalUniformBuffer::MetalUniformBuffer(UniformBufferCreateInfo* createInfo)
-    {
-        
-    }
-    MetalUniformBuffer::~MetalUniformBuffer()
-    {
-        
-    }
+    
 }
 #endif

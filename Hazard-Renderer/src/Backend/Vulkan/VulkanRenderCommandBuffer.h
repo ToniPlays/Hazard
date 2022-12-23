@@ -28,12 +28,12 @@ namespace HazardRenderer::Vulkan
 		VulkanRenderCommandBuffer(const std::string& name, bool swapchain);
 		~VulkanRenderCommandBuffer();
 
-		uint32_t GetFrameIndex() { return m_FrameIndex; };
+		uint32_t GetFrameIndex() override { return m_FrameIndex; };
 		
-		bool IsRecording() { return m_State == State::Record; };
-		void Begin();
-		void End();
-		void Submit();
+		bool IsRecording() override { return m_State == State::Record; };
+		void Begin() override;
+		void End() override;
+		void Submit() override;
 
 		void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
@@ -43,8 +43,8 @@ namespace HazardRenderer::Vulkan
 		void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override;
 		void BindPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr);
-		void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
+		void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
+		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
 		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;

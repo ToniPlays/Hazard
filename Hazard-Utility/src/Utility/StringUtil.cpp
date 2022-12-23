@@ -41,10 +41,10 @@ std::string StringUtil::BytesToString(const size_t& bytes)
 	constexpr uint64_t KB = 1024;
 
 	char buffer[32];
-	if (bytes > GB) sprintf(buffer, "%.0f GB", (float)bytes / (float)GB);
-	else if (bytes > MB) sprintf(buffer, "%.2f MB", (float)bytes / (float)MB);
-	else if (bytes > KB) sprintf(buffer, "%.2f KB", (float)bytes / (float)KB);
-	else sprintf(buffer, "%.2f bytes", (float)bytes);
+	if (bytes > GB) snprintf(buffer, 32, "%.0f GB", (float)bytes / (float)GB);
+	else if (bytes > MB) snprintf(buffer, 32, "%.2f MB", (float)bytes / (float)MB);
+	else if (bytes > KB) snprintf(buffer, 32, "%.2f KB", (float)bytes / (float)KB);
+	else snprintf(buffer, 32, "%.2f bytes", (float)bytes);
 	return std::string(buffer);
 }
 std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replaceWith)
@@ -104,7 +104,7 @@ std::string StringUtil::GetPreprocessor(const char* type, const std::string& sou
 		*offset = std::string::npos;
 		return "";
 	}
-	size_t lineEndOffset = source.find_first_of('\r\n', valueOffset);
+	size_t lineEndOffset = source.find_first_of("\r\n", valueOffset);
 	std::string line = source.substr(valueOffset, lineEndOffset - valueOffset);
 	*offset = valueOffset + line.length();
 	return line.substr(line.find_first_of(' ') + 1);

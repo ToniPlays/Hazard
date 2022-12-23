@@ -19,8 +19,10 @@ namespace HazardRenderer
 		case ShaderStage::Fragment:	return "frag";
 		case ShaderStage::Compute:	return "comp";
 		case ShaderStage::Geometry:	return "geom";
+        default:
+            HZR_ASSERT(false, "");
+            break;
 		}
-		HZR_ASSERT(false, "");
 		return "";
 	}
 	static std::string GetRendererCache(RenderAPI api)
@@ -33,8 +35,11 @@ namespace HazardRenderer
 		case RenderAPI::DX12:		return "dx12";
 		case RenderAPI::Metal:		return "met";
 		case RenderAPI::WebGL:		return "wgl";
+        default:
+            HZR_ASSERT(false, "");
+            break;
 		}
-		HZR_ASSERT(false, "");
+		
 		return "";
 	}
 
@@ -77,7 +82,6 @@ namespace HazardRenderer
 			}
 			for (auto& resource : resources.acceleration_structures)
 			{
-				auto& spvType = compiler.get_type(resource.base_type_id);
 				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
 				auto& descriptorSet = result.AccelerationStructures[set];
 
@@ -98,7 +102,6 @@ namespace HazardRenderer
 			}
 			for (auto& resource : resources.storage_buffers)
 			{
-				auto& spvType = compiler.get_type(resource.base_type_id);
 				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
 				auto& descriptorSet = result.StorageBuffers[set];
 
@@ -143,7 +146,6 @@ namespace HazardRenderer
 			}
 			for (auto& resource : resources.sampled_images)
 			{
-				auto& spvType = compiler.get_type(resource.base_type_id);
 				auto& type = compiler.get_type(resource.type_id);
 				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
 				uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
@@ -180,6 +182,8 @@ namespace HazardRenderer
 				case spv::AccessQualifier::AccessQualifierReadOnly: storageImage.Flags = ShaderResourceFlags_ReadOnly; break;
 				case spv::AccessQualifier::AccessQualifierWriteOnly: storageImage.Flags = ShaderResourceFlags_WriteOnly; break;
 				case spv::AccessQualifier::AccessQualifierReadWrite: storageImage.Flags = ShaderResourceFlags_ReadAndWrite; break;
+                case spv::AccessQualifier::AccessQualifierMax: break;
+                        
 				}
 				storageImage.Flags |= ShaderResourceFlags_WriteOnly;
 			}
@@ -309,6 +313,8 @@ namespace HazardRenderer
 			break;
 		}
 #endif
+            default:
+                break;
 		}
 		return result;
 	}

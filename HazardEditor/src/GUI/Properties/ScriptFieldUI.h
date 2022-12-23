@@ -22,7 +22,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<bool>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
+	bool ScriptField<bool>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
 	{
 		using namespace HazardScript;
 		bool value = obj->GetFieldValue<bool>(field->GetName(), index);
@@ -40,7 +40,7 @@ namespace UI
 
 
 	template<>
-	static bool ScriptField<float>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
+	bool ScriptField<float>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
 	{
 		using namespace HazardScript;
 		float value = obj->GetFieldValue<float>(field->GetName(), index);
@@ -70,7 +70,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<double>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<double>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		double value = obj->GetFieldValue<double>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -84,7 +84,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<int8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<int8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int8_t value = obj->GetFieldValue<int8_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -98,7 +98,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<int16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<int16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int16_t value = obj->GetFieldValue<int16_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -111,7 +111,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<int32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<int32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		int32_t value = obj->GetFieldValue<int32_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -124,7 +124,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<int64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<int64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint64_t value = obj->GetFieldValue<int64_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -138,7 +138,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<uint8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<uint8_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint8_t value = obj->GetFieldValue<uint8_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -151,7 +151,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<uint16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<uint16_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint16_t value = obj->GetFieldValue<uint16_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -164,7 +164,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<uint32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<uint32_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint32_t value = obj->GetFieldValue<uint32_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -177,7 +177,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<uint64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<uint64_t>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		uint64_t value = obj->GetFieldValue<uint64_t>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -191,7 +191,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<glm::vec2>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<glm::vec2>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		glm::vec2 value = obj->GetFieldValue<glm::vec2>(field->GetName());
 
 		bool modified = ImUI::InputFloat2(value, 0.0f);
@@ -200,7 +200,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec3>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<glm::vec3>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		glm::vec3 value = obj->GetFieldValue<glm::vec3>(field->GetName(), index);
 		bool modified = ImUI::InputFloat3(value, 0.0f);
 
@@ -209,7 +209,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<glm::vec4>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<glm::vec4>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		Color value = Color::FromGLM(obj->GetFieldValue<glm::vec4>(field->GetName(), index));
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = ImUI::ColorPicker("##color", value);
@@ -219,7 +219,7 @@ namespace UI
 		return modified;
 	}
 	template<>
-	static bool ScriptField<std::string>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<std::string>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 		using namespace HazardScript;
 		std::string value = obj->GetFieldValue<std::string>(field->GetName(), index);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -239,7 +239,7 @@ namespace UI
 	}
 
 	template<>
-	static bool ScriptField<Hazard::ObjectReference>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
+bool ScriptField<Hazard::ObjectReference>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world) {
 
 		using namespace HazardScript;
 		Hazard::ObjectReference value = obj->GetFieldValue<Hazard::ObjectReference>(field->GetName(), index);
@@ -277,7 +277,7 @@ namespace UI
 
 		std::string text = (value.ObjectUID != 0 ? tag : "None") + " (" + displayName + ")";
 		float rowHeight = ImGui::GetTextLineHeightWithSpacing();
-		ImGui::Text(text.c_str());
+		ImGui::Text("%s", text.c_str());
 
 		bool modified = false;
 		if (isObjectReference) 
@@ -316,7 +316,7 @@ namespace UI
 
 		std::string label = name;
 		label[0] = toupper(name[0]);
-		ImGui::Text(label.c_str());
+		ImGui::Text("%s", label.c_str());
 
 		if (field->Has<TooltipAttribute>())
 		{
@@ -439,10 +439,7 @@ namespace UI
 					});
 			break;
 
-			//default:
-			//	HZR_ASSERT(false, "Wooooop");
-			//	break;
-			//}
+        default: break;
 		}
 		ImGui::NextColumn();
 	}

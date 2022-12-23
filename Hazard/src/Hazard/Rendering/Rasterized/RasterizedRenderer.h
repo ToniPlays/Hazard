@@ -8,16 +8,16 @@ namespace Hazard
 	class RasterizedRenderer : public BaseRenderer
 	{
 	public:
-		void SetCommandBuffer(Ref<HazardRenderer::RenderCommandBuffer> commandBuffer) 
+		void SetCommandBuffer(Ref<HazardRenderer::RenderCommandBuffer> commandBuffer) override
 		{
 			m_CommandBuffer = commandBuffer; 
 		}
 		void Prepare(Ref<HazardRenderer::RenderPass> renderPass, const RendererDrawList& drawList) override;
 		void End() override {};
 
-		void GeometryPass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>>& meshList);
+		void GeometryPass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>>& meshList) override;
 		void EnvironmentPass(const std::unordered_map<EnvironmentMap*, EnvironmentData>& environment) override;
-		void CompositePass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>>& list);
+		void CompositePass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>>& list) override;
 
 	private:
 		Ref<HazardRenderer::RenderCommandBuffer> m_CommandBuffer;

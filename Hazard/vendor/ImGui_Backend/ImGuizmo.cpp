@@ -2766,11 +2766,12 @@ namespace ImGuizmo
 		case OPERATION::ROTATE_SCREEN:	directionColor[2] = color;		break;
 		case OPERATION::SCALE_X:		directionColor[1] = color;		break;
 		case OPERATION::SCALE_Y:		directionColor[2] = color;		break;
-		case OPERATION::SCALE_Z:		directionColor[3] = color;		break;
+		case OPERATION::SCALE_Z:		directionColor[2] = color;		break;
 		case OPERATION::BOUNDS:			directionColor[0] = color;		break;
 		case OPERATION::TRANSLATE:				break;
 		case OPERATION::ROTATE:					break;
 		case OPERATION::SCALE:					break;
+        case OPERATION::NONE: break;
 		}
 	}
 	IMGUI_API void SetPlaneColor(OPERATION op, ImU32 color)
@@ -2780,6 +2781,7 @@ namespace ImGuizmo
 		case OPERATION::TRANSLATE_X:	planeColor[0] = color;		break;
 		case OPERATION::TRANSLATE_Y:	planeColor[1] = color;		break;
 		case OPERATION::TRANSLATE_Z:	planeColor[2] = color;		break;
+        default: break;
 		}
 	}
 };

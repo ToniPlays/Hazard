@@ -110,7 +110,6 @@ void HazardEditorApplication::PreInit()
 void HazardEditorApplication::Init()
 {
 	Editor::EditorWorldManager::Init();
-	auto& manager = PushModule<GUIManager>();
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
 

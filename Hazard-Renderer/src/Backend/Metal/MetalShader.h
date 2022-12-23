@@ -11,10 +11,22 @@ namespace HazardRenderer::Metal
     class MetalShader : public Shader
     {
     public:
-        MetalShader(const std::string& filePath);
-        MetalShader(const std::string& name, const std::string& vertexPath, const std::string& fragmenPath);
+      
+        MetalShader(const std::vector<ShaderStageCode>& shaderCode);
         ~MetalShader();
         
+        void Reload() override;
+        void Set(const std::string& name, uint32_t index, Ref<Image2D> image) override;
+        void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
+        void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) override;
+        void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) override;
+
+        const ShaderData& GetShaderData() override { return m_ShaderData; };
+        std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; };
+        
+    private:
+        ShaderData m_ShaderData;
+        std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
     };
 }
 #endif

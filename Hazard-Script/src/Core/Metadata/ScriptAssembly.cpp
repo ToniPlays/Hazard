@@ -15,7 +15,7 @@ namespace HazardScript
 	{
 		Release();
 		if (m_Path.empty()) return false;
-
+#ifdef HZR_INCLUDE_MONO
 		CachedBuffer data = File::ReadBinaryFile(m_Path);
 		
 		MonoImageOpenStatus status;
@@ -29,15 +29,18 @@ namespace HazardScript
 
 		if(registerScripts)
 			LoadScripts();
-
+#endif
 		return true;
 	}
+#ifdef HZR_INCLUDE_MONO
 	MonoImage* ScriptAssembly::GetImage() const
 	{
 		return mono_assembly_get_image(m_Assembly);
 	}
+#endif
 	void ScriptAssembly::LoadReferencedAssemblies()
 	{
+#ifdef HZR_INCLUDE_MONO
 		const MonoTableInfo* t = mono_image_get_table_info(GetImage(), MONO_TABLE_ASSEMBLYREF);
 		int rows = mono_table_info_get_rows(t);
 		
@@ -51,10 +54,13 @@ namespace HazardScript
 			auto& data = m_ReferencedAssemblies.emplace_back();
 			data.Name = mono_metadata_string_heap(GetImage(), cols[MONO_ASSEMBLYREF_NAME]);
 		}
+#endif
 	}
 	void ScriptAssembly::LoadScripts()
 	{
 		m_Scripts.clear();
+        
+#ifdef HZR_INCLUDE_MONO
 
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(GetImage(), MONO_TABLE_TYPEDEF);
 		uint32_t rows = mono_table_info_get_rows(tableInfo);
@@ -86,6 +92,7 @@ namespace HazardScript
 			script->UpdateMetadata();
 			m_Scripts[script->GetName()] = script;
 		}
+#endif
 	}
 	void ScriptAssembly::Release()
 	{

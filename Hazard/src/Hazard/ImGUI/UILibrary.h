@@ -54,10 +54,10 @@ namespace Hazard::ImUI
 		callback();
 		ImGui::PopID();
 	}
-	static void FocusCurrentWindow() {
+	static inline void FocusCurrentWindow() {
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 	}
-	static bool NavigatedTo()
+	static inline bool NavigatedTo()
 	{
 		ImGuiContext& g = *GImGui;
 		return g.NavJustMovedToId == g.LastItemData.ID;
@@ -94,7 +94,7 @@ namespace Hazard::ImUI
 
 		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_WindowRounding, 4.0f);
 		ImGui::BeginTooltip();
-		ImGui::Text(text);
+		ImGui::Text("%s", text);
 		ImGui::EndTooltip();
 		return true;
 	}
@@ -279,7 +279,7 @@ namespace Hazard::ImUI
 	static bool InputFloat(const char* name, float& value, float clearValue = 0.0f, float speed = 1.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
 	{
 		bool modified = false;
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -291,7 +291,7 @@ namespace Hazard::ImUI
 	static bool SliderFloat(const char* name, float& value, float clearValue = 0.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
 	{
 		bool modified = false;
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -303,7 +303,7 @@ namespace Hazard::ImUI
 	static uint32_t InputFloat2(const char* name, glm::vec2& value, float clearValue = 0.0f, uint32_t flags = 0)
 	{
 		uint32_t modified = 0;
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			modified |= InputFloat2(value, clearValue, flags);
@@ -315,7 +315,7 @@ namespace Hazard::ImUI
 	{
 		uint32_t modified = 0;
 		ShiftY(4.0f);
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 
 		Group(name, [&]() {
@@ -331,7 +331,7 @@ namespace Hazard::ImUI
 	static bool Checkbox(const char* name, bool& value, bool isMixed = false)
 	{
 		bool modified = false;
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -353,7 +353,7 @@ namespace Hazard::ImUI
 			for (uint32_t i = 0; i < count; i++) {
 				bool isSelected = i == selected;
 
-				if (ImGui::Selectable(options[i], &currentSelection))
+				if (ImGui::Selectable(options[i], i == currentSelection))
 				{
 					currentSelection = i;
 					modified = true;
@@ -371,7 +371,7 @@ namespace Hazard::ImUI
 	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected, bool isMixed = false)
 	{
 		ShiftY(4.0f);
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = Combo(id, options, count, selected, isMixed);
@@ -391,7 +391,7 @@ namespace Hazard::ImUI
 	static bool ColorPicker(const char* name, const char* id, Color& color, bool isMixed = false)
 	{
 		ShiftY(4.0f);
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		bool modified = ColorPicker(id, color, isMixed);
@@ -449,8 +449,11 @@ namespace Hazard::ImUI
 			return id;
 		}
 #endif
+            default:
+                HZR_CORE_ASSERT(false, "Undefined ImageID");
+                break;
 		}
-		HZR_CORE_ASSERT(false, "Undefined ImageID");
+
 		return 0;
 	}
 	static void Image(Ref<HazardRenderer::Image2D> image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
@@ -486,7 +489,7 @@ namespace Hazard::ImUI
 		bool modified = false;
 		ImUI::ShiftY(8.0f);
 
-		ImGui::Text(name);
+		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			modified = TextureSlot(text, texture);
@@ -704,11 +707,11 @@ namespace Hazard::ImUI
 		const ImVec2 padding = ((flags & ImGuiTreeNodeFlags_FramePadding)) ? style.FramePadding : ImVec2(style.FramePadding.x, ImMin(window->DC.CurrLineTextBaseOffset, style.FramePadding.y));
 		const float text_offset_x = g.FontSize + padding.x * 2;           // Collapser arrow width + Spacing
 		const float text_offset_y = ImMax(padding.y, window->DC.CurrLineTextBaseOffset);                    // Latch before ItemSize changes it
-		const float text_width = g.FontSize + (label_size.x > 0.0f ? label_size.x + padding.x * 2 : 0.0f);  // Include collapser
+		//const float text_width = g.FontSize + (label_size.x > 0.0f ? label_size.x + padding.x * 2 : 0.0f);  // Include collapser
 		ImVec2 text_pos(window->DC.CursorPos.x + text_offset_x, window->DC.CursorPos.y + text_offset_y);
 		const float arrow_hit_x1 = (text_pos.x - text_offset_x) - style.TouchExtraPadding.x;
 		const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
-		const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
+		//const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
 
 		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(id), flags, text, nullptr);
 
@@ -784,10 +787,11 @@ namespace Hazard::ImUI
 	}
 	static void Separator(ImVec2 size, ImVec4 color);
 
-	static void MenuHeader(const char* label) {
+	static void MenuHeader(const char* label)
+    {
 		ImGui::PushID(label);
 		const Style& style = StyleManager::GetCurrent();
-		ImGui::TextColored(style.Window.TextDark, label);
+		ImGui::TextColored(style.Window.TextDark, "%s", label);
 		ImGui::SameLine(0, 5);
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -1037,7 +1041,7 @@ namespace Hazard::ImUI
 		auto& style = g.Style;
 		ImGuiWindowFlags flags = window->Flags;
 
-		if (/*(flags & ImGuiWindowFlags_NoResize) || (flags & ImGuiWindowFlags_AlwaysAutoResize) || window->AutoFitFramesX > 0 || window->AutoFitFramesY > 0)
+		if ((flags & ImGuiWindowFlags_NoResize) || (flags & ImGuiWindowFlags_AlwaysAutoResize) || window->AutoFitFramesX > 0 || window->AutoFitFramesY > 0)
 		}
 			return false;
 		if (window->WasActive == false) // Early out to avoid running this code for e.g. an hidden implicit/fallback Debug window.
@@ -1171,6 +1175,7 @@ namespace Hazard::ImUI
 		//window->Size = window->SizeFull;
 		return changed;
 		*/
+        return false;
 	}
 
 }

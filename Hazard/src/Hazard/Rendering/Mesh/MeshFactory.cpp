@@ -69,7 +69,7 @@ namespace Hazard
 			m_Importer.SetProgressHandler(handler);
 		}
 
-		const aiScene* scene = m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), m_MeshFlags);
+		const aiScene* scene = m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), (uint32_t)m_MeshFlags);
 		if (!scene || !scene->HasMeshes())
 			return MeshData();
 		
@@ -101,7 +101,7 @@ namespace Hazard
 				instance->m_Importer.SetProgressHandler(handler);
 			}
 
-			const aiScene* scene = instance->m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), instance->m_MeshFlags);
+			const aiScene* scene = instance->m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), (uint32_t)instance->m_MeshFlags);
 			if (!scene || !scene->HasMeshes())
 				return -1;
 
@@ -271,7 +271,7 @@ namespace Hazard
 
 		for (uint32_t i = 0; i < node->mNumMeshes; i++) {
 
-			uint32_t mesh = node->mMeshes[i];
+			//uint32_t mesh = node->mMeshes[i];
 			auto& submesh = data.SubMeshes[i];
 
 			submesh.NodeName = node->mName.C_Str();

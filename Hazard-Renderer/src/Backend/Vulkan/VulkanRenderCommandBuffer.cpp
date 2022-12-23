@@ -391,11 +391,11 @@ namespace HazardRenderer::Vulkan
 
 			});
 	}
-	void VulkanRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
 	{
 		DrawInstanced(count, 1, indexBuffer);
 	}
-	void VulkanRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanIndexBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanIndexBuffer>() : nullptr;

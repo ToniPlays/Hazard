@@ -5,6 +5,7 @@
 
 namespace HazardScript
 {
+#ifdef HZR_INCLUDE_MONO
 	MethodMetadata::MethodMetadata(MonoMethod* method)
 	{
 		m_ManagedMethod = ManagedMethod::FromMethod(method);
@@ -15,14 +16,18 @@ namespace HazardScript
 	{
 		return Mono::RuntimeInvoke(obj, m_ManagedMethod.Method, params);
 	}
+#endif
 	void MethodMetadata::Init()
 	{
+#ifdef HZR_INCLUDE_MONO
 		m_Name = mono_method_get_reflection_name(m_ManagedMethod.Method);
 		m_Name = m_Name.substr(m_Name.find_first_of('.') + 1);
+#endif
 	}
 	void MethodMetadata::LoadAttributes()
 	{
 		m_Attributes.clear();
+#ifdef HZR_INCLUDE_MONO
 		MonoCustomAttrInfo* info = mono_custom_attrs_from_method(m_ManagedMethod.Method);
 
 		if (info == nullptr) return;
@@ -40,5 +45,6 @@ namespace HazardScript
 			if (attrib)
 				m_Attributes.push_back(attrib);
 		}
+#endif
 	}
 }

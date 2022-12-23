@@ -45,8 +45,6 @@ project "HazardLauncher"
 	links {
 		"ImGui",
 		"Hazard",
-		"%{Library.Mono_Debug_Lib}",
-		"%{Library.Assimp_Lib}",
 		"GLFW",
 		"Glad",
 		"Box2D",
@@ -66,6 +64,8 @@ project "HazardLauncher"
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
+			"%{Library.Mono_Debug_Lib}",
+			"%{Library.Assimp_Lib}",
 			"Hazard-Script"
 		}
 		includedirs {
@@ -83,8 +83,7 @@ project "HazardLauncher"
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
-			"MetalKit.framework",
-            "QuartzCore.framwork"
+			"MetalKit.framework"
 		}
         files {
                 "src/**.m",

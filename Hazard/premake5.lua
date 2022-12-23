@@ -83,9 +83,6 @@ project "Hazard"
 			"opengl32.lib",
 			"Hazard-Script"
 		}
-		removefiles {
-			"src/Platform/Rendering/Metal/**"
-		}
 		includedirs {
 			"%{IncludeDir.Optick}",
 			"%{IncludeDir.Mono}"
@@ -101,11 +98,6 @@ project "Hazard"
 		includedirs {
 			"%{IncludeDir.SPIRV_Cross}",
 			"%{IncludeDir.Metal}"
-		}
-		removefiles {
-			"src/Platform/Rendering/Vulkan/**",
-			"src/Platform/Rendering/OpenGL/**",
-			"vendor/VulkanMemoryAllocator/**"
 		}
 
 	filter "configurations:Debug"

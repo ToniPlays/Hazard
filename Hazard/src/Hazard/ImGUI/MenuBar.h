@@ -56,7 +56,6 @@ namespace Hazard::ImUI
 			//ScopedStyleVar border(ImGuiStyleVar_WindowBorderSize, 1);
 			ImGui::BeginMainMenuBar();
 			{
-				const Style& style = StyleManager::GetCurrent();
 				ScopedStyleStack vars(ImGuiStyleVar_WindowPadding, ImVec2(4, 2), ImGuiStyleVar_ChildBorderSize, 0);
 
 				for (auto& item : m_MenuItems) {
@@ -76,8 +75,6 @@ namespace Hazard::ImUI
 		void AddMenuItem(const std::string& name, const std::function<void()> onClick = nullptr)
 		{
 			std::vector<std::string> path = StringUtil::SplitString(name, '/');
-
-			uint32_t index = 0;
 			MenuItemElement& target = GetMenu(name);
 			target.OnClicked = onClick;
 		}

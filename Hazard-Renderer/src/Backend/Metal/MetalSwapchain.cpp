@@ -6,15 +6,16 @@
 #include "MetalRenderCommandBuffer.h"
 #include "MetalWindowLayer.h"
 
-#include <Metal/Metal.hpp>
-#include <Foundation/Foundation.hpp>
-#include <QuartzCore/QuartzCore.hpp>
+//#include <Metal/Metal.hpp>
+//#include <Foundation/Foundation.hpp>
+//#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal {
     
     MetalSwapchain::MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo)
     {
-        if (targetInfo == nullptr) {
+        if (targetInfo == nullptr)
+        {
             //Create default target
 
             FrameBufferCreateInfo frameBufferInfo = {};
@@ -45,10 +46,6 @@ namespace HazardRenderer::Metal {
         m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
     }
 
-    void MetalSwapchain::Create(uint32_t width, uint32_t height, bool vSync) {
-        m_Width = width;
-        m_Height = height;
-    }
     void MetalSwapchain::Resize(uint32_t width, uint32_t height) {
         m_Width = width;
         m_Height = height;
@@ -56,13 +53,13 @@ namespace HazardRenderer::Metal {
 
     void MetalSwapchain::BeginFrame()
     {
-        m_Drawable = MetalContext::GetWindowLayer()->GetNextDrawable();
+        //m_Drawable = MetalContext::GetWindowLayer()->GetNextDrawable();
         m_RenderCommandBuffer->Begin();
     }
     void MetalSwapchain::Present()
     {
         m_RenderCommandBuffer->End();
-        
+        /*
         MTL::CommandBuffer* cmdBuffer = m_RenderCommandBuffer.As<MetalRenderCommandBuffer>()->GetMetalCommandBuffer();
         
         
@@ -71,7 +68,7 @@ namespace HazardRenderer::Metal {
         cmdBuffer->waitUntilCompleted();
         cmdBuffer->release();
         m_Drawable->release();
-        
+        */
     }
 }
 #endif

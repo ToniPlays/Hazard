@@ -1,5 +1,7 @@
 #include "Mono.h"
 
+#ifdef HZR_INCLUDE_MONO
+
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
@@ -147,3 +149,4 @@ namespace HazardScript
 		return name;
 	}
 }
+#endif

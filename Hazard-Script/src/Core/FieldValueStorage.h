@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef HZR_INCLUDE_MONO
-
 #include "Ref.h"
 #include "UtilityCore.h"
 #include "ValueWrapper.h"
@@ -44,6 +42,7 @@ namespace HazardScript
 		bool HasValue() { return m_Storage.HasValue(); }
 		bool Valid() { return m_Field != nullptr; }
 
+#ifdef HZR_INCLUDE_MONO
 		template<typename T>
 		T GetValue(MonoObject* target)
 		{
@@ -54,18 +53,20 @@ namespace HazardScript
 		{
 			m_IsLiveValue ? SetLiveValue<T>(target, value) : SetStoredValue<T>(value);
 		}
+#endif
 
 		template<typename T>
 		T GetStoredValue() 
 		{
 			STATIC_ASSERT(false, T);
 		}
+#ifdef HZR_INCLUDE_MONO
 		template<typename T>
 		T GetLiveValue(MonoObject* target)
 		{
 			STATIC_ASSERT(false, T);
 		}
-
+#endif
 		template<typename T>
 		T GetStoredValueOrDefault()
 		{
@@ -78,6 +79,7 @@ namespace HazardScript
 		{
 			STATIC_ASSERT(false, T);
 		}
+#ifdef HZR_INCLUDE_MONO
 		//Target is MonoClassField*, for array types it returns MonoArray*
 		template<typename T>
 		void SetLiveValue(MonoObject* target, T value)
@@ -96,6 +98,7 @@ namespace HazardScript
 		DEFAULT_TYPE(uint16_t);
 		DEFAULT_TYPE(uint32_t);
 		DEFAULT_TYPE(uint64_t);
+#endif
 
 		template<>
 		std::string GetStoredValue()
@@ -107,6 +110,7 @@ namespace HazardScript
 		{
 			m_Storage.Set<std::string>(value);
 		}
+#ifdef HZR_INCLUDE_MONO
 		template<>
 		std::string GetLiveValue(MonoObject* target) {
 			if (m_Field->GetType().IsArray())
@@ -128,6 +132,7 @@ namespace HazardScript
 		{
 			return { m_Storage.GetRawData(), m_Storage.GetDataSize() };
 		}
+#endif
 
 	private:
 		FieldMetadata* m_Field = nullptr;
@@ -142,6 +147,7 @@ namespace HazardScript
 	public:
 		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
+#ifdef HZR_INCLUDE_MONO
 		uintptr_t GetLength(MonoObject* target) { return IsLive() ? GetLiveLength(target) : m_ArrayStorage.size(); }
 
 		uintptr_t GetLiveLength(MonoObject* target)
@@ -191,6 +197,7 @@ namespace HazardScript
 			}
 		}
 
+
 		bool HasValue(MonoObject* target, size_t index)
 		{
 			if (index >= GetLength(target)) return false;
@@ -220,12 +227,14 @@ namespace HazardScript
 			if (!HasValue(target, index)) return T();
 			return GetValue<T>(target, index);
 		}
+#endif
 
 		template<typename T>
 		void SetStoredValue(size_t index, T value)
 		{
 			m_ArrayStorage[index]->SetStoredValue<T>(value);
 		}
+#ifdef HZR_INCLUDE_MONO
 		template<typename T>
 		void SetLiveValue(MonoObject* target, size_t index, T value)
 		{
@@ -236,10 +245,10 @@ namespace HazardScript
 		{
 			return Buffer();
 		}
+#endif
 
 	private:
 		FieldMetadata* m_Field;
 		std::vector<Ref<FieldValueStorage>> m_ArrayStorage;
 	};
 }
-#endif

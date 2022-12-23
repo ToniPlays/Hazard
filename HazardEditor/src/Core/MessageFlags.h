@@ -15,7 +15,6 @@ enum MessageFlags : uint32_t
 	MessageFlags_Clearable = BIT(6)
 };
 
-
 static uint32_t GetMessageFlagsFromSeverity(const Severity& severity)
 {
 	switch (severity)

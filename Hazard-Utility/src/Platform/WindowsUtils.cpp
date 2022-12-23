@@ -1,6 +1,5 @@
 
 #ifdef HZR_PLATFORM_WINDOWS
-
 #include "PlatformUtils.h"
 #include "UtilityCore.h"
 #include <Windows.h>

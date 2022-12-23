@@ -18,7 +18,7 @@ namespace UI {
 		~Console() = default;
 
 		bool OnEvent(Event& e) override;
-		void OnPanelRender();
+		void OnPanelRender() override;
 
 		bool KeyPressed(KeyPressedEvent& e);
 

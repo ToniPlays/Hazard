@@ -16,6 +16,8 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 #include "Hazard/RenderContext/ShaderLibrary.h"
 
+#include <GLFW/glfw3.h>
+
 using namespace HazardRenderer;
 using namespace Hazard;
 

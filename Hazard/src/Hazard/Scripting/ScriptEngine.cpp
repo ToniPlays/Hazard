@@ -68,6 +68,7 @@ namespace Hazard
 #ifdef HZR_INCLUDE_MONO
 		return m_Engine->GetAppAssembly()->HasScript(moduleName);
 #endif
+        return false;
 	}
 	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) 
 	{

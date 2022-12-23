@@ -56,7 +56,7 @@ namespace UI
 	template<>
 	bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
 	{
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_MAP_MARKER " Transform"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_MAP_MARKER " Transform"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
 
@@ -170,7 +170,7 @@ namespace UI
 	bool ComponentMenu<SpriteRendererComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_PICTURE_O " Sprite renderer"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_PICTURE_O " Sprite renderer"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				auto& firstSr = entities[0].GetComponent<SpriteRendererComponent>();
@@ -257,7 +257,7 @@ namespace UI
 	bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
 	{
 		bool removed = false;
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
@@ -365,7 +365,7 @@ namespace UI
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODE " Script"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODE " Script"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 				using namespace HazardScript;
 				ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
@@ -374,7 +374,7 @@ namespace UI
 				std::string oldModule = "";
 				std::string field = "";
 
-				auto& scriptEngine = Application::GetModule<ScriptEngine>();
+				//auto& scriptEngine = Application::GetModule<ScriptEngine>();
 				bool changed = ImUI::TextFieldWithHint(field, "Script class");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
@@ -450,7 +450,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_GLOBE " Sky light"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_GLOBE " Sky light"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				auto& firstDir = entities[0].GetComponent<SkyLightComponent>();
@@ -541,7 +541,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 	{
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		ImUI::TreenodeWithOptions("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
@@ -604,7 +604,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions("Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
+		ImUI::TreenodeWithOptions("Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
@@ -666,7 +666,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 	bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CUBE " Mesh"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CUBE " Mesh"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 				auto& firstMc = entities[0].GetComponent<MeshComponent>();
@@ -768,7 +768,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 	bool ComponentMenu<Rigidbody2DComponent>(std::vector<Entity>& entities) {
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+		ImUI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]()
 			{
 
@@ -795,7 +795,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODEPEN " Box collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODEPEN " Box collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 
 
@@ -822,7 +822,7 @@ bool ComponentMenu<CircleCollider2DComponent>(std::vector<Entity>& entities) {
 
 		bool removed = false;
 
-		bool optionsOpen = ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CIRCLE_O " Circle collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CIRCLE_O " Circle collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {

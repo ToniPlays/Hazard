@@ -184,8 +184,8 @@ namespace ImGui
                 const float arrowWidth = 20.0f + 1.0f;
                 auto cursorPos = ImGui::GetCursorPos();
                 UI::ShiftY(-frame_height + pad);
-                UI::ShiftX(arrowWidth);/*
-                //UI::Image(icon, { frame_height - pad * 2.0f, frame_height - pad * 2.0f }, ImVec2(0, 0), ImVec2(1, 1), iconTint /*selected ? colourDark : tintFloat//);
+                UI::ShiftX(arrowWidth);
+                //UI::Image(icon, { frame_height - pad * 2.0f, frame_height - pad * 2.0f }, ImVec2(0, 0), ImVec2(1, 1), iconTint selected ? colourDark : tintFloat//);
 
                 // Restore itme data
                 ImGui::SetLastItemData(itemId, itemFlags, itemStatusFlags, itemRect);
@@ -245,10 +245,10 @@ namespace ImGui
                 auto cursorPos = ImGui::GetCursorPos();
                 UI::ShiftY(-frame_height + pad);
                 UI::ShiftX(arrowWidth);
-                //Hazel::UI::Image(icon, { frame_height - pad * 2.0f, frame_height - pad * 2.0f }, ImVec2(0, 0), ImVec2(1, 1), iconTint /*selected ? colourDark : tintFloat*///);
+                //Hazel::UI::Image(icon, { frame_height - pad * 2.0f, frame_height - pad * 2.0f }, ImVec2(0, 0), ImVec2(1, 1), iconTint selected ? colourDark : tintFloat//);
 
-                // Restore itme data
-                /*
+                // Restore itme dasta
+    
                 ImGui::SetLastItemData(itemId, itemFlags, itemStatusFlags, itemRect);
 
                 text_pos.x += frame_height + 2.0f;

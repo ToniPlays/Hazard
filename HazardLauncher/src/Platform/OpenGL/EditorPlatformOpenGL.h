@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
+#ifdef HZR_INCLUDE_OPENGL
 #include "Backend/OpenGL/OpenGLContext.h"
 
 #include <GLFW/glfw3.h>
@@ -21,3 +22,4 @@ private:
 	HazardRenderer::Window* m_Window;
 	HazardRenderer::OpenGL::OpenGLContext* m_Context;
 };
+#endif

@@ -28,7 +28,6 @@ namespace UI
 	}
 	void PerformanceDebugPanel::DrawPerformanceTimers()
 	{
-		const auto& allocStats = Memory::GetAllocationStats();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
 
@@ -45,7 +44,7 @@ namespace UI
 
 			for (auto& [name, time] : timerMap)
 			{
-				bool clicked = ImUI::TableRowClickable((const char*)name, rowHeight);
+				ImUI::TableRowClickable((const char*)name, rowHeight);
 
 				auto& n = name;
 				auto& t = time;
@@ -53,7 +52,7 @@ namespace UI
 				ImUI::Group((const char*)&name, [&]() {
 					ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisY);
 					ImGui::SameLine();
-					ImGui::Text(n);
+					ImGui::Text("%s", n);
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%.4f ms", t);
@@ -81,8 +80,6 @@ namespace UI
 			float rowHeight = 24.0f;
 
 			const auto& allocStatsMap = Memory::Allocator::GetAllocationStats();
-			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-
 			struct MemoryItem
 			{
 				const char* Category;
@@ -101,7 +98,7 @@ namespace UI
 
 			for (auto& item : sortedItems)
 			{
-				bool clicked = ImUI::TableRowClickable((const char*)item.Category, rowHeight);
+				ImUI::TableRowClickable((const char*)item.Category, rowHeight);
 
 				ImUI::Group((const char*)&item.Category, [&]() {
 
@@ -109,10 +106,10 @@ namespace UI
 
 					ImUI::Separator({ 4.0, rowHeight }, GetMemoryColor(item.Size));
 					ImGui::SameLine();
-					ImGui::Text(title.substr(title.find_last_of('\\') + 1).c_str());
+					ImGui::Text("%s", title.substr(title.find_last_of('\\') + 1).c_str());
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
-					ImGui::Text(StringUtil::BytesToString(item.Size).c_str());
+					ImGui::Text("%s", StringUtil::BytesToString(item.Size).c_str());
 					});
 			}
 			});

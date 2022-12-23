@@ -57,7 +57,7 @@ namespace UI
 		ImGui::Text("File path");
 		ImGui::NextColumn();
 		std::string path = m_Directory.string() + "/" + m_CreateInfo.ClassName + ".cs";
-		ImGui::Text(path.c_str());
+		ImGui::Text("%s", path.c_str());
 		ImGui::Columns();
 
 

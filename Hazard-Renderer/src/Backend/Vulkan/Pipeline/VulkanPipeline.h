@@ -18,12 +18,12 @@ namespace HazardRenderer::Vulkan
 		VulkanPipeline(PipelineSpecification* specs);
 		~VulkanPipeline();
 
-		PipelineSpecification GetSpecifications() { return m_Specs; }
-		const PipelineSpecification GetSpecifications() const { return m_Specs; }
-		Ref<Shader> GetShader() { return m_Shader; }
+		PipelineSpecification GetSpecifications() override { return m_Specs; }
+		const PipelineSpecification GetSpecifications() const override { return m_Specs; }
+		Ref<Shader> GetShader() override { return m_Shader; }
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
-		bool IsCompatibleWith(Ref<Shader> shader) const;
+		bool IsCompatibleWith(Ref<Shader> shader) const override;
 		bool IsValid() const { return m_Pipeline != VK_NULL_HANDLE; }
 
 		void SetLayout(const BufferLayout& layout) { m_Layout = layout; };

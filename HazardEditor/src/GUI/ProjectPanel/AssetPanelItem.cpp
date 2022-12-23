@@ -14,7 +14,7 @@ namespace UI
 {
 	void AssetPanelItem::BeginRender()
 	{
-		ImGui::PushID(m_Handle);
+		ImGui::PushID((int)m_Handle);
 		ImGui::BeginGroup();
 
 		if (m_Flags & m_Flags)
@@ -124,8 +124,8 @@ namespace UI
 		ImGui::EndGroup();
 
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
-			ImGui::Text(name.c_str());
-			ImGui::Text(Hazard::Utils::AssetTypeToString(GetMetadata().Type));
+			ImGui::Text("%s", name.c_str());
+			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
 
 		ImGui::PopStyleVar();
@@ -163,7 +163,7 @@ namespace UI
 		}
 		else
 		{
-			ImGui::Text(name);
+			ImGui::Text("%s", name);
 
 			if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
 				m_Flags |= AssetPanelItemFlags_StartRename;
@@ -175,6 +175,6 @@ namespace UI
 			return;
 		HZR_INFO("Renaming to {0}", newName);
 
-		bool succeeded = EditorAssetManager::RenameAsset(newName, m_Handle);
+		EditorAssetManager::RenameAsset(newName, m_Handle);
 	}
 }

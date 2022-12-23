@@ -84,8 +84,8 @@ namespace HazardRenderer
 		virtual void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) = 0;
 		virtual void BindPipeline(Ref<Pipeline> pipeline) = 0;
 
-		virtual void Draw(uint32_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-		virtual void DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
+		virtual void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
+		virtual void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;
 		virtual void TraceRays(const TraceRaysInfo& traceRaysInfo) = 0;
 

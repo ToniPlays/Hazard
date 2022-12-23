@@ -29,7 +29,7 @@ namespace Hazard
 	class RenderEngine : public Module 
 	{
 	public:
-		RenderEngine() = default;
+		RenderEngine() = delete;
 		RenderEngine(RendererCreateInfo* createInfo);
 		~RenderEngine() = default;
 

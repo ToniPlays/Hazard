@@ -16,8 +16,6 @@ namespace HazardRenderer
 	public:
 		static void Init(GraphicsContext* context)
 		{
-			uint32_t framesInFlight = 3;
-
 			s_CommandQueue.RenderCommandQueue = hnew CommandQueue(5 MB);
 			s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(20 MB);
 			s_CommandQueue.ResourceFreeCommandQueue = hnew CommandQueue(5 MB);

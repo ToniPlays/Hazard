@@ -46,5 +46,7 @@ include "Hazard"
 
 include "HazardLauncher"
 
+if os.platform == "Windows" then
 include "HazardScripting"
+end
 include "Hazard-Script"

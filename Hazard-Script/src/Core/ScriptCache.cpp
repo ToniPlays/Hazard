@@ -1,4 +1,5 @@
 #include "ScriptCache.h"
+#ifdef HZR_INCLUDE_MONO
 
 #include "UtilityCore.h"
 #include "Mono/Core/Mono.h"
@@ -92,3 +93,4 @@ namespace HazardScript
 		CacheClass("System.Diagnostics.StackTrace", mono_class_from_name(mono_get_corlib(), "System.Diagnostics", "StackTrace"));
 	}
 }
+#endif

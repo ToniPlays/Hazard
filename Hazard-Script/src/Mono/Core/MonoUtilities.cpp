@@ -1,5 +1,6 @@
 
 #include "MonoUtilities.h"
+#ifdef HZR_INCLUDE_MONO
 #include "Core/Metadata/ManagedType.h"
 
 namespace HazardScript 
@@ -45,3 +46,4 @@ namespace HazardScript
 			mono_array_set(arrayObject, MonoObject*, index, value);
 	}
 }
+#endif

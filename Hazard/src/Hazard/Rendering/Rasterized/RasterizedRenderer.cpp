@@ -43,7 +43,6 @@ namespace Hazard
 					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : resources.WhiteCubemap);
 				if (lut)
 					shader->Set("u_BRDFLut", 0, lut->GetSourceImageAsset()->Value.As<Image2D>());
-				break;
 			}
 		}
 		else

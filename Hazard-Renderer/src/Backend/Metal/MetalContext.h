@@ -11,11 +11,22 @@ namespace HazardRenderer::Metal
     class MetalWindowLayer;
     class MetalSwapchain;
 
-    class MetalContext : public GraphicsContext {
+    class MetalContext : public GraphicsContext
+    {
     public:
         MetalContext(WindowProps* props);
         ~MetalContext();
         
+        void Init(Window* window, HazardRendererCreateInfo* info) override;
+        void BeginFrame() override;
+        void Present() override;
+        
+        void SetClearColor(const glm::vec4& color) override {};
+        
+        Ref<PhysicalDevice> GetDevice() override { return nullptr; };
+        Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
+        DefaultResources& GetDefaultResources() override { return m_Resources; };
+            
         //Metal specific
         static MetalContext* GetInstance() { return s_Instance; }
         static MetalWindowLayer* GetWindowLayer() { return s_Instance->m_MetalLayer; }
@@ -26,10 +37,11 @@ namespace HazardRenderer::Metal
         static ErrorCallback s_Callback;
         
         inline static MetalContext* s_Instance;
-        MetalPhysicalDevice* m_PhysicalDevice;
         
         MetalWindowLayer* m_MetalLayer;
         Ref<MetalSwapchain> m_Swapchain;
+    
+        DefaultResources m_Resources;
     };
 }
 #endif
