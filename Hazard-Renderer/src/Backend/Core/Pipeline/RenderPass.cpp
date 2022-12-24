@@ -6,8 +6,8 @@
 #include "Backend/Vulkan/VulkanCore.h"
 #include "Backend/Metal/MetalCore.h"
 
-namespace HazardRenderer {
-
+namespace HazardRenderer
+{
     Ref<RenderPass> RenderPass::Create(RenderPassCreateInfo* info)
     {
 		switch (GraphicsContext::GetRenderAPI())

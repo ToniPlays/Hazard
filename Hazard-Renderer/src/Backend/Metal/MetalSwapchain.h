@@ -32,7 +32,8 @@ namespace HazardRenderer::Metal {
         Ref<FrameBuffer> GetRenderTarget() override { return m_FrameBuffer; };
         
         //Metal specific
-        //CA::MetalDrawable* GetDrawable() { return m_Drawable; }
+        CA::MetalDrawable* GetDrawable() { return m_Drawable; }
+        void Create(uint32_t* width, uint32_t* height, bool vsync = true);
         
     private:
         uint32_t m_Width;
@@ -42,7 +43,7 @@ namespace HazardRenderer::Metal {
         Ref<RenderCommandBuffer> m_RenderCommandBuffer;
         Ref<FrameBuffer> m_FrameBuffer;
         
-        //CA::MetalDrawable* m_Drawable;
+        CA::MetalDrawable* m_Drawable;
     };
 }
 #endif

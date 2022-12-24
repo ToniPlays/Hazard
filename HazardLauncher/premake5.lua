@@ -31,7 +31,7 @@ project "HazardLauncher"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.VulkanSDK}",
-        "%{IncludeDir.Metal}",
+        	"%{IncludeDir.Metal}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
@@ -73,6 +73,12 @@ project "HazardLauncher"
 			"%{IncludeDir.Optick}",
 			"%{IncludeDir.Mono}"
 		}
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
+			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
+		}
 
 	filter "system:macosx"
 		defines {
@@ -85,24 +91,16 @@ project "HazardLauncher"
 			"Metal.framework",
 			"MetalKit.framework"
 		}
-        files {
-                "src/**.m",
-                "src/**.mm"
-        }
+        	files {
+               		"src/**.m",
+                	"src/**.mm"
+        	}
 
 	filter "configurations:Debug"
 		defines "HZR_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
-	if os.host() == "windows" then
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
-			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
-		}
-	end
 
 	filter "configurations:Release"
 		defines "HZR_RELEASE"

@@ -17,13 +17,13 @@ namespace HazardRenderer::Metal
         MetalFrameBuffer(FrameBufferCreateInfo* info);
         ~MetalFrameBuffer();
 
-        void Resize(uint32_t width, uint32_t height, bool force = false) override;
-        void Resize_RT(uint32_t width, uint32_t height, bool force = false) override;
+        void Resize(uint32_t width, uint32_t height, bool force = false) override {};
+        void Resize_RT(uint32_t width, uint32_t height, bool force = false) override {};
 
-        void Release();
-        void Release_RT();
-        void Invalidate();
-        void Invalidate_RT();
+        void Release() {};
+        void Release_RT() {};
+        void Invalidate() {};
+        void Invalidate_RT() {};
 
         uint32_t GetWidth() const override { return m_Specs.Width; };
         uint32_t GetHeight() const override { return m_Specs.Height; };

@@ -8,7 +8,7 @@
 
 #include "Backend/Metal/MetalContext.h"
 #include <GLFW/glfw3.h>
-#include <Metal/Metal.hpp>
+//#include <Metal/Metal.hpp>
 
 class EditorPlatformMetal : public EditorGuiPlatform {
 public:
@@ -22,6 +22,6 @@ public:
 private:
     HazardRenderer::Window* m_Window;
     HazardRenderer::Metal::MetalContext* m_Context;
-    MTL::RenderPassDescriptor* m_Descriptor;
+    //MTL::RenderPassDescriptor* m_Descriptor;
 };
 #endif

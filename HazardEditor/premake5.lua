@@ -34,7 +34,7 @@ project "HazardEditor"
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
-        "%{IncludeDir.Metal}",
+        	"%{IncludeDir.Metal}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
@@ -91,18 +91,20 @@ project "HazardEditor"
 		}
 
 	filter "system:macosx"
-		systemversion "latest"
-		defines {
+		defines 
+		{
 			"HZR_PLATFORM_MACOS",
 		}
-		links {
+		links 
+		{
 			"IOKit.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
 			"MetalKit.framework"
 		}
-        	files {
+        	files 
+		{
                 	"src/**.m",
                 	"src/**.mm"
         	}

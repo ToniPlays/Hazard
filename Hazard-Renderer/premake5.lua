@@ -60,9 +60,9 @@ project "Hazard-Renderer"
 
 
 	filter "system:macosx"
-		defines {
-			"HZR_PLATFORM_MACOS",
-			"GLFW_INCLUDE_NONE"
+		defines 
+		{
+			"HZR_PLATFORM_MACOS"
 		}
 		links { 
 			"IOKit.framework",
@@ -76,7 +76,8 @@ project "Hazard-Renderer"
 			"%{IncludeDir.Metal}"
 		}
 		files {
-			"src/**.mm"
+			"src/**.mm",
+			"src/**.m"
 		}
 
 	filter "configurations:Debug"

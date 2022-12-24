@@ -11,9 +11,9 @@ namespace HazardRenderer::Metal
     class MetalRenderCommandBuffer : public RenderCommandBuffer
     {
     public:
-        MetalRenderCommandBuffer(uint32_t size = 0, const std::string& name = "", bool compute = false) {};
-        MetalRenderCommandBuffer(const std::string& name, bool swapchain) {};
-        ~MetalRenderCommandBuffer() {};
+        MetalRenderCommandBuffer(uint32_t count = 0, const std::string& name = "", bool compute = false);
+        MetalRenderCommandBuffer(const std::string& name, bool swapchain);
+        ~MetalRenderCommandBuffer();
 
         uint32_t GetFrameIndex() override { return m_FrameIndex; };
         
@@ -34,7 +34,7 @@ namespace HazardRenderer::Metal
         void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override {};
         void DispatchCompute(const DispatchComputeInfo& computeIno) override {};
         void TraceRays(const TraceRaysInfo& traceRaysInfo) override {};
-        void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
+        void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override {};
 
         void InsertMemoryBarrier(const MemoryBarrierInfo& info) override {};
         void TransitionImageLayout(const ImageTransitionInfo& info) override {};
@@ -47,9 +47,7 @@ namespace HazardRenderer::Metal
         uint32_t m_FrameIndex = 0;
         std::string m_DebugName;
         bool m_OwnedBySwapchain = false;
-        
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
-
         State m_State = State::Waiting;
     };
 }

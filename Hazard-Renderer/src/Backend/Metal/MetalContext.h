@@ -21,9 +21,9 @@ namespace HazardRenderer::Metal
         void BeginFrame() override;
         void Present() override;
         
-        void SetClearColor(const glm::vec4& color) override {};
+        void SetClearColor(const glm::vec4& color) override;
         
-        Ref<PhysicalDevice> GetDevice() override { return nullptr; };
+        Ref<PhysicalDevice> GetDevice() override { return m_PhysicalDevice; };
         Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
         DefaultResources& GetDefaultResources() override { return m_Resources; };
             
@@ -39,6 +39,7 @@ namespace HazardRenderer::Metal
         inline static MetalContext* s_Instance;
         
         MetalWindowLayer* m_MetalLayer;
+        Ref<MetalPhysicalDevice> m_PhysicalDevice;
         Ref<MetalSwapchain> m_Swapchain;
     
         DefaultResources m_Resources;

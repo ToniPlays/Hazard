@@ -21,7 +21,7 @@ namespace HazardRenderer::Vulkan
 		void Init(VkInstance instance, Ref<VulkanDevice> device);
 		void InitSurface(GLFWwindow* nativeWindow);
 
-		void Create(uint32_t* width, uint32_t* height, bool enableVSync);
+		void Create(uint32_t* width, uint32_t* height, bool enableVSync) override;
 		void Destroy();
 
 		void Resize(uint32_t width, uint32_t height) override;

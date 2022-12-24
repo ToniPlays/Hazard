@@ -20,22 +20,29 @@ namespace HazardRenderer::Metal
     MetalContext::MetalContext(WindowProps* props)
     {
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        Renderer::Init(this);
         s_Instance = this;
     }
-    MetalContext::~MetalContext() {
-        //m_Device->release();
+    MetalContext::~MetalContext()
+    {
+        
     }
     void MetalContext::Init(Window* window, HazardRendererCreateInfo* info)
     {
         m_Window = window;
-        /*
+        
         m_PhysicalDevice = hnew MetalPhysicalDevice();
         m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
         
         m_Swapchain = Ref<MetalSwapchain>::Create(this, info->pTargetFrameBuffer);
-        m_Swapchain->Create(m_MetalLayer->GetWidth(), m_MetalLayer->GetHeight(), info->VSync);
-         */
         
+        uint32_t w = window->GetWidth();
+        uint32_t h = window->GetHeight();
+
+        m_Swapchain->Create(&w, &h, m_Window->IsVSync());
+
+        window->GetWindowInfo().Width = w;
+        window->GetWindowInfo().Height = w;
     }
 
     void MetalContext::BeginFrame()
@@ -46,18 +53,10 @@ namespace HazardRenderer::Metal
     {
         
     }
-     /*
-    void MetalContext::SetLineWidth(Ref<RenderCommandBuffer> buffer, float lineWidth)
-    {
-        
+    void MetalContext::SetClearColor(const glm::vec4 &color)
+{
+        m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
     }
-    void MetalContext::SetErrorListener(const ErrorCallback &callback) {
-        
-    }*/
-    
-    //void MetalContext::Present(MTL::CommandBuffer* buffer) {
-    //    s_Instance->m_MetalLayer->Present(buffer);
-    //}
 }
 
 #endif
