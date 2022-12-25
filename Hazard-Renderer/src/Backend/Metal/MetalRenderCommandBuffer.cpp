@@ -120,8 +120,7 @@ namespace HazardRenderer::Metal
         
         Renderer::Submit([instance, metalPipeline]() mutable {
             instance->m_CurrentPipeline = metalPipeline;
-            
-            instance->m_RenderEncoder->setRenderPipelineState(metalPipeline->GetMetalRenderPipelineState());
+            metalPipeline->Bind(instance->m_RenderEncoder);
         });
     }
     void MetalRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)

@@ -17,6 +17,6 @@ int main(int argc, char** argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	TriangleTest::Run(renderAPI);
+	TexturedQuad::Run(renderAPI);
     return 0;
 }

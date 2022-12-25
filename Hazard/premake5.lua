@@ -19,8 +19,8 @@ project "Hazard"
 		"vendor/glm/glm/**.inl",
 		"vendor/VulkanMemoryAllocator/**.h",
 		"vendor/VulkanMemoryAllocator/**.cpp",
-		"vendor/vendor/ImGui_Backend/**.h",
-		"Hazard/vendor/ImGui_Backend/**.cpp"
+		"vendor/ImGui_Backend/**.h",
+		"vendor/ImGui_Backend/**.cpp"
 	}
 
 	defines
@@ -98,6 +98,13 @@ project "Hazard"
 		includedirs {
 			"%{IncludeDir.SPIRV_Cross}",
 			"%{IncludeDir.Metal}"
+		}
+		files
+		{
+			"src/**.m",
+			"src/**.mm",
+			"vendor/ImGui_Backend/**.m",
+			"vendor/ImGui_Backend/**.mm"
 		}
 
 	filter "configurations:Debug"

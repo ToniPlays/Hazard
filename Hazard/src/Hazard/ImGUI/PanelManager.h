@@ -9,7 +9,6 @@ namespace Hazard::ImUI
 {
 	class PanelManager {
 	public:
-
 		PanelManager();
 
 		void Update();

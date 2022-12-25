@@ -4,6 +4,7 @@
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
+#include "Backend/Metal/MetalCore.h"
 
 namespace HazardRenderer 
 {
@@ -18,7 +19,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanImage2D>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return nullptr;
+        case RenderAPI::Metal:  return Ref<Metal::MetalImage2D>::Create(info);
 #endif
 		default:
 			return nullptr;

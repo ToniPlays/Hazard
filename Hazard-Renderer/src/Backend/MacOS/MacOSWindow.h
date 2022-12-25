@@ -66,19 +66,22 @@ namespace HazardRenderer {
         virtual void SetDebugCallback(RendererMessageCallback callback) override
         {
             s_DebugCallback = callback;
-            for (auto& m : s_QueueMessages)
+            
+            /*for (auto& m : s_QueueMessages)
                 s_DebugCallback(m);
-
+             */
             s_QueueMessages.clear();
         }
-
+    private:
+        void SetCallbacks();
+        
     private:
         WindowProps m_WindowData;
         GraphicsContext* m_Context;
         GLFWwindow* m_Window = nullptr;
         static inline RendererMessageCallback s_DebugCallback = nullptr;
         static inline std::vector<RenderMessage> s_QueueMessages;
-        void SetCallbacks();
+        
         inline static Window* s_CurrentWindow = nullptr;
     };
 }

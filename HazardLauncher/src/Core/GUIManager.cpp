@@ -199,7 +199,7 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 	}
 #endif
 	default:
-		HZR_ASSERT(false, "No suitable rendering backend included");
+		HZR_ASSERT(false, "No suitable rendering backend included for ImGui");
 		break;
 	}
 }

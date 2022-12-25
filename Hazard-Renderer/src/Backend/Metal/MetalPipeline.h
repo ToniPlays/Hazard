@@ -36,6 +36,11 @@ namespace HazardRenderer::Metal
         MTL::PrimitiveType GetMetalPrimitiveType() const { return m_PrimitiveType; }
         MTL::RenderPipelineState* GetMetalRenderPipelineState() const { return m_Pipeline; }
         
+        void Bind(MTL::RenderCommandEncoder* encoder);
+        
+    private:
+        void InvalidateGraphicsPipeline();
+        void InvalidateComputePipeline();
     private:
         PipelineSpecification m_Specs;
         Ref<MetalShader> m_Shader;

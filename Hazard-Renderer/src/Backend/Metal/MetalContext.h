@@ -25,7 +25,7 @@ namespace HazardRenderer::Metal
         
         Ref<PhysicalDevice> GetDevice() override { return m_PhysicalDevice; };
         Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
-        DefaultResources& GetDefaultResources() override { return m_Resources; };
+        DefaultResources& GetDefaultResources() override { return m_DefaultResources; };
             
         //Metal specific
         static Ref<MetalPhysicalDevice> GetMetalDevice() { return s_Instance->m_PhysicalDevice; }
@@ -45,7 +45,7 @@ namespace HazardRenderer::Metal
         Ref<MetalPhysicalDevice> m_PhysicalDevice;
         Ref<MetalSwapchain> m_Swapchain;
     
-        DefaultResources m_Resources;
+        DefaultResources m_DefaultResources;
     };
 }
 #endif

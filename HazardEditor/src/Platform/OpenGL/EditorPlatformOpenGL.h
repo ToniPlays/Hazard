@@ -3,6 +3,7 @@
 #include <hzrpch.h>
 #include "HazardRendererCore.h"
 #ifdef HZR_INCLUDE_OPENGL
+
 #include "../EditorGuiPlatform.h"
 #include "Backend/OpenGL/OpenGLContext.h"
 

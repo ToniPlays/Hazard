@@ -2,6 +2,10 @@
 #include "MetalImage2D.h"
 #ifdef HZR_INCLUDE_METAL
 
+#include "Renderer.h"
+#include "MetalContext.h"
+#include "MTLUtils.h"
+
 namespace HazardRenderer::Metal
 {
 	MetalImage2D::MetalImage2D(Image2DCreateInfo* info)
@@ -17,15 +21,33 @@ namespace HazardRenderer::Metal
         m_Format = info->Format;
         m_MipLevels = 1; //TODO: Make this work
         m_Usage = info->Usage;
+        
+        Invalidate();
+        
+        if(!info->Data) return;
+        
+        m_LocalBuffer = Buffer::Copy(info->Data.Data, info->Data.Size);
+        
+        Ref<MetalImage2D> instance = this;
+        Renderer::SubmitResourceCreate([instance]() mutable {
+            instance->UploadImageData_RT();
+        });
+        
     }
     MetalImage2D::~MetalImage2D()
     {
-        
+        m_LocalBuffer.Release();
+        m_MetalTexture->release();
     }
     void MetalImage2D::Invalidate()
     {
-        
+        HZR_PROFILE_FUNCTION();
+        Ref<MetalImage2D> instance = this;
+        Renderer::SubmitResourceCreate([instance]() mutable {
+            instance->Invalidate_RT();
+            });
     }
+
     void MetalImage2D::Release()
     {
         
@@ -37,6 +59,78 @@ namespace HazardRenderer::Metal
     void MetalImage2D::Resize_RT(uint32_t width, uint32_t height)
     {
         
+    }
+
+    void MetalImage2D::Invalidate_RT()
+    {
+        HZR_PROFILE_FUNCTION();
+        HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
+        
+        auto device = MetalContext::GetMetalDevice();
+        
+        Release_RT();
+        
+        MTL::TextureDescriptor* descriptor = MTL::TextureDescriptor::alloc()->init();
+        descriptor->setWidth(m_Width);
+        descriptor->setHeight(m_Height);
+        descriptor->setDepth(1);
+        descriptor->setSampleCount(1);
+        descriptor->setArrayLength(1);
+        descriptor->setPixelFormat(ImageFormatToMTLFormat(m_Format));
+        descriptor->setMipmapLevelCount(m_MipLevels);
+        descriptor->setStorageMode(MTL::StorageModeShared);
+        
+        if(m_Usage == ImageUsage::Texture)
+            descriptor->setUsage(MTL::TextureUsageShaderRead);
+        else if(m_Usage == ImageUsage::Storage)
+            descriptor->setUsage(MTL::TextureUsageShaderWrite);
+        else
+            descriptor->setUsage(MTL::TextureUsageRenderTarget);
+        
+        MTL::TextureSwizzleChannels swizzle;
+        swizzle.red = MTL::TextureSwizzleRed;
+        swizzle.green = MTL::TextureSwizzleGreen;
+        swizzle.blue = MTL::TextureSwizzleBlue;
+        swizzle.alpha = MTL::TextureSwizzleAlpha;
+        descriptor->setSwizzle(swizzle);
+        
+        m_MetalTexture = device->GetMetalDevice()->newTexture(descriptor);
+        
+        CreateImageSampler();
+    }
+    void MetalImage2D::CreateImageSampler()
+    {
+        if(m_MetalSampler)
+            m_MetalSampler->release();
+        
+        auto device = MetalContext::GetMetalDevice();
+        
+        MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
+        descriptor->setMaxAnisotropy(1.0);
+        descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
+        descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);
+        descriptor->setRAddressMode(MTL::SamplerAddressModeClampToEdge);
+        descriptor->setSAddressMode(MTL::SamplerAddressModeClampToEdge);
+        descriptor->setTAddressMode(MTL::SamplerAddressModeClampToEdge);
+        
+        descriptor->setLodMinClamp(0.0f);
+        descriptor->setLodMaxClamp(100.0f);
+        descriptor->setBorderColor(MTL::SamplerBorderColorOpaqueWhite);
+        
+        m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
+    }
+
+    void MetalImage2D::UploadImageData_RT()
+    {
+        MTL::Region region;
+        region.size.width = m_Width;
+        region.size.height = m_Height;
+        region.size.depth = 1;
+        region.origin.x = 0;
+        region.origin.y = 0;
+        region.origin.z = 0;
+        
+        m_MetalTexture->replaceRegion(region, 0, m_LocalBuffer.Data, 4 * m_Width);
     }
 }
 #endif

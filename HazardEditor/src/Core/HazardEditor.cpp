@@ -50,7 +50,7 @@ void HazardEditorApplication::PreInit()
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 #else
-	RenderAPI renderAPI = RenderAPI::Vulkan;
+	RenderAPI renderAPI = RenderAPI::Auto;
 #endif
 
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
@@ -110,6 +110,7 @@ void HazardEditorApplication::PreInit()
 void HazardEditorApplication::Init()
 {
 	Editor::EditorWorldManager::Init();
+    PushModule<GUIManager>();
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
 
@@ -140,8 +141,8 @@ void HazardEditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
 		});
+    
 	scriptEngine.ReloadAssemblies();
-
 	EditorAssetManager::Init();
 
 	auto& world = ProjectManager::GetProject().GetProjectData().StartupWorld;

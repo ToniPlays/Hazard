@@ -72,8 +72,14 @@ namespace HazardRenderer::Metal
     bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result)
     {
         HZR_PROFILE_FUNCTION();
+        
         m_ErrorMessage.clear();
+        
+        spirv_cross::CompilerMSL::Options options;
+        options.set_msl_version(2);
+        
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
+        compiler.set_msl_options(options);
         result = compiler.compile();
         return !result.empty();
     }

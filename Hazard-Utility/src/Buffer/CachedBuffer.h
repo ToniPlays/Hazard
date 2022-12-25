@@ -65,7 +65,7 @@ public:
 	}
 
 	template<typename T>
-	T Read(uint32_t size)
+	T Read(size_t size)
 	{
 		uint32_t* start = (uint32_t*)m_DataBuffer.Data + m_CurrentBufferOffset;
 		m_CurrentBufferOffset += size;
@@ -73,7 +73,7 @@ public:
 	}
 
 	template<>
-	Buffer Read(uint32_t size)
+	Buffer Read(size_t size)
 	{
 		Buffer value((uint8_t*)m_DataBuffer.Data + m_CurrentBufferOffset, size);
 		m_CurrentBufferOffset += size;

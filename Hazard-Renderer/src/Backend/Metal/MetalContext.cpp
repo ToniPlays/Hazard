@@ -43,6 +43,19 @@ namespace HazardRenderer::Metal
 
         window->GetWindowInfo().Width = w;
         window->GetWindowInfo().Height = w;
+        
+        
+        uint32_t data = 0xFFFFFFFF;
+        Image2DCreateInfo whiteTexture = {};
+        whiteTexture.DebugName = "DefaultWhiteTexture";
+        whiteTexture.Width = 1;
+        whiteTexture.Height = 1;
+        whiteTexture.Mips = 1;
+        whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
+        whiteTexture.Format = ImageFormat::RGBA;
+        whiteTexture.Usage = ImageUsage::Texture;
+
+        m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
     }
 
     void MetalContext::BeginFrame()

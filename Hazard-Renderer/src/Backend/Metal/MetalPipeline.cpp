@@ -17,7 +17,8 @@ namespace HazardRenderer::Metal
         m_PrimitiveType = DrawTypeToMTLPrimitive(m_Specs.DrawType);
         m_PipelineDescriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         
-        m_Layout = BufferLayout(*specs->pBufferLayout);
+        if(specs->pBufferLayout)
+            m_Layout = BufferLayout(*specs->pBufferLayout);
         
         std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
         for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
@@ -42,9 +43,17 @@ namespace HazardRenderer::Metal
     }
     void MetalPipeline::Invalidate_RT()
     {
+        if(m_Specs.Usage == PipelineUsage::GraphicsBit)
+            InvalidateGraphicsPipeline();
+        else if(m_Specs.Usage == PipelineUsage::ComputeBit)
+            InvalidateComputePipeline();
+    }
+    void MetalPipeline::InvalidateGraphicsPipeline()
+    {
+        if(!m_Specs.pTargetRenderPass) return;
+        
         if(m_Pipeline)
             m_Pipeline->release();
-        
         
         auto device = MetalContext::GetMetalDevice();
         auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<MetalFrameBuffer>();
@@ -100,6 +109,14 @@ namespace HazardRenderer::Metal
         {
             auto attachment = m_PipelineDescriptor->colorAttachments()->object(0);
             attachment->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+            
+            attachment->setBlendingEnabled(true);
+            attachment->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+            attachment->setDestinationRGBBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+            attachment->setRgbBlendOperation(MTL::BlendOperationAdd);
+            attachment->setAlphaBlendOperation(MTL::BlendOperationAdd);
+            attachment->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+            attachment->setDestinationAlphaBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
         }
         else
         {
@@ -110,6 +127,14 @@ namespace HazardRenderer::Metal
                 auto obj = m_PipelineDescriptor->colorAttachments()->object(i);
                 obj->init();
                 obj->setPixelFormat(ImageFormatToMTLFormat(colorAttachment->GetFormat()));
+                
+                obj->setBlendingEnabled(true);
+                obj->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+                obj->setDestinationRGBBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
+                obj->setRgbBlendOperation(MTL::BlendOperationAdd);
+                obj->setAlphaBlendOperation(MTL::BlendOperationAdd);
+                obj->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
+                obj->setDestinationAlphaBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
             }
             
             if(fb->GetDepthImage())
@@ -126,7 +151,16 @@ namespace HazardRenderer::Metal
         
         if(error)
             std::cout << error->description()->utf8String() << std::endl;
+    }
+
+    void MetalPipeline::InvalidateComputePipeline()
+    {
         
+    }
+    void MetalPipeline::Bind(MTL::RenderCommandEncoder* encoder)
+    {
+        encoder->setRenderPipelineState(m_Pipeline);
+        m_Shader->BindResources(encoder);
     }
 }
 #endif

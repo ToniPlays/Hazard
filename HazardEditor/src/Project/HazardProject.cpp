@@ -16,7 +16,8 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 
 	YAML::Node root = YAML::LoadFile(path.string());
 
-	if (root["General"]) {
+	if (root["General"])
+    {
 		DeserializeGeneral(root["General"]);
 	}
 	m_Data.ProjectDirectory = File::GetDirectoryOf(path);

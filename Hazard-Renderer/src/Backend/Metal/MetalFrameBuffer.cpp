@@ -66,8 +66,6 @@ namespace HazardRenderer::Metal
             
             m_ClearValues.clear();
             m_ClearValues.push_back(MetalContext::GetInstance()->GetClearColorValue());
-            
-            
         }
     }
     void MetalFrameBuffer::Release()
@@ -131,7 +129,7 @@ namespace HazardRenderer::Metal
                 depthDescriptor->setLevel(0);
                 depthDescriptor->setLoadAction(m_Specs.ClearOnLoad ? MTL::LoadActionClear : MTL::LoadActionLoad);
                 depthDescriptor->setStoreAction(MTL::StoreActionStore);
-                depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
+                //depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
             }
             else //Color attachment
             {

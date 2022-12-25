@@ -12,7 +12,7 @@ project "HazardEditor"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"%{wks.location}/Hazard/vendor/vendor/ImGui_Backend/**.h",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.h",
 		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
@@ -107,7 +107,9 @@ project "HazardEditor"
         	files 
 		{
                 	"src/**.m",
-                	"src/**.mm"
+                	"src/**.mm",
+			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
+			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
 
 	filter "configurations:Debug"

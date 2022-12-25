@@ -35,6 +35,12 @@ namespace HazardRenderer::Metal
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
+        MTL::SamplerState* GetMetalSamplerState() const { return m_MetalSampler; }
+        
+    private:
+        void Invalidate_RT();
+        void CreateImageSampler();
+        void UploadImageData_RT();
 
     private:
         std::string m_DebugName;
@@ -46,6 +52,7 @@ namespace HazardRenderer::Metal
         Buffer m_LocalBuffer;
         
         MTL::Texture* m_MetalTexture;
+        MTL::SamplerState* m_MetalSampler;
     };
 }
 #endif
