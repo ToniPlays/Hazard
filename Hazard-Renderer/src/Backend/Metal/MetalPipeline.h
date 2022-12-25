@@ -5,15 +5,19 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Core/Pipeline/Pipeline.h"
-#include "Backend/Core/Pipeline/Shader.h"
+#include "MetalShader.h"
+
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal
 {
     class MetalPipeline : public Pipeline
     {
     public:
-        MetalPipeline(PipelineSpecification* specs) {};
-        ~MetalPipeline() {};
+        MetalPipeline(PipelineSpecification* specs);
+        ~MetalPipeline();
 
         PipelineSpecification GetSpecifications() override { return m_Specs; }
         const PipelineSpecification GetSpecifications() const override { return m_Specs; }
@@ -25,12 +29,22 @@ namespace HazardRenderer::Metal
 
         void SetLayout(const BufferLayout& layout) override { m_Layout = layout; };
 
-        void Invalidate() override {};
-        void Invalidate_RT() {};
+        void Invalidate() override;
+        void Invalidate_RT();
+        
+        //Metal specific
+        MTL::PrimitiveType GetMetalPrimitiveType() const { return m_PrimitiveType; }
+        MTL::RenderPipelineState* GetMetalRenderPipelineState() const { return m_Pipeline; }
+        
     private:
         PipelineSpecification m_Specs;
-        Ref<Shader> m_Shader;
+        Ref<MetalShader> m_Shader;
         BufferLayout m_Layout;
+        
+        MTL::PrimitiveType m_PrimitiveType;
+        
+        MTL::RenderPipelineDescriptor* m_PipelineDescriptor;
+        MTL::RenderPipelineState* m_Pipeline;
         
     };
 }

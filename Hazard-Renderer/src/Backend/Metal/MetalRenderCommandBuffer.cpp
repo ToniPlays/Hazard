@@ -11,6 +11,7 @@
 #include "MetalRenderPass.h"
 #include "MetalFrameBuffer.h"
 #include "MetalPipeline.h"
+#include "MetalBuffers.h"
 
 namespace HazardRenderer::Metal
 {
@@ -74,7 +75,6 @@ namespace HazardRenderer::Metal
         {
             descriptor->setRenderTargetWidth(fb->GetWidth());
             descriptor->setRenderTargetHeight(fb->GetHeight());
-            
         }
         
         m_RenderEncoder = m_CommandBuffer->renderCommandEncoder(descriptor);
@@ -99,6 +99,51 @@ namespace HazardRenderer::Metal
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
             instance->m_RenderEncoder->endEncoding();
+        });
+    }
+    void MetalRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
+        Renderer::Submit([instance, buffer, binding]() mutable {
+            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, binding);
+        });
+    }
+    void MetalRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
+    {
+        
+    }
+    void MetalRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalPipeline> metalPipeline = pipeline.As<MetalPipeline>();
+        
+        Renderer::Submit([instance, metalPipeline]() mutable {
+            instance->m_CurrentPipeline = metalPipeline;
+            
+            instance->m_RenderEncoder->setRenderPipelineState(metalPipeline->GetMetalRenderPipelineState());
+        });
+    }
+    void MetalRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
+    {
+        DrawInstanced(count, 1, indexBuffer);
+    }
+    void MetalRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalIndexBuffer> mtlIndexBuffer = indexBuffer.As<MetalIndexBuffer>();
+        Renderer::Submit([instance, mtlIndexBuffer, count, instanceCount]() mutable {
+            
+            auto primitiveType = instance->m_CurrentPipeline->GetMetalPrimitiveType();
+            if(mtlIndexBuffer)
+            {
+                MTL::Buffer* buffer = mtlIndexBuffer->GetMetalBuffer();
+                instance->m_RenderEncoder->drawIndexedPrimitives(primitiveType, count, MTL::IndexTypeUInt32, buffer, 0, instanceCount, 0, 0);
+            }
+            else
+            {
+                instance->m_RenderEncoder->drawPrimitives(primitiveType, 0, count, instanceCount);
+            }
         });
     }
 }

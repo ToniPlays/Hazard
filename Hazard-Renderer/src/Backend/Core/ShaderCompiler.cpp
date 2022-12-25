@@ -6,6 +6,7 @@
 
 #include "Backend/OpenGL/OpenGLShaderCompiler.h"
 #include "Backend/Vulkan/VulkanShaderCompiler.h"
+#include "Backend/Metal/MetalShaderCompiler.h"
 
 #include "spdlog/fmt/fmt.h"
 
@@ -312,6 +313,33 @@ namespace HazardRenderer
 			}
 			break;
 		}
+#endif
+#ifdef HZR_INCLUDE_METAL
+        case RenderAPI::Metal:
+        {
+            Metal::MetalShaderCompiler compiler = {};
+            std::vector<ShaderDefine> defines = {{ "METAL_API" }};
+            
+            for (auto& [stage, source] : sourceCode)
+            {
+                //Compile to Vulkan SPV, convert to MSL later
+                CompileInfo compileInfoMetal = {};
+                compileInfoMetal.Renderer = RenderAPI::Vulkan;
+                compileInfoMetal.Name = File::GetName(sourceFile);
+                compileInfoMetal.Stage = stage;
+                compileInfoMetal.Source = source;
+                compileInfoMetal.DefineCount = defines.size();
+                compileInfoMetal.pDefines = defines.data();
+                
+                if (!compiler.Compile(&compileInfoMetal))
+                {
+                    std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString((uint32_t)stage), compiler.GetErrorMessage()) << std::endl;
+                    continue;
+                }
+                result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
+            }
+            break;
+        }
 #endif
             default:
                 break;

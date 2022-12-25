@@ -22,10 +22,10 @@ namespace HazardRenderer::Metal
         
         if(info->Width == 0)
         {
+            //Swapchain size
             auto swapchain = MetalContext::GetInstance()->GetSwapchain();
             m_Specs.Width = swapchain->GetWidth();
             m_Specs.Height = swapchain->GetHeight();
-            //Swapchain size
         }
         else
         {
@@ -66,6 +66,8 @@ namespace HazardRenderer::Metal
             
             m_ClearValues.clear();
             m_ClearValues.push_back(MetalContext::GetInstance()->GetClearColorValue());
+            
+            
         }
     }
     void MetalFrameBuffer::Release()

@@ -69,15 +69,15 @@ if os.host() == "macosx" then
 
     IncludeDir["SPIRV_Cross"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
 
-    --Library["Vulkan"] = "vulkan"
-    -- Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
+    Library["Vulkan"] = "vulkan"
+    Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 
-    --Library["ShaderC_Debug"] = "shaderc"
+    Library["ShaderC_Debug"] = "shaderc"
     Library["SPIRV_Cross_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-core"
     Library["SPIRV_Cross_GLSL_Debug"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/SPIRV-Tools"
 
-    --Library["ShaderC_Release"] = "shaderc"
+    Library["ShaderC_Release"] = "shaderc"
     Library["SPIRV_Cross_Release"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-core"
     Library["SPIRV_Cross_GLSL_Release"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"

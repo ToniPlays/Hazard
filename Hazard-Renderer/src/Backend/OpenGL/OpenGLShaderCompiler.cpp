@@ -53,6 +53,7 @@ namespace HazardRenderer::OpenGL
 				options.AddMacroDefinition(define.Name, define.Value);
 			else options.AddMacroDefinition(define.Name);
 		}
+        
 		shaderc::Compiler compiler;
 		shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source,
 			ShaderStageToShaderC(compileInfo->Stage), compileInfo->Name.c_str(), options);

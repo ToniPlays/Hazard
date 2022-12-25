@@ -6,6 +6,10 @@
 #include "Backend/Core/Pipeline/Shader.h"
 #include "Backend/Core/Pipeline/Buffers.h"
 
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace HazardRenderer::Metal
 {
     class MetalShader : public Shader
@@ -24,9 +28,13 @@ namespace HazardRenderer::Metal
         const ShaderData& GetShaderData() override { return m_ShaderData; };
         std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; };
         
+        //Metal specific
+        MTL::Function* GetFunction(const ShaderStage& stage) { return m_Functions[stage]; }
+        
     private:
         ShaderData m_ShaderData;
         std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
+        std::unordered_map<ShaderStage, MTL::Function*> m_Functions;
     };
 }
 #endif

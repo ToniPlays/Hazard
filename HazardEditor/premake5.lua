@@ -35,6 +35,7 @@ project "HazardEditor"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
         	"%{IncludeDir.Metal}",
+		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",

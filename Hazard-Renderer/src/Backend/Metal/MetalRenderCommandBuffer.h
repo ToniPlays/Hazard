@@ -30,12 +30,12 @@ namespace HazardRenderer::Metal
         void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
         void EndRenderPass() override;
 
-        void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override {};
-        void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override {};
-        void BindPipeline(Ref<Pipeline> pipeline) override {};
+        void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
+        void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override;
+        void BindPipeline(Ref<Pipeline> pipeline) override;
 
-        void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override {};
-        void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override {};
+        void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
+        void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DispatchCompute(const DispatchComputeInfo& computeIno) override {};
         void TraceRays(const TraceRaysInfo& traceRaysInfo) override {};
         void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override {};
