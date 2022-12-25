@@ -24,6 +24,7 @@ namespace HazardRenderer::Metal {
         
         //Metal specific
         MTL::Device* GetMetalDevice() const { return m_Device; }
+        MTL::CommandQueue* GetGraphicsQueue() const { return m_GraphicsQueue; }
         
     private:
         std::string m_DeviceName;

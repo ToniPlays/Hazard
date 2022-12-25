@@ -28,8 +28,8 @@ namespace HazardRenderer::Metal {
 
         Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; }
 
-        Ref<RenderPass> GetRenderPass() override { return m_RenderPass; };
-        Ref<FrameBuffer> GetRenderTarget() override { return m_FrameBuffer; };
+        Ref<RenderPass> GetRenderPass() override { return m_DefaultRenderPass; };
+        Ref<FrameBuffer> GetRenderTarget() override { return m_DefaultFramebuffer; };
         
         //Metal specific
         CA::MetalDrawable* GetDrawable() { return m_Drawable; }
@@ -41,7 +41,8 @@ namespace HazardRenderer::Metal {
         
         Ref<RenderPass> m_RenderPass;
         Ref<RenderCommandBuffer> m_RenderCommandBuffer;
-        Ref<FrameBuffer> m_FrameBuffer;
+        Ref<FrameBuffer> m_DefaultFramebuffer;
+        Ref<RenderPass> m_DefaultRenderPass;
         
         CA::MetalDrawable* m_Drawable;
     };

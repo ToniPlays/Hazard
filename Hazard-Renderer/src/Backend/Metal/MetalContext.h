@@ -28,8 +28,11 @@ namespace HazardRenderer::Metal
         DefaultResources& GetDefaultResources() override { return m_Resources; };
             
         //Metal specific
+        static Ref<MetalPhysicalDevice> GetMetalDevice() { return s_Instance->m_PhysicalDevice; }
         static MetalContext* GetInstance() { return s_Instance; }
         static MetalWindowLayer* GetWindowLayer() { return s_Instance->m_MetalLayer; }
+        
+        MTL::ClearColor GetClearColorValue() const { return { m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a }; }
         
     private:
         Window* m_Window;

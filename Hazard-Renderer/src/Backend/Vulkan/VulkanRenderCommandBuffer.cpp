@@ -330,7 +330,7 @@ namespace HazardRenderer::Vulkan
 		beginInfo.clearValueCount = (uint32_t)clearValues.size();
 		beginInfo.pClearValues = clearValues.data();
 
-		vkCmdBeginRenderPass(m_ActiveCommandBuffer, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(m_ActiveCommandBuffer, &beginInxfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		if (explicitClear)
 		{

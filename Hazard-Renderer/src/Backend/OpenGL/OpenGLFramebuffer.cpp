@@ -121,11 +121,8 @@ namespace HazardRenderer::OpenGL
 		{
 			if (m_ColorImages.size() > 0)
 			{
-				if (m_ColorImages.size() > 0)
-				{
-					for (auto& image : m_ColorImages)
-						image->Release();
-				}
+                for (auto& image : m_ColorImages)
+					image->Release();
 			}
 			m_ColorImages.clear();
 

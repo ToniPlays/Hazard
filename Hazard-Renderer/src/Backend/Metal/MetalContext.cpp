@@ -51,11 +51,11 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::Present()
     {
-        
+        m_Swapchain->Present();
     }
     void MetalContext::SetClearColor(const glm::vec4 &color)
-{
-        m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
+    {
+        m_ClearColor = color;
     }
 }
 

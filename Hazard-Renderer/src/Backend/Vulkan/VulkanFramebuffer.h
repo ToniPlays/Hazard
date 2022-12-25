@@ -52,6 +52,7 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanImage2D> m_DepthAttachmentImage;
 		Ref<VulkanImage2D> m_ExistingImage;
+        
 		std::map<uint32_t, Ref<VulkanImage2D>> m_ExistingImages;
 		std::vector<uint32_t> m_ExistingImageLayers;
 		std::vector<VkClearValue> m_ClearValues;

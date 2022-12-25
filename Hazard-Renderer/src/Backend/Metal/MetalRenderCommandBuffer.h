@@ -6,6 +6,10 @@
 #include "Backend/Core/RenderCommandBuffer.h"
 #include "MetalPipeline.h"
 
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace HazardRenderer::Metal
 {
     class MetalRenderCommandBuffer : public RenderCommandBuffer
@@ -18,13 +22,13 @@ namespace HazardRenderer::Metal
         uint32_t GetFrameIndex() override { return m_FrameIndex; };
         
         bool IsRecording() override { return m_State == State::Record; };
-        void Begin() override {};
-        void End() override {};
-        void Submit() override {};
+        void Begin() override;
+        void End() override;
+        void Submit() override;
 
-        void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override {};
-        void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false) {};
-        void EndRenderPass() override {};
+        void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
+        void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
+        void EndRenderPass() override;
 
         void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override {};
         void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override {};
@@ -43,12 +47,19 @@ namespace HazardRenderer::Metal
         void SetViewport(float x, float y, float width, float height) override {};
         void SetLineSize(float size) override {};
         
+        //Metal specific
+        MTL::CommandBuffer* GetMetalCommandBuffer() const { return m_CommandBuffer; }
+        MTL::RenderCommandEncoder* GetEncoder() const { return m_RenderEncoder; }
+        
     private:
         uint32_t m_FrameIndex = 0;
         std::string m_DebugName;
         bool m_OwnedBySwapchain = false;
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
         State m_State = State::Waiting;
+        
+        MTL::CommandBuffer* m_CommandBuffer;
+        MTL::RenderCommandEncoder* m_RenderEncoder;
     };
 }
 #endif

@@ -5,16 +5,30 @@
 
 #include "MetalRenderCommandBuffer.h"
 #include "MetalWindowLayer.h"
+#include "RenderPass.h"
 
-//#include <Metal/Metal.hpp>
-//#include <Foundation/Foundation.hpp>
-//#include <QuartzCore/QuartzCore.hpp>
 
 namespace HazardRenderer::Metal {
     
     MetalSwapchain::MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo)
     {
-        if (targetInfo == nullptr)
+        
+    }
+
+    void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
+    {
+        m_Width = *width;
+        m_Height = *height;
+        
+        m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
+        
+        if (m_DefaultFramebuffer)
+        {
+            m_DefaultFramebuffer->Resize_RT(m_Width, m_Height);
+            return;
+        }
+
+        if (nullptr == nullptr) //TODO: Fix this
         {
             //Create default target
 
@@ -23,35 +37,29 @@ namespace HazardRenderer::Metal {
             frameBufferInfo.SwapChainTarget = true;
             frameBufferInfo.AttachmentCount = 2;
             frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
-            
-            m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
+
+            m_DefaultFramebuffer = FrameBuffer::Create(&frameBufferInfo);
 
             RenderPassCreateInfo renderPassInfo = {};
             renderPassInfo.DebugName = "ScreenTarget";
-            renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+            renderPassInfo.pTargetFrameBuffer = m_DefaultFramebuffer;
 
-            m_RenderPass = RenderPass::Create(&renderPassInfo);
+            m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
         }
         else
         {
-            m_FrameBuffer = FrameBuffer::Create(targetInfo);
+            m_DefaultFramebuffer = FrameBuffer::Create(nullptr);
 
             RenderPassCreateInfo renderPassInfo = {};
             renderPassInfo.DebugName = "ScreenTarget";
-            renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
-            
-            m_RenderPass = RenderPass::Create(&renderPassInfo);
+            renderPassInfo.pTargetFrameBuffer = m_DefaultFramebuffer;
+
+            m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
         }
-        
-        m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
     }
 
-    void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
+    void MetalSwapchain::Resize(uint32_t width, uint32_t height)
     {
-        
-    }
-
-    void MetalSwapchain::Resize(uint32_t width, uint32_t height) {
         m_Width = width;
         m_Height = height;
     }
@@ -64,16 +72,17 @@ namespace HazardRenderer::Metal {
     void MetalSwapchain::Present()
     {
         m_RenderCommandBuffer->End();
-        /*
-        MTL::CommandBuffer* cmdBuffer = m_RenderCommandBuffer.As<MetalRenderCommandBuffer>()->GetMetalCommandBuffer();
+
+        auto cmdBuffer = m_RenderCommandBuffer.As<MetalRenderCommandBuffer>();
+        auto mtlCommandBuffer = cmdBuffer->GetMetalCommandBuffer();
         
+        mtlCommandBuffer->presentDrawable(m_Drawable);
+        mtlCommandBuffer->commit();
+        mtlCommandBuffer->waitUntilCompleted();
         
-        cmdBuffer->presentDrawable(m_Drawable);
-        cmdBuffer->commit();
-        cmdBuffer->waitUntilCompleted();
-        cmdBuffer->release();
+        cmdBuffer->GetEncoder()->release();
+        mtlCommandBuffer->release();
         m_Drawable->release();
-        */
     }
 }
 #endif
