@@ -1,7 +1,9 @@
 #include "MetalDescriptorSet.h"
 
-#include "OpenGLBuffers.h"
+#include "MetalBuffers.h"
 #include "MetalImage2D.h"
+
+#include "MetalShader.h"
 
 #include <glad/glad.h>
 
@@ -63,8 +65,14 @@ namespace HazardRenderer::Metal
             switch (descriptor.Type)
             {
             case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-
+            {
+                auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                if(buffer->GetUsageFlags() & (uint32_t)ShaderStage::Vertex)
+                    encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.Binding);
+                if(buffer->GetUsageFlags() & (uint32_t)ShaderStage::Fragment)
+                    encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.Binding);
                 break;
+            }
             case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
                 if (descriptor.Dimension == 3)
                 {

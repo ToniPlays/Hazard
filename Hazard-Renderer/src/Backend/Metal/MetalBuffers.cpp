@@ -103,5 +103,40 @@ namespace HazardRenderer::Metal
         
         m_LocalBuffer.Release();
     }
+
+    MetalUniformBuffer::MetalUniformBuffer(UniformBufferCreateInfo* info)
+    {
+        m_Name = info->Name;
+        m_Binding = info->Binding;
+        m_Size = info->Size;
+        m_Usage = info->Usage;
+        m_LocalData.Allocate(m_Size * 1024);
+
+        Ref<MetalUniformBuffer> instance = this;
+        Renderer::SubmitResourceCreate([instance]() mutable {
+            instance->Invalidate_RT();
+            });
+    }
+    MetalUniformBuffer::~MetalUniformBuffer()
+    {
+        m_LocalData.Release();
+        m_Buffer->release();
+    }
+    void MetalUniformBuffer::SetData(const BufferCopyRegion& copyRegion)
+    {
+        m_LocalData = Buffer::Copy(copyRegion.Data, copyRegion.Size);
+        Ref<MetalUniformBuffer> instance = this;
+        Renderer::Submit([instance]() mutable {
+            void* contents = instance->m_Buffer->contents();
+            memcpy(contents, instance->m_LocalData.Data, instance->m_LocalData.Size);
+        });
+    }
+    void MetalUniformBuffer::Invalidate_RT()
+    {
+        auto device = MetalContext::GetMetalDevice();
+        
+        m_Buffer = device->GetMetalDevice()->newBuffer(m_Size, MTL::ResourceOptionCPUCacheModeWriteCombined);
+        
+    }
 }
 #endif

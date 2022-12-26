@@ -77,6 +77,7 @@ namespace HazardRenderer::Metal
         
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2);
+        options.enable_decoration_binding = true;
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         compiler.set_msl_options(options);

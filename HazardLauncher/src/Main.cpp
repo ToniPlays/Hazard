@@ -17,6 +17,6 @@ int main(int argc, char** argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	TexturedQuad::Run(renderAPI);
+	UniformBufferTest::Run(renderAPI);
     return 0;
 }

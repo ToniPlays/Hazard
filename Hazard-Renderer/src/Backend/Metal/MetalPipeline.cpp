@@ -64,16 +64,16 @@ namespace HazardRenderer::Metal
         uint32_t attribIndex = 0;
         if(m_Layout.GetBufferStride(PerVertex))
         {
-            vertexDescriptor->layouts()->object(0)->setStepRate(MTL::StepFunctionPerVertex);
-            vertexDescriptor->layouts()->object(0)->setStride(m_Layout.GetBufferStride(PerVertex));
+            auto layout = vertexDescriptor->layouts()->object(28);
+            layout->setStride(m_Layout.GetBufferStride(PerVertex));
+            layout->setStepRate(MTL::StepFunctionPerVertex);
 
             for(auto& element : m_Layout.GetElements())
             {
                 if(element.ElementDivisor == PerInstance) continue;
                 
                 auto object = vertexDescriptor->attributes()->object(attribIndex);
-                object->init();
-                object->setBufferIndex(PerVertex);
+                object->setBufferIndex(28);
                 object->setOffset(element.Offset);
                 object->setFormat(ShaderDataTypeToMTLVertexFormat(element.Type));
                 attribIndex++;
@@ -82,15 +82,15 @@ namespace HazardRenderer::Metal
         }
         if(m_Layout.GetBufferStride(PerInstance))
         {
-            vertexDescriptor->layouts()->object(1)->setStepRate(MTL::StepFunctionPerInstance);
-            vertexDescriptor->layouts()->object(1)->setStride(m_Layout.GetBufferStride(PerInstance));
+            auto layout = vertexDescriptor->layouts()->object(29);
+            layout->setStepRate(MTL::StepFunctionPerInstance);
+            layout->setStride(m_Layout.GetBufferStride(PerInstance));
             
             for(auto& element : m_Layout.GetElements())
             {
                 if(element.ElementDivisor == PerVertex) continue;
                 
                 auto object = vertexDescriptor->attributes()->object(attribIndex);
-                object->init();
                 object->setBufferIndex(PerInstance);
                 object->setOffset(element.Offset);
                 object->setFormat(ShaderDataTypeToMTLVertexFormat(element.Type));

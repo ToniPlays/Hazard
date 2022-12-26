@@ -106,12 +106,17 @@ namespace HazardRenderer::Metal
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
         Renderer::Submit([instance, buffer, binding]() mutable {
-            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, binding);
+            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
         });
     }
     void MetalRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
     {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalUniformBuffer> metalUniformBuffer = uniformBuffer.As<MetalUniformBuffer>();
         
+        Renderer::Submit([instance, metalUniformBuffer]() mutable {
+            
+        });
     }
     void MetalRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
     {
