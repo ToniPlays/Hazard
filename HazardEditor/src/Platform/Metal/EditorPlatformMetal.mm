@@ -48,11 +48,12 @@ EditorPlatformMetal::~EditorPlatformMetal()
 
 void EditorPlatformMetal::BeginFrame()
 {
-    /*
     using namespace HazardRenderer::Metal;
     
-    uint32_t w = m_Context->GetSwapchain()->GetWidth();
-    uint32_t h = m_Context->GetSwapchain()->GetHeight();
+    auto swapchain = m_Context->GetSwapchain();
+    
+    uint32_t w = swapchain->GetWidth();
+    uint32_t h = swapchain->GetHeight();
     
     m_Descriptor->setRenderTargetWidth(w);
     m_Descriptor->setRenderTargetHeight(h);
@@ -60,18 +61,27 @@ void EditorPlatformMetal::BeginFrame()
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = { (float)w, (float)h };
     
-    CA::MetalDrawable* drawable = m_Context->GetSwapchain().As<MetalSwapchain>()->GetDrawable();
+    CA::MetalDrawable* drawable = swapchain.As<MetalSwapchain>()->GetDrawable();
     m_Descriptor->colorAttachments()->object(0)->setTexture(drawable->texture());
     
     ImGui_ImplMetal_NewFrame((__bridge MTLRenderPassDescriptor*)(m_Descriptor));
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-     */
 }
 
 void EditorPlatformMetal::EndFrame()
 {
+    using namespace HazardRenderer::Metal;
+    auto swapchain = m_Context->GetSwapchain();
+    auto cmdBuffer = swapchain->GetSwapchainBuffer().As<MetalRenderCommandBuffer>();
+    cmdBuffer->BeginRenderPass_RT(swapchain->GetRenderPass());
     
+           
+    id<MTLCommandBuffer> buffer = (__bridge id<MTLCommandBuffer>)(cmdBuffer->GetMetalCommandBuffer());
+    id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)(cmdBuffer->GetEncoder());
+           
+    ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), buffer, encoder);
+    cmdBuffer->GetEncoder()->endEncoding();
 }
 
 void EditorPlatformMetal::Close()

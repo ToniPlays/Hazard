@@ -75,6 +75,21 @@ namespace HazardRenderer::Metal
         {
             descriptor->setRenderTargetWidth(fb->GetWidth());
             descriptor->setRenderTargetHeight(fb->GetHeight());
+            descriptor->setDefaultRasterSampleCount(specs.Samples);
+            
+            for(uint32_t i = 0; i < fb->GetColorAttachmentCount(); i++)
+            {
+                Ref<MetalImage2D> image = fb->GetImage(i).As<MetalImage2D>();
+                
+                auto color = MTL::ClearColor(specs.ClearColor.r, specs.ClearColor.g, specs.ClearColor.b, specs.ClearColor.a);
+                
+                auto colorAttachment = descriptor->colorAttachments()->object(0);
+                colorAttachment->init();
+                colorAttachment->setClearColor(color);
+                colorAttachment->setTexture(image->GetMetalTexture());
+                colorAttachment->setLoadAction(MTL::LoadActionClear);
+                colorAttachment->setStoreAction(MTL::StoreActionStore);
+            }
         }
         
         m_RenderEncoder = m_CommandBuffer->renderCommandEncoder(descriptor);

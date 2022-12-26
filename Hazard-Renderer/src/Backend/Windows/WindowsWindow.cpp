@@ -190,6 +190,8 @@ namespace HazardRenderer
 			data.Height = h;
 			data.Width = w;
 
+            data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
+            
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
 

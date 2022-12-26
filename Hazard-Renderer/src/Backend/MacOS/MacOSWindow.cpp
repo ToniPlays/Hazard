@@ -88,11 +88,19 @@ namespace HazardRenderer
             }
             HZR_ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
             HZR_ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
-
+                
             //Create window
+            
             m_Window = glfwCreateWindow(m_WindowData.Width, m_WindowData.Height, m_WindowData.Title.c_str(), monitor, NULL);
 
             HZR_ASSERT(m_Window, "Failed to create window");
+            
+            //Correct for retina displays
+            float x, y;
+            glfwGetWindowContentScale(m_Window, &x, &y);
+            m_WindowData.Width = (float)windowInfo.Width * x;
+            m_WindowData.Height = (float)windowInfo.Height * y;
+            
 
             if (info->pAppInfo->IconCount > 0)
                 SetWindowIcon(info->pAppInfo->IconCount, info->pAppInfo->pIcons);
@@ -182,12 +190,17 @@ namespace HazardRenderer
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-            data.Height = h;
-            data.Width = w;
+            float x, y;
+            glfwGetWindowContentScale((GLFWwindow*)data.Window->GetNativeWindow(), &x, &y);
+            data.Width = (float)w * x;
+            data.Height = (float)h * y;
 
+            data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
+            
             WindowResizeEvent event(w, h);
             data.EventCallback(event);
-
+            
+            
             });
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
 

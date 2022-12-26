@@ -19,6 +19,7 @@ namespace HazardRenderer::Metal
         m_Specs.pFrameBuffer = info->pFrameBuffer;
         m_Specs.SwapChainTarget = info->SwapChainTarget;
         m_Specs.ClearColor = info->ClearColor;
+        m_Specs.Samples = info->Samples;
         
         if(info->Width == 0)
         {

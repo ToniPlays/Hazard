@@ -62,6 +62,8 @@ namespace HazardRenderer::Metal {
     {
         m_Width = width;
         m_Height = height;
+        
+        MetalContext::GetWindowLayer()->Resize(m_Width, m_Height);
     }
 
     void MetalSwapchain::BeginFrame()

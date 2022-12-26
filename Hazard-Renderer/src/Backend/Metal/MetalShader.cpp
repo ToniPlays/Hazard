@@ -38,8 +38,6 @@ namespace HazardRenderer::Metal
                 break;
             }
             
-            std::cout << result << std::endl;
-            
             NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             
@@ -75,7 +73,7 @@ namespace HazardRenderer::Metal
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
             auto* write = descriptor.GetWriteDescriptor(name);
-            if (write->ActualBinding == UINT32_MAX)
+            if (!write)
                 continue;
 
             write->BoundValue[index] = cubemap;
