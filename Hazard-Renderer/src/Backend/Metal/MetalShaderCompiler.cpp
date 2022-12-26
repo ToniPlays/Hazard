@@ -82,6 +82,28 @@ namespace HazardRenderer::Metal
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         compiler.set_msl_options(options);
         result = compiler.compile();
+    
         return !result.empty();
+    }
+    std::unordered_map<std::string, uint32_t> MetalShaderCompiler::GetMSLBindings(Buffer binary)
+    {
+        spirv_cross::CompilerMSL::Options options;
+        options.set_msl_version(2);
+        options.enable_decoration_binding = true;
+        
+        spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
+        
+        compiler.set_msl_options(options);
+        
+        auto resources = compiler.get_shader_resources();
+        
+        std::unordered_map<std::string, uint32_t> result;
+        
+        for(auto& buffer : resources.uniform_buffers)
+        {
+            std::string name = compiler.get_name(buffer.id);
+            result[buffer.name] = compiler.get_decoration(buffer.id, spv::DecorationBinding);
+        }
+        return result;
     }
 }

@@ -116,7 +116,7 @@ namespace HazardRenderer::Metal
                 bufferInfo.Binding = binding;
                 bufferInfo.Size = buffer.Size;
                 bufferInfo.Usage = buffer.UsageFlags;
-
+                
                 descriptorSet.GetWriteDescriptor(binding)->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
             }
         }
@@ -158,6 +158,14 @@ namespace HazardRenderer::Metal
 
                 descriptorSet.AddWriteDescriptor(writeDescriptor);
             }
+        }
+        
+        MetalShaderCompiler compiler;
+        for(auto& [stage, code] : m_ShaderCode)
+        {
+            auto resources = compiler.GetMSLBindings(code);
+            for(auto& [set, descriptor] : m_DescriptorSet)
+                descriptor.UpdateBindings(resources);
         }
     }
 }

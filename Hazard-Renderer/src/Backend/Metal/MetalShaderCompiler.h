@@ -13,6 +13,7 @@ namespace HazardRenderer::Metal
 
         bool Compile(CompileInfo* compileInfo);
         bool Decompile(Buffer binary, std::string& result);
+        std::unordered_map<std::string, uint32_t> GetMSLBindings(Buffer binary);
 
         double GetCompileTime() { return m_CompilationTime; }
         std::string GetErrorMessage() { return m_ErrorMessage; }

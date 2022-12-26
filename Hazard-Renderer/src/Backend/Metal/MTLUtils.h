@@ -3,6 +3,9 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/Shader.h"
 
+#include "MetalContext.h"
+#include "MetalPhysicalDevice.h"
+
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -58,14 +61,17 @@ namespace HazardRenderer::Metal
             case ImageFormat::RG32F:            return MTL::PixelFormatRG32Float;
             case ImageFormat::SRGB:             return MTL::PixelFormatR8Unorm_sRGB;
             case ImageFormat::DEPTH32F:         return MTL::PixelFormatR32Float;
-            case ImageFormat::DEPTH24STENCIL8:  return MTL::PixelFormatDepth24Unorm_Stencil8;
-            case ImageFormat::None:
+            case ImageFormat::DEPTH24STENCIL8:
+            {
+                auto device = MetalContext::GetMetalDevice();
+                if(device->Depth24Stencil8Supported())
+                    return MTL::PixelFormatDepth24Unorm_Stencil8;
                 
-                break;
-            case ImageFormat::RED32I:
-                
-                break;
+                return MTL::PixelFormatDepth32Float;
+            }
+            case ImageFormat::RED32I:           break;
         }
-        return MTL::PixelFormatRGBA8Unorm;
+        HZR_ASSERT(false, "");
+        return MTL::PixelFormatInvalid;
     }
 }

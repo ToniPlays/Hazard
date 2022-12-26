@@ -13,6 +13,7 @@
 
 #include "Backend/OpenGL/OpenGLCore.h"
 #include "Backend/Vulkan/VulkanCore.h"
+#include "Backend/Metal/MetalCore.h"
 
 #include "../ImGui_Backend/imgui_impl_vulkan.h"
 #include <Hazard/RenderContext/RenderContextManager.h>
@@ -448,6 +449,13 @@ namespace Hazard::ImUI
 			cache[image.Raw()] = id;
 			return id;
 		}
+#endif
+#ifdef HZR_INCLUDE_METAL
+            case RenderAPI::Metal:
+            {
+                cache[image.Raw()] = image.As<Metal::MetalImage2D>()->GetMetalTexture();
+                return cache[image.Raw()];
+            }
 #endif
             default:
                 HZR_CORE_ASSERT(false, "Undefined ImageID");

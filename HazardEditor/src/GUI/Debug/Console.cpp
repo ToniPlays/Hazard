@@ -103,7 +103,7 @@ namespace UI
 	void Console::DrawToolbar(const ImVec2& size)
 	{
 		using namespace ImUI;
-		const Style& style = StyleManager::GetCurrent();
+		const ImUI::Style& style = StyleManager::GetCurrent();
 		{
 			ScopedStyleStack frame(ImGuiStyleVar_FrameBorderSize, 0.0f, ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 			ImGui::BeginChild("Toolbar", size);

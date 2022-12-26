@@ -62,7 +62,7 @@ namespace HazardRenderer::Metal
     }
 
     void MetalImage2D::Invalidate_RT()
-    {
+{
         HZR_PROFILE_FUNCTION();
         HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
         
@@ -76,16 +76,16 @@ namespace HazardRenderer::Metal
         descriptor->setDepth(1);
         descriptor->setSampleCount(1);
         descriptor->setArrayLength(1);
-        descriptor->setPixelFormat(ImageFormatToMTLFormat(m_Format));
         descriptor->setMipmapLevelCount(m_MipLevels);
         descriptor->setStorageMode(MTL::StorageModeShared);
+        descriptor->setPixelFormat(ImageFormatToMTLFormat(m_Format));
         
         if(m_Usage == ImageUsage::Texture)
             descriptor->setUsage(MTL::TextureUsageShaderRead);
         else if(m_Usage == ImageUsage::Storage)
             descriptor->setUsage(MTL::TextureUsageShaderWrite);
         else
-            descriptor->setUsage(MTL::TextureUsageRenderTarget);
+            descriptor->setUsage(MTL::TextureUsageRenderTarget + MTL::TextureUsageShaderRead);
         
         MTL::TextureSwizzleChannels swizzle;
         swizzle.red = MTL::TextureSwizzleRed;

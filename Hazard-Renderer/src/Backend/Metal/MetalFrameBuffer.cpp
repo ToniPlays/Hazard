@@ -6,6 +6,8 @@
 #include "MetalSwapchain.h"
 #include "MetalRenderPass.h"
 
+#include "spdlog/fmt/fmt.h"
+
 #include "Renderer.h"
 
 namespace HazardRenderer::Metal
@@ -35,6 +37,48 @@ namespace HazardRenderer::Metal
         }
         
         m_RenderPassDescriptor = MTL::RenderPassDescriptor::renderPassDescriptor();
+        
+        if(!m_Specs.pFrameBuffer)
+        {
+            uint32_t attachmentIndex = 0;
+            
+            for (auto& attachmentSpec : m_Specs.Attachments)
+            {
+                if (m_ExistingImage && m_ExistingImage->GetLayerCount() > 1)
+                {
+                    if (attachmentSpec.IsDepth())
+                        m_DepthAttachmentImage = m_ExistingImage;
+                    else m_ColorAttachments.emplace_back(m_ExistingImage);
+                }
+                else if (m_ExistingImages.find(attachmentIndex) != m_ExistingImages.end())
+                {
+                    if (!attachmentSpec.IsDepth())
+                        m_ColorAttachments.emplace_back();
+                }
+                else if (attachmentSpec.IsDepth())
+                {
+                    Image2DCreateInfo imageInfo = {};
+                    imageInfo.Format = attachmentSpec.Format;
+                    imageInfo.Usage = ImageUsage::Attachment;
+                    imageInfo.Width = m_Specs.Width;
+                    imageInfo.Height = m_Specs.Height;
+                    imageInfo.DebugName = fmt::format("{0}-Depth Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
+                    m_DepthAttachmentImage = Image2D::Create(&imageInfo).As<MetalImage2D>();
+                }
+                else
+                {
+                    Image2DCreateInfo imageInfo = {};
+                    imageInfo.Format = attachmentSpec.Format;
+                    imageInfo.Usage = ImageUsage::Attachment;
+                    imageInfo.Width = m_Specs.Width;
+                    imageInfo.Height = m_Specs.Height;
+                    imageInfo.DebugName = fmt::format("{0}-Color Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
+                    m_ColorAttachments.emplace_back(Image2D::Create(&imageInfo).As<MetalImage2D>());
+                }
+                attachmentIndex++;
+            }
+        }
+        
         Resize(m_Specs.Width, m_Specs.Height, true);
     }
     MetalFrameBuffer::~MetalFrameBuffer()
@@ -130,13 +174,14 @@ namespace HazardRenderer::Metal
                 depthDescriptor->setLevel(0);
                 depthDescriptor->setLoadAction(m_Specs.ClearOnLoad ? MTL::LoadActionClear : MTL::LoadActionLoad);
                 depthDescriptor->setStoreAction(MTL::StoreActionStore);
-                //depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
+                depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
             }
             else //Color attachment
             {
                 
             }
         }
+        
     }
 }
 #endif

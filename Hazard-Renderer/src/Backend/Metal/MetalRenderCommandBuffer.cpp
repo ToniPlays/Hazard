@@ -56,6 +56,15 @@ namespace HazardRenderer::Metal
         auto& specs = fb->GetSpecification();
         MTL::RenderPassDescriptor* descriptor = fb->GetMetalRenderPassDescriptor();
         
+        float width = fb->GetWidth();
+        float height = fb->GetHeight();
+        
+        MTL::Viewport viewport;
+        viewport.originX = 0.0;
+        viewport.originY = 0.0;
+        viewport.znear = 0.0f;
+        viewport.zfar = 1.0f;
+        
         if(specs.SwapChainTarget)
         {
             auto swapchain = MetalContext::GetInstance()->GetSwapchain().As<MetalSwapchain>();
@@ -70,11 +79,17 @@ namespace HazardRenderer::Metal
             c1->setTexture(swapchain->GetDrawable()->texture());
             c1->setLoadAction(MTL::LoadActionClear);
             c1->setStoreAction(MTL::StoreActionStore);
+            
+            width = swapchain->GetWidth();
+            height = swapchain->GetHeight();
+            
+            viewport.width = width;
+            viewport.height = height;
         }
         else
         {
-            descriptor->setRenderTargetWidth(fb->GetWidth());
-            descriptor->setRenderTargetHeight(fb->GetHeight());
+            descriptor->setRenderTargetWidth(width);
+            descriptor->setRenderTargetHeight(height);
             descriptor->setDefaultRasterSampleCount(specs.Samples);
             
             for(uint32_t i = 0; i < fb->GetColorAttachmentCount(); i++)
@@ -90,19 +105,27 @@ namespace HazardRenderer::Metal
                 colorAttachment->setLoadAction(MTL::LoadActionClear);
                 colorAttachment->setStoreAction(MTL::StoreActionStore);
             }
+            
+            if(fb->GetDepthImage())
+            {
+                MTL::RenderPassDepthAttachmentDescriptor* depthDescriptor = MTL::RenderPassDepthAttachmentDescriptor::alloc()->init();
+                
+                depthDescriptor->setClearDepth(1.0);
+                depthDescriptor->setLoadAction(specs.ClearOnLoad ? MTL::LoadActionClear : MTL::LoadActionDontCare);
+                depthDescriptor->setStoreAction(MTL::StoreActionStore);
+                depthDescriptor->setTexture(fb->GetDepthImage().As<MetalImage2D>()->GetMetalTexture());
+                descriptor->setDepthAttachment(depthDescriptor);
+            }
+            viewport.originY = height;
+            viewport.width = width;
+            viewport.height = -height;
         }
         
         m_RenderEncoder = m_CommandBuffer->renderCommandEncoder(descriptor);
-    
-        MTL::Viewport viewport;
-        viewport.width = descriptor->renderTargetWidth();
-        viewport.height = descriptor->renderTargetHeight();
-        viewport.originX = 0.0;
-        viewport.originY = 0.0;
         
         MTL::ScissorRect scissors;
-        scissors.width = viewport.width;
-        scissors.height = viewport.height;
+        scissors.width = width;
+        scissors.height = height;
         scissors.x = 0.0;
         scissors.y = 0.0;
         
@@ -130,8 +153,7 @@ namespace HazardRenderer::Metal
         Ref<MetalUniformBuffer> metalUniformBuffer = uniformBuffer.As<MetalUniformBuffer>();
         
         Renderer::Submit([instance, metalUniformBuffer]() mutable {
-            
-        });
+            });
     }
     void MetalRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
     {

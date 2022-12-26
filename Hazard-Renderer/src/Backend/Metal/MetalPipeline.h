@@ -25,7 +25,7 @@ namespace HazardRenderer::Metal
         void SetRenderPass(Ref<RenderPass> renderPass) override {};
 
         bool IsCompatibleWith(Ref<Shader> shader) const override { return false; };
-        bool IsValid() const override { return false; }
+        bool IsValid() const override { return m_Pipeline; }
 
         void SetLayout(const BufferLayout& layout) override { m_Layout = layout; };
 
@@ -49,7 +49,8 @@ namespace HazardRenderer::Metal
         MTL::PrimitiveType m_PrimitiveType;
         
         MTL::RenderPipelineDescriptor* m_PipelineDescriptor;
-        MTL::RenderPipelineState* m_Pipeline;
+        MTL::RenderPipelineState* m_Pipeline = nullptr;
+        MTL::DepthStencilState* m_DepthState = nullptr;
         
     };
 }

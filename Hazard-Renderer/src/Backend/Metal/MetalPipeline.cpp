@@ -125,7 +125,7 @@ namespace HazardRenderer::Metal
             {
                 auto colorAttachment = fb->GetImage(i).As<MetalImage2D>();
                 auto obj = m_PipelineDescriptor->colorAttachments()->object(i);
-                obj->init();
+                
                 obj->setPixelFormat(ImageFormatToMTLFormat(colorAttachment->GetFormat()));
                 
                 obj->setBlendingEnabled(true);
@@ -141,9 +141,9 @@ namespace HazardRenderer::Metal
             {
                 auto depthAttachment = fb->GetDepthImage();
                 m_PipelineDescriptor->setDepthAttachmentPixelFormat(ImageFormatToMTLFormat(depthAttachment->GetFormat()));
+                
             }
         }
-        
         
         NS::Error* error;
         
@@ -151,6 +151,14 @@ namespace HazardRenderer::Metal
         
         if(error)
             std::cout << error->description()->utf8String() << std::endl;
+        
+        //Create depth stencil
+        
+        MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
+        depth->setDepthWriteEnabled(m_Specs.DepthWrite);
+        depth->setDepthCompareFunction(MTL::CompareFunctionLess);
+        
+        m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
     }
 
     void MetalPipeline::InvalidateComputePipeline()
@@ -160,6 +168,7 @@ namespace HazardRenderer::Metal
     void MetalPipeline::Bind(MTL::RenderCommandEncoder* encoder)
     {
         encoder->setRenderPipelineState(m_Pipeline);
+        encoder->setDepthStencilState(m_DepthState);
         m_Shader->BindResources(encoder);
     }
 }

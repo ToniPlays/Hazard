@@ -40,6 +40,8 @@ namespace HazardRenderer::Metal
         MetalWriteDescriptor* GetWriteDescriptor(uint32_t index) { return &m_WriteDescriptors[index]; }
         MetalWriteDescriptor* GetWriteDescriptor(const std::string& name);
 
+        void UpdateBindings(const std::unordered_map<std::string, uint32_t> bindings);
+        
         void BindResources(MTL::RenderCommandEncoder* encoder, bool isCompute = false);
 
     private:

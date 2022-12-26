@@ -25,6 +25,7 @@ namespace HazardRenderer::Metal {
         //Metal specific
         MTL::Device* GetMetalDevice() const { return m_Device; }
         MTL::CommandQueue* GetGraphicsQueue() const { return m_GraphicsQueue; }
+        bool Depth24Stencil8Supported() const { return m_Device->depth24Stencil8PixelFormatSupported(); }
         
     private:
         std::string m_DeviceName;

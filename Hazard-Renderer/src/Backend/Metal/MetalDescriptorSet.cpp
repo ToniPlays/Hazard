@@ -67,10 +67,19 @@ namespace HazardRenderer::Metal
             case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
             {
                 auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
-                if(buffer->GetUsageFlags() & (uint32_t)ShaderStage::Vertex)
-                    encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.Binding);
-                if(buffer->GetUsageFlags() & (uint32_t)ShaderStage::Fragment)
-                    encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.Binding);
+                uint32_t flags = buffer->GetUsageFlags();
+                
+                if(flags & (uint32_t)ShaderStage::Vertex || true)
+                {
+                    encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                }
+                
+                if(flags & (uint32_t)ShaderStage::Fragment || true)
+                {
+                    encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                }
+                
+
                 break;
             }
             case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
@@ -84,13 +93,23 @@ namespace HazardRenderer::Metal
                     {
                         if (!value) continue;
                         auto texture = value.As<MetalImage2D>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.Binding);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.Binding);
+                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding);
+                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding);
                     }
                 }
                 break;
                 default: break;
             }
+        }
+    }
+    void MetalDescriptorSet::UpdateBindings(const std::unordered_map<std::string, uint32_t> bindings)
+    {
+        for(auto& [name, binding] : bindings)
+        {
+            auto writeDescriptor = GetWriteDescriptor(name);
+            if(!writeDescriptor) continue;
+            
+            writeDescriptor->ActualBinding = binding;
         }
     }
 }

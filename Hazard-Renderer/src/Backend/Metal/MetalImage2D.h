@@ -37,6 +37,8 @@ namespace HazardRenderer::Metal
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
         MTL::SamplerState* GetMetalSamplerState() const { return m_MetalSampler; }
         
+        uint32_t GetLayerCount() { return 1; }
+        
     private:
         void Invalidate_RT();
         void CreateImageSampler();

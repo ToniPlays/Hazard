@@ -46,39 +46,28 @@ namespace Editor
 			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
-		return;
 
-		JobPromise promise = AssetManager::GetAssetAsync<AssetPointer>("res/Shaders/Grid.glsl");
+		auto shader = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Grid.glsl");
 
-		promise.Then([this](JobGraph& graph) -> size_t {
+        PipelineSpecification specs = {};
+        specs.DebugName = "Grid";
+        specs.DrawType = DrawType::Fill;
+        specs.Usage = PipelineUsage::GraphicsBit;
+        specs.CullMode = CullMode::None;
+        specs.DepthOperator = DepthOp::Less;
+        specs.pTargetRenderPass = renderPass;
+        specs.ShaderCodeCount = shader->ShaderCode.size();
+        specs.pShaderCode = shader->ShaderCode.data();
+        
+        m_Pipeline = Pipeline::Create(&specs);
 
-			/*
-			Job* dependency = system->GetJob(job->Dependency);
-			auto& shader = *dependency->Value<Ref<ShaderAsset>>();
+        UniformBufferCreateInfo uboInfo = {};
+        uboInfo.Name = "Grid";
+        uboInfo.Set = 2;
+        uboInfo.Binding = 1;
+        uboInfo.Size = sizeof(GridData);
+        uboInfo.Usage = BufferUsage::DynamicDraw;
 
-			PipelineSpecification specs = {};
-			specs.DebugName = "Grid";
-			specs.DrawType = DrawType::Fill;
-			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::None;
-			specs.DepthOperator = DepthOp::Less;
-			specs.pTargetRenderPass = nullptr;
-			specs.ShaderCodeCount = shader->ShaderCode.size();
-			specs.pShaderCode = shader->ShaderCode.data();
-
-			m_Pipeline = Pipeline::Create(&specs);
-
-			UniformBufferCreateInfo uboInfo = {};
-			uboInfo.Name = "Grid";
-			uboInfo.Set = 2;
-			uboInfo.Binding = 1;
-			uboInfo.Size = sizeof(GridData);
-			uboInfo.Usage = BufferUsage::DynamicDraw;
-
-			m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
-			*/
-			return 0;
-
-			});
+        m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
 	}
 }
