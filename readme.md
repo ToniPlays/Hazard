@@ -16,7 +16,7 @@ Runtime system | Coming soon
 Supported platforms | Status
 --------- | ---------
 Windows | All systems running, OpenGL backend has issues
-MacOS | Compiles, likely to be unusable in any form
+MacOS | Currently being developed. Runs, has limited capabilitiess
 Linux | Currently not supported in any form
 
 ![Hazard Editor](https://raw.githubusercontent.com/ToniPlays/Hazard/master/img/editor.PNG)
