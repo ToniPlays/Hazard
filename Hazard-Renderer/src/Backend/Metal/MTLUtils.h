@@ -74,4 +74,10 @@ namespace HazardRenderer::Metal
         HZR_ASSERT(false, "");
         return MTL::PixelFormatInvalid;
     }
+    template<typename T>
+    void SetDebugLabel(T* object, const std::string& label)
+    {
+        NS::String* l = NS::String::alloc()->string(label.c_str(), NS::UTF8StringEncoding);
+        object->setLabel(l);
+    }
 }

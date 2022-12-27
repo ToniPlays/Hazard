@@ -2,6 +2,7 @@
 
 #include "MetalBuffers.h"
 #include "MetalImage2D.h"
+#include "MetalCubemapTexture.h"
 
 #include "MetalShader.h"
 
@@ -73,30 +74,36 @@ namespace HazardRenderer::Metal
                 {
                     encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
                 }
-                
                 if(flags & (uint32_t)ShaderStage::Fragment || true)
                 {
                     encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
                 }
-                
-
                 break;
             }
             case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-                if (descriptor.Dimension == 3)
+                if(descriptor.Dimension == 3)
                 {
-
+                    for (auto& [index, value] : descriptor.BoundValue)
+                    {
+                        if(index >= 16) break; //TODO: what this
+                        
+                        auto texture = value.As<MetalCubemapTexture>();
+                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.Binding + index);
+                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
+                    }
                 }
                 else
                 {
                     for (auto& [index, value] : descriptor.BoundValue)
                     {
-                        if (!value) continue;
+                        if(index >= 16) break; //TODO: what this
+                        
                         auto texture = value.As<MetalImage2D>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding);
+                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.Binding + index);
+                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
                     }
                 }
+                
                 break;
                 default: break;
             }
@@ -110,6 +117,8 @@ namespace HazardRenderer::Metal
             if(!writeDescriptor) continue;
             
             writeDescriptor->ActualBinding = binding;
+            
+            std::cout << name << " -> " << binding << std::endl;
         }
     }
 }

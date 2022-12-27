@@ -28,6 +28,7 @@ namespace HazardRenderer::OpenGL
 			m_Height = createInfo->Height;
 		}
 
+        //TODO: Move to Renderer::SubmitResourceCreate
 		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_ID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
 

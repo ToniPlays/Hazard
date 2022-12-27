@@ -22,9 +22,9 @@ namespace HazardRenderer::Metal
         PipelineSpecification GetSpecifications() override { return m_Specs; }
         const PipelineSpecification GetSpecifications() const override { return m_Specs; }
         Ref<Shader> GetShader() override { return m_Shader; }
-        void SetRenderPass(Ref<RenderPass> renderPass) override {};
+        void SetRenderPass(Ref<RenderPass> renderPass) override;
 
-        bool IsCompatibleWith(Ref<Shader> shader) const override { return false; };
+        bool IsCompatibleWith(Ref<Shader> shader) const override { return true; };
         bool IsValid() const override { return m_Pipeline; }
 
         void SetLayout(const BufferLayout& layout) override { m_Layout = layout; };

@@ -180,7 +180,6 @@ namespace HazardRenderer::Vulkan
 
 		m_VulkanDevice = Ref<VulkanDevice>::Create(m_VulkanPhysicalDevice, enabledFeatures);
 
-
 		VkPipelineCacheCreateInfo cacheInfo = {};
 		cacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 

@@ -101,8 +101,11 @@ namespace HazardRenderer::Metal
         
         for(auto& buffer : resources.uniform_buffers)
         {
-            std::string name = compiler.get_name(buffer.id);
             result[buffer.name] = compiler.get_decoration(buffer.id, spv::DecorationBinding);
+        }
+        for(auto& sampler : resources.sampled_images)
+        {
+            result[sampler.name] = compiler.get_decoration(sampler.id, spv::DecorationBinding);
         }
         return result;
     }

@@ -17,16 +17,21 @@ namespace HazardRenderer::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t count, const std::string& name, bool compute)
     {
-        
+        m_IsCompute = compute;
     }
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain)
     {
         m_DebugName = name;
         m_OwnedBySwapchain = swapchain;
+        m_IsCompute = false;
     }
     MetalRenderCommandBuffer::~MetalRenderCommandBuffer()
     {
-        m_CommandBuffer->release();
+        if(m_CommandBuffer)
+            m_CommandBuffer->release();
+        
+        if(m_ComputeEncoder)
+            m_ComputeEncoder->release();
     }
     void MetalRenderCommandBuffer::Begin()
     {

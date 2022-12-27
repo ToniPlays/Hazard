@@ -22,7 +22,7 @@ namespace Hazard
 			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
 			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
 		}
-		if (drawList.Environment.size() > 0)
+		if (drawList.Environment.size() > 0 && false)
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
 			{
@@ -73,9 +73,8 @@ namespace Hazard
 		for (auto& [pipeline, meshList] : meshList)
 		{
 			pipeline->SetRenderPass(m_RenderPass);
-
 			if (!pipeline->IsValid()) continue;
-
+            
 			m_CommandBuffer->BindPipeline(pipeline);
 
 			for (auto& mesh : meshList)
@@ -103,6 +102,7 @@ namespace Hazard
 		{
 			auto& radiance = environmentData.Map->RadianceMap;
 			if (!radiance) return;
+            
 			auto& resources = Application::GetModule<RenderEngine>().GetResources();
 
 			resources.SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());

@@ -37,7 +37,6 @@ namespace HazardRenderer
 	public:
 
 		virtual ~Texture() = default;
-		virtual void Bind(uint32_t slot = 0) const = 0;
 		
 		virtual ImageFormat GetFormat() const = 0;
 		virtual uint32_t GetWidth() const = 0;

@@ -86,6 +86,6 @@ void main()
 		vec3 color = ACESTonemap(ibl + Lo);
 		color = GammaCorrect(color, gamma);
 	
-		OutputColor = vec4(color, 1.0);
+		OutputColor = vec4(m_Params.color.rgb, 1.0);
 	}
 }

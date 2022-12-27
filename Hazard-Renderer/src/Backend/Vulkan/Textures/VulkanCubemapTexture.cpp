@@ -161,7 +161,6 @@ namespace HazardRenderer::Vulkan
 
 		VkSamplerCreateInfo samplerCreateInfo = {};
 		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerCreateInfo.maxAnisotropy = 1.0f;
 
 		if (VkUtils::IsIntegratedBase(m_Format))
 		{

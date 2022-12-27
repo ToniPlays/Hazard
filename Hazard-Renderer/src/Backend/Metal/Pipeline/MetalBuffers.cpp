@@ -5,6 +5,9 @@
 #include "MetalContext.h"
 #include "MetalRenderCommandBuffer.h"
 #include "Renderer.h"
+#include "../MTLUtils.h"
+
+#include "MathCore.h"
 
 namespace HazardRenderer::Metal
 {
@@ -23,6 +26,8 @@ namespace HazardRenderer::Metal
                 
                 auto device = MetalContext::GetMetalDevice();
                 instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_LocalBuffer.Data, instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
+                
+                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
             });
         }
         else
@@ -32,6 +37,8 @@ namespace HazardRenderer::Metal
                 
                 auto device = MetalContext::GetMetalDevice();
                 instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
+                
+                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
             });
         }
     }
@@ -70,6 +77,8 @@ namespace HazardRenderer::Metal
                 
                 auto device = MetalContext::GetMetalDevice();
                 instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_LocalBuffer.Data, instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
+                
+                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
             });
         }
         else
@@ -79,6 +88,8 @@ namespace HazardRenderer::Metal
                 
                 auto device = MetalContext::GetMetalDevice();
                 instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
+                
+                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
             });
         }
     }
@@ -108,7 +119,7 @@ namespace HazardRenderer::Metal
     {
         m_Name = info->Name;
         m_Binding = info->Binding;
-        m_Size = info->Size;
+        m_Size = Math::Max<size_t>(256, info->Size);
         m_Usage = info->Usage;
         m_LocalData.Allocate(m_Size * 1024);
 
@@ -137,6 +148,7 @@ namespace HazardRenderer::Metal
         
         m_Buffer = device->GetMetalDevice()->newBuffer(m_Size, MTL::ResourceOptionCPUCacheModeWriteCombined);
         
+        SetDebugLabel(m_Buffer, m_Name);
     }
 }
 #endif

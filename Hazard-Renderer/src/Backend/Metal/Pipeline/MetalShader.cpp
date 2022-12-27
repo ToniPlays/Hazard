@@ -38,6 +38,8 @@ namespace HazardRenderer::Metal
                 break;
             }
             
+            std::cout << result << std::endl;
+            
             NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             

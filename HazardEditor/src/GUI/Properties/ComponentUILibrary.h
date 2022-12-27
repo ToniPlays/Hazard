@@ -489,15 +489,11 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImGui::PopStyleVar();
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					/*Application::Get().SubmitJob("Image", [handle, entities](JobSystem* system, Job* job) mutable -> size_t {
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
 						auto envMap = EnvironmentMap::Create(asset);
 
 						for (auto& entity : entities)
 							entity.GetComponent<SkyLightComponent>().EnvironmentMap = envMap;
-						return 0;
-						});
-						*/
 					});
 				ImGui::NextColumn();
 				if (ImUI::InputFloat("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
@@ -704,20 +700,16 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImGui::Text("Mesh");
 				ImGui::NextColumn();
 
-
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 				if (ImUI::TextFieldWithHint(path, "Mesh file"))
 				{
 
 				}
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-					/*Application::Get().SubmitJob("Mesh", [entityList = entities, handle](JobSystem* system, Job* job) mutable -> size_t {
-						auto asset = AssetManager::GetAsset<Mesh>(handle);
-						for (auto& entity : entityList)
-							auto& c = entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
-						return 0;
-						});
-					*/
+                    Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(handle);
+                    
+                    for(auto& entity : entities)
+                        entity.GetComponent<MeshComponent>().m_MeshHandle = mesh;
 					});
 
 				ImGui::NextColumn();

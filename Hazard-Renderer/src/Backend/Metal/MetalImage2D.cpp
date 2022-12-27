@@ -96,6 +96,8 @@ namespace HazardRenderer::Metal
         
         m_MetalTexture = device->GetMetalDevice()->newTexture(descriptor);
         
+        SetDebugLabel(m_MetalTexture, m_DebugName);
+        
         CreateImageSampler();
     }
     void MetalImage2D::CreateImageSampler()
@@ -106,6 +108,8 @@ namespace HazardRenderer::Metal
         auto device = MetalContext::GetMetalDevice();
         
         MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
+        SetDebugLabel(descriptor, m_DebugName);
+
         descriptor->setMaxAnisotropy(1.0);
         descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
         descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);

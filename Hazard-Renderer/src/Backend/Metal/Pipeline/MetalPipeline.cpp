@@ -16,6 +16,7 @@ namespace HazardRenderer::Metal
     {
         m_PrimitiveType = DrawTypeToMTLPrimitive(m_Specs.DrawType);
         m_PipelineDescriptor = MTL::RenderPipelineDescriptor::alloc()->init();
+        SetDebugLabel(m_PipelineDescriptor, m_Specs.DebugName);
         
         if(specs->pBufferLayout)
             m_Layout = BufferLayout(*specs->pBufferLayout);
@@ -33,6 +34,14 @@ namespace HazardRenderer::Metal
         m_PipelineDescriptor->release();
         m_Pipeline->release();
     }
+    void MetalPipeline::SetRenderPass(Ref<RenderPass> renderPass)
+    {
+        if(m_Specs.pTargetRenderPass == renderPass) return;
+        m_Specs.pTargetRenderPass = renderPass;
+        
+        Invalidate();
+    }
+
     void MetalPipeline::Invalidate()
     {
         Ref<MetalPipeline> instance = this;
@@ -154,11 +163,14 @@ namespace HazardRenderer::Metal
         
         //Create depth stencil
         
-        MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
-        depth->setDepthWriteEnabled(m_Specs.DepthWrite);
-        depth->setDepthCompareFunction(MTL::CompareFunctionLess);
-        
-        m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
+        if(fb->GetDepthImage() && !fb->GetSpecification().SwapChainTarget)
+        {
+            MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
+            depth->setDepthWriteEnabled(m_Specs.DepthWrite);
+            depth->setDepthCompareFunction(MTL::CompareFunctionLess);
+            
+            m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
+        }
     }
 
     void MetalPipeline::InvalidateComputePipeline()
@@ -168,7 +180,8 @@ namespace HazardRenderer::Metal
     void MetalPipeline::Bind(MTL::RenderCommandEncoder* encoder)
     {
         encoder->setRenderPipelineState(m_Pipeline);
-        encoder->setDepthStencilState(m_DepthState);
+        if(m_DepthState)
+            encoder->setDepthStencilState(m_DepthState);
         m_Shader->BindResources(encoder);
     }
 }

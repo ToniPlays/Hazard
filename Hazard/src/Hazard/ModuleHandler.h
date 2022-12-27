@@ -4,7 +4,8 @@
 
 namespace Hazard {
 
-	class ModuleHandler {
+	class ModuleHandler
+    {
 	public:
 		ModuleHandler();
 		~ModuleHandler();

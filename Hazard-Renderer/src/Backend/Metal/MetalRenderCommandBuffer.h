@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Core/RenderCommandBuffer.h"
-#include "MetalPipeline.h"
+#include "Pipeline/MetalPipeline.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -49,17 +49,20 @@ namespace HazardRenderer::Metal
         
         //Metal specific
         MTL::CommandBuffer* GetMetalCommandBuffer() const { return m_CommandBuffer; }
-        MTL::RenderCommandEncoder* GetEncoder() const { return m_RenderEncoder; }
+        MTL::RenderCommandEncoder* GetRenderEncoder() const { return m_RenderEncoder; }
+        MTL::ComputeCommandEncoder* GetComputeEncoder() const { return m_ComputeEncoder; }
         
     private:
         uint32_t m_FrameIndex = 0;
         std::string m_DebugName;
         bool m_OwnedBySwapchain = false;
+        bool m_IsCompute = false;
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
         State m_State = State::Waiting;
         
         MTL::CommandBuffer* m_CommandBuffer;
         MTL::RenderCommandEncoder* m_RenderEncoder;
+        MTL::ComputeCommandEncoder* m_ComputeEncoder;
     };
 }
 #endif

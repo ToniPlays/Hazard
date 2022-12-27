@@ -94,7 +94,7 @@ namespace HazardRenderer::OpenGL
 			});
 		m_CurrentPipeline = instance;
 	}
-	void OpenGLRenderCommandBuffer::Draw(uint32_t count, Ref<IndexBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
@@ -104,12 +104,12 @@ namespace HazardRenderer::OpenGL
 			if (instance)
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance->GetBufferID());
-				glDrawElements(pipeline->GetDrawType(), count, GL_UNSIGNED_INT, nullptr);
+				glDrawElements(pipeline->GetDrawType(), (GLsizei)count, GL_UNSIGNED_INT, nullptr);
 			}
-			else glDrawArrays(pipeline->GetDrawType(), 0, count);
+			else glDrawArrays(pipeline->GetDrawType(), 0, (GLsizei)count);
 			});
 	}
-	void OpenGLRenderCommandBuffer::DrawInstanced(uint32_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLIndexBuffer> indexBufferInstance = indexBuffer.As<OpenGLIndexBuffer>();
@@ -119,9 +119,9 @@ namespace HazardRenderer::OpenGL
 			if (indexBufferInstance)
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferInstance->GetBufferID());
-				glDrawElementsInstanced(pipeline->GetDrawType(), count, GL_UNSIGNED_INT, nullptr, instanceCount);
+				glDrawElementsInstanced(pipeline->GetDrawType(), (GLsizei)count, GL_UNSIGNED_INT, nullptr, instanceCount);
 			}
-			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, count, instanceCount);
+			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, (GLsizei)count, instanceCount);
 			});
 	}
 	void OpenGLRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)

@@ -20,8 +20,8 @@ namespace Hazard
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;
-
 		m_Data.Samplers = 32;
+        
 		if(m_QuadBatch)
 			hdelete m_QuadBatch;
 

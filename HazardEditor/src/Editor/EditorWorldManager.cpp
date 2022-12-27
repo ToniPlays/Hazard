@@ -2,6 +2,7 @@
 #include "Hazard/ECS/WorldHandler.h"
 #include "Core/GUIManager.h"
 #include "GUI/Overlays/ProgressOverlay.h"
+#include "Core/EditorEvent.h"
 
 namespace Editor 
 {
@@ -26,7 +27,10 @@ namespace Editor
 		handler.LoadWorld(path, Serialization::Editor);
 		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
 
-		/*
+        Events::SelectionContextChange e({});
+        HazardLoop::GetCurrent().OnEvent(e);
+		
+        /*
 		auto& handler = Application::GetModule<WorldHandler>();
 		auto promise = handler.LoadWorldAsync(path, Serialization::Editor, &promises);
 

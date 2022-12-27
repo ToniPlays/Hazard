@@ -82,7 +82,7 @@ namespace HazardRenderer::Metal {
         mtlCommandBuffer->commit();
         mtlCommandBuffer->waitUntilCompleted();
         
-        cmdBuffer->GetEncoder()->release();
+        cmdBuffer->GetRenderEncoder()->release();
         mtlCommandBuffer->release();
         m_Drawable->release();
     }

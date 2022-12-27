@@ -78,10 +78,10 @@ void EditorPlatformMetal::EndFrame()
     
            
     id<MTLCommandBuffer> buffer = (__bridge id<MTLCommandBuffer>)(cmdBuffer->GetMetalCommandBuffer());
-    id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)(cmdBuffer->GetEncoder());
+    id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)(cmdBuffer->GetRenderEncoder());
            
     ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), buffer, encoder);
-    cmdBuffer->GetEncoder()->endEncoding();
+    cmdBuffer->GetRenderEncoder()->endEncoding();
 }
 
 void EditorPlatformMetal::Close()

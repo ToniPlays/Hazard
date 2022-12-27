@@ -5,8 +5,8 @@
 
 using namespace Hazard;
 
-namespace Events {
-
+namespace Events
+{
 	class SelectionContextChange : public Event
 	{
 	public:
