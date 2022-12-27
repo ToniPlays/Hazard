@@ -32,6 +32,7 @@ namespace HazardRenderer::Metal
         //Metal specific
         MTL::Function* GetFunction(const ShaderStage& stage) { return m_Functions[stage]; }
         void BindResources(MTL::RenderCommandEncoder* encoder);
+        void BindResources(MTL::ComputeCommandEncoder* encoder);
         
     private:
         void Reflect();

@@ -36,7 +36,8 @@ namespace HazardRenderer::Metal
         MTL::PrimitiveType GetMetalPrimitiveType() const { return m_PrimitiveType; }
         MTL::RenderPipelineState* GetMetalRenderPipelineState() const { return m_Pipeline; }
         
-        void Bind(MTL::RenderCommandEncoder* encoder);
+        void BindGraphics(MTL::RenderCommandEncoder* encoder);
+        void BindCompute(MTL::ComputeCommandEncoder* encoder);
         
     private:
         void InvalidateGraphicsPipeline();
@@ -49,7 +50,11 @@ namespace HazardRenderer::Metal
         MTL::PrimitiveType m_PrimitiveType;
         
         MTL::RenderPipelineDescriptor* m_PipelineDescriptor;
+        MTL::ComputePipelineDescriptor* m_ComputeDescriptor;
+        
         MTL::RenderPipelineState* m_Pipeline = nullptr;
+        MTL::ComputePipelineState* m_ComputePipeline = nullptr;
+        
         MTL::DepthStencilState* m_DepthState = nullptr;
         
     };

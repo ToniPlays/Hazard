@@ -9,8 +9,6 @@
 
 #include <glad/glad.h>
 
-#ifdef HZR_INCLUDE_METAL
-
 namespace HazardRenderer::Metal
 {
     void MetalDescriptorSet::AddWriteDescriptor(MetalWriteDescriptor writeDescriptor)
@@ -26,42 +24,9 @@ namespace HazardRenderer::Metal
         }
         return nullptr;
     }
-    void MetalDescriptorSet::BindResources(MTL::RenderCommandEncoder* encoder, bool isCompute)
+    void MetalDescriptorSet::BindGraphicsResources(MTL::RenderCommandEncoder* encoder)
     {
         HZR_PROFILE_FUNCTION();
-        if (isCompute)
-        {
-            for (auto& [binding, descriptor] : m_WriteDescriptors)
-            {
-                switch (descriptor.Type)
-                {
-                case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-                    for (auto& [index, value] : descriptor.BoundValue)
-                    {
-                        if (!value) continue;
-                        auto texture = value.As<MetalImage2D>()->GetMetalTexture();
-                        encoder->setFragmentTexture(texture, index);
-                    }
-                    break;
-                case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
-                    for (auto& [index, value] : descriptor.BoundValue)
-                    {
-                        if (descriptor.Dimension == 3)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
-                    }
-                    break;
-                default: break;
-                }
-                
-            }
-            return;
-        }
         for (auto& [binding, descriptor] : m_WriteDescriptors)
         {
             switch (descriptor.Type)
@@ -110,6 +75,11 @@ namespace HazardRenderer::Metal
             }
         }
     }
+    void MetalDescriptorSet::BindComputeResources(MTL::ComputeCommandEncoder *encoder)
+    {
+        
+    }
+
     void MetalDescriptorSet::UpdateBindings(const std::unordered_map<std::string, uint32_t> bindings)
     {
         for(auto& [name, binding] : bindings)
@@ -123,6 +93,4 @@ namespace HazardRenderer::Metal
         }
     }
 }
-#endif
-
 #endif

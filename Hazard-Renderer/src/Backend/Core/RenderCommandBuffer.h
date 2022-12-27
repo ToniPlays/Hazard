@@ -28,7 +28,6 @@ namespace HazardRenderer
 
 	struct DispatchComputeInfo
 	{
-		Ref<Pipeline> Pipeline;
 		LocalGroupSize GroupSize;
 		bool WaitForCompletion = false;
 	};

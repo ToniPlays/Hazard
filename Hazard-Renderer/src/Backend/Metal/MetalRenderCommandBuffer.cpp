@@ -37,10 +37,18 @@ namespace HazardRenderer::Metal
     {
         auto device = MetalContext::GetMetalDevice();
         m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
+            
+        if(m_IsCompute)
+            m_ComputeEncoder = m_CommandBuffer->computeCommandEncoder();
     }
     void MetalRenderCommandBuffer::End()
     {
+        if(!m_IsCompute) return;
         
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Renderer::Submit([instance]() mutable {
+            instance->m_ComputeEncoder->endEncoding();
+        });
     }
     void MetalRenderCommandBuffer::Submit()
     {
@@ -167,7 +175,12 @@ namespace HazardRenderer::Metal
         
         Renderer::Submit([instance, metalPipeline]() mutable {
             instance->m_CurrentPipeline = metalPipeline;
-            metalPipeline->Bind(instance->m_RenderEncoder);
+            
+            PipelineUsage usage = metalPipeline->GetSpecifications().Usage;
+            if(usage == PipelineUsage::GraphicsBit)
+                metalPipeline->BindGraphics(instance->m_RenderEncoder);
+            else if(usage == PipelineUsage::ComputeBit)
+                metalPipeline->BindCompute(instance->m_ComputeEncoder);
         });
     }
     void MetalRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
@@ -190,6 +203,20 @@ namespace HazardRenderer::Metal
             {
                 instance->m_RenderEncoder->drawPrimitives(primitiveType, 0, count, instanceCount);
             }
+        });
+    }
+    void MetalRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Renderer::Submit([instance, pipeline, size = computeInfo.GroupSize]() mutable {
+        
+            MTL::Size localGroup = { 32, 32, 1 };
+            MTL::Size groupSize = {
+                static_cast<NS::UInteger>(size.x),
+                static_cast<NS::UInteger>(size.y),
+                static_cast<NS::UInteger>(size.z)
+            };
+            instance->m_ComputeEncoder->dispatchThreadgroups(localGroup, groupSize);
         });
     }
 }

@@ -432,8 +432,6 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, info = computeInfo]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-			auto pipeline = info.Pipeline.As<VulkanPipeline>();
-			pipeline->Bind(instance->m_ActiveCommandBuffer);
 
 			LocalGroupSize size = info.GroupSize;
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);

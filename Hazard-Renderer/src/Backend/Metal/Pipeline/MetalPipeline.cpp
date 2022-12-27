@@ -177,11 +177,16 @@ namespace HazardRenderer::Metal
     {
         
     }
-    void MetalPipeline::Bind(MTL::RenderCommandEncoder* encoder)
+    void MetalPipeline::BindGraphics(MTL::RenderCommandEncoder* encoder)
     {
         encoder->setRenderPipelineState(m_Pipeline);
         if(m_DepthState)
             encoder->setDepthStencilState(m_DepthState);
+        m_Shader->BindResources(encoder);
+    }
+    void MetalPipeline::BindCompute(MTL::ComputeCommandEncoder* encoder)
+    {
+        encoder->setComputePipelineState(m_ComputePipeline);
         m_Shader->BindResources(encoder);
     }
 }
