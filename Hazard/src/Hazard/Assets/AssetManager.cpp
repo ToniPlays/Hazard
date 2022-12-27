@@ -58,6 +58,8 @@ namespace Hazard
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
+		if (handle == INVALID_ASSET_HANDLE) return;
+
 		AssetMetadata& data = GetMetadata(handle);
 
 		data.LoadState = LoadState::None;

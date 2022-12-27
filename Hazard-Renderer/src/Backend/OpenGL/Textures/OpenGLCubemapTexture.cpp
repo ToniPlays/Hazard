@@ -87,9 +87,9 @@ namespace HazardRenderer::OpenGL
 
 		DispatchComputeInfo computeInfo = {};
 		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
-		computeInfo.Pipeline = generationData.Pipeline;
 		computeInfo.WaitForCompletion = true;
 
+		commandBuffer->BindPipeline(generationData.Pipeline);
 		commandBuffer->DispatchCompute(computeInfo);
 	}
 }

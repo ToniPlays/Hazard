@@ -66,12 +66,13 @@ namespace HazardRenderer::OpenGL
 	void OpenGLRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLPipeline> instance = pipeline.As<OpenGLPipeline>();
-		Renderer::Submit([instance]() mutable {
+		Ref<OpenGLRenderCommandBuffer> instance = this;
+		m_CurrentPipeline = pipeline.As<OpenGLPipeline>();
 
-			Ref<OpenGLShader> shader = instance->GetShader().As<OpenGLShader>();
+		Renderer::Submit([instance]() mutable {
+			Ref<OpenGLShader> shader = instance->m_CurrentPipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
-			auto spec = instance->GetSpecifications();
+			auto spec = instance->m_CurrentPipeline->GetSpecifications();
 			if (spec.CullMode == CullMode::None)
 			{
 				glDisable(GL_CULL_FACE);
@@ -88,11 +89,10 @@ namespace HazardRenderer::OpenGL
 			}
 			else glDisable(GL_DEPTH_TEST);
 
-			glDepthMask(instance->DepthMaskEnable());
+			glDepthMask(instance->m_CurrentPipeline->DepthMaskEnable());
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), false);
 			});
-		m_CurrentPipeline = instance;
 	}
 	void OpenGLRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
 	{
@@ -127,11 +127,13 @@ namespace HazardRenderer::OpenGL
 	void OpenGLRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(computeInfo.Pipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
-		Ref<OpenGLPipeline> pipeline = computeInfo.Pipeline;
-		Renderer::Submit([pipeline, info = computeInfo]() mutable {
+		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
+		
+		Ref<OpenGLRenderCommandBuffer> instance = this;
 
-			auto shader = pipeline->GetShader().As<OpenGLShader>();
+		Renderer::Submit([instance, info = computeInfo]() mutable {
+
+			auto shader = instance->m_CurrentPipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), true);

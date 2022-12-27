@@ -44,7 +44,6 @@ namespace Hazard
 
 		DispatchComputeInfo computeInfo = {};
 		computeInfo.GroupSize = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6};
-		computeInfo.Pipeline = computePipeline;
 		computeInfo.WaitForCompletion = true;
 
 		ImageTransitionInfo shaderLayout = {};
@@ -56,6 +55,7 @@ namespace Hazard
 		mipmapsInfo.Cubemap = radianceMap;
 
 		computeBuffer->Begin();
+		computeBuffer->BindPipeline(computePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();
@@ -94,7 +94,6 @@ namespace Hazard
 
 		DispatchComputeInfo computeInfo = {};
 		computeInfo.GroupSize = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
-		computeInfo.Pipeline = irradiancePipeline;
 		computeInfo.WaitForCompletion = true;
 
 		GenMipmapsInfo mipmapInfo = {};
@@ -104,6 +103,7 @@ namespace Hazard
 		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
 
 		computeBuffer->Begin();
+		computeBuffer->BindPipeline(irradiancePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();
