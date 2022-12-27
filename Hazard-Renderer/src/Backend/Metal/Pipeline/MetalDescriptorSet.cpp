@@ -1,5 +1,6 @@
 #include "MetalDescriptorSet.h"
 
+#ifdef HZR_INCLUDE_METAL
 #include "MetalBuffers.h"
 #include "MetalImage2D.h"
 #include "MetalCubemapTexture.h"
@@ -124,3 +125,4 @@ namespace HazardRenderer::Metal
 }
 #endif
 
+#endif

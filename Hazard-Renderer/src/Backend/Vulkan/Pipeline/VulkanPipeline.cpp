@@ -18,7 +18,8 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 
 		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
-		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
+		if(device->GetPhysicalDevice()->SupportsRaytracing())
+			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
 
 		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
 		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)

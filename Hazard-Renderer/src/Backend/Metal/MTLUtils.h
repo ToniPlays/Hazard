@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Backend/Core/Core.h"
+#ifdef HZR_INCLUDE_METAL
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Backend/Core/Pipeline/Shader.h"
 
@@ -81,3 +83,4 @@ namespace HazardRenderer::Metal
         object->setLabel(l);
     }
 }
+#endif

@@ -110,7 +110,8 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetLogicalDevice();
 
-		GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdTraceRaysKHR);
+		if(device->GetPhysicalDevice()->SupportsRaytracing())
+			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdTraceRaysKHR);
 
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
@@ -330,7 +331,7 @@ namespace HazardRenderer::Vulkan
 		beginInfo.clearValueCount = (uint32_t)clearValues.size();
 		beginInfo.pClearValues = clearValues.data();
 
-		vkCmdBeginRenderPass(m_ActiveCommandBuffer, &beginInxfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(m_ActiveCommandBuffer, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		if (explicitClear)
 		{

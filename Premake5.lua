@@ -30,7 +30,7 @@ group "Dependencies"
 	include "Hazard/vendor/GLFW"
 	include "Hazard/vendor/Box2D"
 
-	if os.platform == "Windows" then
+	if os.host() == "windows" then
 		include "Hazard/vendor/Optick"
 	end
 
@@ -44,9 +44,9 @@ include "Hazard-UI"
 include "HazardEditor"
 include "Hazard"
 
-include "HazardLauncher"
-
-if os.platform == "Windows" then
-include "HazardScripting"
+if os.host() == "windows" then
+	include "HazardScripting"
 end
+
+include "HazardLauncher"
 include "Hazard-Script"

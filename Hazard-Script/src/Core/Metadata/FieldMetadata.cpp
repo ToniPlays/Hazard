@@ -3,8 +3,6 @@
 #include "Core/AttributeBuilder.h"
 #include "Core/FieldValueStorage.h"
 
-#pragma error Me
-
 namespace HazardScript
 {
 #ifdef HZR_INCLUDE_MONO

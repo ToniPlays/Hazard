@@ -47,11 +47,10 @@ namespace HazardRenderer::Vulkan
 		std::string m_FilePath = "";
 		std::string m_DebugName = "";
 
-
 		Ref<Image2D> m_SourceImage = nullptr;
 
 		VkDescriptorImageInfo m_ImageDescriptor;
-		VkImage m_Image;
+		VkImage m_Image = VK_NULL_HANDLE;
 		VmaAllocation m_Allocation = nullptr;
 	};
 }

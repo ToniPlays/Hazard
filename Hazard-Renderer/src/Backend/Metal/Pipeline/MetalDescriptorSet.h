@@ -3,6 +3,8 @@
 #include "UtilityCore.h"
 #include "Backend/Core/Core.h"
 
+#ifdef HZR_INCLUDE_METAL
+
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -47,3 +49,4 @@ namespace HazardRenderer::Metal
         std::unordered_map<uint32_t, MetalWriteDescriptor> m_WriteDescriptors;
     };
 }
+#endif

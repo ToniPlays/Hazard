@@ -26,7 +26,7 @@
 #include "Hazard/Math/Random.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
-#include "optick.h"
+//#include "optick.h"
 #endif
 #include <chrono>
 

@@ -22,7 +22,7 @@ namespace Hazard
 			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
 			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
 		}
-		if (drawList.Environment.size() > 0 && false)
+		if (drawList.Environment.size() > 0)
 		{
 			for (auto& [map, environmentData] : drawList.Environment)
 			{

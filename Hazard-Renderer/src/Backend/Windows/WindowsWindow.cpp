@@ -75,7 +75,7 @@ namespace HazardRenderer
 			m_Context = GraphicsContext::Create(&m_WindowData);
 
 			glfwWindowHint(GLFW_DECORATED, windowInfo.HasTitlebar);
-			glfwWindowHint(GLFW_TITLEBAR, windowInfo.HasTitlebar);
+			//glfwWindowHint(GLFW_TITLEBAR, windowInfo.HasTitlebar);
 			glfwWindowHint(GLFW_RESIZABLE, windowInfo.Resizable);
 			glfwWindowHint(GLFW_MAXIMIZED, windowInfo.Maximized);
 			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -285,12 +285,13 @@ namespace HazardRenderer
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Minimized = minimized;
 			});
+		/*
 		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			WindowTitleBarHitTestEvent e(x, y, *hit);
 			data.EventCallback(e);
 			});
-
+			*/
 	}
 	WindowsWindow::~WindowsWindow()
 	{

@@ -63,6 +63,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\FontAwesome.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_glfw.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_metal.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_opengl3.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_vulkan.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
     <ClInclude Include="src\BuildSystem\BuildReport.h">
       <Filter>src\BuildSystem</Filter>
     </ClInclude>

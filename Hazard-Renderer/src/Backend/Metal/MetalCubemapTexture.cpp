@@ -1,5 +1,7 @@
 #include "MetalCubemapTexture.h"
 
+#ifdef HZR_INCLUDE_METAL
+
 #include "MTLUtils.h"
 
 namespace HazardRenderer::Metal
@@ -65,3 +67,4 @@ namespace HazardRenderer::Metal
         m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
     }
 }
+#endif

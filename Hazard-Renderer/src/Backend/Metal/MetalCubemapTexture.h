@@ -2,11 +2,11 @@
 
 #include "Backend/Core/Texture/Texture.h"
 
+#ifdef HZR_INCLUDE_METAL
+
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
-
-
 
 namespace HazardRenderer::Metal
 {
@@ -47,3 +47,4 @@ namespace HazardRenderer::Metal
         MTL::SamplerState* m_MetalSampler;
     };
 }
+#endif

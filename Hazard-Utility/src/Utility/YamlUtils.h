@@ -89,7 +89,8 @@ namespace YAML {
 }
 
 
-class YamlUtils {
+class YamlUtils 
+{
 public:
 	template<typename T>
 	static void Serialize(YAML::Emitter& out, const std::string& key, T value) {
@@ -119,47 +120,47 @@ public:
 	}
 
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, bool value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, bool value)
 	{
 		out << YAML::Key << key << YAML::Value << (value ? "True" : "False");
 	}
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, std::filesystem::path value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, std::filesystem::path value)
 	{
 		out << YAML::Key << key << YAML::Value << value.string();
 	}
 
 	//------------Vectors//------------
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, glm::vec2 value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::vec2 value)
 	{
 		out << YAML::Key << key << YAML::Value;
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
 	}
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, glm::vec3 value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::vec3 value)
 	{
 		out << YAML::Key << key << YAML::Value;
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
 	}
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, glm::vec4 value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::vec4 value)
 	{
 		out << YAML::Key << key << YAML::Value;
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.x << value.y << value.z << value.w << YAML::EndSeq;
 	}
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, Color value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, Color value)
 	{
 		out << YAML::Key << key << YAML::Value;
 		out << YAML::Flow;
 		out << YAML::BeginSeq << value.r << value.g << value.b << value.a << YAML::EndSeq;
 	}
 	template<>
-	void Serialize(YAML::Emitter& out, const std::string& key, glm::quat value)
+	static void Serialize(YAML::Emitter& out, const std::string& key, glm::quat value)
 	{
 		glm::vec3 val = glm::eulerAngles(value);
 		out << YAML::Key << key << YAML::Value;
@@ -169,18 +170,18 @@ public:
 
 
 	template<>
-	void Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) {
+	static void Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = node[key].as<std::string>() == "True";
 	}
 	template<>
 	
-    void Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
+	static void Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = Color::FromGLM(node[key].as<glm::vec4>());
 	}
 	template<>
-	void Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) {
+	static void Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) {
 		if (!node[key]) value = defaultValue;
 		else value = node[key].as<std::string>();
 	}

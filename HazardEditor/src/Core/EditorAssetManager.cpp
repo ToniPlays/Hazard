@@ -42,7 +42,7 @@ void EditorAssetManager::Init()
 	promises.reserve(texturesToLoad.size());
 	for (auto& texture : texturesToLoad)
 	{
-#if 1
+#if 0
 		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
 		auto waitPromise = promise.Then(texture.Key, [texture](JobGraph& graph) -> size_t {
 			s_Icons[texture.Key] = *graph.DependencyResult<Ref<Texture2DAsset>>();

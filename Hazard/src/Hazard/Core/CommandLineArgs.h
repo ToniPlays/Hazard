@@ -37,19 +37,19 @@ namespace Hazard
 			STATIC_ASSERT(false, C);
 		}
 		template<>
-		bool Get(const std::string& key)
+		static bool Get(const std::string& key)
 		{
 			return m_Arguments.find(key) != m_Arguments.end();
 		}
 		template<>
-		std::string Get(const std::string& key)
+		static std::string Get(const std::string& key)
 		{
 			if (m_Arguments[key].size() == 0)
 				return "";
 			return m_Arguments[key][0];
 		}
 		template<>
-		std::vector<std::string> Get(const std::string& key)
+		static std::vector<std::string> Get(const std::string& key)
 		{
 			return m_Arguments[key];
 		}

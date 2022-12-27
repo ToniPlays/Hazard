@@ -39,8 +39,9 @@ namespace HazardScript
 			m_Methods[name] = Ref<MethodMetadata>::Create(method);
 			return true;
 		}
-		return false;
+
 #endif
+		return false;
 	}
 #ifdef HZR_INCLUDE_MONO
 	bool ScriptMetadata::TryInvoke(const std::string& name, MonoObject* target, void** params)

@@ -18,6 +18,8 @@ namespace HazardScript
 #ifdef HZR_INCLUDE_MONO
 		CachedBuffer data = File::ReadBinaryFile(m_Path);
 		
+		if (!data.Available()) return false;
+
 		MonoImageOpenStatus status;
 		MonoImage* image = Mono::OpenImage((char*)data.GetData(), data.GetSize(), status);
 		HZR_ASSERT(image, "Image fail");

@@ -58,7 +58,7 @@ namespace Hazard {
 		m_ModuleHandler->Close();
         
 		HZR_PROFILE_SESSION_END();
-		OPTICK_SHUTDOWN();
+		//OPTICK_SHUTDOWN();
 		
 	}
 	bool HazardLoop::Quit(WindowCloseEvent& e)

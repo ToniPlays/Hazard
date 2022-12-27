@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "vulkan/vulkan.h"

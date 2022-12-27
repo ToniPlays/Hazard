@@ -84,9 +84,7 @@ namespace HazardRenderer::Vulkan
 			});
 
 		if (createInfo->pCubemapSrc)
-		{
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
-		}
 
 		if (m_MipLevels > 1 && createInfo->Data)
 			Renderer::SubmitResourceCreate([instance]() mutable {
