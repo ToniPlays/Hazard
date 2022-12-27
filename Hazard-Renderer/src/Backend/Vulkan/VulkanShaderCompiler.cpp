@@ -47,7 +47,7 @@ namespace HazardRenderer::Vulkan
         case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
         }
         
-        options.SetTargetSpirv(shaderc_spirv_version_1_3);
+        options.SetTargetSpirv(shaderc_spirv_version_1_4);
         options.SetOptimizationLevel((shaderc_optimization_level)compileInfo->Optimization);
         options.SetGenerateDebugInfo();
 
