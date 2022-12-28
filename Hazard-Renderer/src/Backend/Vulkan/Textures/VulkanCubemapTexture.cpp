@@ -86,10 +86,8 @@ namespace HazardRenderer::Vulkan
 		if (createInfo->pCubemapSrc)
 			GenerateFromCubemap(*createInfo->pCubemapSrc);
 
-		if (m_MipLevels > 1 && createInfo->Data)
-			Renderer::SubmitResourceCreate([instance]() mutable {
-			//instance->GenerateMipmaps_RT(VK_IMAGE_LAYOUT_GENERAL);
-				});
+		if (createInfo->Data)
+			SetImageData(createInfo->Data);
 	}
 	void VulkanCubemapTexture::Bind(uint32_t slot) const
 	{
@@ -117,6 +115,58 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance]() mutable {
 			//instance->GenerateMipmaps_RT();
 			});
+	}
+	void VulkanCubemapTexture::UploadImageData_RT()
+	{
+		auto device = VulkanContext::GetLogicalDevice();
+
+		VulkanAllocator allocator("VulkanImage2D");
+
+		VkBufferCreateInfo stagingInfo = {};
+		stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		stagingInfo.size = m_LocalBuffer.Size;
+		stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		stagingInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		VkBuffer stagingBuffer;
+		VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+
+		//Copy image data
+		uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
+		memcpy(destData, m_LocalBuffer.Data, m_LocalBuffer.Size);
+		allocator.UnmapMemory(stagingBufferAlloc);
+		m_LocalBuffer.Release();
+
+		VkImageSubresourceRange range = {};
+		range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		range.baseMipLevel = 0;
+		range.levelCount = 1;
+		range.layerCount = 6;
+
+		VkCommandBuffer commandBuffer = device->GetCommandBuffer(true);
+
+		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
+			VK_ACCESS_NONE, VK_ACCESS_TRANSFER_WRITE_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_ACCESS_HOST_READ_BIT, VK_ACCESS_TRANSFER_WRITE_BIT, range);
+
+		VkBufferImageCopy imageCopyRegion = {};
+		imageCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageCopyRegion.imageSubresource.mipLevel = 0;
+		imageCopyRegion.imageSubresource.baseArrayLayer = 0;
+		imageCopyRegion.imageSubresource.layerCount = 6;
+		imageCopyRegion.imageExtent = { m_Width, m_Height, 1 };
+		imageCopyRegion.bufferOffset = 0;
+
+		vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+
+		VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image,
+			VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
+
+		device->FlushCommandBuffer(commandBuffer);
+		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 	}
 	void VulkanCubemapTexture::CreateImageView_RT()
 	{
@@ -190,7 +240,6 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
-        //Transition to transition layout
 		for (uint32_t face = 0; face < 6; face++)
 		{
 			VkImageSubresourceRange range = {};
@@ -206,7 +255,6 @@ namespace HazardRenderer::Vulkan
 				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
 				range);
 		}
-        //Loop mips and faces
 		for (uint32_t mip = 1; mip < m_MipLevels; mip++)
 		{
 			for (uint32_t face = 0; face < 6; face++)
@@ -276,6 +324,15 @@ namespace HazardRenderer::Vulkan
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_ImageDescriptor.imageLayout,
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 			subRange);
+	}
+	void VulkanCubemapTexture::SetImageData(const Buffer& buffer)
+	{
+		m_LocalBuffer = Buffer::Copy(buffer);
+
+		Ref<VulkanCubemapTexture> instance = this;
+		Renderer::SubmitResourceCreate([instance]() mutable {
+			instance->UploadImageData_RT();
+			});
 	}
 }
 #endif

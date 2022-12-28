@@ -31,8 +31,11 @@ namespace HazardRenderer::Vulkan
 		VkImage GetVulkanImage() { return m_Image; }
 
 		void GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		void SetImageData(const Buffer& buffer);
 	private:
 		void GenerateFromCubemap(CubemapGen& generationData);
+
+		void UploadImageData_RT();
 
 		void CreateImageView_RT();
 		void CreateSampler_RT();
@@ -44,6 +47,9 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_Width = 0;
 		uint32_t m_Height = 0;
 		uint32_t m_MipLevels = 0;
+
+		Buffer m_LocalBuffer;
+
 		std::string m_FilePath = "";
 		std::string m_DebugName = "";
 
