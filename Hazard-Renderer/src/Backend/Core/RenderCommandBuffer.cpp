@@ -18,7 +18,7 @@ namespace HazardRenderer {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(count, debugName, compute);
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(count, debugName);
+            case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(count, debugName, compute);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RendererAPI");
@@ -38,7 +38,7 @@ namespace HazardRenderer {
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(debugName, true);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, true);
+        case RenderAPI::Metal:  return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, true);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RendererAPI");

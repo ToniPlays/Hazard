@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
 		HazardLoop loop(app);
 		loop.Start();
 
-		while (!loop.ShouldClose()) {
+		while (!loop.ShouldClose())
+        {
 			loop.Run();
 		}
 	}

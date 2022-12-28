@@ -141,6 +141,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		case DepthOp::NotEqual:				return VK_COMPARE_OP_NOT_EQUAL;
 		case DepthOp::Less:					return VK_COMPARE_OP_LESS;
 		case DepthOp::LessOrEqual:			return VK_COMPARE_OP_LESS_OR_EQUAL;
+        case DepthOp::Equal:                return VK_COMPARE_OP_EQUAL;
 		case DepthOp::Greater:				return VK_COMPARE_OP_GREATER;
 		case DepthOp::GreaterOrEqual:		return VK_COMPARE_OP_GREATER_OR_EQUAL;
 		case DepthOp::Always:				return VK_COMPARE_OP_ALWAYS;

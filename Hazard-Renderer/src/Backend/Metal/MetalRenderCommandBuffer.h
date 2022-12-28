@@ -57,6 +57,7 @@ namespace HazardRenderer::Metal
         std::string m_DebugName;
         bool m_OwnedBySwapchain = false;
         bool m_IsCompute = false;
+        bool m_WaitOnSubmit = false;
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
         State m_State = State::Waiting;
         

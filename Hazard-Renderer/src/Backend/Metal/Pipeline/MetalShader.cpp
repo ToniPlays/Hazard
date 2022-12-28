@@ -38,16 +38,18 @@ namespace HazardRenderer::Metal
                 break;
             }
             
+            
             NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
+            options->setFastMathEnabled(true);
             
             MTL::Library* lib = device->GetMetalDevice()->newLibrary(source, options, &libError);
             
             NS::Error* functionError;
             std::string shaderTypeName = "main0";
             NS::String* name = NS::String::string()->string(shaderTypeName.c_str(), NS::UTF8StringEncoding);
+            
             MTL::FunctionDescriptor* descriptor = MTL::FunctionDescriptor::functionDescriptor();
-                        
             descriptor->setName(name);
             
             m_Functions[stage] = lib->newFunction(descriptor, &functionError);
@@ -73,8 +75,7 @@ namespace HazardRenderer::Metal
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
             auto* write = descriptor.GetWriteDescriptor(name);
-            if (!write)
-                continue;
+            if (!write) continue;
 
             write->BoundValue[index] = cubemap;
             return;
@@ -82,11 +83,11 @@ namespace HazardRenderer::Metal
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<AccelerationStructure> accelerationStructure)
     {
-        
+        HZR_ASSERT(false, "TODO");
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<BufferBase> buffer)
     {
-        
+        HZR_ASSERT(false, "TODO");
     }
     void MetalShader::BindResources(MTL::RenderCommandEncoder* encoder)
     {

@@ -76,6 +76,23 @@ namespace HazardRenderer::Metal
         HZR_ASSERT(false, "");
         return MTL::PixelFormatInvalid;
     }
+    MTL::CompareFunction DepthOpToMTLDepthOp(const DepthOp& op)
+    {
+        switch (op)
+        {
+        case DepthOp::None:                 return MTL::CompareFunctionNever;
+        case DepthOp::Never:                return MTL::CompareFunctionNever;
+        case DepthOp::NotEqual:             return MTL::CompareFunctionNotEqual;
+        case DepthOp::Less:                 return MTL::CompareFunctionLess;
+        case DepthOp::LessOrEqual:          return MTL::CompareFunctionLessEqual;
+        case DepthOp::Equal:          return MTL::CompareFunctionEqual;
+        case DepthOp::Greater:              return MTL::CompareFunctionGreater;
+        case DepthOp::GreaterOrEqual:       return MTL::CompareFunctionGreaterEqual;
+        case DepthOp::Always:               return MTL::CompareFunctionAlways;
+        }
+        return MTL::CompareFunctionNever;
+    }
+
     template<typename T>
     void SetDebugLabel(T* object, const std::string& label)
     {

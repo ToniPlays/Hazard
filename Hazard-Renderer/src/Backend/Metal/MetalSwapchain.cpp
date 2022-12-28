@@ -35,8 +35,8 @@ namespace HazardRenderer::Metal {
             FrameBufferCreateInfo frameBufferInfo = {};
             frameBufferInfo.DebugName = "ScreenFBO";
             frameBufferInfo.SwapChainTarget = true;
-            frameBufferInfo.AttachmentCount = 2;
-            frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+            frameBufferInfo.AttachmentCount = 1;
+            frameBufferInfo.Attachments = { { ImageFormat::RGBA } };
 
             m_DefaultFramebuffer = FrameBuffer::Create(&frameBufferInfo);
 

@@ -19,8 +19,8 @@ namespace HazardRenderer::OpenGL
 			FrameBufferCreateInfo frameBufferInfo = {};
 			frameBufferInfo.DebugName = "ScreenFBO";
 			frameBufferInfo.SwapChainTarget = true;
-			frameBufferInfo.AttachmentCount = 2;
-			frameBufferInfo.Attachments = { { ImageFormat::RGBA }, { ImageFormat::Depth } };
+			frameBufferInfo.AttachmentCount = 1;
+			frameBufferInfo.Attachments = { { ImageFormat::RGBA } };
 
 			m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
 

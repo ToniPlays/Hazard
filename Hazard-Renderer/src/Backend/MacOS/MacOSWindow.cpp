@@ -294,7 +294,7 @@ namespace HazardRenderer
     }
     MacOSWindow::~MacOSWindow()
     {
-
+        
     }
     void MacOSWindow::Show() const
     {

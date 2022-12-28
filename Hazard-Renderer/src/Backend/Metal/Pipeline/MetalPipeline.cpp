@@ -167,7 +167,8 @@ namespace HazardRenderer::Metal
         {
             MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
             depth->setDepthWriteEnabled(m_Specs.DepthWrite);
-            depth->setDepthCompareFunction(MTL::CompareFunctionLess);
+            SetDebugLabel(depth, m_Specs.DebugName + " DepthState");
+            depth->setDepthCompareFunction(DepthOpToMTLDepthOp(m_Specs.DepthOperator));
             
             m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
         }
@@ -175,6 +176,16 @@ namespace HazardRenderer::Metal
 
     void MetalPipeline::InvalidateComputePipeline()
     {
+        auto device = MetalContext::GetMetalDevice();
+        
+        m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
+        SetDebugLabel(m_ComputeDescriptor, m_Specs.DebugName);
+        
+        m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
+        
+        NS::Error* error;
+        
+        m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(ShaderStage::Compute), &error);
         
     }
     void MetalPipeline::BindGraphics(MTL::RenderCommandEncoder* encoder)

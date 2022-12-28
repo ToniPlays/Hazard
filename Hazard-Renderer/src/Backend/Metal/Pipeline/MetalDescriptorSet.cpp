@@ -77,7 +77,46 @@ namespace HazardRenderer::Metal
     }
     void MetalDescriptorSet::BindComputeResources(MTL::ComputeCommandEncoder *encoder)
     {
-        
+        HZR_PROFILE_FUNCTION();
+        for (auto& [binding, descriptor] : m_WriteDescriptors)
+        {
+            switch (descriptor.Type)
+            {
+            case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+            {
+                
+            }
+            case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+            case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+                if(descriptor.Dimension == 3)
+                {
+                    for (auto& [index, value] : descriptor.BoundValue)
+                    {
+                        if(index >= 16) break; //TODO: what this
+                        
+                        auto texture = value.As<MetalCubemapTexture>();
+                        HZR_ASSERT(texture->GetMetalTexture(), "Texture is nullptr");
+                        encoder->setTexture(texture->GetMetalTexture(), descriptor.Binding + index);
+                        encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
+                        
+                        std::cout << "Sampler " << descriptor.DebugName << " at " << (descriptor.Binding + index) << std::endl;
+                    }
+                }
+                else
+                {
+                    for (auto& [index, value] : descriptor.BoundValue)
+                    {
+                        if(index >= 16) break; //TODO: what this
+                        
+                        auto texture = value.As<MetalImage2D>();
+                        encoder->setTexture(texture->GetMetalTexture(), descriptor.Binding + index);
+                        encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
+                    }
+                }
+                break;
+                default: break;
+            }
+        }
     }
 
     void MetalDescriptorSet::UpdateBindings(const std::unordered_map<std::string, uint32_t> bindings)
@@ -88,8 +127,6 @@ namespace HazardRenderer::Metal
             if(!writeDescriptor) continue;
             
             writeDescriptor->ActualBinding = binding;
-            
-            std::cout << name << " -> " << binding << std::endl;
         }
     }
 }

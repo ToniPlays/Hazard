@@ -124,13 +124,14 @@ namespace Hazard
 				blackCubemap.Usage = ImageUsage::Texture;
 				blackCubemap.Width = 1;
 				blackCubemap.Height = 1;
-				blackCubemap.Format = ImageFormat::RGBA16F;
+				blackCubemap.Format = ImageFormat::RGBA;
 				blackCubemap.GenerateMips = false;
 
 				BlackCubemap = CubemapTexture::Create(&blackCubemap);
 
-				uint32_t whiteData = 0xFFFFFF;
-				Buffer data = Buffer(&whiteData, sizeof(uint32_t));
+                Buffer data;
+                data.Allocate(6 * sizeof(uint32_t));
+                data.Initialize(0xFF);
 
 				CubemapTextureCreateInfo whiteCubemap = {};
 				whiteCubemap.DebugName = "WhiteCubemap";
@@ -138,7 +139,7 @@ namespace Hazard
 				whiteCubemap.Width = 1;
 				whiteCubemap.Height = 1;
 				whiteCubemap.Data = data;
-				whiteCubemap.Format = ImageFormat::RGBA16F;
+				whiteCubemap.Format = ImageFormat::RGBA;
 
 				WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 			}

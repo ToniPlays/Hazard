@@ -29,6 +29,9 @@ namespace HazardRenderer::Metal
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
         MTL::SamplerState* GetMetalSamplerState() const { return m_MetalSampler; }
         
+        void SetImageData(const Buffer& data);
+        void UploadImageData_RT();
+        
     private:
         void CreateSampler();
         void GenerateFromCubemap(CubemapGen& generationData) {};
@@ -37,14 +40,17 @@ namespace HazardRenderer::Metal
         ImageFormat m_Format = ImageFormat::None;
         uint32_t m_Width = 0;
         uint32_t m_Height = 0;
+        ImageUsage m_Usage;
+        
+        Buffer m_LocalBuffer;
         
         std::string m_FilePath = "";
         std::string m_DebugName = "";
         
         Ref<Image2D> m_SourceImage = nullptr;
         
-        MTL::Texture* m_MetalTexture;
-        MTL::SamplerState* m_MetalSampler;
+        MTL::Texture* m_MetalTexture = nullptr;
+        MTL::SamplerState* m_MetalSampler = nullptr;
     };
 }
 #endif

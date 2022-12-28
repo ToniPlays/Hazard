@@ -18,6 +18,7 @@ namespace HazardRenderer::Metal
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t count, const std::string& name, bool compute)
     {
         m_IsCompute = compute;
+        m_OwnedBySwapchain = false;
     }
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain)
     {
@@ -53,7 +54,14 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::Submit()
     {
         if(m_OwnedBySwapchain) return;
-        m_CommandBuffer->commit();
+        
+        Ref<MetalRenderCommandBuffer> instance = this;
+        
+        Renderer::Submit([instance, wait = m_WaitOnSubmit]() mutable {
+            instance->m_CommandBuffer->commit();
+            if(wait)
+                instance->m_CommandBuffer->waitUntilCompleted();
+        });
     }
 
     void MetalRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
@@ -207,8 +215,9 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
     {
+        m_WaitOnSubmit = computeInfo.WaitForCompletion;
         Ref<MetalRenderCommandBuffer> instance = this;
-        Renderer::Submit([instance, pipeline, size = computeInfo.GroupSize]() mutable {
+        Renderer::Submit([instance, size = computeInfo.GroupSize]() mutable {
         
             MTL::Size localGroup = { 32, 32, 1 };
             MTL::Size groupSize = {
@@ -216,7 +225,7 @@ namespace HazardRenderer::Metal
                 static_cast<NS::UInteger>(size.y),
                 static_cast<NS::UInteger>(size.z)
             };
-            instance->m_ComputeEncoder->dispatchThreadgroups(localGroup, groupSize);
+            instance->m_ComputeEncoder->dispatchThreadgroups(groupSize, localGroup);
         });
     }
 }
