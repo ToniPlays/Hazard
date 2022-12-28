@@ -24,6 +24,9 @@ namespace HazardRenderer::Metal
             m_Width = createInfo->Width;
             m_Height = createInfo->Height;
         }
+        
+        m_MipLevels = createInfo->GenerateMips ? GetMipLevelCount(m_Width, m_Height) : 1;
+        
         Ref<MetalCubemapTexture> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {
             auto device = MetalContext::GetMetalDevice();
@@ -40,7 +43,7 @@ namespace HazardRenderer::Metal
             descriptor->setHeight(instance->m_Height);
             descriptor->setDepth(1);
             descriptor->setArrayLength(1);
-            descriptor->setMipmapLevelCount(1);
+            descriptor->setMipmapLevelCount(instance->m_MipLevels);
             descriptor->setPixelFormat(ImageFormatToMTLFormat(instance->m_Format));
             descriptor->setSwizzle(channels);
             
@@ -57,8 +60,6 @@ namespace HazardRenderer::Metal
             SetDebugLabel(instance->m_MetalTexture, instance->m_DebugName);
             
             instance->CreateSampler();
-            
-            printf("Cubemap done\n");
         });
         
         if(createInfo->Data)
@@ -82,6 +83,13 @@ namespace HazardRenderer::Metal
             m_MetalTexture->replaceRegion(region, 0, i, m_LocalBuffer.Data, 4 * m_Width, 0);
         
         m_LocalBuffer.Release();
+    }
+
+    void MetalCubemapTexture::GenerateMipmaps_RT(MTL::CommandBuffer* commandBuffer)
+    {
+        auto blitEncoder = commandBuffer->blitCommandEncoder();
+        blitEncoder->generateMipmaps(m_MetalTexture);
+        blitEncoder->endEncoding();
     }
     
     void MetalCubemapTexture::CreateSampler()

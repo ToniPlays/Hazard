@@ -12,6 +12,7 @@
 #include "MetalFrameBuffer.h"
 #include "MetalPipeline.h"
 #include "MetalBuffers.h"
+#include "MetalCubemapTexture.h"
 
 namespace HazardRenderer::Metal
 {
@@ -227,6 +228,19 @@ namespace HazardRenderer::Metal
             };
             instance->m_ComputeEncoder->dispatchThreadgroups(groupSize, localGroup);
         });
+    }
+    void MetalRenderCommandBuffer::GenerateMipmaps(const GenMipmapsInfo &info)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Renderer::Submit([instance, mips = info]() mutable {
+
+            if (mips.Cubemap)
+                mips.Cubemap.As<MetalCubemapTexture>()->GenerateMipmaps_RT(instance->m_CommandBuffer);
+            });
+    }
+    void MetalRenderCommandBuffer::SetLineSize(float size)
+    {
+        HZR_ASSERT(false, "Not implemented");
     }
 }
 #endif

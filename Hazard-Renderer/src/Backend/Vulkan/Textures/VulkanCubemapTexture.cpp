@@ -190,6 +190,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		const auto device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
 
+        //Transition to transition layout
 		for (uint32_t face = 0; face < 6; face++)
 		{
 			VkImageSubresourceRange range = {};
@@ -205,6 +206,7 @@ namespace HazardRenderer::Vulkan
 				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
 				range);
 		}
+        //Loop mips and faces
 		for (uint32_t mip = 1; mip < m_MipLevels; mip++)
 		{
 			for (uint32_t face = 0; face < 6; face++)

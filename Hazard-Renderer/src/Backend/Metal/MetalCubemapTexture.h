@@ -20,7 +20,7 @@ namespace HazardRenderer::Metal
         uint32_t GetWidth() const override { return m_Width; };
         uint32_t GetHeight() const override { return m_Height; }
         glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
-        uint32_t GetMipLevels() const override { return 1; }
+        uint32_t GetMipLevels() const override { return m_MipLevels; }
         const std::string& GetPath() const override { return m_FilePath; };
         
         Ref<Image2D> GetSourceImage() override { return m_SourceImage; }
@@ -32,6 +32,8 @@ namespace HazardRenderer::Metal
         void SetImageData(const Buffer& data);
         void UploadImageData_RT();
         
+        void GenerateMipmaps_RT(MTL::CommandBuffer* commandBuffer);
+        
     private:
         void CreateSampler();
         void GenerateFromCubemap(CubemapGen& generationData) {};
@@ -40,6 +42,7 @@ namespace HazardRenderer::Metal
         ImageFormat m_Format = ImageFormat::None;
         uint32_t m_Width = 0;
         uint32_t m_Height = 0;
+        uint32_t m_MipLevels = 1;
         ImageUsage m_Usage;
         
         Buffer m_LocalBuffer;

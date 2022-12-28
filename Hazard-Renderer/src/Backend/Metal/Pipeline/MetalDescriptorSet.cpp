@@ -98,8 +98,6 @@ namespace HazardRenderer::Metal
                         HZR_ASSERT(texture->GetMetalTexture(), "Texture is nullptr");
                         encoder->setTexture(texture->GetMetalTexture(), descriptor.Binding + index);
                         encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
-                        
-                        std::cout << "Sampler " << descriptor.DebugName << " at " << (descriptor.Binding + index) << std::endl;
                     }
                 }
                 else

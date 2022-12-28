@@ -37,15 +37,26 @@ namespace HazardRenderer::Metal
         void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
-        void TraceRays(const TraceRaysInfo& traceRaysInfo) override {};
-        void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override {};
+        void TraceRays(const TraceRaysInfo& traceRaysInfo) override
+        {
+            HZR_ASSERT(false, "Not implemented")
+        };
+        void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override {
+            HZR_ASSERT(false, "Not implemented")
+        };
 
-        void InsertMemoryBarrier(const MemoryBarrierInfo& info) override {};
-        void TransitionImageLayout(const ImageTransitionInfo& info) override {};
-        void GenerateMipmaps(const GenMipmapsInfo& info) override {};
+        void InsertMemoryBarrier(const MemoryBarrierInfo& info) override {
+            HZR_ASSERT(false, "Not implemented")
+        };
+        void TransitionImageLayout(const ImageTransitionInfo& info) override {
+            HZR_ASSERT(false, "Not implemented")
+        };
+        void GenerateMipmaps(const GenMipmapsInfo& info) override;
 
-        void SetViewport(float x, float y, float width, float height) override {};
-        void SetLineSize(float size) override {};
+        void SetViewport(float x, float y, float width, float height) override {
+            HZR_ASSERT(false, "Not implemented")
+        };
+        void SetLineSize(float size) override;
         
         //Metal specific
         MTL::CommandBuffer* GetMetalCommandBuffer() const { return m_CommandBuffer; }
