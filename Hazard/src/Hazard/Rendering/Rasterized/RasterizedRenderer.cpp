@@ -47,7 +47,7 @@ namespace Hazard
 		}
 		else
 		{
-			data.SkyLightIntensity = 0.0f;
+			data.SkyLightIntensity = 1.0f;
 			data.EnvironmentLod = 0.0f;
 
 			auto shader = resources.PbrPipeline->GetShader();
