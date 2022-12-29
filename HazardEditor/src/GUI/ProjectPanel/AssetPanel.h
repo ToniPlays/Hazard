@@ -6,6 +6,11 @@
 
 namespace UI {
 
+    enum AssetPanelFlags : uint32_t
+    {
+        AssetPanelFlags_SettingsOpen = BIT(0)
+    };
+
 	struct FolderStructureData 
 	{
 		std::filesystem::path Path;
@@ -37,6 +42,7 @@ namespace UI {
 
 	private:
 		void DrawToolbar();
+        void DrawSettings();
 		void DrawFolderTreeView();
 		void DrawContents();
 		void DrawContextMenu();
@@ -55,5 +61,8 @@ namespace UI {
 		std::vector<AssetPanelItem> m_CurrentItems;
 
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
+        
+        float m_Scale = 100.0f;
+        uint32_t m_Flags = 0;
 	};
 }

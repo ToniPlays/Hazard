@@ -11,12 +11,12 @@ namespace HazardRenderer::Metal
     {
         switch (type)
         {
-        case ShaderStage::Vertex:        return shaderc_glsl_vertex_shader;
-        case ShaderStage::Fragment:        return shaderc_glsl_fragment_shader;
-        case ShaderStage::Compute:        return shaderc_glsl_compute_shader;
-        case ShaderStage::Geometry:        return shaderc_glsl_geometry_shader;
-        case ShaderStage::Raygen:        return shaderc_raygen_shader;
-        case ShaderStage::Miss:            return shaderc_miss_shader;
+        case ShaderStage::Vertex:       return shaderc_vertex_shader;
+        case ShaderStage::Fragment:     return shaderc_fragment_shader;
+        case ShaderStage::Compute:      return shaderc_compute_shader;
+        case ShaderStage::Geometry:     return shaderc_geometry_shader;
+        case ShaderStage::Raygen:       return shaderc_raygen_shader;
+        case ShaderStage::Miss:         return shaderc_miss_shader;
         case ShaderStage::ClosestHit:   return shaderc_closesthit_shader;
         case ShaderStage::AnyHit:       return shaderc_anyhit_shader;
         case ShaderStage::None:         return (shaderc_shader_kind)0;
@@ -40,13 +40,16 @@ namespace HazardRenderer::Metal
 
         switch (compileInfo->Renderer)
         {
-        case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
+        case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3); break;
         default: break;
         }
         
         options.SetTargetSpirv(shaderc_spirv_version_1_4);
+        options.SetSourceLanguage(shaderc_source_language_glsl);
+        options.SetOptimizationLevel(shaderc_optimization_level_zero);
         options.SetOptimizationLevel((shaderc_optimization_level)compileInfo->Optimization);
         options.SetGenerateDebugInfo();
+        
 
         for (uint32_t i = 0; i < compileInfo->DefineCount; i++)
         {
@@ -69,27 +72,32 @@ namespace HazardRenderer::Metal
         m_CompilationTime = timer.ElapsedMillis();
         return succeeded;
     }
-    bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result)
+    bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result, bool tesellation)
     {
         HZR_PROFILE_FUNCTION();
         
         m_ErrorMessage.clear();
         
         spirv_cross::CompilerMSL::Options options;
-        options.set_msl_version(2);
+        options.set_msl_version(3, 0, 0);
         options.enable_decoration_binding = true;
+        options.vertex_for_tessellation = tesellation;
+        options.texture_buffer_native = true;
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
+        
         compiler.set_msl_options(options);
         result = compiler.compile();
     
         return !result.empty();
     }
-    std::unordered_map<std::string, uint32_t> MetalShaderCompiler::GetMSLBindings(Buffer binary)
+    std::unordered_map<std::string, uint32_t> MetalShaderCompiler::GetMSLBindings(Buffer binary, bool tesellation)
     {
         spirv_cross::CompilerMSL::Options options;
-        options.set_msl_version(2);
+        options.set_msl_version(2, 4);
         options.enable_decoration_binding = true;
+        options.vertex_for_tessellation = tesellation;
+        options.texture_buffer_native = true;
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         

@@ -5,11 +5,13 @@
 #ifdef HZR_INCLUDE_METAL
 #include "MetalContext.h"
 #include "MetalRenderCommandBuffer.h"
+#include "MetalFrameBuffer.h"
 #include "Pipeline/MetalPipeline.h"
 #include "Pipeline/MetalShader.h"
-#include "MetalFrameBuffer.h"
+
 #include "Pipeline/MetalRenderPass.h"
 #include "Pipeline/MetalBuffers.h"
-#include "MetalCubemapTexture.h"
+
+#include "Texture/MetalCubemapTexture.h"
 
 #endif

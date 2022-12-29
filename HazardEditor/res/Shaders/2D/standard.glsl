@@ -29,7 +29,6 @@ layout(location = 0) out vec4 color;
 
 void main() 
 {
-    /*
 	int index = int(TextureIndex);
 	
 	vec4 textureColor = vec4(1.0);
@@ -69,7 +68,4 @@ void main()
 		case 31: 	 textureColor = texture(u_Textures[31], TextureCoords);  break;
 	}
 	color = textureColor * Color;
-     
-    */
-    color = Color;
 }

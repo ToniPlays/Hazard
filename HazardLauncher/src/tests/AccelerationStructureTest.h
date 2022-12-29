@@ -213,7 +213,7 @@ namespace AccelerationStructureTest
 			rayInfo.pBindingTable = bindingTable;
 
 			commandBuffer->BindPipeline(raygenPipeline);
-			commandBuffer->TraceRays(rayInfo);
+			//commandBuffer->TraceRays(rayInfo);
 
 			ImageTransitionInfo imageInfo = {};
 			imageInfo.Image = image;

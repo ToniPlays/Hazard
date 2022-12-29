@@ -12,8 +12,8 @@ namespace HazardRenderer::Metal
         ~MetalShaderCompiler();
 
         bool Compile(CompileInfo* compileInfo);
-        bool Decompile(Buffer binary, std::string& result);
-        std::unordered_map<std::string, uint32_t> GetMSLBindings(Buffer binary);
+        bool Decompile(Buffer binary, std::string& result, bool tesellation = false);
+        std::unordered_map<std::string, uint32_t> GetMSLBindings(Buffer binary, bool tesellation = false);
 
         double GetCompileTime() { return m_CompilationTime; }
         std::string GetErrorMessage() { return m_ErrorMessage; }

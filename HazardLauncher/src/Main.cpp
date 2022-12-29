@@ -17,6 +17,6 @@ int main(int argc, char** argv)
 	std::cin >> api;
 	RenderAPI renderAPI = (RenderAPI)api;
 
-	UniformBufferTest::Run(renderAPI);
+	AccelerationStructureTest::Run(renderAPI);
     return 0;
 }

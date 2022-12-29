@@ -6,6 +6,8 @@
 #include "MetalContext.h"
 #include "Renderer.h"
 
+#include "Window.h"
+
 namespace HazardRenderer::Metal
 {
     MetalShader::MetalShader(const std::vector<ShaderStageCode>& shaderCode)
@@ -31,28 +33,55 @@ namespace HazardRenderer::Metal
             NS::Error* libError;
             std::string result;
             
-            if(!compiler.Decompile(spirv, result))
+            if(!compiler.Decompile(spirv, result, stage == ShaderStage::Raygen))
             {
                 std::cout << result << std::endl;
                 std::cout << compiler.GetErrorMessage() << std::endl;
                 break;
             }
             
-            
             NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             options->setFastMathEnabled(true);
+            options->setLanguageVersion(MTL::LanguageVersion2_4);
+            
             
             MTL::Library* lib = device->GetMetalDevice()->newLibrary(source, options, &libError);
             
-            NS::Error* functionError;
+            
+            if(libError->code() != 0)
+            {
+                RenderMessage message = {};
+                message.Severity = Severity::Error;
+                message.Description = libError->description()->utf8String();
+                message.StackTrace = result;
+                
+                Window::SendDebugMessage(message);
+                continue;
+            }
+            
+            NS::Error* functionError = NS::Error::alloc();
             std::string shaderTypeName = "main0";
             NS::String* name = NS::String::string()->string(shaderTypeName.c_str(), NS::UTF8StringEncoding);
             
             MTL::FunctionDescriptor* descriptor = MTL::FunctionDescriptor::functionDescriptor();
             descriptor->setName(name);
             
-            m_Functions[stage] = lib->newFunction(descriptor, &functionError);
+            auto func = lib->newFunction(descriptor, &functionError);
+            
+            
+            if(functionError->code() != 0)
+            {
+                RenderMessage message = {};
+                message.Severity = Severity::Error;
+                message.Description = functionError->description()->utf8String();
+                message.StackTrace = functionError->localizedFailureReason()->utf8String();
+                
+                Window::SendDebugMessage(message);
+                continue;
+            }
+            
+            m_Functions[stage] = func;
         }
         
         Reflect();
@@ -83,7 +112,14 @@ namespace HazardRenderer::Metal
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<AccelerationStructure> accelerationStructure)
     {
-        HZR_ASSERT(false, "TODO");
+        for (auto& [set, descriptor] : m_DescriptorSet)
+        {
+            auto* write = descriptor.GetWriteDescriptor(name);
+            if (!write) continue;
+
+            write->BoundValue[index] = accelerationStructure;
+            return;
+        }
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<BufferBase> buffer)
     {

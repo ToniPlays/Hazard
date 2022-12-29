@@ -48,8 +48,6 @@ namespace HazardRenderer::Vulkan
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
 			});
-
-		//Invalidate();
 	}
 	void VulkanTopLevelAS::PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure)
 	{

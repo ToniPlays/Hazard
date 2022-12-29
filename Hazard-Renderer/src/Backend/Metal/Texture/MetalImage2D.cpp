@@ -83,7 +83,7 @@ namespace HazardRenderer::Metal
         if(m_Usage == ImageUsage::Texture)
             descriptor->setUsage(MTL::TextureUsageShaderRead);
         else if(m_Usage == ImageUsage::Storage)
-            descriptor->setUsage(MTL::TextureUsageShaderWrite);
+            descriptor->setUsage(MTL::TextureUsageShaderWrite + MTL::TextureUsageShaderRead);
         else
             descriptor->setUsage(MTL::TextureUsageRenderTarget + MTL::TextureUsageShaderRead);
         

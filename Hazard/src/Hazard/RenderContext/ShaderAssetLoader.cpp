@@ -114,14 +114,14 @@ namespace Hazard
 
 				auto binaries = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, (RenderAPI)api);
 				size_t assetSize = ShaderCompiler::GetBinaryLength(binaries);
-				CachedBuffer dataBuffer(sizeof(AssetPackElement) + assetSize);
+				CachedBuffer dataBuffer(/*sizeof(AssetPackElement) + */assetSize);
 
 				AssetPackElement element = {};
 				element.Type = (uint32_t)AssetType::Shader;
 				element.Handle = metadata.Handle;
 				element.AssetDataSize = assetSize;
 
-				dataBuffer.Write(element);
+				//dataBuffer.Write(element);
 
 				for (auto& [shaderStage, binary] : binaries)
 				{

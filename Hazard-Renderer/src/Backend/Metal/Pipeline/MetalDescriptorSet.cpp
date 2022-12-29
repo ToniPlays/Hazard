@@ -4,6 +4,7 @@
 #include "MetalBuffers.h"
 #include "MetalImage2D.h"
 #include "MetalCubemapTexture.h"
+#include "MetalTopLevelAS.h"
 
 #include "MetalShader.h"
 
@@ -84,7 +85,10 @@ namespace HazardRenderer::Metal
             {
             case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
             {
-                
+                auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                encoder->setBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+               
+                break;
             }
             case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
             case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
@@ -112,6 +116,15 @@ namespace HazardRenderer::Metal
                     }
                 }
                 break;
+                case MTL_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE:
+                {
+                    for (auto& [index, value] : descriptor.BoundValue)
+                    {
+                        auto structure = value.As<MetalTopLevelAS>();
+                        encoder->setAccelerationStructure(structure->GetMetalStructure(), descriptor.Binding + index);
+        
+                    }
+                }
                 default: break;
             }
         }

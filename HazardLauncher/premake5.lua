@@ -12,7 +12,7 @@ project "HazardLauncher"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"%{wks.location}/Hazard/vendor/vendor/ImGui_Backend/**.h",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.h",
 		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
@@ -29,9 +29,10 @@ project "HazardLauncher"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.VulkanSDK}",
         	"%{IncludeDir.Metal}",
+		"%{IncludeDir.shaderc}",
+		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",
@@ -42,31 +43,38 @@ project "HazardLauncher"
 		"%{IncludeDir.Optick}",
 		"src"
 	}
-	links {
+
+	links
+	{
 		"ImGui",
 		"Hazard",
+		"Hazard-Script",
 		"GLFW",
 		"Glad",
 		"Box2D",
-		"yaml-cpp",
-		"Optick"
+		"yaml-cpp"
 	}
-	defines {
-		"GLFW_INCLUDE_NONE"
+
+	postbuildcommands 
+	{
+		"{COPYDIR} \"%{wks.location}/HazardEditor/res\" \"%{cfg.targetdir}/res\""
 	}
+
 
 	filter "system:windows"
 		systemversion "latest"
 		defines {
+			"_CRT_SECURE_NO_WARNINGS",
 			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_MONO"
 		}
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
+			"Hazard-Script",
+			"Optick",
 			"%{Library.Mono_Debug_Lib}",
 			"%{Library.Assimp_Lib}",
-			"Hazard-Script"
 		}
 		includedirs {
 
@@ -81,19 +89,24 @@ project "HazardLauncher"
 		}
 
 	filter "system:macosx"
-		defines {
+		defines 
+		{
 			"HZR_PLATFORM_MACOS",
 		}
-		links {
+		links 
+		{
 			"IOKit.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
 			"MetalKit.framework"
 		}
-        	files {
-               		"src/**.m",
-                	"src/**.mm"
+        	files 
+		{
+                	"src/**.m",
+                	"src/**.mm",
+			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
+			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
 
 	filter "configurations:Debug"

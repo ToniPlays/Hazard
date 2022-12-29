@@ -28,9 +28,12 @@ namespace UI
 			DrawFolderTreeView();
 			ImGui::NextColumn();
 		}
-		DrawContents();
-
+        DrawContents();
 		ImGui::Columns();
+        
+        
+        //if(m_Flags & AssetPanelFlags_SettingsOpen)
+        //    DrawSettings();
 	}
 	bool AssetPanel::OnEvent(Event& e)
 	{
@@ -93,13 +96,28 @@ namespace UI
 
 
 		ImGui::SameLine(size.x - 80, 0);
-		if (ImGui::Button((const char*)ICON_FK_COG " Settings", { 75.0, 28.0f })) {
-
+		if (ImGui::Button((const char*)ICON_FK_COG " Settings", { 75.0, 28.0f }))
+        {
+            m_Flags |= AssetPanelFlags_SettingsOpen;
 		}
-
 		ImGui::EndChild();
 		ImUI::Separator({ size.x, 2.0f }, style.Frame.FrameColor);
 	}
+    void AssetPanel::DrawSettings()
+    {
+        ImGui::SetCursorPosX(12);
+        ImGui::BeginChild("##settingsView", { 200, 160 }, false);
+
+        ImGui::Dummy({ 0, 3 });
+
+        ImGui::Columns(2, 0, false);
+        ImGui::SetColumnWidth(0, 160);
+        ImGui::SetColumnWidth(0, 100);
+        ImGui::Text("Some text");
+        ImGui::Columns();
+        ImGui::EndChild();
+    }
+
 	void AssetPanel::DrawFolderTreeView()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -131,12 +149,12 @@ namespace UI
 	void AssetPanel::DrawContents()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr float thumbailSize = 150.0f;
+		float thumbailSize = m_Scale;
 		const float paddingForOutline = 2.0f;
 		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		float panelWidth = size.x - scrollBarrOffset;
-		float cellSize = 150.0f + 2.0f + paddingForOutline;
+		float cellSize = thumbailSize + 2.0f + paddingForOutline;
 		int columnCount = (int)(panelWidth / cellSize);
 		if (columnCount < 1) columnCount = 1;
 
@@ -162,6 +180,16 @@ namespace UI
 		ImGui::BeginChild("Info", { size.x, 28.0f });
         ImUI::Shift(4.0f,  (28.0f - ImGui::GetTextLineHeight()) * 0.5f );
 		ImGui::Text("Items: %zu", m_CurrentItems.size());
+        
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(100);
+        
+        {
+            ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2 { 2.0f, 2.0 });
+            float width = ImGui::GetContentRegionAvail().x;
+            ImUI::Shift(width - 100, -4.0f);
+            ImGui::SliderFloat("##scale", &m_Scale, 80, 150);
+        }
 
 		ImGui::EndChild();
 	}
@@ -188,7 +216,7 @@ namespace UI
 				panel->Open();
 				});
 			ImUI::MenuItem("World", [&]() {
-				EditorAssetManager::CreateWorld(GetOpenDirectory() / "world.hazard");
+				//EditorAssetManager::CreateWorld(GetOpenDirectory() / "world.hazard");
 				changed = true;
 				});
 			ImUI::MenuItem("Material", [&]() {

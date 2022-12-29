@@ -19,7 +19,7 @@ namespace HazardRenderer
 		std::string StackTrace;
 	};
 
-	using RendererMessageCallback = void(*)(RenderMessage);
+	using RendererMessageCallback = std::function<void(const RenderMessage&)>;
 	using EventCallback = std::function<void(Event&)>;
 
 	enum class RenderAPI : uint32_t
@@ -33,7 +33,7 @@ namespace HazardRenderer
 		WebGL,
 
 		First = OpenGL,
-		Last = Vulkan
+		Last = Metal
 	};
 
 	std::string RenderAPIToString(RenderAPI api);

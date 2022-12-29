@@ -20,7 +20,10 @@ namespace HazardRenderer::Metal {
         const PhysicalDeviceLimits& GetDeviceLimits() const { return m_Limits; };
         const PhysicalDeviceCapabilities& GetDeviceCababilities() const { return m_Capabilities; };
 
-        bool SupportsRaytracing() const { return false; };
+        bool SupportsRaytracing() const
+        {
+            return m_Capabilities.AccelerationStructures && m_Capabilities.RayQuery && m_Capabilities.RayTracingPipeline;
+        };
         
         //Metal specific
         MTL::Device* GetMetalDevice() const { return m_Device; }

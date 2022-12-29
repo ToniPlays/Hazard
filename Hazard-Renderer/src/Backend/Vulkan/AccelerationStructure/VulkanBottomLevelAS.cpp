@@ -52,11 +52,11 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanBottomLevelAS::PushTransforms(const BufferCopyRegion& copyRegion)
 	{
-		//Redundant get rid of this
+		//TODO: remove this
 	}
 	void VulkanBottomLevelAS::Invalidate()
 	{
-
+        
 	}
 	void VulkanBottomLevelAS::Build(const BuildType& type)
 	{

@@ -32,7 +32,7 @@ project "Hazard-Script"
 	filter "system:windows"
 		systemversion "latest"
 		defines {
-			"HZR_PLATFORM_WINDOWS",¨
+			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_MONO"
 		}
 	filter "system:macos"

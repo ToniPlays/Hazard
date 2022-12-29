@@ -14,6 +14,9 @@
 #include "MetalBuffers.h"
 #include "MetalCubemapTexture.h"
 
+#include "MetalTopLevelAS.h"
+#include "MetalBottomLevelAS.h"
+
 namespace HazardRenderer::Metal
 {
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t count, const std::string& name, bool compute)
@@ -188,7 +191,7 @@ namespace HazardRenderer::Metal
             PipelineUsage usage = metalPipeline->GetSpecifications().Usage;
             if(usage == PipelineUsage::GraphicsBit)
                 metalPipeline->BindGraphics(instance->m_RenderEncoder);
-            else if(usage == PipelineUsage::ComputeBit)
+            else
                 metalPipeline->BindCompute(instance->m_ComputeEncoder);
         });
     }
@@ -218,6 +221,10 @@ namespace HazardRenderer::Metal
     {
         m_WaitOnSubmit = computeInfo.WaitForCompletion;
         Ref<MetalRenderCommandBuffer> instance = this;
+        
+        if(!m_ComputeEncoder)
+            m_ComputeEncoder = m_CommandBuffer->computeCommandEncoder();
+        
         Renderer::Submit([instance, size = computeInfo.GroupSize]() mutable {
         
             MTL::Size localGroup = { 32, 32, 1 };
@@ -226,8 +233,35 @@ namespace HazardRenderer::Metal
                 static_cast<NS::UInteger>(size.y),
                 static_cast<NS::UInteger>(size.z)
             };
-            instance->m_ComputeEncoder->dispatchThreadgroups(groupSize, localGroup);
+            auto encoder = instance->m_ComputeEncoder;
+            encoder->dispatchThreadgroups(groupSize, localGroup);
         });
+    }
+    void MetalRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
+    {
+        DispatchComputeInfo computeInfo = {};
+        computeInfo.GroupSize.x = traceRaysInfo.Width;
+        computeInfo.GroupSize.y = traceRaysInfo.Height;
+        computeInfo.GroupSize.z = traceRaysInfo.Depth;
+        computeInfo.WaitForCompletion = true;
+        
+        DispatchCompute(computeInfo);
+    }
+    void MetalRenderCommandBuffer::BuildAccelerationStructure(const AccelerationStructureBuildInfo &info)
+    {
+        Ref<AccelerationStructure> structure = info.AccelerationStructure;
+        structure->Invalidate();
+
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Renderer::Submit([instance, buildInfo = info]() mutable {
+
+            auto level = buildInfo.AccelerationStructure->GetLevel();
+
+            if (level == AccelerationStructureLevel::Top)
+                buildInfo.AccelerationStructure.As<MetalTopLevelAS>()->Build(instance->m_AccelerationEcoder, buildInfo.Type);
+            else if (level == AccelerationStructureLevel::Bottom)
+                buildInfo.AccelerationStructure.As<MetalBottomLevelAS>()->Build(instance->m_AccelerationEcoder, buildInfo.Type);
+            });
     }
     void MetalRenderCommandBuffer::GenerateMipmaps(const GenMipmapsInfo &info)
     {

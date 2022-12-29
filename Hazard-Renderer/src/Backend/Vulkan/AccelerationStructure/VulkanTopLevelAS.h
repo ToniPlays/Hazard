@@ -23,11 +23,12 @@ namespace HazardRenderer::Vulkan
 		void PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure) override;
 
 		void Build(const BuildType& type);
-		void Build(VkCommandBuffer commandBuffer, const BuildType& type);
-
+		
 		void Invalidate() override;
 		void Invalidate_RT();
-
+        
+        //Vulkan specific
+        void Build(VkCommandBuffer commandBuffer, const BuildType& type);
 		AccelerationStructureBufferInfo CreateAccelerationStructureBuffer(VkBufferUsageFlagBits usage, const uint32_t& size);
 		VulkanAccelStruct GetVulkanAccelerationStructure() { return m_StructureInfo; }
 

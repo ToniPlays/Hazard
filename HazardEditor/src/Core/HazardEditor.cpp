@@ -111,19 +111,11 @@ void HazardEditorApplication::Init()
 {
 	Editor::EditorWorldManager::Init();
     PushModule<GUIManager>();
+    
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
 
-	window.SetDebugCallback([](RenderMessage message) {
-		switch (message.Severity)
-		{
-		case Severity::Debug:		HZR_INFO("Debug: {0} -> {1}",		message.Description, message.StackTrace); break;
-		case Severity::Trace:		HZR_TRACE("Trace: {0} -> {1}",		message.Description, message.StackTrace); break;
-		case Severity::Info:		HZR_INFO("Info: {0} -> {1}",		message.Description, message.StackTrace); break;
-		case Severity::Warning:		HZR_WARN("Warning: {0} -> {1}",		message.Description, message.StackTrace); break;
-		case Severity::Error:		HZR_ERROR("Error: {0} -> {1}",		message.Description, message.StackTrace); break;
-		case Severity::Critical:	HZR_ERROR("Critical: {0} -> {1}",	message.Description, message.StackTrace); break;
-		}
+	window.SetDebugCallback([](const RenderMessage& message) {
 
 		auto& manager = Application::GetModule<GUIManager>();
 		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();

@@ -26,7 +26,6 @@ namespace HazardRenderer::Metal
             code[i] = specs->pShaderCode[i];
 
         m_Shader = Shader::Create(code).As<MetalShader>();
-        
         Invalidate();
     }
     MetalPipeline::~MetalPipeline()
@@ -54,7 +53,7 @@ namespace HazardRenderer::Metal
     {
         if(m_Specs.Usage == PipelineUsage::GraphicsBit)
             InvalidateGraphicsPipeline();
-        else if(m_Specs.Usage == PipelineUsage::ComputeBit)
+        else
             InvalidateComputePipeline();
     }
     void MetalPipeline::InvalidateGraphicsPipeline()
@@ -158,7 +157,7 @@ namespace HazardRenderer::Metal
         
         m_Pipeline = device->GetMetalDevice()->newRenderPipelineState(m_PipelineDescriptor, &error);
         
-        if(error)
+        if(error->code() != 0)
             std::cout << error->description()->utf8String() << std::endl;
         
         //Create depth stencil
@@ -181,11 +180,17 @@ namespace HazardRenderer::Metal
         m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
         SetDebugLabel(m_ComputeDescriptor, m_Specs.DebugName);
         
-        m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
+        if(m_Specs.Usage == PipelineUsage::ComputeBit)
+            m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
+        //else
+        //    m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Raygen));
         
         NS::Error* error;
         
         m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(ShaderStage::Compute), &error);
+        
+        if(error->code() != 0)
+            std::cout << error->description()->utf8String() << std::endl;
         
     }
     void MetalPipeline::BindGraphics(MTL::RenderCommandEncoder* encoder)

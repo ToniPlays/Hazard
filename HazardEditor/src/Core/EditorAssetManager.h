@@ -41,9 +41,10 @@ public:
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
 	static bool CreateFolder(const std::filesystem::path& path);
 	static bool CreateScriptAsset(const ScriptCreateInfo& info);
-	static bool CreateWorld(const std::filesystem::path& path);
+	static bool CreateAsset(const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
+    
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
 	static void RefreshEditorAssets(bool force = false);

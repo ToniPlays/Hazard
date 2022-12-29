@@ -4,6 +4,8 @@
 
 #include "Backend/Vulkan/AccelerationStructure/VulkanTopLevelAS.h"
 #include "Backend/Vulkan/AccelerationStructure/VulkanBottomLevelAS.h"
+#include "Backend/Metal/MetalTopLevelAS.h"
+#include "Backend/Metal/MetalBottomLevelAS.h"
 
 namespace HazardRenderer
 {
@@ -19,7 +21,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanTopLevelAS>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: return nullptr; //Ref<Metal::MetalFrameBuffer>::Create(info);
+            case RenderAPI::Metal: return Ref<Metal::MetalTopLevelAS>::Create(info);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RenderAPI");
@@ -38,7 +40,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanBottomLevelAS>::Create(info);
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: return nullptr; //Ref<Metal::MetalFrameBuffer>::Create(info);
+            case RenderAPI::Metal: return Ref<Metal::MetalBottomLevelAS>::Create(info);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RenderAPI");

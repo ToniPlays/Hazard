@@ -260,10 +260,10 @@ namespace RayTracingSphere
 
 		DispatchComputeInfo computeInfo = {};
 		computeInfo.GroupSize = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6 };
-		computeInfo.Pipeline = computePipeline;
 		computeInfo.WaitForCompletion = true;
 
 		computeBuffer->Begin();
+        computeBuffer->BindPipeline(computePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();
