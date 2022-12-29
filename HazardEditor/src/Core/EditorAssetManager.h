@@ -45,6 +45,7 @@ public:
 	static bool CreateAsset(const AssetType& type, const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
+    static bool MoveAssetToFolder(const AssetHandle& handle, const std::filesystem::path& path);
     
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);

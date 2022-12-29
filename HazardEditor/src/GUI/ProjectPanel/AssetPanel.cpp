@@ -42,6 +42,7 @@ namespace UI
 	}
 	bool AssetPanel::OnWindowFocus(WindowFocusEvent& e)
 	{
+        return false;
 		GenerateFolderStructure();
 		RefreshFolderItems();
 		return false;
@@ -137,6 +138,7 @@ namespace UI
 						DrawFolderTreeItem(folder);
 					}
 					});
+                
 				ImUI::ContextMenu([&]() {
 					ImUI::MenuItem("Refresh", [&]() {
 						m_FolderData = GenerateFolderStructure();
@@ -256,6 +258,7 @@ namespace UI
 				File::OpenDirectoryInExplorer(m_CurrentPath);
 				});
 			});
+        
 		if (!changed) return;
 
 		GenerateFolderStructure();
@@ -274,7 +277,6 @@ namespace UI
 			{
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				if (!File::Exists(assetPath)) continue;
-
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
                 
 				if (handle == INVALID_ASSET_HANDLE) continue;
@@ -318,7 +320,8 @@ namespace UI
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
 		ImUI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
-			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered()) {
+			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
+            {
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();
 			}
@@ -327,7 +330,11 @@ namespace UI
 			{
 				DrawFolderTreeItem(subfolder);
 			}
-			});
+        });
+        ImUI::DropTarget<AssetHandle>("Asset", [&, path = folder.Path](AssetHandle handle) {
+            EditorAssetManager::MoveAssetToFolder(handle, path);
+            Refresh();
+        });
 	}
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)

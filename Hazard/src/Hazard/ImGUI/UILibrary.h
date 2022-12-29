@@ -870,7 +870,8 @@ namespace Hazard::ImUI
 		if (ImGui::BeginDragDropTarget())
 		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Utils::AssetTypeToString(type));
-			if (payload) {
+			if (payload)
+            {
 				callback(*(T*)payload->Data);
 				accepted = true;
 			}

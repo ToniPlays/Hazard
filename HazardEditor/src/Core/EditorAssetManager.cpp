@@ -78,8 +78,8 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	YAML::Node root = YAML::LoadFile(path.string());
 	YamlUtils::Deserialize<AssetHandle>(root, "UID", metadata.Handle, INVALID_ASSET_HANDLE);
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
-	YamlUtils::Deserialize<std::filesystem::path>(root, "Path", metadata.Path, "");
-	Hazard::AssetManager::ImportAsset(metadata.Path, metadata);
+    metadata.Path = File::GetPathNoExt(path);
+	Hazard::AssetManager::ImportAsset(File::GetPathNoExt(path), metadata);
 
 	return metadata;
 }
@@ -205,7 +205,6 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	out << YAML::BeginMap;
 	YamlUtils::Serialize(out, "UID", metadata.Handle);
 	YamlUtils::Serialize(out, "Type", metadata.Type);
-	YamlUtils::Serialize(out, "Path", newAssetPath);
 	out << YAML::EndMap;
 
 	File::WriteFile(newAssetPath.string() + ".meta");
@@ -216,6 +215,23 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	AssetManager::GetMetadataRegistry().erase(oldAssetPath);
     
 	return true;
+}
+bool EditorAssetManager::MoveAssetToFolder(const AssetHandle& handle, const std::filesystem::path& path)
+{
+    AssetMetadata& data = AssetManager::GetMetadata(handle);
+    std::filesystem::path newPath = path / File::GetName(data.Path);
+    
+    File::WriteFile(newPath);
+    File::WriteFile(newPath.string() + ".meta");
+    File::Move(data.Path, newPath);
+    File::Move(data.Path.string() + ".meta", newPath.string() + ".meta");
+    
+    auto oldPath = data.Path;
+    data.Path = newPath;
+    AssetManager::GetMetadataRegistry()[newPath] = data;
+    AssetManager::GetMetadataRegistry().erase(oldPath);
+    
+    return true;
 }
 
 Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)

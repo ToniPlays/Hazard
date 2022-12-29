@@ -73,6 +73,16 @@ namespace UI
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
 		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+        
+        if(GetType() == AssetType::Folder)
+        {
+            ImUI::DropTarget<AssetHandle>("Asset", [&](AssetHandle handle) {
+                AssetMetadata data = AssetManager::GetMetadata(m_Handle);
+                EditorAssetManager::MoveAssetToFolder(handle, data.Path);
+                Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+            });
+        }
+        
 
 		ImUI::ShiftY(edgeOffset);
 		ImUI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);
@@ -129,6 +139,10 @@ namespace UI
 			ImGui::Text("%s", name.c_str());
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
+        ImUI::DragSource("Asset", &m_Handle, [&]() {
+            ImGui::Text("%s", name.c_str());
+            ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
+            });
 
 		ImGui::PopStyleVar();
 	}

@@ -13,7 +13,9 @@ namespace Hazard {
 
     bool AssetRegistry::Contains(const std::filesystem::path& path) const
     {
-        return m_Registry.find(GetKey(path)) != m_Registry.end();
+        auto key = GetKey(path);
+        bool contains = m_Registry.find(key) != m_Registry.end();
+        return contains;
     }
 
     size_t AssetRegistry::Remove(const std::filesystem::path& path) 
