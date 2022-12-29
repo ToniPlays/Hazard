@@ -94,9 +94,8 @@ namespace Hazard
 
 	bool AssetManager::SaveAsset(Ref<Asset> asset)
 	{
-		HZR_ASSERT(asset, "Asset cannot be nullptr");
-		bool succeeded = s_AssetLoader.Save(asset);
-		return succeeded;
+		HZR_ASSERT(asset, "Asset cannot be nullptr");        
+		return s_AssetLoader.Save(asset);
 	}
 	JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
 	{

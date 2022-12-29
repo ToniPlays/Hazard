@@ -106,10 +106,10 @@ namespace UI
 		case Key::S:
 		{
 			using namespace Editor;
-			if (EditorModeManager::GetCurrentMode() == EditorMode::Edit) {
+			if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
+            {
 				auto& handler = Application::GetModule<WorldHandler>();
-				WorldSerializer serializer(handler.GetCurrentWorld());
-				serializer.SerializeEditor(handler.GetCurrentWorld()->GetWorldFile());
+                Hazard::AssetManager::SaveAsset(handler.GetCurrentWorld());
 			}
 			return true;
 		}

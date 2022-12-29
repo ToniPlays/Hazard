@@ -15,14 +15,16 @@ using namespace HazardRenderer;
 
 void GUIManager::Init()
 {
+    m_Window = &Application::GetModule<RenderContextManager>().GetWindow();
+    
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_NavEnableKeyboard;
+    if(GraphicsContext::GetRenderAPI() == RenderAPI::OpenGL)
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
-
-	m_Window = &Application::GetModule<RenderContextManager>().GetWindow();
 
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
 	io.DisplaySize = { (float)m_Window->GetWidth(), (float)m_Window->GetHeight() };

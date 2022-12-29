@@ -216,7 +216,7 @@ namespace UI
 				panel->Open();
 				});
 			ImUI::MenuItem("World", [&]() {
-				//EditorAssetManager::CreateWorld(GetOpenDirectory() / "world.hazard");
+                EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
 				changed = true;
 				});
 			ImUI::MenuItem("Material", [&]() {

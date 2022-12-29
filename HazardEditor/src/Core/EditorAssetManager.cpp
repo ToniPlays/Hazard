@@ -24,13 +24,13 @@ void EditorAssetManager::ImportAssets()
 }
 void EditorAssetManager::Init()
 {
-	struct EditorTexture
+	struct EditorAsset
 	{
 		const char* Key;
 		const char* Path;
 	};
 
-	std::vector<EditorTexture> texturesToLoad = {
+	std::vector<EditorAsset> texturesToLoad = {
 		{ "Default", "res/Icons/textureBG.png"},
 		{ "Folder", "res/Icons/folder.png"},
 		{ "World", "res/Icons/world.png"},
@@ -38,6 +38,11 @@ void EditorAssetManager::Init()
 		{ "Camera", "res/Icons/camera.png"},
 		{ "DirectionalLight", "res/Icons/directionalLight.png"}
 	};
+    std::vector<EditorAsset> meshesToLoad = {
+        { "Cube", "res/Mesh/cube.obj"     },
+        { "Sphere", "res/Mesh/sphere.obj" }
+    };
+    
 	std::vector<JobPromise> promises;
 	promises.reserve(texturesToLoad.size());
 	for (auto& texture : texturesToLoad)
@@ -54,6 +59,10 @@ void EditorAssetManager::Init()
 		s_Icons[texture.Key] = AssetManager::GetAsset<Texture2DAsset>(texture.Path);
 #endif
 	}
+    
+    for(auto& mesh : meshesToLoad)
+        s_DefaultMesh[mesh.Key] = AssetManager::GetAsset<Mesh>(mesh.Path);
+    
 	for (auto& promise : promises)
 		promise.Wait();
 
@@ -90,7 +99,8 @@ bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 	sourceFile = StringUtil::Replace(sourceFile, "%DerivesFrom%", info.Derives.empty() ? "" : ": " + info.Derives);
 	sourceFile = StringUtil::Replace(sourceFile, "%MethodList%", methodList);
 
-	if (!File::WriteFile(info.Path, sourceFile)) return false;
+	if (!File::WriteFile(info.Path, sourceFile))
+        return false;
 
 	AssetMetadata metadata = {};
 	metadata.Handle = AssetHandle();
@@ -100,10 +110,41 @@ bool EditorAssetManager::CreateScriptAsset(const ScriptCreateInfo& info)
 	return CreateMetadataFile(metadata, info.Path);
 }
 
+bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesystem::path& path)
+{
+    AssetMetadata metadata = {};
+    metadata.Path = path;
+    metadata.Type = type;
+    
+    switch(type)
+    {
+        case AssetType::World:
+        {
+            Ref<World> world = Ref<World>::Create(path);
+            
+            Entity camera = world->CreateEntity("Camera");
+            camera.AddComponent<CameraComponent>();
+            
+            Entity cube = world->CreateEntity("Cube");
+            cube.AddComponent<MeshComponent>().m_MeshHandle = GetDefaultMesh("Cube");
+            
+            metadata.Handle = AssetManager::NewAsset(world);
+            AssetManager::ImportAsset(path, metadata);
+            AssetManager::SaveAsset(world);
+            metadata.Handle = world->GetHandle();
+            
+        }
+        case AssetType::Shader: break;
+    }
+    return CreateMetadataFile(metadata, path);
+    
+}
+
 bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
 {
 	std::filesystem::path actualPath = path;
-	if (File::DirectoryExists(actualPath)) {
+	if (File::DirectoryExists(actualPath))
+    {
 		size_t i = 1;
 		std::filesystem::path curPath = File::AppendToName(actualPath, std::to_string(i));
 		while (File::DirectoryExists(curPath))
@@ -132,7 +173,6 @@ bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const
 	out << YAML::BeginMap;
 	YamlUtils::Serialize(out, "UID", metadata.Handle);
 	YamlUtils::Serialize(out, "Type", metadata.Type);
-	YamlUtils::Serialize(out, "Path", metadata.Path);
 	out << YAML::EndMap;
 	File::WriteFile(metaPath, out.c_str());
 
@@ -160,8 +200,6 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	}
 
 	metadata.Path = newAssetPath;
-    
-    
 
 	YAML::Emitter out;
 	out << YAML::BeginMap;
@@ -185,6 +223,12 @@ Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
 	if (s_Icons.find(name) != s_Icons.end())
 		return s_Icons[name];
 	return s_Icons["Default"];
+}
+Ref<Mesh> EditorAssetManager::GetDefaultMesh(const std::string& name)
+{
+    if (s_DefaultMesh.find(name) != s_DefaultMesh.end())
+        return s_DefaultMesh[name];
+    return nullptr;;
 }
 
 void EditorAssetManager::RefreshEditorAssets(bool force)

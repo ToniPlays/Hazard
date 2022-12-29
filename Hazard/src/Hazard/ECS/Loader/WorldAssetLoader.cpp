@@ -49,7 +49,12 @@ namespace Hazard
 	}
 	bool WorldAssetLoader::Save(Ref<Asset>& asset)
 	{
-		return false;
+        auto world = asset.As<World>();
+        
+        WorldSerializer serializer(world);
+        serializer.SerializeEditor(world->GetWorldFile());
+        
+        return true;
 	}
 	Ref<JobGraph> WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{

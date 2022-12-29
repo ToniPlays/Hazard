@@ -3,6 +3,7 @@
 #include "UtilityCore.h"
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/RenderContext/Texture2D.h"
+#include "Hazard/Rendering/Mesh/Mesh.h"
 
 enum class MethodImpl 
 {
@@ -41,14 +42,16 @@ public:
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
 	static bool CreateFolder(const std::filesystem::path& path);
 	static bool CreateScriptAsset(const ScriptCreateInfo& info);
-	static bool CreateAsset(const std::filesystem::path& path);
+	static bool CreateAsset(const AssetType& type, const std::filesystem::path& path);
 	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
 	static bool RenameAsset(const std::string& newName, AssetHandle handle);
     
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
+    static Ref<Hazard::Mesh> GetDefaultMesh(const std::string& name);
 	static void RefreshEditorAssets(bool force = false);
 
 private:
 	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> s_Icons;
+    inline static std::unordered_map<std::string, Ref<Hazard::Mesh>> s_DefaultMesh;
 };

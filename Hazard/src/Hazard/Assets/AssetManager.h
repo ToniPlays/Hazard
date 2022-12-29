@@ -173,6 +173,12 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE) return;
 			s_LoadedAssets.erase(handle);
 		}
+        static AssetHandle NewAsset(Ref<Asset> asset)
+        {
+            if(asset->m_Handle == INVALID_ASSET_HANDLE)
+                asset->m_Handle = UID();
+            return asset->m_Handle;
+        }
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);
 
 	private:

@@ -8,8 +8,8 @@
 
 #include "BoundingBox.h"
 
-namespace Hazard {
-
+namespace Hazard
+{
 	struct MeshData;
 
 	struct MeshCreateInfo
