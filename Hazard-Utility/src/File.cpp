@@ -110,12 +110,20 @@ bool File::WriteFile(const std::filesystem::path& file, const std::string& conte
 	return true;
 }
 
-bool File::Move(const std::filesystem::path& src, const std::filesystem::path& dst) {
+bool File::Move(const std::filesystem::path& src, const std::filesystem::path& dst)
+{
 	if (!File::Exists(dst))
 		return false;
 
 	std::filesystem::rename(std::filesystem::canonical(src), std::filesystem::canonical(dst));
 	return true;
+}
+
+bool File::RenameDirectory(const std::filesystem::path& folder, const std::string& newName)
+{
+    std::filesystem::path newPath = folder.parent_path();
+    std::filesystem::rename(folder, newPath / newName);
+    return true;
 }
 
 std::string File::ReadFile(const std::filesystem::path& file)

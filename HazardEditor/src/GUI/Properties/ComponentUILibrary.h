@@ -204,13 +204,15 @@ namespace UI
 
 				ImUI::TextureSlot("Sprite", path, texture, [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-						auto asset = AssetManager::GetAsset<Texture2DAsset>(handle);
-						for (auto& entity : entities)
-						{
-							auto& c = entity.GetComponent<SpriteRendererComponent>();
-							c.Texture = asset;
-						}
-						});
+                        Application::Get().SubmitMainThread([&]() mutable {
+                            auto asset = AssetManager::GetAsset<Texture2DAsset>(handle);
+                            for (auto& entity : entities)
+                            {
+                                auto& c = entity.GetComponent<SpriteRendererComponent>();
+                                c.Texture = asset;
+                            }
+                            });
+                        });
 					});
 
 				ImGui::PopStyleVar();
@@ -489,11 +491,14 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImGui::PopStyleVar();
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
+                    Application::Get().SubmitMainThread([handle, entities]() mutable {
+                        HZR_INFO(handle);
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
 						auto envMap = EnvironmentMap::Create(asset);
 
 						for (auto& entity : entities)
 							entity.GetComponent<SkyLightComponent>().EnvironmentMap = envMap;
+                        });
 					});
 				ImGui::NextColumn();
 				if (ImUI::InputFloat("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))

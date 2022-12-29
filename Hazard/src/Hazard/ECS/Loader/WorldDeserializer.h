@@ -157,7 +157,7 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE)
 				return;
 
-			if (m_CanAsync)
+			if (m_CanAsync && false)
 			{
 				JobPromise promise = AssetManager::GetAssetAsync<Mesh>(handle);
 				promise.Then([e = entity, promise](JobGraph&) -> size_t {

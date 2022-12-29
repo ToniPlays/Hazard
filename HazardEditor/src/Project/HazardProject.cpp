@@ -38,6 +38,7 @@ AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)
 	{
 		AssetMetadata metadata = EditorAssetManager::ImportFromMetadata(path);
 		std::filesystem::path assetPath = File::GetPathNoExt(path);
+        
 		if (File::IsDirectory(assetPath))
 		{
 			ProcessSubFolderAssets(assetPath);
@@ -62,7 +63,8 @@ void HazardProject::ProcessSubFolderAssets(const std::filesystem::path& dir)
 			EditorAssetManager::ImportFromMetadata(item);
 
 			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			if (File::IsDirectory(assetPath)) {
+			if (File::IsDirectory(assetPath))
+            {
 				ProcessSubFolderAssets(assetPath);
 			}
 		}

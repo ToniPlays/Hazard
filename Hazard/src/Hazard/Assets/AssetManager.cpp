@@ -66,7 +66,6 @@ namespace Hazard
 		s_Registry.Remove(data.Path);
 
 		if (s_LoadedAssets.size() == 0) return;
-        std::cout << s_LoadedAssets.size() << std::endl;
 
 		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end())
 			s_LoadedAssets.erase(handle);
@@ -84,6 +83,7 @@ namespace Hazard
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
+        
 		for (auto& [path, metadata] : s_Registry) 
 		{
 			if (metadata.Handle == handle)

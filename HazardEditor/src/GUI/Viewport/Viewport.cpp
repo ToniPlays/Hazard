@@ -137,8 +137,10 @@ namespace UI
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
-			AssetMetadata& meta = AssetManager::GetMetadata(assetHandle);
-			Editor::EditorWorldManager::LoadWorld(meta.Path);
+            Application::Get().SubmitMainThread([handle = assetHandle]() mutable {
+                AssetMetadata& meta = AssetManager::GetMetadata(handle);
+                Editor::EditorWorldManager::LoadWorld(meta.Path);
+            });
 			});
 
 		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
@@ -247,7 +249,8 @@ namespace UI
 	{
 		if (!m_Hovered) return false;
 
-		switch (e.GetKeyCode()) {
+		switch (e.GetKeyCode())
+        {
 		case Key::D1:
 			m_Gizmos.SetType(Gizmo::Translate);
 			return true;

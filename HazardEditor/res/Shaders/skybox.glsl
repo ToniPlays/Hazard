@@ -35,7 +35,6 @@ layout(location = 0) out vec4 OutputColor;
 void main() 
 {
 	int levelTexels = textureQueryLevels(u_CubeMap);
-	//vec3 color = textureLod(u_CubeMap, v_Position, (u_Lights.EnvironmentLod * levelTexels)).rgb;
-    vec3 color = texture(u_CubeMap, v_Position).rgb;
+	vec3 color = textureLod(u_CubeMap, v_Position, (u_Lights.EnvironmentLod * levelTexels)).rgb;
 	OutputColor = vec4(color * u_Lights.SkyLightIntensity, 1.0);
 }

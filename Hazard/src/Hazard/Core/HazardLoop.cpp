@@ -40,7 +40,6 @@ namespace Hazard {
 			m_ModuleHandler->InitializeAll();
 			m_Application->Init();
 
-			std::cout << timer.ElapsedMillis() << std::endl;
 			HZR_CORE_WARN("Startup took {0} ms", timer.ElapsedMillis());
 		}
 		catch (HazardRuntimeError& error)
@@ -71,12 +70,17 @@ namespace Hazard {
 		s_Instance->OnEvent(e);
 	}
 	void HazardLoop::Run()
-	{
-		HZR_PROFILE_FRAME("MainThread");
-		HZR_TIMED_FUNCTION();
-		Time::Update(glfwGetTime());
-		//Update Time
-
+{
+        HZR_PROFILE_FRAME("MainThread");
+        HZR_TIMED_FUNCTION();
+        
+        //Update Time
+        Time::Update(glfwGetTime());
+        
+        for(auto& fn : m_Application->m_MainJobs)
+            fn();
+        m_Application->m_MainJobs.clear();
+        
 		//Update
 		m_ModuleHandler->PreUpdate();
 		m_ModuleHandler->Update();

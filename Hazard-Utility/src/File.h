@@ -50,7 +50,7 @@ public:
 
 	static bool WriteFile(const std::filesystem::path& file, const std::string& content = "");
 	static bool Move(const std::filesystem::path& src, const std::filesystem::path& dst);
-
+    static bool RenameDirectory(const std::filesystem::path& folder, const std::string& newName);
 
 	static std::filesystem::path GetFileAbsolutePath(const std::filesystem::path& file);
 	static std::filesystem::path GetDirectoryOf(const std::filesystem::path& file);

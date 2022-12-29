@@ -43,7 +43,8 @@ namespace Editor
 		const void SetMousePosition(const glm::vec2& pos) { m_InitialMousePos = pos; }
 
 		void SetIs2D(bool enabled2D);
-		void SetFocalPoint(const glm::vec3& point) {
+		void SetFocalPoint(const glm::vec3& point)
+        {
 			m_FocalPoint = point;
 			UpdateView();
 		};

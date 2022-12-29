@@ -61,6 +61,7 @@ namespace Hazard
 
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
+            
 			if ((meta.LoadState == LoadState::None && !(flags & AssetManagerFlags_MustBeLoaded)) || flags & AssetManagerFlags_ForceReload)
 			{
 				meta.LoadState = LoadState::Loading;
@@ -121,7 +122,7 @@ namespace Hazard
 			HZR_TIMED_FUNCTION();
 
 			AssetMetadata& meta = GetMetadata(handle);
-			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
+
 			if ((meta.LoadState == LoadState::None && !(flags & AssetManagerFlags_MustBeLoaded)) || flags & AssetManagerFlags_ForceReload)
 			{
 				Ref<Asset> asset;

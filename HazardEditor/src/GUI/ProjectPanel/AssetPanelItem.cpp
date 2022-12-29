@@ -5,6 +5,8 @@
 #include "MathCore.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
+#include "GUIManager.h"
+#include "AssetPanel.h"
 
 #include "imgui_internal.h"
 
@@ -136,7 +138,8 @@ namespace UI
 		ImGui::PopID();
 		ImGui::NextColumn();
 
-		if (m_Flags & AssetPanelItemFlags_EndRename) {
+		if (m_Flags & AssetPanelItemFlags_EndRename)
+        {
 			RenameTo(m_RenameValue);
 			m_Flags &= ~AssetPanelItemFlags_EndRename;
 		}
@@ -157,8 +160,9 @@ namespace UI
 			ImUI::TextField(m_RenameValue);
 			if (ImGui::IsItemDeactivated())
 			{
+                m_Flags &= ~AssetPanelItemFlags_StartRename;
 				m_Flags &= ~AssetPanelItemFlags_Renaming;
-				m_Flags |= AssetPanelItemFlags_EndRename;
+				m_Flags |=  AssetPanelItemFlags_EndRename;
 			}
 		}
 		else
@@ -176,5 +180,7 @@ namespace UI
 		HZR_INFO("Renaming to {0}", newName);
 
 		EditorAssetManager::RenameAsset(newName, m_Handle);
+        
+        Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}
 }

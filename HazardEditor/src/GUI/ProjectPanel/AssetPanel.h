@@ -33,7 +33,11 @@ namespace UI {
 			m_FolderData = GenerateFolderStructure();
 			RefreshFolderItems();
 		};
-
+        void Refresh()
+        {
+            m_FolderData = GenerateFolderStructure();
+            RefreshFolderItems();
+        }
 		void RefreshFolderItems();
 		std::filesystem::path& GetRootDirectory() { return m_RootPath; }
 		std::filesystem::path& GetOpenDirectory() { return m_CurrentPath; }

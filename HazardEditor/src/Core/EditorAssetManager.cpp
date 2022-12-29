@@ -142,13 +142,15 @@ bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const
 bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle handle)
 {
 	AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+    
 	std::filesystem::path oldAssetPath = metadata.Path;
 	std::string extension = File::GetFileExtension(oldAssetPath);
 	std::filesystem::path newAssetPath;
 
 	if (metadata.Type == AssetType::Folder)
 	{
-		return false;
+        File::RenameDirectory(oldAssetPath, newName);
+        newAssetPath = oldAssetPath.parent_path() / newName;
 	}
 	else
 	{
@@ -158,6 +160,8 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	}
 
 	metadata.Path = newAssetPath;
+    
+    
 
 	YAML::Emitter out;
 	out << YAML::BeginMap;
@@ -173,7 +177,7 @@ bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle han
 	AssetManager::GetMetadataRegistry()[newAssetPath] = metadata;
 	AssetManager::GetMetadataRegistry().erase(oldAssetPath);
     
-	return false;
+	return true;
 }
 
 Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)

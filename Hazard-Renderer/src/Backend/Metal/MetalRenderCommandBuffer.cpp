@@ -63,8 +63,7 @@ namespace HazardRenderer::Metal
         
         Renderer::Submit([instance, wait = m_WaitOnSubmit]() mutable {
             instance->m_CommandBuffer->commit();
-            if(wait)
-                instance->m_CommandBuffer->waitUntilCompleted();
+            instance->m_CommandBuffer->waitUntilCompleted();
         });
     }
 

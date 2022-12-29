@@ -276,6 +276,7 @@ namespace UI
 				if (!File::Exists(assetPath)) continue;
 
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
+                
 				if (handle == INVALID_ASSET_HANDLE) continue;
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 
@@ -284,13 +285,11 @@ namespace UI
 		}
 
 		for (auto& dir : directories)
-		{
 			m_CurrentItems.push_back(dir);
-		}
+		
 		for (auto& f : files)
-		{
 			m_CurrentItems.push_back(f);
-		}
+		
 	}
 
 	void AssetPanel::DrawCurrentFolderPath()
@@ -312,9 +311,8 @@ namespace UI
 			ImGui::TextColored(style.Window.HeaderActive, (const char*)ICON_FK_CHEVRON_RIGHT);
 			ImGui::SameLine(0.0f, 8.0f);
 
-			if (ImGui::Button(path.c_str(), { 0, 28.0f })) {
+			if (ImGui::Button(path.c_str(), { 0, 28.0f }))
 				GoToFolderDepth(m_CurrentPath, i + 1);
-			}
 		}
 	}
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
@@ -378,6 +376,7 @@ namespace UI
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
 			if (!File::IsDirectory(folder)) continue;
+            
 			auto& data = result.emplace_back();
 			data.Path = folder;
 			data.SubFolders = GenerateSubFolderData(folder);
@@ -404,11 +403,12 @@ namespace UI
 	}
 	void AssetPanel::GoToFolderDepth(const std::filesystem::path& path, uint32_t index)
 	{
-		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
-		size_t strPos = StringUtil::OffsetOf(relative, '\\', index);
-		relative = relative.substr(0, strPos);
-		m_CurrentPath = m_RootPath.string() + '\\' + relative;
+        std::filesystem::path newPath = m_CurrentPath;
+		
+        for(uint32_t i = 0; i < index + 1; i++)
+            newPath = newPath.parent_path();
 
+        m_CurrentPath = newPath;
 		RefreshFolderItems();
 	}
 }

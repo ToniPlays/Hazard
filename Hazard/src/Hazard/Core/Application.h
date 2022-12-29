@@ -10,6 +10,7 @@ namespace Hazard
 {
 	class Application 
 	{
+        friend class HazardLoop;
 	public:
 		Application() = default;
 		virtual ~Application() = default;
@@ -25,6 +26,11 @@ namespace Hazard
 		virtual bool OnEvent(Event& e) { return false; };
 		void CreateApplicationStack(HazardCreateInfo* info);
 		JobSystem& GetJobSystem() { return m_JobSystem; }
+        
+        void SubmitMainThread(const std::function<void()>&& function)
+        {
+            m_MainJobs.push_back(function);
+        }
 
 	public:
 		static void Quit();
@@ -39,6 +45,7 @@ namespace Hazard
 
 	private:
 		JobSystem m_JobSystem;// = JobSystem(1);
+        std::vector<std::function<void()>> m_MainJobs;
 	};
 	Hazard::Application* CreateApplication();
 }
