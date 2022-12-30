@@ -75,6 +75,7 @@ namespace HazardRenderer::Metal
         const size_t GetSize() const override { return m_Size; };
 
         uint32_t GetUsageFlags() override { return m_Usage; };
+        void AddUsageFlags(uint32_t flags) override { m_Usage |= flags; }
         
         //Metal specific
         MTL::Buffer* GetMetalBuffer() const { return m_Buffer; }

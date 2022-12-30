@@ -11,7 +11,6 @@
 
 namespace HazardRenderer::Metal
 {
-    
     MetalPipeline::MetalPipeline(PipelineSpecification* specs) : m_Specs(*specs)
     {
         m_PrimitiveType = DrawTypeToMTLPrimitive(m_Specs.DrawType);
@@ -200,6 +199,7 @@ namespace HazardRenderer::Metal
         
         if(m_DepthState)
             encoder->setDepthStencilState(m_DepthState);
+        
         m_Shader->BindResources(encoder);
     }
     void MetalPipeline::BindCompute(MTL::ComputeCommandEncoder* encoder)

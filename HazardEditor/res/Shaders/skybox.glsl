@@ -23,7 +23,6 @@ void main()
 #type Fragment
 #version 450
 
-#include "Uniforms/CameraUniform.glslh"
 #include "Uniforms/LightSources.glslh"
 
 layout(location = 0) in vec3 v_Position;

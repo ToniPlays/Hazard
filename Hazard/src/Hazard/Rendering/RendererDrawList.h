@@ -22,8 +22,6 @@ namespace Hazard
 		glm::mat4 Transform;
 		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
 		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
-		float Metalness;
-		float Roughness;
 		int Flags;
 		size_t Count;
 	};

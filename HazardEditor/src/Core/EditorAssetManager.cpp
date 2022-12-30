@@ -125,15 +125,22 @@ bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
             Entity camera = world->CreateEntity("Camera");
             camera.AddComponent<CameraComponent>();
             
-            Entity cube = world->CreateEntity("Cube");
+            world->CreateEntity("Cube").AddComponent<MeshComponent>();
             //auto mesh = GetDefaultMesh("Cube");
-            //cube.AddComponent<MeshComponent>().m_MeshHandle = mesh;
             
             metadata.Handle = AssetManager::NewAsset(world);
             AssetManager::ImportAsset(path, metadata);
             AssetManager::SaveAsset(world);
             break;
             
+        }
+        case AssetType::Material:
+        {
+            Ref<Material> material = Ref<Material>::Create();
+            metadata.Handle = AssetManager::NewAsset(material);
+            AssetManager::ImportAsset(path, metadata);
+            AssetManager::SaveAsset(material);
+            break;
         }
         case AssetType::Shader:
         {

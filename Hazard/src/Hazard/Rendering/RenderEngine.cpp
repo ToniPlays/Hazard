@@ -2,6 +2,7 @@
 #include "RenderEngine.h"
 #include "HRenderer.h"
 #include "Mesh/MeshAssetLoader.h"
+#include "Mesh/MaterialAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Core/Application.h"
@@ -17,6 +18,7 @@ namespace Hazard
 		using namespace HazardRenderer;
 		HRenderer::s_Engine = this;
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
+        AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";

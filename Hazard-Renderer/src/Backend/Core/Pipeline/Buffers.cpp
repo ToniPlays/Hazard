@@ -61,6 +61,7 @@ namespace HazardRenderer {
 		if (RenderLibrary::HasUniformBuffer(createInfo->Name))
 		{
 			Ref<UniformBuffer> buffer = RenderLibrary::GetUniformBuffer(createInfo->Name);
+            buffer->AddUsageFlags(createInfo->Usage);
 			return buffer;
 		}
 

@@ -28,6 +28,7 @@ namespace HazardRenderer::Metal
     void MetalDescriptorSet::BindGraphicsResources(MTL::RenderCommandEncoder* encoder)
     {
         HZR_PROFILE_FUNCTION();
+        
         for (auto& [binding, descriptor] : m_WriteDescriptors)
         {
             switch (descriptor.Type)
@@ -35,13 +36,14 @@ namespace HazardRenderer::Metal
             case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
             {
                 auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
-                uint32_t flags = buffer->GetUsageFlags();
+                uint32_t flags = descriptor.Flags;
                 
-                if(flags & (uint32_t)ShaderStage::Vertex || true)
+                if(flags & (uint32_t)ShaderStage::Vertex)
                 {
                     encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
                 }
-                if(flags & (uint32_t)ShaderStage::Fragment || true)
+                
+                if(flags & (uint32_t)ShaderStage::Fragment)
                 {
                     encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
                 }
@@ -55,9 +57,10 @@ namespace HazardRenderer::Metal
                         if(index >= 16) break; //TODO: what this
                         
                         auto texture = value.As<MetalCubemapTexture>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.Binding + index);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
+                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding + index);
                     }
+                    break;
                 }
                 else
                 {
@@ -66,12 +69,31 @@ namespace HazardRenderer::Metal
                         if(index >= 16) break; //TODO: what this
                         
                         auto texture = value.As<MetalImage2D>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.Binding + index);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
+                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding + index);
                     }
+                    break;
                 }
-                
-                break;
+                case MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT:
+                {
+                    struct ShaderData {
+                        float m = 0.0f;
+                        float r = 1.0f;
+                    } data;
+                    
+                    uint32_t flags = descriptor.Flags;
+                    
+                    if(flags & (uint32_t)ShaderStage::Vertex)
+                        encoder->setVertexBytes(&data, sizeof(data), descriptor.ActualBinding);
+                    
+                    if(flags & (uint32_t)ShaderStage::Fragment)
+                    {
+                        encoder->setFragmentBytes(&data, sizeof(data), descriptor.ActualBinding);
+                    }
+                        
+                    
+                    break;
+                }
                 default: break;
             }
         }
@@ -136,6 +158,9 @@ namespace HazardRenderer::Metal
         {
             auto writeDescriptor = GetWriteDescriptor(name);
             if(!writeDescriptor) continue;
+            
+            std::cout << name << " at " << binding << std::endl;
+            HZR_ASSERT(binding != UINT32_MAX, "Binding failed");
             
             writeDescriptor->ActualBinding = binding;
         }

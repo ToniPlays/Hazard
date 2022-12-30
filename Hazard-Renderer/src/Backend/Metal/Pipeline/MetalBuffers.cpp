@@ -124,6 +124,8 @@ namespace HazardRenderer::Metal
         m_Size = Math::Max<size_t>(256, info->Size);
         m_Usage = info->Usage;
         m_LocalData.Allocate(m_Size * 1024);
+        
+        std::cout << m_Name << " " << m_Usage << std::endl;
 
         Ref<MetalUniformBuffer> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {

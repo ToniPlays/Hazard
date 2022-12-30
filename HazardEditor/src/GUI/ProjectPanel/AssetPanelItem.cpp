@@ -142,10 +142,6 @@ namespace UI
 			ImGui::Text("%s", name.c_str());
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
-        /*ImUI::DragSource("Asset", &m_Handle, [&]() {
-            ImGui::Text("%s", name.c_str());
-            ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
-            });*/
 
         if(ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder)
             File::OpenInDefaultApp(GetMetadata().Path);

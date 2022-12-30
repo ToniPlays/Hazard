@@ -81,8 +81,6 @@ namespace Hazard
 			{
 				ModelData data = {};
 				data.Transform = mesh.Transform;
-				data.Metalness = mesh.Metalness;
-				data.Roughness = mesh.Roughness;
 				data.Flags = 0;
 
 				BufferCopyRegion region = {};

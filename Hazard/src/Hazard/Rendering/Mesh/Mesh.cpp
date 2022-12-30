@@ -34,17 +34,13 @@ namespace Hazard
 		iboInfo.Usage = createInfo->Usage;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
-
-		m_Pipeline = ShaderLibrary::GetPipelinePtr("pbr_static");
+        
 		m_BoundingBox = createInfo->BoundingBox;
 	}
 
-	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer), m_Pipeline(pipeline)
+	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (pipeline->Value) return;
-
-		m_Pipeline = ShaderLibrary::GetPipelinePtr("pbr_static");
 	}
 }
 

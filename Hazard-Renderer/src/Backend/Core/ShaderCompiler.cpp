@@ -81,6 +81,7 @@ namespace HazardRenderer
 				output.Type = Utils::ShaderDataTypeFromSPV(spvType);
 				output.Size = ShaderDataTypeSize(output.Type);
 			}
+            
 			for (auto& resource : resources.acceleration_structures)
 			{
 				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
@@ -101,6 +102,7 @@ namespace HazardRenderer
 					buffer.UsageFlags |= (uint32_t)stage;
 				}
 			}
+            
 			for (auto& resource : resources.storage_buffers)
 			{
 				uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
@@ -121,6 +123,7 @@ namespace HazardRenderer
 					buffer.UsageFlags |= (uint32_t)stage;
 				}
 			}
+            
 			for (auto& resource : resources.uniform_buffers)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);
@@ -145,6 +148,30 @@ namespace HazardRenderer
 					buffer.UsageFlags |= (uint32_t)stage;
 				}
 			}
+            
+            for(auto& resource : resources.push_constant_buffers)
+            {
+                auto& spvType = compiler.get_type(resource.base_type_id);
+                uint32_t set = compiler.get_decoration(resource.id, spv::Decoration::DecorationDescriptorSet);
+                auto& descriptorSet = result.PushConstants[set];
+
+                uint32_t binding = compiler.get_decoration(resource.id, spv::Decoration::DecorationBinding);
+
+                if (descriptorSet.find(binding) != descriptorSet.end())
+                {
+                    auto& buffer = descriptorSet[binding];
+                    buffer.UsageFlags |= (uint32_t)stage;
+                }
+                else
+                {
+                    auto& buffer = descriptorSet[binding];
+                    buffer.Name = resource.name;
+                    buffer.Binding = binding;
+                    buffer.Size = compiler.get_declared_struct_size(spvType);
+                    buffer.UsageFlags |= (uint32_t)stage;
+                }
+            }
+            
 			for (auto& resource : resources.sampled_images)
 			{
 				auto& type = compiler.get_type(resource.type_id);
@@ -161,6 +188,7 @@ namespace HazardRenderer
 				sampler.Dimension = type.image.dim == spv::DimCube ? 3 : 2;
 				sampler.Flags |= (uint32_t)stage;
 			}
+            
 			for (auto& resource : resources.storage_images)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);

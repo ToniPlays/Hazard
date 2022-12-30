@@ -14,15 +14,15 @@ namespace HazardRenderer
 
 	enum class ShaderStage : uint32_t
 	{
-		None = BIT(0),
-		Vertex = BIT(1),
-		Fragment = BIT(2),
-		Compute = BIT(3),
-		Geometry = BIT(4),
-		Raygen = BIT(5),
-		Miss = BIT(6),
-		ClosestHit = BIT(7),
-		AnyHit = BIT(8)
+		None = 0,
+		Vertex = BIT(0),
+		Fragment = BIT(1),
+		Compute = BIT(2),
+		Geometry = BIT(3),
+		Raygen = BIT(4),
+		Miss = BIT(5),
+		ClosestHit = BIT(6),
+		AnyHit = BIT(7)
 	};
 	enum ShaderResourceFlags
 	{
@@ -91,6 +91,13 @@ namespace HazardRenderer
 		uint32_t DescritorSet = UINT32_MAX;
 		uint32_t Flags = 0;
 	};
+    struct ShaderPushConstantRange
+    {
+        std::string Name;
+        uint32_t Binding = 0;
+        uint32_t Size = 0;
+        uint32_t UsageFlags = 0;
+    };
 
 	struct ShaderStageData
 	{
@@ -109,6 +116,7 @@ namespace HazardRenderer
 		//Set binding sampler
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderImageSampler>> ImageSamplers;
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageImage>> StorageImages;
+        std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderPushConstantRange>> PushConstants;
 	};
 	namespace Utils
 	{

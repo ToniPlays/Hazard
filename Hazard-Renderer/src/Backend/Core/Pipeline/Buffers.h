@@ -106,6 +106,7 @@ namespace HazardRenderer
 		
 		virtual std::string& GetName() = 0;
 		virtual uint32_t GetUsageFlags() = 0;
+        virtual void AddUsageFlags(uint32_t flags) = 0;
 		virtual const uint32_t GetBinding() const = 0;
 		virtual const size_t GetSize() const = 0;
 

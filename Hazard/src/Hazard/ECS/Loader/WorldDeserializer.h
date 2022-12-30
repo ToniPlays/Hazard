@@ -148,8 +148,6 @@ namespace Hazard
 		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
-			YamlUtils::Deserialize(comp, "Metalness", c.Metalness, 0.0f);
-			YamlUtils::Deserialize(comp, "Roughness", c.Roughness, 1.0f);
 
 			AssetHandle handle;
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);

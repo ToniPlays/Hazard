@@ -72,7 +72,6 @@ public:
 	static int CreateSubprocess(const std::string& path, const std::string& arguments, bool background = false);
 	static void WaitForSubprocess(void* id);
 
-
 	static bool HasEnvinronmentVar(const std::string& key);
 	static std::string GetEnvironmentVar(const std::string& key);
 	static bool SetEnvironmentVar(const std::string& key, const std::string& value);

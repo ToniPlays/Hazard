@@ -45,18 +45,15 @@ namespace Hazard
 		~Mesh() = default;
 
 		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; }
-
 		size_t GetIndexCount() { return m_IndexBuffer->GetCount(); }
 
 		Ref<HazardRenderer::VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<HazardRenderer::IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
-		Ref<HazardRenderer::Pipeline> GetPipeline() { return m_Pipeline->Value.As<HazardRenderer::Pipeline>(); }
 		const BoundingBox& GetBoundingBox() { return m_BoundingBox; }
 
 	private:
 		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<HazardRenderer::IndexBuffer> m_IndexBuffer = nullptr;
-		Ref<AssetPointer> m_Pipeline = nullptr;
 
 		Buffer m_LocalVertexData;
 		Buffer m_LocalIndexData;

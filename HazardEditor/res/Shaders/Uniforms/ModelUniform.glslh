@@ -5,7 +5,5 @@ layout(std140, binding = 3) uniform Model
 #endif
 {
 	uniform mat4 Transform;
-	uniform float Metalness;
-	uniform float Roughness;
 	uniform int Flags;
 } u_Model;

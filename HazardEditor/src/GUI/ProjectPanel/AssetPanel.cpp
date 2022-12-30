@@ -44,7 +44,6 @@ namespace UI
 	}
 	bool AssetPanel::OnWindowFocus(WindowFocusEvent& e)
 	{
-        return false;
 		GenerateFolderStructure();
 		RefreshFolderItems();
 		return false;
@@ -202,7 +201,6 @@ namespace UI
 	{
 		bool changed = false;
 		ImUI::ContextMenu([&]() {
-
 			ImUI::MenuHeader("Folder");
 			ImUI::MenuItem("New folder", [&]() {
 				EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
@@ -224,7 +222,8 @@ namespace UI
 				changed = true;
 				});
 			ImUI::MenuItem("Material", [&]() {
-
+                EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
+                changed |= true;
 				});
 
 			ImUI::MenuHeader("Advanced assets");

@@ -91,6 +91,7 @@ namespace HazardRenderer::Metal
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
             auto write = descriptor.GetWriteDescriptor(name);
+            if(write == nullptr) continue;
             if (write->DebugName != name)
                 continue;
 
@@ -158,9 +159,31 @@ namespace HazardRenderer::Metal
                 bufferInfo.Size = buffer.Size;
                 bufferInfo.Usage = buffer.UsageFlags;
                 
-                descriptorSet.GetWriteDescriptor(binding)->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+                auto* descriptor = descriptorSet.GetWriteDescriptor(binding);
+                descriptor->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+                descriptor->Flags = bufferInfo.Usage;
             }
         }
+        
+        for (auto& [set, constants] : m_ShaderData.PushConstants)
+        {
+            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
+            for (auto& [binding, constant] : constants)
+            {
+                MetalWriteDescriptor writeDescriptor = {};
+                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT;
+                writeDescriptor.DebugName = constant.Name;
+                writeDescriptor.Binding = binding;
+                writeDescriptor.ArraySize = 0;
+
+                descriptorSet.AddWriteDescriptor(writeDescriptor);
+                
+                auto* descriptor = descriptorSet.GetWriteDescriptor(binding);
+
+                descriptor->Flags = constant.UsageFlags;
+            }
+        }
+        
         for (auto& [set, samplers] : m_ShaderData.ImageSamplers)
         {
             MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];

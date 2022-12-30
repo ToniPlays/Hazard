@@ -48,6 +48,9 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
+        
+        Ref<Pipeline> pipeline = meshComponent.m_MaterialHandle ? meshComponent.m_MaterialHandle->GetPipeline() : s_Engine->GetResources().PbrPipeline;
+        
 		if (!mesh->IsValid()) return;
 
 		RawMesh data = {};
@@ -55,14 +58,12 @@ namespace Hazard
 		data.VertexBuffer = mesh->GetVertexBuffer();
 		data.IndexBuffer = mesh->GetIndexBuffer();
 		data.Count = mesh->GetIndexCount();
-		data.Metalness = meshComponent.Metalness;
-		data.Roughness = meshComponent.Roughness;
 
-		SubmitMesh(data, mesh->GetPipeline());
+		SubmitMesh(data, pipeline);
 
-		if (!meshComponent.CastShadows) return;
+		if (!true) return;
 
-		SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, mesh->GetPipeline(), data.Count);
+		SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{

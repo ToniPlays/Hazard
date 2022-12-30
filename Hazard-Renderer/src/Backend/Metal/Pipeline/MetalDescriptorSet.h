@@ -17,6 +17,7 @@ namespace HazardRenderer::Metal
         MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
         MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE,
         MTL_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE,
+        MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT,
         MTL_DESCRIPTOR_TYPE_MAX_ENUM,
         MTL_DESCRIPTOR_TYPE_MAX_FLAGS
     };
@@ -29,6 +30,7 @@ namespace HazardRenderer::Metal
         uint32_t ArraySize = 0;
         uint32_t Dimension = 1;
         uint32_t ActualBinding = UINT32_MAX;
+        uint32_t Flags = 0;
         std::unordered_map<uint32_t, Ref<RefCount>> BoundValue;
     };
 

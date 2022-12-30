@@ -79,8 +79,7 @@ namespace HazardRenderer::Metal
         m_ErrorMessage.clear();
         
         spirv_cross::CompilerMSL::Options options;
-        options.set_msl_version(3, 0, 0);
-        options.enable_decoration_binding = true;
+        options.set_msl_version(2, 4);
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         
@@ -95,13 +94,13 @@ namespace HazardRenderer::Metal
     {
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
-        options.enable_decoration_binding = true;
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         
         compiler.set_msl_options(options);
+        auto r = compiler.compile();
         
         auto resources = compiler.get_shader_resources();
         
@@ -109,11 +108,22 @@ namespace HazardRenderer::Metal
         
         for(auto& buffer : resources.uniform_buffers)
         {
-            result[buffer.name] = compiler.get_decoration(buffer.id, spv::DecorationBinding);
+            int id = compiler.get_automatic_msl_resource_binding(buffer.id);
+            if(id == -1) continue;
+            result[buffer.name] = id;
+        }
+        for(auto& range : resources.push_constant_buffers)
+        {
+            int id = compiler.get_automatic_msl_resource_binding(range.id);
+            if(id == -1) continue;
+            result[range.name] = id;
+            std::cout << range.name << " -> " << id << std::endl;
         }
         for(auto& sampler : resources.sampled_images)
         {
-            result[sampler.name] = compiler.get_decoration(sampler.id, spv::DecorationBinding);
+            int id = compiler.get_automatic_msl_resource_binding(sampler.id);
+            if(id == -1) continue;
+            result[sampler.name] = id;
         }
         return result;
     }

@@ -6,6 +6,7 @@
 #include "UID.h"
 #include "Ref.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
+#include "Hazard/Rendering/Mesh/Material.h"
 #include "Core/Instance/ScriptObject.h"
 #include "ComponentBase.h"
 
@@ -83,8 +84,6 @@ namespace Hazard {
 	struct MeshComponent : public ComponentBase
 	{
 		Ref<Mesh> m_MeshHandle;
-		float Metalness = 0.0f;
-		float Roughness = 1.0f;
-		bool CastShadows = false;
+        Ref<Material> m_MaterialHandle;
 	};
 }

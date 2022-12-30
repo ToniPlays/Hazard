@@ -675,9 +675,6 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				uint32_t flags = 0;
 				Ref<Mesh> mesh = firstMc.m_MeshHandle;
 
-				float metallic = firstMc.Metalness;
-				float roughness = firstMc.Roughness;
-
 				for (auto& entity : entities)
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
@@ -686,9 +683,6 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 						mesh = nullptr;
 						flags |= BIT(0);
 					}
-
-					flags |= (mc.Metalness != metallic) ? BIT(1) : 0;
-					flags |= (mc.Roughness != roughness) ? BIT(2) : 0;
 				}
 
 				std::string path = "";
@@ -719,24 +713,6 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
                         });
                     });
 
-				ImGui::NextColumn();
-				if (ImUI::InputFloat("Metalness", metallic, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
-				{
-					for (auto& entity : entities)
-					{
-						auto& mc = entity.GetComponent<MeshComponent>();
-						mc.Metalness = metallic;
-					}
-				}
-				if (ImUI::InputFloat("Roughness", roughness, 1.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(2)) != 0))
-				{
-					for (auto& entity : entities)
-					{
-						auto& mc = entity.GetComponent<MeshComponent>();
-						mc.Roughness = roughness;
-					}
-				}
-
 				ImGui::PopStyleVar();
 
 				ImGui::Columns();
@@ -746,9 +722,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 					{
 						auto& c = entity.GetComponent<MeshComponent>();
 						c.m_MeshHandle = nullptr;
-						c.Metalness = 0.0f;
-						c.Roughness = 1.0f;
-						c.CastShadows = false;
+                        c.m_MaterialHandle = nullptr;
 					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {

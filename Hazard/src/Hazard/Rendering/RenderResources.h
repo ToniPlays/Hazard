@@ -29,8 +29,6 @@ namespace Hazard
 	struct ModelData
 	{
 		glm::mat4 Transform;
-		float Metalness;
-		float Roughness;
 		int Flags;
 	};
 
