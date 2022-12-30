@@ -19,6 +19,7 @@ namespace Hazard::Utils
 		if (type == "Script")				return AssetType::Script;
 		if (type == "Pipeline")				return AssetType::Pipeline;
 		if (type == "Shader")				return AssetType::Shader;
+        if (type == "Material")             return AssetType::Material;
 
 		return AssetType::Undefined;
 	}
@@ -37,6 +38,7 @@ namespace Hazard::Utils
 		case AssetType::Script:				return "Script";
 		case AssetType::Pipeline:			return "Pipeline";
 		case AssetType::Shader:				return "Shader";
+        case AssetType::Material:           return "Material";
 		default:							return "Unknown";
 		}
 		return "";
@@ -58,6 +60,7 @@ namespace Hazard::Utils
 		if (ext == "gltf")		return AssetType::Mesh;
 		if (ext == "cs")		return AssetType::Script;
 		if (ext == "glsl")		return AssetType::Shader;
+        if (ext == "hmat")      return AssetType::Material;
 
 		return AssetType::Undefined;
 	}

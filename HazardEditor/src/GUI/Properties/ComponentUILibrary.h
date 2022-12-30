@@ -711,11 +711,13 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 				}
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
-                    Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(handle);
-                    
-                    for(auto& entity : entities)
-                        entity.GetComponent<MeshComponent>().m_MeshHandle = mesh;
-					});
+                    Application::Get().SubmitMainThread([handle, entities]() {
+                        Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(handle);
+                        
+                        for(auto entity : entities)
+                            entity.GetComponent<MeshComponent>().m_MeshHandle = mesh;
+                        });
+                    });
 
 				ImGui::NextColumn();
 				if (ImUI::InputFloat("Metalness", metallic, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))

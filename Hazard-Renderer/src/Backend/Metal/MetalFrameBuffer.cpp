@@ -140,7 +140,7 @@ namespace HazardRenderer::Metal
         if(m_Specs.pFrameBuffer)
             m_ColorAttachments.clear();
         
-        bool createImages = m_ColorAttachments.empty();
+        //bool createImages = m_ColorAttachments.empty();
 
         uint32_t attachmentImageIndex = 0;
         for(auto& spec : m_Specs.Attachments)

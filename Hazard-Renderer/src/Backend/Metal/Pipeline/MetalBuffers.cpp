@@ -18,6 +18,8 @@ namespace HazardRenderer::Metal
         m_Layout = *info->Layout;
         m_Usage = info->Usage;
         
+        HZR_ASSERT(m_Size, "Buffer size cannot be 0");
+        
         if(info->Data)
         {
             m_LocalBuffer = Buffer::Copy(info->Data, info->Size);

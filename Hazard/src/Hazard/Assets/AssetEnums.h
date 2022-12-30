@@ -17,7 +17,10 @@ enum class AssetType : uint32_t
 	Mesh,
 	Script,
 	Pipeline,
-	Shader
+	Shader,
+    Material,
+    
+    Last
 };
 
 enum class ResourceType 

@@ -126,16 +126,32 @@ bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
             camera.AddComponent<CameraComponent>();
             
             Entity cube = world->CreateEntity("Cube");
-            cube.AddComponent<MeshComponent>().m_MeshHandle = GetDefaultMesh("Cube");
+            //auto mesh = GetDefaultMesh("Cube");
+            //cube.AddComponent<MeshComponent>().m_MeshHandle = mesh;
             
             metadata.Handle = AssetManager::NewAsset(world);
             AssetManager::ImportAsset(path, metadata);
             AssetManager::SaveAsset(world);
-            metadata.Handle = world->GetHandle();
+            break;
             
         }
-        case AssetType::Shader: break;
+        case AssetType::Shader:
+        {
+            std::string source = File::ReadFile("res/templates/shader.glsl");
+            File::WriteFile(path, source);
+            
+            Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
+            metadata.Handle = AssetManager::NewAsset(asset);
+            AssetManager::ImportAsset(path, metadata);
+            AssetManager::SaveAsset(asset);
+            break;
+        }
+        default: break;
     }
+    
+    if(metadata.Handle == INVALID_ASSET_HANDLE)
+        return false;
+    
     return CreateMetadataFile(metadata, path);
     
 }
@@ -223,6 +239,9 @@ bool EditorAssetManager::MoveAssetToFolder(const AssetHandle& handle, const std:
     
     File::WriteFile(newPath);
     File::WriteFile(newPath.string() + ".meta");
+    
+    std::this_thread::sleep_for(500us);
+    
     File::Move(data.Path, newPath);
     File::Move(data.Path.string() + ".meta", newPath.string() + ".meta");
     

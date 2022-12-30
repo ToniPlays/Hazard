@@ -252,13 +252,15 @@ bool File::OpenInExplorer(const std::filesystem::path& path) {
 }
 bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
 {
+    auto abs = GetFileAbsolutePath(path);
+    if (!Exists(path)) return false;
 #ifdef HZR_PLATFORM_WINDOWS
-	auto abs = GetFileAbsolutePath(path);
-	if (!Exists(path)) return false;
+	
 	ShellExecute(NULL, L"explore", abs.c_str(), NULL, NULL, SW_SHOWNORMAL);
 	return true;
 #else
-    return false;
+    SystemCall((std::string("open ") + abs.string()).c_str());
+    return true;
 #endif
 }
 

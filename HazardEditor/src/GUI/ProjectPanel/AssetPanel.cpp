@@ -5,6 +5,8 @@
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
 
+#include "Core/Defines.h"
+
 #include "imgui.h"
 
 namespace UI
@@ -213,7 +215,7 @@ namespace UI
 
 			ImUI::MenuHeader("Quick create");
 			ImUI::MenuItem("Script", [&]() {
-				ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
 				panel->SetDirectory(GetOpenDirectory());
 				panel->Open();
 				});
@@ -241,7 +243,16 @@ namespace UI
 
 				});
 			ImUI::Submenu("Materials and textures", [&]() {
-
+                
+                ImUI::MenuItem("Material", [&]() {
+                    EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
+                    changed |= true;
+                    });
+                
+                ImUI::MenuItem("Shader", [&]() {
+                    EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
+                    changed |= true;
+                    });
 				});
 			ImUI::Submenu("Physics", [&]() {
 
@@ -254,7 +265,7 @@ namespace UI
 				});
 
 			ImUI::MenuHeader("Other");
-			ImUI::MenuItem("Show in Explorer", [&]() {
+			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
 				File::OpenDirectoryInExplorer(m_CurrentPath);
 				});
 			});
@@ -325,16 +336,19 @@ namespace UI
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();
 			}
-
 			for (const auto& subfolder : folder.SubFolders)
 			{
 				DrawFolderTreeItem(subfolder);
 			}
         });
-        ImUI::DropTarget<AssetHandle>("Asset", [&, path = folder.Path](AssetHandle handle) {
-            EditorAssetManager::MoveAssetToFolder(handle, path);
-            Refresh();
-        });
+        
+        for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+        {
+            ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
+                EditorAssetManager::MoveAssetToFolder(handle, path);
+                Refresh();
+            });
+        }
 	}
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)

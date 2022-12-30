@@ -76,11 +76,14 @@ namespace UI
         
         if(GetType() == AssetType::Folder)
         {
-            ImUI::DropTarget<AssetHandle>("Asset", [&](AssetHandle handle) {
-                AssetMetadata data = AssetManager::GetMetadata(m_Handle);
-                EditorAssetManager::MoveAssetToFolder(handle, data.Path);
-                Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
-            });
+            for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+            {
+                ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
+                    AssetMetadata data = AssetManager::GetMetadata(m_Handle);
+                    EditorAssetManager::MoveAssetToFolder(handle, data.Path);
+                    Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+                });
+            }
         }
         
 
@@ -139,10 +142,10 @@ namespace UI
 			ImGui::Text("%s", name.c_str());
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
-        ImUI::DragSource("Asset", &m_Handle, [&]() {
+        /*ImUI::DragSource("Asset", &m_Handle, [&]() {
             ImGui::Text("%s", name.c_str());
             ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
-            });
+            });*/
 
 		ImGui::PopStyleVar();
 	}

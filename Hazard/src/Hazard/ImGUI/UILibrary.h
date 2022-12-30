@@ -826,8 +826,8 @@ namespace Hazard::ImUI
 	template<typename T, typename Callback>
 	static bool DragSource(const char* type, T* data, Callback callback)
 	{
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+        {
 			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
 			callback();
 			ImGui::EndDragDropSource();
@@ -838,13 +838,7 @@ namespace Hazard::ImUI
 	template<typename T, typename Callback>
 	static bool DragSource(const AssetType& type, T* data, Callback callback)
 	{
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-			ImGui::SetDragDropPayload(Utils::AssetTypeToString(type), (void*)data, sizeof(T));
-			callback();
-			ImGui::EndDragDropSource();
-			return true;
-		}
-		return false;
+        return DragSource(Utils::AssetTypeToString(type), data, callback);
 	}
 
 	template<typename T, typename Callback>

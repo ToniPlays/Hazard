@@ -70,8 +70,13 @@ namespace Hazard
 		}
 
 		const aiScene* scene = m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), (uint32_t)m_MeshFlags);
+        
 		if (!scene || !scene->HasMeshes())
-			return MeshData();
+        {
+            HZR_CORE_WARN("Scene not found or has no meshes {0}", file.string());
+            return MeshData();
+        }
+			
 		
 		m_SceneMeshes = scene->mNumMeshes;
 		MeshData data;
