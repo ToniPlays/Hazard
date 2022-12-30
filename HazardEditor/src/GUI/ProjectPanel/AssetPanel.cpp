@@ -339,7 +339,7 @@ namespace UI
 			ImGui::SameLine(0.0f, 8.0f);
 
 			if (ImGui::Button(File::GetName(path).c_str(), { 0, 28.0f }))
-				GoToFolderDepth(m_CurrentPath, i + 1);
+				GoToFolderDepth(m_CurrentPath, (uint32_t)i + 1);
             
             for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
             {

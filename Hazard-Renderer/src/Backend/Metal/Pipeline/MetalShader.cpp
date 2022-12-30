@@ -43,11 +43,10 @@ namespace HazardRenderer::Metal
             NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             options->setFastMathEnabled(true);
+            options->setPreserveInvariance(true);
             options->setLanguageVersion(MTL::LanguageVersion2_4);
             
-            
             MTL::Library* lib = device->GetMetalDevice()->newLibrary(source, options, &libError);
-            
             
             if(libError->code() != 0)
             {

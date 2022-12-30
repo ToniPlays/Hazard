@@ -243,7 +243,8 @@ void File::Copy(const std::filesystem::path& source, const std::filesystem::path
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
 
-bool File::OpenInExplorer(const std::filesystem::path& path) {
+bool File::OpenInExplorer(const std::filesystem::path& path)
+{
 	auto abs = GetFileAbsolutePath(path);
 	if (!Exists(abs)) return false;
 
@@ -258,6 +259,20 @@ bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
 	
 	ShellExecute(NULL, L"explore", abs.c_str(), NULL, NULL, SW_SHOWNORMAL);
 	return true;
+#else
+    SystemCall((std::string("open ") + abs.string()).c_str());
+    return true;
+#endif
+}
+
+bool File::OpenInDefaultApp(const std::filesystem::path& file)
+{
+    auto abs = GetFileAbsolutePath(file);
+    if (!Exists(file)) return false;
+    
+#ifdef HZR_PLATFORM_WINDOWS
+    SystemCall((std::string("explorer.exe ") + abs.string()).c_str());
+    return true;
 #else
     SystemCall((std::string("open ") + abs.string()).c_str());
     return true;

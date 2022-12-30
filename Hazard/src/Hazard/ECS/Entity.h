@@ -57,7 +57,7 @@ namespace Hazard {
 			HZR_TIMED_FUNCTION();
 			return m_World->m_Registry.get<T>(m_Handle);
 		}
-
+        
 		template<typename T>
 		bool HasComponent() { return m_World->m_Registry.has<T>(m_Handle); }
 

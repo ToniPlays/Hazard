@@ -61,8 +61,6 @@ void main()
 		m_Params.Normal = normalize(Normal);
 		m_Params.View = normalize(u_Util.CameraPos.xyz - WorldPosition);
 		m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
-	
-		float alpha = Color.a;
 
 		//Specular reflect direction
 		vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
@@ -77,6 +75,7 @@ void main()
 			DirectionalLight light = u_Lights.DirectionalLights[i];
 			if(light.Color.a <= 0.0) 
 				continue;
+            
 			Lo += CalculateDirectionalLight(F0, light);
 		}
 

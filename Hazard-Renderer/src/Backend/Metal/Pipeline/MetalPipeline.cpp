@@ -196,6 +196,8 @@ namespace HazardRenderer::Metal
     void MetalPipeline::BindGraphics(MTL::RenderCommandEncoder* encoder)
     {
         encoder->setRenderPipelineState(m_Pipeline);
+        encoder->setCullMode(CullModeToMTLCullMode(m_Specs.CullMode));
+        
         if(m_DepthState)
             encoder->setDepthStencilState(m_DepthState);
         m_Shader->BindResources(encoder);

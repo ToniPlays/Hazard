@@ -237,6 +237,9 @@ bool EditorAssetManager::MoveAssetToFolder(const AssetHandle& handle, const std:
     AssetMetadata& data = AssetManager::GetMetadata(handle);
     std::filesystem::path newPath = path / File::GetName(data.Path);
     
+    if(File::Exists(newPath))
+        return false;
+    
     File::WriteFile(newPath);
     File::WriteFile(newPath.string() + ".meta");
     

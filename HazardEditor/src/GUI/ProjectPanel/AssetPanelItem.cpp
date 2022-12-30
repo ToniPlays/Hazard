@@ -147,6 +147,9 @@ namespace UI
             ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
             });*/
 
+        if(ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder)
+            File::OpenInDefaultApp(GetMetadata().Path);
+        
 		ImGui::PopStyleVar();
 	}
 	void AssetPanelItem::EndRender()

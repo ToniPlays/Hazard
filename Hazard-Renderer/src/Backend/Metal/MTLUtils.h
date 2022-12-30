@@ -92,6 +92,15 @@ namespace HazardRenderer::Metal
         }
         return MTL::CompareFunctionNever;
     }
+    MTL::CullMode CullModeToMTLCullMode(const CullMode& mode)
+    {
+        switch(mode)
+        {
+            case CullMode::FrontFace:   return MTL::CullModeFront;
+            case CullMode::BackFace:    return MTL::CullModeBack;
+            case CullMode::None:        return MTL::CullModeNone;
+        }
+    }
 
     template<typename T>
     void SetDebugLabel(T* object, const std::string& label)
