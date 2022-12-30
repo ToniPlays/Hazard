@@ -63,7 +63,8 @@ namespace UI {
 		std::filesystem::path m_CurrentPath;
 		std::vector<FolderStructureData> m_FolderData;
 		std::vector<AssetPanelItem> m_CurrentItems;
-
+        std::vector<std::filesystem::path> m_Paths;
+        
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
         
         float m_Scale = 100.0f;

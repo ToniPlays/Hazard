@@ -303,29 +303,51 @@ namespace UI
 		for (auto& f : files)
 			m_CurrentItems.push_back(f);
 		
+        m_Paths.clear();
+        
+        auto path = m_CurrentPath;
+        
+        while(path != m_RootPath)
+        {
+            m_Paths.push_back(path);
+            path = path.parent_path();
+        }
 	}
 
 	void AssetPanel::DrawCurrentFolderPath()
 	{
 		HZR_PROFILE_FUNCTION();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-		std::string relative = m_CurrentPath.string().substr(m_RootPath.string().length());
-		std::vector<std::string> paths = StringUtil::SplitString(relative, '\\');
-
+        
 		if (ImGui::Button((const char*)ICON_FK_FOLDER " Content", { 0, 28.0f }))
 		{
 			GoToFolderDepth(m_CurrentPath, 0);
 		}
+        for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+        {
+            ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
+                EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
+                Refresh();
+            });
+        }
 
-		for (uint32_t i = 0; i < paths.size(); i++) {
+		for (size_t i = m_Paths.size(); i > 0; i--) {
 
-			const std::string& path = paths[i];
+			const auto& path = m_Paths[i - 1];
 			ImGui::SameLine(0.0f, 8.0f);
 			ImGui::TextColored(style.Window.HeaderActive, (const char*)ICON_FK_CHEVRON_RIGHT);
 			ImGui::SameLine(0.0f, 8.0f);
 
-			if (ImGui::Button(path.c_str(), { 0, 28.0f }))
+			if (ImGui::Button(File::GetName(path).c_str(), { 0, 28.0f }))
 				GoToFolderDepth(m_CurrentPath, i + 1);
+            
+            for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+            {
+                ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
+                    EditorAssetManager::MoveAssetToFolder(handle, path);
+                    Refresh();
+                });
+            }
 		}
 	}
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)

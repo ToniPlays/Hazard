@@ -166,6 +166,7 @@ namespace UI
 		const AssetMetadata& metadata = GetMetadata();
 		if (metadata.Type == AssetType::Folder)
 			return File::GetName(metadata.Path);
+        
 		return File::GetNameNoExt(GetMetadata().Path);
 	}
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
