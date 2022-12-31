@@ -3,7 +3,7 @@
 #include <map>
 #include <mutex>
 
-#ifdef HZR_DEBUG
+#ifdef defined(HZR_DEBUG) && defined(HZR_PLATFORM_WINDOWS)
 #define HZR_MEM_DIAG
 #endif
 
@@ -91,40 +91,43 @@ namespace Memory
 
 #ifdef HZR_MEM_DIAG
     #ifdef HZR_PLATFORM_WINDOWS
+        #define _MEM_FUNC_DEC_ _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+        #define _FUNC_DECL_ __CRTDECL
+    #elif HZR_PLATFORM_MACOS
+        #define _MEM_FUNC_DECL_
+        #define _FUNC_DECL_
+    #endif
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new(size_t size);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new(size_t size);
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new[](size_t size);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new[](size_t size);
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new(size_t size, const char* desc);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new(size_t size, const char* desc);
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new[](size_t size, const char* desc);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new[](size_t size, const char* desc);
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new(size_t size, const char* file, int line);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new(size_t size, const char* file, int line);
 
-    _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
-    void* __CRTDECL operator new[](size_t size, const char* file, int line);
+    _MEM_FUNC_DECL_
+    void* _FUNC_DECL_ operator new[](size_t size, const char* file, int line);
 
-    void __CRTDECL operator delete(void* memory);
-    void __CRTDECL operator delete(void* memory, const char* desc);
-    void __CRTDECL operator delete(void* memory, const char* file, int line);
+    void _FUNC_DECL_ operator delete(void* memory);
+    void _FUNC_DECL_ operator delete(void* memory, const char* desc);
+    void _FUNC_DECL_ operator delete(void* memory, const char* file, int line);
 
-    void __CRTDECL operator delete[](void* memory);
-    void __CRTDECL operator delete[](void* memory, const char* desc);
-    void __CRTDECL operator delete[](void* memory, const char* file, int line);
+    void _FUNC_DECL_ operator delete[](void* memory);
+    void _FUNC_DECL_ operator delete[](void* memory, const char* desc);
+    void _FUNC_DECL_ operator delete[](void* memory, const char* file, int line);
 
     #define hnew new(__FILE__, __LINE__)
     #define hdelete delete
-    #else
-        #define hnew new
-        #define hdelete delete
-    #endif
 #else
+
     #define hnew new
     #define hdelete delete
 #endif

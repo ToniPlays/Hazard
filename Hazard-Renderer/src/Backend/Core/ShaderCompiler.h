@@ -49,6 +49,8 @@ namespace HazardRenderer
 		static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
 		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
+        
+        static std::vector<ShaderMemberType> GetTypeMembers(spirv_cross::Compiler& compiler, spirv_cross::Resource resource);
 
 	private:
 		inline static std::filesystem::path s_CacheDir;

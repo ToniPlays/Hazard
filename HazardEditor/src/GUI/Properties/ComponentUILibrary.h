@@ -473,12 +473,12 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImGui::SetColumnWidth(0, colWidth);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
-				ImGui::Text("Mesh");
+				ImGui::Text("Map");
 				ImGui::NextColumn();
 
 				std::string path = "None";
 				if (map)
-					path = File::GetNameNoExt(AssetManager::GetMetadata(map->GetHandle()).Path);
+					path = File::GetNameNoExt(AssetManager::GetMetadata(map->GetSourceImage()->GetHandle()).Path);
 				else if (flags & BIT(0))
 					path = "---";
 
@@ -494,7 +494,13 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
                     Application::Get().SubmitMainThread([handle, entities]() mutable {
                         HZR_INFO(handle);
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
-						auto envMap = EnvironmentMap::Create(asset);
+                        
+                        EnvironmentMapCreateInfo info = {};
+                        info.SourceImage = asset;
+                        info.Resolution = 2048;
+                        info.Samples = 2048;
+                        
+						auto envMap = EnvironmentMap::Create(&info);
 
 						for (auto& entity : entities)
 							entity.GetComponent<SkyLightComponent>().EnvironmentMap = envMap;

@@ -36,14 +36,17 @@ namespace HazardRenderer
 		ShaderStage Stage;
 		Buffer ShaderCode;
 	};
+    struct ShaderMemberType
+    {
+        std::string Name;
+        ShaderDataType Type = ShaderDataType::None;
+        uint32_t Offset = 0;
+    };
 
 	struct ShaderStageInput
 	{
-		std::string Name;
+        ShaderMemberType Type;
 		uint32_t Location = 0;
-		ShaderDataType Type = ShaderDataType::None;
-		uint32_t Size = 0;
-		uint32_t Offset = 0;
 	};
 	struct ShaderStageAccelerationStructure
 	{
@@ -57,13 +60,14 @@ namespace HazardRenderer
 		uint32_t Location;
 		uint32_t UsageFlags;
 	};
-	struct ShaderStageOutput
+    //Do we need this?
+	/*struct ShaderStageOutput
 	{
 		std::string Name;
+        ShaderDataType Type = ShaderDataType::None;
 		uint32_t Location = 0;
-		ShaderDataType Type = ShaderDataType::None;
 		uint32_t Size = 0;
-	};
+	};*/
 	struct ShaderUniformBufferDescription
 	{
 		std::string Name;
@@ -72,6 +76,8 @@ namespace HazardRenderer
 		size_t MemberCount = 0;
 		uint32_t UsageFlags = 0;
 		uint32_t DescritorSet = UINT32_MAX;
+        
+        std::vector<ShaderMemberType> Members;
 	};
 	struct ShaderImageSampler 
 	{
@@ -98,12 +104,14 @@ namespace HazardRenderer
         uint32_t Binding = 0;
         uint32_t Size = 0;
         uint32_t UsageFlags = 0;
+        
+        std::vector<ShaderMemberType> Members;
     };
 
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
-		std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
+		//std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
 		uint32_t Stride = 0;
 	};
 
@@ -170,6 +178,16 @@ namespace HazardRenderer
 				case 4:     return ShaderDataType::Int4;
                 default:    return ShaderDataType::None;
 				}
+            case SPIRType::UInt:
+                    switch (type.vecsize)
+                    {
+                    case 1:     return ShaderDataType::UInt;
+                    case 2:     return ShaderDataType::UInt2;
+                    case 3:     return ShaderDataType::UInt3;
+                    case 4:     return ShaderDataType::UInt4;
+                    default:    return ShaderDataType::None;
+                    }
+                    
             default:
                 return ShaderDataType::None;
 			}

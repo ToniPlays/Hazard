@@ -118,8 +118,8 @@ namespace Hazard
                     
                     EnvironmentMapCreateInfo info = {};
                     info.SourceImage = asset;
-                    info.Resolution = 256;
-                    info.Samples = 8;
+                    info.Resolution = 2048;
+                    info.Samples = 2048;
                     
 					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(&info);
 					return 0;

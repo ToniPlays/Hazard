@@ -16,7 +16,11 @@ namespace HazardRenderer
 		Int, 
 		Int2, 
 		Int3, 
-		Int4, 
+		Int4,
+        UInt,
+        UInt2,
+        UInt3,
+        UInt4,
 		Bool
 	};
 
@@ -30,9 +34,13 @@ namespace HazardRenderer
 		case ShaderDataType::Mat3:     return (uint32_t)4 * 3 * 3;
 		case ShaderDataType::Mat4:     return (uint32_t)4 * 4 * 3;
 		case ShaderDataType::Int:      return (uint32_t)4;
-		case ShaderDataType::Int2:     return (uint32_t)4 * 2;
-		case ShaderDataType::Int3:     return (uint32_t)4 * 3;
-		case ShaderDataType::Int4:     return (uint32_t)4 * 4;
+        case ShaderDataType::Int2:     return (uint32_t)4 * 2;
+        case ShaderDataType::Int3:     return (uint32_t)4 * 3;
+        case ShaderDataType::Int4:     return (uint32_t)4 * 4;
+        case ShaderDataType::UInt:     return (uint32_t)4;
+        case ShaderDataType::UInt2:    return (uint32_t)4 * 2;
+        case ShaderDataType::UInt3:    return (uint32_t)4 * 4;
+        case ShaderDataType::UInt4:    return (uint32_t)4 * 3;
 		case ShaderDataType::Bool:     return (uint32_t)1;
         case ShaderDataType::None:     return (uint32_t)0;
 		}
@@ -51,8 +59,12 @@ namespace HazardRenderer
 		case ShaderDataType::Int2:     return 2;
 		case ShaderDataType::Int3:     return 3;
 		case ShaderDataType::Int4:     return 4;
+        case ShaderDataType::UInt:     return 1;
+        case ShaderDataType::UInt2:    return 2;
+        case ShaderDataType::UInt3:    return 3;
+        case ShaderDataType::UInt4:    return 4;
 		case ShaderDataType::Bool:     return 1;
-        case ShaderDataType::None:     return (uint32_t)0;
+        case ShaderDataType::None:     return 0;
 		}
 		return 0;
 	}
@@ -69,6 +81,10 @@ namespace HazardRenderer
 		case ShaderDataType::Int2:     return "Int2";
 		case ShaderDataType::Int3:     return "Int3";
 		case ShaderDataType::Int4:     return "Int4";
+        case ShaderDataType::UInt:     return "UInt";
+        case ShaderDataType::UInt2:    return "UInt2";
+        case ShaderDataType::UInt3:    return "UInt3";
+        case ShaderDataType::UInt4:    return "UInt4";
 		case ShaderDataType::Bool:     return "Bool";
         case ShaderDataType::None:     return "None";
 		}

@@ -59,6 +59,7 @@ namespace HazardRenderer::Metal
         }
 
         shaderc::Compiler compiler;
+        
         shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source,
             ShaderStageToShaderC(compileInfo->Stage), compileInfo->Name.c_str(), options);
 

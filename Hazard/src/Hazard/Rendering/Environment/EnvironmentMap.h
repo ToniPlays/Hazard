@@ -8,7 +8,7 @@ namespace Hazard
     struct EnvironmentMapCreateInfo
     {
         uint32_t Resolution;
-        size_t Samples = 0;
+        uint32_t Samples = 0;
         Ref<Texture2DAsset> SourceImage;
     };
 

@@ -97,8 +97,6 @@ namespace HazardRenderer::Metal
     {
         HZR_PROFILE_FUNCTION();
         
-        std::cout << std::endl;
-        
         for(auto& [type, descriptors] : m_WriteDescriptors)
         {
             for (auto& [binding, descriptor] : descriptors)
@@ -181,8 +179,6 @@ namespace HazardRenderer::Metal
                 
                 writeDescriptor->ActualBinding = binding.Binding;
                 writeDescriptor->SecondaryBinding = binding.SamplerBinding;
-                
-                std::cout << fmt::format("{0} actual {1}, secondary {2}", name, binding.Binding, binding.SamplerBinding) << std::endl;
                 break;
             }
         }

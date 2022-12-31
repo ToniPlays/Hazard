@@ -3,7 +3,6 @@
 #include "MathCore.h"
 #include "Utility/StringUtil.h"
 
-
 #include "Backend/OpenGL/OpenGLShaderCompiler.h"
 #include "Backend/Vulkan/VulkanShaderCompiler.h"
 #include "Backend/Metal/MetalShaderCompiler.h"
@@ -63,13 +62,13 @@ namespace HazardRenderer
 				uint32_t location = compiler.get_decoration(resource.id, spv::Decoration::DecorationLocation);
 
 				ShaderStageInput& input = data.Inputs[location];
-				input.Name = resource.name;
+				input.Type.Name = resource.name;
 				input.Location = location;
-				input.Type = Utils::ShaderDataTypeFromSPV(spvType);
-				input.Size = ShaderDataTypeSize(input.Type);
-				input.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
-				data.Stride += input.Size;
+				input.Type.Type = Utils::ShaderDataTypeFromSPV(spvType);
+				input.Type.Offset = compiler.get_decoration(resource.id, spv::Decoration::DecorationOffset);
+				data.Stride += ShaderDataTypeSize(input.Type.Type);
 			}
+            /*
 			for (auto& resource : resources.stage_outputs)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);
@@ -81,6 +80,7 @@ namespace HazardRenderer
 				output.Type = Utils::ShaderDataTypeFromSPV(spvType);
 				output.Size = ShaderDataTypeSize(output.Type);
 			}
+            */
             
 			for (auto& resource : resources.acceleration_structures)
 			{
@@ -146,6 +146,7 @@ namespace HazardRenderer
 					buffer.MemberCount = spvType.member_types.size();
 					buffer.Size = compiler.get_declared_struct_size(spvType);
 					buffer.UsageFlags |= (uint32_t)stage;
+                    buffer.Members = GetTypeMembers(compiler, resource);
 				}
 			}
             
@@ -170,6 +171,8 @@ namespace HazardRenderer
                     buffer.DescriptorSet = set;
                     buffer.Size = compiler.get_declared_struct_size(spvType);
                     buffer.UsageFlags |= (uint32_t)stage;
+                    
+                    buffer.Members = GetTypeMembers(compiler, resource);
                 }
             }
             
@@ -223,8 +226,8 @@ namespace HazardRenderer
 			for (uint32_t i = 0; i < data.Inputs.size(); i++)
 			{
 				auto& input = data.Inputs[i];
-				input.Offset = offset;
-				offset += input.Size;
+				input.Type.Offset = offset;
+				offset += ShaderDataTypeSize(input.Type.Type);
 			}
 		}
 		return result;
@@ -451,4 +454,22 @@ namespace HazardRenderer
 		}
 		return success;
 	}
+    std::vector<ShaderMemberType> ShaderCompiler::GetTypeMembers(spirv_cross::Compiler& compiler, spirv_cross::Resource resource)
+    {
+        auto& type = compiler.get_type(resource.type_id);
+        
+        std::vector<ShaderMemberType> result;
+        result.reserve(type.member_types.size());
+        
+        for(uint32_t i = 0; i < type.member_types.size(); i++)
+        {
+            auto& memberType = compiler.get_type(type.member_types[i]);
+            
+            auto& element = result.emplace_back();
+            element.Name = compiler.get_member_name(resource.base_type_id, i);
+            element.Type = Utils::ShaderDataTypeFromSPV(memberType);
+            element.Offset = compiler.get_member_decoration(type.member_types[i], i, spv::DecorationOffset);
+        }
+        return result;
+    }
 }
