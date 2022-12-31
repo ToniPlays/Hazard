@@ -24,7 +24,7 @@ namespace HazardRenderer
 		ClosestHit = BIT(6),
 		AnyHit = BIT(7)
 	};
-	enum ShaderResourceFlags
+	enum ShaderResourceFlags : uint32_t
 	{
 		ShaderResourceFlags_ReadOnly = BIT(0),
 		ShaderResourceFlags_WriteOnly = BIT(1),
@@ -94,6 +94,7 @@ namespace HazardRenderer
     struct ShaderPushConstantRange
     {
         std::string Name;
+        uint32_t DescriptorSet = 0;
         uint32_t Binding = 0;
         uint32_t Size = 0;
         uint32_t UsageFlags = 0;
@@ -197,6 +198,7 @@ namespace HazardRenderer
 		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) = 0;
+        virtual void Set(const std::string& name, Buffer buffer) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;

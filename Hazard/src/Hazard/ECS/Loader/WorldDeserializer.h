@@ -115,15 +115,27 @@ namespace Hazard
 					HZR_CORE_ASSERT(false, "TODO");
 					Entity entity = { e };
 					Ref<Texture2DAsset> asset = *graph.Result<Ref<Texture2DAsset>>();
-					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(asset);
+                    
+                    EnvironmentMapCreateInfo info = {};
+                    info.SourceImage = asset;
+                    info.Resolution = 256;
+                    info.Samples = 8;
+                    
+					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(&info);
 					return 0;
 					});
 				m_Promises.push_back({ AssetType::Image, promise });
 			}
 			else
 			{
-				Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-				c.EnvironmentMap = EnvironmentMap::Create(sourceImage);
+                Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
+                
+                EnvironmentMapCreateInfo info = {};
+                info.SourceImage = sourceImage;
+                info.Resolution = 256;
+                info.Samples = 8;
+                
+				c.EnvironmentMap = EnvironmentMap::Create(&info);
 			}
 		}
 

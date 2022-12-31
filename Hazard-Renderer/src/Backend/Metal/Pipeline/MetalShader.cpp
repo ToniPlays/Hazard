@@ -90,12 +90,28 @@ namespace HazardRenderer::Metal
     {
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
-            auto write = descriptor.GetWriteDescriptor(name);
+            auto write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, name);
             if(write == nullptr) continue;
             if (write->DebugName != name)
                 continue;
-
-            write->BoundValue[index] = image;
+            
+            Ref<Image2D> instance = image;
+            Renderer::Submit([write, index, instance]() {
+                write->BoundValue[index] = instance;
+            });
+            return;
+        }
+        for (auto& [set, descriptor] : m_DescriptorSet)
+        {
+            auto write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE, name);
+            if(write == nullptr) continue;
+            if (write->DebugName != name)
+                continue;
+            
+            Ref<Image2D> instance = image;
+            Renderer::Submit([write, index, instance]() {
+                write->BoundValue[index] = instance;
+            });
             return;
         }
     }
@@ -103,10 +119,25 @@ namespace HazardRenderer::Metal
     {
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
-            auto* write = descriptor.GetWriteDescriptor(name);
+            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, name);
             if (!write) continue;
 
-            write->BoundValue[index] = cubemap;
+            Ref<CubemapTexture> instance = cubemap;
+            Renderer::Submit([write, index, instance]() {
+                write->BoundValue[index] = instance;
+            });
+            return;
+        }
+        
+        for (auto& [set, descriptor] : m_DescriptorSet)
+        {
+            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE, name);
+            if (!write) continue;
+
+            Ref<CubemapTexture> instance = cubemap;
+            Renderer::Submit([write, index, instance]() {
+                write->BoundValue[index] = instance;
+            });
             return;
         }
     }
@@ -114,16 +145,34 @@ namespace HazardRenderer::Metal
     {
         for (auto& [set, descriptor] : m_DescriptorSet)
         {
-            auto* write = descriptor.GetWriteDescriptor(name);
+            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE, name);
             if (!write) continue;
 
-            write->BoundValue[index] = accelerationStructure;
+            Renderer::Submit([write, index, accelerationStructure]() {
+                write->BoundValue[index] = accelerationStructure;
+            });
             return;
         }
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<BufferBase> buffer)
     {
         HZR_ASSERT(false, "TODO");
+    }
+    void MetalShader::Set(const std::string &name, Buffer buffer)
+    {
+        for (auto& [set, descriptor] : m_DescriptorSet)
+        {
+            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT, name);
+            if (!write) continue;
+
+            Buffer data = Buffer::Copy(buffer);
+            
+            Renderer::Submit([write, data]() mutable {
+                write->Buffer.Write(data.Data, data.Size);
+                data.Release();
+            });
+            return;
+        }
     }
     void MetalShader::BindResources(MTL::RenderCommandEncoder* encoder)
     {
@@ -144,14 +193,6 @@ namespace HazardRenderer::Metal
             MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
             for (auto& [binding, buffer] : buffers)
             {
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                writeDescriptor.DebugName = buffer.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = 0;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-
                 UniformBufferCreateInfo bufferInfo = {};
                 bufferInfo.Name = buffer.Name;
                 bufferInfo.Set = set;
@@ -159,9 +200,15 @@ namespace HazardRenderer::Metal
                 bufferInfo.Size = buffer.Size;
                 bufferInfo.Usage = buffer.UsageFlags;
                 
-                auto* descriptor = descriptorSet.GetWriteDescriptor(binding);
-                descriptor->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
-                descriptor->Flags = bufferInfo.Usage;
+                MetalWriteDescriptor writeDescriptor = {};
+                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                writeDescriptor.DebugName = buffer.Name;
+                writeDescriptor.Binding = binding;
+                writeDescriptor.ArraySize = 0;
+                writeDescriptor.BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+                writeDescriptor.Flags = buffer.UsageFlags;
+
+                descriptorSet.AddWriteDescriptor(writeDescriptor);
             }
         }
         
@@ -175,12 +222,12 @@ namespace HazardRenderer::Metal
                 writeDescriptor.DebugName = constant.Name;
                 writeDescriptor.Binding = binding;
                 writeDescriptor.ArraySize = 0;
+                writeDescriptor.Size = constant.Size;
+                writeDescriptor.Buffer.Allocate(writeDescriptor.Size);
+                writeDescriptor.Buffer.ZeroInitialize();
+                writeDescriptor.Flags = constant.UsageFlags;
 
                 descriptorSet.AddWriteDescriptor(writeDescriptor);
-                
-                auto* descriptor = descriptorSet.GetWriteDescriptor(binding);
-
-                descriptor->Flags = constant.UsageFlags;
             }
         }
         

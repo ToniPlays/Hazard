@@ -8,17 +8,20 @@
 
 #include "MetalShader.h"
 
+#include <spdlog/fmt/fmt.h>
 #include <glad/glad.h>
 
 namespace HazardRenderer::Metal
 {
     void MetalDescriptorSet::AddWriteDescriptor(MetalWriteDescriptor writeDescriptor)
     {
-        m_WriteDescriptors[writeDescriptor.Binding] = writeDescriptor;
+        auto& descriptor = m_WriteDescriptors[writeDescriptor.Type];
+        HZR_ASSERT(descriptor.find(writeDescriptor.Binding) == descriptor.end(), "");
+        descriptor[writeDescriptor.Binding] = writeDescriptor;
     }
-    MetalWriteDescriptor* MetalDescriptorSet::GetWriteDescriptor(const std::string& name)
+    MetalWriteDescriptor* MetalDescriptorSet::GetWriteDescriptor(uint32_t type, const std::string& name)
     {
-        for (auto& [binding, descriptor] : m_WriteDescriptors)
+        for (auto& [binding, descriptor] : m_WriteDescriptors[type])
         {
             if (descriptor.DebugName == name)
                 return &descriptor;
@@ -29,140 +32,159 @@ namespace HazardRenderer::Metal
     {
         HZR_PROFILE_FUNCTION();
         
-        for (auto& [binding, descriptor] : m_WriteDescriptors)
+        for(auto& [type, descriptors] : m_WriteDescriptors)
         {
-            switch (descriptor.Type)
+            for (auto& [binding, descriptor] : descriptors)
             {
-            case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-            {
-                auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
-                uint32_t flags = descriptor.Flags;
-                
-                if(flags & (uint32_t)ShaderStage::Vertex)
+                switch (descriptor.Type)
                 {
-                    encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
-                }
-                
-                if(flags & (uint32_t)ShaderStage::Fragment)
-                {
-                    encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
-                }
-                break;
-            }
-            case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-                if(descriptor.Dimension == 3)
-                {
-                    for (auto& [index, value] : descriptor.BoundValue)
+                    case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
                     {
-                        if(index >= 16) break; //TODO: what this
+                        auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                        uint32_t flags = descriptor.Flags;
                         
-                        auto texture = value.As<MetalCubemapTexture>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding + index);
+                        if(flags & (uint32_t)ShaderStage::Vertex)
+                            encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        
+                        if(flags & (uint32_t)ShaderStage::Fragment)
+                            encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        break;
                     }
-                    break;
-                }
-                else
-                {
-                    for (auto& [index, value] : descriptor.BoundValue)
+                    case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+                    case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+                        if(descriptor.Dimension == 3)
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalCubemapTexture>();
+                                encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                                encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.SecondaryBinding + index);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalImage2D>();
+                                encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                                encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.SecondaryBinding + index);
+                            }
+                            break;
+                        }
+                    case MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT:
                     {
-                        if(index >= 16) break; //TODO: what this
+                        void* data = descriptor.Buffer.Data;
+                        uint32_t flags = descriptor.Flags;
                         
-                        auto texture = value.As<MetalImage2D>();
-                        encoder->setFragmentTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
-                        encoder->setFragmentSamplerState(texture->GetMetalSamplerState(), descriptor.ActualBinding + index);
-                    }
-                    break;
-                }
-                case MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT:
-                {
-                    struct ShaderData {
-                        float m = 0.0f;
-                        float r = 1.0f;
-                    } data;
-                    
-                    uint32_t flags = descriptor.Flags;
-                    
-                    if(flags & (uint32_t)ShaderStage::Vertex)
-                        encoder->setVertexBytes(&data, sizeof(data), descriptor.ActualBinding);
-                    
-                    if(flags & (uint32_t)ShaderStage::Fragment)
-                    {
-                        encoder->setFragmentBytes(&data, sizeof(data), descriptor.ActualBinding);
-                    }
+                        if(flags & (uint32_t)ShaderStage::Vertex)
+                            encoder->setVertexBytes(data, descriptor.Size, descriptor.ActualBinding);
                         
-                    
-                    break;
+                        if(flags & (uint32_t)ShaderStage::Fragment)
+                            encoder->setFragmentBytes(data, descriptor.Size, descriptor.ActualBinding);
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
             }
         }
     }
     void MetalDescriptorSet::BindComputeResources(MTL::ComputeCommandEncoder *encoder)
     {
         HZR_PROFILE_FUNCTION();
-        for (auto& [binding, descriptor] : m_WriteDescriptors)
-        {
-            switch (descriptor.Type)
-            {
-            case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-            {
-                auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
-                encoder->setBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
-               
-                break;
-            }
-            case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
-            case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-                if(descriptor.Dimension == 3)
-                {
-                    for (auto& [index, value] : descriptor.BoundValue)
-                    {
-                        if(index >= 16) break; //TODO: what this
-                        
-                        auto texture = value.As<MetalCubemapTexture>();
-                        HZR_ASSERT(texture->GetMetalTexture(), "Texture is nullptr");
-                        encoder->setTexture(texture->GetMetalTexture(), descriptor.Binding + index);
-                        encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
-                    }
-                }
-                else
-                {
-                    for (auto& [index, value] : descriptor.BoundValue)
-                    {
-                        if(index >= 16) break; //TODO: what this
-                        
-                        auto texture = value.As<MetalImage2D>();
-                        encoder->setTexture(texture->GetMetalTexture(), descriptor.Binding + index);
-                        encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.Binding + index);
-                    }
-                }
-                break;
-                case MTL_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE:
-                {
-                    for (auto& [index, value] : descriptor.BoundValue)
-                    {
-                        auto structure = value.As<MetalTopLevelAS>();
-                        encoder->setAccelerationStructure(structure->GetMetalStructure(), descriptor.Binding + index);
         
+        std::cout << std::endl;
+        
+        for(auto& [type, descriptors] : m_WriteDescriptors)
+        {
+            for (auto& [binding, descriptor] : descriptors)
+            {
+                switch (descriptor.Type)
+                {
+                    case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+                    {
+                        auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                        encoder->setBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        break;
                     }
+                    case MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+                        if(descriptor.Dimension == 3)
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalCubemapTexture>();
+                                encoder->setTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalImage2D>();
+                                encoder->setTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                            }
+                            break;
+                        }
+                    case MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+                        if(descriptor.Dimension == 3)
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalCubemapTexture>();
+                                encoder->setTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                                encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.SecondaryBinding + index);
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            for (auto& [index, value] : descriptor.BoundValue)
+                            {
+                                if(index >= 16) break; //TODO: what this
+                                
+                                auto texture = value.As<MetalImage2D>();
+                                encoder->setTexture(texture->GetMetalTexture(), descriptor.ActualBinding + index);
+                                encoder->setSamplerState(texture->GetMetalSamplerState(), descriptor.SecondaryBinding + index);
+                            }
+                            break;
+                        }
+                    case MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT:
+                    {
+                        encoder->setBytes(descriptor.Buffer.Data, descriptor.Size, descriptor.ActualBinding);
+                        break;
+                    }
+                    default: break;
                 }
-                default: break;
             }
         }
     }
 
-    void MetalDescriptorSet::UpdateBindings(const std::unordered_map<std::string, uint32_t> bindings)
+    void MetalDescriptorSet::UpdateBindings(const std::unordered_map<std::string, MSLBinding> bindings)
     {
         for(auto& [name, binding] : bindings)
         {
-            auto writeDescriptor = GetWriteDescriptor(name);
-            if(!writeDescriptor) continue;
-            
-            std::cout << name << " at " << binding << std::endl;
-            HZR_ASSERT(binding != UINT32_MAX, "Binding failed");
-            
-            writeDescriptor->ActualBinding = binding;
+            for(auto& [type, descriptor] : m_WriteDescriptors)
+            {
+                auto writeDescriptor = GetWriteDescriptor(type, name);
+                if(!writeDescriptor) continue;
+                
+                writeDescriptor->ActualBinding = binding.Binding;
+                writeDescriptor->SecondaryBinding = binding.SamplerBinding;
+                
+                std::cout << fmt::format("{0} actual {1}, secondary {2}", name, binding.Binding, binding.SamplerBinding) << std::endl;
+                break;
+            }
         }
     }
 }

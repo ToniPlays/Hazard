@@ -18,6 +18,7 @@ struct Buffer
 
 		if (size == 0)
 			return;
+        
 		Data = hnew uint8_t[size];
 		Size = size;
 	}

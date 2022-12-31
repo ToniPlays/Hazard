@@ -49,7 +49,6 @@ namespace HazardRenderer::Metal
         options.SetOptimizationLevel(shaderc_optimization_level_zero);
         options.SetOptimizationLevel((shaderc_optimization_level)compileInfo->Optimization);
         options.SetGenerateDebugInfo();
-        
 
         for (uint32_t i = 0; i < compileInfo->DefineCount; i++)
         {
@@ -90,7 +89,7 @@ namespace HazardRenderer::Metal
     
         return !result.empty();
     }
-    std::unordered_map<std::string, uint32_t> MetalShaderCompiler::GetMSLBindings(Buffer binary, bool tesellation)
+    std::unordered_map<std::string, MSLBinding> MetalShaderCompiler::GetMSLBindings(Buffer binary, bool tesellation)
     {
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
@@ -104,26 +103,43 @@ namespace HazardRenderer::Metal
         
         auto resources = compiler.get_shader_resources();
         
-        std::unordered_map<std::string, uint32_t> result;
+        std::unordered_map<std::string, MSLBinding> result;
         
         for(auto& buffer : resources.uniform_buffers)
         {
             int id = compiler.get_automatic_msl_resource_binding(buffer.id);
             if(id == -1) continue;
-            result[buffer.name] = id;
+            result[buffer.name].Binding = id;
         }
         for(auto& range : resources.push_constant_buffers)
         {
             int id = compiler.get_automatic_msl_resource_binding(range.id);
             if(id == -1) continue;
-            result[range.name] = id;
-            std::cout << range.name << " -> " << id << std::endl;
+            result[range.name].Binding = id;
         }
+        
+        for(auto& image : resources.storage_images)
+        {
+            int id = compiler.get_automatic_msl_resource_binding(image.id);
+            auto& type = compiler.get_type(image.type_id);
+            uint32_t sId = compiler.get_automatic_msl_resource_binding_secondary(image.id);
+            
+            if(id == -1) continue;
+            
+            result[image.name].Binding = id;
+            result[image.name].SamplerBinding = sId < UINT32_MAX ? sId : id;
+        }
+        
         for(auto& sampler : resources.sampled_images)
         {
             int id = compiler.get_automatic_msl_resource_binding(sampler.id);
+            auto& type = compiler.get_type(sampler.type_id);
+            uint32_t sId = compiler.get_automatic_msl_resource_binding_secondary(sampler.id);
+            
             if(id == -1) continue;
-            result[sampler.name] = id;
+            
+            result[sampler.name].Binding = id;
+            result[sampler.name].SamplerBinding = sId < UINT32_MAX ? sId : id;
         }
         return result;
     }

@@ -91,7 +91,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "SkyboxLod", component.LodLevel);
 
 				if (!component.EnvironmentMap) return;
-				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->SourceImage->GetHandle());
+				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->GetSourceImage()->GetHandle());
 				});
 		}
 		template<>

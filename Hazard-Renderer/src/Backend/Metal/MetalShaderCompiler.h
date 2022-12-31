@@ -5,6 +5,11 @@
 
 namespace HazardRenderer::Metal
 {
+    struct MSLBinding {
+        uint32_t Binding;
+        uint32_t SamplerBinding;
+    };
+
     class MetalShaderCompiler
     {
     public:
@@ -13,7 +18,7 @@ namespace HazardRenderer::Metal
 
         bool Compile(CompileInfo* compileInfo);
         bool Decompile(Buffer binary, std::string& result, bool tesellation = false);
-        std::unordered_map<std::string, uint32_t> GetMSLBindings(Buffer binary, bool tesellation = false);
+        std::unordered_map<std::string, MSLBinding> GetMSLBindings(Buffer binary, bool tesellation = false);
 
         double GetCompileTime() { return m_CompilationTime; }
         std::string GetErrorMessage() { return m_ErrorMessage; }

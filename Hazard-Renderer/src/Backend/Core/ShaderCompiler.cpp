@@ -167,6 +167,7 @@ namespace HazardRenderer
                     auto& buffer = descriptorSet[binding];
                     buffer.Name = resource.name;
                     buffer.Binding = binding;
+                    buffer.DescriptorSet = set;
                     buffer.Size = compiler.get_declared_struct_size(spvType);
                     buffer.UsageFlags |= (uint32_t)stage;
                 }
