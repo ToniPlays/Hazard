@@ -2,7 +2,6 @@ project "Hazard-Renderer"
 
 	kind "StaticLib"
 	language "C++"
-	cppdialect "C++20"
 	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -43,15 +42,7 @@ project "Hazard-Renderer"
 		"Hazard-Utility"
 	}
 
-	defines {
-		"GLFW_INCLUDE_NONE"
-	}
-
 	filter "system:windows"
-		systemversion "latest"
-		defines {
-			"HZR_PLATFORM_WINDOWS"
-		}
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
@@ -60,10 +51,6 @@ project "Hazard-Renderer"
 
 
 	filter "system:macosx"
-		defines 
-		{
-			"HZR_PLATFORM_MACOS"
-		}
 		links { 
 			"IOKit.framework",
 			"CoreFoundation.framework",
@@ -81,9 +68,6 @@ project "Hazard-Renderer"
 		}
 
 	filter "configurations:Debug"
-		defines "HZR_DEBUG"
-		runtime "Debug"
-		symbols "on"
 		if os.host() == "windows" then
 			links {
 				"%{Library.ShaderC_Debug}",
@@ -92,11 +76,6 @@ project "Hazard-Renderer"
 			}
 		end
 	filter "configurations:Release"
-		defines "HZR_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-
 		if os.host() == "windows" then
 			links {
 				"%{Library.ShaderC_Release}",
@@ -106,10 +85,6 @@ project "Hazard-Renderer"
 		end
 
 	filter "configurations:Dist"
-		defines "HZR_DIST"
-		runtime "Release"
-		optimize "on"
-
 		if os.host() == "windows" then
 			links {
 				"%{Library.ShaderC_Release}",

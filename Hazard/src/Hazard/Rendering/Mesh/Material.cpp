@@ -1,5 +1,6 @@
 #include "Material.h"
 
-namespace Hazard {
+namespace Hazard
+{
 
 }

@@ -85,3 +85,23 @@ if os.host() == "macosx" then
     Library["Mono_Debug_Lib"] = "/usr/local/homebrew/Cellar/mono/6.12.0.122/lib/mono-2.0"
     Library["Assimp_Lib"] = "/opt/homebrew/Cellar/assimp/5.1.4/lib/assimp"
 end
+
+
+
+premake.override(_G, "project", function(base, ...)
+	local rval = base(...)
+	local args = {...}
+	filter "system:ios"
+		filename(args[1] .. "_ios")
+	filter {}
+	return rval
+	end)
+
+premake.override(_G, "workspace", function(base, ...)
+	local rval = base(...)
+	local args = {...}
+	filter "system:ios"
+		filename(args[1] .. "_ios")
+	filter {}
+	return rval
+	end)

@@ -10,7 +10,7 @@ namespace Hazard
     }
     Ref<JobGraph> MaterialAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
     {
-        ref<JobGraph> graph = Ref<JobGraph>::Create();
+        Ref<JobGraph> graph = Ref<JobGraph>::Create();
         return graph;
     }
     bool MaterialAssetLoader::Save(Ref<Asset>& asset)

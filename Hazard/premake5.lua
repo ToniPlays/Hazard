@@ -1,7 +1,6 @@
 project "Hazard"
 	kind "StaticLib"
 	language "C++"
-	cppdialect "C++20"
 	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -70,10 +69,9 @@ project "Hazard"
 	}
 
 	filter "system:windows"
-		systemversion "latest"
 		pchheader "hzrpch.h"
-		defines {
-			"HZR_PLATFORM_WINDOWS",
+		defines 
+		{
 			"HZR_INCLUDE_MONO"
 		}
 
@@ -91,10 +89,6 @@ project "Hazard"
 	filter "system:macosx"
 
 		pchheader "src/hzrpch.h"
-		defines {
-			"HZR_PLATFORM_MACOS",
-			"HZR_INCLUDE_METAL"
-		}
 		includedirs {
 			"%{IncludeDir.SPIRV_Cross}",
 			"%{IncludeDir.Metal}"
@@ -108,9 +102,6 @@ project "Hazard"
 		}
 
 	filter "configurations:Debug"
-		defines "HZR_DEBUG"
-		runtime "Debug"
-		symbols "on"
 
 		if os.host() == "windows" then
 			links {
@@ -121,10 +112,6 @@ project "Hazard"
 		end
 
 	filter "configurations:Release"
-		defines "HZR_RELEASE"
-		runtime "Release"
-		optimize "on"
-
 
 		if os.host() == "windows" then
 			links {
@@ -135,9 +122,6 @@ project "Hazard"
 		end
 
 	filter "configurations:Dist"
-		defines "HZR_DIST"
-		runtime "Release"
-		optimize "on"
 
 		if os.host() == "windows" then
 			links {

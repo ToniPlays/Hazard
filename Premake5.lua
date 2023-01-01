@@ -3,6 +3,7 @@ include "Dependencies.lua"
 workspace "Hazard"
 	architecture "x86_64"
 	startproject "HazardEditor"
+    cppdialect "C++20"
 
 	configurations
 	{
@@ -17,9 +18,51 @@ workspace "Hazard"
 	}
 
 	filter "system:windows"
+        systemversion "latest"
+        defines
+        {
+            "HZR_PLATFORM_WINDOWS"
+        }
 
 	filter "system:macosx"
-		architecture "universal"
+        defines
+        {
+            "HZR_PLATFORM_MACOS"
+        }
+        
+    filter "system:ios"
+        defines
+        {
+            "HZR_PLATFORM_IOS"
+        }
+ 
+    filter "system:ios or system:macosx"
+        architecture "universal"
+        xcodebuildsettings
+        {
+            ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",
+            ["IOS_DEPLOYMENT_TARGET"] = "14.0",
+            ["ALWAYS_SEARCH_USER_PATHS"] = "YES",
+            ["CLANG_ENABLE_OBJC_WEAK"] = "YES",
+            ["DEAD_CODE_STRIPPING"] = "YES",
+        }
+    filter ""
+ 
+ 
+    filter "configurations:Debug"
+        defines "HZR_DEBUG"
+        runtime "Debug"
+        symbols "on"
+        
+    filter "configurations:Release"
+        defines "HZR_RELEASE"
+        runtime "Release"
+        optimize "on"
+ 
+    filter "configurations:Dist"
+        defines "HZR_DIST"
+        runtime "Release"
+        optimize "on"
 
 	filter ""
 

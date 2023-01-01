@@ -143,7 +143,6 @@ namespace HazardRenderer
 					buffer.Name = resource.name;
 					buffer.Binding = binding;
 					buffer.DescritorSet = set;
-					buffer.MemberCount = spvType.member_types.size();
 					buffer.Size = compiler.get_declared_struct_size(spvType);
 					buffer.UsageFlags |= (uint32_t)stage;
                     buffer.Members = GetTypeMembers(compiler, resource);

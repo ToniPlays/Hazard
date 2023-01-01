@@ -2,7 +2,6 @@ project "HazardLauncher"
 
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++20"
 	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -62,10 +61,8 @@ project "HazardLauncher"
 
 
 	filter "system:windows"
-		systemversion "latest"
 		defines {
 			"_CRT_SECURE_NO_WARNINGS",
-			"HZR_PLATFORM_WINDOWS",
 			"HZR_INCLUDE_MONO"
 		}
 		links {
@@ -89,10 +86,6 @@ project "HazardLauncher"
 		}
 
 	filter "system:macosx"
-		defines 
-		{
-			"HZR_PLATFORM_MACOS",
-		}
 		links 
 		{
 			"IOKit.framework",
@@ -108,19 +101,3 @@ project "HazardLauncher"
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
-
-	filter "configurations:Debug"
-		defines "HZR_DEBUG"
-		runtime "Debug"
-		symbols "on"
-
-
-	filter "configurations:Release"
-		defines "HZR_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines "HZR_DIST"
-		runtime "Release"
-		optimize "on"
