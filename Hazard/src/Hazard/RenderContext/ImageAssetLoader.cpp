@@ -6,7 +6,6 @@
 #include "Hazard/Assets/AssetManager.h"
 
 #include "Hazard/Assets/AssetPack.h"
-
 #include "Hazard/Core/Application.h"
 
 namespace Hazard
@@ -19,7 +18,7 @@ namespace Hazard
 		{
 			auto cachedPath = TextureFactory::GetCacheFile(metadata.Handle);
 			CachedBuffer buffer = File::ReadBinaryFile(cachedPath);
-			AssetPackElement element = buffer.Read<AssetPackElement>();
+			buffer.Read<AssetPackElement>();
 
 			TextureAssetHeader header = buffer.Read<TextureAssetHeader>();
 			Buffer imageData = buffer.Read<Buffer>(header.Channels * header.Width * header.Height);

@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 #include "MaterialAssetLoader.h"
 
 #include "JobGraph.h"

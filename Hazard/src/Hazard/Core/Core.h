@@ -9,8 +9,11 @@
             #elif _WIN32
                 #define HAZARD_SYSTEM_BIT "x86"
             #endif
-    #elif defined(HZR_PLATFORM_MACOS)
+    #elif HZR_PLATFORM_MACOS
         #define HZR_PLATFORM "macOS"
+        #define HAZARD_SYSTEM_BIT "arm64"
+    #elif HZR_PLATFORM_IOS
+        #define HZR_PLATFORM "iOS"
         #define HAZARD_SYSTEM_BIT "arm64"
     #else
         #error Unsupported platform!

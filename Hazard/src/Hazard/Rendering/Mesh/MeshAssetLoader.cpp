@@ -24,7 +24,7 @@ namespace Hazard
 			MeshData result;
 			CachedBuffer buffer = File::ReadBinaryFile(factory.GetCacheFile(metadata.Handle));
 
-			AssetPackElement element = buffer.Read<AssetPackElement>();
+			buffer.Read<AssetPackElement>();
 			MeshCacheData data = buffer.Read<MeshCacheData>();
 			result.BoundingBox = data.BoundingBox;
 

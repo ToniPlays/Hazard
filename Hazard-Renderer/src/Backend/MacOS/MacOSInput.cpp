@@ -1,11 +1,9 @@
+#ifdef HZR_PLATFORM_MACOS
 
 #include "Backend/Input.h"
 
 #include "GLFW/glfw3.h"
 #include "Backend/Core/Events/Events.h"
-
-
-#ifdef HZR_PLATFORM_MACOS
 
 #include "spdlog/fmt/fmt.h"
 #include <Backend/MacOS/MacOSWindow.h>

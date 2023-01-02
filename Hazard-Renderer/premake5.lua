@@ -36,9 +36,8 @@ project "Hazard-Renderer"
 		"src",
 		"examples"
 	}
-	links {
-		"GLFW",
-		"GLAD",
+	links 
+	{
 		"Hazard-Utility"
 	}
 
@@ -48,23 +47,33 @@ project "Hazard-Renderer"
 			"%{Library.VulkanUtils}",
 			"opengl32.lib"
 		}
-
-
 	filter "system:macosx"
+		links {
+			"Cocoa.framework",
+		}
+
+	filter "system:macosx or system:ios"
 		links { 
 			"IOKit.framework",
 			"CoreFoundation.framework",
-			"Cocoa.framework",
 			"QuartzCore.framework",
 			"Metal.framework",
 			"MetalKit.framework"
 		}
-		includedirs {
+		includedirs 
+		{
 			"%{IncludeDir.Metal}"
 		}
 		files {
 			"src/**.mm",
 			"src/**.m"
+		}
+
+	filter "system:windows or system:macosx"
+		links
+		{
+			"GLFW",
+			"GLAD",
 		}
 
 	filter "configurations:Debug"

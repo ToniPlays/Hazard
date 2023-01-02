@@ -4,15 +4,16 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Core/GraphicsContext.h"
-#include <GLFW/glfw3.h>
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace HazardRenderer::Metal {
+namespace HazardRenderer::Metal
+{
 
-    class MetalPhysicalDevice : public PhysicalDevice {
+    class MetalPhysicalDevice : public PhysicalDevice
+    {
     public:
         MetalPhysicalDevice();
         

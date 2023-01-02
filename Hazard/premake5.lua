@@ -58,8 +58,6 @@ project "Hazard"
 	}
 
 	links {
-		"GLFW",
-		"Glad",
 		"ImGui",
 		"yaml-cpp",
 		"Box2D",
@@ -86,8 +84,7 @@ project "Hazard"
 			"%{IncludeDir.Mono}"
 		}
 
-	filter "system:macosx"
-
+	filter "system:macosx or system:ios"
 		pchheader "src/hzrpch.h"
 		includedirs {
 			"%{IncludeDir.SPIRV_Cross}",
@@ -99,6 +96,13 @@ project "Hazard"
 			"src/**.mm",
 			"vendor/ImGui_Backend/**.m",
 			"vendor/ImGui_Backend/**.mm"
+		}
+
+	filter "system:windows or system:macosx"
+		links
+		{
+			"GLFW",
+			"Glad"
 		}
 
 	filter "configurations:Debug"

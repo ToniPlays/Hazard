@@ -281,7 +281,7 @@ bool File::OpenInDefaultApp(const std::filesystem::path& file)
 
 int File::SystemCall(const std::string& command)
 {
-	return system(command.c_str());
+    return PlatformUtils::SystemCall(command);
 }
 
 int File::CreateSubprocess(const std::string& path, const std::string& arguments, bool background)

@@ -52,8 +52,6 @@ project "HazardEditor"
 		"ImGui",
 		"Hazard",
 		"Hazard-Script",
-		"GLFW",
-		"Glad",
 		"Box2D",
 		"yaml-cpp"
 	}
@@ -104,3 +102,10 @@ project "HazardEditor"
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
+
+	filter "system:windows or system:macosx"
+		links 
+		{
+			"GLFW",
+			"GLAD"
+		}

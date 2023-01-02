@@ -40,6 +40,7 @@
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
 #include <hzrpch.h>
+#if defined(HZR_PLATFORM_WINDOWS) || defined(HZR_PLATFORM_MACOS)
 
 #include "imgui.h"
 #include "../ImGui_Backend/imgui_impl_glfw.h"
@@ -847,3 +848,4 @@ static void ImGui_ImplGlfw_ShutdownPlatformInterface()
 {
 
 }
+#endif

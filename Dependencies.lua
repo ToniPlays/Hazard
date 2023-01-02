@@ -92,7 +92,7 @@ premake.override(_G, "project", function(base, ...)
 	local rval = base(...)
 	local args = {...}
 	filter "system:ios"
-		filename(args[1] .. "_ios")
+		filename(args[1] .. "-iOS")
 	filter {}
 	return rval
 	end)
@@ -101,7 +101,7 @@ premake.override(_G, "workspace", function(base, ...)
 	local rval = base(...)
 	local args = {...}
 	filter "system:ios"
-		filename(args[1] .. "_ios")
+		filename(args[1] .. "-iOS")
 	filter {}
 	return rval
 	end)

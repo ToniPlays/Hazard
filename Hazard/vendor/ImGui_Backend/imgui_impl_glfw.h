@@ -17,6 +17,9 @@
 // Only override if your GL version doesn't handle this GLSL version. Keep NULL if unsure!
 
 #pragma once
+
+#if defined(HZR_PLATFORM_WINDOWS) || defined(HZR_PLATFORM_MACOS)
+
 #include "imgui.h"      // IMGUI_IMPL_API
 
 struct GLFWwindow;
@@ -33,3 +36,4 @@ IMGUI_IMPL_API void     ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, i
 IMGUI_IMPL_API void     ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 IMGUI_IMPL_API void     ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 IMGUI_IMPL_API void     ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c);
+#endif

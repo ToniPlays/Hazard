@@ -67,6 +67,8 @@
 
 #include <hzrpch.h>
 
+#ifdef HZR_INCLUDE_OPENGL
+
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -688,3 +690,4 @@ void    ImGui_ImplOpenGL3_DestroyDeviceObjects()
 
     ImGui_ImplOpenGL3_DestroyFontsTexture();
 }
+#endif

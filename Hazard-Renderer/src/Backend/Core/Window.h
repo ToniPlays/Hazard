@@ -9,14 +9,15 @@
 #include "glm/glm.hpp"
 
 
-namespace HazardRenderer {
-
+namespace HazardRenderer
+{
 	class GraphicsContext;
 
 	class Window;
 	class Swapchain;
 
-	struct WindowProps {
+	struct WindowProps
+    {
 		friend class Window;
 
 		std::string Title;
@@ -39,10 +40,10 @@ namespace HazardRenderer {
 		WindowProps() = default;
 	};
 
-	class Window {
+	class Window
+    {
 
 	public:
-		//using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {};
 		virtual void Show() const = 0;

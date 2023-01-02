@@ -1,13 +1,12 @@
 
 #include "MetalWindowLayer.h"
-#ifdef HZR_INCLUDE_METAL
+#ifdef defined(HZR_INCLUDE_METAL) && defined(HZR_PLATFORM_MACOS)
 #include "MetalContext.h"
 
 #define GLFW_EXPOSE_NATIVE_COCOA
 
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-
 
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>

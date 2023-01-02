@@ -48,8 +48,6 @@ project "HazardLauncher"
 		"ImGui",
 		"Hazard",
 		"Hazard-Script",
-		"GLFW",
-		"Glad",
 		"Box2D",
 		"yaml-cpp"
 	}
@@ -86,11 +84,16 @@ project "HazardLauncher"
 		}
 
 	filter "system:macosx"
+		links
+		{
+			"Cocoa.framework"
+		}
+
+	filter "system:macosx or system:ios"
 		links 
 		{
 			"IOKit.framework",
 			"CoreFoundation.framework",
-			"Cocoa.framework",
 			"Metal.framework",
 			"MetalKit.framework"
 		}
@@ -101,3 +104,9 @@ project "HazardLauncher"
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
+	filter "system:windows or system:macosx"
+		links 
+		{
+			"GLFW",
+			"GLAD"
+		}

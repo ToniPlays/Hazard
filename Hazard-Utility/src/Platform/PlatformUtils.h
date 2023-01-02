@@ -11,4 +11,6 @@ public:
 	static bool HasEnvVariable(const std::string& key);
 	static std::string GetEnvVariable(const std::string& key);
 	static bool SetEnvVariable(const std::string& key, const std::string& value);
+    
+    static int SystemCall(const std::string& command);
 };

@@ -16,6 +16,10 @@ workspace "Hazard"
 	{
 		"MultiProcessorCompile"
 	}
+	defines 
+	{
+		"GLFW_INCLUDE_NONE"
+	}
 
 	filter "system:windows"
         systemversion "latest"
@@ -41,7 +45,7 @@ workspace "Hazard"
         xcodebuildsettings
         {
             ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",
-            ["IOS_DEPLOYMENT_TARGET"] = "14.0",
+            ["IPHONEOS_DEPLOYMENT_TARGET"] = "14.0",
             ["ALWAYS_SEARCH_USER_PATHS"] = "YES",
             ["CLANG_ENABLE_OBJC_WEAK"] = "YES",
             ["DEAD_CODE_STRIPPING"] = "YES",
@@ -69,8 +73,12 @@ workspace "Hazard"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
-	include "Hazard/vendor/Glad"
-	include "Hazard/vendor/GLFW"
+
+	filter "system:windows or system:macosx"
+		include "Hazard/vendor/Glad"
+		include "Hazard/vendor/GLFW"
+	filter ""
+
 	include "Hazard/vendor/Box2D"
 
 	if os.host() == "windows" then
