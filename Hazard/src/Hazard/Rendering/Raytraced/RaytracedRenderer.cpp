@@ -8,7 +8,7 @@ namespace Hazard
 	{
 
 	}
-	void RaytracedRenderer::GeometryPass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>>& meshList)
+	void RaytracedRenderer::GeometryPass(const MeshDrawList& drawList)
 	{
 
 	}

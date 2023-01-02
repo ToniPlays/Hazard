@@ -86,6 +86,8 @@ namespace Hazard
 		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
+        entity.GetTag().Uid = UID();
+        
 		return entity;
 	}
 

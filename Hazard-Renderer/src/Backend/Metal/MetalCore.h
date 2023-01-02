@@ -10,7 +10,10 @@
 #include "Pipeline/MetalShader.h"
 
 #include "Pipeline/MetalRenderPass.h"
-#include "Pipeline/MetalBuffers.h"
+#include "Pipeline/MetalVertexBuffer.h"
+#include "Pipeline/MetalIndexBuffer.h"
+#include "Pipeline/MetalUniformBuffer.h"
+#include "Pipeline/MetalStorageBuffer.h"
 
 #include "Texture/MetalCubemapTexture.h"
 

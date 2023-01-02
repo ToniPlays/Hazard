@@ -73,7 +73,8 @@ namespace HazardRenderer::Metal
         {
             auto layout = vertexDescriptor->layouts()->object(28);
             layout->setStride(m_Layout.GetBufferStride(PerVertex));
-            layout->setStepRate(MTL::StepFunctionPerVertex);
+            layout->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            layout->setStepRate(1);
 
             for(auto& element : m_Layout.GetElements())
             {
@@ -90,17 +91,19 @@ namespace HazardRenderer::Metal
         if(m_Layout.GetBufferStride(PerInstance))
         {
             auto layout = vertexDescriptor->layouts()->object(29);
-            layout->setStepRate(MTL::StepFunctionPerInstance);
             layout->setStride(m_Layout.GetBufferStride(PerInstance));
+            layout->setStepFunction(MTL::VertexStepFunctionPerInstance);
+            layout->setStepRate(1);
             
             for(auto& element : m_Layout.GetElements())
             {
                 if(element.ElementDivisor == PerVertex) continue;
                 
                 auto object = vertexDescriptor->attributes()->object(attribIndex);
-                object->setBufferIndex(PerInstance);
+                object->setBufferIndex(29);
                 object->setOffset(element.Offset);
                 object->setFormat(ShaderDataTypeToMTLVertexFormat(element.Type));
+                
                 attribIndex++;
             }
         }

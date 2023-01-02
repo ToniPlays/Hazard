@@ -1,7 +1,7 @@
 #include "MetalDescriptorSet.h"
 
 #ifdef HZR_INCLUDE_METAL
-#include "MetalBuffers.h"
+#include "MetalUniformBuffer.h"
 #include "MetalImage2D.h"
 #include "MetalCubemapTexture.h"
 #include "MetalTopLevelAS.h"
@@ -177,8 +177,10 @@ namespace HazardRenderer::Metal
                 auto writeDescriptor = GetWriteDescriptor(type, name);
                 if(!writeDescriptor) continue;
                 
+                
                 writeDescriptor->ActualBinding = binding.Binding;
                 writeDescriptor->SecondaryBinding = binding.SamplerBinding;
+                
                 break;
             }
         }

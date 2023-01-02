@@ -2,7 +2,6 @@
 #version 450
 
 #include "Uniforms/CameraUniform.glslh"
-#include "Uniforms/ModelUniform.glslh"
 #include "Inputs/InputPBR.glslh"
 
 layout(location = 0) out vec4 Color;
@@ -11,11 +10,19 @@ layout(location = 2) out vec3 WorldPosition;
 
 void main()
 {
-	vec4 worldPosition = u_Model.Transform * vec4(a_Position.xyz, 1.0);
+    mat4 transform = mat4(
+            vec4(a_MRow0.x, a_MRow1.x, a_MRow2.x, 0.0),
+            vec4(a_MRow0.y, a_MRow1.y, a_MRow2.y, 0.0),
+            vec4(a_MRow0.z, a_MRow1.z, a_MRow2.z, 0.0),
+            vec4(a_MRow0.w, a_MRow1.w, a_MRow2.w, 1.0)
+        );
+    
+    
+	vec4 worldPosition = transform * vec4(a_Position.xyz, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Color = a_Color;
-	Normal = mat3(u_Model.Transform) * a_Normal.xyz;
+	Normal = mat3(transform) * a_Normal.xyz;
 	WorldPosition = worldPosition.xyz;
 	
 }
@@ -25,7 +32,6 @@ void main()
 
 #include "Uniforms/CameraUniform.glslh"
 #include "Uniforms/LightSources.glslh"
-#include "Uniforms/ModelUniform.glslh"
 #include "Uniforms/UtilityUniform.glslh"
 
 layout(location = 0) in vec4 Color;

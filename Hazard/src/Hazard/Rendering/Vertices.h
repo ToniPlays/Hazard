@@ -13,18 +13,19 @@ namespace Hazard
 		glm::vec4 Tangent = { 0, 0, 0, 0 };
 		glm::vec4 Binormal = { 0, 0, 0, 0 };
 		glm::vec2 TexCoords = { 0, 0 };
-		glm::vec2 Padding = { 0, 0 };
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
 			return {
-				{ "a_Position",			ShaderDataType::Float4 },
-				{ "a_Color",			ShaderDataType::Float4 },
-				{ "a_Normal",			ShaderDataType::Float4 },
-				{ "a_Tangent",			ShaderDataType::Float4 },
-				{ "a_Binormal",			ShaderDataType::Float4 },
-				{ "a_TextureCoords",	ShaderDataType::Float2 },
-				{ "a_Padding",			ShaderDataType::Float2 }
+				{ "a_Position",			ShaderDataType::Float4, PerVertex },
+				{ "a_Color",			ShaderDataType::Float4, PerVertex },
+				{ "a_Normal",			ShaderDataType::Float4, PerVertex },
+				{ "a_Tangent",			ShaderDataType::Float4, PerVertex },
+				{ "a_Binormal",			ShaderDataType::Float4, PerVertex },
+				{ "a_TextureCoords",	ShaderDataType::Float2, PerVertex },
+				{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
+                { "a_MRow0",            ShaderDataType::Float4, PerInstance },
+                { "a_MRow0",            ShaderDataType::Float4, PerInstance }
 			};
 		}
 	};

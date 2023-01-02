@@ -284,7 +284,7 @@ void EditorAssetManager::RefreshEditorAssets(bool force)
 	//Compile non cached shaders
 	for (auto& file : File::GetAllInDirectory("res/Shaders", true))
 	{
-		switch (Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
+        switch (Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
 		{
 		case AssetType::Shader:
 		{

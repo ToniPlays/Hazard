@@ -67,29 +67,35 @@ namespace Hazard
 		resources.LightUniformBuffer->SetData(region);
 	}
 
-	void RasterizedRenderer::GeometryPass(const std::unordered_map<Pipeline*, std::vector<RawMesh>>& meshList)
+	void RasterizedRenderer::GeometryPass(const MeshDrawList& drawList)
 	{
-		auto& modelUniformBuffer = Application::GetModule<RenderEngine>().GetResources().ModelUniformBuffer;
-		for (auto& [pipeline, meshList] : meshList)
+        auto& resources = Application::GetModule<RenderEngine>().GetResources();
+        
+        size_t offset = 0;
+        
+		for (auto& [pipeline, meshList] : drawList)
 		{
 			pipeline->SetRenderPass(m_RenderPass);
 			if (!pipeline->IsValid()) continue;
+
             
-			m_CommandBuffer->BindPipeline(pipeline);
-
-			for (auto& mesh : meshList)
-			{
-				ModelData data = {};
-				data.Transform = mesh.Transform;
-				data.Flags = 0;
-
-				BufferCopyRegion region = {};
-				region.Data = &data;
-				region.Size = sizeof(ModelData);
-
-				modelUniformBuffer->SetData(region);
-				m_CommandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-				m_CommandBuffer->Draw(mesh.Count, mesh.IndexBuffer);
+			for (auto& [vertexBuffer, mesh] : meshList)
+            {
+                BufferCopyRegion region = {};
+                region.Data = mesh.Instances.data();
+                region.Size = mesh.Instances.size() * sizeof(MeshInstance);
+                region.Offset = offset;
+                
+                resources.TransformBuffer->SetData(region);
+                
+                pipeline->GetShader()->Set(PerInstance, resources.TransformBuffer, offset);
+                m_CommandBuffer->BindPipeline(pipeline);
+                
+                m_CommandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+                //Copy transform data to buffer
+				m_CommandBuffer->DrawInstanced(mesh.IndexCount, mesh.Instances.size(), mesh.IndexBuffer);
+                
+                offset += region.Size;
 			}
 		}
 	}

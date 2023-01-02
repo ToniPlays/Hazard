@@ -89,7 +89,6 @@ namespace HazardRenderer::Metal
         options.set_msl_version(2, 4);
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
-        options.
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         

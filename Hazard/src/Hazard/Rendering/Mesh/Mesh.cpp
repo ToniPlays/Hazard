@@ -19,19 +19,17 @@ namespace Hazard
 		BufferLayout layout = Vertex3D::Layout();
 
 		VertexBufferCreateInfo vboInfo = {};
-		vboInfo.DebugName = "SomeMeshVertexBuffer";
+		vboInfo.Name = "SomeMeshVertexBuffer";
 		vboInfo.Layout = &layout;
 		vboInfo.Size = createInfo->VertexCount;
 		vboInfo.Data = (void*)createInfo->pVertices;
-		vboInfo.Usage = createInfo->Usage;
 
 		m_VertexBuffer = VertexBuffer::Create(&vboInfo);
 
 		IndexBufferCreateInfo iboInfo = {};
-		iboInfo.DebugName = "SomeMeshIndices";
+		iboInfo.Name = "SomeMeshIndices";
 		iboInfo.Size = createInfo->IndexCount;
 		iboInfo.Data = createInfo->pIndices;
-		iboInfo.Usage = createInfo->Usage;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
         

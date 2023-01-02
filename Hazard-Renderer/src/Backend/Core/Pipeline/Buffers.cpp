@@ -11,7 +11,7 @@ namespace HazardRenderer {
 
 	Ref<VertexBuffer> VertexBuffer::Create(VertexBufferCreateInfo* createInfo)
 	{
-		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+		HZR_ASSERT(!createInfo->Name.empty(), "Unable to create buffer with no debug name");
 
 		switch (GraphicsContext::GetRenderAPI())
 		{
@@ -32,7 +32,7 @@ namespace HazardRenderer {
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(IndexBufferCreateInfo* createInfo)
 	{
-		HZR_ASSERT(!createInfo->DebugName.empty(), "Unable to create buffer with no debug name");
+		HZR_ASSERT(!createInfo->Name.empty(), "Unable to create buffer with no debug name");
 
 		/*if (createInfo->IsShared && RenderLibrary::HasIndexBuffer(createInfo->DebugName)) {
 			return RenderLibrary::GetIndexBuffer(createInfo->DebugName);
@@ -86,4 +86,24 @@ namespace HazardRenderer {
 
 		return buffer;
 	}
+
+    Ref<StorageBuffer> StorageBuffer::Create(StorageBufferCreateInfo* createInfo)
+    {
+        switch (GraphicsContext::GetRenderAPI())
+        {
+    #ifdef HZR_INCLUDE_OPENGL
+        case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLStorageBuffer>::Create(createInfo); break;
+    #endif
+    #ifdef HZR_INCLUDE_VULKAN
+        case RenderAPI::Vulkan: return Ref<Vulkan::VulkanStorageBuffer>::Create(createInfo); break;
+    #endif
+    #ifdef HZR_INCLUDE_METAL
+        case RenderAPI::Metal: return Ref<Metal::MetalStorageBuffer>::Create(createInfo); break;
+    #endif
+        default:
+            return nullptr;
+        }
+        
+        return nullptr;
+    }
 }

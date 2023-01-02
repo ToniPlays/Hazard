@@ -18,9 +18,6 @@ int main(int argc, char** argv)
 	std::cin >> api;
 	
 #endif
-    
-    std::cout << std::filesystem::current_path().string() << std::endl;
-    
     RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
     return 0;

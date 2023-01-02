@@ -89,12 +89,12 @@ namespace UI
 				ImUI::Treenode(pipeline->GetSpecifications().DebugName.c_str(), 0, [&]() {
 					ImGui::Columns(2, 0, false);
 
-					for (auto& mesh : meshDrawList) {
+					/*for (auto& mesh : meshDrawList) {
 						ImGui::Text("Index count");
 						ImGui::NextColumn();
-						ImGui::Text("%s", std::to_string(mesh.Count).c_str());
+						ImGui::Text("%s", std::to_string(mesh.).c_str());
 						ImGui::NextColumn();
-					}
+					}*/
 					ImGui::Columns();
 					});
 			}

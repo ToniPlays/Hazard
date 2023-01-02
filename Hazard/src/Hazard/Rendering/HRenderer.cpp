@@ -53,17 +53,25 @@ namespace Hazard
         
 		if (!mesh->IsValid()) return;
 
-		RawMesh data = {};
-		data.Transform = transform.GetTransformMat4();
-		data.VertexBuffer = mesh->GetVertexBuffer();
-		data.IndexBuffer = mesh->GetIndexBuffer();
-		data.Count = mesh->GetIndexCount();
-
-		SubmitMesh(data, pipeline);
+        auto& drawList = s_Engine->GetDrawList();
+        
+        const glm::mat4 t = transform.GetTransformMat4();
+        
+        MeshInstance instance = {};
+        instance.Transform.MRow0 = { t[0][0], t[1][0], t[2][0], t[3][0] };
+        instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
+        instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
+        
+        auto& data = drawList.MeshList[pipeline.Raw()][mesh->GetVertexBuffer().Raw()];
+        data.VertexBuffer = mesh->GetVertexBuffer();
+        data.IndexBuffer = mesh->GetIndexBuffer();
+        data.IndexCount = data.IndexBuffer->GetCount();
+        
+        SubmitMesh(data, instance, pipeline);
 
 		if (!true) return;
 
-		SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
+		//SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
@@ -78,24 +86,27 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
-		RawMesh data = {};
-		data.Transform = transform;
-		data.VertexBuffer = vertexBuffer;
-		data.IndexBuffer = indexBuffer;
-		data.Count = count;
-
-		SubmitMesh(data, pipeline);
+        
+        auto& drawList = s_Engine->GetDrawList();
+        
+        const glm::mat4& t = transform;
+        
+        MeshInstance instance = {};
+        instance.Transform.MRow0 = { t[0][0], t[1][0], t[2][0], t[3][0] };
+        instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
+        instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
+        
+        auto& data = drawList.MeshList[pipeline.Raw()][vertexBuffer.Raw()];
+        data.VertexBuffer = vertexBuffer;
+        data.IndexBuffer = indexBuffer;
+        data.IndexCount = count;
+		SubmitMesh(data, instance, pipeline);
 	}
-	void HRenderer::SubmitMesh(const RawMesh& rawMesh, Ref<Pipeline> pipeline)
+	void HRenderer::SubmitMesh(RawMesh& rawMesh, const MeshInstance& instance, Ref<Pipeline> pipeline)
 	{
 		auto& drawList = s_Engine->GetDrawList();
-
-		DrawListStat& stat = s_Engine->GetDrawList().Stats;
-		stat.Vertices += (rawMesh.VertexBuffer->GetSize() / rawMesh.VertexBuffer->GetLayout().GetStride());
-		stat.Indices += rawMesh.Count;
-		stat.MeshCount++;
-
-		drawList.MeshList[pipeline.Raw()].push_back(rawMesh);
+        auto& meshes = drawList.MeshList[pipeline.Raw()];
+        meshes[rawMesh.VertexBuffer.Raw()].Instances.push_back(instance);
 	}
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{

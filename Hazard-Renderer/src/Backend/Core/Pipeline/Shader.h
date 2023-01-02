@@ -216,6 +216,8 @@ namespace HazardRenderer
 		virtual void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) = 0;
 		virtual void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) = 0;
         virtual void Set(const std::string& name, Buffer buffer) = 0;
+        
+        virtual void Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset = 0) = 0;
 
 		virtual const ShaderData& GetShaderData() = 0;
 		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;

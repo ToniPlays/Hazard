@@ -86,9 +86,8 @@ namespace Hazard
 		if (!m_VertexBuffer) 
 		{
 			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.DebugName = "RendererLineBatch";
+			vertexInfo.Name = "RendererLineBatch";
 			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(LineVertex);
-			vertexInfo.Usage = BufferUsage::DynamicDraw;
 			vertexInfo.Layout = &layout;
 			vertexInfo.Data = nullptr;
 

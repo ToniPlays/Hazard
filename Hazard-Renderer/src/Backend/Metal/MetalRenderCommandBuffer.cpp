@@ -6,16 +6,7 @@
 #include "Backend/Core/Window.h"
 #include "Backend/Core/Renderer.h"
 
-#include "MetalContext.h"
-#include "MetalSwapchain.h"
-#include "MetalRenderPass.h"
-#include "MetalFrameBuffer.h"
-#include "MetalPipeline.h"
-#include "MetalBuffers.h"
-#include "MetalCubemapTexture.h"
-
-#include "MetalTopLevelAS.h"
-#include "MetalBottomLevelAS.h"
+#include "MetalCore.h"
 
 namespace HazardRenderer::Metal
 {
@@ -94,6 +85,7 @@ namespace HazardRenderer::Metal
             auto swapchain = MetalContext::GetInstance()->GetSwapchain().As<MetalSwapchain>();
             descriptor->setRenderTargetWidth(swapchain->GetWidth());
             descriptor->setRenderTargetHeight(swapchain->GetHeight());
+            descriptor->setDefaultRasterSampleCount(1);
             
             auto clearColor = MetalContext::GetInstance()->GetClearColorValue();
             

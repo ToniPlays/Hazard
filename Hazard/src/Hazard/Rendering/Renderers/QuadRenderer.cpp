@@ -173,19 +173,17 @@ namespace Hazard
 			}
 
 			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.DebugName = "Renderer2DQuadBatch";
+			vertexInfo.Name = "Renderer2DQuadBatch";
 			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(QuadVertex);
-			vertexInfo.Usage = BufferUsage::DynamicDraw;
 			vertexInfo.Layout = &layout;
 			vertexInfo.Data = nullptr;
 
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 
 			IndexBufferCreateInfo indexBuffer = {};
-			indexBuffer.DebugName = "2DQuadIndexBuffer";
+			indexBuffer.Name = "2DQuadIndexBuffer";
 			indexBuffer.Data = indices;
 			indexBuffer.Size = m_Data.MaxIndices * sizeof(uint32_t);
-			indexBuffer.Usage = BufferUsage::StaticDraw;
 
 			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
 

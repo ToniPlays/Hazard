@@ -99,9 +99,8 @@ namespace TriangleTest {
 		spec.ShaderCodeCount = code.size();
 		spec.pShaderCode = code.data();
 
-
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+		//Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
 
 		while (running)
@@ -111,9 +110,9 @@ namespace TriangleTest {
 
 			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			commandBuffer->BindPipeline(pipeline);
-			commandBuffer->BindVertexBuffer(vertexBuffer);
-			commandBuffer->Draw(6);
+			//commandBuffer->BindPipeline(pipeline);
+			//commandBuffer->BindVertexBuffer(vertexBuffer);
+			//commandBuffer->Draw(6);
 
 			commandBuffer->EndRenderPass();
 			Renderer::WaitAndRender();

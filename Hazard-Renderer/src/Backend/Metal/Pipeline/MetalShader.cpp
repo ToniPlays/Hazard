@@ -5,6 +5,7 @@
 #include "MetalShaderCompiler.h"
 #include "MetalContext.h"
 #include "Renderer.h"
+#include "MetalVertexBuffer.h"
 
 #include "Window.h"
 
@@ -67,7 +68,6 @@ namespace HazardRenderer::Metal
             descriptor->setName(name);
             
             auto func = lib->newFunction(descriptor, &functionError);
-            
             
             if(functionError->code() != 0)
             {
@@ -174,10 +174,27 @@ namespace HazardRenderer::Metal
             return;
         }
     }
+
+    void MetalShader::Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset)
+    {
+        Ref<MetalShader> instance = this;
+        Ref<MetalVertexBuffer> buff = buffer.As<MetalVertexBuffer>();
+        
+        Renderer::Submit([instance, buff, index, offset]() mutable {
+            instance->m_InputBuffers[index] = { buff, offset };
+        });
+    }
+    
     void MetalShader::BindResources(MTL::RenderCommandEncoder* encoder)
     {
         for(auto& [set, descriptor] : m_DescriptorSet)
             descriptor.BindGraphicsResources(encoder);
+        
+        for(auto& [index, buffer] : m_InputBuffers)
+        {
+            encoder->setVertexBuffer(buffer.Buffer->GetMetalBuffer(), 0, index + 28);
+            encoder->setVertexBufferOffset(buffer.Offset, index + 28);
+        }
     }
     void MetalShader::BindResources(MTL::ComputeCommandEncoder* encoder)
     {
@@ -275,6 +292,7 @@ namespace HazardRenderer::Metal
         for(auto& [stage, code] : m_ShaderCode)
         {
             auto resources = compiler.GetMSLBindings(code);
+            
             for(auto& [set, descriptor] : m_DescriptorSet)
                 descriptor.UpdateBindings(resources);
         }

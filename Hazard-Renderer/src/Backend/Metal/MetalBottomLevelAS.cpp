@@ -3,7 +3,8 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Renderer.h"
-#include "MetalBuffers.h"
+#include "MetalVertexBuffer.h"
+#include "MetalIndexBuffer.h"
 
 #include "MTLUtils.h"
 

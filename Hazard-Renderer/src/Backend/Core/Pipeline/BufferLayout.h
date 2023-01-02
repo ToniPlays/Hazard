@@ -18,12 +18,11 @@ namespace HazardRenderer {
 		uint32_t Size;
 		uint32_t ElementDivisor = 0;
 		size_t Offset;
-		bool Normalized;
 
 		BufferElement() = default;
 
-		BufferElement(const std::string& name, ShaderDataType type, bool normalized = false, Divisor divisor = PerVertex)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized), ElementDivisor(divisor)
+		BufferElement(const std::string& name, ShaderDataType type, Divisor divisor = PerVertex)
+			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), ElementDivisor(divisor)
 		{
 		}
 
@@ -93,12 +92,13 @@ namespace HazardRenderer {
 	private:
 		void CalculateOffsetsAndStride()
 		{
-			size_t offset = 0;
-			m_Stride = 0;
+            std::unordered_map<uint32_t, uint32_t> offsets;
+            std::unordered_map<uint32_t, uint32_t> strides;
+            
 			for (auto& element : m_Elements)
 			{
-				element.Offset = offset;
-				offset += element.Size;
+				element.Offset = offsets[element.ElementDivisor];
+				offsets[element.ElementDivisor] += element.Size;
 				m_Stride += element.Size;
 			}
 		}

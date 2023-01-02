@@ -29,34 +29,31 @@ namespace HazardRenderer
 		Uniform,
 		Storage
 	};
+    
+    struct BufferCreateInfo
+    {
+        std::string Name;
+        size_t Size;
+    };
 
-	struct VertexBufferCreateInfo 
+	struct VertexBufferCreateInfo : BufferCreateInfo
 	{
-		std::string DebugName;
-		size_t Size = 0;
-		BufferUsage Usage = BufferUsage::StaticDraw;
-
 		//No layout means object cannot be used for rendering meshes, only instancing data
 		BufferLayout* Layout = nullptr;
-		void* Data = nullptr;
+        void* Data = nullptr;
 	};
-	struct IndexBufferCreateInfo 
+	struct IndexBufferCreateInfo : BufferCreateInfo
 	{
-		std::string DebugName;
-
 		//Size is size in bytes
-		size_t Size;
-		BufferUsage Usage;
 		uint32_t* Data = nullptr;
 	};
-	struct UniformBufferCreateInfo 
+	struct UniformBufferCreateInfo : BufferCreateInfo
 	{
-		std::string Name;
-		size_t Size;
 		uint32_t Set;
 		uint32_t Binding;
 		uint32_t Usage;
 	};
+    using StorageBufferCreateInfo = BufferCreateInfo;
 
 	struct BufferCopyRegion
 	{
@@ -71,18 +68,18 @@ namespace HazardRenderer
 		virtual ~BufferBase() = default;
 
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
-		virtual BufferType GetType() const = 0;
+		virtual const BufferType GetType() const = 0;
+        
+        virtual const size_t GetSize() const = 0;
 	};
 
 	class VertexBuffer : public BufferBase
 	{
 	public:
 		virtual ~VertexBuffer() = default;
-		virtual size_t GetSize() const = 0;
 		virtual std::string& GetDebugName() = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
-
-		BufferType GetType() const override { return BufferType::Vertex; };
+		const BufferType GetType() const override { return BufferType::Vertex; };
 
 		static Ref<VertexBuffer> Create(VertexBufferCreateInfo* createInfo);
 	};
@@ -94,10 +91,11 @@ namespace HazardRenderer
 
 		virtual size_t GetCount() const = 0;
 		virtual std::string& GetDebugName() = 0;
-		BufferType GetType() const override { return BufferType::Index; };
+		const BufferType GetType() const override { return BufferType::Index; };
 
 		static Ref<IndexBuffer> Create(IndexBufferCreateInfo* createInfo);
 	};
+
 	class UniformBuffer : public BufferBase
 	{
 	public:
@@ -108,10 +106,20 @@ namespace HazardRenderer
 		virtual uint32_t GetUsageFlags() = 0;
         virtual void AddUsageFlags(uint32_t flags) = 0;
 		virtual const uint32_t GetBinding() const = 0;
-		virtual const size_t GetSize() const = 0;
 
-		BufferType GetType() const override { return BufferType::Uniform; };
+		const BufferType GetType() const override { return BufferType::Uniform; };
 
 		static Ref<UniformBuffer> Create(UniformBufferCreateInfo* createInfo);
 	};
+
+    class StorageBuffer : public BufferBase
+    {
+    public:
+        virtual ~StorageBuffer() = default;
+        
+        virtual std::string& GetDebugName() = 0;
+        const BufferType GetType() const override { return BufferType::Storage; };
+
+        static Ref<StorageBuffer> Create(StorageBufferCreateInfo* createInfo);
+    };
 }

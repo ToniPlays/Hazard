@@ -5,6 +5,9 @@
 
 #include "Backend/Core/RenderCommandBuffer.h"
 #include "Pipeline/MetalPipeline.h"
+#include "MetalSwapchain.h"
+#include "MetalTopLevelAS.h"
+#include "MetalBottomLevelAS.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

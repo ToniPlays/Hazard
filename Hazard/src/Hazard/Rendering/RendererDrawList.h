@@ -1,9 +1,11 @@
 #pragma once
 
 #include "UtilityCore.h"
+#include "RenderResources.h"
 #include "Renderers/WorldRenderer.h"
 #include "Backend/Core/Pipeline/RenderPass.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Pipeline/Buffers.h"
 #include "Environment/EnvironmentMap.h"
 
 namespace Hazard
@@ -17,14 +19,21 @@ namespace Hazard
 		uint64_t DrawCalls;
 	};
 
+    struct MeshInstance
+    {
+        InstanceTransform Transform;
+    };
+
 	struct RawMesh
 	{
-		glm::mat4 Transform;
+        std::vector<MeshInstance> Instances;
 		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
 		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
+        
 		int Flags;
-		size_t Count;
+		size_t IndexCount;
 	};
+
 	struct PipelineData 
 	{
 		size_t Count;
@@ -54,10 +63,12 @@ namespace Hazard
 		GeometryInclude GeometryFlags = Geometry_All;
 	};
 
+    using MeshDrawList = std::unordered_map<HazardRenderer::Pipeline*, std::unordered_map<HazardRenderer::VertexBuffer*, RawMesh>>;
+
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
-		std::unordered_map<HazardRenderer::Pipeline*, std::vector<RawMesh>> MeshList;
+		MeshDrawList MeshList;
 		std::unordered_map<EnvironmentMap*, EnvironmentData> Environment;
 		std::vector<DirectionalLightSource> DirectionalLights;
 		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;

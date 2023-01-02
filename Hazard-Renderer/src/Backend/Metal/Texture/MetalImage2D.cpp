@@ -102,9 +102,6 @@ namespace HazardRenderer::Metal
     }
     void MetalImage2D::CreateImageSampler()
     {
-        if(m_MetalSampler)
-            m_MetalSampler->release();
-        
         auto device = MetalContext::GetMetalDevice();
         
         MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();

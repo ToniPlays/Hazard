@@ -55,6 +55,13 @@ namespace Hazard
 		uint32_t Flags = 0;
 	};
 
+    struct InstanceTransform
+    {
+        glm::vec4 MRow0;
+        glm::vec4 MRow1;
+        glm::vec4 MRow2;
+    };
+
 	using namespace HazardRenderer;
 	struct RenderResources
 	{
@@ -62,6 +69,8 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> UtilityUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
+        
+        Ref<HazardRenderer::VertexBuffer> TransformBuffer;
 
 		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
 		Ref<HazardRenderer::Pipeline> PbrPipeline;
@@ -109,6 +118,13 @@ namespace Hazard
 				modelUBO.Usage = BufferUsage::DynamicDraw;
 
 				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
+                
+                VertexBufferCreateInfo transformBufferInfo = {};
+                transformBufferInfo.Name = "TransformStorageBuffer";
+                transformBufferInfo.Size = sizeof(InstanceTransform) * 10240;
+                
+                TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
+                
 
 				PbrPipeline = ShaderLibrary::GetPipeline("pbr_static");
 				PbrPipeline->SetRenderPass(renderPass);
