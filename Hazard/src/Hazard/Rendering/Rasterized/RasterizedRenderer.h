@@ -15,7 +15,7 @@ namespace Hazard
 		void Prepare(Ref<HazardRenderer::RenderPass> renderPass, const RendererDrawList& drawList) override;
 		void End() override {};
 
-		void GeometryPass(const MeshDrawList& drawList) override;
+		void GeometryPass(const MeshDrawList& drawList, DrawListStat& stats) override;
 		void EnvironmentPass(const std::unordered_map<EnvironmentMap*, EnvironmentData>& environment) override;
 		void CompositePass(const std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>>& list) override;
 

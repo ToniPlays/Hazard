@@ -67,9 +67,8 @@ namespace Hazard
         data.IndexBuffer = mesh->GetIndexBuffer();
         data.IndexCount = data.IndexBuffer->GetCount();
         
-        SubmitMesh(data, instance, pipeline);
-
-		if (!true) return;
+        auto& meshes = drawList.MeshList[pipeline.Raw()];
+        meshes[data.VertexBuffer.Raw()].Instances.push_back(instance);
 
 		//SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
 	}
@@ -100,14 +99,11 @@ namespace Hazard
         data.VertexBuffer = vertexBuffer;
         data.IndexBuffer = indexBuffer;
         data.IndexCount = count;
-		SubmitMesh(data, instance, pipeline);
-	}
-	void HRenderer::SubmitMesh(RawMesh& rawMesh, const MeshInstance& instance, Ref<Pipeline> pipeline)
-	{
-		auto& drawList = s_Engine->GetDrawList();
+        
         auto& meshes = drawList.MeshList[pipeline.Raw()];
-        meshes[rawMesh.VertexBuffer.Raw()].Instances.push_back(instance);
+        meshes[data.VertexBuffer.Raw()].Instances.push_back(instance);
 	}
+
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();

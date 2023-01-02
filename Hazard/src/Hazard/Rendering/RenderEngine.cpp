@@ -134,7 +134,7 @@ namespace Hazard
 				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 
-				m_CurrentRenderer->GeometryPass(worldDrawList.MeshList);
+				m_CurrentRenderer->GeometryPass(worldDrawList.MeshList, worldDrawList.Stats);
 				m_CurrentRenderer->EnvironmentPass(worldDrawList.Environment);
 				m_CurrentRenderer->CompositePass(worldDrawList.Pipelines);
 				commandBuffer->EndRenderPass();

@@ -67,7 +67,7 @@ namespace Hazard
 		resources.LightUniformBuffer->SetData(region);
 	}
 
-	void RasterizedRenderer::GeometryPass(const MeshDrawList& drawList)
+	void RasterizedRenderer::GeometryPass(const MeshDrawList& drawList, DrawListStat& stats)
 	{
         auto& resources = Application::GetModule<RenderEngine>().GetResources();
         
@@ -78,7 +78,6 @@ namespace Hazard
 			pipeline->SetRenderPass(m_RenderPass);
 			if (!pipeline->IsValid()) continue;
 
-            
 			for (auto& [vertexBuffer, mesh] : meshList)
             {
                 BufferCopyRegion region = {};
@@ -96,6 +95,11 @@ namespace Hazard
 				m_CommandBuffer->DrawInstanced(mesh.IndexCount, mesh.Instances.size(), mesh.IndexBuffer);
                 
                 offset += region.Size;
+                
+                stats.DrawCalls++;
+                stats.MeshCount += mesh.Instances.size();
+                stats.Vertices += mesh.VertexBuffer->GetSize();
+                stats.Indices += mesh.IndexCount;
 			}
 		}
 	}

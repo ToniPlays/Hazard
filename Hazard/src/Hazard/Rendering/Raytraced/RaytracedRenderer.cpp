@@ -8,7 +8,7 @@ namespace Hazard
 	{
 
 	}
-	void RaytracedRenderer::GeometryPass(const MeshDrawList& drawList)
+	void RaytracedRenderer::GeometryPass(const MeshDrawList& drawList, DrawListStat& stats)
 	{
 
 	}
