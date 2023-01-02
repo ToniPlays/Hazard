@@ -32,8 +32,6 @@ namespace HazardRenderer::Metal
         uint32_t GetHeight() { return m_Height; }
         
         CA::MetalDrawable* GetNextDrawable();
-        MTL::Texture* GetDrawableTexture();
-
     private:
         CA::MetalLayer* m_Layer;
         uint32_t m_Width;

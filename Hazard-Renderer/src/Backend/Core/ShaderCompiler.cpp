@@ -48,7 +48,7 @@ namespace HazardRenderer
 	{
 		HZR_PROFILE_FUNCTION();
 		ShaderData result;
-
+#if !defined(HZR_PLATFORM_IOS)
 		for (auto& [stage, binary] : binaries)
 		{
 			spirv_cross::Compiler compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
@@ -229,6 +229,7 @@ namespace HazardRenderer
 				offset += ShaderDataTypeSize(input.Type.Type);
 			}
 		}
+#endif
 		return result;
 	}
 	std::vector<ShaderStageCode> ShaderCompiler::GetShaderBinariesFromSource(const std::filesystem::path& sourceFile, const RenderAPI& api)

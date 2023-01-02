@@ -79,8 +79,6 @@ namespace HazardRenderer
             HZR_ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
                 
             //Create window
-
-            HZR_ASSERT(m_Window, "Failed to create window");
             
             //Correct for retina displays
             //float x, y;

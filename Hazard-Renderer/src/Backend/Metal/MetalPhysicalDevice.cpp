@@ -12,7 +12,10 @@ namespace HazardRenderer::Metal
         m_GraphicsQueue = m_Device->newCommandQueue();
         m_DeviceName = m_Device->name()->utf8String();
         
+#ifdef HZR_PLATFORM_MACOS
         m_Capabilities.Discrete = m_Device->removable();
+        m_Capabilities.LowPower = m_Device->lowPower();
+#endif
         m_Capabilities.Swapchain = true;
         m_Capabilities.DiagnosticCheckpoint = false;
         m_Capabilities.DiagnosticConfig = false;

@@ -17,6 +17,7 @@ namespace HazardRenderer
 	struct PhysicalDeviceCapabilities
 	{
 		bool Discrete = false;
+        bool LowPower = false;
 		bool Swapchain = false;
 		
 		//Diagnostic

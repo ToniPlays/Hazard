@@ -19,7 +19,9 @@ namespace HazardRenderer::Metal
 {
     MetalContext::MetalContext(WindowProps* props)
     {
+#ifdef HZR_PLATFORM_MACOS
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+#endif
         Renderer::Init(this);
         s_Instance = this;
     }

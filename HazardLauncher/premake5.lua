@@ -1,6 +1,5 @@
 project "HazardLauncher"
 
-	kind "ConsoleApp"
 	language "C++"
 	staticruntime "off"
 
@@ -88,6 +87,8 @@ project "HazardLauncher"
 		{
 			"Cocoa.framework"
 		}
+	filter "system:ios"
+		kind "WindowedApp"
 
 	filter "system:macosx or system:ios"
 		links 
@@ -105,6 +106,7 @@ project "HazardLauncher"
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
         	}
 	filter "system:windows or system:macosx"
+		kind "ConsoleApp"
 		links 
 		{
 			"GLFW",

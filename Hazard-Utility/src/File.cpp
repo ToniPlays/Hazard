@@ -13,6 +13,10 @@
 #include <Windows.h>
 #endif
 
+#ifdef HZR_PLATFORM_IOS
+#include <CoreFoundation/CFBundle.h>
+#endif
+
 std::string File::OpenFileDialog()
 {
 	auto f = pfd::open_file("Open file", "");
@@ -39,7 +43,22 @@ std::string File::SaveFile(const std::vector<std::string>& filters, const std::f
 
 bool File::Exists(const std::filesystem::path& path)
 {
+#ifdef HZR_PLATFORM_IOS
+    CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    char resourcePath[PATH_MAX];
+    if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
+                                           PATH_MAX))
+    {
+        bool exists = resourceURL != NULL;
+        if (exists)
+        {
+            CFRelease(resourceURL);
+        }
+            return exists;
+    }
+#else
 	return std::filesystem::exists(path);
+#endif
 }
 bool File::DirectoryExists(const std::filesystem::path& dir)
 {
@@ -195,7 +214,22 @@ bool File::ReadBinaryFileUint32(const std::filesystem::path& path, std::vector<u
 
 std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
-	return std::filesystem::absolute(file);
+#ifdef HZR_PLATFORM_IOS
+    CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    char resourcePath[PATH_MAX];
+    if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
+                                           PATH_MAX))
+    {
+        bool exists = resourceURL != NULL;
+        if (exists)
+        {
+            CFRelease(resourceURL);
+        }
+        return resourcePath;
+    }
+#else
+    return std::filesystem::absolute(file);
+#endif
 }
 std::filesystem::path File::GetDirectoryOf(const std::filesystem::path& file)
 {

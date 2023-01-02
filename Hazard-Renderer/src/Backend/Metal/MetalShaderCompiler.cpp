@@ -2,11 +2,14 @@
 
 #include "Profiling/Timer.h"
 
-#include <shaderc/shaderc.hpp>
-#include <spirv_cross/spirv_msl.hpp>
+#ifdef HZR_PLATFORM_MACOS
+    #include <shaderc/shaderc.hpp>
+    #include <spirv_cross/spirv_msl.hpp>
+#endif
 
 namespace HazardRenderer::Metal
 {
+#ifdef HZR_PLATFORM_MACOS
     static shaderc_shader_kind ShaderStageToShaderC(const ShaderStage& type)
     {
         switch (type)
@@ -23,7 +26,7 @@ namespace HazardRenderer::Metal
         }
         return (shaderc_shader_kind)0;
     }
-
+#endif
 
     MetalShaderCompiler::~MetalShaderCompiler()
     {
@@ -31,11 +34,12 @@ namespace HazardRenderer::Metal
     }
     bool MetalShaderCompiler::Compile(CompileInfo* compileInfo)
     {
+
         HZR_PROFILE_FUNCTION();
         Timer timer;
 
         m_ResultBinary.Release();
-
+#ifdef HZR_PLATFORM_MACOS
         shaderc::CompileOptions options;
 
         switch (compileInfo->Renderer)
@@ -68,8 +72,10 @@ namespace HazardRenderer::Metal
             m_ResultBinary = Buffer::Copy(result.begin(), (result.end() - result.begin()) * sizeof(uint32_t));
         else
             m_ErrorMessage = result.GetErrorMessage();
-
         m_CompilationTime = timer.ElapsedMillis();
+#else
+        bool succeeded = false;
+#endif
         return succeeded;
     }
     bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result, bool tesellation)
@@ -77,21 +83,27 @@ namespace HazardRenderer::Metal
         HZR_PROFILE_FUNCTION();
         
         m_ErrorMessage.clear();
+#ifdef HZR_PLATFORM_MACOS
         
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
+        options.
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         
         compiler.set_msl_options(options);
         result = compiler.compile();
+#endif
     
         return !result.empty();
     }
     std::unordered_map<std::string, MSLBinding> MetalShaderCompiler::GetMSLBindings(Buffer binary, bool tesellation)
     {
+        std::unordered_map<std::string, MSLBinding> result;
+        
+#ifdef HZR_PLATFORM_MACOS
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
         options.vertex_for_tessellation = tesellation;
@@ -103,8 +115,6 @@ namespace HazardRenderer::Metal
         auto r = compiler.compile();
         
         auto resources = compiler.get_shader_resources();
-        
-        std::unordered_map<std::string, MSLBinding> result;
         
         for(auto& buffer : resources.uniform_buffers)
         {
@@ -142,6 +152,7 @@ namespace HazardRenderer::Metal
             result[sampler.name].Binding = id;
             result[sampler.name].SamplerBinding = sId < UINT32_MAX ? sId : id;
         }
+#endif
         return result;
     }
 }
