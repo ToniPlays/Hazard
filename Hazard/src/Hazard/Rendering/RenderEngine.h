@@ -56,18 +56,17 @@ namespace Hazard
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
 		
-		RenderResources& GetResources() { return *m_Resources; }
+		static RenderResources& GetResources() { return *s_Resources; }
 		RendererSettings& GetSettings() { return m_Settings; }
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;
+        
 		RenderContextManager* m_RenderContextManager;
 
-		RenderResources* m_Resources = nullptr;
+		inline static RenderResources* s_Resources = nullptr;
 		RasterizedRenderer* m_RasterizedRenderer;
 		RaytracedRenderer* m_RaytracedRenderer;
-
-		BaseRenderer* m_CurrentRenderer;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;

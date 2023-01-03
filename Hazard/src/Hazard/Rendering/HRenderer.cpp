@@ -46,6 +46,7 @@ namespace Hazard
 	void HRenderer::SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent)
 	{
 		HZR_PROFILE_FUNCTION();
+        HZR_TIMED_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
 		if (!mesh) return;
         
@@ -85,6 +86,7 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
+        HZR_TIMED_FUNCTION();
         
         auto& drawList = s_Engine->GetDrawList();
         
@@ -124,7 +126,7 @@ namespace Hazard
 		data.EnvironmentLod = skyLight.LodLevel;
 		data.Map = map;
 
-		s_Engine->GetDrawList().Environment[map.Raw()] = data;
+		s_Engine->GetDrawList().Environment = data;
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{

@@ -45,12 +45,27 @@ namespace Hazard
 		float SkylightIntensity;
 		float EnvironmentLod;
 	};
-	struct DirectionalLightSource
+    struct LightSource
+    {
+        glm::vec3 Color;
+        float Intensity;
+    };
+
+	struct DirectionalLightSource : LightSource
 	{
 		glm::vec3 Direction;
-		glm::vec3 Color;
-		float Intensity;
 	};
+
+    struct PointLightSource : LightSource
+    {
+        float Radius;
+    };
+
+    struct SpotLightSource : LightSource
+    {
+        float Radius;
+        float ConeAngle;
+    };
 
 	struct RenderingCamera
 	{
@@ -65,12 +80,16 @@ namespace Hazard
 
     using MeshDrawList = std::unordered_map<HazardRenderer::Pipeline*, std::unordered_map<HazardRenderer::VertexBuffer*, RawMesh>>;
 
+    //Draw list for single world context
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
 		MeshDrawList MeshList;
-		std::unordered_map<EnvironmentMap*, EnvironmentData> Environment;
+		
+        EnvironmentData Environment;
 		std::vector<DirectionalLightSource> DirectionalLights;
+        std::vector<PointLightSource> PointLights;
+        std::vector<SpotLightSource> SpotLights;
 		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;
 
 		DrawListStat Stats;

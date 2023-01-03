@@ -7,130 +7,151 @@
 namespace Hazard 
 {
 	using namespace HazardRenderer;
+    
+    void RasterizedRenderer::Render(Ref<HazardRenderer::RenderCommandBuffer> buffer, const RendererDrawList &drawList)
+    {
+        m_Buffer = buffer;
+        m_DrawCalls.clear();
+        PreRender(drawList);
+        
+        for(auto& camera : drawList.WorldRenderer->GetCameraData())
+        {
+            m_Buffer->BeginRenderPass(camera.RenderPass);
+            PrepareCamera(camera);
+            CompositePass(drawList.Environment);
+            m_Buffer->EndRenderPass();
+        }
+    }
 
-	void RasterizedRenderer::Prepare(Ref<HazardRenderer::RenderPass> renderPass, const RendererDrawList& drawList)
-	{
-		m_RenderPass = renderPass;
+    void RasterizedRenderer::PrepareCamera(const WorldCameraData& camera)
+    {
+        auto& resources = RenderEngine::GetResources();
+        //Setup camera uniform
+        
+        CameraData data = {};
+        data.ViewProjection = camera.Projection * camera.View;
+        data.Projection = camera.Projection;
+        data.InverseProjection = glm::inverse(camera.Projection);
+        data.View = camera.View;
+        data.InverseView = glm::inverse(camera.View);
+        data.InverseViewProjection = data.InverseView * data.InverseViewProjection;
+            
+        BufferCopyRegion region = {};
+        region.Data = &data;
+        region.Size = sizeof(CameraData);
+            
+        resources.CameraUniformBuffer->SetData(region);
+        //Setup utility buffer
 
-		auto& resources = Application::GetModule<RenderEngine>().GetResources();
-		LightingData data = {};
-		data.DirectionLightCount = drawList.DirectionalLights.size();
+        UtilityUniformData utils = {};
+        utils.CameraPos = data.InverseView[3];
+        utils.Flags = 0;
+            
+        region.Data = &utils;
+        region.Size = sizeof(UtilityUniformData);
+        
+        
+        resources.UtilityUniformBuffer->SetData(region);
+        m_Buffer->BindUniformBuffer(resources.CameraUniformBuffer);
+        m_Buffer->BindUniformBuffer(resources.UtilityUniformBuffer);
+        
+    }
 
-		for (uint32_t i = 0; i < data.DirectionLightCount; i++)
-		{
-			auto& light = drawList.DirectionalLights[i];
-			data.Lights[i].Direction = glm::vec4(glm::normalize(light.Direction), 1.0);
-			data.Lights[i].Color = glm::vec4(light.Color, light.Intensity);
-		}
-		if (drawList.Environment.size() > 0)
-		{
-			for (auto& [map, environmentData] : drawList.Environment)
-			{
-				data.SkyLightIntensity = environmentData.SkylightIntensity;
-				data.EnvironmentLod = environmentData.EnvironmentLod;
-
-				auto radiance = environmentData.Map->RadianceMap;
-				auto irradiance = environmentData.Map->IrradianceMap;
-				auto prefilter = environmentData.Map->PreFilterMap;
-				auto lut = environmentData.Map->BRDFLut;
-
-				auto shader = resources.PbrPipeline->GetShader();
-				if (radiance)
-					shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);
-				if (irradiance)
-					shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);
-				if (prefilter)
-					shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : resources.WhiteCubemap);
-				if (lut)
-					shader->Set("u_BRDFLut", 0, lut->GetSourceImageAsset()->Value.As<Image2D>());
-			}
-		}
-		else
-		{
-			data.SkyLightIntensity = 0.0f;
-			data.EnvironmentLod = 0.0f;
-
-			auto shader = resources.PbrPipeline->GetShader();
-			shader->Set("u_RadianceMap", 0, resources.WhiteCubemap);
-			shader->Set("u_IrradianceMap", 0, resources.WhiteCubemap);
-			shader->Set("u_PrefilterMap", 0, resources.WhiteCubemap);
-			shader->Set("u_BRDFLut", 0, resources.BRDFLut->GetSourceImageAsset()->Value.As<Image2D>());
-		}
-
-		//Update buffers
-		m_CommandBuffer->BindUniformBuffer(resources.LightUniformBuffer);
-
-		BufferCopyRegion region = {};
-		region.Data = &data;
-		region.Size = sizeof(LightingData);
-
-		resources.LightUniformBuffer->SetData(region);
-	}
-
-	void RasterizedRenderer::GeometryPass(const MeshDrawList& drawList, DrawListStat& stats)
-	{
-        auto& resources = Application::GetModule<RenderEngine>().GetResources();
+    void RasterizedRenderer::PreRender(const RendererDrawList &drawList)
+    {
+        auto& resources = RenderEngine::GetResources();
+        //Initialize lighting data
+        {
+            LightingData data = {};
+            data.SkyLightIntensity = drawList.Environment.SkylightIntensity;
+            data.EnvironmentLod = drawList.Environment.EnvironmentLod;
+            
+            BufferCopyRegion region = {};
+            region.Data = &data;
+            region.Size = sizeof(LightingData);
+            
+            resources.LightUniformBuffer->SetData(region);
+        }
+        m_Buffer->BindUniformBuffer(resources.LightUniformBuffer);
+        
+        //Initialize mesh transform data
         
         size_t offset = 0;
         
-		for (auto& [pipeline, meshList] : drawList)
-		{
-			pipeline->SetRenderPass(m_RenderPass);
-			if (!pipeline->IsValid()) continue;
-
-			for (auto& [vertexBuffer, mesh] : meshList)
+        for(auto& [pipeline, meshes] : drawList.MeshList)
+        {
+            if(!pipeline->IsValid()) continue;
+            
+            for(auto& [buffer, mesh] : meshes)
             {
+                DrawCall& call = m_DrawCalls.emplace_back();
+                call.Pipeline = pipeline;
+                call.VertexBuffer = mesh.VertexBuffer;
+                call.IndexBuffer = mesh.IndexBuffer;
+                call.InstanceCount = mesh.Instances.size();
+                call.IndexCount = mesh.IndexCount;
+                call.TransformOffset = offset;
+                
                 BufferCopyRegion region = {};
                 region.Data = mesh.Instances.data();
                 region.Size = mesh.Instances.size() * sizeof(MeshInstance);
                 region.Offset = offset;
                 
                 resources.TransformBuffer->SetData(region);
-                
-                pipeline->GetShader()->Set(PerInstance, resources.TransformBuffer, offset);
-                m_CommandBuffer->BindPipeline(pipeline);
-                
-                m_CommandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-                //Copy transform data to buffer
-				m_CommandBuffer->DrawInstanced(mesh.IndexCount, mesh.Instances.size(), mesh.IndexBuffer);
-                
+        
                 offset += region.Size;
+            }
+        }
+    }
+    void RasterizedRenderer::CompositePass(const EnvironmentData& environment)
+    {
+        auto& resources = RenderEngine::GetResources();
+     
+        //Prepare Materials
+        {
+            auto shader = resources.PbrPipeline->GetShader();
+            if(!environment.Map)
+            {
+                shader->Set("u_RadianceMap", 0, resources.WhiteCubemap);
+                shader->Set("u_IrradianceMap", 0, resources.WhiteCubemap);
+                shader->Set("u_PrefilterMap", 0, resources.WhiteCubemap);
+                shader->Set("u_BRDFLut", 0, resources.BRDFLut->GetSourceImageAsset()->Value.As<Image2D>());
+            }
+            else
+            {
+                auto radiance = environment.Map->RadianceMap;
+                auto irradiance = environment.Map->IrradianceMap;
+                auto prefilter = environment.Map->PreFilterMap;
+                auto lut = environment.Map->BRDFLut;
                 
-                stats.DrawCalls++;
-                stats.MeshCount += mesh.Instances.size();
-                stats.Vertices += mesh.VertexBuffer->GetSize();
-                stats.Indices += mesh.IndexCount;
-			}
-		}
-	}
-	void RasterizedRenderer::EnvironmentPass(const std::unordered_map<EnvironmentMap*, EnvironmentData>& environment)
-	{
-		HZR_PROFILE_FUNCTION();
-		for (auto& [map, environmentData] : environment)
-		{
-			auto& radiance = environmentData.Map->RadianceMap;
-			if (!radiance) return;
-            
-			auto& resources = Application::GetModule<RenderEngine>().GetResources();
-
-			resources.SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
-			m_CommandBuffer->BindPipeline(resources.SkyboxPipeline);
-			m_CommandBuffer->Draw(6);
-			return;
-		}
-	}
-	void RasterizedRenderer::CompositePass(const std::unordered_map<Pipeline*, std::vector<PipelineData>>& list)
-	{
-		HZR_PROFILE_FUNCTION();
-		for (auto& [pipeline, usages] : list)
-		{
-			pipeline->SetRenderPass(m_RenderPass);
-
-			if (!pipeline->IsValid()) continue;
-			m_CommandBuffer->BindPipeline(pipeline);
-
-			for (auto& data : usages)
-				m_CommandBuffer->Draw(data.Count);
-		}
-	}
+                if (radiance)
+                    shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);
+                if (irradiance)
+                    shader->Set("u_IrradianceMap", 0, irradiance->Value ? irradiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);
+                if (prefilter)
+                    shader->Set("u_PrefilterMap", 0, prefilter->Value ? prefilter->Value.As<CubemapTexture>() : resources.WhiteCubemap);
+                if (lut)
+                    shader->Set("u_BRDFLut", 0, lut->GetSourceImageAsset()->Value.As<Image2D>());
+            }
+        }
+        //Draw all meshes
+        {
+            for(DrawCall& call : m_DrawCalls)
+            {
+                call.Pipeline->GetShader()->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
+                
+                m_Buffer->BindPipeline(call.Pipeline);
+                m_Buffer->BindVertexBuffer(call.VertexBuffer);
+                m_Buffer->DrawInstanced(call.IndexCount, call.InstanceCount, call.IndexBuffer);
+            }
+        }
+        if(!environment.Map) return;
+        
+        auto& radiance = environment.Map->RadianceMap;
+        if (!radiance) return;
+        
+        RenderEngine::GetResources().SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
+        m_Buffer->BindPipeline(resources.SkyboxPipeline);
+        m_Buffer->Draw(6);
+    }
 }

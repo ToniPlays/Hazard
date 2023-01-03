@@ -34,11 +34,6 @@ namespace UI
 					ImGui::Text("%s", std::to_string(renderer->GetCameraData().size()).c_str());
 
 					ImGui::TableNextColumn();
-					ImGui::Text("Environment count");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Environment.size()).c_str());
-
-					ImGui::TableNextColumn();
 					ImGui::Text("Quad count");
 					ImGui::TableNextColumn();
 					ImGui::Text("%s", std::to_string(list.Stats.QuadCount).c_str());

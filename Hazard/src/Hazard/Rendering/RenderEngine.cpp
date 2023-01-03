@@ -42,8 +42,8 @@ namespace Hazard
 		m_LineRenderer.Init();
 		m_LineRenderer.CreateResources(m_RenderPass);
 
-		m_Resources = hnew RenderResources();
-		m_Resources->Initialize(m_RenderPass);
+		s_Resources = hnew RenderResources();
+		s_Resources->Initialize(m_RenderPass);
 
 		m_RasterizedRenderer = hnew RasterizedRenderer();
 		m_RaytracedRenderer = hnew RaytracedRenderer();
@@ -88,60 +88,19 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
-
-		m_CurrentRenderer = m_Settings.Raytraced ? static_cast<BaseRenderer*>(m_RaytracedRenderer) : static_cast<BaseRenderer*>(m_RasterizedRenderer);
-
-		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
-		m_CurrentRenderer->SetCommandBuffer(commandBuffer);
-
-		for (auto& worldDrawList : m_DrawList)
-		{
-			//Not camera dependant
-			CollectGeometry();
-			m_CurrentRenderer->Prepare(m_RenderPass, worldDrawList);
-
-			for (auto& camera : worldDrawList.WorldRenderer->m_CameraData)
-			{
-				glm::mat4 inverseProjection = glm::inverse(camera.Projection);
-				glm::mat4 inverseView = glm::inverse(camera.View);
-
-				CameraData data = {};
-				data.ViewProjection = camera.Projection * camera.View;
-				data.Projection = camera.Projection;
-				data.InverseProjection = inverseProjection;
-				data.View = camera.View;
-				data.InverseView = inverseView;
-				data.InverseViewProjection = inverseView * inverseProjection;
-
-				UtilityUniformData utils = {};
-				utils.CameraPos = data.InverseView[3];
-				utils.Flags = m_Flags;
-
-				{
-					BufferCopyRegion region = {};
-					region.Data = &data;
-					region.Size = sizeof(CameraData);
-					m_Resources->CameraUniformBuffer->SetData(region);
-				}
-				{
-					BufferCopyRegion region = {};
-					region.Data = &utils;
-					region.Size = sizeof(UtilityUniformData);
-					m_Resources->UtilityUniformBuffer->SetData(region);
-				}
-
-				commandBuffer->BindUniformBuffer(m_Resources->UtilityUniformBuffer);
-				commandBuffer->BindUniformBuffer(m_Resources->CameraUniformBuffer);
-				commandBuffer->BeginRenderPass(camera.RenderPass);
-
-				m_CurrentRenderer->GeometryPass(worldDrawList.MeshList, worldDrawList.Stats);
-				m_CurrentRenderer->EnvironmentPass(worldDrawList.Environment);
-				m_CurrentRenderer->CompositePass(worldDrawList.Pipelines);
-				commandBuffer->EndRenderPass();
-			}
-
-			m_CurrentDrawContext++;
-			break;
-		}
+        
+        Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
+        
+        for (auto& worldDrawList : m_DrawList)
+        {
+            CollectGeometry();
+            
+            if(m_Settings.Raytraced)
+                m_RaytracedRenderer->Render();
+            else
+                m_RasterizedRenderer->Render(commandBuffer, worldDrawList);
+            
+            m_CurrentDrawContext++;
+        }
 	}
 }
