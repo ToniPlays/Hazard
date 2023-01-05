@@ -35,15 +35,15 @@ namespace Hazard
 			{
 				Vertex3D& v = result.Vertices[i];
 				if (data.Flags & MeshFlags_Positions)
-					v.Position = { buffer.Read<glm::vec3>(), 1.0 };
+					v.Position = buffer.Read<glm::vec3>();
 				if (data.Flags & MeshFlags_VertexColors)
 					v.Color = buffer.Read<glm::vec4>();
 				if (data.Flags & MeshFlags_Normals)
-					v.Normals = { buffer.Read<glm::vec3>(), 1.0 };
+                    v.Normals = buffer.Read<glm::vec3>();
 				if (data.Flags & MeshFlags_Tangent)
-					v.Tangent = { buffer.Read<glm::vec3>(), 1.0 };
+                    v.Tangent = buffer.Read<glm::vec3>();
 				if (data.Flags & MeshFlags_Binormal)
-					v.Binormal = { buffer.Read<glm::vec3>(), 1.0 };
+                    v.Binormal = buffer.Read<glm::vec3>();
 				if (data.Flags & MeshFlags_TextCoord)
 					v.TexCoords = buffer.Read<glm::vec2>();
 			}

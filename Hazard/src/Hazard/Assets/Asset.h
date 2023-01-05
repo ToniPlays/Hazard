@@ -47,9 +47,9 @@ namespace Hazard
 		virtual ~Asset();
 
 		const AssetType GetType() const { return m_Type; }
-		AssetHandle GetHandle() { return m_Handle; }
-		AssetFlags GetFlags() { return m_Flags; }
-		bool IsValid() { return m_Handle != INVALID_ASSET_HANDLE && m_Type != AssetType::Undefined; }
+		AssetHandle GetHandle() const { return m_Handle; }
+		AssetFlags GetFlags() const { return m_Flags; }
+		bool IsValid() const { return m_Handle != INVALID_ASSET_HANDLE && m_Type != AssetType::Undefined; }
 
 	protected:
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;

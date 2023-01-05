@@ -76,7 +76,6 @@ namespace Hazard
             HZR_CORE_WARN("Scene not found or has no meshes {0}", file.string());
             return MeshData();
         }
-			
 		
 		m_SceneMeshes = scene->mNumMeshes;
 		MeshData data;
@@ -218,8 +217,7 @@ namespace Hazard
 			vertex.Position.x = mesh->mVertices[i].x;
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
-
-			vertex.Position = m_ScaleMatrix * vertex.Position;
+			vertex.Position = m_ScaleMatrix * glm::vec4(vertex.Position, 1.0);
 
 			data.BoundingBox.Encapsulate(vertex.Position);
 
@@ -248,6 +246,7 @@ namespace Hazard
 				vertex.Binormal.y = mesh->mBitangents[i].y;
 				vertex.Binormal.z = mesh->mBitangents[i].z;
 			}
+            
 			if (mesh->HasTextureCoords(0))
 			{
 				vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;

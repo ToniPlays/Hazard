@@ -1,6 +1,8 @@
 #include "Material.h"
 #include "ShaderLibrary.h"
 
+#include "RenderEngine.h"
+
 namespace Hazard
 {
     Material::Material()
@@ -13,18 +15,26 @@ namespace Hazard
         m_ParameterBuffer.Release();
         m_Pipeline = pipeline;
         
-        auto& pushConstants = pipeline->GetShader()->GetShaderData().PushConstants;
+        auto& data = pipeline->GetShader()->GetShaderData();
         
         //Specify u_MaterialConstants as the constant buffer for a material
-        for(auto& [set, ranges] : pushConstants)
+        for(auto& [set, ranges] : data.PushConstants)
         {
             for(auto& [binding, constant] : ranges)
             {
                 if(constant.Name == "u_MaterialConstants")
-                {
                     UpdateParameters(constant);
-                    return;
-                }
+            }
+        }
+        auto& resources = RenderEngine::GetResources();
+        
+        for(auto& [set, samplers] : data.ImageSamplers)
+        {
+            if(set == 0) continue;
+            for(auto& [binding, sampler] : samplers)
+            {
+                if(sampler.Dimension == 2)
+                    m_Textures[sampler.Name] = resources.WhiteTexture;
             }
         }
     }

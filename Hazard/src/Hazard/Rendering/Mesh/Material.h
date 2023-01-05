@@ -2,6 +2,7 @@
 
 #include "Hazard/Assets/Asset.h"
 #include "Backend/Core/Pipeline/Pipeline.h"
+#include "Hazard/RenderContext/Texture2D.h"
 
 #include "UtilityCore.h"
 
@@ -41,7 +42,13 @@ namespace Hazard
             return m_ParameterBuffer.Write(&value, sizeof(T), offset);
         }
         
+        void SetTexture(const std::string& name, Ref<Texture2DAsset> texture)
+        {
+            m_Textures[name] = texture;
+        }
+        
         const std::unordered_map<std::string, MaterialParam>& GetParameters() const { return m_Params; }
+        const std::unordered_map<std::string, Ref<Texture2DAsset>>& GetTextures() const { return m_Textures; }
         Buffer GetBuffer() const { return m_ParameterBuffer; }
         
         Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
@@ -55,6 +62,7 @@ namespace Hazard
         Ref<HazardRenderer::Pipeline> m_Pipeline;
         Buffer m_ParameterBuffer;
         std::unordered_map<std::string, MaterialParam> m_Params;
+        std::unordered_map<std::string, Ref<Texture2DAsset>> m_Textures;
         
     };
 }

@@ -22,6 +22,18 @@ namespace UI
         
         ImGui::Columns(2, 0, false);
         ImGui::SetColumnWidth(0, 125);
+        
+        for(auto& [name, texture] : m_Material->GetTextures())
+        {
+            std::string text = name;
+            ImUI::TextureSlot("Texture", text, texture, [&]() {
+                ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
+                    Ref<Texture2DAsset> texture = AssetManager::GetAsset<Texture2DAsset>(handle);
+                    m_Material->SetTexture(text, texture);
+                    });
+            });
+        }
+        
         for(auto& [name, param] : m_Material->GetParameters())
             DrawMaterialParam(name, param);
         
@@ -64,6 +76,14 @@ namespace UI
                     auto c = value.ToGLM();
                     m_Material->Set(name, c);
                 }
+                break;
+            }
+            case ShaderDataType::UInt:
+            case ShaderDataType::Bool:
+            {
+                bool value = m_Material->Get<bool>(name);
+                if(ImUI::Checkbox(name.c_str(), value))
+                    m_Material->Set(name, value);
                 break;
             }
             default: break;

@@ -140,6 +140,13 @@ namespace Hazard
             {
                 auto pipeline = call.Material->GetPipeline();
                 auto shader = pipeline->GetShader();
+                
+                //Bind textures
+                for(auto& [name, texture] : call.Material->GetTextures())
+                {
+                    shader->Set(name, 0, texture->GetSourceImageAsset()->Value.As<Image2D>());
+                }
+                
                 shader->Set("u_MaterialConstants", call.Material->GetBuffer());
                 shader->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
                 

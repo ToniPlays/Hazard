@@ -7,21 +7,21 @@ namespace Hazard
 {
 	struct Vertex3D
 	{
-		glm::vec4 Position = { 0, 0, 0, 1.0 };
-		glm::vec4 Color = Color::White;
-		glm::vec4 Normals = { 0, 0, 0, 0 };
-		glm::vec4 Tangent = { 0, 0, 0, 0 };
-		glm::vec4 Binormal = { 0, 0, 0, 0 };
+		glm::vec3 Position  = { 0, 0, 0 };
+		glm::vec4 Color     = Color::White;
+		glm::vec3 Normals   = { 0, 0, 0 };
+		glm::vec3 Tangent   = { 0, 0, 0 };
+		glm::vec3 Binormal  = { 0, 0, 0 };
 		glm::vec2 TexCoords = { 0, 0 };
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
 			return {
-				{ "a_Position",			ShaderDataType::Float4, PerVertex },
+				{ "a_Position",			ShaderDataType::Float3, PerVertex },
 				{ "a_Color",			ShaderDataType::Float4, PerVertex },
-				{ "a_Normal",			ShaderDataType::Float4, PerVertex },
-				{ "a_Tangent",			ShaderDataType::Float4, PerVertex },
-				{ "a_Binormal",			ShaderDataType::Float4, PerVertex },
+				{ "a_Normal",			ShaderDataType::Float3, PerVertex },
+				{ "a_Tangent",			ShaderDataType::Float3, PerVertex },
+				{ "a_Binormal",			ShaderDataType::Float3, PerVertex },
 				{ "a_TextureCoords",	ShaderDataType::Float2, PerVertex },
 				{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
                 { "a_MRow0",            ShaderDataType::Float4, PerInstance },

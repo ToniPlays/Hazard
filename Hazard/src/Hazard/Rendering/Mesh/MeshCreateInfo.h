@@ -5,44 +5,47 @@
 #include "BoundingBox.h"
 #include "Mesh.h"
 
+#include <assimp/postprocess.h>
+
 namespace Hazard {
 
 	enum MeshLoaderFlags : size_t 
 	{
-		MeshLoaderFlags_CalculateTangentSpace = BIT(0),
-		MeshLoaderFlags_JoinIdenticalVertices = BIT(1),
-		MeshLoaderFlags_MakeLeftHanded = BIT(2),
-		MeshLoaderFlags_Triangulate = BIT(3),
-		MeshLoaderFlags_RemoveComponent = BIT(4),
-		MeshLoaderFlags_GenerateNormals = BIT(5),
-		MeshLoaderFlags_GenerateSmoothNormals = BIT(6),
-		MeshLoaderFlags_SplitLargeMeshes = BIT(7),
-		MeshLoaderFlags_PreTransformVertices = BIT(8),
-		MeshLoaderFlags_LimitBoneWeights = BIT(9),
-		MeshLoaderFlags_ValidateDataStructure = BIT(10),
-		MeshLoaderFlags_ImproveCacheLocality = BIT(11),
-		MeshLoaderFlags_RemoveReduntantMaterials = BIT(12),
-		MeshLoaderFlags_FixInFacingNormals = BIT(13),
-		MeshLoaderFlags_PopulateArmatureData = BIT(14),
-		MeshLoaderFlags_SortByType = BIT(15),
-		MeshLoaderFlags_FindDegenerates = BIT(16),
-		MeshLoaderFlags_FindInvalidData = BIT(17),
-		MeshLoaderFlags_GenerateUVCoords = BIT(18),
-		MeshLoaderFlags_TransformUVCoords = BIT(19),
-		MeshLoaderFlags_FindInstances = BIT(20),
-		MeshLoaderFlags_OptimizeMeshes = BIT(21),
-		MeshLoaderFlags_OptimizeGraph = BIT(22),
-		MeshLoaderFlags_FlipUVs = BIT(23),
-		MeshLoaderFlags_FlipWindingOrderToCW = BIT(24),
-		MeshLoaderFlags_SplitByBoneCount = BIT(25),
-		MeshLoaderFlags_Debone = BIT(26),
-		MeshLoaderFlags_GlobalScale = BIT(27),
-		MeshLoaderFlags_EmbedTextures = BIT(28),
-		MeshLoaderFlags_ForceGenerateNormals = BIT(29),
-		MeshLoaderFlags_DropNormals = BIT(30),
-		MeshLoaderFlags_GenerateBoundingBoxes = BIT(31),
+		MeshLoaderFlags_CalculateTangentSpace = aiProcess_CalcTangentSpace,
+		MeshLoaderFlags_JoinIdenticalVertices = aiProcess_JoinIdenticalVertices,
+		MeshLoaderFlags_MakeLeftHanded = aiProcess_MakeLeftHanded,
+		MeshLoaderFlags_Triangulate = aiProcess_Triangulate,
+		MeshLoaderFlags_RemoveComponent = aiProcess_RemoveComponent,
+		MeshLoaderFlags_GenerateNormals = aiProcess_GenNormals,
+		MeshLoaderFlags_GenerateSmoothNormals = aiProcess_GenSmoothNormals,
+		MeshLoaderFlags_SplitLargeMeshes = aiProcess_SplitLargeMeshes,
+		MeshLoaderFlags_PreTransformVertices = aiProcess_PreTransformVertices,
+		MeshLoaderFlags_LimitBoneWeights = aiProcess_LimitBoneWeights,
+		MeshLoaderFlags_ValidateDataStructure = aiProcess_ValidateDataStructure,
+		MeshLoaderFlags_ImproveCacheLocality = aiProcess_ImproveCacheLocality,
+		MeshLoaderFlags_RemoveReduntantMaterials = aiProcess_RemoveRedundantMaterials,
+		MeshLoaderFlags_FixInFacingNormals = aiProcess_FixInfacingNormals,
+		MeshLoaderFlags_PopulateArmatureData = aiProcess_PopulateArmatureData,
+		MeshLoaderFlags_SortByType = aiProcess_SortByPType,
+		MeshLoaderFlags_FindDegenerates = aiProcess_FindDegenerates,
+		MeshLoaderFlags_FindInvalidData = aiProcess_FindInvalidData,
+		MeshLoaderFlags_GenerateUVCoords = aiProcess_GenUVCoords,
+		MeshLoaderFlags_TransformUVCoords = aiProcess_TransformUVCoords,
+		MeshLoaderFlags_FindInstances = aiProcess_FindInstances,
+		MeshLoaderFlags_OptimizeMeshes = aiProcess_OptimizeMeshes,
+		MeshLoaderFlags_OptimizeGraph = aiProcess_OptimizeGraph,
+		MeshLoaderFlags_FlipUVs = aiProcess_FlipUVs,
+		MeshLoaderFlags_FlipWindingOrderToCW = aiProcess_FlipWindingOrder,
+		MeshLoaderFlags_SplitByBoneCount = aiProcess_SplitByBoneCount,
+		MeshLoaderFlags_Debone = aiProcess_Debone,
+		MeshLoaderFlags_GlobalScale = aiProcess_GlobalScale,
+		MeshLoaderFlags_EmbedTextures = aiProcess_EmbedTextures,
+		MeshLoaderFlags_ForceGenerateNormals = aiProcess_ForceGenNormals,
+		MeshLoaderFlags_DropNormals = aiProcess_DropNormals,
+		MeshLoaderFlags_GenerateBoundingBoxes = aiProcess_GenBoundingBoxes,
 
-		MeshLoaderFlags_DefaultFlags = MeshLoaderFlags_CalculateTangentSpace
+		MeshLoaderFlags_DefaultFlags =
+          MeshLoaderFlags_CalculateTangentSpace
 		| MeshLoaderFlags_Triangulate 
 		| MeshLoaderFlags_SortByType
 		| MeshLoaderFlags_GenerateNormals

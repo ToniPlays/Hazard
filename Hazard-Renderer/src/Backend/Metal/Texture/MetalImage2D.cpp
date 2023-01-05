@@ -110,9 +110,9 @@ namespace HazardRenderer::Metal
         descriptor->setMaxAnisotropy(1.0);
         descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
         descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setRAddressMode(MTL::SamplerAddressModeClampToEdge);
-        descriptor->setSAddressMode(MTL::SamplerAddressModeClampToEdge);
-        descriptor->setTAddressMode(MTL::SamplerAddressModeClampToEdge);
+        descriptor->setRAddressMode(MTL::SamplerAddressModeRepeat);
+        descriptor->setSAddressMode(MTL::SamplerAddressModeRepeat);
+        descriptor->setTAddressMode(MTL::SamplerAddressModeRepeat);
         
         descriptor->setLodMinClamp(0.0f);
         descriptor->setLodMaxClamp(100.0f);

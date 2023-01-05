@@ -6,6 +6,8 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/ShaderLibrary.h"
 
+#include "Hazard/RenderContext/RenderContextManager.h"
+
 #include "Hazard/RenderContext/Texture2D.h"
 
 namespace Hazard
@@ -68,6 +70,7 @@ namespace Hazard
 		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
 		Ref<HazardRenderer::Pipeline> PbrPipeline;
 
+        Ref<Texture2DAsset> WhiteTexture;
 		Ref<Texture2DAsset> BRDFLut;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
@@ -115,6 +118,12 @@ namespace Hazard
 				SkyboxPipeline = ShaderLibrary::GetPipeline("skybox");
 				SkyboxPipeline->SetRenderPass(renderPass);
 
+                auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
+                
+                Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
+                
+                WhiteTexture = Ref<Texture2DAsset>::Create(asset);
+                
 				BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 
 				CubemapTextureCreateInfo blackCubemap = {};
