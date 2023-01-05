@@ -468,7 +468,7 @@ namespace HazardRenderer
             auto& element = result.emplace_back();
             element.Name = compiler.get_member_name(resource.base_type_id, i);
             element.Type = Utils::ShaderDataTypeFromSPV(memberType);
-            element.Offset = compiler.get_member_decoration(type.member_types[i], i, spv::DecorationOffset);
+            element.Offset = compiler.get_member_decoration(resource.base_type_id, i, spv::DecorationOffset);
         }
         return result;
     }

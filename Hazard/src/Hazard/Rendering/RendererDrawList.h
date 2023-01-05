@@ -78,7 +78,7 @@ namespace Hazard
 		GeometryInclude GeometryFlags = Geometry_All;
 	};
 
-    using MeshDrawList = std::unordered_map<HazardRenderer::Pipeline*, std::unordered_map<HazardRenderer::VertexBuffer*, RawMesh>>;
+    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<HazardRenderer::VertexBuffer*, RawMesh>>;
 
     //Draw list for single world context
 	struct RendererDrawList

@@ -44,11 +44,15 @@ struct Buffer
 	{
 		return *(T*)((uint8_t*)Data + offset);
 	}
+    void* Read(size_t size, size_t offset = 0)
+    {
+        return ((uint8_t*)Data + offset);
+    }
 	uint8_t* ReadBytes(size_t size, size_t offset) 
 	{
 		if (offset + size > Size) assert(false);
+        
 		uint8_t* buffer = hnew uint8_t[size];
-
 		memcpy(buffer, (uint8_t*)Data + offset, size);
 		return buffer;
 	}

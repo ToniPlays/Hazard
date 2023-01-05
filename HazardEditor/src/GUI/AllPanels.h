@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AssetTools/ScriptCreatePanel.h"
+#include "AssetTools/MaterialEditor.h"
 
 #include "Debug/RenderCommandListPanel.h"
 #include "Debug/RendererDebugPanel.h"

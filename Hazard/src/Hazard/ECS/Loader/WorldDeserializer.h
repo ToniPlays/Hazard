@@ -164,26 +164,13 @@ namespace Hazard
 			AssetHandle handle;
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);
 
-			if (handle == INVALID_ASSET_HANDLE)
-				return;
+			if (handle != INVALID_ASSET_HANDLE)
+                c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 
-			if (m_CanAsync && false)
-			{
-				JobPromise promise = AssetManager::GetAssetAsync<Mesh>(handle);
-				promise.Then([e = entity, promise](JobGraph&) -> size_t {
-
-					Ref<Mesh> asset = *promise.Value<Ref<Mesh>>();
-
-					Entity entity = { e };
-					entity.GetComponent<MeshComponent>().m_MeshHandle = asset;
-					return 0;
-					});
-				m_Promises.push_back({ AssetType::Mesh , promise });
-			}
-			else
-			{
-				c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
-			}
+            YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
+            
+            if(handle != INVALID_ASSET_HANDLE)
+                c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {

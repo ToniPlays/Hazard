@@ -10,8 +10,8 @@
 
 #include <glm/gtx/quaternion.hpp>
 
-namespace YAML {
-
+namespace YAML
+{
 	template<>
 	struct convert<glm::vec2>
 	{

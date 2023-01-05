@@ -458,7 +458,7 @@ namespace Hazard::ImUI
             }
 #endif
             default:
-                HZR_CORE_ASSERT(false, "Undefined ImageID");
+                HZR_ASSERT(false, "Undefined ImageID");
                 break;
 		}
 
@@ -549,7 +549,6 @@ namespace Hazard::ImUI
 	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr, DragSource dragSource = nullptr)
 	{
 		bool treeOpen = false;
-		bool optionsOpen = false;
 		{
 
 			ImVec2 contentRegion = ImGui::GetContentRegionAvail();
@@ -585,7 +584,7 @@ namespace Hazard::ImUI
 			ImGui::TreePop();
 		}
 
-		return treeOpen;
+		return false;
 	}
 
 #pragma endregion

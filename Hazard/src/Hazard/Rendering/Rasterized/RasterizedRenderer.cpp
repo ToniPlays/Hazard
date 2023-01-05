@@ -78,14 +78,14 @@ namespace Hazard
         
         size_t offset = 0;
         
-        for(auto& [pipeline, meshes] : drawList.MeshList)
+        for(auto& [material, meshes] : drawList.MeshList)
         {
-            if(!pipeline->IsValid()) continue;
+            if(!material) continue;
             
             for(auto& [buffer, mesh] : meshes)
             {
                 DrawCall& call = m_DrawCalls.emplace_back();
-                call.Pipeline = pipeline;
+                call.Material = material;
                 call.VertexBuffer = mesh.VertexBuffer;
                 call.IndexBuffer = mesh.IndexBuffer;
                 call.InstanceCount = mesh.Instances.size();
@@ -138,9 +138,12 @@ namespace Hazard
         {
             for(DrawCall& call : m_DrawCalls)
             {
-                call.Pipeline->GetShader()->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
+                auto pipeline = call.Material->GetPipeline();
+                auto shader = pipeline->GetShader();
+                shader->Set("u_MaterialConstants", call.Material->GetBuffer());
+                shader->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
                 
-                m_Buffer->BindPipeline(call.Pipeline);
+                m_Buffer->BindPipeline(pipeline);
                 m_Buffer->BindVertexBuffer(call.VertexBuffer);
                 m_Buffer->DrawInstanced(call.IndexCount, call.InstanceCount, call.IndexBuffer);
             }

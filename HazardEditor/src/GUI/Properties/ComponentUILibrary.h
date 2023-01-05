@@ -680,6 +680,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 				uint32_t flags = 0;
 				Ref<Mesh> mesh = firstMc.m_MeshHandle;
+                Ref<Material> material = firstMc.m_MaterialHandle;
 
 				for (auto& entity : entities)
 				{
@@ -689,13 +690,24 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 						mesh = nullptr;
 						flags |= BIT(0);
 					}
+                    if(mc.m_MaterialHandle != material)
+                    {
+                        material = nullptr;
+                        flags |= BIT(1);
+                    }
 				}
 
-				std::string path = "";
+				std::string meshName = "";
+                std::string materialName = "";
 				if (mesh)
-					path = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Path);
+                    meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Path);
 				else if (flags & BIT(0))
-					path = "---";
+					meshName = "---";
+            
+                if (material)
+                    materialName = File::GetNameNoExt(AssetManager::GetMetadata(material->GetHandle()).Path);
+                else if (flags & BIT(1))
+                    materialName = "---";
 
 
 				ImGui::Columns(2, 0, false);
@@ -706,7 +718,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImGui::NextColumn();
 
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-				if (ImUI::TextFieldWithHint(path, "Mesh file"))
+				if (ImUI::TextFieldWithHint(meshName, "Mesh file"))
 				{
 
 				}
@@ -716,6 +728,23 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
                         
                         for(auto entity : entities)
                             entity.GetComponent<MeshComponent>().m_MeshHandle = mesh;
+                        });
+                    });
+                ImGui::NextColumn();
+                ImGui::Text("Material");
+                ImGui::NextColumn();
+            
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                if (ImUI::TextFieldWithHint(materialName, "Material"))
+                {
+
+                }
+                ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
+                    Application::Get().SubmitMainThread([handle, entities]() {
+                        Ref<Material> mat = AssetManager::GetAsset<Material>(handle);
+                        
+                        for(auto entity : entities)
+                            entity.GetComponent<MeshComponent>().m_MaterialHandle = mat;
                         });
                     });
 

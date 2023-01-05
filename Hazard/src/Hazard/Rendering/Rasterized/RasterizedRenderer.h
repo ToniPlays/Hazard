@@ -13,7 +13,7 @@ namespace Hazard
         size_t IndexCount;
         size_t TransformOffset;
         
-        Ref<HazardRenderer::Pipeline> Pipeline;
+        Ref<Material> Material;
         Ref<HazardRenderer::VertexBuffer> VertexBuffer;
         Ref<HazardRenderer::IndexBuffer> IndexBuffer;
     };

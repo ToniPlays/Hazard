@@ -48,11 +48,11 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
+        Ref<Material> material = meshComponent.m_MaterialHandle;
 		if (!mesh) return;
+        if (!mesh->IsValid()) return;
         
         Ref<Pipeline> pipeline = meshComponent.m_MaterialHandle ? meshComponent.m_MaterialHandle->GetPipeline() : s_Engine->GetResources().PbrPipeline;
-        
-		if (!mesh->IsValid()) return;
 
         auto& drawList = s_Engine->GetDrawList();
         
@@ -63,13 +63,13 @@ namespace Hazard
         instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
         instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
         
-        auto& data = drawList.MeshList[pipeline.Raw()][mesh->GetVertexBuffer().Raw()];
+        auto& meshList = drawList.MeshList[material.Raw()];
+        auto& data = meshList[mesh->GetVertexBuffer().Raw()];
         data.VertexBuffer = mesh->GetVertexBuffer();
         data.IndexBuffer = mesh->GetIndexBuffer();
         data.IndexCount = data.IndexBuffer->GetCount();
         
-        auto& meshes = drawList.MeshList[pipeline.Raw()];
-        meshes[data.VertexBuffer.Raw()].Instances.push_back(instance);
+        data.Instances.push_back(instance);
 
 		//SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
 	}
@@ -78,12 +78,12 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, nullptr, pipeline, count);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material)
 	{
 		HZR_PROFILE_FUNCTION();
-		SubmitMesh(transform, vertexBuffer, indexBuffer, pipeline, indexBuffer->GetCount());
+		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetCount());
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
@@ -97,16 +97,17 @@ namespace Hazard
         instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
         instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
         
-        auto& data = drawList.MeshList[pipeline.Raw()][vertexBuffer.Raw()];
+        auto& meshes = drawList.MeshList[material.Raw()];
+        
+        auto& data = meshes[vertexBuffer.Raw()];
         data.VertexBuffer = vertexBuffer;
         data.IndexBuffer = indexBuffer;
         data.IndexCount = count;
         
-        auto& meshes = drawList.MeshList[pipeline.Raw()];
         meshes[data.VertexBuffer.Raw()].Instances.push_back(instance);
 	}
 
-	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Pipeline> pipeline, size_t count)
+	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}

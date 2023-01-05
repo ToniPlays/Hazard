@@ -3,7 +3,7 @@
 #include <map>
 #include <mutex>
 
-#ifdef defined(HZR_DEBUG) && defined(HZR_PLATFORM_WINDOWS)
+#if defined(HZR_DEBUG) && defined(HZR_PLATFORM_WINDOWS)
 #define HZR_MEM_DIAG
 #endif
 

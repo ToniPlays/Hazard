@@ -121,6 +121,9 @@ namespace Hazard
 
 				if (component.m_MeshHandle) 
 					YamlUtils::Serialize(out, "Mesh", component.m_MeshHandle->GetHandle());
+                
+                if (component.m_MaterialHandle)
+                    YamlUtils::Serialize(out, "Material", component.m_MaterialHandle->GetHandle());
 				});
 		}
 		template<>

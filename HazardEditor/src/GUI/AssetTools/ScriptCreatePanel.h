@@ -4,7 +4,8 @@
 #include "Hazard/ImGUI/Modal.h"
 #include "Core/EditorAssetManager.h"
 
-namespace UI {
+namespace UI
+{
 	class ScriptCreatePanel : public Hazard::ImUI::Modal
 	{
 	public:

@@ -14,6 +14,7 @@ namespace Hazard
 
 	struct MeshCreateInfo
 	{
+        std::string DebugName;
 		BoundingBox BoundingBox;
 		HazardRenderer::BufferUsage Usage;
 		size_t VertexCount;

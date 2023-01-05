@@ -42,7 +42,9 @@ layout(push_constant) uniform PushConstants
 {
     float Metalness;
     float Roughness;
-} u_Constants;
+    vec4 AlbedoColor;
+    
+} u_MaterialConstants;
 
 layout(set = 1, binding = 1) uniform samplerCube u_RadianceMap;
 
@@ -67,9 +69,9 @@ void main()
 	else
 	{
 		//Initialize Params
-		m_Params.Albedo = Color.rgb;
-		m_Params.Metalness = u_Constants.Metalness;
-		m_Params.Roughness = max(u_Constants.Roughness, 0.05);
+		m_Params.Albedo = u_MaterialConstants.AlbedoColor.rgb * Color.rgb;
+		m_Params.Metalness = u_MaterialConstants.Metalness;
+		m_Params.Roughness = max(u_MaterialConstants.Roughness, 0.05);
 		m_Params.Normal = normalize(Normal);
 		m_Params.View = normalize(u_Util.CameraPos.xyz - WorldPosition);
 		m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);

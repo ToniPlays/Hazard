@@ -26,12 +26,6 @@ namespace Hazard
 		glm::vec4 Unused2;
 	};
 
-	struct ModelData
-	{
-		glm::mat4 Transform;
-		int Flags;
-	};
-
 	struct DirectionalLight 
 	{
 		//W component not used
@@ -51,7 +45,7 @@ namespace Hazard
 	struct UtilityUniformData 
 	{
 		glm::vec3 CameraPos;
-		float randomShit;
+		float someRandomStuff;
 		uint32_t Flags = 0;
 	};
 
@@ -68,7 +62,6 @@ namespace Hazard
 		Ref<HazardRenderer::UniformBuffer> CameraUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> UtilityUniformBuffer;
 		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
-		Ref<HazardRenderer::UniformBuffer> ModelUniformBuffer;
         
         Ref<HazardRenderer::VertexBuffer> TransformBuffer;
 
@@ -109,15 +102,6 @@ namespace Hazard
 				lightUBO.Usage = BufferUsage::DynamicDraw;
 
 				LightUniformBuffer = UniformBuffer::Create(&lightUBO);
-
-				UniformBufferCreateInfo modelUBO = {};
-				modelUBO.Name = "Model";
-				modelUBO.Set = 1;
-				modelUBO.Binding = 0;
-				modelUBO.Size = sizeof(ModelData);
-				modelUBO.Usage = BufferUsage::DynamicDraw;
-
-				ModelUniformBuffer = UniformBuffer::Create(&modelUBO);
                 
                 VertexBufferCreateInfo transformBufferInfo = {};
                 transformBufferInfo.Name = "TransformStorageBuffer";

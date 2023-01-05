@@ -72,7 +72,7 @@ namespace Hazard
 			{
 				auto cachedPath = TextureFactory::GetCacheFile(handle);
 				CachedBuffer buffer = File::ReadBinaryFile(cachedPath);
-				AssetPackElement element = buffer.Read<AssetPackElement>();
+				buffer.Read<AssetPackElement>();
 
 				TextureAssetHeader header = buffer.Read<TextureAssetHeader>();
 				Buffer imageData = buffer.Read<Buffer>(header.Channels * header.Width * header.Height);

@@ -79,17 +79,22 @@ namespace UI
 			});
 		ImUI::Treenode("Shadow pass", ImGuiTreeNodeFlags_Framed, [&]() {});
 		ImUI::Treenode("Geometry pass", ImGuiTreeNodeFlags_Framed, [&]() {
-			for (auto& [pipeline, list] : drawList.MeshList) {
+			for (auto& [material, list] : drawList.MeshList) {
 				auto& meshDrawList = list;
-				ImUI::Treenode(pipeline->GetSpecifications().DebugName.c_str(), 0, [&]() {
+                
+                auto specs = material->GetPipeline()->GetSpecifications();
+                
+				ImUI::Treenode(specs.DebugName.c_str(), 0, [&]() {
 					ImGui::Columns(2, 0, false);
 
-					/*for (auto& mesh : meshDrawList) {
-						ImGui::Text("Index count");
-						ImGui::NextColumn();
-						ImGui::Text("%s", std::to_string(mesh.).c_str());
-						ImGui::NextColumn();
-					}*/
+                    for(auto& [vertexBuffer, drawCall] : meshDrawList)
+                    {
+                        ImGui::Text("%s", drawCall.VertexBuffer->GetDebugName().c_str());
+                        ImGui::NextColumn();
+                        ImGui::Text("%zu", drawCall.Instances.size());
+                        ImGui::NextColumn();
+                    }
+                    
 					ImGui::Columns();
 					});
 			}

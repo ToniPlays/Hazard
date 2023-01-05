@@ -25,7 +25,8 @@ namespace Hazard
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (filePath == "") return INVALID_ASSET_HANDLE;
+		if (filePath == "")
+            return INVALID_ASSET_HANDLE;
 
 		std::filesystem::path path = File::GetFileAbsolutePath(filePath); 
 

@@ -8,6 +8,8 @@
 #include "GUIManager.h"
 #include "AssetPanel.h"
 
+#include "GUI/AssetTools/MaterialEditor.h"
+
 #include "imgui_internal.h"
 
 using namespace Hazard;
@@ -143,8 +145,13 @@ namespace UI
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
 
-        if(ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder)
+        if(ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder && Input::IsKeyDown(Key::LeftControl))
             File::OpenInDefaultApp(GetMetadata().Path);
+        
+        if(ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
+        {
+            OnItemClicked();
+        }
         
 		ImGui::PopStyleVar();
 	}
@@ -200,4 +207,17 @@ namespace UI
         
         Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}
+    void AssetPanelItem::OnItemClicked()
+    {
+        switch(GetType())
+        {
+            case AssetType::Material:
+            {
+                auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<MaterialEditor>();
+                
+                panel->SetSelectedMaterial(AssetManager::GetAsset<Material>(m_Handle));
+            }
+            default: break;
+        }
+    }
 }

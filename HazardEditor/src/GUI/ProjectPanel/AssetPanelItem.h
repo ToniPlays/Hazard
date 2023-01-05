@@ -13,7 +13,8 @@ namespace UI
 		AssetPanelItemFlags_EndRename = BIT(2)
 	};
 
-	class AssetPanelItem {
+	class AssetPanelItem
+    {
 	public:
 		AssetPanelItem() = default;
 		AssetPanelItem(Hazard::AssetHandle handle) : m_Handle(handle) { }
@@ -30,6 +31,9 @@ namespace UI
 	private:
 		void DrawItemName(const char* name, float edgeOffset);
 		void RenameTo(const std::string& newName);
+        
+        void OnItemClicked();
+        
 	private:
 		Hazard::AssetHandle m_Handle;
 		uint32_t m_Flags = 0;
