@@ -25,7 +25,8 @@ namespace Hazard
 				{ "a_TextureCoords",	ShaderDataType::Float2, PerVertex },
 				{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
                 { "a_MRow0",            ShaderDataType::Float4, PerInstance },
-                { "a_MRow0",            ShaderDataType::Float4, PerInstance }
+                { "a_MRow0",            ShaderDataType::Float4, PerInstance },
+                { "a_EntityID",         ShaderDataType::Int, PerInstance }
 			};
 		}
 	};

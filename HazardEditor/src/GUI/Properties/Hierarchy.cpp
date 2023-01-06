@@ -79,10 +79,14 @@ namespace UI
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{
+        EventDispatcher dispatcher(e);
+        bool handled = dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Hierarchy::OnEntitiesSelected));
+        
 		if (!m_Hovered) return false;
 
-		EventDispatcher dispatcher(e);
-		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::OnKeyPressed));
+        handled |= dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Hierarchy::OnKeyPressed));
+
+		return handled;
 	}
 	bool Hierarchy::OnKeyPressed(KeyPressedEvent& e)
 	{
@@ -112,6 +116,12 @@ namespace UI
 		}
 		return false;
 	}
+    bool Hierarchy::OnEntitiesSelected(Events::SelectionContextChange &e)
+    {
+        m_SelectionContext = e.GetEntitites();
+        return false;
+    }
+
 	void Hierarchy::DrawModifiers(Entity& e, TagComponent& tag)
 	{
 		bool scriptState = false;
@@ -225,8 +235,6 @@ namespace UI
 	}
 	void Hierarchy::SelectEntity(const Entity& entity)
 	{
-
-
 		if (!Input::IsKeyDown(Key::LeftControl))
 		{
 			m_SelectionContext.clear();

@@ -50,7 +50,10 @@ namespace HazardRenderer::Metal
 
     void MetalImage2D::Release()
     {
-        
+        Ref<MetalImage2D> instance = this;
+        Renderer::SubmitResourceFree([instance]() mutable {
+            instance->Release_RT();
+        });
     }
     void MetalImage2D::Release_RT()
     {
@@ -60,9 +63,34 @@ namespace HazardRenderer::Metal
     {
         
     }
-
+    Buffer MetalImage2D::ReadPixels(const ImageCopyRegion& region)
+    {
+        Buffer buffer;
+        buffer.Allocate(4 * region.Width * region.Height * region.Depth);
+        
+        Ref<MetalImage2D> instance = this;
+        Renderer::Submit([instance, dataBuffer = buffer, region]() mutable {
+            
+            auto device = MetalContext::GetMetalDevice();
+            auto commandBuffer = device->GetGraphicsQueue()->commandBuffer();
+            
+            MTL::BlitCommandEncoder* encoder = commandBuffer->blitCommandEncoder();
+            
+            MTL::Buffer* buffer = device->GetMetalDevice()->newBuffer(dataBuffer.Size, MTL::ResourceOptionCPUCacheModeDefault);
+        
+            encoder->copyFromTexture(instance->m_MetalTexture, 0, 0, { region.X, region.Y, region.Z }, { region.Width, region.Height, region.Depth }, buffer, 0, 4 * region.Width, 0);
+            
+            encoder->endEncoding();
+            commandBuffer->commit();
+            commandBuffer->waitUntilCompleted();
+            
+            dataBuffer.Write(buffer->contents(), dataBuffer.Size);
+        });
+        return buffer;
+    }
+    
     void MetalImage2D::Invalidate_RT()
-{
+    {
         HZR_PROFILE_FUNCTION();
         HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
         

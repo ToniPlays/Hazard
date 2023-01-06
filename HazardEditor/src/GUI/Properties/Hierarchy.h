@@ -4,6 +4,7 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/ECS/Entity.h"
+#include "EditorEvent.h"
 
 namespace UI {
 	class Hierarchy : public Hazard::ImUI::Panel {
@@ -14,6 +15,7 @@ namespace UI {
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 		bool OnKeyPressed(KeyPressedEvent& e);
+        bool OnEntitiesSelected(Events::SelectionContextChange& e);
 	private:
 		void DrawModifiers(Hazard::Entity& e, Hazard::TagComponent& tag);
 		void DrawContextMenu(Ref<Hazard::World>& world);

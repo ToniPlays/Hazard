@@ -138,7 +138,7 @@ namespace HazardRenderer::Metal
                 
                 obj->setPixelFormat(ImageFormatToMTLFormat(colorAttachment->GetFormat()));
                 
-                obj->setBlendingEnabled(true);
+                obj->setBlendingEnabled(FormatBlendable(colorAttachment->GetFormat()));
                 obj->setSourceRGBBlendFactor(MTL::BlendFactorSourceAlpha);
                 obj->setDestinationRGBBlendFactor(MTL::BlendFactorOneMinusSourceAlpha);
                 obj->setRgbBlendOperation(MTL::BlendOperationAdd);
@@ -163,7 +163,6 @@ namespace HazardRenderer::Metal
             std::cout << error->description()->utf8String() << std::endl;
         
         //Create depth stencil
-        
         if(fb->GetDepthImage() && !fb->GetSpecification().SwapChainTarget)
         {
             MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();

@@ -19,17 +19,17 @@ namespace Hazard
 		static void SubmitWorldRenderer(const Ref<WorldRenderer>& renderer);
 
 		//Mesh 2D
-		static void SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer);
-		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color);
-		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture);
+		static void SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer, int id = 0);
+		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, int id = 0);
+		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture, int id = 0);
 
 		static void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset>& texture);
 
 		//Mesh3D
-		static void SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count);
+		static void SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count, int id = 0);
 
 		static void SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count);
 

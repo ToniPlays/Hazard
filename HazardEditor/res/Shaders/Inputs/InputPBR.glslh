@@ -8,3 +8,4 @@ layout(location = 5) in vec2 a_TextureCoords;
 layout(location = 6) in vec4 a_MRow0;
 layout(location = 7) in vec4 a_MRow1;
 layout(location = 8) in vec4 a_MRow2;
+layout(location = 9) in int a_EntityID;

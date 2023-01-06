@@ -7,6 +7,8 @@
 #include "Backend/Core/Pipeline/Pipeline.h"
 #include "Hazard/RenderContext/Texture2D.h"
 
+#include "Hazard/Rendering/Mesh/Material.h"
+
 #include "Hazard/Rendering/Vertices.h"
 
 namespace Hazard 
@@ -57,7 +59,7 @@ namespace Hazard
 		Batch<QuadVertex>* m_QuadBatch = nullptr;
 		QuadRendererData m_Data;
 
-		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		Ref<Material> m_Material;
 		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::IndexBuffer> m_IndexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;

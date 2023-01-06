@@ -18,10 +18,9 @@ namespace UI
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "ViewportCamera";
 		frameBufferInfo.SwapChainTarget = false;
-		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
-		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RED32I, ImageFormat::Depth } };
 		frameBufferInfo.Width = 1280;
 		frameBufferInfo.Height = 720;
 
@@ -134,6 +133,14 @@ namespace UI
 		{
 			m_DrawSettings = false;
 			m_DrawStats = false;
+            
+            auto windowPos = ImGui::GetWindowPos();
+            auto mousePos = Input::GetMousePos();
+            glm::vec2 pos;
+            pos.x = mousePos.x - windowPos.x;
+            pos.y = mousePos.y - windowPos.y - 36;
+            
+            OnMouseClicked(pos);
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
@@ -224,6 +231,7 @@ namespace UI
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
+        
 		if (m_Gizmos.OnEvent(e)) return true;
 
 		if (m_Hovered)
@@ -276,6 +284,38 @@ namespace UI
 		}
 		return false;
 	}
+    void Viewport::OnMouseClicked(const glm::vec2& mousePos)
+    {
+        ImageCopyRegion region = {};
+        region.Width = 1;
+        region.Height = 1;
+        region.X = mousePos.x * ((float)m_FrameBuffer->GetWidth() / (float)m_Width);
+        region.Y = mousePos.y * ((float)m_FrameBuffer->GetHeight() / (float)m_Height);
+        
+        //Invert region
+        region.Y = m_FrameBuffer->GetHeight() - region.Y;
+        
+        m_MouseClickBuffer.Release();
+        m_MouseClickBuffer = m_FrameBuffer->GetImage(1)->ReadPixels(region);
+        
+        Application::Get().SubmitMainThread([&]() mutable {
+            int val = (int)m_MouseClickBuffer.Read<int>() - 1;
+            
+            auto world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+            
+            Entity entity = { (entt::entity)val, world.Raw() };
+            if(entity.IsValid())
+            {
+                Events::SelectionContextChange e({ entity });
+                HazardLoop::GetCurrent().OnEvent(e);
+            }
+            else
+            {
+                Events::SelectionContextChange e({});
+                HazardLoop::GetCurrent().OnEvent(e);
+            }
+        });
+    }
 
 	void Viewport::DrawStatsWindow()
 	{

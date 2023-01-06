@@ -49,7 +49,7 @@ namespace Hazard
 		region.Offset = 0;
 
 		m_VertexBuffer->SetData(region);
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch->GetCount());
+		//HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Pipeline, m_LineBatch->GetCount());
 	}
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
 	{

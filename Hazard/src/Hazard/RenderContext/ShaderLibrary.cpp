@@ -67,6 +67,7 @@ namespace Hazard
 			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
 
 				BufferLayout layout = Vertex3D::Layout();
+                
 				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
 
 				PipelineSpecification specs = {};

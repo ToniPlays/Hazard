@@ -30,6 +30,7 @@ namespace UI
 	private:
 		bool OnSelectionContextChange(Events::SelectionContextChange& e);
 		bool KeyPressed(KeyPressedEvent& e);
+        void OnMouseClicked(const glm::vec2& mousePos);
 		void DrawStatsWindow();
 		void DrawSettingsWindow();
 
@@ -43,6 +44,8 @@ namespace UI
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
+        
+        Buffer m_MouseClickBuffer;
 
 		bool m_DrawStats = false;
 		bool m_DrawSettings = false;

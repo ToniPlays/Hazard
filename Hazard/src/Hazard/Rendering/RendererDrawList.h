@@ -22,6 +22,7 @@ namespace Hazard
     struct MeshInstance
     {
         InstanceTransform Transform;
+        int ID;
     };
 
 	struct RawMesh

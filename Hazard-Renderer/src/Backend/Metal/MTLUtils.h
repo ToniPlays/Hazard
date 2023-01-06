@@ -71,11 +71,21 @@ namespace HazardRenderer::Metal
                 
                 return MTL::PixelFormatDepth32Float;
             }
-            case ImageFormat::RED32I:           break;
+            case ImageFormat::RED32I:           return MTL::PixelFormatR32Sint;
         }
         HZR_ASSERT(false, "");
         return MTL::PixelFormatInvalid;
     }
+    
+    bool FormatBlendable(const ImageFormat& format)
+    {
+        switch (format)
+        {
+            case ImageFormat::RED32I: return false;
+            default: return true;
+        }
+    }
+    
     MTL::CompareFunction DepthOpToMTLDepthOp(const DepthOp& op)
     {
         switch (op)

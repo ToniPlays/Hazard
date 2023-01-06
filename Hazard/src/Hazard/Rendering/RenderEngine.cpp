@@ -22,8 +22,8 @@ namespace Hazard
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
-		frameBufferInfo.AttachmentCount = 4;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
+		frameBufferInfo.AttachmentCount = 3;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RED32I, ImageFormat::Depth } };
 		frameBufferInfo.ClearOnLoad = true;
 		frameBufferInfo.Width = 1920;
 		frameBufferInfo.Height = 1080;
@@ -37,13 +37,13 @@ namespace Hazard
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
+        s_Resources = hnew RenderResources();
+        s_Resources->Initialize(m_RenderPass);
+        
 		m_QuadRenderer.Init();
 		m_QuadRenderer.CreateResources(m_RenderPass);
 		m_LineRenderer.Init();
 		m_LineRenderer.CreateResources(m_RenderPass);
-
-		s_Resources = hnew RenderResources();
-		s_Resources->Initialize(m_RenderPass);
 
 		m_RasterizedRenderer = hnew RasterizedRenderer();
 		m_RaytracedRenderer = hnew RaytracedRenderer();

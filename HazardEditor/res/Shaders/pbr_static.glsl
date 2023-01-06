@@ -14,6 +14,7 @@ struct VertexOuput
 };
 
 layout(location = 0) out VertexOuput Output;
+layout(location = 7) out int v_EntityID;
 
 void main()
 {
@@ -33,7 +34,8 @@ void main()
     Output.WorldNormal = mat3(transform) * mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
     Output.TextureCoords = a_TextureCoords;
-	
+    
+    v_EntityID = a_EntityID;
 }
 
 #type Fragment
@@ -52,6 +54,7 @@ struct VertexOuput
 };
 
 layout(location = 0) in VertexOuput Input;
+layout(location = 7) in flat int v_EntityID;
 
 layout(push_constant) uniform PushConstants
 {
@@ -60,7 +63,6 @@ layout(push_constant) uniform PushConstants
     vec4 AlbedoColor;
     vec3 Unused;
     bool UseNormalMap;
-    
 } u_MaterialConstants;
 
 layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
@@ -75,6 +77,7 @@ layout(set = 1, binding = 1) uniform sampler2D u_NormalMap;
 #include "Utils/PostProcessing.glslh"
 
 layout(location = 0) out vec4 OutputColor;
+layout(location = 1) out int EntityID;
 
 const float gamma = 2.2;
 
@@ -118,4 +121,6 @@ void main()
     vec3 color = ACESTonemap(ibl + Lo);
     color = GammaCorrect(color, gamma);
     OutputColor = vec4(color, 1.0);
+    
+    EntityID = v_EntityID;
 }

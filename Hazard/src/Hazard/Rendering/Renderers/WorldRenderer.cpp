@@ -54,21 +54,23 @@ namespace Hazard
 		{
 			//Submit Sprites for drawing
 			auto view = m_TargetWorld->GetEntitiesWith<SpriteRendererComponent>();
-			for (auto& entity : view) {
+			for (auto& entity : view)
+            {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& sr = e.GetComponent<SpriteRendererComponent>();
 				if (!e.IsVisible() || !sr.Active) continue;
-				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), sr);
+				HRenderer::SubmitSprite(e.GetComponent<TransformComponent>(), sr, (uint32_t)e.GetHandle() + 1);
 			}
 		}
 		{
 			//Submit Meshes for drawing
 			auto view = m_TargetWorld->GetEntitiesWith<MeshComponent>();
-			for (auto& entity : view) {
+			for (auto& entity : view)
+            {
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& mc = e.GetComponent<MeshComponent>();
 				if (!e.IsVisible() || !mc.Active) continue;
-				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), mc);
+				HRenderer::SubmitMesh(e.GetComponent<TransformComponent>(), mc, (uint32_t)e.GetHandle() + 1);
 			}
 		}
 	}

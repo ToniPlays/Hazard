@@ -9,13 +9,14 @@ namespace UI
 {
 	GameViewport::GameViewport() : Panel("Game Viewport")
 	{
+        return;
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "GameViewport";
 		frameBufferInfo.SwapChainTarget = false;
-		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::Depth } };
-		frameBufferInfo.AttachmentCount = 2;
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RED32I, ImageFormat::Depth } };
+		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.Width = 1280;
 		frameBufferInfo.Height = 720;
 
@@ -30,6 +31,7 @@ namespace UI
 	void GameViewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
+        return;
 		Ref<World> world = nullptr; // Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		if (!world) return;
 

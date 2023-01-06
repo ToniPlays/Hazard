@@ -114,7 +114,7 @@ namespace HazardRenderer::Metal
                 
                 auto color = MTL::ClearColor(specs.ClearColor.r, specs.ClearColor.g, specs.ClearColor.b, specs.ClearColor.a);
                 
-                auto colorAttachment = descriptor->colorAttachments()->object(0);
+                auto colorAttachment = descriptor->colorAttachments()->object(i);
                 colorAttachment->init();
                 colorAttachment->setClearColor(color);
                 colorAttachment->setTexture(image->GetMetalTexture());

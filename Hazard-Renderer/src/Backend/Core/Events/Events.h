@@ -174,8 +174,8 @@ class MouseButtonEvent : public Event
 {
 public:
 	inline int GetMouseButton() const { return m_Button; }
-
 	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+    
 protected:
 	MouseButtonEvent(int button)
 		: m_Button(button) {}

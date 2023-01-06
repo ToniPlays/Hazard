@@ -21,6 +21,10 @@ namespace Hazard
     public:
         
         Material();
+        Material(Ref<HazardRenderer::Pipeline> pipeline)
+        {
+            SetPipeline(pipeline);
+        }
         
         template<typename T>
         T Get(const std::string& key)
