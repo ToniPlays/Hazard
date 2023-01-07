@@ -146,6 +146,7 @@ namespace HazardRenderer::Vulkan
 			}
 			HZR_ASSERT(validationPresent, "Could not find validation layers");
 		}
+
 		auto result = vkCreateInstance(&instanceInfo, nullptr, &m_VulkanInstance);
 		VK_CHECK_RESULT(result, "Failed to create VkInstance");
 		//Instance and surface

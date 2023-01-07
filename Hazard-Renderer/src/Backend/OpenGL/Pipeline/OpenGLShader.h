@@ -23,6 +23,8 @@ namespace HazardRenderer::OpenGL
 		void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
 		void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) override {};
 		void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) override {};
+		void Set(const std::string& name, Buffer buffer) override {};
+		void Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset = 0) override {};
 
 		const ShaderData& GetShaderData() { return m_ShaderData; };
 		std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; }

@@ -22,6 +22,7 @@ namespace HazardRenderer::Vulkan
 		const size_t GetSize() const override { return m_Size; };
 
 		uint32_t GetUsageFlags() { return m_Usage; };
+		void AddUsageFlags(uint32_t flags) override { m_Usage |= flags; };
 
 		//Vulkan specific
 		void Release();
@@ -33,6 +34,7 @@ namespace HazardRenderer::Vulkan
 		{ 
 			return (uint32_t)Math::Max<int>(((int)m_CurrentBufferDataIndex - (int)m_Size), 0); 
 		}
+
 		VkBuffer GetVulkanBuffer() const { return m_UniformBuffer; }
 		Buffer& GetWriteBuffer() { return m_LocalData; }
 

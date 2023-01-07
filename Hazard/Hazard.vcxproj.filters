@@ -261,14 +261,17 @@
     <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\BaseRenderer.h">
-      <Filter>src\Hazard\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentMap.h">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\HRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Material.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\MaterialAssetLoader.h">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Mesh.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
@@ -1762,6 +1765,12 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\HRenderer.cpp">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Material.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Mesh\MaterialAssetLoader.cpp">
+      <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\Mesh.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>

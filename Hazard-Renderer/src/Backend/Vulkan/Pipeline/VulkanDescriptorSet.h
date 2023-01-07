@@ -42,6 +42,7 @@ namespace HazardRenderer::Vulkan
 		}
 		void AddWriteDescriptor(uint32_t binding, const std::string& name, VkWriteDescriptorSet descriptor)
 		{
+			HZR_ASSERT(m_WriteDescriptors.find(binding) == m_WriteDescriptors.end(), "Failed to find binding");
 			m_WriteDescriptors[binding] = { name, descriptor };
 			m_WriteDescriptorNames[name] = binding;
 		}

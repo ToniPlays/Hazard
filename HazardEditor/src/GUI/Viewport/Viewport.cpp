@@ -298,7 +298,9 @@ namespace UI
         m_MouseClickBuffer.Release();
         m_MouseClickBuffer = m_FrameBuffer->GetImage(1)->ReadPixels(region);
         
-        Application::Get().SubmitMainThread([&]() mutable {
+		Application::Get().SubmitMainThread([&]() mutable {
+			if (m_MouseClickBuffer.Size == 0) return;
+
             int val = (int)m_MouseClickBuffer.Read<int>() - 1;
             
             auto world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();

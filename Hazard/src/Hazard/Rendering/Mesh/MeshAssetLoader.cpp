@@ -50,8 +50,10 @@ namespace Hazard
 			for (size_t i = 0; i < data.IndexCount; i++)
 				result.Indices[i] = buffer.Read<uint32_t>();
 
+			//if (result.Vertices.size() == 0 || result.Indices.size() == 0) return LoadType::Failed;
+
 			MeshCreateInfo meshInfo = {};
-            meshInfo.DebugName = metadata.Path.filename();
+            meshInfo.DebugName = metadata.Path.filename().string();
 			meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
 			meshInfo.BoundingBox = result.BoundingBox;
 			meshInfo.VertexCount = result.Vertices.size() * sizeof(Vertex3D);
@@ -71,8 +73,10 @@ namespace Hazard
 
 		MeshData meshData = factory.LoadMeshFromSource(metadata.Path);
 
+		//if (meshData.Vertices.size() == 0 || meshData.Indices.size() == 0) return LoadType::Failed;
+
 		MeshCreateInfo meshInfo = {};
-        meshInfo.DebugName = metadata.Path.filename();
+        meshInfo.DebugName = metadata.Path.filename().string();
 		meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
 		meshInfo.BoundingBox = meshData.BoundingBox;
 		meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);

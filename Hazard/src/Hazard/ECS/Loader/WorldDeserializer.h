@@ -132,8 +132,8 @@ namespace Hazard
                 
                 EnvironmentMapCreateInfo info = {};
                 info.SourceImage = sourceImage;
-                info.Resolution = 256;
-                info.Samples = 8;
+                info.Resolution = 2048;
+                info.Samples = 2048;
                 
 				c.EnvironmentMap = EnvironmentMap::Create(&info);
 			}

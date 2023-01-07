@@ -1,7 +1,7 @@
 #include <hzrpch.h>
 #include "MaterialAssetLoader.h"
 
-#include "AssetManager.h"
+#include "Hazard/Assets/AssetManager.h"
 
 #include "Backend/Core/Utils.h"
 
@@ -13,7 +13,7 @@ namespace Hazard
     LoadType MaterialAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
     {
         Ref<Material> material = Ref<Material>::Create();
-        YAML::Node root = YAML::LoadFile(metadata.Path);
+        YAML::Node root = YAML::LoadFile(metadata.Path.string());
         
         for(auto& [name, texture] : material->GetTextures())
         {

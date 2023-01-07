@@ -45,7 +45,7 @@ namespace Hazard
 
 		BufferLayout layout = Vertex3D::Layout();
 		VertexBufferCreateInfo vboInfo = {};
-		vboInfo.DebugName = "C#_Created";
+		vboInfo.Name = "C#_Created";
 		vboInfo.Layout = &layout;
 		vboInfo.Size = info->Size;
 		vboInfo.Data = data;
@@ -83,7 +83,7 @@ namespace Hazard
 		}
 
 		IndexBufferCreateInfo iboInfo = {};
-		iboInfo.DebugName = "C#_Created";
+		iboInfo.Name = "C#_Created";
 		iboInfo.Size = info->Size * sizeof(uint32_t);
 		iboInfo.Data = data;
 		Ref<IndexBuffer> buffer = IndexBuffer::Create(&iboInfo);

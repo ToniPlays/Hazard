@@ -14,6 +14,7 @@ namespace HazardRenderer::Vulkan
 
 		size_t GetCount() const override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
+		const size_t GetSize() const { return m_Size; };
 
 		//Vulkan specific
 
@@ -24,7 +25,6 @@ namespace HazardRenderer::Vulkan
 		void SetData_RT(const BufferCopyRegion& copyRegion);
 
 		std::string m_DebugName;
-		BufferUsage m_Usage;
 		uint32_t m_Size;
 
 		Buffer m_LocalData;

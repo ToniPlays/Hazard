@@ -13,6 +13,7 @@ namespace HazardRenderer::Vulkan
 		auto& writeSet = m_WriteDescriptors[binding];
 		writeSet.Set.dstSet = m_VkDescriptorSet;
 		writeSet.Set.pBufferInfo = &info;
+		writeSet.Set.pImageInfo = nullptr;
 
 		vkUpdateDescriptorSets(device, 1, &writeSet.Set, 0, nullptr);
 	}

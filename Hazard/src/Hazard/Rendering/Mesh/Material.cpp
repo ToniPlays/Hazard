@@ -1,7 +1,7 @@
+#include <hzrpch.h>
 #include "Material.h"
-#include "ShaderLibrary.h"
 
-#include "RenderEngine.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 namespace Hazard
 {

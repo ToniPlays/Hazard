@@ -3,7 +3,7 @@ include "Dependencies.lua"
 workspace "Hazard"
 	architecture "x86_64"
 	startproject "HazardEditor"
-    cppdialect "C++20"
+      cppdialect "C++20"
 
 	configurations
 	{

@@ -34,8 +34,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLVertexBuffer::OpenGLVertexBuffer(VertexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_DebugName = info->DebugName;
-		m_Usage = info->Usage;
+		m_DebugName = info->Name;
 
 		if (info->Layout != nullptr)
 			m_Layout = *info->Layout;
@@ -51,13 +50,13 @@ namespace HazardRenderer::OpenGL
 			if (instance->m_Layout.GetStride() == 0)
 			{
 				glCreateBuffers(1, &instance->m_BufferID);
-				glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+				glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STATIC_DRAW);
 				return;
 			}
 
 			glCreateVertexArrays(1, &instance->m_VAO);
 			glCreateBuffers(1, &instance->m_BufferID);
-			glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+			glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STATIC_DRAW);
 
 			uint32_t bufferedOffset = 0;
 			uint32_t currentBuffer = 0;
@@ -76,7 +75,7 @@ namespace HazardRenderer::OpenGL
 				}
 
 				glEnableVertexArrayAttrib(instance->m_VAO, i);
-				glVertexArrayAttribFormat(instance->m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized, element.Offset - bufferedOffset);
+				glVertexArrayAttribFormat(instance->m_VAO, i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type), GL_FALSE, element.Offset - bufferedOffset);
 				glVertexArrayAttribBinding(instance->m_VAO, i, element.ElementDivisor);
 			}
 			if (instance->m_LocalBuffer)
@@ -118,8 +117,7 @@ namespace HazardRenderer::OpenGL
 	OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBufferCreateInfo* info) : m_Size(info->Size)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_DebugName = info->DebugName;
-		m_Usage = info->Usage;
+		m_DebugName = info->Name;
 
 		Ref<OpenGLIndexBuffer> instance = this;
 
@@ -129,7 +127,7 @@ namespace HazardRenderer::OpenGL
 		Renderer::SubmitResourceCreate([instance]() mutable {
 
 			glCreateBuffers(1, &instance->m_BufferID);
-			glNamedBufferData(instance->GetBufferID(), instance->m_Size, nullptr, GL_STREAM_DRAW + instance->m_Usage);
+			glNamedBufferData(instance->GetBufferID(), instance->m_Size, nullptr, GL_STATIC_DRAW);
 
 			if (instance->m_LocalBuffer.Data != nullptr)
 			{

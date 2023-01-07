@@ -91,7 +91,7 @@ namespace Memory
 
 #ifdef HZR_MEM_DIAG
     #ifdef HZR_PLATFORM_WINDOWS
-        #define _MEM_FUNC_DEC_ _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+        #define _MEM_FUNC_DECL_ _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
         #define _FUNC_DECL_ __CRTDECL
     #elif HZR_PLATFORM_MACOS
         #define _MEM_FUNC_DECL_

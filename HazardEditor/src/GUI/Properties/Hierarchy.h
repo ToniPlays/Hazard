@@ -4,7 +4,7 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/ECS/Entity.h"
-#include "EditorEvent.h"
+#include "Core/EditorEvent.h"
 
 namespace UI {
 	class Hierarchy : public Hazard::ImUI::Panel {

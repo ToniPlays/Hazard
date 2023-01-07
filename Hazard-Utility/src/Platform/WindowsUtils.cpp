@@ -86,6 +86,9 @@ bool PlatformUtils::SetEnvVariable(const std::string& key, const std::string& va
 	}
 
 	return false;
-
+}
+int PlatformUtils::SystemCall(const std::string& command)
+{
+	return system(command.c_str());
 }
 #endif

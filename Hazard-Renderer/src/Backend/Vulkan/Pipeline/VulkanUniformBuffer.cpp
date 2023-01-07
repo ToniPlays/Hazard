@@ -17,7 +17,7 @@ namespace HazardRenderer::Vulkan
 		m_Binding = createInfo->Binding;
 		m_Size = Math::Max<uint32_t>(256, createInfo->Size);
 		m_Usage = createInfo->Usage;
-		m_LocalData.Allocate(m_Size * 1024);
+		m_LocalData.Allocate(m_Size * 8);
 
 		Ref<VulkanUniformBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {

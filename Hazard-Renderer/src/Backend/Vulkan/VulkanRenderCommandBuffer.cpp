@@ -389,7 +389,6 @@ namespace HazardRenderer::Vulkan
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
-
 			});
 	}
 	void VulkanRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)

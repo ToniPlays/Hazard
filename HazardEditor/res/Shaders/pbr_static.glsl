@@ -2,7 +2,18 @@
 #version 450
 
 #include "Uniforms/CameraUniform.glslh"
-#include "Inputs/InputPBR.glslh"
+
+layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec4 a_Color;
+layout(location = 2) in vec3 a_Normal;
+layout(location = 3) in vec3 a_Tangent;
+layout(location = 4) in vec3 a_Binormal;
+layout(location = 5) in vec2 a_TextureCoords;
+
+layout(location = 6) in vec4 a_MRow0;
+layout(location = 7) in vec4 a_MRow1;
+layout(location = 8) in vec4 a_MRow2;
+layout(location = 9) in int a_EntityID;
 
 struct VertexOuput
 {
@@ -63,11 +74,12 @@ layout(push_constant) uniform PushConstants
     vec4 AlbedoColor;
     vec3 Unused;
     bool UseNormalMap;
+
 } u_MaterialConstants;
 
-layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
-layout(set = 0, binding = 2) uniform samplerCube u_IrradianceMap;
-layout(set = 0, binding = 3) uniform sampler2D u_BRDFLut;
+layout(set = 0, binding = 3) uniform samplerCube u_RadianceMap;
+layout(set = 0, binding = 4) uniform samplerCube u_IrradianceMap;
+layout(set = 0, binding = 5) uniform sampler2D u_BRDFLut;
 
 layout(set = 1, binding = 0) uniform sampler2D u_AlbedoMap;
 layout(set = 1, binding = 1) uniform sampler2D u_NormalMap;

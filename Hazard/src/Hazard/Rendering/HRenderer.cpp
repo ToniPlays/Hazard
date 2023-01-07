@@ -49,9 +49,10 @@ namespace Hazard
         HZR_TIMED_FUNCTION();
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
         Ref<Material> material = meshComponent.m_MaterialHandle;
-		if (!mesh) return;
+		if (!mesh || !material) return;
         if (!mesh->IsValid()) return;
         
+		//Fix
         Ref<Pipeline> pipeline = meshComponent.m_MaterialHandle ? meshComponent.m_MaterialHandle->GetPipeline() : s_Engine->GetResources().PbrPipeline;
 
         auto& drawList = s_Engine->GetDrawList();

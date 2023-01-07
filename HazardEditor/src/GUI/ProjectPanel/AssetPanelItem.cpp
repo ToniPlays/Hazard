@@ -5,7 +5,7 @@
 #include "MathCore.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
-#include "GUIManager.h"
+#include "Core/GUIManager.h"
 #include "AssetPanel.h"
 
 #include "GUI/AssetTools/MaterialEditor.h"

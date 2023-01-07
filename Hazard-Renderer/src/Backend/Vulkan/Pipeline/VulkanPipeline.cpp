@@ -89,6 +89,17 @@ namespace HazardRenderer::Vulkan
 		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
 		vkCmdBindDescriptorSets(commandBuffer, bindingPoint, m_PipelineLayout, 0,
 			descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
+
+		for (auto& [name, range] : m_Shader->GetPushConstantRanges())
+		{
+			vkCmdPushConstants(commandBuffer, m_PipelineLayout, range.Stages, range.Offset, range.Size, range.Buffer.Data);
+		}
+
+		for (auto& [binding, input] : m_Shader->GetInputBufferBindings())
+		{
+			VkBuffer buffer = input.Buffer->GetVulkanBuffer();
+			vkCmdBindVertexBuffers(commandBuffer, binding, 1, &buffer, &input.Offset);
+		}
 	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
 	{
@@ -124,14 +135,16 @@ namespace HazardRenderer::Vulkan
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
-		for (uint32_t i = 0; i < pushConstantRanges.size(); i++)
 		{
-			const auto& range = pushConstantRanges[i];
-			auto& vkRange = vulkanPushConstantRanges[i];
+			uint32_t i = 0;
+			for (auto& [name, range] : pushConstantRanges)
+			{
+				auto& vkRange = vulkanPushConstantRanges[i];
 
-			vkRange.stageFlags = range.Stages;
-			vkRange.offset = range.Offset;
-			vkRange.size = range.Size;
+				vkRange.stageFlags = range.Stages;
+				vkRange.offset = range.Offset;
+				vkRange.size = range.Size;
+			}
 		}
 		VkPipelineLayoutCreateInfo layoutInfo = {};
 		layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -305,10 +318,27 @@ namespace HazardRenderer::Vulkan
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
 
+		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
+		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
+		{
+			uint32_t i = 0;
+			for (auto& [name, range] : pushConstantRanges)
+			{
+				auto& vkRange = vulkanPushConstantRanges[i];
+
+				vkRange.stageFlags = range.Stages;
+				vkRange.offset = range.Offset;
+				vkRange.size = range.Size;
+			}
+		}
+
+
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayout.setLayoutCount = setLayouts.size();
 		pipelineLayout.pSetLayouts = setLayouts.data();
+		pipelineLayout.pushConstantRangeCount = vulkanPushConstantRanges.size();
+		pipelineLayout.pPushConstantRanges = vulkanPushConstantRanges.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
 

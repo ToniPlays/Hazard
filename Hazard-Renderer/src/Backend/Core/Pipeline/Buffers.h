@@ -69,7 +69,6 @@ namespace HazardRenderer
 
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual const BufferType GetType() const = 0;
-        
         virtual const size_t GetSize() const = 0;
 	};
 

@@ -275,6 +275,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
 		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
 		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case ShaderDataType::Int:	   return VK_FORMAT_R32_SINT;
 		}
 		HZR_ASSERT(false, "Woop");
 		return VK_FORMAT_MAX_ENUM;

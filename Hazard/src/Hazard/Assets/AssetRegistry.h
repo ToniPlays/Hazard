@@ -2,7 +2,7 @@
 
 #include "Asset.h"
 
-
+#ifndef HZR_PLATFORM_WINDOWS
 namespace std
 {
 	template <>
@@ -14,6 +14,7 @@ namespace std
 		}
 	};
 }
+#endif
 
 namespace Hazard
 {

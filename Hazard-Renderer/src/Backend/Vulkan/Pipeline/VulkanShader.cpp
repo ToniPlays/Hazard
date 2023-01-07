@@ -157,6 +157,24 @@ namespace HazardRenderer::Vulkan
 			}
 			});
 	}
+	void VulkanShader::Set(const std::string& name, Buffer buffer)
+	{
+		Buffer data = Buffer::Copy(buffer);
+
+		Ref<VulkanShader> instance = this;
+		Renderer::Submit([instance, name, data]() mutable {
+			instance->m_PushConstantRanges[name].Buffer.Write(data.Data, data.Size);
+			data.Release();
+			});
+	}
+	void VulkanShader::Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset)
+	{
+		Ref<VulkanShader> instance = this;
+		Ref<VulkanVertexBuffer> vulkanBuffer = buffer.As<VulkanVertexBuffer>();
+		Renderer::Submit([instance, index, vulkanBuffer, offset]() mutable {
+			instance->m_InputBuffers[index] = { vulkanBuffer, offset };
+			});
+	}
 
 	void VulkanShader::Reload_RT(bool forceCompile)
 	{
@@ -204,7 +222,7 @@ namespace HazardRenderer::Vulkan
 		{
 			for (auto& [binding, uniformBuffer] : buffers)
 			{
-				m_DynamicOffsets[i] = uniformBuffer.As<VulkanUniformBuffer>()->GetOffset();
+				m_DynamicOffsets[i] = uniformBuffer->GetOffset();
 				i++;
 			}
 		}
@@ -232,7 +250,7 @@ namespace HazardRenderer::Vulkan
 				info.Size = buffer.Size;
 				info.Usage = buffer.UsageFlags;
 
-				m_UniformBuffers[set][binding] = UniformBuffer::Create(&info);
+				m_UniformBuffers[set][binding] = UniformBuffer::Create(&info).As<VulkanUniformBuffer>();
 				size++;
 			}
 			if (set > descriptorSets)
@@ -243,13 +261,14 @@ namespace HazardRenderer::Vulkan
 			if (set > descriptorSets)
 				descriptorSets = set;
 		}
+
 		m_DynamicOffsets.resize(size);
 		m_DescriptorSets.resize(VulkanContext::GetImagesInFlight());
 
 		for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			m_DescriptorSets[i].resize(descriptorSets + 1);
 
-		//std::cout << fmt::format("Shader reflection took {0}", timer.ElapsedMillis()) << std::endl;
+		CreatePushConstantRanges();
 	}
 	void VulkanShader::CreateShaderModules()
 	{
@@ -386,18 +405,24 @@ namespace HazardRenderer::Vulkan
 					descriptorSet.AddWriteDescriptor(binding, storageImage.Name, writeDescriptor);
 				}
 
+				for (auto& [binding, range] : m_ShaderData.PushConstants[set])
+				{
+					auto& constant = m_PushConstantRanges[range.Name];
+					constant.Stages = VkUtils::GetVulkanShaderStage(range.UsageFlags);
+					constant.Size = range.Size;
+					constant.Buffer.Allocate(constant.Size);
+				}
+
 				descriptorSet.Invalidate();
 
 				for (auto& [binding, buffer] : m_UniformBuffers[set])
 				{
-					auto vulkanBuffer = buffer.As<VulkanUniformBuffer>();
-
 					VkDescriptorBufferInfo bufferInfo = {};
-					bufferInfo.buffer = vulkanBuffer->GetVulkanBuffer();
+					bufferInfo.buffer = buffer->GetVulkanBuffer();
 					bufferInfo.offset = 0;
-					bufferInfo.range = vulkanBuffer->GetSize();
+					bufferInfo.range = buffer->GetSize();
 
-					descriptorSet.SetBuffer(vulkanBuffer->GetBinding(), bufferInfo);
+					descriptorSet.SetBuffer(buffer->GetBinding(), bufferInfo);
 				}
 
 				Ref<VulkanImage2D> whiteTexture = VulkanContext::GetInstance()->GetDefaultResources().WhiteTexture;
@@ -415,6 +440,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanShader::CreatePushConstantRanges()
 	{
 		HZR_PROFILE_FUNCTION();
+
 	}
 }
 #endif

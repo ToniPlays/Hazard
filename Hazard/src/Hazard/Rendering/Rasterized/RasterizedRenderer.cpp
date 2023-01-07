@@ -49,8 +49,7 @@ namespace Hazard
             
         region.Data = &utils;
         region.Size = sizeof(UtilityUniformData);
-        
-        
+                
         resources.UtilityUniformBuffer->SetData(region);
         m_Buffer->BindUniformBuffer(resources.CameraUniformBuffer);
         m_Buffer->BindUniformBuffer(resources.UtilityUniformBuffer);

@@ -13,6 +13,9 @@ namespace HazardRenderer::OpenGL
 
 		void Invalidate() override;
 		void Release() override;
+
+		Buffer ReadPixels(const ImageCopyRegion& region) { return Buffer(); };
+
 		const std::string& GetDebugName() const override { return m_DebugName; };
 
 		uint32_t GetWidth() override { return m_Width; };

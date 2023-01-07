@@ -90,7 +90,7 @@ namespace Hazard
 	{
 		Ref<EnvironmentMap> map = AssetManager::GetRuntimeAsset<EnvironmentMap>(handle);
 		Ref<Texture2DAsset> source = AssetManager::GetAsset<Texture2DAsset>(sourceImage);
-		map->GenerateRadiance(source);
+		map->GenerateRadiance();
 	}
 	static void EnvironmentMap_GenerateIrradiance_Native(uint64_t handle, uint64_t sourceCube)
 	{

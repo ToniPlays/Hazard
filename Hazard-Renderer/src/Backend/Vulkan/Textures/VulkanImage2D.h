@@ -21,6 +21,8 @@ namespace HazardRenderer::Vulkan
 
 		void Resize_RT(uint32_t width, uint32_t height);
 
+		Buffer ReadPixels(const ImageCopyRegion& region) { return Buffer(); };
+
 		uint32_t GetWidth() override { return m_Width; };
 		uint32_t GetHeight() override { return m_Height; };
 		ImageFormat GetFormat() const override { return m_Format; }
