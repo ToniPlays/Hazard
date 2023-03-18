@@ -28,6 +28,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_Size;
 		BufferLayout m_Layout;
 		Buffer m_LocalData;
+		uint32_t m_UsageFlags = 0;
 
 		VkBuffer m_VertexBuffer;
 		VmaAllocation m_BufferAllocation;

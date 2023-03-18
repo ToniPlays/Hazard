@@ -356,7 +356,7 @@ namespace HazardRenderer::Vulkan
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 			});
 	}
-	void VulkanRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+	void VulkanRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanVertexBuffer> buffer = vertexBuffer.As<VulkanVertexBuffer>();
@@ -370,11 +370,11 @@ namespace HazardRenderer::Vulkan
 			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
 			});
 	}
-	void VulkanRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
+	void VulkanRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
-	void VulkanRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
+	void VulkanRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
@@ -450,7 +450,7 @@ namespace HazardRenderer::Vulkan
 			auto closestHitTable = bindingTable->GetClosestHitTableAddress();
 			auto callableTable = bindingTable->GetCallableTableAddress();
 
-			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Width, info.Height, info.Depth);
+			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Extent.Width, info.Extent.Height, info.Extent.Depth);
 			});
 	}
 	void VulkanRenderCommandBuffer::BuildAccelerationStructure(const AccelerationStructureBuildInfo& info)

@@ -51,8 +51,8 @@ namespace Hazard
         region.Size = sizeof(UtilityUniformData);
                 
         resources.UtilityUniformBuffer->SetData(region);
-        m_Buffer->BindUniformBuffer(resources.CameraUniformBuffer);
-        m_Buffer->BindUniformBuffer(resources.UtilityUniformBuffer);
+        std::vector<Ref<UniformBuffer>> buffers = { resources.CameraUniformBuffer, resources.UtilityUniformBuffer };
+        m_Buffer->SetUniformBuffers(buffers.data(), 2);
         
     }
 
@@ -71,7 +71,7 @@ namespace Hazard
             
             resources.LightUniformBuffer->SetData(region);
         }
-        m_Buffer->BindUniformBuffer(resources.LightUniformBuffer);
+        m_Buffer->SetUniformBuffers(&resources.LightUniformBuffer, 1);
         
         //Initialize mesh transform data
         
@@ -149,18 +149,19 @@ namespace Hazard
                 shader->Set("u_MaterialConstants", call.Material->GetBuffer());
                 shader->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
                 
-                m_Buffer->BindPipeline(pipeline);
-                m_Buffer->BindVertexBuffer(call.VertexBuffer);
+                m_Buffer->SetPipeline(pipeline);
+                m_Buffer->SetVertexBuffer(call.VertexBuffer);
                 m_Buffer->DrawInstanced(call.IndexCount, call.InstanceCount, call.IndexBuffer);
             }
         }
         if(!environment.Map) return;
         
         auto& radiance = environment.Map->RadianceMap;
+
         if (!radiance) return;
         
         RenderEngine::GetResources().SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
-        m_Buffer->BindPipeline(resources.SkyboxPipeline);
+        m_Buffer->SetPipeline(resources.SkyboxPipeline);
         m_Buffer->Draw(6);
     }
 }

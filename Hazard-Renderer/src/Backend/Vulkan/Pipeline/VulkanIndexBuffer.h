@@ -26,6 +26,7 @@ namespace HazardRenderer::Vulkan
 
 		std::string m_DebugName;
 		uint32_t m_Size;
+		uint32_t m_UsageFlags = 0;
 
 		Buffer m_LocalData;
 		VkBuffer m_IndexBuffer;

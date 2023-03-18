@@ -1,6 +1,5 @@
-#include "Mesh.h"
-
 #include <hzrpch.h>
+
 #include "Mesh.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Core/Application.h"
@@ -22,7 +21,8 @@ namespace Hazard
 		vboInfo.Name = createInfo->DebugName;
 		vboInfo.Layout = &layout;
 		vboInfo.Size = createInfo->VertexCount;
-		vboInfo.Data = (void*)createInfo->pVertices;
+		vboInfo.Data = createInfo->pVertices;
+		vboInfo.UsageFlags = createInfo->UsageFlags;
 
 		m_VertexBuffer = VertexBuffer::Create(&vboInfo);
 
@@ -30,6 +30,7 @@ namespace Hazard
 		iboInfo.Name = createInfo->DebugName;
 		iboInfo.Size = createInfo->IndexCount;
 		iboInfo.Data = createInfo->pIndices;
+		iboInfo.UsageFlags = createInfo->UsageFlags;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
         

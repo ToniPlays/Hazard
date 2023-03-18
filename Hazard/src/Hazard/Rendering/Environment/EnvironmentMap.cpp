@@ -65,7 +65,7 @@ namespace Hazard
 
         //Command buffer recording
 		computeBuffer->Begin();
-		computeBuffer->BindPipeline(computePipeline);
+		computeBuffer->SetPipeline(computePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();
@@ -117,7 +117,7 @@ namespace Hazard
 		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
 
 		computeBuffer->Begin();
-		computeBuffer->BindPipeline(irradiancePipeline);
+		computeBuffer->SetPipeline(irradiancePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();

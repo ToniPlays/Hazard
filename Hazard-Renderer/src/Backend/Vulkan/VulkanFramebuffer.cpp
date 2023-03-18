@@ -56,8 +56,7 @@ namespace HazardRenderer::Vulkan
 					Image2DCreateInfo imageInfo = {};
 					imageInfo.Format = attachmentSpec.Format;
 					imageInfo.Usage = ImageUsage::Attachment;
-					imageInfo.Width = m_Specs.Width;
-					imageInfo.Height = m_Specs.Height;
+					imageInfo.Extent = { m_Specs.Width, m_Specs.Height, 1 };
 					imageInfo.DebugName = fmt::format("{0}-Depth Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
 					m_DepthAttachmentImage = Image2D::Create(&imageInfo).As<VulkanImage2D>();
 				}
@@ -66,8 +65,7 @@ namespace HazardRenderer::Vulkan
 					Image2DCreateInfo imageInfo = {};
 					imageInfo.Format = attachmentSpec.Format;
 					imageInfo.Usage = ImageUsage::Attachment;
-					imageInfo.Width = m_Specs.Width;
-					imageInfo.Height = m_Specs.Height;
+					imageInfo.Extent = { m_Specs.Width, m_Specs.Height, 1 };
 					imageInfo.DebugName = fmt::format("{0}-Color Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
 					m_ColorAttachments.emplace_back(Image2D::Create(&imageInfo).As<VulkanImage2D>());
 				}
@@ -269,8 +267,7 @@ namespace HazardRenderer::Vulkan
 						Image2DCreateInfo imageInfo = {};
 						imageInfo.Format = spec.Format;
 						imageInfo.Usage = ImageUsage::Attachment;
-						imageInfo.Width = m_Specs.Width;
-						imageInfo.Height = m_Specs.Height;
+						imageInfo.Extent = { m_Specs.Width, m_Specs.Height, 1 };
 
 						colorAttachment = m_ColorAttachments.emplace_back(Image2D::Create(&imageInfo).As<VulkanImage2D>());
 					}

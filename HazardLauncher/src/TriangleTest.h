@@ -12,7 +12,7 @@ namespace TriangleTest {
 
 	//OpenGL: Working
 	//Vulkan: Working
-	//Metal	: Working
+	//Metal	: Test
 	//DX12	: Test
 	//DX11  : Test
 
@@ -51,8 +51,7 @@ namespace TriangleTest {
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Width = 1280;
-		windowInfo.Height = 720;
+		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(255, 128, 0, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -82,8 +81,7 @@ namespace TriangleTest {
 		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", api);
 
 		VertexBufferCreateInfo vbo = {};
-		vbo.DebugName = "TriangleVBO";
-		vbo.Usage = BufferUsage::StaticDraw;
+		vbo.Name = "TriangleVBO";
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = vertices;
@@ -100,7 +98,7 @@ namespace TriangleTest {
 		spec.pShaderCode = code.data();
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		//Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 
 
 		while (running)
@@ -110,9 +108,9 @@ namespace TriangleTest {
 
 			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			//commandBuffer->BindPipeline(pipeline);
-			//commandBuffer->BindVertexBuffer(vertexBuffer);
-			//commandBuffer->Draw(6);
+			commandBuffer->BindPipeline(pipeline);
+			commandBuffer->BindVertexBuffer(vertexBuffer);
+			commandBuffer->Draw(6);
 
 			commandBuffer->EndRenderPass();
 			Renderer::WaitAndRender();

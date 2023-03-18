@@ -16,11 +16,11 @@ namespace Hazard
 	{
         std::string DebugName;
 		BoundingBox BoundingBox;
-		HazardRenderer::BufferUsage Usage;
 		size_t VertexCount;
 		Vertex3D* pVertices;
 		size_t IndexCount;
 		uint32_t* pIndices;
+		uint32_t UsageFlags = 0;
 	};
 
 	struct SubMesh 

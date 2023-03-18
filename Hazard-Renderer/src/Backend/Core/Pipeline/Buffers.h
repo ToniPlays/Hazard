@@ -7,19 +7,10 @@ namespace HazardRenderer
 {
 	class VertexBuffer;
 
-	enum BufferUsage : int32_t
+	enum BufferUsageFlags : uint32_t
 	{
-		StreamDraw = 0,
-		StreamRead = 1,
-		StreamCopy = 2,
-		StaticDraw = 4,
-		StaticRead = 5,
-		StaticCopy = 6,
-		DynamicDraw = 8,
-		DynamicRead = 9,
-		DynamicCopy = 10,
-		TLAS = 11,
-		BLAS = 12
+		BUFFER_USAGE_TOP_LEVEL_ACCELERATION_STRUCTURE = BIT(0),
+		BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE = BIT(1)
 	};
 
 	enum class BufferType
@@ -34,6 +25,7 @@ namespace HazardRenderer
     {
         std::string Name;
         size_t Size;
+		uint32_t UsageFlags = 0;
     };
 
 	struct VertexBufferCreateInfo : BufferCreateInfo

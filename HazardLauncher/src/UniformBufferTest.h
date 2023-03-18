@@ -53,8 +53,7 @@ namespace UniformBufferTest
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Width = 1280;
-		windowInfo.Height = 720;
+		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(255, 128, 0, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -87,23 +86,21 @@ namespace UniformBufferTest
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/UboTest.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/UboTest.glsl", api);
 
 		stbi_set_flip_vertically_on_load(true);
 
 		int w, h, channels;
-		stbi_uc* data = stbi_load("src/tests/Textures/csharp.png", &w, &h, &channels, 4);
+		stbi_uc* data = stbi_load("assets/Textures/csharp.png", &w, &h, &channels, 4);
 
 		VertexBufferCreateInfo vbo = {};
-		vbo.DebugName = "QuadVBO";
-		vbo.Usage = BufferUsage::StaticDraw;
+		vbo.Name = "QuadVBO";
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
 
 		IndexBufferCreateInfo ibo = {};
-		ibo.DebugName = "QuadIBO";
-		ibo.Usage = BufferUsage::StaticDraw;
+		ibo.Name = "QuadIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
 
@@ -120,8 +117,7 @@ namespace UniformBufferTest
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Width = w;
-		imageInfo.Height = h;
+		imageInfo.Extent = { (uint32_t)w, (uint32_t)h };
 		imageInfo.Format = ImageFormat::RGBA;
 		imageInfo.Data = Buffer(data, w * h * 4);
 		imageInfo.Usage = ImageUsage::Texture;
@@ -131,7 +127,6 @@ namespace UniformBufferTest
 		uboInfo.Set = 0;
 		uboInfo.Binding = 0;
 		uboInfo.Size = sizeof(glm::mat4);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
 
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);

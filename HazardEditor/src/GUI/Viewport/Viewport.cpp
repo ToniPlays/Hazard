@@ -287,8 +287,8 @@ namespace UI
     void Viewport::OnMouseClicked(const glm::vec2& mousePos)
     {
         ImageCopyRegion region = {};
-        region.Width = 1;
-        region.Height = 1;
+        region.Extent.Width = 1;
+        region.Extent.Height = 1;
         region.X = mousePos.x * ((float)m_FrameBuffer->GetWidth() / (float)m_Width);
         region.Y = mousePos.y * ((float)m_FrameBuffer->GetHeight() / (float)m_Height);
         

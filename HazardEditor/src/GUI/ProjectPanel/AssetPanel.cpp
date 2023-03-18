@@ -378,7 +378,7 @@ namespace UI
 		{
 		case AssetType::Image:
 		{
-#if 1
+#if 0
 			if (metadata.LoadState != LoadState::Loaded)
 			{
 				if (metadata.LoadState == LoadState::None)

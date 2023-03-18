@@ -166,6 +166,9 @@ namespace HazardRenderer::Vulkan
 			debugUtilsInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 
 			VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(m_VulkanInstance, &debugUtilsInfo, nullptr, &m_DebugMessenger), "Failed to create VkDebutUtilsMessengerEXT");
+
+			RenderMessage message = { Severity::Debug, "Enabled validation layers", fmt::format("{}:{}", __FILE__, __LINE__) };
+			Window::SendDebugMessage(message);
 		}
 
 		VkUtils::LoadDebugUtilsExtensions(m_VulkanInstance);
@@ -205,8 +208,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t data = 0xFFFFFFFF;
 		Image2DCreateInfo whiteTexture = {};
 		whiteTexture.DebugName = "DefaultWhiteTexture";
-		whiteTexture.Width = 1;
-		whiteTexture.Height = 1;
+		whiteTexture.Extent = { 1, 1, 1 };
 		whiteTexture.Mips = 1;
 		whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
 		whiteTexture.Format = ImageFormat::RGBA;
@@ -261,18 +263,18 @@ namespace HazardRenderer::Vulkan
 				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 },
 			};
 
-			VkDescriptorPoolCreateInfo poolInfo = {};
-			poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-			poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-			poolInfo.maxSets = 100000;
-			poolInfo.poolSizeCount = (uint32_t)(sizeof(poolSizes) / sizeof(*poolSizes));
-			poolInfo.pPoolSizes = poolSizes;
+		VkDescriptorPoolCreateInfo poolInfo = {};
+		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+		poolInfo.maxSets = 100000;
+		poolInfo.poolSizeCount = (uint32_t)(sizeof(poolSizes) / sizeof(*poolSizes));
+		poolInfo.pPoolSizes = poolSizes;
 
-			for (uint32_t i = 0; i < context->GetImagesInFlight(); i++)
-			{
-				VK_CHECK_RESULT(vkCreateDescriptorPool(context->GetLogicalDevice()->GetVulkanDevice(), &poolInfo, nullptr, &s_Data->DescriptorPools[i]), "Failed to create descriptor pool");
-				s_Data->DescriptorPoolAllocationCount[i] = 0;
-			}
+		for (uint32_t i = 0; i < context->GetImagesInFlight(); i++)
+		{
+			VK_CHECK_RESULT(vkCreateDescriptorPool(context->GetLogicalDevice()->GetVulkanDevice(), &poolInfo, nullptr, &s_Data->DescriptorPools[i]), "Failed to create descriptor pool");
+			s_Data->DescriptorPoolAllocationCount[i] = 0;
+		}
 			});
 	}
 	std::vector<const char*> VulkanContext::GetSupportedExtensions()

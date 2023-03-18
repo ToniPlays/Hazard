@@ -60,8 +60,7 @@ namespace HazardRenderer
 
 		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-		uint32_t Width = 0;
-		uint32_t Height = 0;
+		Extent Extent;
 	};
 
 	struct HazardRendererCreateInfo

@@ -3,11 +3,17 @@
 
 namespace HazardRenderer 
 {
+	struct Extent
+	{
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+		uint32_t Depth = 1;
+	};
+
 	struct Image2DCreateInfo 
 	{
 		std::string DebugName;
-		uint32_t Width;
-		uint32_t Height;
+		Extent Extent;
 		Buffer Data;
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
@@ -18,9 +24,7 @@ namespace HazardRenderer
 
     struct ImageCopyRegion
     {
-        uint32_t Width;
-        uint32_t Height;
-        uint32_t Depth = 1;
+		Extent Extent;
         
         uint32_t X;
         uint32_t Y;

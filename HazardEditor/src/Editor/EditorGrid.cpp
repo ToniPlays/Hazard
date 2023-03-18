@@ -66,7 +66,6 @@ namespace Editor
         uboInfo.Set = 2;
         uboInfo.Binding = 1;
         uboInfo.Size = sizeof(GridData);
-        uboInfo.Usage = BufferUsage::DynamicDraw;
 
         m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
 	}

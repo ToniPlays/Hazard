@@ -66,8 +66,8 @@ namespace HazardRenderer
 			m_WindowData.Platform = "Windows";
 			m_WindowData.SelectedAPI = info->Renderer;
 			m_WindowData.HasTitleBar = windowInfo.HasTitlebar;
-			m_WindowData.Width = windowInfo.Width;
-			m_WindowData.Height = windowInfo.Height;
+			m_WindowData.Width = windowInfo.Extent.Width;
+			m_WindowData.Height = windowInfo.Extent.Height;
 			m_WindowData.VSync = info->VSync;
 			m_WindowData.ImagesInFlight = info->ImagesInFlight;
 			m_WindowData.Window = this;

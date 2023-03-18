@@ -16,6 +16,7 @@ class JobSystem;
 struct JobPromise
 {
 	friend class JobSystem;
+
 public:
 	JobPromise() = default;
 	JobPromise(JobSystem* jobSystem, Ref<JobGraph> node);

@@ -16,12 +16,11 @@ namespace HazardRenderer::OpenGL
 		HZR_ASSERT(info->Usage != ImageUsage::None, "Image format cannot be none");
 
 		m_DebugName = info->DebugName;
-		m_Width = info->Width;
-		m_Height = info->Height;
+		m_Extent = info->Extent;
 		m_Format = info->Format;
 		m_Samples = 1;
 		m_ImageUsage = info->Usage;
-		m_MipLevels = info->GenerateMips ? OpenGLUtils::GetMipLevelCount(m_Width, m_Height) : 1;
+		m_MipLevels = info->GenerateMips ? OpenGLUtils::GetMipLevelCount(m_Extent.Width, m_Extent.Height) : 1;
 
 		Invalidate();
 		if (info->Data.Data != nullptr)
@@ -92,8 +91,8 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 
-		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Width, m_Height);
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);
+		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Extent.Width, m_Extent.Height);
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Extent.Width, m_Extent.Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);
 		if (m_MipLevels > 1) {}
 		//glGenerateTextureMipmap(m_ID);
 	/*

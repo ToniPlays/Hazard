@@ -16,11 +16,12 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(info->Format != ImageFormat::None, "Image format cannot be none");
 		HZR_ASSERT(info->Usage != ImageUsage::None, "Image usage cannot be none");
 
+		HZR_ASSERT(info->Extent.Width < 32768 && info->Extent.Height < 32768, "Image extent too large");
+
 		m_DebugName = info->DebugName;
-		m_Width = info->Width;
-		m_Height = info->Height;
 		m_Format = info->Format;
-		m_MipLevels = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
+		m_Extent = info->Extent;
+		m_MipLevels = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Extent.Width, m_Extent.Height) : 1;
 		m_Usage = info->Usage;
 
 		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -137,14 +138,14 @@ namespace HazardRenderer::Vulkan
 	void VulkanImage2D::Resize_RT(uint32_t width, uint32_t height)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_Width = width;
-		m_Height = height;
+		m_Extent.Width = width;
+		m_Extent.Height = height;
 		Invalidate_RT();
 	}
 	void VulkanImage2D::Invalidate_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
+		HZR_ASSERT(m_Extent.Width > 0 && m_Extent.Height > 0, "Image dimensions failed");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
@@ -179,8 +180,8 @@ namespace HazardRenderer::Vulkan
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		createInfo.imageType = VK_IMAGE_TYPE_2D;
 		createInfo.format = VkUtils::VulkanImageFormat(m_Format);
-		createInfo.extent.width = m_Width;
-		createInfo.extent.height = m_Height;
+		createInfo.extent.width = m_Extent.Width;
+		createInfo.extent.height = m_Extent.Height;
 		createInfo.extent.depth = 1;
 		createInfo.mipLevels = m_MipLevels;
 		createInfo.arrayLayers = 1;
@@ -253,7 +254,7 @@ namespace HazardRenderer::Vulkan
 		imageCopyRegion.imageSubresource.mipLevel = 0;
 		imageCopyRegion.imageSubresource.baseArrayLayer = 0;
 		imageCopyRegion.imageSubresource.layerCount = 1;
-		imageCopyRegion.imageExtent = { m_Width, m_Height, 1 };
+		imageCopyRegion.imageExtent = { m_Extent.Width, m_Extent.Height, 1 };
 		imageCopyRegion.bufferOffset = 0;
 
 		vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
@@ -353,17 +354,16 @@ namespace HazardRenderer::Vulkan
 			blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			blit.srcSubresource.layerCount = 1;
 			blit.srcSubresource.mipLevel = mip - 1;
-			blit.srcOffsets[1].x = int32_t(m_Width >> (mip - 1));
-			blit.srcOffsets[1].y = int32_t(m_Height >> (mip - 1));
+			blit.srcOffsets[1].x = int32_t(m_Extent.Width >> (mip - 1));
+			blit.srcOffsets[1].y = int32_t(m_Extent.Height >> (mip - 1));
 			blit.srcOffsets[1].z = 1;
 
 			blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			blit.dstSubresource.layerCount = 1;
 			blit.dstSubresource.mipLevel = mip;
-			blit.dstOffsets[1].x = int32_t(m_Width >> mip);
-			blit.dstOffsets[1].y = int32_t(m_Height >> mip);
+			blit.dstOffsets[1].x = int32_t(m_Extent.Width >> mip);
+			blit.dstOffsets[1].y = int32_t(m_Extent.Height >> mip);
 			blit.dstOffsets[1].z = 1;
-
 
 			VkImageSubresourceRange mipRange = {};
 			mipRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;

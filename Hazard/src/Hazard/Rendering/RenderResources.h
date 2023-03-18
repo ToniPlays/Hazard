@@ -84,7 +84,6 @@ namespace Hazard
 				utilityUbo.Set = 0;
 				utilityUbo.Binding = 0;
 				utilityUbo.Size = sizeof(UtilityUniformData);
-				utilityUbo.Usage = BufferUsage::DynamicDraw;
 
 				UtilityUniformBuffer = UniformBuffer::Create(&utilityUbo);
 
@@ -93,7 +92,6 @@ namespace Hazard
 				cameraUBO.Set = 0;
 				cameraUBO.Binding = 2;
 				cameraUBO.Size = sizeof(CameraData);
-				cameraUBO.Usage = BufferUsage::DynamicDraw;
 
 				CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
 
@@ -102,7 +100,6 @@ namespace Hazard
 				lightUBO.Set = 0;
 				lightUBO.Binding = 1;
 				lightUBO.Size = sizeof(LightingData);
-				lightUBO.Usage = BufferUsage::DynamicDraw;
 
 				LightUniformBuffer = UniformBuffer::Create(&lightUBO);
                 

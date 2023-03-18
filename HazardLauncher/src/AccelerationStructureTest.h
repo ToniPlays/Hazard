@@ -48,8 +48,7 @@ namespace AccelerationStructureTest
 		windowInfo.Title = rendererApp.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Width = 1280;
-		windowInfo.Height = 720;
+		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(32, 32, 32, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -86,17 +85,17 @@ namespace AccelerationStructureTest
 		};
 
 		VertexBufferCreateInfo vbo = {};
-		vbo.DebugName = "QuadVBO";
-		vbo.Usage = BufferUsage::BLAS;
+		vbo.Name = "QuadVBO";
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
+		vbo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
 
 		IndexBufferCreateInfo ibo = {};
-		ibo.DebugName = "QuadIBO";
-		ibo.Usage = BufferUsage::BLAS;
+		ibo.Name = "QuadIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
+		ibo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
 
 		BoundingBox boundingBox = {};
 		boundingBox.Encapsulate({ -0.5f, -0.5f, -0.5f });
@@ -109,8 +108,7 @@ namespace AccelerationStructureTest
 
 		Image2DCreateInfo outputImage = {};
 		outputImage.DebugName = "OutputImage";
-		outputImage.Width = 1920;
-		outputImage.Height = 1080;
+		outputImage.Extent = { 1920, 1080 };
 		outputImage.Format = ImageFormat::RGBA;
 		outputImage.Usage = ImageUsage::Storage;
 
@@ -129,7 +127,6 @@ namespace AccelerationStructureTest
 
 		Ref<BottomLevelAS> bottomLevelAccelerationStructure = BottomLevelAS::Create(&bottomAccelInfo);
 
-
 		AccelerationStructureInstance instance = {};
 		instance.CustomIndex = 0;
 		instance.pBottomLevelAS = bottomLevelAccelerationStructure;
@@ -142,8 +139,8 @@ namespace AccelerationStructureTest
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygenBasic.glsl", api);
-		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/raygenBasic.glsl", api);
+		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/composite.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "RaygenPipeline";
@@ -180,7 +177,6 @@ namespace AccelerationStructureTest
 		uboInfo.Set = 0;
 		uboInfo.Binding = 2;
 		uboInfo.Size = sizeof(CameraData);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
 
 		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
 
@@ -207,13 +203,13 @@ namespace AccelerationStructureTest
 			raygenPipeline->GetShader()->Set("image", 0, image);
 
 			TraceRaysInfo rayInfo = {};
-			rayInfo.Width = outputImage.Width;
-			rayInfo.Height = outputImage.Height;
-			rayInfo.Depth = 1;
+			rayInfo.Extent.Width = outputImage.Extent.Width;
+			rayInfo.Extent.Height = outputImage.Extent.Height;
+			rayInfo.Extent.Depth = 1;
 			rayInfo.pBindingTable = bindingTable;
 
 			commandBuffer->BindPipeline(raygenPipeline);
-			//commandBuffer->TraceRays(rayInfo);
+			commandBuffer->TraceRays(rayInfo);
 
 			ImageTransitionInfo imageInfo = {};
 			imageInfo.Image = image;

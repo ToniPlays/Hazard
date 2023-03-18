@@ -25,8 +25,8 @@ namespace Hazard
 
 			Image2DCreateInfo info = {};
 			info.DebugName = File::GetName(metadata.Path);
-			info.Width = header.Width;
-			info.Height = header.Height;
+			info.Extent.Width = header.Width;
+			info.Extent.Height = header.Height;
 			info.Data = imageData;
 			info.Format = ImageFormat::RGBA;
 			info.Usage = ImageUsage::Texture;
@@ -46,8 +46,8 @@ namespace Hazard
 
 		Image2DCreateInfo info = {};
 		info.DebugName = File::GetName(metadata.Path);
-		info.Width = header.Width;
-		info.Height = header.Height;
+		info.Extent.Width = header.Width;
+		info.Extent.Height = header.Height;
 		info.Data = header.ImageData;
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
@@ -79,8 +79,8 @@ namespace Hazard
 
 				Image2DCreateInfo info = {};
 				info.DebugName = File::GetName(path);
-				info.Width = header.Width;
-				info.Height = header.Height;
+				info.Extent.Width = header.Width;
+				info.Extent.Height = header.Height;
 				info.Data = imageData;
 				info.Format = ImageFormat::RGBA;
 				info.Usage = ImageUsage::Texture;
@@ -103,8 +103,8 @@ namespace Hazard
 
 			Image2DCreateInfo info = {};
 			info.DebugName = File::GetName(path);
-			info.Width = header.Width;
-			info.Height = header.Height;
+			info.Extent.Width = header.Width;
+			info.Extent.Height = header.Height;
 			info.Data = header.ImageData;
 			info.Format = ImageFormat::RGBA;
 			info.Usage = ImageUsage::Texture;

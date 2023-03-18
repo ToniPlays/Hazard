@@ -138,8 +138,8 @@ namespace HazardRenderer::OpenGL
 
 			Image2DCreateInfo imageInfo = {};
 			imageInfo.Usage = ImageUsage::Attachment;
-			imageInfo.Width = m_Specs.Width;
-			imageInfo.Height = m_Specs.Height;
+			imageInfo.Extent.Width = m_Specs.Width;
+			imageInfo.Extent.Height = m_Specs.Height;
 
 			for (uint32_t i = 0; i < m_ColorImages.size(); i++)
 			{
@@ -154,8 +154,8 @@ namespace HazardRenderer::OpenGL
 			Image2DCreateInfo imageInfo = {};
 			imageInfo.DebugName = fmt::format("FBO ({}) depth", m_Specs.DebugName);
 			imageInfo.Usage = ImageUsage::Attachment;
-			imageInfo.Width = m_Specs.Width;
-			imageInfo.Height = m_Specs.Height;
+			imageInfo.Extent.Width = m_Specs.Width;
+			imageInfo.Extent.Height = m_Specs.Height;
 			imageInfo.Mips = m_Specs.Samples;
 			imageInfo.Format = m_DepthAttachment.Format;
 

@@ -50,8 +50,7 @@ namespace TexturedQuad {
 		windowInfo.Title = appInfo.AppName;
 		windowInfo.FullScreen = false;
 		windowInfo.Maximized = false;
-		windowInfo.Width = 1280;
-		windowInfo.Height = 720;
+		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(255, 128, 0, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -84,23 +83,21 @@ namespace TexturedQuad {
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/texturedQuad.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
 
 		stbi_set_flip_vertically_on_load(true);
 
 		int w, h, channels;
-		stbi_uc* data = stbi_load("src/tests/Textures/csharp.png", &w, &h, &channels, 4);
+		stbi_uc* data = stbi_load("assets/textures/csharp.png", &w, &h, &channels, 4);
 
 		VertexBufferCreateInfo vbo = {};
-		vbo.DebugName = "TriangleVBO";
-		vbo.Usage = BufferUsage::StaticDraw;
+		vbo.Name = "TriangleVBO";
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
 
 		IndexBufferCreateInfo ibo = {};
-		ibo.DebugName = "TriangleIBO";
-		ibo.Usage = BufferUsage::StaticDraw;
+		ibo.Name = "TriangleIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
 
@@ -117,8 +114,7 @@ namespace TexturedQuad {
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Width = w;
-		imageInfo.Height = h;
+		imageInfo.Extent = { (uint32_t)w, (uint32_t)h };
 		imageInfo.Format = ImageFormat::RGBA;
 		imageInfo.Data = Buffer(data, w * h * 4);
 		imageInfo.Usage = ImageUsage::Texture;
@@ -127,8 +123,6 @@ namespace TexturedQuad {
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
-
-
 
 		while (running)
 		{

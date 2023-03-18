@@ -25,8 +25,6 @@ namespace HazardRenderer::Vulkan
 		writeSet.Set.dstArrayElement = index;
 		writeSet.Set.pImageInfo = &info;
 
-		//std::cout << fmt::format("{3} Sampler {0} [{1}, {2}]", writeSet.name, binding, index, m_DebugName) << std::endl;
-
 		vkUpdateDescriptorSets(device, 1, &writeSet.Set, 0, nullptr);
 	}
 	void VulkanDescriptorSet::SetAccelerationStructure(uint32_t binding, uint32_t index, VkWriteDescriptorSetAccelerationStructureKHR info)

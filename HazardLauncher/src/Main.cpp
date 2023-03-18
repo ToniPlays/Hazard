@@ -20,5 +20,14 @@ int main(int argc, char** argv)
 #endif
     RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
+	TexturedQuad::Run(renderAPI);
+	UniformBufferTest::Run(renderAPI);
+
+	if (renderAPI == RenderAPI::Vulkan)
+	{
+		AccelerationStructureTest::Run(renderAPI);
+		RayTracingSphere::Run(renderAPI);
+	}
+	RayTracingSphere::Run(renderAPI);
     return 0;
 }

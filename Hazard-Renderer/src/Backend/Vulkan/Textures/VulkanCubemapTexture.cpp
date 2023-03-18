@@ -108,7 +108,7 @@ namespace HazardRenderer::Vulkan
 		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
 		computeInfo.WaitForCompletion = true;
 
-		commandBuffer->BindPipeline(generationData.Pipeline);
+		commandBuffer->SetPipeline(generationData.Pipeline);
 		commandBuffer->DispatchCompute(computeInfo);
 
 		Ref<VulkanCubemapTexture> instance = this;

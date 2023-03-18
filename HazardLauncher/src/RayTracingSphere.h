@@ -67,8 +67,7 @@ namespace RayTracingSphere
 		windowInfo.Title = rendererApp.AppName;
 		windowInfo.Maximized = false;
 		windowInfo.FullScreen = false;
-		windowInfo.Width = 1920;
-		windowInfo.Height = 1080;
+		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(32, 32, 32, 255);
 
 		HazardRendererCreateInfo renderInfo = {};
@@ -91,27 +90,29 @@ namespace RayTracingSphere
 		MeshFactory factory = {};
 		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
 
-		MeshData corvetteData = factory.LoadMeshFromSource("src/tests/Meshes/c8_corvette_colored.fbx");
+		MeshData corvetteData = factory.LoadMeshFromSource("assets/models/c8_corvette_colored.fbx");
 
 		MeshCreateInfo corvetteInfo = {};
-		corvetteInfo.Usage = BufferUsage::BLAS;
+		corvetteInfo.DebugName = "Corvette";
 		corvetteInfo.BoundingBox = corvetteData.BoundingBox;
 		corvetteInfo.VertexCount = corvetteData.Vertices.size() * sizeof(Vertex3D);
 		corvetteInfo.pVertices = corvetteData.Vertices.data();
 		corvetteInfo.IndexCount = corvetteData.Indices.size() * sizeof(uint32_t);
 		corvetteInfo.pIndices = corvetteData.Indices.data();
+		corvetteInfo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
 
 		Ref<Mesh> corvette = Ref<Mesh>::Create(&corvetteInfo);
 
-		MeshData cubeData = factory.LoadMeshFromSource("src/tests/Meshes/cube.fbx");
+		MeshData cubeData = factory.LoadMeshFromSource("assets/models/cube.fbx");
 
 		MeshCreateInfo cubeInfo = {};
-		cubeInfo.Usage = BufferUsage::BLAS;
+		cubeInfo.DebugName = "Cube";
 		cubeInfo.BoundingBox = cubeData.BoundingBox;
 		cubeInfo.VertexCount = cubeData.Vertices.size() * sizeof(Vertex3D);
 		cubeInfo.pVertices = cubeData.Vertices.data();
 		cubeInfo.IndexCount = cubeData.Indices.size() * sizeof(uint32_t);
 		cubeInfo.pIndices = cubeData.Indices.data();
+		cubeInfo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
 
 		Ref<Mesh> cube = Ref<Mesh>::Create(&cubeInfo);
 
@@ -120,8 +121,8 @@ namespace RayTracingSphere
 #pragma region OutputImage
 		Image2DCreateInfo outputImageSpec = {};
 		outputImageSpec.DebugName = "OutputImage";
-		outputImageSpec.Width = window->GetWidth();
-		outputImageSpec.Height = window->GetHeight();
+		outputImageSpec.Extent.Width = window->GetWidth();
+		outputImageSpec.Extent.Height = window->GetHeight();
 		outputImageSpec.Format = ImageFormat::RGBA;
 		outputImageSpec.Usage = ImageUsage::Storage;
 
@@ -183,8 +184,8 @@ namespace RayTracingSphere
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 #pragma endregion
 #pragma region Raygen
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/raygen.glsl", api);
-		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/composite.glsl", api);
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/raygen.glsl", api);
+		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/composite.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "RaygenPipeline";
@@ -215,14 +216,14 @@ namespace RayTracingSphere
 #pragma endregion
 #pragma region EnvironmentMap
 
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile("src/tests/Textures/pink_sunrise_4k.hdr", true);
+		TextureHeader header = TextureFactory::LoadTextureFromSourceFile("assets/Textures/pink_sunrise_4k.hdr", true);
 
 		Image2DCreateInfo envInfo = {};
 		envInfo.DebugName = "EnvMap";
 		envInfo.Format = ImageFormat::RGBA;
 		envInfo.Usage = ImageUsage::Texture;
-		envInfo.Width = header.Width;
-		envInfo.Height = header.Height;
+		envInfo.Extent.Width = header.Width;
+		envInfo.Extent.Height = header.Height;
 		envInfo.Data = header.ImageData;
 
 		Ref<Image2D> environmentMapImage = Image2D::Create(&envInfo);
@@ -244,7 +245,7 @@ namespace RayTracingSphere
 		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
 		generalTransition.DestLayout = ImageLayout_General;
 
-		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("src/tests/Shaders/EquirectangularToCubeMap.glsl", api);
+		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/EquirectangularToCubeMap.glsl", api);
 
 		PipelineSpecification computeSpec = {};
 		computeSpec.DebugName = "EquirectangularToCubemap";
@@ -281,7 +282,6 @@ namespace RayTracingSphere
 		uboInfo.Set = 0;
 		uboInfo.Binding = 2;
 		uboInfo.Size = sizeof(CameraData);
-		uboInfo.Usage = BufferUsage::DynamicDraw;
 
 		Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
 
@@ -314,9 +314,7 @@ namespace RayTracingSphere
 			raygenPipeline->GetShader()->Set("u_EnvironmentMap", 0, radianceMap);
 
 			TraceRaysInfo info = {};
-			info.Width = outputImageSpec.Width;
-			info.Height = outputImageSpec.Height;
-			info.Depth = 1;
+			info.Extent = outputImageSpec.Extent;
 			info.pBindingTable = bindingTable;
 
 			commandBuffer->BindPipeline(raygenPipeline);

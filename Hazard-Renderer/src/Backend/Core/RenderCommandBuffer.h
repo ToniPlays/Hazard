@@ -54,9 +54,7 @@ namespace HazardRenderer
 
 	struct TraceRaysInfo
 	{
-		uint32_t Width;
-		uint32_t Height;
-		uint32_t Depth;
+		Extent Extent;
 		Ref<ShaderBindingTable> pBindingTable;
 	};
 	struct AccelerationStructureBuildInfo 
@@ -79,9 +77,9 @@ namespace HazardRenderer
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
 		virtual void EndRenderPass() = 0;
 
-		virtual void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) = 0;
-		virtual void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) = 0;
-		virtual void BindPipeline(Ref<Pipeline> pipeline) = 0;
+		virtual void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) = 0;
+		virtual void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) = 0;
+		virtual void SetPipeline(Ref<Pipeline> pipeline) = 0;
 
 		virtual void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;

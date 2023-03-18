@@ -26,8 +26,8 @@ namespace Hazard
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = createInfo->Title;
-		windowInfo.Width = createInfo->Width;
-		windowInfo.Height = createInfo->Height;
+		windowInfo.Extent.Width = createInfo->Width;
+		windowInfo.Extent.Height = createInfo->Height;
 		windowInfo.Color = { 0, 1, 0.5, 1.0 };
 
 		HazardRendererCreateInfo rendererInfo = {};

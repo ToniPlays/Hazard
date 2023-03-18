@@ -40,7 +40,7 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	void OpenGLRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+	void OpenGLRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLVertexBuffer> instance = vertexBuffer.As<OpenGLVertexBuffer>();
@@ -55,15 +55,17 @@ namespace HazardRenderer::OpenGL
 			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->GetBufferID(), 0, s_CurrentLayout.GetBufferStride(binding));
 			});
 	}
-	void OpenGLRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
+	void OpenGLRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<OpenGLUniformBuffer> instance = uniformBuffer.As<OpenGLUniformBuffer>();
-		Renderer::Submit([instance]() {
-			glBindBufferBase(GL_UNIFORM_BUFFER, instance->GetBinding(), instance->GetBufferID());
+		std::vector<Ref<UniformBuffer>> buffers(count);
+		memcpy(buffers.data(), uniformBuffer, count * sizeof(Ref<UniformBuffer>));
+		Renderer::Submit([buffers]() {
+			for(auto& buffer : buffers)
+				glBindBufferBase(GL_UNIFORM_BUFFER, buffer->GetBinding(), buffer.As<OpenGLUniformBuffer>()->GetBufferID());
 			});
 	}
-	void OpenGLRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
+	void OpenGLRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<OpenGLRenderCommandBuffer> instance = this;
@@ -73,6 +75,7 @@ namespace HazardRenderer::OpenGL
 			Ref<OpenGLShader> shader = instance->m_CurrentPipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
 			auto spec = instance->m_CurrentPipeline->GetSpecifications();
+
 			if (spec.CullMode == CullMode::None)
 			{
 				glDisable(GL_CULL_FACE);

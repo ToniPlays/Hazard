@@ -54,7 +54,6 @@ namespace Hazard
 
 			MeshCreateInfo meshInfo = {};
             meshInfo.DebugName = metadata.Path.filename().string();
-			meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
 			meshInfo.BoundingBox = result.BoundingBox;
 			meshInfo.VertexCount = result.Vertices.size() * sizeof(Vertex3D);
 			meshInfo.pVertices = result.Vertices.data();
@@ -77,7 +76,6 @@ namespace Hazard
 
 		MeshCreateInfo meshInfo = {};
         meshInfo.DebugName = metadata.Path.filename().string();
-		meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
 		meshInfo.BoundingBox = meshData.BoundingBox;
 		meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
 		meshInfo.pVertices = meshData.Vertices.data();

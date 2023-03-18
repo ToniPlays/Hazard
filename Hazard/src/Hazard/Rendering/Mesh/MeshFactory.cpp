@@ -140,7 +140,6 @@ namespace Hazard
 				MeshData meshData = std::move(*graph->Result<MeshData>());
 
 				MeshCreateInfo meshInfo = {};
-				meshInfo.Usage = HazardRenderer::BufferUsage::StaticDraw;
 				meshInfo.BoundingBox = meshData.BoundingBox;
 				meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
 				meshInfo.pVertices = meshData.Vertices.data();

@@ -23,13 +23,13 @@ namespace HazardRenderer::Vulkan
 
 		Buffer ReadPixels(const ImageCopyRegion& region) { return Buffer(); };
 
-		uint32_t GetWidth() override { return m_Width; };
-		uint32_t GetHeight() override { return m_Height; };
+		uint32_t GetWidth() override { return m_Extent.Width; };
+		uint32_t GetHeight() override { return m_Extent.Height; };
 		ImageFormat GetFormat() const override { return m_Format; }
 		const std::string& GetDebugName() const override { return m_DebugName; };
 		virtual uint32_t GetMipLevels() const { return m_MipLevels; };
 
-		virtual float GetAspectRatio() override { return (float)m_Width / (float)m_Height; };
+		virtual float GetAspectRatio() override { return (float)m_Extent.Width / (float)m_Extent.Height; };
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 
@@ -59,8 +59,7 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		std::string m_DebugName;
-		uint32_t m_Width;
-		uint32_t m_Height;
+		Extent m_Extent;
 		uint32_t m_MipLevels;
 		ImageFormat m_Format;
 		ImageUsage m_Usage;

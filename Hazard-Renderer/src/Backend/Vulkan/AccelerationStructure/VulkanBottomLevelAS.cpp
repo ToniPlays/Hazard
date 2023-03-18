@@ -134,8 +134,8 @@ namespace HazardRenderer::Vulkan
 
 		m_StructureInfo.Address = fpGetAccelerationStructureDeviceAddressKHR(device->GetVulkanDevice(), &addressInfo);
 
-		VulkanAllocator allocator("VulkanAccelerationStructure");
-		allocator.DestroyBuffer(m_ScratchBuffer.Buffer, m_ScratchBuffer.Allocation);
+		//VulkanAllocator allocator("VulkanAccelerationStructure");
+		//allocator.DestroyBuffer(m_ScratchBuffer.Buffer, m_ScratchBuffer.Allocation);
 	}
 	void VulkanBottomLevelAS::Invalidate_RT()
 	{
