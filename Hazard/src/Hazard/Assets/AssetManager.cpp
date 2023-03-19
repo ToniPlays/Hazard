@@ -98,12 +98,12 @@ namespace Hazard
 		HZR_ASSERT(asset, "Asset cannot be nullptr");        
 		return s_AssetLoader.Save(asset);
 	}
-	JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
+	/*JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
 	{
 		HZR_ASSERT(asset, "Asset cannot be nullptr");
 		Ref<JobGraph> graph = s_AssetLoader.SaveAsync(asset);
 		return Application::Get().GetJobSystem().SubmitGraph(graph);
-	}
+	}*/
 
 	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)
 	{

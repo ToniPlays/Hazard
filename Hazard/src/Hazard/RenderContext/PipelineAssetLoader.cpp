@@ -64,11 +64,11 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	Ref<JobGraph> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}
+	}*/
 	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -96,9 +96,9 @@ namespace Hazard
 
 		return true;
 	}
-	Ref<JobGraph> PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}
+	}*/
 }

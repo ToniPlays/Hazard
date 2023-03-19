@@ -105,21 +105,21 @@
     <Compile Include="source\Hazard\Resources\InternalCalls.cs" />
     <Compile Include="source\Hazard\Resources\Resources.cs" />
     <Compile Include="source\Hazard\Resources\Sprite.cs" />
-    <Compile Include="source\Rendering\Buffer.cs" />
-    <Compile Include="source\Rendering\BufferEnums.cs" />
-    <Compile Include="source\Rendering\CubemapTexture.cs" />
-    <Compile Include="source\Rendering\EnvironmentMap.cs" />
-    <Compile Include="source\Rendering\Image2D.cs" />
-    <Compile Include="source\Rendering\IndexBuffeCreateInfo.cs" />
-    <Compile Include="source\Rendering\IndexBuffer.cs" />
-    <Compile Include="source\Rendering\InternalCalls.cs" />
-    <Compile Include="source\Rendering\Material.cs" />
-    <Compile Include="source\Rendering\Mesh.cs" />
-    <Compile Include="source\Rendering\Pipeline.cs" />
-    <Compile Include="source\Rendering\Shader.cs" />
-    <Compile Include="source\Rendering\Texture.cs" />
-    <Compile Include="source\Rendering\VertexBuffer.cs" />
-    <Compile Include="source\Rendering\VertexBufferCreateInfo.cs" />
+    <Compile Include="source\Hazard.Rendering\Buffer.cs" />
+    <Compile Include="source\Hazard.Rendering\BufferEnums.cs" />
+    <Compile Include="source\Hazard.Rendering\CubemapTexture.cs" />
+    <Compile Include="source\Hazard.Rendering\EnvironmentMap.cs" />
+    <Compile Include="source\Hazard.Rendering\Image2D.cs" />
+    <Compile Include="source\Hazard.Rendering\IndexBuffeCreateInfo.cs" />
+    <Compile Include="source\Hazard.Rendering\IndexBuffer.cs" />
+    <Compile Include="source\Hazard.Rendering\InternalCalls.cs" />
+    <Compile Include="source\Hazard.Rendering\Material.cs" />
+    <Compile Include="source\Hazard.Rendering\Mesh.cs" />
+    <Compile Include="source\Hazard.Rendering\Pipeline.cs" />
+    <Compile Include="source\Hazard.Rendering\Shader.cs" />
+    <Compile Include="source\Hazard.Rendering\Texture.cs" />
+    <Compile Include="source\Hazard.Rendering\VertexBuffer.cs" />
+    <Compile Include="source\Hazard.Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

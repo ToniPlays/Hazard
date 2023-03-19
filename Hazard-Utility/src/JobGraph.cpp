@@ -1,93 +1,46 @@
 #include "JobGraph.h"
-#include "Jobs.h"
 
-#include "spdlog/fmt/fmt.h"
+#include "GraphStage.h"
 
-JobNode::JobNode(const JobNode& copy)
+JobGraph::JobGraph(const std::string& name, uint32_t count) : m_Name(name)
 {
-	DebugName = copy.DebugName;
-	Callback = copy.Callback;
-	Weight = copy.Weight;
+	m_Stages.resize(count);
+	for (uint32_t i = 0; i < count; i++)
+	{
+		m_Stages[i] = Ref<GraphStage>::Create(1.0f / (float)count);
+		m_Stages[i]->m_JobGraph = this;
+	}
+}
+Ref<GraphStage> JobGraph::GetNextStage()
+{
+	if (m_CurrentStage + 1 == m_Stages.size()) 
+		return nullptr;
 
-	m_RemainingDependencies = copy.m_RemainingDependencies.load();
-	m_Status = copy.m_Status.load();
-	m_ReturnCode = copy.m_ReturnCode.load();
-	m_RefCount = copy.m_RefCount.load();
-
-	m_Buffer = copy.m_Buffer;
-	m_BufferDestructor = copy.m_BufferDestructor;
-
-	m_Dependant = copy.m_Dependant;
+	return m_Stages[m_CurrentStage + 1];
 }
 
-void JobNode::JobFinished()
+float JobGraph::GetProgress()
 {
-	m_Status = JobStatus::Done;
-	m_Status.notify_all();
-
-	for (auto& dependant : m_Dependant)
+	float progress = 0;
+	for (auto& stage : m_Stages)
 	{
-		if (--dependant->m_RemainingDependencies == 0)
-			m_JobGraph->GetSystem().SubmitJob(dependant);
+		/*if (stage->m_JobCount == 0)
+			progress += stage->GetWeight();
+		else
+			*/progress += stage->GetProgress();
 	}
 
-	m_JobGraph->AsyncJobFinished(this);
+	return progress;
 }
 
-void JobNode::SetProgress(float progress)
+void JobGraph::OnStageFinished()
 {
-	m_Progress = progress * Weight;
-	m_JobGraph->UpdateProgress();
-}
-void JobGraph::AsyncJobFinished(Ref<JobNode> node)
-{
-	if (m_JobsRunning == 0) {}
-	else if (--m_JobsRunning > 0)
+	Ref<GraphStage> next = GetNextStage();
+	if (!next) 
 		return;
 
-	if (m_FinishCallback)
-		m_FinishCallback(*this);
+	m_CurrentStage++;
+	m_CurrentStage.notify_all();
 
-	m_Status = JobStatus::Done;
-	m_Status.notify_all();
-	m_Progress = 1.0f;
-
-	for(auto& graph : m_DependantGraph)
-		m_JobSystem->SubmitGraph(graph);
-
-}
-
-void JobGraph::PushNode(Ref<JobNode> node)
-{
-	node->m_JobGraph = this;
-	node->m_Status = JobStatus::Waiting;
-	m_AllJobs.push_back(node);
-	m_JobsRunning++;
-
-	if (node->m_RemainingDependencies == 0 && m_JobSystem)
-		m_JobSystem->SubmitJob(node);
-}
-void JobGraph::Then(Ref<JobNode> node)
-{
-	for (auto& job : m_AllJobs)
-		job->m_Dependant.push_back(node);
-
-	node->m_JobGraph = this;
-	node->m_Status = JobStatus::Waiting;
-	node->m_Dependencies = m_AllJobs;
-	node->m_RemainingDependencies = m_AllJobs.size();
-
-	m_JobsRunning++;
-	m_AllJobs.push_back(node);
-}
-
-void JobGraph::UpdateProgress()
-{
-	float totalProgress = 0.0f;
-
-	for (auto& job : m_AllJobs)
-		totalProgress += job->m_Progress;
-
-	m_Progress = totalProgress;
-	HZR_ASSERT(m_Progress <= 1.0f, "");
+	m_JobSystem->QueueJobs(next->m_Jobs);
 }

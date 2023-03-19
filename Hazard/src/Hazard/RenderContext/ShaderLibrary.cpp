@@ -16,7 +16,7 @@ namespace Hazard
 		Timer timer;
 
 		using namespace HazardRenderer;
-		std::vector<JobPromise> promises;
+		/*std::vector<JobPromise> promises;
 		//Line shader
 		{
 			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Debug/lineShader.glsl");
@@ -142,9 +142,9 @@ namespace Hazard
 				});
 			promises.push_back(waitPromise);
 		}
-
 		for (auto& promise : promises)
 			promise.Wait();
+		*/
 
 		HZR_CORE_INFO("Shader library initialized in {0} ms", timer.ElapsedMillis());
 	}

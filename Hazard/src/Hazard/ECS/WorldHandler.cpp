@@ -104,7 +104,7 @@ namespace Hazard {
 
 		return false;
 	}
-	JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type, WorldAsyncPromises* promises)
+	/*JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type, WorldAsyncPromises* promises)
 	{
 		HZR_PROFILE_FUNCTION();
 		if (File::Exists(file))
@@ -130,5 +130,5 @@ namespace Hazard {
 		entity.AddComponent<CameraComponent>();
 
 		return JobPromise();
-	}
+	}*/
 }

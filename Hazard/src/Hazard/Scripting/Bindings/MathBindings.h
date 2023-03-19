@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HazardScript.h"
-#include "Hazard/Math/Random.h"
+#include "Random.h"
 #include "MathCore.h"
 #include "Hazard/Math/Time.h"
 

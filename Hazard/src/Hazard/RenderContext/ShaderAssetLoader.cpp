@@ -45,7 +45,7 @@ namespace Hazard
 
 		return LoadType::Source;
 	}
-	Ref<JobGraph> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> ShaderAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		auto loadFunc = ([path = metadata.Path, handle = metadata.Handle, flags](JobNode& node) -> size_t {
 			using namespace HazardRenderer;
@@ -94,12 +94,12 @@ namespace Hazard
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(loadingJob->DebugName);
 		graph->PushNode(loadingJob);
 		return graph;
-	}
+	}*/
 	bool ShaderAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return false;
 	}
-	Ref<JobGraph> ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> ShaderAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -114,7 +114,7 @@ namespace Hazard
 
 				auto binaries = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, (RenderAPI)api);
 				size_t assetSize = ShaderCompiler::GetBinaryLength(binaries);
-				CachedBuffer dataBuffer(/*sizeof(AssetPackElement) + */assetSize);
+				CachedBuffer dataBuffer(/*sizeof(AssetPackElement) + assetSize);
 
 				AssetPackElement element = {};
 				element.Type = (uint32_t)AssetType::Shader;
@@ -154,5 +154,5 @@ namespace Hazard
 			graph->PushNode(node);
 		}
 		return graph;
-	}
+	}*/
 }

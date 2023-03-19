@@ -7,7 +7,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/ProgressHandler.hpp>
-#include <JobGraph.h>
 
 namespace Hazard
 {
@@ -44,7 +43,7 @@ namespace Hazard
 		void SetProgressHandler(MeshProgressCallback handler) { m_Handler = handler; }
 
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
-		Ref<JobGraph> LoadMeshFromSourceAsync(const std::filesystem::path& file);
+		//Ref<JobGraph> LoadMeshFromSourceAsync(const std::filesystem::path& file);
 		CacheStatus CacheStatus(const AssetHandle& handle);
 		std::filesystem::path GetCacheFile(const AssetHandle& handle);
 		size_t GetMeshDataSize(const MeshData& data);

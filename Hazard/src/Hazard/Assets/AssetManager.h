@@ -24,7 +24,8 @@ namespace Hazard
 	};
 
 
-	class AssetManager {
+	class AssetManager 
+	{
 	public:
 		AssetManager() = default;
 		~AssetManager() = default;
@@ -52,16 +53,16 @@ namespace Hazard
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 
 		static bool SaveAsset(Ref<Asset> asset);
-		static JobPromise SaveAssetAsync(Ref<Asset> asset);
+		//static JobPromise SaveAssetAsync(Ref<Asset> asset);
 
-		template<typename T>
+		/*template<typename T>
 		static JobPromise GetAssetAsync(AssetHandle handle, uint32_t flags = 0)
 		{
 			static_assert(std::is_base_of<Asset, T>::value);
 
 			AssetMetadata& meta = GetMetadata(handle);
 			HZR_ASSERT(meta.Type != AssetType::Undefined, "AssetType cannot be Undefined for {0}", meta.Path.string());
-            
+
 			if ((meta.LoadState == LoadState::None && !(flags & AssetManagerFlags_MustBeLoaded)) || flags & AssetManagerFlags_ForceReload)
 			{
 				meta.LoadState = LoadState::Loading;
@@ -92,7 +93,7 @@ namespace Hazard
 			Ref<T> asset;
 			if (s_LoadedAssets.find(handle) == s_LoadedAssets.end())
 				asset = nullptr;
-			else 
+			else
 				asset = s_LoadedAssets[handle].As<T>();
 
 			Ref<JobGraph> graph = Ref<JobGraph>::Create();
@@ -105,7 +106,7 @@ namespace Hazard
 		static JobPromise GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)
 		{
 			return GetAssetAsync<T>(GetHandleFromFile(path), flags);
-		}
+		}*/
 
 		template<typename T>
 		static Ref<T> GetAsset(const std::filesystem::path& path, uint32_t flags = 0)
@@ -173,12 +174,12 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE) return;
 			s_LoadedAssets.erase(handle);
 		}
-        static AssetHandle NewAsset(Ref<Asset> asset)
-        {
-            if(asset->m_Handle == INVALID_ASSET_HANDLE)
-                asset->m_Handle = UID();
-            return asset->m_Handle;
-        }
+		static AssetHandle NewAsset(Ref<Asset> asset)
+		{
+			if (asset->m_Handle == INVALID_ASSET_HANDLE)
+				asset->m_Handle = UID();
+			return asset->m_Handle;
+		}
 		static std::filesystem::path ToRelative(const std::filesystem::path& path);
 
 	private:

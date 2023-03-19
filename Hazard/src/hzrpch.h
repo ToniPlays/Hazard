@@ -23,7 +23,7 @@
 
 #include "Hazard/Math/Time.h"
 #include "MathCore.h"
-#include "Hazard/Math/Random.h"
+#include "Random.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
 //#include "optick.h"

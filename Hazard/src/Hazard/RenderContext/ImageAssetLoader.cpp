@@ -63,7 +63,7 @@ namespace Hazard
 		header.ImageData.Release();
 		return LoadType::Source;
 	}
-	Ref<JobGraph> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		auto loadFunc = ([path = metadata.Path, handle = metadata.Handle](JobNode& node) -> size_t {
 			using namespace HazardRenderer;
@@ -131,7 +131,7 @@ namespace Hazard
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(metadata.Path.filename().string());
 		graph->PushNode(job);
 		return graph;
-	}
+	}*/
 	bool ImageAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -181,9 +181,9 @@ namespace Hazard
 
 		return false;
 	}
-	Ref<JobGraph> ImageAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> ImageAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}
+	}*/
 }

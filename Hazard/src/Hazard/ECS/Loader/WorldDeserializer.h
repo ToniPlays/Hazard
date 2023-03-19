@@ -107,7 +107,7 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
 
 			if (handle == INVALID_ASSET_HANDLE) return;
-
+			/*
 			if (m_CanAsync && false)
 			{
 				JobPromise promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
@@ -127,6 +127,7 @@ namespace Hazard
 				m_Promises.push_back({ AssetType::Image, promise });
 			}
 			else
+			*/
 			{
                 Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
                 

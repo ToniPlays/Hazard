@@ -1,85 +1,57 @@
 #pragma once
 
-#include "UtilityCore.h"
-#include <thread>
+#include <Ref.h>
 #include <functional>
-#include <deque>
-#include "UID.h"
+#include "GraphStage.h"
 #include "JobGraph.h"
 
+template<typename T>
+class JobPromise
+{
+public:
+	void Wait();
 
-struct JobPromise;
-class Job;
-class JobSystem;
+private:
+		
+};
 
-//Promise handles a single graph
-struct JobPromise
+class Job : public RefCount
 {
 	friend class JobSystem;
+	friend class GraphStage;
+	using JobCallback = std::function<void(Ref<Job>)>;
 
 public:
-	JobPromise() = default;
-	JobPromise(JobSystem* jobSystem, Ref<JobGraph> node);
+	Job(JobCallback&& callback) : m_JobCallback(callback) {}
 
-	JobPromise(const JobPromise& copy);
-	JobPromise(JobPromise&& move) noexcept;
+	const std::string& GetName() { return m_JobName; }
+	void SetJobName(const std::string& name) { m_JobName = name; }
 
-	JobPromise& operator=(const JobPromise& copy);
-	JobPromise& operator=(JobPromise&& move) noexcept;
+	float GetExecutionTime() { return m_ExecutionTime; }
+	float WaitForUpdate() {
+		m_Progress.wait(m_Progress);
+		return m_Progress;
+	}
+	float GetProgress() { return m_Progress; }
 
-	size_t ReturnCode() const;
-	JobStatus Status() const;
-	float Progress() const;
-
-	template<typename T>
-	T* Value() const;
-	JobPromise Wait();
-	JobPromise Then(JobGraphCallback&& callback);
-	JobPromise Then(const std::string& name, JobGraphCallback&& callback);
-	JobPromise Then(Ref<JobGraph> graph)
-	{
-		HZR_ASSERT(false, "");
-		return JobPromise();
+	void Progress(float progress) 
+	{ 
+		m_Progress = progress; 
+		m_Progress.notify_all();
 	}
 
-protected:
-	JobSystem* m_System = nullptr;
-	Ref<JobGraph> m_Graph;
-};
-
-class JobSystem
-{
-public:
-	JobSystem(uint32_t threadCount = std::thread::hardware_concurrency());
-	~JobSystem();
-
-	JobPromise SubmitGraph(Ref<JobGraph> graph);
-
-	void WaitForJobs();
-	void GetJobs();
-	void SubmitJob(Ref<JobNode> node);
-	size_t GetJobCount() { return m_JobCount; }
+	Ref<JobGraph> GetJobGraph() 
+	{ 
+		if (!m_Stage) return nullptr;
+		return m_Stage->GetGraph(); 
+	}
 
 private:
-	void ThreadFunc(uint32_t index);
-	Ref<JobNode> GetNextAvailableJob();
+	JobCallback m_JobCallback;
 
-	void PrintGraphDebugInfo(Ref<JobGraph> graph);
+	std::atomic<float> m_Progress = 0.0f;
+	std::atomic<float> m_ExecutionTime = 0.0f;
+	std::string m_JobName;
 
-private:
-	uint32_t m_ThreadCount = 0;
-	std::vector<std::thread> m_Threads;
-	std::atomic_size_t m_JobCount;
-	std::atomic_bool m_Running = true;
-
-	std::deque<Ref<JobNode>> m_AvailableJobNodes;
-	mutable std::mutex m_JobMutex;
+	Ref<GraphStage> m_Stage = nullptr;
 };
-
-template<typename T>
-inline T* JobPromise::Value() const
-{
-	if (!m_Graph) return nullptr;
-	return m_Graph->Result<T>();
-}
-

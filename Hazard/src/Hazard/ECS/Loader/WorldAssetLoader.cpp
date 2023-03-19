@@ -17,15 +17,15 @@ namespace Hazard
 		WorldDeserializer deserializer;
 		asset = deserializer.DeserializeEditor(metadata.Path, flags | AssetManagerFlags_CanAsync);
 		//Wait for assets to be loaded
-		for (auto& promise : deserializer.GetPromises())
-			promise.Promise.Wait();
+		//for (auto& promise : deserializer.GetPromises())
+		//	promise.Promise.Wait();
 
 		return LoadType::Source;
 	}
+	/*
 	Ref<JobGraph> WorldAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		return nullptr;
-		/*
 		return Application::Get().SubmitJob<Ref<Asset>>("WorldAsync", [meta = metadata, flags](JobSystem* system, Job* job) -> size_t {
 
 			if (!File::Exists(meta.Path))
@@ -45,8 +45,8 @@ namespace Hazard
 			*job->Value<Ref<World>>() = std::move(world);
 			return (size_t)LoadType::Source;
 			});
-			*/
 	}
+	*/
 	bool WorldAssetLoader::Save(Ref<Asset>& asset)
 	{
         auto world = asset.As<World>();
@@ -56,9 +56,9 @@ namespace Hazard
         
         return true;
 	}
-	Ref<JobGraph> WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> WorldAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}
+	}*/
 }

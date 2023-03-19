@@ -197,7 +197,7 @@ namespace AccelerationStructureTest
 			region.Size = sizeof(CameraData);
 
 			camera->SetData(region);
-			commandBuffer->BindUniformBuffer(camera);
+			commandBuffer->SetUniformBuffers(&camera, 1);
 
 			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("image", 0, image);
@@ -208,7 +208,7 @@ namespace AccelerationStructureTest
 			rayInfo.Extent.Depth = 1;
 			rayInfo.pBindingTable = bindingTable;
 
-			commandBuffer->BindPipeline(raygenPipeline);
+			commandBuffer->SetPipeline(raygenPipeline);
 			commandBuffer->TraceRays(rayInfo);
 
 			ImageTransitionInfo imageInfo = {};
@@ -221,7 +221,7 @@ namespace AccelerationStructureTest
 
 			screenPass->GetShader()->Set("u_Image", 0, image);
 
-			commandBuffer->BindPipeline(screenPass);
+			commandBuffer->SetPipeline(screenPass);
 			commandBuffer->Draw(6);
 
 			commandBuffer->EndRenderPass();

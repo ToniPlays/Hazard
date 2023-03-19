@@ -5,6 +5,8 @@
 #include "AccelerationStructureTest.h"
 #include "RayTracingSphere.h"
 
+#include "JobSystemTest.h"
+
 int main(int argc, char** argv)
 {
     uint32_t api = 0;
@@ -18,6 +20,10 @@ int main(int argc, char** argv)
 	std::cin >> api;
 	
 #endif
+
+	JobSystemTest::Run();
+	return 0;
+
     RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
 	TexturedQuad::Run(renderAPI);

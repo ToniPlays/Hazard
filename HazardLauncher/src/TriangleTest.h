@@ -108,8 +108,8 @@ namespace TriangleTest {
 
 			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			commandBuffer->BindPipeline(pipeline);
-			commandBuffer->BindVertexBuffer(vertexBuffer);
+			commandBuffer->SetPipeline(pipeline);
+			commandBuffer->SetVertexBuffer(vertexBuffer);
 			commandBuffer->Draw(6);
 
 			commandBuffer->EndRenderPass();

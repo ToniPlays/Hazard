@@ -12,16 +12,16 @@ namespace Hazard
 		asset = Ref<HScript>::Create(File::GetNameNoExt(metadata.Path));
 		return LoadType::Source;
 	}
-	Ref<JobGraph> ScriptAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> ScriptAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		return nullptr;
-	}
+	}*/
 	bool ScriptAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return false;
 	}
-	Ref<JobGraph> ScriptAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> ScriptAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		return nullptr;
-	}
+	}*/
 }

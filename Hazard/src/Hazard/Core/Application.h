@@ -5,6 +5,7 @@
 #include "ApplicationCreateInfo.h"
 #include "Hazard/Module.h"
 #include <Jobs.h>
+#include <JobSystem.h>
 
 namespace Hazard 
 {

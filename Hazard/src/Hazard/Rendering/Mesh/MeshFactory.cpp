@@ -85,7 +85,7 @@ namespace Hazard
 
 		return data;
 	}
-	Ref<JobGraph> MeshFactory::LoadMeshFromSourceAsync(const std::filesystem::path& file)
+	/*Ref<JobGraph> MeshFactory::LoadMeshFromSourceAsync(const std::filesystem::path& file)
 	{
 		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
 		Ref<MeshFactory> instance = this;
@@ -161,7 +161,7 @@ namespace Hazard
 		graph->PushNode(loadingJob);
 
 		return graph;
-	}
+	}*/
 	CacheStatus MeshFactory::CacheStatus(const AssetHandle& handle)
 	{
 		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;

@@ -12,11 +12,11 @@ namespace Hazard
 	struct WorldAsyncAssetPromise
 	{
 		AssetType Type;
-		JobPromise Promise;
+		//JobPromise Promise;
 	};
 	struct WorldAsyncPromises
 	{
-		JobPromise WorldPromise;
+		//JobPromise WorldPromise;
 		std::vector<WorldAsyncAssetPromise> AssetPromises;
 	};
 

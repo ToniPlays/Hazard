@@ -150,10 +150,10 @@ namespace UniformBufferTest
 
 			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
-			commandBuffer->BindVertexBuffer(vertexBuffer);
+			commandBuffer->SetVertexBuffer(vertexBuffer);
 			pipeline->GetShader()->Set("u_Texture", 0, image);
 
-			commandBuffer->BindPipeline(pipeline);
+			commandBuffer->SetPipeline(pipeline);
 			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
 
 			commandBuffer->EndRenderPass();

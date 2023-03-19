@@ -6,7 +6,6 @@
 #include "Backend/Core/Utils.h"
 
 #include "Material.h"
-#include "JobGraph.h"
 
 namespace Hazard
 {
@@ -35,12 +34,12 @@ namespace Hazard
         asset = material;
         return LoadType::Source;
     }
-    Ref<JobGraph> MaterialAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+    /*Ref<JobGraph> MaterialAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
     {
         HZR_CORE_ASSERT(false, "TODO");
         Ref<JobGraph> graph = Ref<JobGraph>::Create();
         return graph;
-    }
+    }*/
     bool MaterialAssetLoader::Save(Ref<Asset>& asset)
     {
         YAML::Emitter out;
@@ -67,10 +66,10 @@ namespace Hazard
         File::WriteFile(data.Path, out.c_str());
         return true;
     }
-    Ref<JobGraph> MaterialAssetLoader::SaveAsync(Ref<Asset>& asset)
+    /*Ref<JobGraph> MaterialAssetLoader::SaveAsync(Ref<Asset>& asset)
     {
         HZR_CORE_ASSERT(false, "TODO");
         return nullptr;
-    }
+    }*/
 }
 

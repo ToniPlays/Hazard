@@ -16,7 +16,7 @@ namespace Hazard
 		}
 		return m_Loaders[metadata.Type]->Load(metadata, asset);
 	}
-	Ref<JobGraph> AssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> AssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		if (m_Loaders.find(metadata.Type) == m_Loaders.end())
 		{
@@ -24,7 +24,7 @@ namespace Hazard
 			return nullptr;
 		}
 		return m_Loaders[metadata.Type]->LoadAsync(metadata, flags);
-	}
+	}*/
 	bool AssetLoader::Save(Ref<Asset>& asset)
 	{
 		if (!asset) 
@@ -39,7 +39,7 @@ namespace Hazard
 		}
 		return m_Loaders[metadata.Type]->Save(asset);
 	}
-	Ref<JobGraph> AssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> AssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		if (!asset)
 			return nullptr;
@@ -52,5 +52,5 @@ namespace Hazard
 			return nullptr;
 		}
 		return m_Loaders[metadata.Type]->SaveAsync(asset);
-	}
+	}*/
 }

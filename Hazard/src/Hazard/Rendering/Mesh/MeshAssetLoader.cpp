@@ -87,13 +87,13 @@ namespace Hazard
 		HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
 		return LoadType::Source;
 	}
-	Ref<JobGraph> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	/*Ref<JobGraph> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
 	{
 		Ref<MeshFactory> factory = Ref<MeshFactory>::Create();
 		factory->SetOptimization(MeshLoaderFlags_DefaultFlags);
 		Ref<JobGraph> graph = factory->LoadMeshFromSourceAsync(metadata.Path);
 		return graph;
-	}
+	}*/
 	bool MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
@@ -155,9 +155,9 @@ namespace Hazard
 		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 		return false;
 	}
-	Ref<JobGraph> MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
+	/*Ref<JobGraph> MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
 	{
 		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}
+	}*/
 }

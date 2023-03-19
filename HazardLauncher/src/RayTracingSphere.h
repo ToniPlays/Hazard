@@ -264,7 +264,7 @@ namespace RayTracingSphere
 		computeInfo.WaitForCompletion = true;
 
 		computeBuffer->Begin();
-        computeBuffer->BindPipeline(computePipeline);
+        computeBuffer->SetPipeline(computePipeline);
 		computeBuffer->DispatchCompute(computeInfo);
 		computeBuffer->End();
 		computeBuffer->Submit();
@@ -305,7 +305,7 @@ namespace RayTracingSphere
 			copyRegion.Size = sizeof(CameraData);
 
 			cameraUBO->SetData(copyRegion);
-			commandBuffer->BindUniformBuffer(cameraUBO);
+			commandBuffer->SetUniformBuffers(&cameraUBO, 1);
 
 			raygenPipeline->GetShader()->Set("TLAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
 			raygenPipeline->GetShader()->Set("outputImage", 0, outputImage);
@@ -317,7 +317,7 @@ namespace RayTracingSphere
 			info.Extent = outputImageSpec.Extent;
 			info.pBindingTable = bindingTable;
 
-			commandBuffer->BindPipeline(raygenPipeline);
+			commandBuffer->SetPipeline(raygenPipeline);
 			commandBuffer->TraceRays(info);
 			{
 				ImageTransitionInfo imageInfo = {};
@@ -330,7 +330,7 @@ namespace RayTracingSphere
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 
 			screenPass->GetShader()->Set("u_Image", 0, outputImage);
-			commandBuffer->BindPipeline(screenPass);
+			commandBuffer->SetPipeline(screenPass);
 			commandBuffer->Draw(6);
 
 			commandBuffer->EndRenderPass();
