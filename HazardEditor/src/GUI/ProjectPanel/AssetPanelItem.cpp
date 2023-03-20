@@ -82,7 +82,7 @@ namespace UI
             {
                 ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
                     AssetMetadata data = AssetManager::GetMetadata(m_Handle);
-                    EditorAssetManager::MoveAssetToFolder(handle, data.Path);
+                    EditorAssetManager::MoveAssetToFolder(handle, data.Key);
                     Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
                 });
             }
@@ -146,7 +146,7 @@ namespace UI
 			});
 
         if(ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder && Input::IsKeyDown(Key::LeftControl))
-            File::OpenInDefaultApp(GetMetadata().Path);
+            File::OpenInDefaultApp(GetMetadata().Key);
         
         if(ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
         {
@@ -171,9 +171,9 @@ namespace UI
 	{
 		const AssetMetadata& metadata = GetMetadata();
 		if (metadata.Type == AssetType::Folder)
-			return File::GetName(metadata.Path);
+			return File::GetName(metadata.Key);
         
-		return File::GetNameNoExt(GetMetadata().Path);
+		return File::GetNameNoExt(GetMetadata().Key);
 	}
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
 	{

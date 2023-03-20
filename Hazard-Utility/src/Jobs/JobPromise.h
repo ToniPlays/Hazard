@@ -11,23 +11,21 @@ class JobPromise
 public:
 
 	JobPromise() = default;
+	JobPromise(Ref<Job> job) : m_Job(job) {};
+	JobPromise(Ref<JobGraph> graph) : m_JobGraph(graph) {};
 
 	void Wait()
 	{
-		/*if (m_JobGraph)
+		if (m_JobGraph)
 			m_JobGraph->Wait();
-			*/
 	}
 	T Get()
 	{
-		return T();
-		/*if (m_JobGraph)
+		if (m_JobGraph)
 			return m_JobGraph->GetResult<T>();
-			*/
+		return nullptr;
 	}
 private:
-	JobPromise(Ref<Job> job) : m_Job(job) {};
-	JobPromise(Ref<JobGraph> graph) : m_JobGraph(graph) {};
 
 	void* GetResultBuffer() { return nullptr;  };
 

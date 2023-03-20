@@ -22,42 +22,28 @@ namespace Hazard
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	AssetHandle AssetManager::ImportAsset(const AssetPack& assetPack)
+	AssetHandle AssetManager::ImportAsset(const AssetPackElement& asset, std::string key)
 	{
 		HZR_PROFILE_FUNCTION();
-		/*
-		if (filePath == "")
+
+		if ((AssetType)asset.Type == AssetType::Undefined)
             return INVALID_ASSET_HANDLE;
+		
+		if (s_Registry.Contains(key) && !key.empty())
+			return s_Registry.Get(key).Handle;
+			
+		AssetMetadata metadata = {};
+		metadata.Type = (AssetType)asset.Type;
+		metadata.Key = key;
+		metadata.AssetPackFile = asset.AssetPack;
+		metadata.Handle = asset.Handle;
+		metadata.LoadState = LoadState::None;
 
-		std::filesystem::path path = File::GetFileAbsolutePath(filePath); 
+		s_Registry[key] = metadata;
 
-		if (s_Registry.Contains(path))
-			return s_Registry.Get(path).Handle;
+		HZR_CORE_INFO("Importing asset as {}", key);
 
-		AssetType type = AssetType::Undefined;
-
-		if (!File::IsDirectory(filePath)) 
-		{
-			std::string extension = File::GetFileExtension(path.string());
-			type = Utils::AssetTypeFromExtension(extension);
-		}
-		else type = AssetType::Folder;
-
-		if (type == AssetType::Undefined)
-			return INVALID_ASSET_HANDLE;
-
-		//Create Asset metadata, don't load until requested
- 		if (!metadata.IsValid()) 
-		{
-			metadata.Handle = AssetHandle();
-			metadata.Path = path;
-			metadata.Type = type;
-		}
-		s_Registry[metadata.Path] = metadata;
-
-		return metadata.Handle;
-		*/
-		return INVALID_ASSET_HANDLE;
+		return asset.Handle;
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
@@ -67,18 +53,30 @@ namespace Hazard
 		AssetMetadata& data = GetMetadata(handle);
 
 		data.LoadState = LoadState::None;
-		s_Registry.Remove(data.Path);
 
 		if (s_LoadedAssets.size() == 0) return;
 
 		if (s_LoadedAssets.find(handle) != s_LoadedAssets.end())
 			s_LoadedAssets.erase(handle);
 	}
-	AssetHandle AssetManager::GetHandleFromFile(const std::filesystem::path& filePath)
+	AssetHandle AssetManager::GetHandleFromKey(const std::string& key)
 	{
 		HZR_PROFILE_FUNCTION();
-		auto path = File::GetFileAbsolutePath(filePath);
-		return s_Registry.Contains(path) ? s_Registry.Get(path).Handle : INVALID_ASSET_HANDLE;
+		return s_Registry.Contains(key) ? s_Registry.Get(key).Handle : INVALID_ASSET_HANDLE;
+	}
+	Buffer AssetManager::GetAssetData(AssetHandle handle)
+	{
+		//Find correct file and read data to buffer
+		AssetMetadata& metadata = GetMetadata(handle);
+		CachedBuffer buffer = File::ReadBinaryFile(metadata.AssetPackFile);
+		AssetPack pack = AssetPack::Create(buffer, metadata.AssetPackFile);
+		
+		for (auto& element : pack.Elements)
+		{
+			if (element.Handle == handle)
+				return Buffer::Copy(element.Data);
+		}
+		return Buffer();
 	}
 	bool AssetManager::IsLoaded(const AssetHandle& handle)
 	{

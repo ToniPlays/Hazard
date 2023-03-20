@@ -46,6 +46,7 @@ namespace Editor
 			m_Pipeline->SetRenderPass(renderPass);
 			return;
 		}
+		return;
 
 		auto shader = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Grid.glsl");
 

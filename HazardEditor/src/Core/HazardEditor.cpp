@@ -101,15 +101,13 @@ void HazardEditorApplication::PreInit()
 
 	EditorAssetManager::Init();
 
-	ShaderCompiler::SetCacheLocation("Library/Shaders");
-	TextureFactory::SetCacheLocation("Library/Textures");
-	MeshFactory::SetCacheLocation("Library/Meshes/");
-
 	CreateApplicationStack(&createInfo);
 	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {
+	EditorAssetManager::LoadEditorAssets();
+
 	Editor::EditorWorldManager::Init();
     PushModule<GUIManager>();
     

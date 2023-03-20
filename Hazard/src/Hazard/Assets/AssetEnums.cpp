@@ -46,21 +46,21 @@ namespace Hazard::Utils
 	AssetType AssetTypeFromExtension(const std::string& ext) 
 	{
 		if (ext == "")			return AssetType::Folder;
-		if (ext == "jpeg")		return AssetType::Image;
-		if (ext == "jpg")		return AssetType::Image;
-		if (ext == "png")		return AssetType::Image;
-		if (ext == "hdr")		return AssetType::Image;
-		if (ext == "tga")		return AssetType::Image;
-		if (ext == "mp3")		return AssetType::AudioClip;
-		if (ext == "ogg")		return AssetType::AudioClip;
-		if (ext == "hazard")	return AssetType::World;
-		if (ext == "obj")		return AssetType::Mesh;
-		if (ext == "fbx")		return AssetType::Mesh;
-		if (ext == "dae")		return AssetType::Mesh;
-		if (ext == "gltf")		return AssetType::Mesh;
-		if (ext == "cs")		return AssetType::Script;
-		if (ext == "glsl")		return AssetType::Shader;
-        if (ext == "hmat")      return AssetType::Material;
+		if (ext == ".jpeg")		return AssetType::Image;
+		if (ext == ".jpg")		return AssetType::Image;
+		if (ext == ".png")		return AssetType::Image;
+		if (ext == ".hdr")		return AssetType::Image;
+		if (ext == ".tga")		return AssetType::Image;
+		if (ext == ".mp3")		return AssetType::AudioClip;
+		if (ext == ".ogg")		return AssetType::AudioClip;
+		if (ext == ".hazard")	return AssetType::World;
+		if (ext == ".obj")		return AssetType::Mesh;
+		if (ext == ".fbx")		return AssetType::Mesh;
+		if (ext == ".dae")		return AssetType::Mesh;
+		if (ext == ".gltf")		return AssetType::Mesh;
+		if (ext == ".cs")		return AssetType::Script;
+		if (ext == ".glsl")		return AssetType::Shader;
+        if (ext == ".hmat")      return AssetType::Material;
 
 		return AssetType::Undefined;
 	}

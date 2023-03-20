@@ -4,16 +4,57 @@
 
 namespace Hazard
 {
-	struct AssetPack
+	struct AssetPackHeader
 	{
-		uint32_t Elements;
-		CachedBuffer ElementBuffer;
+		uint32_t ElementCount = 0;
 	};
 
-	struct AssetPackElement
+	struct AssetPackElementHeader
 	{
 		uint64_t Handle;
 		uint32_t Type;
 		size_t AssetDataSize = 0;
+		uint32_t AssetDataOffset = 0;
+	};
+	struct AssetPackElement
+	{
+		std::filesystem::path AssetPack;
+		uint64_t Handle;
+		uint32_t Type;
+		Buffer Data;
+	};
+
+	struct AssetPack
+	{
+		uint32_t ElementCount = 0;
+		std::vector<AssetPackElement> Elements;
+
+		//Write assets after this header
+
+		static AssetPack Create(CachedBuffer& buffer, const std::filesystem::path& path)
+		{
+			buffer.ResetCursor();
+			
+			AssetPack pack;
+			AssetPackHeader header = buffer.Read<AssetPackHeader>();
+
+			pack.ElementCount = header.ElementCount;
+			AssetPackElementHeader* headers = (AssetPackElementHeader*)buffer.Read<Buffer>(sizeof(AssetPackElementHeader) * pack.ElementCount).Data;
+
+			pack.ElementCount = header.ElementCount;
+			pack.Elements.reserve(header.ElementCount);
+			
+			for (uint32_t i = 0; i < header.ElementCount; i++)
+			{
+				AssetPackElement& element = pack.Elements.emplace_back();
+
+				element.AssetPack = path;
+				element.Type = headers[i].Type;
+				element.Handle = headers[i].Handle;
+				element.Data = buffer.Read<Buffer>(headers[i].AssetDataSize);
+			}
+			
+			return pack;
+		}
 	};
 }

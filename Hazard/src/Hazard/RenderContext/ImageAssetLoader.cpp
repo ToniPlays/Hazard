@@ -10,61 +10,42 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	static void LoadImageJob(Ref<Job> job, AssetHandle handle)
 	{
-		return nullptr;
-		/*
 		using namespace HazardRenderer;
-		HZR_PROFILE_FUNCTION();
-		if (TextureFactory::CacheStatus(metadata.Handle) == CacheStatus::Exists)
-		{
-			auto cachedPath = TextureFactory::GetCacheFile(metadata.Handle);
-			CachedBuffer buffer = File::ReadBinaryFile(cachedPath);
-			buffer.Read<AssetPackElement>();
 
-			TextureAssetHeader header = buffer.Read<TextureAssetHeader>();
-			Buffer imageData = buffer.Read<Buffer>(header.Channels * header.Width * header.Height);
+		Buffer buffer = AssetManager::GetAssetData(handle);
+		CachedBuffer readBuffer(buffer.Data, buffer.Size);
 
-			Image2DCreateInfo info = {};
-			info.DebugName = File::GetName(metadata.Path);
-			info.Extent.Width = header.Width;
-			info.Extent.Height = header.Height;
-			info.Data = imageData;
-			info.Format = ImageFormat::RGBA;
-			info.Usage = ImageUsage::Texture;
-			info.ClearLocalBuffer = true;
-			info.GenerateMips = false;
-
-			Ref<Image2D> image = Image2D::Create(&info);
-			Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
-
-			asset = Ref<Texture2DAsset>::Create(pointer);
-			asset->m_Type = AssetType::Image;
-
-			return LoadType::Cache;
-		}
-
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(metadata.Path, true);
+		TextureFileHeader header = readBuffer.Read<TextureFileHeader>();
 
 		Image2DCreateInfo info = {};
-		info.DebugName = File::GetName(metadata.Path);
+		info.DebugName = fmt::format("Image {}", handle);
 		info.Extent.Width = header.Width;
 		info.Extent.Height = header.Height;
-		info.Data = header.ImageData;
+		info.Data = readBuffer.Read<Buffer>(header.Width * header.Height * header.Channels);
 		info.Format = ImageFormat::RGBA;
 		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
-		info.GenerateMips = true;
+		info.GenerateMips = false;
 
 		Ref<Image2D> image = Image2D::Create(&info);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
 
-		asset = Ref<Texture2DAsset>::Create(pointer);
-		asset->m_Type = AssetType::Image;
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
+		job->GetStage()->SetResult(asset);
 
-		header.ImageData.Release();
-		return LoadType::Source;
-		*/
+		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
+	}
+
+	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)
+	{
+		Ref<Job> job = Ref<Job>::Create(LoadImageJob, metadata.Handle);
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Image load {}", metadata.Handle), 1);
+		graph->GetStage(0)->QueueJobs({ job });
+
+		return graph;
 	}
 	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset>& asset)
 	{

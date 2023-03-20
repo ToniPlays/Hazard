@@ -65,14 +65,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 
 			thread->m_CurrentJob = job;
 			{
-				Timer timer;
-				if (job->m_JobCallback)
-					job->m_JobCallback(job);
-				job->m_ExecutionTime = timer.ElapsedMillis();
-				job->m_Progress = 1.0f;
-
-				if (job->m_Stage)
-					job->m_Stage->OnJobFinished();
+				job->Execute();
 			}
 			thread->m_CurrentJob = nullptr;
 			m_RunningJobs--;
@@ -125,6 +118,8 @@ void JobSystem::Terminate()
 
 void JobSystem::QueueGraphJobs(Ref<JobGraph> graph)
 {
+	if (!graph) return;
+
 	graph->m_JobSystem = this;
 	Ref<GraphStage> stage = graph->GetStage(0);
 	QueueJobs(stage->m_Jobs);

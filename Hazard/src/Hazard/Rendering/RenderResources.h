@@ -120,8 +120,7 @@ namespace Hazard
                 Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
                 
                 WhiteTexture = Ref<Texture2DAsset>::Create(asset);
-                
-				BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
+				BRDFLut = WhiteTexture;// AssetManager::GetAsset<Texture2DAsset>("BRDF_LUT.hpack");
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

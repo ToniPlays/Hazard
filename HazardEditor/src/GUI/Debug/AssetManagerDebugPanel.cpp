@@ -22,7 +22,7 @@ namespace UI
 
 			for (auto& [path, metadata] : AssetManager::GetMetadataRegistry())
 			{
-				if (!StringUtil::Contains(metadata.Path.string(), m_SearchValue)) continue;
+				if (!StringUtil::Contains(metadata.Key, m_SearchValue)) continue;
 
 				ImUI::TableRowClickable((const char*)path.c_str(), rowHeight);
 
@@ -33,7 +33,7 @@ namespace UI
 
 					ImUI::Separator({ 4.0, rowHeight }, GetLoadStateColor(meta.LoadState));
 					ImGui::SameLine();
-					ImGui::Text("%s", n.string().c_str());
+					ImGui::Text("%s", n.c_str());
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%s", std::to_string(meta.Handle).c_str());

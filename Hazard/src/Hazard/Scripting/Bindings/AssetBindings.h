@@ -13,6 +13,7 @@ namespace Hazard
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(id);
 		if (metadata.Handle == INVALID_ASSET_HANDLE) return Mono::StringToMonoString("");
-		return Mono::StringToMonoString(File::GetName(metadata.Path));
+		return Mono::StringToMonoString("");
+		//return Mono::StringToMonoString(File::GetName(metadata.Path));
 	}
 }

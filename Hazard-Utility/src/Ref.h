@@ -28,6 +28,7 @@ private:
 	mutable std::atomic_uint32_t m_RefCount;
 };
 
+
 template<typename T>
 class Ref
 {
@@ -160,4 +161,14 @@ private:
 	template<class T2>
 	friend class Ref;
 	T* m_Instance = nullptr;
+};
+
+template<class T, class RT = void>
+struct IsRef {
+	static constexpr bool value = false;
+};
+
+template<class RT>
+struct IsRef<Ref<RT>> {
+	static constexpr bool value = true;
 };

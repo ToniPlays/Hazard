@@ -4,38 +4,33 @@
 
 namespace Hazard {
 
-    static std::filesystem::path GetKey(const std::filesystem::path& path) {
-        auto key = path;
-        if (key.empty()) 
-            key = path.lexically_normal();
+    static std::string GetKey(const std::string& key) {
         return key;
     }
 
-    bool AssetRegistry::Contains(const std::filesystem::path& path) const
+    bool AssetRegistry::Contains(const std::string& key) const
     {
-        auto key = GetKey(path);
         bool contains = m_Registry.find(key) != m_Registry.end();
         return contains;
     }
 
-    size_t AssetRegistry::Remove(const std::filesystem::path& path) 
+    size_t AssetRegistry::Remove(const const std::string& key)
     {
-        return m_Registry.erase(GetKey(path));
+        return m_Registry.erase(GetKey(key));
     }
 
-    AssetMetadata& AssetRegistry::Get(const std::filesystem::path& path)
+    AssetMetadata& AssetRegistry::Get(const std::string& key)
     {
-        return m_Registry.at(GetKey(path));
+        return m_Registry.at(GetKey(key));
     }
 
-    const AssetMetadata& AssetRegistry::Get(const std::filesystem::path& path) const
+    const AssetMetadata& AssetRegistry::Get(const std::string& key) const
     {
-        return m_Registry.at(GetKey(path));
+        return m_Registry.at(GetKey(key));
     }
 
-    AssetMetadata& AssetRegistry::operator[](const std::filesystem::path& path)
+    AssetMetadata& AssetRegistry::operator[](const std::string& key)
     {
-        HZR_CORE_ASSERT(!path.string().empty(), "File path empty!");
-        return m_Registry[GetKey(path)];
+        return m_Registry[GetKey(key)];
     }
 }

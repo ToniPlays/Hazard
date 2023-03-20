@@ -19,6 +19,15 @@ Ref<GraphStage> JobGraph::GetNextStage()
 	return m_Stages[m_CurrentStage + 1];
 }
 
+void JobGraph::Execute()
+{
+	for (auto& stage : m_Stages)
+	{
+		for (auto& job : stage->m_Jobs)
+			job->Execute();
+	}
+}
+
 float JobGraph::GetProgress()
 {
 	float progress = 0;
@@ -35,7 +44,6 @@ float JobGraph::GetProgress()
 
 void JobGraph::OnStageFinished()
 {
-	std::cout << m_Name << " stage finished " << std::endl;
 	Ref<GraphStage> next = GetNextStage();
 	m_CurrentStage++;
 	m_CurrentStage.notify_all();

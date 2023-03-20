@@ -270,8 +270,9 @@ bool ScriptField<Hazard::ObjectReference>(uint32_t index, Ref<HazardScript::Fiel
 		else
 		{
 			const AssetMetadata& metadata = AssetManager::GetMetadata(value.ObjectUID);
-			if (metadata.Handle != INVALID_ASSET_HANDLE)
+			/*if (metadata.Handle != INVALID_ASSET_HANDLE)
 				tag = File::GetNameNoExt(metadata.Path);
+			*/
 			isObjectReference = false;
 		}
 

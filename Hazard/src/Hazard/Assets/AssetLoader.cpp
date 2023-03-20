@@ -7,16 +7,24 @@
 
 namespace Hazard 
 {
-	JobPromise<bool> AssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+	JobPromise<Ref<Asset>> AssetLoader::Load(AssetMetadata& metadata, bool synchronous)
 	{
 		HZR_CORE_ASSERT(metadata.Type != AssetType::Undefined, "Asset type cannot be undefined");
 
 		if (m_Loaders.find(metadata.Type) == m_Loaders.end()) 
 		{
-			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
-			return JobPromise<bool>();
+			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Key);
+			return JobPromise<Ref<Asset>>();
 		}
-		return Application::Get().GetJobSystem().QueueGraph<bool>(m_Loaders[metadata.Type]->Load(metadata, asset));
+
+		Ref<JobGraph> graph = m_Loaders[metadata.Type]->Load(metadata);
+		if (synchronous)
+		{
+			graph->Execute();
+			return JobPromise<Ref<Asset>>(graph);
+		}
+
+		return Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
 	}
 	JobPromise<bool> AssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -27,7 +35,7 @@ namespace Hazard
 
 		if (m_Loaders.find(metadata.Type) == m_Loaders.end()) 
 		{
-			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
+			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Key);
 			return JobPromise<bool>();
 		}
 		return Application::Get().GetJobSystem().QueueGraph<bool>(m_Loaders[metadata.Type]->Save(asset));

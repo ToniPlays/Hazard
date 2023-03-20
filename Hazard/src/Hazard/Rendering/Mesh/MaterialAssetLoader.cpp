@@ -9,10 +9,11 @@
 
 namespace Hazard
 {
-    Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+    Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata)
     {
+        return nullptr;
         Ref<Material> material = Ref<Material>::Create();
-        YAML::Node root = YAML::LoadFile(metadata.Path.string());
+        YAML::Node root;// = YAML::LoadFile(metadata.Path.string());
         
         for(auto& [name, texture] : material->GetTextures())
         {
@@ -30,8 +31,6 @@ namespace Hazard
             
             HazardRenderer::Utils::Deserialize(root["Properties"][name], param.Offset, material->GetBuffer(), param.Type);
         }
-        
-        asset = material;
         return nullptr;
     }
     Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset>& asset)
@@ -57,7 +56,7 @@ namespace Hazard
         out << YAML::EndMap << YAML::EndMap;
         
         AssetMetadata& data = AssetManager::GetMetadata(asset->GetHandle());
-        File::WriteFile(data.Path, out.c_str());
+        //File::WriteFile(data.Path, out.c_str());
         return nullptr;
     }
 }

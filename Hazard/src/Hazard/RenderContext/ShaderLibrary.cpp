@@ -13,16 +13,17 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	static void LoadPipeline(Ref<Job> job, std::string file, PipelineSpecification spec, BufferLayout layout, std::unordered_map<std::string, Ref<AssetPointer>>* assets)
+	static void LoadPipeline(Ref<Job> job, PipelineSpecification spec, BufferLayout layout, std::unordered_map<std::string, Ref<AssetPointer>>* assets)
 	{
-		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(file);
-		if (!asset) return;
+		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(spec.DebugName + ".hpack");
 
 		spec.ShaderCodeCount = asset->ShaderCode.size();
 		spec.pShaderCode = asset->ShaderCode.data();
 		spec.pBufferLayout = &layout;
 
+
 		(*assets)[spec.DebugName] = AssetPointer::Create(Pipeline::Create(&spec), AssetType::Pipeline);
+		HZR_CORE_INFO("Pipeline loaded {}", spec.DebugName);
 	}
 
 	void ShaderLibrary::Init()
@@ -32,7 +33,7 @@ namespace Hazard
 		std::vector<Ref<Job>> jobs;
 		{
 			BufferLayout layout = LineVertex::Layout();
-			std::string file = "res/Shaders/Debug/lineShader.glsl";
+			std::string file = "LineShader";
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "LineShader";
@@ -41,25 +42,23 @@ namespace Hazard
 			specs.CullMode = CullMode::None;
 			specs.LineWidth = 3.0f;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
 			BufferLayout layout = QuadVertex::Layout();
-			std::string file = "res/Shaders/2D/standard.glsl";
 
 			PipelineSpecification specs = {};
-			specs.DebugName = "QuadPipeline";
+			specs.DebugName = "QuadShader";
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
 			BufferLayout layout = Vertex3D::Layout();
-			std::string file = "res/Shaders/pbr_static.glsl";
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "PBR_Static";
@@ -67,12 +66,10 @@ namespace Hazard
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
-			std::string file = "res/Shaders/skybox.glsl";
-
 			PipelineSpecification specs = {};
 			specs.DebugName = "Skybox";
 			specs.DrawType = DrawType::Fill;
@@ -81,26 +78,24 @@ namespace Hazard
 			specs.DepthOperator = DepthOp::LessOrEqual;
 			specs.DepthWrite = false;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
-			std::string file = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
 
 			PipelineSpecification specs = {};
-			specs.DebugName = "EquirectangularToCubemap";
+			specs.DebugName = "EquirectangularToCubeMap";
 			specs.Usage = PipelineUsage::ComputeBit;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
-			std::string file = "res/Shaders/Compute/EnvironmentIrradiance.glsl";
 			PipelineSpecification specs = {};
 			specs.DebugName = "EnvironmentIrradiance";
 			specs.Usage = PipelineUsage::ComputeBit;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 

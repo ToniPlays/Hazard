@@ -8,14 +8,12 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!File::Exists(metadata.Path))
-			return nullptr;
 
 		WorldDeserializer deserializer;
-		asset = deserializer.DeserializeEditor(metadata.Path);
+		//asset = deserializer.DeserializeEditor(metadata);
 
 		return nullptr;
 	}

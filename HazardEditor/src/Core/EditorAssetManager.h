@@ -5,6 +5,9 @@
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 
+#include "Hazard/Assets/AssetPack.h"
+#include "Jobs.h"
+
 enum class MethodImpl 
 {
 	OnCreate,
@@ -37,6 +40,7 @@ public:
 	~EditorAssetManager() = default;
 
 	static void Init();
+	static void LoadEditorAssets();
 
 	//TODO: Deprecate these
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
@@ -53,6 +57,8 @@ public:
 
 private:
 	static void ImportEngineAssets();
+	static CachedBuffer GenerateAssetPack(const std::filesystem::path& path);
+	static void GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path);
 
 private:
 	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> s_Icons;

@@ -23,7 +23,7 @@ namespace Hazard
 		IAssetLoader() = default;
 		virtual ~IAssetLoader() = default;
 
-		virtual Ref<JobGraph> Load(AssetMetadata& path, Ref<Asset>& asset) = 0;
+		virtual Ref<JobGraph> Load(AssetMetadata& path) = 0;
 		
 		//TODO: Maybe a Revert option
 		virtual Ref<JobGraph> Save(Ref<Asset>& asset) = 0;

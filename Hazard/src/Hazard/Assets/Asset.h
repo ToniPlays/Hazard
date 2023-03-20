@@ -31,9 +31,10 @@ namespace Hazard
 	{
 		AssetHandle Handle = INVALID_ASSET_HANDLE;
 		AssetType Type = AssetType::Undefined;
-
-		std::filesystem::path Path = "";
 		LoadState LoadState = LoadState::None;
+
+		std::string Key = "";
+		std::filesystem::path AssetPackFile = "";
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
 	};

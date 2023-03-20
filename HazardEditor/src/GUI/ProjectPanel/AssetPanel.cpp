@@ -56,7 +56,7 @@ namespace UI
 
 			AssetMetadata metadata = {};
 			metadata.Handle = AssetHandle();
-			metadata.Path = m_CurrentPath / File::GetName(file);
+			metadata.Key = (m_CurrentPath / File::GetName(file)).string();
 			metadata.Type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(file));
 			EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
 			RefreshFolderItems();
@@ -285,14 +285,16 @@ namespace UI
 		{
 			if (File::GetFileExtension(item) == "meta")
 			{
+				/*
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				if (!File::Exists(assetPath)) continue;
-				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
+				AssetHandle handle = AssetManager::key(assetPath.string());
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 
 				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);
+				*/
 			}
 		}
 
@@ -398,7 +400,7 @@ namespace UI
 
 		for (auto& folder : File::GetAllInDirectory(m_RootPath))
 		{
-			AssetHandle handle = AssetManager::GetHandleFromFile(folder.string());
+			AssetHandle handle = AssetManager::GetHandleFromKey(folder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
 			if (!File::IsDirectory(folder)) continue;
@@ -416,7 +418,7 @@ namespace UI
 
 		for (auto& subfolder : File::GetAllInDirectory(folder))
 		{
-			AssetHandle handle = AssetManager::GetHandleFromFile(subfolder.string());
+			AssetHandle handle = AssetManager::GetHandleFromKey(subfolder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
 			if (!File::IsDirectory(subfolder)) continue;

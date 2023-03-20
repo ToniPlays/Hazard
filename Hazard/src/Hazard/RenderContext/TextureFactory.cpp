@@ -38,16 +38,6 @@ namespace Hazard
 		return 0;
 	}
 
-	std::filesystem::path TextureFactory::GetCacheFile(const AssetHandle& handle)
-	{
-		return s_CacheDirectory / (std::to_string(handle) + ".hzrche");
-	}
-
-	CacheStatus TextureFactory::CacheStatus(const AssetHandle& handle)
-	{
-		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;
-	}
-
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip)
 	{
 		HZR_PROFILE_FUNCTION();

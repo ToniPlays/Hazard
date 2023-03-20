@@ -9,7 +9,7 @@ namespace Hazard
 		ShaderAssetLoader() = default;
 		~ShaderAssetLoader() = default;
 
-		Ref<JobGraph> Load(AssetMetadata& metadata, Ref<Asset>& asset) override;
+		Ref<JobGraph> Load(AssetMetadata& metadata) override;
 		Ref<JobGraph> Save(Ref<Asset>& asset) override;
 	};
 }

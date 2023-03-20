@@ -34,6 +34,7 @@ namespace HazardRenderer
 	struct ShaderStageCode
 	{
 		ShaderStage Stage;
+		uint32_t Size;
 		Buffer ShaderCode;
 	};
     struct ShaderMemberType

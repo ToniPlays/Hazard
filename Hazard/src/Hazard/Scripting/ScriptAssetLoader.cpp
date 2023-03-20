@@ -6,10 +6,10 @@
 
 namespace Hazard 
 {
-	Ref<JobGraph> ScriptAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	Ref<JobGraph> ScriptAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
-		asset = Ref<HScript>::Create(File::GetNameNoExt(metadata.Path));
+		//asset = Ref<HScript>::Create(File::GetNameNoExt(metadata.Path));
 		return nullptr;
 	}
 	Ref<JobGraph> ScriptAssetLoader::Save(Ref<Asset>& asset)

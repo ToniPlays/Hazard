@@ -6,7 +6,7 @@
 #include "AssetPack.h"
 #include "UID.h"
 #include "Profiling/PerformanceProfiler.h"
-#include "JobPromise.h"
+#include "Jobs.h"
 
 #include "Hazard/Core/Application.h"
 
@@ -32,7 +32,7 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry()
+		static std::unordered_map<std::string, AssetMetadata>& GetMetadataRegistry()
 		{
 			return s_Registry.GetRegistry();
 		}
@@ -43,8 +43,9 @@ namespace Hazard
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
 
-		static AssetHandle ImportAsset(const AssetPack& pack);
-		static AssetHandle GetHandleFromFile(const std::filesystem::path& filePath);
+		static AssetHandle ImportAsset(const AssetPackElement& pack, std::string name = "");
+		static AssetHandle GetHandleFromKey(const std::string& key);
+		static Buffer GetAssetData(AssetHandle handle);
 
 		static void RemoveAsset(AssetHandle handle);
 		static bool IsLoaded(const AssetHandle& handle);
@@ -54,9 +55,9 @@ namespace Hazard
 		static bool SaveAsset(Ref<Asset> asset);
 
 		template<typename T>
-		static Ref<T> GetAsset(const std::filesystem::path& path)
+		static Ref<T> GetAsset(const std::string& key)
 		{
-			return GetAsset<T>(GetHandleFromFile(path));
+			return GetAsset<T>(GetHandleFromKey(key));
 		}
 
 		template<typename T>
@@ -71,11 +72,12 @@ namespace Hazard
 
 			if (metadata.LoadState == LoadState::None)
 			{
-				Ref<Asset> asset = nullptr;
-				//Load asset async and wait
-				JobPromise<bool> promise = s_AssetLoader.Load(metadata, asset);
-				promise.Wait();
+				metadata.LoadState = LoadState::Loading;
 
+				//Load asset async and wait
+				JobPromise<Ref<Asset>> promise = s_AssetLoader.Load(metadata, true);
+
+				Ref<Asset> asset = promise.Get();
 				s_LoadedAssets[metadata.Handle] = asset;
 				return asset.As<T>();
 			}
@@ -83,22 +85,32 @@ namespace Hazard
 		}
 
 		template<typename T>
-		static JobPromise<Ref<T>> GetAssetAsync(const std::filesystem::path& path, uint32_t flags = 0)
+		static JobPromise<Ref<T>> GetAssetAsync(const std::string& key)
 		{
-			return JobPromise<Ref<T>>();
+			return GetAssetAsync<T>(GetHandleFromKey(key));
 		}
 
 		template<typename T>
-		static JobPromise<Ref<T>> GetAssetAsync(AssetHandle handle, uint32_t flags = 0)
+		static JobPromise<Ref<T>> GetAssetAsync(AssetHandle handle)
 		{
 			static_assert(std::is_base_of<Asset, T>::value);
 
 			HZR_PROFILE_FUNCTION();
 			HZR_TIMED_FUNCTION();
 
+			AssetMetadata& metadata = GetMetadata(handle);
+
+			if (metadata.LoadState == LoadState::None)
+			{
+				metadata.LoadState = LoadState::Loading;
+				Ref<Asset> asset = nullptr;
+
+				//Load asset async and wait
+				JobPromise<Ref<Asset>> promise = s_AssetLoader.Load(metadata);
+				return promise;
+			}
 			return JobPromise<Ref<T>>();
 		}
-
 
 		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset)
 		{

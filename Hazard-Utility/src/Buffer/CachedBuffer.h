@@ -7,10 +7,18 @@
 class CachedBuffer
 {
 public:
+
+	CachedBuffer() = default;
+
 	CachedBuffer(size_t size)
 	{
 		m_DataBuffer.Allocate(size);
 		m_DataBuffer.ZeroInitialize();
+	}
+	CachedBuffer(void* data, size_t size)
+	{
+		m_DataBuffer = Buffer(data, size);
+		m_OwnsData = false;
 	}
 
 	CachedBuffer(const CachedBuffer& other)
@@ -29,7 +37,8 @@ public:
 
 	~CachedBuffer()
 	{
-		m_DataBuffer.Release();
+		if (m_OwnsData)
+			m_DataBuffer.Release();
 	}
 
 	CachedBuffer& operator=(std::nullptr_t)
@@ -107,13 +116,24 @@ public:
 
 	void* GetData() const { return m_DataBuffer.Data; }
 	size_t GetSize() { return m_DataBuffer.Size; }
-	void SetBufferOffsfet(size_t offset) { m_CurrentBufferOffset = offset; }
+	size_t GetCursor() { return m_CurrentBufferOffset; }
+	void AddBufferOffset(size_t offset) { m_CurrentBufferOffset = offset; }
 
-private:
+	void ResetCursor() { m_CurrentBufferOffset = 0; }
 
+	void Resize(size_t size)
+	{
+		Buffer oldBuffer = m_DataBuffer;
+
+		m_DataBuffer = Buffer();
+		m_DataBuffer.Allocate(size);
+		m_DataBuffer.TryWrite(oldBuffer.Data, oldBuffer.Size);
+		oldBuffer.Release();
+	}
 private:
 	Buffer m_DataBuffer;
 	size_t m_CurrentBufferOffset = 0;
 	uint32_t m_RefCount = 0;
+	bool m_OwnsData = true;
 
 };

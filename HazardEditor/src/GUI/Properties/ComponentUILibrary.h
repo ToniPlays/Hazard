@@ -193,7 +193,7 @@ namespace UI
 
 				std::string path = "None";
 				if (texture)
-					path = File::GetNameNoExt(AssetManager::GetMetadata(texture->GetHandle()).Path);
+					path = File::GetNameNoExt(AssetManager::GetMetadata(texture->GetHandle()).Key);
 				else if (flags & BIT(0))
 					path = "---";
 
@@ -380,12 +380,12 @@ namespace UI
 				bool changed = ImUI::TextFieldWithHint(field, "Script class");
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
-					Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
+					//Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
 
-					if (script) {
+					/*if (script) {
 						//c.ModuleName = script->GetModuleName();
 						changed = true;
-					}
+					}*/
 					});
 
 
@@ -478,7 +478,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 				std::string path = "None";
 				if (map)
-					path = File::GetNameNoExt(AssetManager::GetMetadata(map->GetSourceImage()->GetHandle()).Path);
+					path = File::GetNameNoExt(AssetManager::GetMetadata(map->GetSourceImage()->GetHandle()).Key);
 				else if (flags & BIT(0))
 					path = "---";
 
@@ -700,12 +700,12 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				std::string meshName = "";
                 std::string materialName = "";
 				if (mesh)
-                    meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Path);
+                    meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Key);
 				else if (flags & BIT(0))
 					meshName = "---";
             
                 if (material)
-                    materialName = File::GetNameNoExt(AssetManager::GetMetadata(material->GetHandle()).Path);
+                    materialName = File::GetNameNoExt(AssetManager::GetMetadata(material->GetHandle()).Key);
                 else if (flags & BIT(1))
                     materialName = "---";
 

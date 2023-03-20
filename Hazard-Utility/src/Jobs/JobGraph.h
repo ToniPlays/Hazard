@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Ref.h>
-#include "Jobs.h"
+#include "Job.h"
 #include "JobSystem.h"
 
 class GraphStage;
@@ -16,6 +16,8 @@ public:
 	size_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	Ref<GraphStage> GetNextStage();
+
+	void Execute();
 
 	float GetProgress();
 

@@ -249,13 +249,16 @@ std::string File::GetPathNoExt(const std::filesystem::path& file)
 {
 	return file.string().substr(0, file.string().find_last_of('.'));
 }
-std::string File::GetFileExtension(const std::filesystem::path& file) {
-	return file.string().substr(file.string().find_last_of('.') + 1);
+std::string File::GetFileExtension(const std::filesystem::path& file) 
+{
+	return file.extension().string();
 }
 
 std::vector<std::filesystem::path> File::GetAllInDirectory(const std::filesystem::path& path, bool recursive)
 {
 	std::vector<std::filesystem::path> result;
+	if (!Exists(path)) return result;
+
 	if (recursive)
 	{
 		for (const auto& iter : std::filesystem::recursive_directory_iterator(path))
@@ -265,6 +268,7 @@ std::vector<std::filesystem::path> File::GetAllInDirectory(const std::filesystem
 
 	for (const auto& iter : std::filesystem::directory_iterator(path))
 		result.emplace_back(iter);
+
 	return result;
 }
 

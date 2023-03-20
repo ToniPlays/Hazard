@@ -12,7 +12,7 @@ namespace Hazard
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		JobPromise<bool> Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags = 0);
+		JobPromise<Ref<Asset>> Load(AssetMetadata& metadata, bool synchronous = false);
 		JobPromise<bool> Save(Ref<Asset>& asset);
 
 	private:

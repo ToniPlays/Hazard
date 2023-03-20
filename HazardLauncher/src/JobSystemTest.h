@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "JobSystem.h"
+#include <Jobs.h>
 
 #include <spdlog/fmt/fmt.h>
 #include <Profiling/Timer.h>

@@ -12,33 +12,38 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	static void LoadShader(Ref<Job> job, AssetHandle handle)
 	{
-		return nullptr;
 		using namespace HazardRenderer;
-		RenderAPI api = GraphicsContext::GetRenderAPI();
+
 		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
+		Buffer buffer = AssetManager::GetAssetData(handle);
+		CachedBuffer readBuffer(buffer.Data, buffer.Size);
 
-		auto cachePath = ShaderCompiler::GetCachedFilePath(metadata.Path, api);
-		if (File::Exists(cachePath))
+		while (readBuffer.Available())
 		{
-			CachedBuffer buffer = File::ReadBinaryFile(cachePath);
-			AssetPackElement element = buffer.Read<AssetPackElement>();
+			ShaderStageCode code = {};
+			code.Stage = (ShaderStage)readBuffer.Read<uint32_t>();
+			code.Size = readBuffer.Read<uint32_t>();
+			code.ShaderCode = readBuffer.Read<Buffer>(code.Size);
 
-			while (buffer.Available())
-			{
-				ShaderCode code = buffer.Read<ShaderCode>();
-				Buffer shaderCode = buffer.Read<Buffer>(code.Length);
-
-				shaderAsset->ShaderCode.push_back({ code.Stage, Buffer::Copy(shaderCode) });
-			}
-
-			shaderAsset->m_Handle = element.Handle;
-			shaderAsset->m_Type = (AssetType)element.Type;
-			asset = shaderAsset;
-			return nullptr;
+			shaderAsset->ShaderCode.push_back(code);
 		}
-		return nullptr;
+		job->GetStage()->SetResult(shaderAsset);
+
+		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
+	}
+
+	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata)
+	{
+		using namespace HazardRenderer;
+
+		Ref<Job> job = Ref<Job>::Create(LoadShader, metadata.Handle);
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Shader load {}", metadata.Handle), 1);
+		graph->GetStage(0)->QueueJobs({ job });
+
+		return graph;
 	}
 	Ref<JobGraph> ShaderAssetLoader::Save(Ref<Asset>& asset)
 	{

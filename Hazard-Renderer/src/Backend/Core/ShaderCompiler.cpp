@@ -313,7 +313,7 @@ namespace HazardRenderer
 					continue;
 				}
 
-				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
+				result.push_back({ stage, (uint32_t)compiler.GetCompiledBinary().Size, Buffer::Copy(compiler.GetCompiledBinary()) });
 			}
 			break;
             
@@ -341,7 +341,7 @@ namespace HazardRenderer
 					std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString((uint32_t)stage), compiler.GetErrorMessage()) << std::endl;
 					continue;
 				}
-				result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
+				result.push_back({ stage, (uint32_t)compiler.GetCompiledBinary().Size, Buffer::Copy(compiler.GetCompiledBinary()) });
 			}
 			break;
 		}
@@ -381,20 +381,12 @@ namespace HazardRenderer
 	size_t ShaderCompiler::GetBinaryLength(const std::vector<ShaderStageCode>& binaries)
 	{
 		size_t size = 0;
-		for (auto& [stage, shaderCode] : binaries)
+		for (auto& stage : binaries)
 		{
 			size += sizeof(ShaderCode);
-			size += shaderCode.Size;
+			size += stage.ShaderCode.Size;
 		}
 		return size;
-	}
-
-	std::filesystem::path ShaderCompiler::GetCachedFilePath(const std::filesystem::path& path, RenderAPI api)
-	{
-		HZR_PROFILE_FUNCTION();
-		std::string name = File::GetNameNoExt(path);
-		std::string extension = GetRendererCache(api);
-		return s_CacheDir / (name + "." + extension + ".hzrche");
 	}
 
 	std::unordered_map<ShaderStage, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)

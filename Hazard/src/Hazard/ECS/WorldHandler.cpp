@@ -89,10 +89,12 @@ namespace Hazard {
 		HZR_PROFILE_FUNCTION();
 		if (File::Exists(file))
 		{
+			/*
 			AssetHandle handle = AssetManager::GetHandleFromFile(file);
 			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
 			m_World = AssetManager::GetAsset<World>(handle); //TODO: Add flag AssetManagerFlags_CanAsync
 			return true;
+			*/
 		}
 		m_World = Ref<World>::Create("");
 		m_World->SetName("New World");

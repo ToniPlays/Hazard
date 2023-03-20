@@ -118,10 +118,10 @@ namespace Hazard
             }
             else
             {
-                auto radiance = environment.Map->RadianceMap;
-                auto irradiance = environment.Map->IrradianceMap;
-                auto prefilter = environment.Map->PreFilterMap;
-                auto lut = environment.Map->BRDFLut;
+                auto& radiance = environment.Map->RadianceMap;
+                auto& irradiance = environment.Map->IrradianceMap;
+                auto& prefilter = environment.Map->PreFilterMap;
+                auto& lut = environment.Map->BRDFLut;
                 
                 if (radiance)
                     shader->Set("u_RadianceMap", 0, radiance->Value ? radiance->Value.As<CubemapTexture>() : resources.WhiteCubemap);

@@ -13,12 +13,13 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata)
 	{
 		return nullptr;
 		HZR_PROFILE_FUNCTION();
 
 		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
+		/*
 		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
 		{
 			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI));
@@ -42,6 +43,7 @@ namespace Hazard
 			asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			return nullptr;
 		}
+		*/
 	}
 	Ref<JobGraph> PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
@@ -49,8 +51,6 @@ namespace Hazard
 		return nullptr;
 
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
-
-		HZR_CORE_INFO("Saving asset {0}", metadata.Path.string());
 
 		auto pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
 		PipelineSpecification specs = pipeline->GetSpecifications();

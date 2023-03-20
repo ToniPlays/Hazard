@@ -10,9 +10,11 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
+	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
+		return nullptr;
+		/*
 		Timer timer;
 		MeshFactory factory = {};
 
@@ -84,10 +86,12 @@ namespace Hazard
 
 		HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
 		return nullptr;
+		*/
 	}
 	Ref<JobGraph> MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return nullptr;
+		/*
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		
 		MeshFactory factory = {};
@@ -111,7 +115,6 @@ namespace Hazard
 		AssetPackElement element = {};
 		element.Type = (uint32_t)asset->GetType();
 		element.Handle = asset->GetHandle();
-		element.AssetDataSize = dataSize;
 
 		MeshCacheData meshData = {};
 		meshData.Flags = data.Flags;
@@ -146,5 +149,6 @@ namespace Hazard
 
 		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 		return nullptr;
+		*/
 	}
 }

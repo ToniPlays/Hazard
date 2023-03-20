@@ -38,9 +38,6 @@ namespace UI
 
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);
-		AddMenuItem("Assets/Refresh cache", []() {
-			EditorAssetManager::RefreshEditorAssets(true);
-			});
 
 		AddMenuItem("Tools/Project settings", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<ProjectSettingsPanel>(true);
