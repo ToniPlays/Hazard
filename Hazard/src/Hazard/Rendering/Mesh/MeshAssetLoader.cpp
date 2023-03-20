@@ -10,7 +10,7 @@
 
 namespace Hazard
 {
-	LoadType MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		Timer timer;
@@ -50,7 +50,6 @@ namespace Hazard
 			for (size_t i = 0; i < data.IndexCount; i++)
 				result.Indices[i] = buffer.Read<uint32_t>();
 
-			//if (result.Vertices.size() == 0 || result.Indices.size() == 0) return LoadType::Failed;
 
 			MeshCreateInfo meshInfo = {};
             meshInfo.DebugName = metadata.Path.filename().string();
@@ -62,17 +61,16 @@ namespace Hazard
 
 			asset = Ref<Mesh>::Create(&meshInfo);
 			HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
-			return LoadType::Cache;
+			return nullptr;
 		}
 		if (!File::Exists(metadata.Path))
 		{
 			HZR_CORE_INFO("Mesh asset failed to load in {0}", timer.ElapsedMillis());
-			return LoadType::Failed;
+			return nullptr;
 		}
 
 		MeshData meshData = factory.LoadMeshFromSource(metadata.Path);
 
-		//if (meshData.Vertices.size() == 0 || meshData.Indices.size() == 0) return LoadType::Failed;
 
 		MeshCreateInfo meshInfo = {};
         meshInfo.DebugName = metadata.Path.filename().string();
@@ -85,17 +83,11 @@ namespace Hazard
 		asset = Ref<Mesh>::Create(&meshInfo);
 
 		HZR_CORE_INFO("Mesh asset loaded in {0}", timer.ElapsedMillis());
-		return LoadType::Source;
+		return nullptr;
 	}
-	/*Ref<JobGraph> MeshAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
+	Ref<JobGraph> MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
-		Ref<MeshFactory> factory = Ref<MeshFactory>::Create();
-		factory->SetOptimization(MeshLoaderFlags_DefaultFlags);
-		Ref<JobGraph> graph = factory->LoadMeshFromSourceAsync(metadata.Path);
-		return graph;
-	}*/
-	bool MeshAssetLoader::Save(Ref<Asset>& asset)
-	{
+		return nullptr;
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		
 		MeshFactory factory = {};
@@ -153,11 +145,6 @@ namespace Hazard
 			File::CreateDir(path.parent_path());
 
 		File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
-		return false;
-	}
-	/*Ref<JobGraph> MeshAssetLoader::SaveAsync(Ref<Asset>& asset)
-	{
-		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}*/
+	}
 }

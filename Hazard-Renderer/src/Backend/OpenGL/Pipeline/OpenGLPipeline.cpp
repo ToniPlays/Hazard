@@ -11,14 +11,10 @@ namespace HazardRenderer::OpenGL
 	OpenGLPipeline::OpenGLPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
 		HZR_PROFILE_FUNCTION();
-		if(specs->Usage == PipelineUsage::GraphicsBit)
-			HZR_ASSERT(specs->pBufferLayout, "Cannot use pipeline without input layout");
 
 		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
 		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
-		{
 			code[i] = specs->pShaderCode[i];
-		}
 
 		m_Shader = Shader::Create(code);
 		Invalidate();

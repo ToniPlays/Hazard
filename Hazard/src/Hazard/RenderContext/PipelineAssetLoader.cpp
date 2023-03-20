@@ -13,8 +13,9 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	LoadType PipelineAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
+		return nullptr;
 		HZR_PROFILE_FUNCTION();
 
 		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
@@ -39,40 +40,13 @@ namespace Hazard
 			specs.pShaderCode = shader->ShaderCode.data();
 
 			asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			return LoadType::Cache;
+			return nullptr;
 		}
-
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource(metadata.Path, currentAPI);
-
-		PipelineSpecification specs = {};
-		specs.DebugName = metadata.Path.string();
-		specs.DrawType = DrawType::Fill;
-		specs.Usage = PipelineUsage::GraphicsBit;
-		specs.CullMode = CullMode::None;
-		specs.DepthOperator = DepthOp::Less;
-		specs.DepthTest = true;
-		specs.DepthWrite = true;
-		specs.UseShaderLayout = true;
-		specs.pTargetRenderPass = nullptr;
-		specs.ShaderCodeCount = shaderCode.size();
-		specs.pShaderCode = shaderCode.data();
-
-		asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-
-		for (auto& code : shaderCode)
-			code.ShaderCode.Release();
-
-		return LoadType::Source;
 	}
-	/*Ref<JobGraph> PipelineAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
-	{
-		HZR_CORE_ASSERT(false, "TODO");
-		return nullptr;
-	}*/
-	bool PipelineAssetLoader::Save(Ref<Asset>& asset)
+	Ref<JobGraph> PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
-		return false;
+		return nullptr;
 
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
@@ -94,11 +68,6 @@ namespace Hazard
 		header.StageCount = pipeline->GetShader()->GetShaderCode().size();
 		header.ShaderHandle = 0;
 
-		return true;
-	}
-	/*Ref<JobGraph> PipelineAssetLoader::SaveAsync(Ref<Asset>& asset)
-	{
-		HZR_CORE_ASSERT(false, "TODO");
 		return nullptr;
-	}*/
+	}
 }

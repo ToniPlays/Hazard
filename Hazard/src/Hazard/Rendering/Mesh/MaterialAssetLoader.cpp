@@ -9,7 +9,7 @@
 
 namespace Hazard
 {
-    LoadType MaterialAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+    Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
     {
         Ref<Material> material = Ref<Material>::Create();
         YAML::Node root = YAML::LoadFile(metadata.Path.string());
@@ -32,15 +32,9 @@ namespace Hazard
         }
         
         asset = material;
-        return LoadType::Source;
+        return nullptr;
     }
-    /*Ref<JobGraph> MaterialAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
-    {
-        HZR_CORE_ASSERT(false, "TODO");
-        Ref<JobGraph> graph = Ref<JobGraph>::Create();
-        return graph;
-    }*/
-    bool MaterialAssetLoader::Save(Ref<Asset>& asset)
+    Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset>& asset)
     {
         YAML::Emitter out;
         
@@ -64,12 +58,7 @@ namespace Hazard
         
         AssetMetadata& data = AssetManager::GetMetadata(asset->GetHandle());
         File::WriteFile(data.Path, out.c_str());
-        return true;
-    }
-    /*Ref<JobGraph> MaterialAssetLoader::SaveAsync(Ref<Asset>& asset)
-    {
-        HZR_CORE_ASSERT(false, "TODO");
         return nullptr;
-    }*/
+    }
 }
 

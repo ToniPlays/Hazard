@@ -33,8 +33,6 @@ JobSystem::~JobSystem()
 void JobSystem::ThreadFunc(Ref<Thread> thread)
 {
 	//Initialize thread state
-
-
 	while (m_Running)
 	{
 		thread->m_Status = ThreadStatus::Waiting;
@@ -86,7 +84,8 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 	thread->m_Status = ThreadStatus::Terminated;
 	thread->m_Status.notify_all();
 }
-void JobSystem::QueueJob(Ref<Job> job)
+
+JobPromise<bool> JobSystem::QueueJob(Ref<Job> job)
 {
 	m_JobMutex.lock();
 	m_Jobs.emplace_back(job);
@@ -95,7 +94,7 @@ void JobSystem::QueueJob(Ref<Job> job)
 
 	m_JobCount.notify_one();
 
-	std::cout << fmt::format("Job {} queued", job->GetName()) << std::endl;
+	return JobPromise<bool>(job);
 }
 void JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
@@ -107,14 +106,6 @@ void JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 	m_JobMutex.unlock();
 
 	m_JobCount.notify_all();
-}
-
-void JobSystem::QueueGraph(Ref<JobGraph> graph)
-{
-	graph->m_JobSystem = this;
-
-	Ref<GraphStage> first = graph->GetStage(0);
-	QueueJobs(first->m_Jobs);
 }
 
 void JobSystem::WaitForJobsToFinish()
@@ -130,6 +121,13 @@ void JobSystem::Terminate()
 	m_Running = false;
 	m_JobCount = 1;
 	m_JobCount.notify_all();
+}
+
+void JobSystem::QueueGraphJobs(Ref<JobGraph> graph)
+{
+	graph->m_JobSystem = this;
+	Ref<GraphStage> stage = graph->GetStage(0);
+	QueueJobs(stage->m_Jobs);
 }
 
 Ref<Job> JobSystem::FindAvailableJob()

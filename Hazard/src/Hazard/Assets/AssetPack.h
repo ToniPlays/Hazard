@@ -6,7 +6,8 @@ namespace Hazard
 {
 	struct AssetPack
 	{
-
+		uint32_t Elements;
+		CachedBuffer ElementBuffer;
 	};
 
 	struct AssetPackElement

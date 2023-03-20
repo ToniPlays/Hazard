@@ -7,50 +7,29 @@
 
 namespace Hazard 
 {
-	LoadType AssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+	JobPromise<bool> AssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
 	{
+		HZR_CORE_ASSERT(metadata.Type != AssetType::Undefined, "Asset type cannot be undefined");
+
 		if (m_Loaders.find(metadata.Type) == m_Loaders.end()) 
 		{
 			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
-			return LoadType::Failed;
+			return JobPromise<bool>();
 		}
-		return m_Loaders[metadata.Type]->Load(metadata, asset);
+		return Application::Get().GetJobSystem().QueueGraph<bool>(m_Loaders[metadata.Type]->Load(metadata, asset));
 	}
-	/*Ref<JobGraph> AssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
-	{
-		if (m_Loaders.find(metadata.Type) == m_Loaders.end())
-		{
-			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
-			return nullptr;
-		}
-		return m_Loaders[metadata.Type]->LoadAsync(metadata, flags);
-	}*/
-	bool AssetLoader::Save(Ref<Asset>& asset)
+	JobPromise<bool> AssetLoader::Save(Ref<Asset>& asset)
 	{
 		if (!asset) 
-			return false;
+			return JobPromise<bool>();
 
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
 		if (m_Loaders.find(metadata.Type) == m_Loaders.end()) 
 		{
 			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
-			return false;
+			return JobPromise<bool>();
 		}
-		return m_Loaders[metadata.Type]->Save(asset);
+		return Application::Get().GetJobSystem().QueueGraph<bool>(m_Loaders[metadata.Type]->Save(asset));
 	}
-	/*Ref<JobGraph> AssetLoader::SaveAsync(Ref<Asset>& asset)
-	{
-		if (!asset)
-			return nullptr;
-
-		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
-
-		if (m_Loaders.find(metadata.Type) == m_Loaders.end())
-		{
-			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(metadata.Type), metadata.Path.string());
-			return nullptr;
-		}
-		return m_Loaders[metadata.Type]->SaveAsync(asset);
-	}*/
 }

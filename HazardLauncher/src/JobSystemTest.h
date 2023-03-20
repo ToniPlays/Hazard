@@ -79,7 +79,7 @@ namespace JobSystemTest
 
 		graph->GetStage(1)->SetWeight(0.60f);
 
-		jobSystem.QueueGraph(graph);
+		//jobSystem.QueueGraph(graph);
 
 		static float progress = 0.0f;
 

@@ -3,7 +3,7 @@
 #include <thread>
 #include <Jobs.h>
 #include "GraphStage.h"
-
+#include "JobPromise.h"
 
 enum class ThreadStatus
 {
@@ -47,10 +47,15 @@ public:
 
 	const std::vector<Ref<Thread>>& GetThreads() { return m_Threads; }
 
-	void QueueJob(Ref<Job> job);
+	JobPromise<bool> QueueJob(Ref<Job> job);
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
 
-	void QueueGraph(Ref<JobGraph> graph);
+	template<typename T>
+	JobPromise<T> QueueGraph(Ref<JobGraph> graph)
+	{
+		QueueGraphJobs(graph);
+		return JobPromise<T>(graph);
+	}
 
 	uint32_t WaitForUpdate()
 	{
@@ -67,6 +72,7 @@ public:
 
 private:
 
+	void QueueGraphJobs(Ref<JobGraph> graph);
 	Ref<Job> FindAvailableJob();
 
 	void ThreadFunc(Ref<Thread> thread);

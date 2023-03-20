@@ -36,8 +36,8 @@ public:
 	EditorAssetManager() = default;
 	~EditorAssetManager() = default;
 
-	static void ImportAssets();
 	static void Init();
+
 	//TODO: Deprecate these
 	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
 	static bool CreateFolder(const std::filesystem::path& path);
@@ -50,7 +50,9 @@ public:
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
     static Ref<Hazard::Mesh> GetDefaultMesh(const std::string& name);
-	static void RefreshEditorAssets(bool force = false);
+
+private:
+	static void ImportEngineAssets();
 
 private:
 	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> s_Icons;

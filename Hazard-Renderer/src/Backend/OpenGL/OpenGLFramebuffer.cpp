@@ -195,6 +195,8 @@ namespace HazardRenderer::OpenGL
 					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGBA, GL_RGBA16F, m_Specs.Width, m_Specs.Height, i); break;
 				case ImageFormat::RGB16F:
 					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RGB, GL_RGB16F, m_Specs.Width, m_Specs.Height, i); break;
+				case ImageFormat::RED32I:
+					OpenGLUtils::AttachColorTexture(m_ColorImages[i]->GetID(), m_Specs.Samples, GL_RED, GL_R32I, m_Specs.Width, m_Specs.Height, i); break;
 				default:
 					HZR_ASSERT(false, "Unknown format");
 				}

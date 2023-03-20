@@ -10,20 +10,10 @@
 
 using namespace Hazard;
 
-
-void EditorAssetManager::ImportAssets()
-{
-	for (auto& file : File::GetAllInDirectory("res/Icons", true))
-		AssetManager::ImportAsset(file);
-	for (auto& file : File::GetAllInDirectory("res/Mesh", true))
-		AssetManager::ImportAsset(file);
-	for (auto& file : File::GetAllInDirectory("res/Shaders", true))
-		AssetManager::ImportAsset(file);
-	for (auto& file : File::GetAllInDirectory("res/Textures", true))
-		AssetManager::ImportAsset(file);
-}
 void EditorAssetManager::Init()
 {
+	ImportEngineAssets();
+
 	struct EditorAsset
 	{
 		const char* Key;
@@ -43,29 +33,22 @@ void EditorAssetManager::Init()
         { "Sphere", "res/Mesh/sphere.obj" }
     };
 
-    /*
-	std::vector<JobPromise> promises;
-	promises.reserve(texturesToLoad.size());
-	*/
+	//promises.reserve(texturesToLoad.size());
 
+	Timer timer;
 	for (auto& texture : texturesToLoad)
 	{
-#if 0
-		auto promise = AssetManager::GetAssetAsync<Texture2DAsset>(texture.Path);
-		auto waitPromise = promise.Then(texture.Key, [texture](JobGraph& graph) -> size_t {
-			s_Icons[texture.Key] = *graph.DependencyResult<Ref<Texture2DAsset>>();
-			return 0;
-			});
-
-		promises.push_back(waitPromise);
-#else
-		s_Icons[texture.Key] = AssetManager::GetAsset<Texture2DAsset>(texture.Path);
-#endif
+		//promises.push_back(AssetManager::GetAssetAsync<Asset>(texture.Path));
+		//s_Icons[texture.Key] = AssetManager::GetAsset<Texture2DAsset>(texture.Path);
 	}
     
-    for(auto& mesh : meshesToLoad)
-        s_DefaultMesh[mesh.Key] = AssetManager::GetAsset<Mesh>(mesh.Path);
+	for (auto& mesh : meshesToLoad) {}
+		//promises.push_back(AssetManager::GetAssetAsync<Asset>(mesh.Path));
+        //s_DefaultMesh[mesh.Key] = AssetManager::GetAsset<Mesh>(mesh.Path);
     
+	
+
+	HZR_INFO("Editor assets loaded in {}ms", timer.ElapsedMillis());
 	RefreshEditorAssets();
 }
 
@@ -79,7 +62,7 @@ AssetMetadata EditorAssetManager::ImportFromMetadata(const std::filesystem::path
 	YamlUtils::Deserialize<AssetHandle>(root, "UID", metadata.Handle, INVALID_ASSET_HANDLE);
 	YamlUtils::Deserialize<AssetType>(root, "Type", metadata.Type, AssetType::Undefined);
     metadata.Path = File::GetPathNoExt(path);
-	Hazard::AssetManager::ImportAsset(File::GetPathNoExt(path), metadata);
+	//Hazard::AssetManager::ImportAsset(File::GetPathNoExt(path), metadata);
 
 	return metadata;
 }
@@ -118,6 +101,7 @@ bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
     
     switch(type)
     {
+		/*
         case AssetType::World:
         {
             Ref<World> world = Ref<World>::Create(path);
@@ -152,6 +136,7 @@ bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
             AssetManager::SaveAsset(asset);
             break;
         }
+		*/
         default: break;
     }
     
@@ -188,17 +173,7 @@ bool EditorAssetManager::CreateFolder(const std::filesystem::path& path)
 
 bool EditorAssetManager::CreateMetadataFile(const AssetMetadata& metadata, const std::filesystem::path& path)
 {
-	std::filesystem::path metaPath = path.string() + ".meta";
-	if (File::Exists(metaPath)) return false;
-	YAML::Emitter out;
-
-	out << YAML::BeginMap;
-	YamlUtils::Serialize(out, "UID", metadata.Handle);
-	YamlUtils::Serialize(out, "Type", metadata.Type);
-	out << YAML::EndMap;
-	File::WriteFile(metaPath, out.c_str());
-
-	return Hazard::AssetManager::ImportAsset(path, metadata) != INVALID_ASSET_HANDLE;
+	return false; // Hazard::AssetManager::ImportAsset(path, metadata) != INVALID_ASSET_HANDLE;
 }
 
 bool EditorAssetManager::RenameAsset(const std::string& newName, AssetHandle handle)
@@ -272,27 +247,12 @@ Ref<Mesh> EditorAssetManager::GetDefaultMesh(const std::string& name)
 {
     if (s_DefaultMesh.find(name) != s_DefaultMesh.end())
         return s_DefaultMesh[name];
-    return nullptr;;
+    return nullptr;
 }
 
-void EditorAssetManager::RefreshEditorAssets(bool force)
+void EditorAssetManager::ImportEngineAssets()
 {
-	Timer timer;
-	auto progressPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
+	HZR_INFO("Importing engine assets");
+	
 
-	//Compile non cached shaders
-	for (auto& file : File::GetAllInDirectory("res/Shaders", true))
-	{
-        switch (Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(file)))
-		{
-		case AssetType::Shader:
-		{
-			break;
-		}
-		default:
-			break;
-		}
-	}
-
-	HZR_INFO("Refresh editor assets in {0} ms", timer.ElapsedMillis());
 }

@@ -22,9 +22,10 @@ namespace Hazard
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& filePath, AssetMetadata metadata)
+	AssetHandle AssetManager::ImportAsset(const AssetPack& assetPack)
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		if (filePath == "")
             return INVALID_ASSET_HANDLE;
 
@@ -55,6 +56,8 @@ namespace Hazard
 		s_Registry[metadata.Path] = metadata;
 
 		return metadata.Handle;
+		*/
+		return INVALID_ASSET_HANDLE;
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
@@ -96,7 +99,7 @@ namespace Hazard
 	bool AssetManager::SaveAsset(Ref<Asset> asset)
 	{
 		HZR_ASSERT(asset, "Asset cannot be nullptr");        
-		return s_AssetLoader.Save(asset);
+		return false;// s_AssetLoader.Save(asset);
 	}
 	/*JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
 	{
@@ -104,9 +107,4 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.SaveAsync(asset);
 		return Application::Get().GetJobSystem().SubmitGraph(graph);
 	}*/
-
-	std::filesystem::path AssetManager::ToRelative(const std::filesystem::path& path)
-	{
-		return path;
-	}
 }

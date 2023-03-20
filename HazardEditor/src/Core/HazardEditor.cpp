@@ -99,7 +99,8 @@ void HazardEditorApplication::PreInit()
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
 
-	EditorAssetManager::ImportAssets();
+	EditorAssetManager::Init();
+
 	ShaderCompiler::SetCacheLocation("Library/Shaders");
 	TextureFactory::SetCacheLocation("Library/Textures");
 	MeshFactory::SetCacheLocation("Library/Meshes/");

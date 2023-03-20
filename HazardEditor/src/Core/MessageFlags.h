@@ -19,11 +19,11 @@ static uint32_t GetMessageFlagsFromSeverity(const Severity& severity)
 {
 	switch (severity)
 	{
-	case Severity::Debug:		return MessageFlags_Debug | MessageFlags_Clearable;
-	case Severity::Info:		return MessageFlags_Info | MessageFlags_Clearable;
-	case Severity::Trace:		return MessageFlags_Info | MessageFlags_Clearable;
+	case Severity::Debug:		return MessageFlags_Debug   | MessageFlags_Clearable;
+	case Severity::Info:		return MessageFlags_Info    | MessageFlags_Clearable;
+	case Severity::Trace:		return MessageFlags_Info    | MessageFlags_Clearable;
 	case Severity::Warning:		return MessageFlags_Warning | MessageFlags_Clearable;
-	case Severity::Error:		return MessageFlags_Error | MessageFlags_Clearable;
+	case Severity::Error:		return MessageFlags_Error   | MessageFlags_Clearable;
 	case Severity::Critical:	return MessageFlags_Fatal;
 	}
 	return 0;

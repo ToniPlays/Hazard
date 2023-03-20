@@ -13,11 +13,14 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	static void LoadPipeline(Ref<Job> job, std::string file, PipelineSpecification spec, std::unordered_map<std::string, Ref<AssetPointer>>* assets)
+	static void LoadPipeline(Ref<Job> job, std::string file, PipelineSpecification spec, BufferLayout layout, std::unordered_map<std::string, Ref<AssetPointer>>* assets)
 	{
 		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(file);
+		if (!asset) return;
+
 		spec.ShaderCodeCount = asset->ShaderCode.size();
 		spec.pShaderCode = asset->ShaderCode.data();
+		spec.pBufferLayout = &layout;
 
 		(*assets)[spec.DebugName] = AssetPointer::Create(Pipeline::Create(&spec), AssetType::Pipeline);
 	}
@@ -37,9 +40,8 @@ namespace Hazard
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::None;
 			specs.LineWidth = 3.0f;
-			specs.pBufferLayout = &layout;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
@@ -51,9 +53,8 @@ namespace Hazard
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
-			specs.pBufferLayout = &layout;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
@@ -65,9 +66,8 @@ namespace Hazard
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
-			specs.pBufferLayout = &layout;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, layout, &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
@@ -81,7 +81,7 @@ namespace Hazard
 			specs.DepthOperator = DepthOp::LessOrEqual;
 			specs.DepthWrite = false;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
@@ -91,7 +91,7 @@ namespace Hazard
 			specs.DebugName = "EquirectangularToCubemap";
 			specs.Usage = PipelineUsage::ComputeBit;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 		{
@@ -100,13 +100,15 @@ namespace Hazard
 			specs.DebugName = "EnvironmentIrradiance";
 			specs.Usage = PipelineUsage::ComputeBit;
 
-			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, BufferLayout(), &s_LoadedShaders);
 			jobs.push_back(job);
 		}
 
 		Ref<JobGraph> shaderJobs = Ref<JobGraph>::Create("ShaderLibrary::Init", 1);
 		shaderJobs->GetStage(0)->QueueJobs(jobs);
-		Application::Get().GetJobSystem().QueueGraph(shaderJobs);
+		auto& system = Application::Get().GetJobSystem();
+		system.QueueGraph<bool>(shaderJobs);
+
 		shaderJobs->Wait();
 
 		HZR_CORE_INFO("Shader library initialized in {0} ms", timer.ElapsedMillis());

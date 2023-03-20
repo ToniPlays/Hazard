@@ -5,21 +5,13 @@
 #include "GraphStage.h"
 #include "JobGraph.h"
 
-template<typename T>
-class JobPromise
-{
-public:
-	void Wait();
 
-private:
-		
-};
+using JobCallback = std::function<void(Ref<Job>)>;
 
 class Job : public RefCount
 {
 	friend class JobSystem;
 	friend class GraphStage;
-	using JobCallback = std::function<void(Ref<Job>)>;
 
 public:
 	Job() = delete;
@@ -33,24 +25,27 @@ public:
 	const std::string& GetName() { return m_JobName; }
 	void SetJobName(const std::string& name) { m_JobName = name; }
 
+	const std::string& GetTag() { return m_JobTag; }
+	void SetJobTag(const std::string& name) { m_JobTag = name; }
+
 	float GetExecutionTime() { return m_ExecutionTime; }
-	float WaitForUpdate() 
+	float WaitForUpdate()
 	{
 		m_Progress.wait(m_Progress);
 		return m_Progress;
 	}
 	float GetProgress() { return m_Progress; }
 
-	void Progress(float progress) 
-	{ 
-		m_Progress = progress; 
+	void Progress(float progress)
+	{
+		m_Progress = progress;
 		m_Progress.notify_all();
 	}
 
 	template<typename T>
-	T GetInput() 
-	{ 
-		if (!m_Stage) 
+	T GetInput()
+	{
+		if (!m_Stage)
 			return T();
 
 		uint32_t index = m_Stage->GetStageIndex() - 1;
@@ -60,10 +55,10 @@ public:
 
 	Ref<GraphStage> GetStage() { return m_Stage; }
 
-	Ref<JobGraph> GetJobGraph() 
-	{ 
+	Ref<JobGraph> GetJobGraph()
+	{
 		if (!m_Stage) return nullptr;
-		return m_Stage->GetGraph(); 
+		return m_Stage->GetGraph();
 	}
 
 private:
@@ -71,6 +66,7 @@ private:
 
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
+	std::string m_JobTag;
 	std::string m_JobName;
 
 	Ref<GraphStage> m_Stage = nullptr;

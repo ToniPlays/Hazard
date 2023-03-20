@@ -30,12 +30,12 @@ namespace UI
 			DrawFolderTreeView();
 			ImGui::NextColumn();
 		}
-        DrawContents();
+		DrawContents();
 		ImGui::Columns();
-        
-        
-        //if(m_Flags & AssetPanelFlags_SettingsOpen)
-        //    DrawSettings();
+
+
+		//if(m_Flags & AssetPanelFlags_SettingsOpen)
+		//    DrawSettings();
 	}
 	bool AssetPanel::OnEvent(Event& e)
 	{
@@ -99,26 +99,26 @@ namespace UI
 
 		ImGui::SameLine(size.x - 80, 0);
 		if (ImGui::Button((const char*)ICON_FK_COG " Settings", { 75.0, 28.0f }))
-        {
-            m_Flags |= AssetPanelFlags_SettingsOpen;
+		{
+			m_Flags |= AssetPanelFlags_SettingsOpen;
 		}
 		ImGui::EndChild();
 		ImUI::Separator({ size.x, 2.0f }, style.Frame.FrameColor);
 	}
-    void AssetPanel::DrawSettings()
-    {
-        ImGui::SetCursorPosX(12);
-        ImGui::BeginChild("##settingsView", { 200, 160 }, false);
+	void AssetPanel::DrawSettings()
+	{
+		ImGui::SetCursorPosX(12);
+		ImGui::BeginChild("##settingsView", { 200, 160 }, false);
 
-        ImGui::Dummy({ 0, 3 });
+		ImGui::Dummy({ 0, 3 });
 
-        ImGui::Columns(2, 0, false);
-        ImGui::SetColumnWidth(0, 160);
-        ImGui::SetColumnWidth(0, 100);
-        ImGui::Text("Some text");
-        ImGui::Columns();
-        ImGui::EndChild();
-    }
+		ImGui::Columns(2, 0, false);
+		ImGui::SetColumnWidth(0, 160);
+		ImGui::SetColumnWidth(0, 100);
+		ImGui::Text("Some text");
+		ImGui::Columns();
+		ImGui::EndChild();
+	}
 
 	void AssetPanel::DrawFolderTreeView()
 	{
@@ -139,7 +139,7 @@ namespace UI
 						DrawFolderTreeItem(folder);
 					}
 					});
-                
+
 				ImUI::ContextMenu([&]() {
 					ImUI::MenuItem("Refresh", [&]() {
 						m_FolderData = GenerateFolderStructure();
@@ -181,18 +181,18 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Info", { size.x, 28.0f });
-        ImUI::Shift(4.0f,  (28.0f - ImGui::GetTextLineHeight()) * 0.5f );
+		ImUI::Shift(4.0f, (28.0f - ImGui::GetTextLineHeight()) * 0.5f);
 		ImGui::Text("Items: %zu", m_CurrentItems.size());
-        
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(100);
-        
-        {
-            ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2 { 2.0f, 2.0 });
-            float width = ImGui::GetContentRegionAvail().x;
-            ImUI::Shift(width - 100, -4.0f);
-            ImGui::SliderFloat("##scale", &m_Scale, 80, 150);
-        }
+
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(100);
+
+		{
+			ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2{ 2.0f, 2.0 });
+			float width = ImGui::GetContentRegionAvail().x;
+			ImUI::Shift(width - 100, -4.0f);
+			ImGui::SliderFloat("##scale", &m_Scale, 80, 150);
+		}
 
 		ImGui::EndChild();
 	}
@@ -202,73 +202,73 @@ namespace UI
 		bool changed = false;
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuHeader("Folder");
-			ImUI::MenuItem("New folder", [&]() {
-				EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
-				changed = true;
-				});
-			ImUI::MenuHeader("Import");
-			ImUI::MenuItem("Import asset", [&]() {
-				OpenImport();
-				});
+		ImUI::MenuItem("New folder", [&]() {
+			EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
+		changed = true;
+			});
+		ImUI::MenuHeader("Import");
+		ImUI::MenuItem("Import asset", [&]() {
+			OpenImport();
+			});
 
-			ImUI::MenuHeader("Quick create");
-			ImUI::MenuItem("Script", [&]() {
-				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
-				panel->SetDirectory(GetOpenDirectory());
-				panel->Open();
-				});
-			ImUI::MenuItem("World", [&]() {
-                EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
-				changed = true;
-				});
-			ImUI::MenuItem("Material", [&]() {
-                EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
-                changed |= true;
-				});
+		ImUI::MenuHeader("Quick create");
+		ImUI::MenuItem("Script", [&]() {
+			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+		panel->SetDirectory(GetOpenDirectory());
+		panel->Open();
+			});
+		ImUI::MenuItem("World", [&]() {
+			EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
+		changed = true;
+			});
+		ImUI::MenuItem("Material", [&]() {
+			EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
+		changed |= true;
+			});
 
-			ImUI::MenuHeader("Advanced assets");
+		ImUI::MenuHeader("Advanced assets");
 
-			ImUI::Submenu("Animation", [&]() {
+		ImUI::Submenu("Animation", [&]() {
 
-				});
-			ImUI::Submenu("Scripts", [&]() {
-				ImUI::MenuItem("Entity script", [&]() {
-					ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
-					panel->SetDirectory(GetOpenDirectory());
-					panel->Open();
-					});
-				});
-			ImUI::Submenu("Editor", [&]() {
-
-				});
-			ImUI::Submenu("Materials and textures", [&]() {
-                
-                ImUI::MenuItem("Material", [&]() {
-                    EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
-                    changed |= true;
-                    });
-                
-                ImUI::MenuItem("Shader", [&]() {
-                    EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
-                    changed |= true;
-                    });
-				});
-			ImUI::Submenu("Physics", [&]() {
-
-				});
-			ImUI::Submenu("Sounds", [&]() {
-
-				});
-			ImUI::Submenu("User interface", [&]() {
-
-				});
-
-			ImUI::MenuHeader("Other");
-			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
-				File::OpenDirectoryInExplorer(m_CurrentPath);
+			});
+		ImUI::Submenu("Scripts", [&]() {
+			ImUI::MenuItem("Entity script", [&]() {
+				ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+		panel->SetDirectory(GetOpenDirectory());
+		panel->Open();
 				});
 			});
-        
+		ImUI::Submenu("Editor", [&]() {
+
+			});
+		ImUI::Submenu("Materials and textures", [&]() {
+
+			ImUI::MenuItem("Material", [&]() {
+				EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
+		changed |= true;
+				});
+
+		ImUI::MenuItem("Shader", [&]() {
+			EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
+		changed |= true;
+			});
+			});
+		ImUI::Submenu("Physics", [&]() {
+
+			});
+		ImUI::Submenu("Sounds", [&]() {
+
+			});
+		ImUI::Submenu("User interface", [&]() {
+
+			});
+
+		ImUI::MenuHeader("Other");
+		ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
+			File::OpenDirectoryInExplorer(m_CurrentPath);
+			});
+			});
+
 		if (!changed) return;
 
 		GenerateFolderStructure();
@@ -288,7 +288,7 @@ namespace UI
 				std::filesystem::path assetPath = File::GetPathNoExt(item);
 				if (!File::Exists(assetPath)) continue;
 				AssetHandle handle = AssetManager::GetHandleFromFile(assetPath.string());
-                
+
 				if (handle == INVALID_ASSET_HANDLE) continue;
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 
@@ -298,37 +298,37 @@ namespace UI
 
 		for (auto& dir : directories)
 			m_CurrentItems.push_back(dir);
-		
+
 		for (auto& f : files)
 			m_CurrentItems.push_back(f);
-		
-        m_Paths.clear();
-        
-        auto path = m_CurrentPath;
-        
-        while(path != m_RootPath)
-        {
-            m_Paths.push_back(path);
-            path = path.parent_path();
-        }
+
+		m_Paths.clear();
+
+		auto path = m_CurrentPath;
+
+		while (path != m_RootPath)
+		{
+			m_Paths.push_back(path);
+			path = path.parent_path();
+		}
 	}
 
 	void AssetPanel::DrawCurrentFolderPath()
 	{
 		HZR_PROFILE_FUNCTION();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-        
+
 		if (ImGui::Button((const char*)ICON_FK_FOLDER " Content", { 0, 28.0f }))
 		{
 			GoToFolderDepth(m_CurrentPath, 0);
 		}
-        for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
-        {
-            ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
-                EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
-                Refresh();
-            });
-        }
+		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+		{
+			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
+				EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
+			Refresh();
+				});
+		}
 
 		for (size_t i = m_Paths.size(); i > 0; i--) {
 
@@ -339,37 +339,37 @@ namespace UI
 
 			if (ImGui::Button(File::GetName(path).c_str(), { 0, 28.0f }))
 				GoToFolderDepth(m_CurrentPath, (uint32_t)i + 1);
-            
-            for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
-            {
-                ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
-                    EditorAssetManager::MoveAssetToFolder(handle, path);
-                    Refresh();
-                });
-            }
+
+			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+			{
+				ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
+					EditorAssetManager::MoveAssetToFolder(handle, path);
+				Refresh();
+					});
+			}
 		}
 	}
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
 		ImUI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
 			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
-            {
+			{
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();
 			}
-			for (const auto& subfolder : folder.SubFolders)
-			{
-				DrawFolderTreeItem(subfolder);
-			}
-        });
-        
-        for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
-        {
-            ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
-                EditorAssetManager::MoveAssetToFolder(handle, path);
-                Refresh();
-            });
-        }
+		for (const auto& subfolder : folder.SubFolders)
+		{
+			DrawFolderTreeItem(subfolder);
+		}
+			});
+
+		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+		{
+			ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
+				EditorAssetManager::MoveAssetToFolder(handle, path);
+			Refresh();
+				});
+		}
 	}
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
@@ -378,8 +378,7 @@ namespace UI
 		{
 		case AssetType::Image:
 		{
-			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
-			return asset->GetSourceImageAsset()->Value ? asset : EditorAssetManager::GetIcon("Default");
+			break;
 		}
 		case AssetType::Script:
 			return EditorAssetManager::GetIcon("Script");
@@ -387,11 +386,11 @@ namespace UI
 			return EditorAssetManager::GetIcon("World");
 		case AssetType::Folder:
 			return EditorAssetManager::GetIcon("Folder");
-            default:
-                return EditorAssetManager::GetIcon("Default");
-	}
+		default:
+			return EditorAssetManager::GetIcon("Default");
+		}
 		return EditorAssetManager::GetIcon("Default");
-}
+	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
 	{
@@ -403,7 +402,7 @@ namespace UI
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
 			if (!File::IsDirectory(folder)) continue;
-            
+
 			auto& data = result.emplace_back();
 			data.Path = folder;
 			data.SubFolders = GenerateSubFolderData(folder);
@@ -430,12 +429,12 @@ namespace UI
 	}
 	void AssetPanel::GoToFolderDepth(const std::filesystem::path& path, uint32_t index)
 	{
-        std::filesystem::path newPath = m_CurrentPath;
-		
-        for(uint32_t i = 0; i < index + 1; i++)
-            newPath = newPath.parent_path();
+		std::filesystem::path newPath = m_CurrentPath;
 
-        m_CurrentPath = newPath;
+		for (uint32_t i = 0; i < index + 1; i++)
+			newPath = newPath.parent_path();
+
+		m_CurrentPath = newPath;
 		RefreshFolderItems();
 	}
 }

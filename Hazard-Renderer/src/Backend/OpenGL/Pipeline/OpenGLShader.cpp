@@ -48,6 +48,8 @@ namespace HazardRenderer::OpenGL
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
 			auto write = descriptor.GetWriteDescriptor(name);
+			if (!write) continue;
+
 			if (write->ActualBinding == UINT32_MAX)
 				continue;
 
@@ -60,6 +62,8 @@ namespace HazardRenderer::OpenGL
 		for (auto& [set, descriptor] : m_DescriptorSet)
 		{
 			auto* write = descriptor.GetWriteDescriptor(name);
+			if (!write) continue;
+
 			if (write->ActualBinding == UINT32_MAX)
 				continue;
 

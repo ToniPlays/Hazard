@@ -13,7 +13,7 @@ class JobGraph : public RefCount
 public:
 	JobGraph(const std::string& name, uint32_t stageCount);
 
-	uint32_t GetStageCount() const { return m_Stages.size(); }
+	size_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	Ref<GraphStage> GetNextStage();
 
@@ -28,6 +28,12 @@ public:
 	{
 		while (!HasFinished())
 			m_CurrentStage.wait(m_CurrentStage);
+	}
+
+	template<typename T>
+	T GetResult()
+	{
+		return m_Stages[m_Stages.size() - 1]->GetResult<T>();
 	}
 
 private:

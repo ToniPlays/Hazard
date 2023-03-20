@@ -10,8 +10,10 @@
 
 namespace Hazard
 {
-	LoadType ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset, uint32_t flags)
+	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata, Ref<Asset>& asset)
 	{
+		return nullptr;
+		/*
 		using namespace HazardRenderer;
 		HZR_PROFILE_FUNCTION();
 		if (TextureFactory::CacheStatus(metadata.Handle) == CacheStatus::Exists)
@@ -62,81 +64,13 @@ namespace Hazard
 
 		header.ImageData.Release();
 		return LoadType::Source;
+		*/
 	}
-	/*Ref<JobGraph> ImageAssetLoader::LoadAsync(AssetMetadata& metadata, uint32_t flags)
-	{
-		auto loadFunc = ([path = metadata.Path, handle = metadata.Handle](JobNode& node) -> size_t {
-			using namespace HazardRenderer;
-
-			if (TextureFactory::CacheStatus(handle) == CacheStatus::Exists)
-			{
-				auto cachedPath = TextureFactory::GetCacheFile(handle);
-				CachedBuffer buffer = File::ReadBinaryFile(cachedPath);
-				buffer.Read<AssetPackElement>();
-
-				TextureAssetHeader header = buffer.Read<TextureAssetHeader>();
-				Buffer imageData = buffer.Read<Buffer>(header.Channels * header.Width * header.Height);
-
-				Image2DCreateInfo info = {};
-				info.DebugName = File::GetName(path);
-				info.Extent.Width = header.Width;
-				info.Extent.Height = header.Height;
-				info.Data = imageData;
-				info.Format = ImageFormat::RGBA;
-				info.Usage = ImageUsage::Texture;
-				info.ClearLocalBuffer = true;
-				info.GenerateMips = false;
-
-				Ref<Image2D> image = Image2D::Create(&info);
-				Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
-
-				Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
-				asset->m_Type = AssetType::Image;
-
-				node.GetGraph()->CreateBuffer<Ref<Texture2DAsset>>();
-				*node.GetGraph()->Result<Ref<Texture2DAsset>>() = std::move(asset);
-
-				return (size_t)LoadType::Cache;
-			}
-
-			TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, true);
-
-			Image2DCreateInfo info = {};
-			info.DebugName = File::GetName(path);
-			info.Extent.Width = header.Width;
-			info.Extent.Height = header.Height;
-			info.Data = header.ImageData;
-			info.Format = ImageFormat::RGBA;
-			info.Usage = ImageUsage::Texture;
-			info.ClearLocalBuffer = true;
-			info.GenerateMips = true;
-
-			Ref<Image2D> image = Image2D::Create(&info);
-			Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
-
-			Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
-			asset->m_Type = AssetType::Image;
-
-			header.ImageData.Release();
-
-			node.GetGraph()->CreateBuffer<Ref<Texture2DAsset>>();
-			*node.GetGraph()->Result<Ref<Texture2DAsset>>() = std::move(asset);
-			return (size_t)LoadType::Source;
-		});
-		
-		Ref<JobNode> job = Ref<JobNode>::Create();
-		job->DebugName = "ImageLoad " + metadata.Path.filename().string();
-		job->Callback = loadFunc;
-		
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(metadata.Path.filename().string());
-		graph->PushNode(job);
-		return graph;
-	}*/
-	bool ImageAssetLoader::Save(Ref<Asset>& asset)
+	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		return false;
+		return nullptr;
 		/*
 		Thread& thread = Application::Get().GetThreadPool().GetThread();
 		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
@@ -178,12 +112,5 @@ namespace Hazard
 
 		});
 		*/
-
-		return false;
 	}
-	/*Ref<JobGraph> ImageAssetLoader::SaveAsync(Ref<Asset>& asset)
-	{
-		HZR_CORE_ASSERT(false, "TODO");
-		return nullptr;
-	}*/
 }
