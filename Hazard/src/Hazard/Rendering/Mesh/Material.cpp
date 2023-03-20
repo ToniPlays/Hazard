@@ -7,7 +7,7 @@ namespace Hazard
 {
     Material::Material()
     {
-        SetPipeline(ShaderLibrary::GetPipeline("pbr_static"));
+        SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
     }
 
     void Material::SetPipeline(Ref<HazardRenderer::Pipeline> pipeline)

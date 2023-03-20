@@ -10,19 +10,36 @@ class GraphStage : public RefCount
 	friend class JobSystem;
 	friend class JobGraph;
 public:
-	GraphStage(float weight) : m_Weight(weight) {}
+	GraphStage(uint32_t index, float weight) : m_StageIndex(index), m_Weight(weight) {}
 
 	float GetWeight() const { return m_Weight; }
 	void SetWeight(float weight) { m_Weight = weight; }
 
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
-
 	float GetProgress();
+
+	uint32_t GetStageIndex() const { return m_StageIndex; }
 
 	Ref<JobGraph> GetGraph()
 	{
 		if (!m_JobGraph) return nullptr;
 		return m_JobGraph;
+	}
+	template<typename T>
+	T GetResult() 
+	{ 
+		if (!m_ResultBuffer.Data) 
+			return T();
+
+		return m_ResultBuffer.Read<T>(); 
+	}
+
+	template<typename T>
+	void SetResult(T result)
+	{
+		m_ResultBuffer.Release();
+		m_ResultBuffer.Allocate(sizeof(T));
+		m_ResultBuffer.Write(&result, sizeof(T));
 	}
 
 private:
@@ -35,4 +52,7 @@ private:
 
 	std::mutex m_JobMutex;
 	std::atomic_uint32_t m_JobCount;
+
+	Buffer m_ResultBuffer;
+	uint32_t m_StageIndex = 0;
 };

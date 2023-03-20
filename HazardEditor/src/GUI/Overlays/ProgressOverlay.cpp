@@ -17,6 +17,7 @@ namespace UI
 		}
 		Close();
 	}
+	/*
 	void ProgressOverlay::OnPanelRender()
 	{
 		for (auto& [type, jobs] : m_CurrentProcesses)
@@ -66,5 +67,5 @@ namespace UI
 	{
 		auto& a = m_CurrentProcesses[type];
 		a.push_back(promise);
-	}
+	}*/
 }

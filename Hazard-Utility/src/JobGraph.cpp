@@ -7,7 +7,7 @@ JobGraph::JobGraph(const std::string& name, uint32_t count) : m_Name(name)
 	m_Stages.resize(count);
 	for (uint32_t i = 0; i < count; i++)
 	{
-		m_Stages[i] = Ref<GraphStage>::Create(1.0f / (float)count);
+		m_Stages[i] = Ref<GraphStage>::Create(i, 1.0f / (float)count);
 		m_Stages[i]->m_JobGraph = this;
 	}
 }
@@ -35,12 +35,13 @@ float JobGraph::GetProgress()
 
 void JobGraph::OnStageFinished()
 {
+	std::cout << m_Name << " stage finished " << std::endl;
 	Ref<GraphStage> next = GetNextStage();
-	if (!next) 
-		return;
-
 	m_CurrentStage++;
 	m_CurrentStage.notify_all();
+
+	if (!next) 
+		return;
 
 	m_JobSystem->QueueJobs(next->m_Jobs);
 }

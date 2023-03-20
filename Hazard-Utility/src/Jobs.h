@@ -22,13 +22,20 @@ class Job : public RefCount
 	using JobCallback = std::function<void(Ref<Job>)>;
 
 public:
-	Job(JobCallback&& callback) : m_JobCallback(callback) {}
+	Job() = delete;
+
+	template<typename Fn, typename... Args>
+	Job(Fn&& callback, Args&&... args)
+	{
+		m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
+	}
 
 	const std::string& GetName() { return m_JobName; }
 	void SetJobName(const std::string& name) { m_JobName = name; }
 
 	float GetExecutionTime() { return m_ExecutionTime; }
-	float WaitForUpdate() {
+	float WaitForUpdate() 
+	{
 		m_Progress.wait(m_Progress);
 		return m_Progress;
 	}
@@ -39,6 +46,19 @@ public:
 		m_Progress = progress; 
 		m_Progress.notify_all();
 	}
+
+	template<typename T>
+	T GetInput() 
+	{ 
+		if (!m_Stage) 
+			return T();
+
+		uint32_t index = m_Stage->GetStageIndex() - 1;
+		Ref<GraphStage> stage = m_Stage->GetGraph()->GetStage(index);
+		return stage->GetResult<T>();
+	}
+
+	Ref<GraphStage> GetStage() { return m_Stage; }
 
 	Ref<JobGraph> GetJobGraph() 
 	{ 

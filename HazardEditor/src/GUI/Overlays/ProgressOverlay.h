@@ -13,14 +13,14 @@ namespace UI
 		~ProgressOverlay() = default;
 		void Update() override;
 		bool OnEvent(Event& e) override { return false; };
-		void OnPanelRender() override;
+		void OnPanelRender() override {};
 
-		bool DrawProgressCard(const char* title, std::vector<JobPromise>& promises);
+		//bool DrawProgressCard(const char* title, std::vector<JobGraph>& promises);
 
-		void AddProcesses(const std::string& type, const std::vector<JobPromise>& promises);
-		void AddProcess(const std::string& type, const JobPromise& promise);
+		//void AddProcesses(const std::string& type, const std::vector<JobGraph>& promises);
+		//void AddProcess(const std::string& type, const JobGraph& promise);
 
 	private:
-		std::unordered_map<std::string, std::vector<JobPromise>> m_CurrentProcesses;
+		std::unordered_map<std::string, std::vector<JobGraph>> m_CurrentProcesses;
 	};
 }

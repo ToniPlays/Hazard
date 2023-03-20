@@ -11,140 +11,103 @@
 
 namespace Hazard
 {
+	using namespace HazardRenderer;
+
+	static void LoadPipeline(Ref<Job> job, std::string file, PipelineSpecification spec, std::unordered_map<std::string, Ref<AssetPointer>>* assets)
+	{
+		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(file);
+		spec.ShaderCodeCount = asset->ShaderCode.size();
+		spec.pShaderCode = asset->ShaderCode.data();
+
+		(*assets)[spec.DebugName] = AssetPointer::Create(Pipeline::Create(&spec), AssetType::Pipeline);
+	}
+
 	void ShaderLibrary::Init()
 	{
 		Timer timer;
-
-		using namespace HazardRenderer;
-		/*std::vector<JobPromise> promises;
-		//Line shader
+		
+		std::vector<Ref<Job>> jobs;
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Debug/lineShader.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
+			BufferLayout layout = LineVertex::Layout();
+			std::string file = "res/Shaders/Debug/lineShader.glsl";
 
-				BufferLayout layout = LineVertex::Layout();
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			PipelineSpecification specs = {};
+			specs.DebugName = "LineShader";
+			specs.DrawType = DrawType::Line;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::None;
+			specs.LineWidth = 3.0f;
+			specs.pBufferLayout = &layout;
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "LineShader";
-				specs.DrawType = DrawType::Line;
-				specs.Usage = PipelineUsage::GraphicsBit;
-				specs.CullMode = CullMode::None;
-				specs.LineWidth = 3.0f;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
-				specs.pBufferLayout = &layout;
-
-				s_LoadedShaders["lineShader"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		//Quad shader
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/2D/standard.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
-				BufferLayout layout = QuadVertex::Layout();
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			BufferLayout layout = QuadVertex::Layout();
+			std::string file = "res/Shaders/2D/standard.glsl";
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "QuadPipeline";
-				specs.DrawType = DrawType::Fill;
-				specs.Usage = PipelineUsage::GraphicsBit;
-				specs.CullMode = CullMode::BackFace;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
-				specs.pBufferLayout = &layout;
+			PipelineSpecification specs = {};
+			specs.DebugName = "QuadPipeline";
+			specs.DrawType = DrawType::Fill;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::BackFace;
+			specs.pBufferLayout = &layout;
 
-				s_LoadedShaders["standard"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		//PBR shader
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/pbr_static.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
+			BufferLayout layout = Vertex3D::Layout();
+			std::string file = "res/Shaders/pbr_static.glsl";
 
-				BufferLayout layout = Vertex3D::Layout();
-                
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			PipelineSpecification specs = {};
+			specs.DebugName = "PBR_Static";
+			specs.DrawType = DrawType::Fill;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::BackFace;
+			specs.pBufferLayout = &layout;
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "PBR_Static";
-				specs.DrawType = DrawType::Fill;
-				specs.Usage = PipelineUsage::GraphicsBit;
-				specs.CullMode = CullMode::BackFace;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
-				specs.pBufferLayout = &layout;
-
-				s_LoadedShaders["pbr_static"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		//Skybox
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/skybox.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			std::string file = "res/Shaders/skybox.glsl";
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "Skybox";
-				specs.DrawType = DrawType::Fill;
-				specs.Usage = PipelineUsage::GraphicsBit;
-				specs.CullMode = CullMode::None;
-				specs.DepthOperator = DepthOp::LessOrEqual;
-				specs.DepthWrite = false;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
+			PipelineSpecification specs = {};
+			specs.DebugName = "Skybox";
+			specs.DrawType = DrawType::Fill;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::None;
+			specs.DepthOperator = DepthOp::LessOrEqual;
+			specs.DepthWrite = false;
 
-				s_LoadedShaders["skybox"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		//Compute shaders
-		//EquirectangularToCubemap
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubeMap.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
-				
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			std::string file = "res/Shaders/Compute/EquirectangularToCubeMap.glsl";
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "EquirectangularToCubemap";
-				specs.Usage = PipelineUsage::ComputeBit;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
+			PipelineSpecification specs = {};
+			specs.DebugName = "EquirectangularToCubemap";
+			specs.Usage = PipelineUsage::ComputeBit;
 
-				s_LoadedShaders["EquirectangularToCubeMap"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
-
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		//Environment irradiance
 		{
-			auto promise = AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl");
-			auto waitPromise = promise.Then([](JobGraph& graph) -> size_t {
-				Ref<ShaderAsset> asset = *graph.DependencyResult<Ref<ShaderAsset>>();
+			std::string file = "res/Shaders/Compute/EnvironmentIrradiance.glsl";
+			PipelineSpecification specs = {};
+			specs.DebugName = "EnvironmentIrradiance";
+			specs.Usage = PipelineUsage::ComputeBit;
 
-				PipelineSpecification specs = {};
-				specs.DebugName = "EnvironmentIrradiance";
-				specs.Usage = PipelineUsage::ComputeBit;
-				specs.ShaderCodeCount = asset->ShaderCode.size();
-				specs.pShaderCode = asset->ShaderCode.data();
-
-				s_LoadedShaders["EnvironmentIrradiance"] = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-				return 0;
-				});
-			promises.push_back(waitPromise);
+			Ref<Job> job = Ref<Job>::Create(LoadPipeline, file, specs, &s_LoadedShaders);
+			jobs.push_back(job);
 		}
-		for (auto& promise : promises)
-			promise.Wait();
-		*/
+
+		Ref<JobGraph> shaderJobs = Ref<JobGraph>::Create("ShaderLibrary::Init", 1);
+		shaderJobs->GetStage(0)->QueueJobs(jobs);
+		Application::Get().GetJobSystem().QueueGraph(shaderJobs);
+		shaderJobs->Wait();
 
 		HZR_CORE_INFO("Shader library initialized in {0} ms", timer.ElapsedMillis());
 	}

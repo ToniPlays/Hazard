@@ -110,9 +110,9 @@ namespace Hazard
                 TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
                 
 
-				PbrPipeline = ShaderLibrary::GetPipeline("pbr_static");
+				PbrPipeline = ShaderLibrary::GetPipeline("PBR_Static");
 				PbrPipeline->SetRenderPass(renderPass);
-				SkyboxPipeline = ShaderLibrary::GetPipeline("skybox");
+				SkyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
 				SkyboxPipeline->SetRenderPass(renderPass);
 
                 auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();

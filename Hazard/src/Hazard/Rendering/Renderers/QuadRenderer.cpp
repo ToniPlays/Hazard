@@ -191,7 +191,7 @@ namespace Hazard
 			hdelete[] indices;
 		}
         
-        m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("standard"));
+        m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadPipeline"));
 		m_RenderPass = renderPass;
 	}
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)

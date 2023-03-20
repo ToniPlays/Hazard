@@ -11,8 +11,9 @@ namespace JobSystemTest
 {
 	static void AssetLoad(Ref<Job> job)
 	{
-		Random random;
-		uint32_t count = 35;
+		int result = job->GetInput<int>();
+
+		uint32_t count = result;
 		for (uint32_t i = 0; i < count; i++)
 		{
 			job->Progress((float)i / (float)count);
@@ -23,15 +24,16 @@ namespace JobSystemTest
 		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
 	}
 
-	static void WorldLoad(Ref<Job> job)
+	static void WorldLoad(Ref<Job> job, int num)
 	{
-		Random random;
-		uint32_t count = 100;
+		uint32_t count = num;
 		for (uint32_t i = 0; i < count; i++)
 		{
 			job->Progress((float)i / (float)count);
-			std::this_thread::sleep_for(25ms);
+			std::this_thread::sleep_for(2ms);
 		}
+
+		job->GetStage()->SetResult(50);
 
 		//Initialize next stage jobs
 		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
@@ -65,7 +67,8 @@ namespace JobSystemTest
 #endif
 		JobSystem jobSystem;
 
-		Ref<Job> loadingJob = Ref<Job>::Create(WorldLoad);
+		Ref<Job> loadingJob = new Job(WorldLoad, 500);
+
 		loadingJob->SetJobName("World loading");
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World loader", 2);

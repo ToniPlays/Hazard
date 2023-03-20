@@ -342,10 +342,10 @@ namespace UI
 		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
 		ImGui::NextColumn();
 
-		ImGui::Text("Active jobs");
+		/*ImGui::Text("Active jobs");
 		ImGui::NextColumn();
 		ImGui::Text("%zu", Application::Get().GetJobSystem().GetJobCount());
-		ImGui::NextColumn();
+		ImGui::NextColumn();*/
 
 		const char* shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };
 

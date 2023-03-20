@@ -42,9 +42,12 @@ void EditorAssetManager::Init()
         { "Cube", "res/Mesh/cube.obj"     },
         { "Sphere", "res/Mesh/sphere.obj" }
     };
-    
+
+    /*
 	std::vector<JobPromise> promises;
 	promises.reserve(texturesToLoad.size());
+	*/
+
 	for (auto& texture : texturesToLoad)
 	{
 #if 0
@@ -63,9 +66,6 @@ void EditorAssetManager::Init()
     for(auto& mesh : meshesToLoad)
         s_DefaultMesh[mesh.Key] = AssetManager::GetAsset<Mesh>(mesh.Path);
     
-	for (auto& promise : promises)
-		promise.Wait();
-
 	RefreshEditorAssets();
 }
 
@@ -126,7 +126,6 @@ bool EditorAssetManager::CreateAsset(const AssetType& type, const std::filesyste
             camera.AddComponent<CameraComponent>();
             
             world->CreateEntity("Cube").AddComponent<MeshComponent>();
-            //auto mesh = GetDefaultMesh("Cube");
             
             metadata.Handle = AssetManager::NewAsset(world);
             AssetManager::ImportAsset(path, metadata);
@@ -288,21 +287,6 @@ void EditorAssetManager::RefreshEditorAssets(bool force)
 		{
 		case AssetType::Shader:
 		{
-			using namespace HazardRenderer;
-			
-			auto cacheDir = ShaderCompiler::GetCachedFilePath(file, RenderAPI::OpenGL);
-
-			if (File::IsNewerThan(file, cacheDir) || force)
-			{
-				JobPromise promise = AssetManager::GetAssetAsync<Asset>(file, force ? AssetManagerFlags_ForceSource | AssetManagerFlags_ForceReload : 0);
-				promise.Then([progressPanel](JobGraph& graph) -> size_t {
-					Ref<Asset> asset = *graph.DependencyResult<Ref<Asset>>();
-					JobPromise savePromise = AssetManager::SaveAssetAsync(asset);
-					progressPanel->AddProcess("Caching shader", savePromise);
-					return 0;
-					});
-				progressPanel->AddProcess("Loading shader", promise);
-			}
 			break;
 		}
 		default:

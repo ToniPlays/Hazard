@@ -43,7 +43,7 @@ namespace Hazard
 		radianceInfo.Height = m_Resolution;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
-		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubeMap");
+		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
         //Prepare shader
         {
             auto shader = computePipeline->GetShader();

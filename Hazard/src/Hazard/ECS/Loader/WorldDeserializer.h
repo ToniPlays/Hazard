@@ -83,7 +83,7 @@ namespace Hazard
 
 			auto& c = entity.AddComponentWithCallback<ScriptComponent>([&](ScriptComponent& c) {
 				c.ModuleName = moduleName;
-				c.Active = active;
+			c.Active = active;
 				});
 
 			if (!comp["Fields"] || !c.m_Handle)
@@ -107,37 +107,15 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
 
 			if (handle == INVALID_ASSET_HANDLE) return;
-			/*
-			if (m_CanAsync && false)
-			{
-				JobPromise promise = AssetManager::GetAssetAsync<Texture2DAsset>(handle);
-				promise.Then([e = entity](JobGraph& graph) -> size_t {
-					HZR_CORE_ASSERT(false, "TODO");
-					Entity entity = { e };
-					Ref<Texture2DAsset> asset = *graph.Result<Ref<Texture2DAsset>>();
-                    
-                    EnvironmentMapCreateInfo info = {};
-                    info.SourceImage = asset;
-                    info.Resolution = 2048;
-                    info.Samples = 2048;
-                    
-					entity.GetComponent<SkyLightComponent>().EnvironmentMap = EnvironmentMap::Create(&info);
-					return 0;
-					});
-				m_Promises.push_back({ AssetType::Image, promise });
-			}
-			else
-			*/
-			{
-                Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-                
-                EnvironmentMapCreateInfo info = {};
-                info.SourceImage = sourceImage;
-                info.Resolution = 2048;
-                info.Samples = 2048;
-                
-				c.EnvironmentMap = EnvironmentMap::Create(&info);
-			}
+
+			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
+
+			EnvironmentMapCreateInfo info = {};
+			info.SourceImage = sourceImage;
+			info.Resolution = 2048;
+			info.Samples = 2048;
+
+			c.EnvironmentMap = EnvironmentMap::Create(&info);
 		}
 
 		template<>
@@ -166,12 +144,12 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);
 
 			if (handle != INVALID_ASSET_HANDLE)
-                c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
+				c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
 
-            YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
-            
-            if(handle != INVALID_ASSET_HANDLE)
-                c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
+
+			if (handle != INVALID_ASSET_HANDLE)
+				c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
