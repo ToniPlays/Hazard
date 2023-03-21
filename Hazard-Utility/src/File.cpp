@@ -245,7 +245,7 @@ std::string File::GetNameNoExt(const std::filesystem::path& file)
 	std::string name = GetName(file);
 	return name.substr(0, name.find_last_of('.'));
 }
-std::string File::GetPathNoExt(const std::filesystem::path& file)
+std::filesystem::path File::GetPathNoExt(const std::filesystem::path& file)
 {
 	return file.string().substr(0, file.string().find_last_of('.'));
 }

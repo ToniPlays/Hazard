@@ -76,8 +76,8 @@ void HazardEditorApplication::PreInit()
 	renderContextInfo.Renderer = renderAPI;
 	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI) + " | " + GetBuildType();
-	renderContextInfo.Width = 1280;
-    renderContextInfo.Height = 720;
+	renderContextInfo.Width = 1920;
+    renderContextInfo.Height = 1080;
 
 	RendererCreateInfo rendererInfo = {};
 

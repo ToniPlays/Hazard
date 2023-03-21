@@ -2,6 +2,7 @@
 
 #include "AssetTools/ScriptCreatePanel.h"
 #include "AssetTools/MaterialEditor.h"
+#include "AssetTools/AssetImporterPanel.h"
 
 #include "Debug/RenderCommandListPanel.h"
 #include "Debug/RendererDebugPanel.h"

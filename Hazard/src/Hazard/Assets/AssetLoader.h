@@ -12,8 +12,8 @@ namespace Hazard
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		JobPromise<Ref<Asset>> Load(AssetMetadata& metadata, bool synchronous = false);
-		JobPromise<bool> Save(Ref<Asset>& asset);
+		Ref<JobGraph> Load(AssetMetadata& metadata);
+		Ref<JobGraph> Save(Ref<Asset>& asset);
 
 	private:
 		std::unordered_map<AssetType, Scope<IAssetLoader>> m_Loaders;

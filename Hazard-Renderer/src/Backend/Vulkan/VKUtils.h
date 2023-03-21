@@ -169,6 +169,28 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_IMAGE_LAYOUT_MAX_ENUM;
 	}
+	static VkFilter GetVulkanFilter(const FilterMode& mode)
+	{
+		switch (mode)
+		{
+		case FilterMode::Nearest:		return VK_FILTER_NEAREST;
+		case FilterMode::NearestMip:	return VK_FILTER_NEAREST;
+		case FilterMode::Linear:		return VK_FILTER_LINEAR;
+		case FilterMode::LinearMip:		return VK_FILTER_LINEAR;
+		}
+		return VK_FILTER_MAX_ENUM;
+	}
+	static VkSamplerMipmapMode GetVulkanMipmapMode(const FilterMode& mode)
+	{
+		switch (mode)
+		{
+		case FilterMode::Nearest:		return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		case FilterMode::NearestMip:	return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		case FilterMode::Linear:		return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		case FilterMode::LinearMip:		return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		}
+		return VK_SAMPLER_MIPMAP_MODE_MAX_ENUM;
+	}
 	static VkAccessFlags GetVulkanAccess(const ImageLayout& layout)
 	{
 		switch (layout)

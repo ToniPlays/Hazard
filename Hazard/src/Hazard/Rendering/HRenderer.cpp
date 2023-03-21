@@ -23,7 +23,7 @@ namespace Hazard
 		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
-		SubmitQuad(tMatrix, color, spriteRenderer.Texture, id);
+		SubmitQuad(tMatrix, color, AssetManager::GetAsset<Texture2DAsset>(spriteRenderer.Texture), id);
 	}
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, int id)
 	{
@@ -47,13 +47,18 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
+
 		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
-        Ref<Material> material = meshComponent.m_MaterialHandle;
-		if (!mesh || !material) return;
+		if (!mesh) return;
         if (!mesh->IsValid()) return;
+
+        Ref<Material> material = meshComponent.m_MaterialHandle;
+		if (!material)
+			material = s_Engine->GetResources().PBRMaterial;
+
         
 		//Fix
-        Ref<Pipeline> pipeline = meshComponent.m_MaterialHandle ? meshComponent.m_MaterialHandle->GetPipeline() : s_Engine->GetResources().PbrPipeline;
+        Ref<Pipeline> pipeline = material->GetPipeline();
 
         auto& drawList = s_Engine->GetDrawList();
         

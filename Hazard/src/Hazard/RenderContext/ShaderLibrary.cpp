@@ -21,9 +21,8 @@ namespace Hazard
 		spec.pShaderCode = asset->ShaderCode.data();
 		spec.pBufferLayout = &layout;
 
-
 		(*assets)[spec.DebugName] = AssetPointer::Create(Pipeline::Create(&spec), AssetType::Pipeline);
-		HZR_CORE_INFO("Pipeline loaded {}", spec.DebugName);
+		HZR_CORE_WARN("Pipeline loaded {}", spec.DebugName);
 	}
 
 	void ShaderLibrary::Init()
@@ -33,10 +32,9 @@ namespace Hazard
 		std::vector<Ref<Job>> jobs;
 		{
 			BufferLayout layout = LineVertex::Layout();
-			std::string file = "LineShader";
 
 			PipelineSpecification specs = {};
-			specs.DebugName = "LineShader";
+			specs.DebugName = "LineShader.glsl";
 			specs.DrawType = DrawType::Line;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::None;
@@ -49,7 +47,7 @@ namespace Hazard
 			BufferLayout layout = QuadVertex::Layout();
 
 			PipelineSpecification specs = {};
-			specs.DebugName = "QuadShader";
+			specs.DebugName = "QuadShader.glsl";
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
@@ -61,7 +59,7 @@ namespace Hazard
 			BufferLayout layout = Vertex3D::Layout();
 
 			PipelineSpecification specs = {};
-			specs.DebugName = "PBR_Static";
+			specs.DebugName = "PBR_Static.glsl";
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::BackFace;
@@ -71,7 +69,7 @@ namespace Hazard
 		}
 		{
 			PipelineSpecification specs = {};
-			specs.DebugName = "Skybox";
+			specs.DebugName = "Skybox.glsl";
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.CullMode = CullMode::None;
@@ -82,9 +80,8 @@ namespace Hazard
 			jobs.push_back(job);
 		}
 		{
-
 			PipelineSpecification specs = {};
-			specs.DebugName = "EquirectangularToCubeMap";
+			specs.DebugName = "EquirectangularToCubemap.glsl";
 			specs.Usage = PipelineUsage::ComputeBit;
 
 			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, BufferLayout(), &s_LoadedShaders);
@@ -92,7 +89,7 @@ namespace Hazard
 		}
 		{
 			PipelineSpecification specs = {};
-			specs.DebugName = "EnvironmentIrradiance";
+			specs.DebugName = "EnvironmentIrradiance.glsl";
 			specs.Usage = PipelineUsage::ComputeBit;
 
 			Ref<Job> job = Ref<Job>::Create(LoadPipeline, specs, BufferLayout(), &s_LoadedShaders);
@@ -110,7 +107,7 @@ namespace Hazard
 	}
 	Ref<HazardRenderer::Pipeline> ShaderLibrary::GetPipeline(const std::string& name)
 	{
-		return GetPipelinePtr(name)->Value.As<HazardRenderer::Pipeline>();
+		return GetPipelinePtr(name + ".glsl")->Value.As<HazardRenderer::Pipeline>();
 	}
 	Ref<AssetPointer> ShaderLibrary::GetPipelinePtr(const std::string& name)
 	{

@@ -3,6 +3,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
 #include "Backend/Core/Texture/Texture.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/RenderContext/ShaderLibrary.h"
 
@@ -17,7 +18,7 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
-		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
+		BRDFLut = Application::GetModule<RenderEngine>().GetResources().WhiteTexture;// AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
     void EnvironmentMap::Update(uint32_t samples)
     {

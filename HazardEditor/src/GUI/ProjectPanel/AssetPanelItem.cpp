@@ -9,6 +9,7 @@
 #include "AssetPanel.h"
 
 #include "GUI/AssetTools/MaterialEditor.h"
+#include "GUI/AssetTools/AssetImporterPanel.h"
 
 #include "imgui_internal.h"
 
@@ -75,14 +76,14 @@ namespace UI
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
 		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
-        
+
         if(GetType() == AssetType::Folder)
         {
             for(uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
             {
                 ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
                     AssetMetadata data = AssetManager::GetMetadata(m_Handle);
-                    EditorAssetManager::MoveAssetToFolder(handle, data.Key);
+                    //EditorAssetManager::MoveAssetToFolder(handle, data.Key);
                     Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
                 });
             }
@@ -152,8 +153,15 @@ namespace UI
         {
             OnItemClicked();
         }
-        
+		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
+		{
+			//Open import settings
+			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+			panel->OpenExisting(m_Handle);
+		}
+       
 		ImGui::PopStyleVar();
+
 	}
 	void AssetPanelItem::EndRender()
 	{
@@ -203,7 +211,7 @@ namespace UI
 			return;
 		HZR_INFO("Renaming to {0}", newName);
 
-		EditorAssetManager::RenameAsset(newName, m_Handle);
+		//EditorAssetManager::RenameAsset(newName, m_Handle);
         
         Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}

@@ -56,7 +56,7 @@ public:
 	static std::filesystem::path GetDirectoryOf(const std::filesystem::path& file);
 	static std::string GetName(const std::filesystem::path& file);
 	static std::string GetNameNoExt(const std::filesystem::path& file);
-	static std::string GetPathNoExt(const std::filesystem::path& file);
+	static std::filesystem::path GetPathNoExt(const std::filesystem::path& file);
 	static std::string GetFileExtension(const std::filesystem::path& file);
 
 	static std::vector<std::filesystem::path> GetAllInDirectory(const std::filesystem::path& path, bool recursive = false);

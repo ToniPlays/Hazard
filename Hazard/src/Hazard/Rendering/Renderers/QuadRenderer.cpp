@@ -68,7 +68,7 @@ namespace Hazard
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 
-		//HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount());
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -190,8 +190,9 @@ namespace Hazard
 
 			hdelete[] indices;
 		}
-        
-        m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadShader"));
+		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("QuadShader");
+		pipeline->SetRenderPass(renderPass);
+        m_Material = Ref<Material>::Create(pipeline);
 		m_RenderPass = renderPass;
 	}
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)

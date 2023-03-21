@@ -24,11 +24,6 @@ namespace Hazard
 	{
 		m_MeshFlags = flags;
 	}
-	std::filesystem::path MeshFactory::GetCacheFile(const AssetHandle& handle)
-	{
-		return s_CacheDirectory / (std::to_string(handle) + ".hzrche");
-	}
-
 	uint32_t MeshFactory::GetColorChannel(const aiMesh* mesh)
 	{
 		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++)
@@ -41,6 +36,17 @@ namespace Hazard
 
 	size_t MeshFactory::GetMeshDataSize(const MeshData& data)
 	{
+		uint32_t vertexSize = GetVertexSize(data);
+
+		size_t size = 0;
+		size += data.Vertices.size() * vertexSize;
+		size += data.Indices.size() * sizeof(uint32_t);
+
+		return size;
+	}
+
+	size_t MeshFactory::GetVertexSize(const MeshData& data)
+	{
 		uint32_t vertexSize = 0;
 		vertexSize += data.Flags & MeshFlags_Positions ? sizeof(glm::vec3) : 0;
 		vertexSize += data.Flags & MeshFlags_VertexColors ? sizeof(glm::vec4) : 0;
@@ -49,11 +55,7 @@ namespace Hazard
 		vertexSize += data.Flags & MeshFlags_Binormal ? sizeof(glm::vec3) : 0;
 		vertexSize += data.Flags & MeshFlags_TextCoord ? sizeof(glm::vec2) : 0;
 
-		size_t size = 0;
-		size += data.Vertices.size() * vertexSize;
-		size += data.Indices.size() * sizeof(uint32_t);
-
-		return size;
+		return vertexSize;
 	}
 
 	MeshData MeshFactory::LoadMeshFromSource(const std::filesystem::path& file)
@@ -85,87 +87,7 @@ namespace Hazard
 
 		return data;
 	}
-	/*Ref<JobGraph> MeshFactory::LoadMeshFromSourceAsync(const std::filesystem::path& file)
-	{
-		HZR_CORE_ASSERT(File::Exists(file), "File does not exist");
-		Ref<MeshFactory> instance = this;
 
-		Ref<JobNode> loadingJob = Ref<JobNode>::Create();
-
-		loadingJob->DebugName = file.filename().string();
-		loadingJob->Weight = 0.1f;
-		loadingJob->Callback = ([instance, file](JobNode& node) mutable -> size_t {
-
-			Timer timer;
-			node.GetGraph()->CreateBuffer<MeshData>();
-
-			if (instance->m_Handler)
-			{
-				MeshFactoryProgressHandler* handler = new MeshFactoryProgressHandler((MeshFactory*)instance.Raw());
-				instance->m_Importer.SetProgressHandler(handler);
-			}
-
-			const aiScene* scene = instance->m_Importer.ReadFile(File::GetFileAbsolutePath(file).string(), (uint32_t)instance->m_MeshFlags);
-			if (!scene || !scene->HasMeshes())
-				return -1;
-
-			HZR_CORE_INFO("Assimp file loaded in {0} ms (Mesh count {1})", timer.ElapsedMillis(), scene->mNumMeshes);
-			
-			auto graph = node.GetGraph();
-			float jobWeight = 1.0f / (float)scene->mNumMeshes;
-
-			for (size_t submesh = 0; submesh < scene->mNumMeshes; submesh++)
-			{
-				const aiMesh* mesh = scene->mMeshes[submesh];
-
-				Ref<JobNode> processingNode = Ref<JobNode>::Create();
-				processingNode->DebugName = mesh->mName.C_Str();
-				processingNode->Weight = jobWeight;
-				processingNode->Callback = ([submesh, scene, instance](JobNode& node) mutable -> size_t {
-
-					Timer timer;
-					MeshData& data = *node.GetGraph()->Result<MeshData>();
-
-					aiMesh* aiMesh = scene->mMeshes[submesh];
-					instance->ProcessMesh(aiMesh, scene, data);
-					return 0;
-					});
-				graph->PushNode(processingNode);
-			}
-
-			Ref<JobNode> conversionNode = Ref<JobNode>::Create();
-			conversionNode->DebugName = file.string() + " conversion";
-			conversionNode->Callback = ([](JobNode& node) -> size_t {
-				auto graph = node.GetGraph();
-				MeshData meshData = std::move(*graph->Result<MeshData>());
-
-				MeshCreateInfo meshInfo = {};
-				meshInfo.BoundingBox = meshData.BoundingBox;
-				meshInfo.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
-				meshInfo.pVertices = meshData.Vertices.data();
-				meshInfo.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
-				meshInfo.pIndices = meshData.Indices.data();
-
-				hdelete graph->Result<MeshData>();
-				graph->CreateBuffer<Ref<Mesh>>();
-				*graph->Result<Ref<Mesh>>() = Ref<Mesh>::Create(&meshInfo);
-				return 0;
-				});
-
-			graph->Then(conversionNode);
-
-			return 0;
-			});
-
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(file.filename().string());
-		graph->PushNode(loadingJob);
-
-		return graph;
-	}*/
-	CacheStatus MeshFactory::CacheStatus(const AssetHandle& handle)
-	{
-		return File::Exists(GetCacheFile(handle)) ? CacheStatus::Exists : CacheStatus::None;
-	}
 	void MeshFactory::ProcessNode(aiNode* node, const aiScene* scene, MeshData& data)
 	{
 		for (uint32_t i = 0; i < node->mNumMeshes; i++)
@@ -179,7 +101,6 @@ namespace Hazard
 
 	void MeshFactory::ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data)
 	{
-		std::scoped_lock<std::mutex> lock(m_Mutex);
 		SubMesh& subMesh = data.SubMeshes.emplace_back();
 
 		subMesh.BaseVertex = data.VertexIndex;
@@ -216,7 +137,7 @@ namespace Hazard
 			vertex.Position.x = mesh->mVertices[i].x;
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
-			vertex.Position = m_ScaleMatrix * glm::vec4(vertex.Position, 1.0);
+			vertex.Position = glm::vec4(vertex.Position, 1.0);
 
 			data.BoundingBox.Encapsulate(vertex.Position);
 

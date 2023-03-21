@@ -41,15 +41,6 @@ public:
 
 	static void Init();
 	static void LoadEditorAssets();
-
-	//TODO: Deprecate these
-	static Hazard::AssetMetadata ImportFromMetadata(const std::filesystem::path& path);
-	static bool CreateFolder(const std::filesystem::path& path);
-	static bool CreateScriptAsset(const ScriptCreateInfo& info);
-	static bool CreateAsset(const AssetType& type, const std::filesystem::path& path);
-	static bool CreateMetadataFile(const Hazard::AssetMetadata& metadata, const std::filesystem::path& path);
-	static bool RenameAsset(const std::string& newName, AssetHandle handle);
-    static bool MoveAssetToFolder(const AssetHandle& handle, const std::filesystem::path& path);
     
 	//---------------------
 	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
@@ -57,7 +48,7 @@ public:
 
 private:
 	static void ImportEngineAssets();
-	static CachedBuffer GenerateAssetPack(const std::filesystem::path& path);
+	static CachedBuffer GenerateEngineAssetPack(const std::filesystem::path& path);
 	static void GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path);
 
 private:

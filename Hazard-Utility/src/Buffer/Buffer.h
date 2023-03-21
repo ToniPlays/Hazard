@@ -75,6 +75,7 @@ struct Buffer
 	operator bool() const { return Data; }
 	uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }
 	uint8_t operator[](int index) const { return ((uint8_t*)Data)[index]; }
+
 	template<typename T>
 	T* As() { return (T*)Data; }
 	inline size_t GetSize() { return Size; }
@@ -92,13 +93,15 @@ struct Buffer
 	}
 
 	template<typename T>
-	static T Get(void* data, size_t startIndex = 0) {
+	static T Get(void* data, size_t startIndex = 0) 
+	{
 		T value = {};
 		memcpy(&value, (uint8_t*)data + startIndex, sizeof(T));
 		return value;
 	}
 	template<typename T>
-	static T GetRaw(void* data, size_t len, size_t startIndex = 0) {
+	static T GetRaw(void* data, size_t len, size_t startIndex = 0) 
+	{
 		T value = {};
 		memcpy(&value, data, len);
 		return value;

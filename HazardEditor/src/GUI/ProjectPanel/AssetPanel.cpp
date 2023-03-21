@@ -51,15 +51,10 @@ namespace UI
 	void AssetPanel::OpenImport()
 	{
 		std::filesystem::path file = File::OpenFileDialog();
-		if (!file.empty()) {
-			File::Copy(file, m_CurrentPath / File::GetName(file), CopyOptions::UpdateExisting);
-
-			AssetMetadata metadata = {};
-			metadata.Handle = AssetHandle();
-			metadata.Key = (m_CurrentPath / File::GetName(file)).string();
-			metadata.Type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(file));
-			EditorAssetManager::CreateMetadataFile(metadata, m_CurrentPath / File::GetName(file));
-			RefreshFolderItems();
+		if (!file.empty())
+		{
+			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+			panel->Open(file);
 		}
 	}
 	void AssetPanel::DrawToolbar()
@@ -200,11 +195,12 @@ namespace UI
 	void AssetPanel::DrawContextMenu()
 	{
 		bool changed = false;
+
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuHeader("Folder");
 		ImUI::MenuItem("New folder", [&]() {
-			EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
-		changed = true;
+			//EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
+			changed = true;
 			});
 		ImUI::MenuHeader("Import");
 		ImUI::MenuItem("Import asset", [&]() {
@@ -218,12 +214,12 @@ namespace UI
 		panel->Open();
 			});
 		ImUI::MenuItem("World", [&]() {
-			EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
-		changed = true;
+			//EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
+			changed = true;
 			});
 		ImUI::MenuItem("Material", [&]() {
-			EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
-		changed |= true;
+			//EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
+			changed |= true;
 			});
 
 		ImUI::MenuHeader("Advanced assets");
@@ -244,13 +240,13 @@ namespace UI
 		ImUI::Submenu("Materials and textures", [&]() {
 
 			ImUI::MenuItem("Material", [&]() {
-				EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
-		changed |= true;
+				//EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
+				changed |= true;
 				});
 
 		ImUI::MenuItem("Shader", [&]() {
-			EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
-		changed |= true;
+			//EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
+			changed |= true;
 			});
 			});
 		ImUI::Submenu("Physics", [&]() {
@@ -283,18 +279,16 @@ namespace UI
 		m_CurrentItems.clear();
 		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == "meta")
+			if (File::GetFileExtension(item) == ".hpack")
 			{
-				/*
-				std::filesystem::path assetPath = File::GetPathNoExt(item);
-				if (!File::Exists(assetPath)) continue;
-				AssetHandle handle = AssetManager::key(assetPath.string());
+				std::filesystem::path assetPackPath = item.lexically_normal();
+				if (!File::Exists(assetPackPath)) continue;
+				AssetHandle handle = AssetManager::GetHandleFromKey(assetPackPath.string());
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 
-				File::IsDirectory(assetPath) ? directories.push_back(assetItem) : files.push_back(assetItem);
-				*/
+				File::IsDirectory(item) ? directories.push_back(assetItem) : files.push_back(assetItem);
 			}
 		}
 
@@ -327,8 +321,8 @@ namespace UI
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
-				EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
-			Refresh();
+				//EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
+				Refresh();
 				});
 		}
 
@@ -345,8 +339,8 @@ namespace UI
 			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 			{
 				ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
-					EditorAssetManager::MoveAssetToFolder(handle, path);
-				Refresh();
+					//EditorAssetManager::MoveAssetToFolder(handle, path);
+					Refresh();
 					});
 			}
 		}
@@ -368,18 +362,29 @@ namespace UI
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
-				EditorAssetManager::MoveAssetToFolder(handle, path);
-			Refresh();
+				//EditorAssetManager::MoveAssetToFolder(handle, path);
+				Refresh();
 				});
 		}
 	}
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
 	{
+
 		switch (metadata.Type)
 		{
 		case AssetType::Image:
 		{
+			if (metadata.LoadState == LoadState::Loading)
+				break;
+			if (metadata.LoadState == LoadState::None)
+			{
+				JobPromise<Ref<Asset>> asset = AssetManager::GetAssetAsync<Asset>(metadata.Handle);
+				break;
+			}
+			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
+			if (asset)
+				return asset;
 			break;
 		}
 		case AssetType::Script:

@@ -5,7 +5,7 @@
 
 namespace Hazard 
 {
-	struct MeshCacheData
+	struct MeshFileHeader
 	{
 		//Metadata
 		uint32_t Flags;

@@ -50,6 +50,7 @@ public:
 		if (!m_Stage)
 			return T();
 
+		if (!m_Stage->GetGraph()) return T();
 		uint32_t index = m_Stage->GetStageIndex() - 1;
 		Ref<GraphStage> stage = m_Stage->GetGraph()->GetStage(index);
 		return stage->GetResult<T>();

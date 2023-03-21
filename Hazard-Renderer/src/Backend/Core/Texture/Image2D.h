@@ -10,6 +10,13 @@ namespace HazardRenderer
 		uint32_t Depth = 1;
 	};
 
+	struct ImageFilter
+	{
+		ImageWrap Wrapping = ImageWrap::Repeat;
+		FilterMode MinFilter = FilterMode::Linear;
+		FilterMode MagFilter = FilterMode::Linear;
+	};
+
 	struct Image2DCreateInfo 
 	{
 		std::string DebugName;
@@ -18,6 +25,8 @@ namespace HazardRenderer
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
+		ImageFilter Filters;
+
 		bool ClearLocalBuffer = true;
 		bool GenerateMips = false;
 	};

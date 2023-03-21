@@ -5,10 +5,9 @@
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/ShaderLibrary.h"
-
 #include "Hazard/RenderContext/RenderContextManager.h"
-
 #include "Hazard/RenderContext/Texture2D.h"
+#include "Mesh/Material.h"
 
 namespace Hazard
 {
@@ -68,7 +67,7 @@ namespace Hazard
         Ref<HazardRenderer::VertexBuffer> TransformBuffer;
 
 		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
-		Ref<HazardRenderer::Pipeline> PbrPipeline;
+		Ref<Material> PBRMaterial;
 
         Ref<Texture2DAsset> WhiteTexture;
 		Ref<Texture2DAsset> BRDFLut;
@@ -109,9 +108,12 @@ namespace Hazard
                 
                 TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
                 
+				Ref<HazardRenderer::Pipeline> pbrPipeline = ShaderLibrary::GetPipeline("PBR_Static");
+				pbrPipeline->SetRenderPass(renderPass);
 
-				PbrPipeline = ShaderLibrary::GetPipeline("PBR_Static");
-				PbrPipeline->SetRenderPass(renderPass);
+				PBRMaterial = Ref<Material>::Create(pbrPipeline);
+
+
 				SkyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
 				SkyboxPipeline->SetRenderPass(renderPass);
 

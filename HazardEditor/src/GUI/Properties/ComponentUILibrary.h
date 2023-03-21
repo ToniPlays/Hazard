@@ -176,15 +176,15 @@ namespace UI
 				auto& firstSr = entities[0].GetComponent<SpriteRendererComponent>();
 
 				uint32_t flags = 0;
-				Ref<Texture2DAsset> texture = firstSr.Texture;
+				AssetHandle textureHandle = firstSr.Texture;
 				const Color& color = firstSr.Color;
 
 				for (auto& entity : entities)
 				{
 					auto& sr = entity.GetComponent<SpriteRendererComponent>();
-					if (sr.Texture != texture)
+					if (sr.Texture != textureHandle)
 					{
-						texture = nullptr;
+						textureHandle = INVALID_ASSET_HANDLE;
 						flags |= BIT(0);
 					}
 
@@ -192,8 +192,8 @@ namespace UI
 				}
 
 				std::string path = "None";
-				if (texture)
-					path = File::GetNameNoExt(AssetManager::GetMetadata(texture->GetHandle()).Key);
+				if (textureHandle != INVALID_ASSET_HANDLE)
+					path = File::GetNameNoExt(AssetManager::GetMetadata(textureHandle).Key);
 				else if (flags & BIT(0))
 					path = "---";
 
@@ -202,14 +202,13 @@ namespace UI
 				ImGui::SetColumnWidth(0, colWidth);
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
 
-				ImUI::TextureSlot("Sprite", path, texture, [&]() {
+				ImUI::TextureSlot("Sprite", path, AssetManager::GetAsset<Texture2DAsset>(textureHandle), [&]() {
 					ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-                        Application::Get().SubmitMainThread([&]() mutable {
-                            auto asset = AssetManager::GetAsset<Texture2DAsset>(handle);
+                        Application::Get().SubmitMainThread([=]() mutable {
                             for (auto& entity : entities)
                             {
                                 auto& c = entity.GetComponent<SpriteRendererComponent>();
-                                c.Texture = asset;
+                                c.Texture = handle;
                             }
                             });
                         });
@@ -234,7 +233,7 @@ namespace UI
 					for (auto& entity : entities)
 					{
 						auto& c = entity.GetComponent<SpriteRendererComponent>();
-						c.Texture = nullptr;
+						c.Texture = INVALID_ASSET_HANDLE;
 						c.Color = Color::White;
 					}
 					});

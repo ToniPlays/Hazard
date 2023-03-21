@@ -13,8 +13,8 @@ namespace Hazard
 		uint32_t Width, Height;
 		uint32_t Dimensions = 2;
 		uint32_t Channels;
-		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
 		Buffer ImageData;
+		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
 
 		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
 	};
@@ -23,15 +23,17 @@ namespace Hazard
 	{
 		uint32_t Width, Height;
 		uint32_t Dimensions = 2;
-		uint32_t Channels;
+		uint32_t Channels = 0;
 		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
+		uint8_t MinFilter = 0;
+		uint8_t MagFilter = 0;
+		uint8_t WrapMode  = 0;
 	};
 
 	class TextureFactory 
 	{
 	public:
 		static TextureHeader LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip = false);
-		static std::filesystem::path GetCacheFile(const AssetHandle& handle);
 		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
 	};
 }

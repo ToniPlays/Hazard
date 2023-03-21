@@ -33,7 +33,6 @@ namespace Hazard
 		iboInfo.UsageFlags = createInfo->UsageFlags;
 
 		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
-        
 		m_BoundingBox = createInfo->BoundingBox;
 	}
 

@@ -72,7 +72,7 @@ namespace UI
 		ImGui::BeginDisabled(m_CreateInfo.ClassName.empty());
 		if (ImGui::Button("Create", { 100, 24 })) {
 			m_CreateInfo.Path = path;
-
+			/*
 			if (EditorAssetManager::CreateScriptAsset(m_CreateInfo))
 			{
 				m_CreateInfo.SetDefaults();
@@ -84,6 +84,7 @@ namespace UI
 				((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
 				Close();
 			}
+			*/
 		}
 		ImGui::EndDisabled();
 	}

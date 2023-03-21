@@ -30,7 +30,12 @@ namespace Hazard
             return INVALID_ASSET_HANDLE;
 		
 		if (s_Registry.Contains(key) && !key.empty())
+		{
+			Ref<Asset> asset = GetAsset<Asset>(s_Registry.Get(key).Handle);
+			HZR_CORE_WARN("Reimporting asset {} with {} references", key, asset->GetRefCount());
+			s_Registry.Get(key).LoadState = LoadState::None;
 			return s_Registry.Get(key).Handle;
+		}
 			
 		AssetMetadata metadata = {};
 		metadata.Type = (AssetType)asset.Type;

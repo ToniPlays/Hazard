@@ -8,7 +8,7 @@ using namespace Hazard;
 
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
-	if (!File::Exists(path)) 
+	if (!File::Exists(path))
 	{
 		HZR_FATAL(path.string());
 		HZR_ASSERT(false, "This needs to be fixed");
@@ -17,7 +17,7 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 	YAML::Node root = YAML::LoadFile(path.string());
 
 	if (root["General"])
-    {
+	{
 		DeserializeGeneral(root["General"]);
 	}
 	m_Data.ProjectDirectory = File::GetDirectoryOf(path);
@@ -28,24 +28,20 @@ void HazardProject::ProcessAssets()
 	std::filesystem::path libraryPath = m_Data.ProjectDirectory / "Library";
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 
-	for (auto& item : File::GetAllInDirectory(assetPath))
+	for (auto& item : File::GetAllInDirectory(assetPath, true))
 		ProcessAsset(item);
 }
 
-AssetMetadata HazardProject::ProcessAsset(const std::filesystem::path& path)
+void HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
-	if (File::GetFileExtension(path) == "meta")
+	if (File::GetFileExtension(path) == ".hpack")
 	{
-		AssetMetadata metadata = EditorAssetManager::ImportFromMetadata(path);
-		std::filesystem::path assetPath = File::GetPathNoExt(path);
-        
-		if (File::IsDirectory(assetPath))
-		{
-			ProcessSubFolderAssets(assetPath);
-		}
-		return metadata;
+		CachedBuffer buffer = File::ReadBinaryFile(path);
+		AssetPack pack = AssetPack::Create(buffer, path);
+
+		for (auto& element : pack.Elements)
+			AssetManager::ImportAsset(element, File::GetFileAbsolutePath(path).lexically_normal().string());
 	}
-	return Hazard::AssetMetadata();
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)
@@ -54,19 +50,3 @@ void HazardProject::DeserializeGeneral(const YAML::Node& node)
 	YamlUtils::Deserialize(node, "Startup world", m_Data.StartupWorld, std::filesystem::path(""));
 }
 
-void HazardProject::ProcessSubFolderAssets(const std::filesystem::path& dir)
-{
-	for (auto& item : File::GetAllInDirectory(dir))
-	{
-		if (File::GetFileExtension(item) == "meta")
-		{
-			EditorAssetManager::ImportFromMetadata(item);
-
-			std::filesystem::path assetPath = File::GetPathNoExt(item);
-			if (File::IsDirectory(assetPath))
-            {
-				ProcessSubFolderAssets(assetPath);
-			}
-		}
-	}
-}

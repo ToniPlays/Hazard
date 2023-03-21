@@ -160,9 +160,7 @@ namespace Hazard
 
 			if (!comp["Sprite"]) return;
 
-			AssetHandle handle = INVALID_ASSET_HANDLE;
-			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", handle, INVALID_ASSET_HANDLE);
-			component.Texture = AssetManager::GetAsset<Texture2DAsset>(handle);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", component.Texture, INVALID_ASSET_HANDLE);
 		};
 		template<>
 		void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)

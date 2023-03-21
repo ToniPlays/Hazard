@@ -32,8 +32,8 @@ namespace Hazard
 		case ImageFormat::DEPTH32F:			return 1;
 		case ImageFormat::DEPTH24STENCIL8:	return 1;
 		case ImageFormat::RED32I:           return 1;
-        case ImageFormat::RGB16F:           return 4;
-        case ImageFormat::RGB32F:           return 4;
+		case ImageFormat::RGB16F:           return 4;
+		case ImageFormat::RGB32F:           return 4;
 		}
 		return 0;
 	}
@@ -46,19 +46,16 @@ namespace Hazard
 
 		int w, h, channels;
 		constexpr int desired = 4;
-		{
-			stbi_set_flip_vertically_on_load(verticalFlip);
+		stbi_set_flip_vertically_on_load(verticalFlip);
 
-			stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, desired);
-			HZR_CORE_ASSERT(data, "Data not loaded correctly");
-			header.ImageData = Buffer(data, w * h * desired);
-		}
+		stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, desired);
+		HZR_CORE_ASSERT(data, "Data not loaded correctly");
+		header.ImageData = Buffer::Copy(data, w * h * desired);
+		stbi_image_free(data);
 
 		header.Width = w;
 		header.Height = h;
 		header.Channels = desired;
-
-		//std::cout << "Image load from source " << path << " took " << timer.ElapsedMillis() << " ms" << std::endl;
 
 		return header;
 	}

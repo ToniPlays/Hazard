@@ -393,6 +393,7 @@ namespace HazardRenderer
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
+
 		std::string sourceFile = File::ReadFile(path);
 		std::unordered_map<ShaderStage, std::string> result;
 

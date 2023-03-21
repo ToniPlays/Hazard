@@ -18,7 +18,7 @@ extern Hazard::Application* Hazard::CreateApplication();
 #ifdef HZR_PLATFORM_WINDOWS
 #include <Windows.h>
 
-#if defined(HZR_DEBUG) || defined(HZR_RELEASE)
+#if defined(HZR_DEBUG)// || defined(HZR_RELEASE)
 
 #pragma comment( linker, "/subsystem:console" )
 int main(int argc, char* argv[])

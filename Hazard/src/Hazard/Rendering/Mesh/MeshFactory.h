@@ -32,8 +32,6 @@ namespace Hazard
 		}
 		~MeshFactory() = default;
 
-		static void SetCacheLocation(const std::filesystem::path& path) { s_CacheDirectory = path; }
-
 		void SetOptimization(MeshLoaderFlags flags);
 		void SetScalar(float scalar)
 		{
@@ -43,10 +41,8 @@ namespace Hazard
 		void SetProgressHandler(MeshProgressCallback handler) { m_Handler = handler; }
 
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
-		//Ref<JobGraph> LoadMeshFromSourceAsync(const std::filesystem::path& file);
-		CacheStatus CacheStatus(const AssetHandle& handle);
-		std::filesystem::path GetCacheFile(const AssetHandle& handle);
 		size_t GetMeshDataSize(const MeshData& data);
+		size_t GetVertexSize(const MeshData& data);
 
 	private:
 		static uint32_t GetColorChannel(const aiMesh* mesh);
@@ -64,9 +60,6 @@ namespace Hazard
 		std::atomic_size_t m_ProcessedNodes = 0;
 
 		Assimp::Importer m_Importer;
-		std::mutex m_Mutex;
-
-		inline static std::filesystem::path s_CacheDirectory = "Library/Mesh/";
 	};
 
 	class MeshFactoryProgressHandler : public Assimp::ProgressHandler

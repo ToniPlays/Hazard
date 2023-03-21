@@ -23,13 +23,13 @@ namespace HazardRenderer::Vulkan
 
 		Buffer ReadPixels(const ImageCopyRegion& region) { return Buffer(); };
 
-		uint32_t GetWidth() override { return m_Extent.Width; };
-		uint32_t GetHeight() override { return m_Extent.Height; };
-		ImageFormat GetFormat() const override { return m_Format; }
-		const std::string& GetDebugName() const override { return m_DebugName; };
-		virtual uint32_t GetMipLevels() const { return m_MipLevels; };
+		uint32_t GetWidth() override { return m_Info.Extent.Width; };
+		uint32_t GetHeight() override { return m_Info.Extent.Height; };
+		ImageFormat GetFormat() const override { return m_Info.Format; }
+		const std::string& GetDebugName() const override { return m_Info.DebugName; };
+		virtual uint32_t GetMipLevels() const { return m_Info.Mips; };
 
-		virtual float GetAspectRatio() override { return (float)m_Extent.Width / (float)m_Extent.Height; };
+		virtual float GetAspectRatio() override { return (float)m_Info.Extent.Width / (float)m_Info.Extent.Height; };
 		virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
 		virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
 
@@ -58,11 +58,7 @@ namespace HazardRenderer::Vulkan
 		void GenerateMips_RT();
 
 	private:
-		std::string m_DebugName;
-		Extent m_Extent;
-		uint32_t m_MipLevels;
-		ImageFormat m_Format;
-		ImageUsage m_Usage;
+		Image2DCreateInfo m_Info;
 		Buffer m_LocalBuffer;
 
 		//Vulkan Specific

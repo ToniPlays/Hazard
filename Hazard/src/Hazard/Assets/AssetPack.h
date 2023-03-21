@@ -20,7 +20,7 @@ namespace Hazard
 	{
 		std::filesystem::path AssetPack;
 		uint64_t Handle;
-		uint32_t Type;
+		AssetType Type;
 		Buffer Data;
 	};
 
@@ -29,7 +29,11 @@ namespace Hazard
 		uint32_t ElementCount = 0;
 		std::vector<AssetPackElement> Elements;
 
-		//Write assets after this header
+		void Free()
+		{
+			for (auto& element : Elements)
+				element.Data.Release();
+		}
 
 		static AssetPack Create(CachedBuffer& buffer, const std::filesystem::path& path)
 		{
@@ -49,7 +53,7 @@ namespace Hazard
 				AssetPackElement& element = pack.Elements.emplace_back();
 
 				element.AssetPack = path;
-				element.Type = headers[i].Type;
+				element.Type = (AssetType)headers[i].Type;
 				element.Handle = headers[i].Handle;
 				element.Data = buffer.Read<Buffer>(headers[i].AssetDataSize);
 			}

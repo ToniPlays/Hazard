@@ -16,6 +16,13 @@ public:
 	size_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	Ref<GraphStage> GetNextStage();
+	Ref<GraphStage> AddStage()
+	{
+		Ref<GraphStage> stage = Ref<GraphStage>::Create(m_Stages.size(), 0.0f);
+		stage->m_JobGraph = this;
+		m_Stages.push_back(stage);
+		return stage;
+	}
 
 	void Execute();
 

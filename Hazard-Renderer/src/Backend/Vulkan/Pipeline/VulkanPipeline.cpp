@@ -128,6 +128,8 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
 		HZR_ASSERT(m_Shader, "No shader");
 
+		std::cout << m_Specs.DebugName << std::endl;
+
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
@@ -168,7 +170,7 @@ namespace HazardRenderer::Vulkan
 		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizationState.polygonMode = VkUtils::GetVulkanPolygonMode(m_Specs.DrawType);
 		rasterizationState.cullMode = VkUtils::GetVulkanCullMode(m_Specs.CullMode);
-		rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizationState.depthClampEnable = VK_FALSE;
 		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 		rasterizationState.depthBiasEnable = VK_FALSE;

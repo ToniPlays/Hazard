@@ -18,11 +18,8 @@ namespace HazardRenderer::Vulkan
 
 		HZR_ASSERT(info->Extent.Width < 32768 && info->Extent.Height < 32768, "Image extent too large");
 
-		m_DebugName = info->DebugName;
-		m_Format = info->Format;
-		m_Extent = info->Extent;
-		m_MipLevels = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Extent.Width, m_Extent.Height) : 1;
-		m_Usage = info->Usage;
+		m_Info = *info;
+		m_Info.Mips = info->GenerateMips ? VkUtils::GetMipLevelCount(m_Info.Extent.Width, m_Info.Extent.Height) : 1;
 
 		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
@@ -38,9 +35,9 @@ namespace HazardRenderer::Vulkan
 		Renderer::SubmitResourceCreate([instance]() mutable {
 
 			instance->UploadImageData_RT(instance->m_LocalBuffer,
-				instance->m_MipLevels > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
+				instance->m_Info.Mips > 1 ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : instance->m_ImageDescriptor.imageLayout);
 
-			if (instance->m_MipLevels > 1)
+			if (instance->m_Info.Mips > 1)
 			{
 				instance->m_IsValid = false;
 				instance->GenerateMips_RT();
@@ -138,14 +135,14 @@ namespace HazardRenderer::Vulkan
 	void VulkanImage2D::Resize_RT(uint32_t width, uint32_t height)
 	{
 		HZR_PROFILE_FUNCTION();
-		m_Extent.Width = width;
-		m_Extent.Height = height;
+		m_Info.Extent.Width = width;
+		m_Info.Extent.Height = height;
 		Invalidate_RT();
 	}
 	void VulkanImage2D::Invalidate_RT()
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(m_Extent.Width > 0 && m_Extent.Height > 0, "Image dimensions failed");
+		HZR_ASSERT(m_Info.Extent.Width > 0 && m_Info.Extent.Height > 0, "Image dimensions failed");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
@@ -154,57 +151,57 @@ namespace HazardRenderer::Vulkan
 		VulkanAllocator allocator("VulkanImage2D");
 
 		VkImageUsageFlags flags = VK_IMAGE_USAGE_SAMPLED_BIT;
-		if (m_Usage == ImageUsage::Attachment)
+		if (m_Info.Usage == ImageUsage::Attachment)
 		{
-			if (m_Format >= ImageFormat::DEPTH32F)
+			if (m_Info.Format >= ImageFormat::DEPTH32F)
 				flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			else
 				flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		}
-		else if (m_Usage == ImageUsage::Texture)
+		else if (m_Info.Usage == ImageUsage::Texture)
 		{
 			flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 		}
-		else if (m_Usage == ImageUsage::Storage)
+		else if (m_Info.Usage == ImageUsage::Storage)
 		{
 			flags |= VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 		}
 
-		VkImageAspectFlags aspectMask = m_Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+		VkImageAspectFlags aspectMask = m_Info.Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 
-		if (m_Format == ImageFormat::DEPTH24STENCIL8)
+		if (m_Info.Format == ImageFormat::DEPTH24STENCIL8)
 			aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
 
 		VkImageCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		createInfo.imageType = VK_IMAGE_TYPE_2D;
-		createInfo.format = VkUtils::VulkanImageFormat(m_Format);
-		createInfo.extent.width = m_Extent.Width;
-		createInfo.extent.height = m_Extent.Height;
+		createInfo.format = VkUtils::VulkanImageFormat(m_Info.Format);
+		createInfo.extent.width = m_Info.Extent.Width;
+		createInfo.extent.height = m_Info.Extent.Height;
 		createInfo.extent.depth = 1;
-		createInfo.mipLevels = m_MipLevels;
+		createInfo.mipLevels = m_Info.Mips;
 		createInfo.arrayLayers = 1;
 		createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		createInfo.usage = flags;
 
-		m_ImageDescriptor.imageLayout = m_Usage == ImageUsage::Storage ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_ImageDescriptor.imageLayout = m_Info.Usage == ImageUsage::Storage ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 		m_Allocation = allocator.AllocateImage(createInfo, VMA_MEMORY_USAGE_GPU_ONLY, m_Image);
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_DebugName), m_Image);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_Info.DebugName), m_Image);
 
 		CreateImageView_RT();
 		CreateSampler_RT();
 
-		if (m_Usage == ImageUsage::Storage)
+		if (m_Info.Usage == ImageUsage::Storage)
 		{
 			VkCommandBuffer commandBuffer = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
 
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			range.baseMipLevel = 0;
-			range.levelCount = m_MipLevels;
+			range.levelCount = m_Info.Mips;
 			range.layerCount = 1;
 
 			VkUtils::InsertImageMemoryBarrier(commandBuffer, m_Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
@@ -254,7 +251,7 @@ namespace HazardRenderer::Vulkan
 		imageCopyRegion.imageSubresource.mipLevel = 0;
 		imageCopyRegion.imageSubresource.baseArrayLayer = 0;
 		imageCopyRegion.imageSubresource.layerCount = 1;
-		imageCopyRegion.imageExtent = { m_Extent.Width, m_Extent.Height, 1 };
+		imageCopyRegion.imageExtent = { m_Info.Extent.Width, m_Info.Extent.Height, 1 };
 		imageCopyRegion.bufferOffset = 0;
 
 		vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
@@ -275,26 +272,26 @@ namespace HazardRenderer::Vulkan
 		if (m_ImageDescriptor.imageView)
 			vkDestroyImageView(device, m_ImageDescriptor.imageView, nullptr);
 
-		VkImageAspectFlags aspectMask = m_Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+		VkImageAspectFlags aspectMask = m_Info.Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 
-		if (m_Format == ImageFormat::DEPTH24STENCIL8)
+		if (m_Info.Format == ImageFormat::DEPTH24STENCIL8)
 			aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
 		VkImageViewCreateInfo viewInfo = {};
 		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		viewInfo.viewType = 1 > 1 ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D; //Change to support arrays
-		viewInfo.format = VkUtils::VulkanImageFormat(m_Format);
+		viewInfo.format = VkUtils::VulkanImageFormat(m_Info.Format);
 		viewInfo.flags = 0;
 		viewInfo.subresourceRange = {};
 		viewInfo.subresourceRange.aspectMask = aspectMask;
 		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = m_MipLevels;
+		viewInfo.subresourceRange.levelCount = m_Info.Mips;
 		viewInfo.subresourceRange.baseArrayLayer = 0;
 		viewInfo.subresourceRange.layerCount = 1;
 		viewInfo.image = m_Image;
 
 		VK_CHECK_RESULT(vkCreateImageView(device, &viewInfo, nullptr, &m_ImageDescriptor.imageView), "Failed to create VkImageView");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_DebugName), m_ImageDescriptor.imageView);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_Info.DebugName), m_ImageDescriptor.imageView);
 
 		m_IsValid = true;
 	}
@@ -310,7 +307,7 @@ namespace HazardRenderer::Vulkan
 		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 		samplerCreateInfo.maxAnisotropy = 1.0f;
 
-		if (VkUtils::IsIntegratedBase(m_Format))
+		if (VkUtils::IsIntegratedBase(m_Info.Format))
 		{
 			samplerCreateInfo.magFilter = VK_FILTER_NEAREST;
 			samplerCreateInfo.minFilter = VK_FILTER_NEAREST;
@@ -318,9 +315,9 @@ namespace HazardRenderer::Vulkan
 		}
 		else
 		{
-			samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			samplerCreateInfo.magFilter = VkUtils::GetVulkanFilter(m_Info.Filters.MagFilter);
+			samplerCreateInfo.minFilter = VkUtils::GetVulkanFilter(m_Info.Filters.MinFilter);
+			samplerCreateInfo.mipmapMode = VkUtils::GetVulkanMipmapMode(m_Info.Filters.MinFilter);
 		}
 
 		samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -333,7 +330,7 @@ namespace HazardRenderer::Vulkan
 		samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
 		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_ImageDescriptor.sampler), "Failed to create VulkanImage2D sampler");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_DebugName), m_ImageDescriptor.sampler);
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_Info.DebugName), m_ImageDescriptor.sampler);
 	}
 	void VulkanImage2D::GenerateMips_RT()
 	{
@@ -348,21 +345,21 @@ namespace HazardRenderer::Vulkan
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
-		for (uint32_t mip = 1; mip < m_MipLevels; mip++)
+		for (uint32_t mip = 1; mip < m_Info.Mips; mip++)
 		{
 			VkImageBlit blit = {};
 			blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			blit.srcSubresource.layerCount = 1;
 			blit.srcSubresource.mipLevel = mip - 1;
-			blit.srcOffsets[1].x = int32_t(m_Extent.Width >> (mip - 1));
-			blit.srcOffsets[1].y = int32_t(m_Extent.Height >> (mip - 1));
+			blit.srcOffsets[1].x = int32_t(m_Info.Extent.Width >> (mip - 1));
+			blit.srcOffsets[1].y = int32_t(m_Info.Extent.Height >> (mip - 1));
 			blit.srcOffsets[1].z = 1;
 
 			blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			blit.dstSubresource.layerCount = 1;
 			blit.dstSubresource.mipLevel = mip;
-			blit.dstOffsets[1].x = int32_t(m_Extent.Width >> mip);
-			blit.dstOffsets[1].y = int32_t(m_Extent.Height >> mip);
+			blit.dstOffsets[1].x = int32_t(m_Info.Extent.Width >> mip);
+			blit.dstOffsets[1].y = int32_t(m_Info.Extent.Height >> mip);
 			blit.dstOffsets[1].z = 1;
 
 			VkImageSubresourceRange mipRange = {};
@@ -391,7 +388,7 @@ namespace HazardRenderer::Vulkan
 		VkImageSubresourceRange subRange = {};
 		subRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		subRange.layerCount = 1;
-		subRange.levelCount = m_MipLevels;
+		subRange.levelCount = m_Info.Mips;
 
 		VkUtils::InsertImageMemoryBarrier(blitCmd, m_Image,
 			VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,

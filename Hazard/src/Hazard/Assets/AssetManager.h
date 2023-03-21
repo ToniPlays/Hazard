@@ -22,7 +22,6 @@ namespace Hazard
 		AssetManagerFlags_ForceSource = BIT(3)
 	};
 
-
 	class AssetManager
 	{
 	public:
@@ -68,6 +67,9 @@ namespace Hazard
 			HZR_PROFILE_FUNCTION();
 			HZR_TIMED_FUNCTION();
 
+			if (handle == INVALID_ASSET_HANDLE)
+				return nullptr;
+
 			AssetMetadata& metadata = GetMetadata(handle);
 
 			if (metadata.LoadState == LoadState::None)
@@ -75,9 +77,12 @@ namespace Hazard
 				metadata.LoadState = LoadState::Loading;
 
 				//Load asset async and wait
-				JobPromise<Ref<Asset>> promise = s_AssetLoader.Load(metadata, true);
+				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+				graph->Execute();
 
-				Ref<Asset> asset = promise.Get();
+				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
+
+				std::scoped_lock lock(s_Mutex);
 				s_LoadedAssets[metadata.Handle] = asset;
 				return asset.As<T>();
 			}
@@ -98,16 +103,24 @@ namespace Hazard
 			HZR_PROFILE_FUNCTION();
 			HZR_TIMED_FUNCTION();
 
+			if (handle == INVALID_ASSET_HANDLE)
+				return JobPromise<Ref<T>>();
+
 			AssetMetadata& metadata = GetMetadata(handle);
 
 			if (metadata.LoadState == LoadState::None)
 			{
 				metadata.LoadState = LoadState::Loading;
-				Ref<Asset> asset = nullptr;
+				s_LoadedAssets[handle] = nullptr;
 
 				//Load asset async and wait
-				JobPromise<Ref<Asset>> promise = s_AssetLoader.Load(metadata);
-				return promise;
+				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+				if (graph)
+				{
+					Ref<Job> job = Ref<Job>::Create(AddLoadedAssetJop, handle);
+					graph->AddStage()->QueueJobs({ job });
+				}
+				return Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
 			}
 			return JobPromise<Ref<T>>();
 		}
@@ -135,11 +148,25 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE) return;
 			s_LoadedAssets.erase(handle);
 		}
+
+		static void AddLoadedAssetJop(Ref<Job> job, AssetHandle handle)
+		{
+			Ref<Asset> asset = job->GetInput<Ref<Asset>>();
+
+			job->GetStage()->SetResult(asset);
+			GetMetadata(handle).LoadState = LoadState::Loaded;
+
+			std::scoped_lock lock(s_Mutex);
+			s_LoadedAssets[handle] = asset;
+		}
+
 	private:
 
 		static std::unordered_map<AssetHandle, Ref<Asset>> s_LoadedAssets;
 		inline static AssetRegistry s_Registry;
 		inline static AssetMetadata s_NullMetadata;
 		inline static AssetLoader s_AssetLoader;
+
+		inline static std::mutex s_Mutex;
 	};
 }

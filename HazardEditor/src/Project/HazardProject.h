@@ -21,13 +21,12 @@ public:
 
 	void ProcessAssets();
 
-	Hazard::AssetMetadata ProcessAsset(const std::filesystem::path& path);
+	void ProcessAsset(const std::filesystem::path& path);
 
 	const ProjectGeneralData& GetProjectData() { return m_Data; }
 
 private:
 	void DeserializeGeneral(const YAML::Node& node);
-	void ProcessSubFolderAssets(const std::filesystem::path& dir);
 
 private:
 	ProjectGeneralData m_Data;
