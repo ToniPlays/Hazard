@@ -164,7 +164,7 @@ namespace UI
 		for (auto& item : m_CurrentItems)
 		{
 			item.BeginRender();
-			Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetMetadata());
+			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? EditorAssetManager::GetIcon("Folder") :  GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
@@ -199,7 +199,7 @@ namespace UI
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuHeader("Folder");
 		ImUI::MenuItem("New folder", [&]() {
-			//EditorAssetManager::CreateFolder(GetOpenDirectory() / "Folder");
+			CreateFolder(GetOpenDirectory() / "Folder");
 			changed = true;
 			});
 		ImUI::MenuHeader("Import");
@@ -286,9 +286,15 @@ namespace UI
 				AssetHandle handle = AssetManager::GetHandleFromKey(assetPackPath.string());
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
-				AssetPanelItem assetItem = AssetPanelItem(handle);
 
-				File::IsDirectory(item) ? directories.push_back(assetItem) : files.push_back(assetItem);
+				AssetPanelItem assetItem = AssetPanelItem(handle);
+				files.push_back(assetItem);
+
+			}
+			else if (File::IsDirectory(item))
+			{
+				AssetPanelItem folder(item);
+				directories.push_back(folder);
 			}
 		}
 
@@ -391,8 +397,6 @@ namespace UI
 			return EditorAssetManager::GetIcon("Script");
 		case AssetType::World:
 			return EditorAssetManager::GetIcon("World");
-		case AssetType::Folder:
-			return EditorAssetManager::GetIcon("Folder");
 		default:
 			return EditorAssetManager::GetIcon("Default");
 		}
@@ -443,5 +447,15 @@ namespace UI
 
 		m_CurrentPath = newPath;
 		RefreshFolderItems();
+	}
+	void AssetPanel::CreateFolder(const std::filesystem::path& path)
+	{
+		std::filesystem::path directoryPath = path;
+		uint32_t suffix = 1;
+
+		while (File::Exists(directoryPath))
+			directoryPath = path.string() + std::to_string(suffix);
+
+		File::CreateDir(directoryPath);
 	}
 }

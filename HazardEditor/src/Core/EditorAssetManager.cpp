@@ -158,6 +158,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 
 		UI::ImageImportSettings settings = {};
 		settings.GenerateMips = false;
+		settings.FlipOnLoad = true;
 
 		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();

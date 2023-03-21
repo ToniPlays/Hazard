@@ -58,6 +58,10 @@ namespace UI {
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
 		
 		void GoToFolderDepth(const std::filesystem::path& path, uint32_t index);
+
+	private:
+		void CreateFolder(const std::filesystem::path& path);
+
 	private:
 		std::filesystem::path m_RootPath;
 		std::filesystem::path m_CurrentPath;
