@@ -678,15 +678,15 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				auto& firstMc = entities[0].GetComponent<MeshComponent>();
 
 				uint32_t flags = 0;
-				Ref<Mesh> mesh = firstMc.m_MeshHandle;
+				AssetHandle mesh = firstMc.m_MeshHandle;
                 Ref<Material> material = firstMc.m_MaterialHandle;
 
 				for (auto& entity : entities)
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
-					if (mc.m_MeshHandle.Raw() != mesh.Raw())
+					if (mc.m_MeshHandle != mesh)
 					{
-						mesh = nullptr;
+						mesh = INVALID_ASSET_HANDLE;
 						flags |= BIT(0);
 					}
                     if(mc.m_MaterialHandle != material)
@@ -699,7 +699,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				std::string meshName = "";
                 std::string materialName = "";
 				if (mesh)
-                    meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh->GetHandle()).Key);
+                    meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh).Key);
 				else if (flags & BIT(0))
 					meshName = "---";
             
@@ -723,10 +723,8 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				}
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
                     Application::Get().SubmitMainThread([handle, entities]() {
-                        Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(handle);
-                        
                         for(auto entity : entities)
-                            entity.GetComponent<MeshComponent>().m_MeshHandle = mesh;
+                            entity.GetComponent<MeshComponent>().m_MeshHandle = handle;
                         });
                     });
                 ImGui::NextColumn();
@@ -755,7 +753,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 					for (auto& entity : entities)
 					{
 						auto& c = entity.GetComponent<MeshComponent>();
-						c.m_MeshHandle = nullptr;
+						c.m_MeshHandle = INVALID_ASSET_HANDLE;
                         c.m_MaterialHandle = nullptr;
 					}
 					});

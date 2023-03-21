@@ -48,7 +48,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
 
-		Ref<Mesh> mesh = meshComponent.m_MeshHandle;
+		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.m_MeshHandle);
 		if (!mesh) return;
         if (!mesh->IsValid()) return;
 

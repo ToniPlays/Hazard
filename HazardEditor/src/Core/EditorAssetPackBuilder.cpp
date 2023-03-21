@@ -103,11 +103,9 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	job->SetJobName(File::GetName(file));
 	MeshFactory factory;
 	factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
-	factory.SetScalar(1.0f);
+	factory.SetScalar(settings.Scale);
 	factory.SetProgressHandler([&](float progress) {
-		std::this_thread::sleep_for(10ms);
 		job->Progress(progress * 0.9f);
-		std::cout << "Job progress: " << job->GetProgress() << std::endl;
 	});
 
 
@@ -168,6 +166,39 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	result.Handle = settings.Handle;
 	result.Type = AssetType::Mesh;
 	result.Data = data;
+
+	job->GetStage()->SetResult(result);
+}
+
+void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::RenderAPI api)
+{
+	using namespace HazardRenderer;
+	std::vector<ShaderStageCode> binaries = ShaderCompiler::GetShaderBinariesFromSource(file, api);
+
+	size_t codeSize = 0;
+	for (auto& stage : binaries)
+		codeSize += sizeof(ShaderStage) + sizeof(uint32_t) + stage.ShaderCode.Size;
+
+	Buffer data;
+	//Header and combined binary size
+	data.Allocate(codeSize);
+
+	size_t offset = 0;
+
+	for (auto& stage : binaries)
+	{
+		data.Write(&stage.Stage, sizeof(uint32_t), offset);
+		offset += sizeof(uint32_t);
+		data.Write(&stage.Size, sizeof(uint32_t), offset);
+		offset += sizeof(uint32_t);
+		data.Write(stage.ShaderCode.Data, stage.ShaderCode.Size, offset);
+		offset += stage.ShaderCode.Size;
+	}
+
+	AssetPackElement result = {};
+	result.Type = AssetType::Shader;
+	result.Data = data;
+	result.Handle = AssetHandle();
 
 	job->GetStage()->SetResult(result);
 }

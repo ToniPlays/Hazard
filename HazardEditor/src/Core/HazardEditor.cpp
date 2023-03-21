@@ -134,7 +134,6 @@ void HazardEditorApplication::Init()
 		});
     
 	scriptEngine.ReloadAssemblies();
-	EditorAssetManager::Init();
 
 	auto& world = ProjectManager::GetProject().GetProjectData().StartupWorld;
 	Editor::EditorWorldManager::LoadWorld(world);

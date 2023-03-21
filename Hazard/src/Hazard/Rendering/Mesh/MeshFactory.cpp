@@ -137,7 +137,7 @@ namespace Hazard
 			vertex.Position.x = mesh->mVertices[i].x;
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
-			vertex.Position = glm::vec4(vertex.Position, 1.0);
+			vertex.Position = m_ScaleMatrix * glm::vec4(vertex.Position, 1.0);
 
 			data.BoundingBox.Encapsulate(vertex.Position);
 

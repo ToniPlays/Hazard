@@ -141,6 +141,8 @@ namespace UI
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 200);
+
+		ImUI::InputFloat("Scale factor", info.Scale);
 		ImGui::Columns();
 
 		if (m_Import)
@@ -160,12 +162,7 @@ namespace UI
 		{
 		case AssetType::Image:
 		{
-			ImageImportSettings settings = {};
-			settings.FlipOnLoad = false;
-			settings.GenerateMips = true;
-			settings.MinFilter = FilterMode::Linear;
-			settings.MagFilter = FilterMode::Linear;
-			settings.Wrapping = ImageWrap::ClampBorder;
+			ImageImportSettings settings = GetImportSettings<ImageImportSettings>(m_CurrentFilePath);
 			settings.Handle = m_AssetHandle;
 
 			m_ImportDataBuffer.Allocate(sizeof(ImageImportSettings));
@@ -174,8 +171,7 @@ namespace UI
 		}
 		case AssetType::Mesh:
 		{
-			MeshImportSettings settings = {};
-			settings.Scale = 1.0f;
+			MeshImportSettings settings = GetImportSettings<MeshImportSettings>(m_CurrentFilePath);
 			settings.Handle = m_AssetHandle;
 
 			m_ImportDataBuffer.Allocate(sizeof(MeshImportSettings));
@@ -185,17 +181,18 @@ namespace UI
 		}
 	}
 
-	static void CreateImageMetadata(Ref<Job> job, Image2DCreateInfo info, AssetHandle handle, bool flip, const std::filesystem::path& path, const std::filesystem::path& destination)
+	static void CreateImageMetadata(Ref<Job> job, Image2DCreateInfo info, ImageImportSettings settings, const std::filesystem::path& path, const std::filesystem::path& destination)
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		YamlUtils::Serialize(out, "UID", handle);
+		YamlUtils::Serialize(out, "UID", settings.Handle);
 		YamlUtils::Serialize(out, "Type", AssetType::Image);
 		YamlUtils::Map(out, "Importer", [&]() {
 			YamlUtils::Serialize(out, "WrapMode", (uint32_t)info.Filters.Wrapping);
-		YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
-		YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
-		YamlUtils::Serialize(out, "FlipOnLoad", flip);
+			YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
+			YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
+			YamlUtils::Serialize(out, "Mipmaps", settings.GenerateMips);
+			YamlUtils::Serialize(out, "FlipOnLoad", settings.FlipOnLoad);
 			});
 		out << YAML::EndMap;
 		File::WriteFile(destination.string() + ".meta", out.c_str());
@@ -213,7 +210,7 @@ namespace UI
 		info.Filters = { settings.Wrapping, settings.MinFilter, settings.MagFilter };
 		info.GenerateMips = settings.GenerateMips;
 
-		Ref<Job> metadataJob = Ref<Job>::Create(CreateImageMetadata, info, settings.Handle, settings.FlipOnLoad, filePath, destination / File::GetName(filePath));
+		Ref<Job> metadataJob = Ref<Job>::Create(CreateImageMetadata, info, settings, filePath, destination / File::GetName(filePath));
 		metadataJob->SetJobTag("Metadata");
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
@@ -233,7 +230,9 @@ namespace UI
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "UID", info.Handle);
 		YamlUtils::Serialize(out, "Type", AssetType::Mesh);
-		YamlUtils::Map(out, "Importer", [&]() {});
+		YamlUtils::Map(out, "Importer", [&]() {
+			YamlUtils::Serialize(out, "Scale", info.Scale);
+			});
 		out << YAML::EndMap;
 		File::WriteFile(destination.string() + ".meta", out.c_str());
 

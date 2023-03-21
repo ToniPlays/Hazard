@@ -89,9 +89,9 @@ namespace UI
 					auto& tc = e.GetComponent<TransformComponent>();
 					auto& mc = e.GetComponent<MeshComponent>();
 
-					if (!mc.m_MeshHandle) continue;
+					if (mc.m_MeshHandle != INVALID_ASSET_HANDLE) continue;
 
-					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), mc.m_MeshHandle->GetBoundingBox());
+					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), AssetManager::GetAsset<Mesh>(mc.m_MeshHandle)->GetBoundingBox());
 				}
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)

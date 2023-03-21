@@ -101,7 +101,7 @@ void EditorAssetManager::ImportEngineAssets()
 	for (auto& file : File::GetAllInDirectory("res", true))
 	{
 		auto packPath = File::GetName(file) + ".hpack";
-		if (cache.HasFile(packPath)) continue;
+		//if (cache.HasFile(packPath)) continue;
 
 		Ref<Job> job = Ref<Job>::Create(GenerateAndSavePack, file);
 		jobs.push_back(job);
@@ -114,8 +114,8 @@ void EditorAssetManager::ImportEngineAssets()
 	JobPromise<bool> promise = system.QueueGraph<bool>(loadingGraph);
 	promise.Wait();
 	
-
-	for (auto& file : File::GetAllInDirectory(cache.GetCachePath(), true))
+	auto files = File::GetAllInDirectory(cache.GetCachePath(), true);
+	for (auto& file : files)
 	{
 		auto packPath = File::GetName(file);
 
@@ -141,7 +141,10 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 	{
 	case AssetType::Shader:
 	{
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan)->Execute()->GetResult<AssetPackElement>();
+		Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
+		if (!graph) break;
+
+		AssetPackElement element = graph->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 		break;
@@ -153,7 +156,10 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		info.GenerateMips = false;
 		info.Usage = ImageUsage::Texture;
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, false)->Execute()->GetResult<AssetPackElement>();
+		UI::ImageImportSettings settings = {};
+		settings.GenerateMips = false;
+
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 		break;
@@ -163,7 +169,9 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		MeshCreateInfo info = {};
 		info.DebugName = File::GetName(path);
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info)->Execute()->GetResult<AssetPackElement>();
+		UI::MeshImportSettings settings = {};
+
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 	}

@@ -18,7 +18,7 @@ namespace Hazard
 		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
-		BRDFLut = Application::GetModule<RenderEngine>().GetResources().WhiteTexture;// AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
+		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
     void EnvironmentMap::Update(uint32_t samples)
     {

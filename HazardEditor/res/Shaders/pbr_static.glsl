@@ -130,6 +130,7 @@ void main()
     vec3 ibl = IBL(F0, Lr) * u_Lights.SkyLightIntensity;
 	
     //Tonemapping
+
     vec3 color = ACESTonemap(ibl + Lo);
     color = GammaCorrect(color, gamma);
     OutputColor = vec4(color, 1.0);

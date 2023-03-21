@@ -141,11 +141,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 
 			AssetHandle handle;
-			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", handle, INVALID_ASSET_HANDLE);
-
-			if (handle != INVALID_ASSET_HANDLE)
-				c.m_MeshHandle = AssetManager::GetAsset<Mesh>(handle);
-
+			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.m_MeshHandle, INVALID_ASSET_HANDLE);
 			YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
 
 			if (handle != INVALID_ASSET_HANDLE)
