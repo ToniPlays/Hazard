@@ -138,7 +138,7 @@ public:
      *   */
     virtual void UpdateFileWrite(int currentStep /*= 0*/, int numberOfSteps /*= 0*/) {
         float f = numberOfSteps ? currentStep / (float)numberOfSteps : 1.0f;
-        Update(f * 0.5f);
+        Update( f * 0.5f);
     }
 }; // !class ProgressHandler
 

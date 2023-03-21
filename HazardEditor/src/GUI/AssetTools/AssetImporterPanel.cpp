@@ -49,7 +49,7 @@ namespace UI
 			DrawImageImportSettings();
 			break;
 		case AssetType::Mesh:
-			//DrawMeshImportSettings();
+			DrawMeshImportSettings();
 			break;
 		}
 
@@ -126,11 +126,8 @@ namespace UI
 		{
 			auto& dst = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>()->GetOpenDirectory();
 
-			Ref<Job> job = Ref<Job>::Create(ImportImage, m_CurrentFilePath, dst, m_ImportDataBuffer.Read<ImageImportSettings>());
-			job->SetJobTag("Texture");
-			job->SetJobName(fmt::format("Import {}", File::GetName(m_CurrentFilePath)));
+			ImportImage(m_CurrentFilePath, dst, m_ImportDataBuffer.Read<ImageImportSettings>());
 
-			Application::Get().GetJobSystem().QueueJob(job);
 			m_Open = false;
 			m_Import = false;
 		}
@@ -150,11 +147,7 @@ namespace UI
 		{
 			auto& dst = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>()->GetOpenDirectory();
 
-			Ref<Job> job = Ref<Job>::Create(ImportMesh, m_CurrentFilePath, dst, m_ImportDataBuffer.Read<MeshImportSettings>());
-			job->SetJobTag("Mesh");
-			job->SetJobName(fmt::format("Import {}", File::GetName(m_CurrentFilePath)));
-
-			Application::Get().GetJobSystem().QueueJob(job);
+			ImportMesh(m_CurrentFilePath, dst, m_ImportDataBuffer.Read<MeshImportSettings>());
 
 			m_Open = false;
 			m_Import = false;
@@ -166,7 +159,7 @@ namespace UI
 		switch (m_AssetType)
 		{
 		case AssetType::Image:
-
+		{
 			ImageImportSettings settings = {};
 			settings.FlipOnLoad = false;
 			settings.GenerateMips = true;
@@ -179,86 +172,99 @@ namespace UI
 			m_ImportDataBuffer.Write(&settings, sizeof(ImageImportSettings));
 			break;
 		}
+		case AssetType::Mesh:
+		{
+			MeshImportSettings settings = {};
+			settings.Scale = 1.0f;
+			settings.Handle = m_AssetHandle;
+
+			m_ImportDataBuffer.Allocate(sizeof(MeshImportSettings));
+			m_ImportDataBuffer.Write(&settings, sizeof(MeshImportSettings));
+			break;
+		}
+		}
 	}
-	void AssetImporterPanel::ImportImage(Ref<Job> job, std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings)
+
+	static void CreateImageMetadata(Ref<Job> job, Image2DCreateInfo info, AssetHandle handle, bool flip, const std::filesystem::path& path, const std::filesystem::path& destination)
 	{
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		YamlUtils::Serialize(out, "UID", handle);
+		YamlUtils::Serialize(out, "Type", AssetType::Image);
+		YamlUtils::Map(out, "Importer", [&]() {
+			YamlUtils::Serialize(out, "WrapMode", (uint32_t)info.Filters.Wrapping);
+		YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
+		YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
+		YamlUtils::Serialize(out, "FlipOnLoad", flip);
+			});
+		out << YAML::EndMap;
+		File::WriteFile(destination.string() + ".meta", out.c_str());
+
+		if (!File::Exists(destination) && path != destination)
+			File::Copy(path, destination, CopyOptions::SkipExisting);
+	}
+
+	void AssetImporterPanel::ImportImage(std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings)
+	{
+		//Build image import pipeline
+		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
+
 		Image2DCreateInfo info = {};
 		info.Filters = { settings.Wrapping, settings.MinFilter, settings.MagFilter };
 		info.GenerateMips = settings.GenerateMips;
 
-		{
-			if (!File::Exists(destination / File::GetName(filePath)))
-				File::Copy(filePath, destination / File::GetName(filePath), CopyOptions::SkipExisting);
+		Ref<Job> metadataJob = Ref<Job>::Create(CreateImageMetadata, info, settings.Handle, settings.FlipOnLoad, filePath, destination / File::GetName(filePath));
+		metadataJob->SetJobTag("Metadata");
 
-			YAML::Emitter out;
-			out << YAML::BeginMap;
-			YamlUtils::Serialize(out, "UID", settings.Handle);
-			YamlUtils::Serialize(out, "Type", AssetType::Image);
-			YamlUtils::Map(out, "Importer", [&]() {
-				YamlUtils::Serialize(out, "WrapMode", (uint32_t)info.Filters.Wrapping);
-			YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
-			YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
-			YamlUtils::Serialize(out, "FlipOnLoad", settings.FlipOnLoad);
-				});
-			out << YAML::EndMap;
-			File::WriteFile((destination / File::GetName(filePath)).string() + ".meta", out.c_str());
-		}
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
+		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
 
-		job->Progress(0.5f);
+		graph->GetStage(0)->QueueJobs({ metadataJob });
+		graph->CombineStages(packGraph);
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings.FlipOnLoad);
-		element.Handle = settings.Handle;
-
-		std::vector<AssetPackElement> elements = { element };
-		AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
-		CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
-
-		//Save asset pack and generate meta file
-		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
-		File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize());
-
-		//Finally import asset pack
-		for (auto& e : pack.Elements)
-		{
-			e.AssetPack = packPath;
-			AssetManager::ImportAsset(e, packPath);
-		}
-		pack.Free();
+		Ref<Job> saveJob = Ref<Job>::Create(EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
+		graph->GetStage(1)->QueueJobs({ saveJob });
+		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
 	}
-	void AssetImporterPanel::ImportMesh(Ref<Job> job, std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)
+
+	static void CreateMeshMetadata(Ref<Job> job, MeshImportSettings info, const std::filesystem::path& path, const std::filesystem::path& destination)
 	{
-		AssetHandle handle = AssetHandle();
-		{
-			File::Copy(filePath, destination / File::GetName(filePath), CopyOptions::SkipExisting);
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		YamlUtils::Serialize(out, "UID", info.Handle);
+		YamlUtils::Serialize(out, "Type", AssetType::Mesh);
+		YamlUtils::Map(out, "Importer", [&]() {});
+		out << YAML::EndMap;
+		File::WriteFile(destination.string() + ".meta", out.c_str());
 
-			YAML::Emitter out;
-			out << YAML::BeginMap;
-			YamlUtils::Serialize(out, "UID", handle);
-			YamlUtils::Serialize(out, "Type", AssetType::Mesh);
-			YamlUtils::Map(out, "Importer", [&]() {});
-			out << YAML::EndMap;
-			File::WriteFile((destination / File::GetName(filePath)).string() + ".meta", out.c_str());
-		}
+		if (!File::Exists(destination))
+			File::Copy(path, destination, CopyOptions::SkipExisting);
+	}
 
-		job->Progress(0.5f);
-
+	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)
+	{
+		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 		MeshCreateInfo info = {};
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(filePath, info);
-		element.Handle = handle;
+		Ref<Job> metadataJob = Ref<Job>::Create(CreateMeshMetadata, settings, filePath, destination / File::GetName(filePath));
+		metadataJob->SetJobTag("Metadata");
 
-		std::vector<AssetPackElement> elements = { element };
-		AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
-		CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 3);
+		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
 
-		//Save asset pack and generate meta file
-		auto packPath = (destination / File::GetNameNoExt(filePath)).string() + ".hpack";
-		File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize());
+		Ref<GraphStage> firstStage = graph->GetStage(0);
+		firstStage->QueueJobs({ metadataJob });
+		firstStage->SetWeight(0);
 
-		//Finally import asset pack
-		for (auto& e : pack.Elements)
-			AssetManager::ImportAsset(e, filePath.string());
+		Ref<GraphStage> secondStage = graph->GetStage(1);
+		secondStage->SetWeight(0.95);
+		graph->CombineStages(packGraph, 1);
 
-		pack.Free();
+		Ref<Job> saveJob = Ref<Job>::Create(EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
+		Ref<GraphStage> saveStage = graph->GetStage(2);
+		saveStage->SetWeight(0.05);
+		saveStage->QueueJobs({ saveJob });
+
+		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
 	}
 }

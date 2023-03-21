@@ -19,13 +19,14 @@ Ref<GraphStage> JobGraph::GetNextStage()
 	return m_Stages[m_CurrentStage + 1];
 }
 
-void JobGraph::Execute()
+Ref<JobGraph> JobGraph::Execute()
 {
 	for (auto& stage : m_Stages)
 	{
 		for (auto& job : stage->m_Jobs)
 			job->Execute();
 	}
+	return this;
 }
 
 float JobGraph::GetProgress()
@@ -50,6 +51,9 @@ void JobGraph::OnStageFinished()
 
 	if (!next) 
 		return;
+
+	if (next->GetJobs().size() == 0)
+		OnStageFinished();
 
 	m_JobSystem->QueueJobs(next->m_Jobs);
 }

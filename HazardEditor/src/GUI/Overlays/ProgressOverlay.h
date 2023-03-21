@@ -3,6 +3,7 @@
 #include "Hazard.h"
 #include "Hazard/ImGUI/Overlay.h"
 #include "Core/EditorAssetManager.h"
+#include "Jobs.h"
 
 namespace UI 
 {
@@ -13,14 +14,11 @@ namespace UI
 		~ProgressOverlay() = default;
 		void Update() override;
 		bool OnEvent(Event& e) override { return false; };
-		void OnPanelRender() override {};
+		void OnPanelRender() override;
 
-		//bool DrawProgressCard(const char* title, std::vector<JobGraph>& promises);
+		void DrawProgressCard(const char* title, float progress);
 
 		//void AddProcesses(const std::string& type, const std::vector<JobGraph>& promises);
 		//void AddProcess(const std::string& type, const JobGraph& promise);
-
-	private:
-		std::unordered_map<std::string, std::vector<JobGraph>> m_CurrentProcesses;
 	};
 }

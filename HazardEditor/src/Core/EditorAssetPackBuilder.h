@@ -5,6 +5,7 @@
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 #include "HazardRenderer.h"
 #include <Hazard/Rendering/Mesh/MeshAssetLoader.h>
+#include "GUI/AssetTools/AssetImporterPanel.h"
 
 using namespace Hazard;
 class EditorAssetPackBuilder
@@ -13,52 +14,37 @@ public:
 
 	static AssetPack CreateAssetPack(const std::vector<AssetPackElement> element);
 	static CachedBuffer AssetPackToBuffer(const AssetPack& pack);
+	static void GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path);
+
+	static void ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings);
+	static void MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings);
 
 	template<typename T>
-	static AssetPackElement CreatePackElement(const std::filesystem::path& file, T info)
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info)
 	{
 		__debugbreak();
-		return AssetPackElement();
+		return nullptr;
 	}
 	template<typename T, typename E>
-	static AssetPackElement CreatePackElement(const std::filesystem::path& file, T info, E setting)
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info, E setting)
 	{
 		__debugbreak();	
-		return AssetPackElement();
+		return nullptr;
 	}
 	template<>
-	static AssetPackElement CreatePackElement(const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, bool flipOnLoad)
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings)
 	{
-		TextureHeader textureHeader = TextureFactory::LoadTextureFromSourceFile(file, flipOnLoad);
+		Ref<Job> job = Ref<Job>::Create(ImageAssetPackJob, file, info, settings);
+		job->SetJobTag(file.string());
 
-		Buffer data;
-		data.Allocate(sizeof(TextureFileHeader) + textureHeader.Width * textureHeader.Height * textureHeader.Channels);
-
-		TextureFileHeader fileHeader = {};
-		fileHeader.Width = textureHeader.Width;
-		fileHeader.Height = textureHeader.Height;
-		fileHeader.Dimensions = textureHeader.Dimensions;
-		fileHeader.Channels = textureHeader.Channels;
-		fileHeader.Format = textureHeader.Format;
-		fileHeader.MinFilter = (uint8_t)info.Filters.MinFilter;
-		fileHeader.MagFilter = (uint8_t)info.Filters.MagFilter;
-		fileHeader.WrapMode = (uint8_t)info.Filters.Wrapping;
-
-		data.Write(&fileHeader, sizeof(TextureFileHeader));
-		data.Write(textureHeader.ImageData.Data, textureHeader.ImageData.Size, sizeof(TextureFileHeader));
-
-		AssetPackElement element = {};
-		element.Type = AssetType::Image;
-		element.Data = data;
-
-		textureHeader.ImageData.Release();
-
-		return element;
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
+		graph->GetStage(0)->QueueJobs({ job });
+		return graph;
 	}
 	template<>
-	static AssetPackElement CreatePackElement(const std::filesystem::path& file, HazardRenderer::RenderAPI renderApi)
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, HazardRenderer::RenderAPI renderApi)
 	{
-		if (!File::Exists(file)) return AssetPackElement();
+		if (!File::Exists(file)) return nullptr;
 
 		using namespace HazardRenderer;
 		std::vector<ShaderStageCode> binaries = ShaderCompiler::GetShaderBinariesFromSource(file, renderApi);
@@ -87,70 +73,20 @@ public:
 		result.Type = AssetType::Shader;
 		result.Data = data;
 
-		return result;
+		return Ref<JobGraph>::Create("No", 0);
 	}
 	template<>
-	static AssetPackElement CreatePackElement(const std::filesystem::path& file, MeshCreateInfo info)
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings)
 	{
-		if (!File::Exists(file)) return AssetPackElement();
+		if (!File::Exists(file))
+			return nullptr;
 	
-		MeshFactory factory;
-		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
-		factory.SetScalar(1.0f);
-		MeshData meshData = factory.LoadMeshFromSource(file);
+		Ref<Job> job = Ref<Job>::Create(MeshAssetPackJob, file, info, settings);
+		job->SetJobTag(file.string());
 
-		MeshFileHeader header;
-		header.Flags = meshData.Flags;
-		header.VertexCount = meshData.Vertices.size();
-		header.IndexCount = meshData.Indices.size();
-		header.BoundingBox = meshData.BoundingBox;
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
+		graph->GetStage(0)->QueueJobs({ job });
 
-		Buffer data;
-		uint32_t writeOffset = 0;
-
-		data.Allocate(sizeof(MeshFileHeader) + factory.GetMeshDataSize(meshData));
-		data.Write(&header, sizeof(MeshFileHeader));
-		writeOffset += sizeof(MeshFileHeader);
-		
-		for (auto& v : meshData.Vertices)
-		{
-			if (meshData.Flags & MeshFlags_Positions)
-			{
-				data.Write(&v.Position, sizeof(glm::vec3), writeOffset);
-				writeOffset += sizeof(glm::vec3);
-			}
-			if (meshData.Flags & MeshFlags_VertexColors)
-			{
-				data.Write(&v.Color, sizeof(glm::vec4), writeOffset);
-				writeOffset += sizeof(glm::vec4);
-			}
-			if (meshData.Flags & MeshFlags_Normals)
-			{
-				data.Write(&v.Normals, sizeof(glm::vec3), writeOffset);
-				writeOffset += sizeof(glm::vec3);
-			}
-			if (meshData.Flags & MeshFlags_Tangent)
-			{
-				data.Write(&v.Tangent, sizeof(glm::vec3), writeOffset);
-				writeOffset += sizeof(glm::vec3);
-			}
-			if (meshData.Flags & MeshFlags_Binormal)
-			{
-				data.Write(&v.Binormal, sizeof(glm::vec3), writeOffset);
-				writeOffset += sizeof(glm::vec3);
-			}
-			if (meshData.Flags & MeshFlags_TextCoord)
-			{
-				data.Write(&v.Position, sizeof(glm::vec2), writeOffset);
-				writeOffset += sizeof(glm::vec2);
-			}
-		}
-		data.Write(meshData.Indices.data(), meshData.Indices.size() * sizeof(uint32_t), writeOffset);
-
-		AssetPackElement result = {};
-		result.Type = AssetType::Mesh;
-		result.Data = data;
-
-		return result;
+		return graph;
 	}
 };

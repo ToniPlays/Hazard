@@ -16,6 +16,8 @@ public:
 	float GetWeight() const { return m_Weight; }
 	void SetWeight(float weight) { m_Weight = weight; }
 
+	const std::vector<Ref<Job>>& GetJobs() { return m_Jobs; }
+
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
 	float GetProgress();
 
@@ -27,12 +29,12 @@ public:
 		return m_JobGraph;
 	}
 	template<typename T>
-	T GetResult() 
-	{ 
-		if (!m_ResultBuffer.Data) 
+	T GetResult()
+	{
+		if (!m_ResultBuffer.Data)
 			return T();
 
-		return m_ResultBuffer.Read<T>(); 
+		return m_ResultBuffer.Read<T>();
 	}
 
 	template<typename T>
@@ -40,7 +42,8 @@ public:
 	{
 		if constexpr (IsRef<T>::value)
 		{
-			result->IncRefCount();
+			if (result != nullptr)
+				result->IncRefCount();
 		}
 
 		m_ResultBuffer.Release();
@@ -50,10 +53,6 @@ public:
 
 private:
 	void OnJobFinished();
-	void Execute()
-	{
-		
-	}
 
 private:
 	float m_Weight = 1.0f;

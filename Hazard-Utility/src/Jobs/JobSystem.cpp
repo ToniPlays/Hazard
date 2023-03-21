@@ -47,8 +47,12 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 
 		if (job)
 		{
-			m_RunningJobs++;
-			m_RunningJobs.notify_all();
+			m_RunningJobMutex.lock();
+			m_RunningJobs.push_back(job);
+			m_RunningJobMutex.unlock();
+
+			m_RunningJobCount++;
+			m_RunningJobCount.notify_all();
 
 			thread->m_Status = ThreadStatus::Executing;
 			thread->m_Status.notify_all();
@@ -59,17 +63,37 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 					m_Jobs.erase(it);
 
 			}
+
+			m_JobMutex.unlock();
+
 			m_JobCount = m_Jobs.size();
 			m_JobCount.notify_one();
-			m_JobMutex.unlock();
 
 			thread->m_CurrentJob = job;
 			{
 				job->Execute();
+				if (job->GetJobGraph())
+				{
+					//Check if this was the last job to run on graph
+					if (job->GetJobGraph()->HasFinished())
+					{
+						std::scoped_lock lock(m_GraphMutex);
+						auto it = std::find(m_QueuedGraphs.begin(), m_QueuedGraphs.end(), job->GetJobGraph());
+						if (it != m_QueuedGraphs.end())
+							m_QueuedGraphs.erase(it);
+					}
+				}
 			}
-			thread->m_CurrentJob = nullptr;
-			m_RunningJobs--;
-			m_RunningJobs.notify_all();
+			{
+				thread->m_CurrentJob = nullptr;
+
+				m_RunningJobMutex.lock();
+				m_RunningJobs.erase(std::find(m_RunningJobs.begin(), m_RunningJobs.end(), job));
+				m_RunningJobMutex.unlock();
+			}
+
+			m_RunningJobCount--;
+			m_RunningJobCount.notify_all();
 		}
 		else m_JobMutex.unlock();
 	}

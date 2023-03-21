@@ -18,6 +18,7 @@ namespace UI
     struct MeshImportSettings
     {
         float Scale = 1.0;
+        AssetHandle Handle;
     };
 
     class AssetImporterPanel : public Hazard::ImUI::Modal
@@ -41,8 +42,8 @@ namespace UI
         void InitializeData();
 
         //Import jobs
-        static void ImportImage(Ref<Job> job, std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings);
-        static void ImportMesh(Ref<Job> job, std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings);
+        static void ImportImage(std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings);
+        static void ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings);
 
     private:
         std::filesystem::path m_CurrentFilePath;

@@ -15,6 +15,12 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		Buffer buffer = AssetManager::GetAssetData(handle);
+		if (!buffer.Data)
+		{
+			HZR_CORE_ERROR("Cannot find asset data for {}", handle);
+			return;
+		}
+
 		CachedBuffer readBuffer(buffer.Data, buffer.Size);
 
 		TextureFileHeader header = readBuffer.Read<TextureFileHeader>();

@@ -292,10 +292,7 @@ namespace HazardRenderer::Vulkan
 			result.reserve(count);
 
 			for (auto& extension : extensions)
-			{
-				std::cout << extension.extensionName << std::endl;
 				result.push_back(extension.extensionName);
-			}
 		}
 	}
 }

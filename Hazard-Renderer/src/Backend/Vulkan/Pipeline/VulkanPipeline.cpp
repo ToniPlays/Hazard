@@ -128,8 +128,6 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::GraphicsBit, "Pipeline is not a graphics pipeline");
 		HZR_ASSERT(m_Shader, "No shader");
 
-		std::cout << m_Specs.DebugName << std::endl;
-
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 

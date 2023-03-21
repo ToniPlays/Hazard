@@ -13,8 +13,10 @@ class JobGraph : public RefCount
 public:
 	JobGraph(const std::string& name, uint32_t stageCount);
 
+	const std::string& GetName() const { return m_Name; }
 	size_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
+	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
 	Ref<GraphStage> GetNextStage();
 	Ref<GraphStage> AddStage()
 	{
@@ -24,7 +26,20 @@ public:
 		return stage;
 	}
 
-	void Execute();
+	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0)
+	{
+		auto& stages = graph->GetStages();
+		for (uint32_t i = 0; i < stages.size(); i++)
+		{
+			Ref<GraphStage> stage = GetStage(i + offset);
+			if (!stage) 
+				stage = AddStage();
+			stage->m_JobGraph = this;
+			stage->QueueJobs(stages[i]->m_Jobs);
+		}
+	}
+
+	Ref<JobGraph> Execute();
 
 	float GetProgress();
 

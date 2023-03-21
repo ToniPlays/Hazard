@@ -141,7 +141,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 	{
 	case AssetType::Shader:
 	{
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 		break;
@@ -153,7 +153,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		info.GenerateMips = false;
 		info.Usage = ImageUsage::Texture;
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info);
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, false)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 		break;
@@ -163,7 +163,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		MeshCreateInfo info = {};
 		info.DebugName = File::GetName(path);
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info);
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info)->Execute()->GetResult<AssetPackElement>();
 		element.Handle = AssetHandle();
 		elements.push_back(element);
 	}

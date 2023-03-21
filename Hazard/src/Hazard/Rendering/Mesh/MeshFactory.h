@@ -8,6 +8,8 @@
 #include <assimp/scene.h>
 #include <assimp/ProgressHandler.hpp>
 
+#include "MathCore.h"
+
 namespace Hazard
 {
 	using MeshProgressCallback = std::function<void(float)>;
@@ -70,7 +72,7 @@ namespace Hazard
 		bool Update(float progress) override
 		{
 			if(m_Factory->m_Handler)
-				m_Factory->m_Handler(progress * 0.5f);
+				m_Factory->m_Handler(Math::Clamp(progress * 0.5f, 0.0f, 1.0f));
 			return true;
 		}
 	private:

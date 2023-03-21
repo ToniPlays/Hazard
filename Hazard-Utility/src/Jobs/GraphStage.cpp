@@ -29,5 +29,6 @@ float GraphStage::GetProgress()
 	float result = 0;
 	for (auto& job : m_Jobs)
 		result += job->GetProgress() / m_Jobs.size();
+
 	return result * m_Weight;
 }
