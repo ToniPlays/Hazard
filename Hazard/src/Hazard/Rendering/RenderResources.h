@@ -66,11 +66,11 @@ namespace Hazard
         
         Ref<HazardRenderer::VertexBuffer> TransformBuffer;
 
-		Ref<HazardRenderer::Pipeline> SkyboxPipeline;
+		AssetHandle SkyboxPipelineHandle;
 		Ref<Material> PBRMaterial;
 
-        Ref<Texture2DAsset> WhiteTexture;
-		Ref<Texture2DAsset> BRDFLut;
+        AssetHandle WhiteTextureHandle;
+		AssetHandle BRDFLut;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
@@ -108,21 +108,14 @@ namespace Hazard
                 
                 TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
                 
-				Ref<HazardRenderer::Pipeline> pbrPipeline = ShaderLibrary::GetPipeline("PBR_Static");
-				pbrPipeline->SetRenderPass(renderPass);
-
-				PBRMaterial = Ref<Material>::Create(pbrPipeline);
-
-
-				SkyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
-				SkyboxPipeline->SetRenderPass(renderPass);
+				AssetHandle pbrPipeline = AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack");
+				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl.hpack");
 
                 auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
-                
                 Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
                 
-                WhiteTexture = Ref<Texture2DAsset>::Create(asset);
-				BRDFLut = AssetManager::GetAsset<Texture2DAsset>("BRDF_LUT.tga.hpack");
+				WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
+				BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga.hpack");
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

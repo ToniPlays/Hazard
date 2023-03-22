@@ -21,9 +21,9 @@ namespace Hazard
     public:
         
         Material();
-        Material(Ref<HazardRenderer::Pipeline> pipeline)
+        Material(AssetHandle pipelineHandle)
         {
-            SetPipeline(pipeline);
+            SetPipeline(pipelineHandle);
         }
         
         template<typename T>
@@ -46,27 +46,26 @@ namespace Hazard
             return m_ParameterBuffer.Write(&value, sizeof(T), offset);
         }
         
-        void SetTexture(const std::string& name, Ref<Texture2DAsset> texture)
+        void SetTexture(const std::string& name, AssetHandle handle)
         {
-            m_Textures[name] = texture;
+            m_Textures[name] = handle;
         }
         
         const std::unordered_map<std::string, MaterialParam>& GetParameters() const { return m_Params; }
-        const std::unordered_map<std::string, Ref<Texture2DAsset>>& GetTextures() const { return m_Textures; }
+        const std::unordered_map<std::string, AssetHandle>& GetTextures() const { return m_Textures; }
         Buffer GetBuffer() const { return m_ParameterBuffer; }
         
-        Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
-        void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
+        AssetHandle GetPipeline() const { return m_PipelineHandle; };
+        void SetPipeline(AssetHandle handle) { m_PipelineHandle = handle; };
         
     private:
         
         void UpdateParameters(const HazardRenderer::ShaderPushConstantRange& constant);
         
     private:
-        Ref<HazardRenderer::Pipeline> m_Pipeline;
+        AssetHandle m_PipelineHandle;
         Buffer m_ParameterBuffer;
         std::unordered_map<std::string, MaterialParam> m_Params;
-        std::unordered_map<std::string, Ref<Texture2DAsset>> m_Textures;
-        
+        std::unordered_map<std::string, AssetHandle> m_Textures;
     };
 }

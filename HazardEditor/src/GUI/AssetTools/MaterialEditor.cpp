@@ -13,7 +13,7 @@ namespace UI
     void MaterialEditor::OnPanelRender()
     {
         if(!m_Material) return;
-        
+        /*
         const char* name = m_Material->GetPipeline()->GetSpecifications().DebugName.c_str();
         
         ImVec2 size = ImGui::CalcTextSize(name);
@@ -41,6 +41,7 @@ namespace UI
         
         if(ImGui::Button("Save"))
             AssetManager::SaveAsset(m_Material);
+        */
     }
     void MaterialEditor::DrawMaterialParam(const std::string &name, const Hazard::MaterialParam &param)
     {

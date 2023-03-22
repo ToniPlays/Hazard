@@ -13,11 +13,9 @@ namespace UI
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Path", "Handle" };
+		const char* columns[] = { "Path", "Type", "Handle" };
 
-		ImUI::Table("AssetPanel", columns, 2, size, [&]() {
-
-			
+		ImUI::Table("AssetPanel", columns, 3, size, [&]() {
 			float rowHeight = 24.0f;
 
 			for (auto& [path, metadata] : AssetManager::GetMetadataRegistry())
@@ -34,6 +32,9 @@ namespace UI
 					ImUI::Separator({ 4.0, rowHeight }, GetLoadStateColor(meta.LoadState));
 					ImGui::SameLine();
 					ImGui::Text("%s", n.c_str());
+					ImGui::TableNextColumn();
+					ImUI::ShiftX(4.0f);
+					ImGui::Text("%s", Hazard::Utils::AssetTypeToString(meta.Type));
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%s", std::to_string(meta.Handle).c_str());

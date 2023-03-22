@@ -22,7 +22,7 @@ namespace Hazard
 		Missing = BIT(2),
 		Invalid = BIT(3),
 		InvalidInput = BIT(4),
-		RuntimeGenerated = BIT(5)
+		MemoryOnly = BIT(5)
 	};
 
 	using AssetHandle = UID;
@@ -35,6 +35,8 @@ namespace Hazard
 
 		std::string Key = "";
 		std::filesystem::path AssetPackFile = "";
+
+		bool MemoryOnly = false;
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
 	};
@@ -50,17 +52,17 @@ namespace Hazard
 
 		const AssetType GetType() const { return m_Type; }
 		AssetHandle GetHandle() const { return m_Handle; }
-		AssetFlags GetFlags() const { return m_Flags; }
+		uint32_t GetFlags() const { return m_Flags; }
 		bool IsValid() const { return m_Handle != INVALID_ASSET_HANDLE && m_Type != AssetType::Undefined; }
 
 	protected:
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
 		AssetType m_Type = AssetType::Undefined;
-		AssetFlags m_Flags = AssetFlags::None;
+		uint16_t m_Flags = 0;
 
 	private:
 		void SetHandle(UID handle) { m_Handle = handle; };
-		void SetFlags(AssetFlags flags) { m_Flags = flags; }
+		void SetFlags(uint32_t flags) { m_Flags = flags; }
 	};
 
 	class AssetPointer : public Asset

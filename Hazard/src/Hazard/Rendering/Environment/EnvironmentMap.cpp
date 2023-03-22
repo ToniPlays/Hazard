@@ -15,7 +15,6 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		m_Handle = UID();
-		m_Flags = AssetFlags::RuntimeGenerated;
 		m_Type = AssetType::EnvironmentMap;
 
 		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
@@ -77,11 +76,7 @@ namespace Hazard
 		graphicsBuffer->Submit();
 
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
-		AssetMetadata radianceMetadata = {};
-		radianceMetadata.Handle = RadianceMap->GetHandle();
-		radianceMetadata.Type = AssetType::EnvironmentMap;
-
-		AssetManager::AddRuntimeAsset(radianceMetadata, RadianceMap);
+		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, RadianceMap);
 	}
 	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
 	{
@@ -129,11 +124,7 @@ namespace Hazard
 		graphicsBuffer->Submit();
 
 		IrradianceMap = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
-
-		AssetMetadata irradianceMetadata = {};
-		irradianceMetadata.Handle = IrradianceMap->GetHandle();
-		irradianceMetadata.Type = AssetType::EnvironmentMap;
-		AssetManager::AddRuntimeAsset(irradianceMetadata, IrradianceMap);
+		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, IrradianceMap);
 	}
 	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
 	{

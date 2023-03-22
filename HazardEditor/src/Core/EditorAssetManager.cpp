@@ -40,6 +40,8 @@ void EditorAssetManager::LoadEditorAssets()
 		{ "Sphere", "sphere.fbx.hpack" }
 	};
 
+	return;
+
 	Timer timer;
 	for (auto& texture : texturesToLoad)
 		texture.Promise = AssetManager::GetAssetAsync<Asset>(texture.Path);
@@ -50,12 +52,12 @@ void EditorAssetManager::LoadEditorAssets()
 	for (auto& texture : texturesToLoad)
 	{
 		texture.Promise.Wait();
-		s_Icons[texture.Key] = texture.Promise.Get().As<Texture2DAsset>();
+		s_Icons[texture.Key] = texture.Promise.Result().As<Texture2DAsset>();
 	}
 	for (auto& mesh : meshesToLoad)
 	{
 		mesh.Promise.Wait();
-		s_DefaultMesh[mesh.Key] = mesh.Promise.Get().As<Mesh>();
+		s_DefaultMesh[mesh.Key] = mesh.Promise.Result().As<Mesh>();
 	}
 
 	HZR_INFO("Editor assets loaded in {}ms", timer.ElapsedMillis());

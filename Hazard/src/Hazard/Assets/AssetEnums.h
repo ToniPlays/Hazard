@@ -16,6 +16,7 @@ enum class AssetType : uint32_t
 	PhysicsMaterial,
 	Mesh,
 	Script,
+	Buffer,
 	Pipeline,
 	Shader,
     Material,

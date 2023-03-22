@@ -7,9 +7,9 @@ namespace Hazard
 {
     Material::Material()
     {
-        SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
+        SetPipeline(AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack"));
     }
-
+    /*
     void Material::SetPipeline(Ref<HazardRenderer::Pipeline> pipeline)
     {
         m_ParameterBuffer.Release();
@@ -33,11 +33,12 @@ namespace Hazard
             if(set == 0) continue;
             for(auto& [binding, sampler] : samplers)
             {
-                if(sampler.Dimension == 2)
-                    m_Textures[sampler.Name] = resources.WhiteTexture;
+                if (sampler.Dimension == 2)
+                    m_Textures[sampler.Name] = AssetManager::GetAsset<Texture2DAsset>(resources.WhiteTextureHandle);
             }
         }
     }
+    */
     void Material::UpdateParameters(const HazardRenderer::ShaderPushConstantRange& constant)
     {
         m_ParameterBuffer.Allocate(constant.Size);

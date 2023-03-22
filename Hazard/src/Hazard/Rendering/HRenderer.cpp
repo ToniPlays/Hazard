@@ -58,7 +58,7 @@ namespace Hazard
 
         
 		//Fix
-        Ref<Pipeline> pipeline = material->GetPipeline();
+        Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value;
 
         auto& drawList = s_Engine->GetDrawList();
         

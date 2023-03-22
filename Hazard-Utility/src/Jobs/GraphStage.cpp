@@ -3,7 +3,12 @@
 
 #include <Jobs.h>
 
-void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs) 
+GraphStage::~GraphStage()
+{
+	m_ResultBuffer.Release();
+}
+
+void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
 	std::lock_guard lock(m_JobMutex);
 	m_Jobs.insert(m_Jobs.begin(), jobs.begin(), jobs.end());

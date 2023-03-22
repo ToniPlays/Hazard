@@ -93,11 +93,10 @@ namespace Hazard {
 			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
 			JobPromise<Ref<Asset>> promise = AssetManager::GetAssetAsync<Asset>(handle);
 			promise.Wait();
-			m_World = promise.Get().As<World>();
+			m_World = promise.Result().As<World>();
 			return m_World;
 		}
 		m_World = Ref<World>::Create("");
-		m_World->SetName("New World");
 
 		Entity entity = m_World->CreateEntity("Camera");
 		m_World->CreateEntity("Entity 1");
@@ -105,31 +104,4 @@ namespace Hazard {
 
 		return false;
 	}
-	/*JobPromise WorldHandler::LoadWorldAsync(const std::filesystem::path& file, Serialization type, WorldAsyncPromises* promises)
-	{
-		HZR_PROFILE_FUNCTION();
-		if (File::Exists(file))
-		{
-			AssetHandle handle = AssetManager::GetHandleFromFile(file);
-			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
-
-			auto promise = AssetManager::GetAssetAsync<World>(handle);
-			promise.Wait();
-			auto waitPromise = promise.Then([handle, type](JobGraph& graph) -> size_t {
-				Application::GetModule<WorldHandler>().SetWorld(*graph.Result<Ref<World>>());
-				return 0;
-				});
-
-			return waitPromise;
-
-		}
-		m_World = Ref<World>::Create("");
-		m_World->SetName("New World");
-
-		Entity entity = m_World->CreateEntity("Camera");
-		m_World->CreateEntity("Entity 1");
-		entity.AddComponent<CameraComponent>();
-
-		return JobPromise();
-	}*/
 }

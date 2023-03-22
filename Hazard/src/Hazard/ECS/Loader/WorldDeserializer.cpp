@@ -16,8 +16,6 @@ namespace Hazard
 		if (!root["World"])
 			return;
 
-		world->SetName(root["World"].as<std::string>());
-
 		//Loop entities
 		auto entities = root["Entities"];
 		size_t index = 0;
@@ -56,8 +54,9 @@ namespace Hazard
 		metadata.Type = AssetType::World;
 		world->m_Handle = metadata.Handle;
 
+		world->IncRefCount();
 		job->GetStage()->SetResult(world);
-		HZR_CORE_INFO("Loaded world {}", world->GetName());
+		HZR_CORE_INFO("Loaded world {}", metadata.Key);
 	}
 	static void LoadWorldAsset(Ref<Job> job, AssetHandle handle)
 	{

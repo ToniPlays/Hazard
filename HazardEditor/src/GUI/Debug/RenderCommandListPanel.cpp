@@ -18,7 +18,7 @@ namespace UI
 			Ref<WorldRenderer> renderer = list.WorldRenderer;
 			if (!renderer->IsValid()) continue;
 
-			ImUI::Treenode(renderer->GetTargetWorld()->GetName().c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+			ImUI::Treenode("##worldCommandList", ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
 				const char* elements[] = { "Type", "Value" };
 
 				ImVec2 size = ImGui::GetContentRegionAvail();
@@ -82,6 +82,7 @@ namespace UI
 			for (auto& [material, list] : drawList.MeshList) {
 				auto& meshDrawList = list;
                 
+				/*
                 auto specs = material->GetPipeline()->GetSpecifications();
                 
 				ImUI::Treenode(specs.DebugName.c_str(), 0, [&]() {
@@ -97,6 +98,7 @@ namespace UI
                     
 					ImGui::Columns();
 					});
+					*/
 			}
 			});
 		ImUI::Treenode("Composite pass", ImGuiTreeNodeFlags_Framed, [&]() {});

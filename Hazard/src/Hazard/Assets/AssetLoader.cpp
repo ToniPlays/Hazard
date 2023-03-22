@@ -17,8 +17,7 @@ namespace Hazard
 			return nullptr;
 		}
 
-		Ref<JobGraph> graph = m_Loaders[metadata.Type]->Load(metadata);
-		return graph;
+		return m_Loaders[metadata.Type]->Load(metadata);
 	}
 	Ref<JobGraph> AssetLoader::Save(Ref<Asset>& asset)
 	{

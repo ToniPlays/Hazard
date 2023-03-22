@@ -29,7 +29,8 @@ namespace Hazard
 			shaderAsset->ShaderCode.push_back(code);
 		}
 		
-		job->GetStage()->SetResult(shaderAsset);
+		job->GetStage()->SetResult(shaderAsset.Raw());
+		shaderAsset->IncRefCount();
 		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
 	}
 

@@ -12,6 +12,7 @@ class GraphStage : public RefCount
 	friend class Job;
 public:
 	GraphStage(uint32_t index, float weight) : m_StageIndex(index), m_Weight(weight) {}
+	~GraphStage();
 
 	float GetWeight() const { return m_Weight; }
 	void SetWeight(float weight) { m_Weight = weight; }
@@ -40,12 +41,6 @@ public:
 	template<typename T>
 	void SetResult(T result)
 	{
-		if constexpr (IsRef<T>::value)
-		{
-			if (result != nullptr)
-				result->IncRefCount();
-		}
-
 		m_ResultBuffer.Release();
 		m_ResultBuffer.Allocate(sizeof(T));
 		m_ResultBuffer.Write(&result, sizeof(T));

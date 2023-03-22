@@ -128,33 +128,24 @@ namespace Hazard
 				JobPromise<Ref<Asset>> promise = Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
 				return promise;
 			}
-			return JobPromise<Ref<T>>();
+			return JobPromise<Ref<T>>(s_LoadedAssets[handle]);
 		}
 
-		static bool AddRuntimeAsset(const AssetMetadata& metadata, Ref<Asset> asset)
+		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset)
 		{
-			HZR_PROFILE_FUNCTION();
-			HZR_ASSERT(asset->m_Handle == metadata.Handle, "Stuff no match");
+			AssetMetadata metadata = {};
+			metadata.Handle = AssetHandle();
+			metadata.Type = type;
+			metadata.MemoryOnly = true;
+			metadata.LoadState = LoadState::Loaded;
 
-			asset->m_Type = metadata.Type;
+			asset->m_Flags |= (uint32_t)AssetFlags::MemoryOnly;
+
 			s_LoadedAssets[metadata.Handle] = asset;
-
-			return true;
-		}
-		template<typename T>
-		static Ref<T> GetRuntimeAsset(const AssetHandle& handle)
-		{
-			HZR_PROFILE_FUNCTION();
-			if (handle == INVALID_ASSET_HANDLE) return nullptr;
-			return s_LoadedAssets[handle].As<T>();
-		}
-		static void RemoveRuntimeAsset(const AssetHandle& handle)
-		{
-			HZR_PROFILE_FUNCTION();
-			if (handle == INVALID_ASSET_HANDLE) return;
-			s_LoadedAssets.erase(handle);
+			return metadata.Handle;
 		}
 
+	private:
 		static void AddLoadedAssetJop(Ref<Job> job, AssetHandle handle)
 		{
 			Ref<Asset> asset = job->GetInput<Ref<Asset>>();

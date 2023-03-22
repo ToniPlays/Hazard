@@ -20,9 +20,7 @@ namespace Hazard
             if(!root["Textures"][name]) continue;
             AssetHandle handle;
             YamlUtils::Deserialize(root["Textures"], name, handle, INVALID_ASSET_HANDLE);
-            
-            if(handle != INVALID_ASSET_HANDLE)
-                material->SetTexture(name, AssetManager::GetAsset<Texture2DAsset>(handle));
+            material->SetTexture(name, handle);
         }
         
         for(auto& [name, param] : material->GetParameters())
@@ -42,7 +40,7 @@ namespace Hazard
         out << YAML::Key << "Textures" << YAML::BeginMap;
         
         for(auto& [name, texture] : material->GetTextures())
-            YamlUtils::Serialize(out, name, texture->GetHandle());
+            YamlUtils::Serialize(out, name, texture);
         
         out << YAML::EndMap;
         out << YAML::Key << "Properties" << YAML::BeginMap;

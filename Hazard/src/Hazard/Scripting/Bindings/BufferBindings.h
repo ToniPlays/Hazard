@@ -51,11 +51,7 @@ namespace Hazard
 		vboInfo.Data = data;
 		Ref<VertexBuffer> buffer = VertexBuffer::Create(&vboInfo);
 
-		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Undefined);
-
-		AssetMetadata metadata = {};
-		metadata.Type = AssetType::Undefined;
-		metadata.Handle = asset->GetHandle();
+		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Buffer);
 
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
@@ -63,12 +59,12 @@ namespace Hazard
 			hdelete dataPtr;
 			});
 		
-		AssetManager::AddRuntimeAsset(metadata, buffer);
+		AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
 		return asset->GetHandle();
 	}
 	static void VertexBuffer_Destroy_Native(uint64_t handle) 
 	{
-		Ref<VertexBuffer> buffer = AssetManager::GetRuntimeAsset<VertexBuffer>(handle);
+		Ref<VertexBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
 		buffer->DecRefCount();
 	}
 
@@ -88,11 +84,7 @@ namespace Hazard
 		iboInfo.Data = data;
 		Ref<IndexBuffer> buffer = IndexBuffer::Create(&iboInfo);
 
-		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Undefined);
-
-		AssetMetadata metadata = {};
-		metadata.Type = AssetType::Undefined;
-		metadata.Handle = asset->GetHandle();
+		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Buffer);
 
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
@@ -100,32 +92,27 @@ namespace Hazard
 			hdelete dataPtr;
 			});
 
-
-		AssetManager::AddRuntimeAsset(metadata, buffer);
+		AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
 		return asset->GetHandle();
 	}
 	static void IndexBuffer_Destroy_Native(uint64_t handle)
 	{
-		Ref<IndexBuffer> buffer = AssetManager::GetRuntimeAsset<IndexBuffer>(handle);
+		Ref<IndexBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
 		buffer->DecRefCount();
 	}
 	static uint64_t Mesh_Create_Native(ManagedMeshInfo* info)
 	{
-		Ref<VertexBuffer> vbo = AssetManager::GetRuntimeAsset<VertexBuffer>(info->VertexBuffer);
-		Ref<IndexBuffer> ibo = AssetManager::GetRuntimeAsset<IndexBuffer>(info->IndexBuffer);
+		Ref<VertexBuffer> vbo = AssetManager::GetAsset<AssetPointer>(info->VertexBuffer)->Value;
+		Ref<IndexBuffer> ibo = AssetManager::GetAsset<AssetPointer>(info->IndexBuffer)->Value;
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create(vbo, ibo, nullptr);
-		
-		AssetMetadata metadata = {};
-		metadata.Type = AssetType::Mesh;
-		metadata.Handle = mesh->GetHandle();
 
-		AssetManager::AddRuntimeAsset(metadata, mesh);
+		AssetManager::CreateMemoryOnly(AssetType::Mesh, mesh);
 		return mesh->GetHandle();
 	}
 	static void Mesh_Destroy_Native(uint64_t handle)
 	{
-		Ref<Mesh> mesh = AssetManager::GetRuntimeAsset<Mesh>(handle);
+		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(handle);
 		mesh->DecRefCount();
 	}
 }

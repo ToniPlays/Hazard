@@ -94,7 +94,7 @@ namespace Hazard
 			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
 		}
 
-		m_Pipeline = ShaderLibrary::GetPipeline("LineShader");
+		m_PipelineHandle = AssetManager::GetHandleFromKey("LineShader.glsl.hpack");
 
 		m_RenderPass = renderPass;
 	}

@@ -20,7 +20,9 @@ namespace UI
 		AddMenuItem("File/Save", [&]() {
 			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
 			WorldSerializer serializer(world);
-			serializer.SerializeEditor(world->GetWorldFile());
+
+			AssetMetadata& metadata = AssetManager::GetMetadata(world->GetHandle());
+			serializer.SerializeEditor(metadata.Key);
 
 			});
 		AddMenuItem("File/Save as", nullptr);

@@ -108,6 +108,7 @@ namespace Hazard
 
 		//Prepare Materials
 		{
+			/*
 			auto shader = resources.PBRMaterial->GetPipeline()->GetShader();
 			if (!environment.Map)
 			{
@@ -132,19 +133,21 @@ namespace Hazard
 				if (lut)
 					shader->Set("u_BRDFLut", 0, lut->GetSourceImageAsset()->Value.As<Image2D>());
 			}
+			*/
 		}
 		//Draw all meshes
 		{
 			for (DrawCall& call : m_DrawCalls)
 			{
-				auto pipeline = call.Material->GetPipeline();
+				auto pipeline = AssetManager::GetAsset<AssetPointer>(call.Material->GetPipeline())->Value.As<Pipeline>();
 				auto shader = pipeline->GetShader();
 
 				//Bind textures
 				for (auto& [name, texture] : call.Material->GetTextures())
 				{
+					Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(texture);
 					if (texture)
-						shader->Set(name, 0, texture->GetSourceImageAsset()->Value.As<Image2D>());
+						shader->Set(name, 0, asset->GetSourceImageAsset()->Value.As<Image2D>());
 				}
 
 				shader->Set("u_MaterialConstants", call.Material->GetBuffer());
@@ -161,8 +164,10 @@ namespace Hazard
 
 		if (!radiance) return;
 
-		RenderEngine::GetResources().SkyboxPipeline->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
-		m_Buffer->SetPipeline(resources.SkyboxPipeline);
+		auto skyboxMaterial = AssetManager::GetAsset<AssetPointer>(RenderEngine::GetResources().SkyboxPipelineHandle)->Value.As<Pipeline>();
+
+		skyboxMaterial->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
+		m_Buffer->SetPipeline(skyboxMaterial);
 		m_Buffer->Draw(6);
 	}
 }

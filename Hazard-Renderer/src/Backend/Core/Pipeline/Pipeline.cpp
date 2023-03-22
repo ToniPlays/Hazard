@@ -12,6 +12,8 @@ namespace HazardRenderer
 	{
 		HZR_ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
 
+		std::cout << "Creating pipeline " << specs->DebugName << std::endl;
+
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL

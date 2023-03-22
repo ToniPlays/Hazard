@@ -466,7 +466,6 @@ namespace UI
 			worldPath = path.string() + std::to_string(suffix) + ".hazard";
 
 		Ref<World> newWorld = Ref<World>::Create(path);
-		newWorld->SetName("New World");
 
 		Entity entity = newWorld->CreateEntity("Camera");
 		newWorld->CreateEntity("Entity 1");
