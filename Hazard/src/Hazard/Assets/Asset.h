@@ -43,6 +43,7 @@ namespace Hazard
 	{
 		friend class AssetManager;
 		friend class ImageAssetLoader;
+		friend class WorldAssetLoader;
 	public:
 
 		virtual ~Asset();

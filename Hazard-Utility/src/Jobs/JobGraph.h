@@ -67,5 +67,5 @@ private:
 	std::vector<Ref<GraphStage>> m_Stages;
 	std::atomic_uint32_t m_CurrentStage = 0;
 
-	JobSystem* m_JobSystem;
+	JobSystem* m_JobSystem = nullptr;
 };

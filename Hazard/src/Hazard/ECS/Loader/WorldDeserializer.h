@@ -14,16 +14,15 @@ namespace Hazard
 {
 	using DeserializerProgressHandler = std::function<void(Entity&, size_t, size_t)>;
 
-	class WorldDeserializer {
+	class WorldDeserializer
+	{
 	public:
 
 		WorldDeserializer() = default;
 
-		Ref<World> DeserializeEditor(const std::filesystem::path& file, uint32_t flags = 0);
-		Ref<World> DeserializeRuntime(const std::filesystem::path& file, uint32_t flags = 0) { return nullptr; };
-
-		std::vector<WorldAsyncAssetPromise>& GetPromises() { return m_Promises; }
-
+		Ref<JobGraph> DeserializeEditor(const std::filesystem::path& file);
+		static void ProcessWorld(Ref<Job> job, std::filesystem::path file);
+		Ref<JobGraph> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
 
 		void SetProgressHandler(DeserializerProgressHandler handler)
 		{
@@ -144,8 +143,8 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.m_MeshHandle, INVALID_ASSET_HANDLE);
 			YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
 
-			if (handle != INVALID_ASSET_HANDLE)
-				c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
+			//if (handle != INVALID_ASSET_HANDLE)
+			//	c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -195,9 +194,55 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "RestitutionThreshold", component.RestitutionThreshold, 0.1f);
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
+
+		template<typename T>
+		static void FetchAssetsToLoad(const char* key, YAML::Node comp, std::vector<AssetHandle>& handles)
+		{
+			if (comp[key])
+				FetchAssetsFromComponent<T>(comp[key], handles);
+		}
+
+		template<typename T>
+		static void FetchAssetsFromComponent(YAML::Node comp, std::vector<AssetHandle>& handles)
+		{
+			__debugbreak();
+			//static_assert(false);
+		}
+
+		template<>
+		static void FetchAssetsFromComponent<MeshComponent>(YAML::Node comp, std::vector<AssetHandle>& handles)
+		{
+			const char* keys[] = { "Mesh" };
+
+			for (auto& key : keys)
+			{
+				AssetHandle handle;
+				YamlUtils::Deserialize(comp, key, handle, (AssetHandle)0);
+				if (handle == 0) continue;
+
+				AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+				if (metadata.LoadState == LoadState::None)
+					handles.push_back(handle);
+			}
+		}
+		template<>
+		static void FetchAssetsFromComponent<SpriteRendererComponent>(YAML::Node comp, std::vector<AssetHandle>& handles)
+		{
+			const char* keys[] = { "Texture" };
+
+			for (auto& key : keys)
+			{
+				AssetHandle handle;
+				YamlUtils::Deserialize(comp, key, handle, (AssetHandle)0);
+				if (handle == 0) continue;
+
+				AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+				if (metadata.LoadState == LoadState::None)
+					handles.push_back(handle);
+			}
+		}
+
 	private:
-		bool m_CanAsync = false;
-		std::vector<WorldAsyncAssetPromise> m_Promises;
 		DeserializerProgressHandler m_Handler;
 	};
 }

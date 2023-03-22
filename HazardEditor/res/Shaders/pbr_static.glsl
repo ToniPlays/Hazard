@@ -100,6 +100,8 @@ void main()
     m_Params.Metalness = u_MaterialConstants.Metalness;
     m_Params.Roughness = max(u_MaterialConstants.Roughness, 0.05);
     
+    m_Params.Albedo = Input.Color.rgb;
+
     if(u_MaterialConstants.UseNormalMap)
     {
         m_Params.Normal = normalize(texture(u_NormalMap, Input.TextureCoords).rgb * 2.0f - 1.0f);

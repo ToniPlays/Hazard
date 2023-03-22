@@ -164,7 +164,7 @@ namespace UI
 		for (auto& item : m_CurrentItems)
 		{
 			item.BeginRender();
-			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? EditorAssetManager::GetIcon("Folder") :  GetItemIcon(item.GetMetadata());
+			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? EditorAssetManager::GetIcon("Folder") : GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
@@ -200,7 +200,7 @@ namespace UI
 			ImUI::MenuHeader("Folder");
 		ImUI::MenuItem("New folder", [&]() {
 			CreateFolder(GetOpenDirectory() / "Folder");
-			changed = true;
+		changed = true;
 			});
 		ImUI::MenuHeader("Import");
 		ImUI::MenuItem("Import asset", [&]() {
@@ -214,8 +214,8 @@ namespace UI
 		panel->Open();
 			});
 		ImUI::MenuItem("World", [&]() {
-			//EditorAssetManager::CreateAsset(AssetType::World, GetOpenDirectory() / "world.hazard");
-			changed = true;
+			CreateWorld(GetOpenDirectory() / "NewWorld");
+		changed = true;
 			});
 		ImUI::MenuItem("Material", [&]() {
 			//EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
@@ -279,11 +279,12 @@ namespace UI
 		m_CurrentItems.clear();
 		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == ".hpack")
+			AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(item));
+			
+			if (type != AssetType::Folder && type != AssetType::Undefined)
 			{
-				std::filesystem::path assetPackPath = item.lexically_normal();
-				if (!File::Exists(assetPackPath)) continue;
-				AssetHandle handle = AssetManager::GetHandleFromKey(assetPackPath.string());
+				AssetHandle handle = AssetManager::GetHandleFromKey(item.lexically_normal().string());
+				HZR_INFO("Updating file {} ({})", item.string(), handle);
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
 
@@ -409,9 +410,6 @@ namespace UI
 
 		for (auto& folder : File::GetAllInDirectory(m_RootPath))
 		{
-			AssetHandle handle = AssetManager::GetHandleFromKey(folder.string());
-			if (handle == INVALID_ASSET_HANDLE) continue;
-
 			if (!File::IsDirectory(folder)) continue;
 
 			auto& data = result.emplace_back();
@@ -431,6 +429,7 @@ namespace UI
 			if (handle == INVALID_ASSET_HANDLE) continue;
 
 			if (!File::IsDirectory(subfolder)) continue;
+
 			auto& data = result.emplace_back();
 			data.Path = subfolder;
 			data.SubFolders = GenerateSubFolderData(subfolder);
@@ -457,5 +456,31 @@ namespace UI
 			directoryPath = path.string() + std::to_string(suffix);
 
 		File::CreateDir(directoryPath);
+	}
+	void AssetPanel::CreateWorld(const std::filesystem::path& path)
+	{
+		std::filesystem::path worldPath = path.string() + ".hazard";
+		uint32_t suffix = 1;
+
+		while (File::Exists(worldPath))
+			worldPath = path.string() + std::to_string(suffix) + ".hazard";
+
+		Ref<World> newWorld = Ref<World>::Create(path);
+		newWorld->SetName("New World");
+
+		Entity entity = newWorld->CreateEntity("Camera");
+		newWorld->CreateEntity("Entity 1");
+		entity.AddComponent<CameraComponent>();
+
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		YamlUtils::Serialize(out, "UID", AssetHandle());
+		YamlUtils::Serialize(out, "Type", AssetType::World);
+		out << YAML::EndMap;
+		File::WriteFile(worldPath.string() + ".meta", out.c_str());
+
+		WorldSerializer serializer(newWorld);
+		
+		serializer.SerializeEditor(worldPath);
 	}
 }

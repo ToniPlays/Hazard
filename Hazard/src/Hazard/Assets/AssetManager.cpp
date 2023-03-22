@@ -27,8 +27,8 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		if ((AssetType)asset.Type == AssetType::Undefined)
-            return INVALID_ASSET_HANDLE;
-		
+			return INVALID_ASSET_HANDLE;
+
 		if (s_Registry.Contains(key) && !key.empty())
 		{
 			Ref<Asset> asset = GetAsset<Asset>(s_Registry.Get(key).Handle);
@@ -36,7 +36,7 @@ namespace Hazard
 			s_Registry.Get(key).LoadState = LoadState::None;
 			return s_Registry.Get(key).Handle;
 		}
-			
+
 		AssetMetadata metadata = {};
 		metadata.Type = (AssetType)asset.Type;
 		metadata.Key = key;
@@ -46,7 +46,7 @@ namespace Hazard
 
 		s_Registry[key] = metadata;
 
-		HZR_CORE_INFO("Importing asset as {}", key);
+		HZR_CORE_INFO("Importing asset as {} ({})", key, asset.Handle);
 
 		return asset.Handle;
 	}
@@ -73,9 +73,13 @@ namespace Hazard
 	{
 		//Find correct file and read data to buffer
 		AssetMetadata& metadata = GetMetadata(handle);
+
 		CachedBuffer buffer = File::ReadBinaryFile(metadata.AssetPackFile);
+		if (!buffer.GetData())
+			return Buffer();
+
 		AssetPack pack = AssetPack::Create(buffer, metadata.AssetPackFile);
-		
+
 		for (auto& element : pack.Elements)
 		{
 			if (element.Handle == handle)
@@ -90,8 +94,8 @@ namespace Hazard
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
-        
-		for (auto& [path, metadata] : s_Registry) 
+
+		for (auto& [path, metadata] : s_Registry)
 		{
 			if (metadata.Handle == handle)
 				return metadata;
@@ -101,13 +105,14 @@ namespace Hazard
 
 	bool AssetManager::SaveAsset(Ref<Asset> asset)
 	{
-		HZR_ASSERT(asset, "Asset cannot be nullptr");        
-		return false;// s_AssetLoader.Save(asset);
-	}
-	/*JobPromise AssetManager::SaveAssetAsync(Ref<Asset> asset)
-	{
 		HZR_ASSERT(asset, "Asset cannot be nullptr");
-		Ref<JobGraph> graph = s_AssetLoader.SaveAsync(asset);
-		return Application::Get().GetJobSystem().SubmitGraph(graph);
-	}*/
+
+		Ref<JobGraph> graph = s_AssetLoader.Save(asset);
+		if (graph)
+		{
+			graph->Execute();
+			return true;
+		}
+		return false;
+	}
 }

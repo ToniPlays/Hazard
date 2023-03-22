@@ -34,6 +34,8 @@ void HazardProject::ProcessAssets()
 
 void HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
+	AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(path));
+
 	if (File::GetFileExtension(path) == ".hpack")
 	{
 		CachedBuffer buffer = File::ReadBinaryFile(path);
@@ -41,6 +43,24 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 
 		for (auto& element : pack.Elements)
 			AssetManager::ImportAsset(element, File::GetFileAbsolutePath(path).lexically_normal().string());
+	}
+	else if(type != AssetType::Folder && type != AssetType::Undefined)
+	{
+		//Asset is a source asset, requires to be added dynamically
+
+		if (!File::Exists(path.string() + ".meta"))
+			return;
+
+		std::filesystem::path packFile = path.string() + ".hpack";
+
+		AssetPackElement element = {};
+		element.AssetPack = File::Exists(packFile) ? packFile : "";
+
+		YAML::Node node = YAML::LoadFile(path.string() + ".meta");
+		YamlUtils::Deserialize(node, "UID", element.Handle, AssetHandle());
+		YamlUtils::Deserialize(node, "Type", element.Type, AssetType::Undefined);
+
+		AssetManager::ImportAsset(element, File::GetFileAbsolutePath(path).lexically_normal().string());
 	}
 }
 

@@ -212,7 +212,6 @@ namespace UI
 	{
 		if (newName == GetName())
 			return;
-		HZR_INFO("Renaming to {0}", newName);
 		
 		if (IsFolder())
 			File::RenameDirectory(m_Path, newName);

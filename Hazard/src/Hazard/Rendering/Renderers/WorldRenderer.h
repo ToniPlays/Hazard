@@ -48,6 +48,7 @@ namespace Hazard
 
 		void SetTargetWorld(Ref<World> world) 
 		{
+			HZR_CORE_ASSERT(world, "Target world cannot be nullptr");
 			m_TargetWorld = world;
 		}
 

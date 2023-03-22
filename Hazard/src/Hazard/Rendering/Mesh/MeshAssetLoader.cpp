@@ -14,6 +14,8 @@ namespace Hazard
 	{
 		Buffer buffer = AssetManager::GetAssetData(handle);
 		CachedBuffer data(buffer.Data, buffer.Size);
+		if (!data.GetData()) return;
+
 		MeshFileHeader header = data.Read<MeshFileHeader>();
 
 		std::vector<Vertex3D> vertices(header.VertexCount);

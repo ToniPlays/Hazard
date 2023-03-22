@@ -25,7 +25,7 @@ namespace Hazard
 	class World : public Asset
 	{
 		friend class Entity;
-		friend class WorldAssetLoader;
+		friend class WorldDeserializer;
 
 	public:
 		World(const std::filesystem::path& file);

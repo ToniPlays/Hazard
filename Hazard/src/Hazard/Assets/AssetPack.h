@@ -19,7 +19,7 @@ namespace Hazard
 	struct AssetPackElement
 	{
 		std::filesystem::path AssetPack;
-		uint64_t Handle;
+		AssetHandle Handle;
 		AssetType Type;
 		Buffer Data;
 	};

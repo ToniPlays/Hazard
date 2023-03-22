@@ -71,6 +71,8 @@ namespace Hazard
 				return nullptr;
 
 			AssetMetadata& metadata = GetMetadata(handle);
+			if (metadata.Type == AssetType::Undefined)
+				return nullptr;
 
 			if (metadata.LoadState == LoadState::None)
 			{
@@ -78,9 +80,12 @@ namespace Hazard
 
 				//Load asset async and wait
 				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+				if (!graph) return nullptr;
 				graph->Execute();
 
 				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
+				asset->m_Type = metadata.Type;
+				asset->m_Handle = metadata.Handle;
 
 				std::scoped_lock lock(s_Mutex);
 				s_LoadedAssets[metadata.Handle] = asset;
@@ -120,7 +125,8 @@ namespace Hazard
 					Ref<Job> job = Ref<Job>::Create(AddLoadedAssetJop, handle);
 					graph->AddStage()->QueueJobs({ job });
 				}
-				return Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
+				JobPromise<Ref<Asset>> promise = Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
+				return promise;
 			}
 			return JobPromise<Ref<T>>();
 		}

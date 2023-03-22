@@ -23,7 +23,7 @@ public:
 	{
 		if (m_JobGraph)
 			return m_JobGraph->GetResult<T>();
-		return nullptr;
+		return T();
 	}
 private:
 

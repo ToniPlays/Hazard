@@ -13,7 +13,7 @@ JobGraph::JobGraph(const std::string& name, uint32_t count) : m_Name(name)
 }
 Ref<GraphStage> JobGraph::GetNextStage()
 {
-	if (m_CurrentStage + 1 == m_Stages.size()) 
+	if (m_CurrentStage + 1 == m_Stages.size())
 		return nullptr;
 
 	return m_Stages[m_CurrentStage + 1];
@@ -49,11 +49,12 @@ void JobGraph::OnStageFinished()
 	m_CurrentStage++;
 	m_CurrentStage.notify_all();
 
-	if (!next) 
+	if (!next)
 		return;
 
 	if (next->GetJobs().size() == 0)
 		OnStageFinished();
 
-	m_JobSystem->QueueJobs(next->m_Jobs);
+	if (m_JobSystem)
+		m_JobSystem->QueueJobs(next->m_Jobs);
 }
