@@ -90,7 +90,6 @@ namespace Hazard
 				{
 					asset->m_Type = metadata.Type;
 					asset->m_Handle = metadata.Handle;
-					asset->DecRefCount();
 				}
 
 				std::scoped_lock lock(s_Mutex);
@@ -165,7 +164,6 @@ namespace Hazard
 
 			std::scoped_lock lock(s_Mutex);
 			s_LoadedAssets[handle] = asset;
-			asset->DecRefCount();
 		}
 
 	private:

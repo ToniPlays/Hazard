@@ -147,7 +147,7 @@ namespace UI
 	void AssetPanel::DrawContents()
 	{
 		HZR_PROFILE_FUNCTION();
-		float thumbailSize = m_Scale;
+		float thumbailSize = m_Scale * 1.3f;
 		const float paddingForOutline = 2.0f;
 		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
 		ImVec2 size = ImGui::GetContentRegionAvail();
@@ -165,6 +165,8 @@ namespace UI
 		{
 			AssetMetadata metadata = item.GetMetadata();
 			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder")) : GetItemIcon(item.GetMetadata());
+			if (!itemIcon) continue;
+
 			item.BeginRender();
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
@@ -280,21 +282,21 @@ namespace UI
 		m_CurrentItems.clear();
 		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(item));
-			
-			if (type != AssetType::Undefined &&  type != AssetType::Folder)
+			if (File::GetFileExtension(item) == ".meta")
 			{
-				AssetHandle handle = AssetManager::GetHandleFromKey(item.lexically_normal().string());
+				AssetHandle handle;
+				YAML::Node node = YAML::LoadFile(item.string());
+				YamlUtils::Deserialize(node, "UID", handle, INVALID_ASSET_HANDLE);
 				HZR_INFO("Updating file {} ({})", item.string(), handle);
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
 
-				AssetPanelItem assetItem = AssetPanelItem(handle);
+				AssetPanelItem assetItem = AssetPanelItem(handle, File::GetPathNoExt(item));
 				files.push_back(assetItem);
 			}
 			else if (File::IsDirectory(item))
 			{
-				AssetPanelItem folder(item);
+				AssetPanelItem folder(INVALID_ASSET_HANDLE, item);
 				directories.push_back(folder);
 			}
 		}

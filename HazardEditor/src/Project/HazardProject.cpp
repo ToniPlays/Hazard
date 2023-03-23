@@ -42,7 +42,7 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 		AssetPack pack = AssetPack::Create(buffer);
 		AssetManager::ImportAssetPack(pack, path);
 	}
-	
+	/*
 	else if(type != AssetType::Folder && type != AssetType::Undefined)
 	{
 		//Asset is a source asset, requires to be added dynamically
@@ -52,6 +52,7 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 
 		std::filesystem::path packFile = path.string() + ".hpack";
 
+		//Use asset pack handle as a pointer to .hpack file
 		AssetPackElement element = {};
 		element.AssetPackHandle = INVALID_ASSET_HANDLE;
 
@@ -61,6 +62,7 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 
 		AssetManager::ImportAsset(element, File::GetFileAbsolutePath(path).lexically_normal().string());
 	}
+	*/
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

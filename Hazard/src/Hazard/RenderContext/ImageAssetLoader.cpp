@@ -46,6 +46,8 @@ namespace Hazard
 		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
 
 		buffer.Release();
+
+		HZR_CORE_TRACE("Loaded image {}", handle);
 	}
 
 	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)

@@ -29,7 +29,7 @@ namespace UI
         ~AssetImporterPanel() = default;
 
         void Open(const std::filesystem::path& path);
-        void OpenExisting(AssetHandle handle);
+        void OpenExisting(const std::filesystem::path& path, AssetHandle handle);
 
         void Update() override {};
         bool OnEvent(Event& e) override { return false; };

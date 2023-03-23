@@ -27,25 +27,28 @@ namespace Hazard
 
 		if (s_Registry.Contains(filePath))
 		{
-			HZR_CORE_WARN("Reimporting asset pack", filePath.string());
-			s_Registry.Get(filePath).LoadState = LoadState::None;
+			HZR_CORE_WARN("Reimporting {} ({})", filePath.string(), pack.Handle);
+			AssetMetadata& metadata = s_Registry.Get(filePath);
+			metadata.LoadState = LoadState::None;
+
+			for (auto& element : pack.Elements)
+				ImportAsset(element, fmt::format("{}", File::GetName(path)));
+
 			return s_Registry.Get(filePath).Handle;
 		}
 
 		AssetMetadata metadata = {};
 		metadata.AssetPackHandle = INVALID_ASSET_HANDLE;
-		metadata.Type = AssetType::Undefined;
+		metadata.Type = AssetType::Last;
 		metadata.Key = filePath.string();
 		metadata.Handle = pack.Handle;
 		metadata.LoadState = LoadState::None;
 
 		s_Registry[filePath] = metadata;
-		HZR_CORE_INFO("Importing asset pack as {} ({})", path.string(), pack.Handle);
+		HZR_CORE_INFO("Importing pack  as {} ({})", path.string(), pack.Handle);
 
 		for (auto& element : pack.Elements)
-		{
-			ImportAsset(element, fmt::format("{}_{}", File::GetName(path), element.Handle));
-		}
+			ImportAsset(element, fmt::format("{}", File::GetName(path)));
 
 		return pack.Handle;
 	}
@@ -64,8 +67,13 @@ namespace Hazard
 		if (s_Registry.Contains(key))
 		{
 			Ref<Asset> asset = GetAsset<Asset>(s_Registry.Get(key).Handle);
+			AssetHandle handle = asset->GetHandle();
+			asset->DecRefCount();
 			HZR_CORE_WARN("Reimporting asset {} with {} references", key, asset->GetRefCount());
 			s_Registry.Get(key).LoadState = LoadState::None;
+
+			s_LoadedAssets[asset->GetHandle()] = GetAsset<Asset>(handle);
+
 			return s_Registry.Get(key).Handle;
 		}
 
@@ -106,7 +114,7 @@ namespace Hazard
 		//Find correct file and read data to buffer
 		AssetMetadata& metadata = GetMetadata(handle);
 		AssetMetadata& packMetadata = GetMetadata(metadata.AssetPackHandle);
-		if (packMetadata.Handle == INVALID_ASSET_HANDLE) 
+		if (packMetadata.Handle == INVALID_ASSET_HANDLE)
 			return Buffer();
 
 		CachedBuffer buffer = File::ReadBinaryFile(packMetadata.Key);

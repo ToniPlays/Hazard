@@ -9,7 +9,6 @@ namespace Hazard::Utils
 	AssetType StringToAssetType(const std::string& type) 
 	{
 		if (type == "None")					return AssetType::Undefined;
-		if (type == "Folder")				return AssetType::Folder;
 		if (type == "AudioClip")			return AssetType::AudioClip;
 		if (type == "World")				return AssetType::World;
 		if (type == "Image")				return AssetType::Image;
@@ -28,7 +27,6 @@ namespace Hazard::Utils
 		switch (type)
 		{
 		case AssetType::Undefined:			return "Undefined";
-		case AssetType::Folder:				return "Folder";
 		case AssetType::AudioClip:			return "AudioClip";
 		case AssetType::World:				return "World";
 		case AssetType::Image:				return "Image";
@@ -45,7 +43,6 @@ namespace Hazard::Utils
 	}
 	AssetType AssetTypeFromExtension(const std::string& ext) 
 	{
-		if (ext == "")			return AssetType::Folder;
 		if (ext == ".jpeg")		return AssetType::Image;
 		if (ext == ".jpg")		return AssetType::Image;
 		if (ext == ".png")		return AssetType::Image;

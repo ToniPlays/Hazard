@@ -16,8 +16,9 @@ namespace Hazard
 
 		for (auto& camera : drawList.WorldRenderer->GetCameraData())
 		{
-			m_Buffer->BeginRenderPass(camera.RenderPass);
 			PrepareCamera(camera);
+			m_CurrentRenderPass = camera.RenderPass;
+			m_Buffer->BeginRenderPass(camera.RenderPass);
 			CompositePass(drawList.Environment);
 			m_Buffer->EndRenderPass();
 		}
@@ -162,13 +163,14 @@ namespace Hazard
 
 		auto& radiance = environment.Map->RadianceMap;
 
-		if (!radiance || true) return;
+		if (!radiance) return;
 
 		auto skyboxMaterial = AssetManager::GetAsset<AssetPointer>(RenderEngine::GetResources().SkyboxPipelineHandle);
-		auto material = skyboxMaterial->Value.As<Pipeline>();
+		auto material = ShaderLibrary::GetPipeline("Skybox");
 
+		material->SetRenderPass(m_CurrentRenderPass);
 		material->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
-		m_Buffer->SetPipeline(skyboxMaterial);
+		m_Buffer->SetPipeline(material);
 		m_Buffer->Draw(6);
 	}
 }

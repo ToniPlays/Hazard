@@ -385,7 +385,7 @@ namespace HazardRenderer::Vulkan
 			SetLineSize(lineWidth);
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
-			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindPipeline");
+			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetPipeline");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			pipeline->Bind(instance->m_ActiveCommandBuffer);

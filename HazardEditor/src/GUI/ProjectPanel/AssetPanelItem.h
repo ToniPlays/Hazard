@@ -17,14 +17,13 @@ namespace UI
     {
 	public:
 		AssetPanelItem() = default;
-		AssetPanelItem(Hazard::AssetHandle handle) : m_Handle(handle) { }
-		AssetPanelItem(const std::filesystem::path& directoryPath) : m_Path(directoryPath) {}
+		AssetPanelItem(Hazard::AssetHandle handle, const std::filesystem::path& sourcePath) : m_Handle(handle), m_SourcePath(sourcePath) { }
 
 		void BeginRender();
 		void OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, const float& thumbnailSize);
 		void EndRender();
 
-		bool IsFolder() { return !m_Path.empty(); }
+		bool IsFolder() { return File::IsDirectory(m_SourcePath); }
 		const Hazard::AssetHandle& GetHandle() { return m_Handle; }
 		const Hazard::AssetMetadata& GetMetadata() { return Hazard::AssetManager::GetMetadata(m_Handle); }
 		std::string GetName();
@@ -40,6 +39,6 @@ namespace UI
 		Hazard::AssetHandle m_Handle;
 		uint32_t m_Flags = 0;
 		std::string m_RenameValue;
-		std::filesystem::path m_Path;
+		std::filesystem::path m_SourcePath;
 	};
 }

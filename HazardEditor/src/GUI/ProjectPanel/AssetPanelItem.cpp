@@ -19,7 +19,7 @@ namespace UI
 {
 	void AssetPanelItem::BeginRender()
 	{
-		ImGui::PushID((int)m_Handle);
+		ImGui::PushID(m_SourcePath.c_str());
 		ImGui::BeginGroup();
 
 		if (m_Flags & m_Flags)
@@ -54,7 +54,7 @@ namespace UI
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		if (GetType() != AssetType::Folder)
+		if (!IsFolder())
 		{
 			auto* drawList = ImGui::GetWindowDrawList();
 			drawShadow(topLeft, bottomRight, false);
@@ -77,7 +77,7 @@ namespace UI
 		ImUI::ShiftX(edgeOffset);
 		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
-		if (GetType() == AssetType::Folder)
+		if (IsFolder())
 		{
 			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 			{
@@ -95,7 +95,7 @@ namespace UI
 		ImUI::Shift(edgeOffset, edgeOffset);
 		std::string name = GetName();
 
-		if (GetType() == AssetType::Folder)
+		if (IsFolder())
 		{
 			ImGui::BeginVertical((std::string("InfoPanel") + name).c_str(), ImVec2(thumbnailSize - edgeOffset * 2.0f, infoPanelHeight - edgeOffset));
 			{
@@ -106,7 +106,7 @@ namespace UI
 					ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + (thumbnailSize - edgeOffset * 3.0f));
 					const float textWidth = Math::Min(ImGui::CalcTextSize(name.c_str()).x, thumbnailSize);
 					ImGui::SetNextItemWidth(textWidth);
-					DrawItemName(name.c_str(), edgeOffset);
+					DrawItemName(name.c_str(), 0.0f);
 
 					ImGui::PopTextWrapPos();
 				}
@@ -146,20 +146,20 @@ namespace UI
 		ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 			});
 
-		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && GetType() != AssetType::Folder && Input::IsKeyDown(Key::LeftControl))
+		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !IsFolder() && Input::IsKeyDown(Key::LeftControl))
 			File::OpenInDefaultApp(GetMetadata().Key);
 
 		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
 		{
 			OnItemClicked();
 		}
-		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
+		else if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !(m_Flags & AssetPanelItemFlags_Renaming))
 		{
 			if (!IsFolder())
 			{
 				//Open import settings
 				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
-				panel->OpenExisting(m_Handle);
+				panel->OpenExisting(m_SourcePath, m_Handle);
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace UI
 	std::string AssetPanelItem::GetName()
 	{
 		if (IsFolder())
-			return File::GetName(m_Path);
+			return File::GetName(m_SourcePath);
 
 		const AssetMetadata& metadata = GetMetadata();
 		return File::GetNameNoExt(GetMetadata().Key);
@@ -214,7 +214,7 @@ namespace UI
 			return;
 		
 		if (IsFolder())
-			File::RenameDirectory(m_Path, newName);
+			File::RenameDirectory(m_SourcePath, newName);
 
 		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}

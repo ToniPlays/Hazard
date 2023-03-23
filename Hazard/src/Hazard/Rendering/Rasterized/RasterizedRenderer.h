@@ -36,6 +36,7 @@ namespace Hazard
       
     private:
         Ref<HazardRenderer::RenderCommandBuffer> m_Buffer;
+        Ref<HazardRenderer::RenderPass> m_CurrentRenderPass;
         std::vector<DrawCall> m_DrawCalls;
 	};
 }

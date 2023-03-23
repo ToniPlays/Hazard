@@ -8,7 +8,6 @@ using AssetHandle = UID;
 enum class AssetType : uint32_t
 {
 	Undefined = 0,
-	Folder,
 	Image,
 	AudioClip,
 	World,

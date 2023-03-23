@@ -124,7 +124,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 {
 	AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(path));
 
-	if (type == AssetType::Undefined || type == AssetType::Folder)
+	if (type == AssetType::Undefined)
 		return CachedBuffer();
 
 	std::vector<AssetPackElement> elements;

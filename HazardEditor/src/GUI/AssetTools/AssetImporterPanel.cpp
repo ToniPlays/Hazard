@@ -26,17 +26,16 @@ namespace UI
 
 		InitializeData();
 	}
-	void AssetImporterPanel::OpenExisting(AssetHandle handle)
+	void AssetImporterPanel::OpenExisting(const std::filesystem::path& path, AssetHandle handle)
 	{
-		m_AssetHandle = handle;
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 
 		m_AssetType = metadata.Type;
 		m_Open = true;
 		m_IsImportingNew = false;
 
-		//Source file resolve by removing extension
-		m_CurrentFilePath = metadata.Key;// .substr(0, metadata.Key.find_last_of('.'));
+		m_CurrentFilePath = path;
+		m_AssetHandle = handle;
 
 		m_Title = fmt::format("{} \"{}\" import settings", Hazard::Utils::AssetTypeToString(m_AssetType), File::GetNameNoExt(metadata.Key));
 		InitializeData();
