@@ -14,7 +14,11 @@ namespace Hazard
 	{
 		Buffer buffer = AssetManager::GetAssetData(handle);
 		CachedBuffer data(buffer.Data, buffer.Size);
-		if (!data.GetData()) return;
+		if (!data.GetData())
+		{
+			HZR_CORE_ERROR("Cannot find asset data for mesh {}", handle);
+			return;
+		}
 
 		MeshFileHeader header = data.Read<MeshFileHeader>();
 

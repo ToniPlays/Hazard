@@ -13,28 +13,33 @@ namespace UI
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Path", "Type", "Handle" };
+		const char* columns[] = { "Path", "Type", "Pack handle", "Handle" };
 
-		ImUI::Table("AssetPanel", columns, 3, size, [&]() {
+		ImUI::Table("AssetPanel", columns, 4, size, [&]() {
 			float rowHeight = 24.0f;
 
-			for (auto& [path, metadata] : AssetManager::GetMetadataRegistry())
+			auto& registry = AssetManager::GetMetadataRegistry();
+
+			for (auto& [key, metadata] : registry)
 			{
 				if (!StringUtil::Contains(metadata.Key, m_SearchValue)) continue;
 
-				ImUI::TableRowClickable((const char*)path.c_str(), rowHeight);
+				ImUI::TableRowClickable((const char*)key.c_str(), rowHeight);
 
-				auto& n = path;
+				auto& n = key;
 				auto& meta = metadata;
 
-				ImUI::Group((const char*)&path, [&]() {
+				ImUI::Group((const char*)&key, [&]() {
 
 					ImUI::Separator({ 4.0, rowHeight }, GetLoadStateColor(meta.LoadState));
 					ImGui::SameLine();
-					ImGui::Text("%s", n.c_str());
+					ImGui::Text("%s", n.string().c_str());
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%s", Hazard::Utils::AssetTypeToString(meta.Type));
+					ImGui::TableNextColumn();
+					ImUI::ShiftX(4.0f);
+					ImGui::Text("%s", std::to_string(meta.AssetPackHandle).c_str());
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%s", std::to_string(meta.Handle).c_str());

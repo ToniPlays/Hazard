@@ -20,7 +20,6 @@ enum class AssetType : uint32_t
 	Pipeline,
 	Shader,
     Material,
-    
     Last
 };
 
@@ -39,8 +38,6 @@ namespace Hazard::Utils
 	AssetType StringToAssetType(const std::string& type);
 	const char* AssetTypeToString(AssetType type);
 	AssetType AssetTypeFromExtension(const std::string& ext);
-
-	const char* ResourceTypeToString(ResourceType type);
 }
 template<>
 void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue);

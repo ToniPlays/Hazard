@@ -36,7 +36,7 @@ namespace UI
 		m_IsImportingNew = false;
 
 		//Source file resolve by removing extension
-		m_CurrentFilePath = metadata.Key.substr(0, metadata.Key.find_last_of('.'));
+		m_CurrentFilePath = metadata.Key;// .substr(0, metadata.Key.find_last_of('.'));
 
 		m_Title = fmt::format("{} \"{}\" import settings", Hazard::Utils::AssetTypeToString(m_AssetType), File::GetNameNoExt(metadata.Key));
 		InitializeData();

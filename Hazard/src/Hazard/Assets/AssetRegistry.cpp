@@ -4,32 +4,32 @@
 
 namespace Hazard {
 
-    static std::string GetKey(const std::string& key) {
+    static std::filesystem::path GetKey(const std::filesystem::path& key) {
         return key;
     }
 
-    bool AssetRegistry::Contains(const std::string& key) const
+    bool AssetRegistry::Contains(const std::filesystem::path& key) const
     {
         bool contains = m_Registry.find(key) != m_Registry.end();
         return contains;
     }
 
-    size_t AssetRegistry::Remove(const const std::string& key)
+    size_t AssetRegistry::Remove(const const std::filesystem::path& key)
     {
         return m_Registry.erase(GetKey(key));
     }
 
-    AssetMetadata& AssetRegistry::Get(const std::string& key)
+    AssetMetadata& AssetRegistry::Get(const std::filesystem::path& key)
     {
         return m_Registry.at(GetKey(key));
     }
 
-    const AssetMetadata& AssetRegistry::Get(const std::string& key) const
+    const AssetMetadata& AssetRegistry::Get(const std::filesystem::path& key) const
     {
         return m_Registry.at(GetKey(key));
     }
 
-    AssetMetadata& AssetRegistry::operator[](const std::string& key)
+    AssetMetadata& AssetRegistry::operator[](const std::filesystem::path& key)
     {
         return m_Registry[GetKey(key)];
     }

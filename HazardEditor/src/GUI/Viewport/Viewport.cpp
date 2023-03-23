@@ -66,7 +66,7 @@ namespace UI
 				auto cameraView = world->GetEntitiesWith<CameraComponent>();
 				if (cameraView.size() > 0)
 				{
-					auto icon = EditorAssetManager::GetIcon("Camera");
+					auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Camera"));
 
 					for (auto entity : cameraView) {
 						Entity e = { entity, world.Raw() };
@@ -99,7 +99,7 @@ namespace UI
 				auto cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
 				if (cameraView.size() > 0)
 				{
-					auto icon = EditorAssetManager::GetIcon("DirectionalLight");
+					auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("DirectionalLight"));
 
 					for (auto& entity : cameraView)
 					{

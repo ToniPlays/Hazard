@@ -5,14 +5,18 @@
 AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackElement> element)
 {
 	AssetPack pack = {};
+	pack.Handle = AssetHandle();
 	pack.ElementCount = element.size();
 	pack.Elements = element;
+	for (auto& e : pack.Elements)
+		e.AssetPackHandle = pack.Handle;
 
 	return pack;
 }
 CachedBuffer EditorAssetPackBuilder::AssetPackToBuffer(const AssetPack& pack)
 {
 	AssetPackHeader header = {};
+	header.Handle = pack.Handle;
 	header.ElementCount = pack.ElementCount;
 
 	size_t dataSize = 0;
@@ -58,12 +62,8 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 
 	File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 
-	//Finally import asset pack
-	for (auto& e : pack.Elements)
-	{
-		e.AssetPack = path;
-		AssetManager::ImportAsset(e, path.string());
-	}
+	AssetManager::ImportAssetPack(pack, path);
+
 	pack.Free();
 }
 
@@ -90,6 +90,7 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 
 	AssetPackElement element = {};
 	element.Type = AssetType::Image;
+	element.AssetPackHandle = INVALID_ASSET_HANDLE;
 	element.Handle = settings.Handle;
 	element.Data = data;
 

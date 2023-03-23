@@ -163,8 +163,9 @@ namespace UI
 
 		for (auto& item : m_CurrentItems)
 		{
+			AssetMetadata metadata = item.GetMetadata();
+			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder")) : GetItemIcon(item.GetMetadata());
 			item.BeginRender();
-			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? EditorAssetManager::GetIcon("Folder") : GetItemIcon(item.GetMetadata());
 			item.OnRender(itemIcon, thumbailSize);
 			item.EndRender();
 		}
@@ -281,7 +282,7 @@ namespace UI
 		{
 			AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(item));
 			
-			if (type != AssetType::Folder && type != AssetType::Undefined)
+			if (type != AssetType::Undefined &&  type != AssetType::Folder)
 			{
 				AssetHandle handle = AssetManager::GetHandleFromKey(item.lexically_normal().string());
 				HZR_INFO("Updating file {} ({})", item.string(), handle);
@@ -290,7 +291,6 @@ namespace UI
 
 				AssetPanelItem assetItem = AssetPanelItem(handle);
 				files.push_back(assetItem);
-
 			}
 			else if (File::IsDirectory(item))
 			{
@@ -377,6 +377,8 @@ namespace UI
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
 	{
+		HZR_ASSERT(metadata.Type != AssetType::Undefined, "Asset cannot be undefined");
+		AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
 
 		switch (metadata.Type)
 		{
@@ -389,19 +391,19 @@ namespace UI
 				JobPromise<Ref<Asset>> asset = AssetManager::GetAssetAsync<Asset>(metadata.Handle);
 				break;
 			}
-			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(metadata.Handle);
-			if (asset)
-				return asset;
+			handle = metadata.Handle;
 			break;
 		}
 		case AssetType::Script:
-			return EditorAssetManager::GetIcon("Script");
+			handle = EditorAssetManager::GetIconHandle("Script"); break;
 		case AssetType::World:
-			return EditorAssetManager::GetIcon("World");
+			handle = EditorAssetManager::GetIconHandle("World"); break;
 		default:
-			return EditorAssetManager::GetIcon("Default");
+			handle = EditorAssetManager::GetIconHandle("Default"); break;
+
 		}
-		return EditorAssetManager::GetIcon("Default");
+		
+		return AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
@@ -456,6 +458,8 @@ namespace UI
 			directoryPath = path.string() + std::to_string(suffix);
 
 		File::CreateDir(directoryPath);
+
+		Refresh();
 	}
 	void AssetPanel::CreateWorld(const std::filesystem::path& path)
 	{

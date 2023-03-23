@@ -22,60 +22,52 @@ void EditorAssetManager::LoadEditorAssets()
 {
 	struct EditorAsset
 	{
-		const char* Key;
-		const char* Path;
-		JobPromise<Ref<Asset>> Promise;
+		std::string Key;
+		std::string Path;
 	};
 
 	std::vector<EditorAsset> texturesToLoad = {
-		{ "Default", "textureBG.png.hpack"},
-		{ "Folder", "folder.png.hpack"},
-		{ "World", "world.png.hpack"},
-		{ "Script", "csharp.png.hpack"},
-		{ "Camera", "camera.png.hpack"},
-		{ "DirectionalLight", "directionalLight.png.hpack"}
+		{ "Default", "Library/textureBG.png.hpack"},
+		{ "Folder", "Library/folder.png.hpack"},
+		{ "World", "Library/world.png.hpack"},
+		{ "Script", "Library/csharp.png.hpack"},
+		{ "Camera", "Library/camera.png.hpack"},
+		{ "DirectionalLight", "Library/directionalLight.png.hpack"}
 	};
 	std::vector<EditorAsset> meshesToLoad = {
-		{ "Cube", "cube.fbx.hpack"     },
-		{ "Sphere", "sphere.fbx.hpack" }
+		{ "Cube", "Library/cube.obj.hpack"     },
+		{ "Sphere", "Library/sphere.obj.hpack" }
 	};
-
-	return;
-
+	
 	Timer timer;
 	for (auto& texture : texturesToLoad)
-		texture.Promise = AssetManager::GetAssetAsync<Asset>(texture.Path);
-
-	for (auto& mesh : meshesToLoad)
-		mesh.Promise = AssetManager::GetAssetAsync<Asset>(mesh.Path);
-
-	for (auto& texture : texturesToLoad)
 	{
-		texture.Promise.Wait();
-		s_Icons[texture.Key] = texture.Promise.Result().As<Texture2DAsset>();
-	}
-	for (auto& mesh : meshesToLoad)
-	{
-		mesh.Promise.Wait();
-		s_DefaultMesh[mesh.Key] = mesh.Promise.Result().As<Mesh>();
+		//Get asset pack handle
+		AssetHandle packHandle = AssetManager::GetHandleFromKey(texture.Path);
+		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
+		s_Icons[texture.Key] = pack.Elements[0].Handle;
 	}
 
-	HZR_INFO("Editor assets loaded in {}ms", timer.ElapsedMillis());
+	for (auto& mesh : meshesToLoad)
+	{
+		//Get asset pack handle
+		AssetHandle packHandle = AssetManager::GetHandleFromKey(mesh.Path);
+		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
+		s_Icons[mesh.Key] = pack.Elements[0].Handle;
+	}
 }
 
-
-
-Ref<Texture2DAsset> EditorAssetManager::GetIcon(const std::string& name)
+AssetHandle EditorAssetManager::GetIconHandle(const std::string& name)
 {
 	if (s_Icons.find(name) != s_Icons.end())
 		return s_Icons[name];
 	return s_Icons["Default"];
 }
-Ref<Mesh> EditorAssetManager::GetDefaultMesh(const std::string& name)
+AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 {
 	if (s_DefaultMesh.find(name) != s_DefaultMesh.end())
 		return s_DefaultMesh[name];
-	return nullptr;
+	return INVALID_ASSET_HANDLE;
 }
 
 void EditorAssetManager::GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path)
@@ -103,7 +95,7 @@ void EditorAssetManager::ImportEngineAssets()
 	for (auto& file : File::GetAllInDirectory("res", true))
 	{
 		auto packPath = File::GetName(file) + ".hpack";
-		//if (cache.HasFile(packPath)) continue;
+		if (cache.HasFile(packPath)) continue;
 
 		Ref<Job> job = Ref<Job>::Create(GenerateAndSavePack, file);
 		jobs.push_back(job);
@@ -122,10 +114,8 @@ void EditorAssetManager::ImportEngineAssets()
 		auto packPath = File::GetName(file);
 
 		CachedBuffer buffer = File::ReadBinaryFile(file);
-		AssetPack pack = AssetPack::Create(buffer, file);
-
-		for (auto& element : pack.Elements)
-			AssetManager::ImportAsset(element, File::GetName(packPath));
+		AssetPack pack = AssetPack::Create(buffer);
+		AssetManager::ImportAssetPack(pack, file);
 	}
 	HZR_INFO("Engine assets imported in {}ms", timer.ElapsedMillis());
 }

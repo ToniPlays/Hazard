@@ -19,7 +19,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		//If asset pack is empty, load from source file
-		if (metadata.AssetPackFile.empty())
+		if (metadata.AssetPackHandle == INVALID_ASSET_HANDLE)
 		{
 			WorldDeserializer deserializer;
 			return deserializer.DeserializeEditor(metadata.Key);

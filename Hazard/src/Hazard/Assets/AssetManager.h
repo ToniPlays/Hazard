@@ -31,7 +31,7 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::string, AssetMetadata>& GetMetadataRegistry()
+		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry()
 		{
 			return s_Registry.GetRegistry();
 		}
@@ -41,10 +41,12 @@ namespace Hazard
 		{
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
-
+		static AssetHandle ImportAssetPack(const AssetPack& pack, const std::filesystem::path& path);
 		static AssetHandle ImportAsset(const AssetPackElement& pack, std::string name = "");
 		static AssetHandle GetHandleFromKey(const std::string& key);
 		static Buffer GetAssetData(AssetHandle handle);
+
+		static AssetPack OpenAssetPack(AssetHandle handle);
 
 		static void RemoveAsset(AssetHandle handle);
 		static bool IsLoaded(const AssetHandle& handle);
@@ -84,12 +86,17 @@ namespace Hazard
 				graph->Execute();
 
 				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
-				asset->m_Type = metadata.Type;
-				asset->m_Handle = metadata.Handle;
+				if (asset)
+				{
+					asset->m_Type = metadata.Type;
+					asset->m_Handle = metadata.Handle;
+					asset->DecRefCount();
+				}
 
 				std::scoped_lock lock(s_Mutex);
+
 				s_LoadedAssets[metadata.Handle] = asset;
-				return asset.As<T>();
+				return s_LoadedAssets[metadata.Handle].As<T>();
 			}
 			return s_LoadedAssets[metadata.Handle].As<T>();
 		}
@@ -149,12 +156,16 @@ namespace Hazard
 		static void AddLoadedAssetJop(Ref<Job> job, AssetHandle handle)
 		{
 			Ref<Asset> asset = job->GetInput<Ref<Asset>>();
+			if (!asset) return;
 
 			job->GetStage()->SetResult(asset);
-			GetMetadata(handle).LoadState = LoadState::Loaded;
+			auto& metadata = GetMetadata(handle);
+
+			metadata.LoadState = LoadState::Loaded;
 
 			std::scoped_lock lock(s_Mutex);
 			s_LoadedAssets[handle] = asset;
+			asset->DecRefCount();
 		}
 
 	private:

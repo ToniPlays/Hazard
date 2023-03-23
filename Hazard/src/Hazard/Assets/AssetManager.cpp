@@ -17,6 +17,38 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		s_LoadedAssets.clear();
 	}
+	AssetHandle AssetManager::ImportAssetPack(const AssetPack& pack, const std::filesystem::path& path)
+	{
+		HZR_PROFILE_FUNCTION();
+
+		if (pack.ElementCount == 0) return INVALID_ASSET_HANDLE;
+
+		auto filePath = path.lexically_normal();
+
+		if (s_Registry.Contains(filePath))
+		{
+			HZR_CORE_WARN("Reimporting asset pack", filePath.string());
+			s_Registry.Get(filePath).LoadState = LoadState::None;
+			return s_Registry.Get(filePath).Handle;
+		}
+
+		AssetMetadata metadata = {};
+		metadata.AssetPackHandle = INVALID_ASSET_HANDLE;
+		metadata.Type = AssetType::Undefined;
+		metadata.Key = filePath.string();
+		metadata.Handle = pack.Handle;
+		metadata.LoadState = LoadState::None;
+
+		s_Registry[filePath] = metadata;
+		HZR_CORE_INFO("Importing asset pack as {} ({})", path.string(), pack.Handle);
+
+		for (auto& element : pack.Elements)
+		{
+			ImportAsset(element, fmt::format("{}_{}", File::GetName(path), element.Handle));
+		}
+
+		return pack.Handle;
+	}
 	/// <summary>
 	/// Import asset, asset is not loaded until it is requested
 	/// </summary>
@@ -29,7 +61,7 @@ namespace Hazard
 		if ((AssetType)asset.Type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
-		if (s_Registry.Contains(key) && !key.empty())
+		if (s_Registry.Contains(key))
 		{
 			Ref<Asset> asset = GetAsset<Asset>(s_Registry.Get(key).Handle);
 			HZR_CORE_WARN("Reimporting asset {} with {} references", key, asset->GetRefCount());
@@ -38,15 +70,15 @@ namespace Hazard
 		}
 
 		AssetMetadata metadata = {};
+		metadata.AssetPackHandle = asset.AssetPackHandle;
 		metadata.Type = (AssetType)asset.Type;
 		metadata.Key = key;
-		metadata.AssetPackFile = asset.AssetPack;
 		metadata.Handle = asset.Handle;
 		metadata.LoadState = LoadState::None;
 
 		s_Registry[key] = metadata;
 
-		HZR_CORE_INFO("Importing asset as {} ({})", key, asset.Handle);
+		HZR_CORE_INFO("Importing asset as {} ({} from {})", key, asset.Handle, asset.AssetPackHandle);
 
 		return asset.Handle;
 	}
@@ -73,12 +105,15 @@ namespace Hazard
 	{
 		//Find correct file and read data to buffer
 		AssetMetadata& metadata = GetMetadata(handle);
+		AssetMetadata& packMetadata = GetMetadata(metadata.AssetPackHandle);
+		if (packMetadata.Handle == INVALID_ASSET_HANDLE) 
+			return Buffer();
 
-		CachedBuffer buffer = File::ReadBinaryFile(metadata.AssetPackFile);
+		CachedBuffer buffer = File::ReadBinaryFile(packMetadata.Key);
 		if (!buffer.GetData())
 			return Buffer();
 
-		AssetPack pack = AssetPack::Create(buffer, metadata.AssetPackFile);
+		AssetPack pack = AssetPack::Create(buffer);
 
 		for (auto& element : pack.Elements)
 		{
@@ -87,6 +122,18 @@ namespace Hazard
 		}
 		return Buffer();
 	}
+
+	AssetPack AssetManager::OpenAssetPack(AssetHandle handle)
+	{
+		AssetMetadata& packMetadata = GetMetadata(handle);
+		CachedBuffer buffer = File::ReadBinaryFile(packMetadata.Key);
+
+		if (!buffer.GetData())
+			return AssetPack();
+
+		return AssetPack::Create(buffer);
+	}
+
 	bool AssetManager::IsLoaded(const AssetHandle& handle)
 	{
 		return s_LoadedAssets.find(handle) != s_LoadedAssets.end();

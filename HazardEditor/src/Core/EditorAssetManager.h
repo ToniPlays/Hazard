@@ -43,8 +43,8 @@ public:
 	static void LoadEditorAssets();
     
 	//---------------------
-	static Ref<Hazard::Texture2DAsset> GetIcon(const std::string& name);
-    static Ref<Hazard::Mesh> GetDefaultMesh(const std::string& name);
+	static AssetHandle GetIconHandle(const std::string& name);
+    static AssetHandle GetDefaultMesh(const std::string& name);
 
 private:
 	static void ImportEngineAssets();
@@ -52,6 +52,6 @@ private:
 	static void GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path);
 
 private:
-	inline static std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> s_Icons;
-    inline static std::unordered_map<std::string, Ref<Hazard::Mesh>> s_DefaultMesh;
+	inline static std::unordered_map<std::string, AssetHandle> s_Icons;
+    inline static std::unordered_map<std::string, AssetHandle> s_DefaultMesh;
 };

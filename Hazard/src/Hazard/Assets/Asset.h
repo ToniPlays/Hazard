@@ -30,11 +30,11 @@ namespace Hazard
 	struct AssetMetadata
 	{
 		AssetHandle Handle = INVALID_ASSET_HANDLE;
+		AssetHandle AssetPackHandle = INVALID_ASSET_HANDLE;
+
 		AssetType Type = AssetType::Undefined;
 		LoadState LoadState = LoadState::None;
-
 		std::string Key = "";
-		std::filesystem::path AssetPackFile = "";
 
 		bool MemoryOnly = false;
 

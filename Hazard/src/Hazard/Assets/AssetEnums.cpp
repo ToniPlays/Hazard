@@ -60,23 +60,9 @@ namespace Hazard::Utils
 		if (ext == ".gltf")		return AssetType::Mesh;
 		if (ext == ".cs")		return AssetType::Script;
 		if (ext == ".glsl")		return AssetType::Shader;
-        if (ext == ".hmat")      return AssetType::Material;
+        if (ext == ".hmat")     return AssetType::Material;
 
 		return AssetType::Undefined;
-	}
-	const char* ResourceTypeToString(ResourceType type)
-	{
-		switch (type)
-		{
-		case ResourceType::VertexBuffer:	return "VertexBuffer";
-		case ResourceType::IndexBuffer:		return "IndexBuffer";
-		case ResourceType::UniformBuffer:	return "UniformBuffer";
-		case ResourceType::Pipeline:		return "Pipeline";
-		case ResourceType::Mesh:			return "Mesh";
-		default:
-			return "Undefined";
-		}
-		return "Undefined";
 	}
 }
 using namespace Hazard;

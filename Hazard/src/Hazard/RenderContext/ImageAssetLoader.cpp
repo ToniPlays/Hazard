@@ -18,7 +18,7 @@ namespace Hazard
 		if (!buffer.Data)
 		{
 			HZR_CORE_ERROR("Cannot find asset data for {}", handle);
-			return;
+			return; 
 		}
 
 		CachedBuffer readBuffer(buffer.Data, buffer.Size);
