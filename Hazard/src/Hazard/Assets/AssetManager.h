@@ -146,6 +146,9 @@ namespace Hazard
 			metadata.LoadState = LoadState::Loaded;
 
 			asset->m_Flags |= (uint32_t)AssetFlags::MemoryOnly;
+			asset->m_Handle = metadata.Handle;
+
+			s_Registry[std::to_string(asset->GetHandle())] = metadata;
 
 			s_LoadedAssets[metadata.Handle] = asset;
 			return metadata.Handle;

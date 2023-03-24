@@ -48,14 +48,14 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
 
-		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.m_MeshHandle);
+		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 		if (!mesh) return;
         if (!mesh->IsValid()) return;
 
-        Ref<Material> material = meshComponent.m_MaterialHandle;
-		if (!material)
-			material = s_Engine->GetResources().PBRMaterial;
-
+        //Ref<Material> material = meshComponent.MaterialHandle;
+		//if (!material)
+		//	material = s_Engine->GetResources().PBRMaterial;
+		/*
         
 		//Fix
         Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value;
@@ -77,6 +77,8 @@ namespace Hazard
         data.IndexCount = data.IndexBuffer->GetCount();
         
         data.Instances.push_back(instance);
+
+		*/
 
 		//SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
 	}

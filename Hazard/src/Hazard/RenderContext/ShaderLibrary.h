@@ -7,6 +7,10 @@ namespace Hazard
 	class ShaderLibrary
 	{
 	public:
-		static Ref<HazardRenderer::Pipeline> GetPipeline(const std::string& name);
+		static void Init();
+		static AssetHandle GetPipelineAssetHandle(const std::string& name);
+
+	private:
+		inline static std::unordered_map<std::string, AssetHandle> s_LoadedPipelines;
 	};
 }

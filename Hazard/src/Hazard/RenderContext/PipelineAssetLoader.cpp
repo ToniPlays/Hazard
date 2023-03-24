@@ -15,35 +15,8 @@ namespace Hazard
 
 	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata)
 	{
-		return nullptr;
 		HZR_PROFILE_FUNCTION();
-
-		RenderAPI currentAPI = GraphicsContext::GetRenderAPI();
-		/*
-		if (File::Exists(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI)))
-		{
-			CachedBuffer dataBuffer = File::ReadBinaryFile(ShaderCompiler::GetCachedFilePath(metadata.Path, currentAPI));
-			PipelineAssetHeader header = dataBuffer.Read<PipelineAssetHeader>();
-
-			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(header.ShaderHandle);
-
-			PipelineSpecification specs = {};
-			specs.DebugName = metadata.Path.string();
-			specs.pTargetRenderPass = nullptr;
-			specs.DrawType = header.DrawType;
-			specs.Usage = header.Usage;
-			specs.CullMode = header.CullMode;
-			specs.DepthTest = header.DepthTest;
-			specs.DepthWrite = header.DepthWrite;
-			specs.UseShaderLayout = header.UseShaderLayout;
-			specs.DepthOperator = header.DepthOperator;
-			specs.ShaderCodeCount = shader->ShaderCode.size();
-			specs.pShaderCode = shader->ShaderCode.data();
-
-			asset = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			return nullptr;
-		}
-		*/
+		return nullptr;
 	}
 	Ref<JobGraph> PipelineAssetLoader::Save(Ref<Asset>& asset)
 	{

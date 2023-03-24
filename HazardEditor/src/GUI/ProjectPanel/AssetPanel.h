@@ -62,6 +62,7 @@ namespace UI {
 	private:
 		void CreateFolder(const std::filesystem::path& path);
 		void CreateWorld(const std::filesystem::path& path);
+		void CreateMaterial(const std::filesystem::path& path);
 
 	private:
 		std::filesystem::path m_RootPath;

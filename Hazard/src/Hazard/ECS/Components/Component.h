@@ -83,7 +83,7 @@ namespace Hazard {
 	};
 	struct MeshComponent : public ComponentBase
 	{
-		AssetHandle m_MeshHandle;
-        Ref<Material> m_MaterialHandle;
+		AssetHandle MeshHandle;
+        AssetHandle MaterialHandle;
 	};
 }

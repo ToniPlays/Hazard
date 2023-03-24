@@ -43,7 +43,9 @@ namespace Hazard
 		radianceInfo.Height = m_Resolution;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
-		Ref<Pipeline> computePipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
+		AssetHandle computePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EquirectangularToCubemap");
+		Ref<Pipeline> computePipeline = AssetManager::GetAsset<AssetPointer>(computePipelineHandle)->Value.As<Pipeline>();
+
         //Prepare shader
         {
             auto shader = computePipeline->GetShader();
@@ -92,14 +94,15 @@ namespace Hazard
 		irradianceInfo.GenerateMips = true;
 
 		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
-		Ref<Pipeline> irradiancePipeline = ShaderLibrary::GetPipeline("EnvironmentIrradiance");
+
+		AssetHandle irradiancePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EnvironmentIrradiance");
+		Ref<Pipeline> irradiancePipeline = AssetManager::GetAsset<AssetPointer>(irradiancePipelineHandle)->Value.As<Pipeline>();
 
         {
             auto shader = irradiancePipeline->GetShader();
             shader->Set("o_IrradianceMap", 0, irradianceMap);
             shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
             shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
-            
         }
 
 		DispatchComputeInfo computeInfo = {};

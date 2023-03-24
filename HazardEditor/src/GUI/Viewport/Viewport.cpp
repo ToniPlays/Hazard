@@ -57,59 +57,57 @@ namespace UI
 
 		renderer->SubmitExtra([=]() mutable {
 			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
-			m_EditorGrid.Render(m_EditorCamera);
+		m_EditorGrid.Render(m_EditorCamera);
 
-			if (!world) return;
+		if (!world) return;
 
-			if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
+		if (m_ViewportSettings & ViewportSettingsFlags_CameraFrustum)
+		{
+			auto cameraView = world->GetEntitiesWith<CameraComponent>();
+			if (cameraView.size() > 0)
 			{
-				auto cameraView = world->GetEntitiesWith<CameraComponent>();
-				if (cameraView.size() > 0)
-				{
-					auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Camera"));
+				auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Camera"));
 
-					for (auto entity : cameraView) {
-						Entity e = { entity, world.Raw() };
-						auto& tc = e.GetComponent<TransformComponent>();
-						auto& cc = e.GetComponent<CameraComponent>();
-
-						if (cc.GetProjectionType() == Projection::Perspective)
-							HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-						else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-
-						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
-					}
-				}
-			}
-			if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
-			{
-				auto meshView = world->GetEntitiesWith<MeshComponent>();
-				for (auto entity : meshView) {
+				for (auto entity : cameraView) {
 					Entity e = { entity, world.Raw() };
 					auto& tc = e.GetComponent<TransformComponent>();
-					auto& mc = e.GetComponent<MeshComponent>();
+					auto& cc = e.GetComponent<CameraComponent>();
 
-					if (mc.m_MeshHandle != INVALID_ASSET_HANDLE) continue;
+					if (cc.GetProjectionType() == Projection::Perspective)
+						HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+					else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 
-					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), AssetManager::GetAsset<Mesh>(mc.m_MeshHandle)->GetBoundingBox());
+					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 				}
 			}
-			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
+		}
+		if (m_ViewportSettings & ViewportSettingsFlags_BoundingBox)
+		{
+			auto meshView = world->GetEntitiesWith<MeshComponent>();
+			for (auto entity : meshView) {
+				Entity e = { entity, world.Raw() };
+				auto& tc = e.GetComponent<TransformComponent>();
+				auto& mc = e.GetComponent<MeshComponent>();
+				if (mc.MeshHandle != INVALID_ASSET_HANDLE)
+					HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), AssetManager::GetAsset<Mesh>(mc.MeshHandle)->GetBoundingBox());
+			}
+		}
+		if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
+		{
+			auto cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
+			if (cameraView.size() > 0)
 			{
-				auto cameraView = world->GetEntitiesWith<DirectionalLightComponent>();
-				if (cameraView.size() > 0)
+				auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("DirectionalLight"));
+
+				for (auto& entity : cameraView)
 				{
-					auto icon = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("DirectionalLight"));
+					Entity e = { entity, world.Raw() };
+					auto& tc = e.GetComponent<TransformComponent>();
 
-					for (auto& entity : cameraView)
-					{
-						Entity e = { entity, world.Raw() };
-						auto& tc = e.GetComponent<TransformComponent>();
-
-						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
-					}
+					HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 				}
 			}
+		}
 			});
 	}
 	void Viewport::OnPanelRender()
@@ -133,21 +131,21 @@ namespace UI
 		{
 			m_DrawSettings = false;
 			m_DrawStats = false;
-            
-            auto windowPos = ImGui::GetWindowPos();
-            auto mousePos = Input::GetMousePos();
-            glm::vec2 pos;
-            pos.x = mousePos.x - windowPos.x;
-            pos.y = mousePos.y - windowPos.y - 36;
-            
-            OnMouseClicked(pos);
+
+			auto windowPos = ImGui::GetWindowPos();
+			auto mousePos = Input::GetMousePos();
+			glm::vec2 pos;
+			pos.x = mousePos.x - windowPos.x;
+			pos.y = mousePos.y - windowPos.y - 36;
+
+			OnMouseClicked(pos);
 		}
 
 		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
-            Application::Get().SubmitMainThread([handle = assetHandle]() mutable {
-                AssetMetadata& meta = AssetManager::GetMetadata(handle);
-                Editor::EditorWorldManager::LoadWorld(meta.Key);
-            });
+			Application::Get().SubmitMainThread([handle = assetHandle]() mutable {
+				AssetMetadata& meta = AssetManager::GetMetadata(handle);
+		Editor::EditorWorldManager::LoadWorld(meta.Key);
+				});
 			});
 
 		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
@@ -231,7 +229,7 @@ namespace UI
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Events::SelectionContextChange>(BIND_EVENT(Viewport::OnSelectionContextChange));
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Viewport::KeyPressed));
-        
+
 		if (m_Gizmos.OnEvent(e)) return true;
 
 		if (m_Hovered)
@@ -258,7 +256,7 @@ namespace UI
 		if (!m_Hovered) return false;
 
 		switch (e.GetKeyCode())
-        {
+		{
 		case Key::D1:
 			m_Gizmos.SetType(Gizmo::Translate);
 			return true;
@@ -284,40 +282,40 @@ namespace UI
 		}
 		return false;
 	}
-    void Viewport::OnMouseClicked(const glm::vec2& mousePos)
-    {
-        ImageCopyRegion region = {};
-        region.Extent.Width = 1;
-        region.Extent.Height = 1;
-        region.X = mousePos.x * ((float)m_FrameBuffer->GetWidth() / (float)m_Width);
-        region.Y = mousePos.y * ((float)m_FrameBuffer->GetHeight() / (float)m_Height);
-        
-        //Invert region
-        region.Y = m_FrameBuffer->GetHeight() - region.Y;
-        
-        m_MouseClickBuffer.Release();
-        m_MouseClickBuffer = m_FrameBuffer->GetImage(1)->ReadPixels(region);
-        
+	void Viewport::OnMouseClicked(const glm::vec2& mousePos)
+	{
+		ImageCopyRegion region = {};
+		region.Extent.Width = 1;
+		region.Extent.Height = 1;
+		region.X = mousePos.x * ((float)m_FrameBuffer->GetWidth() / (float)m_Width);
+		region.Y = mousePos.y * ((float)m_FrameBuffer->GetHeight() / (float)m_Height);
+
+		//Invert region
+		region.Y = m_FrameBuffer->GetHeight() - region.Y;
+
+		m_MouseClickBuffer.Release();
+		m_MouseClickBuffer = m_FrameBuffer->GetImage(1)->ReadPixels(region);
+
 		Application::Get().SubmitMainThread([&]() mutable {
 			if (m_MouseClickBuffer.Size == 0) return;
 
-            int val = (int)m_MouseClickBuffer.Read<int>() - 1;
-            
-            auto world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
-            
-            Entity entity = { (entt::entity)val, world.Raw() };
-            if(entity.IsValid())
-            {
-                Events::SelectionContextChange e({ entity });
-                HazardLoop::GetCurrent().OnEvent(e);
-            }
-            else
-            {
-                Events::SelectionContextChange e({});
-                HazardLoop::GetCurrent().OnEvent(e);
-            }
-        });
-    }
+		int val = (int)m_MouseClickBuffer.Read<int>() - 1;
+
+		auto world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+
+		Entity entity = { (entt::entity)val, world.Raw() };
+		if (entity.IsValid())
+		{
+			Events::SelectionContextChange e({ entity });
+			HazardLoop::GetCurrent().OnEvent(e);
+		}
+		else
+		{
+			Events::SelectionContextChange e({});
+			HazardLoop::GetCurrent().OnEvent(e);
+		}
+			});
+	}
 
 	void Viewport::DrawStatsWindow()
 	{

@@ -13,16 +13,14 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Ref<HazardRenderer::Pipeline> ShaderLibrary::GetPipeline(const std::string& name)
+	void ShaderLibrary::Init()
 	{
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
-
-		if (name == "LineShader")
 		{
 			BufferLayout layout = LineVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Library/LineShader.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("LineShader.glsl.hpack");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "LineShader.glsl";
@@ -34,13 +32,13 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["LineShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		else if (name == "QuadShader")
 		{
 			BufferLayout layout = QuadVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Library/QuadShader.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl.hpack");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "QuadShader.glsl";
@@ -51,13 +49,13 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["QuadShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		else if (name == "PBR_Static")
 		{
 			BufferLayout layout = Vertex3D::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Library/PBR_Static.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("PBR_Static.glsl.hpack");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "PBR_Static.glsl";
@@ -68,9 +66,9 @@ namespace Hazard
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["PBR_Static"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		else if (name == "Skybox")
 		{
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Skybox.glsl.hpack");
 
@@ -84,9 +82,9 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		else if (name == "EquirectangularToCubemap") 
 		{
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EquirectangularToCubemap.glsl.hpack");
 
@@ -96,9 +94,9 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["EquirectangularToCubemap"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		else if (name == "EnvironmentIrradiance") 
 		{
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EnvironmentIrradiance.glsl.hpack");
 
@@ -108,8 +106,14 @@ namespace Hazard
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 
-			return AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline)->Value;
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["EnvironmentIrradiance"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
-		return nullptr;
+	}
+	AssetHandle ShaderLibrary::GetPipelineAssetHandle(const std::string& name)
+	{
+		if (s_LoadedPipelines.find(name) == s_LoadedPipelines.end())
+			return INVALID_ASSET_HANDLE;
+		return s_LoadedPipelines[name];
 	}
 }

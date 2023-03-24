@@ -13,11 +13,11 @@ namespace Hazard
 	static uint64_t MeshComponent_GetMesh_Native(uint64_t id)
 	{
 		auto& mc = GET_ENTITY(id).GetComponent<MeshComponent>();
-		return mc.m_MeshHandle;
+		return mc.MeshHandle;
 	}
 
 	static void MeshComponent_SetMesh_Native(uint64_t id, uint64_t handle)
 	{
-		GET_ENTITY(id).GetComponent<MeshComponent>().m_MeshHandle = handle;
+		GET_ENTITY(id).GetComponent<MeshComponent>().MeshHandle = handle;
 	}
 }

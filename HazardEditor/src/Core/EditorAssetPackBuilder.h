@@ -6,12 +6,12 @@
 #include "HazardRenderer.h"
 #include <Hazard/Rendering/Mesh/MeshAssetLoader.h>
 #include "GUI/AssetTools/AssetImporterPanel.h"
+#include <Hazard/Rendering/Mesh/MaterialAssetLoader.h>
 
 using namespace Hazard;
 class EditorAssetPackBuilder
 {
 public:
-
 	static AssetPack CreateAssetPack(const std::vector<AssetPackElement> element);
 	static CachedBuffer AssetPackToBuffer(const AssetPack& pack);
 	static void GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path);
@@ -19,6 +19,7 @@ public:
 	static void ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings);
 	static void MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings);
 	static void ShaderAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::RenderAPI api);
+	static void MaterialAssetPackJob(Ref<Job> job, const std::filesystem::path& file, UI::MaterialImportSettings settings);
 
 	template<typename T>
 	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info)
@@ -63,6 +64,20 @@ public:
 			return nullptr;
 	
 		Ref<Job> job = Ref<Job>::Create(MeshAssetPackJob, file, info, settings);
+		job->SetJobTag(file.string());
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
+		graph->GetStage(0)->QueueJobs({ job });
+
+		return graph;
+	}
+	template<>
+	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, UI::MaterialImportSettings settings)
+	{
+		if (!File::Exists(file))
+			return nullptr;
+
+		Ref<Job> job = Ref<Job>::Create(MaterialAssetPackJob, file, settings);
 		job->SetJobTag(file.string());
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);

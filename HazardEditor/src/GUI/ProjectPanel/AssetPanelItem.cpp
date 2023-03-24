@@ -153,7 +153,7 @@ namespace UI
 		{
 			OnItemClicked();
 		}
-		else if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !(m_Flags & AssetPanelItemFlags_Renaming))
+		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
 		{
 			if (!IsFolder())
 			{

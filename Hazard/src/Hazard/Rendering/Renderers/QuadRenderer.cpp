@@ -21,15 +21,15 @@ namespace Hazard
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;
 		m_Data.Samplers = 32;
-        
-		if(m_QuadBatch)
+
+		if (m_QuadBatch)
 			hdelete m_QuadBatch;
 
 		m_QuadBatch = hnew Batch<QuadVertex>(m_Data.MaxVertices);
 		m_Data.TextureSlots.resize(m_Data.Samplers);
 
 		Ref<Image2D> whiteTexture = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
-        
+
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			m_Data.TextureSlots[i] = whiteTexture;
 	}
@@ -65,7 +65,7 @@ namespace Hazard
 		m_VertexBuffer->SetData(region);
 		/*Ref<Shader> shader = m_Material->GetPipeline()->GetShader();
 
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
 			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
 		*/
 		//HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount());
@@ -76,14 +76,14 @@ namespace Hazard
 
 		if (!IsVisible(transform)) return;
 
-		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices) 
+		if (m_QuadBatch->GetIndexCount() >= m_Data.MaxIndices)
 		{
 			Flush();
 			BeginBatch();
 		}
 
 		float textureIndex = 0.0f;
-		if(texture)
+		if (texture)
 			textureIndex = GetImageIndex(texture->GetSourceImageAsset()->Value.As<Image2D>());
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -119,8 +119,8 @@ namespace Hazard
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 		constexpr float size = 1.0f;
 
-		const glm::vec4 cameraRightVector	= { view[0][0], view[1][0], view[2][0], 0.0f };
-		const glm::vec4 cameraUpVector		= { view[0][1], view[1][1], view[2][1], 0.0f };
+		const glm::vec4 cameraRightVector = { view[0][0], view[1][0], view[2][0], 0.0f };
+		const glm::vec4 cameraUpVector = { view[0][1], view[1][1], view[2][1], 0.0f };
 
 		for (uint8_t i = 0; i < 4; i++)
 		{
@@ -128,7 +128,7 @@ namespace Hazard
 
 			QuadVertex vertex = {};
 			vertex.Position = transform[3] + size * pos.x * cameraRightVector +
-											 size * pos.y * cameraUpVector;
+				size * pos.y * cameraUpVector;
 
 			vertex.Color = color;
 			vertex.TextureCoords = textureCoords[i];
@@ -148,8 +148,8 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		m_Data.QuadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		m_Data.QuadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		BufferLayout layout = QuadVertex::Layout();
@@ -160,7 +160,7 @@ namespace Hazard
 
 			uint32_t* indices = hnew uint32_t[m_Data.MaxIndices];
 
-			for (size_t i = 0; i < m_Data.MaxIndices; i += 6) 
+			for (size_t i = 0; i < m_Data.MaxIndices; i += 6)
 			{
 				indices[i + 0] = offset + 0;
 				indices[i + 1] = offset + 1;
@@ -190,9 +190,10 @@ namespace Hazard
 
 			hdelete[] indices;
 		}
-		//Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("QuadShader");
-		//pipeline->SetRenderPass(renderPass);
-        //m_Material = Ref<Material>::Create(pipeline);
+
+		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
+		m_Material = Ref<Material>::Create(pipelineHandle);
+
 		m_RenderPass = renderPass;
 	}
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)

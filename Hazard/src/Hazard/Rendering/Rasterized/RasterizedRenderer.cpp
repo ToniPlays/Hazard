@@ -166,7 +166,8 @@ namespace Hazard
 		if (!radiance) return;
 
 		auto skyboxMaterial = AssetManager::GetAsset<AssetPointer>(RenderEngine::GetResources().SkyboxPipelineHandle);
-		auto material = ShaderLibrary::GetPipeline("Skybox");
+		auto materialHandle = ShaderLibrary::GetPipelineAssetHandle("Skybox");
+		auto material = AssetManager::GetAsset<AssetPointer>(materialHandle)->Value.As<Pipeline>();
 
 		material->SetRenderPass(m_CurrentRenderPass);
 		material->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());

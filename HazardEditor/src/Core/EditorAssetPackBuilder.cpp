@@ -203,3 +203,23 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 
 	job->GetStage()->SetResult(result);
 }
+
+void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::filesystem::path& file, UI::MaterialImportSettings settings)
+{
+	MaterialAssetHeader header = {};
+
+	header.PipelineHandle = settings.PipelineHandle;
+	header.TextureCount = 0;
+	header.ParameterCount = 0;
+
+	Buffer data;
+	data.Allocate(sizeof(MaterialAssetHeader));
+	data.Write(&header, sizeof(MaterialAssetHeader));
+
+	AssetPackElement result = {};
+	result.Type = AssetType::Material;
+	result.Data = data;
+	result.Handle = settings.Handle;
+
+	job->GetStage()->SetResult(result);
+}

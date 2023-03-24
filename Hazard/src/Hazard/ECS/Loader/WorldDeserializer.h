@@ -139,12 +139,8 @@ namespace Hazard
 			auto& c = entity.AddComponent<MeshComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 
-			AssetHandle handle;
-			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.m_MeshHandle, INVALID_ASSET_HANDLE);
-			YamlUtils::Deserialize<AssetHandle>(comp, "Material", handle, INVALID_ASSET_HANDLE);
-
-			//if (handle != INVALID_ASSET_HANDLE)
-			//	c.m_MaterialHandle = AssetManager::GetAsset<Material>(handle);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.MeshHandle, INVALID_ASSET_HANDLE);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Material", c.MaterialHandle, INVALID_ASSET_HANDLE);
 		};
 		template<>
 		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
@@ -152,9 +148,6 @@ namespace Hazard
 
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
-
-			if (!comp["Sprite"]) return;
-
 			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", component.Texture, INVALID_ASSET_HANDLE);
 		};
 		template<>

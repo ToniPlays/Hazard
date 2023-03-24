@@ -678,20 +678,20 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				auto& firstMc = entities[0].GetComponent<MeshComponent>();
 
 				uint32_t flags = 0;
-				AssetHandle mesh = firstMc.m_MeshHandle;
-                Ref<Material> material = firstMc.m_MaterialHandle;
+				AssetHandle mesh = firstMc.MeshHandle;
+                AssetHandle material = firstMc.MaterialHandle;
 
 				for (auto& entity : entities)
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
-					if (mc.m_MeshHandle != mesh)
+					if (mc.MeshHandle != mesh)
 					{
 						mesh = INVALID_ASSET_HANDLE;
 						flags |= BIT(0);
 					}
-                    if(mc.m_MaterialHandle != material)
+                    if(mc.MaterialHandle != material)
                     {
-                        material = nullptr;
+                        material = INVALID_ASSET_HANDLE;
                         flags |= BIT(1);
                     }
 				}
@@ -704,7 +704,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 					meshName = "---";
             
                 if (material)
-                    materialName = File::GetNameNoExt(AssetManager::GetMetadata(material->GetHandle()).Key);
+                    materialName = File::GetNameNoExt(AssetManager::GetMetadata(material).Key);
                 else if (flags & BIT(1))
                     materialName = "---";
 
@@ -724,12 +724,13 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 				ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
                     Application::Get().SubmitMainThread([handle, entities]() {
                         for(auto entity : entities)
-                            entity.GetComponent<MeshComponent>().m_MeshHandle = handle;
+                            entity.GetComponent<MeshComponent>().MeshHandle = handle;
                         });
                     });
                 ImGui::NextColumn();
                 ImGui::Text("Material");
                 ImGui::NextColumn();
+				ImGui::PushID("##materialInput");
             
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 if (ImUI::TextFieldWithHint(materialName, "Material"))
@@ -738,23 +739,21 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
                 }
                 ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
                     Application::Get().SubmitMainThread([handle, entities]() {
-                        Ref<Material> mat = AssetManager::GetAsset<Material>(handle);
-                        
                         for(auto entity : entities)
-                            entity.GetComponent<MeshComponent>().m_MaterialHandle = mat;
+                            entity.GetComponent<MeshComponent>().MaterialHandle = handle;
                         });
                     });
 
 				ImGui::PopStyleVar();
-
+				ImGui::PopID();
 				ImGui::Columns();
 			}, [&]() {
 				ImUI::MenuItem("Reset", [&]() {
 					for (auto& entity : entities)
 					{
 						auto& c = entity.GetComponent<MeshComponent>();
-						c.m_MeshHandle = INVALID_ASSET_HANDLE;
-                        c.m_MaterialHandle = nullptr;
+						c.MeshHandle = INVALID_ASSET_HANDLE;
+                        c.MaterialHandle = INVALID_ASSET_HANDLE;
 					}
 					});
 				ImUI::MenuItem("Remove component", [&]() {

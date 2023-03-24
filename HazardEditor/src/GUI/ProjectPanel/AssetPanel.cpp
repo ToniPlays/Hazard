@@ -1,6 +1,7 @@
 
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
+#include "Core/EditorAssetPackBuilder.h"
 #include "Editor/EditorScriptManager.h"
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
@@ -221,8 +222,8 @@ namespace UI
 		changed = true;
 			});
 		ImUI::MenuItem("Material", [&]() {
-			//EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "material.hmat");
-			changed |= true;
+			CreateMaterial(GetOpenDirectory() / "material");
+		changed |= true;
 			});
 
 		ImUI::MenuHeader("Advanced assets");
@@ -243,8 +244,8 @@ namespace UI
 		ImUI::Submenu("Materials and textures", [&]() {
 
 			ImUI::MenuItem("Material", [&]() {
-				//EditorAssetManager::CreateAsset(AssetType::Material, GetOpenDirectory() / "newshader.glsl");
-				changed |= true;
+				CreateMaterial(GetOpenDirectory() / "material");
+		changed |= true;
 				});
 
 		ImUI::MenuItem("Shader", [&]() {
@@ -404,7 +405,7 @@ namespace UI
 			handle = EditorAssetManager::GetIconHandle("Default"); break;
 
 		}
-		
+
 		return AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 
@@ -485,7 +486,50 @@ namespace UI
 		File::WriteFile(worldPath.string() + ".meta", out.c_str());
 
 		WorldSerializer serializer(newWorld);
-		
+
 		serializer.SerializeEditor(worldPath);
+	}
+	void AssetPanel::CreateMaterial(const std::filesystem::path& path)
+	{
+		std::filesystem::path materialPath = path.string() + ".hmat";
+		uint32_t suffix = 1;
+
+		while (File::Exists(materialPath))
+			materialPath = path.string() + std::to_string(suffix) + ".hmat";
+
+		AssetHandle materialHandle = AssetHandle();
+
+		//Write meta file
+		{
+			YAML::Emitter out;
+			out << YAML::BeginMap;
+			YamlUtils::Serialize(out, "UID", materialHandle);
+			YamlUtils::Serialize(out, "Type", AssetType::Material);
+			YamlUtils::Map(out, "Importer", []() {});
+			out << YAML::EndMap;
+			File::WriteFile(materialPath.string() + ".meta", out.c_str());
+		}
+		//Write hmat file
+		{
+			YAML::Emitter out;
+			out << YAML::BeginMap;
+			YamlUtils::Serialize(out, "Shader", INVALID_ASSET_HANDLE);
+			YamlUtils::Map(out, "Parameters", []() {});
+			YamlUtils::Map(out, "Textures", []() {});
+			out << YAML::EndMap;
+			File::WriteFile(materialPath, out.c_str());
+		}
+
+		MaterialImportSettings settings = {};
+		settings.Handle = materialHandle;
+		settings.PipelineHandle = INVALID_ASSET_HANDLE;
+
+		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(materialPath, settings)->Execute()->GetResult<AssetPackElement>();
+
+		AssetPack pack = EditorAssetPackBuilder::CreateAssetPack({ element });
+		CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
+		File::WriteBinaryFile(materialPath.string() + ".hpack", buffer.GetData(), buffer.GetSize());
+
+		AssetManager::ImportAssetPack(pack, materialPath.string() + ".hpack");
 	}
 }

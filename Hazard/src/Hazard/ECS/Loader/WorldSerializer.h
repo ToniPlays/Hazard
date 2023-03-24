@@ -118,10 +118,8 @@ namespace Hazard
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
-				YamlUtils::Serialize(out, "Mesh", component.m_MeshHandle);
-
-                if (component.m_MaterialHandle)
-                    YamlUtils::Serialize(out, "Material", component.m_MaterialHandle->GetHandle());
+				YamlUtils::Serialize(out, "Mesh", component.MeshHandle);
+				YamlUtils::Serialize(out, "Material", component.MaterialHandle);
 				});
 		}
 		template<>

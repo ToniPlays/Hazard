@@ -21,6 +21,11 @@ namespace UI
         float Scale = 1.0;
         AssetHandle Handle;
     };
+    struct MaterialImportSettings
+    {
+        AssetHandle Handle;
+        AssetHandle PipelineHandle;
+    };
 
     class AssetImporterPanel : public Hazard::ImUI::Modal
     {

@@ -45,7 +45,7 @@ namespace Hazard
 		metadata.LoadState = LoadState::None;
 
 		s_Registry[filePath] = metadata;
-		HZR_CORE_INFO("Importing pack  as {} ({})", path.string(), pack.Handle);
+		//HZR_CORE_INFO("Importing pack  as {} ({})", path.string(), pack.Handle);
 
 		for (auto& element : pack.Elements)
 			ImportAsset(element, fmt::format("{}", File::GetName(path)));
