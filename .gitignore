@@ -52,3 +52,7 @@ Hazard/vendor/VulkanSDK
 Hazard/vendor/Optick
 *.hzrche
 *.hzrcfg
+Hazard/vendor/yaml-cpp
+Hazard/vendor/Metal-CPP
+Hazard/vendor/glfw
+Hazard/vendor/box2d
