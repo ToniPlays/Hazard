@@ -6,8 +6,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Metal/MetalContext.h"
-
-//#include <Metal/Metal.hpp>
+#include <Metal/Metal.hpp>
 
 #include <GLFW/glfw3.h>
 

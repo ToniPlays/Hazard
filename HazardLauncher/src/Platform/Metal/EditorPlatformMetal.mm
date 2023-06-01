@@ -55,10 +55,10 @@ void EditorPlatformMetal::BeginFrame()
 {
     
     using namespace HazardRenderer::Metal;
-    
+    /*
     uint32_t w = m_Context->GetSwapchain()->GetWidth();
     uint32_t h = m_Context->GetSwapchain()->GetHeight();
-    /*
+    
     m_Descriptor->setRenderTargetWidth(w);
     m_Descriptor->setRenderTargetHeight(h);
     

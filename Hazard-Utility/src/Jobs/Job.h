@@ -54,8 +54,9 @@ public:
 			return T();
 
 		uint32_t index = m_Stage->GetStageIndex() - 1;
-		Ref<GraphStage> stage = m_Stage->GetGraph()->GetStage(index);
-		return stage->GetResult<T>();
+		//Ref<GraphStage> stage = m_Stage->GetGraph()->GetStage(index);
+		//return stage->GetResult<T>();
+        return T();
 	}
 
 	Ref<GraphStage> GetStage() { return m_Stage; }

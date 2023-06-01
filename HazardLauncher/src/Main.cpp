@@ -22,10 +22,10 @@ int main(int argc, char** argv)
 #endif
 
 	JobSystemTest::Run();
-	return 0;
 
     RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
+    /*
 	TexturedQuad::Run(renderAPI);
 	UniformBufferTest::Run(renderAPI);
 
@@ -34,6 +34,6 @@ int main(int argc, char** argv)
 		AccelerationStructureTest::Run(renderAPI);
 		RayTracingSphere::Run(renderAPI);
 	}
-	RayTracingSphere::Run(renderAPI);
+	*/
     return 0;
 }

@@ -54,8 +54,7 @@ namespace UI
         template<typename T>
         static T GetImportSettings(const std::filesystem::path& path)
         {
-            __debugbreak();
-            //static_assert(false);
+            HZR_ASSERT(false, "AssetImporterPanel::GetImportSettings<T>");
         }
 
         template<>

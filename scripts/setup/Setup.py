@@ -3,9 +3,9 @@ import os
 import sys
 from platform import platform
 import subprocess
+
 import Utils
 import SetupPackages
-
 from SetupVulkan import VulkanConfiguration as VulkanRequirements
 from SetupPython import PythonConfiguration
 from SetupPremake import PremakeConfiguration as PremakeRequirements
@@ -18,7 +18,6 @@ def main(argv):
            print("Hazard for MacOS\n")
         
     #Init colorama
-
     if not SetupPackages.PackageInstalled('colorama'):
         SetupPackages.InstallPackage('colorama')
 
@@ -29,16 +28,14 @@ def main(argv):
 
     colorama.init()
     os.chdir("../")
+    
+    
     #Check if 'requests' package exists
     print("Checking packages")
     requestsInstalled = SetupPackages.PackageInstalled('requests')
 
     if not requestsInstalled:
-        print(f"{Style.BRIGHT}{Back.YELLOW}Python package 'requests' not found{Style.RESET_ALL}")
-        if Utils.YesNo("Install package? [Y/N]"):
-            SetupPackages.InstallPackage('requests')
-            print(f"{Style.BRIGHT}{Back.GREEN}Package 'requests' installed{Style.RESET_ALL}")
-            requestsInstalled = True
+        SetupPackages.PromptInstall('packages')
 
     #Check premake settings
     print("\nValidating premake")
@@ -52,13 +49,15 @@ def main(argv):
             requestsInstalled = True
 
     #Check vulkan version
-    print("\nValidating Vulkan version")
-    vulkanInstalled = VulkanRequirements.Validate("1.3.216.0")
-    if not vulkanInstalled:
-        if Utils.YesNo("Vulkan SDK not found, would you like to install it [Y/N]"):
-            VulkanRequirements.InstallVulkanSDK()
-    else:
-        print(f"{Style.BRIGHT}{Back.GREEN}Vulkan SDK located{Style.RESET_ALL}")
+    if Utils.IsWindows():
+        print("\nValidating Vulkan version")
+        vulkanInstalled = VulkanRequirements.Validate("1.3.216.0")
+        
+        if not vulkanInstalled:
+            if Utils.YesNo("Vulkan SDK not found, would you like to install it [Y/N]"):
+                VulkanRequirements.InstallVulkanSDK()
+        else:
+            print(f"{Style.BRIGHT}{Back.GREEN}Vulkan SDK located{Style.RESET_ALL}")
 
     print("Current branch branch")
     subprocess.call(["git", "branch"])
@@ -67,8 +66,10 @@ def main(argv):
     subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 
     print("\nRunning premake")
+    
     if Utils.IsWindows():
         subprocess.check_call(["vendor/premake/bin/premake5.exe", "vs2022"])
+        
     elif Utils.IsMacos():
         platformOverride = ""
         if len(argv) > 0:

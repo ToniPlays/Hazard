@@ -33,9 +33,9 @@ namespace HazardRenderer::Metal
         void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
         void EndRenderPass() override;
         
-        void BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
-        void BindUniformBuffer(Ref<UniformBuffer> uniformBuffer) override;
-        void BindPipeline(Ref<Pipeline> pipeline) override;
+        void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
+        void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) override;
+        void SetPipeline(Ref<Pipeline> pipeline) override;
         
         void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;

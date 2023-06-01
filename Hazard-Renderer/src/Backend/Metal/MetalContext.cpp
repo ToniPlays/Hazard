@@ -50,8 +50,8 @@ namespace HazardRenderer::Metal
         uint32_t data = 0xFFFFFFFF;
         Image2DCreateInfo whiteTexture = {};
         whiteTexture.DebugName = "DefaultWhiteTexture";
-        whiteTexture.Width = 1;
-        whiteTexture.Height = 1;
+        whiteTexture.Extent.Width = 1;
+        whiteTexture.Extent.Height = 1;
         whiteTexture.Mips = 1;
         whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
         whiteTexture.Format = ImageFormat::RGBA;

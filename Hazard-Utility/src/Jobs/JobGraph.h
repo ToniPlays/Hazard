@@ -4,6 +4,7 @@
 #include "Job.h"
 #include "JobSystem.h"
 
+class JobSystem;
 class GraphStage;
 
 class JobGraph : public RefCount

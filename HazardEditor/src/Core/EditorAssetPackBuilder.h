@@ -24,13 +24,11 @@ public:
 	template<typename T>
 	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info)
 	{
-		__debugbreak();
 		return nullptr;
 	}
 	template<typename T, typename E>
 	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info, E setting)
 	{
-		__debugbreak();	
 		return nullptr;
 	}
 	template<>

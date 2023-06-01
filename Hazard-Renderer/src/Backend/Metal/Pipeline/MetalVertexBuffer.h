@@ -30,10 +30,8 @@ namespace HazardRenderer::Metal
         size_t m_Size;
         std::string m_DebugName;
         BufferLayout m_Layout;
-        BufferUsage m_Usage;
         
         Buffer m_LocalBuffer;
-        
         MTL::Buffer* m_Buffer;
     };
 }

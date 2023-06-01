@@ -60,8 +60,8 @@ namespace HazardRenderer::Metal
                     Image2DCreateInfo imageInfo = {};
                     imageInfo.Format = attachmentSpec.Format;
                     imageInfo.Usage = ImageUsage::Attachment;
-                    imageInfo.Width = m_Specs.Width;
-                    imageInfo.Height = m_Specs.Height;
+                    imageInfo.Extent.Width = m_Specs.Width;
+                    imageInfo.Extent.Height = m_Specs.Height;
                     imageInfo.DebugName = fmt::format("{0}-Depth Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
                     m_DepthAttachmentImage = Image2D::Create(&imageInfo).As<MetalImage2D>();
                 }
@@ -70,8 +70,8 @@ namespace HazardRenderer::Metal
                     Image2DCreateInfo imageInfo = {};
                     imageInfo.Format = attachmentSpec.Format;
                     imageInfo.Usage = ImageUsage::Attachment;
-                    imageInfo.Width = m_Specs.Width;
-                    imageInfo.Height = m_Specs.Height;
+                    imageInfo.Extent.Width = m_Specs.Width;
+                    imageInfo.Extent.Height = m_Specs.Height;
                     imageInfo.DebugName = fmt::format("{0}-Color Attachment {1}", m_Specs.DebugName.empty() ? "Unnamed FB" : m_Specs.DebugName, attachmentIndex);
                     m_ColorAttachments.emplace_back(Image2D::Create(&imageInfo).As<MetalImage2D>());
                 }

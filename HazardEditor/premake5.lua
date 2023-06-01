@@ -93,7 +93,8 @@ project "HazardEditor"
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
-			"MetalKit.framework"
+			"MetalKit.framework",
+			"%{Library.Assimp_Lib}",
 		}
         	files 
 		{

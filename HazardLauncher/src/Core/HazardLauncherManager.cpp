@@ -119,19 +119,10 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 	{
 		File::CreateDir(project.Path / "Assets" / "Scripts");
-		File::WriteFile(project.Path / "Assets" / "Scripts.meta", GenerateMetaFileContent(project.Path / "Assets" / "Scripts", AssetType::Folder));
-
 		File::CreateDir(project.Path / "Assets" / "Materials");
-		File::WriteFile(project.Path / "Assets" / "Materials.meta", GenerateMetaFileContent(project.Path / "Assets" / "Materials", AssetType::Folder));
-
 		File::CreateDir(project.Path / "Assets" / "Sprites");
-		File::WriteFile(project.Path / "Assets" / "Sprites.meta", GenerateMetaFileContent(project.Path / "Assets" / "Sprites", AssetType::Folder));
-
 		File::CreateDir(project.Path / "Assets" / "Models");
-		File::WriteFile(project.Path / "Assets" / "Models.meta", GenerateMetaFileContent(project.Path / "Assets" / "Models", AssetType::Folder));
-
 		File::CreateDir(project.Path / "Assets" / "Worlds");
-		File::WriteFile(project.Path / "Assets" / "Worlds.meta", GenerateMetaFileContent(project.Path / "Assets" / "Worlds", AssetType::Folder));
 	}
 
 	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";

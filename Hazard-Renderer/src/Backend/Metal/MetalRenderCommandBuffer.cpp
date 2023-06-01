@@ -155,23 +155,19 @@ namespace HazardRenderer::Metal
             instance->m_RenderEncoder->endEncoding();
         });
     }
-    void MetalRenderCommandBuffer::BindVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+    void MetalRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
-        Renderer::Submit([instance, buffer, binding]() mutable {
-            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
-        });
+        //Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
+        //Renderer::Submit([instance, buffer, binding]() mutable {
+        //    instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
+        //});
     }
-    void MetalRenderCommandBuffer::BindUniformBuffer(Ref<UniformBuffer> uniformBuffer)
+    void MetalRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
     {
-        Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalUniformBuffer> metalUniformBuffer = uniformBuffer.As<MetalUniformBuffer>();
         
-        Renderer::Submit([instance, metalUniformBuffer]() mutable {
-            });
     }
-    void MetalRenderCommandBuffer::BindPipeline(Ref<Pipeline> pipeline)
+    void MetalRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalPipeline> metalPipeline = pipeline.As<MetalPipeline>();
@@ -231,9 +227,9 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
     {
         DispatchComputeInfo computeInfo = {};
-        computeInfo.GroupSize.x = traceRaysInfo.Width;
-        computeInfo.GroupSize.y = traceRaysInfo.Height;
-        computeInfo.GroupSize.z = traceRaysInfo.Depth;
+        computeInfo.GroupSize.x = traceRaysInfo.Extent.Width;
+        computeInfo.GroupSize.y = traceRaysInfo.Extent.Height;
+        computeInfo.GroupSize.z = traceRaysInfo.Extent.Depth;
         computeInfo.WaitForCompletion = true;
         
         DispatchCompute(computeInfo);

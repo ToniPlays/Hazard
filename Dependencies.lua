@@ -3,6 +3,13 @@
 
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
+function file_exists(name)
+   print(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
+
+
 IncludeDir = {}
 IncludeDir["yaml_cpp"] = "%{wks.location}/Hazard/vendor/yaml-cpp/include"
 IncludeDir["glm"] = "%{wks.location}/Hazard/vendor/glm"
@@ -67,23 +74,29 @@ Library = {}
 end
 if os.host() == "macosx" then
 
-    IncludeDir["SPIRV_Cross"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/include"
+    CELLAR = os.getenv("HOMEBREW_CELLAR") .. "/"
+
+    IncludeDir["SPIRV_Cross"] = CELLAR .. "spirv-cross/2021-01-15/include"
+
+    LibraryDir["Assimp_Lib"] = CELLAR .. "assimp/5.2.5/lib/"
+    LibraryDir["SPIRV_Cross"] = CELLAR .. "spirv-cross/2021-01-15/lib"
 
     Library["Vulkan"] = "vulkan"
     Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 
     Library["ShaderC_Debug"] = "shaderc"
-    Library["SPIRV_Cross_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Debug"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-glsl"
-    Library["SPIRV_Tools_Debug"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/SPIRV-Tools"
+    Library["SPIRV_Cross_Debug"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-core"
+    Library["SPIRV_Cross_GLSL_Debug"] = CELLAR .. "/spirv-cross/2021-01-15/lib/spirv-cross-glsl"
+    Library["SPIRV_Tools_Debug"] = CELLAR .. "spirv-cross/2021-01-15/lib/SPIRV-Tools"
 
     Library["ShaderC_Release"] = "shaderc"
-    Library["SPIRV_Cross_Release"] = "/opt/homebrew/Cellar//spirv-cross/2021-01-15/lib/spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Release"] = "/opt/homebrew/Cellar/spirv-cross/2021-01-15/lib/spirv-cross-glsl"
+    Library["SPIRV_Cross_Release"] = CELLAR .. "/spirv-cross/2021-01-15/lib/spirv-cross-core"
+    Library["SPIRV_Cross_GLSL_Release"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
 
-    Library["Mono_Debug_Lib"] = "/usr/local/homebrew/Cellar/mono/6.12.0.122/lib/mono-2.0"
-    Library["Assimp_Lib"] = "/opt/homebrew/Cellar/assimp/5.1.4/lib/assimp"
+    Library["Mono_Debug_Lib"] = CELLAR .. "mono/6.12.0.122/lib/mono-2.0"
+    Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.dylib"
+    
 end
 
 
@@ -105,3 +118,4 @@ premake.override(_G, "workspace", function(base, ...)
 	filter {}
 	return rval
 	end)
+

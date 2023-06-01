@@ -198,7 +198,7 @@ namespace Hazard
 		template<typename T>
 		static void FetchAssetsFromComponent(YAML::Node comp, std::vector<AssetHandle>& handles)
 		{
-			__debugbreak();
+			
 			//static_assert(false);
 		}
 

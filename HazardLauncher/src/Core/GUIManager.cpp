@@ -114,7 +114,7 @@ void GUIManager::Render()
 				ImUI::Separator({ 2.0, rowHeight }, style.Colors.AxisZ);
 				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 				ImGui::SameLine(0, 8.0f);
-				ImGui::Text(project.Name.c_str());
+				ImGui::Text("%s", project.Name.c_str());
 				ImGui::PopFont();
 				ImGui::TableNextColumn();
 

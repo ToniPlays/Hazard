@@ -62,8 +62,8 @@ namespace HazardRenderer
             m_WindowData.Platform = "MacOS";
             m_WindowData.SelectedAPI = info->Renderer;
             m_WindowData.HasTitleBar = windowInfo.HasTitlebar;
-            m_WindowData.Width = windowInfo.Width;
-            m_WindowData.Height = windowInfo.Height;
+            m_WindowData.Width = windowInfo.Extent.Width;
+            m_WindowData.Height = windowInfo.Extent.Height;
             m_WindowData.VSync = info->VSync;
             m_WindowData.ImagesInFlight = info->ImagesInFlight;
             m_WindowData.Window = this;
@@ -98,8 +98,8 @@ namespace HazardRenderer
             //Correct for retina displays
             float x, y;
             glfwGetWindowContentScale(m_Window, &x, &y);
-            m_WindowData.Width = (float)windowInfo.Width * x;
-            m_WindowData.Height = (float)windowInfo.Height * y;
+            m_WindowData.Width = (float)windowInfo.Extent.Width * x;
+            m_WindowData.Height = (float)windowInfo.Extent.Height * y;
             
 
             if (info->pAppInfo->IconCount > 0)

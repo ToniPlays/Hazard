@@ -16,8 +16,8 @@ namespace HazardRenderer::Metal
         HZR_ASSERT(info->Usage != ImageUsage::None, "Image usage cannot be none");
 
         m_DebugName = info->DebugName;
-        m_Width = info->Width;
-        m_Height = info->Height;
+        m_Width = info->Extent.Width;
+        m_Height = info->Extent.Height;
         m_Format = info->Format;
         m_MipLevels = 1; //TODO: Make this work
         m_Usage = info->Usage;
@@ -66,7 +66,7 @@ namespace HazardRenderer::Metal
     Buffer MetalImage2D::ReadPixels(const ImageCopyRegion& region)
     {
         Buffer buffer;
-        buffer.Allocate(4 * region.Width * region.Height * region.Depth);
+        buffer.Allocate(4 * region.Extent.Width * region.Extent.Height * region.Extent.Depth);
         
         Ref<MetalImage2D> instance = this;
         Renderer::Submit([instance, dataBuffer = buffer, region]() mutable {
@@ -78,7 +78,7 @@ namespace HazardRenderer::Metal
             
             MTL::Buffer* buffer = device->GetMetalDevice()->newBuffer(dataBuffer.Size, MTL::ResourceOptionCPUCacheModeDefault);
         
-            encoder->copyFromTexture(instance->m_MetalTexture, 0, 0, { region.X, region.Y, region.Z }, { region.Width, region.Height, region.Depth }, buffer, 0, 4 * region.Width, 0);
+            encoder->copyFromTexture(instance->m_MetalTexture, 0, 0, { region.X, region.Y, region.Z }, { region.Extent.Width, region.Extent.Height, region.Extent.Depth }, buffer, 0, 4 * region.Extent.Width, 0);
             
             encoder->endEncoding();
             commandBuffer->commit();

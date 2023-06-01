@@ -1,9 +1,7 @@
-﻿import requests
 
 import sys
 import os
 import time
-import urllib
 
 from fake_useragent import UserAgent
 from zipfile import ZipFile
@@ -16,6 +14,8 @@ from colorama import Style
 
 
 def DownloadFile(url, filepath):
+    import requests
+    
     path = filepath
     filepath = os.path.abspath(filepath)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
