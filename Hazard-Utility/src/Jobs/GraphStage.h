@@ -57,7 +57,7 @@ private:
 	Ref<JobGraph> m_JobGraph;
 
 	std::mutex m_JobMutex;
-	std::atomic_uint32_t m_JobCount;
+	std::atomic_uint64_t m_JobCount;
 
 	Buffer m_ResultBuffer;
 	uint32_t m_StageIndex = 0;

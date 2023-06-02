@@ -17,9 +17,6 @@ namespace TexturedQuad {
 
 	static void Run(RenderAPI api)
 	{
-#ifdef HZR_PLATFORM_MACOS
-		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
@@ -114,7 +111,7 @@ namespace TexturedQuad {
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Extent = { (uint32_t)w, (uint32_t)h };
+		imageInfo.Extent = { (uint32_t)w, (uint32_t)h, 1 };
 		imageInfo.Format = ImageFormat::RGBA;
 		imageInfo.Data = Buffer(data, w * h * 4);
 		imageInfo.Usage = ImageUsage::Texture;
@@ -124,24 +121,25 @@ namespace TexturedQuad {
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
 
+        pipeline->GetShader()->Set("u_Texture", 0, image);
+        
 		while (running)
 		{
+            auto swapchain = window->GetSwapchain();
+            auto commandBuffer = swapchain->GetSwapchainBuffer();
+            auto renderPass = swapchain->GetRenderPass();
+            
 			Input::Update();
 			window->BeginFrame();
-
-			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
+            
+			commandBuffer->BeginRenderPass(renderPass);
 			commandBuffer->SetVertexBuffer(vertexBuffer);
-			pipeline->GetShader()->Set("u_Texture", 0, image);
-
 			commandBuffer->SetPipeline(pipeline);
 			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
-
 			commandBuffer->EndRenderPass();
+            
 			Renderer::WaitAndRender();
 			window->Present();
 		}
-
-		std::cout << "Test closed";
 	}
 }

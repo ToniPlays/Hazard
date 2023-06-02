@@ -237,7 +237,5 @@ namespace AccelerationStructureTest
 			Renderer::WaitAndRender();
 			window->Present();
 		}
-
-		std::cout << "Test closed";
 	}
 }

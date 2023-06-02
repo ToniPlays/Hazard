@@ -17,7 +17,7 @@ namespace JobSystemTest
 		for (uint32_t i = 0; i < count; i++)
 		{
 			job->Progress((float)i / (float)count);
-			std::this_thread::sleep_for(25ms);
+			std::this_thread::sleep_for(5ms);
 		}
 
 		//Initialize next stage jobs
@@ -67,7 +67,7 @@ namespace JobSystemTest
 #endif
 		JobSystem jobSystem;
 
-		Ref<Job> loadingJob = new Job(WorldLoad, 500);
+		Ref<Job> loadingJob = new Job(WorldLoad, 250);
 
 		loadingJob->SetJobName("World loading");
 
@@ -79,7 +79,7 @@ namespace JobSystemTest
 
 		graph->GetStage(1)->SetWeight(0.60f);
 
-		//jobSystem.QueueGraph(graph);
+        jobSystem.QueueGraph<bool>(graph);
 
 		static float progress = 0.0f;
 
@@ -88,7 +88,7 @@ namespace JobSystemTest
 		{
 			if (progress == graph->GetProgress()) continue;
 			progress = graph->GetProgress();
-			std::cout << fmt::format("{} progress: {}%", "Some graph", graph->GetProgress() * 100.0f) << std::endl;
+			std::cout << fmt::format("{} progress: {}%", graph->GetName(), graph->GetProgress() * 100.0f) << std::endl;
 
 			continue;
 

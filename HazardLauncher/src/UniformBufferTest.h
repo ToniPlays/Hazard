@@ -20,9 +20,6 @@ namespace UniformBufferTest
 
 	static void Run(RenderAPI api)
 	{
-#ifdef HZR_PLATFORM_MACOS
-		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
 		static bool running = true;
 
 		HazardRendererAppInfo appInfo = {};
@@ -117,7 +114,7 @@ namespace UniformBufferTest
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Extent = { (uint32_t)w, (uint32_t)h };
+		imageInfo.Extent = { (uint32_t)w, (uint32_t)h, 1 };
 		imageInfo.Format = ImageFormat::RGBA;
 		imageInfo.Data = Buffer(data, w * h * 4);
 		imageInfo.Usage = ImageUsage::Texture;
@@ -133,12 +130,17 @@ namespace UniformBufferTest
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
 		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+        
+        pipeline->GetShader()->Set("u_Texture", 0, image);
 
 		while (running)
 		{
+            auto swapchain = window->GetSwapchain();
+            auto commandBuffer = swapchain->GetSwapchainBuffer();
+            auto renderPass = swapchain->GetRenderPass();
+            
 			Input::Update();
-			window->BeginFrame();
-
+			
 			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
 			glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -10.0f, 10.0f);
 
@@ -148,19 +150,15 @@ namespace UniformBufferTest
 
 			camera->SetData(region);
 
-			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
+            window->BeginFrame();
+			commandBuffer->BeginRenderPass(renderPass);
 			commandBuffer->SetVertexBuffer(vertexBuffer);
-			pipeline->GetShader()->Set("u_Texture", 0, image);
-
 			commandBuffer->SetPipeline(pipeline);
 			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
-
 			commandBuffer->EndRenderPass();
+            
 			Renderer::WaitAndRender();
 			window->Present();
 		}
-
-		std::cout << "Test closed";
 	}
 }

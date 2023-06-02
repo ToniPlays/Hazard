@@ -65,7 +65,7 @@ public:
 		return JobPromise<T>(graph);
 	}
 
-	uint32_t WaitForUpdate()
+	uint64_t WaitForUpdate()
 	{
 		if (m_JobCount != 0)
 			m_JobCount.wait(m_JobCount);
@@ -94,8 +94,8 @@ private:
 	std::vector<Ref<Job>> m_RunningJobs;
 	std::atomic_bool m_Running = false;
 
-	std::atomic_uint32_t m_JobCount = 0;
-	std::atomic_uint32_t m_RunningJobCount = 0;
+	std::atomic_uint64_t m_JobCount = 0;
+	std::atomic_uint64_t m_RunningJobCount = 0;
 
 	std::mutex m_JobMutex;
 	std::mutex m_RunningJobMutex;

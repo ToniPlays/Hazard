@@ -34,12 +34,11 @@ namespace HazardRenderer::Metal
     }
     bool MetalShaderCompiler::Compile(CompileInfo* compileInfo)
     {
-
+        
         HZR_PROFILE_FUNCTION();
         Timer timer;
 
         m_ResultBinary.Release();
-#ifdef HZR_PLATFORM_MACOS
         shaderc::CompileOptions options;
 
         switch (compileInfo->Renderer)
@@ -73,17 +72,15 @@ namespace HazardRenderer::Metal
         else
             m_ErrorMessage = result.GetErrorMessage();
         m_CompilationTime = timer.ElapsedMillis();
-#else
-        bool succeeded = false;
-#endif
+        
         return succeeded;
     }
     bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result, bool tesellation)
     {
+        HZR_ASSERT(binary.Size > 0, "Cannot use empty binary data");
         HZR_PROFILE_FUNCTION();
         
         m_ErrorMessage.clear();
-#ifdef HZR_PLATFORM_MACOS
         
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
@@ -94,7 +91,6 @@ namespace HazardRenderer::Metal
         
         compiler.set_msl_options(options);
         result = compiler.compile();
-#endif
     
         return !result.empty();
     }
@@ -102,7 +98,6 @@ namespace HazardRenderer::Metal
     {
         std::unordered_map<std::string, MSLBinding> result;
         
-#ifdef HZR_PLATFORM_MACOS
         spirv_cross::CompilerMSL::Options options;
         options.set_msl_version(2, 4);
         options.vertex_for_tessellation = tesellation;
@@ -151,7 +146,6 @@ namespace HazardRenderer::Metal
             result[sampler.name].Binding = id;
             result[sampler.name].SamplerBinding = sId < UINT32_MAX ? sId : id;
         }
-#endif
         return result;
     }
 }

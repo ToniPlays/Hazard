@@ -346,7 +346,5 @@ namespace RayTracingSphere
 			Renderer::WaitAndRender();
 			window->Present();
 		}
-
-		std::cout << "Test closed";
 	}
 }

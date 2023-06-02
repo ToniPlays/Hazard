@@ -2,14 +2,19 @@
 #include "TriangleTest.h"
 #include "TexturedQuad.h"
 #include "UniformBufferTest.h"
+#include "ComputeShaderTest.h"
 #include "AccelerationStructureTest.h"
 #include "RayTracingSphere.h"
 
 #include "JobSystemTest.h"
 
+#include <filesystem>
+
 int main(int argc, char** argv)
 {
+    
     uint32_t api = 0;
+    
 #if !defined(HZR_PLATFORM_IOS)
 	std::cout << "Select api" << std::endl;
 	std::cout << " 0 - Auto" << std::endl;
@@ -18,22 +23,22 @@ int main(int argc, char** argv)
 	std::cout << " 3 - Metal" << std::endl;
 	
 	std::cin >> api;
-	
 #endif
-
+    
 	JobSystemTest::Run();
 
     RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
-    /*
+    
 	TexturedQuad::Run(renderAPI);
 	UniformBufferTest::Run(renderAPI);
+    ComputeShaderTest::Run(renderAPI);
 
 	if (renderAPI == RenderAPI::Vulkan)
 	{
 		AccelerationStructureTest::Run(renderAPI);
 		RayTracingSphere::Run(renderAPI);
 	}
-	*/
+	
     return 0;
 }

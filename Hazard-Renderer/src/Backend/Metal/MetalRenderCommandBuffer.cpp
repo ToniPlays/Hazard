@@ -39,8 +39,6 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::End()
     {
-        if(!m_IsCompute) return;
-        
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
             instance->m_ComputeEncoder->endEncoding();
@@ -158,10 +156,10 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
-        //Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
-        //Renderer::Submit([instance, buffer, binding]() mutable {
-        //    instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
-        //});
+        Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
+        Renderer::Submit([instance, buffer, binding]() mutable {
+            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
+        });
     }
     void MetalRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
     {

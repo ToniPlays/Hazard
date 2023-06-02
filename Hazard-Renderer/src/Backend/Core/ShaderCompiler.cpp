@@ -236,7 +236,6 @@ namespace HazardRenderer
 	{
 		Timer timer;
 		auto sourceCode = GetShaderSources(sourceFile);
-
 		std::vector<ShaderStageCode> result;
 
 		switch (api)
@@ -368,13 +367,14 @@ namespace HazardRenderer
                     std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString((uint32_t)stage), compiler.GetErrorMessage()) << std::endl;
                     continue;
                 }
-                result.push_back({ stage, Buffer::Copy(compiler.GetCompiledBinary()) });
+                
+                result.push_back({ stage, (uint32_t)compiler.GetCompiledBinary().Size, Buffer::Copy(compiler.GetCompiledBinary()) });
             }
             break;
         }
 #endif
-            default:
-                break;
+        default:
+            break;
 		}
 		return result;
 	}

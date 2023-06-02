@@ -12,17 +12,15 @@ namespace TriangleTest {
 
 	//OpenGL: Working
 	//Vulkan: Working
-	//Metal	: Test
+	//Metal	: Working
 	//DX12	: Test
 	//DX11  : Test
 
 	static void Run(RenderAPI api)
 	{
-#ifdef HZR_PLATFORM_MACOS
-		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
 		static bool running = true;
-
+        
+        //Window creation
 		HazardRendererAppInfo appInfo = {};
 		appInfo.AppName = "Hello Triangle";
 		appInfo.BuildVersion = "0.0.1a";
@@ -49,8 +47,6 @@ namespace TriangleTest {
 
 		HazardWindowCreateInfo windowInfo = {};
 		windowInfo.Title = appInfo.AppName;
-		windowInfo.FullScreen = false;
-		windowInfo.Maximized = false;
 		windowInfo.Extent = { 1920, 1080 };
 		windowInfo.Color = Color(255, 128, 0, 255);
 
@@ -64,8 +60,8 @@ namespace TriangleTest {
 
 		Window* window = Window::Create(&renderInfo);
 		window->Show();
-
 		//---------------
+        
 		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 		float vertices[] =
 		{
@@ -78,14 +74,15 @@ namespace TriangleTest {
 								{ "a_Color", ShaderDataType::Float4 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", api);
-
 		VertexBufferCreateInfo vbo = {};
 		vbo.Name = "TriangleVBO";
 		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = vertices;
 
+        
+        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", api);
+        
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
@@ -103,20 +100,21 @@ namespace TriangleTest {
 
 		while (running)
 		{
+            auto swapchain = window->GetSwapchain();
+            auto commandBuffer = swapchain->GetSwapchainBuffer();
+            auto renderPass = swapchain->GetRenderPass();
+            
 			Input::Update();
 			window->BeginFrame();
-
-			auto commandBuffer = window->GetSwapchain()->GetSwapchainBuffer();
-			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
+            
+			commandBuffer->BeginRenderPass(renderPass);
 			commandBuffer->SetPipeline(pipeline);
 			commandBuffer->SetVertexBuffer(vertexBuffer);
 			commandBuffer->Draw(6);
-
 			commandBuffer->EndRenderPass();
+            
 			Renderer::WaitAndRender();
 			window->Present();
 		}
-
-		std::cout << "Test closed";
 	}
 }
