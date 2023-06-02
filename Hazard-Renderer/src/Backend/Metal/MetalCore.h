@@ -6,15 +6,15 @@
 #include "MetalContext.h"
 #include "MetalRenderCommandBuffer.h"
 #include "MetalFrameBuffer.h"
-#include "Pipeline/MetalPipeline.h"
-#include "Pipeline/MetalShader.h"
+#include "MetalPipeline.h"
+#include "MetalShader.h"
 
-#include "Pipeline/MetalRenderPass.h"
-#include "Pipeline/MetalVertexBuffer.h"
-#include "Pipeline/MetalIndexBuffer.h"
-#include "Pipeline/MetalUniformBuffer.h"
-#include "Pipeline/MetalStorageBuffer.h"
+#include "MetalRenderPass.h"
+#include "MetalVertexBuffer.h"
+#include "MetalIndexBuffer.h"
+#include "MetalUniformBuffer.h"
+#include "MetalStorageBuffer.h"
 
-#include "Texture/MetalCubemapTexture.h"
+#include "MetalCubemapTexture.h"
 
 #endif

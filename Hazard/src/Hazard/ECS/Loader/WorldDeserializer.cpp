@@ -82,7 +82,7 @@ namespace Hazard
 		for (size_t i = entities.size(); i > 0; --i)
 		{
 			auto node = entities[i - 1];
-			UID uid = node["Entity"].as<uint64_t>();
+			//UID uid = node["Entity"].as<uint64_t>();
 
 			//TryDeserializeComponent<ScriptComponent>("ScriptComponent", entity, node);
 

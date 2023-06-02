@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Utility/YamlUtils.h"
-#include "Pipeline/Shader.h"
+#include "Shader.h"
 
 #include <glm/glm.hpp>
 

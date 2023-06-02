@@ -3,9 +3,9 @@
 #include "UtilityCore.h"
 #include "RenderResources.h"
 #include "Renderers/WorldRenderer.h"
-#include "Backend/Core/Pipeline/RenderPass.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
-#include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/RenderPass.h"
+#include "Backend/Core/Pipeline.h"
+#include "Backend/Core/Buffers.h"
 #include "Environment/EnvironmentMap.h"
 
 namespace Hazard

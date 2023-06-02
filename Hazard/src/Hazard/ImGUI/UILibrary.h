@@ -654,7 +654,7 @@ namespace Hazard::ImUI
 	static bool TableRowTreeItem(const char* id, const char* text, bool selected, T callback)
 	{
 		bool clicked = false;
-		constexpr float edgeOffset = 4.0f;
+		//constexpr float edgeOffset = 4.0f;
 		constexpr float rowHeight = 21.0f;
 
 		auto* window = ImGui::GetCurrentWindow();
@@ -710,14 +710,14 @@ namespace Hazard::ImUI
 
 		ImGuiContext& g = *GImGui;
 		auto& style = ImGui::GetStyle();
-		const ImVec2 label_size = ImGui::CalcTextSize(text, nullptr, false);
+		//const ImVec2 label_size = ImGui::CalcTextSize(text, nullptr, false);
 		const ImVec2 padding = ((flags & ImGuiTreeNodeFlags_FramePadding)) ? style.FramePadding : ImVec2(style.FramePadding.x, ImMin(window->DC.CurrLineTextBaseOffset, style.FramePadding.y));
 		const float text_offset_x = g.FontSize + padding.x * 2;           // Collapser arrow width + Spacing
 		const float text_offset_y = ImMax(padding.y, window->DC.CurrLineTextBaseOffset);                    // Latch before ItemSize changes it
 		//const float text_width = g.FontSize + (label_size.x > 0.0f ? label_size.x + padding.x * 2 : 0.0f);  // Include collapser
 		ImVec2 text_pos(window->DC.CursorPos.x + text_offset_x, window->DC.CursorPos.y + text_offset_y);
-		const float arrow_hit_x1 = (text_pos.x - text_offset_x) - style.TouchExtraPadding.x;
-		const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
+		//const float arrow_hit_x1 = (text_pos.x - text_offset_x) - style.TouchExtraPadding.x;
+		//const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
 		//const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
 
 		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(id), flags, text, nullptr);

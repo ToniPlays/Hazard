@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Backend/Core/Texture/Texture.h"
+#include "Backend/Core/Texture.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include <vulkan/vulkan.h>

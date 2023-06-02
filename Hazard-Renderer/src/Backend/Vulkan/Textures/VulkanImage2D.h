@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Backend/Core/Texture/Image2D.h"
+#include "Backend/Core/Image2D.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"

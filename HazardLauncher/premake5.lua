@@ -95,14 +95,13 @@ project "HazardLauncher"
 		{
 			"IOKit.framework",
 			"CoreFoundation.framework",
+			"QuartzCore.framework",
 			"Metal.framework",
 			"MetalKit.framework",
 			"%{Library.Assimp_Lib}",
-			"%{Library.SPIRV_Cross}",	
 		}
 		libdirs {
-			"%{LibraryDir.Assimp_Lib}",	
-			"%{LibraryDir.SPIRV_Cross}",			
+			"%{LibraryDir.Assimp_Lib}",			
 		}
         	files 
 		{

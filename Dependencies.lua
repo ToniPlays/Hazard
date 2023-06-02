@@ -79,17 +79,18 @@ if os.host() == "macosx" then
     IncludeDir["SPIRV_Cross"] = CELLAR .. "spirv-cross/2021-01-15/include"
 
     LibraryDir["Assimp_Lib"] = CELLAR .. "assimp/5.2.5/lib/"
-    LibraryDir["SPIRV_Cross"] = CELLAR .. "spirv-cross/2021-01-15/lib"
+    LibraryDir["SPIRV_Cross"] = CELLAR .. "spirv-cross/2021-01-15/lib/"
+    LibraryDir["ShaderC"] = CELLAR .. "shaderc/2022.4/lib/"
 
     Library["Vulkan"] = "vulkan"
     Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
 
-    Library["ShaderC_Debug"] = "shaderc"
+    Library["ShaderC_Debug"] = "shaderc/2022.4/lib/libshaderc.a"
     Library["SPIRV_Cross_Debug"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-core"
     Library["SPIRV_Cross_GLSL_Debug"] = CELLAR .. "/spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Debug"] = CELLAR .. "spirv-cross/2021-01-15/lib/SPIRV-Tools"
 
-    Library["ShaderC_Release"] = "shaderc"
+    Library["ShaderC_Release"] = CELLAR .. "shaderc"
     Library["SPIRV_Cross_Release"] = CELLAR .. "/spirv-cross/2021-01-15/lib/spirv-cross-core"
     Library["SPIRV_Cross_GLSL_Release"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"

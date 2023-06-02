@@ -44,10 +44,11 @@ workspace "Hazard"
         architecture "universal"
         xcodebuildsettings
         {
-            ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",
+            ["MACOSX_DEPLOYMENT_TARGET"] = "12.0",
             ["IPHONEOS_DEPLOYMENT_TARGET"] = "14.0",
             ["ALWAYS_SEARCH_USER_PATHS"] = "YES",
             ["CLANG_ENABLE_OBJC_WEAK"] = "YES",
+            ["DEAD_CODE_STRIPPING"] = "YES",
             ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++20",
         }
     filter ""

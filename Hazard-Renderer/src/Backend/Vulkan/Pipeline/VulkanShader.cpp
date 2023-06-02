@@ -9,7 +9,7 @@
 #include "VulkanUniformBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
-#include "../AccelerationStructure/VulkanTopLevelAS.h"
+#include "../RTCoreVulkanTopLevelAS.h"
 #include "Profiling/Timer.h"
 
 #include "Backend/Core/ShaderCompiler.h"

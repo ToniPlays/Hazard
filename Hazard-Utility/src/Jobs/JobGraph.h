@@ -1,11 +1,9 @@
 #pragma once
 
 #include <Ref.h>
-#include "Job.h"
-#include "JobSystem.h"
+#include "GraphStage.h"
 
 class JobSystem;
-class GraphStage;
 
 class JobGraph : public RefCount
 {

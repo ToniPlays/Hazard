@@ -53,7 +53,7 @@ namespace Hazard
         
         out << YAML::EndMap << YAML::EndMap;
         
-        AssetMetadata& data = AssetManager::GetMetadata(asset->GetHandle());
+        //AssetMetadata& data = AssetManager::GetMetadata(asset->GetHandle());
         //File::WriteFile(data.Path, out.c_str());
         return nullptr;
     }

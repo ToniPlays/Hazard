@@ -3,7 +3,7 @@
 #include "RenderContextCreateInfo.h"
 #include "PhysicalDevice.h"
 #include "RenderCommandBuffer.h"
-#include "Pipeline/RenderPass.h"
+#include "RenderPass.h"
 #include "Swapchain.h"
 #include <functional>
 

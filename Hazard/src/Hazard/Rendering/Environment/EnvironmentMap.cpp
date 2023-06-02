@@ -2,7 +2,7 @@
 #include "EnvironmentMap.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
-#include "Backend/Core/Texture/Texture.h"
+#include "Backend/Core/Texture.h"
 #include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/RenderContext/ShaderLibrary.h"

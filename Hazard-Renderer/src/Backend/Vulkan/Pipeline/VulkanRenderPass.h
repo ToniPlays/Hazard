@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/RenderPass.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 namespace HazardRenderer::Vulkan 

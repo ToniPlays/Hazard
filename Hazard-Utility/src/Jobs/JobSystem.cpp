@@ -152,8 +152,6 @@ void JobSystem::QueueGraphJobs(Ref<JobGraph> graph)
 Ref<Job> JobSystem::FindAvailableJob()
 {
 	for (auto& job : m_Jobs)
-	{
 		return job;
-	}
 	return nullptr;
 }

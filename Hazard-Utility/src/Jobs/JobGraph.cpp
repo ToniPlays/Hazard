@@ -1,6 +1,7 @@
 #include "JobGraph.h"
 
 #include "GraphStage.h"
+#include "JobSystem.h"
 
 JobGraph::JobGraph(const std::string& name, uint32_t count) : m_Name(name)
 {
@@ -34,10 +35,10 @@ float JobGraph::GetProgress()
 	float progress = 0;
 	for (auto& stage : m_Stages)
 	{
-		/*if (stage->m_JobCount == 0)
+		if (stage->m_JobCount == 0)
 			progress += stage->GetWeight();
 		else
-			*/progress += stage->GetProgress();
+			progress += stage->GetProgress();
 	}
 
 	return progress;

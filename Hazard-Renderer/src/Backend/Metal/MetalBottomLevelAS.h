@@ -4,7 +4,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
+#include "Backend/Core/RTCore/AccelerationStructure.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

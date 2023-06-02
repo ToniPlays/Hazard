@@ -3,7 +3,7 @@
 #include "Hazard/Core/Application.h"
 #include "PipelineAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/RenderPass.h"
 
 #include "Backend/Core/GraphicsContext.h"
 #include "Backend/Core/ShaderCompiler.h"
@@ -23,7 +23,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
 
-		auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
+		//auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
 		auto pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
 		PipelineSpecification specs = pipeline->GetSpecifications();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ref.h"
-#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/RenderPass.h"
 #include "Backend/Core/FrameBuffer.h"
 #include "RenderCommandBuffer.h"
 

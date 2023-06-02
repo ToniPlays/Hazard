@@ -6,7 +6,7 @@
 #include "Backend/Metal/MetalRenderCommandBuffer.h"
 #include "Backend/Metal/MetalSwapchain.h"
 
-#include "../ImGui_Backend/imgui_impl_metal.h"
+//#include "../ImGui_Backend/imgui_impl_metal.h"
 #include "../ImGui_Backend/imgui_impl_glfw.h"
 
 #import <Metal/Metal.h>
@@ -15,7 +15,7 @@
 EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
 {
     using namespace HazardRenderer::Metal;
-    
+    /*
     m_Window = &window;
     m_Context = (MetalContext*)window.GetContext();
     ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
@@ -38,18 +38,19 @@ EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
     float xScale, yScale;
     glfwGetWindowContentScale((GLFWwindow*)m_Window->GetNativeWindow(), &xScale, &yScale);
     io.DisplayFramebufferScale = { xScale, yScale };
+     */
 }
 
 EditorPlatformMetal::~EditorPlatformMetal()
 {
     ImGui_ImplGlfw_Shutdown();
-    ImGui_ImplMetal_Shutdown();
+    //ImGui_ImplMetal_Shutdown();
 }
 
 void EditorPlatformMetal::BeginFrame()
 {
     using namespace HazardRenderer::Metal;
-    
+    /*
     auto swapchain = m_Context->GetSwapchain();
     
     uint32_t w = swapchain->GetWidth();
@@ -67,10 +68,12 @@ void EditorPlatformMetal::BeginFrame()
     ImGui_ImplMetal_NewFrame((__bridge MTLRenderPassDescriptor*)(m_Descriptor));
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    */
 }
 
 void EditorPlatformMetal::EndFrame()
 {
+    /*
     using namespace HazardRenderer::Metal;
     auto swapchain = m_Context->GetSwapchain();
     auto cmdBuffer = swapchain->GetSwapchainBuffer().As<MetalRenderCommandBuffer>();
@@ -82,6 +85,7 @@ void EditorPlatformMetal::EndFrame()
            
     ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), buffer, encoder);
     cmdBuffer->GetRenderEncoder()->endEncoding();
+     */
 }
 
 void EditorPlatformMetal::Close()

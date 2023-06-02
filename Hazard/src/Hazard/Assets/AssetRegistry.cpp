@@ -14,7 +14,7 @@ namespace Hazard {
         return contains;
     }
 
-    size_t AssetRegistry::Remove(const const std::filesystem::path& key)
+    size_t AssetRegistry::Remove(const std::filesystem::path& key)
     {
         return m_Registry.erase(GetKey(key));
     }

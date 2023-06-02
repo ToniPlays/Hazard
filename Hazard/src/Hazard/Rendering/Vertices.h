@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Backend/Core/Pipeline/BufferLayout.h"
+#include "Backend/Core/BufferLayout.h"
 
 namespace Hazard
 {

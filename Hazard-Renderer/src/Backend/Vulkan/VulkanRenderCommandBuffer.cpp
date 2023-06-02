@@ -12,9 +12,9 @@
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
 #include "Textures/VulkanCubemapTexture.h"
-#include "AccelerationStructure/VulkanShaderBindingTable.h"
-#include "AccelerationStructure/VulkanTopLevelAS.h"
-#include "AccelerationStructure/VulkanBottomLevelAS.h"
+#include "RTCoreVulkanShaderBindingTable.h"
+#include "RTCoreVulkanTopLevelAS.h"
+#include "RTCoreVulkanBottomLevelAS.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"

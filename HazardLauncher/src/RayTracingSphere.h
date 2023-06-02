@@ -2,7 +2,7 @@
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
-#include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
+#include "Backend/Core/RTCore/AccelerationStructure.h"
 
 #include "Hazard/Math/Time.h"
 

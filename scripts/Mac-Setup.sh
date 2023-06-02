@@ -1,1 +1,1 @@
-python3 setup/setup.py
+python3 setup/setup.py xcode4

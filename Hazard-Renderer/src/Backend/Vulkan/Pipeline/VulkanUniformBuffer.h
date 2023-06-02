@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Buffers.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include "MathCore.h"
 

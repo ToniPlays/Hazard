@@ -3,10 +3,10 @@
 #include "Core.h"
 #include "RenderContextCreateInfo.h"
 
-#include "Pipeline/RenderPass.h"
-#include "Pipeline/Pipeline.h"
-#include "Texture/Texture.h"
-#include "AccelerationStructure/ShaderBindingTable.h"
+#include "RenderPass.h"
+#include "Pipeline.h"
+#include "Texture.h"
+#include "RTCore/ShaderBindingTable.h"
 
 namespace HazardRenderer 
 {

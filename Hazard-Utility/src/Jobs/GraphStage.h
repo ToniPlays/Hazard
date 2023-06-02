@@ -29,6 +29,8 @@ public:
 		if (!m_JobGraph) return nullptr;
 		return m_JobGraph;
 	}
+    Ref<GraphStage> GetGraphStage(uint32_t index);
+    
 	template<typename T>
 	T GetResult()
 	{

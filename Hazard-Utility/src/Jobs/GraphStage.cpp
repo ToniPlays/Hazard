@@ -7,6 +7,10 @@ GraphStage::~GraphStage()
 {
 	m_ResultBuffer.Release();
 }
+Ref<GraphStage> GraphStage::GetGraphStage(uint32_t index) {
+    if (!m_JobGraph) return nullptr;
+    return m_JobGraph->GetStage(index);
+}
 
 void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {

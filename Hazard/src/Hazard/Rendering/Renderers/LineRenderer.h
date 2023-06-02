@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include "Batch.h"
 
-#include "Backend/Core/Pipeline/Buffers.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Buffers.h"
+#include "Backend/Core/Pipeline.h"
 #include "Hazard/Rendering/Vertices.h"
 
 namespace Hazard

@@ -108,7 +108,7 @@ namespace Hazard
                 
                 TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
                 
-				AssetHandle pbrPipeline = AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack");
+				//AssetHandle pbrPipeline = AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack");
 				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl.hpack");
 
                 auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pipeline/Buffers.h"
+#include "Buffers.h"
 
 #include <unordered_map>
 #include <string>

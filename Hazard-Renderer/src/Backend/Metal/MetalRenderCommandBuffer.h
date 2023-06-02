@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Core/RenderCommandBuffer.h"
-#include "Pipeline/MetalPipeline.h"
+#include "MetalPipeline.h"
 #include "MetalSwapchain.h"
 #include "MetalTopLevelAS.h"
 #include "MetalBottomLevelAS.h"

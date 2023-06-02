@@ -68,13 +68,13 @@ def main(argv):
     print("\nRunning premake")
     
     if Utils.IsWindows():
-        subprocess.check_call(["vendor/premake/bin/premake5.exe", "vs2022"])
+        subprocess.check_call(["vendor/premake/bin/premake5.exe", argv[0]])
         
     elif Utils.IsMacos():
         platformOverride = ""
-        if len(argv) > 0:
-            platformOverride = "--os=" + argv[0]
-        subprocess.check_call(["vendor/premake/bin/premake5", "xcode4", platformOverride])
+        if len(argv) > 1:
+            platformOverride = "--os=" + argv[1]
+        subprocess.check_call(["vendor/premake/bin/premake5", argv[0], platformOverride])
 
     print("\nSetup completed")
 

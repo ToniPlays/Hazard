@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Assets/IAssetLoader.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Pipeline.h"
 
 namespace Hazard
 {

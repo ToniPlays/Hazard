@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pipeline/Shader.h"
+#include "Shader.h"
 #include "Backend/Core/RenderContextCreateInfo.h"
 
 namespace HazardRenderer

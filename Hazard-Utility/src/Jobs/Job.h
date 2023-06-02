@@ -2,9 +2,8 @@
 
 #include <Ref.h>
 #include <functional>
-#include "GraphStage.h"
 #include "JobGraph.h"
-
+#include "GraphStage.h"
 
 using JobCallback = std::function<void(Ref<Job>)>;
 
@@ -54,7 +53,7 @@ public:
 			return T();
 
 		uint32_t index = m_Stage->GetStageIndex() - 1;
-		//Ref<GraphStage> stage = m_Stage->GetGraph()->GetStage(index);
+		Ref<GraphStage> stage = m_Stage->GetGraphStage(index);
 		//return stage->GetResult<T>();
         return T();
 	}

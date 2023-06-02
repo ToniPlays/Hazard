@@ -1,3 +1,3 @@
 @echo off
-python setup/setup.py
+python setup/setup.py vs2022
 PAUSE

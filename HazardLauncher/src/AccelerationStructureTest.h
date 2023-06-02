@@ -3,7 +3,7 @@
 #include "Event.h"
 #include "Color.h"
 
-#include "Backend/Core/AccelerationStructure/AccelerationStructure.h"
+#include "Backend/Core/RTCore/AccelerationStructure.h"
 
 #include "vendor/stb_image.h"
 #include <glm/glm/ext/matrix_clip_space.hpp>

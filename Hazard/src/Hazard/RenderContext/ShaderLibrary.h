@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Pipeline.h"
 
 namespace Hazard
 {

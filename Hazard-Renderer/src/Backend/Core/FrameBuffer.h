@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Texture/Image2D.h"
+#include "Image2D.h"
 #include "glm/glm.hpp"
 #include <vector>
 #include "Core.h"
