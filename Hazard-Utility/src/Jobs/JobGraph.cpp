@@ -14,7 +14,7 @@ JobGraph::JobGraph(const std::string& name, uint32_t count) : m_Name(name)
 }
 Ref<GraphStage> JobGraph::GetNextStage()
 {
-	if (m_CurrentStage + 1 == m_Stages.size())
+	if (m_CurrentStage + 1 >= m_Stages.size())
 		return nullptr;
 
 	return m_Stages[m_CurrentStage + 1];

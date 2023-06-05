@@ -7,18 +7,18 @@
 
 namespace HazardRenderer {
 
-	Ref<RenderCommandBuffer> RenderCommandBuffer::Create(const std::string& debugName, uint32_t count, bool compute)
+	Ref<RenderCommandBuffer> RenderCommandBuffer::Create(const std::string& debugName, DeviceQueue queue, uint32_t count)
 	{
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(count, debugName, compute);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(count, debugName, queue);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(count, debugName, compute);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(count, debugName, queue);
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(count, debugName, compute);
+            case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, queue, count);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RendererAPI");

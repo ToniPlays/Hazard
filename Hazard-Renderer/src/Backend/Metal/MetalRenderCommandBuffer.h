@@ -18,7 +18,7 @@ namespace HazardRenderer::Metal
     class MetalRenderCommandBuffer : public RenderCommandBuffer
     {
     public:
-        MetalRenderCommandBuffer(uint32_t count = 0, const std::string& name = "", bool compute = false);
+        MetalRenderCommandBuffer(const std::string& name, DeviceQueue queue, uint32_t count);
         MetalRenderCommandBuffer(const std::string& name, bool swapchain);
         ~MetalRenderCommandBuffer();
         
@@ -39,6 +39,9 @@ namespace HazardRenderer::Metal
         
         void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
+        void DrawIndirect(uint32_t drawCount, uint32_t offset = 0) override;
+        
+        
         void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
         void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
         void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
@@ -46,12 +49,8 @@ namespace HazardRenderer::Metal
         void InsertMemoryBarrier(const MemoryBarrierInfo& info) override {};
         void TransitionImageLayout(const ImageTransitionInfo& info) override {};
         void GenerateMipmaps(const GenMipmapsInfo& info) override;
-
-        void SetViewport(float x, float y, float width, float height) override {
-            HZR_ASSERT(false, "Not implemented");
-        };
-        void SetLineSize(float size) override;
-            
+          
+    public:
         //Metal specific
         MTL::CommandBuffer* GetMetalCommandBuffer() const { return m_CommandBuffer; }
         MTL::RenderCommandEncoder* GetRenderEncoder() const { return m_RenderEncoder; }
@@ -60,15 +59,16 @@ namespace HazardRenderer::Metal
     private:
         std::string m_DebugName;
         uint32_t m_FrameIndex = 0;
+        DeviceQueue m_Queue;
         bool m_OwnedBySwapchain = false;
-        bool m_IsCompute = false;
         bool m_WaitOnSubmit = false;
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
         State m_State = State::Waiting;
             
         MTL::CommandBuffer* m_CommandBuffer;
-        MTL::RenderCommandEncoder* m_RenderEncoder;
-        MTL::ComputeCommandEncoder* m_ComputeEncoder;
+        MTL::IndirectCommandBuffer* m_IndirectCommandBuffer;
+        MTL::RenderCommandEncoder* m_RenderEncoder = nullptr;
+        MTL::ComputeCommandEncoder* m_ComputeEncoder = nullptr;
         MTL::AccelerationStructureCommandEncoder* m_AccelerationEcoder;
     };
 }

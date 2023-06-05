@@ -228,8 +228,8 @@ namespace RayTracingSphere
 
 		Ref<Image2D> environmentMapImage = Image2D::Create(&envInfo);
 
-		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", 1, true);
-		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit);
+		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", DeviceQueue::GraphicsBit);
 
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + environmentMapImage->GetDebugName();

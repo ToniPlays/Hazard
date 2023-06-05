@@ -10,38 +10,49 @@
 
 namespace HazardRenderer::Metal
 {
-    MetalRenderCommandBuffer::MetalRenderCommandBuffer(uint32_t count, const std::string& name, bool compute)
+    MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, DeviceQueue queue, uint32_t count)
     {
-        m_IsCompute = compute;
+        m_DebugName = name;
+        m_Queue = queue;
         m_OwnedBySwapchain = false;
     }
     MetalRenderCommandBuffer::MetalRenderCommandBuffer(const std::string& name, bool swapchain)
     {
         m_DebugName = name;
         m_OwnedBySwapchain = swapchain;
-        m_IsCompute = false;
+        m_Queue = DeviceQueue::GraphicsBit;
     }
     MetalRenderCommandBuffer::~MetalRenderCommandBuffer()
     {
         if(m_CommandBuffer)
             m_CommandBuffer->release();
+        if(m_IndirectCommandBuffer)
+            m_IndirectCommandBuffer->release();
         
         if(m_ComputeEncoder)
             m_ComputeEncoder->release();
     }
     void MetalRenderCommandBuffer::Begin()
     {
-        auto device = MetalContext::GetMetalDevice();
-        m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Renderer::Submit([instance]() mutable {
+            auto device = MetalContext::GetMetalDevice();
+            instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
             
-        if(m_IsCompute)
-            m_ComputeEncoder = m_CommandBuffer->computeCommandEncoder();
+            MTL::IndirectCommandBufferDescriptor* descriptor = MTL::IndirectCommandBufferDescriptor::alloc()->init();
+            
+            instance->m_IndirectCommandBuffer = device->GetMetalDevice()->newIndirectCommandBuffer(descriptor, 8192, MTL::ResourceStorageModeManaged);
+                
+            if(instance->m_Queue == DeviceQueue::ComputeBit)
+                instance->m_ComputeEncoder = instance->m_CommandBuffer->computeCommandEncoder();
+        });
     }
     void MetalRenderCommandBuffer::End()
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
-            instance->m_ComputeEncoder->endEncoding();
+            if(instance->m_ComputeEncoder)
+                instance->m_ComputeEncoder->endEncoding();
         });
     }
     void MetalRenderCommandBuffer::Submit()
@@ -202,6 +213,15 @@ namespace HazardRenderer::Metal
             }
         });
     }
+    void MetalRenderCommandBuffer::DrawIndirect(uint32_t drawCount, uint32_t offset) {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        
+        Renderer::Submit([instance, drawCount, offset]() mutable {
+            
+            //MTL::IndirectRenderCommand command;
+            
+        });
+    }
     void MetalRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
     {
         m_WaitOnSubmit = computeInfo.WaitForCompletion;
@@ -256,10 +276,6 @@ namespace HazardRenderer::Metal
             if (mips.Cubemap)
                 mips.Cubemap.As<MetalCubemapTexture>()->GenerateMipmaps_RT(instance->m_CommandBuffer);
             });
-    }
-    void MetalRenderCommandBuffer::SetLineSize(float size)
-    {
-        HZR_ASSERT(false, "Not implemented");
     }
 }
 #endif

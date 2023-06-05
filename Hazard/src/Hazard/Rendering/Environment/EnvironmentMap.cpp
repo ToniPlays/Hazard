@@ -32,8 +32,8 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 		Ref<Image2D> image = m_SourceImage->GetSourceImageAsset()->Value.As<Image2D>();
-		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", 1, true);
-		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit);
+		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", DeviceQueue::GraphicsBit);
 
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
@@ -112,8 +112,8 @@ namespace Hazard
 		GenMipmapsInfo mipmapInfo = {};
 		mipmapInfo.Cubemap = irradianceMap;
 
-		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", 1, true);
-		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", 1);
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit);
+		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", DeviceQueue::GraphicsBit);
 
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(irradiancePipeline);

@@ -8,11 +8,11 @@
 
 using namespace HazardRenderer;
 
-namespace ComputeShaderTest {
+namespace IndirectDrawGPUTest {
 
     //OpenGL: Test
     //Vulkan: Test
-    //Metal : Working
+    //Metal : Test
     //DX12  : Test
     //DX11  : Test
 
@@ -22,7 +22,7 @@ namespace ComputeShaderTest {
         
         //Window creation
         HazardRendererAppInfo appInfo = {};
-        appInfo.AppName = "Compute shader";
+        appInfo.AppName = "Indirect draw on GPU";
         appInfo.BuildVersion = "0.0.1a";
         appInfo.MessageCallback = [](RenderMessage message) {
             std::cout << message.Description << std::endl;
@@ -63,32 +63,43 @@ namespace ComputeShaderTest {
         //---------------
         
         std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
-       
-        BufferLayout layout = { { "a_Position", ShaderDataType::Float3 },
-                                { "a_Color", ShaderDataType::Float4 },
-                                { "a_TextureCoord", ShaderDataType::Float2 }
-        };
-        
         float vertices[] =
         {
-            -0.75f, -0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-             0.75f, -0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-             0.75f,  0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.75f,  0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-            -0.75f,  0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-            -0.75f, -0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f
+            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
         };
-        
+        uint32_t indices[] = {
+            0, 1, 2,
+            2, 3, 0
+        };
+
+        BufferLayout layout = { { "a_Position",            ShaderDataType::Float3 },
+                                { "a_Color",            ShaderDataType::Float4 },
+                                { "a_TextureCoords",    ShaderDataType::Float2 }
+        };
+
+        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
+
+        stbi_set_flip_vertically_on_load(true);
+
+        int w, h, channels;
+        stbi_uc* data = stbi_load("assets/textures/csharp.png", &w, &h, &channels, 4);
+
         VertexBufferCreateInfo vbo = {};
         vbo.Name = "TriangleVBO";
         vbo.Layout = &layout;
         vbo.Size = sizeof(vertices);
         vbo.Data = &vertices;
-        
-        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
-        
+
+        IndexBufferCreateInfo ibo = {};
+        ibo.Name = "TriangleIBO";
+        ibo.Size = sizeof(indices);
+        ibo.Data = indices;
+
         PipelineSpecification spec = {};
-        spec.DebugName = "Rasterized";
+        spec.DebugName = "Pipeline";
         spec.Usage = PipelineUsage::GraphicsBit;
         spec.DrawType = DrawType::Fill;
         spec.CullMode = CullMode::None;
@@ -97,45 +108,21 @@ namespace ComputeShaderTest {
         spec.pBufferLayout = &layout;
         spec.ShaderCodeCount = code.size();
         spec.pShaderCode = code.data();
-        
-        std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/compute.glsl", api);
-        
-        PipelineSpecification computeSpec = {};
-        computeSpec.DebugName = "Compute";
-        computeSpec.Usage = PipelineUsage::ComputeBit;
-        computeSpec.ShaderCodeCount = computeCode.size();
-        computeSpec.pShaderCode = computeCode.data();
-        
-        Image2DCreateInfo outputImageSpec = {};
-        outputImageSpec.DebugName = "ComputeOutput";
-        outputImageSpec.Extent = { 512, 512, 1 };
-        outputImageSpec.Mips = 1;
-        outputImageSpec.Format = ImageFormat::RGBA;
-        outputImageSpec.Usage = ImageUsage::Storage;
-        
-        
-        Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
-        Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-        Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-        Ref<Pipeline> compute = Pipeline::Create(&computeSpec);
-        Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit);
-        
-        //Compute step
-        {
-            DispatchComputeInfo info = {};
-            info.WaitForCompletion = true;
-            info.GroupSize = { 512, 512, 1 };
-            
-            compute->GetShader()->Set("o_OutputImage", 0, outputImage);
-            computeBuffer->Begin();
-            computeBuffer->SetPipeline(compute);
-            computeBuffer->DispatchCompute(info);
-            computeBuffer->End();
-            computeBuffer->Submit();
-        }
-        
-        pipeline->GetShader()->Set("u_Texture", 0, outputImage);
 
+        Image2DCreateInfo imageInfo = {};
+        imageInfo.DebugName = "Image2D";
+        imageInfo.Extent = { (uint32_t)w, (uint32_t)h, 1 };
+        imageInfo.Format = ImageFormat::RGBA;
+        imageInfo.Data = Buffer(data, w * h * 4);
+        imageInfo.Usage = ImageUsage::Texture;
+
+        Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+        Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+        Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+        Ref<Image2D> image = Image2D::Create(&imageInfo);
+
+        pipeline->GetShader()->Set("u_Texture", 0, image);
+        
         while (running)
         {
             auto swapchain = window->GetSwapchain();
@@ -148,7 +135,7 @@ namespace ComputeShaderTest {
             commandBuffer->BeginRenderPass(renderPass);
             commandBuffer->SetVertexBuffer(vertexBuffer);
             commandBuffer->SetPipeline(pipeline);
-            commandBuffer->Draw(6);
+            commandBuffer->DrawIndirect(1, indexBuffer);
             commandBuffer->EndRenderPass();
             
             Renderer::WaitAndRender();
@@ -156,4 +143,5 @@ namespace ComputeShaderTest {
         }
     }
 }
+
 
