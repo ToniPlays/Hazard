@@ -4,9 +4,9 @@
 
 #ifdef HZR_INCLUDE_OPENGL
 
-#include "Backend/Core/Texture/Image.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
-#include "Backend/Core/Pipeline/Shader.h"
+#include "Backend/Core/Image.h"
+#include "Backend/Core/Pipeline.h"
+#include "Backend/Core/Shader.h"
 
 #include "Severity.h"
 

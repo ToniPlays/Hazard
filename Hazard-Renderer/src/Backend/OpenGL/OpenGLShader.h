@@ -3,10 +3,10 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
 
-#include "Backend/Core/Pipeline/Shader.h"
-#include "Backend/Core/Pipeline/Buffers.h"
-#include "Backend/Core/Texture/Image2D.h"
-#include "Backend/Core/Texture/Texture.h"
+#include "Backend/Core/Shader.h"
+#include "Backend/Core/Buffers.h"
+#include "Backend/Core/Image2D.h"
+#include "Backend/Core/Texture.h"
 
 #include "OpenGLDescriptorSet.h"
 

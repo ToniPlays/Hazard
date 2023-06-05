@@ -9,7 +9,7 @@
 
 namespace HazardRenderer::OpenGL
 {
-	OpenGLRenderCommandBuffer::OpenGLRenderCommandBuffer(uint32_t size, const std::string& name, bool compute)
+	OpenGLRenderCommandBuffer::OpenGLRenderCommandBuffer(const std::string& name, DeviceQueue queue, uint32_t size)
 	{
 		m_Swapchain = OpenGLContext::GetInstance().GetSwapchain();
 	}
@@ -46,13 +46,12 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLVertexBuffer> instance = vertexBuffer.As<OpenGLVertexBuffer>();
 		Renderer::Submit([instance, binding]() {
 			uint32_t vao = instance->GetVAOID();
-			if (vao && vao != s_BoundVAO)
+			if (vao)
 			{
 				glBindVertexArray(vao);
-				s_BoundVAO = vao;
 				s_CurrentLayout = instance->GetLayout();
 			}
-			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->GetBufferID(), 0, s_CurrentLayout.GetBufferStride(binding));
+			glVertexArrayVertexBuffer(vao, binding, instance->GetBufferID(), 0, s_CurrentLayout.GetBufferStride(binding));
 			});
 	}
 	void OpenGLRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
@@ -138,6 +137,7 @@ namespace HazardRenderer::OpenGL
 
 			auto shader = instance->m_CurrentPipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
+
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), true);
 

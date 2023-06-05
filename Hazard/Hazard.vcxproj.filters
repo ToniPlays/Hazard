@@ -402,9 +402,6 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_glfw.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui_Backend\imgui_impl_metal.h">
-      <Filter>vendor\ImGui_Backend</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_opengl3.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>

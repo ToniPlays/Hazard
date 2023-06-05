@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "Backend/Core/FrameBuffer.h"
-#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/RenderPass.h"
 
 namespace HazardRenderer::OpenGL 
 {

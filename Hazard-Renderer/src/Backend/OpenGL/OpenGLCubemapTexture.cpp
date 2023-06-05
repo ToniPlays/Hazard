@@ -3,10 +3,10 @@
 #ifdef HZR_INCLUDE_OPENGL
 #include "File.h"
 
-#include "../OpenGLContext.h"
+#include "OpenGLContext.h"
 #include "Backend/Core/Renderer.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
-#include "../OpenGLUtils.h"
+#include "Backend/Core/Pipeline.h"
+#include "OpenGLUtils.h"
 
 #include "vendor/stb_image.h"
 

@@ -12,9 +12,9 @@
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
 #include "Textures/VulkanCubemapTexture.h"
-#include "RTCoreVulkanShaderBindingTable.h"
-#include "RTCoreVulkanTopLevelAS.h"
-#include "RTCoreVulkanBottomLevelAS.h"
+#include "RTCore/VulkanShaderBindingTable.h"
+#include "RTCore/VulkanTopLevelAS.h"
+#include "RTCore/VulkanBottomLevelAS.h"
 
 #include "VkUtils.h"
 #include "spdlog/fmt/fmt.h"
@@ -23,7 +23,7 @@ namespace HazardRenderer::Vulkan
 {
 	static PFN_vkCmdTraceRaysKHR fpCmdTraceRaysKHR;
 
-	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t size, const std::string& name, bool compute) : m_DebugName(std::move(name))
+	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, DeviceQueue queue, uint32_t count) : m_DebugName(std::move(name))
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -33,12 +33,26 @@ namespace HazardRenderer::Vulkan
 
 		auto queueIndices = device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetQueueFamilyIndices();
 
-		m_SubmitQueue = compute ? device->GetComputeQueue() : device->GetGraphicsQueue();
-
 		VkCommandPoolCreateInfo cmdPoolInfo = {};
 		cmdPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		cmdPoolInfo.queueFamilyIndex = compute ? queueIndices.Compute : queueIndices.Graphics;
 		cmdPoolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+		switch (queue)
+		{
+		case HazardRenderer::DeviceQueue::GraphicsBit:
+			m_SubmitQueue = device->GetGraphicsQueue();
+			cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
+			break;
+		case HazardRenderer::DeviceQueue::ComputeBit:
+			m_SubmitQueue = device->GetComputeQueue();
+			cmdPoolInfo.queueFamilyIndex = queueIndices.Compute;
+			break;
+		case HazardRenderer::DeviceQueue::TransferBit:
+			m_SubmitQueue = device->GetGraphicsQueue();
+			cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
+			break;
+		}
+
 
 		VK_CHECK_RESULT(vkCreateCommandPool(device->GetVulkanDevice(), &cmdPoolInfo, nullptr, &m_CommandPool), "Failed to create Command Pool");
 
@@ -46,7 +60,7 @@ namespace HazardRenderer::Vulkan
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_CommandPool;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = size == 0 ? framesInFlight : size;
+		allocInfo.commandBufferCount = count == 0 ? framesInFlight : count;
 
 		m_CommandBuffers.resize(allocInfo.commandBufferCount);
 
@@ -379,14 +393,15 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
-
 		float lineWidth = pipeline->GetSpecifications().LineWidth;
-		if (lineWidth > 1.0f)
-			SetLineSize(lineWidth);
 
-		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
+
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline, lineWidth]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetPipeline");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+
+			if (lineWidth > 1.0f)
+				glLineWidth(lineWidth);
 
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
 			});
@@ -601,19 +616,6 @@ namespace HazardRenderer::Vulkan
 
 			if (mips.Cubemap)
 				mips.Cubemap.As<VulkanCubemapTexture>()->GenerateMipmaps_RT(instance->m_ActiveCommandBuffer);
-			});
-	}
-	void VulkanRenderCommandBuffer::SetViewport(float x, float y, float width, float height)
-	{
-		HZR_PROFILE_FUNCTION();
-	}
-	void VulkanRenderCommandBuffer::SetLineSize(float size)
-	{
-		HZR_PROFILE_FUNCTION();
-		Ref<VulkanRenderCommandBuffer> instance = this;
-		Renderer::Submit([instance, size]() mutable {
-			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetLineSize");
-			vkCmdSetLineWidth(instance->m_ActiveCommandBuffer, size);
 			});
 	}
 }

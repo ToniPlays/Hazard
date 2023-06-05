@@ -2,6 +2,7 @@
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
+#include "TestUtils.h"
 #include <filesystem>
 
 #include <glad/glad.h>
@@ -20,45 +21,7 @@ namespace TriangleTest {
 	{
 		static bool running = true;
         
-        //Window creation
-		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hello Triangle";
-		appInfo.BuildVersion = "0.0.1a";
-		appInfo.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Description << std::endl;
-		};
-		appInfo.EventCallback = [](Event& e) {
-			EventDispatcher dispatcher(e);
-			if (e.GetEventType() == EventType::WindowClose) {
-				running = false;
-			}
-		};
-
-		HazardRendererAppInfo rendererApp = {};
-		rendererApp.AppName = appInfo.AppName;
-		rendererApp.BuildVersion = "1.0.0!";
-		rendererApp.EventCallback = appInfo.EventCallback;
-
-		rendererApp.MessageCallback = [](RenderMessage message)
-		{
-			std::cout << message.Description << std::endl;
-			std::cout << message.StackTrace << std::endl;
-		};
-
-		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = appInfo.AppName;
-		windowInfo.Extent = { 1920, 1080 };
-		windowInfo.Color = Color(255, 128, 0, 255);
-
-		HazardRendererCreateInfo renderInfo = {};
-		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = api;
-		renderInfo.Logging = true;
-		renderInfo.VSync = true;
-		renderInfo.WindowCount = 1;
-		renderInfo.pWindows = &windowInfo;
-
-		Window* window = Window::Create(&renderInfo);
+		Window* window = CreateTestWindow("Triangle test", api, &running);
 		window->Show();
 		//---------------
         
@@ -94,27 +57,30 @@ namespace TriangleTest {
 		spec.ShaderCodeCount = code.size();
 		spec.pShaderCode = code.data();
 
-		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-
-
-		while (running)
 		{
-            auto swapchain = window->GetSwapchain();
-            auto commandBuffer = swapchain->GetSwapchainBuffer();
-            auto renderPass = swapchain->GetRenderPass();
+			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+
+
+			while (running)
+			{
+				auto swapchain = window->GetSwapchain();
+				auto commandBuffer = swapchain->GetSwapchainBuffer();
+				auto renderPass = swapchain->GetRenderPass();
             
-			Input::Update();
-			window->BeginFrame();
+				Input::Update();
+				window->BeginFrame();
             
-			commandBuffer->BeginRenderPass(renderPass);
-			commandBuffer->SetPipeline(pipeline);
-			commandBuffer->SetVertexBuffer(vertexBuffer);
-			commandBuffer->Draw(6);
-			commandBuffer->EndRenderPass();
+				commandBuffer->BeginRenderPass(renderPass);
+				commandBuffer->SetPipeline(pipeline);
+				commandBuffer->SetVertexBuffer(vertexBuffer);
+				commandBuffer->Draw(6);
+				commandBuffer->EndRenderPass();
             
-			Renderer::WaitAndRender();
-			window->Present();
+				Renderer::WaitAndRender();
+				window->Present();
+			}
 		}
+		window->Close();
 	}
 }

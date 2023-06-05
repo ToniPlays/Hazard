@@ -4,7 +4,7 @@
 #include "File.h"
 
 #include "Backend/Core/Renderer.h"
-#include "Backend/Core/Pipeline/Pipeline.h"
+#include "Backend/Core/Pipeline.h"
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
 #include "../VulkanRenderCommandBuffer.h"

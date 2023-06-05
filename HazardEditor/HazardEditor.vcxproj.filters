@@ -72,9 +72,6 @@
     <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_glfw.h">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_metal.h">
-      <Filter>Hazard\vendor\ImGui_Backend</Filter>
-    </ClInclude>
     <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_opengl3.h">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClInclude>
@@ -91,6 +88,9 @@
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EditorAssetManager.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\EditorAssetPackBuilder.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
@@ -131,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="src\GUI\AllPanels.h">
       <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\AssetTools\AssetImporterPanel.h">
+      <Filter>src\GUI\AssetTools</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\AssetTools\MaterialEditor.h">
       <Filter>src\GUI\AssetTools</Filter>
@@ -213,8 +216,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\AssetImporterPanel.h" />
-    <ClInclude Include="src\Core\EditorAssetPackBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -233,6 +234,9 @@
       <Filter>src\BuildSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\EditorAssetManager.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\EditorAssetPackBuilder.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\GUIManager.cpp">
@@ -261,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\AssetTools\AssetImporterPanel.cpp">
+      <Filter>src\GUI\AssetTools</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\MaterialEditor.cpp">
       <Filter>src\GUI\AssetTools</Filter>
@@ -328,7 +335,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\AssetImporterPanel.cpp" />
-    <ClCompile Include="src\Core\EditorAssetPackBuilder.cpp" />
   </ItemGroup>
 </Project>

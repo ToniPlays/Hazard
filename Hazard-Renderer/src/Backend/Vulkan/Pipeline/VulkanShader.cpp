@@ -9,7 +9,7 @@
 #include "VulkanUniformBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
-#include "../RTCoreVulkanTopLevelAS.h"
+#include "../RTCore/VulkanTopLevelAS.h"
 #include "Profiling/Timer.h"
 
 #include "Backend/Core/ShaderCompiler.h"
@@ -55,13 +55,16 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanImage2D> vulkanImage = image.As<VulkanImage2D>();
 
 		Renderer::Submit([instance, vulkanImage, index, name]() mutable {
-			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			
+			for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			{
-				if (!set.Contains(name)) continue;
-				uint32_t binding = set.GetIndex(name);
-				set.SetSampler(binding, index, vulkanImage->GetImageDescriptor());
-				return;
+				for (auto& set : instance->m_DescriptorSets[i])
+				{
+					if (!set.Contains(name)) continue;
+
+					uint32_t binding = set.GetIndex(name);
+					set.SetSampler(binding, index, vulkanImage->GetImageDescriptor());
+				}
 			}
 			});
 	}
@@ -71,15 +74,16 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanShader> instance = this;
 		Ref<VulkanCubemapTexture> vulkanCubemap = cubemap.As<VulkanCubemapTexture>();
 		Renderer::Submit([instance, vulkanCubemap, index, name]() mutable {
-			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-
-			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			
+			for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			{
-				if (!set.Contains(name)) continue;
+				for (auto& set : instance->m_DescriptorSets[i])
+				{
+					if (!set.Contains(name)) continue;
 
-				uint32_t binding = set.GetIndex(name);
-				set.SetSampler(set.GetIndex(name), index, vulkanCubemap->GetImageDescriptor());
-				return;
+					uint32_t binding = set.GetIndex(name);
+					set.SetSampler(set.GetIndex(name), index, vulkanCubemap->GetImageDescriptor());
+				}
 			}
 			});
 	}
@@ -89,24 +93,25 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanShader> instance = this;
 		Renderer::Submit([instance, accelerationStructure, index, name]() mutable {
-			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-
-			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			
+			for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			{
-				if (!set.Contains(name)) continue;
+				for (auto& set : instance->m_DescriptorSets[i])
+				{
+					if (!set.Contains(name)) continue;
 
-				VkAccelerationStructureKHR s = {};
-				//if(accelerationStructure->GetLevel() == AccelerationStructureLevel::Top)
+					VkAccelerationStructureKHR s = {};
+					//if(accelerationStructure->GetLevel() == AccelerationStructureLevel::Top)
 					s = accelerationStructure.As<VulkanTopLevelAS>()->GetVulkanAccelerationStructure().AccelerationStructure;
 
-				VkWriteDescriptorSetAccelerationStructureKHR info = {};
-				info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
-				info.accelerationStructureCount = 1;
-				info.pAccelerationStructures = &s;
+					VkWriteDescriptorSetAccelerationStructureKHR info = {};
+					info.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+					info.accelerationStructureCount = 1;
+					info.pAccelerationStructures = &s;
 
-				uint32_t binding = set.GetIndex(name);
-				set.SetAccelerationStructure(set.GetIndex(name), index, info);
-				return;
+					uint32_t binding = set.GetIndex(name);
+					set.SetAccelerationStructure(set.GetIndex(name), index, info);
+				}
 			}
 			});
 	}
@@ -117,43 +122,45 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanShader> instance = this;
 		Ref<BufferBase> b = buffer.As<BufferBase>();
 		Renderer::Submit([instance, b, index, name]() mutable {
-			uint32_t frameIndex = VulkanContext::GetFrameIndex();
-
-			for (auto& set : instance->m_DescriptorSets[frameIndex])
+			
+			for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			{
-				if (!set.Contains(name)) continue;
-				uint32_t binding = set.GetIndex(name);
-				
-				switch (b->GetType())
+
+				for (auto& set : instance->m_DescriptorSets[i])
 				{
-				case BufferType::Vertex:
-				{
-					auto buf = b.As<VulkanVertexBuffer>();
+					if (!set.Contains(name)) continue;
+					uint32_t binding = set.GetIndex(name);
 
-					VkDescriptorBufferInfo bufferInfo = {};
-					bufferInfo.buffer = buf->GetVulkanBuffer();
-					bufferInfo.offset = 0;
-					bufferInfo.range = VK_WHOLE_SIZE;
+					switch (b->GetType())
+					{
+					case BufferType::Vertex:
+					{
+						auto buf = b.As<VulkanVertexBuffer>();
 
-					set.SetBuffer(binding, bufferInfo);
-					break;
-				}
-				case BufferType::Index:
-				{
-					auto buf = b.As<VulkanIndexBuffer>();
+						VkDescriptorBufferInfo bufferInfo = {};
+						bufferInfo.buffer = buf->GetVulkanBuffer();
+						bufferInfo.offset = 0;
+						bufferInfo.range = VK_WHOLE_SIZE;
 
-					VkDescriptorBufferInfo bufferInfo = {};
-					bufferInfo.buffer = buf->GetVulkanBuffer();
-					bufferInfo.offset = 0;
-					bufferInfo.range = VK_WHOLE_SIZE;
+						set.SetBuffer(binding, bufferInfo);
+						break;
+					}
+					case BufferType::Index:
+					{
+						auto buf = b.As<VulkanIndexBuffer>();
 
-					set.SetBuffer(binding, bufferInfo);
-					break;
-				}
+						VkDescriptorBufferInfo bufferInfo = {};
+						bufferInfo.buffer = buf->GetVulkanBuffer();
+						bufferInfo.offset = 0;
+						bufferInfo.range = VK_WHOLE_SIZE;
+
+						set.SetBuffer(binding, bufferInfo);
+						break;
+					}
 					default: HZR_ASSERT(false, "TODO");
-				}
+					}
 
-				return;
+				}
 			}
 			});
 	}

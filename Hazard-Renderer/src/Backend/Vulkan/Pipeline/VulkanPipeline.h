@@ -3,8 +3,8 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_VULKAN
 
-#include "Backend/Core/Pipeline/Pipeline.h"
-#include "Backend/Core/Pipeline/RenderPass.h"
+#include "Backend/Core/Pipeline.h"
+#include "Backend/Core/RenderPass.h"
 
 #include <vulkan/vulkan.h>
 

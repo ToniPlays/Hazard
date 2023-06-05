@@ -2,7 +2,7 @@
 
 #ifdef HZR_PLATFORM_WINDOWS
 
-#include "Backend/Core/RTCoreShaderBindingTable.h"
+#include "Backend/Core/RTCore/ShaderBindingTable.h"
 #include "Backend/Vulkan/Pipeline/VulkanPipeline.h"
 #include "vulkan/vulkan.h"
 #include "vk_mem_alloc.h"

@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_OPENGL
 
 #include "Backend/Core/FrameBuffer.h"
-#include "Textures/OpenGLImage2D.h"
+#include "OpenGLImage2D.h"
 
 namespace HazardRenderer::OpenGL
 {

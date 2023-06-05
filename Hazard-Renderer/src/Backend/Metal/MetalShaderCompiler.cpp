@@ -1,15 +1,14 @@
 #include "MetalShaderCompiler.h"
 
+#ifdef HZR_INCLUDE_METAL
+
 #include "Profiling/Timer.h"
 
-#ifdef HZR_PLATFORM_MACOS
-    #include <shaderc/shaderc.hpp>
-    #include <spirv_cross/spirv_msl.hpp>
-#endif
+#include <shaderc/shaderc.hpp>
+#include <spirv_cross/spirv_msl.hpp>
 
 namespace HazardRenderer::Metal
 {
-#ifdef HZR_PLATFORM_MACOS
     static shaderc_shader_kind ShaderStageToShaderC(const ShaderStage& type)
     {
         switch (type)
@@ -26,7 +25,6 @@ namespace HazardRenderer::Metal
         }
         return (shaderc_shader_kind)0;
     }
-#endif
 
     MetalShaderCompiler::~MetalShaderCompiler()
     {
@@ -149,3 +147,4 @@ namespace HazardRenderer::Metal
         return result;
     }
 }
+#endif

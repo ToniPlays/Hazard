@@ -22,44 +22,9 @@ namespace AccelerationStructureTest
 
 	static void Run(RenderAPI api)
 	{
-#ifdef HZR_PLATFORM_MACOS
-		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
 		static bool running = true;
 
-		HazardRendererAppInfo rendererApp = {};
-		rendererApp.AppName = "Hello Acceleration structures";
-		rendererApp.BuildVersion = "0.0.1a";
-		rendererApp.EventCallback = [](Event& e) {
-			EventDispatcher dispatcher(e);
-			if (e.GetEventType() == EventType::WindowClose)
-			{
-				running = false;
-			}
-		};;
-
-		rendererApp.MessageCallback = [](RenderMessage message)
-		{
-			std::cout << message.Description << std::endl;
-			std::cout << message.StackTrace << std::endl;
-		};
-
-		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = rendererApp.AppName;
-		windowInfo.FullScreen = false;
-		windowInfo.Maximized = false;
-		windowInfo.Extent = { 1920, 1080 };
-		windowInfo.Color = Color(32, 32, 32, 255);
-
-		HazardRendererCreateInfo renderInfo = {};
-		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = api;
-		renderInfo.Logging = true;
-		renderInfo.VSync = true;
-		renderInfo.WindowCount = 1;
-		renderInfo.pWindows = &windowInfo;
-
-		Window* window = Window::Create(&renderInfo);
+		Window* window = CreateTestWindow("Acceleration structure test", api, &running);
 		window->Show();
 
 		auto device = window->GetContext()->GetDevice();

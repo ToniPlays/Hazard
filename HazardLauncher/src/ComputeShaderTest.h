@@ -10,8 +10,8 @@ using namespace HazardRenderer;
 
 namespace ComputeShaderTest {
 
-    //OpenGL: Test
-    //Vulkan: Test
+    //OpenGL: Working
+    //Vulkan: Working
     //Metal : Working
     //DX12  : Test
     //DX11  : Test
@@ -20,45 +20,7 @@ namespace ComputeShaderTest {
     {
         static bool running = true;
         
-        //Window creation
-        HazardRendererAppInfo appInfo = {};
-        appInfo.AppName = "Compute shader";
-        appInfo.BuildVersion = "0.0.1a";
-        appInfo.MessageCallback = [](RenderMessage message) {
-            std::cout << message.Description << std::endl;
-        };
-        appInfo.EventCallback = [](Event& e) {
-            EventDispatcher dispatcher(e);
-            if (e.GetEventType() == EventType::WindowClose) {
-                running = false;
-            }
-        };
-
-        HazardRendererAppInfo rendererApp = {};
-        rendererApp.AppName = appInfo.AppName;
-        rendererApp.BuildVersion = "1.0.0!";
-        rendererApp.EventCallback = appInfo.EventCallback;
-
-        rendererApp.MessageCallback = [](RenderMessage message)
-        {
-            std::cout << message.Description << std::endl;
-            std::cout << message.StackTrace << std::endl;
-        };
-
-        HazardWindowCreateInfo windowInfo = {};
-        windowInfo.Title = appInfo.AppName;
-        windowInfo.Extent = { 1920, 1080 };
-        windowInfo.Color = Color(255, 128, 0, 255);
-
-        HazardRendererCreateInfo renderInfo = {};
-        renderInfo.pAppInfo = &rendererApp;
-        renderInfo.Renderer = api;
-        renderInfo.Logging = true;
-        renderInfo.VSync = true;
-        renderInfo.WindowCount = 1;
-        renderInfo.pWindows = &windowInfo;
-
-        Window* window = Window::Create(&renderInfo);
+        Window* window = CreateTestWindow("Compute shader test", api, &running);
         window->Show();
         //---------------
         
@@ -113,47 +75,49 @@ namespace ComputeShaderTest {
         outputImageSpec.Format = ImageFormat::RGBA;
         outputImageSpec.Usage = ImageUsage::Storage;
         
-        
-        Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
-        Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-        Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-        Ref<Pipeline> compute = Pipeline::Create(&computeSpec);
-        Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit);
-        
-        //Compute step
         {
-            DispatchComputeInfo info = {};
-            info.WaitForCompletion = true;
-            info.GroupSize = { 512, 512, 1 };
-            
-            compute->GetShader()->Set("o_OutputImage", 0, outputImage);
-            computeBuffer->Begin();
-            computeBuffer->SetPipeline(compute);
-            computeBuffer->DispatchCompute(info);
-            computeBuffer->End();
-            computeBuffer->Submit();
-        }
-        
-        pipeline->GetShader()->Set("u_Texture", 0, outputImage);
+            Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
+            Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+            Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+            Ref<Pipeline> compute = Pipeline::Create(&computeSpec);
+            Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit);
 
-        while (running)
-        {
-            auto swapchain = window->GetSwapchain();
-            auto commandBuffer = swapchain->GetSwapchainBuffer();
-            auto renderPass = swapchain->GetRenderPass();
-            
-            Input::Update();
-            window->BeginFrame();
-            
-            commandBuffer->BeginRenderPass(renderPass);
-            commandBuffer->SetVertexBuffer(vertexBuffer);
-            commandBuffer->SetPipeline(pipeline);
-            commandBuffer->Draw(6);
-            commandBuffer->EndRenderPass();
-            
-            Renderer::WaitAndRender();
-            window->Present();
+
+            while (running)
+            {
+            //Compute step
+            {
+                DispatchComputeInfo info = {};
+                info.WaitForCompletion = true;
+                info.GroupSize = { 512, 512, 1 };
+
+                compute->GetShader()->Set("o_OutputImage", 0, outputImage);
+                computeBuffer->Begin();
+                computeBuffer->SetPipeline(compute);
+                computeBuffer->DispatchCompute(info);
+                computeBuffer->End();
+                computeBuffer->Submit();
+            }
+
+                pipeline->GetShader()->Set("u_Texture", 0, outputImage);
+                auto swapchain = window->GetSwapchain();
+                auto commandBuffer = swapchain->GetSwapchainBuffer();
+                auto renderPass = swapchain->GetRenderPass();
+
+                Input::Update();
+                window->BeginFrame();
+
+                commandBuffer->BeginRenderPass(renderPass);
+                commandBuffer->SetVertexBuffer(vertexBuffer);
+                commandBuffer->SetPipeline(pipeline);
+                commandBuffer->Draw(6);
+                commandBuffer->EndRenderPass();
+
+                Renderer::WaitAndRender();
+                window->Present();
+            }
         }
+        window->Close();
     }
 }
 

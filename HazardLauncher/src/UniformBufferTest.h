@@ -14,7 +14,7 @@ namespace UniformBufferTest
 
 	//OpenGL : Working
 	//Vulkan : Working
-	//Metal	 : Test
+	//Metal	 : Working
 	//DX12	 : Test
 	//DX11	 : Test
 
@@ -22,46 +22,7 @@ namespace UniformBufferTest
 	{
 		static bool running = true;
 
-		HazardRendererAppInfo appInfo = {};
-		appInfo.AppName = "Hello Uniform buffer";
-		appInfo.BuildVersion = "0.0.1a";
-		appInfo.MessageCallback = [](RenderMessage message) {
-			std::cout << message.Description << std::endl;
-		};
-		appInfo.EventCallback = [](Event& e) {
-			EventDispatcher dispatcher(e);
-			if (e.GetEventType() == EventType::WindowClose) {
-				running = false;
-			}
-		};
-
-		HazardRendererAppInfo rendererApp = {};
-		rendererApp.AppName = appInfo.AppName;
-		rendererApp.BuildVersion = "1.0.0!";
-		rendererApp.EventCallback = appInfo.EventCallback;
-
-		rendererApp.MessageCallback = [](RenderMessage message)
-		{
-			std::cout << message.Description << std::endl;
-			std::cout << message.StackTrace << std::endl;
-		};
-
-		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = appInfo.AppName;
-		windowInfo.FullScreen = false;
-		windowInfo.Maximized = false;
-		windowInfo.Extent = { 1920, 1080 };
-		windowInfo.Color = Color(255, 128, 0, 255);
-
-		HazardRendererCreateInfo renderInfo = {};
-		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = api;
-		renderInfo.Logging = true;
-		renderInfo.VSync = true;
-		renderInfo.WindowCount = 1;
-		renderInfo.pWindows = &windowInfo;
-
-		Window* window = Window::Create(&renderInfo);
+		Window* window = CreateTestWindow("Uniform buffer test", api, &running);
 		window->Show();
 
 		//---------------
@@ -125,40 +86,44 @@ namespace UniformBufferTest
 		uboInfo.Binding = 0;
 		uboInfo.Size = sizeof(glm::mat4);
 
-		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
-		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-		Ref<Image2D> image = Image2D::Create(&imageInfo);
-		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
-        
-        pipeline->GetShader()->Set("u_Texture", 0, image);
-
-		while (running)
 		{
-            auto swapchain = window->GetSwapchain();
-            auto commandBuffer = swapchain->GetSwapchainBuffer();
-            auto renderPass = swapchain->GetRenderPass();
-            
-			Input::Update();
-			
-			float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
-			glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -10.0f, 10.0f);
+			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+			Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
+			Ref<Image2D> image = Image2D::Create(&imageInfo);
+			Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
 
-			BufferCopyRegion region = {};
-			region.Data = &projection;
-			region.Size = sizeof(glm::mat4);
+			pipeline->GetShader()->Set("u_Texture", 0, image);
 
-			camera->SetData(region);
+			while (running)
+			{
+				auto swapchain = window->GetSwapchain();
+				auto commandBuffer = swapchain->GetSwapchainBuffer();
+				auto renderPass = swapchain->GetRenderPass();
 
-            window->BeginFrame();
-			commandBuffer->BeginRenderPass(renderPass);
-			commandBuffer->SetVertexBuffer(vertexBuffer);
-			commandBuffer->SetPipeline(pipeline);
-			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
-			commandBuffer->EndRenderPass();
-            
-			Renderer::WaitAndRender();
-			window->Present();
+				Input::Update();
+
+				float aspectRatio = (float)window->GetWidth() / (float)window->GetHeight();
+				glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -10.0f, 10.0f);
+
+				BufferCopyRegion region = {};
+				region.Data = &projection;
+				region.Size = sizeof(glm::mat4);
+
+				camera->SetData(region);
+
+				window->BeginFrame();
+				commandBuffer->BeginRenderPass(renderPass);
+				commandBuffer->SetVertexBuffer(vertexBuffer);
+				commandBuffer->SetPipeline(pipeline);
+				commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
+				commandBuffer->EndRenderPass();
+
+				Renderer::WaitAndRender();
+				window->Present();
+			}
 		}
+
+		window->Close();
 	}
 }

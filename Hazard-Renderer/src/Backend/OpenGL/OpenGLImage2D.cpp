@@ -62,6 +62,8 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 
 		m_ID = OpenGLUtils::CreateTextures(m_Samples > 1);
+		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Extent.Width, m_Extent.Height);
+
 		if (m_ImageUsage == ImageUsage::Attachment) return;
 
 		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, m_MipLevels > 1 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR);
@@ -91,18 +93,8 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 
-		glTextureStorage2D(m_ID, 1, GL_RGBA8, m_Extent.Width, m_Extent.Height);
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Extent.Width, m_Extent.Height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer.Data);
 		if (m_MipLevels > 1) {}
-		//glGenerateTextureMipmap(m_ID);
-	/*
-	glBindTexture(GL_TEXTURE_2D, m_ID);
-
-	for (uint32_t i = 1; i < m_MipLevels; i++)
-	{
-		glTextureStorage2D(m_ID, i, GL_RGBA8, (m_Width >> (i - 1)), (m_Height >> (i -1)));
-	}
-	*/
 
 		m_LocalBuffer.Release();
 	}

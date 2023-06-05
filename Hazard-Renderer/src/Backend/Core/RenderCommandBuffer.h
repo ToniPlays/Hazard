@@ -91,7 +91,6 @@ namespace HazardRenderer
         
         //Compute
 		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;
-        
 		virtual void TraceRays(const TraceRaysInfo& traceRaysInfo) = 0;
 
         //Barriers

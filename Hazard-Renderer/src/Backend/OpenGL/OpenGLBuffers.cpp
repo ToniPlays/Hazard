@@ -3,9 +3,9 @@
 
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Renderer.h"
-#include "Backend/Core/Pipeline/ShaderDataType.h"
-#include "../OpenGLContext.h"
-#include "../OpenGLSwapchain.h"
+#include "Backend/Core/ShaderDataType.h"
+#include "OpenGLContext.h"
+#include "OpenGLSwapchain.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL

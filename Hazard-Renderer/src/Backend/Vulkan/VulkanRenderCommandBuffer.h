@@ -24,13 +24,13 @@ namespace HazardRenderer::Vulkan
 	class VulkanRenderCommandBuffer : public RenderCommandBuffer 
 	{
 	public:
-		VulkanRenderCommandBuffer(uint32_t size = 0, const std::string& name = "", bool compute = false);
+		VulkanRenderCommandBuffer(const std::string& name, DeviceQueue queue, uint32_t count);
 		VulkanRenderCommandBuffer(const std::string& name, bool swapchain);
 		~VulkanRenderCommandBuffer();
 
 		uint32_t GetFrameIndex() override { return m_FrameIndex; };
-		
 		bool IsRecording() override { return m_State == State::Record; };
+
 		void Begin() override;
 		void End() override;
 		void Submit() override;
@@ -44,7 +44,9 @@ namespace HazardRenderer::Vulkan
 		void SetPipeline(Ref<Pipeline> pipeline) override;
 
 		void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr);
+		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
+		void DrawIndirect(uint32_t drawCount, uint32_t offset = 0) override {};
+
 		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
@@ -52,9 +54,6 @@ namespace HazardRenderer::Vulkan
 		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
 		void TransitionImageLayout(const ImageTransitionInfo& info) override;
 		void GenerateMipmaps(const GenMipmapsInfo& info) override;
-
-		void SetViewport(float x, float y, float width, float height) override;
-		void SetLineSize(float size) override;
 
 		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }

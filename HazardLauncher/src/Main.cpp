@@ -26,11 +26,10 @@ int main(int argc, char** argv)
 	std::cin >> api;
 #endif
     
+    RenderAPI renderAPI = (RenderAPI)api;
 	JobSystemTest::Run();
 
-    RenderAPI renderAPI = (RenderAPI)api;
 	TriangleTest::Run(renderAPI);
-    
 	TexturedQuad::Run(renderAPI);
 	UniformBufferTest::Run(renderAPI);
     ComputeShaderTest::Run(renderAPI);

@@ -2,8 +2,8 @@
 #include "OpenGLPipeline.h"
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Renderer.h"
-#include "../OpenGLFramebuffer.h"
-#include "../OpenGLUtils.h"
+#include "OpenGLFramebuffer.h"
+#include "OpenGLUtils.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer::OpenGL

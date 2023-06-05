@@ -12,10 +12,10 @@ namespace HazardRenderer {
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(count, debugName, queue);
+		case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLRenderCommandBuffer>::Create(debugName, queue, count);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(count, debugName, queue);
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanRenderCommandBuffer>::Create(debugName, queue, count);
 #endif
 #ifdef HZR_INCLUDE_METAL
             case RenderAPI::Metal: return Ref<Metal::MetalRenderCommandBuffer>::Create(debugName, queue, count);

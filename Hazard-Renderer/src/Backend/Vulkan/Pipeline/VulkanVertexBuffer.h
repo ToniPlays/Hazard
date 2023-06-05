@@ -2,7 +2,7 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_VULKAN
 
-#include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Buffers.h"
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
 

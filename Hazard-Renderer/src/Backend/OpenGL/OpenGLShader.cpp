@@ -2,11 +2,11 @@
 #include "OpenGLShader.h"
 #ifdef HZR_INCLUDE_OPENGL
 
-#include "../OpenGLUtils.h"
+#include "OpenGLUtils.h"
 #include "Backend/Core/Renderer.h"
 
-#include "../Textures/OpenGLImage2D.h"
-#include "../OpenGLContext.h"
+#include "OpenGLImage2D.h"
+#include "OpenGLContext.h"
 #include "OpenGLBuffers.h"
 #include "Profiling/Timer.h"
 

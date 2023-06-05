@@ -5,10 +5,10 @@
 
 #include <map>
 
-#include "Backend/Core/Pipeline/Shader.h"
-#include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Shader.h"
+#include "Backend/Core/Buffers.h"
 #include "VulkanUniformBuffer.h"
-#include "Backend/Core/Texture/Texture.h"
+#include "Backend/Core/Texture.h"
 #include "VulkanDescriptorSet.h"
 #include <vulkan/vulkan.h>
 #include "VulkanVertexBuffer.h"

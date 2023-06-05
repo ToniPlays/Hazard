@@ -2,7 +2,7 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_OPENGL
 
-#include "Backend/Core/Pipeline/Buffers.h"
+#include "Backend/Core/Buffers.h"
 
 namespace HazardRenderer::OpenGL
 {

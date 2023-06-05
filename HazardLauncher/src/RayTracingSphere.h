@@ -31,9 +31,6 @@ namespace RayTracingSphere
 
 	static void Run(RenderAPI api)
 	{
-#ifdef HZR_PLATFORM_MACOS
-		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
 		static bool running = true;
 
 		Editor::EditorCamera camera(45.0f, 1.0f, 0.03f, 1000.0f);
@@ -41,44 +38,7 @@ namespace RayTracingSphere
 #pragma region Init
 		Logging::Logger logger = Logging::Logger();
 
-		HazardRendererAppInfo rendererApp = {};
-		rendererApp.AppName = "Hello RayTracing";
-		rendererApp.BuildVersion = "0.0.1a";
-		rendererApp.EventCallback = [&](Event& e) {
-			camera.OnEvent(e);
-			if (e.GetEventType() == EventType::WindowClose)
-			{
-				running = false;
-			}
-			if (e.GetEventType() == EventType::WindowResize)
-			{
-				auto& resize = (WindowResizeEvent&)e;
-				camera.SetViewport(resize.GetWidth(), resize.GetHeight());
-			}
-		};
-
-		rendererApp.MessageCallback = [](RenderMessage message)
-		{
-			std::cout << message.Description << std::endl;
-			std::cout << message.StackTrace << std::endl;
-		};
-
-		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = rendererApp.AppName;
-		windowInfo.Maximized = false;
-		windowInfo.FullScreen = false;
-		windowInfo.Extent = { 1920, 1080 };
-		windowInfo.Color = Color(32, 32, 32, 255);
-
-		HazardRendererCreateInfo renderInfo = {};
-		renderInfo.pAppInfo = &rendererApp;
-		renderInfo.Renderer = api;
-		renderInfo.Logging = true;
-		renderInfo.VSync = true;
-		renderInfo.WindowCount = 1;
-		renderInfo.pWindows = &windowInfo;
-#pragma endregion
-		Window* window = Window::Create(&renderInfo);
+		Window* window = CreateTestWindow("Raytraced sphere test", api, &running);
 		window->Show();
 
 		auto device = window->GetContext()->GetDevice();
