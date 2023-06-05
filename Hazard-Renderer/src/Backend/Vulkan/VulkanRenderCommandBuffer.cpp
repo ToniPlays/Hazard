@@ -381,7 +381,8 @@ namespace HazardRenderer::Vulkan
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
 			VkDeviceSize offsets = { 0 };
-			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, 0, 1, &vkBuffer, &offsets);
+
+			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &offsets);
 			});
 	}
 	void VulkanRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)

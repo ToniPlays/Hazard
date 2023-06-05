@@ -50,6 +50,7 @@ namespace HazardRenderer::OpenGL
 		Ref<OpenGLPipeline> m_CurrentPipeline;
 
 		inline static BufferLayout s_CurrentLayout;
+		inline static uint32_t s_BoundVAO;
 	};
 }
 #endif

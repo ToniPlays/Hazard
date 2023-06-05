@@ -24,7 +24,7 @@ namespace HazardRenderer::OpenGL
 
 	private:
 		std::string m_DebugName;
-		uint32_t m_BufferID = 0, m_VAO = 0;
+		uint32_t m_BufferID = 0, m_VAO = UINT32_MAX;
 		uint32_t m_Size;
 		BufferLayout m_Layout;
 		Buffer m_LocalBuffer;

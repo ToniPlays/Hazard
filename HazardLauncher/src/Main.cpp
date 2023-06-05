@@ -3,6 +3,7 @@
 #include "TexturedQuad.h"
 #include "UniformBufferTest.h"
 #include "ComputeShaderTest.h"
+#include "InstancingTest.h"
 #include "AccelerationStructureTest.h"
 #include "RayTracingSphere.h"
 #include "IndirectDrawCPUTest.h"
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
 	TexturedQuad::Run(renderAPI);
 	UniformBufferTest::Run(renderAPI);
     ComputeShaderTest::Run(renderAPI);
+	InstancingTest::Run(renderAPI);
     IndirectDrawCPUTest::Run(renderAPI);
 
 	if (renderAPI == RenderAPI::Vulkan)

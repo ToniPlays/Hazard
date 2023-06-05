@@ -51,6 +51,17 @@ namespace HazardRenderer::OpenGL
 			{
 				glCreateBuffers(1, &instance->m_BufferID);
 				glNamedBufferData(instance->m_BufferID, instance->m_Size, nullptr, GL_STATIC_DRAW);
+
+				if (instance->m_LocalBuffer)
+				{
+					BufferCopyRegion region = {};
+					region.Data = instance->m_LocalBuffer.Data;
+					region.Size = instance->m_LocalBuffer.Size;
+					region.Offset = 0;
+
+					instance->SetData_RT(region);
+				}
+
 				return;
 			}
 
@@ -154,7 +165,6 @@ namespace HazardRenderer::OpenGL
 
 		m_LocalBuffer.Release();
 		m_LocalBuffer = Buffer::Copy(copyRegion.Data, copyRegion.Size);
-
 
 		Ref<OpenGLIndexBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, copyRegion]() mutable {
