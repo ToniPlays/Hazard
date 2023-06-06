@@ -1,24 +1,20 @@
-#include "MetalIndexBuffer.h"
+#include "MetalArgumentBuffer.h"
+
 #ifdef HZR_INCLUDE_METAL
-
-#include "MetalContext.h"
-#include "MetalRenderCommandBuffer.h"
 #include "Backend/Core/Renderer.h"
+#include "MetalContext.h"
 #include "MTLUtils.h"
-
-#include "MathCore.h"
 
 namespace HazardRenderer::Metal
 {
-    MetalIndexBuffer::MetalIndexBuffer(IndexBufferCreateInfo* info)
-    {
-        m_DebugName = info->Name;
-        m_Size = info->Size;
+    MetalArgumentBuffer::MetalArgumentBuffer(ArgumentBufferCreateInfo* createInfo) {
+        m_DebugName = createInfo->Name;
+        m_Size = createInfo->Size;
         
-        if(info->Data)
+        if(createInfo->Data)
         {
-            m_LocalBuffer = Buffer::Copy(info->Data, info->Size);
-            Ref<MetalIndexBuffer> instance = this;
+            m_LocalBuffer = Buffer::Copy(createInfo->Data, createInfo->Size);
+            Ref<MetalArgumentBuffer> instance = this;
             Renderer::SubmitResourceCreate([instance]() mutable {
                 
                 auto device = MetalContext::GetMetalDevice();
@@ -29,7 +25,7 @@ namespace HazardRenderer::Metal
         }
         else
         {
-            Ref<MetalIndexBuffer> instance = this;
+            Ref<MetalArgumentBuffer> instance = this;
             Renderer::SubmitResourceCreate([instance]() mutable {
                 
                 auto device = MetalContext::GetMetalDevice();
@@ -39,28 +35,15 @@ namespace HazardRenderer::Metal
             });
         }
     }
-    MetalIndexBuffer::~MetalIndexBuffer()
-    {
+    MetalArgumentBuffer::~MetalArgumentBuffer() {
         m_LocalBuffer.Release();
         Renderer::SubmitResourceFree([buffer = m_Buffer]() mutable {
             buffer->release();
         });
     }
-    void MetalIndexBuffer::SetData(const BufferCopyRegion &copyRegion)
+    void MetalArgumentBuffer::SetData(const BufferCopyRegion& copyRegion)
     {
-        Ref<MetalIndexBuffer> instance = this;
-        m_LocalBuffer = Buffer::Copy(copyRegion.Data, copyRegion.Size);
         
-        Renderer::Submit([instance, copyRegion]() mutable {
-            instance->SetData_RT(copyRegion);
-        });
-    }
-    void MetalIndexBuffer::SetData_RT(const BufferCopyRegion &copyRegion)
-    {
-        void* data = m_Buffer->contents();
-        memcpy((uint8_t*)data + copyRegion.Offset, m_LocalBuffer.Data, m_LocalBuffer.Size);
-        
-        m_LocalBuffer.Release();
     }
 }
 #endif

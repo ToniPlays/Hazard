@@ -36,7 +36,7 @@ namespace Hazard
 
 	size_t MeshFactory::GetMeshDataSize(const MeshData& data)
 	{
-		uint32_t vertexSize = GetVertexSize(data);
+		uint64_t vertexSize = GetVertexSize(data);
 
 		size_t size = 0;
 		size += data.Vertices.size() * vertexSize;

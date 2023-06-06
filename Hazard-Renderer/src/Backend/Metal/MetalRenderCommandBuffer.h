@@ -39,7 +39,7 @@ namespace HazardRenderer::Metal
         
         void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
         void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
-        void DrawIndirect(uint32_t drawCount, uint32_t offset = 0) override;
+        void DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<IndexBuffer> indexBuffer = nullptr) override;
         
         
         void DispatchCompute(const DispatchComputeInfo& computeInfo) override;

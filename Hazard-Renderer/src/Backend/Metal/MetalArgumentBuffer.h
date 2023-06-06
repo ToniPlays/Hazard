@@ -11,15 +11,15 @@
 
 namespace HazardRenderer::Metal
 {
-    class MetalStorageBuffer : public StorageBuffer
+    class MetalArgumentBuffer : public ArgumentBuffer
     {
     public:
-        MetalStorageBuffer(StorageBufferCreateInfo* createInfo) {};
-        ~MetalStorageBuffer() {};
+        MetalArgumentBuffer(ArgumentBufferCreateInfo* createInfo);
+        ~MetalArgumentBuffer();
         
-        void SetData(const BufferCopyRegion& copyRegion) override {};
+        void SetData(const BufferCopyRegion& copyRegion) override;
 
-        std::string& GetDebugName() override { return m_Name; }
+        std::string& GetDebugName() override { return m_DebugName; }
         const size_t GetSize() const override { return m_Size; };
         
         //Metal specific
@@ -29,11 +29,11 @@ namespace HazardRenderer::Metal
         void SetData_RT() {};
         
     private:
-        std::string m_Name;
+        std::string m_DebugName;
         size_t m_Size;
         
         MTL::Buffer* m_Buffer;
-        Buffer m_LocalData;
+        Buffer m_LocalBuffer;
     };
 }
 #endif

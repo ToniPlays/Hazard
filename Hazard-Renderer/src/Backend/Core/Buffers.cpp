@@ -98,7 +98,7 @@ namespace HazardRenderer {
 		case RenderAPI::Vulkan: return new Vulkan::VulkanArgumentBuffer(createInfo); break;
     #endif
     #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal: return Ref<Metal::MetalStorageBuffer>::Create(createInfo); break;
+        case RenderAPI::Metal: return Ref<Metal::MetalArgumentBuffer>::Create(createInfo); break;
     #endif
         default:
             return nullptr;

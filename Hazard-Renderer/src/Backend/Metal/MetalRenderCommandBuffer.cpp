@@ -39,12 +39,15 @@ namespace HazardRenderer::Metal
             auto device = MetalContext::GetMetalDevice();
             instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
             
-            MTL::IndirectCommandBufferDescriptor* descriptor = MTL::IndirectCommandBufferDescriptor::alloc()->init();
+            /*MTL::IndirectCommandBufferDescriptor* descriptor = MTL::IndirectCommandBufferDescriptor::alloc()->init();
             
-            instance->m_IndirectCommandBuffer = device->GetMetalDevice()->newIndirectCommandBuffer(descriptor, 8192, MTL::ResourceStorageModeManaged);
-                
+            instance->m_IndirectCommandBuffer = device->GetMetalDevice()->newIndirectCommandBuffer(descriptor, 512, MTL::ResourceStorageModeManaged);
+                */
+            //descriptor->release();
             if(instance->m_Queue == DeviceQueue::ComputeBit)
                 instance->m_ComputeEncoder = instance->m_CommandBuffer->computeCommandEncoder();
+            
+            
         });
     }
     void MetalRenderCommandBuffer::End()
@@ -213,13 +216,28 @@ namespace HazardRenderer::Metal
             }
         });
     }
-    void MetalRenderCommandBuffer::DrawIndirect(uint32_t drawCount, uint32_t offset) {
-        Ref<MetalRenderCommandBuffer> instance = this;
+    void MetalRenderCommandBuffer::DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset, Ref<IndexBuffer> indexBuffer) {
         
-        Renderer::Submit([instance, drawCount, offset]() mutable {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalArgumentBuffer> argBuffer = argumentBuffer.As<MetalArgumentBuffer>();
+        Ref<MetalIndexBuffer> mtlIndexBuffer = indexBuffer.As<MetalIndexBuffer>();
+        
+        Renderer::Submit([instance, argBuffer, mtlIndexBuffer, drawCount, stride, offset]() mutable {
             
-            //MTL::IndirectRenderCommand command;
+            auto argBuf = argBuffer->GetMetalBuffer();
             
+            if(mtlIndexBuffer)
+            {
+                auto buffer = mtlIndexBuffer->GetMetalBuffer();
+                for(uint32_t i = 0; i < drawCount; i++)
+                {
+                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset);
+                }
+            }
+            else
+            {
+                
+            }
         });
     }
     void MetalRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)

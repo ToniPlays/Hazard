@@ -13,7 +13,7 @@
 #include "MetalVertexBuffer.h"
 #include "MetalIndexBuffer.h"
 #include "MetalUniformBuffer.h"
-#include "MetalStorageBuffer.h"
+#include "MetalArgumentBuffer.h"
 
 #include "MetalCubemapTexture.h"
 
