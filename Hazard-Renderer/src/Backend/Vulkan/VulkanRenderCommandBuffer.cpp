@@ -9,6 +9,7 @@
 #include "Pipeline/VulkanVertexBuffer.h"
 #include "Pipeline/VulkanIndexBuffer.h"
 #include "Pipeline/VulkanUniformBuffer.h"
+#include "Pipeline/VulkanArgumentBuffer.h"
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
 #include "Textures/VulkanCubemapTexture.h"
@@ -438,6 +439,25 @@ namespace HazardRenderer::Vulkan
 				return;
 			}
 			vkCmdDraw(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0);
+			});
+	}
+	void VulkanRenderCommandBuffer::DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset, Ref<IndexBuffer> indexBuffer)
+	{
+		HZR_PROFILE_FUNCTION();
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanIndexBuffer> indexBuf = indexBuffer.As<VulkanIndexBuffer>();
+		Ref<VulkanArgumentBuffer> buffer = argumentBuffer.As<VulkanArgumentBuffer>();
+
+		Renderer::Submit([instance, indexBuf, buffer, drawCount, stride, offset]() mutable {
+
+			if (indexBuf)
+			{
+				VkBuffer vkBuffer = indexBuf->GetVulkanBuffer();
+				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, vkBuffer, 0, VK_INDEX_TYPE_UINT32);
+			}
+
+			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
+			vkCmdDrawIndexedIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
 			});
 	}
 	void VulkanRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)

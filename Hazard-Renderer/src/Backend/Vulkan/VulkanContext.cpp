@@ -181,6 +181,7 @@ namespace HazardRenderer::Vulkan
 		enabledFeatures.fillModeNonSolid = true;
 		enabledFeatures.independentBlend = true;
 		enabledFeatures.pipelineStatisticsQuery = true;
+		enabledFeatures.multiDrawIndirect = true;
 
 		m_VulkanDevice = Ref<VulkanDevice>::Create(m_VulkanPhysicalDevice, enabledFeatures);
 

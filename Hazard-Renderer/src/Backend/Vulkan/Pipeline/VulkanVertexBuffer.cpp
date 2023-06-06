@@ -113,6 +113,7 @@ namespace HazardRenderer::Vulkan
 		if (m_LocalData.Size == 0) return;
 
 		VulkanAllocator allocator("VulkanVertexBuffer");
+
 		uint8_t* dst = allocator.MapMemory<uint8_t>(m_BufferAllocation);
 		memcpy(dst + copyRegion.Offset, m_LocalData.Data, copyRegion.Size);
 		allocator.UnmapMemory(m_BufferAllocation);

@@ -27,6 +27,22 @@ namespace HazardRenderer
 		ImageLayout_General = BIT(1)
 	};
 
+	struct DrawIndirectCommand 
+	{
+		uint32_t VertexCount;
+		uint32_t InstanceCount;
+		uint32_t FirstVertex = 0;
+		uint32_t FirstInstance = 0;
+	};
+	struct DrawIndirectIndexedCommand 
+	{
+		uint32_t IndexCount;
+		uint32_t InstanceCount;
+		uint32_t FirstIndex = 0;
+		uint32_t VertexOffset = 0;
+		uint32_t FirstInstance = 0;
+	};
+
 	struct DispatchComputeInfo
 	{
 		LocalGroupSize GroupSize;
@@ -53,11 +69,13 @@ namespace HazardRenderer
 		Ref<CubemapTexture> Cubemap = nullptr;
 	};
 
+	//TODO: Check if needed
 	struct TraceRaysInfo
 	{
 		Extent Extent;
 		Ref<ShaderBindingTable> pBindingTable;
 	};
+	//TODO: Check if needed
 	struct AccelerationStructureBuildInfo 
 	{
 		BuildType Type;
@@ -87,7 +105,7 @@ namespace HazardRenderer
         //Draw
 		virtual void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-        virtual void DrawIndirect(uint32_t drawCount, uint32_t offset = 0) = 0;
+        virtual void DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
         
         //Compute
 		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;

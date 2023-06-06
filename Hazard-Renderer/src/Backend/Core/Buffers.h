@@ -18,7 +18,8 @@ namespace HazardRenderer
 		Vertex,
 		Index,
 		Uniform,
-		Storage
+		Storage,
+		Argument
 	};
     
     struct BufferCreateInfo
@@ -26,18 +27,21 @@ namespace HazardRenderer
         std::string Name;
         size_t Size;
 		uint32_t UsageFlags = 0;
+		void* Data = nullptr;
     };
 
 	struct VertexBufferCreateInfo : BufferCreateInfo
 	{
 		//No layout means object cannot be used for rendering meshes, only instancing data
 		BufferLayout* Layout = nullptr;
-        void* Data = nullptr;
 	};
 	struct IndexBufferCreateInfo : BufferCreateInfo
 	{
-		//Size is size in bytes
 		uint32_t* Data = nullptr;
+	};
+	struct ArgumentBufferCreateInfo : BufferCreateInfo
+	{
+		void* Data = nullptr;
 	};
 	struct UniformBufferCreateInfo : BufferCreateInfo
 	{
@@ -45,13 +49,12 @@ namespace HazardRenderer
 		uint32_t Binding;
 		uint32_t Usage;
 	};
-    using StorageBufferCreateInfo = BufferCreateInfo;
 
 	struct BufferCopyRegion
 	{
-		const void* Data = nullptr;
 		size_t Size = 0;
 		size_t Offset = 0;
+		const void* Data = nullptr;
 	};
 
 	class BufferBase : public RefCount
@@ -103,14 +106,14 @@ namespace HazardRenderer
 		static Ref<UniformBuffer> Create(UniformBufferCreateInfo* createInfo);
 	};
 
-    class StorageBuffer : public BufferBase
+    class ArgumentBuffer : public BufferBase
     {
     public:
-        virtual ~StorageBuffer() = default;
+        virtual ~ArgumentBuffer() = default;
         
-        virtual std::string& GetDebugName() = 0;
-        const BufferType GetType() const override { return BufferType::Storage; };
+        virtual const std::string& GetDebugName() = 0;
+        const BufferType GetType() const override { return BufferType::Argument; };
 
-        static Ref<StorageBuffer> Create(StorageBufferCreateInfo* createInfo);
+        static Ref<ArgumentBuffer> Create(ArgumentBufferCreateInfo* createInfo);
     };
 }

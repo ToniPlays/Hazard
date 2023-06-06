@@ -87,15 +87,15 @@ namespace HazardRenderer {
 		return buffer;
 	}
 
-    Ref<StorageBuffer> StorageBuffer::Create(StorageBufferCreateInfo* createInfo)
+    Ref<ArgumentBuffer> ArgumentBuffer::Create(ArgumentBufferCreateInfo* createInfo)
     {
         switch (GraphicsContext::GetRenderAPI())
         {
     #ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL: return nullptr ;//Ref<OpenGL::OpenGLStorageBuffer>::Create(createInfo); break;
+		case RenderAPI::OpenGL: return nullptr; //Ref<OpenGL::OpenGLStorageBuffer>::Create(createInfo); break;
     #endif
     #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return nullptr; //Ref<Vulkan::VulkanStorageBuffer>::Create(createInfo); break;
+		case RenderAPI::Vulkan: return new Vulkan::VulkanArgumentBuffer(createInfo); break;
     #endif
     #ifdef HZR_INCLUDE_METAL
         case RenderAPI::Metal: return Ref<Metal::MetalStorageBuffer>::Create(createInfo); break;

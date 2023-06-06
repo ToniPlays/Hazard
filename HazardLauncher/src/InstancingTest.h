@@ -12,7 +12,7 @@ namespace InstancingTest {
 
 	//OpenGL : Working
 	//Vulkan : Working
-	//Metal	 : Test
+	//Metal	 : Working
 	//DX12	 : Test
 	//DX11	 : Test
 
