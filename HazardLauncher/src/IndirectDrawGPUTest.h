@@ -156,6 +156,7 @@ namespace IndirectDrawGPUTest {
             Ref<Pipeline> pipeline = Pipeline::Create(&spec);
             Ref<Pipeline> compute = Pipeline::Create(&computeSpec);
             Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+            Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("ComputeBuffer", DeviceQueue::ComputeBit, 1);
 
             auto shader = compute->GetShader();
             shader->Set("InDrawCommands", 0, argumentBuffer.As<BufferBase>());
@@ -194,9 +195,11 @@ namespace IndirectDrawGPUTest {
 
                     drawCommandBuffer->SetData(region);
                 }
-
-                commandBuffer->SetPipeline(compute);
-                commandBuffer->DispatchCompute(computeInfo);
+                computeBuffer->Begin();
+                computeBuffer->SetPipeline(compute);
+                computeBuffer->DispatchCompute(computeInfo);
+                computeBuffer->End();
+                computeBuffer->Submit();
 
                 commandBuffer->BeginRenderPass(renderPass);
                 commandBuffer->SetVertexBuffer(vertexBuffer);

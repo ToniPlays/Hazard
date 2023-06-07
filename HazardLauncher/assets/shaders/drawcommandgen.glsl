@@ -16,12 +16,6 @@ struct DrawCommand
     uint    FirstInstance;
 };
 
-layout(push_constant) uniform PushConstants
-{
-    uint64_t Input;
-    uint64_t Output;
-} pushConstants;
-
 layout(set = 0, binding = 1) buffer InDrawCommands { DrawCommand dc[]; } cullIn;
 layout(set = 0, binding = 2) buffer OutDrawCommands { DrawCommand dc[]; } cullOut;
 
