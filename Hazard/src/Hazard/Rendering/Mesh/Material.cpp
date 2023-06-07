@@ -46,6 +46,6 @@ namespace Hazard
         
         m_Params.clear();
         for(auto& member : constant.Members)
-            m_Params[member.Name] = { member.Type, member.Offset };
+            m_Params[member.Name] = { member.Type, member.Offset }; 
     }
 }

@@ -457,7 +457,7 @@ namespace HazardRenderer::Vulkan
 			}
 
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
-			vkCmdDrawIndexedIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
+			vkCmdDrawIndexedIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset * stride, drawCount, stride);
 			});
 	}
 	void VulkanRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
@@ -470,6 +470,13 @@ namespace HazardRenderer::Vulkan
 
 			LocalGroupSize size = info.GroupSize;
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+
+			VkMemoryBarrier barrier = {};
+			barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+			barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+			barrier.dstAccessMask = VK_ACCESS_INDIRECT_COMMAND_READ_BIT;
+			
+			vkCmdPipelineBarrier(instance->m_ActiveCommandBuffer, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, 0, 1, &barrier, 0, nullptr, 0, nullptr);
 			});
 	}
 	void VulkanRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)

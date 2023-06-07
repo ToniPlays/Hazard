@@ -30,10 +30,13 @@ namespace HazardRenderer::Vulkan
 		if(specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
 
-		if (!IsCompatibleWith(m_Shader))
+		if (specs->Usage == PipelineUsage::GraphicsBit)
 		{
-			std::cout << m_Specs.DebugName << " is not compatible with shader" << std::endl;
-			return;
+			if (!IsCompatibleWith(m_Shader))
+			{
+				std::cout << m_Specs.DebugName << " is not compatible with shader" << std::endl;
+				return;
+			}
 		}
 
 		Invalidate();

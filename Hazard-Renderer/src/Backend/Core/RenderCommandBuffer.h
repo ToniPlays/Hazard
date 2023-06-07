@@ -10,7 +10,7 @@
 
 namespace HazardRenderer 
 {
-	using LocalGroupSize = glm::vec3;
+	using LocalGroupSize = glm::uvec3;
 	enum class State { Waiting, Record, Finished, Submit };
     enum class DeviceQueue { GraphicsBit, ComputeBit, TransferBit };
 

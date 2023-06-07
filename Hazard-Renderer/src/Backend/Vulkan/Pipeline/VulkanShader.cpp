@@ -7,6 +7,7 @@
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
 #include "VulkanUniformBuffer.h"
+#include "VulkanArgumentBuffer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
 #include "../RTCore/VulkanTopLevelAS.h"
@@ -125,7 +126,6 @@ namespace HazardRenderer::Vulkan
 			
 			for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
 			{
-
 				for (auto& set : instance->m_DescriptorSets[i])
 				{
 					if (!set.Contains(name)) continue;
@@ -157,9 +157,20 @@ namespace HazardRenderer::Vulkan
 						set.SetBuffer(binding, bufferInfo);
 						break;
 					}
+					case BufferType::Argument:
+					{
+						auto buf = b.As<VulkanArgumentBuffer>();
+
+						VkDescriptorBufferInfo bufferInfo = {};
+						bufferInfo.buffer = buf->GetVulkanBuffer();
+						bufferInfo.offset = 0;
+						bufferInfo.range = VK_WHOLE_SIZE;
+
+						set.SetBuffer(binding, bufferInfo);
+						break;
+					}
 					default: HZR_ASSERT(false, "TODO");
 					}
-
 				}
 			}
 			});

@@ -50,7 +50,7 @@ namespace HazardRenderer::Vulkan
 		VkBufferCreateInfo bufferInfo = {};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		bufferInfo.size = m_Size;
-		bufferInfo.usage = VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+		bufferInfo.usage = VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 		m_BufferAllocation = allocator.AllocateBuffer(bufferInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, m_VulkanBuffer);
@@ -66,8 +66,6 @@ namespace HazardRenderer::Vulkan
 		allocator.UnmapMemory(m_BufferAllocation);
 
 		m_LocalData.Release();
-
-		std::cout << "Argument buffer data written" << std::endl;
 	}
 }
 #endif
