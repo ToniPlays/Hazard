@@ -1,4 +1,3 @@
-
 #include "MetalShader.h"
 #ifdef HZR_INCLUDE_METAL
 
@@ -156,7 +155,16 @@ namespace HazardRenderer::Metal
     }
     void MetalShader::Set(const std::string &name, uint32_t index, Ref<BufferBase> buffer)
     {
-        HZR_ASSERT(false, "TODO");
+        for (auto& [set, descriptor] : m_DescriptorSet)
+        {
+            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER, name);
+            if (!write) continue;
+            
+            Renderer::Submit([write, index, buffer]() mutable {
+                write->BoundValue[index] = buffer;
+            });
+            return;
+        }
     }
     void MetalShader::Set(const std::string &name, Buffer buffer)
     {
@@ -243,6 +251,21 @@ namespace HazardRenderer::Metal
                 writeDescriptor.Buffer.Allocate(writeDescriptor.Size);
                 writeDescriptor.Buffer.ZeroInitialize();
                 writeDescriptor.Flags = constant.UsageFlags;
+
+                descriptorSet.AddWriteDescriptor(writeDescriptor);
+            }
+        }
+        for (auto& [set, buffers] : m_ShaderData.StorageBuffers)
+        {
+            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
+            for (auto& [binding, buffer] : buffers)
+            {
+                MetalWriteDescriptor writeDescriptor = {};
+                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                writeDescriptor.DebugName = buffer.Name;
+                writeDescriptor.Binding = binding;
+                writeDescriptor.ArraySize = 0;
+                writeDescriptor.Flags = buffer.UsageFlags;
 
                 descriptorSet.AddWriteDescriptor(writeDescriptor);
             }

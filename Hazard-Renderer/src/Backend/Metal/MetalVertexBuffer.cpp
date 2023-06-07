@@ -63,8 +63,7 @@ namespace HazardRenderer::Metal
     {
         void* data = m_Buffer->contents();
         memcpy((uint8_t*)data, m_LocalBuffer.Data, m_LocalBuffer.Size);
-        
-        //m_LocalBuffer.Release();
+        m_LocalBuffer.Release();
     }
 
 }

@@ -43,7 +43,15 @@ namespace HazardRenderer::Metal
     }
     void MetalArgumentBuffer::SetData(const BufferCopyRegion& copyRegion)
     {
+        m_LocalBuffer.Release();
+        m_LocalBuffer = Buffer::Copy(copyRegion.Data, copyRegion.Size);
         
+        Ref<MetalArgumentBuffer> instance = this;
+        Renderer::Submit([instance, copyRegion]() mutable {
+            void* data = instance->m_Buffer->contents();
+            memcpy((uint8_t*)data, instance->m_LocalBuffer.Data, copyRegion.Size);
+            instance->m_LocalBuffer.Release();
+        });
     }
 }
 #endif

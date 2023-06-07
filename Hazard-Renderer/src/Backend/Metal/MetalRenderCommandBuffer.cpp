@@ -231,7 +231,8 @@ namespace HazardRenderer::Metal
                 auto buffer = mtlIndexBuffer->GetMetalBuffer();
                 for(uint32_t i = 0; i < drawCount; i++)
                 {
-                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset);
+                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset * stride);
+                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset * stride);
                 }
             }
             else

@@ -2,6 +2,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 #include "MetalUniformBuffer.h"
+#include "MetalArgumentBuffer.h"
 #include "MetalImage2D.h"
 #include "MetalCubemapTexture.h"
 #include "MetalTopLevelAS.h"
@@ -41,6 +42,18 @@ namespace HazardRenderer::Metal
                     case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
                     {
                         auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                        uint32_t flags = descriptor.Flags;
+                        
+                        if(flags & (uint32_t)ShaderStage::Vertex)
+                            encoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        
+                        if(flags & (uint32_t)ShaderStage::Fragment)
+                            encoder->setFragmentBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        break;
+                    }
+                    case MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+                    {
+                        auto buffer = descriptor.BoundValue[0].As<MetalArgumentBuffer>();
                         uint32_t flags = descriptor.Flags;
                         
                         if(flags & (uint32_t)ShaderStage::Vertex)
@@ -106,6 +119,12 @@ namespace HazardRenderer::Metal
                     case MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
                     {
                         auto buffer = descriptor.BoundValue[0].As<MetalUniformBuffer>();
+                        encoder->setBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
+                        break;
+                    }
+                    case MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+                    {
+                        auto buffer = descriptor.BoundValue[0].As<MetalArgumentBuffer>();
                         encoder->setBuffer(buffer->GetMetalBuffer(), 0, descriptor.ActualBinding);
                         break;
                     }

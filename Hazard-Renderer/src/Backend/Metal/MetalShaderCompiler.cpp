@@ -1,3 +1,4 @@
+
 #include "MetalShaderCompiler.h"
 
 #ifdef HZR_INCLUDE_METAL
@@ -120,6 +121,12 @@ namespace HazardRenderer::Metal
             if(id == -1) continue;
             result[range.name].Binding = id;
         }
+        for(auto& buffer : resources.storage_buffers)
+        {
+            int id = compiler.get_automatic_msl_resource_binding(buffer.id);
+            if(id == -1) continue;
+            result[buffer.name].Binding = id;
+        }
         
         for(auto& image : resources.storage_images)
         {
@@ -136,7 +143,6 @@ namespace HazardRenderer::Metal
         for(auto& sampler : resources.sampled_images)
         {
             int id = compiler.get_automatic_msl_resource_binding(sampler.id);
-            auto& type = compiler.get_type(sampler.type_id);
             uint32_t sId = compiler.get_automatic_msl_resource_binding_secondary(sampler.id);
             
             if(id == -1) continue;

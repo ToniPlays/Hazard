@@ -24,10 +24,9 @@ void main()
 {
     DrawCommand object = cullIn.dc[gl_GlobalInvocationID.x];
 
-
     uint indicesToDraw = object.IndexCount;
     uint drawId = atomicAdd(cullOut.dc[0].IndexCount, 1);
-
+    
     cullOut.dc[drawId + 1] = DrawCommand(
         indicesToDraw, 1, 0, 0, gl_GlobalInvocationID.x);
 }
