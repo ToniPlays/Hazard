@@ -10,7 +10,7 @@ namespace Hazard {
 	bool WorldSerializer::SerializeEditor(const std::filesystem::path& file)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_CORE_INFO("Saving editor world {0}", file.string());
+
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		YamlUtils::Serialize(out, "World", "Untitled world");

@@ -17,6 +17,8 @@ namespace HazardRenderer::Vulkan
 
 		void Bind(uint32_t slot = 0) const;
 
+		TextureType GetType() const { return TextureType::CubemapTexture; };
+
 		ImageFormat GetFormat() const override { return m_Format; };
 		uint32_t GetWidth() const override { return m_Width; };
 		uint32_t GetHeight() const override { return m_Height; }

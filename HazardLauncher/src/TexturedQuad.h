@@ -2,16 +2,15 @@
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
-
-#include "vendor/stb_image.h"
+#include "Hazard/RenderContext/TextureFactory.h"
 
 using namespace HazardRenderer;
 
 namespace TexturedQuad {
 
-	//OpenGL : Working
+	//OpenGL : Test
 	//Vulkan : Working
-	//Metal	 : Working
+	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
 
@@ -42,22 +41,19 @@ namespace TexturedQuad {
 		};
 
 		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
+		Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
-		stbi_set_flip_vertically_on_load(true);
-
-		int w, h, channels;
-		stbi_uc* data = stbi_load("assets/textures/csharp.png", &w, &h, &channels, 4);
-
-		VertexBufferCreateInfo vbo = {};
+		BufferCreateInfo vbo = {};
 		vbo.Name = "TriangleVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
+		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		IndexBufferCreateInfo ibo = {};
+		BufferCreateInfo ibo = {};
 		ibo.Name = "TriangleIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
+		ibo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
@@ -72,31 +68,51 @@ namespace TexturedQuad {
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Extent = { (uint32_t)w, (uint32_t)h, 1 };
+		imageInfo.Extent = { header.Width, header.Height, 1 };
 		imageInfo.Format = ImageFormat::RGBA;
-		imageInfo.Data = Buffer(data, w * h * 4);
+		imageInfo.Data = header.ImageData;
 		imageInfo.Usage = ImageUsage::Texture;
 
-		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+		SamplerCreateInfo samplerInfo = {};
+		samplerInfo.DebugName = "ImageSampler";
+		samplerInfo.MinFilter = FilterMode::Linear;
+		samplerInfo.MagFilter = FilterMode::Linear;
+		samplerInfo.Wrapping = ImageWrap::ClampBorder;
+
+		Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
+		Ref<GPUBuffer> indexBuffer = GPUBuffer::Create(&ibo);
 		Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
+		Ref<Sampler> sampler = Sampler::Create(&samplerInfo);
 
-        pipeline->GetShader()->Set("u_Texture", 0, image);
-        
+		header.ImageData.Release();
+
+		DescriptorSetLayout descriptorLayout = {
+			{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D }
+		};
+
+
+		DescriptorSetCreateInfo descriptorInfo = {};
+		descriptorInfo.Set = 0;
+		descriptorInfo.pLayout = &descriptorLayout;
+		
+		Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorInfo);
+		descriptorSet->Write(0, image, sampler, true);
+
 		while (running)
 		{
             auto swapchain = window->GetSwapchain();
             auto commandBuffer = swapchain->GetSwapchainBuffer();
             auto renderPass = swapchain->GetRenderPass();
-            
+
 			Input::Update();
 			window->BeginFrame();
             
 			commandBuffer->BeginRenderPass(renderPass);
-			commandBuffer->SetVertexBuffer(vertexBuffer);
 			commandBuffer->SetPipeline(pipeline);
-			commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
+			commandBuffer->SetDescriptorSet(descriptorSet, 0);
+			commandBuffer->SetVertexBuffer(vertexBuffer);
+			commandBuffer->Draw(indexBuffer->GetSize() / sizeof(uint32_t), indexBuffer);
 			commandBuffer->EndRenderPass();
             
 			Renderer::WaitAndRender();

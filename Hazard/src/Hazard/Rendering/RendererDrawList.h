@@ -5,7 +5,7 @@
 #include "Renderers/WorldRenderer.h"
 #include "Backend/Core/RenderPass.h"
 #include "Backend/Core/Pipeline.h"
-#include "Backend/Core/Buffers.h"
+#include "Backend/Core/GPUBuffer.h"
 #include "Environment/EnvironmentMap.h"
 
 namespace Hazard
@@ -28,8 +28,8 @@ namespace Hazard
 	struct RawMesh
 	{
         std::vector<MeshInstance> Instances;
-		Ref<HazardRenderer::VertexBuffer> VertexBuffer;
-		Ref<HazardRenderer::IndexBuffer> IndexBuffer;
+		Ref<HazardRenderer::GPUBuffer> VertexBuffer;
+		Ref<HazardRenderer::GPUBuffer> IndexBuffer;
         
 		int Flags;
 		size_t IndexCount;
@@ -79,7 +79,7 @@ namespace Hazard
 		GeometryInclude GeometryFlags = Geometry_All;
 	};
 
-    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<HazardRenderer::VertexBuffer*, RawMesh>>;
+    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<HazardRenderer::GPUBuffer*, RawMesh>>;
 
     //Draw list for single world context
 	struct RendererDrawList

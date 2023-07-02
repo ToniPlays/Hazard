@@ -11,14 +11,14 @@
 
 namespace HazardRenderer
 {
-	static std::string GetShaderStageCache(ShaderStage type)
+	static std::string GetShaderStageCache(uint32_t type)
 	{
 		switch (type)
 		{
-		case ShaderStage::Vertex:	return "vert";
-		case ShaderStage::Fragment:	return "frag";
-		case ShaderStage::Compute:	return "comp";
-		case ShaderStage::Geometry:	return "geom";
+		case SHADER_STAGE_VERTEX_BIT:	return "vert";
+		case SHADER_STAGE_FRAGMENT_BIT:	return "frag";
+		case SHADER_STAGE_COMPUTE_BIT:	return "comp";
+		case SHADER_STAGE_GEOMETRY_BIT:	return "geom";
         default:
             HZR_ASSERT(false, "");
             break;
@@ -44,7 +44,7 @@ namespace HazardRenderer
 	}
 
 
-	ShaderData ShaderCompiler::GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries)
+	ShaderData ShaderCompiler::GetShaderResources(const std::unordered_map<uint32_t, Buffer>& binaries)
 	{
 		HZR_PROFILE_FUNCTION();
 		ShaderData result;
@@ -55,7 +55,7 @@ namespace HazardRenderer
 			spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
 			//Check stage inputs
-			ShaderStageData& data = result.Stages[stage];
+			ShaderStageData& data = result.Stages[(uint32_t)stage];
 			for (auto& resource : resources.stage_inputs)
 			{
 				auto& spvType = compiler.get_type(resource.base_type_id);
@@ -167,7 +167,7 @@ namespace HazardRenderer
                     auto& buffer = descriptorSet[binding];
                     buffer.Name = resource.name;
                     buffer.Binding = binding;
-                    buffer.DescriptorSet = set;
+                    buffer.Set = set;
                     buffer.Size = compiler.get_declared_struct_size(spvType);
                     buffer.UsageFlags |= (uint32_t)stage;
                     
@@ -211,13 +211,13 @@ namespace HazardRenderer
 
 				switch (spvType.image.access)
 				{
-				case spv::AccessQualifier::AccessQualifierReadOnly: storageImage.Flags = ShaderResourceFlags_ReadOnly; break;
-				case spv::AccessQualifier::AccessQualifierWriteOnly: storageImage.Flags = ShaderResourceFlags_WriteOnly; break;
-				case spv::AccessQualifier::AccessQualifierReadWrite: storageImage.Flags = ShaderResourceFlags_ReadAndWrite; break;
+				case spv::AccessQualifier::AccessQualifierReadOnly:		storageImage.Flags = SHADER_ACCESS_READ; break;
+				case spv::AccessQualifier::AccessQualifierWriteOnly:	storageImage.Flags = SHADER_ACCESS_WRITE; break;
+				case spv::AccessQualifier::AccessQualifierReadWrite:	storageImage.Flags = SHADER_ACCESS_READ | SHADER_ACCESS_WRITE; break;
                 case spv::AccessQualifier::AccessQualifierMax: break;
                         
 				}
-				storageImage.Flags |= ShaderResourceFlags_WriteOnly;
+				storageImage.Flags |= SHADER_ACCESS_WRITE;
 			}
 
 			//Sort input offsets
@@ -389,13 +389,13 @@ namespace HazardRenderer
 		return size;
 	}
 
-	std::unordered_map<ShaderStage, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)
+	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
 
 		std::string sourceFile = File::ReadFile(path);
-		std::unordered_map<ShaderStage, std::string> result;
+		std::unordered_map<uint32_t, std::string> result;
 
 		const char* typeToken = "#type";
 		size_t endPos = 0;

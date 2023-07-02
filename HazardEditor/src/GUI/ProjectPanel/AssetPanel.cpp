@@ -288,7 +288,6 @@ namespace UI
 				AssetHandle handle;
 				YAML::Node node = YAML::LoadFile(item.string());
 				YamlUtils::Deserialize(node, "UID", handle, INVALID_ASSET_HANDLE);
-				HZR_INFO("Updating file {} ({})", item.string(), handle);
 
 				if (handle == INVALID_ASSET_HANDLE) continue;
 

@@ -35,6 +35,8 @@ namespace UI
 		m_EditorGrid.Invalidate(m_RenderPass);
 
 		m_RaytracingSettings = Application::GetModule<RenderContextManager>().GetWindow().GetContext()->GetDevice()->SupportsRaytracing();
+
+		m_ImageSampler = RenderEngine::GetResources().DefaultImageSampler;
 	}
 	void Viewport::Update()
 	{
@@ -126,7 +128,7 @@ namespace UI
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
-		ImUI::Image(m_FrameBuffer->GetImage(), size);
+		ImUI::Image(m_FrameBuffer->GetImage(), m_ImageSampler, size);
 		if (ImGui::IsItemClicked())
 		{
 			m_DrawSettings = false;

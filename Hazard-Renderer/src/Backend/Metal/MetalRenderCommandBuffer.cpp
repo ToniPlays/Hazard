@@ -167,7 +167,7 @@ namespace HazardRenderer::Metal
             instance->m_RenderEncoder->endEncoding();
         });
     }
-    void MetalRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+    void MetalRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
@@ -231,8 +231,8 @@ namespace HazardRenderer::Metal
                 auto buffer = mtlIndexBuffer->GetMetalBuffer();
                 for(uint32_t i = 0; i < drawCount; i++)
                 {
-                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset * stride);
-                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset * stride);
+                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset);
+                    instance->m_RenderEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, MTL::IndexTypeUInt32, buffer, 0, argBuf, stride * i + offset);
                 }
             }
             else

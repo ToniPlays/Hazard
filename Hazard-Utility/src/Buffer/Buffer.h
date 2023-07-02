@@ -84,7 +84,7 @@ struct Buffer
 	{
 		Buffer buffer;
 		buffer.Allocate(size);
-		memcpy(buffer.Data, (uint8_t*)data + offset, size);
+		buffer.Write((uint8_t*)data + offset, size);
 		return buffer;
 	}
 	static Buffer Copy(const Buffer& source)

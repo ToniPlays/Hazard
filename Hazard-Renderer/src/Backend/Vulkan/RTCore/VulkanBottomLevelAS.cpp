@@ -75,7 +75,7 @@ namespace HazardRenderer::Vulkan
 
 		for (size_t i = 0; i < geometries.size(); i++)
 		{
-			uint32_t primitives = m_Geometries[i].IndexBuffer->GetCount() / 3;
+			uint32_t primitives = m_Geometries[i].IndexBuffer->GetSize() / 3;
 
 			auto& geometry = geometries[i];
 			geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
@@ -171,8 +171,9 @@ namespace HazardRenderer::Vulkan
 
 		for (auto& geometry : m_Geometries) 
 		{
-			Ref<VulkanVertexBuffer> vertexBuffer = geometry.VertexBuffer.As<VulkanVertexBuffer>();
-			Ref<VulkanIndexBuffer> indexBuffer = geometry.IndexBuffer.As<VulkanIndexBuffer>();
+			/*
+			Ref<GPUBuffer> vertexBuffer = geometry.VertexBuffer.As<VulkanVertexBuffer>();
+			Ref<GPUBuffer> indexBuffer = geometry.IndexBuffer.As<VulkanIndexBuffer>();
 
 			uint32_t stride = geometry.VertexBuffer->GetLayout().GetStride();
 			VkAccelerationStructureGeometryTrianglesDataKHR& data = m_GeometryData.emplace_back();
@@ -188,6 +189,7 @@ namespace HazardRenderer::Vulkan
 			data.transformData.deviceAddress = m_TransformBuffer.Address;
 
 			transforms.emplace_back(VkUtils::MatrixToKHR(geometry.Transform));
+			*/
 		}
 
 		VulkanAllocator allocator("VulkanAccelerationStructure");

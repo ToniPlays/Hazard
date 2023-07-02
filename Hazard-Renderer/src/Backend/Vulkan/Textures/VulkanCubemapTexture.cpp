@@ -102,14 +102,10 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
 		auto commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
 
-		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, this);
-
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
-		computeInfo.WaitForCompletion = true;
+		GroupSize size = { m_Width / 32, m_Height / 32, 6 };
 
 		commandBuffer->SetPipeline(generationData.Pipeline);
-		commandBuffer->DispatchCompute(computeInfo);
+		commandBuffer->DispatchCompute(size);
 
 		Ref<VulkanCubemapTexture> instance = this;
 		Renderer::Submit([instance]() mutable {

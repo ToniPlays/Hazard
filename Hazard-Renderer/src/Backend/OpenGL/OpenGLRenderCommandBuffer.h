@@ -28,23 +28,23 @@ namespace HazardRenderer::OpenGL
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		void EndRenderPass() override;
 
-		void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) override;
-		void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) override;
+		void SetVertexBuffer(Ref<GPUBuffer> GPUBuffer, uint32_t binding = 0) override;
+		//void SetUniformBuffers(const Ref<GPUBuffer>* uniformBuffer, uint32_t count) override;
 		void SetPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<IndexBuffer> indexBuffer = nullptr) override {
+		void Draw(size_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override {
 			HZR_ASSERT(false, "Not implemented");
 		};
 
-		void DispatchCompute(const DispatchComputeInfo& computeInfo) override;
+		void DispatchCompute(GroupSize globalGroupSize) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override {};
 		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) {};
 
-		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
-		void TransitionImageLayout(const ImageTransitionInfo& info) override {};
-		void GenerateMipmaps(const GenMipmapsInfo& info) override {};
+		//void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
+		//void TransitionImageLayout(const ImageTransitionInfo& info) override {};
+		//void GenerateMipmaps(const GenMipmapsInfo& info) override {};
 
 	private:
 		uint32_t m_FrameIndex = 0;

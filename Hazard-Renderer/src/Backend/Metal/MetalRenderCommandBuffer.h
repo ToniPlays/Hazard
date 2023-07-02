@@ -33,7 +33,7 @@ namespace HazardRenderer::Metal
         void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
         void EndRenderPass() override;
         
-        void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
+        void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding) override;
         void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) override;
         void SetPipeline(Ref<Pipeline> pipeline) override;
         

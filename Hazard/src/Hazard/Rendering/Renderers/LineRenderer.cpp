@@ -83,17 +83,6 @@ namespace Hazard
 								{ "a_Color",		ShaderDataType::Float4 }
 		};
 
-		if (!m_VertexBuffer) 
-		{
-			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.Name = "RendererLineBatch";
-			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(LineVertex);
-			vertexInfo.Layout = &layout;
-			vertexInfo.Data = nullptr;
-
-			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
-		}
-
 		m_PipelineHandle = AssetManager::GetHandleFromKey("LineShader.glsl.hpack");
 
 		m_RenderPass = renderPass;

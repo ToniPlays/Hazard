@@ -27,11 +27,11 @@ namespace Hazard
 
 		//Mesh3D
 		static void SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent, int id = 0);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id = 0);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, int id = 0);
-		static void SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id = 0);
 
-		static void SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count);
+		static void SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count);
 
 		//Pipeline
 		static void SubmitPipeline(Ref<Pipeline>& pipeline, size_t count);

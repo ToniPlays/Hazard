@@ -67,7 +67,7 @@ namespace HazardRenderer::OpenGL
 			switch (descriptor.Type)
 			{
 			case GL_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-				glBindBufferBase(GL_UNIFORM_BUFFER, descriptor.ActualBinding, descriptor.BoundValue.at(0).As<OpenGLUniformBuffer>()->GetBufferID());
+				//glBindBufferBase(GL_UNIFORM_BUFFER, descriptor.ActualBinding, descriptor.BoundValue.at(0).As<OpenGLUniformBuffer>()->GetBufferID());
 				break;
 			case GL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
 				if (descriptor.Dimension == 3)

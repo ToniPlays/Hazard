@@ -183,10 +183,10 @@ namespace HazardRenderer::Metal
         }
     }
 
-    void MetalShader::Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset)
+    void MetalShader::Set(uint32_t index, Ref<GPUBuffer> buffer, size_t offset)
     {
         Ref<MetalShader> instance = this;
-        Ref<MetalVertexBuffer> buff = buffer.As<MetalVertexBuffer>();
+        Ref<MetalGPUBuffer> buff = buffer.As<GPUBuffer>();
         
         Renderer::Submit([instance, buff, index, offset]() mutable {
             instance->m_InputBuffers[index] = { buff, offset };

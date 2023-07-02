@@ -40,9 +40,10 @@ namespace HazardRenderer::OpenGL
 		HZR_PROFILE_FUNCTION();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	void OpenGLRenderCommandBuffer::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding)
+	void OpenGLRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		Ref<OpenGLVertexBuffer> instance = vertexBuffer.As<OpenGLVertexBuffer>();
 		Renderer::Submit([instance, binding]() {
 			uint32_t vao = instance->GetVAOID();
@@ -54,17 +55,20 @@ namespace HazardRenderer::OpenGL
 			}
 			glVertexArrayVertexBuffer(s_BoundVAO, binding, instance->GetBufferID(), 0, s_CurrentLayout.GetBufferStride(binding));
 			});
+			*/
 	}
-	void OpenGLRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
+	/*
+	void OpenGLRenderCommandBuffer::SetUniformBuffers(const Ref<GPUBuffer>* uniformBuffer, uint32_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 		std::vector<Ref<UniformBuffer>> buffers(count);
-		memcpy(buffers.data(), uniformBuffer, count * sizeof(Ref<UniformBuffer>));
+		memcpy(buffers.data(), uniformBuffer, count * sizeof(Ref<GPUBuffer>));
 		Renderer::Submit([buffers]() {
 			for(auto& buffer : buffers)
 				glBindBufferBase(GL_UNIFORM_BUFFER, buffer->GetBinding(), buffer.As<OpenGLUniformBuffer>()->GetBufferID());
 			});
 	}
+	*/
 	void OpenGLRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -97,9 +101,10 @@ namespace HazardRenderer::OpenGL
 				descriptor.BindResources(shader->GetProgramID(), false);
 			});
 	}
-	void OpenGLRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		Ref<OpenGLIndexBuffer> instance = indexBuffer.As<OpenGLIndexBuffer>();
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
@@ -111,10 +116,12 @@ namespace HazardRenderer::OpenGL
 			}
 			else glDrawArrays(pipeline->GetDrawType(), 0, (GLsizei)count);
 			});
+			*/
 	}
-	void OpenGLRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		Ref<OpenGLIndexBuffer> indexBufferInstance = indexBuffer.As<OpenGLIndexBuffer>();
 		Ref<OpenGLPipeline> pipeline = m_CurrentPipeline;
 
@@ -126,15 +133,16 @@ namespace HazardRenderer::OpenGL
 			}
 			else glDrawArraysInstanced(pipeline->GetDrawType(), 0, (GLsizei)count, instanceCount);
 			});
+			*/
 	}
-	void OpenGLRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
+	void OpenGLRenderCommandBuffer::DispatchCompute(GroupSize globalGroupSize)
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(m_CurrentPipeline->GetSpecifications().Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute");
 		
 		Ref<OpenGLRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, info = computeInfo]() mutable {
+		Renderer::Submit([instance, size = globalGroupSize]() mutable {
 
 			auto shader = instance->m_CurrentPipeline->GetShader().As<OpenGLShader>();
 			glUseProgram(shader->GetProgramID());
@@ -142,19 +150,16 @@ namespace HazardRenderer::OpenGL
 			for (auto& [index, descriptor] : shader->GetDescriptorSets())
 				descriptor.BindResources(shader->GetProgramID(), true);
 
-			LocalGroupSize size = info.GroupSize;
 			glDispatchCompute(size.x, size.y, size.z);
-
-			if (info.WaitForCompletion)
-				glMemoryBarrier(GL_ALL_BARRIER_BITS);
+			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});
 	}
-	void OpenGLRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
+	/*void OpenGLRenderCommandBuffer::InsertMemoryBarrier(const MemoryBarrierInfo& info)
 	{
 		HZR_PROFILE_FUNCTION();
 		Renderer::Submit([info]() mutable {
 			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			});
-	}
+	}*/
 }
 #endif

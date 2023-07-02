@@ -72,9 +72,6 @@ namespace HazardRenderer::Vulkan
 
 			});
 
-		m_Image = VK_NULL_HANDLE;
-		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
-		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
 	}
@@ -96,9 +93,6 @@ namespace HazardRenderer::Vulkan
 			instance->Release_RT();
 			});
 
-		m_Image = VK_NULL_HANDLE;
-		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
-		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
 	}
@@ -126,9 +120,6 @@ namespace HazardRenderer::Vulkan
 		VulkanAllocator allocator("VulkanImage2D");
 		allocator.DestroyImage(m_Image, m_Allocation);
 
-		m_Image = VK_NULL_HANDLE;
-		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
-		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 		m_LayerImageViews.clear();
 		m_PerMipImageView.clear();
 	}
@@ -159,19 +150,14 @@ namespace HazardRenderer::Vulkan
 				flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		}
 		else if (m_Info.Usage == ImageUsage::Texture)
-		{
 			flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-		}
 		else if (m_Info.Usage == ImageUsage::Storage)
-		{
 			flags |= VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-		}
 
 		VkImageAspectFlags aspectMask = m_Info.Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 
 		if (m_Info.Format == ImageFormat::DEPTH24STENCIL8)
 			aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-
 
 		VkImageCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -192,7 +178,6 @@ namespace HazardRenderer::Vulkan
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanImage2D {0}", m_Info.DebugName), m_Image);
 
 		CreateImageView_RT();
-		CreateSampler_RT();
 
 		if (m_Info.Usage == ImageUsage::Storage)
 		{
@@ -279,7 +264,7 @@ namespace HazardRenderer::Vulkan
 
 		VkImageViewCreateInfo viewInfo = {};
 		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		viewInfo.viewType = 1 > 1 ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D; //Change to support arrays
+		viewInfo.viewType = 1 > 1 ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D; //TODO: Change to support arrays
 		viewInfo.format = VkUtils::VulkanImageFormat(m_Info.Format);
 		viewInfo.flags = 0;
 		viewInfo.subresourceRange = {};
@@ -294,43 +279,6 @@ namespace HazardRenderer::Vulkan
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_Info.DebugName), m_ImageDescriptor.imageView);
 
 		m_IsValid = true;
-	}
-	void VulkanImage2D::CreateSampler_RT()
-	{
-		HZR_PROFILE_FUNCTION();
-		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-
-		if (m_ImageDescriptor.sampler)
-			vkDestroySampler(device, m_ImageDescriptor.sampler, nullptr);
-
-		VkSamplerCreateInfo samplerCreateInfo = {};
-		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerCreateInfo.maxAnisotropy = 1.0f;
-
-		if (VkUtils::IsIntegratedBase(m_Info.Format))
-		{
-			samplerCreateInfo.magFilter = VK_FILTER_NEAREST;
-			samplerCreateInfo.minFilter = VK_FILTER_NEAREST;
-			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-		}
-		else
-		{
-			samplerCreateInfo.magFilter = VkUtils::GetVulkanFilter(m_Info.Filters.MagFilter);
-			samplerCreateInfo.minFilter = VkUtils::GetVulkanFilter(m_Info.Filters.MinFilter);
-			samplerCreateInfo.mipmapMode = VkUtils::GetVulkanMipmapMode(m_Info.Filters.MinFilter);
-		}
-
-		samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerCreateInfo.addressModeV = samplerCreateInfo.addressModeU;
-		samplerCreateInfo.addressModeW = samplerCreateInfo.addressModeU;
-		samplerCreateInfo.mipLodBias = 0.0f;
-		samplerCreateInfo.maxAnisotropy = 1.0f;
-		samplerCreateInfo.minLod = 0.0f;
-		samplerCreateInfo.maxLod = 100.0f;
-		samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-
-		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_ImageDescriptor.sampler), "Failed to create VulkanImage2D sampler");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_Info.DebugName), m_ImageDescriptor.sampler);
 	}
 	void VulkanImage2D::GenerateMips_RT()
 	{

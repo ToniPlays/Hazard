@@ -12,9 +12,9 @@ using namespace HazardRenderer;
 namespace UniformBufferTest
 {
 
-	//OpenGL : Working
+	//OpenGL : Test
 	//Vulkan : Working
-	//Metal	 : Working
+	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
 
@@ -45,22 +45,19 @@ namespace UniformBufferTest
 		};
 
 		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/UboTest.glsl", api);
+		Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
-		stbi_set_flip_vertically_on_load(true);
-
-		int w, h, channels;
-		stbi_uc* data = stbi_load("assets/Textures/csharp.png", &w, &h, &channels, 4);
-
-		VertexBufferCreateInfo vbo = {};
+		BufferCreateInfo vbo = {};
 		vbo.Name = "QuadVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
+		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		IndexBufferCreateInfo ibo = {};
+		BufferCreateInfo ibo = {};
 		ibo.Name = "QuadIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
+		ibo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
@@ -75,25 +72,42 @@ namespace UniformBufferTest
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = "Image2D";
-		imageInfo.Extent = { (uint32_t)w, (uint32_t)h, 1 };
+		imageInfo.Extent = { header.Width, header.Height, 1 };
 		imageInfo.Format = ImageFormat::RGBA;
-		imageInfo.Data = Buffer(data, w * h * 4);
+		imageInfo.Data = header.ImageData;
 		imageInfo.Usage = ImageUsage::Texture;
 
-		UniformBufferCreateInfo uboInfo = {};
+		BufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 0;
 		uboInfo.Size = sizeof(glm::mat4);
+		uboInfo.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
+		SamplerCreateInfo samplerInfo = {};
+		samplerInfo.DebugName = "ImageSampler";
+		samplerInfo.MinFilter = FilterMode::Linear;
+		samplerInfo.MagFilter = FilterMode::Linear;
+		samplerInfo.Wrapping = ImageWrap::ClampBorder;
+
+		DescriptorSetLayout descriptorLayout = { 
+			{ "u_Camera",  0, DESCRIPTOR_TYPE_UNIFORM_BUFFER	},
+			{ "u_Texture", 1, DESCRIPTOR_TYPE_SAMPLER_2D		}
+		};
+
+		DescriptorSetCreateInfo descriptorSetSpec = {};
+		descriptorSetSpec.Set = 0;
+		descriptorSetSpec.pLayout = &descriptorLayout;
 
 		{
-			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-			Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+			Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
+			Ref<GPUBuffer> indexBuffer = GPUBuffer::Create(&ibo);
+			Ref<GPUBuffer> camera = GPUBuffer::Create(&uboInfo);
 			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 			Ref<Image2D> image = Image2D::Create(&imageInfo);
-			Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+			Ref<Sampler> sampler = Sampler::Create(&samplerInfo);
+			Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorSetSpec);
 
-			pipeline->GetShader()->Set("u_Texture", 0, image);
+			descriptorSet->Write(0, camera, true);
+			descriptorSet->Write(1, image, sampler, true);
 
 			while (running)
 			{
@@ -114,16 +128,16 @@ namespace UniformBufferTest
 
 				window->BeginFrame();
 				commandBuffer->BeginRenderPass(renderPass);
-				commandBuffer->SetVertexBuffer(vertexBuffer);
 				commandBuffer->SetPipeline(pipeline);
-				commandBuffer->Draw(indexBuffer->GetCount(), indexBuffer);
+				commandBuffer->SetDescriptorSet(descriptorSet, 0);
+				commandBuffer->SetVertexBuffer(vertexBuffer);
+				commandBuffer->Draw(indexBuffer->GetSize() / sizeof(uint32_t), indexBuffer);
 				commandBuffer->EndRenderPass();
 
 				Renderer::WaitAndRender();
 				window->Present();
 			}
 		}
-
 		window->Close();
 	}
 }

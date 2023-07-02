@@ -44,6 +44,7 @@ namespace UI
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
+		Ref<HazardRenderer::Sampler> m_ImageSampler;
         
         Buffer m_MouseClickBuffer;
 

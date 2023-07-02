@@ -60,11 +60,11 @@ namespace Hazard
 	using namespace HazardRenderer;
 	struct RenderResources
 	{
-		Ref<HazardRenderer::UniformBuffer> CameraUniformBuffer;
-		Ref<HazardRenderer::UniformBuffer> UtilityUniformBuffer;
-		Ref<HazardRenderer::UniformBuffer> LightUniformBuffer;
+		Ref<HazardRenderer::GPUBuffer> CameraUniformBuffer;
+		Ref<HazardRenderer::GPUBuffer> UtilityUniformBuffer;
+		Ref<HazardRenderer::GPUBuffer> LightUniformBuffer;
         
-        Ref<HazardRenderer::VertexBuffer> TransformBuffer;
+        Ref<HazardRenderer::GPUBuffer> TransformBuffer;
 
 		AssetHandle SkyboxPipelineHandle;
 		Ref<Material> PBRMaterial;
@@ -75,9 +75,12 @@ namespace Hazard
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
 
+		Ref<HazardRenderer::Sampler> DefaultImageSampler;
+
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
 			{
+				/*
 				UniformBufferCreateInfo utilityUbo = {};
 				utilityUbo.Name = "Utility";
 				utilityUbo.Set = 0;
@@ -92,7 +95,7 @@ namespace Hazard
 				cameraUBO.Binding = 2;
 				cameraUBO.Size = sizeof(CameraData);
 
-				CameraUniformBuffer = UniformBuffer::Create(&cameraUBO);
+				CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
 
 				UniformBufferCreateInfo lightUBO = {};
 				lightUBO.Name = "Lights";
@@ -100,13 +103,13 @@ namespace Hazard
 				lightUBO.Binding = 1;
 				lightUBO.Size = sizeof(LightingData);
 
-				LightUniformBuffer = UniformBuffer::Create(&lightUBO);
+				LightUniformBuffer = GPUBuffer::Create(&lightUBO);
                 
                 VertexBufferCreateInfo transformBufferInfo = {};
                 transformBufferInfo.Name = "TransformStorageBuffer";
                 transformBufferInfo.Size = sizeof(InstanceTransform) * 10240;
                 
-                TransformBuffer = VertexBuffer::Create(&transformBufferInfo);
+                TransformBuffer = GPUBuffer::Create(&transformBufferInfo);
                 
 				//AssetHandle pbrPipeline = AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack");
 				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl.hpack");
@@ -141,6 +144,15 @@ namespace Hazard
 
 				WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 				data.Release();
+				*/
+
+				SamplerCreateInfo samplerInfo = {};
+				samplerInfo.DebugName = "DefaultImageSampler";
+				samplerInfo.MinFilter = FilterMode::Linear;
+				samplerInfo.MagFilter = FilterMode::Linear;
+				samplerInfo.Wrapping = ImageWrap::Repeat;
+
+				DefaultImageSampler = Sampler::Create(&samplerInfo);
 			}
 		}
 	};

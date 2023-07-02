@@ -26,13 +26,13 @@ public:
 
 	void Wait()
 	{
-		//if (m_JobGraph)
-		//	m_JobGraph->Wait();
+		if (m_JobGraph)
+			m_JobGraph->Wait();
 	}
 	T Result()
 	{
-		//if (m_JobGraph)
-		//	return m_JobGraph->GetResult<T>();
+		if (m_JobGraph)
+			return m_JobGraph->GetResult<T>();
 		if (m_Result.Data)
 			return m_Result.Read<T>();
 		return T();

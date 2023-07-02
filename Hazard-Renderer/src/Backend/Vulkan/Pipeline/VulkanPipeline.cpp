@@ -30,15 +30,6 @@ namespace HazardRenderer::Vulkan
 		if(specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
 
-		if (specs->Usage == PipelineUsage::GraphicsBit)
-		{
-			if (!IsCompatibleWith(m_Shader))
-			{
-				std::cout << m_Specs.DebugName << " is not compatible with shader" << std::endl;
-				return;
-			}
-		}
-
 		Invalidate();
 	}
 	VulkanPipeline::~VulkanPipeline()
@@ -62,15 +53,7 @@ namespace HazardRenderer::Vulkan
 	}
 	bool VulkanPipeline::IsCompatibleWith(Ref<Shader> shader) const
 	{
-		auto& data = shader->GetShaderData().Stages;
-		uint32_t stride = m_Layout.GetStride();
-		if (data.size() == 0 && stride == 0) return true;
-		if (data.size() == 0 && stride > 0) return false;
-
-		if ((data.find(ShaderStage::Vertex) == data.end()) && stride == 0 )
-			return true;
-
-		return data.at(ShaderStage::Vertex).Stride == stride;
+		return true;
 	}
 	void VulkanPipeline::Invalidate()
 	{
@@ -84,25 +67,8 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
-		auto descriptorSets = m_Shader->GetVulkanDescriptorSets();
-
 		auto bindingPoint = GetBindingPoint();
-		auto& offsets = m_Shader->GetDynamicOffsets();
-
 		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
-		vkCmdBindDescriptorSets(commandBuffer, bindingPoint, m_PipelineLayout, 0,
-			descriptorSets.size(), descriptorSets.data(), offsets.size(), offsets.data());
-
-		for (auto& [name, range] : m_Shader->GetPushConstantRanges())
-		{
-			vkCmdPushConstants(commandBuffer, m_PipelineLayout, range.Stages, range.Offset, range.Size, range.Buffer.Data);
-		}
-
-		for (auto& [binding, input] : m_Shader->GetInputBufferBindings())
-		{
-			VkBuffer buffer = input.Buffer->GetVulkanBuffer();
-			vkCmdBindVertexBuffers(commandBuffer, binding, 1, &buffer, &input.Offset);
-		}
 	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
 	{
@@ -134,7 +100,7 @@ namespace HazardRenderer::Vulkan
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
-		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto setLayouts = m_Shader->GetDescriptorSetLayouts();
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
@@ -151,7 +117,7 @@ namespace HazardRenderer::Vulkan
 		}
 		VkPipelineLayoutCreateInfo layoutInfo = {};
 		layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		layoutInfo.setLayoutCount = (uint32_t)setLayouts.size();
+		layoutInfo.setLayoutCount = setLayouts.size();
 		layoutInfo.pSetLayouts = setLayouts.data();
 		layoutInfo.pushConstantRangeCount = (uint32_t)vulkanPushConstantRanges.size();
 		layoutInfo.pPushConstantRanges = vulkanPushConstantRanges.data();
@@ -319,7 +285,7 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
 
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
@@ -363,7 +329,7 @@ namespace HazardRenderer::Vulkan
 	{
 		m_ShaderGroups.clear();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto setLayouts = m_Shader->GetAllDescriptorSetLayouts();
+		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

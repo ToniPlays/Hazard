@@ -2,15 +2,32 @@
 
 #include "BufferLayout.h"
 #include "RenderPass.h"
-#include "Buffers.h"
+#include "GPUBuffer.h"
 #include "Shader.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer
 {
-	enum class PipelineUsage { None = 0, GraphicsBit, ComputeBit, Raygen };
-	enum class DrawType { None = 0, Fill, Line, Point };
-	enum class CullMode { None = 0, FrontFace, BackFace };
+	enum class PipelineUsage 
+	{
+		None = 0,
+		GraphicsBit,
+		ComputeBit,
+		Raygen
+	};
+	enum class DrawType 
+	{ 
+		None = 0,
+		Fill,
+		Line,
+		Point 
+	};
+	enum class CullMode 
+	{ 
+		None = 0,
+		FrontFace,
+		BackFace 
+	};
 	enum class DepthOp 
 	{
 		None = 0,
@@ -24,8 +41,6 @@ namespace HazardRenderer
 		Always
 	};
 
-	class RenderPass;
-
 	struct PipelineSpecification
 	{
 		std::string DebugName;
@@ -38,8 +53,9 @@ namespace HazardRenderer
 		size_t ShaderCodeCount = 0;
 		ShaderStageCode* pShaderCode = nullptr;
 
-		float LineWidth = 1.0f;
 		uint32_t MaxRayDepth = 0;
+		float LineWidth = 1.0f;
+
 		bool UseShaderLayout = false;
 		bool DepthTest = true;
 		bool DepthWrite = true;

@@ -414,7 +414,7 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Images
 
-	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image)
+	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler)
 	{
 		using namespace HazardRenderer;
 		static std::unordered_map<Image2D*, ImTextureID> cache;
@@ -436,16 +436,17 @@ namespace Hazard::ImUI
 		{
 			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
 			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
+			const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
 
-			if (!vkImage->IsValid())
+			if (!vkImage->IsValid() && vkSampler->GetVulkanSampler())
 			{
 				auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
 				const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
-				cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(whiteImageDesc.sampler, whiteImageDesc.imageView, whiteImageDesc.imageLayout);
+				cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
 				return cache[white.Raw()];
 			}
 
-			ImTextureID id = ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView, imageInfo.imageLayout);
+			ImTextureID id = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), imageInfo.imageView, imageInfo.imageLayout);
 			cache[image.Raw()] = id;
 			return id;
 		}
@@ -464,9 +465,9 @@ namespace Hazard::ImUI
 
 		return 0;
 	}
-	static void Image(Ref<HazardRenderer::Image2D> image, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
+	static void Image(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
 	{
-		ImGui::Image(GetImageID(image), size, t0, t1);
+		ImGui::Image(GetImageID(image, sampler), size, t0, t1);
 	}
 	static bool TextureSlot(std::string& text, Ref<Hazard::Texture2DAsset> texture)
 	{
@@ -479,15 +480,14 @@ namespace Hazard::ImUI
 		ImGui::SameLine(0, 5);
 
 		if (texture)
-		{
-			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), { size, size });
-		}
+			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), texture->GetSampler(), {size, size});
 		else
 		{
 			ImVec2 pos = ImGui::GetCursorScreenPos();
 			ImGui::GetWindowDrawList()->AddRectFilled(pos, { pos.x + size, pos.y + size }, ImGui::GetColorU32({ 1.0, 1.0, 1.0, 1.0 }));
 			ImUI::ShiftY(36.0f);
 		}
+
 		ImUI::ShiftY(2.0f);
 		return false;
 	}

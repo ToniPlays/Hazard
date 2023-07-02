@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Backend/Core/RTCore/AccelerationStructure.h"
-#include "Backend/Vulkan/Pipeline/VulkanVertexBuffer.h"
-#include "Backend/Vulkan/Pipeline/VulkanIndexBuffer.h"
+#include "Backend/Vulkan/Pipeline/VulkanGPUBuffer.h"
 
 #ifdef HZR_INCLUDE_VULKAN
 

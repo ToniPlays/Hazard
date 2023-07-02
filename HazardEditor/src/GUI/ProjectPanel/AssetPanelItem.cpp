@@ -75,7 +75,10 @@ namespace UI
 
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
-		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+
+
+		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), thumbnailIcon->GetSampler(),
+			ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		if (IsFolder())
 		{

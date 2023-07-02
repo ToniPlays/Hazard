@@ -12,28 +12,27 @@ namespace HazardRenderer
 {
 	class UniformBuffer;
 
-	enum class ShaderStage : uint32_t
+	enum ShaderStageFlags : uint32_t
 	{
-		None = 0,
-		Vertex = BIT(0),
-		Fragment = BIT(1),
-		Compute = BIT(2),
-		Geometry = BIT(3),
-		Raygen = BIT(4),
-		Miss = BIT(5),
-		ClosestHit = BIT(6),
-		AnyHit = BIT(7)
+		SHADER_STAGE_NONE = 0,
+		SHADER_STAGE_VERTEX_BIT = BIT(0),
+		SHADER_STAGE_FRAGMENT_BIT = BIT(1),
+		SHADER_STAGE_COMPUTE_BIT = BIT(2),
+		SHADER_STAGE_GEOMETRY_BIT = BIT(3),
+		SHADER_STAGE_RAYGEN_BIT = BIT(4),
+		SHADER_STAGE_MISS_BIT = BIT(5),
+		SHADER_STAGE_CLOSEST_HIT_BIT = BIT(6),
+		SHADER_STAGE_ANY_HIT_BIT = BIT(7)
 	};
-	enum ShaderResourceFlags : uint32_t
+	enum ResourceAccessFlags : uint32_t
 	{
-		ShaderResourceFlags_ReadOnly = BIT(0),
-		ShaderResourceFlags_WriteOnly = BIT(1),
-		ShaderResourceFlags_ReadAndWrite = BIT(2)
+		SHADER_ACCESS_READ = BIT(0),
+		SHADER_ACCESS_WRITE = BIT(1),
 	};
 
 	struct ShaderStageCode
 	{
-		ShaderStage Stage;
+		uint32_t Stage;
 		uint32_t Size;
 		Buffer ShaderCode;
 	};
@@ -61,14 +60,6 @@ namespace HazardRenderer
 		uint32_t Location;
 		uint32_t UsageFlags;
 	};
-    //Do we need this?
-	/*struct ShaderStageOutput
-	{
-		std::string Name;
-        ShaderDataType Type = ShaderDataType::None;
-		uint32_t Location = 0;
-		uint32_t Size = 0;
-	};*/
 	struct ShaderUniformBufferDescription
 	{
 		std::string Name;
@@ -100,7 +91,7 @@ namespace HazardRenderer
     struct ShaderPushConstantRange
     {
         std::string Name;
-        uint32_t DescriptorSet = 0;
+        uint32_t Set = 0;
         uint32_t Binding = 0;
         size_t Size = 0;
         uint32_t UsageFlags = 0;
@@ -111,13 +102,12 @@ namespace HazardRenderer
 	struct ShaderStageData
 	{
 		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
-		//std::unordered_map<uint32_t, ShaderStageOutput> Outputs;
 		uint32_t Stride = 0;
 	};
 
 	struct ShaderData 
 	{
-		std::unordered_map<ShaderStage, ShaderStageData> Stages;
+		std::unordered_map<uint32_t, ShaderStageData> Stages;
 		//Set Binding, buffer
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderUniformBufferDescription>> UniformsDescriptions;
 		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStageAccelerationStructure>> AccelerationStructures;
@@ -129,28 +119,28 @@ namespace HazardRenderer
 	};
 	namespace Utils
 	{
-		static ShaderStage ShaderStageFromString(const std::string& type) 
+		static ShaderStageFlags ShaderStageFromString(const std::string& type) 
 		{
-			if (type == "Vertex")		return ShaderStage::Vertex;
-			if (type == "Fragment")		return ShaderStage::Fragment;
-			if (type == "Pixel")		return ShaderStage::Fragment;
-			if (type == "Compute")		return ShaderStage::Compute;
-			if (type == "Raygen")		return ShaderStage::Raygen;
-			if (type == "Miss")			return ShaderStage::Miss;
-			if (type == "ClosestHit")	return ShaderStage::ClosestHit;
-			if (type == "AnyHit")		return ShaderStage::AnyHit;
+			if (type == "Vertex")		return SHADER_STAGE_VERTEX_BIT;
+			if (type == "Fragment")		return SHADER_STAGE_FRAGMENT_BIT;
+			if (type == "Pixel")		return SHADER_STAGE_FRAGMENT_BIT;
+			if (type == "Compute")		return SHADER_STAGE_COMPUTE_BIT;
+			if (type == "Raygen")		return SHADER_STAGE_RAYGEN_BIT;
+			if (type == "Miss")			return SHADER_STAGE_MISS_BIT;
+			if (type == "ClosestHit")	return SHADER_STAGE_CLOSEST_HIT_BIT;
+			if (type == "AnyHit")		return SHADER_STAGE_ANY_HIT_BIT;
 			HZR_ASSERT(false, "Undefined shader stage");
-			return ShaderStage::None;
+			return SHADER_STAGE_NONE;
 		}
 		static std::string ShaderStageToString(const uint32_t& type) 
 		{
-			if (type & (uint32_t)ShaderStage::Vertex)		return "Vertex";
-			if (type & (uint32_t)ShaderStage::Fragment)		return "Fragment";
-			if (type & (uint32_t)ShaderStage::Compute)		return "Compute";
-			if (type & (uint32_t)ShaderStage::Raygen)		return "Raygen";
-			if (type & (uint32_t)ShaderStage::Miss)			return "Miss";
-			if (type & (uint32_t)ShaderStage::ClosestHit)	return "ClosestHit";
-			if (type & (uint32_t)ShaderStage::AnyHit)		return "AnyHit";
+			if (type & SHADER_STAGE_VERTEX_BIT)			return "Vertex";
+			if (type & SHADER_STAGE_FRAGMENT_BIT)		return "Fragment";
+			if (type & SHADER_STAGE_COMPUTE_BIT)		return "Compute";
+			if (type & SHADER_STAGE_RAYGEN_BIT)			return "Raygen";
+			if (type & SHADER_STAGE_MISS_BIT)			return "Miss";
+			if (type & SHADER_STAGE_CLOSEST_HIT_BIT)	return "ClosestHit";
+			if (type & SHADER_STAGE_ANY_HIT_BIT)		return "AnyHit";
 			HZR_ASSERT(false, "Undefined shader stage");
 			return "Unknown";
 		}
@@ -195,10 +185,10 @@ namespace HazardRenderer
 		static std::string UsageFlagsToString(const uint32_t& flags) 
 		{
 			std::string result;
-			if (flags & (uint32_t)ShaderStage::Vertex)		result += "Vertex";
-			if (flags & (uint32_t)ShaderStage::Fragment)	result += " Fragment";
-			if (flags & (uint32_t)ShaderStage::Compute)		result += " Compute";
-			if (flags & (uint32_t)ShaderStage::Geometry)	result += " Geometry";
+			if (flags & SHADER_STAGE_VERTEX_BIT)	result += " Vertex";
+			if (flags & SHADER_STAGE_FRAGMENT_BIT)	result += " Fragment";
+			if (flags & SHADER_STAGE_COMPUTE_BIT)	result += " Compute";
+			if (flags & SHADER_STAGE_GEOMETRY_BIT)	result += " Geometry";
 			return result;
 		}
 	}
@@ -212,16 +202,8 @@ namespace HazardRenderer
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
 
-		virtual void Set(const std::string& name, uint32_t index, Ref<Image2D> image) = 0;
-		virtual void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) = 0;
-		virtual void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) = 0;
-		virtual void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) = 0;
-        virtual void Set(const std::string& name, Buffer buffer) = 0;
-        
-        virtual void Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset = 0) = 0;
-
 		virtual const ShaderData& GetShaderData() = 0;
-		virtual std::unordered_map<ShaderStage, Buffer> GetShaderCode() const = 0;
+		virtual std::unordered_map<uint32_t, Buffer> GetShaderCode() const = 0;
 
 		static Ref<Shader> Create(const std::vector<ShaderStageCode>& shaderCode);
 	};

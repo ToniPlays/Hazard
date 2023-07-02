@@ -4,8 +4,15 @@
 #include <functional>
 #include "JobGraph.h"
 #include "GraphStage.h"
+#include "JobException.h"
 
 using JobCallback = std::function<void(Ref<Job>)>;
+
+enum class JobStatus {
+	Failure = -1,
+	Executing = 0,
+	Success = 1
+};
 
 class Job : public RefCount
 {

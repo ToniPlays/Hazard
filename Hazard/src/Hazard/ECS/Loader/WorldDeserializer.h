@@ -27,7 +27,6 @@ namespace Hazard
 		void SetProgressHandler(DeserializerProgressHandler handler)
 		{
 			m_Handler = handler;
-			HZR_CORE_INFO("Progress handler set");
 		}
 
 		template<typename T>

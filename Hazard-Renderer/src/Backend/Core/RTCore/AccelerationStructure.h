@@ -2,7 +2,7 @@
 
 #include "Ref.h"
 #include "BoundingBox.h"
-#include "Backend/Core/Buffers.h"
+#include "Backend/Core/GPUBuffer.h"
 
 namespace HazardRenderer
 {
@@ -22,8 +22,8 @@ namespace HazardRenderer
 	struct AccelerationStructureGeometry
 	{
 		glm::mat4 Transform = glm::mat4(1.0f);
-		Ref<VertexBuffer> VertexBuffer;
-		Ref<IndexBuffer> IndexBuffer;
+		Ref<GPUBuffer> VertexBuffer;
+		Ref<GPUBuffer> IndexBuffer;
 		BoundingBox BoundingBox;
 	};
 	struct AccelerationStructureInstance

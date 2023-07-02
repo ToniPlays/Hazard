@@ -19,6 +19,7 @@ public:
     
     Hazard::ImUI::PanelManager& GetPanelManager() { return m_PanelManager; }
 	Hazard::ImUI::MenuBar& GetMenuBar() { return m_MainMenuBar; }
+	Ref<HazardRenderer::Sampler>& GetImageSampler() { return m_ImageSampler; }
 
 	template<typename T>
 	void SetPanelOpen(bool open) 
@@ -35,6 +36,7 @@ private:
 private:
 	Hazard::ImUI::PanelManager m_PanelManager;
 	EditorGuiPlatform* m_Platform;
+	Ref<HazardRenderer::Sampler> m_ImageSampler;
 	HazardRenderer::Window* m_Window;
 	UI::MainMenuBar m_MainMenuBar;
 };

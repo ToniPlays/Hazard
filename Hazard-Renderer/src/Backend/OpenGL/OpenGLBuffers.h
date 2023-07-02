@@ -6,6 +6,7 @@
 
 namespace HazardRenderer::OpenGL
 {
+	/*
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
@@ -82,5 +83,6 @@ namespace HazardRenderer::OpenGL
 		uint32_t m_CurrentBufferDataIndex = 0;
 		uint32_t m_FrameIndex = 255;
 	};
+	*/
 }
 #endif

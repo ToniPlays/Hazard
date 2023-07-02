@@ -85,12 +85,10 @@ namespace HazardRenderer::OpenGL
 		Ref<CubemapTexture> instance = this;
 		generationData.Pipeline->GetShader()->Set(generationData.OutputImageName, 0, instance);
 
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { m_Width / 32, m_Height / 32, 6 };
-		computeInfo.WaitForCompletion = true;
+		GroupSize size = { m_Width / 32, m_Height / 32, 6 };
 
 		commandBuffer->SetPipeline(generationData.Pipeline);
-		commandBuffer->DispatchCompute(computeInfo);
+		commandBuffer->DispatchCompute(size);
 	}
 }
 #endif

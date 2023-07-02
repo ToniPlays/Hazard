@@ -491,7 +491,7 @@ bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities) {
 
 				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
                     Application::Get().SubmitMainThread([handle, entities]() mutable {
-                        HZR_INFO(handle);
+
 						Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(handle);
                         
                         EnvironmentMapCreateInfo info = {};

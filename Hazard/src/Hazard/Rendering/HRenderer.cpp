@@ -52,72 +52,25 @@ namespace Hazard
 		if (!mesh) return;
         if (!mesh->IsValid()) return;
 
-        //Ref<Material> material = meshComponent.MaterialHandle;
-		//if (!material)
-		//	material = s_Engine->GetResources().PBRMaterial;
-		/*
-        
-		//Fix
-        Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value;
-
-        auto& drawList = s_Engine->GetDrawList();
-        
-        const glm::mat4 t = transform.GetTransformMat4();
-        
-        MeshInstance instance = {};
-        instance.Transform.MRow0 = { t[0][0], t[1][0], t[2][0], t[3][0] };
-        instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
-        instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
-        instance.ID = id;
-        
-        auto& meshList = drawList.MeshList[material.Raw()];
-        auto& data = meshList[mesh->GetVertexBuffer().Raw()];
-        data.VertexBuffer = mesh->GetVertexBuffer();
-        data.IndexBuffer = mesh->GetIndexBuffer();
-        data.IndexCount = data.IndexBuffer->GetCount();
-        
-        data.Instances.push_back(instance);
-
-		*/
-
-		//SubmitShadowMesh(data.Transform, data.VertexBuffer, data.IndexBuffer, pipeline, data.Count);
+		//TODO: Fix this
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, nullptr, pipeline, count, id);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetCount(), id);
+		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetSize() / 3, id);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
         HZR_TIMED_FUNCTION();
-        
-        auto& drawList = s_Engine->GetDrawList();
-        
-        const glm::mat4& t = transform;
-        
-        MeshInstance instance = {};
-        instance.Transform.MRow0 = { t[0][0], t[1][0], t[2][0], t[3][0] };
-        instance.Transform.MRow1 = { t[0][1], t[1][1], t[2][1], t[3][1] };
-        instance.Transform.MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
-        instance.ID = id;
-        
-        auto& meshes = drawList.MeshList[material.Raw()];
-        
-        auto& data = meshes[vertexBuffer.Raw()];
-        data.VertexBuffer = vertexBuffer;
-        data.IndexBuffer = indexBuffer;
-        data.IndexCount = count;
-        
-        meshes[data.VertexBuffer.Raw()].Instances.push_back(instance);
 	}
 
-	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Ref<Material> material, size_t count)
+	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
@@ -152,7 +105,6 @@ namespace Hazard
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{
 		HZR_PROFILE_FUNCTION();
-		//s_Engine->GetDrawList().LightSource.push_back({ transform.GetTransformNoScale(), pointLight.LightColor, pointLight.Intensity });
 	}
 
 	void HRenderer::SubmitBoundingBox(const glm::mat4& transform, const BoundingBox& boundingBox, const Color& color)
@@ -226,16 +178,10 @@ namespace Hazard
 		auto& lineRenderer = s_Engine->GetLineRenderer();
 
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
-		}
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
-		}
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
-		}
 	}
 }

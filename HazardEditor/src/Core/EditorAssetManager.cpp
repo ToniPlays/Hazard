@@ -28,10 +28,10 @@ void EditorAssetManager::LoadEditorAssets()
 
 	std::vector<EditorAsset> texturesToLoad = {
 		{ "Default", "Library/textureBG.png.hpack"},
-		{ "Folder", "Library/folder.png.hpack"},
-		{ "World", "Library/world.png.hpack"},
-		{ "Script", "Library/csharp.png.hpack"},
-		{ "Camera", "Library/camera.png.hpack"},
+		{ "Folder",  "Library/folder.png.hpack"},
+		{ "World",   "Library/world.png.hpack"},
+		{ "Script",  "Library/csharp.png.hpack"},
+		{ "Camera",  "Library/camera.png.hpack"},
 		{ "DirectionalLight", "Library/directionalLight.png.hpack"}
 	};
 	std::vector<EditorAsset> meshesToLoad = {
@@ -76,10 +76,11 @@ void EditorAssetManager::GenerateAndSavePack(Ref<Job> job, std::filesystem::path
 
 	auto packPath = File::GetName(path) + ".hpack";
 	CachedBuffer buffer = EditorAssetManager::GenerateEngineAssetPack(path);
-	if (buffer.GetSize() == 0) return;
+	if (buffer.GetSize() == 0)
+		throw JobException(fmt::format("Asset pack generation failed: {}", path.string()));
 
 	if (!File::WriteBinaryFile(cache.GetCachePath() / packPath, buffer.GetData(), buffer.GetSize()))
-		HZR_WARN("Asset pack saving failed");
+		throw JobException(fmt::format("Asset pack saving failed: {}", path.string()));
 }
 
 void EditorAssetManager::ImportEngineAssets()
@@ -94,6 +95,8 @@ void EditorAssetManager::ImportEngineAssets()
 
 	for (auto& file : File::GetAllInDirectory("res", true))
 	{
+		if (File::IsDirectory(file)) continue;
+
 		auto packPath = File::GetName(file) + ".hpack";
 		if (cache.HasFile(packPath)) continue;
 
@@ -106,6 +109,7 @@ void EditorAssetManager::ImportEngineAssets()
 
 	JobSystem& system = Application::Get().GetJobSystem();
 	JobPromise<bool> promise = system.QueueGraph<bool>(loadingGraph);
+
 	promise.Wait();
 	
 	auto files = File::GetAllInDirectory(cache.GetCachePath(), true);

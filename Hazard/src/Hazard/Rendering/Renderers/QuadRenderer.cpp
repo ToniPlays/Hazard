@@ -173,20 +173,8 @@ namespace Hazard
 				offset += 4;
 			}
 
-			VertexBufferCreateInfo vertexInfo = {};
-			vertexInfo.Name = "Renderer2DQuadBatch";
-			vertexInfo.Size = (uint32_t)m_Data.MaxVertices * sizeof(QuadVertex);
-			vertexInfo.Layout = &layout;
-			vertexInfo.Data = nullptr;
-
-			m_VertexBuffer = VertexBuffer::Create(&vertexInfo);
-
-			IndexBufferCreateInfo indexBuffer = {};
-			indexBuffer.Name = "2DQuadIndexBuffer";
-			indexBuffer.Data = indices;
-			indexBuffer.Size = m_Data.MaxIndices * sizeof(uint32_t);
-
-			m_IndexBuffer = IndexBuffer::Create(&indexBuffer);
+			//m_VertexBuffer = GPUBuffer::Create(nullptr);
+			//m_IndexBuffer = GPUBuffer::Create(nullptr);
 
 			hdelete[] indices;
 		}

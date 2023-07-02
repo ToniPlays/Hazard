@@ -4,6 +4,7 @@
 #include "TextureFactory.h"
 #include "Texture2D.h"
 #include "Hazard/Assets/AssetManager.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/Assets/AssetPack.h"
 #include "Hazard/Core/Application.h"
@@ -34,12 +35,12 @@ namespace Hazard
 		info.Usage = ImageUsage::Texture;
 		info.ClearLocalBuffer = true;
 		info.GenerateMips = false;
-		info.Filters = { (ImageWrap)header.WrapMode, (FilterMode)header.MinFilter, (FilterMode)header.MagFilter };
 
 		Ref<Image2D> image = Image2D::Create(&info);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
+		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
 
-		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer);
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
 		asset->IncRefCount();
 		job->GetStage()->SetResult(asset);
 

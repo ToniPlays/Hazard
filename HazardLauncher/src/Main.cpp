@@ -8,6 +8,7 @@
 #include "RayTracingSphere.h"
 #include "IndirectDrawCPUTest.h"
 #include "IndirectDrawGPUTest.h"
+#include "IndirectSceneTest.h"
 
 #include "JobSystemTest.h"
 
@@ -38,8 +39,9 @@ int main(int argc, char** argv)
 	std::cout << "6. InstancingTest\n";
 	std::cout << "7. IndirectDrawCPUTest\n";
 	std::cout << "8. IndirectDrawGPUTest\n";
-	std::cout << "9. AccelerationStructureTest\n";
-	std::cout << "10. RayTracingSphere\n";
+	std::cout << "9. IndirectSceneTest\n";
+	std::cout << "10. AccelerationStructureTest\n";
+	std::cout << "11. RayTracingSphere\n";
 
 	uint32_t test = 0;
 	std::cin >> test;
@@ -71,9 +73,12 @@ int main(int argc, char** argv)
 		IndirectDrawGPUTest::Run(renderAPI);
 		break;
 	case 9:
-		AccelerationStructureTest::Run(renderAPI);
+		IndirectSceneTest::Run(renderAPI);
 		break;
 	case 10:
+		AccelerationStructureTest::Run(renderAPI);
+		break;
+	case 11:
 		RayTracingSphere::Run(renderAPI);
 		break;
 	}

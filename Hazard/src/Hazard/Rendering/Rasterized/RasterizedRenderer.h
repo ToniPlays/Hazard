@@ -14,8 +14,8 @@ namespace Hazard
         size_t TransformOffset;
         
         Ref<Material> Material;
-        Ref<HazardRenderer::VertexBuffer> VertexBuffer;
-        Ref<HazardRenderer::IndexBuffer> IndexBuffer;
+        Ref<HazardRenderer::GPUBuffer> VertexBuffer;
+        Ref<HazardRenderer::GPUBuffer> IndexBuffer;
     };
 
 	class RasterizedRenderer

@@ -15,7 +15,7 @@ public:
 
 	bool HasFile(const std::filesystem::path& file) 
 	{ 
-		return File::Exists(m_Path / file);
+		return File::Exists(m_Path / file) && !File::IsDirectory(m_Path / file);
 	}
 
 private:

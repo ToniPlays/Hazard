@@ -12,6 +12,7 @@ namespace HazardRenderer
 
 		uint32_t MaxRecursionDepth = 0;
 		uint32_t ShaderGroupHandleSize = 0;
+		uint32_t TimestampPeriod = 0.0f;
 	};
 
 	struct PhysicalDeviceCapabilities

@@ -2,7 +2,7 @@
 
 #version 450 core
 
-layout(binding = 0, rgba8) restrict writeonly uniform image2D o_OutputImage;
+layout(set = 0, binding = 0, rgba8) restrict writeonly uniform image2D o_OutputImage;
 
 layout(local_size_x = 1, local_size_y = 1, local_size_y = 1) in;
 void main()

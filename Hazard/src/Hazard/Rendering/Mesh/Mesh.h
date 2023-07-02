@@ -42,19 +42,19 @@ namespace Hazard
 	public:
 		Mesh() = default;
 		Mesh(MeshCreateInfo* createInfo);
-		Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline);
+		Mesh(Ref<HazardRenderer::GPUBuffer> vertexBuffer, Ref<HazardRenderer::GPUBuffer> indexBuffer, Ref<AssetPointer> pipeline);
 		~Mesh() = default;
 
 		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; }
-		size_t GetIndexCount() { return m_IndexBuffer->GetCount(); }
+		size_t GetIndexCount() { return m_IndexBuffer->GetSize() / 3; }
 
-		Ref<HazardRenderer::VertexBuffer> GetVertexBuffer() { return m_VertexBuffer; }
-		Ref<HazardRenderer::IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
+		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer() { return m_VertexBuffer; }
+		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		const BoundingBox& GetBoundingBox() { return m_BoundingBox; }
 
 	private:
-		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer = nullptr;
-		Ref<HazardRenderer::IndexBuffer> m_IndexBuffer = nullptr;
+		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer = nullptr;
+		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer = nullptr;
 
 		Buffer m_LocalVertexData;
 		Buffer m_LocalIndexData;

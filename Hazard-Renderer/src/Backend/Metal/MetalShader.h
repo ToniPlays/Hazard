@@ -34,7 +34,7 @@ namespace HazardRenderer::Metal
         void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) override;
         void Set(const std::string& name, Buffer buffer) override;
         
-        void Set(uint32_t index, Ref<VertexBuffer> buffer, size_t offset = 0) override;
+        void Set(uint32_t index, Ref<GPUBuffer> buffer, size_t offset = 0) override;
 
         const ShaderData& GetShaderData() override { return m_ShaderData; };
         std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; };

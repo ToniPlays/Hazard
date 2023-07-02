@@ -16,8 +16,8 @@ struct DrawCommand
     uint    FirstInstance;
 };
 
-layout(set = 0, binding = 1) buffer InDrawCommands { DrawCommand dc[]; } cullIn;
-layout(set = 0, binding = 2) buffer OutDrawCommands { DrawCommand dc[]; } cullOut;
+layout(set = 0, binding = 0) buffer InDrawCommands { DrawCommand dc[]; } cullIn;
+layout(set = 0, binding = 1) buffer OutDrawCommands { DrawCommand dc[]; } cullOut;
 
 layout(local_size_x = 1, local_size_y = 1, local_size_y = 1) in;
 void main()

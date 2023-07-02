@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include "Batch.h"
 
-#include "Backend/Core/Buffers.h"
+#include "Backend/Core/GPUBuffer.h"
 #include "Backend/Core/Pipeline.h"
 #include "Hazard/RenderContext/Texture2D.h"
 
@@ -60,8 +60,8 @@ namespace Hazard
 		QuadRendererData m_Data;
 
 		Ref<Material> m_Material;
-		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer;
-		Ref<HazardRenderer::IndexBuffer> m_IndexBuffer;
+		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
+		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 	};
 }

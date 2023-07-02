@@ -17,26 +17,25 @@ namespace Hazard
 
 		BufferLayout layout = Vertex3D::Layout();
 
-		VertexBufferCreateInfo vboInfo = {};
+		BufferCreateInfo vboInfo = {};
 		vboInfo.Name = createInfo->DebugName;
-		vboInfo.Layout = &layout;
 		vboInfo.Size = createInfo->VertexCount;
 		vboInfo.Data = createInfo->pVertices;
 		vboInfo.UsageFlags = createInfo->UsageFlags;
 
-		m_VertexBuffer = VertexBuffer::Create(&vboInfo);
+		//m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
-		IndexBufferCreateInfo iboInfo = {};
+		BufferCreateInfo iboInfo = {};
 		iboInfo.Name = createInfo->DebugName;
 		iboInfo.Size = createInfo->IndexCount;
 		iboInfo.Data = createInfo->pIndices;
 		iboInfo.UsageFlags = createInfo->UsageFlags;
 
-		m_IndexBuffer = IndexBuffer::Create(&iboInfo);
+		//m_IndexBuffer = GPUBuffer::Create(&iboInfo);
 		m_BoundingBox = createInfo->BoundingBox;
 	}
 
-	Mesh::Mesh(Ref<HazardRenderer::VertexBuffer> vertexBuffer, Ref<HazardRenderer::IndexBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer)
+	Mesh::Mesh(Ref<HazardRenderer::GPUBuffer> vertexBuffer, Ref<HazardRenderer::GPUBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 	}

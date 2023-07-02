@@ -15,7 +15,7 @@ namespace AccelerationStructureTest
 {
 
 	//OpenGL : Definitely a big nono
-	//Vulkan : Working
+	//Vulkan : Test
 	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
@@ -49,18 +49,17 @@ namespace AccelerationStructureTest
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		VertexBufferCreateInfo vbo = {};
+		BufferCreateInfo vbo = {};
 		vbo.Name = "QuadVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
-		vbo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
+		vbo.UsageFlags = BUFFER_USAGE_ACCELERATION_STRUCTURE | BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		IndexBufferCreateInfo ibo = {};
+		BufferCreateInfo ibo = {};
 		ibo.Name = "QuadIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
-		ibo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
+		ibo.UsageFlags = BUFFER_USAGE_ACCELERATION_STRUCTURE | BUFFER_USAGE_INDEX_BUFFER_BIT;
 
 		BoundingBox boundingBox = {};
 		boundingBox.Encapsulate({ -0.5f, -0.5f, -0.5f });
@@ -68,8 +67,8 @@ namespace AccelerationStructureTest
 		boundingBox.Encapsulate({  0.5f,  0.5f,  0.5f });
 		boundingBox.Encapsulate({ -0.5f,  0.5f, -0.5f });
 
-		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+		//Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
+		//Ref<GPUBuffer> indexBuffer = GPUBuffer::Create(&ibo);
 
 		Image2DCreateInfo outputImage = {};
 		outputImage.DebugName = "OutputImage";
@@ -80,8 +79,8 @@ namespace AccelerationStructureTest
 		Ref<Image2D> image = Image2D::Create(&outputImage);
 
 		AccelerationStructureGeometry geometry = {};
-		geometry.VertexBuffer = vertexBuffer;
-		geometry.IndexBuffer = indexBuffer;
+		//geometry.VertexBuffer = vertexBuffer;
+		//geometry.IndexBuffer = indexBuffer;
 		geometry.BoundingBox = boundingBox;
 
 		AccelerationStructureCreateInfo bottomAccelInfo = {};
@@ -137,13 +136,11 @@ namespace AccelerationStructureTest
 			glm::mat4 InvProjection;
 		};
 
-		UniformBufferCreateInfo uboInfo = {};
+		BufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 2;
 		uboInfo.Size = sizeof(CameraData);
 
-		Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+		Ref<GPUBuffer> camera = GPUBuffer::Create(&uboInfo);
 
 		while (running)
 		{
@@ -161,11 +158,11 @@ namespace AccelerationStructureTest
 			region.Data = &cameraData;
 			region.Size = sizeof(CameraData);
 
-			camera->SetData(region);
-			commandBuffer->SetUniformBuffers(&camera, 1);
+			//camera->SetData(region);
+			//commandBuffer->SetUniformBuffers(&camera, 1);
 
-			raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
-			raygenPipeline->GetShader()->Set("image", 0, image);
+			//raygenPipeline->GetShader()->Set("topLevelAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
+			//raygenPipeline->GetShader()->Set("image", 0, image);
 
 			TraceRaysInfo rayInfo = {};
 			rayInfo.Extent.Width = outputImage.Extent.Width;
@@ -181,10 +178,10 @@ namespace AccelerationStructureTest
 			imageInfo.SourceLayout = ImageLayout_General;
 			imageInfo.DestLayout = ImageLayout_ShaderReadOnly;
 
-			commandBuffer->TransitionImageLayout(imageInfo);
+			//commandBuffer->TransitionImageLayout(imageInfo);
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 
-			screenPass->GetShader()->Set("u_Image", 0, image);
+			//->GetShader()->Set("u_Image", 0, image);
 
 			commandBuffer->SetPipeline(screenPass);
 			commandBuffer->Draw(6);
@@ -196,7 +193,7 @@ namespace AccelerationStructureTest
 				imageInfo.SourceLayout = ImageLayout_ShaderReadOnly;
 				imageInfo.DestLayout = ImageLayout_General;
 
-				commandBuffer->TransitionImageLayout(imageInfo);
+				//commandBuffer->TransitionImageLayout(imageInfo);
 			}
 
 			Renderer::WaitAndRender();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Buffers.h"
+#include "GPUBuffer.h"
 
 #include <unordered_map>
 #include <string>
@@ -14,16 +14,16 @@ namespace HazardRenderer
 		{
 			return s_UniformBuffers.find(name) != s_UniformBuffers.end();
 		}
-		static void AddUniformBuffer(Ref<UniformBuffer> uniformBuffer) 
+		static void AddUniformBuffer(Ref<GPUBuffer> uniformBuffer)
 		{
-			s_UniformBuffers[uniformBuffer->GetName()] = uniformBuffer;
+			//s_UniformBuffers[uniformBuffer->GetName()] = uniformBuffer;
 		}
-		static Ref<UniformBuffer> GetUniformBuffer(const std::string& name) 
+		static Ref<GPUBuffer> GetUniformBuffer(const std::string& name)
 		{
 			return s_UniformBuffers[name];
 		}
 
 	private:
-		inline static std::unordered_map<std::string, Ref<UniformBuffer>> s_UniformBuffers;
+		inline static std::unordered_map<std::string, Ref<GPUBuffer>> s_UniformBuffers;
 	};
 }

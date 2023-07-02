@@ -41,7 +41,7 @@ namespace Hazard
 		region.Data = &data;
 		region.Size = sizeof(CameraData);
 
-		resources.CameraUniformBuffer->SetData(region);
+		//resources.CameraUniformBuffer->SetData(region);
 		//Setup utility buffer
 
 		UtilityUniformData utils = {};
@@ -51,9 +51,9 @@ namespace Hazard
 		region.Data = &utils;
 		region.Size = sizeof(UtilityUniformData);
 
-		resources.UtilityUniformBuffer->SetData(region);
-		std::vector<Ref<UniformBuffer>> buffers = { resources.CameraUniformBuffer, resources.UtilityUniformBuffer };
-		m_Buffer->SetUniformBuffers(buffers.data(), 2);
+		//resources.UtilityUniformBuffer->SetData(region);
+		std::vector<Ref<GPUBuffer>> buffers = { resources.CameraUniformBuffer, resources.UtilityUniformBuffer };
+		//m_Buffer->SetUniformBuffers(buffers.data(), 2);
 
 	}
 
@@ -70,9 +70,9 @@ namespace Hazard
 			region.Data = &data;
 			region.Size = sizeof(LightingData);
 
-			resources.LightUniformBuffer->SetData(region);
+			//resources.LightUniformBuffer->SetData(region);
 		}
-		m_Buffer->SetUniformBuffers(&resources.LightUniformBuffer, 1);
+		//m_Buffer->SetUniformBuffers(&resources.LightUniformBuffer, 1);
 
 		//Initialize mesh transform data
 
@@ -97,7 +97,7 @@ namespace Hazard
 				region.Size = mesh.Instances.size() * sizeof(MeshInstance);
 				region.Offset = offset;
 
-				resources.TransformBuffer->SetData(region);
+				//resources.TransformBuffer->SetData(region);
 
 				offset += region.Size;
 			}
@@ -147,12 +147,12 @@ namespace Hazard
 				for (auto& [name, texture] : call.Material->GetTextures())
 				{
 					Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(texture);
-					if (texture)
-						shader->Set(name, 0, asset->GetSourceImageAsset()->Value.As<Image2D>());
+					//if (texture)
+						//shader->Set(name, 0, asset->GetSourceImageAsset()->Value.As<Image2D>());
 				}
 
-				shader->Set("u_MaterialConstants", call.Material->GetBuffer());
-				shader->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
+				//shader->Set("u_MaterialConstants", call.Material->GetBuffer());
+				//shader->Set(PerInstance, resources.TransformBuffer, call.TransformOffset);
 
 				m_Buffer->SetPipeline(pipeline);
 				m_Buffer->SetVertexBuffer(call.VertexBuffer);
@@ -170,7 +170,7 @@ namespace Hazard
 		auto material = AssetManager::GetAsset<AssetPointer>(materialHandle)->Value.As<Pipeline>();
 
 		material->SetRenderPass(m_CurrentRenderPass);
-		material->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
+		//material->GetShader()->Set("u_CubeMap", 0, radiance->Value.As<CubemapTexture>());
 		m_Buffer->SetPipeline(material);
 		m_Buffer->Draw(6);
 	}

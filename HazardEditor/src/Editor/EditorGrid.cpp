@@ -62,12 +62,10 @@ namespace Editor
         
         m_Pipeline = Pipeline::Create(&specs);
 
-        UniformBufferCreateInfo uboInfo = {};
+        BufferCreateInfo uboInfo = {};
         uboInfo.Name = "Grid";
-        uboInfo.Set = 2;
-        uboInfo.Binding = 1;
         uboInfo.Size = sizeof(GridData);
 
-        m_GridUniformBuffer = UniformBuffer::Create(&uboInfo);
+        m_GridUniformBuffer = GPUBuffer::Create(&uboInfo);
 	}
 }

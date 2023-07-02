@@ -202,7 +202,7 @@ namespace HazardRenderer::OpenGL
 				bufferInfo.Size = buffer.Size;
 				bufferInfo.Usage = buffer.UsageFlags;
 
-				descriptorSet.GetWriteDescriptor(binding)->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+				//descriptorSet.GetWriteDescriptor(binding)->BoundValue[0] = UniformBuffer::Create(&bufferInfo);
 			}
 		}
 		for (auto& [set, samplers] : m_ShaderData.ImageSamplers)

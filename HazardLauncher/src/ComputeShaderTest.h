@@ -10,9 +10,9 @@ using namespace HazardRenderer;
 
 namespace ComputeShaderTest {
 
-	//OpenGL: Working
+	//OpenGL: Test
 	//Vulkan: Working
-	//Metal : Working
+	//Metal : Test
 	//DX12  : Test
 	//DX11  : Test
 
@@ -41,11 +41,11 @@ namespace ComputeShaderTest {
 			-0.75f, -0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f
 		};
 
-		VertexBufferCreateInfo vbo = {};
+		BufferCreateInfo vbo = {};
 		vbo.Name = "TriangleVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
+		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
 
@@ -75,27 +75,51 @@ namespace ComputeShaderTest {
 		outputImageSpec.Format = ImageFormat::RGBA;
 		outputImageSpec.Usage = ImageUsage::Storage;
 
+		SamplerCreateInfo samplerInfo = {};
+		samplerInfo.DebugName = "ImageSampler";
+		samplerInfo.MinFilter = FilterMode::Linear;
+		samplerInfo.MagFilter = FilterMode::Linear;
+		samplerInfo.Wrapping = ImageWrap::ClampBorder;
+
+		DescriptorSetLayout computeDescriptorLayout = {
+			{ "o_OutputImage", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE }
+		};
+
+		DescriptorSetCreateInfo computeDescriptorSpec = {};
+		computeDescriptorSpec.Set = 0;
+		computeDescriptorSpec.pLayout = &computeDescriptorLayout;
+
+		DescriptorSetLayout descriptorLayout = {
+			{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D }
+		};
+
+		DescriptorSetCreateInfo descriptorSpec = {};
+		descriptorSpec.Set = 0;
+		descriptorSpec.pLayout = &descriptorLayout;
+
 		{
-			Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
-			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+			Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
 			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
 			Ref<Pipeline> compute = Pipeline::Create(&computeSpec);
-			Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit);
+			Ref<Image2D> outputImage = Image2D::Create(&outputImageSpec);
+			Ref<Sampler> sampler = Sampler::Create(&samplerInfo);
+			Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit, 1);
+			Ref<DescriptorSet> computeDescriptorSet = DescriptorSet::Create(&computeDescriptorSpec);
+			Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorSpec);
 
 			//Compute step
 			{
-				DispatchComputeInfo info = {};
-				info.WaitForCompletion = true;
-				info.GroupSize = { 512, 512, 1 };
+				computeDescriptorSet->Write(0, outputImage, sampler);
 
-				compute->GetShader()->Set("o_OutputImage", 0, outputImage);
 				computeBuffer->Begin();
 				computeBuffer->SetPipeline(compute);
-				computeBuffer->DispatchCompute(info);
+				computeBuffer->SetDescriptorSet(computeDescriptorSet, 0);
+				computeBuffer->DispatchCompute({ 512, 512, 1 });
 				computeBuffer->End();
 				computeBuffer->Submit();
 			}
-			pipeline->GetShader()->Set("u_Texture", 0, outputImage);
+
+			descriptorSet->Write(0, outputImage, sampler, true);
 
 			while (running)
 			{
@@ -107,8 +131,9 @@ namespace ComputeShaderTest {
 				window->BeginFrame();
 
 				commandBuffer->BeginRenderPass(renderPass);
-				commandBuffer->SetVertexBuffer(vertexBuffer);
 				commandBuffer->SetPipeline(pipeline);
+				commandBuffer->SetVertexBuffer(vertexBuffer);
+				commandBuffer->SetDescriptorSet(descriptorSet, 0);
 				commandBuffer->Draw(6);
 				commandBuffer->EndRenderPass();
 

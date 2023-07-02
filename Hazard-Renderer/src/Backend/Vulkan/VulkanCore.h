@@ -8,14 +8,12 @@
 #include "VulkanFramebuffer.h"
 
 #include "Pipeline/VulkanRenderPass.h"
-#include "Pipeline/VulkanVertexBuffer.h"
-#include "Pipeline/VulkanIndexBuffer.h"
-#include "Pipeline/VulkanUniformBuffer.h"
-#include "Pipeline/VulkanArgumentBuffer.h"
+#include "Pipeline/VulkanGPUBuffer.h"
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
 
 #include "Textures/VulkanImage2D.h"
+#include "Textures/VulkanSampler.h"
 #include "Textures/VulkanCubemapTexture.h"
 
 #include "RTCore/VulkanTopLevelAS.h"

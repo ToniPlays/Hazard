@@ -39,27 +39,34 @@ namespace HazardRenderer::Vulkan
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		void EndRenderPass() override;
 
-		void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding) override;
-		void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) override;
+		void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding) override;
+		void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) override;
+		void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override;
 		void SetPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) override;
-		void DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<IndexBuffer> indexBuffer = nullptr) override;
+		void Draw(size_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
 
-		void DispatchCompute(const DispatchComputeInfo& computeIno) override;
+		void DispatchCompute(GroupSize globalGroupSize) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
-		void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
+		//BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
 
-		void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
-		void TransitionImageLayout(const ImageTransitionInfo& info) override;
-		void GenerateMipmaps(const GenMipmapsInfo& info) override;
+		//void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
+		//void TransitionImageLayout(const ImageTransitionInfo& info) override;
+		//void GenerateMipmaps(const GenMipmapsInfo& info) override;
 
 		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }
 		VkFence GetFence(uint32_t index) { return m_WaitFences[index]; }
 
+		void GetQueryPoolResults_RT();
+
 	private:
+		void BeginPerformanceQuery_RT();
+		void EndPerformanceQuery_RT();
+
 		void SetState(State state) { m_State = state; }
 
 	private:

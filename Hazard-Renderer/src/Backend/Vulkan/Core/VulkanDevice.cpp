@@ -62,6 +62,7 @@ namespace HazardRenderer::Vulkan
 			deviceInfo.pNext = &features12;
 		}
 
+		features12.drawIndirectCount = true;
 		deviceInfo.pEnabledFeatures = &features;
 
 		if (additionalExtensions.size() > 0)

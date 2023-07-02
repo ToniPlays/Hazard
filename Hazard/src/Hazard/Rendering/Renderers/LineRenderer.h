@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include "Batch.h"
 
-#include "Backend/Core/Buffers.h"
+#include "Backend/Core/GPUBuffer.h"
 #include "Backend/Core/Pipeline.h"
 #include "Hazard/Rendering/Vertices.h"
 
@@ -47,7 +47,7 @@ namespace Hazard
 		LineRendererData m_Data;
 
 		AssetHandle m_PipelineHandle;
-		Ref<HazardRenderer::VertexBuffer> m_VertexBuffer;
+		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 	};
 }

@@ -23,6 +23,7 @@ namespace HazardRenderer::Vulkan
 
 		Buffer ReadPixels(const ImageCopyRegion& region) { return Buffer(); };
 
+		TextureType GetType() const { return TextureType::Image2D; };
 		uint32_t GetWidth() override { return m_Info.Extent.Width; };
 		uint32_t GetHeight() override { return m_Info.Extent.Height; };
 		ImageFormat GetFormat() const override { return m_Info.Format; }
@@ -39,8 +40,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetLayerCount() { return 1; }
 		bool IsValid() 
 		{ 
-			return m_ImageDescriptor.sampler != VK_NULL_HANDLE
-				&& m_ImageDescriptor.imageView != VK_NULL_HANDLE
+			return m_ImageDescriptor.imageView != VK_NULL_HANDLE
 				&& m_ImageDescriptor.imageLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 				&& m_IsValid;
 		}
@@ -54,7 +54,7 @@ namespace HazardRenderer::Vulkan
 	private:
 
 		void CreateImageView_RT();
-		void CreateSampler_RT();
+		//void CreateSampler_RT();
 		void GenerateMips_RT();
 
 	private:

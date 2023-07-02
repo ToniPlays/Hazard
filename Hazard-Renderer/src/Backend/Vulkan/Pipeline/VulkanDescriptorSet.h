@@ -3,8 +3,9 @@
 #include "Backend/Core/Core.h"
 #ifdef HZR_INCLUDE_VULKAN
 
-#include "vulkan/vulkan.h"
+#include "Backend/Core/DescriptorSet.h"
 
+#include "vulkan/vulkan.h"
 #include <unordered_map>
 #include <vector>
 #include <iostream>
@@ -19,51 +20,26 @@ namespace HazardRenderer::Vulkan
 	};
 
 
-	class VulkanDescriptorSet
+	class VulkanDescriptorSet : public DescriptorSet
 	{
 	public:
-		VulkanDescriptorSet() = default;
+		VulkanDescriptorSet(DescriptorSetCreateInfo* createInfo);
+		~VulkanDescriptorSet();
 
-		void SetDebugName(const std::string& name) { m_DebugName = name; }
-		VkDescriptorSet& GetVulkanDescriptorSet() { return m_VkDescriptorSet; }
+		void Write(uint32_t binding, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
+		void Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll = false) override;
+
+		VkDescriptorSet GetVulkanDescriptorSet();
 		VkDescriptorSetLayout& GetLayout() { return m_DescriptorSetLayout; }
 
-		void SetBuffer(uint32_t binding, VkDescriptorBufferInfo info);
-		void SetSampler(uint32_t binding, uint32_t index, VkDescriptorImageInfo info);
-		void SetAccelerationStructure(uint32_t binding, uint32_t index, VkWriteDescriptorSetAccelerationStructureKHR info);
-
-		void ReserveBindings(size_t size)
-		{
-			m_Bindings.reserve(size);
-		}
-		void AddBinding(VkDescriptorSetLayoutBinding binding)
-		{
-			m_Bindings.push_back(binding);
-		}
-		void AddWriteDescriptor(uint32_t binding, const std::string& name, VkWriteDescriptorSet descriptor)
-		{
-			HZR_ASSERT(m_WriteDescriptors.find(binding) == m_WriteDescriptors.end(), "Failed to find binding");
-			m_WriteDescriptors[binding] = { name, descriptor };
-			m_WriteDescriptorNames[name] = binding;
-		}
-		bool Contains(const std::string& name)
-		{
-			return m_WriteDescriptorNames.find(name) != m_WriteDescriptorNames.end();
-		}
-		uint32_t GetIndex(const std::string& name)
-		{
-			return m_WriteDescriptorNames[name];
-		}
-
 		void Invalidate();
+		void Invalidate_RT();
 
 	private:
-		VkDescriptorSet m_VkDescriptorSet;
-		std::unordered_map<uint32_t, WriteDescriptorData> m_WriteDescriptors;
-		std::unordered_map<std::string, uint32_t> m_WriteDescriptorNames;
-		std::vector<VkDescriptorSetLayoutBinding> m_Bindings;
+		uint32_t m_Set;
+		DescriptorSetLayout m_Layout;
+		std::vector<VkDescriptorSet> m_VkDescriptorSet;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
-		std::string m_DebugName;
 	};
 }
 #endif

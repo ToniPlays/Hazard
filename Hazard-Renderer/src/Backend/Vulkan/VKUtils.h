@@ -122,12 +122,15 @@ namespace HazardRenderer::Vulkan::VkUtils
 
 
 	inline static void SetDebugUtilsObjectName(const VkDevice device, const VkObjectType type, const std::string& name, const void* handle) {
+
 		VkDebugUtilsObjectNameInfoEXT nameInfo = {};
 		nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
 		nameInfo.objectType = type;
 		nameInfo.pObjectName = name.c_str();
 		nameInfo.objectHandle = (uint64_t)handle;
 		nameInfo.pNext = VK_NULL_HANDLE;
+
+		fpSetDebugUtilsObjectNameEXT(device, &nameInfo);
 	}
 	static std::string ImageLayoutToString(VkImageLayout layout)
 	{
@@ -160,7 +163,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		return "";
 	}
 
-	static VkImageLayout GetVulkanImageLayout(const ImageLayout& layout)
+	static VkImageLayout GetVulkanImageLayout(ImageLayout layout)
 	{
 		switch (layout)
 		{
@@ -169,7 +172,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_IMAGE_LAYOUT_MAX_ENUM;
 	}
-	static VkFilter GetVulkanFilter(const FilterMode& mode)
+	static VkFilter GetVulkanFilter(FilterMode mode)
 	{
 		switch (mode)
 		{
@@ -180,7 +183,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_FILTER_MAX_ENUM;
 	}
-	static VkSamplerMipmapMode GetVulkanMipmapMode(const FilterMode& mode)
+	static VkSamplerMipmapMode GetVulkanMipmapMode(FilterMode mode)
 	{
 		switch (mode)
 		{
@@ -191,7 +194,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_SAMPLER_MIPMAP_MODE_MAX_ENUM;
 	}
-	static VkAccessFlags GetVulkanAccess(const ImageLayout& layout)
+	static VkAccessFlags GetVulkanAccess(ImageLayout layout)
 	{
 		switch (layout)
 		{
@@ -200,7 +203,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_ACCESS_FLAG_BITS_MAX_ENUM;
 	}
-	static VkAccessFlags GetVulkanStage(const ImageLayout& layout)
+	static VkAccessFlags GetVulkanStage(ImageLayout layout)
 	{
 		switch (layout)
 		{
@@ -209,6 +212,40 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM;
 	}
+	static VkBufferUsageFlags GetUsageFlags(uint32_t flags)
+	{
+		uint32_t result = 0;
+		if (flags & BUFFER_USAGE_VERTEX_BUFFER_BIT)
+			result |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+		if (flags & BUFFER_USAGE_INDEX_BUFFER_BIT)
+			result |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+		if (flags & BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+			result |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		if (flags & BUFFER_USAGE_STORAGE_BUFFER_BIT)
+			result |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+		if (flags & BUFFER_USAGE_INDIRECT_BIT)
+			result |= VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
+		if (flags & BUFFER_USAGE_ACCELERATION_STRUCTURE)
+			result |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR;
+
+		return result;
+	}
+
+	static VkDescriptorType GetDescriptorType(DescriptorType type)
+	{
+		switch (type)
+		{
+		case DESCRIPTOR_TYPE_SAMPLER_2D:				return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		case DESCRIPTOR_TYPE_SAMPLER_CUBE:				return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		case DESCRIPTOR_TYPE_STORAGE_IMAGE:				return VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+		case DESCRIPTOR_TYPE_UNIFORM_BUFFER:			return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		case DESCRIPTOR_TYPE_STORAGE_BUFFER:			return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		case DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE:	return VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+		}
+		HZR_ASSERT(false, "");
+		return VK_DESCRIPTOR_TYPE_MAX_ENUM;
+	}
+
 	VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer);
 	VkTransformMatrixKHR MatrixToKHR(const glm::mat4& matrix);
 }

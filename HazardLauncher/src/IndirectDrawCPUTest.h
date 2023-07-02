@@ -13,7 +13,7 @@ namespace IndirectDrawCPUTest {
 
     //OpenGL: Test
     //Vulkan: Working
-    //Metal : Working
+    //Metal : Test
     //DX12  : Test
     //DX11  : Test
 
@@ -28,10 +28,10 @@ namespace IndirectDrawCPUTest {
         std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
         float vertices[] =
         {
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.2f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.2f, 1.0f,
         };
         uint32_t indices[] = {
             0, 1, 2,
@@ -99,26 +99,29 @@ namespace IndirectDrawCPUTest {
         drawCommands[3].InstanceCount = 1;
         drawCommands[3].VertexOffset = 0;
 
-        VertexBufferCreateInfo vbo = {};
+        BufferCreateInfo vbo = {};
         vbo.Name = "TriangleVBO";
-        vbo.Layout = &layout;
         vbo.Size = sizeof(vertices);
         vbo.Data = &vertices;
+        vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-        VertexBufferCreateInfo instanceBufferSpec = {};
+        BufferCreateInfo instanceBufferSpec = {};
         instanceBufferSpec.Name = "InstanceVBO";
         instanceBufferSpec.Size = sizeof(InstanceTransform) * transforms.size();
         instanceBufferSpec.Data = transforms.data();
+        instanceBufferSpec.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-        IndexBufferCreateInfo ibo = {};
+        BufferCreateInfo ibo = {};
         ibo.Name = "TriangleIBO";
         ibo.Size = sizeof(indices);
         ibo.Data = indices;
+        ibo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-        ArgumentBufferCreateInfo argumentBufferSpec = {};
+        BufferCreateInfo argumentBufferSpec = {};
         argumentBufferSpec.Name = "ArgumentBuffer";
         argumentBufferSpec.Size = sizeof(DrawIndirectIndexedCommand) * drawCommands.size();
         argumentBufferSpec.Data = drawCommands.data();
+        argumentBufferSpec.UsageFlags = BUFFER_USAGE_STORAGE_BUFFER_BIT | BUFFER_USAGE_INDIRECT_BIT;
 
         PipelineSpecification spec = {};
         spec.DebugName = "Pipeline";
@@ -131,19 +134,29 @@ namespace IndirectDrawCPUTest {
         spec.ShaderCodeCount = code.size();
         spec.pShaderCode = code.data();
 
-        UniformBufferCreateInfo uboInfo = {};
+        BufferCreateInfo uboInfo = {};
         uboInfo.Name = "Camera";
-        uboInfo.Set = 0;
-        uboInfo.Binding = 0;
         uboInfo.Size = sizeof(glm::mat4);
+        uboInfo.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
+        DescriptorSetLayout descriptorLayout = {
+            { "u_Camera",  0, DESCRIPTOR_TYPE_UNIFORM_BUFFER	}
+        };
+
+        DescriptorSetCreateInfo descriptorSetSpec = {};
+        descriptorSetSpec.Set = 0;
+        descriptorSetSpec.pLayout = &descriptorLayout;
 
         {
-            Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-            Ref<VertexBuffer> instancedBuffer = VertexBuffer::Create(&instanceBufferSpec);
-            Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
-            Ref<ArgumentBuffer> argumentBuffer = ArgumentBuffer::Create(&argumentBufferSpec);
+            Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
+            Ref<GPUBuffer> instancedBuffer = GPUBuffer::Create(&instanceBufferSpec);
+            Ref<GPUBuffer> indexBuffer = GPUBuffer::Create(&ibo);
+            Ref<GPUBuffer> argumentBuffer = GPUBuffer::Create(&argumentBufferSpec);
             Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-            Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+            Ref<GPUBuffer> camera = GPUBuffer::Create(&uboInfo);
+            Ref<DescriptorSet> descriptor = DescriptorSet::Create(&descriptorSetSpec);
+
+            descriptor->Write(0, camera, true);
         
             while (running)
             {
@@ -164,9 +177,10 @@ namespace IndirectDrawCPUTest {
                 window->BeginFrame();
             
                 commandBuffer->BeginRenderPass(renderPass);
+                commandBuffer->SetPipeline(pipeline);
+                commandBuffer->SetDescriptorSet(descriptor, 0);
                 commandBuffer->SetVertexBuffer(vertexBuffer);
                 commandBuffer->SetVertexBuffer(instancedBuffer, 1);
-                commandBuffer->SetPipeline(pipeline);
                 commandBuffer->DrawIndirect(argumentBuffer, 4, sizeof(DrawIndirectIndexedCommand), 0, indexBuffer);
                 commandBuffer->EndRenderPass();
             

@@ -39,14 +39,14 @@ namespace HazardRenderer::Vulkan
 			for (uint32_t i = 0; i < pCallbackData->objectCount; i++)
 			{
 				const auto& obj = pCallbackData->pObjects[i];
-				labels.append(fmt::format("\t\t- Object[{0}]: name {1}, type {2}, handle: {3:#x}\n", i, obj.pObjectName ? obj.pObjectName : "NULL", VkUtils::VkObjectTypeToString(obj.objectType), obj.objectHandle));
+				objects.append(fmt::format("\t\t- Object[{0}]: name {1}, type {2}, handle: {3:#x}\n", i, obj.pObjectName ? obj.pObjectName : "NULL", VkUtils::VkObjectTypeToString(obj.objectType), obj.objectHandle));
 			}
 		}
 
 		RenderMessage message = {};
 		message.Severity = Severity::Error;
-		message.Description = "Validation error";
-		message.StackTrace = fmt::format("{0} {1}\n\t{2}\n {3} {4}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity), pCallbackData->pMessage, labels, objects);
+		message.Description = fmt::format("{0} {1}", VkUtils::VkDebugUtilsMessageType(messageType), VkUtils::VkDebugUtilsMessageSeverity(messageSeverity));
+		message.StackTrace = fmt::format("\n\t{0}\n {1} {2}", pCallbackData->pMessage, labels, objects);
 
 		Window::SendDebugMessage(message);
 		return VK_FALSE;
@@ -74,6 +74,10 @@ namespace HazardRenderer::Vulkan
 
 	VulkanContext::~VulkanContext()
 	{
+		vkDeviceWaitIdle(m_VulkanDevice->GetVulkanDevice());
+		for (auto& pool : s_Data->DescriptorPools)
+			vkDestroyDescriptorPool(m_VulkanDevice->GetVulkanDevice(), pool, nullptr);
+
 		m_Swapchain->Destroy();
 		vkDestroyPipelineCache(m_VulkanDevice->GetVulkanDevice(), m_PipelineCache, nullptr);
 		m_VulkanDevice->Destroy();
@@ -98,9 +102,7 @@ namespace HazardRenderer::Vulkan
 		instanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 		instanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 		if (info->Logging)
-		{
 			instanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-		}
 
 		VkValidationFeatureEnableEXT enables[] = { VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT };
 		VkValidationFeaturesEXT features = {};
@@ -239,6 +241,7 @@ namespace HazardRenderer::Vulkan
 		VkDescriptorSet set;
 		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &set), "Failed to allocate descriptor set");
 		s_Data->DescriptorPoolAllocationCount[bufferIndex] += allocInfo.descriptorSetCount;
+
 		return set;
 	}
 	void VulkanContext::CreateDescriptorPools()

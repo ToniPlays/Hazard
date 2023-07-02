@@ -44,12 +44,7 @@ namespace Hazard
 		}
 
 		BufferLayout layout = Vertex3D::Layout();
-		VertexBufferCreateInfo vboInfo = {};
-		vboInfo.Name = "C#_Created";
-		vboInfo.Layout = &layout;
-		vboInfo.Size = info->Size;
-		vboInfo.Data = data;
-		Ref<VertexBuffer> buffer = VertexBuffer::Create(&vboInfo);
+		Ref<GPUBuffer> buffer = GPUBuffer::Create(nullptr);
 
 		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Buffer);
 
@@ -64,7 +59,7 @@ namespace Hazard
 	}
 	static void VertexBuffer_Destroy_Native(uint64_t handle) 
 	{
-		Ref<VertexBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
+		Ref<GPUBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
 		buffer->DecRefCount();
 	}
 
@@ -78,11 +73,7 @@ namespace Hazard
 			memcpy(data, dataPtr, info->Size * sizeof(uint32_t));
 		}
 
-		IndexBufferCreateInfo iboInfo = {};
-		iboInfo.Name = "C#_Created";
-		iboInfo.Size = info->Size * sizeof(uint32_t);
-		iboInfo.Data = data;
-		Ref<IndexBuffer> buffer = IndexBuffer::Create(&iboInfo);
+		Ref<GPUBuffer> buffer = GPUBuffer::Create(nullptr);
 
 		Ref<AssetPointer> asset = AssetPointer::Create(buffer, AssetType::Buffer);
 
@@ -97,13 +88,13 @@ namespace Hazard
 	}
 	static void IndexBuffer_Destroy_Native(uint64_t handle)
 	{
-		Ref<IndexBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
+		Ref<GPUBuffer> buffer = AssetManager::GetAsset<AssetPointer>(handle)->Value;
 		buffer->DecRefCount();
 	}
 	static uint64_t Mesh_Create_Native(ManagedMeshInfo* info)
 	{
-		Ref<VertexBuffer> vbo = AssetManager::GetAsset<AssetPointer>(info->VertexBuffer)->Value;
-		Ref<IndexBuffer> ibo = AssetManager::GetAsset<AssetPointer>(info->IndexBuffer)->Value;
+		Ref<GPUBuffer> vbo = AssetManager::GetAsset<AssetPointer>(info->VertexBuffer)->Value;
+		Ref<GPUBuffer> ibo = AssetManager::GetAsset<AssetPointer>(info->IndexBuffer)->Value;
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create(vbo, ibo, nullptr);
 

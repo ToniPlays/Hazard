@@ -70,6 +70,7 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 
 void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings)
 {
+	using namespace HazardRenderer;
 	TextureHeader textureHeader = TextureFactory::LoadTextureFromSourceFile(file, settings.FlipOnLoad);
 
 	Buffer data;
@@ -81,9 +82,9 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 	fileHeader.Dimensions = textureHeader.Dimensions;
 	fileHeader.Channels = textureHeader.Channels;
 	fileHeader.Format = textureHeader.Format;
-	fileHeader.MinFilter = (uint8_t)info.Filters.MinFilter;
-	fileHeader.MagFilter = (uint8_t)info.Filters.MagFilter;
-	fileHeader.WrapMode = (uint8_t)info.Filters.Wrapping;
+	fileHeader.MinFilter = 0; //(uint8_t)info.Filters.MinFilter;
+	fileHeader.MagFilter = 0; //(uint8_t)info.Filters.MagFilter;
+	fileHeader.WrapMode = 0;  //(uint8_t)info.Filters.Wrapping;
 
 	data.Write(&fileHeader, sizeof(TextureFileHeader));
 	data.Write(textureHeader.ImageData.Data, textureHeader.ImageData.Size, sizeof(TextureFileHeader));
@@ -178,7 +179,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 
 	size_t codeSize = 0;
 	for (auto& stage : binaries)
-		codeSize += sizeof(ShaderStage) + sizeof(uint32_t) + stage.ShaderCode.Size;
+		codeSize += sizeof(ShaderStageFlags) + sizeof(uint32_t) + stage.ShaderCode.Size;
 
 	Buffer data;
 	//Header and combined binary size

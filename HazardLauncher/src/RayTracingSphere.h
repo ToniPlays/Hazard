@@ -47,36 +47,8 @@ namespace RayTracingSphere
 		HZR_ASSERT(device->SupportsRaytracing(), "Device does not support Raytracing");
 
 #pragma region Mesh
-		MeshFactory factory = {};
-		factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
-
-		MeshData corvetteData = factory.LoadMeshFromSource("assets/models/c8_corvette_colored.fbx");
-
-		MeshCreateInfo corvetteInfo = {};
-		corvetteInfo.DebugName = "Corvette";
-		corvetteInfo.BoundingBox = corvetteData.BoundingBox;
-		corvetteInfo.VertexCount = corvetteData.Vertices.size() * sizeof(Vertex3D);
-		corvetteInfo.pVertices = corvetteData.Vertices.data();
-		corvetteInfo.IndexCount = corvetteData.Indices.size() * sizeof(uint32_t);
-		corvetteInfo.pIndices = corvetteData.Indices.data();
-		corvetteInfo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
-
-		Ref<Mesh> corvette = Ref<Mesh>::Create(&corvetteInfo);
-
-		MeshData cubeData = factory.LoadMeshFromSource("assets/models/cube.fbx");
-
-		MeshCreateInfo cubeInfo = {};
-		cubeInfo.DebugName = "Cube";
-		cubeInfo.BoundingBox = cubeData.BoundingBox;
-		cubeInfo.VertexCount = cubeData.Vertices.size() * sizeof(Vertex3D);
-		cubeInfo.pVertices = cubeData.Vertices.data();
-		cubeInfo.IndexCount = cubeData.Indices.size() * sizeof(uint32_t);
-		cubeInfo.pIndices = cubeData.Indices.data();
-		cubeInfo.UsageFlags = BUFFER_USAGE_BOTTOM_LEVEL_ACCELERATION_STRUCTURE;
-
-		Ref<Mesh> cube = Ref<Mesh>::Create(&cubeInfo);
-
-
+		Ref<Mesh> corvette = LoadMesh("assets/models/c8_corvette_colored.fbx");
+		Ref<Mesh> cube = LoadMesh("assets/models/cube.fbx");
 #pragma endregion
 #pragma region OutputImage
 		Image2DCreateInfo outputImageSpec = {};
@@ -216,16 +188,14 @@ namespace RayTracingSphere
 		Ref<Pipeline> computePipeline = Pipeline::Create(&computeSpec);
 
 		auto shader = computePipeline->GetShader();
-		shader->Set("o_CubeMap", 0, radianceMap);
-		shader->Set("u_EquirectangularTexture", 0, environmentMapImage);
+		//shader->Set("o_CubeMap", 0, radianceMap);
+		//shader->Set("u_EquirectangularTexture", 0, environmentMapImage);
 
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6 };
-		computeInfo.WaitForCompletion = true;
+		GroupSize size = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6 };
 
 		computeBuffer->Begin();
         computeBuffer->SetPipeline(computePipeline);
-		computeBuffer->DispatchCompute(computeInfo);
+		computeBuffer->DispatchCompute(size);
 		computeBuffer->End();
 		computeBuffer->Submit();
 
@@ -237,13 +207,11 @@ namespace RayTracingSphere
 			glm::mat4 InvView;
 		};
 
-		UniformBufferCreateInfo uboInfo = {};
+		BufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 2;
 		uboInfo.Size = sizeof(CameraData);
 
-		Ref<UniformBuffer> cameraUBO = UniformBuffer::Create(&uboInfo);
+		Ref<GPUBuffer> cameraUBO = GPUBuffer::Create(&uboInfo);
 
 		while (running)
 		{
@@ -264,14 +232,14 @@ namespace RayTracingSphere
 			copyRegion.Data = &cameraData;
 			copyRegion.Size = sizeof(CameraData);
 
-			cameraUBO->SetData(copyRegion);
-			commandBuffer->SetUniformBuffers(&cameraUBO, 1);
+			//cameraUBO->SetData(copyRegion);
+			//commandBuffer->SetUniformBuffers(&cameraUBO, 1);
 
-			raygenPipeline->GetShader()->Set("TLAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
-			raygenPipeline->GetShader()->Set("outputImage", 0, outputImage);
-			raygenPipeline->GetShader()->Set("Vertices", 0, corvette->GetVertexBuffer().As<BufferBase>());
-			raygenPipeline->GetShader()->Set("Indices", 0, corvette->GetIndexBuffer().As<BufferBase>());
-			raygenPipeline->GetShader()->Set("u_EnvironmentMap", 0, radianceMap);
+			//raygenPipeline->GetShader()->Set("TLAS", 0, topLevelAccelerationStructure.As<AccelerationStructure>());
+			//raygenPipeline->GetShader()->Set("outputImage", 0, outputImage);
+			//raygenPipeline->GetShader()->Set("Vertices", 0, corvette->GetVertexBuffer().As<GPUBuffer>());
+			//raygenPipeline->GetShader()->Set("Indices", 0, corvette->GetIndexBuffer().As<GPUBuffer>());
+			//raygenPipeline->GetShader()->Set("u_EnvironmentMap", 0, radianceMap);
 
 			TraceRaysInfo info = {};
 			info.Extent = outputImageSpec.Extent;
@@ -285,11 +253,11 @@ namespace RayTracingSphere
 				imageInfo.SourceLayout = ImageLayout_General;
 				imageInfo.DestLayout = ImageLayout_ShaderReadOnly;
 
-				commandBuffer->TransitionImageLayout(imageInfo);
+				//commandBuffer->TransitionImageLayout(imageInfo);
 			}
 			commandBuffer->BeginRenderPass(window->GetSwapchain()->GetRenderPass());
 
-			screenPass->GetShader()->Set("u_Image", 0, outputImage);
+			//screenPass->GetShader()->Set("u_Image", 0, outputImage);
 			commandBuffer->SetPipeline(screenPass);
 			commandBuffer->Draw(6);
 
@@ -300,7 +268,7 @@ namespace RayTracingSphere
 				imageInfo.SourceLayout = ImageLayout_ShaderReadOnly;
 				imageInfo.DestLayout = ImageLayout_General;
 
-				commandBuffer->TransitionImageLayout(imageInfo);
+				//commandBuffer->TransitionImageLayout(imageInfo);
 			}
 
 			Renderer::WaitAndRender();

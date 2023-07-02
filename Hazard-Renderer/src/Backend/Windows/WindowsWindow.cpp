@@ -25,7 +25,6 @@ namespace HazardRenderer
 
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
-
 		if (!WindowsWindow::s_DebugCallback)
 		{
 			WindowsWindow::s_QueueMessages.push_back(message);

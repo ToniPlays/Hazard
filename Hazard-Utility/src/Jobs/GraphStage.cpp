@@ -28,8 +28,6 @@ void GraphStage::OnJobFinished()
 	m_JobCount--;
 	m_JobCount.notify_all();
     
-    std::cout << "Finished job" << std::endl;
-
 	if (m_JobCount > 0) return;
 	
 	m_JobGraph->OnStageFinished();

@@ -17,7 +17,7 @@ namespace Editor {
 		void SetVisible(bool visible) { m_ShowGrid = visible; }
 
 	private:
-		Ref<HazardRenderer::UniformBuffer> m_GridUniformBuffer;
+		Ref<HazardRenderer::GPUBuffer> m_GridUniformBuffer;
 		Ref<HazardRenderer::Pipeline> m_Pipeline = nullptr;
 		bool m_ShowGrid = true;
 	};

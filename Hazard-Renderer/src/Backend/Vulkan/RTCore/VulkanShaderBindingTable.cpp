@@ -60,7 +60,7 @@ namespace HazardRenderer::Vulkan
             buffer.StridedAddress.stride = limits.ShaderGroupHandleSize;
             buffer.StridedAddress.size = limits.ShaderGroupHandleSize;
 
-            m_BindingTableBuffers[ShaderStage::Raygen] = buffer;
+            m_BindingTableBuffers[SHADER_STAGE_RAYGEN_BIT] = buffer;
         }
         //Miss
         {
@@ -81,7 +81,7 @@ namespace HazardRenderer::Vulkan
             buffer.StridedAddress.stride = limits.ShaderGroupHandleSize;
             buffer.StridedAddress.size = limits.ShaderGroupHandleSize;
 
-            m_BindingTableBuffers[ShaderStage::Miss] = buffer;
+            m_BindingTableBuffers[SHADER_STAGE_MISS_BIT] = buffer;
         }
         //Closest hit
         {
@@ -101,7 +101,7 @@ namespace HazardRenderer::Vulkan
             buffer.StridedAddress.stride = limits.ShaderGroupHandleSize;
             buffer.StridedAddress.size = limits.ShaderGroupHandleSize;
 
-            m_BindingTableBuffers[ShaderStage::ClosestHit] = buffer;
+            m_BindingTableBuffers[SHADER_STAGE_CLOSEST_HIT_BIT] = buffer;
         }
     }
 }

@@ -11,9 +11,9 @@ using namespace HazardRenderer;
 
 namespace TriangleTest {
 
-	//OpenGL: Working
+	//OpenGL: Test
 	//Vulkan: Working
-	//Metal	: Working
+	//Metal	: Test
 	//DX12	: Test
 	//DX11  : Test
 
@@ -26,6 +26,7 @@ namespace TriangleTest {
 		//---------------
         
 		std::cout << "Selected device: " << window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
+
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.8f, 0.0f, 1.0f,
@@ -37,15 +38,14 @@ namespace TriangleTest {
 								{ "a_Color", ShaderDataType::Float4 }
 		};
 
-		VertexBufferCreateInfo vbo = {};
+        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", api);
+
+		BufferCreateInfo vbo = {};
 		vbo.Name = "TriangleVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = vertices;
+		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-        
-        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", api);
-        
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
 		spec.Usage = PipelineUsage::GraphicsBit;
@@ -58,9 +58,8 @@ namespace TriangleTest {
 		spec.pShaderCode = code.data();
 
 		{
-			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
+			Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
 			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-
 
 			while (running)
 			{

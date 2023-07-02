@@ -12,6 +12,7 @@
 
 #include <array>
 #include <Profiling/PerformanceProfiler.h>
+#include <Backend/Vulkan/VulkanRenderCommandBuffer.h>
 
 
 static PFN_vkGetPhysicalDeviceSurfaceSupportKHR fpGetPhysicalDeviceSurfaceSupportKHR;
@@ -291,11 +292,14 @@ namespace HazardRenderer::Vulkan
 		allocInfo.commandBufferCount = 1;
 
 		m_CommandBuffers.resize(m_ImageCount);
-		for (auto& buffer : m_CommandBuffers)
+		for (uint32_t i = 0; auto& buffer : m_CommandBuffers)
 		{
 			VK_CHECK_RESULT(vkCreateCommandPool(device, &poolInfo, nullptr, &buffer.CommandPool), "Failed to create command pool");
 			allocInfo.commandPool = buffer.CommandPool;
 			VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &allocInfo, &buffer.CommandBuffer), "Failed to allocate command buffer");
+			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_COMMAND_BUFFER, fmt::format("Swapchain CommandBuffer {}", i), buffer.CommandBuffer);
+
+			i++;
 		}
 
 		if (!m_Semaphores.RenderComplete || !m_Semaphores.PresentComplete)
@@ -443,6 +447,8 @@ namespace HazardRenderer::Vulkan
 		auto device = m_Device->GetVulkanDevice();
 		vkDeviceWaitIdle(device);
 
+		m_RenderCommandBuffer = nullptr;
+
 		if (m_Swapchain)
 			vkDestroySwapchainKHR(device, m_Swapchain, nullptr);
 		for (auto& image : m_Images)
@@ -479,6 +485,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
+
 		m_CurrentImageIndex = AcquireSwapchainImage();
 		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
 
@@ -488,6 +495,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
+
 		m_RenderCommandBuffer->End();
 		const uint64_t DEFAULT_TIMEOUT = 100000000000;
 
@@ -507,7 +515,7 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
 		VkResult result = vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]);
-		VK_CHECK_RESULT(result, "Wat");
+		VK_CHECK_RESULT(result, "vkQueueSubmit Failed");
 
 		{
 			VkPresentInfoKHR presentInfo = {};
@@ -533,6 +541,8 @@ namespace HazardRenderer::Vulkan
 			m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % imageCount;
 			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
 		}
+
+		m_RenderCommandBuffer.As<VulkanRenderCommandBuffer>()->GetQueryPoolResults_RT();
 	}
 	void VulkanSwapchain::FindImageFormatAndColorSpace()
 	{

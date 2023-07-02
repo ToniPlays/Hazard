@@ -22,9 +22,9 @@ namespace HazardRenderer::Vulkan
 		VulkanShaderBindingTable(ShaderBindingTableCreateInfo* createInfo);
 		~VulkanShaderBindingTable() = default;
 
-		VkStridedDeviceAddressRegionKHR GetRaygenTableAddress() { return m_BindingTableBuffers[ShaderStage::Raygen].StridedAddress; };
-		VkStridedDeviceAddressRegionKHR GetMissTableAddress() { return m_BindingTableBuffers[ShaderStage::Miss].StridedAddress; };
-		VkStridedDeviceAddressRegionKHR GetClosestHitTableAddress() { return m_BindingTableBuffers[ShaderStage::ClosestHit].StridedAddress; };
+		VkStridedDeviceAddressRegionKHR GetRaygenTableAddress() { return m_BindingTableBuffers[SHADER_STAGE_RAYGEN_BIT].StridedAddress; };
+		VkStridedDeviceAddressRegionKHR GetMissTableAddress() { return m_BindingTableBuffers[SHADER_STAGE_MISS_BIT].StridedAddress; };
+		VkStridedDeviceAddressRegionKHR GetClosestHitTableAddress() { return m_BindingTableBuffers[SHADER_STAGE_CLOSEST_HIT_BIT].StridedAddress; };
 		VkStridedDeviceAddressRegionKHR GetCallableTableAddress() { return VkStridedDeviceAddressRegionKHR(); };
 
 
@@ -35,8 +35,7 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		Ref<VulkanPipeline> m_Pipeline;
-
-		std::unordered_map<ShaderStage, BindingTableBuffer> m_BindingTableBuffers;
+		std::unordered_map<uint32_t, BindingTableBuffer> m_BindingTableBuffers;
 
 	};
 }

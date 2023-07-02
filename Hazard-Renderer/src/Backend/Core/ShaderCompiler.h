@@ -8,11 +8,10 @@ namespace HazardRenderer
 	enum class Optimization { None = 0, Memory, Performance };
 
 	struct ShaderStageData;
-	enum class ShaderStage : uint32_t;
 
 	struct ShaderCode
 	{
-		ShaderStage Stage;
+		uint32_t Stage;
 		size_t Length;
 	};
 
@@ -29,7 +28,7 @@ namespace HazardRenderer
 	{
 		RenderAPI Renderer;
 		Optimization Optimization;
-		ShaderStage Stage;
+		uint32_t Stage;
 		std::string Source;
 		std::string Name;
 		size_t DefineCount = 0;
@@ -39,12 +38,12 @@ namespace HazardRenderer
 	class ShaderCompiler
 	{
 	public:
-		static ShaderData GetShaderResources(const std::unordered_map<ShaderStage, Buffer>& binaries);
+		static ShaderData GetShaderResources(const std::unordered_map<uint32_t, Buffer>& binaries);
 		static std::vector<ShaderStageCode> GetShaderBinariesFromSource(const std::filesystem::path& sourceFile, const RenderAPI& api);
 		static size_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
 
 	private:
-		static std::unordered_map<ShaderStage, std::string> GetShaderSources(const std::filesystem::path& path);
+		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);
 		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
         

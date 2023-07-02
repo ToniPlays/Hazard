@@ -10,6 +10,7 @@
 
 namespace HazardRenderer::OpenGL
 {
+	/*
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
 	{
 		switch (type)
@@ -220,5 +221,6 @@ namespace HazardRenderer::OpenGL
 			});
 		m_CurrentBufferDataIndex += m_Size;
 	}
+	*/
 }
 #endif

@@ -6,11 +6,12 @@
 #include "RenderPass.h"
 #include "Pipeline.h"
 #include "Texture.h"
+#include "DescriptorSet.h"
 #include "RTCore/ShaderBindingTable.h"
 
 namespace HazardRenderer 
 {
-	using LocalGroupSize = glm::uvec3;
+	using GroupSize = glm::uvec3;
 	enum class State { Waiting, Record, Finished, Submit };
     enum class DeviceQueue { GraphicsBit, ComputeBit, TransferBit };
 
@@ -43,15 +44,11 @@ namespace HazardRenderer
 		uint32_t FirstInstance = 0;
 	};
 
-	struct DispatchComputeInfo
-	{
-		LocalGroupSize GroupSize;
-		bool WaitForCompletion = false;
-	};
-
+	//Fix this
 	struct MemoryBarrierInfo
 	{
 		MemoryBarrierFlags Flags;
+		
 		Ref<Image2D> Image = nullptr;
 		Ref<CubemapTexture> Cubemap = nullptr;
 	};
@@ -82,7 +79,6 @@ namespace HazardRenderer
 		Ref<AccelerationStructure> AccelerationStructure;
 	};
 
-
 	class RenderCommandBuffer : public RefCount
 	{
 		friend class Pipeline;
@@ -93,30 +89,35 @@ namespace HazardRenderer
 		virtual void End() = 0;
 		virtual void Submit() = 0;
         
-        
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
 		virtual void EndRenderPass() = 0;
 
         //Pipeline resources
-		virtual void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer, uint32_t binding = 0) = 0;
-		virtual void SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count) = 0;
+		virtual void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding = 0) = 0;
+		virtual void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) = 0;
+		virtual void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) = 0;
 		virtual void SetPipeline(Ref<Pipeline> pipeline) = 0;
 
         //Draw
-		virtual void Draw(size_t count, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-		virtual void DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-        virtual void DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<IndexBuffer> indexBuffer = nullptr) = 0;
-        
+		virtual void Draw(size_t count, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
+		virtual void DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
+        virtual void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
+		virtual void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
         //Compute
-		virtual void DispatchCompute(const DispatchComputeInfo& computeInfo) = 0;
+		virtual void DispatchCompute(GroupSize GlobalGroupSize) = 0;
 		virtual void TraceRays(const TraceRaysInfo& traceRaysInfo) = 0;
 
         //Barriers
-		virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
-        //Resource transitions
-		virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;
-		virtual void GenerateMipmaps(const GenMipmapsInfo& info) = 0;
-		virtual void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) = 0;
+		//virtual void InsertMemoryBarrier(const MemoryBarrierInfo& info) = 0;
+        
+		//Resource transitions
+		//virtual void TransitionImageLayout(const ImageTransitionInfo& info) = 0;
+		//virtual void GenerateMipmaps(const GenMipmapsInfo& info) = 0;
+		//virtual void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) = 0;
+
+		//Statistics
+		
+		
 
 		virtual uint32_t GetFrameIndex() = 0;
 		virtual bool IsRecording() = 0;

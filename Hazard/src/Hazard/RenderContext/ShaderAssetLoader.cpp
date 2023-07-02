@@ -23,7 +23,7 @@ namespace Hazard
 		while (readBuffer.Available())
 		{
 			ShaderStageCode code = {};
-			code.Stage = (ShaderStage)readBuffer.Read<uint32_t>();
+			code.Stage = readBuffer.Read<uint32_t>();
 			code.Size = readBuffer.Read<uint32_t>();
 			code.ShaderCode = readBuffer.Read<Buffer>(code.Size);
 			shaderAsset->ShaderCode.push_back(code);

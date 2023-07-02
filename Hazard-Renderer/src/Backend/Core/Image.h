@@ -8,7 +8,6 @@ namespace HazardRenderer
 	enum class TextureType 
 	{
 		Image2D,
-		Texture2D,
 		CubemapTexture
 	};
 
@@ -45,6 +44,8 @@ namespace HazardRenderer
 
 		virtual void Invalidate() = 0;
 		virtual void Release() = 0;
+
+		virtual TextureType GetType() const = 0;
 
 		virtual uint32_t GetWidth() = 0;
 		virtual uint32_t GetHeight() = 0;

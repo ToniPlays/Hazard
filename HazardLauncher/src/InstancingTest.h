@@ -10,9 +10,9 @@ using namespace HazardRenderer;
 
 namespace InstancingTest {
 
-	//OpenGL : Working
-	//Vulkan : Working
-	//Metal	 : Working
+	//OpenGL : Test
+	//Vulkan : Test
+	//Metal	 : Test
 	//DX12	 : Test
 	//DX11	 : Test
 
@@ -81,21 +81,23 @@ namespace InstancingTest {
 			transforms[3].MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
 		}
 
-		VertexBufferCreateInfo vbo = {};
+		BufferCreateInfo vbo = {};
 		vbo.Name = "TriangleVBO";
-		vbo.Layout = &layout;
 		vbo.Size = sizeof(vertices);
 		vbo.Data = &vertices;
+		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		VertexBufferCreateInfo instanceBufferSpec = {};
+		BufferCreateInfo instanceBufferSpec = {};
 		instanceBufferSpec.Name = "InstanceVBO";
 		instanceBufferSpec.Size = sizeof(InstanceTransform) * transforms.size();
 		instanceBufferSpec.Data = transforms.data();
+		instanceBufferSpec.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		IndexBufferCreateInfo ibo = {};
+		BufferCreateInfo ibo = {};
 		ibo.Name = "TriangleIBO";
 		ibo.Size = sizeof(indices);
 		ibo.Data = indices;
+		ibo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Pipeline";
@@ -108,18 +110,28 @@ namespace InstancingTest {
 		spec.ShaderCodeCount = code.size();
 		spec.pShaderCode = code.data();
 
-		UniformBufferCreateInfo uboInfo = {};
+		BufferCreateInfo uboInfo = {};
 		uboInfo.Name = "Camera";
-		uboInfo.Set = 0;
-		uboInfo.Binding = 0;
 		uboInfo.Size = sizeof(glm::mat4);
+		uboInfo.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
+		DescriptorSetLayout descriptorLayout = {
+			{ "u_Camera",  0, DESCRIPTOR_TYPE_UNIFORM_BUFFER	}
+		};
+
+		DescriptorSetCreateInfo descriptorSetSpec = {};
+		descriptorSetSpec.Set = 0;
+		descriptorSetSpec.pLayout = &descriptorLayout;
 
 		{
-			Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(&vbo);
-			Ref<VertexBuffer> instancedBuffer = VertexBuffer::Create(&instanceBufferSpec);
-			Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(&ibo);
+			Ref<GPUBuffer> vertexBuffer = GPUBuffer::Create(&vbo);
+			Ref<GPUBuffer> instancedBuffer = GPUBuffer::Create(&instanceBufferSpec);
+			Ref<GPUBuffer> indexBuffer = GPUBuffer::Create(&ibo);
 			Ref<Pipeline> pipeline = Pipeline::Create(&spec);
-			Ref<UniformBuffer> camera = UniformBuffer::Create(&uboInfo);
+			Ref<GPUBuffer> camera = GPUBuffer::Create(&uboInfo);
+			Ref<DescriptorSet> descriptor = DescriptorSet::Create(&descriptorSetSpec);
+
+			descriptor->Write(0, camera, true);
 
 			while (running)
 			{
@@ -140,10 +152,11 @@ namespace InstancingTest {
 				window->BeginFrame();
 
 				commandBuffer->BeginRenderPass(renderPass);
+				commandBuffer->SetPipeline(pipeline);
+				commandBuffer->SetDescriptorSet(descriptor, 0);
 				commandBuffer->SetVertexBuffer(vertexBuffer);
 				commandBuffer->SetVertexBuffer(instancedBuffer, 1);
-				commandBuffer->SetPipeline(pipeline);
-				commandBuffer->DrawInstanced(indexBuffer->GetCount(), 4, indexBuffer);
+				commandBuffer->DrawInstanced(indexBuffer->GetSize() / sizeof(uint32_t), 4, indexBuffer);
 				commandBuffer->EndRenderPass();
 
 				Renderer::WaitAndRender();

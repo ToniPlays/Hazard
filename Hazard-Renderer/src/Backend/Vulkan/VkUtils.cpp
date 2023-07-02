@@ -244,21 +244,21 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		VkShaderStageFlags flags = 0;
 
-		if (stage & (uint32_t)ShaderStage::Vertex)
+		if (stage & SHADER_STAGE_VERTEX_BIT)
 			flags |= VK_SHADER_STAGE_VERTEX_BIT;
-		if (stage & (uint32_t)ShaderStage::Fragment)
+		if (stage & SHADER_STAGE_FRAGMENT_BIT)
 			flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-		if (stage & (uint32_t)ShaderStage::Geometry)
+		if (stage & SHADER_STAGE_GEOMETRY_BIT)
 			flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-		if (stage & (uint32_t)ShaderStage::Compute)
+		if (stage & SHADER_STAGE_COMPUTE_BIT)
 			flags |= VK_SHADER_STAGE_COMPUTE_BIT;
-		if (stage & (uint32_t)ShaderStage::Raygen)
+		if (stage & SHADER_STAGE_RAYGEN_BIT)
 			flags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-		if (stage & (uint32_t)ShaderStage::Miss)
+		if (stage & SHADER_STAGE_MISS_BIT)
 			flags |= VK_SHADER_STAGE_MISS_BIT_KHR;
-		if (stage & (uint32_t)ShaderStage::ClosestHit)
+		if (stage & SHADER_STAGE_CLOSEST_HIT_BIT)
 			flags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
-		if (stage & (uint32_t)ShaderStage::AnyHit)
+		if (stage & SHADER_STAGE_ANY_HIT_BIT)
 			flags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
 
 		return flags;

@@ -49,13 +49,11 @@ namespace Hazard
         //Prepare shader
         {
             auto shader = computePipeline->GetShader();
-            shader->Set("o_CubeMap", 0, radianceMap);
-            shader->Set("u_EquirectangularTexture", 0, image);
+            //shader->Set("o_CubeMap", 0, radianceMap);
+            //shader->Set("u_EquirectangularTexture", 0, image);
         }
 
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6};
-		computeInfo.WaitForCompletion = true;
+		GroupSize size = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6};
 
 		ImageTransitionInfo shaderLayout = {};
 		shaderLayout.Cubemap = radianceMap;
@@ -68,12 +66,12 @@ namespace Hazard
         //Command buffer recording
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(computePipeline);
-		computeBuffer->DispatchCompute(computeInfo);
+		computeBuffer->DispatchCompute(size);
 		computeBuffer->End();
 		computeBuffer->Submit();
 
 		graphicsBuffer->Begin();
-		graphicsBuffer->GenerateMipmaps(mipmapsInfo);
+		//graphicsBuffer->GenerateMipmaps(mipmapsInfo);
 		graphicsBuffer->End();
 		graphicsBuffer->Submit();
 
@@ -100,14 +98,12 @@ namespace Hazard
 
         {
             auto shader = irradiancePipeline->GetShader();
-            shader->Set("o_IrradianceMap", 0, irradianceMap);
-            shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
-            shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
+            //shader->Set("o_IrradianceMap", 0, irradianceMap);
+            //shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
+            //shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
         }
 
-		DispatchComputeInfo computeInfo = {};
-		computeInfo.GroupSize = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
-		computeInfo.WaitForCompletion = true;
+		GroupSize size = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
 
 		GenMipmapsInfo mipmapInfo = {};
 		mipmapInfo.Cubemap = irradianceMap;
@@ -117,12 +113,12 @@ namespace Hazard
 
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(irradiancePipeline);
-		computeBuffer->DispatchCompute(computeInfo);
+		computeBuffer->DispatchCompute(size);
 		computeBuffer->End();
 		computeBuffer->Submit();
 
 		graphicsBuffer->Begin();
-		graphicsBuffer->GenerateMipmaps(mipmapInfo);
+		//graphicsBuffer->GenerateMipmaps(mipmapInfo);
 		graphicsBuffer->End();
 		graphicsBuffer->Submit();
 

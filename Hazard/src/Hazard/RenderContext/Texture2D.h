@@ -6,14 +6,18 @@
 namespace Hazard
 {
 	//Texture contains texture atlas coords, selected from a source image
-	class Texture2DAsset : public Asset 
+	class Texture2DAsset : public Asset
 	{
 	public:
-		Texture2DAsset(Ref<AssetPointer> sourceImage) : m_SourceImage2D(sourceImage) {};
+		Texture2DAsset(Ref<AssetPointer> sourceImage, Ref<HazardRenderer::Sampler> sampler) 
+			: m_SourceImage2D(sourceImage), m_ImageSampler(sampler) {};
+
 		~Texture2DAsset() {}
 		Ref<AssetPointer> GetSourceImageAsset() const { return m_SourceImage2D; }
+		Ref<HazardRenderer::Sampler> GetSampler() const { return m_ImageSampler; }
 
 	private:
 		Ref<AssetPointer> m_SourceImage2D = nullptr;
+		Ref<HazardRenderer::Sampler> m_ImageSampler = nullptr;
 	};
 }

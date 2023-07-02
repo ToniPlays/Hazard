@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Hazard.h"
+#include "Hazard/Rendering/Mesh/MeshFactory.h"
 #include "HazardRendererCore.h"
 #include <Color.h>
 
@@ -46,4 +48,23 @@ static Window* CreateTestWindow(const char* title, RenderAPI api, bool* running)
 	renderInfo.pWindows = &windowInfo;
 
 	return Window::Create(&renderInfo);
+}
+static Ref<Hazard::Mesh> LoadMesh(const std::string& filePath)
+{
+	using namespace Hazard;
+
+	MeshFactory factory = {};
+	factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
+
+	MeshData meshData = factory.LoadMeshFromSource(filePath);
+
+	MeshCreateInfo info = {};
+	info.DebugName = File::GetName(filePath);
+	info.BoundingBox = meshData.BoundingBox;
+	info.VertexCount = meshData.Vertices.size() * sizeof(Vertex3D);
+	info.pVertices = meshData.Vertices.data();
+	info.IndexCount = meshData.Indices.size() * sizeof(uint32_t);
+	info.pIndices = meshData.Indices.data();
+	
+	return Ref<Mesh>::Create(&info);
 }

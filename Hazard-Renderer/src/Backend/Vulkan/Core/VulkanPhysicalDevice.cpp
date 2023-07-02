@@ -123,6 +123,7 @@ namespace HazardRenderer::Vulkan
 		m_Limits.MaxTextureUnits = m_Properties.limits.maxPerStageDescriptorSampledImages;
 		m_Limits.MaxFrameBufferSize.x = m_Properties.limits.maxFramebufferWidth;
 		m_Limits.MaxFrameBufferSize.y = m_Properties.limits.maxFramebufferHeight;
+		m_Limits.TimestampPeriod = m_Properties.limits.timestampPeriod;
 
 		if (SupportsRaytracing())
 		{

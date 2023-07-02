@@ -187,9 +187,9 @@ namespace UI
 		YamlUtils::Serialize(out, "UID", settings.Handle);
 		YamlUtils::Serialize(out, "Type", AssetType::Image);
 		YamlUtils::Map(out, "Importer", [&]() {
-			YamlUtils::Serialize(out, "WrapMode", (uint32_t)info.Filters.Wrapping);
-			YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
-			YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
+			//YamlUtils::Serialize(out, "WrapMode", (uint32_t)info.Filters.Wrapping);
+			//YamlUtils::Serialize(out, "MinFilter", (uint32_t)info.Filters.MinFilter);
+			//YamlUtils::Serialize(out, "MagFilter", (uint32_t)info.Filters.MagFilter);
 			YamlUtils::Serialize(out, "Mipmaps", settings.GenerateMips);
 			YamlUtils::Serialize(out, "FlipOnLoad", settings.FlipOnLoad);
 			});
@@ -206,7 +206,7 @@ namespace UI
 		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 
 		Image2DCreateInfo info = {};
-		info.Filters = { settings.Wrapping, settings.MinFilter, settings.MagFilter };
+		//info.Filters = { settings.Wrapping, settings.MinFilter, settings.MagFilter };
 		info.GenerateMips = settings.GenerateMips;
 
 		Ref<Job> metadataJob = Ref<Job>::Create(CreateImageMetadata, info, settings, filePath, destination / File::GetName(filePath));

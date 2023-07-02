@@ -65,6 +65,14 @@ void GUIManager::Init()
     m_PanelManager.AddRenderable<UI::AssetImporterPanel>();
 
 	m_PanelManager.AddRenderable<UI::ProgressOverlay>();
+
+	//Initialize default image sampler
+
+	SamplerCreateInfo samplerInfo = {};
+	samplerInfo.DebugName = "UIImageSampler";
+	samplerInfo.MinFilter = FilterMode::Linear;
+	samplerInfo.MagFilter = FilterMode::Linear;
+	samplerInfo.Wrapping = ImageWrap::Repeat;
 }
 
 void GUIManager::Update()

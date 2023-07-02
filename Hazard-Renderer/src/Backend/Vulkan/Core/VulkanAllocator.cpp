@@ -94,7 +94,6 @@ namespace HazardRenderer::Vulkan {
 			createInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
 
 		VK_CHECK_RESULT(vmaCreateAllocator(&createInfo, &s_Data->Allocator), "Failed to init VulkanAllocator");
-		
 	}
 	void VulkanAllocator::Shutdown()
 	{
