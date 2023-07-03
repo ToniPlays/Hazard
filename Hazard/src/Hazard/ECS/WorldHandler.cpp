@@ -84,16 +84,12 @@ namespace Hazard {
 		}
 	}
 
-	bool WorldHandler::LoadWorld(const std::filesystem::path& file, Serialization type)
+	bool WorldHandler::LoadWorld(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (File::Exists(file))
+		if (handle != INVALID_ASSET_HANDLE)
 		{
-			AssetHandle handle = AssetManager::GetHandleFromKey(file.string());
-			HZR_ASSERT(handle != INVALID_ASSET_HANDLE, "World handle is invalid");
-			JobPromise<Ref<Asset>> promise = AssetManager::GetAssetAsync<Asset>(handle);
-			promise.Wait();
-			m_World = promise.Result().As<World>();
+			m_World = AssetManager::GetAsset<World>(handle);
 			return m_World;
 		}
 		m_World = Ref<World>::Create("");

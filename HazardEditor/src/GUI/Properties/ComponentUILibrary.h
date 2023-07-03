@@ -176,13 +176,13 @@ namespace UI
 				auto& firstSr = entities[0].GetComponent<SpriteRendererComponent>();
 
 				uint32_t flags = 0;
-				AssetHandle textureHandle = firstSr.Texture;
+				AssetHandle textureHandle = firstSr.TextureHandle;
 				const Color& color = firstSr.Color;
 
 				for (auto& entity : entities)
 				{
 					auto& sr = entity.GetComponent<SpriteRendererComponent>();
-					if (sr.Texture != textureHandle)
+					if (sr.TextureHandle != textureHandle)
 					{
 						textureHandle = INVALID_ASSET_HANDLE;
 						flags |= BIT(0);
@@ -208,7 +208,7 @@ namespace UI
                             for (auto& entity : entities)
                             {
                                 auto& c = entity.GetComponent<SpriteRendererComponent>();
-                                c.Texture = handle;
+                                c.TextureHandle = handle;
                             }
                             });
                         });
@@ -233,7 +233,7 @@ namespace UI
 					for (auto& entity : entities)
 					{
 						auto& c = entity.GetComponent<SpriteRendererComponent>();
-						c.Texture = INVALID_ASSET_HANDLE;
+						c.TextureHandle = INVALID_ASSET_HANDLE;
 						c.Color = Color::White;
 					}
 					});
@@ -241,12 +241,6 @@ namespace UI
 					removed = true;
 					});
 			}, [&]() {
-				/*
-				ImUI::DragSource("Hazard.SpriteRendererComponent", &e.GetUID(), [&]() {
-					ImGui::Text("Sprite renderer");
-					ImGui::Text(std::to_string(e.GetUID()).c_str());
-					});
-					*/
 			});
 
 		if (removed)

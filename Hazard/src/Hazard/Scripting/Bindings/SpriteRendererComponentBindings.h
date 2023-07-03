@@ -22,11 +22,11 @@ namespace Hazard
 	static uint64_t SpriteRendererComponent_GetSprite_Native(uint64_t id)
 	{
 		auto& src = GET_ENTITY(id).GetComponent<SpriteRendererComponent>();
-		return src.Texture;
+		return src.TextureHandle;
 	}
 	static void SpriteRendererComponent_SetSprite_Native(uint64_t id, uint64_t handle)
 	{
 		auto& src = GET_ENTITY(id).GetComponent<SpriteRendererComponent>();
-		src.Texture = handle;
+		src.TextureHandle = handle;
 	}
 }

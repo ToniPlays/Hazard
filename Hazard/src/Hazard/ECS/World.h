@@ -63,7 +63,6 @@ namespace Hazard
 
 	private:
 		entt::registry m_Registry;
-
 		std::unordered_map<UID, Entity> m_EntityUIDMap;
 	};
 }

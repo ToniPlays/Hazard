@@ -8,7 +8,6 @@
 
 namespace Hazard 
 {
-	enum Serialization { Runtime, Editor };
 	enum WorldFlags : uint32_t 
 	{
 		WorldFlags_Render = BIT(0),
@@ -27,7 +26,7 @@ namespace Hazard
 		void OnBegin();
 		void OnEnd();
 
-		bool LoadWorld(const std::filesystem::path& file, Serialization type = Serialization::Editor);
+		bool LoadWorld(AssetHandle handle);
 		//JobPromise LoadWorldAsync(const std::filesystem::path& file, Serialization type = Serialization::Editor, WorldAsyncPromises* promises = nullptr);
 
 		void SetFlags(uint32_t flags) { m_Flags = (WorldFlags)flags; }

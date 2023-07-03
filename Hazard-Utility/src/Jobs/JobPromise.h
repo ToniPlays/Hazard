@@ -30,8 +30,6 @@ public:
 	}
 	T Result()
 	{
-		HZR_ASSERT(false, "");
-
 		if (m_JobGraph)
 			return m_JobGraph->GetResult<T>();
 		if (m_Result.Data)
@@ -40,7 +38,7 @@ public:
 	}
 private:
 
-	void* GetResultBuffer() { return nullptr;  };
+	void* GetResultBuffer() { return m_Result.Data; };
 
 private:
 	Ref<JobGraph> m_JobGraph = nullptr;

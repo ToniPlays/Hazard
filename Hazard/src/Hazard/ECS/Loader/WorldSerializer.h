@@ -22,15 +22,15 @@ namespace Hazard
 		}
 
 		template<typename T>
-		void TrySerializeEditor(Entity& entity, YAML::Emitter& out)
+		void TrySerialize(Entity& entity, YAML::Emitter& out)
 		{
 			if (entity.HasComponent<T>())
-				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
+				SerializeComponent(entity, entity.GetComponent<T>(), out);
 		}
 		Buffer Serialize();
-		void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
+		void SerializeEntity(Entity& entity, YAML::Emitter& out);
 		template<typename T>
-		void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
+		void SerializeComponent(Entity& entity, T& component, YAML::Emitter& out);
 
 		bool SerializeRuntime(const std::string& file);
 
@@ -40,7 +40,7 @@ namespace Hazard
 	public:
 
 		template<>
-		void SerializeComponentEditor(Entity& entity, TagComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, TagComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "TagComponent", [&]() {
 				YamlUtils::Serialize(out, "Tag", component.Tag);
@@ -48,7 +48,7 @@ namespace Hazard
 		}
 
 		template<>
-		void SerializeComponentEditor(Entity& entity, TransformComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, TransformComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "TransformComponent", [&]() {
 				YamlUtils::Serialize(out, "Translation", component.GetTranslation());
@@ -57,7 +57,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, CameraComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, CameraComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "CameraComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -68,7 +68,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "ScriptComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -84,7 +84,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "SkyLightComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -96,7 +96,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "DirectionalLightComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -105,7 +105,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "PointLightComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -115,7 +115,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
+		void SerializeComponent<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "MeshComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -124,16 +124,16 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "SpriteRendererComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.Color);
-				YamlUtils::Serialize(out, "Sprite", component.Texture);
+				YamlUtils::Serialize(out, "Sprite", component.TextureHandle);
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, Rigidbody2DComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, Rigidbody2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "Rigidbody2DComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -143,7 +143,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, BoxCollider2DComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, BoxCollider2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "BoxCollider2DComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
@@ -157,7 +157,7 @@ namespace Hazard
 			});
 		}
 		template<>
-		void SerializeComponentEditor(Entity& entity, CircleCollider2DComponent& component, YAML::Emitter& out)
+		void SerializeComponent(Entity& entity, CircleCollider2DComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "CircleCollider2DComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);

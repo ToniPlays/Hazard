@@ -8,7 +8,7 @@ namespace Editor
 	public:
 		static void Init();
 		static void Update();
-		static void LoadWorld(const std::filesystem::path& path);
+		static void LoadWorld(AssetHandle handle);
 		static Ref<Hazard::WorldRenderer> GetWorldRender() { return s_WorldRenderer; }
 
 	private:

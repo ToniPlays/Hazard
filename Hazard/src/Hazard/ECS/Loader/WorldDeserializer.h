@@ -18,30 +18,30 @@ namespace Hazard
 	{
 	public:
 
-		WorldDeserializer() = default;
+		WorldDeserializer(AssetHandle handle) : m_Handle(handle)
+		{
+		}
 
-		Ref<JobGraph> DeserializeEditor(const std::filesystem::path& file);
-		static void ProcessWorld(Ref<Job> job, std::filesystem::path file);
-		Ref<JobGraph> DeserializeRuntime(const std::filesystem::path& file) { return nullptr; };
+		Ref<World> Deserialize();
 
 		void SetProgressHandler(DeserializerProgressHandler handler)
 		{
 			m_Handler = handler;
 		}
-
+	private:
 		template<typename T>
-		void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
+		static void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
 		template<typename T>
-		void Deserialize(Entity entity, YAML::Node node);
+		static void Deserialize(Entity entity, YAML::Node node);
 
 		template<>
-		void Deserialize<TagComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<TagComponent>(Entity entity, YAML::Node comp)
 		{
 			YamlUtils::Deserialize(comp, "Tag", entity.GetComponent<TagComponent>().Tag, std::string("New entity"));
 		};
 
 		template<>
-		void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
+		static void Deserialize<TransformComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.GetComponent<TransformComponent>();
 
 			glm::vec3 translation;
@@ -57,7 +57,7 @@ namespace Hazard
 			c.SetScale(scale);
 		};
 		template<>
-		void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
+		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp) {
 
 			auto& c = entity.AddComponent<CameraComponent>();
 			std::string projection;
@@ -72,7 +72,7 @@ namespace Hazard
 			c.SetZFar(clipping.y);
 		};
 		template<>
-		void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
+		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp) {
 			std::string moduleName;
 			bool active;
 
@@ -94,7 +94,7 @@ namespace Hazard
 			}
 		};
 		template<>
-		void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<SkyLightComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
@@ -103,21 +103,10 @@ namespace Hazard
 
 			AssetHandle handle;
 			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
-
-			if (handle == INVALID_ASSET_HANDLE) return;
-
-			Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(handle);
-
-			EnvironmentMapCreateInfo info = {};
-			info.SourceImage = sourceImage;
-			info.Resolution = 2048;
-			info.Samples = 2048;
-
-			c.EnvironmentMap = EnvironmentMap::Create(&info);
 		}
 
 		template<>
-		void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<DirectionalLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<DirectionalLightComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
@@ -125,7 +114,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
 		template<>
-		void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& c = entity.AddComponent<PointLightComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
@@ -134,7 +123,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
 		template<>
-		void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
+		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp) {
 			auto& c = entity.AddComponent<MeshComponent>();
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 
@@ -142,15 +131,15 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "Material", c.MaterialHandle, INVALID_ASSET_HANDLE);
 		};
 		template<>
-		void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
+		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp) {
 			auto& component = entity.AddComponent<SpriteRendererComponent>();
 
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
-			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", component.Texture, INVALID_ASSET_HANDLE);
+			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", component.TextureHandle, INVALID_ASSET_HANDLE);
 		};
 		template<>
-		void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<Rigidbody2DComponent>();
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
@@ -161,7 +150,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "UseGravity", component.UseGravity, true);
 		}
 		template<>
-		void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<BoxCollider2DComponent>();
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
@@ -174,7 +163,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
 		template<>
-		void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
+		static void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
 			auto& component = entity.AddComponent<CircleCollider2DComponent>();
 			YamlUtils::Deserialize(comp, "Active", component.Active, true);
@@ -187,54 +176,8 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
 
-		template<typename T>
-		static void FetchAssetsToLoad(const char* key, YAML::Node comp, std::vector<AssetHandle>& handles)
-		{
-			if (comp[key])
-				FetchAssetsFromComponent<T>(comp[key], handles);
-		}
-
-		template<typename T>
-		static void FetchAssetsFromComponent(YAML::Node comp, std::vector<AssetHandle>& handles)
-		{
-			
-			//static_assert(false);
-		}
-
-		template<>
-		static void FetchAssetsFromComponent<MeshComponent>(YAML::Node comp, std::vector<AssetHandle>& handles)
-		{
-			const char* keys[] = { "Mesh" };
-
-			for (auto& key : keys)
-			{
-				AssetHandle handle;
-				YamlUtils::Deserialize(comp, key, handle, (AssetHandle)0);
-				if (handle == 0) continue;
-
-				AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-				if (metadata.LoadState == LoadState::None)
-					handles.push_back(handle);
-			}
-		}
-		template<>
-		static void FetchAssetsFromComponent<SpriteRendererComponent>(YAML::Node comp, std::vector<AssetHandle>& handles)
-		{
-			const char* keys[] = { "Texture" };
-
-			for (auto& key : keys)
-			{
-				AssetHandle handle;
-				YamlUtils::Deserialize(comp, key, handle, (AssetHandle)0);
-				if (handle == 0) continue;
-
-				AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-				if (metadata.LoadState == LoadState::None)
-					handles.push_back(handle);
-			}
-		}
-
 	private:
+		AssetHandle m_Handle;
 		DeserializerProgressHandler m_Handler;
 	};
 }

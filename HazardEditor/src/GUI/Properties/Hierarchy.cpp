@@ -135,7 +135,7 @@ namespace UI
 		}
 
 		if (e.HasComponent<SpriteRendererComponent>())
-			spriteState = !e.GetComponent<SpriteRendererComponent>().Texture;
+			spriteState = !e.GetComponent<SpriteRendererComponent>().TextureHandle;
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		const ImVec4 visibleColor = style.Colors.AxisZ;

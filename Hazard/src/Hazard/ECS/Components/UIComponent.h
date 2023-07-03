@@ -10,7 +10,7 @@ namespace Hazard {
 	struct SpriteRendererComponent : ComponentBase
 	{
 		Color Color = Color::White;
-		AssetHandle Texture = INVALID_ASSET_HANDLE;
+		AssetHandle TextureHandle = INVALID_ASSET_HANDLE;
 
 		SpriteRendererComponent() = default;
 	};

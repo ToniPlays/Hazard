@@ -18,7 +18,8 @@ namespace UI
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);
 		AddMenuItem("File/Open/OpenNew", nullptr);
 		AddMenuItem("File/Save", [&]() {
-			
+			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+			AssetManager::SaveAsset(world);
 			});
 		AddMenuItem("File/Save as", nullptr);
 		AddMenuItem("File/Project settings", nullptr);

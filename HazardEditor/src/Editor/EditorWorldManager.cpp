@@ -20,31 +20,13 @@ namespace Editor
 		HZR_PROFILE_FUNCTION();
 		s_WorldRenderer->Submit();
 	}
-	void EditorWorldManager::LoadWorld(const std::filesystem::path& path)
+	void EditorWorldManager::LoadWorld(AssetHandle handle)
 	{
-		WorldAsyncPromises promises;
 		auto& handler = Application::GetModule<WorldHandler>();
-		handler.LoadWorld(path, Serialization::Editor);
+		handler.LoadWorld(handle);
 		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
 
         Events::SelectionContextChange e({});
         HazardLoop::GetCurrent().OnEvent(e);
-		
-        /*
-		auto& handler = Application::GetModule<WorldHandler>();
-		auto promise = handler.LoadWorldAsync(path, Serialization::Editor, &promises);
-
-		auto thenPromise = promise.Then([](JobSystem* system, Job* job) -> size_t {
-			auto& handler = Application::GetModule<WorldHandler>();
-			s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
-			return 0;
-			});
-
-		auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::ProgressOverlay>();
-		panel->AddProcess(AssetType::World, promises.WorldPromise);
-
-		for (auto& promise : promises.AssetPromises)
-			panel->AddProcess(promise.Type, promise.Promise);
-		*/
 	}
 }
